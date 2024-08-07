@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTradingRewardsContext } from "../provider";
 import { EpochInfoItem, WalletRewardsItem } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
+import { useAppContext } from "@orderly.network/react-app";
 
 
 export type ListType = EpochInfoItem & {
@@ -27,6 +28,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
   const epochInfos = epochList?.[0];
   const { isUnstart } = epochList?.[1];
   const [history] = walletRewardsHistory;
+  const { wrongNetwork } = useAppContext();
 
   const data = useMemo(() => {
     if (isUnstart) return [];
@@ -36,7 +38,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
       const id = e.epoch_id;
       const index = history?.rows.findIndex((info) => id === info.epoch_id);
 
-      if (index !== -1) {
+      if (index !== -1 && !wrongNetwork) {
         return {
           ...e,
           info: history?.rows?.[index as number],
@@ -71,7 +73,8 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     combineData.sort((a, b) => b.epoch_id - a.epoch_id);
     const curDate = Date.now();
     return combineData.filter((item) => item.end_time <= curDate);
-  }, [history, epochInfos, totalOrderClaimedReward, isUnstart]);
+  
+}, [history, epochInfos, totalOrderClaimedReward, isUnstart, wrongNetwork]);
 
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
@@ -84,6 +87,8 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     setPageSize(pageSize);
   };
 
+  
+
   const newData = useMemo(() => {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -95,6 +100,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     current_page: page,
     records_per_page: pageSize,
   });
+
 
   return {
     data: newData,
