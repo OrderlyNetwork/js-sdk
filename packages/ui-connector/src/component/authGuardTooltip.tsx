@@ -24,7 +24,7 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
     opactiy = 90,
     tooltip = {
       connectWallet: "Please Connect wallet before set up",
-      signIn: "Please Sign before set up",
+      signIn: "Please Sign in before set up",
       enableTrading: "Please Enable trading before set up",
       wrongNetwork: "Please switch to a supported network to set up",
     },
