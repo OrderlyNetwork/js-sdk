@@ -9,6 +9,9 @@ type QueryParams = {
   page?: number;
 };
 
+/**
+ * Fetch statistics data, only support weekly/monthly/quarterly for now
+ */
 export const useStatisticsDaily = (params: QueryParams) => {
   const { startDate, endDate, page = 1 } = params;
   if (!startDate || !endDate) {

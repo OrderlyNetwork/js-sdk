@@ -1,8 +1,5 @@
-import { useMemo } from "react";
-import { getThemeColors } from "../utils/theme";
 import { useColors } from "./useColors";
 // import { Line } from "../line/line";
-import { Box, Text } from "@orderly.network/ui";
 import {
   LineChart,
   XAxis,
@@ -16,6 +13,7 @@ import {
 
 import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
+import { XAxisLabel } from "./xAxisLabel";
 
 export type AssetChartDataItem = {
   date: string;
@@ -33,6 +31,7 @@ export type PnlLineChartProps = {
 
 const CustomTooltip = (props: TooltipProps<any, any>) => {
   const { active, payload, label } = props;
+  console.log("CustomTooltip", props);
   if (active && payload && payload.length) {
     return <OrderlyChartTooltip label={label} value={payload[0].value} />;
   }
@@ -72,7 +71,8 @@ const AssetLineChart = (props: PnlLineChartProps) => {
         <XAxis
           dataKey="date"
           interval={props.data.length - 2}
-          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          // tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          tick={<XAxisLabel />}
           stroke="#FFFFFF"
           strokeOpacity={0.04}
         ></XAxis>

@@ -82,6 +82,7 @@ export const useAssetsHistoryData = (
     onPeriodChange,
     data: calculateData(data, isRealtime),
     aggregateValue,
+    volumeUpdateDate: data?.[data.length - 1]?.date ?? "",
   } as const;
 };
 

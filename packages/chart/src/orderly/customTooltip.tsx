@@ -9,6 +9,9 @@ export const OrderlyChartTooltip = (props: {
   coloring?: boolean;
 }) => {
   const { label, value, prefix, unit = "USDC", coloring = false } = props;
+
+  // console.log("OrderlyChartTooltip", props);
+
   return (
     <Box intensity={600} p={3} r="md">
       <Flex direction={"row"} className={props.titleClassName}>

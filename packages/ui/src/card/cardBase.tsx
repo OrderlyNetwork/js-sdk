@@ -86,7 +86,7 @@ const CardContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cnBase("oui-card-content oui-py-4", className)}
+    className={cnBase("oui-card-content oui-pt-4", className)}
     {...props}
   />
 ));

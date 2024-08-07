@@ -42,7 +42,12 @@ const StatisticLabel = React.forwardRef<HTMLDivElement, StatisticLabelProps>(
     // const { label } = props;
     const { label: labelClassName } = statisticVariants({});
     return (
-      <div ref={ref} className={labelClassName()}>
+      <div
+        ref={ref}
+        className={labelClassName({
+          className: cnBase("oui-statistic-label", props.className),
+        })}
+      >
         {props.children}
       </div>
     );
@@ -57,13 +62,19 @@ type StatisticProps = VariantProps<typeof statisticVariants> &
   HTMLAttributes<HTMLDivElement> & {
     label: string | ReactNode;
     valueProps?: NumeralProps;
+    classNames?: {
+      root?: string;
+      label?: string;
+      value?: string;
+    };
   };
 
 const Statistic = React.forwardRef<
   DivElement,
   PropsWithChildren<StatisticProps>
 >((props, ref) => {
-  const { label, valueProps, align, className, children, ...rest } = props;
+  const { label, valueProps, align, className, classNames, children, ...rest } =
+    props;
   const { root, value: valueClassName } = statisticVariants({ align });
 
   const value = useMemo(() => {
@@ -87,8 +98,12 @@ const Statistic = React.forwardRef<
   }, [children, valueProps]);
 
   return (
-    <div {...rest} className={root({ className })} ref={ref}>
-      <StatisticLabel>{label}</StatisticLabel>
+    <div
+      {...rest}
+      className={root({ className: cnBase(className, classNames?.root) })}
+      ref={ref}
+    >
+      <StatisticLabel className={classNames?.label}>{label}</StatisticLabel>
       {value}
     </div>
   );

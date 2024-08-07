@@ -32,7 +32,7 @@ export type LayoutProps = {
   rightSidebar?: React.ReactNode;
   topBar?: React.ReactNode;
   // topBarProps?:
-  mainNavProps?: MainNavProps;
+  mainNavProps?: PropsWithChildren<MainNavProps>;
   footer?: React.ReactNode;
   routerAdapter?: routerAdapter;
   footerHeight?: number;
@@ -71,9 +71,12 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   };
 
   return (
-    <div className="oui-relative" style={{
-      height: `calc(100vh-${props.footerHeight || 29}px)`
-    }}>
+    <div
+      className="oui-relative"
+      style={{
+        height: `calc(100vh-${props.footerHeight || 29}px)`,
+      }}
+    >
       <ExpandableContext.Provider
         value={{
           routerAdapter,

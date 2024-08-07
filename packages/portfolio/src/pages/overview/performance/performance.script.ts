@@ -2,7 +2,9 @@ import { useAssetsHistoryData } from "../shared/useAssetHistory";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 
 export const usePerformanceScript = () => {
-  const state = useAssetsHistoryData("portfolio_performance_period");
+  const state = useAssetsHistoryData("portfolio_performance_period", {
+    isRealtime: true,
+  });
 
   const { wrongNetwork } = useAppContext();
   // const filteredData = useDataTap(state.data, {
