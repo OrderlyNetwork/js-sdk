@@ -116,7 +116,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
           permissions: scope
             ?.split(",")
             ?.map((e) => capitalizeFirstChar(e))
-            .join(","),
+            .join(", "),
         });
         setShowCreatedDialog(true);
       };

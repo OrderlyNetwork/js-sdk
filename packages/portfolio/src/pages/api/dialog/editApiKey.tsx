@@ -36,6 +36,7 @@ export const EditAPIKeyDialog: FC<{
 
   return (
     <SimpleDialog
+      size="sm"
       open={open}
       onOpenChange={setOpen}
       title="Edit API key"
@@ -55,6 +56,8 @@ export const EditAPIKeyDialog: FC<{
             setOpen(false);
           },
           disabled: item.ip_restriction_list.join(",") === ipText,
+          size: "md",
+          fullWidth: true,
         },
       }}
       classNames={{
@@ -75,7 +78,7 @@ export const EditAPIKeyDialog: FC<{
           <textarea
             placeholder="Add IP addresses, separated by commas."
             className={cn(
-              "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full",
+              "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",
               "oui-border-0 focus:oui-border-2 focus:oui-border-primary oui-outline-none",
               "oui-placeholder-base-contrast-20",
               hint.length > 0 &&
@@ -86,7 +89,7 @@ export const EditAPIKeyDialog: FC<{
               setIpText(e.target.value);
             }}
             style={{
-              resize: 'none'
+              resize: "none",
             }}
           />
           {hint.length > 0 && (
@@ -112,30 +115,20 @@ export const EditAPIKeyDialog: FC<{
             itemAlign={"start"}
             className="oui-mt-2"
           >
-            <Flex direction={"row"} gap={2}>
-              <Checkbox
-                // className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
-                size={18}
-                checked={read}
-                onCheckedChange={(e) => setRead(e as boolean)}
-                disabled
-              />
-              <Text intensity={54} size="sm">
-                Read
-              </Text>
-            </Flex>
-            <Flex direction={"row"} gap={2}>
-              <Checkbox
-                // className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
-                size={18}
-                checked={trade}
-                onCheckedChange={(e) => setTrade(e as boolean)}
-                disabled
-              />
-              <Text intensity={54} size="sm">
-                Trade
-              </Text>
-            </Flex>
+            <Checkbox
+              disabled
+              size={18}
+              checked={read}
+              onCheckedChange={(e) => setRead(e as boolean)}
+              label="Read"
+            />
+            <Checkbox
+              disabled
+              size={18}
+              checked={trade}
+              onCheckedChange={(e) => setTrade(e as boolean)}
+              label="Trading"
+            />
           </Flex>
         </Statistic>
       </Flex>
