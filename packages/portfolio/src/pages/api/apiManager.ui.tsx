@@ -285,13 +285,15 @@ const EditButton: FC<{
         Edit
       </Button>
 
-      <EditAPIKeyDialog
-        item={item}
-        open={open}
-        setOpen={setOpen}
-        onUpdate={onUpdate}
-        verifyIP={verifyIP}
-      />
+      {open && (
+        <EditAPIKeyDialog
+          item={item}
+          open={open}
+          setOpen={setOpen}
+          onUpdate={onUpdate}
+          verifyIP={verifyIP}
+        />
+      )}
     </>
   );
 };
@@ -316,12 +318,14 @@ const DeleteButton: FC<{
         Delete
       </Button>
 
-      <DeleteAPIKeyDialog
-        item={item}
-        open={open}
-        setOpen={setOpen}
-        onDelete={onDelete}
-      />
+      {open && (
+        <DeleteAPIKeyDialog
+          item={item}
+          open={open}
+          setOpen={setOpen}
+          onDelete={onDelete}
+        />
+      )}
     </>
   );
 };
