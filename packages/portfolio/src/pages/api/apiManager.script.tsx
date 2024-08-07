@@ -45,6 +45,7 @@ export type ApiManagerScriptReturns = {
   onCopyApiSecretKey: () => void;
   onCopyIP: () => void;
   verifyIP: (ip: string) => string;
+  isLoading: boolean;
 };
 
 export const useApiManagerScript = (): ApiManagerScriptReturns => {
@@ -217,9 +218,11 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     return ipRegex.test(ip) ? '' : 'IP restriction format is incorrect.';
   };
 
+  const address = useDataTap(data?.account_id);
+  const uid = useDataTap(data?.user_id);
   return {
-    address: data?.account_id,
-    uid: `${data?.user_id || "--"}`,
+    address: address ?? '--',
+    uid: `${uid ?? "--"}`,
     onCreateApiKey,
     onReadApiGuide,
     showCreateDialog,
@@ -241,6 +244,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     onCopyApiSecretKey,
     onCopyIP,
     verifyIP,
+    isLoading,
   };
 };
 

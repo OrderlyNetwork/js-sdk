@@ -11,34 +11,47 @@ type AuthGuardProps = {
   side?: "top" | "right" | "bottom" | "left";
   sideOffset?: number;
   opactiy?: number;
+  tooltip?: {
+    connectWallet?: string;
+    signIn?: string;
+    enableTrading?: string;
+    wrongNetwork?: string;
+  };
 };
 
 const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
-  const { opactiy = 90 } = props;
+  const {
+    opactiy = 90,
+    tooltip = {
+      connectWallet: "Please Connect wallet before set up",
+      signIn: "Please Sign in before set up",
+      enableTrading: "Please Enable trading before set up",
+      wrongNetwork: "Please switch to a supported network to set up",
+    },
+  } = props;
   const { state } = useAccount();
   const isSupport = true;
   const { wrongNetwork } = useAppContext();
 
-
   const hint = useMemo(() => {
     if (wrongNetwork) {
-      return "Please switch to a supported network to set up";
+      return tooltip?.wrongNetwork;
     }
     switch (state.status) {
       case AccountStatusEnum.NotConnected:
-        return "Please Connect wallet before set up";
+        return tooltip?.connectWallet;
       case AccountStatusEnum.NotSignedIn:
-        return "Please Sign before set up";
+        return tooltip?.signIn;
       case AccountStatusEnum.DisabledTrading:
-        return "Please Enable trading before set up";
+        return tooltip?.enableTrading;
       case AccountStatusEnum.EnableTrading: {
-        if (!isSupport) return "Please switch to a supported network to set up";
+        if (!isSupport) return tooltip?.wrongNetwork;
         return "";
       }
       default:
         return props.content;
     }
-  }, [props.content, state, isSupport]);
+  }, [props.content, state, isSupport, tooltip]);
 
   const newOpacity = useMemo(() => {
     switch (state.status) {
@@ -53,7 +66,6 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
         return undefined;
     }
   }, [props.opactiy, state, isSupport]);
-  
 
   return (
     <Tooltip

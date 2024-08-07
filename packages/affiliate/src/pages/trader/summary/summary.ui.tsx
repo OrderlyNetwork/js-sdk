@@ -103,9 +103,9 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
         <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
-        <Text.numeral>
+        <Text>
           {commifyOptional(props.rebates, { fix: 2, fallback: "0" })}
-        </Text.numeral>
+        </Text>
       </Flex>
     </Flex>
   );

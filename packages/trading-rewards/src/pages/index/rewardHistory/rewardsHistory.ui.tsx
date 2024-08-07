@@ -15,7 +15,7 @@ import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
 import { FC, ReactNode } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable, AuthGuardEmpty } from "@orderly.network/ui-connector";
 
 export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
   return (
@@ -221,7 +221,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   ];
 
   return (
-    <AuthGuardDataTable<ListType>
+    <DataTable<ListType>
       bordered
       columns={columns}
       dataSource={data}
@@ -230,13 +230,14 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         header: "oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-base-contrast-80",
       }}
+      emptyView={<AuthGuardEmpty />}
     >
       <Pagination
         {...props.meta}
         onPageChange={props.onPageChange}
         onPageSizeChange={props.onPageSizeChange}
       />
-    </AuthGuardDataTable>
+    </DataTable>
   );
 };
 
