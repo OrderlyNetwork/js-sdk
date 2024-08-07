@@ -152,7 +152,7 @@ export function useFavoritesTabScript(favorite: TFavorite) {
   useEffect(() => {
     if (value) {
       const rect = spanRef.current?.getBoundingClientRect();
-      setInputWidth(Math.max(rect?.width || 0, 50));
+      setInputWidth(Math.max((rect?.width || 0) + 14, 50));
     }
   }, [value]);
 

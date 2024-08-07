@@ -144,7 +144,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           onBlur={updateCurTab}
           classNames={{
             root: cn(
-              "oui-padding-0 oui-h-[24px] oui-rounded oui-px-2",
+              "oui-p-0 oui-h-[24px] oui-rounded oui-px-2",
               "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
               isActive &&
                 "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
