@@ -1,4 +1,4 @@
-import { Card, Grid, Box, Statistic, Text } from "@orderly.network/ui";
+import { Card, Grid, Box, Statistic, Text, Flex } from "@orderly.network/ui";
 
 import { UsePerformanceScriptReturn } from "./performance.script";
 import { PnLBarChart, PnlLineChart } from "@orderly.network/chart";
@@ -12,8 +12,14 @@ export type PerformanceUIProps = {
 } & UsePerformanceScriptReturn;
 
 export const PerformanceUI = (props: PerformanceUIProps) => {
-  const { periodTypes, period, onPeriodChange, aggregateValue, invisible } =
-    props;
+  const {
+    periodTypes,
+    period,
+    onPeriodChange,
+    aggregateValue,
+    invisible,
+    volumeUpdateDate,
+  } = props;
 
   return (
     <Card
@@ -53,7 +59,18 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           </Statistic>
         </Box>
         <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
-          <Statistic label={`${period} Volume (USDC)`}>
+          <Statistic
+            classNames={{
+              label: "oui-w-full",
+            }}
+            label={
+              <Flex justify={"between"}>
+                <span>{`${period} Volume (USDC)`}</span>
+
+                <span>{volumeUpdateDate}</span>
+              </Flex>
+            }
+          >
             {invisible ? "--" : aggregateValue.vol}
           </Statistic>
         </Box>
@@ -71,10 +88,10 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
 
 export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
   // console.log(props.data);
-  const tickValues = useMemo(() => {
-    if (!Array.isArray(props.data) || !props.data.length) return;
-    return [props.data[0].date, props.data[props.data?.length - 1].date];
-  }, [props.data]);
+  // const tickValues = useMemo(() => {
+  //   if (!Array.isArray(props.data) || !props.data.length) return;
+  //   return [props.data[0].date, props.data[props.data?.length - 1].date];
+  // }, [props.data]);
 
   return (
     <Box mt={4} height={"188px"}>

@@ -10,7 +10,15 @@ export const OrderlyChartTooltip = (props: {
   dp?: number;
   rm?: number;
 }) => {
-  const { label, value, prefix, unit = "USDC", coloring = false, dp, rm } = props;
+  const {
+    label,
+    value,
+    prefix,
+    unit = "USDC",
+    coloring = false,
+    dp,
+    rm,
+  } = props;
   return (
     <Box intensity={600} p={3} r="md">
       <Flex direction={"row"} className={props.titleClassName}>

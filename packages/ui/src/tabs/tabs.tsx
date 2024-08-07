@@ -77,29 +77,28 @@ const Tabs: FC<TabsProps> = (props) => {
           //   rest.variant === "text" && "oui-border-b oui-border-b-line-6"
           // )}
         >
-          <Flex>
-            {props.leading}
-            <TabsList
-              className={props.classNames?.tabsList}
-              variant={rest.variant}
-              size={rest.size}
-            >
-              {Object.keys(tabList).map((key) => {
-                const tab = tabList[key];
-                return (
-                  <TabsTrigger
-                    key={key}
-                    value={tab.value}
-                    icon={tab.icon}
-                    variant={rest.variant}
-                    size={rest.size}
-                  >
-                    {tab.title}
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-          </Flex>
+          {props.leading}
+          <TabsList
+            className={cnBase("oui-flex-1", props.classNames?.tabsList)}
+            variant={rest.variant}
+            size={rest.size}
+          >
+            {Object.keys(tabList).map((key) => {
+              const tab = tabList[key];
+              return (
+                <TabsTrigger
+                  key={key}
+                  value={tab.value}
+                  icon={tab.icon}
+                  variant={rest.variant}
+                  size={rest.size}
+                >
+                  {tab.title}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
           {props.trailing}
         </Flex>
 
