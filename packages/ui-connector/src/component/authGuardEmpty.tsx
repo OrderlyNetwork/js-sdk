@@ -78,7 +78,7 @@ const AuthGuardEmpty = (props: PropsWithChildren<AuthGuardProps>) => {
   }, [state]);
 
   return (
-    <Flex direction={"column"}>
+    <Flex direction={"column"} my={8}>
       <AuthGuard>{props.children || <EmptyDataState />}</AuthGuard>
       {bottomInfo}
     </Flex>
