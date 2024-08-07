@@ -10,6 +10,7 @@ export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
 export const useFavoritesScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const [data, favorite] = useMarkets(MarketsType.FAVORITES);
+  const [loading, setLoading] = useState(true);
 
   const { favorites, favoriteTabs, getLastSelFavTab } = favorite;
 
@@ -51,11 +52,16 @@ export const useFavoritesScript = () => {
   }, [data, page, pageSize, searchValue, pageData]);
 
   useEffect(() => {
+    setLoading(false);
+  }, [favorites]);
+
+  useEffect(() => {
     // reset page when size change and search data
     setPage(1);
   }, [pageSize, searchValue]);
 
   return {
+    loading,
     dataSource: pageData,
     meta,
     setPage,
@@ -75,28 +81,17 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     favoriteTabs,
     updateFavoriteTabs,
     updateSelectedFavoriteTab,
-    updateSymbolFavoriteState,
     updateFavorites,
     curTab,
     setCurTab,
   } = favorite;
 
+  const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const [inputWidth, setInputWidth] = useState(50);
-
-  const onBlur = () => {
-    updateFavoriteTabs(
-      {
-        ...curTab,
-        name: value,
-      },
-      { update: true }
-    );
-    setEditing(false);
-  };
 
   const onEdit = (item: any) => {
     setEditing(true);
@@ -107,9 +102,21 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     }, 0);
   };
 
-  const onAdd = (item: any) => {
+  const updateSelectedTab = (item: any) => {
     setCurTab(item);
     updateSelectedFavoriteTab(item);
+  };
+
+  const updateCurTab = () => {
+    updateFavoriteTabs(
+      {
+        ...curTab,
+        name: value,
+      },
+      { update: true }
+    );
+    setEditing(false);
+    setOpen(false);
   };
 
   const addTab = () => {
@@ -150,15 +157,17 @@ export function useFavoritesTabScript(favorite: TFavorite) {
   }, [value]);
 
   return {
+    open,
+    setOpen,
     inputRef,
     inputWidth,
     spanRef,
     editing,
     value,
     onValueChange: setValue,
-    onBlur,
     onEdit,
-    onAdd,
+    updateSelectedTab,
+    updateCurTab,
     addTab,
     delTab,
   };

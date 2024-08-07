@@ -212,7 +212,7 @@ const SideBar = (props: SideBarProps) => {
   return (
     <Box
       data-state={open ? "opened" : "closed"}
-      className={cn("oui-group/bar oui-bg-base-9", props.className)}
+      className={cn("oui-group/bar", props.className)}
       style={props.style}
     >
       <SideBarHeader
