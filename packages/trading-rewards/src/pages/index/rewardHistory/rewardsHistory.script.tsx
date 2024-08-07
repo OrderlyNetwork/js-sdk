@@ -2,8 +2,7 @@ import { useMemo } from "react";
 import { useTradingRewardsContext } from "../provider";
 import { EpochInfoItem, WalletRewardsItem } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { useDataTap } from "@orderly.network/react-app";
-// import { useDataTap } from "@orderly.network/react-app";
+
 
 export type ListType = EpochInfoItem & {
   info?: WalletRewardsItem;
@@ -97,11 +96,8 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     records_per_page: pageSize,
   });
 
-
-  const newDataValue = useDataTap(newData);
-
   return {
-    data: newDataValue || [],
+    data: newData,
     meta: meta,
     onPageChange,
     onPageSizeChange,
