@@ -21,6 +21,7 @@ import {
 import { TFavorite } from "../../../../type";
 import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
 import { useMarketsContext } from "../../provider";
+import "../../../../style/index.css";
 
 type FavoritesProps = {} & UseFavoritesReturn;
 
@@ -209,7 +210,12 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   };
 
   return (
-    <Flex my={3} gapX={3}>
+    <Flex
+      my={3}
+      gapX={3}
+      id="oui-markets-favorites-tabs-container"
+      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer "
+    >
       {favoriteTabs?.map((item: any) => {
         const isActive = curTab.id === item.id;
         return (
