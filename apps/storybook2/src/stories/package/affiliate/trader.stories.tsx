@@ -63,6 +63,8 @@ const meta = {
                             splashPage={() => (<div style={{ backgroundColor: "#FF0000" }}>df</div>)}
                             overwrite={
                                 {
+                                    shortBrokerName: "Mark",
+                                    brokerName: "Mark Pan",
                                     ref: {
                                         // gradientTitle: "Mark",
                                         // top: (state) =>  (<div>ASD</div>),

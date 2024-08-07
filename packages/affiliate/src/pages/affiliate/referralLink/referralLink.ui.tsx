@@ -86,7 +86,7 @@ const Subtitle: FC<ReferralLinkReturns> = (props) => {
         <GradientText
           texts={[
             { text: props.earn || "-", gradient: true, gradientColor: "brand" },
-            { text: " Orderly net fee that deduct Orderly fee." },
+            { text: ` ${props.brokerName} net fee that deduct Orderly fee.` },
           ]}
         />
       )}
@@ -103,7 +103,7 @@ const Subtitle: FC<ReferralLinkReturns> = (props) => {
               gradient: true,
               gradientColor: "brand",
             },
-            { text: " of their Orderly net fee" },
+            { text: ` of their ${props.brokerName} net fee` },
           ]}
         />
       )}

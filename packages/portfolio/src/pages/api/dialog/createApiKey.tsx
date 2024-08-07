@@ -25,9 +25,8 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
     }
   }, [props.showCreateDialog]);
 
-  useEffect(() =>{
-    if (ipText.length === 0)
-      setHint("");
+  useEffect(() => {
+    if (ipText.length === 0) setHint("");
   }, [ipText]);
 
   return (
@@ -49,7 +48,6 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
                 return;
               }
             }
-            
 
             const scopes: string[] = [];
             if (read) {
@@ -80,19 +78,27 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           </Text>
           <textarea
             placeholder="Add up to 20 IP addresses, separated by commas. "
-            className={cn("oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full",
+            className={cn(
+              "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full",
               "oui-border-0 focus:oui-border-2 focus:oui-border-primary oui-outline-none",
-              hint.length > 0 && "oui-outline-1 oui-outline-danger focus:oui-outline-none"
+              "oui-placeholder-base-contrast-20",
+              hint.length > 0 &&
+                "oui-outline-1 oui-outline-danger focus:oui-outline-none"
             )}
             value={ipText}
             onChange={(e) => {
               setIpText(e.target.value);
             }}
+            style={{
+              resize: "none",
+            }}
           />
           {hint.length > 0 && (
             <Flex gap={1}>
               <div className="oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"></div>
-              <Text color="danger" size="xs">{hint}</Text>
+              <Text color="danger" size="xs">
+                {hint}
+              </Text>
             </Flex>
           )}
         </Flex>

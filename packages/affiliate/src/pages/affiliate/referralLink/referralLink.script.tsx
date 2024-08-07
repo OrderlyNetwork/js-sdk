@@ -12,6 +12,7 @@ export type ReferralLinkReturns = {
     refCode?: string;
     earn?: string;
     share?: string;
+    brokerName?: string;
 };
 
 export const useReferralLinkScript = (): ReferralLinkReturns => {
@@ -21,7 +22,7 @@ export const useReferralLinkScript = (): ReferralLinkReturns => {
     };
 
 
-    const { referralInfo, referralLinkUrl } = useReferralContext();
+    const { referralInfo, referralLinkUrl, overwrite } = useReferralContext();
     const [pinCodes, setPinCodes] = useLocalStorage<string[]>("orderly_referral_codes", [] as string[]);
 
     const codes = useMemo((): RefferalAPI.ReferralCode[] => {
@@ -87,5 +88,6 @@ export const useReferralLinkScript = (): ReferralLinkReturns => {
         refCode: code,
         share,
         earn,
+        brokerName: overwrite?.brokerName ?? overwrite?.shortBrokerName,
     };
 };
