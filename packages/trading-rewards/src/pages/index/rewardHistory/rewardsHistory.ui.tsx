@@ -212,7 +212,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         return (
           <Flex direction={"row"} gap={1}>
             {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
-            <Text>{commifyOptional(record.info?.r_wallet)}</Text>
+            <Text>{commifyOptional(record.info?.r_wallet, { fix: 2 })}</Text>
           </Flex>
         );
       },

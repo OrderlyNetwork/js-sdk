@@ -80,21 +80,21 @@ const useCommissionDataScript = (): ListReturns<
   const onPageSizeChange = (pageSize: number) => {
     console.log("page size change", pageSize);
     
-    if (meta?.total) {
-      setPageSize(pageSize);
-      const state = parseMeta({
-        total: meta?.total,
-        current_page: page,
-        records_per_page: pageSize,
-      });
-      console.log("page size change 222", {
-        total: meta?.total,
-        current_page: page,
-        records_per_page: pageSize,
-      }, state);
+    setPageSize(pageSize);
+    // if (meta?.total) {
+    //   const state = parseMeta({
+    //     total: meta?.total,
+    //     current_page: page,
+    //     records_per_page: pageSize,
+    //   });
+    //   console.log("page size change 222", {
+    //     total: meta?.total,
+    //     current_page: page,
+    //     records_per_page: pageSize,
+    //   }, state);
       
-      setPage(state.page);
-    }
+    //   setPage(state.page);
+    // }
   };
 
   // const loadMore = () => {

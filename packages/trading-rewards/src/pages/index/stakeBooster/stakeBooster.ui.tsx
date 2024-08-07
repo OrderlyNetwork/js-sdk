@@ -40,9 +40,7 @@ export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
           onClick={props.stakeNow}
           className="oui-cursor-pointer oui-text-primary-light"
         >
-          <Text size="sm">
-            Stake
-          </Text>
+          <Text size="sm">Stake</Text>
           <JumpIcon />
         </Flex>
       </Flex>
@@ -100,15 +98,12 @@ const Statics: FC<{
             className="oui-text-sm xl:oui-text-base"
             color="brand"
             angle={90}
-            
           >
-            {calcValue + (calcValue === '--' ? '' : 'x')}
+            {calcValue + (calcValue === "--" ? "" : "x")}
           </Text.gradient>
         ) : (
-          <Text
-            className="oui-text-sm xl:oui-text-base"
-          >
-            {commifyOptional(props.value)}
+          <Text className="oui-text-sm xl:oui-text-base">
+            {commifyOptional(props.value, { fix: 2 })}
           </Text>
         )}
       </Flex>
