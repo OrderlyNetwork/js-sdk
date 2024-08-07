@@ -6,7 +6,18 @@ export const usePagination = (initial?: {
 }) => {
   const dataTotal = useRef(0);
   const [page, setPage] = useState<number>(initial?.page ?? 1);
-  const [pageSize, setPageSize] = useState<number>(initial?.pageSize ?? 10);
+  const [pageSize, _setPageSize] = useState<number>(initial?.pageSize ?? 10);
+
+  const setPageSize = (size: number) => {
+    _setPageSize(size);
+    // check page > page total
+    if (dataTotal.current > 0) {
+      const totalPage = Math.ceil(dataTotal.current / size);
+      if (page > totalPage) {
+        setPage(totalPage);
+      }
+    }
+  }
 
   /**
    * helper function to parse meta data,
