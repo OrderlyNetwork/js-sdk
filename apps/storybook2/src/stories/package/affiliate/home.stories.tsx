@@ -16,11 +16,14 @@ const meta = {
   // },
   decorators: [
     (Story: any) => {
-
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
+      const configStore = new CustomConfigStore({
+        networkId,
+        brokerId: "woofi_pro",
+        env: "qa",
+      });
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -35,7 +38,6 @@ const meta = {
               referralLinkUrl="https://ordely.network"
               showReferralPage={() => {
                 console.log("show referral page");
-
               }}
               // onEnterAffiliatePage={() => {
               //   console.log("show affiliate page");
@@ -47,11 +49,11 @@ const meta = {
               // }}
               // chartConfig={
               //   {
-              //     trader: { 
-              //       bar: { ...InitialBarStyle, fill: "#00B49E", columnPadding: 20 } 
+              //     trader: {
+              //       bar: { ...InitialBarStyle, fill: "#00B49E", columnPadding: 20 }
               //     },
-              //     affiliate: { 
-              //       bar: { ...InitialBarStyle, fill: "#608CFF", columnPadding: 20 } 
+              //     affiliate: {
+              //       bar: { ...InitialBarStyle, fill: "#608CFF", columnPadding: 20 }
               //     },
               //   }
               // }
@@ -60,32 +62,32 @@ const meta = {
               // messages,
               // }
               // }
-              splashPage={() => (<div style={{ backgroundColor: "#FF0000" }}>df</div>)}
-              overwrite={
-                {
-                  ref: {
-                    // gradientTitle: "Mark",
-                    // top: (state) =>  (<div>ASD</div>),
-                    // card: (state) => (<div>GFHJK</div>),
-                    // card: {
-                    // refClassName: "orderly-text-red-900",
-                    // refIcon: (<div className="orderly-bg-white orderly-h-full">DDS</div>),
-                    // ref: (state) => (<div>gdjsj</div>)
-
-                    // traderClassName: "orderly-text-red-900",
-                    // traderIcon: (<div className="orderly-bg-white orderly-h-full">DDS</div>),
-                    // trader: (state) => (<div>gdjsj</div>)
-                    // },
-
-                    // step: (state) => (<div>DJD</div>)
-                    // step: {
-                    //   applyIcon: (<div>Apply</div>),
-                    //   shareIcon: (<div>Share</div>),
-                    //   earnIcon: (<div>Earn</div>),
-                    // }
-                  }
-                }
-              }
+              splashPage={() => (
+                <div style={{ backgroundColor: "#FF0000" }}>df</div>
+              )}
+              overwrite={{
+                shortBrokerName: "Mark",
+                brokerName: "Mark Pan",
+                ref: {
+                  // gradientTitle: "Mark",
+                  // top: (state) =>  (<div>ASD</div>),
+                  // card: (state) => (<div>GFHJK</div>),
+                  // card: {
+                  // refClassName: "orderly-text-red-900",
+                  // refIcon: (<div className="orderly-bg-white orderly-h-full">DDS</div>),
+                  // ref: (state) => (<div>gdjsj</div>)
+                  // traderClassName: "orderly-text-red-900",
+                  // traderIcon: (<div className="orderly-bg-white orderly-h-full">DDS</div>),
+                  // trader: (state) => (<div>gdjsj</div>)
+                  // },
+                  // step: (state) => (<div>DJD</div>)
+                  // step: {
+                  //   applyIcon: (<div>Apply</div>),
+                  //   shareIcon: (<div>Share</div>),
+                  //   earnIcon: (<div>Earn</div>),
+                  // }
+                },
+              }}
             >
               <Story />
             </ReferralProvider>
@@ -123,11 +125,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
 
-
 export const LayoutPage: Story = {
   render: () => {
-    return <TradingRewardsLayoutWidget>
-      <Dashboard.HomePage/>
-    </TradingRewardsLayoutWidget>
+    return (
+      <TradingRewardsLayoutWidget>
+        <Dashboard.HomePage />
+      </TradingRewardsLayoutWidget>
+    );
   },
-}
+};

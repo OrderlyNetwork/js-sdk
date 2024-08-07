@@ -43,8 +43,9 @@ export type UserVolumeType = {
 // }
 
 export type Overwrite = {
+  shortBrokerName?: string;
+  brokerName?: string;
   ref?: {
-    gradientTitle?: string;
     top?: BuildNode;
     card?: BuildNode;
     step?: BuildNode;
