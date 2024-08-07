@@ -5,7 +5,7 @@ import { Button, ButtonProps } from "../button";
 export type DialogAction<T = any> = {
   label: string;
   onClick: () => Promise<T> | T;
-} & Pick<ButtonProps, "size" | "disabled" | "className">;
+} & Pick<ButtonProps, "size" | "disabled" | "className" | "fullWidth">;
 
 export type SimpleDialogFooterProps = {
   actions?: {
@@ -35,6 +35,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           className={actions.secondary.className}
           disabled={actions.secondary.disabled}
           size={actions.secondary.size}
+          fullWidth={actions.secondary.fullWidth}
         >
           {actions.secondary.label}
         </Button>
@@ -58,6 +59,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           disabled={actions.primary.disabled || primaryLoading}
           loading={primaryLoading}
           size={actions.primary.size}
+          fullWidth
         >
           {actions.primary.label}
         </Button>

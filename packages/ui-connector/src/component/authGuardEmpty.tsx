@@ -16,27 +16,22 @@ import { useAppContext } from "@orderly.network/react-app";
 import { AuthGuard } from "./authGuard";
 
 type AuthGuardProps = {
-  fallback?: (props: {
-    validating: boolean;
-    status: AccountStatusEnum;
-  }) => ReactElement;
-  // indicator?: ReactElement;
-  /**
-   * Required state to be satisfied
-   * @default AccountStatusEnum.EnableTrading
-   */
-  status?: AccountStatusEnum;
-
-  buttonProps?: ButtonProps;
-
-  // validatingIndicator?: ReactElement;
+  hint?: {
+    connectWallet?: string;
+    signIn?: string;
+    enableTrading?: string;
+    wrongNetwork?: string;
+  };
 };
 
 const AuthGuardEmpty = (props: PropsWithChildren<AuthGuardProps>) => {
   const {
-    status = AccountStatusEnum.EnableTrading,
-    buttonProps,
-    fallback,
+    hint = {
+      connectWallet: "Please connect wallet before starting to trade",
+      signIn: "Please sign in before starting to trade",
+      enableTrading: "Please sign in before starting to trade",
+      wrongNetwork: "Please switch to a supported network to continue.",
+    },
   } = props;
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
@@ -45,42 +40,30 @@ const AuthGuardEmpty = (props: PropsWithChildren<AuthGuardProps>) => {
     const value = state.status;
 
     if (wrongNetwork) {
-      return (
-        <Text intensity={36} size="xs" className="oui-mt-4">
-          Please switch to a supported network to continue.
-        </Text>
-      );
+      return hint.wrongNetwork ?? "";
     }
 
     if (value <= AccountStatusEnum.NotConnected) {
-      return (
-        <Text intensity={36} size="xs" className="oui-mt-4">
-          Please Connect wallet before starting to trade
-        </Text>
-      );
+      return hint.connectWallet ?? "";
     }
     if (value <= AccountStatusEnum.NotSignedIn) {
-      return (
-        <Text intensity={36} size="xs" className="oui-mt-4">
-          Please sign in before starting to trade
-        </Text>
-      );
+      return hint.signIn ?? "";
     }
     if (value <= AccountStatusEnum.DisabledTrading) {
-      return (
-        <Text intensity={36} size="xs" className="oui-mt-4">
-          Please Enable trading before starting to trade
-        </Text>
-      );
+      return hint.enableTrading ?? "";
     }
 
-    return <></>;
-  }, [state]);
+    return "";
+  }, [state, hint]);
 
   return (
     <Flex direction={"column"} my={8}>
       <AuthGuard>{props.children || <EmptyDataState />}</AuthGuard>
-      {bottomInfo}
+      {bottomInfo.length > 0 && (
+        <Text intensity={36} size="xs" className="oui-mt-4">
+          {bottomInfo}
+        </Text>
+      )}
     </Flex>
   );
 };

@@ -21,6 +21,7 @@ export const DeleteAPIKeyDialog: FC<{
 
   return (
     <SimpleDialog
+      size="sm"
       open={open}
       onOpenChange={setOpen}
       title="Delete API key"
@@ -28,6 +29,7 @@ export const DeleteAPIKeyDialog: FC<{
         primary: {
           label: "Confirm",
           className: "oui-w-[120px] lg:oui-w-[154px]",
+          size: "md",
           onClick: async () => {
             await props.onDelete?.(item);
             setOpen(false);
@@ -36,6 +38,7 @@ export const DeleteAPIKeyDialog: FC<{
         secondary: {
           label: "Cancel",
           className: "oui-w-[120px] lg:oui-w-[154px]",
+          size: "md",
           onClick: async () => {
             setOpen(false);
           },

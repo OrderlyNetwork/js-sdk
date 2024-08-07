@@ -141,7 +141,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
         tooltip={{
           connectWallet: "Please connect wallet before create API key",
           signIn: "Please sign in before create API key",
-          enableTrading: "Please Enable trading before create API key",
+          enableTrading: "Please enable trading before create API key",
           wrongNetwork:
             "Please switch to a supported network to create API key",
         }}
@@ -188,7 +188,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
         value
           ?.split(",")
           .map((e: any) => capitalizeFirstChar(`${e}`))
-          .join(","),
+          .join(", "),
     },
     {
       title: "Restricted IP",
