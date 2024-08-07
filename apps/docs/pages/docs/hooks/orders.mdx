@@ -15,6 +15,8 @@ export interface OrderEntryReturn {
   maxQty: number;
   freeCollateral: number;
   markPrice: number;
+  estLiqPrice?: number | null;
+  estLeverage?: number | null;
 
   symbolConfig: API.SymbolExt;
   helper: {
@@ -37,6 +39,9 @@ const useOrderEntry = (
 - `maxQty`: The maximum quantity that the user can trade based on the free collateral.
 - `freeCollateral`: The amount collateral available for trading, factoring in open positions and pending orders.
 - `markPrice`: The mark price of the symbol.
+- `estLiqPrice`: The estimated liquidation price based on the chosen order type and the orderbook bid and ask prices. 
+
+> Note: Calculating `estLiqPrice` requires the `watchOrderbook` option to be set to `true`. It also depends on the `orderbook:update` event emitted by the `useOrderbookStream` hook, which must be used elsewhere in your application.
 
 ### Data calculations
 
