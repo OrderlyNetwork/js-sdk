@@ -1,5 +1,65 @@
 # @orderly.network/trading-view
 
+## 1.5.11-internal.10
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.11-internal.10
+  - @orderly.network/types@1.5.11-internal.10
+  - @orderly.network/utils@1.5.11-internal.10
+  - @orderly.network/core@1.5.11-internal.10
+  - @orderly.network/net@1.5.11-internal.10
+
+## 1.5.11-internal.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.11-internal.9
+  - @orderly.network/types@1.5.11-internal.9
+  - @orderly.network/utils@1.5.11-internal.9
+  - @orderly.network/core@1.5.11-internal.9
+  - @orderly.network/net@1.5.11-internal.9
+
+## 1.5.11-internal.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.11-internal.8
+  - @orderly.network/types@1.5.11-internal.8
+  - @orderly.network/utils@1.5.11-internal.8
+  - @orderly.network/core@1.5.11-internal.8
+  - @orderly.network/net@1.5.11-internal.8
+
+## 1.5.11-internal.7
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.11-internal.7
+  - @orderly.network/types@1.5.11-internal.7
+  - @orderly.network/utils@1.5.11-internal.7
+  - @orderly.network/core@1.5.11-internal.7
+  - @orderly.network/net@1.5.11-internal.7
+
+## 1.5.11-internal.6
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.11-internal.6
+  - @orderly.network/types@1.5.11-internal.6
+  - @orderly.network/utils@1.5.11-internal.6
+  - @orderly.network/core@1.5.11-internal.6
+  - @orderly.network/net@1.5.11-internal.6
+
 ## 1.5.11-internal.5
 
 ### Patch Changes

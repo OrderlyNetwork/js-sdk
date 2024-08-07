@@ -1,5 +1,60 @@
 # @orderly/docs
 
+## 0.4.11-internal.10
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.11-internal.10
+  - @orderly.network/web3-onboard@1.5.11-internal.10
+  - @orderly.network/hooks@1.5.11-internal.10
+  - @orderly.network/types@1.5.11-internal.10
+
+## 0.4.11-internal.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.11-internal.9
+  - @orderly.network/web3-onboard@1.5.11-internal.9
+  - @orderly.network/hooks@1.5.11-internal.9
+  - @orderly.network/types@1.5.11-internal.9
+
+## 0.4.11-internal.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.11-internal.8
+  - @orderly.network/web3-onboard@1.5.11-internal.8
+  - @orderly.network/hooks@1.5.11-internal.8
+  - @orderly.network/types@1.5.11-internal.8
+
+## 0.4.11-internal.7
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.11-internal.7
+  - @orderly.network/web3-onboard@1.5.11-internal.7
+  - @orderly.network/hooks@1.5.11-internal.7
+  - @orderly.network/types@1.5.11-internal.7
+
+## 0.4.11-internal.6
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.11-internal.6
+  - @orderly.network/web3-onboard@1.5.11-internal.6
+  - @orderly.network/hooks@1.5.11-internal.6
+  - @orderly.network/types@1.5.11-internal.6
+
 ## 0.4.11-internal.5
 
 ### Patch Changes

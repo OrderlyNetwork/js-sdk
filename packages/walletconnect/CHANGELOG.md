@@ -1,5 +1,35 @@
 # @orderly.network/web3-modal
 
+## 1.5.11-internal.10
+
+### Patch Changes
+
+- update
+
+## 1.5.11-internal.9
+
+### Patch Changes
+
+- update
+
+## 1.5.11-internal.8
+
+### Patch Changes
+
+- update
+
+## 1.5.11-internal.7
+
+### Patch Changes
+
+- update
+
+## 1.5.11-internal.6
+
+### Patch Changes
+
+- update
+
 ## 1.5.11-internal.5
 
 ### Patch Changes
