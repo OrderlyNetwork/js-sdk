@@ -1,5 +1,27 @@
 # @orderly/docs
 
+## 0.4.10-sdk-v2.49
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.10-sdk-v2.49
+  - @orderly.network/web3-onboard@1.5.10-sdk-v2.49
+  - @orderly.network/hooks@1.5.10-sdk-v2.49
+  - @orderly.network/types@1.5.10-sdk-v2.49
+
+## 0.4.10-sdk-v2.48
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.10-sdk-v2.48
+  - @orderly.network/web3-onboard@1.5.10-sdk-v2.48
+  - @orderly.network/hooks@1.5.10-sdk-v2.48
+  - @orderly.network/types@1.5.10-sdk-v2.48
+
 ## 0.4.10-sdk-v2.47
 
 ### Patch Changes

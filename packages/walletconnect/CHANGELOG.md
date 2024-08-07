@@ -1,5 +1,17 @@
 # @orderly.network/web3-modal
 
+## 1.5.10-sdk-v2.49
+
+### Patch Changes
+
+- update
+
+## 1.5.10-sdk-v2.48
+
+### Patch Changes
+
+- update
+
 ## 1.5.10-sdk-v2.47
 
 ### Patch Changes
