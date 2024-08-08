@@ -51,11 +51,16 @@ const RoundedRectangle = (props: any) => {
 };
 
 export const XAxisLabel = (props: any) => {
-  const { x, y, stroke, payload, index, width } = props;
+  const { x, y, stroke, payload, index, width, containerWidth } = props;
 
   console.log("props", props);
 
-  const _x = index === 0 ? 58 : width + payload.offset;
+  const _x =
+    index === 0
+      ? 58
+      : containerWidth > 0
+      ? containerWidth
+      : width + payload.offset;
 
   return (
     <g transform={`translate(${_x},${y - 6})`}>
@@ -113,10 +118,17 @@ const CustomTooltip = (props: TooltipProps<any, any>) => {
 export const PnLBarChart = (props: PnLChartProps) => {
   const { invisible } = props;
   const colors = useColors(props.colors);
+  const widthRef = useRef(0);
 
   return (
     // @ts-ignore
-    <ResponsiveContainer className={cn(invisible && "chart-invisible")}>
+    <ResponsiveContainer
+      className={cn(invisible && "chart-invisible")}
+      onResize={(width, height) => {
+        // console.log("width", width, height);
+        widthRef.current = width;
+      }}
+    >
       {/* @ts-ignore */}
       <BarChart
         data={props.data}
@@ -165,7 +177,7 @@ export const PnLBarChart = (props: PnLChartProps) => {
           height={1}
           // scale="time"
           // tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-          tick={<XAxisLabel />}
+          tick={<XAxisLabel containerWidth={widthRef.current} />}
           stroke="#FFFFFF"
           strokeOpacity={0.04}
         />
