@@ -224,7 +224,7 @@ const ActionButton: FC<{
 const ReferralCode: FC<WalletConnectContentProps> = (props) => {
   return (
     <TextField
-      placeholder="Referral cdoe"
+      placeholder="Referral code"
       fullWidth
       label={"Referral code (optional)"}
       value={props.refCode}

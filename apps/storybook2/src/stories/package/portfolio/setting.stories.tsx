@@ -14,18 +14,18 @@ const meta = {
   decorators: [
     (Story: any) => {
       const networkId = "testnet";
-      const configStore = new CustomConfigStore({
-        networkId,
-        brokerId: "woofi_pro",
-        env: "qa",
-      });
+      // const configStore = new CustomConfigStore({
+      //   networkId,
+      //   brokerId: "woofi_pro",
+      //   env: "qa",
+      // });
       return (
         <ConnectorProvider>
           <OrderlyApp
             brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
-            configStore={configStore}
+            // configStore={configStore}
           >
             <Story />
           </OrderlyApp>

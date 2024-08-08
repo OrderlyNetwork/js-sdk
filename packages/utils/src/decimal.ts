@@ -33,7 +33,7 @@ export const commifyOptional = (
     if (hasDecimal) {
       return prefix +  list[0] + "." + list[1].padEnd(options.fix, fillString);
     }
-    return prefix + list[0] + "." + "".padEnd(options.fix, fillString);
+    return prefix + list[0];
   }
   return prefix + value;
 };
@@ -49,7 +49,7 @@ export const commify = (num: number | string, fix?: number): string => {
   return (
     numberPart.replace(thousands, ",") +
     (decimalPart
-      ? "." + decimalPart.substring(0, fix || decimalPart.length)
+      ? ((fix && fix > 0) ? "." + decimalPart.substring(0, fix ?? decimalPart.length) : '')
       : endsWithPoint
       ? "."
       : "")

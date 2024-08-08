@@ -27,7 +27,7 @@ const meta = {
             brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
-            configStore={configStore}
+            // configStore={configStore}
           >
             <Story />
           </OrderlyApp>
@@ -86,7 +86,9 @@ export const LayoutPage: Story = {
         }
       }
     >
-      <TradingRewards.HomePage className="oui-py-6 oui-px-4 lg:oui-px-6 xl:oui-pl-4 lx:oui-pr-6" />
+      <TradingRewards.HomePage className="oui-py-6 oui-px-4 lg:oui-px-6 xl:oui-pl-4 lx:oui-pr-6" titleConfig={{
+        brokerName: "Mark"
+      }}/>
     </TradingRewardsLayoutWidget>
   },
 }

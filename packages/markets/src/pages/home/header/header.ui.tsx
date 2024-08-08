@@ -51,13 +51,13 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           className={cls}
         />
       </Flex>
-      <Box mt={1} mb={3}>
+      <div className="oui-mt-1 oui-mb-3  3xl:oui-mt-4 3xl:oui-mb-0">
         <ScrollIndicator
           scrollIndex={scrollIndex}
           scrollPrev={emblaApi?.scrollPrev}
           scrollNext={emblaApi?.scrollNext}
         />
-      </Box>
+      </div>
     </div>
   );
 };

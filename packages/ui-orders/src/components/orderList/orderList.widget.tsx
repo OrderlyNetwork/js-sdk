@@ -5,7 +5,7 @@ import { TabType } from "../orders.widget";
 
 export const OrderListWidget = (props: {
     type: TabType;
-    ordersStatus: OrderStatus;
+    ordersStatus?: OrderStatus;
     filterSides?: boolean;
     filterStatus?: boolean;
     filterDate?: boolean
