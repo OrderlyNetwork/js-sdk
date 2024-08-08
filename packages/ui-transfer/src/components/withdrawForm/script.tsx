@@ -1,5 +1,6 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {
+    OrderlyContext,
     useAccount,
     useChains,
     useConfig,
@@ -83,6 +84,32 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         filter: (chain: any) =>
             chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
     });
+
+    const {
+        configStore,
+    } = useContext(OrderlyContext);
+    const apiBaseUrl = configStore.get("apiBaseUrl");
+
+    const { data: tokenChainsRes} = useQuery<any[]>(
+        `${apiBaseUrl}/v1/public/token`,
+        {
+                revalidateIfStale: false,
+                revalidateOnFocus: false,
+                revalidateOnReconnect: false,
+                // If false, undefined data gets cached against the key.
+                revalidateOnMount: true,
+                // dont duplicate a request w/ same key for 1hr
+                dedupingInterval: 3_600_000,
+            formatter: data => {
+                console.log('-- data', data);
+                    if (data.rows.length === 1) {
+                        return data.rows[0].chain_details;
+                    }
+            }
+        },
+    );
+
+
 
     const currentChain = useMemo(() => {
         if (!connectedChain) return null;
@@ -219,7 +246,8 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
     const fee = useMemo(() => {
         if (!currentChain) return 0;
 
-        const item = chains?.find((c) => c.chain_id ===currentChain!.id);
+
+        const item = tokenChainsRes?.find((c: any) => parseInt(c.chain_id) ===currentChain!.id);
 
         if (!item) {
             return 0;
@@ -233,7 +261,21 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         }
 
         return item.withdrawal_fee || 0;
-    }, [currentChain, chains, crossChainWithdraw]);
+    }, [tokenChainsRes, chains, crossChainWithdraw]);
+
+    const showQty = useMemo(() => {
+        console.log('quanty', quantity);
+        if (!quantity) {
+            return '';
+        }
+        console.log('-- qty', quantity);
+        const value = new Decimal(quantity).sub(fee ?? 0)
+        if (value.isNegative()) {
+            return '';
+        }
+        return value.toNumber();
+
+    }, [fee, quantity]);
 
     useEffect(() => {
         if (crossChainTrans) {
@@ -327,5 +369,6 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         fee,
         crossChainWithdraw,
         crossChainTrans,
+        showQty,
     }
 }

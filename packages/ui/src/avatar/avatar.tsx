@@ -117,4 +117,11 @@ const EVMAvatar = React.forwardRef<
   return <Avatar {...rest} src={src} />;
 });
 
-export { AvatarBase, AvatarImage, AvatarFallback, Avatar, EVMAvatar };
+export {
+  AvatarBase,
+  AvatarImage,
+  AvatarFallback,
+  Avatar,
+  EVMAvatar,
+  avatarVariants,
+};
