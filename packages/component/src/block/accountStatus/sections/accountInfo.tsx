@@ -21,6 +21,7 @@ import { Divider } from "@/divider";
 import { Statistic } from "@/statistic";
 import { OrderlyAppContext } from "@/provider";
 import { commify } from "@orderly.network/utils";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 export interface AccountInfoProps {
   onDisconnect?: () => void;
@@ -150,7 +151,9 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
 };
 
 const ReferralInfo = () => {
-  const { referral } = useContext(OrderlyAppContext);
+  const { referral } = useTradingPageContext();
+  console.log("referral aabb", referral);
+  
 
   const clickReferral = useCallback(() => {
     referral?.onClickReferral?.();

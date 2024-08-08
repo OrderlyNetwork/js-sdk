@@ -68,7 +68,7 @@ const Identifier = (props: {
         ),
         completed: (
           <div>
-            <CheckedCircleFillIcon color={"primary"} opacity={1} />
+            <CheckedCircleFillIcon opacity={1} className="oui-text-[rgba(96,140,255,1)]"/>
           </div>
         ),
       }}
@@ -84,7 +84,7 @@ const Dot: FC<{ active: boolean; className?: string }> = ({
   return (
     <div
       className={cn(
-        "oui-w-2 oui-h-2 oui-rounded-full oui-ml-2 oui-mt-1",
+        "oui-w-3 oui-h-3 oui-rounded-full oui-ml-2 oui-mt-1",
         className,
         active ? "oui-bg-primary-light" : "oui-bg-base-2"
       )}

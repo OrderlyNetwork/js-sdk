@@ -111,7 +111,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   };
 
   return (
-    <Box>
+    <Box id="oui-wallet-connect-dialog-content" className="oui-font-semibold">
       <Text intensity={54} size="xs">
         Your previous access has expired, you will receive a signature request
         to enable trading. Signing is free and will not send a transaction.
@@ -140,14 +140,15 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           <Box
             position={"absolute"}
             height={"38px"}
-            left={27}
-            top={18}
+            left={30}
+            top={20}
             zIndex={0}
           >
             <Divider
               lineStyle={"dashed"}
               direction={"vertical"}
               intensity={16}
+              className="oui-h-full"
             />
           </Box>
         )}
@@ -168,6 +169,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           checked={remember}
           onCheckedChange={setRemember}
           disabled={loading}
+          className="data-[state=checked]:oui-bg-[#3347FD]"
         />
       </Flex>
       <Flex justify={"center"} mt={8}>

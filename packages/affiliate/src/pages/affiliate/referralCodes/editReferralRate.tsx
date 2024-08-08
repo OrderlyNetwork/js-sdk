@@ -125,6 +125,7 @@ export const EditReferralRate = modal.create<{
                 %
               </div>
             }
+            color={showError ? "danger" : undefined}
           />
 
           <div className="oui-text-2xs oui-mt-6 oui-text-base-contrast-80">
@@ -157,6 +158,7 @@ export const EditReferralRate = modal.create<{
                 %
               </div>
             }
+            color={showError ? "danger" : undefined}
           />
 
           {showError && (
