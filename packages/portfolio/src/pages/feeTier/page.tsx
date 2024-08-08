@@ -1,5 +1,8 @@
-import { FeeTierWidget } from "./feeTier.widget";
+import { FC } from "react";
+import { FeeTierWidget, FeeTierWidgetProps } from "./feeTier.widget";
 
-export const FeeTierPage = () => {
-  return <FeeTierWidget />;
+export type FeeTierPageProps = FeeTierWidgetProps;
+
+export const FeeTierPage: FC<FeeTierPageProps> = (props) => {
+  return <FeeTierWidget {...props} />;
 };

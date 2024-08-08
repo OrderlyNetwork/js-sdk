@@ -1,31 +1,47 @@
-import { Box, Card, Divider } from "@orderly.network/ui";
-import { Flex, Text } from "@orderly.network/ui";
-import { ReactNode, useCallback } from "react";
-import { dataSource } from "./dataSource";
-import { FC } from "react";
-import { DataTable } from "@orderly.network/ui";
-import { useFeeTierColumns } from "./column";
-import { useFeeTierScriptReturn } from "./feeTier.script";
+import { FC, ReactNode, useCallback } from "react";
+import {
+  Box,
+  Flex,
+  Text,
+  Card,
+  Column,
+  Divider,
+  DataTable,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { useFeeTierScriptReturn } from "./feeTier.script";
 
 export type FeeTierProps = useFeeTierScriptReturn;
 
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
-  const { tier, vol } = props;
+  const { columns, dataSource, tier, vol, takerFeeRate, makerFeeRate } = props;
   return (
-    // @ts-ignore
-    <Card title={(
-      <Flex justify={"between"}>
-        <Text size="lg">Fee tier</Text>
-        <Flex gap={1}>
-          <Text size="xs" intensity={54}>Updated daily by</Text>
-          <Text size="xs" intensity={80}>2:00 UTC</Text>
+    <Card
+      // @ts-ignore
+      title={
+        <Flex justify={"between"}>
+          <Text size="lg">Fee tier</Text>
+          <Flex gap={1}>
+            <Text size="xs" intensity={54}>
+              Updated daily by
+            </Text>
+            <Text size="xs" intensity={80}>
+              2:00 UTC
+            </Text>
+          </Flex>
         </Flex>
-      </Flex>
-    )} className="w-full" id="oui-portfolio-fee-tier">
+      }
+      className="w-full"
+      id="oui-portfolio-fee-tier"
+    >
       <Divider />
-      <FeeTierHeader {...props} />
-      <FeeTierTable dataSource={dataSource} tier={tier} />
+      <FeeTierHeader
+        tier={tier!}
+        vol={vol!}
+        takerFeeRate={takerFeeRate!}
+        makerFeeRate={makerFeeRate!}
+      />
+      <FeeTierTable dataSource={dataSource} columns={columns} tier={tier} />
     </Card>
   );
 };
@@ -33,9 +49,11 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
 export type FeeTierHeaderProps = {
   tier?: number;
   vol?: number;
+  takerFeeRate?: string;
+  makerFeeRate?: string;
 };
 
-export const FeeTierHeader: React.FC<FeeTierProps> = (props) => {
+export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   return (
     <Flex direction="row" gapX={4} my={4}>
       <FeeTierHeaderItem
@@ -58,7 +76,7 @@ export const FeeTierHeader: React.FC<FeeTierProps> = (props) => {
         label="Take fee rate"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
-            {props.futures_taker_fee_rate || "--"}
+            {props.takerFeeRate || "--"}
           </Text.gradient>
         }
       />
@@ -66,8 +84,8 @@ export const FeeTierHeader: React.FC<FeeTierProps> = (props) => {
         label="Marker fee rate"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
-          {props.futures_maker_fee_rate || "--"}
-        </Text.gradient>
+            {props.makerFeeRate || "--"}
+          </Text.gradient>
         }
       />
     </Flex>
@@ -113,6 +131,7 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 };
 
 type FeeTierTableProps = {
+  columns: Column[];
   dataSource?: any[];
   page?: number;
   pageSize?: number;
@@ -121,8 +140,6 @@ type FeeTierTableProps = {
 };
 
 export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
-  const columns = useFeeTierColumns();
-
   const onRow = useCallback(
     (record: any, index: number) => {
       if (index + 1 == props.tier) {
@@ -147,7 +164,7 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
           body: "oui-text-base-contrast-80",
         }}
         onRow={onRow}
-        columns={columns}
+        columns={props.columns}
         dataSource={props.dataSource}
       />
     </div>
