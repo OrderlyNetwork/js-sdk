@@ -64,6 +64,8 @@ const CommissionData: FC<SummaryReturns> = (props) => {
       width={"100%"}
       direction={"column"}
       gap={3}
+      height={"100%"}
+      className="oui-max-h-[104px]"
     >
       <Text intensity={54} className="oui-text-base 2xl:oui-text-lg">
         Commission (USDC)

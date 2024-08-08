@@ -4,7 +4,7 @@ import {
   TradingPageProvider,
   TooltipProvider,
 } from "@orderly.network/react";
-import type { TradingPageProps } from "@orderly.network/react";
+import { TradingPageProps } from "../types/types";
 
 const { Header, Content } = Layout;
 
@@ -16,6 +16,8 @@ export const Trading = (props: TradingPageProps) => {
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
       disableFeatures={props.disableFeatures}
+      sharePnlConfig={props.shareOptions}
+      referral={props.referral}
     >
       <Layout mobile={<MobileTradingPage {...props} />}>
         <Layout style={{ paddingBottom: "42px" }}>
