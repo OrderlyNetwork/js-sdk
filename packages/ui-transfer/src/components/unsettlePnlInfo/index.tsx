@@ -29,7 +29,7 @@ export const UnsettlePnlInfo = ({hasPositions, unsettledPnl, onSettlle}: IProps)
                <Text>
                    Unsettled:
                </Text>
-               <Text.numeral coloring weight="semibold" dp={6} >
+               <Text.numeral showIdentifier coloring weight="semibold" dp={6} >
                    {unsettledPnl}
                </Text.numeral>
                <Text>USDC</Text>
