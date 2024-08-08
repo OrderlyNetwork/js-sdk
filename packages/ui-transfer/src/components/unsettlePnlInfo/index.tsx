@@ -22,7 +22,7 @@ export const UnsettlePnlInfo = ({hasPositions, unsettledPnl, onSettlle}: IProps)
         })
     }
    return (
-       <Flex justify='between' className='oui-text-2xs oui-text-base-contrast-36 oui-mt-1'>
+       <Flex justify='between' className='oui-text-2xs oui-text-base-contrast-36 oui-mt-1 oui-mx-2'>
            <Flex itemAlign='center' justify='start' gap={1}>
 
                <ExclamationFillIcon size={14} className='oui-text-warning'/>
