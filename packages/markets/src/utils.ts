@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { TInitialSort } from "./type";
 
 /** get page data */
-export function getPageData(list: any[], pageSize: number, pageIndex: number) {
+export function getPagedData(list: any[], pageSize: number, pageIndex: number) {
   const pageData: any[][] = [];
   let rows: any[] = [];
   for (let i = 0; i < list.length; i++) {
