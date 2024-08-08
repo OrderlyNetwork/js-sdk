@@ -79,6 +79,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
           inlist={80}
           rule={"address"}
           copyable={props.address !== "--"}
+          copyIconSize={16}
           onCopy={props.onCopyAccountId}
         >
           {props.address}
@@ -172,6 +173,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
           <Text.formatted
             rule={""}
             copyable
+            copyIconSize={16}
             onCopy={() => {
               props.onCopyApiKey?.(value);
             }}

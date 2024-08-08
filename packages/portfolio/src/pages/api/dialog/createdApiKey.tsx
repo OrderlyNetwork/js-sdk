@@ -51,6 +51,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             size="sm"
             intensity={80}
             copyable
+            copyIconSize={16}
             className="oui-break-all"
             onCopy={() => props.onCopyApiKey(props.generateKey?.key)}
           >
@@ -62,6 +63,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             size="sm"
             intensity={80}
             copyable
+            copyIconSize={16}
             className="oui-break-all"
             onCopy={props.onCopyApiSecretKey}
           >
@@ -73,6 +75,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             size="sm"
             intensity={80}
             copyable={(props.generateKey?.ip?.length || 0) > 0}
+            copyIconSize={16}
             className="oui-max-h-[100px] oui-overflow-hidden oui-text-ellipsis oui-block oui-break-all"
             onCopy={props.onCopyIP}
           >
