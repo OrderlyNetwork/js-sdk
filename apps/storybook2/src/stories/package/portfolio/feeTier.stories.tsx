@@ -58,7 +58,7 @@ export const CustomData: Story = {
               align: "center",
             },
             {
-              title: "Staking (WOO + XP)",
+              title: "Staking",
               dataIndex: "staking",
               align: "center",
               width: 150,

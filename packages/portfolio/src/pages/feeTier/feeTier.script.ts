@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  useAccount,
-  useAccountInfo,
-  usePrivateQuery,
-} from "@orderly.network/hooks";
+import { useAccountInfo, usePrivateQuery } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { dataSource as defaultDataSource } from "./dataSource";
 import { AccountStatusEnum, API } from "@orderly.network/types";
@@ -23,7 +19,6 @@ export type UseFeeTierScriptOptions = {
 export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
   const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
-  const { state } = useAccount();
   const { data } = useAccountInfo();
 
   const cols = useFeeTierColumns();
@@ -84,18 +79,20 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
     return `${new Decimal(value).mul(0.01).toString()}%`;
   }, [data]);
 
-  const tierValue = useDataTap(tier, {
-    accountStatus: AccountStatusEnum.EnableTrading,
-  });
-  const volValue = useDataTap(volumeStatistics?.perp_volume_last_30_days);
-  const futures_taker_fee_rateValue = useDataTap(futures_taker_fee_rate);
-  const futures_maker_fee_rateValue = useDataTap(futures_maker_fee_rate);
+  const authData = useDataTap(
+    {
+      tier,
+      vol: volumeStatistics?.perp_volume_last_30_days,
+      takerFeeRate: futures_taker_fee_rate,
+      makerFeeRate: futures_maker_fee_rate,
+    },
+    {
+      accountStatus: AccountStatusEnum.EnableTrading,
+    }
+  );
 
   return {
-    tier: tierValue,
-    vol: volValue,
-    takerFeeRate: futures_taker_fee_rateValue,
-    makerFeeRate: futures_maker_fee_rateValue,
+    ...authData,
     columns,
     dataSource,
   };
