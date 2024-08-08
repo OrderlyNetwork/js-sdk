@@ -1,7 +1,10 @@
-import { useFeeTierScript } from "./feeTier.script";
+import { FC } from "react";
+import { useFeeTierScript, UseFeeTierScriptOptions } from "./feeTier.script";
 import { FeeTier } from "./feeTier.ui";
 
-export const FeeTierWidget = () => {
-  const props = useFeeTierScript();
-  return <FeeTier {...props} />;
+export type FeeTierWidgetProps = UseFeeTierScriptOptions;
+
+export const FeeTierWidget: FC<FeeTierWidgetProps> = (props) => {
+  const state = useFeeTierScript(props);
+  return <FeeTier {...state} />;
 };

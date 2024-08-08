@@ -263,7 +263,7 @@ const StatusInfo = (
     <Flex direction={"column"}>
       <Button {...buttonProps}></Button>
       {!!description && (
-        <Box mt={4}>
+        <Box mt={4} className="oui-leading-none" style={{ lineHeight: 0 }}>
           <Text size="2xs" intensity={36}>
             {description}
           </Text>

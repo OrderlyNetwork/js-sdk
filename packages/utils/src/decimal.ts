@@ -33,7 +33,7 @@ export const commifyOptional = (
     if (hasDecimal) {
       return prefix +  list[0] + "." + list[1].padEnd(options.fix, fillString);
     }
-    return prefix + list[0];
+    return prefix + list[0] + "." + "".padEnd(options.fix, fillString);
   }
   return prefix + value;
 };
@@ -46,14 +46,19 @@ export const commify = (num: number | string, fix?: number): string => {
   const thousands = /\B(?=(\d{3})+(?!\d))/g;
 
   const endsWithPoint = str.endsWith(".") && str.length > 1;
-  return (
+  const result = (
     numberPart.replace(thousands, ",") +
     (decimalPart
-      ? ((fix && fix > 0) ? "." + decimalPart.substring(0, fix ?? decimalPart.length) : '')
+      ? "." + decimalPart.substring(0, fix || decimalPart.length)
       : endsWithPoint
       ? "."
       : "")
   );
+
+  if (fix === 0 && result.includes(".")) {
+    return result.substring(0, result.indexOf('.'));
+  }
+  return result;
 };
 
 export const getPrecisionByNumber = (num: number | string): number => {

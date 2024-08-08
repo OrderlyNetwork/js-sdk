@@ -1,8 +1,8 @@
 export const XAxisLabel = (props: any) => {
   const { x, y, stroke, payload, index } = props;
-  // console.log("XAxisLabel", props);
+
   return (
-    <g transform={`translate(${x},${y})`}>
+    <g transform={`translate(${x},${y - 6})`}>
       <text
         x={0}
         y={0}

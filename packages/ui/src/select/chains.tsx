@@ -174,6 +174,9 @@ const ChainSelect = (props: ChainSelectProps) => {
           className={content({ className: "oui-w-[260px]" })}
           align={"end"}
           sideOffset={12}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+          }}
           {...contentProps}
         >
           <SelectPrimitive.Viewport className={viewport()}>

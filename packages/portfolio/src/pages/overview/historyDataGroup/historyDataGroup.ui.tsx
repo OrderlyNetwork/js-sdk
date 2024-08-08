@@ -18,7 +18,15 @@ export const HistoryDataGroupUI = (props: {
   const { active = "deposit", onTabChange } = props;
   return (
     <Card>
-      <Tabs value={active} onValueChange={onTabChange}>
+      <Tabs
+        value={active}
+        onValueChange={onTabChange}
+        variant="contained"
+        size="xl"
+        classNames={{
+          tabsList: "oui-px-3",
+        }}
+      >
         <TabPanel
           title={"Deposits & Withdrawals"}
           icon={<ArrowLeftRightIcon />}

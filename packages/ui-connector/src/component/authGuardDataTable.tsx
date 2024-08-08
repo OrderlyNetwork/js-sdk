@@ -26,7 +26,9 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
     dataSource,
     ...rest
   } = props;
-  const data = useDataTap(dataSource);
+  const data = useDataTap(dataSource, {
+    accountStatus: status,
+  });
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
 
@@ -60,11 +62,14 @@ const GuardView = (props: GuardViewProps) => {
   const descriptions = { ...DESCRIPTIONS, ...props.description };
   if (!props.visible) return null;
   return (
-    <Flex>
+    <Flex py={8}>
       <AuthGuard
         status={props.status}
         labels={props.labels}
         descriptions={descriptions}
+        buttonProps={{
+          size: "md",
+        }}
       >
         <ExtensionSlot position={"emptyDataState"} />
       </AuthGuard>

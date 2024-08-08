@@ -70,13 +70,12 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     setExpand(expand);
   };
 
+  const footerHeight = props.footerHeight !== undefined ? props.footerHeight : 29;
+
   return (
-    <div
-      className="oui-relative"
-      style={{
-        height: `calc(100vh-${props.footerHeight || 29}px)`,
-      }}
-    >
+    <div className="oui-flex oui-flex-col oui-overflow-auto" style={{
+      height: `calc(100vh - ${footerHeight}px)`
+    }}>
       <ExpandableContext.Provider
         value={{
           routerAdapter,
@@ -109,14 +108,16 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           <Grid
             className={cn(
               "oui-box-content oui-transition-all oui-flex xl:oui-grid",
+              "oui-flex-1",
               classNames?.body
             )}
             style={{
+              // marginBottom: `${props.footerHeight ?? 29}px`,
               gridTemplateColumns: `${
                 expand ? sideBarDefaultWidth + "px" : "98px"
               } 1fr`,
-              gridTemplateRows: "auto 1fr auto",
-              gridTemplateAreas: `"left main" "left main" "left main"`,
+              // gridTemplateRows: "auto 1fr",
+              // gridTemplateAreas: `"left main" "left main"`,
             }}
           >
             <div className={cn(classNames?.leftSidebar)}>
@@ -138,7 +139,8 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
 
         <Box
           className={cn(
-            "oui-fixed oui-bottom-0 oui-w-full",
+            "oui-fixed oui-bottom-0 oui-z-50",
+            "oui-w-full",
             classNames?.footer
           )}
         >

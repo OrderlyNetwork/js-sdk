@@ -1,9 +1,10 @@
 import { useMemo, type FC } from "react";
-import { Avatar } from "../avatar/avatar";
+import { Avatar, AvatarBase, avatarVariants } from "../avatar/avatar";
+import type { VariantProps } from "tailwind-variants";
+
 export type WalletIconProps = {
-  size?: "sm" | "md" | "lg";
   name: string;
-};
+} & Pick<VariantProps<typeof avatarVariants>, "size">;
 
 export const WalletIcon: FC<WalletIconProps> = (props) => {
   const url = useMemo(() => {
