@@ -1,5 +1,16 @@
 # examples
 
+## 0.4.10-sdk-v2.52
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.10-sdk-v2.52
+  - @orderly.network/web3-onboard@1.5.10-sdk-v2.52
+  - @orderly.network/hooks@1.5.10-sdk-v2.52
+  - @orderly.network/core@1.5.10-sdk-v2.52
+
 ## 0.4.10-sdk-v2.51
 
 ### Patch Changes
