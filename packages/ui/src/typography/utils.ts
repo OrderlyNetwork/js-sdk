@@ -25,7 +25,7 @@ export const parseNumber = (
     rule,
     dp,
     tick,
-    rm = Decimal.ROUND_HALF_EVEN,
+    rm = Decimal.ROUND_DOWN,
     padding = true,
     abs,
   } = options;

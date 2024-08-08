@@ -22,7 +22,7 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
         content: "oui-h-[150px] oui-pb-0",
       }}
     >
-      <AssetLineChart data={props.data} invisible={props.wrongNetwork} />
+      <AssetLineChart data={props.data} invisible={props.invisible} />
       {/* <PnlLineChart data={data} /> */}
       {/* <LineChart data={data} /> */}
     </Card>

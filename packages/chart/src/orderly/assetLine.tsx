@@ -14,6 +14,7 @@ import {
 import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { XAxisLabel } from "./xAxisLabel";
+import { useRef } from "react";
 
 export type AssetChartDataItem = {
   date: string;
@@ -31,9 +32,16 @@ export type PnlLineChartProps = {
 
 const CustomTooltip = (props: TooltipProps<any, any>) => {
   const { active, payload, label } = props;
-  console.log("CustomTooltip", props);
+
+  const todayStr = useRef(new Date().toISOString().split("T")[0]);
+
   if (active && payload && payload.length) {
-    return <OrderlyChartTooltip label={label} value={payload[0].value} />;
+    return (
+      <OrderlyChartTooltip
+        label={label === todayStr.current ? "Now" : label}
+        value={payload[0].value}
+      />
+    );
   }
 
   return null;
