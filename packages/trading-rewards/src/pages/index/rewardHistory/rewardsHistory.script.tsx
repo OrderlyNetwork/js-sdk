@@ -20,6 +20,7 @@ export type RewardsHistoryReturns = {
   };
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
+  isLoading: boolean;
 };
 
 export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
@@ -107,5 +108,6 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     meta: meta,
     onPageChange,
     onPageSizeChange,
+    isLoading: epochList[1].isLoading,
   };
 };
