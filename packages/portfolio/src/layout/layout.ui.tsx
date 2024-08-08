@@ -26,7 +26,7 @@ export const PortfolioLayout = (
         content: "lg:oui-mb-0",
         topNavbar: "oui-bg-base-9",
         leftSidebar:
-          "oui-m-3 oui-mb-6 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9",
+          "oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9",
       }}
       {...props}
     >
