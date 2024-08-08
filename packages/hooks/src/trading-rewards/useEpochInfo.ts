@@ -19,6 +19,7 @@ export type EpochInfoItem = {
 export type EpochInfoType = [
   data: EpochInfoItem[] | undefined,
   {
+    isLoading: boolean;
     curEpochInfo: EpochInfoItem | undefined;
     isUnstart: boolean;
     refresh: () => void;
@@ -38,6 +39,7 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
   const {
     data: epochInfo,
     error,
+    isLoading,
     mutate: refresh,
   } = useQuery(path, {
     formatter: (res) => {
@@ -83,5 +85,5 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     return true;
   }, [epochInfo]);
 
-  return [epochInfo, { curEpochInfo, isUnstart, refresh }];
+  return [epochInfo, { isLoading, curEpochInfo, isUnstart, refresh }];
 };

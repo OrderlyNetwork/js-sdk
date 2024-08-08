@@ -69,7 +69,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
     return (
       <Tooltip
         open
-        content={"Please Enable trading before starting to trade"}
+        content={"Please enable trading before starting to trade"}
         align={"end"}
       >
         <Button
