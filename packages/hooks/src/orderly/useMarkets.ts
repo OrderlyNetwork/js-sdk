@@ -352,11 +352,7 @@ export const useMarkets = (type: MarketsType) => {
 };
 
 function get8hFunding(est_funding_rate: number, funding_period: number) {
-  if (est_funding_rate === null) {
-    return null;
-  }
-
-  let funding8h = 0;
+   let funding8h = 0;
 
   if (funding_period) {
     funding8h = new Decimal(est_funding_rate || 0)
