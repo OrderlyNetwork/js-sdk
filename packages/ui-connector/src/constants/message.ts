@@ -7,7 +7,7 @@ export type alertMessages = {
 
 export const LABELS = {
   connectWallet: "Connect wallet",
-  switchChain: "Wrong network",
+  switchChain: "Switch network",
   enableTrading: "Enable trading",
   signin: "Sigin",
 };

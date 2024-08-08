@@ -53,8 +53,6 @@ const RoundedRectangle = (props: any) => {
 export const XAxisLabel = (props: any) => {
   const { x, y, stroke, payload, index, width, containerWidth } = props;
 
-  console.log("props", props);
-
   const _x =
     index === 0
       ? 58

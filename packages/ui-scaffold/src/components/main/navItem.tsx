@@ -46,29 +46,6 @@ export const NavItem: FC<{
     props.onClick?.([props.item]);
   }, [props.item]);
 
-  // const iconElement = useMemo(() => {
-  //   if (!props.item.icon) return null;
-  //   if (typeof props.item.icon === "string") {
-  //     return (
-  //       <span className={"oui-w-[20px] oui-h-[20px] oui-mr-1"}>
-  //         {
-  //           <img
-  //             src={
-  //               isActive
-  //                 ? (props.item.activeIcon as string) || props.item.icon
-  //                 : props.item.icon
-  //             }
-  //             className={"oui-max-w-full oui-max-h-full"}
-  //           />
-  //         }
-  //       </span>
-  //     );
-  //   }
-  //   return isActive
-  //     ? props.item.activeIcon || props.item.icon
-  //     : props.item.icon;
-  // }, [props.item.icon, isActive]);
-
   const button = (
     <button
       disabled={props.item.disabled}
@@ -96,20 +73,20 @@ export const NavItem: FC<{
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M5.721 4.585 2.726 6.578a.51.51 0 0 0-.14.7.51.51 0 0 0 .702.14l2.714-1.806 2.715 1.806c.23.153.549.089.702-.14a.51.51 0 0 0-.14-.7L6.283 4.585a.51.51 0 0 0-.562 0"
+                  d="M2.913 4.515a.5.5 0 0 0-.328.202.51.51 0 0 0 .14.701L5.722 7.41a.51.51 0 0 0 .562 0l2.995-1.992a.51.51 0 0 0 .14-.7.51.51 0 0 0-.701-.14L6.002 6.382 3.287 4.577a.5.5 0 0 0-.374-.062"
                   fill="url(#a)"
                 />
                 <defs>
                   <linearGradient
                     id="a"
                     x1="9.502"
-                    y1="6.001"
+                    y1="5.994"
                     x2="2.502"
-                    y2="6.001"
+                    y2="5.994"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="#59B0FE" />
-                    <stop offset="1" stopColor="#26FEFE" />
+                    <stop stop-color="#59B0FE" />
+                    <stop offset="1" stop-color="#26FEFE" />
                   </linearGradient>
                 </defs>
               </svg>
