@@ -13,7 +13,7 @@ const chainSelectVariants = tv({
   extend: selectVariants,
   slots: {
     icon: "",
-    item: ["oui-text-2xs", "oui-rounded-lg"],
+    item: ["oui-text-2xs", "oui-rounded-lg", "oui-cursor-pointer"],
     itemSize: "",
     tag: "oui-bg-success/20 oui-text-success oui-px-2 oui-rounded oui-font-semibold",
   },
@@ -81,7 +81,7 @@ function ChainSelectItem(props: {
           )}
         </Flex>
         <SelectPrimitive.ItemIndicator>
-          <Box width={"4px"} height={"4px"} gradient={"brand"} r={"full"} />
+          <Box width={"6px"} height={"6px"} gradient={"brand"} r={"full"} />
         </SelectPrimitive.ItemIndicator>
       </Flex>
     </SelectPrimitive.SelectItem>

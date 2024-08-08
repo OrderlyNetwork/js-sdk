@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { getPageData, searchBySymbol, useSort } from "../../../../utils";
+import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
 import { TFavorite } from "../../../../type";
 import { useMarketsContext } from "../../provider";
 
@@ -37,19 +37,21 @@ export const useFavoritesScript = () => {
     return searchBySymbol(filterList, searchValue);
   }, [data, curTab, favorites, searchValue]);
 
-  const pageData = useMemo(() => {
-    const list = getSortedList(filterData);
-    return getPageData(list, pageSize, page);
+  const { totalData, pagedData } = useMemo(() => {
+    const totalData = getSortedList(filterData);
+    return {
+      totalData,
+      pagedData: getPagedData(totalData, pageSize, page),
+    };
   }, [filterData, pageSize, page, getSortedList]);
 
   const meta = useMemo(() => {
-    const _data = searchValue ? pageData : data;
     return parseMeta({
-      total: _data?.length,
+      total: totalData?.length,
       current_page: page,
       records_per_page: pageSize,
     });
-  }, [data, page, pageSize, searchValue, pageData]);
+  }, [data, page, pageSize, totalData]);
 
   useEffect(() => {
     setLoading(false);
@@ -62,7 +64,7 @@ export const useFavoritesScript = () => {
 
   return {
     loading,
-    dataSource: pageData,
+    dataSource: pagedData,
     meta,
     setPage,
     setPageSize,

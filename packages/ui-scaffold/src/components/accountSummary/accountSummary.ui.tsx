@@ -10,12 +10,12 @@ import {
 import { AccountSummaryType } from "./useWidgetBuilder.script";
 
 type AccountSummaryUi = {
-  totalValue?: number;
-  freeCollateral?: number;
-  maxLeverage?: number;
-  currentLeverage?: number;
-  unrealized_pnl_ROI?: number;
-  unrealPnL?: number;
+  totalValue: number | null;
+  freeCollateral: number | null;
+  maxLeverage: number | null;
+  currentLeverage: number | null;
+  unrealized_pnl_ROI: number | null;
+  unrealPnL: number | null;
   visible?: boolean;
   onToggleVisibility?: () => void;
   type: AccountSummaryType;
@@ -58,12 +58,12 @@ export const AccountSummary = (props: AccountSummaryUi) => {
     <Popover
       content={
         <AccountInfoPopover
-          totalValue={rest.totalValue ?? 0}
-          freeCollateral={props.freeCollateral ?? 0}
-          maxLeverage={props.maxLeverage ?? 0}
-          currentLeverage={props.currentLeverage ?? 0}
-          unrealized_pnl_ROI={props.unrealized_pnl_ROI ?? 0}
-          unrealPnL={props.unrealPnL ?? 0}
+          totalValue={rest.totalValue}
+          freeCollateral={props.freeCollateral}
+          maxLeverage={props.maxLeverage}
+          currentLeverage={props.currentLeverage}
+          unrealized_pnl_ROI={props.unrealized_pnl_ROI}
+          unrealPnL={props.unrealPnL}
           type={props.type}
           onTypeChange={props.onTypeChange}
           visible={props.visible}
@@ -82,7 +82,7 @@ export const AccountSummary = (props: AccountSummaryUi) => {
 
 //----------------- TotalValue -----------------
 const TotalValue: FC<{
-  totalValue?: number;
+  totalValue: number | null;
   visible?: boolean;
   onToggleVisibility?: () => void;
 }> = (props) => {
@@ -118,7 +118,7 @@ const TotalValue: FC<{
         unitClassName="oui-text-base-contrast-20 oui-ml-1"
         as="div"
       >
-        {totalValue}
+        {totalValue ?? "-"}
       </Text.numeral>
     </Flex>
   );
@@ -126,7 +126,7 @@ const TotalValue: FC<{
 
 //----------------- FreeCollateral -----------------
 const FreeCollateral: FC<{
-  freeCollateral?: number;
+  freeCollateral?: number | null;
 }> = (props) => {
   const { freeCollateral } = props;
   return (
@@ -146,7 +146,7 @@ const FreeCollateral: FC<{
         unitClassName="oui-text-base-contrast-20 oui-ml-1"
         as="div"
       >
-        {freeCollateral ?? 0}
+        {freeCollateral ?? "-"}
       </Text.numeral>
     </Flex>
   );
@@ -154,7 +154,7 @@ const FreeCollateral: FC<{
 
 //----------------- CurrentLeverage -----------------
 const CurrentLeverage: FC<{
-  currentLeverage?: number;
+  currentLeverage: number | null;
 }> = (props) => {
   const { currentLeverage } = props;
   return (
@@ -178,7 +178,7 @@ const CurrentLeverage: FC<{
 
 //----------------- MaxLeverage -----------------
 const MaxLeverage: FC<{
-  maxLeverage?: number;
+  maxLeverage: number | null;
 }> = (props) => {
   return (
     <Flex
@@ -192,15 +192,15 @@ const MaxLeverage: FC<{
           Max leverage
         </Text>
       </Box>
-      <Text color="primary" as={"div"}>{`${props.maxLeverage ?? 0}x`}</Text>
+      <Text color="primary" as={"div"}>{`${props.maxLeverage ?? "--"}x`}</Text>
     </Flex>
   );
 };
 
 //----------------- UnrealPnL -----------------
 const UnrealPnL: FC<{
-  unrealized_pnl_ROI?: number;
-  unrealPnL?: number;
+  unrealized_pnl_ROI: number | null;
+  unrealPnL: number | null;
 }> = (props) => {
   return (
     <Flex
@@ -221,11 +221,11 @@ const UnrealPnL: FC<{
         weight={"semibold"}
         suffix={
           <Text.numeral coloring prefix={"("} suffix={")"} rule={"percentages"}>
-            {props.unrealized_pnl_ROI ?? 0}
+            {props.unrealized_pnl_ROI ?? "-"}
           </Text.numeral>
         }
       >
-        {props.unrealPnL ?? 0}
+        {props.unrealPnL ?? "-"}
       </Text.numeral>
     </Flex>
   );
@@ -233,12 +233,12 @@ const UnrealPnL: FC<{
 
 //----------------- AccountInfoPopover -----------------
 const AccountInfoPopover = (props: {
-  totalValue: number;
-  freeCollateral: number;
-  maxLeverage: number;
-  currentLeverage: number;
-  unrealPnL: number;
-  unrealized_pnl_ROI: number;
+  totalValue: number | null;
+  freeCollateral: number | null;
+  maxLeverage: number | null;
+  currentLeverage: number | null;
+  unrealPnL: number | null;
+  unrealized_pnl_ROI: number | null;
   type: AccountSummaryType;
   visible?: boolean;
   onTypeChange: (type: AccountSummaryType) => void;
@@ -263,7 +263,7 @@ const AccountInfoPopover = (props: {
           unit="USDC"
           unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
         >
-          {totalValue}
+          {totalValue ?? "-"}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"} width={"100%"}>
@@ -278,7 +278,7 @@ const AccountInfoPopover = (props: {
           unit="USDC"
           unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
         >
-          {props.freeCollateral}
+          {props.freeCollateral ?? "-"}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"} width={"100%"}>
@@ -299,11 +299,11 @@ const AccountInfoPopover = (props: {
               suffix={")"}
               rule={"percentages"}
             >
-              {props.unrealized_pnl_ROI}
+              {props.unrealized_pnl_ROI ?? "-"}
             </Text.numeral>
           }
         >
-          {props.unrealPnL}
+          {props.unrealPnL ?? "-"}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"} width={"100%"}>
@@ -314,7 +314,7 @@ const AccountInfoPopover = (props: {
           />
           <span>Current leverage</span>
         </Flex>
-        <Text.numeral unit="x">{props.currentLeverage}</Text.numeral>
+        <Text.numeral unit="x">{props.currentLeverage ?? "-"}</Text.numeral>
       </Flex>
       <Flex justify={"between"} width={"100%"}>
         <Flex className={"oui-text-base-contrast-54"} gapX={2}>
@@ -324,7 +324,7 @@ const AccountInfoPopover = (props: {
           />
           <span>Max leverage</span>
         </Flex>
-        <Text color="primary">{`${props.maxLeverage}x`}</Text>
+        <Text color="primary">{`${props.maxLeverage ?? "-"}x`}</Text>
       </Flex>
     </Flex>
   );

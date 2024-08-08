@@ -32,7 +32,7 @@ export const ReferralLink: FC<ReferralLinkReturns> = (props) => {
         <div className="oui-w-full 3xl:oui-w-1/3">
           <Subtitle {...props} />
         </div>
-        <Flex direction={"column"} width={"100%"} className="3xl:oui-w-2/3">
+        <Flex direction={"column"} width={"100%"} className="3xl:oui-w-2/3 3xl:oui-gap-2">
           <Input title="Referral code" value={props.refCode} {...props} />
           <Input title="Referral link" value={props.refLink} {...props} />
         </Flex>
@@ -127,8 +127,8 @@ const Input: FC<
       width={"100%"}
       className="oui-bg-base-8"
     >
-      <Text className="oui-text-base-contrast-54 oui-flex-shrink">{title}</Text>
-      <Flex direction={"row"} justify={"end"} gap={2} className="oui-flex-1">
+      <Text className="oui-text-base-contrast-54 oui-flex-shrink oui-text-2xs md:oui-text-xs xl:oui-text-sm">{title}</Text>
+      <Flex direction={"row"} justify={"end"} gap={2} className="oui-flex-1 oui-text-xs md:oui-text-sm xl:oui-text-base">
         <AutoHideText text={value} />
         <button
           className="oui-cursor-pointer oui-text-sm oui-flex-shrink"
@@ -137,7 +137,7 @@ const Input: FC<
             props.onCopy?.(value);
           }}
         >
-          <CopyIcon size={12} color="white" />
+          <CopyIcon size={12} color="white" className="oui-w-[13px] oui-h-[13px] md:oui-w-[14px] md:oui-h-[14px] xl:oui-w-4 xl:oui-h-4" />
         </button>
       </Flex>
     </Flex>
@@ -163,7 +163,7 @@ const Alert: FC<{
         }}
       >
         <Flex direction={"column"}>
-          <Text intensity={54}>{props.title}</Text>
+          <Text intensity={54} className="oui-text-2xs md:oui-text-xs xl:oui-text-sm" >{props.title}</Text>
           <Divider className="oui-w-full" lineStyle="dotted" intensity={16}/>
         </Flex>
       </div>
