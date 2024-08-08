@@ -19,46 +19,40 @@ export const TradingRewardsLayout = (
   props: PropsWithChildren<TradingRewardsLayoutProps>
 ) => {
   const { children, ...rest } = props;
- 
+
   return (
     <Scaffold
       footerHeight={29}
-      classNames={
-        {
-          content: "lg:oui-mb-6",
-          topNavbar: "oui-bg-base-9"
-        }
-      }
+      classNames={{
+        content: "lg:oui-mb-0",
+        topNavbar: "oui-bg-base-9",
+        leftSidebar:
+          "oui-m-3 oui-mb-6 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9",
+      }}
       leftSidebar={props.hideSideBar ? null : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}
       {...props}
     >
-      <Box className="oui-flex oui-justify-center">
-        {props.children}
-      </Box>
+      <Box className="oui-flex oui-justify-center">{props.children}</Box>
     </Scaffold>
   );
 };
-
 const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 
   return (
-    <div className="oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9 oui-h-full">
-      <SideBar
-        title={"Rewards"}
-        {...props}
-        open={expanded}
-        
-        onOpenChange={(open) => setExpand(open)}
-        onItemSelect={(a) => {
-          props.onItemSelect?.(a);
-          props.routerAdapter?.onRouteChange?.({
-            href: a.href || "" ,
-            name: a.name,
-          });
-        }}
-      />
-    </div>
+    <SideBar
+      title={"Rewards"}
+      {...props}
+      open={expanded}
+      onOpenChange={(open) => setExpand(open)}
+      onItemSelect={(a) => {
+        props.onItemSelect?.(a);
+        props.routerAdapter?.onRouteChange?.({
+          href: a.href || "",
+          name: a.name,
+        });
+      }}
+    />
   );
 };
