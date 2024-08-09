@@ -1,13 +1,13 @@
 import { TabPane, Tabs } from "@/tab";
 import { FC, useEffect, useState } from "react";
 import { Withdraw } from "../withdraw";
-import { create } from "@/modal/modalHelper";
-import { useModal } from "@/modal";
+import { useModal, modal } from "@orderly.network/ui";
 import { Sheet, SheetContent } from "@/sheet";
 import { AssetsProvider } from "@/provider/assetsProvider";
 import { Dialog, DialogContent } from "@/dialog";
 import { DepositSlot } from "./slot";
 import { ArrowDownToLineIcon } from "@/icon";
+import { Deposit } from "../deposit";
 
 type activeName = "deposit" | "withdraw";
 
@@ -40,7 +40,8 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
           value="deposit"
         >
           <div className="orderly-py-3 orderly-px-[2px]">
-            <DepositSlot onOk={props.onOk!} />
+            {/* <DepositSlot onOk={props.onOk!} /> */}
+            <Deposit onOk={props.onOk} />
           </div>
         </TabPane>
         <TabPane
@@ -62,8 +63,8 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
   );
 };
 
-export const DepositAndWithdrawWithSheet = create<DepositAndWithdrawProps>(
-  (props) => {
+export const DepositAndWithdrawWithSheet =
+  modal.create<DepositAndWithdrawProps>((props) => {
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
     const onOk = (data?: any) => {
@@ -78,34 +79,32 @@ export const DepositAndWithdrawWithSheet = create<DepositAndWithdrawProps>(
         </SheetContent>
       </Sheet>
     );
-  }
-);
+  });
 
-export const DepositAndWithdrawWithDialog = create<DepositAndWithdrawProps>(
-  (props) => {
-    const { visible, hide, resolve, reject, onOpenChange } = useModal();
-    const [top, setTop] = useState<string | number>("20%");
+// export const DepositAndWithdrawWithDialog =
+//   modal.create<DepositAndWithdrawProps>((props) => {
+//     const { visible, hide, resolve, reject, onOpenChange } = useModal();
+//     const [top, setTop] = useState<string | number>("20%");
 
-    const onOk = (data?: any) => {
-      resolve(data);
-      hide();
-    };
+//     const onOk = (data?: any) => {
+//       resolve(data);
+//       hide();
+//     };
 
-    useEffect(() => {
-      setTop((window.innerHeight - 500) * 0.5);
-    }, [window.innerHeight]);
+//     useEffect(() => {
+//       setTop((window.innerHeight - 500) * 0.5);
+//     }, [window.innerHeight]);
 
-    return (
-      <Dialog open={visible} onOpenChange={onOpenChange}>
-        <DialogContent
-          style={{ top }}
-          className="orderly-p-5 orderly-top-[20%] orderly-translate-y-0"
-          maxWidth={"lg"}
-          closable
-        >
-          <DepositAndWithdraw activeTab={props.activeTab} onOk={onOk} />
-        </DialogContent>
-      </Dialog>
-    );
-  }
-);
+//     return (
+//       <Dialog open={visible} onOpenChange={onOpenChange}>
+//         <DialogContent
+//           style={{ top }}
+//           className="orderly-p-5 orderly-top-[20%] orderly-translate-y-0"
+//           maxWidth={"lg"}
+//           closable
+//         >
+//           <DepositAndWithdraw activeTab={props.activeTab} onOk={onOk} />
+//         </DialogContent>
+//       </Dialog>
+//     );
+//   });

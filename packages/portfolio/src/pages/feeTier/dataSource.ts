@@ -5,9 +5,6 @@ export const dataSource = [
     taker_fee: "0.06%",
     volume_min: 0,
     volume_max: 500000,
-    or: "/",
-    staking_min: null,
-    staking_max: null,
   },
   {
     tier: 2,
@@ -15,9 +12,6 @@ export const dataSource = [
     taker_fee: "0.054%",
     volume_min: 500000,
     volume_max: 2500000,
-    or: "/",
-    staking_min: 12000,
-    staking_max: 30000,
   },
   {
     tier: 3,
@@ -25,9 +19,6 @@ export const dataSource = [
     taker_fee: "0.048%",
     volume_min: 2500000,
     volume_max: 10000000,
-    or: "/",
-    staking_min: 30000,
-    staking_max: 120000,
   },
   {
     tier: 4,
@@ -35,9 +26,6 @@ export const dataSource = [
     taker_fee: "0.042%",
     volume_min: 10000000,
     volume_max: 100000000,
-    or: "/",
-    staking_min: 120000,
-    staking_max: 300000,
   },
   {
     tier: 5,

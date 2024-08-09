@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from "react";
 import { Select } from "@/select";
 import Button from "@/button";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { OrderSide, OrderStatus } from "@orderly.network/types";
 import { SIDE_OPTIONS, STATUS_OPTIONS } from "../shared/constants";
 

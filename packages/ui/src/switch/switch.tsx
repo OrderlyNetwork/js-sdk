@@ -1,6 +1,7 @@
 import React from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { tv, type VariantProps } from "tailwind-variants";
+import { cn } from "..";
 
 const switchVariants = tv({
   slots: {
@@ -91,7 +92,7 @@ const Switch = React.forwardRef<
   });
 
   return (
-    <SwitchPrimitives.Root className={root()} {...props} ref={ref}>
+    <SwitchPrimitives.Root className={cn(root(), className)} {...props} ref={ref}>
       <SwitchPrimitives.Thumb className={thumb()} />
     </SwitchPrimitives.Root>
   );

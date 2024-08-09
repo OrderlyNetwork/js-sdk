@@ -57,10 +57,16 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
                 }
                 return true;
               })
-              .then((data?: any) => {
-                resolve(data);
-                hide();
-              });
+              .then(
+                (data?: any) => {
+                  resolve(data);
+                  hide();
+                },
+                (err) => {
+                  reject(err);
+                  hide();
+                }
+              );
           },
         },
         secondary: {
@@ -74,10 +80,16 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
                 }
                 return true;
               })
-              .then((data?: any) => {
-                resolve(data);
-                hide();
-              });
+              .then(
+                (data?: any) => {
+                  resolve(data);
+                  hide();
+                },
+                (err) => {
+                  reject(err);
+                  hide();
+                }
+              );
           },
         },
       }}

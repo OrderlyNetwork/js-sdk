@@ -4,7 +4,7 @@ import { WsStatus } from "@/block/accountStatus/sections/WsStatus";
 import { ChainIdSwtich } from "@/block/accountStatus/sections/chainIdSwitch";
 import { GetTestUSDC } from "@/block/operation/getTestUSDC";
 import { WalletConnectSheet } from "@/block/walletConnect";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { OrderlyAppContext } from "@/provider";
 import {
   useAccount,

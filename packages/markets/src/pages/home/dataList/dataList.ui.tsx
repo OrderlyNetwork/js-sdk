@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
   Flex,
   Input,
+  ScrollArea,
   TabPanel,
   Tabs,
   Text,
@@ -181,38 +182,40 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
   );
 
   const content = (
-    <Box my={2}>
-      {favoriteTabs?.map((item) => {
-        const checked = !!selectedTabs.find((tab) => tab.id === item.id);
-        return (
-          <Box key={item.id} className="oui-cursor-pointer">
-            <Flex
-              className="oui-gap-x-[6px] hover:oui-bg-base-6"
-              p={2}
-              r="md"
-              onClick={() => {
-                onCheck(item, checked);
-              }}
-            >
-              {checked ? (
-                <CheckedSquareFillIcon
-                  size={18}
-                  className="oui-text-base-contrast-80"
-                />
-              ) : (
-                <CheckSquareEmptyIcon
-                  size={18}
-                  className="oui-text-base-contrast-80"
-                />
-              )}
+    <ScrollArea>
+      <Box my={2} className="oui-max-h-[200px]">
+        {favoriteTabs?.map((item) => {
+          const checked = !!selectedTabs.find((tab) => tab.id === item.id);
+          return (
+            <Box key={item.id} className="oui-cursor-pointer">
+              <Flex
+                className="oui-gap-x-[6px] hover:oui-bg-base-6"
+                p={2}
+                r="md"
+                onClick={() => {
+                  onCheck(item, checked);
+                }}
+              >
+                {checked ? (
+                  <CheckedSquareFillIcon
+                    size={18}
+                    className="oui-text-base-contrast-80"
+                  />
+                ) : (
+                  <CheckSquareEmptyIcon
+                    size={18}
+                    className="oui-text-base-contrast-80"
+                  />
+                )}
 
-              <Text intensity={54}>{item.name}</Text>
-            </Flex>
-          </Box>
-        );
-      })}
-      {renderInput()}
-    </Box>
+                <Text intensity={54}>{item.name}</Text>
+              </Flex>
+            </Box>
+          );
+        })}
+        {renderInput()}
+      </Box>
+    </ScrollArea>
   );
 
   const footer = (
@@ -245,9 +248,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
       <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
-          onCloseAutoFocus={(e) => {
-            e.preventDefault();
-          }}
+          onCloseAutoFocus={(e) => e.preventDefault()}
           onClick={(e) => e.stopPropagation()}
           align="start"
           sideOffset={20}

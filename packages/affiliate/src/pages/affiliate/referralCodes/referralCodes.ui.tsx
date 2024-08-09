@@ -28,11 +28,11 @@ export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
       width={"100%"}
       gap={4}
       direction={"column"}
-      className="oui-bg-base-9 oui-tabular-nums"
+      className="oui-bg-base-9 oui-tabular-nums oui-p-6 oui-h-full"
     >
       <Title {...props} />
 
-      <div className="oui-w-full oui-flex oui-flex-col">
+      <div className="oui-w-full oui-flex oui-flex-col 2xl:oui-h-full">
         <Divider />
         {isTablet ? <MobileLayout {...props} /> : <DesktopLayout {...props} />}
       </div>
@@ -48,7 +48,9 @@ const Title: FC<ReferralCodesReturns> = (props) => {
         <Text className="oui-text-base-contrast-54">
           Remaining referral codes:&nbsp;
         </Text>
-        <Text className="oui-text-primary-light">6</Text>
+        <Text className="oui-text-primary-light">
+          {props.codes?.length || "--"}
+        </Text>
       </div>
     </Flex>
   );
@@ -147,12 +149,7 @@ const MobileCell: FC<{
   const { data, setPinCode, copyLink, copyCode, editRate } = props;
 
   return (
-    <Flex
-      key={data.code}
-      gap={3}
-      direction={"column"}
-      className="oui-w-full"
-    >
+    <Flex key={data.code} gap={3} direction={"column"} className="oui-w-full">
       <Flex
         direction={"row"}
         justify={"between"}
@@ -235,7 +232,8 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       {
         title: "Referral Codes",
         dataIndex: "code",
-        width: moreColumn ? 80 : 120,
+        width: moreColumn ? 115 : 120,
+        className: "!oui-px-0",
         render: (value, data) => {
           return (
             <Flex direction={"row"} itemAlign={"center"} gap={1}>
@@ -260,9 +258,10 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
         },
       },
       {
-        title: "You / Referree",
+        title: "You / Referee",
         dataIndex: "dffd",
-        width: moreColumn ? 80 : 120,
+        width: moreColumn ? 120 : 120,
+        className: "oui-pr-0",
         render: (value, data) => {
           return (
             <Flex direction={"row"} itemAlign={"center"} gap={1}>
@@ -283,13 +282,15 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       cols.push({
         title: "Referees",
         dataIndex: "referee_rebate_rate",
-        width: 80,
+        width: 70,
+        className: "oui-pr-0",
         render: (value, data) => getCount(data).split("/")[0],
       });
       cols.push({
         title: "Traders",
         dataIndex: "referrer_rebate_rate",
-        width: 80,
+        width: 70,
+        className: "oui-pr-0",
         render: (value, data) => getCount(data).split("/")[1],
       });
     } else {
@@ -307,6 +308,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       dataIndex: "",
       align: "right",
       width: 74,
+      className: "!oui-px-0",
       render: (value, data) => (
         <Button
           variant="outlined"
@@ -327,19 +329,19 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   }, [moreColumn]);
 
   console.log("codes", props.codes);
-  
 
   return (
     <DataTable
       bordered
       columns={columns}
       dataSource={props.codes}
-      scroll={{ y: 280 }}
+      scroll={{ y: 200 }}
       classNames={{
-        header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
-        body: "oui-text-xs oui-text-base-contrast-80 oui-min-h-[100px]",
+        header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9 oui-px-0",
+        body: "oui-text-xs oui-text-base-contrast-80",
+        root: "2xl:oui-flex-1 2xl:oui-max-h-[230px] 3xl:oui-max-h-[300px]"
       }}
-    ></DataTable>
+    />
   );
 };
 

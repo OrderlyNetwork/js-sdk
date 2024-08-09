@@ -1,8 +1,8 @@
 import { getGlobalObject } from "@orderly.network/utils";
 import { Extension, ExtensionBuilder, ExtensionPosition } from "./types";
 
-const DEFAULT_BUILDER = () => {
-  console.warn("No builder provided for extension");
+const DEFAULT_BUILDER = (position: string) => () => {
+  console.warn(`No builder provided for extension: [${position}]`);
   return {};
 };
 
@@ -35,7 +35,7 @@ export class OrderlyExtensionRegistry {
         const builder = this.extensionMap.get(plugin.positions[index])?.builder;
         plugin.builder =
           typeof builder === "undefined"
-            ? DEFAULT_BUILDER
+            ? DEFAULT_BUILDER(plugin.positions[index])
             : (builder as ExtensionBuilder);
       }
       const pos = plugin.positions[index];

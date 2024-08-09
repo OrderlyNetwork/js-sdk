@@ -21,12 +21,17 @@ export type VolChartDataItem = {
   opacity?: string | number;
 };
 
+export type VolChartTooltip = {
+  rm?: number;
+  dp?: number;
+};
+
 export type VolChartProps = {
   colors?: {
     fill: string;
   };
   data: VolChartDataItem[];
-  tooltipPrefix?: string;
+  tooltip?: VolChartTooltip;
   className?: string;
 };
 
@@ -49,7 +54,9 @@ const RoundedRectangle = (props: any) => {
 };
 
 const CustomizedCross = (props: any) => {
-  const { width, height, stroke, fill } = props;
+  const { width, height, payload, stroke, fill } = props;
+
+  if (payload?.[0]?.value === 0) return null;
 
   return (
     // @ts-ignore
@@ -67,10 +74,11 @@ const CustomizedCross = (props: any) => {
 };
 
 const CustomTooltip = (
-  props: TooltipProps<any, any>,
-  tooltipPrefix?: string
+  props: TooltipProps<any, any> & { tooltip?: VolChartTooltip }
 ) => {
-  const { active, payload, label } = props;
+  const { active, payload, label, tooltip } = props;
+
+  if (payload?.[0]?.value === 0) return null;
 
   if (active && payload && payload.length) {
     return (
@@ -79,6 +87,8 @@ const CustomTooltip = (
         value={payload[0].value}
         // prefix="Commission"
         titleClassName="oui-gap-4"
+        rm={tooltip?.rm}
+        dp={tooltip?.dp}
       />
     );
   }
@@ -103,13 +113,13 @@ export const VolBarChart = (props: VolChartProps) => {
         {/* @ts-ignore */}
         <BarChart
           data={props.data}
-          margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
+          margin={{ left: -0, top: 0, right: 0, bottom: 20 }}
         >
           {/* @ts-ignore */}
           <Tooltip
             // cursor={{ fillOpacity: 0.1 }}
             cursor={<CustomizedCross />}
-            content={<CustomTooltip />}
+            content={<CustomTooltip tooltip={props.tooltip} />}
           />
           <CartesianGrid
             vertical={false}
@@ -138,8 +148,9 @@ export const VolBarChart = (props: VolChartProps) => {
             dataKey={"volume"}
             tickFormatter={(value, index) => {
               if (isEmpty) return value === 0 ? "0" : "";
-              return value;
+              return numberToHumanStyle(value, 1);
             }}
+            width={45}
           />
           {/* @ts-ignore */}
           <XAxis
@@ -159,3 +170,29 @@ export const VolBarChart = (props: VolChartProps) => {
     </Box>
   );
 };
+function numberToHumanStyle(number: number, decimalPlaces: number = 2): string {
+  const abbreviations = ["", "K", "M", "B", "T"];
+
+  let index = 0;
+  while (number >= 1000 && index < abbreviations.length - 1) {
+    number /= 1000;
+    index++;
+  }
+
+  const roundedNumber = toFixedWithoutRounding(number, decimalPlaces);
+
+  return `${roundedNumber}${abbreviations[index]}`;
+}
+
+function toFixedWithoutRounding(num: number, fix: number): string {
+  const numStr = num.toString();
+  const decimalIndex = numStr.indexOf(".");
+
+  if (decimalIndex === -1 || fix === 0) {
+    return numStr.split(".")[0];
+  }
+
+  const cutoffIndex = decimalIndex + fix + 1;
+
+  return numStr.slice(0, cutoffIndex);
+}

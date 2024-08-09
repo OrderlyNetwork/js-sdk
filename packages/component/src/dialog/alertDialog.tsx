@@ -7,7 +7,7 @@ import {
 } from "@/dialog/dialog";
 import { FC, useCallback } from "react";
 import Button from "@/button";
-import { useModal } from "@/modal";
+import { useModal } from "@orderly.network/ui";
 
 export interface AlertDialogProps {
   title?: string;

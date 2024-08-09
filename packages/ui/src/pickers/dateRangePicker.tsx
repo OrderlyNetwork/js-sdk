@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Popover } from "../popover/popover";
 import { Calendar, CalendarProps } from "./date/calendar";
 import { selectVariants } from "../select/selectPrimitive";
@@ -39,6 +39,22 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     value || initialValue || null
   );
 
+  const [isMobileView, setIsMobileView] = useState<boolean>(false);
+
+  // Effect hook to listen to window resize events
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const { trigger } = selectVariants({ size, className });
 
   const formattedValue = useMemo(() => {
@@ -70,9 +86,9 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
       }}
       content={
         <Calendar
+          numberOfMonths={isMobileView ? 1 : 2}
           {...calendarProps}
           mode={"range"}
-          numberOfMonths={2}
           // @ts-ignore
           selected={dateRange}
           // @ts-ignore

@@ -9,8 +9,18 @@ type QueryParams = {
   page?: number;
 };
 
-export const useStatisticsDaily = (params: QueryParams) => {
+/**
+ * Fetch statistics data, only support weekly/monthly/quarterly for now
+ */
+export const useStatisticsDaily = (
+  params: QueryParams,
+  options?: {
+    ignoreAggregation?: boolean;
+  }
+) => {
   const { startDate, endDate, page = 1 } = params;
+  const { ignoreAggregation = false } = options || {};
+
   if (!startDate || !endDate) {
     throw new SDKError("startDate and endDate are required");
   }
@@ -28,7 +38,10 @@ export const useStatisticsDaily = (params: QueryParams) => {
     const searchParams = new URLSearchParams();
 
     searchParams.set("page", page.toString());
-    searchParams.set("size", (getPeriod(startDate, endDate) + 1).toString());
+    searchParams.set(
+      "size",
+      (getPeriod(startDate, endDate) + (ignoreAggregation ? 0 : 1)).toString()
+    );
 
     /*
      * add one day for the start date, for ROI calculation
@@ -50,6 +63,9 @@ export const useStatisticsDaily = (params: QueryParams) => {
   });
 
   const aggregateValue = useMemo(() => {
+    if (ignoreAggregation) {
+      return { vol: null, pnl: null, roi: null };
+    }
     let vol = zero;
     let pnl = zero;
     let roi = zero;

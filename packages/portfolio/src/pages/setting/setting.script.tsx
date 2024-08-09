@@ -32,12 +32,12 @@ export const useSettingScript = (): SettingScriptReturns => {
   }, [data]);
 
   const updateCheckState = useDebouncedCallback((value: boolean) => {
-    if (value === data?.maintenance_cancel_orders) return;
+    // if (value === data?.maintenance_cancel_orders) return;
     update({
       maintenance_cancel_order_flag: value,
     }).then((data) => {
       if (data.success) {
-        toast.success(value ? "Opened" : "Closed");
+        // toast.success(value ? "Opened" : "Closed");
       } else {
         setChecked(!value);
       }

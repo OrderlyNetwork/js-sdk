@@ -13,7 +13,7 @@ import {
 import { API } from "@orderly.network/types";
 import { TokenOption } from "./tokenOption";
 import { Decimal } from "@orderly.network/utils";
-import { InputStatus } from '../../types'
+import { InputStatus } from "../../types";
 
 export type QuantityInputProps = {
   token?: API.TokenInfo;
@@ -170,9 +170,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           }}
           formatters={[
             inputFormatter.numberFormatter,
-            inputFormatter.dpFormatter(token?.precision ?? 2, {
-              roundingMode: Decimal.ROUND_DOWN,
-            }),
+            inputFormatter.dpFormatter(token?.precision ?? 2),
             inputFormatter.currencyFormatter,
           ]}
           {...rest}
@@ -182,8 +180,9 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
               "oui-h-[54px] oui-relative oui-px-3",
               "oui-bg-base-5 oui-rounded-lg",
               "oui-border oui-border-line",
-              status === "error" && "focus-within:oui-outline-danger-light",
-              status === "warning" && "focus-within:oui-outline-warning-light",
+              status === "error" && "focus-within:oui-outline-danger-light oui-outline-danger-light",
+              status === "warning" && "focus-within:oui-outline-warning-light oui-outline-warning-light",
+              props.readOnly ? "oui-bg-base-6 focus-within:oui-outline-0" : "oui-bg-base-5",
               classNames?.root
             ),
             input: cn("oui-absolute oui-bottom-0", classNames?.input),

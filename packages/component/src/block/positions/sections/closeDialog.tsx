@@ -1,6 +1,6 @@
 import { OrderSide, type API } from "@orderly.network/types";
 import { ClosePositionPane } from "./closeForm";
-import { useModal } from "@/modal";
+import { useModal } from "@orderly.network/ui";
 
 export interface PositionLimitCloseDialogProps {
   positions: API.Position;

@@ -26,6 +26,7 @@ type Props = {
   portfolioValue: number;
   visible: boolean;
   toggleVisible: () => void;
+  wrongNetwork: boolean;
 } & StatisticProps;
 
 type StatisticProps = {
@@ -40,16 +41,56 @@ export const AssetsUI = (props: Props) => {
     <Card
       classNames={{
         footer: "oui-h-[48px]",
+        root: "oui-h-[240px]",
       }}
       // @ts-ignore
       title={
         <AssetsHeader
-          disabled={!props.connected}
+          disabled={!props.connected || props.wrongNetwork}
           onDeposit={props.onDeposit}
           onWithdraw={props.onWithdraw}
         />
       }
-      footer={
+    >
+      <>
+        <Statistic
+          label={
+            <Flex gap={1}>
+              <Text intensity={54}>Portfolio value</Text>
+              <button
+                onClick={() => {
+                  props.toggleVisible();
+                }}
+              >
+                {props.visible ? (
+                  <EyeIcon size={16} color={"white"} />
+                ) : (
+                  <EyeCloseIcon size={16} color={"white"} />
+                )}
+              </button>
+            </Flex>
+          }
+        >
+          <Either
+            value={(props.connected ?? false) && !props.wrongNetwork}
+            left={<NoValue />}
+          >
+            <Text.numeral
+              visible={props.visible}
+              unit="USDC"
+              // @ts-ignore
+              style={{ "--oui-gradient-angle": "45deg" }}
+              unitClassName="oui-text-base oui-text-base-contrast-80 oui-h-9 oui-ml-1"
+              className={gradientTextVariants({
+                className: "oui-font-bold oui-text-3xl",
+                color: "brand",
+              })}
+            >
+              {props.portfolioValue}
+            </Text.numeral>
+          </Either>
+        </Statistic>
+        <Divider className="oui-my-4" intensity={8} />
         <AuthGuard buttonProps={{ size: "lg", fullWidth: true }}>
           <AssetStatistic
             unrealROI={props.unrealROI}
@@ -59,43 +100,7 @@ export const AssetsUI = (props: Props) => {
             onLeverageEdit={props.onLeverageEdit}
           />
         </AuthGuard>
-      }
-    >
-      <Statistic
-        label={
-          <Flex gap={1}>
-            <Text intensity={54}>Portfolio value</Text>
-            <button
-              onClick={() => {
-                props.toggleVisible();
-              }}
-            >
-              {props.visible ? (
-                <EyeIcon size={16} color={"white"} />
-              ) : (
-                <EyeCloseIcon size={16} color={"white"} />
-              )}
-            </button>
-          </Flex>
-        }
-      >
-        <Either value={props.connected ?? false} left={<NoValue />}>
-          <Text.numeral
-            visible={props.visible}
-            unit="USDC"
-            // @ts-ignore
-            style={{ "--oui-gradient-angle": "45deg" }}
-            unitClassName="oui-text-base oui-text-base-contrast-80 oui-h-9 oui-ml-1"
-            className={gradientTextVariants({
-              className: "oui-font-bold oui-text-3xl",
-              color: "brand",
-            })}
-          >
-            {props.portfolioValue}
-          </Text.numeral>
-        </Either>
-      </Statistic>
-      <Divider className="oui-mt-4" intensity={8} />
+      </>
     </Card>
   );
 };
@@ -115,7 +120,7 @@ export const AssetStatistic = (
   props: StatisticProps & { onLeverageEdit?: () => void }
 ) => {
   return (
-    <Grid cols={3}>
+    <Grid cols={3} className="oui-h-12">
       <Statistic label="Unreal. PnL">
         <Flex>
           <Text.numeral coloring size="lg" weight="semibold">

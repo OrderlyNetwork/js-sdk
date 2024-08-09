@@ -11,6 +11,7 @@ type MarketListProps = UseMarketListReturn & {
 
 export const MarketList: FC<MarketListProps> = (props) => {
   const {
+    loading,
     dataSource,
     meta,
     setPage,
@@ -32,6 +33,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
         body: "oui-text-base-contrast-80",
       }}
       columns={columns}
+      loading={loading}
       dataSource={dataSource}
       onRow={(record, index) => {
         return {

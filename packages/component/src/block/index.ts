@@ -44,6 +44,6 @@ export { SystemStatusBar } from "./systemStatusBar";
 export type { FooterStatusBarProps } from "./systemStatusBar";
 
 export {
-  DepositAndWithdrawWithDialog,
+  // DepositAndWithdrawWithDialog,
   DepositAndWithdrawWithSheet,
 } from "./depositAndwithdraw";

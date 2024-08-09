@@ -25,6 +25,7 @@ import {
   useMediaQuery,
 } from "@orderly.network/hooks";
 import { UseOrderEntryMetaState, utils } from "@orderly.network/hooks";
+import { AuthGuard } from "@orderly.network/ui-connector";
 
 import {
   API,
@@ -33,7 +34,7 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-// import { modal } from "@/modal";
+// import { modal } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
   OrderConfirmFooter,
@@ -677,7 +678,10 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             reduceOnly={formattedOrder.reduce_only}
             onFieldChange={props.onFieldChange}
           />
-          <StatusGuardButton id="orderly-order-entry-status-guard-button">
+          <AuthGuard
+            id="orderly-order-entry-status-guard-button"
+            buttonProps={{ size: "lg", fullWidth: true }}
+          >
             <Button
               id="orderly-order-entry-confirm-button"
               className="orderly-text-xs desktop:orderly-font-bold desktop:orderly-text-sm"
@@ -688,7 +692,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             >
               {buttonText}
             </Button>
-          </StatusGuardButton>
+          </AuthGuard>
         </div>
       </form>
     );

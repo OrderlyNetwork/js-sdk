@@ -68,6 +68,16 @@ export type NumeralProps = TextProps & {
   showIdentifier?: boolean;
 
   /**
+   * Placeholder when children is not valid number
+   */
+  placeholder?: string;
+
+  /**
+   * custom masking element when visible is false
+   */
+  masking?: React.ReactNode | string;
+
+  /**
    * Custom + or - sign
    */
   identifiers?: {
@@ -93,6 +103,8 @@ export const Numeral: FC<NumeralProps> = (props) => {
     identifiers,
     className,
     unitClassName,
+    placeholder,
+    masking,
     ...rest
   } = props;
   // TODO: check precision
@@ -100,9 +112,10 @@ export const Numeral: FC<NumeralProps> = (props) => {
   const num = Number(props.children);
 
   const child = useMemo(() => {
-    if (isNaN(num)) return "--";
+    if (props.children === "-") return props.children;
+    if (isNaN(num)) return placeholder ?? "--";
 
-    if (typeof visible !== "undefined" && !visible) return "*****";
+    if (typeof visible !== "undefined" && !visible) return masking ?? "*****";
 
     return parseNumber(num, {
       rule,

@@ -92,6 +92,8 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-transfer": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",

@@ -10,7 +10,11 @@ export {
   useAssetHistoryColumns,
 } from "./assetHistory";
 
-export { PerformanceUI, PerformanceWidget } from "./performance";
+export {
+  PerformanceUI,
+  PerformanceWidget,
+  usePerformanceScript,
+} from "./performance";
 export {
   FundingHistoryWidget,
   useFundingHistoryColumns,

@@ -22,6 +22,12 @@ export const PortfolioLayout = (
     <Scaffold
       leftSidebar={props.hideSideBar ? <></> : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}
+      classNames={{
+        content: "lg:oui-mb-0",
+        topNavbar: "oui-bg-base-9",
+        leftSidebar:
+          "oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9",
+      }}
       {...props}
     >
       <Box mx={3} my={6}>
@@ -35,8 +41,7 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 
   return (
-    <Box p={4} m={3} border borderColor={8} r={"xl"} height={"100%"}>
-      <SideBar
+    <SideBar
         title="Portfolio"
         {...props}
         open={expanded}
@@ -49,6 +54,5 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
           });
         }}
       />
-    </Box>
   );
 };

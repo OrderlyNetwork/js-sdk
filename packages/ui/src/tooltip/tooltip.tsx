@@ -5,6 +5,7 @@ import { cnBase, tv } from "tailwind-variants";
 const TooltipProvider = TooltipPrimitive.Provider;
 
 // const Tooltip = TooltipPrimitive.Root;
+const TooltipRoot = TooltipPrimitive.Root;
 
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
@@ -99,4 +100,10 @@ const Tooltip = React.forwardRef<
   }
 );
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+export {
+  Tooltip,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+};

@@ -7,7 +7,7 @@ import { useLocalStorage } from "@orderly.network/hooks";
 import { Label } from "@/label";
 import Button from "@/button";
 import { cn } from "@/utils";
-import { useModal } from "@/modal";
+import { useModal } from "@orderly.network/ui";
 import { commify } from "@orderly.network/utils";
 
 interface OrderConfirmViewProps {
@@ -66,7 +66,7 @@ export const OrderConfirmView: FC<OrderConfirmViewProps> = (props) => {
       </div>
       <div className="orderly-flex orderly-text-base-contract-54 orderly-text-xs desktop:orderly-text-sm orderly-font-semibold">
         <div>
-          <div className="orderly-mr-3 orderly-w-[89px] desktop:orderly-w-[180px]">
+          <div className="orderly-mr-3 orderly-w-[89px] desktop:orderly-w-[140px]">
             {type}
           </div>
         </div>

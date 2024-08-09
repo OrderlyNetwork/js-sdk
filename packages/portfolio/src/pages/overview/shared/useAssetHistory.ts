@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
+  useAssetsHistory,
   useCollateral,
   useLocalStorage,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
 import { subDays, format } from "date-fns";
 import { API } from "@orderly.network/types";
-import { useDataTap } from "@orderly.network/react-app";
+import { Decimal, zero } from "@orderly.network/utils";
 
 export enum PeriodType {
   WEEK = "7D",
@@ -33,20 +34,45 @@ export const useAssetsHistoryData = (
   const getStartDate = (value: PeriodType) => {
     switch (value) {
       case PeriodType.MONTH:
-        return subDays(new Date(), isRealtime ? 29 : 30);
+        return subDays(new Date(), 35);
 
       case PeriodType.QUARTER:
-        return subDays(new Date(), isRealtime ? 89 : 90);
+        return subDays(new Date(), 95);
       default:
-        return subDays(new Date(), isRealtime ? 6 : 7);
+        return subDays(new Date(), 10);
     }
   };
 
-  const [startDate, setStartDate] = useState(getStartDate(period));
+  const periodValue = useMemo(() => {
+    switch (period) {
+      case PeriodType.WEEK:
+        return 7;
+      case PeriodType.MONTH:
+        return 30;
+      case PeriodType.QUARTER:
+        return 90;
+      default:
+        return 7;
+    }
+  }, [period]);
 
-  const [data, { aggregateValue }] = useStatisticsDaily({
-    startDate: startDate.toISOString().split("T")[0],
-    endDate: new Date().toISOString().split("T")[0],
+  const [startDate, setStartDate] = useState(getStartDate(period));
+  // const nowStamp = useRef(new Date().getTime().toString());
+  const now = useRef(new Date());
+
+  const [data] = useStatisticsDaily(
+    {
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: now.current.toISOString().split("T")[0],
+    },
+    {
+      ignoreAggregation: true,
+    }
+  );
+
+  const [assetHistory] = useAssetsHistory({
+    startTime: subDays(now.current, 2).getTime().toString(),
+    endTime: now.current.getTime().toString(),
   });
 
   const onPeriodChange = (value: PeriodType) => {
@@ -54,34 +80,145 @@ export const useAssetsHistoryData = (
     setPeriod(value);
   };
 
-  // console.log("-------", totalValue, data);
+  const lastItem = data[data.length - 1];
 
-  const calculateData = (data: API.DailyRow[], isRealTime: boolean) => {
-    return !isRealtime
-      ? data
-      : Array.isArray(data) && data.length > 0
-      ? data.concat([
-          //@ts-ignore
-          {
-            date: format(new Date(), "yyyy-MM-dd"),
-            account_value: !!totalValue
-              ? totalValue
-              : data[data.length - 1]?.account_value ?? 0,
-          },
-        ])
-      : data;
+  const latestDepositAndWithdraw = useMemo(() => {
+    if (
+      !lastItem ||
+      !Array.isArray(assetHistory) ||
+      assetHistory.length <= 0 ||
+      typeof lastItem.snapshot_time === "undefined"
+    )
+      return null;
+
+    // find a list with the timestamp greater than the last item timestamp and trans_status = success;
+    const list = [];
+
+    for (let i = 0; i < assetHistory.length; i++) {
+      const item = assetHistory[i];
+      if (item.updated_time > lastItem.snapshot_time) {
+        list.push(item);
+      }
+    }
+
+    return list;
+  }, [assetHistory, lastItem]);
+
+  const calculateLastPnl = (inputs: {
+    lastItem: API.DailyRow;
+    assetHistory: API.AssetHistoryRow[];
+    totalValue: number;
+  }) => {
+    // today daily pnl = totalValue - lastItem.account_value - deposit + withdraw
+    let value = new Decimal(totalValue).sub(inputs.lastItem.account_value);
+
+    // subtraction of deposit and withdraw
+    if (
+      Array.isArray(inputs.assetHistory) &&
+      inputs.assetHistory.length > 0 &&
+      typeof inputs.lastItem.snapshot_time !== "undefined"
+    ) {
+      // find a list with the timestamp greater than the last item timestamp and trans_status = success;
+      const list = [];
+
+      for (let i = 0; i < inputs.assetHistory.length; i++) {
+        const item = inputs.assetHistory[i];
+        if (item.updated_time > inputs.lastItem.snapshot_time) {
+          list.push(item);
+        }
+      }
+
+      // calculate the sum of deposit and withdraw
+      for (let i = 0; i < list.length; i++) {
+        const item = list[i];
+        if (item.side === "deposit") {
+          // value -= item.amount;
+          value = value.sub(item.amount);
+        } else if (item.side === "withdraw") {
+          // value += item.amount;
+          value = value.add(item.amount);
+        }
+      }
+    }
+
+    return value.toNumber();
   };
 
-  // const filteredData = useDataTap(calculateData(data, isRealtime), {
-  //   fallbackData: [data[0], data[data.length - 1]],
-  // });
+  const calculate = (data: API.DailyRow[], totalValue: number) => {
+    const lastItem = data[data.length - 1];
+    const today = format(new Date(), "yyyy-MM-dd");
+
+    return {
+      ...lastItem,
+      date: today,
+      account_value: !!totalValue ? totalValue : lastItem?.account_value ?? 0,
+      pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }),
+    };
+  };
+
+  const mergeData = (data: API.DailyRow[], totalValue: number) => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return data;
+    }
+
+    if (data[data.length - 1].date === format(new Date(), "yyyy-MM-dd")) {
+      data;
+    }
+
+    return data.concat([calculate(data, totalValue)]);
+  };
+
+  const calculateData = (data: API.DailyRow[], realtime: boolean) => {
+    const _data = !realtime ? data : mergeData(data, totalValue);
+
+    return _data.slice(_data.length - periodValue);
+  };
+
+  const calculatedData = useMemo(() => {
+    return calculateData(data, isRealtime);
+  }, [data, totalValue]);
+
+  const aggregateValue = useMemo(() => {
+    let vol = zero;
+    let pnl = zero;
+    let roi = zero;
+
+    if (Array.isArray(calculatedData) && calculatedData.length) {
+      calculatedData.forEach((d) => {
+        vol = vol.add(d.perp_volume);
+        pnl = pnl.add(d.pnl);
+      });
+
+      roi = pnl.div(
+        data[data.length - calculateData.length - 1]!.account_value
+      );
+    }
+
+    return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
+  }, [calculatedData]);
+
+  const createFakeData = (
+    start: Partial<API.DailyRow>,
+    end: Partial<API.DailyRow>
+  ) => {
+    return Array.from({ length: 2 }, (_, i) => {
+      const date = format(i === 0 ? startDate : new Date(), "yyyy-MM-dd");
+
+      return {
+        date,
+        ...(i === 0 ? start : end),
+      };
+    });
+  };
 
   return {
     periodTypes,
     period,
     onPeriodChange,
-    data: calculateData(data, isRealtime),
+    data: calculatedData,
     aggregateValue,
+    createFakeData,
+    volumeUpdateDate: data?.[data.length - 1]?.date ?? "",
   } as const;
 };
 

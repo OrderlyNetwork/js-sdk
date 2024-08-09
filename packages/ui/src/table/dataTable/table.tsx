@@ -26,6 +26,8 @@ import { useTableSize } from "./useTableSize";
 import { Box } from "../../box";
 import { cn } from "../..";
 
+const DEFAULT_MIN_HEIGHT = 130;
+
 export interface DataTableProps<RecordType>
   extends TBodyProps<RecordType>,
     VariantProps<typeof dataTableVariants> {
@@ -36,6 +38,8 @@ export interface DataTableProps<RecordType>
    * @default false
    */
   loading?: boolean;
+  // checkLoading?: boolean;
+  ignoreLoadingCheck?: boolean;
   className?: string;
   // headerClassName?: string;
   // bodyClassName?: string;
@@ -55,6 +59,9 @@ export interface DataTableProps<RecordType>
   id?: string;
   // header?: ReactElement;
   // footer?: ReactElement;
+
+  minHeight?: number;
+  initialMinHeight?: number;
 
   /**
    * if you want to fixed the table header or column, you need to set the height/width of the table;
@@ -100,6 +107,9 @@ export const DataTable = <RecordType extends unknown>(
     classNames,
     scroll,
     emptyView,
+    minHeight: minHeightProp,
+    initialMinHeight,
+    ignoreLoadingCheck,
     ...rest
   } = props;
   const { root } = dataTableVariants({
@@ -108,16 +118,20 @@ export const DataTable = <RecordType extends unknown>(
 
   // const fetched = useRef(0);
   //
-  const [initialised, setInitialised] = useState(false);
-  const minHeight = useRef(280);
+  const [initialized, setInitialized] = useState(false);
+  const minHeight = useRef(initialMinHeight || DEFAULT_MIN_HEIGHT);
 
   useEffect(() => {
-    if (initialised) return;
+    if (initialized) return;
 
-    if (loading || (Array.isArray(dataSource) && dataSource.length > 0)) {
-      setInitialised(true);
+    if (
+      ignoreLoadingCheck ||
+      loading ||
+      (Array.isArray(dataSource) && dataSource.length > 0)
+    ) {
+      setInitialized(true);
     }
-  }, [loading, dataSource, initialised]);
+  }, [loading, dataSource, initialized]);
 
   const [filterEle, setFilterEle] = useState<ReactElement | null>(null);
   const [paginationEle, setPaginationEle] = useState<ReactElement | null>(null);
@@ -158,12 +172,12 @@ export const DataTable = <RecordType extends unknown>(
   }, []);
 
   useEffect(() => {
-    if (!tableRef.current) return;
+    if (!tableRef.current || typeof minHeightProp !== "undefined") return;
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
-        minHeight.current = Math.max(height, 280);
+        minHeight.current = Math.max(height, minHeight.current);
       }
     });
 
@@ -173,6 +187,13 @@ export const DataTable = <RecordType extends unknown>(
       resizeObserver.disconnect();
     };
   }, [tableRef.current]);
+
+  // if pageSize is changed or data is null, reset the minHeight
+  useEffect(() => {
+    if (dataSource === null) {
+      minHeight.current = initialMinHeight || DEFAULT_MIN_HEIGHT;
+    }
+  }, [dataSource]);
 
   const { width, height } = useTableSize({ scroll });
 
@@ -210,7 +231,7 @@ export const DataTable = <RecordType extends unknown>(
           classNames?.body
         )}
         style={{
-          minHeight: `${minHeight.current}px`,
+          minHeight: `${minHeightProp || minHeight.current}px`,
         }}
       >
         <Table
@@ -221,7 +242,7 @@ export const DataTable = <RecordType extends unknown>(
           <TBody {...rest} />
         </Table>
         <TablePlaceholder
-          visible={((dataSource?.length ?? 0) === 0 || loading) && initialised}
+          visible={((dataSource?.length ?? 0) === 0 || loading) && initialized}
           loading={loading}
           emptyView={emptyView}
         />

@@ -1,7 +1,9 @@
 import {
   ArrowLeftRightIcon,
+  Box,
   Button,
   Card,
+  CopyIcon,
   DataTable,
   Divider,
   EmptyDataState,
@@ -23,6 +25,7 @@ import { EditAPIKeyDialog } from "./dialog/editApiKey";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
   AuthGuard,
+  AuthGuardDataTable,
   AuthGuardEmpty,
   AuthGuardTooltip,
 } from "@orderly.network/ui-connector";
@@ -75,7 +78,8 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
           size="base"
           inlist={80}
           rule={"address"}
-          copyable
+          copyable={props.address !== "--"}
+          copyIconSize={16}
           onCopy={props.onCopyAccountId}
         >
           {props.address}
@@ -115,6 +119,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
           share your API keys with anyone.{" "}
         </Text>
         <Flex
+          itemAlign={"center"}
           className="oui-text-primary oui-fill-white/[.54] hover:oui-text-primary-light hover:oui-fill-white/[.8] oui-cursor-pointer"
           onClick={props.onReadApiGuide}
         >
@@ -126,12 +131,22 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
             fill="currentColor"
             fillOpacity="1"
             xmlns="http://www.w3.org/2000/svg"
+            className="oui-mt-[1px]"
           >
             <path d="M6.777 3.348a.65.65 0 0 0-.498.083.685.685 0 0 0-.187.938L8.5 7.993 6.092 11.62a.685.685 0 0 0 .187.937.68.68 0 0 0 .934-.187l2.657-4a.69.69 0 0 0 0-.75l-2.657-4a.67.67 0 0 0-.436-.271" />
           </svg>
         </Flex>
       </Flex>
-      <AuthGuardTooltip side="top">
+      <AuthGuardTooltip
+        side="top"
+        tooltip={{
+          connectWallet: "Please connect wallet before create API key",
+          signIn: "Please sign in before create API key",
+          enableTrading: "Please enable trading before create API key",
+          wrongNetwork:
+            "Please switch to a supported network to create API key",
+        }}
+      >
         <Button
           size="md"
           icon={<PlusIcon />}
@@ -158,6 +173,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
           <Text.formatted
             rule={""}
             copyable
+            copyIconSize={16}
             onCopy={() => {
               props.onCopyApiKey?.(value);
             }}
@@ -174,7 +190,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
         value
           ?.split(",")
           .map((e: any) => capitalizeFirstChar(`${e}`))
-          .join(","),
+          .join(", "),
     },
     {
       title: "Restricted IP",
@@ -185,15 +201,25 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
           ip = "--";
         }
         return (
-          <Tooltip
-            content={value}
-            className="oui-max-w-[200px] oui-break-all"
-          >
-            <div className="oui-overflow-ellipsis oui-overflow-hidden">
-              <Text.formatted copyable={ip !== "--"} onCopy={props.onCopyIP}>
+          <Tooltip content={value} className="oui-max-w-[200px] oui-break-all">
+            <Flex gap={1}>
+              <div className=" oui-overflow-ellipsis oui-overflow-hidden">
                 {ip}
-              </Text.formatted>
-            </div>
+              </div>
+              {ip !== "--" && (
+                <Box width={16} height={16} className="oui-cursor-pointer">
+                  <CopyIcon
+                    color="white"
+                    opacity={0.54}
+                    size={16}
+                    onClick={(e) => {
+                      navigator.clipboard.writeText(ip);
+                      props?.onCopyIP();
+                    }}
+                  />
+                </Box>
+              )}
+            </Flex>
           </Tooltip>
         );
       },
@@ -214,7 +240,11 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       render: (_, item) => {
         return (
           <Flex direction={"row"} gap={2}>
-            <EditButton item={item} onUpdate={props.doEdit} verifyIP={props.verifyIP} />
+            <EditButton
+              item={item}
+              onUpdate={props.doEdit}
+              verifyIP={props.verifyIP}
+            />
             <DeleteButton item={item} onDelete={props.doDelete} />
           </Flex>
         );
@@ -222,11 +252,11 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
     },
   ];
   return (
-    <DataTable
+    <AuthGuardDataTable
       bordered
       columns={columns}
+      loading={props.isLoading}
       dataSource={props.keys}
-      scroll={{ y: 300 }}
       emptyView={<AuthGuardEmpty />}
       classNames={{
         header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
@@ -257,13 +287,15 @@ const EditButton: FC<{
         Edit
       </Button>
 
-      <EditAPIKeyDialog
-        item={item}
-        open={open}
-        setOpen={setOpen}
-        onUpdate={onUpdate}
-        verifyIP={verifyIP}
-      />
+      {open && (
+        <EditAPIKeyDialog
+          item={item}
+          open={open}
+          setOpen={setOpen}
+          onUpdate={onUpdate}
+          verifyIP={verifyIP}
+        />
+      )}
     </>
   );
 };
@@ -288,12 +320,14 @@ const DeleteButton: FC<{
         Delete
       </Button>
 
-      <DeleteAPIKeyDialog
-        item={item}
-        open={open}
-        setOpen={setOpen}
-        onDelete={onDelete}
-      />
+      {open && (
+        <DeleteAPIKeyDialog
+          item={item}
+          open={open}
+          setOpen={setOpen}
+          onDelete={onDelete}
+        />
+      )}
     </>
   );
 };

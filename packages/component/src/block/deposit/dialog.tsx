@@ -1,11 +1,11 @@
-import { useModal } from "@/modal";
-import { create } from "@/modal/modalHelper";
+import { useModal, modal } from "@orderly.network/ui";
+// import { create } from "@/modal/modalHelper";
 import { Deposit } from "./deposit";
 import type { DepositProps } from "./deposit";
-import { Sheet, SheetContent } from "@/sheet/sheet";
+import { Sheet, SheetContent } from "@orderly.network/ui";
 import { Dialog, DialogContent } from "@/dialog/dialog";
 
-export const DepositWithSheet = create<DepositProps>((props) => {
+export const DepositWithSheet = modal.create<DepositProps>((props) => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const onOk = (data?: any) => {
@@ -32,7 +32,7 @@ export const DepositWithSheet = create<DepositProps>((props) => {
   );
 });
 
-export const DepositWithDialog = create<DepositProps>((props) => {
+export const DepositWithDialog = modal.create<DepositProps>((props) => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const onOk = (data?: any) => {

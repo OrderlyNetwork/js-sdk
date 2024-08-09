@@ -39,9 +39,9 @@ const OrderlyApp = (
       >
         <OrderlyConfigProvider {...configProps}>
           <AppStateProvider onChainChanged={onChainChanged}>
-            <ModalProvider>
-              <TooltipProvider>{props.children}</TooltipProvider>
-            </ModalProvider>
+            <TooltipProvider>
+              <ModalProvider>{props.children}</ModalProvider>
+            </TooltipProvider>
           </AppStateProvider>
           <Toaster />
         </OrderlyConfigProvider>

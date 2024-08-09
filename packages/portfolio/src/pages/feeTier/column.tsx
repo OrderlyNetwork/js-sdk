@@ -42,41 +42,6 @@ export const useFeeTierColumns = () => {
         },
       },
       {
-        title: "or",
-        dataIndex: "or",
-        width: 120,
-        align: "center",
-      },
-      {
-        title: "Staking (WOO + XP)",
-        dataIndex: "staking",
-        align: "center",
-        width: 150,
-        render: (value, row) => {
-          const { staking_min, staking_max } = row;
-          if (!staking_min && !staking_max) {
-            return <div style={{ fontVariantLigatures: "none" }}>--</div>;
-          }
-
-          if (staking_min && !staking_max) {
-            return (
-              <div>
-                {"Above "}
-                {numberToHumanStyle(staking_min, 0)}
-              </div>
-            );
-          }
-
-          return (
-            <div>
-              {staking_min && numberToHumanStyle(staking_min, 0)}
-              {` - `}
-              {staking_max && numberToHumanStyle(staking_max, 0)}
-            </div>
-          );
-        },
-      },
-      {
         title: "Maker",
         dataIndex: "maker_fee",
         align: "right",

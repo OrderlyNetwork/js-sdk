@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { usePositionStream } from "@orderly.network/hooks";
 import { PositionsView } from ".";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { ClosePositionPane } from "./sections/closeForm";
 
 const meta: Meta = {

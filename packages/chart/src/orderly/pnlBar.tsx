@@ -15,6 +15,8 @@ import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { Box, cn } from "@orderly.network/ui";
 import { Flex } from "@orderly.network/ui";
+// import { XAxisLabel } from "./xAxisLabel";
+import { useRef } from "react";
 
 export type PnLChartDataItem = {
   date: string;
@@ -48,6 +50,33 @@ const RoundedRectangle = (props: any) => {
   );
 };
 
+export const XAxisLabel = (props: any) => {
+  const { x, y, stroke, payload, index, width, containerWidth } = props;
+
+  const _x =
+    index === 0
+      ? 58
+      : containerWidth > 0
+      ? containerWidth
+      : width + payload.offset;
+
+  return (
+    <g transform={`translate(${_x},${y - 6})`}>
+      <text
+        x={0}
+        y={0}
+        dy={16}
+        textAnchor={index === 0 ? "start" : "end"}
+        // textAnchor={"start"}
+        fontSize={10}
+        fill={"rgba(255,255,255,0.54)"}
+      >
+        {index === 0 ? payload.value : "Now"}
+      </text>
+    </g>
+  );
+};
+
 const CustomizedCross = (props: any) => {
   const { width, height, stroke, fill } = props;
 
@@ -69,9 +98,15 @@ const CustomizedCross = (props: any) => {
 const CustomTooltip = (props: TooltipProps<any, any>) => {
   const { active, payload, label } = props;
 
+  const todayStr = useRef(new Date().toISOString().split("T")[0]);
+
   if (active && payload && payload.length) {
     return (
-      <OrderlyChartTooltip label={label} value={payload[0].value} coloring />
+      <OrderlyChartTooltip
+        label={label === todayStr.current ? "Now" : label}
+        value={payload[0].value}
+        coloring
+      />
     );
   }
 
@@ -81,10 +116,17 @@ const CustomTooltip = (props: TooltipProps<any, any>) => {
 export const PnLBarChart = (props: PnLChartProps) => {
   const { invisible } = props;
   const colors = useColors(props.colors);
+  const widthRef = useRef(0);
 
   return (
     // @ts-ignore
-    <ResponsiveContainer className={cn(invisible && "chart-invisible")}>
+    <ResponsiveContainer
+      className={cn(invisible && "chart-invisible")}
+      onResize={(width, height) => {
+        // console.log("width", width, height);
+        widthRef.current = width;
+      }}
+    >
       {/* @ts-ignore */}
       <BarChart
         data={props.data}
@@ -132,7 +174,8 @@ export const PnLBarChart = (props: PnLChartProps) => {
           // tick={renderQuarterTick}
           height={1}
           // scale="time"
-          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          // tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          tick={<XAxisLabel containerWidth={widthRef.current} />}
           stroke="#FFFFFF"
           strokeOpacity={0.04}
         />

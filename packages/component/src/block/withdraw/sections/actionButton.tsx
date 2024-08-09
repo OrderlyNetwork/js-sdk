@@ -4,7 +4,7 @@ import { toast } from "@/toast";
 import { API, CurrentChain } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils";
 import { usePrivateQuery, useWalletSubscription } from "@orderly.network/hooks";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { CrossChainConfirm } from "./crossChainConfirm";
 import { useChainNotSupport } from "../useChainNotSupport";
 import { StatusGuardButton } from "@/block/accountStatus";

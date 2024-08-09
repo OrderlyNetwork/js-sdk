@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
-import { getPageData, searchBySymbol, useSort } from "../../../../utils";
+import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
 import { TFavorite } from "../../../../type";
 import { useMarketsContext } from "../../provider";
 
@@ -10,6 +10,7 @@ export type UseMarketListScriptOptions = MarketListWidgetProps;
 export type UseMarketListReturn = ReturnType<typeof useMarketListScript>;
 
 export const useMarketListScript = (options: UseMarketListScriptOptions) => {
+  const [loading, setLoading] = useState(true);
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
   const [data, favorite] = useMarkets(MarketsType.ALL);
@@ -21,26 +22,31 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     options?.sortOrder
   );
 
-  const pageData = useMemo(() => {
+  const { totalData, pagedData } = useMemo(() => {
     const list = getSortedList(data);
-    const filterList = searchBySymbol(list, searchValue);
-    return getPageData(filterList, pageSize, page);
+    const totalData = searchBySymbol(list, searchValue);
+    return {
+      totalData,
+      pagedData: getPagedData(totalData, pageSize, page),
+    };
   }, [data, pageSize, page, getSortedList, searchValue]);
 
-  const meta = useMemo(
-    () =>
-      parseMeta({
-        total: data?.length,
-        current_page: page,
-        records_per_page: pageSize,
-      }),
-    [data, page, pageSize]
-  );
+  const meta = useMemo(() => {
+    return parseMeta({
+      total: totalData?.length,
+      current_page: page,
+      records_per_page: pageSize,
+    });
+  }, [data, page, pageSize, totalData]);
 
   useEffect(() => {
-    // reset page when size change
+    setLoading(false);
+  }, [data]);
+
+  useEffect(() => {
+    // reset page when size change and search data
     setPage(1);
-  }, [pageSize]);
+  }, [pageSize, searchValue]);
 
   useEffect(() => {
     // Only all markets store sort
@@ -50,7 +56,8 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
   }, [sortKey, sortOrder, favorite, options.type]);
 
   return {
-    dataSource: pageData,
+    loading,
+    dataSource: pagedData,
     meta,
     setPage,
     setPageSize,

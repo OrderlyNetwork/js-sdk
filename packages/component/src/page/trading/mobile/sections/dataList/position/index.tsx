@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from "react";
 import { PositionsView } from "@/block/positions";
 import { usePositionStream, useSessionStorage } from "@orderly.network/hooks";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import {
   API,
   AccountStatusEnum,

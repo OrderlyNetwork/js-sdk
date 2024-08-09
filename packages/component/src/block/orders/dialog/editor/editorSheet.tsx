@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useModal } from "@/modal";
+import { useModal } from "@orderly.network/ui";
 import { OrderEditForm } from "./editorForm";
 import { API, OrderEntity } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";

@@ -370,6 +370,7 @@ export declare namespace API {
     date: string;
     perp_volume: number;
     pnl: number;
+    snapshot_time?: number;
   }
 }
 

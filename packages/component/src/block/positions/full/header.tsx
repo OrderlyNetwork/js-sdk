@@ -9,7 +9,7 @@ import { RefreshCcw } from "lucide-react";
 import { Checkbox } from "@/checkbox";
 import { Label } from "@/label";
 import { AssetsContext, AssetsProvider } from "@/provider/assetsProvider";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { SettlePnlContent } from "@/block/withdraw";
 import { useTabContext } from "@/tab/tabContext";
 
@@ -21,7 +21,7 @@ interface Props {
 
   showAllSymbol?: boolean;
   onShowAllSymbolChange?: (value: boolean) => void;
-  pnlNotionalDecimalPrecision: any,
+  pnlNotionalDecimalPrecision: any;
 }
 
 export const Header: FC<Props> = (props) => {
@@ -29,13 +29,12 @@ export const Header: FC<Props> = (props) => {
   const { onSettle } = useContext(AssetsContext);
   const { pnlNotionalDecimalPrecision } = props;
 
-
   const onSettleClick = useCallback(() => {
     modal
       .confirm({
         title: "Settle PnL",
         content: <SettlePnlContent />,
-        maxWidth: "xs",
+        // maxWidth: "xs",
         onCancel() {
           return Promise.reject("cancel");
         },

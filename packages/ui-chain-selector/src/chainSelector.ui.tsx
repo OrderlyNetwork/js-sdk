@@ -37,7 +37,7 @@ export const ChainSelector = (props: {
             intensity={54}
             size="2xs"
           >
-            mainnet
+            Mainnet
           </Text>
         )}
 
@@ -53,7 +53,7 @@ export const ChainSelector = (props: {
         })}
         {Array.isArray(props.chains.testnet) && (
           <Text as="div" className="oui-px-4" intensity={54} size="2xs">
-            testnet
+            Testnet
           </Text>
         )}
         {props.chains.testnet?.map((item, index) => {

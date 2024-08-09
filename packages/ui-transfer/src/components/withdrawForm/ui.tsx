@@ -41,6 +41,7 @@ export const WithdrawFormUI = (
         chainVaultBalance,
         crossChainWithdraw,
         crossChainTrans,
+        showQty,
     }: UseWithdrawFormScriptReturn
 ) => {
     return (
@@ -87,7 +88,7 @@ export const WithdrawFormUI = (
                             root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
                         }}
                         token={token}
-                        value={quantity}
+                        value={showQty}
                         readOnly
                     />
                 </Box>

@@ -1,5 +1,5 @@
-import { useModal } from "@/modal";
-import { create } from "@/modal/modalHelper";
+import { useModal, modal } from "@orderly.network/ui";
+// import { create } from "@/modal/modalHelper";
 import { Sheet, SheetContent, SheetHeader } from "@/sheet/sheet";
 import { Dialog, DialogContent } from "@/dialog/dialog";
 import {
@@ -24,9 +24,9 @@ import { MobileSharePnLContent } from "./mobileSharePnl";
 import { OrderlyAppContext } from "@/provider";
 import { ReferralType } from "./sharePnLUtils";
 
-export const SharePoisitionView = create<{
+export const SharePoisitionView = modal.create<{
   position: any;
-  leverage: any,
+  leverage: any;
 }>((props) => {
   const isTablet = useMediaQuery(MEDIA_TABLET);
   const { position } = props;
@@ -55,7 +55,6 @@ export const SharePoisitionView = create<{
   //   return Math.min(maxAccountLeverage, maxSymbolLeverage);
   // }, [maxAccountLeverage, maxSymbolLeverage]);
 
-
   const { getFirstRefCode } = useReferralInfo();
 
   if (symbolInfo.isNil) return null;
@@ -70,13 +69,10 @@ export const SharePoisitionView = create<{
       code,
       slogan: referral?.slogan,
       link: referral?.refLink,
-    }
+    };
 
     return info;
-
-  }, [
-    getFirstRefCode, referral,
-  ]);
+  }, [getFirstRefCode, referral]);
 
   return isTablet ? (
     <MobileSharePnL

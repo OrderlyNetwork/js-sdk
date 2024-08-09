@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, KeyboardEventHandler } from "react";
 import {
   Box,
   cn,
@@ -12,19 +12,38 @@ import {
 } from "@orderly.network/ui";
 import { FavoriteTab } from "@orderly.network/hooks";
 import { useDataListColumns } from "../column";
-import { EditIcon, TrashIcon, AddIcon } from "../../../../icons";
+import {
+  EditIcon,
+  TrashIcon,
+  AddIcon,
+  UnFavoritesIcon,
+} from "../../../../icons";
 import { TFavorite } from "../../../../type";
 import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
 import { useMarketsContext } from "../../provider";
+import "../../../../style/index.css";
 
 type FavoritesProps = {} & UseFavoritesReturn;
 
 export const Favorites: FC<FavoritesProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize, favorite, onSort } = props;
+  const { dataSource, meta, setPage, setPageSize, favorite, onSort, loading } =
+    props;
 
   const { onSymbolChange } = useMarketsContext();
 
   const columns = useDataListColumns(favorite, true);
+
+  const emptyView = (
+    <Flex>
+      <Text size="xs" intensity={36}>
+        Click on the
+      </Text>
+      <UnFavoritesIcon className="oui-text-base-contrast-36" />
+      <Text size="xs" intensity={36}>
+        icon next to a market to add it to your list.
+      </Text>
+    </Flex>
+  );
 
   return (
     <div>
@@ -34,10 +53,12 @@ export const Favorites: FC<FavoritesProps> = (props) => {
         bordered
         classNames={{
           header: "oui-text-base-contrast-36",
-          body: "oui-text-base-contrast-80",
+          body: "oui-text-base-contrast-80 !oui-min-h-[187.5px]",
         }}
         columns={columns}
         dataSource={dataSource}
+        emptyView={emptyView}
+        loading={loading}
         onRow={(record, index) => {
           return {
             className: cn(
@@ -70,15 +91,17 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   const { curTab, favoriteTabs } = props.favorite;
 
   const {
+    open,
+    setOpen,
     inputRef,
     inputWidth,
     spanRef,
     editing,
     value,
     onValueChange,
-    onBlur,
+    updateSelectedTab,
+    updateCurTab,
     onEdit,
-    onAdd,
     addTab,
     delTab,
   } = useFavoritesTabScript(props.favorite);
@@ -94,6 +117,12 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
         return Promise.resolve();
       },
     });
+  };
+
+  const onKeyUp: KeyboardEventHandler = (e) => {
+    if (e.key === "Enter") {
+      updateCurTab();
+    }
   };
 
   const renderContent = (item: FavoriteTab, isActive: boolean) => {
@@ -112,19 +141,20 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             width: inputWidth,
           }}
           onValueChange={onValueChange}
-          onBlur={onBlur}
+          onBlur={updateCurTab}
           classNames={{
             root: cn(
-              "oui-padding-0 oui-h-[18px] oui-rounded oui-px-2",
+              "oui-p-0 oui-h-[24px] oui-rounded oui-px-2",
               "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
               isActive &&
                 "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
             ),
             input: cn(
-              "oui-text-2xs oui-font-semibold oui-text-transparent",
+              "oui-text-sm oui-font-semibold oui-text-transparent",
               "oui-gradient-brand oui-caret-[rgba(217,217,217,1)]"
             ),
           }}
+          onKeyUp={onKeyUp}
         />
       );
     } else if (isActive) {
@@ -133,8 +163,8 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           color="brand"
           angle={270}
           weight="semibold"
-          size="2xs"
-          className="oui-leading-[18px]"
+          size="sm"
+          className="oui-leading-[24px]"
           as="div"
         >
           {item.name}
@@ -144,8 +174,8 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       content = (
         <Text
           weight="semibold"
-          size="2xs"
-          className="oui-leading-[18px]"
+          size="sm"
+          className="oui-leading-[24px]"
           as="div"
         >
           {item.name}
@@ -157,7 +187,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       <Box
         r="base"
         px={2}
-        height={18}
+        height={24}
         className={cn(
           "oui-cursor-pointer oui-select-none",
           isActive
@@ -168,7 +198,10 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             : "oui-bg-line-6 oui-text-base-contrast-36 hover:oui-text-base-contrast"
         )}
         onClick={() => {
-          onAdd(item);
+          updateSelectedTab(item);
+          if (isActive) {
+            setOpen(true);
+          }
         }}
       >
         {content}
@@ -177,24 +210,34 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   };
 
   return (
-    <Flex my={3} gapX={3}>
+    <Flex
+      my={3}
+      gapX={3}
+      id="oui-markets-favorites-tabs-container"
+      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer "
+    >
       {favoriteTabs?.map((item: any) => {
         const isActive = curTab.id === item.id;
         return (
           <Tooltip
             key={item.id}
-            open={isActive && !editing ? undefined : false}
+            open={isActive && !editing ? open : false}
+            onOpenChange={(open) => {
+              if (isActive) {
+                setOpen(open);
+              }
+            }}
             // @ts-ignore
             content={
               <Flex gapX={2} itemAlign="center" px={2} py={1}>
                 <EditIcon
-                  className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
+                  className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer"
                   onClick={() => {
                     onEdit(item);
                   }}
                 />
                 <TrashIcon
-                  className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
+                  className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer"
                   onClick={() => {
                     onDel(item);
                   }}

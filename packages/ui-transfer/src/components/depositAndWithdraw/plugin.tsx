@@ -21,7 +21,7 @@ export const DepositSlot = (props: DepositFormWidgetProps) => {
   return (
     <ExtensionSlot
       position={ExtensionPositionEnum.DepositForm}
-      defaultWidget={<DepositFormWidget onClose={props.onClose} />}
+      defaultWidget={DepositFormWidget}
       {...props}
     />
   );

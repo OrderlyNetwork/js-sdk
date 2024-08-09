@@ -9,9 +9,15 @@ import React, {
   ReactElement,
 } from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { TabsBase, TabsList, TabsContent, TabsTrigger } from "./tabsBase";
+import {
+  TabsBase,
+  TabsList,
+  TabsContent,
+  TabsTrigger,
+  tabsVariants,
+} from "./tabsBase";
 import { Flex } from "../flex";
-import { cnBase } from "tailwind-variants";
+import { cnBase, VariantProps } from "tailwind-variants";
 
 type tabConfig = {
   title: ReactNode;
@@ -38,7 +44,8 @@ type TabsProps<T = string> = {
     tabsList?: string;
     tabsContent?: string;
   };
-} & TabsPrimitive.TabsProps;
+} & TabsPrimitive.TabsProps &
+  VariantProps<typeof tabsVariants>;
 
 const Tabs: FC<TabsProps> = (props) => {
   const { classNames, ...rest } = props;
@@ -61,33 +68,38 @@ const Tabs: FC<TabsProps> = (props) => {
       }}
     >
       {props.children}
-      <TabsBase
-        {...rest}
-        // value={value}
-        // onValueChange={onChange}
-        // defaultValue={defaultValue}
-      >
+      <TabsBase {...rest}>
         <Flex
           justify="between"
           itemAlign="center"
           width="100%"
-          className=" oui-border-b oui-border-b-line-6"
+          className={cnBase("oui-border-b oui-border-b-line-6")}
         >
-          <Flex>
-            {props.leading}
-            <TabsList
-              className={cnBase("oui-border-b-0", props.classNames?.tabsList)}
-            >
-              {Object.keys(tabList).map((key) => {
-                const tab = tabList[key];
-                return (
-                  <TabsTrigger key={key} value={tab.value} icon={tab.icon}>
-                    {tab.title}
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-          </Flex>
+          {props.leading}
+          <TabsList
+            className={cnBase(
+              "oui-flex-1 oui-border-0",
+              props.classNames?.tabsList
+            )}
+            variant={rest.variant}
+            size={rest.size}
+          >
+            {Object.keys(tabList).map((key) => {
+              const tab = tabList[key];
+              return (
+                <TabsTrigger
+                  key={key}
+                  value={tab.value}
+                  icon={tab.icon}
+                  variant={rest.variant}
+                  size={rest.size}
+                >
+                  {tab.title}
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
+
           {props.trailing}
         </Flex>
 

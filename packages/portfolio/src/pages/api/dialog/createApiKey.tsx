@@ -25,13 +25,13 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
     }
   }, [props.showCreateDialog]);
 
-  useEffect(() =>{
-    if (ipText.length === 0)
-      setHint("");
+  useEffect(() => {
+    if (ipText.length === 0) setHint("");
   }, [ipText]);
 
   return (
     <SimpleDialog
+      size="sm"
       open={props.showCreateDialog}
       onOpenChange={(open) => {
         props.hideCreateDialog?.();
@@ -49,7 +49,6 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
                 return;
               }
             }
-            
 
             const scopes: string[] = [];
             if (read) {
@@ -61,6 +60,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             await props.doCreate(ipText, scopes.join(",") as ScopeType);
           },
           disabled: !trade && !read,
+          size: "md"
         },
       }}
       classNames={{
@@ -80,19 +80,27 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           </Text>
           <textarea
             placeholder="Add up to 20 IP addresses, separated by commas. "
-            className={cn("oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-7 oui-w-full",
+            className={cn(
+              "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",
               "oui-border-0 focus:oui-border-2 focus:oui-border-primary oui-outline-none",
-              hint.length > 0 && "oui-outline-1 oui-outline-danger focus:oui-outline-none"
+              "oui-placeholder-base-contrast-20",
+              hint.length > 0 &&
+                "oui-outline-1 oui-outline-danger focus:oui-outline-none"
             )}
             value={ipText}
             onChange={(e) => {
               setIpText(e.target.value);
             }}
+            style={{
+              resize: "none",
+            }}
           />
           {hint.length > 0 && (
             <Flex gap={1}>
               <div className="oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"></div>
-              <Text color="danger" size="xs">{hint}</Text>
+              <Text color="danger" size="xs">
+                {hint}
+              </Text>
             </Flex>
           )}
         </Flex>
@@ -110,28 +118,18 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             itemAlign={"start"}
             className="oui-mt-2"
           >
-            <Flex direction={"row"} gap={2}>
-              <Checkbox
-                // className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
-                size={18}
-                checked={read}
-                onCheckedChange={(e) => setRead(e as boolean)}
-              />
-              <Text intensity={54} size="sm">
-                Read
-              </Text>
-            </Flex>
-            <Flex direction={"row"} gap={2}>
-              <Checkbox
-                // className="oui-w-[14px] oui-h-[14px] oui-border-white/[.54] data-[state=checked]:oui-bg-white/80"
-                size={18}
-                checked={trade}
-                onCheckedChange={(e) => setTrade(e as boolean)}
-              />
-              <Text intensity={54} size="sm">
-                Trade
-              </Text>
-            </Flex>
+            <Checkbox
+              size={18}
+              checked={read}
+              onCheckedChange={(e) => setRead(e as boolean)}
+              label="Read"
+            />
+            <Checkbox
+              size={18}
+              checked={trade}
+              onCheckedChange={(e) => setTrade(e as boolean)}
+              label="Trading"
+            />
           </Flex>
         </Statistic>
       </Flex>
@@ -144,6 +142,7 @@ export const Checkbox: FC<{
   checked: boolean;
   onCheckedChange: (checked?: boolean) => void;
   disabled?: boolean;
+  label: string;
 }> = (props) => {
   return (
     <button
@@ -151,7 +150,9 @@ export const Checkbox: FC<{
       onClick={(e) => {
         props.onCheckedChange(!props.checked);
       }}
-      className={"disabled:oui-cursor-not-allowed disabled:oui-opacity-50"}
+      className={
+        "disabled:oui-cursor-not-allowed disabled:oui-opacity-50 oui-flex oui-items-center oui-gap-2"
+      }
     >
       {props.checked ? (
         <svg
@@ -184,6 +185,9 @@ export const Checkbox: FC<{
           />
         </svg>
       )}
+      <Text intensity={54} size="sm">
+        {props.label}
+      </Text>
     </button>
   );
 };

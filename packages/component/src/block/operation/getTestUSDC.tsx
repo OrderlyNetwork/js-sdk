@@ -7,7 +7,7 @@ import {
 } from "@orderly.network/hooks";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 import { toast } from "@/toast";
 
 const localStorageItem = "Orderly_GetTestUSDC";
@@ -78,7 +78,10 @@ export const GetTestUSDC = () => {
   }
 
   return (
-    <div id="orderly-get-usdc" className="orderly-flex orderly-justify-between orderly-items-center orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-bg-base-700 orderly-z-20 orderly-px-2 orderly-animate-in orderly-fade-in">
+    <div
+      id="orderly-get-usdc"
+      className="orderly-flex orderly-justify-between orderly-items-center orderly-fixed orderly-left-0 orderly-right-0 orderly-bottom-[64px] orderly-h-[40px] orderly-bg-base-700 orderly-z-20 orderly-px-2 orderly-animate-in orderly-fade-in"
+    >
       <div className="orderly-text-3xs orderly-text-base-contrast/50 orderly-cursor-pointer">
         <span className="orderly-text-primary-light" onClick={onGetClick}>
           Get test USDC

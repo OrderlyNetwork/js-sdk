@@ -38,6 +38,7 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
         size={props.size}
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
+        onCloseAutoFocus={(event) => event.preventDefault()}
         className={props.classNames?.content}
       >
         {props.title && (

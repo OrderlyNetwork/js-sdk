@@ -4,7 +4,7 @@ import { SidePicker } from "@/block/pickers";
 import { Label } from "@/label";
 import { Checkbox } from "@/checkbox";
 import { useOrderStream } from "@orderly.network/hooks";
-import { modal } from "@/modal";
+import { modal } from "@orderly.network/ui";
 
 interface Props {
   onCancelAll?: () => Promise<void>;

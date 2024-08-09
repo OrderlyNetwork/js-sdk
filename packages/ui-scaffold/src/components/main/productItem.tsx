@@ -16,7 +16,7 @@ export const ProductItem: FC<{
     <Button
       variant={active ? "gradient" : "text"}
       color="secondary"
-      size="md"
+      size="sm"
       angle={45}
       className={cn(
         active ? "oui-text-[rgba(0_,_0_,_0_,_0.88)]" : "hover:oui-bg-base-7"

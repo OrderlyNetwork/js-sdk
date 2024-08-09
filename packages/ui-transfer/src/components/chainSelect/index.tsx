@@ -44,7 +44,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
   ) : (
     <ChainIcon className="oui-w-[18px] oui-h-[18px]" chainId={value?.id} />
   );
-  const chainName = wrongNetwork ? "Unkonwn" : value?.info?.network_infos?.name;
+  const chainName = wrongNetwork ? "Unknown" : value?.info?.network_infos?.name;
 
   const renderRightIcon = () => {
     if (loading) {
@@ -57,7 +57,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
 
   const trigger = (
     <Flex
-      intensity={500}
+      intensity={600}
       className={cn(
         "oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line",
         selectable ? "oui-cursor-pointer" : "oui-cursor-auto"

@@ -12,6 +12,7 @@ import { ApiManagerScriptReturns } from "../apiManager.script";
 export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   return (
     <SimpleDialog
+      size="sm"
       open={props.showCreatedDialog}
       onOpenChange={(open) => {
         props.hideCreatedDialog?.();
@@ -22,6 +23,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           label: "OK",
           className:
             "oui-w-[120px] lg:oui-w-[154px] oui-bg-base-2 hover:oui-bg-base-3",
+          size: "md",
           onClick: async () => {
             return props.doConfirm();
           },
@@ -30,6 +32,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           label: "Copy API info",
           className:
             "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary hover:oui-opacity-80",
+          size: "md",
           onClick: async () => {
             return props.onCopyApiKeyInfo();
           },
@@ -48,6 +51,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             size="sm"
             intensity={80}
             copyable
+            copyIconSize={16}
             className="oui-break-all"
             onCopy={() => props.onCopyApiKey(props.generateKey?.key)}
           >
@@ -59,6 +63,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             size="sm"
             intensity={80}
             copyable
+            copyIconSize={16}
             className="oui-break-all"
             onCopy={props.onCopyApiSecretKey}
           >
@@ -70,6 +75,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             size="sm"
             intensity={80}
             copyable={(props.generateKey?.ip?.length || 0) > 0}
+            copyIconSize={16}
             className="oui-max-h-[100px] oui-overflow-hidden oui-text-ellipsis oui-block oui-break-all"
             onCopy={props.onCopyIP}
           >

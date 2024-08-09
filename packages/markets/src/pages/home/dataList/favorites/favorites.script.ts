@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { getPageData, searchBySymbol, useSort } from "../../../../utils";
+import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
 import { TFavorite } from "../../../../type";
 import { useMarketsContext } from "../../provider";
 
@@ -10,6 +10,7 @@ export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
 export const useFavoritesScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const [data, favorite] = useMarkets(MarketsType.FAVORITES);
+  const [loading, setLoading] = useState(true);
 
   const { favorites, favoriteTabs, getLastSelFavTab } = favorite;
 
@@ -36,28 +37,34 @@ export const useFavoritesScript = () => {
     return searchBySymbol(filterList, searchValue);
   }, [data, curTab, favorites, searchValue]);
 
-  const pageData = useMemo(() => {
-    const list = getSortedList(filterData);
-    return getPageData(list, pageSize, page);
+  const { totalData, pagedData } = useMemo(() => {
+    const totalData = getSortedList(filterData);
+    return {
+      totalData,
+      pagedData: getPagedData(totalData, pageSize, page),
+    };
   }, [filterData, pageSize, page, getSortedList]);
 
-  const meta = useMemo(
-    () =>
-      parseMeta({
-        total: data?.length,
-        current_page: page,
-        records_per_page: pageSize,
-      }),
-    [data, page, pageSize]
-  );
+  const meta = useMemo(() => {
+    return parseMeta({
+      total: totalData?.length,
+      current_page: page,
+      records_per_page: pageSize,
+    });
+  }, [data, page, pageSize, totalData]);
 
   useEffect(() => {
-    // 切换页面大小时，重置页码
+    setLoading(false);
+  }, [favorites]);
+
+  useEffect(() => {
+    // reset page when size change and search data
     setPage(1);
-  }, [pageSize]);
+  }, [pageSize, searchValue]);
 
   return {
-    dataSource: pageData,
+    loading,
+    dataSource: pagedData,
     meta,
     setPage,
     setPageSize,
@@ -76,28 +83,17 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     favoriteTabs,
     updateFavoriteTabs,
     updateSelectedFavoriteTab,
-    updateSymbolFavoriteState,
     updateFavorites,
     curTab,
     setCurTab,
   } = favorite;
 
+  const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
   const [inputWidth, setInputWidth] = useState(50);
-
-  const onBlur = () => {
-    updateFavoriteTabs(
-      {
-        ...curTab,
-        name: value,
-      },
-      { update: true }
-    );
-    setEditing(false);
-  };
 
   const onEdit = (item: any) => {
     setEditing(true);
@@ -108,9 +104,21 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     }, 0);
   };
 
-  const onAdd = (item: any) => {
+  const updateSelectedTab = (item: any) => {
     setCurTab(item);
     updateSelectedFavoriteTab(item);
+  };
+
+  const updateCurTab = () => {
+    updateFavoriteTabs(
+      {
+        ...curTab,
+        name: value,
+      },
+      { update: true }
+    );
+    setEditing(false);
+    setOpen(false);
   };
 
   const addTab = () => {
@@ -146,20 +154,22 @@ export function useFavoritesTabScript(favorite: TFavorite) {
   useEffect(() => {
     if (value) {
       const rect = spanRef.current?.getBoundingClientRect();
-      setInputWidth(Math.max(rect?.width || 0, 50));
+      setInputWidth(Math.max((rect?.width || 0) + 14, 50));
     }
   }, [value]);
 
   return {
+    open,
+    setOpen,
     inputRef,
     inputWidth,
     spanRef,
     editing,
     value,
     onValueChange: setValue,
-    onBlur,
     onEdit,
-    onAdd,
+    updateSelectedTab,
+    updateCurTab,
     addTab,
     delTab,
   };

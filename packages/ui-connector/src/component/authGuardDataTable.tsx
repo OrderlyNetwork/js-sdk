@@ -5,6 +5,7 @@ import { alertMessages, DESCRIPTIONS } from "../constants/message";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Flex } from "@orderly.network/ui";
 import { AuthGuard } from "./authGuard";
+import { useAccount } from "@orderly.network/hooks";
 
 export const AuthGuardDataTable = <RecordType extends unknown>(
   props: PropsWithChildren<
@@ -25,19 +26,24 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
     dataSource,
     ...rest
   } = props;
-  const data = useDataTap(dataSource);
-  // const { wrongNetwork } = useAppContext();
+  const data = useDataTap(dataSource, {
+    accountStatus: status,
+  });
+  const { state } = useAccount();
+  const { wrongNetwork } = useAppContext();
 
   return (
     <DataTable
       {...rest}
       dataSource={data}
+      ignoreLoadingCheck={wrongNetwork || state.status < status}
       emptyView={
         <GuardView
           status={status}
           description={description}
           labels={labels}
           className={props.classNames?.authGuardDescription}
+          visible={!state.validating}
         />
       }
     />
@@ -49,16 +55,21 @@ type GuardViewProps = {
   description?: alertMessages;
   labels?: alertMessages;
   className?: string;
+  visible?: boolean;
 };
 
 const GuardView = (props: GuardViewProps) => {
   const descriptions = { ...DESCRIPTIONS, ...props.description };
+  if (!props.visible) return null;
   return (
-    <Flex>
+    <Flex py={8}>
       <AuthGuard
         status={props.status}
         labels={props.labels}
         descriptions={descriptions}
+        buttonProps={{
+          size: "md",
+        }}
       >
         <ExtensionSlot position={"emptyDataState"} />
       </AuthGuard>

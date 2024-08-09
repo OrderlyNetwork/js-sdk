@@ -24,9 +24,9 @@ export const themePlugin = () =>
         "--oui-color-danger-darken": "157 32 77,",
         "--oui-color-danger-contrast": "255 255 255",
 
-        "--oui-color-success": "0 134 118",
-        "--oui-color-success-light": "0 181 159",
-        "--oui-color-success-darken": "0 119 105",
+        "--oui-color-success": "0 180 158",
+        "--oui-color-success-light": "15 203 180",
+        "--oui-color-success-darken": "3 152 134",
         "--oui-color-success-contrast": "255 255 255",
 
         "--oui-color-warning": "210 95 0",
@@ -77,6 +77,12 @@ export const themePlugin = () =>
 
         "--oui-gradient-brand-start": "38 254 255",
         "--oui-gradient-brand-end": "89 176 254",
+
+        // Spacing
+        "--oui-spacing-sm": "22.5rem",
+        "--oui-spacing-md": "26.25rem",
+        "--oui-spacing-lg": "30rem",
+        "--oui-spacing-xl": "33.75rem",
       },
     });
   });

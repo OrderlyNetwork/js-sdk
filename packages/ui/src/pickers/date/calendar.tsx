@@ -2,6 +2,7 @@ import { DayPicker } from "react-day-picker";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "../../icon";
 import { cnBase } from "tailwind-variants";
+import { cn } from "../..";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -39,19 +40,20 @@ function Calendar({
             ? "[&:has(>.oui-day-range-end)]:oui-rounded-r-md [&:has(>.oui-day-range-start)]:oui-rounded-l-md first:[&:has([aria-selected])]:oui-rounded-l-md last:[&:has([aria-selected])]:oui-rounded-r-md"
             : "[&:has([aria-selected])]:oui-rounded-md"
         ),
-        day: cnBase(
-          "oui-h-7 oui-w-7 oui-p-0 oui-rounded-md oui-text-base-contrast-80 oui-font-normal aria-selected:oui-opacity-100 hover:oui-bg-base-5"
+        day: cn(
+        //   buttonVariants({ variant: "ghost" }),
+          "oui-h-7 oui-w-7 oui-p-0 oui-rounded-md oui-font-normal aria-selected:oui-opacity-100 oui-text-base-contrast-80 hover:oui-bg-base-5",
         ),
-        day_range_start: "oui-day-range-start",
-        day_range_end: "oui-day-range-end",
+        day_range_start: "day-range-start  oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
+        day_range_end: "day-range-end oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
         day_selected:
-          "oui-bg-primary oui-day-cell-selected oui-text-base-contrast hover:oui-bg-primary hover:oui-text-base-contrast focus:oui-bg-primary focus:oui-text-base-contrast",
-        day_today: "oui-bg-base-4 oui-text-primary-light",
+          "oui-bg-base-4 ",
+        day_today: "oui-bg-accent ",
         day_outside:
-          "day-outside oui-text-base-contrast-80 oui-opacity-30  aria-selected:oui-bg-base-4/50 aria-selected:oui-text-base-contrast-80 aria-selected:oui-opacity-30",
-        day_disabled: "oui-text-base-contrast-80 oui-opacity-30",
+          "oui-day-outside oui-text-muted-foreground oui-opacity-50 aria-selected:oui-bg-accent/50 aria-selected:oui-text-muted-foreground aria-selected:oui-opacity-30",
+        day_disabled: "oui-text-muted-foreground oui-opacity-50",
         day_range_middle:
-          "aria-selected:oui-bg-base-4 aria-selected:oui-text-base-contrast-80",
+          "aria-selected:oui-bg-accent aria-selected:oui-text-accent-foreground",
         day_hidden: "oui-invisible",
         ...classNames,
       }}

@@ -8,6 +8,6 @@ export const useTitleScript = (): TitleReturns => {
   const { overwrite } = useReferralContext();
 
   return {
-    gradientTitle: overwrite?.ref?.gradientTitle || "Orderly",
+    gradientTitle: overwrite?.shortBrokerName || "Orderly",
   };
 };
