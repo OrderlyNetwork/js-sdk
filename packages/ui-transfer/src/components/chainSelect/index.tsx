@@ -44,7 +44,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
   ) : (
     <ChainIcon className="oui-w-[18px] oui-h-[18px]" chainId={value?.id} />
   );
-  const chainName = wrongNetwork ? "Unkonwn" : value?.info?.network_infos?.name;
+  const chainName = wrongNetwork ? "Unknown" : value?.info?.network_infos?.name;
 
   const renderRightIcon = () => {
     if (loading) {
