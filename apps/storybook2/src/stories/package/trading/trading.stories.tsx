@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
+import { fn } from '@storybook/test';
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
@@ -28,9 +28,7 @@ const meta = {
             brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
-            onChainChanged={(chainId, isTest) => {
-              console.log("onChainChanged", chainId, isTest);
-            }}
+            onChainChanged={fn()}
             // configStore={configStore}
           >
             <Scaffold
@@ -82,6 +80,7 @@ const meta = {
       },
       refLink: "https://orderly.netowork/referral?abc=123",
     },
+    onSymbolChange:fn(),
   },
 } satisfies Meta<typeof TradingPage>;
 

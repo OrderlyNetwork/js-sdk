@@ -12,6 +12,7 @@ export const ChainSelector = (props: {
   currentChainId?: number;
   close?: () => void;
   resolve?: (isSuccess: boolean) => void;
+  chainChangedCallback?: (chainId: number, isTestnet: boolean) => void;
 }) => {
   const [select, setSelect] = useState<number | undefined>();
   // props.currentChainId
@@ -22,6 +23,8 @@ export const ChainSelector = (props: {
     if (complete) {
       props.resolve?.(complete);
       props.close?.();
+
+      props.chainChangedCallback?.(chain.id, chain.isTestnet ?? false);
     } else {
       setSelect(undefined);
     }
@@ -46,7 +49,8 @@ export const ChainSelector = (props: {
             <ChainTile
               key={index}
               selected={select === item.id}
-              {...item}
+              // {...item}
+              item={item}
               onClick={(chain: ChainItem) => onChange(chain)}
             />
           );
@@ -61,8 +65,9 @@ export const ChainSelector = (props: {
             <ChainTile
               key={item.id}
               selected={select === item.id}
-              {...item}
+              // {...item}
               onClick={(chain: ChainItem) => onChange(chain)}
+              item={item}
             />
           );
         })}
@@ -79,12 +84,14 @@ export const ChainSelector = (props: {
 
 // ------------------ ChainItem start ------------------
 export const ChainTile = (props: {
-  id: number;
-  name: string;
-  lowestFee?: boolean;
+  // id: number;
+  // name: string;
+  // lowestFee?: boolean;
   selected: boolean;
+  item: ChainItem;
   onClick?: (chain: ChainItem) => void;
 }) => {
+  const { item } = props;
   return (
     <button
       className={
@@ -93,17 +100,14 @@ export const ChainTile = (props: {
           : "oui-w-full oui-rounded-lg hover:oui-bg-base-6 "
       }
       onClick={() => {
-        props.onClick?.({
-          id: props.id,
-          name: props.name,
-        });
+        props.onClick?.(item);
       }}
     >
       <Flex justify={"between"}>
         <Flex itemAlign={"center"} width={"100%"} py={3} px={4} gap={2}>
-          <ChainIcon chainId={props.id} />
-          <Text size="2xs">{props.name}</Text>
-          {props.lowestFee && (
+          <ChainIcon chainId={item.id} />
+          <Text size="2xs">{item.name}</Text>
+          {item.lowestFee && (
             <div className="oui-text-success oui-px-2 oui-bg-success/10 oui-rounded oui-text-2xs">
               lowest fee
             </div>

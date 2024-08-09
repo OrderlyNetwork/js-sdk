@@ -1,7 +1,8 @@
+import { useMemo } from "react";
 import { useConfig } from "@orderly.network/hooks";
 import { useChains, useWalletConnector } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
-import { useMemo } from "react";
+import { useAppContext } from "@orderly.network/react-app";
 
 export const useChainSelectorBuilder = (options?: {
   networkId?: NetworkId;
@@ -10,6 +11,8 @@ export const useChainSelectorBuilder = (options?: {
   const config = useConfig();
   const [chains, { checkChainSupport }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
+
+  const { onChainChanged } = useAppContext();
 
   const onChainChange = async (chain: { id: number }) => {
     if (!connectedChain) {
@@ -37,11 +40,13 @@ export const useChainSelectorBuilder = (options?: {
         name: chain.network_infos.name,
         id: chain.network_infos.chain_id,
         lowestFee: chain.network_infos.bridgeless,
+        isTestnet: false,
       })),
       testnet: chains.testnet.map((chain) => ({
         name: chain.network_infos.name,
         id: chain.network_infos.chain_id,
         lowestFee: chain.network_infos.bridgeless,
+        isTestnet: true,
       })),
     };
 
@@ -63,6 +68,7 @@ export const useChainSelectorBuilder = (options?: {
   return {
     chains: filteredChains,
     onChainChange,
+    chainChangedCallback: onChainChanged,
     currentChainId: connectedChain?.id as number | undefined,
   };
 };

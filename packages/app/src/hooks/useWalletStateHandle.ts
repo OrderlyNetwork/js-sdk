@@ -24,7 +24,7 @@ import type { WalletState } from "@orderly.network/hooks";
 // }
 
 export const useWalletStateHandle = (options: {
-  onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  // onChainChanged?: (chainId: number, isTestnet: boolean) => void;
 }) => {
   const {
     wallet: connectedWallet,
@@ -126,7 +126,7 @@ export const useWalletStateHandle = (options: {
       account.switchChainId(currentChainId!);
 
       // emit chain changed event
-      options.onChainChanged?.(currentChainId!, isTestnet(networkId));
+      // options.onChainChanged?.(currentChainId!, isTestnet(networkId));
     }
   }, [
     connectedWallet,
