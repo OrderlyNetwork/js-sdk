@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 1.0.1-sdk-v2.55
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@1.5.10-sdk-v2.55
+
 ## 1.0.1-sdk-v2.54
 
 ### Patch Changes
