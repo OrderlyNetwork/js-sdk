@@ -60,7 +60,7 @@ const MobileCell: FC<{
   const { data } = props;
   const isOrder =
     `${data?.info?.epoch_token || data.epoch_token}`.toLowerCase() === "order";
-  const r_warret = commifyOptional(data.info?.r_wallet);
+  const r_warret = commifyOptional(data.info?.r_wallet, { fix: 2});
   return (
     <Flex
       key={data.epoch_id}

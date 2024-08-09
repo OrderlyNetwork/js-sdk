@@ -1,15 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAccountInfo, usePrivateQuery } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
-import { dataSource } from "./dataSource";
-import { API } from "@orderly.network/types";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { dataSource as defaultDataSource } from "./dataSource";
+import { AccountStatusEnum, API } from "@orderly.network/types";
+import { useDataTap } from "@orderly.network/react-app";
+import { Column } from "@orderly.network/ui";
+import { useFeeTierColumns } from "./column";
 
 export type useFeeTierScriptReturn = ReturnType<typeof useFeeTierScript>;
 
-export function useFeeTierScript() {
+export type UseFeeTierScriptOptions = {
+  dataAdapter?: (
+    columns: Column[],
+    dataSource: any[]
+  ) => { columns: Column[]; dataSource: any[] };
+};
+
+export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
+  const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
   const { data } = useAccountInfo();
+
+  const cols = useFeeTierColumns();
+
   const { data: volumeStatistics } = usePrivateQuery<
     | {
         perp_volume_last_30_days: number;
@@ -17,8 +30,17 @@ export function useFeeTierScript() {
     | undefined
   >("/v1/volume/user/stats");
 
+  const { columns, dataSource } = useMemo(() => {
+    return typeof dataAdapter === "function"
+      ? dataAdapter(cols, defaultDataSource)
+      : {
+          columns: cols,
+          dataSource: defaultDataSource,
+        };
+  }, [dataAdapter, cols]);
+
   const getFuturesCurrentTier = (
-    feeList: typeof dataSource,
+    feeList: typeof defaultDataSource,
     data: API.AccountInfo
   ) => {
     const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
@@ -43,7 +65,7 @@ export function useFeeTierScript() {
 
     const tier = getFuturesCurrentTier(dataSource, data);
     setTier(tier!);
-  }, [data]);
+  }, [data, dataSource]);
 
   const futures_taker_fee_rate = useMemo(() => {
     const value = data?.futures_taker_fee_rate;
@@ -57,16 +79,21 @@ export function useFeeTierScript() {
     return `${new Decimal(value).mul(0.01).toString()}%`;
   }, [data]);
 
-  const tierValue = useDataTap(tier);
-  const volValue = useDataTap(volumeStatistics?.perp_volume_last_30_days);
-  const futures_taker_fee_rateValue = useDataTap(futures_taker_fee_rate);
-  const futures_maker_fee_rateValue = useDataTap(futures_maker_fee_rate);
-  const {wrongNetwork} = useAppContext();
-  
+  const authData = useDataTap(
+    {
+      tier,
+      vol: volumeStatistics?.perp_volume_last_30_days,
+      takerFeeRate: futures_taker_fee_rate,
+      makerFeeRate: futures_maker_fee_rate,
+    },
+    {
+      accountStatus: AccountStatusEnum.EnableTrading,
+    }
+  );
+
   return {
-    tier: tierValue,
-    vol: volValue,
-    futures_taker_fee_rate: futures_taker_fee_rateValue,
-    futures_maker_fee_rate: futures_maker_fee_rateValue,
+    ...authData,
+    columns,
+    dataSource,
   };
 }

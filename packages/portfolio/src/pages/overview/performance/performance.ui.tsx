@@ -34,7 +34,15 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
       id="portfolio-overview-performance"
     >
       <Grid cols={3} gap={4}>
-        <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
+        <Box
+          gradient="neutral"
+          r="md"
+          px={4}
+          py={2}
+          angle={184}
+          border
+          borderColor={6}
+        >
           <Statistic
             label={`${period} ROI`}
             // @ts-ignore
@@ -46,7 +54,15 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             {invisible ? "--" : aggregateValue.roi}
           </Statistic>
         </Box>
-        <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
+        <Box
+          gradient="neutral"
+          r="md"
+          px={4}
+          py={2}
+          angle={184}
+          border
+          borderColor={6}
+        >
           <Statistic
             label={`${period} PnL`}
             // @ts-ignore
@@ -58,7 +74,15 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             {invisible ? "--" : aggregateValue.pnl}
           </Statistic>
         </Box>
-        <Box gradient="neutral" r="md" px={4} py={2} angle={184}>
+        <Box
+          gradient="neutral"
+          r="md"
+          px={4}
+          py={2}
+          angle={184}
+          border
+          borderColor={6}
+        >
           <Statistic
             classNames={{
               label: "oui-w-full",
@@ -66,7 +90,6 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             label={
               <Flex justify={"between"}>
                 <span>{`${period} Volume (USDC)`}</span>
-
                 <span>{volumeUpdateDate}</span>
               </Flex>
             }

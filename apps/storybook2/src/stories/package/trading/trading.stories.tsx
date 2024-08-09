@@ -5,9 +5,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import {CustomConfigStore} from "../CustomConfig Store";
-import { TradingPage } from '@orderly.network/trading';
+import { TradingPage } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-
 
 const meta = {
   title: "Package/Trading/page",
@@ -18,7 +17,6 @@ const meta = {
   // },
   decorators: [
     (Story) => {
-
       // const networkId = localStorage.getItem("preview-orderly-networkId");
       // const networkId = "mainnet";
       const networkId = "testnet";
@@ -31,11 +29,13 @@ const meta = {
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={(chainId, isTest) => {
-              console.log("onChainChanged", chainId, isTest)
+              console.log("onChainChanged", chainId, isTest);
             }}
-          // configStore={configStore}
+            // configStore={configStore}
           >
-            <Scaffold leftSidebar={null}
+            <Scaffold
+              leftSidebar={null}
+              // @ts-ignore
               mainNavProps={{
                 mainMenus: [
                   { name: "Trading", href: "/" },
@@ -48,8 +48,8 @@ const meta = {
                 ],
                 initialMenu: "/markets",
                 initialProduct: "/trade",
-              }}>
-
+              }}
+            >
               <Story />
             </Scaffold>
           </OrderlyApp>
@@ -71,13 +71,24 @@ const meta = {
       library_path: "/tradingview/charting_library/",
       customCssUrl: "/tradingview/chart.css",
     },
+    referral: {
+      saveRefCode: true,
+      slogan: "Slogan is： NEWBE",
+      onClickReferral: () => {
+        console.log("click referral");
+      },
+      onBoundRefCode: (success, error) => {
+        console.log("onBoundRefCode", success, error);
+      },
+      refLink: "https://orderly.netowork/referral?abc=123",
+    },
   },
 } satisfies Meta<typeof TradingPage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// @ts-ignore
 export const Page: Story = {};
-
 
 // export const LayoutPage: Story = {}

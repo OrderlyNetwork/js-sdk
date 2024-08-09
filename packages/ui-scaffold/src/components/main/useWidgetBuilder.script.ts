@@ -67,7 +67,8 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
       items: mainNavConfig.products,
       current: currentProduct,
       onItemClick: (product: ProductItem) => {
-        setCurrentProduct(product.href);
+        // No need to modify the intenal state
+        // setCurrentProduct(product.href);
         routerAdapter?.onRouteChange({
           href: product.href,
           name: product.name,

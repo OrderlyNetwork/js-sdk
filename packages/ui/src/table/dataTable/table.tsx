@@ -26,6 +26,8 @@ import { useTableSize } from "./useTableSize";
 import { Box } from "../../box";
 import { cn } from "../..";
 
+const DEFAULT_MIN_HEIGHT = 130;
+
 export interface DataTableProps<RecordType>
   extends TBodyProps<RecordType>,
     VariantProps<typeof dataTableVariants> {
@@ -117,7 +119,7 @@ export const DataTable = <RecordType extends unknown>(
   // const fetched = useRef(0);
   //
   const [initialized, setInitialized] = useState(false);
-  const minHeight = useRef(initialMinHeight || 280);
+  const minHeight = useRef(initialMinHeight || DEFAULT_MIN_HEIGHT);
 
   useEffect(() => {
     if (initialized) return;
@@ -185,6 +187,13 @@ export const DataTable = <RecordType extends unknown>(
       resizeObserver.disconnect();
     };
   }, [tableRef.current]);
+
+  // if pageSize is changed or data is null, reset the minHeight
+  useEffect(() => {
+    if (dataSource === null) {
+      minHeight.current = initialMinHeight || DEFAULT_MIN_HEIGHT;
+    }
+  }, [dataSource]);
 
   const { width, height } = useTableSize({ scroll });
 

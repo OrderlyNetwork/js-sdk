@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 
 import { format as formatDate, isValid } from "date-fns";
-import { Text, TextElement, TextProps } from "./text";
+import { CopyableTextProps, Text, TextElement, TextProps } from "./text";
 import { CopyIcon } from "../icon/copy";
 import { TokenIcon } from "../icon";
 import { SizeType } from "../helpers/sizeType";
@@ -58,7 +58,7 @@ type SymbolText = {
 const DEFAULT_SYMBOL_FORMAT = "base-quote";
 const DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-export type FormattedTextProps = TextProps & {
+export type FormattedTextProps = TextProps & CopyableTextProps & {
   // asChildren?: boolean;
   // rule?: Omit<TextRule, "status"|'address'|'date'>;
   loading?: boolean;
@@ -91,6 +91,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       // @ts-ignore
       capitalize,
       copyable,
+      copyIconSize,
       onCopy,
       //@ts-ignore
       showIcon,
@@ -122,7 +123,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
               onCopy?.();
             }}
           >
-            <CopyIcon size={12} color="white" />
+            <CopyIcon size={copyIconSize ?? 12} color="white" />
           </button>
         );
       }

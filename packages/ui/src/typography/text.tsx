@@ -60,8 +60,11 @@ const textVariants = tv({
 
 export type TextElement = React.ElementRef<"span">;
 
-interface CommonTextProps extends VariantProps<typeof textVariants> {
+interface BasicTextProps extends VariantProps<typeof textVariants> {
   asChild?: boolean;
+}
+
+interface CopyableTextProps extends BasicTextProps {
   /**
    * If true, the text will be copied when clicked.
    */
@@ -70,6 +73,8 @@ interface CommonTextProps extends VariantProps<typeof textVariants> {
    * Callback when the text is copied.
    */
   onCopy?: () => void;
+  /** default is 12 */
+  copyIconSize?: number;
 }
 
 type TextSpanProps = { as?: "span" } & ComponentPropsWithout<
@@ -82,7 +87,7 @@ type TextLabelProps = { as: "label" } & ComponentPropsWithout<
   RemovedProps
 >;
 type TextPProps = { as: "p" } & ComponentPropsWithout<"p", RemovedProps>;
-type TextProps = CommonTextProps &
+type TextProps = BasicTextProps &
   (TextSpanProps | TextDivProps | TextLabelProps | TextPProps);
 
 const Text = React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
@@ -117,4 +122,4 @@ const Text = React.forwardRef<TextElement, TextProps>((props, forwardedRef) => {
 Text.displayName = "Text";
 
 export { Text, textVariants };
-export type { TextProps };
+export type { TextProps, CopyableTextProps };

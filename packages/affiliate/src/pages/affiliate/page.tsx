@@ -58,9 +58,11 @@ const Layout1280 = () => {
       </Flex>
       <Flex direction={"column"} gap={4} className="oui-w-1/2">
         <ReferralLinkWidget />
-        <div className="oui-h-[360px]">
+        {/* <div className="oui-h-[360px]"> */}
+          <div className="oui-flex-1">
           <ReferralCodesWidget />
-        </div>
+          </div>
+        {/* </div> */}
       </Flex>
     </Flex>
   );

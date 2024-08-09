@@ -42,7 +42,6 @@ export const useDataListColumns = (
             <Flex
               width="100%"
               height="100%"
-              className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
               mr={3}
               justify="center"
               itemAlign="center"
@@ -51,7 +50,7 @@ export const useDataListColumns = (
               {value ? (
                 <FavoritesIcon className="oui-text-[rgba(255,154,46,1)]" />
               ) : (
-                <UnFavoritesIcon />
+                <UnFavoritesIcon className="oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
               )}
             </Flex>
           );
@@ -70,7 +69,7 @@ export const useDataListColumns = (
       {
         title: "Market",
         dataIndex: "symbol",
-        width: 80,
+        width: 90,
         render: (value) => {
           return (
             <Flex gapX={1}>
@@ -94,7 +93,11 @@ export const useDataListColumns = (
         align: "right",
         onSort: true,
         render: (value, record) => {
-          return <Text.numeral dp={record.quote_dp || 2}>{value}</Text.numeral>;
+          return (
+            <Text.numeral dp={record.quote_dp || 2} currency="$">
+              {value}
+            </Text.numeral>
+          );
         },
       },
       {

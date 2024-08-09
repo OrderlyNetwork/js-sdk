@@ -76,7 +76,7 @@ const tabsVariants = tv({
           "data-[state=active]:oui-bg-base-5",
           "data-[state=active]:oui-text-base-contrast",
         ],
-        icon: ["oui-text-base-contrast"],
+        icon: ["oui-text-inherit"],
       },
     },
     size: {

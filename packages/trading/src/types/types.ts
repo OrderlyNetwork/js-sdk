@@ -1,3 +1,5 @@
+import type { TradingPageProps as OldTradingPageProps } from "@orderly.network/react";
+
 export type layoutInfo = {
   width?: number;
   height?: number;
@@ -65,3 +67,15 @@ export type ShareOptions = {
     brandColor?: string;
   };
 };
+
+
+export type ReferralProps = {
+  saveRefCode?: boolean;
+  onClickReferral?: () => void;
+  onBoundRefCode?: (success: boolean, error: any) => void;
+  refLink?: string;
+  slogan?: string;
+};
+
+
+export type TradingPageProps =  OldTradingPageProps& { shareOptions: ShareOptions, referral: ReferralProps }

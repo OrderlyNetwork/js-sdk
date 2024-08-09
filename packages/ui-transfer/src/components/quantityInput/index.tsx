@@ -170,9 +170,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           }}
           formatters={[
             inputFormatter.numberFormatter,
-            inputFormatter.dpFormatter(token?.precision ?? 2, {
-              roundingMode: Decimal.ROUND_DOWN,
-            }),
+            inputFormatter.dpFormatter(token?.precision ?? 2),
             inputFormatter.currencyFormatter,
           ]}
           {...rest}

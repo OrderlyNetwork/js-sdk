@@ -12,7 +12,7 @@ export const DashboardPage = (props: {
   const { classNames = {} } = props;
   const { root, ...rest } = classNames;
   return (
-    <div id="oui-affiliate-dashboard-page" className={cn("oui-w-full", root)}>
+    <div id="oui-affiliate-dashboard-page" className={cn("oui-w-full oui-tracking-tight", root)}>
       <TabWidget classNames={rest} />
     </div>
   );

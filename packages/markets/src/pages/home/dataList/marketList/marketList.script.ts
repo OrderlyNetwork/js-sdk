@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
-import { getPageData, searchBySymbol, useSort } from "../../../../utils";
+import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
 import { TFavorite } from "../../../../type";
 import { useMarketsContext } from "../../provider";
 
@@ -22,20 +22,22 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     options?.sortOrder
   );
 
-  const pageData = useMemo(() => {
+  const { totalData, pagedData } = useMemo(() => {
     const list = getSortedList(data);
-    const filterList = searchBySymbol(list, searchValue);
-    return getPageData(filterList, pageSize, page);
+    const totalData = searchBySymbol(list, searchValue);
+    return {
+      totalData,
+      pagedData: getPagedData(totalData, pageSize, page),
+    };
   }, [data, pageSize, page, getSortedList, searchValue]);
 
   const meta = useMemo(() => {
-    const _data = searchValue ? pageData : data;
     return parseMeta({
-      total: _data?.length,
+      total: totalData?.length,
       current_page: page,
       records_per_page: pageSize,
     });
-  }, [data, page, pageSize, searchValue, pageData]);
+  }, [data, page, pageSize, totalData]);
 
   useEffect(() => {
     setLoading(false);
@@ -55,7 +57,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
 
   return {
     loading,
-    dataSource: pageData,
+    dataSource: pagedData,
     meta,
     setPage,
     setPageSize,

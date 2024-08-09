@@ -17,7 +17,7 @@ import { alertMessages, DESCRIPTIONS, LABELS } from "../constants/message";
 import { Flex } from "@orderly.network/ui";
 import { Box } from "@orderly.network/ui";
 
-export type AuthGuardProps = {
+export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   fallback?: (props: {
     validating: boolean;
     status: AccountStatusEnum;
@@ -53,6 +53,10 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     buttonProps,
     fallback,
     descriptions,
+    classNames,
+    networkId,
+    id,
+    // ...rest
   } = props;
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
@@ -80,10 +84,12 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
         <StatusInfo
           // variant={"gradient"}
           angle={45}
-          fullWidth
+          // fullWidth
           disabled
           loading
           description={descriptions?.connectWallet}
+          id={id}
+          type="button"
           {...buttonProps}
         >
           {labels.connectWallet}
@@ -94,7 +100,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     return (
       <DefaultFallback
         status={state.status}
-        buttonProps={buttonProps}
+        buttonProps={{ ...buttonProps, id, type: "button" }}
         wrongNetwork={wrongNetwork}
         networkId={props.networkId}
         labels={labels}
@@ -120,6 +126,7 @@ const DefaultFallback = (props: {
   buttonProps?: ButtonProps;
   networkId?: NetworkId;
   labels: alertMessages;
+
   descriptions?: alertMessages;
 }) => {
   const { buttonProps, labels, descriptions } = props;
@@ -263,7 +270,7 @@ const StatusInfo = (
     <Flex direction={"column"}>
       <Button {...buttonProps}></Button>
       {!!description && (
-        <Box mt={4}>
+        <Box mt={4} className="oui-leading-none" style={{ lineHeight: 0 }}>
           <Text size="2xs" intensity={36}>
             {description}
           </Text>
