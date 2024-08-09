@@ -1,5 +1,15 @@
 # @orderly.network/trading
 
+## 1.0.1-sdk-v2.54
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.10-sdk-v2.54
+  - @orderly.network/hooks@1.5.10-sdk-v2.54
+  - @orderly.network/ui@1.0.1-sdk-v2.54
+
 ## 1.0.1-sdk-v2.53
 
 ### Patch Changes

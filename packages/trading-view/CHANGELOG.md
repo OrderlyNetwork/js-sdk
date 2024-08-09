@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 1.5.10-sdk-v2.54
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.10-sdk-v2.54
+  - @orderly.network/types@1.5.10-sdk-v2.54
+  - @orderly.network/utils@1.5.10-sdk-v2.54
+  - @orderly.network/core@1.5.10-sdk-v2.54
+  - @orderly.network/net@1.5.10-sdk-v2.54
+
 ## 1.5.10-sdk-v2.53
 
 ### Patch Changes
