@@ -18,11 +18,17 @@ export function getPagedData(list: any[], pageSize: number, pageIndex: number) {
 
 export function sortList(list: any[], sortKey?: string, sortOrder?: SortOrder) {
   const sortedList = [...(list || [])];
+
+  const isEmpty = (value: any) => value === undefined || value === null;
+
   if (sortKey && sortOrder) {
     // sort list
     sortedList.sort((a: any, b: any) => {
       const val1 = a[sortKey];
       const val2 = b[sortKey];
+
+      if (isEmpty(val1)) return 1;
+      if (isEmpty(val2)) return -1;
 
       if (sortOrder === "desc") {
         return val2 - val1;
