@@ -237,9 +237,14 @@ export const useMarkets = (type: MarketsType) => {
       const rate = fundingRates[item.symbol];
       const est_funding_rate = rate("est_funding_rate") || null;
       const funding_period = info("funding_period");
+      const change =
+        item.change === undefined
+          ? get24hChange(item["24h_close"], item["24h_open"])
+          : item.change;
 
       return {
         ...item,
+        change,
         "8h_funding": get8hFunding(est_funding_rate, funding_period),
         quote_dp: info("quote_dp"),
         created_time: info("created_time"),
@@ -352,7 +357,11 @@ export const useMarkets = (type: MarketsType) => {
 };
 
 function get8hFunding(est_funding_rate: number, funding_period: number) {
-   let funding8h = 0;
+  let funding8h = 0;
+
+  if (est_funding_rate === undefined || est_funding_rate === null) {
+    return null;
+  }
 
   if (funding_period) {
     funding8h = new Decimal(est_funding_rate || 0)
@@ -362,4 +371,13 @@ function get8hFunding(est_funding_rate: number, funding_period: number) {
   }
 
   return funding8h;
+}
+
+function get24hChange(close: number, open: number) {
+  if (close !== undefined && open !== undefined) {
+    if (open === 0) {
+      return 0;
+    }
+    return new Decimal(close).minus(open).div(open).toNumber();
+  }
 }
