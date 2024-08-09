@@ -25,7 +25,7 @@ const meta = {
   },
   decorators: [
     (Story, args) => {
-      console.log("args", args);
+      
       const config = new CustomConfigStore({
         env: "qa",
       });
