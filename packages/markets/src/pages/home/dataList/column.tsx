@@ -154,6 +154,9 @@ export const useDataListColumns = (
         align: "right",
         onSort: true,
         render: (value) => {
+          if (value === null) {
+            return "--";
+          }
           return (
             <Text.numeral
               rule="percentages"
@@ -162,7 +165,7 @@ export const useDataListColumns = (
               rm={Decimal.ROUND_DOWN}
               showIdentifier
             >
-              {value || 0}
+              {value}
             </Text.numeral>
           );
         },
