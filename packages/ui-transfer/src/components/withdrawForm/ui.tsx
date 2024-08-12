@@ -42,6 +42,7 @@ export const WithdrawFormUI = (
         crossChainWithdraw,
         crossChainTrans,
         showQty,
+        networkId,
     }: UseWithdrawFormScriptReturn
 ) => {
     return (
@@ -113,6 +114,7 @@ export const WithdrawFormUI = (
 
             <Flex justify="center" mt={3}>
                 <WithdrawAction
+                    networkId={networkId}
                     disabled={disabled}
                     loading={loading}
                     onWithdraw={onWithdraw}
