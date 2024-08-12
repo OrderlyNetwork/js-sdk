@@ -12,11 +12,19 @@ import { useCSSVariable } from "@/hooks/useCSSVariable";
 import { LayoutContext } from "@/layout/layoutContext";
 import { useTradingPageContext } from "../context/tradingPageContext";
 import { useSplitPersistent } from "./useSplitPersistent";
+import SwitchMarginModulePlace from "@/page/trading/desktop/elements/switchMarginModulePlace";
+import { Divider } from "@/divider";
+import { cn } from "@/utils";
 
 export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
-  const { siderWidth, pageHeaderHeight, headerHeight, footerHeight } =
-    useContext(LayoutContext);
+  const {
+    siderWidth,
+    pageHeaderHeight,
+    headerHeight,
+    footerHeight,
+    marginModulePosition,
+  } = useContext(LayoutContext);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [entryMaxWidth, setEntryMaxWidth] = useState(500);
@@ -58,8 +66,7 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   }, [cssVariable]);
 
   useEffect(() => {
-
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
         setEntryMaxWidth(Math.min(width - 768, 500));
@@ -142,17 +149,24 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
         </div>
 
         <div
+          className={cn(
+            "orderly-flex orderly-flex-col orderly-justify-start",
+            marginModulePosition === "bottom" &&
+              "orderly-flex-col-reverse orderly-justify-end"
+          )}
           style={{
             minWidth: "300px",
             maxWidth: `${entryMaxWidth}px`,
             minHeight: "990px",
             width: mainSplitSize,
+            position: "relative",
           }}
         >
           <AssetsProvider>
             <AccountInfoElement />
 
-            <div className="orderly-px-3 orderly-mt-3 orderly-z-30">
+            <Divider className="orderly-mt-3" />
+            <div className="orderly-px-3 orderly-mt-4 orderly-z-30">
               <MyOrderEntry symbol={props.symbol} />
             </div>
           </AssetsProvider>
