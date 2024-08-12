@@ -82,15 +82,16 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
           gapX={1}
           justify="center"
           itemAlign="center"
-          className="oui-cursor-pointer"
+          className={cn(
+            statusUrl ? "oui-text-primary-light" : "oui-text-base-contrast-20",
+            statusUrl ? "oui-cursor-pointer" : "oui-cursor-not-allowed"
+          )}
           onClick={() => {
-            window.open(statusUrl);
+            statusUrl && window.open(statusUrl);
           }}
         >
-          <Text size="2xs" color="primaryLight">
-            View status
-          </Text>
-          <TopRightArrowIcon className="oui-text-primary-light" />
+          <Text size="2xs">View status</Text>
+          <TopRightArrowIcon />
         </Flex>
       </Box>
 
