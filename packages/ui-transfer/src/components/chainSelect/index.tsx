@@ -26,7 +26,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
   const { chains, value, wrongNetwork, loading } = props;
   const [open, setOpen] = useState(false);
 
-  const selectable = chains?.length > 1;
+  const selectable = wrongNetwork ||  chains?.length > 1;
 
   const chainIcon = wrongNetwork ? (
     <Flex
