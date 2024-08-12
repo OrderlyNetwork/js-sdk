@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Box, Button, ButtonProps } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { NetworkId } from "@orderly.network/types";
@@ -25,7 +25,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     networkId,
   } = props;
 
-  const renderButton = () => {
+  const buttonParams = useMemo(() => {
     const params: Record<DepositAction, ButtonProps> = {
       [DepositAction.Approve]: {
         children: `Approve ${symbol}`,
@@ -41,20 +41,18 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
       },
     };
 
-    return (
-      <Button
-        fullWidth
-        disabled={disabled}
-        loading={loading}
-        {...params[actionType]}
-      />
-    );
-  };
+    return params[actionType];
+  }, [onApprove, onDeposit, actionType, symbol]);
 
   return (
-    <Box width={184}>
+    <Box className="oui-min-w-[184px]">
       <AuthGuard networkId={networkId} buttonProps={{ fullWidth: true }}>
-        {renderButton()}
+        <Button
+          fullWidth
+          disabled={disabled}
+          loading={loading}
+          {...buttonParams}
+        />
       </AuthGuard>
     </Box>
   );

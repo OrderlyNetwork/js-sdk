@@ -57,7 +57,7 @@ export const XAxisLabel = (props: any) => {
     index === 0
       ? 58
       : containerWidth > 0
-      ? containerWidth
+      ? containerWidth - 10
       : width + payload.offset;
 
   return (

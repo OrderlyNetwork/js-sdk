@@ -14,7 +14,7 @@ export const useChainMenuBuilderScript = () => {
 
   const [currentChainId, setCurrentChainId] = useState<number | undefined>();
 
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, onChainChanged } = useAppContext();
 
   useEffect(() => {
     if (connectedChain) {
@@ -33,11 +33,15 @@ export const useChainMenuBuilderScript = () => {
     }
   }, [connectedChain, chains]);
 
-  const onChainChange = (chain: { id: number }) => {
+  const onChainChange = async (chain: { id: number; isTestnet: boolean }) => {
     if (!connectedChain) return;
-    return setChain({
+    const result = await setChain({
       chainId: chain.id,
     });
+
+    if (!result) return;
+
+    onChainChanged?.(chain.id, chain.isTestnet);
   };
 
   return {
@@ -46,11 +50,13 @@ export const useChainMenuBuilderScript = () => {
         name: chain.network_infos.name,
         id: chain.network_infos.chain_id,
         lowestFee: chain.network_infos.bridgeless,
+        isTestnet: false,
       })),
       testnet: chains.testnet.map((chain) => ({
         name: chain.network_infos.name,
         id: chain.network_infos.chain_id,
         lowestFee: chain.network_infos.bridgeless,
+        isTestnet: true,
       })),
     },
     // currentChain,

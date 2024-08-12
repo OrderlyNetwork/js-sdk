@@ -7,6 +7,7 @@ type ChainItem = {
   name: string;
   id: number;
   lowestFee?: boolean;
+  isTestnet?: boolean;
 };
 
 export const ChainMenu = (props: {

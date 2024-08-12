@@ -24,7 +24,8 @@ const meta = {
     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
   },
   decorators: [
-    (Story) => {
+    (Story, args) => {
+      
       const config = new CustomConfigStore({
         env: "qa",
       });
@@ -34,6 +35,7 @@ const meta = {
             brokerId={"orderly"}
             brokerName={""}
             networkId={"testnet"}
+            onChainChanged={args.args.onChainChanged}
             // configStore={config}
           >
             <Story />
@@ -58,11 +60,12 @@ const meta = {
         step: 1,
       },
     },
+
   },
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
-    p: 5,
-    // py: 2,
+
+    onChainChanged: fn(),
   },
 } satisfies Meta<typeof OverviewModule.OverviewPage>;
 

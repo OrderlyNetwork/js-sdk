@@ -1,5 +1,13 @@
 import React, { FC, memo } from "react";
-import { Box, Flex, tv, VariantProps, Text, cn } from "@orderly.network/ui";
+import {
+  Box,
+  Flex,
+  tv,
+  VariantProps,
+  Text,
+  cn,
+  Tooltip,
+} from "@orderly.network/ui";
 
 type SideMenuItem = {
   name: string;
@@ -68,30 +76,40 @@ const MenuItem: FC<
     active: props.active,
     open: props.open,
   });
+  const children = (
+    <button
+      data-actived={props.active}
+      disabled={item.disabled}
+      className={button()}
+      onClick={() => {
+        props.onClick?.(item);
+      }}
+    >
+      <Flex itemAlign={"center"} gap={2} as="span">
+        {item.icon}
+        {props.open && (
+          <Text.gradient
+            color={props.active ? "brand" : "inherit"}
+            angle={45}
+            size="base"
+            className="oui-animate-in oui-fade-in"
+          >
+            {item.name}
+          </Text.gradient>
+        )}
+      </Flex>
+    </button>
+  );
+
+  if (props.open) {
+    return <li className="oui-min-w-[120px]">{children}</li>;
+  }
+
   return (
-    <li className="oui-min-w-[120px]">
-      <button
-        data-actived={props.active}
-        disabled={item.disabled}
-        className={button()}
-        onClick={() => {
-          props.onClick?.(item);
-        }}
-      >
-        <Flex itemAlign={"center"} gap={2} as="span">
-          {item.icon}
-          {props.open && (
-            <Text.gradient
-              color={props.active ? "brand" : "inherit"}
-              angle={45}
-              size="base"
-              className="oui-animate-in oui-fade-in"
-            >
-              {item.name}
-            </Text.gradient>
-          )}
-        </Flex>
-      </button>
+    <li>
+      <Tooltip content={item.name} side="right" align="center" sideOffset={20}>
+        {children}
+      </Tooltip>
     </li>
   );
 });
