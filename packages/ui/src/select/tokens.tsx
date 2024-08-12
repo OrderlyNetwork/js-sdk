@@ -26,6 +26,7 @@ export type TokenSelect = {
 
 export const TokenSelect = (props: TokenSelect) => {
   const { tokens, showIcon = true, ...rest } = props;
+  console.log("TokenSelect", props);
   const { icon } = selectVariants();
 
   const options = useMemo(() => {
@@ -68,6 +69,7 @@ export const TokenSelect = (props: TokenSelect) => {
       options={options}
       valueRenderer={showIcon ? valueRenderer : undefined}
       optionRenderer={optionRenderer}
+      maxHeight={254} // 30 * 8 + 2 * 7
     />
   );
 };

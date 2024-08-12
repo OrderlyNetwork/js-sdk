@@ -7,6 +7,7 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Flex,
+  ScrollArea,
   Spinner,
   Text,
   cn,
@@ -26,7 +27,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
   const { chains, value, wrongNetwork, loading } = props;
   const [open, setOpen] = useState(false);
 
-  const selectable = chains?.length > 1;
+  const selectable = wrongNetwork ||  chains?.length > 1;
 
   const chainIcon = wrongNetwork ? (
     <Flex
@@ -84,7 +85,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
     </Flex>
   );
 
-  const content = chains.map((chain) => {
+  const content = chains.map((chain, index) => {
     const isActive = chain.chain_id === value?.id;
     return (
       <Flex
@@ -95,7 +96,8 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
         className={cn(
           "oui-deposit-network-select-item",
           "hover:oui-bg-base-5 oui-h-[30px] oui-cursor-pointer",
-          isActive && "oui-bg-base-5"
+          isActive && "oui-bg-base-5",
+          index !== 0 && "oui-mt-[2px]"
         )}
         onClick={async () => {
           setOpen(false);
@@ -152,7 +154,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
             "oui-rounded-md oui-select-none"
           )}
         >
-          {content}
+          <ScrollArea className="oui-h-[254px]">{content}</ScrollArea>
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
