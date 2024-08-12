@@ -8,11 +8,11 @@ import {
   Divider,
   Button,
 } from "@orderly.network/ui";
-import { ArrowRightIcon, GasFeeIcon, WoofiIcon } from "../../icons";
 import { API } from "@orderly.network/types";
-import { SwapMode, SymbolInfo } from "../../types";
+import { feeDecimalsOffset } from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
-import { feeDecimalsOffset } from "../../utils";
+import { SwapMode, SymbolInfo } from "../../types";
+import { ArrowRightIcon, GasFeeIcon, WoofiIcon } from "../../icons";
 
 export interface SwapInfo {
   // gasFee: string;
