@@ -74,6 +74,10 @@ export const useCrossDepositFormScript = (
     decimals: token?.decimals,
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
+    crossChainRouteAddress: (currentChain?.info?.network_infos as NetworkInfos)
+      ?.woofi_dex_cross_chain_router,
+    depositorAddress: (currentChain?.info?.network_infos as NetworkInfos)
+      ?.woofi_dex_depositor,
   });
 
   const maxQuantity = useMemo(
