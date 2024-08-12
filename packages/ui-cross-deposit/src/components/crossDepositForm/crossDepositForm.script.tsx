@@ -40,7 +40,21 @@ export const useCrossDepositFormScript = (
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
 
-  const { token, tokens, onTokenChange } = useToken({ currentChain });
+  const tokensFilter = useCallback((chainInfo: API.Chain) => {
+    return (
+      chainInfo.token_infos.filter((token) => {
+        if (chainInfo.network_infos.bridgeless && token.symbol === "USDC") {
+          return true;
+        }
+        return !!(token as TokenInfo).swap_enable;
+      }) ?? []
+    );
+  }, []);
+
+  const { token, tokens, onTokenChange } = useToken({
+    currentChain,
+    tokensFilter,
+  });
 
   const {
     dst,
