@@ -109,6 +109,28 @@ export const useMarkets = (type: MarketsType) => {
     const [favorites, setFavorites] = useState(getFavorites);
     const [recent, setRecent] = useState(getRecent);
 
+    const getLastSelFavTab = () => {
+        // @ts-ignore
+        const curData = configStore.get(marketsKey)["lastSelectedFavoriteTab"];
+        return (curData || { name: "Popular", id: 1 }) as FavoriteTab;
+    };
+
+    const saveInfo = (opions?: {
+        newRecent?: Recent[];
+        newFavorites?: {
+          tabs: FavoriteTab[];
+          name: string;
+        }[];
+        newFavoriteTabs?: FavoriteTab[];
+      }) => {
+        configStore.set(marketsKey, {
+          recent: opions?.newRecent ?? recent,
+          favorites: opions?.newFavorites ?? favorites,
+          favoriteTabs: opions?.newFavoriteTabs ?? favoriteTabs,
+          lastSelectFavoriteTab: getLastSelFavTab(),
+        });
+      };
+
     const updateFavoriteTabs = (tab: FavoriteTab | FavoriteTab[], operator?: {
         add?: boolean,
         update?: boolean,
@@ -249,6 +271,22 @@ export const useMarkets = (type: MarketsType) => {
             }
         }
 
+
+        if (type === MarketsType.RECENT) {
+            const newRecent = filter?.map((e) => ({ name: e.symbol })) ?? [];
+            if (newRecent.length !== recent.length) {
+              setRecent(newRecent);
+              saveInfo({ newRecent });
+            }
+          } else if (type === MarketsType.FAVORITES) {
+            const symbols = data?.map((e) => e.symbol);
+            const newFavorites = favorites.filter((e) => symbols?.includes(e.name));
+            if (newFavorites.length != favorites.length) {
+              setFavorites(newFavorites);
+              saveInfo({ newFavorites });
+            }
+          }
+
         return filter;
 
     };
@@ -286,11 +324,7 @@ export const useMarkets = (type: MarketsType) => {
     }, [favoriteTabs]);
 
 
-    const getLastSelFavTab = () => {
-        // @ts-ignore
-        const curData = configStore.get(marketsKey)["lastSelectedFavoriteTab"];
-        return (curData || { name: "Popular", id: 1 }) as FavoriteTab;
-    };
+    
 
     const updateSelectedFavoriteTab = (tab: FavoriteTab) => {
         configStore.set(marketsKey, {
