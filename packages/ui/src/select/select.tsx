@@ -60,11 +60,9 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
         )}
       </SelectTrigger>
       <SelectContent {...contentProps}>
-        {maxHeight ? (
-          <ScrollArea style={{ height: maxHeight }}>{children}</ScrollArea>
-        ) : (
-          children
-        )}
+        <ScrollArea>
+          <div style={{ maxHeight }}> {children}</div>
+        </ScrollArea>
       </SelectContent>
     </SelectRoot>
   );
