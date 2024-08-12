@@ -40,7 +40,21 @@ export const useCrossDepositFormScript = (
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
 
-  const { token, tokens, onTokenChange } = useToken({ currentChain });
+  const tokensFilter = useCallback((chainInfo: API.Chain) => {
+    return (
+      chainInfo.token_infos.filter((token) => {
+        if (chainInfo.network_infos.bridgeless && token.symbol === "USDC") {
+          return true;
+        }
+        return !!(token as TokenInfo).swap_enable;
+      }) ?? []
+    );
+  }, []);
+
+  const { token, tokens, onTokenChange } = useToken({
+    currentChain,
+    tokensFilter,
+  });
 
   const {
     dst,
@@ -60,6 +74,10 @@ export const useCrossDepositFormScript = (
     decimals: token?.decimals,
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
+    crossChainRouteAddress: (currentChain?.info?.network_infos as NetworkInfos)
+      ?.woofi_dex_cross_chain_router,
+    depositorAddress: (currentChain?.info?.network_infos as NetworkInfos)
+      ?.woofi_dex_depositor,
   });
 
   const maxQuantity = useMemo(

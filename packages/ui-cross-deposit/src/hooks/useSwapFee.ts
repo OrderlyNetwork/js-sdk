@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { useIndexPrice } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { feeDecimalsOffset } from "../utils";
 import { TransactionInfo } from "./useSwapEnquiry";
+import { feeDecimalsOffset } from "@orderly.network/ui-transfer";
 
 export type UseSwapFee = ReturnType<typeof useSwapFee>;
 
