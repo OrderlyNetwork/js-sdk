@@ -21,7 +21,6 @@ export type AccountStatus =
 export interface AccountStatusProps {
   className?: string;
   status: AccountStatusEnum;
-  chains: string[];
   address?: string;
   balance?: string;
   currency?: string;
