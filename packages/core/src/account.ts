@@ -444,15 +444,20 @@ export class Account {
     key: string;
     secretKey: string;
   }> {
-    const { res, keyPair } = await this.generateAPiKey(expiration, options);
-    if (res.success) {
-      const key = await keyPair.getPublicKey();
-      return {
-        key: key.replace("ed25519:", ""),
-        secretKey: keyPair.secretKey?.replace("ed25519:", ""),
-      };
+    try {
+      const { res, keyPair } = await this.generateAPiKey(expiration, options);
+      if (res.success) {
+        const key = await keyPair.getPublicKey();
+        return {
+          key: key.replace("ed25519:", ""),
+          secretKey: keyPair.secretKey?.replace("ed25519:", ""),
+        };
+      }
+    } catch (e) {
+      if (`${e}`.includes("user rejected action")) 
+        throw new Error("User rejected the request.");
+      throw e;
     }
-
     throw new Error("create api key failed");
   }
 
