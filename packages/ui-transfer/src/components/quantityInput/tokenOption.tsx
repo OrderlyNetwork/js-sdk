@@ -58,7 +58,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
             <Spinner size="sm" />
           ) : (
             <Text.numeral
-              rule="human"
+              rule="price"
               dp={dp}
               rm={Decimal.ROUND_DOWN}
               className={cn(
