@@ -36,7 +36,7 @@ export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
       direction={"column"}
       className="oui-bg-base-9 oui-tabular-nums"
     >
-      <Tabs defaultValue="account" className="oui-w-full">
+      <Tabs defaultValue="account" className="oui-w-full" variant="contained">
         <TabPanel value="account" title="Commission">
           <CommissionList {...props} />
         </TabPanel>

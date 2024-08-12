@@ -113,7 +113,7 @@ export const VolBarChart = (props: VolChartProps) => {
         {/* @ts-ignore */}
         <BarChart
           data={props.data}
-          margin={{ left: -0, top: 0, right: 0, bottom: 20 }}
+          margin={{ left: -0, top: 6, right: 0, bottom: 20 }}
         >
           {/* @ts-ignore */}
           <Tooltip
@@ -145,10 +145,11 @@ export const VolBarChart = (props: VolChartProps) => {
             tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
             tickLine={false}
             axisLine={false}
+            tickCount={6}
             dataKey={"volume"}
             tickFormatter={(value, index) => {
-              if (isEmpty) return value === 0 ? "0" : "";
-              return numberToHumanStyle(value, 1);
+              if (isEmpty) return `${index * 100}`;
+              return numberToHumanStyle(value);
             }}
             width={45}
           />
@@ -170,7 +171,7 @@ export const VolBarChart = (props: VolChartProps) => {
     </Box>
   );
 };
-function numberToHumanStyle(number: number, decimalPlaces: number = 2): string {
+function numberToHumanStyle(number: number, decimalPlaces: number = 0): string {
   const abbreviations = ["", "K", "M", "B", "T"];
 
   let index = 0;

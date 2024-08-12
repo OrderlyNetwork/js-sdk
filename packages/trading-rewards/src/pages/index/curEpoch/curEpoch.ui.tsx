@@ -47,7 +47,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
         <EstRewards
           direction={state.notConnected ? "row" : "column"}
           justify={state.notConnected ? "between" : "center"}
-          estRewards={state.notConnected ? "--" : props.estimate?.est_r_wallet}
+          estRewards={state.hideData ? "--" : props.estimate?.est_r_wallet}
           background={
             state.notConnected
               ? "linear-gradient(28.29deg, #1B1D22 21.6%, #26292E 83.23%)"
@@ -124,7 +124,7 @@ const Statics: FC<{
   const { title, highLight, text } = props;
   return (
     <Flex
-      px={4}
+      // px={1}
       py={2}
       justify={"between"}
       direction={"column"}
