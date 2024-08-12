@@ -23,6 +23,7 @@
     "@orderly.network/web3-modal": "1.5.10"
   },
   "changesets": [
+    "afraid-parrots-attend",
     "big-worms-accept",
     "curly-mayflies-crash",
     "few-waves-appear",
