@@ -24,7 +24,7 @@ export const Title: FC<TitleConfig> = (props) => {
       <Divider intensity={8} className="oui-w-full"/>
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
         {subtitle || (
-          <Text size="base">{`Trade with ${props.brokerName} to earn rewards.`}</Text>
+          <Text size="base">{`Trade with ${props.brokerName} to earn ORDER.`}</Text>
         )}
 
         {content || <MultiLineText docOpenOptions={docOpenOptions} />}
