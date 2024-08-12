@@ -677,6 +677,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             onFieldChange={props.onFieldChange}
           />
           <AuthGuard
+            // @ts-ignore
             id="orderly-order-entry-status-guard-button"
             buttonProps={{ size: "lg", fullWidth: true }}
           >
