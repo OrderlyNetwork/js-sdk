@@ -141,7 +141,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
           itemAlign={"end"}
         >
           <Text className="oui-text-base md:oui-text-lg lg:oui-text-xl 2xl:oui-text-2xl">
-            40%-80%
+            40%~60%
           </Text>
           <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
             Commission
