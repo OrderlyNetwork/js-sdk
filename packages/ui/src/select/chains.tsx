@@ -124,10 +124,10 @@ const ChainSelect = (props: ChainSelectProps) => {
 
   const onChange = (value: any) => {
     if (!chains || !Array.isArray(chains.mainnet)) return;
-    const current = chains.mainnet.find((chain) => chain.id === Number(value));
-    setCurrentChain(current?.id);
-    if (!current) return;
-    props.onChange?.(current);
+    const selected = chains.mainnet.find((chain) => chain.id === Number(value));
+    setCurrentChain(selected?.id);
+    if (!selected) return;
+    props.onChange?.(selected);
   };
 
   return (

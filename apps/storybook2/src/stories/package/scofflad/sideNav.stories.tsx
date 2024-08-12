@@ -142,11 +142,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  decorators: [
-    (Story) => (
-      <Box width={"160px"} intensity={900} p={4} r={"2xl"}>
-        <Story />
+  render: (args) => {
+    return (
+      <Box width={args.open ? "160px" : "75px"} intensity={900} p={4} r={"2xl"}>
+        <SideNavbarWidget {...args} />
       </Box>
-    ),
-  ],
+    );
+  },
+  // decorators: [
+  //   (Story) => (
+
+  //   ),
+  // ],
 };

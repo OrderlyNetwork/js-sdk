@@ -26,6 +26,8 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
     const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
         revalidateOnMount: true,
     });
+    const networkId = useConfig("networkId") as NetworkId;
+
 
     const [quantity, setQuantity] = useState<string>("");
     const [token, setToken] = useState<API.TokenInfo>({
@@ -76,8 +78,6 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
 
     const {dst, withdraw, isLoading, maxAmount, availableBalance, availableWithdraw, unsettledPnL} = useWithdraw();
     const [disabled, setDisabled] = useState<boolean>(true);
-
-    const networkId = config.get("networkId") as NetworkId;
 
     const [chains, {findByChainId}] = useChains(networkId, {
         pick: "network_infos",
@@ -370,5 +370,6 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         crossChainWithdraw,
         crossChainTrans,
         showQty,
+        networkId,
     }
 }

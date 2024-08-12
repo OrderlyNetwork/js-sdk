@@ -12,6 +12,7 @@ interface TokenOptionProps {
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
   onTokenChange?: (token: API.TokenInfo) => void;
   isActive: boolean;
+  index?: number;
 }
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
@@ -22,6 +23,30 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
   const showBalance = typeof fetchBalance === "function";
 
   const dp = precision ?? 2;
+
+  const renderValue = () => {
+    if (!showBalance) {
+      return null;
+    }
+
+    if (loading) {
+      return <Spinner size="sm" />;
+    }
+
+    return (
+      <Text.numeral
+        rule="price"
+        dp={dp}
+        rm={Decimal.ROUND_DOWN}
+        className={cn(
+          "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",
+          isActive && "oui-text-base-contrast-54"
+        )}
+      >
+        {balance}
+      </Text.numeral>
+    );
+  };
 
   return (
     <Flex
@@ -34,7 +59,8 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         "oui-h-[30px] hover:oui-bg-base-5",
         "oui-text-2xs oui-font-semibold",
         "oui-cursor-pointer",
-        isActive && "oui-bg-base-5"
+        isActive && "oui-bg-base-5",
+        props.index !== 0 && "oui-mt-[2px]"
       )}
       onClick={() => {
         onTokenChange?.(token);
@@ -52,27 +78,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         </Text>
       </Flex>
 
-      {showBalance && (
-        <Flex gapX={1}>
-          {loading ? (
-            <Spinner size="sm" />
-          ) : (
-            <Text.numeral
-              rule="human"
-              dp={dp}
-              rm={Decimal.ROUND_DOWN}
-              className={cn(
-                "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",
-                isActive && "oui-text-base-contrast-54"
-              )}
-            >
-              {balance}
-            </Text.numeral>
-          )}
-
-          <Text intensity={54}>{symbol}</Text>
-        </Flex>
-      )}
+      {renderValue()}
     </Flex>
   );
 };
