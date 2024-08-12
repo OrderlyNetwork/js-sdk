@@ -27,7 +27,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
   const { chains, value, wrongNetwork, loading } = props;
   const [open, setOpen] = useState(false);
 
-  const selectable = wrongNetwork ||  chains?.length > 1;
+  const selectable = wrongNetwork || chains?.length > 1;
 
   const chainIcon = wrongNetwork ? (
     <Flex
@@ -154,7 +154,9 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
             "oui-rounded-md oui-select-none"
           )}
         >
-          <ScrollArea className="oui-h-[254px]">{content}</ScrollArea>
+          <ScrollArea>
+            <div className="oui-max-h-[254px]">{content} </div>
+          </ScrollArea>
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>

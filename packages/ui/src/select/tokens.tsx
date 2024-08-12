@@ -26,7 +26,6 @@ export type TokenSelect = {
 
 export const TokenSelect = (props: TokenSelect) => {
   const { tokens, showIcon = true, ...rest } = props;
-  console.log("TokenSelect", props);
   const { icon } = selectVariants();
 
   const options = useMemo(() => {
