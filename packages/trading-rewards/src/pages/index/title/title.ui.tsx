@@ -20,7 +20,7 @@ export const Title: FC<TitleConfig> = (props) => {
       r={"2xl"}
       width={"100%"}
     >
-      {title || <Text size="lg">Trading Rewards</Text>}
+      {title || <Text size="lg">Trading rewards</Text>}
       <Divider intensity={8} className="oui-w-full"/>
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
         {subtitle || (
@@ -46,11 +46,11 @@ const MultiLineText: FC<{
       isLink: true,
     },
     // {
-    //   content: "about Orderly Trading Rewards Program.",
+    //   content: "about Orderly Trading rewards Program.",
     //   isLink: false,
     // },
     // {
-    //   content: "Trading Rewards Docs",
+    //   content: "Trading rewards Docs",
     //   isLink: true,
     // },
   ];
