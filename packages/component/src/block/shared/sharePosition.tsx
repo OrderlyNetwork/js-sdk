@@ -23,13 +23,16 @@ import { DesktopSharePnLContent } from "./desktopSharePnl";
 import { MobileSharePnLContent } from "./mobileSharePnl";
 import { OrderlyAppContext } from "@/provider";
 import { ReferralType } from "./sharePnLUtils";
+import { ShareConfigProps } from "./shareConfigProps";
+import { shadowVariants } from "@orderly.network/ui/src/layout/shadow";
 
 export const SharePoisitionView = modal.create<{
   position: any;
   leverage: any;
+  shareOptions: any;
 }>((props) => {
   const isTablet = useMediaQuery(MEDIA_TABLET);
-  const { position } = props;
+  const { position, shareOptions } = props;
   // const [leverage] = useLeverage();
   const symbolInfo = useSymbolsInfo();
   // const { data: info } = useAccountInfo();
@@ -81,6 +84,7 @@ export const SharePoisitionView = modal.create<{
       baseDp={base_dp}
       quoteDp={quote_dp}
       referral={referralInfo}
+      shareOptions={shareOptions}
     />
   ) : (
     <DesktopSharePnL
@@ -89,6 +93,7 @@ export const SharePoisitionView = modal.create<{
       baseDp={base_dp}
       quoteDp={quote_dp}
       referral={referralInfo}
+      shareOptions={shareOptions}
     />
   );
 });
@@ -101,9 +106,10 @@ const MobileSharePnL: FC<
     baseDp?: number;
     quoteDp?: number;
     referral?: ReferralType;
+    shareOptions: ShareConfigProps;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp, referral } = props;
+  const { leverage, position, baseDp, quoteDp, referral, shareOptions } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   return (
@@ -127,6 +133,7 @@ const MobileSharePnL: FC<
           baseDp={baseDp}
           quoteDp={quoteDp}
           referral={referral}
+          shareOptions={shareOptions}
         />
       </SheetContent>
     </Sheet>
@@ -141,9 +148,10 @@ const DesktopSharePnL: FC<
     baseDp?: number;
     quoteDp?: number;
     referral?: ReferralType;
+    shareOptions: ShareConfigProps;
   }>
 > = (props) => {
-  const { leverage, position, baseDp, quoteDp, referral } = props;
+  const { leverage, position, baseDp, quoteDp, referral, shareOptions } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [viewportHeight, setViewportHeight] = useState(
@@ -182,6 +190,7 @@ const DesktopSharePnL: FC<
             baseDp={baseDp}
             quoteDp={quoteDp}
             referral={referral}
+            shareOptions={shareOptions}
           />
         </div>
       </DialogContent>

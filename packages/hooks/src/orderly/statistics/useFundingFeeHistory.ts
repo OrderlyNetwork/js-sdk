@@ -66,7 +66,7 @@ export const useFundingFeeHistory = (
       const config = infos[row.symbol];
       return {
         ...row,
-        annual_rate: row.funding_rate * (24 / config("funding_period")),
+        annual_rate: row.funding_rate * (24 / config("funding_period")) * 365,
       };
     });
   }, [data, infos]);

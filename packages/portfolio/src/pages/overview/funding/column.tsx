@@ -30,12 +30,14 @@ export const useFundingHistoryColumns = () => {
         render: (value: any, record) => {
           return (
             <Flex gap={1}>
-              <Text.numeral rule={"percentages"}>
-                {record.funding_rate}
+              {/* <span>{`${record.funding_rate * 100}%`}</span> */}
+              <Text.numeral rule={"percentages"} dp={6}>
+                {record.funding_rate * -1}
               </Text.numeral>
               <span>/</span>
-              <Text.numeral rule={"percentages"}>
-                {record.annual_rate}
+              {/* <span>{`${record.annual_rate * 10}%`}</span> */}
+              <Text.numeral rule={"percentages"} dp={6}>
+                {record.annual_rate * -1}
               </Text.numeral>
             </Flex>
           );
@@ -61,6 +63,9 @@ export const useFundingHistoryColumns = () => {
         dataIndex: "funding_fee",
         width: 80,
         rule: "price",
+        formatter(value, record, index) {
+          return Number(value) * -1;
+        },
         numeralProps: {
           coloring: true,
           showIdentifier: true,

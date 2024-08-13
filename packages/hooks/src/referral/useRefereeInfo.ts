@@ -7,17 +7,28 @@ import { API } from "@orderly.network/types";
 type Params = {
   //** default is 10 */
   size?: number;
-  //** YYYY-MM-dd */
+  /**
+   * @deprecated 
+   * YYYY-MM-dd */
   startDate?: string;
-  //** YYYY-MM-dd */
+  /**
+   * @deprecated 
+   * YYYY-MM-dd */
   endDate?: string;
-  //** default is 1 */
+  /** default is 1 */
   initialSize?: number;
+  sort?:
+    | "ascending_code_binding_time"
+    | "descending_code_binding_time"
+    | "ascending_referral_rebate"
+    | "descending_referral_rebate"
+    | "ascending_volume"
+    | "descending_volume";
   page?: number;
 };
 
 export const useRefereeInfo = (params: Params) => {
-  const { size = 10, startDate, endDate, initialSize, page } = params;
+  const { size = 10, startDate, endDate, initialSize, page, sort } = params;
 
   const response = usePrivateInfiniteQuery<any>(
     generateKeyFun({
@@ -26,6 +37,7 @@ export const useRefereeInfo = (params: Params) => {
       startDate,
       endDate,
       page,
+      sort,
     }),
     {
       initialSize: initialSize,
@@ -43,18 +55,18 @@ export const useRefereeInfo = (params: Params) => {
   };
 
   const meta = useMemo(():
-  | {
-      total: number;
-      records_per_page: number;
-      current_page: number;
-    }
-  | undefined => {
-  return response.data?.[0]?.meta;
-}, [response.data]);
+    | {
+        total: number;
+        records_per_page: number;
+        current_page: number;
+      }
+    | undefined => {
+    return response.data?.[0]?.meta;
+  }, [response.data]);
 
-const total = useMemo(() => {
-  return meta?.total || 0;
-}, [meta]);
+  const total = useMemo(() => {
+    return meta?.total || 0;
+  }, [meta]);
 
   const flattenOrders = useMemo((): RefferalAPI.RefereeInfoItem[] | null => {
     if (!response.data) {

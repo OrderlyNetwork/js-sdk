@@ -4,7 +4,6 @@ import { FC } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { transSymbolformString } from "@orderly.network/utils";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 

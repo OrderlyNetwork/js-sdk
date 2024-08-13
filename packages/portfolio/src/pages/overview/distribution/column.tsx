@@ -9,14 +9,14 @@ export const useColumns = () => {
   >(() => {
     return [
       {
-        title: "Instrument",
-        dataIndex: "symbol",
+        title: "Token",
+        dataIndex: "token",
         width: 80,
         rule: "symbol",
       },
       {
         title: "Time",
-        dataIndex: "created_time",
+        dataIndex: "updated_time",
         width: 120,
         rule: "date",
       },

@@ -1,25 +1,24 @@
-
-import {  CloseIcon } from "@/icon";
-import {
-  FC,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { CloseIcon } from "@/icon";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { PnLDisplayFormat, ShareOptions } from "./type";
 import { Divider } from "@/divider";
 import { Poster } from "../poster";
 import { OrderlyAppContext } from "@/provider";
-import { ReferralType, getPnLPosterData, getPnlInfo, savePnlInfo } from "./sharePnLUtils";
+import {
+  ReferralType,
+  getPnLPosterData,
+  getPnlInfo,
+  savePnlInfo,
+} from "./sharePnLUtils";
 import { PosterRef } from "../poster/poster";
-import { CarouselBackgroundImage} from "./desktop/carousel";
+import { CarouselBackgroundImage } from "./desktop/carousel";
 import { PnlFormatView } from "./desktop/pnlFormat";
 import { ShareOption } from "./desktop/options";
 import { BottomButtons } from "./desktop/bottomBtns";
 import { Message } from "./desktop/message";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
+import { ShareConfigProps } from "./shareConfigProps";
 
 export const DesktopSharePnLContent: FC<{
   position: any;
@@ -28,20 +27,25 @@ export const DesktopSharePnLContent: FC<{
   baseDp?: number;
   quoteDp?: number;
   referral?: ReferralType;
+  shareOptions: ShareConfigProps;
 }> = (props) => {
-
+  const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
-  
 
-  const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(localPnlConfig.pnlFormat);
+  const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
+    localPnlConfig.pnlFormat
+  );
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
     new Set(localPnlConfig.options)
   );
   const [selectedSnap, setSelectedSnap] = useState(localPnlConfig.bgIndex);
   const [message, setMessage] = useState(localPnlConfig.message);
   const [check, setCheck] = useState(false);
-  const { shareOptions } = useContext(OrderlyAppContext);
-  const { backgroundImages, ...resetOptions } = shareOptions.pnl;
+  // const { shareOptions } = useTradingPageContext();
+  const { backgroundImages, ...resetOptions } = shareOptions?.pnl ?? {
+    backgroundImages: [],
+  };
+
   const [domain, setDomain] = useState("");
 
   const posterRef = useRef<PosterRef | null>(null);
@@ -52,8 +56,8 @@ export const DesktopSharePnLContent: FC<{
   }, []);
 
   const curBgImg = useMemo(() => {
-    return shareOptions.pnl.backgroundImages[selectedSnap];
-  }, [shareOptions.pnl.backgroundImages, selectedSnap]);
+    return shareOptions?.pnl.backgroundImages[selectedSnap];
+  }, [shareOptions?.pnl.backgroundImages, selectedSnap]);
 
   const posterData = getPnLPosterData(
     props.position,
@@ -64,7 +68,7 @@ export const DesktopSharePnLContent: FC<{
     shareOption,
     props.baseDp,
     props.quoteDp,
-    props.referral,
+    props.referral
   );
 
   const onCopy = () => {
@@ -94,16 +98,15 @@ export const DesktopSharePnLContent: FC<{
   };
 
   const formats: PnLDisplayFormat[] = ["roi_pnl", "roi", "pnl"];
-  const options: ShareOptions[] = ["openPrice", "markPrice", "openTime", "leverage", "quantity"];
+  const options: ShareOptions[] = [
+    "openPrice",
+    "markPrice",
+    "openTime",
+    "leverage",
+    "quantity",
+  ];
 
-
-
-  savePnlInfo(
-    pnlFormat,
-    shareOption,
-    selectedSnap,
-    message,
-  );
+  savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
 
   return (
     <div className="orderly-h-full orderly-flex orderly-flex-col orderly-relative orderly-referral">
@@ -122,7 +125,7 @@ export const DesktopSharePnLContent: FC<{
             ref={posterRef}
           />
           <CarouselBackgroundImage
-            backgroundImages={shareOptions.pnl.backgroundImages}
+            backgroundImages={shareOptions?.pnl.backgroundImages ?? []}
             selectedSnap={selectedSnap}
             setSelectedSnap={setSelectedSnap}
           />
@@ -134,11 +137,13 @@ export const DesktopSharePnLContent: FC<{
               PnL display format
             </div>
             <div className="orderly-pt-4 orderly-flex orderly-justify-start orderly-gap-3">
-              {formats.map((e) =>  <PnlFormatView
-                setPnlFormat={setPnlFormat}
-                type={e}
-                curType={pnlFormat}
-              />)}
+              {formats.map((e) => (
+                <PnlFormatView
+                  setPnlFormat={setPnlFormat}
+                  type={e}
+                  curType={pnlFormat}
+                />
+              ))}
             </div>
           </div>
 
@@ -149,7 +154,13 @@ export const DesktopSharePnLContent: FC<{
               Optional information to share
             </div>
             <div className="orderly-mt-4 orderly-flex orderly-justify-start orderly-gap-4">
-              {options.map((item) => <ShareOption setShareOption={setShareOption} type={item} curType={shareOption}/>)}
+              {options.map((item) => (
+                <ShareOption
+                  setShareOption={setShareOption}
+                  type={item}
+                  curType={shareOption}
+                />
+              ))}
             </div>
           </div>
 
@@ -164,9 +175,12 @@ export const DesktopSharePnLContent: FC<{
 
       <BottomButtons onClickCopy={onCopy} onClickDownload={onDownload} />
 
-      <button onClick={() => {
-        props.hide();
-      }} className="orderly-absolute orderly-top-0 orderly-right-0 orderly-w-[40px] orderly-h-[40px] orderly-flex orderly-justify-center orderly-items-center">
+      <button
+        onClick={() => {
+          props.hide();
+        }}
+        className="orderly-absolute orderly-top-0 orderly-right-0 orderly-w-[40px] orderly-h-[40px] orderly-flex orderly-justify-center orderly-items-center"
+      >
         <CloseIcon size={12} className="orderly-fill-base-contrast-54" />
       </button>
     </div>

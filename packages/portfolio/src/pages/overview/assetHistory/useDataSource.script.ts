@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAssetsHistory } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
+import { parseDateRangeForFilter } from "../helper/date";
 
 const useAssetHistoryHook = () => {
   // const [fileter, setFilter] = useState<FilterParams>({});
@@ -20,20 +21,18 @@ const useAssetHistoryHook = () => {
     side,
   });
 
-  // const onSearch = (filter: FilterParams) => {
-  //   setFilter((prevState) => ({
-  //     ...prevState,
-  //     ...filter,
-  //   }));
-  // };
-
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "side") {
       setSide(filter.value);
+      setPage(1);
     }
 
     if (filter.name === "dateRange") {
-      setDateRange([filter.value.from, filter.value.to]);
+      // console.log("filter.value", filter.value);
+
+      // setDateRange([filter.value.from, filter.value.to]);
+      setDateRange(parseDateRangeForFilter(filter.value));
+      setPage(1);
     }
   };
 
