@@ -140,7 +140,11 @@ export const useDeposit = (options?: useDepositOptions) => {
       if (isNativeTokenChecker(token.address)) {
         continue;
       }
-      tasks.push(account.assetsManager.getBalanceByAddress(token.address));
+      tasks.push(
+        account.assetsManager.getBalanceByAddress(token.address, {
+          decimals: token?.decimals,
+        })
+      );
     }
 
     const balances = await Promise.all(tasks);
@@ -149,7 +153,12 @@ export const useDeposit = (options?: useDepositOptions) => {
     // setBalance(() => balances);
   }, []);
 
-  const getAllowance = async (address?: string, vaultAddress?: string) => {
+  const getAllowance = async (inputs: {
+    address?: string;
+    vaultAddress?: string;
+    decimals?: number;
+  }) => {
+    const { address, vaultAddress, decimals } = inputs;
     // if (!address || !vaultAddress) return;
     const key = `${address}-${vaultAddress}`;
 
@@ -162,24 +171,32 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     prevAddress.current = key;
 
-    const allowance = await account.assetsManager.getAllowance(
+    const allowance = await account.assetsManager.getAllowance({
       address,
-      vaultAddress
-    );
+      vaultAddress,
+      decimals,
+    });
 
     setAllowance(() => allowance);
     // setAllowanceRevalidating(false);
     return allowance;
   };
 
-  const getAllowanceByDefaultAddress = async (address?: string) => {
+  const getAllowanceByDefaultAddress = async (inputs: {
+    address?: string;
+    decimals?: number;
+  }) => {
+    const { address, decimals } = inputs;
     if (prevAddress.current === address) return;
 
     if (!address || isNativeTokenChecker(address)) return;
 
     prevAddress.current = address;
 
-    const allowance = await account.assetsManager.getAllowance(address);
+    const allowance = await account.assetsManager.getAllowance({
+      address,
+      decimals,
+    });
 
     setAllowance(() => allowance);
   };
@@ -204,8 +221,12 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const queryAllowance = useDebouncedCallback(
-    (tokenAddress?: string, vaultAddress?: string) => {
-      getAllowance(tokenAddress, vaultAddress);
+    (inputs: {
+      address?: string;
+      vaultAddress?: string;
+      decimals?: number;
+    }) => {
+      getAllowance(inputs);
     },
     100
   );
@@ -219,15 +240,22 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     queryBalance(options?.address, options?.decimals);
 
+    const params = {
+      address: options?.address,
+      vaultAddress: options?.crossChainRouteAddress,
+      decimals: options?.decimals,
+    };
+
     if (dst.chainId !== options?.srcChainId) {
-      // getAllowance(options?.address, options?.crossChainRouteAddress);
-      queryAllowance(options?.address, options?.crossChainRouteAddress);
+      queryAllowance(params);
     } else {
       if (dst.symbol !== options?.srcToken) {
-        // getAllowance(options?.address, options?.depositorAddress);
-        queryAllowance(options?.address, options?.depositorAddress);
+        queryAllowance(params);
       } else {
-        getAllowanceByDefaultAddress(options?.address);
+        getAllowanceByDefaultAddress({
+          address: options?.address,
+          decimals: options?.decimals,
+        });
       }
     }
   }, [
@@ -237,6 +265,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     options?.depositorAddress,
     options?.srcChainId,
     options?.srcToken,
+    options?.decimals,
     account.address,
     dst.chainId,
     dst.symbol,
@@ -248,15 +277,25 @@ export const useDeposit = (options?: useDepositOptions) => {
         throw new Error("address is required");
       }
       const vaultAddress = getVaultAddress();
+
       return account.assetsManager
-        .approve(options.address, amount, vaultAddress)
+        .approve({
+          address: options.address,
+          amount,
+          vaultAddress,
+          decimals: options?.decimals,
+        })
         .then((result: any) => {
           return account.walletClient
             ?.pollTransactionReceiptWithBackoff(result.hash)
             .then((receipt) => {
               if (receipt.status === 1) {
                 account.assetsManager
-                  .getAllowance(options.address, vaultAddress)
+                  .getAllowance({
+                    address: options.address,
+                    vaultAddress,
+                    decimals: options?.decimals,
+                  })
                   .then((allowance) => {
                     setAllowance(() => allowance);
                   });
@@ -264,7 +303,7 @@ export const useDeposit = (options?: useDepositOptions) => {
             });
         });
     },
-    [account, getAllowance, options?.address, dst]
+    [account, getAllowance, dst, options?.address, options?.decimals]
   );
 
   const deposit = useCallback(async () => {
@@ -274,14 +313,26 @@ export const useDeposit = (options?: useDepositOptions) => {
       .deposit(quantity, depositFee)
       .then((res: any) => {
         account.assetsManager
-          .getAllowance(options?.address, vaultAddress)
+          .getAllowance({
+            address: options?.address,
+            vaultAddress,
+            decimals: options?.decimals,
+          })
           .then((allowance) => {
             setAllowance(() => allowance);
           });
         setBalance((value) => new Decimal(value).sub(quantity).toString());
         return res;
       });
-  }, [account, fetchBalance, getVaultAddress, quantity, depositFee]);
+  }, [
+    account,
+    fetchBalance,
+    getVaultAddress,
+    quantity,
+    depositFee,
+    options?.address,
+    options?.decimals,
+  ]);
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
