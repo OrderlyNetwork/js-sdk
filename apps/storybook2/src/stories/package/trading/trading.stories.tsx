@@ -80,6 +80,21 @@ const meta = {
       },
       refLink: "https://orderly.netowork/referral?abc=123",
     },
+    shareOptions:{
+      pnl: {
+        backgroundImages: [
+          "/pnl/poster_bg_1.png",
+          "/pnl/poster_bg_2.png",
+          "/pnl/poster_bg_3.png",
+          "/pnl/poster_bg_4.png",
+          "/pnl/poster_bg_5.png",
+        ],
+        color: "rgba(255, 255, 255, 0.98)",
+        profitColor: "rgb(255,0,0)",
+        lossColor: "rgb(0,0,255)",
+        brandColor: "rgb(0,181,159)",
+      },
+    },
     onSymbolChange:fn(),
   },
 } satisfies Meta<typeof TradingPage>;

@@ -11,7 +11,7 @@ export interface TradingPageContextValue {
 
   disableFeatures: TradingFeatures[];
   overrides?: Record<TradingFeatures, ReactNode>;
-  sharePnlConfig?: ShareConfigProps;
+  shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
 }
 
@@ -24,7 +24,7 @@ export interface TradingPageProviderProps {
   symbol: string;
   disableFeatures?: TradingFeatures[];
   overrides?: Record<TradingFeatures, ReactNode>;
-  sharePnlConfig?: ShareConfigProps;
+  shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
 }
 
@@ -40,10 +40,12 @@ export const TradingPageProvider: React.FC<
   symbol,
   disableFeatures = [],
   overrides,
-  sharePnlConfig,
+  shareOptions,
   referral,
 }) => {
   useExecutionReport();
+
+  console.log("xxxxxxxx Trading 222", shareOptions);
   return (
     <TradingPageContext.Provider
       value={{
@@ -51,7 +53,7 @@ export const TradingPageProvider: React.FC<
         symbol,
         disableFeatures,
         overrides,
-        sharePnlConfig,
+        shareOptions,
         referral,
       }}
     >

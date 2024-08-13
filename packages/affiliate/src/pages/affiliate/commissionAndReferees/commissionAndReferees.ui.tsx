@@ -359,10 +359,10 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
       justify={"start"}
       itemAlign={"start"}
     >
-      <DateFiler
+      {/* <DateFiler
         value={props.referees.dateRange}
         setValue={props.referees.setDateRange}
-      />
+      /> */}
       {body}
     </Flex>
   );

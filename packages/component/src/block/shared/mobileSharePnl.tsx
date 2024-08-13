@@ -17,6 +17,7 @@ import {
 } from "@/carousel/carousel";
 import { Carousel } from "@/carousel";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 export const MobileSharePnLContent: FC<{
   position: any;
@@ -35,12 +36,12 @@ export const MobileSharePnLContent: FC<{
   );
   const [message, setMessage] = useState<string>(localPnlConfig.message);
   const [selectIndex, setSelectIndex] = useState(localPnlConfig.bgIndex);
-  const { shareOptions } = useContext(OrderlyAppContext);
-  const { backgroundImages, ...resetOptions } = shareOptions.pnl;
+  const { shareOptions } = useTradingPageContext();
+  const { backgroundImages, ...resetOptions } = shareOptions?.pnl ?? { backgroundImages: []};
 
   const [domain, setDomain] = useState("");
 
-  const posterRefs = shareOptions.pnl.backgroundImages.map(() =>
+  const posterRefs = shareOptions?.pnl.backgroundImages.map(() =>
     useRef<PosterRef | null>(null)
   );
 
@@ -122,7 +123,7 @@ export const MobileSharePnLContent: FC<{
           initIndex={selectIndex}
         >
           <CarouselContent style={{ height: `${carouselHeight}px` }}>
-            {shareOptions.pnl.backgroundImages.map((item, index) => (
+            {shareOptions?.pnl.backgroundImages.map((item, index) => (
               <CarouselItem key={index}>
                 <Poster
                   className="orderly-transform orderly-origin-top-left"
@@ -135,7 +136,7 @@ export const MobileSharePnLContent: FC<{
                     data: posterData,
                   }}
                   ratio={3}
-                  ref={posterRefs[index]}
+                  ref={posterRefs?.[index]}
                 />
               </CarouselItem>
             ))}
@@ -234,7 +235,10 @@ export const MobileSharePnLContent: FC<{
           fullWidth
           className="orderly-h-[40px] orderly-text-[16px]"
           onClick={() => {
-            onSharePnL(posterRefs[selectIndex]);
+            const ref = posterRefs?.[selectIndex];
+            if (ref) {
+              onSharePnL(ref);
+            }
           }}
         >
           Share
