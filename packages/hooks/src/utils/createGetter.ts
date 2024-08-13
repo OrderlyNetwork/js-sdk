@@ -25,6 +25,14 @@ export function createGetter<
   : { [P in K]: (key?: Key, defaultValue?: ValueOf<T>) => any }) & {
   isNil: boolean;
 } {
+  const getValue = (value: any, defaultValue?: any) => {
+    if (defaultValue === undefined) {
+      return value;
+    }
+
+    return value ?? defaultValue;
+  };
+
   return new Proxy(data || {}, {
     get(
       target: any,
@@ -37,12 +45,12 @@ export function createGetter<
       if (depth === 1) {
         return (defaultValue: any) => {
           if (!target) return defaultValue;
-          return target[property] ?? defaultValue;
+          return getValue(target[property], defaultValue);
         };
       }
       return (key?: Key, defaultValue?: any) => {
         if (key) {
-          return (target as any)[property]?.[key] ?? defaultValue;
+          return getValue((target as any)[property]?.[key], defaultValue);
         } else {
           return target[property];
         }
