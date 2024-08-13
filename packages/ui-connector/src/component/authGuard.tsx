@@ -102,6 +102,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
 
     return (
       <DefaultFallback
+          bridgeLessOnly={bridgeLessOnly}
         status={state.status}
         buttonProps={{ ...buttonProps, id, type: "button" }}
         wrongNetwork={wrongNetwork}

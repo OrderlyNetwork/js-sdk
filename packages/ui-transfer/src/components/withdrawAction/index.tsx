@@ -59,7 +59,7 @@ export const WithdrawAction = (props: IProps) => {
 
     return (
         <Box width={184}>
-            <AuthGuard networkId={networkId} buttonProps={{fullWidth: true}}>
+            <AuthGuard networkId={networkId} bridgeLessOnly buttonProps={{fullWidth: true}}>
                 <Button
                     fullWidth
                     disabled={disabled}
