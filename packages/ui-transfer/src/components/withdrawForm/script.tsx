@@ -94,7 +94,6 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
 
     }, [allChains, networkId]);
 
-    console.log('-- chains', chains)
     const {
         configStore,
     } = useContext(OrderlyContext);
