@@ -125,9 +125,11 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
 
       toast.success("API key created");
       console.log("xxx generateKeyRes", generateKeyRes);
-      
+
       if ((ipRestriction?.length || 0) > 0) {
-        const key = generateKeyRes.key.startsWith("ed25519:") ? generateKeyRes.key : `ed25519:${generateKeyRes.key}`;
+        const key = generateKeyRes.key.startsWith("ed25519:")
+          ? generateKeyRes.key
+          : `ed25519:${generateKeyRes.key}`;
         const res = await setIPRestriction(key, ipRestriction!);
         console.log("set ip res", res);
         if (res.success) {
@@ -136,7 +138,9 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
       } else {
         createdSuccess(generateKeyRes, undefined);
       }
-    } catch (err) {}
+    } catch (err: any) {
+      if (err?.message) toast.error(err?.message);
+    }
 
     return Promise.resolve(0);
   };
@@ -181,13 +185,13 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   const doEdit = async (item: APIKeyItem, ip?: string): Promise<void> => {
     let future;
     if ((ip?.length || 0) === 0) {
-     future = resetOrderlyKeyIPRestriction(item.orderly_key, "ALLOW_ALL_IPS");
+      future = resetOrderlyKeyIPRestriction(item.orderly_key, "ALLOW_ALL_IPS");
     } else {
       future = setIPRestriction(item.orderly_key, ip!);
     }
 
     const data = await future;
-  
+
     if (data.success) {
       toast.success("API key updated");
       refresh();
@@ -200,7 +204,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
 
   const onCopyAccountId = () => toast.success("Account id copied");
   const onCopyApiKey = (key?: string) => {
-    if (typeof key !== 'undefined') {
+    if (typeof key !== "undefined") {
       navigator.clipboard.writeText(key.replace("ed25519:", ""));
     }
     toast.success("API key copied");
@@ -214,14 +218,19 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   keyList = useDataTap(keyList) || [];
 
   const verifyIP = (ip: string) => {
-    const ipRegex = /^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(,((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9]))*$/;
-    return ipRegex.test(ip) ? '' : 'IP restriction format is incorrect.';
+    const ipRegex =
+      /^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(,((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9]))*$/;
+    return ipRegex.test(ip) ? "" : "IP restriction format is incorrect.";
   };
 
-  const address = useDataTap(data?.account_id);
-  const uid = useDataTap(data?.user_id);
+  const address = useDataTap(data?.account_id, {
+    accountStatus: AccountStatusEnum.EnableTrading,
+  });
+  const uid = useDataTap(data?.user_id, {
+    accountStatus: AccountStatusEnum.EnableTrading,
+  });
   return {
-    address: address ?? '--',
+    address: address ?? "--",
     uid: `${uid ?? "--"}`,
     onCreateApiKey,
     onReadApiGuide,

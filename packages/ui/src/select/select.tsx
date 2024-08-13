@@ -10,6 +10,7 @@ import {
 } from "./selectPrimitive";
 
 import { cnBase, VariantProps } from "tailwind-variants";
+import { ScrollArea } from "../scrollarea";
 
 export type SelectProps<T> = SelectPrimitive.SelectProps & {
   placeholder?: string;
@@ -21,6 +22,7 @@ export type SelectProps<T> = SelectPrimitive.SelectProps & {
   ) => string;
   contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
   showCaret?: boolean;
+  maxHeight?: number;
 } & VariantProps<typeof selectVariants>;
 
 export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
@@ -33,6 +35,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
     contentProps,
     valueFormatter: valueRenderer,
     showCaret,
+    maxHeight,
     ...rest
   } = props;
 
@@ -56,7 +59,11 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
           <SelectValue placeholder={placeholder} />
         )}
       </SelectTrigger>
-      <SelectContent {...contentProps}>{children}</SelectContent>
+      <SelectContent {...contentProps}>
+        <ScrollArea>
+          <div style={{ maxHeight }}> {children}</div>
+        </ScrollArea>
+      </SelectContent>
     </SelectRoot>
   );
 };

@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -8,13 +8,16 @@ import {
   Input,
   inputFormatter,
   Match,
+  modal,
   Switch,
   Text,
   TextField,
   toast,
+  Tooltip,
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./step";
+import { useLocalStorage } from "@orderly.network/hooks";
 
 export type WalletConnectContentProps = {
   initAccountState: AccountStatusEnum;
@@ -36,6 +39,15 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const [state, setState] = useState(initAccountState);
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [firstShowDialog] = useLocalStorage(
+    "oui-first-show-wallet-connector-dialog",
+    undefined
+  );
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("oui-first-show-wallet-connector-dialog", "1");
+    };
+  }, []);
 
   const steps = useMemo(() => {
     const steps = [];
@@ -153,25 +165,21 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           </Box>
         )}
       </Box>
-      {props.showRefCodeInput && <ReferralCode {...props} />}
-      <Flex justify={"between"} itemAlign={"center"}>
-        <Text
-          intensity={54}
-          size={"xs"}
-          className={
-            "oui-underline oui-underline-offset-4 oui-decoration-dashed oui-decoration-base-contrast-36"
-          }
-        >
-          Remember me
-        </Text>
-        <Switch
-          color={"primary"}
-          checked={remember}
-          onCheckedChange={setRemember}
-          disabled={loading}
-          className="data-[state=checked]:oui-bg-[#3347FD]"
-        />
-      </Flex>
+      {props.showRefCodeInput && steps.length == 2 && (
+        <ReferralCode {...props} />
+      )}
+      {firstShowDialog && (
+        <Flex justify={"between"} itemAlign={"center"}>
+          <RememberMe />
+          <Switch
+            color={"primary"}
+            checked={remember}
+            onCheckedChange={setRemember}
+            disabled={loading}
+            className="data-[state=checked]:oui-bg-[#3347FD]"
+          />
+        </Flex>
+      )}
       <Flex justify={"center"} mt={8}>
         <Box width={"45%"}>
           <ActionButton
@@ -226,15 +234,17 @@ const ActionButton: FC<{
 const ReferralCode: FC<WalletConnectContentProps> = (props) => {
   return (
     <TextField
-      placeholder="Referral code"
+      placeholder="Referral code (Optional)"
       fullWidth
-      label={"Referral code (optional)"}
+      // label={"Referral code (optional)"}
+      label=""
       value={props.refCode}
       onChange={(e) => {
         props.setRefCode(e.target.value);
       }}
       classNames={{
         label: "oui-text-base-contrast-54 oui-text-xs",
+        input: "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
       }}
       formatters={[inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g)]}
       onClear={() => {
@@ -245,5 +255,34 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
       className="oui-mb-4"
       color={props.helpText ? "danger" : undefined}
     />
+  );
+};
+
+const RememberMe = () => {
+  const showRememberHint = () => {
+    if (window.innerWidth > 768) return;
+    modal.alert({
+      title: "Remember me",
+      message: (
+        <span className="oui-text-2xs oui-text-base-contrast/60">
+          Toggle this option to skip these steps next time you want to trade.
+        </span>
+      ),
+    });
+  };
+  return (
+    <Tooltip content={"Toggle this option to skip these steps next time you want to trade."} className="oui-max-w-[300px]">
+      <button onClick={showRememberHint}>
+        <Text
+          intensity={54}
+          size={"xs"}
+          className={
+            "oui-underline oui-underline-offset-4 oui-decoration-dashed oui-decoration-base-contrast-36"
+          }
+        >
+          Remember me
+        </Text>
+      </button>
+    </Tooltip>
   );
 };

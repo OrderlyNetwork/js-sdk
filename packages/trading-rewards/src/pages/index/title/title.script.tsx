@@ -2,11 +2,11 @@ import { ReactNode } from "react";
 import { useTradingRewardsContext } from "../provider";
 
 export type TitleConfig = {
-  /// default is `Trading Rewards`
+  /// default is `Trading rewards`
   title?: string | ReactNode;
-  /// default is `Trade with Orderly’s brokers to earn rewards.`
+  /// default is `Trade with Orderly’s to earn ORDER.`
   subtitle?: string | ReactNode;
-  /// default is `Learn more about Orderly Trading Rewards Program in Trading Rewards Docs`
+  /// default is `Learn more about Orderly Trading rewards Program in Trading rewards Docs`
   content?: string | ReactNode;
   /// default is { url: 'https://orderly.network/docs/introduction/tokenomics/trading-rewards', target: "_blank"}
   docOpenOptions?: {

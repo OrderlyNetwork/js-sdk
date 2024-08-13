@@ -30,7 +30,7 @@ export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
       r="2xl"
       className="oui-bg-base-9 oui-w-full oui-font-semibold oui-tabular-nums"
     >
-      <Text className="oui-text-lg oui-px-3">Reward History</Text>
+      <Text className="oui-text-lg oui-px-3">Reward history</Text>
       <div className="oui-border-t-2 oui-border-line-4 oui-w-full">
         <List {...props} />
       </div>
@@ -50,7 +50,9 @@ const List: FC<RewardsHistoryReturns> = (props) => {
       className="oui-mt-3 oui-max-h-[356px]"
     />
   ) : (
-    <DesktopList {...props} />
+    <Box px={3}>
+      <DesktopList {...props} />
+    </Box>
   );
 };
 

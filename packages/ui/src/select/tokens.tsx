@@ -68,6 +68,7 @@ export const TokenSelect = (props: TokenSelect) => {
       options={options}
       valueFormatter={showIcon ? valueRenderer : undefined}
       optionRenderer={optionRenderer}
+      maxHeight={254} // 30 * 8 + 2 * 7
     />
   );
 };
