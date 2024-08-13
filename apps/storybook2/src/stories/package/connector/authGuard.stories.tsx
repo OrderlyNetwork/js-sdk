@@ -45,6 +45,14 @@ export const OnlyMainnet: Story = {
   },
 };
 
+export const OnlyBridgeLess: Story = {
+  args: {
+    status: AccountStatusEnum.EnableTrading,
+    children: <Text>Trading view</Text>,
+    bridgeLessOnly: true,
+  },
+};
+
 export const DataTable: Story = {
   render: (args) => {
     const {

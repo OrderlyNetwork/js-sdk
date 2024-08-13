@@ -116,7 +116,7 @@ export const Tab: FC<
             id="oui-affiliate-dashboard-tab-affiliate"
             value={TabTypes.affiliate}
           >
-            <Flex direction={"row"} gap={1}>
+            <Flex direction={"row"} gap={1} mb={1}>
               <AffiliateIcon
                 fillOpacity={1}
                 fill="currentColor"
@@ -135,7 +135,7 @@ export const Tab: FC<
             id="oui-affiliate-dashboard-tab-trader"
             value={TabTypes.trader}
           >
-            <Flex direction={"row"} gap={1}>
+            <Flex direction={"row"} gap={1} mb={1}>
               <TraderIcon
                 fillOpacity={1}
                 fill="currentColor"

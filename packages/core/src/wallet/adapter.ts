@@ -10,8 +10,8 @@ export interface IWalletAdapter {
    * Set the chain id
    */
   set chainId(chainId: number);
-  parseUnits: (amount: string) => string;
-  formatUnits: (amount: string) => string;
+  parseUnits: (amount: string, decimals?: number) => string;
+  formatUnits: (amount: string, decimals?: number) => string;
   // getBalance: (address: string) => Promise<any>;
   // deposit: (from: string, to: string, amount: string) => Promise<any>;
   send: (

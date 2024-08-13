@@ -119,7 +119,7 @@ export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
   return (
     <Box mt={4} height={"188px"}>
       <Text as="div" size="sm" className="oui-mb-3">
-        Performance PnL
+        Daily PnL
       </Text>
       <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
         <PnLBarChart data={props.data} invisible={props.invisible} />

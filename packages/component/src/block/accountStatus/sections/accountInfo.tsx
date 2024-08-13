@@ -10,6 +10,7 @@ import {
   OrderlyContext,
   useCurEpochEstimate,
   TWType,
+  useEpochInfo,
 } from "@orderly.network/hooks";
 import { toast } from "@/toast";
 import { modal } from "@orderly.network/ui";
@@ -231,19 +232,23 @@ const ReferralInfo = () => {
 
 const TradingRewardsInfo = () => {
   const [curEpochEstimate] = useCurEpochEstimate(TWType.normal);
+  const [list, curEpoch] = useEpochInfo(TWType.normal);
+  const curEpochId = useMemo(() => {
+    return curEpoch.curEpochInfo?.epoch_id ?? "--";
+  }, [curEpoch]);
 
   const estRewards = useMemo(() => {
     if (typeof curEpochEstimate?.est_r_wallet === "undefined") {
-      return "-";
+      return "--";
     }
-    return commify(curEpochEstimate?.est_r_wallet);
+    return curEpochEstimate?.est_r_wallet;
   }, [curEpochEstimate]);
 
   const vol = useMemo(() => {
     if (typeof curEpochEstimate?.est_trading_volume === "undefined") {
-      return "-";
+      return "--";
     }
-    return commify(curEpochEstimate?.est_trading_volume);
+    return curEpochEstimate?.est_trading_volume;
   }, [curEpochEstimate]);
 
   const clickReferral = useCallback(() => {
@@ -258,7 +263,7 @@ const TradingRewardsInfo = () => {
       >
         <div className="orderly-flex-1 orderly-flex orderly-gap-1">
           <span>Trading rewards</span>
-          <span className="orderly-text-base-contrast-54">{`(epoch ${1})`}</span>
+          <span className="orderly-text-base-contrast-54">{`(epoch ${curEpochId})`}</span>
         </div>
         <ArrowRightIcon
           size={14}

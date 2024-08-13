@@ -57,6 +57,8 @@ export const AccountMenu = (props: AccountMenuProps) => {
         open
         content={"Please sign in before starting to trade"}
         align={"end"}
+        className="oui-bg-base-5"
+        arrow={{ className: "oui-fill-base-5" }}
       >
         <Button size="md" onClick={() => props.onCrateAccount()}>
           Sign in

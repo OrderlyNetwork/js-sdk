@@ -19,7 +19,7 @@ export const TablePlaceholder = (props: {
       top={0}
       right={0}
       bottom={0}
-      className="oui-flex oui-justify-center oui-items-center"
+      className="oui-flex oui-justify-center oui-items-center oui-bg-base-9/75"
     >
       {loading ? (
         <Spinner />

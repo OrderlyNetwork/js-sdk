@@ -14,12 +14,12 @@ import { ScrollArea } from "../scrollarea";
 
 export type SelectProps<T> = SelectPrimitive.SelectProps & {
   placeholder?: string;
-  valueRenderer?: (
+  valueFormatter?: (
     value: T,
     options: {
       placeholder?: string;
     }
-  ) => ReactElement;
+  ) => React.ReactNode;
   contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
   showCaret?: boolean;
   maxHeight?: number;
@@ -33,7 +33,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
     placeholder,
     variant,
     contentProps,
-    valueRenderer,
+    valueFormatter: valueRenderer,
     showCaret,
     maxHeight,
     ...rest

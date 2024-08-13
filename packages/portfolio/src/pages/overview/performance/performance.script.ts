@@ -1,35 +1,37 @@
-import { useAssetsHistoryData } from "../shared/useAssetHistory";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { useAccount } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useOverviewContext } from "../providers/overviewCtx";
 
 export const usePerformanceScript = () => {
-  const res = useAssetsHistoryData("portfolio_performance_period", {
-    isRealtime: true,
-  });
+  const ctx = useOverviewContext();
 
   const { wrongNetwork } = useAppContext();
   // const { state } = useAccount();
-  const filteredData = useDataTap(res.data, {
+  const filteredData = useDataTap(ctx.data, {
     accountStatus: AccountStatusEnum.EnableTrading,
-    fallbackData:
-      res.data && res.data.length >= 2
-        ? [res.data[0], res.data[res.data.length - 1]]
-        : res.createFakeData(
-            {
-              account_value: 0,
-              pnl: 0,
-            },
-            { account_value: 1000, pnl: 1000 }
-          ),
+    fallbackData: ctx.createFakeData(
+      {
+        account_value: 0,
+        pnl: 0,
+      },
+      { account_value: 500, pnl: 500 }
+    ),
+    // fallbackData:
+    //   ctx.data && ctx.data.length >= 2
+    //     ? [ctx.data[0], ctx.data[ctx.data.length - 1]]
+    //     : ctx.createFakeData(
+    //         {
+    //           account_value: 0,
+    //           pnl: 0,
+    //         },
+    //         { account_value: 1000, pnl: 1000 }
+    //       ),
   });
 
-  // console.log("filteredData", filteredData, res.data);
-
   return {
-    ...res,
+    ...ctx,
     data: filteredData,
-    invisible: wrongNetwork || !res.data.length,
+    invisible: wrongNetwork || !ctx.data.length,
   };
 };
 
