@@ -18,6 +18,7 @@ import { ShareOption } from "./desktop/options";
 import { BottomButtons } from "./desktop/bottomBtns";
 import { Message } from "./desktop/message";
 import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
+import { ShareConfigProps } from "./shareConfigProps";
 
 export const DesktopSharePnLContent: FC<{
   position: any;
@@ -26,7 +27,9 @@ export const DesktopSharePnLContent: FC<{
   baseDp?: number;
   quoteDp?: number;
   referral?: ReferralType;
+  shareOptions: ShareConfigProps;
 }> = (props) => {
+  const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
 
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
@@ -38,12 +41,11 @@ export const DesktopSharePnLContent: FC<{
   const [selectedSnap, setSelectedSnap] = useState(localPnlConfig.bgIndex);
   const [message, setMessage] = useState(localPnlConfig.message);
   const [check, setCheck] = useState(false);
-  const { shareOptions } = useTradingPageContext();
+  // const { shareOptions } = useTradingPageContext();
   const { backgroundImages, ...resetOptions } = shareOptions?.pnl ?? {
     backgroundImages: [],
   };
 
-  console.log("xxxxxxxx Trading 333", shareOptions);
   const [domain, setDomain] = useState("");
 
   const posterRef = useRef<PosterRef | null>(null);

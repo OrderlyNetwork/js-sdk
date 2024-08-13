@@ -45,7 +45,6 @@ export const TradingPageProvider: React.FC<
 }) => {
   useExecutionReport();
 
-  console.log("xxxxxxxx Trading 222", shareOptions);
   return (
     <TradingPageContext.Provider
       value={{

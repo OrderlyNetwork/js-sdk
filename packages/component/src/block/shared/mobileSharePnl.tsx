@@ -18,6 +18,7 @@ import {
 import { Carousel } from "@/carousel";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
+import { ShareConfigProps } from "./shareConfigProps";
 
 export const MobileSharePnLContent: FC<{
   position: any;
@@ -26,8 +27,9 @@ export const MobileSharePnLContent: FC<{
   baseDp?: number;
   quoteDp?: number;
   referral?: ReferralType;
+  shareOptions: ShareConfigProps;
 }> = (props) => {
-
+  const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
 
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(localPnlConfig.pnlFormat);
@@ -36,7 +38,7 @@ export const MobileSharePnLContent: FC<{
   );
   const [message, setMessage] = useState<string>(localPnlConfig.message);
   const [selectIndex, setSelectIndex] = useState(localPnlConfig.bgIndex);
-  const { shareOptions } = useTradingPageContext();
+  // const { shareOptions } = useTradingPageContext();
   const { backgroundImages, ...resetOptions } = shareOptions?.pnl ?? { backgroundImages: []};
 
   const [domain, setDomain] = useState("");
