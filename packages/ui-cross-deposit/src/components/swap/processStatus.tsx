@@ -65,13 +65,29 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
     status === SwapProcessStatus.Bridging ||
     status === SwapProcessStatus.Depositing;
 
+  const showDashLine = items.length > 1;
+
   return (
     <div className="oui-font-semibold">
       <Box intensity={600} p={4} r="lg">
-        <Flex direction="column" itemAlign="start" gapY={4}>
+        <Flex
+          direction="column"
+          itemAlign="start"
+          gapY={4}
+          className="oui-relative"
+        >
           {items.map((item) => (
             <ProcessItem {...item} key={item.title} />
           ))}
+          {showDashLine && (
+            <div
+              className={cn(
+                "oui-absolute oui-left-[10px] oui-top-[20px] oui-bottom-[38px]",
+                "oui-w-[1px] oui-h-[34px]",
+                "oui-border-r oui-border-dashed oui-border-r-line-16"
+              )}
+            />
+          )}
         </Flex>
 
         <Box my={3}>
