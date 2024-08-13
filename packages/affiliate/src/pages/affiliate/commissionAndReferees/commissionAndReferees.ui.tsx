@@ -181,7 +181,6 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         columns={columns}
         loading={props.commission.isLoading}
         ignoreLoadingCheck={true}
-        scroll={{ y: 400 }}
         dataSource={props.commission.data}
         classNames={{
           header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
