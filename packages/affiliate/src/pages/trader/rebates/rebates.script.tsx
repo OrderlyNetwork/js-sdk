@@ -10,26 +10,11 @@ import { compareDate, formatDateTimeToUTC } from "../../../utils/utils";
 import { subDays } from "date-fns";
 import { usePagination } from "@orderly.network/ui";
 
-export type RebatesReturns = {
-  dateRange?: DateRange;
-  setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
-  displayDate?: string;
-  dataSource: RebatesItem[];
-  meta: {
-    count: number;
-    page: number;
-    pageSize: number;
-    pageTotal: number;
-  };
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
-};
-
 export type RebatesItem = RefferalAPI.RefereeRebateSummary & {
   vol?: number;
 };
 
-export const useRebatesScript = (): RebatesReturns => {
+export const useRebatesScript = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: subDays(new Date(), 90),
     to: subDays(new Date(), 1),
@@ -45,7 +30,7 @@ export const useRebatesScript = (): RebatesReturns => {
   });
   // const { dailyVolume } = useReferralContext();
 
-  const { data: dailyVolume, mutate: dailyVolumeMutate } = useDaily({
+  const { data: dailyVolume, mutate: dailyVolumeMutate, } = useDaily({
     startDate: dateRange?.to,
     endDate: dateRange?.from,
   });
@@ -107,5 +92,8 @@ export const useRebatesScript = (): RebatesReturns => {
     meta,
     onPageChange,
     onPageSizeChange,
+    isLoading,
   };
 };
+
+export type RebatesReturns = ReturnType<typeof useRebatesScript>;

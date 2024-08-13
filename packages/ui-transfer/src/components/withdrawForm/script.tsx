@@ -79,11 +79,20 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
     const {dst, withdraw, isLoading, maxAmount, availableBalance, availableWithdraw, unsettledPnL} = useWithdraw();
     const [disabled, setDisabled] = useState<boolean>(true);
 
-    const [chains, {findByChainId}] = useChains(networkId, {
+    const [allChains, {findByChainId}] = useChains(networkId, {
         pick: "network_infos",
         filter: (chain: any) =>
             chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
     });
+
+    const chains = useMemo(() => {
+        if (networkId === 'mainnet') {
+            return allChains.filter(item => item.bridgeless);
+        }
+
+        return allChains;
+
+    }, [allChains, networkId]);
 
     const {
         configStore,

@@ -143,7 +143,7 @@ export const VolBarChart = (props: VolChartProps) => {
           {/* @ts-ignore */}
           <YAxis
             tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-            tickLine={false}
+            tickLine={true}
             axisLine={false}
             tickCount={6}
             dataKey={"volume"}
