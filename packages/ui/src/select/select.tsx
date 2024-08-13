@@ -19,7 +19,7 @@ export type SelectProps<T> = SelectPrimitive.SelectProps & {
     options: {
       placeholder?: string;
     }
-  ) => string;
+  ) => React.ReactNode;
   contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
   showCaret?: boolean;
   maxHeight?: number;

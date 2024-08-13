@@ -67,7 +67,9 @@ export const CombineSelect = (props: CombineSelectProps) => {
             focused
               ? keyword
               : typeof valueFormatter === "function"
-              ? valueFormatter(value ?? "", { placeholder: props.placeholder })
+              ? (valueFormatter(value ?? "", {
+                  placeholder: props.placeholder,
+                }) as string)
               : value
           }
           onValueChange={(value) => {
