@@ -189,9 +189,14 @@ export const useAssetsHistoryData = (
         pnl = pnl.add(d.pnl);
       });
 
-      roi = pnl.div(
-        data[data.length - calculateData.length - 1]!.account_value
-      );
+      const lastAccountValue =
+        data[data.length - calculateData.length - 1]!.account_value;
+
+      if (typeof lastAccountValue === "undefined" || lastAccountValue === 0) {
+        roi = zero;
+      } else {
+        roi = pnl.div(lastAccountValue);
+      }
     }
 
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };

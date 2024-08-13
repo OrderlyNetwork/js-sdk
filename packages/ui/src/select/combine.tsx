@@ -77,7 +77,7 @@ export const CombineSelect = (props: CombineSelectProps) => {
           }}
           // onKeyDown={onKeyDown}
           className={trigger({
-            className: "oui-min-w-32 oui-peer",
+            className: "oui-min-w-20 oui-peer",
           })}
           classNames={{
             input: "oui-text-base-contrast-54",

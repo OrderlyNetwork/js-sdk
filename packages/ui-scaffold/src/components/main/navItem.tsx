@@ -4,6 +4,7 @@ import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@orderly.network/ui";
 import React, {
   cloneElement,
   FC,
+  HTMLAttributeAnchorTarget,
   PropsWithChildren,
   ReactElement,
   useCallback,
@@ -15,6 +16,7 @@ import React, {
 export type MainNavItem = {
   name: string;
   href: string;
+  target?: HTMLAttributeAnchorTarget;
   icon?: string | React.ReactElement;
   activeIcon?: string | React.ReactElement;
   tag?: string;
@@ -175,7 +177,7 @@ const SubMenus = (
           timer.current ? clearTimeout(timer.current) : void 0;
         }}
         className={cn(
-          "oui-p-1 oui-w-[260px] oui-border oui-border-line-6",
+          "oui-p-1 oui-w-[260px] oui-border oui-border-line-6 oui-space-y-[2px]",
           props.className
         )}
       >
@@ -206,7 +208,7 @@ const SubMenu = (props: {
       py={3}
       gapX={2}
       className={cn(
-        "hover:oui-bg-base-6 oui-cursor-pointer oui-text-base-contrast-80",
+        "hover:oui-bg-base-6 oui-cursor-pointer oui-text-base-contrast-80 oui-items-start",
         props.active && "oui-bg-base-5"
       )}
       r={"md"}
@@ -214,7 +216,12 @@ const SubMenu = (props: {
         props.onClick(item);
       }}
     >
-      <ItemIcon isActive={props.active ?? false} item={props.item} />
+      {!!props.item.icon && (
+        <div className="oui-flex oui-border oui-border-line oui-w-6 oui-h-6 oui-rounded-md oui-justify-center oui-items-center oui-translate-y-1">
+          <ItemIcon isActive={props.active ?? false} item={props.item} />
+        </div>
+      )}
+
       <Flex direction={"column"} itemAlign={"start"}>
         <SubMenuTitle item={item} isActive={props.active} />
         {typeof item.description !== "undefined" && (
@@ -265,7 +272,7 @@ const Tag = (props: { item: MainNavItem }) => {
 const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
   const { item, isActive } = props;
 
-  if (!props.item.icon) return null;
+  // if (!props.item.icon) return null;
   if (typeof props.item.icon === "string") {
     return (
       <span className={"oui-w-[20px] oui-h-[20px] oui-mr-1"}>

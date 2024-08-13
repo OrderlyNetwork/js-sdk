@@ -7,6 +7,7 @@ import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useState } from "react";
 import { useDataTap } from "@orderly.network/react-app";
+import { parseDateRangeForFilter } from "../helper/date";
 
 // type FundingSearchParams = {
 //   dataRange?: Date[];
@@ -19,6 +20,8 @@ export const useFundingHistoryHook = () => {
   ]);
   const [symbol, setSymbol] = useState<string>("All");
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+
+  console.log("dateRange", dateRange);
 
   const [data, { isLoading, meta }] = useFundingFeeHistory(
     {
@@ -35,10 +38,13 @@ export const useFundingHistoryHook = () => {
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "symbol") {
       setSymbol(filter.value);
+      setPage(1);
     }
 
     if (filter.name === "dateRange") {
-      setDateRange([filter.value.from, filter.value.to]);
+      // setDateRange([filter.value.from, filter.value.to]);
+      setDateRange(parseDateRangeForFilter(filter.value));
+      setPage(1);
     }
   };
 

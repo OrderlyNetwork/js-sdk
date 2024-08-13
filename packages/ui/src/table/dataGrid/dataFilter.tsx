@@ -10,6 +10,7 @@ import {
 } from "../../select/withOptions";
 import { DatePicker, DatePickerProps } from "../../pickers/datepicker";
 import { CombineSelect } from "../../select/combine";
+import { DateRange } from "react-day-picker";
 
 type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol";
 
@@ -66,9 +67,19 @@ const FilterDatePicker = (props: DatePickerProps) => {
 };
 
 const FilterDateRangePicker = (props: DateRangePickerProps) => {
+  const { onChange, ...rest } = props;
+
+  const onValueChange = (value: DateRange) => {
+    // const from =value.from
+
+    if (typeof onChange === "function") {
+      onChange(value);
+    }
+  };
+
   return (
     <div className={"oui-min-w-[180px]"}>
-      <DateRangePicker size="xs" {...props} />
+      <DateRangePicker size="xs" {...rest} onChange={onValueChange} />
     </div>
   );
 };
@@ -83,7 +94,7 @@ export const DataFilterRenderer: FC<{
   switch (type) {
     case "select":
       return (
-        <div className="oui-min-w-28">
+        <div className="oui-min-w-24">
           {isCombine ? (
             <CombineSelect
               size="xs"
@@ -122,7 +133,7 @@ export const DataTableFilter = (props: DataFilterProps) => {
       justify={"start"}
       gapX={3}
       p={3}
-      className="oui-datagrid-filter-bar oui-border-b oui-border-line"
+      className="oui-data-grid-filter-bar oui-border-b oui-border-line"
     >
       {props.items.map((item, index: number) => {
         if (item.type === "date") {

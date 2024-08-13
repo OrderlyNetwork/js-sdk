@@ -2,6 +2,7 @@ import { useDistributionHistory } from "@orderly.network/hooks";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useState } from "react";
 import { usePagination } from "@orderly.network/ui";
+import { parseDateRangeForFilter } from "../helper/date";
 
 export const useDistributionHistoryHook = () => {
   const [dateRange, setDateRange] = useState<Date[]>([
@@ -22,10 +23,13 @@ export const useDistributionHistoryHook = () => {
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "type") {
       setType(filter.value);
+      setPage(1);
     }
 
     if (filter.name === "dateRange") {
-      setDateRange([filter.value.from, filter.value.to]);
+      // setDateRange([filter.value.from, filter.value.to]);
+      setDateRange(parseDateRangeForFilter(filter.value));
+      setPage(1);
     }
   };
 
