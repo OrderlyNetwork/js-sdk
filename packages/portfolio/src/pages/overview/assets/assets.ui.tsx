@@ -98,6 +98,7 @@ export const AssetsUI = (props: Props) => {
             freeCollateral={props.freeCollateral}
             currentLeverage={props.currentLeverage}
             onLeverageEdit={props.onLeverageEdit}
+            visible={props.visible}
           />
         </AuthGuard>
       </>
@@ -117,13 +118,18 @@ const NoValue: FC = () => {
 };
 
 export const AssetStatistic = (
-  props: StatisticProps & { onLeverageEdit?: () => void }
+  props: StatisticProps & { onLeverageEdit?: () => void; visible: boolean }
 ) => {
   return (
     <Grid cols={3} className="oui-h-12">
       <Statistic label="Unreal. PnL">
         <Flex>
-          <Text.numeral coloring size="lg" weight="semibold">
+          <Text.numeral
+            coloring
+            size="lg"
+            weight="semibold"
+            visible={props.visible}
+          >
             {props.unrealPnL}
           </Text.numeral>
           <Text.numeral
@@ -133,6 +139,7 @@ export const AssetStatistic = (
             weight="semibold"
             prefix={"("}
             suffix=")"
+            visible={props.visible}
           >
             {props.unrealROI}
           </Text.numeral>
@@ -152,7 +159,7 @@ export const AssetStatistic = (
         // @ts-ignore
         align="right"
         // @ts-ignore
-        valueProps={{ size: "lg" }}
+        valueProps={{ size: "lg", visible: props.visible }}
       >
         {props.freeCollateral}
       </Statistic>

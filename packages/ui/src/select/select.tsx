@@ -13,12 +13,12 @@ import { cnBase, VariantProps } from "tailwind-variants";
 
 export type SelectProps<T> = SelectPrimitive.SelectProps & {
   placeholder?: string;
-  valueRenderer?: (
+  valueFormatter?: (
     value: T,
     options: {
       placeholder?: string;
     }
-  ) => ReactElement;
+  ) => string;
   contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
   showCaret?: boolean;
 } & VariantProps<typeof selectVariants>;
@@ -31,7 +31,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
     placeholder,
     variant,
     contentProps,
-    valueRenderer,
+    valueFormatter: valueRenderer,
     showCaret,
     ...rest
   } = props;

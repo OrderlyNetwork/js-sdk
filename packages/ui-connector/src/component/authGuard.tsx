@@ -30,6 +30,8 @@ export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
    */
   status?: AccountStatusEnum;
 
+  bridgeLessOnly?: boolean;
+
   buttonProps?: ButtonProps;
 
   descriptions?: alertMessages;
@@ -56,6 +58,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     classNames,
     networkId,
     id,
+    bridgeLessOnly,
     // ...rest
   } = props;
   const { state } = useAccount();
@@ -126,6 +129,7 @@ const DefaultFallback = (props: {
   buttonProps?: ButtonProps;
   networkId?: NetworkId;
   labels: alertMessages;
+  bridgeLessOnly?: boolean;
 
   descriptions?: alertMessages;
 }) => {
@@ -171,6 +175,7 @@ const DefaultFallback = (props: {
         wrongNetwork: boolean;
       }>(ChainSelectorId, {
         networkId: props.networkId,
+        bridgeLessOnly: props.bridgeLessOnly,
       })
       .then(
         (r) => {

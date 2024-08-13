@@ -52,6 +52,7 @@ export interface DataTableProps<RecordType>
   showMaskElement?: boolean;
   emptyView?: ReactNode;
   bordered?: boolean;
+  // stickyHeader?: boolean;
   loadMore?: () => void;
   onSort?: (options?: { sortKey: string; sort: SortOrder }) => void;
   initialSort?: { sortKey: string; sort: SortOrder };
@@ -77,7 +78,7 @@ export interface DataTableProps<RecordType>
 
 const dataTableVariants = tv({
   slots: {
-    root: "oui-DataTableRoot oui-relative oui-flex-col oui-overflow-x-auto oui-peer",
+    root: "oui-data-table-root oui-relative oui-flex-col  oui-peer",
   },
   variants: {
     loading: {
@@ -110,6 +111,7 @@ export const DataTable = <RecordType extends unknown>(
     minHeight: minHeightProp,
     initialMinHeight,
     ignoreLoadingCheck,
+    // stickyHeader,
     ...rest
   } = props;
   const { root } = dataTableVariants({
@@ -155,7 +157,14 @@ export const DataTable = <RecordType extends unknown>(
 
         // @ts-ignore
         if (child.type?.displayName === "TablePagination") {
-          setPaginationEle(child);
+          setPaginationEle((prev) => {
+            if (!!prev && child.props.pageSize !== prev.props.pageSize) {
+              minHeight.current = initialMinHeight || DEFAULT_MIN_HEIGHT;
+            }
+            return child;
+          });
+
+          // setPaginationEle(child);
         }
       }
     });
@@ -176,7 +185,7 @@ export const DataTable = <RecordType extends unknown>(
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
-        const { width, height } = entry.contentRect;
+        const { height } = entry.contentRect;
         minHeight.current = Math.max(height, minHeight.current);
       }
     });
@@ -189,11 +198,11 @@ export const DataTable = <RecordType extends unknown>(
   }, [tableRef.current]);
 
   // if pageSize is changed or data is null, reset the minHeight
-  useEffect(() => {
-    if (dataSource === null) {
-      minHeight.current = initialMinHeight || DEFAULT_MIN_HEIGHT;
-    }
-  }, [dataSource]);
+  // useEffect(() => {
+  //   if (dataSource === null) {
+  //     minHeight.current = initialMinHeight || DEFAULT_MIN_HEIGHT;
+  //   }
+  // }, [dataSource]);
 
   const { width, height } = useTableSize({ scroll });
 
@@ -208,7 +217,7 @@ export const DataTable = <RecordType extends unknown>(
           classNames?.root
         ),
       })}
-      style={{ width, height }}
+      style={{ width }}
       // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
     >
       <TableHeader
@@ -216,6 +225,7 @@ export const DataTable = <RecordType extends unknown>(
         className={classNames?.header}
         bordered={props.bordered}
         justified={props.justified}
+        sticky={false}
       />
       {/* <EndReachedBox
           onEndReached={() => {
@@ -227,11 +237,12 @@ export const DataTable = <RecordType extends unknown>(
 
       <div
         className={cn(
-          "oui-relative oui-w-full oui-h-[calc(100%_-_40px)] oui-TableRoot",
+          "oui-relative oui-w-full oui-table-body",
           classNames?.body
         )}
         style={{
           minHeight: `${minHeightProp || minHeight.current}px`,
+          height,
         }}
       >
         <Table

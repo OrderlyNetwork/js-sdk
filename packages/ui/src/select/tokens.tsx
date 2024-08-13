@@ -41,8 +41,8 @@ export const TokenSelect = (props: TokenSelect) => {
   const selectable = options.length > 1;
 
   const valueRenderer = (value: string) => {
-    if (typeof props.valueRenderer === "function") {
-      return props.valueRenderer(value, {});
+    if (typeof props.valueFormatter === "function") {
+      return props.valueFormatter(value, {});
     }
     return (
       <Flex gapX={1}>
@@ -66,7 +66,7 @@ export const TokenSelect = (props: TokenSelect) => {
       {...rest}
       showCaret={selectable}
       options={options}
-      valueRenderer={showIcon ? valueRenderer : undefined}
+      valueFormatter={showIcon ? valueRenderer : undefined}
       optionRenderer={optionRenderer}
     />
   );
