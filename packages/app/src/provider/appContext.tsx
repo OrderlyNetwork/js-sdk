@@ -1,6 +1,8 @@
 import { FC, createContext, PropsWithChildren, useContext } from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useAppState } from "../hooks/useAppState";
+import { useWalletEvent } from "../hooks/useWalletEvent";
+import { useSettleEvent } from "../hooks/useSettleEvent";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -28,6 +30,10 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   const { connectWallet, wrongNetwork } = useWalletStateHandle({
     // onChainChanged: props.onChainChanged,
   });
+
+  useWalletEvent();
+  useSettleEvent();
+
   // const { networkStatus } = useAppState();
 
   return (
