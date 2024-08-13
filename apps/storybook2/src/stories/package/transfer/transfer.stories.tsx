@@ -4,6 +4,7 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId } from '@orderly.network/ui-transfer';
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
+import {customChains} from "./customChains.ts";
 
 const networkId = "mainnet";
 // const networkId = "testnet";
@@ -19,7 +20,9 @@ const meta = {
     decorators: [
         (Story: any) => (
             <ConnectorProvider>
-                <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId={networkId} configStore={configStore} appIcons={{
+                <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId={networkId}
+                            customChains={customChains as any}
+                            configStore={configStore} appIcons={{
                     main: {
                         img: "/orderly-logo.svg",
                     },

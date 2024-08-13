@@ -14,7 +14,7 @@ export type CombineSelectProps = {
 } & SelectWithOptionsProps;
 
 export const CombineSelect = (props: CombineSelectProps) => {
-  const { options, variant, ...rest } = props;
+  const { options, variant, valueFormatter, ...rest } = props;
   const [keyword, setKeyword] = useState<string>("");
   // const [open, setOpen] = useState<boolean>(props.defaultOpen || false);
   const [value, setValue] = useState<string | undefined>(props.value ?? "");
@@ -63,7 +63,15 @@ export const CombineSelect = (props: CombineSelectProps) => {
             setFocused(false);
           }}
           placeholder={props.placeholder ?? "All"}
-          value={focused ? keyword : value}
+          value={
+            focused
+              ? keyword
+              : typeof valueFormatter === "function"
+              ? (valueFormatter(value ?? "", {
+                  placeholder: props.placeholder,
+                }) as string)
+              : value
+          }
           onValueChange={(value) => {
             setKeyword(value);
           }}

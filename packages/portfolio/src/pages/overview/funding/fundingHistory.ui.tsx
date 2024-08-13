@@ -4,6 +4,7 @@ import { FC } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { transSymbolformString } from "@orderly.network/utils";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
@@ -46,14 +47,21 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
                 value: "All",
               },
               ...Object.keys(symbols).map((symbol) => {
-                // const s = transSymbolformString(symbol);
+                const s = symbol.split("_")[1];
                 return {
-                  label: symbol,
+                  label: s,
                   value: symbol,
                 };
               }),
             ],
             value: symbol,
+            valueFormatter: (value) => {
+              console.log(value);
+              if (value === "All") {
+                return "All";
+              }
+              return value.split("_")[1];
+            },
           },
           {
             type: "range",

@@ -27,6 +27,8 @@ export const ChainMenu = (props: {
       <Tooltip
         open
         content={"Please switch to a supported network to continue."}
+        className="oui-bg-base-5"
+        arrow={{ className: "oui-fill-base-5" }}
       >
         <Button
           color="warning"

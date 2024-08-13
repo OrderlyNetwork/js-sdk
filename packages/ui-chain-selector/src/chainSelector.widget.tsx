@@ -5,6 +5,7 @@ import { NetworkId } from "@orderly.network/types";
 
 export const ChainSelectorWidget = (props: {
   networkId?: NetworkId;
+  bridgeLessOnly?: boolean;
   close?: () => void;
   resolve?: (isSuccess: boolean) => void;
   reject?: () => void;

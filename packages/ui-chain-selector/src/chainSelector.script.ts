@@ -6,8 +6,9 @@ import { useAppContext } from "@orderly.network/react-app";
 
 export const useChainSelectorBuilder = (options?: {
   networkId?: NetworkId;
+  bridgeLessOnly?: boolean;
 }) => {
-  const { networkId } = options || {};
+  const { networkId, bridgeLessOnly } = options || {};
   const config = useConfig();
   const [chains, { checkChainSupport }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
@@ -35,8 +36,12 @@ export const useChainSelectorBuilder = (options?: {
   };
 
   const filteredChains = useMemo(() => {
+    const filteredChains = bridgeLessOnly
+      ? chains.mainnet.filter((chain) => chain.network_infos.bridgeless)
+      : chains.mainnet;
+
     const _chains = {
-      mainnet: chains.mainnet.map((chain) => ({
+      mainnet: filteredChains.map((chain) => ({
         name: chain.network_infos.name,
         id: chain.network_infos.chain_id,
         lowestFee: chain.network_infos.bridgeless,
@@ -63,7 +68,7 @@ export const useChainSelectorBuilder = (options?: {
     return {
       mainnet: _chains.mainnet,
     };
-  }, [chains, networkId]);
+  }, [chains, networkId, bridgeLessOnly]);
 
   return {
     chains: filteredChains,

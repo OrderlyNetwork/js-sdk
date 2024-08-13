@@ -27,13 +27,21 @@ export const AccountSummary = (props: AccountSummaryUi) => {
   let element;
   switch (props.type) {
     case "freeCollateral":
-      element = <FreeCollateral freeCollateral={props.freeCollateral} />;
+      element = (
+        <FreeCollateral
+          freeCollateral={props.freeCollateral}
+          visible={props.visible}
+          onToggleVisibility={props.onToggleVisibility}
+        />
+      );
       break;
     case "unrealPnL":
       element = (
         <UnrealPnL
           unrealPnL={props.unrealPnL}
           unrealized_pnl_ROI={props.unrealized_pnl_ROI}
+          visible={props.visible}
+          onToggleVisibility={props.onToggleVisibility}
         />
       );
       break;
@@ -127,8 +135,10 @@ const TotalValue: FC<{
 //----------------- FreeCollateral -----------------
 const FreeCollateral: FC<{
   freeCollateral?: number | null;
+  visible?: boolean;
+  onToggleVisibility?: () => void;
 }> = (props) => {
-  const { freeCollateral } = props;
+  const { freeCollateral, visible, onToggleVisibility } = props;
   return (
     <Flex
       direction={"column"}
@@ -136,14 +146,31 @@ const FreeCollateral: FC<{
       className="oui-text-2xs"
       itemAlign={"start"}
     >
-      <Box>
+      <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
           Free collateral
         </Text>
-      </Box>
+        <button onClick={() => onToggleVisibility?.()}>
+          {visible ? (
+            <EyeIcon size={12} className="oui-text-primary-light" opacity={1} />
+          ) : (
+            <EyeCloseIcon
+              size={12}
+              className="oui-text-primary-light"
+              opacity={1}
+            />
+          )}
+        </button>
+      </Flex>
+      {/* <Box>
+        <Text intensity={54} className="oui-whitespace-nowrap">
+          Free collateral
+        </Text>
+      </Box> */}
       <Text.numeral
         unit="USDC"
         unitClassName="oui-text-base-contrast-20 oui-ml-1"
+        visible={visible}
         as="div"
       >
         {freeCollateral ?? "-"}
@@ -201,7 +228,10 @@ const MaxLeverage: FC<{
 const UnrealPnL: FC<{
   unrealized_pnl_ROI: number | null;
   unrealPnL: number | null;
+  visible?: boolean;
+  onToggleVisibility?: () => void;
 }> = (props) => {
+  const { visible, onToggleVisibility } = props;
   return (
     <Flex
       direction={"column"}
@@ -209,16 +239,33 @@ const UnrealPnL: FC<{
       className="oui-text-2xs"
       itemAlign={"start"}
     >
-      <Box>
+      <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
           Unreal. PnL
         </Text>
-      </Box>
+        <button onClick={() => onToggleVisibility?.()}>
+          {visible ? (
+            <EyeIcon size={12} className="oui-text-primary-light" opacity={1} />
+          ) : (
+            <EyeCloseIcon
+              size={12}
+              className="oui-text-primary-light"
+              opacity={1}
+            />
+          )}
+        </button>
+      </Flex>
+      {/* <Box>
+        <Text intensity={54} className="oui-whitespace-nowrap">
+          Unreal. PnL
+        </Text>
+      </Box> */}
       <Text.numeral
         as={"div"}
         coloring
         showIdentifier
         weight={"semibold"}
+        visible={visible}
         suffix={
           <Text.numeral coloring prefix={"("} suffix={")"} rule={"percentages"}>
             {props.unrealized_pnl_ROI ?? "-"}
@@ -276,6 +323,7 @@ const AccountInfoPopover = (props: {
         </Flex>
         <Text.numeral
           unit="USDC"
+          visible={props.visible}
           unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
         >
           {props.freeCollateral ?? "-"}
@@ -292,10 +340,12 @@ const AccountInfoPopover = (props: {
         <Text.numeral
           coloring
           showIdentifier
+          visible={props.visible}
           suffix={
             <Text.numeral
               coloring
               prefix={"("}
+              visible={props.visible}
               suffix={")"}
               rule={"percentages"}
             >

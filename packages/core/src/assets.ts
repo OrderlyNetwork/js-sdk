@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { Account } from "./account";
 import { ConfigStore } from "./configStore/configStore";
 
@@ -199,13 +198,16 @@ export class Assets {
     // return this.account.walletClient?.formatUnits(result,options?.decimals);
   }
 
-  async getBalanceByAddress(address: string): Promise<string> {
+  async getBalanceByAddress(
+    address: string,
+    options?: {
+      decimals?: number;
+    }
+  ): Promise<string> {
     if (!this.account.walletClient) {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
-
-    //
 
     const result = await this.account.walletClient?.call(
       address,
@@ -215,11 +217,30 @@ export class Assets {
         abi: contractAddress.erc20Abi,
       }
     );
-
-    return this.account.walletClient?.formatUnits(result);
+    return formatByUnits(result, options?.decimals);
+    // return this.account.walletClient?.formatUnits(result);
   }
 
-  async getAllowance(address?: string, vaultAddress?: string) {
+  // async getAllowance(address?: string, vaultAddress?: string) {
+  async getAllowance(
+    inputs?:
+      | string
+      | {
+          address?: string;
+          vaultAddress?: string;
+          decimals?: number;
+        },
+    _vaultAddress?: string
+  ) {
+    const { address, vaultAddress, decimals } =
+      typeof inputs === "object"
+        ? inputs
+        : {
+            address: inputs,
+            vaultAddress: _vaultAddress,
+            decimals: undefined,
+          };
+
     if (!this.account.walletClient) {
       return "0";
     }
@@ -236,10 +257,32 @@ export class Assets {
       }
     );
 
-    return this.account.walletClient?.formatUnits(result);
+    return this.account.walletClient?.formatUnits(result, decimals);
   }
 
-  async approve(address?: string, amount?: string, vaultAddress?: string) {
+  // async approve(address?: string, amount?: string, vaultAddress?: string) {
+  async approve(
+    inputs?:
+      | string
+      | {
+          address?: string;
+          amount?: string;
+          vaultAddress?: string;
+          decimals?: number;
+        },
+    _amount?: string,
+    _vaultAddress?: string
+  ) {
+    const { address, amount, vaultAddress, decimals } =
+      typeof inputs === "object"
+        ? inputs
+        : {
+            address: inputs,
+            amount: _amount,
+            vaultAddress: _vaultAddress,
+            decimals: undefined,
+          };
+
     if (!address) {
       throw new Error("address is required");
     }
@@ -249,9 +292,9 @@ export class Assets {
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const parsedAmount =
-        typeof amount !== "undefined" && amount !== ""
-            ? this.account.walletClient.parseUnits(amount)
-            : MaxUint256.toString();
+      typeof amount !== "undefined" && amount !== ""
+        ? this.account.walletClient.parseUnits(amount, decimals)
+        : MaxUint256.toString();
 
     const result = await this.account.walletClient?.call(
       // contractAddress.usdcAddress,
@@ -266,23 +309,22 @@ export class Assets {
     return result;
   }
 
-  async approveByAddress(inputs: { amount?: string; address: string }) {
-    const { amount, address } = inputs;
-
-    return this._approve(address, amount);
-  }
-
-  private async _approve(contractAddress: string, amount?: string) {
+  async approveByAddress(inputs: {
+    address: string;
+    amount?: string;
+    decimals?: number;
+  }) {
+    const { address, amount, decimals } = inputs;
     if (!this.account.walletClient) {
       throw new Error("walletClient is undefined");
     }
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
-        ? this.account.walletClient.parseUnits(amount)
+        ? this.account.walletClient.parseUnits(amount, decimals)
         : MaxUint256.toString();
     const orderlyContractAddress = this.contractManger.getContractInfoByEnv();
     const result = await this.account.walletClient?.call(
-      contractAddress,
+      address,
       "approve",
       [orderlyContractAddress.vaultAddress, parsedAmount],
       {
@@ -293,7 +335,7 @@ export class Assets {
     return result;
   }
 
-  getDepositData(amount: string) {
+  async getDepositFee(amount: string, chain: API.NetworkInfos) {
     if (!this.account.walletClient)
       throw new Error("walletClient is undefined");
 
@@ -301,19 +343,12 @@ export class Assets {
 
     if (!brokerId) throw new Error("[Assets]:brokerId is required");
 
-    return {
+    const depositData = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletClient?.parseUnits(amount),
     };
-  }
-
-  async getDepositFee(amount: string, chain: API.NetworkInfos) {
-    if (!this.account.walletClient)
-      throw new Error("walletClient is undefined");
-
-    const depositData = this.getDepositData(amount);
 
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
@@ -344,16 +379,6 @@ export class Assets {
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletClient?.parseUnits(amount),
     };
-
-    // --- call deposit
-    // const result = await this.account.walletClient?.call(
-    //   contractAddress.vaultAddress,
-    //   "deposit",
-    //   [depositData],
-    //   {
-    //     abi: contractAddress.vaultAbi,
-    //   }
-    // );
 
     const result = await this.account.walletClient?.sendTransaction(
       contractAddress.vaultAddress,

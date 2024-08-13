@@ -20,12 +20,17 @@ export const useFundingHistoryHook = () => {
   const [symbol, setSymbol] = useState<string>("All");
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
-  const [data, { isLoading, meta }] = useFundingFeeHistory({
-    dataRange: dateRange.map((date) => date.getTime()),
-    symbol,
-    page,
-    pageSize,
-  });
+  const [data, { isLoading, meta }] = useFundingFeeHistory(
+    {
+      dataRange: dateRange.map((date) => date.getTime()),
+      symbol,
+      page,
+      pageSize,
+    },
+    {
+      keepPreviousData: true,
+    }
+  );
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "symbol") {

@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  AssetHistoryStatusEnum,
-  useAssetsHistory,
-} from "@orderly.network/hooks";
+import { useAssetsHistory } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 

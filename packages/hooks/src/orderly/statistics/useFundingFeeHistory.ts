@@ -2,6 +2,7 @@ import { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useMemo, useRef } from "react";
 import { useSymbolsInfo } from "../useSymbolsInfo";
+import { SWRConfiguration } from "swr";
 
 type FundingSearchParams = {
   /**
@@ -16,7 +17,10 @@ type FundingSearchParams = {
   pageSize?: number;
 };
 
-export const useFundingFeeHistory = (params: FundingSearchParams) => {
+export const useFundingFeeHistory = (
+  params: FundingSearchParams,
+  options?: SWRConfiguration
+) => {
   let { symbol, dataRange, page = 1, pageSize = 10 } = params;
 
   const infos = useSymbolsInfo();
@@ -44,6 +48,8 @@ export const useFundingFeeHistory = (params: FundingSearchParams) => {
     formatter: (data) => data,
     revalidateOnFocus: false,
     errorRetryCount: 3,
+    // keepPreviousData: true,
+    ...options,
   });
 
   const parsedData = useMemo<

@@ -10,13 +10,15 @@ export interface THeadProps {
   containerClassName?: string;
   bordered?: boolean;
   justified?: boolean;
+  sticky?: boolean;
 }
 
 export const TableHeader: FC<THeadProps> = (props) => {
   return (
     <table
       className={cnBase(
-        "oui-border-collapse oui-w-full oui-text-xs oui-table-fixed oui-sticky oui-top-0 oui-z-20 oui-datatable-header",
+        "oui-border-collapse oui-w-full oui-text-xs oui-table-fixed oui-data-table-header",
+        props.sticky && "oui-sticky oui-top-0 oui-z-20",
         props.containerClassName
       )}
     >
@@ -30,7 +32,10 @@ export const TableHeader: FC<THeadProps> = (props) => {
           // className="oui-bg-base-9"
         >
           {props.columns.map((column, index) => {
-            const className = (typeof column.className === 'function') ? (column.className(undefined, index)) : column.className;
+            const className =
+              typeof column.className === "function"
+                ? column.className(undefined, index)
+                : column.className;
             return (
               <TheadCol
                 col={column}
