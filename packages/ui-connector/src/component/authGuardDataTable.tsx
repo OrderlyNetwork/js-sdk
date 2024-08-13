@@ -36,7 +36,9 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
     <DataTable
       {...rest}
       dataSource={data}
-      ignoreLoadingCheck={wrongNetwork || state.status < status}
+      ignoreLoadingCheck={
+        wrongNetwork || state.status < status || props.ignoreLoadingCheck
+      }
       emptyView={
         <GuardView
           status={status}

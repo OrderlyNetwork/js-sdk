@@ -180,6 +180,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         bordered
         columns={columns}
         loading={props.commission.isLoading}
+        ignoreLoadingCheck={true}
         scroll={{ y: 400 }}
         dataSource={props.commission.data}
         classNames={{
@@ -334,6 +335,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
       <AuthGuardDataTable
         bordered
         loading={props.referees.isLoading}
+        ignoreLoadingCheck={true}
         columns={columns}
         dataSource={props.referees.data}
         classNames={{
@@ -357,10 +359,10 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
       justify={"start"}
       itemAlign={"start"}
     >
-      <DateFiler
+      {/* <DateFiler
         value={props.referees.dateRange}
         setValue={props.referees.setDateRange}
-      />
+      /> */}
       {body}
     </Flex>
   );
@@ -379,7 +381,7 @@ const DateFiler: FC<{
           onChange={(range) => {
             props.setValue(range);
           }}
-          max={89}
+          max={90}
           disabled={{
             after: new Date(),
           }}

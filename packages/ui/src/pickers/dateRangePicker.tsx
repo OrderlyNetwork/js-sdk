@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Popover } from "../popover/popover";
 import { Calendar, CalendarProps } from "./date/calendar";
 import { selectVariants } from "../select/selectPrimitive";
@@ -41,17 +41,22 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
 
   const [isMobileView, setIsMobileView] = useState<boolean>(false);
 
+  const update = useDebouncedCallback((width: number) => {
+    setIsMobileView(width <= 768);
+  }, 100);
+
   // Effect hook to listen to window resize events
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileView(window.innerWidth <= 768);
+      update(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
+    setIsMobileView(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup event listener on component unmount
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -118,3 +123,21 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
 DateRangePicker.displayName = "DateRangePicker";
 
 export { DateRangePicker };
+
+function useDebouncedCallback(callback: any, delay: number) {
+  const timeoutRef = useRef<number | null>(null);
+
+  const debouncedCallback = useCallback(
+    (args: any) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        callback(args);
+      }, delay);
+    },
+    [callback, delay]
+  );
+  return debouncedCallback;
+}

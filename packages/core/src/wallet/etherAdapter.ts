@@ -28,11 +28,11 @@ export class EtherAdapter implements IWalletAdapter {
     this._address = options.address;
   }
 
-  parseUnits(amount: string) {
-    return ethers.parseUnits(amount, 6).toString();
+  parseUnits(amount: string, decimals = 6) {
+    return ethers.parseUnits(amount, decimals).toString();
   }
-  formatUnits(amount: string) {
-    return ethers.formatUnits(amount, 6);
+  formatUnits(amount: string, decimals = 6) {
+    return ethers.formatUnits(amount, decimals);
   }
   getBalance(userAddress: string): Promise<any> {
     // return contract.balanceOf(userAddress);
@@ -162,12 +162,15 @@ export class EtherAdapter implements IWalletAdapter {
   }
 
   async getTransactionRecipect(txHash: string) {
-
     await this.provider!.getTransactionReceipt(txHash);
-
   }
 
-  async pollTransactionReceiptWithBackoff(txHash: string, baseInterval = 1000, maxInterval = 6000, maxRetries= 30) {
+  async pollTransactionReceiptWithBackoff(
+    txHash: string,
+    baseInterval = 1000,
+    maxInterval = 6000,
+    maxRetries = 30
+  ) {
     let interval = baseInterval;
     let retries = 0;
 
@@ -188,7 +191,7 @@ export class EtherAdapter implements IWalletAdapter {
       retries++;
     }
 
-    throw new Error('Transaction did not complete after maximum retries.');
+    throw new Error("Transaction did not complete after maximum retries.");
   }
 
   private async estimateGas(tx: ethers.TransactionRequest): Promise<number> {

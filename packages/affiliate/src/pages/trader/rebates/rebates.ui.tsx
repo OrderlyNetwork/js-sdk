@@ -14,6 +14,7 @@ import { RebatesItem, RebatesReturns } from "./rebates.script";
 import { commifyOptional } from "@orderly.network/utils";
 import { subDays } from "date-fns";
 import { useMediaQuery } from "@orderly.network/hooks";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (
@@ -41,7 +42,7 @@ export const Rebates: FC<RebatesReturns> = (props) => {
             onChange={(range) => {
               props.setDateRange(range);
             }}
-            max={89}
+            max={90}
             disabled={{
               after: new Date(),
             }}
@@ -118,11 +119,12 @@ const List: FC<RebatesReturns> = (props) => {
   }
 
   return (
-    <DataTable
+    <AuthGuardDataTable
       bordered
+      loading={props.isLoading}
       columns={columns}
       dataSource={props.dataSource}
-      scroll={{ y: 240 }}
+      ignoreLoadingCheck={true}
       classNames={{
         header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-xs oui-text-base-contrast-80",
@@ -133,7 +135,7 @@ const List: FC<RebatesReturns> = (props) => {
         onPageChange={props.onPageChange}
         onPageSizeChange={props.onPageSizeChange}
       />
-    </DataTable>
+    </AuthGuardDataTable>
   );
 };
 

@@ -133,7 +133,7 @@ export const DataTable = <RecordType extends unknown>(
     ) {
       setInitialized(true);
     }
-  }, [loading, dataSource, initialized]);
+  }, [loading, ignoreLoadingCheck, dataSource, initialized]);
 
   const [filterEle, setFilterEle] = useState<ReactElement | null>(null);
   const [paginationEle, setPaginationEle] = useState<ReactElement | null>(null);

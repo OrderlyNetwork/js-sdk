@@ -4,6 +4,7 @@ import { FC, PropsWithChildren } from "react";
 import { modal } from "@orderly.network/ui";
 import { SharePoisitionView } from "./sharePosition";
 import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 export const SharePnLIcon: FC<
   PropsWithChildren<{
@@ -12,6 +13,7 @@ export const SharePnLIcon: FC<
   }>
 > = (props) => {
   const leverage = useSymbolLeverage(props.position.symbol);
+  const { shareOptions } = useTradingPageContext();
 
   return (
     <PositionShareIcon
@@ -26,6 +28,7 @@ export const SharePnLIcon: FC<
         modal.show(SharePoisitionView, {
           position: props.position,
           leverage,
+          shareOptions,
         });
       }}
     />

@@ -7,11 +7,9 @@ import {
   Divider,
   Flex,
   ListView,
-  ScrollArea,
   Statistic,
   Text,
   cn,
-  toast,
 } from "@orderly.network/ui";
 import { ReferralCodesReturns, ReferralCodeType } from "./referralCodes.script";
 import { PinBtn } from "../../../components/pinButton";
@@ -58,22 +56,6 @@ const Title: FC<ReferralCodesReturns> = (props) => {
 
 const MobileLayout: FC<ReferralCodesReturns> = (props) => {
   return (
-    // <ScrollArea>
-    //   <div className="oui-max-h-[240px]">
-    //     {props.codes?.map((e, index) => {
-    //       return (
-    //         <MobileCell
-    //           key={index}
-    //           data={e}
-    //           editRate={props.editRate}
-    //           copyLink={props.copyLink}
-    //           copyCode={props.copyCode}
-    //           setPinCode={props.setPinCode}
-    //         />
-    //       );
-    //     })}
-    //   </div>
-    // </ScrollArea>
     <ListView
       dataSource={props.codes}
       className="oui-max-h-[240px] oui-w-full"

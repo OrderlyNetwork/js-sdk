@@ -235,7 +235,7 @@ export const useMarkets = (type: MarketsType) => {
 
       const info = symbolsInfo[item.symbol];
       const rate = fundingRates[item.symbol];
-      const est_funding_rate = rate("est_funding_rate") || null;
+      const est_funding_rate = rate("est_funding_rate");
       const funding_period = info("funding_period");
       const change =
         item.change === undefined
