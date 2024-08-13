@@ -95,6 +95,12 @@ const meta = {
         brandColor: "rgb(0,181,159)",
       },
     },
+    tradingReward: {
+      onClickTradingReward: () => {
+        console.log("hahahahah");
+        
+      }
+    },
     onSymbolChange:fn(),
   },
 } satisfies Meta<typeof TradingPage>;

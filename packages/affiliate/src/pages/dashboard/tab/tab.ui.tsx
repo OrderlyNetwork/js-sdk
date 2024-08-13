@@ -85,6 +85,9 @@ export const Tab: FC<
     );
   }
 
+  console.log("class name", props.classNames);
+  
+
   if ((!props.isAffiliate && !props.isTrader) || props.showHome) {
     return (
       <div className={cn("oui-max-w-[960px]", props?.classNames?.home)}>

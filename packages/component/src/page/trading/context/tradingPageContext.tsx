@@ -5,6 +5,10 @@ import { useExecutionReport } from "../shared/hooks/useExecutionReport";
 import { ShareConfigProps } from "@/block/shared/shareConfigProps";
 import { ReferralProps } from "@/provider/appProvider";
 
+export type TradingRewardProps = {
+  onClickTradingReward?: () => void;
+};
+
 export interface TradingPageContextValue {
   onSymbolChange?: (symbol: API.Symbol) => void;
   symbol: string;
@@ -13,6 +17,7 @@ export interface TradingPageContextValue {
   overrides?: Record<TradingFeatures, ReactNode>;
   shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
+  tradingReward?: TradingRewardProps;
 }
 
 export const TradingPageContext = React.createContext<TradingPageContextValue>(
@@ -26,6 +31,7 @@ export interface TradingPageProviderProps {
   overrides?: Record<TradingFeatures, ReactNode>;
   shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
+  tradingReward?: TradingRewardProps;
 }
 
 export const useTradingPageContext = () => {
@@ -42,6 +48,7 @@ export const TradingPageProvider: React.FC<
   overrides,
   shareOptions,
   referral,
+  tradingReward
 }) => {
   useExecutionReport();
 
@@ -54,6 +61,7 @@ export const TradingPageProvider: React.FC<
         overrides,
         shareOptions,
         referral,
+        tradingReward
       }}
     >
       {children}

@@ -21,6 +21,7 @@ export const Trading = (props: TradingPageProps) => {
       disableFeatures={props.disableFeatures}
       shareOptions={props.shareOptions}
       referral={props.referral}
+      tradingReward={props.tradingReward}
     >
       <Layout mobile={<MobileTradingPage {...props} />}>
         <Layout style={{ paddingBottom: "42px" }}>

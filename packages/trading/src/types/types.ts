@@ -68,7 +68,6 @@ export type ShareOptions = {
   };
 };
 
-
 export type ReferralProps = {
   saveRefCode?: boolean;
   onClickReferral?: () => void;
@@ -77,5 +76,12 @@ export type ReferralProps = {
   slogan?: string;
 };
 
+export type TradingRewardProps = {
+  onClickTradingReward?: () => void;
+};
 
-export type TradingPageProps =  OldTradingPageProps& { shareOptions: ShareOptions, referral: ReferralProps }
+export type TradingPageProps = OldTradingPageProps & {
+  shareOptions: ShareOptions;
+  referral: ReferralProps;
+  tradingReward: TradingRewardProps;
+};
