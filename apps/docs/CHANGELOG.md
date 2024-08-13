@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.4.10-sdk-v2.57
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.10-sdk-v2.57
+  - @orderly.network/web3-onboard@1.5.10-sdk-v2.57
+  - @orderly.network/hooks@1.5.10-sdk-v2.57
+  - @orderly.network/types@1.5.10-sdk-v2.57
+
 ## 0.4.10-sdk-v2.56
 
 ### Patch Changes
