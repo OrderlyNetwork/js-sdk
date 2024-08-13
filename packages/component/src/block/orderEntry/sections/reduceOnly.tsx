@@ -7,6 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
+import { OrderEntity } from "@orderly.network/types";
 
 export const MobileReduceOnlyLabel: FC = () => {
   const showReduceOnlyHint = useCallback(() => {
@@ -36,14 +37,24 @@ export const MobileReduceOnlyLabel: FC = () => {
   );
 };
 
-export const DesktopReduceOnlyLabel: FC = () => {
+export const DesktopReduceOnlyLabel: FC<{
+  reduceOnly?: boolean;
+  onFieldChange: (name: keyof OrderEntity, value: any) => void;
+}> = (props) => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="orderly-text-base-contrast-54" type="button">
+          <button
+            className="orderly-text-base-contrast-54"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onFieldChange("reduce_only", !props.reduceOnly);
+            }}
+          >
             Reduce only
           </button>
         </TooltipTrigger>

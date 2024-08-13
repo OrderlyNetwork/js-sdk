@@ -50,7 +50,14 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
               // field.onChange(checked);
             }}
           />
-          {isTable ? <MobileReduceOnlyLabel /> : <DesktopReduceOnlyLabel />}
+          {isTable ? (
+            <MobileReduceOnlyLabel />
+          ) : (
+            <DesktopReduceOnlyLabel
+              reduceOnly={formattedOrder.reduce_only ?? reduceOnly}
+              onFieldChange={onFieldChange}
+            />
+          )}
         </div>
 
         <button
