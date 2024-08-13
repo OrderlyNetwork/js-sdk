@@ -1,5 +1,17 @@
 # @orderly.network/ui-connector
 
+## 1.0.1-sdk-v2.60
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-chain-selector@1.0.1-sdk-v2.60
+  - @orderly.network/hooks@1.5.10-sdk-v2.60
+  - @orderly.network/types@1.5.10-sdk-v2.60
+  - @orderly.network/react-app@1.0.1-sdk-v2.60
+  - @orderly.network/ui@1.0.1-sdk-v2.60
+
 ## 1.0.1-sdk-v2.59
 
 ### Patch Changes
