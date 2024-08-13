@@ -8,7 +8,7 @@ export const PeriodTitle = (props: {
 }) => {
   return (
     <Flex justify={"between"}>
-      <CardTitle>Assets</CardTitle>
+      <CardTitle>Performance</CardTitle>
 
       <div className={"oui-min-w-14"}>
         <Select.options

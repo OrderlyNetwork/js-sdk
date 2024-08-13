@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { cnBase, tv } from "tailwind-variants";
+import { tv } from "../utils/tv";
+import { cn } from "tailwind-variants";
+// import { cn } from "..";
 
 const TooltipProvider = TooltipPrimitive.Provider;
 
@@ -77,6 +79,7 @@ const Tooltip = React.forwardRef<
     },
     ref
   ) => {
+    const { className, ...arrowProps } = arrow || {};
     return (
       <TooltipPrimitive.Root
         defaultOpen={defaultOpen}
@@ -91,8 +94,13 @@ const Tooltip = React.forwardRef<
           <TooltipPrimitive.Arrow
             width={12}
             height={6}
-            {...arrow}
-            className={cnBase("oui-fill-base-8", arrow?.className)}
+            {...arrowProps}
+            className={cn(
+              "oui-fill-base-8",
+              className
+            )({
+              twMerge: true,
+            })}
           />
         </TooltipContent>
       </TooltipPrimitive.Root>

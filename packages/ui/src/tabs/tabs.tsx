@@ -73,7 +73,9 @@ const Tabs: FC<TabsProps> = (props) => {
           justify="between"
           itemAlign="center"
           width="100%"
-          className={cnBase("oui-border-b oui-border-b-line-6")}
+          className={cnBase(
+            props.variant !== "contained" && "oui-border-b oui-border-b-line-6"
+          )}
         >
           {props.leading}
           <TabsList
