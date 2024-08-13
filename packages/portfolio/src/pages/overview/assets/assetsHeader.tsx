@@ -17,7 +17,7 @@ type Props = {
 export const AssetsHeader: FC<Props> = (props) => {
   return (
     <Flex justify={"between"}>
-      <CardTitle>My Assets</CardTitle>
+      <CardTitle>Overview</CardTitle>
       <Flex gap={3}>
         <Button
           disabled={props.disabled}
