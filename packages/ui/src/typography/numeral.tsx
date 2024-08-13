@@ -19,6 +19,11 @@ export type NumeralProps = TextProps & {
   dp?: number;
 
   /**
+   * Whether to ignore the decimal place, if true then direct output, the default is false
+   */
+  ignoreDP?: boolean;
+
+  /**
    * The number of decimal places to round to.
    * tick is obtained directly from the Orderly API and is used to calculate the number of decimal places for prices.
    * If both dp and tick are passed, dp takes priority.
@@ -105,6 +110,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     unitClassName,
     placeholder,
     masking,
+    ignoreDP,
     ...rest
   } = props;
   // TODO: check precision
@@ -116,6 +122,8 @@ export const Numeral: FC<NumeralProps> = (props) => {
     if (isNaN(num)) return placeholder ?? "--";
 
     if (typeof visible !== "undefined" && !visible) return masking ?? "*****";
+
+    if (ignoreDP) return num;
 
     return parseNumber(num, {
       rule,
