@@ -279,7 +279,7 @@ const ICON_CLASSNAME =
 const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
   const { item, isActive } = props;
 
-  // if (!props.item.icon) return null;
+  if (!props.item.icon) return null;
   if (typeof props.item.icon === "string") {
     return (
       <span className={"oui-w-[20px] oui-h-[20px] oui-mr-1"}>
