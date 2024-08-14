@@ -12,7 +12,6 @@ export const useColumns = () => {
         title: "Token",
         dataIndex: "token",
         width: 80,
-        rule: "symbol",
       },
       {
         title: "Time",
