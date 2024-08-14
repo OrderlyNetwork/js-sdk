@@ -55,7 +55,7 @@ export type FeeTierHeaderProps = {
 
 export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   return (
-    <Flex direction="row" gapX={4} my={4}>
+    <Flex direction="row" gapX={4} my={4} itemAlign={"stretch"}>
       <FeeTierHeaderItem
         label="Your Tier"
         value={
