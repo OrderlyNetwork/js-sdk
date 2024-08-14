@@ -8,13 +8,10 @@ import { SliderMarks, useModal } from "@orderly.network/ui";
 import { log } from "console";
 import { useMemo, useState } from "react";
 
-
-
 export const useLeverageScript = () => {
   const { currentLeverage } = useMarginRatio();
 
   const { hide } = useModal();
-  
 
   const [maxLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
@@ -29,26 +26,29 @@ export const useLeverageScript = () => {
 
   const [leverage, setLeverage] = useState(maxLeverage ?? 0);
 
-  
   const marks = useMemo((): SliderMarks => {
-    return leverageLevers?.map((e: number) => ({
-      label: `${e}x`,
-      value: e,
-    })) || [];
+    return (
+      leverageLevers?.map((e: number) => ({
+        label: `${e}x`,
+        value: e,
+      })) || []
+    );
   }, [leverageLevers]);
-  
+
   const step = 100 / ((marks?.length || 0) - 1);
-  
+
   const leverageValue = useMemo(() => {
     const index = leverageLevers.findIndex((item: any) => item === leverage);
 
     return index * step;
   }, [leverageLevers, leverage, step]);
-  
+
   const onCancel = () => hide();
   const onSave = async () => {
-    await update({leverage});
-    hide();
+    try {
+      await update({ leverage });
+      hide();
+    } catch (e) {}
   };
 
   return {
