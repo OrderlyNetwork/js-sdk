@@ -15,6 +15,7 @@ import {
 import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { XAxisLabel } from "./xAxisLabel";
+import { numberToHumanStyle } from "@orderly.network/utils";
 
 export type PnlLineChartProps = {
   colors?: {
@@ -71,7 +72,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
       {/* @ts-ignore */}
       <LineChart
         data={data}
-        margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
+        margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
       >
         <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
         {/* @ts-ignore */}
@@ -92,6 +93,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
           tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
           tickLine={false}
           axisLine={false}
+          tickFormatter={(value) => numberToHumanStyle(value)}
         />
         {/* @ts-ignore */}
         {!props.invisible && (

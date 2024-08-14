@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { Flex, type Column, Text } from "@orderly.network/ui";
+import { Flex, type Column, Text, TokenIcon } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 
 export const useColumns = () => {
@@ -12,7 +12,15 @@ export const useColumns = () => {
         title: "Token",
         dataIndex: "token",
         width: 80,
-        rule: "symbol",
+        // rule: "symbol",
+        render: (value, record) => {
+          return (
+            <Flex gapX={2}>
+              <TokenIcon name={value} size="xs" />
+              <span>{value}</span>
+            </Flex>
+          );
+        },
       },
       {
         title: "Time",
@@ -56,7 +64,7 @@ export const useColumns = () => {
         title: "Amount",
         dataIndex: "amount",
         width: 80,
-        rule: "price",
+        // rule: "price",
       },
     ];
   }, []);

@@ -3,8 +3,8 @@ import {AuthGuard} from "@orderly.network/ui-connector";
 import React, {useMemo} from "react";
 import {NetworkId} from "@orderly.network/types";
 import {CrossWithdrawConfirm} from "../crossWithdrawConfirm";
-import {API} from "@orderly.network/types/src";
 import {Decimal} from "@orderly.network/utils";
+import SwitchChainButton from "./SwitchChainButton";
 
 interface IProps {
     disabled?: boolean;
@@ -16,6 +16,7 @@ interface IProps {
     currentChain?: any;
     quantity: string;
     fee: number;
+    checkIsBridgeless: boolean;
 
 }
 
@@ -30,6 +31,7 @@ export const WithdrawAction = (props: IProps) => {
         currentChain,
         quantity,
         fee,
+        checkIsBridgeless,
     } = props;
 
     const amount = useMemo(() => {
@@ -60,14 +62,18 @@ export const WithdrawAction = (props: IProps) => {
     return (
         <Box width={184}>
             <AuthGuard networkId={networkId} bridgeLessOnly buttonProps={{fullWidth: true}}>
-                <Button
-                    fullWidth
-                    disabled={disabled}
-                    loading={loading}
-                    onClick={preWithdraw}
-                >
-                    Withdraw
-                </Button>
+                {checkIsBridgeless ?
+                    <Button
+                        fullWidth
+                        disabled={disabled}
+                        loading={loading}
+                        onClick={preWithdraw}
+                    >
+                        Withdraw
+                    </Button>
+                    :
+                    <SwitchChainButton networkId={networkId}/>
+                }
             </AuthGuard>
         </Box>
     );

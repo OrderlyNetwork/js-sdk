@@ -264,14 +264,14 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       cols.push({
         title: "Referees",
         dataIndex: "referee_rebate_rate",
-        width: 70,
+        width: 65,
         className: "oui-pr-0",
         render: (value, data) => getCount(data).split("/")[0],
       });
       cols.push({
         title: "Traders",
         dataIndex: "referrer_rebate_rate",
-        width: 70,
+        width: 65,
         className: "oui-pr-0",
         render: (value, data) => getCount(data).split("/")[1],
       });

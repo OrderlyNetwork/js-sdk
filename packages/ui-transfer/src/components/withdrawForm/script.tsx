@@ -134,6 +134,25 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
     }, [connectedChain, findByChainId]);
 
 
+    const checkIsBridgeless = useMemo(() => {
+        if (wrongNetwork) {
+            return false;
+        }
+        if (!currentChain) {
+           return false;
+        }
+        if (!currentChain.info) {
+            return false;
+        }
+        if (!currentChain.info.network_infos || !currentChain.info.network_infos.bridgeless) {
+           return false;
+        }
+        return true;
+
+    }, [currentChain, wrongNetwork]);
+
+
+
     const cleanData = () => {
         setQuantity("");
     };
@@ -380,5 +399,6 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         crossChainTrans,
         showQty,
         networkId,
+        checkIsBridgeless,
     }
 }

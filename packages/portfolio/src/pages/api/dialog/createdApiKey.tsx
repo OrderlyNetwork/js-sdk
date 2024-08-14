@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import {
+  Box,
   Checkbox,
+  CopyIcon,
   Flex,
   SimpleDialog,
   Statistic,
@@ -71,16 +73,34 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           </Text.formatted>{" "}
         </Statistic>
         <Statistic label="IP">
-          <Text.formatted
-            size="sm"
-            intensity={80}
-            copyable={(props.generateKey?.ip?.length || 0) > 0}
-            copyIconSize={16}
-            className="oui-max-h-[100px] oui-overflow-hidden oui-text-ellipsis oui-block oui-break-all"
-            onCopy={props.onCopyIP}
+          <Flex
+            width={320}
+            gap={1}
+            itemAlign={"center"}
+            className="oui-text-base-contrast-80 oui-text-sm"
           >
-            {props.generateKey?.ip || "--"}
-          </Text.formatted>{" "}
+            <Box className="oui-max-h-[100px] oui-flex-1 oui-overflow-hidden oui-text-ellipsis oui-line-clamp-5 oui-break-all">
+              {props.generateKey?.ip}
+            </Box>
+            {props.generateKey?.ip !== "--" && (
+              <Box
+                width={16}
+                height={16}
+                className="oui-cursor-pointer oui-flex-shrink-0"
+              >
+                <CopyIcon
+                  color="white"
+                  opacity={0.54}
+                  size={16}
+                  onClick={(e) => {
+                    if (props.generateKey?.ip)
+                      navigator.clipboard.writeText(props.generateKey?.ip);
+                    props?.onCopyIP();
+                  }}
+                />
+              </Box>
+            )}
+          </Flex>
         </Statistic>
         <Statistic label="Permissions">
           <Text size="sm" intensity={80}>

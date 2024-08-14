@@ -22,16 +22,16 @@ export const commifyOptional = (
     prefix?: string;
   }
 ): string => {
-  const prefix = options?.prefix || '';
+  const prefix = options?.prefix || "";
   if (typeof num === "undefined") return prefix + (options?.fallback || "--");
   const value = commify(num, options?.fix);
-  
+
   if (options && options.padEnd && options.fix) {
-    const fillString = options?.fillString || '0';
+    const fillString = options?.fillString || "0";
     const hasDecimal = value.includes(".");
     const list = value.split(".");
     if (hasDecimal) {
-      return prefix +  list[0] + "." + list[1].padEnd(options.fix, fillString);
+      return prefix + list[0] + "." + list[1].padEnd(options.fix, fillString);
     }
     return prefix + list[0] + "." + "".padEnd(options.fix, fillString);
   }
@@ -46,17 +46,16 @@ export const commify = (num: number | string, fix?: number): string => {
   const thousands = /\B(?=(\d{3})+(?!\d))/g;
 
   const endsWithPoint = str.endsWith(".") && str.length > 1;
-  const result = (
+  const result =
     numberPart.replace(thousands, ",") +
     (decimalPart
       ? "." + decimalPart.substring(0, fix || decimalPart.length)
       : endsWithPoint
       ? "."
-      : "")
-  );
+      : "");
 
   if (fix === 0 && result.includes(".")) {
-    return result.substring(0, result.indexOf('.'));
+    return result.substring(0, result.indexOf("."));
   }
   return result;
 };
@@ -82,21 +81,48 @@ export function toNonExponential(num: number) {
  * const number1 = 12345;
  * const number2 = 987654321;
  */
-export function numberToHumanStyle(
-  number: number,
-  decimalPlaces: number = 2
-): string {
-  const abbreviations = ["", "K", "M", "B", "T"];
+// export function numberToHumanStyle(
+//   number: number,
+//   decimalPlaces: number = 2,
+//   options?: {
+//     padding?: boolean;
+//   }
+// ): string {
+//   const { padding } = options || {};
+//   const abbreviations = ["", "K", "M", "B", "T"];
 
-  let index = 0;
-  while (number >= 1000 && index < abbreviations.length - 1) {
-    number /= 1000;
-    index++;
+//   let index = 0;
+//   while (number >= 1000 && index < abbreviations.length - 1) {
+//     number /= 1000;
+//     index++;
+//   }
+
+//   const roundedNumber = padding
+//     ? number.toFixed(decimalPlaces)
+//     : number.toString();
+
+//   return `${roundedNumber}${abbreviations[index]}`;
+// }
+
+export function numberToHumanStyle(num: number): string {
+  const absNum = Math.abs(num);
+  let formattedNum = "";
+
+  if (absNum >= 1e12) {
+    formattedNum = (num / 1e12).toFixed(1) + "T";
+  } else if (absNum >= 1e9) {
+    formattedNum = (num / 1e9).toFixed(1) + "B";
+  } else if (absNum >= 1e6) {
+    formattedNum = (num / 1e6).toFixed(1) + "M";
+  } else if (absNum >= 1e3) {
+    formattedNum = (num / 1e3).toFixed(1) + "K";
+  } else {
+    formattedNum = num.toString();
   }
 
-  const roundedNumber = number.toFixed(decimalPlaces);
+  formattedNum = formattedNum.replace(/\.0$/, "");
 
-  return `${roundedNumber}${abbreviations[index]}`;
+  return formattedNum;
 }
 
 export function parseNumStr(str: string | number): Decimal | undefined {

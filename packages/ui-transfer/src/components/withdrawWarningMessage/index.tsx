@@ -1,8 +1,9 @@
-import {Box, Flex } from "@orderly.network/ui"
+import {Box, Flex} from "@orderly.network/ui"
 import {useAppContext} from "@orderly.network/react-app";
 import {useMemo} from "react";
-import { Decimal } from "@orderly.network/utils";
-import {API} from "@orderly.network/types/src";
+import {Decimal} from "@orderly.network/utils";
+import {AccountStatusEnum} from "@orderly.network/types";
+import {useAccount} from "@orderly.network/hooks";
 
 interface IProps{
     quantity: string;
@@ -10,10 +11,12 @@ interface IProps{
     currentChain: any;
     maxAmount: number;
     crossChainTrans: boolean;
+    checkIsBridgeless: boolean;
 }
 
-export const WithdrawWarningMessage = ({quantity, chainVaultBalance, currentChain, maxAmount, crossChainTrans}: IProps) => {
-    const { wrongNetwork } = useAppContext();
+export const WithdrawWarningMessage = ({checkIsBridgeless, quantity, chainVaultBalance, currentChain, maxAmount, crossChainTrans}: IProps) => {
+    const { wrongNetwork} = useAppContext();
+    const { state}  = useAccount();
 
     const networkName = useMemo(() => {
         if (currentChain && currentChain.info && currentChain.info.network_infos) {
@@ -45,8 +48,11 @@ export const WithdrawWarningMessage = ({quantity, chainVaultBalance, currentChai
     }, [quantity, chainVaultBalance])
 
     const renderContent = () => {
+        if (state.status === AccountStatusEnum.NotConnected) {
+            return <></>;
+        }
 
-        if (wrongNetwork) {
+        if (wrongNetwork || !checkIsBridgeless) {
             return (
                 <Box>
                     Withdrawals are not supported on {networkName ?? "this chain"}. Please switch to any of the bridgeless networks.
