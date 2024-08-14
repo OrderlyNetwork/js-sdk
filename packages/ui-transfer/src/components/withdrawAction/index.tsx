@@ -3,7 +3,6 @@ import {AuthGuard} from "@orderly.network/ui-connector";
 import React, {useMemo} from "react";
 import {NetworkId} from "@orderly.network/types";
 import {CrossWithdrawConfirm} from "../crossWithdrawConfirm";
-import {API} from "@orderly.network/types/src";
 import {Decimal} from "@orderly.network/utils";
 import SwitchChainButton from "./SwitchChainButton";
 

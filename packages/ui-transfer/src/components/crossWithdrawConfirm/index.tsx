@@ -1,5 +1,4 @@
 import {Box, ChainIcon, Flex, Text} from "@orderly.network/ui"
-import {API} from "@orderly.network/types/src";
 import {useMemo} from "react";
 
 interface IProps {

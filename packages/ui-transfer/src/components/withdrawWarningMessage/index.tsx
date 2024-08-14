@@ -2,7 +2,7 @@ import {Box, Flex} from "@orderly.network/ui"
 import {useAppContext} from "@orderly.network/react-app";
 import {useMemo} from "react";
 import {Decimal} from "@orderly.network/utils";
-import {AccountStatusEnum} from "@orderly.network/types/src";
+import {AccountStatusEnum} from "@orderly.network/types";
 import {useAccount} from "@orderly.network/hooks";
 
 interface IProps{
