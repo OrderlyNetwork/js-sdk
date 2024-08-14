@@ -635,6 +635,9 @@ importers:
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
       d3-array:
         specifier: ^3.2.4
         version: 3.2.4
