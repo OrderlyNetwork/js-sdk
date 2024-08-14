@@ -5,7 +5,7 @@ import {
   useLocalStorage,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
-import { subDays, format } from "date-fns";
+import { subDays, format, getYear, getMonth, getDate } from "date-fns";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 
@@ -21,6 +21,11 @@ export const useAssetsHistoryData = (
     isRealtime?: boolean;
   }
 ) => {
+  const [today] = useState(() => {
+    const d = new Date();
+
+    return new Date(getYear(d), getMonth(d), getDate(d), 23, 59, 0);
+  });
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
   const [period, setPeriod] = useLocalStorage<PeriodType>(
@@ -34,12 +39,12 @@ export const useAssetsHistoryData = (
   const getStartDate = (value: PeriodType) => {
     switch (value) {
       case PeriodType.MONTH:
-        return subDays(new Date(), 35);
+        return subDays(today, 35);
 
       case PeriodType.QUARTER:
-        return subDays(new Date(), 95);
+        return subDays(today, 95);
       default:
-        return subDays(new Date(), 10);
+        return subDays(today, 10);
     }
   };
 
@@ -58,12 +63,12 @@ export const useAssetsHistoryData = (
 
   const [startDate, setStartDate] = useState(getStartDate(period));
   // const nowStamp = useRef(new Date().getTime().toString());
-  const now = useRef(new Date());
+  // const now = useRef(new Date());
 
   const [data] = useStatisticsDaily(
     {
       startDate: startDate.toISOString().split("T")[0],
-      endDate: now.current.toISOString().split("T")[0],
+      endDate: today.toISOString().split("T")[0],
     },
     {
       ignoreAggregation: true,
@@ -71,8 +76,8 @@ export const useAssetsHistoryData = (
   );
 
   const [assetHistory] = useAssetsHistory({
-    startTime: subDays(now.current, 2).getTime().toString(),
-    endTime: now.current.getTime().toString(),
+    startTime: subDays(today, 2).getTime().toString(),
+    endTime: today.getTime().toString(),
   });
 
   const onPeriodChange = (value: PeriodType) => {

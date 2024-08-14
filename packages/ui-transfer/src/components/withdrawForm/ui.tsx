@@ -43,6 +43,7 @@ export const WithdrawFormUI = (
         crossChainTrans,
         showQty,
         networkId,
+        checkIsBridgeless,
     }: UseWithdrawFormScriptReturn
 ) => {
     return (
@@ -110,10 +111,11 @@ export const WithdrawFormUI = (
                 </Flex>
             </Box>
 
-            <WithdrawWarningMessage chainVaultBalance={chainVaultBalance} currentChain={currentChain} quantity={quantity} maxAmount={maxQuantity} crossChainTrans={crossChainTrans}/>
+            <WithdrawWarningMessage checkIsBridgeless={checkIsBridgeless} chainVaultBalance={chainVaultBalance} currentChain={currentChain} quantity={quantity} maxAmount={maxQuantity} crossChainTrans={crossChainTrans}/>
 
             <Flex justify="center" mt={3}>
                 <WithdrawAction
+                    checkIsBridgeless={checkIsBridgeless}
                     networkId={networkId}
                     disabled={disabled}
                     loading={loading}
