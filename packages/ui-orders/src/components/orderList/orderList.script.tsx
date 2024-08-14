@@ -6,6 +6,7 @@ import {
 } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
 import { TabType } from "../orders.widget";
+import { usePagination } from "@orderly.network/ui";
 
 export const useOrderListScript = (props: {
   type: TabType;
@@ -17,6 +18,8 @@ export const useOrderListScript = (props: {
   const { ordersStatus, type } = props;
   const [ordersSide, setOrdersSide] = useState<OrderSide>();
   const [dateRange, setDateRange] = useState();
+
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
   const [
     data,
@@ -31,6 +34,8 @@ export const useOrderListScript = (props: {
   ] = useOrderStream({
     status: ordersStatus,
     side: ordersSide,
+    page: page,
+    size: pageSize,
   });
 
   const updateOrdersSide = (side: OrderSide) => {
@@ -51,6 +56,9 @@ export const useOrderListScript = (props: {
     updateOrder,
     cancelAlgoOrder,
     updateAlgoOrder,
+
+    // pagination
+    page, pageSize, setPage, setPageSize, 
   };
 };
 
