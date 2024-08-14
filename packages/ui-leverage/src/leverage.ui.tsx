@@ -36,7 +36,7 @@ export const Leverage = (props: LeverageScriptReturns) => {
         >
           Cancel
         </Button>
-        <Button fullWidth onClick={props.onSave}>
+        <Button fullWidth loading={props.isLoading} onClick={props.onSave}>
           Save
         </Button>
       </Flex>

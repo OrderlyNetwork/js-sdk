@@ -269,7 +269,10 @@ const Marks = (props: SliderMarksProps) => {
               return "oui-text-primary-light";
           }
         }, [color]);
-        const active = _value >= __value * 10 && _value >= 0 && !props.disabled;
+        const active =
+          (isInnerMask ? _value >= __value : (selIndex ?? 0) >= __value) &&
+          _value >= 0 &&
+          !props.disabled;
 
         const classNames = active ? colorCls : "";
 

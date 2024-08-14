@@ -8,17 +8,9 @@ import { SliderMarks, useModal } from "@orderly.network/ui";
 import { log } from "console";
 import { useMemo, useState } from "react";
 
-export type LeverageScriptReturns = {
-  currentLeverage?: number;
-  value: number;
-  marks?: SliderMarks;
-  onLeverageChange: (leverage: number) => void;
-  step: number;
-  onCancel?: () => void;
-  onSave?: () => void;
-};
 
-export const useLeverageScript = (): LeverageScriptReturns => {
+
+export const useLeverageScript = () => {
   const { currentLeverage } = useMarginRatio();
 
   const { hide } = useModal();
@@ -54,7 +46,10 @@ export const useLeverageScript = (): LeverageScriptReturns => {
   }, [leverageLevers, leverage, step]);
   
   const onCancel = () => hide();
-  const onSave = () => updateLeverage(leverage);
+  const onSave = async () => {
+    await update({leverage});
+    hide();
+  };
 
   return {
     currentLeverage,
@@ -64,7 +59,8 @@ export const useLeverageScript = (): LeverageScriptReturns => {
     step,
     onCancel,
     onSave,
+    isLoading: isMutating,
   };
 };
 
-export type UseLeverageScript = ReturnType<typeof useLeverageScript>;
+export type LeverageScriptReturns = ReturnType<typeof useLeverageScript>;
