@@ -37,12 +37,13 @@ export const useDistributionHistory = (parmas: DistributionSearchParams) => {
 
     return `/v1/client/distribution_history?${search.toString()}`;
   };
-  const { data, isLoading } = usePrivateQuery<API.FundingFeeHistory>(getKey(), {
-    // initialSize: 1,
-    formatter: (data) => data,
-    revalidateOnFocus: false,
-    errorRetryCount: 3,
-  });
+  const { data, isLoading, isValidating } =
+    usePrivateQuery<API.FundingFeeHistory>(getKey(), {
+      // initialSize: 1,
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+      errorRetryCount: 3,
+    });
 
   const parsedData = useMemo<
     (API.FundingFeeRow & {
@@ -67,6 +68,7 @@ export const useDistributionHistory = (parmas: DistributionSearchParams) => {
     {
       meta: data?.meta,
       isLoading,
+      isValidating,
     },
   ] as const;
 };

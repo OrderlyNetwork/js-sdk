@@ -6,6 +6,9 @@ export const getThemeColors = () => {
     primary: convertToRGB(
       computedStyle.getPropertyValue("--oui-color-primary")
     ),
+    primaryLight: convertToRGB(
+      computedStyle.getPropertyValue("--oui-color-primary-light")
+    ),
     secondary: convertToRGB(
       computedStyle.getPropertyValue("--oui-color-secondary")
     ),

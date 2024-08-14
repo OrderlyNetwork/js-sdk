@@ -21,12 +21,14 @@ export const useDistributionHistoryHook = () => {
   const [type, setType] = useState<string>("All");
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
-  const [data, { isLoading, meta }] = useDistributionHistory({
+  const [data, { isLoading, meta, isValidating }] = useDistributionHistory({
     dataRange: dateRange.map((date) => date.getTime()),
     type,
     pageSize,
     page,
   });
+
+  // console.log("----", isLoading, isValidating);
 
   // const res = useQuery("v1/public/info/funding_period");
 
@@ -47,6 +49,7 @@ export const useDistributionHistoryHook = () => {
     dataSource: data,
     meta: parseMeta(meta),
     isLoading,
+    isValidating,
     // onDateRangeChange,
     queryParameter: {
       type,
