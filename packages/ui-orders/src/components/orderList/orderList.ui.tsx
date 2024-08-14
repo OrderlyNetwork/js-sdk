@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Divider, Flex, Text } from "@orderly.network/ui";
+import { Divider, Flex, Text, Pagination } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useOrderColumn } from "./useColumn";
@@ -10,8 +10,8 @@ import { OrderListProvider } from "./orderListContext";
 export const OrderList: FC<OrdersBuilderState> = (props) => {
   const columns = useOrderColumn(props.type);
 
-  console.log("order list", props.dataSource, columns);
-  
+  console.log("order list", props.dataSource, columns, props.meta);
+
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -26,10 +26,11 @@ export const OrderList: FC<OrdersBuilderState> = (props) => {
           columns={columns}
           loading={props.isLoading}
           dataSource={props.dataSource}
+          ignoreLoadingCheck={true}
           onRow={(record, index) => {
             return {
-              className: grayCell(record) ?  "oui-text-base-contrast-20" : ''
-            }
+              className: grayCell(record) ? "oui-text-base-contrast-20" : "",
+            };
           }}
           generatedRowKey={(record, index) =>
             `${props.type}${index}${record.order_id || record.algo_order_id}`
@@ -43,7 +44,13 @@ export const OrderList: FC<OrdersBuilderState> = (props) => {
               />
             );
           }}
-        ></AuthGuardDataTable>
+        >
+          <Pagination
+            {...props.meta}
+            onPageChange={props.setPage}
+            onPageSizeChange={props.setPageSize}
+          />
+        </AuthGuardDataTable>
       </Flex>
     </OrderListProvider>
   );

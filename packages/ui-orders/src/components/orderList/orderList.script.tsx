@@ -30,6 +30,7 @@ export const useOrderListScript = (props: {
       updateOrder,
       cancelAlgoOrder,
       updateAlgoOrder,
+      meta,
     },
   ] = useOrderStream({
     status: ordersStatus,
@@ -58,7 +59,7 @@ export const useOrderListScript = (props: {
     updateAlgoOrder,
 
     // pagination
-    page, pageSize, setPage, setPageSize, 
+    page, pageSize, setPage, setPageSize, meta: parseMeta(meta)
   };
 };
 
