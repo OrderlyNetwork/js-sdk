@@ -20,7 +20,7 @@ export const PortfolioLayout = (
 
   return (
     <Scaffold
-      leftSidebar={props.hideSideBar ? <></> : <LeftSidebar {...rest} />}
+      leftSidebar={props.hideSideBar ?null : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}
       classNames={{
         content: "lg:oui-mb-0",

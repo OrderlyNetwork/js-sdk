@@ -9,13 +9,13 @@ export const useFeeTierColumns = () => {
         title: "Tier",
         dataIndex: "tier",
         align: "left",
-        width: 200,
+        width: 100,
       },
       {
         title: "30 Day Volume (USDC)",
         dataIndex: "volume",
         align: "center",
-        width: 150,
+        width: 170,
         render: (value, row) => {
           const { volume_min, volume_max } = row;
           if (!volume_min && !volume_max) {
@@ -45,7 +45,7 @@ export const useFeeTierColumns = () => {
         title: "Maker",
         dataIndex: "maker_fee",
         align: "right",
-        width: 272,
+        width: 100,
         render: (value) => {
           return <Text>{value}</Text>;
         },
@@ -54,7 +54,7 @@ export const useFeeTierColumns = () => {
         title: "Taker",
         dataIndex: "taker_fee",
         align: "right",
-        width: 272,
+        width: 100,
         render: (value) => {
           return <Text>{value}</Text>;
         },
