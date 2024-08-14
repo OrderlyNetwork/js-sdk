@@ -15,6 +15,7 @@ import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { XAxisLabel } from "./xAxisLabel";
 import { useRef } from "react";
+import { numberToHumanStyle } from "@orderly.network/utils";
 
 export type AssetChartDataItem = {
   date: string;
@@ -72,7 +73,7 @@ const AssetLineChart = (props: PnlLineChartProps) => {
         width={530}
         height={150}
         data={props.data}
-        margin={{ top: 20, right: 10, left: 0, bottom: 0 }}
+        margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
       >
         <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
         {/* @ts-ignore */}
@@ -90,6 +91,7 @@ const AssetLineChart = (props: PnlLineChartProps) => {
           tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
           tickLine={false}
           axisLine={false}
+          tickFormatter={(value) => numberToHumanStyle(value)}
         />
         {/* @ts-ignore */}
         {!props.invisible && (
