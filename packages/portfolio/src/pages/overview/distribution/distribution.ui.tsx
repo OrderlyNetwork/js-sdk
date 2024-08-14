@@ -26,6 +26,10 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
       dataSource={dataSource}
       loading={isLoading}
       className="oui-font-semibold"
+      classNames={{
+        header: "oui-text-base-contrast-36",
+        body: "oui-text-base-contrast-80",
+      }}
     >
       <Filter
         items={[
