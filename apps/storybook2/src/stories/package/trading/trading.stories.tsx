@@ -7,6 +7,7 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import {CustomConfigStore} from "../CustomConfig Store";
 import { TradingPage } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
+import { CustomConfigStore } from "../CustomConfigStore";
 
 const meta = {
   title: "Package/Trading/page",
@@ -21,7 +22,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      // const configStore = new CustomConfigStore({networkId, env: "qa"});
+      const configStore = new CustomConfigStore({networkId, env: "dev"});
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -29,7 +30,7 @@ const meta = {
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-            // configStore={configStore}
+            configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}

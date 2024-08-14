@@ -1575,6 +1575,9 @@ importers:
       '@orderly.network/react':
         specifier: workspace:*
         version: link:../component
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui

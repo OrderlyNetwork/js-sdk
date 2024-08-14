@@ -18,6 +18,7 @@ export interface TradingPageContextValue {
   shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
   tradingReward?: TradingRewardProps;
+  wrongNetwork: boolean;
 }
 
 export const TradingPageContext = React.createContext<TradingPageContextValue>(
@@ -32,6 +33,7 @@ export interface TradingPageProviderProps {
   shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
   tradingReward?: TradingRewardProps;
+  wrongNetwork?: boolean;
 }
 
 export const useTradingPageContext = () => {
@@ -48,7 +50,8 @@ export const TradingPageProvider: React.FC<
   overrides,
   shareOptions,
   referral,
-  tradingReward
+  tradingReward,
+  wrongNetwork = false,
 }) => {
   useExecutionReport();
 
@@ -61,7 +64,8 @@ export const TradingPageProvider: React.FC<
         overrides,
         shareOptions,
         referral,
-        tradingReward
+        tradingReward,
+        wrongNetwork
       }}
     >
       {children}
