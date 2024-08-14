@@ -85,6 +85,9 @@ export const Tab: FC<
     );
   }
 
+  console.log("class name", props.classNames);
+  
+
   if ((!props.isAffiliate && !props.isTrader) || props.showHome) {
     return (
       <div className={cn("oui-max-w-[960px]", props?.classNames?.home)}>
@@ -116,7 +119,7 @@ export const Tab: FC<
             id="oui-affiliate-dashboard-tab-affiliate"
             value={TabTypes.affiliate}
           >
-            <Flex direction={"row"} gap={1} mb={1}>
+            <Flex direction={"row"} gap={1} mb={2}>
               <AffiliateIcon
                 fillOpacity={1}
                 fill="currentColor"
@@ -135,7 +138,7 @@ export const Tab: FC<
             id="oui-affiliate-dashboard-tab-trader"
             value={TabTypes.trader}
           >
-            <Flex direction={"row"} gap={1} mb={1}>
+            <Flex direction={"row"} gap={1} mb={2}>
               <TraderIcon
                 fillOpacity={1}
                 fill="currentColor"
