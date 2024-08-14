@@ -20,9 +20,17 @@ export type MainNavProps = {
    * @type string | string[]
    */
   initialMenu: string | string[];
+
+  onItemClick?: (options: {
+    href: string;
+    name: string;
+    scope?: string;
+  }) => void;
 };
 
 export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
+  const { onItemClick } = props;
+
   const { routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
   const { wrongNetwork } = useAppContext();
@@ -68,12 +76,20 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
       current: currentProduct,
       onItemClick: (product: ProductItem) => {
         // No need to modify the intenal state
-        // setCurrentProduct(product.href);
-        routerAdapter?.onRouteChange({
+        const args = {
           href: product.href,
           name: product.name,
           scope: "product",
-        });
+        };
+
+        if (typeof onItemClick === "function") {
+          onItemClick(args);
+          return;
+        }
+
+        routerAdapter?.onRouteChange(args);
+
+        // routerAdapter?.onRouteChange(args);
       },
     },
     mainMenus: {
@@ -87,11 +103,19 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
         setCurrent(item.map((item) => item.href));
 
         const current = item[item.length - 1];
-        routerAdapter?.onRouteChange({
+        const args = {
           href: current.href,
           name: current.name,
           scope: "mainMenu",
-        });
+          target: current.target,
+        };
+
+        if (typeof onItemClick === "function") {
+          onItemClick(args);
+          return;
+        }
+
+        routerAdapter?.onRouteChange(args);
       },
     },
 

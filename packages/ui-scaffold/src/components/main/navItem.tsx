@@ -207,9 +207,10 @@ const SubMenu = (props: {
       px={2}
       py={3}
       gapX={2}
+      data-active={props.active ?? false}
       className={cn(
-        "hover:oui-bg-base-6 oui-cursor-pointer oui-text-base-contrast-80 oui-items-start",
-        props.active && "oui-bg-base-5"
+        "hover:oui-bg-base-6 oui-cursor-pointer oui-text-base-contrast-80 oui-items-start oui-w-full oui-group data-[active=true]:oui-bg-base-5"
+        // props.active && "oui-bg-base-5"
       )}
       r={"md"}
       onClick={() => {
@@ -217,19 +218,19 @@ const SubMenu = (props: {
       }}
     >
       {!!props.item.icon && (
-        <div className="oui-flex oui-border oui-border-line oui-w-6 oui-h-6 oui-rounded-md oui-justify-center oui-items-center oui-translate-y-1">
+        <div className="oui-translate-y-1 oui-relative oui-w-6 oui-h-6">
           <ItemIcon isActive={props.active ?? false} item={props.item} />
         </div>
       )}
 
-      <Flex direction={"column"} itemAlign={"start"}>
+      <div className="oui-flex-1">
         <SubMenuTitle item={item} isActive={props.active} />
         {typeof item.description !== "undefined" && (
           <Text size={"2xs"} as={"div"} intensity={36}>
             {item.description}
           </Text>
         )}
-      </Flex>
+      </div>
     </Flex>
   );
 };
@@ -240,17 +241,20 @@ const SubMenuTitle = (props: { item: MainNavItem; isActive?: boolean }) => {
     isActive,
   } = props;
   return (
-    <Flex itemAlign={"center"}>
-      <Text.gradient
-        color={isActive ? "brand" : "inherit"}
-        size={"xs"}
-        as={"div"}
-        intensity={80}
-        weight={"semibold"}
-      >
-        {name}
-      </Text.gradient>
-      {typeof props.item.tag !== "undefined" && <Tag item={props.item} />}
+    <Flex itemAlign={"center"} width={"100%"} position="relative">
+      <div className="oui-flex-1 oui-flex">
+        <Text.gradient
+          color={isActive ? "brand" : "inherit"}
+          size={"xs"}
+          as={"div"}
+          intensity={80}
+          weight={"semibold"}
+        >
+          {name}
+        </Text.gradient>
+        {typeof props.item.tag !== "undefined" && <Tag item={props.item} />}
+      </div>
+      {props.item.target === "_blank" && <OutlinkIcon />}
     </Flex>
   );
 };
@@ -268,6 +272,9 @@ const Tag = (props: { item: MainNavItem }) => {
     </div>
   );
 };
+
+const ICON_CLASSNAME =
+  "oui-flex oui-border oui-border-line oui-w-6 oui-h-6 oui-rounded-md oui-justify-center oui-items-center oui-absolute oui-left-0 oui-top-0";
 
 const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
   const { item, isActive } = props;
@@ -289,5 +296,73 @@ const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
       </span>
     );
   }
-  return isActive ? props.item.activeIcon || props.item.icon : props.item.icon;
+  // return isActive ? props.item.activeIcon || props.item.icon : props.item.icon;
+  return (
+    <>
+      <div
+        className={cn(
+          ICON_CLASSNAME,
+          "group-data-[active=true]:oui-invisible group-hover:oui-invisible"
+        )}
+      >
+        {props.item.icon}
+      </div>
+      <div
+        className={cn(
+          ICON_CLASSNAME,
+          "oui-invisible group-data-[active=true]:oui-visible group-hover:oui-visible"
+        )}
+      >
+        {props.item.activeIcon || props.item.icon}
+      </div>
+    </>
+  );
+};
+
+const OutlinkIcon = () => {
+  return (
+    <>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="oui-absolute oui-right-0 oui-top-0 group-hover:oui-invisible"
+      >
+        <path
+          d="M14.159 17.492a3.333 3.333 0 0 0 3.333-3.333V5.826a3.333 3.333 0 0 0-3.333-3.334H5.826a3.333 3.333 0 0 0-3.334 3.334v8.333a3.333 3.333 0 0 0 3.334 3.333zm-6.667-4.166a.85.85 0 0 1-.599-.235.86.86 0 0 1 0-1.198l3.333-3.333-1.9-1.901h5v5l-1.901-1.9L8.09 13.09a.84.84 0 0 1-.599.235"
+          fill="#fff"
+          fillOpacity=".2"
+        />
+      </svg>
+
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="oui-absolute oui-right-0 oui-top-0 oui-invisible group-hover:oui-visible"
+      >
+        <path
+          d="M14.159 17.492a3.333 3.333 0 0 0 3.333-3.333V5.826a3.333 3.333 0 0 0-3.333-3.334H5.826a3.333 3.333 0 0 0-3.334 3.334v8.333a3.333 3.333 0 0 0 3.334 3.333zm-6.667-4.166a.85.85 0 0 1-.599-.235.86.86 0 0 1 0-1.198l3.333-3.333-1.9-1.901h5v5l-1.901-1.9L8.09 13.09a.84.84 0 0 1-.599.235"
+          fill="url(#a)"
+        />
+        <defs>
+          <linearGradient
+            id="a"
+            x1="17.492"
+            y1="9.992"
+            x2="2.492"
+            y2="9.992"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#59B0FE" />
+            <stop offset="1" stopColor="#26FEFE" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </>
+  );
 };
