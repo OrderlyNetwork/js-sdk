@@ -69,8 +69,9 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         r="xl"
         gradient="neutral"
         angle={27}
+        border
         className="oui-w-1/2"
-      >
+        >
         <Text size="xs" intensity={36}>
           Account ID
         </Text>
@@ -93,6 +94,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         r="xl"
         gradient="neutral"
         angle={27}
+        border
         className="oui-w-1/2"
       >
         <Text size="xs" intensity={36}>
