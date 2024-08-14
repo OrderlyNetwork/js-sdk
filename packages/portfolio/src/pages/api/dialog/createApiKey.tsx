@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import {
+  Box,
   cn,
+  CopyIcon,
   // Checkbox,
   Flex,
   SimpleDialog,
@@ -79,7 +81,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             IP restriction (optional)
           </Text>
           <textarea
-            placeholder="Add up to 20 IP addresses, separated by commas. "
+            placeholder="Add IP addresses, separated by commas."
             className={cn(
               "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",
               "oui-border-0 focus:oui-border-2 focus:oui-border-primary oui-outline-none",
