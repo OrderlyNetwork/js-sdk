@@ -104,18 +104,18 @@ export function toNonExponential(num: number) {
 //   return `${roundedNumber}${abbreviations[index]}`;
 // }
 
-export function numberToHumanStyle(num: number): string {
+export function numberToHumanStyle(num: number, dp: number = 0): string {
   const absNum = Math.abs(num);
   let formattedNum = "";
 
   if (absNum >= 1e12) {
-    formattedNum = (num / 1e12).toFixed(1) + "T";
+    formattedNum = (num / 1e12).toFixed(dp) + "T";
   } else if (absNum >= 1e9) {
-    formattedNum = (num / 1e9).toFixed(1) + "B";
+    formattedNum = (num / 1e9).toFixed(dp) + "B";
   } else if (absNum >= 1e6) {
-    formattedNum = (num / 1e6).toFixed(1) + "M";
+    formattedNum = (num / 1e6).toFixed(dp) + "M";
   } else if (absNum >= 1e3) {
-    formattedNum = (num / 1e3).toFixed(1) + "K";
+    formattedNum = (num / 1e3).toFixed(dp) + "K";
   } else {
     formattedNum = num.toString();
   }
