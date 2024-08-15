@@ -38,6 +38,7 @@ export interface DataTableProps<RecordType>
    * @default false
    */
   loading?: boolean;
+  isValidating?: boolean;
   // checkLoading?: boolean;
   ignoreLoadingCheck?: boolean;
   className?: string;
@@ -102,6 +103,7 @@ export const DataTable = <RecordType extends unknown>(
   const {
     dataSource,
     loading,
+    isValidating,
     columns,
     showMaskElement = true,
     className,
@@ -129,7 +131,8 @@ export const DataTable = <RecordType extends unknown>(
     if (
       ignoreLoadingCheck ||
       loading ||
-      (Array.isArray(dataSource) && dataSource.length > 0)
+      // isValidating ||
+      Array.isArray(dataSource)
     ) {
       setInitialized(true);
     }

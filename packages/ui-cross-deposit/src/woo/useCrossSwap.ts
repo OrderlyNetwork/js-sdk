@@ -17,6 +17,7 @@ import {
 export enum MessageStatus {
   INITIALIZING = "WAITTING",
   INFLIGHT = "INFLIGHT",
+  CONFIRMING = "CONFIRMING",
   DELIVERED = "DELIVERED",
   FAILED = "FAILED",
 }
@@ -37,6 +38,8 @@ export const useCrossSwap = (): any => {
   );
   const txHashFromBridge = useRef<string | undefined>();
 
+  const checkLayerStatusListener = useRef<ReturnType<typeof setTimeout>>();
+
   const account = useAccountInstance();
 
   const config = useConfig();
@@ -45,17 +48,6 @@ export const useCrossSwap = (): any => {
 
   const client = useRef(createClient(networkId as Environment)).current;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>();
-
-  //TODO: useWalletSubscription
-  // useWalletSubscription({
-  //   onMessage: (message) => {
-  //     const { side, transStatus, trxId } = message;
-
-  //     if (side === "DEPOSIT" && trxId === txHashFromBridge.current) {
-  //       setStatus(transStatus);
-  //     }
-  //   },
-  // });
 
   useEffect(() => {
     const handler = (data: any) => {
@@ -73,45 +65,36 @@ export const useCrossSwap = (): any => {
   }, [txHashFromBridge.current]);
 
   const checkLayerStatus = useCallback((txHash: string) => {
-    const check = async (txHash: string) => {
+    checkLayerStatusListener.current &&
+      clearTimeout(checkLayerStatusListener.current);
+    checkLayerStatusListener.current = setTimeout(async () => {
       try {
         const { messages } = await client.getMessagesBySrcTxHash(txHash);
 
         if (messages.length > 0) {
           const { status } = messages[0];
 
-          if (status === MessageStatus.INFLIGHT) {
-            setTimeout(() => {
-              check(txHash);
-            }, 1000);
-          }
           setLayerStatus(status as MessageStatus);
 
           if (status === MessageStatus.DELIVERED) {
             setBridgeMessage(messages[0]);
             txHashFromBridge.current = messages[0].dstTxHash;
-          }
-
-          if (status === MessageStatus.FAILED) {
+          } else if (status === MessageStatus.FAILED) {
             setBridgeMessage(messages[0]);
+          } else {
+            checkLayerStatus(txHash);
           }
         } else {
-          setTimeout(() => {
-            check(txHash);
-          }, 1000);
+          checkLayerStatus(txHash);
         }
       } catch (e) {
         // setLayerStatus(MessageStatus.FAILED);
-        setTimeout(() => {
-          check(txHash);
-        }, 1000);
+        checkLayerStatus(txHash);
       }
-    };
-
-    check(txHash);
+    }, 1000);
   }, []);
 
-  // swap 的時候拿 src tx hash, cross swap 拿 dst tx hash
+  // swap => src tx hash, cross swap => dst tx hash
   // const checkDeposit
 
   useEffect(() => {
@@ -172,23 +155,6 @@ export const useCrossSwap = (): any => {
       }
     );
 
-    // const result = await account.walletClient.call(
-    //   crossChainRouteAddress,
-    //   "crossSwap",
-    //   [
-    //     account.address,
-    //     src,
-    //     dst,
-    //     dstValutDeposit(),
-    //     {
-    //       value: quotoLZFee[0],
-    //     },
-    //   ],
-    //   {
-    //     abi: woofiDexCrossChainRouterAbi,
-    //   }
-    // );
-
     try {
       const result = await account.walletClient.sendTransaction(
         crossChainRouteAddress,
@@ -206,18 +172,7 @@ export const useCrossSwap = (): any => {
         }
       );
 
-      // account.walletClient.on(
-      //   {
-      //     address: crossChainRouteAddress,
-      //   },
-      //   (log: any, event: any) => {
-      //
-      //   }
-      // );
-
       stop();
-
-      //
 
       checkLayerStatus(result.hash);
 

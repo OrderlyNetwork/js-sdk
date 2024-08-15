@@ -16,6 +16,7 @@ import {
   RefferalAPI as API,
   usePrivateQuery,
   useDaily,
+  useAccount,
 } from "@orderly.network/hooks";
 import { subDays } from "date-fns";
 import { useAppContext } from "@orderly.network/react-app";
@@ -161,6 +162,9 @@ export const ReferralProvider: FC<
     splashPage,
   } = props;
 
+  const { state } = useAccount();
+ 
+
   const {
     data,
     mutate: referralInfoMutate,
@@ -241,6 +245,17 @@ export const ReferralProvider: FC<
   const [tab, setTab] = useState<TabTypes>(TabTypes.affiliate);
 
   const { wrongNetwork } = useAppContext();
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      mutate();
+    }, 1000);
+
+    return () => {
+      clearTimeout(id);
+    }
+    
+  },[state.status])
 
   return (
     <IntlProvider

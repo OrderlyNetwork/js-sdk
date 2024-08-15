@@ -60,6 +60,7 @@ export const useStatisticsDaily = (
 
   const { data } = usePrivateQuery<API.DailyRow[]>(key, {
     formatter: (data) => data.rows.reverse(),
+    revalidateOnFocus: false,
   });
 
   const aggregateValue = useMemo(() => {

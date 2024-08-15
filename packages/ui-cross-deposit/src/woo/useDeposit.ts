@@ -212,8 +212,8 @@ export const useDeposit = (options?: useDepositOptions) => {
   }, [options, dst]);
 
   const queryBalance = useDebouncedCallback(
-    (tokenAddress?: string, decimals?: number) => {
-      fetchBalance(options?.address, options?.decimals).finally(() => {
+    (address?: string, decimals?: number) => {
+      fetchBalance(address, decimals).finally(() => {
         setBalanceRevalidating(false);
       });
     },
@@ -240,22 +240,24 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     queryBalance(options?.address, options?.decimals);
 
-    const params = {
+    const commonParams = {
       address: options?.address,
-      vaultAddress: options?.crossChainRouteAddress,
       decimals: options?.decimals,
     };
 
     if (dst.chainId !== options?.srcChainId) {
-      queryAllowance(params);
+      queryAllowance({
+        ...commonParams,
+        vaultAddress: options?.crossChainRouteAddress,
+      });
     } else {
       if (dst.symbol !== options?.srcToken) {
-        queryAllowance(params);
-      } else {
-        getAllowanceByDefaultAddress({
-          address: options?.address,
-          decimals: options?.decimals,
+        queryAllowance({
+          ...commonParams,
+          vaultAddress: options?.depositorAddress,
         });
+      } else {
+        getAllowanceByDefaultAddress(commonParams);
       }
     }
   }, [

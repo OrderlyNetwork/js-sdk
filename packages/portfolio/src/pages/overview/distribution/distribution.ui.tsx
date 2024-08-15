@@ -12,6 +12,7 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
     queryParameter,
     onFilter,
     isLoading,
+    isValidating,
     meta,
     setPage,
     setPageSize,
@@ -25,6 +26,7 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
       columns={columns}
       dataSource={dataSource}
       loading={isLoading}
+      isValidating={isValidating}
       className="oui-font-semibold"
       classNames={{
         header: "oui-text-base-contrast-36",

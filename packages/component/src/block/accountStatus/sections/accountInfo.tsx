@@ -224,7 +224,7 @@ const ReferralInfo = () => {
           valueClassName="orderly-mt-1 orderly-text-[16px]"
           label="30d vol."
           value={vol}
-          precision={2}
+          precision={0}
           rule="price"
         />
       </div>
@@ -281,7 +281,7 @@ const TradingRewardsInfo = () => {
           valueClassName="orderly-mt-1 orderly-text-[16px]"
           label="Trading volume"
           value={vol}
-          precision={2}
+          precision={0}
           rule="price"
         />
         <Statistic

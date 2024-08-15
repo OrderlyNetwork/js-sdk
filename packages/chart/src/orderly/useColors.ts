@@ -8,6 +8,7 @@ export const useColors = (colors?: { profit: string; loss: string }) => {
       profit: colors?.profit || themeColors.profit,
       loss: colors?.loss || themeColors.loss,
       primary: themeColors.primary,
+      primaryLight: themeColors.primaryLight,
     };
   }, [colors]);
 

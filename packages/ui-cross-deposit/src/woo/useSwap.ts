@@ -32,17 +32,6 @@ export const useSwap = (): any => {
   const txHash = useRef<string | undefined>();
   const ee = useEventEmitter();
 
-  //TODO: useWalletSubscription
-  // useWalletSubscription({
-  //   onMessage: (message) => {
-  //     const { side, transStatus, trxId } = message;
-
-  //     if (side === "DEPOSIT" && trxId === txHash.current) {
-  //       setStatus(transStatus);
-  //     }
-  //   },
-  // });
-
   useEffect(() => {
     const handler = (data: any) => {
       const { side, transStatus, trxId } = data;

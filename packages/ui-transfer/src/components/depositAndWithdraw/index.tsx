@@ -21,6 +21,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
       value={activeTab}
       onValueChange={setActiveTab}
       variant="contained"
+      size="lg"
       classNames={{
         tabsList: "oui-px-0",
         tabsContent: "oui-pt-5",

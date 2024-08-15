@@ -11,6 +11,7 @@ import { Tooltip } from "@/tooltip";
 import { Divider } from "@/divider";
 import { cn } from "@/utils";
 import { getMarginRatioColor } from "../utils";
+import { modal } from "@orderly.network/ui";
 
 interface LeverageAndMarginRatioProps {
   isConnected: boolean;
@@ -72,7 +73,10 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           {isConnected ? marginRatioVal : "-"}
         </Numeral>
       </div>
-      <div id="orderly-desktop-max-leverage" className={"orderly-flex orderly-flex-col orderly-items-end"}>
+      <div
+        id="orderly-desktop-max-leverage"
+        className={"orderly-flex orderly-flex-col orderly-items-end"}
+      >
         <Tooltip
           content={
             "Your actual Leverage of the whole account / Your max Leverage of the whole account"
@@ -99,7 +103,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           )}
 
           <span className={"orderly-text-base-contrast-54"}>/</span>
-          {isConnected ? (
+          {/* {isConnected ? (
             <LeverageDialog>
               <button id="orderly-desktop-leverage-button" className="orderly-flex orderly-items-center orderly-gap-1">
                 <span>{`${maxLeverage ?? "-"}x`}</span>
@@ -111,7 +115,27 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
             </LeverageDialog>
           ) : (
             "-"
-          )}
+          )} */}
+          {
+            // modal.show(LeverageWidgetId, { currentLeverage: 5 });
+            isConnected ? (
+              <button
+                id="orderly-desktop-leverage-button"
+                className="orderly-flex orderly-items-center orderly-gap-1"
+                onClick={() => {
+                  modal.show("leverageEditor", { currentLeverage: 5 });
+                }}
+              >
+                <span>{`${maxLeverage ?? "-"}x`}</span>
+                {typeof maxLeverage !== "undefined" && (
+                  // @ts-ignore
+                  <Pencil size={14} className="orderly-text-base-contrast-54" />
+                )}
+              </button>
+            ) : (
+              "-"
+            )
+          }
         </div>
       </div>
     </div>

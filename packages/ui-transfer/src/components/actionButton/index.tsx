@@ -30,6 +30,8 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
       [DepositAction.Approve]: {
         children: `Approve ${symbol}`,
         onClick: onApprove,
+        // approve not disabled button
+        disabled: false,
       },
       [DepositAction.Increase]: {
         children: `increase ${symbol} authorized amount`,
