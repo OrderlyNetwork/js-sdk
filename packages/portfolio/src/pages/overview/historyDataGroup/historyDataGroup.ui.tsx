@@ -23,9 +23,9 @@ export const HistoryDataGroupUI = (props: {
         onValueChange={onTabChange}
         variant="contained"
         size="xl"
-        classNames={{
-          tabsList: "oui-px-3",
-        }}
+        // classNames={{
+        //   tabsList: "oui-px-3",
+        // }}
       >
         <TabPanel
           title={"Deposits & Withdrawals"}

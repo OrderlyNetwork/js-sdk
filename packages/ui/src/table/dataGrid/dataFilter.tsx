@@ -132,7 +132,7 @@ export const DataTableFilter = (props: DataFilterProps) => {
     <Flex
       justify={"start"}
       gapX={3}
-      p={3}
+      py={3}
       className="oui-data-grid-filter-bar oui-border-b oui-border-line"
     >
       {props.items.map((item, index: number) => {
