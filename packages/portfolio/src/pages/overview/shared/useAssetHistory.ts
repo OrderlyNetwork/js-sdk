@@ -5,7 +5,7 @@ import {
   useLocalStorage,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
-import { subDays, format } from "date-fns";
+import { subDays, format, getYear, getMonth, getDate } from "date-fns";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 
@@ -21,6 +21,11 @@ export const useAssetsHistoryData = (
     isRealtime?: boolean;
   }
 ) => {
+  const [today] = useState(() => {
+    const d = new Date();
+
+    return new Date(getYear(d), getMonth(d), getDate(d), 23, 59, 0);
+  });
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
   const [period, setPeriod] = useLocalStorage<PeriodType>(
@@ -34,12 +39,12 @@ export const useAssetsHistoryData = (
   const getStartDate = (value: PeriodType) => {
     switch (value) {
       case PeriodType.MONTH:
-        return subDays(new Date(), 35);
+        return subDays(today, 35);
 
       case PeriodType.QUARTER:
-        return subDays(new Date(), 95);
+        return subDays(today, 95);
       default:
-        return subDays(new Date(), 10);
+        return subDays(today, 10);
     }
   };
 
@@ -58,12 +63,12 @@ export const useAssetsHistoryData = (
 
   const [startDate, setStartDate] = useState(getStartDate(period));
   // const nowStamp = useRef(new Date().getTime().toString());
-  const now = useRef(new Date());
+  // const now = useRef(new Date());
 
   const [data] = useStatisticsDaily(
     {
       startDate: startDate.toISOString().split("T")[0],
-      endDate: now.current.toISOString().split("T")[0],
+      endDate: today.toISOString().split("T")[0],
     },
     {
       ignoreAggregation: true,
@@ -71,8 +76,8 @@ export const useAssetsHistoryData = (
   );
 
   const [assetHistory] = useAssetsHistory({
-    startTime: subDays(now.current, 2).getTime().toString(),
-    endTime: now.current.getTime().toString(),
+    startTime: subDays(today, 2).getTime().toString(),
+    endTime: today.getTime().toString(),
   });
 
   const onPeriodChange = (value: PeriodType) => {
@@ -80,29 +85,7 @@ export const useAssetsHistoryData = (
     setPeriod(value);
   };
 
-  const lastItem = data[data.length - 1];
-
-  const latestDepositAndWithdraw = useMemo(() => {
-    if (
-      !lastItem ||
-      !Array.isArray(assetHistory) ||
-      assetHistory.length <= 0 ||
-      typeof lastItem.snapshot_time === "undefined"
-    )
-      return null;
-
-    // find a list with the timestamp greater than the last item timestamp and trans_status = success;
-    const list = [];
-
-    for (let i = 0; i < assetHistory.length; i++) {
-      const item = assetHistory[i];
-      if (item.updated_time > lastItem.snapshot_time) {
-        list.push(item);
-      }
-    }
-
-    return list;
-  }, [assetHistory, lastItem]);
+  // const lastItem = data[data.length - 1];
 
   const calculateLastPnl = (inputs: {
     lastItem: API.DailyRow;
@@ -123,7 +106,7 @@ export const useAssetsHistoryData = (
 
       for (let i = 0; i < inputs.assetHistory.length; i++) {
         const item = inputs.assetHistory[i];
-        if (item.updated_time > inputs.lastItem.snapshot_time) {
+        if (item.created_time > inputs.lastItem.snapshot_time) {
           list.push(item);
         }
       }
@@ -133,10 +116,14 @@ export const useAssetsHistoryData = (
         const item = list[i];
         if (item.side === "deposit") {
           // value -= item.amount;
-          value = value.sub(item.amount);
+          if (item.trans_status === "SUCCESS") {
+            value = value.sub(item.amount);
+          }
         } else if (item.side === "withdraw") {
           // value += item.amount;
-          value = value.add(item.amount);
+          if (item.trans_status !== "FAILED") {
+            value = value.add(item.amount);
+          }
         }
       }
     }
@@ -146,11 +133,11 @@ export const useAssetsHistoryData = (
 
   const calculate = (data: API.DailyRow[], totalValue: number) => {
     const lastItem = data[data.length - 1];
-    const today = format(new Date(), "yyyy-MM-dd");
+    const todayFormattedStr = format(today, "yyyy-MM-dd");
 
     return {
       ...lastItem,
-      date: today,
+      date: todayFormattedStr,
       account_value: !!totalValue ? totalValue : lastItem?.account_value ?? 0,
       pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }),
     };
@@ -161,7 +148,7 @@ export const useAssetsHistoryData = (
       return data;
     }
 
-    if (data[data.length - 1].date === format(new Date(), "yyyy-MM-dd")) {
+    if (data[data.length - 1].date === format(today, "yyyy-MM-dd")) {
       data;
     }
 
@@ -189,9 +176,19 @@ export const useAssetsHistoryData = (
         pnl = pnl.add(d.pnl);
       });
 
-      roi = pnl.div(
-        data[data.length - calculateData.length - 1]!.account_value
-      );
+      const tail = calculatedData[0];
+
+      const dataTailIndex = data.findIndex((d) => d.date === tail.date);
+
+      const lastAccountValue = data[dataTailIndex - 1]!.account_value;
+
+      // console.log(data, calculatedData, tail, dataTailIndex);
+
+      if (typeof lastAccountValue === "undefined" || lastAccountValue === 0) {
+        roi = zero;
+      } else {
+        roi = pnl.div(lastAccountValue);
+      }
     }
 
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };

@@ -139,6 +139,7 @@ const useRefereesDataScript = (): ListReturns<
           : undefined,
       size: pageSize,
       page: !isLG ? page : undefined,
+      sort: "descending_code_binding_time"
     });
 
   useEffect(() => {

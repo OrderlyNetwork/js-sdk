@@ -11,6 +11,7 @@ import { Logo } from "@/logo";
 import { Chains } from "./sections/chains";
 import { OrderlyAppContext } from "@/provider";
 import { StatusGuardButton } from "./statusGuardButton";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 export type AccountStatus =
   | "NotConnected"
@@ -60,10 +61,12 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
     }
   }, [status, props.address]);
 
-  const notSupport = errors?.ChainNetworkNotSupport;
+  const { wrongNetwork } = useTradingPageContext();
+
+  
 
   const right = () => {
-    if (notSupport) {
+    if (wrongNetwork) {
       return <></>;
     }
 
@@ -115,7 +118,7 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
       <div className="orderly-flex orderly-gap-2">
         <Chains
           disabled={status < AccountStatusEnum.NotConnected}
-          wrongNetwork={notSupport}
+          wrongNetwork={wrongNetwork}
         />
         {right()}
       </div>

@@ -43,14 +43,15 @@ export const useFundingFeeHistory = (
 
     return `/v1/funding_fee/history?${search.toString()}`;
   };
-  const { data, isLoading } = usePrivateQuery<API.FundingFeeHistory>(getKey(), {
-    // initialSize: 1,
-    formatter: (data) => data,
-    revalidateOnFocus: false,
-    errorRetryCount: 3,
-    // keepPreviousData: true,
-    ...options,
-  });
+  const { data, isLoading, isValidating } =
+    usePrivateQuery<API.FundingFeeHistory>(getKey(), {
+      // initialSize: 1,
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+      errorRetryCount: 3,
+      // keepPreviousData: true,
+      ...options,
+    });
 
   const parsedData = useMemo<
     | (API.FundingFeeRow & {
@@ -66,7 +67,7 @@ export const useFundingFeeHistory = (
       const config = infos[row.symbol];
       return {
         ...row,
-        annual_rate: row.funding_rate * (24 / config("funding_period")),
+        annual_rate: row.funding_rate * (24 / config("funding_period")) * 365,
       };
     });
   }, [data, infos]);
@@ -76,6 +77,7 @@ export const useFundingFeeHistory = (
     {
       meta: data?.meta,
       isLoading,
+      isValidating,
     },
   ] as const;
 };

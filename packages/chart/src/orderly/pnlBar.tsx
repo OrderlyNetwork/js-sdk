@@ -17,6 +17,7 @@ import { Box, cn } from "@orderly.network/ui";
 import { Flex } from "@orderly.network/ui";
 // import { XAxisLabel } from "./xAxisLabel";
 import { useRef } from "react";
+import { numberToHumanStyle } from "@orderly.network/utils";
 
 export type PnLChartDataItem = {
   date: string;
@@ -55,7 +56,7 @@ export const XAxisLabel = (props: any) => {
 
   const _x =
     index === 0
-      ? 58
+      ? 48
       : containerWidth > 0
       ? containerWidth - 10
       : width + payload.offset;
@@ -130,7 +131,7 @@ export const PnLBarChart = (props: PnLChartProps) => {
       {/* @ts-ignore */}
       <BarChart
         data={props.data}
-        margin={{ left: 0, top: 10, right: 10, bottom: 25 }}
+        margin={{ left: -10, top: 10, right: 10, bottom: 30 }}
       >
         {!invisible && (
           // @ts-ignore
@@ -161,6 +162,7 @@ export const PnLBarChart = (props: PnLChartProps) => {
         {/* @ts-ignore */}
         <YAxis
           tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+          tickFormatter={(value) => numberToHumanStyle(value)}
           tickLine={false}
           axisLine={false}
           dataKey={"pnl"}

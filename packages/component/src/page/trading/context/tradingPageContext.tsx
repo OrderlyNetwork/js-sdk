@@ -5,14 +5,20 @@ import { useExecutionReport } from "../shared/hooks/useExecutionReport";
 import { ShareConfigProps } from "@/block/shared/shareConfigProps";
 import { ReferralProps } from "@/provider/appProvider";
 
+export type TradingRewardProps = {
+  onClickTradingReward?: () => void;
+};
+
 export interface TradingPageContextValue {
   onSymbolChange?: (symbol: API.Symbol) => void;
   symbol: string;
 
   disableFeatures: TradingFeatures[];
   overrides?: Record<TradingFeatures, ReactNode>;
-  sharePnlConfig?: ShareConfigProps;
+  shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
+  tradingReward?: TradingRewardProps;
+  wrongNetwork: boolean;
 }
 
 export const TradingPageContext = React.createContext<TradingPageContextValue>(
@@ -24,8 +30,10 @@ export interface TradingPageProviderProps {
   symbol: string;
   disableFeatures?: TradingFeatures[];
   overrides?: Record<TradingFeatures, ReactNode>;
-  sharePnlConfig?: ShareConfigProps;
+  shareOptions?: ShareConfigProps;
   referral?: ReferralProps;
+  tradingReward?: TradingRewardProps;
+  wrongNetwork?: boolean;
 }
 
 export const useTradingPageContext = () => {
@@ -40,10 +48,13 @@ export const TradingPageProvider: React.FC<
   symbol,
   disableFeatures = [],
   overrides,
-  sharePnlConfig,
+  shareOptions,
   referral,
+  tradingReward,
+  wrongNetwork = false,
 }) => {
   useExecutionReport();
+
   return (
     <TradingPageContext.Provider
       value={{
@@ -51,8 +62,10 @@ export const TradingPageProvider: React.FC<
         symbol,
         disableFeatures,
         overrides,
-        sharePnlConfig,
+        shareOptions,
         referral,
+        tradingReward,
+        wrongNetwork
       }}
     >
       {children}

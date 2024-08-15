@@ -10,14 +10,18 @@ const { Header, Content } = Layout;
 
 const { mobile: MobileTradingPage, desktop: DesktopTradingPage } = TradingPage;
 
-export const Trading = (props: TradingPageProps) => {
+export const Trading = (
+  props: TradingPageProps & { wrongNetwork: boolean }
+) => {
   return (
     <TradingPageProvider
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
       disableFeatures={props.disableFeatures}
-      sharePnlConfig={props.shareOptions}
+      shareOptions={props.shareOptions}
       referral={props.referral}
+      tradingReward={props.tradingReward}
+      wrongNetwork={props.wrongNetwork}
     >
       <Layout mobile={<MobileTradingPage {...props} />}>
         <Layout style={{ paddingBottom: "42px" }}>

@@ -130,7 +130,7 @@ const Bottom: FC<AsTraderReturns> = (props) => {
             itemAlign={"center"}
             className="oui-cursor-pointer"
             onClick={(e) => {
-              props?.onEnterTraderPage?.(props.referralInfo);
+              props?.onEnterTraderPage?.();
             }}
           >
             <Text className="oui-text-sm md:oui-text-base xl:oui-text-lg">
@@ -175,54 +175,8 @@ const Bottom: FC<AsTraderReturns> = (props) => {
 };
 
 const EntryCode: FC<AsTraderReturns> = (props) => {
-  const [code, setCode] = useState("");
-  const [open, setOpen] = useState(false);
-
-  const {
-    isExist,
-    error: checkCodeError,
-    isLoading,
-  } = useCheckReferralCode(code);
-  const hide = () => {
-    setOpen(false);
-  };
-
-  const [bindCode, { error, isMutating }] = useMutation(
-    "/v1/referral/bind",
-    "POST"
-  );
-
-  const onClickConfirm = async () => {
-    try {
-      await bindCode({ referral_code: code });
-      // toast.success("Referral code bound");
-      // mutate();
-      if (props.bindReferralCodeState) {
-        props.bindReferralCodeState(true, null, hide, { tab: 1 });
-      } else {
-        hide();
-      }
-    } catch (e: any) {
-      let errorText = `${e}`;
-      if ("message" in e) {
-        errorText = e.message;
-      }
-
-      if ("referral code not exist" === errorText) {
-        errorText = "This referral code does not exist";
-      }
-
-      if (props.bindReferralCodeState) {
-        // toast.error(errorText);
-        props.bindReferralCodeState(false, e, hide, {});
-      } else {
-        // toast.error(errorText);
-      }
-    }
-  };
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={props.open} onOpenChange={props.setOpen}>
       <DialogTrigger>
         <Tooltip content={props.wrongNetwork ? 'Please switch to a supported network to continue.' : "Please connect your wallet to use this function"}>
           <Button variant="contained" color="light" disabled={!props.isSignIn || props.wrongNetwork}>
@@ -243,26 +197,26 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
           <TextField
             className="oui-w-full oui-mt-4"
             placeholder="Referral code"
-            value={code}
+            value={props.code}
             onChange={(e) => {
-              setCode(e.target.value);
+              props.setCode(e.target.value);
             }}
             formatters={[
               inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
             ]}
             onClean={() => {
-              setCode("");
+              props.setCode("");
             }}
             label={"Enter referral code"}
             classNames={{
               label: "oui-text-2xs oui-text-base-contrast-54",
             }}
             helpText={
-              !isExist && !isLoading && code.length > 0
+              !props.isExist && !props.isLoading && props.code.length > 0
                 ? "This referral code does not exist."
                 : undefined
             }
-            color={!isExist && !isLoading && code.length > 0? "danger" : undefined}
+            color={!props.isExist && !props.isLoading && props.code.length > 0? "danger" : undefined}
           />
 
           <Flex
@@ -277,10 +231,10 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
               color="primary"
               size="md"
               className="oui-px-[40px]"
-              disabled={code.length < 4 || !isExist}
+              disabled={props.code.length < 4 || !props.isExist}
               onClick={(e) => {
                 e.stopPropagation();
-                onClickConfirm();
+                props.onClickConfirm();
               }}
             >
               Confirm

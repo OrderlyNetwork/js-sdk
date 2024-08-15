@@ -42,6 +42,7 @@ const useAssetsHistory = (options: {
 
   const { data, isLoading } = usePrivateQuery<API.AssetHistory>(getKey(), {
     formatter: (data) => data,
+    revalidateOnFocus: false,
   });
 
   return [

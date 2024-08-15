@@ -125,7 +125,6 @@ const List: FC<RebatesReturns> = (props) => {
       columns={columns}
       dataSource={props.dataSource}
       ignoreLoadingCheck={true}
-      scroll={{ y: 240 }}
       classNames={{
         header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-xs oui-text-base-contrast-80",

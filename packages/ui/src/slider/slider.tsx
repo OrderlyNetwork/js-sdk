@@ -242,7 +242,7 @@ const Marks = (props: SliderMarksProps) => {
 
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
         const __value = isInnerMask ? mark.value : index;
-        console.log("_ value", isInnerMask, _value, selIndex, mark, __value, percent);
+        // console.log("_ value", isInnerMask, _value, selIndex, mark, __value, percent);
 
         const colorCls = useMemo(() => {
           switch (color) {
@@ -269,7 +269,10 @@ const Marks = (props: SliderMarksProps) => {
               return "oui-text-primary-light";
           }
         }, [color]);
-        const active = _value >= __value * 10 && _value >= 0 && !props.disabled;
+        const active =
+          (isInnerMask ? _value >= __value : (selIndex ?? 0) >= __value) &&
+          _value >= 0 &&
+          !props.disabled;
 
         const classNames = active ? colorCls : "";
 
@@ -287,7 +290,7 @@ const Marks = (props: SliderMarksProps) => {
               <span
                 key={index}
                 className={cn(
-                  "oui-absolute oui-top-[16px] oui-text-xs oui-text-base-contrast-54 oui-pointer-events-none oui-translate-x-[-50%]",
+                  "oui-absolute oui-top-[16px] oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer oui-translate-x-[-50%]",
                   (selIndex === index) && textCls
                 )}
                 style={{

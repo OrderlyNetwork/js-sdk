@@ -126,6 +126,8 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
             fullWidth
             className="orderly-text-xs orderly-font-bold orderly-text-danger-light orderly-border-danger-light hover:orderly-bg-transparent hover:orderly-text-danger-light"
             onClick={() => {
+              console.log("asfsdfsd");
+              
               onDisconnect?.();
             }}
           >
@@ -231,6 +233,7 @@ const ReferralInfo = () => {
 };
 
 const TradingRewardsInfo = () => {
+  const { tradingReward } = useTradingPageContext();
   const [curEpochEstimate] = useCurEpochEstimate(TWType.normal);
   const [list, curEpoch] = useEpochInfo(TWType.normal);
   const curEpochId = useMemo(() => {
@@ -252,8 +255,8 @@ const TradingRewardsInfo = () => {
   }, [curEpochEstimate]);
 
   const clickReferral = useCallback(() => {
-    window.open("https://app.orderly.network/tradingRewards", "_blank");
-  }, []);
+    tradingReward?.onClickTradingReward?.();
+  }, [tradingReward]);
 
   return (
     <div className="orderly-bg-base-600 orderly-rounded-lg orderly-p-3 orderly-mb-3 orderly-mt-4">

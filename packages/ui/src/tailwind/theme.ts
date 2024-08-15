@@ -19,9 +19,9 @@ export const themePlugin = () =>
         "--oui-color-tertiary": "218 218 218",
         "--oui-color-quaternary": "218 218 218",
 
-        "--oui-color-danger": "217 45 107",
+        "--oui-color-danger": "255 68 124",
         "--oui-color-danger-light": "255 68 124",
-        "--oui-color-danger-darken": "157 32 77,",
+        "--oui-color-danger-darken": "157 32 77",
         "--oui-color-danger-contrast": "255 255 255",
 
         "--oui-color-success": "0 180 158",
@@ -51,9 +51,9 @@ export const themePlugin = () =>
         "--oui-color-base-foreground": "255 255 255",
         "--oui-color-line": "255 255 255",
 
-        "--oui-color-trading-loss": "217 45 107",
+        "--oui-color-trading-loss": "255 68 124",
         "--oui-color-trading-loss-contrast": "255 255 255",
-        "--oui-color-trading-profit": "0 134 118",
+        "--oui-color-trading-profit": "0 180 158",
         "--oui-color-trading-profit-contrast": "255 255 255",
 
         /* gradients */
