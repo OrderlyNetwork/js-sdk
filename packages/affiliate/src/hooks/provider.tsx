@@ -20,6 +20,7 @@ import {
 } from "@orderly.network/hooks";
 import { subDays } from "date-fns";
 import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export enum TabTypes {
   affiliate = "affiliate",
@@ -248,7 +249,9 @@ export const ReferralProvider: FC<
 
   useEffect(() => {
     const id = setTimeout(() => {
-      mutate();
+      if (state.status >= AccountStatusEnum.EnableTrading) {
+        mutate();
+      }
     }, 1000);
 
     return () => {
