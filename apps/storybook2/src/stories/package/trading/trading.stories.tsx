@@ -30,7 +30,7 @@ const meta = {
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-            // configStore={configStore}
+            configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}
