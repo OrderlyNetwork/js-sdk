@@ -104,7 +104,7 @@ export const useApiManagerScript = () => {
         const res = await setIPRestriction(key, ipRestriction!);
         console.log("set ip res", res);
         if (res.success) {
-          createdSuccess(generateKeyRes, res.data.ip_restriction_list);
+          createdSuccess(generateKeyRes, res.data.ip_restriction_list?.join(","));
         }
       } else {
         createdSuccess(generateKeyRes, undefined);

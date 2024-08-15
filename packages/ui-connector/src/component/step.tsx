@@ -24,7 +24,7 @@ export const StepItem = (props: StepItemProps) => {
   return (
     <Box position="relative" className="oui-pl-8">
       <Box>
-        <Text as="div" intensity={98} size={"xs"}>
+        <Text as="div" intensity={98} size={"sm"}>
           {title}
         </Text>
         <Text as="div" intensity={54} size={"2xs"}>
@@ -84,7 +84,7 @@ const Dot: FC<{ active: boolean; className?: string }> = ({
   return (
     <div
       className={cn(
-        "oui-w-3 oui-h-3 oui-rounded-full oui-ml-2 oui-mt-1",
+        "oui-w-[8.3px] oui-h-[8.3px] oui-rounded-full oui-ml-2 oui-mt-1",
         className,
         active ? "oui-bg-primary-light" : "oui-bg-base-2"
       )}
