@@ -68,7 +68,7 @@ export const useFundingHistoryColumns = () => {
         },
         numeralProps: {
           coloring: true,
-          showIdentifier: true,
+          showIdentifier: false,
           ignoreDP: true,
         },
       },

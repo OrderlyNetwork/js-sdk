@@ -1,9 +1,12 @@
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useOverviewContext } from "../providers/overviewCtx";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { useMemo } from "react";
 
 export const usePerformanceScript = () => {
   const ctx = useOverviewContext();
+  const [visible] = useLocalStorage("orderly_assets_visible", true);
 
   const { wrongNetwork } = useAppContext();
   // const { state } = useAccount();
@@ -28,10 +31,22 @@ export const usePerformanceScript = () => {
     //       ),
   });
 
+  const _data = useMemo(() => {
+    if (filteredData?.length ?? 0 > 0) return filteredData;
+    return ctx.createFakeData(
+      {
+        account_value: 0,
+        pnl: 0,
+      },
+      { account_value: 500, pnl: 500 }
+    );
+  }, [filteredData?.length]);
+
   return {
     ...ctx,
-    data: filteredData,
+    data: _data,
     invisible: wrongNetwork || !ctx.data.length,
+    visible,
   };
 };
 

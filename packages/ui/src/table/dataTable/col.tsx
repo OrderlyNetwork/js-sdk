@@ -47,11 +47,23 @@ export type Column<RecordType extends unknown = any> = {
    * text rule for formatted text, if provided, the text will be rendered as formatted text component;
    */
   rule?: TextRule | NumeralRule;
-  numeralProps?: Omit<NumeralProps, "children" | "as" | "rule">;
+  numeralProps?:
+    | Omit<NumeralProps, "children" | "as" | "rule">
+    | ((
+        value: any,
+        record: RecordType,
+        index: number
+      ) => Omit<NumeralProps, "children" | "as" | "rule">);
   /**
    * text props for formatted text
    */
-  textProps?: Omit<FormattedTextProps, "children" | "as" | "rule">;
+  textProps?:
+    | Omit<FormattedTextProps, "children" | "as" | "rule">
+    | ((
+        value: any,
+        record: RecordType,
+        index: number
+      ) => Omit<FormattedTextProps, "children" | "as" | "rule">);
 };
 
 export interface ColProps {
@@ -79,10 +91,14 @@ export const ColItem: FC<ColProps> = (props) => {
 
     if (typeof col.rule !== "undefined") {
       if (isTextRule(col.rule)) {
+        const textProps =
+          typeof col.textProps === "function"
+            ? col.textProps(value, record, index)
+            : col.textProps;
         return (
           <FormattedText
             rule={col.rule}
-            {...col.textProps}
+            {...textProps}
             // copyable={col.copyable}
           >
             {value}
@@ -91,8 +107,12 @@ export const ColItem: FC<ColProps> = (props) => {
       }
 
       if (isNumeralRule(col.rule)) {
+        const numeralProps =
+          typeof col.numeralProps === "function"
+            ? col.numeralProps(value, record, index)
+            : col.numeralProps;
         return (
-          <Numeral rule={col.rule} {...col.numeralProps}>
+          <Numeral rule={col.rule} {...numeralProps}>
             {value}
           </Numeral>
         );

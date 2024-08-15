@@ -56,12 +56,11 @@ export const useFundingHistoryHook = () => {
     }
   };
 
-  // const filteredData = useDataTap(data);
-
   return {
     dataSource: data,
     meta: parseMeta(meta),
     isLoading,
+    isValidating,
     // onDateRangeChange,
     queryParameter: {
       symbol,

@@ -36,11 +36,11 @@ export const useAssetHistoryColumns = () => {
         width: 120,
         rule: "txId",
         copyable: true,
-        textProps: {
-          copyable: true,
+        textProps: (value) => ({
+          copyable: !!value,
           className:
             "oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-line-16",
-        },
+        }),
       },
       {
         title: "Status",

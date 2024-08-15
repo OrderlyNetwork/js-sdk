@@ -18,6 +18,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
     onPeriodChange,
     aggregateValue,
     invisible,
+    visible,
     volumeUpdateDate,
   } = props;
 
@@ -70,6 +71,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             valueProps={{
               coloring: true,
               showIdentifier: true,
+              visible,
             }}
           >
             {invisible ? "--" : aggregateValue.pnl}
