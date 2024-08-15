@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { APIManagerModule } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box } from "@orderly.network/ui";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { PortfolioLayout } from "../../../../../../packages/portfolio/src/layout/layout.ui";
-import { CustomConfigStore } from "../CustomConfigStore";
+import {
+  APIManagerModule,
+  PortfolioLayoutWidget,
+} from "@orderly.network/portfolio";import { CustomConfigStore } from "../CustomConfigStore";
 
 const meta = {
   title: "Package/Portfolio/APIKey",
@@ -47,9 +48,9 @@ export const Page: Story = {};
 export const Layout: Story = {
   render: (e) => {
     return (
-      <PortfolioLayout items={[]}>
+      <PortfolioLayoutWidget>
         <APIManagerModule.ApiManagerPage />
-      </PortfolioLayout>
+      </PortfolioLayoutWidget>
     );
   },
 };

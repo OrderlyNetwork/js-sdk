@@ -1,4 +1,4 @@
-import { FC, ReactNode, useCallback } from "react";
+import { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -140,12 +140,27 @@ type FeeTierTableProps = {
 };
 
 export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
+  const [top, setTop] = useState<undefined | number>(undefined);
+  useEffect(() => {
+    const parentRect = document
+      .getElementById("oui-fee-tier-content")
+      ?.getBoundingClientRect();
+    const elementRect = document
+      .getElementById("oui-fee-tier-current")
+      ?.getBoundingClientRect();
+
+    if (elementRect && parentRect) {
+      const offsetTop = elementRect.top - parentRect.top;
+      setTop(offsetTop);
+    }
+  }, [props.tier]);
   const onRow = useCallback(
     (record: any, index: number) => {
       if (index + 1 == props.tier) {
         return {
+          id: "oui-fee-tier-current",
           className:
-            "oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-rounded-[6px] oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+            "oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
         };
       }
 
@@ -155,18 +170,33 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
   );
 
   return (
-    <div className="oui-border-b oui-border-line-4 ">
+    <Box
+      id="oui-fee-tier-content"
+      className="oui-border-b oui-border-line-4 oui-relative"
+    >
+      {top && (
+        <Box
+          angle={90}
+          gradient="brand"
+          className="oui-rounded-[6px] oui-absolute oui-w-full"
+          style={{
+            top: `${top}px`,
+            height: "48px",
+          }}
+        />
+      )}
       <DataTable
         bordered
         className="oui-font-semibold"
         classNames={{
           header: "oui-text-base-contrast-36",
           body: "oui-text-base-contrast-80",
+          root: "oui-bg-transparent",
         }}
         onRow={onRow}
         columns={props.columns}
         dataSource={props.dataSource}
       />
-    </div>
+    </Box>
   );
 };

@@ -125,6 +125,7 @@ export const VolBarChart = (props: VolChartProps) => {
             vertical={false}
             stroke="#FFFFFF"
             strokeOpacity={0.08}
+            repeatCount={6}
           />
           <ReferenceLine y={0} stroke="#000" />
           {/* @ts-ignore */}
@@ -145,7 +146,6 @@ export const VolBarChart = (props: VolChartProps) => {
             tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
             tickLine={false}
             axisLine={false}
-            tickCount={6}
             dataKey={"volume"}
             tickFormatter={(value, index) => {
               if (isEmpty) return `${index * 100}`;
