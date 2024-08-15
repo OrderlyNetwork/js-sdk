@@ -47,10 +47,12 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
       >
         <AccountInfo {...props} />
         <Subtitle {...props} />
-        <KeyList {...props} />
-        <CreateAPIKeyDialog {...props} />
-        <CreatedAPIKeyDialog {...props} />
       </Flex>
+        <div>
+          <KeyList {...props} />
+          <CreateAPIKeyDialog {...props} />
+          <CreatedAPIKeyDialog {...props} />
+        </div>
     </Card>
   );
 };
