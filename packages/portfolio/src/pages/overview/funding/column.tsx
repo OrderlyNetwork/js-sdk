@@ -32,12 +32,12 @@ export const useFundingHistoryColumns = () => {
             <Flex gap={1}>
               {/* <span>{`${record.funding_rate * 100}%`}</span> */}
               <Text.numeral rule={"percentages"} dp={6}>
-                {record.funding_rate * -1}
+                {record.funding_rate}
               </Text.numeral>
               <span>/</span>
               {/* <span>{`${record.annual_rate * 10}%`}</span> */}
               <Text.numeral rule={"percentages"} dp={6}>
-                {record.annual_rate * -1}
+                {record.annual_rate}
               </Text.numeral>
             </Flex>
           );
@@ -68,7 +68,7 @@ export const useFundingHistoryColumns = () => {
         },
         numeralProps: {
           coloring: true,
-          showIdentifier: false,
+          showIdentifier: true,
           ignoreDP: true,
         },
       },

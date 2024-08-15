@@ -1,7 +1,7 @@
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useOverviewContext } from "../providers/overviewCtx";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useMemo } from "react";
 
 export const usePerformanceScript = () => {
@@ -9,7 +9,7 @@ export const usePerformanceScript = () => {
   const [visible] = useLocalStorage("orderly_assets_visible", true);
 
   const { wrongNetwork } = useAppContext();
-  // const { state } = useAccount();
+  const { state } = useAccount();
   const filteredData = useDataTap(ctx.data, {
     accountStatus: AccountStatusEnum.EnableTrading,
     fallbackData: ctx.createFakeData(
@@ -45,7 +45,7 @@ export const usePerformanceScript = () => {
   return {
     ...ctx,
     data: _data,
-    invisible: wrongNetwork,
+    invisible: wrongNetwork || state.status < AccountStatusEnum.EnableTrading,
     visible,
   };
 };

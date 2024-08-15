@@ -111,6 +111,7 @@ export const ColItem: FC<ColProps> = (props) => {
           typeof col.numeralProps === "function"
             ? col.numeralProps(value, record, index)
             : col.numeralProps;
+
         return (
           <Numeral rule={col.rule} {...numeralProps}>
             {value}
