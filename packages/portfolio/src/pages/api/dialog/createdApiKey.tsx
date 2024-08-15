@@ -12,6 +12,8 @@ import {
 import { ApiManagerScriptReturns } from "../apiManager.script";
 
 export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
+  console.log("props.generateKey?.ip", props.generateKey?.ip);
+  
   return (
     <SimpleDialog
       size="sm"
