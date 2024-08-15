@@ -46,17 +46,6 @@ export const useCrossSwap = (): any => {
   const client = useRef(createClient(networkId as Environment)).current;
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>();
 
-  //TODO: useWalletSubscription
-  // useWalletSubscription({
-  //   onMessage: (message) => {
-  //     const { side, transStatus, trxId } = message;
-
-  //     if (side === "DEPOSIT" && trxId === txHashFromBridge.current) {
-  //       setStatus(transStatus);
-  //     }
-  //   },
-  // });
-
   useEffect(() => {
     const handler = (data: any) => {
       const { side, transStatus, trxId } = data;
