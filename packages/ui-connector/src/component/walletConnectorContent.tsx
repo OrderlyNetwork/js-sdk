@@ -110,10 +110,10 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       .then(
         (res) => {
           setActiveStep((step) => step + 1);
-          return onEnableTrading();
+          onEnableTrading();
         },
         (reject) => {
-          toast.error("User rejected the request");
+          toast.error("User rejected the request.");
           setLoading(false);
         }
       )
@@ -121,6 +121,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         setLoading(false);
       });
   };
+
+  console.log("state", state);
+  
 
   return (
     <Box id="oui-wallet-connect-dialog-content" className="oui-font-semibold">
@@ -152,8 +155,8 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           <Box
             position={"absolute"}
             height={"38px"}
-            left={30}
-            top={20}
+            left={28}
+            top={18}
             zIndex={0}
           >
             <Divider
@@ -205,7 +208,7 @@ const ActionButton: FC<{
   return (
     <Match
       value={() => {
-        if (state < AccountStatusEnum.SignedIn) {
+        if (state <= AccountStatusEnum.NotSignedIn) {
           return "signIn";
         }
         return "enableTrading";

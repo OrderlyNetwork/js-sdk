@@ -8,6 +8,7 @@ import {
   Divider,
   EmptyDataState,
   Flex,
+  Pagination,
   PlusIcon,
   Text,
   Tooltip,
@@ -46,10 +47,12 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
       >
         <AccountInfo {...props} />
         <Subtitle {...props} />
-        <KeyList {...props} />
-        <CreateAPIKeyDialog {...props} />
-        <CreatedAPIKeyDialog {...props} />
       </Flex>
+        <div>
+          <KeyList {...props} />
+          <CreateAPIKeyDialog {...props} />
+          <CreatedAPIKeyDialog {...props} />
+        </div>
     </Card>
   );
 };
@@ -71,7 +74,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         angle={27}
         border
         className="oui-w-1/2"
-        >
+      >
         <Text size="xs" intensity={36}>
           Account ID
         </Text>
@@ -122,7 +125,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
         </Text>
         <Flex
           itemAlign={"center"}
-          className="oui-text-primary oui-fill-white/[.54] hover:oui-text-primary-light hover:oui-fill-white/[.8] oui-cursor-pointer"
+          className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
           onClick={props.onReadApiGuide}
         >
           <Text>Read API guide</Text>
@@ -131,11 +134,9 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
             height="16"
             viewBox="0 0 16 16"
             fill="currentColor"
-            fillOpacity="1"
             xmlns="http://www.w3.org/2000/svg"
-            className="oui-mt-[1px]"
           >
-            <path d="M6.777 3.348a.65.65 0 0 0-.498.083.685.685 0 0 0-.187.938L8.5 7.993 6.092 11.62a.685.685 0 0 0 .187.937.68.68 0 0 0 .934-.187l2.657-4a.69.69 0 0 0 0-.75l-2.657-4a.67.67 0 0 0-.436-.271" />
+            <path d="M4.008 7.995c0-.368.298-.666.666-.666H9.71L7.733 5.331l.937-.936 3.143 3.122c.13.13.195.304.195.479a.67.67 0 0 1-.195.478L8.67 11.596l-.937-.937 1.978-1.998H4.674a.666.666 0 0 1-.666-.666" />
           </svg>
         </Flex>
       </Flex>
@@ -203,7 +204,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
           ip = "--";
         }
         return (
-          <Tooltip content={value} className="oui-max-w-[200px] oui-break-all">
+          <Tooltip content={ip} className="oui-max-w-[200px] oui-break-all">
             <Flex gap={1}>
               <div className=" oui-overflow-ellipsis oui-overflow-hidden">
                 {ip}
@@ -264,7 +265,13 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
         header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
         body: "oui-text-xs oui-text-base-contrast-80",
       }}
-    />
+    >
+      <Pagination
+        {...props.meta}
+        onPageChange={props.onPageChange}
+        onPageSizeChange={props.onPageSizeChange}
+      />
+    </AuthGuardDataTable>
   );
 };
 
