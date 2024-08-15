@@ -28,7 +28,7 @@ const AssetsDetail = () => {
       return "-";
     }
     const bigMMR = new Decimal(mmr);
-    return bigMMR.mul(100).toFixed(2);
+    return bigMMR.mul(100).todp(2, 0).toFixed(2);
   }, [mmr]);
   const onSettleClick = useCallback(() => {
     modal
