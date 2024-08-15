@@ -15,6 +15,7 @@ import { useSplitPersistent } from "./useSplitPersistent";
 import SwitchMarginModulePlace from "@/page/trading/desktop/elements/switchMarginModulePlace";
 import { Divider } from "@/divider";
 import { cn } from "@/utils";
+import { TradingFeatures } from "@/page";
 
 export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
   // const {} = useLayoutMeasure();
@@ -165,7 +166,10 @@ export const DesktopTradingPage: FC<TradingPageProps> = (props) => {
           <AssetsProvider>
             <AccountInfoElement />
 
-            <Divider className="orderly-mt-3" />
+            {!disableFeatures?.includes(TradingFeatures.AssetAndMarginInfo) && (
+              <Divider className="orderly-mt-3" />
+            )}
+
             <div className="orderly-px-3 orderly-mt-4 orderly-z-30">
               <MyOrderEntry symbol={props.symbol} />
             </div>
