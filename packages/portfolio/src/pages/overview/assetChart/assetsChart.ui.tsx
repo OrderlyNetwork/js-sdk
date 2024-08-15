@@ -20,7 +20,7 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
       }
       id="portfolio-overview-assets-chart"
       classNames={{
-        content: "oui-h-[160px] oui-pb-0",
+        content: "oui-h-[168px] oui-pb-0",
       }}
     >
       <AssetLineChart data={props.data} invisible={props.invisible} />

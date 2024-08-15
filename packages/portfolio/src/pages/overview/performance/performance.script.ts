@@ -45,7 +45,7 @@ export const usePerformanceScript = () => {
   return {
     ...ctx,
     data: _data,
-    invisible: wrongNetwork || !ctx.data.length,
+    invisible: wrongNetwork,
     visible,
   };
 };
