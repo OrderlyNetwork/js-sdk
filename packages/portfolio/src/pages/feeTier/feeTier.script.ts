@@ -51,11 +51,12 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
       .mul(0.01)
       .toString()}%`;
 
-    for (const item of feeList) {
-      if (takerRate === item.taker_fee && makerRate === item.maker_fee) {
-        return item.tier;
-      }
-    }
+    // for (const item of feeList) {
+    //   if (takerRate === item.taker_fee && makerRate === item.maker_fee) {
+    //     return item.tier;
+    //   }
+    // }
+    return feeList[0].tier;
   };
 
   useEffect(() => {
