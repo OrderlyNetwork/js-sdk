@@ -8,7 +8,9 @@ export const useLeverage = (): any => {
   const { data, mutate } = usePrivateQuery("/v1/client/info");
   const [update, { isMutating }] = useMutation("/v1/client/leverage");
 
-  const { data: config } = useQuery("/v1/public/config");
+  const { data: config } = useQuery("/v1/public/config", {
+    revalidateOnFocus: false,
+  });
 
   const updateLeverage = useCallback((data: { leverage: number }) => {
     return update(data).then((res: any) => {

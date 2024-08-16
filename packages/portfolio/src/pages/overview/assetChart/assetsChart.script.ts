@@ -22,19 +22,6 @@ export const useAssetsLineChartScript = () => {
       },
       { account_value: 500 }
     ),
-    // fallbackData:
-    //   assetHistory.data && assetHistory.data.length >= 2
-    //     ? [
-    //         assetHistory.data[0],
-    //         assetHistory.data[assetHistory.data.length - 1],
-    //       ]
-    //     : assetHistory.createFakeData(
-    //         {
-    //           account_value: 0,
-    //           // pnl: 0,
-    //         },
-    //         { account_value: 500 }
-    //       ),
   });
 
   const _data = useMemo(() => {
@@ -46,7 +33,7 @@ export const useAssetsLineChartScript = () => {
       },
       { account_value: 500 }
     );
-  }, [filteredData?.length]);
+  }, [filteredData]);
 
   return {
     ...assetHistory,
