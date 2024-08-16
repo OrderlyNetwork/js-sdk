@@ -27,7 +27,7 @@ export const MobileRememberMe = () => {
 
     return (
         <div
-            className="orderly-text-base-contrast-54 orderly-text-xs  desktop:orderly-text-base"
+            className="orderly-text-base-contrast-54 orderly-text-xs  desktop:orderly-text-base orderly-cursor-pointer"
             onClick={showRememberHint}
         >
             <span>Remember me</span>
