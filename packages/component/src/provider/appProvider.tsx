@@ -95,7 +95,7 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
   {} as OrderlyAppContextState
 );
 
-type OrderlyAppProviderProps = CommonOrderlyAppState & {
+export type OrderlyAppProviderProps = CommonOrderlyAppState & {
   toastLimitCount?: number;
   contracts?: IContract;
   /**

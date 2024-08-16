@@ -1,4 +1,5 @@
 
+import { max, min } from "ramda";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { RefferalAPI } from "./api";
 import { formatDate } from "./format";
@@ -19,7 +20,7 @@ export const useDaily = (options?: {
     const start_date = formatDate(startDate);
     const end_date = formatDate(endDate);
 
-    const url = `${path}?start_date=${start_date}&end_date=${end_date}`;
+    const url = `${path}?start_date=${min(start_date, end_date)}&end_date=${max(start_date, end_date)}`;
     const {
         data: dailyVolume,
         mutate,
@@ -32,6 +33,8 @@ export const useDaily = (options?: {
         mutate,
     }
 }
+
+
 
 
 

@@ -39,7 +39,7 @@ const KEY = "ORDERLY_WEB_ASSETS_COLLAPSED";
 
 export const Assets: FC<AssetsProps> = (props) => {
   // const [expand, { toggle }] = useBoolean(false);
-  const [collapsed, setCollapsed] = useLocalStorage(KEY, 1);
+  const [collapsed, setCollapsed] = useLocalStorage(KEY, 0);
   const { totalCollateral, freeCollateral, totalValue, availableBalance } =
     useCollateral({
       dp: 2,

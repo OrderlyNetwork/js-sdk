@@ -1,13 +1,6 @@
 export { default as version } from "./version";
 
-export {
-  OrderlyAppProvider,
-  OrderlyAppContext,
-  SymbolProvider,
-  SymbolContext,
-  AssetsProvider,
-  AssetsContext,
-} from "./provider";
+export * from "./provider";
 
 // ==================== base component ====================
 export { default as Button } from "./button";
@@ -122,6 +115,9 @@ export type {
   OrdersViewProps,
   PositionsViewProps,
   AccountStatusProps,
+  FooterStatusBarProps,
+  ShareConfigProps,
+  DesktopDropMenuItem,
 } from "./block";
 
 export { cn, parseNumber } from "./utils";
