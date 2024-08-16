@@ -33,6 +33,7 @@ import {
 import { DropdownMenuPortal } from "@radix-ui/react-dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
 import { isTestnet } from "@orderly.network/utils";
+import { modal } from "@orderly.network/ui";
 
 interface ChainsProps {
   disabled?: boolean;
@@ -108,43 +109,46 @@ export const Chains: FC<ChainsProps> = (props) => {
     }
   };
 
-  const trigger = () => {
-    if (props.wrongNetwork) {
-      return (
-        <Button
-          id="orderly-account-status-bar-wrong-network-button"
-          size={"small"}
-          className="orderly-bg-[#DA6313] orderly-text-3xs orderly-h-[30px] hover:orderly-bg-[#DA6313] hover:orderly-opacity-70"
-        >
-          Wrong network
-        </Button>
-      );
-    }
-
+  if (props.wrongNetwork) {
     return (
       <Button
-          id="orderly-botom-bar-switch-chain-button"
-          variant={"outlined"}
-          size={"small"}
-          color={"buy"}
-          loading={settingChain}
-          disabled={disabled}
-          className={cn(
-            "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
-            props.className
-          )}
-        >
-          {chainName}
-          <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
-        </Button>
+        id="orderly-account-status-bar-wrong-network-button"
+        size={"small"}
+        className="orderly-bg-[#DA6313] orderly-text-3xs orderly-h-[30px] hover:orderly-bg-[#DA6313] hover:orderly-opacity-70"
+        onClick={() => {
+          modal.show<{
+            wrongNetwork: boolean;
+          }>("ChainSelector");
+        }}
+      >
+        Wrong network
+      </Button>
+    );
+  }
+
+  const trigger = () => {
+    return (
+      <Button
+        id="orderly-botom-bar-switch-chain-button"
+        variant={"outlined"}
+        size={"small"}
+        color={"buy"}
+        loading={settingChain}
+        disabled={disabled}
+        className={cn(
+          "orderly-border-primary orderly-gap-1 orderly-text-base-contrast orderly-h-[30px] hover:orderly-text-primary-light hover:orderly-bg-transparent active:orderly-bg-transparent",
+          props.className
+        )}
+      >
+        {chainName}
+        <ArrowIcon size={8} className="orderly-text-base-contrast-54" />
+      </Button>
     );
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        {trigger()}
-      </DialogTrigger>
+      <DialogTrigger>{trigger()}</DialogTrigger>
       <DialogContent
         onOpenAutoFocus={(event) => event.preventDefault()}
         closable

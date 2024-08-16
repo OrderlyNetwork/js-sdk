@@ -152,14 +152,6 @@ export function useChains(
       updateTestnetInfo(testnetArr, chainId, item);
     });
 
-    mainnetArr.sort((a, b) => {
-      return a.network_infos.bridgeless ? -1 : 1;
-    });
-
-    testnetArr.sort((a, b) => {
-      return a.network_infos.bridgeless ? -1 : 1;
-    });
-
     mainnetArr = filterByAllowedChains(mainnetArr, allowedChains?.mainnet);
     testnetArr = filterByAllowedChains(testnetArr, allowedChains?.testnet);
 
