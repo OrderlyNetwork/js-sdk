@@ -50,12 +50,14 @@ export class DataPaint extends BasePaint {
       needDrawDetails || hasReferral ? 0 : offsetTop
     );
 
-    if (!!options.data?.domain) {
-      this.drawDomainUrl(options);
-    }
+    if (!hasReferral) {
+      if (!!options.data?.domain) {
+        this.drawDomainUrl(options);
+      }
 
-    if (typeof options.data?.updateTime !== "undefined") {
-      this.drawPositionTime(options);
+      if (typeof options.data?.updateTime !== "undefined") {
+        this.drawPositionTime(options);
+      }
     }
 
     if (typeof options.data?.referral !== "undefined") {

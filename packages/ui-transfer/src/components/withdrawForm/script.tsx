@@ -141,6 +141,9 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         if (!currentChain) {
            return false;
         }
+        if (networkId=== 'testnet') {
+            return true;
+        }
         if (!currentChain.info) {
             return false;
         }

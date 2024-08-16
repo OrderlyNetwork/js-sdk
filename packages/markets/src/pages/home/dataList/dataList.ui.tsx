@@ -48,7 +48,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
       value={searchValue}
       onValueChange={onSearchValueChange}
       placeholder="Search market"
-      className="oui-w-[240px] oui-mb-2"
+      className="oui-w-[240px] oui-my-1"
       size="sm"
       prefix={
         <Box pl={3} pr={1}>
@@ -71,7 +71,13 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
 
   return (
     <Box id="oui-markets-list" intensity={900} p={6} r="2xl">
-      <Tabs value={activeTab} onValueChange={onTabChange} trailing={search}>
+      <Tabs
+        variant="contained"
+        size="xl"
+        value={activeTab}
+        onValueChange={onTabChange}
+        trailing={search}
+      >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <FavoritesWidget />
         </TabPanel>

@@ -18,6 +18,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
     onPeriodChange,
     aggregateValue,
     invisible,
+    visible,
     volumeUpdateDate,
   } = props;
 
@@ -70,6 +71,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             valueProps={{
               coloring: true,
               showIdentifier: true,
+              visible,
             }}
           >
             {invisible ? "--" : aggregateValue.pnl}
@@ -103,7 +105,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
         <PerformancePnL data={props.data ?? []} invisible={props.invisible} />
         <CumulativePnlChart
           data={props.data ?? []}
-          invisible={props.invisible}
+          invisible={props.invisible || (props.data?.length ?? 0) <= 2}
         />
       </Grid>
     </Card>
@@ -123,7 +125,10 @@ export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
         Daily PnL
       </Text>
       <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
-        <PnLBarChart data={props.data} invisible={props.invisible} />
+        <PnLBarChart
+          data={props.data}
+          invisible={props.invisible || (props.data?.length ?? 0) <= 2}
+        />
       </Box>
     </Box>
   );
@@ -139,7 +144,10 @@ export const CumulativePnlChart = (props: {
         Cumulative PnL
       </Text>
       <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
-        <PnlLineChart data={props.data} invisible={props.invisible} />
+        <PnlLineChart
+          data={props.data}
+          invisible={props.invisible || (props.data?.length ?? 0) <= 2}
+        />
         {/* <Chart data={props.data} x={"date"} y={"pnl"}>
           <Axis orientation="left" />
         </Chart> */}

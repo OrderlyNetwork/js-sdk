@@ -2,7 +2,6 @@ import { DayPicker } from "react-day-picker";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "../../icon";
 import { cnBase } from "tailwind-variants";
-import { cn } from "../..";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -40,14 +39,15 @@ function Calendar({
             ? "[&:has(>.oui-day-range-end)]:oui-rounded-r-md [&:has(>.oui-day-range-start)]:oui-rounded-l-md first:[&:has([aria-selected])]:oui-rounded-l-md last:[&:has([aria-selected])]:oui-rounded-r-md"
             : "[&:has([aria-selected])]:oui-rounded-md"
         ),
-        day: cn(
-        //   buttonVariants({ variant: "ghost" }),
-          "oui-h-7 oui-w-7 oui-p-0 oui-rounded-md oui-font-normal aria-selected:oui-opacity-100 oui-text-base-contrast-80 hover:oui-bg-base-5",
+        day: cnBase(
+          //   buttonVariants({ variant: "ghost" }),
+          "oui-h-7 oui-w-7 oui-p-0 oui-rounded-md oui-font-normal aria-selected:oui-opacity-100 oui-text-base-contrast-80 hover:oui-bg-base-5"
         ),
-        day_range_start: "day-range-start  oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
-        day_range_end: "day-range-end oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
-        day_selected:
-          "oui-bg-base-4 ",
+        day_range_start:
+          "day-range-start  oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
+        day_range_end:
+          "day-range-end oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
+        day_selected: "oui-bg-base-4 ",
         day_today: "oui-bg-accent ",
         day_outside:
           "oui-day-outside oui-text-muted-foreground oui-opacity-50 aria-selected:oui-bg-accent/50 aria-selected:oui-text-muted-foreground aria-selected:oui-opacity-30",

@@ -59,7 +59,7 @@ export const useFundingFeeHistory = (
       })[]
     | null
   >(() => {
-    if (!Array.isArray(data?.rows) || !data?.rows.length || infos.isNil) {
+    if (!data || !Array.isArray(data?.rows) || infos.isNil) {
       return null;
     }
 

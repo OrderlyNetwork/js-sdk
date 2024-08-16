@@ -76,11 +76,12 @@ export const CombineSelect = (props: CombineSelectProps) => {
             setKeyword(value);
           }}
           // onKeyDown={onKeyDown}
-          className={trigger({
-            className: "oui-min-w-20 oui-peer",
-          })}
+
           classNames={{
-            input: "oui-text-base-contrast-54",
+            root: trigger({
+              className: "oui-w-24 oui-peer",
+            }),
+            input: "oui-text-base-contrast-54 oui-font-semibold",
           }}
           data-state={focused ? "open" : "closed"}
           suffix={

@@ -320,7 +320,7 @@ export const TPSLForm: FC<Props> = (props) => {
             className={"orderly-text-base-contrast-36 orderly-text-2xs"}
             data-testid="slEstPnL"
           >
-            <span>est. PnL: </span>
+            <span>Est. PnL: </span>
             {order.sl_pnl ? (
               <Numeral rule="price" coloring precision={symbolInfo("quote_dp")}>
                 {order.sl_pnl}

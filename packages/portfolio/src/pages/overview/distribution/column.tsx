@@ -50,13 +50,14 @@ export const useColumns = () => {
         width: 80,
         formatter: (value: any) => {
           switch (value) {
-            case "REFERRAL_REBATE":
-              return "Referral commision";
+            case "REFERRER_REBATE":
+              return "Referral commission";
             case "REFEREE_REBATE":
               return "Referee rebate";
             case "REFERRAL_FEE":
-            default:
               return "Broker fee";
+            default:
+              return "-";
           }
         },
       },
@@ -74,7 +75,7 @@ export const useColumns = () => {
 
 export const TYPES = [
   { label: "All", value: "All" },
-  { label: "Referral commision", value: "REFEREE_REBATE" },
-  { label: "Referee rebate", value: "REFERRER_REBATE" },
+  { label: "Referral commission", value: "REFERRER_REBATE" },
+  { label: "Referee rebate", value: "REFEREE_REBATE" },
   { label: "Broker fee", value: "BROKER_FEE" },
 ];
