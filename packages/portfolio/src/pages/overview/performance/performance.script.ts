@@ -40,7 +40,7 @@ export const usePerformanceScript = () => {
       },
       { account_value: 500, pnl: 500 }
     );
-  }, [filteredData?.length]);
+  }, [filteredData]);
 
   return {
     ...ctx,

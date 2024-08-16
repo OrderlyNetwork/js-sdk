@@ -2,6 +2,9 @@ import { API } from "@orderly.network/types";
 import { SWRInfiniteResponse } from "swr/infinite";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { usePrivateQuery } from "../../usePrivateQuery";
+import { useEventEmitter } from "../../useEventEmitter";
+import { useEffect } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 export enum AssetHistoryStatusEnum {
   NEW = "new",
@@ -22,6 +25,7 @@ const useAssetsHistory = (options: {
   pageSize?: number;
 }) => {
   const { page = 1, pageSize = 10 } = options;
+  const ee = useEventEmitter();
 
   const getKey = () => {
     // if (previousPageData && !previousPageData.length) return null;
@@ -40,10 +44,28 @@ const useAssetsHistory = (options: {
     return `/v1/asset/history?${searchParams.toString()}`;
   };
 
-  const { data, isLoading } = usePrivateQuery<API.AssetHistory>(getKey(), {
-    formatter: (data) => data,
-    revalidateOnFocus: false,
-  });
+  const { data, isLoading, mutate } = usePrivateQuery<API.AssetHistory>(
+    getKey(),
+    {
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+    }
+  );
+  const updateList = useDebouncedCallback(
+    (data: any) => {
+      mutate();
+    },
+    // delay in ms
+    300
+  );
+
+  useEffect(() => {
+    ee.on("wallet:changed", updateList);
+
+    return () => {
+      ee.off("wallet:changed", updateList);
+    };
+  }, []);
 
   return [
     data?.rows || [],

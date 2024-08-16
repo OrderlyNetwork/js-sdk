@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { toast } from "@orderly.network/ui";
+import { useEventEmitter } from "@orderly.network/hooks";
 
 type Options = {
   quantity: string;
@@ -23,6 +24,8 @@ export function useDepositAction(options: Options) {
   } = options;
   const [submitting, setSubmitting] = useState(false);
 
+  const ee = useEventEmitter();
+
   const onApprove = useCallback(async () => {
     if (submitting) return;
     setSubmitting(true);
@@ -44,12 +47,13 @@ export function useDepositAction(options: Options) {
     return deposit()
       .then((res: any) => {
         toast.success("Deposit requested");
+        ee.emit("deposit:requested");
         onSuccess?.();
       })
       .catch((error) => {
         toast.error(error?.errorCode || "Deposit failed");
       });
-  }, [deposit, onSuccess]);
+  }, [deposit, onSuccess, ee]);
 
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
