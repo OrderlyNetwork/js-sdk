@@ -8,6 +8,7 @@ import { SwapDetail } from "./swapDetail";
 import { SwapMode, SwapProcessStatus } from "../../types";
 import { ViewFAQs } from "./viewFAQs";
 import { ProcessStatus } from "./processStatus";
+import { useEventEmitter } from "@orderly.network/hooks";
 
 export const SingleSwap: FC<SwapProps> = (props) => {
   const {
@@ -27,6 +28,8 @@ export const SingleSwap: FC<SwapProps> = (props) => {
 
   const [view, setView] = useState<"processing" | "details">("details");
   const [tx, setTx] = useState<any>();
+
+  const ee = useEventEmitter();
 
   const { swap: doSingleSwap, status: swapStatus } = useSwap();
 
@@ -78,12 +81,13 @@ export const SingleSwap: FC<SwapProps> = (props) => {
       .then((res: any) => {
         setTx(res);
         toast.success("Deposit requested");
+        ee.emit("deposit:requested");
       })
       .catch((error: any) => {
         setStatus(SwapProcessStatus.DepositFailed);
         toast.error(error?.message || "Error");
       });
-  }, [transaction, mode, dst, src]);
+  }, [transaction, mode, dst, src, ee]);
 
   const statusUrl = useMemo(() => {
     if (status < SwapProcessStatus.Depositing || !tx) {
