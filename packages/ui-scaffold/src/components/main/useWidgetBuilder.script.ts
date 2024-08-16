@@ -100,7 +100,16 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
        */
       current,
       onItemClick: (item: MainNavItem[]) => {
-        setCurrent(item.map((item) => item.href));
+        const lastItem = item[item.length - 1];
+
+        if (!lastItem) return;
+
+        /**
+         * If the target is not _blank, we should update the current state
+         */
+        if (lastItem.target !== "_blank") {
+          setCurrent(item.map((item) => item.href));
+        }
 
         const current = item[item.length - 1];
         const args = {
