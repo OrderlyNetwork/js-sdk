@@ -1,11 +1,18 @@
-import { memo, useCallback, useContext } from "react";
+import { memo, useCallback, useContext, useMemo } from "react";
 import { Numeral } from "@/text";
-import { useCollateral, usePositionStream } from "@orderly.network/hooks";
+import {
+  useCollateral,
+  useMarginRatio,
+  usePositionStream,
+} from "@orderly.network/hooks";
 import { AssetsContext } from "@/provider";
 import { modal } from "@orderly.network/ui";
 import { SettlePnlContent } from "@/block/withdraw";
 import { RefreshCcw } from "lucide-react";
 import { DesktopFreeCollat } from "@/block/orderEntry/sections/freeCollat";
+import { Tooltip } from "@/tooltip";
+import { cn } from "@/utils";
+import { Decimal } from "@orderly.network/utils";
 
 const AssetsDetail = () => {
   const { freeCollateral } = useCollateral({
@@ -15,7 +22,14 @@ const AssetsDetail = () => {
   const [{ aggregated }] = usePositionStream();
 
   const { onSettle } = useContext(AssetsContext);
-
+  const { mmr } = useMarginRatio();
+  const renderMMR = useMemo(() => {
+    if (!mmr) {
+      return "-";
+    }
+    const bigMMR = new Decimal(mmr);
+    return bigMMR.mul(100).todp(2, 0).toFixed(2);
+  }, [mmr]);
   const onSettleClick = useCallback(() => {
     modal
       .confirm({
@@ -57,6 +71,22 @@ const AssetsDetail = () => {
             }
           >
             {freeCollateral}
+          </Numeral>
+        </div>
+      </div>
+      <div
+        className={
+          "orderly-flex orderly-justify-between orderly-text-base-contrast-54"
+        }
+      >
+        <div className="orderly-text-xs orderly-text-base-contrast-54 orderly-cursor-pointer">
+          Maintenance margin ratio
+        </div>
+        <div className="orderly-flex orderly-justify-end orderly-gap-1">
+          <Numeral
+            surfix={<span className={"orderly-text-base-contrast-36"}>%</span>}
+          >
+            {renderMMR}
           </Numeral>
         </div>
       </div>
