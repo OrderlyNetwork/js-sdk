@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 // import { XAxis, YAxis, BarStyle } from "../components";
@@ -119,7 +120,7 @@ export type ReferralContextReturns = {
   isLoading: boolean;
   showHome: boolean;
   setShowHome: (value: boolean) => void;
-  tab: TabTypes,
+  tab: TabTypes;
   setTab: React.Dispatch<React.SetStateAction<TabTypes>>;
   wrongNetwork: boolean;
 } & ReferralContextProps;
@@ -164,7 +165,6 @@ export const ReferralProvider: FC<
   } = props;
 
   const { state } = useAccount();
- 
 
   const {
     data,
@@ -247,18 +247,20 @@ export const ReferralProvider: FC<
 
   const { wrongNetwork } = useAppContext();
 
+  const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
   useEffect(() => {
-    const id = setTimeout(() => {
-      if (state.status >= AccountStatusEnum.EnableTrading) {
+    let timerId: any;
+    if (lastStete.current !== state.status) {
+      lastStete.current = state.status;
+      timerId = setTimeout(() => {
         mutate();
-      }
-    }, 1000);
+      }, 1000);
+    }
 
     return () => {
-      clearTimeout(id);
-    }
-    
-  },[state.status])
+      if (timerId) clearTimeout(timerId);
+    };
+  }, [state.status]);
 
   return (
     <IntlProvider
@@ -289,7 +291,8 @@ export const ReferralProvider: FC<
           overwrite,
           splashPage,
           isLoading,
-          tab,setTab,
+          tab,
+          setTab,
           wrongNetwork,
         }}
       >
