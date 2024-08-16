@@ -2,6 +2,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { useAssetsHistoryData } from "../shared/useAssetHistory";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { useOverviewContext } from "../providers/overviewCtx";
+import { useMemo } from "react";
 
 export const useAssetsLineChartScript = () => {
   // const assetHistory = useAssetsHistoryData("portfolio_asset_history_period", {
@@ -36,10 +37,21 @@ export const useAssetsLineChartScript = () => {
     //       ),
   });
 
+  const _data = useMemo(() => {
+    if (filteredData?.length ?? 0 > 0) return filteredData;
+    return assetHistory.createFakeData(
+      {
+        account_value: 0,
+        // pnl: 0,
+      },
+      { account_value: 500 }
+    );
+  }, [filteredData?.length]);
+
   return {
     ...assetHistory,
     wrongNetwork,
-    data: filteredData,
+    data: _data,
     invisible: wrongNetwork || !assetHistory.data.length,
   } as const;
 };

@@ -1,18 +1,9 @@
-import {
-  useFundingFeeHistory,
-  useQuery,
-  useSymbolsInfo,
-} from "@orderly.network/hooks";
+import { useFundingFeeHistory } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
-import { useRef, useState } from "react";
-import { useDataTap } from "@orderly.network/react-app";
+import { useState } from "react";
 import { parseDateRangeForFilter } from "../helper/date";
-import { getDate, getMonth, getYear, setHours, setMinutes } from "date-fns";
-
-// type FundingSearchParams = {
-//   dataRange?: Date[];
-// };
+import { addDays, getDate, getMonth, getYear } from "date-fns";
 
 export const useFundingHistoryHook = () => {
   // const today = useRef(setMinutes(setHours(new Date(), 23), 59));
@@ -20,7 +11,7 @@ export const useFundingHistoryHook = () => {
   const [today] = useState(() => {
     const d = new Date();
 
-    return new Date(getYear(d), getMonth(d), getDate(d), 23, 59, 0);
+    return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
   });
 
   const [dateRange, setDateRange] = useState<Date[]>([
@@ -33,7 +24,8 @@ export const useFundingHistoryHook = () => {
 
   const [data, { isLoading, meta, isValidating }] = useFundingFeeHistory(
     {
-      dataRange: dateRange.map((date) => date.getTime()),
+      // dataRange: dateRange.map((date) => date.getTime()),
+      dataRange: [dateRange[0].getTime(), addDays(dateRange[1], 1).getTime()],
       symbol,
       page,
       pageSize,
@@ -56,12 +48,11 @@ export const useFundingHistoryHook = () => {
     }
   };
 
-  // const filteredData = useDataTap(data);
-
   return {
     dataSource: data,
     meta: parseMeta(meta),
     isLoading,
+    isValidating,
     // onDateRangeChange,
     queryParameter: {
       symbol,

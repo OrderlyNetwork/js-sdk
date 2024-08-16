@@ -5,7 +5,7 @@ import {
   useLocalStorage,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
-import { subDays, format, getYear, getMonth, getDate } from "date-fns";
+import { subDays, format, getYear, getMonth, getDate, addDays } from "date-fns";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 
@@ -24,7 +24,7 @@ export const useAssetsHistoryData = (
   const [today] = useState(() => {
     const d = new Date();
 
-    return new Date(getYear(d), getMonth(d), getDate(d), 23, 59, 0);
+    return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
   });
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
@@ -65,10 +65,12 @@ export const useAssetsHistoryData = (
   // const nowStamp = useRef(new Date().getTime().toString());
   // const now = useRef(new Date());
 
+  const endDate = useMemo(() => addDays(today, 1), [today]);
+
   const [data] = useStatisticsDaily(
     {
       startDate: startDate.toISOString().split("T")[0],
-      endDate: today.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0],
     },
     {
       ignoreAggregation: true,
@@ -77,7 +79,7 @@ export const useAssetsHistoryData = (
 
   const [assetHistory] = useAssetsHistory({
     startTime: subDays(today, 2).getTime().toString(),
-    endTime: today.getTime().toString(),
+    endTime: endDate.getTime().toString(),
   });
 
   const onPeriodChange = (value: PeriodType) => {

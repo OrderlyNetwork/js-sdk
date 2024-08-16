@@ -55,7 +55,6 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
             ],
             value: symbol,
             valueFormatter: (value) => {
-              console.log(value);
               if (value === "All") {
                 return "All";
               }
