@@ -3,7 +3,7 @@ import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useState } from "react";
 import { parseDateRangeForFilter } from "../helper/date";
-import { addDays, getDate, getMonth, getYear } from "date-fns";
+import { addDays, getDate, getMonth, getYear, isSameDay, set } from "date-fns";
 
 export const useFundingHistoryHook = () => {
   // const today = useRef(setMinutes(setHours(new Date(), 23), 59));
@@ -25,7 +25,20 @@ export const useFundingHistoryHook = () => {
   const [data, { isLoading, meta, isValidating }] = useFundingFeeHistory(
     {
       // dataRange: dateRange.map((date) => date.getTime()),
-      dataRange: [dateRange[0].getTime(), addDays(dateRange[1], 1).getTime()],
+      dataRange: [
+        dateRange[0].getTime(),
+        (isSameDay(dateRange[0], dateRange[1])
+          ? dateRange[1]
+          : set(dateRange[1], {
+              hours: 23,
+              seconds: 59,
+              minutes: 0,
+              milliseconds: 0,
+            })
+        )
+          //  addDays(dateRange[1], 1)
+          .getTime(),
+      ],
       symbol,
       page,
       pageSize,
