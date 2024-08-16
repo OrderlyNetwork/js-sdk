@@ -10,6 +10,7 @@ import { AssetsContext } from "@/provider/assetsProvider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
 import { Decimal } from "@orderly.network/utils";
 import { OrderlyAppContext } from "@/provider";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 interface AccountTotalProps {
   status: AccountStatusEnum;
@@ -27,10 +28,12 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
 
   const { currentLeverage } = useMarginRatio();
 
+  const { wrongNetwork } = useTradingPageContext();
+
   //
 
   const balance = useMemo(() => {
-    if (props.status < AccountStatusEnum.EnableTrading) {
+    if (props.status < AccountStatusEnum.EnableTrading || wrongNetwork) {
       return "--";
     }
 
@@ -39,11 +42,12 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
         {props.totalValue ?? 0}
       </Numeral>
     );
-  }, [props.status, props.totalValue, visible]);
+  }, [props.status, props.totalValue, visible, wrongNetwork]);
 
   const maxLerverage = useMemo(() => {
+    if (wrongNetwork) return "--";
     return accountInfo?.max_leverage ?? "-";
-  }, [accountInfo]);
+  }, [accountInfo, wrongNetwork]);
 
   const balanceInfo = useMemo(() => {
     return (
@@ -85,16 +89,18 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
       <SheetTrigger asChild>
         <div className="orderly-flex orderly-items-center orderly-cursor-pointer orderly-text-base-contrast-54">
           {balanceInfo}
-          <Divider vertical className="orderly-px-3" />
+          {!wrongNetwork && <Divider vertical className="orderly-px-3" />}
 
-          <div className="orderly-flex orderly-gap-[10px] orderly-items-center">
-          <div className="orderly-border orderly-border-solid orderly-px-2 orderly-rounded orderly-border-primary-light orderly-text-primary-light orderly-text-4xs orderly-h-[30px] orderly-leading-[30px] orderly-flex orderly-items-center">
-            {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
-            <Numeral precision={2} surfix="x">
-              {currentLeverage}
-            </Numeral>
-          </div>
-          </div>
+          {!wrongNetwork && (
+            <div className="orderly-flex orderly-gap-[10px] orderly-items-center">
+              <div className="orderly-border orderly-border-solid orderly-px-2 orderly-rounded orderly-border-primary-light orderly-text-primary-light orderly-text-4xs orderly-h-[30px] orderly-leading-[30px] orderly-flex orderly-items-center">
+                {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
+                <Numeral precision={2} surfix="x">
+                  {currentLeverage}
+                </Numeral>
+              </div>
+            </div>
+          )}
         </div>
       </SheetTrigger>
       <SheetContent

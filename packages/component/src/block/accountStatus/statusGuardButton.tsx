@@ -17,7 +17,12 @@ export interface ConnectGuardButtonProps {
   placeholder?: ReactNode;
   connected?: boolean;
   // onConnectWallet?: () => void;
-  id?: string;
+  id?: {
+    connectWallet?: string;
+    signIn?: string;
+    enableTrading?: string;
+    normal?: string;
+  };
   className?: string;
 }
 
@@ -66,12 +71,29 @@ export const StatusGuardButton: FC<
 
     return "-";
   }, [state.status]);
+  
+  
+  const buttonId = useMemo(() => {
+    if (state.status === AccountStatusEnum.NotConnected) {
+      return props.id?.connectWallet;
+    }
+
+    if (state.status < AccountStatusEnum.SignedIn) {
+      return props.id?.signIn;
+    }
+
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return props.id?.enableTrading;
+    }
+
+    return props.id?.normal;
+  }, [props.id]);
 
   if (state.status < AccountStatusEnum.EnableTrading) {
     if (typeof props.placeholder === "undefined") {
       return (
         <Button
-          id={props.id}
+          id={buttonId}
           type="button"
           fullWidth
           onClick={() => onClick()}

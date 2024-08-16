@@ -1,7 +1,8 @@
 import { InfoIcon } from "@/icon";
-import { modal } from "@/modal";
+// import { modal } from "@/modal";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
+import { modal } from "@orderly.network/ui";
 import { Tooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export const RememberMe = () => {
@@ -27,7 +28,7 @@ export const MobileRememberMe = () => {
 
     return (
         <div
-            className="orderly-text-base-contrast-54 orderly-text-xs  desktop:orderly-text-base"
+            className="orderly-text-base-contrast-54 orderly-text-xs  desktop:orderly-text-base orderly-cursor-pointer"
             onClick={showRememberHint}
         >
             <span>Remember me</span>

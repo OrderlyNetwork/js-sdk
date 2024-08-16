@@ -26,7 +26,7 @@ export const useAssetHistoryColumns = () => {
       },
       {
         title: "Time",
-        dataIndex: "block_time",
+        dataIndex: "created_time",
         width: 80,
         rule: "date",
       },

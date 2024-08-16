@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   useAssetsHistory,
   useCollateral,
@@ -26,10 +26,10 @@ export const useAssetsHistoryData = (
 
     return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
   });
+
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
   const [period, setPeriod] = useLocalStorage<PeriodType>(
-    // "portfolio_performance_period",
     localKey,
     PeriodType.WEEK
   );
@@ -182,7 +182,7 @@ export const useAssetsHistoryData = (
 
       const dataTailIndex = data.findIndex((d) => d.date === tail.date);
 
-      const lastAccountValue = data[dataTailIndex - 1]!.account_value;
+      const lastAccountValue = data[dataTailIndex - 1]?.account_value;
 
       // console.log(data, calculatedData, tail, dataTailIndex);
 

@@ -43,7 +43,9 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
   const { referral } = useContext(OrderlyAppContext);
   const { isExist } = useCheckReferralCode(refCode);
 
-  const { referral_code, isLoading: loadingReferralCode } = useGetReferralCode(account?.accountId);
+  const { referral_code, isLoading: loadingReferralCode } = useGetReferralCode(
+    account?.accountId
+  );
 
   const buttonLabel = useMemo(() => {
     if (status < AccountStatusEnum.SignedIn) {
@@ -81,6 +83,9 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
             errorText = e.message;
           }
 
+          if (errorText.includes("User rejected the request.")) {
+            errorText = "User rejected the request.";
+          }
           if ("referral code not exist" === errorText) {
             errorText = "This referral code does not exist";
           }
@@ -178,7 +183,9 @@ export const WalletConnect: FC<WalletConnectProps> = (props) => {
           id="orderly-wallet-connector-button"
           className="orderly-text-xs orderly-text-base-contrast"
           fullWidth
-          disabled={handleStep > 0 || (isExist !== true && (refCode?.length || 0) > 0)}
+          disabled={
+            handleStep > 0 || (isExist !== true && (refCode?.length || 0) > 0)
+          }
           onClick={onClick}
           loading={handleStep > 0}
         >
