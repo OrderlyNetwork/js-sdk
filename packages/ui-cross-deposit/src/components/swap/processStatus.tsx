@@ -33,16 +33,18 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
   const { status, mode, statusUrl, brokerName } = props;
 
   const items = useMemo(() => {
+    const bridgeStatus = getBridgeStatus(status!);
+    const depositStatus = getDepositStatus(status!);
     const list: TProcessItem[] = [
       {
-        title: "Bridging",
+        title: bridgeStatus === "pending" ? "Bridging" : "Bridge",
         description: "Bridge to Arbirtum via Stargate",
-        state: getBridgeStatus(status!),
+        state: bridgeStatus,
       },
       {
-        title: "Deposit",
+        title: depositStatus === "pending" ? "Depositing" : "Deposit",
         description: `Deposit to ${brokerName}`,
-        state: getDepositStatus(status!),
+        state: depositStatus,
       },
     ];
 
