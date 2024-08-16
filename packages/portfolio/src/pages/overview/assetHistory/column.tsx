@@ -64,8 +64,8 @@ export const useAssetHistoryColumns = () => {
         rule: "price",
         formatter: (value, record) =>
           record.side === "WITHDRAW"
-            ? -(value - record.fee ?? 0)
-            : value - record.fee ?? 0,
+            ? -(value - (record.fee ?? 0))
+            : value - (record.fee ?? 0),
         numeralProps: {
           coloring: true,
           showIdentifier: true,
