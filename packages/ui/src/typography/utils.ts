@@ -46,7 +46,7 @@ export const parseNumber = (
 
   let d = new Decimal(value);
 
-  console.log("abs:::", value, abs);
+  // console.log("abs:::", value, abs);
 
   if (abs) {
     d = d.abs();

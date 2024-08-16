@@ -12,7 +12,8 @@ import {
 import { ApiManagerScriptReturns } from "../apiManager.script";
 
 export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
-  console.log("props.generateKey?.ip", props.generateKey?.ip);
+
+  const ip = props.generateKey?.ip ?? "--";
   
   return (
     <SimpleDialog
@@ -82,9 +83,9 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             className="oui-text-base-contrast-80 oui-text-sm"
           >
             <Box className="oui-max-h-[100px] oui-flex-1 oui-overflow-hidden oui-text-ellipsis oui-line-clamp-5 oui-break-all">
-              {props.generateKey?.ip}
+              {ip}
             </Box>
-            {props.generateKey?.ip !== "--" && (
+            {ip !== "--" && (
               <Box
                 width={16}
                 height={16}

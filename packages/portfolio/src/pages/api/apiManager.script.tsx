@@ -183,10 +183,9 @@ export const useApiManagerScript = () => {
   const onCopyApiSecretKey = () => toast.success("Secret key copied");
   const onCopyIP = () => toast.success("Restricted IP copied");
 
-  let keyList = (keys || []).filter(
-    (e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"
-  );
-  keyList = useDataTap(keyList) || [];
+  const keyList = useMemo(() => {
+    return keys?.filter((e) => e.tag === "manualCreated" && e.key_status === "ACTIVE");
+  }, [keys]);
 
   const verifyIP = (ip: string) => {
     const ipRegex =
@@ -202,9 +201,9 @@ export const useApiManagerScript = () => {
   });
 
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({page: 1});
 
-  const totalCount = useMemo(() => keyList.length, [data]);
+  const totalCount = useMemo(() => keyList?.length, [data]);
   const onPageChange = (page: number) => {
     setPage(page);
   };
@@ -218,11 +217,11 @@ export const useApiManagerScript = () => {
   const newData = useMemo(() => {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    return keyList.slice(startIndex, endIndex);
-  }, [data, page, pageSize]);
+    return keyList?.slice(startIndex, endIndex);
+  }, [keyList, page, pageSize]);
 
   const meta = parseMeta({
-    total: totalCount,
+    total: totalCount ?? 0,
     current_page: page,
     records_per_page: pageSize,
   });
