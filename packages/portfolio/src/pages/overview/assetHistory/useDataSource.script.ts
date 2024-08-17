@@ -8,6 +8,8 @@ import {
   getDate,
   getMonth,
   getYear,
+  isSameDay,
+  set,
   setHours,
   setMinutes,
 } from "date-fns";
@@ -30,7 +32,17 @@ const useAssetHistoryHook = () => {
 
   const [data, { meta, isLoading }] = useAssetsHistory({
     startTime: dateRange[0].getTime().toString(),
-    endTime: addDays(dateRange[1], 1).getTime().toString(),
+    endTime: (isSameDay(dateRange[0], dateRange[1])
+      ? dateRange[1]
+      : set(dateRange[1], {
+          hours: 23,
+          seconds: 59,
+          minutes: 0,
+          milliseconds: 0,
+        })
+    )
+      .getTime()
+      .toString(),
     page,
     pageSize,
     side,

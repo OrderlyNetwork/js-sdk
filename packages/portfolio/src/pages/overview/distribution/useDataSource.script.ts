@@ -8,6 +8,8 @@ import {
   getDate,
   getMonth,
   getYear,
+  isSameDay,
+  set,
   setHours,
   setMinutes,
 } from "date-fns";
@@ -30,7 +32,18 @@ export const useDistributionHistoryHook = () => {
 
   const [data, { isLoading, meta, isValidating }] = useDistributionHistory({
     // dataRange: dateRange.map((date) => date.getTime()),
-    dataRange: [dateRange[0].getTime(), addDays(dateRange[1], 1).getTime()],
+    dataRange: [
+      dateRange[0].getTime(),
+      (isSameDay(dateRange[0], dateRange[1])
+        ? dateRange[1]
+        : set(dateRange[1], {
+            hours: 23,
+            seconds: 59,
+            minutes: 0,
+            milliseconds: 0,
+          })
+      ).getTime(),
+    ],
     type,
     pageSize,
     page,

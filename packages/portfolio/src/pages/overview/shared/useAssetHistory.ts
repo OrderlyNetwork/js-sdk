@@ -113,16 +113,17 @@ export const useAssetsHistoryData = (
         }
       }
 
+      // console.log("--->>>>> list", list);
+
       // calculate the sum of deposit and withdraw
       for (let i = 0; i < list.length; i++) {
         const item = list[i];
-        if (item.side === "deposit") {
+        if (item.side === "DEPOSIT") {
           // value -= item.amount;
           if (item.trans_status === "SUCCESS") {
             value = value.sub(item.amount);
           }
-        } else if (item.side === "withdraw") {
-          // value += item.amount;
+        } else if (item.side === "WITHDRAW") {
           if (item.trans_status !== "FAILED") {
             value = value.add(item.amount);
           }
@@ -140,6 +141,7 @@ export const useAssetsHistoryData = (
     return {
       ...lastItem,
       date: todayFormattedStr,
+      perp_volume: 0,
       account_value: !!totalValue ? totalValue : lastItem?.account_value ?? 0,
       pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }),
     };
@@ -164,6 +166,10 @@ export const useAssetsHistoryData = (
   };
 
   const calculatedData = useMemo(() => {
+    /**
+     * need the totalValue and data are all ready, else return null;
+     */
+    if (!totalValue) return [];
     return calculateData(data, isRealtime);
   }, [data, totalValue]);
 
@@ -174,7 +180,7 @@ export const useAssetsHistoryData = (
 
     if (Array.isArray(calculatedData) && calculatedData.length) {
       calculatedData.forEach((d) => {
-        vol = vol.add(d.perp_volume);
+        // vol = vol.add(d.perp_volume);
         pnl = pnl.add(d.pnl);
       });
 
@@ -193,8 +199,17 @@ export const useAssetsHistoryData = (
       }
     }
 
+    if (data.length > 0) {
+      for (let i = 0; i < periodValue; i++) {
+        const item = data[i];
+        if (item) {
+          vol = vol.add(item.perp_volume ?? 0);
+        }
+      }
+    }
+
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
-  }, [calculatedData]);
+  }, [calculatedData, data, periodValue]);
 
   const createFakeData = (
     start: Partial<API.DailyRow>,

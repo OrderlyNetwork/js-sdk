@@ -64,6 +64,14 @@ export const useWalletConnectorBuilder = () => {
   };
 
   const signIn = async () => {
+    if (showRefCodeInput) {
+      const info = await checkRefCode();
+      if (typeof info !== "undefined") {
+        setHelpText(info);
+        return Promise.reject(-1);
+      }
+    }
+    setHelpText("");
     return createAccount();
   };
 

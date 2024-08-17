@@ -54,7 +54,7 @@ export const useColumns = () => {
               return "Referral commission";
             case "REFEREE_REBATE":
               return "Referee rebate";
-            case "REFERRAL_FEE":
+            case "BROKER_FEE":
               return "Broker fee";
             default:
               return "-";
