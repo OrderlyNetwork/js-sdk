@@ -21,28 +21,32 @@ type ProcessStatusProps = {
   brokerName?: string;
 };
 
-type SwapState = "notStart" | "pending" | "failed" | "success";
+enum SwapState {
+  Pending = "pending",
+  Failed = "failed",
+  Success = "success",
+}
 
 type TProcessItem = {
   title: string;
   description: string;
-  state: SwapState;
+  state?: SwapState;
 };
 
 export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
   const { status, mode, statusUrl, brokerName } = props;
 
-  const items = useMemo(() => {
+  const processList = useMemo(() => {
     const bridgeStatus = getBridgeStatus(status!);
     const depositStatus = getDepositStatus(status!);
     const list: TProcessItem[] = [
       {
-        title: bridgeStatus === "pending" ? "Bridging" : "Bridge",
+        title: bridgeStatus === SwapState.Pending ? "Bridging" : "Bridge",
         description: "Bridge to Arbirtum via Stargate",
         state: bridgeStatus,
       },
       {
-        title: depositStatus === "pending" ? "Depositing" : "Deposit",
+        title: depositStatus === SwapState.Pending ? "Depositing" : "Deposit",
         description: `Deposit to ${brokerName}`,
         state: depositStatus,
       },
@@ -67,7 +71,7 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
     status === SwapProcessStatus.Bridging ||
     status === SwapProcessStatus.Depositing;
 
-  const showDashLine = items.length > 1;
+  const showDashLine = processList.length > 1;
 
   return (
     <div className="oui-font-semibold">
@@ -78,7 +82,7 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
           gapY={4}
           className="oui-relative"
         >
-          {items.map((item) => (
+          {processList.map((item) => (
             <ProcessItem {...item} key={item.title} />
           ))}
           {showDashLine && (
@@ -166,12 +170,12 @@ const ProcessItem: FC<TProcessItem> = ({ title, description, state }) => {
   );
 };
 
-const StatusIndicator: FC<{ state: SwapState }> = ({ state }) => {
-  if (state === "pending") {
+const StatusIndicator: FC<{ state?: SwapState }> = ({ state }) => {
+  if (state === SwapState.Pending) {
     return <Spinner size="sm" />;
   }
 
-  if (state === "failed") {
+  if (state === SwapState.Failed) {
     return (
       <CloseCircleFillIcon
         size={20}
@@ -181,7 +185,7 @@ const StatusIndicator: FC<{ state: SwapState }> = ({ state }) => {
     );
   }
 
-  if (state === "success") {
+  if (state === SwapState.Success) {
     return (
       <CheckedCircleFillIcon
         size={20}
@@ -194,32 +198,31 @@ const StatusIndicator: FC<{ state: SwapState }> = ({ state }) => {
   return <Box r="full" width={10} height={10} intensity={200}></Box>;
 };
 
-function getBridgeStatus(status: SwapProcessStatus): SwapState {
+function getBridgeStatus(status: SwapProcessStatus) {
   if (status === SwapProcessStatus.Bridging) {
-    return "pending";
+    return SwapState.Pending;
   }
   if (status === SwapProcessStatus.BridgeFialed) {
-    return "failed";
+    return SwapState.Failed;
   }
 
-  if (status === SwapProcessStatus.Done) {
-    return "success";
+  if (
+    status === SwapProcessStatus.Done ||
+    status === SwapProcessStatus.Depositing
+  ) {
+    return SwapState.Success;
   }
-
-  return "notStart";
 }
 
-function getDepositStatus(status: SwapProcessStatus): SwapState {
+function getDepositStatus(status: SwapProcessStatus) {
   if (status === SwapProcessStatus.Depositing) {
-    return "pending";
+    return SwapState.Pending;
   }
   if (status === SwapProcessStatus.DepositFailed) {
-    return "failed";
+    return SwapState.Failed;
   }
 
   if (status === SwapProcessStatus.Done) {
-    return "success";
+    return SwapState.Success;
   }
-
-  return "notStart";
 }
