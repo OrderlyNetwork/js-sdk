@@ -1,5 +1,5 @@
 import { API, OrderSide, OrderStatus } from "@orderly.network/types";
-import { commify } from "@orderly.network/utils";
+import { commify, commifyOptional } from "@orderly.network/utils";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
 import { cleanStringStyle } from "@orderly.network/hooks";
@@ -98,7 +98,7 @@ const NormalState: FC<{
           !props.disableEdit && "oui-bg-base-7 oui-px-1"
         )}
       >
-        <Text size="2xs">{price}</Text>
+        <Text size="2xs">{commifyOptional(price)}</Text>
       </Flex>
     </div>
   );

@@ -1,6 +1,6 @@
 import { API, OrderSide, OrderStatus, OrderType } from "@orderly.network/types";
-import { Box, Button, cn, Column, Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Box, Button, capitalizeFirstLetter, cn, Column, Flex, Text } from "@orderly.network/ui";
+import { commifyOptional, Decimal } from "@orderly.network/utils";
 import { useMemo } from "react";
 import { grayCell, parseBadgesFor, upperCaseFirstLetter } from "../../utils/util";
 import { TabType } from "../orders.widget";
@@ -59,21 +59,25 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.filled:
           return [
-            instrument(),
-            type(),
-            side(),
-            fillAndQuantity(),
-            price(),
-            notional(),
-            reduce(),
-            orderTime(),
-            cancelBtn(),
+            instrument({ width: 124, }),
+            type({ width: 124, }),
+            side({ width: 124, }),
+            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
+            price({ width: 124, title: "Order price", disableEdit: true }),
+            avgPrice({ width: 124, }),
+            triggerPrice({ width: 124, disableEdit: true,}),
+            estTotal({ width: 124, }),
+            fee({ width: 124, }),
+            status({ width: 124, }),
+            reduce({ width: 124, }),
+            hidden({ width: 124, }),
+            orderTime({ width: 124, }),
           ];
         case TabType.cancelled:
           return [
             instrument({ showType: true, width: 124 }),
             side({ width: 124 }),
-            fillAndQuantity({ width: 124, disableEdit: true }),
+            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
             price({ width: 124, disableEdit: true }),
             avgOpen({ width: 124 }),
             triggerPrice({ width: 124, disableEdit: true }),
@@ -87,7 +91,7 @@ export const useOrderColumn = (_type: TabType) => {
           return [
             instrument({ showType: true, width: 124 }),
             side({ width: 124 }),
-            fillAndQuantity({ width: 124, disableEdit: true }),
+            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
             price({ width: 124, disableEdit: true }),
             avgOpen({ width: 124 }),
             triggerPrice({ width: 124, disableEdit: true }),
@@ -102,7 +106,7 @@ export const useOrderColumn = (_type: TabType) => {
           return [
             instrument({ showType: true, width: 124 }),
             side({ width: 124 }),
-            fillAndQuantity({ width: 124, disableEdit: true }),
+            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
             price({ width: 124, disableEdit: true }),
             avgOpen({ width: 124 }),
             triggerPrice({ width: 124, disableEdit: true }),
@@ -282,19 +286,38 @@ function quantity(option?: {
 }
 
 function price(option?: {
+  title?: string;
   enableSort?: boolean;
   width?: number;
   className?: string;
   disableEdit?: boolean;
 }): Column<API.Order> {
   return {
-    title: "Price",
+    title: option?.title ?? "Price",
     className: option?.className,
     dataIndex: "price",
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
       return <Price order={record} disableEdit={option?.disableEdit} />;
+    },
+  };
+}
+
+function avgPrice(option?: {
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+  disableEdit?: boolean;
+}): Column<API.Order> {
+  return {
+    title: "Avg. price",
+    className: option?.className,
+    dataIndex: "average_executed_price",
+    width: option?.width,
+    onSort: option?.enableSort,
+    render: (value: string, record: any) => {
+      return <Text>{commifyOptional(value)}</Text>;
     },
   };
 }
@@ -452,7 +475,7 @@ function status(option?: {
     className: option?.className,
     render: (value: string, record: any) => (
       <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {record?.algo_status || record.status}
+        {capitalizeFirstLetter((record?.algo_status || record.status)?.toLocaleLowerCase())}
       </Text>
     ),
   };
@@ -487,6 +510,7 @@ function cancelBtn(option?: {
     width: option?.width,
     className: option?.className,
     align: "right",
+    fixed: "right",
     render: (_: string, record: any) => {
       if (record.status === OrderStatus.CANCELLED) {
         return <Renew record={record} />;
