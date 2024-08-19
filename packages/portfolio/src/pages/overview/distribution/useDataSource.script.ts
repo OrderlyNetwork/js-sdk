@@ -3,7 +3,16 @@ import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useRef, useState } from "react";
 import { usePagination } from "@orderly.network/ui";
 import { parseDateRangeForFilter } from "../helper/date";
-import { getDate, getMonth, getYear, setHours, setMinutes } from "date-fns";
+import {
+  addDays,
+  getDate,
+  getMonth,
+  getYear,
+  isSameDay,
+  set,
+  setHours,
+  setMinutes,
+} from "date-fns";
 
 export const useDistributionHistoryHook = () => {
   // const today = useRef(setMinutes(setHours(new Date(), 23), 59));
@@ -11,7 +20,7 @@ export const useDistributionHistoryHook = () => {
   const [today] = useState(() => {
     const d = new Date();
 
-    return new Date(getYear(d), getMonth(d), getDate(d), 23, 59, 0);
+    return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
   });
 
   const [dateRange, setDateRange] = useState<Date[]>([
@@ -21,12 +30,26 @@ export const useDistributionHistoryHook = () => {
   const [type, setType] = useState<string>("All");
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
-  const [data, { isLoading, meta }] = useDistributionHistory({
-    dataRange: dateRange.map((date) => date.getTime()),
+  const [data, { isLoading, meta, isValidating }] = useDistributionHistory({
+    // dataRange: dateRange.map((date) => date.getTime()),
+    dataRange: [
+      dateRange[0].getTime(),
+      (isSameDay(dateRange[0], dateRange[1])
+        ? dateRange[1]
+        : set(dateRange[1], {
+            hours: 23,
+            seconds: 59,
+            minutes: 0,
+            milliseconds: 0,
+          })
+      ).getTime(),
+    ],
     type,
     pageSize,
     page,
   });
+
+  // console.log("----", isLoading, isValidating);
 
   // const res = useQuery("v1/public/info/funding_period");
 
@@ -47,6 +70,7 @@ export const useDistributionHistoryHook = () => {
     dataSource: data,
     meta: parseMeta(meta),
     isLoading,
+    isValidating,
     // onDateRangeChange,
     queryParameter: {
       type,

@@ -4,8 +4,9 @@ import {
   useMarginRatio,
   usePositionStream,
 } from "@orderly.network/hooks";
-import { useCollateral } from "@orderly.network/hooks";
+import { useCollateral, useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export type AccountSummaryType =
   | "totalValue"
@@ -19,9 +20,11 @@ export const useTotalValueBuilderScript = () => {
     "accountSummaryType",
     "totalValue"
   );
-  const { freeCollateral, totalValue, availableBalance } = useCollateral({
+  const { freeCollateral, totalValue } = useCollateral({
     dp: 2,
   });
+
+  const { state } = useAccount();
 
   const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
 
@@ -36,13 +39,16 @@ export const useTotalValueBuilderScript = () => {
     setType(type);
   };
 
+  const unavailable =
+    wrongNetwork || state.status < AccountStatusEnum.EnableTrading;
+
   return {
-    totalValue: wrongNetwork ? null : totalValue,
-    freeCollateral: wrongNetwork ? null : freeCollateral,
-    maxLeverage: wrongNetwork ? null : maxLeverage,
-    currentLeverage: wrongNetwork ? null : currentLeverage,
-    unrealPnL: wrongNetwork ? null : aggregated?.unrealPnL,
-    unrealized_pnl_ROI: wrongNetwork ? null : totalUnrealizedROI,
+    totalValue: unavailable ? null : totalValue,
+    freeCollateral: unavailable ? null : freeCollateral,
+    maxLeverage: unavailable ? null : maxLeverage,
+    currentLeverage: unavailable ? null : currentLeverage,
+    unrealPnL: unavailable ? null : aggregated?.unrealPnL,
+    unrealized_pnl_ROI: unavailable ? null : totalUnrealizedROI,
     type,
     onTypeChange,
     visible,

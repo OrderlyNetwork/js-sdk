@@ -71,9 +71,9 @@ const AssetLineChart = (props: PnlLineChartProps) => {
       {/* @ts-ignore */}
       <LineChart
         width={530}
-        height={150}
+        height={180}
         data={props.data}
-        margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
+        margin={{ top: 20, right: 10, left: -20, bottom: -10 }}
       >
         <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
         {/* @ts-ignore */}

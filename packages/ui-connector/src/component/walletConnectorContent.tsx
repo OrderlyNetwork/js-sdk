@@ -17,7 +17,7 @@ import {
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./step";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 
 export type WalletConnectContentProps = {
   initAccountState: AccountStatusEnum;
@@ -36,6 +36,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const { initAccountState = AccountStatusEnum.NotConnected } = props;
   const [remember, setRemember] = useState(true);
 
+  const { state: accountState } = useAccount();
   const [state, setState] = useState(initAccountState);
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -48,6 +49,10 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       localStorage.setItem("oui-first-show-wallet-connector-dialog", "1");
     };
   }, []);
+
+  useEffect(() => {
+    setState(accountState.status);
+  }, [accountState]);
 
   const steps = useMemo(() => {
     const steps = [];
@@ -110,17 +115,20 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       .then(
         (res) => {
           setActiveStep((step) => step + 1);
-          return onEnableTrading();
+          onEnableTrading();
         },
         (reject) => {
-          toast.error("User rejected the request");
           setLoading(false);
+          if (reject === -1) return;
+          toast.error("User rejected the request");
         }
       )
       .catch((e) => {
         setLoading(false);
       });
   };
+
+  console.log("state", state);
 
   return (
     <Box id="oui-wallet-connect-dialog-content" className="oui-font-semibold">
@@ -152,8 +160,8 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           <Box
             position={"absolute"}
             height={"38px"}
-            left={30}
-            top={20}
+            left={28}
+            top={18}
             zIndex={0}
           >
             <Divider
@@ -205,14 +213,19 @@ const ActionButton: FC<{
   return (
     <Match
       value={() => {
-        if (state < AccountStatusEnum.SignedIn) {
+        if (state <= AccountStatusEnum.NotSignedIn) {
           return "signIn";
         }
         return "enableTrading";
       }}
       case={{
         signIn: (
-          <Button fullWidth onClick={() => signIn()} loading={loading}>
+          <Button
+            fullWidth
+            onClick={() => signIn()}
+            loading={loading}
+            disabled={disabled}
+          >
             Sign In
           </Button>
         ),
@@ -271,7 +284,12 @@ const RememberMe = () => {
     });
   };
   return (
-    <Tooltip content={"Toggle this option to skip these steps next time you want to trade."} className="oui-max-w-[300px]">
+    <Tooltip
+      content={
+        "Toggle this option to skip these steps next time you want to trade."
+      }
+      className="oui-max-w-[300px]"
+    >
       <button onClick={showRememberHint}>
         <Text
           intensity={54}

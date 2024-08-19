@@ -4,7 +4,7 @@ import {
   useLeverage,
   useMarginRatio,
 } from "@orderly.network/hooks";
-import { SliderMarks, useModal } from "@orderly.network/ui";
+import { SliderMarks, toast, useModal } from "@orderly.network/ui";
 import { log } from "console";
 import { useMemo, useState } from "react";
 
@@ -19,11 +19,6 @@ export const useLeverageScript = () => {
     setLeverage(leverage);
     // updateLeverage(leverage);
   };
-
-  const updateLeverage = useDebouncedCallback((leverage: number) => {
-    update({ leverage });
-  }, 200);
-
   const [leverage, setLeverage] = useState(maxLeverage ?? 0);
 
   const marks = useMemo((): SliderMarks => {
@@ -46,8 +41,15 @@ export const useLeverageScript = () => {
   const onCancel = () => hide();
   const onSave = async () => {
     try {
-      await update({ leverage });
-      hide();
+      update({ leverage }).then(
+        (res: any) => {
+          hide();
+          toast.success("Leverage updated");
+        },
+        (err: Error) => {
+          toast.error(err.message);
+        }
+      );
     } catch (e) {}
   };
 

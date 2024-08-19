@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 // import { XAxis, YAxis, BarStyle } from "../components";
@@ -16,9 +17,11 @@ import {
   RefferalAPI as API,
   usePrivateQuery,
   useDaily,
+  useAccount,
 } from "@orderly.network/hooks";
 import { subDays } from "date-fns";
 import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export enum TabTypes {
   affiliate = "affiliate",
@@ -117,7 +120,7 @@ export type ReferralContextReturns = {
   isLoading: boolean;
   showHome: boolean;
   setShowHome: (value: boolean) => void;
-  tab: TabTypes,
+  tab: TabTypes;
   setTab: React.Dispatch<React.SetStateAction<TabTypes>>;
   wrongNetwork: boolean;
 } & ReferralContextProps;
@@ -160,6 +163,8 @@ export const ReferralProvider: FC<
     overwrite,
     splashPage,
   } = props;
+
+  const { state } = useAccount();
 
   const {
     data,
@@ -242,6 +247,21 @@ export const ReferralProvider: FC<
 
   const { wrongNetwork } = useAppContext();
 
+  const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
+  useEffect(() => {
+    let timerId: any;
+    if (lastStete.current !== state.status) {
+      lastStete.current = state.status;
+      timerId = setTimeout(() => {
+        mutate();
+      }, 1000);
+    }
+
+    return () => {
+      if (timerId) clearTimeout(timerId);
+    };
+  }, [state.status]);
+
   return (
     <IntlProvider
       messages={messages}
@@ -271,7 +291,8 @@ export const ReferralProvider: FC<
           overwrite,
           splashPage,
           isLoading,
-          tab,setTab,
+          tab,
+          setTab,
           wrongNetwork,
         }}
       >

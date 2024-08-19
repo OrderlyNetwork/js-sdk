@@ -4,6 +4,7 @@ import {
     useAccount,
     useChains,
     useConfig,
+    useEventEmitter,
     usePositionStream, usePrivateQuery, useQuery,
     useWalletConnector, useWalletSubscription,
     useWithdraw
@@ -28,6 +29,7 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
     });
     const networkId = useConfig("networkId") as NetworkId;
 
+    const ee = useEventEmitter();
 
     const [quantity, setQuantity] = useState<string>("");
     const [token, setToken] = useState<API.TokenInfo>({
@@ -140,6 +142,9 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         }
         if (!currentChain) {
            return false;
+        }
+        if (networkId=== 'testnet') {
+            return true;
         }
         if (!currentChain.info) {
             return false;
@@ -255,6 +260,8 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
             allowCrossChainWithdraw: crossChainWithdraw,
         }).then(res => {
             toast.success('Withdraw requested');
+            ee.emit("withdraw:requested");
+
             if (onClose) {
                 onClose();
             }

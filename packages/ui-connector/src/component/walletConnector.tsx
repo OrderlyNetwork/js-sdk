@@ -11,6 +11,6 @@ export const WalletConnectorWidget = (props: any) => {
 };
 
 registerSimpleDialog(WalletConnectorModalId, WalletConnectorWidget, {
-  size: "md",
+  size: "sm",
   title: "Connect wallet",
 });

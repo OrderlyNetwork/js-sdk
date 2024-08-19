@@ -26,7 +26,7 @@ export const useAssetHistoryColumns = () => {
       },
       {
         title: "Time",
-        dataIndex: "block_time",
+        dataIndex: "created_time",
         width: 80,
         rule: "date",
       },
@@ -36,11 +36,11 @@ export const useAssetHistoryColumns = () => {
         width: 120,
         rule: "txId",
         copyable: true,
-        textProps: {
-          copyable: true,
+        textProps: (value) => ({
+          copyable: !!value,
           className:
             "oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-line-16",
-        },
+        }),
       },
       {
         title: "Status",
@@ -63,7 +63,9 @@ export const useAssetHistoryColumns = () => {
         width: 100,
         rule: "price",
         formatter: (value, record) =>
-          record.side === "WITHDRAW" ? -value : value,
+          record.side === "WITHDRAW"
+            ? -(value - (record.fee ?? 0))
+            : value - (record.fee ?? 0),
         numeralProps: {
           coloring: true,
           showIdentifier: true,

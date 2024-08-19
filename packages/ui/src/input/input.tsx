@@ -13,7 +13,6 @@ const inputVariants = tv({
       "oui-flex-1",
       "focus-visible:oui-outline-none",
       "oui-flex",
-      "oui-peer",
       "placeholder:oui-text-base-contrast-20",
       "placeholder:oui-text-xs",
       "oui-tabular-nums",

@@ -104,6 +104,8 @@ export const VolBarChart = (props: VolChartProps) => {
   );
 
   const isEmpty = props.data.reduce((a, b) => a + b.volume, 0) === 0;
+  const maxVolume = props.data.reduce((a,b) => (a > b.volume ? a : b.volume), 0);
+  const decimal = maxVolume <= 10 ? 2 : (maxVolume <= 100 ? 1 : 0);
 
   return (
     // @ts-ignore
@@ -125,6 +127,7 @@ export const VolBarChart = (props: VolChartProps) => {
             vertical={false}
             stroke="#FFFFFF"
             strokeOpacity={0.08}
+            repeatCount={6}
           />
           <ReferenceLine y={0} stroke="#000" />
           {/* @ts-ignore */}
@@ -145,11 +148,10 @@ export const VolBarChart = (props: VolChartProps) => {
             tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
             tickLine={false}
             axisLine={false}
-            tickCount={6}
             dataKey={"volume"}
             tickFormatter={(value, index) => {
               if (isEmpty) return `${index * 100}`;
-              return numberToHumanStyle(value);
+              return numberToHumanStyle(value, decimal);
             }}
             width={45}
           />

@@ -9,8 +9,8 @@ import {
 } from "@orderly.network/hooks";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { useContext, useState } from "react";
+import { toast, usePagination } from "@orderly.network/ui";
+import { useContext, useMemo, useState } from "react";
 
 export type GenerateKeyInfo = {
   key: string;
@@ -19,36 +19,7 @@ export type GenerateKeyInfo = {
   permissions?: string;
 };
 
-export type ApiManagerScriptReturns = {
-  address?: string;
-  uid?: string;
-  onCreateApiKey?: () => void;
-  onReadApiGuide?: () => void;
-  showCreateDialog: boolean;
-  hideCreateDialog?: () => void;
-  /** ipRestriction: "192.168.1.1,192.168.1.2" scope: 'read' or 'read,trading' or 'trading' */
-  doCreate: (ipRestriction?: string, scope?: ScopeType) => Promise<number>;
-  showCreatedDialog: boolean;
-  hideCreatedDialog?: () => void;
-  onCopyApiKeyInfo: () => void;
-  doConfirm: () => void;
-  hideDeleteDialog?: () => void;
-  doDelete: (item: APIKeyItem) => Promise<void>;
-  doEdit: (item: APIKeyItem, ip?: string) => Promise<void>;
-  canCreateApiKey: boolean;
-  wrongNetwork: boolean;
-  status: AccountStatusEnum;
-  keys: APIKeyItem[];
-  generateKey?: GenerateKeyInfo;
-  onCopyAccountId: () => void;
-  onCopyApiKey: (key?: string) => void;
-  onCopyApiSecretKey: () => void;
-  onCopyIP: () => void;
-  verifyIP: (ip: string) => string;
-  isLoading: boolean;
-};
-
-export const useApiManagerScript = (): ApiManagerScriptReturns => {
+export const useApiManagerScript = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCreatedDialog, setShowCreatedDialog] = useState(false);
   const [generateKey, setGenerateKey] = useState<GenerateKeyInfo | undefined>();
@@ -133,7 +104,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
         const res = await setIPRestriction(key, ipRestriction!);
         console.log("set ip res", res);
         if (res.success) {
-          createdSuccess(generateKeyRes, res.data.ip_restriction_list);
+          createdSuccess(generateKeyRes, res.data.ip_restriction_list?.join(","));
         }
       } else {
         createdSuccess(generateKeyRes, undefined);
@@ -212,10 +183,9 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   const onCopyApiSecretKey = () => toast.success("Secret key copied");
   const onCopyIP = () => toast.success("Restricted IP copied");
 
-  let keyList = (keys || []).filter(
-    (e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"
-  );
-  keyList = useDataTap(keyList) || [];
+  const keyList = useMemo(() => {
+    return keys?.filter((e) => e.tag === "manualCreated" && e.key_status === "ACTIVE");
+  }, [keys]);
 
   const verifyIP = (ip: string) => {
     const ipRegex =
@@ -229,6 +199,34 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
   const uid = useDataTap(data?.user_id, {
     accountStatus: AccountStatusEnum.EnableTrading,
   });
+
+
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({page: 1});
+
+  const totalCount = useMemo(() => keyList?.length, [keyList]);
+  const onPageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const onPageSizeChange = (pageSize: number) => {
+    setPageSize(pageSize);
+  };
+
+  
+
+  const newData = useMemo(() => {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return keyList?.slice(startIndex, endIndex);
+  }, [keyList, page, pageSize]);
+
+  const meta = parseMeta({
+    total: totalCount ?? 0,
+    current_page: page,
+    records_per_page: pageSize,
+  });
+
+
   return {
     address: address ?? "--",
     uid: `${uid ?? "--"}`,
@@ -245,7 +243,7 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     doEdit,
     canCreateApiKey,
     status: state.status,
-    keys: keyList,
+    keys: newData,
     generateKey,
     onCopyAccountId,
     wrongNetwork,
@@ -254,9 +252,17 @@ export const useApiManagerScript = (): ApiManagerScriptReturns => {
     onCopyIP,
     verifyIP,
     isLoading,
+
+    // pagination
+    meta: meta,
+    onPageChange,
+    onPageSizeChange,
   };
 };
 
 export function capitalizeFirstChar(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+
+export type ApiManagerScriptReturns = ReturnType<typeof useApiManagerScript>;

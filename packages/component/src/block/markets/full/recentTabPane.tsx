@@ -23,8 +23,9 @@ export const RecentTabPane: FC<{
                 return null;
             }
             return data[index];
-        }).map((item) => item);
+        }).map((item) => item).filter((e: any) => e !== null);
     }, [data, recent]);
+    
     const [dataSource, { onSearch, onSort }] = useDataSource(
         // @ts-ignore
         filterData

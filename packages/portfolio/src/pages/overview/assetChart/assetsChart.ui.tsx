@@ -20,7 +20,7 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
       }
       id="portfolio-overview-assets-chart"
       classNames={{
-        content: "oui-h-[150px] oui-pb-0",
+        content: "oui-h-[168px] oui-pb-0",
       }}
     >
       <AssetLineChart data={props.data} invisible={props.invisible} />
@@ -29,13 +29,3 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
     </Card>
   );
 };
-
-// export const LineChart = (props: { data: any[] }) => {
-//   return (
-//     <Chart data={props.data} x={"date"} y={"pnl"}>
-//       <Axis orientation="left" />
-//       <Axis orientation="bottom" />
-//       <Line dataKey="account_value" />
-//     </Chart>
-//   );
-// };

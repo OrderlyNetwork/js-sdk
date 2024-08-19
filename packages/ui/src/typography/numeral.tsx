@@ -123,7 +123,13 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
     if (typeof visible !== "undefined" && !visible) return masking ?? "*****";
 
-    if (ignoreDP) return num;
+    if (ignoreDP) {
+      if (!!props.showIdentifier) {
+        return Math.abs(num).toString();
+      }
+
+      return num;
+    }
 
     return parseNumber(num, {
       rule,
@@ -134,6 +140,8 @@ export const Numeral: FC<NumeralProps> = (props) => {
       abs: showIdentifier,
     });
   }, [num, visible, tick, dp]);
+
+  // console.log("numeral", child, props.showIdentifier);
 
   const defaultColor = rest.color || "inherit";
 
@@ -151,6 +159,8 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
     return "profit";
   }, [coloring, num, rest.color, props.visible]);
+
+  // console.log("parseNumber", child, props.showIdentifier);
 
   const identifier = useMemo(() => {
     if (!showIdentifier || Number.isNaN(num) || num === 0) return null;

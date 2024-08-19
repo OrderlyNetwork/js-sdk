@@ -12,12 +12,12 @@ export function useBalance(
     if (loading || typeof fetchBalance !== "function") return;
     setLoading(true);
     fetchBalance(token.address, token.decimals)
-      .then(
-        (balance) => {
-          setBalance(balance);
-        },
-        (error) => {}
-      )
+      .then((balance) => {
+        setBalance(balance);
+      })
+      .catch((err) => {
+        console.error("fetchBalance", err);
+      })
       .finally(() => {
         setLoading(false);
       });

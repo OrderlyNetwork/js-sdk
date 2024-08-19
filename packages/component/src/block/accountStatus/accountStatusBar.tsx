@@ -23,7 +23,6 @@ export type AccountStatus =
 export interface AccountStatusProps {
   className?: string;
   status: AccountStatusEnum;
-  chains: string[];
   address?: string;
   balance?: string;
   currency?: string;
@@ -71,7 +70,13 @@ export const AccountStatusBar: FC<AccountStatusProps> = (props) => {
     }
 
     return (
-      <StatusGuardButton className="orderly-h-[30px] orderly-text-3xs">
+      <StatusGuardButton className="orderly-h-[30px] orderly-text-3xs" id={
+        {
+          connectWallet: "orderly-bottom-bar-connect-button-connectWallet",
+          signIn: "orderly-bottom-bar-connect-button-signIn",
+          enableTrading: "orderly-bottom-bar-connect-button-enableTrading",
+        }
+      }>
         <Sheet open={infoOpen} onOpenChange={setInfoOpen}>
           <SheetTrigger asChild>
             <Button

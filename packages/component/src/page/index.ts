@@ -7,3 +7,4 @@ export {
   type TradingPageContextValue,
 } from "./trading/context/tradingPageContext";
 export { Portfolio } from "./portfolio";
+export type { TopNavbarProps } from "./common/topNavbar";

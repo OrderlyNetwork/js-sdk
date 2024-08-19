@@ -96,7 +96,7 @@ export class PositionLineService{
         }
         const borderColor = isPositiveUnrealPnl ? colorConfig.pnlUpColor:colorConfig.pnlDownColor;
         const sideColor = isPositiveBalance ? colorConfig.upColor:colorConfig.downColor;
-        const price = new Decimal(position.open).todp(position.basePriceDecimal, Decimal.ROUND_DOWN).toNumber();
+        const price = new Decimal(position.open).toNumber();
 
         this.positionLines[idx] = this.positionLines[idx] ?? this.getBasePositionLine();
         this.positionLines[idx]

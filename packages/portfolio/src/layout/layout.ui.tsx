@@ -20,7 +20,7 @@ export const PortfolioLayout = (
 
   return (
     <Scaffold
-      leftSidebar={props.hideSideBar ? <></> : <LeftSidebar {...rest} />}
+      leftSidebar={props.hideSideBar ? null : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}
       classNames={{
         content: "lg:oui-mb-0",
@@ -42,17 +42,17 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
 
   return (
     <SideBar
-        title="Portfolio"
-        {...props}
-        open={expanded}
-        onOpenChange={(open) => setExpand(open)}
-        onItemSelect={(e) => {
-          props.onItemSelect?.(e);
-          props.routerAdapter?.onRouteChange?.({
-            href: e.href || "",
-            name: e.name,
-          });
-        }}
-      />
+      title="Portfolio"
+      {...props}
+      open={expanded}
+      onOpenChange={(open) => setExpand(open)}
+      onItemSelect={(e) => {
+        props.onItemSelect?.(e);
+        props.routerAdapter?.onRouteChange?.({
+          href: e.href || "",
+          name: e.name,
+        });
+      }}
+    />
   );
 };

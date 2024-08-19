@@ -45,6 +45,7 @@ export const parseNumber = (
   }
 
   let d = new Decimal(value);
+
   if (abs) {
     d = d.abs();
   }

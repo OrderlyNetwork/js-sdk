@@ -16,7 +16,7 @@ export function fillData(
     }
   ).reverse();
 
-  console.log("fill data", result);
+  console.log("fill data", result, origin);
   
 
   const dataObject = origin?.reduce((acc, curr) => {
@@ -26,8 +26,9 @@ export function fillData(
 
   for (let index = 0; index < result.length; index++) {
     const element = result[index];
-    if (dataObject?.[element.date]) {
-      result[index] = { ...dataObject[element.date] };
+    const originData = dataObject?.[element.date];
+    if (originData) {
+      result[index] = { ...originData, opacity: originData.volume > 0 ? 1 : 0 };
     }
   }
 
