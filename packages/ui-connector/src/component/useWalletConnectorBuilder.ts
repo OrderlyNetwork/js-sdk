@@ -63,6 +63,10 @@ export const useWalletConnectorBuilder = () => {
     return Promise.resolve(undefined);
   };
 
+
+  const showRefCodeInput = (referral_code?.length || 0) === 0 && !isLoading;
+
+
   const signIn = async () => {
     if (showRefCodeInput) {
       const info = await checkRefCode();
@@ -74,8 +78,6 @@ export const useWalletConnectorBuilder = () => {
     setHelpText("");
     return createAccount();
   };
-
-  const showRefCodeInput = (referral_code?.length || 0) === 0 && !isLoading;
 
   const enableTrading = async (remember: boolean) => {
     if (showRefCodeInput) {
