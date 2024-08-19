@@ -84,25 +84,32 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
     return balanceInfo;
   }
 
+  const trigger = () => {
+    return (
+      <div className="orderly-flex orderly-items-center orderly-text-base-contrast-54">
+        {balanceInfo}
+        {!wrongNetwork && <Divider vertical className="orderly-px-3" />}
+
+        {!wrongNetwork && (
+          <div className="orderly-flex orderly-gap-[10px] orderly-items-center">
+            <div className="orderly-border orderly-border-solid orderly-px-2 orderly-rounded orderly-border-primary-light orderly-text-primary-light orderly-text-4xs orderly-h-[30px] orderly-leading-[30px] orderly-flex orderly-items-center">
+              {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
+              <Numeral precision={2} surfix="x">
+                {currentLeverage}
+              </Numeral>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+  if (wrongNetwork) {
+    return trigger();
+  }
+
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <div className="orderly-flex orderly-items-center orderly-cursor-pointer orderly-text-base-contrast-54">
-          {balanceInfo}
-          {!wrongNetwork && <Divider vertical className="orderly-px-3" />}
-
-          {!wrongNetwork && (
-            <div className="orderly-flex orderly-gap-[10px] orderly-items-center">
-              <div className="orderly-border orderly-border-solid orderly-px-2 orderly-rounded orderly-border-primary-light orderly-text-primary-light orderly-text-4xs orderly-h-[30px] orderly-leading-[30px] orderly-flex orderly-items-center">
-                {/* {`${new Decimal(currentLeverage).todp(2)}x`} */}
-                <Numeral precision={2} surfix="x">
-                  {currentLeverage}
-                </Numeral>
-              </div>
-            </div>
-          )}
-        </div>
-      </SheetTrigger>
+      <SheetTrigger asChild>{trigger()}</SheetTrigger>
       <SheetContent
         id="orderly-asset-and-margin-sheet"
         onOpenAutoFocus={(event) => event.preventDefault()}
