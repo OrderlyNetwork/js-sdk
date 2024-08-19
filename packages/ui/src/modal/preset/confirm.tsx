@@ -3,6 +3,7 @@ import { useModal } from "../useModal";
 import { DialogBody, SimpleDialog } from "../../dialog";
 import { modalActions } from "../modalContext";
 import { Text } from "../../typography";
+import { useMemo } from "react";
 
 export interface ConfirmProps {
   title?: string;
@@ -21,6 +22,7 @@ export interface ConfirmProps {
 export const ConfirmDialog = create<ConfirmProps>((props) => {
   const { size = "sm" } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
+
   return (
     <SimpleDialog
       open={visible}
