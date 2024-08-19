@@ -454,7 +454,7 @@ export class Account {
         };
       }
     } catch (e) {
-      if (`${e}`.includes("user rejected action")) 
+      if (`${e}`.includes("user rejected action"))
         throw new Error("User rejected the request.");
       throw e;
     }
@@ -691,19 +691,6 @@ export class Account {
 
   get wallet() {
     return this.walletClient;
-  }
-
-  private _initState() {
-    const address = this.keyStore.getAddress();
-
-    this._state = {
-      status: AccountStatusEnum.NotConnected,
-      // balance: "",
-      // checking: false,
-      validating: !!address, // if address is exist, validating is available
-      // leverage: Number.NaN,
-      isNew: false,
-    };
   }
 
   private async _getRegisterationNonce() {
