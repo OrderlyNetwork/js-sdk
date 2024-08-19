@@ -138,6 +138,8 @@ export const useWalletStateHandle = (options: {
     unsupported,
   ]);
 
+  // console.log("🔗 wallet state handle", connectedWallet);
+
   /**
    * User manually connects to wallet
    */
