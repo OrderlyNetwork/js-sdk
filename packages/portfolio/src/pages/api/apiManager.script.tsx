@@ -203,7 +203,7 @@ export const useApiManagerScript = () => {
 
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({page: 1});
 
-  const totalCount = useMemo(() => keyList?.length, [data]);
+  const totalCount = useMemo(() => keyList?.length, [keyList]);
   const onPageChange = (page: number) => {
     setPage(page);
   };
