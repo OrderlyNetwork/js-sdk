@@ -18,6 +18,7 @@ import { Flex } from "@orderly.network/ui";
 // import { XAxisLabel } from "./xAxisLabel";
 import { useRef } from "react";
 import { numberToHumanStyle } from "@orderly.network/utils";
+import { tickFormatter } from "../utils/yTickFormatter";
 
 export type PnLChartDataItem = {
   date: string;
@@ -162,7 +163,7 @@ export const PnLBarChart = (props: PnLChartProps) => {
         {/* @ts-ignore */}
         <YAxis
           tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-          tickFormatter={(value) => numberToHumanStyle(value)}
+          tickFormatter={(value) => tickFormatter(value)}
           tickLine={false}
           axisLine={false}
           dataKey={"pnl"}

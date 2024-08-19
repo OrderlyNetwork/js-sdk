@@ -51,6 +51,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             valueProps={{
               rule: "percentages",
               coloring: true,
+              visible,
             }}
           >
             {invisible ? "--" : aggregateValue.roi}

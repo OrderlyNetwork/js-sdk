@@ -7,12 +7,14 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import {
-  isTestnet,
   parseChainIdToNumber,
   praseChainIdToNumber,
+  windowGuard,
 } from "@orderly.network/utils";
-import { AccountStatusEnum, API } from "@orderly.network/types";
+import { AccountStatusEnum } from "@orderly.network/types";
 import type { WalletState } from "@orderly.network/hooks";
+
+const WALLET_KEY = "orderly:wallet-info";
 
 export const useWalletStateHandle = (options: {
   // onChainChanged?: (chainId: number, isTestnet: boolean) => void;
@@ -33,11 +35,6 @@ export const useWalletStateHandle = (options: {
   const [chains, { checkChainSupport }] = useChains();
 
   const [unsupported, setUnsupported] = useState(false);
-
-  // const localAddress = useMemo<string | undefined | null>(
-  //   () => keyStore.getAddress(),
-  //   []
-  // );
 
   // current connected wallet address
   const currentWalletAddress = useMemo<string | undefined>(() => {
@@ -65,26 +62,34 @@ export const useWalletStateHandle = (options: {
 
   useEffect(() => {
     // if (unsupported) return;
-    //
-    const localAddress = keyStore.getAddress();
 
-    /**
-     * if locale address is exist, restore account state
-     */
-    if (localAddress && account.address !== localAddress) {
-      connect({
-        autoSelect: {
-          //FIXED: MetaMask
-          label: "MetaMask",
-          disableModals: true,
-        },
-      }).then(
-        (res) => {
-          console.log("silent connect wallet successes", res);
-        },
-        (error) => console.log("connect error", error)
-      );
-    }
+    windowGuard(() => {
+      const localAddress = keyStore.getAddress();
+      const walletInfo = JSON.parse(localStorage.getItem(WALLET_KEY) ?? "{}");
+
+      /**
+       * if locale address is exist, restore account state
+       */
+      if (
+        localAddress &&
+        account.address !== localAddress &&
+        walletInfo.label
+      ) {
+        connect({
+          autoSelect: {
+            //FIXED: MetaMask
+            // label: "MetaMask",
+            label: walletInfo.label,
+            disableModals: true,
+          },
+        }).then(
+          (res) => {
+            console.log("silent connect wallet successes", res);
+          },
+          (error) => console.log("connect error", error)
+        );
+      }
+    });
   }, [connectedWallet, account.address]);
 
   /**
@@ -109,6 +114,16 @@ export const useWalletStateHandle = (options: {
         wallet: {
           name: connectedWallet.label,
         },
+      });
+
+      // save wallet connector info to local storage
+      windowGuard(() => {
+        localStorage.setItem(
+          WALLET_KEY,
+          JSON.stringify({
+            label: connectedWallet.label,
+          })
+        );
       });
     }
 

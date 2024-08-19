@@ -120,7 +120,7 @@ export const useAssetsHistoryData = (
         const item = list[i];
         if (item.side === "DEPOSIT") {
           // value -= item.amount;
-          if (item.trans_status === "SUCCESS") {
+          if (item.trans_status === "COMPLETED") {
             value = value.sub(item.amount);
           }
         } else if (item.side === "WITHDRAW") {
@@ -201,12 +201,15 @@ export const useAssetsHistoryData = (
 
     if (data.length > 0) {
       for (let i = 0; i < periodValue; i++) {
-        const item = data[i];
+        const item = data[data.length - 1 - i];
+
         if (item) {
           vol = vol.add(item.perp_volume ?? 0);
         }
       }
     }
+
+    // console.log("---------------------------");
 
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
   }, [calculatedData, data, periodValue]);
