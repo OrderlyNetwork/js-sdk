@@ -1,22 +1,19 @@
-import { API, OrderSide, OrderStatus } from "@orderly.network/types";
-import { commify, commifyOptional } from "@orderly.network/utils";
+import { API } from "@orderly.network/types";
+import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
-import { cleanStringStyle } from "@orderly.network/hooks";
 import {
   Button,
   cn,
-  Divider,
   Flex,
   Input,
   Popover,
-  PopoverAnchor,
-  PopoverContent,
   toast,
   Tooltip,
   Text,
   CloseIcon,
   CheckIcon,
+  inputFormatter,
 } from "@orderly.network/ui";
 import { OrderListContext } from "./orderListContext";
 import { useSymbolContext } from "./symbolProvider";
@@ -32,91 +29,8 @@ export const Price = (props: {
     order.price?.toString() ?? "Market"
   );
 
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState(false);
   const [editting, setEditting] = useState(false);
-
-  useEffect(() => {
-    {
-      if (!!props.order.price) {
-        setPrice(`${props.order.price}`);
-      }
-    }
-  }, [props.order.price]);
-
-  const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
-
-  if (isAlgoMarketOrder) {
-    return <span>Market</span>;
-  }
-
-  if ((!editting && open <= 0) || props.disableEdit) {
-    return (
-      <NormalState
-        order={order}
-        price={price}
-        setEditing={setEditting}
-        disableEdit={props.disableEdit}
-      />
-    );
-  }
-
-  return (
-    <EditingState
-      order={order}
-      price={price}
-      setPrice={setPrice}
-      editting={editting}
-      setEditting={setEditting}
-      open={open}
-      setOpen={setOpen}
-    />
-  );
-};
-
-const NormalState: FC<{
-  order: any;
-  price: string;
-  setEditing: any;
-  disableEdit?: boolean;
-}> = (props) => {
-  const { order, price } = props;
-
-  return (
-    <div
-      className={cn(
-        "oui-flex oui-max-w-[110px] oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold",
-        grayCell(order) && "oui-text-base-conrast-20"
-      )}
-      onClick={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        props.setEditing(true);
-      }}
-    >
-      <Flex
-        r="base"
-        className={cn(
-          "oui-min-w-[70px] oui-h-[28px]",
-          !props.disableEdit && "oui-bg-base-7 oui-px-1"
-        )}
-      >
-        <Text size="2xs">{commifyOptional(price)}</Text>
-      </Flex>
-    </div>
-  );
-};
-
-const EditingState: FC<{
-  order: API.OrderExt;
-  price: string;
-  setPrice: any;
-  editting: boolean;
-  setEditting: any;
-  open: number;
-  setOpen: any;
-}> = (props) => {
-  const { order, price, setPrice, editting, setEditting, setOpen, open } =
-    props;
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
   // console.log("price node", order);
@@ -128,48 +42,27 @@ const EditingState: FC<{
   const { editOrder, editAlgoOrder, checkMinNotional } =
     useContext(OrderListContext);
 
-  const boxRef = useRef<HTMLDivElement>(null);
-  const confirmRef = useRef<HTMLButtonElement>(null);
   const { base, base_dp } = useSymbolContext();
-  const closePopover = () => setOpen(0);
+  const closePopover = () => {
+    setOpen(false);
+    setEditting(false);
+  };
   const cancelPopover = () => {
-    setOpen(-1);
+    setOpen(false);
     setPrice(order.price?.toString() ?? "Market");
+    setEditting(false);
   };
 
-  useEffect(() => {
-    const clickHandler = (event: MouseEvent) => {
-      // close the input when click outside of boxRef
-      const el = boxRef?.current;
-      if (!el || el.contains(event.target as Node)) {
-        return;
-      }
+  const onClick = (event: any) => {
+    event?.stopPropagation();
+    event?.preventDefault();
+    console.log("xxxx onclick", price, order.price);
 
-      const el2 = confirmRef?.current;
-      if (!el2 || el2.contains(event.target as Node)) {
-        return;
-      }
-
-      setPrice(order.price?.toString() ?? "Market");
+    if (price === `${order.price}`) {
       setEditting(false);
-    };
-
-    document.body.addEventListener("click", clickHandler);
-
-    return () => {
-      document.body.removeEventListener("click", clickHandler);
-    };
-  }, []);
-
-  const onClick = () => {
-    // event.stopPropagation();
-    // event.preventDefault();
-
-    setEditting(false);
-
-    if (Number(price) === Number(order.price)) {
       return;
     }
+    console.log("xxxx onclick 22", price, order.price);
 
     if (order.reduce_only !== true) {
       const notionalText = checkMinNotional(
@@ -185,20 +78,12 @@ const EditingState: FC<{
       }
     }
 
-    setOpen(1);
-  };
-
-  const onClickCancel = (order: any) => {
-    setPrice(order.price);
-    setEditting(false);
+    setOpen(true);
   };
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
-      event.stopPropagation();
-      event.preventDefault();
-
-      onClick();
+      onClick(event);
     }
   };
 
@@ -259,7 +144,7 @@ const EditingState: FC<{
         (err) => {
           toast.error(err.message);
 
-          setPrice(order.price?.toString());
+          setPrice(order.price!.toString());
           cancelPopover();
         }
       )
@@ -289,126 +174,255 @@ const EditingState: FC<{
     return "";
   }, [isStopMarket, editting, rangeInfo, price]);
 
+  useEffect(() => {
+    {
+      if (!!props.order.price) {
+        setPrice(`${props.order.price}`);
+      }
+    }
+  }, [props.order.price]);
+
+  const componentRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClickOutside = (event: any) => {
+    if (
+      componentRef.current &&
+      !componentRef.current.contains(event.target as Node) &&
+      !open
+    ) {
+      cancelPopover();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
+  const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
+
+  if (isAlgoMarketOrder) {
+    return <span>Market</span>;
+  }
+
+  const trigger = () => {
+    if (!editting || props.disableEdit) {
+      return (
+        <NormalState
+          order={order}
+          price={price}
+          setEditing={setEditting}
+          disableEdit={props.disableEdit}
+        />
+      );
+    }
+
+    return (
+      <InnerInput
+        inputRef={inputRef}
+        base_dp={base_dp}
+        price={price}
+        setPrice={setPrice}
+        setEditting={setEditting}
+        open={open}
+        order={order}
+        handleKeyDown={handleKeyDown}
+        onClick={onClick}
+        hintInfo={hintInfo}
+      />
+    );
+  };
+
   return (
     <Popover
-      open={open > 0}
-      onOpenChange={(open: boolean) => setOpen(open ? 1 : 0)}
-      content={undefined}
+      open={open}
+      onOpenChange={setOpen}
+      content={
+        <ConfirmContent
+          base={base}
+          price={price}
+          cancelPopover={cancelPopover}
+          isSubmitting={isSubmitting}
+          onConfirm={onConfirm}
+        />
+      }
     >
-      <div
-        className={
-          "oui-flex oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold"
-        }
-        ref={boxRef}
-      >
-        <div
-          className={cn(
-            "oui-absolute oui-left-1 oui-flex",
-            editting
-              ? "oui-animate-in oui-fade-in oui-zoom-in"
-              : "oui-animate-out oui-fade-out oui-zoom-out oui-hidden"
-          )}
-        >
-          <button
-            className="hover:oui-bg-base-contrast/10 oui-h-[25px] oui-rounded oui-px-1 oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
-            onClick={() => onClickCancel(order)}
-          >
-            <CloseIcon size={14} />
-          </button>
-
-          <Divider
-            direction="vertical"
-            className="oui-ml-[1px] before:oui-h-[16px] oui-min-w-[2px]"
-          />
-        </div>
-        <PopoverAnchor>
-          {isStopMarket && <span>Market</span>}
-          {!isStopMarket && (
-            <Tooltip content={hintInfo} open={hintInfo.length > 0}>
-              <Input
-                ref={inputRef}
-                type="text"
-                value={commify(price)}
-                onChange={(e) => setPrice(cleanStringStyle(e.target.value))}
-                onFocus={() => setEditting(true)}
-                onBlur={() => {
-                  setTimeout(() => {
-                    setEditting(false);
-                    if (open <= 0) {
-                      setPrice(order.price?.toString() ?? "Market");
-                    }
-                  }, 100);
-                }}
-                onKeyDown={handleKeyDown}
-                autoFocus
-                containerClassName="oui-h-auto oui-pl-7"
-                className="oui-w-full oui-flex-1 oui-pl-9 oui-pr-9 oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded"
-              />
-            </Tooltip>
-          )}
-        </PopoverAnchor>
-        <div
-          className={cn(
-            "oui-absolute oui-right-1 oui-flex",
-            editting
-              ? "oui-animate-in oui-fade-in oui-zoom-in"
-              : "oui-animate-out oui-fade-out oui-zoom-out  oui-hidden"
-          )}
-        >
-          <Divider
-            direction="vertical"
-            className="before:oui-h-[16px] oui-min-w-[2px] oui-mr-[1px]"
-          />
-          <button
-            className="hover:oui-bg-base-contrast/10 oui-h-[25px] oui-rounded oui-px-1 oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
-            // @ts-ignore
-            onMouseDown={onClick}
-          >
-            <CheckIcon size={14} />
-          </button>
-
-          <PopoverContent
-            align="end"
-            side="top"
-            className="oui-w-[340px]"
-            onCloseAutoFocus={(e) => {
-              if (inputRef.current && open === -1) {
-                inputRef.current.focus();
-              }
-            }}
-            onOpenAutoFocus={(e) => e.preventDefault()}
-          >
-            <div className="oui-pt-5 oui-relative">
-              <div className="oui-text-base-contrast-54 oui-text-2xs desktop:oui-text-sm">
-                You agree changing the price of {base}-PERP order to{" "}
-                <span className="oui-text-warning">{commify(price)}</span>.
-              </div>
-              <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-mt-5">
-                <Button
-                  color="secondary"
-                  onClick={cancelPopover}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  ref={confirmRef}
-                  loading={isSubmitting}
-                  onClick={onConfirm}
-                >
-                  Confirm
-                </Button>
-              </div>
-              <button
-                className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54"
-                onClick={cancelPopover}
-              >
-                <CloseIcon size={18} />
-              </button>
-            </div>
-          </PopoverContent>
-        </div>
-      </div>
+      <div ref={componentRef}>{trigger()}</div>
     </Popover>
+  );
+};
+
+const NormalState: FC<{
+  order: any;
+  price: string;
+  setEditing: any;
+  disableEdit?: boolean;
+}> = (props) => {
+  const { order, price } = props;
+
+  return (
+    <div
+      className={cn(
+        "oui-flex oui-max-w-[110px] oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold",
+        grayCell(order) && "oui-text-base-conrast-20"
+      )}
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        props.setEditing(true);
+      }}
+    >
+      <Flex
+        r="base"
+        className={cn(
+          "oui-min-w-[70px] oui-h-[28px]",
+          !props.disableEdit && "oui-bg-base-7 oui-px-1"
+        )}
+      >
+        <Text size="2xs">{commifyOptional(price)}</Text>
+      </Flex>
+    </div>
+  );
+};
+
+const ConfirmContent: FC<{
+  base: string;
+  price: string;
+  cancelPopover: () => void;
+  isSubmitting: boolean;
+  onConfirm: (e: any) => void;
+}> = (props) => {
+  const { base, price, cancelPopover, isSubmitting, onConfirm } = props;
+  return (
+    <div className="oui-pt-5 oui-relative">
+      <div className="oui-text-base-contrast-54 oui-text-2xs desktop:oui-text-sm">
+        You agree changing the price of {base}-PERP order to{" "}
+        <span className="oui-text-warning">{commify(price)}</span>.
+      </div>
+      <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-mt-5">
+        <Button
+          color="secondary"
+          onClick={cancelPopover}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </Button>
+        <Button loading={isSubmitting} onClick={onConfirm}>
+          Confirm
+        </Button>
+      </div>
+      <button
+        className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54"
+        onClick={cancelPopover}
+      >
+        <CloseIcon size={18} />
+      </button>
+    </div>
+  );
+};
+
+const InnerInput: FC<{
+  inputRef: any;
+  base_dp: number;
+  price: string;
+  setPrice: any;
+  setEditting: any;
+  open: boolean;
+  order: any;
+  error?: string;
+  handleKeyDown: (e: any) => void;
+  onClick: (e: any) => void;
+  hintInfo?: string;
+}> = (props) => {
+  const {
+    inputRef,
+    base_dp,
+    price,
+    setPrice,
+    setEditting,
+    open,
+    order,
+    error,
+    handleKeyDown,
+    onClick,
+    hintInfo,
+  } = props;
+
+  console.log("xxxx InnerInput", open);
+
+  useEffect(() => {
+    const input = inputRef.current;
+    if (input) {
+      const length = input.value.length;
+      input.setSelectionRange(length, length);
+    }
+    setEditting(true);
+  }, []);
+  return (
+    <Tooltip content={hintInfo} open={(hintInfo?.length || 0) > 0}>
+      <Input
+        ref={inputRef}
+        type="text"
+        size="sm"
+        formatters={[
+          inputFormatter.dpFormatter(base_dp, {
+            roundingMode: Decimal.ROUND_DOWN,
+          }),
+        ]}
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        // onBlur={() => {
+        //   setEditting(false);
+        //   console.log("reset price", open);
+        //   if (!open) {
+
+        //     setPrice(order.price.toString());
+        //   }
+        //   setTimeout(() => {
+        //   }, 250);
+        // }}
+        // error={!!error}
+        helpText={error}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        onKeyDown={handleKeyDown}
+        autoFocus
+        // containerClassName="oui-h-auto oui-pl-7 oui-flex-1"
+        // className="oui-flex-1 oui-pl-9 oui-pr-9 oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded"
+        classNames={{
+          root: "oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded",
+          input: "oui-px-2",
+        }}
+        prefix={
+          <CloseIcon
+            size={14}
+            color="white"
+            opacity={1}
+            className="oui-cursor-pointer oui-opacity-50 hover:oui-opacity-100"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setEditting(false);
+              setPrice(order.price.toString());
+            }}
+          />
+        }
+        suffix={
+          <button onClick={onClick}>
+            <CheckIcon
+              size={18}
+              color="white"
+              opacity={1}
+              className="oui-cursor-pointer oui-opacity-50 hover:oui-opacity-100"
+            />
+          </button>
+        }
+      />
+    </Tooltip>
   );
 };

@@ -64,10 +64,14 @@ export const OrderQuantity = (props: {
     }
   };
 
-  const closePopover = () => setOpen(false);
+  const closePopover = () => {
+    setOpen(false);
+    setEditting(false);
+  };
   const cancelPopover = () => {
     setOpen(false);
     setQuantity(order.quantity.toString());
+    setEditting(false);
   };
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -183,7 +187,25 @@ export const OrderQuantity = (props: {
       .finally(() => setIsSubmitting(false));
   }, [quantity]);
 
+  const componentRef = useRef<HTMLDivElement | null>(null);
 
+  const handleClickOutside = (event: any) => {
+    if (
+      componentRef.current &&
+      !componentRef.current.contains(event.target as Node) &&
+      !open
+    ) {
+      cancelPopover();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   const trigger = () => {
     if (!editting || props.disableEdit) {
@@ -226,7 +248,7 @@ export const OrderQuantity = (props: {
         />
       }
     >
-      <div>{trigger()}</div>
+      <div ref={componentRef}>{trigger()}</div>
     </Popover>
   );
 };
@@ -361,15 +383,6 @@ const InnerInput: FC<{
       ]}
       value={quantity}
       onChange={(e) => setQuantity(e.target.value)}
-      onBlur={() => {
-        setTimeout(() => {
-          setEditting(false);
-          if (!open) {
-            setQuantity(order.quantity.toString());
-          }
-        }, 200);
-      }}
-      // error={!!error}
       helpText={error}
       onClick={(e) => {
         e.stopPropagation();
