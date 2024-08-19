@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/portfolio",
-  "version": "1.0.1-sdk-v2.67",
+  "version": "1.0.1-sdk-v2.68",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

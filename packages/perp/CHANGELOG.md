@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.10-sdk-v2.68
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.10-sdk-v2.68
+  - @orderly.network/utils@1.5.10-sdk-v2.68
+
 ## 3.3.10-sdk-v2.67
 
 ### Patch Changes

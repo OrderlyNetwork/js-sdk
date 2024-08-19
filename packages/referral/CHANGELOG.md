@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 1.5.10-sdk-v2.68
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.10-sdk-v2.68
+  - @orderly.network/hooks@1.5.10-sdk-v2.68
+  - @orderly.network/utils@1.5.10-sdk-v2.68
+
 ## 1.5.10-sdk-v2.67
 
 ### Patch Changes
