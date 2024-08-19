@@ -30,24 +30,32 @@ export const AccountMenu = (props: AccountMenuProps) => {
 
   if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
-      <Button
-        size="md"
-        variant="gradient"
-        angle={45}
-        className="wallet-connect-button"
-        loading={state.validating}
-        disabled={state.validating}
-        onClick={() => {
-          props
-            .connect()
-            .then((r) => {
-              console.log("*****", r);
-            })
-            .catch((e) => console.error(e));
-        }}
+      <Tooltip
+        open
+        content={"Please Connect wallet before starting to trade"}
+        align={"end"}
+        className="oui-bg-base-5"
+        arrow={{ className: "oui-fill-base-5" }}
       >
-        Connect wallet
-      </Button>
+        <Button
+          size="md"
+          variant="gradient"
+          angle={45}
+          className="wallet-connect-button"
+          loading={state.validating}
+          disabled={state.validating}
+          onClick={() => {
+            props
+              .connect()
+              .then((r) => {
+                console.log("*****", r);
+              })
+              .catch((e) => console.error(e));
+          }}
+        >
+          Connect wallet
+        </Button>
+      </Tooltip>
     );
   }
 
