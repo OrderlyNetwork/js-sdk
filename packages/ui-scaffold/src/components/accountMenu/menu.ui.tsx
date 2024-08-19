@@ -51,6 +51,12 @@ export const AccountMenu = (props: AccountMenuProps) => {
     );
   }
 
+  console.log(
+    "🔗 account state",
+    state.status,
+    state.status <= AccountStatusEnum.NotSignedIn
+  );
+
   if (state.status <= AccountStatusEnum.NotSignedIn) {
     return (
       <Tooltip
