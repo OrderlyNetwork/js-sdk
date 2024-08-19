@@ -350,8 +350,6 @@ export const useOrderStream = (
     return ordersResponse.data?.[0]?.meta;
   }, [ordersResponse.data?.[0]]);
 
-  console.log("ordersResponse", meta);
-
   return [
     orders,
     {

@@ -9,9 +9,6 @@ import { OrderListProvider } from "./orderListContext";
 
 export const OrderList: FC<OrdersBuilderState> = (props) => {
   const columns = useOrderColumn(props.type);
-
-  console.log("order list", props.dataSource, columns, props.meta);
-
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}

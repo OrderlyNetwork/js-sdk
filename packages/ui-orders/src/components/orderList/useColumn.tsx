@@ -27,23 +27,22 @@ export const useOrderColumn = (_type: TabType) => {
             estTotal(),
             fee(),
             status(),
-            reduce(),
+            reduceOnly(),
             hidden(),
             cancelBtn(),
           ];
         case TabType.pending:
           return [
-            instrument({ showType: true }),
-            side(),
-            fillAndQuantity(),
-            price(),
-            avgOpen(),
-            triggerPrice(),
-            estTotal(),
-            reduce(),
-            hidden(),
-            orderTime(),
-            cancelBtn(),
+            instrument({ width: 162, showType: true }),
+            side({ width: 162 }),
+            fillAndQuantity({ width: 162, className: "oui-pr-0" }),
+            price({ width: 162, className: "oui-pr-0" }),
+            triggerPrice({ width: 162, className: "oui-pr-0" }),
+            estTotal({ width: 162 }),
+            reduceOnly({ width: 162 }),
+            hidden({ width: 162 }),
+            orderTime({ width: 162 }),
+            cancelBtn({ width: 162 }),
           ];
         case TabType.tp_sl:
           return [
@@ -53,7 +52,7 @@ export const useOrderColumn = (_type: TabType) => {
             triggerPrice(),
             price(),
             notional(),
-            reduce(),
+            reduceOnly(),
             orderTime(),
             cancelBtn(),
           ];
@@ -69,7 +68,7 @@ export const useOrderColumn = (_type: TabType) => {
             estTotal({ width: 124, }),
             fee({ width: 124, }),
             status({ width: 124, }),
-            reduce({ width: 124, }),
+            reduceOnly({ width: 124, }),
             hidden({ width: 124, }),
             orderTime({ width: 124, }),
           ];
@@ -84,7 +83,7 @@ export const useOrderColumn = (_type: TabType) => {
             estTotal({ width: 124 }),
             fee({ width: 124 }),
             status({ width: 124 }),
-            reduce({ width: 124 }),
+            reduceOnly({ width: 124 }),
             hidden({ width: 124 }),
           ];
         case TabType.rejected:
@@ -98,7 +97,7 @@ export const useOrderColumn = (_type: TabType) => {
             estTotal({ width: 124 }),
             fee({ width: 124 }),
             status({ width: 124 }),
-            reduce({ width: 124 }),
+            reduceOnly({ width: 124 }),
             hidden({ width: 124 }),
             orderTime({ width: 124 }),
           ];
@@ -113,7 +112,7 @@ export const useOrderColumn = (_type: TabType) => {
             estTotal({ width: 124 }),
             fee({ width: 124 }),
             status({ width: 124 }),
-            reduce({ width: 124 }),
+            reduceOnly({ width: 124 }),
             hidden({ width: 124 }),
             orderTime({ width: 124 }),
             cancelBtn({ width: 124 }),
@@ -149,7 +148,7 @@ function instrument(option?: {
         typeof record.type === "string"
           ? record.type.replace("_ORDER", "").toLowerCase()
           : record.type;
-      console.log("xxxxxx badge", badge, record, record.type);
+      
   
       const showGray = grayCell(record);
 
@@ -373,13 +372,13 @@ function estTotal(option?: {
   };
 }
 
-function reduce(option?: {
+function reduceOnly(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
 }): Column<API.Order> {
   return {
-    title: "Reduce",
+    title: "Reduce only",
     dataIndex: "reduce_only",
     width: option?.width,
     className: option?.className,
