@@ -14,15 +14,6 @@ import {
 import { AccountStatusEnum, API } from "@orderly.network/types";
 import type { WalletState } from "@orderly.network/hooks";
 
-// function checkChainSupport(chainId: number | string, chains: API.Chain[]) {
-//   if (typeof chainId === "string") {
-//     chainId = parseInt(chainId);
-//   }
-//   return chains.some((chain) => {
-//     return chain.network_infos.chain_id === chainId;
-//   });
-// }
-
 export const useWalletStateHandle = (options: {
   // onChainChanged?: (chainId: number, isTestnet: boolean) => void;
 }) => {
@@ -43,10 +34,10 @@ export const useWalletStateHandle = (options: {
 
   const [unsupported, setUnsupported] = useState(false);
 
-  const localAddress = useMemo<string | undefined | null>(
-    () => keyStore.getAddress(),
-    []
-  );
+  // const localAddress = useMemo<string | undefined | null>(
+  //   () => keyStore.getAddress(),
+  //   []
+  // );
 
   // current connected wallet address
   const currentWalletAddress = useMemo<string | undefined>(() => {
@@ -75,6 +66,7 @@ export const useWalletStateHandle = (options: {
   useEffect(() => {
     // if (unsupported) return;
     //
+    const localAddress = keyStore.getAddress();
 
     /**
      * if locale address is exist, restore account state
@@ -82,17 +74,18 @@ export const useWalletStateHandle = (options: {
     if (localAddress && account.address !== localAddress) {
       connect({
         autoSelect: {
+          //FIXED: MetaMask
           label: "MetaMask",
           disableModals: true,
         },
       }).then(
         (res) => {
-          console.log("silent connect wallet successed", res);
+          console.log("silent connect wallet successes", res);
         },
         (error) => console.log("connect error", error)
       );
     }
-  }, [localAddress, connectedChain?.id, chains]);
+  }, [connectedWallet, account.address]);
 
   /**
    * handle wallet connection

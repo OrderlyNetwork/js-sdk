@@ -16,6 +16,7 @@ export const Positions = (props: PositionsBuilderState) => {
           body: "oui-text-base-contrast-80",
         }}
         columns={column}
+        bordered
         dataSource={props.dataSource}
         generatedRowKey={(record) => record.symbol}
         renderRowContainer={(record, index, children) => {

@@ -6,9 +6,13 @@ import {
   Box,
   Flex,
   TokenIcon,
+  Tooltip,
 } from "@orderly.network/ui";
+import { useQuery } from "@orderly.network/hooks";
 
 export const useAssetHistoryColumns = () => {
+  const { data: chains } = useQuery("/v1/public/chain_info");
+
   const columns = useMemo<Column[]>(() => {
     return [
       {
@@ -34,13 +38,31 @@ export const useAssetHistoryColumns = () => {
         title: "TxID",
         dataIndex: "tx_id",
         width: 120,
-        rule: "txId",
-        copyable: true,
-        textProps: (value) => ({
-          copyable: !!value,
-          className:
-            "oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-line-16",
-        }),
+
+        render: (value, record) => {
+          if (!value) {
+            return <div className="oui-text-base-contrast-54">-</div>;
+          }
+          const chainInfo = (chains as any[])?.find(
+            (item) => parseInt(record.chain_id) === parseInt(item.chain_id)
+          );
+          const explorer_base_url = chainInfo?.explorer_base_url;
+          const href = `${explorer_base_url}/tx/${value}`;
+          return (
+            <a href={href} target="_blank">
+              {/* <Tooltip content={value} delayDuration={0}> */}
+
+              <Text.formatted
+                copyable={!!value}
+                rule="txId"
+                className="oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-line-16"
+              >
+                {value}
+              </Text.formatted>
+              {/* </Tooltip> */}
+            </a>
+          );
+        },
       },
       {
         title: "Status",
