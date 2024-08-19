@@ -15,6 +15,8 @@ import {
   toast,
   Tooltip,
   Text,
+  CloseIcon,
+  CheckIcon,
 } from "@orderly.network/ui";
 import { OrderListContext } from "./orderListContext";
 import { useSymbolContext } from "./symbolProvider";
@@ -76,7 +78,7 @@ const NormalState: FC<{
     <div
       className={cn(
         "oui-flex oui-max-w-[110px] oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold",
-        grayCell(order) && 'oui-text-base-conrast-20'
+        grayCell(order) && "oui-text-base-conrast-20"
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -116,7 +118,7 @@ const EditingState: FC<{
   const ee = useEventEmitter();
 
   const boxRef = useRef<HTMLDivElement>(null);
-  const confirmRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLButtonElement>(null);
   const { base, base_dp } = useSymbolContext();
   const closePopover = () => setOpen(0);
   const cancelPopover = () => {
@@ -190,7 +192,6 @@ const EditingState: FC<{
   const onConfirm = () => {
     setIsSubmitting(true);
 
-    // @ts-ignore
     let data: any = {
       // price: price,
       quantity: order.quantity,
@@ -205,7 +206,7 @@ const EditingState: FC<{
     if (order.order_tag !== undefined) {
       data = { ...data, order_tag: order.order_tag };
     }
-    // @ts-ignore
+
     editAlgoOrder(`${order.algo_order_id}`, data)
       .then(
         (result) => {
@@ -215,7 +216,7 @@ const EditingState: FC<{
         },
         (err) => {
           toast.error(err.message);
-          // @ts-ignore
+
           setPrice(order.trigger_price?.toString());
           cancelPopover();
         }
@@ -249,8 +250,7 @@ const EditingState: FC<{
             className="hover:oui-bg-base-contrast/10 oui-h-[25px] oui-rounded oui-px-1 oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
             onClick={() => onClickCancel(order)}
           >
-            {/* @ts-ignore */}
-            <X size={14} />
+            <CloseIcon size={14} />
           </button>
 
           <Divider
@@ -297,8 +297,7 @@ const EditingState: FC<{
             // @ts-ignore
             onMouseDown={onClick}
           >
-            {/* @ts-ignore */}
-            <Check size={18} />
+            <CheckIcon size={18} />
           </button>
 
           <PopoverContent
@@ -326,7 +325,6 @@ const EditingState: FC<{
                   Cancel
                 </Button>
                 <Button
-                  // @ts-ignore
                   ref={confirmRef}
                   loading={isSubmitting}
                   onClick={onConfirm}
@@ -338,8 +336,7 @@ const EditingState: FC<{
                 className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54"
                 onClick={cancelPopover}
               >
-                {/* @ts-ignore */}
-                <X size={18} />
+                <CloseIcon size={18} />
               </button>
             </div>
           </PopoverContent>

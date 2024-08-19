@@ -22,6 +22,8 @@ import {
   PopoverContent,
   toast,
   Text,
+  CloseIcon,
+  CheckIcon,
 } from "@orderly.network/ui";
 import { OrderListContext } from "./orderListContext";
 import { useTPSLOrderRowContext } from "./tpslOrderRowContext";
@@ -164,7 +166,7 @@ const EditingState: FC<{
   };
 
   const boxRef = useRef<HTMLDivElement>(null);
-  const confirmRef = useRef<HTMLDivElement>(null);
+  const confirmRef = useRef<HTMLButtonElement>(null);
   const { base } = useSymbolContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -265,13 +267,13 @@ const EditingState: FC<{
       params = { ...params, order_tag: order.order_tag };
     }
 
-    // @ts-ignore
-    if (order.visible_quantity === 0) {
+    
+    if (order?.visible_quantity === 0) {
       params["visible_quantity"] = 0;
     }
 
     // @ts-ignore
-    if (order.tag !== undefined) {
+    if (order?.tag !== undefined) {
       // @ts-ignore
       params["order_tag"] = order.tag;
     }
@@ -288,7 +290,6 @@ const EditingState: FC<{
       }
     }
 
-    // @ts-ignore
     future
       .then(
         (result) => {
@@ -330,7 +331,7 @@ const EditingState: FC<{
         >
           <button
             className="hover:oui-bg-base-contrast/10 oui-h-[25px] oui-rounded oui-px-1 oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
-            // @ts-ignore
+            
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
@@ -338,8 +339,7 @@ const EditingState: FC<{
               setQuantity(order.quantity.toString());
             }}
           >
-            {/* @ts-ignore */}
-            <X size={14} />
+            <CloseIcon size={14} />
           </button>
 
           <Divider
@@ -389,8 +389,7 @@ const EditingState: FC<{
             // @ts-ignore
             onMouseDown={onClick}
           >
-            {/* @ts-ignore */}
-            <Check size={14} />
+            <CheckIcon size={14} />
           </button>
 
           <PopoverContent
@@ -418,7 +417,6 @@ const EditingState: FC<{
                   Cancel
                 </Button>
                 <Button
-                  // @ts-ignore
                   ref={confirmRef}
                   loading={isSubmitting}
                   onClick={onConfirm}
@@ -430,8 +428,7 @@ const EditingState: FC<{
                 className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54"
                 onClick={cancelPopover}
               >
-                {/* @ts-ignore */}
-                <X size={18} />
+                <CloseIcon size={18} />
               </button>
             </div>
           </PopoverContent>
