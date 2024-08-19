@@ -50,7 +50,7 @@ export const OrderQuantity = (props: {
   const { onUpdateOrder: onUpdateTPSLOrder, position } =
     useTPSLOrderRowContext();
 
-  const { quote_dp, base } = useSymbolContext();
+  const { base_dp, base } = useSymbolContext();
 
   const setQuantity = (qty: string) => {
     originSetQuantity(qty);
@@ -222,7 +222,7 @@ export const OrderQuantity = (props: {
     return (
       <InnerInput
         inputRef={inputRef}
-        quote_dp={quote_dp}
+        base_dp={base_dp}
         quantity={quantity}
         setQuantity={setQuantity}
         setEditting={setEditting}
@@ -294,7 +294,7 @@ const NormalState: FC<{
         r="base"
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
-          !props.disableEdit && "oui-bg-base-7 oui-px-1"
+          !props.disableEdit && "oui-bg-base-7 oui-px-2"
         )}
       >
         <Text size="2xs">{quantity}</Text>
@@ -341,7 +341,7 @@ const ConfirmContent: FC<{
 
 const InnerInput: FC<{
   inputRef: any;
-  quote_dp: number;
+  base_dp: number;
   quantity: string;
   setQuantity: any;
   setEditting: any;
@@ -353,7 +353,7 @@ const InnerInput: FC<{
 }> = (props) => {
   const {
     inputRef,
-    quote_dp,
+    base_dp,
     quantity,
     setQuantity,
     setEditting,
@@ -377,7 +377,7 @@ const InnerInput: FC<{
       type="text"
       size="sm"
       formatters={[
-        inputFormatter.dpFormatter(quote_dp, {
+        inputFormatter.dpFormatter(base_dp, {
           roundingMode: Decimal.ROUND_DOWN,
         }),
       ]}

@@ -42,7 +42,7 @@ export const Price = (props: {
   const { editOrder, editAlgoOrder, checkMinNotional } =
     useContext(OrderListContext);
 
-  const { base, base_dp } = useSymbolContext();
+  const { base, quote_dp } = useSymbolContext();
   const closePopover = () => {
     setOpen(false);
     setEditting(false);
@@ -56,13 +56,11 @@ export const Price = (props: {
   const onClick = (event: any) => {
     event?.stopPropagation();
     event?.preventDefault();
-    console.log("xxxx onclick", price, order.price);
 
     if (price === `${order.price}`) {
       setEditting(false);
       return;
     }
-    console.log("xxxx onclick 22", price, order.price);
 
     if (order.reduce_only !== true) {
       const notionalText = checkMinNotional(
@@ -223,7 +221,7 @@ export const Price = (props: {
     return (
       <InnerInput
         inputRef={inputRef}
-        base_dp={base_dp}
+        quote_dp={quote_dp}
         price={price}
         setPrice={setPrice}
         setEditting={setEditting}
@@ -279,7 +277,7 @@ const NormalState: FC<{
         r="base"
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
-          !props.disableEdit && "oui-bg-base-7 oui-px-1"
+          !props.disableEdit && "oui-bg-base-7 oui-px-2"
         )}
       >
         <Text size="2xs">{commifyOptional(price)}</Text>
@@ -326,7 +324,7 @@ const ConfirmContent: FC<{
 
 const InnerInput: FC<{
   inputRef: any;
-  base_dp: number;
+  quote_dp: number;
   price: string;
   setPrice: any;
   setEditting: any;
@@ -339,7 +337,7 @@ const InnerInput: FC<{
 }> = (props) => {
   const {
     inputRef,
-    base_dp,
+    quote_dp,
     price,
     setPrice,
     setEditting,
@@ -368,23 +366,12 @@ const InnerInput: FC<{
         type="text"
         size="sm"
         formatters={[
-          inputFormatter.dpFormatter(base_dp, {
+          inputFormatter.dpFormatter(quote_dp, {
             roundingMode: Decimal.ROUND_DOWN,
           }),
         ]}
         value={price}
         onChange={(e) => setPrice(e.target.value)}
-        // onBlur={() => {
-        //   setEditting(false);
-        //   console.log("reset price", open);
-        //   if (!open) {
-
-        //     setPrice(order.price.toString());
-        //   }
-        //   setTimeout(() => {
-        //   }, 250);
-        // }}
-        // error={!!error}
         helpText={error}
         onClick={(e) => {
           e.stopPropagation();
@@ -392,8 +379,6 @@ const InnerInput: FC<{
         }}
         onKeyDown={handleKeyDown}
         autoFocus
-        // containerClassName="oui-h-auto oui-pl-7 oui-flex-1"
-        // className="oui-flex-1 oui-pl-9 oui-pr-9 oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded"
         classNames={{
           root: "oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded",
           input: "oui-px-2",
