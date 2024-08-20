@@ -251,6 +251,32 @@ export const SortableByBackend: Story = {
   },
 };
 
+export const ScrollView: Story = {
+  render: (args) => {
+    const {
+      dataSource,
+      queryParameter,
+      onFilter,
+      isLoading,
+      meta,
+      setPage,
+      setPageSize,
+    } = OverviewModule.useFundingHistoryHook();
+
+    return (
+      <DataTable
+        {...args}
+        columns={args.columns}
+        dataSource={dataSource}
+        loading={isLoading}
+      />
+    );
+  },
+  args: {
+    scroll: { y: 200 },
+  },
+};
+
 // export const FixedColumns: Story = {
 //   decorators: [
 //     (Story) => (

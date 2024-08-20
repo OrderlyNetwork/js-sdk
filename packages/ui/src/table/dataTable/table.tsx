@@ -11,6 +11,7 @@ import {
 } from "react";
 import { Column, SortOrder } from "./col";
 import { TableHeader } from "./thead";
+import { ScrollArea } from "../../scrollarea";
 
 import { ColGroup } from "./colgroup";
 import { TableProvider } from "./tableContext";
@@ -123,7 +124,7 @@ export const DataTable = <RecordType extends unknown>(
   // const fetched = useRef(0);
   //
   const [initialized, setInitialized] = useState(false);
-  const minHeight = useRef(initialMinHeight || DEFAULT_MIN_HEIGHT);
+  // const minHeight = useRef(initialMinHeight || DEFAULT_MIN_HEIGHT);
 
   useEffect(() => {
     if (initialized) return;
@@ -183,23 +184,6 @@ export const DataTable = <RecordType extends unknown>(
     wrapRef.current.style.setProperty("--table-background-color", bodyBgColor);
   }, []);
 
-  useEffect(() => {
-    if (!tableRef.current || typeof minHeightProp !== "undefined") return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        const { height } = entry.contentRect;
-        minHeight.current = Math.max(height, minHeight.current);
-      }
-    });
-
-    resizeObserver.observe(tableRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [tableRef.current]);
-
   // if pageSize is changed or data is null, reset the minHeight
   // useEffect(() => {
   //   if (dataSource === null) {
@@ -207,7 +191,10 @@ export const DataTable = <RecordType extends unknown>(
   //   }
   // }, [dataSource]);
 
-  const { width, height } = useTableSize({ scroll });
+  const { width, height, minHeight } = useTableSize(tableRef, {
+    scroll,
+    minHeight: props.initialMinHeight,
+  });
 
   let childElement = (
     <div
@@ -220,7 +207,7 @@ export const DataTable = <RecordType extends unknown>(
           classNames?.root
         ),
       })}
-      style={{ width }}
+      // style={{ width }}
       // onScroll={(e) => onScroll(e.currentTarget.scrollLeft)}
     >
       <TableHeader
@@ -244,17 +231,25 @@ export const DataTable = <RecordType extends unknown>(
           classNames?.body
         )}
         style={{
-          minHeight: `${minHeightProp || minHeight.current}px`,
+          minHeight: `${minHeightProp || minHeight}px`,
           height,
         }}
       >
-        <Table
-          className={cnBase("oui-table-fixed oui-border-collapse")}
-          ref={tableRef}
+        <ScrollView
+          scroll={{
+            width,
+            height,
+          }}
         >
-          <ColGroup columns={props.columns} />
-          <TBody {...rest} />
-        </Table>
+          <Table
+            className={cnBase("oui-table-fixed oui-border-collapse")}
+            ref={tableRef}
+          >
+            <ColGroup columns={props.columns} />
+            <TBody {...rest} />
+          </Table>
+        </ScrollView>
+
         <TablePlaceholder
           visible={((dataSource?.length ?? 0) === 0 || loading) && initialized}
           loading={loading}
@@ -289,5 +284,31 @@ export const DataTable = <RecordType extends unknown>(
     >
       {childElement}
     </TableProvider>
+  );
+};
+
+const ScrollView = (
+  props: PropsWithChildren<{
+    scroll: {
+      width?: string | number;
+      height?: string | number;
+    };
+  }>
+) => {
+  const { scroll } = props;
+
+  // console.log("scroll", scroll, !scroll || (!scroll.width && !scroll.width));
+
+  if (!scroll || (!scroll.width && !scroll.height)) return props.children;
+
+  return (
+    <ScrollArea
+      style={{
+        width: scroll.width,
+        height: scroll.height,
+      }}
+    >
+      {props.children}
+    </ScrollArea>
   );
 };
