@@ -148,6 +148,12 @@ export const DataTable = <RecordType extends unknown>(
   //   );
   // }, [props.columns]);
   //
+
+  const { width, height, minHeight, updateMinHeight } = useTableSize(tableRef, {
+    scroll,
+    minHeight: props.initialMinHeight,
+  });
+
   useLayoutEffect(() => {
     const children = props.children;
 
@@ -163,7 +169,7 @@ export const DataTable = <RecordType extends unknown>(
         if (child.type?.displayName === "TablePagination") {
           setPaginationEle((prev) => {
             if (!!prev && child.props.pageSize !== prev.props.pageSize) {
-              minHeight.current = initialMinHeight || DEFAULT_MIN_HEIGHT;
+              updateMinHeight(initialMinHeight || DEFAULT_MIN_HEIGHT);
             }
             return child;
           });
@@ -190,11 +196,6 @@ export const DataTable = <RecordType extends unknown>(
   //     minHeight.current = initialMinHeight || DEFAULT_MIN_HEIGHT;
   //   }
   // }, [dataSource]);
-
-  const { width, height, minHeight } = useTableSize(tableRef, {
-    scroll,
-    minHeight: props.initialMinHeight,
-  });
 
   let childElement = (
     <div

@@ -13,6 +13,7 @@ export const useTableSize = (
   width?: string;
   height?: string;
   minHeight: string;
+  updateMinHeight: (height: number) => void;
 } => {
   const { scroll } = options;
   let width!: string, height!: string;
@@ -54,9 +55,14 @@ export const useTableSize = (
   //   height = "100%";
   // }
 
+  const updateMinHeight = (height: number) => {
+    setMinHeight(height);
+  };
+
   return {
     width: width,
     height: height,
     minHeight: `${options.minHeight || minHeight}px`,
+    updateMinHeight,
   };
 };
