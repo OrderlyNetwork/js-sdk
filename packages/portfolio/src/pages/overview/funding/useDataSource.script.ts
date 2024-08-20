@@ -31,8 +31,8 @@ export const useFundingHistoryHook = () => {
           ? dateRange[1]
           : set(dateRange[1], {
               hours: 23,
+              minutes: 59,
               seconds: 59,
-              minutes: 0,
               milliseconds: 0,
             })
         )

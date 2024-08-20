@@ -16,6 +16,7 @@ import { OrderlyChartTooltip } from "./customTooltip";
 import { XAxisLabel } from "./xAxisLabel";
 import { useRef } from "react";
 import { numberToHumanStyle } from "@orderly.network/utils";
+import { tickFormatter } from "../utils/yTickFormatter";
 
 export type AssetChartDataItem = {
   date: string;
@@ -91,7 +92,7 @@ const AssetLineChart = (props: PnlLineChartProps) => {
           tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => numberToHumanStyle(value)}
+          tickFormatter={(value) => tickFormatter(value)}
         />
         {/* @ts-ignore */}
         {!props.invisible && (

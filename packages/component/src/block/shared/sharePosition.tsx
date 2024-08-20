@@ -25,14 +25,16 @@ import { OrderlyAppContext } from "@/provider";
 import { ReferralType } from "./sharePnLUtils";
 import { ShareConfigProps } from "./shareConfigProps";
 import { shadowVariants } from "@orderly.network/ui/src/layout/shadow";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 export const SharePoisitionView = modal.create<{
   position: any;
   leverage: any;
   shareOptions: any;
+  referral: any;
 }>((props) => {
   const isTablet = useMediaQuery(MEDIA_TABLET);
-  const { position, shareOptions } = props;
+  const { position, shareOptions, referral } = props;
   // const [leverage] = useLeverage();
   const symbolInfo = useSymbolsInfo();
   // const { data: info } = useAccountInfo();
@@ -60,11 +62,12 @@ export const SharePoisitionView = modal.create<{
 
   const { getFirstRefCode } = useReferralInfo();
 
+
   if (symbolInfo.isNil) return null;
 
   const base_dp = symbolInfo[position.symbol]("base_dp");
   const quote_dp = symbolInfo[position.symbol]("quote_dp");
-  const { referral } = useContext(OrderlyAppContext);
+  // const { referral } = useTradingPageContext();
 
   const referralInfo = useMemo((): ReferralType | undefined => {
     const code = getFirstRefCode()?.code;

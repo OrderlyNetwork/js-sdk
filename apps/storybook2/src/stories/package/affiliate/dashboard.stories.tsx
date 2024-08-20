@@ -20,7 +20,7 @@ const meta = {
             // const networkId = localStorage.getItem("preview-orderly-networkId");
             // const networkId = "mainnet";
             const networkId = "testnet";
-            const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "dev" });
+            const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
             return (
                 <ConnectorProvider>
                     <OrderlyApp
