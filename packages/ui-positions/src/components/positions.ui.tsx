@@ -3,6 +3,7 @@ import { useColumn } from "./useColumn";
 import { API } from "@orderly.network/types";
 import { PositionsBuilderState } from "./usePositionsBuilder.script";
 import { PositionsRowProvider } from "./positionRowContext";
+import { SymbolProvider } from "../providers/symbolProvider";
 
 export const Positions = (props: PositionsBuilderState) => {
   const column = useColumn();
@@ -21,9 +22,11 @@ export const Positions = (props: PositionsBuilderState) => {
         generatedRowKey={(record) => record.symbol}
         renderRowContainer={(record, index, children) => {
           return (
-            <PositionsRowProvider position={record}>
-              {children}
-            </PositionsRowProvider>
+            <SymbolProvider symbol={record.symbol}>
+              <PositionsRowProvider position={record}>
+                {children}
+              </PositionsRowProvider>
+            </SymbolProvider>
           );
         }}
       />

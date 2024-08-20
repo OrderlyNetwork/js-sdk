@@ -9,12 +9,13 @@ import { useConfig } from "../useConfig";
 export const useMarketsStream = () => {
   // get listing of all markets from /public/info
   const ws = useWS();
-  const brokerId = useConfig("brokerId");
+  // const brokerId = useConfig("brokerId");
   const { data: futures } = useQuery<WSMessage.Ticker[]>(`/v1/public/futures`, {
     revalidateOnFocus: false,
   });
 
-  const topic = brokerId ? `${brokerId}$tickers` : "tickers";
+  // const topic = brokerId ? `${brokerId}$tickers` : "tickers";
+  const topic = "tickers";
 
   const { data: tickers } = useSWRSubscription("tickers", (_, { next }) => {
     const unsubscribe = ws.subscribe(

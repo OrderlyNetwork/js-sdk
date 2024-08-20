@@ -1,6 +1,8 @@
 import { Column, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
 import { TPSLButton } from "./tpsl/tpsl.ui";
+import { QuantityInput } from "./quantityInput";
+import { renderQuantity, renderQuantityInput } from "./listElement";
 
 export const useColumn = () => {
   const column = useMemo<Column[]>(
@@ -34,11 +36,12 @@ export const useColumn = () => {
         dataIndex: "position_qty",
         onSort: true,
         width: 100,
-        rule: "price",
-        numeralProps: {
-          coloring: true,
-          // tick: "base_dp",
-        },
+        // rule: "price",
+        // numeralProps: {
+        //   coloring: true,
+        //   // tick: "base_dp",
+        // },
+        render: renderQuantity,
         // render: (value: string) => (
         //   <NumeralWithCtx
         //     coloring
@@ -163,6 +166,7 @@ export const useColumn = () => {
         dataIndex: "mm",
         onSort: true,
         width: 100,
+        rule: "price",
         // render: (value: string) => (
         //   <Numeral className="orderly-font-semibold">{value}</Numeral>
         // ),
@@ -173,16 +177,14 @@ export const useColumn = () => {
         //     <span>Margin = Position size * Mark price * MMR</span>
         //   </div>
         // ),
-        hintClassName: "orderly-p-2",
+        // hintClassName: "orderly-p-2",
       },
       {
         title: "Qty.",
         dataIndex: "close_qty",
         width: 100,
         fixed: "right",
-        // render: (value: string) => {
-        //   return <QuantityInput />;
-        // },
+        render: renderQuantityInput,
       },
       {
         title: "Price",
