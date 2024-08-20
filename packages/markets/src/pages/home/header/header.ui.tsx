@@ -112,7 +112,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
 /** -----------MarketsHeader start ------------ */
 
 type BlockItemProps = {
-  label: string;
+  label: ReactNode;
   value?: number;
 };
 
