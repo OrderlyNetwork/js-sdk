@@ -207,7 +207,7 @@ const WalletMenu = (props: {
             </Flex>
           </DropdownMenuGroup>
           <Divider className={"oui-mx-4 oui-my-3"} intensity={8} />
-          <DropdownMenuGroup>
+          {/* <DropdownMenuGroup>
             <DropdownMenuItem size={"xl"}>
               <Flex gap={2}>
                 <svg
@@ -246,7 +246,7 @@ const WalletMenu = (props: {
               </Flex>
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <Divider className={"oui-mx-4 oui-my-3"} intensity={8} />
+          <Divider className={"oui-mx-4 oui-my-3"} intensity={8} /> */}
           <DropdownMenuGroup>
             <DropdownMenuItem
               size={"xl"}
