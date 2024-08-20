@@ -277,7 +277,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             return modal.confirm({
               // maxWidth: "sm",
               title: "Confirm Order",
-              bodyClassName: "orderly-pb-0",
+              bodyClassName: "!orderly-pb-0",
               // okId: "orderly-confirm-order-dialog-confirm",
               // cancelId: "orderly-confirm-order-dialog-cancel",
               onCancel: () => {
