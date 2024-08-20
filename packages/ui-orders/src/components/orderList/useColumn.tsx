@@ -19,17 +19,17 @@ export const useOrderColumn = (_type: TabType) => {
         case TabType.all:
           return [
             instrument({ showType: true }),
-            side(),
-            fillAndQuantity(),
-            price(),
-            avgOpen(),
-            triggerPrice(),
-            estTotal(),
-            fee(),
-            status(),
-            reduceOnly(),
-            hidden(),
-            cancelBtn(),
+            side({ width: 130, }),
+            fillAndQuantity({ width: 130, }),
+            price({ width: 130, }),
+            avgOpen({ width: 130, }),
+            triggerPrice({ width: 130, }),
+            estTotal({ width: 130, }),
+            fee({ width: 130, }),
+            status({ width: 130, }),
+            reduceOnly({ width: 130, }),
+            hidden({ width: 130, }),
+            cancelBtn({ width: 130, }),
           ];
         case TabType.pending:
           return [
