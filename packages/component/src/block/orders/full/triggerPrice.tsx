@@ -53,7 +53,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
   }
 
   return (
-    <div ref={componentRef}>
+    <span ref={componentRef} className="orderly-block">
       {!editting && open <= 0 ? (
         <NormalState order={order} price={price} setEditing={setEditting} />
       ) : (
@@ -67,7 +67,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
           setOpen={setOpen}
         />
       )}
-    </div>
+    </span>
   );
 };
 

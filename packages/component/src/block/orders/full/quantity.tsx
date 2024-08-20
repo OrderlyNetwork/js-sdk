@@ -56,7 +56,7 @@ export const OrderQuantity = (props: {
   }, [open]);
 
   return (
-    <div ref={componentRef}>
+    <span ref={componentRef} className="orderly-block">
       {
         (!editting && open <= 0) ? (
           <NormalState order={order} quantity={quantity} setEditing={setEditting} />
@@ -72,7 +72,7 @@ export const OrderQuantity = (props: {
           />
         )
       }
-    </div>
+    </span>
   );
 
   // if (!editting && open <= 0) {
