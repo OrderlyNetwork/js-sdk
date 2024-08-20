@@ -7,24 +7,14 @@ import {
   useState,
 } from "react";
 import { API, OrderSide } from "@orderly.network/types";
-import { commify, Decimal } from "@orderly.network/utils";
 import { AlgoOrderRootType } from "@orderly.network/types";
-import {
-  Button,
-  cn,
-  Flex,
-  Input,
-  Popover,
-  toast,
-  Text,
-  CloseIcon,
-  CheckIcon,
-  inputFormatter,
-} from "@orderly.network/ui";
+import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
 import { OrderListContext } from "./orderListContext";
 import { useTPSLOrderRowContext } from "./tpslOrderRowContext";
 import { useSymbolContext } from "./symbolProvider";
 import { grayCell } from "../../utils/util";
+import { ConfirmContent, EditType } from "./editOrder/confirmContent";
+import { InnerInput } from "./editOrder/innerInput";
 
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
@@ -222,14 +212,13 @@ export const OrderQuantity = (props: {
     return (
       <InnerInput
         inputRef={inputRef}
-        base_dp={base_dp}
-        quantity={quantity}
-        setQuantity={setQuantity}
+        dp={base_dp}
+        value={quantity}
+        setPrice={setQuantity}
         setEditting={setEditting}
-        open={open}
-        order={order}
         handleKeyDown={handleKeyDown}
         onClick={onClick}
+        onClose={cancelPopover}
       />
     );
   };
@@ -240,8 +229,9 @@ export const OrderQuantity = (props: {
       onOpenChange={setOpen}
       content={
         <ConfirmContent
+          type={EditType.quantity}
           base={base}
-          quantity={quantity}
+          value={quantity}
           cancelPopover={cancelPopover}
           isSubmitting={isSubmitting}
           onConfirm={onConfirm}
@@ -300,123 +290,5 @@ const NormalState: FC<{
         <Text size="2xs">{quantity}</Text>
       </Flex>
     </Flex>
-  );
-};
-
-const ConfirmContent: FC<{
-  base: string;
-  quantity: string;
-  cancelPopover: () => void;
-  isSubmitting: boolean;
-  onConfirm: (e: any) => void;
-}> = (props) => {
-  const { base, quantity, cancelPopover, isSubmitting, onConfirm } = props;
-  return (
-    <div className="oui-pt-5 oui-relative">
-      <div className="oui-text-base-contrast-54 oui-text-2xs desktop:oui-text-sm">
-        You agree changing the quantity of {base}-PERP order to{" "}
-        <span className="oui-text-warning">{commify(quantity)}</span>.
-      </div>
-      <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-mt-5">
-        <Button
-          color="secondary"
-          onClick={cancelPopover}
-          disabled={isSubmitting}
-        >
-          Cancel
-        </Button>
-        <Button loading={isSubmitting} onClick={onConfirm}>
-          Confirm
-        </Button>
-      </div>
-      <button
-        className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54"
-        onClick={cancelPopover}
-      >
-        <CloseIcon size={18} />
-      </button>
-    </div>
-  );
-};
-
-const InnerInput: FC<{
-  inputRef: any;
-  base_dp: number;
-  quantity: string;
-  setQuantity: any;
-  setEditting: any;
-  open: boolean;
-  order: any;
-  error?: string;
-  handleKeyDown: (e: any) => void;
-  onClick: (e: any) => void;
-}> = (props) => {
-  const {
-    inputRef,
-    base_dp,
-    quantity,
-    setQuantity,
-    setEditting,
-    open,
-    order,
-    error,
-    handleKeyDown,
-    onClick,
-  } = props;
-  useEffect(() => {
-    const input = inputRef.current;
-    if (input) {
-      const length = input.value.length;
-      input.setSelectionRange(length, length);
-    }
-    setEditting(true);
-  }, []);
-  return (
-    <Input
-      ref={inputRef}
-      type="text"
-      size="sm"
-      formatters={[
-        inputFormatter.numberFormatter,
-        inputFormatter.dpFormatter(base_dp),
-      ]}
-      value={quantity}
-      onValueChange={(e) => setQuantity(e)}
-      helpText={error}
-      onClick={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-      }}
-      onKeyDown={handleKeyDown}
-      autoFocus
-      // containerClassName="oui-h-auto oui-pl-7 oui-flex-1"
-      // className="oui-flex-1 oui-pl-9 oui-pr-9 oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded"
-      classNames={{
-        root: "oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded",
-        input: "oui-px-2",
-      }}
-      prefix={
-        <CloseIcon
-          size={14}
-          color="white"
-          opacity={1}
-          className="oui-cursor-pointer oui-opacity-50 hover:oui-opacity-100"
-          onClick={(e) => {
-            setEditting(false);
-            setQuantity(order.quantity.toString());
-          }}
-        />
-      }
-      suffix={
-        <button onClick={onClick}>
-          <CheckIcon
-            size={18}
-            color="white"
-            opacity={1}
-            className="oui-cursor-pointer oui-opacity-50 hover:oui-opacity-100"
-          />
-        </button>
-      }
-    />
   );
 };
