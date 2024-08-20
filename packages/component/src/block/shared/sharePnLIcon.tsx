@@ -13,7 +13,8 @@ export const SharePnLIcon: FC<
   }>
 > = (props) => {
   const leverage = useSymbolLeverage(props.position.symbol);
-  const { shareOptions } = useTradingPageContext();
+  const { shareOptions, referral } = useTradingPageContext();
+  
 
   return (
     <PositionShareIcon
@@ -29,6 +30,7 @@ export const SharePnLIcon: FC<
           position: props.position,
           leverage,
           shareOptions,
+          referral,
         });
       }}
     />
