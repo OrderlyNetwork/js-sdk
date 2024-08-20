@@ -16,6 +16,7 @@ import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { XAxisLabel } from "./xAxisLabel";
 import { numberToHumanStyle } from "@orderly.network/utils";
+import { tickFormatter } from "../utils/yTickFormatter";
 
 export type PnlLineChartProps = {
   colors?: {
@@ -93,7 +94,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
           tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => numberToHumanStyle(value)}
+          tickFormatter={(value) => tickFormatter(value)}
         />
         {/* @ts-ignore */}
         {!props.invisible && (

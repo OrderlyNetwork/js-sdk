@@ -32,7 +32,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
     return (
       <Tooltip
         open
-        content={"Please Connect wallet before starting to trade"}
+        content={"Please connect wallet before starting to trade"}
         align={"end"}
         className="oui-bg-base-5"
         arrow={{ className: "oui-fill-base-5" }}
@@ -85,6 +85,8 @@ export const AccountMenu = (props: AccountMenuProps) => {
     return (
       <Tooltip
         open
+        className="oui-bg-base-5"
+        arrow={{ className: "oui-fill-base-5" }}
         content={"Please enable trading before starting to trade"}
         align={"end"}
       >
