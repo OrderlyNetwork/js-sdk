@@ -554,12 +554,13 @@ const InnerInput: FC<{
         type="text"
         size="sm"
         formatters={[
-          inputFormatter.dpFormatter(quote_dp, {
-            roundingMode: Decimal.ROUND_DOWN,
-          }),
+          inputFormatter.numberFormatter,
+          inputFormatter.dpFormatter(2),
         ]}
         value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        onValueChange={(e) => {
+          setPrice(e);
+        }}
         helpText={error}
         onClick={(e) => {
           e.stopPropagation();

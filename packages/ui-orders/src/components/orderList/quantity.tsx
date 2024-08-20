@@ -377,12 +377,11 @@ const InnerInput: FC<{
       type="text"
       size="sm"
       formatters={[
-        inputFormatter.dpFormatter(base_dp, {
-          roundingMode: Decimal.ROUND_DOWN,
-        }),
+        inputFormatter.numberFormatter,
+        inputFormatter.dpFormatter(base_dp),
       ]}
       value={quantity}
-      onChange={(e) => setQuantity(e.target.value)}
+      onValueChange={(e) => setQuantity(e)}
       helpText={error}
       onClick={(e) => {
         e.stopPropagation();
