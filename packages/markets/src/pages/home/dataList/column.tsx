@@ -8,7 +8,12 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { FavoritesIcon, MoveToTopIcon, UnFavoritesIcon } from "../../../icons";
+import {
+  FavoritesIcon,
+  MoveToTopIcon,
+  OrderlyIcon,
+  UnFavoritesIcon,
+} from "../../../icons";
 import { FavoritesDropdownMenu } from "./dataList.ui";
 import { TFavorite } from "../../../type";
 
@@ -120,7 +125,11 @@ export const useDataListColumns = (
         },
       },
       {
-        title: "24h volume",
+        title: (
+          <Flex gapX={1}>
+            <OrderlyIcon /> 24h volume
+          </Flex>
+        ),
         dataIndex: "24h_amount",
         width: 100,
         align: "right",
