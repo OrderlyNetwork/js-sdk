@@ -42,8 +42,11 @@ export const Price = (props: { order: API.OrderExt }) => {
   const componentRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: any) => {
-    if (componentRef.current && !componentRef.current.contains(event.target)) {
-      
+    if (
+      componentRef.current &&
+      !componentRef.current.contains(event.target) &&
+      open <= 0
+    ) {
       setPrice(order.price?.toString() ?? "Market");
       setEditting(false);
     }
@@ -55,7 +58,7 @@ export const Price = (props: { order: API.OrderExt }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [open]);
 
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
@@ -63,22 +66,21 @@ export const Price = (props: { order: API.OrderExt }) => {
     return <span>Market</span>;
   }
 
-  
   return (
-    <div ref={componentRef} >
-      {
-        (!editting && open <= 0) ? (<NormalState order={order} price={price} setEditing={setEditting} />) : (
-          <EditingState
-            order={order}
-            price={price}
-            setPrice={setPrice}
-            editting={editting}
-            setEditting={setEditting}
-            open={open}
-            setOpen={setOpen}
-          />
-        )
-      }
+    <div ref={componentRef}>
+      {!editting && open <= 0 ? (
+        <NormalState order={order} price={price} setEditing={setEditting} />
+      ) : (
+        <EditingState
+          order={order}
+          price={price}
+          setPrice={setPrice}
+          editting={editting}
+          setEditting={setEditting}
+          open={open}
+          setOpen={setOpen}
+        />
+      )}
     </div>
   );
 
@@ -143,30 +145,38 @@ const EditingState: FC<{
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editOrder, editAlgoOrder, checkMinNotional } = useContext(OrderListContext);
+  const { editOrder, editAlgoOrder, checkMinNotional } =
+    useContext(OrderListContext);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
   const { base, base_dp } = useSymbolContext();
-  const closePopover = () => setOpen(0);
+  const closePopover = () => {
+    setOpen(0);
+    setEditting(false);
+  };
   const cancelPopover = () => {
     setOpen(-1);
     setPrice(order.price?.toString() ?? "Market");
+    setEditting(false);
   };
 
-  
-  const onClick = () => {
-    // event.stopPropagation();
-    // event.preventDefault();
+  const onClick = (event: any) => {
+    event?.stopPropagation();
+    event?.preventDefault();
 
-    setEditting(false);
-
+    
     if (Number(price) === Number(order.price)) {
+      setEditting(false);
       return;
     }
 
     if (order.reduce_only !== true) {
-      const notionalText = checkMinNotional(order.symbol, price, order.quantity);
+      const notionalText = checkMinNotional(
+        order.symbol,
+        price,
+        order.quantity
+      );
       if (notionalText) {
         toast.error(notionalText);
         setIsSubmitting(false);
@@ -185,10 +195,7 @@ const EditingState: FC<{
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
-      event.stopPropagation();
-      event.preventDefault();
-
-      onClick();
+      onClick(event);
     }
   };
 
@@ -208,9 +215,8 @@ const EditingState: FC<{
       data.reduce_only = order.reduce_only;
     }
 
-
     if (order.order_tag !== undefined) {
-      data = {...data, order_tag: order.order_tag};
+      data = { ...data, order_tag: order.order_tag };
     }
 
     if (isAlgoOrder) {
@@ -245,8 +251,8 @@ const EditingState: FC<{
     future
       .then(
         (result) => {
-          closePopover();
           setPrice(price);
+          closePopover();
           // setTimeout(() => inputRef.current?.blur(), 300);
         },
         (err) => {

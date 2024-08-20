@@ -30,7 +30,11 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
   const componentRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: any) => {
-    if (componentRef.current && !componentRef.current.contains(event.target)) {
+    if (
+      componentRef.current &&
+      !componentRef.current.contains(event.target) &&
+      open <= 0
+    ) {
       setPrice(order.trigger_price?.toString() ?? "0");
       setEditting(false);
     }
@@ -42,7 +46,7 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [open]);
 
   if (!isAlgoOrder) {
     return <div>-</div>;
@@ -113,19 +117,23 @@ const EditingState: FC<{
   const boxRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLDivElement>(null);
   const { base, base_dp } = useSymbolContext();
-  const closePopover = () => setOpen(0);
+  const closePopover = () => {
+    setOpen(0);
+    setEditting(false);
+  };
   const cancelPopover = () => {
     setOpen(-1);
     setPrice(order.trigger_price?.toString() ?? "0");
+    setEditting(false);
   };
 
-  const onClick = () => {
-    // event.stopPropagation();
-    // event.preventDefault();
+  const onClick = (event :any) => {
+    event?.stopPropagation();
+    event?.preventDefault();
 
-    setEditting(false);
-
+    
     if (Number(price) === Number(order.trigger_price)) {
+      setEditting(false);
       return;
     }
 
@@ -148,9 +156,7 @@ const EditingState: FC<{
 
   const handleKeyDown = (event: any) => {
     if (event.key === "Enter") {
-      event.stopPropagation();
-      event.preventDefault();
-      onClick();
+      onClick(event);
     }
   };
 

@@ -40,7 +40,7 @@ export const OrderQuantity = (props: {
   const componentRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: any) => {
-    if (componentRef.current && !componentRef.current.contains(event.target)) {
+    if (componentRef.current && !componentRef.current.contains(event.target) && open <= 0) {
       
       setQuantity(order.quantity.toString());
       setEditting(false);
@@ -53,7 +53,7 @@ export const OrderQuantity = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [open]);
 
   return (
     <div ref={componentRef}>
@@ -172,10 +172,14 @@ const EditingState: FC<{
     }
   };
 
-  const closePopover = () => setOpen(0);
+  const closePopover = () => {
+    setOpen(0);
+    setEditting(false);
+  };
   const cancelPopover = () => {
     setOpen(-1);
     setQuantity(order.quantity.toString());
+    setEditting(false);
   };
 
   const boxRef = useRef<HTMLDivElement>(null);
@@ -215,8 +219,8 @@ const EditingState: FC<{
       return;
     }
 
-    setEditting(false);
     if (Number(quantity) === Number(order.quantity)) {
+      setEditting(false);
       return;
     }
 
