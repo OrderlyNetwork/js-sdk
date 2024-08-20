@@ -27,24 +27,43 @@ export const TriggerPrice = (props: { order: API.OrderExt }) => {
   const [open, setOpen] = useState(0);
   const [editting, setEditting] = useState(false);
 
+  const componentRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClickOutside = (event: any) => {
+    if (componentRef.current && !componentRef.current.contains(event.target)) {
+      setPrice(order.trigger_price?.toString() ?? "0");
+      setEditting(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (!isAlgoOrder) {
     return <div>-</div>;
   }
 
-  if (!editting && open <= 0) {
-    return <NormalState order={order} price={price} setEditing={setEditting} />;
-  }
-
   return (
-    <EditingState
-      order={order}
-      price={price}
-      setPrice={setPrice}
-      editting={editting}
-      setEditting={setEditting}
-      open={open}
-      setOpen={setOpen}
-    />
+    <div ref={componentRef}>
+      {!editting && open <= 0 ? (
+        <NormalState order={order} price={price} setEditing={setEditting} />
+      ) : (
+        <EditingState
+          order={order}
+          price={price}
+          setPrice={setPrice}
+          editting={editting}
+          setEditting={setEditting}
+          open={open}
+          setOpen={setOpen}
+        />
+      )}
+    </div>
   );
 };
 
@@ -100,29 +119,6 @@ const EditingState: FC<{
     setPrice(order.trigger_price?.toString() ?? "0");
   };
 
-  useEffect(() => {
-    const clickHandler = (event: MouseEvent) => {
-      // close the input when click outside of boxRef
-      const el = boxRef?.current;
-      if (!el || el.contains(event.target as Node)) {
-        return;
-      }
-      const el2 = confirmRef?.current;
-      if (!el2 || el2.contains(event.target as Node)) {
-        return;
-      }
-
-      setPrice(order.trigger_price?.toString() ?? "0");
-      setEditting(false);
-    };
-
-    document.body.addEventListener("click", clickHandler);
-
-    return () => {
-      document.body.removeEventListener("click", clickHandler);
-    };
-  }, []);
-
   const onClick = () => {
     // event.stopPropagation();
     // event.preventDefault();
@@ -134,7 +130,11 @@ const EditingState: FC<{
     }
 
     if (order.price && order.reduce_only !== true) {
-      const notionalText = checkMinNotional(order.symbol, order.price, order.quantity);
+      const notionalText = checkMinNotional(
+        order.symbol,
+        order.price,
+        order.quantity
+      );
       if (notionalText) {
         toast.error(notionalText);
         setIsSubmitting(false);
@@ -175,7 +175,7 @@ const EditingState: FC<{
     };
 
     if (order.order_tag !== undefined) {
-      data = {...data, order_tag: order.order_tag};
+      data = { ...data, order_tag: order.order_tag };
     }
     // @ts-ignore
     editAlgoOrder(`${order.algo_order_id}`, data)
@@ -236,14 +236,14 @@ const EditingState: FC<{
             value={commify(price)}
             onChange={(e) => setPrice(cleanStringStyle(e.target.value))}
             onFocus={() => setEditting(true)}
-            onBlur={() => {
-              setTimeout(() => {
-                setEditting(false);
-                if (open <= 0) {
-                  setPrice(order.trigger_price?.toString() ?? "0");
-                }
-              }, 100);
-            }}
+            // onBlur={() => {
+            //   setTimeout(() => {
+            //     setEditting(false);
+            //     if (open <= 0) {
+            //       setPrice(order.trigger_price?.toString() ?? "0");
+            //     }
+            //   }, 100);
+            // }}
             autoFocus
             onKeyDown={handleKeyDown}
             containerClassName="orderly-h-auto orderly-pl-7"

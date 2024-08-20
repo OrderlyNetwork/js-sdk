@@ -36,23 +36,62 @@ export const OrderQuantity = (props: {
     setQuantity(order.quantity.toString());
   }, [props.order.quantity]);
 
-  if (!editting && open <= 0) {
-    return (
-      <NormalState order={order} quantity={quantity} setEditing={setEditting} />
-    );
-  }
+
+  const componentRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClickOutside = (event: any) => {
+    if (componentRef.current && !componentRef.current.contains(event.target)) {
+      
+      setQuantity(order.quantity.toString());
+      setEditting(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <EditingState
-      order={order}
-      quantity={quantity}
-      setQuantity={setQuantity}
-      editting={editting}
-      setEditting={setEditting}
-      open={open}
-      setOpen={setOpen}
-    />
+    <div ref={componentRef}>
+      {
+        (!editting && open <= 0) ? (
+          <NormalState order={order} quantity={quantity} setEditing={setEditting} />
+        ) : (
+          <EditingState
+            order={order}
+            quantity={quantity}
+            setQuantity={setQuantity}
+            editting={editting}
+            setEditting={setEditting}
+            open={open}
+            setOpen={setOpen}
+          />
+        )
+      }
+    </div>
   );
+
+  // if (!editting && open <= 0) {
+  //   return (
+  //     <NormalState order={order} quantity={quantity} setEditing={setEditting} />
+  //   );
+  // }
+
+  // return (
+  //   <EditingState
+  //     order={order}
+  //     quantity={quantity}
+  //     setQuantity={setQuantity}
+  //     editting={editting}
+  //     setEditting={setEditting}
+  //     open={open}
+  //     setOpen={setOpen}
+  //   />
+  // );
 };
 
 const NormalState: FC<{
@@ -330,14 +369,14 @@ const EditingState: FC<{
             value={commify(quantity)}
             onChange={(e) => setQuantity(cleanStringStyle(e.target.value))}
             onFocus={() => setEditting(true)}
-            onBlur={() => {
-              setTimeout(() => {
-                setEditting(false);
-                if (open <= 0) {
-                  setQuantity(order.quantity.toString());
-                }
-              }, 100);
-            }}
+            // onBlur={() => {
+            //   setTimeout(() => {
+            //     setEditting(false);
+            //     if (open <= 0) {
+            //       setQuantity(order.quantity.toString());
+            //     }
+            //   }, 100);
+            // }}
             error={!!error}
             helpText={error}
             onKeyDown={handleKeyDown}

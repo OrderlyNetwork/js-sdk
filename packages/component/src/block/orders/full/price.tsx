@@ -39,27 +39,64 @@ export const Price = (props: { order: API.OrderExt }) => {
     }
   }, [props.order.price]);
 
+  const componentRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClickOutside = (event: any) => {
+    if (componentRef.current && !componentRef.current.contains(event.target)) {
+      
+      setPrice(order.price?.toString() ?? "Market");
+      setEditting(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
   if (isAlgoMarketOrder) {
     return <span>Market</span>;
   }
 
-  if (!editting && open <= 0) {
-    return <NormalState order={order} price={price} setEditing={setEditting} />;
-  }
-
+  
   return (
-    <EditingState
-      order={order}
-      price={price}
-      setPrice={setPrice}
-      editting={editting}
-      setEditting={setEditting}
-      open={open}
-      setOpen={setOpen}
-    />
+    <div ref={componentRef} >
+      {
+        (!editting && open <= 0) ? (<NormalState order={order} price={price} setEditing={setEditting} />) : (
+          <EditingState
+            order={order}
+            price={price}
+            setPrice={setPrice}
+            editting={editting}
+            setEditting={setEditting}
+            open={open}
+            setOpen={setOpen}
+          />
+        )
+      }
+    </div>
   );
+
+  // if (!editting && open <= 0) {
+  //   return <NormalState order={order} price={price} setEditing={setEditting} />;
+  // }
+
+  // return (
+  //   <EditingState
+  //     order={order}
+  //     price={price}
+  //     setPrice={setPrice}
+  //     editting={editting}
+  //     setEditting={setEditting}
+  //     open={open}
+  //     setOpen={setOpen}
+  //   />
+  // );
 };
 
 const NormalState: FC<{
@@ -117,30 +154,7 @@ const EditingState: FC<{
     setPrice(order.price?.toString() ?? "Market");
   };
 
-  useEffect(() => {
-    const clickHandler = (event: MouseEvent) => {
-      // close the input when click outside of boxRef
-      const el = boxRef?.current;
-      if (!el || el.contains(event.target as Node)) {
-        return;
-      }
-
-      const el2 = confirmRef?.current;
-      if (!el2 || el2.contains(event.target as Node)) {
-        return;
-      }
-
-      setPrice(order.price?.toString() ?? "Market");
-      setEditting(false);
-    };
-
-    document.body.addEventListener("click", clickHandler);
-
-    return () => {
-      document.body.removeEventListener("click", clickHandler);
-    };
-  }, []);
-
+  
   const onClick = () => {
     // event.stopPropagation();
     // event.preventDefault();
@@ -310,14 +324,14 @@ const EditingState: FC<{
                   value={commify(price)}
                   onChange={(e) => setPrice(cleanStringStyle(e.target.value))}
                   onFocus={() => setEditting(true)}
-                  onBlur={() => {
-                    setTimeout(() => {
-                      setEditting(false);
-                      if (open <= 0) {
-                        setPrice(order.price?.toString() ?? "Market");
-                      }
-                    }, 100);
-                  }}
+                  // onBlur={() => {
+                  //   setTimeout(() => {
+                  //     setEditting(false);
+                  //     if (open <= 0) {
+                  //       setPrice(order.price?.toString() ?? "Market");
+                  //     }
+                  //   }, 100);
+                  // }}
                   onKeyDown={handleKeyDown}
                   autoFocus
                   containerClassName="orderly-h-auto orderly-pl-7"
