@@ -1,8 +1,20 @@
 import { API, OrderSide, OrderStatus, OrderType } from "@orderly.network/types";
-import { Box, Button, capitalizeFirstLetter, cn, Column, Flex, Text } from "@orderly.network/ui";
+import {
+  Box,
+  Button,
+  capitalizeFirstLetter,
+  cn,
+  Column,
+  Flex,
+  Text,
+} from "@orderly.network/ui";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
 import { useMemo } from "react";
-import { grayCell, parseBadgesFor, upperCaseFirstLetter } from "../../utils/util";
+import {
+  grayCell,
+  parseBadgesFor,
+  upperCaseFirstLetter,
+} from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { Badge } from "@orderly.network/ui";
 import { OrderQuantity } from "./quantity";
@@ -18,18 +30,22 @@ export const useOrderColumn = (_type: TabType) => {
       switch (_type) {
         case TabType.all:
           return [
-            instrument({ showType: true }),
-            side({ width: 130, }),
-            fillAndQuantity({ width: 130, }),
-            price({ width: 130, }),
-            avgOpen({ width: 130, }),
-            triggerPrice({ width: 130, }),
-            estTotal({ width: 130, }),
-            fee({ width: 130, }),
-            status({ width: 130, }),
-            reduceOnly({ width: 130, }),
-            hidden({ width: 130, }),
-            cancelBtn({ width: 130, }),
+            instrument({ width: 130, showType: true }),
+            side({ width: 130 }),
+            fillAndQuantity({
+              width: 130,
+              disableEdit: true,
+              className: "oui-pl-0 oui-pr-0",
+            }),
+            price({ width: 130, title: "Order price", disableEdit: true }),
+            avgOpen({ width: 130 }),
+            triggerPrice({ width: 130, disableEdit: true }),
+            estTotal({ width: 130 }),
+            fee({ width: 130 }),
+            status({ width: 130 }),
+            reduceOnly({ width: 130 }),
+            hidden({ width: 130 }),
+            cancelBtn({ width: 130 }),
           ];
         case TabType.pending:
           return [
@@ -58,25 +74,33 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.filled:
           return [
-            instrument({ width: 124, }),
-            type({ width: 124, }),
-            side({ width: 124, }),
-            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
+            instrument({ width: 124 }),
+            type({ width: 124 }),
+            side({ width: 124 }),
+            fillAndQuantity({
+              width: 124,
+              disableEdit: true,
+              className: "oui-pl-0 oui-pr-0",
+            }),
             price({ width: 124, title: "Order price", disableEdit: true }),
-            avgPrice({ width: 124, }),
-            triggerPrice({ width: 124, disableEdit: true,}),
-            estTotal({ width: 124, }),
-            fee({ width: 124, }),
-            status({ width: 124, }),
-            reduceOnly({ width: 124, }),
-            hidden({ width: 124, }),
-            orderTime({ width: 124, }),
+            avgPrice({ width: 124 }),
+            triggerPrice({ width: 124, disableEdit: true }),
+            estTotal({ width: 124 }),
+            fee({ width: 124 }),
+            status({ width: 124 }),
+            reduceOnly({ width: 124 }),
+            hidden({ width: 124 }),
+            orderTime({ width: 124 }),
           ];
         case TabType.cancelled:
           return [
             instrument({ showType: true, width: 124 }),
             side({ width: 124 }),
-            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
+            fillAndQuantity({
+              width: 124,
+              disableEdit: true,
+              className: "oui-pl-0 oui-pr-0",
+            }),
             price({ width: 124, disableEdit: true }),
             avgOpen({ width: 124 }),
             triggerPrice({ width: 124, disableEdit: true }),
@@ -90,7 +114,11 @@ export const useOrderColumn = (_type: TabType) => {
           return [
             instrument({ showType: true, width: 124 }),
             side({ width: 124 }),
-            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
+            fillAndQuantity({
+              width: 124,
+              disableEdit: true,
+              className: "oui-pl-0 oui-pr-0",
+            }),
             price({ width: 124, disableEdit: true }),
             avgOpen({ width: 124 }),
             triggerPrice({ width: 124, disableEdit: true }),
@@ -105,7 +133,11 @@ export const useOrderColumn = (_type: TabType) => {
           return [
             instrument({ showType: true, width: 124 }),
             side({ width: 124 }),
-            fillAndQuantity({ width: 124, disableEdit: true, className:"oui-pl-0 oui-pr-0" }),
+            fillAndQuantity({
+              width: 124,
+              disableEdit: true,
+              className: "oui-pl-0 oui-pr-0",
+            }),
             price({ width: 124, disableEdit: true }),
             avgOpen({ width: 124 }),
             triggerPrice({ width: 124, disableEdit: true }),
@@ -148,8 +180,7 @@ function instrument(option?: {
         typeof record.type === "string"
           ? record.type.replace("_ORDER", "").toLowerCase()
           : record.type;
-      
-  
+
       const showGray = grayCell(record);
 
       return (
@@ -172,7 +203,9 @@ function instrument(option?: {
                 <Badge
                   color={
                     e.toLocaleLowerCase() === "position"
-                      ? showGray ? "neutural": "primary"
+                      ? showGray
+                        ? "neutural"
+                        : "primary"
                       : "neutural"
                   }
                   size="xs"
@@ -207,16 +240,13 @@ function side(option?: {
         }
       : undefined,
     render: (value: string, record) => {
-      const clsName = grayCell(record) ? 'oui-text-base-contrast-20' : (value === OrderSide.BUY
+      const clsName = grayCell(record)
+        ? "oui-text-base-contrast-20"
+        : value === OrderSide.BUY
         ? "oui-text-trade-profit"
-        : "oui-text-trade-loss");
+        : "oui-text-trade-loss";
       return (
-        <span
-          className={cn(
-            "oui-font-semibold",
-            clsName,
-          )}
-        >
+        <span className={cn("oui-font-semibold", clsName)}>
           {upperCaseFirstLetter(value)}
         </span>
       );
@@ -474,7 +504,9 @@ function status(option?: {
     className: option?.className,
     render: (value: string, record: any) => (
       <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {capitalizeFirstLetter((record?.algo_status || record.status)?.toLocaleLowerCase())}
+        {capitalizeFirstLetter(
+          (record?.algo_status || record.status)?.toLocaleLowerCase()
+        )}
       </Text>
     ),
   };
