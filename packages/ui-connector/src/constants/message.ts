@@ -9,7 +9,7 @@ export const LABELS = {
   connectWallet: "Connect wallet",
   switchChain: "Switch network",
   enableTrading: "Enable trading",
-  signin: "Sigin",
+  signin: "Sign in",
 };
 
 export const DESCRIPTIONS: alertMessages = {
