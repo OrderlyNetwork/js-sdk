@@ -2004,6 +2004,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
+      '@orderly.network/ui-positions':
+        specifier: workspace:*
+        version: link:../ui-positions
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils

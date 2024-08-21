@@ -72,12 +72,12 @@ export const useOrderColumn = (_type: TabType) => {
             instrument({ width: 176, showType: true }),
             side({ width: 176 }),
             quantity({ width: 176 }),
-            tpslTriggerPrice({ width: 176, }),
+            tpslTriggerPrice({ width: 176 }),
             price({ width: 176, disableEdit: true }),
             notional({ width: 176 }),
             reduceOnly({ width: 176 }),
             orderTime({ width: 176 }),
-            cancelBtn({ width: 176 }),
+            tpslAction({ width: 176 }),
           ];
         case TabType.filled:
           return [
@@ -580,6 +580,30 @@ function cancelBtn(option?: {
       }
 
       return null;
+    },
+  };
+}
+
+function tpslAction(option?: {
+  width?: number;
+  className?: string;
+}): Column<API.Order> {
+  return {
+    title: "",
+    dataIndex: "",
+    width: option?.width,
+    className: option?.className,
+    align: "right",
+    fixed: "right",
+    render: (_: string, record: any) => {
+      return (
+        <Flex gap={3}>
+          <Button size="sm" variant={"outlined"} color={"secondary"}>
+            Edit
+          </Button>
+          <CancelButton order={record} />
+        </Flex>
+      );
     },
   };
 }

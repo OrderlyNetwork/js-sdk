@@ -20,6 +20,7 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "date-fns": "^3.6.0"
   },
