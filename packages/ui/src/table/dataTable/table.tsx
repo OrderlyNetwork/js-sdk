@@ -197,7 +197,7 @@ export const DataTable = <RecordType extends unknown>(
   //   }
   // }, [dataSource]);
 
-  console.log("minHeight", minHeight, height);
+  // console.log("minHeight", minHeight, height);
 
   let childElement = (
     <div
