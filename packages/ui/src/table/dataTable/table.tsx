@@ -150,6 +150,7 @@ export const DataTable = <RecordType extends unknown>(
   //
 
   const { width, height, minHeight, updateMinHeight } = useTableSize(tableRef, {
+    dataSource,
     scroll,
     minHeight: props.initialMinHeight,
   });
@@ -198,6 +199,8 @@ export const DataTable = <RecordType extends unknown>(
   // }, [dataSource]);
 
   // console.log("minHeight", minHeight, height);
+  //
+  const dataIsEmpty = !Array.isArray(dataSource) || dataSource?.length === 0;
 
   let childElement = (
     <div
@@ -234,7 +237,11 @@ export const DataTable = <RecordType extends unknown>(
           classNames?.body
         )}
         style={{
-          minHeight: minHeightProp ? `${minHeightProp}px` : minHeight,
+          minHeight: minHeightProp
+            ? `${minHeightProp}px`
+            : dataIsEmpty
+            ? minHeight
+            : undefined,
           height,
         }}
       >
