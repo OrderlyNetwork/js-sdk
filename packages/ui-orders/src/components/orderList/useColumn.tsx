@@ -1,4 +1,10 @@
-import { API, OrderSide, OrderStatus, OrderType } from "@orderly.network/types";
+import {
+  AlgoOrderRootType,
+  API,
+  OrderSide,
+  OrderStatus,
+  OrderType,
+} from "@orderly.network/types";
 import {
   Box,
   Button,
@@ -22,6 +28,7 @@ import { Price } from "./price";
 import { TriggerPrice } from "./triggerPrice";
 import { CancelButton } from "./cancelBtn";
 import { Renew } from "./renew";
+import { OrderTriggerPrice } from "./tpslTriggerPrice";
 
 export const useOrderColumn = (_type: TabType) => {
   const columns =
@@ -39,7 +46,7 @@ export const useOrderColumn = (_type: TabType) => {
             }),
             price({ width: 130, title: "Order price", disableEdit: true }),
             avgOpen({ width: 130 }),
-            triggerPrice({ width: 130, disableEdit: true }),
+            tpslTriggerPrice({ width: 130 }),
             estTotal({ width: 130 }),
             fee({ width: 130 }),
             status({ width: 130 }),
@@ -62,15 +69,15 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.tp_sl:
           return [
-            instrument({ showType: true }),
-            side(),
-            quantity(),
-            triggerPrice(),
-            price(),
-            notional(),
-            reduceOnly(),
-            orderTime(),
-            cancelBtn(),
+            instrument({ width: 176, showType: true }),
+            side({ width: 176 }),
+            quantity({ width: 176 }),
+            tpslTriggerPrice({ width: 176, }),
+            price({ width: 176, disableEdit: true }),
+            notional({ width: 176 }),
+            reduceOnly({ width: 176 }),
+            orderTime({ width: 176 }),
+            cancelBtn({ width: 176 }),
           ];
         case TabType.filled:
           return [
@@ -308,6 +315,9 @@ function quantity(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
+      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+        return "Entire position";
+      }
       return <OrderQuantity order={record} />;
       // return value;
     },
@@ -366,6 +376,21 @@ function triggerPrice(option?: {
     render: (value: string, record: any) => (
       <TriggerPrice order={record} disableEdit={option?.disableEdit} />
     ),
+  };
+}
+
+function tpslTriggerPrice(option?: {
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+}): Column<API.Order> {
+  return {
+    title: "Trigger",
+    className: option?.className,
+    dataIndex: "trigger_price",
+    width: option?.width,
+    onSort: option?.enableSort,
+    render: (value: string, record: any) => <OrderTriggerPrice />,
   };
 }
 

@@ -6,6 +6,8 @@ import { useOrderColumn } from "./useColumn";
 import { grayCell } from "../../utils/util";
 import { SymbolProvider } from "./symbolProvider";
 import { OrderListProvider } from "./orderListContext";
+import { TabType } from "../orders.widget";
+import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 
 export const OrderList: FC<OrdersBuilderState> = (props) => {
   const columns = useOrderColumn(props.type);
@@ -25,7 +27,7 @@ export const OrderList: FC<OrdersBuilderState> = (props) => {
           dataSource={props.dataSource}
           ignoreLoadingCheck={true}
           classNames={{
-            root: "oui-items-start"
+            root: "oui-items-start",
           }}
           onRow={(record, index) => {
             return {
@@ -33,15 +35,21 @@ export const OrderList: FC<OrdersBuilderState> = (props) => {
             };
           }}
           generatedRowKey={(record, index) =>
-            `${props.type}${index}${record.order_id || record.algo_order_id}_index${index}`
+            `${props.type}${index}${
+              record.order_id || record.algo_order_id
+            }_index${index}`
           }
-          renderRowContainer={(record, index, children) => {
+          renderRowContainer={(record: any, index, children) => {
+            if (props.type === TabType.tp_sl) {
+              children = (
+                <TPSLOrderRowProvider order={record}>
+                  {children}
+                </TPSLOrderRowProvider>
+              );
+            }
+
             return (
-              <SymbolProvider
-                key={index}
-                symbol={record.symbol}
-                children={children}
-              />
+              <SymbolProvider symbol={record.symbol}>{children}</SymbolProvider>
             );
           }}
         >
@@ -51,7 +59,6 @@ export const OrderList: FC<OrdersBuilderState> = (props) => {
               onFilter={(value: any) => {
                 props.onFilter(value);
               }}
-              
             />
           )}
 

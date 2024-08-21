@@ -25,6 +25,13 @@ export const useOrderListScript = (props: {
       setPage,
     });
 
+  const includes = useMemo(() => {
+    if (type === TabType.tp_sl) {
+      return [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL];
+    }
+    return undefined;
+  }, [type]);
+
 
   const [
     data,
@@ -43,6 +50,7 @@ export const useOrderListScript = (props: {
     page: page,
     size: pageSize,
     dateRange,
+    includes,
   });
 
   return {
