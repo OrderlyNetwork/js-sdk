@@ -197,6 +197,8 @@ export const DataTable = <RecordType extends unknown>(
   //   }
   // }, [dataSource]);
 
+  console.log("minHeight", minHeight, height);
+
   let childElement = (
     <div
       id={props.id}
@@ -232,7 +234,7 @@ export const DataTable = <RecordType extends unknown>(
           classNames?.body
         )}
         style={{
-          minHeight: `${minHeightProp || minHeight}px`,
+          minHeight: minHeightProp ? `${minHeightProp}px` : minHeight,
           height,
         }}
       >
