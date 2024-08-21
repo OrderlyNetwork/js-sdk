@@ -228,9 +228,9 @@ function side(option?: {
 }): Column<API.Order> {
   return {
     title: "Side",
+    dataIndex: "side",
     width: option?.width,
     className: "oui-h-[48px]",
-    dataIndex: "side",
     onSort: option?.enableSort
       ? (r1, r2, sortOrder) => {
           if (sortOrder === "asc") {
@@ -261,9 +261,9 @@ function type(option?: {
 }): Column<API.Order> {
   return {
     title: "Type",
+    dataIndex: "type",
     width: option?.width,
     className: option?.className,
-    dataIndex: "type",
     formatter: (value: string, record: any) => {
       const type =
         typeof record.type === "string"
@@ -285,8 +285,8 @@ function fillAndQuantity(option?: {
 }): Column<API.Order> {
   return {
     title: "Filled / Quantity",
+    dataIndex: "fill_quantity",
     className: option?.className,
-    dataIndex: "quantity",
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
@@ -323,8 +323,8 @@ function price(option?: {
 }): Column<API.Order> {
   return {
     title: option?.title ?? "Price",
-    className: option?.className,
     dataIndex: "price",
+    className: option?.className,
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
@@ -341,8 +341,8 @@ function avgPrice(option?: {
 }): Column<API.Order> {
   return {
     title: "Avg. price",
-    className: option?.className,
     dataIndex: "average_executed_price",
+    className: option?.className,
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
@@ -376,9 +376,9 @@ function estTotal(option?: {
 }): Column<API.Order> {
   return {
     title: "Est. total",
+    dataIndex: "executed",
     width: option?.width,
     className: option?.className,
-    dataIndex: "executed",
     render: (value: string, record: any) => {
       if (
         record.type === OrderType.CLOSE_POSITION &&

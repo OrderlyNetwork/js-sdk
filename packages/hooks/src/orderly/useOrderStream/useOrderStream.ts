@@ -40,6 +40,10 @@ export const useOrderStream = (
      * @default []
      */
     excludes?: CombineOrderType[];
+    dateRange?: {
+      from?: Date;
+      to?: Date;
+    }
   },
   options?: {
     /**
@@ -58,6 +62,7 @@ export const useOrderStream = (
     side,
     size = 100,
     page,
+    dateRange,
     includes = ["ALL"],
     excludes = [],
   } = params;
@@ -96,7 +101,7 @@ export const useOrderStream = (
     )}`;
     regesterKeyHandler?.(
       key,
-      generateKeyFun({ status, symbol, side, size, page })
+      generateKeyFun({ status, symbol, side, size, page, dateRange })
     );
 
     return () => {
@@ -104,10 +109,10 @@ export const useOrderStream = (
 
       unregisterKeyHandler(key);
     };
-  }, [status, symbol, side, options?.keeplive]);
+  }, [status, symbol, side, options?.keeplive, page, dateRange]);
 
   const ordersResponse = usePrivateInfiniteQuery(
-    generateKeyFun({ status, symbol, side, size, page }),
+    generateKeyFun({ status, symbol, side, size, page, dateRange }),
     {
       initialSize: 1,
       // revalidateFirstPage: false,

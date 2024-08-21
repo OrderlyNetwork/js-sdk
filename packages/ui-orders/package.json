@@ -16,11 +16,12 @@
     "DeFi"
   ],
   "dependencies": {
-    "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*"
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
