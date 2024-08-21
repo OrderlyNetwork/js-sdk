@@ -232,7 +232,7 @@ export const DataTable = <RecordType extends unknown>(
           classNames?.body
         )}
         style={{
-          minHeight: `${minHeightProp || minHeight}px`,
+          minHeight: minHeightProp ? `${minHeightProp}px` : minHeight,
           height,
         }}
       >
