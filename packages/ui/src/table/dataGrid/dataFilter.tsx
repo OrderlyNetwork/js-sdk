@@ -71,6 +71,7 @@ const FilterDateRangePicker = (props: DateRangePickerProps) => {
 
   const onValueChange = (value: DateRange) => {
     // const from =value.from
+    // console.log(value);
 
     if (typeof onChange === "function") {
       onChange(value);

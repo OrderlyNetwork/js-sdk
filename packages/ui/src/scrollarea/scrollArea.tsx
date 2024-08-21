@@ -6,7 +6,7 @@ import { tv } from "../utils/tv";
 
 const scrollAreaVariants = tv({
   slots: {
-    root: "oui-relative oui-overflow-hidden",
+    root: "oui-relative oui-overflow-hidden oui-scroll-area-root",
     viewport: "oui-h-full oui-w-full oui-rounded-[inherit]",
     bar: [
       "oui-flex",
@@ -14,7 +14,7 @@ const scrollAreaVariants = tv({
       "oui-select-none",
       "oui-transition-colors",
     ],
-    tumb: "oui-relative oui-flex-1 oui-rounded-full oui-bg-base-1",
+    tumb: "oui-relative oui-flex-1 oui-rounded-full oui-bg-base-10",
   },
   variants: {
     orientation: {

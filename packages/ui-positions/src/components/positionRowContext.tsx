@@ -1,4 +1,4 @@
-import { API, OrderEntity, OrderType } from "@orderly.network/types";
+import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import {
   FC,
   PropsWithChildren,
@@ -8,8 +8,6 @@ import {
   useMemo,
   useState,
 } from "react";
-
-import { OrderSide } from "@orderly.network/types";
 
 import { useOrderEntry } from "@orderly.network/hooks";
 

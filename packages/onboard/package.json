@@ -19,6 +19,7 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@types/lodash": "^4.17.7",
+    "@web3-onboard/bitget": "^2.1.1",
     "@web3-onboard/core": "^2.21.5",
     "@web3-onboard/injected-wallets": "^2.10.15",
     "@web3-onboard/react": "2.8.16",

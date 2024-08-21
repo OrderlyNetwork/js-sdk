@@ -14,6 +14,7 @@ const meta = {
   //     Assets: OverviewModule.AssetWidget,
   //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
   // },
+
   decorators: [
     (Story) => (
       <ConnectorProvider>
@@ -24,7 +25,7 @@ const meta = {
     ),
   ],
   parameters: {
-    // layout: "centered",
+    layout: "fullscreen",
   },
 
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
