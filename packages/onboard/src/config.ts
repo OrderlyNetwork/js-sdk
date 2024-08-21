@@ -2,11 +2,13 @@ import injectedModule from "@web3-onboard/injected-wallets";
 import { init } from "@web3-onboard/react";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
 import { getChainsArray } from "./chains";
-import binanceModule from "@binance/w3w-blocknative-connector";
+// import binanceModule from "@binance/w3w-blocknative-connector";
+import bitgetWalletModule from "@web3-onboard/bitget";
 import { merge } from "lodash";
 
 // initialize the module with options
-const binance = binanceModule({ options: { lng: "en" } });
+// const binance = binanceModule({ options: { lng: "en" } });
+const bitgetWallet = bitgetWalletModule();
 
 export const initConfig: (
   apiKey?: string,
@@ -18,8 +20,7 @@ export const initConfig: (
       // autoConnectAllPreviousWallet: true,
       autoConnectLastWallet: true,
     },
-    //@ts-ignore
-    wallets: [injectedModule(), binance],
+    wallets: [injectedModule(), bitgetWallet],
     chains: getChainsArray(),
     appMetadata: {
       name: "Orderly",
@@ -49,7 +50,7 @@ export const initConfig: (
       },
     },
     theme: "dark",
-  };
+  } as InitOptions;
 
   const mergedOptions = merge(defaultOptions, options);
 
