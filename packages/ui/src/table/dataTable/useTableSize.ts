@@ -5,6 +5,7 @@ const DEFAULT_MIN_HEIGHT = 130;
 export const useTableSize = (
   tableRef: React.RefObject<HTMLTableElement>,
   options: {
+    dataSource: any;
     initialMinHeight?: number;
     minHeight?: number;
     scroll?: { x?: number; y?: number };
@@ -15,12 +16,13 @@ export const useTableSize = (
   minHeight: string;
   updateMinHeight: (height: number) => void;
 } => {
-  const { scroll } = options;
+  const { scroll, dataSource } = options;
   let width!: string, height!: string;
-  // const minHeight = useRef(options.initialMinHeight || DEFAULT_MIN_HEIGHT);
-  const [minHeight, setMinHeight] = useState(
-    options.initialMinHeight || DEFAULT_MIN_HEIGHT
-  );
+  const initialMinHeight = options.initialMinHeight || DEFAULT_MIN_HEIGHT;
+
+  const [minHeight, setMinHeight] = useState(initialMinHeight);
+
+  const dataIsEmpty = !Array.isArray(dataSource) || dataSource?.length === 0;
   // const [minHeight, setMinHeight] = useState(options.minHeight || 240);
   //
   useEffect(() => {
@@ -30,7 +32,13 @@ export const useTableSize = (
       for (let entry of entries) {
         const { height } = entry.contentRect;
         // minHeight.current = Math.max(height, minHeight.current);
-        setMinHeight((minHeight) => Math.max(height, minHeight));
+        setMinHeight((minHeight) =>
+          dataIsEmpty
+            ? initialMinHeight
+            : height < minHeight
+            ? height
+            : Math.max(height, minHeight)
+        );
       }
     });
 
