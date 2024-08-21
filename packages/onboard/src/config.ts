@@ -20,7 +20,6 @@ export const initConfig: (
       // autoConnectAllPreviousWallet: true,
       autoConnectLastWallet: true,
     },
-    //@ts-ignore
     wallets: [injectedModule(), bitgetWallet],
     chains: getChainsArray(),
     appMetadata: {
@@ -51,7 +50,7 @@ export const initConfig: (
       },
     },
     theme: "dark",
-  };
+  } as InitOptions;
 
   const mergedOptions = merge(defaultOptions, options);
 
