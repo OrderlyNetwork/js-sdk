@@ -1,5 +1,6 @@
+import { Input } from "@orderly.network/ui";
 import { Select } from "@orderly.network/ui";
 
 export const PriceInput = () => {
-  return <Select.combine options={[]}></Select.combine>;
+  return <Input size="sm" value={"Market"} />;
 };
