@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text, cn } from "@orderly.network/ui";
+import { Box, Button, Flex, Text, Tooltip, cn } from "@orderly.network/ui";
 
 import { useState, useEffect, FC } from "react";
 import { OrderlyIcon } from "../components/orderlyIcon";
@@ -6,6 +6,7 @@ import { CurEpochReturns } from "./curEpoch.script";
 import { commify, commifyOptional } from "@orderly.network/utils";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { RewardsTooltip } from "./rewardsTooltip";
 
 export const CurEpoch: FC<CurEpochReturns> = (props) => {
   const state = props;
@@ -40,14 +41,16 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           />
           <Statics
             title="Epoch rewards"
-            highLight={commifyOptional(max_reward_amount, { fix: 0, })}
+            highLight={commifyOptional(max_reward_amount, { fix: 0 })}
             text={token}
           />
         </Flex>
         <EstRewards
           direction={state.notConnected ? "row" : "column"}
           justify={state.notConnected ? "between" : "center"}
+          hideData={state.hideData}
           estRewards={state.hideData ? "--" : props.estimate?.est_r_wallet}
+          rewardsTooltip={props.rewardsTooltip}
           background={
             state.notConnected
               ? "linear-gradient(28.29deg, #1B1D22 21.6%, #26292E 83.23%)"
@@ -85,6 +88,14 @@ const EstRewards: FC<{
   direction: "row" | "column";
   justify: "center" | "between";
   background: string;
+  hideData: boolean;
+  rewardsTooltip:
+    | {
+        brokerName: string | undefined;
+        curRewards: number;
+        otherRewards: number;
+      }
+    | undefined;
 }> = (props) => {
   return (
     <Flex
@@ -104,13 +115,15 @@ const EstRewards: FC<{
       <Text className="oui-text-base xl:oui-text-lg oui-text-base-contrast-54">
         My est. rewards
       </Text>
-      <Flex direction={"row"} gap={1}>
-        <OrderlyIcon 
-        className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />
+      <Flex direction={"row"} gap={3}>
+        <OrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />
         <Text
           children={commifyOptional(props.estRewards, { fix: 2 })}
           className="oui-text-xl md:oui-text-2xl xl:oui-text-[32px]"
         />
+        {props.rewardsTooltip && (
+          <RewardsTooltip rewardsTooltip={props.rewardsTooltip} />
+        )}
       </Flex>
     </Flex>
   );
@@ -236,6 +249,7 @@ const Countdown: FC<{
     </Box>
   );
 };
+
 
 const getDate = (timestamp?: number): string => {
   if (!timestamp) return "";
