@@ -5,7 +5,9 @@ import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./navItem";
 
-export type MainNavProps = {
+export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
+
+export type MainNavWidgetProps = {
   logo: {
     src: string;
     alt: string;
@@ -13,6 +15,9 @@ export type MainNavProps = {
   mainMenus: MainNavItem[];
 
   products: MainNavItem[];
+
+  campaigns?: MainNavItem;
+  campaignPosition?: CampaignPosition;
 
   initialProduct: string;
   /**
@@ -28,8 +33,8 @@ export type MainNavProps = {
   }) => void;
 };
 
-export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
-  const { onItemClick } = props;
+export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
+  const { onItemClick, campaignPosition = "navTailing" } = props;
 
   const { routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
@@ -46,7 +51,7 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
   );
 
   const mainNavConfig = useMemo(() => {
-    return {
+    const config = {
       logo: {
         //https://mintlify.s3-us-west-1.amazonaws.com/orderly/logo/dark.png
         src: "https://testnet-dex-evm.woo.org/images/woofipro.svg",
@@ -63,14 +68,26 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
         // { name: "Perps", href: "/perps" },
       ],
       ...props,
+      campaignPosition,
     };
+
+    if (props.campaigns) {
+      if (campaignPosition === "menuTailing") {
+        config.mainMenus = [...config.mainMenus, props.campaigns];
+      } else if (campaignPosition === "menuLeading") {
+        config.mainMenus = [props.campaigns, ...config.mainMenus];
+      } else {
+        config.campaigns = props.campaigns;
+      }
+    }
+
+    return config;
   }, [props]);
 
   return {
-    // ...mainNavConfig,
-
     // currentProduct,
-    logo: mainNavConfig.logo,
+    // logo: mainNavConfig.logo,
+    ...mainNavConfig,
     products: {
       items: mainNavConfig.products,
       current: currentProduct,
@@ -128,6 +145,8 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
       },
     },
 
+    // campaigns: mainNavConfig.campaigns,
+    // campaignPosition: campaignPosition,
     isConnected: !!connectedChain,
     wrongNetwork,
   };

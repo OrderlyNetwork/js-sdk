@@ -5,7 +5,7 @@ export const gradientPlugin = () =>
     addUtilities({
       ".gradient-primary": {
         backgroundImage:
-          "linear-gradient(var(--oui-gradient-angle, 28.29deg), rgb(var(--oui-gradient-primary-start)) 0%, rgb(var(--oui-gradient-primary-end)) 100%)",
+          "linear-gradient(var(--oui-gradient-angle, 28.29deg), rgb(var(--oui-gradient-primary-start)) var(--oui-gradient-primary-stop-start,0%), rgb(var(--oui-gradient-primary-end)) var(--oui-gradient-primary-stop-end,100%))",
       },
       ".gradient-secondary": {
         backgroundImage:
