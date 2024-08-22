@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { cnBase, tv, type VariantProps } from "tailwind-variants";
+import { cn, cnBase, tv, type VariantProps } from "tailwind-variants";
 import { CloseIcon } from "../icon/close";
 
 const Sheet = SheetPrimitive.Root;
@@ -27,7 +27,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = tv({
-  base: "oui-sheet-overlay oui-fixed oui-inset-0 oui-z-50 oui-bg-black/60 oui-backdrop-blur-sm data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=open]:oui-fade-in-0",
+  base: "oui-fixed oui-z-50 oui-gap-4 oui-bg-base-8 oui-p-6 oui-shadow-lg oui-transition oui-ease-in-out data-[state=closed]:oui-duration-260 data-[state=open]:oui-duration-300 data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
   variants: {
     side: {
       top: "oui-inset-x-0 oui-top-0 oui-border-b data-[state=closed]:oui-slide-out-to-top data-[state=open]:oui-slide-in-from-top",
@@ -119,16 +119,23 @@ SheetFooter.displayName = "SheetFooter";
 
 const SheetTitle = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <SheetPrimitive.Title
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title> & {
+    leading?: React.ReactNode;
+  }
+>(({ className, leading, ...props }, ref) => (
+  <div
+    className="oui-sheet-header oui-grid oui-grid-cols-[40px_1fr_40px] oui-items-center"
     ref={ref}
-    className={cnBase(
-      "oui-sheet-title oui-text-lg oui-text-base-contrast",
-      className
-    )}
-    {...props}
-  />
+  >
+    <div>{leading}</div>
+    <div
+      className={cnBase(
+        "oui-flex oui-flex-col oui-space-y-2 oui-text-center oui-text-lg oui-text-base-contrast",
+        className
+      )}
+      {...props}
+    />
+  </div>
 ));
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
 
