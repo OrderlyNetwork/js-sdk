@@ -1,13 +1,19 @@
 import { useMemo } from "react";
 import { useTradingRewardsContext } from "../provider";
-import { EpochInfoItem, WalletRewardsItem } from "@orderly.network/hooks";
+import {
+  EpochInfoItem,
+  useAccount,
+  useAccountRewardsHistory,
+  WalletRewardsItem,
+} from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
-
+import { RewardsTooltipProps } from "../curEpoch/rewardsTooltip";
 
 export type ListType = EpochInfoItem & {
   info?: WalletRewardsItem;
   state?: string;
+  rewardsTooltip?: RewardsTooltipProps;
 };
 
 export type RewardsHistoryReturns = {
@@ -24,12 +30,20 @@ export type RewardsHistoryReturns = {
 };
 
 export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
-  const { epochList, walletRewardsHistory, totalOrderClaimedReward } =
-    useTradingRewardsContext();
+  const { account } = useAccount();
+  const {
+    epochList,
+    walletRewardsHistory,
+    totalOrderClaimedReward,
+    brokerId,
+    brokerName,
+  } = useTradingRewardsContext();
   const epochInfos = epochList?.[0];
   const { isUnstart } = epochList?.[1];
   const [history] = walletRewardsHistory;
   const { wrongNetwork } = useAppContext();
+
+  const { data: accountHistory } = useAccountRewardsHistory(account.address);
 
   const data = useMemo(() => {
     if (isUnstart) return [];
@@ -39,10 +53,28 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
       const id = e.epoch_id;
       const index = history?.rows.findIndex((info) => id === info.epoch_id);
 
+      let rewardsTooltip: RewardsTooltipProps | undefined = undefined; 
+
       if (index !== -1 && !wrongNetwork) {
+        const info = history?.rows?.[index as number];
+        const _findIndex = accountHistory?.findIndex((item: any) => item?.epoch_id === e.epoch_id);
+        if (accountHistory !== undefined && _findIndex !== undefined && _findIndex !== -1) {
+          // get broker
+          const brokerList = accountHistory[_findIndex].broker;
+          const curBrokerIndex = brokerList.findIndex((item) => item.broker_id === brokerId);
+          const curBroker = curBrokerIndex !== -1 ? brokerList[curBrokerIndex] : undefined;
+          const curRewards = curBroker?.r_account ?? 0;
+          const otherRewards = Math.max(0, (info?.r_wallet ?? 0) - curRewards);
+          rewardsTooltip = {
+            brokerName,
+            curRewards,
+            otherRewards,
+          };
+        }
         return {
           ...e,
-          info: history?.rows?.[index as number],
+          info,
+          rewardsTooltip,
         } as ListType;
       }
       return {
@@ -74,8 +106,14 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     combineData.sort((a, b) => b.epoch_id - a.epoch_id);
     const curDate = Date.now();
     return combineData.filter((item) => item.end_time <= curDate);
-  
-}, [history, epochInfos, totalOrderClaimedReward, isUnstart, wrongNetwork]);
+  }, [
+    history,
+    epochInfos,
+    totalOrderClaimedReward,
+    isUnstart,
+    wrongNetwork,
+    accountHistory,
+  ]);
 
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
@@ -88,8 +126,6 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     setPageSize(pageSize);
   };
 
-  
-
   const newData = useMemo(() => {
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
@@ -101,7 +137,6 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     current_page: page,
     records_per_page: pageSize,
   });
-
 
   return {
     data: newData,
