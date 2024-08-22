@@ -1,5 +1,18 @@
 # @orderly.network/ui-scaffold
 
+## 1.0.1-preReleaseV2.76
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-chain-selector@1.0.1-preReleaseV2.76
+  - @orderly.network/ui-connector@1.0.1-preReleaseV2.76
+  - @orderly.network/hooks@1.5.10-preReleaseV2.76
+  - @orderly.network/types@1.5.10-preReleaseV2.76
+  - @orderly.network/react-app@1.0.1-preReleaseV2.76
+  - @orderly.network/ui@1.0.1-preReleaseV2.76
+
 ## 1.0.1-preReleaseV2.75
 
 ### Patch Changes
