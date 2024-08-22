@@ -13,7 +13,7 @@ export const useStakeBoosterScript = (): StakeBoosterReturns => {
 
     const env = useGetEnv();
     const stakeNow = (e: any) => {
-        const url = `https://${env !== ENVType.prod ? `${env}-` : ""}app.orderly.network/stake`;
+        const url = `https://${env !== ENVType.prod ? `${env}-` : ""}app.orderly.network/staking`;
         window.open(url, "_blank");
     };
     const estimateValue = useDataTap(curEpochEstimate);
