@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/types",
-  "version": "1.5.10-preReleaseV2.76",
+  "version": "1.5.10-preReleaseV2.77",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

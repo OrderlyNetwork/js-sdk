@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.10-preReleaseV2.77
+
+### Patch Changes
+
+- update
+
 ## 1.5.10-preReleaseV2.76
 
 ### Patch Changes
