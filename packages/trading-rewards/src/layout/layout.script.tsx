@@ -4,54 +4,50 @@ import React, { useEffect } from "react";
 import { useMemo, useState } from "react";
 
 export const useLayoutBuilder = (props: {
-  current?: string
+  current?: string;
 }): SideBarProps & {
   hideSideBar: boolean;
 } => {
   const [current, setCurrent] = useState(props.current || "/rewards/affiliate");
-  
-  useEffect(() => {
-    if (props.current)
-      setCurrent(props.current);
-  }, [
-    props.current
-  ]);
 
+  useEffect(() => {
+    if (props.current) setCurrent(props.current);
+  }, [props.current]);
 
   const items = useMemo(() => {
     return [
-      // {
-      //   name: "Trading",
-      //   href: "/rewards/trading",
-      //   icon: (
-      //     <svg
-      //       width="18"
-      //       height="18"
-      //       viewBox="0 0 18 18"
-      //       fill="none"
-      //       xmlns="http://www.w3.org/2000/svg"
-      //     >
-      //       <path
-      //         d="M4.883 1.5c-.166.01-.393.076-.515.173a2 2 0 0 0-.18.173L.918 6.553a.86.86 0 0 0-.168.475c0 .339.232.543.232.543l7.374 8.633c.005.006.269.301.644.296s.64-.29.644-.296l7.402-8.663s.204-.269.204-.513-.196-.517-.196-.517L13.82 1.848c-.023-.032-.076-.021-.103-.049-.033-.038-.037-.091-.077-.124-.123-.097-.267-.106-.413-.123-.04-.005-.063-.049-.103-.049h-.078zm1.745 1.582h4.744L9 5.795zm-1.675.542 2.294 2.615H3.122zm8.094 0 1.831 2.615h-4.125zM3.328 7.818h4.847v5.672zm6.497 0h4.847c-1.151 1.345-3.422 4.007-4.847 5.672z"
-      //         // fill="url(#a)"
-      //         className="oui-fill-current group-data-[actived=true]:oui-fill-[url(#side-menu-gradient)]"
-      //       />
-      //       <defs>
-      //         <linearGradient
-      //           id="a"
-      //           x1="17.25"
-      //           y1="9"
-      //           x2=".75"
-      //           y2="9"
-      //           gradientUnits="userSpaceOnUse"
-      //         >
-      //           <stop stopColor="#59B0FE" />
-      //           <stop offset="1" stopColor="#26FEFE" />
-      //         </linearGradient>
-      //       </defs>
-      //     </svg>
-      //   ),
-      // },
+      {
+        name: "Trading",
+        href: "/rewards/trading",
+        icon: (
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.883 1.5c-.166.01-.393.076-.515.173a2 2 0 0 0-.18.173L.918 6.553a.86.86 0 0 0-.168.475c0 .339.232.543.232.543l7.374 8.633c.005.006.269.301.644.296s.64-.29.644-.296l7.402-8.663s.204-.269.204-.513-.196-.517-.196-.517L13.82 1.848c-.023-.032-.076-.021-.103-.049-.033-.038-.037-.091-.077-.124-.123-.097-.267-.106-.413-.123-.04-.005-.063-.049-.103-.049h-.078zm1.745 1.582h4.744L9 5.795zm-1.675.542 2.294 2.615H3.122zm8.094 0 1.831 2.615h-4.125zM3.328 7.818h4.847v5.672zm6.497 0h4.847c-1.151 1.345-3.422 4.007-4.847 5.672z"
+              // fill="url(#a)"
+              className="oui-fill-current group-data-[actived=true]:oui-fill-[url(#side-menu-gradient)]"
+            />
+            <defs>
+              <linearGradient
+                id="a"
+                x1="17.25"
+                y1="9"
+                x2=".75"
+                y2="9"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stopColor="#59B0FE" />
+                <stop offset="1" stopColor="#26FEFE" />
+              </linearGradient>
+            </defs>
+          </svg>
+        ),
+      },
       {
         name: "Affiliate",
         href: "/rewards/affiliate",
