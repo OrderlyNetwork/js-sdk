@@ -83,7 +83,7 @@ export function toNonExponential(num: number) {
  */
 export function numberToHumanStyle(
   number: number,
-  decimalPlaces: number = 0,
+  decimalPlaces: number = 2,
   options?: {
     padding?: boolean;
   }

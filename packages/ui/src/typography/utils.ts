@@ -38,8 +38,8 @@ export const parseNumber = (
 
   if (rule === "human") {
     return numberToHumanStyle(
-      typeof value === "number" ? value : Number(value)
-      // dp,
+      typeof value === "number" ? value : Number(value),
+      dp
       // { padding }
     );
   }

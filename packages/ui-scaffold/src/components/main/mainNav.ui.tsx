@@ -13,7 +13,7 @@ import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
 import type { MainNavItem } from "./navItem";
 import { CampaignPositionEnum } from "./useWidgetBuilder.script";
-import { CampaignButton } from "./campaignButton";
+import { CampaignButton, CampaignProps } from "./campaignButton";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
@@ -24,7 +24,7 @@ export type MainNavProps = {
   mainMenus: MainNavItemsProps;
   wrongNetwork: boolean;
   isConnected: boolean;
-  campaigns?: MainNavItem;
+  campaigns?: CampaignProps;
   campaignPosition?: CampaignPositionEnum;
   classNames?: {
     root?: string;
@@ -39,7 +39,7 @@ export type MainNavProps = {
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
-  // console.log("MainNavProps", props);
+  console.log("MainNavProps", props);
   const { className, logo, products, classNames, campaigns, campaignPosition } =
     props;
 
@@ -66,9 +66,9 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       {children}
 
       <Flex itemAlign={"center"} gap={4}>
-        {campaignPosition === "navTailing" && campaigns ? (
+        {campaignPosition === CampaignPositionEnum.navTailing && campaigns ? (
           <CampaignButton
-            item={campaigns}
+            {...campaigns}
             className={classNames?.campaignButton}
           />
         ) : null}
