@@ -8,6 +8,7 @@ import {
   AccountSummaryWidget,
   ChainMenuWidget,
   ChainMenu,
+  CampaignPositionEnum,
 } from "@orderly.network/ui-scaffold";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { useChains } from "@orderly.network/hooks";
@@ -467,7 +468,7 @@ export const CampaignsNav: Story = {
         },
       ],
     },
-    campaignPosition: "navTailing",
+    campaignPosition: CampaignPositionEnum.navTailing,
 
     onItemClick: fn(),
   },

@@ -5,7 +5,12 @@ import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./navItem";
 
-export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
+// export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
+export enum CampaignPositionEnum {
+  menuLeading = "menuLeading",
+  menuTailing = "menuTailing",
+  navTailing = "navTailing",
+}
 
 export type MainNavWidgetProps = {
   logo: {
@@ -17,7 +22,7 @@ export type MainNavWidgetProps = {
   products: MainNavItem[];
 
   campaigns?: MainNavItem;
-  campaignPosition?: CampaignPosition;
+  campaignPosition?: CampaignPositionEnum;
 
   initialProduct: string;
   /**
@@ -34,7 +39,8 @@ export type MainNavWidgetProps = {
 };
 
 export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
-  const { onItemClick, campaignPosition = "navTailing" } = props;
+  const { onItemClick, campaignPosition = CampaignPositionEnum.navTailing } =
+    props;
 
   const { routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
@@ -72,9 +78,9 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
     };
 
     if (props.campaigns) {
-      if (campaignPosition === "menuTailing") {
+      if (campaignPosition === CampaignPositionEnum.menuTailing) {
         config.mainMenus = [...config.mainMenus, props.campaigns];
-      } else if (campaignPosition === "menuLeading") {
+      } else if (campaignPosition === CampaignPositionEnum.menuLeading) {
         config.mainMenus = [props.campaigns, ...config.mainMenus];
       } else {
         config.campaigns = props.campaigns;

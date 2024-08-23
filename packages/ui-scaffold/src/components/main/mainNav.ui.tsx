@@ -12,7 +12,7 @@ import { AccountMenuWidget } from "../accountMenu";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
 import type { MainNavItem } from "./navItem";
-import { CampaignPosition } from "./useWidgetBuilder.script";
+import { CampaignPositionEnum } from "./useWidgetBuilder.script";
 import { CampaignButton } from "./campaignButton";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
@@ -25,7 +25,7 @@ export type MainNavProps = {
   wrongNetwork: boolean;
   isConnected: boolean;
   campaigns?: MainNavItem;
-  campaignPosition?: CampaignPosition;
+  campaignPosition?: CampaignPositionEnum;
   classNames?: {
     root?: string;
     mainNav?: MainNavClassNames;
