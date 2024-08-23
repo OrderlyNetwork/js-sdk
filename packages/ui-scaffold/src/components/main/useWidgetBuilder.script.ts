@@ -90,11 +90,10 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
     return config;
   }, [props]);
 
-  return {
-    // currentProduct,
-    // logo: mainNavConfig.logo,
-    ...mainNavConfig,
-    products: {
+  const converted: any = {};
+
+  if (mainNavConfig.products && mainNavConfig.products.length) {
+    converted.products = {
       items: mainNavConfig.products,
       current: currentProduct,
       onItemClick: (product: ProductItem) => {
@@ -114,8 +113,11 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
 
         // routerAdapter?.onRouteChange(args);
       },
-    },
-    mainMenus: {
+    };
+  }
+
+  if (mainNavConfig.mainMenus && mainNavConfig.mainMenus.length) {
+    converted.mainMenus = {
       items: mainNavConfig.mainMenus,
       /**
        * @type string
@@ -149,12 +151,54 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
 
         routerAdapter?.onRouteChange(args);
       },
-    },
+    };
+  }
 
-    // campaigns: mainNavConfig.campaigns,
-    // campaignPosition: campaignPosition,
+  if (mainNavConfig.campaigns && mainNavConfig.campaigns.children?.length) {
+    converted.campaigns = {
+      item: mainNavConfig.campaigns,
+
+      current,
+      onItemClick: (item: MainNavItem[]) => {
+        const lastItem = item[item.length - 1];
+
+        if (!lastItem) return;
+
+        /**
+         * If the target is not _blank, we should update the current state
+         */
+        if (lastItem.target !== "_blank") {
+          setCurrent(item.map((item) => item.href));
+        }
+
+        const current = item[item.length - 1];
+        const args = {
+          href: current.href,
+          name: current.name,
+          scope: "campaign",
+          target: current.target,
+        };
+
+        if (typeof onItemClick === "function") {
+          onItemClick(args);
+          return;
+        }
+
+        routerAdapter?.onRouteChange(args);
+      },
+    };
+  }
+
+  // return converted;
+
+  return {
+    // currentProduct,
+    // logo: mainNavConfig.logo,
+    ...mainNavConfig,
+
     isConnected: !!connectedChain,
     wrongNetwork,
+    ...converted,
   };
 };
 
