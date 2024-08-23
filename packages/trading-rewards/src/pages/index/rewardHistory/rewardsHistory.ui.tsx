@@ -6,17 +6,17 @@ import {
   Flex,
   ListView,
   Pagination,
-  ScrollArea,
   Text,
 } from "@orderly.network/ui";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
-import { AuthGuardDataTable, AuthGuardEmpty } from "@orderly.network/ui-connector";
+import { AuthGuardEmpty } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { RewardsTooltip } from "../curEpoch/rewardsTooltip";
 
 export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
   return (
@@ -62,7 +62,7 @@ const MobileCell: FC<{
   const { data } = props;
   const isOrder =
     `${data?.info?.epoch_token || data.epoch_token}`.toLowerCase() === "order";
-  const r_warret = commifyOptional(data.info?.r_wallet, { fix: 2});
+  const r_warret = commifyOptional(data.info?.r_wallet, { fix: 2 });
   return (
     <Flex
       key={data.epoch_id}
@@ -213,10 +213,26 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         const isOrder =
           `${record?.info?.epoch_token || record.epoch_token}`.toLowerCase() ===
           "order";
+
+        let children = (
+          <Text>{commifyOptional(record.info?.r_wallet, { fix: 2 })}</Text>
+        );
+
+        if (record.rewardsTooltip) {
+          children = (
+            <RewardsTooltip
+              rewardsTooltip={record.rewardsTooltip}
+              children={children}
+              align="center"
+              className="oui-bg-base-5"
+              arrowClassName="oui-fill-base-5"
+            />
+          );
+        }
         return (
           <Flex direction={"row"} gap={1}>
             {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
-            <Text>{commifyOptional(record.info?.r_wallet, { fix: 2 })}</Text>
+            {children}
           </Flex>
         );
       },
@@ -233,7 +249,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         header: "oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-base-contrast-80",
       }}
-      emptyView={<AuthGuardEmpty status={AccountStatusEnum.SignedIn}/>}
+      emptyView={<AuthGuardEmpty status={AccountStatusEnum.SignedIn} />}
     >
       <Pagination
         {...props.meta}
