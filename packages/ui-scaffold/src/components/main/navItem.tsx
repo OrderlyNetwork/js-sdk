@@ -24,19 +24,22 @@ export type MainNavItem = {
   disabled?: boolean;
   children?: MainNavItem[];
   className?: string;
+  asChild?: boolean;
 };
 
-export const NavItem: FC<{
-  item: MainNavItem;
-  onClick?: (item: MainNavItem[]) => void;
-  // active?: boolean;
-  currentPath?: string[];
-  classNames?: {
-    navItem?: string;
-    subMenu?: string;
-  };
-}> = (props) => {
-  const { classNames, currentPath } = props;
+export const NavItem: FC<
+  Omit<React.HTMLAttributes<HTMLButtonElement>, "onClick"> & {
+    item: MainNavItem;
+    onClick?: (item: MainNavItem[]) => void;
+    // active?: boolean;
+    currentPath?: string[];
+    classNames?: {
+      navItem?: string;
+      subMenu?: string;
+    };
+  }
+> = (props) => {
+  const { classNames, currentPath, item, onClick, ...buttonProps } = props;
 
   const isActive = useMemo(
     () => props.currentPath?.[0] === props.item.href,
@@ -50,6 +53,7 @@ export const NavItem: FC<{
 
   const button = (
     <button
+      {...buttonProps}
       disabled={props.item.disabled}
       data-actived={isActive}
       className={cn(

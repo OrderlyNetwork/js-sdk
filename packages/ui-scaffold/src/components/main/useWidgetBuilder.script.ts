@@ -5,7 +5,14 @@ import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./navItem";
 
-export type MainNavProps = {
+// export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
+export enum CampaignPositionEnum {
+  menuLeading = "menuLeading",
+  menuTailing = "menuTailing",
+  navTailing = "navTailing",
+}
+
+export type MainNavWidgetProps = {
   logo: {
     src: string;
     alt: string;
@@ -13,6 +20,9 @@ export type MainNavProps = {
   mainMenus: MainNavItem[];
 
   products: MainNavItem[];
+
+  campaigns?: MainNavItem;
+  campaignPosition?: CampaignPositionEnum;
 
   initialProduct: string;
   /**
@@ -28,8 +38,9 @@ export type MainNavProps = {
   }) => void;
 };
 
-export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
-  const { onItemClick } = props;
+export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
+  const { onItemClick, campaignPosition = CampaignPositionEnum.navTailing } =
+    props;
 
   const { routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
@@ -46,7 +57,7 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
   );
 
   const mainNavConfig = useMemo(() => {
-    return {
+    const config = {
       logo: {
         //https://mintlify.s3-us-west-1.amazonaws.com/orderly/logo/dark.png
         src: "https://testnet-dex-evm.woo.org/images/woofipro.svg",
@@ -63,15 +74,26 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
         // { name: "Perps", href: "/perps" },
       ],
       ...props,
+      campaignPosition,
     };
+
+    if (props.campaigns) {
+      if (campaignPosition === CampaignPositionEnum.menuTailing) {
+        config.mainMenus = [...config.mainMenus, props.campaigns];
+      } else if (campaignPosition === CampaignPositionEnum.menuLeading) {
+        config.mainMenus = [props.campaigns, ...config.mainMenus];
+      } else {
+        config.campaigns = props.campaigns;
+      }
+    }
+
+    return config;
   }, [props]);
 
-  return {
-    // ...mainNavConfig,
+  const converted: any = {};
 
-    // currentProduct,
-    logo: mainNavConfig.logo,
-    products: {
+  if (mainNavConfig.products && mainNavConfig.products.length) {
+    converted.products = {
       items: mainNavConfig.products,
       current: currentProduct,
       onItemClick: (product: ProductItem) => {
@@ -91,8 +113,11 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
 
         // routerAdapter?.onRouteChange(args);
       },
-    },
-    mainMenus: {
+    };
+  }
+
+  if (mainNavConfig.mainMenus && mainNavConfig.mainMenus.length) {
+    converted.mainMenus = {
       items: mainNavConfig.mainMenus,
       /**
        * @type string
@@ -126,10 +151,54 @@ export const useMainNavBuilder = (props: Partial<MainNavProps>) => {
 
         routerAdapter?.onRouteChange(args);
       },
-    },
+    };
+  }
+
+  if (mainNavConfig.campaigns && mainNavConfig.campaigns.children?.length) {
+    converted.campaigns = {
+      item: mainNavConfig.campaigns,
+
+      current,
+      onItemClick: (item: MainNavItem[]) => {
+        const lastItem = item[item.length - 1];
+
+        if (!lastItem) return;
+
+        /**
+         * If the target is not _blank, we should update the current state
+         */
+        if (lastItem.target !== "_blank") {
+          setCurrent(item.map((item) => item.href));
+        }
+
+        const current = item[item.length - 1];
+        const args = {
+          href: current.href,
+          name: current.name,
+          scope: "campaign",
+          target: current.target,
+        };
+
+        if (typeof onItemClick === "function") {
+          onItemClick(args);
+          return;
+        }
+
+        routerAdapter?.onRouteChange(args);
+      },
+    };
+  }
+
+  // return converted;
+
+  return {
+    // currentProduct,
+    // logo: mainNavConfig.logo,
+    ...mainNavConfig,
 
     isConnected: !!connectedChain,
     wrongNetwork,
+    ...converted,
   };
 };
 
