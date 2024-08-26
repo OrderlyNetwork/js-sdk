@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.10-preReleaseV2.78
+
+### Patch Changes
+
+- update
+
 ## 0.3.10-preReleaseV2.77
 
 ### Patch Changes

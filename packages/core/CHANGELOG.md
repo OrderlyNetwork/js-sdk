@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 1.5.10-preReleaseV2.78
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.10-preReleaseV2.78
+
 ## 1.5.10-preReleaseV2.77
 
 ### Patch Changes
