@@ -11,6 +11,7 @@ import {
   useWalletRewardsHistory,
   WalletRewardsHisotryReturns,
   Brokers,
+  useConfig,
 } from "@orderly.network/hooks";
 import { TitleConfig } from "./title/title.script";
 
@@ -34,13 +35,15 @@ export const TradingRewardsContext = createContext<TradingRewardsState>(
 export const TradingRewardsProvider = (
   props: PropsWithChildren<{
     /** default is 'orderly' */
-    brokerId?: string;
+    // brokerId?: string;
     /** default is TWType.normal */
     type?: TWType;
     titleConfig?: TitleConfig;
   }>
 ) => {
-  const { brokerId = "orderly" } = props;
+  // const { brokerId = "orderly" } = props;
+
+  const brokerId = useConfig("brokerId");
 
   const {
     type = TWType.normal,
@@ -67,8 +70,7 @@ export const TradingRewardsProvider = (
   const epochList = useEpochInfo(type as TWType);
 
   const brokerName = useMemo(() => {
-
-    return brokers?.[brokerId]
+    return brokers?.[brokerId];
   }, [brokerId, brokers]);
 
   return (
