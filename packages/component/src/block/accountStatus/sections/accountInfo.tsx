@@ -106,7 +106,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
         </div>
       </div>
       <ReferralInfo />
-      {/* <TradingRewardsInfo /> */}
+      <TradingRewardsInfo />
 
       {props.showGetTestUSDC ? (
         <div className="orderly-py-4 orderly-grid orderly-grid-cols-2 orderly-gap-3">
