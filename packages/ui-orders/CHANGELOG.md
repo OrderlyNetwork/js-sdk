@@ -1,5 +1,17 @@
 # @orderly.network/ui-orders
 
+## 1.0.1-preReleaseV2.79
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@1.0.1-preReleaseV2.79
+  - @orderly.network/hooks@1.5.10-preReleaseV2.79
+  - @orderly.network/types@1.5.10-preReleaseV2.79
+  - @orderly.network/utils@1.5.10-preReleaseV2.79
+  - @orderly.network/ui@1.0.1-preReleaseV2.79
+
 ## 1.0.1-preReleaseV2.78
 
 ### Patch Changes
