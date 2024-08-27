@@ -10,7 +10,7 @@ export type RewardsTooltipProps = {
 
 export const RewardsTooltip: FC<{
   rewardsTooltip?: RewardsTooltipProps;
-  children?: React.ReactNode;
+  children?: React.ReactElement;
   className?: string;
   arrowClassName?: string;
   align?: "start" | "center" | "end";
@@ -51,7 +51,14 @@ export const RewardsTooltip: FC<{
       }}
       delayDuration={100}
     >
-      {props.children || (
+      {!!props.children ? (
+        React.cloneElement(props.children!, {
+          onClick: (e: any) => {
+            e.preventDefault();
+            setOpen(!open);
+          },
+        })
+      ) : (
         <svg
           width="21"
           height="20"
