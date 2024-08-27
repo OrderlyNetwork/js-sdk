@@ -12,8 +12,14 @@ import {
 } from "@orderly.network/ui";
 import { CloseIcon, InfoIcon } from "../icons";
 import { MaintenanceTipInterface } from "./script";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { MEDIA_TABLET } from "@orderly.network/types/src";
 
 export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
+  const isTable = useMediaQuery(MEDIA_TABLET);
+  if (isTable) {
+    return <></>;
+  }
   const { showTips, showDialog, tipsContent, closeTips, dialogContent } = props;
   if (showDialog) {
     return (
