@@ -127,7 +127,7 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
             className="orderly-text-xs orderly-font-bold orderly-text-danger-light orderly-border-danger-light hover:orderly-bg-transparent hover:orderly-text-danger-light"
             onClick={() => {
               console.log("asfsdfsd");
-              
+
               onDisconnect?.();
             }}
           >
@@ -156,7 +156,6 @@ export const AccountInfo: FC<AccountInfoProps> = (props) => {
 const ReferralInfo = () => {
   const { referral } = useTradingPageContext();
   console.log("referral aabb", referral);
-  
 
   const clickReferral = useCallback(() => {
     referral?.onClickReferral?.();

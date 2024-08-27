@@ -250,7 +250,6 @@ const Countdown: FC<{
   );
 };
 
-
 const getDate = (timestamp?: number): string => {
   if (!timestamp) return "";
   const date = new Date(timestamp);

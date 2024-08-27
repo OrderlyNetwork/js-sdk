@@ -215,7 +215,15 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
           "order";
 
         let children = (
-          <Text>{commifyOptional(record.info?.r_wallet, { fix: 2 })}</Text>
+          <Text
+            className={
+              record.rewardsTooltip
+                ? "oui-underline oui-decoration-dashed oui-cursor-pointer oui-underline-offset-4 oui-decoration-line-16"
+                : ""
+            }
+          >
+            {commifyOptional(record.info?.r_wallet, { fix: 2 })}
+          </Text>
         );
 
         if (record.rewardsTooltip) {
