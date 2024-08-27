@@ -13,7 +13,7 @@ import {
 import { CloseIcon, InfoIcon } from "../icons";
 import { MaintenanceTipInterface } from "./script";
 import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types/src";
+import { MEDIA_TABLET } from "@orderly.network/types";
 
 export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
   const isTable = useMediaQuery(MEDIA_TABLET);
