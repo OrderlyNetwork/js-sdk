@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.5.10-preReleaseV2.83
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.10-preReleaseV2.83
+  - @orderly.network/utils@1.5.10-preReleaseV2.83
+  - @orderly.network/core@1.5.10-preReleaseV2.83
+  - @orderly.network/perp@3.3.10-preReleaseV2.83
+  - @orderly.network/net@1.5.10-preReleaseV2.83
+
 ## 1.5.10-preReleaseV2.82
 
 ### Patch Changes

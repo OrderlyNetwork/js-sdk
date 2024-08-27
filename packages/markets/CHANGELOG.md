@@ -1,5 +1,16 @@
 # @orderly.network/markets
 
+## 1.0.1-preReleaseV2.83
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.10-preReleaseV2.83
+  - @orderly.network/types@1.5.10-preReleaseV2.83
+  - @orderly.network/utils@1.5.10-preReleaseV2.83
+  - @orderly.network/ui@1.0.1-preReleaseV2.83
+
 ## 1.0.1-preReleaseV2.82
 
 ### Patch Changes
