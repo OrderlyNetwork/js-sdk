@@ -18,6 +18,7 @@ export type ListType = EpochInfoItem & {
 
 export type RewardsHistoryReturns = {
   data: ListType[];
+  originalData: ListType[];
   meta: {
     count: number;
     page: number;
@@ -150,6 +151,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
 
   return {
     data: newData,
+    originalData: data,
     meta: meta,
     onPageChange,
     onPageSizeChange,

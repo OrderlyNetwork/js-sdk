@@ -43,7 +43,7 @@ const List: FC<RewardsHistoryReturns> = (props) => {
 
   return isMobile ? (
     <ListView
-      dataSource={props.data}
+      dataSource={props.originalData}
       renderItem={(item, index) => {
         return <MobileCell data={item} />;
       }}
