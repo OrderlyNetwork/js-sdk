@@ -59,10 +59,12 @@
     "@orderly.network/perp": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "immer": "^10.1.1",
     "ramda": "^0.29.0",
     "swr": "2.2.4",
     "use-constant": "^1.1.1",
-    "use-debounce": "^9.0.4"
+    "use-debounce": "^9.0.4",
+    "zustand": "^4.5.5"
   },
   "publishConfig": {
     "access": "public"

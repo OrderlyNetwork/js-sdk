@@ -1157,6 +1157,9 @@ importers:
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
       ramda:
         specifier: ^0.29.0
         version: 0.29.0
@@ -1172,6 +1175,9 @@ importers:
       use-debounce:
         specifier: ^9.0.4
         version: 9.0.4(react@18.2.0)
+      zustand:
+        specifier: ^4.5.5
+        version: 4.5.5(@types/react@18.3.2)(immer@10.1.1)(react@18.2.0)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.22.9
@@ -14559,7 +14565,7 @@ packages:
       eventemitter3: 4.0.7
       typescript: 5.2.2
       viem: 1.21.4(typescript@5.2.2)
-      zustand: 4.5.4(@types/react@18.3.2)(react@18.2.0)
+      zustand: 4.5.5(@types/react@18.3.2)(immer@10.1.1)(react@18.2.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -22225,6 +22231,9 @@ packages:
     dependencies:
       queue: 6.0.2
     dev: false
+
+  /immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
 
   /import-cwd@3.0.0:
     resolution: {integrity: sha512-4pnzH16plW+hgvRECbDWpQl3cqtvSofHWh44met7ESfZ8UZOWWddm8hEyDTqREJ9RbYHY8gi8DqmaelApoOGMg==}
@@ -32863,8 +32872,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /zustand@4.5.4(@types/react@18.3.2)(react@18.2.0):
-    resolution: {integrity: sha512-/BPMyLKJPtFEvVL0E9E9BTUM63MNyhPGlvxk1XjrfWTUlV+BR8jufjsovHzrtR6YNcBEcL7cMHovL1n9xHawEg==}
+  /zustand@4.5.5(@types/react@18.3.2)(immer@10.1.1)(react@18.2.0):
+    resolution: {integrity: sha512-+0PALYNJNgK6hldkgDq2vLrw5f6g/jCInz52n9RTpropGgeAf/ioFUCdtsjCqu4gNhW9D01rUQBROoRjdzyn2Q==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@types/react': '>=16.8'
@@ -32879,8 +32888,9 @@ packages:
         optional: true
     dependencies:
       '@types/react': 18.3.2
+      immer: 10.1.1
       react: 18.2.0
-      use-sync-external-store: 1.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.2(react@18.2.0)
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
