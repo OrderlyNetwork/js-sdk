@@ -46,7 +46,7 @@ const Switch = React.forwardRef<
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        "orderly-pointer-events-none orderly-block orderly-h-[10px] orderly-w-[10px] orderly-rounded-full orderly-bg-white orderly-shadow-lg orderly-ring-0 orderly-transition-transform data-[state=checked]:orderly-translate-x-[18px] data-[state=checked]:desktop:orderly-translate-x-[10.5px] data-[state=unchecked]:orderly-translate-x-[1] desktop:orderly-h-[10px] desktop:orderly-w-[10px]",
+        "orderly-pointer-events-none orderly-block orderly-h-[10px] orderly-w-[10px] orderly-rounded-full orderly-bg-white orderly-shadow-lg orderly-ring-0 orderly-transition-transform data-[state=checked]:orderly-translate-x-[18px] data-[state=checked]:desktop:orderly-translate-x-[13px] data-[state=unchecked]:orderly-translate-x-[1] desktop:orderly-h-[10px] desktop:orderly-w-[10px]",
         thumbClassName
       )}
     />

@@ -317,7 +317,7 @@ export const TPSLForm: FC<Props> = (props) => {
         >
           <div className="orderly-text-xs">Stop loss</div>
           <div
-            className={"orderly-text-base-contrast-36 orderly-text-2xs"}
+            className={"orderly-text-base-contrast-36 orderly-text-3xs"}
             data-testid="slEstPnL"
           >
             <span>Est. PnL: </span>
