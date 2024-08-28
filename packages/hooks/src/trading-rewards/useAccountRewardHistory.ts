@@ -28,6 +28,7 @@ export const useAccountRewardsHistory = (address?: string) => {
       address ?? ""
     }`,
     {
+      revalidateOnFocus: false,
       formatter: (res) => {
         const data = res?.rows?.map((e: any) => {
           e.broker = e.broker.map((item: any) => ({
