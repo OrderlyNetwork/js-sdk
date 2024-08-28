@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/perp",
-  "version": "3.3.10-sdk-v2.78",
+  "version": "3.3.10-sdk-v2.79",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

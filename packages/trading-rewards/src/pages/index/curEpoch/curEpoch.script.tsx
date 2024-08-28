@@ -11,7 +11,6 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { RewardsTooltipProps } from "./rewardsTooltip";
 
-
 export const useCurEpochScript = () => {
   const {
     epochList,
@@ -33,10 +32,9 @@ export const useCurEpochScript = () => {
 
   const rewardsTooltip = useMemo((): RewardsTooltipProps | undefined => {
     if (typeof estimate === "undefined" || estimate === null) return undefined;
-    const otherRewards = estimate.rows.reduce(
-      (a, b) => (a + b.broker_id !== brokerId ? b.est_r_account : 0),
-      0
-    );
+    const otherRewards = estimate.rows
+      .filter((item) => item.broker_id !== brokerId)
+      .reduce((a, b) => a + b.est_r_account, 0);
     const curRewards = Number(estimate.est_r_wallet) - otherRewards;
     return {
       brokerName,

@@ -56,6 +56,34 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
     () => props?.initialProduct ?? props?.products?.[0].href ?? ""
   );
 
+  const onItemClickHandler = (scope: string) => (item: MainNavItem[]) => {
+    const lastItem = item[item.length - 1];
+
+    if (!lastItem) return;
+
+    /**
+     * If the target is not _blank, we should update the current state
+     */
+    if (lastItem.target !== "_blank") {
+      setCurrent(item.map((item) => item.href));
+    }
+
+    const current = item[item.length - 1];
+    const args = {
+      href: current.href,
+      name: current.name,
+      scope,
+      target: current.target,
+    };
+
+    if (typeof onItemClick === "function") {
+      onItemClick(args);
+      return;
+    }
+
+    routerAdapter?.onRouteChange(args);
+  };
+
   const mainNavConfig = useMemo(() => {
     const config = {
       logo: {
@@ -124,68 +152,69 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
        * The current item of the router
        */
       current,
-      onItemClick: (item: MainNavItem[]) => {
-        const lastItem = item[item.length - 1];
+      onItemClick: onItemClickHandler("mainMenu"),
+      // onItemClick: (item: MainNavItem[]) => {
+      //   const lastItem = item[item.length - 1];
 
-        if (!lastItem) return;
+      //   if (!lastItem) return;
 
-        /**
-         * If the target is not _blank, we should update the current state
-         */
-        if (lastItem.target !== "_blank") {
-          setCurrent(item.map((item) => item.href));
-        }
+      //   /**
+      //    * If the target is not _blank, we should update the current state
+      //    */
+      //   if (lastItem.target !== "_blank") {
+      //     setCurrent(item.map((item) => item.href));
+      //   }
 
-        const current = item[item.length - 1];
-        const args = {
-          href: current.href,
-          name: current.name,
-          scope: "mainMenu",
-          target: current.target,
-        };
+      //   const current = item[item.length - 1];
+      //   const args = {
+      //     href: current.href,
+      //     name: current.name,
+      //     scope: "mainMenu",
+      //     target: current.target,
+      //   };
 
-        if (typeof onItemClick === "function") {
-          onItemClick(args);
-          return;
-        }
+      //   if (typeof onItemClick === "function") {
+      //     onItemClick(args);
+      //     return;
+      //   }
 
-        routerAdapter?.onRouteChange(args);
-      },
+      //   routerAdapter?.onRouteChange(args);
+      // },
     };
   }
 
   if (mainNavConfig.campaigns && mainNavConfig.campaigns.children?.length) {
     converted.campaigns = {
       item: mainNavConfig.campaigns,
-
       current,
-      onItemClick: (item: MainNavItem[]) => {
-        const lastItem = item[item.length - 1];
+      onItemClick: onItemClickHandler("campaign"),
+      // onItemClick: (item: MainNavItem[]) => {
+      //   const lastItem = item[item.length - 1];
 
-        if (!lastItem) return;
+      //   if (!lastItem) return;
 
-        /**
-         * If the target is not _blank, we should update the current state
-         */
-        if (lastItem.target !== "_blank") {
-          setCurrent(item.map((item) => item.href));
-        }
+      //   /**
+      //    * If the target is not _blank, we should update the current state
+      //    */
+      //   if (lastItem.target !== "_blank") {
+      //     setCurrent(item.map((item) => item.href));
+      //   }
 
-        const current = item[item.length - 1];
-        const args = {
-          href: current.href,
-          name: current.name,
-          scope: "campaign",
-          target: current.target,
-        };
+      //   const current = item[item.length - 1];
+      //   const args = {
+      //     href: current.href,
+      //     name: current.name,
+      //     scope: "campaign",
+      //     target: current.target,
+      //   };
 
-        if (typeof onItemClick === "function") {
-          onItemClick(args);
-          return;
-        }
+      //   if (typeof onItemClick === "function") {
+      //     onItemClick(args);
+      //     return;
+      //   }
 
-        routerAdapter?.onRouteChange(args);
-      },
+      //   routerAdapter?.onRouteChange(args);
+      // },
     };
   }
 

@@ -5,7 +5,7 @@ import { create } from "@/modal/modalHelper";
 import { modalActions } from "@/modal/modalContext";
 import { DialogBody } from "@/dialog";
 export interface ConfirmProps {
-  title?: string;
+  title?: React.ReactNode;
   content?: React.ReactNode;
   footer?: React.ReactNode;
   onOk?: () => Promise<any>;

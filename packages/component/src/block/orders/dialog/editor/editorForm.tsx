@@ -280,7 +280,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
           />
         </div>
 
-        <div className="orderly-grid orderly-grid-cols-2 orderly-gap-3 orderly-py-5">
+        <div className="orderly-grid orderly-grid-cols-2 orderly-gap-3 orderly-py-5 orderly-text-xs">
           <Button
             fullWidth
             variant="contained"

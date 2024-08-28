@@ -31,8 +31,8 @@ export function useMaintenanceStatus() {
     }
     // systemInfo.data.status = 2;
     // systemInfo.data.scheduled_maintenance = {
-    //   start_time: new Date("2024-07-24").getTime(),
-    //   end_time: new Date("2024-07-25").getTime(),
+    //   start_time: new Date("2024-08-27").getTime(),
+    //   end_time: new Date("2024-08-30").getTime(),
     // };
     console.log("--systemInfo", systemInfo, brokerName);
     if (systemInfo.data.scheduled_maintenance) {

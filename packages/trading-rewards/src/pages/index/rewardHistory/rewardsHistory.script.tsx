@@ -18,6 +18,7 @@ export type ListType = EpochInfoItem & {
 
 export type RewardsHistoryReturns = {
   data: ListType[];
+  originalData: ListType[];
   meta: {
     count: number;
     page: number;
@@ -53,16 +54,26 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
       const id = e.epoch_id;
       const index = history?.rows.findIndex((info) => id === info.epoch_id);
 
-      let rewardsTooltip: RewardsTooltipProps | undefined = undefined; 
+      let rewardsTooltip: RewardsTooltipProps | undefined = undefined;
 
       if (index !== -1 && !wrongNetwork) {
         const info = history?.rows?.[index as number];
-        const _findIndex = accountHistory?.findIndex((item: any) => item?.epoch_id === e.epoch_id);
-        if (accountHistory !== undefined && _findIndex !== undefined && _findIndex !== -1) {
+        const _findIndex = accountHistory?.findIndex((item: any) => {
+          return item?.epoch_id === e.epoch_id;
+        });
+
+        if (
+          accountHistory !== undefined &&
+          _findIndex !== undefined &&
+          _findIndex !== -1
+        ) {
           // get broker
           const brokerList = accountHistory[_findIndex].broker;
-          const curBrokerIndex = brokerList.findIndex((item) => item.broker_id === brokerId);
-          const curBroker = curBrokerIndex !== -1 ? brokerList[curBrokerIndex] : undefined;
+          const curBrokerIndex = brokerList.findIndex(
+            (item) => item.broker_id === brokerId
+          );
+          const curBroker =
+            curBrokerIndex !== -1 ? brokerList[curBrokerIndex] : undefined;
           const curRewards = curBroker?.r_account ?? 0;
           const otherRewards = Math.max(0, (info?.r_wallet ?? 0) - curRewards);
           rewardsTooltip = {
@@ -81,6 +92,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
         ...e,
       } as ListType;
     });
+
     combineData.sort((a, b) => a.epoch_id - b.epoch_id); // asc
     let [claimedReward] = totalOrderClaimedReward;
     if (typeof claimedReward !== "undefined") {
@@ -140,6 +152,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
 
   return {
     data: newData,
+    originalData: data,
     meta: meta,
     onPageChange,
     onPageSizeChange,

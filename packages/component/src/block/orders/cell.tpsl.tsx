@@ -54,8 +54,8 @@ export const TPSLCell: FC<{
                     labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
                     valueClassName={
                       child.algo_type === AlgoOrderType.TAKE_PROFIT
-                        ? "orderly-text-trade-profit orderly-text-3xs orderly-font-bold orderly-underline orderly-underline-offset-2 orderly-decoration-dashed orderly-decoration-base-contrast-36"
-                        : "orderly-text-trade-loss orderly-text-3xs orderly-font-bold orderly-underline orderly-underline-offset-2 orderly-decoration-dashed orderly-decoration-base-contrast-36"
+                        ? "orderly-text-trade-profit orderly-text-2xs orderly-font-bold orderly-underline orderly-underline-offset-2 orderly-decoration-dashed orderly-decoration-base-contrast-36"
+                        : "orderly-text-trade-loss orderly-text-2xs orderly-font-bold orderly-underline orderly-underline-offset-2 orderly-decoration-dashed orderly-decoration-base-contrast-36"
                     }
                     rule="price"
                     precision={quote_dp}
@@ -85,7 +85,7 @@ export const TPSLCell: FC<{
               labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
               value={<span>Market</span>}
               rule="price"
-              valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+              valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
             />
           </Fragment>
         );
@@ -107,7 +107,7 @@ export const TPSLCell: FC<{
         precision={base_dp}
         rule="price"
         align="right"
-        valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+        valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
       />
     );
 

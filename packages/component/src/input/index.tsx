@@ -218,7 +218,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <InputMask
             name={id || cid}
             className={cn(
-              "orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-xs",
+              "orderly-text-3xs orderly-select-none orderly-text-base-contrast-54 orderly-font-semibold desktop:orderly-text-2xs",
               fixClassName
             )}
           >
@@ -254,7 +254,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <Tooltip
-        className={cn("orderly-text-base-contrast orderly-text-4xs", props.tooltipClassName)}
+        className={cn(
+          "orderly-text-base-contrast orderly-text-4xs",
+          props.tooltipClassName
+        )}
         open={showTooltip}
         content={helpText ?? "input help text"}
         sideOffset={5}

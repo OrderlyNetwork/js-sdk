@@ -108,7 +108,7 @@ export const OrderOptions: FC<OrderOptionsProps> = (props) => {
                 />
                 <Label
                   htmlFor="orderConfirm"
-                  className="orderly-text-base-contrast-54"
+                  className="orderly-text-base-contrast-54 desktop:orderly-text-2xs"
                 >
                   Order confirm
                 </Label>
