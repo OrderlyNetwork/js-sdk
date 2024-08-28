@@ -39,7 +39,8 @@
       "@orderly.network/trading": ["../../packages/trading/src"],
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
-      ]
+      ],
+      "@orderly.network/react": ["../../packages/component/src"],
     }
   },
   "include": ["src"]

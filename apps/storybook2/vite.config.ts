@@ -71,6 +71,15 @@ export default defineConfig({
         __dirname,
         "../../packages/onboard/src"
       ),
+      "@orderly.network/react/dist": resolve(
+        __dirname,
+        "../../packages/component/dist"
+      ),
+      "@orderly.network/react": resolve(
+        __dirname,
+        "../../packages/component/src"
+      ),
+      "@": resolve(__dirname, "../../packages/component/src"),
     },
   },
 });
