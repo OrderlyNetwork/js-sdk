@@ -16,14 +16,14 @@ export const OrderTypesCheckbox: FC<Props> = ({ value, onValueChange }) => {
         label="Post only"
         value={OrderType.POST_ONLY}
         onClick={onValueChange}
-        />
+      />
       <OrderTypeItem
         id="orderly-order-entry-expand-content-ioc"
         active={value === OrderType.IOC}
         label="IOC"
         value={OrderType.IOC}
         onClick={onValueChange}
-        />
+      />
       <OrderTypeItem
         id="orderly-order-entry-expand-content-fok"
         active={value === OrderType.FOK}
@@ -66,7 +66,9 @@ const OrderTypeItem: FC<{
           <Circle className="orderly-order-entry-radio-circle orderly-w-[10px] orderly-h-[10px] orderly-text-link orderly-bg-link orderly-rounded-full" />
         )}
       </button>
-      <span className="orderly-text-3xs">{props.label}</span>
+      <span className="orderly-text-3xs desktop:orderly-text-2xs">
+        {props.label}
+      </span>
     </div>
   );
 };

@@ -48,7 +48,7 @@ export const DesktopReduceOnlyLabel: FC<{
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            className="orderly-text-base-contrast-54"
+            className="orderly-text-base-contrast-54 orderly-text-2xs"
             type="button"
             onClick={(e) => {
               e.stopPropagation();
