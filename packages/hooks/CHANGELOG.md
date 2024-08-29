@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.5.10-sdk-v2.82
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.10-sdk-v2.82
+  - @orderly.network/utils@1.5.10-sdk-v2.82
+  - @orderly.network/core@1.5.10-sdk-v2.82
+  - @orderly.network/perp@3.3.10-sdk-v2.82
+  - @orderly.network/net@1.5.10-sdk-v2.82
+
 ## 1.5.10-sdk-v2.81
 
 ### Patch Changes
