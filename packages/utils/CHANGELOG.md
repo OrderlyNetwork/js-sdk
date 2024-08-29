@@ -1,5 +1,11 @@
 # @orderly.network/utils
 
+## 1.5.11
+
+### Patch Changes
+
+- fix bugs;
+
 ## 1.5.10
 
 ### Patch Changes
