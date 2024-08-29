@@ -194,13 +194,14 @@ export const Assets: FC<AssetsProps> = (props) => {
       </CollapsibleContent>
       <div className={"orderly-pb-4"}>
         <Progress
-          value={marginRatioVal * 100}
-          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
           foregroundClassName={cn("orderly-bg-gradient-to-r", {
             "orderly-from-[#F4807C] orderly-to-[#FF4F82]": isRed,
             "orderly-from-[#E6D673] orderly-to-[#C5A038]": isYellow,
             "orderly-from-[#1DF6B5] orderly-to-[#86ED92]": isGreen,
           })}
+          value={marginRatioVal * 100}
+          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
+          data-variant={isConnected && marginRatioVal ? "solid" : "gradient"}
           data-margin-ratio={isConnected ? marginRatioAttr : undefined}
         />
       </div>
