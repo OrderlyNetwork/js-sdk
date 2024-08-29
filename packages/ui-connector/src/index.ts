@@ -6,6 +6,7 @@ export {
 export {
   WalletConnectorWidget,
   WalletConnectorModalId,
+  WalletConnectorSheetId,
 } from "./component/walletConnector";
 
 export { useWalletConnectorBuilder } from "./component/useWalletConnectorBuilder";
