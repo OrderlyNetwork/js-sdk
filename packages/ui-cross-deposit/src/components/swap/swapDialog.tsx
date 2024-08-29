@@ -21,7 +21,7 @@ export const SwapDialog = modal.create<SwapProps>((props) => {
       closable
       onOpenChange={onOpenChange}
       classNames={{
-        content: "oui-font-semibold",
+        content: "oui-font-semibold oui-w-[95%]",
       }}
       size="md"
     >
