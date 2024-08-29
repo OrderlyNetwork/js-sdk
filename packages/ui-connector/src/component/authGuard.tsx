@@ -1,5 +1,9 @@
-import { useAccount } from "@orderly.network/hooks";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
+import { useAccount, useMediaQuery } from "@orderly.network/hooks";
+import {
+  AccountStatusEnum,
+  MEDIA_TABLET,
+  NetworkId,
+} from "@orderly.network/types";
 import {
   Button,
   Either,
@@ -11,7 +15,10 @@ import {
 } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
 import { PropsWithChildren, ReactElement, useMemo } from "react";
-import { WalletConnectorModalId } from "./walletConnector";
+import {
+  WalletConnectorModalId,
+  WalletConnectorSheetId,
+} from "./walletConnector";
 import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 import { alertMessages, DESCRIPTIONS, LABELS } from "../constants/message";
 import { Flex } from "@orderly.network/ui";
@@ -102,7 +109,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
 
     return (
       <DefaultFallback
-          bridgeLessOnly={bridgeLessOnly}
+        bridgeLessOnly={bridgeLessOnly}
         status={state.status}
         buttonProps={{ ...buttonProps, id, type: "button" }}
         wrongNetwork={wrongNetwork}
@@ -137,9 +144,10 @@ const DefaultFallback = (props: {
   const { buttonProps, labels, descriptions } = props;
   const { connectWallet } = useAppContext();
   const { account } = useAccount();
+  const matches = useMediaQuery(MEDIA_TABLET);
   // const { connect } = useWalletConnector();
   const onConnectOrderly = () => {
-    modal.show(WalletConnectorModalId).then(
+    modal.show(matches ? WalletConnectorSheetId : WalletConnectorModalId).then(
       (r) => console.log(r),
       (error) => console.log(error)
     );
