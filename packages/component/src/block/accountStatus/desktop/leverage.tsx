@@ -12,6 +12,7 @@ import { Divider } from "@/divider";
 import { cn } from "@/utils";
 import { getMarginRatioColor } from "../utils";
 import { modal } from "@orderly.network/ui";
+import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 
 interface LeverageAndMarginRatioProps {
   isConnected: boolean;
@@ -123,7 +124,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
                 id="orderly-desktop-leverage-button"
                 className="orderly-flex orderly-items-center orderly-gap-1"
                 onClick={() => {
-                  modal.show("leverageEditor", { currentLeverage: 5 });
+                  modal.show(LeverageWidgetId, { currentLeverage: 5 });
                 }}
               >
                 <span>{`${maxLeverage ?? "-"}x`}</span>

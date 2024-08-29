@@ -1,17 +1,10 @@
 {
   "extends": "tsconfig/base.json",
-  "compilerOptions": {
-    
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
-  },
+  "compilerOptions": {},
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
     "out": "docs"
-}
+  }
 }
