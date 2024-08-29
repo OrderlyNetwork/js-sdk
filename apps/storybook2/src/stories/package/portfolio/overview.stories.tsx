@@ -36,7 +36,7 @@ const meta = {
             brokerName={""}
             networkId={"testnet"}
             onChainChanged={args.args.onChainChanged}
-            // configStore={config}
+            configStore={config}
           >
             <Story />
           </OrderlyApp>

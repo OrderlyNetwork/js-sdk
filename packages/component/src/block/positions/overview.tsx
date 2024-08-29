@@ -46,7 +46,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
       >
         <Statistic
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-xs"
           label="Unreal. PnL"
           value={aggregated?.unrealPnL}
           coloring
@@ -54,7 +54,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-xs"
           label="Notional"
           value={aggregated?.notional}
           rule="price"
@@ -62,7 +62,7 @@ export const PositionOverview: FC<OverviewProps> = (props) => {
         <Statistic
           label=""
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-xs"
           value={<div />}
           rule="price"
           coloring

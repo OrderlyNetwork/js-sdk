@@ -5,6 +5,7 @@
       "@/*": ["./src/*"],
       "@orderly.network/core": ["../core/src"],
       "@orderly.network/ui": ["../ui/src"],
+      "@orderly.network/ui-leverage": ["../ui-leverage/src"],
       "@orderly.network/hooks": ["../hooks/src"],
       "@orderly.network/net": ["../net/src"],
       "@orderly.network/web3-onboard": ["../onboard/src"],
@@ -12,7 +13,7 @@
       "@orderly.network/trading-view": ["../trading-view/src"],
       "@orderly.network/types": ["../types/src"],
       "@orderly.network/utils": ["../utils/src"],
-      "@orderly.network/web3-modal": ["../walletconnect/src"]
+      "@orderly.network/web3-modal": ["../walletconnect/src"],
     }
   }
 }

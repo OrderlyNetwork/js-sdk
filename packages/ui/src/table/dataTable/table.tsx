@@ -18,7 +18,6 @@ import { TableProvider } from "./tableContext";
 // import { useDebouncedCallback } from "@orderly.network/hooks";
 import { FixedDivide } from "./fixedDivide";
 import { TBody, TBodyProps } from "./tbody";
-// import { EndReachedBox } from "@/listView/endReachedBox";
 import { Table } from "../table";
 import { cnBase, type VariantProps } from "tailwind-variants";
 import { tv } from "../../utils/tv";

@@ -43,7 +43,7 @@ const List: FC<RewardsHistoryReturns> = (props) => {
 
   return isMobile ? (
     <ListView
-      dataSource={props.data}
+      dataSource={props.originalData}
       renderItem={(item, index) => {
         return <MobileCell data={item} />;
       }}
@@ -60,6 +60,7 @@ const MobileCell: FC<{
   data: ListType;
 }> = (props) => {
   const { data } = props;
+  console.log(data.rewardsTooltip);
   const isOrder =
     `${data?.info?.epoch_token || data.epoch_token}`.toLowerCase() === "order";
   const r_warret = commifyOptional(data.info?.r_wallet, { fix: 2 });
@@ -107,7 +108,21 @@ const MobileCell: FC<{
           <Flex gap={1}>
             {r_warret !== "--" &&
               (isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />)}
-            <Text className="oui-text-sm">{r_warret}</Text>
+            {!!data.rewardsTooltip ? (
+              <RewardsTooltip
+                rewardsTooltip={data.rewardsTooltip}
+                children={
+                  <Text className="oui-text-sm oui-underline oui-decoration-dashed oui-cursor-pointer oui-underline-offset-4 oui-decoration-line-16">
+                    {r_warret}
+                  </Text>
+                }
+                align="center"
+                className="oui-bg-base-5"
+                arrowClassName="oui-fill-base-5"
+              />
+            ) : (
+              <Text className="oui-text-sm">{r_warret}</Text>
+            )}
           </Flex>
         </Flex>
       </Flex>

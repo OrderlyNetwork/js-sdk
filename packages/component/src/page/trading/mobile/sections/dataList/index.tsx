@@ -16,7 +16,7 @@ export const DataListView = () => {
       id="orderly-data-list"
       value={activeTab}
       onTabChange={setActiveTab}
-      tabBarClassName="orderly-data-list-tab-bar orderly-bg-base-900 orderly-text-3xs"
+      tabBarClassName="orderly-data-list-tab-bar orderly-bg-base-900 orderly-text-xs"
     >
       <TabPane
         title={<PositionTabTitle />}

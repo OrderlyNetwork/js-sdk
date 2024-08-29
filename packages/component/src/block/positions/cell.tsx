@@ -49,7 +49,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={
             <div
               className={cn(
-                "orderly-flex orderly-justify-end orderly-text-3xs orderly-items-center",
+                "orderly-flex orderly-justify-end orderly-text-2xs orderly-items-center orderly-gap-0.5",
                 item["unrealized_pnl"] > 0
                   ? "orderly-text-trade-profit"
                   : item["unrealized_pnl"] < 0
@@ -78,7 +78,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           label="Qty."
           labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           value={item["position_qty"]}
           coloring
           rule="price"
@@ -87,7 +87,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         <Statistic
           rule="price"
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Margin</span>
@@ -98,7 +98,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Notional</span>
@@ -112,7 +112,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Avg. open</span>
@@ -125,7 +125,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Mark price</span>
@@ -144,7 +144,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
               {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
-          valueClassName="orderly-text-warning orderly-text-3xs"
+          valueClassName="orderly-text-warning orderly-text-2xs"
           value={item["est_liq_price"] === 0 ? "--" : item["est_liq_price"]}
           align="right"
           rule="price"

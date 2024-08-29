@@ -90,7 +90,7 @@ export const MSelect: FC<SelectProps> = ({
         onClick={() => setOpen((open) => !open)}
         className={cn(
           "orderly-select",
-          "orderly-flex orderly-flex-row orderly-items-center orderly-rounded orderly-space-x-1 orderly-text-3xs desktop:orderly-text-xs",
+          "orderly-flex orderly-flex-row orderly-items-center orderly-rounded orderly-space-x-1 orderly-text-3xs desktop:orderly-text-2xs",
           selectVariants({
             size,
             disabled: disabled || options.length === 0,

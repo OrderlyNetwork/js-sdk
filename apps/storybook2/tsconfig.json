@@ -40,7 +40,8 @@
       "@orderly.network/ui-order-entry": ["../../packages/ui-order-entry/src"],
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
-      ]
+      ],
+      "@orderly.network/react": ["../../packages/component/src"],
     }
   },
   "include": ["src"]

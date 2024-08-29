@@ -18,6 +18,7 @@ export type ListType = EpochInfoItem & {
 
 export type RewardsHistoryReturns = {
   data: ListType[];
+  originalData: ListType[];
   meta: {
     count: number;
     page: number;
@@ -57,9 +58,10 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
 
       if (index !== -1 && !wrongNetwork) {
         const info = history?.rows?.[index as number];
-        const _findIndex = accountHistory?.findIndex(
-          (item: any) => item?.epoch_id === e.epoch_id
-        );
+        const _findIndex = accountHistory?.findIndex((item: any) => {
+          return item?.epoch_id === e.epoch_id;
+        });
+
         if (
           accountHistory !== undefined &&
           _findIndex !== undefined &&
@@ -150,6 +152,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
 
   return {
     data: newData,
+    originalData: data,
     meta: meta,
     onPageChange,
     onPageSizeChange,

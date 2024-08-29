@@ -63,7 +63,7 @@ export const Header: FC<Props> = (props) => {
             label={"Unreal. PnL"}
             value={
               <div
-                className={cn("orderly-flex orderly-gap-1", {
+                className={cn("orderly-flex orderly-gap-[0.5]", {
                   "orderly-text-trade-loss": unrealPnL < 0,
                   "orderly-text-trade-profit": unrealPnL > 0,
                 })}
