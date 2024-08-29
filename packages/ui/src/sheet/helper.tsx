@@ -29,7 +29,6 @@ function createSheetComponent<P extends Partial<SheetProps>>(
   });
 }
 
-// export function registerDialog<Props = {}>() {}
 
 export const registerSimpleSheet = <Props = {}>(
   id: string,
