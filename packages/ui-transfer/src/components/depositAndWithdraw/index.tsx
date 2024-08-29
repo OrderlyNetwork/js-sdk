@@ -1,10 +1,16 @@
 import { FC, useState } from "react";
-import { registerSimpleDialog, TabPanel, Tabs } from "@orderly.network/ui";
+import {
+  registerSimpleDialog,
+  registerSimpleSheet,
+  TabPanel,
+  Tabs,
+} from "@orderly.network/ui";
 import { DepositIcon, WithdrawIcon } from "../../icons";
 import { WithdrawFormWidget } from "../withdrawForm";
 import { DepositSlot } from "./plugin";
 
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
+export const DepositAndWithdrawWithSheetId = "DepositAndWithdrawWithSheetId";
 
 export type DepositAndWithdrawProps = {
   activeTab?: "deposit" | "withdraw";
@@ -12,6 +18,7 @@ export type DepositAndWithdrawProps = {
 };
 
 export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
+  console.log("DepositAndWithdraw", props);
   const [activeTab, setActiveTab] = useState<string>(
     props.activeTab || "deposit"
   );
@@ -40,3 +47,5 @@ registerSimpleDialog(DepositAndWithdrawWithDialogId, DepositAndWithdraw, {
   size: "md",
   bodyClassName: "oui-pt-3",
 });
+
+registerSimpleSheet(DepositAndWithdrawWithSheetId, DepositAndWithdraw);
