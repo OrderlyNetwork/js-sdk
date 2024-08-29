@@ -10,3 +10,5 @@ export {
   SheetTitle,
   SheetDescription,
 } from "./sheet";
+
+export { registerSimpleSheet } from "./helper";
