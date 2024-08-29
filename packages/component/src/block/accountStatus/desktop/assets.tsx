@@ -111,6 +111,20 @@ export const Assets: FC<AssetsProps> = (props) => {
 
   const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
+  const marginRatioAttr = useMemo(() => {
+    if (isRed) {
+      return "high";
+    }
+    if (isYellow) {
+      return "medium";
+    }
+    if (isGreen) {
+      return "low";
+    }
+
+    return "default";
+  }, [isRed, isYellow, isGreen]);
+
   return (
     <Collapsible
       open={collapsed > 0}
@@ -187,9 +201,13 @@ export const Assets: FC<AssetsProps> = (props) => {
             "orderly-from-[#E6D673] orderly-to-[#C5A038]": isYellow,
             "orderly-from-[#1DF6B5] orderly-to-[#86ED92]": isGreen,
           })}
+          data-margin-ratio={isConnected ? marginRatioAttr : undefined}
         />
       </div>
-      <MemorizedLeverage isConnected={isConnected} />
+      <MemorizedLeverage
+        isConnected={isConnected}
+        data-margin-ratio={isConnected ? marginRatioAttr : undefined}
+      />
     </Collapsible>
   );
 };
