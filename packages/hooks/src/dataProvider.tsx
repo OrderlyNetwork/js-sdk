@@ -1,6 +1,16 @@
 import { PropsWithChildren, createContext, useContext, useRef } from "react";
 import { usePrivateDataObserver } from "./orderly/usePrivateDataObserver";
 import { usePreLoadData } from "./usePreloadData";
+import { useWSObserver } from "./orderly/internal/useWSObserver";
+import { useSimpleDI } from "./useSimpleDI";
+import {
+  CalculatorService,
+  CalculatorServiceID,
+} from "./orderly/calculator/calculatorService";
+import useConstant from "use-constant";
+import { SimpleDI } from "@orderly.network/core";
+import { ShardedScheduler } from "./orderly/calculator/shardedScheduler";
+import { PositionCalculator } from "./orderly/calculator/positions";
 
 export type getKeyFunction = (index: number, prevData: any) => string | null;
 
@@ -9,7 +19,7 @@ interface DataCenterContextState {
   // positions
   // balances
   //
-  regesterKeyHandler: (key: string, handler: getKeyFunction) => void;
+  registerKeyHandler: (key: string, handler: getKeyFunction) => void;
   unregisterKeyHandler: (key: string) => void;
 }
 
@@ -25,6 +35,22 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
    *  hidden view while the required data is not ready
    */
   const { error, done } = usePreLoadData();
+  const { get } = useSimpleDI<CalculatorService>();
+
+  const calculatorService = useConstant(() => {
+    let calculatorService = get(CalculatorServiceID);
+
+    if (!calculatorService) {
+      calculatorService = new CalculatorService(new ShardedScheduler(), [
+        ["markPrice", [new PositionCalculator()]],
+      ]);
+
+      SimpleDI.registerByName(CalculatorServiceID, calculatorService);
+    }
+    return calculatorService;
+  });
+
+  useWSObserver(calculatorService);
 
   const getKeyHandlerMapRef = useRef<Map<string, getKeyFunction>>(new Map());
 
@@ -43,7 +69,7 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
   return (
     <DataCenterContext.Provider
       value={{
-        regesterKeyHandler: (key, fun) => {
+        registerKeyHandler: (key, fun) => {
           getKeyHandlerMapRef.current.set(key, fun);
         },
         unregisterKeyHandler: (key) => {

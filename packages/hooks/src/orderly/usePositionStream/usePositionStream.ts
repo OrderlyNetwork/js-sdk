@@ -23,16 +23,9 @@ import {
   findTPSLFromOrder,
   findTPSLFromOrders,
 } from "./utils";
+// import { usePosition } from "./usePosition";
 
 type PriceMode = "markPrice" | "lastPrice";
-
-export interface PositionReturn {
-  data: any[];
-  loading: boolean;
-  close: (
-    order: Pick<OrderEntity, "order_type" | "order_price" | "side">
-  ) => void;
-}
 
 export const usePositionStream = (
   /**
@@ -47,6 +40,8 @@ export const usePositionStream = (
     includedPendingOrder?: boolean;
   }
 ) => {
+  // const updatePosition = usePosition((state) => state.updatePosition);
+  //
   const symbolInfo = useSymbolsInfo();
 
   const { includedPendingOrder = false } = options || {};
@@ -114,7 +109,7 @@ export const usePositionStream = (
     return data;
   }, [tickers]);
 
-  const formatedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
+  const formattedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
     if (!data?.rows || symbolInfo.isNil || !accountInfo) return null;
 
     const filteredData =
@@ -224,8 +219,8 @@ export const usePositionStream = (
     if (!holding || !markPrices) {
       return [zero, zero, 0];
     }
-    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formatedPositions);
-    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formatedPositions);
+    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formattedPositions);
+    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formattedPositions);
 
     const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
 
@@ -247,16 +242,16 @@ export const usePositionStream = (
     });
 
     return [totalCollateral, totalValue, totalUnrealizedROI];
-  }, [holding, formatedPositions, markPrices]);
+  }, [holding, formattedPositions, markPrices]);
 
   const positionsRows = useMemo<API.PositionTPSLExt[] | null>(() => {
-    if (!formatedPositions) return null;
+    if (!formattedPositions) return null;
 
-    if (!symbolInfo || !accountInfo) return formatedPositions[0];
+    if (!symbolInfo || !accountInfo) return formattedPositions[0];
 
     const total = totalCollateral.toNumber();
 
-    let rows = formatedPositions[0];
+    let rows = formattedPositions[0];
 
     if (!includedPendingOrder) {
       rows = rows.filter((item) => item.position_qty !== 0);
@@ -322,7 +317,13 @@ export const usePositionStream = (
     });
 
     return rows;
-  }, [formatedPositions, symbolInfo, accountInfo, totalCollateral, tpslOrders]);
+  }, [
+    formattedPositions,
+    symbolInfo,
+    accountInfo,
+    totalCollateral,
+    tpslOrders,
+  ]);
 
   const positionInfoGetter = createGetter<
     Omit<API.PositionInfo, "rows">,
@@ -333,7 +334,7 @@ export const usePositionStream = (
     {
       rows: positionsRows,
       aggregated: {
-        ...(formatedPositions?.[1] ?? {}),
+        ...(formattedPositions?.[1] ?? {}),
         unrealPnlROI: totalUnrealizedROI,
       },
       totalCollateral,

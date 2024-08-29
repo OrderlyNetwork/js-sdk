@@ -21,7 +21,7 @@ const badgeVariants = tv({
       danger: "",
       success: "",
       warning: "",
-      neutural: "",
+      neutral: "",
     },
     size: {
       xs: "oui-px-2 oui-py-0.5 oui-text-3xs oui-rounded oui-h-[18px]",
@@ -63,7 +63,7 @@ const badgeVariants = tv({
     },
     {
       variant: "contained",
-      color: "neutural",
+      color: "neutral",
       className: ["oui-bg-line", "oui-text-base-contrast-36"],
     },
     {
@@ -88,7 +88,7 @@ const badgeVariants = tv({
     },
     {
       variant: "text",
-      color: "neutural",
+      color: "neutral",
       className: ["oui-text-base-contrast-36"],
     },
   ],

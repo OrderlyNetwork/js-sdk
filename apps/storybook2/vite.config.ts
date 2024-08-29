@@ -71,6 +71,10 @@ export default defineConfig({
         __dirname,
         "../../packages/onboard/src"
       ),
+      "@orderly.network/ui-order-entry": resolve(
+        __dirname,
+        "../../packages/ui-order-entry/src"
+      ),
     },
   },
 });

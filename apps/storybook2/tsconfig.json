@@ -37,6 +37,7 @@
       "@orderly.network/ui-transfer": ["../../packages/ui-transfer/src"],
       "@orderly.network/withdraw": ["../../packages/withdraw/src"],
       "@orderly.network/trading": ["../../packages/trading/src"],
+      "@orderly.network/ui-order-entry": ["../../packages/ui-order-entry/src"],
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
       ]

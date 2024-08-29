@@ -7,13 +7,24 @@ import {
   DropdownMenuTrigger,
   Input,
 } from "@orderly.network/ui";
+import { useState } from "react";
+
+export enum PriceInputType {
+  MARKET = "Market",
+  LIMIT = "Limit",
+}
 
 export const PriceInput = () => {
+  const [type, setType] = useState<PriceInputType>(PriceInputType.MARKET);
   return (
     <DropdownMenuRoot>
       <Input
         size="sm"
-        value={"Market"}
+        autoComplete="off"
+        value={type === PriceInputType.MARKET ? "Market" : ""}
+        onFocus={() => {
+          setType(PriceInputType.LIMIT);
+        }}
         suffix={
           <DropdownMenuTrigger asChild>
             <button className="oui-px-1 oui-h-full">
@@ -29,8 +40,8 @@ export const PriceInput = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             size="xs"
-            onSelect={(vent) => {
-              console.log(vent);
+            onSelect={() => {
+              setType(PriceInputType.MARKET);
             }}
           >
             <span>Market</span>
