@@ -75,10 +75,30 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
   }, [dateRange, placeholder]);
 
   const onOpenChange = (nextOpen: boolean) => {
+    // console.log(dateRange);
+    if (
+      typeof dateRange?.to === "undefined" &&
+      typeof dateRange?.from !== "undefined"
+    ) {
+      setDateRange({
+        ...dateRange,
+        to: dateRange.from,
+      });
+    }
     if (!nextOpen && dateRange) {
       onChange?.(dateRange);
     }
     setOpen(nextOpen);
+  };
+
+  const onSelected = (range: DateRange, date: Date) => {
+    if (dateRange?.from && dateRange?.to) {
+      setDateRange({
+        from: date,
+      });
+    } else {
+      setDateRange(range);
+    }
   };
 
   return (
@@ -97,7 +117,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
           // @ts-ignore
           selected={dateRange}
           // @ts-ignore
-          onSelect={setDateRange}
+          onSelect={onSelected}
         />
       }
     >

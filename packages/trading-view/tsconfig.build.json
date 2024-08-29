@@ -4,9 +4,6 @@
     "jsx": "react-jsx",
     "declarationDir": "types",
     "resolveJsonModule": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

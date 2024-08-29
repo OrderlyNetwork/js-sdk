@@ -1,6 +1,13 @@
 import { Column, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
 import { TPSLButton } from "./tpsl/tpsl.ui";
+import { QuantityInput } from "./quantityInput";
+import {
+  renderPriceInput,
+  renderQuantity,
+  renderQuantityInput,
+} from "./listElement";
+import { CloseButton } from "./closeButton";
 
 export const useColumn = () => {
   const column = useMemo<Column[]>(
@@ -34,11 +41,12 @@ export const useColumn = () => {
         dataIndex: "position_qty",
         onSort: true,
         width: 100,
-        rule: "price",
-        numeralProps: {
-          coloring: true,
-          // tick: "base_dp",
-        },
+        // rule: "price",
+        // numeralProps: {
+        //   coloring: true,
+        //   // tick: "base_dp",
+        // },
+        render: renderQuantity,
         // render: (value: string) => (
         //   <NumeralWithCtx
         //     coloring
@@ -163,6 +171,7 @@ export const useColumn = () => {
         dataIndex: "mm",
         onSort: true,
         width: 100,
+        rule: "price",
         // render: (value: string) => (
         //   <Numeral className="orderly-font-semibold">{value}</Numeral>
         // ),
@@ -173,22 +182,21 @@ export const useColumn = () => {
         //     <span>Margin = Position size * Mark price * MMR</span>
         //   </div>
         // ),
-        hintClassName: "orderly-p-2",
+        // hintClassName: "orderly-p-2",
       },
       {
         title: "Qty.",
         dataIndex: "close_qty",
         width: 100,
         fixed: "right",
-        // render: (value: string) => {
-        //   return <QuantityInput />;
-        // },
+        render: renderQuantityInput,
       },
       {
         title: "Price",
         dataIndex: "close_price",
         width: 100,
         fixed: "right",
+        render: renderPriceInput,
         // render: (value: string) => <PriceInput />,
       },
       {
@@ -199,8 +207,8 @@ export const useColumn = () => {
         fixed: "right",
         render: (value: string) => {
           return (
-            <div className="orderly-flex orderly-space-x-2">
-              {/* <CloseButton /> */}
+            <div className="oui-flex oui-space-x-2">
+              <CloseButton />
               <TPSLButton />
             </div>
           );

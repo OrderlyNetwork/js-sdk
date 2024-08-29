@@ -6,17 +6,17 @@ import {
   Flex,
   ListView,
   Pagination,
-  ScrollArea,
   Text,
 } from "@orderly.network/ui";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
-import { AuthGuardDataTable, AuthGuardEmpty } from "@orderly.network/ui-connector";
+import { AuthGuardEmpty } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { RewardsTooltip } from "../curEpoch/rewardsTooltip";
 
 export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
   return (
@@ -43,7 +43,7 @@ const List: FC<RewardsHistoryReturns> = (props) => {
 
   return isMobile ? (
     <ListView
-      dataSource={props.data}
+      dataSource={props.originalData}
       renderItem={(item, index) => {
         return <MobileCell data={item} />;
       }}
@@ -60,9 +60,10 @@ const MobileCell: FC<{
   data: ListType;
 }> = (props) => {
   const { data } = props;
+  console.log(data.rewardsTooltip);
   const isOrder =
     `${data?.info?.epoch_token || data.epoch_token}`.toLowerCase() === "order";
-  const r_warret = commifyOptional(data.info?.r_wallet, { fix: 2});
+  const r_warret = commifyOptional(data.info?.r_wallet, { fix: 2 });
   return (
     <Flex
       key={data.epoch_id}
@@ -107,7 +108,21 @@ const MobileCell: FC<{
           <Flex gap={1}>
             {r_warret !== "--" &&
               (isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />)}
-            <Text className="oui-text-sm">{r_warret}</Text>
+            {!!data.rewardsTooltip ? (
+              <RewardsTooltip
+                rewardsTooltip={data.rewardsTooltip}
+                children={
+                  <Text className="oui-text-sm oui-underline oui-decoration-dashed oui-cursor-pointer oui-underline-offset-4 oui-decoration-line-16">
+                    {r_warret}
+                  </Text>
+                }
+                align="center"
+                className="oui-bg-base-5"
+                arrowClassName="oui-fill-base-5"
+              />
+            ) : (
+              <Text className="oui-text-sm">{r_warret}</Text>
+            )}
           </Flex>
         </Flex>
       </Flex>
@@ -213,10 +228,34 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         const isOrder =
           `${record?.info?.epoch_token || record.epoch_token}`.toLowerCase() ===
           "order";
+
+        let children = (
+          <Text
+            className={
+              record.rewardsTooltip
+                ? "oui-underline oui-decoration-dashed oui-cursor-pointer oui-underline-offset-4 oui-decoration-line-16"
+                : ""
+            }
+          >
+            {commifyOptional(record.info?.r_wallet, { fix: 2 })}
+          </Text>
+        );
+
+        if (record.rewardsTooltip) {
+          children = (
+            <RewardsTooltip
+              rewardsTooltip={record.rewardsTooltip}
+              children={children}
+              align="center"
+              className="oui-bg-base-5"
+              arrowClassName="oui-fill-base-5"
+            />
+          );
+        }
         return (
           <Flex direction={"row"} gap={1}>
             {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
-            <Text>{commifyOptional(record.info?.r_wallet, { fix: 2 })}</Text>
+            {children}
           </Flex>
         );
       },
@@ -233,7 +272,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
         header: "oui-text-base-contrast-36 oui-bg-base-9",
         body: "oui-text-base-contrast-80",
       }}
-      emptyView={<AuthGuardEmpty status={AccountStatusEnum.SignedIn}/>}
+      emptyView={<AuthGuardEmpty status={AccountStatusEnum.SignedIn} />}
     >
       <Pagination
         {...props.meta}

@@ -27,15 +27,12 @@ export const useFundingHistoryHook = () => {
       // dataRange: dateRange.map((date) => date.getTime()),
       dataRange: [
         dateRange[0].getTime(),
-        (isSameDay(dateRange[0], dateRange[1])
-          ? dateRange[1]
-          : set(dateRange[1], {
-              hours: 23,
-              seconds: 59,
-              minutes: 0,
-              milliseconds: 0,
-            })
-        )
+        set(dateRange[1], {
+          hours: 23,
+          minutes: 59,
+          seconds: 59,
+          milliseconds: 0,
+        })
           //  addDays(dateRange[1], 1)
           .getTime(),
       ],

@@ -37,6 +37,7 @@ import {
 // import { modal } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
+  OrderConfirmCheckBox,
   OrderConfirmFooter,
   OrderConfirmView,
 } from "./sections/orderConfirmView.new";
@@ -276,6 +277,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
             return modal.confirm({
               // maxWidth: "sm",
               title: "Confirm Order",
+              bodyClassName: "!orderly-pb-0",
               // okId: "orderly-confirm-order-dialog-confirm",
               // cancelId: "orderly-confirm-order-dialog-cancel",
               onCancel: () => {
@@ -292,17 +294,22 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                 />
               ) : undefined,
               content: (
-                <OrderConfirmView
-                  order={{
-                    ...(formattedOrder as OrderEntity),
-                    side: side!,
-                    symbol: props.symbol,
-                  }}
-                  symbol={symbol}
-                  base={symbolConfig?.base}
-                  quote={symbolConfig?.quote}
-                  isTable={isTablet}
-                />
+                <>
+                  <OrderConfirmView
+                    order={{
+                      ...(formattedOrder as OrderEntity),
+                      side: side!,
+                      symbol: props.symbol,
+                    }}
+                    symbol={symbol}
+                    base={symbolConfig?.base}
+                    quote={symbolConfig?.quote}
+                    isTable={isTablet}
+                  />
+                  <div className="orderly-flex-1 orderly-items-center orderly-h-[32px]">
+                    <OrderConfirmCheckBox className="orderly-pt-[6px]" />
+                  </div>
+                </>
               ),
             });
           } else {

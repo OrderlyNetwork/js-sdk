@@ -143,11 +143,11 @@ export const OrderConfirmCheckBox: FC<{
         }}
       />
       <Label
-        htmlFor={"showAll"}
+        htmlFor={"orderConfirm"}
         className="orderly-text-base-contrast-54 orderly-text-3xs"
-        onClick={() => {
-          setNeedConfirm(!needConfirm);
-        }}
+        // onClick={() => {
+        //   setNeedConfirm(!needConfirm);
+        // }}
       >
         Disable order confirmation
       </Label>

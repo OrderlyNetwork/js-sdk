@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useContext } from "react";
+import { PropsWithChildren, createContext, useContext, useMemo } from "react";
 import {
   TWType,
   EpochInfoType,
@@ -9,19 +9,20 @@ import {
   useCurEpochEstimate,
   CurrentEpochEstimate,
   useWalletRewardsHistory,
-  WalletRewards,
   WalletRewardsHisotryReturns,
+  Brokers,
+  useConfig,
 } from "@orderly.network/hooks";
 import { TitleConfig } from "./title/title.script";
 
 export type TradingRewardsState = {
   type: TWType;
+  brokerId: string;
+  brokerName?: string;
+  brokers?: Brokers;
   epochList: EpochInfoType;
   totalOrderClaimedReward: [number | undefined, { refresh: () => void }];
-  totalEsOrderClaimedReward: [
-    number | undefined,
-    { refresh: () => void }
-  ];
+  totalEsOrderClaimedReward: [number | undefined, { refresh: () => void }];
   curEpochEstimate?: CurrentEpochEstimate;
   walletRewardsHistory: WalletRewardsHisotryReturns;
   titleConfig: TitleConfig;
@@ -33,13 +34,16 @@ export const TradingRewardsContext = createContext<TradingRewardsState>(
 
 export const TradingRewardsProvider = (
   props: PropsWithChildren<{
-    /// default is TWType.normal
+    /** default is 'orderly' */
+    // brokerId?: string;
+    /** default is TWType.normal */
     type?: TWType;
     titleConfig?: TitleConfig;
   }>
 ) => {
-  // const searchParams = useSearchParams();
-  // let type = parseToTWType(searchParams.get("type"));
+  // const { brokerId = "orderly" } = props;
+
+  const brokerId = useConfig("brokerId");
 
   const {
     type = TWType.normal,
@@ -65,6 +69,10 @@ export const TradingRewardsProvider = (
 
   const epochList = useEpochInfo(type as TWType);
 
+  const brokerName = useMemo(() => {
+    return brokers?.[brokerId];
+  }, [brokerId, brokers]);
+
   return (
     <TradingRewardsContext.Provider
       value={{
@@ -77,6 +85,9 @@ export const TradingRewardsProvider = (
         curEpochEstimate,
         walletRewardsHistory,
         titleConfig,
+        brokerId,
+        brokerName,
+        brokers,
       }}
     >
       {/* <PageLoading loading={epochList.data === undefined}> */}

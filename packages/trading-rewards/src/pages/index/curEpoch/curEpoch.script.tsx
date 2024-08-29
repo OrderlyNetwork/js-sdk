@@ -9,34 +9,48 @@ import { useTradingRewardsContext } from "../provider";
 import { useMemo } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { RewardsTooltipProps } from "./rewardsTooltip";
 
-export type CurEpochReturns = {
-  epochList?: EpochInfoType;
-  estimate?: CurrentEpochEstimate;
-  hideData: boolean;
-  notConnected: boolean;
-  connect: () => Promise<any>;
-};
 export const useCurEpochScript = () => {
-  const { epochList, curEpochEstimate: estimate } = useTradingRewardsContext();
+  const {
+    epochList,
+    curEpochEstimate: estimate,
+    brokerId,
+    brokerName,
+  } = useTradingRewardsContext();
   const { wrongNetwork } = useAppContext();
   const { connect } = useWalletConnector();
   const { state } = useAccount();
 
   const hideData = useMemo(() => {
     return state.status <= AccountStatusEnum.SignedIn || wrongNetwork;
-  }, [state , wrongNetwork]);
+  }, [state, wrongNetwork]);
 
   const notConnected = useMemo(() => {
     return state.status <= AccountStatusEnum.SignedIn;
   }, [state]);
 
-  
-  console.log("xxxxx state,", state, notConnected);
-  
-  // const epochInfo = useDataTap(epochList[1].curEpochInfo);
-  // epochList[1].curEpochInfo = epochInfo ?? undefined;
+  const rewardsTooltip = useMemo((): RewardsTooltipProps | undefined => {
+    if (typeof estimate === "undefined" || estimate === null) return undefined;
+    const otherRewards = estimate.rows
+      .filter((item) => item.broker_id !== brokerId)
+      .reduce((a, b) => a + b.est_r_account, 0);
+    const curRewards = Number(estimate.est_r_wallet) - otherRewards;
+    return {
+      brokerName,
+      curRewards,
+      otherRewards,
+    };
+  }, [brokerId, brokerName, estimate]);
 
-
-  return { epochList, estimate, hideData, notConnected, connect };
+  return {
+    epochList,
+    estimate,
+    hideData,
+    notConnected,
+    connect,
+    rewardsTooltip: hideData ? undefined : rewardsTooltip,
+  };
 };
+
+export type CurEpochReturns = ReturnType<typeof useCurEpochScript>;

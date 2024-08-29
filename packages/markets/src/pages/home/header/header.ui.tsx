@@ -3,6 +3,7 @@ import { HeaderReturns } from "./header.script";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../provider";
+import { OrderlyIcon } from "../../../icons";
 
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
@@ -77,7 +78,11 @@ const BlockList: React.FC<BlockListProps> = (props) => {
   const list = useMemo(() => {
     return [
       {
-        label: "24h volume",
+        label: (
+          <Flex gapX={1}>
+            <OrderlyIcon /> 24h volume
+          </Flex>
+        ),
         value: total24Amount,
       },
       {
@@ -107,7 +112,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
 /** -----------MarketsHeader start ------------ */
 
 type BlockItemProps = {
-  label: string;
+  label: ReactNode;
   value?: number;
 };
 

@@ -81,7 +81,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <FavoritesWidget />
         </TabPanel>
-        <TabPanel title="All Markets" icon={<AllMarketsIcon />} value="all">
+        <TabPanel title="All markets" icon={<AllMarketsIcon />} value="all">
           <MarketListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
         </TabPanel>
         <TabPanel title="New listings" icon={<NewListingsIcon />} value="new">

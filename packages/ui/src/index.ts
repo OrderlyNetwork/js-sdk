@@ -41,7 +41,7 @@ export { EVMAvatar, Avatar } from "./avatar";
 export type { ButtonProps } from "./button";
 export type { BoxProps } from "./box";
 export type { FlexProps } from "./flex";
-export type { TextProps } from "./typography";
+export type { TextProps, NumeralProps } from "./typography";
 export type {
   InputProps,
   TextFieldProps,
@@ -67,7 +67,6 @@ export type { VariantProps } from "tailwind-variants";
 export * from "./utils";
 export { tv } from "./utils/tv";
 export { default as toast } from "react-hot-toast";
-
 
 //===== tailwind
 export * as OUITailwind from "./tailwind";

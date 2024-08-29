@@ -4,19 +4,15 @@ import React, { useEffect } from "react";
 import { useMemo, useState } from "react";
 
 export const useLayoutBuilder = (props: {
-  current?: string
+  current?: string;
 }): SideBarProps & {
   hideSideBar: boolean;
 } => {
-  const [current, setCurrent] = useState(props.current || "/rewards/trading");
-  
-  useEffect(() => {
-    if (props.current)
-      setCurrent(props.current);
-  }, [
-    props.current
-  ]);
+  const [current, setCurrent] = useState(props.current || "/rewards/affiliate");
 
+  useEffect(() => {
+    if (props.current) setCurrent(props.current);
+  }, [props.current]);
 
   const items = useMemo(() => {
     return [

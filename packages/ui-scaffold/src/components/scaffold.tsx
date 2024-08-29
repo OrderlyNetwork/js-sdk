@@ -16,7 +16,7 @@ import {
 } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterConfig, FooterWidget } from "./footer";
-import { MainNavProps } from "./main/useWidgetBuilder.script";
+import { MainNavWidgetProps } from "./main/useWidgetBuilder.script";
 import { MaintenanceTipsWidget } from "./maintenanceTips";
 
 export type LayoutProps = {
@@ -32,7 +32,7 @@ export type LayoutProps = {
   rightSidebar?: React.ReactNode;
   topBar?: React.ReactNode;
   // topBarProps?:
-  mainNavProps?: PropsWithChildren<MainNavProps>;
+  mainNavProps?: PropsWithChildren<MainNavWidgetProps>;
   footer?: React.ReactNode;
   routerAdapter?: routerAdapter;
   footerHeight?: number;
@@ -70,12 +70,16 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     setExpand(expand);
   };
 
-  const footerHeight = props.footerHeight !== undefined ? props.footerHeight : 29;
+  const footerHeight =
+    props.footerHeight !== undefined ? props.footerHeight : 29;
 
   return (
-    <div className="oui-flex oui-flex-col oui-overflow-auto" style={{
-      height: `calc(100vh - ${footerHeight}px)`
-    }}>
+    <div
+      className="oui-flex oui-flex-col oui-overflow-auto"
+      style={{
+        height: `calc(100vh - ${footerHeight}px)`,
+      }}
+    >
       <ExpandableContext.Provider
         value={{
           routerAdapter,

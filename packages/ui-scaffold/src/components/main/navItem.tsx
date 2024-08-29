@@ -24,19 +24,22 @@ export type MainNavItem = {
   disabled?: boolean;
   children?: MainNavItem[];
   className?: string;
+  asChild?: boolean;
 };
 
-export const NavItem: FC<{
-  item: MainNavItem;
-  onClick?: (item: MainNavItem[]) => void;
-  // active?: boolean;
-  currentPath?: string[];
-  classNames?: {
-    navItem?: string;
-    subMenu?: string;
-  };
-}> = (props) => {
-  const { classNames, currentPath } = props;
+export const NavItem: FC<
+  Omit<React.HTMLAttributes<HTMLButtonElement>, "onClick"> & {
+    item: MainNavItem;
+    onClick?: (item: MainNavItem[]) => void;
+    // active?: boolean;
+    currentPath?: string[];
+    classNames?: {
+      navItem?: string;
+      subMenu?: string;
+    };
+  }
+> = (props) => {
+  const { classNames, currentPath, item, onClick, ...buttonProps } = props;
 
   const isActive = useMemo(
     () => props.currentPath?.[0] === props.item.href,
@@ -50,6 +53,7 @@ export const NavItem: FC<{
 
   const button = (
     <button
+      {...buttonProps}
       disabled={props.item.disabled}
       data-actived={isActive}
       className={cn(
@@ -75,11 +79,11 @@ export const NavItem: FC<{
               >
                 <path
                   d="M2.913 4.515a.5.5 0 0 0-.328.202.51.51 0 0 0 .14.701L5.722 7.41a.51.51 0 0 0 .562 0l2.995-1.992a.51.51 0 0 0 .14-.7.51.51 0 0 0-.701-.14L6.002 6.382 3.287 4.577a.5.5 0 0 0-.374-.062"
-                  fill="url(#a)"
+                  fill="url(#mainNavDropDownIcon)"
                 />
                 <defs>
                   <linearGradient
-                    id="a"
+                    id="mainNavDropDownIcon"
                     x1="9.502"
                     y1="5.994"
                     x2="2.502"
@@ -347,11 +351,11 @@ const OutlinkIcon = () => {
       >
         <path
           d="M14.159 17.492a3.333 3.333 0 0 0 3.333-3.333V5.826a3.333 3.333 0 0 0-3.333-3.334H5.826a3.333 3.333 0 0 0-3.334 3.334v8.333a3.333 3.333 0 0 0 3.334 3.333zm-6.667-4.166a.85.85 0 0 1-.599-.235.86.86 0 0 1 0-1.198l3.333-3.333-1.9-1.901h5v5l-1.901-1.9L8.09 13.09a.84.84 0 0 1-.599.235"
-          fill="url(#a)"
+          fill="url(#outlineIcon)"
         />
         <defs>
           <linearGradient
-            id="a"
+            id="outlineIcon"
             x1="17.492"
             y1="9.992"
             x2="2.492"

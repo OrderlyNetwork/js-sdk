@@ -8,10 +8,16 @@ import {
   AccountSummaryWidget,
   ChainMenuWidget,
   ChainMenu,
+  CampaignPositionEnum,
 } from "@orderly.network/ui-scaffold";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { useChains } from "@orderly.network/hooks";
 import { fn } from "@storybook/test";
+import {
+  OrderlyActiveIcon,
+  OrderlyIcon,
+} from "../../../components/icons/orderly";
+import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
 
 const meta = {
   title: "Package/ui-scaffold/MainNav",
@@ -296,10 +302,21 @@ export const SubMainNav: Story = {
             description: "Earn more as a WOOFi affiliate",
           },
           {
-            name: "ARB rewards",
-            href: "https://app.orderly.network/",
-            description: "Earn ARB by trading on WOOFi",
+            name: "Orderly airdrop",
+            href: "https://app.orderly.network",
+            description: "Earn Orderly merits by trading on WOOFi Pro.",
             target: "_blank",
+            icon: <OrderlyIcon size={14} />,
+            activeIcon: <OrderlyActiveIcon size={14} />,
+          },
+
+          {
+            name: "ARB incentives",
+            href: "https://mirror.xyz/woofi.eth/9NVYvKwfldZf1JPoKkNQ2YMXnNbgVUyHkgMJIvXv9dg",
+            description: "Trade to win a share of 9,875 ARB each week.",
+            target: "_blank",
+            icon: <ARBIcon size={14} />,
+            activeIcon: <ARBActiveIcon size={14} />,
           },
         ],
       },
@@ -310,6 +327,48 @@ export const SubMainNav: Story = {
     ],
     initialMenu: "/markets",
     initialProduct: "/trade",
+    onItemClick: fn(),
+  },
+};
+
+export const CampaignsNav: Story = {
+  args: {
+    mainMenus: [
+      { name: "Trading", href: "/" },
+      { name: "Markets", href: "/markets" },
+    ],
+    products: [
+      { name: "Swap", href: "/swap" },
+      { name: "Trade", href: "/trade" },
+    ],
+    initialMenu: "/markets",
+    initialProduct: "/trade",
+    campaigns: {
+      name: "Reward",
+      href: "/rewards",
+      icon: "box-ani.gif",
+      children: [
+        {
+          name: "Orderly airdrop",
+          href: "https://app.orderly.network",
+          description: "Earn Orderly merits by trading on WOOFi Pro.",
+          target: "_blank",
+          icon: <OrderlyIcon size={14} />,
+          activeIcon: <OrderlyActiveIcon size={14} />,
+        },
+
+        {
+          name: "ARB incentives",
+          href: "https://mirror.xyz/woofi.eth/9NVYvKwfldZf1JPoKkNQ2YMXnNbgVUyHkgMJIvXv9dg",
+          description: "Trade to win a share of 9,875 ARB each week.",
+          target: "_blank",
+          icon: <ARBIcon size={14} />,
+          activeIcon: <ARBActiveIcon size={14} />,
+        },
+      ],
+    },
+    campaignPosition: CampaignPositionEnum.navTailing,
+
     onItemClick: fn(),
   },
 };

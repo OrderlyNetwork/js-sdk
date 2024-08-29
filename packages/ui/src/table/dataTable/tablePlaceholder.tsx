@@ -3,12 +3,14 @@ import { ExtensionSlot } from "../../plugin/slot";
 import { Box } from "../../box";
 import { Spinner } from "../../spinner/spinner";
 
-export const TablePlaceholder = (props: {
-  visible?: boolean;
-  loading?: boolean;
-  emptyView?: ReactNode;
-}) => {
-  const { visible, loading, emptyView } = props;
+export const TablePlaceholder = (
+  props: React.HTMLAttributes<HTMLDivElement> & {
+    visible?: boolean;
+    loading?: boolean;
+    emptyView?: ReactNode;
+  }
+) => {
+  const { visible, loading, emptyView, ...divProps } = props;
 
   if (!visible) return null;
 
@@ -19,6 +21,11 @@ export const TablePlaceholder = (props: {
       top={0}
       right={0}
       bottom={0}
+      {...divProps}
+      // style={{
+      //   width: width || "100%",
+      //   height: height || "100%",
+      // }}
       className="oui-flex oui-justify-center oui-items-center oui-bg-base-9/75"
     >
       {loading ? (

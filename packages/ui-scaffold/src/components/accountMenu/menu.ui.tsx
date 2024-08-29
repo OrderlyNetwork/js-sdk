@@ -32,7 +32,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
     return (
       <Tooltip
         open
-        content={"Please Connect wallet before starting to trade"}
+        content={"Please connect wallet before starting to trade"}
         align={"end"}
         className="oui-bg-base-5"
         arrow={{ className: "oui-fill-base-5" }}
@@ -59,6 +59,12 @@ export const AccountMenu = (props: AccountMenuProps) => {
     );
   }
 
+  console.log(
+    "🔗 account state",
+    state.status,
+    state.status <= AccountStatusEnum.NotSignedIn
+  );
+
   if (state.status <= AccountStatusEnum.NotSignedIn) {
     return (
       <Tooltip
@@ -79,6 +85,8 @@ export const AccountMenu = (props: AccountMenuProps) => {
     return (
       <Tooltip
         open
+        className="oui-bg-base-5"
+        arrow={{ className: "oui-fill-base-5" }}
         content={"Please enable trading before starting to trade"}
         align={"end"}
       >
@@ -199,7 +207,7 @@ const WalletMenu = (props: {
             </Flex>
           </DropdownMenuGroup>
           <Divider className={"oui-mx-4 oui-my-3"} intensity={8} />
-          <DropdownMenuGroup>
+          {/* <DropdownMenuGroup>
             <DropdownMenuItem size={"xl"}>
               <Flex gap={2}>
                 <svg
@@ -238,7 +246,7 @@ const WalletMenu = (props: {
               </Flex>
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <Divider className={"oui-mx-4 oui-my-3"} intensity={8} />
+          <Divider className={"oui-mx-4 oui-my-3"} intensity={8} /> */}
           <DropdownMenuGroup>
             <DropdownMenuItem
               size={"xl"}

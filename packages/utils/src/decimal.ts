@@ -81,49 +81,58 @@ export function toNonExponential(num: number) {
  * const number1 = 12345;
  * const number2 = 987654321;
  */
-// export function numberToHumanStyle(
-//   number: number,
-//   decimalPlaces: number = 2,
-//   options?: {
-//     padding?: boolean;
-//   }
-// ): string {
-//   const { padding } = options || {};
-//   const abbreviations = ["", "K", "M", "B", "T"];
+export function numberToHumanStyle(
+  number: number,
+  decimalPlaces: number = 2,
+  options?: {
+    padding?: boolean;
+  }
+): string {
+  const { padding } = options || {};
+  const abbreviations = ["", "K", "M", "B", "T"];
 
-//   let index = 0;
-//   while (number >= 1000 && index < abbreviations.length - 1) {
-//     number /= 1000;
-//     index++;
-//   }
-
-//   const roundedNumber = padding
-//     ? number.toFixed(decimalPlaces)
-//     : number.toString();
-
-//   return `${roundedNumber}${abbreviations[index]}`;
-// }
-
-export function numberToHumanStyle(num: number, dp: number = 0): string {
-  const absNum = Math.abs(num);
-  let formattedNum = "";
-
-  if (absNum >= 1e12) {
-    formattedNum = (num / 1e12).toFixed(dp) + "T";
-  } else if (absNum >= 1e9) {
-    formattedNum = (num / 1e9).toFixed(dp) + "B";
-  } else if (absNum >= 1e6) {
-    formattedNum = (num / 1e6).toFixed(dp) + "M";
-  } else if (absNum >= 1e3) {
-    formattedNum = (num / 1e3).toFixed(dp) + "K";
-  } else {
-    formattedNum = num.toString();
+  let index = 0;
+  while (number >= 1000 && index < abbreviations.length - 1) {
+    number /= 1000;
+    index++;
   }
 
-  formattedNum = formattedNum.replace(/\.0$/, "");
+  // const roundedNumber = number.toFixed(decimalPlaces);
+  let roundedNumber = new Decimal(number)
+    .toFixed(decimalPlaces, Decimal.ROUND_DOWN)
+    .toString();
 
-  return formattedNum;
+  // const roundedNumber = padding
+  //   ? number.toFixed(decimalPlaces)
+  //   : number.toString();
+
+  roundedNumber = roundedNumber.replace(/\.0+$/, "");
+
+  return `${roundedNumber}${abbreviations[index]}`;
 }
+
+// export function numberToHumanStyle(num: number, dp: number = 0): string {
+//   const absNum = Math.abs(num);
+//   let formattedNum = "";
+
+//   let exp;
+
+//   if (absNum >= 1e12) {
+//     formattedNum = (num / 1e12).toFixed(dp) + "T";
+//   } else if (absNum >= 1e9) {
+//     formattedNum = (num / 1e9).toFixed(dp) + "B";
+//   } else if (absNum >= 1e6) {
+//     formattedNum = (num / 1e6).toFixed(dp) + "M";
+//   } else if (absNum >= 1e3) {
+//     formattedNum = (num / 1e3).toFixed(dp) + "K";
+//   } else {
+//     formattedNum = num.toString();
+//   }
+
+//   formattedNum = formattedNum.replace(/\.0$/, "");
+
+//   return formattedNum;
+// }
 
 export function parseNumStr(str: string | number): Decimal | undefined {
   const value = str.toString();
