@@ -351,7 +351,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <Badge size="xs" color={"primaryLight"}>
             Position
           </Badge>
-          <Badge size="xs" color="neutural">
+          <Badge size="xs" color="neutral">
             TP/SL
           </Badge>
         </Flex>

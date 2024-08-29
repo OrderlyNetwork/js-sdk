@@ -6,6 +6,7 @@ class ShardedScheduler implements CalculatorScheduler {
     for (let index = 0; index < calculators.length; index++) {
       const calculator = calculators[index];
       const result = calculator.calc(data);
+      calculator.update(result);
     }
   }
 }

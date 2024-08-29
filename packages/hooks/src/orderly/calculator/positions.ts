@@ -19,6 +19,7 @@ class PositionCalculator implements Calculator<API.PositionTPSLExt[]> {
   }
 
   update(data: API.PositionTPSLExt[]) {
+    console.log("!!!! Updating positions...", data);
     const { updatePosition } = positionActions();
 
     updatePosition(data);

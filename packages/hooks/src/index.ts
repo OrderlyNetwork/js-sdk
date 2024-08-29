@@ -1,4 +1,5 @@
 // import "./utils/dev";
+import type { Immer } from "immer";
 
 export { default as version } from "./version";
 
