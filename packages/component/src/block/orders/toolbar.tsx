@@ -67,6 +67,7 @@ export const Toolbar: FC<Props> = (props) => {
         size={"small"}
         color={"tertiary"}
         onClick={cancelAllOrder}
+        className="orderly-text-3xs orderly-text-base-contrast-36"
       >
         Cancel all
       </Button>

@@ -738,6 +738,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
+      '@orderly.network/ui-leverage':
+        specifier: workspace:*
+        version: link:../ui-leverage
       '@orderly.network/ui-transfer':
         specifier: workspace:*
         version: link:../ui-transfer

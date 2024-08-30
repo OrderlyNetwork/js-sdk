@@ -17,7 +17,7 @@ export const AlgoOrderConfirmView: FC<{
   onConfirm: () => Promise<any>;
   oldOrder?: API.AlgoOrder;
   isEditing?: boolean;
-  quoteDp?: number,
+  quoteDp?: number;
 }> = (props) => {
   const { order, oldOrder, tp_trigger_price, sl_trigger_price } = props;
 
@@ -74,7 +74,7 @@ export const AlgoOrderConfirmView: FC<{
       )}
       <div className="orderly-flex orderly-items-center orderly-pb-4">
         <NetworkImage symbol={order.symbol} type="symbol" size={20} />
-        <span className="desktop:orderly-text-lg orderly-pl-2">{`${symbolConfig.base}-PERP`}</span>
+        <span className="orderly-text-lg orderly-pl-2">{`${symbolConfig.base}-PERP`}</span>
       </div>
       <div
         className={cn(

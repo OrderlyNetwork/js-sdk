@@ -39,7 +39,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           </div>
         </div>
         <Statistic
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Unreal. PnL</span>
@@ -49,7 +49,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={
             <div
               className={cn(
-                "orderly-flex orderly-justify-end orderly-text-3xs orderly-items-center",
+                "orderly-flex orderly-justify-end orderly-text-2xs orderly-items-center orderly-gap-0.5",
                 item["unrealized_pnl"] > 0
                   ? "orderly-text-trade-profit"
                   : item["unrealized_pnl"] < 0
@@ -77,8 +77,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
       <div className="orderly-grid orderly-grid-cols-3 orderly-gap-2">
         <Statistic
           label="Qty."
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs"
           value={item["position_qty"]}
           coloring
           rule="price"
@@ -86,8 +86,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           rule="price"
-          labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          labelClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Margin</span>
@@ -97,8 +97,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["mm"]}
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          labelClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Notional</span>
@@ -111,8 +111,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           align="right"
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          labelClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Avg. open</span>
@@ -124,8 +124,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["average_open_price"]}
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
-          valueClassName="orderly-text-3xs"
+          labelClassName="orderly-text-3xs"
+          valueClassName="orderly-text-2xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Mark price</span>
@@ -137,14 +137,14 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["mark_price"]}
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Liq. price</span>
               {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
-          valueClassName="orderly-text-warning orderly-text-3xs"
+          valueClassName="orderly-text-warning orderly-text-2xs"
           value={item["est_liq_price"] === 0 ? "--" : item["est_liq_price"]}
           align="right"
           rule="price"
@@ -162,7 +162,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onTPSLOrder?.(props.item, props.item.algo_order)}
-          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-3xs"
         >
           TP / SL
         </Button>
@@ -172,7 +172,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onLimitClose?.(props.item)}
-          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-3xs"
         >
           Limit close
         </Button>
@@ -182,7 +182,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onMarketClose?.(props.item)}
-          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-3xs"
         >
           Market close
         </Button>

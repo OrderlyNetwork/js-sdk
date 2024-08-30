@@ -261,7 +261,7 @@ export const TPSLForm: FC<Props> = (props) => {
         >
           <div className="orderly-text-xs">Take profit</div>
           <div
-            className={"orderly-text-base-contrast-36 orderly-text-2xs"}
+            className={"orderly-text-base-contrast-36 orderly-text-3xs"}
             data-testid="tpEstPnL"
           >
             <span>Est. PnL: </span>
@@ -317,7 +317,7 @@ export const TPSLForm: FC<Props> = (props) => {
         >
           <div className="orderly-text-xs">Stop loss</div>
           <div
-            className={"orderly-text-base-contrast-36 orderly-text-2xs"}
+            className={"orderly-text-base-contrast-36 orderly-text-3xs"}
             data-testid="slEstPnL"
           >
             <span>Est. PnL: </span>
@@ -366,7 +366,7 @@ export const TPSLForm: FC<Props> = (props) => {
       </div>
       <div
         className={
-          "orderly-flex orderly-justify-center orderly-gap-3 orderly-pt-2 desktop:orderly-pt-0"
+          "orderly-flex orderly-justify-center orderly-gap-3 orderly-pt-2 desktop:orderly-pt-0 orderly-text-xs"
         }
       >
         <Button
