@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+
 ## 0.3.11
 
 ### Patch Changes

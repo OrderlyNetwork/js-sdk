@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.4.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+- Updated dependencies
+  - @orderly.network/react@1.5.12-alpha.0
+  - @orderly.network/hooks@1.5.12-alpha.0
+  - @orderly.network/web3-onboard@1.5.12-alpha.0
+  - @orderly.network/types@1.5.12-alpha.0
+
 ## 0.4.11
 
 ### Patch Changes

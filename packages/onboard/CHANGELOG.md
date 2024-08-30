@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.5.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+- Updated dependencies
+  - @orderly.network/hooks@1.5.12-alpha.0
+  - @orderly.network/types@1.5.12-alpha.0
+
 ## 1.5.11
 
 ### Patch Changes
