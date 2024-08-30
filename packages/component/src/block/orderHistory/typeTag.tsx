@@ -16,9 +16,7 @@ export const OrderTypeTag: FC<{
     }
     if (props.order.parent_algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
       return (
-        <Tag className="orderly-bg-primary/20">
-          Position
-        </Tag>
+        <Tag className="orderly-bg-primary/20 orderly-text-3xs">Position</Tag>
       );
     }
   }, [props.order]);
@@ -58,9 +56,7 @@ export const OrderTypeTag: FC<{
     }
 
     return (
-      <Tag
-        className="orderly-bg-white/10 orderly-text-base-contrast-54"
-      >
+      <Tag className="orderly-bg-white/10 orderly-text-base-contrast-54 orderly-text-3xs">
         {type}
       </Tag>
     );

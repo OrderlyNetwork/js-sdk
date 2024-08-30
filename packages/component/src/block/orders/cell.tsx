@@ -77,7 +77,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           </div>
           <TPSLOrderTag order={order} />
         </div>
-        <div className="orderly-text-4xs orderly-text-base-contrast-36">
+        <div className="orderly-text-3xs orderly-text-base-contrast-36">
           <Text rule="date">{order.created_time}</Text>
         </div>
       </div>
@@ -90,7 +90,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           variant="outlined"
           size="small"
           color="tertiary"
-          className="orderly-w-[120px] orderly-text-4xs"
+          className="orderly-w-[120px] orderly-text-3xs orderly-text-base-contrast-36"
           onClick={() => onEditOrder(order, position)}
         >
           Edit
@@ -100,7 +100,7 @@ export const OrderCell: FC<OrderCellProps> = (props) => {
           variant="outlined"
           color="tertiary"
           size="small"
-          className="orderly-w-[120px] orderly-text-4xs"
+          className="orderly-w-[120px] orderly-text-3xs orderly-text-base-contrast-36"
           loading={loading}
           onClick={cancelOrder}
         >

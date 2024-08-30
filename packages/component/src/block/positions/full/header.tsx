@@ -75,7 +75,7 @@ export const Header: FC<Props> = (props) => {
                   rule="percentages"
                   prefix={"("}
                   surfix={")"}
-                  className={"orderly-ml-1"}
+                  className={"orderly-ml-1 orderly-text-3xs"}
                   precision={pnlNotionalDecimalPrecision}
                 >
                   {props.aggregated?.unrealPnlROI ?? 0}

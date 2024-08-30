@@ -17,7 +17,7 @@ export const RegularCell: FC<{
     <>
       <Statistic
         label="Qty."
-        labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+        labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
         value={order.quantity ?? "-"}
         precision={base_dp}
         rule="price"
@@ -29,7 +29,7 @@ export const RegularCell: FC<{
       />
       <Statistic
         label="Filled"
-        labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+        labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
         valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
         // @ts-ignore
         value={order.total_executed_quantity ?? "-"}
@@ -43,7 +43,7 @@ export const RegularCell: FC<{
             <span className="orderly-text-base-contrast-20">(USDC)</span>
           </>
         }
-        labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+        labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
         valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
         value={
           <NumeralTotal
@@ -61,7 +61,7 @@ export const RegularCell: FC<{
             {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
           </>
         }
-        labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+        labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
         valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
         rule="price"
         precision={quote_dp}
@@ -74,7 +74,7 @@ export const RegularCell: FC<{
             {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
           </>
         }
-        labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+        labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
         valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
         value={isStopMarket ? <span>Market</span> : order.price ?? "-"}
         rule="price"
@@ -87,7 +87,7 @@ export const RegularCell: FC<{
             {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
           </>
         }
-        labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+        labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
         valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
         rule="price"
         precision={quote_dp}
