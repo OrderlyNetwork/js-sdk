@@ -55,7 +55,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     const { maxQty, symbol, markPrice } = configs;
 
     // @ts-ignore
-    let { order_quantity, total, order_price, reduce_only, order_type } = values;
+    let { order_quantity, total, order_price, reduce_only, order_type } =
+      values;
 
     const { min_notional } = symbol;
 
@@ -96,32 +97,29 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       }
     }
 
-    if (!!total) {
-      const { quote_max, quote_min, quote_dp } = configs.symbol;
-      const totalNumber = new Decimal(total);
-      if (totalNumber.lt(quote_min)) {
-        errors.total = {
-          type: "min",
-          message: `Quantity must be at least ${new Decimal(quote_min).todp(
-            quote_dp
-          )}`,
-        };
-      } else if (totalNumber.gt(quote_max)) {
-        errors.total = {
-          type: "max",
-          message: `Quantity should be less or equal than ${new Decimal(
-            quote_max
-          ).todp(quote_dp)}`,
-        };
-      }
-    }
+    // remove total validation
+    // if (!!total) {
+    //   const { quote_max, quote_min, quote_dp } = configs.symbol;
+    //   const totalNumber = new Decimal(total);
+    //   if (totalNumber.lt(quote_min)) {
+    //     errors.total = {
+    //       type: "min",
+    //       message: `Quantity must be at least ${new Decimal(quote_min).todp(
+    //         quote_dp
+    //       )}`,
+    //     };
+    //   } else if (totalNumber.gt(quote_max)) {
+    //     errors.total = {
+    //       type: "max",
+    //       message: `Quantity should be less or equal than ${new Decimal(
+    //         quote_max
+    //       ).todp(quote_dp)}`,
+    //     };
+    //   }
+    // }
 
     const price = `${order_type}`.includes("MARKET") ? markPrice : order_price;
-    const notionalHintStr = checkNotional(
-      price,
-      order_quantity,
-      min_notional
-    );
+    const notionalHintStr = checkNotional(price, order_quantity, min_notional);
 
     if (notionalHintStr !== undefined && reduce_only !== true) {
       errors.total = {

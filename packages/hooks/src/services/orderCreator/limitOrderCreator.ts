@@ -50,7 +50,7 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
       } else {
         const price = new Decimal(order_price);
         const { symbol } = config;
-        const { price_range, price_scope } = symbol;
+        const { price_range, price_scope, quote_max, quote_min } = symbol;
         const maxPriceNumber = maxPrice(config.markPrice, price_range);
         const minPriceNumber = minPrice(config.markPrice, price_range);
         const scropePriceNumbere = scropePrice(
@@ -72,21 +72,36 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
 
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
-        if (price.gt(priceRange?.max)) {
+        if (price.gt(quote_max)) {
           errors.order_price = {
             type: "max",
-            message: `Price must be less than ${new Decimal(
-              priceRange.max
-            ).todp(symbol.quote_dp)}`,
+            message: `Price must be less than ${quote_max}`,
           };
+        } else {
+          if (price.gt(priceRange?.max)) {
+            errors.order_price = {
+              type: "max",
+              message: `Price must be less than ${new Decimal(
+                priceRange.max
+              ).todp(symbol.quote_dp)}`,
+            };
+          }
         }
-        if (price.lt(priceRange?.min)) {
+
+        if (price.lt(quote_min)) {
           errors.order_price = {
             type: "min",
-            message: `Price must be greater than ${new Decimal(
-              priceRange.min
-            ).todp(symbol.quote_dp)}`,
+            message: `Price must be greater than ${quote_min}`,
           };
+        } else {
+          if (price.lt(priceRange?.min)) {
+            errors.order_price = {
+              type: "min",
+              message: `Price must be greater than ${new Decimal(
+                priceRange.min
+              ).todp(symbol.quote_dp)}`,
+            };
+          }
         }
       }
 
