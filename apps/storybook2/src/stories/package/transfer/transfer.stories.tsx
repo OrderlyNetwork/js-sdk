@@ -6,9 +6,9 @@ import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 import {customChains} from "./customChains.ts";
 
-// const networkId = "mainnet";
-const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: 'Orderly', brokerId: 'orderly' });
+const networkId = "mainnet";
+// const networkId = "testnet";
+const configStore = new CustomConfigStore({ networkId, env: "prod", brokerName: 'Orderly', brokerId: 'orderly' });
 
 
 const meta = {
