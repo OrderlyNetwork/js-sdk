@@ -12,15 +12,20 @@ import React from "react";
 export interface SheetProps {
   title: string | React.ReactNode;
   content?: React.ReactNode;
-  contentClassName?: string;
+  // contentClassName?: string;
+  classNames?: {
+    content?: string;
+    body?: string;
+  };
 }
 
 const SimpleSheet = create<SheetProps>((props) => {
+  const { classNames = {} } = props;
   const { visible, hide, resolve, onOpenChange } = useModal();
   return (
     <Sheet open={visible} onOpenChange={onOpenChange}>
       <SheetContent
-        className={props.contentClassName}
+        className={classNames.content}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
         }}
@@ -28,7 +33,7 @@ const SimpleSheet = create<SheetProps>((props) => {
         <SheetHeader>
           <SheetTitle>{props.title}</SheetTitle>
         </SheetHeader>
-        {props.content}
+        <div className={classNames.body}>{props.content}</div>
       </SheetContent>
     </Sheet>
   );

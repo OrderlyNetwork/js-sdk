@@ -306,9 +306,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
                     quote={symbolConfig?.quote}
                     isTable={isTablet}
                   />
-                  <div className="orderly-flex-1 orderly-items-center orderly-h-[32px] orderly-hidden desktop:orderly-block">
-                    <OrderConfirmCheckBox className="orderly-pt-[6px]" />
-                  </div>
+                  {isTablet ? (
+                    <div className="orderly-flex-1 orderly-items-center orderly-h-[32px]">
+                      <OrderConfirmCheckBox className="orderly-pt-[6px]" />
+                    </div>
+                  ) : null}
                 </>
               ),
             });
