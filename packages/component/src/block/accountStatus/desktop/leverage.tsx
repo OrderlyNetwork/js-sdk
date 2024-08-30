@@ -18,7 +18,7 @@ interface LeverageAndMarginRatioProps {
 }
 
 const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
-  const { isConnected } = props;
+  const { isConnected, ...rest } = props;
   const { marginRatio, currentLeverage, mmr } = useMarginRatio();
   const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
 
@@ -27,7 +27,11 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
   const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
   return (
-    <div className={"orderly-flex orderly-justify-between orderly-text-xs"}>
+    <div
+      id="orderly-account-leverage"
+      className={"orderly-flex orderly-justify-between orderly-text-xs"}
+      {...rest}
+    >
       <div
         className={
           "orderly-flex orderly-flex-col orderly-tabular-nums orderly-items-start"
@@ -50,6 +54,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           className="orderly-max-w-[270px]"
         >
           <div
+            id="orderly-account-margin-ratio-title"
             className={
               "orderly-text-base-contrast-54 orderly-text-3xs orderly-cursor-pointer"
             }
@@ -58,6 +63,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           </div>
         </Tooltip>
         <Numeral
+          id="orderly-account-margin-ratio-value"
           className={cn(
             "orderly-text-base-contrast",
             isConnected &&
@@ -84,6 +90,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           className="orderly-max-w-[270px]"
         >
           <div
+            id="orderly-account-leverage-title"
             className={
               "orderly-text-base-contrast-54 orderly-text-3xs orderly-cursor-pointer"
             }
@@ -92,6 +99,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           </div>
         </Tooltip>
         <div
+          id="orderly-account-leverage-value"
           className={
             "orderly-flex orderly-items-center orderly-gap-1 orderly-text-2xs"
           }
@@ -105,7 +113,10 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           <span className={"orderly-text-base-contrast-54"}>/</span>
           {/* {isConnected ? (
             <LeverageDialog>
-              <button id="orderly-desktop-leverage-button" className="orderly-flex orderly-items-center orderly-gap-1">
+              <button
+                id="orderly-desktop-leverage-button"
+                className="orderly-flex orderly-items-center orderly-gap-1"
+              >
                 <span>{`${maxLeverage ?? "-"}x`}</span>
                 {typeof maxLeverage !== "undefined" && (
                   // @ts-ignore
