@@ -284,7 +284,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
           />
         </div>
         <Divider className="orderly-py-4" />
-        <Paper className="orderly-bg-base-600">
+        <Paper className="orderly-bg-base-700">
           <div className="orderly-flex orderly-justify-between orderly-text-4xs orderly-text-base-contrast-36">
             <span>Instrument</span>
             <span>Available balance</span>

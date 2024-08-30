@@ -33,13 +33,9 @@ export const TPSLOrderTag: FC<{
     return (
       <div className="orderly-flex orderly-items-center orderly-gap-1 orderly-mt-1">
         {order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ? (
-          <Tag className="orderly-bg-primary/20">
-            Position
-          </Tag>
+          <Tag className="orderly-bg-primary/20 orderly-text-3xs">Position</Tag>
         ) : null}
-        <Tag
-          className="orderly-bg-white/10 orderly-text-base-contrast-54"
-        >
+        <Tag className="orderly-bg-white/10 orderly-text-base-contrast-54 orderly-text-3xs">
           {keys.map((key) => (
             <span key={key}>{key}</span>
           ))}

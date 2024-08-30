@@ -51,7 +51,7 @@ export const TPSLCell: FC<{
                         {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
                       </>
                     }
-                    labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+                    labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
                     valueClassName={
                       child.algo_type === AlgoOrderType.TAKE_PROFIT
                         ? "orderly-text-trade-profit orderly-text-2xs orderly-font-bold orderly-underline orderly-underline-offset-2 orderly-decoration-dashed orderly-decoration-base-contrast-36"
@@ -82,7 +82,7 @@ export const TPSLCell: FC<{
 
             <Statistic
               label={`${type} price`}
-              labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+              labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
               value={<span>Market</span>}
               rule="price"
               valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
@@ -96,7 +96,7 @@ export const TPSLCell: FC<{
       0,
       <Statistic
         label="Quantity"
-        labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+        labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
         value={
           <span>
             {order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL

@@ -113,6 +113,7 @@ export const AccountTotal: FC<AccountTotalProps> = (props) => {
       <SheetContent
         id="orderly-asset-and-margin-sheet"
         onOpenAutoFocus={(event) => event.preventDefault()}
+        className="orderly-bg-base-600"
       >
         <SheetHeader
           id="orderly-asset-and-margin-sheet-title"

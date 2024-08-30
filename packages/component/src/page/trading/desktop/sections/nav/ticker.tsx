@@ -66,12 +66,15 @@ export const Ticker: FC<Props> = (props) => {
         "orderly-text-2xs orderly-text-base-contrast-80 orderly-tabular-nums orderly-font-semibold"
       }
     >
-      <div className="orderly-relative orderly-overflow-hidden">
+      <div
+        className="orderly-relative orderly-overflow-hidden"
+        id="orderly-top-nav-ticker"
+      >
         <div
           className="orderly-flex orderly-space-x-5 orderly-relative orderly-items-center orderly-h-full orderly-overflow-x-auto orderly-hide-scrollbar"
           ref={containerRef}
         >
-          <div ref={leadingElementRef}>
+          <div ref={leadingElementRef} orderly-text="16px">
             <NumeralWithCtx className="orderly-font-semibold">
               {data?.["24h_close"]}
             </NumeralWithCtx>
