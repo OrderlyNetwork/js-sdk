@@ -14,6 +14,7 @@ import { toast } from "@/toast";
 import { AlgoOrderConfirmView } from "./algoOrderConfirmView";
 import { SimpleDialog } from "@/dialog/simpleDialog";
 import { AlgoOrderEntity } from "@orderly.network/types";
+import { cn } from "@/utils";
 
 export const TPSLEditor: FC<{
   symbol: string;
