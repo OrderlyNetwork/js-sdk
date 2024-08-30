@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/referral",
-  "version": "1.5.10-preReleaseV2.85",
+  "version": "1.5.10-preReleaseV2.86",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
