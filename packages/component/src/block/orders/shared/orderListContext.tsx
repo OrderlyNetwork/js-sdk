@@ -76,7 +76,10 @@ export const OrderListProvider: FC<
 
       const orderEntry = await modal.sheet({
         title: "Edit Order",
-        contentClassName: "orderly-edit-order-sheet-content",
+        // contentClassName: ,
+        classNames: {
+          content: "orderly-edit-order-sheet-content",
+        },
         content: (
           <OrderEditFormSheet
             order={order}
