@@ -1,6 +1,30 @@
 # @orderly.network/cli
 
-## 0.3.10-sdk-v2.82
+## 0.3.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+- Updated dependencies [11399d1f3]
+  - @orderly.network/core@1.5.12
+
+## 0.3.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+- Updated dependencies
+  - @orderly.network/core@1.5.12-alpha.0
+
+## 0.3.11
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/core@1.5.11
+
+## 0.3.10
 
 ### Patch Changes
 

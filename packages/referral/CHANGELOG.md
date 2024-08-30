@@ -1,6 +1,36 @@
 # @orderly.network/referral
 
-## 1.5.10-sdk-v2.82
+## 1.5.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+- Updated dependencies [11399d1f3]
+  - @orderly.network/react@1.5.12
+  - @orderly.network/hooks@1.5.12
+  - @orderly.network/utils@1.5.12
+
+## 1.5.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+- Updated dependencies
+  - @orderly.network/react@1.5.12-alpha.0
+  - @orderly.network/hooks@1.5.12-alpha.0
+  - @orderly.network/utils@1.5.12-alpha.0
+
+## 1.5.11
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@1.5.11
+  - @orderly.network/hooks@1.5.11
+  - @orderly.network/utils@1.5.11
+
+## 1.5.10
 
 ### Patch Changes
 

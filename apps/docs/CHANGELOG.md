@@ -1,6 +1,39 @@
 # @orderly/docs
 
-## 0.4.10-sdk-v2.82
+## 0.4.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+- Updated dependencies [11399d1f3]
+  - @orderly.network/react@1.5.12
+  - @orderly.network/hooks@1.5.12
+  - @orderly.network/web3-onboard@1.5.12
+  - @orderly.network/types@1.5.12
+
+## 0.4.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+- Updated dependencies
+  - @orderly.network/react@1.5.12-alpha.0
+  - @orderly.network/hooks@1.5.12-alpha.0
+  - @orderly.network/web3-onboard@1.5.12-alpha.0
+  - @orderly.network/types@1.5.12-alpha.0
+
+## 0.4.11
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@1.5.11
+  - @orderly.network/hooks@1.5.11
+  - @orderly.network/web3-onboard@1.5.11
+  - @orderly.network/types@1.5.11
+
+## 0.4.10
 
 ### Patch Changes
 

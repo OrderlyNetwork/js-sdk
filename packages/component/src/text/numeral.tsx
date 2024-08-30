@@ -66,6 +66,7 @@ export interface NumeralProps {
     loss?: React.ReactNode;
     profit?: React.ReactNode;
   };
+  id?: string;
 }
 
 const coloringClasses: Record<string, string> = {
@@ -88,6 +89,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
     truncate = "floor",
     padding = true,
     showIcon = false,
+    id,
   } = props;
   // TODO: check precision
 
@@ -173,6 +175,7 @@ export const Numeral: FC<NumeralProps> = (props) => {
 
   return (
     <span
+      id={id}
       className={cn(
         "orderly-inline-flex orderly-items-center orderly-gap-1 orderly-tabular-nums",
         colorClassName,

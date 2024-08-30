@@ -111,6 +111,20 @@ export const Assets: FC<AssetsProps> = (props) => {
 
   const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
 
+  const marginRatioAttr = useMemo(() => {
+    if (isRed) {
+      return "high";
+    }
+    if (isYellow) {
+      return "medium";
+    }
+    if (isGreen) {
+      return "low";
+    }
+
+    return "default";
+  }, [isRed, isYellow, isGreen]);
+
   return (
     <Collapsible
       open={collapsed > 0}
@@ -180,16 +194,21 @@ export const Assets: FC<AssetsProps> = (props) => {
       </CollapsibleContent>
       <div className={"orderly-pb-4"}>
         <Progress
-          value={marginRatioVal * 100}
-          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
           foregroundClassName={cn("orderly-bg-gradient-to-r", {
             "orderly-from-[#F4807C] orderly-to-[#FF4F82]": isRed,
             "orderly-from-[#E6D673] orderly-to-[#C5A038]": isYellow,
             "orderly-from-[#1DF6B5] orderly-to-[#86ED92]": isGreen,
           })}
+          value={marginRatioVal * 100}
+          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
+          data-variant={isConnected && marginRatioVal ? "solid" : "gradient"}
+          data-margin-ratio={isConnected ? marginRatioAttr : undefined}
         />
       </div>
-      <MemorizedLeverage isConnected={isConnected} />
+      <MemorizedLeverage
+        isConnected={isConnected}
+        data-margin-ratio={isConnected ? marginRatioAttr : undefined}
+      />
     </Collapsible>
   );
 };
