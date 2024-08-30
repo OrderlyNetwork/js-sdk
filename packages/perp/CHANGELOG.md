@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+- Updated dependencies [11399d1f3]
+  - @orderly.network/types@1.5.12
+  - @orderly.network/utils@1.5.12
+
 ## 3.3.12-alpha.0
 
 ### Patch Changes

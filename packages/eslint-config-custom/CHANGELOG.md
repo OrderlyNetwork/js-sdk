@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+
 ## 0.3.12-alpha.0
 
 ### Patch Changes

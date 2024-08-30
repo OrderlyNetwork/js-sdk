@@ -1,5 +1,16 @@
 # examples
 
+## 0.4.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+- Updated dependencies [11399d1f3]
+  - @orderly.network/react@1.5.12
+  - @orderly.network/core@1.5.12
+  - @orderly.network/hooks@1.5.12
+  - @orderly.network/web3-onboard@1.5.12
+
 ## 0.4.12-alpha.0
 
 ### Patch Changes

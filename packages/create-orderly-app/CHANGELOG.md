@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+
 ## 1.5.12-alpha.0
 
 ### Patch Changes
