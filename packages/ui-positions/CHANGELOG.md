@@ -1,5 +1,16 @@
 # @orderly.network/ui-positions
 
+## 1.0.2-sdk-v2.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.13-sdk-v2.1
+  - @orderly.network/types@1.5.13-sdk-v2.1
+  - @orderly.network/utils@1.5.13-sdk-v2.1
+  - @orderly.network/ui@1.0.2-sdk-v2.1
+
 ## 1.0.2-sdk-v2.0
 
 ### Patch Changes
