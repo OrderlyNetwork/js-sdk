@@ -1,5 +1,5 @@
 import React, { type InputHTMLAttributes, useId } from "react";
-import { cnBase, type VariantProps } from "tailwind-variants";
+import { cnBase, cn, type VariantProps } from "tailwind-variants";
 import { BaseInput, BaseInputProps } from "./baseInput";
 import { InputPrefix } from "./prefix";
 import { InputSuffix } from "./suffix";
@@ -35,7 +35,7 @@ const inputVariants = tv({
       "oui-input-root",
     ],
     additional: [
-      "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast/60",
+      "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast",
     ],
     closeButton: [
       "oui-cursor-pointer",
@@ -142,6 +142,8 @@ interface InputProps<T = string>
     root?: string;
     additional?: string;
     clearButton?: string;
+    prefix?: string;
+    suffix?: string;
   };
 }
 
@@ -194,7 +196,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <InputPrefix
         id={id || cid}
         prefix={prefix}
-        className={additional({ className: classNames?.additional })}
+        className={additional({
+          className: cnBase(classNames?.additional, classNames?.prefix),
+        })}
       />
       <BaseInput
         {...inputProps}
@@ -206,7 +210,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <InputSuffix
         id={id || cid}
         suffix={suffixElement}
-        className={additional({ className: classNames?.additional })}
+        className={additional({
+          className: cnBase(classNames?.additional, classNames?.suffix),
+        })}
       />
     </div>
   );

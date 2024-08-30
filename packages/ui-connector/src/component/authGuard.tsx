@@ -24,6 +24,11 @@ import { alertMessages, DESCRIPTIONS, LABELS } from "../constants/message";
 import { Flex } from "@orderly.network/ui";
 import { Box } from "@orderly.network/ui";
 
+type ChainProps = {
+    networkId?: NetworkId;
+    bridgeLessOnly?: boolean;
+}
+
 export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   fallback?: (props: {
     validating: boolean;

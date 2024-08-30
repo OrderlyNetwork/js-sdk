@@ -34,14 +34,16 @@ const buttonVariants = tv({
       xl: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"], //54px
     },
     color: {
-      primary: ["hover:oui-bg-primary/70 active:oui-bg-primary/50"],
-      secondary: "hover:oui-bg-base-4/70 active:oui-bg-base-4/50",
-      success: "hover:oui-bg-success/70 active:oui-bg-success/50",
-      danger: "hover:oui-bg-danger/70 active:oui-bg-danger/50",
-      warning: "hover:oui-bg-warning/70 active:oui-bg-warning/50",
-      gray: "hover:oui-bg-base-2/70 active:oui-bg-base-2/50",
+      primary: ["hover:oui-bg-primary/80 active:oui-bg-primary/70"],
+      secondary: "hover:oui-bg-base-4/80 active:oui-bg-base-4/70",
+      success: "hover:oui-bg-success/80 active:oui-bg-success/70",
+      buy: "hover:oui-bg-success/80 active:oui-bg-success/70",
+      danger: "hover:oui-bg-danger/80 active:oui-bg-danger/70",
+      sell: "hover:oui-bg-danger/80 active:oui-bg-danger/70",
+      warning: "hover:oui-bg-warning/80 active:oui-bg-warning/70",
+      gray: "hover:oui-bg-base-2/80 active:oui-bg-base-2/70",
       light:
-        "hover:oui-bg-white/70 active:oui-bg-white/50 disable:oui-bg-white/20",
+        "hover:oui-bg-white/80 active:oui-bg-white/50 disable:oui-bg-white/20",
     },
     fullWidth: {
       true: "oui-w-full",
@@ -69,12 +71,22 @@ const buttonVariants = tv({
     },
     {
       variant: "contained",
+      color: "buy",
+      className: ["oui-bg-success", "oui-text-success-contrast"],
+    },
+    {
+      variant: "contained",
       color: "warning",
       className: ["oui-bg-warning", "oui-text-warning-contrast"],
     },
     {
       variant: "contained",
       color: "danger",
+      className: ["oui-bg-danger", "oui-text-danger-contrast"],
+    },
+    {
+      variant: "contained",
+      color: "sell",
       className: ["oui-bg-danger", "oui-text-danger-contrast"],
     },
     {

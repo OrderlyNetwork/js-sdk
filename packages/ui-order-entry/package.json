@@ -12,6 +12,7 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {
