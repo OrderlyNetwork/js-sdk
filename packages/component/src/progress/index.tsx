@@ -64,6 +64,7 @@ const Progress = forwardRef<
       <ProgressPrimitive.Root
         ref={ref}
         className={cn(
+          "orderly-progress-container",
           "orderly-relative orderly-h-[8px] orderly-w-full orderly-overflow-hidden orderly-rounded-full",
           backgoundClassName ?? progressVariantsBg({ variant })
         )}
@@ -76,6 +77,7 @@ const Progress = forwardRef<
       >
         <ProgressPrimitive.Indicator
           className={cn(
+            "orderly-progress-indicator",
             "orderly-h-full orderly-w-full orderly-flex-1 orderly-transition-all orderly-rounded-full",
             foregroundClassName ?? progressVariantsFg({ variant })
           )}
