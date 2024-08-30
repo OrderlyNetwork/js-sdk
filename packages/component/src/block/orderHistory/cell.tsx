@@ -67,7 +67,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           </div>
           <OrderTypeTag order={item} />
         </div>
-        <div className="orderly-text-4xs orderly-text-base-contrast-36 orderly-flex orderly-flex-col orderly-gap-1">
+        <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-flex orderly-flex-col orderly-gap-1">
           <div className="orderly-text-2xs orderly-text-base-contrast-80 orderly-text-right">
             {state}
           </div>
@@ -77,7 +77,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
       <div className="orderly-grid orderly-grid-cols-3 orderly-gap-2">
         <Statistic
           label="Qty."
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs"
           value={qty}
           rule="price"
@@ -92,7 +92,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         />
         <Statistic
           label="Filled"
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           // @ts-ignore
           value={item.total_executed_quantity ?? "-"}
@@ -100,7 +100,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           precision={base_dp}
         />
         <Statistic
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
@@ -127,14 +127,14 @@ export const Cell: FC<HistoryCellProps> = (props) => {
               {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
           value={item.average_executed_price ?? "-"}
         />
         <Statistic
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
@@ -147,7 +147,7 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           value={item.type === OrderType.MARKET ? "Market" : item.price}
         />
         <Statistic
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs"
           rule="price"
           precision={2}

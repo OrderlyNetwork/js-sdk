@@ -39,7 +39,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           </div>
         </div>
         <Statistic
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Unreal. PnL</span>
@@ -77,7 +77,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
       <div className="orderly-grid orderly-grid-cols-3 orderly-gap-2">
         <Statistic
           label="Qty."
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
           valueClassName="orderly-text-2xs"
           value={item["position_qty"]}
           coloring
@@ -86,7 +86,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
         />
         <Statistic
           rule="price"
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           valueClassName="orderly-text-2xs"
           label={
             <>
@@ -97,7 +97,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["mm"]}
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           valueClassName="orderly-text-2xs"
           label={
             <>
@@ -111,7 +111,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           align="right"
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           valueClassName="orderly-text-2xs"
           label={
             <>
@@ -124,7 +124,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["average_open_price"]}
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           valueClassName="orderly-text-2xs"
           label={
             <>
@@ -137,7 +137,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           value={item["mark_price"]}
         />
         <Statistic
-          labelClassName="orderly-text-4xs"
+          labelClassName="orderly-text-3xs"
           label={
             <>
               <span className="orderly-text-base-contrast-36">Liq. price</span>
@@ -162,7 +162,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onTPSLOrder?.(props.item, props.item.algo_order)}
-          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-3xs"
         >
           TP / SL
         </Button>
@@ -172,7 +172,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onLimitClose?.(props.item)}
-          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-3xs"
         >
           Limit close
         </Button>
@@ -182,7 +182,7 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
           size={"small"}
           color={"tertiary"}
           onClick={() => props.onMarketClose?.(props.item)}
-          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-4xs"
+          className="orderly-flex-1 orderly-h-[28px] orderly-text-base-contrast-54 orderly-text-3xs"
         >
           Market close
         </Button>

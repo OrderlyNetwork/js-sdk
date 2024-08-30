@@ -102,7 +102,7 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
     const apiBaseUrl = configStore.get("apiBaseUrl");
 
     const { data: tokenChainsRes} = useQuery<any[]>(
-        `${apiBaseUrl}/v1/public/token`,
+        `${apiBaseUrl}/v1/public/token?t=withdraw`,
         {
                 revalidateIfStale: false,
                 revalidateOnFocus: false,
@@ -296,7 +296,7 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
         }
 
         return item.withdrawal_fee || 0;
-    }, [tokenChainsRes, chains, crossChainWithdraw]);
+    }, [currentChain, tokenChainsRes, chains, crossChainWithdraw]);
 
     const showQty = useMemo(() => {
         console.log('quanty', quantity);

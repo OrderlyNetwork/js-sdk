@@ -54,7 +54,7 @@ export const TPSLTriggerPrice: FC<{
     }
 
     return (
-      <div className="orderly-text-2xs orderly-text-base-contrast-36 orderly-mt-2">
+      <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-mt-2">
         <div className="orderly-flex orderly-gap-1">
           {keys.map((key, index) => {
             return <span key={index}>{key}</span>;
