@@ -11,7 +11,6 @@ export const DashboardPage = (props: {
 }) => {
   const { classNames = {} } = props;
   const { root, ...rest } = classNames;
-  console.log("xxxxxxxxxxxxxx rest", rest, classNames);
   
   return (
     <div id="oui-affiliate-dashboard-page" className={cn("oui-w-full oui-tracking-tight", root)}>

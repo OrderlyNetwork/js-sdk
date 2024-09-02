@@ -5,9 +5,7 @@ import {
   useMutation,
 } from "@orderly.network/hooks";
 import { TabTypes, useReferralContext } from "../../../hooks";
-import { MockData } from "../../../utils/mockData";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useAppContext } from "@orderly.network/react-app";
 import { useState } from "react";
 import { toast } from "@orderly.network/ui";
 

@@ -139,7 +139,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
           isLoading={props.commission.isLoading}
           renderItem={(e, index) => {
             return (
-              <div id="sfsdf">
+              <div>
                 <Flex direction={"row"} width={"100%"}>
                   <MobileCellItem
                     title="Commission"

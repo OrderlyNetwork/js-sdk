@@ -84,8 +84,6 @@ export const Tab: FC<
       </div>
     );
   }
-
-  console.log("class name", props.classNames);
   
 
   if ((!props.isAffiliate && !props.isTrader) || props.showHome) {
