@@ -7,7 +7,7 @@ import { OrderList, OrderListWidget } from "./orderList";
 
 export const Orders = (props: OrdersBuilderState) => {
   return (
-    <Tabs defaultValue={props.current || TabType.all}>
+    <Tabs defaultValue={props.current || TabType.all} variant="contained">
       <TabPanel value={TabType.all} title="All">
         <OrderListWidget
           type={TabType.all}

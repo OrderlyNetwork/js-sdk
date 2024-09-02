@@ -27,6 +27,7 @@ export const useOrderStream = (
   params: {
     symbol?: string;
     status?: OrderStatus;
+    page?: number;
     size?: number;
     side?: OrderSide;
     /**
@@ -39,6 +40,10 @@ export const useOrderStream = (
      * @default []
      */
     excludes?: CombineOrderType[];
+    dateRange?: {
+      from?: Date;
+      to?: Date;
+    }
   },
   options?: {
     /**
@@ -56,6 +61,8 @@ export const useOrderStream = (
     symbol,
     side,
     size = 100,
+    page,
+    dateRange,
     includes = ["ALL"],
     excludes = [],
   } = params;
@@ -92,17 +99,20 @@ export const useOrderStream = (
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side
     )}`;
-    regesterKeyHandler?.(key, generateKeyFun({ status, symbol, side, size }));
+    regesterKeyHandler?.(
+      key,
+      generateKeyFun({ status, symbol, side, size, page, dateRange })
+    );
 
     return () => {
       if (!options?.stopOnUnmount) return;
 
       unregisterKeyHandler(key);
     };
-  }, [status, symbol, side, options?.keeplive]);
+  }, [status, symbol, side, options?.keeplive, page, dateRange]);
 
   const ordersResponse = usePrivateInfiniteQuery(
-    generateKeyFun({ status, symbol, side, size }),
+    generateKeyFun({ status, symbol, side, size, page, dateRange }),
     {
       initialSize: 1,
       // revalidateFirstPage: false,
@@ -340,6 +350,11 @@ export const useOrderStream = (
     []
   );
 
+  const meta = useMemo(() => {
+    // @ts-ignore
+    return ordersResponse.data?.[0]?.meta;
+  }, [ordersResponse.data?.[0]]);
+
   return [
     orders,
     {
@@ -356,6 +371,7 @@ export const useOrderStream = (
       cancelAlgoOrder,
       cancelTPSLChildOrder,
       updateTPSLOrder,
+      meta,
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,

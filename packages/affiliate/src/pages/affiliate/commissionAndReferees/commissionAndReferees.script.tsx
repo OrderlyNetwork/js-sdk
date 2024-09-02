@@ -151,19 +151,7 @@ const useRefereesDataScript = (): ListReturns<
   };
 
   const onPageSizeChange = (pageSize: number) => {
-    console.log("page size change", pageSize);
-    
-    if (meta?.total) {
-      setPageSize(pageSize);
-      const { page: currentPage } = parseMeta({
-        total: meta?.total,
-        current_page: page,
-        records_per_page: pageSize,
-      });
-      console.log("page size change 222", currentPage);
-      
-      setPage(currentPage);
-    }
+    setPageSize(pageSize);
   };
 
   // const loadMore = () => {
