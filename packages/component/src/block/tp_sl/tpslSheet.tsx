@@ -31,7 +31,9 @@ export const TPSLOrderEditorSheet: FC<{
   return (
     <div>
       <div className="orderly-py-3 orderly-space-x-2">
-        <Text rule="symbol">{position!.symbol}</Text>
+        <Text rule="symbol" className="orderly-text-xs">
+          {position!.symbol}
+        </Text>
         {isEditing ? null : (
           <>
             {position.position_qty > 0 ? (

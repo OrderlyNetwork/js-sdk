@@ -67,8 +67,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           </div>
           <OrderTypeTag order={item} />
         </div>
-        <div className="orderly-text-4xs orderly-text-base-contrast-36 orderly-flex orderly-flex-col orderly-gap-1">
-          <div className="orderly-text-3xs orderly-text-base-contrast-80 orderly-text-right">
+        <div className="orderly-text-3xs orderly-text-base-contrast-36 orderly-flex orderly-flex-col orderly-gap-1">
+          <div className="orderly-text-2xs orderly-text-base-contrast-80 orderly-text-right">
             {state}
           </div>
           <Text rule="date">{item.created_time}</Text>
@@ -77,8 +77,8 @@ export const Cell: FC<HistoryCellProps> = (props) => {
       <div className="orderly-grid orderly-grid-cols-3 orderly-gap-2">
         <Statistic
           label="Qty."
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs"
           value={qty}
           rule="price"
           precision={base_dp}
@@ -92,16 +92,16 @@ export const Cell: FC<HistoryCellProps> = (props) => {
         />
         <Statistic
           label="Filled"
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           // @ts-ignore
           value={item.total_executed_quantity ?? "-"}
           rule="price"
           precision={base_dp}
         />
         <Statistic
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
           label={
@@ -127,15 +127,15 @@ export const Cell: FC<HistoryCellProps> = (props) => {
               {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
           value={item.average_executed_price ?? "-"}
         />
         <Statistic
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs orderly-text-base-contrast-80"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs orderly-text-base-contrast-80"
           rule="price"
           precision={quote_dp}
           label={
@@ -147,23 +147,27 @@ export const Cell: FC<HistoryCellProps> = (props) => {
           value={item.type === OrderType.MARKET ? "Market" : item.price}
         />
         <Statistic
-          labelClassName="orderly-text-4xs orderly-text-base-contrast-36"
-          valueClassName="orderly-text-3xs"
+          labelClassName="orderly-text-3xs orderly-text-base-contrast-36"
+          valueClassName="orderly-text-2xs"
           rule="price"
           precision={2}
-          prefix={item.realized_pnl > 0 ? '+' : ''}
+          prefix={item.realized_pnl > 0 ? "+" : ""}
           label={
             <>
               <span className="orderly-text-base-contrast-36">
-                Realized PnL(USDC)
+                Real. PnL(USDC)
               </span>
               {/* <span className="orderly-text-base-contrast-20">(USDC)</span> */}
             </>
           }
-          className={item.realized_pnl === 0 ? "" : (item.realized_pnl > 0
-            ? "orderly-text-trade-profit"
-            : "orderly-text-trade-loss")}
-          value={item.realized_pnl === 0 ? '-' : item.realized_pnl}
+          className={
+            item.realized_pnl === 0
+              ? ""
+              : item.realized_pnl > 0
+              ? "orderly-text-trade-profit"
+              : "orderly-text-trade-loss"
+          }
+          value={item.realized_pnl === 0 ? "-" : item.realized_pnl}
           align="right"
         />
       </div>

@@ -15,6 +15,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/dialog";
+import {
+  WalletConnectorModalId,
+  WalletConnectorSheetId,
+} from "@orderly.network/ui-connector";
 
 const useWalletConnect = () => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
@@ -141,8 +145,9 @@ export const WalletConnectDialog = modal.create<WalletConnectProps>((props) => {
 export const showAccountConnectorModal = async (props: WalletConnectProps) => {
   const matches = window.matchMedia(MEDIA_TABLET).matches;
   if (matches) {
-    return await modal.show(WalletConnectSheet, props);
+    // return await modal.show(WalletConnectSheet, props);
+    await modal.show(WalletConnectorSheetId, props);
   } else {
-    return await modal.show(WalletConnectDialog, props);
+    return await modal.show(WalletConnectorModalId, props);
   }
 };
