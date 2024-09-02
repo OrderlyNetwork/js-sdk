@@ -30,6 +30,7 @@
     "@orderly.network/ui-orders": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
+    "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/web3-onboard": "workspace:*",
     "@storybook/components": "^8.1.5",
