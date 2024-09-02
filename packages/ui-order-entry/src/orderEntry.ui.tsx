@@ -14,6 +14,7 @@ import {
 } from "@orderly.network/ui";
 import { PropsWithChildren, useMemo } from "react";
 import { OrderSide, OrderType } from "@orderly.network/types";
+import { OrderTPSL } from "./components/tpsl";
 
 export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
   const { side } = props;
@@ -64,12 +65,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
       </AuthGuard>
       <AssetInfo />
       <Divider />
-      <Flex itemAlign={"center"} gapX={1}>
-        <Switch id={"tpsl"} />
-        <label htmlFor={"tpsl"} className={"oui-text-xs"}>
-          TP/SL
-        </label>
-      </Flex>
+      <OrderTPSL />
       <Flex itemAlign={"center"} gapX={1}>
         <Switch id={"reduceOnly"} />
         <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
@@ -94,13 +90,13 @@ const OrderQuantityInput = (props: { type: OrderType }) => {
           label={"Quantity"}
           suffix={"BTC"}
           id={"quantity"}
-          className={"!oui-rounded-br"}
+          className={"!oui-rounded-br !oui-rounded-tr"}
         />
         <CustomInput
           label={"Total≈"}
           suffix={"USDC"}
           id={"total"}
-          className={"!oui-rounded-bl"}
+          className={"!oui-rounded-bl !oui-rounded-tl"}
         />
       </Flex>
     </div>

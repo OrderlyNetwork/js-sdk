@@ -44,6 +44,11 @@ const inputVariants = tv({
     ],
   },
   variants: {
+    // variant: {
+    //   outline:{
+    //     box:
+    //   }
+    // },
     size: {
       xs: {
         input: ["oui-h-6", "oui-text-2xs", "placeholder:oui-text-2xs"],
