@@ -17,6 +17,7 @@ module.exports = {
     "../../packages/markets/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/chart/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-transfer/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-share/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
