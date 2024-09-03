@@ -2,14 +2,18 @@ import { FC, PropsWithChildren, useEffect, useState } from "react";
 import { Box } from "@orderly.network/ui";
 import { SharePnLState } from "./sharePnL.script";
 import { DesktopSharePnLContent } from "./desktop/content";
-
+import { MobileSharePnLContent } from "./mobile/content";
 
 export const DesktopSharePnL: FC<SharePnLState> = (props) => {
-
-  console.log("xxxxxx DesktopSharePnL props", props);
-  
-  const { leverage, position, baseDp, quoteDp, referralInfo, shareOptions } =
-    props;
+  const {
+    leverage,
+    position,
+    baseDp,
+    quoteDp,
+    referralInfo,
+    shareOptions,
+    hide,
+  } = props;
 
   const [viewportHeight, setViewportHeight] = useState(
     window.innerHeight < 900 ? 660 : 807
@@ -30,30 +34,35 @@ export const DesktopSharePnL: FC<SharePnLState> = (props) => {
     <DesktopSharePnLContent
       position={position}
       leverage={`${leverage}`}
-      hide={props.hide}
-      baseDp={props.baseDp}
-      quoteDp={props.quoteDp}
-      referral={props.referralInfo}
+      hide={hide}
+      baseDp={baseDp}
+      quoteDp={quoteDp}
+      referral={referralInfo}
       shareOptions={shareOptions}
     />
   );
 };
 
 export const MobileSharePnL: FC<SharePnLState> = (props) => {
-  const { leverage, position, baseDp, quoteDp, referralInfo, shareOptions } =
-    props;
-  // const { visible, hide, resolve, reject, onOpenChange } = useModal();
+  const {
+    leverage,
+    position,
+    baseDp,
+    quoteDp,
+    referralInfo,
+    shareOptions,
+    hide,
+  } = props;
 
-  /*、
-  <MobileSharePnLContent
-          position={position}
-          leverage={leverage}
-          hide={hide}
-          baseDp={baseDp}
-          quoteDp={quoteDp}
-          referral={referral}
-          shareOptions={shareOptions}
-        /> 
-  */
-  return <Box>Mweb</Box>;
+  return (
+    <MobileSharePnLContent
+      position={position}
+      leverage={leverage}
+      hide={hide}
+      baseDp={baseDp}
+      quoteDp={quoteDp}
+      referral={referralInfo}
+      shareOptions={shareOptions}
+    />
+  );
 };

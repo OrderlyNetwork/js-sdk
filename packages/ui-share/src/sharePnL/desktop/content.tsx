@@ -107,7 +107,7 @@ export const DesktopSharePnLContent: FC<{
   savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
 
   return (
-    <div className="oui-h-full oui-flex oui-flex-col oui-relative oui-referral oui-bg-slate-900">
+    <div className="oui-h-full oui-flex oui-flex-col oui-relative oui-referral">
       <div className="oui-flex-1 oui-h-full oui-overflow-y-auto">
         <div className="oui-h-[422px] oui-mt-[36px]">
           <Flex itemAlign={"center"} justify={"center"}>

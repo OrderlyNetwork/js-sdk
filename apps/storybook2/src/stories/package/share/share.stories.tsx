@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import { SharePnLDialogWidget, SharePnLDialogId, SharePnLBottomSheetId } from '@orderly.network/ui-share';
+import { SharePnLDialogWidget, SharePnLDialogId, SharePnLBottomSheetId, SharePnLBottomSheetWidget } from '@orderly.network/ui-share';
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { Button, Flex, modal } from "@orderly.network/ui";
@@ -96,6 +96,19 @@ export const Desktop: Story = {
   ],
 };
 
+export const Mobile: Story = {
+  render: (arg) => {
+
+    return (
+      <Flex style={{ width: "375px" }} direction={"column"}>
+        <SharePnLBottomSheetWidget pnl={
+          arg.pnl
+        } />
+      </Flex>
+    );
+  }
+};
+
 
 export const CommandStyle: Story = {
   render: (arg) => {
@@ -107,7 +120,7 @@ export const CommandStyle: Story = {
         modal.show(SharePnLDialogId, { pnl });
       }}>Share PnL (Desktop)</Button>
       <Button onClick={() => {
-        modal.show(SharePnLBottomSheetId);
+        modal.show(SharePnLBottomSheetId, { pnl });
       }}>Share PnL (mWeb)</Button>
     </Flex>
   },
