@@ -55,6 +55,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-transfer/src"
       ),
+      "@orderly.network/ui-share": resolve(
+        __dirname,
+        "../../packages/ui-share/src"
+      ),
       "@orderly.network/withdraw": resolve(
         __dirname,
         "../../packages/withdraw/src"

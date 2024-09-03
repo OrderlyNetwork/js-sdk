@@ -1,7 +1,26 @@
-import { useSharePnLScript } from "./sharePnL.script";
-import { SharePnL } from "./sharePnL.ui";
 
-export const SharePnLWidget = () => {
-    const state = useSharePnLScript();
-    return (<SharePnL {...state} />);
+import { SharePnLConfig, SharePnLParams } from "../types/types";
+import { useSharePnLScript } from "./sharePnL.script";
+import { DesktopSharePnL, MobileSharePnL } from "./sharePnL.ui";
+
+export const SharePnLBottomSheetWidget = (props: {
+  hide?: () => void;
+  pnl?: SharePnLConfig & SharePnLParams;
+}) => {
+  const state = useSharePnLScript({
+    hide: props.hide,
+    pnl: props.pnl,
+  });
+  return <MobileSharePnL {...state} />;
+};
+
+export const SharePnLDialogWidget = (props: {
+  hide?: () => void;
+  pnl?: SharePnLConfig & SharePnLParams;
+}) => {
+  const state = useSharePnLScript({
+    hide: props.hide,
+    pnl: props.pnl,
+  });
+  return <DesktopSharePnL {...state} />;
 };

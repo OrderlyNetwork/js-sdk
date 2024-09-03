@@ -9,11 +9,16 @@
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["Orderly", "Leverage"],
+  "keywords": [
+    "Orderly",
+    "Leverage"
+  ],
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*"
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "embla-carousel-react": "^8.2.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",
@@ -27,8 +32,8 @@
     "tsup": "^7.1.0"
   },
   "peerDependencies": {
+    "@orderly.network/ui": "workspace:*",
     "react": "^18.3.1",
-    "react-dom": "^18.2.0",
-    "@orderly.network/ui": "workspace:*"
+    "react-dom": "^18.2.0"
   }
 }

@@ -1,13 +1,21 @@
-import { registerSimpleDialog } from "@orderly.network/ui";
-import { SharePnLWidget } from "./sharePnL";
+import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import {
+  SharePnLDialogWidget,
+  SharePnLBottomSheetWidget,
+} from "./sharePnL/sharePnL.widget";
 
-const SharePnLWidgetId = "leverageEditor";
+const SharePnLDialogId = "sharePnLDialog";
+const SharePnLBottomSheetId = "sharePnLBottomSheet";
 
-export { SharePnLWidget } from "./sharePnL";
-
-registerSimpleDialog(SharePnLWidgetId, SharePnLWidget, {
-//   title: "Max account leverage",
-  size: "md",
+registerSimpleDialog(SharePnLDialogId, SharePnLDialogWidget, {
+  //   title: "Max account leverage",
+  // size: "2xl",
+  contentClassName: "!oui-max-w-[624px] oui-p-0",
 });
 
-export { SharePnLWidgetId };
+registerSimpleSheet(SharePnLBottomSheetId, SharePnLBottomSheetWidget, {
+  title: "Share PnL",
+});
+
+export * from "./sharePnL";
+export { SharePnLDialogId, SharePnLBottomSheetId };

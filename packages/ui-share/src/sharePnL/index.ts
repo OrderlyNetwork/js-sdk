@@ -1,2 +1,2 @@
-export { SharePnL } from "./sharePnL.ui";
-export { SharePnLWidget } from "./sharePnL.widget";
+export { useSharePnLScript } from "./sharePnL.script";
+export { SharePnLBottomSheetWidget, SharePnLDialogWidget, } from "./sharePnL.widget";
