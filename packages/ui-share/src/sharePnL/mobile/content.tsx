@@ -1,10 +1,6 @@
-import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { Poster } from "../poster";
 import { PosterRef } from "../poster/poster";
-
-
-import { useLocalStorage } from "@orderly.network/hooks";
-import { ShareConfigProps } from "@orderly.network/react";
 import {
   PnLDisplayFormat,
   ReferralType,
@@ -12,9 +8,22 @@ import {
   SharePnLConfig,
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
-import { Box, Button, cn, Input, toast } from "@orderly.network/ui";
+import {
+  Box,
+  Button,
+  CloseCircleFillIcon,
+  cn,
+  Input,
+  ScrollArea,
+  toast,
+} from "@orderly.network/ui";
 import { Carousel } from "../carousel";
-import { CarouselContent, CarouselItem, Dot, useCarousel } from "../carousel/carousel";
+import {
+  CarouselContent,
+  CarouselItem,
+  Dot,
+  useCarousel,
+} from "../carousel/carousel";
 
 export const MobileSharePnLContent: FC<{
   position: any;
@@ -69,6 +78,9 @@ export const MobileSharePnLContent: FC<{
   const aspectRatio = 552 / 310;
   const [scale, setScale] = useState(1);
   const [carouselHeight, setCarouselHeight] = useState(0);
+
+  const [focus, setFocus] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (carouselRef.current) {
@@ -148,7 +160,7 @@ export const MobileSharePnLContent: FC<{
         </Carousel>
       </div>
 
-      <div className="oui-max-h-[200px] oui-overflow-y-auto">
+      <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto">
         <div className="oui-mt-4">
           <div className="oui-text-3xs oui-text-base-contrast-54">
             PnL display format
@@ -222,10 +234,31 @@ export const MobileSharePnLContent: FC<{
                 }
                 setMessage(e.target.value);
               }}
+              ref={inputRef}
+              onFocus={() => setFocus(true)}
+              onBlur={() => setFocus(false)}
+              suffix={
+                focus && (
+                  <button
+                    className="oui-mr-3 oui-cursor-pointer"
+                    onMouseDown={(e) => {
+                      console.log("set message to empty");
+
+                      setMessage("");
+                        setTimeout(() => {
+                          inputRef.current?.focus();
+                        }, 50);
+                      e.stopPropagation();
+                    }}
+                  >
+                    <CloseCircleFillIcon size={18} color="white" />
+                  </button>
+                )
+              }
             />
           </div>
         </div>
-      </div>
+      </ScrollArea>
 
       <div className="oui-pt-2">
         <Button
@@ -268,7 +301,7 @@ const PnlFormatView: FC<{
   return (
     <div
       className={cn(
-        "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-flex-1 oui-bg-base-400 hover:oui-cursor-pointer oui-flex oui-items-center oui-px-3 oui-referral-shadow",
+        "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-flex-1 oui-bg-base-4 hover:oui-cursor-pointer oui-flex oui-items-center oui-px-3 oui-referral-shadow",
         isSelected && "oui-bg-primary oui-dot-sel"
       )}
       onClick={() => {
@@ -308,7 +341,7 @@ const ShareOption: FC<{
   return (
     <div
       className={cn(
-        "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-mt-0 oui-w-[calc(50%-6px)] oui-bg-base-400 hover:oui-cursor-pointer oui-items-center oui-flex oui-p-3 oui-referral-shadow"
+        "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-mt-0 oui-w-[calc(50%-6px)] oui-bg-base-4 hover:oui-cursor-pointer oui-items-center oui-flex oui-p-3 oui-referral-shadow"
       )}
       onClick={() => {
         // setPnlFormat(type);
@@ -354,7 +387,6 @@ const MyIdentifier: FC<{
   }, [selectedIndex]);
 
   console.log("setSelectIndex is", selectedIndex);
-  
 
   return (
     <div className={cn("oui-flex oui-gap-1")}>
