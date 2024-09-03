@@ -45,7 +45,7 @@ const meta = {
     pnl: {
       position: {
         "symbol": "PERP_ETH_USDC",
-        "position_qty": -0.0794,
+        "position_qty": 0.0794,
         "cost_position": -187.802286,
         "last_sum_unitary_funding": 1558.09,
         "pending_long_qty": 0.023,
@@ -67,7 +67,8 @@ const meta = {
       // ref
       refCode: "AADB",
       refSlogan: "NEW BE",
-      refLink: "www.orderly.network",
+      refLink: "https://orderly.network",
+
       backgroundImages: [
         "/pnl/poster_bg_1.png",
         "/pnl/poster_bg_2.png",
@@ -76,9 +77,9 @@ const meta = {
         "/pnl/poster_bg_5.png",
       ],
       color: "rgba(255, 255, 255, 0.98)",
-      profitColor: "rgb(255,0,0)",
-      lossColor: "rgb(0,0,255)",
-      brandColor: "rgb(0,181,159)",
+      profitColor: "rgba(255,68,124,1)",
+      lossColor: "rgba(0,180,158,1)",
+      brandColor: "rgba(51,95,252,1)",
     }
   },
 } satisfies Meta<typeof SharePnLDialogWidget>;

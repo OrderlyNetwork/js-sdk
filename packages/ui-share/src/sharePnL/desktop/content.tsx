@@ -6,7 +6,7 @@ import {
   SharePnLConfig,
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
-import { CloseIcon, Divider, Flex, toast } from "@orderly.network/ui";
+import { CloseIcon, Divider, Flex, toast, Text, Box } from "@orderly.network/ui";
 import { Poster } from "../poster";
 import { CarouselBackgroundImage } from "./carousel";
 import { PnlFormatView } from "./pnlFormat";
@@ -67,7 +67,6 @@ export const DesktopSharePnLContent: FC<{
   );
 
   console.log("posterData is", posterData);
-  
 
   const onCopy = () => {
     posterRef.current
@@ -109,49 +108,61 @@ export const DesktopSharePnLContent: FC<{
   return (
     <div className="oui-h-full oui-flex oui-flex-col oui-relative oui-referral">
       <div className="oui-flex-1 oui-h-full oui-overflow-y-auto">
-        <div className="oui-h-[422px] oui-mt-[36px]">
+        <Box mt={9} height={422} >
           <Flex itemAlign={"center"} justify={"center"}>
-          <Poster
-            // className="oui-mx-11"
-            width={552}
-            height={310}
-            data={{
-              backgroundImg: curBgImg,
-              ...resetOptions,
-              data: posterData,
-            }}
-            ratio={3}
-            ref={posterRef}
-          />
+            <Poster
+              // className="oui-mx-11"
+              width={552}
+              height={310}
+              data={{
+                backgroundImg: curBgImg,
+                ...resetOptions,
+                data: posterData,
+              }}
+              ratio={3}
+              ref={posterRef}
+            />
           </Flex>
           <CarouselBackgroundImage
             backgroundImages={shareOptions?.backgroundImages ?? []}
             selectedSnap={selectedSnap}
             setSelectedSnap={setSelectedSnap}
           />
-        </div>
+        </Box>
 
-        <div className="oui-px-10">
-          <div className="oui-mt-4">
-            <div className="oui-text-lg oui-h-[26px]">PnL display format</div>
-            <div className="oui-pt-4 oui-flex oui-justify-start oui-gap-3">
-              {formats.map((e) => (
-                <PnlFormatView
-                  setPnlFormat={setPnlFormat}
-                  type={e}
-                  curType={pnlFormat}
-                />
-              ))}
-            </div>
-          </div>
+        <Flex
+          direction={"column"}
+          px={10}
+          mt={6}
+          justify={"start"}
+          itemAlign={"start"}
+          width={"100%"}
+        >
+          <Text size="sm" intensity={80}>
+            PnL display format
+          </Text>
+          <Flex pt={3} gap={3} itemAlign={"center"}>
+            {formats.map((e) => (
+              <PnlFormatView
+                setPnlFormat={setPnlFormat}
+                type={e}
+                curType={pnlFormat}
+              />
+            ))}
+          </Flex>
 
-          <Divider className="oui-pt-6 oui-border-white/10" />
+          <Divider className="oui-w-full oui-pt-6 oui-border-white/10" />
 
-          <div className="oui-mt-4">
-            <div className="oui-text-lg oui-h-[26px]">
+          <Flex
+            mt={6}
+            direction={"column"}
+            justify={"start"}
+            itemAlign={"start"}
+          >
+            <Text size="sm" intensity={80}>
               Optional information to share
-            </div>
-            <div className="oui-mt-4 oui-flex oui-justify-start oui-gap-4">
+            </Text>
+            <Flex mt={3} gap={4}>
               {options.map((item) => (
                 <ShareOption
                   setShareOption={setShareOption}
@@ -159,8 +170,8 @@ export const DesktopSharePnLContent: FC<{
                   curType={shareOption}
                 />
               ))}
-            </div>
-          </div>
+            </Flex>
+          </Flex>
 
           <Message
             message={message}
@@ -168,7 +179,7 @@ export const DesktopSharePnLContent: FC<{
             check={check}
             setCheck={setCheck}
           />
-        </div>
+        </Flex>
       </div>
 
       <BottomButtons onClickCopy={onCopy} onClickDownload={onDownload} />

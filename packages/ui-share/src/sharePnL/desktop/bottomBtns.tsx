@@ -8,7 +8,7 @@ export const BottomButtons: FC<{
   const { onClickDownload, onClickCopy } = props;
 
   return (
-    <Flex px={8} gap={3} itemAlign={"center"} >
+    <Flex px={8} gap={3} mt={3} itemAlign={"center"} >
       <Button
         color={"secondary"}
         className="oui-flex-1 oui-flex oui-gap-1"

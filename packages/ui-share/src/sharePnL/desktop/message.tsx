@@ -16,15 +16,16 @@ export const Message: FC<{
   const [focus, setFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (
-    <div className="oui-mt-4 oui-mb-7 oui-flex oui-items-center">
+    <div className="oui-mt-3 oui-mb-6 oui-flex oui-items-center">
       <Checkbox
+      className="oui-mt-[2px]"
         checked={check}
         onCheckedChange={(e: boolean) => {
           setCheck(e);
         }}
       />
       <div
-        className="oui-text-xs oui-text-base-contrast-54 oui-ml-2 hover:oui-cursor-pointer"
+        className="oui-text-xs oui-text-base-contrast-54 oui-ml-1 hover:oui-cursor-pointer"
         onClick={() => {
           setCheck(!props.check);
         }}
@@ -35,7 +36,10 @@ export const Message: FC<{
         <Input
           ref={inputRef}
           placeholder="Max 25 characters"
-          containerClassName="oui-bg-transparent oui-h-[32px] oui-w-[295px]"
+          classNames={{
+            root: "oui-w-[320px]"
+          }}
+          size="sm"
           value={message}
           autoFocus={false}
           suffix={

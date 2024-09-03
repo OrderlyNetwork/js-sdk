@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { PnLDisplayFormat } from "../../types/types";
-import { Button, cn } from "@orderly.network/ui";
+import { Text, cn } from "@orderly.network/ui";
 
 export const PnlFormatView: FC<{
   type: PnLDisplayFormat;
@@ -37,14 +37,16 @@ export const PnlFormatView: FC<{
       }}
     >
       <RadioButton sel={isSelected} />
-      <span
+      <Text
+        size="xs"
+        intensity={54}
         className={cn(
-          "oui-text-[16px] oui-ml-2 oui-text-base-contrast-54",
-          isSelected && "oui-text-base-contrast"
+          "oui-ml-2 ",
+          // isSelected && "oui-text-base-contrast"
         )}
       >
         {text}
-      </span>
+      </Text>
     </div>
   );
 };

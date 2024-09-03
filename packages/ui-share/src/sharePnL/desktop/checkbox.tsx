@@ -1,15 +1,22 @@
 export const Checkbox = (props: {
+  size?: number;
+  className?: string;
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
 }) => {
+  const { size = 16, className } = props;
   return (
-    <button type="button" onClick={(e) => {
+    <button
+      type="button"
+      onClick={(e) => {
         props.onCheckedChange(!props.checked);
-    }}>
+      }}
+      className={className}
+    >
       {props.checked ? (
         <svg
-          width="16"
-          height="16"
+          width={size}
+          height={size}
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -24,8 +31,8 @@ export const Checkbox = (props: {
         </svg>
       ) : (
         <svg
-          width="16"
-          height="16"
+          width={size}
+          height={size}
           viewBox="0 0 16 16"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

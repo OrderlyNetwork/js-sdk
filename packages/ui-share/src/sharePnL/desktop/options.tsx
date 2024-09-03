@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { ShareOptions } from "../../types/types";
-import { cn } from "@orderly.network/ui";
+import { Flex, Text, cn } from "@orderly.network/ui";
 import { Checkbox } from "./checkbox";
 
 export const ShareOption: FC<{
@@ -28,10 +28,10 @@ export const ShareOption: FC<{
   const isSelected = curType.has(type);
 
   return (
-    <div
-      className={cn(
-        "oui-h-[20px] hover:oui-cursor-pointer oui-items-center oui-flex oui-cursor-pointer"
-      )}
+    <Flex
+      itemAlign={"center"}
+      gap={1}
+      className={cn("hover:oui-cursor-pointer")}
       onClick={() => {
         // setPnlFormat(type);
         setShareOption((value: Set<ShareOptions>) => {
@@ -46,7 +46,9 @@ export const ShareOption: FC<{
       }}
     >
       <Checkbox
+        size={16}
         checked={isSelected}
+        className="oui-pt-[2px]"
         onCheckedChange={(checked: boolean) => {
           setShareOption((value: Set<ShareOptions>) => {
             const updateSet = new Set(value);
@@ -60,9 +62,9 @@ export const ShareOption: FC<{
         }}
       />
 
-      <div className="oui-text-sm oui-text-base-contrast-54 oui-pl-1">
+      <Text size="xs" intensity={54} >
         {text}
-      </div>
-    </div>
+      </Text>
+    </Flex>
   );
 };

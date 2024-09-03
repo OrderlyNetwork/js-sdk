@@ -1,7 +1,7 @@
 import useEmblaCarousel from "embla-carousel-react";
 import { FC, useCallback, useEffect } from "react";
 import { NextButton, PrevButton } from "./buttons";
-import { cn, Flex } from "@orderly.network/ui";
+import { Box, cn, Flex } from "@orderly.network/ui";
 
 export const CarouselBackgroundImage: FC<{
   backgroundImages: string[];
@@ -42,31 +42,34 @@ export const CarouselBackgroundImage: FC<{
   }, [emblaApi, onSelect]);
 
   return (
-    <Flex mt={5} px={2} >
+    <Flex mt={4} px={2} >
       <PrevButton onClick={onPrevButtonClick} />
       <div
         ref={emblaRef}
-        className="oui-w-[552px] oui-overflow oui-overflow-x-auto oui-scrollbar-hidden oui-hide-scrollbar oui-mx-2"
+        className="oui-w-full oui-overflow oui-overflow-x-auto oui-scrollbar-hidden oui-hide-scrollbar oui-mx-0"
       >
-        <div className="oui-flex">
+        <Flex>
           {backgroundImages.map((e, index) => (
-            <div
+            <Box
               key={e}
               onClick={() => {
-                console.log("scroll to", index);
 
                 emblaApi?.scrollTo(index);
               }}
+              mx={2}
+              my={1}
+              mr={6}
+              r="base"
               className={cn(
-                "oui-shrink-0 oui-mx-2 oui-w-[162px] oui-my-1 oui-mr-[21px] oui-rounded-sm",
+                "oui-shrink-0 oui-w-[162px]",
                 selectedSnap === index &&
                   "oui-outline oui-outline-1 oui-outline-primary"
               )}
             >
               <img src={e} className="oui-rounded-sm" />
-            </div>
+            </Box>
           ))}
-        </div>
+        </Flex>
       </div>
       <NextButton onClick={onNextButtonClick} />
     </Flex>
