@@ -61,7 +61,9 @@ const meta = {
         "IMR_withdraw_orders": 0.05,
         "MMR_with_orders": 0.012,
         "pnl_24_h": 0.0,
-        "fee_24_h": 0.119993
+        "fee_24_h": 0.119993,
+        "unrealized_pnl": 20,
+        "unrealized_pnl_ROI": 1.22
       },
       leverage: 10,
       // ref

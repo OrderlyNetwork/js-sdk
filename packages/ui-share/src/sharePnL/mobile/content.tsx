@@ -119,7 +119,7 @@ export const MobileSharePnLContent: FC<{
   savePnlInfo(pnlFormat, shareOption, selectIndex, message);
 
   return (
-    <div>
+    <div className="oui-w-full">
       {/* <div>{`leverage: ${props.leverage}x`}</div> */}
       <div
         ref={carouselRef}
