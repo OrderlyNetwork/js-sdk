@@ -13,6 +13,9 @@
     "@orderly.network/react": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/ui-orders": "workspace:*",
+    "@orderly.network/ui-positions": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "@orderly.network/react-app": "workspace:*"
   },
   "devDependencies": {

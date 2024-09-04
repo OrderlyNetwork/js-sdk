@@ -12,9 +12,6 @@ import { differenceInDays, setHours } from "date-fns";
 export const useOrderListScript = (props: {
   type: TabType;
   ordersStatus?: OrderStatus;
-  filterSides?: boolean;
-  filterStatus?: boolean;
-  filterDate?: boolean;
 }) => {
   const { ordersStatus, type } = props;
 

@@ -1597,9 +1597,18 @@ importers:
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/ui-orders':
+        specifier: workspace:*
+        version: link:../ui-orders
+      '@orderly.network/ui-positions':
+        specifier: workspace:*
+        version: link:../ui-positions
     devDependencies:
       '@types/react':
         specifier: ^18.3.2

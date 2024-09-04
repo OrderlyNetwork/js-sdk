@@ -5,7 +5,7 @@ import { fn } from '@storybook/test';
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import {CustomConfigStore} from "../CustomConfig Store";
-import { TradingPage } from "@orderly.network/trading";
+import { TradingPage, DataListWidget } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
@@ -240,3 +240,11 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {};
 
 // export const LayoutPage: Story = {}
+
+
+export const DataList: Story = {
+  render: () => {
+
+    return (<DataListWidget />);
+  }
+}

@@ -6,9 +6,6 @@ import { TabType } from "../orders.widget";
 export const OrderListWidget = (props: {
     type: TabType;
     ordersStatus?: OrderStatus;
-    filterSides?: boolean;
-    filterStatus?: boolean;
-    filterDate?: boolean
 }) => {
     const state = useOrderListScript(props);
     return (
