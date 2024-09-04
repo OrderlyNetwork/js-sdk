@@ -9,6 +9,7 @@
       "@orderly.network/ui-orders": ["../ui-orders/src"],
       "@orderly.network/hooks": ["../hooks/src"],
       "@orderly.network/types": ["../types/src"],
+      "@orderly.network/utils": ["../utils/src"],
     },
   }
 }

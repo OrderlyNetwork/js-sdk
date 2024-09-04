@@ -1,9 +1,10 @@
 import { FC } from "react";
-import { Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { DataListState, DataListTabType } from "./dataList.script";
 import { PositionsWidget } from "@orderly.network/ui-positions";
 import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
+import { PositionHeaderWidget } from "./positionHeader";
 
 export const DataList: FC<DataListState> = (props) => {
   return (
@@ -15,7 +16,7 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.positions}
         title={DataListTabType.positions}
       >
-        <PositionsWidget {...props.config} />
+        <PositionsView {...props} />
       </TabPanel>
       <TabPanel value={DataListTabType.pending} title={DataListTabType.pending}>
         <OrderListWidget
@@ -42,5 +43,19 @@ export const DataList: FC<DataListState> = (props) => {
         <OrderListWidget type={TabType.orderHistory} />
       </TabPanel>
     </Tabs>
+  );
+};
+
+const PositionsView: FC<DataListState> = (props) => {
+  return (
+    <Flex direction={"column"}>
+      <PositionHeaderWidget
+        pnlNotionalDecimalPrecision={props.config?.pnlNotionalDecimalPrecision}
+        symbol={props.config?.symbol}
+        unPnlPriceBasis={props.config?.unPnlPriceBasis}
+      />
+      <Divider className="oui-w-full" />
+      <PositionsWidget {...props.config} />
+    </Flex>
   );
 };

@@ -10,7 +10,10 @@ export enum DataListTabType {
 
 export const useDataListScript = (props: {
     current?: DataListTabType;
-    config: PositionsProps;
+    config: PositionsProps & {
+        symbol?: string;
+        unPnlPriceBasis: "markPrice" | "lastPrice";
+      };
   }) => {
     const { current, config } = props;
     return {

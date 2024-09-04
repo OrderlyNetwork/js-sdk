@@ -10,6 +10,7 @@ import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
 import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
+import { Box } from "@orderly.network/ui";
 
 const meta = {
   title: "Package/Trading/page",
@@ -245,8 +246,10 @@ export const Page: Story = {};
 export const DataList: Story = {
   render: () => {
 
-    return (<DataListWidget config={{
+    return (<Box p={3}>
+      <DataListWidget config={{
       pnlNotionalDecimalPrecision: 2,
+      unPnlPriceBasis: "markPrice",
       sharePnLConfig: {
         backgroundImages: [
           "/pnl/poster_bg_1.png",
@@ -264,6 +267,7 @@ export const DataList: Story = {
         refLink: "https://orderly.network",
         refSlogan: "NEW BE222",
       }
-    }} />);
+    }} />
+    </Box>);
   }
 }
