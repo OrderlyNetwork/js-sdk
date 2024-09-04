@@ -40,6 +40,8 @@
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
       ],
+      "@orderly.network/ui-tradingview": ["../../packages/ui-tradingview/src"],
+
       "@orderly.network/react": ["../../packages/component/src"],
     }
   },
