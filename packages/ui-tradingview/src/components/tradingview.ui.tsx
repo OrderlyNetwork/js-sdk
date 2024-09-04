@@ -6,7 +6,7 @@ export  function TradingviewUi(props: TradingviewUIPropsInterface) {
     <div>
       trading view
       <div id='sdk-tradingview' className='oui-h-full oui-w-full'>
-         trading view chart3
+         trading view chart4
       </div>
     </div>
   );
