@@ -55,21 +55,21 @@ export const InnerInput: FC<{
           autoFocus
           classNames={{
             root: "oui-bg-base-700 oui-px-2 oui-py-1 oui-rounded",
-            input: "oui-px-2",
+            input: "oui-pr-2",
           }}
-          prefix={
-            <CloseIcon
-              size={14}
-              color="white"
-              opacity={1}
-              className="oui-cursor-pointer oui-opacity-50 hover:oui-opacity-100"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                onClose(e);
-              }}
-            />
-          }
+          // prefix={
+          //   <CloseIcon
+          //     size={14}
+          //     color="white"
+          //     opacity={1}
+          //     className="oui-cursor-pointer oui-opacity-50 hover:oui-opacity-100"
+          //     onClick={(e) => {
+          //       e.stopPropagation();
+          //       e.preventDefault();
+          //       onClose(e);
+          //     }}
+          //   />
+          // }
           suffix={
             <button onClick={onClick}>
               <CheckIcon
