@@ -192,7 +192,8 @@ export const Price = (props: {
 
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
-  if (isAlgoMarketOrder) {
+  
+  if (isAlgoMarketOrder || price === "Market") {
     return <span>Market</span>;
   }
 
