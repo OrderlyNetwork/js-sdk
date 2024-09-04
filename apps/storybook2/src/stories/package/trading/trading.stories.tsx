@@ -24,7 +24,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({networkId, brokerId: "woofi_pro", env: "staging"});
+      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging" });
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -32,7 +32,7 @@ const meta = {
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-            // configStore={configStore}
+          // configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}
@@ -156,7 +156,7 @@ const meta = {
                         icon: <OrderlyIcon size={14} />,
                         activeIcon: <OrderlyActiveIcon size={14} />,
                       },
-            
+
                       {
                         name: "ARB incentives",
                         href: "https://mirror.xyz/woofi.eth/9NVYvKwfldZf1JPoKkNQ2YMXnNbgVUyHkgMJIvXv9dg",
@@ -208,7 +208,7 @@ const meta = {
       },
       refLink: "https://orderly.netowork/referral?abc=123",
     },
-    shareOptions:{
+    shareOptions: {
       pnl: {
         backgroundImages: [
           "/pnl/poster_bg_1.png",
@@ -226,10 +226,10 @@ const meta = {
     tradingReward: {
       onClickTradingReward: () => {
         console.log("hahahahah");
-        
+
       }
     },
-    onSymbolChange:fn(),
+    onSymbolChange: fn(),
   },
 } satisfies Meta<typeof TradingPage>;
 
@@ -245,6 +245,25 @@ export const Page: Story = {};
 export const DataList: Story = {
   render: () => {
 
-    return (<DataListWidget />);
+    return (<DataListWidget config={{
+      pnlNotionalDecimalPrecision: 2,
+      sharePnLConfig: {
+        backgroundImages: [
+          "/pnl/poster_bg_1.png",
+          "/pnl/poster_bg_2.png",
+          "/pnl/poster_bg_3.png",
+          "/pnl/poster_bg_4.png",
+          "/pnl/poster_bg_5.png",
+        ],
+        color: "rgba(255, 255, 255, 0.98)",
+        profitColor: "rgba(255,68,124,1)",
+        lossColor: "rgba(0,180,158,1)",
+        brandColor: "rgba(51,95,252,1)",
+
+        // ref
+        refLink: "https://orderly.network",
+        refSlogan: "NEW BE222",
+      }
+    }} />);
   }
 }

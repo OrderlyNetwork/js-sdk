@@ -19,3 +19,4 @@ registerSimpleSheet(SharePnLBottomSheetId, SharePnLBottomSheetWidget, {
 
 export * from "./sharePnL";
 export { SharePnLDialogId, SharePnLBottomSheetId };
+export type  { SharePnLConfig, SharePnLParams } from "./types/types";

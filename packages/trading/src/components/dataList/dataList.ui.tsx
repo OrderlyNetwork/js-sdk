@@ -15,7 +15,7 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.positions}
         title={DataListTabType.positions}
       >
-        <PositionsWidget />
+        <PositionsWidget {...props.config} />
       </TabPanel>
       <TabPanel value={DataListTabType.pending} title={DataListTabType.pending}>
         <OrderListWidget

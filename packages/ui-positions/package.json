@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*"

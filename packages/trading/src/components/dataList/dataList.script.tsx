@@ -1,3 +1,5 @@
+import { PositionsProps } from "@orderly.network/ui-positions";
+
 export enum DataListTabType {
     positions = "Positions",
     pending = "Pending",
@@ -6,10 +8,14 @@ export enum DataListTabType {
     orderHistory = "Order history",
 }
 
-export const useDataListScript = (props: {current?: DataListTabType}) => {
-    const { current } = props;
+export const useDataListScript = (props: {
+    current?: DataListTabType;
+    config: PositionsProps;
+  }) => {
+    const { current, config } = props;
     return {
-        current
+        current,
+        config,
     };
 };
 
