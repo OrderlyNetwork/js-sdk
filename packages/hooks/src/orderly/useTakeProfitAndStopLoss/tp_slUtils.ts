@@ -53,7 +53,7 @@ export function priceToOffset(
     orderSide: OrderSide;
     orderType: AlgoOrderType;
   },
-  options: { symbol?: API.SymbolExt } = {}
+  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {}
 ) {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
@@ -208,7 +208,7 @@ export function priceToPnl(
     orderSide: OrderSide;
     orderType: AlgoOrderType;
   },
-  options: { symbol?: API.SymbolExt } = {}
+  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {}
 ): number {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
@@ -258,16 +258,16 @@ export function priceToPnl(
 //     .toNumber();
 // }
 
-export function calculateHelper(
+export function tpslCalculateHelper(
   key: string,
   inputs: {
     key: string;
     value: string | number;
-    entryPrice: number;
-    qty: number;
+    entryPrice: number | string;
+    qty: number | string;
     orderSide: OrderSide;
   },
-  options: { symbol?: API.SymbolExt } = {}
+  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {}
 ) {
   const { symbol } = options;
   // if not need to be computed, return the value directly

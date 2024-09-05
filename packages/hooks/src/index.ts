@@ -82,3 +82,6 @@ export * from "./referral";
 export * from "./trading-rewards";
 
 export * from "./apiKeys";
+
+//--------- next hooks-----------
+export { useOrderEntryNext } from "./orderly/next/useOrderEntry";

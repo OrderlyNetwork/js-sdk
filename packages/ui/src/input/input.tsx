@@ -35,7 +35,7 @@ const inputVariants = tv({
       "oui-input-root",
     ],
     additional: [
-      "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast",
+      "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-2 oui-text-base-contrast",
     ],
     closeButton: [
       "oui-cursor-pointer",

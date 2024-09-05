@@ -10,7 +10,7 @@ import {
 
 class PositionCalculator implements Calculator<API.PositionTPSLExt[]> {
   calc(markPrice: Record<string, number>) {
-    console.log("!!!! Calculating positions...", markPrice);
+    // console.log("!!!! Calculating positions...", markPrice);
     // const positions = usePositions();
 
     // console.log("22222 Calculating positions...", positions);
@@ -19,7 +19,7 @@ class PositionCalculator implements Calculator<API.PositionTPSLExt[]> {
   }
 
   update(data: API.PositionTPSLExt[]) {
-    console.log("!!!! Updating positions...", data);
+    // console.log("!!!! Updating positions...", data);
     const { updatePosition } = positionActions();
 
     updatePosition(data);

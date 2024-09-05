@@ -21,6 +21,7 @@ export enum AlgoOrderRootType {
   TP_SL = "TP_SL",
   POSITIONAL_TP_SL = "POSITIONAL_TP_SL",
   STOP = "STOP",
+  BRACKET = "BRACKET",
 }
 
 export enum TriggerPriceType {
@@ -56,11 +57,83 @@ export enum OrderStatus {
   REJECTED = "REJECTED",
 }
 
+export interface OrderExt {
+  total: string;
+}
+
+export interface BaseOrder {
+  symbol: string;
+
+  type: OrderType;
+  price: string;
+  quantity: string;
+  order_amount?: number;
+  visible_quantity: number;
+  side: OrderSide;
+  reduce_only: boolean;
+  slippage: number;
+  order_tag: string;
+  level: number;
+  post_only_adjust: boolean;
+}
+
+export interface RegularOrder extends BaseOrder, OrderExt {
+  // symbol:           string;
+  // client_order_id:  string;
+  // type:       OrderType;
+  // price:      number;
+  // quantity:   number;
+}
+
+export interface AlgoOrder extends BaseOrder, OrderExt {
+  // symbol: string;
+  algo_type: AlgoOrderRootType;
+  trigger_price_type: string;
+  trigger_price: number;
+  child_orders: AlgoOrderChildOrders;
+}
+
+export interface BracketOrder extends BaseOrder, OrderExt {
+  /**
+   * Computed take profit
+   */
+  tp_pnl?: number;
+  tp_offset?: number;
+  tp_offset_percentage?: number;
+  tp_ROI?: number;
+
+  /**
+   * Computed stop loss
+   */
+  sl_pnl?: number;
+  sl_offset?: number;
+  sl_offset_percentage?: number;
+  sl_ROI?: number;
+}
+
+export type OrderlyOrder = RegularOrder & AlgoOrder & BracketOrder;
+
+export interface AlgoOrderChildOrders {
+  symbol: string;
+  algo_type: string;
+  child_orders: ChildOrder[];
+}
+
+export interface ChildOrder {
+  symbol: string;
+  algo_type: string;
+  side: string;
+  type: string;
+  trigger_price: number;
+  price: number;
+  reduce_only: string;
+  trigger_price_type: string;
+}
+
 // export interface OrderEntity {}
 
 export interface OrderEntity {
   symbol: string;
-
   order_type: OrderType;
   algo_type?: AlgoOrderRootType;
   order_type_ext?: OrderType;
@@ -93,6 +166,7 @@ export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
   child_orders: (Partial<Omit<AlgoOrderEntity<T>, "algo_type" | "type">> & {
     algo_type: AlgoOrderType;
     type: OrderType;
+    child_orders?: BaseAlgoOrderEntity<T>["child_orders"];
     // trigger_price: number | string;
   })[];
   // if update the order, then need to provide the order_id
@@ -130,4 +204,9 @@ export type AlgoOrderEntity<
 export type TPSLOrderEntry = Optional<
   AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
   "side" | "type" | "trigger_price"
+>;
+
+export type BracketOrderEntry = Optional<
+  AlgoOrderEntity<AlgoOrderRootType.BRACKET>,
+  "side"
 >;

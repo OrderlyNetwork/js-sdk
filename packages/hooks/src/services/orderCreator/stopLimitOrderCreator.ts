@@ -9,7 +9,7 @@ import { Decimal } from "@orderly.network/utils";
 import { order as orderUntil } from "@orderly.network/perp";
 import { BaseOrderCreator } from "./baseCreator";
 import { OrderType } from "@orderly.network/types";
-import { pick } from "ramda";
+import { pick, values } from "ramda";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
@@ -50,6 +50,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       order
     );
   }
+
   validate(
     values: OrderFormEntity,
     config: ValuesDepConfig
@@ -148,4 +149,6 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       return errors;
     });
   }
+
+  orderType: OrderType.STOP_LIMIT = OrderType.STOP_LIMIT;
 }

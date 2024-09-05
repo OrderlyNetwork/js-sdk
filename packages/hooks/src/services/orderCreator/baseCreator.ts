@@ -13,6 +13,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
   abstract validate(values: T, config: ValuesDepConfig): Promise<VerifyResult>;
 
+  abstract orderType: OrderType;
+
   baseOrder(data: OrderEntity): OrderEntity {
     const order: Pick<
       OrderEntity,
@@ -150,5 +152,9 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     }
 
     return order as OrderEntity;
+  }
+
+  get type(): OrderType {
+    return this.orderType;
   }
 }

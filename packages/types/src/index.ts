@@ -17,7 +17,12 @@ export type {
   BaseAlgoOrderEntity,
   Optional,
   PositionSide,
+  BracketOrderEntry,
   RequireKeys,
+  BaseOrder,
+  RegularOrder,
+  AlgoOrder,
+  OrderlyOrder,
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";

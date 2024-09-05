@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {  
+import {
   API,
   OrderEntity,
   OrderSide,
@@ -255,7 +255,7 @@ export function useOrderEntry(
   const parseString2Number = (
     order: OrderParams & Record<string, any>,
     key: keyof OrderParams,
-    dp?: number,
+    dp?: number
   ) => {
     if (typeof order[key] !== "string") return;
     // fix: delete the comma then remove the forward one of the string
@@ -274,7 +274,10 @@ export function useOrderEntry(
       const endOfPoint = `${order[key]}`.endsWith(".");
       const decimalPart = `${order[key]}`.split(".");
       if (hasPoint && !endOfPoint) {
-        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(0,quoteDP)}`;
+        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(
+          0,
+          quoteDP
+        )}`;
       }
     }
   };
@@ -383,8 +386,6 @@ export function useOrderEntry(
       return Promise.reject(new SDKError("orderCreator is null"));
     }
 
-    
-
     return new Promise((resolve, reject) => {
       return orderCreator
         .validate(values, {
@@ -486,7 +487,13 @@ export function useOrderEntry(
         orderEntityFormatHandle(baseDP, quoteDP),
         fieldHandler,
         baseInputHandle
-      )([values, field, value, markPrice, { baseDP, quoteDP }]);
+      )([
+        values,
+        field,
+        value,
+        markPrice,
+        { base_dp: baseDP, quote_dp: quoteDP },
+      ]);
 
       return newValues as Partial<OrderEntity>;
     },
@@ -538,7 +545,7 @@ export function useOrderEntry(
       return orderDataCache.current as Partial<OrderEntity>;
     }
 
-    // set field dirty
+    // set the field dirty
     if (typeof parsedData.order_price !== "undefined") {
       fieldDirty.current.order_price = true;
     }
@@ -627,18 +634,18 @@ export function useOrderEntry(
       return null;
 
     /**
-     * price
-     * if order_type = market order,
-        order side = long, then order_price_i = ask0
-        order side = short, then order_price_i = bid0
-      if order_type = limit order
-        order side = long
-          limit_price >= ask0, then order_price_i = ask0
-          limit_price < ask0, then order_price_i = limit_price
-        order side = short
-          limit_price <= bid0, then order_price_i = bid0
-          limit_price > ask0, then order_price_i = ask0
-     */
+         * price
+         * if order_type = market order,
+         order side = long, then order_price_i = ask0
+         order side = short, then order_price_i = bid0
+         if order_type = limit order
+         order side = long
+         limit_price >= ask0, then order_price_i = ask0
+         limit_price < ask0, then order_price_i = limit_price
+         order side = short
+         limit_price <= bid0, then order_price_i = bid0
+         limit_price > ask0, then order_price_i = ask0
+         */
     let price: number | undefined;
 
     if (

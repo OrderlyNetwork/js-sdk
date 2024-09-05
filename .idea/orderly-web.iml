@@ -16,6 +16,7 @@
     <content url="file://$MODULE_DIR$/packages/net" />
     <content url="file://$MODULE_DIR$/packages/portfolio" />
     <content url="file://$MODULE_DIR$/packages/trading" />
+    <content url="file://$MODULE_DIR$/packages/types" />
     <content url="file://$MODULE_DIR$/packages/ui" />
     <content url="file://$MODULE_DIR$/packages/ui-order-entry" />
     <content url="file://$MODULE_DIR$/packages/ui-orders" />

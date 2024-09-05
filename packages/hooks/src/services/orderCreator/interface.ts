@@ -1,4 +1,4 @@
-import { API, OrderEntity } from "@orderly.network/types";
+import { API, OrderEntity, OrderType } from "@orderly.network/types";
 
 export type VerifyResult = {
   [P in keyof OrderEntity]?: { type: string; message: string };
@@ -24,4 +24,6 @@ export interface OrderCreator<T> {
   ) => Promise<{
     [P in keyof T]?: { type: string; message: string };
   }>;
+
+  get type(): OrderType;
 }

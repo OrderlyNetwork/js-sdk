@@ -6,7 +6,7 @@ import {
   OrderSide,
   SDKError,
 } from "@orderly.network/types";
-import { UpdateOrderKey, calculateHelper } from "./utils";
+import { UpdateOrderKey, tpslCalculateHelper } from "./tp_slUtils";
 import { useMutation } from "../../useMutation";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { AlgoOrderRootType } from "@orderly.network/types";
@@ -16,22 +16,24 @@ import { useSymbolsInfo } from "../useSymbolsInfo";
 import { useMarkPrice } from "../useMarkPrice";
 import { omit } from "ramda";
 
-export type ComputedAlgoOrder = Partial<
-  AlgoOrderEntity<AlgoOrderRootType.TP_SL> & {
-    /**
-     * Computed take profit
-     */
-    tp_pnl: number;
-    tp_offset: number;
-    tp_offset_percentage: number;
+export type TPSLComputedData = {
+  /**
+   * Computed take profit
+   */
+  tp_pnl: number;
+  tp_offset: number;
+  tp_offset_percentage: number;
 
-    /**
-     * Computed stop loss
-     */
-    sl_pnl: number;
-    sl_offset: number;
-    sl_offset_percentage: number;
-  }
+  /**
+   * Computed stop loss
+   */
+  sl_pnl: number;
+  sl_offset: number;
+  sl_offset_percentage: number;
+};
+
+export type ComputedAlgoOrder = Partial<
+  AlgoOrderEntity<AlgoOrderRootType.TP_SL> & TPSLComputedData
 >;
 
 export type ValidateError = {
@@ -137,7 +139,7 @@ export const useTaskProfitAndStopLossInternal = (
         value = value ? `-${value}` : "";
       }
 
-      const newValue = calculateHelper(
+      const newValue = tpslCalculateHelper(
         key,
         {
           key,

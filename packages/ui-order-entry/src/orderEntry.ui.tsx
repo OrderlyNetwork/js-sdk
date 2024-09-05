@@ -13,7 +13,11 @@ import {
   textVariants,
 } from "@orderly.network/ui";
 import { PropsWithChildren, useMemo } from "react";
-import { OrderSide, OrderType } from "@orderly.network/types";
+import {
+  AlgoOrderRootType,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { OrderTPSL } from "./components/tpsl";
 
 export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
@@ -27,7 +31,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
         <Flex className={"oui-flex-1 oui-gap-x-1"}>
           <Button
             onClick={() => {
-              props.setOrderSide(OrderSide.BUY);
+              props.setOrderValue("side", OrderSide.BUY);
             }}
             size={"md"}
             fullWidth
@@ -37,7 +41,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           </Button>
           <Button
             onClick={() => {
-              props.setOrderSide(OrderSide.SELL);
+              props.setOrderValue("side", OrderSide.SELL);
             }}
             fullWidth
             size={"md"}
@@ -65,9 +69,23 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
       </AuthGuard>
       <AssetInfo />
       <Divider />
-      <OrderTPSL />
+      <OrderTPSL
+        onTPSLToggle={(isSetting) => {
+          props.setOrderValue(
+            "algo_type",
+            isSetting ? AlgoOrderRootType.BRACKET : "NONE"
+          );
+        }}
+      />
       <Flex itemAlign={"center"} gapX={1}>
-        <Switch id={"reduceOnly"} />
+        <Switch
+          id={"reduceOnly"}
+          checked={props.orderEntity.reduce_only}
+          onCheckedChange={(checked) => {
+            // console.log(checked);
+            props.setOrderValue("reduce_only", checked);
+          }}
+        />
         <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
           Reduce only
         </label>
@@ -78,18 +96,19 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
 
 const OrderQuantityInput = (props: { type: OrderType }) => {
   return (
-    <div className={"oui-space-y-[2px]"}>
+    <div className={"oui-space-y-1"}>
       <div className={"oui-group"}>
         <CustomInput label={"Price"} suffix={"USDC"} id={"trigger"} />
       </div>
       <div className={"oui-group"}>
         <CustomInput label={"Price"} suffix={"USDC"} id={"price"} />
       </div>
-      <Flex className={"oui-space-x-[2px] oui-group"}>
+      <Flex className={"oui-space-x-1 oui-group"}>
         <CustomInput
           label={"Quantity"}
           suffix={"BTC"}
-          id={"quantity"}
+          id="order_quantity_input"
+          name="order_quantity_input"
           className={"!oui-rounded-br !oui-rounded-tr"}
         />
         <CustomInput
@@ -109,6 +128,7 @@ const CustomInput = (props: {
   suffix: string;
   id: string;
   className?: string;
+  name?: string;
 }) => {
   return (
     <Input
@@ -116,6 +136,7 @@ const CustomInput = (props: {
       size={"lg"}
       placeholder={"0"}
       id={props.id}
+      name={props.name}
       prefix={<InputLabel id={props.id}>{props.label}</InputLabel>}
       suffix={props.suffix}
       classNames={{

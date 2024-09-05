@@ -1,26 +1,24 @@
-import { OrderEntity, OrderType } from "@orderly.network/types";
+import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-
-export type OrderEntityKey = keyof OrderEntity & string;
 
 // index 3: markPrice
 type orderEntryInputs = [
-  Partial<OrderEntity>,
+  Partial<OrderlyOrder>,
   // to update field
-  keyof OrderEntity,
+  keyof OrderlyOrder,
   any,
   number,
   {
-    baseDP: number;
-    quoteDP: number;
+    base_dp: number;
+    quote_dp: number;
   }
 ];
 
 type orderEntryInputHandle = (inputs: orderEntryInputs) => orderEntryInputs;
 
-const needNumberOnlyFields: (keyof OrderEntity)[] = [
-  "order_quantity",
-  "order_price",
+const needNumberOnlyFields: (keyof OrderlyOrder)[] = [
+  "quantity",
+  "price",
   "trigger_price",
   "total",
 ];
@@ -73,10 +71,17 @@ export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
 
   if (value === OrderType.LIMIT || value === OrderType.STOP_LIMIT) {
-    if (values.order_price === "") {
+    if (values.price === "") {
       values.total = "";
     }
   }
+  //
+  // if (value === OrderType.STOP_MARKET || value === OrderType.STOP_LIMIT) {
+  //   values.algo_type = AlgoOrderRootType.STOP;
+  //   // values.type = OrderType.S
+  // }
+
+  console.log("orderTypeHandle----", values, input, value, markPrice, config);
 
   return [values, input, value, markPrice, config];
 }
@@ -91,19 +96,19 @@ export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
     const [values, input, value, markPrice, config] = inputs;
 
     // TODO: formatting only deals with the thousandths and so on
-    // if (!!values.order_quantity) {
+    // if (!!values.quantity) {
     //
-    //   const d = new Decimal(values.order_quantity);
+    //   const d = new Decimal(values.quantity);
     //   const dp = d.dp();
     //   if (dp > quoteTick) {
-    //     values.order_quantity = d.toDecimalPlaces(baseTick).toNumber();
+    //     values.quantity = d.toDecimalPlaces(baseTick).toNumber();
     //   }
     // }
 
-    // if (!!values.order_price && values.order_type === OrderType.LIMIT) {
-    //   const sd = new Decimal(values.order_price).sd(false);
+    // if (!!values.price && values.type === OrderType.LIMIT) {
+    //   const sd = new Decimal(values.price).sd(false);
     //   if (sd > quoteTick) {
-    //     values.order_price = new Decimal(values.order_price).toFixed(quoteTick);
+    //     values.price = new Decimal(values.price).toFixed(quoteTick);
     //   }
     // }
 
@@ -134,13 +139,13 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const price = new Decimal(value);
   const priceDP = price.dp();
 
-  if (priceDP > config.quoteDP) {
-    values.order_price = price.toDecimalPlaces(config.quoteDP).toString();
+  if (priceDP > config.quote_dp) {
+    values.price = price.toDecimalPlaces(config.quote_dp).toString();
   }
 
-  price.toDecimalPlaces(Math.min(priceDP, config.quoteDP));
+  price.toDecimalPlaces(Math.min(priceDP, config.quote_dp));
 
-  if (!values.order_quantity && !values.total) {
+  if (!values.quantity && !values.total) {
     return [values, input, value, markPrice, config];
   }
 
@@ -148,14 +153,14 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     ...values,
   };
 
-  if (values.order_quantity) {
-    // total = price.mul(values.order_quantity);
-    newValue.total = price.mul(values.order_quantity).todp(2).toString();
+  if (values.quantity) {
+    // total = price.mul(values.quantity);
+    newValue.total = price.mul(values.quantity).todp(2).toString();
   } else if (values.total) {
     // total = new Decimal(values.total);
-    newValue.order_quantity = new Decimal(values.total)
+    newValue.quantity = new Decimal(values.total)
       .div(price)
-      .todp(config.baseDP)
+      .todp(config.base_dp)
       .toString();
   }
 
@@ -189,31 +194,33 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const quantityDP = quantity.dp();
 
   // check the length for precision and recalculate
-  if (quantityDP > config.baseDP) {
-    quantity = quantity.toDecimalPlaces(config.baseDP);
-    values.order_quantity = quantity.toNumber();
+  if (quantityDP > config.base_dp) {
+    quantity = quantity.toDecimalPlaces(config.base_dp);
+    values.quantity = quantity.toString();
   }
 
-  // if(values.order_type === OrderType.MARKET) {
+  // if(values.type === OrderType.MARKET) {
 
   // }
 
   if (
-    values.order_type === OrderType.MARKET ||
-    values.order_type === OrderType.STOP_MARKET
+    values.type === OrderType.MARKET ||
+    values.type === OrderType.STOP_MARKET
   ) {
+    if (!markPrice) {
+      console.warn("[ORDERLY]markPrice is required for market order");
+      return [values, input, value, markPrice, config];
+    }
     const price = markPrice;
+    values.price = "";
     values.total = quantity.mul(price).todp(2).toString();
   }
 
-  if (
-    values.order_type === OrderType.LIMIT ||
-    values.order_type === OrderType.STOP_LIMIT
-  ) {
-    if (values.order_price) {
-      const price = Number(values.order_price);
+  if (values.type === OrderType.LIMIT || values.type === OrderType.STOP_LIMIT) {
+    if (values.price) {
+      const price = Number(values.price);
       const total = quantity.mul(price);
-      values.total = total.todp(config.quoteDP).toString();
+      values.total = total.todp(config.quote_dp).toString();
     } else {
       values.total = "";
     }
@@ -225,7 +232,6 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   return [
     {
       ...values,
-      // total: total.todp(2).toNumber(),
     },
     input,
     value,
@@ -242,23 +248,22 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
   if (value === "") {
-    return [{ ...values, order_quantity: "" }, input, value, markPrice, config];
+    return [{ ...values, quantity: "" }, input, value, markPrice, config];
   }
 
   let price = markPrice;
 
   if (
-    (values.order_type === OrderType.LIMIT ||
-      values.order_type === OrderType.STOP_LIMIT) &&
-    !!values.order_price
+    (values.type === OrderType.LIMIT || values.type === OrderType.STOP_LIMIT) &&
+    !!values.price
   ) {
-    price = Number(values.order_price);
+    price = Number(values.price);
   }
   let total = new Decimal(value);
   const totalDP = total.dp();
 
-  if (totalDP > config.quoteDP) {
-    total = total.toDecimalPlaces(config.quoteDP);
+  if (totalDP > config.quote_dp) {
+    total = total.toDecimalPlaces(config.quote_dp);
     values.total = total.toString();
   }
 
@@ -267,8 +272,8 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   return [
     {
       ...values,
-      order_quantity: quantity
-        .toDecimalPlaces(Math.min(config.baseDP, quantity.dp()))
+      quantity: quantity
+        .toDecimalPlaces(Math.min(config.base_dp, quantity.dp()))
         .toString(),
     },
     input,
@@ -291,12 +296,12 @@ export const getCalculateHandler = (
   fieldName: string
 ): orderEntryInputHandle => {
   switch (fieldName) {
-    case "order_type":
+    case "type":
       return orderTypeHandle;
-    case "order_quantity": {
+    case "quantity": {
       return quantityInputHandle;
     }
-    case "order_price": {
+    case "price": {
       return priceInputHandle;
     }
     case "total": {
@@ -316,17 +321,16 @@ export function formatNumber(
   if (typeof dp === "undefined") return `${qty}`;
 
   // console.log("qty", qty, "dp", dp);
-  
+
   const _qty = `${qty}`.replace(/,/g, "");
-  
-  
+
   try {
     const _dp = new Decimal(dp);
     const _qtyDecimal = new Decimal(_qty);
-    
+
     if (_dp.lessThan(1)) {
       if (`${_qty}`.endsWith(".")) return `${_qty}`;
-      
+
       const numStr = dp.toString();
       const decimalIndex = numStr.indexOf(".");
       const digitsAfterDecimal =
@@ -348,7 +352,7 @@ export function formatNumber(
       .toDecimalPlaces(0, Decimal.ROUND_DOWN)
       .mul(dp)
       .toString();
-  } catch (e) {    
+  } catch (e) {
     return undefined;
   }
 }

@@ -3,6 +3,7 @@ import { Calculator, CalculatorScheduler } from "../../types";
 
 class CalculatorService {
   private calculators: Map<string, Calculator[]>;
+
   constructor(
     private readonly scheduler: CalculatorScheduler,
     queue: [string, Calculator[]][]
@@ -16,6 +17,16 @@ class CalculatorService {
       queue.push(calculator);
     } else {
       this.calculators.set(scope, [calculator]);
+    }
+  }
+
+  unregister(scope: string, calculator: Calculator) {
+    const queue = this.calculators.get(scope);
+    if (Array.isArray(queue)) {
+      const index = queue.indexOf(calculator);
+      if (index > -1) {
+        queue.splice(index, 1);
+      }
     }
   }
 
