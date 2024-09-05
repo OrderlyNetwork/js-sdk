@@ -33,7 +33,7 @@ const meta = {
         <OrderlyApp
           brokerId={"orderly"}
           brokerName={""}
-          networkId={"mainnet"}
+          networkId={"testnet"}
           onChainChanged={fn()}
         >
           <Story />
