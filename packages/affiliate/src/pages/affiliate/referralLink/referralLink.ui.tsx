@@ -8,7 +8,6 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { ReferralLinkReturns } from "./referralLink.script";
-import { InfoIcon } from "../../../components/infoIcon";
 import { AutoHideText } from "../../../components/autoHideText";
 import { GradientText } from "../../../components/gradientText";
 

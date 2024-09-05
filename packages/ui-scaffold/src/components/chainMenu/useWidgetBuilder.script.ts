@@ -34,14 +34,23 @@ export const useChainMenuBuilderScript = () => {
   }, [connectedChain, chains]);
 
   const onChainChange = async (chain: { id: number; isTestnet: boolean }) => {
-    if (!connectedChain) return;
-    const result = await setChain({
-      chainId: chain.id,
-    });
+    // if (!connectedChain) return;
 
-    if (!result) return;
-
-    onChainChanged?.(chain.id, chain.isTestnet);
+    if (connectedChain) {
+      const result = await setChain({
+        chainId: chain.id,
+      });
+      if (!result) return;
+      onChainChanged?.(chain.id, {
+        isTestnet: chain.isTestnet,
+        isWalletConnected: true,
+      });
+    } else {
+      onChainChanged?.(chain.id, {
+        isTestnet: chain.isTestnet,
+        isWalletConnected: false,
+      });
+    }
   };
 
   return {
