@@ -11,15 +11,25 @@ const checkboxVariants = tv({
     "oui-shrink-0",
     "oui-rounded-sm",
     "oui-border",
-    "oui-border-primary",
+    // "oui-border-primary",
     "focus-visible:oui-outline-none",
     // "focus-visible:oui-ring-1",
     // "focus-visible:oui-ring-ring",
     "disabled:oui-cursor-not-allowed",
     "disabled:oui-opacity-50",
-    "data-[state=checked]:oui-bg-primary",
-    "data-[state=checked]:oui-text-base-contrast",
+    // "data-[state=checked]:oui-bg-primary",
+    // "data-[state=checked]:oui-text-base-contrast",
   ],
+  variants: {
+    color: {
+      blue: "oui-border-primary data-[state=checked]:oui-bg-primary data-[state=checked]:oui-text-base-contrast",
+      white:
+        "oui-border-white/80 data-[state=checked]:oui-bg-white/80 data-[state=checked]:oui-text-[rgba(0,0,0,0.88)]",
+    },
+  },
+  defaultVariants: {
+    color: "blue",
+  },
 });
 
 const Checkbox = React.forwardRef<
@@ -27,11 +37,12 @@ const Checkbox = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {
     size?: number;
     indicatorClassName?: string;
+    color?: "blue" | "white";
   }
->(({ className, ...props }, ref) => (
+>(({ className, color = "blue", ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
-    className={checkboxVariants({ className })}
+    className={checkboxVariants({ color, className })}
     {...props}
   >
     <CheckboxPrimitive.Indicator
@@ -40,7 +51,11 @@ const Checkbox = React.forwardRef<
         props.indicatorClassName
       )}
     >
-      <CheckIcon size={12} color="white" />
+      <CheckIcon
+        size={props.size ?? 12}
+        opacity={color === "blue" ? 0.54 : 1}
+        color={color === "blue" ? "white" : "black"}
+      />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

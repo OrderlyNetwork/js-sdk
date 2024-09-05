@@ -1,6 +1,6 @@
 const path = require("path");
 // const { chartPlugin } = require("@orderly.network/chart");
-import {chartPlugin} from "@orderly.network/chart";
+import { chartPlugin } from "@orderly.network/chart";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {

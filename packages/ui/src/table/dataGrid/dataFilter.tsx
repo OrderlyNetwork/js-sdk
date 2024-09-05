@@ -42,7 +42,7 @@ type SymbolFilter = {
   type: "symbol";
 };
 
-type DataFilterItems = (DataFilterGeneral &
+export type DataFilterItems = (DataFilterGeneral &
   (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter))[];
 
 export type DataFilterProps = {
@@ -134,6 +134,7 @@ export const DataTableFilter = (props: DataFilterProps) => {
       justify={"start"}
       gapX={3}
       py={3}
+      width={"100%"}
       className="oui-data-grid-filter-bar oui-border-b oui-border-line"
     >
       {props.items.map((item, index: number) => {

@@ -54,11 +54,26 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       // const errors = this.baseValidate(values, config);
       // @ts-ignore
       const { order_price, trigger_price, side } = values;
+      const { symbol } = config;
+      const { quote_max, quote_min } = symbol;
 
       if (!trigger_price) {
         errors.trigger_price = {
           type: "required",
           message: "Trigger price is required",
+        };
+      }
+
+      // validate trigger price
+      if (trigger_price > quote_max) {
+        errors.trigger_price = {
+          type: "max",
+          message: `Trigger price must be less than ${quote_max}`,
+        };
+      } else if (trigger_price < quote_min) {
+        errors.trigger_price = {
+          type: "min",
+          message: `Trigger price must be greater than ${quote_min}`,
         };
       }
 

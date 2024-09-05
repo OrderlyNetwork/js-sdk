@@ -1,15 +1,21 @@
-import { Column, Text } from "@orderly.network/ui";
+import { Column, Flex, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
 import { TPSLButton } from "./tpsl/tpsl.ui";
-import { QuantityInput } from "./quantityInput";
 import {
   renderPriceInput,
   renderQuantity,
   renderQuantityInput,
 } from "./listElement";
 import { CloseButton } from "./closeButton";
+import { Decimal } from "@orderly.network/utils";
+import { SharePnLConfig } from "@orderly.network/ui-share";
+import { ShareButtonWidget } from "./shareButton";
 
-export const useColumn = () => {
+export const useColumn = (props: {
+  pnlNotionalDecimalPrecision?: number;
+  sharePnLConfig?: SharePnLConfig;
+}) => {
+  const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
   const column = useMemo<Column[]>(
     () => [
       {
@@ -112,32 +118,37 @@ export const useColumn = () => {
         //     setUnPnlPriceBasic={props.setUnPnlPriceBasic}
         //   />
         // ),
-        // render: (value: string, record: any) => {
-        //   return (
-        //     <span>
-        //       <Numeral
-        //         precision={pnlNotionalDecimalPrecision}
-        //         coloring
-        //         className="orderly-font-semibold"
-        //       >
-        //         {value}
-        //       </Numeral>
-        //       {
-        //         <Numeral
-        //           rule="percentages"
-        //           precision={pnlNotionalDecimalPrecision}
-        //           coloring
-        //           className="orderly-font-semibold"
-        //           prefix="("
-        //           surfix=")"
-        //         >
-        //           {record.unrealized_pnl_ROI}
-        //         </Numeral>
-        //       }
-        //       <SharePnLIcon className="orderly-ml-2" position={record} />
-        //     </span>
-        //   );
-        // },
+        render: (value: string, record: any) => {
+          return (
+            <Flex gap={2}>
+              <Flex>
+                <Text.numeral
+                  dp={props.pnlNotionalDecimalPrecision}
+                  rm={Decimal.ROUND_DOWN}
+                  coloring
+                  className="orderly-font-semibold"
+                >
+                  {value}
+                </Text.numeral>
+                <Text.numeral
+                  rule="percentages"
+                  dp={props.pnlNotionalDecimalPrecision}
+                  rm={Decimal.ROUND_DOWN}
+                  coloring
+                  className="orderly-font-semibold"
+                  prefix="("
+                  suffix=")"
+                >
+                  {record.unrealized_pnl_ROI}
+                </Text.numeral>
+              </Flex>
+              <ShareButtonWidget
+                position={record}
+                sharePnLConfig={props.sharePnLConfig}
+              />
+            </Flex>
+          );
+        },
       },
       {
         title: "TP/SL",
@@ -215,7 +226,7 @@ export const useColumn = () => {
         },
       },
     ],
-    []
+    [pnlNotionalDecimalPrecision, sharePnLConfig]
   );
 
   return column;

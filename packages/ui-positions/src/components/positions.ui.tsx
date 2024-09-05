@@ -4,9 +4,16 @@ import { API } from "@orderly.network/types";
 import { PositionsBuilderState } from "./usePositionsBuilder.script";
 import { PositionsRowProvider } from "./positionRowContext";
 import { SymbolProvider } from "../providers/symbolProvider";
+import { PositionsProps } from "../types/types";
 
-export const Positions = (props: PositionsBuilderState) => {
-  const column = useColumn();
+export const Positions = (
+  props: PositionsBuilderState & PositionsProps
+) => {
+  const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
+  const column = useColumn({
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+  });
   return (
     <div>
       <DataTable<API.PositionTPSLExt>
