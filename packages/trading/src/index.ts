@@ -5,3 +5,4 @@ import "./style/style.css";
 import "@orderly.network/react/dist/styles.css";
 
 export * from "./components/dataList";
+export * from "./pages";
