@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 1.0.2-preReleaseV2.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@1.5.13-preReleaseV2.2
+
 ## 1.0.2-preReleaseV2.1
 
 ### Patch Changes

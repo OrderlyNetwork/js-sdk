@@ -1,5 +1,16 @@
 # @orderly.network/trading
 
+## 1.0.2-preReleaseV2.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.13-preReleaseV2.2
+  - @orderly.network/hooks@1.5.13-preReleaseV2.2
+  - @orderly.network/react-app@1.0.2-preReleaseV2.2
+  - @orderly.network/ui@1.0.2-preReleaseV2.2
+
 ## 1.0.2-preReleaseV2.1
 
 ### Patch Changes
