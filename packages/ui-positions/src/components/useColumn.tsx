@@ -1,7 +1,6 @@
-import { Column, Flex, modal, ShareIcon, Text } from "@orderly.network/ui";
+import { Column, Flex, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
 import { TPSLButton } from "./tpsl/tpsl.ui";
-import { QuantityInput } from "./quantityInput";
 import {
   renderPriceInput,
   renderQuantity,
@@ -16,6 +15,7 @@ export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
 }) => {
+  const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
   const column = useMemo<Column[]>(
     () => [
       {
@@ -226,7 +226,7 @@ export const useColumn = (props: {
         },
       },
     ],
-    []
+    [pnlNotionalDecimalPrecision, sharePnLConfig]
   );
 
   return column;

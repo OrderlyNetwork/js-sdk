@@ -248,8 +248,6 @@ export const DataList: Story = {
 
     return (<Box p={3}>
       <DataListWidget config={{
-      pnlNotionalDecimalPrecision: 2,
-      unPnlPriceBasis: "markPrice",
       sharePnLConfig: {
         backgroundImages: [
           "/pnl/poster_bg_1.png",

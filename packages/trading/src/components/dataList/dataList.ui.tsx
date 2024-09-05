@@ -5,12 +5,23 @@ import { PositionsWidget } from "@orderly.network/ui-positions";
 import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
 import { PositionHeaderWidget } from "./positionHeader";
+import { SettingWidget } from "./setting";
 
 export const DataList: FC<DataListState> = (props) => {
   return (
     <Tabs
       defaultValue={props.current || DataListTabType.positions}
       variant="contained"
+      trailing={
+        <SettingWidget
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          setPnlNotionalDecimalPrecision={props.setPnlNotionalDecimalPrecision}
+          unPnlPriceBasis={props.unPnlPriceBasis}
+          setUnPnlPriceBasic={props.setUnPnlPriceBasic}
+          showAllSymbol={props.showAllSymbol}
+          setShowAllSymbol={props.setShowAllSymbol}
+        />
+      }
     >
       <TabPanel
         value={DataListTabType.positions}
@@ -50,12 +61,12 @@ const PositionsView: FC<DataListState> = (props) => {
   return (
     <Flex direction={"column"}>
       <PositionHeaderWidget
-        pnlNotionalDecimalPrecision={props.config?.pnlNotionalDecimalPrecision}
+        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.config?.symbol}
-        unPnlPriceBasis={props.config?.unPnlPriceBasis}
+        unPnlPriceBasis={props.unPnlPriceBasis}
       />
       <Divider className="oui-w-full" />
-      <PositionsWidget {...props.config} />
+      <PositionsWidget  {...props.config} pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision} />
     </Flex>
   );
 };
