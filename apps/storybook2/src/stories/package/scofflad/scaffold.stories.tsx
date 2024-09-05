@@ -12,6 +12,7 @@ import {
 } from "@orderly.network/ui-scaffold";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { useChains } from "@orderly.network/hooks";
+import { fn } from "@storybook/test";
 
 const meta = {
   title: "Package/ui-scaffold/Scaffold",
@@ -29,7 +30,12 @@ const meta = {
   decorators: [
     (Story: any) => (
       <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"mainnet"}>
+        <OrderlyApp
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"mainnet"}
+          onChainChanged={fn()}
+        >
           <Story />
         </OrderlyApp>
       </ConnectorProvider>

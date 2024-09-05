@@ -12,7 +12,13 @@ export const ChainSelector = (props: {
   currentChainId?: number;
   close?: () => void;
   resolve?: (isSuccess: boolean) => void;
-  chainChangedCallback?: (chainId: number, isTestnet: boolean) => void;
+  chainChangedCallback?: (
+    chainId: number,
+    state: {
+      isTestnet: boolean;
+      isWalletConnected: boolean;
+    }
+  ) => void;
 }) => {
   const [select, setSelect] = useState<number | undefined>();
   // props.currentChainId
@@ -24,7 +30,10 @@ export const ChainSelector = (props: {
       props.resolve?.(complete);
       props.close?.();
 
-      props.chainChangedCallback?.(chain.id, chain.isTestnet ?? false);
+      props.chainChangedCallback?.(chain.id, {
+        isTestnet: chain.isTestnet ?? false,
+        isWalletConnected: true,
+      });
     } else {
       setSelect(undefined);
     }
