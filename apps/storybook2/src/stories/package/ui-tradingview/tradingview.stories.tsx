@@ -29,23 +29,35 @@ const meta = {
     )
   ],
   parameters: {
-    symbol: "PERP_ETH_USDC",
-    tradingViewConfig: {
-      scriptSRC: "/tradingview/charting_library/charting_library.js",
-      library_path: "/tradingview/charting_library/",
-      customCssUrl: "/tradingview/chart.css",
-    },
+
   },
 
-  args: {}
+  args: {
+
+  }
 } satisfies Meta<typeof TradingviewWidget>;
 
 type Story = StoryObj<typeof meta>;
 
 export default meta;
 
+const tradingviewProps = {
+  symbol: "PERP_ETH_USDC",
+  tradingViewScriptSrc: "/tradingview/charting_library/charting_library.js",
+  libraryPath: "/tradingview/charting_library/",
+  tradingViewCustomCssUrl: "/tradingview/chart.css",
+}
+
 export const Default: Story = {
   render: () => {
-    return <TradingviewWidget />;
+    return <TradingviewWidget
+      {...tradingviewProps}
+    />;
   }
 };
+
+export const NoTradingviewFile: Story = {
+  render: () => {
+    return <TradingviewWidget/>
+  }
+}
