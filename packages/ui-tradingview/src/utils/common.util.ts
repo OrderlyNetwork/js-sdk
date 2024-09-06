@@ -66,3 +66,9 @@ export const mapResolution = (resolution: any) => {
 
     return time;
 };
+
+export const TradingViewSDKLocalstorageKey = {
+    interval: "TradingviewSDK.lastUsedTimeBasedResolution",
+    lineType: "TradingviewSDK.lastUsedStyle",
+    displayControlSetting: "TradingviewSDK.displaySetting",
+};

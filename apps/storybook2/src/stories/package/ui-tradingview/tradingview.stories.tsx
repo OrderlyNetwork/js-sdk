@@ -55,3 +55,9 @@ export const Default: Story = {
     />;
   }
 };
+
+export const NoTradingviewFile: Story = {
+  render: () => {
+    return <TradingviewWidget/>
+  }
+}

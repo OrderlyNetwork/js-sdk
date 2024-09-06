@@ -1,4 +1,7 @@
-import { TradingviewWidgetPropsInterface } from "../type";
+import {
+  DisplayControlSettingInterface,
+  TradingviewWidgetPropsInterface,
+} from "../type";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getOveriides, withExchangePrefix } from "../utils/chart.util";
 import { useAccount, useConfig, useMediaQuery, useWS } from "@orderly.network/hooks";
@@ -12,6 +15,7 @@ import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
 import { Widget, WidgetProps } from "../tradingviewAdapter/widget";
 import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";
 import { WS } from "@orderly.network/net";
+import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
 
 const chartKey = "SDK_Tradingview";
 
@@ -36,7 +40,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     tradingViewCustomCssUrl,
     fullscreen,
     symbol,
-    interval,
     theme,
     mode,
     colorConfig: customerColorConfig,
@@ -44,6 +47,46 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   const chart = useRef<any>();
   const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
   const { state: accountState } = useAccount();
+
+  const [displayControlState, setDisplayControlState] =
+    useState<DisplayControlSettingInterface>(() => {
+      const displaySettingInfo = localStorage.getItem(
+        TradingViewSDKLocalstorageKey.displayControlSetting
+      );
+      if (displaySettingInfo) {
+        return JSON.parse(displaySettingInfo) as DisplayControlSettingInterface;
+      }
+      return {
+        position: true,
+        buySell: true,
+        limitOrders: true,
+        stopOrders: true,
+        tpsl: true,
+        positionTpsl: true,
+      };
+    });
+
+
+  const [interval, setInterval] = useState<string>(() => {
+    const lastUsedInterval = localStorage.getItem(
+      TradingViewSDKLocalstorageKey.interval
+    );
+    if (!lastUsedInterval) {
+      return "1";
+    }
+    return lastUsedInterval;
+  });
+
+  const [lineType, setLineType] = useState<string>(() => {
+    const lastUsedLineType = localStorage.getItem(
+      TradingViewSDKLocalstorageKey.lineType
+    );
+    if (!lastUsedLineType) {
+      return "1";
+    }
+    return lastUsedLineType;
+  });
+
   const isMobile = useMediaQuery(MEDIA_TABLET);
 
   const defaultColorConfig: ColorConfigInterface = {
@@ -95,8 +138,39 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     return true;
   }, [accountState]);
 
+  const changeInterval = (newInterval: string) => {
+    localStorage.setItem(TradingViewSDKLocalstorageKey.interval, newInterval);
+    setInterval(newInterval);
+  };
+
+  const changeLineType = (newLineType: string) => {
+    localStorage.setItem(TradingViewSDKLocalstorageKey.lineType, newLineType);
+    setLineType(newLineType);
+  };
+
+  const changeDisplaySetting = (newSetting: DisplayControlSettingInterface) => {
+    localStorage.setItem(
+      TradingViewSDKLocalstorageKey.displayControlSetting,
+      JSON.stringify(newSetting)
+    );
+    setDisplayControlState(newSetting);
+  };
+
+  const openChartSetting = () => {
+    if (!chart.current) {
+      return;
+    }
+    chart.current.executeActionById('chartProperties');
+  }
+
+  const openChartIndicators = () => {
+    if (!chart.current) {
+      return;
+    }
+    chart.current.executeActionById('insertIndicator');
+  }
+
   useEffect(() => {
-    console.log('-- tradingview script ', tradingViewScriptSrc, chartRef.current, chartingLibrarySciprtReady);
     if (!tradingViewScriptSrc) {
       return;
     }
@@ -211,5 +285,14 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   }, [interval]);
 
 
-  return {tradingViewScriptSrc, chartRef}
+  return {tradingViewScriptSrc, chartRef,
+    changeDisplaySetting,
+    displayControlState,
+    interval,
+    changeInterval,
+    lineType,
+    changeLineType,
+    openChartSetting,
+    openChartIndicators,
+  }
 }
