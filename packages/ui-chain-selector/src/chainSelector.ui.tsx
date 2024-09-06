@@ -117,7 +117,7 @@ export const ChainTile = (props: {
           <ChainIcon chainId={item.id} />
           <Text size="2xs">{item.name}</Text>
           {item.lowestFee && (
-            <div className="oui-text-success oui-px-2 oui-bg-success/10 oui-rounded oui-text-2xs">
+            <div className="oui-text-success oui-px-2 oui-bg-success/20 oui-rounded oui-text-2xs">
               lowest fee
             </div>
           )}
