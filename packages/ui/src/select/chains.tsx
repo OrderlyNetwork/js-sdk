@@ -1,4 +1,4 @@
-import { PropsWithoutRef, useEffect, useState } from "react";
+import { PropsWithoutRef, useEffect, useMemo, useState } from "react";
 import { selectVariants } from "./selectPrimitive";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { VariantProps } from "tailwind-variants";
@@ -105,6 +105,10 @@ const ChainSelect = (props: ChainSelectProps) => {
 
   // console.log("ChainSelectItem", props);
 
+  const mergedChains = useMemo(() => {
+    return [...chains.mainnet, ...chains.testnet];
+  }, [chains]);
+
   const { trigger, icon, content, item, itemSize, viewport, tag } =
     chainSelectVariants({
       size,
@@ -123,8 +127,8 @@ const ChainSelect = (props: ChainSelectProps) => {
   }, [props.value]);
 
   const onChange = (value: any) => {
-    if (!chains || !Array.isArray(chains.mainnet)) return;
-    const selected = chains.mainnet.find((chain) => chain.id === Number(value));
+    if (!chains || !Array.isArray(mergedChains)) return;
+    const selected = mergedChains.find((chain) => chain.id === Number(value));
     setCurrentChain(selected?.id);
     if (!selected) return;
     props.onChange?.(selected);

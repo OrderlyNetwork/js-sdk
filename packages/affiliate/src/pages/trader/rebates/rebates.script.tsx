@@ -7,7 +7,7 @@ import {
 } from "@orderly.network/hooks";
 import { useReferralContext } from "../../../hooks";
 import { compareDate, formatDateTimeToUTC } from "../../../utils/utils";
-import { subDays } from "date-fns";
+import { subDays, toDate } from "date-fns";
 import { usePagination } from "@orderly.network/ui";
 
 export type RebatesItem = RefferalAPI.RefereeRebateSummary & {
@@ -45,7 +45,7 @@ export const useRebatesScript = () => {
           const createdTime = item.date;
 
           const volume = dailyVolume?.filter((item) => {
-            return compareDate(new Date(createdTime), new Date(item.date));
+            return compareDate(toDate(createdTime), toDate(item.date));
           })?.[0];
           if (volume) {
             return { ...item, vol: volume.perp_volume };

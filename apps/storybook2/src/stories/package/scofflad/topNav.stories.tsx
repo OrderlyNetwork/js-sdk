@@ -94,12 +94,15 @@ export const ChainMenuComponent: Story = {
       </Flex>
     ),
   ],
+  // args:{
+
+  // }
 };
 
 export const CustomChainsMenu: Story = {
   render: () => {
     const [chains] = useChains();
-    console.log("chains", chains);
+
     const formattedChains = useMemo(() => {
       return {
         mainnet: chains.mainnet.map((chain) => ({

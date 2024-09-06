@@ -59,8 +59,8 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
       };
     } else {
       return {
-        startDate: undefined,
-        endDate: undefined,
+        startDate: subDays(new Date(), 7),
+        endDate: subDays(new Date(), 1),
       };
     }
   }, [period]);
