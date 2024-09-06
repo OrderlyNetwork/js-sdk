@@ -34,7 +34,7 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
       {!tradingViewScriptSrc ? (
         <NoTradingview />
       ) : (
-        <div className="oui-z-[1]">
+        <div className="oui-z-[1] oui-absolute oui-top-0 oui-bottom-0 oui-right-0 oui-left-0 oui-h-full oui-w-full oui-flex oui-flex-col">
           <TopBar>
             <TimeInterval
               interval={interval ?? "1"}
