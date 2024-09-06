@@ -240,7 +240,7 @@ importers:
         version: 18.2.7
       '@web3-onboard/injected-wallets':
         specifier: ^2.10.10
-        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)
       '@web3-onboard/ledger':
         specifier: ^2.5.2
         version: 2.5.2(@react-native-async-storage/async-storage@1.24.0)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10)
@@ -412,7 +412,7 @@ importers:
         version: 8.1.5
       '@web3-onboard/injected-wallets':
         specifier: ^2.11.0
-        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)
       json-diff-kit:
         specifier: ^1.0.29
         version: 1.0.29
@@ -885,7 +885,7 @@ importers:
         version: 18.3.0
       '@web3-onboard/injected-wallets':
         specifier: ^2.10.10
-        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)
       '@web3-onboard/walletconnect':
         specifier: ^2.5.1
         version: 2.5.1(@react-native-async-storage/async-storage@1.24.0)(@types/react@18.3.2)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10)
@@ -1343,7 +1343,7 @@ importers:
     dependencies:
       '@binance/w3w-blocknative-connector':
         specifier: ^1.1.7
-        version: 1.1.7(@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8))(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.4.12)(@types/node@20.0.0)(typescript@5.2.2))(utf-8-validate@5.0.10)
+        version: 1.1.7(@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.4.12)(@types/node@20.0.0)(typescript@5.2.2))(utf-8-validate@5.0.10)
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -1355,13 +1355,13 @@ importers:
         version: 4.17.7
       '@web3-onboard/bitget':
         specifier: ^2.1.1
-        version: 2.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+        version: 2.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)
       '@web3-onboard/core':
         specifier: ^2.21.5
         version: 2.21.5(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@web3-onboard/injected-wallets':
         specifier: ^2.10.15
-        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+        version: 2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)
       '@web3-onboard/react':
         specifier: 2.8.16
         version: 2.8.16(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10)
@@ -1597,9 +1597,21 @@ importers:
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/ui-orders':
+        specifier: workspace:*
+        version: link:../ui-orders
+      '@orderly.network/ui-positions':
+        specifier: workspace:*
+        version: link:../ui-positions
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@types/react':
         specifier: ^18.3.2
@@ -2103,6 +2115,9 @@ importers:
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/ui-share':
+        specifier: workspace:*
+        version: link:../ui-share
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
@@ -18210,12 +18225,12 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@binance/w3w-blocknative-connector@1.1.7(@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8))(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.4.12)(@types/node@20.0.0)(typescript@5.2.2))(utf-8-validate@5.0.10)':
+  '@binance/w3w-blocknative-connector@1.1.7(@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.4.12)(@types/node@20.0.0)(typescript@5.2.2))(utf-8-validate@5.0.10)':
     dependencies:
       '@binance/w3w-ethereum-provider': 1.1.7(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.4.12)(@types/node@20.0.0)(typescript@5.2.2))(utf-8-validate@5.0.10)
       '@binance/w3w-types': 1.1.4
       '@binance/w3w-utils': 1.1.4
-      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -26145,10 +26160,10 @@ snapshots:
       '@walletconnect/window-getters': 1.0.1
       tslib: 1.14.1
 
-  '@web3-onboard/bitget@2.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
+  '@web3-onboard/bitget@2.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)':
     dependencies:
       '@bitget-wallet/web3-sdk': 0.0.8(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -26184,7 +26199,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
+  '@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)':
     dependencies:
       joi: 17.9.1
       viem: 2.12.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -26194,10 +26209,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)':
+  '@web3-onboard/common@2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)':
     dependencies:
       joi: 17.9.1
-      viem: 2.12.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+      viem: 2.12.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -26253,9 +26268,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3-onboard/injected-wallets@2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
+  '@web3-onboard/injected-wallets@2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)':
     dependencies:
-      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)
       joi: 17.9.1
       lodash.uniqby: 4.7.0
     transitivePeerDependencies:
@@ -26264,9 +26279,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3-onboard/injected-wallets@2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)':
+  '@web3-onboard/injected-wallets@2.11.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)':
     dependencies:
-      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+      '@web3-onboard/common': 2.4.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)
       joi: 17.9.1
       lodash.uniqby: 4.7.0
     transitivePeerDependencies:
@@ -29117,7 +29132,7 @@ snapshots:
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.9.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.4(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
@@ -29135,7 +29150,7 @@ snapshots:
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.9.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.4(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
@@ -29168,7 +29183,7 @@ snapshots:
       enhanced-resolve: 5.17.0
       eslint: 8.57.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.5
       is-core-module: 2.14.0
@@ -29185,7 +29200,7 @@ snapshots:
       enhanced-resolve: 5.17.0
       eslint: 8.57.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.5
       is-core-module: 2.14.0
@@ -29218,7 +29233,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.2.2))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -29245,7 +29260,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@6.21.0(eslint@8.57.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -37661,7 +37676,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  viem@2.12.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8):
+  viem@2.12.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4):
     dependencies:
       '@adraffy/ens-normalize': 1.10.0
       '@noble/curves': 1.2.0
