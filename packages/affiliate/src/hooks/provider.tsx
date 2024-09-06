@@ -19,7 +19,7 @@ import {
   useDaily,
   useAccount,
 } from "@orderly.network/hooks";
-import { subDays } from "date-fns";
+import { format, subDays } from "date-fns";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 
@@ -201,7 +201,7 @@ export const ReferralProvider: FC<
     const volume: any = {};
 
     if (dailyVolume && dailyVolume.length > 0) {
-      const now = formatYMDTime(new Date().toLocaleDateString());
+      const now = format(new Date(), 'yyyy-MM-dd');
       const index = dailyVolume.findIndex((item: any) => {
         const itemDate = item.date;
         return itemDate === now;

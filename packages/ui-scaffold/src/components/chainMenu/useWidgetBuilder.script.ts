@@ -1,6 +1,7 @@
 import {
   useAccount,
   useChains,
+  useConfig,
   useWalletConnector,
 } from "@orderly.network/hooks";
 
@@ -11,6 +12,8 @@ export const useChainMenuBuilderScript = () => {
   const [chains] = useChains();
   const { state } = useAccount();
   const { setChain, connectedChain } = useWalletConnector();
+
+  const networkId = useConfig("networkId");
 
   const [currentChainId, setCurrentChainId] = useState<number | undefined>();
 
@@ -26,22 +29,32 @@ export const useChainMenuBuilderScript = () => {
     } else {
       if (!!currentChainId) return;
       const firstChain =
-        chains.mainnet?.[0]?.network_infos ||
-        chains.testnet?.[0]?.network_infos;
+        networkId === "mainnet"
+          ? chains.mainnet?.[0]?.network_infos
+          : chains.testnet?.[0]?.network_infos;
       if (!firstChain) return;
       setCurrentChainId(firstChain.chain_id);
     }
-  }, [connectedChain, chains]);
+  }, [connectedChain, chains, currentChainId, networkId]);
 
   const onChainChange = async (chain: { id: number; isTestnet: boolean }) => {
-    if (!connectedChain) return;
-    const result = await setChain({
-      chainId: chain.id,
-    });
+    // if (!connectedChain) return;
 
-    if (!result) return;
-
-    onChainChanged?.(chain.id, chain.isTestnet);
+    if (connectedChain) {
+      const result = await setChain({
+        chainId: chain.id,
+      });
+      if (!result) return;
+      onChainChanged?.(chain.id, {
+        isTestnet: chain.isTestnet,
+        isWalletConnected: true,
+      });
+    } else {
+      onChainChanged?.(chain.id, {
+        isTestnet: chain.isTestnet,
+        isWalletConnected: false,
+      });
+    }
   };
 
   return {
