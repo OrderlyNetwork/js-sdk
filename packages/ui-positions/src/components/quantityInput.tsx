@@ -12,6 +12,7 @@ import { Input } from "@orderly.network/ui";
 import { useEffect, useState } from "react";
 import { usePositionsRowContext } from "./positionRowContext";
 import { Decimal } from "@orderly.network/utils";
+import { OrderType } from "@orderly.network/types";
 
 export const QuantityInput = (props: { value: number }) => {
   // const [quantity, setQuantity] = useState(`${props.value}`);
@@ -22,6 +23,7 @@ export const QuantityInput = (props: { value: number }) => {
     quoteDp,
     updateQuantity: setQuantity,
     quantity,
+    type,
   } = usePositionsRowContext();
 
   useEffect(() => {
@@ -59,11 +61,16 @@ export const QuantityInput = (props: { value: number }) => {
           value={quantity}
           onValueChange={(e) => {
             setQuantity(e);
-            const value = new Decimal(e)
-              .div(props.value)
-              .mul(100)
-              .toFixed(0, Decimal.ROUND_DOWN);
-            setSliderValue(Math.min(100, Number(value)));
+            if (type === OrderType.LIMIT) {
+              const value = new Decimal(e)
+                .div(props.value)
+                .mul(100)
+                .abs()
+                .toFixed(0, Decimal.ROUND_DOWN);
+                console.log("xxxxxx value", value);
+                
+              setSliderValue(Math.min(100, Number(value)));
+            }
           }}
         />
       </PopoverTrigger>
