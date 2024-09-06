@@ -1,15 +1,23 @@
 import {
   PopoverRoot,
-  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
+  Flex,
+  Text,
+  Slider,
+  Button,
+  inputFormatter,
 } from "@orderly.network/ui";
 import { Input } from "@orderly.network/ui";
 import { useEffect, useState } from "react";
+import { usePositionsRowContext } from "./positionRowContext";
+import { Decimal } from "@orderly.network/utils";
 
 export const QuantityInput = (props: { value: number }) => {
-  const [quantity] = useState(props.value);
+  const [quantity, setQuantity] = useState(`${props.value}`);
   const [open, setOpen] = useState(false);
+  const [sliderValue, setSliderValue] = useState<number>(100);
+  const { baseDp, quoteDp } = usePositionsRowContext();
 
   useEffect(() => {
     // when click the outside of the popover, close the popover
@@ -27,27 +35,111 @@ export const QuantityInput = (props: { value: number }) => {
     };
   }, []);
 
+  const resetQuantity = (percent: number) => {
+    setQuantity(`${props.value * (percent / 100)}`);
+  };
+
   return (
-    <PopoverRoot>
+    <PopoverRoot >
       <PopoverTrigger>
         <Input
           size="sm"
-          value={quantity}
           onFocus={() => {
             setOpen(true);
+          }}
+          formatters={[
+            inputFormatter.numberFormatter,
+            ...(baseDp ? [inputFormatter.dpFormatter(baseDp)] : []),
+          ]}
+          value={quantity}
+          onValueChange={(e) => {
+            setQuantity(e);
+            const value = new Decimal(e)
+              .div(props.value)
+              .mul(100)
+              .toFixed(0, Decimal.ROUND_DOWN);
+            setSliderValue(Math.min(100, Number(value)));
           }}
         />
       </PopoverTrigger>
       <PopoverContent
-        className="oui-[278px]"
+        className="oui-w-[360px] oui-rounded-xl"
         align="start"
         side="bottom"
         onOpenAutoFocus={(event) => {
           event.preventDefault();
         }}
       >
-        <div>Quantity slider</div>
+        <Flex p={1} gap={2} width={"100%"} itemAlign={"start"}>
+          <Text size="xs" intensity={98} className="oui-min-w-[30px]">
+            {`${sliderValue}%`}
+          </Text>
+          <Flex direction={"column"} width={"100%"} gap={2}>
+            <Slider
+              markCount={4}
+              value={[sliderValue]}
+              onValueChange={(e) => {
+                const values = Array.from(e.values());
+                setSliderValue(values[0]);
+                resetQuantity(values[0]);
+              }}
+            />
+            <Buttons
+              onClick={(value) => {
+                setSliderValue(value * 100);
+                resetQuantity(value * 100);
+              }}
+            />
+          </Flex>
+        </Flex>
       </PopoverContent>
     </PopoverRoot>
+  );
+};
+
+const Buttons = (props: { onClick: (value: number) => void }) => {
+  const list = [
+    {
+      label: "0%",
+      value: 0,
+    },
+    {
+      label: "25%",
+      value: 0.25,
+    },
+    {
+      label: "50%",
+      value: 0.5,
+    },
+    {
+      label: "75%",
+      value: 0.75,
+    },
+    {
+      label: "Max",
+      value: 1,
+    },
+  ];
+
+  return (
+    <Flex gap={2} width={"100%"}>
+      {list.map((item, index) => {
+        return (
+          <Button
+            key={index}
+            variant="outlined"
+            color="secondary"
+            size="xs"
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onClick(item.value);
+            }}
+            className="oui-w-1/5"
+          >
+            {item.label}
+          </Button>
+        );
+      })}
+    </Flex>
   );
 };
