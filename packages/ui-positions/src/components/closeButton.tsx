@@ -25,8 +25,6 @@ export const CloseButton = () => {
 
   const { base, quote } = useSymbolContext();
 
-  console.log("quantity", quantity, price);
-
   const onConfirm = () => {
     return onSubmit().then(
       (res) => {
