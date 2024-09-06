@@ -2320,6 +2320,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@orderly.network/net':
+        specifier: workspace:*
+        version: link:../net
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../types

@@ -92,7 +92,7 @@ const Switch = React.forwardRef<
   });
 
   return (
-    <SwitchPrimitives.Root className={cn(root(), className)} {...props} ref={ref}>
+    <SwitchPrimitives.Root className={root({className})} {...props} ref={ref}>
       <SwitchPrimitives.Thumb className={thumb()} />
     </SwitchPrimitives.Root>
   );

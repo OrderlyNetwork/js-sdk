@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { useOrderEntry } from "@orderly.network/hooks";
+import { useOrderEntry, useSymbolsInfo } from "@orderly.network/hooks";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -27,6 +27,8 @@ export interface PositionsRowContextState {
   onSubmit: () => Promise<any>;
   submitting: boolean;
   tpslOrder?: API.AlgoOrder;
+  quoteDp?: number;
+  baseDp?: number;
 }
 
 export const PositionsRowContext = createContext(
@@ -54,6 +56,13 @@ export const PositionsRowProvider: FC<
   );
 
   const [type, setType] = useState<OrderType>(OrderType.MARKET);
+
+  const config = useSymbolsInfo();
+  const symbol = props.position.symbol;
+  const curSymbolInfo = config?.[symbol];
+  const quoteDp = curSymbolInfo("quote_dp");
+  const baseDp = curSymbolInfo("base_dp");
+  
 
   const { helper, onSubmit, submitting } = useOrderEntry(
     props.position?.symbol!,
@@ -128,6 +137,8 @@ export const PositionsRowProvider: FC<
         onSubmit: postOrder,
         submitting,
         closeOrderData,
+        quoteDp,
+        baseDp,
       }}
     >
       {props.children}

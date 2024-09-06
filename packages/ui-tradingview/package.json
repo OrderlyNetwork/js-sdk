@@ -22,6 +22,7 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/net": "workspace:*",
     "eslint-config-custom": "workspace:*",
 
     "date-fns": "^3.6.0"

@@ -20,7 +20,7 @@ import { TokenIcon } from "@orderly.network/ui";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
-  const { onSubmit, price, quantity, closeOrderData, type, submitting } =
+  const { onSubmit, price, quantity, closeOrderData, type, submitting, quoteDp } =
     usePositionsRowContext();
 
   const { base, quote } = useSymbolContext();
@@ -62,15 +62,26 @@ export const CloseButton = () => {
         className: "oui-w-[360px] oui-px-5 oui-rounded-xl",
       }}
       content={
-        <LimitConfirmDialog
-          base={base}
-          quantity={quantity}
-          onClose={onClose}
-          onConfirm={onConfirm}
-          submitting={submitting}
-          quote={quote}
-          order={closeOrderData}
-        />
+        type === OrderType.MARKET ? (
+          <MarketCloseConfirm
+            base={base}
+            quantity={quantity}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            submitting={submitting}
+          />
+        ) : (
+          <LimitConfirmDialog
+            base={base}
+            quantity={quantity}
+            price={price}
+            onClose={onClose}
+            onConfirm={onConfirm}
+            submitting={submitting}
+            quoteDp={quoteDp}
+            order={closeOrderData}
+          />
+        )
       }
     >
       <Button
@@ -140,12 +151,14 @@ export const ConfirmFooter: FC<{
 };
 
 export const OrderDetail = (props: {
-  order: any;
-  quote: string;
+  quantity: any;
+  price: any;
+  side: OrderSide;
+  quoteDp: number;
   className?: string;
 }) => {
-  const { order, quote } = props;
-  const { side } = order;
+  const { quantity, price, quoteDp, side } = props;
+  
 
   return (
     <Flex
@@ -158,7 +171,7 @@ export const OrderDetail = (props: {
       <Flex justify={"between"} width={"100%"} gap={1}>
         <Text>Qty.</Text>
         <Text color={side === OrderSide.BUY ? "success" : "danger"}>
-          {order?.quantity}
+          {quantity}
         </Text>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
@@ -167,7 +180,7 @@ export const OrderDetail = (props: {
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
         >
-          {order?.price}
+          {price}
         </Text.formatted>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
@@ -176,7 +189,7 @@ export const OrderDetail = (props: {
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
         >
-          {order?.total}
+          {new Decimal(price).mul(quantity).toFixed(quoteDp, Decimal.ROUND_DOWN)}
         </Text.formatted>
       </Flex>
     </Flex>
@@ -213,13 +226,14 @@ export const MarketCloseConfirm: FC<{
 export const LimitConfirmDialog: FC<{
   base: string;
   quantity: string;
+  price: string;
   onClose: () => void;
   onConfirm: () => Promise<any>;
-  quote: string;
   order: OrderEntity;
   submitting: boolean;
+  quoteDp?: number;
 }> = (props) => {
-  const { order, quote } = props;
+  const { order, quoteDp, quantity, price, submitting } = props;
 
   const { side } = order;
   const onCancel = () => {
@@ -260,8 +274,10 @@ export const LimitConfirmDialog: FC<{
 
       <OrderDetail
         className="oui-text-sm"
-        order={props.order}
-        quote={props.quote}
+        price={price}
+        quantity={quantity}
+        side={order.side}
+        quoteDp={quoteDp ?? 2}
       />
       <ConfirmFooter
         onCancel={onCancel}

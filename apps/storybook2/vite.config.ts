@@ -59,6 +59,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-share/src"
       ),
+      "@orderly.network/ui-tradingview": resolve(
+        __dirname,
+        "../../packages/ui-tradingview/src"
+      ),
       "@orderly.network/withdraw": resolve(
         __dirname,
         "../../packages/withdraw/src"
