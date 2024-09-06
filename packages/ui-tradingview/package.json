@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-tradingview",
-  "version": "1.0.0",
+  "version": "1.0.1-developV2.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,7 +24,6 @@
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/net": "workspace:*",
     "eslint-config-custom": "workspace:*",
-
     "date-fns": "^3.6.0"
   },
   "devDependencies": {

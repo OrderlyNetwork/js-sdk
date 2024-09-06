@@ -41,5 +41,7 @@
     "@orderly.network/utils": "1.5.12",
     "@orderly.network/web3-modal": "1.5.12"
   },
-  "changesets": []
+  "changesets": [
+    "bright-geckos-yell"
+  ]
 }
