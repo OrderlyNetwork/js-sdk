@@ -71,10 +71,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-chain-selector/src"
       ),
-      "@orderly.network/web3-onboard": resolve(
-        __dirname,
-        "../../packages/onboard/src"
-      ),
+      // "@orderly.network/web3-onboard": resolve(
+      //   __dirname,
+      //   "../../packages/onboard/src"
+      // ),
       "@orderly.network/ui-order-entry": resolve(
         __dirname,
         "../../packages/ui-order-entry/src"
@@ -83,11 +83,12 @@ export default defineConfig({
         __dirname,
         "../../packages/component/dist"
       ),
+      
       "@orderly.network/react": resolve(
         __dirname,
         "../../packages/component/src"
       ),
-      "@": resolve(__dirname, "../../packages/component/src"),
-    },
-  },
+      "@": resolve(__dirname, "../../packages/component/src")
+    }
+  }
 });

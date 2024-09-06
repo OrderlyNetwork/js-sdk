@@ -81,8 +81,6 @@ export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
   //   // values.type = OrderType.S
   // }
 
-  console.log("orderTypeHandle----", values, input, value, markPrice, config);
-
   return [values, input, value, markPrice, config];
 }
 

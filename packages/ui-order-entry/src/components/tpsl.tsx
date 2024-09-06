@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { cn, Flex, Input, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
+import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 
 export const OrderTPSL = (props: {
-  onTPSLToggle: (checked: boolean) => void;
+  // onTPSLToggle: (checked: boolean) => void;
+  onCancelTPSL: () => void;
 }) => {
   const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
@@ -16,7 +18,9 @@ export const OrderTPSL = (props: {
           onCheckedChange={(checked) => {
             // console.log(checked);
             setOpen(checked);
-            // props.onTPSLToggle(checked);
+            if (!checked) {
+              props.onCancelTPSL();
+            }
           }}
         />
         <label htmlFor={"tpsl"} className={"oui-text-xs"}>
@@ -61,6 +65,8 @@ const TPSLInputForm = React.forwardRef<
   );
 });
 
+TPSLInputForm.displayName = "TPSLInputForm";
+
 const TPSLInputRow = (props: { type: "TP" | "SL" }) => {
   return (
     <div>
@@ -69,13 +75,20 @@ const TPSLInputRow = (props: { type: "TP" | "SL" }) => {
           <Input
             prefix={"TP Price"}
             size={"md"}
+            autoComplete={"off"}
             classNames={{ additional: "oui-text-base-contrast-54" }}
           />
         </div>
         <div>
-          <Input
-            size={"md"}
-            classNames={{ additional: "oui-text-base-contrast-54" }}
+          <PnlInputWidget
+            onChange={() => {}}
+            quote={"USDC"}
+            type={props.type}
+            values={{
+              PnL: "",
+              Offset: "",
+              "Offset%": "",
+            }}
           />
         </div>
       </Grid>

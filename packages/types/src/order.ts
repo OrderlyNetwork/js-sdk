@@ -101,6 +101,7 @@ export interface BracketOrder extends BaseOrder, OrderExt {
   tp_offset?: number;
   tp_offset_percentage?: number;
   tp_ROI?: number;
+  tp_trigger_price?: number;
 
   /**
    * Computed stop loss
@@ -109,6 +110,7 @@ export interface BracketOrder extends BaseOrder, OrderExt {
   sl_offset?: number;
   sl_offset_percentage?: number;
   sl_ROI?: number;
+  sl_trigger_price?: number;
 }
 
 export type OrderlyOrder = RegularOrder & AlgoOrder & BracketOrder;

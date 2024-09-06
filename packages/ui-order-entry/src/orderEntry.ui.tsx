@@ -69,14 +69,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
       </AuthGuard>
       <AssetInfo />
       <Divider />
-      <OrderTPSL
-        onTPSLToggle={(isSetting) => {
-          props.setOrderValue(
-            "algo_type",
-            isSetting ? AlgoOrderRootType.BRACKET : "NONE"
-          );
-        }}
-      />
+      <OrderTPSL onCancelTPSL={props.cancelTP_SL} />
       <Flex itemAlign={"center"} gapX={1}>
         <Switch
           id={"reduceOnly"}

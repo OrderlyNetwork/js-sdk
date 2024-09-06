@@ -9,8 +9,7 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-import { devtools } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
+
 import { useCallback, useEffect } from "react";
 import {
   baseInputHandle,
@@ -19,6 +18,11 @@ import {
 import { compose, head } from "ramda";
 import { tpslCalculateHelper } from "../useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderFactory } from "../../services/orderCreator/factory";
+import {
+  type FullOrderState,
+  useOrderEntryFromStore,
+  useOrderStore,
+} from "./orderEntry.store";
 
 type BaseOrderEntity = {
   symbol: string;
@@ -31,86 +35,6 @@ type BracketOrderEntryChild = {
   algo_type: AlgoOrderRootType;
   child_orders: BracketOrderEntryChild[];
 };
-
-export type FullOrderState = OrderlyOrder;
-
-type OrderEntryState = {
-  entry: Partial<FullOrderState>;
-  errors: Record<string, string>;
-};
-
-type OrderEntryActions = {
-  updateOrder: (order: Partial<FullOrderState>) => void;
-  updateOrderByKey: (key: string, value: any) => void;
-  restoreOrder: (order: Partial<FullOrderState>) => void;
-  resetOrder: () => void;
-};
-
-export const useOrderStore = create<
-  OrderEntryState & {
-    actions: OrderEntryActions;
-  }
->()(
-  devtools(
-    immer((set, get) => ({
-      entry: {
-        side: OrderSide.BUY as OrderSide,
-        type: OrderType.LIMIT as OrderType,
-      } as Partial<FullOrderState>,
-      errors: {},
-      actions: {
-        updateOrder: (order: Partial<FullOrderState>) => {
-          set(
-            (state) => {
-              // state.entry[key as keyof BracketOrderEntry] = value;
-              state.entry = {
-                ...state.entry,
-                ...order,
-              };
-            },
-            false,
-            "updateOrder"
-          );
-        },
-        updateOrderByKey: (key: string, value: any) => {
-          set(
-            (state) => {
-              state.entry[key as keyof FullOrderState] = value;
-            },
-            false,
-            "updateOrderByKey"
-          );
-        },
-        restoreOrder: (order) => {
-          set(
-            (state) => {
-              state.entry = {
-                ...order,
-                symbol: state.entry.symbol,
-              };
-            },
-            false,
-            "restoreOrder"
-          );
-        },
-        resetOrder: () => {
-          set(
-            (state) => {
-              state.entry = {};
-            },
-            true,
-            "resetOrder"
-          );
-        },
-      },
-    })),
-    {
-      name: "markPrice",
-    }
-  )
-);
-
-const useOrderEntryFromStore = () => useOrderStore((state) => state.entry);
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -224,8 +148,6 @@ const useOrderEntryNextInternal = (
         return;
       }
 
-      const { base_dp, quote_dp } = options.symbolInfo;
-
       const values = useOrderStore.getState().entry;
 
       const newValues = calculate(
@@ -241,6 +163,39 @@ const useOrderEntryNextInternal = (
       orderEntryActions.updateOrder(newValues);
 
       // validate the order
+    },
+    [calculate, options.symbolInfo, orderEntryActions]
+  );
+
+  const setValues = useCallback(
+    (
+      values: Partial<FullOrderState>,
+      additional?: {
+        markPrice: number;
+      }
+    ) => {
+      if (!options.symbolInfo) {
+        orderEntryActions.updateOrder(values);
+        console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
+        return;
+      }
+
+      const prevValues = useOrderStore.getState().entry;
+      let newValues = { ...prevValues };
+
+      Object.keys(values).forEach((key) => {
+        newValues = calculate(
+          newValues,
+          key as keyof FullOrderState,
+          values[key as keyof FullOrderState],
+          additional?.markPrice ?? 0,
+          options.symbolInfo!
+        );
+
+        // orderEntryActions.updateOrder(newValues);
+      });
+
+      orderEntryActions.updateOrder(newValues);
     },
     []
   );
@@ -263,6 +218,7 @@ const useOrderEntryNextInternal = (
   return {
     formattedOrder: orderEntity,
     setValue,
+    setValues,
     onMarkPriceChange,
   } as const;
 };
