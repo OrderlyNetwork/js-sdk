@@ -71,6 +71,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-chain-selector/src"
       ),
+      "@orderly.network/ui-cross-deposit": resolve(
+        __dirname,
+        "../../packages/ui-cross-deposit/src"
+      ),
       "@orderly.network/web3-onboard": resolve(
         __dirname,
         "../../packages/onboard/src"

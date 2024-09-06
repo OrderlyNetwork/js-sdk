@@ -1,0 +1,40 @@
+{
+  "name": "@orderly.network/ui-cross-deposit",
+  "version": "1.0.0",
+  "description": "cross deposit",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup && pnpm run build:css",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-transfer": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/ui-chain-selector": "workspace:*",
+    "@layerzerolabs/scan-client": "^0.0.6",
+    "ramda": "^0.29.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@types/ramda": "^0.29.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.4",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0"
+  }
+}

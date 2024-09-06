@@ -1,9 +1,10 @@
 import {
+  useConfig,
   useAccount,
   useChains,
-  useConfig,
   useWalletConnector,
 } from "@orderly.network/hooks";
+import { NetworkId } from "@orderly.network/types";
 
 import { useEffect, useMemo, useState } from "react";
 import { useAppContext } from "@orderly.network/react-app";
@@ -13,11 +14,11 @@ export const useChainMenuBuilderScript = () => {
   const { state } = useAccount();
   const { setChain, connectedChain } = useWalletConnector();
 
-  const networkId = useConfig("networkId");
-
   const [currentChainId, setCurrentChainId] = useState<number | undefined>();
 
   const { wrongNetwork, onChainChanged } = useAppContext();
+
+  const networkId = useConfig("networkId") as NetworkId;
 
   useEffect(() => {
     if (connectedChain) {
@@ -78,6 +79,7 @@ export const useChainMenuBuilderScript = () => {
     isConnected: !!connectedChain,
     wrongNetwork,
     accountStatus: state.status,
+    networkId,
   };
 };
 

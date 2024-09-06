@@ -1,4 +1,4 @@
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { Button, Flex, modal, Select, Tooltip } from "@orderly.network/ui";
 import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
@@ -21,6 +21,7 @@ export const ChainMenu = (props: {
   wrongNetwork: boolean;
   isConnected: boolean;
   accountStatus: AccountStatusEnum;
+  networkId: NetworkId
 }) => {
   if (props.wrongNetwork && props.isConnected) {
     return (
@@ -37,7 +38,9 @@ export const ChainMenu = (props: {
             modal
               .show<{
                 wrongNetwork: boolean;
-              }>(ChainSelectorId)
+              }>(ChainSelectorId,{
+                networkId:props.networkId
+              })
               .then(
                 (r) => {
                   if (
