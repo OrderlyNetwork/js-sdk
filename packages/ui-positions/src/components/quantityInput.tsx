@@ -14,10 +14,15 @@ import { usePositionsRowContext } from "./positionRowContext";
 import { Decimal } from "@orderly.network/utils";
 
 export const QuantityInput = (props: { value: number }) => {
-  const [quantity, setQuantity] = useState(`${props.value}`);
+  // const [quantity, setQuantity] = useState(`${props.value}`);
   const [open, setOpen] = useState(false);
   const [sliderValue, setSliderValue] = useState<number>(100);
-  const { baseDp, quoteDp } = usePositionsRowContext();
+  const {
+    baseDp,
+    quoteDp,
+    updateQuantity: setQuantity,
+    quantity,
+  } = usePositionsRowContext();
 
   useEffect(() => {
     // when click the outside of the popover, close the popover
@@ -40,7 +45,7 @@ export const QuantityInput = (props: { value: number }) => {
   };
 
   return (
-    <PopoverRoot >
+    <PopoverRoot>
       <PopoverTrigger>
         <Input
           size="sm"
