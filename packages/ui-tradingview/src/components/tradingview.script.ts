@@ -4,8 +4,19 @@ import {
 } from "../type";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getOveriides, withExchangePrefix } from "../utils/chart.util";
-import { useAccount, useConfig, useMediaQuery, useWS } from "@orderly.network/hooks";
-import { AccountStatusEnum, MEDIA_TABLET } from "@orderly.network/types";
+import {
+  useAccount,
+  useConfig,
+  useMediaQuery,
+  useOrderEntry, useSymbolsInfo,
+  useWS
+} from "@orderly.network/hooks";
+import {
+  AccountStatusEnum,
+  MEDIA_TABLET,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { ColorConfigInterface } from "../tradingviewAdapter/type";
 import useBroker from "../tradingviewAdapter/hooks/useBroker";
 import useCreateRenderer from "../tradingviewAdapter/hooks/useCreateRenderer";
@@ -16,6 +27,9 @@ import { Widget, WidgetProps } from "../tradingviewAdapter/widget";
 import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";
 import { WS } from "@orderly.network/net";
 import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
+import { toast } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { useLazyEffect } from "../tradingviewAdapter/hooks/useLazyEffect";
 
 const chartKey = "SDK_Tradingview";
 
@@ -47,7 +61,19 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   const chart = useRef<any>();
   const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
   const { state: accountState } = useAccount();
+  const [side, setSide] = useState<OrderSide>(OrderSide.SELL);
+  const symbolsInfo = useSymbolsInfo();
 
+  const {onSubmit, submitting } = useOrderEntry({
+    symbol: symbol ?? '',
+    side: side,
+    order_type: OrderType.CLOSE_POSITION,
+    reduce_only: true,
+  }, {
+    watchOrderbook: true,
+  });
+  const [openCloseConfirmDialog, setOpenCloseConfirmDialog] = useState(false);
+  const [orderData, setOrderData] = useState<any>();
   const [displayControlState, setDisplayControlState] =
     useState<DisplayControlSettingInterface>(() => {
       const displaySettingInfo = localStorage.getItem(
@@ -106,29 +132,33 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     defaultColorConfig,
     customerColorConfig ?? {}
   );
-  const broker = useBroker({
-    // todo
-    closeConfirm: () => {},
-    colorConfig,
-    // todo
-    onToast: () => {},
-    mode,
-  });
-  const [createRenderer, removeRenderer] = useCreateRenderer(
-    symbol!,
-    // todo
-    {
-      position: false,
-      tpsl: false,
-      limitOrders: false,
-      stopOrders: false,
-      buySell: false,
-      positionTpsl: false,
-    },
-  );
+
   const ws = useWS();
   const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] =
     useState<boolean>(false);
+
+  const closePositionConfirmCallback = (data: any) => {
+    // todo need update code
+    const symbolInfo = symbolsInfo[symbol!];
+    if (!symbolInfo) {
+      return;
+    }
+    const side = new Decimal(data.balance).greaterThan(0)
+      ? OrderSide.SELL
+      : OrderSide.BUY;
+    const order: any = {
+      //   order_price: undefined,
+      order_quantity: data.balance,
+      symbol: symbol,
+      order_type: OrderType.MARKET,
+      side,
+      base: symbolInfo('base'),
+      reduce_only: true,
+    };
+    setOrderData(order);
+    setSide(side);
+    setOpenCloseConfirmDialog(true);
+  };
 
   const chartRef = useRef<HTMLDivElement>(null);
   const isLoggedIn = useMemo(() => {
@@ -138,14 +168,34 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     return true;
   }, [accountState]);
 
+  const broker = useBroker({
+    closeConfirm: closePositionConfirmCallback,
+    colorConfig,
+    onToast: toast,
+    mode,
+  });
+  const [createRenderer, removeRenderer] = useCreateRenderer(
+    symbol!,
+    displayControlState,
+  );
+
   const changeInterval = (newInterval: string) => {
+    if (!chart.current) {
+      return;
+    }
     localStorage.setItem(TradingViewSDKLocalstorageKey.interval, newInterval);
     setInterval(newInterval);
+    chart.current.setSymbol(symbol, interval);
+
   };
 
   const changeLineType = (newLineType: string) => {
+    if (!chart.current) {
+      return;
+    }
     localStorage.setItem(TradingViewSDKLocalstorageKey.lineType, newLineType);
     setLineType(newLineType);
+    chart.current.changeLineType(Number(newLineType));
   };
 
   const changeDisplaySetting = (newSetting: DisplayControlSettingInterface) => {
@@ -237,16 +287,15 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
             return defaultItems;
           },
         },
-        getBroker: isLoggedIn
-          ? (instance: any, host: any) => {
-            console.log("-- broker_factory");
-            brokerHostHandler(instance, host);
-            return getBrokerAdapter(host, broker);
-          }
-          : undefined,
-
-        // todo
-        // positionControlCallback,
+        // todo broker effect sell/buy
+        // getBroker: isLoggedIn
+        //   ? (instance: any, host: any) => {
+        //     console.log("-- broker_factory");
+        //     brokerHostHandler(instance, host);
+        //     return getBrokerAdapter(host, broker);
+        //   }
+        //   : undefined,
+        getBroker: undefined,
       };
 
       const chartProps: WidgetProps = {
@@ -262,7 +311,22 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     return () => {
       chart.current?.remove();
     };
-  }, [chartingLibrarySciprtReady, isLoggedIn, isMobile]);
+  }, [chartingLibrarySciprtReady, isMobile]);
+
+
+  useEffect(() => {
+    if (chart.current && chart.current.instance) {
+      chart.current.instance.onChartReady(() => {
+        console.log("-- chart ready");
+        if (isLoggedIn && chart.current.instance) {
+          createRenderer(chart.current.instance, undefined, broker);
+        }
+      });
+    }
+    return () => {
+      removeRenderer();
+    };
+  }, [chart.current, isLoggedIn]);
 
 
   useEffect(() => {
@@ -277,13 +341,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     };
   }, [symbol]);
 
-  useEffect(() => {
-    if (!chart.current) {
-      return;
-    }
-    chart.current.setSymbol(symbol, interval);
-  }, [interval]);
-
 
   return {tradingViewScriptSrc, chartRef,
     changeDisplaySetting,
@@ -294,5 +351,11 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     changeLineType,
     openChartSetting,
     openChartIndicators,
+    openCloseConfirmDialog,
+    setOpenCloseConfirmDialog,
+    orderData,
+    onSubmit,
+    submitting,
+    symbol,
   }
 }
