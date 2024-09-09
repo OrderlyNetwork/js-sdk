@@ -1,21 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from '@storybook/test';
+import { fn } from "@storybook/test";
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { DataListWidget, TradingPageV2 } from "@orderly.network/trading";
+import { DataListWidget, LastTradesWidget, TradingPageV2 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
 import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
 import { Box } from "@orderly.network/ui";
+
 const sharePnLConfig = {
   backgroundImages: [
     "/pnl/poster_bg_1.png",
     "/pnl/poster_bg_2.png",
     "/pnl/poster_bg_3.png",
     "/pnl/poster_bg_4.png",
-    "/pnl/poster_bg_5.png",
+    "/pnl/poster_bg_5.png"
   ],
   color: "rgba(255, 255, 255, 0.98)",
   profitColor: "rgba(255,68,124,1)",
@@ -24,8 +25,8 @@ const sharePnLConfig = {
 
   // ref
   refLink: "https://orderly.network",
-  refSlogan: "NEW BE222",
-}
+  refSlogan: "NEW BE222"
+};
 const meta = {
   title: "Package/Trading/trading-v2",
   component: TradingPageV2,
@@ -104,7 +105,7 @@ const meta = {
                               fill="url(#rewardsIcon)"
                             />
                           </svg>
-                        ),
+                        )
                       },
                       {
                         name: "Trading rewards x2",
@@ -152,13 +153,13 @@ const meta = {
                               fill="url(#rewardsIcon)"
                             />
                           </svg>
-                        ),
+                        )
                       },
                       {
                         name: "Affiliate",
                         href: "/markets",
                         tag: "40% Rebate",
-                        description: "Earn more as a WOOFi affiliate",
+                        description: "Earn more as a WOOFi affiliate"
                       },
                       {
                         name: "Orderly airdrop",
@@ -166,7 +167,7 @@ const meta = {
                         description: "Earn Orderly merits by trading on WOOFi Pro.",
                         target: "_blank",
                         icon: <OrderlyIcon size={14} />,
-                        activeIcon: <OrderlyActiveIcon size={14} />,
+                        activeIcon: <OrderlyActiveIcon size={14} />
                       },
 
                       {
@@ -175,17 +176,17 @@ const meta = {
                         description: "Trade to win a share of 9,875 ARB each week.",
                         target: "_blank",
                         icon: <ARBIcon size={14} />,
-                        activeIcon: <ARBActiveIcon size={14} />,
-                      },
-                    ],
-                  },
+                        activeIcon: <ARBActiveIcon size={14} />
+                      }
+                    ]
+                  }
                 ],
                 products: [
                   { name: "Swap", href: "/swap" },
-                  { name: "Trade", href: "/trade" },
+                  { name: "Trade", href: "/trade" }
                 ],
                 initialMenu: "/markets",
-                initialProduct: "/trade",
+                initialProduct: "/trade"
               }}
             >
               <Story />
@@ -193,10 +194,10 @@ const meta = {
           </OrderlyApp>
         </ConnectorProvider>
       );
-    },
+    }
   ],
   parameters: {
-    layout: "fullscreen",
+    layout: "fullscreen"
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   // tags: ['autodocs'],
@@ -207,17 +208,17 @@ const meta = {
     tradingViewConfig: {
       scriptSRC: "/tradingview/charting_library/charting_library.js",
       library_path: "/tradingview/charting_library/",
-      customCssUrl: "/tradingview/chart.css",
+      customCssUrl: "/tradingview/chart.css"
     },
 
     dataList: {
       config: {
-        sharePnLConfig,
+        sharePnLConfig
       }
-    },
+    }
 
 
-  },
+  }
 } satisfies Meta<typeof TradingPageV2>;
 
 export default meta;
@@ -235,4 +236,19 @@ export const DataList: Story = {
       }} />
     </Box>);
   }
-}
+};
+
+
+export const LastTrades: Story = {
+  render: () => {
+
+    return (
+      <div className="oui-bg-base-10 oui-p-3">
+        <Box p={3} r="xl" className="oui-bg-base-9">
+          <LastTradesWidget symbol="PERP_ETH_USDC" />
+        </Box>
+      </div>
+    );
+  }
+};
+
