@@ -10,13 +10,14 @@ import { CloseButton } from "./closeButton";
 import { Decimal } from "@orderly.network/utils";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { ShareButtonWidget } from "./shareButton";
+import { API } from "@orderly.network/types";
 
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
 }) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
-  const column = useMemo<Column[]>(
+  const column = useMemo<Column<API.PositionTPSLExt>[]>(
     () => [
       {
         title: "Instrument",
@@ -69,7 +70,13 @@ export const useColumn = (props: {
         width: 120,
         onSort: true,
         dataIndex: "average_open_price",
-        // render: (value: string) => <NumeralWithCtx>{value}</NumeralWithCtx>,
+        render: (value: string, record: any) => {
+          return (
+            <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN}>
+              {value}
+            </Text.numeral>
+          );
+        },
       },
       {
         title: "Mark price",
@@ -78,13 +85,13 @@ export const useColumn = (props: {
         onSort: true,
         className: "orderly-h-[48px]",
 
-        // render: (value: string) => {
-        //   return (
-        //     <NumeralWithCtx className="orderly-font-semibold">
-        //       {value}
-        //     </NumeralWithCtx>
-        //   );
-        // },
+        render: (value: string, record: any) => {
+          return (
+            <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN}>
+              {value}
+            </Text.numeral>
+          );
+        },
       },
       {
         title: "Liq. price",
@@ -92,15 +99,15 @@ export const useColumn = (props: {
         onSort: true,
         hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
         dataIndex: "est_liq_price",
-        // render: (value: string) => {
-        //   return Number(value) === 0 ? (
-        //     "--"
-        //   ) : (
-        //     <NumeralWithCtx className="orderly-text-warning orderly-font-semibold">
-        //       {value}
-        //     </NumeralWithCtx>
-        //   );
-        // },
+        render: (value: string, record: any) => {
+          return Number(value) === 0 ? (
+            "--"
+          ) : (
+            <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN}>
+              {value}
+            </Text.numeral>
+          );
+        },
       },
       {
         title: "Unreal. PnL",

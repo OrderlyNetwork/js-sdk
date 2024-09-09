@@ -5,7 +5,7 @@ import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import { Button, modal } from "@orderly.network/ui";
 import { PositionsWidget } from '@orderly.network/ui-positions';
-import { Box } from "@orderly.network/ui";
+import { Box, Button, modal } from "@orderly.network/ui";
 
 const meta = {
   title: "Package/ui-positions/list",
@@ -58,3 +58,23 @@ export const Defaut: Story = {
     (Stroy) => <Box height={'360px'}>{Stroy()}</Box >
   ]
 };
+
+
+export const MarketClose: Story = {
+
+  render: () => {
+
+    return <Button onClick={() => {
+      modal.show("MarketCloseConfirmID", {
+        base: "ETH",
+        quantity: 222.22,
+        onConfirm: async () => {
+          return Promise.resolve(0);
+        },
+        submitting: false,
+      });
+    }}>
+      Show market close 
+    </Button>
+  }
+}

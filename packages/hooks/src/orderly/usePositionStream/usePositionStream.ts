@@ -192,6 +192,7 @@ export const usePositionStream = (
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
         unrealized_pnl_ROI: unrealPnlROI,
+        symbolInfo: info
       };
     });
 
