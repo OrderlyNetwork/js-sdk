@@ -5,7 +5,7 @@ import { fn } from '@storybook/test';
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import {CustomConfigStore} from "../CustomConfig Store";
-import { TradingPage, TradingPageV2, DataListWidget } from "@orderly.network/trading";
+import { TradingPage, TradingPageV2, DataListWidget, LastTradesWidget } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
@@ -272,6 +272,20 @@ export const DataList: Story = {
         sharePnLConfig
       }} />
     </Box>);
+  }
+}
+
+
+export const LastTrades: Story = {
+  render: () => {
+
+    return (
+      <div className="oui-bg-base-10 oui-p-3">
+        <Box p={3} r="xl" className="oui-bg-base-9">
+          <LastTradesWidget symbol="PERP_ETH_USDC" />
+        </Box>
+      </div>
+    );
   }
 }
 
