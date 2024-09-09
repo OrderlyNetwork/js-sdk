@@ -1,24 +1,35 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from '@storybook/test';
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-// import {CustomConfigStore} from "../CustomConfig Store";
-import { TradingPage, TradingPageV2, DataListWidget } from "@orderly.network/trading";
+import { DataListWidget, TradingPageV2 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
 import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
 import { Box } from "@orderly.network/ui";
+const sharePnLConfig = {
+  backgroundImages: [
+    "/pnl/poster_bg_1.png",
+    "/pnl/poster_bg_2.png",
+    "/pnl/poster_bg_3.png",
+    "/pnl/poster_bg_4.png",
+    "/pnl/poster_bg_5.png",
+  ],
+  color: "rgba(255, 255, 255, 0.98)",
+  profitColor: "rgba(255,68,124,1)",
+  lossColor: "rgba(0,180,158,1)",
+  brandColor: "rgba(51,95,252,1)",
 
+  // ref
+  refLink: "https://orderly.network",
+  refSlogan: "NEW BE222",
+}
 const meta = {
-  title: "Package/Trading/page",
-  component: TradingPage,
-  // subcomponents: {
-  //     Assets: OverviewModule.AssetWidget,
-  //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
-  // },
+  title: "Package/Trading/trading-v2",
+  component: TradingPageV2,
+
   decorators: [
     (Story) => {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
@@ -33,7 +44,7 @@ const meta = {
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-          // configStore={configStore}
+            // configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}
@@ -198,69 +209,30 @@ const meta = {
       library_path: "/tradingview/charting_library/",
       customCssUrl: "/tradingview/chart.css",
     },
-    referral: {
-      saveRefCode: true,
-      slogan: "Slogan is： NEWBE",
-      onClickReferral: () => {
-        console.log("click referral");
-      },
-      onBoundRefCode: (success, error) => {
-        console.log("onBoundRefCode", success, error);
-      },
-      refLink: "https://orderly.netowork/referral?abc=123",
-    },
-    shareOptions: {
-      pnl: {
-        backgroundImages: [
-          "/pnl/poster_bg_1.png",
-          "/pnl/poster_bg_2.png",
-          "/pnl/poster_bg_3.png",
-          "/pnl/poster_bg_4.png",
-          "/pnl/poster_bg_5.png",
-        ],
-        color: "rgba(255, 255, 255, 0.98)",
-        profitColor: "rgb(255,0,0)",
-        lossColor: "rgb(0,0,255)",
-        brandColor: "rgb(0,181,159)",
-      },
-    },
-    tradingReward: {
-      onClickTradingReward: () => {
-        console.log("hahahahah");
 
+    dataList: {
+      config: {
+        sharePnLConfig,
       }
     },
-    onSymbolChange: fn(),
 
 
   },
-} satisfies Meta<typeof TradingPage>;
+} satisfies Meta<typeof TradingPageV2>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// @ts-ignore
-export const Page: Story = {};
+export const Default: Story = {};
 
-// export const LayoutPage: Story = {}
 
-const sharePnLConfig = {
-  backgroundImages: [
-    "/pnl/poster_bg_1.png",
-    "/pnl/poster_bg_2.png",
-    "/pnl/poster_bg_3.png",
-    "/pnl/poster_bg_4.png",
-    "/pnl/poster_bg_5.png",
-  ],
-  color: "rgba(255, 255, 255, 0.98)",
-  profitColor: "rgba(255,68,124,1)",
-  lossColor: "rgba(0,180,158,1)",
-  brandColor: "rgba(51,95,252,1)",
+export const DataList: Story = {
+  render: () => {
 
-  // ref
-  refLink: "https://orderly.network",
-  refSlogan: "NEW BE222",
+    return (<Box p={3}>
+      <DataListWidget config={{
+        sharePnLConfig
+      }} />
+    </Box>);
+  }
 }
-
-
-
