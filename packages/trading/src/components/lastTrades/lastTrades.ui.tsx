@@ -11,6 +11,7 @@ export const LastTrades: FC<LastTradesState> = (props) => {
       itemAlign={"start"}
       className="oui-font-semibold"
       width={"100%"}
+      height={"100%"}
     >
       <Text size="base" intensity={80} className="oui-pt-3 oui-pb-2">
         Last Trades
@@ -74,7 +75,7 @@ const List = (props: {
   quoteDp: number;
 }) => {
   return (
-    <ScrollArea className="oui-w-full">
+    <ScrollArea className="oui-w-full oui-h-full">
       {props.data?.map((item, index) => {
         return (
           <Row

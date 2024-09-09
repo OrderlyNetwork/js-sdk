@@ -244,7 +244,7 @@ export const LastTrades: Story = {
 
     return (
       <div className="oui-bg-base-10 oui-p-3">
-        <Box p={3} r="xl" className="oui-bg-base-9">
+        <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
           <LastTradesWidget symbol="PERP_ETH_USDC" />
         </Box>
       </div>
