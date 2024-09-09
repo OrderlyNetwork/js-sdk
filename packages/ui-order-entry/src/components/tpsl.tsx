@@ -2,10 +2,21 @@ import React, { useState } from "react";
 import { cn, Flex, Input, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
+import { OrderlyOrder } from "@orderly.network/types";
+import { PNL_Values } from "./pnlInput/useBuilder.script";
+
+type OrderValueKeys = keyof OrderlyOrder;
+
+type Est_Values = PNL_Values & {
+  trigger_price?: number;
+};
+
+type TPSL_Values = { tp: Est_Values; sl: Est_Values };
 
 export const OrderTPSL = (props: {
-  // onTPSLToggle: (checked: boolean) => void;
   onCancelTPSL: () => void;
+  onChange: (key: OrderValueKeys, value: any) => void;
+  values: TPSL_Values;
 }) => {
   const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
@@ -16,7 +27,6 @@ export const OrderTPSL = (props: {
         <Switch
           id={"tpsl"}
           onCheckedChange={(checked) => {
-            // console.log(checked);
             setOpen(checked);
             if (!checked) {
               props.onCancelTPSL();
@@ -39,9 +49,8 @@ export const OrderTPSL = (props: {
       >
         <TPSLInputForm
           ref={tpslFormRef}
-          onChange={(key, value) => {
-            console.log(key, value);
-          }}
+          onChange={props.onChange}
+          values={props.values}
         />
       </div>
     </div>
@@ -51,7 +60,8 @@ export const OrderTPSL = (props: {
 const TPSLInputForm = React.forwardRef<
   HTMLDivElement,
   {
-    onChange: (key: string, value: any) => void;
+    onChange: (key: OrderValueKeys, value: any) => void;
+    values: TPSL_Values;
   }
 >((props, ref) => {
   return (
@@ -59,15 +69,29 @@ const TPSLInputForm = React.forwardRef<
       ref={ref}
       className={"oui-transition-all oui-pt-2 oui-pb-2 oui-px-1 oui-space-y-1"}
     >
-      <TPSLInputRow type={"TP"} />
-      <TPSLInputRow type={"SL"} />
+      <TPSLInputRow
+        type={"TP"}
+        onChange={props.onChange}
+        values={props.values.tp}
+      />
+      <TPSLInputRow
+        type={"SL"}
+        onChange={props.onChange}
+        values={props.values.sl}
+      />
     </div>
   );
 });
 
 TPSLInputForm.displayName = "TPSLInputForm";
 
-const TPSLInputRow = (props: { type: "TP" | "SL" }) => {
+const TPSLInputRow = (props: {
+  type: "TP" | "SL";
+  values: Est_Values;
+  onChange: (key: OrderValueKeys, value: any) => void;
+}) => {
+  const priceKey =
+    props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
   return (
     <div>
       <Grid cols={2} gapX={1}>
@@ -75,19 +99,25 @@ const TPSLInputRow = (props: { type: "TP" | "SL" }) => {
           <Input
             prefix={"TP Price"}
             size={"md"}
+            placeholder="USDC"
+            align="right"
             autoComplete={"off"}
+            value={props.values.trigger_price}
             classNames={{ additional: "oui-text-base-contrast-54" }}
+            onChange={(event) => {
+              props.onChange(priceKey, event.target.value);
+            }}
           />
         </div>
         <div>
           <PnlInputWidget
-            onChange={() => {}}
+            onChange={props.onChange}
             quote={"USDC"}
             type={props.type}
             values={{
-              PnL: "",
-              Offset: "",
-              "Offset%": "",
+              PnL: props.values.PnL,
+              Offset: props.values.Offset,
+              "Offset%": props.values["Offset%"],
             }}
           />
         </div>

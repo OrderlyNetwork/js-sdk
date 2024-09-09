@@ -31,6 +31,7 @@ const meta = {
     },
   },
   args: {
+    symbol: "PERP_ETH_USDC",
     side: OrderSide.BUY,
     type: OrderType.LIMIT,
   },

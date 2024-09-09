@@ -1,7 +1,10 @@
 import { OrderEntry } from "./orderEntry.ui";
-import { useOrderEntryScript } from "./useOrderEntry.script";
+import {
+  OrderEntryScriptInputs,
+  useOrderEntryScript,
+} from "./useOrderEntry.script";
 
-export const OrderEntryWidget = () => {
-  const state = useOrderEntryScript();
+export const OrderEntryWidget = (props: OrderEntryScriptInputs) => {
+  const state = useOrderEntryScript(props);
   return <OrderEntry {...state} />;
 };

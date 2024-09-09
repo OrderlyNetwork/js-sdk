@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { positionActions, useMarkPriceBySymbol } from "@orderly.network/hooks";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { useOrderEntryNext } from "@orderly.network/hooks";
 
-export const useOrderEntryScript = () => {
-  // const markPrice = useMarkPriceBySymbol("PERP_BTC_USDC");
-  // const { getPositions } = positionActions();
-  const { formattedOrder, setValue, setValues } = useOrderEntryNext(
-    "PERP_BTC_USDC",
+export type OrderEntryScriptInputs = {
+  symbol: string;
+};
+
+export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
+  const { formattedOrder, setValue, setValues, symbolInfo } = useOrderEntryNext(
+    inputs.symbol,
     {}
   );
 
@@ -27,6 +28,7 @@ export const useOrderEntryScript = () => {
     setOrderValue: setValue,
     orderEntity: formattedOrder,
     cancelTP_SL,
+    symbolInfo,
   };
 };
 

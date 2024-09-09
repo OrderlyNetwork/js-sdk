@@ -1,40 +1,26 @@
 import { create } from "zustand";
 import {
-  AlgoOrderEntity,
-  AlgoOrderRootType,
   type API,
   BracketOrderEntry,
   OrderEntity,
   OrderlyOrder,
   OrderSide,
-  OrderType,
+  OrderType
 } from "@orderly.network/types";
 
 import { useCallback, useEffect } from "react";
 import {
   baseInputHandle,
-  getCalculateHandler,
+  getCalculateHandler
 } from "../../utils/orderEntryHelper";
 import { compose, head } from "ramda";
-import { tpslCalculateHelper } from "../useTakeProfitAndStopLoss/tp_slUtils";
+import { tpslCalculateHelper } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import {
   type FullOrderState,
   useOrderEntryFromStore,
-  useOrderStore,
+  useOrderStore
 } from "./orderEntry.store";
-
-type BaseOrderEntity = {
-  symbol: string;
-  side: OrderSide;
-  orderType: OrderType;
-};
-
-type BracketOrderEntryChild = {
-  symbol: string;
-  algo_type: AlgoOrderRootType;
-  child_orders: BracketOrderEntryChild[];
-};
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -53,8 +39,9 @@ const useOrderEntryNextInternal = (
     // markPrice,
     initialOrder = {
       side: OrderSide.BUY,
-      type: OrderType.LIMIT,
+      type: OrderType.LIMIT
     },
+    symbolInfo
   } = options;
 
   const orderEntryActions = useOrderStore((state) => state.actions);
@@ -79,30 +66,6 @@ const useOrderEntryNextInternal = (
       )([values, fieldName, value, markPrice, config]);
 
       //whether tpsl calculation is necessary
-
-      if (
-        "algo_type" in newValues &&
-        !!newValues.price &&
-        !!newValues.quantity &&
-        (newValues.algo_type === AlgoOrderRootType.TP_SL ||
-          newValues.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
-          newValues.algo_type === AlgoOrderRootType.BRACKET)
-      ) {
-        newValues = tpslCalculateHelper(
-          fieldName,
-          {
-            key: fieldName,
-            value,
-            entryPrice: newValues.price, // order price or mark price
-            qty: newValues.quantity,
-            orderSide: newValues.side!,
-            // values: newValues,
-          },
-          {
-            symbol: options.symbolInfo,
-          }
-        );
-      }
 
       return newValues as Partial<FullOrderState>;
     },
@@ -132,8 +95,6 @@ const useOrderEntryNextInternal = (
   //   });
   // };
 
-  const validate = useCallback(() => {}, []);
-
   const setValue = useCallback(
     (
       key: keyof FullOrderState,
@@ -142,7 +103,14 @@ const useOrderEntryNextInternal = (
         markPrice: number;
       }
     ) => {
-      if (!options.symbolInfo) {
+      console.group("setValue");
+      console.log("key", key);
+      console.log("value", value);
+      console.log("additional", additional);
+      console.log("symbolInfo", symbolInfo);
+      console.groupEnd();
+
+      if (!symbolInfo) {
         orderEntryActions.updateOrderByKey(key, value);
         console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
         return;
@@ -155,7 +123,7 @@ const useOrderEntryNextInternal = (
         key,
         value,
         additional?.markPrice ?? 0,
-        options.symbolInfo
+        symbolInfo
       );
 
       // orderEntryActions.updateOrder(key, newValues[key as keyof OrderEntity]);
@@ -164,7 +132,7 @@ const useOrderEntryNextInternal = (
 
       // validate the order
     },
-    [calculate, options.symbolInfo, orderEntryActions]
+    [calculate, symbolInfo, orderEntryActions]
   );
 
   const setValues = useCallback(
@@ -174,7 +142,7 @@ const useOrderEntryNextInternal = (
         markPrice: number;
       }
     ) => {
-      if (!options.symbolInfo) {
+      if (!symbolInfo) {
         orderEntryActions.updateOrder(values);
         console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
         return;
@@ -189,7 +157,7 @@ const useOrderEntryNextInternal = (
           key as keyof FullOrderState,
           values[key as keyof FullOrderState],
           additional?.markPrice ?? 0,
-          options.symbolInfo!
+          symbolInfo!
         );
 
         // orderEntryActions.updateOrder(newValues);
@@ -197,7 +165,7 @@ const useOrderEntryNextInternal = (
 
       orderEntryActions.updateOrder(newValues);
     },
-    []
+    [calculate, orderEntryActions, symbolInfo]
   );
 
   const onMarkPriceChange = useCallback((markPrice: number) => {
@@ -219,7 +187,7 @@ const useOrderEntryNextInternal = (
     formattedOrder: orderEntity,
     setValue,
     setValues,
-    onMarkPriceChange,
+    onMarkPriceChange
   } as const;
 };
 

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useWS } from "../../useWS";
-import { markPriceActions } from "../useMarkPrice/useMarkPriceStore";
+import { useMarkPriceActions } from "../useMarkPrice/useMarkPriceStore";
 import { Calculator } from "../../types";
 import { CalculatorService } from "../calculator/calculatorService";
 
 export const useWSObserver = (calculatorService: CalculatorService) => {
   // const { calculatorService } = option;
   const ws = useWS();
-  const { updateMarkPrice } = markPriceActions();
+  const { updateMarkPrice } = useMarkPriceActions();
 
   useEffect(() => {
     console.log("[ORDERLY SDK]: subscribing to ws...");

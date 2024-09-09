@@ -253,6 +253,10 @@ const ClearButton = React.forwardRef<
   );
 });
 
+ClearButton.displayName = "ClearButton";
+
+Input.displayName = "Input";
+
 export { Input, inputVariants };
 
 export type { InputProps };

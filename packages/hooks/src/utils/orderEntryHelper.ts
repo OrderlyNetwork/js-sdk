@@ -1,5 +1,6 @@
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { tpslCalculateHelper } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 
 // index 3: markPrice
 type orderEntryInputs = [
@@ -281,6 +282,32 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   ];
 }
 
+function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
+  const [values, input, value, markPrice, config] = inputs;
+
+  // if price or quantity is empty, return
+  if (!values.price || !values.quantity) {
+    return [values, input, value, markPrice, config];
+  }
+
+  const _tpslValue = tpslCalculateHelper(
+    input,
+    {
+      key: input,
+      value,
+      entryPrice: values.price!, // order price or mark price
+      qty: values.quantity!,
+      orderSide: values.side!,
+      // values: newValues,
+    },
+    {
+      symbol: config,
+    }
+  );
+
+  return [{ ...values, ..._tpslValue }, input, value, markPrice, config];
+}
+
 /**
  * other input handle
  * @param inputs
@@ -291,7 +318,7 @@ function otherInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 export const getCalculateHandler = (
-  fieldName: string
+  fieldName: keyof OrderlyOrder
 ): orderEntryInputHandle => {
   switch (fieldName) {
     case "type":
@@ -305,6 +332,14 @@ export const getCalculateHandler = (
     case "total": {
       return totalInputHandle;
     }
+    case "tp_trigger_price":
+    case "sl_trigger_price":
+    case "tp_offset":
+    case "sl_offset":
+    case "tp_offset_percentage":
+    case "sl_offset_percentage":
+      return tpslInputHandle;
+
     default:
       return otherInputHandle;
   }

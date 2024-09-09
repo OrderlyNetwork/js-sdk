@@ -1,8 +1,12 @@
-import { useMarkPriceBySymbol, useSymbolsInfo } from "../orderlyHooks";
+import {
+  useMarkPriceBySymbol,
+  useSymbolsInfo,
+} from "../../orderly/orderlyHooks";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 import { useCallback, useState } from "react";
-import { markPriceActions } from "../useMarkPrice/useMarkPriceStore";
+import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import type { FullOrderState } from "./orderEntry.store";
+import { API } from "@orderly.network/types";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -13,8 +17,9 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   }
   // const [ext,setExt] = useState(0);
   // const markPrice = useMarkPriceBySymbol(symbol);
-  const actions = markPriceActions();
+  const actions = useMarkPriceActions();
   const symbolConfig = useSymbolsInfo();
+  const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
 
   const {
     formattedOrder,
@@ -22,7 +27,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     setValues: setValuesInternal,
   } = useOrderEntryNextInternal(symbol, {
     ...options,
-    symbolInfo: symbolConfig[symbol](),
+    symbolInfo,
   });
 
   const prepareData = useCallback(() => {
@@ -32,23 +37,18 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     return additionalValue;
   }, [actions, symbol]);
 
-  const setValue = useCallback(
-    (key: keyof FullOrderState, value: any) => {
-      setValueInternal(key, value, prepareData());
-    },
-    [symbol]
-  );
-  const setValues = useCallback(
-    (values: Partial<FullOrderState>) => {
-      setValuesInternal(values, prepareData());
-    },
-    [symbol]
-  );
+  const setValue = (key: keyof FullOrderState, value: any) => {
+    setValueInternal(key, value, prepareData());
+  };
+  const setValues = (values: Partial<FullOrderState>) => {
+    setValuesInternal(values, prepareData());
+  };
 
   return {
     formattedOrder,
     setValue,
     setValues,
+    symbolInfo: symbolInfo || {},
   };
 };
 

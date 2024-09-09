@@ -37,7 +37,7 @@ export { OrderlyConfigProvider } from "./configProvider";
 export {
   WalletConnectorContext,
   useWalletConnector,
-  type WalletState,
+  type WalletState
 } from "./walletConnectorContext";
 
 export * from "./orderly/orderlyHooks";
@@ -46,7 +46,7 @@ import useSWR, {
   type SWRConfiguration,
   SWRConfig,
   useSWRConfig,
-  unstable_serialize,
+  unstable_serialize
 } from "swr";
 
 export {
@@ -54,7 +54,7 @@ export {
   SWRConfig,
   useSWRConfig,
   type SWRConfiguration,
-  unstable_serialize,
+  unstable_serialize
 };
 
 export * from "use-debounce";
@@ -65,7 +65,7 @@ export { usePoster } from "./usePoster";
 export { DefaultLayoutConfig } from "./services/painter/layout.config";
 export type {
   PosterLayoutConfig,
-  DrawOptions,
+  DrawOptions
 } from "./services/painter/basePaint";
 
 export * from "./orderly/orderlyHooks";
@@ -84,4 +84,5 @@ export * from "./trading-rewards";
 export * from "./apiKeys";
 
 //--------- next hooks-----------
-export { useOrderEntryNext } from "./orderly/next/useOrderEntry";
+// export { useOrderEntryNext } from "./next/useOrderEntry/useOrderEntry";
+export * from "./next/useOrderEntry";

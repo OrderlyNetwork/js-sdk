@@ -35,6 +35,7 @@ const useMarkPriceStore = create<
     })),
     {
       name: "markPrice",
+      enabled: false,
     }
   )
 );
@@ -42,11 +43,11 @@ const useMarkPriceStore = create<
 const useMarkPrices = () => useMarkPriceStore((state) => state.markPrices);
 const useMarkPriceBySymbol = (symbol: string) =>
   useMarkPriceStore((state) => state.actions.getMarkPriceBySymbol(symbol));
-const markPriceActions = () => useMarkPriceStore((state) => state.actions);
+const useMarkPriceActions = () => useMarkPriceStore((state) => state.actions);
 
 export {
   useMarkPriceStore,
   useMarkPrices,
   useMarkPriceBySymbol,
-  markPriceActions,
+  useMarkPriceActions,
 };

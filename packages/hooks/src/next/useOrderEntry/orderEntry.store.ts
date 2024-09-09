@@ -1,22 +1,37 @@
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+  RequireKeys,
+} from "@orderly.network/types";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 export type FullOrderState = OrderlyOrder;
 
+type OrderEntryStateEntity = RequireKeys<FullOrderState, "side" | "type">;
+
 type OrderEntryState = {
-  entry: Partial<FullOrderState>;
-  errors: Record<string, string>;
+  entry: OrderEntryStateEntity;
+  errors: Partial<Record<keyof FullOrderState, string>>;
 };
 
 type OrderEntryActions = {
   updateOrder: (order: Partial<FullOrderState>) => void;
-  updateOrderByKey: (key: string, value: any) => void;
+  updateOrderByKey: <K extends keyof FullOrderState>(
+    key: K,
+    value: FullOrderState[K]
+  ) => void;
   restoreOrder: (order: Partial<FullOrderState>) => void;
   resetOrder: () => void;
   hasTP_SL: () => boolean;
 };
+
+const initialOrderState = {
+  side: OrderSide.BUY as OrderSide,
+  type: OrderType.LIMIT as OrderType,
+} as OrderEntryStateEntity;
 
 export const useOrderStore = create<
   OrderEntryState & {
@@ -26,9 +41,8 @@ export const useOrderStore = create<
   devtools(
     immer((set, get) => ({
       entry: {
-        side: OrderSide.BUY as OrderSide,
-        type: OrderType.LIMIT as OrderType,
-      } as Partial<FullOrderState>,
+        ...initialOrderState,
+      },
       errors: {},
       actions: {
         hasTP_SL: () => {
@@ -51,10 +65,13 @@ export const useOrderStore = create<
             "updateOrder"
           );
         },
-        updateOrderByKey: (key: string, value: any) => {
+        updateOrderByKey: <K extends keyof FullOrderState>(
+          key: K,
+          value: FullOrderState[K]
+        ) => {
           set(
             (state) => {
-              state.entry[key as keyof FullOrderState] = value;
+              state.entry[key] = value;
             },
             false,
             "updateOrderByKey"
@@ -66,7 +83,7 @@ export const useOrderStore = create<
               state.entry = {
                 ...order,
                 symbol: state.entry.symbol,
-              };
+              } as OrderEntryStateEntity;
             },
             false,
             "restoreOrder"
@@ -75,7 +92,11 @@ export const useOrderStore = create<
         resetOrder: () => {
           set(
             (state) => {
-              state.entry = {};
+              state.entry = {
+                // side: OrderSide.BUY as OrderSide,
+                // type: OrderType.LIMIT as OrderType,
+                ...initialOrderState,
+              } as OrderEntryStateEntity;
             },
             true,
             "resetOrder"

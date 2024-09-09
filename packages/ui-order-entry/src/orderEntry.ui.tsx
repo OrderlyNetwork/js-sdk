@@ -13,18 +13,16 @@ import {
   textVariants,
 } from "@orderly.network/ui";
 import { PropsWithChildren, useMemo } from "react";
-import {
-  AlgoOrderRootType,
-  OrderSide,
-  OrderType,
-} from "@orderly.network/types";
+import { OrderSide, OrderType } from "@orderly.network/types";
 import { OrderTPSL } from "./components/tpsl";
+import { API } from "@orderly.network/types";
 
 export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
-  const { side } = props;
+  const { side, orderEntity, setOrderValue, symbolInfo } = props;
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY ? "Buy / Long" : "Sell / Short";
   }, [side]);
+
   return (
     <div className={"oui-space-y-3 oui-text-base-contrast-54"}>
       <Flex gapX={2}>
@@ -51,25 +49,53 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           </Button>
         </Flex>
         <div className={"oui-flex-1"}>
-          <OrderTypeSelect type={OrderType.LIMIT} />
+          <OrderTypeSelect
+            type={orderEntity.type}
+            onChange={(type) => {
+              setOrderValue("type", type);
+            }}
+          />
         </div>
       </Flex>
       <Flex justify={"between"}>
         <Text size={"2xs"}>Available</Text>
-        <Text.numeral unit={"USDC"} size={"2xs"} unitClassName={"oui-ml-1"}>
+        <Text.numeral
+          unit={symbolInfo.quote}
+          size={"2xs"}
+          unitClassName={"oui-ml-1"}
+        >
           0
         </Text.numeral>
       </Flex>
-      <OrderQuantityInput type={props.type} />
+      <OrderQuantityInput type={props.type} symbolInfo={symbolInfo} />
       <QuantitySlider maxQty={0} setMaxQty={() => {}} side={props.side} />
       <AuthGuard buttonProps={{ fullWidth: true }}>
         <Button fullWidth color={side === OrderSide.BUY ? "buy" : "sell"}>
           {buttonLabel}
         </Button>
       </AuthGuard>
-      <AssetInfo />
+      <AssetInfo quote={symbolInfo.quote} />
       <Divider />
-      <OrderTPSL onCancelTPSL={props.cancelTP_SL} />
+      <OrderTPSL
+        onCancelTPSL={props.cancelTP_SL}
+        values={{
+          tp: {
+            trigger_price: orderEntity.tp_trigger_price ?? "",
+            PnL: orderEntity.tp_pnl ?? "",
+            Offset: orderEntity.tp_offset ?? "",
+            "Offset%": orderEntity.tp_offset_percentage ?? "",
+          },
+          sl: {
+            trigger_price: orderEntity.sl_trigger_price ?? "",
+            PnL: orderEntity.sl_pnl ?? "",
+            Offset: orderEntity.sl_offset ?? "",
+            "Offset%": orderEntity.sl_offset_percentage ?? "",
+          },
+        }}
+        onChange={(key, value) => {
+          props.setOrderValue(key, value);
+        }}
+      />
       <Flex itemAlign={"center"} gapX={1}>
         <Switch
           id={"reduceOnly"}
@@ -87,26 +113,46 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
   );
 };
 
-const OrderQuantityInput = (props: { type: OrderType }) => {
+//----------------- Order Quantity Input Component start -----------------
+const OrderQuantityInput = (props: {
+  type: OrderType;
+  symbolInfo: API.SymbolExt;
+  // values: {
+  //   quantity: number;
+  //   price: number;
+  // };
+  // onChange:(key:OrderValueKeys,value:any)=>void;
+}) => {
+  const { type, symbolInfo } = props;
   return (
     <div className={"oui-space-y-1"}>
-      <div className={"oui-group"}>
-        <CustomInput label={"Price"} suffix={"USDC"} id={"trigger"} />
-      </div>
-      <div className={"oui-group"}>
-        <CustomInput label={"Price"} suffix={"USDC"} id={"price"} />
-      </div>
+      {type === OrderType.STOP_LIMIT || type === OrderType.STOP_MARKET ? (
+        <div className={"oui-group"}>
+          <CustomInput
+            label={"Trigger"}
+            suffix={symbolInfo.quote}
+            id={"trigger"}
+          />
+        </div>
+      ) : null}
+
+      {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
+        <div className={"oui-group"}>
+          <CustomInput label={"Price"} suffix={symbolInfo.quote} id={"price"} />
+        </div>
+      ) : null}
+
       <Flex className={"oui-space-x-1 oui-group"}>
         <CustomInput
           label={"Quantity"}
-          suffix={"BTC"}
+          suffix={symbolInfo.base}
           id="order_quantity_input"
           name="order_quantity_input"
           className={"!oui-rounded-br !oui-rounded-tr"}
         />
         <CustomInput
           label={"Total≈"}
-          suffix={"USDC"}
+          suffix={symbolInfo.quote}
           id={"total"}
           className={"!oui-rounded-bl !oui-rounded-tl"}
         />
@@ -200,7 +246,10 @@ const QuantitySlider = (props: {
 
 // -----------Order type Select Component start ------------
 
-const OrderTypeSelect = (props: { type: OrderType }) => {
+const OrderTypeSelect = (props: {
+  type: OrderType;
+  onChange: (type: OrderType) => void;
+}) => {
   return (
     <Select.options
       value={props.type}
@@ -210,6 +259,7 @@ const OrderTypeSelect = (props: { type: OrderType }) => {
         { label: "Stop Limit", value: OrderType.STOP_LIMIT },
         { label: "Stop Market", value: OrderType.STOP_MARKET },
       ]}
+      onValueChange={props.onChange}
       size={"md"}
     />
   );
@@ -217,12 +267,12 @@ const OrderTypeSelect = (props: { type: OrderType }) => {
 
 // -----------Order type Select Component end ------------
 
-function AssetInfo() {
+function AssetInfo(props: { quote: string }) {
   return (
     <div className={"oui-space-y-1"}>
       <Flex justify={"between"}>
         <Text size={"2xs"}>Est. Liq. price</Text>
-        <Text.numeral unit={"USDC"} size={"2xs"}>
+        <Text.numeral unit={props.quote} size={"2xs"}>
           --
         </Text.numeral>
       </Flex>

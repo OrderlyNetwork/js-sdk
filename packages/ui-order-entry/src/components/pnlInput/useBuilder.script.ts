@@ -19,11 +19,19 @@ export type PNL_Values = {
   "Offset%": string;
 };
 
+type PNL_Keys =
+  | "tp_offset"
+  | "tp_offset_percentage"
+  | "tp_pnl"
+  | "sl_offset"
+  | "sl_offset_percentage"
+  | "sl_pnl";
+
 export type BuilderProps = {
   type: "TP" | "SL";
 
   quote_dp?: number;
-  onChange: (key: string, value: number | string) => void;
+  onChange: (key: PNL_Keys, value: number | string) => void;
 
   values: PNL_Values;
 };
@@ -35,14 +43,14 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     PnLMode.PERCENTAGE
   );
 
-  const key = useMemo(() => {
+  const key = useMemo<PNL_Keys>(() => {
     switch (mode) {
       case PnLMode.OFFSET:
-        return `${type.toLowerCase()}_offset`;
+        return `${type.toLowerCase()}_offset` as PNL_Keys;
       case PnLMode.PERCENTAGE:
-        return `${type.toLowerCase()}_offset_percentage`;
+        return `${type.toLowerCase()}_offset_percentage` as PNL_Keys;
       default:
-        return `${type.toLowerCase()}_pnl`;
+        return `${type.toLowerCase()}_pnl` as PNL_Keys;
     }
   }, [mode]);
 
