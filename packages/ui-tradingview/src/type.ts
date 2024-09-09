@@ -3,14 +3,15 @@ import { ChartMode, ColorConfigInterface } from "./tradingviewAdapter/type";
 export interface TradingviewWidgetPropsInterface {
   symbol?: string;
   mode?: ChartMode;
+  scriptSRC?: string;
+  library_path?: string;
+  overrides?: Record<string, string>;
+  studiesOverrides?: Record<string, string>;
+  customCssUrl?: string;
+  colorConfig?: ColorConfigInterface;
   libraryPath?: string;
-  tradingViewScriptSrc?: string;
-  tradingViewCustomCssUrl?: string;
-  overrides?: any;
-  studiesOverrides?: any;
   fullscreen?: boolean;
   theme?: string;
-  colorConfig?: ColorConfigInterface;
 }
 
 export interface TradingviewUIPropsInterface {
@@ -24,12 +25,7 @@ export interface TradingviewUIPropsInterface {
   changeLineType: (newLineType: string) => void;
   openChartSetting: () => void;
   openChartIndicators: () => void;
-  symbol: string;
-  openCloseConfirmDialog: boolean;
-  setOpenCloseConfirmDialog: (openCloseConfirmDialog: boolean) => void;
-  orderData: any;
-  onSubmit: () => Promise<void>;
-  submitting: boolean;
+  symbol?: string;
 }
 
 export interface DisplayControlSettingInterface {

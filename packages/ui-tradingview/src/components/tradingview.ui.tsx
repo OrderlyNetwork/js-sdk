@@ -37,11 +37,7 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
     changeLineType,
     openChartSetting,
     openChartIndicators,
-    openCloseConfirmDialog,
-    setOpenCloseConfirmDialog,
-    orderData,
-    onSubmit,
-    submitting,
+
   } = props;
   return (
     <div className="oui-h-full oui-w-full oui-min-h-[350px] oui-relative">

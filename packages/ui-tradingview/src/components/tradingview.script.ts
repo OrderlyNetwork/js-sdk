@@ -47,11 +47,11 @@ const font = "regular 11px Manrope";
 
 export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   const {
-    tradingViewScriptSrc,
+    scriptSRC: tradingViewScriptSrc,
+    libraryPath,
+    customCssUrl: tradingViewCustomCssUrl,
     overrides: customerOverrides,
     studiesOverrides: customerStudiesOverrides,
-    libraryPath,
-    tradingViewCustomCssUrl,
     fullscreen,
     symbol,
     theme,
@@ -64,14 +64,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   const [side, setSide] = useState<OrderSide>(OrderSide.SELL);
   const symbolsInfo = useSymbolsInfo();
 
-  const {onSubmit, submitting } = useOrderEntry({
-    symbol: symbol ?? '',
-    side: side,
-    order_type: OrderType.CLOSE_POSITION,
-    reduce_only: true,
-  }, {
-    watchOrderbook: true,
-  });
   const [openCloseConfirmDialog, setOpenCloseConfirmDialog] = useState(false);
   const [orderData, setOrderData] = useState<any>();
   const [displayControlState, setDisplayControlState] =
@@ -351,11 +343,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     changeLineType,
     openChartSetting,
     openChartIndicators,
-    openCloseConfirmDialog,
-    setOpenCloseConfirmDialog,
-    orderData,
-    onSubmit,
-    submitting,
     symbol,
   }
 }

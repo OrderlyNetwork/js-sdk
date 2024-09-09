@@ -49,9 +49,9 @@ export default meta;
 
 const tradingviewProps = {
   symbol: "PERP_ETH_USDC",
-  tradingViewScriptSrc: "/tradingview/charting_library/charting_library.js",
+  scriptSRC: "/tradingview/charting_library/charting_library.js",
   libraryPath: "/tradingview/charting_library/",
-  tradingViewCustomCssUrl: "/tradingview/chart.css",
+  customCssUrl: "/tradingview/chart.css",
 }
 
 export const Default: Story = {
