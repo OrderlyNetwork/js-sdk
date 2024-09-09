@@ -11,6 +11,7 @@ export { useAccountInfo } from "./useAccountInfo";
 
 export { useMarketsStream } from "./useMarketsStream";
 export { useMarkets, MarketsType } from "./useMarkets";
+export { useMarketList } from "./useMarketList";
 export type { FavoriteTab, Favorite, Recent } from "./useMarkets";
 export { useMarkPricesStream } from "./useMarkPricesStream";
 export { useMarkPrice } from "./useMarkPrice";

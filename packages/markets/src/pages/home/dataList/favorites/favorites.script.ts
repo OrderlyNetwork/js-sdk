@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MarketsType, useMarkets } from "@orderly.network/hooks";
+import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
 import { TFavorite } from "../../../../type";
@@ -9,7 +9,7 @@ export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
 
 export const useFavoritesScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
-  const [data, favorite] = useMarkets(MarketsType.FAVORITES);
+  const [data, favorite] = useMarketList(MarketsType.FAVORITES);
   const [loading, setLoading] = useState(true);
 
   const { favorites, favoriteTabs, getLastSelFavTab } = favorite;
