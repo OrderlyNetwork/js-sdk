@@ -6,7 +6,7 @@ import { Decimal } from "@orderly.network/utils";
 
 export const renderQuantity = (value: number, record: any) => {
   return (
-    <Text.numeral dp={record?.symbolInfo?.("quote_dp")} rm={Decimal.ROUND_DOWN} padding={false}>
+    <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN} padding={false}>
       {value}
     </Text.numeral>
   );

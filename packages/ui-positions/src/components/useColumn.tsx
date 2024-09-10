@@ -11,6 +11,7 @@ import { Decimal } from "@orderly.network/utils";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { ShareButtonWidget } from "./shareButton";
 import { API } from "@orderly.network/types";
+import { TriggerPrice } from "./triggerPrice";
 
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
@@ -72,7 +73,7 @@ export const useColumn = (props: {
         dataIndex: "average_open_price",
         render: (value: string, record: any) => {
           return (
-            <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral dp={record?.symbolInfo?.("quote_dp")} rm={Decimal.ROUND_DOWN}>
               {value}
             </Text.numeral>
           );
@@ -87,7 +88,7 @@ export const useColumn = (props: {
 
         render: (value: string, record: any) => {
           return (
-            <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral dp={record?.symbolInfo?.("quote_dp")} rm={Decimal.ROUND_DOWN}>
               {value}
             </Text.numeral>
           );
@@ -103,7 +104,7 @@ export const useColumn = (props: {
           return Number(value) === 0 ? (
             "--"
           ) : (
-            <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral dp={record?.symbolInfo?.("quote_dp")} rm={Decimal.ROUND_DOWN}>
               {value}
             </Text.numeral>
           );
@@ -161,12 +162,12 @@ export const useColumn = (props: {
         title: "TP/SL",
         dataIndex: "__",
         width: 150,
-        // render: (_: string, record) => (
-        //   <TriggerPrice
-        //     stopLossPrice={record.sl_trigger_price}
-        //     takeProfitPrice={record.tp_trigger_price}
-        //   />
-        // ),
+        render: (_: string, record) => (
+          <TriggerPrice
+            stopLossPrice={record.sl_trigger_price}
+            takeProfitPrice={record.tp_trigger_price}
+          />
+        ),
       },
 
       {
