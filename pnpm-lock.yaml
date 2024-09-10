@@ -2272,43 +2272,6 @@ importers:
         specifier: ^7.1.0
         version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))(typescript@5.2.2)
 
-  packages/ui-tpsl:
-    dependencies:
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
-    devDependencies:
-      '@types/react':
-        specifier: ^18.3.2
-        version: 18.3.2
-      '@types/react-dom':
-        specifier: ^18.3.0
-        version: 18.3.0
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.3.1)
-      tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.4(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsup:
-        specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))(typescript@5.2.2)
-
   packages/ui-tradingview:
     dependencies:
       '@orderly.network/hooks':
@@ -32929,7 +32892,6 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
-    optional: true
 
   metro-core@0.80.9:
     dependencies:
@@ -33036,7 +32998,6 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
-    optional: true
 
   metro@0.80.9(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     dependencies:
@@ -33064,7 +33025,7 @@ snapshots:
       metro-babel-transformer: 0.80.9
       metro-cache: 0.80.9
       metro-cache-key: 0.80.9
-      metro-config: 0.80.9(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      metro-config: 0.80.9(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       metro-core: 0.80.9
       metro-file-map: 0.80.9
       metro-resolver: 0.80.9
@@ -33139,7 +33100,6 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
-    optional: true
 
   micro-ftch@0.3.1: {}
 
@@ -38647,7 +38607,6 @@ snapshots:
     optionalDependencies:
       bufferutil: 4.0.8
       utf-8-validate: 6.0.4
-    optional: true
 
   ws@7.5.3(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     optionalDependencies:

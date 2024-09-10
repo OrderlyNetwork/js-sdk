@@ -19,7 +19,14 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   // const markPrice = useMarkPriceBySymbol(symbol);
   const actions = useMarkPriceActions();
   const symbolConfig = useSymbolsInfo();
+
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
+
+  console.log(
+    ">>>>>useOrderEntryNext \\\\\\//////// symbolInfo<<<<<<<",
+    symbolInfo,
+    typeof symbolConfig[symbol]
+  );
 
   const {
     formattedOrder,

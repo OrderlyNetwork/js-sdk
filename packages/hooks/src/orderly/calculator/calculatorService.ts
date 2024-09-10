@@ -1,8 +1,17 @@
 import { SimpleDI } from "@orderly.network/core";
-import { Calculator, CalculatorScheduler } from "../../types";
-
+import {
+  Calculator,
+  CalculatorCtx,
+  CalculatorScheduler,
+  CalculatorScope,
+} from "../../types";
+import { useAppStore } from "../appStore";
+import { API } from "@orderly.network/types";
+import { CalculatorContext } from "./calculatorContext";
 class CalculatorService {
   private calculators: Map<string, Calculator[]>;
+
+  private pendingCalc: { scope: string; data: any }[] = [];
 
   constructor(
     private readonly scheduler: CalculatorScheduler,
@@ -30,11 +39,21 @@ class CalculatorService {
     }
   }
 
-  calc(scope: string, data: any) {
+  async calc(scope: CalculatorScope, data: any) {
     const queue = this.calculators.get(scope);
 
+    const ctx = new CalculatorContext();
+    // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
+    if (!ctx.isReady) {
+      this.pendingCalc.push({ scope, data });
+      return;
+    }
+
     if (Array.isArray(queue) && queue.length) {
-      this.scheduler.calc(queue, data);
+      await this.scheduler.calc(scope, queue, data, ctx);
+
+      console.log("calc done:", ctx.outputToValue());
+      this.scheduler.update(scope, queue, data);
     }
   }
 }

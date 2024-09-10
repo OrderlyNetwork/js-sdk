@@ -3,15 +3,9 @@ import { usePrivateDataObserver } from "./orderly/usePrivateDataObserver";
 import { usePreLoadData } from "./usePreloadData";
 import { useWSObserver } from "./orderly/internal/useWSObserver";
 import { useSimpleDI } from "./useSimpleDI";
-import {
-  CalculatorService,
-  CalculatorServiceID,
-} from "./orderly/calculator/calculatorService";
-import useConstant from "use-constant";
-import { SimpleDI } from "@orderly.network/core";
-import { ShardedScheduler } from "./orderly/calculator/shardedScheduler";
-import { PositionCalculator } from "./orderly/calculator/positions";
-
+import { CalculatorService } from "./orderly/calculator/calculatorService";
+import { useCalculatorService } from "./useCalculatorService";
+import { usePublicDataObserver } from "./orderly/usePublicDataObserver";
 export type getKeyFunction = (index: number, prevData: any) => string | null;
 
 interface DataCenterContextState {
@@ -37,18 +31,9 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
   const { error, done } = usePreLoadData();
   const { get } = useSimpleDI<CalculatorService>();
 
-  const calculatorService = useConstant(() => {
-    let calculatorService = get(CalculatorServiceID);
+  const calculatorService = useCalculatorService();
 
-    if (!calculatorService) {
-      calculatorService = new CalculatorService(new ShardedScheduler(), [
-        ["markPrice", [new PositionCalculator()]],
-      ]);
-
-      SimpleDI.registerByName(CalculatorServiceID, calculatorService);
-    }
-    return calculatorService;
-  });
+  usePublicDataObserver();
 
   useWSObserver(calculatorService);
 

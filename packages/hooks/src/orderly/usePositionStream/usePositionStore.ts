@@ -10,7 +10,8 @@ type PositionState = {
 
 type PositionActions = {
   updatePosition: (position: API.PositionTPSLExt[]) => void;
-  getPositions: () => SWRResponse<API.PositionInfo>;
+  setPositions: (positions: API.PositionTPSLExt[]) => void;
+  // getPositions: () => SWRResponse<API.PositionInfo>;
 };
 
 const usePositionStore = create<
@@ -26,24 +27,29 @@ const usePositionStore = create<
           state.positions = positions;
         }, true);
       },
-
-      getPositions: () => {
-        return usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
-          formatter: (data) => data,
-          onError: (err) => {},
-          onSuccess: (data) => {
-            // console.log(data);
-            set((state) => {
-              state.positions = data.rows;
-            }, true);
-          },
-        });
+      setPositions: (positions: API.PositionTPSLExt[]) => {
+        set((state) => {
+          state.positions = positions;
+        }, true);
       },
+
+      // getPositions: () => {
+      //   // return usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
+      //   //   formatter: (data) => data,
+      //   //   onError: (err) => {},
+      //   //   onSuccess: (data) => {
+      //   //     // console.log(data);
+      //   //     set((state) => {
+      //   //       state.positions = data.rows;
+      //   //     }, true);
+      //   //   },
+      //   // });
+      // },
     },
   }))
 );
 
 const usePositions = () => usePositionStore((state) => state.positions);
-const positionActions = () => usePositionStore((state) => state.actions);
+const usePositionActions = () => usePositionStore((state) => state.actions);
 
-export { usePositionStore, usePositions, positionActions };
+export { usePositionStore, usePositions, usePositionActions };

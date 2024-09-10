@@ -6,6 +6,7 @@ import {
   Divider,
   Flex,
   Input,
+  InputProps,
   Select,
   Slider,
   Switch,
@@ -67,7 +68,19 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           0
         </Text.numeral>
       </Flex>
-      <OrderQuantityInput type={props.type} symbolInfo={symbolInfo} />
+      <OrderQuantityInput
+        type={props.type}
+        symbolInfo={symbolInfo}
+        values={{
+          quantity: orderEntity.quantity,
+          price: orderEntity.price,
+          trigger_price: orderEntity.trigger_price,
+          total: orderEntity.total,
+        }}
+        onChange={(key, value) => {
+          props.setOrderValue(key, value);
+        }}
+      />
       <QuantitySlider maxQty={0} setMaxQty={() => {}} side={props.side} />
       <AuthGuard buttonProps={{ fullWidth: true }}>
         <Button fullWidth color={side === OrderSide.BUY ? "buy" : "sell"}>
@@ -117,11 +130,16 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
 const OrderQuantityInput = (props: {
   type: OrderType;
   symbolInfo: API.SymbolExt;
-  // values: {
-  //   quantity: number;
-  //   price: number;
-  // };
-  // onChange:(key:OrderValueKeys,value:any)=>void;
+  values: {
+    quantity?: string;
+    price?: string;
+    trigger_price?: number;
+    total?: string;
+  };
+  onChange: (
+    key: "quantity" | "price" | "trigger_price" | "total",
+    value: any
+  ) => void;
 }) => {
   const { type, symbolInfo } = props;
   return (
@@ -132,13 +150,26 @@ const OrderQuantityInput = (props: {
             label={"Trigger"}
             suffix={symbolInfo.quote}
             id={"trigger"}
+            value={props.values.trigger_price}
+            onChange={(e) => {
+              props.onChange("trigger_price", e.target.value);
+            }}
           />
         </div>
       ) : null}
 
       {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
         <div className={"oui-group"}>
-          <CustomInput label={"Price"} suffix={symbolInfo.quote} id={"price"} />
+          <CustomInput
+            label={"Price"}
+            suffix={symbolInfo.quote}
+            id={"price"}
+            value={props.values.price}
+            // helperText="Price per unit"
+            onChange={(e) => {
+              props.onChange("price", e.target.value);
+            }}
+          />
         </div>
       ) : null}
 
@@ -149,12 +180,20 @@ const OrderQuantityInput = (props: {
           id="order_quantity_input"
           name="order_quantity_input"
           className={"!oui-rounded-br !oui-rounded-tr"}
+          value={props.values.quantity}
+          onChange={(e) => {
+            props.onChange("quantity", e.target.value);
+          }}
         />
         <CustomInput
           label={"Total≈"}
           suffix={symbolInfo.quote}
           id={"total"}
           className={"!oui-rounded-bl !oui-rounded-tl"}
+          value={props.values.total}
+          onChange={(e) => {
+            props.onChange("total", e.target.value);
+          }}
         />
       </Flex>
     </div>
@@ -168,6 +207,9 @@ const CustomInput = (props: {
   id: string;
   className?: string;
   name?: string;
+  onChange?: InputProps["onChange"];
+  value?: InputProps["value"];
+  // helperText?: InputProps["helperText"];
 }) => {
   return (
     <Input
@@ -178,6 +220,8 @@ const CustomInput = (props: {
       name={props.name}
       prefix={<InputLabel id={props.id}>{props.label}</InputLabel>}
       suffix={props.suffix}
+      value={props.value}
+      onChange={props.onChange}
       classNames={{
         root: cn(
           "oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",

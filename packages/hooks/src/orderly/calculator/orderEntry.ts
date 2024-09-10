@@ -1,6 +1,7 @@
 import { Calculator } from "../../types";
+import { BaseCalculator } from "./baseCalculator";
 
-class OrderEntryCalculator implements Calculator {
+class OrderEntryCalculator extends BaseCalculator<any> {
   calc(markPrice: Record<string, number>) {
     console.log("!!!! Calculating positions...", markPrice);
     return [];

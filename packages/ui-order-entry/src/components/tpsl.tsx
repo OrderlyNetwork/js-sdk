@@ -8,7 +8,7 @@ import { PNL_Values } from "./pnlInput/useBuilder.script";
 type OrderValueKeys = keyof OrderlyOrder;
 
 type Est_Values = PNL_Values & {
-  trigger_price?: number;
+  trigger_price?: string;
 };
 
 type TPSL_Values = { tp: Est_Values; sl: Est_Values };
@@ -20,6 +20,7 @@ export const OrderTPSL = (props: {
 }) => {
   const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
+
 
   return (
     <div>
@@ -117,7 +118,7 @@ const TPSLInputRow = (props: {
             values={{
               PnL: props.values.PnL,
               Offset: props.values.Offset,
-              "Offset%": props.values["Offset%"],
+              "Offset%": props.values["Offset%"]
             }}
           />
         </div>

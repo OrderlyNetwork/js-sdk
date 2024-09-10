@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useWS } from "../useWS";
 import { mutate } from "swr";
-import { WSMessage } from "@orderly.network/types";
+import { API, WSMessage } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { unstable_serialize } from "swr/infinite";
 import { useEventEmitter } from "../useEventEmitter";
@@ -10,6 +10,8 @@ import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { object2underscore } from "../utils/ws";
 import { useLocalStorage } from "../useLocalStorage";
+import { usePrivateQuery } from "../usePrivateQuery";
+import { useAppStore } from "./appStore";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -19,9 +21,18 @@ export const usePrivateDataObserver = (options: {
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state } = useAccount();
+  const { setAccountInfo } = useAppStore((state) => state.actions);
 
-  // TODO: remove this when the WS service provides the correct data
-  // const algoOrderCacheQuneue = useRef<API.AlgoOrder[]>([]);
+  // fetch the data of current account
+
+  const { data: clientInfo } =
+    usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
+  useEffect(() => {
+    if (clientInfo) {
+      setAccountInfo(clientInfo);
+    }
+  }, [clientInfo, setAccountInfo]);
 
   const [subOrder, setSubOrder] = useLocalStorage(
     "orderly_subscribe_order",

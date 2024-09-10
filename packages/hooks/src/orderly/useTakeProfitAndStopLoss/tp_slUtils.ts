@@ -148,6 +148,7 @@ export function priceToOffsetPercentage(inputs: {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(1)
         .minus(new Decimal(price).div(new Decimal(entryPrice)))
+        .abs()
         .toNumber();
     }
 

@@ -2,14 +2,14 @@ import {
   CaretDownIcon,
   Input,
   MenuItem,
-  SimpleDropdownMenu,
+  SimpleDropdownMenu
 } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 
-export type PNLInputProps = PNLInputState & { testId?: string; quote: string };
+export type PNLInputProps = PNLInputState & { testId?: string; quote: string, type: "TP" | "SL" };
 
 export const PNLInput = (props: PNLInputProps) => {
-  const { mode, modes, onModeChange, onValueChange, quote, quote_db, value } =
+  const { mode, modes, onModeChange, onValueChange, quote, quote_db, value, type } =
     props;
   return (
     <Input
@@ -22,8 +22,10 @@ export const PNLInput = (props: PNLInputProps) => {
       autoComplete={"off"}
       onValueChange={onValueChange}
       formatters={[props.formatter({ dp: quote_db, mode })]}
-      classNames={{ additional: "oui-text-base-contrast-54" }}
-      // value={props.value}
+      classNames={{
+        additional: "oui-text-base-contrast-54",
+        input: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+      }}
       suffix={
         <PNLMenus
           modes={modes}
@@ -44,6 +46,7 @@ const PNLMenus = (props: {
       align={"end"}
       size={"xs"}
       className={"oui-min-w-[80px]"}
+      onCloseAutoFocus={(event) => event.preventDefault()}
       onSelect={(item) => props.onModeChange(item as MenuItem)}
     >
       <button className={"oui-p-2"}>

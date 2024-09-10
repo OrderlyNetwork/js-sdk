@@ -5,13 +5,14 @@ import {
   OrderEntity,
   OrderlyOrder,
   OrderSide,
-  OrderType
+  OrderType,
+  SDKError,
 } from "@orderly.network/types";
 
 import { useCallback, useEffect } from "react";
 import {
   baseInputHandle,
-  getCalculateHandler
+  getCalculateHandler,
 } from "../../utils/orderEntryHelper";
 import { compose, head } from "ramda";
 import { tpslCalculateHelper } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
@@ -19,7 +20,7 @@ import { OrderFactory } from "../../services/orderCreator/factory";
 import {
   type FullOrderState,
   useOrderEntryFromStore,
-  useOrderStore
+  useOrderStore,
 } from "./orderEntry.store";
 
 const useOrderEntryNextInternal = (
@@ -30,7 +31,7 @@ const useOrderEntryNextInternal = (
      *
      */
     initialOrder?: Omit<Partial<FullOrderState>, "symbol">;
-    symbolInfo?: Pick<API.SymbolExt, "base_dp" | "quote_dp">;
+    symbolInfo?: API.SymbolExt;
   } = {}
 ) => {
   const orderEntity = useOrderEntryFromStore();
@@ -39,9 +40,9 @@ const useOrderEntryNextInternal = (
     // markPrice,
     initialOrder = {
       side: OrderSide.BUY,
-      type: OrderType.LIMIT
+      type: OrderType.LIMIT,
     },
-    symbolInfo
+    symbolInfo,
   } = options;
 
   const orderEntryActions = useOrderStore((state) => state.actions);
@@ -64,6 +65,8 @@ const useOrderEntryNextInternal = (
         fieldHandler,
         baseInputHandle
       )([values, fieldName, value, markPrice, config]);
+
+      // if fieldName is type,recalculate
 
       //whether tpsl calculation is necessary
 
@@ -117,17 +120,31 @@ const useOrderEntryNextInternal = (
       }
 
       const values = useOrderStore.getState().entry;
+      const { markPrice } = additional ?? { markPrice: 0 };
 
-      const newValues = calculate(
+      let newValues = calculate(
         { ...values },
         key,
         value,
-        additional?.markPrice ?? 0,
+        markPrice,
         symbolInfo
       );
 
+      /// if the order type is market or stop market, recalculate the total use mark price
+      if (
+        key === "type" &&
+        (value === OrderType.MARKET || value === OrderType.STOP_MARKET)
+      ) {
+        newValues = calculate(
+          newValues,
+          "price",
+          markPrice,
+          markPrice,
+          symbolInfo
+        );
+      }
       // orderEntryActions.updateOrder(key, newValues[key as keyof OrderEntity]);
-      console.log("@orderEntryActions.updateOrder", newValues);
+
       orderEntryActions.updateOrder(newValues);
 
       // validate the order
@@ -149,7 +166,7 @@ const useOrderEntryNextInternal = (
       }
 
       const prevValues = useOrderStore.getState().entry;
-      let newValues = { ...prevValues };
+      let newValues: Partial<FullOrderState> = { ...prevValues };
 
       Object.keys(values).forEach((key) => {
         newValues = calculate(
@@ -168,7 +185,7 @@ const useOrderEntryNextInternal = (
     [calculate, orderEntryActions, symbolInfo]
   );
 
-  const onMarkPriceChange = useCallback((markPrice: number) => {
+  const onMarkPriceUpdated = useCallback((markPrice: number) => {
     // console.log("markPrice", markPrice);
     if (!options.symbolInfo) return;
     const values = useOrderStore.getState().entry;
@@ -183,11 +200,39 @@ const useOrderEntryNextInternal = (
     orderEntryActions.updateOrder(newValues);
   }, []);
 
+  const createOrder = () => {
+    if (!orderEntity.symbol) {
+      throw new SDKError("symbol is error");
+    }
+
+    if (!orderEntity.side) {
+      throw new SDKError("side is error");
+    }
+
+    if (!orderEntity || typeof orderEntity.type === "undefined") {
+      throw new SDKError("order_type is error");
+    }
+
+    const orderCreator = OrderFactory.create(orderEntity.type);
+
+    // return orderCreator.validate(orderEntity, {
+    //   symbol: symbolInfo!,
+    //   maxQty,
+    //   markPrice: markPrice,
+    // });
+  };
+
+  const submitOrder = useCallback(() => {
+    // const values = useOrderStore.getState().entry;
+    // const order = OrderFactory.create(values.type);
+    // order.submit(values);
+  }, []);
+
   return {
     formattedOrder: orderEntity,
     setValue,
     setValues,
-    onMarkPriceChange
+    onMarkPriceChange: onMarkPriceUpdated,
   } as const;
 };
 

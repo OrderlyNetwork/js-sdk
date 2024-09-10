@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useWS } from "../../useWS";
 import { useMarkPriceActions } from "../useMarkPrice/useMarkPriceStore";
-import { Calculator } from "../../types";
+import { Calculator, CalculatorScope } from "../../types";
 import { CalculatorService } from "../calculator/calculatorService";
 
 export const useWSObserver = (calculatorService: CalculatorService) => {
@@ -22,7 +22,7 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
         }
         updateMarkPrice(data);
         // call the calculator service
-        calculatorService.calc("markPrice", data);
+        calculatorService.calc(CalculatorScope.MARK_PRICE, data);
       },
 
       onError: (error: any) => {},

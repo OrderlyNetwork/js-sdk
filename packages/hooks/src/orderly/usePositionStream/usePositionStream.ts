@@ -23,6 +23,9 @@ import {
   findTPSLFromOrder,
   findTPSLFromOrders,
 } from "./utils";
+import { usePositionActions } from "./usePositionStore";
+import { useCalculatorService } from "../../useCalculatorService";
+import { CalculatorScope } from "../../types";
 // import { usePosition } from "./usePosition";
 
 type PriceMode = "markPrice" | "lastPrice";
@@ -43,6 +46,7 @@ export const usePositionStream = (
   // const updatePosition = usePosition((state) => state.updatePosition);
   //
   const symbolInfo = useSymbolsInfo();
+  // const {setPositions} = usePositionActions();
 
   const { includedPendingOrder = false } = options || {};
 
@@ -59,6 +63,7 @@ export const usePositionStream = (
   );
 
   const fundingRates = useFundingRates();
+  const calculatorService = useCalculatorService();
 
   const {
     data,
@@ -77,6 +82,12 @@ export const usePositionStream = (
     formatter: (data) => data,
     onError: (err) => {},
   });
+
+  useEffect(() => {
+    if (data && Array.isArray(data.rows) && data.rows.length > 0) {
+      calculatorService.calc(CalculatorScope.POSITION, data.rows);
+    }
+  }, [data]);
 
   const { data: markPrices } = useMarkPricesStream();
 
