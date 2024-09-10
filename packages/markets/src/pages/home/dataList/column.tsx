@@ -15,10 +15,10 @@ import {
   UnFavoritesIcon,
 } from "../../../icons";
 import { FavoritesDropdownMenu } from "./dataList.ui";
-import { TFavorite } from "../../../type";
+import { FavoriteInstance } from "../../../type";
 
 export const useDataListColumns = (
-  favorite: TFavorite,
+  favorite: FavoriteInstance,
   isFavoriteList = false
 ) => {
   const columns = useMemo<Column[]>(() => {
@@ -39,7 +39,11 @@ export const useDataListColumns = (
         width: 30,
         render: (value, record) => {
           const onDelSymbol: MouseEventHandler = (e) => {
-            favorite.updateSymbolFavoriteState(record, favorite.curTab, true);
+            favorite.updateSymbolFavoriteState(
+              record,
+              favorite.selectedFavoriteTab,
+              true
+            );
             e.stopPropagation();
           };
 

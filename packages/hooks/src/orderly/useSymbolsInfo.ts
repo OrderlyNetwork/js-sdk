@@ -3,6 +3,8 @@ import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 
+export type SymbolInfo = ReturnType<typeof useSymbolsInfo>;
+
 export const useSymbolsInfo = () => {
   const { data } = useQuery<Record<string, API.SymbolExt>>(`/v1/public/info`, {
     focusThrottleInterval: 1000 * 60 * 60 * 24,

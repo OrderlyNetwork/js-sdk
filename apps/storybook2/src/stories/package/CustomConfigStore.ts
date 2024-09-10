@@ -1,4 +1,5 @@
 import { ConfigKey, ConfigStore } from "@orderly.network/core";
+import { MarketsStorageKey } from "@orderly.network/hooks";
 
 type ENV_NAME = "prod" | "staging" | "qa" | "dev";
 
@@ -36,8 +37,6 @@ const API_URLS: Record<ENV_NAME, URLS> = {
   },
 };
 
-const Markets_key = "markets";
-
 export class CustomConfigStore implements ConfigStore {
   protected map: Map<ConfigKey, any>;
 
@@ -60,21 +59,9 @@ export class CustomConfigStore implements ConfigStore {
     ]);
   }
   get<T>(key: ConfigKey): T {
-    if (key === Markets_key) {
-      const jsonStr = localStorage.getItem(Markets_key);
-      if (jsonStr) {
-        this.map.set(Markets_key, JSON.parse(jsonStr));
-      } else {
-        const defaultTab = { name: "Popular", id: 1 };
-        this.set(Markets_key, {
-          recent: [],
-          favorites: [
-            { name: "PERP_ETH_USDC", tabs: [{ ...defaultTab }] },
-            { name: "PERP_BTC_USDC", tabs: [{ ...defaultTab }] },
-          ],
-          favoriteTabs: [{ ...defaultTab }],
-        });
-      }
+    if (key === MarketsStorageKey) {
+      const jsonStr = localStorage.getItem(MarketsStorageKey);
+      return jsonStr ? JSON.parse(jsonStr) : "";
     }
     return this.map.get(key);
   }
@@ -82,9 +69,10 @@ export class CustomConfigStore implements ConfigStore {
     return this.map.get(key) ?? defaultValue;
   }
   set<T>(key: ConfigKey, value: T): void {
-    if (key === Markets_key) {
+    if (key === MarketsStorageKey) {
       const jsonStr = JSON.stringify(value);
-      localStorage.setItem(Markets_key, jsonStr);
+      localStorage.setItem(MarketsStorageKey, jsonStr);
+      return;
     }
     this.map.set(key, value);
   }

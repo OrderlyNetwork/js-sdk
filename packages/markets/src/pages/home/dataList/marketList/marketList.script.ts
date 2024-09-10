@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarkets } from "@orderly.network/hooks";
+import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
 import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
-import { TFavorite } from "../../../../type";
 import { useMarketsContext } from "../../provider";
 
 export type UseMarketListScriptOptions = MarketListWidgetProps;
@@ -13,7 +12,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
   const [loading, setLoading] = useState(true);
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
-  const [data, favorite] = useMarkets(MarketsType.ALL);
+  const [data, favorite] = useMarketList(MarketsType.ALL);
 
   const { searchValue } = useMarketsContext();
 
@@ -61,7 +60,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     meta,
     setPage,
     setPageSize,
-    favorite: favorite as TFavorite,
+    favorite,
     onSort,
   };
 };
