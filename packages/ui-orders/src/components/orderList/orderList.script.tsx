@@ -29,6 +29,13 @@ export const useOrderListScript = (props: {
     return undefined;
   }, [type]);
 
+  const excludes = useMemo(() => {
+    if (type === TabType.pending) {
+      return [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL];
+    }
+    return undefined;
+  }, [type]);
+
 
   const [
     data,
@@ -48,6 +55,7 @@ export const useOrderListScript = (props: {
     size: pageSize,
     dateRange,
     includes,
+    excludes,
   });
 
   return {
