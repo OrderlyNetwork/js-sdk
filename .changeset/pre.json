@@ -40,6 +40,7 @@
     "@orderly.network/web3-modal": "1.5.12"
   },
   "changesets": [
-    "gold-planes-boil"
+    "gold-planes-boil",
+    "ninety-penguins-act"
   ]
 }
