@@ -3,7 +3,6 @@ import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
 import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
-import { TFavorite } from "../../../../type";
 import { useMarketsContext } from "../../provider";
 
 export type UseMarketListScriptOptions = MarketListWidgetProps;
@@ -61,7 +60,7 @@ export const useMarketListScript = (options: UseMarketListScriptOptions) => {
     meta,
     setPage,
     setPageSize,
-    favorite: favorite as TFavorite,
+    favorite,
     onSort,
   };
 };

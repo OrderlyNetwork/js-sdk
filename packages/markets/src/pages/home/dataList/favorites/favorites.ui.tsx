@@ -18,7 +18,7 @@ import {
   AddIcon,
   UnFavoritesIcon,
 } from "../../../../icons";
-import { TFavorite } from "../../../../type";
+import { FavoriteInstance } from "../../../../type";
 import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
 import { useMarketsContext } from "../../provider";
 import "../../../../style/index.css";
@@ -84,11 +84,12 @@ export const Favorites: FC<FavoritesProps> = (props) => {
 };
 
 type FavoritesTabProps = {
-  favorite: TFavorite;
+  favorite: FavoriteInstance;
 };
 
 const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
-  const { curTab, favoriteTabs } = props.favorite;
+  const { selectedFavoriteTab, favoriteTabs, updateSelectedFavoriteTab } =
+    props.favorite;
 
   const {
     open,
@@ -99,7 +100,6 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
     editing,
     value,
     onValueChange,
-    updateSelectedTab,
     updateCurTab,
     onEdit,
     addTab,
@@ -198,7 +198,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             : "oui-bg-line-6 oui-text-base-contrast-36 hover:oui-text-base-contrast"
         )}
         onClick={() => {
-          updateSelectedTab(item);
+          updateSelectedFavoriteTab(item);
           if (isActive) {
             setOpen(true);
           }
@@ -217,7 +217,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer "
     >
       {favoriteTabs?.map((item: any) => {
-        const isActive = curTab.id === item.id;
+        const isActive = selectedFavoriteTab.id === item.id;
         return (
           <Tooltip
             key={item.id}

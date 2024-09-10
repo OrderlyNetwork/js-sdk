@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
-import { TFavorite } from "../../../../type";
+import { FavoriteInstance } from "../../../../type";
 import { useMarketsContext } from "../../provider";
 
 export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
@@ -12,18 +12,18 @@ export const useFavoritesScript = () => {
   const [data, favorite] = useMarketList(MarketsType.FAVORITES);
   const [loading, setLoading] = useState(true);
 
-  const { favorites, favoriteTabs, getLastSelFavTab } = favorite;
+  const { favorites, selectedFavoriteTab } = favorite;
 
   const { searchValue } = useMarketsContext();
-
-  const [curTab, setCurTab] = useState(getLastSelFavTab() || favoriteTabs[0]);
 
   const { onSort, getSortedList } = useSort();
 
   const filterData = useMemo(() => {
     const filterList = favorites
       ?.filter(
-        (item) => item.tabs?.findIndex((tab) => tab.id === curTab.id) !== -1
+        (item) =>
+          item.tabs?.findIndex((tab) => tab.id === selectedFavoriteTab.id) !==
+          -1
       )
       ?.map((fav) => {
         const index = data?.findIndex((item) => item.symbol === fav.name);
@@ -35,7 +35,7 @@ export const useFavoritesScript = () => {
       ?.filter((item) => item);
 
     return searchBySymbol(filterList, searchValue);
-  }, [data, curTab, favorites, searchValue]);
+  }, [data, selectedFavoriteTab, favorites, searchValue]);
 
   const { totalData, pagedData } = useMemo(() => {
     const totalData = getSortedList(filterData);
@@ -68,24 +68,19 @@ export const useFavoritesScript = () => {
     meta,
     setPage,
     setPageSize,
-    favorite: {
-      ...favorite,
-      curTab,
-      setCurTab,
-    } as TFavorite,
+    favorite,
     onSort,
   };
 };
 
-export function useFavoritesTabScript(favorite: TFavorite) {
+export function useFavoritesTabScript(favorite: FavoriteInstance) {
   const {
     favorites,
     favoriteTabs,
+    selectedFavoriteTab,
     updateFavoriteTabs,
     updateSelectedFavoriteTab,
     updateFavorites,
-    curTab,
-    setCurTab,
   } = favorite;
 
   const [open, setOpen] = useState(false);
@@ -104,15 +99,10 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     }, 0);
   };
 
-  const updateSelectedTab = (item: any) => {
-    setCurTab(item);
-    updateSelectedFavoriteTab(item);
-  };
-
   const updateCurTab = () => {
     updateFavoriteTabs(
       {
-        ...curTab,
+        ...selectedFavoriteTab,
         name: value,
       },
       { update: true }
@@ -127,7 +117,6 @@ export function useFavoritesTabScript(favorite: TFavorite) {
       id: Date.now(),
     };
     updateFavoriteTabs(newTab, { add: true });
-    setCurTab(newTab);
     updateSelectedFavoriteTab(newTab);
   };
 
@@ -146,7 +135,6 @@ export function useFavoritesTabScript(favorite: TFavorite) {
       // auto selected last tab
       const tabs = favoriteTabs.filter((item) => item.id !== selectedTab.id);
       const tab = tabs?.[tabs?.length - 1] || tabs?.[0];
-      setCurTab(tab);
       updateSelectedFavoriteTab(tab);
     }, 0);
   };
@@ -168,7 +156,6 @@ export function useFavoritesTabScript(favorite: TFavorite) {
     value,
     onValueChange: setValue,
     onEdit,
-    updateSelectedTab,
     updateCurTab,
     addTab,
     delTab,
