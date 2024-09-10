@@ -8,8 +8,9 @@ import {
   useAccount,
   useConfig,
   useMediaQuery,
-  useOrderEntry, useSymbolsInfo,
-  useWS
+  useOrderEntry,
+  useSymbolsInfo,
+  useWS,
 } from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
@@ -20,16 +21,13 @@ import {
 import { ColorConfigInterface } from "../tradingviewAdapter/type";
 import useBroker from "../tradingviewAdapter/hooks/useBroker";
 import useCreateRenderer from "../tradingviewAdapter/hooks/useCreateRenderer";
-import brokerHostHandler from "../tradingviewAdapter/renderer/brokerHostHandler";
-import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
 import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
 import { Widget, WidgetProps } from "../tradingviewAdapter/widget";
 import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";
 import { WS } from "@orderly.network/net";
 import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
-import { toast } from "@orderly.network/ui";
+import { modal, toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { useLazyEffect } from "../tradingviewAdapter/hooks/useLazyEffect";
 
 const chartKey = "SDK_Tradingview";
 
@@ -64,8 +62,13 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   const [side, setSide] = useState<OrderSide>(OrderSide.SELL);
   const symbolsInfo = useSymbolsInfo();
 
-  const [openCloseConfirmDialog, setOpenCloseConfirmDialog] = useState(false);
-  const [orderData, setOrderData] = useState<any>();
+  const {onSubmit, submitting} = useOrderEntry({
+    symbol: symbol ?? '',
+    side: side,
+    order_type: OrderType.MARKET,
+  }, {
+    watchOrderbook: true,
+  })
   const [displayControlState, setDisplayControlState] =
     useState<DisplayControlSettingInterface>(() => {
       const displaySettingInfo = localStorage.getItem(
@@ -130,7 +133,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     useState<boolean>(false);
 
   const closePositionConfirmCallback = (data: any) => {
-    // todo need update code
     const symbolInfo = symbolsInfo[symbol!];
     if (!symbolInfo) {
       return;
@@ -140,16 +142,21 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
       : OrderSide.BUY;
     const order: any = {
       //   order_price: undefined,
-      order_quantity: data.balance,
+      order_quantity: new Decimal(data.balance).abs().toNumber(),
       symbol: symbol,
       order_type: OrderType.MARKET,
       side,
-      base: symbolInfo('base'),
       reduce_only: true,
     };
-    setOrderData(order);
     setSide(side);
-    setOpenCloseConfirmDialog(true);
+    modal.show("MarketCloseConfirmID", {
+      base: symbolInfo('base'),
+      quantity: data.balance,
+      onConfirm: async () => {
+        return onSubmit(order);
+      },
+      submitting,
+    });
   };
 
   const chartRef = useRef<HTMLDivElement>(null);
