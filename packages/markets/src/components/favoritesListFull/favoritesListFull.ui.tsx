@@ -50,6 +50,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
             ),
             onClick: () => {
               onSymbolChange?.(record);
+              favorite.addToHistory(record);
             },
           };
         }}

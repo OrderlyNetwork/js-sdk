@@ -18,11 +18,20 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     total24Amount,
     totalOpenInterest,
     tvl,
+    favorite,
   } = props;
+  const { onSymbolChange } = useMarketsContext();
+
   const cls = cn(
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
     enableScroll && "oui-select-none oui-cursor-pointer"
   );
+
+  const onSymbol = (item: any) => {
+    onSymbolChange?.(item);
+    favorite.addToHistory(item);
+  };
+
   return (
     <div
       id="oui-markets-header"
@@ -40,16 +49,19 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           data={news}
           title={<Text.gradient color="brand">New listings</Text.gradient>}
           className={cls}
+          onSymbol={onSymbol}
         />
         <CardItem
           data={gainers}
           title={<Text className="oui-text-success-light">Top gainers</Text>}
           className={cls}
+          onSymbol={onSymbol}
         />
         <CardItem
           data={losers}
           title={<Text className="oui-text-danger-light">Top losers</Text>}
           className={cls}
+          onSymbol={onSymbol}
         />
       </Flex>
       <div className="oui-mt-1 oui-mb-3  3xl:oui-mt-4 3xl:oui-mb-0">
@@ -134,6 +146,7 @@ type CardItemProps = {
   data?: TListItem[];
   title: ReactNode;
   className?: string;
+  onSymbol: (item: any) => void;
 };
 
 const CardItem: React.FC<CardItemProps> = (props) => {
@@ -154,7 +167,7 @@ const CardItem: React.FC<CardItemProps> = (props) => {
 
       <Flex direction="column" itemAlign="start" mt={2}>
         {props.data?.map((item, index) => (
-          <ListItem key={item.symbol} item={item} />
+          <ListItem key={item.symbol} item={item} onSymbol={props.onSymbol} />
         ))}
       </Flex>
     </Box>
@@ -172,12 +185,11 @@ type TListItem = {
 type ListItemProps = {
   item: TListItem;
   className?: string;
+  onSymbol: (item: any) => void;
 };
 
 const ListItem: React.FC<ListItemProps> = (props) => {
   const { item } = props;
-
-  const { onSymbolChange } = useMarketsContext();
 
   return (
     <Flex
@@ -187,7 +199,7 @@ const ListItem: React.FC<ListItemProps> = (props) => {
       px={4}
       className={cn("hover:oui-bg-base-8 oui-cursor-pointer", props.className)}
       onClick={() => {
-        onSymbolChange?.(item as any);
+        props.onSymbol(item);
       }}
     >
       <Flex width="100%" gapX={1}>

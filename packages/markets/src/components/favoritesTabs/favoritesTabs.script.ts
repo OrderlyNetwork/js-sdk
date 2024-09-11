@@ -3,6 +3,7 @@ import { FavoriteInstance } from "../../type";
 
 export type UseFavoritesTabScriptOptions = {
   favorite: FavoriteInstance;
+  size?: "sm" | "default";
 };
 
 export type UseFavoritesTabScriptReturn = ReturnType<
@@ -10,7 +11,7 @@ export type UseFavoritesTabScriptReturn = ReturnType<
 >;
 
 export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
-  const { favorite } = options;
+  const { favorite, size = "default" } = options;
   const {
     favorites,
     favoriteTabs,
@@ -79,7 +80,8 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
   useEffect(() => {
     if (value) {
       const rect = spanRef.current?.getBoundingClientRect();
-      setInputWidth(Math.max((rect?.width || 0) + 14, 50));
+      const offset = size === "sm" ? 0 : 14;
+      setInputWidth(Math.max((rect?.width || 0) + offset, 50));
     }
   }, [value]);
 

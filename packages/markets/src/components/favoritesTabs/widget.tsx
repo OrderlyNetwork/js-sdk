@@ -10,5 +10,5 @@ export const FavoritesTabWidget: React.FC<FavoritesTabWidgetProps> = (
   props
 ) => {
   const state = useFavoritesTabScript(props);
-  return <FavoritesTab {...state} />;
+  return <FavoritesTab {...state} size={props.size} />;
 };

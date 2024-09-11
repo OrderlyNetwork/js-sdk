@@ -40,6 +40,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
           className: cn("oui-h-[55px] oui-border-line-4 oui-cursor-pointer"),
           onClick: () => {
             onSymbolChange?.(record);
+            favorite.addToHistory(record);
           },
         };
       }}

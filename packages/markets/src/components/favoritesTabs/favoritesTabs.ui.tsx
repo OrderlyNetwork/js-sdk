@@ -9,11 +9,17 @@ import {
   modal,
 } from "@orderly.network/ui";
 import { FavoriteTab } from "@orderly.network/hooks";
-import { UseFavoritesTabScriptReturn } from "./favoritesTabs.script";
-import { AddIcon, EditIcon, TrashIcon } from "../../icons";
+import {
+  UseFavoritesTabScriptOptions,
+  UseFavoritesTabScriptReturn,
+} from "./favoritesTabs.script";
+import { AddIcon, AddIcon2, EditIcon, TrashIcon } from "../../icons";
 import "./style.css";
 
-export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
+export type FavoritesTabProps = UseFavoritesTabScriptReturn &
+  Pick<UseFavoritesTabScriptOptions, "size">;
+
+export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   const {
     open,
     setOpen,
@@ -27,6 +33,7 @@ export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
     onEdit,
     addTab,
     delTab,
+    size = "default",
   } = props;
 
   const { selectedFavoriteTab, favoriteTabs, updateSelectedFavoriteTab } =
@@ -70,14 +77,16 @@ export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
           onBlur={updateCurTab}
           classNames={{
             root: cn(
-              "oui-p-0 oui-h-[24px] oui-rounded oui-px-2",
+              "oui-p-0 oui-rounded oui-px-2",
               "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
+              size === "sm" ? "oui-h-[18px]" : "oui-h-[24px]",
               isActive &&
                 "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
             ),
             input: cn(
-              "oui-text-sm oui-font-semibold oui-text-transparent",
-              "oui-gradient-brand oui-caret-[rgba(217,217,217,1)]"
+              "oui-font-semibold oui-text-transparent",
+              "oui-gradient-brand oui-caret-[rgba(217,217,217,1)]",
+              size === "sm" ? "oui-text-2xs" : "oui-text-sm"
             ),
           }}
           onKeyUp={onKeyUp}
@@ -89,8 +98,10 @@ export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
           color="brand"
           angle={270}
           weight="semibold"
-          size="sm"
-          className="oui-leading-[24px]"
+          size={size === "sm" ? "2xs" : "sm"}
+          className={
+            size === "sm" ? "oui-leading-[18px]" : "oui-leading-[24px]"
+          }
           as="div"
         >
           {item.name}
@@ -100,8 +111,10 @@ export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
       content = (
         <Text
           weight="semibold"
-          size="sm"
-          className="oui-leading-[24px]"
+          size={size === "sm" ? "2xs" : "sm"}
+          className={
+            size === "sm" ? "oui-leading-[18px]" : "oui-leading-[24px]"
+          }
           as="div"
         >
           {item.name}
@@ -113,7 +126,7 @@ export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
       <Box
         r="base"
         px={2}
-        height={24}
+        height={size === "sm" ? 18 : 24}
         className={cn(
           "oui-cursor-pointer oui-select-none",
           isActive
@@ -138,9 +151,9 @@ export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
   return (
     <Flex
       my={3}
-      gapX={3}
+      gapX={size === "sm" ? 2 : 3}
       id="oui-markets-favorites-tabs-container"
-      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer "
+      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer"
     >
       {favoriteTabs?.map((item: any) => {
         const isActive = selectedFavoriteTab.id === item.id;
@@ -181,15 +194,15 @@ export const FavoritesTab: React.FC<UseFavoritesTabScriptReturn> = (props) => {
         );
       })}
       <Flex
-        className="oui-bg-line-6 oui-cursor-pointer oui-text-base-contrast-36 hover:oui-text-base-contrast"
-        width={32}
-        height={18}
+        className="oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
+        width={size === "sm" ? 28 : 36}
+        height={size === "sm" ? 18 : 24}
         r="base"
         justify="center"
         itemAlign="center"
         onClick={addTab}
       >
-        <AddIcon className="oui-w-4 oui-h-4" />
+        <AddIcon2 className="oui-w-4 oui-h-4" />
       </Flex>
       <Text size="xs" ref={spanRef} className="oui-invisible">
         {value}
