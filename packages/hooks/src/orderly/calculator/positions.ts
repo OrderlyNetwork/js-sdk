@@ -20,7 +20,7 @@ class PositionCalculator extends BaseCalculator<API.PositionTPSLExt[]> {
     data: any,
     ctx: CalculatorCtx
   ): API.PositionExt[] {
-    // console.log("!!!! PositionCalculator calc", scope, data, ctx);
+    console.log("!!!! PositionCalculator calc", scope, ctx.positions);
     if (scope === CalculatorScope.MARK_PRICE) {
       return this.calcByPrice(data as Record<string, number>, ctx);
     }

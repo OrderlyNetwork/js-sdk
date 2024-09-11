@@ -15,6 +15,8 @@ export interface CalculatorCtx {
   // onComplete: (name: string, data: any) => void;
   saveOutput: (name: string, data: any) => void;
 
+  get positions(): API.PositionTPSLExt[];
+
   // onQueueComplete: () => void;
 }
 

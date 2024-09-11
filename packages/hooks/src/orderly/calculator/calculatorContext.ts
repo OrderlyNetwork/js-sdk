@@ -1,6 +1,7 @@
 import { API } from "@orderly.network/types";
 import { CalculatorCtx } from "../../types";
 import { useAppStore } from "../appStore";
+import { usePositionStore } from "../usePositionStream/usePositionStore";
 
 export class CalculatorContext implements CalculatorCtx {
   accountInfo: API.AccountInfo;
@@ -17,10 +18,17 @@ export class CalculatorContext implements CalculatorCtx {
       string,
       API.FundingRate
     >;
+
+    // this.positions = usePositionStore.getState().positions;
   }
 
   get(output: Record<string, any>) {
     return output;
+  }
+
+  get positions(): API.PositionTPSLExt[] {
+    if (this.output.positions) return this.output.positions;
+    return usePositionStore.getState().positions;
   }
 
   get isReady(): boolean {

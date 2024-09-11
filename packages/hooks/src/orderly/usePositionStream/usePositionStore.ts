@@ -32,19 +32,6 @@ const usePositionStore = create<
           state.positions = positions;
         }, true);
       },
-
-      // getPositions: () => {
-      //   // return usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
-      //   //   formatter: (data) => data,
-      //   //   onError: (err) => {},
-      //   //   onSuccess: (data) => {
-      //   //     // console.log(data);
-      //   //     set((state) => {
-      //   //       state.positions = data.rows;
-      //   //     }, true);
-      //   //   },
-      //   // });
-      // },
     },
   }))
 );
