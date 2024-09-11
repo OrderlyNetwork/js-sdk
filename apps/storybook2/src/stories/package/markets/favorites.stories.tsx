@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
-  FavoritesDropdownMenuWidget
+  FavoritesDropdownMenuWidget,
+  FavoritesTabWidget
 } from "@orderly.network/markets";
 import { Box, Button } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
@@ -50,3 +51,19 @@ export const DropdownMenu: Story = {
     ),
   ],
 };
+
+// export const Tabs: Story = {
+//   render: (args) => {
+//     return (
+//       <FavoritesTabWidget favorite={{ favoriteTabs: [{ name: "Popular", id: 1 }] } as any} />
+//     );
+//   },
+
+//   decorators: [
+//     (Story) => (
+//       <Box>
+//         <Story />
+//       </Box>
+//     ),
+//   ],
+// };
