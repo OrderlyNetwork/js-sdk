@@ -90,10 +90,6 @@ export type MarketsItem = {
 export const MarketsStorageKey = "markets";
 export const DefaultFavoriteTab = { name: "Popular", id: 1 };
 
-export const useFavorite = () => {
-
-};
-
 export const useMarketList = (type: MarketsType) => {
   const { configStore } = useContext(OrderlyContext);
 

@@ -14,8 +14,8 @@ import {
   OrderlyIcon,
   UnFavoritesIcon,
 } from "../../../icons";
-import { FavoritesDropdownMenu } from "./dataList.ui";
 import { FavoriteInstance } from "../../../type";
+import { FavoritesDropdownMenuWidget } from "../../../components/favoritesDropdownMenu";
 
 export const useDataListColumns = (
   favorite: FavoriteInstance,
@@ -69,9 +69,9 @@ export const useDataListColumns = (
           }
 
           return (
-            <FavoritesDropdownMenu row={record} favorite={favorite}>
+            <FavoritesDropdownMenuWidget row={record} favorite={favorite}>
               {button}
-            </FavoritesDropdownMenu>
+            </FavoritesDropdownMenuWidget>
           );
         },
       },
