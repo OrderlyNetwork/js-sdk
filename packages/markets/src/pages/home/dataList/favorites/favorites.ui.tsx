@@ -3,7 +3,7 @@ import { cn, DataTable, Flex, Pagination, Text } from "@orderly.network/ui";
 import { useDataListColumns } from "../column";
 import { UnFavoritesIcon } from "../../../../icons";
 import { UseFavoritesReturn } from "./favorites.script";
-import { useMarketsContext } from "../../provider";
+import { useMarketsContext } from "../../../../components/marketsProvider";
 import { FavoritesTabWidget } from "../../../../components/favoritesTabs";
 
 type FavoritesProps = {} & UseFavoritesReturn;

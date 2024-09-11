@@ -3,7 +3,7 @@ import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import { MarketListWidgetProps } from "./widget";
 import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
-import { useMarketsContext } from "../../provider";
+import { useMarketsContext } from "../../../../components/marketsProvider";
 
 export type UseMarketListScriptOptions = MarketListWidgetProps;
 export type UseMarketListReturn = ReturnType<typeof useMarketListScript>;

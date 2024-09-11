@@ -3,7 +3,7 @@ import { cn, DataTable, Pagination } from "@orderly.network/ui";
 import { type UseMarketListReturn } from "./marketList.script";
 import { useDataListColumns } from "../column";
 import { TInitialSort } from "../../../../type";
-import { useMarketsContext } from "../../provider";
+import { useMarketsContext } from "../../../../components/marketsProvider";
 
 type MarketListProps = UseMarketListReturn & {
   initialSort: TInitialSort;

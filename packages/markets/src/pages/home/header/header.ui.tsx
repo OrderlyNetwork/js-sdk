@@ -2,7 +2,7 @@ import { FC, ReactNode, useMemo } from "react";
 import { HeaderReturns } from "./header.script";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { useMarketsContext } from "../provider";
+import { useMarketsContext } from "../../../components/marketsProvider";
 import { OrderlyIcon } from "../../../icons";
 
 /** -----------MarketsHeader start ------------ */

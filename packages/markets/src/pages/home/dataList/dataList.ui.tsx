@@ -14,7 +14,7 @@ import {
   NewListingsIcon,
   SearchIcon,
 } from "../../../icons";
-import { useMarketsContext } from "../provider";
+import { useMarketsContext } from "../../../components/marketsProvider";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useMarketsContext } from "../provider";
+import { useMarketsContext } from "../../../components/marketsProvider";
 
 export type TabName = "favorites" | "all" | "new";
 
