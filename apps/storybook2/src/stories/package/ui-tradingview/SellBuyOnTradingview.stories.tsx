@@ -4,13 +4,14 @@ import { OrderlyApp } from "@orderly.network/react-app";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { CustomConfigStore } from "../CustomConfigStore.ts";
 import { Box } from "@orderly.network/ui";
+import { AccountMenuWidget } from "@orderly.network/ui-scaffold";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: "Orderly", brokerId: "orderly" });
 
 
 const meta = {
-  title: "Package/ui-tradingview",
+  title: "Package/ui-tradingview/buySellOnTradingview",
   component: TradingviewWidget,
   decorators: [
     (Story) => (
@@ -24,6 +25,7 @@ const meta = {
             img: "/orderly-logo-secondary.svg"
           }
         }}>
+         <AccountMenuWidget/>
           <Box height={600}>
 
             <Story />
@@ -47,28 +49,6 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
-const tradingviewProps = {
-  symbol: "PERP_ETH_USDC",
-  scriptSRC: "/tradingview/charting_library/charting_library.js",
-  libraryPath: "/tradingview/charting_library/",
-  customCssUrl: "/tradingview/chart.css",
-}
-
-export const Default: Story = {
-  args: {
-    ...tradingviewProps,
-  }
-};
-
-
-export const NoTradingviewFile: Story = {
-
-  render: () => {
-    return <TradingviewWidget
-    symbol='PERP_BTC_USDC'/>
-  }
-}
-
 const tradingviewProps2= {
   symbol: "PERP_ETH_USDC",
   scriptSRC: "/tradingviewWoofiPro/charting_library/charting_library.js",
@@ -76,12 +56,10 @@ const tradingviewProps2= {
   customCssUrl: "/tradingviewWoofiPro/chart.css",
 }
 
-export const SellBuyOnTradingview: Story = {
-  render: () => {
-    return <TradingviewWidget
-      {...tradingviewProps2}
-
-    />
-  },
-
+export const Default: Story = {
+  args: {
+    ...tradingviewProps2,
+  }
 };
+
+

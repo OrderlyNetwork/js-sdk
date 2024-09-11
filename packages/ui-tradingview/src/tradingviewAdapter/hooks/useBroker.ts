@@ -5,15 +5,21 @@ import useSenderOrder from "./useSendOrder";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { ChartMode, ColorConfigInterface } from "../type";
 
+const createBrokerMethod = <T extends (...args: any) => any>(method: T) => {
+  return (params: T) => method(params);
+};
+
 const useBroker = ({
   closeConfirm,
   colorConfig,
   onToast,
   mode,
+  symbol,
 }: {
   closeConfirm: any;
   colorConfig: ColorConfigInterface;
   onToast?: any;
+  symbol: string;
   mode?: ChartMode;
 }) => {
   const cancelOrder = useCancelOrder();
@@ -23,7 +29,7 @@ const useBroker = ({
     (position: any) => closeConfirm && closeConfirm(position),
     [closeConfirm]
   );
-  const { sendLimitOrder } = useSenderOrder();
+  const { sendMarketOrder, sendLimitOrder} = useSenderOrder(symbol);
 
   const getSymbolInfo = useCallback(
     (symbol: string) => {
@@ -46,6 +52,7 @@ const useBroker = ({
     colorConfig,
     sendLimitOrder,
     getSymbolInfo,
+    sendMarketOrder: createBrokerMethod(sendMarketOrder),
     mode,
   });
 
@@ -55,7 +62,8 @@ const useBroker = ({
 
   useEffect(() => {
     broker.current.sendLimitOrder = sendLimitOrder;
-  }, [sendLimitOrder]);
+    broker.current.sendMarketOrder = sendMarketOrder;
+  }, [sendLimitOrder,  sendMarketOrder]);
 
   useEffect(() => {
     broker.current.closePosition = closePosition;
