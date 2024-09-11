@@ -1,13 +1,14 @@
-import { Button } from "@orderly.network/ui";
+import { Button, Text } from "@orderly.network/ui";
 import { NumeralWithCtx } from "./numeralWithCtx";
 import { PriceInput } from "./priceInput";
 import { QuantityInput } from "./quantityInput";
+import { Decimal } from "@orderly.network/utils";
 
-export const renderQuantity = (value: number) => {
+export const renderQuantity = (value: number, record: any) => {
   return (
-    <NumeralWithCtx rule="price" coloring>
+    <Text.numeral dp={record?.symbolInfo?.("base_dp")} rm={Decimal.ROUND_DOWN} padding={false} coloring>
       {value}
-    </NumeralWithCtx>
+    </Text.numeral>
   );
 };
 

@@ -4,9 +4,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import { Button, modal } from "@orderly.network/ui";
-import { limitCloseConfirm, LimitCloseDialogId, LimitDialog, PositionsWidget } from '@orderly.network/ui-positions';
-import { Box, Button, Flex, modal } from "@orderly.network/ui";
-import { OrderSide } from "@orderly.network/types";
+import { PositionsWidget } from '@orderly.network/ui-positions';
+import { Box, Button, modal } from "@orderly.network/ui";
 
 const meta = {
   title: "Package/ui-positions/list",
@@ -60,40 +59,22 @@ export const Defaut: Story = {
   ]
 };
 
-export const LimitCloseDialog: Story = {
-  render: (args) => {
-    return <Flex justify={'center'} pt={6}>
-      <Box width={'320px'} intensity={800} r="md" p={4}><LimitDialog  {...args}/></Box>
-    </Flex>
-  },
-  args: {
-    symbol: 'PERP_ETH_USDC',
-    quantity: 0.11,
-    price: 1000,
-    total: 110.356,
-    side: OrderSide.SELL
-  }
-}
 
-export const LimitCloseDialogCommandStyle: Story = {
-  render: (args) => {
-    return <Flex justify={'center'}>
-      <Button onClick={()=>{
-        limitCloseConfirm(
-          args,
-          {
-         
-          onOk: ()=>Promise.resolve().then(()=>console.log('ok')),
-          onCancel: ()=>Promise.resolve().then(()=>console.log('cancel'))
-        })
-      }}>Limit close position</Button>
-    </Flex>
-  },
-  args: {
-    symbol: 'PERP_ETH_USDC',
-    quantity: 0.11,
-    price: 1000,
-    total: 110.356,
-    side: OrderSide.SELL
+export const MarketClose: Story = {
+
+  render: () => {
+
+    return <Button onClick={() => {
+      modal.show("MarketCloseConfirmID", {
+        base: "ETH",
+        quantity: 222.22,
+        onConfirm: async () => {
+          return Promise.resolve(0);
+        },
+        submitting: false,
+      });
+    }}>
+      Show market close 
+    </Button>
   }
 }

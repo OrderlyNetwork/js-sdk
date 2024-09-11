@@ -10,7 +10,10 @@ type AppContextState = {
    * Whether the current network is not supported
    */
   wrongNetwork: boolean;
-  onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  onChainChanged?: (
+    chainId: number,
+    state: { isTestnet: boolean; isWalletConnected: boolean }
+  ) => void;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
 };
 
@@ -21,7 +24,10 @@ export const useAppContext = () => {
 };
 
 export type AppStateProviderProps = {
-  onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  onChainChanged?: (
+    chainId: number,
+    state: { isTestnet: boolean; isWalletConnected: boolean }
+  ) => void;
 };
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (

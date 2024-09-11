@@ -1,4 +1,6 @@
 import type { TradingPageProps as OldTradingPageProps } from "@orderly.network/react";
+import { DataListTabType } from "../components/dataList/dataList.script";
+import { PositionsProps } from "@orderly.network/ui-positions";
 
 export type layoutInfo = {
   width?: number;
@@ -84,4 +86,11 @@ export type TradingPageProps = OldTradingPageProps & {
   shareOptions: ShareOptions;
   referral: ReferralProps;
   tradingReward: TradingRewardProps;
+};
+
+export type TradingPageV2Props = OldTradingPageProps & {
+  dataList: {
+    current?: DataListTabType;
+    config: Partial<Omit<PositionsProps, "pnlNotionalDecimalPrecision">>;
+  };
 };

@@ -6,24 +6,30 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Input,
+  inputFormatter,
 } from "@orderly.network/ui";
+import { usePositionsRowContext } from "./positionRowContext";
 import { useState } from "react";
-
-export enum PriceInputType {
-  MARKET = "Market",
-  LIMIT = "Limit",
-}
+import { OrderType } from "@orderly.network/types";
 
 export const PriceInput = () => {
-  const [type, setType] = useState<PriceInputType>(PriceInputType.MARKET);
+  const { type, quoteDp, price, updatePriceChange, updateOrderType, position } =
+    usePositionsRowContext();
+
   return (
     <DropdownMenuRoot>
       <Input
         size="sm"
-        autoComplete="off"
-        value={type === PriceInputType.MARKET ? "Market" : ""}
-        onFocus={() => {
-          setType(PriceInputType.LIMIT);
+        value={type === OrderType.LIMIT ? price : "Market"}
+        onValueChange={(e) => updatePriceChange(e)}
+        formatters={[
+          inputFormatter.numberFormatter,
+          ...(quoteDp ? [inputFormatter.dpFormatter(quoteDp)] : []),
+        ]}
+        onFocus={(e) => {
+          if (type === OrderType.MARKET) {
+            updateOrderType(OrderType.LIMIT, `${position.mark_price}`);
+          }
         }}
         suffix={
           <DropdownMenuTrigger asChild>
@@ -40,8 +46,8 @@ export const PriceInput = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             size="xs"
-            onSelect={() => {
-              setType(PriceInputType.MARKET);
+            onSelect={(vent) => {
+              updateOrderType(OrderType.MARKET);
             }}
           >
             <span>Market</span>

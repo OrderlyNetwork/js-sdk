@@ -3,6 +3,7 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { CustomConfigStore } from "../CustomConfigStore.ts";
+import { Box } from "@orderly.network/ui";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: "Orderly", brokerId: "orderly" });
@@ -23,29 +24,44 @@ const meta = {
             img: "/orderly-logo-secondary.svg"
           }
         }}>
-          <Story />
+          <Box height={600}>
+
+            <Story />
+          </Box>
         </OrderlyApp>
       </ConnectorProvider>
     )
   ],
   parameters: {
-    symbol: "PERP_ETH_USDC",
-    tradingViewConfig: {
-      scriptSRC: "/tradingview/charting_library/charting_library.js",
-      library_path: "/tradingview/charting_library/",
-      customCssUrl: "/tradingview/chart.css",
-    },
+
   },
 
-  args: {}
+  args: {
+
+    symbol: 'PERP_BTC_USDC',
+  },
+
 } satisfies Meta<typeof TradingviewWidget>;
 
 type Story = StoryObj<typeof meta>;
 
 export default meta;
 
+const tradingviewProps = {
+  symbol: "PERP_ETH_USDC",
+  scriptSRC: "/tradingview/charting_library/charting_library.js",
+  libraryPath: "/tradingview/charting_library/",
+  customCssUrl: "/tradingview/chart.css",
+}
+
 export const Default: Story = {
-  render: () => {
-    return <TradingviewWidget />;
+  args: {
+    ...tradingviewProps,
   }
 };
+
+export const NoTradingviewFile: Story = {
+  render: () => {
+    return <TradingviewWidget/>
+  }
+}

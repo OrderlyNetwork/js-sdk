@@ -32,7 +32,7 @@ import {
   NewListingsIcon,
   SearchIcon,
 } from "../../../icons";
-import { TFavorite } from "../../../type";
+import { FavoriteInstance } from "../../../type";
 import { useMarketsContext } from "../provider";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
@@ -98,7 +98,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
 
 export type FavoritesDropdownMenuProps = PropsWithChildren<{
   row: any;
-  favorite: TFavorite;
+  favorite: FavoriteInstance;
 }>;
 
 export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
@@ -126,6 +126,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
     if (inputVisible) {
       return (
         <Input
+          autoComplete="off"
           autoFocus
           value={value}
           onValueChange={onValueChange}

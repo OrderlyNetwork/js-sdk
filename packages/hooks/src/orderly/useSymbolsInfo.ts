@@ -5,6 +5,8 @@ import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useAppStore } from "./appStore";
 import { original } from "immer";
 
+export type SymbolInfo = ReturnType<typeof useSymbolsInfo>;
+
 export const useSymbolsInfo = () => {
   // const { data } = useQuery<Record<string, API.SymbolExt>>(`/v1/public/info`, {
   //   focusThrottleInterval: 1000 * 60 * 60 * 24,

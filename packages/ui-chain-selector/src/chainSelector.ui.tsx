@@ -12,7 +12,13 @@ export const ChainSelector = (props: {
   currentChainId?: number;
   close?: () => void;
   resolve?: (isSuccess: boolean) => void;
-  chainChangedCallback?: (chainId: number, isTestnet: boolean) => void;
+  chainChangedCallback?: (
+    chainId: number,
+    state: {
+      isTestnet: boolean;
+      isWalletConnected: boolean;
+    }
+  ) => void;
 }) => {
   const [select, setSelect] = useState<number | undefined>();
   // props.currentChainId
@@ -24,7 +30,10 @@ export const ChainSelector = (props: {
       props.resolve?.(complete);
       props.close?.();
 
-      props.chainChangedCallback?.(chain.id, chain.isTestnet ?? false);
+      props.chainChangedCallback?.(chain.id, {
+        isTestnet: chain.isTestnet ?? false,
+        isWalletConnected: true,
+      });
     } else {
       setSelect(undefined);
     }
@@ -108,7 +117,7 @@ export const ChainTile = (props: {
           <ChainIcon chainId={item.id} />
           <Text size="2xs">{item.name}</Text>
           {item.lowestFee && (
-            <div className="oui-text-success oui-px-2 oui-bg-success/10 oui-rounded oui-text-2xs">
+            <div className="oui-text-success oui-px-2 oui-bg-success/20 oui-rounded oui-text-2xs">
               lowest fee
             </div>
           )}

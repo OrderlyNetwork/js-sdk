@@ -2,6 +2,7 @@ import { ENVType, useGetEnv, useWalletRewardsHistory } from "@orderly.network/ho
 import { useTradingRewardsContext } from "../provider";
 import { useMemo } from "react";
 import { useDataTap } from "@orderly.network/react-app";
+import { Decimal } from "@orderly.network/utils";
 
 export type AvailableReturns = {
   order?: number;
@@ -27,7 +28,8 @@ export const useAvailableScript = (): AvailableReturns => {
       typeof totalClaimedReward !== "undefined" &&
       typeof totalGetReward !== "undefined"
     ) {
-      return totalGetReward - totalClaimedReward;
+      const fixStr = new Decimal(totalGetReward).sub(totalClaimedReward).toFixed(18, Decimal.ROUND_DOWN);
+      return Number(fixStr);
     }
 
     return undefined;

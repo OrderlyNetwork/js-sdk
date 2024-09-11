@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { TitleReturns } from "./title.script";
-import { Box, Flex, Text } from "@orderly.network/ui";
 
 export const Title: FC<TitleReturns> = (props) => {
   return (
