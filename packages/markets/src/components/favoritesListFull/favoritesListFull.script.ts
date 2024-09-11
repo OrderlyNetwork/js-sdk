@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
-import { useMarketsContext } from "../../../../components/marketsProvider";
+import { getPagedData, searchBySymbol, useSort } from "../../utils";
+import { useMarketsContext } from "../../components/marketsProvider";
 
-export type UseFavoritesReturn = ReturnType<typeof useFavoritesScript>;
+export type UseFavoritesListFullReturn = ReturnType<
+  typeof useFavoritesListFullScript
+>;
 
-export const useFavoritesScript = () => {
+export const useFavoritesListFullScript = () => {
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const [data, favorite] = useMarketList(MarketsType.FAVORITES);
   const [loading, setLoading] = useState(true);

@@ -1,15 +1,15 @@
 import { FC } from "react";
 import { cn, DataTable, Pagination } from "@orderly.network/ui";
-import { type UseMarketListReturn } from "./marketList.script";
-import { useDataListColumns } from "../column";
-import { TInitialSort } from "../../../../type";
-import { useMarketsContext } from "../../../../components/marketsProvider";
+import { type UseMarketsListFullReturn } from "./marketsListFull.script";
+import { TInitialSort } from "../../type";
+import { useMarketsContext } from "../../components/marketsProvider";
+import { useMarketsListFullColumns } from "./column";
 
-type MarketListProps = UseMarketListReturn & {
+export type MarketsListFullProps = UseMarketsListFullReturn & {
   initialSort: TInitialSort;
 };
 
-export const MarketList: FC<MarketListProps> = (props) => {
+export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
   const {
     loading,
     dataSource,
@@ -23,7 +23,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
 
   const { onSymbolChange } = useMarketsContext();
 
-  const columns = useDataListColumns(favorite, false);
+  const columns = useMarketsListFullColumns(favorite, false);
 
   return (
     <DataTable

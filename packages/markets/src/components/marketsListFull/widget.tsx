@@ -1,22 +1,24 @@
-import { MarketList } from "./marketList.ui";
-import { useMarketListScript } from "./marketList.script";
+import { MarketsListFull } from "./marketsListFull.ui";
+import { useMarketsListFullScript } from "./marketsListFull.script";
 import { SortOrder } from "@orderly.network/ui";
 
-export type MarketListWidgetProps = {
+export type MarketsListFullWidgetProps = {
   type?: "all" | "new";
   sortKey: string;
   sortOrder: SortOrder;
 };
 
-export const MarketListWidget: React.FC<MarketListWidgetProps> = (props) => {
-  const state = useMarketListScript(props);
+export const MarketsListFullWidget: React.FC<MarketsListFullWidgetProps> = (
+  props
+) => {
+  const state = useMarketsListFullScript(props);
 
   // Only all markets store sort
   const sortStore =
     props.type === "all" ? state.favorite.tabSort?.all : undefined;
 
   return (
-    <MarketList
+    <MarketsListFull
       {...state}
       initialSort={{
         sortKey: sortStore?.sortKey || props.sortKey,

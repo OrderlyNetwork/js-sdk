@@ -1,14 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { MarketListWidgetProps } from "./widget";
-import { getPagedData, searchBySymbol, useSort } from "../../../../utils";
-import { useMarketsContext } from "../../../../components/marketsProvider";
+import { MarketsListFullWidgetProps } from "./widget";
+import { getPagedData, searchBySymbol, useSort } from "../../utils";
+import { useMarketsContext } from "../../components/marketsProvider";
 
-export type UseMarketListScriptOptions = MarketListWidgetProps;
-export type UseMarketListReturn = ReturnType<typeof useMarketListScript>;
+export type UseMarketsListFullScriptOptions = MarketsListFullWidgetProps;
 
-export const useMarketListScript = (options: UseMarketListScriptOptions) => {
+export type UseMarketsListFullReturn = ReturnType<
+  typeof useMarketsListFullScript
+>;
+
+export const useMarketsListFullScript = (
+  options: UseMarketsListFullScriptOptions
+) => {
   const [loading, setLoading] = useState(true);
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 

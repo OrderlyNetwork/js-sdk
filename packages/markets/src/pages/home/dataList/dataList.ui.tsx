@@ -6,8 +6,6 @@ import {
   Tabs,
 } from "@orderly.network/ui";
 import { UseMarketsDataListScript } from "./dataList.script";
-import { FavoritesWidget } from "./favorites";
-import { MarketListWidget } from "./marketList";
 import {
   AllMarketsIcon,
   FavoritesIcon,
@@ -15,6 +13,8 @@ import {
   SearchIcon,
 } from "../../../icons";
 import { useMarketsContext } from "../../../components/marketsProvider";
+import { MarketsListFullWidget } from "../../../components/marketsListFull";
+import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
 
@@ -60,13 +60,17 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         trailing={search}
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
-          <FavoritesWidget />
+          <FavoritesListFullWidget />
         </TabPanel>
         <TabPanel title="All markets" icon={<AllMarketsIcon />} value="all">
-          <MarketListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
+          <MarketsListFullWidget
+            type="all"
+            sortKey="24h_amount"
+            sortOrder="desc"
+          />
         </TabPanel>
         <TabPanel title="New listings" icon={<NewListingsIcon />} value="new">
-          <MarketListWidget
+          <MarketsListFullWidget
             type="new"
             sortKey="created_time"
             sortOrder="desc"

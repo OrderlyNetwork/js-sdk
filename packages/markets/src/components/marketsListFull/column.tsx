@@ -13,11 +13,11 @@ import {
   MoveToTopIcon,
   OrderlyIcon,
   UnFavoritesIcon,
-} from "../../../icons";
-import { FavoriteInstance } from "../../../type";
-import { FavoritesDropdownMenuWidget } from "../../../components/favoritesDropdownMenu";
+} from "../../icons";
+import { FavoriteInstance } from "../../type";
+import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 
-export const useDataListColumns = (
+export const useMarketsListFullColumns = (
   favorite: FavoriteInstance,
   isFavoriteList = false
 ) => {

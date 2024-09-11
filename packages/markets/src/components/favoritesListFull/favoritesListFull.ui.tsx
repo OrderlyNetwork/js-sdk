@@ -1,20 +1,20 @@
 import { FC } from "react";
 import { cn, DataTable, Flex, Pagination, Text } from "@orderly.network/ui";
-import { useDataListColumns } from "../column";
-import { UnFavoritesIcon } from "../../../../icons";
-import { UseFavoritesReturn } from "./favorites.script";
-import { useMarketsContext } from "../../../../components/marketsProvider";
-import { FavoritesTabWidget } from "../../../../components/favoritesTabs";
+import { UnFavoritesIcon } from "../../icons";
+import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
+import { useMarketsContext } from "../../components/marketsProvider";
+import { FavoritesTabWidget } from "../../components/favoritesTabs";
+import { useFavoritesListFullColumns } from "./column";
 
-type FavoritesProps = {} & UseFavoritesReturn;
+export type FavoritesListFullProps = UseFavoritesListFullReturn;
 
-export const Favorites: FC<FavoritesProps> = (props) => {
+export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
   const { dataSource, meta, setPage, setPageSize, favorite, onSort, loading } =
     props;
 
   const { onSymbolChange } = useMarketsContext();
 
-  const columns = useDataListColumns(favorite, true);
+  const columns = useFavoritesListFullColumns(favorite, true);
 
   const emptyView = (
     <Flex>

@@ -4,8 +4,8 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
   MarketsHomePage,
   MarketsHeaderWidget,
-  MarketListWidget,
-  FavoritesWidget,
+  MarketsListFullWidget,
+  FavoritesListFullWidget,
   MarketsDataListWidget,
   MarketsProvider,
 } from "@orderly.network/markets";
@@ -67,7 +67,7 @@ export const Header: Story = {
 
 export const Favorites: Story = {
   render: (args) => {
-    return <FavoritesWidget />;
+    return <FavoritesListFullWidget />;
   },
 
   decorators: [
@@ -82,7 +82,7 @@ export const Favorites: Story = {
 export const AllMarkets: Story = {
   render: (args) => {
     return (
-      <MarketListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
+      <MarketsListFullWidget type="all" sortKey="24h_amount" sortOrder="desc" />
     );
   },
 
@@ -98,7 +98,7 @@ export const AllMarkets: Story = {
 export const NewListings: Story = {
   render: (args) => {
     return (
-      <MarketListWidget type="new" sortKey="created_time" sortOrder="desc" />
+      <MarketsListFullWidget type="new" sortKey="created_time" sortOrder="desc" />
     );
   },
 
