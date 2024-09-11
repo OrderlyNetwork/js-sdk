@@ -1,8 +1,11 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Renderer } from "../renderer/renderer";
-import { useOrderStream, usePositionStream } from "@orderly.network/hooks";
-import { OrderStatus } from "@orderly.network/types";
-import { TpslAlgoType } from "../renderer/tpsl.util";
+import {
+  useAccount,
+  useOrderStream,
+  usePositionStream,
+} from "@orderly.network/hooks";
+import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
 import { AlgoType } from "../type";
 import { DisplayControlSettingInterface } from "../../type";
 
@@ -12,6 +15,7 @@ export default function useCreateRenderer(
 ) {
   const [renderer, setRenderer] = useState<Renderer>();
   const rendererRef = useRef<Renderer>();
+  const { state } = useAccount();
 
   const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
   const [pendingOrders] = useOrderStream({
@@ -32,6 +36,12 @@ export default function useCreateRenderer(
   });
 
   useEffect(() => {
+    console.log('-- state.status', state.status, AccountStatusEnum.EnableTrading);
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      renderer?.renderPositions([]);
+      return;
+    }
+
     if (!displayControlSetting || !displayControlSetting.position) {
       renderer?.renderPositions([]);
       return;
@@ -50,13 +60,18 @@ export default function useCreateRenderer(
       };
     });
     renderer?.renderPositions(positionList);
-  }, [renderer, positions, symbol, displayControlSetting]);
+  }, [renderer, positions, symbol, displayControlSetting, state]);
 
   useEffect(() => {
     let tpslOrder: any = [];
     let positionTpsl: any = [];
     let limitOrder: any = [];
     let stopOrder: any = [];
+
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      renderer?.renderPendingOrders([]);
+      return;
+    }
 
     const symbolPosition = (positions ?? []).find(
       (item) => item.symbol === symbol
@@ -117,7 +132,14 @@ export default function useCreateRenderer(
     renderer?.renderPendingOrders(
       tpslOrder.concat(positionTpsl).concat(limitOrder).concat(stopOrder)
     );
-  }, [renderer, pendingOrders, symbol, displayControlSetting, positions]);
+  }, [
+    renderer,
+    pendingOrders,
+    symbol,
+    displayControlSetting,
+    positions,
+    state.status,
+  ]);
 
   return [createRenderer.current, removeRenderer.current] as const;
 }

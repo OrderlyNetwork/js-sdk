@@ -28,6 +28,8 @@ import { WS } from "@orderly.network/net";
 import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
 import { modal, toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import brokerHostHandler from "../tradingviewAdapter/renderer/brokerHostHandler";
+import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
 
 const chartKey = "SDK_Tradingview";
 
@@ -171,6 +173,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     closeConfirm: closePositionConfirmCallback,
     colorConfig,
     onToast: toast,
+    symbol: symbol ?? '',
     mode,
   });
   const [createRenderer, removeRenderer] = useCreateRenderer(
@@ -287,14 +290,12 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
           },
         },
         // todo broker effect sell/buy
-        // getBroker: isLoggedIn
-        //   ? (instance: any, host: any) => {
-        //     console.log("-- broker_factory");
-        //     brokerHostHandler(instance, host);
-        //     return getBrokerAdapter(host, broker);
-        //   }
-        //   : undefined,
-        getBroker: undefined,
+        getBroker: (instance: any, host: any) => {
+            console.log("-- broker_factory");
+            brokerHostHandler(instance, host);
+            return getBrokerAdapter(host, broker);
+          }
+        // getBroker: undefined,
       };
 
       const chartProps: WidgetProps = {
