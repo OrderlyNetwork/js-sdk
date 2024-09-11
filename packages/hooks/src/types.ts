@@ -8,14 +8,16 @@ export interface CalculatorCtx {
   accountInfo: API.AccountInfo;
   symbolsInfo: Record<string, API.SymbolExt>;
   fundingRates: Record<string, API.FundingRate>;
-  get: (output: Record<string, any>) => any;
+  markPrices: Record<string, number> | null;
+  holding: API.Holding[];
+  get: (fn: (output: Record<string, any>) => any) => any;
   outputToValue: () => any;
   get isReady(): boolean;
 
   // onComplete: (name: string, data: any) => void;
   saveOutput: (name: string, data: any) => void;
 
-  get positions(): API.PositionTPSLExt[];
+  // get positions(): API.PositionTPSLExt[];
 
   // onQueueComplete: () => void;
 }
@@ -27,7 +29,7 @@ export enum CalculatorScope {
 
 export interface Calculator<T = any> {
   name: string;
-  calc: (scope: CalculatorScope, data: any, ctx: CalculatorCtx) => T;
+  calc: (scope: CalculatorScope, data: any, ctx: CalculatorCtx) => T | null;
   cache: (result: T) => void;
   update: (data: T) => void;
 }

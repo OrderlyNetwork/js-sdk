@@ -11,7 +11,7 @@ import { CalculatorContext } from "./calculatorContext";
 class CalculatorService {
   private calculators: Map<string, Calculator[]>;
 
-  private pendingCalc: { scope: string; data: any }[] = [];
+  private pendingCalc: { scope: CalculatorScope; data: any }[] = [];
 
   constructor(
     private readonly scheduler: CalculatorScheduler,
@@ -39,21 +39,45 @@ class CalculatorService {
     }
   }
 
-  async calc(scope: CalculatorScope, data: any) {
+  async calc(
+    scope: CalculatorScope,
+    data: any,
+    options?: {
+      skipUpdate?: boolean;
+      skipPending?: boolean;
+    }
+  ) {
+    // this.pendingCalc.push({ scope, data });
+
     const queue = this.calculators.get(scope);
 
-    const ctx = new CalculatorContext();
+    const ctx = new CalculatorContext(scope, data);
     // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
-    if (!ctx.isReady) {
+    if (!ctx.isReady && !options?.skipPending) {
       this.pendingCalc.push({ scope, data });
       return;
     }
 
+    // handle pending calc
+    this.handlePendingCalc();
+
     if (Array.isArray(queue) && queue.length) {
       await this.scheduler.calc(scope, queue, data, ctx);
 
-      console.log("calc done:", ctx.outputToValue());
-      this.scheduler.update(scope, queue, data);
+      // console.log("[calc done:]", scope, ctx.outputToValue());
+      if (!options?.skipUpdate) {
+        this.scheduler.update(scope, queue, ctx.outputToValue());
+      }
+    }
+  }
+
+  private handlePendingCalc() {
+    while (this.pendingCalc.length) {
+      const item = this.pendingCalc.shift();
+      if (item) {
+        const { scope, data } = item;
+        this.calc(scope, data, { skipUpdate: false });
+      }
     }
   }
 }

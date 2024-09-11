@@ -12,6 +12,8 @@ import { object2underscore } from "../utils/ws";
 import { useLocalStorage } from "../useLocalStorage";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useAppStore } from "./appStore";
+import { useCalculatorService } from "../useCalculatorService";
+import { CalculatorScope } from "../types";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -21,8 +23,10 @@ export const usePrivateDataObserver = (options: {
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state } = useAccount();
-  const { setAccountInfo } = useAppStore((state) => state.actions);
-
+  const { setAccountInfo, updateHolding } = useAppStore(
+    (state) => state.actions
+  );
+  const calculatorService = useCalculatorService();
   // fetch the data of current account
 
   const { data: clientInfo } =
@@ -33,6 +37,77 @@ export const usePrivateDataObserver = (options: {
       setAccountInfo(clientInfo);
     }
   }, [clientInfo, setAccountInfo]);
+  //======================
+
+  /**
+   * fetch the positions of current account
+   */
+  const { data: positions } = usePrivateQuery<API.PositionInfo>(
+    "/v1/positions",
+    {
+      formatter: (data) => data,
+    }
+  );
+
+  useEffect(() => {
+    if (
+      positions &&
+      Array.isArray(positions.rows) &&
+      positions.rows.length > 0
+    ) {
+      calculatorService.calc(CalculatorScope.POSITION, positions);
+    }
+  }, [calculatorService, positions]);
+
+  //======================
+
+  // useHolding
+  const { data: holding } = usePrivateQuery<API.Holding[]>(
+    "/v1/client/holding",
+    {
+      formatter: (data) => data,
+    }
+  );
+
+  useEffect(() => {
+    const unsubscribe = ws.privateSubscribe(
+      {
+        id: "balance",
+        event: "subscribe",
+        topic: "balance",
+        ts: Date.now(),
+      },
+      {
+        onMessage: (data: any) => {
+          const holding = data?.balances ?? ({} as Record<string, any>);
+
+          if (holding) {
+            console.log("---->>>>>>!!!! holding", holding);
+            //TODO: update holding
+            // mutate((prevData) => {
+            //   return prevData?.map((item) => {
+            //     const token = holding[item.token];
+            //     return {
+            //       ...item,
+            //       frozen: token.frozen,
+            //       holding: token.holding,
+            //     };
+            //   });
+            // });
+            // next(holding);
+          }
+        },
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (holding) {
+      updateHolding(holding);
+    }
+  }, [holding]);
 
   const [subOrder, setSubOrder] = useLocalStorage(
     "orderly_subscribe_order",

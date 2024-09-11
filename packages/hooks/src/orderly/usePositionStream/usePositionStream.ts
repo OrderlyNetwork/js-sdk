@@ -23,9 +23,11 @@ import {
   findTPSLFromOrder,
   findTPSLFromOrders,
 } from "./utils";
-import { usePositionActions } from "./usePositionStore";
+import { usePositionActions, usePositionStore } from "./usePositionStore";
 import { useCalculatorService } from "../../useCalculatorService";
 import { CalculatorScope } from "../../types";
+import { useAppStore } from "../appStore";
+import { omit } from "ramda";
 // import { usePosition } from "./usePosition";
 
 type PriceMode = "markPrice" | "lastPrice";
@@ -62,32 +64,31 @@ export const usePositionStream = (
     }
   );
 
-  const fundingRates = useFundingRates();
-  const calculatorService = useCalculatorService();
+  // const fundingRates = useFundingRates();
 
-  const {
-    data,
-    error,
-    isLoading,
-    isValidating,
-    mutate: refreshPositions,
-  } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
-    // revalidateOnFocus: false,
-    // revalidateOnReconnect: false,
-    // dedupingInterval: 200,
-    // keepPreviousData: false,
-    // revalidateIfStale: true,
-    ...options,
+  // const {
+  //   data,
+  //   error,
+  //   isLoading,
+  //   isValidating,
+  //   mutate: refreshPositions,
+  // } = usePrivateQuery<API.PositionInfo>(`/v1/positions`, {
+  //   // revalidateOnFocus: false,
+  //   // revalidateOnReconnect: false,
+  //   // dedupingInterval: 200,
+  //   // keepPreviousData: false,
+  //   // revalidateIfStale: true,
+  //   ...options,
 
-    formatter: (data) => data,
-    onError: (err) => {},
-  });
+  //   formatter: (data) => data,
+  //   onError: (err) => {},
+  // });
 
-  useEffect(() => {
-    if (data && Array.isArray(data.rows) && data.rows.length > 0) {
-      calculatorService.calc(CalculatorScope.POSITION, data.rows);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data && Array.isArray(data.rows) && data.rows.length > 0) {
+  //     calculatorService.calc(CalculatorScope.POSITION, data.rows);
+  //   }
+  // }, [data]);
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -120,106 +121,113 @@ export const usePositionStream = (
     return data;
   }, [tickers]);
 
-  const formattedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
-    if (!data?.rows || symbolInfo.isNil || !accountInfo) return null;
-
-    const filteredData =
-      typeof symbol === "undefined" || symbol === ""
-        ? data.rows
-        : data.rows.filter((item) => {
-            return item.symbol === symbol;
-          });
-
-    let unrealPnL_total = zero,
-      notional_total = zero,
-      unsettlementPnL_total = zero;
-
-    const formatted = filteredData.map((item: API.Position) => {
-      // const price = (markPrices as any)[item.symbol] ?? item.mark_price;
-      const unRealizedPrice = propOr(
-        item.mark_price,
-        item.symbol,
-        priceMode === "markPrice" ? markPrices : tickerPrices
-      ) as unknown as number;
-
-      const price = propOr(
-        item.mark_price,
-        item.symbol,
-        markPrices
-      ) as unknown as number;
-
-      const info = symbolInfo[item.symbol];
-      //
-
-      const notional = positions.notional(item.position_qty, price);
-
-      const unrealPnl = positions.unrealizedPnL({
-        qty: item.position_qty,
-        openPrice: item?.average_open_price,
-        markPrice: unRealizedPrice,
-      });
-
-      const imr = account.IMR({
-        maxLeverage: accountInfo.max_leverage,
-        baseIMR: info("base_imr"),
-        IMR_Factor: accountInfo.imr_factor[item.symbol] as number,
-        positionNotional: notional,
-        ordersNotional: 0,
-        IMR_factor_power: 4 / 5,
-      });
-
-      const unrealPnlROI = positions.unrealizedPnLROI({
-        positionQty: item.position_qty,
-        openPrice: item.average_open_price,
-        IMR: imr,
-        unrealizedPnL: unrealPnl,
-      });
-
-      const unsettlementPnL = positions.unsettlementPnL({
-        positionQty: item.position_qty,
-        markPrice: price,
-        costPosition: item.cost_position,
-        sumUnitaryFunding: fundingRates[item.symbol]?.(
-          "sum_unitary_funding",
-          0
-        ),
-        lastSumUnitaryFunding: item.last_sum_unitary_funding,
-      });
-
-      unrealPnL_total = unrealPnL_total.add(unrealPnl);
-      notional_total = notional_total.add(notional);
-      unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
-
-      return {
-        ...item,
-        mark_price: price,
-        mm: 0,
-        notional,
-        unsettlement_pnl: unsettlementPnL,
-        unrealized_pnl: unrealPnl,
-        unrealized_pnl_ROI: unrealPnlROI,
-        symbolInfo: info
-      };
-    });
-
-    return [
-      formatted,
-      {
-        unrealPnL: unrealPnL_total.toNumber(),
-        notional: notional_total.toNumber(),
-        unsettledPnL: unsettlementPnL_total.toNumber(),
-      },
-    ];
-  }, [
-    data?.rows,
-    symbolInfo,
-    accountInfo,
-    markPrices,
-    priceMode,
-    tickerPrices,
-    symbol,
-    holding,
+  const formattedPositions = usePositionStore((state) => [
+    state.positions.rows,
+    omit(["rows"], state.positions),
   ]);
+
+  // console.log("!!!! formattedPositions", formattedPositions);
+
+  // const formattedPositions = useMemo<[API.PositionExt[], any] | null>(() => {
+  //   if (!data?.rows || symbolInfo.isNil || !accountInfo) return null;
+
+  //   const filteredData =
+  //     typeof symbol === "undefined" || symbol === ""
+  //       ? data.rows
+  //       : data.rows.filter((item) => {
+  //           return item.symbol === symbol;
+  //         });
+
+  //   let unrealPnL_total = zero,
+  //     notional_total = zero,
+  //     unsettlementPnL_total = zero;
+
+  //   const formatted = filteredData.map((item: API.Position) => {
+  //     // const price = (markPrices as any)[item.symbol] ?? item.mark_price;
+  //     const unRealizedPrice = propOr(
+  //       item.mark_price,
+  //       item.symbol,
+  //       priceMode === "markPrice" ? markPrices : tickerPrices
+  //     ) as unknown as number;
+
+  //     const price = propOr(
+  //       item.mark_price,
+  //       item.symbol,
+  //       markPrices
+  //     ) as unknown as number;
+
+  //     const info = symbolInfo[item.symbol];
+  //     //
+
+  //     const notional = positions.notional(item.position_qty, price);
+
+  //     const unrealPnl = positions.unrealizedPnL({
+  //       qty: item.position_qty,
+  //       openPrice: item?.average_open_price,
+  //       markPrice: unRealizedPrice,
+  //     });
+
+  //     const imr = account.IMR({
+  //       maxLeverage: accountInfo.max_leverage,
+  //       baseIMR: info("base_imr"),
+  //       IMR_Factor: accountInfo.imr_factor[item.symbol] as number,
+  //       positionNotional: notional,
+  //       ordersNotional: 0,
+  //       IMR_factor_power: 4 / 5,
+  //     });
+
+  //     const unrealPnlROI = positions.unrealizedPnLROI({
+  //       positionQty: item.position_qty,
+  //       openPrice: item.average_open_price,
+  //       IMR: imr,
+  //       unrealizedPnL: unrealPnl,
+  //     });
+
+  //     const unsettlementPnL = positions.unsettlementPnL({
+  //       positionQty: item.position_qty,
+  //       markPrice: price,
+  //       costPosition: item.cost_position,
+  //       sumUnitaryFunding: fundingRates[item.symbol]?.(
+  //         "sum_unitary_funding",
+  //         0
+  //       ),
+  //       lastSumUnitaryFunding: item.last_sum_unitary_funding,
+  //     });
+
+  //     unrealPnL_total = unrealPnL_total.add(unrealPnl);
+  //     notional_total = notional_total.add(notional);
+  //     unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
+
+  //     return {
+  //       ...item,
+  //       mark_price: price,
+  //       mm: 0,
+  //       notional,
+  //       unsettlement_pnl: unsettlementPnL,
+  //       unrealized_pnl: unrealPnl,
+  //       unrealized_pnl_ROI: unrealPnlROI,
+  //       symbolInfo: info
+  //     };
+  //   });
+
+  //   return [
+  //     formatted,
+  //     {
+  //       unrealPnL: unrealPnL_total.toNumber(),
+  //       notional: notional_total.toNumber(),
+  //       unsettledPnL: unsettlementPnL_total.toNumber(),
+  //     },
+  //   ];
+  // }, [
+  //   data?.rows,
+  //   symbolInfo,
+  //   accountInfo,
+  //   markPrices,
+  //   priceMode,
+  //   tickerPrices,
+  //   symbol,
+  //   holding,
+  // ]);
 
   // const showSymbol = useCallback((symbol: string) => {
   //   setVisibleSymbol(symbol);
@@ -263,7 +271,7 @@ export const usePositionStream = (
 
     const total = totalCollateral.toNumber();
 
-    let rows = formattedPositions[0];
+    let rows = formattedPositions[0] as API.PositionTPSLExt[];
 
     if (!includedPendingOrder) {
       rows = rows.filter((item) => item.position_qty !== 0);
@@ -340,7 +348,7 @@ export const usePositionStream = (
   const positionInfoGetter = createGetter<
     Omit<API.PositionInfo, "rows">,
     keyof Omit<API.PositionInfo, "rows">
-  >(data as any, 1);
+  >(formattedPositions[1] as any, 1);
 
   return [
     {
@@ -358,13 +366,13 @@ export const usePositionStream = (
       /**
        * @deprecated use `isLoading` instead
        */
-      loading: isLoading,
-      isLoading,
-      isValidating,
-      // showSymbol,
-      error,
-      // loadMore: () => {},
-      refresh: refreshPositions,
+      // loading: isLoading,
+      // isLoading,
+      // isValidating,
+      // // showSymbol,
+      // error,
+      // // loadMore: () => {},
+      // refresh: refreshPositions,
     },
   ] as const;
 };

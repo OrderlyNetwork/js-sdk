@@ -12,52 +12,75 @@ import {
 import { BaseCalculator } from "./baseCalculator";
 import { useMarkPriceStore } from "../useMarkPrice/useMarkPriceStore";
 import { propOr } from "ramda";
+import { zero } from "@orderly.network/utils";
 
-class PositionCalculator extends BaseCalculator<API.PositionTPSLExt[]> {
+class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   name = "positionCalculator";
+
   calc(
     scope: CalculatorScope,
     data: any,
     ctx: CalculatorCtx
-  ): API.PositionExt[] {
-    console.log("!!!! PositionCalculator calc", scope, ctx.positions);
+  ): API.PositionsTPSLExt | null {
     if (scope === CalculatorScope.MARK_PRICE) {
       return this.calcByPrice(data as Record<string, number>, ctx);
     }
 
     if (scope === CalculatorScope.POSITION) {
-      return this.calcByPosition(this.preprocess(data), ctx);
+      return this.calcByPosition(
+        this.preprocess(data as API.PositionInfo),
+        ctx
+      );
     }
 
-    return [];
+    return data;
   }
 
-  update(data: API.PositionTPSLExt[]) {
-    // console.log("!!!! Updating positions...", data);
-    // const { updatePosition } = usePositionActions();
-
-    // updatePosition(data);
-    usePositionStore.getState().actions.setPositions(data);
+  update(data: API.PositionsTPSLExt | null) {
+    if (!!data) {
+      usePositionStore.getState().actions.setPositions(data);
+    }
   }
 
-  private calcByPrice(price: Record<string, number>, ctx: CalculatorCtx) {
-    return [];
+  private calcByPrice(markPrice: Record<string, number>, ctx: CalculatorCtx) {
+    // console.log("!!!! calcByPrice", price, ctx.positions);
+
+    let positions =
+      ctx.get((output: Record<string, any>) => output[this.name]) ||
+      usePositionStore.getState().positions;
+
+    if (!positions || positions.rows.length === 0) {
+      return null;
+    }
+
+    positions = {
+      ...positions,
+      rows: positions.rows.map((item) => ({
+        ...item,
+        mark_price: markPrice[item.symbol],
+      })),
+    };
+
+    const formattedPositions = this.format(positions, ctx);
+
+    return formattedPositions;
   }
-  private calcByPosition(positions: API.Position[], ctx: CalculatorCtx) {
+  private calcByPosition(positions: API.PositionInfo, ctx: CalculatorCtx) {
     return this.format(positions, ctx);
   }
 
-  private format(
-    data: (API.PositionTPSLExt | API.PositionExt | API.Position)[],
-    ctx: CalculatorCtx
-  ): API.PositionExt[] {
+  private format(data: API.PositionInfo, ctx: CalculatorCtx): API.PositionInfo {
     const { accountInfo, symbolsInfo, fundingRates } = ctx;
 
     if (!accountInfo || !fundingRates) {
-      return data as API.PositionExt[];
+      return data;
     }
 
-    return data.map((item) => {
+    let unrealPnL_total = zero,
+      notional_total = zero,
+      unsettlementPnL_total = zero;
+
+    const rows = data.rows.map((item) => {
       //TODO: get markPrice from store
       // const markPrice = useMarkPriceStore.getState().markPrices[item.symbol];
       // // console.log("!!!! ctx", ctx);
@@ -100,35 +123,35 @@ class PositionCalculator extends BaseCalculator<API.PositionTPSLExt[]> {
         lastSumUnitaryFunding: item.last_sum_unitary_funding,
       });
 
-      console.log(
-        "!!!! unrealPnlROI",
-        unrealPnlROI,
-        unrealPnl,
-        unsettlementPnL
-      );
+      unrealPnL_total = unrealPnL_total.add(unrealPnl);
+      notional_total = notional_total.add(notional);
+      unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
 
       return {
         ...item,
-        // mark_price: item.mark_price,
         mm: 0,
         notional,
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
         unrealized_pnl_ROI: unrealPnlROI,
       };
-      // const imr = account.IMR({
-      //   maxLeverage: accountInfo.max_leverage,
-      //   baseIMR: info("base_imr"),
-      //   IMR_Factor: accountInfo.imr_factor[item.symbol] as number,
-      //   positionNotional: notional,
-      //   ordersNotional: 0,
-      //   IMR_factor_power: 4 / 5,
-      // });
     });
+
+    return {
+      ...data,
+      // unrealPnL: unrealPnL_total.toNumber(),
+      // notional: notional_total.toNumber(),
+      // unsettledPnL: unsettlementPnL_total.toNumber(),
+      rows,
+    };
   }
 
-  private preprocess(data: API.Position[]) {
-    return data.filter((item) => item.position_qty !== 0);
+  private preprocess(data: API.PositionInfo): API.PositionInfo {
+    console.log("!!!! PositionCalculator preprocess", data);
+    return {
+      ...data,
+      rows: data.rows.filter((item) => item.position_qty !== 0),
+    };
   }
 }
 

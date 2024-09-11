@@ -18,14 +18,10 @@ class ShardingScheduler implements CalculatorScheduler {
     for (let index = 0; index < calculators.length; index++) {
       const calculator = calculators[index];
       const result = calculator.calc(scope, data, ctx);
-      console.log("calc ======>>>>>>", result);
-      ctx.saveOutput(calculator.name, result);
-      // if (typeof calculator.cache === "undefined") {
-      //   console.warn("No cache method found for calculator", calculator.name);
-      // } else {
-      //   calculator.cache(result);
-      // }
-      // calculator.update(result);
+      console.log("item calc ======>>>>>>", scope, calculator.name, result);
+      if (result) {
+        ctx.saveOutput(calculator.name, result);
+      }
     }
     return Promise.resolve();
   }
@@ -33,7 +29,7 @@ class ShardingScheduler implements CalculatorScheduler {
   update(scope: CalculatorScope, calculators: Calculator[], data: any) {
     for (let index = 0; index < calculators.length; index++) {
       const calculator = calculators[index];
-      calculator.update(data);
+      calculator.update(data[calculator.name]);
     }
     return Promise.resolve();
   }

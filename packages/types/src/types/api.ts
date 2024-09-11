@@ -182,7 +182,21 @@ export declare namespace API {
     sum_unitary_funding: number;
   }
 
-  export interface PositionInfo {
+  export interface PositionInfo extends PositionAggregated {
+    // margin_ratio: number;
+    // initial_margin_ratio: number;
+    // maintenance_margin_ratio: number;
+    // open_margin_ratio: number;
+    // current_margin_ratio_with_orders: number;
+    // initial_margin_ratio_with_orders: number;
+    // maintenance_margin_ratio_with_orders: number;
+    // total_collateral_value: number;
+    // free_collateral: number;
+    rows: Position[];
+    // total_pnl_24_h: number;
+  }
+
+  export interface PositionAggregated {
     margin_ratio: number;
     initial_margin_ratio: number;
     maintenance_margin_ratio: number;
@@ -192,7 +206,6 @@ export declare namespace API {
     maintenance_margin_ratio_with_orders: number;
     total_collateral_value: number;
     free_collateral: number;
-    rows: Position[];
     total_pnl_24_h: number;
   }
 
@@ -238,6 +251,10 @@ export declare namespace API {
      * related position tp/sl order
      */
     algo_order?: AlgoOrder;
+  }
+
+  export interface PositionsTPSLExt extends PositionAggregated {
+    rows: PositionTPSLExt[];
   }
 
   export interface Trade {

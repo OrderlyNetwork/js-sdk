@@ -1,14 +1,15 @@
 import { API } from "@orderly.network/types";
-import { CalculatorCtx } from "../../types";
+import { CalculatorCtx, CalculatorScope } from "../../types";
 import { useAppStore } from "../appStore";
-import { usePositionStore } from "../usePositionStream/usePositionStore";
 
 export class CalculatorContext implements CalculatorCtx {
   accountInfo: API.AccountInfo;
   symbolsInfo: Record<string, API.SymbolExt>;
   fundingRates: Record<string, API.FundingRate>;
-  private output: Record<string, any> = {};
-  constructor() {
+  holding: API.Holding[];
+  markPrices: Record<string, number> | null;
+  private output: Record<string, any>;
+  constructor(scope: CalculatorScope, data: any) {
     this.accountInfo = useAppStore.getState().accountInfo as API.AccountInfo;
     this.symbolsInfo = useAppStore.getState().symbolsInfo as Record<
       string,
@@ -18,18 +19,24 @@ export class CalculatorContext implements CalculatorCtx {
       string,
       API.FundingRate
     >;
+    this.holding = useAppStore.getState().portfolio.holding as API.Holding[];
 
-    // this.positions = usePositionStore.getState().positions;
+    // const positions = usePositionStore.getState().positions;
+    this.markPrices = scope === CalculatorScope.MARK_PRICE ? data : null;
+
+    this.output = {
+      // rows: positions,
+    };
   }
 
-  get(output: Record<string, any>) {
-    return output;
+  get(fn: (output: Record<string, any>) => any) {
+    return fn(this.output);
   }
 
-  get positions(): API.PositionTPSLExt[] {
-    if (this.output.positions) return this.output.positions;
-    return usePositionStore.getState().positions;
-  }
+  // get positions(): API.PositionTPSLExt[] {
+  //   if (this.output.positionCalculator) return this.output.positionCalculator;
+  //   return usePositionStore.getState().positions;
+  // }
 
   get isReady(): boolean {
     return !!this.accountInfo && !!this.symbolsInfo && !!this.fundingRates;

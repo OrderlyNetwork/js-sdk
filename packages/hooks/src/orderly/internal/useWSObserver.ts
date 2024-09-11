@@ -22,7 +22,9 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
         }
         updateMarkPrice(data);
         // call the calculator service
-        calculatorService.calc(CalculatorScope.MARK_PRICE, data);
+        calculatorService.calc(CalculatorScope.MARK_PRICE, data, {
+          skipPending: true,
+        });
       },
 
       onError: (error: any) => {},

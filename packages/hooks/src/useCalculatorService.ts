@@ -8,6 +8,7 @@ import {
 import { ShardingScheduler } from "./orderly/calculator/shardedScheduler";
 import { PositionCalculator } from "./orderly/calculator/positions";
 import { CalculatorScope } from "./types";
+import { PortfolioCalculator } from "./orderly/calculator/portfolio";
 
 export const useCalculatorService = () => {
   const { get } = useSimpleDI<CalculatorService>();
@@ -16,8 +17,9 @@ export const useCalculatorService = () => {
 
     if (!calculatorService) {
       const positionCalculator = new PositionCalculator();
+      const portfolioCalculator = new PortfolioCalculator();
       calculatorService = new CalculatorService(new ShardingScheduler(), [
-        [CalculatorScope.MARK_PRICE, [positionCalculator]],
+        [CalculatorScope.MARK_PRICE, [positionCalculator, portfolioCalculator]],
         [CalculatorScope.POSITION, [positionCalculator]],
       ]);
 
