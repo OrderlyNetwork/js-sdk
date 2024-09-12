@@ -26,6 +26,7 @@ export const useOrderBookScript = (props: {
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
       level,
+      padding: false
     });
 
   const pendingOrders = usePendingOrderStream(symbol);
@@ -80,6 +81,8 @@ export const useOrderBookScript = (props: {
       return allDepths?.map((e) => (removeTrailingZeros(e))) || [];
     }, [allDepths,quote_dp]);
 
+    console.log("xxxxx data is", data);
+    
     return {
         level,
         asks: data?.asks,

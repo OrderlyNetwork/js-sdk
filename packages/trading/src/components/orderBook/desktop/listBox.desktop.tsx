@@ -1,10 +1,4 @@
-import {
-  FC,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { FC, useCallback, useContext, useMemo, useState } from "react";
 import { DesktopOrderBookCell } from "./cell.desktop";
 import { OrderBookCellType } from "../types";
 import { OrderBookContext, useOrderBookContext } from "../orderContext";
@@ -13,6 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
   Text,
+  Flex,
 } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 
@@ -24,10 +19,7 @@ interface DesktopListBoxProps {
 
 export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
   const { data, type } = props;
-  const { depth } = useContext(OrderBookContext);
-
-
-  const { symbolInfo } = useOrderBookContext();
+  const { symbolInfo, depth } = useOrderBookContext();
 
   const findMaxItem = useCallback(() => {
     if ((data?.length || 0) === 0) {
@@ -164,57 +156,109 @@ const Tip: FC<{
   }
 
   return (
-    <Tooltip open={open} onOpenChange={setOpen}>
-      <TooltipTrigger>
-        <DesktopOrderBookCell
-          background={""}
-          price={item[0]}
-          quantity={item[1]}
-          accumulated={item[2]}
-          count={props.countQty}
-          type={props.type}
-          accumulatedAmount={item[3]}
-          maxQty={maxQty}
-          isHover={isHover}
-          symbolInfo={symbolInfo}
-          onMouseEnter={() => {
-            setHoverIndex(index);
-            setOpen(true);
-          }}
-          onMouseLeave={() => {
-            setHoverIndex(-1);
-            setOpen(false);
-          }}
-        />
-      </TooltipTrigger>
-      <TooltipContent
-        className="oui-max-w-[400px] oui-w-full oui-text-3xs oui-shadow-md oui-rounded oui-p-3 oui-bg-base-700 oui-animate-in oui-fade-in-0 oui-zoom-in-95 data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=closed]:oui-zoom-out-95 data-[side=bottom]:oui-slide-in-from-top-2 data-[side=left]:oui-slide-in-from-right-2 data-[side=right]:oui-slide-in-from-left-2 data-[side=top]:oui-slide-in-from-bottom-2"
-        align="center"
-        side="left"
-        sideOffset={12}
-        onPointerEnter={(e) => e.preventDefault()}
-      >
-        <Row
-          title="Avg. Price≈"
-          content={hintInfo.avgPrice}
-          contentDp={priceDp}
-        />
-        <Row
-          title={`Sum (${base})`}
-          content={hintInfo.sumQty}
-          contentDp={baseDp}
-        />
-        <Row
-          title={`Sum (${quote})`}
-          content={hintInfo.sumQtyAmount}
-          contentDp={quoteDp}
-        />
-
-        {/* TODO: show arrow */}
-        {/* <TooltipArrow className="oui-fill-base-700" /> */}
-      </TooltipContent>
+    <Tooltip
+      open={open}
+      onOpenChange={setOpen}
+      align="center"
+      side="left"
+      sideOffset={12}
+      onPointerEnter={(e) => e.preventDefault()}
+      className="oui-max-w-[400px] oui-w-full oui-text-3xs oui-shadow-md oui-rounded oui-p-3 oui-bg-base-700 oui-animate-in oui-fade-in-0 oui-zoom-in-95 data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=closed]:oui-zoom-out-95 data-[side=bottom]:oui-slide-in-from-top-2 data-[side=left]:oui-slide-in-from-right-2 data-[side=right]:oui-slide-in-from-left-2 data-[side=top]:oui-slide-in-from-bottom-2"
+      content={
+        <Flex direction={"column"}>
+          <Row
+            title="Avg. Price≈"
+            content={hintInfo.avgPrice}
+            contentDp={priceDp}
+          />
+          <Row
+            title={`Sum (${base})`}
+            content={hintInfo.sumQty}
+            contentDp={baseDp}
+          />
+          <Row
+            title={`Sum (${quote})`}
+            content={hintInfo.sumQtyAmount}
+            contentDp={quoteDp}
+          />
+        </Flex>
+      }
+    >
+      <DesktopOrderBookCell
+        background={""}
+        price={item[0]}
+        quantity={item[1]}
+        accumulated={item[2]}
+        count={props.countQty}
+        type={props.type}
+        accumulatedAmount={item[3]}
+        maxQty={maxQty}
+        isHover={isHover}
+        symbolInfo={symbolInfo}
+        onMouseEnter={() => {
+          setHoverIndex(index);
+          setOpen(true);
+        }}
+        onMouseLeave={() => {
+          setHoverIndex(-1);
+          setOpen(false);
+        }}
+      />
     </Tooltip>
   );
+
+  // return (
+  //   <Tooltip open={open} onOpenChange={setOpen}>
+  //     <TooltipTrigger>
+  //       <DesktopOrderBookCell
+  //         background={""}
+  //         price={item[0]}
+  //         quantity={item[1]}
+  //         accumulated={item[2]}
+  //         count={props.countQty}
+  //         type={props.type}
+  //         accumulatedAmount={item[3]}
+  //         maxQty={maxQty}
+  //         isHover={isHover}
+  //         symbolInfo={symbolInfo}
+  //         onMouseEnter={() => {
+  //           setHoverIndex(index);
+  //           setOpen(true);
+  //         }}
+  //         onMouseLeave={() => {
+  //           setHoverIndex(-1);
+  //           setOpen(false);
+  //         }}
+  //       />
+  //     </TooltipTrigger>
+  //     <TooltipContent
+  //       className="oui-max-w-[400px] oui-w-full oui-text-3xs oui-shadow-md oui-rounded oui-p-3 oui-bg-base-700 oui-animate-in oui-fade-in-0 oui-zoom-in-95 data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=closed]:oui-zoom-out-95 data-[side=bottom]:oui-slide-in-from-top-2 data-[side=left]:oui-slide-in-from-right-2 data-[side=right]:oui-slide-in-from-left-2 data-[side=top]:oui-slide-in-from-bottom-2"
+  //       align="center"
+  //       side="left"
+  //       sideOffset={12}
+  //       onPointerEnter={(e) => e.preventDefault()}
+  //     >
+  //       <Row
+  //         title="Avg. Price≈"
+  //         content={hintInfo.avgPrice}
+  //         contentDp={priceDp}
+  //       />
+  //       <Row
+  //         title={`Sum (${base})`}
+  //         content={hintInfo.sumQty}
+  //         contentDp={baseDp}
+  //       />
+  //       <Row
+  //         title={`Sum (${quote})`}
+  //         content={hintInfo.sumQtyAmount}
+  //         contentDp={quoteDp}
+  //       />
+
+  //       {/* TODO: show arrow */}
+  //       {/* <TooltipArrow className="oui-fill-base-700" /> */}
+  //     </TooltipContent>
+  //   </Tooltip>
+  // );
 };
 
 const Row: FC<{ title: string; content: number; contentDp: number }> = (

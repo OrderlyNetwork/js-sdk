@@ -55,13 +55,14 @@ const Price: FC<{
       }
     >
       <Text.numeral dp={quote_dp}>{middlePrice}</Text.numeral>
-      {middlePrice < prevLastPrice ? (
-        <ArrowDownShortIcon size={18} color="danger" opacity={1} />
-      ) : middlePrice > prevLastPrice ? (
-        <ArrowUpShortIcon size={18} color="success" opacity={1} />
-      ) : (
-        <Box width={18}></Box>
-      )}
+      <Box width={19}>
+        {middlePrice < prevLastPrice && (
+          <ArrowDownShortIcon size={18} color="danger" opacity={1} />
+        )}
+        {middlePrice > prevLastPrice && (
+          <ArrowUpShortIcon size={18} color="success" opacity={1} />
+        )}
+      </Box>
     </Flex>
   );
 };

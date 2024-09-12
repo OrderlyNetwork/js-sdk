@@ -1,7 +1,9 @@
+import { Box } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookCellType } from "../types";
 import { DesktopListBox } from "./listBox.desktop";
 import { FC, useMemo } from "react";
+import { useOrderBookContext } from "../orderContext";
 export interface Props {
   data: number[][];
 }
@@ -19,6 +21,7 @@ export const DesktopAsks: FC<Props> = (props) => {
 
     return max;
   }, [data]);
+  
   return (
     <DesktopListBox type={OrderBookCellType.ASK} data={data} countQty={countQty} />
   );

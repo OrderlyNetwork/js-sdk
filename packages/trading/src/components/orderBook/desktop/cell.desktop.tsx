@@ -1,8 +1,7 @@
 import { FC, useContext, useMemo } from "react";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { OrderBookCellType } from "../types";
-import { OrderBookContext } from "../orderContext";
-import { useTradingPateContext } from "../../../provider/context";
+import { OrderBookContext, useOrderBookContext } from "../orderContext";
 import { cn, parseNumber, Text } from "@orderly.network/ui";
 import { CellBar, CellBarDirection } from "../cellBar";
 import { BasicSymbolInfo } from "../../../types/types";
@@ -26,7 +25,7 @@ export interface DesktopOrderBookCellProps {
 
 export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   const { cellHeight, showTotal, onItemClick, depth, pendingOrders } =
-    useContext(OrderBookContext);
+    useOrderBookContext();
   const { symbolInfo } = props;
   const { base_dp, quote_dp } = symbolInfo;
 

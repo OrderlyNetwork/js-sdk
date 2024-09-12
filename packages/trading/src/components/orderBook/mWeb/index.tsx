@@ -6,6 +6,7 @@ import { MarkPrice } from "./markPrice";
 import { OrderBookProvider } from "../orderContext";
 import { DepthSelect } from "./depthSelect";
 import { cn, Spinner } from "@orderly.network/ui";
+import { BasicSymbolInfo } from "../../../types/types";
 export interface OrderBookProps {
   asks: any[];
   bids: any[];
@@ -26,6 +27,7 @@ export interface OrderBookProps {
   cellHeight?: number;
 
   className?: string;
+  symbolInfo: BasicSymbolInfo;
 }
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
@@ -39,6 +41,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       depth={props.activeDepth}
       pendingOrders={[]}
       showTotal={false}
+      symbolInfo={props.symbolInfo}
     >
       <div id="oui-orderbook-mobile" className={cn("oui-h-full oui-relative", props.className)} >
         <Header quote={quote} base={base} />

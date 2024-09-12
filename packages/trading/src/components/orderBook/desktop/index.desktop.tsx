@@ -92,7 +92,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           onChange={onDepthChange}
         />
         <DesktopHeader quote={quote} base={base} />
-        {/* <DesktopAsks data={[...props.asks]} /> */}
+        <DesktopAsks data={[...props.asks]} />
         <DesktopMarkPrice
           lastPrice={lastPrice}
           markPrice={markPrice}
@@ -100,9 +100,9 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           bids={[...props.bids]}
           symbolInfo={props.symbolInfo}
         />
-        {/* <DesktopBids data={[...props.bids]}/> */}
+        <DesktopBids data={[...props.bids]}/>
         {isLoading && (
-          <div className="oui-absolute oui-left-0 oui-top-0 oui-right-0 oui-bottom-0 oui-z-10 oui-flex oui-items-center oui-justify-center oui-bg-base-800/70 oui-h-full oui-min-h-[420px]">
+          <div className="oui-absolute oui-left-0 oui-top-0 oui-right-0 oui-bottom-0 oui-z-10 oui-flex oui-items-center oui-justify-center oui-bg-bg-8/70">
             <Spinner />
           </div>
         )}

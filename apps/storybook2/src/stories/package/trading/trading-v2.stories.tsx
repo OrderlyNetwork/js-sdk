@@ -8,7 +8,7 @@ import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
 import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
-import { Box } from "@orderly.network/ui";
+import { Box, Flex } from "@orderly.network/ui";
 
 const sharePnLConfig = {
   backgroundImages: [
@@ -243,12 +243,12 @@ export const DataList: Story = {
 
 
 export const LastTrades: Story = {
-  render: () => {
+  render: (arg) => {
 
     return (
       <div className="oui-bg-base-10 oui-p-3">
         <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
-          <LastTradesWidget symbol="PERP_ETH_USDC" />
+          <LastTradesWidget symbol={arg.symbol} />
         </Box>
       </div>
     );
@@ -274,11 +274,11 @@ export const OrderBook: Story = {
   render: (arg) => {
 
     return (
-      <div className="oui-bg-base-10 oui-p-3">
-        <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
-          <OrderBookWidget symbol={arg.symbol}/>
-        </Box>
-      </div>
+      <Flex justify={"center"} className="oui-bg-base-10 oui-p-3 oui-m-3 oui-h-[500px]">
+          <Box className="oui-w-1/2">
+            <OrderBookWidget symbol={arg.symbol}/>
+          </Box>
+      </Flex>
     );
   }
 };
