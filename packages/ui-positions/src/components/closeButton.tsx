@@ -15,7 +15,7 @@ import { usePositionsRowContext } from "./positionRowContext";
 import { useSymbolContext } from "../providers/symbolProvider";
 import { FC, useMemo, useState } from "react";
 import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
-import { commify, Decimal } from "@orderly.network/utils";
+import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { TokenIcon } from "@orderly.network/ui";
 
 export const CloseButton = () => {
@@ -117,9 +117,9 @@ export const ConfirmHeader: FC<{
 };
 
 export const ConfirmFooter: FC<{
-  onConfirm: () => Promise<any>;
-  onCancel: () => void;
-  submitting: boolean;
+  onConfirm?: () => Promise<any>;
+  onCancel?: () => void;
+  submitting?: boolean;
 }> = ({ onCancel, onConfirm, submitting }) => {
   return (
     <Flex
@@ -197,26 +197,34 @@ export const OrderDetail = (props: {
 };
 
 export const MarketCloseConfirm: FC<{
-  base: string;
-  quantity: string;
-  onClose: () => void;
-  onConfirm: () => Promise<any>;
-  submitting: boolean;
+  base?: string;
+  quantity?: string;
+  onClose?: () => void;
+  close?: () => void;
+  onConfirm?: () => Promise<any>;
+  submitting?: boolean;
 }> = (props) => {
+  console.log("props", props);
+  
   const onCancel = () => {
-    props.onClose();
+    const func = props?.onClose ?? props.close;
+    console.log("xxxxxxxxxxx func is", func);
+    func?.();
   };
   return (
     <Flex direction={"column"}>
       <ConfirmHeader onClose={onCancel} title="Market Close" />
       <Text intensity={54} size="sm" className="oui-my-5">
-        {`You agree closing ${commify(props.quantity)} ${
+        {`You agree closing ${commifyOptional(props.quantity)} ${
           props.base
         } position at market price.`}
       </Text>
       <ConfirmFooter
         onCancel={onCancel}
-        onConfirm={props.onConfirm}
+        onConfirm={async () => {
+           await props.onConfirm?.();
+           onCancel();
+        }}
         submitting={props.submitting}
       />
     </Flex>
@@ -287,3 +295,4 @@ export const LimitConfirmDialog: FC<{
     </>
   );
 };
+

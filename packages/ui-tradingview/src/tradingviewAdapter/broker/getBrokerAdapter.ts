@@ -2,6 +2,7 @@ import {IBrokerConnectionAdapterHost} from '../type';
 import useBroker from '../hooks/useBroker';
 import { SideType, AlgoType, OrderCombinationType} from "../type";
 import { withoutExchangePrefix } from '../../utils/chart.util';
+import { OrderType } from "@orderly.network/types";
 
 const getBrokerAdapter = (host: IBrokerConnectionAdapterHost, broker: ReturnType<typeof useBroker>) => {
     let symbol: string;
@@ -37,11 +38,15 @@ const getBrokerAdapter = (host: IBrokerConnectionAdapterHost, broker: ReturnType
             const quantity = order.qty.toString();
             const limitPrice = (order.limitPrice ?? 0).toString();
             const triggerPrice = (order.stopPrice ?? 0).toString();
-            const symbol = order.symbol;
+            const symbol = withoutExchangePrefix(order.symbol);
             const orderCombinationType = getOrderCombinationType(order.type);
+            console.log('-- order orderCombinationType ', orderCombinationType);
+            console.log('-- side, orderquantity ',side, quantity, limitPrice, triggerPrice, symbol);
 
             if (orderCombinationType === OrderCombinationType.MARKET) {
-                // broker.sendMarketOrder({ side, orderQuantity: quantity, symbol });
+                console.log('--0 order', order);
+                // @ts-ignore
+                broker.sendMarketOrder({ side, order_quantity: quantity, symbol, order_type: OrderType.MARKET });
             } else if (orderCombinationType === OrderCombinationType.LIMIT) {
                 // broker.sendLimitOrder({ side, orderQuantity: quantity, orderPrice: limitPrice, symbol });
             }

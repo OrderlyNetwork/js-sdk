@@ -20,6 +20,7 @@ module.exports = {
     "../../packages/ui-share/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-cross-deposit/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-tradingview/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/trading/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),

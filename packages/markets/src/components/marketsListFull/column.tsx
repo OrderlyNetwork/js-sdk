@@ -13,12 +13,12 @@ import {
   MoveToTopIcon,
   OrderlyIcon,
   UnFavoritesIcon,
-} from "../../../icons";
-import { FavoritesDropdownMenu } from "./dataList.ui";
-import { TFavorite } from "../../../type";
+} from "../../icons";
+import { FavoriteInstance } from "../../type";
+import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 
-export const useDataListColumns = (
-  favorite: TFavorite,
+export const useMarketsListFullColumns = (
+  favorite: FavoriteInstance,
   isFavoriteList = false
 ) => {
   const columns = useMemo<Column[]>(() => {
@@ -39,7 +39,11 @@ export const useDataListColumns = (
         width: 30,
         render: (value, record) => {
           const onDelSymbol: MouseEventHandler = (e) => {
-            favorite.updateSymbolFavoriteState(record, favorite.curTab, true);
+            favorite.updateSymbolFavoriteState(
+              record,
+              favorite.selectedFavoriteTab,
+              true
+            );
             e.stopPropagation();
           };
 
@@ -65,9 +69,9 @@ export const useDataListColumns = (
           }
 
           return (
-            <FavoritesDropdownMenu row={record} favorite={favorite}>
+            <FavoritesDropdownMenuWidget row={record} favorite={favorite}>
               {button}
-            </FavoritesDropdownMenu>
+            </FavoritesDropdownMenuWidget>
           );
         },
       },
