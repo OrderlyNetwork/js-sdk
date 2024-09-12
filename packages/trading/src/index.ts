@@ -8,4 +8,6 @@ export * from "./components/dataList";
 export * from "./components/lastTrades";
 export * from "./components/assetView";
 export * from "./components/marginRatio";
+export * from "./components/orderBook";
 export * from "./pages";
+export * from "./provider";
