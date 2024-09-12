@@ -9,6 +9,7 @@ import {
   useConfig,
   usePrivateQuery,
   useCollateral,
+  useMarginRatio,
 } from "@orderly.network/hooks";
 import {
   MEDIA_TABLET,
@@ -18,18 +19,18 @@ import {
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { capitalizeString } from "@orderly.network/utils";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   DepositAndWithdrawWithSheetId,
   DepositAndWithdrawWithDialogId,
 } from "@orderly.network/ui-transfer";
 import { useAppContext } from "@orderly.network/react-app";
-import { useMemo } from "react";
+import { Decimal } from "@orderly.network/utils";
 
 interface StatusInfo {
   title: string;
   description: string;
-  titleColor?: string;
+  titleColor?: any;
 }
 
 const useFirstTimeDeposit = () => {
@@ -53,6 +54,7 @@ const useFirstTimeDeposit = () => {
     searchParams.set("page", "1");
     searchParams.set("size", "5");
     searchParams.set("side", "DEPOSIT");
+    searchParams.set("status", "COMPLETED");
     searchParams.set("startTime", startTime.toString());
     searchParams.set("endTime", endTime.toString());
 
@@ -82,7 +84,7 @@ export const useCurrentStatusText = (): StatusInfo => {
       return {
         title: "Wrong Network",
         description: "Please switch to a supported network to continue.",
-        titleColor: "#FF7D00",
+        titleColor: "warning",
       };
     }
 
@@ -90,19 +92,19 @@ export const useCurrentStatusText = (): StatusInfo => {
       case AccountStatusEnum.NotConnected:
         return {
           title: "Connect wallet",
-          description: "Please Connect wallet before starting to trade",
+          description: "Please connect your wallet before starting to trade.",
         };
       case AccountStatusEnum.NotSignedIn:
         return {
           title: "Sign in",
-          description: "Please sign in before starting to trade",
-          titleColor: "#608CFF",
+          description: "Please sign in before starting to trade.",
+          titleColor: "primaryLight",
         };
       case AccountStatusEnum.DisabledTrading:
         return {
           title: "Enable trading",
-          description: "Enable trading before starting to trade",
-          titleColor: "#608CFF",
+          description: "Enable trading before starting to trade.",
+          titleColor: "primaryLight",
         };
       default:
         return {
@@ -115,7 +117,6 @@ export const useCurrentStatusText = (): StatusInfo => {
   return currentStatus;
 };
 
-// hook
 export const useAssetViewScript = () => {
   const account = useAccountInstance();
   const matches = useMediaQuery(MEDIA_TABLET);
@@ -125,6 +126,20 @@ export const useAssetViewScript = () => {
   const titleColor = currentStatus.titleColor ?? "";
   const networkId = useConfig("networkId") as NetworkId;
   const { state } = useAccount();
+  const { freeCollateral } = useCollateral({
+    dp: 2,
+  });
+  const { marginRatio, mmr } = useMarginRatio();
+  const isConnected = state.status >= AccountStatusEnum.Connected;
+  const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
+
+  const renderMMR = useMemo(() => {
+    if (!mmr) {
+      return "-";
+    }
+    const bigMMR = new Decimal(mmr);
+    return bigMMR.mul(100).todp(2, 0).toFixed(2);
+  }, [mmr]);
 
   const openDepositAndWithdraw = useCallback(
     async (viewName: "deposit" | "withdraw") => {
@@ -158,7 +173,7 @@ export const useAssetViewScript = () => {
     return account
       .settle()
       .catch((e) => {
-        if (e.code == -1104) {
+        if (e.code === -1104) {
           toast.error(
             "Settlement is only allowed once every 10 minutes. Please try again later."
           );
@@ -169,7 +184,7 @@ export const useAssetViewScript = () => {
         toast.success("Settlement requested");
         return Promise.resolve(res);
       });
-  }, []);
+  }, [account]);
 
   const [visible, setVisible] = useLocalStorage<boolean>(
     "orderly_assets_visible",
@@ -185,7 +200,6 @@ export const useAssetViewScript = () => {
 
   useWalletSubscription({
     onMessage: (data: any) => {
-      //
       const { side, transStatus } = data;
 
       if (transStatus === "COMPLETED") {
@@ -204,8 +218,6 @@ export const useAssetViewScript = () => {
     onMessage: (data: any) => {
       const { status } = data;
 
-      // console.log("settle ws: ", data);
-
       switch (status) {
         case "COMPLETED":
           toast.success("Settlement completed");
@@ -218,6 +230,7 @@ export const useAssetViewScript = () => {
       }
     },
   });
+
   return {
     onDeposit,
     onWithdraw,
@@ -231,6 +244,10 @@ export const useAssetViewScript = () => {
     isFirstTimeDeposit,
     totalValue,
     status: state.status,
+    freeCollateral,
+    marginRatioVal,
+    renderMMR,
+    isConnected,
   };
 };
 

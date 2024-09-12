@@ -4,6 +4,8 @@ import { TradingV2State } from "./tradingV2.script";
 import { DataListWidget } from "../components/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { LastTradesWidget } from "../components/lastTrades";
+import { AssetViewWidget } from "../components/assetView";
+import { RiskRateWidget } from "../components/riskRate";
 
 export const TradingV2: FC<TradingV2State> = (props) => {
   return (
@@ -22,6 +24,11 @@ export const TradingV2: FC<TradingV2State> = (props) => {
       <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3">
           <DataListWidget {...props.dataList} />
         </Box>
+
+      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
+        <AssetViewWidget  />
+        <RiskRateWidget  />
+      </Box>
     </Flex>
   );
 };
