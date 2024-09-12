@@ -13,32 +13,27 @@ type MarkPriceActions = {
 
 const useMarkPriceStore = create<
   MarkPriceStore & { actions: MarkPriceActions }
->()(
-  devtools(
-    immer((set, get) => ({
-      markPrices: {},
+>()((set, get) => ({
+  markPrices: {},
 
-      actions: {
-        updateMarkPrice: (markPrice) => {
-          set(
-            (state) => {
-              state.markPrices = markPrice;
-            },
-            true,
-            "updateMarkPrice"
-          );
-        },
-        getMarkPriceBySymbol: (symbol: string) => {
-          return get().markPrices[symbol];
-        },
-      },
-    })),
-    {
-      name: "markPrice",
-      enabled: false,
-    }
-  )
-);
+  actions: {
+    updateMarkPrice: (markPrice) => {
+      set(
+        {
+          markPrices: markPrice,
+        }
+        // (state) => {
+        //   state.markPrices = markPrice;
+        // },
+        // true,
+        // "updateMarkPrice"
+      );
+    },
+    getMarkPriceBySymbol: (symbol: string) => {
+      return get().markPrices[symbol];
+    },
+  },
+}));
 
 const useMarkPrices = () => useMarkPriceStore((state) => state.markPrices);
 const useMarkPriceBySymbol = (symbol: string) =>

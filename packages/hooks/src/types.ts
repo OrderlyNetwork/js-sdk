@@ -10,8 +10,9 @@ export interface CalculatorCtx {
   fundingRates: Record<string, API.FundingRate>;
   markPrices: Record<string, number> | null;
   holding: API.Holding[];
-  get: (fn: (output: Record<string, any>) => any) => any;
+  get: <T extends any>(fn: (output: Record<string, any>) => T) => T;
   outputToValue: () => any;
+
   get isReady(): boolean;
 
   // onComplete: (name: string, data: any) => void;
@@ -25,6 +26,7 @@ export interface CalculatorCtx {
 export enum CalculatorScope {
   MARK_PRICE = "markPrice",
   POSITION = "position",
+  TICK_PRICE = "tickPrice",
 }
 
 export interface Calculator<T = any> {

@@ -55,14 +55,14 @@ export const usePositionStream = (
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
-  const { data: holding } = usePrivateQuery<API.Holding[]>(
-    "/v1/client/holding",
-    {
-      formatter: (data) => {
-        return data.holding;
-      },
-    }
-  );
+  // const { data: holding } = usePrivateQuery<API.Holding[]>(
+  //   "/v1/client/holding",
+  //   {
+  //     formatter: (data) => {
+  //       return data.holding;
+  //     },
+  //   }
+  // );
 
   // const fundingRates = useFundingRates();
 
@@ -90,7 +90,7 @@ export const usePositionStream = (
   //   }
   // }, [data]);
 
-  const { data: markPrices } = useMarkPricesStream();
+  // const { data: markPrices } = useMarkPricesStream();
 
   // get TP/SL orders;
 
@@ -110,21 +110,28 @@ export const usePositionStream = (
     }
   }, [options?.calcMode]);
 
-  const { data: tickers } = useMarketsStream();
+  // const { data: tickers } = useMarketsStream();
 
-  const tickerPrices = useMemo(() => {
-    const data: Record<string, number> = Object.create(null);
-    tickers?.forEach((item) => {
-      // @ts-ignore
-      data[item.symbol] = item["24h_close"];
-    });
-    return data;
-  }, [tickers]);
+  // const tickerPrices = useMemo(() => {
+  //   const data: Record<string, number> = Object.create(null);
+  //   tickers?.forEach((item) => {
+  //     // @ts-ignore
+  //     data[item.symbol] = item["24h_close"];
+  //   });
+  //   return data;
+  // }, [tickers]);
 
-  const formattedPositions = usePositionStore((state) => [
+  const formattedPositions: [
+    API.PositionTPSLExt[],
+    Omit<API.PositionsTPSLExt, "rows">
+  ] = usePositionStore((state) => [
     state.positions.rows,
     omit(["rows"], state.positions),
   ]);
+
+  const { totalCollateral, totalValue, totalUnrealizedROI } = useAppStore(
+    (state) => state.portfolio
+  );
 
   // console.log("!!!! formattedPositions", formattedPositions);
 
@@ -233,117 +240,117 @@ export const usePositionStream = (
   //   setVisibleSymbol(symbol);
   // }, []);
 
-  const [totalCollateral, totalValue, totalUnrealizedROI] = useMemo<
-    [Decimal, Decimal, number]
-  >(() => {
-    if (!holding || !markPrices) {
-      return [zero, zero, 0];
-    }
-    const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formattedPositions);
-    const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formattedPositions);
+  // const [totalCollateral, totalValue, totalUnrealizedROI] = useMemo<
+  //   [Decimal, Decimal, number]
+  // >(() => {
+  //   if (!holding || !markPrices) {
+  //     return [zero, zero, 0];
+  //   }
+  //   const unsettlemnedPnL = pathOr(0, [1, "unsettledPnL"])(formattedPositions);
+  //   const unrealizedPnL = pathOr(0, [1, "unrealPnL"])(formattedPositions);
+  //
+  //   const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
+  //
+  //   const totalCollateral = account.totalCollateral({
+  //     USDCHolding: USDC_holding,
+  //     nonUSDCHolding: nonUSDC,
+  //     unsettlementPnL: unsettlemnedPnL,
+  //   });
+  //
+  //   const totalValue = account.totalValue({
+  //     totalUnsettlementPnL: unsettlemnedPnL,
+  //     USDCHolding: USDC_holding,
+  //     nonUSDCHolding: nonUSDC,
+  //   });
+  //
+  //   const totalUnrealizedROI = account.totalUnrealizedROI({
+  //     totalUnrealizedPnL: unrealizedPnL,
+  //     totalValue: totalValue.toNumber(),
+  //   });
+  //
+  //   return [totalCollateral, totalValue, totalUnrealizedROI];
+  // }, [holding, formattedPositions, markPrices]);
 
-    const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
-
-    const totalCollateral = account.totalCollateral({
-      USDCHolding: USDC_holding,
-      nonUSDCHolding: nonUSDC,
-      unsettlementPnL: unsettlemnedPnL,
-    });
-
-    const totalValue = account.totalValue({
-      totalUnsettlementPnL: unsettlemnedPnL,
-      USDCHolding: USDC_holding,
-      nonUSDCHolding: nonUSDC,
-    });
-
-    const totalUnrealizedROI = account.totalUnrealizedROI({
-      totalUnrealizedPnL: unrealizedPnL,
-      totalValue: totalValue.toNumber(),
-    });
-
-    return [totalCollateral, totalValue, totalUnrealizedROI];
-  }, [holding, formattedPositions, markPrices]);
-
-  const positionsRows = useMemo<API.PositionTPSLExt[] | null>(() => {
-    if (!formattedPositions) return null;
-
-    if (!symbolInfo || !accountInfo) return formattedPositions[0];
-
-    const total = totalCollateral.toNumber();
-
-    let rows = formattedPositions[0] as API.PositionTPSLExt[];
-
-    if (!includedPendingOrder) {
-      rows = rows.filter((item) => item.position_qty !== 0);
-    } else {
-      rows = rows.filter(
-        (item) =>
-          item.position_qty !== 0 ||
-          item.pending_long_qty !== 0 ||
-          item.pending_short_qty !== 0
-      );
-    }
-    // .filter((item) => item.position_qty !== 0)
-    rows = rows.map((item) => {
-      const info = symbolInfo?.[item.symbol];
-
-      const related_order = Array.isArray(tpslOrders)
-        ? findPositionTPSLFromOrders(tpslOrders, item.symbol)
-        : undefined;
-
-      const tp_sl_pricer = !!related_order
-        ? findTPSLFromOrder(related_order)
-        : undefined;
-
-      const MMR = positions.MMR({
-        baseMMR: info("base_mmr"),
-        baseIMR: info("base_imr"),
-        IMRFactor: accountInfo.imr_factor[item.symbol] as number,
-        positionNotional: item.notional,
-        IMR_factor_power: 4 / 5,
-      });
-
-      return {
-        ...item,
-        mm: positions.maintenanceMargin({
-          positionQty: item.position_qty,
-          markPrice: item.mark_price,
-          MMR,
-        }),
-        tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
-        sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
-
-        mmr: MMR,
-
-        // has_position_tp_sl:
-        //   !tp_sl_pricer?.sl_trigger_price && !tp_sl_pricer?.tp_trigger_price,
-        algo_order: related_order,
-      };
-    });
-
-    // calculate est_liq_price
-    rows = rows.map((item) => {
-      const est_liq_price = positions.liqPrice({
-        markPrice: item.mark_price,
-        totalCollateral: total,
-        positionQty: item.position_qty,
-        positions: rows,
-        MMR: item.mmr,
-      });
-      return {
-        ...item,
-        est_liq_price,
-      };
-    });
-
-    return rows;
-  }, [
-    formattedPositions,
-    symbolInfo,
-    accountInfo,
-    totalCollateral,
-    tpslOrders,
-  ]);
+  // const positionsRows = useMemo<API.PositionTPSLExt[] | null>(() => {
+  //   if (!formattedPositions) return null;
+  //
+  //   if (!symbolInfo || !accountInfo) return formattedPositions[0];
+  //
+  //   const total = totalCollateral;
+  //
+  //   let rows = formattedPositions[0] as API.PositionTPSLExt[];
+  //
+  //   if (!includedPendingOrder) {
+  //     rows = rows.filter((item) => item.position_qty !== 0);
+  //   } else {
+  //     rows = rows.filter(
+  //       (item) =>
+  //         item.position_qty !== 0 ||
+  //         item.pending_long_qty !== 0 ||
+  //         item.pending_short_qty !== 0
+  //     );
+  //   }
+  //   // .filter((item) => item.position_qty !== 0)
+  //   rows = rows.map((item) => {
+  //     const info = symbolInfo?.[item.symbol];
+  //
+  //     const related_order = Array.isArray(tpslOrders)
+  //       ? findPositionTPSLFromOrders(tpslOrders, item.symbol)
+  //       : undefined;
+  //
+  //     const tp_sl_pricer = !!related_order
+  //       ? findTPSLFromOrder(related_order)
+  //       : undefined;
+  //
+  //     const MMR = positions.MMR({
+  //       baseMMR: info("base_mmr"),
+  //       baseIMR: info("base_imr"),
+  //       IMRFactor: accountInfo.imr_factor[item.symbol] as number,
+  //       positionNotional: item.notional,
+  //       IMR_factor_power: 4 / 5,
+  //     });
+  //
+  //     return {
+  //       ...item,
+  //       mm: positions.maintenanceMargin({
+  //         positionQty: item.position_qty,
+  //         markPrice: item.mark_price,
+  //         MMR,
+  //       }),
+  //       tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
+  //       sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
+  //
+  //       mmr: MMR,
+  //
+  //       // has_position_tp_sl:
+  //       //   !tp_sl_pricer?.sl_trigger_price && !tp_sl_pricer?.tp_trigger_price,
+  //       algo_order: related_order,
+  //     };
+  //   });
+  //
+  //   // calculate est_liq_price
+  //   rows = rows.map((item) => {
+  //     const est_liq_price = positions.liqPrice({
+  //       markPrice: item.mark_price,
+  //       totalCollateral: total,
+  //       positionQty: item.position_qty,
+  //       positions: rows,
+  //       MMR: item.mmr,
+  //     });
+  //     return {
+  //       ...item,
+  //       est_liq_price,
+  //     };
+  //   });
+  //
+  //   return rows;
+  // }, [
+  //   formattedPositions,
+  //   symbolInfo,
+  //   accountInfo,
+  //   totalCollateral,
+  //   tpslOrders,
+  // ]);
 
   const positionInfoGetter = createGetter<
     Omit<API.PositionInfo, "rows">,
@@ -352,7 +359,8 @@ export const usePositionStream = (
 
   return [
     {
-      rows: positionsRows,
+      // rows: positionsRows,
+      rows: formattedPositions[0],
       aggregated: {
         ...(formattedPositions?.[1] ?? {}),
         unrealPnlROI: totalUnrealizedROI,

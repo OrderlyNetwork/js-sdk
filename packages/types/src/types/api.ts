@@ -207,6 +207,9 @@ export declare namespace API {
     total_collateral_value: number;
     free_collateral: number;
     total_pnl_24_h: number;
+    total_unreal_pnl: number;
+    total_unsettled_pnl: number;
+    notional: number;
   }
 
   export interface Position {

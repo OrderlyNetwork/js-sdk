@@ -4,13 +4,8 @@ import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
 
 import { account, positions } from "@orderly.network/perp";
 
-import {
-  usePositionActions,
-  usePositions,
-  usePositionStore,
-} from "../usePositionStream/usePositionStore";
+import { usePositionStore } from "../usePositionStream/usePositionStore";
 import { BaseCalculator } from "./baseCalculator";
-import { useMarkPriceStore } from "../useMarkPrice/useMarkPriceStore";
 import { propOr } from "ramda";
 import { zero } from "@orderly.network/utils";
 
@@ -55,7 +50,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     positions = {
       ...positions,
-      rows: positions.rows.map((item) => ({
+      rows: positions.rows.map((item: API.PositionTPSLExt) => ({
         ...item,
         mark_price: markPrice[item.symbol],
       })),
@@ -65,15 +60,19 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     return formattedPositions;
   }
+
   private calcByPosition(positions: API.PositionInfo, ctx: CalculatorCtx) {
     return this.format(positions, ctx);
   }
 
-  private format(data: API.PositionInfo, ctx: CalculatorCtx): API.PositionInfo {
+  private format(
+    data: API.PositionInfo | API.PositionsTPSLExt,
+    ctx: CalculatorCtx
+  ): API.PositionsTPSLExt {
     const { accountInfo, symbolsInfo, fundingRates } = ctx;
 
     if (!accountInfo || !fundingRates) {
-      return data;
+      return data as API.PositionsTPSLExt;
     }
 
     let unrealPnL_total = zero,
@@ -139,15 +138,15 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     return {
       ...data,
-      // unrealPnL: unrealPnL_total.toNumber(),
-      // notional: notional_total.toNumber(),
-      // unsettledPnL: unsettlementPnL_total.toNumber(),
+      total_unreal_pnl: unrealPnL_total.toNumber(),
+      notional: notional_total.toNumber(),
+      total_unsettled_pnl: unsettlementPnL_total.toNumber(),
       rows,
     };
   }
 
   private preprocess(data: API.PositionInfo): API.PositionInfo {
-    console.log("!!!! PositionCalculator preprocess", data);
+    // console.log("!!!! PositionCalculator preprocess", data);
     return {
       ...data,
       rows: data.rows.filter((item) => item.position_qty !== 0),

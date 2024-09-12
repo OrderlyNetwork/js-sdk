@@ -7,17 +7,12 @@ import { parseHolding } from "../../utils/parseHolding";
 import { Portfolio, useAppStore } from "../appStore";
 import { Decimal } from "@orderly.network/utils";
 import { createGetter } from "../../utils/createGetter";
-// import { useHoldingStore } from "../../store";
+
 class PortfolioCalculator extends BaseCalculator<any> {
   name = "portfolio";
 
   calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx) {
-    // console.log(
-    //   "!!!! calc",
-
-    //   ctx.get((output: Record<string, any>) => output)
-    // );
-    const positions = ctx.get(
+    const positions = ctx.get<API.PositionsTPSLExt>(
       (output: Record<string, any>) => output.positionCalculator
     );
 
@@ -34,6 +29,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
     const unrealizedPnL = pathOr(0, ["unrealized_pnl"])(positions);
 
     const [USDC_holding, nonUSDC] = parseHolding(holding, data);
+    const usdc = holding.find((item) => item.token === "USDC");
 
     const totalCollateral = account.totalCollateral({
       USDCHolding: USDC_holding,
@@ -65,21 +61,28 @@ class PortfolioCalculator extends BaseCalculator<any> {
       totalInitialMarginWithOrders,
     });
 
+    const availableBalance = account.availableBalance({
+      USDCHolding: usdc?.holding ?? 0,
+      unsettlementPnL: positions.total_unsettled_pnl,
+    });
+
     return {
       totalCollateral,
       totalValue,
       totalUnrealizedROI,
       freeCollateral,
+      availableBalance,
     };
   }
 
   update(data: { [K in keyof Portfolio]: number | Decimal } | null) {
     if (!!data) {
       useAppStore.getState().actions.batchUpdateForPortfolio({
-        totalCollateral: (data.totalCollateral as Decimal).toNumber(),
-        totalValue: (data.totalValue as Decimal).toNumber(),
-        freeCollateral: (data.freeCollateral as Decimal).toNumber(),
-        // totalUnrealizedROI: data.totalUnrealizedROI as number,
+        totalCollateral: data.totalCollateral as Decimal,
+        totalValue: data.totalValue as Decimal,
+        freeCollateral: data.freeCollateral as Decimal,
+        availableBalance: data.availableBalance as number,
+        totalUnrealizedROI: data.totalUnrealizedROI as number,
       });
     }
   }

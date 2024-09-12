@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { API } from "@orderly.network/types";
 import { immer } from "zustand/middleware/immer";
+import { Decimal, zero } from "@orderly.network/utils";
 // import { devtools } from "zustand/middleware";
 
 export type AppStatus = {
@@ -12,12 +13,12 @@ export type AppStatus = {
 
 export type Portfolio = {
   holding?: API.Holding[];
-  // usdc?: API.Holding;
-  totalCollateral: number;
-  freeCollateral: number;
-  totalValue: number;
+  totalCollateral: Decimal;
+  freeCollateral: Decimal;
+  totalValue: Decimal;
   availableBalance: number;
   unsettledPnL: number;
+  totalUnrealizedROI: number;
 };
 
 export type AppState = {
@@ -37,7 +38,7 @@ export type AppActions = {
   updateAppStatus: (key: keyof AppStatus, value: boolean) => void;
   updatePortfolio: (
     key: keyof Omit<Portfolio, "usdc" | "holding">,
-    value: number
+    value: number | Decimal
   ) => void;
 
   batchUpdateForPortfolio: (data: Partial<Portfolio>) => void;
@@ -53,18 +54,19 @@ export const useAppStore = create<
   immer((set) => ({
     // accountInfo: null,
     portfolio: {
-      totalCollateral: 0,
-      totalValue: 0,
-      freeCollateral: 0,
+      totalCollateral: zero,
+      totalValue: zero,
+      freeCollateral: zero,
       availableBalance: 0,
       unsettledPnL: 0,
+      totalUnrealizedROI: 0,
     },
     appState: {
       positionsLoading: false,
       ordersLoading: false,
       fundingRatesLoading: false,
       ready: false,
-    },
+    } as AppStatus,
     actions: {
       setAccountInfo: (accountInfo: API.AccountInfo) => {
         set(
@@ -104,7 +106,7 @@ export const useAppStore = create<
       },
       updatePortfolio: (
         key: keyof Omit<Portfolio, "usdc" | "holding">,
-        value: number
+        value: any
       ) => {
         set(
           (state) => {

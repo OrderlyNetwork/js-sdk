@@ -65,7 +65,7 @@ export const usePrivateDataObserver = (options: {
   const { data: holding } = usePrivateQuery<API.Holding[]>(
     "/v1/client/holding",
     {
-      formatter: (data) => data,
+      formatter: (data) => data.holding,
     }
   );
 

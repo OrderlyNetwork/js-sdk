@@ -9,6 +9,7 @@ export class CalculatorContext implements CalculatorCtx {
   holding: API.Holding[];
   markPrices: Record<string, number> | null;
   private output: Record<string, any>;
+
   constructor(scope: CalculatorScope, data: any) {
     this.accountInfo = useAppStore.getState().accountInfo as API.AccountInfo;
     this.symbolsInfo = useAppStore.getState().symbolsInfo as Record<
@@ -20,6 +21,8 @@ export class CalculatorContext implements CalculatorCtx {
       API.FundingRate
     >;
     this.holding = useAppStore.getState().portfolio.holding as API.Holding[];
+
+    // console.log("!!!! CalculatorContext", this.holding);
 
     // const positions = usePositionStore.getState().positions;
     this.markPrices = scope === CalculatorScope.MARK_PRICE ? data : null;
