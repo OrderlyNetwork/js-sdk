@@ -7,5 +7,5 @@ import "@orderly.network/react/dist/styles.css";
 export * from "./components/dataList";
 export * from "./components/lastTrades";
 export * from "./components/assetView";
-export * from "./components/marginRatio";
+export * from "./components/riskRate";
 export * from "./pages";
