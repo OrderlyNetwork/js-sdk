@@ -42,6 +42,7 @@
     "@orderly.network/web3-modal": "1.5.12"
   },
   "changesets": [
-    "bright-geckos-yell"
+    "bright-geckos-yell",
+    "serious-actors-begin"
   ]
 }
