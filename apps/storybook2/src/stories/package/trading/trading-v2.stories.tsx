@@ -3,7 +3,13 @@ import { fn } from "@storybook/test";
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { AssetViewWidget, DataListWidget, LastTradesWidget, TradingPageV2 } from "@orderly.network/trading";
+import {
+  AssetViewWidget,
+  DataListWidget,
+  LastTradesWidget,
+  RiskRateWidget,
+  TradingPageV2
+} from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
@@ -260,6 +266,19 @@ export const AssetView: Story = {
       <div className="oui-bg-base-10 oui-p-3">
         <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
           <AssetViewWidget />
+        </Box>
+      </div>
+    );
+  }
+};
+
+export const RiskRate: Story = {
+  render: () => {
+
+    return (
+      <div className="oui-bg-base-10 oui-p-3">
+        <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
+          <RiskRateWidget />
         </Box>
       </div>
     );
