@@ -158,7 +158,7 @@ const Tip: FC<{
   }
 
   return (
-    <TooltipRoot open={index == 1} onOpenChange={setOpen}>
+    <TooltipRoot open={open} onOpenChange={setOpen}>
       <TooltipTrigger>
         <DesktopOrderBookCell
           background={""}
@@ -170,6 +170,7 @@ const Tip: FC<{
           accumulatedAmount={item[3]}
           maxQty={maxQty}
           isHover={isHover}
+          currentHover={hoverIndex === index}
           symbolInfo={symbolInfo}
           onMouseEnter={() => {
             setHoverIndex(index);
@@ -186,7 +187,6 @@ const Tip: FC<{
         align="center"
         side="left"
         sideOffset={12}
-        alignOffset={0}
         onPointerEnter={(e) => e.preventDefault()}
       >
         <Row

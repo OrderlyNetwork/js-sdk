@@ -1,8 +1,8 @@
 import { FC, useContext, useMemo } from "react";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { OrderBookCellType } from "../types";
-import { OrderBookContext, useOrderBookContext } from "../orderContext";
-import { cn, parseNumber, Text } from "@orderly.network/ui";
+import { useOrderBookContext } from "../orderContext";
+import { cn, Divider, parseNumber, Text } from "@orderly.network/ui";
 import { CellBar, CellBarDirection } from "../cellBar";
 import { BasicSymbolInfo } from "../../../types/types";
 
@@ -19,6 +19,7 @@ export interface DesktopOrderBookCellProps {
   symbolInfo: BasicSymbolInfo;
 
   isHover: boolean;
+  currentHover: boolean;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
@@ -26,7 +27,7 @@ export interface DesktopOrderBookCellProps {
 export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   const { cellHeight, showTotal, onItemClick, depth, pendingOrders } =
     useOrderBookContext();
-  const { symbolInfo } = props;
+  const { symbolInfo, currentHover } = props;
   const { base_dp, quote_dp } = symbolInfo;
 
   const width = Number.isNaN(props.price)
@@ -128,7 +129,25 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
       )}
 
       {props.isHover && (
-        <div className="oui-absolute oui-bg-white oui-left-0 oui-right-0 oui-top-0 oui-bottom-0 oui-opacity-10"></div>
+        <div className="oui-absolute oui-bg-white oui-left-0 oui-right-0 oui-top-0 oui-bottom-0 oui-opacity-[.12]"></div>
+      )}
+      {currentHover && (
+        <div
+          className={cn(
+            "oui-absolute oui-left-0 oui-right-0",
+            props.type === OrderBookCellType.ASK && "oui-top-0",
+            props.type === OrderBookCellType.BID && "oui-bottom-0"
+          )}
+        >
+          <Divider
+            lineStyle="dashed"
+            className={cn(
+              "oui-w-full",
+              props.type === OrderBookCellType.BID && "oui-border-trade-profit",
+              props.type === OrderBookCellType.ASK && "oui-border-trade-loss"
+            )}
+          />
+        </div>
       )}
     </div>
   );

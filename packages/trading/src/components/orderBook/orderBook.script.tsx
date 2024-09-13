@@ -80,8 +80,6 @@ export const useOrderBookScript = (props: {
     const depths = useMemo(() => {
       return allDepths?.map((e) => (removeTrailingZeros(e))) || [];
     }, [allDepths,quote_dp]);
-
-    console.log("xxxxx data is", data);
     
     return {
         level,
