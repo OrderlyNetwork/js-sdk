@@ -118,9 +118,9 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
         return (
           <button
             className="oui-cursor-pointer oui-text-sm"
-            onClick={() => {
+            onClick={(e) => {
               navigator.clipboard.writeText(children as string);
-              onCopy?.();
+              onCopy?.(e);
             }}
           >
             <CopyIcon size={copyIconSize ?? 12} color="white" />
