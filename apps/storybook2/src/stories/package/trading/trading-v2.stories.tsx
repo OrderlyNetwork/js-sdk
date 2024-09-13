@@ -51,7 +51,7 @@ const meta = {
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-            // configStore={configStore}
+          // configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}
@@ -249,11 +249,9 @@ export const LastTrades: Story = {
   render: () => {
 
     return (
-      <div className="oui-bg-base-10 oui-p-3">
-        <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
-          <LastTradesWidget symbol="PERP_ETH_USDC" />
-        </Box>
-      </div>
+      <Box p={3} m={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
+        <LastTradesWidget symbol="PERP_ETH_USDC" />
+      </Box>
     );
   }
 };
@@ -263,11 +261,9 @@ export const AssetView: Story = {
   render: () => {
 
     return (
-      <div className="oui-bg-base-10 oui-p-3">
-        <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
-          <AssetViewWidget />
-        </Box>
-      </div>
+      <Box p={3} m={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
+        <AssetViewWidget />
+      </Box>
     );
   }
 };
@@ -276,11 +272,9 @@ export const RiskRate: Story = {
   render: () => {
 
     return (
-      <div className="oui-bg-base-10 oui-p-3">
-        <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
-          <RiskRateWidget />
-        </Box>
-      </div>
+      <Box p={3} m={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
+        <RiskRateWidget />
+      </Box>
     );
   }
 };
