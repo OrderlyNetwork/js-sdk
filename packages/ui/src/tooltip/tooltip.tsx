@@ -11,6 +11,8 @@ const TooltipRoot = TooltipPrimitive.Root;
 
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
+const TooltipArrow = TooltipPrimitive.Arrow;
+
 const tooltipVariants = tv({
   base: [
     "oui-z-50",
@@ -114,4 +116,5 @@ export {
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
+  TooltipArrow,
 };

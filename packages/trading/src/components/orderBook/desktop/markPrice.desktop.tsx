@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { Decimal } from "@orderly.network/utils";
+import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import {
   ArrowDownShortIcon,
   ArrowUpShortIcon,
@@ -121,6 +121,8 @@ const Spread: FC<{
     return Math.ceil(dValue.toNumber() * 1000000 + 0.1) / 10000;
   }, [asks, bids]);
 
+  
+
   return (
     <div>
       <Tooltip
@@ -130,6 +132,7 @@ const Spread: FC<{
         <Text
           size="2xs"
           intensity={36}
+          
           className={
             "oui-cursor-pointer oui-underline oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-base-contrast-36"
           }
