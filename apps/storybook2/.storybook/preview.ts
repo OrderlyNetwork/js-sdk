@@ -12,13 +12,20 @@ export const decorators = [
       light: "light",
       dark: "dark",
     },
-    defaultTheme: "light",
+    defaultTheme: "dark",
   }),
   // withWalletConnect,
 ];
 
 const preview: Preview = {
   parameters: {
+    backgrounds: {
+      values: [
+        { name: "Dark", value: "#07080A"},
+        { name: "Light", value: "#07080A"},
+      ],
+      default: "Dark",
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
