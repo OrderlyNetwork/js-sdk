@@ -43,6 +43,7 @@ export { SortingAscIcon } from "./sortingASCIcon";
 export { SortingDescIcon } from "./sortingDESCIcon";
 
 export { SortingIcon } from "./sortingIcon";
+export { ArrowDownShortIcon } from "./arrowDownShort";
 
 import { CombineIcon } from "./combine";
 
