@@ -12,6 +12,7 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
+import "../../style/index.css";
 
 export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
 
@@ -48,14 +49,16 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   );
 
   return (
-    <Box className={cn("oui-font-semibold")}>
+    <Box className={cn("oui-font-semibold oui-h-full")}>
       <Box px={3}>{search}</Box>
       <Tabs
         variant="contained"
         size="md"
         value={activeTab}
         onValueChange={onTabChange}
-        classNames={{ tabsList: "oui-my-[6px] oui-px-3" }}
+        classNames={{
+          tabsList: "oui-my-[6px] oui-px-3",
+        }}
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <FavoritesListWidget />

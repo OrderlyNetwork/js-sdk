@@ -20,8 +20,9 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
     <DataTable
       bordered
       classNames={{
+        root: "oui-h-full",
         header: "oui-text-base-contrast-36",
-        body: "oui-text-base-contrast-80",
+        body: "oui-text-base-contrast-80 oui-h-[600px] oui-overflow-y-auto custom-scrollbar",
       }}
       columns={columns}
       loading={loading}

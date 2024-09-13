@@ -8,6 +8,11 @@ export * from "./components/favoritesDropdownMenu";
 export * from "./components/favoritesTabs";
 export * from "./components/expandMarkets";
 export * from "./components/favoritesList";
+export * from "./components/recentList";
+export * from "./components/marketsList";
+
+export * from "./components/collapseMarkets";
+export * from "./components/sideMarkets";
 
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";

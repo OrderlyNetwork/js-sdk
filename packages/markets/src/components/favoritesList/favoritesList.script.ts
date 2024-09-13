@@ -1,15 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarketList } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
-import { getPagedData, searchBySymbol, useSort } from "../../utils";
+import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
 
-export type UseFavoritesListReturn = ReturnType<
-  typeof useFavoritesListScript
->;
+export type UseFavoritesListReturn = ReturnType<typeof useFavoritesListScript>;
 
 export const useFavoritesListScript = () => {
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const [data, favorite] = useMarketList(MarketsType.FAVORITES);
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +15,7 @@ export const useFavoritesListScript = () => {
 
   const { onSort, getSortedList } = useSort();
 
-  const filterData = useMemo(() => {
+  const dataSource = useMemo(() => {
     const filterList = favorites
       ?.filter(
         (item) =>
@@ -35,40 +31,17 @@ export const useFavoritesListScript = () => {
       })
       ?.filter((item) => item);
 
-    return searchBySymbol(filterList, searchValue);
-  }, [data, selectedFavoriteTab, favorites, searchValue]);
-
-  const { totalData, pagedData } = useMemo(() => {
-    const totalData = getSortedList(filterData);
-    return {
-      totalData,
-      pagedData: getPagedData(totalData, pageSize, page),
-    };
-  }, [filterData, pageSize, page, getSortedList]);
-
-  const meta = useMemo(() => {
-    return parseMeta({
-      total: totalData?.length,
-      current_page: page,
-      records_per_page: pageSize,
-    });
-  }, [data, page, pageSize, totalData]);
+    const searchResults = searchBySymbol(filterList, searchValue);
+    return getSortedList(searchResults);
+  }, [data, selectedFavoriteTab, favorites, searchValue, getSortedList]);
 
   useEffect(() => {
     setLoading(false);
-  }, [favorites]);
-
-  useEffect(() => {
-    // reset page when size change and search data
-    setPage(1);
-  }, [pageSize, searchValue]);
+  }, [data]);
 
   return {
     loading,
-    dataSource: pagedData,
-    meta,
-    setPage,
-    setPageSize,
+    dataSource,
     favorite,
     onSort,
   };
