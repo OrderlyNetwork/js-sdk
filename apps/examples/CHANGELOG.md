@@ -1,5 +1,16 @@
 # examples
 
+## 0.4.13-developV2.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@1.5.13-developV2.2
+  - @orderly.network/web3-onboard@1.5.13-developV2.2
+  - @orderly.network/hooks@1.5.13-developV2.2
+  - @orderly.network/core@1.5.13-developV2.2
+
 ## 0.4.13-developV2.1
 
 ### Patch Changes
