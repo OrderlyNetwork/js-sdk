@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "../useQuery";
 import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
@@ -36,5 +37,5 @@ export const useSymbolsInfo = () => {
     },
   });
 
-  return createGetter<API.SymbolExt, string>(data);
+  return useMemo(() => createGetter<API.SymbolExt, string>(data), [data]);
 };
