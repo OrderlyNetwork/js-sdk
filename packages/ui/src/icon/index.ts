@@ -49,7 +49,6 @@ export {
 } from "./arrowShort";
 
 export { SortingIcon } from "./sortingIcon";
-export { ArrowDownShortIcon } from "./arrowDownShort";
 
 import { CombineIcon } from "./combine";
 

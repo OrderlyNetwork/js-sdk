@@ -9,5 +9,6 @@ export * from "./components/lastTrades";
 export * from "./components/assetView";
 export * from "./components/orderBook";
 export * from "./components/riskRate";
+export * from "./components/orderBookAndTrades";
 export * from "./pages";
 export * from "./provider";

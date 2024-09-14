@@ -9,7 +9,8 @@ import {
   LastTradesWidget,
   RiskRateWidget,
   TradingPageV2,
-  OrderBookWidget
+  OrderBookWidget,
+  OrderBookAndTradesWidget
 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
@@ -290,9 +291,23 @@ export const OrderBook: Story = {
   render: (arg) => {
 
     return (
-      <Flex justify={"center"} className="oui-bg-base-10 oui-p-3 oui-m-3 oui-h-[500px]">
-          <Box className="oui-w-1/2">
+      <Flex justify={"center"} className="oui-h-[500px]">
+          <Box className="oui-w-1/2 oui-bg-base-9" r="base" p={3}>
             <OrderBookWidget symbol={arg.symbol}/>
+          </Box>
+      </Flex>
+    );
+  }
+};
+
+
+export const OrderBookAndTrades: Story = {
+  render: (arg) => {
+
+    return (
+      <Flex p={10} justify={"center"} itemAlign={"start"} className="">
+          <Box className="oui-w-1/2 oui-h-[600px]" r="base" p={3}>
+            <OrderBookAndTradesWidget symbol={arg.symbol}/>
           </Box>
       </Flex>
     );

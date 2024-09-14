@@ -10,8 +10,8 @@ interface Props {
 export const DesktopHeader: FC<Props> = (props) => {
   const { showTotal } = useContext(OrderBookContext);
   return (
-    <Flex justify={"between"} gap={1} className="oui-py-[6px]">
-      <Flex gap={1} className={cn("oui-w-2/3", showTotal && "oui-basis-1/2")}>
+    <Flex justify={"between"} className="oui-py-[6px]">
+      <Flex gap={1} className={cn("oui-basis-7/12", showTotal && "oui-basis-1/2")}>
         <Box width={"100%"}>
           <Title
             name="Price"
@@ -28,7 +28,7 @@ export const DesktopHeader: FC<Props> = (props) => {
           />
         </Box>
       </Flex>
-      <Flex gap={1} className={cn("oui-w-1/3", showTotal && "oui-basis-1/2")}>
+      <Flex gap={1} pr={3} className={cn("oui-basis-5/12", showTotal && "oui-basis-1/2")}>
         <Box width={"100%"}>
           <Title
             name="Total"

@@ -9,6 +9,7 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
+import { useOrderBookContext } from "../orderContext";
 
 interface DesktopMarkPriceProps {
   markPrice: number;
@@ -20,9 +21,10 @@ interface DesktopMarkPriceProps {
 
 export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
   const { markPrice = 0, lastPrice, asks, bids, symbolInfo } = props;
+  const { showTotal } = useOrderBookContext();
 
   return (
-    <Flex py={1} justify={"between"}>
+    <Flex py={1} pr={showTotal ? 3 : 6} justify={"between"}>
       <Flex gap={2}>
         <Price
           markPrice={markPrice}

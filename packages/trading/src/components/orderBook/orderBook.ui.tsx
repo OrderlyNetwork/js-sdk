@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { Box, Flex, Text } from "@orderly.network/ui";
 import { OrderBookState } from "./orderBook.script";
 import { DesktopOrderBook } from "./desktop/index.desktop";
 
@@ -9,7 +9,13 @@ export const OrderBook: FC<
   }
 > = (props) => {
   return (
-    <Flex>
+    <Box
+      // direction={"column"}
+      // itemAlign={"start"}
+      className="oui-font-semibold"
+      width={"100%"}
+      height={"100%"}
+    >
       <DesktopOrderBook
         level={props.level}
         asks={props.asks!}
@@ -28,6 +34,6 @@ export const OrderBook: FC<
         pendingOrders={props.pendingOrders}
         symbolInfo={props.symbolInfo}
       />
-    </Flex>
+    </Box>
   );
 };
