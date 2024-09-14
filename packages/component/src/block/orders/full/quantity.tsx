@@ -331,7 +331,7 @@ const EditingState: FC<{
     >
       <div
         className={cn(
-          "orderly-flex orderly-min-w-[120px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold orderly-z-10",
+          "orderly-flex orderly-min-w-[120px] orderly-justify-start orderly-items-center orderly-relative orderly-font-semibold",
           {
             "orderly-text-trade-profit": order.side === OrderSide.BUY,
             "orderly-text-trade-loss": order.side === OrderSide.SELL,
@@ -387,7 +387,8 @@ const EditingState: FC<{
             autoFocus
             containerClassName="orderly-h-auto orderly-pl-7 orderly-flex-1"
             className="orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
-          />
+            tooltipClassName="orderly-z-50"
+          /> 
         </PopoverAnchor>
         <div
           className={cn("orderly-absolute orderly-right-1 orderly-flex", {

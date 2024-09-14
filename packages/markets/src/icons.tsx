@@ -304,3 +304,29 @@ export const AddIcon2: FC<SVGProps<SVGSVGElement>> = (props) => (
     </defs>
   </svg>
 );
+
+export const ExpandIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="70"
+    height="20"
+    viewBox="0 0 70 20"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M39.159 17.492a3.333 3.333 0 0 0 3.333-3.333V5.826a3.333 3.333 0 0 0-3.333-3.334h-8.333a3.333 3.333 0 0 0-3.334 3.334v8.333a3.333 3.333 0 0 0 3.334 3.333zm-6.667-4.166a.85.85 0 0 1-.599-.235.86.86 0 0 1 0-1.198l3.334-3.333-1.901-1.901h5v5l-1.901-1.9-3.333 3.332a.84.84 0 0 1-.6.235" />
+  </svg>
+);
+
+export const CollapseIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M5.826 17.492a3.333 3.333 0 0 1-3.334-3.333V5.826a3.333 3.333 0 0 1 3.334-3.334h8.333a3.333 3.333 0 0 1 3.333 3.334v8.333a3.333 3.333 0 0 1-3.333 3.333zm6.666-4.166a.85.85 0 0 0 .6-.235.86.86 0 0 0 0-1.198L9.758 8.56l1.901-1.901h-5v5l1.9-1.9 3.334 3.332a.84.84 0 0 0 .6.235" />
+  </svg>
+);

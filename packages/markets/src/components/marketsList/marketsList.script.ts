@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarketList } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
 import { MarketsListWidgetProps } from "./widget";
-import { getPagedData, searchBySymbol, useSort } from "../../utils";
+import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
 
 export type UseMarketsListScriptOptions = MarketsListWidgetProps;
@@ -11,7 +10,6 @@ export type UseMarketsListReturn = ReturnType<typeof useMarketsListScript>;
 
 export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
   const [loading, setLoading] = useState(true);
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
 
   const [data, favorite] = useMarketList(MarketsType.ALL);
 
@@ -22,31 +20,14 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
     options?.sortOrder
   );
 
-  const { totalData, pagedData } = useMemo(() => {
-    const list = getSortedList(data);
-    const totalData = searchBySymbol(list, searchValue);
-    return {
-      totalData,
-      pagedData: getPagedData(totalData, pageSize, page),
-    };
-  }, [data, pageSize, page, getSortedList, searchValue]);
-
-  const meta = useMemo(() => {
-    return parseMeta({
-      total: totalData?.length,
-      current_page: page,
-      records_per_page: pageSize,
-    });
-  }, [data, page, pageSize, totalData]);
+  const dataSource = useMemo(() => {
+    const searchResults = searchBySymbol(data, searchValue);
+    return getSortedList(searchResults);
+  }, [data, getSortedList, searchValue]);
 
   useEffect(() => {
     setLoading(false);
   }, [data]);
-
-  useEffect(() => {
-    // reset page when size change and search data
-    setPage(1);
-  }, [pageSize, searchValue]);
 
   useEffect(() => {
     // Only all markets store sort
@@ -57,10 +38,7 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
 
   return {
     loading,
-    dataSource: pagedData,
-    meta,
-    setPage,
-    setPageSize,
+    dataSource,
     favorite,
     onSort,
   };
