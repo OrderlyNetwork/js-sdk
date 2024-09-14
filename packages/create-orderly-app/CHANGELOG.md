@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.13-developV2.4
+
+### Patch Changes
+
+- update
+
 ## 1.5.13-developV2.3
 
 ### Patch Changes
