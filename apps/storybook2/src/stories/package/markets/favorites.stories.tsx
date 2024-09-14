@@ -34,6 +34,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const decorators = [(Story:any) => (
+  <Box width={500} >
+    <Story />
+  </Box>
+)]
+
 
 export const DropdownMenu: Story = {
   render: (args) => {
@@ -46,13 +52,7 @@ export const DropdownMenu: Story = {
     </FavoritesDropdownMenuWidget>;
   },
 
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
+  decorators
 };
 
 export const Tabs: Story = {
@@ -62,18 +62,17 @@ export const Tabs: Story = {
     return (<>
       <Flex direction='column' itemAlign='start' gapY={2} p={2}>
         <div>Small</div>
-        <FavoritesTabWidget favorite={favorite} size="sm" />
-        <div>Default</div>
-        <FavoritesTabWidget favorite={favorite} />
+        <Box width={400} intensity={900} px={3}>
+          <FavoritesTabWidget favorite={favorite} size="sm" />
+        </Box>
+
+        <div>Default</div>        
+        <Box width={600} intensity={900} px={3}>
+          <FavoritesTabWidget favorite={favorite} />
+        </Box>
       </Flex>
       </>)
   },
 
-  decorators: [
-    (Story) => (
-      <Box intensity={900} >
-        <Story />
-      </Box>
-    ),
-  ],
+  decorators
 };
