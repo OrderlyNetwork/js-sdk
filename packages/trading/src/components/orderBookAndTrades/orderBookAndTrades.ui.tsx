@@ -18,7 +18,15 @@ export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
 
 const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
   return (
-    <Grid cols={2} width={"100%"} gap={3}>
+    <Grid
+      cols={2}
+      width={"100%"}
+      gap={3}
+      className="oui-auto-rows-fr"
+      style={{
+        height: props.containerSize?.height,
+      }}
+    >
       <Flex
         direction={"column"}
         itemAlign={"start"}
@@ -31,7 +39,11 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
         <Title title="Order book" />
         <OrderBookWidget
           symbol={props.symbol}
-          height={props.containerSize ? props.containerSize.height - 29 : undefined}
+          height={
+            props.containerSize
+              ? props.containerSize.height - 29 - 24
+              : undefined
+          }
         />
       </Flex>
       <Flex
@@ -39,11 +51,15 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
         itemAlign={"start"}
         p={3}
         r="2xl"
-        className="oui-bg-base-9"
-        height={props.containerSize ? props.containerSize.height + 24 : undefined}
+        className="oui-bg-base-9 oui-h-full"
       >
         <Title title="Last trades" />
-        <LastTradesWidget symbol={props.symbol} />
+        <LastTradesWidget
+          symbol={props.symbol}
+          style={{
+            height: props.containerSize && props.containerSize.height - 29 - 24,
+          }}
+        />
       </Flex>
     </Grid>
   );

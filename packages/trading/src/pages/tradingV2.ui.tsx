@@ -24,9 +24,6 @@ export const TradingV2: FC<TradingV2State> = (props) => {
           <OrderBookAndTradesWidget symbol={props.symbol} />
         </Box>
       </Flex>
-      <Box p={3} width={"100%"} height={300} r="xl" className="oui-bg-base-9">
-        <LastTradesWidget symbol="PERP_ETH_USDC" />
-      </Box>
       <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3">
         <DataListWidget {...props.dataList} />
       </Box>

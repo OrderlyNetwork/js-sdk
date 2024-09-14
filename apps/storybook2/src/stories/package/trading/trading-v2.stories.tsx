@@ -292,9 +292,9 @@ export const OrderBook: Story = {
 
     return (
       <Flex justify={"center"} className="oui-h-[500px]">
-          <Box className="oui-w-1/2 oui-bg-base-9" r="base" p={3}>
-            <OrderBookWidget symbol={arg.symbol}/>
-          </Box>
+        <Box className="oui-w-1/2 oui-bg-base-9" r="base" p={3}>
+          <OrderBookWidget symbol={arg.symbol} />
+        </Box>
       </Flex>
     );
   }
@@ -305,10 +305,15 @@ export const OrderBookAndTrades: Story = {
   render: (arg) => {
 
     return (
-      <Flex p={10} justify={"center"} itemAlign={"start"} className="">
-          <Box className="oui-w-1/2 oui-h-[600px]" r="base" p={3}>
-            <OrderBookAndTradesWidget symbol={arg.symbol}/>
-          </Box>
+      <Flex 
+        p={10} 
+        justify={"center"} 
+        itemAlign={"start"} 
+        className="oui-bg-[rgba(255,255,255,0.3)]"
+      >
+        <Box className="oui-w-[50vw] oui-h-[600px]" >
+          <OrderBookAndTradesWidget symbol={arg.symbol} />
+        </Box>
       </Flex>
     );
   }
