@@ -30,6 +30,9 @@ export const TradingV2: FC<TradingV2State> = (props) => {
 
       <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
         <AssetViewWidget />
+      </Box>
+
+      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
         <RiskRateWidget />
       </Box>
     </Flex>
