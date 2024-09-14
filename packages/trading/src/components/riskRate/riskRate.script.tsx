@@ -3,6 +3,10 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
 
+/**
+ * TODO: 此处不建议有 isBlue isOrange isRed 这种具体表示颜色的字变量，builder可能会有不同的设计规范
+ * 
+ */
 const getRiskRateColor = (riskRate: null | number) => {
   if (riskRate === null) {
     return { isRed: false, isOrange: false, isBlue: false, isDefault: true };

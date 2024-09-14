@@ -79,6 +79,11 @@ export const useCurrentStatusText = (): StatusInfo => {
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
 
+  /**
+   * TODO:
+   *  script文件不应该包括UI显示的具体数据，建议移动到ui文件中
+   *  处理完成之后，请删掉 TODO
+   */
   const currentStatus = useMemo(() => {
     if (wrongNetwork) {
       return {

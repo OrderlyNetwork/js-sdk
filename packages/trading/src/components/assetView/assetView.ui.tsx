@@ -50,12 +50,14 @@ const TotalValue: FC<{
             <EyeIcon
               size={18}
               className="oui-text-base-contrast-54"
+              // TODO: 需要确认是否是0.5,之前的设计规范是0.54，并且className和opacity是一样的功能，保留一个即可
               opacity={0.5}
-            />
-          ) : (
-            <EyeCloseIcon
+              />
+            ) : (
+              <EyeCloseIcon
               size={18}
               className="oui-text-base-contrast-54"
+              // TODO: 需要确认是否是0.5,之前的设计规范是0.54，并且className和opacity是一样的功能，保留一个即可
               opacity={0.5}
             />
           )}
@@ -79,6 +81,7 @@ const AssetValueList: FC<{
   isConnected,
 }) => {
   const [optionsOpen, setOptionsOpen] = useLocalStorage(
+    // TODO: 加前缀 oui 或者 orderly
     "order_entry_asset_list_open",
     false
   );

@@ -7,6 +7,7 @@ import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 export const RiskRate: FC<RiskRateState> = (props) => {
   const { riskRate, riskRateColor,isConnected,currentLeverage,maxLeverage } = props;
   const { isRed, isOrange, isBlue, isDefault } = riskRateColor;
+  // TODO: 实际情况中应尽量避免直接写死颜色的值，考虑使用其他方式实现该功能
   const textColor = isRed
     ? "#d82d6a"
     : isOrange
@@ -16,7 +17,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
     : "";
 
   return (
-    <Box className="oui-space-y-2">
+    <Box data-risk={''} className="oui-space-y-2">
       <Flex
         itemAlign="center"
         justify="start"
@@ -88,6 +89,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             {isConnected ? (
               <Text.numeral suffix={"x"}>{currentLeverage}</Text.numeral>
             ) : (
+              // TODO: 应该是 双横杆
               "-"
             )}
 
@@ -97,11 +99,12 @@ export const RiskRate: FC<RiskRateState> = (props) => {
               // modal.show(LeverageWidgetId, { currentLeverage: 5 });
               isConnected ? (
                 <button
-                  className="oui-flex oui-items-center oui-gap-1"
-                  onClick={() => {
-                    modal.show(LeverageWidgetId, { currentLeverage: 5 });
-                  }}
+                className="oui-flex oui-items-center oui-gap-1"
+                onClick={() => {
+                  modal.show(LeverageWidgetId, { currentLeverage: 5 });
+                }}
                 >
+                  {/* TODO: 应该是 双横杆 */}
                   <span>{`${maxLeverage ?? "-"}x`}</span>
                   {typeof maxLeverage !== "undefined" && (
                     // @ts-ignore
@@ -109,6 +112,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
                   )}
                 </button>
               ) : (
+                // TODO: 应该是 双横杆
                 "-"
               )
             }
