@@ -1,6 +1,7 @@
-import type { TradingPageProps as OldTradingPageProps } from "@orderly.network/react";
+import { API } from "@orderly.network/types";
 import { DataListTabType } from "../components/dataList/dataList.script";
 import { PositionsProps } from "@orderly.network/ui-positions";
+import { ReactNode } from "react";
 
 export type layoutInfo = {
   width?: number;
@@ -70,6 +71,61 @@ export type ShareOptions = {
   };
 };
 
+
+export enum TradingFeatures {
+  Sider = "sider",
+  TopNavBar = "topNavBar",
+  Footer = "footer",
+  Header = "header",
+  Kline = "kline",
+  OrderBook = "orderBook",
+  TradeHistory = "tradeHistory",
+  Positions = "positions",
+  Orders = "orders",
+  AssetAndMarginInfo = "asset_margin_info",
+}
+
+export type BasicSymbolInfo = {
+  base_dp: number;
+  quote_dp: number;
+  base_tick: number;
+  base: string;
+  quote: string;
+}
+
+export interface TradingPageState extends TradingPageV2Props {
+  symbolInfo: {
+    base_dp: number;
+    quote_dp: number;
+    base_tick: number;
+    base: string;
+    quote: string;
+    symbol: string;
+  };
+}
+
+interface TradingViewConfigInterface {
+  scriptSRC?: string;
+  library_path: string;
+  overrides?: Record<string, string>;
+  studiesOverrides?: Record<string, string>;
+  customCssUrl?: string;
+  colorConfig?: ColorConfigInterface;
+}
+
+export interface ColorConfigInterface {
+  chartBG?: string;
+  upColor?: string;
+  downColor?: string;
+  pnlUpColor?: string;
+  pnlDownColor?: string;
+  pnlZoreColor?: string;
+  textColor?: string;
+  qtyTextColor?: string;
+  font?: string;
+  closeIcon?: string;
+}
+
 export type ReferralProps = {
   saveRefCode?: boolean;
   onClickReferral?: () => void;
@@ -82,13 +138,22 @@ export type TradingRewardProps = {
   onClickTradingReward?: () => void;
 };
 
-export type TradingPageProps = OldTradingPageProps & {
+type BaseTradingPageProps = {
+  symbol: string;
+  tradingViewConfig: TradingViewConfigInterface;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+  // enableFeatures?: TradingFeatures[];
+  disableFeatures?: TradingFeatures[];
+  overrideFeatures?: Record<TradingFeatures, ReactNode>;
+}
+
+export type TradingPageProps = BaseTradingPageProps & {
   shareOptions: ShareOptions;
   referral: ReferralProps;
   tradingReward: TradingRewardProps;
 };
 
-export type TradingPageV2Props = OldTradingPageProps & {
+export type TradingPageV2Props = BaseTradingPageProps & {
   dataList: {
     current?: DataListTabType;
     config: Partial<Omit<PositionsProps, "pnlNotionalDecimalPrecision">>;

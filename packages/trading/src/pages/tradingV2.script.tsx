@@ -1,7 +1,8 @@
+import { useTradingPateContext } from "../provider/context";
 import { TradingPageV2Props } from "../types/types";
 
-export const useTradingV2Script = (props: TradingPageV2Props) => {
-
+export const useTradingV2Script = () => {
+    const props = useTradingPateContext();
     return props;
 };
 
