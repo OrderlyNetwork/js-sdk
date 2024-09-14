@@ -1,4 +1,4 @@
-import React, { FC, SVGProps } from "react";
+import React, { FC, PropsWithChildren, SVGProps } from "react";
 
 export const EditIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
@@ -330,3 +330,63 @@ export const CollapseIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     <path d="M5.826 17.492a3.333 3.333 0 0 1-3.334-3.333V5.826a3.333 3.333 0 0 1 3.334-3.334h8.333a3.333 3.333 0 0 1 3.333 3.334v8.333a3.333 3.333 0 0 1-3.333 3.333zm6.666-4.166a.85.85 0 0 0 .6-.235.86.86 0 0 0 0-1.198L9.758 8.56l1.901-1.901h-5v5l1.9-1.9 3.334 3.332a.84.84 0 0 0 .6.235" />
   </svg>
 );
+
+const BaseSortIcon = (props: PropsWithChildren) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+    >
+      {props.children}
+    </svg>
+  );
+};
+
+export const SortingIcon = () => {
+  return (
+    <BaseSortIcon>
+      <path
+        d="M5 1.042a.47.47 0 0 0-.338.135L2.166 3.844c-.206.22-.005.531.338.531h4.992c.342 0 .543-.311.337-.531L5.338 1.177A.47.47 0 0 0 5 1.042m0 7.916a.47.47 0 0 1-.338-.135L2.166 6.156c-.206-.22-.005-.531.338-.531h4.992c.342 0 .543.311.337.531L5.338 8.823A.47.47 0 0 1 5 8.958"
+        fill="#fff"
+        fillOpacity=".2"
+      />
+    </BaseSortIcon>
+  );
+};
+
+export const AscendingIcon = () => {
+  return (
+    <BaseSortIcon>
+      <path
+        d="M5 1.042a.47.47 0 0 0-.338.135L2.166 3.844c-.206.22-.005.531.338.531h4.992c.342 0 .543-.311.337-.531L5.338 1.177A.47.47 0 0 0 5 1.042"
+        fill="#fff"
+        fillOpacity=".8"
+      />
+      <path
+        d="M5 8.958a.47.47 0 0 1-.338-.135L2.166 6.156c-.206-.22-.005-.531.338-.531h4.992c.342 0 .543.311.337.531L5.338 8.823A.47.47 0 0 1 5 8.958"
+        fill="#fff"
+        fillOpacity=".2"
+      />
+    </BaseSortIcon>
+  );
+};
+
+export const DescendingIcon = () => {
+  return (
+    <BaseSortIcon>
+      <path
+        d="M5 1.042a.47.47 0 0 0-.338.135L2.166 3.844c-.206.22-.005.531.338.531h4.992c.342 0 .543-.311.337-.531L5.338 1.177A.47.47 0 0 0 5 1.042"
+        fill="#fff"
+        fillOpacity=".2"
+      />
+      <path
+        d="M5 8.958a.47.47 0 0 1-.338-.135L2.166 6.156c-.206-.22-.005-.531.338-.531h4.992c.342 0 .543.311.337.531L5.338 8.823A.47.47 0 0 1 5 8.958"
+        fill="#fff"
+        fillOpacity=".8"
+      />
+    </BaseSortIcon>
+  );
+};

@@ -90,6 +90,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             ),
           }}
           onKeyUp={onKeyUp}
+          autoComplete="off"
         />
       );
     } else if (isActive) {

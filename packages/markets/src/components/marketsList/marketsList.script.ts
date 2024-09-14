@@ -3,6 +3,7 @@ import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { MarketsListWidgetProps } from "./widget";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
+import { useSideMarketsContext } from "../sideMarketsProvider";
 
 export type UseMarketsListScriptOptions = MarketsListWidgetProps;
 
@@ -14,6 +15,7 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
   const [data, favorite] = useMarketList(MarketsType.ALL);
 
   const { searchValue } = useMarketsContext();
+  const { activeTab, setCurrentDataSource } = useSideMarketsContext();
 
   const { onSort, getSortedList, sortKey, sortOrder } = useSort(
     options?.sortKey,
@@ -35,6 +37,12 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
       favorite.updateTabsSortState("all", sortKey!, sortOrder!);
     }
   }, [sortKey, sortOrder, options.type]);
+
+  useEffect(() => {
+    if (activeTab === 'all') {
+      setCurrentDataSource?.(dataSource);
+    }
+  }, [activeTab, dataSource]);
 
   return {
     loading,

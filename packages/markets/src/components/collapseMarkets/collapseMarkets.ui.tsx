@@ -2,7 +2,9 @@ import { TokenIcon, Flex, Text, cn, Tooltip, Badge } from "@orderly.network/ui";
 import { UseCollapseMarketsScriptReturn } from "./collapseMarkets.script";
 import { Decimal } from "@orderly.network/utils";
 
-export type CollapseMarketsProps = UseCollapseMarketsScriptReturn;
+export type CollapseMarketsProps = UseCollapseMarketsScriptReturn & {
+  dataSource: any[];
+};
 
 export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
   const { dataSource } = props;

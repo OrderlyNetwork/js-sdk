@@ -1,33 +1,35 @@
-import { FC } from "react";
-import { cn, DataTable } from "@orderly.network/ui";
+import { FC, useMemo } from "react";
+import { cn } from "@orderly.network/ui";
 import { UseRecentListReturn } from "./recentList.script";
 import { useMarketsContext } from "../marketsProvider";
-import { useRecentListColumns } from "./column";
+import Table from "../Table";
+import { getSideMarketsColumns } from "../sideMarkets/column";
+import { RecentListWidgetProps } from "./widget";
 
-export type RecentListProps = UseRecentListReturn;
+export type RecentListProps = UseRecentListReturn & RecentListWidgetProps;
 
 export const RecentList: FC<RecentListProps> = (props) => {
-  const { dataSource, favorite, onSort, loading } = props;
+  const { dataSource, favorite, onSort, loading, getColumns } = props;
 
   const { onSymbolChange } = useMarketsContext();
 
-  const columns = useRecentListColumns(favorite);
-
+  const columns = useMemo(() => {
+    return typeof getColumns === "function"
+      ? getColumns(favorite, true)
+      : getSideMarketsColumns(favorite, true);
+  }, [favorite]);
+  
   return (
-    <DataTable
+    <Table
       classNames={{
-        header: "oui-text-base-contrast-36",
-        body: "oui-text-base-contrast-80",
+        body: "oui-pb-[53px]",
       }}
       columns={columns}
       dataSource={dataSource}
       loading={loading}
       onRow={(record, index) => {
         return {
-          className: cn(
-            "group",
-            "oui-h-[53px] oui-border-none oui-rounded-[6px]"
-          ),
+          className: cn("group", "oui-h-[53px]"),
           onClick: () => {
             onSymbolChange?.(record);
             favorite.addToHistory(record);
@@ -36,7 +38,6 @@ export const RecentList: FC<RecentListProps> = (props) => {
       }}
       generatedRowKey={(record) => record.symbol}
       onSort={onSort}
-      bordered={false}
     />
   );
 };

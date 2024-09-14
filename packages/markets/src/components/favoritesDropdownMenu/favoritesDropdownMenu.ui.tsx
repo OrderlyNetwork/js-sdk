@@ -46,7 +46,6 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
     if (inputVisible) {
       return (
         <Input
-          autoComplete="off"
           autoFocus
           value={value}
           onValueChange={onValueChange}
@@ -70,6 +69,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
               />
             </Flex>
           }
+          autoComplete="off"
         />
       );
     }

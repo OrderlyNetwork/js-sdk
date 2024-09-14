@@ -90,11 +90,8 @@ export type MarketsItem = {
 export const MarketsStorageKey = "markets";
 export const DefaultFavoriteTab = { name: "Popular", id: 1 };
 
-export const useMarketList = (type: MarketsType) => {
+export const useMarketsStore = () => {
   const { configStore } = useContext(OrderlyContext);
-
-  const { data: futures } = useMarketsStream();
-  const symbolsInfo = useSymbolsInfo();
 
   const getStore = () => {
     const store = configStore.get(MarketsStorageKey) as MarketsData;
@@ -137,8 +134,6 @@ export const useMarketList = (type: MarketsType) => {
   const getTabSort = () => {
     return getStoreByKey("tabSort", {});
   };
-
-  const [markets, setMarkets] = useState<MarketsItem[]>([]);
 
   const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs);
   const [selectedFavoriteTab, setSelectedFavoriteTab] = useState(
@@ -207,29 +202,39 @@ export const useMarketList = (type: MarketsType) => {
     });
   }, [favoriteTabs, favorites, recent, tabSort, selectedFavoriteTab]);
 
+  return {
+    favoriteTabs,
+    favorites,
+    recent,
+    tabSort,
+    selectedFavoriteTab,
+    updateFavorites: setFavorites,
+    updateFavoriteTabs,
+    updateSymbolFavoriteState,
+    pinToTop,
+    addToHistory,
+    updateSelectedFavoriteTab: setSelectedFavoriteTab,
+    updateTabsSortState,
+  };
+};
+
+export const useMarketList = (type: MarketsType) => {
+  const { data: futures } = useMarketsStream();
+  const symbolsInfo = useSymbolsInfo();
+
+  const [markets, setMarkets] = useState<MarketsItem[]>([]);
+
+  const store = useMarketsStore();
+
+  const { favorites, recent } = store;
+
   useEffect(() => {
     const markets = addFieldToMarkets(futures, symbolsInfo);
     const filterList = filterMarkets({ markets, favorites, recent, type });
     setMarkets(filterList);
   }, [futures, symbolsInfo, favorites, recent, type]);
 
-  return [
-    markets,
-    {
-      favoriteTabs,
-      favorites,
-      recent,
-      tabSort,
-      selectedFavoriteTab,
-      updateFavorites: setFavorites,
-      updateFavoriteTabs,
-      updateSymbolFavoriteState,
-      pinToTop,
-      addToHistory,
-      updateSelectedFavoriteTab: setSelectedFavoriteTab,
-      updateTabsSortState,
-    },
-  ] as const;
+  return [markets, store] as const;
 };
 
 const addFieldToMarkets = (

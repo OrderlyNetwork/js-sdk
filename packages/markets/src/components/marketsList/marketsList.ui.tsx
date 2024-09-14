@@ -1,38 +1,39 @@
-import { FC } from "react";
-import { cn, DataTable } from "@orderly.network/ui";
+import { FC, useMemo } from "react";
+import { cn } from "@orderly.network/ui";
 import { type UseMarketsListReturn } from "./marketsList.script";
-import { TInitialSort } from "../../type";
+import { GetColumns, TInitialSort } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
-import { useMarketsListColumns } from "./column";
+import Table from "../Table";
+import { getSideMarketsColumns } from "../sideMarkets/column";
 
 export type MarketsListProps = UseMarketsListReturn & {
   initialSort: TInitialSort;
+  getColumns?: GetColumns;
 };
 
 export const MarketsList: FC<MarketsListProps> = (props) => {
-  const { loading, dataSource, favorite, onSort, initialSort } = props;
+  const { loading, dataSource, favorite, onSort, initialSort, getColumns } =
+    props;
 
   const { onSymbolChange } = useMarketsContext();
 
-  const columns = useMarketsListColumns(favorite);
+  const columns = useMemo(() => {
+    return typeof getColumns === "function"
+      ? getColumns(favorite, true)
+      : getSideMarketsColumns(favorite, true);
+  }, [favorite]);
 
   return (
-    <DataTable
-      bordered
+    <Table
       classNames={{
-        root: "oui-h-full",
-        header: "oui-text-base-contrast-36",
-        body: "oui-text-base-contrast-80 oui-h-[600px] oui-overflow-y-auto custom-scrollbar",
+        body: "oui-pb-[53px]",
       }}
       columns={columns}
       loading={loading}
       dataSource={dataSource}
       onRow={(record, index) => {
         return {
-          className: cn(
-            "group",
-            "oui-h-[53px] oui-border-none oui-rounded-[6px]"
-          ),
+          className: cn("group", "oui-h-[53px]"),
           onClick: () => {
             onSymbolChange?.(record);
             favorite.addToHistory(record);
@@ -41,7 +42,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
       }}
       generatedRowKey={(record) => record.symbol}
       onSort={onSort}
-      initialSort={initialSort}
+      // initialSort={initialSort}
     />
   );
 };
