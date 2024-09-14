@@ -18,7 +18,7 @@ export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
 
 const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
   return (
-    <Grid cols={2} width={"100%"} gap={3} >
+    <Grid cols={2} width={"100%"} gap={3}>
       <Flex
         direction={"column"}
         itemAlign={"start"}
@@ -29,7 +29,10 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
         className="oui-bg-base-9"
       >
         <Title title="Order book" />
-        <OrderBookWidget symbol={props.symbol} height={props.containerSize && props.containerSize?.height - 29} />
+        <OrderBookWidget
+          symbol={props.symbol}
+          height={props.containerSize ? props.containerSize.height - 29 : undefined}
+        />
       </Flex>
       <Flex
         direction={"column"}
@@ -37,7 +40,7 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
         p={3}
         r="2xl"
         className="oui-bg-base-9"
-        height={props.containerSize && props.containerSize?.height + 24}
+        height={props.containerSize ? props.containerSize.height + 24 : undefined}
       >
         <Title title="Last trades" />
         <LastTradesWidget symbol={props.symbol} />
@@ -55,7 +58,7 @@ const TabLayout: FC<OrderBookAndTradesState> = (props) => {
       r="2xl"
       className="oui-bg-base-9"
       style={{
-        maxHeight: props.containerSize?.height
+        maxHeight: props.containerSize?.height,
       }}
     >
       <Tabs
@@ -66,19 +69,26 @@ const TabLayout: FC<OrderBookAndTradesState> = (props) => {
         }}
       >
         <TabPanel value="orderBook" title={"Order book"}>
-          <OrderBookWidget symbol={props.symbol} height={props.containerSize?.height} />
+          <OrderBookWidget
+            symbol={props.symbol}
+            height={props.containerSize?.height}
+          />
         </TabPanel>
         <TabPanel value="lastTrades" title={"Last trades"}>
-          <LastTradesWidget symbol={props.symbol} style={{
-            maxHeight: props.containerSize && props.containerSize?.height - 40
-          }}/>
+          <LastTradesWidget
+            symbol={props.symbol}
+            style={{
+              maxHeight:
+                props.containerSize && props.containerSize?.height - 40,
+            }}
+          />
         </TabPanel>
       </Tabs>
     </Box>
   );
 };
 
-const Title = (props: { title: string, className?: string }) => {
+const Title = (props: { title: string; className?: string }) => {
   return (
     <Text size="base" intensity={80} className="oui-pb-[5px]">
       {props.title}

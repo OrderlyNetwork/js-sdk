@@ -4,7 +4,7 @@ import { OrderBook } from "./orderBook.ui";
 export const OrderBookWidget = (props: {
   className?: string;
   symbol: string;
-  height: number;
+  height?: number;
 }) => {
   const state = useOrderBookScript({
     symbol: props.symbol,
