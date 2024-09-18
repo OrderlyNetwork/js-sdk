@@ -28,6 +28,7 @@ export const DeleteAPIKeyDialog: FC<{
       actions={{
         primary: {
           label: "Confirm",
+          "data-testid": "oui-testid-apiKey-deleteApiKey-dialog-confirm-btn",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           size: "md",
           onClick: async () => {

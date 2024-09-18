@@ -97,6 +97,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       showIcon,
       //@ts-ignore
       iconSize = "xs",
+      copyIconTestid,
       //@ts-ignore
       isIcon,
       ...rest
@@ -118,6 +119,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
         return (
           <button
             className="oui-cursor-pointer oui-text-sm"
+            data-testid={copyIconTestid}
             onClick={(e) => {
               navigator.clipboard.writeText(children as string);
               onCopy?.(e);

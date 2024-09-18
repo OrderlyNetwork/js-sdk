@@ -11,7 +11,7 @@
   },
   "keywords": [
     "Orderly",
-    "Leverage"
+    "Share"
   ],
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",

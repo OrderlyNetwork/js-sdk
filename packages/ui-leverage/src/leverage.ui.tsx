@@ -33,10 +33,16 @@ export const Leverage = (props: LeverageScriptReturns) => {
           color="gray"
           fullWidth
           onClick={props.onCancel}
+          data-testid="oui-testid-leverage-cancel-btn"
         >
           Cancel
         </Button>
-        <Button fullWidth loading={props.isLoading} onClick={props.onSave}>
+        <Button
+          fullWidth
+          loading={props.isLoading}
+          onClick={props.onSave}
+          data-testid="oui-testid-leverage-save-btn"
+        >
           Save
         </Button>
       </Flex>

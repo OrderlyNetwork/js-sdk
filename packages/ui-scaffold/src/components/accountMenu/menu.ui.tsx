@@ -38,6 +38,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
         arrow={{ className: "oui-fill-base-5" }}
       >
         <Button
+          data-testid="oui-testid-nav-bar-connectWallet-btn"
           size="md"
           variant="gradient"
           angle={45}
