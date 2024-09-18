@@ -51,6 +51,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
         primary: {
           label: "Confirm",
           className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
+          "data-testid": "oui-testid-confirm-dialog-confirm-btn",
           onClick: () => {
             return Promise.resolve()
               .then(() => {
@@ -74,6 +75,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
         secondary: {
           label: "Cancel",
           className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
+          "data-testid": "oui-testid-confirm-dialog-cancel-btn",
           onClick: () => {
             return Promise.resolve()
               .then(() => {

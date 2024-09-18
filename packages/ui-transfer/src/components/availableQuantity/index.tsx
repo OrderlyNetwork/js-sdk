@@ -29,7 +29,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
       <Flex gapX={2}>
         <Text size="2xs" intensity={36}>
           Available:{" "}
-          <Text.numeral rm={Decimal.ROUND_DOWN} dp={dp} padding={false}>
+          <Text.numeral rm={Decimal.ROUND_DOWN} dp={dp} padding={false} data-testid="oui-testid-withdraw_deposit-dialog-available-value">
             {maxQuantity!}
           </Text.numeral>{" "}
           {name}

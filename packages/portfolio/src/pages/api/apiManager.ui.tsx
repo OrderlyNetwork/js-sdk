@@ -85,6 +85,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
           copyable={props.address !== "--"}
           copyIconSize={16}
           onCopy={props.onCopyAccountId}
+          copyIconTestid="oui-testid-apiKey-accountInfo-accountId-copy-btn"
         >
           {props.address}
         </Text.formatted>
@@ -158,6 +159,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
           onClick={props.onCreateApiKey}
           disabled={!props.canCreateApiKey || props.wrongNetwork}
           // className="disabled:oui-cursor-default"
+          data-testid="oui-testid-apiKey-createApiKey-btn"
         >
           Create API key
         </Button>
@@ -292,6 +294,7 @@ const EditButton: FC<{
           e.stopPropagation();
           setOpen(true);
         }}
+        data-testid="oui-testid-apiKey-keyList-edit-btn"
       >
         Edit
       </Button>
@@ -325,6 +328,7 @@ const DeleteButton: FC<{
           e.stopPropagation();
           setOpen(true);
         }}
+        data-testid="oui-testid-apiKey-keyList-delete-btn"
       >
         Delete
       </Button>

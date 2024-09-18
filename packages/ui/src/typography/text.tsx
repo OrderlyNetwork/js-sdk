@@ -75,6 +75,7 @@ interface CopyableTextProps extends BasicTextProps {
   onCopy?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   /** default is 12 */
   copyIconSize?: number;
+  copyIconTestid?: string;
 }
 
 type TextSpanProps = { as?: "span" } & ComponentPropsWithout<

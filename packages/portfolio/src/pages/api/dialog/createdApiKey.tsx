@@ -26,6 +26,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       actions={{
         primary: {
           label: "OK",
+          "data-testid": "oui-testid-apiKey-createdApiKey-dialog-ok-btn",
           className:
             "oui-w-[120px] lg:oui-w-[154px] oui-bg-base-2 hover:oui-bg-base-3",
           size: "md",
@@ -35,6 +36,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
         },
         secondary: {
           label: "Copy API info",
+          "data-testid": "oui-testid-apiKey-createdApiKey-dialog-copy-btn",
           className:
             "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary hover:oui-opacity-80",
           size: "md",
@@ -59,6 +61,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             copyIconSize={16}
             className="oui-break-all"
             onCopy={() => props.onCopyApiKey(props.generateKey?.key)}
+            data-testid="oui-testid-apiKey-createdApiKey-dialog-key-span"
           >
             {props.generateKey?.key}
           </Text.formatted>
@@ -106,7 +109,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           </Flex>
         </Statistic>
         <Statistic label="Permissions">
-          <Text size="sm" intensity={80}>
+          <Text size="sm" intensity={80} data-testid="oui-testid-apiKey-createdApiKey-dialog-permissions-span">
             {props.generateKey?.permissions}
           </Text>
         </Statistic>

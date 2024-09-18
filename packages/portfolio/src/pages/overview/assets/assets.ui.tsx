@@ -61,6 +61,7 @@ export const AssetsUI = (props: Props) => {
                 onClick={() => {
                   props.toggleVisible();
                 }}
+                data-testid="oui-testid-portfolio-assets-eye-btn"
               >
                 {props.visible ? (
                   <EyeIcon size={16} color={"white"} />
@@ -147,9 +148,9 @@ export const AssetStatistic = (
       </Statistic>
       <Statistic label="Max account leverage">
         <Flex itemAlign={"center"}>
-          <span className="oui-text-lg">{props.currentLeverage}</span>
+          <span data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value" className="oui-text-lg">{props.currentLeverage}</span>
           <span>x</span>
-          <button className="oui-ml-1" onClick={() => props.onLeverageEdit?.()}>
+          <button className="oui-ml-1" onClick={() => props.onLeverageEdit?.()} data-testid="oui-testid-portfolio-assets-maxAccountLeverage-edit-btn">
             <EditIcon color={"white"} size={18} />
           </button>
         </Flex>

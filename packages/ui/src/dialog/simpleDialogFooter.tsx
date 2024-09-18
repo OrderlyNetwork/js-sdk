@@ -5,7 +5,7 @@ import { Button, ButtonProps } from "../button";
 export type DialogAction<T = any> = {
   label: string;
   onClick: () => Promise<T> | T;
-} & Pick<ButtonProps, "size" | "disabled" | "className" | "fullWidth">;
+} & Pick<ButtonProps, "size" | "disabled" | "className" | "fullWidth" | "data-testid">;
 
 export type SimpleDialogFooterProps = {
   actions?: {
@@ -27,6 +27,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     if (actions.secondary && typeof actions.secondary.onClick === "function") {
       buttons.push(
         <Button
+          data-testid={actions.secondary?.["data-testid"]}
           key="secondary"
           color="gray"
           onClick={() => {
@@ -45,6 +46,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     if (actions.primary && typeof actions.primary.onClick === "function") {
       buttons.push(
         <Button
+        data-testid={actions.primary?.["data-testid"]}
           key="primary"
           onClick={async () => {
             try {
