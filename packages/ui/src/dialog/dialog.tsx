@@ -196,7 +196,7 @@ const DialogContent = React.forwardRef<
         >
           {children}
           {closable && (
-            <DialogPrimitive.Close className={close()}>
+            <DialogPrimitive.Close className={close()} data-testid="oui-testid-dialog-content-close-btn">
               <CloseIcon size={16} color="white" opacity={98} />
               <span className="oui-sr-only">Close</span>
             </DialogPrimitive.Close>

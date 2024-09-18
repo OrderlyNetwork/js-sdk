@@ -43,6 +43,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
         primary: {
           label: "Confirm",
           className: "oui-w-[120px] lg:oui-w-[154px]",
+          "data-testid": "oui-testid-apiKey-createApiKey-dialog-comfirm-btn",
           onClick: async () => {
             if (ipText.length > 0) {
               const hint = props.verifyIP(ipText);
@@ -81,6 +82,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             IP restriction (optional)
           </Text>
           <textarea
+            data-testid="oui-testid-apiKey-createApiKey-dialog-textarea"
             placeholder="Add IP addresses, separated by commas."
             className={cn(
               "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",
@@ -125,12 +127,14 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
               checked={read}
               onCheckedChange={(e) => setRead(e as boolean)}
               label="Read"
+              testid="oui-testid-apiKey-createApiKey-dialog-read-checkbox"
             />
             <Checkbox
               size={18}
               checked={trade}
               onCheckedChange={(e) => setTrade(e as boolean)}
               label="Trading"
+              testid="oui-testid-apiKey-createApiKey-dialog-trading-checkbox"
             />
           </Flex>
         </Statistic>
@@ -145,6 +149,7 @@ export const Checkbox: FC<{
   onCheckedChange: (checked?: boolean) => void;
   disabled?: boolean;
   label: string;
+  testid?: string;
 }> = (props) => {
   return (
     <button
@@ -155,6 +160,7 @@ export const Checkbox: FC<{
       className={
         "disabled:oui-cursor-not-allowed disabled:oui-opacity-50 oui-flex oui-items-center oui-gap-2"
       }
+      data-testid={props.testid}
     >
       {props.checked ? (
         <svg
