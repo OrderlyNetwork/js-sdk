@@ -5,15 +5,15 @@ import { Decimal } from "@orderly.network/utils";
 
 const getRiskRateColor = (riskRate: null | number) => {
   if (riskRate === null) {
-    return { isRed: false, isOrange: false, isBlue: false, isDefault: true };
+    return { isHigh: false, isMedium: false, isLow: false, isDefault: true };
   }
 
-  const isBlue = riskRate < 40;
-  const isOrange = riskRate >= 40 && riskRate < 80;
-  const isRed = riskRate >= 80;
-  const isDefault = !isBlue && !isOrange && !isRed;
+  const isLow = riskRate < 40;
+  const isMedium = riskRate >= 40 && riskRate < 80;
+  const isHigh = riskRate >= 80;
+  const isDefault = !isLow && !isMedium && !isHigh;
 
-  return { isRed, isOrange, isBlue, isDefault };
+  return { isHigh, isMedium, isLow, isDefault };
 };
 
 export const useRiskRateScript = () => {
@@ -25,7 +25,7 @@ export const useRiskRateScript = () => {
 
   const riskRate = useMemo(() => {
     if (!isConnected || marginRatio === null || mmr === null) {
-      return "--";
+      return "0%";
     }
 
     if (marginRatio === 0 || mmr === 0) {

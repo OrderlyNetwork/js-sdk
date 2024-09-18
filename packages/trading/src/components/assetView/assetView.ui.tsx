@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import {
   Flex,
   Text,
@@ -16,7 +16,61 @@ import { AssetViewState } from "./assetView.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { cn, Collapsible, CollapsibleContent } from "@orderly.network/react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useAccount, useLocalStorage } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
+
+interface StatusInfo {
+  title: string;
+  description: string;
+  titleColor?: any;
+}
+
+export const useCurrentStatusText = (): StatusInfo => {
+  const { state } = useAccount();
+  const { wrongNetwork } = useAppContext();
+
+  /**
+   * TODO:
+   *  script文件不应该包括UI显示的具体数据，建议移动到ui文件中
+   *  处理完成之后，请删掉 TODO
+   */
+  const currentStatus = useMemo(() => {
+    if (wrongNetwork) {
+      return {
+        title: "Wrong Network",
+        description: "Please switch to a supported network to continue.",
+        titleColor: "warning",
+      };
+    }
+
+    switch (state.status) {
+      case AccountStatusEnum.NotConnected:
+        return {
+          title: "Connect wallet",
+          description: "Please connect your wallet before starting to trade.",
+        };
+      case AccountStatusEnum.NotSignedIn:
+        return {
+          title: "Sign in",
+          description: "Please sign in before starting to trade.",
+          titleColor: "primaryLight",
+        };
+      case AccountStatusEnum.DisabledTrading:
+        return {
+          title: "Enable trading",
+          description: "Enable trading before starting to trade.",
+          titleColor: "primaryLight",
+        };
+      default:
+        return {
+          title: "",
+          description: "",
+        };
+    }
+  }, [state.status, wrongNetwork]);
+
+  return currentStatus;
+};
 
 const TotalValue: FC<{
   totalValue: number | null;
@@ -36,6 +90,7 @@ const TotalValue: FC<{
         size="2xl"
         className={gradientTextVariants({ color: "brand" })}
         as="div"
+        padding={false}
       >
         {totalValue ?? "--"}
       </Text.numeral>
@@ -47,17 +102,9 @@ const TotalValue: FC<{
 
         <button onClick={() => onToggleVisibility?.()}>
           {visible ? (
-            <EyeIcon
-              size={18}
-              className="oui-text-base-contrast-54"
-              opacity={0.5}
-            />
+            <EyeIcon size={18} className="oui-text-base-contrast-54" />
           ) : (
-            <EyeCloseIcon
-              size={18}
-              className="oui-text-base-contrast-54"
-              opacity={0.5}
-            />
+            <EyeCloseIcon size={18} className="oui-text-base-contrast-54" />
           )}
         </button>
       </Flex>
@@ -79,7 +126,7 @@ const AssetValueList: FC<{
   isConnected,
 }) => {
   const [optionsOpen, setOptionsOpen] = useLocalStorage(
-    "order_entry_asset_list_open",
+    "orderly_entry_asset_list_open",
     false
   );
   const [open, setOpen] = useState<boolean>(optionsOpen);
@@ -138,6 +185,7 @@ const AssetValueList: FC<{
                 unit="USDC"
                 unitClassName="oui-text-base-contrast-36"
                 as="div"
+                padding={false}
               >
                 {freeCollateral ?? "--"}
               </Text.numeral>
@@ -173,9 +221,10 @@ const AssetValueList: FC<{
               {isConnected ? (
                 <Text.numeral
                   size="2xs"
-                  suffix="%"
                   unitClassName="oui-text-base-contrast-36"
                   as="div"
+                  rule="percentages"
+                  padding={false}
                 >
                   {marginRatioVal}
                 </Text.numeral>
@@ -211,6 +260,7 @@ const AssetValueList: FC<{
                   suffix="%"
                   unitClassName="oui-text-base-contrast-36"
                   as="div"
+                  padding={false}
                 >
                   {renderMMR}
                 </Text.numeral>
@@ -226,9 +276,6 @@ const AssetValueList: FC<{
 };
 
 export const AssetView: FC<AssetViewState> = ({
-  title,
-  description,
-  titleColor,
   networkId,
   isFirstTimeDeposit,
   totalValue,
@@ -241,6 +288,10 @@ export const AssetView: FC<AssetViewState> = ({
   renderMMR,
   isConnected,
 }) => {
+  const currentStatus = useCurrentStatusText();
+  const { title, description } = currentStatus;
+  const titleColor = currentStatus.titleColor ?? "";
+
   return (
     <Box>
       {title && description ? (
