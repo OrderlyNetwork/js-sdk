@@ -70,7 +70,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
               weight="semibold"
               className="oui-cursor-pointer"
             >
-              Risk Rate
+              Risk rate
             </Text>
           </Tooltip>
           <Text

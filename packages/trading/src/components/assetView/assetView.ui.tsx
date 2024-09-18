@@ -72,7 +72,6 @@ export const useCurrentStatusText = (): StatusInfo => {
   return currentStatus;
 };
 
-
 const TotalValue: FC<{
   totalValue: number | null;
   visible?: boolean;
@@ -91,6 +90,7 @@ const TotalValue: FC<{
         size="2xl"
         className={gradientTextVariants({ color: "brand" })}
         as="div"
+        padding={false}
       >
         {totalValue ?? "--"}
       </Text.numeral>
@@ -102,15 +102,9 @@ const TotalValue: FC<{
 
         <button onClick={() => onToggleVisibility?.()}>
           {visible ? (
-            <EyeIcon
-              size={18}
-              className="oui-text-base-contrast-54"
-              />
-            ) : (
-              <EyeCloseIcon
-              size={18}
-              className="oui-text-base-contrast-54"
-            />
+            <EyeIcon size={18} className="oui-text-base-contrast-54" />
+          ) : (
+            <EyeCloseIcon size={18} className="oui-text-base-contrast-54" />
           )}
         </button>
       </Flex>
@@ -191,6 +185,7 @@ const AssetValueList: FC<{
                 unit="USDC"
                 unitClassName="oui-text-base-contrast-36"
                 as="div"
+                padding={false}
               >
                 {freeCollateral ?? "--"}
               </Text.numeral>
@@ -226,9 +221,10 @@ const AssetValueList: FC<{
               {isConnected ? (
                 <Text.numeral
                   size="2xs"
-                  suffix="%"
                   unitClassName="oui-text-base-contrast-36"
                   as="div"
+                  rule="percentages"
+                  padding={false}
                 >
                   {marginRatioVal}
                 </Text.numeral>
@@ -264,6 +260,7 @@ const AssetValueList: FC<{
                   suffix="%"
                   unitClassName="oui-text-base-contrast-36"
                   as="div"
+                  padding={false}
                 >
                   {renderMMR}
                 </Text.numeral>
