@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef } from "react";
-import { Box, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { OrderBookAndTradesState } from "./orderBookAndTrades.script";
 import { OrderBookWidget } from "../orderBook";
 import { LastTradesWidget } from "../lastTrades";
@@ -30,13 +30,13 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
       <Flex
         direction={"column"}
         itemAlign={"start"}
-        pl={3}
+        // pl={3}
         pt={3}
         pb={3}
         r="2xl"
         className="oui-bg-base-9"
       >
-        <Title title="Order book" />
+        <Title title="Order book" className="oui-pl-3" />
         <OrderBookWidget
           symbol={props.symbol}
           height={
@@ -67,7 +67,7 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
 const TabLayout: FC<OrderBookAndTradesState> = (props) => {
   return (
     <Box
-      pl={3}
+      // pl={3}
       pt={3}
       pb={3}
       pr={props.tab === "lastTrades" ? 3 : 0}
@@ -84,7 +84,7 @@ const TabLayout: FC<OrderBookAndTradesState> = (props) => {
           props.setTab(tab as any);
         }}
       >
-        <TabPanel value="orderBook" title={"Order book"}>
+        <TabPanel value="orderBook" title={"Order book"} >
           <OrderBookWidget
             symbol={props.symbol}
             height={
@@ -109,7 +109,7 @@ const TabLayout: FC<OrderBookAndTradesState> = (props) => {
 
 const Title = (props: { title: string; className?: string }) => {
   return (
-    <Text size="base" intensity={80} className="oui-pb-[5px]">
+    <Text size="base" intensity={80} className={cn("oui-pb-[5px]",props.className)}>
       {props.title}
     </Text>
   );

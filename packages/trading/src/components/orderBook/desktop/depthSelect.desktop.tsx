@@ -16,7 +16,7 @@ export const DesktopDepthSelect: FC<DesktopDepthSelectProps> = (props) => {
   }, [props.depths]);
 
   return (
-    <Box width={97} className="oui-py-[10px]">
+    <Box pl={3} width={97} className="oui-py-[10px]">
       <Select.options
         options={options}
         size={"xs"}
