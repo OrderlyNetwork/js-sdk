@@ -19,19 +19,13 @@ import {
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { capitalizeString } from "@orderly.network/utils";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
   DepositAndWithdrawWithSheetId,
   DepositAndWithdrawWithDialogId,
 } from "@orderly.network/ui-transfer";
 import { useAppContext } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
-
-interface StatusInfo {
-  title: string;
-  description: string;
-  titleColor?: any;
-}
 
 const useFirstTimeDeposit = () => {
   const { state } = useAccount();
@@ -75,55 +69,12 @@ const useFirstTimeDeposit = () => {
   };
 };
 
-export const useCurrentStatusText = (): StatusInfo => {
-  const { state } = useAccount();
-  const { wrongNetwork } = useAppContext();
-
-  const currentStatus = useMemo(() => {
-    if (wrongNetwork) {
-      return {
-        title: "Wrong Network",
-        description: "Please switch to a supported network to continue.",
-        titleColor: "warning",
-      };
-    }
-
-    switch (state.status) {
-      case AccountStatusEnum.NotConnected:
-        return {
-          title: "Connect wallet",
-          description: "Please connect your wallet before starting to trade.",
-        };
-      case AccountStatusEnum.NotSignedIn:
-        return {
-          title: "Sign in",
-          description: "Please sign in before starting to trade.",
-          titleColor: "primaryLight",
-        };
-      case AccountStatusEnum.DisabledTrading:
-        return {
-          title: "Enable trading",
-          description: "Enable trading before starting to trade.",
-          titleColor: "primaryLight",
-        };
-      default:
-        return {
-          title: "",
-          description: "",
-        };
-    }
-  }, [state.status, wrongNetwork]);
-
-  return currentStatus;
-};
-
 export const useAssetViewScript = () => {
   const account = useAccountInstance();
   const matches = useMediaQuery(MEDIA_TABLET);
-  const currentStatus = useCurrentStatusText();
+
   const { isFirstTimeDeposit, totalValue } = useFirstTimeDeposit();
-  const { title, description } = currentStatus;
-  const titleColor = currentStatus.titleColor ?? "";
+
   const networkId = useConfig("networkId") as NetworkId;
   const { state } = useAccount();
   const { freeCollateral } = useCollateral({
@@ -135,7 +86,7 @@ export const useAssetViewScript = () => {
 
   const renderMMR = useMemo(() => {
     if (!mmr) {
-      return "-";
+      return "--";
     }
     const bigMMR = new Decimal(mmr);
     return bigMMR.mul(100).todp(2, 0).toFixed(2);
@@ -237,9 +188,6 @@ export const useAssetViewScript = () => {
     onSettle,
     visible,
     toggleVisible,
-    title,
-    titleColor,
-    description,
     networkId,
     isFirstTimeDeposit,
     totalValue,

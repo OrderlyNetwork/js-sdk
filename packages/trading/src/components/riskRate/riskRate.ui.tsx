@@ -1,22 +1,32 @@
 import React, { FC } from "react";
-import { Flex, Text, Box, Tooltip, modal } from "@orderly.network/ui";
+import {
+  Flex,
+  Text,
+  Box,
+  Tooltip,
+  modal,
+  gradientTextVariants,
+  cn,
+} from "@orderly.network/ui";
 import { RiskRateState } from "./riskRate.script";
 import { Pencil } from "lucide-react";
 import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 
 export const RiskRate: FC<RiskRateState> = (props) => {
-  const { riskRate, riskRateColor,isConnected,currentLeverage,maxLeverage } = props;
-  const { isRed, isOrange, isBlue, isDefault } = riskRateColor;
-  const textColor = isRed
-    ? "#d82d6a"
-    : isOrange
-    ? "#ff7d00"
-    : isBlue
-    ? "#59b0fe"
+  const { riskRate, riskRateColor, isConnected, currentLeverage, maxLeverage } =
+    props;
+  const { isHigh, isMedium, isLow, isDefault } = riskRateColor;
+
+  const textColor = isHigh
+    ? "oui-text-danger"
+    : isMedium
+    ? "oui-text-warning"
+    : isLow
+    ? gradientTextVariants({ color: "brand" })
     : "";
 
   return (
-    <Box className="oui-space-y-2">
+    <Box data-risk={""} className="oui-space-y-2">
       <Flex
         itemAlign="center"
         justify="start"
@@ -29,21 +39,21 @@ export const RiskRate: FC<RiskRateState> = (props) => {
           />
         ) : null}
 
-        {isRed ? (
+        {isHigh ? (
           <Box
             className="oui-bg-gradient-to-tr oui-from-[#791438] oui-to-[#ff447c] oui-h-1.5 oui-rounded-full"
             style={{ width: riskRate }}
           />
         ) : null}
 
-        {isOrange ? (
+        {isMedium ? (
           <Box
             className="oui-bg-gradient-to-tr oui-from-[#792e00] oui-to-[#ffb65d] oui-h-1.5 oui-rounded-full"
             style={{ width: riskRate }}
           />
         ) : null}
 
-        {isBlue ? (
+        {isLow ? (
           <Box
             className="oui-bg-gradient-to-tr oui-from-[#59b0fe] oui-to-[#26fefe] oui-h-1.5 oui-rounded-full"
             style={{ width: riskRate }}
@@ -60,14 +70,14 @@ export const RiskRate: FC<RiskRateState> = (props) => {
               weight="semibold"
               className="oui-cursor-pointer"
             >
-              Risk Rate
+              Risk rate
             </Text>
           </Tooltip>
           <Text
             size="xs"
             color="neutral"
             weight="semibold"
-            style={{ color: textColor }}
+            className={cn(textColor)}
           >
             {riskRate}
           </Text>
@@ -88,7 +98,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             {isConnected ? (
               <Text.numeral suffix={"x"}>{currentLeverage}</Text.numeral>
             ) : (
-              "-"
+              "--"
             )}
 
             <span className={"oui-text-base-contrast-54"}>/</span>
@@ -102,14 +112,14 @@ export const RiskRate: FC<RiskRateState> = (props) => {
                     modal.show(LeverageWidgetId, { currentLeverage: 5 });
                   }}
                 >
-                  <span>{`${maxLeverage ?? "-"}x`}</span>
+                  <span>{`${maxLeverage ?? "--"}x`}</span>
                   {typeof maxLeverage !== "undefined" && (
                     // @ts-ignore
                     <Pencil size={14} className="oui-text-base-contrast-54" />
                   )}
                 </button>
               ) : (
-                "-"
+                "--"
               )
             }
           </Flex>
