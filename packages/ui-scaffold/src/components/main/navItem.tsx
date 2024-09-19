@@ -14,6 +14,8 @@ import React, {
 } from "react";
 
 export type MainNavItem = {
+  id?: string;
+  testid?: string;
   name: string;
   href: string;
   target?: HTMLAttributeAnchorTarget;
@@ -53,10 +55,12 @@ export const NavItem: FC<
 
   const button = (
     <button
+      id={item.id}
+      data-testid={item.testid}
       {...buttonProps}
       disabled={props.item.disabled}
       data-actived={isActive}
-      className={cn(
+      className={cn( 
         "oui-text-base-contrast-36 oui-text-sm oui-relative oui-group oui-rounded oui-px-3 oui-py-1 oui-h-[32px] hover:oui-bg-base-7",
         classNames?.navItem
       )}

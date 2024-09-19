@@ -184,6 +184,7 @@ interface ButtonProps
   extends Omit<BaseButtonProps, "size">,
     VariantProps<typeof buttonVariants> {
   angle?: number;
+  "data-testid"?: string;
 }
 
 const Button = React.forwardRef<

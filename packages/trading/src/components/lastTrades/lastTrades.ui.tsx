@@ -4,18 +4,21 @@ import { LastTradesState } from "./lastTrades.script";
 import { API, OrderSide } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
 
-export const LastTrades: FC<LastTradesState> = (props) => {
+export const LastTrades: FC<
+  LastTradesState & {
+    className?: string;
+    style?: React.CSSProperties;
+  }
+> = (props) => {
   return (
     <Flex
       direction={"column"}
       itemAlign={"start"}
-      className="oui-font-semibold"
+      className={cn("oui-font-semibold", props.className)}
       width={"100%"}
       height={"100%"}
+      style={props.style}
     >
-      <Text size="base" intensity={80} className="oui-pt-3 oui-pb-2">
-        Last Trades
-      </Text>
       <Header base={props.base} quote={props.quote} />
       <List
         data={props.data}
@@ -88,9 +91,15 @@ const List = (props: {
             mid={commifyOptional(item?.price, { fix: props.quoteDp })}
             right={commifyOptional(item?.size, { fix: props.baseDp })}
             classNames={{
-                left: "oui-text-base-contrast-80",
-                right: item.side === OrderSide.BUY ? "oui-text-trade-profit" : "oui-text-trade-loss",
-                mid: item.side === OrderSide.BUY ? "oui-text-trade-profit" : "oui-text-trade-loss",
+              left: "oui-text-base-contrast-80",
+              right:
+                item.side === OrderSide.BUY
+                  ? "oui-text-trade-profit"
+                  : "oui-text-trade-loss",
+              mid:
+                item.side === OrderSide.BUY
+                  ? "oui-text-trade-profit"
+                  : "oui-text-trade-loss",
             }}
           />
         );

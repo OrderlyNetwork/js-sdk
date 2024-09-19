@@ -7,6 +7,7 @@ import {
   Flex,
   TokenIcon,
   Tooltip,
+  toast,
 } from "@orderly.network/ui";
 import { useQuery } from "@orderly.network/hooks";
 
@@ -56,6 +57,11 @@ export const useAssetHistoryColumns = () => {
                 copyable={!!value}
                 rule="txId"
                 className="oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-line-16"
+                onCopy={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  toast.success("Copy success");
+                }}
               >
                 {value}
               </Text.formatted>
@@ -95,7 +101,7 @@ export const useAssetHistoryColumns = () => {
         // formatter: "date",
       },
     ];
-  }, []);
+  }, [chains]);
 
   return columns;
 };

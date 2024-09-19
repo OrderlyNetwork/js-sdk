@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "../useQuery";
 import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
@@ -39,6 +40,7 @@ export const useSymbolsInfo = () => {
   // });
   const symbolsInfo = useAppStore((state) => state.symbolsInfo);
 
+  return useMemo(() => createGetter<API.SymbolExt, string>(data), [data]);
   // console.log(">>>>>symbolsInfo<<<<<<<", symbolsInfo);
 
   return createGetter<API.SymbolExt, string>({ ...symbolsInfo });
