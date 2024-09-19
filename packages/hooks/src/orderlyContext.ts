@@ -4,6 +4,7 @@ import {
   type ConfigStore,
   type OrderlyKeyStore,
   type getWalletAdapterFunc,
+  WalletAdapter,
 } from "@orderly.network/core";
 
 import { Chain, NetworkId } from "@orderly.network/types";
@@ -24,6 +25,7 @@ export interface OrderlyConfigContextState {
   configStore: ConfigStore;
   keyStore: OrderlyKeyStore;
   getWalletAdapter: getWalletAdapterFunc;
+  walletAdapters: WalletAdapter[];
 
   networkId: NetworkId;
 

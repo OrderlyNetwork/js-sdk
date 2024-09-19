@@ -27,3 +27,4 @@ export * from "./wallet";
 export { ApiError, SDKError } from "./errors";
 
 export { definedTypes } from "./sign";
+export * as superstruct from "superstruct";

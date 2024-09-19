@@ -13,6 +13,7 @@ import {
   SimpleDI,
   Account,
   IContract,
+  WalletAdapter,
 } from "@orderly.network/core";
 
 import useConstant from "use-constant";
@@ -47,6 +48,7 @@ export interface ConfigProviderProps {
   keyStore?: OrderlyKeyStore;
   contracts?: IContract;
   getWalletAdapter?: getWalletAdapterFunc;
+  walletAdapters: WalletAdapter[];
   brokerId: string;
   brokerName: string;
   networkId: NetworkId;
@@ -65,6 +67,7 @@ export const OrderlyConfigProvider = (
     configStore,
     keyStore,
     getWalletAdapter,
+    walletAdapters,
     brokerId,
     brokerName,
     networkId,
@@ -77,10 +80,27 @@ export const OrderlyConfigProvider = (
     console.error("[OrderlyConfigProvider]: brokerId is required");
   }
 
+  if (typeof walletAdapters === "undefined") {
+    console.error(
+      "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
+        "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
+    );
+  }
+
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
     throw new SDKError(
       "if configStore is provided, brokerId is required in configStore"
+    );
+  }
+
+  if (
+    typeof brokerId !== "undefined" &&
+    typeof configStore !== "undefined" &&
+    brokerId !== configStore.get("brokerId")
+  ) {
+    throw new SDKError(
+      "If you have provided a custom `configStore` and the `brokerId` is set in the `configStore`, please remove the `brokerId` prop."
     );
   }
 
@@ -111,7 +131,8 @@ export const OrderlyConfigProvider = (
       account = new Account(
         innerConfigStore,
         innerKeyStore,
-        innerGetWalletAdapter,
+        // innerGetWalletAdapter,
+        walletAdapters,
         {
           contracts,
         }
@@ -129,13 +150,6 @@ export const OrderlyConfigProvider = (
     }
 
     return chainFilter;
-
-    // const { mainnet, testnet } = props.chains || {};
-
-    // return {
-    //   mainnet: mainnet || defaultMainnetChains,
-    //   testnet: testnet || defaultTestnetChains,
-    // };
   }, [props.chainFilter, innerConfigStore]);
 
   if (!account) {
@@ -150,6 +164,7 @@ export const OrderlyConfigProvider = (
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
         filteredChains: filteredChains,
+        walletAdapters,
         // apiBaseUrl,
         customChains,
       }}
@@ -160,7 +175,3 @@ export const OrderlyConfigProvider = (
     </OrderlyProvider>
   );
 };
-
-// const DataPreload = () => {
-//   const { error, done } = usePreLoadData();
-// };

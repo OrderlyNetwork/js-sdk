@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 
 export const useAccountInstance = (): Account => {
-  const { configStore, keyStore, getWalletAdapter } =
+  const { configStore, keyStore, getWalletAdapter, walletAdapters } =
     useContext(OrderlyContext);
 
   if (!configStore)
@@ -23,9 +23,8 @@ export const useAccountInstance = (): Account => {
       account = new Account(
         configStore,
         keyStore,
-
-        getWalletAdapter
-        // walletAdapter
+        // getWalletAdapter,
+        walletAdapters
       );
 
       SimpleDI.registerByName("account", account);
