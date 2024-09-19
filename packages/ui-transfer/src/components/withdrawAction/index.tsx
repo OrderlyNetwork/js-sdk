@@ -64,6 +64,7 @@ export const WithdrawAction = (props: IProps) => {
             <AuthGuard networkId={networkId} bridgeLessOnly buttonProps={{fullWidth: true}}>
                 {checkIsBridgeless ?
                     <Button
+                        data-testid="oui-testid-withdraw-dialog-withdraw-btn"
                         fullWidth
                         disabled={disabled}
                         loading={loading}

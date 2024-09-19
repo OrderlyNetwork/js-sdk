@@ -41,6 +41,12 @@ export { CopyIcon } from "./copy";
 export { ServerFillIcon } from "./serverFill";
 export { SortingAscIcon } from "./sortingASCIcon";
 export { SortingDescIcon } from "./sortingDESCIcon";
+export {
+  ArrowUpShortIcon,
+  ArrowDownShortIcon,
+  ArrowLeftShortIcon,
+  ArrowRightShortIcon,
+} from "./arrowShort";
 
 export { SortingIcon } from "./sortingIcon";
 

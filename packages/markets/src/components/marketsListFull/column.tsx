@@ -81,17 +81,15 @@ export const useMarketsListFullColumns = (
         width: 90,
         render: (value) => {
           return (
-            <Flex gapX={1}>
-              <TokenIcon symbol={value} size="xs" />
-              <Text.formatted
-                rule="symbol"
-                formatString="base-type"
-                size="xs"
-                weight="semibold"
-              >
-                {value}
-              </Text.formatted>
-            </Flex>
+            <Text.formatted
+              rule="symbol"
+              formatString="base-type"
+              size="xs"
+              weight="semibold"
+              showIcon
+            >
+              {value}
+            </Text.formatted>
           );
         },
       },

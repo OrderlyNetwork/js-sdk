@@ -10,7 +10,7 @@ type propertyType<D, K, F> = D extends 1 ? K : F;
 // }
 
 // type KeyOf<T> = keyof T;
-type ValueOf<T> = T[keyof T];
+export type ValueOf<T> = T[keyof T];
 
 // export function createGetter<T extends Record<string, any>, K extends keyof T>(
 export function createGetter<

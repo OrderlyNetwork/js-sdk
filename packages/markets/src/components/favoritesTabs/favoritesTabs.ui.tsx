@@ -14,7 +14,7 @@ import {
   UseFavoritesTabScriptReturn,
 } from "./favoritesTabs.script";
 import { AddIcon, AddIcon2, EditIcon, TrashIcon } from "../../icons";
-import "./style.css";
+import "../../style/index.css";
 
 export type FavoritesTabProps = UseFavoritesTabScriptReturn &
   Pick<UseFavoritesTabScriptOptions, "size">;
@@ -153,7 +153,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       my={3}
       gapX={size === "sm" ? 2 : 3}
       id="oui-markets-favorites-tabs-container"
-      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer"
+      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer hide-scrollbar"
     >
       {favoriteTabs?.map((item: any) => {
         const isActive = selectedFavoriteTab.id === item.id;

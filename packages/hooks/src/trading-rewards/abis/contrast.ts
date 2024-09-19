@@ -62,14 +62,16 @@ export const getContractByEnv = (env: ENVType): ContractDataInterface => {
 
     }
     if (env === ENVType.staging) {
-        data.orderTokenAddress = '0x2921a94509a17aebC1bB4d5bb35e3919Cd2a0BA8';
-        data.orderTokenAddressOnEthereum = '0xF706d113f17bDb5d571Ce58A353360537110A357';
-        data.orderlyContract = '0xfD81d496CeCEf7e18d3fca7F822bE770131f75F2';
+        data.orderTokenAddress = '0x5f11B4510BC50EfB82Fb55D7839a46e9b621f8C2';
+        data.orderTokenAddressOnEthereum = '0x48465104e96AEE47bdD0E40dD40b1DFE1a66e232';
+        data.orderlyContract = '0xAFEabBA48Aa0D33267a4ADf92a63C3E1A1284AB5';
         data.contract = '0x912196EB2583A2f0a18FaD632ee5dB65B8C93EEf';
     }
     if (env === ENVType.prod) {
-
-        // todo prod contract info
+        data.orderTokenAddress = '0x4E200fE2f3eFb977d5fd9c430A41531FB04d97B8';
+        data.orderTokenAddressOnEthereum = '0xABD4C63d2616A5201454168269031355f4764337';
+        data.orderlyContract = '0x7819704B69a38fD63Cc768134b8410dc08B987D0';
+        data.contract = '0xC8A8Ce0Ab010E499ca57477AC031358febCbbF17';   
     }
 
     return data;
