@@ -1,15 +1,15 @@
-import { FC, useContext, useMemo } from "react";
+import { FC, useMemo } from "react";
 
-import { OrderBookContext } from "../orderContext";
+import { useOrderBookContext } from "../orderContext";
+import { Flex, Text } from "@orderly.network/ui";
 
 interface Props {
   quote: string;
   base: string;
-  // onModeChange?: (mode: QtyMode) => void;
 }
 
 export const Header: FC<Props> = (props) => {
-  const { mode, onModeChange } = useContext(OrderBookContext);
+  const { mode, onModeChange } = useOrderBookContext();
   const currency = useMemo(() => {
     if (mode === "amount") {
       return props.quote;
@@ -22,30 +22,30 @@ export const Header: FC<Props> = (props) => {
   }, [mode]);
 
   return (
-    <div className="oui-flex oui-flex-1 oui-flex-row oui-justify-between oui-text-base-contrast-36 oui-text-4xs desktop:oui-text-3xs oui-pb-2 desktop:oui-pt-2">
-      <div
+    <Flex
+      justify={"between"}
+      width={"100%"}
+      className="oui-text-base-contrast-36 oui-text-2xs oui-py-[5px]"
+    >
+      <Flex
+        direction={"column"}
+        itemAlign={"start"}
         id="oui-order-book-header-price"
-        className="oui-flex oui-flex-col desktop:oui-flex-row desktop:oui-items-center"
       >
-        <span className="desktop:oui-text-2xs">Price</span>
-        <span>{`(${props.quote})`}</span>
-      </div>
-      <div
-        className="oui-flex oui-items-center oui-cursor-pointer"
+        <Text>Price</Text>
+        <Text>{`(${props.quote})`}</Text>
+      </Flex>
+      <Flex
+        direction={"column"}
+        itemAlign={"end"}
+        className="oui-cursor-pointer"
         onClick={() =>
           onModeChange?.(mode === "amount" ? "quantity" : "amount")
-          
         }
       >
-        <div
-          id="oui-order-book-header-qty"
-          className="oui-flex oui-flex-col desktop:oui-flex-row desktop:oui-items-center oui-text-base-contrast-36 oui-text-4xs oui-items-end oui-mr-1"
-        >
-          <span className="desktop:oui-text-2xs">{qtyLabel}</span>
-          <span>{`(${currency})`}</span>
-        </div>
-      </div>
-    </div>
+        <Text>{qtyLabel}</Text>
+        <Text>{`(${currency})`}</Text>
+      </Flex>
+    </Flex>
   );
 };
-

@@ -12,3 +12,6 @@ export {
 } from "./sheet";
 
 export { registerSimpleSheet } from "./helper";
+
+export { ActionSheet } from "./actionSheet";
+export type { BaseActionSheetItem, ActionSheetItem } from "./actionSheet";

@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTradingPateContext } from "../../provider/context";
 import {
+  useMediaQuery,
   useOrderbookStream,
   useOrderStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { removeTrailingZeros } from "@orderly.network/utils";
-import { OrderStatus } from "@orderly.network/types";
+import { MEDIA_TABLET, OrderStatus } from "@orderly.network/types";
 import { getBasicSymbolInfo } from "../../utils/utils";
 
 const CELL_MAX = 30;
@@ -79,6 +80,8 @@ export const useOrderBookScript = (props: {
     return allDepths?.map((e) => removeTrailingZeros(e)) || [];
   }, [allDepths, quote_dp]);
 
+  const isMWeb = useMediaQuery(MEDIA_TABLET);
+
   return {
     level,
     asks: data?.asks,
@@ -95,6 +98,7 @@ export const useOrderBookScript = (props: {
     onDepthChange,
     pendingOrders,
     symbolInfo: getBasicSymbolInfo(symbolInfo),
+    isMWeb,
   };
 };
 
