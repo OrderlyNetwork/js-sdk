@@ -18,6 +18,7 @@ export const MarketListWidget: React.FC<MarketListWidgetProps> = (props) => {
   return (
     <MarketList
       {...state}
+      type={props.type}
       initialSort={{
         sortKey: sortStore?.sortKey || props.sortKey,
         sort: (sortStore?.sortOrder as SortOrder) || props.sortOrder,

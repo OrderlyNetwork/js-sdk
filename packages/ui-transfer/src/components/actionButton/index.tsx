@@ -32,14 +32,17 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
         onClick: onApprove,
         // approve not disabled button
         disabled: false,
+        "data-testid": "oui-testid-deposit-dialog-approve-btn"
       },
       [DepositAction.Increase]: {
         children: `increase ${symbol} authorized amount`,
         onClick: onApprove,
+        "data-testid": "oui-testid-deposit-dialog-increase-btn"
       },
       [DepositAction.Deposit]: {
         children: "Deposit",
         onClick: onDeposit,
+        "data-testid": "oui-testid-deposit-dialog-deposit-btn"
       },
     };
 
