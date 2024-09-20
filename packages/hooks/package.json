@@ -52,7 +52,6 @@
   },
   "dependencies": {
     "@akamfoad/qr": "^0.4.0",
-    "@enzoferey/ethers-error-parser": "^0.2.3",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/net": "workspace:*",
     "@orderly.network/perp": "workspace:*",

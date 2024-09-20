@@ -1,9 +1,6 @@
 // import { ethers } from "ethers";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  getParsedEthersError,
-  // @ts-ignore
-} from "@enzoferey/ethers-error-parser";
+
 import { getContractByEnv } from "./abis/contrast";
 import { toOrder } from "./utils";
 import { useGetEnv } from "./useGetEnv";
@@ -47,7 +44,7 @@ export const useGetClaimed = (
   const refresh = useCallback(() => {
     const params = getContractByEnv(env);
     if (
-      typeof address === "undefined" 
+      typeof address === "undefined"
       // ||
       // typeof rpc.current === "undefined" ||
       // typeof provider.current === "undefined" ||
@@ -56,26 +53,29 @@ export const useGetClaimed = (
       return;
 
     console.log(`get claimed(${id})`, [id, address]);
-    account.wallet?.callOnChain(
-      // @ts-ignore
-      { public_rpc_url: params.orderlyChainRpcUrl },
-      params.orderlyContract,
-      "getClaimed",
-      [id, address],
-      {
-        abi: params.orderlyContractABI,
-      }
-    ).catch((error: any) => {
-      const parsedEthersError = getParsedEthersError(error);
-        throw parsedEthersError;
-    }).then((res: any) => {
-      const resOrder = toOrder(res);
+    account.walletAdapter
+      ?.callOnChain(
+        // @ts-ignore
+        { public_rpc_url: params.orderlyChainRpcUrl },
+        params.orderlyContract,
+        "getClaimed",
+        [id, address],
+        {
+          abi: params.orderlyContractABI,
+        }
+      )
+      .catch((error: any) => {
+        // const parsedEthersError = getParsedEthersError(error);
+        // throw parsedEthersError;
+        throw error;
+      })
+      .then((res: any) => {
+        const resOrder = toOrder(res);
         // const resOrder = toOrder(BigInt(2921867952260000000000));
         console.log(`new get claimed(${id})`, resOrder);
         setData(resOrder);
-    }).catch((error: any) => {
-
-    });
+      })
+      .catch((error: any) => {});
 
     // contract.current["getClaimed"]
     //   .apply(null, [id, address])
