@@ -389,12 +389,6 @@ importers:
       '@orderly.network/ui-scaffold':
         specifier: workspace:*
         version: link:../../packages/ui-scaffold
-      '@orderly.network/ui-share':
-        specifier: workspace:*
-        version: link:../../packages/ui-share
-      '@orderly.network/ui-tradingview':
-        specifier: workspace:*
-        version: link:../../packages/ui-tradingview
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -1146,10 +1140,6 @@ importers:
       eslint-plugin-react:
         specifier: 7.28.0
         version: 7.28.0(eslint@8.57.0)
-    devDependencies:
-      next:
-        specifier: 14.2.7
-        version: 14.2.7(react-dom@18.2.0)(react@18.3.1)
 
   packages/hooks:
     dependencies:
@@ -1380,7 +1370,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(@swc/core@1.4.12)(typescript@5.2.2)
 
   packages/perp:
     dependencies:
@@ -1597,27 +1587,9 @@ importers:
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-orders':
-        specifier: workspace:*
-        version: link:../ui-orders
-      '@orderly.network/ui-positions':
-        specifier: workspace:*
-        version: link:../ui-positions
-      '@orderly.network/ui-tradingview':
-        specifier: workspace:*
-        version: link:../ui-tradingview
-      '@orderly.network/ui-transfer':
-        specifier: workspace:*
-        version: link:../ui-transfer
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
     devDependencies:
       '@types/react':
         specifier: ^18.3.2
@@ -1981,6 +1953,67 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
 
+  packages/ui-cross-deposit:
+    dependencies:
+      '@layerzerolabs/scan-client':
+        specifier: ^0.0.6
+        version: 0.0.6(axios@1.7.2)
+      '@orderly.network/core':
+        specifier: workspace:*
+        version: link:../core
+      '@orderly.network/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
+      '@orderly.network/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@orderly.network/ui-chain-selector':
+        specifier: workspace:*
+        version: link:../ui-chain-selector
+      '@orderly.network/ui-transfer':
+        specifier: workspace:*
+        version: link:../ui-transfer
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
+      ramda:
+        specifier: ^0.29.1
+        version: 0.29.1
+    devDependencies:
+      '@types/ramda':
+        specifier: ^0.29.1
+        version: 0.29.3
+      '@types/react':
+        specifier: ^18.3.2
+        version: 18.3.2
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.3.1)
+      tailwindcss:
+        specifier: ^3.4.4
+        version: 3.4.4
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^7.1.0
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.2.2
+
   packages/ui-leverage:
     dependencies:
       '@orderly.network/hooks':
@@ -2075,15 +2108,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-positions':
-        specifier: workspace:*
-        version: link:../ui-positions
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
-      date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
     devDependencies:
       '@types/react':
         specifier: ^18.3.2
@@ -2121,9 +2148,6 @@ importers:
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-share':
-        specifier: workspace:*
-        version: link:../ui-share
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
@@ -2213,107 +2237,6 @@ importers:
       tsup:
         specifier: ^7.1.0
         version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
-
-  packages/ui-share:
-    dependencies:
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
-      embla-carousel-react:
-        specifier: ^8.2.0
-        version: 8.2.0(react@18.3.1)
-    devDependencies:
-      '@swc/cli':
-        specifier: ^0.3.12
-        version: 0.3.12(@swc/core@1.4.12)
-      '@swc/core':
-        specifier: ^1.4.12
-        version: 1.4.12
-      '@types/react':
-        specifier: ^18.3.2
-        version: 18.3.2
-      '@types/react-dom':
-        specifier: ^18.3.0
-        version: 18.3.0
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.3.1)
-      tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.4
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsup:
-        specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
-
-  packages/ui-tradingview:
-    dependencies:
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/net':
-        specifier: workspace:*
-        version: link:../net
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/ui-connector':
-        specifier: workspace:*
-        version: link:../ui-connector
-      '@orderly.network/ui-positions':
-        specifier: workspace:*
-        version: link:../ui-positions
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
-      date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../eslint-config-custom
-    devDependencies:
-      '@types/react':
-        specifier: ^18.3.2
-        version: 18.3.2
-      '@types/react-dom':
-        specifier: ^18.3.0
-        version: 18.3.0
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.3.1)
-      tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.4
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsup:
-        specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.2.2
 
   packages/ui-transfer:
     dependencies:
@@ -8051,6 +7974,14 @@ packages:
     resolution: {integrity: sha512-Lg3PnLp0QXpxwLIAuuJboLeRaIhrgJjeuh797QADg3xz8wGLugQOS5DpsE8A6i6Adgzf+bacllkKZG3J0tGfDw==}
     dev: true
 
+  /@layerzerolabs/scan-client@0.0.6(axios@1.7.2):
+    resolution: {integrity: sha512-K6Dpktj8bsPK/bE4DjgPclWn/mOZm/zm6lwRaaZvPkfPhmLQx43j5voBod9hqT2hSh26lC7ZkFAb+8aVUpPISQ==}
+    peerDependencies:
+      axios: '*'
+    dependencies:
+      axios: 1.7.2
+    dev: false
+
   /@ledgerhq/connect-kit-loader@1.1.8:
     resolution: {integrity: sha512-mDJsOucVW8m3Lk2fdQst+P74SgiKebvq1iBk4sXLbADQOwhL9bWGaArvO+tW7jPJZwEfSPWBdHcHoYi11XAwZw==}
     dev: false
@@ -8581,10 +8512,6 @@ packages:
     resolution: {integrity: sha512-Ms8ZswqY65/YfcjrlcIwMPD7Rg/dVjdLapMcSHG26W6O67EJDF435ShW4H4LXi1xKO1oRc97tLXUpx8jpLe86A==}
     dev: false
 
-  /@next/env@14.2.7:
-    resolution: {integrity: sha512-OTx9y6I3xE/eih+qtthppwLytmpJVPM5PPoJxChFsbjIEFXIayG0h/xLzefHGJviAa3Q5+Fd+9uYojKkHDKxoQ==}
-    dev: true
-
   /@next/eslint-plugin-next@13.4.1:
     resolution: {integrity: sha512-tVPS/2FKlA3ANCRCYZVT5jdbUKasBU8LG6bYqcNhyORDFTlDYa4cAWQJjZ7msIgLwMQIbL8CAsxrOL8maa/4Lg==}
     dependencies:
@@ -8615,15 +8542,6 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-darwin-arm64@14.2.7:
-    resolution: {integrity: sha512-UhZGcOyI9LE/tZL3h9rs/2wMZaaJKwnpAyegUVDGZqwsla6hMfeSj9ssBWQS9yA4UXun3pPhrFLVnw5KXZs3vw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@next/swc-darwin-x64@13.4.1:
     resolution: {integrity: sha512-7cmDgF9tGWTgn5Gw+vP17miJbH4wcraMHDCOHTYWkO/VeKT73dUWG23TNRLfgtCNSPgH4V5B4uLHoZTanx9bAw==}
     engines: {node: '>= 10'}
@@ -8640,15 +8558,6 @@ packages:
     os: [darwin]
     requiresBuild: true
     dev: false
-    optional: true
-
-  /@next/swc-darwin-x64@14.2.7:
-    resolution: {integrity: sha512-ys2cUgZYRc+CbyDeLAaAdZgS7N1Kpyy+wo0b/gAj+SeOeaj0Lw/q+G1hp+DuDiDAVyxLBCJXEY/AkhDmtihUTA==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [darwin]
-    requiresBuild: true
-    dev: true
     optional: true
 
   /@next/swc-linux-arm64-gnu@13.4.1:
@@ -8669,15 +8578,6 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-gnu@14.2.7:
-    resolution: {integrity: sha512-2xoWtE13sUJ3qrC1lwE/HjbDPm+kBQYFkkiVECJWctRASAHQ+NwjMzgrfqqMYHfMxFb5Wws3w9PqzZJqKFdWcQ==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@next/swc-linux-arm64-musl@13.4.1:
     resolution: {integrity: sha512-qcC54tWNGDv/VVIFkazxhqH1Bnagjfs4enzELVRlUOoJPD2BGJTPI7z08pQPbbgxLtRiu8gl2mXvpB8WlOkMeA==}
     engines: {node: '>= 10'}
@@ -8694,15 +8594,6 @@ packages:
     os: [linux]
     requiresBuild: true
     dev: false
-    optional: true
-
-  /@next/swc-linux-arm64-musl@14.2.7:
-    resolution: {integrity: sha512-+zJ1gJdl35BSAGpkCbfyiY6iRTaPrt3KTl4SF/B1NyELkqqnrNX6cp4IjjjxKpd64/7enI0kf6b9O1Uf3cL0pw==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
     optional: true
 
   /@next/swc-linux-x64-gnu@13.4.1:
@@ -8723,15 +8614,6 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-gnu@14.2.7:
-    resolution: {integrity: sha512-m6EBqrskeMUzykBrv0fDX/28lWIBGhMzOYaStp0ihkjzIYJiKUOzVYD1gULHc8XDf5EMSqoH/0/TRAgXqpQwmw==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@next/swc-linux-x64-musl@13.4.1:
     resolution: {integrity: sha512-sNDGaWmSqTS4QRUzw61wl4mVPeSqNIr1OOjLlQTRuyInxMxtqImRqdvzDvFTlDfdeUMU/DZhWGYoHrXLlZXe6A==}
     engines: {node: '>= 10'}
@@ -8748,15 +8630,6 @@ packages:
     os: [linux]
     requiresBuild: true
     dev: false
-    optional: true
-
-  /@next/swc-linux-x64-musl@14.2.7:
-    resolution: {integrity: sha512-gUu0viOMvMlzFRz1r1eQ7Ql4OE+hPOmA7smfZAhn8vC4+0swMZaZxa9CSIozTYavi+bJNDZ3tgiSdMjmMzRJlQ==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-    requiresBuild: true
-    dev: true
     optional: true
 
   /@next/swc-win32-arm64-msvc@13.4.1:
@@ -8777,15 +8650,6 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-arm64-msvc@14.2.7:
-    resolution: {integrity: sha512-PGbONHIVIuzWlYmLvuFKcj+8jXnLbx4WrlESYlVnEzDsa3+Q2hI1YHoXaSmbq0k4ZwZ7J6sWNV4UZfx1OeOlbQ==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@next/swc-win32-ia32-msvc@13.4.1:
     resolution: {integrity: sha512-vIoXVVc7UYO68VwVMDKwJC2+HqAZQtCYiVlApyKEeIPIQpz2gpufzGxk1z3/gwrJt/kJ5CDZjlhYDCzd3hdz+g==}
     engines: {node: '>= 10'}
@@ -8804,15 +8668,6 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-ia32-msvc@14.2.7:
-    resolution: {integrity: sha512-BiSY5umlx9ed5RQDoHcdbuKTUkuFORDqzYKPHlLeS+STUWQKWziVOn3Ic41LuTBvqE0TRJPKpio9GSIblNR+0w==}
-    engines: {node: '>= 10'}
-    cpu: [ia32]
-    os: [win32]
-    requiresBuild: true
-    dev: true
-    optional: true
-
   /@next/swc-win32-x64-msvc@13.4.1:
     resolution: {integrity: sha512-n8V5ImLQZibKTu10UUdI3nIeTLkliEXe628qxqW9v8My3BAH2a7H0SaCqkV2OgqFnn8sG1wxKYw9/SNJ632kSA==}
     engines: {node: '>= 10'}
@@ -8829,15 +8684,6 @@ packages:
     os: [win32]
     requiresBuild: true
     dev: false
-    optional: true
-
-  /@next/swc-win32-x64-msvc@14.2.7:
-    resolution: {integrity: sha512-pxsI23gKWRt/SPHFkDEsP+w+Nd7gK37Hpv0ngc5HpWy2e7cKx9zR/+Q2ptAUqICNTecAaGWvmhway7pj/JLEWA==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [win32]
-    requiresBuild: true
-    dev: true
     optional: true
 
   /@noble/curves@1.2.0:
@@ -13322,13 +13168,6 @@ packages:
       tslib: 2.6.0
     dev: false
 
-  /@swc/helpers@0.5.5:
-    resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
-    dependencies:
-      '@swc/counter': 0.1.3
-      tslib: 2.6.3
-    dev: true
-
   /@swc/plugin-remove-console@1.5.121:
     resolution: {integrity: sha512-oPmTosjPEPTkLQamFjeg/B/uT3VEbwo0dor4iUZUEjgu5Bv6JL8vafv1ma1GLdJ3lkOtN9t1xKirtFcM6aP0ug==}
     dependencies:
@@ -17751,6 +17590,7 @@ packages:
     engines: {node: '>=10.16.0'}
     dependencies:
       streamsearch: 1.1.0
+    dev: false
 
   /bytes@3.0.0:
     resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
@@ -18150,6 +17990,7 @@ packages:
 
   /client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+    dev: false
 
   /clipboardy@1.2.2:
     resolution: {integrity: sha512-16KrBOV7bHmHdxcQiCvfUFYVFyEah4FI8vYT1Fr7CGSA4G+xBWMEfUEQJS1hxeHGtI9ju1Bzs9uXSbj5HZKArw==}
@@ -19805,16 +19646,6 @@ packages:
       react: 18.3.1
     dev: false
 
-  /embla-carousel-react@8.2.0(react@18.3.1):
-    resolution: {integrity: sha512-dWqbmaEBQjeAcy/EKrcAX37beVr0ubXuHPuLZkx27z58V1FIvRbbMb4/c3cLZx0PAv/ofngX2QFrwUB+62SPnw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.1 || ^18.0.0
-    dependencies:
-      embla-carousel: 8.2.0
-      embla-carousel-reactive-utils: 8.2.0(embla-carousel@8.2.0)
-      react: 18.3.1
-    dev: false
-
   /embla-carousel-reactive-utils@8.1.5(embla-carousel@8.1.5):
     resolution: {integrity: sha512-76uZTrSaEGGta+qpiGkMFlLK0I7N04TdjZ2obrBhyggYIFDWlxk1CriIEmt2lisLNsa1IYXM85kr863JoCMSyg==}
     peerDependencies:
@@ -19823,20 +19654,8 @@ packages:
       embla-carousel: 8.1.5
     dev: false
 
-  /embla-carousel-reactive-utils@8.2.0(embla-carousel@8.2.0):
-    resolution: {integrity: sha512-ZdaPNgMydkPBiDRUv+wRIz3hpZJ3LKrTyz+XWi286qlwPyZFJDjbzPBiXnC3czF9N/nsabSc7LTRvGauUzwKEg==}
-    peerDependencies:
-      embla-carousel: 8.2.0
-    dependencies:
-      embla-carousel: 8.2.0
-    dev: false
-
   /embla-carousel@8.1.5:
     resolution: {integrity: sha512-R6xTf7cNdR2UTNM6/yUPZlJFRmZSogMiRjJ5vXHO65II5MoUlrVYUAP0fHQei/py82Vf15lj+WI+QdhnzBxA2g==}
-    dev: false
-
-  /embla-carousel@8.2.0:
-    resolution: {integrity: sha512-rf2GIX8rab9E6ZZN0Uhz05746qu2KrDje9IfFyHzjwxLwhvGjUt6y9+uaY1Sf+B0OPSa3sgas7BE2hWZCtopTA==}
     dev: false
 
   /emittery@0.13.1:
@@ -26464,48 +26283,6 @@ packages:
       - babel-plugin-macros
     dev: false
 
-  /next@14.2.7(react-dom@18.2.0)(react@18.3.1):
-    resolution: {integrity: sha512-4Qy2aK0LwH4eQiSvQWyKuC7JXE13bIopEQesWE0c/P3uuNRnZCQanI0vsrMLmUQJLAto+A+/8+sve2hd+BQuOQ==}
-    engines: {node: '>=18.17.0'}
-    hasBin: true
-    peerDependencies:
-      '@opentelemetry/api': ^1.1.0
-      '@playwright/test': ^1.41.2
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      sass: ^1.3.0
-    peerDependenciesMeta:
-      '@opentelemetry/api':
-        optional: true
-      '@playwright/test':
-        optional: true
-      sass:
-        optional: true
-    dependencies:
-      '@next/env': 14.2.7
-      '@swc/helpers': 0.5.5
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001642
-      graceful-fs: 4.2.11
-      postcss: 8.4.31
-      react: 18.3.1
-      react-dom: 18.2.0(react@18.3.1)
-      styled-jsx: 5.1.1(react@18.3.1)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.7
-      '@next/swc-darwin-x64': 14.2.7
-      '@next/swc-linux-arm64-gnu': 14.2.7
-      '@next/swc-linux-arm64-musl': 14.2.7
-      '@next/swc-linux-x64-gnu': 14.2.7
-      '@next/swc-linux-x64-musl': 14.2.7
-      '@next/swc-win32-arm64-msvc': 14.2.7
-      '@next/swc-win32-ia32-msvc': 14.2.7
-      '@next/swc-win32-x64-msvc': 14.2.7
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-    dev: true
-
   /nextgen-events@1.5.3:
     resolution: {integrity: sha512-P6qw6kenNXP+J9XlKJNi/MNHUQ+Lx5K8FEcSfX7/w8KJdZan5+BB5MKzuNgL2RTjHG1Svg8SehfseVEp8zAqwA==}
     engines: {node: '>=6.0.0'}
@@ -27993,6 +27770,7 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.0.1
       source-map-js: 1.2.0
+    dev: false
 
   /postcss@8.4.39:
     resolution: {integrity: sha512-0vzE+lAiG7hZl1/9I8yzKLx3aR9Xbof3fBHKunvMfOCYAtMhrsnccJY2iTURb9EZd5+pLuiNV9/c/GZJOHsgIw==}
@@ -28422,6 +28200,10 @@ packages:
 
   /ramda@0.29.0:
     resolution: {integrity: sha512-BBea6L67bYLtdbOqfp8f58fPMqEwx0doL+pAi8TZyp2YWz8R9G8z9x75CZI8W+ftqhFHCpEX2cRnUUXK130iKA==}
+
+  /ramda@0.29.1:
+    resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
+    dev: false
 
   /randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
@@ -30362,6 +30144,7 @@ packages:
   /streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
     engines: {node: '>=10.0.0'}
+    dev: false
 
   /strict-event-emitter@0.4.6:
     resolution: {integrity: sha512-12KWeb+wixJohmnwNFerbyiBrAlq5qJLwIt38etRtKtmmHyDSoGlIqFE9wx+4IwG0aDjI7GV8tc8ZccjWZZtTg==}
@@ -30623,23 +30406,6 @@ packages:
       client-only: 0.0.1
       react: 18.2.0
     dev: false
-
-  /styled-jsx@5.1.1(react@18.3.1):
-    resolution: {integrity: sha512-pW7uC1l4mBZ8ugbiZrcIsiIvVx1UmTfw7UkC3Um2tmfUq9Bhk8IiyEIPl6F8agHgjzku6j0xQEZbfA5uSgSaCw==}
-    engines: {node: '>= 12.0.0'}
-    peerDependencies:
-      '@babel/core': '*'
-      babel-plugin-macros: '*'
-      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      babel-plugin-macros:
-        optional: true
-    dependencies:
-      client-only: 0.0.1
-      react: 18.3.1
-    dev: true
 
   /stylehacks@5.1.1(postcss@8.4.39):
     resolution: {integrity: sha512-sBpcd5Hx7G6seo7b1LkpttvTz7ikD0LlH5RmdcBNb6fFR0Fl7LQwHDFr300q4cwUqi+IYrFGmsIHieMBfnN/Bw==}
