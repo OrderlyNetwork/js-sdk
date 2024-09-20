@@ -65,6 +65,7 @@ export const Favorites: FC<FavoritesProps> = (props) => {
               "group",
               "oui-h-[55px] oui-border-line-4 oui-cursor-pointer"
             ),
+            "data-testid": `oui-testid-markets-favorites-tr-${record.symbol}`,
             onClick: () => {
               onSymbolChange?.(record);
             },
@@ -166,6 +167,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           size="sm"
           className="oui-leading-[24px]"
           as="div"
+           data-testid="oui-markets-favorite-tab-subTab"
         >
           {item.name}
         </Text.gradient>
@@ -177,6 +179,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           size="sm"
           className="oui-leading-[24px]"
           as="div"
+          data-testid="oui-markets-favorite-tab-subTab"
         >
           {item.name}
         </Text>
@@ -229,7 +232,7 @@ const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             }}
             // @ts-ignore
             content={
-              <Flex gapX={2} itemAlign="center" px={2} py={1}>
+              <Flex gapX={2} itemAlign="center" px={2} py={1} >
                 <EditIcon
                   className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer"
                   onClick={() => {

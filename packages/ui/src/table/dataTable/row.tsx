@@ -43,6 +43,8 @@ export const Row = <RecordType,>(props: RowProps<RecordType>) => {
   }, [record, index, props.onRow]);
 
   const { className, ...rest } = rowAttrs;
+  console.log("table row rest", rest);
+  
 
   return (
     <>

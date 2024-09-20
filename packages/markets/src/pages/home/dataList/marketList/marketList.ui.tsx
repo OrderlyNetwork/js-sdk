@@ -7,6 +7,7 @@ import { useMarketsContext } from "../../provider";
 
 type MarketListProps = UseMarketListReturn & {
   initialSort: TInitialSort;
+  type?: "all" | "new";
 };
 
 export const MarketList: FC<MarketListProps> = (props) => {
@@ -19,6 +20,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
     favorite,
     onSort,
     initialSort,
+    type,
   } = props;
 
   const { onSymbolChange } = useMarketsContext();
@@ -41,6 +43,7 @@ export const MarketList: FC<MarketListProps> = (props) => {
           onClick: () => {
             onSymbolChange?.(record);
           },
+          "data-testid": `oui-testid-markets-${type === 'new' ? 'newListing' : 'all'}-tr-${record.symbol}`
         };
       }}
       generatedRowKey={(record) => record.symbol}
