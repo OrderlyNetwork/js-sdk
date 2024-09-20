@@ -1,10 +1,9 @@
 import { FC, useContext, useMemo } from "react";
-import { CellBar, CellBarDirection } from "../cellBar";
-import { Decimal, getPrecisionByNumber, removeTrailingZeros } from "@orderly.network/utils";
+import { CellBar } from "../cellBar";
+import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { OrderBookCellType, QtyMode } from "../types";
 import { OrderBookContext } from "../orderContext";
-import { useTradingPateContext } from "../../../provider/context";
-import { cn, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, Text } from "@orderly.network/ui";
 
 export interface OrderBookCellProps {
   background: string;
@@ -19,9 +18,9 @@ export interface OrderBookCellProps {
 
 export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const width = (props.accumulated / props.count) * 100;
-  const { cellHeight, onItemClick, depth, showTotal } =
+  const { cellHeight, onItemClick, depth, showTotal, symbolInfo } =
     useContext(OrderBookContext);
-  const { base_dp, quote_dp } = useTradingPateContext().symbolInfo;
+  const { base_dp, quote_dp } = symbolInfo;
 
   let qty = Number.isNaN(props.quantity)
     ? "-"
@@ -38,9 +37,9 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   }, [depth, quote_dp]);
 
   return (
-    <div
+    <Box
       className={cn(
-        "oui-order-book-list-item oui-overflow-hidden oui-relative oui-cursor-pointer oui-tabular-nums",
+        "oui-overflow-hidden oui-relative oui-cursor-pointer oui-tabular-nums oui-text-2xs oui-w-full",
         showTotal && "oui-flex-1"
       )}
       style={{ height: `${cellHeight}px` }}
@@ -49,29 +48,21 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
 
         onItemClick?.([props.price, props.quantity]);
       }}
-      // onMouseDown={(e) => {
-      //   if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
-      //   e.stopPropagation();
-      //   e.preventDefault();
-
-      // }}
     >
-      <div className="oui-flex oui-flex-row oui-justify-between oui-items-center oui-z-10 oui-relative oui-px-1 oui-text-4xs desktop:oui-text-2xs oui-h-full">
-        <div
-          className={
-            props.type === OrderBookCellType.ASK
-              ? "oui-text-trade-loss"
-              : "oui-text-trade-profit"
-          }
+      <Flex justify={"between"}>
+        <Text.numeral
+          color={props.type === OrderBookCellType.BID ? "buy" : "sell"}
+          dp={dp}
         >
-          <Text.numeral dp={dp}>{props.price}</Text.numeral>
-        </div>
-        <div className="oui-text-base-contrast-80">
-          <Text.numeral dp={props.mode === "amount" ? 2 : base_dp}>
-            {qty}
-          </Text.numeral>
-        </div>
-      </div>
+          {props.price}
+        </Text.numeral>
+        <Text.numeral
+          dp={props.mode === "amount" ? 2 : base_dp}
+          className="oui-text-base-contrast-80"
+        >
+          {qty}
+        </Text.numeral>
+      </Flex>
       {Number.isNaN(width) || showTotal ? null : (
         <CellBar
           width={width}
@@ -82,6 +73,6 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
           }
         />
       )}
-    </div>
+    </Box>
   );
 };

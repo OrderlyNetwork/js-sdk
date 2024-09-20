@@ -5,15 +5,16 @@ import { Asks } from "./asks";
 import { MarkPrice } from "./markPrice";
 import { OrderBookProvider } from "../orderContext";
 import { DepthSelect } from "./depthSelect";
-import { cn, Spinner } from "@orderly.network/ui";
+import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
+import { FundingRateWidget } from "../fundingRate";
 export interface OrderBookProps {
   asks: any[];
   bids: any[];
   markPrice: number;
   lastPrice: number[];
   onItemClick?: (item: number[]) => void;
-  depth?: string[];
+  depths?: string[];
   activeDepth?: string;
   onDepthChange?: (depth: number) => void;
   //
@@ -33,6 +34,7 @@ export interface OrderBookProps {
 export const OrderBook: FC<OrderBookProps> = (props) => {
   const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
   // const onModeChange = useCallback((mode: QtyMode) => {}, []);
+  const symbol = `PERP_${props.symbolInfo.base}_${props.symbolInfo.quote}`;
 
   return (
     <OrderBookProvider
@@ -43,13 +45,22 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       showTotal={false}
       symbolInfo={props.symbolInfo}
     >
-      <div id="oui-orderbook-mobile" className={cn("oui-h-full oui-relative", props.className)} >
+      <Flex
+        direction={"column"}
+        p={2}
+        id="oui-orderbook-mobile"
+        className={cn("oui-h-full oui-wfull oui-relative", props.className)}
+        justify={"start"}
+        itemAlign={"start"}
+      >
+        <FundingRateWidget symbol={symbol} />
         <Header quote={quote} base={base} />
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <Bids data={props.bids} />
+
         <DepthSelect
-          depth={props.depth || []}
+          depth={props.depths || []}
           value={props.activeDepth}
           onChange={onDepthChange}
         />
@@ -58,7 +69,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
             <Spinner />
           </div>
         )}
-      </div>
+      </Flex>
     </OrderBookProvider>
   );
 };
