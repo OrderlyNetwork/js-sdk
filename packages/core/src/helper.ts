@@ -137,7 +137,7 @@ export function generateSettleMessage(inputs: {
 }) {
   const { chainId, settlePnlNonce, domain, brokerId } = inputs;
   const primaryType = "SettlePnl";
-  const timestamp = new Date().getTime();
+  const timestamp = getTimestamp();
 
   const typeDefinition = {
     EIP712Domain: definedTypes.EIP712Domain,
