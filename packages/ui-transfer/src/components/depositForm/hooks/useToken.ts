@@ -1,6 +1,7 @@
-import { API, CurrentChain } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
 import { useCallback, useEffect, useState } from "react";
 import { getTokenByTokenList } from "../../../utils";
+import { CurrentChain } from "./useChainSelect";
 
 type Options = {
   currentChain: CurrentChain | null;

@@ -74,7 +74,7 @@ export const Assets: FC<AssetsProps> = (props) => {
     }
     setDisableGetTestUSDC(true);
     return getTestUSDC({
-      chain_id: account.wallet?.chainId.toString(),
+      chain_id: account.walletAdapter?.chainId.toString(),
       user_address: state.address,
       broker_id: config.get("brokerId"),
     }).then(

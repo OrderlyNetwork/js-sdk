@@ -3,12 +3,15 @@ import { UseSideMarketsScriptReturn } from "./sideMarkets.script";
 import { CollapseIcon, ExpandIcon } from "../../icons";
 import { ExpandMarketsWidget } from "../expandMarkets";
 import { CollapseMarketsWidget } from "../collapseMarkets";
+import { useSideMarketsContext } from "../sideMarketsProvider";
 import "../../style/index.css";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn;
 
 export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
   const { collapsed, onCollapse } = props;
+
+  const { activeTab, onTabChange, currentDataSource } = useSideMarketsContext();
 
   const header = (
     <Box width="100%">
@@ -34,9 +37,19 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       )}
     </Box>
   );
+
   const content = (
-    <Box width="100%">
-      {collapsed ? <CollapseMarketsWidget /> : <ExpandMarketsWidget />}
+    <Box
+      width="100%"
+      className={cn(
+        collapsed ? "oui-h-[calc(100%_-_52px)]" : "oui-h-[calc(100%_-_56px)]"
+      )}
+    >
+      {collapsed ? (
+        <CollapseMarketsWidget dataSource={currentDataSource!} />
+      ) : (
+        <ExpandMarketsWidget activeTab={activeTab} onTabChange={onTabChange} />
+      )}
     </Box>
   );
 

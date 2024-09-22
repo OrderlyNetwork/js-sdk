@@ -27,7 +27,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
       value={searchValue}
       onValueChange={onSearchValueChange}
       placeholder="Search"
-      classNames={{ root: "oui-my-2 oui-border oui-border-line" }}
+      classNames={{ root: "oui-border oui-mt-[1px] oui-border-line" }}
       size="sm"
       prefix={
         <Box pl={3} pr={1}>
@@ -45,12 +45,17 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
           </Box>
         )
       }
+      autoComplete="off"
     />
   );
 
+  const cls = "oui-h-[calc(100%_-_36px)]";
+
   return (
-    <Box className={cn("oui-font-semibold oui-h-full")}>
-      <Box px={3}>{search}</Box>
+    <Box className={cn("oui-font-semibold oui-overflow-hidden")} height="100%">
+      <Box px={3} pb={2}>
+        {search}
+      </Box>
       <Tabs
         variant="contained"
         size="md"
@@ -58,16 +63,28 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         onValueChange={onTabChange}
         classNames={{
           tabsList: "oui-my-[6px] oui-px-3",
+          tabsContent: "oui-h-full",
         }}
+        className={cls}
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
-          <FavoritesListWidget />
+          <div className={cls}>
+            <FavoritesListWidget />
+          </div>
         </TabPanel>
         <TabPanel title="Recent" value="recent">
-          <RecentListWidget />
+          <div className={cls}>
+            <RecentListWidget />
+          </div>
         </TabPanel>
         <TabPanel title="All" value="all">
-          <MarketsListWidget type="all" sortKey="24h_change" sortOrder="desc" />
+          <div className={cls}>
+            <MarketsListWidget
+              type="all"
+              sortKey="24h_change"
+              sortOrder="desc"
+            />{" "}
+          </div>
         </TabPanel>
       </Tabs>
     </Box>

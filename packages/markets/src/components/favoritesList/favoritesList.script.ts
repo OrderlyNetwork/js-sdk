@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
+import { useSideMarketsContext } from "../sideMarketsProvider";
 
 export type UseFavoritesListReturn = ReturnType<typeof useFavoritesListScript>;
 
@@ -12,6 +13,7 @@ export const useFavoritesListScript = () => {
   const { favorites, selectedFavoriteTab } = favorite;
 
   const { searchValue } = useMarketsContext();
+  const { activeTab, setCurrentDataSource } = useSideMarketsContext();
 
   const { onSort, getSortedList } = useSort();
 
@@ -38,6 +40,12 @@ export const useFavoritesListScript = () => {
   useEffect(() => {
     setLoading(false);
   }, [data]);
+
+  useEffect(() => {
+    if (activeTab === "favorites") {
+      setCurrentDataSource?.(dataSource);
+    }
+  }, [activeTab, dataSource]);
 
   return {
     loading,

@@ -34,6 +34,19 @@ export { Account, type AccountState } from "./account";
 export * from "./configStore/configStore";
 
 export { DefaultConfigStore } from "./configStore/defaultConfigStore";
+export type {
+  ChainType,
+  WalletAdapter,
+  Message,
+  RegisterAccountInputs,
+  WithdrawInputs,
+  SettleInputs,
+  AddOrderlyKeyInputs,
+} from "./wallet/walletAdapter";
+export { BaseWalletAdapter } from "./wallet/baseWalletAdapter";
+export { ChainNamespace } from "./constants";
+export type { Ed25519Keypair } from "./types";
+export type { SignatureDomain } from "./utils";
 
 export * from "./wallet";
 

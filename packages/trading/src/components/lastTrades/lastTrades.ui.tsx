@@ -1,12 +1,20 @@
 import { FC, ReactNode } from "react";
 import { Box, cn, Flex, ScrollArea, Text } from "@orderly.network/ui";
 import { LastTradesState } from "./lastTrades.script";
-import { API, OrderSide } from "@orderly.network/types";
+import { OrderSide } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
 
 export const LastTrades: FC<
   LastTradesState & {
-    className?: string;
+    classNames?: {
+      root?: string;
+      listHeader?: string;
+      listItem?: {
+        left?: string;
+        mid?: string;
+        right?: string;
+      };
+    };
     style?: React.CSSProperties;
   }
 > = (props) => {
@@ -14,17 +22,22 @@ export const LastTrades: FC<
     <Flex
       direction={"column"}
       itemAlign={"start"}
-      className={cn("oui-font-semibold", props.className)}
+      className={cn("oui-font-semibold", props.classNames?.root)}
       width={"100%"}
       height={"100%"}
       style={props.style}
     >
-      <Header base={props.base} quote={props.quote} />
+      <Header
+        base={props.base}
+        quote={props.quote}
+        className={props.classNames?.listHeader}
+      />
       <List
         data={props.data}
         isLoading={props.isLoading}
         baseDp={props.baseDp}
         quoteDp={props.quoteDp}
+        classNames={props.classNames?.listItem}
       />
     </Flex>
   );
@@ -60,13 +73,15 @@ const Row = (props: {
   );
 };
 
-const Header = (props: { base: string; quote: string }) => {
+const Header = (props: { base: string; quote: string; className?: string }) => {
   return (
     <Row
       left="Time"
       mid={`Price(${props.quote})`}
       right={`Qty(${props.base})`}
-      classNames={{ root: "oui-text-base-contrast-54 oui-h-[32px]" }}
+      classNames={{
+        root: cn("oui-text-base-contrast-54 oui-h-[32px]", props.className),
+      }}
     />
   );
 };
@@ -76,6 +91,11 @@ const List = (props: {
   isLoading?: boolean;
   baseDp: number;
   quoteDp: number;
+  classNames?: {
+    left?: string;
+    mid?: string;
+    right?: string;
+  };
 }) => {
   return (
     <ScrollArea className="oui-w-full oui-h-full">
@@ -91,15 +111,19 @@ const List = (props: {
             mid={commifyOptional(item?.price, { fix: props.quoteDp })}
             right={commifyOptional(item?.size, { fix: props.baseDp })}
             classNames={{
-              left: "oui-text-base-contrast-80",
-              right:
+              left: cn("oui-text-base-contrast-80", props.classNames?.left),
+              right: cn(
                 item.side === OrderSide.BUY
                   ? "oui-text-trade-profit"
                   : "oui-text-trade-loss",
-              mid:
+                props.classNames?.mid
+              ),
+              mid: cn(
                 item.side === OrderSide.BUY
                   ? "oui-text-trade-profit"
                   : "oui-text-trade-loss",
+                props.classNames?.right
+              ),
             }}
           />
         );

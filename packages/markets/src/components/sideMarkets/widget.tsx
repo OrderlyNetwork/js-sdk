@@ -1,18 +1,26 @@
 import React from "react";
 import { useSideMarketsScript } from "./sideMarkets.script";
-import { SideMarkets } from "./sideMarkets.ui";
+import { SideMarkets, SideMarketsProps } from "./sideMarkets.ui";
 import {
   SideMarketsProvider,
   SideMarketsProviderProps,
 } from "../sideMarketsProvider";
+import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 
-export type SideMarketsWidgetProps = SideMarketsProviderProps;
+export type SideMarketsWidgetProps = SideMarketsProviderProps &
+  MarketsProviderProps &
+  SideMarketsProps;
 
 export const SideMarketsWidget: React.FC<SideMarketsWidgetProps> = (props) => {
-  const state = useSideMarketsScript();
+  const state = useSideMarketsScript({
+    collapsed: props.collapsed,
+    onCollapse: props.onCollapse,
+  });
   return (
-    <SideMarketsProvider onSymbolChange={props.onSymbolChange}>
-      <SideMarkets {...state} />
+    <SideMarketsProvider>
+      <MarketsProvider onSymbolChange={props.onSymbolChange}>
+        <SideMarkets {...state} />
+      </MarketsProvider>
     </SideMarketsProvider>
   );
 };

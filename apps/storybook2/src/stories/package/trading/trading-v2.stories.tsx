@@ -291,11 +291,11 @@ export const OrderBook: Story = {
   render: (arg) => {
 
     return (
-      <Flex justify={"center"} className="oui-h-[500px]">
-        <Box className="oui-w-1/2 oui-bg-base-9" r="base" p={3}>
+      <div className="oui-h-[500px] oui-m-3 oui-flex oui-items-start oui-justify-center">
+        <Box className="oui-w-1/2 oui-bg-base-9" r="2xl" py={3}>
           <OrderBookWidget symbol={arg.symbol} />
         </Box>
-      </Flex>
+      </div>
     );
   }
 };
