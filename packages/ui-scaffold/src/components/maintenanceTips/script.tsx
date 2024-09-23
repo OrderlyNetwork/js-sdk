@@ -2,6 +2,7 @@ import { useMaintenanceStatus } from "@orderly.network/hooks";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { UTCDateMini } from "@date-fns/utc";
+import { getTimestamp } from "@orderly.network/utils";
 function getTimeString(timestamp: number) {
   const date = format(new UTCDateMini(timestamp), "MMM dd");
   const time = format(new UTCDateMini(timestamp), "h:mm aa");
@@ -50,7 +51,7 @@ export const useMaintenanceScript = (): MaintenanceTipInterface => {
     }
     setShowDialog(false);
     if (startTime) {
-      if (startTime < new Date().getTime() + oneDay) {
+      if (startTime < getTimestamp() + oneDay) {
         // check localstorage
         if (!window.localStorage.getItem(`Maintenance_${startTime}`)) {
           setShowTips(true);
