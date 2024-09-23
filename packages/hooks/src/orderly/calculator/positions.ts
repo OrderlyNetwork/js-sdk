@@ -44,7 +44,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       ctx.get((output: Record<string, any>) => output[this.name]) ||
       usePositionStore.getState().positions;
 
-    if (!positions || positions.rows.length === 0) {
+    if (!positions) {
       return null;
     }
 
@@ -80,10 +80,6 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       unsettlementPnL_total = zero;
 
     const rows = data.rows.map((item) => {
-      //TODO: get markPrice from store
-      // const markPrice = useMarkPriceStore.getState().markPrices[item.symbol];
-      // // console.log("!!!! ctx", ctx);
-      // console.log("!!!! markPrice", markPrice);
       const info = symbolsInfo[item.symbol];
 
       const notional = positions.notional(item.position_qty, item.mark_price);

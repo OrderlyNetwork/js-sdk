@@ -19,7 +19,14 @@ import { OrderTPSL } from "./components/tpsl";
 import { API } from "@orderly.network/types";
 
 export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
-  const { side, orderEntity, setOrderValue, symbolInfo } = props;
+  const {
+    side,
+    orderEntity,
+    setOrderValue,
+    symbolInfo,
+    maxQty,
+    freeCollateral,
+  } = props;
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY ? "Buy / Long" : "Sell / Short";
   }, [side]);
@@ -65,7 +72,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           size={"2xs"}
           unitClassName={"oui-ml-1"}
         >
-          0
+          {freeCollateral}
         </Text.numeral>
       </Flex>
       <OrderQuantityInput
@@ -81,7 +88,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           props.setOrderValue(key, value);
         }}
       />
-      <QuantitySlider maxQty={0} setMaxQty={() => {}} side={props.side} />
+      <QuantitySlider maxQty={maxQty} setMaxQty={() => {}} side={props.side} />
       <AuthGuard buttonProps={{ fullWidth: true }}>
         <Button fullWidth color={side === OrderSide.BUY ? "buy" : "sell"}>
           {buttonLabel}
@@ -209,11 +216,13 @@ const CustomInput = (props: {
   name?: string;
   onChange?: InputProps["onChange"];
   value?: InputProps["value"];
+  autoFocus?: InputProps["autoFocus"];
   // helperText?: InputProps["helperText"];
 }) => {
   return (
     <Input
       autoComplete={"off"}
+      autoFocus={props.autoFocus}
       size={"lg"}
       placeholder={"0"}
       id={props.id}
@@ -272,7 +281,6 @@ const QuantitySlider = (props: {
         <Flex>
           <button
             className={textVariants({
-              // color: "buy",
               size: "2xs",
               className: "oui-mr-1",
             })}
@@ -280,7 +288,7 @@ const QuantitySlider = (props: {
             Max buy
           </button>
           <Text.numeral size={"2xs"} color={color}>
-            34567
+            {props.maxQty}
           </Text.numeral>
         </Flex>
       </Flex>

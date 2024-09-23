@@ -35,6 +35,9 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
 
   usePublicDataObserver();
 
+  /**
+   * WS observer
+   */
   useWSObserver(calculatorService);
 
   const getKeyHandlerMapRef = useRef<Map<string, getKeyFunction>>(new Map());

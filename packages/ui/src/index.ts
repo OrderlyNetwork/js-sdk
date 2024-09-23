@@ -11,6 +11,7 @@ export { Checkbox } from "./checkbox";
 export { Switch } from "./switch";
 export { Badge } from "./badge/badge";
 export { Logo, type LogoProps } from "./logo/logo";
+// export * from "./tag/tag";
 export * from "./tooltip";
 export * from "./table";
 export * from "./scrollarea";

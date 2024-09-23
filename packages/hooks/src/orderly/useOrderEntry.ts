@@ -23,6 +23,7 @@ import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
+import { usePositions } from "./usePositionStream/usePositionStore";
 // import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
@@ -141,16 +142,17 @@ export function useOrderEntry(
 
   const ee = useEventEmitter();
 
+  const positions = usePositions();
+
   const fieldDirty = useRef<{ [K in keyof OrderEntity]?: boolean }>({});
   const submitted = useRef<boolean>(false);
   const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
 
-  const onOrderbookUpdate = useDebouncedCallback((data: number[]) => {
+  const onOrderBookUpdate = useDebouncedCallback((data: number[]) => {
     askAndBid.current = data;
   }, 200);
 
-  const { freeCollateral, totalCollateral, positions, accountInfo } =
-    useCollateral();
+  const { freeCollateral, totalCollateral, accountInfo } = useCollateral();
 
   const symbolInfo = useSymbolsInfo();
   // const tokenInfo = useTokenInfo();
@@ -597,10 +599,10 @@ export function useOrderEntry(
       }
     }
 
-    ee.on("orderbook:update", onOrderbookUpdate);
+    ee.on("orderbook:update", onOrderBookUpdate);
 
     return () => {
-      ee.off("orderbook:update", onOrderbookUpdate);
+      ee.off("orderbook:update", onOrderBookUpdate);
     };
   }, [optionsValue?.watchOrderbook]);
 
@@ -634,18 +636,18 @@ export function useOrderEntry(
       return null;
 
     /**
-         * price
-         * if order_type = market order,
-         order side = long, then order_price_i = ask0
-         order side = short, then order_price_i = bid0
-         if order_type = limit order
-         order side = long
-         limit_price >= ask0, then order_price_i = ask0
-         limit_price < ask0, then order_price_i = limit_price
-         order side = short
-         limit_price <= bid0, then order_price_i = bid0
-         limit_price > ask0, then order_price_i = ask0
-         */
+     * price
+     * if order_type = market order,
+     order side = long, then order_price_i = ask0
+     order side = short, then order_price_i = bid0
+     if order_type = limit order
+     order side = long
+     limit_price >= ask0, then order_price_i = ask0
+     limit_price < ask0, then order_price_i = limit_price
+     order side = short
+     limit_price <= bid0, then order_price_i = bid0
+     limit_price > ask0, then order_price_i = ask0
+     */
     let price: number | undefined;
 
     if (

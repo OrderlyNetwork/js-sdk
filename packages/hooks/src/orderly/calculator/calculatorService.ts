@@ -6,16 +6,29 @@ import {
 } from "../../types";
 import { CalculatorContext } from "./calculatorContext";
 
+type CalcOptions = {
+  skipUpdate?: boolean;
+  skipPending?: boolean;
+};
+
+type CalcItem = {
+  scope: CalculatorScope;
+  data: any;
+  options?: CalcOptions;
+};
+
 class CalculatorService {
   private calculators: Map<string, Calculator[]>;
 
-  private pendingCalc: { scope: CalculatorScope; data: any }[] = [];
+  private pendingCalc: CalcItem[] = [];
+
+  private calcQueue: CalcItem[] = [];
 
   constructor(
     private readonly scheduler: CalculatorScheduler,
-    queue: [string, Calculator[]][]
+    calculators: [string, Calculator[]][]
   ) {
-    this.calculators = new Map(queue);
+    this.calculators = new Map(calculators);
   }
 
   register(scope: string, calculator: Calculator) {
@@ -37,44 +50,47 @@ class CalculatorService {
     }
   }
 
-  async calc(
-    scope: CalculatorScope,
-    data: any,
-    options?: {
-      skipUpdate?: boolean;
-      skipPending?: boolean;
-    }
-  ) {
-    // this.pendingCalc.push({ scope, data });
-
-    const queue = this.calculators.get(scope);
-
+  async calc(scope: CalculatorScope, data: any, options?: CalcOptions) {
     const ctx = new CalculatorContext(scope, data);
     // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
     if (!ctx.isReady && !options?.skipPending) {
-      this.pendingCalc.push({ scope, data });
+      this.pendingCalc.push({ scope, data, options });
       return;
     }
 
     // handle pending calc
     this.handlePendingCalc();
 
-    if (Array.isArray(queue) && queue.length) {
-      await this.scheduler.calc(scope, queue, data, ctx);
+    this.calcQueue.push({ scope, data, options });
 
-      // console.log("[calc done:]", scope, ctx.outputToValue());
-      if (!options?.skipUpdate) {
-        this.scheduler.update(scope, queue, ctx.outputToValue());
-      }
-    }
+    this.handleCalcQueue(ctx);
   }
 
-  private handlePendingCalc() {
+  private async handlePendingCalc() {
     while (this.pendingCalc.length) {
       const item = this.pendingCalc.shift();
       if (item) {
         const { scope, data } = item;
-        this.calc(scope, data, { skipUpdate: false });
+        await this.calc(scope, data, { skipUpdate: false });
+      }
+    }
+  }
+
+  private async handleCalcQueue(context?: CalculatorContext) {
+    const first = this.calcQueue.shift();
+    if (first) {
+      // console.log("[calcQueue:]", first);
+      const { scope, data, options } = first;
+      const ctx = context || new CalculatorContext(scope, data);
+      const calculators = this.calculators.get(scope);
+      if (Array.isArray(calculators) && calculators.length) {
+        await this.scheduler.calc(scope, calculators, data, ctx);
+        if (!options?.skipUpdate) {
+          this.scheduler.update(scope, calculators, ctx.outputToValue());
+        }
+      }
+      if (this.calcQueue.length) {
+        requestAnimationFrame(() => this.handleCalcQueue());
       }
     }
   }

@@ -7,12 +7,12 @@ import { useMarkPricesStream } from "./useMarkPricesStream";
 import { account } from "@orderly.network/perp";
 import { useCollateral } from "./useCollateral";
 
-import { usePrivateQuery } from "../usePrivateQuery";
-import { usePositionStream } from "./usePositionStream/usePositionStream";
 import { pathOr } from "ramda";
 import { useOrderStream } from "./useOrderStream/useOrderStream";
+import { usePositions } from "./usePositionStream/usePositionStore";
+import { useAccountInfo } from "./appStore";
 
-const positionsPath = pathOr([], [0, "rows"]);
+// const positionsPath = pathOr([], [0, "rows"]);
 
 /**
  * @param symbol
@@ -25,25 +25,31 @@ export const useMaxQty = (
   side: OrderSide,
   reduceOnly: boolean = false
 ) => {
-  const positionsData = usePositionStream();
+  // const positionsData = usePositionStream();
 
-  // const [orders] = useOrderStream({ status: OrderStatus.NEW });
+  const positions = usePositions();
 
-  const { data: accountInfo } =
-    usePrivateQuery<API.AccountInfo>("/v1/client/info");
+  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+
+  // const { data: accountInfo } =
+  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
+  const accountInfo = useAccountInfo();
 
   const symbolInfo = useSymbolsInfo();
 
   const { totalCollateral } = useCollateral();
 
-  const { data: markPrices } = useMarkPricesStream();
+  const markPrices = useMarkPricesStream();
 
-  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+  // const [orders] = useOrderStream({ status: OrderStatus.NEW });
+
+  console.log("+++++++++++maxQty++++++++++++++ ", positions.length);
 
   const maxQty = useMemo(() => {
     if (!symbol) return 0;
 
-    const positions = positionsPath(positionsData);
+    // const positions = positionsPath(positionsData);
 
     const positionQty = account.getQtyFromPositions(positions, symbol);
 
@@ -121,7 +127,7 @@ export const useMaxQty = (
     });
   }, [
     orders,
-    positionsData,
+    // positionsData,
     markPrices,
     accountInfo,
     symbolInfo,
@@ -131,19 +137,7 @@ export const useMaxQty = (
     reduceOnly,
   ]);
 
-  // debugPrint({
-  //   maxQty,
-  //   totalCollateral,
-  //   side,
-  //   // reduceOnly,
-  //   orders: orders?.map((o) => o.quantity),
-  //   // positionsData,
-  //   // markPrices,
-  //   // accountInfo,
-  //   // symbolInfo,
-  //   // symbol,
-  // });
-  // console.log("maxQty", maxQty);
+  // return 0;
 
   return Math.max(maxQty, 0) as number;
 };

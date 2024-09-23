@@ -36,6 +36,9 @@ const usePositionStore = create<
         total_collateral_value: 0,
         free_collateral: 0,
         total_pnl_24_h: 0,
+        total_unreal_pnl: 0,
+        total_unsettled_pnl: 0,
+        notional: 0,
       },
       actions: {
         setPositions: (positions: API.PositionsTPSLExt) => {
@@ -56,7 +59,7 @@ const usePositionStore = create<
   )
 );
 
-const usePositions = () => usePositionStore((state) => state.positions);
+const usePositions = () => usePositionStore((state) => state.positions.rows);
 const usePositionActions = () => usePositionStore((state) => state.actions);
 
 export { usePositionStore, usePositions, usePositionActions };

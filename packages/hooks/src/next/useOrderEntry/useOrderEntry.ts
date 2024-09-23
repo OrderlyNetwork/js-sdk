@@ -1,12 +1,14 @@
 import {
+  useCollateral,
   useMarkPriceBySymbol,
+  useMaxQty,
   useSymbolsInfo,
 } from "../../orderly/orderlyHooks";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import type { FullOrderState } from "./orderEntry.store";
-import { API } from "@orderly.network/types";
+import { API, OrderEntity } from "@orderly.network/types";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -21,12 +23,6 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   const symbolConfig = useSymbolsInfo();
 
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
-
-  console.log(
-    ">>>>>useOrderEntryNext \\\\\\//////// symbolInfo<<<<<<<",
-    symbolInfo,
-    typeof symbolConfig[symbol]
-  );
 
   const {
     formattedOrder,
@@ -51,8 +47,36 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     setValuesInternal(values, prepareData());
   };
 
+  const { freeCollateral, totalCollateral } = useCollateral();
+
+  // const estLeverage = useMemo(() => {
+  //   if (!accountInfo || !parsedData) return null;
+  //   const result = getPriceAndQty(formattedOrder as OrderEntity);
+  //   if (result === null || !result.price || !result.quantity) return null;
+  //
+  //   const leverage = orderUtils.estLeverage({
+  //     totalCollateral,
+  //     positions,
+  //     newOrder: {
+  //       symbol: parsedData.symbol,
+  //       qty: result.quantity,
+  //       price: result.price,
+  //     },
+  //   });
+  //
+  //   return leverage;
+  // }, []);
+
+  const maxQty = useMaxQty(
+    symbol,
+    formattedOrder.side,
+    formattedOrder.reduce_only
+  );
+
   return {
     formattedOrder,
+    maxQty,
+    freeCollateral,
     setValue,
     setValues,
     symbolInfo: symbolInfo || {},

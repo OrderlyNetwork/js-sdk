@@ -4,7 +4,7 @@ import { MenuItem } from "@orderly.network/ui";
 import { commify, Decimal } from "@orderly.network/utils";
 import type {
   InputFormatter,
-  InputFormatterOptions
+  InputFormatterOptions,
 } from "@orderly.network/ui";
 
 export enum PnLMode {
@@ -55,7 +55,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   }, [mode]);
 
   const value = useMemo(() => {
-    console.log("mode", mode, values);
+    // console.log("mode", mode, values);
     return values[mode as keyof PNL_Values];
   }, [values, mode]);
 
@@ -65,13 +65,13 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       {
         label: "Offset",
         value: PnLMode.OFFSET,
-        testId: `${PnLMode.OFFSET}_mneu_item`
+        testId: `${PnLMode.OFFSET}_mneu_item`,
       },
       {
         label: "Offset%",
         value: PnLMode.PERCENTAGE,
-        testId: `${PnLMode.PERCENTAGE}_menu_item`
-      }
+        testId: `${PnLMode.PERCENTAGE}_menu_item`,
+      },
     ];
   }, []);
 
@@ -116,7 +116,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           // value = todpIfNeed(value, quote_dp);
         }
         return value;
-      }
+      },
     };
   };
 
@@ -129,7 +129,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     },
     value,
     onValueChange,
-    quote_db: props.quote_dp
+    quote_db: props.quote_dp,
   };
 };
 

@@ -26,6 +26,7 @@ export interface CalculatorCtx {
 export enum CalculatorScope {
   MARK_PRICE = "markPrice",
   POSITION = "position",
+  ORDER = "order",
   TICK_PRICE = "tickPrice",
 }
 

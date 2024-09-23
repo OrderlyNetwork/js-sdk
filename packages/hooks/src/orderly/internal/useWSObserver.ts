@@ -5,7 +5,6 @@ import { Calculator, CalculatorScope } from "../../types";
 import { CalculatorService } from "../calculator/calculatorService";
 
 export const useWSObserver = (calculatorService: CalculatorService) => {
-  // const { calculatorService } = option;
   const ws = useWS();
   const { updateMarkPrice } = useMarkPriceActions();
 
@@ -20,6 +19,7 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
           const element = message[index];
           data[element.symbol] = element.price;
         }
+
         updateMarkPrice(data);
         // call the calculator service
         calculatorService.calc(CalculatorScope.MARK_PRICE, data, {

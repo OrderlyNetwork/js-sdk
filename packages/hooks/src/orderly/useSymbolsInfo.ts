@@ -40,8 +40,11 @@ export const useSymbolsInfo = () => {
   // });
   const symbolsInfo = useAppStore((state) => state.symbolsInfo);
 
-  return useMemo(() => createGetter<API.SymbolExt, string>(data), [data]);
+  return useMemo(
+    () => createGetter<API.SymbolExt, string>({ ...symbolsInfo }),
+    [symbolsInfo]
+  );
   // console.log(">>>>>symbolsInfo<<<<<<<", symbolsInfo);
 
-  return createGetter<API.SymbolExt, string>({ ...symbolsInfo });
+  // return createGetter<API.SymbolExt, string>({ ...symbolsInfo });
 };

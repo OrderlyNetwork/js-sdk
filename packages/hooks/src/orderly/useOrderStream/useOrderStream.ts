@@ -43,7 +43,7 @@ export const useOrderStream = (
     dateRange?: {
       from?: Date;
       to?: Date;
-    }
+    };
   },
   options?: {
     /**
@@ -67,7 +67,7 @@ export const useOrderStream = (
     excludes = [],
   } = params;
 
-  const { data: markPrices = {} } = useMarkPricesStream();
+  const markPrices = useMarkPricesStream();
 
   const { registerKeyHandler: regesterKeyHandler, unregisterKeyHandler } =
     useDataCenterContext();
@@ -84,7 +84,7 @@ export const useOrderStream = (
   ] = useMutation("/v1/order", "PUT");
 
   const [
-    doCanceAlgolOrder,
+    doCancelAlgolOrder,
     { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
   ] = useMutation("/v1/algo/order", "DELETE");
 
@@ -169,7 +169,7 @@ export const useOrderStream = (
     return flattenOrders.map((item) => {
       const order = {
         ...item,
-        mark_price: (markPrices as any)[item.symbol] ?? 0,
+        mark_price: (markPrices ?? ({} as any))[item.symbol] ?? 0,
       };
 
       ///TODO: remove this when BE provides the correct data
@@ -261,7 +261,7 @@ export const useOrderStream = (
     (orderId: number, type: CreateOrderType, symbol?: string) => {
       switch (type) {
         case "algoOrder":
-          return doCanceAlgolOrder(null, {
+          return doCancelAlgolOrder(null, {
             // @ts-ignore
             order_id: orderId,
             symbol,

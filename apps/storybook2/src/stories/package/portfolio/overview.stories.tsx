@@ -4,6 +4,7 @@ import {
   OverviewModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
+// import { OverviewContextProvider } from "@orderly.network/portfolio";
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
@@ -25,7 +26,6 @@ const meta = {
   },
   decorators: [
     (Story, args) => {
-      
       const config = new CustomConfigStore({
         env: "qa",
       });
@@ -60,14 +60,12 @@ const meta = {
         step: 1,
       },
     },
-
   },
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
-
     onChainChanged: fn(),
   },
-} satisfies Meta<typeof OverviewModule.OverviewPage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -155,15 +153,13 @@ export const PerformanceAndData: Story = {
     );
   },
 
-  // decorators: [
-  //   (Story) => (
-  //     <Flex justify={"center"}  className="oui-w-full">
-
-  //         <Story />
-
-  //     </Flex>
-  //   ),
-  // ],
+  decorators: [
+    (Story) => (
+      <OverviewModule.OverviewContextProvider>
+        <Story />
+      </OverviewModule.OverviewContextProvider>
+    ),
+  ],
 };
 
 export const AssetHistoryChart: Story = {
@@ -206,7 +202,9 @@ export const DistributionHistory: Story = {
   decorators: [
     (Story) => (
       <Box height={"550px"} className="oui-bg-base-9">
-        <Story />
+        <OverviewModule.OverviewContextProvider>
+          <Story />
+        </OverviewModule.OverviewContextProvider>
       </Box>
     ),
   ],

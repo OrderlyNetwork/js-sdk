@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useEffect,
+  forwardRef,
 } from "react";
 import { InputHTMLAttributes } from "react";
 import { InputFormatter } from "./formatter/inputFormatter";
@@ -32,7 +33,7 @@ export interface BaseInputProps<T = string>
   onValueChange?: (value: T) => void;
 }
 
-export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
+export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
   (props, ref) => {
     const {
       clearable,
@@ -175,3 +176,5 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     );
   }
 );
+
+BaseInput.displayName = "BaseInput";

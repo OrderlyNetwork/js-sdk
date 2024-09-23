@@ -25,8 +25,8 @@ class PortfolioCalculator extends BaseCalculator<any> {
       return null;
     }
 
-    const unsettlementPnL = pathOr(0, ["unsettled_pnl"])(positions);
-    const unrealizedPnL = pathOr(0, ["unrealized_pnl"])(positions);
+    const unsettlementPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
+    const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
     const [USDC_holding, nonUSDC] = parseHolding(holding, data);
     const usdc = holding.find((item) => item.token === "USDC");

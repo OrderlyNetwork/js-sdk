@@ -13,21 +13,14 @@ type MarkPriceActions = {
 
 const useMarkPriceStore = create<
   MarkPriceStore & { actions: MarkPriceActions }
->()((set, get) => ({
+>((set, get) => ({
   markPrices: {},
 
   actions: {
     updateMarkPrice: (markPrice) => {
-      set(
-        {
-          markPrices: markPrice,
-        }
-        // (state) => {
-        //   state.markPrices = markPrice;
-        // },
-        // true,
-        // "updateMarkPrice"
-      );
+      set({
+        markPrices: markPrice,
+      });
     },
     getMarkPriceBySymbol: (symbol: string) => {
       return get().markPrices[symbol];
