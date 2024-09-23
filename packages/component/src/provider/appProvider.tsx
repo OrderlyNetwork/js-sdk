@@ -31,7 +31,7 @@ import {
   PnLDefaultProps,
   ShareConfigProps,
 } from "@/block/shared/shareConfigProps";
-import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
+import { Chains } from "@orderly.network/hooks";
 import { DesktopDropMenuItem } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { TopNavbarProps } from "@/page/common/topNavbar";
 
