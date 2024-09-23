@@ -5,8 +5,9 @@ import {
   FavoritesDropdownMenuWidget,
   FavoritesTabWidget
 } from "@orderly.network/markets";
-import { Box, Button } from "@orderly.network/ui";
+import { Box, Button, Flex } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
+import { MarketsType, useMarketList } from "@orderly.network/hooks";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging" });
@@ -33,37 +34,45 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const decorators = [(Story:any) => (
+  <Box width={500} >
+    <Story />
+  </Box>
+)]
+
 
 export const DropdownMenu: Story = {
   render: (args) => {
+    const [data, favorite] = useMarketList(MarketsType.ALL);
+
     return <FavoritesDropdownMenuWidget
       row={{ symbol: 'PERP_BTC_USDC' }}
-      favorite={{ favoriteTabs: [{ name: "Popular", id: 1 }] } as any}>
+      favorite={favorite}>
       <Button>Show favorite dropdown menu</Button>
     </FavoritesDropdownMenuWidget>;
   },
 
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
+  decorators
 };
 
-// export const Tabs: Story = {
-//   render: (args) => {
-//     return (
-//       <FavoritesTabWidget favorite={{ favoriteTabs: [{ name: "Popular", id: 1 }] } as any} />
-//     );
-//   },
+export const Tabs: Story = {
+  render: (args) => {
+    const [data, favorite] = useMarketList(MarketsType.ALL);
 
-//   decorators: [
-//     (Story) => (
-//       <Box>
-//         <Story />
-//       </Box>
-//     ),
-//   ],
-// };
+    return (<>
+      <Flex direction='column' itemAlign='start' gapY={2} p={2}>
+        <div>Small</div>
+        <Box width={400} intensity={900} px={3}>
+          <FavoritesTabWidget favorite={favorite} size="sm" />
+        </Box>
+
+        <div>Default</div>        
+        <Box width={600} intensity={900} px={3}>
+          <FavoritesTabWidget favorite={favorite} />
+        </Box>
+      </Flex>
+      </>)
+  },
+
+  decorators
+};

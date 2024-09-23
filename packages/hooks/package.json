@@ -2,13 +2,8 @@
   "name": "@orderly.network/hooks",
   "version": "1.5.12",
   "description": "",
-  "main": "lib/index.js",
-  "module": "esm/index.js",
-  "types": "esm/index.d.ts",
-  "files": [
-    "esm",
-    "lib"
-  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
     "dev": "tsup --watch --tsconfig tsconfig.build.json",
     "build:tsc": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs",
@@ -18,13 +13,17 @@
     "docs:generate": "typedoc",
     "docs:parse": "@orderly.network/typedoc-json-parser",
     "test": "jest",
-    "build": "rimraf -rf dist esm lib && pnpm build:swc:esm && pnpm build:swc:cjs",
+    "build": "rimraf -rf dist esm lib && pnpm build:tsup",
+    "build:swc": "rimraf -rf dist esm lib && pnpm build:swc:esm && pnpm build:swc:cjs",
     "build:swc:esm": "pnpm generateType:esm && swc src -d esm --strip-leading-paths --copy-files",
     "build:swc:cjs": "pnpm generateType:cjs && swc src -d lib --config module.type=commonjs --strip-leading-paths --copy-files",
     "generateType:esm": "tsc --emitDeclarationOnly --project tsconfig.build.json --outDir esm",
     "generateType:cjs": "tsc --emitDeclarationOnly --project tsconfig.build.json --module commonjs --outDir lib"
   },
   "keywords": [],
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "react": "^18.2.0"
   },
@@ -58,6 +57,8 @@
     "@orderly.network/perp": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/web3-provider-ethers": "workspace:*",
+    "@orderly.network/default-evm-adapter": "workspace:*",
     "immer": "^10.1.1",
     "ramda": "^0.29.0",
     "swr": "2.2.4",

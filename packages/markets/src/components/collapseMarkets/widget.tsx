@@ -1,8 +1,9 @@
 import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 import { useCollapseMarketsScript } from "./collapseMarkets.script";
-import { CollapseMarkets } from "./collapseMarkets.ui";
+import { CollapseMarkets, CollapseMarketsProps } from "./collapseMarkets.ui";
 
-export type CollapseMarketsWidgetPros = MarketsProviderProps;
+export type CollapseMarketsWidgetPros = MarketsProviderProps &
+  Pick<CollapseMarketsProps, "dataSource">;
 
 export const CollapseMarketsWidget: React.FC<CollapseMarketsWidgetPros> = (
   props
@@ -10,7 +11,7 @@ export const CollapseMarketsWidget: React.FC<CollapseMarketsWidgetPros> = (
   const state = useCollapseMarketsScript();
   return (
     <MarketsProvider onSymbolChange={props.onSymbolChange}>
-      <CollapseMarkets {...state} />
+      <CollapseMarkets {...state} dataSource={props.dataSource} />
     </MarketsProvider>
   );
 };

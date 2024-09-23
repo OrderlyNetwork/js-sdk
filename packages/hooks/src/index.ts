@@ -36,6 +36,7 @@ export { OrderlyConfigProvider } from "./configProvider";
 
 export {
   WalletConnectorContext,
+  type ConnectedChain,
   useWalletConnector,
   type WalletState
 } from "./walletConnectorContext";

@@ -47,6 +47,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           </Box>
         )
       }
+      autoComplete="off"
     />
   );
 

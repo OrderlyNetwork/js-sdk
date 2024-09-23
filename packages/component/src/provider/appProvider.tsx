@@ -31,7 +31,7 @@ import {
   PnLDefaultProps,
   ShareConfigProps,
 } from "@/block/shared/shareConfigProps";
-import { Chains } from "@orderly.network/hooks/esm/orderly/useChains";
+import { Chains } from "@orderly.network/hooks";
 import { DesktopDropMenuItem } from "@/block/accountStatus/desktop/accountStatus.desktop";
 import { TopNavbarProps } from "@/page/common/topNavbar";
 
@@ -113,7 +113,6 @@ export const OrderlyAppProvider: FC<
     theme,
     configStore,
     keyStore,
-    getWalletAdapter,
     brokerId,
     brokerName,
     networkId,
@@ -130,13 +129,14 @@ export const OrderlyAppProvider: FC<
     onClickAccountMenuItem,
     topBar,
     topBarProps,
+    walletAdapters,
   } = props;
 
   return (
     <OrderlyConfigProvider
       configStore={configStore}
       keyStore={keyStore}
-      getWalletAdapter={getWalletAdapter}
+      walletAdapters={walletAdapters}
       brokerId={brokerId}
       brokerName={brokerName}
       networkId={networkId}
@@ -275,6 +275,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
           provider: wallet.provider,
           chain: {
             id: praseChainIdToNumber(wallet.chains[0].id),
+            namespace: wallet.chains[0].namespace,
           },
           wallet: {
             name: wallet.label,
@@ -367,7 +368,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
           provider: currentWallet.provider,
           chain: {
             id: currentChainId,
-            // name: currentWallet.chains[0].name,
+            namespace: currentWallet.chains[0].namespace,
           },
           wallet: {
             name: currentWallet.label,

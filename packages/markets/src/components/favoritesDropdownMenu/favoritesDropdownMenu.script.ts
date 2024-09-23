@@ -59,6 +59,7 @@ export function useFavoritesDropdownMenuScript(
     } else {
       setSelectedTabs([...selectedTabs, item]);
     }
+    hideInput();
   };
 
   const confirm = () => {

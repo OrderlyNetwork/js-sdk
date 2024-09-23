@@ -4,25 +4,32 @@ import {
   PropsWithChildren,
   useState,
   useContext,
-  useCallback,
 } from "react";
-import { API } from "@orderly.network/types";
+import type { TabName } from "../expandMarkets/expandMarkets.script";
 
-type SideMarketsContextState = {} & SideMarketsProviderProps;
+type SideMarketsContextState = {
+  activeTab?: TabName;
+  onTabChange?: (tab: TabName) => void;
+  /** current tab data source */
+  currentDataSource?: any[];
+  setCurrentDataSource?: (data: any[]) => void;
+};
 
 export const SideMarketsContext = createContext({} as SideMarketsContextState);
 
-export type SideMarketsProviderProps = {
-  onSymbolChange?: (symbol: API.Symbol) => void;
-};
+export type SideMarketsProviderProps = PropsWithChildren<any>;
 
-export const SideMarketsProvider: FC<
-  PropsWithChildren<SideMarketsProviderProps>
-> = (props) => {
+export const SideMarketsProvider: FC<SideMarketsProviderProps> = (props) => {
+  const [activeTab, setActiveTab] = useState<TabName>("favorites");
+  const [currentDataSource, setCurrentDataSource] = useState([] as any[]);
+
   return (
     <SideMarketsContext.Provider
       value={{
-        onSymbolChange: props.onSymbolChange,
+        activeTab,
+        onTabChange: setActiveTab,
+        currentDataSource,
+        setCurrentDataSource,
       }}
     >
       {props.children}

@@ -1,7 +1,12 @@
 import { RecentList } from "./recentList.ui";
 import { useRecentListScript } from "./recentList.script";
+import { GetColumns } from "../../type";
 
-export const RecentListWidget: React.FC = () => {
+export type RecentListWidgetProps = {
+  getColumns?: GetColumns;
+};
+
+export const RecentListWidget: React.FC<RecentListWidgetProps> = (props) => {
   const state = useRecentListScript();
-  return <RecentList {...state} />;
+  return <RecentList {...state} {...props} />;
 };
