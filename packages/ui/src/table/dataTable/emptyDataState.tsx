@@ -1,7 +1,7 @@
 import EmptyStateIcon from "../../icon/emptyData";
 import { Flex } from "../../flex";
 import { Box } from "../../box";
-import { installExtension } from "../../plugin";
+import { ExtensionPositionEnum, installExtension } from "../../plugin";
 import { Text } from "../../typography";
 
 export const EmptyDataState = (props: { title?: string }) => {
@@ -19,5 +19,5 @@ export const EmptyDataState = (props: { title?: string }) => {
 
 installExtension<{ title?: string }>({
   name: "emptyDataState",
-  positions: ["emptyDataState"],
+  positions: [ExtensionPositionEnum.EmptyDataState],
 })(EmptyDataState);

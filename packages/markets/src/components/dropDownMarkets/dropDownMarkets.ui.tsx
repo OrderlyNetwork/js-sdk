@@ -1,61 +1,66 @@
 import {
   Box,
   CloseCircleFillIcon,
+  CloseIcon,
   cn,
+  Flex,
   Input,
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
 import { FavoritesIcon, SearchIcon } from "../../icons";
-import { UseExpandMarketsScriptReturn } from "./expandMarkets.script";
 import { useMarketsContext } from "../marketsProvider";
 import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
+import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
 import "../../style/index.css";
+import { getDropDownMarketsColumns } from "./column";
 
-export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
+export type DropDownMarketsProps = UseDropDownMarketsScriptReturn;
 
-export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
+export const DropDownMarkets: React.FC<DropDownMarketsProps> = (props) => {
   const { activeTab, onTabChange } = props;
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
 
   const search = (
-    <Input
-      value={searchValue}
-      onValueChange={onSearchValueChange}
-      placeholder="Search"
-      classNames={{ root: "oui-border oui-mt-[1px] oui-border-line" }}
-      size="sm"
-      prefix={
-        <Box pl={3} pr={1}>
-          <SearchIcon className="oui-text-base-contrast-36" />
-        </Box>
-      }
-      suffix={
-        searchValue && (
-          <Box mr={2}>
-            <CloseCircleFillIcon
-              size={14}
-              className="oui-text-base-contrast-36 oui-cursor-pointer"
-              onClick={clearSearchValue}
-            />
+    <Flex mx={3} gapX={3} pb={2}>
+      <Input
+        value={searchValue}
+        onValueChange={onSearchValueChange}
+        placeholder="Search"
+        classNames={{
+          root: "oui-border oui-mt-[1px] oui-border-line oui-flex-1",
+        }}
+        size="sm"
+        prefix={
+          <Box pl={3} pr={1}>
+            <SearchIcon className="oui-text-base-contrast-36" />
           </Box>
-        )
-      }
-      autoComplete="off"
-    />
+        }
+        autoComplete="off"
+      />
+      <CloseIcon
+        size={12}
+        className="oui-text-base-contrast-80 oui-cursor-pointer"
+        onClick={clearSearchValue}
+        opacity={1}
+      />
+    </Flex>
   );
 
   const cls = "oui-h-[calc(100%_-_36px)]";
 
   return (
-    <Box className={cn("oui-font-semibold oui-overflow-hidden")} height="100%">
-      <Box px={3} pb={2}>
-        {search}
-      </Box>
+    <Box
+      className={cn("oui-font-semibold oui-overflow-hidden")}
+      height="100%"
+      intensity={800}
+    >
+      {search}
+
       <Tabs
         variant="contained"
         size="md"
@@ -69,12 +74,12 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <div className={cls}>
-            <FavoritesListWidget />
+            <FavoritesListWidget getColumns={getDropDownMarketsColumns} />
           </div>
         </TabPanel>
         <TabPanel title="Recent" value="recent">
           <div className={cls}>
-            <RecentListWidget />
+            <RecentListWidget getColumns={getDropDownMarketsColumns} />
           </div>
         </TabPanel>
         <TabPanel title="All" value="all">
@@ -83,7 +88,8 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
               type="all"
               sortKey="24h_change"
               sortOrder="desc"
-            />{" "}
+              getColumns={getDropDownMarketsColumns}
+            />
           </div>
         </TabPanel>
       </Tabs>

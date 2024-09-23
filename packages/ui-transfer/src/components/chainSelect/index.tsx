@@ -13,7 +13,8 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { ExchangeIcon } from "../../icons";
-import { API, CurrentChain } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
+import { CurrentChain } from "../depositForm/hooks";
 
 type ChainSelectProps = {
   chains: API.NetworkInfos[];

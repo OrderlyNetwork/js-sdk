@@ -24,9 +24,33 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState("");
+  const [scrollable, setScrollable] = useState(false);
+
+  const scrollView = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
+
   const [inputWidth, setInputWidth] = useState(50);
+
+  const updateScrollLayout = () => {
+    const addIconWidth = size === "sm" ? 28 : 36;
+    setTimeout(() => {
+      const { scrollWidth, clientWidth } = scrollView.current || {};
+
+      if (scrollWidth! > clientWidth!) {
+        setScrollable(true);
+      }
+    }, 0);
+  };
+
+  const scrollToRight = () => {
+    setTimeout(() => {
+      if (scrollView.current) {
+        scrollView.current.scrollLeft =
+          scrollView.current.scrollWidth - scrollView.current.clientWidth;
+      }
+    }, 0);
+  };
 
   const onEdit = (item: any) => {
     setEditing(true);
@@ -37,16 +61,17 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
     }, 0);
   };
 
-  const updateCurTab = () => {
+  const updateCurTab = (overLen: boolean) => {
     updateFavoriteTabs(
       {
         ...selectedFavoriteTab,
-        name: value,
+        name: overLen ? selectedFavoriteTab.name : value,
       },
       { update: true }
     );
     setEditing(false);
     setOpen(false);
+    updateScrollLayout();
   };
 
   const addTab = () => {
@@ -56,6 +81,8 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
     };
     updateFavoriteTabs(newTab, { add: true });
     updateSelectedFavoriteTab(newTab);
+    updateScrollLayout();
+    scrollToRight();
   };
 
   const delTab = (selectedTab: any) => {
@@ -85,10 +112,15 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
     }
   }, [value]);
 
+  useEffect(() => {
+    updateScrollLayout();
+  }, []);
+
   return {
     favorite,
     open,
     setOpen,
+    container: scrollView,
     inputRef,
     inputWidth,
     spanRef,
@@ -99,5 +131,6 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
     updateCurTab,
     addTab,
     delTab,
+    scrollable,
   };
 }

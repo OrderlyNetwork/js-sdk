@@ -1,7 +1,14 @@
 import { FavoritesList } from "./favoritesList.ui";
 import { useFavoritesListScript } from "./favoritesList.script";
+import { GetColumns } from "../../type";
 
-export const FavoritesListWidget: React.FC = () => {
+export type FavoritesListWidgetProps = {
+  getColumns?: GetColumns;
+};
+
+export const FavoritesListWidget: React.FC<FavoritesListWidgetProps> = (
+  props
+) => {
   const state = useFavoritesListScript();
-  return <FavoritesList {...state} />;
+  return <FavoritesList {...state} {...props} />;
 };

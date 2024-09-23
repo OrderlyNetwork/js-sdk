@@ -4,7 +4,7 @@ import {
   Button,
   CheckedSquareFillIcon,
   CheckSquareEmptyIcon,
-  CloseCircleFillIcon,
+  PlusIcon,
   CloseIcon,
   Divider,
   DropdownMenuContent,
@@ -15,9 +15,14 @@ import {
   Input,
   ScrollArea,
   Text,
+  cn,
+  CloseCircleFillIcon,
+  Badge,
+  Tooltip,
 } from "@orderly.network/ui";
 import { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
 import { CirclePlusIcon } from "../../icons";
+import "../../style/index.css";
 
 export type FavoritesDropdownMenuProps =
   PropsWithChildren<UseFavoritesDropdownMenuScriptReturn>;
@@ -42,48 +47,100 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
     confirm,
   } = props;
 
+  const overLen = value?.length > 15;
+
   const renderInput = () => {
     if (inputVisible) {
       return (
-        <Input
-          autoComplete="off"
-          autoFocus
-          value={value}
-          onValueChange={onValueChange}
-          classNames={{
-            root: "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
-          }}
-          suffix={
-            <Flex itemAlign="center" gapX={2} mr={2}>
-              <Text
-                className={
-                  "oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
-                }
-                onClick={addTab}
-              >
-                Add
-              </Text>
-              <CloseCircleFillIcon
-                size={20}
-                className="oui-text-base-contrast-20 hover:oui-text-base-contrast oui-cursor-pointer"
-                onClick={hideInput}
-              />
+        <Box>
+          <Flex gapX={2}>
+            <Input
+              autoFocus
+              value={value}
+              onValueChange={onValueChange}
+              classNames={{
+                root: cn(
+                  "oui-bg-base-6 oui-h-7 oui-w-full oui-ml-[1px] oui-rounded-sm",
+                  overLen &&
+                    "focus-visible:oui-outline-danger focus-within:oui-outline-danger"
+                ),
+              }}
+              autoComplete="off"
+              suffix={
+                value && (
+                  <Box mr={2}>
+                    <CloseCircleFillIcon
+                      opacity={1}
+                      size={14}
+                      className="oui-text-base-contrast-20 oui-cursor-pointer"
+                      onClick={() => {
+                        onValueChange("");
+                      }}
+                    />
+                  </Box>
+                )
+              }
+            />
+
+            <Button
+              className="oui-rounded-sm"
+              size="sm"
+              onClick={addTab}
+              disabled={!value || overLen}
+            >
+              Add
+            </Button>
+          </Flex>
+
+          {overLen && (
+            <Flex itemAlign="center" gapX={1} mt={1}>
+              <div className="oui-h-1 oui-w-1 oui-bg-danger oui-rounded-full"></div>
+              <Text color="danger">List name cannot exceed 15 characters</Text>
             </Flex>
-          }
-        />
+          )}
+        </Box>
       );
     }
 
+    const overTabs = favoriteTabs.length > 10;
+
     return (
-      <Flex
-        gapX={2}
-        className="oui-text-base-contrast-36 hover:oui-text-base-contrast"
-        p={2}
-        onClick={showInput}
+      <Tooltip
+        open={overTabs ? undefined : false}
+        // @ts-ignore
+        content={
+          <Text size="2xs" intensity={80}>
+            Maximum 10 groups in the favorite list
+          </Text>
+        }
+        className="oui-bg-base-6"
+        delayDuration={0}
+        arrow={{ className: "oui-fill-base-6" }}
       >
-        <CirclePlusIcon />
-        <Text size="sm">Add a new watchlist</Text>
-      </Flex>
+        <div>
+          <Flex
+            className={cn(
+              overTabs ? "oui-cursor-not-allowed" : "oui-cursor-pointer"
+            )}
+            itemAlign="center"
+            gapX={2}
+            p={2}
+            intensity={overTabs ? 500 : 600}
+            onClick={overTabs ? undefined : showInput}
+            height={28}
+            r="base"
+          >
+            <PlusIcon
+              size={14}
+              className="oui-text-base-contrast-36"
+              opacity={1}
+            />
+            <Text className="" intensity={20}>
+              Add a new watchlist
+            </Text>
+          </Flex>
+        </div>
+      </Tooltip>
     );
   };
 
@@ -109,9 +166,13 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
   );
 
   const content = (
-    <ScrollArea>
-      <Box my={2} className="oui-max-h-[200px]">
-        {favoriteTabs?.map((item) => {
+    // <ScrollArea className="custom-scrollbar">
+    <Box>
+      <Box
+        my={2}
+        className="oui-max-h-[288px] oui-overflow-y-auto custom-scrollbar"
+      >
+        {favoriteTabs?.slice(0, 10)?.map((item) => {
           const checked = !!selectedTabs.find((tab) => tab.id === item.id);
           return (
             <Box key={item.id} className="oui-cursor-pointer">
@@ -140,9 +201,12 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
             </Box>
           );
         })}
+      </Box>
+      <Box mt={3} pb={5}>
         {renderInput()}
       </Box>
-    </ScrollArea>
+    </Box>
+    // </ScrollArea>
   );
 
   const footer = (

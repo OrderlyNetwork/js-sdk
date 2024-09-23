@@ -101,10 +101,12 @@ export const useTickerStream = (symbol: string) => {
         .div(ticker.open)
         .toNumber();
 
-      config["24h_change"] = new Decimal(ticker.close).minus(ticker.open);
+      config["24h_change"] = new Decimal(ticker.close)
+        .minus(ticker.open)
+        .toNumber();
     }
     return config;
   }, [info, symbol, ticker, futures, openInterest]);
 
-  return value as API.MarketInfo & { change?: Decimal; "24h_change"?: Decimal };
+  return value as API.MarketInfo & { change?: number; "24h_change"?: number };
 };

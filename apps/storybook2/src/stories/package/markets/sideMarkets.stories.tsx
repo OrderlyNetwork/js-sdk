@@ -7,23 +7,24 @@ import {
   MarketsListWidget,
   RecentListWidget,
   CollapseMarketsWidget,
-  SideMarketsWidget
+  SideMarketsWidget,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
+import { MarketsType, useMarketList } from "@orderly.network/hooks";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 
 const decorators = [(Story: any) => (
-  <Box r="2xl" py={6} width={280} intensity={900}>
+  <Box  width={280} height={600} intensity={900}>
     <Story />
   </Box>
-),]
+)]
 
 const meta = {
-  title: "Package/Markets/Markets",
+  title: "Package/Markets/SideMarkets",
   subcomponents: {},
   decorators: [
     (Story: any) => (
@@ -48,21 +49,26 @@ type Story = StoryObj<typeof meta>;
 
 export const SideMarkets: Story = {
   render: (args) => {
-    return <Box height={600}><SideMarketsWidget /></Box>
+    return <SideMarketsWidget />
   },
-  decorators:[]
+  decorators:[(Story: any) => (
+    <Box height={600}>
+      <Story />
+    </Box>
+  )]
 };
 
 export const ExpandMarkets: Story = {
   render: (args) => {
-    return <Box height={600}><ExpandMarketsWidget /></Box>
+    return <ExpandMarketsWidget />
   },
   decorators
 };
 
 export const CollapseMarkets: Story = {
   render: (args) => {
-    return <CollapseMarketsWidget />
+    const [data] = useMarketList(MarketsType.ALL);
+    return <CollapseMarketsWidget dataSource={data} />
   },
   decorators: [
     (Story) => (
