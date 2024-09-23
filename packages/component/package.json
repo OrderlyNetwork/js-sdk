@@ -5,9 +5,7 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "files": [
-    "dist",
-    "esm",
-    "lib"
+    "dist"
   ],
   "scripts": {
     "watch": "tsup --watch --tsconfig tsconfig.build.json",

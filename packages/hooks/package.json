@@ -21,6 +21,9 @@
     "generateType:cjs": "tsc --emitDeclarationOnly --project tsconfig.build.json --module commonjs --outDir lib"
   },
   "keywords": [],
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "react": "^18.2.0"
   },
