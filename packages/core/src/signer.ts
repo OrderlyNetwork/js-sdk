@@ -1,5 +1,5 @@
 import { OrderlyKeyStore } from "./keyStore";
-import { base64url } from "./utils";
+import { base64url, getTimestamp } from "./utils";
 
 import { Buffer } from "buffer";
 // window.Buffer = window.Buffer || Buffer;
@@ -35,18 +35,21 @@ export type SignedMessagePayload = {
  *  ```
  */
 export interface Signer {
-  sign: (data: MessageFactor, timestamp?: number) => Promise<SignedMessagePayload>;
+  sign: (
+    data: MessageFactor,
+    timestamp?: number
+  ) => Promise<SignedMessagePayload>;
   signText: (text: string) => Promise<{ signature: string; publicKey: string }>;
 }
 
 export class BaseSigner implements Signer {
   constructor(private readonly keyStore: OrderlyKeyStore) {}
 
-  async sign(message: MessageFactor, timestamp = Date.now()): Promise<SignedMessagePayload> {
-    // const timestamp = Date.now().toString();
-    // const url = message.url.split(message.baseUrl)[1];
-
-    const _timestamp = (timestamp || Date.now()).toString();
+  async sign(
+    message: MessageFactor,
+    timestamp = getTimestamp()
+  ): Promise<SignedMessagePayload> {
+    const _timestamp = timestamp.toString();
 
     let msgStr = [_timestamp, message.method.toUpperCase(), message.url].join(
       ""

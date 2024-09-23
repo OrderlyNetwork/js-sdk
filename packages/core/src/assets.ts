@@ -113,7 +113,7 @@ export class Assets {
   }) {
     const { chainId, receiver, token, amount, domain, nonce } = inputs;
     const primaryType = "Withdraw";
-    const timestamp = Date.now();
+    const timestamp = getTimestamp();
 
     const typeDefinition = {
       EIP712Domain: definedTypes.EIP712Domain,
@@ -141,7 +141,7 @@ export class Assets {
   }
 
   private async getWithdrawalNonce(): Promise<number> {
-    const timestamp = Date.now().toString();
+    const timestamp = getTimestamp().toString();
     const url = "/v1/withdraw_nonce";
     const message = [timestamp, "GET", url].join("");
 
