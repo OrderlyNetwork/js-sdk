@@ -1,6 +1,7 @@
-import { FC, useContext, useEffect, useRef } from "react";
-import { Text, cn, modal } from "@orderly.network/ui";
-import { useTradingPateContext } from "../../../provider/context";
+import { FC } from "react";
+import { Flex, Text, cn, modal } from "@orderly.network/ui";
+import { useOrderBookContext } from "../orderContext";
+import { MarkPriceView, MiddlePriceView } from "../desktop/markPrice.desktop";
 
 interface MarkPriceProps {
   markPrice: number;
@@ -10,7 +11,9 @@ interface MarkPriceProps {
 export const MarkPrice: FC<MarkPriceProps> = (props) => {
   const { markPrice = 0, lastPrice } = props;
 
-  const { quote_dp } = useTradingPateContext().symbolInfo;
+  const { symbolInfo } = useOrderBookContext();
+
+  const { quote_dp } = symbolInfo;
 
   const [prevLastPrice, middlePrice] = lastPrice;
 
@@ -31,44 +34,20 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
   };
 
   return (
-    <div
-      id="oui-order-book-mark-price"
-      className="oui-py-1 oui-flex oui-justify-between oui-text-xs oui-text-base-contrast-80 desktop:oui-h-[42px] desktop:oui-text-[20px] desktop:oui-justify-center desktop:oui-gap-5 oui-tabular-nums"
-    >
-      <div
-        className={cn(
-          "oui-font-semibold oui-flex oui-items-center desktop:oui-font-normal desktop:oui-relative desktop:oui-pr-4",
-          middlePrice > prevLastPrice
-            ? "oui-text-trade-profit"
-            : "oui-text-trade-loss"
-        )}
-      >
-        <Text.numeral dp={quote_dp}>{middlePrice}</Text.numeral>
-        {prevLastPrice !== middlePrice && (
-          // @ts-ignore
-          <MoveUpIcon
-            size={14}
-            color="currentcolor"
-            className={cn(
-              "desktop:oui-absolute desktop:oui-right-0",
-              middlePrice < prevLastPrice ? "oui-rotate-180" : ""
-            )}
-          />
-        )}
-      </div>
-      <div
-        className="oui-flex oui-items-center oui-gap-1 oui-text-3xs desktop:oui-text-base"
-        onClick={onMarkPrice}
-      >
-        {/* @ts-ignore */}
-        <Flag size={14} className="oui-text-yellow-400" />
-        <Text.numeral
-          dp={quote_dp}
-          className="desktop:oui-text-base-contrast-54"
-        >
-          {markPrice}
-        </Text.numeral>
-      </div>
-    </div>
+    <Flex id="oui-order-book-mark-price" className="oui-py-[6px]" width={"100%"} justify={"between"}>
+      <MiddlePriceView
+        markPrice={props.markPrice}
+        lastPrice={props.lastPrice}
+        quote_dp={quote_dp}
+        className="oui-text-sm"
+        iconSize={14}
+      />
+      <MarkPriceView
+        markPrice={props.markPrice}
+        quote_dp={quote_dp}
+        className="oui-text-2xs"
+        iconSize={12}
+      />
+    </Flex>
   );
 };

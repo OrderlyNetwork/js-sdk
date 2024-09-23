@@ -1,7 +1,8 @@
 import { FC, useContext, useMemo } from "react";
 import { OrderBookCell } from "./cell";
-import { OrderBookContext } from "../orderContext";
+import { OrderBookContext, useOrderBookContext } from "../orderContext";
 import { OrderBookCellType } from "../types";
+import { Box } from "@orderly.network/ui";
 
 interface OrderBookListProps {
   type: OrderBookCellType;
@@ -11,12 +12,12 @@ interface OrderBookListProps {
 
 export const ListBox: FC<OrderBookListProps> = (props) => {
   const { data } = props;
-  const { mode } = useContext(OrderBookContext);
+  const { mode } = useOrderBookContext();
 
   return (
-    <div
+    <Box
       id="oui-order-book-list"
-      className="oui-flex oui-flex-col oui-gap-[1px]"
+      className="oui-flex oui-flex-col oui-gap-[1px] oui-w-full"
     >
       {data.map((item, index) => {
         return (
@@ -32,12 +33,6 @@ export const ListBox: FC<OrderBookListProps> = (props) => {
           />
         );
       })}
-      {/*<OrderBookCell*/}
-      {/*  background={""}*/}
-      {/*  price={"0.00"}*/}
-      {/*  quantity={"0.00"}*/}
-      {/*  size={30}*/}
-      {/*/>*/}
-    </div>
+    </Box>
   );
 };
