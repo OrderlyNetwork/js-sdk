@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+
+package "@orderly.network/core" {
+[setAddress Method]
+[walletAdapterManager Field]
+[signer Field]
+}
+
+package "@orderly.network/onboard"{
+[connect Method]
+}
+
+package "@orderly.network/hooks"{
+[signatureMiddleware Middleware]
+[useGetClaimed hook] #Coral
+}
+
+package "@orderly.network/react-app"{
+[useWalletStateHandle hook]
+[wrongNetwork check]
+}
+
+package "@orderly.network/default-evm-adapter"{
+}
+
+package "@orderly.network/default-solana-adapter"{
+}
+
+package "@orderly.network/default-wallet-modal" #Yellow {
+
+
+}
+
+
+
+[useWalletStateHandle hook] --> [setAddress Method]
+[useWalletStateHandle hook] <-- [connect Method]
+[signatureMiddleware Middleware] --> [signer Field]
+"@orderly.network/default-evm-adapter" --> [walletAdapterManager Field]
+"@orderly.network/default-solana-adapter" --> [walletAdapterManager Field]
+
+@enduml

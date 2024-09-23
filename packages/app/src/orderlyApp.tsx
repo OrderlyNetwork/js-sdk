@@ -10,9 +10,18 @@ import { useBootstrap } from "./hooks/useBootstrap";
 import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./provider/appContext";
 import { AppConfigProvider } from "./provider/configContext";
+import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
+import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
+type OptionalConfig = Optional<OrderlyAppConfig, "walletAdapters">;
+
+const evmWalletAdapter = new DefaultEVMAdapterWalletAdapter(
+  new EthersProvider()
+);
 
 const OrderlyApp = (
-  props: PropsWithChildren<OrderlyAppConfig & AppStateProviderProps>
+  props: PropsWithChildren<OptionalConfig & AppStateProviderProps>
 ) => {
   const {
     onChainChanged,
@@ -21,15 +30,8 @@ const OrderlyApp = (
     appIcons,
     ...configProps
   } = props;
-  useBootstrap();
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const refCode = searchParams.get("ref");
-    if (refCode) {
-      localStorage.setItem("referral_code", refCode);
-    }
-  }, []);
+  useBootstrap();
 
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName}>
@@ -37,7 +39,10 @@ const OrderlyApp = (
         dateFormatting={dateFormatting}
         components={components}
       >
-        <OrderlyConfigProvider {...configProps}>
+        <OrderlyConfigProvider
+          {...configProps}
+          walletAdapters={[evmWalletAdapter]}
+        >
           <AppStateProvider onChainChanged={onChainChanged}>
             <TooltipProvider>
               <ModalProvider>{props.children}</ModalProvider>
