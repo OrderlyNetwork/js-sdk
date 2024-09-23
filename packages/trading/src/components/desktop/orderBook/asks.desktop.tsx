@@ -1,9 +1,6 @@
-import { Box } from "@orderly.network/ui";
-import { BasicSymbolInfo } from "../../../types/types";
-import { OrderBookCellType } from "../types";
 import { DesktopListBox } from "./listBox.desktop";
 import { FC, useMemo } from "react";
-import { useOrderBookContext } from "../orderContext";
+import { OrderBookCellType } from "../../base/orderBook/types";
 export interface Props {
   data: number[][];
 }

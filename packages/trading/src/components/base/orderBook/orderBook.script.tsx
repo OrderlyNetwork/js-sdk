@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useTradingPateContext } from "../../provider/context";
+import { useTradingPateContext } from "../../../provider/context";
 import {
   useMediaQuery,
   useOrderbookStream,
@@ -8,7 +8,7 @@ import {
 } from "@orderly.network/hooks";
 import { removeTrailingZeros } from "@orderly.network/utils";
 import { MEDIA_TABLET, OrderStatus } from "@orderly.network/types";
-import { getBasicSymbolInfo } from "../../utils/utils";
+import { getBasicSymbolInfo } from "../../../utils/utils";
 
 const CELL_MAX = 30;
 const DEFAULT_CELL_HEIGHT = 20;

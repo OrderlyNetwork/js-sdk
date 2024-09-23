@@ -1,4 +1,4 @@
-import { Flex, Box, Picker } from "@orderly.network/ui";
+import { Box, Picker } from "@orderly.network/ui";
 import { FC, useMemo } from "react";
 
 interface DepthSelectProps {

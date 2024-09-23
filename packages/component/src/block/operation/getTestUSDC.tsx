@@ -41,12 +41,12 @@ export const GetTestUSDC = () => {
     (event: any) => {
       event.preventDefault();
       const toastId = toast.loading("Getting test USDC...");
-      if (!account || !account.wallet) {
+      if (!account || !account.walletAdapter) {
         return;
       }
 
       getTestUSDC({
-        chain_id: account.wallet.chainId.toString(),
+        chain_id: account.walletAdapter.chainId.toString(),
         user_address: state.address,
         broker_id: configStore.get("brokerId"),
       })

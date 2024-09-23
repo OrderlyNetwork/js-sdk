@@ -1,9 +1,9 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC} from "react";
 import { Header } from "./header";
 import { Bids } from "./bids";
 import { Asks } from "./asks";
 import { MarkPrice } from "./markPrice";
-import { OrderBookProvider } from "../orderContext";
+import { OrderBookProvider } from "../../base/orderBook/orderContext";
 import { DepthSelect } from "./depthSelect";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";

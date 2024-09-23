@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { DataListTabType } from "../components/dataList/dataList.script";
+import { DataListTabType } from "../components/desktop/dataList/dataList.script";
 import { PositionsProps } from "@orderly.network/ui-positions";
 import { ReactNode } from "react";
 

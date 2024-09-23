@@ -1,8 +1,8 @@
 import { FC, useContext, useMemo } from "react";
-import { CellBar } from "../cellBar";
+import { CellBar } from "../../base/orderBook/cellBar";
 import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
-import { OrderBookCellType, QtyMode } from "../types";
-import { OrderBookContext } from "../orderContext";
+import { OrderBookCellType, QtyMode } from "../../base/orderBook/types";
+import { OrderBookContext } from "../../base/orderBook/orderContext";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 
 export interface OrderBookCellProps {
