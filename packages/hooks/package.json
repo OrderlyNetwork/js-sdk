@@ -4,7 +4,6 @@
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch --tsconfig tsconfig.build.json",
     "build:tsc": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs",
@@ -54,6 +53,8 @@
     "@orderly.network/perp": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/web3-provider-ethers": "workspace:*",
+    "@orderly.network/default-evm-adapter": "workspace:*",
     "ramda": "^0.29.0",
     "swr": "2.2.4",
     "use-constant": "^1.1.1",

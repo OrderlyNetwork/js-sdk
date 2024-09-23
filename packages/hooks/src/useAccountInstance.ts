@@ -4,8 +4,7 @@ import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
 
 export const useAccountInstance = (): Account => {
-  const { configStore, keyStore, getWalletAdapter, walletAdapters } =
-    useContext(OrderlyContext);
+  const { configStore, keyStore, walletAdapters } = useContext(OrderlyContext);
 
   if (!configStore)
     throw new Error("configStore is not defined, please use OrderlyProvider");
