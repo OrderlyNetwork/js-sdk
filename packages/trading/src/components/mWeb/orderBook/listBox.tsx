@@ -1,7 +1,7 @@
-import { FC, useContext, useMemo } from "react";
+import { FC } from "react";
 import { OrderBookCell } from "./cell";
-import { OrderBookContext, useOrderBookContext } from "../orderContext";
-import { OrderBookCellType } from "../types";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
+import { OrderBookCellType } from "../../base/orderBook/types";
 import { Box } from "@orderly.network/ui";
 
 interface OrderBookListProps {

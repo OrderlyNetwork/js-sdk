@@ -1,8 +1,8 @@
 import { FC, useEffect, useRef } from "react";
 import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { OrderBookAndTradesState } from "./orderBookAndTrades.script";
-import { OrderBookWidget } from "../orderBook";
-import { LastTradesWidget } from "../lastTrades";
+import { OrderBookWidget } from "../../base/orderBook";
+import { LastTradesWidget } from "../../lastTrades";
 
 export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
   return (

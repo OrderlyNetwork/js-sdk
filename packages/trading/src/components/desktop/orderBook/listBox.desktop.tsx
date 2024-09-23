@@ -1,7 +1,7 @@
-import { FC, useCallback, useContext, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { DesktopOrderBookCell } from "./cell.desktop";
-import { OrderBookCellType } from "../types";
-import { OrderBookContext, useOrderBookContext } from "../orderContext";
+
+
 import {
   Tooltip,
   TooltipContent,
@@ -12,6 +12,8 @@ import {
   TooltipArrow,
 } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
+import { OrderBookCellType } from "../../base/orderBook/types";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
 
 interface DesktopListBoxProps {
   type: OrderBookCellType;

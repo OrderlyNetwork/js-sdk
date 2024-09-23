@@ -1,10 +1,10 @@
-import { FC, useContext, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { getPrecisionByNumber } from "@orderly.network/utils";
-import { OrderBookCellType } from "../types";
-import { useOrderBookContext } from "../orderContext";
 import { cn, Divider, parseNumber, Text } from "@orderly.network/ui";
-import { CellBar, CellBarDirection } from "../cellBar";
 import { BasicSymbolInfo } from "../../../types/types";
+import { OrderBookCellType } from "../../base/orderBook/types";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
+import { CellBar, CellBarDirection } from "../../base/orderBook/cellBar";
 
 export interface DesktopOrderBookCellProps {
   background: string;

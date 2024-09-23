@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 
-import { useOrderBookContext } from "../orderContext";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { Flex, Text } from "@orderly.network/ui";
 
 interface Props {

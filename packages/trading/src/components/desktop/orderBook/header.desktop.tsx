@@ -1,6 +1,6 @@
-import { FC, useContext, useMemo } from "react";
-import { OrderBookContext } from "../orderContext";
+import { FC } from "react";
 import { Box, cn, Flex } from "@orderly.network/ui";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
 
 interface Props {
   quote: string;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const DesktopHeader: FC<Props> = (props) => {
-  const { showTotal } = useContext(OrderBookContext);
+  const { showTotal } = useOrderBookContext();
   return (
     <Flex pl={3} justify={"between"} className="oui-py-[6px]">
       <Flex gap={1} className={cn("oui-basis-7/12", showTotal && "oui-basis-1/2")}>
