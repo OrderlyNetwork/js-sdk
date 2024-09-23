@@ -1,6 +1,7 @@
 import { useQuery } from "../useQuery";
 import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
+import { getTimestamp } from "@orderly.network/utils";
 
 export const useFundingRates = () => {
   const { data } = useQuery<{ [key: string]: API.FundingRate }>(
@@ -35,7 +36,7 @@ function getEstFundingRate(data: API.FundingRate) {
 
   const { next_funding_time, est_funding_rate } = data;
 
-  if (Date.now() > next_funding_time) {
+  if (getTimestamp() > next_funding_time) {
     return null;
   }
 

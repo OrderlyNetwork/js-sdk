@@ -1,7 +1,7 @@
 import { definedTypes } from "@orderly.network/types";
 import { LocalStorageStore, MockKeyStore } from "./keyStore";
 import { BaseSigner } from "./signer";
-import { SignatureDomain } from "./utils";
+import { getTimestamp, SignatureDomain } from "./utils";
 
 export const getMockSigner = (secretKey?: string) => {
   const mockKeyStore = new MockKeyStore(
@@ -50,7 +50,7 @@ export function generateRegisterAccountMessage(inputs: {
     chainId,
     registrationNonce,
     brokerId,
-    timestamp = Date.now(),
+    timestamp = getTimestamp(),
   } = inputs;
   // const now = Date.now();
   const primaryType = "Registration";
@@ -95,7 +95,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
     primaryType,
     brokerId,
     expiration = 365,
-    timestamp = Date.now(),
+    timestamp = getTimestamp(),
     scope,
     tag,
   } = inputs;
@@ -108,7 +108,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
     chainId,
     timestamp,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
-    ...( typeof tag !== 'undefined' ? {tag} : {})
+    ...(typeof tag !== "undefined" ? { tag } : {}),
   };
 
   const typeDefinition = {
