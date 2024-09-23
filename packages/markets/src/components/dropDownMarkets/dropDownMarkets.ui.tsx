@@ -1,12 +1,15 @@
 import {
   Box,
-  CloseCircleFillIcon,
   CloseIcon,
   cn,
   Flex,
   Input,
   TabPanel,
   Tabs,
+  DropdownMenuContent,
+  DropdownMenuPortal,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
 } from "@orderly.network/ui";
 import { FavoritesIcon, SearchIcon } from "../../icons";
 import { useMarketsContext } from "../marketsProvider";
@@ -16,17 +19,46 @@ import { RecentListWidget } from "../recentList";
 import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
 import "../../style/index.css";
 import { getDropDownMarketsColumns } from "./column";
+import { PropsWithChildren } from "react";
 
-export type DropDownMarketsProps = UseDropDownMarketsScriptReturn;
+export type DropDownMarketsProps = UseDropDownMarketsScriptReturn & {
+  contentClassName?: string;
+};
 
-export const DropDownMarkets: React.FC<DropDownMarketsProps> = (props) => {
+export const DropDownMarkets: React.FC<
+  PropsWithChildren<DropDownMarketsProps>
+> = (props) => {
+  return (
+    <DropdownMenuRoot>
+      <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          onCloseAutoFocus={(e) => e.preventDefault()}
+          onClick={(e) => e.stopPropagation()}
+          align="start"
+          sideOffset={20}
+          className={cn(
+            "oui-markets-dropdown-menu-content oui-bg-base-8",
+            props.contentClassName
+          )}
+        >
+          <DropDownMarketsConetnt {...props} />
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
+  );
+};
+
+export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
+  props
+) => {
   const { activeTab, onTabChange } = props;
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
 
   const search = (
-    <Flex mx={3} gapX={3} pb={2}>
+    <Flex mx={3} gapX={3} pt={3} pb={2}>
       <Input
         value={searchValue}
         onValueChange={onSearchValueChange}

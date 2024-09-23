@@ -20,6 +20,7 @@ import {
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
 import { ReactNode, useMemo } from "react";
+import { DropDownMarketsWidget } from "../dropDownMarkets";
 
 export type Layout = "left" | "right";
 
@@ -66,19 +67,21 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
   );
 
   const symbolView = (
-    <Flex gapX={1} className="oui-cursor-pointer">
-      <TokenIcon symbol={symbol} className="oui-w-4 oui-h-4" />
-      <Text.formatted
-        className="oui-break-normal oui-whitespace-nowrap"
-        rule="symbol"
-        formatString="base-type"
-        size="2xs"
-        weight="semibold"
-      >
-        {symbol}
-      </Text.formatted>
-      <TriangleDownIcon className="oui-text-base-contrast-54" />
-    </Flex>
+    <DropDownMarketsWidget contentClassName="oui-w-[429px] oui-h-[496px]">
+      <Flex gapX={1} className="oui-cursor-pointer">
+        <TokenIcon symbol={symbol} className="oui-w-4 oui-h-4" />
+        <Text.formatted
+          className="oui-break-normal oui-whitespace-nowrap"
+          rule="symbol"
+          formatString="base-type"
+          size="2xs"
+          weight="semibold"
+        >
+          {symbol}
+        </Text.formatted>
+        <TriangleDownIcon className="oui-text-base-contrast-54" />
+      </Flex>
+    </DropDownMarketsWidget>
   );
 
   const price = (
