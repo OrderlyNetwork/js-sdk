@@ -44,6 +44,9 @@ export const TokenInfoBar: Story = {
       <Box width={800}>
         <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
       </Box>
+      <Box>
+        <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
+      </Box>
     </Flex>
   },
 };
