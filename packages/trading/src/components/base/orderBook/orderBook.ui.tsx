@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { Box, Flex, Text } from "@orderly.network/ui";
 import { OrderBookState } from "./orderBook.script";
-import { DesktopOrderBook } from "./desktop/index.desktop";
-import { OrderBook as MWebOrderBook } from "./mWeb/index";
+import { DesktopOrderBook } from "../../desktop/orderBook/index.desktop";
+import { OrderBook as MWebOrderBook } from "../../mWeb/orderBook";
 
 export const OrderBook: FC<
   OrderBookState & {

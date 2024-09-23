@@ -1,12 +1,12 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { DesktopBids } from "./bids.desktop";
 import { DesktopAsks } from "./asks.desktop";
 import { DesktopMarkPrice } from "./markPrice.desktop";
 import { DesktopHeader } from "./header.desktop";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
-import { OrderBookProvider } from "../orderContext";
 import { cn, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
+import { OrderBookProvider } from "../../base/orderBook/orderContext";
 
 export interface DesktopOrderBookProps {
   asks: any[];

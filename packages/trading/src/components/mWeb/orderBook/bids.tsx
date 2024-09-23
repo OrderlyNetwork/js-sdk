@@ -1,12 +1,11 @@
-
-import { OrderBookCellType } from "../types";
-import { DesktopListBox } from "./listBox.desktop";
+import { OrderBookCellType } from "../../base/orderBook/types";
+import { ListBox } from "./listBox";
 import { FC, useMemo } from "react";
 
 export interface Props {
   data: any[];
 }
-export const DesktopBids: FC<Props> = (props) => {
+export const Bids: FC<Props> = (props) => {
   const { data } = props;
   const countQty = useMemo(() => {
     let max = Number.NaN;
@@ -22,6 +21,6 @@ export const DesktopBids: FC<Props> = (props) => {
     // return data.length > 0 ? data[data.length - 1][2] : 0;
   }, [data]);
   return (
-    <DesktopListBox type={OrderBookCellType.BID} data={data} countQty={countQty} />
+    <ListBox type={OrderBookCellType.BID} data={data} countQty={countQty} />
   );
 };

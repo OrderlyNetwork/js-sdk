@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { Box, Flex, Text } from "@orderly.network/ui";
 import { TradingV2State } from "./tradingV2.script";
-import { DataListWidget } from "../components/dataList";
+import { DataListWidget } from "../components/desktop/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { LastTradesWidget } from "../components/lastTrades";
-import { AssetViewWidget } from "../components/assetView";
-import { RiskRateWidget } from "../components/riskRate";
-import { OrderBookAndTradesWidget } from "../components/orderBookAndTrades";
+import { AssetViewWidget } from "../components/desktop/assetView";
+import { RiskRateWidget } from "../components/desktop/riskRate";
+import { OrderBookAndTradesWidget } from "../components/desktop/orderBookAndTrades";
 
 export const TradingV2: FC<TradingV2State> = (props) => {
   return (
