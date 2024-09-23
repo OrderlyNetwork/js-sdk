@@ -14,6 +14,8 @@ export * from "./components/marketsList";
 export * from "./components/collapseMarkets";
 export * from "./components/sideMarkets";
 export * from "./components/dropDownMarkets";
+export * from "./components/tokenInfoBar";
+
 
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";

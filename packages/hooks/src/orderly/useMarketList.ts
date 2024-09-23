@@ -218,7 +218,7 @@ export const useMarketsStore = () => {
   };
 };
 
-export const useMarketList = (type: MarketsType) => {
+export const useMarketList = (type: MarketsType = MarketsType.ALL) => {
   const { data: futures } = useMarketsStream();
   const symbolsInfo = useSymbolsInfo();
 

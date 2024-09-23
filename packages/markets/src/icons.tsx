@@ -331,6 +331,83 @@ export const CollapseIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
+export const TriangleDownIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M3.003 3.998a.494.494 0 0 0-.39.797l3 4c.2.266.597.266.797 0l3-4a.5.5 0 0 0-.407-.797z" />
+  </svg>
+);
+
+export const ArrowLeftIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M9.186 3.348a.67.67 0 0 0-.436.27l-2.657 4a.69.69 0 0 0 0 .75l2.657 4a.68.68 0 0 0 .934.188.685.685 0 0 0 .187-.937L7.463 7.993 9.87 4.37a.685.685 0 0 0-.187-.938.65.65 0 0 0-.498-.083" />
+  </svg>
+);
+
+export const ArrowRightIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M6.777 3.348a.65.65 0 0 0-.498.083.685.685 0 0 0-.187.938L8.5 7.993l-2.408 3.625a.685.685 0 0 0 .187.938.68.68 0 0 0 .934-.187l2.657-4a.69.69 0 0 0 0-.75l-2.657-4a.67.67 0 0 0-.436-.271" />
+  </svg>
+);
+
+export const LeftLayoutIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M8 7H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"
+      fill="#608CFF"
+    />
+    <path
+      d="M17.813 4C20.107 4 22 5.778 22 8v8c0 2.222-1.893 4-4.187 4H6.188C3.893 20 2 18.222 2 16V8c0-2.222 1.893-4 4.188-4zM8 7H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"
+      fill="#282E3A"
+    />
+  </svg>
+);
+
+export const RightLayoutIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M6.188 4C3.893 4 2 5.778 2 8v8c0 2.222 1.893 4 4.188 4h11.624C20.107 20 22 18.222 22 16V8c0-2.222-1.893-4-4.188-4zM16 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2"
+      fill="#282E3A"
+    />
+    <path
+      d="M17 7h-1a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"
+      fill="#608CFF"
+    />
+  </svg>
+);
+
 const BaseSortIcon = (props: PropsWithChildren) => {
   return (
     <svg
