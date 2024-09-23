@@ -3,9 +3,17 @@ import { LastTrades } from "./lastTrades.ui";
 
 export const LastTradesWidget = (props: {
   symbol: string;
-  className?: string;
+  classNames?: {
+    root?: string;
+    listHeader?: string;
+    listItem?: {
+      left?: string;
+      mid?: string;
+      right?: string;
+    }
+  };
   style?: React.CSSProperties;
 }) => {
   const state = useLastTradesScript(props.symbol);
-  return <LastTrades {...state} className={props.className} style={props.style} />;
+  return <LastTrades {...state} classNames={props.classNames} style={props.style} />;
 };

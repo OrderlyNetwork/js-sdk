@@ -1,6 +1,6 @@
 import { createContext, FC, PropsWithChildren, useContext, useState } from "react";
 import { QtyMode, TotalMode } from "./types";
-import { BasicSymbolInfo } from "../../types/types";
+import { BasicSymbolInfo } from "../../../types/types";
 
 export interface OrderBookContextValue {
   cellHeight: number;
