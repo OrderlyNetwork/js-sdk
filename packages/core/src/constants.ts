@@ -18,3 +18,8 @@ export const EVENT_NAMES = {
   validateStart: "validate:start",
   validateEnd: "validate:end",
 };
+
+export enum ChainNamespace {
+  evm = "evm",
+  solana = "solana",
+}

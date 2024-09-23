@@ -159,6 +159,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     return (
       <>
         <Input
+          data-testid="oui-testid-withdraw_deposit-dialog-quantity-input"
           ref={inputRef}
           autoComplete="off"
           placeholder={_placeholder}

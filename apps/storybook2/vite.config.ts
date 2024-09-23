@@ -26,7 +26,7 @@ export default defineConfig({
       ),
       "@orderly.network/ui": resolve(__dirname, "../../packages/ui/src"),
       "@orderly.network/hooks": resolve(__dirname, "../../packages/hooks/src"),
-      "@orderly.network/utils": resolve(__dirname, "../../packages/utils/src"),
+      // "@orderly.network/utils": resolve(__dirname, "../../packages/utils/src"),
       "@orderly.network/react-app": resolve(
         __dirname,
         "../../packages/app/src"
@@ -35,14 +35,14 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-connector/src"
       ),
-      "@orderly.network/ui-scaffold": resolve(
-        __dirname,
-        "../../packages/ui-scaffold/src"
-      ),
-      "@orderly.network/ui-leverage": resolve(
-        __dirname,
-        "../../packages/ui-leverage/src"
-      ),
+      // "@orderly.network/ui-scaffold": resolve(
+      //   __dirname,
+      //   "../../packages/ui-scaffold/src"
+      // ),
+      // "@orderly.network/ui-leverage": resolve(
+      //   __dirname,
+      //   "../../packages/ui-leverage/src"
+      // ),
       "@orderly.network/ui-positions": resolve(
         __dirname,
         "../../packages/ui-positions/src"
@@ -59,10 +59,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-share/src"
       ),
-      "@orderly.network/ui-tradingview": resolve(
-        __dirname,
-        "../../packages/ui-tradingview/src"
-      ),
+      // "@orderly.network/ui-tradingview": resolve(
+      //   __dirname,
+      //   "../../packages/ui-tradingview/src"
+      // ),
       "@orderly.network/withdraw": resolve(
         __dirname,
         "../../packages/withdraw/src"
@@ -78,6 +78,10 @@ export default defineConfig({
       "@orderly.network/web3-onboard": resolve(
         __dirname,
         "../../packages/onboard/src"
+      ),
+      "@orderly.network/default-evm-adapter": resolve(
+        __dirname,
+        "../../packages/default-evm-adapter/src"
       ),
       "@orderly.network/react/dist": resolve(
         __dirname,

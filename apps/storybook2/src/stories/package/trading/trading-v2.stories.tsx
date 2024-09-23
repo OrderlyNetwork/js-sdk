@@ -26,7 +26,7 @@ const sharePnLConfig = {
     "/pnl/poster_bg_4.png",
     "/pnl/poster_bg_5.png"
   ],
-  color: "rgba(255, 255, 255, 0.98)",
+  color: "rgba(255, 255, 255, 0.98)", 
   profitColor: "rgba(255,68,124,1)",
   lossColor: "rgba(0,180,158,1)",
   brandColor: "rgba(51,95,252,1)",
@@ -38,9 +38,9 @@ const sharePnLConfig = {
 
 const mainNavProps = {
   mainMenus: [
-    { name: "Trading", href: "/" },
-    { name: "Reward", href: "/rewards" },
-    { name: "Markets", href: "/markets" },
+    { name: "Trading", href: "/", testid: "oui-main-nav-trading"  },
+    { name: "Reward", href: "/rewards", testid: "oui-main-nav-reward" },
+    { name: "Markets", href: "/markets", testid: "oui-main-nav-markets"  },
     {
       name: "Reward",
       href: "/rewards",
@@ -291,11 +291,11 @@ export const OrderBook: Story = {
   render: (arg) => {
 
     return (
-      <Flex justify={"center"} className="oui-h-[500px]">
-        <Box className="oui-w-1/2 oui-bg-base-9" r="base" p={3}>
+      <div className="oui-h-[500px] oui-m-3 oui-flex oui-items-start oui-justify-center">
+        <Box className="oui-w-1/2 oui-bg-base-9" r="2xl" py={3}>
           <OrderBookWidget symbol={arg.symbol} />
         </Box>
-      </Flex>
+      </div>
     );
   }
 };

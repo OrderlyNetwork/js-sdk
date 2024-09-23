@@ -50,6 +50,7 @@ export const Setting: FC<SettingScriptReturns> = (props) => {
               props.setMaintainConfig(e);
             }}
             disabled={props.isSetting || !props.canTouch}
+            data-testid="oui-testid-setting-switch-btn"
           />{" "}
         </AuthGuardTooltip>
       </Flex>

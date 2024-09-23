@@ -4,6 +4,7 @@ import {
   ArrowDownShortIcon,
   ArrowUpShortIcon,
   Box,
+  cn,
   Flex,
   Text,
   Tooltip,
@@ -24,56 +25,73 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
   const { showTotal } = useOrderBookContext();
 
   return (
-    <Flex py={1} pr={showTotal ? 3 : 6} justify={"between"}>
+    <Flex py={1} pl={3} pr={showTotal ? 3 : 6} justify={"between"}>
       <Flex gap={2}>
-        <Price
+        <MiddlePriceView
           markPrice={markPrice}
           lastPrice={lastPrice}
           quote_dp={symbolInfo.quote_dp}
         />
-        <MarkPrice markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
+        <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
       </Flex>
       <Spread asks={asks} bids={bids} />
     </Flex>
   );
 };
 
-const Price: FC<{
+/**
+ * default style is desktop effect
+ */
+export const MiddlePriceView: FC<{
   markPrice: number;
   lastPrice: number[];
   quote_dp: number;
+  className?: string;
+  iconSize?: number;
 }> = (props) => {
-  const { markPrice = 0, lastPrice, quote_dp } = props;
+  const {
+    markPrice = 0,
+    lastPrice,
+    quote_dp,
+    className,
+    iconSize = 18,
+  } = props;
 
   const [prevLastPrice, middlePrice] = lastPrice;
 
   return (
     <Flex
       gap={1}
-      className={
+      className={cn(
         middlePrice > prevLastPrice
           ? "oui-text-trade-profit"
-          : "oui-text-trade-loss"
-      }
+          : "oui-text-trade-loss",
+        className
+      )}
     >
       <Text.numeral dp={quote_dp}>{middlePrice}</Text.numeral>
       <Box width={19}>
         {middlePrice < prevLastPrice && (
-          <ArrowDownShortIcon size={18} color="danger" opacity={1} />
+          <ArrowDownShortIcon size={iconSize} color="danger" opacity={1} />
         )}
         {middlePrice > prevLastPrice && (
-          <ArrowUpShortIcon size={18} color="success" opacity={1} />
+          <ArrowUpShortIcon size={iconSize} color="success" opacity={1} />
         )}
       </Box>
     </Flex>
   );
 };
 
-const MarkPrice: FC<{
+/**
+ * default style is desktop effect
+ */
+export const MarkPriceView: FC<{
   markPrice: number;
   quote_dp: number;
+  className?: string;
+  iconSize?: number;
 }> = (props) => {
-  const { quote_dp } = props;
+  const { quote_dp, className, iconSize = 18 } = props;
 
   return (
     <Tooltip
@@ -82,12 +100,14 @@ const MarkPrice: FC<{
       }
       className="oui-max-w-[270px]"
     >
-      <Flex gap={1} className="oui-cursor-pointer">
-        <FlagIcon />
+      <Flex
+        gap={1}
+        className={cn("oui-cursor-pointer oui-text-2xs", className)}
+      >
+        <FlagIcon size={iconSize} />
         <Text.numeral
           dp={quote_dp}
           color="warning"
-          size="2xs"
           className="oui-underline oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-warning"
         >
           {props.markPrice}
@@ -123,8 +143,6 @@ const Spread: FC<{
     return Math.ceil(dValue.toNumber() * 1000000 + 0.1) / 10000;
   }, [asks, bids]);
 
-  
-
   return (
     <div>
       <Tooltip
@@ -134,7 +152,6 @@ const Spread: FC<{
         <Text
           size="2xs"
           intensity={36}
-          
           className={
             "oui-cursor-pointer oui-underline oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-base-contrast-36"
           }
@@ -146,11 +163,11 @@ const Spread: FC<{
   );
 };
 
-const FlagIcon = () => {
+const FlagIcon = (props: { size: number }) => {
   return (
     <svg
-      width="18"
-      height="18"
+      width={props.size}
+      height={props.size}
       viewBox="0 0 18 18"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

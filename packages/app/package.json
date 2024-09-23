@@ -18,7 +18,9 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/types": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/default-evm-adapter": "workspace:*",
+    "@orderly.network/web3-provider-ethers": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

@@ -1,3 +1,4 @@
+import { Flex, Box, Picker } from "@orderly.network/ui";
 import { FC, useMemo } from "react";
 
 interface DepthSelectProps {
@@ -14,19 +15,19 @@ export const DepthSelect: FC<DepthSelectProps> = (props) => {
     }));
   }, [props.depth]);
     return (
-      <div id="oui-order-book-depth" className="oui-pt-2">
+      <Box id="oui-order-book-depth" className="oui-pt-2" >
         {/* <Select size={"small"} value={"0.001"} /> */}
-        {/* <Picker
+        <Picker
           options={options}
           fullWidth
-          size={"small"}
+          size={"sm"}
           value={props.value}
-          className="oui-text-4xs oui-text-base-contrast-54"
+          className="oui-text-2xs oui-text-base-contrast-54 "
           onValueChange={(value) => {
             //
-            props.onChange?.(value.value);
+            props.onChange?.(value);
           }}
-        /> */}
-      </div>
+        />
+      </Box>
     );
 };

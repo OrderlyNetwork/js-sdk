@@ -11,10 +11,11 @@ import {
   praseChainIdToNumber,
   windowGuard,
 } from "@orderly.network/utils";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, SDKError } from "@orderly.network/types";
 import type { WalletState } from "@orderly.network/hooks";
 
 const WALLET_KEY = "orderly:wallet-info";
+const CHAIN_NAMESPACE = "orderly:chain-namespace";
 
 export const useWalletStateHandle = (options: {
   // onChainChanged?: (chainId: number, isTestnet: boolean) => void;
@@ -26,6 +27,10 @@ export const useWalletStateHandle = (options: {
   } = useWalletConnector();
 
   // console.log("🔗 wallet state handle", connectedWallet);
+
+  if (typeof connect !== "function") {
+    throw new SDKError("Please provide a wallet connector provider");
+  }
 
   const isManualConnect = useRef<boolean>(false);
 
@@ -42,10 +47,16 @@ export const useWalletStateHandle = (options: {
   }, [connectedWallet]);
 
   // current connected chain id
-  const currentChainId = useMemo<number | undefined>(() => {
+  const currentChain = useMemo<
+    { id: number; namespace: string } | undefined
+  >(() => {
     const id = connectedWallet?.chains?.[0]?.id;
-    if (typeof id === "undefined") return id;
-    return parseChainIdToNumber(id);
+    const namespace = connectedWallet?.chains?.[0]?.namespace;
+    if (typeof id === "undefined") return undefined;
+    return {
+      id: parseChainIdToNumber(id),
+      namespace,
+    };
   }, [connectedWallet]);
 
   useEffect(() => {
@@ -58,7 +69,7 @@ export const useWalletStateHandle = (options: {
     );
 
     setUnsupported(!isSupported);
-  }, [connectedChain?.id, chains]);
+  }, [connectedChain, chains, checkChainSupport, networkId]);
 
   useEffect(() => {
     // if (unsupported) return;
@@ -77,8 +88,6 @@ export const useWalletStateHandle = (options: {
       ) {
         connect({
           autoSelect: {
-            //FIXED: MetaMask
-            // label: "MetaMask",
             label: walletInfo.label,
             disableModals: true,
           },
@@ -108,9 +117,7 @@ export const useWalletStateHandle = (options: {
     if (!!currentWalletAddress && currentWalletAddress !== account.address) {
       account.setAddress(currentWalletAddress, {
         provider: connectedWallet?.provider,
-        chain: {
-          id: currentChainId!,
-        },
+        chain: currentChain as any,
         wallet: {
           name: connectedWallet.label,
         },
@@ -130,8 +137,8 @@ export const useWalletStateHandle = (options: {
     /**
      * switch chainId
      */
-    if (currentChainId !== account.chainId) {
-      account.switchChainId(currentChainId!);
+    if (currentChain?.id !== account.chainId) {
+      account.switchChainId(currentChain?.id!);
 
       // emit chain changed event
       // options.onChainChanged?.(currentChainId!, isTestnet(networkId));
@@ -140,7 +147,7 @@ export const useWalletStateHandle = (options: {
     connectedWallet,
     connectedChain,
     currentWalletAddress,
-    currentChainId,
+    currentChain,
     account.address,
     account.chainId,
     unsupported,
@@ -186,6 +193,7 @@ export const useWalletStateHandle = (options: {
             provider: wallet.provider,
             chain: {
               id: praseChainIdToNumber(wallet.chains[0].id),
+              namespace: wallet.chains[0].namespace,
             },
             wallet: {
               name: wallet.label,
