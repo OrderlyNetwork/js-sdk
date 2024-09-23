@@ -163,7 +163,7 @@ export const useCrossDepositFormScript = (
             decimals: dst.decimals,
           },
           chain: currentChain?.info?.network_infos,
-          nativeToken: currentChain?.info.nativeToken,
+          nativeToken: currentChain?.info?.nativeToken,
           depositFee,
           transactionData: transaction,
           slippage,
