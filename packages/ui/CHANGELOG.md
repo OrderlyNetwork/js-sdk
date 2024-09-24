@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 1.0.1-developV2.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@1.5.13-developV2.8
+
 ## 1.0.1-developV2.7
 
 ### Patch Changes
