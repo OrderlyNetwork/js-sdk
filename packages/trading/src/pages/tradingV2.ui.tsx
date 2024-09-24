@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Box, Flex, ScrollArea } from "@orderly.network/ui";
+import { FC, ReactNode, useMemo, useState } from "react";
+import { Box, cn, Flex, ScrollArea } from "@orderly.network/ui";
 import { TradingV2State } from "./tradingV2.script";
 import { DataListWidget } from "../components/desktop/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
@@ -12,6 +12,10 @@ import { TopTabWidget } from "../components/mWeb/topTab";
 import { OrderBookAndEntryWidget } from "../components/mWeb/orderBookAndEntry";
 import { BottomTabWidget } from "../components/mWeb/bottomTab";
 import { OrderBookAndTradesWidget } from "../components/desktop/orderBookAndTrades";
+import {
+  SideMarketsWidget,
+  TokenInfoBarWidget,
+} from "@orderly.network/markets";
 
 export const TradingV2: FC<TradingV2State> = (props) => {
   const isMobileLayout = useMediaQuery(MEDIA_TABLET);
@@ -35,32 +39,82 @@ const MobileLayout: FC<TradingV2State> = (props) => {
 };
 
 const DesktopLayout: FC<TradingV2State> = (props) => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [layout, setLayout] = useState<"left" | "right">("right");
+
+  const { view, width } = useMemo(() => {
+    const marketsView = (
+      <SideMarketsWidget collapsed={collapsed} onCollapse={setCollapsed} />
+    );
+    const orderEntryView = (
+      <>
+        <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
+          <AssetViewWidget />
+        </Box>
+        <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
+          <RiskRateWidget />
+        </Box>
+      </>
+    );
+    const marketsWidth = collapsed ? 70 : 280;
+    const orderEntryWidth = 280;
+    let view: { left: ReactNode; right: ReactNode };
+    let width: { left: number; right: number };
+
+    if (layout === "left") {
+      view = { left: orderEntryView, right: marketsView };
+      width = { left: orderEntryWidth, right: marketsWidth };
+    } else {
+      view = { left: marketsView, right: orderEntryView };
+      width = { left: marketsWidth, right: orderEntryWidth };
+    }
+
+    return { view, width };
+  }, [collapsed, layout]);
+
   return (
-    <Flex direction={"column"} gap={3} p={3} className="oui-bg-base-10">
-      <Flex p={3} width={"100%"} height={600} gap={3}>
-        <Box className="oui-flex-1" width={"100%"} height={"100%"}>
-          <TradingviewWidget
-            symbol={props.symbol}
-            libraryPath={props.tradingViewConfig?.library_path}
-            scriptSRC={props.tradingViewConfig?.scriptSRC}
-            customCssUrl={props.tradingViewConfig?.customCssUrl}
-          />
-        </Box>
-        <Box className="oui-flex-1" width={"100%"} height={"100%"}>
-          <OrderBookAndTradesWidget symbol={props.symbol} />
-        </Box>
-      </Flex>
-      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3">
-        <DataListWidget {...props.dataList} />
-      </Box>
+    <div
+      style={{
+        gridTemplateColumns: `${width.left}px 1fr ${width.right}px`,
+      }}
+      className={cn(
+        "oui-grid oui-grid-rows-1 oui-h-[calc(100vh_-_49px_-_29px)]",
+        "oui-p-3 oui-gap-3 oui-bg-base-10",
+        "oui-transition-all"
+      )}
+    >
+      <div className="oui-h-full">{view.left}</div>
+      <div
+        className={cn(
+          "oui-grid oui-grid-cols-1 oui-gap-3",
+          "oui-overflow-hidden"
+        )}
+      >
+        <TokenInfoBarWidget
+          symbol={props.symbol}
+          layout={layout}
+          onLayout={setLayout}
+        />
 
-      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
-        <AssetViewWidget />
-      </Box>
+        <Flex gapX={3}>
+          <Box className="oui-flex-1" width={"100%"} height={"100%"}>
+            <TradingviewWidget
+              symbol={props.symbol}
+              libraryPath={props.tradingViewConfig?.library_path}
+              scriptSRC={props.tradingViewConfig?.scriptSRC}
+              customCssUrl={props.tradingViewConfig?.customCssUrl}
+            />
+          </Box>
+          <Box className="oui-flex-1" width={"100%"} height={"100%"}>
+            <OrderBookAndTradesWidget symbol={props.symbol} />
+          </Box>
+        </Flex>
 
-      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
-        <RiskRateWidget />
-      </Box>
-    </Flex>
+        <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3">
+          <DataListWidget {...props.dataList} />
+        </Box>
+      </div>
+      <div>{view.right}</div>
+    </div>
   );
 };

@@ -10,6 +10,7 @@
       "@orderly.network/hooks": ["../hooks/src"],
       "@orderly.network/types": ["../types/src"],
       "@orderly.network/utils": ["../utils/src"],
+      "@orderly.network/markets": ["../markets/src"],
     },
   }
 }
