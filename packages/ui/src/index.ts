@@ -26,6 +26,7 @@ export * from "./pickers";
 export * from "./slider";
 export * from "./toast";
 export * from "./listView";
+export * from "./collapsible";
 
 export * from "./dropdown";
 
