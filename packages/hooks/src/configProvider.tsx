@@ -51,7 +51,7 @@ export interface ConfigProviderProps {
   contracts?: IContract;
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters: WalletAdapter[];
-  brokerId?: string;
+  brokerId: string;
   brokerName: string;
   networkId: NetworkId;
 
