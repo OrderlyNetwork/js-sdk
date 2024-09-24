@@ -11,11 +11,13 @@ import {
   Tooltip,
   Divider,
   gradientTextVariants,
+  cn,
+  Collapsible,
+  CollapsibleContent,
 } from "@orderly.network/ui";
 import { AssetViewState } from "./assetView.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { cn, Collapsible, CollapsibleContent } from "@orderly.network/react";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 
