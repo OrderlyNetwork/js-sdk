@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useTradingPateContext } from "../../../provider/context";
+import { useTradingPageContext } from "../../../provider/context";
 import {
   useMediaQuery,
   useOrderbookStream,

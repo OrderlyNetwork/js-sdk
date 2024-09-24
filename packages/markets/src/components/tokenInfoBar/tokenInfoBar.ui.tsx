@@ -20,6 +20,7 @@ import {
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
 import { ReactNode, useMemo } from "react";
+import { DropDownMarketsWidget } from "../dropDownMarkets";
 
 export type Layout = "left" | "right";
 
@@ -66,18 +67,21 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
   );
 
   const symbolView = (
-    <Flex gapX={1} className="oui-cursor-pointer">
-      <TokenIcon symbol={symbol} className="oui-w-4 oui-h-4" />
-      <Text.formatted
-        rule="symbol"
-        formatString="base-type"
-        size="2xs"
-        weight="semibold"
-      >
-        {symbol}
-      </Text.formatted>
-      <TriangleDownIcon className="oui-text-base-contrast-54" />
-    </Flex>
+    <DropDownMarketsWidget contentClassName="oui-w-[429px] oui-h-[496px]">
+      <Flex gapX={1} className="oui-cursor-pointer">
+        <TokenIcon symbol={symbol} className="oui-w-4 oui-h-4" />
+        <Text.formatted
+          className="oui-break-normal oui-whitespace-nowrap"
+          rule="symbol"
+          formatString="base-type"
+          size="2xs"
+          weight="semibold"
+        >
+          {symbol}
+        </Text.formatted>
+        <TriangleDownIcon className="oui-text-base-contrast-54" />
+      </Flex>
+    </DropDownMarketsWidget>
   );
 
   const price = (
@@ -154,56 +158,55 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
         </Flex>
         <Divider className="oui-h-[26px]" direction="vertical" intensity={8} />
         {price}
-        <div className="oui-relative oui-flex-1">
-          <Flex
-            gapX={8}
-            // ref={containerRef}
-            // hide-scrollbar
-            className="oui-overflow-x-auto oui-max-w-full"
-            // width="100%"
+        <div className="oui-relative oui-overflow-hidden">
+          <div
+            ref={containerRef}
+            className="oui-overflow-x-auto hide-scrollbar"
           >
-            <div ref={leadingElementRef}>
-              <DataItem label="24h Change" value={change} />
-            </div>
-            <DataItem
-              label="Mark"
-              value={<Text.numeral>{data?.["mark_price"]}</Text.numeral>}
-              hint="Price for the computation of unrealized PnL and liquidation."
-            />
-            <DataItem
-              label="Index"
-              value={<Text.numeral>{data?.["index_price"]}</Text.numeral>}
-              hint="Average of the last prices across other exchanges."
-            />
-            <DataItem
-              label="24h volume"
-              value={
-                <Text.numeral rule="price" dp={quotoDp}>
-                  {data?.["24h_amount"]}
-                </Text.numeral>
-              }
-              hint="24 hour total trading volume on the Orderly Network."
-            />
-            <DataItem
-              label="Pred. funding rate"
-              value={fundingRateView}
-              hint="Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions."
-            />
-            <div ref={tailingElementRef}>
+            <Flex gapX={8} height={54}>
+              <div ref={leadingElementRef}>
+                <DataItem label="24h Change" value={change} />
+              </div>
               <DataItem
-                label="Open interest"
-                value={
-                  <>
-                    <Text.numeral rule="price">{openInterest}</Text.numeral>
-                    <Text intensity={36}>{` USDC`}</Text>
-                  </>
-                }
-                hint="Total size of positions per side."
+                label="Mark"
+                value={<Text.numeral>{data?.["mark_price"]}</Text.numeral>}
+                hint="Price for the computation of unrealized PnL and liquidation."
               />
-            </div>
-          </Flex>
-          <ScrollIndicator leading onClick={onScoll} />
-          <ScrollIndicator tailing onClick={onScoll} />
+              <DataItem
+                label="Index"
+                value={<Text.numeral>{data?.["index_price"]}</Text.numeral>}
+                hint="Average of the last prices across other exchanges."
+              />
+              <DataItem
+                label="24h volume"
+                value={
+                  <Text.numeral rule="price" dp={quotoDp}>
+                    {data?.["24h_amount"]}
+                  </Text.numeral>
+                }
+                hint="24 hour total trading volume on the Orderly Network."
+              />
+              <DataItem
+                label="Pred. funding rate"
+                value={fundingRateView}
+                hint="Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions."
+              />
+              <div ref={tailingElementRef}>
+                <DataItem
+                  label="Open interest"
+                  value={
+                    <>
+                      <Text.numeral rule="price">{openInterest}</Text.numeral>
+                      <Text intensity={36}>{` USDC`}</Text>
+                    </>
+                  }
+                  hint="Total size of positions per side."
+                />
+              </div>
+            </Flex>
+          </div>
+          <ScrollIndicator leading onClick={onScoll} visible={leadingVisible} />
+          <ScrollIndicator tailing onClick={onScoll} visible={tailingVisible} />
         </div>
       </Flex>
 
@@ -259,30 +262,24 @@ type ScrollIndicatorProps = {
 const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
   const { visible, leading, tailing, onClick } = props;
   if (!visible) return null;
-  const icon = tailing ? (
-    <ArrowRightIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80" />
-  ) : (
-    <ArrowLeftIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80" />
-  );
+
   return (
     <button
       onClick={() => {
         onClick?.(leading ? "left" : "right");
       }}
       style={{
-        borderRadius: "4px 0px 0px 4px",
-        background: tailing
-          ? "linear-gradient(90deg, #07080A 0%, rgba(7, 8, 10, 0.60) 65%, rgba(7, 8, 10, 0.00) 100%)"
-          : "linear-gradient(90deg, #07080A 0%, rgba(7, 8, 10, 0.60) 65%, rgba(7, 8, 10, 0.00) 100%)",
+        background:
+          "linear-gradient(90deg, #07080A 0%, rgba(7, 8, 10, 0.60) 65%, rgba(7, 8, 10, 0.00) 100%)",
       }}
       className={cn(
         "oui-flex oui-items-center oui-w-[80px] oui-h-[54px]",
-        "oui-absolute oui-top-0 oui-bottom-0",
+        "oui-absolute oui-top-0 oui-bottom-0 oui-rounded-l",
         leading && "oui-left-0 oui-pl-1",
-        tailing && "oui-right-0 oui-pr-1"
+        tailing && "oui-right-0 oui-pr-1 oui-rotate-180"
       )}
     >
-      {icon}
+      <ArrowLeftIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80" />
     </button>
   );
 };

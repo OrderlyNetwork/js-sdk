@@ -7,9 +7,10 @@ import {
   MarketsListWidget,
   RecentListWidget,
   DropDownMarketsWidget,
+  DropDownMarketsConetnt,
   getDropDownMarketsColumns
 } from "@orderly.network/markets";
-import { Box } from "@orderly.network/ui";
+import { Box, Button } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
 const networkId = "testnet";
@@ -46,10 +47,11 @@ type Story = StoryObj<typeof meta>;
 
 export const DropDownMarkets: Story = {
   render: (args) => {
-    return <DropDownMarketsWidget />
+    return <DropDownMarketsWidget contentClassName="oui-w-[429px] oui-h-[496px]"><Button>Show DropDown markets</Button></DropDownMarketsWidget>
   },
-  decorators
+  decorators:[]
 };
+
 
 
 export const Favorites: Story = {

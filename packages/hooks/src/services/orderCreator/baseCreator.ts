@@ -72,7 +72,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     let { order_quantity, total, order_price, reduce_only, order_type } =
       values;
 
-    const { min_notional } = symbol;
+    const { min_notional } = symbol || {};
 
     if (!order_quantity) {
       // calculate order_quantity from total

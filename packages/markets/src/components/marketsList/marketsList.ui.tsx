@@ -19,8 +19,8 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
 
   const columns = useMemo(() => {
     return typeof getColumns === "function"
-      ? getColumns(favorite, true)
-      : getSideMarketsColumns(favorite, true);
+      ? getColumns(favorite, false)
+      : getSideMarketsColumns(favorite, false);
   }, [favorite]);
 
   return (

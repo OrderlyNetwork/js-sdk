@@ -150,6 +150,7 @@ const TableItem: React.FC<TableItemProps> = (props) => {
     <div
       key={row.id}
       className={cn(
+        "oui-group",
         "oui-flex oui-justify-center oui-items-center",
         "oui-mx-1 oui-px-2",
         "hover:oui-bg-base-7 oui-rounded-[6px]",

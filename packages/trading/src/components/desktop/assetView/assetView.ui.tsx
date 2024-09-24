@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useMemo, useState, useCallback, ReactNode } from "react";
 import {
   Flex,
   Text,
@@ -11,11 +11,13 @@ import {
   Tooltip,
   Divider,
   gradientTextVariants,
+  cn,
+  Collapsible,
+  CollapsibleContent,
 } from "@orderly.network/ui";
 import { AssetViewState } from "./assetView.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { cn, Collapsible, CollapsibleContent } from "@orderly.network/react";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 
@@ -25,16 +27,41 @@ interface StatusInfo {
   titleColor?: any;
 }
 
-export const useCurrentStatusText = (): StatusInfo => {
+interface TooltipContentProps {
+  description: ReactNode;
+  formula: ReactNode;
+}
+
+interface TotalValueProps {
+  totalValue: number | null;
+  visible?: boolean;
+  onToggleVisibility?: () => void;
+}
+
+interface AssetDetailProps {
+  label: string;
+  description: ReactNode;
+  formula: ReactNode;
+  visible: boolean;
+  value: number | string;
+  unit?: string;
+  rule?: "percentages";
+  isConnected?: boolean;
+}
+
+interface AssetValueListProps {
+  visible?: boolean;
+  freeCollateral: number | null;
+  marginRatioVal: number;
+  renderMMR: string;
+  isConnected: boolean;
+}
+
+const useCurrentStatusText = (): StatusInfo => {
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
 
-  /**
-   * TODO:
-   *  script文件不应该包括UI显示的具体数据，建议移动到ui文件中
-   *  处理完成之后，请删掉 TODO
-   */
-  const currentStatus = useMemo(() => {
+  return useMemo(() => {
     if (wrongNetwork) {
       return {
         title: "Wrong Network",
@@ -68,57 +95,91 @@ export const useCurrentStatusText = (): StatusInfo => {
         };
     }
   }, [state.status, wrongNetwork]);
-
-  return currentStatus;
 };
 
-const TotalValue: FC<{
-  totalValue: number | null;
-  visible?: boolean;
-  onToggleVisibility?: () => void;
-}> = ({ totalValue = 0, visible = true, onToggleVisibility }) => {
-  return (
-    <Flex
-      direction={"column"}
-      gap={1}
-      className="oui-text-2xs"
-      itemAlign={"center"}
+const TooltipContent: FC<TooltipContentProps> = ({ description, formula }) => (
+  <div className="oui-leading-[1.5] oui-text-2xs oui-text-base-contrast-80 oui-min-w-[204px] oui-max-w-[240px]">
+    <span>{description}</span>
+    <Divider className="oui-border-white/10" my={2} />
+    <span>{formula}</span>
+  </div>
+);
+
+const TotalValue: FC<TotalValueProps> = ({
+  totalValue = 0,
+  visible = true,
+  onToggleVisibility,
+}) => (
+  <Flex direction="column" gap={1} className="oui-text-2xs" itemAlign="center">
+    <Text.numeral
+      visible={visible}
+      weight="bold"
+      size="2xl"
+      className={gradientTextVariants({ color: "brand" })}
+      as="div"
+      padding={false}
     >
+      {totalValue ?? "--"}
+    </Text.numeral>
+    <Flex gap={1} itemAlign="center">
+      <Text size="2xs" color="neutral" weight="semibold">
+        My Assets (USDC)
+      </Text>
+      <button onClick={onToggleVisibility}>
+        {visible ? (
+          <EyeIcon size={18} className="oui-text-base-contrast-54" />
+        ) : (
+          <EyeCloseIcon size={18} className="oui-text-base-contrast-54" />
+        )}
+      </button>
+    </Flex>
+  </Flex>
+);
+
+const AssetDetail: FC<AssetDetailProps> = ({
+  label,
+  description,
+  formula,
+  visible,
+  value,
+  unit,
+  rule,
+  isConnected,
+}) => (
+  <Flex justify="between">
+    <Tooltip
+      content={
+        (<TooltipContent description={description} formula={formula} />) as any
+      }
+    >
+      <Text
+        size="2xs"
+        color="neutral"
+        weight="semibold"
+        className="oui-cursor-pointer"
+      >
+        {label}
+      </Text>
+    </Tooltip>
+    {isConnected !== false ? (
       <Text.numeral
         visible={visible}
-        weight="bold"
-        size="2xl"
-        className={gradientTextVariants({ color: "brand" })}
+        size="2xs"
+        unit={unit}
+        unitClassName="oui-text-base-contrast-36"
         as="div"
+        rule={rule}
         padding={false}
       >
-        {totalValue ?? "--"}
+        {value ?? "--"}
       </Text.numeral>
+    ) : (
+      <Text className="oui-text-base-contrast-36">--</Text>
+    )}
+  </Flex>
+);
 
-      <Flex gap={1} itemAlign={"center"}>
-        <Text size="2xs" color="neutral" weight="semibold">
-          My Assets (USDC)
-        </Text>
-
-        <button onClick={() => onToggleVisibility?.()}>
-          {visible ? (
-            <EyeIcon size={18} className="oui-text-base-contrast-54" />
-          ) : (
-            <EyeCloseIcon size={18} className="oui-text-base-contrast-54" />
-          )}
-        </button>
-      </Flex>
-    </Flex>
-  );
-};
-
-const AssetValueList: FC<{
-  visible?: boolean;
-  freeCollateral: number | null;
-  marginRatioVal: number;
-  renderMMR: string;
-  isConnected: boolean;
-}> = ({
+const AssetValueList: FC<AssetValueListProps> = ({
   visible = true,
   freeCollateral,
   marginRatioVal,
@@ -131,17 +192,19 @@ const AssetValueList: FC<{
   );
   const [open, setOpen] = useState<boolean>(optionsOpen);
 
+  const toggleOpen = useCallback(() => {
+    setOpen((prevOpen) => !prevOpen);
+    setOptionsOpen(!open);
+  }, [setOptionsOpen]);
+
   return (
     <Box>
       <Flex
         justify="center"
         gap={1}
-        itemAlign={"center"}
+        itemAlign="center"
         className="oui-cursor-pointer"
-        onClick={() => {
-          setOpen((prevOpen) => !prevOpen);
-          setOptionsOpen(!open);
-        }}
+        onClick={toggleOpen}
       >
         <Divider className="oui-flex-1" />
         <ChevronDownIcon
@@ -151,123 +214,33 @@ const AssetValueList: FC<{
         />
         <Divider className="oui-flex-1" />
       </Flex>
-
       <Collapsible open={open}>
         <CollapsibleContent>
           <Box className="oui-space-y-1.5">
-            <Flex justify="between">
-              <Tooltip
-                content={
-                  (
-                    <div>
-                      <span>Free collateral for placing new orders.</span>
-                      <Divider className="oui-py-2 oui-border-white/10" />
-                      <span>
-                        Free collateral = Total balance + Total unsettlement PnL
-                        - Total position initial margin
-                      </span>
-                    </div>
-                  ) as any
-                }
-              >
-                <Text
-                  size="2xs"
-                  color="neutral"
-                  weight="semibold"
-                  className="oui-cursor-pointer"
-                >
-                  Free collateral
-                </Text>
-              </Tooltip>
-              <Text.numeral
-                visible={visible}
-                size="2xs"
-                unit="USDC"
-                unitClassName="oui-text-base-contrast-36"
-                as="div"
-                padding={false}
-              >
-                {freeCollateral ?? "--"}
-              </Text.numeral>
-            </Flex>
-
-            <Flex justify="between">
-              <Tooltip
-                content={
-                  (
-                    <div>
-                      <span>
-                        Your actual Leverage of the whole account / Your max
-                        Leverage of the whole account
-                      </span>
-                      <Divider className="oui-py-2 oui-border-white/10" />
-                      <span>
-                        Margin ratio = Total collateral / Total position
-                        notional
-                      </span>
-                    </div>
-                  ) as any
-                }
-              >
-                <Text
-                  size="2xs"
-                  color="neutral"
-                  weight="semibold"
-                  className="oui-cursor-pointer"
-                >
-                  Margin ratio
-                </Text>
-              </Tooltip>
-              {isConnected ? (
-                <Text.numeral
-                  size="2xs"
-                  unitClassName="oui-text-base-contrast-36"
-                  as="div"
-                  rule="percentages"
-                  padding={false}
-                >
-                  {marginRatioVal}
-                </Text.numeral>
-              ) : (
-                <Text className="oui-text-base-contrast-36">--</Text>
-              )}
-            </Flex>
-
-            <Flex justify="between">
-              <Tooltip
-                content={
-                  (
-                    <div>
-                      <span>Maintenance margin ratio.</span>
-                      <Divider className="oui-py-2 oui-border-white/10" />
-                      <span>Maintenance margin ratio = ...</span>
-                    </div>
-                  ) as any
-                }
-              >
-                <Text
-                  size="2xs"
-                  color="neutral"
-                  weight="semibold"
-                  className="oui-cursor-pointer"
-                >
-                  Maintenance margin ratio
-                </Text>
-              </Tooltip>
-              {renderMMR ? (
-                <Text.numeral
-                  size="2xs"
-                  suffix="%"
-                  unitClassName="oui-text-base-contrast-36"
-                  as="div"
-                  padding={false}
-                >
-                  {renderMMR}
-                </Text.numeral>
-              ) : (
-                <Text className="oui-text-base-contrast-36">--</Text>
-              )}
-            </Flex>
+            <AssetDetail
+              label="Free collateral"
+              description="Free collateral for placing new orders."
+              formula="Free collateral = Total balance + Total unsettlement PnL - Total position initial margin"
+              visible={visible}
+              value={freeCollateral!}
+              unit="USDC"
+            />
+            <AssetDetail
+              label="Margin ratio"
+              description="The margin ratio represents the proportion of collateral relative to the total position value."
+              formula="Account margin ratio = (Total collateral value / Total position notional) * 100%"
+              visible={visible}
+              value={marginRatioVal}
+              isConnected={isConnected}
+              rule="percentages"
+            />
+            <AssetDetail
+              label="Maintenance margin ratio"
+              description="The minimum margin ratio required to protect your positions from being liquidated."
+              formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
+              visible={visible}
+              value={renderMMR}
+            />
           </Box>
         </CollapsibleContent>
       </Collapsible>
@@ -288,29 +261,20 @@ export const AssetView: FC<AssetViewState> = ({
   renderMMR,
   isConnected,
 }) => {
-  const currentStatus = useCurrentStatusText();
-  const { title, description } = currentStatus;
-  const titleColor = currentStatus.titleColor ?? "";
+  const { title, description, titleColor } = useCurrentStatusText();
 
   return (
     <Box>
-      {title && description ? (
+      {title && description && (
         <Flex direction="column" gap={1} className="oui-mb-[32px]">
-          {titleColor ? (
-            <Text size="lg" weight="bold" color={titleColor}>
-              {title}
-            </Text>
-          ) : (
-            <Text.gradient size="lg" weight="bold" color={"brand"}>
-              {title}
-            </Text.gradient>
-          )}
-
+          <Text size="lg" weight="bold" color={titleColor || "inherit"}>
+            {title}
+          </Text>
           <Text size="2xs" color="neutral" weight="semibold">
             {description}
           </Text>
         </Flex>
-      ) : null}
+      )}
       <AuthGuard
         networkId={networkId}
         status={AccountStatusEnum.EnableTrading}
@@ -320,7 +284,7 @@ export const AssetView: FC<AssetViewState> = ({
           <>
             <Box>
               <Flex direction="column" gap={1} className="oui-mb-[32px]">
-                <Text.gradient size="lg" weight="bold" color={"brand"}>
+                <Text.gradient size="lg" weight="bold" color="brand">
                   Deposit to start trade
                 </Text.gradient>
                 <Text size="2xs" color="neutral" weight="semibold">
@@ -347,7 +311,7 @@ export const AssetView: FC<AssetViewState> = ({
               renderMMR={renderMMR}
               isConnected={isConnected}
             />
-            <Flex gap={3} itemAlign={"center"}>
+            <Flex gap={3} itemAlign="center">
               <Button
                 fullWidth
                 color="secondary"

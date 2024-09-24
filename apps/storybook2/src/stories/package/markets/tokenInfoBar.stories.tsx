@@ -38,10 +38,13 @@ export const TokenInfoBar: Story = {
   render: (args) => {
     const [layout, setLayout] = useState<'left' | 'right'>('right');
     return <Flex direction='column' itemAlign='start' gapY={5}>
-      <Box width={500}>
+      <Box width={600}>
         <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
       </Box>
-      <Box width={800}>
+      <Box width={900}>
+        <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
+      </Box>
+      <Box width='100%'>
         <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
       </Box>
     </Flex>

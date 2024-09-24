@@ -5,7 +5,7 @@ import { API } from "@orderly.network/types";
 import { getBasicSymbolInfo } from "../utils/utils";
 
 export const TradingPageContext = createContext({} as TradingPageState);
-export const useTradingPateContext = () => {
+export const useTradingPageContext = () => {
   return useContext(TradingPageContext);
 };
 

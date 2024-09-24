@@ -26,7 +26,7 @@ const sharePnLConfig = {
     "/pnl/poster_bg_4.png",
     "/pnl/poster_bg_5.png"
   ],
-  color: "rgba(255, 255, 255, 0.98)", 
+  color: "rgba(255, 255, 255, 0.98)",
   profitColor: "rgba(255,68,124,1)",
   lossColor: "rgba(0,180,158,1)",
   brandColor: "rgba(51,95,252,1)",
@@ -38,9 +38,9 @@ const sharePnLConfig = {
 
 const mainNavProps = {
   mainMenus: [
-    { name: "Trading", href: "/", testid: "oui-main-nav-trading"  },
+    { name: "Trading", href: "/", testid: "oui-main-nav-trading" },
     { name: "Reward", href: "/rewards", testid: "oui-main-nav-reward" },
-    { name: "Markets", href: "/markets", testid: "oui-main-nav-markets"  },
+    { name: "Markets", href: "/markets", testid: "oui-main-nav-markets" },
     {
       name: "Reward",
       href: "/rewards",
@@ -189,11 +189,11 @@ const meta = {
       return (
         <ConnectorProvider>
           <OrderlyApp
-            brokerId={"orderly"}
+            // brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-          // configStore={configStore}
+            configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}
@@ -227,8 +227,6 @@ const meta = {
         sharePnLConfig
       }
     }
-
-
   }
 } satisfies Meta<typeof TradingPageV2>;
 
@@ -305,10 +303,10 @@ export const OrderBookAndTrades: Story = {
   render: (arg) => {
 
     return (
-      <Flex 
-        p={10} 
-        justify={"center"} 
-        itemAlign={"start"} 
+      <Flex
+        p={10}
+        justify={"center"}
+        itemAlign={"start"}
         className="oui-bg-[rgba(255,255,255,0.3)]"
       >
         <Box className="oui-w-[50vw] oui-h-[600px]" >
