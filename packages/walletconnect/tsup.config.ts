@@ -10,4 +10,5 @@ export default defineConfig((options) => ({
   clean: !options.watch,
   dts: true,
   external: ["react", "react-dom", "@orderly.network/hooks"],
+  tsconfig: "tsconfig.build.json",
 }));

@@ -8,10 +8,10 @@
     "dist"
   ],
   "scripts": {
-    "watch": "tsup --watch --tsconfig tsconfig.build.json",
+    "watch": "tsup --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:tsc": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs && pnpm run build-tailwind",
-    "build:tsup": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
+    "build:tsup": "tsup && pnpm run build-tailwind",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
     "build:esm": "tsc --project tsconfig.build.json --outDir esm && tsc-alias --project tsconfig.build.json --outDir esm",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib && tsc-alias --project tsconfig.build.json --outDir lib",
