@@ -1,14 +1,17 @@
 import { FC } from "react";
-import { Box, Flex, Text } from "@orderly.network/ui";
+import { Box, Flex } from "@orderly.network/ui";
 import { TradingV2State } from "./tradingV2.script";
 import { DataListWidget } from "../components/desktop/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
-import { LastTradesWidget } from "../components/base/lastTrades";
 import { AssetViewWidget } from "../components/desktop/assetView";
 import { RiskRateWidget } from "../components/desktop/riskRate";
-import { OrderBookAndTradesWidget } from "../components/desktop/orderBookAndTrades";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
+import { NavBarWidget } from "../components/mWeb/navBar";
+import { TopTabWidget } from "../components/mWeb/topTab";
+import { OrderBookAndEntryWidget } from "../components/mWeb/orderBookAndEntry";
+import { BottomTabWidget } from "../components/mWeb/bottomTab";
+import { OrderBookAndTradesWidget } from "../components/desktop/orderBookAndTrades";
 
 export const TradingV2: FC<TradingV2State> = (props) => {
   const isMobileLayout = useMediaQuery(MEDIA_TABLET);
@@ -21,10 +24,12 @@ export const TradingV2: FC<TradingV2State> = (props) => {
 };
 
 const MobileLayout: FC<TradingV2State> = (props) => {
-
   return (
     <>
-    
+      <NavBarWidget />
+      <TopTabWidget />
+      <OrderBookAndEntryWidget />
+      <BottomTabWidget />
     </>
   );
 };
