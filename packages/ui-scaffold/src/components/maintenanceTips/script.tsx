@@ -60,7 +60,7 @@ export const useMaintenanceScript = (): MaintenanceTipInterface => {
     }
   }, [startTime, status]);
   const tipsContent = `${brokerName} will be temporarily unavailable for a scheduled upgrade from ${startDate} to ${endDate}.`;
-  const dialogContent = ` Sorry, ${brokerName} is temporarily unavailable due to a scheduled upgrade. The service is expected to be back by`;
+  const dialogContent = ` Sorry, ${brokerName} is temporarily unavailable due to a scheduled upgrade. The service is expected to be back by ${endDate}.`;
   return {
     tipsContent,
     showTips,
