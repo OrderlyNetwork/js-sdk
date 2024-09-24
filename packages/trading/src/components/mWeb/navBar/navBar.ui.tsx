@@ -6,7 +6,7 @@ import { NavBarState } from "./navBar.script";
 export const NavBar: FC<NavBarState> = (props) => {
 
     return (
-        <Flex height={54}>
+        <Flex height={54} className="oui-sticky">
             Nav bar
         </Flex>
     );

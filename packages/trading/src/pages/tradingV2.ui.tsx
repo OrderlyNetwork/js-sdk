@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Flex } from "@orderly.network/ui";
+import { Box, Flex, ScrollArea } from "@orderly.network/ui";
 import { TradingV2State } from "./tradingV2.script";
 import { DataListWidget } from "../components/desktop/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
@@ -25,12 +25,12 @@ export const TradingV2: FC<TradingV2State> = (props) => {
 
 const MobileLayout: FC<TradingV2State> = (props) => {
   return (
-    <>
+    <ScrollArea className="oui-h-100%">
       <NavBarWidget />
       <TopTabWidget />
       <OrderBookAndEntryWidget />
       <BottomTabWidget />
-    </>
+    </ScrollArea>
   );
 };
 
