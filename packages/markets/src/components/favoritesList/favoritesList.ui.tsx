@@ -36,7 +36,7 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
         loading={loading}
         onRow={(record, index) => {
           return {
-            className: cn("group", "oui-h-[53px]"),
+            className: cn("oui-h-[53px]"),
             onClick: () => {
               onSymbolChange?.(record);
               favorite.addToHistory(record);
