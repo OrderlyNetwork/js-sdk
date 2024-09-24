@@ -3,6 +3,7 @@ import {
   AlgoOrderRootType,
   OrderEntity,
   TriggerPriceType,
+  OrderlyOrder,
 } from "@orderly.network/types";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";

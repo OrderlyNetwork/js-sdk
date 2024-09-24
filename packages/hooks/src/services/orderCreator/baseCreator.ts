@@ -1,4 +1,12 @@
-import { OrderEntity, OrderType } from "@orderly.network/types";
+import {
+  OrderEntity,
+  OrderType,
+  OrderlyOrder,
+  AlgoOrderType,
+  ChildOrder,
+  AlgoOrderRootType,
+  AlgoOrderChildOrders,
+} from "@orderly.network/types";
 import {
   OrderCreator,
   OrderFormEntity,
@@ -15,7 +23,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
   abstract orderType: OrderType;
 
-  baseOrder(data: OrderEntity): OrderEntity {
+  baseOrder(data: OrderlyOrder): OrderlyOrder {
     const order: Pick<
       OrderEntity,
       | "symbol"
@@ -27,12 +35,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       | "visible_quantity"
     > = {
       symbol: data.symbol!,
-      order_type:
-        data.order_type === OrderType.LIMIT
-          ? !!data.order_type_ext
-            ? data.order_type_ext
-            : data.order_type
-          : data.order_type,
+      order_type: data.order_type,
       side: data.side,
       reduce_only: data.reduce_only!,
       order_quantity: data.order_quantity!,
@@ -43,7 +46,16 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       order.visible_quantity = data.visible_quantity;
     }
 
-    return order as OrderEntity;
+    const bracketOrder = this.parseBracketOrder(data);
+
+    if (!bracketOrder) {
+      return order;
+    }
+
+    return {
+      ...order,
+      child_orders: bracketOrder,
+    };
   }
 
   baseValidate(
@@ -156,5 +168,51 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
   get type(): OrderType {
     return this.orderType;
+  }
+
+  protected parseBracketOrder(data: OrderlyOrder): AlgoOrderChildOrders | null {
+    const orders: ChildOrder[] = [];
+
+    console.log(data);
+
+    if (!!data.tp_trigger_price) {
+      // const tp_trigger_price = !!data.tp_trigger_price
+      //   ? new Decimal(data.tp_trigger_price)
+      //       .todp(data.symbol.quote_dp)
+      //       .toNumber()
+      //   : data.tp_trigger_price;
+
+      const tp_trigger_price = data.tp_trigger_price;
+
+      orders.push({
+        algo_type: AlgoOrderType.TAKE_PROFIT,
+        side: data.side,
+        type: OrderType.MARKET,
+        trigger_price: tp_trigger_price,
+        symbol: data.symbol,
+        reduce_only: true,
+      });
+    }
+
+    if (!!data.sl_trigger_price) {
+      const sl_trigger_price = data.sl_trigger_price;
+
+      orders.push({
+        algo_type: AlgoOrderType.STOP_LOSS,
+        side: data.side,
+        type: OrderType.MARKET,
+        trigger_price: sl_trigger_price,
+        symbol: data.symbol,
+        reduce_only: true,
+      });
+    }
+
+    if (!orders.length) return null;
+
+    return {
+      symbol: data.symbol,
+      algo_type: AlgoOrderRootType.POSITIONAL_TP_SL,
+      child_orders: orders,
+    };
   }
 }

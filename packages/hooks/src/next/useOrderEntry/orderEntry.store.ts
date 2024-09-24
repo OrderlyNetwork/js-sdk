@@ -10,7 +10,7 @@ import { immer } from "zustand/middleware/immer";
 
 export type FullOrderState = OrderlyOrder;
 
-type OrderEntryStateEntity = RequireKeys<FullOrderState, "side" | "type">;
+type OrderEntryStateEntity = RequireKeys<FullOrderState, "side" | "order_type">;
 
 type OrderEntryState = {
   entry: OrderEntryStateEntity;
@@ -36,7 +36,7 @@ type OrderEntryActions = {
 
 const initialOrderState = {
   side: OrderSide.BUY as OrderSide,
-  type: OrderType.LIMIT as OrderType,
+  order_type: OrderType.LIMIT as OrderType,
 } as OrderEntryStateEntity;
 
 export const useOrderStore = create<

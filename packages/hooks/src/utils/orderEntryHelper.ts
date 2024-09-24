@@ -18,10 +18,10 @@ type orderEntryInputs = [
 type orderEntryInputHandle = (inputs: orderEntryInputs) => orderEntryInputs;
 
 const needNumberOnlyFields: (keyof OrderlyOrder)[] = [
-  "quantity",
-  "price",
+  "order_quantity",
+  "order_price",
   "trigger_price",
-  "total"
+  "total",
 ];
 
 /// only save number
@@ -57,12 +57,12 @@ export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   return [
     {
       ...values,
-      [input]: value
+      [input]: value,
     },
     input,
     value,
     markPrice,
-    config
+    config,
   ];
 
   //   return [values, input, value, markPrice];
@@ -72,7 +72,7 @@ export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
 
   if (value === OrderType.LIMIT || value === OrderType.STOP_LIMIT) {
-    if (values.price === "") {
+    if (values.order_price === "") {
       values.total = "";
     }
   }
@@ -96,7 +96,7 @@ export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
  * @returns
  */
 export function orderEntityFormatHandle(baseTick: number, quoteTick: number) {
-  return function(inputs: orderEntryInputs): orderEntryInputs {
+  return function (inputs: orderEntryInputs): orderEntryInputs {
     const [values, input, value, markPrice, config] = inputs;
 
     // TODO: formatting only deals with the thousandths and so on
@@ -144,25 +144,25 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const priceDP = price.dp();
 
   if (priceDP > config.quote_dp) {
-    values.price = price.toDecimalPlaces(config.quote_dp).toString();
+    values.order_price = price.toDecimalPlaces(config.quote_dp).toString();
   }
 
   price.toDecimalPlaces(Math.min(priceDP, config.quote_dp));
 
-  if (!values.quantity && !values.total) {
+  if (!values.order_quantity && !values.total) {
     return [values, input, value, markPrice, config];
   }
 
   const newValue = {
-    ...values
+    ...values,
   };
 
-  if (values.quantity) {
+  if (values.order_quantity) {
     // total = price.mul(values.quantity);
-    newValue.total = price.mul(values.quantity).todp(2).toString();
+    newValue.total = price.mul(values.order_quantity).todp(2).toString();
   } else if (values.total) {
     // total = new Decimal(values.total);
-    newValue.quantity = new Decimal(values.total)
+    newValue.order_quantity = new Decimal(values.total)
       .div(price)
       .todp(config.base_dp)
       .toString();
@@ -178,7 +178,7 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     input,
     value,
     markPrice,
-    config
+    config,
   ];
 }
 
@@ -200,7 +200,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   // check the length for precision and recalculate
   if (quantityDP > config.base_dp) {
     quantity = quantity.toDecimalPlaces(config.base_dp);
-    values.quantity = quantity.toString();
+    values.order_quantity = quantity.toString();
   }
 
   // if(values.type === OrderType.MARKET) {
@@ -208,21 +208,24 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   // }
 
   if (
-    values.type === OrderType.MARKET ||
-    values.type === OrderType.STOP_MARKET
+    values.order_type === OrderType.MARKET ||
+    values.order_type === OrderType.STOP_MARKET
   ) {
     if (!markPrice) {
       console.warn("[ORDERLY]markPrice is required for market order");
       return [values, input, value, markPrice, config];
     }
     const price = markPrice;
-    values.price = "";
+    values.order_price = "";
     values.total = quantity.mul(price).todp(2).toString();
   }
 
-  if (values.type === OrderType.LIMIT || values.type === OrderType.STOP_LIMIT) {
-    if (values.price) {
-      const price = Number(values.price);
+  if (
+    values.order_type === OrderType.LIMIT ||
+    values.order_type === OrderType.STOP_LIMIT
+  ) {
+    if (values.order_price) {
+      const price = Number(values.order_price);
       const total = quantity.mul(price);
       values.total = total.todp(config.quote_dp).toString();
     } else {
@@ -235,12 +238,12 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 
   return [
     {
-      ...values
+      ...values,
     },
     input,
     value,
     markPrice,
-    config
+    config,
   ];
 }
 
@@ -252,16 +255,17 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   const [values, input, value, markPrice, config] = inputs;
   if (value === "") {
-    return [{ ...values, quantity: "" }, input, value, markPrice, config];
+    return [{ ...values, order_quantity: "" }, input, value, markPrice, config];
   }
 
   let price = markPrice;
 
   if (
-    (values.type === OrderType.LIMIT || values.type === OrderType.STOP_LIMIT) &&
-    !!values.price
+    (values.order_type === OrderType.LIMIT ||
+      values.order_type === OrderType.STOP_LIMIT) &&
+    !!values.order_price
   ) {
-    price = Number(values.price);
+    price = Number(values.order_price);
   }
   let total = new Decimal(value);
   const totalDP = total.dp();
@@ -276,14 +280,14 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   return [
     {
       ...values,
-      quantity: quantity
+      order_quantity: quantity
         .toDecimalPlaces(Math.min(config.base_dp, quantity.dp()))
-        .toString()
+        .toString(),
     },
     input,
     value,
     markPrice,
-    config
+    config,
   ];
 }
 
@@ -291,10 +295,14 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   console.log(inputs);
   const [values, input, value, markPrice, config] = inputs;
 
-  const price = values.type === OrderType.MARKET || values.type === OrderType.STOP_MARKET ? markPrice : values.price;
+  const price =
+    values.order_type === OrderType.MARKET ||
+    values.order_type === OrderType.STOP_MARKET
+      ? markPrice
+      : values.order_price;
 
   // if price or quantity is empty, return
-  if (!price || !values.quantity) {
+  if (!price || !values.order_quantity) {
     return [values, input, value, markPrice, config];
   }
 
@@ -304,12 +312,12 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
       key: input,
       value,
       entryPrice: price, // order price or mark price
-      qty: values.quantity!,
-      orderSide: values.side!
+      qty: values.order_quantity!,
+      orderSide: values.side!,
       // values: newValues,
     },
     {
-      symbol: config
+      symbol: config,
     }
   );
 
@@ -329,12 +337,12 @@ export const getCalculateHandler = (
   fieldName: keyof OrderlyOrder
 ): orderEntryInputHandle => {
   switch (fieldName) {
-    case "type":
+    case "order_type":
       return orderTypeHandle;
-    case "quantity": {
+    case "order_quantity": {
       return quantityInputHandle;
     }
-    case "price": {
+    case "order_price": {
       return priceInputHandle;
     }
     case "total": {

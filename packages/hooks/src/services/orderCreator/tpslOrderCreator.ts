@@ -10,7 +10,7 @@ import { Decimal } from "@orderly.network/utils";
 export class TPSLOrderCreator extends BaseAlgoOrderCreator<
   AlgoOrderEntity<AlgoOrderRootType.TP_SL>
 > {
-  orderType = OrderType.MARKET;
+  type = OrderType.MARKET;
 
   create(
     values: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,

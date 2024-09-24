@@ -1,4 +1,4 @@
-import { OrderEntity } from "@orderly.network/types";
+import { OrderEntity, OrderType, OrderlyOrder } from "@orderly.network/types";
 import { BaseOrderCreator } from "./baseCreator";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
@@ -8,7 +8,7 @@ import { pick } from "ramda";
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
 export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
-  create(values: OrderEntity, config?: ValuesDepConfig): OrderEntity {
+  create(values: OrderlyOrder, config?: ValuesDepConfig): OrderEntity {
     const order = {
       ...this.baseOrder(values),
       order_price: values.order_price,
@@ -16,7 +16,7 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
 
     this.totalToQuantity(order, config!);
 
-    // console.log("create", order);
+    console.log("create", order);
 
     return pick(
       [
@@ -27,12 +27,14 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
         "reduce_only",
         "side",
         "order_type",
+        "child_orders",
       ],
       order
     );
 
     // return order;
   }
+
   validate(
     values: OrderFormEntity,
     config: ValuesDepConfig
@@ -108,4 +110,6 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
       return errors;
     });
   }
+
+  orderType = OrderType.LIMIT;
 }

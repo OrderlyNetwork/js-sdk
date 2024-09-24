@@ -63,10 +63,9 @@ export interface OrderExt {
 
 export interface BaseOrder {
   symbol: string;
-
-  type: OrderType;
-  price: string;
-  quantity: string;
+  order_type: OrderType;
+  order_price: string;
+  order_quantity: string;
   order_amount?: number;
   visible_quantity: number;
   side: OrderSide;
@@ -123,13 +122,13 @@ export interface AlgoOrderChildOrders {
 
 export interface ChildOrder {
   symbol: string;
-  algo_type: string;
+  algo_type: AlgoOrderType;
   side: string;
   type: string;
   trigger_price: number;
-  price: number;
-  reduce_only: string;
-  trigger_price_type: string;
+
+  reduce_only: boolean;
+  trigger_price_type?: string;
 }
 
 // export interface OrderEntity {}

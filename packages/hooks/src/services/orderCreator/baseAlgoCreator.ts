@@ -1,4 +1,9 @@
-import { AlgoOrderEntity, OrderSide } from "@orderly.network/types";
+import {
+  AlgoOrderEntity,
+  AlgoOrderRootType,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import {
   OrderCreator,
   OrderFormEntity,
@@ -6,6 +11,9 @@ import {
   VerifyResult,
 } from "./interface";
 import { AlgoOrderRootType } from "@orderly.network/types";
+import { values } from "ramda";
+import { config } from "@swc/core/spack";
+import { maxQty } from "@orderly.network/perp";
 
 export type AlgoOrderUpdateEntity = {
   trigger_price?: number;
@@ -103,4 +111,6 @@ export abstract class BaseAlgoOrderCreator<
       return Object.keys(result).length > 0 ? result : null;
     });
   }
+
+  abstract get type(): OrderType;
 }

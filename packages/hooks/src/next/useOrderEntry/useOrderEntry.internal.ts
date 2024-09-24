@@ -1,12 +1,8 @@
-import { create } from "zustand";
 import {
   type API,
-  BracketOrderEntry,
   OrderEntity,
-  OrderlyOrder,
   OrderSide,
   OrderType,
-  SDKError,
 } from "@orderly.network/types";
 
 import { useCallback, useEffect } from "react";
@@ -15,14 +11,14 @@ import {
   getCalculateHandler,
 } from "../../utils/orderEntryHelper";
 import { compose, head } from "ramda";
-import { tpslCalculateHelper } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
-import { OrderFactory } from "../../services/orderCreator/factory";
 import {
   type FullOrderState,
   useOrderEntryFromStore,
   useOrderStore,
 } from "./orderEntry.store";
 import { useMutation } from "../../useMutation";
+import { OrderCreator } from "../../services/orderCreator/interface";
+import { OrderlyOrder } from "@orderly.network/types";
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -41,7 +37,8 @@ const useOrderEntryNextInternal = (
     // markPrice,
     initialOrder = {
       side: OrderSide.BUY,
-      type: OrderType.LIMIT,
+      order_type: OrderType.LIMIT,
+      order_price: "",
     },
     symbolInfo,
   } = options;
@@ -49,9 +46,9 @@ const useOrderEntryNextInternal = (
   const orderEntryActions = useOrderStore((state) => state.actions);
 
   const isAlgoOrder =
-    orderEntity?.type === OrderType.STOP_LIMIT ||
-    orderEntity?.type === OrderType.STOP_MARKET ||
-    orderEntity?.type === OrderType.CLOSE_POSITION;
+    orderEntity?.order_type === OrderType.STOP_LIMIT ||
+    orderEntity?.order_type === OrderType.STOP_MARKET ||
+    orderEntity?.order_type === OrderType.CLOSE_POSITION;
 
   const [doCreateOrder, { isMutating }] = useMutation<OrderEntity, any>(
     isAlgoOrder ? "/v1/algo/order" : "/v1/order"
@@ -96,59 +93,49 @@ const useOrderEntryNextInternal = (
     orderEntryActions.updateOrderByKey("symbol", symbol);
   }, [symbol]);
 
-  const setValue = useCallback(
-    (
-      key: keyof FullOrderState,
-      value: any,
-      additional?: {
-        markPrice: number;
-      }
-    ) => {
-      console.group("setValue");
-      console.log("key", key);
-      console.log("value", value);
-      console.log("additional", additional);
-      console.log("symbolInfo", symbolInfo);
-      console.groupEnd();
+  const setValue = (
+    key: keyof FullOrderState,
+    value: any,
+    additional?: {
+      markPrice: number;
+    }
+  ) => {
+    console.group("setValue");
+    console.log("key", key);
+    console.log("value", value);
+    console.log("additional", additional);
+    console.log("symbolInfo", symbolInfo);
+    console.groupEnd();
 
-      if (!symbolInfo) {
-        orderEntryActions.updateOrderByKey(key, value);
-        console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
-        return;
-      }
+    if (!symbolInfo) {
+      orderEntryActions.updateOrderByKey(key, value);
+      console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
+      return;
+    }
 
-      const values = useOrderStore.getState().entry;
-      const { markPrice } = additional ?? { markPrice: 0 };
+    const values = useOrderStore.getState().entry;
+    const { markPrice } = additional ?? { markPrice: 0 };
 
-      let newValues = calculate(
-        { ...values },
-        key,
-        value,
+    let newValues = calculate({ ...values }, key, value, markPrice, symbolInfo);
+
+    /// if the order type is market or stop market, recalculate the total use mark price
+    if (
+      key === "order_type" &&
+      (value === OrderType.MARKET || value === OrderType.STOP_MARKET)
+    ) {
+      newValues = calculate(
+        newValues,
+        "order_price",
+        markPrice,
         markPrice,
         symbolInfo
       );
+    }
 
-      /// if the order type is market or stop market, recalculate the total use mark price
-      if (
-        key === "type" &&
-        (value === OrderType.MARKET || value === OrderType.STOP_MARKET)
-      ) {
-        newValues = calculate(
-          newValues,
-          "price",
-          markPrice,
-          markPrice,
-          symbolInfo
-        );
-      }
-      // orderEntryActions.updateOrder(key, newValues[key as keyof OrderEntity]);
+    orderEntryActions.updateOrder(newValues);
 
-      orderEntryActions.updateOrder(newValues);
-
-      // validate the order
-    },
-    [calculate, symbolInfo, orderEntryActions]
-  );
+    return newValues;
+  };
 
   const setValues = useCallback(
     (
@@ -179,6 +166,8 @@ const useOrderEntryNextInternal = (
       });
 
       orderEntryActions.updateOrder(newValues);
+
+      return newValues;
     },
     [calculate, orderEntryActions, symbolInfo]
   );
@@ -189,7 +178,7 @@ const useOrderEntryNextInternal = (
     const values = useOrderStore.getState().entry;
     const newValues = calculate(
       { ...values },
-      "price",
+      "order_price",
       markPrice,
       markPrice,
       options.symbolInfo
@@ -198,42 +187,31 @@ const useOrderEntryNextInternal = (
     orderEntryActions.updateOrder(newValues);
   }, []);
 
-  const createOrder = () => {
-    if (!orderEntity.symbol) {
-      throw new SDKError("symbol is error");
-    }
+  const validate = (
+    order: Partial<OrderlyOrder>,
+    creator: OrderCreator<any>,
+    options: { maxQty: number; markPrice: number }
+  ) => {
+    const { markPrice, maxQty } = options;
 
-    if (!orderEntity.side) {
-      throw new SDKError("side is error");
-    }
-
-    if (!orderEntity || typeof orderEntity.type === "undefined") {
-      throw new SDKError("order_type is error");
-    }
-
-    const orderCreator = OrderFactory.create(orderEntity.type);
-
-    // return orderCreator.validate(orderEntity, {
-    //   symbol: symbolInfo!,
-    //   maxQty,
-    //   markPrice: markPrice,
-    // });
+    return creator?.validate(order, {
+      symbol: symbolInfo!,
+      maxQty,
+      markPrice,
+    });
   };
 
-  const validate = useCallback(
-    (options: { maxQty: number; markPrice: number }) => {
-      const { markPrice, maxQty } = options;
-      const creator = OrderFactory.create(orderEntity.type);
+  const generateOrder = (
+    creator: OrderCreator<any>,
+    options: { maxQty: number; markPrice: number }
+  ) => {
+    const order = creator.create(orderEntity, {
+      ...options,
+      symbol: symbolInfo!,
+    });
 
-      return creator?.validate(orderEntity, {
-        symbol: symbolInfo!,
-        // token: tokenInfo[symbol](),
-        maxQty,
-        markPrice,
-      });
-    },
-    [orderEntity, symbolInfo]
-  );
+    return order;
+  };
 
   const submitOrder = useCallback(() => {
     console.log("submitOrder orderEntity:", orderEntity);
@@ -241,11 +219,14 @@ const useOrderEntryNextInternal = (
     // order.submit(values);
   }, [orderEntity]);
 
+  // const hasErrors = useMemo(()=>{}, [errors]);
+
   return {
     formattedOrder: orderEntity,
     setValue,
     setValues,
     submit: submitOrder,
+    generateOrder,
     validate,
     onMarkPriceChange: onMarkPriceUpdated,
   } as const;

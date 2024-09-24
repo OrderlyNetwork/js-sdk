@@ -1,11 +1,16 @@
-import { API, OrderEntity, OrderType } from "@orderly.network/types";
+import {
+  API,
+  OrderEntity,
+  OrderType,
+  OrderlyOrder,
+} from "@orderly.network/types";
 
 export type VerifyResult = {
-  [P in keyof OrderEntity]?: { type: string; message: string };
+  [P in keyof OrderlyOrder]?: { type: string; message: string };
 };
 
 export type OrderFormEntity = Pick<
-  OrderEntity,
+  OrderlyOrder,
   "order_price" | "order_quantity" | "total" | "reduce_only"
 >;
 

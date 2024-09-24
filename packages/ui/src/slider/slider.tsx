@@ -226,12 +226,9 @@ const Marks = (props: SliderMarksProps) => {
   } = props;
   const _value = useMemo(() => value?.[0] ?? 0, [value]);
   const selIndex = useMemo(() => {
-    if (typeof props.step === 'undefined') return undefined;
+    if (typeof props.step === "undefined") return undefined;
     return Math.floor(_value / props.step);
-  }, [
-    _value, props.step
-  ]);
-  
+  }, [_value, props.step]);
 
   return (
     <>
@@ -292,7 +289,7 @@ const Marks = (props: SliderMarksProps) => {
                 key={index}
                 className={cn(
                   "oui-absolute oui-top-[16px] oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer oui-translate-x-[-50%]",
-                  (selIndex === index) && textCls
+                  selIndex === index && textCls
                 )}
                 style={{
                   left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
@@ -341,12 +338,14 @@ const SingleSlider = React.forwardRef<
   );
 });
 
+SingleSlider.displayName = "SingleSlider";
+
 type SliderType = typeof BaseSlider & {
-  signle: typeof SingleSlider;
+  single: typeof SingleSlider;
 };
 
 const Slider = BaseSlider as SliderType;
 
-Slider.signle = SingleSlider;
+Slider.single = SingleSlider;
 
 export { Slider };

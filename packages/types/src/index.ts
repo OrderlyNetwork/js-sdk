@@ -15,6 +15,7 @@ export type {
   AlgoOrderEntity,
   TPSLOrderEntry,
   BaseAlgoOrderEntity,
+  AlgoOrderChildOrders,
   Optional,
   PositionSide,
   BracketOrderEntry,
@@ -23,6 +24,7 @@ export type {
   RegularOrder,
   AlgoOrder,
   OrderlyOrder,
+  ChildOrder,
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";

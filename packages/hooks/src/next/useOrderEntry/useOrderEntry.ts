@@ -1,16 +1,17 @@
 import {
   useCollateral,
-  useMarkPriceBySymbol,
   useMaxQty,
   useSymbolsInfo,
 } from "../../orderly/orderlyHooks";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import type { FullOrderState } from "./orderEntry.store";
-import { API, OrderEntity } from "@orderly.network/types";
+import { API, OrderlyOrder } from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
+import { OrderFactory } from "../../services/orderCreator/factory";
+import { VerifyResult } from "../../services/orderCreator/interface";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -21,12 +22,12 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   }
 
   const ee = useEventEmitter();
-  const fieldDirty = useRef<{ [K in keyof OrderEntity]?: boolean }>({});
-  const submitted = useRef<boolean>(false);
+  const fieldDirty = useRef<{ [K in keyof OrderlyOrder]?: boolean }>({});
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
 
-  // const [ext,setExt] = useState(0);
-  // const markPrice = useMarkPriceBySymbol(symbol);
+  const [errors, setErrors] = useState<VerifyResult | null>(null);
+
   const actions = useMarkPriceActions();
   const symbolConfig = useSymbolsInfo();
 
@@ -37,6 +38,8 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     setValue: setValueInternal,
     setValues: setValuesInternal,
     validate,
+    generateOrder,
+    // submit,
     ...orderEntryActions
   } = useOrderEntryNextInternal(symbol, {
     ...options,
@@ -63,54 +66,79 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   }, []);
 
   const prepareData = useCallback(() => {
-    let additionalValue = {
+    return {
       markPrice: actions.getMarkPriceBySymbol(symbol),
       maxQty,
     };
-    return additionalValue;
   }, [actions, maxQty, symbol]);
 
+  const interactiveValidate = (order: Partial<OrderlyOrder>) => {
+    validateFunc(order).then((errors) => {
+      const keys = Object.keys(errors);
+      if (keys.length > 0) {
+        setErrors(errors);
+      } else {
+        setErrors(null);
+      }
+    });
+  };
+
   const setValue = (key: keyof FullOrderState, value: any) => {
-    console.log("setValue", key, value);
-    setValueInternal(key, value, prepareData());
+    // console.log("setValue", key, value);
+    fieldDirty.current[key] = true;
+    const values = setValueInternal(key, value, prepareData());
+    if (values) {
+      interactiveValidate(values);
+    }
   };
 
   const setValues = (values: Partial<FullOrderState>) => {
-    setValuesInternal(values, prepareData());
+    const newValues = setValuesInternal(values, prepareData());
+    if (newValues) {
+      interactiveValidate(newValues);
+    }
   };
 
-  const validateOrder = useCallback(() => {
-    return new Promise<void>(async (resolve, reject) => {
-      const errors = await validate(prepareData());
-      if (!!errors) {
+  async function validateFunc(order: Partial<OrderlyOrder>) {
+    const creator = OrderFactory.create(formattedOrder.order_type);
+    return await validate(order, creator, prepareData());
+  }
+
+  /**
+   * Validate the order
+   */
+  const validateOrder = (): Promise<VerifyResult | null> => {
+    return new Promise<VerifyResult | null>(async (resolve, reject) => {
+      const errors = await validateFunc(formattedOrder);
+      const keys = Object.keys(errors);
+      if (keys.length > 0) {
         reject(errors);
       }
-      resolve();
+      resolve(null);
     });
-  }, [validate, prepareData]);
+  };
 
   const { freeCollateral, totalCollateral } = useCollateral();
 
-  // const estLeverage = useMemo(() => {
-  //   if (!accountInfo || !parsedData) return null;
-  //   const result = getPriceAndQty(formattedOrder as OrderEntity);
-  //   if (result === null || !result.price || !result.quantity) return null;
+  const submitOrder = async () => {
+    /**
+     * validate order
+     */
+    const creator = OrderFactory.create(formattedOrder.order_type);
+    const errors = await validate(formattedOrder, creator, prepareData());
 
-  //   const leverage = orderUtils.estLeverage({
-  //     totalCollateral,
-  //     positions,
-  //     newOrder: {
-  //       symbol: parsedData.symbol,
-  //       qty: result.quantity,
-  //       price: result.price,
-  //     },
-  //   });
-
-  //   return leverage;
-  // }, []);
+    if (Object.keys(errors).length > 0) {
+      throw new Error("Order validation failed");
+    }
+    setSubmitted(true);
+    const order = generateOrder(creator, prepareData());
+    console.log("submitOrder order:", order);
+    // return submit();
+  };
 
   return {
     ...orderEntryActions,
+    submit: submitOrder,
     formattedOrder,
     maxQty,
     helper: {
@@ -124,6 +152,11 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     setValue,
     setValues,
     symbolInfo: symbolInfo || {},
+    metaState: {
+      dirty: fieldDirty.current,
+      submitted,
+      errors,
+    },
   };
 };
 

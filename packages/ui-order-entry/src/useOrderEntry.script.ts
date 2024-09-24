@@ -7,7 +7,7 @@ export type OrderEntryScriptInputs = {
 };
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
-  const { formattedOrder, setValue, setValues, symbolInfo, ...actions } =
+  const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
     useOrderEntryNext(inputs.symbol, {});
 
   // cancel TP/SL
@@ -20,9 +20,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   };
 
   return {
-    ...actions,
+    ...state,
     side: formattedOrder.side as OrderSide,
-    type: formattedOrder.type as OrderType,
+    type: formattedOrder.order_type as OrderType,
     setOrderValue: setValue,
 
     orderEntity: formattedOrder,

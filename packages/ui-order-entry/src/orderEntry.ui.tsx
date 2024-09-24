@@ -17,6 +17,8 @@ import { PropsWithChildren, useMemo } from "react";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { OrderTPSL } from "./components/tpsl";
 import { API } from "@orderly.network/types";
+import { Simulate } from "react-dom/test-utils";
+import error = Simulate.error;
 
 export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
   const {
@@ -28,18 +30,22 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
     freeCollateral,
     helper,
     submit,
+    metaState,
   } = props;
+
+  // console.log("errors:", metaState.errors);
+
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY ? "Buy / Long" : "Sell / Short";
   }, [side]);
 
-  const onSubmit = () => {
+  const onSubmit = (): void => {
     helper.validate().then(
       () => {
-        submit();
+        return submit();
       },
       (errors) => {
-        console.log("validation errors", errors);
+        console.log("validation errors+++++", errors);
       }
     );
   };
@@ -71,9 +77,9 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
         </Flex>
         <div className={"oui-flex-1"}>
           <OrderTypeSelect
-            type={orderEntity.type}
+            type={orderEntity.order_type}
             onChange={(type) => {
-              setOrderValue("type", type);
+              setOrderValue("order_type", type);
             }}
           />
         </div>
@@ -92,8 +98,8 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
         type={props.type}
         symbolInfo={symbolInfo}
         values={{
-          quantity: orderEntity.quantity,
-          price: orderEntity.price,
+          quantity: orderEntity.order_quantity,
+          price: orderEntity.order_price,
           trigger_price: orderEntity.trigger_price,
           total: orderEntity.total,
         }}
@@ -103,8 +109,15 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
       />
       <QuantitySlider
         maxQty={maxQty}
+        value={
+          !orderEntity.order_quantity ? 0 : Number(orderEntity.order_quantity)
+        }
+        tick={symbolInfo.base_tick}
         dp={symbolInfo.base_dp}
-        setMaxQty={() => {}}
+        setMaxQty={(value) => {
+          // console.log("value:", value);
+          setOrderValue("order_quantity", value);
+        }}
         side={props.side}
       />
       <AuthGuard buttonProps={{ fullWidth: true }}>
@@ -168,7 +181,7 @@ const OrderQuantityInput = (props: {
     total?: string;
   };
   onChange: (
-    key: "quantity" | "price" | "trigger_price" | "total",
+    key: "order_quantity" | "order_price" | "trigger_price" | "total",
     value: any
   ) => void;
 }) => {
@@ -198,7 +211,7 @@ const OrderQuantityInput = (props: {
             value={props.values.price}
             // helperText="Price per unit"
             onChange={(e) => {
-              props.onChange("price", e.target.value);
+              props.onChange("order_price", e.target.value);
             }}
           />
         </div>
@@ -213,7 +226,7 @@ const OrderQuantityInput = (props: {
           className={"!oui-rounded-br !oui-rounded-tr"}
           value={props.values.quantity}
           onChange={(e) => {
-            props.onChange("quantity", e.target.value);
+            props.onChange("order_quantity", e.target.value);
           }}
         />
         <CustomInput
@@ -241,6 +254,8 @@ const CustomInput = (props: {
   onChange?: InputProps["onChange"];
   value?: InputProps["value"];
   autoFocus?: InputProps["autoFocus"];
+  error?: string;
+
   // helperText?: InputProps["helperText"];
 }) => {
   return (
@@ -251,6 +266,7 @@ const CustomInput = (props: {
       placeholder={"0"}
       id={props.id}
       name={props.name}
+      color={props.error ? "danger" : undefined}
       prefix={<InputLabel id={props.id}>{props.label}</InputLabel>}
       suffix={props.suffix}
       value={props.value}
@@ -287,9 +303,11 @@ const InputLabel = (props: PropsWithChildren<{ id: string }>) => {
 
 const QuantitySlider = (props: {
   side: OrderSide;
+  value: number;
   maxQty: number;
+  tick: number;
   dp: number;
-  setMaxQty: () => void;
+  setMaxQty: (value: number) => void;
 }) => {
   const color = useMemo(
     () => (props.side === OrderSide.BUY ? "buy" : "sell"),
@@ -298,7 +316,14 @@ const QuantitySlider = (props: {
 
   return (
     <div>
-      <Slider color={color} markCount={4} />
+      <Slider.single
+        value={props.value}
+        color={color}
+        markCount={4}
+        max={props.maxQty}
+        step={props.tick}
+        onValueChange={props.setMaxQty}
+      />
       <Flex justify={"between"} pt={2}>
         <Text.numeral rule={"percentages"} size={"2xs"} color={color}>
           0
