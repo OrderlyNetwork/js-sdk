@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useWS } from "../../useWS";
-import { useMarkPriceActions } from "../useMarkPrice/useMarkPriceStore";
+// import { useMarkPriceActions } from "../useMarkPrice/useMarkPriceStore";
 import { Calculator, CalculatorScope } from "../../types";
 import { CalculatorService } from "../calculator/calculatorService";
 
 export const useWSObserver = (calculatorService: CalculatorService) => {
   const ws = useWS();
-  const { updateMarkPrice } = useMarkPriceActions();
+  // const { updateMarkPrice } = useMarkPriceActions();
 
   useEffect(() => {
     console.log("[ORDERLY SDK]: subscribing to ws...");
@@ -20,7 +20,7 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
           data[element.symbol] = element.price;
         }
 
-        updateMarkPrice(data);
+        // updateMarkPrice(data);
         // call the calculator service
         calculatorService.calc(CalculatorScope.MARK_PRICE, data, {
           skipPending: true,

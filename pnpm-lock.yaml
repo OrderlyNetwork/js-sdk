@@ -347,6 +347,9 @@ importers:
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@orderly.network/default-evm-adapter':
+        specifier: workspace:*
+        version: link:../../packages/default-evm-adapter
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
@@ -440,7 +443,7 @@ importers:
         version: 8.1.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(prettier@3.3.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@storybook/addon-interactions':
         specifier: ^8.1.5
-        version: 8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
+        version: 8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
       '@storybook/addon-links':
         specifier: ^8.1.5
         version: 8.1.5(react@18.2.0)
@@ -476,7 +479,7 @@ importers:
         version: 8.1.5(@swc/core@1.4.12(@swc/helpers@0.5.12))(esbuild@0.20.2)(prettier@3.3.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)
       '@storybook/test':
         specifier: ^8.1.5
-        version: 8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
+        version: 8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
       '@storybook/types':
         specifier: ^8.1.5
         version: 8.1.5
@@ -607,6 +610,9 @@ importers:
 
   packages/app:
     dependencies:
+      '@orderly.network/default-evm-adapter':
+        specifier: workspace:*
+        version: link:../default-evm-adapter
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -619,6 +625,9 @@ importers:
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
+      '@orderly.network/web3-provider-ethers':
+        specifier: workspace:*
+        version: link:../web3-provider-ethers
     devDependencies:
       '@types/react':
         specifier: ^18.3.2
@@ -978,7 +987,7 @@ importers:
     dependencies:
       '@enzoferey/ethers-error-parser':
         specifier: ^0.2.3
-        version: 0.2.3(ethers@6.12.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+        version: 0.2.3(ethers@6.13.2(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       '@noble/ed25519':
         specifier: ^2.0.0
         version: 2.0.0
@@ -989,8 +998,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       ethers:
-        specifier: ^6.12.1
-        version: 6.12.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        specifier: ^6.13.2
+        version: 6.13.2(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
@@ -1038,14 +1047,14 @@ importers:
         specifier: ^7.1.0
         version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@17.0.12)(typescript@5.2.2))(typescript@5.2.2)
       typedoc:
-        specifier: ^0.26.5
-        version: 0.26.5(typescript@5.2.2)
+        specifier: ^0.26.7
+        version: 0.26.7(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
       web3:
         specifier: ^4.1.1
-        version: 4.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+        version: 4.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
 
   packages/create-orderly-app:
     dependencies:
@@ -1138,6 +1147,40 @@ importers:
         specifier: ^5.1.6
         version: 5.2.2
 
+  packages/default-evm-adapter:
+    dependencies:
+      '@noble/ed25519':
+        specifier: ^2.0.0
+        version: 2.0.0
+      '@orderly.network/core':
+        specifier: workspace:*
+        version: link:../core
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
+      bs58:
+        specifier: ^5.0.0
+        version: 5.0.0
+    devDependencies:
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^7.1.0
+        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))(typescript@5.2.2)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.2.2
+
+  packages/default-solana-adapter:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.95.3
+        version: 1.95.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+
   packages/eslint-config-custom:
     dependencies:
       eslint-config-next:
@@ -1162,12 +1205,12 @@ importers:
       '@akamfoad/qr':
         specifier: ^0.4.0
         version: 0.4.0
-      '@enzoferey/ethers-error-parser':
-        specifier: ^0.2.3
-        version: 0.2.3(ethers@6.12.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../core
+      '@orderly.network/default-evm-adapter':
+        specifier: workspace:*
+        version: link:../default-evm-adapter
       '@orderly.network/net':
         specifier: workspace:*
         version: link:../net
@@ -1180,6 +1223,9 @@ importers:
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
+      '@orderly.network/web3-provider-ethers':
+        specifier: workspace:*
+        version: link:../web3-provider-ethers
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -1793,6 +1839,10 @@ importers:
   packages/tsconfig: {}
 
   packages/types:
+    dependencies:
+      superstruct:
+        specifier: ^2.0.2
+        version: 2.0.2
     devDependencies:
       '@babel/core':
         specifier: ^7.22.9
@@ -2455,6 +2505,34 @@ importers:
       wagmi:
         specifier: ^1.4.12
         version: 1.4.12(@react-native-async-storage/async-storage@1.24.0(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.24.8(@babel/core@7.24.9))(@types/react@18.3.2)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10)))(@types/react@18.3.2)(bufferutil@4.0.8)(immer@10.1.1)(react-dom@18.2.0(react@18.2.0))(react-native@0.74.3(@babel/core@7.24.9)(@babel/preset-env@7.24.8(@babel/core@7.24.9))(@types/react@18.3.2)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10))(react@18.2.0)(typescript@5.2.2)(utf-8-validate@5.0.10)(viem@1.21.4(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)
+
+  packages/web3-provider-ethers:
+    dependencies:
+      '@enzoferey/ethers-error-parser':
+        specifier: ^0.2.3
+        version: 0.2.3(ethers@6.13.2(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+      '@orderly.network/default-evm-adapter':
+        specifier: workspace:*
+        version: link:../default-evm-adapter
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
+      ethers:
+        specifier: ^6.13.2
+        version: 6.13.2(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+    devDependencies:
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^7.1.0
+        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))(typescript@5.2.2)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.2.2
 
 packages:
 
@@ -6200,6 +6278,21 @@ packages:
 
   '@shikijs/core@1.13.0':
     resolution: {integrity: sha512-Mj5NVfbAXcD1GnwOTSPl8hBn/T8UDpfFQTptp+p41n/CbUcJtOq98WaRD7Lz3hCglYotUTHUWtzu3JhK6XlkAA==}
+
+  '@shikijs/core@1.18.0':
+    resolution: {integrity: sha512-VK4BNVCd2leY62Nm2JjyxtRLkyrZT/tv104O81eyaCjHq4Adceq2uJVFJJAIof6lT1mBwZrEo2qT/T+grv3MQQ==}
+
+  '@shikijs/engine-javascript@1.18.0':
+    resolution: {integrity: sha512-qoP/aO/ATNwYAUw1YMdaip/YVEstMZEgrwhePm83Ll9OeQPuxDZd48szZR8oSQNQBT8m8UlWxZv8EA3lFuyI5A==}
+
+  '@shikijs/engine-oniguruma@1.18.0':
+    resolution: {integrity: sha512-B9u0ZKI/cud+TcmF8Chyh+R4V5qQVvyDOqXC2l2a4x73PBSBc6sZ0JRAX3eqyJswqir6ktwApUUGBYePdKnMJg==}
+
+  '@shikijs/types@1.18.0':
+    resolution: {integrity: sha512-O9N36UEaGGrxv1yUrN2nye7gDLG5Uq0/c1LyfmxsvzNPqlHzWo9DI0A4+fhW2y3bGKuQu/fwS7EPdKJJCowcVA==}
+
+  '@shikijs/vscode-textmate@9.2.2':
+    resolution: {integrity: sha512-TMp15K+GGYrWlZM8+Lnj9EaHEFmOen0WJBrfa17hF7taDOYthuPPV0GWzfd/9iMij0akS/8Yw2ikquH7uVi/fg==}
 
   '@sideway/address@4.1.5':
     resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
@@ -10083,6 +10176,10 @@ packages:
     resolution: {integrity: sha512-j6wcVoZf06nqEcBbDWkKg8Fp895SS96dSnTCjiXT+8vt2o02raTn4Lo9ERUuIVU5bAjoPYeA+7ytQFexFmLuVw==}
     engines: {node: '>=14.0.0'}
 
+  ethers@6.13.2:
+    resolution: {integrity: sha512-9VkriTTed+/27BGuY1s0hf441kqwHJ1wtN2edksEtiRvXx+soxRX3iSXTfFqq2+YwrOqbDoTHjIhQnjJRlzKmg==}
+    engines: {node: '>=14.0.0'}
+
   event-emitter@0.3.5:
     resolution: {integrity: sha512-D9rRn9y7kLPnJ+hMq7S/nhvoKwwvVJahBi2BPmx3bvbsEdK3W9ii8cBSGjP+72/LnM4n6fo3+dkCX5FeTQruXA==}
 
@@ -10753,6 +10850,9 @@ packages:
   hast-util-to-estree@2.3.3:
     resolution: {integrity: sha512-ihhPIUPxN0v0w6M5+IiAZZrn0LH2uZomeWwhn7uP7avZC6TE7lIiEh2yBMPr5+zi1aUCXq6VoYRgs2Bw9xmycQ==}
 
+  hast-util-to-html@9.0.3:
+    resolution: {integrity: sha512-M17uBDzMJ9RPCqLMO92gNNUDuBSq10a25SDBI08iCCxmorf4Yy6sYHK57n9WAbRAAaU+DuR4W6GN9K4DFZesYg==}
+
   hast-util-to-parse5@8.0.0:
     resolution: {integrity: sha512-3KKrV5ZVI8if87DVSi1vDeByYrkGzg4mEfeu4alwgmmIeARiBLKCZS2uw5Gb6nU9x9Yufyj3iudm6i7nl52PFw==}
 
@@ -10764,6 +10864,9 @@ packages:
 
   hast-util-whitespace@2.0.1:
     resolution: {integrity: sha512-nAxA0v8+vXSBDt3AnRUNjyRIQ0rD+ntpbAp4LnPkumc5M9yUbSMa4XDU9Q6etY4f1Wp4bNgvc1yjiZtsTTrSng==}
+
+  hast-util-whitespace@3.0.0:
+    resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
 
   hastscript@8.0.0:
     resolution: {integrity: sha512-dMOtzCEd3ABUeSIISmrETiKuyydk1w0pa+gE/uormcTpSYuaNJPbX1NU3JLyscSLjwAQM8bWMhhIlnCqnRvDTw==}
@@ -11597,6 +11700,16 @@ packages:
 
   jest@29.6.1:
     resolution: {integrity: sha512-Nirw5B4nn69rVUZtemCQhwxOBhm0nsp3hmtF4rzCeWD7BkjAXRIji7xWQfnTNbz9g0aVsBX6aZK3n+23LM6uDw==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+
+  jest@29.7.0:
+    resolution: {integrity: sha512-NIy3oAFp9shda19hy4HK0HRTWKtPJmGdnvywu01nOqNC2vZg+Z+fvJDxpMQA88eb2I9EcafcdjYgsDthnYTvGw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
     peerDependencies:
@@ -13026,6 +13139,9 @@ packages:
     resolution: {integrity: sha512-1FlR+gjXK7X+AsAHso35MnyN5KqGwJRi/31ft6x0M194ht7S+rWAvd7PHss9xSKMzE0asv1pyIHaJYq+BbacAQ==}
     engines: {node: '>=12'}
 
+  oniguruma-to-js@0.4.3:
+    resolution: {integrity: sha512-X0jWUcAlxORhOqqBREgPMgnshB7ZGYszBNspP+tS9hPD3l13CdaXcHbgImoHUHlrvGx/7AvFEkTRhAGYh+jzjQ==}
+
   open@6.4.0:
     resolution: {integrity: sha512-IFenVPgF70fSm1keSd2iDBIDIBZkroLeuffXq+wKTzTJlBpesFWojV9lb8mzOfaAzM1sr7HQHuO0vtV0zYekGg==}
     engines: {node: '>=8'}
@@ -14212,6 +14328,9 @@ packages:
   regenerator-transform@0.15.2:
     resolution: {integrity: sha512-hfMp2BoF0qOk3uc5V20ALGDS2ddjQaLrdl7xrGXvAIow7qeWRM2VA2HuCHkUKk9slq3VwEwLNK3DFBqDfPGYtg==}
 
+  regex@4.3.2:
+    resolution: {integrity: sha512-kK/AA3A9K6q2js89+VMymcboLOlF5lZRCYJv3gzszXFHBr6kO6qLGzbm+UIugBEV8SMMKCTR59txoY6ctRHYVw==}
+
   regexp.prototype.flags@1.5.2:
     resolution: {integrity: sha512-NcDiDkTLuPR+++OCKB0nWafEmhg/Da8aUPLPMQbK+bxKKCm1/S5he+AqYa4PlMCVBalb4/yxIRub6qkEx5yJbw==}
     engines: {node: '>= 0.4'}
@@ -14614,6 +14733,9 @@ packages:
 
   shiki@1.13.0:
     resolution: {integrity: sha512-e0dWfnONbEv6xl7FJy3XIhsVHQ/65XHDZl92+6H9+4xWjfdo7pmkqG7Kg47KWtDiEtzM5Z+oEfb4vtRvoZ/X9w==}
+
+  shiki@1.18.0:
+    resolution: {integrity: sha512-8jo7tOXr96h9PBQmOHVrltnETn1honZZY76YA79MHheGQg55jBvbm9dtU+MI5pjC5NJCFuA6rvVTLVeSW5cE4A==}
 
   side-channel@1.0.6:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
@@ -15579,6 +15701,13 @@ packages:
     peerDependencies:
       typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x
 
+  typedoc@0.26.7:
+    resolution: {integrity: sha512-gUeI/Wk99vjXXMi8kanwzyhmeFEGv1LTdTQsiyIsmSYsBebvFxhbcyAx7Zjo4cMbpLGxM4Uz3jVIjksu/I2v6Q==}
+    engines: {node: '>= 18'}
+    hasBin: true
+    peerDependencies:
+      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x
+
   types-ramda@0.29.10:
     resolution: {integrity: sha512-5PJiW/eiTPyXXBYGZOYGezMl6qj7keBiZheRwfjJZY26QPHsNrjfJnz0mru6oeqqoTHOni893Jfd6zyUXfQRWg==}
 
@@ -16417,6 +16546,11 @@ packages:
 
   yaml@2.4.5:
     resolution: {integrity: sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==}
+    engines: {node: '>= 14'}
+    hasBin: true
+
+  yaml@2.5.1:
+    resolution: {integrity: sha512-bLQOjaX/ADgQ20isPJRvF0iRUHIxVhYvr53Of7wGcWlO2jvtUlH5m87DsmulFVxRpNLOnI4tB6p/oh8D7kpn9Q==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -18833,9 +18967,9 @@ snapshots:
 
   '@emotion/weak-memoize@0.3.1': {}
 
-  '@enzoferey/ethers-error-parser@0.2.3(ethers@6.12.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
+  '@enzoferey/ethers-error-parser@0.2.3(ethers@6.13.2(bufferutil@4.0.8)(utf-8-validate@6.0.4))':
     dependencies:
-      ethers: 6.12.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ethers: 6.13.2(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   '@esbuild/aix-ppc64@0.19.12':
     optional: true
@@ -22688,6 +22822,33 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
+  '@shikijs/core@1.18.0':
+    dependencies:
+      '@shikijs/engine-javascript': 1.18.0
+      '@shikijs/engine-oniguruma': 1.18.0
+      '@shikijs/types': 1.18.0
+      '@shikijs/vscode-textmate': 9.2.2
+      '@types/hast': 3.0.4
+      hast-util-to-html: 9.0.3
+
+  '@shikijs/engine-javascript@1.18.0':
+    dependencies:
+      '@shikijs/types': 1.18.0
+      '@shikijs/vscode-textmate': 9.2.2
+      oniguruma-to-js: 0.4.3
+
+  '@shikijs/engine-oniguruma@1.18.0':
+    dependencies:
+      '@shikijs/types': 1.18.0
+      '@shikijs/vscode-textmate': 9.2.2
+
+  '@shikijs/types@1.18.0':
+    dependencies:
+      '@shikijs/vscode-textmate': 9.2.2
+      '@types/hast': 3.0.4
+
+  '@shikijs/vscode-textmate@9.2.2': {}
+
   '@sideway/address@4.1.5':
     dependencies:
       '@hapi/hoek': 9.3.0
@@ -22907,11 +23068,11 @@ snapshots:
     dependencies:
       '@storybook/global': 5.0.0
 
-  '@storybook/addon-interactions@8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))':
+  '@storybook/addon-interactions@8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))':
     dependencies:
       '@storybook/global': 5.0.0
       '@storybook/instrumenter': 8.1.5
-      '@storybook/test': 8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
+      '@storybook/test': 8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
       '@storybook/types': 8.1.5
       polished: 4.3.1
       ts-dedent: 2.2.0
@@ -23893,14 +24054,14 @@ snapshots:
       - prettier
       - supports-color
 
-  '@storybook/test@8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))':
+  '@storybook/test@8.1.5(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))':
     dependencies:
       '@storybook/client-logger': 8.1.5
       '@storybook/core-events': 8.1.5
       '@storybook/instrumenter': 8.1.5
       '@storybook/preview-api': 8.1.5
       '@testing-library/dom': 9.3.4
-      '@testing-library/jest-dom': 6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
+      '@testing-library/jest-dom': 6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))
       '@testing-library/user-event': 14.5.2(@testing-library/dom@9.3.4)
       '@vitest/expect': 1.3.1
       '@vitest/spy': 1.6.0
@@ -24011,7 +24172,7 @@ snapshots:
 
   '@swc/helpers@0.5.1':
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.3
 
   '@swc/helpers@0.5.12':
     dependencies:
@@ -24019,7 +24180,7 @@ snapshots:
 
   '@swc/helpers@0.5.2':
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.3
 
   '@swc/helpers@0.5.5':
     dependencies:
@@ -24112,7 +24273,7 @@ snapshots:
       lz-string: 1.5.0
       pretty-format: 27.5.1
 
-  '@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))':
+  '@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.3)(jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)))':
     dependencies:
       '@adobe/css-tools': 4.4.0
       '@babel/runtime': 7.25.0
@@ -24125,7 +24286,7 @@ snapshots:
     optionalDependencies:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.3
-      jest: 29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
+      jest: 29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
 
   '@testing-library/react-hooks@8.0.1(@types/react@18.3.2)(react-test-renderer@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -30067,6 +30228,19 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  ethers@6.13.2(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.1
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@types/node': 18.15.13
+      aes-js: 4.0.0-beta.5
+      tslib: 2.4.0
+      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   event-emitter@0.3.5:
     dependencies:
       d: 1.0.2
@@ -30944,6 +31118,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  hast-util-to-html@9.0.3:
+    dependencies:
+      '@types/hast': 3.0.4
+      '@types/unist': 3.0.2
+      ccount: 2.0.1
+      comma-separated-tokens: 2.0.3
+      hast-util-whitespace: 3.0.0
+      html-void-elements: 3.0.0
+      mdast-util-to-hast: 13.2.0
+      property-information: 6.5.0
+      space-separated-tokens: 2.0.2
+      stringify-entities: 4.0.4
+      zwitch: 2.0.4
+
   hast-util-to-parse5@8.0.0:
     dependencies:
       '@types/hast': 3.0.4
@@ -30966,6 +31154,10 @@ snapshots:
       unist-util-find-after: 5.0.0
 
   hast-util-whitespace@2.0.1: {}
+
+  hast-util-whitespace@3.0.0:
+    dependencies:
+      '@types/hast': 3.0.4
 
   hastscript@8.0.0:
     dependencies:
@@ -31565,9 +31757,9 @@ snapshots:
     dependencies:
       ws: 7.5.10(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  isomorphic-ws@5.0.0(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
+  isomorphic-ws@5.0.0(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
     dependencies:
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   isows@1.0.3(ws@8.13.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)):
     dependencies:
@@ -32075,6 +32267,18 @@ snapshots:
       - ts-node
 
   jest@29.6.1(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)):
+    dependencies:
+      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
+      '@jest/types': 29.6.3
+      import-local: 3.1.0
+      jest-cli: 29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
+    transitivePeerDependencies:
+      - '@types/node'
+      - babel-plugin-macros
+      - supports-color
+      - ts-node
+
+  jest@29.7.0(@types/node@20.0.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2)):
     dependencies:
       '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@20.0.0)(typescript@5.2.2))
       '@jest/types': 29.6.3
@@ -34356,6 +34560,10 @@ snapshots:
     dependencies:
       mimic-fn: 4.0.0
 
+  oniguruma-to-js@0.4.3:
+    dependencies:
+      regex: 4.3.2
+
   open@6.4.0:
     dependencies:
       is-wsl: 1.1.0
@@ -35938,6 +36146,8 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.25.0
 
+  regex@4.3.2: {}
+
   regexp.prototype.flags@1.5.2:
     dependencies:
       call-bind: 1.0.7
@@ -36263,7 +36473,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.6.0
+      tslib: 2.6.3
 
   sade@1.8.1:
     dependencies:
@@ -36466,6 +36676,15 @@ snapshots:
   shiki@1.13.0:
     dependencies:
       '@shikijs/core': 1.13.0
+      '@types/hast': 3.0.4
+
+  shiki@1.18.0:
+    dependencies:
+      '@shikijs/core': 1.18.0
+      '@shikijs/engine-javascript': 1.18.0
+      '@shikijs/engine-oniguruma': 1.18.0
+      '@shikijs/types': 1.18.0
+      '@shikijs/vscode-textmate': 9.2.2
       '@types/hast': 3.0.4
 
   side-channel@1.0.6:
@@ -37673,6 +37892,15 @@ snapshots:
       typescript: 5.2.2
       yaml: 2.4.5
 
+  typedoc@0.26.7(typescript@5.2.2):
+    dependencies:
+      lunr: 2.3.9
+      markdown-it: 14.1.0
+      minimatch: 9.0.5
+      shiki: 1.18.0
+      typescript: 5.2.2
+      yaml: 2.5.1
+
   types-ramda@0.29.10:
     dependencies:
       ts-toolbelt: 9.6.0
@@ -38338,13 +38566,13 @@ snapshots:
 
   web-worker@1.3.0: {}
 
-  web3-core@4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  web3-core@4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       web3-errors: 1.2.0
       web3-eth-accounts: 4.1.3
       web3-eth-iban: 4.0.7
       web3-providers-http: 4.1.0
-      web3-providers-ws: 4.0.8(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-providers-ws: 4.0.8(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-types: 1.7.0
       web3-utils: 4.3.1
       web3-validator: 2.0.6
@@ -38380,12 +38608,12 @@ snapshots:
       web3-utils: 4.3.1
       web3-validator: 2.0.6
 
-  web3-eth-contract@4.6.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8):
+  web3-eth-contract@4.6.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8):
     dependencies:
       '@ethereumjs/rlp': 5.0.2
-      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-errors: 1.2.0
-      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
       web3-eth-abi: 4.2.3(typescript@5.2.2)(zod@3.23.8)
       web3-types: 1.7.0
       web3-utils: 4.3.1
@@ -38397,14 +38625,14 @@ snapshots:
       - utf-8-validate
       - zod
 
-  web3-eth-ens@4.4.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8):
+  web3-eth-ens@4.4.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8):
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
-      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-errors: 1.2.0
-      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
-      web3-eth-contract: 4.6.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
-      web3-net: 4.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+      web3-eth-contract: 4.6.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+      web3-net: 4.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-types: 1.7.0
       web3-utils: 4.3.1
       web3-validator: 2.0.6
@@ -38422,11 +38650,11 @@ snapshots:
       web3-utils: 4.3.1
       web3-validator: 2.0.6
 
-  web3-eth-personal@4.0.8(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8):
+  web3-eth-personal@4.0.8(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8):
     dependencies:
-      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
-      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-types: 1.7.0
       web3-utils: 4.3.1
       web3-validator: 2.0.6
@@ -38437,16 +38665,16 @@ snapshots:
       - utf-8-validate
       - zod
 
-  web3-eth@4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8):
+  web3-eth@4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8):
     dependencies:
       setimmediate: 1.0.5
-      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-errors: 1.2.0
       web3-eth-abi: 4.2.3(typescript@5.2.2)(zod@3.23.8)
       web3-eth-accounts: 4.1.3
-      web3-net: 4.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      web3-providers-ws: 4.0.8(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-net: 4.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      web3-providers-ws: 4.0.8(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-types: 1.7.0
       web3-utils: 4.3.1
       web3-validator: 2.0.6
@@ -38457,10 +38685,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  web3-net@4.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  web3-net@4.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
-      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-types: 1.7.0
       web3-utils: 4.3.1
     transitivePeerDependencies:
@@ -38484,21 +38712,21 @@ snapshots:
       web3-utils: 4.3.1
     optional: true
 
-  web3-providers-ws@4.0.8(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  web3-providers-ws@4.0.8(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@types/ws': 8.5.3
-      isomorphic-ws: 5.0.0(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      isomorphic-ws: 5.0.0(ws@8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       web3-errors: 1.2.0
       web3-types: 1.7.0
       web3-utils: 4.3.1
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  web3-rpc-methods@1.3.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  web3-rpc-methods@1.3.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
-      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-types: 1.7.0
       web3-validator: 2.0.6
     transitivePeerDependencies:
@@ -38524,21 +38752,21 @@ snapshots:
       web3-types: 1.7.0
       zod: 3.21.4
 
-  web3@4.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8):
+  web3@4.1.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8):
     dependencies:
-      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-core: 4.5.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-errors: 1.2.0
-      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      web3-eth: 4.8.1(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
       web3-eth-abi: 4.2.3(typescript@5.2.2)(zod@3.23.8)
       web3-eth-accounts: 4.1.3
-      web3-eth-contract: 4.6.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
-      web3-eth-ens: 4.4.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      web3-eth-contract: 4.6.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+      web3-eth-ens: 4.4.0(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
       web3-eth-iban: 4.0.7
-      web3-eth-personal: 4.0.8(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8)
-      web3-net: 4.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-eth-personal: 4.0.8(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@6.0.4)(zod@3.23.8)
+      web3-net: 4.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-providers-http: 4.1.0
-      web3-providers-ws: 4.0.8(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      web3-providers-ws: 4.0.8(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      web3-rpc-methods: 1.3.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       web3-types: 1.7.0
       web3-utils: 4.3.1
       web3-validator: 2.0.6
@@ -38869,6 +39097,8 @@ snapshots:
   yaml@1.10.2: {}
 
   yaml@2.4.5: {}
+
+  yaml@2.5.1: {}
 
   yargs-parser@18.1.3:
     dependencies:

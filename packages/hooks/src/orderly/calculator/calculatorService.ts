@@ -1,9 +1,4 @@
-import {
-  Calculator,
-  CalculatorCtx,
-  CalculatorScheduler,
-  CalculatorScope,
-} from "../../types";
+import { Calculator, CalculatorScheduler, CalculatorScope } from "../../types";
 import { CalculatorContext } from "./calculatorContext";
 
 type CalcOptions = {
@@ -59,14 +54,15 @@ class CalculatorService {
     }
 
     // handle pending calc
-    this.handlePendingCalc();
+    await this.handlePendingCalc();
 
     this.calcQueue.push({ scope, data, options });
 
-    this.handleCalcQueue(ctx);
+    await this.handleCalcQueue(ctx);
   }
 
   private async handlePendingCalc() {
+    if (this.pendingCalc.length === 0) return;
     while (this.pendingCalc.length) {
       const item = this.pendingCalc.shift();
       if (item) {

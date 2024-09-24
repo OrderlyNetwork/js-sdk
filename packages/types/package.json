@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "tsup --watch --tsconfig tsconfig.build.json",
     "build": "tsup --tsconfig tsconfig.build.json",

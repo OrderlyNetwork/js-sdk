@@ -4,6 +4,8 @@ import { devtools } from "zustand/middleware";
 
 type MarkPriceStore = {
   markPrices: Record<string, number>;
+  // ask_bid: number[];
+  // orderBook: Record<string, number>;
 };
 
 type MarkPriceActions = {
@@ -15,6 +17,8 @@ const useMarkPriceStore = create<
   MarkPriceStore & { actions: MarkPriceActions }
 >((set, get) => ({
   markPrices: {},
+  // orderBook: {},
+  // ask_bid: [],
 
   actions: {
     updateMarkPrice: (markPrice) => {

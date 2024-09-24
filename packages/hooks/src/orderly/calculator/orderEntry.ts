@@ -1,9 +1,11 @@
-import { Calculator } from "../../types";
+import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
 import { BaseCalculator } from "./baseCalculator";
 
 class OrderEntryCalculator extends BaseCalculator<any> {
-  calc(markPrice: Record<string, number>) {
-    console.log("!!!! Calculating positions...", markPrice);
+  name: string = "orderEntry";
+
+  calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx) {
+    console.log("!!!! Calculating positions...", scope, data);
     return [];
   }
 
@@ -11,3 +13,5 @@ class OrderEntryCalculator extends BaseCalculator<any> {
     console.log("!!!! Updating orderEntry...", data);
   }
 }
+
+export { OrderEntryCalculator };

@@ -22,6 +22,7 @@ import {
   useOrderEntryFromStore,
   useOrderStore,
 } from "./orderEntry.store";
+import { useMutation } from "../../useMutation";
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -46,6 +47,15 @@ const useOrderEntryNextInternal = (
   } = options;
 
   const orderEntryActions = useOrderStore((state) => state.actions);
+
+  const isAlgoOrder =
+    orderEntity?.type === OrderType.STOP_LIMIT ||
+    orderEntity?.type === OrderType.STOP_MARKET ||
+    orderEntity?.type === OrderType.CLOSE_POSITION;
+
+  const [doCreateOrder, { isMutating }] = useMutation<OrderEntity, any>(
+    isAlgoOrder ? "/v1/algo/order" : "/v1/order"
+  );
 
   const calculate = useCallback(
     (
@@ -85,18 +95,6 @@ const useOrderEntryNextInternal = (
     /// reset the symbol
     orderEntryActions.updateOrderByKey("symbol", symbol);
   }, [symbol]);
-
-  // const validator = (values: any) => {
-  //   // @ts-ignore
-  //   const creator = OrderFactory.create(values.order_type);
-  //
-  //   return creator?.validate(values, {
-  //     symbol: symbolInfo[symbol](),
-  //     // token: tokenInfo[symbol](),
-  //     maxQty,
-  //     markPrice: markPrice,
-  //   });
-  // };
 
   const setValue = useCallback(
     (
@@ -222,16 +220,33 @@ const useOrderEntryNextInternal = (
     // });
   };
 
+  const validate = useCallback(
+    (options: { maxQty: number; markPrice: number }) => {
+      const { markPrice, maxQty } = options;
+      const creator = OrderFactory.create(orderEntity.type);
+
+      return creator?.validate(orderEntity, {
+        symbol: symbolInfo!,
+        // token: tokenInfo[symbol](),
+        maxQty,
+        markPrice,
+      });
+    },
+    [orderEntity, symbolInfo]
+  );
+
   const submitOrder = useCallback(() => {
-    // const values = useOrderStore.getState().entry;
+    console.log("submitOrder orderEntity:", orderEntity);
     // const order = OrderFactory.create(values.type);
     // order.submit(values);
-  }, []);
+  }, [orderEntity]);
 
   return {
     formattedOrder: orderEntity,
     setValue,
     setValues,
+    submit: submitOrder,
+    validate,
     onMarkPriceChange: onMarkPriceUpdated,
   } as const;
 };

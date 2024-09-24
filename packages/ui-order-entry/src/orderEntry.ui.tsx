@@ -26,15 +26,28 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
     symbolInfo,
     maxQty,
     freeCollateral,
+    helper,
+    submit,
   } = props;
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY ? "Buy / Long" : "Sell / Short";
   }, [side]);
 
+  const onSubmit = () => {
+    helper.validate().then(
+      () => {
+        submit();
+      },
+      (errors) => {
+        console.log("validation errors", errors);
+      }
+    );
+  };
+
   return (
     <div className={"oui-space-y-3 oui-text-base-contrast-54"}>
       <Flex gapX={2}>
-        <Flex className={"oui-flex-1 oui-gap-x-1"}>
+        <Flex className={"oui-flex-1 oui-gap-x-[6px]"}>
           <Button
             onClick={() => {
               props.setOrderValue("side", OrderSide.BUY);
@@ -88,9 +101,20 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           props.setOrderValue(key, value);
         }}
       />
-      <QuantitySlider maxQty={maxQty} setMaxQty={() => {}} side={props.side} />
+      <QuantitySlider
+        maxQty={maxQty}
+        dp={symbolInfo.base_dp}
+        setMaxQty={() => {}}
+        side={props.side}
+      />
       <AuthGuard buttonProps={{ fullWidth: true }}>
-        <Button fullWidth color={side === OrderSide.BUY ? "buy" : "sell"}>
+        <Button
+          fullWidth
+          color={side === OrderSide.BUY ? "buy" : "sell"}
+          onClick={() => {
+            onSubmit();
+          }}
+        >
           {buttonLabel}
         </Button>
       </AuthGuard>
@@ -264,6 +288,7 @@ const InputLabel = (props: PropsWithChildren<{ id: string }>) => {
 const QuantitySlider = (props: {
   side: OrderSide;
   maxQty: number;
+  dp: number;
   setMaxQty: () => void;
 }) => {
   const color = useMemo(
@@ -287,7 +312,7 @@ const QuantitySlider = (props: {
           >
             Max buy
           </button>
-          <Text.numeral size={"2xs"} color={color}>
+          <Text.numeral size={"2xs"} color={color} dp={props.dp}>
             {props.maxQty}
           </Text.numeral>
         </Flex>

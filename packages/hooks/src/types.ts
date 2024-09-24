@@ -28,6 +28,7 @@ export enum CalculatorScope {
   POSITION = "position",
   ORDER = "order",
   TICK_PRICE = "tickPrice",
+  ORDER_BOOK = "orderBook",
 }
 
 export interface Calculator<T = any> {

@@ -6,7 +6,7 @@ import { useWS } from "../useWS";
 import { useMarkPrice } from "./useMarkPrice";
 import { useIndexPrice } from "./useIndexPrice";
 import { useOpenInterest } from "./useOpenInterest";
-import { useFetures } from "../unuse/useFetures";
+import { useFutures } from "./useFutures";
 
 export const useTickerStream = (symbol: string) => {
   if (!symbol) {
@@ -51,7 +51,7 @@ export const useTickerStream = (symbol: string) => {
   const { data: markPrice } = useMarkPrice(symbol);
   const { data: indexPrice } = useIndexPrice(symbol);
   const { data: openInterest } = useOpenInterest(symbol);
-  const { data: futures } = useFetures();
+  const { data: futures } = useFutures();
 
   const value = useMemo(() => {
     //

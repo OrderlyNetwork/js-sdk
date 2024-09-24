@@ -44,8 +44,6 @@ export const useMaxQty = (
 
   // const [orders] = useOrderStream({ status: OrderStatus.NEW });
 
-  console.log("+++++++++++maxQty++++++++++++++ ", positions.length);
-
   const maxQty = useMemo(() => {
     if (!symbol) return 0;
 
@@ -137,6 +135,7 @@ export const useMaxQty = (
     reduceOnly,
   ]);
 
+  // console.log("+++++++++++maxQty++++++++++++++ ", maxQty);
   // return 0;
 
   return Math.max(maxQty, 0) as number;

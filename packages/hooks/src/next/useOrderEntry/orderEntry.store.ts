@@ -14,6 +14,8 @@ type OrderEntryStateEntity = RequireKeys<FullOrderState, "side" | "type">;
 
 type OrderEntryState = {
   entry: OrderEntryStateEntity;
+  estLeverage: number | null;
+  estLiquidationPrice: number | null;
   errors: Partial<Record<keyof FullOrderState, string>>;
 };
 
@@ -24,6 +26,10 @@ type OrderEntryActions = {
     value: FullOrderState[K]
   ) => void;
   restoreOrder: (order: Partial<FullOrderState>) => void;
+  updateOrderComputed: (data: {
+    estLeverage: number | null;
+    estLiquidationPrice: number | null;
+  }) => void;
   resetOrder: () => void;
   hasTP_SL: () => boolean;
 };
@@ -43,6 +49,8 @@ export const useOrderStore = create<
       entry: {
         ...initialOrderState,
       },
+      estLeverage: null,
+      estLiquidationPrice: null,
       errors: {},
       actions: {
         hasTP_SL: () => {
@@ -50,6 +58,19 @@ export const useOrderStore = create<
           return (
             typeof order.tp_trigger_price !== "undefined" ||
             typeof order.sl_trigger_price !== "undefined"
+          );
+        },
+        updateOrderComputed: (data: {
+          estLeverage: number | null;
+          estLiquidationPrice: number | null;
+        }) => {
+          set(
+            (state) => {
+              state.estLeverage = data.estLeverage;
+              state.estLiquidationPrice = data.estLiquidationPrice;
+            },
+            false,
+            "updateOrderComputed"
           );
         },
         updateOrder: (order: Partial<FullOrderState>) => {
