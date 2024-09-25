@@ -76,6 +76,7 @@ export const ActionSheetContent: FC<ActionSheetContentProps> = (props) => {
         }
         return (
           <Fragment key={action.value || index}>
+            {action.value === 'cancel' && <div className="oui-h-2 oui-bg-base-10"/>}
             <ActionItem
               onClick={(value) => {
                 if (value.value === "cancel") {
@@ -164,7 +165,7 @@ export const ActionSheet: FC<PropsWithChildren<ActionSheetProps>> = (props) => {
 
       <SheetContent
         closeable={false}
-        className="oui-action-sheet-content !oui-p-0"
+        className="oui-action-sheet-content !oui-p-0 oui-pb-[env(safe-area-inset-bottom)]"
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <ActionSheetContent
