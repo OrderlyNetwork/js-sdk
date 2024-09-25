@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarketList } from "@orderly.network/hooks";
+import {
+  MarketsType,
+  useMarketList,
+  useSessionStorage,
+} from "@orderly.network/hooks";
 import { MarketsListWidgetProps } from "./widget";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
@@ -17,6 +21,11 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
   const { searchValue } = useMarketsContext();
   const { activeTab, setCurrentDataSource } = useSideMarketsContext();
 
+  const [tabSort, setTabSort] = useSessionStorage(
+    "orderly_markets_tab_sort",
+    {} as any
+  );
+
   const { onSort, getSortedList, sortKey, sortOrder } = useSort(
     options?.sortKey,
     options?.sortOrder
@@ -32,14 +41,19 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
   }, [data]);
 
   useEffect(() => {
-    // Only all markets store sort
     if (options.type === "all") {
-      favorite.updateTabsSortState("all", sortKey!, sortOrder!);
+      setTabSort({
+        ...tabSort,
+        all: {
+          sortKey,
+          sortOrder,
+        },
+      });
     }
   }, [sortKey, sortOrder, options.type]);
 
   useEffect(() => {
-    if (activeTab === 'all') {
+    if (activeTab === "all") {
       setCurrentDataSource?.(dataSource);
     }
   }, [activeTab, dataSource]);
@@ -49,5 +63,6 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
     dataSource,
     favorite,
     onSort,
+    tabSort,
   };
 };

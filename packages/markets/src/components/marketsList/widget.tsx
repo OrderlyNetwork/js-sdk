@@ -13,9 +13,7 @@ export type MarketsListWidgetProps = {
 export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
   const state = useMarketsListScript(props);
 
-  // Only all markets store sort
-  const sortStore =
-    props.type === "all" ? state.favorite.tabSort?.all : undefined;
+  const sortStore = props.type === "all" ? state.tabSort?.all : undefined;
 
   return (
     <MarketsList

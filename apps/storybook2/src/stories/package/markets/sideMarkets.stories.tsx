@@ -96,7 +96,7 @@ export const Recent: Story = {
 
 export const All: Story = {
   render: (args) => {
-    return <MarketsListWidget type="all" sortKey="24h_change" sortOrder="desc" />
+    return <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
   },
   decorators
 };

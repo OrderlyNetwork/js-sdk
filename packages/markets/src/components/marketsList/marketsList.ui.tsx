@@ -42,7 +42,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
       }}
       generatedRowKey={(record) => record.symbol}
       onSort={onSort}
-      // initialSort={initialSort}
+      initialSort={initialSort}
     />
   );
 };
