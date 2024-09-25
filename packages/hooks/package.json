@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "dev": "tsup --watch --tsconfig tsconfig.build.json",
+    "dev": "tsup --watch",
     "build:tsc": "rimraf -rf dist esm lib && pnpm run build:esm && pnpm run build:cjs",
-    "build:tsup": "tsup --tsconfig tsconfig.build.json",
+    "build:tsup": "tsup",
     "build:esm": "tsc --project tsconfig.build.json --outDir esm",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir lib",
     "docs:generate": "typedoc",

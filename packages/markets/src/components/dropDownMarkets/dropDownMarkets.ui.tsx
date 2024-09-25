@@ -1,3 +1,4 @@
+import { PropsWithChildren } from "react";
 import {
   Box,
   CloseIcon,
@@ -17,9 +18,8 @@ import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
 import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
-import "../../style/index.css";
 import { getDropDownMarketsColumns } from "./column";
-import { PropsWithChildren } from "react";
+import "../../style/index.css";
 
 export type DropDownMarketsProps = UseDropDownMarketsScriptReturn & {
   contentClassName?: string;
