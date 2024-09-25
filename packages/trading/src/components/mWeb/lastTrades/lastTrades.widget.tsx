@@ -6,7 +6,8 @@ export const MWebLastTrades = (props: {
 
     return <LastTradesWidget symbol={props.symbol} classNames={
         {
-            root: "oui-px-3 oui-min-h-[173px] oui-max-h-[234px]",
+            root: "oui-px-3 ",
+            list: "oui-min-h-[141px] oui-max-h-[202px] oui-w-full",
             listHeader: "oui-text-xs oui-text-base-contrast-36",
             listItem: {
                 left: "oui-text-xs",
