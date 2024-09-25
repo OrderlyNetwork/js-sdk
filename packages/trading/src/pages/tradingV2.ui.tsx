@@ -5,7 +5,7 @@ import { DataListWidget } from "../components/desktop/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { AssetViewWidget } from "../components/desktop/assetView";
 import { RiskRateWidget } from "../components/desktop/riskRate";
-import { useMediaQuery } from "@orderly.network/hooks";
+import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { NavBarWidget } from "../components/mWeb/navBar";
 import { TopTabWidget } from "../components/mWeb/topTab";
@@ -39,8 +39,15 @@ const MobileLayout: FC<TradingV2State> = (props) => {
 };
 
 const DesktopLayout: FC<TradingV2State> = (props) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [layout, setLayout] = useState<"left" | "right">("right");
+  const [collapsed, setCollapsed] = useLocalStorage(
+    "orderly_side_markets_collapsed",
+    false
+  );
+  // Order entry <> side market list
+  const [layout, setLayout] = useLocalStorage(
+    "orderly_order_entry_side_markets_layout",
+    "right"
+  );
 
   const { view, width } = useMemo(() => {
     const marketsView = (
