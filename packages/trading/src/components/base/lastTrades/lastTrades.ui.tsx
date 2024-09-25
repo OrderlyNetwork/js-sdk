@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Box, cn, Flex, ScrollArea, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, ListView, ScrollArea, Text } from "@orderly.network/ui";
 import { LastTradesState } from "./lastTrades.script";
 import { OrderSide } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
@@ -81,7 +81,10 @@ const Header = (props: { base: string; quote: string; className?: string }) => {
       mid={`Price(${props.quote})`}
       right={`Qty(${props.base})`}
       classNames={{
-        root: cn("oui-text-base-contrast-54 oui-h-[32px] oui-sticky", props.className),
+        root: cn(
+          "oui-text-base-contrast-54 oui-h-[32px] oui-sticky",
+          props.className
+        ),
       }}
     />
   );
@@ -100,8 +103,15 @@ const List = (props: {
   className?: string;
 }) => {
   return (
-    <ScrollArea className={cn("oui-w-full oui-h-full", props.className)}>
-      {props.data?.map((item, index) => {
+    <ListView
+      dataSource={props.data}
+      className={cn(
+        "oui-w-full oui-h-full",
+        props.className,
+        "oui-overflow-auto"
+      )}
+      contentClassName="oui-space-y-0"
+      renderItem={(item, index) => {
         return (
           <Row
             key={index}
@@ -129,7 +139,7 @@ const List = (props: {
             }}
           />
         );
-      })}
-    </ScrollArea>
+      }}
+    />
   );
 };
