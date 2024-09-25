@@ -8,20 +8,6 @@ import { StakeBoosterReturns } from "./stakeBooster.script";
 import { Decimal, commify, commifyOptional } from "@orderly.network/utils";
 
 export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
-  const booster = useMemo(() => {
-    const estStakeBoost = props.curEpochEstimate?.est_stake_boost;
-    if (typeof estStakeBoost === "undefined" || estStakeBoost === null) {
-      return undefined;
-    }
-
-    if (estStakeBoost === 0) return estStakeBoost;
-
-    return new Decimal(estStakeBoost)
-      .div(new Decimal(10).pow(0.2))
-      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
-      .toString();
-  }, [props.curEpochEstimate?.est_stake_boost]);
-
   return (
     <Flex
       id="oui-tradingRewards-home-stakeBooster"
@@ -61,7 +47,7 @@ export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
         />
         <Statics
           title="Booster"
-          value={booster}
+          value={props.booster}
           icon={<RocketIcon />}
           gradient
         />
