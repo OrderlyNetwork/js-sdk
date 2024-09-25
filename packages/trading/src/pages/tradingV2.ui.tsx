@@ -29,12 +29,12 @@ export const TradingV2: FC<TradingV2State> = (props) => {
 
 const MobileLayout: FC<TradingV2State> = (props) => {
   return (
-    <ScrollArea className="oui-h-100%">
+    <div className="oui-h-100% oui-overflow-auto oui-hide-scrollbar">
       <NavBarWidget />
       <TopTabWidget />
       <OrderBookAndEntryWidget />
       <BottomTabWidget />
-    </ScrollArea>
+    </div>
   );
 };
 

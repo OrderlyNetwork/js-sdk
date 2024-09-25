@@ -71,6 +71,7 @@ module.exports = withTV({
         13: "3.25rem",
       },
       maxWidth: {
+        xs: "var(--oui-spacing-sm, 20rem)",
         sm: "var(--oui-spacing-sm, 22.5rem)",
         md: "var(--oui-spacing-md, 26.25rem)",
         lg: "var(--oui-spacing-lg, 30rem)",

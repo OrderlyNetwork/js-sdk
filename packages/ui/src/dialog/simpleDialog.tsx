@@ -16,7 +16,7 @@ import {
 type SimpleDialogProps = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg";
   closable?: boolean;
   title?: ReactNode;
   description?: ReactNode;
