@@ -1,18 +1,15 @@
 import { TokenIcon, Flex, Text, cn, Tooltip, Badge } from "@orderly.network/ui";
-import { UseCollapseMarketsScriptReturn } from "./collapseMarkets.script";
 import { Decimal } from "@orderly.network/utils";
 
-export type CollapseMarketsProps = UseCollapseMarketsScriptReturn & {
+export type CollapseMarketsProps = {
   dataSource: any[];
 };
 
 export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
-  const { dataSource } = props;
-
   return (
     <div className="oui-overflow-y-auto custom-scrollbar oui-h-full">
       <Flex direction="column" px={2} gapY={1}>
-        {dataSource?.map((item) => {
+        {props.dataSource?.map((item) => {
           const content = (
             <Flex intensity={800} p={2} className="oui-gap-x-7" r="base">
               <Flex direction="column" itemAlign="start" gapY={1}>

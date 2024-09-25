@@ -6,12 +6,14 @@ import { FavoritesTabWidget } from "../favoritesTabs";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import type { FavoritesListWidgetProps } from "./widget";
 import Table from "../Table";
+import { CollapseMarkets } from "../collapseMarkets";
 
 export type FavoritesListProps = UseFavoritesListReturn &
   FavoritesListWidgetProps;
 
 export const FavoritesList: FC<FavoritesListProps> = (props) => {
-  const { dataSource, favorite, onSort, loading, getColumns } = props;
+  const { dataSource, favorite, onSort, loading, getColumns, collapsed } =
+    props;
 
   const { onSymbolChange } = useMarketsContext();
 
@@ -21,6 +23,10 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
       : getSideMarketsColumns(favorite, true);
   }, [favorite]);
 
+  if (collapsed) {
+    return <CollapseMarkets dataSource={dataSource} />;
+  }
+  
   return (
     <>
       <Box px={3}>

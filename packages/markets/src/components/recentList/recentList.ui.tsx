@@ -5,11 +5,13 @@ import { useMarketsContext } from "../marketsProvider";
 import Table from "../Table";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import { RecentListWidgetProps } from "./widget";
+import { CollapseMarkets } from "../collapseMarkets";
 
 export type RecentListProps = UseRecentListReturn & RecentListWidgetProps;
 
 export const RecentList: FC<RecentListProps> = (props) => {
-  const { dataSource, favorite, onSort, loading, getColumns } = props;
+  const { dataSource, favorite, onSort, loading, getColumns, collapsed } =
+    props;
 
   const { onSymbolChange } = useMarketsContext();
 
@@ -18,6 +20,10 @@ export const RecentList: FC<RecentListProps> = (props) => {
       ? getColumns(favorite, false)
       : getSideMarketsColumns(favorite, false);
   }, [favorite]);
+
+  if (collapsed) {
+    return <CollapseMarkets dataSource={dataSource} />;
+  }
 
   return (
     <Table

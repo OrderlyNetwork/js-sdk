@@ -1,3 +1,4 @@
+import { useLocalStorage } from "@orderly.network/hooks";
 import { useCallback, useEffect, useState } from "react";
 
 export type UseSideMarketsScriptOptions = {
@@ -11,6 +12,11 @@ export type UseSideMarketsScriptReturn = ReturnType<
 
 export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
   const [collapsed, setCollapsed] = useState(options?.collapsed);
+  // const [activeTab, setActiveTab] = useState<TabName>("all");
+  const [activeTab, setActiveTab] = useLocalStorage(
+    "orderly_markets_sel_tab_key",
+    "all"
+  );
 
   useEffect(() => {
     setCollapsed(options?.collapsed);
@@ -27,5 +33,5 @@ export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
     [options?.onCollapse]
   );
 
-  return { collapsed, onCollapse };
+  return { collapsed, onCollapse, activeTab, onTabChange: setActiveTab };
 }

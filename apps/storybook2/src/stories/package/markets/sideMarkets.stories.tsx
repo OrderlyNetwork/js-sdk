@@ -6,12 +6,10 @@ import {
   FavoritesListWidget,
   MarketsListWidget,
   RecentListWidget,
-  CollapseMarketsWidget,
   SideMarketsWidget,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
-import { MarketsType, useMarketList } from "@orderly.network/hooks";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging" });
@@ -67,8 +65,12 @@ export const ExpandMarkets: Story = {
 
 export const CollapseMarkets: Story = {
   render: (args) => {
-    const [data] = useMarketList(MarketsType.ALL);
-    return <CollapseMarketsWidget dataSource={data} />
+    return  <MarketsListWidget
+      type="all"
+      sortKey="24h_amount"
+      sortOrder="desc"
+      collapsed={true}
+    />
   },
   decorators: [
     (Story) => (

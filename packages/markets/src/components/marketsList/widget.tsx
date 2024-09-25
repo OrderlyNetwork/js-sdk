@@ -8,6 +8,7 @@ export type MarketsListWidgetProps = {
   sortKey: string;
   sortOrder: SortOrder;
   getColumns?: GetColumns;
+  collapsed?: boolean;
 };
 
 export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
@@ -23,6 +24,7 @@ export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
         sort: (sortStore?.sortOrder as SortOrder) || props.sortOrder,
       }}
       getColumns={props.getColumns}
+      collapsed={props.collapsed}
     />
   );
 };
