@@ -32,10 +32,14 @@ export const TradingV2: FC<TradingV2State> = (props) => {
 const MobileLayout: FC<TradingV2State> = (props) => {
   return (
     <div className="oui-h-100% oui-overflow-auto oui-hide-scrollbar oui-space-y-1">
-      <NavBarWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl"/>
-      <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl"/>
-      <OrderBookAndEntryWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl"/>
-      <BottomTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl oui-p-2"/>
+      <NavBarWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
+      <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
+      <OrderBookAndEntryWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
+      <BottomTabWidget
+        symbol={props.symbol}
+        className="oui-mx-1 oui-bg-base-9 oui-rounded-xl oui-p-2"
+        config={props.dataList.config}
+      />
     </div>
   );
 };
@@ -135,12 +139,18 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
             />
           </Box>
           <Box className="oui-flex-1" width={"100%"} height={"100%"}>
-            <OrderBookAndTradesWidget symbol={props.symbol} tabletMediaQuery={props.tabletMediaQuery}/>
+            <OrderBookAndTradesWidget
+              symbol={props.symbol}
+              tabletMediaQuery={props.tabletMediaQuery}
+            />
           </Box>
         </Flex>
 
         <Box intensity={900} r="2xl" p={3}>
-          <DataListWidget {...props.dataList} />
+          <DataListWidget
+            {...props.dataList}
+            tabletMediaQuery={props.tabletMediaQuery}
+          />
         </Box>
       </div>
       <div>{view.right}</div>

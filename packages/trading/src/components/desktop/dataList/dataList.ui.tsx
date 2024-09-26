@@ -64,6 +64,7 @@ const PositionsView: FC<DataListState> = (props) => {
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.config?.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
+        tabletMediaQuery={props.tabletMediaQuery}
       />
       <Divider className="oui-w-full" />
       <PositionsWidget  {...props.config} pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision} />

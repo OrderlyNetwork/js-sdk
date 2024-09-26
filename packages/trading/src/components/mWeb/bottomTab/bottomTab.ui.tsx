@@ -4,6 +4,7 @@ import { BottomTabState, BottomTabType } from "./bottomTab.script";
 import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
 import { PositionsWidget } from "@orderly.network/ui-positions";
+import { PositionHeaderWidget } from "../../base/positionHeader";
 
 export const BottomTab: FC<
   BottomTabState & {
@@ -43,19 +44,19 @@ export const BottomTab: FC<
 };
 
 const PositionsView: FC<BottomTabState> = (props) => {
-    return <>Text</>
-//   return (
-//     <Flex direction={"column"}>
-//       <PositionHeaderWidget
-//         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-//         symbol={props.config?.symbol}
-//         unPnlPriceBasis={props.unPnlPriceBasis}
-//       />
-//       <Divider className="oui-w-full" />
-//       <PositionsWidget
-//         {...props.config}
-//         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-//       />
-//     </Flex>
-//   );
+  return (
+    <Flex direction={"column"}>
+      <PositionHeaderWidget
+        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+        symbol={props.symbol}
+        unPnlPriceBasis={props.unPnlPriceBasis}
+        tabletMediaQuery={props.tabletMediaQuery}
+      />
+      {/* <Divider className="oui-w-full" />
+      <PositionsWidget
+        {...props.config}
+        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+      /> */}
+    </Flex>
+  );
 };

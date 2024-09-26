@@ -5,7 +5,8 @@ export const PositionHeaderWidget = (props: {
   pnlNotionalDecimalPrecision?: number;
   unPnlPriceBasis: "markPrice" | "lastPrice";
   symbol?: string;
+  tabletMediaQuery: string;
 }) => {
   const state = usePositionHeaderScript(props);
-  return <PositionHeader {...state} />;
+  return <PositionHeader {...state}/>;
 };
