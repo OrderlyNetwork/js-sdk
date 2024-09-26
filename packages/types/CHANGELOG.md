@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.13-developV2.10
+
+### Patch Changes
+
+- update
+
 ## 1.5.13-developV2.9
 
 ### Patch Changes
