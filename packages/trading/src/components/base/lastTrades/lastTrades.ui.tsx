@@ -110,7 +110,7 @@ const List = (props: {
         props.className,
         "oui-overflow-auto"
       )}
-      contentClassName="oui-space-y-0"
+      contentClassName="!oui-space-y-0"
       renderItem={(item, index) => {
         return (
           <Row

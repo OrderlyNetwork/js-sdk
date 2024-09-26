@@ -4,13 +4,15 @@ import { TopTabState, TopTabType } from "./topTab.script";
 import { MWebLastTrades } from "../lastTrades/lastTrades.widget";
 import { TradeDataWidget } from "../tradeData";
 
-export const TopTab: FC<TopTabState> = (props) => {
+export const TopTab: FC<TopTabState & {
+  className?: string;
+}> = (props) => {
   return (
     <Tabs
       variant="contained"
       value={props.tab}
       onValueChange={(e) => props.setTab(e as any)}
-      className="oui-mx-1 oui-bg-base-9 oui-rounded-xl"
+      className={props.className}
       classNames={{
         tabsList: "oui-p-2",
         tabsContent: "oui-min-h-[176px] oui-max-h-[234px]",

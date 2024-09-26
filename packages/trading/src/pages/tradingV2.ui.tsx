@@ -31,11 +31,11 @@ export const TradingV2: FC<TradingV2State> = (props) => {
 
 const MobileLayout: FC<TradingV2State> = (props) => {
   return (
-    <div className="oui-h-100% oui-overflow-auto oui-hide-scrollbar">
-      <NavBarWidget />
-      <TopTabWidget />
-      <OrderBookAndEntryWidget />
-      <BottomTabWidget />
+    <div className="oui-h-100% oui-overflow-auto oui-hide-scrollbar oui-space-y-1">
+      <NavBarWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl"/>
+      <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl"/>
+      <OrderBookAndEntryWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl"/>
+      <BottomTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl oui-p-2"/>
     </div>
   );
 };

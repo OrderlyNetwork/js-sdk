@@ -1,11 +1,61 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
-import { BottomTabState } from "./bottomTab.script";
+import { Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { BottomTabState, BottomTabType } from "./bottomTab.script";
+import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
+import { OrderStatus } from "@orderly.network/types";
+import { PositionsWidget } from "@orderly.network/ui-positions";
 
+export const BottomTab: FC<
+  BottomTabState & {
+    className?: string;
+  }
+> = (props) => {
+  return (
+    <Tabs
+      variant="contained"
+      value={props.tab}
+      onValueChange={(e: any) => props.setTab(e)}
+      className={props.className}
+    >
+      <TabPanel title={BottomTabType.position} value={BottomTabType.position}>
+        <PositionsView {...props} />
+      </TabPanel>
+      <TabPanel title={BottomTabType.pending} value={BottomTabType.pending}>
+        <OrderListWidget
+          type={TabType.pending}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
+      </TabPanel>
+      <TabPanel title={BottomTabType.tp_sl} value={BottomTabType.tp_sl}>
+        <OrderListWidget
+          type={TabType.tp_sl}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
+      </TabPanel>
+      <TabPanel title={BottomTabType.history} value={BottomTabType.history}>
+        <OrderListWidget
+          type={TabType.orderHistory}
+          ordersStatus={OrderStatus.INCOMPLETE}
+        />
+      </TabPanel>
+    </Tabs>
+  );
+};
 
-export const BottomTab: FC<BottomTabState> = (props) => {
-
-    return (
-        <Flex></Flex>
-    );
-}
+const PositionsView: FC<BottomTabState> = (props) => {
+    return <>Text</>
+//   return (
+//     <Flex direction={"column"}>
+//       <PositionHeaderWidget
+//         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+//         symbol={props.config?.symbol}
+//         unPnlPriceBasis={props.unPnlPriceBasis}
+//       />
+//       <Divider className="oui-w-full" />
+//       <PositionsWidget
+//         {...props.config}
+//         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+//       />
+//     </Flex>
+//   );
+};

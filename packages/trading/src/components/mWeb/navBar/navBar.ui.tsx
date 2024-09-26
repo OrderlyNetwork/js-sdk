@@ -1,12 +1,14 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@orderly.network/ui";
 import { NavBarState } from "./navBar.script";
 
 
-export const NavBar: FC<NavBarState> = (props) => {
+export const NavBar: FC<NavBarState & {
+    className?: string;
+}> = (props) => {
 
     return (
-        <Flex height={54} className="oui-sticky">
+        <Flex height={54} className={cn("oui-sticky", props.className)}>
             Nav bar
         </Flex>
     );

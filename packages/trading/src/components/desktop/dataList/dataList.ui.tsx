@@ -4,7 +4,7 @@ import { DataListState, DataListTabType } from "./dataList.script";
 import { PositionsWidget } from "@orderly.network/ui-positions";
 import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
-import { PositionHeaderWidget } from "./positionHeader";
+import { PositionHeaderWidget } from "../../base/positionHeader";
 import { SettingWidget } from "./setting";
 
 export const DataList: FC<DataListState> = (props) => {
