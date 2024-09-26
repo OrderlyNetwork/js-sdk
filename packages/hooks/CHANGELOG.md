@@ -1,5 +1,19 @@
 # @orderly.network/hooks
 
+## 1.5.13-developV2.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/web3-provider-ethers@1.0.1-developV2.9
+  - @orderly.network/default-evm-adapter@1.0.1-developV2.9
+  - @orderly.network/types@1.5.13-developV2.9
+  - @orderly.network/utils@1.5.13-developV2.9
+  - @orderly.network/core@1.5.13-developV2.9
+  - @orderly.network/perp@3.3.13-developV2.9
+  - @orderly.network/net@1.5.13-developV2.9
+
 ## 1.5.13-developV2.8
 
 ### Patch Changes
