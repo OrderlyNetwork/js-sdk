@@ -7,6 +7,7 @@ import { OrderBook as MWebOrderBook } from "../../mWeb/orderBook";
 export const OrderBook: FC<
   OrderBookState & {
     className?: string;
+    tabletMediaQuery: string;
   }
 > = (props) => {
   return (
@@ -28,9 +29,10 @@ export const OrderBook: FC<
           onDepthChange={props.onDepthChange}
           className={props.className}
           symbolInfo={props.symbolInfo}
-        />
-      ) : (
-        <DesktopOrderBook
+          tabletMediaQuery={props.tabletMediaQuery}
+          />
+        ) : (
+          <DesktopOrderBook
           level={props.level}
           asks={props.asks!}
           bids={props.bids!}
@@ -47,6 +49,7 @@ export const OrderBook: FC<
           className={props.className}
           pendingOrders={props.pendingOrders}
           symbolInfo={props.symbolInfo}
+          tabletMediaQuery={props.tabletMediaQuery}
         />
       )}
     </Box>

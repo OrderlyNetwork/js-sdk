@@ -2,9 +2,9 @@ import { useTradingPageContext } from "../../../provider/context";
 
 export const useOrderBookAndEntryScript = () => {
 
-    const { symbol } = useTradingPageContext();
+    const { symbol, tabletMediaQuery, } = useTradingPageContext();
     return {
-        symbol
+        symbol,tabletMediaQuery,
     };
 };
 

@@ -17,9 +17,10 @@ const SPACE = 104;
 
 export const useOrderBookScript = (props: {
   symbol: string;
+  tabletMediaQuery?: string;
   height?: number;
 }) => {
-  const { symbol, height } = props;
+  const { symbol, height, tabletMediaQuery = MEDIA_TABLET } = props;
   const symbolInfo = useSymbolsInfo()[props.symbol];
 
   const [cellHeight, setCellHeight] = useState(DEFAULT_CELL_HEIGHT);
@@ -80,7 +81,7 @@ export const useOrderBookScript = (props: {
     return allDepths?.map((e) => removeTrailingZeros(e)) || [];
   }, [allDepths, quote_dp]);
 
-  const isMWeb = useMediaQuery(MEDIA_TABLET);
+  const isMWeb = useMediaQuery(tabletMediaQuery);
 
   return {
     level,

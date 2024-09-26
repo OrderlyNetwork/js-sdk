@@ -20,7 +20,7 @@ interface DesktopMarkPriceProps {
 
 export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
   const { markPrice = 0, lastPrice, asks, bids, symbolInfo } = props;
-  const { showTotal } = useOrderBookContext();
+  const { showTotal, tabletMediaQuery } = useOrderBookContext();
 
   return (
     <Flex py={1} pl={3} pr={showTotal ? 3 : 6} justify={"between"}>
@@ -30,7 +30,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
           lastPrice={lastPrice}
           quote_dp={symbolInfo.quote_dp}
         />
-        <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
+        <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} tabletMediaQuery={tabletMediaQuery} />
       </Flex>
       <Spread asks={asks} bids={bids} />
     </Flex>

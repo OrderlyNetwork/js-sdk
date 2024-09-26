@@ -20,7 +20,7 @@ import { LayoutSwitch } from "../components/desktop/layoutSwitch";
 // import Split from "@uiw/react-split";
 
 export const TradingV2: FC<TradingV2State> = (props) => {
-  const isMobileLayout = useMediaQuery(MEDIA_TABLET);
+  const isMobileLayout = useMediaQuery(props.tabletMediaQuery);
 
   return isMobileLayout ? (
     <MobileLayout {...props} />
@@ -135,7 +135,7 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
             />
           </Box>
           <Box className="oui-flex-1" width={"100%"} height={"100%"}>
-            <OrderBookAndTradesWidget symbol={props.symbol} />
+            <OrderBookAndTradesWidget symbol={props.symbol} tabletMediaQuery={props.tabletMediaQuery}/>
           </Box>
         </Flex>
 

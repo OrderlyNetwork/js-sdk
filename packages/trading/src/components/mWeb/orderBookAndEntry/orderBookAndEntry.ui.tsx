@@ -15,7 +15,7 @@ export const OrderBookAndEntry: FC<
         props.className
       )}
     >
-      <OrderBookWidget symbol={props.symbol} height={360} />
+      <OrderBookWidget symbol={props.symbol} height={360} tabletMediaQuery={props.tabletMediaQuery} />
 
       <div>Order Entry</div>
     </div>

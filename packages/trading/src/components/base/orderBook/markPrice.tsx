@@ -10,8 +10,9 @@ export const MarkPriceView: FC<{
   quote_dp: number;
   className?: string;
   iconSize?: number;
+  tabletMediaQuery?: string;
 }> = (props) => {
-  const isMobileLayout = useMediaQuery(MEDIA_TABLET);
+  const isMobileLayout = useMediaQuery(props.tabletMediaQuery ?? MEDIA_TABLET);
 
   return isMobileLayout ? (
     <MobileLayout {...props} />
