@@ -16,6 +16,7 @@ import {
   SideMarketsWidget,
   TokenInfoBarWidget,
 } from "@orderly.network/markets";
+import { LayoutSwitch } from "../components/desktop/layoutSwitch";
 // import Split from "@uiw/react-split";
 
 export const TradingV2: FC<TradingV2State> = (props) => {
@@ -44,7 +45,8 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
     "orderly_side_markets_collapsed",
     false
   );
-  // Order entry <> side market list
+
+  // Order entry and side market list position, default Order entry in right
   const [layout, setLayout] = useLocalStorage(
     "orderly_order_entry_side_markets_layout",
     "right"
@@ -55,8 +57,13 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
     const orderEntryWidth = 280;
 
     const marketsView = (
-      <Box width={marketsWidth} intensity={900} pt={3} r="2xl" height="100%">
-        <SideMarketsWidget collapsed={collapsed} onCollapse={setCollapsed} />
+      <Box intensity={900} pt={3} r="2xl" height="100%">
+        <SideMarketsWidget
+          collapsed={collapsed}
+          onCollapse={setCollapsed}
+          onSymbolChange={props.onSymbolChange}
+          width={marketsWidth}
+        />
       </Box>
     );
 
@@ -103,11 +110,12 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
           "oui-overflow-hidden"
         )}
       >
-        <Box intensity={900} r="2xl" px={3}>
+        <Box height={54} intensity={900} r="2xl" px={3}>
           <TokenInfoBarWidget
             symbol={props.symbol}
-            layout={layout}
-            onLayout={setLayout}
+            onSymbolChange={props.onSymbolChange}
+            trailing={<LayoutSwitch layout={layout} onLayout={setLayout} />}
+            height={54}
           />
         </Box>
 

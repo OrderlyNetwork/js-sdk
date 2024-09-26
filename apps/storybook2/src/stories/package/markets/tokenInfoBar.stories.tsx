@@ -6,7 +6,6 @@ import {
 } from "@orderly.network/markets";
 import { Box, Button, Flex } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
-import { useState } from "react";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging" });
@@ -36,16 +35,15 @@ type Story = StoryObj<typeof meta>;
 
 export const TokenInfoBar: Story = {
   render: (args) => {
-    const [layout, setLayout] = useState<'left' | 'right'>('right');
     return <Flex direction='column' itemAlign='start' gapY={5}>
       <Box width={600} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
+        <TokenInfoBarWidget symbol="PERP_BTC_USDC" trailing={<Box pl={3}>Trailing</Box>} height={54}/>
       </Box>
-      <Box width={900} width={600} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
+      <Box width={900} intensity={900} r="2xl" px={3}>
+        <TokenInfoBarWidget symbol="PERP_BTC_USDC" trailing={<Box pl={3}>Trailing</Box>} height={54}/>
       </Box>
-      <Box width='100%' width={600} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget symbol="PERP_BTC_USDC" layout={layout} onLayout={setLayout} />
+      <Box width='100%' intensity={900} r="2xl" px={3}>
+        <TokenInfoBarWidget symbol="PERP_BTC_USDC" trailing={<Box pl={3}>Trailing</Box>} height={54}/>
       </Box>
     </Flex>
   },
