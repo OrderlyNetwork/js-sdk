@@ -54,9 +54,6 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
         className
       )}
       direction="column"
-      // intensity={900}
-      // r="2xl"
-      // pt={3}
       gapY={5}
       height="100%"
     >

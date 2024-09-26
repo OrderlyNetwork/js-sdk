@@ -4,31 +4,29 @@ import {
   Text,
   cn,
   Divider,
-  Box,
   Tooltip,
 } from "@orderly.network/ui";
 import { UseTokenInfoBarScriptReturn } from "./tokenInfoBar.script";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 import {
   ArrowLeftIcon,
-  ArrowRightIcon,
   FavoritesIcon2,
-  LeftLayoutIcon,
-  RightLayoutIcon,
   TriangleDownIcon,
   UnFavoritesIcon2,
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
-import { ReactNode, useMemo } from "react";
+import { CSSProperties, ReactNode, useMemo } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
+import { MarketsProviderProps } from "../marketsProvider";
 
 export type Layout = "left" | "right";
 
-export type TokenInfoBarProps = UseTokenInfoBarScriptReturn & {
-  layout?: Layout;
-  onLayout?: (layout: Layout) => void;
-  className?: string;
-};
+export type TokenInfoBarProps = Pick<MarketsProviderProps, "onSymbolChange"> &
+  UseTokenInfoBarScriptReturn & {
+    className?: string;
+    trailing?: ReactNode;
+    height?: CSSProperties["height"];
+  };
 
 export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
   const {
@@ -39,14 +37,13 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
     quotoDp,
     openInterest,
     fundingRate,
-    layout,
-    onLayout,
     containerRef,
     leadingElementRef,
     tailingElementRef,
     leadingVisible,
     tailingVisible,
     onScoll,
+    height,
   } = props;
 
   const favoriteIcon = (
@@ -68,7 +65,10 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
   );
 
   const symbolView = (
-    <DropDownMarketsWidget contentClassName="oui-w-[429px] oui-h-[496px]">
+    <DropDownMarketsWidget
+      contentClassName="oui-w-[429px] oui-h-[496px]"
+      onSymbolChange={props.onSymbolChange}
+    >
       <Flex gapX={1} className="oui-cursor-pointer">
         <TokenIcon symbol={symbol} className="oui-w-4 oui-h-4" />
         <Text.formatted
@@ -126,44 +126,29 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
     );
   }, [fundingRate]);
 
-  const layoutView = (
-    <Flex className="oui-gap-x-[6px]">
-      <Text size="2xs" intensity={36}>
-        layout
-      </Text>
-      <div
-        className="oui-cursor-pointer oui-transition-all"
-        onClick={() => {
-          onLayout?.(layout === "left" ? "right" : "left");
-        }}
-      >
-        {layout === "left" ? <LeftLayoutIcon /> : <RightLayoutIcon />}
-      </div>
-    </Flex>
-  );
-
   return (
-    <Flex
-      className={cn("oui-font-semibold", props.className)}
-      height={54}
-      // width="100%"
-      gapX={3}
-    >
-      <Flex gapX={6} className="oui-flex-1 oui-overflow-hidden">
+    <Flex className={cn("oui-font-semibold", props.className)} height={height}>
+      <Flex gapX={6} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={1}>
           {favoriteIcon}
           {symbolView}
         </Flex>
         <Divider className="oui-h-[26px]" direction="vertical" intensity={8} />
         {price}
-        <div className="oui-relative oui-overflow-hidden">
+        <div className="oui-relative oui-overflow-hidden oui-h-full">
           <div
             ref={containerRef}
-            className="oui-overflow-x-auto hide-scrollbar"
+            className="oui-overflow-x-auto hide-scrollbar oui-h-full"
           >
-            <Flex gapX={8} height={54}>
+            <Flex gapX={8} height="100%">
               <div ref={leadingElementRef}>
-                <DataItem label="24h Change" value={change} />
+                <DataItem
+                  label="24h Cha
+                
+                
+                nge"
+                  value={change}
+                />
               </div>
               <DataItem
                 label="Mark"
@@ -207,8 +192,7 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
           <ScrollIndicator tailing onClick={onScoll} visible={tailingVisible} />
         </div>
       </Flex>
-
-      {layoutView}
+      {props.trailing}
     </Flex>
   );
 };
@@ -271,7 +255,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
           "linear-gradient(90deg, #07080A 0%, rgba(7, 8, 10, 0.60) 65%, rgba(7, 8, 10, 0.00) 100%)",
       }}
       className={cn(
-        "oui-flex oui-items-center oui-w-[80px] oui-h-[54px]",
+        "oui-flex oui-items-center oui-w-[80px]",
         "oui-absolute oui-top-0 oui-bottom-0 oui-rounded-l",
         leading && "oui-left-0 oui-pl-1",
         tailing && "oui-right-0 oui-pr-1 oui-rotate-180"
