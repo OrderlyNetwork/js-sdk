@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo, useState } from "react";
+import { FC, PropsWithChildren, ReactNode, useMemo, useState } from "react";
 import { Box, cn, Flex, ScrollArea } from "@orderly.network/ui";
 import { TradingV2State } from "./tradingV2.script";
 import { DataListWidget } from "../components/desktop/dataList";
@@ -16,6 +16,7 @@ import {
   SideMarketsWidget,
   TokenInfoBarWidget,
 } from "@orderly.network/markets";
+// import Split from "@uiw/react-split";
 
 export const TradingV2: FC<TradingV2State> = (props) => {
   const isMobileLayout = useMediaQuery(MEDIA_TABLET);
@@ -50,21 +51,26 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
   );
 
   const { view, width } = useMemo(() => {
+    const marketsWidth = collapsed ? 70 : 280;
+    const orderEntryWidth = 280;
+
     const marketsView = (
-      <SideMarketsWidget collapsed={collapsed} onCollapse={setCollapsed} />
+      <Box width={marketsWidth} intensity={900} pt={3} r="2xl" height="100%">
+        <SideMarketsWidget collapsed={collapsed} onCollapse={setCollapsed} />
+      </Box>
     );
+
     const orderEntryView = (
-      <>
+      <Flex gapY={3} direction="column">
         <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
           <AssetViewWidget />
         </Box>
         <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
           <RiskRateWidget />
         </Box>
-      </>
+      </Flex>
     );
-    const marketsWidth = collapsed ? 70 : 280;
-    const orderEntryWidth = 280;
+
     let view: { left: ReactNode; right: ReactNode };
     let width: { left: number; right: number };
 
@@ -97,14 +103,22 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
           "oui-overflow-hidden"
         )}
       >
-        <TokenInfoBarWidget
-          symbol={props.symbol}
-          layout={layout}
-          onLayout={setLayout}
-        />
+        <Box intensity={900} r="2xl" px={3}>
+          <TokenInfoBarWidget
+            symbol={props.symbol}
+            layout={layout}
+            onLayout={setLayout}
+          />
+        </Box>
 
         <Flex gapX={3}>
-          <Box className="oui-flex-1" width={"100%"} height={"100%"}>
+          <Box
+            className="oui-flex-1"
+            width={"100%"}
+            height={"100%"}
+            intensity={900}
+            r="2xl"
+          >
             <TradingviewWidget
               symbol={props.symbol}
               libraryPath={props.tradingViewConfig?.library_path}
@@ -117,11 +131,19 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
           </Box>
         </Flex>
 
-        <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3">
+        <Box intensity={900} r="2xl" p={3}>
           <DataListWidget {...props.dataList} />
         </Box>
       </div>
       <div>{view.right}</div>
     </div>
+  );
+};
+
+export const Container: React.FC<PropsWithChildren<{}>> = (props) => {
+  return (
+    <Box intensity={900} r="2xl">
+      {props.children}
+    </Box>
   );
 };
