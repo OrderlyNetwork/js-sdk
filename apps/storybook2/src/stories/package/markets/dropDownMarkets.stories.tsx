@@ -47,7 +47,15 @@ type Story = StoryObj<typeof meta>;
 
 export const DropDownMarkets: Story = {
   render: (args) => {
-    return <DropDownMarketsWidget contentClassName="oui-w-[429px] oui-h-[496px]"><Button>Show DropDown markets</Button></DropDownMarketsWidget>
+    return (
+      <DropDownMarketsWidget
+        contentClassName="oui-w-[429px] oui-h-[496px]"
+        onSymbolChange={(symbol) => {
+          console.log('onSymbolChange', symbol);
+        }}>
+        <Button>Show DropDown markets</Button>
+      </DropDownMarketsWidget>
+    )
   },
   decorators:[]
 };

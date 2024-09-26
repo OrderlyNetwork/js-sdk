@@ -10,6 +10,7 @@ import { FavoritesListWidget } from "../favoritesList";
 import { RecentListWidget } from "../recentList";
 import { MarketsListWidget } from "../marketsList";
 import "../../style/index.css";
+import { useMarketsContext } from "../marketsProvider";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn & {
   className?: string;
@@ -20,10 +21,16 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
   const { collapsed, onCollapse, activeTab, onTabChange, className, width } =
     props;
 
+  const { onSymbolChange } = useMarketsContext();
+
   const renderContent = () => {
     if (!collapsed) {
       return (
-        <ExpandMarketsWidget activeTab={activeTab} onTabChange={onTabChange} />
+        <ExpandMarketsWidget
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          onSymbolChange={onSymbolChange}
+        />
       );
     }
 

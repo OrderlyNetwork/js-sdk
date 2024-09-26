@@ -17,7 +17,7 @@ const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 
 const decorators = [(Story: any) => (
-  <Box  width={280} height={600} intensity={900}>
+  <Box width={280} height={600} intensity={900}>
     <Story />
   </Box>
 )]
@@ -63,11 +63,14 @@ export const SideMarkets: Story = {
           collapsed={collapsed}
           onCollapse={setCollapsed}
           width={width}
+          onSymbolChange={(symbol) => {
+            console.log('onSymbolChange', symbol);
+          }}
         />
       </Box>
     )
   },
-  decorators:[]
+  decorators: []
   // decorators:[(Story: any) => (
   //   <Box height={600} intensity={900}>
   //     <Story />
@@ -77,14 +80,19 @@ export const SideMarkets: Story = {
 
 export const ExpandMarkets: Story = {
   render: (args) => {
-    return <ExpandMarketsWidget />
+    return (
+      <ExpandMarketsWidget
+        onSymbolChange={(symbol) => {
+          console.log('onSymbolChange', symbol);
+        }}
+      />)
   },
   decorators
 };
 
 export const CollapseMarkets: Story = {
   render: (args) => {
-    return  <MarketsListWidget
+    return <MarketsListWidget
       type="all"
       sortKey="24h_amount"
       sortOrder="desc"

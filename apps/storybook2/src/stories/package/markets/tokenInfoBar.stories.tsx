@@ -37,13 +37,34 @@ export const TokenInfoBar: Story = {
   render: (args) => {
     return <Flex direction='column' itemAlign='start' gapY={5}>
       <Box width={600} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget symbol="PERP_BTC_USDC" trailing={<Box pl={3}>Trailing</Box>} height={54}/>
+        <TokenInfoBarWidget
+          height={54}
+          symbol="PERP_BTC_USDC"
+          trailing={<Box pl={3}>Trailing</Box>}          
+          onSymbolChange={(symbol) => {
+            console.log('onSymbolChange', symbol);
+          }}
+        />
       </Box>
       <Box width={900} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget symbol="PERP_BTC_USDC" trailing={<Box pl={3}>Trailing</Box>} height={54}/>
+        <TokenInfoBarWidget
+          height={54}
+          symbol="PERP_BTC_USDC"
+          trailing={<Box pl={3}>Trailing</Box>}          
+          onSymbolChange={(symbol) => {
+            console.log('onSymbolChange', symbol);
+          }}
+        />
       </Box>
       <Box width='100%' intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget symbol="PERP_BTC_USDC" trailing={<Box pl={3}>Trailing</Box>} height={54}/>
+        <TokenInfoBarWidget
+          height={54}
+          symbol="PERP_BTC_USDC"
+          trailing={<Box pl={3}>Trailing</Box>}          
+          onSymbolChange={(symbol) => {
+            console.log('onSymbolChange', symbol);
+          }}
+        />
       </Box>
     </Flex>
   },
