@@ -9,7 +9,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { RiskRateState } from "./riskRate.script";
-import { Pencil } from "lucide-react";
+// import { Pencil } from "lucide-react";
 import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 
 export const RiskRate: FC<RiskRateState> = (props) => {
@@ -113,10 +113,10 @@ export const RiskRate: FC<RiskRateState> = (props) => {
                   }}
                 >
                   <span>{`${maxLeverage ?? "--"}x`}</span>
-                  {typeof maxLeverage !== "undefined" && (
+                  {/* {typeof maxLeverage !== "undefined" && (
                     // @ts-ignore
-                    <Pencil size={14} className="oui-text-base-contrast-54" />
-                  )}
+                    // <Pencil size={14} className="oui-text-base-contrast-54" />
+                  )} */}
                 </button>
               ) : (
                 "--"

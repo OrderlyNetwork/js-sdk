@@ -102,6 +102,9 @@ const dialogVariants = tv({
   },
   variants: {
     size: {
+      xs: {
+        content: ["oui-max-w-xs"], //320
+      },
       sm: {
         content: ["oui-max-w-sm"], //360
       },

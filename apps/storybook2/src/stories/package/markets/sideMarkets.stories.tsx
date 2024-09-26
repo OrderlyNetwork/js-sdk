@@ -6,12 +6,11 @@ import {
   FavoritesListWidget,
   MarketsListWidget,
   RecentListWidget,
-  CollapseMarketsWidget,
   SideMarketsWidget,
 } from "@orderly.network/markets";
-import { Box } from "@orderly.network/ui";
+import { Box, cn } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
-import { MarketsType, useMarketList } from "@orderly.network/hooks";
+import { useState } from "react";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging" });
@@ -49,13 +48,31 @@ type Story = StoryObj<typeof meta>;
 
 export const SideMarkets: Story = {
   render: (args) => {
-    return <SideMarketsWidget />
+    const [collapsed, setCollapsed] = useState(false);
+    const width = collapsed ? 70 : 280
+
+    return (
+      <Box
+        width={width}
+        height={600}
+        intensity={900}
+        pt={3}
+        r="2xl"
+      >
+        <SideMarketsWidget
+          collapsed={collapsed}
+          onCollapse={setCollapsed}
+          width={width}
+        />
+      </Box>
+    )
   },
-  decorators:[(Story: any) => (
-    <Box height={600}>
-      <Story />
-    </Box>
-  )]
+  decorators:[]
+  // decorators:[(Story: any) => (
+  //   <Box height={600} intensity={900}>
+  //     <Story />
+  //   </Box>
+  // )]
 };
 
 export const ExpandMarkets: Story = {
@@ -67,8 +84,12 @@ export const ExpandMarkets: Story = {
 
 export const CollapseMarkets: Story = {
   render: (args) => {
-    const [data] = useMarketList(MarketsType.ALL);
-    return <CollapseMarketsWidget dataSource={data} />
+    return  <MarketsListWidget
+      type="all"
+      sortKey="24h_amount"
+      sortOrder="desc"
+      collapsed={true}
+    />
   },
   decorators: [
     (Story) => (
@@ -96,7 +117,7 @@ export const Recent: Story = {
 
 export const All: Story = {
   render: (args) => {
-    return <MarketsListWidget type="all" sortKey="24h_change" sortOrder="desc" />
+    return <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
   },
   decorators
 };

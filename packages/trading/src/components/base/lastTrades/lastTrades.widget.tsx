@@ -5,6 +5,7 @@ export const LastTradesWidget = (props: {
   symbol: string;
   classNames?: {
     root?: string;
+    list?: string;
     listHeader?: string;
     listItem?: {
       left?: string;

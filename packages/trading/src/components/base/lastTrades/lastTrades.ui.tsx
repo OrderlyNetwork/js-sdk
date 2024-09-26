@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Box, cn, Flex, ScrollArea, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, ListView, ScrollArea, Text } from "@orderly.network/ui";
 import { LastTradesState } from "./lastTrades.script";
 import { OrderSide } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
@@ -8,6 +8,7 @@ export const LastTrades: FC<
   LastTradesState & {
     classNames?: {
       root?: string;
+      list?: string;
       listHeader?: string;
       listItem?: {
         left?: string;
@@ -19,12 +20,11 @@ export const LastTrades: FC<
   }
 > = (props) => {
   return (
-    <Flex
-      direction={"column"}
-      itemAlign={"start"}
-      className={cn("oui-font-semibold", props.classNames?.root)}
-      width={"100%"}
-      height={"100%"}
+    <div
+      className={cn(
+        "oui-grid oui-grid-rows=[auto,1fr] oui-h-full oui-w-full",
+        props.classNames?.root
+      )}
       style={props.style}
     >
       <Header
@@ -38,8 +38,9 @@ export const LastTrades: FC<
         baseDp={props.baseDp}
         quoteDp={props.quoteDp}
         classNames={props.classNames?.listItem}
+        className={props.classNames?.list}
       />
-    </Flex>
+    </div>
   );
 };
 
@@ -80,7 +81,10 @@ const Header = (props: { base: string; quote: string; className?: string }) => {
       mid={`Price(${props.quote})`}
       right={`Qty(${props.base})`}
       classNames={{
-        root: cn("oui-text-base-contrast-54 oui-h-[32px]", props.className),
+        root: cn(
+          "oui-text-base-contrast-54 oui-h-[32px] oui-sticky",
+          props.className
+        ),
       }}
     />
   );
@@ -96,10 +100,18 @@ const List = (props: {
     mid?: string;
     right?: string;
   };
+  className?: string;
 }) => {
   return (
-    <ScrollArea className="oui-w-full oui-h-full">
-      {props.data?.map((item, index) => {
+    <ListView
+      dataSource={props.data}
+      className={cn(
+        "oui-w-full oui-h-full",
+        props.className,
+        "oui-overflow-auto"
+      )}
+      contentClassName="oui-space-y-0"
+      renderItem={(item, index) => {
         return (
           <Row
             key={index}
@@ -127,7 +139,7 @@ const List = (props: {
             }}
           />
         );
-      })}
-    </ScrollArea>
+      }}
+    />
   );
 };

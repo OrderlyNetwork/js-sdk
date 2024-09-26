@@ -27,6 +27,7 @@ export type Layout = "left" | "right";
 export type TokenInfoBarProps = UseTokenInfoBarScriptReturn & {
   layout?: Layout;
   onLayout?: (layout: Layout) => void;
+  className?: string;
 };
 
 export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
@@ -143,11 +144,8 @@ export const TokenInfoBar: React.FC<TokenInfoBarProps> = (props) => {
 
   return (
     <Flex
-      className="oui-font-semibold"
+      className={cn("oui-font-semibold", props.className)}
       height={54}
-      intensity={900}
-      r="2xl"
-      px={3}
       // width="100%"
       gapX={3}
     >

@@ -50,5 +50,5 @@ export function useSort(options: Pick<TableProps, "onSort" | "initialSort">) {
     return <SortingIcon />;
   };
 
-  return { sortKey, onSort,renderSortIndicator};
+  return { sortKey, onSort, renderSortIndicator };
 }

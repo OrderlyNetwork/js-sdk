@@ -20,10 +20,10 @@ export const useTradeDataScript = (props: {
     }, [ticker]);
    
     const openInterest = useMemo(() => {
-        const close = ticker?.["mark_price"];
-        const volume = ticker?.["open_interest"];
-        if (close && volume && !isNaN(close) && volume.length > 0) {
-            return new Decimal(close).mul(Number(volume)).toFixed(symbolInfo.quote_dp, Decimal.ROUND_DOWN);
+        const markPrice = ticker?.["mark_price"];
+        const openInterest = ticker?.["open_interest"];
+        if (markPrice && openInterest && !isNaN(markPrice) ) {
+            return new Decimal(markPrice).mul(Number(openInterest)).toFixed(symbolInfo.quote_dp, Decimal.ROUND_DOWN);
         }
         return undefined;
     }, [ticker]);
