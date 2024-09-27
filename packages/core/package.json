@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/core",
-  "version": "1.5.9-dmm.2",
+  "version": "1.5.12",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -38,7 +38,7 @@
     "node-stdlib-browser": "^1.2.0",
     "tsconfig": "workspace:*",
     "tsup": "^7.1.0",
-    "typedoc": "^0.24.8",
+    "typedoc": "^0.26.5",
     "web3": "^4.1.1",
     "typescript": "^5.1.6"
   },

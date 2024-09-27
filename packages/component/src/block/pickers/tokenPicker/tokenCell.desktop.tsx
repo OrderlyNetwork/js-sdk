@@ -32,7 +32,7 @@ export const DesktopTokenCell: FC<TokenCellProps> = (props) => {
           />
         ) : (
           <div className="orderly-flex orderly-items-center">
-            <Numeral precision={2} padding={false}>
+            <Numeral precision={token.precision || 2} padding={false}>
               {balance}
             </Numeral>
             <span className="orderly-text-4xs orderly-ml-1">

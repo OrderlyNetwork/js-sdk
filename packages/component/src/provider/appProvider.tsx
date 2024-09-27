@@ -57,11 +57,11 @@ export type AppLogos = Partial<{
 }>;
 
 export type ReferralProps = {
-  saveRefCode?: boolean,
-  onClickReferral?: () => void,
-  onBoundRefCode?: (success: boolean, error: any) => void,
-  refLink?: string,
-  slogan?: string,
+  saveRefCode?: boolean;
+  onClickReferral?: () => void;
+  onBoundRefCode?: (success: boolean, error: any) => void;
+  refLink?: string;
+  slogan?: string;
 };
 
 export type CommonOrderlyAppState = {
@@ -81,7 +81,7 @@ export type CommonOrderlyAppState = {
   accountMenuItems?: DesktopDropMenuItem[] | React.ReactNode;
   onClickAccountMenuItem?: (item: DesktopDropMenuItem) => void;
 
-  referral?: ReferralProps
+  referral?: ReferralProps;
 };
 
 export type OrderlyAppContextState = CommonOrderlyAppState & {
@@ -95,14 +95,14 @@ export const OrderlyAppContext = createContext<OrderlyAppContextState>(
   {} as OrderlyAppContextState
 );
 
-type OrderlyAppProviderProps = CommonOrderlyAppState & {
+export type OrderlyAppProviderProps = CommonOrderlyAppState & {
   toastLimitCount?: number;
   contracts?: IContract;
   /**
    * are include testnet chains
    */
   includeTestnet?: boolean;
-  referral?: ReferralProps
+  referral?: ReferralProps;
 };
 
 export const OrderlyAppProvider: FC<
@@ -138,6 +138,7 @@ export const OrderlyAppProvider: FC<
       keyStore={keyStore}
       getWalletAdapter={getWalletAdapter}
       brokerId={brokerId}
+      brokerName={brokerName}
       networkId={networkId}
       contracts={contracts}
       chainFilter={chainFilter}
@@ -391,11 +392,11 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const refCode = searchParams.get('ref');
+    const refCode = searchParams.get("ref");
     if (refCode) {
-        localStorage.setItem("referral_code", refCode);
+      localStorage.setItem("referral_code", refCode);
     }
-}, []);
+  }, []);
 
   return (
     <OrderlyAppContext.Provider

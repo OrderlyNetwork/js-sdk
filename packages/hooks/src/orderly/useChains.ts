@@ -91,7 +91,7 @@ export function useChains(
   };
 
   // only prod env return mainnet chains info
-  const { data: tokenChains, error: tokenError } = useQuery<API.Chain[]>(
+  const { data: tokenChainsRes, error: tokenError } = useQuery<API.Chain[]>(
     "https://api-evm.orderly.org/v1/public/token",
     { ...commonSwrOpts }
   );
@@ -100,18 +100,18 @@ export function useChains(
 
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
-    `/v1/public/chain_info${
+    `https://api-evm.orderly.org/v1/public/chain_info${
       brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
     }`,
     { ...commonSwrOpts }
   );
 
   const chains = useMemo(() => {
-    const orderlyChainsArr = fillChainsInfo(tokenChains, filterFun.current);
+    const tokenChains = fillChainsInfo(tokenChainsRes, filterFun.current);
 
     let testnetArr = [...TestnetChains] as API.Chain[];
 
-    orderlyChainsArr?.forEach((item) => {
+    tokenChains?.forEach((item) => {
       const chainId = item.network_infos?.chain_id;
       chainsMap.current.set(chainId, item);
       updateTestnetInfo(testnetArr, chainId, item);
@@ -123,9 +123,8 @@ export function useChains(
 
     let mainnetArr: API.Chain[] = [];
 
-    // TODO: /v1/public/chain_info api data is not match /v1/public/token api data, so it can effect is prod
-    mainnetArr = updateOrderlyChains(
-      orderlyChainsArr,
+    mainnetArr = filterAndUpdateChains(
+      tokenChains,
       chainInfos,
       filterFun.current
     );
@@ -166,7 +165,7 @@ export function useChains(
       testnet: testnetArr,
       mainnet: mainnetArr,
     };
-  }, [networkId, tokenChains, chainInfos, pickField, allowedChains]);
+  }, [networkId, tokenChainsRes, chainInfos, pickField, allowedChains]);
 
   const findByChainId = useCallback(
     (chainId: number, field?: string) => {
@@ -241,13 +240,14 @@ export function fillChainsInfo(
   return _chains;
 }
 
-/** update network_infos by chain_info api(v1/public/chain_info) */
-export function updateOrderlyChains(
+/** filter chains and update network_infos by chain_info api (v1/public/chain_info) */
+export function filterAndUpdateChains(
   chains: API.Chain[],
   chainInfos: any,
   filter?: (chain: any) => boolean
 ) {
-  const _chains: API.Chain[] = [];
+  const filterChains: API.Chain[] = [];
+
   chains.forEach((chain) => {
     let _chain = { ...chain };
 
@@ -275,10 +275,12 @@ export function updateOrderlyChains(
       if (!filter(_chain)) return;
     }
 
-    _chains.push(_chain);
+    if (networkInfo) {
+      filterChains.push(_chain);
+    }
   });
 
-  return _chains;
+  return filterChains;
 }
 
 /** if chain is testnet, update testnet network_infos */

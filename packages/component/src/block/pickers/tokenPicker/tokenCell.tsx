@@ -34,7 +34,7 @@ export const TokenCell: FC<TokenCellProps> = (props) => {
         {loading ? (
           <Spinner size={"small"} />
         ) : (
-          <Numeral precision={2} padding={false}>
+          <Numeral precision={token.precision || 2} padding={false}>
             {balance}
           </Numeral>
         )}

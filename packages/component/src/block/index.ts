@@ -36,7 +36,7 @@ export { OrdersView } from "./orders";
 export type { OrdersViewProps } from "./orders";
 
 export { AccountStatusBar, AssetAndMarginSheet } from "./accountStatus";
-export type { AccountStatusProps } from "./accountStatus";
+export type { AccountStatusProps, DesktopDropMenuItem } from "./accountStatus";
 
 export { ChainListView, ChainSelect, ChainDialog } from "./pickers/chainPicker";
 
@@ -47,3 +47,5 @@ export {
   DepositAndWithdrawWithDialog,
   DepositAndWithdrawWithSheet,
 } from "./depositAndwithdraw";
+
+export type { ShareConfigProps } from "./shared/shareConfigProps";

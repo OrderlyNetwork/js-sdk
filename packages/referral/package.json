@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/referral",
-  "version": "1.5.9-dmm.2",
+  "version": "1.5.12",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -42,7 +42,7 @@
     "typescript": "^5.1.6",
     "tsup": "^7.1.0",
     "tsconfig": "workspace:*",
-    "typedoc": "^0.24.8"
+    "typedoc": "^0.26.5"
   },
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",

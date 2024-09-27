@@ -88,7 +88,7 @@
     --orderly-font-size-4xl: 36px;
 
     --orderly-color-divider: 42 46 52;
-    --orderly-color-divider-fill: 255 255 255
+    --orderly-color-divider-fill: 255 255 255;
 
     --orderly-font-family: "Manrope", sans-serif;
 
@@ -207,4 +207,9 @@
   background-color: rgba(255, 255, 255, 0.04);
   border-radius: 3px;
   /* border: 1px solid #ffffff; */
+}
+
+.absolut-item-center{
+  top: 50%;
+  transform: translateY(-50%);
 }
