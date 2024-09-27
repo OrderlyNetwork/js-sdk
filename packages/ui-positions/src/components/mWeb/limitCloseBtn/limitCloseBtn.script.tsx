@@ -8,7 +8,8 @@ import { OrderType } from "@orderly.network/types";
 
 export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
   const { state } = props;
-  const [open, setOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const {
     onSubmit,
     price,
@@ -27,7 +28,8 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
   const onConfirm = () => {
     return onSubmit().then(
       (res) => {
-        setOpen(false);
+        setSheetOpen(false);
+        setDialogOpen(false);
       },
       (error: any) => {
         if (typeof error === "string") {
@@ -40,7 +42,10 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
   };
 
   const onClose = () => {
-    setOpen(false);
+    setSheetOpen(false);
+  };
+  const onCloseDialog = () => {
+    setDialogOpen(false);
   };
   const prices = useMarkPricesStream();
   const curMarkPrice = useMemo(() => {
@@ -49,25 +54,25 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
 
   const { quote_dp, base_dp, base, quote } = useSymbolContext();
   useEffect(() => {
-    if (!setPrice.current && curMarkPrice && open) {
+    if (!setPrice.current && curMarkPrice && sheetOpen) {
       setPrice.current = true;
       updateOrderType(OrderType.LIMIT, `${curMarkPrice}`);
     }
-  }, [setPrice, curMarkPrice, open]);
+  }, [setPrice, curMarkPrice, sheetOpen]);
 
   // clear state
   useEffect(() => {
-    if (!open) {
-        console.log("clear state");
-        updateOrderType(OrderType.MARKET);
+    if (!sheetOpen) {
+      updateOrderType(OrderType.MARKET);
       setPrice.current = false;
+      setSliderValue(100);
     }
-  }, [open]);
+  }, [sheetOpen]);
 
   return {
     ...state,
-    open,
-    setOpen,
+    sheetOpen,
+    setSheetOpen,
     curMarkPrice,
     quote_dp,
     base_dp,
@@ -84,7 +89,12 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     updateQuantity,
 
     // slider
-    sliderValue, setSliderValue,
+    sliderValue,
+    setSliderValue,
+
+    dialogOpen,
+    setDialogOpen,
+    onCloseDialog,
   };
 };
 

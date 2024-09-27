@@ -6,18 +6,33 @@ import {
   Flex,
   Input,
   inputFormatter,
+  SimpleDialog,
   SimpleSheet,
   Slider,
   Text,
-  toast,
 } from "@orderly.network/ui";
 import { LimitCloseBtnState } from "./limitCloseBtn.script";
-import { usePositionsRowContext } from "../../desktop/positionRowContext";
-import { useSymbolContext } from "../../../providers/symbolProvider";
 import { Decimal } from "@orderly.network/utils";
+import { LimitConfirmDialog } from "../../desktop/closeButton";
 
 export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
-  const { item, open, setOpen, updatePriceChange } = props;
+  const {
+    item,
+    sheetOpen,
+    setSheetOpen,
+    dialogOpen,
+    setDialogOpen,
+    updatePriceChange,
+    base,
+    quantity,
+    price,
+    onClose,
+    onConfirm,
+    submitting,
+    quote_dp,
+    closeOrderData,
+    onCloseDialog,
+  } = props;
   const isBuy = item.position_qty > 0;
 
   return (
@@ -27,17 +42,17 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
         color="secondary"
         onClick={() => {
           updatePriceChange("limit");
-          setOpen(true);
+          setSheetOpen(true);
         }}
       >
         Limit Close
       </Button>
 
-      {open && (
+      {sheetOpen && (
         <SimpleSheet
           title={"Limit close"}
-          open={open}
-          onClose={() => setOpen(false)}
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
         >
           <Flex
             direction={"column"}
@@ -130,11 +145,44 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               </Flex>
             </Flex>
             <Flex width={"100%"} gap={3} mt={2}>
-                <Button fullWidth color="secondary">Cancel</Button>
-                <Button fullWidth >Confirm</Button>
+              <Button
+                fullWidth
+                color="secondary"
+                onClick={(e) => {
+                  onClose();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                fullWidth
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  setDialogOpen(true);
+                }}
+              >
+                Confirm
+              </Button>
             </Flex>
           </Flex>
         </SimpleSheet>
+      )}
+
+      {dialogOpen && (
+        <SimpleDialog open={dialogOpen} onOpenChange={setDialogOpen} size="xs">
+          <LimitConfirmDialog
+            base={base}
+            quantity={quantity}
+            price={price}
+            onClose={onCloseDialog}
+            onConfirm={onConfirm}
+            submitting={submitting}
+            quoteDp={quote_dp}
+            order={closeOrderData}
+            hideCloseIcon
+          />
+        </SimpleDialog>
       )}
     </>
   );

@@ -100,18 +100,20 @@ export const CloseButton = () => {
 };
 
 export const ConfirmHeader: FC<{
-  onClose: () => void;
+  onClose?: () => void;
   title: string;
+  hideCloseIcon?: boolean;
 }> = (props) => {
+  const { hideCloseIcon = false } = props;
   return (
     <div className="oui-pb-3 oui-border-b oui-border-line-4 oui-relative oui-w-full">
       <Text size={"base"}>{props.title}</Text>
-      <button
+      {!hideCloseIcon && (<button
         onClick={props.onClose}
         className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-p-2"
       >
         <CloseIcon size={18} color="white" />
-      </button>
+      </button>)}
     </div>
   );
 };
@@ -158,6 +160,14 @@ export const OrderDetail = (props: {
   className?: string;
 }) => {
   const { quantity, price, quoteDp, side } = props;
+
+  const total = useMemo(() => {
+
+    if (price && quantity) {
+      return new Decimal(price).mul(quantity).toFixed(quoteDp, Decimal.ROUND_DOWN);
+    }
+    return '--';
+  }, [price, quantity]);
   
 
   return (
@@ -189,7 +199,7 @@ export const OrderDetail = (props: {
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
         >
-          {new Decimal(price).mul(quantity).toFixed(quoteDp, Decimal.ROUND_DOWN)}
+          {total}
         </Text.formatted>
       </Flex>
     </Flex>
@@ -235,21 +245,22 @@ export const LimitConfirmDialog: FC<{
   base: string;
   quantity: string;
   price: string;
-  onClose: () => void;
+  onClose?: () => void;
   onConfirm: () => Promise<any>;
   order: OrderEntity;
   submitting: boolean;
   quoteDp?: number;
+  hideCloseIcon?: boolean;
 }> = (props) => {
   const { order, quoteDp, quantity, price, submitting } = props;
 
   const { side } = order;
   const onCancel = () => {
-    props.onClose();
+    props.onClose?.();
   };
   return (
     <>
-      <ConfirmHeader onClose={onCancel} title="Limit close" />
+      <ConfirmHeader onClose={onCancel} title="Limit close" hideCloseIcon={props.hideCloseIcon} />
       <Text intensity={54} size="sm" className="oui-mt-5">
         {`You agree closing ${commify(props.quantity)} ${
           props.base
