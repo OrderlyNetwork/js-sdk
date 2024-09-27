@@ -1,10 +1,12 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { TabPane, Tabs } from "@/tab";
 import AssetHistory from "./assetHistory";
 import FundingFee from "./fundingFee";
 import Liquidations from "./liquidations";
 import { LayoutContext } from "@/layout/layoutContext";
-
+import Button from "@/button";
+import { modal } from "@/modal";
+import { DepositAndWithdrawWithDialog } from "@/block/depositAndwithdraw";
 export enum EPortfolioTab {
   DepositsWithdrawals = "deposits_withdrawals",
   Funding = "funding",
@@ -23,6 +25,15 @@ export const DataList = () => {
     headerHeight + footerHeight + (pageHeaderHeight ?? 0) + 20 + 32
   }px)`;
 
+  const openDepositAndWithdraw = useCallback(
+    async (viewName: "deposit" | "withdraw") => {
+      return await modal.show(DepositAndWithdrawWithDialog, {
+        activeTab: viewName,
+      });
+    },
+    []
+  );
+
   return (
     <div
       style={{ height }}
@@ -32,6 +43,28 @@ export const DataList = () => {
         value={activeTab}
         onTabChange={setActiveTab}
         tabBarClassName="orderly-h-[48px] orderly-text-sm orderly-pl-0"
+        tabBarExtra={
+          <div className="orderly-flex orderly-gap-x-2">
+            <Button
+              variant="outlined"
+              className="orderly-border-base-contrast-54 orderly-text-base-contrast-54 orderly-h-[32px]"
+              onClick={() => {
+                openDepositAndWithdraw("withdraw");
+              }}
+            >
+              Withdraw
+            </Button>
+            <Button
+              variant="outlined"
+              className="orderly-border-base-contrast-54 orderly-text-base-contrast-54 orderly-h-[32px]"
+              onClick={() => {
+                openDepositAndWithdraw("deposit");
+              }}
+            >
+              Deposit
+            </Button>
+          </div>
+        }
       >
         <TabPane
           title="Deposits & Withdrawals"
