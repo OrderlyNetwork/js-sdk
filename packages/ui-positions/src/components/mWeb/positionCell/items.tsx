@@ -2,6 +2,7 @@ import {
   Badge,
   Button,
   cn,
+  Divider,
   Flex,
   Sheet,
   SimpleDialog,
@@ -203,48 +204,6 @@ export const TPSLBtn: FC<PositionCellState> = (props) => {
     <Button variant="outlined" color="secondary">
       TP/SL
     </Button>
-  );
-};
-export const LimitCloseBtn: FC<PositionCellState> = (props) => {
-  const { item } = props;
-  const [open, setOpen] = useState(false);
-  const { onSubmit, price, quantity, closeOrderData, type, submitting, quoteDp, updatePriceChange } =
-    usePositionsRowContext();
-
-  const { base, quote } = useSymbolContext();
-
-  const onConfirm = () => {
-    return onSubmit().then(
-      (res) => {
-        setOpen(false);
-      },
-      (error: any) => {
-        if (typeof error === "string") {
-          toast.error(error);
-        } else {
-          toast.error(error.message);
-        }
-      }
-    );
-  };
-
-  const onClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <Button variant="outlined" color="secondary" onClick={() => {
-        updatePriceChange('limit');
-        setOpen(true);
-      }}>
-        Limit Close
-      </Button>
-
-      <SimpleSheet title={"Limit close"} open={open} onClose={() => setOpen(false)}>
-        DIalog
-      </SimpleSheet>
-    </>
   );
 };
 export const MarketCloseBtn: FC<PositionCellState> = (props) => {

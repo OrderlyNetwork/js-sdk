@@ -11,9 +11,9 @@ import {
   MarkPrice,
   LiqPrice,
   TPSLBtn,
-  LimitCloseBtn,
   MarketCloseBtn,
 } from "./items";
+import { LimitCloseBtnWidget } from "../limitCloseBtn";
 
 export const PositionCell: FC<
   PositionCellState & {
@@ -60,7 +60,7 @@ const Buttons: FC<PositionCellState> = (props) => {
   return (
     <Grid width={"100%"} gap={2} cols={3} rows={1}>
       <TPSLBtn {...props} />
-      <LimitCloseBtn {...props} />
+      <LimitCloseBtnWidget state={props} />
       <MarketCloseBtn {...props} />
     </Grid>
   );
