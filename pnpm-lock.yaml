@@ -413,6 +413,9 @@ importers:
       '@storybook/preview-api':
         specifier: ^8.1.5
         version: 8.1.5
+      '@uiw/react-split':
+        specifier: ^5.9.3
+        version: 5.9.3(react-dom@18.2.0)(react@18.2.0)
       '@web3-onboard/injected-wallets':
         specifier: ^2.11.0
         version: 2.11.0(typescript@5.2.2)
@@ -1673,6 +1676,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.0.6
         version: 1.0.6(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.2.0)(react@18.3.1)
+      '@uiw/react-split':
+        specifier: ^5.9.3
+        version: 5.9.3(react-dom@18.2.0)(react@18.3.1)
       lucide-react:
         specifier: ^0.343.0
         version: 0.343.0(react@18.3.1)
@@ -15005,6 +15011,16 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@uiw/react-split@5.9.3(react-dom@18.2.0)(react@18.3.1):
+    resolution: {integrity: sha512-HgwETU+kRhzZAp+YiE4Yu8bNJm3jxxnGgGPfkadUl8jA1wsMD3aMMskuhQF5akiUUUadiLUvAc8e1RH9Y/SKDw==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.2.0(react@18.3.1)
     dev: false
 
   /@ungap/structured-clone@1.2.0:
