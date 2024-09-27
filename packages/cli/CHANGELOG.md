@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.9-dmm.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@1.5.9-dmm.2
+
 ## 0.3.9-dmm.1
 
 ### Patch Changes

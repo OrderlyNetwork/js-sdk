@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.9-dmm.2
+
+### Patch Changes
+
+- update
+
 ## 1.5.9-dmm.1
 
 ### Patch Changes
