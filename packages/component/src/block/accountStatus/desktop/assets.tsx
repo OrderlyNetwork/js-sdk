@@ -99,22 +99,31 @@ export const Assets: FC<AssetsProps> = (props) => {
     );
   }, [state]);
 
-  const [{ aggregated }, positionsInfo] = usePositionStream();
   const { marginRatio, mmr } = useMarginRatio();
 
-  const marginRatioVal = useMemo(() => {
-    return Math.min(
-      10,
-      aggregated.notional === 0
-        ? // @ts-ignore
-          positionsInfo["margin_ratio"](10)
-        : marginRatio
-    );
-  }, [marginRatio, aggregated]);
-
   const isConnected = state.status >= AccountStatusEnum.Connected;
+  const marginRatioVal = useMemo(() => {
+    if (!isConnected) {
+      return 0;
+    }
+    return marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
+  }, [isConnected, marginRatio]);
 
   const { isRed, isYellow, isGreen } = getMarginRatioColor(marginRatioVal, mmr);
+
+  const marginRatioAttr = useMemo(() => {
+    if (isRed) {
+      return "high";
+    }
+    if (isYellow) {
+      return "medium";
+    }
+    if (isGreen) {
+      return "low";
+    }
+
+    return "default";
+  }, [isRed, isYellow, isGreen]);
 
   return (
     <Collapsible
@@ -130,7 +139,7 @@ export const Assets: FC<AssetsProps> = (props) => {
       >
         <div className={"orderly-flex-1"}>
           <div className={"orderly-text-3xs orderly-text-base-contrast-54"}>
-            Total balance
+            Total value
           </div>
           <div>
             <Numeral
@@ -183,19 +192,23 @@ export const Assets: FC<AssetsProps> = (props) => {
       <CollapsibleContent>
         <MemorizedAssetsDetail />
       </CollapsibleContent>
-
       <div className={"orderly-pb-4"}>
         <Progress
-          value={marginRatioVal * 100}
-          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
           foregroundClassName={cn("orderly-bg-gradient-to-r", {
             "orderly-from-[#F4807C] orderly-to-[#FF4F82]": isRed,
             "orderly-from-[#E6D673] orderly-to-[#C5A038]": isYellow,
             "orderly-from-[#1DF6B5] orderly-to-[#86ED92]": isGreen,
           })}
+          value={marginRatioVal * 100}
+          variant={isConnected && marginRatioVal ? "solid" : "gradient"}
+          data-variant={isConnected && marginRatioVal ? "solid" : "gradient"}
+          data-margin-ratio={isConnected ? marginRatioAttr : undefined}
         />
       </div>
-      <MemorizedLeverage isConnected={isConnected} />
+      <MemorizedLeverage
+        isConnected={isConnected}
+        data-margin-ratio={isConnected ? marginRatioAttr : undefined}
+      />
     </Collapsible>
   );
 };

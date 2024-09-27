@@ -1,5 +1,47 @@
 # eslint-config-custom
 
+## 0.3.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+
+## 0.3.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+
+## 0.3.11
+
+### Patch Changes
+
+- fix bugs;
+
+## 0.3.10
+
+### Patch Changes
+
+- e5a88d5f3: add system maintenance component;
+
+## 0.3.10-alpha.0
+
+### Patch Changes
+
+- add system maintenance component;
+
+## 0.3.9
+
+### Patch Changes
+
+- 187dd07b: fix bugs;
+
+## 0.3.9-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+
 ## 0.3.8
 
 ### Patch Changes

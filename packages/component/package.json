@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "1.5.8",
+  "version": "1.5.12",
   "description": "",
   "main": "lib/index.js",
   "module": "esm/index.js",
@@ -98,6 +98,7 @@
     "vite": "^5.1.6"
   },
   "dependencies": {
+    "@date-fns/utc": "1.2.0",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/net": "workspace:*",

@@ -52,6 +52,7 @@ export interface ConfigProviderProps {
   contracts?: IContract;
   getWalletAdapter?: getWalletAdapterFunc;
   brokerId: string;
+  brokerName?: string;
   networkId: NetworkId;
 
   chainFilter?: filteredChains | filterChainsFunc;
@@ -68,6 +69,7 @@ export const OrderlyConfigProvider = (
     keyStore,
     getWalletAdapter,
     brokerId,
+    brokerName,
     networkId,
     contracts,
     chainFilter,
@@ -86,7 +88,7 @@ export const OrderlyConfigProvider = (
 
   const innerConfigStore = useConstant<ConfigStore>(() => {
     return new ProxyConfigStore(
-      configStore || new DefaultConfigStore({ brokerId, networkId })
+      configStore || new DefaultConfigStore({ brokerId, brokerName, networkId })
     );
   });
 

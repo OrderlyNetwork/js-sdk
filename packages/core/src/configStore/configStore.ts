@@ -6,6 +6,7 @@ export type ConfigKey =
   | "operatorUrl"
   | "domain"
   | "brokerId"
+    | "brokerName"
   | "networkId"
   | "env"
   | "PROD_URL"

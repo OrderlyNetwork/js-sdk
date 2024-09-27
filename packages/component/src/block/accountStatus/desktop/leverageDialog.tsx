@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useRef, useState } from "react";
+import { FC, PropsWithChildren, useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogBody,
@@ -25,6 +25,10 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
     useLeverage();
   const nextLeverage = useRef(maxLeverage ?? 0);
 
+  useEffect(() => {
+    nextLeverage.current = maxLeverage;
+  }, [maxLeverage]);
+
   const onSave = (value: { leverage: number }) => {
     return Promise.resolve().then(() => {
       //   console.log("value", value);
@@ -33,7 +37,6 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
   };
 
   const onSubmit = () => {
-    if (nextLeverage.current === maxLeverage) return;
     update({ leverage: nextLeverage.current }).then(
       (res: any) => {
         setOpen(false);
@@ -79,11 +82,15 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
             onClick={() => {
               setOpen(false);
             }}
-            >
+          >
             Cancel
-            
           </Button>
-          <Button id="orderly-desktop-leverage-dialog-save" fullWidth onClick={() => onSubmit()} loading={isMutating}>
+          <Button
+            id="orderly-desktop-leverage-dialog-save"
+            fullWidth
+            onClick={() => onSubmit()}
+            loading={isMutating}
+          >
             Save
           </Button>
         </DialogFooter>

@@ -1,5 +1,68 @@
 # @orderly.network/futures
 
+## 3.3.12
+
+### Patch Changes
+
+- 11399d1f3: add element id;
+- Updated dependencies [11399d1f3]
+  - @orderly.network/types@1.5.12
+  - @orderly.network/utils@1.5.12
+
+## 3.3.12-alpha.0
+
+### Patch Changes
+
+- add element id;
+- Updated dependencies
+  - @orderly.network/types@1.5.12-alpha.0
+  - @orderly.network/utils@1.5.12-alpha.0
+
+## 3.3.11
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.5.11
+  - @orderly.network/utils@1.5.11
+
+## 3.3.10
+
+### Patch Changes
+
+- e5a88d5f3: add system maintenance component;
+- Updated dependencies [e5a88d5f3]
+  - @orderly.network/types@1.5.10
+  - @orderly.network/utils@1.5.10
+
+## 3.3.10-alpha.0
+
+### Patch Changes
+
+- add system maintenance component;
+- Updated dependencies
+  - @orderly.network/types@1.5.10-alpha.0
+  - @orderly.network/utils@1.5.10-alpha.0
+
+## 3.3.9
+
+### Patch Changes
+
+- 187dd07b: fix bugs;
+- Updated dependencies [187dd07b]
+  - @orderly.network/types@1.5.9
+  - @orderly.network/utils@1.5.9
+
+## 3.3.9-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.5.9-alpha.0
+  - @orderly.network/utils@1.5.9-alpha.0
+
 ## 3.3.8
 
 ### Patch Changes

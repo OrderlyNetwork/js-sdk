@@ -29,9 +29,10 @@ export interface QuantityInputProps {
   hintMessage?: string;
   balanceRevalidating?: boolean;
   fetchBalance: (token: string, decimals: number) => Promise<any>;
+  precision?: number;
 }
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
-  const { disabled } = props;
+  const { disabled, precision = 2 } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const amount = useMemo(() => {
@@ -47,7 +48,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   return (
     <>
       <div
-      id="orderly-quantity-input-view"
+        id="orderly-quantity-input-view"
         className={cn(
           "orderly-bg-base-500 dark:orderly-bg-base-100 orderly-rounded orderly-pl-1 orderly-pr-2 orderly-py-2 focus-within:orderly-bg-bg-base-500 focus-within:orderly-outline focus-within:orderly-outline-1 orderly-outline-primary",
           props.className,
@@ -90,7 +91,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
               onClick={(event) => {
                 props?.onValueChange?.({
                   value: parseNumber(props.maxAmount ?? 0, {
-                    precision: 2,
+                    precision,
                   }),
                   token: props.token?.symbol ?? "",
                 });
@@ -120,7 +121,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
           <div className="orderly-flex orderly-items-center orderly-space-x-2">
             <span>{`Available: ${
               parseNumber(props.maxAmount ?? 0, {
-                precision: 2,
+                precision,
                 rule: "price",
               }) ?? "-"
             } ${props.token?.symbol ?? ""}`}</span>
