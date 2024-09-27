@@ -6,8 +6,9 @@ export const useShareButtonScript = (props: {
   position: any;
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+    modalId: string;
 }) => {
-  const { sharePnLConfig, position } = props;
+  const { sharePnLConfig, position, modalId } = props;
   const { getFirstRefCode } = useReferralInfo();
   const refCode = useMemo(() => {
     return getFirstRefCode()?.code;
@@ -18,6 +19,7 @@ export const useShareButtonScript = (props: {
     refCode,
     leverage,
     sharePnLConfig,
+    modalId,
   };
 };
 

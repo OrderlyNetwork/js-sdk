@@ -63,6 +63,8 @@ const SheetContent = React.forwardRef<
       <SheetPrimitive.Content
         ref={ref}
         className={cnBase(sheetVariants({ side }), className)}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
         {...props}
       >
         {closeable && (

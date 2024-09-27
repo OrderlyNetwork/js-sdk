@@ -10,7 +10,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
       type="button"
       onClick={(e: any) => {
         e.stopPropagation();
-        modal.show(SharePnLDialogId, {
+        modal.show(props.modalId, {
           pnl: {
             position: props.position,
             refCode: props.refCode,

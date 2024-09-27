@@ -1,14 +1,14 @@
-import { DataTable } from "@orderly.network/ui";
-import { useColumn } from "./useColumn";
+import { DataTable, ListView } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 import { PositionsBuilderState } from "./usePositionsBuilder.script";
-import { PositionsRowProvider } from "./positionRowContext";
 import { SymbolProvider } from "../providers/symbolProvider";
 import { PositionsProps } from "../types/types";
+import { useColumn } from "./desktop/useColumn";
+import { PositionsRowProvider } from "./desktop/positionRowContext";
+import { ReactNode } from "react";
+import { PositionCellWidget } from "./mWeb/positionCell";
 
-export const Positions = (
-  props: PositionsBuilderState & PositionsProps
-) => {
+export const Positions = (props: PositionsBuilderState & PositionsProps) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
   const column = useColumn({
     pnlNotionalDecimalPrecision,
@@ -38,5 +38,30 @@ export const Positions = (
         }}
       />
     </div>
+  );
+};
+
+export const MobilePositions = (
+  props: PositionsBuilderState & PositionsProps
+) => {
+  const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
+
+  return (
+    <ListView
+      className="oui-w-full"
+      dataSource={props.dataSource}
+      renderItem={(item, index) => (
+        <SymbolProvider symbol={item.symbol}>
+          <PositionsRowProvider position={item}>
+            <PositionCellWidget
+              item={item}
+              index={index}
+              pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+              sharePnLConfig={sharePnLConfig}
+            />
+          </PositionsRowProvider>
+        </SymbolProvider>
+      )}
+    />
   );
 };

@@ -3,7 +3,7 @@ import { Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { BottomTabState, BottomTabType } from "./bottomTab.script";
 import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
-import { PositionsWidget } from "@orderly.network/ui-positions";
+import { MobilePositionsWidget, PositionsWidget } from "@orderly.network/ui-positions";
 import { PositionHeaderWidget } from "../../base/positionHeader";
 
 export const BottomTab: FC<
@@ -52,11 +52,11 @@ const PositionsView: FC<BottomTabState> = (props) => {
         unPnlPriceBasis={props.unPnlPriceBasis}
         tabletMediaQuery={props.tabletMediaQuery}
       />
-      {/* <Divider className="oui-w-full" />
-      <PositionsWidget
+      <div className="oui-mt-2"></div>
+      <MobilePositionsWidget
         {...props.config}
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-      /> */}
+      />
     </Flex>
   );
 };

@@ -8,7 +8,7 @@ import {
 } from "./listElement";
 import { CloseButton } from "./closeButton";
 import { Decimal } from "@orderly.network/utils";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { SharePnLBottomSheetId, SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 import { ShareButtonWidget } from "./shareButton";
 import { API } from "@orderly.network/types";
 import { TriggerPrice } from "./triggerPrice";
@@ -153,6 +153,7 @@ export const useColumn = (props: {
               <ShareButtonWidget
                 position={record}
                 sharePnLConfig={props.sharePnLConfig}
+                modalId={SharePnLDialogId}
               />
             </Flex>
           );
