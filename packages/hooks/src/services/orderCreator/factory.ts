@@ -30,7 +30,6 @@ export class OrderFactory {
         return new FOKOrderCreator();
       case OrderType.POST_ONLY:
         return new PostOnlyOrderCreator();
-
       case OrderType.STOP_LIMIT:
         return new StopLimitOrderCreator();
       case OrderType.STOP_MARKET:

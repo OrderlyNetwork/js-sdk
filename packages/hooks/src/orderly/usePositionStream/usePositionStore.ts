@@ -60,6 +60,7 @@ const usePositionStore = create<
 );
 
 const usePositions = () => usePositionStore((state) => state.positions.rows);
+
 const usePositionActions = () => usePositionStore((state) => state.actions);
 
 export { usePositionStore, usePositions, usePositionActions };

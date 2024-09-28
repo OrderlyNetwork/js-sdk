@@ -77,6 +77,10 @@ export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
     }
   }
 
+  if (value === OrderType.MARKET || value === OrderType.LIMIT) {
+    values.trigger_price = undefined;
+  }
+
   if (value === OrderType.MARKET || value === OrderType.STOP_MARKET) {
     // if the type is market, price use markPrice
   }
@@ -292,7 +296,6 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
-  console.log(inputs);
   const [values, input, value, markPrice, config] = inputs;
 
   const price =

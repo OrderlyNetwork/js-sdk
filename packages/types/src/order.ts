@@ -88,7 +88,7 @@ export interface AlgoOrder extends BaseOrder, OrderExt {
   // symbol: string;
   algo_type: AlgoOrderRootType;
   trigger_price_type: string;
-  trigger_price: number;
+  trigger_price: number | string;
   child_orders: AlgoOrderChildOrders;
 }
 
@@ -96,20 +96,20 @@ export interface BracketOrder extends BaseOrder, OrderExt {
   /**
    * Computed take profit
    */
-  tp_pnl?: number;
-  tp_offset?: number;
-  tp_offset_percentage?: number;
-  tp_ROI?: number;
-  tp_trigger_price?: number;
+  tp_pnl?: string;
+  tp_offset?: string;
+  tp_offset_percentage?: string;
+  tp_ROI?: string;
+  tp_trigger_price?: string;
 
   /**
    * Computed stop loss
    */
-  sl_pnl?: number;
-  sl_offset?: number;
-  sl_offset_percentage?: number;
-  sl_ROI?: number;
-  sl_trigger_price?: number;
+  sl_pnl?: string;
+  sl_offset?: string;
+  sl_offset_percentage?: string;
+  sl_ROI?: string;
+  sl_trigger_price?: string;
 }
 
 export type OrderlyOrder = RegularOrder & AlgoOrder & BracketOrder;
@@ -159,7 +159,7 @@ export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type RequireKeys<T extends object, K extends keyof T> = Required<
   Pick<T, K>
 > &
-  Omit<T, K>;
+  Partial<Omit<T, K>>;
 
 export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
   extends OrderEntity {

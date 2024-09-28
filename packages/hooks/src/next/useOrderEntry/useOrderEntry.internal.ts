@@ -19,6 +19,7 @@ import {
 import { useMutation } from "../../useMutation";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import { OrderlyOrder } from "@orderly.network/types";
+import { hasTPSL } from "./helper";
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -45,26 +46,16 @@ const useOrderEntryNextInternal = (
 
   const orderEntryActions = useOrderStore((state) => state.actions);
 
-  const isAlgoOrder =
-    orderEntity?.order_type === OrderType.STOP_LIMIT ||
-    orderEntity?.order_type === OrderType.STOP_MARKET ||
-    orderEntity?.order_type === OrderType.CLOSE_POSITION;
-
-  const [doCreateOrder, { isMutating }] = useMutation<OrderEntity, any>(
-    isAlgoOrder ? "/v1/algo/order" : "/v1/order"
-  );
-
   const calculate = useCallback(
     (
       values: Partial<FullOrderState>,
-      fieldName: keyof FullOrderState,
+      fieldName: keyof OrderlyOrder & ("tpsl_quantity" | "tpsl_price"),
       value: any,
       markPrice: number,
       config: Pick<API.SymbolExt, "base_dp" | "quote_dp">
     ): Partial<FullOrderState> => {
       // console.log("calculate", values, fieldName, value, options);
       const fieldHandler = getCalculateHandler(fieldName);
-      // const price = values.type===OrderType.LIMIT ||  values.price;
 
       let newValues = compose<any, any, any, Partial<FullOrderState>>(
         head,
@@ -73,9 +64,7 @@ const useOrderEntryNextInternal = (
         baseInputHandle
       )([values, fieldName, value, markPrice, config]);
 
-      // if fieldName is type,recalculate
-
-      //whether tpsl calculation is necessary
+      // if fieldName is quantity/price,recalculate the tp/sl
 
       return newValues as Partial<FullOrderState>;
     },
@@ -100,12 +89,12 @@ const useOrderEntryNextInternal = (
       markPrice: number;
     }
   ) => {
-    console.group("setValue");
-    console.log("key", key);
-    console.log("value", value);
-    console.log("additional", additional);
-    console.log("symbolInfo", symbolInfo);
-    console.groupEnd();
+    // console.group("setValue");
+    // console.log("key", key);
+    // console.log("value", value);
+    // console.log("additional", additional);
+    // console.log("symbolInfo", symbolInfo);
+    // console.groupEnd();
 
     if (!symbolInfo) {
       orderEntryActions.updateOrderByKey(key, value);
@@ -130,6 +119,31 @@ const useOrderEntryNextInternal = (
         markPrice,
         symbolInfo
       );
+    }
+
+    if (
+      (key === "order_quantity" || key === "order_price") &&
+      hasTPSL(newValues)
+    ) {
+      if (typeof newValues.tp_trigger_price !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "tp_trigger_price",
+          newValues.tp_trigger_price,
+          markPrice,
+          symbolInfo
+        );
+      }
+
+      if (typeof newValues.sl_trigger_price !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "sl_trigger_price",
+          newValues.sl_trigger_price,
+          markPrice,
+          symbolInfo
+        );
+      }
     }
 
     orderEntryActions.updateOrder(newValues);
@@ -219,13 +233,16 @@ const useOrderEntryNextInternal = (
     // order.submit(values);
   }, [orderEntity]);
 
-  // const hasErrors = useMemo(()=>{}, [errors]);
+  const resetOrder = (order?: Partial<OrderlyOrder>) => {
+    orderEntryActions.resetOrder(order);
+  };
 
   return {
     formattedOrder: orderEntity,
     setValue,
     setValues,
     submit: submitOrder,
+    reset: resetOrder,
     generateOrder,
     validate,
     onMarkPriceChange: onMarkPriceUpdated,

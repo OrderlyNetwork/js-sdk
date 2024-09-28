@@ -6,6 +6,7 @@ import {
   ChildOrder,
   AlgoOrderRootType,
   AlgoOrderChildOrders,
+  OrderSide,
 } from "@orderly.network/types";
 import {
   OrderCreator,
@@ -87,7 +88,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     if (!order_quantity) {
       errors.order_quantity = {
         type: "required",
-        message: "quantity is required",
+        message: "Quantity is required",
       };
     } else {
       // need to use MaxQty+base_max, base_min to compare
@@ -96,7 +97,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       if (qty.lt(base_min)) {
         errors.order_quantity = {
           type: "min",
-          message: `quantity must be greater than ${new Decimal(base_min).todp(
+          message: `Quantity must be greater than ${new Decimal(base_min).todp(
             base_dp
           )}`,
         };
@@ -104,7 +105,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       } else if (qty.gt(maxQty)) {
         errors.order_quantity = {
           type: "max",
-          message: `quantity must be less than ${new Decimal(maxQty).todp(
+          message: `Quantity must be less than ${new Decimal(maxQty).todp(
             base_dp
           )}`,
         };
@@ -135,7 +136,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     const price = `${order_type}`.includes("MARKET") ? markPrice : order_price;
     const notionalHintStr = checkNotional(price, order_quantity, min_notional);
 
-    if (notionalHintStr !== undefined && reduce_only !== true) {
+    if (notionalHintStr !== undefined && !reduce_only) {
       errors.total = {
         type: "min",
         message: notionalHintStr,
@@ -173,20 +174,14 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
   protected parseBracketOrder(data: OrderlyOrder): AlgoOrderChildOrders | null {
     const orders: ChildOrder[] = [];
 
-    console.log(data);
+    const side = data.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
 
     if (!!data.tp_trigger_price) {
-      // const tp_trigger_price = !!data.tp_trigger_price
-      //   ? new Decimal(data.tp_trigger_price)
-      //       .todp(data.symbol.quote_dp)
-      //       .toNumber()
-      //   : data.tp_trigger_price;
-
       const tp_trigger_price = data.tp_trigger_price;
 
       orders.push({
         algo_type: AlgoOrderType.TAKE_PROFIT,
-        side: data.side,
+        side: side,
         type: OrderType.MARKET,
         trigger_price: tp_trigger_price,
         symbol: data.symbol,
@@ -199,7 +194,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
       orders.push({
         algo_type: AlgoOrderType.STOP_LOSS,
-        side: data.side,
+        side: side,
         type: OrderType.MARKET,
         trigger_price: sl_trigger_price,
         symbol: data.symbol,

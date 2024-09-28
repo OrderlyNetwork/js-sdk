@@ -2,15 +2,28 @@ import {
   CaretDownIcon,
   Input,
   MenuItem,
-  SimpleDropdownMenu
+  SimpleDropdownMenu,
 } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
+import { inputFormatter } from "@orderly.network/ui";
 
-export type PNLInputProps = PNLInputState & { testId?: string; quote: string, type: "TP" | "SL" };
+export type PNLInputProps = PNLInputState & {
+  testId?: string;
+  quote: string;
+  type: "TP" | "SL";
+};
 
 export const PNLInput = (props: PNLInputProps) => {
-  const { mode, modes, onModeChange, onValueChange, quote, quote_db, value, type } =
-    props;
+  const {
+    mode,
+    modes,
+    onModeChange,
+    onValueChange,
+    quote,
+    quote_db,
+    value,
+    type,
+  } = props;
   return (
     <Input
       prefix={mode}
@@ -21,10 +34,13 @@ export const PNLInput = (props: PNLInputProps) => {
       data-testid={props.testId}
       autoComplete={"off"}
       onValueChange={onValueChange}
-      formatters={[props.formatter({ dp: quote_db, mode })]}
+      formatters={[
+        props.formatter({ dp: quote_db, mode, type }),
+        inputFormatter.currencyFormatter,
+      ]}
       classNames={{
         additional: "oui-text-base-contrast-54",
-        input: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+        input: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
       }}
       suffix={
         <PNLMenus

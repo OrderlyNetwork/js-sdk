@@ -84,6 +84,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const formatter = (options: {
     dp?: number;
     mode: PnLMode;
+    type: "TP" | "SL";
   }): InputFormatter => {
     const { dp = 2 } = options;
     return {
@@ -91,11 +92,16 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         value: string | number,
         options: InputFormatterOptions
       ) => {
+        value = `${value}`; // convert to string
         if (value === "") return value;
 
-        if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
-          return commify(value);
+        if (type === "SL" && mode === PnLMode.PnL) {
+          value = value.startsWith("-") ? value : "-" + value;
         }
+
+        // if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
+        //   return commify(value);
+        // }
 
         if (mode === PnLMode.PERCENTAGE) {
           return `${new Decimal(value).mul(100).todp(2, 4).toString()}${

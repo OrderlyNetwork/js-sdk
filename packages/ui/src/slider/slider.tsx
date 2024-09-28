@@ -22,18 +22,24 @@ const sliderVariants = tv({
       "focus-visible:oui-outline-none",
       // "focus-visible:oui-ring-1",
       // "focus-visible:oui-ring-ring",
+      // "focus:oui-w-4",
+      // "focus:oui-h-4",
+      "focus:oui-shadow-[0_0_0_8px]",
+      "focus:oui-shadow-base-contrast/20",
       "focus:oui-h-[14px]",
       "focus:oui-w-[14px]",
-      "focus:oui-border-[3px]",
-      "disabled:oui-pointer-events-none",
-      "disabled:oui-opacity-50",
+      // "focus:oui-border-[3px]",
+      "data-[disabled]:oui-pointer-events-none",
+      "data-[disabled]:oui-border-base-2",
+      "data-[disabled]:oui-hidden",
     ],
     track:
       "oui-relative oui-h-[8px] oui-w-full oui-grow oui-overflow-hidden oui-rounded-full",
 
     trackInner:
       "oui-absolute oui-left-0 oui-right-0 oui-h-[2px] oui-top-[3px]  oui-pointer-events-none oui-bg-base-2",
-    range: "oui-absolute oui-h-[2px] oui-top-[3px] oui-bg-primary",
+    range:
+      "oui-absolute oui-h-[2px] oui-top-[3px] oui-bg-primary data-[disabled]:oui-bg-base-2",
     mark: "oui-absolute oui-top-[1px] oui-w-[6px] oui-h-[6px] oui-rounded oui-border oui-border-base-2 oui-bg-base-6 oui-pointer-events-none oui-translate-x-[-50%]",
   },
   variants: {

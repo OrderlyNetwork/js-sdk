@@ -10,7 +10,10 @@ import { immer } from "zustand/middleware/immer";
 
 export type FullOrderState = OrderlyOrder;
 
-type OrderEntryStateEntity = RequireKeys<FullOrderState, "side" | "order_type">;
+type OrderEntryStateEntity = RequireKeys<
+  FullOrderState,
+  "side" | "order_type" | "symbol"
+>;
 
 type OrderEntryState = {
   entry: OrderEntryStateEntity;
@@ -25,19 +28,24 @@ type OrderEntryActions = {
     key: K,
     value: FullOrderState[K]
   ) => void;
-  restoreOrder: (order: Partial<FullOrderState>) => void;
+  restoreOrder: (order?: Partial<FullOrderState>) => void;
   updateOrderComputed: (data: {
     estLeverage: number | null;
     estLiquidationPrice: number | null;
   }) => void;
-  resetOrder: () => void;
+  resetOrder: (order?: Partial<FullOrderState>) => void;
   hasTP_SL: () => boolean;
 };
 
 const initialOrderState = {
-  side: OrderSide.BUY as OrderSide,
-  order_type: OrderType.LIMIT as OrderType,
-} as OrderEntryStateEntity;
+  order_price: "",
+  order_quantity: "",
+  trigger_price: "",
+  tp_trigger_price: "",
+  sl_trigger_price: "",
+  total: "",
+  symbol: "",
+};
 
 export const useOrderStore = create<
   OrderEntryState & {
@@ -47,8 +55,10 @@ export const useOrderStore = create<
   devtools(
     immer((set, get) => ({
       entry: {
+        side: OrderSide.BUY,
+        order_type: OrderType.LIMIT,
         ...initialOrderState,
-      },
+      } as OrderEntryStateEntity,
       estLeverage: null,
       estLiquidationPrice: null,
       errors: {},
@@ -101,23 +111,21 @@ export const useOrderStore = create<
         restoreOrder: (order) => {
           set(
             (state) => {
-              state.entry = {
-                ...order,
-                symbol: state.entry.symbol,
-              } as OrderEntryStateEntity;
+              state.entry = order as OrderEntryStateEntity;
             },
             false,
             "restoreOrder"
           );
         },
-        resetOrder: () => {
+        resetOrder: (order?: Partial<FullOrderState>) => {
           set(
             (state) => {
-              state.entry = {
-                // side: OrderSide.BUY as OrderSide,
-                // type: OrderType.LIMIT as OrderType,
-                ...initialOrderState,
-              } as OrderEntryStateEntity;
+              state.entry.order_price = "";
+              state.entry.order_quantity = "";
+              state.entry.trigger_price = "";
+              state.entry.tp_trigger_price = "";
+              state.entry.sl_trigger_price = "";
+              state.entry.total = "";
             },
             true,
             "resetOrder"

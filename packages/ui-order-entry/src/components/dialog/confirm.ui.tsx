@@ -5,52 +5,39 @@ import {
   Divider,
   Flex,
   Grid,
+  registerSimpleDialog,
   Text,
   textVariants,
 } from "@orderly.network/ui";
-import { API, OrderSide, OrderType } from "@orderly.network/types";
+import { OrderSide, OrderType } from "@orderly.network/types";
+import { OrderlyOrder } from "@orderly.network/types";
+import { useMemo } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 
 type Props = {
-  symbol: string;
-  quote: string;
-  base: string;
-  side: OrderSide;
-  type: OrderType;
-  qty: number;
-  price: number;
-  total: number;
-  tpPrice?: number;
-  slPrice?: number;
-  // symbolInfo:API.SymbolExt;
+  order: OrderlyOrder;
   quoteDP: number;
   baseDP: number;
 
-  onConfirm: () => Promise<void>;
+  onConfirm: () => void;
   onCancel: () => void;
 };
 
 export const OrderConfirmDialog = (props: Props) => {
-  const {
-    quote,
-    base,
-    baseDP,
-    quoteDP,
-    side,
-    type,
-    qty,
-    price,
-    tpPrice,
-    slPrice,
-    total,
-    symbol,
-  } = props;
+  const { baseDP, quoteDP, order, onConfirm, onCancel } = props;
+
+  const { side, order_type, symbol } = order;
+
+  const [_, setNeedConfirm] = useLocalStorage("orderly_order_confirm", true);
+
   return (
-    <div>
+    <>
       <Flex justify={"between"}>
         <Text.formatted rule={"symbol"} showIcon>
-          {symbol}
+          {order.symbol}
         </Text.formatted>
         <Flex justify={"end"} gapX={1}>
+          <OrderTypeTag type={order.order_type} />
           {side === OrderSide.BUY ? (
             <Badge color={"buy"} size={"sm"}>
               Buy
@@ -60,10 +47,6 @@ export const OrderConfirmDialog = (props: Props) => {
               Sell
             </Badge>
           )}
-
-          <Badge color={"neutral"} size={"sm"}>
-            {type}
-          </Badge>
         </Flex>
       </Flex>
       <Divider className="oui-my-4" />
@@ -77,25 +60,40 @@ export const OrderConfirmDialog = (props: Props) => {
         <Flex justify={"between"}>
           <Text>Qty.</Text>
           <Text.numeral
-            unit={"ETH"}
             rule={"price"}
             dp={baseDP}
-            coloring
-            unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+            className="oui-text-base-contrast"
           >
-            {qty}
+            {order.order_quantity}
           </Text.numeral>
         </Flex>
+        {!order.trigger_price ? null : (
+          <Flex justify={"between"}>
+            <Text>Trigger</Text>
+            <Text.numeral
+              unit={"USDC"}
+              rule={"price"}
+              className={"oui-text-base-contrast"}
+              unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+            >
+              {order.trigger_price}
+            </Text.numeral>
+          </Flex>
+        )}
         <Flex justify={"between"}>
-          <Text>Order price</Text>
-          <Text.numeral
-            unit={"USDC"}
-            rule={"price"}
-            className={"oui-text-base-contrast"}
-            unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-          >
-            {price}
-          </Text.numeral>
+          <Text>Price</Text>
+          {order.order_type === OrderType.MARKET ? (
+            <Text intensity={80}>Market</Text>
+          ) : (
+            <Text.numeral
+              unit={"USDC"}
+              rule={"price"}
+              className={"oui-text-base-contrast"}
+              unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+            >
+              {order.order_price}
+            </Text.numeral>
+          )}
         </Flex>
         <Flex justify={"between"}>
           <Text>Est. Total</Text>
@@ -106,11 +104,11 @@ export const OrderConfirmDialog = (props: Props) => {
             className={"oui-text-base-contrast"}
             unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
           >
-            {total}
+            {order.total}
           </Text.numeral>
         </Flex>
       </div>
-      {tpPrice || slPrice ? (
+      {order.tp_trigger_price || order.sl_trigger_price ? (
         <>
           <Divider className="oui-my-4" />
           <div
@@ -120,7 +118,7 @@ export const OrderConfirmDialog = (props: Props) => {
               className: "oui-space-y-1",
             })}
           >
-            {tpPrice && (
+            {order.tp_trigger_price && (
               <Flex justify={"between"}>
                 <Text>TP Price</Text>
                 <Text.numeral
@@ -130,20 +128,21 @@ export const OrderConfirmDialog = (props: Props) => {
                   dp={quoteDP}
                   unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
                 >
-                  {tpPrice}
+                  {order.tp_trigger_price}
                 </Text.numeral>
               </Flex>
             )}
-            {slPrice && (
+            {order.sl_trigger_price && (
               <Flex justify={"between"}>
                 <Text>SL Price</Text>
                 <Text.numeral
                   unit={"ETH"}
                   rule={"price"}
                   coloring
+                  className="oui-text-trade-loss"
                   unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
                 >
-                  {slPrice}
+                  {order.sl_trigger_price}
                 </Text.numeral>
               </Flex>
             )}
@@ -152,7 +151,13 @@ export const OrderConfirmDialog = (props: Props) => {
       ) : null}
 
       <Flex gapX={1} pt={8} pb={3}>
-        <Checkbox id="orderConfirm" color={"white"} />
+        <Checkbox
+          id="orderConfirm"
+          color={"white"}
+          onCheckedChange={(checked) => {
+            setNeedConfirm(!!!checked);
+          }}
+        />
         <label
           htmlFor="orderConfirm"
           className={textVariants({
@@ -164,11 +169,66 @@ export const OrderConfirmDialog = (props: Props) => {
         </label>
       </Flex>
       <Grid cols={2} gapX={3}>
-        <Button color={"secondary"} size={"md"}>
+        <Button color={"secondary"} size={"md"} onClick={() => onCancel()}>
           Cancel
         </Button>
-        <Button size={"md"}>Confirm</Button>
+        <Button size={"md"} onClick={() => onConfirm()}>
+          Confirm
+        </Button>
       </Grid>
-    </div>
+    </>
   );
 };
+
+OrderConfirmDialog.displayName = "OrderConfirmDialog";
+
+const OrderTypeTag = (props: { type: OrderType }) => {
+  const typeStr = useMemo(() => {
+    switch (props.type) {
+      case OrderType.LIMIT:
+        return "Limit";
+      case OrderType.MARKET:
+        return "Market";
+      case OrderType.STOP_LIMIT:
+        return "Stop Limit";
+      case OrderType.STOP_MARKET:
+        return "Stop Market";
+      default:
+        return "";
+    }
+  }, [props.type]);
+
+  return (
+    <Badge color={"neutral"} size={"sm"}>
+      {typeStr}
+    </Badge>
+  );
+};
+
+const Dialog = (
+  props: Omit<Props, "onCancel" | "onConfirm"> & {
+    close: () => void;
+    resolve: (value?: any) => void;
+    reject: (reason?: any) => void;
+  }
+) => {
+  const { close, resolve, reject, ...rest } = props;
+
+  return (
+    <OrderConfirmDialog
+      {...rest}
+      onCancel={close}
+      onConfirm={() => {
+        resolve();
+        close();
+      }}
+    />
+  );
+};
+
+export const orderConfirmDialogId = "orderConfirm";
+
+registerSimpleDialog(orderConfirmDialogId, Dialog, {
+  size: "sm",
+  title: "Order confirm",
+});

@@ -25,7 +25,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
     this.totalToQuantity(values, config!);
 
     const order: AlgoOrderEntity<AlgoOrderRootType.STOP> = {
-      ...this.baseOrder(values as unknown as OrderEntity),
+      ...this.baseOrder(values as unknown as OrderlyOrder),
 
       trigger_price: values.trigger_price!,
       algo_type: AlgoOrderRootType.STOP,
@@ -62,6 +62,8 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       const { order_price, trigger_price, side } = values;
       const { symbol } = config;
       const { price_range, price_scope, quote_max, quote_min } = symbol;
+
+      console.log("stopLimitOrderCreator values", values);
 
       if (!trigger_price) {
         errors.trigger_price = {
