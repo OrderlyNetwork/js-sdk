@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { DataListState, DataListTabType } from "./dataList.script";
 import { PositionsWidget } from "@orderly.network/ui-positions";
-import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
+import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
 import { PositionHeaderWidget } from "../../base/positionHeader";
 import { SettingWidget } from "./setting";
@@ -30,19 +30,19 @@ export const DataList: FC<DataListState> = (props) => {
         <PositionsView {...props} />
       </TabPanel>
       <TabPanel value={DataListTabType.pending} title={DataListTabType.pending}>
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
       <TabPanel value={DataListTabType.tp_sl} title={DataListTabType.tp_sl}>
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
       <TabPanel value={DataListTabType.filled} title={DataListTabType.filled}>
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.filled}
           ordersStatus={OrderStatus.FILLED}
         />
@@ -51,7 +51,7 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.orderHistory}
         title={DataListTabType.orderHistory}
       >
-        <OrderListWidget type={TabType.orderHistory} />
+        <DesktopOrderListWidget type={TabType.orderHistory} />
       </TabPanel>
     </Tabs>
   );

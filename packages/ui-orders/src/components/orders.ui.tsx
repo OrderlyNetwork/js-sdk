@@ -1,50 +1,49 @@
 import { DataTable, TabPanel, Tabs } from "@orderly.network/ui";
-import { useOrderColumn } from "./orderList/useColumn";
 import { OrderStatus, API } from "@orderly.network/types";
 import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";
-import { OrderList, OrderListWidget } from "./orderList";
+import { DesktopOrderListWidget } from "./orderList";
 
 export const Orders = (props: OrdersBuilderState) => {
   return (
     <Tabs defaultValue={props.current || TabType.all} variant="contained">
       <TabPanel value={TabType.all} title="All">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.all}
         />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
       <TabPanel value={TabType.tp_sl} title="TP/SL">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
       <TabPanel value={TabType.filled} title="Filled">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.filled}
           ordersStatus={OrderStatus.FILLED}
         />
       </TabPanel>
       <TabPanel value={TabType.cancelled} title="Cancelled">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.cancelled}
           ordersStatus={OrderStatus.CANCELLED}
         />
       </TabPanel>
       <TabPanel value={TabType.rejected} title="Rejected">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.rejected}
           ordersStatus={OrderStatus.REJECTED}
         />
       </TabPanel>
       <TabPanel value={TabType.orderHistory} title="Order history">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.orderHistory}
         />
       </TabPanel>

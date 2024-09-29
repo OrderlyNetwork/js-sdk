@@ -1,14 +1,25 @@
 import { OrderStatus } from "@orderly.network/types";
 import { useOrderListScript } from "./orderList.script";
-import { OrderList } from "./orderList.ui";
+import { DesktopOrderList, MobileOrderList } from "./orderList.ui";
 import { TabType } from "../orders.widget";
 
-export const OrderListWidget = (props: {
+export const DesktopOrderListWidget = (props: {
     type: TabType;
     ordersStatus?: OrderStatus;
 }) => {
     const state = useOrderListScript(props);
     return (
-        <OrderList {...state}/>
+        <DesktopOrderList {...state}/>
+    );
+};
+
+
+export const MobileOrderListWidget = (props: {
+    type: TabType;
+    ordersStatus?: OrderStatus;
+}) => {
+    const state = useOrderListScript(props);
+    return (
+        <MobileOrderList {...state}/>
     );
 };

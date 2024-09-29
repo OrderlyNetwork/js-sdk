@@ -20,8 +20,8 @@ import {
   grayCell,
   parseBadgesFor,
   upperCaseFirstLetter,
-} from "../../utils/util";
-import { TabType } from "../orders.widget";
+} from "../../../utils/util";
+import { TabType } from "../../orders.widget";
 import { Badge } from "@orderly.network/ui";
 import { OrderQuantity } from "./quantity";
 import { Price } from "./price";

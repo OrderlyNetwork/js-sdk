@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { BottomTabState, BottomTabType } from "./bottomTab.script";
-import { OrderListWidget, TabType } from "@orderly.network/ui-orders";
+import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
 import { MobilePositionsWidget, PositionsWidget } from "@orderly.network/ui-positions";
 import { PositionHeaderWidget } from "../../base/positionHeader";
@@ -22,19 +22,19 @@ export const BottomTab: FC<
         <PositionsView {...props} />
       </TabPanel>
       <TabPanel title={BottomTabType.pending} value={BottomTabType.pending}>
-        <OrderListWidget
+        <MobileOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
       <TabPanel title={BottomTabType.tp_sl} value={BottomTabType.tp_sl}>
-        <OrderListWidget
+        <MobileOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
         />
       </TabPanel>
       <TabPanel title={BottomTabType.history} value={BottomTabType.history}>
-        <OrderListWidget
+        <MobileOrderListWidget
           type={TabType.orderHistory}
           ordersStatus={OrderStatus.INCOMPLETE}
         />

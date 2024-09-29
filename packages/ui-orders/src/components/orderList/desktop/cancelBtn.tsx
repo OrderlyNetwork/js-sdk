@@ -1,14 +1,14 @@
 import { API } from "@orderly.network/types";
 import { Button, toast } from "@orderly.network/ui";
 import { FC, useContext, useState } from "react";
-import { OrderListContext } from "./orderListContext";
+import { useOrderListContext } from "../orderListContext";
 
 export const CancelButton: FC<{
   order: API.Order;
 }> = (props) => {
   const { order } = props;
 
-  const { onCancelOrder } = useContext(OrderListContext);
+  const { onCancelOrder } = useOrderListContext();
   const [isLoading, setIsLoading] = useState(false);
 
   return (
@@ -23,8 +23,8 @@ export const CancelButton: FC<{
         setIsLoading(true);
         onCancelOrder(order)
           .then(
-            (res) => res,
-            (error) => {
+            (res: any) => res,
+            (error: any) => {
               toast.error(error.message);
             }
           )

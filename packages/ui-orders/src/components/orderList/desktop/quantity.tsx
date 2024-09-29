@@ -9,12 +9,12 @@ import {
 import { API, OrderSide } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
-import { OrderListContext } from "./orderListContext";
-import { useTPSLOrderRowContext } from "./tpslOrderRowContext";
-import { useSymbolContext } from "./symbolProvider";
-import { grayCell } from "../../utils/util";
 import { ConfirmContent, EditType } from "./editOrder/confirmContent";
 import { InnerInput } from "./editOrder/innerInput";
+import { useOrderListContext } from "../orderListContext";
+import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
+import { useSymbolContext } from "../symbolProvider";
+import { grayCell } from "../../../utils/util";
 
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
@@ -36,7 +36,7 @@ export const OrderQuantity = (props: {
   const [error, setError] = useState<string>();
 
   const { editOrder, editAlgoOrder, checkMinNotional } =
-    useContext(OrderListContext);
+    useOrderListContext();
   const { onUpdateOrder: onUpdateTPSLOrder, position } =
     useTPSLOrderRowContext();
 
@@ -163,12 +163,12 @@ export const OrderQuantity = (props: {
 
     future
       .then(
-        (result) => {
+        (result: any) => {
           closePopover();
           setQuantity(quantity.toString());
           // setTimeout(() => inputRef.current?.blur(), 300);
         },
-        (err) => {
+        (err: any) => {
           toast.error(err.message);
           setQuantity(order.quantity.toString());
           cancelPopover();
