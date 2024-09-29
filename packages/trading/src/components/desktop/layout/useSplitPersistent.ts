@@ -2,8 +2,9 @@ import { useMemo } from "react";
 
 export const useSplitPersistent = (
   key: string,
-  defaulValue: string
-): [string, (size: string) => void] => {
+  defaulValue?: string,
+  dep?: any
+): [string | undefined, (size: string) => void] => {
   const size = useMemo(() => {
     const size = localStorage.getItem(key);
 
@@ -11,7 +12,7 @@ export const useSplitPersistent = (
       return `${size}%`;
     }
     return defaulValue;
-  }, [key, defaulValue]);
+  }, [key, defaulValue, dep]);
 
   const setSize = (size: string) => {
     localStorage.setItem(key, size);

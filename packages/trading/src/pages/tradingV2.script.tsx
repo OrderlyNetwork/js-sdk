@@ -21,7 +21,8 @@ export const useTradingV2Script = () => {
 
   const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
     "orderly_main_split_size",
-    "300px"
+    undefined,
+    layout
   );
   const [dataListSplitSize, setDataListSplitSize] = useSplitPersistent(
     "orderly_datalist_split_size",
@@ -47,3 +48,10 @@ export const useTradingV2Script = () => {
 
   return { ...props, ...map } as TradingPageState & typeof map;
 };
+
+export function getOffsetSizeNum(size: string | null) {
+  if (size) {
+    return `${100 - Math.min(Number(size), 100)}`;
+  }
+  return "";
+}
