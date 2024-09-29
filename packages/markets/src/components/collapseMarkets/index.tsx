@@ -1,11 +1,14 @@
 import { TokenIcon, Flex, Text, cn, Tooltip, Badge } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { useMarketsContext } from "../marketsProvider";
 
 export type CollapseMarketsProps = {
   dataSource: any[];
 };
 
 export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
+  const { onSymbolChange } = useMarketsContext();
+
   return (
     <div className="oui-overflow-y-auto custom-scrollbar oui-h-full">
       <Flex direction="column" px={2} gapY={1}>
@@ -77,6 +80,9 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
                 height={54}
                 r="lg"
                 className={cn("oui-cursor-pointer", "hover:oui-bg-base-6")}
+                onClick={() => {
+                  onSymbolChange?.(item);
+                }}
               >
                 <TokenIcon
                   symbol={item.symbol}

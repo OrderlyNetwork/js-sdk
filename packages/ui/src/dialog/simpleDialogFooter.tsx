@@ -4,8 +4,8 @@ import { Button, ButtonProps } from "../button";
 
 export type DialogAction<T = any> = {
   label: string;
-  onClick: () => Promise<T> | T;
-} & Pick<ButtonProps, "size" | "disabled" | "className" | "fullWidth" | "data-testid">;
+  onClick: (event: any) => Promise<T> | T;
+} & Pick<ButtonProps, "size" | "disabled" | "className" | "fullWidth" | "data-testid" | "loading">;
 
 export type SimpleDialogFooterProps = {
   actions?: {
@@ -30,8 +30,8 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           data-testid={actions.secondary?.["data-testid"]}
           key="secondary"
           color="gray"
-          onClick={() => {
-            actions.secondary?.onClick?.();
+          onClick={(event) => {
+            actions.secondary?.onClick?.(event);
           }}
           className={actions.secondary.className}
           disabled={actions.secondary.disabled}
@@ -48,10 +48,10 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
         <Button
         data-testid={actions.primary?.["data-testid"]}
           key="primary"
-          onClick={async () => {
+          onClick={async (event) => {
             try {
               setPrimaryLoading(true);
-              await actions.primary?.onClick();
+              await actions.primary?.onClick(event);
             } catch (e) {
             } finally {
               setPrimaryLoading(false);

@@ -27,7 +27,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = tv({
-  base: "oui-fixed oui-z-50 oui-gap-4 oui-bg-base-8 oui-p-6 oui-shadow-lg oui-transition oui-ease-in-out data-[state=closed]:oui-duration-260 data-[state=open]:oui-duration-300 data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
+  base: "oui-fixed oui-z-50 oui-gap-4 oui-bg-base-8 oui-p-4 oui-shadow-lg oui-transition oui-ease-in-out data-[state=closed]:oui-duration-260 data-[state=open]:oui-duration-300 data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
   variants: {
     side: {
       top: "oui-inset-x-0 oui-top-0 oui-border-b data-[state=closed]:oui-slide-out-to-top data-[state=open]:oui-slide-in-from-top",
@@ -63,10 +63,12 @@ const SheetContent = React.forwardRef<
       <SheetPrimitive.Content
         ref={ref}
         className={cnBase(sheetVariants({ side }), className)}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
         {...props}
       >
         {closeable && (
-          <SheetPrimitive.Close className="oui-absolute oui-right-[24px] oui-top-[24px] oui-rounded-sm oui-opacity-70 oui-ring-offset-base-700 oui-transition-opacity hover:oui-opacity-100 focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-ring focus:oui-ring-offset-2 disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary">
+          <SheetPrimitive.Close className="oui-absolute oui-right-4 oui-top-4 oui-rounded-sm oui-opacity-70 oui-ring-offset-base-700 oui-transition-opacity hover:oui-opacity-100 focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-ring focus:oui-ring-offset-2 disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary">
             {/* <Cross2Icon className="h-4 w-4" /> */}
             <CloseIcon size={16} color="white" opacity={98} />
             <span className="oui-sr-only">Close</span>

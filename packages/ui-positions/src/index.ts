@@ -1,10 +1,10 @@
 import { registerSimpleDialog } from "@orderly.network/ui";
-import { MarketCloseConfirm } from "./components/closeButton";
+import { MarketCloseConfirm } from "./components/desktop/closeButton";
 
-export { PositionsWidget } from "./components/positions.widget";
-export { TPSLWidget } from "./components/tpsl/tpsl.widget";
-export { TPSLEditorWidget } from "./components/tpsl/dialog/tpslDialog.widget";
-export { PositionTPSLConfirm } from "./components/tpsl/tpsl.ui";
+export { PositionsWidget, MobilePositionsWidget } from "./components/positions.widget";
+export { TPSLWidget } from "./components/desktop/tpsl/tpsl.widget";
+export { TPSLEditorWidget } from "./components/desktop/tpsl/dialog/tpslDialog.widget";
+export { PositionTPSLConfirm } from "./components/desktop/tpsl/tpsl.ui";
 export type { PositionsProps } from "./types/types";
 
 export const MarketCloseConfirmID = "MarketCloseConfirmID";

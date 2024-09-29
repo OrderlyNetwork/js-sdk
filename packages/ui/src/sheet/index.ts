@@ -15,3 +15,4 @@ export { registerSimpleSheet } from "./helper";
 
 export { ActionSheet } from "./actionSheet";
 export type { BaseActionSheetItem, ActionSheetItem } from "./actionSheet";
+export { SimpleSheet } from "./simpleSheet";

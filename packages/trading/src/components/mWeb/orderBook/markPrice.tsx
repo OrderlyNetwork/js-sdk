@@ -12,7 +12,7 @@ interface MarkPriceProps {
 export const MarkPrice: FC<MarkPriceProps> = (props) => {
   const { markPrice = 0, lastPrice } = props;
 
-  const { symbolInfo } = useOrderBookContext();
+  const { symbolInfo, tabletMediaQuery } = useOrderBookContext();
 
   const { quote_dp } = symbolInfo;
 
@@ -48,6 +48,7 @@ export const MarkPrice: FC<MarkPriceProps> = (props) => {
         quote_dp={quote_dp}
         className="oui-text-2xs"
         iconSize={12}
+        tabletMediaQuery={tabletMediaQuery}
       />
     </Flex>
   );
