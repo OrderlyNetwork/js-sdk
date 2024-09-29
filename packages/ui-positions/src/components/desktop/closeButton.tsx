@@ -20,8 +20,15 @@ import { useSymbolContext } from "../../providers/symbolProvider";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
-  const { onSubmit, price, quantity, closeOrderData, type, submitting, quoteDp } =
-    usePositionsRowContext();
+  const {
+    onSubmit,
+    price,
+    quantity,
+    closeOrderData,
+    type,
+    submitting,
+    quoteDp,
+  } = usePositionsRowContext();
 
   const { base, quote } = useSymbolContext();
 
@@ -108,12 +115,14 @@ export const ConfirmHeader: FC<{
   return (
     <div className="oui-pb-3 oui-border-b oui-border-line-4 oui-relative oui-w-full">
       <Text size={"base"}>{props.title}</Text>
-      {!hideCloseIcon && (<button
-        onClick={props.onClose}
-        className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-p-2"
-      >
-        <CloseIcon size={18} color="white" />
-      </button>)}
+      {!hideCloseIcon && (
+        <button
+          onClick={props.onClose}
+          className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-p-2"
+        >
+          <CloseIcon size={18} color="white" />
+        </button>
+      )}
     </div>
   );
 };
@@ -162,13 +171,13 @@ export const OrderDetail = (props: {
   const { quantity, price, quoteDp, side } = props;
 
   const total = useMemo(() => {
-
     if (price && quantity) {
-      return new Decimal(price).mul(quantity).toFixed(quoteDp, Decimal.ROUND_DOWN);
+      return new Decimal(price)
+        .mul(quantity)
+        .toFixed(quoteDp, Decimal.ROUND_DOWN);
     }
-    return '--';
+    return "--";
   }, [price, quantity]);
-  
 
   return (
     <Flex
@@ -213,9 +222,10 @@ export const MarketCloseConfirm: FC<{
   close?: () => void;
   onConfirm?: () => Promise<any>;
   submitting?: boolean;
+  hideCloseIcon?: boolean;
 }> = (props) => {
   console.log("props", props);
-  
+
   const onCancel = () => {
     const func = props?.onClose ?? props.close;
     console.log("xxxxxxxxxxx func is", func);
@@ -223,7 +233,11 @@ export const MarketCloseConfirm: FC<{
   };
   return (
     <Flex direction={"column"}>
-      <ConfirmHeader onClose={onCancel} title="Market Close" />
+      <ConfirmHeader
+        onClose={onCancel}
+        title="Market Close"
+        hideCloseIcon={props.hideCloseIcon}
+      />
       <Text intensity={54} size="sm" className="oui-my-5">
         {`You agree closing ${commifyOptional(props.quantity)} ${
           props.base
@@ -232,8 +246,8 @@ export const MarketCloseConfirm: FC<{
       <ConfirmFooter
         onCancel={onCancel}
         onConfirm={async () => {
-           await props.onConfirm?.();
-           onCancel();
+          await props.onConfirm?.();
+          onCancel();
         }}
         submitting={props.submitting}
       />
@@ -260,7 +274,11 @@ export const LimitConfirmDialog: FC<{
   };
   return (
     <>
-      <ConfirmHeader onClose={onCancel} title="Limit close" hideCloseIcon={props.hideCloseIcon} />
+      <ConfirmHeader
+        onClose={onCancel}
+        title="Limit close"
+        hideCloseIcon={props.hideCloseIcon}
+      />
       <Text intensity={54} size="sm" className="oui-mt-5">
         {`You agree closing ${commify(props.quantity)} ${
           props.base
@@ -306,4 +324,3 @@ export const LimitConfirmDialog: FC<{
     </>
   );
 };
-
