@@ -4,9 +4,7 @@ import { SideMarkets, SideMarketsProps } from "./sideMarkets.ui";
 import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 
 export type SideMarketsWidgetProps = MarketsProviderProps &
-  Partial<
-    Pick<SideMarketsProps, "collapsed" | "onCollapse" | "className" | "width">
-  >;
+  Partial<Pick<SideMarketsProps, "collapsed" | "onCollapse" | "className">>;
 
 export const SideMarketsWidget: React.FC<SideMarketsWidgetProps> = (props) => {
   const state = useSideMarketsScript({
@@ -16,7 +14,7 @@ export const SideMarketsWidget: React.FC<SideMarketsWidgetProps> = (props) => {
 
   return (
     <MarketsProvider onSymbolChange={props.onSymbolChange}>
-      <SideMarkets {...state} className={props.className} width={props.width} />
+      <SideMarkets {...state} className={props.className} />
     </MarketsProvider>
   );
 };

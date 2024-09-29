@@ -58,11 +58,11 @@ export const SideMarkets: Story = {
         intensity={900}
         pt={3}
         r="2xl"
+        className="oui-transition-all oui-duration-300"
       >
         <SideMarketsWidget
           collapsed={collapsed}
           onCollapse={setCollapsed}
-          width={width}
           onSymbolChange={(symbol) => {
             console.log('onSymbolChange', symbol);
           }}

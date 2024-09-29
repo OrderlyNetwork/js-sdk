@@ -14,12 +14,10 @@ import { useMarketsContext } from "../marketsProvider";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn & {
   className?: string;
-  width?: CSSProperties["width"];
 };
 
 export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
-  const { collapsed, onCollapse, activeTab, onTabChange, className, width } =
-    props;
+  const { collapsed, onCollapse, activeTab, onTabChange, className } = props;
 
   const { onSymbolChange } = useMarketsContext();
 
@@ -54,15 +52,11 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
 
   return (
     <Flex
-      style={{ width }}
-      className={cn(
-        "oui-font-semibold oui-transition-all",
-        // cn(collapsed ? "oui-w-[70px]" : "oui-w-[280px]")
-        className
-      )}
+      className={cn("oui-font-semibold", className)}
       direction="column"
       gapY={5}
       height="100%"
+      width="100%"
     >
       <SideMarketsHeader collapsed={collapsed} onCollapse={onCollapse} />
       <Box

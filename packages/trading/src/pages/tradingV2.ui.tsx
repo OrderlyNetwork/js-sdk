@@ -61,12 +61,18 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
     const marketsWidth = collapsed ? 70 : 280;
 
     const marketsView = (
-      <Box intensity={900} pt={3} r="2xl" height="100%" width={marketsWidth}>
+      <Box
+        intensity={900}
+        pt={3}
+        r="2xl"
+        height="100%"
+        width={marketsWidth}
+        className="oui-transition-all oui-duration-300"
+      >
         <SideMarketsWidget
           collapsed={collapsed}
           onCollapse={onCollapse}
           onSymbolChange={props.onSymbolChange}
-          width={marketsWidth}
         />
       </Box>
     );
@@ -222,10 +228,7 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
 export const Container: React.FC<PropsWithChildren<{}>> = (props) => {
   return (
     <Flex
-      className={cn(
-        "oui-h-[calc(100vh_-_49px_-_29px)] oui-bg-base-10",
-        "oui-transition-all"
-      )}
+      className="oui-h-[calc(100vh_-_49px_-_29px)] oui-bg-base-10"
       width="100%"
       p={3}
       gap={3}
