@@ -1,25 +1,15 @@
 import {
   Badge,
-  Button,
   cn,
-  Divider,
   Flex,
-  Sheet,
-  SimpleDialog,
-  SimpleSheet,
   Statistic,
   Text,
-  toast,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { PositionCellState } from "./positionCell.script";
-import { FC, useState } from "react";
-import { usePositionsRowContext } from "../../desktop/positionRowContext";
-import { LimitConfirmDialog } from "../../desktop/closeButton";
-import { useSymbolContext } from "../../../providers/symbolProvider";
-
+import { FC } from "react";
 export const Symbol: FC<PositionCellState> = (props) => {
   const { item } = props;
   const isBuy = item.position_qty > 0;
@@ -113,7 +103,9 @@ export const Margin: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.quote_dp} coloring>{item.mm}</Text.numeral>
+      <Text.numeral dp={props.quote_dp} coloring>
+        {item.mm}
+      </Text.numeral>
     </Statistic>
   );
 };
@@ -130,7 +122,9 @@ export const Notional: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.quote_dp} coloring>{item.notional}</Text.numeral>
+      <Text.numeral dp={props.quote_dp} coloring>
+        {item.notional}
+      </Text.numeral>
     </Statistic>
   );
 };
@@ -146,10 +140,7 @@ export const AvgOpen: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-      >
+      <Text.numeral dp={props.quote_dp} rm={Decimal.ROUND_DOWN}>
         {item.average_open_price}
       </Text.numeral>
     </Statistic>
@@ -167,10 +158,7 @@ export const MarkPrice: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-      >
+      <Text.numeral dp={props.quote_dp} rm={Decimal.ROUND_DOWN}>
         {item.mark_price}
       </Text.numeral>
     </Statistic>
@@ -189,11 +177,7 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-        color="warning"
-      >
+      <Text.numeral dp={props.quote_dp} rm={Decimal.ROUND_DOWN} color="warning">
         {item.mark_price}
       </Text.numeral>
     </Statistic>

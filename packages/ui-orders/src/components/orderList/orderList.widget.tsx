@@ -6,6 +6,8 @@ import { TabType } from "../orders.widget";
 export const DesktopOrderListWidget = (props: {
     type: TabType;
     ordersStatus?: OrderStatus;
+    /** if has value, will be fetch current symbol orders*/
+    symbol?: string;
 }) => {
     const state = useOrderListScript(props);
     return (
@@ -17,9 +19,15 @@ export const DesktopOrderListWidget = (props: {
 export const MobileOrderListWidget = (props: {
     type: TabType;
     ordersStatus?: OrderStatus;
+    /** if has value, will be fetch current symbol orders*/
+    symbol?: string;
+    classNames?: {
+        root?: string;
+        cell?: string;
+    }
 }) => {
     const state = useOrderListScript(props);
     return (
-        <MobileOrderList {...state}/>
+        <MobileOrderList {...state} classNames={props.classNames}/>
     );
 };
