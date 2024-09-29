@@ -56,7 +56,6 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
         >
           <Flex
             direction={"column"}
-            p={4}
             gap={3}
             width={"100%"}
             itemAlign={"start"}
@@ -111,7 +110,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 autoComplete="off"
                 formatters={[
                   inputFormatter.numberFormatter,
-                  inputFormatter.dpFormatter(props.quote_dp),
+                  inputFormatter.dpFormatter(props.base_dp),
                 ]}
                 value={props.quantity}
                 onValueChange={(e) => props.updateQuantity(e)}

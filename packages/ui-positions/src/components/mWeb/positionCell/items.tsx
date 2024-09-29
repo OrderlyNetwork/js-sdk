@@ -95,7 +95,9 @@ export const Qty: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral coloring>{item.position_qty}</Text.numeral>
+      <Text.numeral dp={props.base_dp} padding={false} coloring>
+        {item.position_qty}
+      </Text.numeral>
     </Statistic>
   );
 };
@@ -111,7 +113,7 @@ export const Margin: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral coloring>{item.mm}</Text.numeral>
+      <Text.numeral dp={props.quote_dp} coloring>{item.mm}</Text.numeral>
     </Statistic>
   );
 };
@@ -128,7 +130,7 @@ export const Notional: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral coloring>{item.notional}</Text.numeral>
+      <Text.numeral dp={props.quote_dp} coloring>{item.notional}</Text.numeral>
     </Statistic>
   );
 };
@@ -145,7 +147,7 @@ export const AvgOpen: FC<PositionCellState> = (props) => {
       }}
     >
       <Text.numeral
-        dp={(item as any)?.symbolInfo?.("quote_dp")}
+        dp={props.quote_dp}
         rm={Decimal.ROUND_DOWN}
       >
         {item.average_open_price}
@@ -166,7 +168,7 @@ export const MarkPrice: FC<PositionCellState> = (props) => {
       }}
     >
       <Text.numeral
-        dp={(item as any)?.symbolInfo?.("quote_dp")}
+        dp={props.quote_dp}
         rm={Decimal.ROUND_DOWN}
       >
         {item.mark_price}
@@ -188,7 +190,7 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
       }}
     >
       <Text.numeral
-        dp={(item as any)?.symbolInfo?.("quote_dp")}
+        dp={props.quote_dp}
         rm={Decimal.ROUND_DOWN}
         color="warning"
       >
@@ -203,14 +205,6 @@ export const TPSLBtn: FC<PositionCellState> = (props) => {
   return (
     <Button variant="outlined" color="secondary">
       TP/SL
-    </Button>
-  );
-};
-export const MarketCloseBtn: FC<PositionCellState> = (props) => {
-  const { item } = props;
-  return (
-    <Button variant="outlined" color="secondary">
-      Market Close
     </Button>
   );
 };

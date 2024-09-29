@@ -10,10 +10,10 @@ import {
   AvgOpen,
   MarkPrice,
   LiqPrice,
-  TPSLBtn,
-  MarketCloseBtn,
 } from "./items";
 import { LimitCloseBtnWidget } from "../limitCloseBtn";
+import { MarketCloseBtnWidget } from "../marketCloseBtn";
+import { TpSLBtnWidget } from "../tpSLBtn";
 
 export const PositionCell: FC<
   PositionCellState & {
@@ -59,9 +59,9 @@ const Body: FC<PositionCellState> = (props) => {
 const Buttons: FC<PositionCellState> = (props) => {
   return (
     <Grid width={"100%"} gap={2} cols={3} rows={1}>
-      <TPSLBtn {...props} />
+      <TpSLBtnWidget state={props} />
       <LimitCloseBtnWidget state={props} />
-      <MarketCloseBtn {...props} />
+      <MarketCloseBtnWidget state={props} />
     </Grid>
   );
 };
