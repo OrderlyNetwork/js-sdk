@@ -199,12 +199,3 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
     </Statistic>
   );
 };
-
-export const TPSLBtn: FC<PositionCellState> = (props) => {
-  const { item } = props;
-  return (
-    <Button variant="outlined" color="secondary">
-      TP/SL
-    </Button>
-  );
-};
