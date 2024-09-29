@@ -1,5 +1,11 @@
 # @orderly.network/default-solana-adapter
 
+## 1.0.1-developV2.12
+
+### Patch Changes
+
+- update
+
 ## 1.0.1-developV2.11
 
 ### Patch Changes
