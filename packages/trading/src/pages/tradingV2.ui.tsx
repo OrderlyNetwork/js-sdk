@@ -13,7 +13,7 @@ import { BottomTabWidget } from "../components/mWeb/bottomTab";
 import { OrderBookAndTradesWidget } from "../components/desktop/orderBookAndTrades";
 import {
   SideMarketsWidget,
-  TokenInfoBarWidget,
+  TokenInfoBarFullWidget,
 } from "@orderly.network/markets";
 import { LayoutSwitch } from "../components/desktop/layout/layoutSwitch";
 import SplitLayout from "../components/desktop/layout/splitLayout";
@@ -100,7 +100,7 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
 
   const tokenInfoBarView = (
     <Box height={54} intensity={900} r="2xl" px={3} width="100%">
-      <TokenInfoBarWidget
+      <TokenInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
         trailing={<LayoutSwitch layout={layout} onLayout={onLayout} />}

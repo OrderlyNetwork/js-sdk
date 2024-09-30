@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
-  TokenInfoBarWidget,
+  TokenInfoBarFullWidget,
 } from "@orderly.network/markets";
 import { Box, Button, Flex } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
@@ -12,7 +12,7 @@ const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 const meta = {
   title: "Package/Markets/TokenInfoBar",
-  component: TokenInfoBarWidget,
+  component: TokenInfoBarFullWidget,
   decorators: [
     (Story: any) => (
       <ConnectorProvider>
@@ -27,7 +27,7 @@ const meta = {
       </ConnectorProvider>
     ),
   ],
-} satisfies Meta<typeof TokenInfoBarWidget>;
+} satisfies Meta<typeof TokenInfoBarFullWidget>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -37,7 +37,7 @@ export const TokenInfoBar: Story = {
   render: (args) => {
     return <Flex direction='column' itemAlign='start' gapY={5}>
       <Box width={600} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget
+        <TokenInfoBarFullWidget
           height={54}
           symbol="PERP_BTC_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
@@ -47,7 +47,7 @@ export const TokenInfoBar: Story = {
         />
       </Box>
       <Box width={900} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget
+        <TokenInfoBarFullWidget
           height={54}
           symbol="PERP_BTC_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
@@ -57,7 +57,7 @@ export const TokenInfoBar: Story = {
         />
       </Box>
       <Box width='100%' intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget
+        <TokenInfoBarFullWidget
           height={54}
           symbol="PERP_BTC_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
