@@ -3,7 +3,7 @@ import { cn } from "@orderly.network/ui";
 import { type UseMarketsListReturn } from "./marketsList.script";
 import { GetColumns, TInitialSort } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
-import Table from "../Table";
+import DataTable from "../dataTable";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import { CollapseMarkets } from "../collapseMarkets";
 
@@ -37,7 +37,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
   }
 
   return (
-    <Table
+    <DataTable
       classNames={{
         body: "oui-pb-[53px]",
       }}

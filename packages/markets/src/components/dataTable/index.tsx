@@ -43,7 +43,7 @@ function alignClassName(align?: Column["align"]) {
   );
 }
 
-const Table: FC<TableProps> = (props) => {
+const DataTable: FC<TableProps> = (props) => {
   const { columns, dataSource, className, onRow, classNames } = props;
 
   const { onSort, renderSortIndicator } = useSort({
@@ -180,4 +180,4 @@ const TableItem: React.FC<TableItemProps> = (props) => {
   );
 };
 
-export default Table;
+export default DataTable;

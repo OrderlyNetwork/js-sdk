@@ -2,7 +2,7 @@ import { FC, useMemo } from "react";
 import { cn } from "@orderly.network/ui";
 import { UseRecentListReturn } from "./recentList.script";
 import { useMarketsContext } from "../marketsProvider";
-import Table from "../Table";
+import DataTable from "../dataTable";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import { RecentListWidgetProps } from "./widget";
 import { CollapseMarkets } from "../collapseMarkets";
@@ -26,7 +26,7 @@ export const RecentList: FC<RecentListProps> = (props) => {
   }
 
   return (
-    <Table
+    <DataTable
       classNames={{
         body: "oui-pb-[53px]",
       }}

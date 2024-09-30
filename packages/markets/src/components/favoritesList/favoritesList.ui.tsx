@@ -5,7 +5,7 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import type { FavoritesListWidgetProps } from "./widget";
-import Table from "../Table";
+import DataTable from "../dataTable";
 import { CollapseMarkets } from "../collapseMarkets";
 
 export type FavoritesListProps = UseFavoritesListReturn &
@@ -26,14 +26,14 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
   if (collapsed) {
     return <CollapseMarkets dataSource={dataSource} />;
   }
-  
+
   return (
     <>
       <Box px={3}>
         <FavoritesTabWidget favorite={favorite} size="sm" />
       </Box>
 
-      <Table
+      <DataTable
         classNames={{
           body: "oui-pb-[53px]",
         }}
