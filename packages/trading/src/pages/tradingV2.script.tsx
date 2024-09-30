@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { useTradingPageContext } from "../provider/context";
 import { TradingPageState } from "../types/types";
 import { useSplitPersistent } from "../components/desktop/layout/useSplitPersistent";
@@ -30,8 +30,11 @@ export const useTradingV2Script = () => {
   );
   const [orderBookSplitSize, setOrderbookSplitSize] = useSplitPersistent(
     "orderly_orderbook_split_size",
-    "280px"
+    "280px",
+    layout
   );
+
+  const isMedium = useMediaQuery("(max-width: 1680px)");
 
   const map = {
     collapsed,
@@ -44,6 +47,7 @@ export const useTradingV2Script = () => {
     setDataListSplitSize,
     mainSplitSize,
     setMainSplitSize,
+    isMedium,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
