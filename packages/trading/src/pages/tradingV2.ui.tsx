@@ -1,5 +1,5 @@
-import { FC, PropsWithChildren, useMemo } from "react";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import { FC, PropsWithChildren } from "react";
+import { Box, Flex } from "@orderly.network/ui";
 import { getOffsetSizeNum, TradingV2State } from "./tradingV2.script";
 import { DataListWidget } from "../components/desktop/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
@@ -55,54 +55,48 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
     setDataListSplitSize,
     mainSplitSize,
     setMainSplitSize,
+    isMedium,
   } = props;
 
-  const { left, right } = useMemo(() => {
-    const marketsWidth = collapsed ? 70 : 280;
+  const marketsWidth = collapsed ? 70 : 280;
 
-    const marketsView = (
-      <Box
-        intensity={900}
-        pt={3}
-        r="2xl"
-        height="100%"
-        width={marketsWidth}
-        className="oui-transition-all oui-duration-300"
-      >
-        <SideMarketsWidget
-          collapsed={collapsed}
-          onCollapse={onCollapse}
-          onSymbolChange={props.onSymbolChange}
-        />
+  const marketsView = (
+    <Box
+      intensity={900}
+      pt={3}
+      r="2xl"
+      height="100%"
+      width={marketsWidth}
+      style={{ minWidth: marketsWidth }}
+      className="oui-transition-all oui-duration-300"
+    >
+      <SideMarketsWidget
+        collapsed={collapsed}
+        onCollapse={onCollapse}
+        onSymbolChange={props.onSymbolChange}
+      />
+    </Box>
+  );
+
+  const orderEntryView = (
+    <Flex
+      gapY={3}
+      direction="column"
+      style={{
+        minWidth: "280px",
+        maxWidth: "500px",
+        width: mainSplitSize,
+      }}
+      height="100%"
+    >
+      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
+        <AssetViewWidget />
       </Box>
-    );
-
-    const orderEntryView = (
-      <Flex
-        gapY={3}
-        direction="column"
-        style={{
-          minWidth: "280px",
-          maxWidth: "500px",
-          width: mainSplitSize,
-        }}
-        height="100%"
-      >
-        <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
-          <AssetViewWidget />
-        </Box>
-        <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
-          <RiskRateWidget />
-        </Box>
-      </Flex>
-    );
-
-    if (layout === "left") {
-      return { left: orderEntryView, right: marketsView };
-    } else {
-      return { left: marketsView, right: orderEntryView };
-    }
-  }, [collapsed, layout, mainSplitSize]);
+      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
+        <RiskRateWidget />
+      </Box>
+    </Flex>
+  );
 
   const tokenInfoBarView = (
     <Box height={54} intensity={900} r="2xl" px={3} width="100%">
@@ -162,13 +156,63 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
     </Box>
   );
 
+  const renderTradingView = () => {
+    if (isMedium && layout === "right") {
+      return (
+        <Flex
+          gap={3}
+          className="oui-flex-1"
+          style={{
+            minWidth: 468 + marketsWidth + 12,
+          }}
+        >
+          {marketsView}
+          {tradingView}
+        </Flex>
+      );
+    }
+
+    return tradingView;
+  };
+
+  const tradingViewAndOrderbookView = (
+    <SplitLayout
+      style={{
+        // the style width is not set, and a child node style needs to be set to flex: 1 to adapt
+        flex: 1,
+        minHeight: "450px",
+      }}
+      onSizeChange={setOrderbookSplitSize}
+    >
+      {renderTradingView()}
+      {orderbookView}
+    </SplitLayout>
+  );
+
+  const renderTradingViewAndOrderbookView = () => {
+    if (isMedium && layout === "left") {
+      return (
+        <Flex
+          gapX={3}
+          style={{
+            minHeight: "450px",
+          }}
+          height="100%"
+        >
+          {tradingViewAndOrderbookView}
+          {marketsView}
+        </Flex>
+      );
+    }
+    return tradingViewAndOrderbookView;
+  };
+
   const mainView = (
     <Flex
       direction="column"
       className="oui-flex-1 oui-overflow-hidden"
       gap={3}
       style={{
-        // minWidth: "768px"
         minWidth: "calc(100% - 500px)",
       }}
     >
@@ -178,49 +222,29 @@ const DesktopLayout: FC<TradingV2State> = (props) => {
         mode="vertical"
         onSizeChange={setDataListSplitSize}
       >
-        <SplitLayout
-          style={{
-            // the style width is not set, and a child node style needs to be set to flex: 1 to adapt
-            flex: 1,
-            minHeight: "450px",
-          }}
-          onSizeChange={setOrderbookSplitSize}
-        >
-          {tradingView}
-          {orderbookView}
-        </SplitLayout>
-
+        {renderTradingViewAndOrderbookView()}
         {dataListView}
       </SplitLayout>
     </Flex>
   );
 
-  if (layout === "left") {
-    return (
-      <Container>
-        <SplitLayout
-          className="oui-flex oui-flex-1 oui-overflow-hidden"
-          onSizeChange={(width) => setMainSplitSize(getOffsetSizeNum(width))}
-        >
-          {left}
-          {mainView}
-        </SplitLayout>
-        {right}
-      </Container>
-    );
-  }
+  const onSizeChange = (width: string) =>
+    layout === "left"
+      ? setMainSplitSize(getOffsetSizeNum(width))
+      : setMainSplitSize(width);
 
   return (
     <Container>
-      {left}
-
+      {!isMedium && layout === "right" && marketsView}
       <SplitLayout
         className="oui-flex oui-flex-1 oui-overflow-hidden"
-        onSizeChange={setMainSplitSize}
+        onSizeChange={onSizeChange}
       >
+        {layout === "left" && orderEntryView}
         {mainView}
-        {right}
+        {layout === "right" && orderEntryView}
       </SplitLayout>
+      {!isMedium && layout === "left" && marketsView}
     </Container>
   );
 };
