@@ -145,13 +145,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
           >
             <Flex gapX={8} height="100%">
               <div ref={leadingElementRef}>
-                <DataItem
-                  label="24h Cha
-                
-                
-                nge"
-                  value={change}
-                />
+                <DataItem label="24h Change" value={change} />
               </div>
               <DataItem
                 label="Mark"
