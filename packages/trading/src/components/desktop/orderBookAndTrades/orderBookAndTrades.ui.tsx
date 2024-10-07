@@ -4,7 +4,9 @@ import { OrderBookAndTradesState } from "./orderBookAndTrades.script";
 import { OrderBookWidget } from "../../base/orderBook";
 import { LastTradesWidget } from "../../base/lastTrades";
 
-export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
+export const OrderBookAndTrades: FC<OrderBookAndTradesState & {
+  tabletMediaQuery: string;
+}> = (props) => {
   return (
     <div ref={props.containerRef} className="oui-h-full">
       {(props.containerSize?.width || 0) >= 572 ? (
@@ -16,7 +18,9 @@ export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
   );
 };
 
-const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
+const TwoColLayout: FC<OrderBookAndTradesState & {
+  tabletMediaQuery: string;
+}> = (props) => {
   return (
     <Grid
       cols={2}
@@ -39,6 +43,7 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
         <Title title="Order book" className="oui-pl-3" />
         <OrderBookWidget
           symbol={props.symbol}
+          tabletMediaQuery={props.tabletMediaQuery}
           height={
             props.containerSize
               ? props.containerSize.height - 29 - 24
@@ -64,7 +69,9 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
     </Grid>
   );
 };
-const TabLayout: FC<OrderBookAndTradesState> = (props) => {
+const TabLayout: FC<OrderBookAndTradesState & {
+  tabletMediaQuery: string;
+}> = (props) => {
   return (
     <Box
       // pl={3}
@@ -87,6 +94,7 @@ const TabLayout: FC<OrderBookAndTradesState> = (props) => {
         <TabPanel value="orderBook" title={"Order book"} >
           <OrderBookWidget
             symbol={props.symbol}
+            tabletMediaQuery={props.tabletMediaQuery}
             height={
               props.containerSize
                 ? props.containerSize.height - 29 - 18

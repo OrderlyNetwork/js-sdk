@@ -81,9 +81,9 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
           <div className={cls}>
             <MarketsListWidget
               type="all"
-              sortKey="24h_change"
+              sortKey="24h_amount"
               sortOrder="desc"
-            />{" "}
+            />
           </div>
         </TabPanel>
       </Tabs>

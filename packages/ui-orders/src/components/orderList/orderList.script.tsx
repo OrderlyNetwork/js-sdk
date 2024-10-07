@@ -12,6 +12,7 @@ import { differenceInDays, setHours } from "date-fns";
 export const useOrderListScript = (props: {
   type: TabType;
   ordersStatus?: OrderStatus;
+  symbol?: string;
 }) => {
   const { ordersStatus, type } = props;
 
@@ -49,6 +50,7 @@ export const useOrderListScript = (props: {
       meta,
     },
   ] = useOrderStream({
+    symbol: props.symbol,
     status: orderStatus,
     side: ordersSide,
     page: page,

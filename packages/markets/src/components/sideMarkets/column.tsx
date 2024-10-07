@@ -9,7 +9,7 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { Column } from "../Table";
+import { Column } from "../dataTable";
 
 export const getSideMarketsColumns = (
   favorite: FavoriteInstance,

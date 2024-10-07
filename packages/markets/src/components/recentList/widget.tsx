@@ -4,6 +4,7 @@ import { GetColumns } from "../../type";
 
 export type RecentListWidgetProps = {
   getColumns?: GetColumns;
+  collapsed?: boolean;
 };
 
 export const RecentListWidget: React.FC<RecentListWidgetProps> = (props) => {

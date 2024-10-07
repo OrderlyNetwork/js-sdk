@@ -1,15 +1,23 @@
 import { FC } from "react";
-import { Divider, Flex, Text, Pagination, Filter } from "@orderly.network/ui";
+import {
+  Divider,
+  Flex,
+  Text,
+  Pagination,
+  Filter,
+  ListView,
+} from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { useOrderColumn } from "./useColumn";
 import { grayCell } from "../../utils/util";
 import { SymbolProvider } from "./symbolProvider";
 import { OrderListProvider } from "./orderListContext";
 import { TabType } from "../orders.widget";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
+import { useOrderColumn } from "./desktop/useColumn";
+import { OrderCell, OrderCellWidget } from "./mWeb";
 
-export const OrderList: FC<OrdersBuilderState> = (props) => {
+export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
   const columns = useOrderColumn(props.type);
   return (
     <OrderListProvider
@@ -69,6 +77,43 @@ export const OrderList: FC<OrdersBuilderState> = (props) => {
           />
         </AuthGuardDataTable>
       </Flex>
+    </OrderListProvider>
+  );
+};
+
+export const MobileOrderList: FC<
+  OrdersBuilderState & {
+    classNames?: {
+      root?: string;
+      cell?: string;
+    };
+  }
+> = (props) => {
+  return (
+    <OrderListProvider
+      cancelOrder={props.cancelOrder}
+      editOrder={props.updateOrder}
+      cancelAlgoOrder={props.cancelAlgoOrder}
+      editAlgoOrder={props.updateAlgoOrder}
+      // cancelTPSLOrder={props.cancelTPSLOrder}
+    >
+      <ListView
+        className={props.classNames?.root}
+        dataSource={props.dataSource}
+        renderItem={(item, index) => {
+          let children = <OrderCellWidget item={item} index={index} className={props.classNames?.cell}/>;
+          if (props.type === TabType.tp_sl) {
+            children = (
+              <TPSLOrderRowProvider order={item}>
+                {children}
+              </TPSLOrderRowProvider>
+            );
+          }
+          return (
+            <SymbolProvider symbol={item.symbol}>{children}</SymbolProvider>
+          );
+        }}
+      />
     </OrderListProvider>
   );
 };

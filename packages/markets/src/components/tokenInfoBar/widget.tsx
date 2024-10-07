@@ -1,3 +1,4 @@
+import { MarketsProviderProps } from "../marketsProvider";
 import {
   useTokenInfoBarScript,
   UseTokenInfoBarScriptOptions,
@@ -5,11 +6,12 @@ import {
 import { TokenInfoBar, TokenInfoBarProps } from "./tokenInfoBar.ui";
 
 export type TokenInfoBarWidgetPros = UseTokenInfoBarScriptOptions &
-  Pick<TokenInfoBarProps, "layout" | "onLayout">;
+  Pick<TokenInfoBarProps, "className" | "trailing" | "height"> &
+  Pick<MarketsProviderProps, "onSymbolChange">;
 
 export const TokenInfoBarWidget: React.FC<TokenInfoBarWidgetPros> = (props) => {
-  const state = useTokenInfoBarScript({ symbol: props.symbol });
-  return (
-    <TokenInfoBar {...state} layout={props.layout} onLayout={props.onLayout} />
-  );
+  const { symbol, ...rest } = props;
+
+  const state = useTokenInfoBarScript({ symbol });
+  return <TokenInfoBar {...state} {...rest} />;
 };

@@ -102,6 +102,8 @@ export interface TradingPageState extends TradingPageV2Props {
     quote: string;
     symbol: string;
   };
+  /** default is  `(max-width: 768px)`*/
+  tabletMediaQuery: string;
 }
 
 interface TradingViewConfigInterface {
@@ -158,4 +160,6 @@ export type TradingPageV2Props = BaseTradingPageProps & {
     current?: DataListTabType;
     config: Partial<Omit<PositionsProps, "pnlNotionalDecimalPrecision">>;
   };
+  /** default is  `(max-width: 768px)`*/
+  tabletMediaQuery?: string;
 };

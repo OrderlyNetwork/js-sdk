@@ -1,4 +1,10 @@
-import { createContext, FC, PropsWithChildren, useContext, useState } from "react";
+import {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 import { QtyMode, TotalMode } from "./types";
 import { BasicSymbolInfo } from "../../../types/types";
 
@@ -13,6 +19,7 @@ export interface OrderBookContextValue {
   pendingOrders: number[];
   onTotalModeChange?: (mode: TotalMode) => void;
   symbolInfo: BasicSymbolInfo;
+  tabletMediaQuery: string;
 }
 
 export const OrderBookContext = createContext({
@@ -28,6 +35,7 @@ interface OrderBookProviderProps {
   pendingOrders: number[];
   onItemClick?: (item: number[]) => void;
   symbolInfo: BasicSymbolInfo;
+  tabletMediaQuery: string;
 }
 
 export const OrderBookProvider: FC<
@@ -48,6 +56,7 @@ export const OrderBookProvider: FC<
         showTotal: props.showTotal || false,
         pendingOrders: props.pendingOrders,
         symbolInfo: props.symbolInfo,
+        tabletMediaQuery: props.tabletMediaQuery,
       }}
     >
       {props.children}

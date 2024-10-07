@@ -47,7 +47,15 @@ type Story = StoryObj<typeof meta>;
 
 export const DropDownMarkets: Story = {
   render: (args) => {
-    return <DropDownMarketsWidget contentClassName="oui-w-[429px] oui-h-[496px]"><Button>Show DropDown markets</Button></DropDownMarketsWidget>
+    return (
+      <DropDownMarketsWidget
+        contentClassName="oui-w-[429px] oui-h-[496px]"
+        onSymbolChange={(symbol) => {
+          console.log('onSymbolChange', symbol);
+        }}>
+        <Button>Show DropDown markets</Button>
+      </DropDownMarketsWidget>
+    )
   },
   decorators:[]
 };
@@ -70,7 +78,7 @@ export const Recent: Story = {
 
 export const All: Story = {
   render: (args) => {
-    return <MarketsListWidget type="all" sortKey="24h_change" sortOrder="desc" getColumns={getDropDownMarketsColumns}/>
+    return <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" getColumns={getDropDownMarketsColumns}/>
   },
   decorators
 };

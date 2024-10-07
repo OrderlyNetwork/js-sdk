@@ -236,6 +236,32 @@ const Marks = (props: SliderMarksProps) => {
     return Math.floor(_value / props.step);
   }, [_value, props.step]);
 
+  const colorCls = useMemo(() => {
+    switch (color) {
+      case "primary":
+        return "oui-border-primary oui-bg-primary";
+      case "buy":
+        return "oui-border-trade-profit oui-bg-trade-profit";
+      case "sell":
+        return "oui-border-trade-loss oui-bg-trade-loss";
+      case "primaryLight":
+        return "oui-border-primary-light oui-bg-primary-light";
+    }
+  }, [color]);
+
+  const textCls = useMemo(() => {
+    switch (color) {
+      case "primary":
+        return "oui-text-primary";
+      case "buy":
+        return "oui-texttrade-profit";
+      case "sell":
+        return "oui-text-trade-loss";
+      case "primaryLight":
+        return "oui-text-primary-light";
+    }
+  }, [color]);
+
   return (
     <>
       {marks?.map((mark, index) => {
@@ -247,31 +273,7 @@ const Marks = (props: SliderMarksProps) => {
         const __value = isInnerMask ? mark.value : index;
         // console.log("_ value", isInnerMask, _value, selIndex, mark, __value, percent);
 
-        const colorCls = useMemo(() => {
-          switch (color) {
-            case "primary":
-              return "oui-border-primary oui-bg-primary";
-            case "buy":
-              return "oui-border-trade-profit oui-bg-trade-profit";
-            case "sell":
-              return "oui-border-trade-loss oui-bg-trade-loss";
-            case "primaryLight":
-              return "oui-border-primary-light oui-bg-primary-light";
-          }
-        }, [color]);
-
-        const textCls = useMemo(() => {
-          switch (color) {
-            case "primary":
-              return "oui-text-primary";
-            case "buy":
-              return "oui-texttrade-profit";
-            case "sell":
-              return "oui-text-trade-loss";
-            case "primaryLight":
-              return "oui-text-primary-light";
-          }
-        }, [color]);
+        
         const active =
           (isInnerMask ? _value >= __value : (selIndex ?? 0) >= __value) &&
           _value >= 0 &&

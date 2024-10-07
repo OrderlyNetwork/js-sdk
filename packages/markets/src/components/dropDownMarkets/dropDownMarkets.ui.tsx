@@ -118,7 +118,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
           <div className={cls}>
             <MarketsListWidget
               type="all"
-              sortKey="24h_change"
+              sortKey="24h_amount"
               sortOrder="desc"
               getColumns={getDropDownMarketsColumns}
             />

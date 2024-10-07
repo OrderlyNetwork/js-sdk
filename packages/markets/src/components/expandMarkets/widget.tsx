@@ -15,6 +15,7 @@ export const ExpandMarketsWidget: React.FC<ExpandMarketsWidgetProps> = (
     activeTab: props.activeTab,
     onTabChange: props.onTabChange,
   });
+
   return (
     <MarketsProvider onSymbolChange={props.onSymbolChange}>
       <ExpandMarkets {...state} />

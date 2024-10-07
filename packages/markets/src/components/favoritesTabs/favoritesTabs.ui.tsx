@@ -236,7 +236,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
         ref={container}
         id="oui-markets-favorites-tabs-container"
         className={cn(
-          "oui-relative oui-cursor-pointer hide-scrollbar",
+          "oui-relative oui-cursor-pointer oui-hide-scrollbar",
           "oui-overflow-hidden oui-overflow-x-auto"
         )}
         my={3}

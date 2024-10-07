@@ -4,6 +4,7 @@ import { GetColumns } from "../../type";
 
 export type FavoritesListWidgetProps = {
   getColumns?: GetColumns;
+  collapsed?: boolean;
 };
 
 export const FavoritesListWidget: React.FC<FavoritesListWidgetProps> = (

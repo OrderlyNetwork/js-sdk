@@ -47,7 +47,7 @@ example data:
     favoriteTabs: [
       { "name": "Popular", "id": 1 },
     ],
-    "lastSelectFavoriteTab": { "name": "Popular", "id": 1 },
+    "selectedFavoriteTab": { "name": "Popular", "id": 1 },
     "tabSort": { "all": { "sortKey": "24h_amount", "sortOrder": "desc" }}        
   }
 }
@@ -327,7 +327,7 @@ function getOpenInterest(open_interest?: number, index_price?: number) {
   return new Decimal(open_interest || 0).mul(index_price || 0).toNumber();
 }
 
-function getDefaultStoreData() {
+function getDefaultStoreData(): MarketsData {
   return {
     recent: [],
     favorites: [
@@ -335,9 +335,9 @@ function getDefaultStoreData() {
       { name: "PERP_BTC_USDC", tabs: [{ ...DefaultFavoriteTab }] },
     ],
     favoriteTabs: [{ ...DefaultFavoriteTab }],
-    lastSelectedFavoriteTab: { ...DefaultFavoriteTab },
+    selectedFavoriteTab: { ...DefaultFavoriteTab },
     tabSort: {},
-  } as MarketsData;
+  };
 }
 
 function filterInvalidTabs(favorites: Favorite[], tabs: FavoriteTab[]) {

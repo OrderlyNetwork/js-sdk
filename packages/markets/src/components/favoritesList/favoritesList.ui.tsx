@@ -5,13 +5,15 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import type { FavoritesListWidgetProps } from "./widget";
-import Table from "../Table";
+import DataTable from "../dataTable";
+import { CollapseMarkets } from "../collapseMarkets";
 
 export type FavoritesListProps = UseFavoritesListReturn &
   FavoritesListWidgetProps;
 
 export const FavoritesList: FC<FavoritesListProps> = (props) => {
-  const { dataSource, favorite, onSort, loading, getColumns } = props;
+  const { dataSource, favorite, onSort, loading, getColumns, collapsed } =
+    props;
 
   const { onSymbolChange } = useMarketsContext();
 
@@ -21,13 +23,17 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
       : getSideMarketsColumns(favorite, true);
   }, [favorite]);
 
+  if (collapsed) {
+    return <CollapseMarkets dataSource={dataSource} />;
+  }
+
   return (
     <>
       <Box px={3}>
         <FavoritesTabWidget favorite={favorite} size="sm" />
       </Box>
 
-      <Table
+      <DataTable
         classNames={{
           body: "oui-pb-[53px]",
         }}
