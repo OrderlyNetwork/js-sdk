@@ -78,7 +78,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
           className="oui-break-normal oui-whitespace-nowrap"
           rule="symbol"
           formatString="base-type"
-          size="2xs"
+          size="xs"
           weight="semibold"
         >
           {symbol}
@@ -89,7 +89,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   );
 
   const price = (
-    <Text.numeral dp={quotoDp || 2} currency="$">
+    <Text.numeral dp={quotoDp || 2} currency="$" size="sm">
       {data?.["24h_close"]}
     </Text.numeral>
   );
