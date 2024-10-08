@@ -7,7 +7,7 @@ import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import type { FullOrderState } from "./orderEntry.store";
-import { API, OrderlyOrder } from "@orderly.network/types";
+import { API, OrderlyOrder, OrderType } from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
 import { OrderFactory } from "../../services/orderCreator/factory";
@@ -17,17 +17,11 @@ import {
   calcEstLeverage,
   calcEstLiqPrice,
   getCreateOrderUrl,
-  getPriceAndQty,
   tpslFields,
 } from "./helper";
 import { produce } from "immer";
-import { order as orderUtils } from "@orderly.network/perp";
-import { OrderType } from "@orderly.network/types";
 import { useAccountInfo } from "../../orderly/appStore";
-import {
-  usePositions,
-  usePositionStore,
-} from "../../orderly/usePositionStream/usePositionStore";
+import { usePositions } from "../../orderly/usePositionStream/usePositionStore";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -170,7 +164,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   async function validateFunc(order: Partial<OrderlyOrder>) {
     const creator = OrderFactory.create(order.order_type!);
 
-    return await validate(order, creator, prepareData());
+    return validate(order, creator, prepareData());
   }
 
   /**
@@ -211,7 +205,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     const markPrice = actions.getMarkPriceBySymbol(symbol);
     if (!markPrice || !accountInfo) return null;
 
-    const result = calcEstLiqPrice(formattedOrder, askAndBid.current, {
+    return calcEstLiqPrice(formattedOrder, askAndBid.current, {
       baseIMR: symbolInfo.base_imr,
       baseMMR: symbolInfo.base_mmr,
       markPrice,
@@ -221,18 +215,14 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
       symbol,
       positions,
     });
-
-    return result;
   }, [formattedOrder, accountInfo, positions, totalCollateral, symbol]);
 
   const estLeverage = useMemo(() => {
-    const result = calcEstLeverage(formattedOrder, askAndBid.current, {
+    return calcEstLeverage(formattedOrder, askAndBid.current, {
       totalCollateral,
       positions,
       symbol,
     });
-
-    return result;
   }, [formattedOrder, accountInfo, positions, totalCollateral, symbol]);
 
   const submitOrder = async () => {

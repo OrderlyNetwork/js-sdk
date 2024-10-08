@@ -13,7 +13,9 @@ import {
   Switch,
   Text,
   textVariants,
-  InputFormatter,
+  inputFormatter,
+  Box,
+  Popover,
 } from "@orderly.network/ui";
 import {
   PropsWithChildren,
@@ -35,6 +37,7 @@ import {
   OrderEntryProvider,
 } from "./components/orderEntryContext";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 
 export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
   const {
@@ -167,7 +170,8 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           <Text.numeral
             unit={symbolInfo.quote}
             size={"2xs"}
-            unitClassName={"oui-ml-1"}
+            className={"oui-text-base-contrast-80"}
+            unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
           >
             {freeCollateral}
           </Text.numeral>
@@ -243,19 +247,25 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
             props.setOrderValue(key, value);
           }}
         />
-        <Flex itemAlign={"center"} gapX={1}>
-          <Switch
-            id={"reduceOnly"}
-            checked={props.formattedOrder.reduce_only}
-            onCheckedChange={(checked) => {
-              // console.log(checked);
-              props.setOrderValue("reduce_only", checked);
-            }}
-          />
-          <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
-            Reduce only
-          </label>
+        <Flex justify={"between"} itemAlign={"center"}>
+          <Flex itemAlign={"center"} gapX={1}>
+            <Switch
+              id={"reduceOnly"}
+              checked={props.formattedOrder.reduce_only}
+              onCheckedChange={(checked) => {
+                // console.log(checked);
+                props.setOrderValue("reduce_only", checked);
+              }}
+            />
+            <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
+              Reduce only
+            </label>
+          </Flex>
+          <AdditionalConfigButton />
         </Flex>
+        <Box p={2} r={"md"} intensity={700}>
+          <AdditionalInfoWidget />
+        </Box>
       </div>
     </OrderEntryProvider>
   );
@@ -375,7 +385,10 @@ const CustomInput = (props: {
       suffix={props.suffix}
       value={props.value}
       onChange={props.onChange}
-      formatters={[numberFormatter]}
+      formatters={[
+        inputFormatter.numberFormatter,
+        inputFormatter.currencyFormatter,
+      ]}
       classNames={{
         root: cn(
           "oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
@@ -528,5 +541,34 @@ function AssetInfo(props: {
         </Text.numeral> */}
       </Flex>
     </div>
+  );
+}
+
+function AdditionalConfigButton() {
+  // const []
+  return (
+    <Popover
+      content={<AdditionalInfoWidget />}
+      contentProps={{
+        side: "top",
+        align: "end",
+      }}
+    >
+      <button>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3.332 2.665a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667z"
+            fill="#fff"
+            fillOpacity=".8"
+          />
+        </svg>
+      </button>
+    </Popover>
   );
 }

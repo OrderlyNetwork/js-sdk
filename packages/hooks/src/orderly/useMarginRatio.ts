@@ -1,11 +1,9 @@
 import { useMemo } from "react";
-import { account, positions } from "@orderly.network/perp";
-import { usePositionStream } from "./usePositionStream/usePositionStream";
+import { account } from "@orderly.network/perp";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useCollateral } from "./useCollateral";
 import { zero } from "@orderly.network/utils";
 import { usePositionStore } from "./usePositionStream/usePositionStore";
-import { useMarkPrices } from "./useMarkPrice/useMarkPriceStore";
 
 export type MarginRatioReturn = {
   // Margin Ratio
@@ -28,7 +26,6 @@ export const useMarginRatio = (): MarginRatioReturn => {
   //
   // const markPrices = useMarkPrices();
   //
-  console.log("row", rows, notional);
 
   const { totalCollateral } = useCollateral();
   const marginRatio = useMemo(() => {
@@ -36,12 +33,11 @@ export const useMarginRatio = (): MarginRatioReturn => {
       return 0;
     }
 
-    const ratio = account.totalMarginRatio({
+    return account.totalMarginRatio({
       totalCollateral: totalCollateral,
       markPrices: markPrices,
       positions: rows ?? [],
     });
-    return ratio;
   }, [rows, markPrices, totalCollateral]);
 
   const currentLeverage = useMemo(() => {

@@ -79,12 +79,15 @@ const inputVariants = tv({
     color: {
       success: {
         box: ["oui-outline-success", "focus-within:oui-outline-success"],
+        input: ["oui-text-success"],
       },
       danger: {
         box: ["oui-outline-danger", "focus-within:oui-outline-danger"],
+        input: ["oui-text-danger"],
       },
       warning: {
         box: ["oui-outline-warning", "focus-within:oui-outline-warning"],
+        input: ["oui-text-warning"],
       },
       default: {
         box: ["oui-outline-transparent"],

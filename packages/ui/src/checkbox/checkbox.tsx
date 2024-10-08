@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { tv, cnBase } from "tailwind-variants";
+import { tv, cnBase, VariantProps } from "tailwind-variants";
 import { CheckIcon } from "../icon/check";
 
 const checkboxVariants = tv({
@@ -24,11 +24,18 @@ const checkboxVariants = tv({
     color: {
       blue: "oui-border-primary data-[state=checked]:oui-bg-primary data-[state=checked]:oui-text-base-contrast",
       white:
-        "oui-border-white/80 data-[state=checked]:oui-bg-white/80 data-[state=checked]:oui-text-[rgba(0,0,0,0.88)]",
+        "oui-border-base-contrast-54 data-[state=checked]:oui-bg-white/80 data-[state=checked]:oui-text-[rgba(0,0,0,0.88)]",
+    },
+    variant: {
+      // checkBox: [],
+      checkBox: "",
+      radio:
+        "oui-rounded-full data-[state=checked]:oui-border-base-contrast-20 data-[state=checked]:oui-bg-transparent",
     },
   },
   defaultVariants: {
     color: "blue",
+    // style: "checkBox",
   },
 });
 
@@ -38,11 +45,12 @@ const Checkbox = React.forwardRef<
     size?: number;
     indicatorClassName?: string;
     color?: "blue" | "white";
+    variant?: "checkBox" | "radio";
   }
->(({ className, color = "blue", ...props }, ref) => (
+>(({ className, color = "blue", variant = "checkBox", ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
-    className={checkboxVariants({ color, className })}
+    className={checkboxVariants({ color, className, variant })}
     {...props}
   >
     <CheckboxPrimitive.Indicator
@@ -51,11 +59,20 @@ const Checkbox = React.forwardRef<
         props.indicatorClassName
       )}
     >
-      <CheckIcon
-        size={props.size ?? 12}
-        opacity={color === "blue" ? 0.54 : 1}
-        color={color === "blue" ? "white" : "black"}
-      />
+      {variant === "checkBox" ? (
+        <CheckIcon
+          size={props.size ?? 12}
+          opacity={color === "blue" ? 0.54 : 1}
+          color={color === "blue" ? "white" : "black"}
+        />
+      ) : (
+        <div
+          className={cnBase(
+            "oui-w-[6px] oui-h-[6px] oui-rounded-full",
+            "oui-bg-base-contrast-80"
+          )}
+        />
+      )}
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));

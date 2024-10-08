@@ -52,91 +52,86 @@ export const useOrderStore = create<
     actions: OrderEntryActions;
   }
 >()(
-  devtools(
-    immer((set, get) => ({
-      entry: {
-        side: OrderSide.BUY,
-        order_type: OrderType.LIMIT,
-        ...initialOrderState,
-      } as OrderEntryStateEntity,
-      estLeverage: null,
-      estLiquidationPrice: null,
-      errors: {},
-      actions: {
-        hasTP_SL: () => {
-          const order = get().entry;
-          return (
-            typeof order.tp_trigger_price !== "undefined" ||
-            typeof order.sl_trigger_price !== "undefined"
-          );
-        },
-        updateOrderComputed: (data: {
-          estLeverage: number | null;
-          estLiquidationPrice: number | null;
-        }) => {
-          set(
-            (state) => {
-              state.estLeverage = data.estLeverage;
-              state.estLiquidationPrice = data.estLiquidationPrice;
-            },
-            false,
-            "updateOrderComputed"
-          );
-        },
-        updateOrder: (order: Partial<FullOrderState>) => {
-          set(
-            (state) => {
-              // state.entry[key as keyof BracketOrderEntry] = value;
-              state.entry = {
-                ...state.entry,
-                ...order,
-              };
-            },
-            false,
-            "updateOrder"
-          );
-        },
-        updateOrderByKey: <K extends keyof FullOrderState>(
-          key: K,
-          value: FullOrderState[K]
-        ) => {
-          set(
-            (state) => {
-              state.entry[key] = value;
-            },
-            false,
-            "updateOrderByKey"
-          );
-        },
-        restoreOrder: (order) => {
-          set(
-            (state) => {
-              state.entry = order as OrderEntryStateEntity;
-            },
-            false,
-            "restoreOrder"
-          );
-        },
-        resetOrder: (order?: Partial<FullOrderState>) => {
-          set(
-            (state) => {
-              state.entry.order_price = "";
-              state.entry.order_quantity = "";
-              state.entry.trigger_price = "";
-              state.entry.tp_trigger_price = "";
-              state.entry.sl_trigger_price = "";
-              state.entry.total = "";
-            },
-            true,
-            "resetOrder"
-          );
-        },
+  immer((set, get) => ({
+    entry: {
+      side: OrderSide.BUY,
+      order_type: OrderType.LIMIT,
+      ...initialOrderState,
+    } as OrderEntryStateEntity,
+    estLeverage: null,
+    estLiquidationPrice: null,
+    errors: {},
+    actions: {
+      hasTP_SL: () => {
+        const order = get().entry;
+        return (
+          typeof order.tp_trigger_price !== "undefined" ||
+          typeof order.sl_trigger_price !== "undefined"
+        );
       },
-    })),
-    {
-      name: "markPrice",
-    }
-  )
+      updateOrderComputed: (data: {
+        estLeverage: number | null;
+        estLiquidationPrice: number | null;
+      }) => {
+        set(
+          (state) => {
+            state.estLeverage = data.estLeverage;
+            state.estLiquidationPrice = data.estLiquidationPrice;
+          },
+          false
+          // "updateOrderComputed"
+        );
+      },
+      updateOrder: (order: Partial<FullOrderState>) => {
+        set(
+          (state) => {
+            // state.entry[key as keyof BracketOrderEntry] = value;
+            state.entry = {
+              ...state.entry,
+              ...order,
+            };
+          },
+          false
+          // "updateOrder"
+        );
+      },
+      updateOrderByKey: <K extends keyof FullOrderState>(
+        key: K,
+        value: FullOrderState[K]
+      ) => {
+        set(
+          (state) => {
+            state.entry[key] = value;
+          },
+          false
+          // "updateOrderByKey"
+        );
+      },
+      restoreOrder: (order) => {
+        set(
+          (state) => {
+            state.entry = order as OrderEntryStateEntity;
+          },
+          false
+          // "restoreOrder"
+        );
+      },
+      resetOrder: (order?: Partial<FullOrderState>) => {
+        set(
+          (state) => {
+            state.entry.order_price = "";
+            state.entry.order_quantity = "";
+            state.entry.trigger_price = "";
+            state.entry.tp_trigger_price = "";
+            state.entry.sl_trigger_price = "";
+            state.entry.total = "";
+          },
+          true
+          // "resetOrder"
+        );
+      },
+    },
+  }))
 );
 
 export const useOrderEntryFromStore = () =>

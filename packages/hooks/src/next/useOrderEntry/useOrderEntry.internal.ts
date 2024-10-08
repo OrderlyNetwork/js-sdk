@@ -16,7 +16,6 @@ import {
   useOrderEntryFromStore,
   useOrderStore,
 } from "./orderEntry.store";
-import { useMutation } from "../../useMutation";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import { OrderlyOrder } from "@orderly.network/types";
 import { hasTPSL } from "./helper";

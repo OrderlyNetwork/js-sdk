@@ -128,7 +128,7 @@ const selectVariants = tv({
         icon: ["oui-w-4", "oui-h-4"],
       },
       md: {
-        trigger: ["oui-h-8", "oui-text-2xs"],
+        trigger: ["oui-h-8", "oui-text-xs"],
         item: ["oui-h-7", "oui-text-2xs"],
         icon: ["oui-w-4", "oui-h-4"],
       },

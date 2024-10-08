@@ -1,18 +1,18 @@
 import { API } from "@orderly.network/types";
-import { Calculator, CalculatorScope } from "../../types";
+import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
 import { BaseCalculator } from "./baseCalculator";
+import { Portfolio } from "../appStore";
+import { Decimal } from "@orderly.network/utils";
 
-class OrderCalculator extends BaseCalculator<API.OrderExt[]> {
+export class OrderCalculator extends BaseCalculator<API.OrderExt[]> {
   name = "orders";
-  calc(
-    scope: CalculatorScope,
-    markPrice: Record<string, number>
-  ): API.OrderExt[] {
+
+  calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx): API.OrderExt[] {
     // Implementation logic here
     return [];
   }
 
-  update(data: API.OrderExt[]): void {
+  update(data: any | null): void {
     // Implementation logic here
   }
 }
