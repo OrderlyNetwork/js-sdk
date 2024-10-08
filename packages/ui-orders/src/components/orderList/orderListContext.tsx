@@ -80,7 +80,7 @@ export const OrderListProvider: FC<
       const orderEntry = await modal.sheet({
         title: "Edit Order",
         classNames: {
-          content: "orderly-edit-order-sheet-content",
+          content: "oui-edit-order-sheet-content",
         },
         content: (
           // <OrderEditFormSheet

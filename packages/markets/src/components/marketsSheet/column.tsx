@@ -1,17 +1,11 @@
-import { MouseEventHandler, ReactNode } from "react";
+import { MouseEventHandler } from "react";
 import { Flex, TokenIcon, Text, Badge, cn } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import {
-  DeleteIcon,
-  FavoritesIcon2,
-  TopIcon,
-  UnFavoritesIcon2,
-} from "../../icons";
+import { DeleteIcon, TopIcon } from "../../icons";
 import { FavoriteInstance } from "../../type";
-import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 import { Column } from "../dataTable";
 
-export const getSideMarketsColumns = (
+export const getMarketsSheetColumns = (
   favorite: FavoriteInstance,
   isFavoriteList = false
 ) => {
@@ -22,58 +16,34 @@ export const getSideMarketsColumns = (
       onSort: true,
       className: "oui-h-[36px]",
       render: (value, record) => {
-        let favoritesIcon: ReactNode;
-        if (!isFavoriteList) {
-          favoritesIcon = (
-            <FavoritesDropdownMenuWidget row={record} favorite={favorite}>
-              <Flex
-                width={12}
-                height={12}
-                justify="center"
-                itemAlign="center"
-                className="oui-cursor-pointer oui-mr-1"
-              >
-                {record.isFavorite ? (
-                  <FavoritesIcon2 className="oui-w-3 oui-h-3 oui-text-[rgba(255,154,46,1)]" />
-                ) : (
-                  <UnFavoritesIcon2 className="oui-w-3 oui-h-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
-                )}
-              </Flex>
-            </FavoritesDropdownMenuWidget>
-          );
-        }
-
         return (
-          <Flex>
-            {favoritesIcon}
-            <Flex direction="column" itemAlign="start" gapY={1}>
-              <Flex gapX={1}>
-                <TokenIcon
-                  symbol={record.symbol}
-                  className="oui-w-[18px] oui-h-[18px]"
-                />
-                <Text.formatted
-                  rule="symbol"
-                  formatString="base"
-                  size="2xs"
-                  weight="semibold"
-                >
-                  {record.symbol}
-                </Text.formatted>
-                <Badge size="xs" color="primaryLight">
-                  {record.leverage}x
-                </Badge>
-              </Flex>
-
-              <Text.numeral
-                intensity={54}
-                rule="human"
-                dp={2}
-                rm={Decimal.ROUND_DOWN}
+          <Flex direction="column" itemAlign="start" gapY={1}>
+            <Flex gapX={1}>
+              <TokenIcon
+                symbol={record.symbol}
+                className="oui-w-[18px] oui-h-[18px]"
+              />
+              <Text.formatted
+                rule="symbol"
+                formatString="base"
+                size="2xs"
+                weight="semibold"
               >
-                {value}
-              </Text.numeral>
+                {record.symbol}
+              </Text.formatted>
+              <Badge size="xs" color="primaryLight">
+                {record.leverage}x
+              </Badge>
             </Flex>
+
+            <Text.numeral
+              intensity={54}
+              rule="human"
+              dp={2}
+              rm={Decimal.ROUND_DOWN}
+            >
+              {value}
+            </Text.numeral>
           </Flex>
         );
       },

@@ -17,7 +17,9 @@ export const useCancelBtnScript = (props: { state: OrderCellState }) => {
     setIsLoading(true);
     onCancelOrder(state.item)
       .then(
-        (res: any) => res,
+        (res: any) => {
+          setOpen(false);
+        },
         (error: any) => {
           toast.error(error.message);
         }

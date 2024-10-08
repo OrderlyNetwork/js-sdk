@@ -74,6 +74,7 @@ const DataTable: FC<TableProps> = (props) => {
               style={{ width: column.width }}
               className={cn(
                 "oui-flex oui-items-center oui-gap-x-1",
+                "oui-break-normal oui-whitespace-nowrap",
                 "oui-basis-[100%]",
                 sortable && "oui-cursor-pointer",
                 alignClassName(column.align),

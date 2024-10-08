@@ -24,16 +24,16 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       py={2}
     >
       <Flex width={"100%"} justify={"between"}>
-        <UlrealPnL
+        <UnrealPnL
           classNames={{
-            label: "oui-text-2xs",
+            label: "oui-text-2xs oui-text-base-contrast-54",
             root: "oui-text-sm",
           }}
           {...props}
         />
         <Notional
           classNames={{
-            label: "oui-text-2xs",
+            label: "oui-text-2xs oui-text-base-contrast-54",
             root: "oui-text-sm",
           }}
           {...props}
@@ -48,11 +48,13 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
             props.setShowAllSymbol(checked);
           }}
         />
-        <Text size="2xs" intensity={54} onClick={() => {
-          props.setShowAllSymbol(!props.showAllSymbol);
-        }}>
+
+        <label
+          className="oui-text-2xs oui-text-base-contrast-54"
+          htmlFor="oui-checkbox-showAllInstruments"
+        >
           Show all instruments
-        </Text>
+        </label>
       </Flex>
     </Flex>
   );
@@ -60,13 +62,19 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
 const DesktopLayout: FC<PositionHeaderState> = (props) => {
   return (
     <Flex px={3} py={2} gap={6} width={"100%"} justify={"start"}>
-      <UlrealPnL {...props} />
-      <Notional {...props} />
+      <UnrealPnL
+        {...props}
+        classNames={{ label: "oui-text-base-contrast-54" }}
+      />
+      <Notional
+        {...props}
+        classNames={{ label: "oui-text-base-contrast-54" }}
+      />
     </Flex>
   );
 };
 
-const UlrealPnL: FC<
+const UnrealPnL: FC<
   PositionHeaderState & {
     classNames?:
       | {
@@ -77,24 +85,39 @@ const UlrealPnL: FC<
       | undefined;
   }
 > = (props) => {
+  const unrealPnLClsName =
+    typeof props.unrealPnL === "number"
+      ? props.unrealPnL > 0
+        ? "oui-text-trade-profit"
+        : "oui-text-trade-loss"
+      : "oui-text-base-contrast-80";
+
+  const unrealPnLROIClsName =
+    typeof props.unrealPnL === "number"
+      ? props.unrealPnlROI > 0
+        ? "oui-text-success-darken"
+        : "oui-text-danger-darken"
+      : "oui-text-base-contrast-80";
+
   return (
     <Statistic label="Unreal. PnL" classNames={props.classNames}>
       <Flex>
         <Text.numeral
-          coloring
           dp={props.pnlNotionalDecimalPrecision}
           rm={Decimal.ROUND_DOWN}
+          intensity={80}
+          className={unrealPnLClsName}
         >
           {props.unrealPnL}
         </Text.numeral>
         {props.unrealPnlROI && (
           <Text.numeral
-            coloring
             prefix="("
             suffix=")"
             rule="percentages"
             dp={props.pnlNotionalDecimalPrecision}
             rm={Decimal.ROUND_DOWN}
+            className={unrealPnLROIClsName}
           >
             {props.unrealPnlROI}
           </Text.numeral>
@@ -120,6 +143,7 @@ const Notional: FC<
       <Text.numeral
         dp={props.pnlNotionalDecimalPrecision}
         rm={Decimal.ROUND_DOWN}
+        intensity={80}
       >
         {props.notional}
       </Text.numeral>

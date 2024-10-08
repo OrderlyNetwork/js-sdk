@@ -18,15 +18,14 @@ export const Setting: FC<SettingState> = (props) => {
     <Flex gap={0}>
       <Flex gap={1}>
         <Checkbox
+          id="oui-checkbox-showAllInstruments"
           color="white"
           checked={props.showAllSymbol}
           onCheckedChange={(checked: boolean) => {
             props.setShowAllSymbol(checked);
           }}
         />
-        <Text size="xs" intensity={54}>
-          Show all instruments
-        </Text>
+        <label className="oui-text-xs oui-text-base-contrast-54" htmlFor="oui-checkbox-showAllInstruments">Show all instruments</label>
       </Flex>
       <Button
         size="xs"

@@ -22,6 +22,10 @@ export const DataList: FC<DataListState> = (props) => {
           setShowAllSymbol={props.setShowAllSymbol}
         />
       }
+      size="lg"
+      classNames={{
+        tabsList: "oui-px-3"
+      }}
     >
       <TabPanel
         value={DataListTabType.positions}

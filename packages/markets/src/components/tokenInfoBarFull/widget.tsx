@@ -6,7 +6,7 @@ import {
 import { TokenInfoBarFull, TokenInfoBarFullProps } from "./tokenInfoBarFull.ui";
 
 export type TokenInfoBarFullWidgetPros = UseTokenInfoBarFullScriptOptions &
-  Pick<TokenInfoBarFullProps, "className" | "trailing" | "height"> &
+  Pick<TokenInfoBarFullProps, "className" | "trailing"> &
   Pick<MarketsProviderProps, "onSymbolChange">;
 
 export const TokenInfoBarFullWidget: React.FC<TokenInfoBarFullWidgetPros> = (

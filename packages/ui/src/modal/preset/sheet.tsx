@@ -1,6 +1,7 @@
 import {
   Sheet,
   SheetContent,
+  SheetContentProps,
   SheetHeader,
   SheetTitle,
 } from "../../sheet/sheet";
@@ -17,6 +18,7 @@ export interface SheetProps {
     content?: string;
     body?: string;
   };
+  contentProps?: SheetContentProps;
 }
 
 const SimpleSheet = create<SheetProps>((props) => {
@@ -26,9 +28,8 @@ const SimpleSheet = create<SheetProps>((props) => {
     <Sheet open={visible} onOpenChange={onOpenChange}>
       <SheetContent
         className={classNames.content}
-        onOpenAutoFocus={(event) => {
-          event.preventDefault();
-        }}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        {...props.contentProps}
       >
         <SheetHeader>
           <SheetTitle>{props.title}</SheetTitle>

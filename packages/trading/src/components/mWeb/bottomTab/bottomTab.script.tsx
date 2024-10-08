@@ -15,7 +15,8 @@ export const useBottomTabScript = (props: {
     config: Partial<Omit<PositionsProps, "pnlNotionalDecimalPrecision">>;
 }) => {
     const { symbol, config } = props;
-  const [tab, setTab] = useState<BottomTabType>(BottomTabType.position);
+    // TODO: default tab should be position
+  const [tab, setTab] = useState<BottomTabType>(BottomTabType.pending);
   const { tabletMediaQuery } = useTradingPageContext();
   const loalStorage = useTradingLocalStorage();
 
