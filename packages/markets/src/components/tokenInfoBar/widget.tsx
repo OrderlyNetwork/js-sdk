@@ -5,7 +5,7 @@ import {
 import { TokenInfoBar, TokenInfoBarProps } from "./tokenInfoBar.ui";
 
 export type TokenInfoBarWidgetPros = UseTokenInfoBarScriptOptions &
-  Pick<TokenInfoBarProps, "className" | "trailing" | "height" | "onSymbol">;
+  Pick<TokenInfoBarProps, "className" | "trailing" | "onSymbol">;
 
 export const TokenInfoBarWidget: React.FC<TokenInfoBarWidgetPros> = (props) => {
   const { symbol, ...rest } = props;

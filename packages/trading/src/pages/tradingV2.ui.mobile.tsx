@@ -23,9 +23,8 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
   };
 
   const topBar = (
-    <Box intensity={900} px={3}>
+    <Box intensity={900} px={3} height={54}>
       <TokenInfoBarWidget
-        height={54}
         symbol="PERP_BTC_USDC"
         trailing={<SecondaryLogo />}
         onSymbol={onSymbol}

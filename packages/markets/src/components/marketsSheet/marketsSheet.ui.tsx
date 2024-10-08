@@ -11,6 +11,7 @@ import { SearchIcon } from "../../icons";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
 import "../../style/index.css";
+import { getMarketsSheetColumns } from "./column";
 
 export type MarketsSheetProps = UseMarketsSheetScriptReturn & {
   className?: string;
@@ -64,7 +65,12 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
       </Box>
 
       <Box width="100%" mt={2} className="oui-h-[calc(100vh_-_88px)]">
-        <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
+        <MarketsListWidget
+          type="all"
+          sortKey="24h_amount"
+          sortOrder="desc"
+          getColumns={getMarketsSheetColumns}
+        />
       </Box>
     </Box>
   );

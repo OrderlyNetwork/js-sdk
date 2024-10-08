@@ -15,7 +15,7 @@ import {
   UnFavoritesIcon2,
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
-import { CSSProperties, ReactNode, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
 
@@ -28,7 +28,6 @@ export type TokenInfoBarFullProps = Pick<
   UseTokenInfoBarFullScriptReturn & {
     className?: string;
     trailing?: ReactNode;
-    height?: CSSProperties["height"];
   };
 
 export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
@@ -46,7 +45,6 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
     leadingVisible,
     tailingVisible,
     onScoll,
-    height,
   } = props;
 
   const favoriteIcon = (
@@ -130,7 +128,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   }, [fundingRate]);
 
   return (
-    <Flex className={cn("oui-font-semibold", props.className)} height={height}>
+    <Flex className={cn("oui-font-semibold oui-h-full", props.className)}>
       <Flex gapX={6} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={1}>
           {favoriteIcon}

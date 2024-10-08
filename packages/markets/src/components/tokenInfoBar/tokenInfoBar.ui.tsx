@@ -1,4 +1,4 @@
-import { CSSProperties, FC, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { Flex, Text, cn, Divider, Badge } from "@orderly.network/ui";
 import { UseTokenInfoBarScriptReturn } from "./tokenInfoBar.script";
 import { TriangleDownIcon } from "../../icons";
@@ -11,12 +11,11 @@ export type TokenInfoBarProps = Pick<MarketsProviderProps, "onSymbolChange"> &
   UseTokenInfoBarScriptReturn & {
     className?: string;
     trailing?: ReactNode;
-    height?: CSSProperties["height"];
     onSymbol?: () => void;
   };
 
 export const TokenInfoBar: FC<TokenInfoBarProps> = (props) => {
-  const { symbol, data, leverage, height, onSymbol } = props;
+  const { symbol, data, leverage, onSymbol } = props;
 
   const symbolView = (
     <Flex className="oui-cursor-pointer oui-gap-x-[6px]" onClick={onSymbol}>
@@ -35,7 +34,7 @@ export const TokenInfoBar: FC<TokenInfoBarProps> = (props) => {
   );
 
   return (
-    <Flex className={cn("oui-font-semibold", props.className)} height={height}>
+    <Flex className={cn("oui-font-semibold oui-h-full", props.className)}>
       <Flex gapX={3} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={3}>
           {symbolView}

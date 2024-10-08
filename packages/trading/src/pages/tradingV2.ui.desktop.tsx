@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 import { Box, Flex } from "@orderly.network/ui";
 import { getOffsetSizeNum, TradingV2State } from "./tradingV2.script";
 import { DataListWidget } from "../components/desktop/dataList";
@@ -13,7 +13,11 @@ import {
 import { LayoutSwitch } from "../components/desktop/layout/layoutSwitch";
 import SplitLayout from "../components/desktop/layout/splitLayout";
 
-export const DesktopLayout: FC<TradingV2State> = (props) => {
+export type DesktopLayoutProps = TradingV2State & {
+  className?: string;
+};
+
+export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const {
     collapsed,
     onCollapse,
@@ -69,12 +73,20 @@ export const DesktopLayout: FC<TradingV2State> = (props) => {
   );
 
   const tokenInfoBarView = (
-    <Box height={54} intensity={900} r="2xl" px={3} width="100%">
+    <Box
+      intensity={900}
+      r="2xl"
+      px={3}
+      width="100%"
+      style={{
+        minHeight: 54,
+        height: 54,
+      }}
+    >
       <TokenInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
         trailing={<LayoutSwitch layout={layout} onLayout={onLayout} />}
-        height={54}
       />
     </Box>
   );
@@ -204,7 +216,7 @@ export const DesktopLayout: FC<TradingV2State> = (props) => {
       : setMainSplitSize(width);
 
   return (
-    <Container>
+    <Flex className={props.className} width="100%" p={3} gap={3}>
       {!isMedium && layout === "right" && marketsView}
       <SplitLayout
         className="oui-flex oui-flex-1 oui-overflow-hidden"
@@ -215,19 +227,6 @@ export const DesktopLayout: FC<TradingV2State> = (props) => {
         {layout === "right" && orderEntryView}
       </SplitLayout>
       {!isMedium && layout === "left" && marketsView}
-    </Container>
-  );
-};
-
-export const Container: React.FC<PropsWithChildren<{}>> = (props) => {
-  return (
-    <Flex
-      className="oui-h-[calc(100vh_-_49px_-_29px)] oui-bg-base-10"
-      width="100%"
-      p={3}
-      gap={3}
-    >
-      {props.children}
     </Flex>
   );
 };
