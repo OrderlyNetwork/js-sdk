@@ -90,6 +90,10 @@ const TabLayout: FC<OrderBookAndTradesState & {
         onValueChange={(tab) => {
           props.setTab(tab as any);
         }}
+        classNames={{
+          tabsList: 'oui-pl-3',
+          tabsContent: props.tab === "lastTrades" ? 'oui-pl-3' : ''
+        }}
       >
         <TabPanel value="orderBook" title={"Order book"} >
           <OrderBookWidget
