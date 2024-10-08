@@ -194,6 +194,14 @@ const meta = {
             networkId={networkId}
             onChainChanged={fn()}
             configStore={configStore}
+            appIcons={{
+              main: {
+                  img: "/orderly-logo.svg",
+              },
+              secondary: {
+                  img: "/orderly-logo-secondary.svg",
+              },
+          }}
           >
             <Scaffold
               leftSidebar={null}

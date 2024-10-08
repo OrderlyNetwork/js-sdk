@@ -4,8 +4,9 @@ import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
   TokenInfoBarWidget,
   TokenInfoBarFullWidget,
+  MarketsSheetWidget
 } from "@orderly.network/markets";
-import { Box, Flex } from "@orderly.network/ui";
+import { Box, Flex, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
 const networkId = "testnet";
@@ -73,17 +74,24 @@ export const DepositTokenInfoBar: Story = {
 
 export const MobileTokenInfoBar: Story = {
   render: (args) => {
-    return (
-      <Box width={430
+    const onSymbol = () => {
+      modal.sheet({
+        title: null,        
+        classNames: {
+          content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
+        },
+        content: <MarketsSheetWidget />,
+        contentProps: { side: "left", closeable:false },
+      });
+    };
 
-      } intensity={900} px={3}>
+    return (
+      <Box width={430} intensity={900} px={3}>
         <TokenInfoBarWidget
           height={54}
           symbol="PERP_BTC_USDC"
-          trailing={<Box pl={3}>Trailing</Box>}          
-          onSymbolChange={(symbol) => {
-            console.log('onSymbolChange', symbol);
-          }}
+          trailing={<Box pl={3}>Trailing</Box>}    
+          onSymbol={onSymbol}
         />
       </Box>
     )    

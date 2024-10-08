@@ -1,14 +1,41 @@
 import { FC } from "react";
 import { TradingV2State } from "./tradingV2.script";
-import { NavBarWidget } from "../components/mWeb/navBar";
 import { TopTabWidget } from "../components/mWeb/topTab";
 import { OrderBookAndEntryWidget } from "../components/mWeb/orderBookAndEntry";
 import { BottomTabWidget } from "../components/mWeb/bottomTab";
+import {
+  MarketsSheetWidget,
+  TokenInfoBarWidget,
+} from "@orderly.network/markets";
+import { Box, modal } from "@orderly.network/ui";
+import { SecondaryLogo } from "../components/base/secondaryLogo";
 
 export const MobileLayout: FC<TradingV2State> = (props) => {
+  const onSymbol = () => {
+    modal.sheet({
+      title: null,
+      classNames: {
+        content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
+      },
+      content: <MarketsSheetWidget onSymbolChange={props.onSymbolChange} />,
+      contentProps: { side: "left", closeable: false },
+    });
+  };
+
+  const topBar = (
+    <Box intensity={900} px={3}>
+      <TokenInfoBarWidget
+        height={54}
+        symbol="PERP_BTC_USDC"
+        trailing={<SecondaryLogo />}
+        onSymbol={onSymbol}
+      />
+    </Box>
+  );
+
   return (
     <div className="oui-h-100% oui-overflow-auto oui-hide-scrollbar oui-space-y-1">
-      <NavBarWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
+      {topBar}
       <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
       <OrderBookAndEntryWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
       <BottomTabWidget

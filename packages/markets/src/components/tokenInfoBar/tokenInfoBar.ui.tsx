@@ -12,13 +12,14 @@ export type TokenInfoBarProps = Pick<MarketsProviderProps, "onSymbolChange"> &
     className?: string;
     trailing?: ReactNode;
     height?: CSSProperties["height"];
+    onSymbol?: () => void;
   };
 
 export const TokenInfoBar: FC<TokenInfoBarProps> = (props) => {
-  const { symbol, data, leverage, height } = props;
+  const { symbol, data, leverage, height, onSymbol } = props;
 
   const symbolView = (
-    <Flex className="oui-cursor-pointer oui-gap-x-[6px]">
+    <Flex className="oui-cursor-pointer oui-gap-x-[6px]" onClick={onSymbol}>
       <Text.formatted
         className="oui-break-normal oui-whitespace-nowrap"
         rule="symbol"
