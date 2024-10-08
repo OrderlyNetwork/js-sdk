@@ -1,9 +1,4 @@
-import {
-  type API,
-  OrderEntity,
-  OrderSide,
-  OrderType,
-} from "@orderly.network/types";
+import { type API, OrderSide, OrderType } from "@orderly.network/types";
 
 import { useCallback, useEffect } from "react";
 import {

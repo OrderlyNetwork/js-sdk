@@ -64,6 +64,7 @@ export interface OrderExt {
 export interface BaseOrder {
   symbol: string;
   order_type: OrderType;
+  order_type_ext?: OrderType;
   order_price: string;
   order_quantity: string;
   order_amount?: number;
@@ -125,7 +126,7 @@ export interface ChildOrder {
   algo_type: AlgoOrderType;
   side: string;
   type: string;
-  trigger_price: number;
+  trigger_price: string;
 
   reduce_only: boolean;
   trigger_price_type?: string;

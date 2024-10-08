@@ -36,7 +36,12 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       | "visible_quantity"
     > = {
       symbol: data.symbol!,
-      order_type: data.order_type,
+      order_type:
+        data.order_type === OrderType.LIMIT
+          ? !!data.order_type_ext
+            ? data.order_type_ext
+            : data.order_type
+          : data.order_type,
       side: data.side,
       reduce_only: data.reduce_only!,
       order_quantity: data.order_quantity!,

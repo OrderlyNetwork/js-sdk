@@ -1,25 +1,45 @@
 import { Checkbox, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
+import { OrderlyOrder, OrderType } from "@orderly.network/types";
 
-type AdditionalInfoProps = {
-  pined: boolean;
-  onValueChange?: (key: string, value: any) => void;
+export type AdditionalInfoProps = {
+  pinned: boolean;
+  setPinned: (value: boolean) => void;
+  needConfirm: boolean;
+  setNeedConfirm: (value: boolean) => void;
+  orderTypeExtra?: OrderType;
+  onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
 };
 
 export const AdditionalInfo = (props: AdditionalInfoProps) => {
-  const { pined } = props;
+  const { pinned, orderTypeExtra } = props;
+  const onTypeToggle = (type: OrderType) => (checked: boolean) => {
+    if (props.onValueChange) {
+      props.onValueChange(
+        "order_type_ext" as keyof OrderlyOrder,
+        checked ? type : ""
+        // orderTypeExtra === type ? "" : type
+      );
+    }
+  };
   return (
     <div className={"oui-text-base-contrast-54"}>
-      <Flex justify={pined ? "between" : "stretch"} itemAlign={"center"} mb={3}>
+      <Flex
+        justify={pinned ? "between" : "stretch"}
+        itemAlign={"center"}
+        mb={3}
+      >
         <Flex
           gapX={5}
-          justify={pined ? "start" : "between"}
-          width={pined ? "unset" : "100%"}
+          justify={pinned ? "start" : "between"}
+          width={pinned ? "unset" : "100%"}
         >
           <Flex itemAlign={"center"}>
             <Checkbox
               id={"toggle_order_post_only"}
               color={"white"}
               variant={"radio"}
+              checked={orderTypeExtra === OrderType.POST_ONLY}
+              onCheckedChange={onTypeToggle(OrderType.POST_ONLY)}
             />
             <label
               htmlFor={"toggle_order_post_only"}
@@ -33,6 +53,8 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
               id={"toggle_order_iov"}
               color={"white"}
               variant={"radio"}
+              checked={orderTypeExtra === OrderType.IOC}
+              onCheckedChange={onTypeToggle(OrderType.IOC)}
             />
             <label
               htmlFor={"toggle_order_iov"}
@@ -46,6 +68,8 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
               id={"toggle_order_fok"}
               color={"white"}
               variant={"radio"}
+              checked={orderTypeExtra === OrderType.FOK}
+              onCheckedChange={onTypeToggle(OrderType.FOK)}
             />
             <label
               htmlFor={"toggle_order_fok"}
@@ -55,8 +79,12 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             </label>
           </Flex>
         </Flex>
-        {pined && (
-          <button>
+        {pinned && (
+          <button
+            onClick={() => {
+              props.setPinned(false);
+            }}
+          >
             <svg
               width="16"
               height="16"
@@ -75,7 +103,14 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
       </Flex>
       <Flex gapX={6}>
         <Flex>
-          <Checkbox id={"toggle_order_confirm"} color={"white"} />
+          <Checkbox
+            id={"toggle_order_confirm"}
+            color={"white"}
+            checked={props.needConfirm}
+            onCheckedChange={(checked) => {
+              props.setNeedConfirm(!!checked);
+            }}
+          />
           <label
             htmlFor={"toggle_order_confirm"}
             className={"oui-text-2xs oui-ml-1"}
@@ -84,7 +119,13 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           </label>
         </Flex>
         <Flex>
-          <Checkbox id={"toggle_order_hidden"} color={"white"} />
+          <Checkbox
+            id={"toggle_order_hidden"}
+            color={"white"}
+            onCheckedChange={(checked) => {
+              props.onValueChange?.("visible_quantity", checked ? 0 : 1);
+            }}
+          />
           <label
             htmlFor={"toggle_order_hidden"}
             className={"oui-text-2xs oui-ml-1"}
@@ -93,11 +134,16 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           </label>
         </Flex>
       </Flex>
-      {!pined && (
+      {!pinned && (
         <>
           <Divider className={"oui-my-3"} />
           <Flex>
-            <Switch id={"toggle_order_keep_visible"} />
+            <Switch
+              id={"toggle_order_keep_visible"}
+              onCheckedChange={(checked) => {
+                props.setPinned(checked);
+              }}
+            />
             <label
               htmlFor={"toggle_order_keep_visible"}
               className={"oui-text-2xs oui-ml-1"}

@@ -1,9 +1,7 @@
-import { AdditionalInfo } from "./additionalInfo.ui";
+import { AdditionalInfo, AdditionalInfoProps } from "./additionalInfo.ui";
 import { useAdditionalScript } from "./additional.script";
 
-export const AdditionalInfoWidget = (props: {
-  onValueChange?: (key: string, value: any) => void;
-}) => {
+export const AdditionalInfoWidget = (props: AdditionalInfoProps) => {
   const state = useAdditionalScript();
-  return <AdditionalInfo {...state} onValueChange={props.onValueChange} />;
+  return <AdditionalInfo {...state} {...props} />;
 };

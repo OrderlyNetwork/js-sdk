@@ -15,7 +15,9 @@ import {
   textVariants,
   inputFormatter,
   Box,
-  Popover,
+  PopoverRoot,
+  PopoverContent,
+  PopoverTrigger,
 } from "@orderly.network/ui";
 import {
   PropsWithChildren,
@@ -24,14 +26,11 @@ import {
   useMemo,
   useState,
 } from "react";
-import { OrderSide, OrderType } from "@orderly.network/types";
+import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
 import { OrderTPSL } from "./components/tpsl";
 import { API } from "@orderly.network/types";
 
-import {
-  OrderConfirmDialog,
-  orderConfirmDialogId,
-} from "./components/dialog/confirm.ui";
+import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import {
   OrderEntryContext,
   OrderEntryProvider,
@@ -56,6 +55,10 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_order_confirm",
+    true
+  );
+  const [pinned, setPinned] = useLocalStorage(
+    "orderly-order-additional-pinned",
     true
   );
 
@@ -261,11 +264,29 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
               Reduce only
             </label>
           </Flex>
-          <AdditionalConfigButton />
+          {!pinned && (
+            <AdditionalConfigButton
+              pinned={pinned}
+              setPinned={setPinned}
+              needConfirm={needConfirm}
+              setNeedConfirm={setNeedConfirm}
+              onValueChange={setOrderValue}
+              orderTypeExtra={formattedOrder["order_type_ext"]}
+            />
+          )}
         </Flex>
-        <Box p={2} r={"md"} intensity={700}>
-          <AdditionalInfoWidget />
-        </Box>
+        {pinned && (
+          <Box p={2} r={"md"} intensity={700}>
+            <AdditionalInfoWidget
+              pinned={pinned}
+              setPinned={setPinned}
+              needConfirm={needConfirm}
+              setNeedConfirm={setNeedConfirm}
+              onValueChange={setOrderValue}
+              orderTypeExtra={formattedOrder["order_type_ext"]}
+            />
+          </Box>
+        )}
       </div>
     </OrderEntryProvider>
   );
@@ -544,31 +565,43 @@ function AssetInfo(props: {
   );
 }
 
-function AdditionalConfigButton() {
+function AdditionalConfigButton(props: {
+  pinned: boolean;
+  setPinned: (pinned: boolean) => void;
+  onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
+  orderTypeExtra?: OrderType;
+  needConfirm: boolean;
+  setNeedConfirm: (value: boolean) => void;
+}) {
   // const []
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover
-      content={<AdditionalInfoWidget />}
-      contentProps={{
-        side: "top",
-        align: "end",
-      }}
-    >
-      <button>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+    <PopoverRoot open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          onClick={() => {
+            setOpen(true);
+          }}
         >
-          <path
-            d="M3.332 2.665a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667z"
-            fill="#fff"
-            fillOpacity=".8"
-          />
-        </svg>
-      </button>
-    </Popover>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3.332 2.665a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667z"
+              fill="#fff"
+              fillOpacity={open ? 0.8 : 0.36}
+            />
+          </svg>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent side={"top"} align={"end"} className={"oui-w-[230px]"}>
+        <AdditionalInfoWidget {...props} />
+      </PopoverContent>
+    </PopoverRoot>
   );
 }

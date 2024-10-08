@@ -1,10 +1,11 @@
-import { useLocalStorage } from "@orderly.network/hooks";
-
 export const useAdditionalScript = () => {
-  const [pined, setPined] = useLocalStorage("pined", true);
+  // const [needConfirm, setNeedConfirm] = useLocalStorage(
+  //   "orderly_order_confirm",
+  //   true
+  // );
 
   return {
-    pined,
-    setPined,
+    // needConfirm,
+    // setNeedConfirm,
   };
 };
