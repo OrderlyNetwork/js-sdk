@@ -185,7 +185,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "orderly", env: "staging" });
       return (
         <ConnectorProvider>
           <OrderlyApp
