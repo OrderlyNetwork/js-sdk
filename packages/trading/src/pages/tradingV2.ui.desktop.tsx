@@ -34,7 +34,20 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     setAnimating,
   } = props;
 
+  const tokenInfoBarHeight = 54;
+
   const marketsWidth = collapsed ? 70 : 280;
+  const orderEntryMinWidth = 280;
+  const orderEntryMaxWidth = 360;
+
+  const orderbookMinWidth = 280;
+  const orderbookMaxWidth = 732;
+
+  const orderbookMinHeight = 464;
+  const orderbookMaxHeight = 728;
+
+  const tradingViewMinWidth = 468;
+  const dataListMinHeight = 350;
 
   const marketsView = (
     <Box
@@ -64,8 +77,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       gapY={3}
       direction="column"
       style={{
-        minWidth: "280px",
-        maxWidth: "500px",
+        minWidth: orderEntryMinWidth,
+        maxWidth: orderEntryMaxWidth,
         width: mainSplitSize,
       }}
       height="100%"
@@ -86,8 +99,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       px={3}
       width="100%"
       style={{
-        minHeight: 54,
-        height: 54,
+        minHeight: tokenInfoBarHeight,
+        height: tokenInfoBarHeight,
       }}
     >
       <TokenInfoBarFullWidget
@@ -104,7 +117,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       height="100%"
       intensity={900}
       r="2xl"
-      style={{ flex: 1, minWidth: "468px" }}
+      style={{ flex: 1, minWidth: tradingViewMinWidth }}
     >
       <TradingviewWidget
         symbol={props.symbol}
@@ -119,8 +132,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     <Box
       height="100%"
       style={{
-        minWidth: "280px",
-        maxWidth: "800px",
+        minWidth: orderbookMinWidth,
+        maxWidth: orderbookMaxWidth,
         width: orderBookSplitSize,
       }}
     >
@@ -136,7 +149,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       intensity={900}
       r="2xl"
       p={3}
-      style={{ height: dataListSplitSize, minHeight: "350px" }}
+      style={{ height: dataListSplitSize, minHeight: dataListMinHeight }}
     >
       <DataListWidget
         {...props.dataList}
@@ -169,7 +182,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       style={{
         // the style width is not set, and a child node style needs to be set to flex: 1 to adapt
         flex: 1,
-        minHeight: "450px",
+        minHeight: orderbookMinHeight,
+        maxHeight: orderbookMaxHeight,
       }}
       onSizeChange={setOrderbookSplitSize}
     >
@@ -184,7 +198,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         <Flex
           gapX={3}
           style={{
-            minHeight: "450px",
+            minHeight: orderbookMinHeight,
+            maxHeight: orderbookMaxHeight,
           }}
           height="100%"
         >
@@ -202,7 +217,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       className="oui-flex-1 oui-overflow-hidden"
       gap={3}
       style={{
-        minWidth: "calc(100% - 500px)",
+        minWidth: `calc(100% - ${orderEntryMaxWidth}px)`,
       }}
     >
       {tokenInfoBarView}
