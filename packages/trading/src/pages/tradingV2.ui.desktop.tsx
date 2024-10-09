@@ -11,7 +11,7 @@ import {
   TokenInfoBarFullWidget,
 } from "@orderly.network/markets";
 import { LayoutSwitch } from "../components/desktop/layout/layoutSwitch";
-import SplitLayout from "../components/desktop/layout/splitLayout";
+import { SplitLayout } from "../components/desktop/layout/splitLayout";
 
 export type DesktopLayoutProps = TradingV2State & {
   className?: string;
@@ -57,7 +57,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       height="100%"
       width={marketsWidth}
       style={{ minWidth: marketsWidth }}
-      className="oui-transition-all oui-duration-150"     
+      className="oui-transition-all oui-duration-150"
       onTransitionEnd={() => {
         setAnimating(false);
       }}
