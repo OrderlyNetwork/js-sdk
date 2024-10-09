@@ -31,13 +31,9 @@ export const useOrderBookScript = (props: {
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
       level,
-      padding: false,
     });
 
   const pendingOrders = usePendingOrderStream(symbol);
-
-  // const { height } = useTabContext();
-
   useEffect(() => {
     if (height) {
       //   setCellHeight(height.content / level);
