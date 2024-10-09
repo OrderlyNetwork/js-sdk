@@ -30,6 +30,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     mainSplitSize,
     setMainSplitSize,
     isMedium,
+    animating,
+    setAnimating,
   } = props;
 
   const marketsWidth = collapsed ? 70 : 280;
@@ -42,13 +44,18 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       height="100%"
       width={marketsWidth}
       style={{ minWidth: marketsWidth }}
-      className="oui-transition-all oui-duration-200"
+      className="oui-transition-all oui-duration-150"     
+      onTransitionEnd={() => {
+        setAnimating(false);
+      }}
     >
-      <SideMarketsWidget
-        collapsed={collapsed}
-        onCollapse={onCollapse}
-        onSymbolChange={props.onSymbolChange}
-      />
+      {!animating && (
+        <SideMarketsWidget
+          collapsed={collapsed}
+          onCollapse={onCollapse}
+          onSymbolChange={props.onSymbolChange}
+        />
+      )}
     </Box>
   );
 
