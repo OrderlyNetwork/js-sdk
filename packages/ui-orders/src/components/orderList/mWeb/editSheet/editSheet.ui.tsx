@@ -159,6 +159,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         open={props.dialogOpen}
         onOpenChange={props.setDialogOpen}
         title="Confirm order"
+        size="xs"
         actions={{
           primary: {
             label: "Confirm",
@@ -174,7 +175,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         }}
         classNames={{
             content: "oui-p-4",
-            body: "oui-p-0"
+            body: "oui-p-0",
+            footer: "oui-pt-3 oui-pb-0",
         }}
       >
         <ConfirmDialogContent {...props} />

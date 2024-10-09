@@ -37,7 +37,16 @@ export const useColumn = (props: {
         },
         render: (value: string, record) => (
           <Flex gap={2}>
-            <Box width={4} height={20} className={cn("oui-rounded-[1px]", record.position_qty > 0 ? 'oui-bg-trade-profit' : 'oui-bg-trade-loss')} />
+            <Box
+              width={4}
+              height={20}
+              className={cn(
+                "oui-rounded-[1px]",
+                record.position_qty > 0
+                  ? "oui-bg-trade-profit"
+                  : "oui-bg-trade-loss"
+              )}
+            />
 
             <Text.formatted
               rule={"symbol"}
