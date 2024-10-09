@@ -67,6 +67,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
               onFilter={(value: any) => {
                 props.onFilter(value);
               }}
+              className="oui-px-3"
             />
           )}
 
