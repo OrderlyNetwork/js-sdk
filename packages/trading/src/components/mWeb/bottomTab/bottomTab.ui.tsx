@@ -29,22 +29,43 @@ export const BottomTab: FC<
       onValueChange={(e: any) => props.setTab(e)}
       className={props.className}
     >
-      <TabPanel title={BottomTabType.position} value={BottomTabType.position}>
+      <TabPanel
+        title={
+          (props.positionCount ?? 0) > 0
+            ? `${BottomTabType.position}(${props.positionCount})`
+            : BottomTabType.position
+        }
+        value={BottomTabType.position}
+      >
         <PositionsView {...props} />
       </TabPanel>
-      <TabPanel title={BottomTabType.pending} value={BottomTabType.pending}>
+      <TabPanel
+        title={
+          (props.pendingOrderCount ?? 0) > 0
+            ? `${BottomTabType.pending}(${props.pendingOrderCount})`
+            : BottomTabType.pending
+        }
+        value={BottomTabType.pending}
+      >
         <OrdersView
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
           {...props}
         />
       </TabPanel>
-      <TabPanel title={BottomTabType.tp_sl} value={BottomTabType.tp_sl}>
+      <TabPanel
+        title={
+          (props.tpSlOrderCount ?? 0) > 0
+            ? `${BottomTabType.tp_sl}(${props.tpSlOrderCount})`
+            : BottomTabType.tp_sl
+        }
+        value={BottomTabType.tp_sl}
+      >
         <OrdersView
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
           {...props}
-          />
+        />
       </TabPanel>
       <TabPanel title={BottomTabType.history} value={BottomTabType.history}>
         <OrdersView
@@ -68,6 +89,7 @@ const PositionsView: FC<BottomTabState> = (props) => {
       />
       <div className="oui-mt-2"></div>
       <MobilePositionsWidget
+        symbol={props.showAllSymbol ? undefined : props.symbol}
         {...props.config}
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
       />
@@ -103,9 +125,12 @@ const OrdersView: FC<
             Show all instruments
           </Text>
         </Flex>
-        <Button variant="outlined" size="xs" color="secondary">Close All</Button>
+        <Button variant="outlined" size="xs" color="secondary">
+          Close All
+        </Button>
       </Flex>
       <MobileOrderListWidget
+        symbol={props.showAllSymbol ? undefined : props.symbol}
         type={props.type}
         ordersStatus={props.ordersStatus}
         classNames={{

@@ -2,11 +2,13 @@ import { useLocalStorage, useMediaQuery } from "@orderly.network/hooks";
 import { useTradingPageContext } from "../provider/context";
 import { TradingPageState } from "../types/types";
 import { useSplitPersistent } from "../components/desktop/layout/useSplitPersistent";
+import { useState } from "react";
 
 export type TradingV2State = ReturnType<typeof useTradingV2Script>;
 
 export const useTradingV2Script = () => {
   const props = useTradingPageContext();
+  const [animating, setAnimating] = useState(false);
 
   const [collapsed, setCollapsed] = useLocalStorage(
     "orderly_side_markets_collapsed",
@@ -36,9 +38,14 @@ export const useTradingV2Script = () => {
 
   const isMedium = useMediaQuery("(max-width: 1680px)");
 
+  const onCollapse = (collapsed: boolean) => {
+    setCollapsed(collapsed);
+    setAnimating(true);
+  };
+
   const map = {
     collapsed,
-    onCollapse: setCollapsed,
+    onCollapse,
     layout,
     onLayout: setLayout,
     orderBookSplitSize,
@@ -48,6 +55,8 @@ export const useTradingV2Script = () => {
     mainSplitSize,
     setMainSplitSize,
     isMedium,
+    animating,
+    setAnimating
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;

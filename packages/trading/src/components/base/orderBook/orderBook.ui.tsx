@@ -30,9 +30,9 @@ export const OrderBook: FC<
           className={props.className}
           symbolInfo={props.symbolInfo}
           tabletMediaQuery={props.tabletMediaQuery}
-          />
-        ) : (
-          <DesktopOrderBook
+        />
+      ) : (
+        <DesktopOrderBook
           level={props.level}
           asks={props.asks!}
           bids={props.bids!}

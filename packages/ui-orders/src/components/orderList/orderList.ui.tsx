@@ -39,7 +39,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
           }}
           onRow={(record, index) => {
             return {
-              className: grayCell(record) ? "oui-text-base-contrast-20" : "",
+              className: grayCell(record) ? "oui-text-base-contrast-20" : "oui-text-base-contrast-80",
             };
           }}
           generatedRowKey={(record, index) =>
@@ -67,6 +67,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
               onFilter={(value: any) => {
                 props.onFilter(value);
               }}
+              className="oui-px-3"
             />
           )}
 

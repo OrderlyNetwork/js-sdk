@@ -223,7 +223,8 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    symbol: "PERP_ETH_USDC",
+    // symbol: "PERP_ETH_USDC",
+    symbol: "PERP_ORDER_USDC",
     tradingViewConfig: {
       scriptSRC: "/tradingview/charting_library/charting_library.js",
       library_path: "/tradingview/charting_library/",
@@ -231,10 +232,9 @@ const meta = {
     },
 
     dataList: {
-      config: {
-        sharePnLConfig
-      }
-    }
+      sharePnLConfig
+    },
+    tabletMediaQuery: "(max-width: 768px)"
   }
 } satisfies Meta<typeof TradingPageV2>;
 
@@ -245,12 +245,10 @@ export const Default: Story = {};
 
 
 export const DataList: Story = {
-  render: () => {
+  render: (arg) => {
 
     return (<Box p={3}>
-      <DataListWidget config={{
-        sharePnLConfig
-      }} />
+      <DataListWidget sharePnLConfig={sharePnLConfig} tabletMediaQuery={arg.tabletMediaQuery!} />
     </Box>);
   }
 };
@@ -299,7 +297,7 @@ export const OrderBook: Story = {
     return (
       <div className="oui-h-[500px] oui-m-3 oui-flex oui-items-start oui-justify-center">
         <Box className="oui-w-1/2 oui-bg-base-9" r="2xl" py={3}>
-          <OrderBookWidget symbol={arg.symbol} />
+          <OrderBookWidget symbol={arg.symbol} tabletMediaQuery={arg.tabletMediaQuery!} />
         </Box>
       </div>
     );
@@ -318,7 +316,7 @@ export const OrderBookAndTrades: Story = {
         className="oui-bg-[rgba(255,255,255,0.3)]"
       >
         <Box className="oui-w-[50vw] oui-h-[600px]" >
-          <OrderBookAndTradesWidget symbol={arg.symbol} />
+          <OrderBookAndTradesWidget symbol={arg.symbol} tabletMediaQuery={arg.tabletMediaQuery!} />
         </Box>
       </Flex>
     );

@@ -30,7 +30,7 @@ import { useAppStore } from "../appStore";
 import { omit } from "ramda";
 // import { usePosition } from "./usePosition";
 
-type PriceMode = "markPrice" | "lastPrice";
+export type PriceMode = "markPrice" | "lastPrice";
 
 export const usePositionStream = (
   /**
