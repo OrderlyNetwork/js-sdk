@@ -117,7 +117,7 @@ export class Assets {
   }
 
   private async getWithdrawalNonce(): Promise<number> {
-    const timestamp = Date.now().toString();
+    const timestamp = getTimestamp().toString();
     const url = "/v1/withdraw_nonce";
     const message = [timestamp, "GET", url].join("");
 

@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Decimal } from "@orderly.network/utils";
-import { useMarketList, useQuery, MarketsType } from "@orderly.network/hooks";
+import {
+  useMarketsStream,
+  useSymbolsInfo,
+  useQuery,
+} from "@orderly.network/hooks";
 import { sortList, useSize } from "../../../utils";
 
 // export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
@@ -43,8 +47,26 @@ export const useMarketsHeaderScript = () => {
 };
 
 export function useDataSource() {
-  const [markets, favorite] = useMarketList(MarketsType.ALL);
+  const symbolsInfo = useSymbolsInfo();
+  const { data: futures } = useMarketsStream();
   const { data: balance } = useQuery("/v1/public/balance/stats");
+
+  const markets = useMemo(() => {
+    const list = futures?.map((item: any) => {
+      const { open_interest = 0, index_price = 0 } = item;
+      const info = symbolsInfo[item.symbol];
+
+      return {
+        ...item,
+        quote_dp: info("quote_dp"),
+        created_time: info("created_time"),
+        openInterest: new Decimal(open_interest || 0)
+          .mul(index_price || 0)
+          .toNumber(),
+      };
+    });
+    return list || [];
+  }, [symbolsInfo, futures]);
 
   const news = useMemo(
     () => sortList(markets, "created_time", "desc").slice(0, 5),
@@ -94,6 +116,5 @@ export function useDataSource() {
     total24Amount: total24Amount.toNumber(),
     totalOpenInterest: totalOpenInterest.toNumber(),
     tvl,
-    favorite,
   };
 }

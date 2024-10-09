@@ -1,15 +1,16 @@
 import { FC } from "react";
 import { cn, DataTable, Pagination } from "@orderly.network/ui";
-import { type UseMarketsListFullReturn } from "./marketsListFull.script";
-import { TInitialSort } from "../../type";
-import { useMarketsContext } from "../../components/marketsProvider";
-import { useMarketsListFullColumns } from "./column";
+import { type UseMarketListReturn } from "./marketList.script";
+import { useDataListColumns } from "../column";
+import { TInitialSort } from "../../../../type";
+import { useMarketsContext } from "../../provider";
 
-export type MarketsListFullProps = UseMarketsListFullReturn & {
+type MarketListProps = UseMarketListReturn & {
   initialSort: TInitialSort;
+  type?: "all" | "new";
 };
 
-export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
+export const MarketList: FC<MarketListProps> = (props) => {
   const {
     loading,
     dataSource,
@@ -19,11 +20,12 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
     favorite,
     onSort,
     initialSort,
+    type,
   } = props;
 
   const { onSymbolChange } = useMarketsContext();
 
-  const columns = useMarketsListFullColumns(favorite, false);
+  const columns = useDataListColumns(favorite, false);
 
   return (
     <DataTable
@@ -40,8 +42,8 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
           className: cn("oui-h-[55px] oui-border-line-4 oui-cursor-pointer"),
           onClick: () => {
             onSymbolChange?.(record);
-            favorite.addToHistory(record);
           },
+          "data-testid": `oui-testid-markets-${type === 'new' ? 'newListing' : 'all'}-tr-${record.symbol}`
         };
       }}
       generatedRowKey={(record) => record.symbol}

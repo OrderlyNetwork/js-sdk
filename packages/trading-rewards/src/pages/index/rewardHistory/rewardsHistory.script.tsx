@@ -9,6 +9,7 @@ import {
 import { usePagination } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
 import { RewardsTooltipProps } from "../curEpoch/rewardsTooltip";
+import { getTimestamp } from "@orderly.network/utils";
 
 export type ListType = EpochInfoItem & {
   info?: WalletRewardsItem;
@@ -116,7 +117,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
       }
     }
     combineData.sort((a, b) => b.epoch_id - a.epoch_id);
-    const curDate = Date.now();
+    const curDate = getTimestamp();
     return combineData.filter((item) => item.end_time <= curDate);
   }, [
     history,

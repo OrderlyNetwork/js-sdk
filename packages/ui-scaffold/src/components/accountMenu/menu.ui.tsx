@@ -146,7 +146,7 @@ const WalletMenu = (props: {
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger asChild>
-        <Button size="md" variant="gradient" angle={45}>
+        <Button size="md" variant="gradient" angle={45} data-testid="oui-testid-nav-bar-address-btn">
           <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
             {address}
           </Text.formatted>
@@ -255,8 +255,9 @@ const WalletMenu = (props: {
                 event.preventDefault();
                 onDisconnect();
               }}
+              data-testid="oui-testid-nav-bar-dropDownMenuItem-disconnect"
             >
-              <Flex gap={2} className={"oui-text-danger-light"}>
+              <Flex gap={2} className={"oui-text-danger-light"} >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { TWType } from "./types";
 import { useQuery } from "../useQuery";
+import { getTimestamp } from "@orderly.network/utils";
 
 export type EpochInfoItem = {
   epoch_id: number;
@@ -56,7 +57,7 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
 
           const epochOne = list.find((item) => item.epoch_id === 1);
 
-          if (epochOne && epochOne?.start_time > Date.now()) {
+          if (epochOne && epochOne?.start_time > getTimestamp()) {
             // not start
             setCurEpochInfo(epochOne);
           } else {
@@ -80,7 +81,7 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
 
     const epochOne = epochInfo?.find((item) => item.epoch_id === 1);
     if (epochOne) {
-      return epochOne.start_time > Date.now();
+      return epochOne.start_time > getTimestamp();
     }
     return true;
   }, [epochInfo]);

@@ -1,7 +1,12 @@
-import { useMarketList } from "@orderly.network/hooks";
+import { FavoriteTab, useMarkets } from "@orderly.network/hooks";
 import { SortOrder } from "@orderly.network/ui";
 
-export type FavoriteInstance = ReturnType<typeof useMarketList>[1];
+export type MarketsFavorite = ReturnType<typeof useMarkets>[1];
+
+export type TFavorite = MarketsFavorite & {
+  curTab: FavoriteTab;
+  setCurTab: (tab: FavoriteTab) => void;
+};
 
 export type TInitialSort = {
   sortKey: string;

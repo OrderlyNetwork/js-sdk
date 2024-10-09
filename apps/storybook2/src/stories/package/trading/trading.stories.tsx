@@ -49,6 +49,7 @@ const meta = {
                         name: "Trading rewards",
                         href: "/",
                         description: "Trade with WOOFi Pro to earn ORDER",
+                        testid: "aabc",
                         icon: (
                           <svg
                             width="20"

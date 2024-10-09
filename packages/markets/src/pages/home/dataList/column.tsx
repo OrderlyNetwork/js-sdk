@@ -13,12 +13,12 @@ import {
   MoveToTopIcon,
   OrderlyIcon,
   UnFavoritesIcon,
-} from "../../icons";
-import { FavoriteInstance } from "../../type";
-import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+} from "../../../icons";
+import { FavoritesDropdownMenu } from "./dataList.ui";
+import { TFavorite } from "../../../type";
 
-export const useMarketsListFullColumns = (
-  favorite: FavoriteInstance,
+export const useDataListColumns = (
+  favorite: TFavorite,
   isFavoriteList = false
 ) => {
   const columns = useMemo<Column[]>(() => {
@@ -39,11 +39,7 @@ export const useMarketsListFullColumns = (
         width: 30,
         render: (value, record) => {
           const onDelSymbol: MouseEventHandler = (e) => {
-            favorite.updateSymbolFavoriteState(
-              record,
-              favorite.selectedFavoriteTab,
-              true
-            );
+            favorite.updateSymbolFavoriteState(record, favorite.curTab, true);
             e.stopPropagation();
           };
 
@@ -55,6 +51,7 @@ export const useMarketsListFullColumns = (
               justify="center"
               itemAlign="center"
               onClick={isFavoriteList ? onDelSymbol : undefined}
+              data-testid="oui-testid-markets-table-row-favorite-icon"
             >
               {value ? (
                 <FavoritesIcon className="oui-text-[rgba(255,154,46,1)]" />
@@ -69,9 +66,9 @@ export const useMarketsListFullColumns = (
           }
 
           return (
-            <FavoritesDropdownMenuWidget row={record} favorite={favorite}>
+            <FavoritesDropdownMenu row={record} favorite={favorite}>
               {button}
-            </FavoritesDropdownMenuWidget>
+            </FavoritesDropdownMenu>
           );
         },
       },
@@ -81,15 +78,17 @@ export const useMarketsListFullColumns = (
         width: 90,
         render: (value) => {
           return (
-            <Text.formatted
-              rule="symbol"
-              formatString="base-type"
-              size="xs"
-              weight="semibold"
-              showIcon
-            >
-              {value}
-            </Text.formatted>
+            <Flex gapX={1}>
+              <TokenIcon symbol={value} size="xs" />
+              <Text.formatted
+                rule="symbol"
+                formatString="base-type"
+                size="xs"
+                weight="semibold"
+              >
+                {value}
+              </Text.formatted>
+            </Flex>
           );
         },
       },
@@ -196,6 +195,7 @@ export const useMarketsListFullColumns = (
                       e.stopPropagation();
                       favorite.pinToTop(record);
                     }}
+                    data-testid="oui-markets-favorites-pinned-icon"
                   >
                     <MoveToTopIcon className="oui-text-base-contrast-20 hover:oui-text-base-contrast" />
                   </Box>

@@ -1,25 +1,96 @@
-import { KeyboardEventHandler } from "react";
+import { FC, KeyboardEventHandler } from "react";
 import {
   Box,
   cn,
+  DataTable,
   Flex,
+  Pagination,
   Text,
   Tooltip,
   Input,
   modal,
 } from "@orderly.network/ui";
 import { FavoriteTab } from "@orderly.network/hooks";
+import { useDataListColumns } from "../column";
 import {
-  UseFavoritesTabScriptOptions,
-  UseFavoritesTabScriptReturn,
-} from "./favoritesTabs.script";
-import { AddIcon, AddIcon2, EditIcon, TrashIcon } from "../../icons";
-import "../../style/index.css";
+  EditIcon,
+  TrashIcon,
+  AddIcon,
+  UnFavoritesIcon,
+} from "../../../../icons";
+import { TFavorite } from "../../../../type";
+import { UseFavoritesReturn, useFavoritesTabScript } from "./favorites.script";
+import { useMarketsContext } from "../../provider";
+import "../../../../style/index.css";
 
-export type FavoritesTabProps = UseFavoritesTabScriptReturn &
-  Pick<UseFavoritesTabScriptOptions, "size">;
+type FavoritesProps = {} & UseFavoritesReturn;
 
-export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
+export const Favorites: FC<FavoritesProps> = (props) => {
+  const { dataSource, meta, setPage, setPageSize, favorite, onSort, loading } =
+    props;
+
+  const { onSymbolChange } = useMarketsContext();
+
+  const columns = useDataListColumns(favorite, true);
+
+  const emptyView = (
+    <Flex>
+      <Text size="xs" intensity={36}>
+        Click on the
+      </Text>
+      <UnFavoritesIcon className="oui-text-base-contrast-36" />
+      <Text size="xs" intensity={36}>
+        icon next to a market to add it to your list.
+      </Text>
+    </Flex>
+  );
+
+  return (
+    <div>
+      <FavoritesTab favorite={favorite} />
+
+      <DataTable
+        bordered
+        classNames={{
+          header: "oui-text-base-contrast-36",
+          body: "oui-text-base-contrast-80 !oui-min-h-[187.5px]",
+        }}
+        columns={columns}
+        dataSource={dataSource}
+        emptyView={emptyView}
+        loading={loading}
+        onRow={(record, index) => {
+          return {
+            className: cn(
+              "group",
+              "oui-h-[55px] oui-border-line-4 oui-cursor-pointer"
+            ),
+            "data-testid": `oui-testid-markets-favorites-tr-${record.symbol}`,
+            onClick: () => {
+              onSymbolChange?.(record);
+            },
+          };
+        }}
+        generatedRowKey={(record) => record.symbol}
+        onSort={onSort}
+      >
+        <Pagination
+          {...meta}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
+      </DataTable>
+    </div>
+  );
+};
+
+type FavoritesTabProps = {
+  favorite: TFavorite;
+};
+
+const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
+  const { curTab, favoriteTabs } = props.favorite;
+
   const {
     open,
     setOpen,
@@ -29,15 +100,12 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
     editing,
     value,
     onValueChange,
+    updateSelectedTab,
     updateCurTab,
     onEdit,
     addTab,
     delTab,
-    size = "default",
-  } = props;
-
-  const { selectedFavoriteTab, favoriteTabs, updateSelectedFavoriteTab } =
-    props.favorite;
+  } = useFavoritesTabScript(props.favorite);
 
   const onDel = (item: any) => {
     modal.confirm({
@@ -77,16 +145,14 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           onBlur={updateCurTab}
           classNames={{
             root: cn(
-              "oui-p-0 oui-rounded oui-px-2",
+              "oui-p-0 oui-h-[24px] oui-rounded oui-px-2",
               "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
-              size === "sm" ? "oui-h-[18px]" : "oui-h-[24px]",
               isActive &&
                 "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
             ),
             input: cn(
-              "oui-font-semibold oui-text-transparent",
-              "oui-gradient-brand oui-caret-[rgba(217,217,217,1)]",
-              size === "sm" ? "oui-text-2xs" : "oui-text-sm"
+              "oui-text-sm oui-font-semibold oui-text-transparent",
+              "oui-gradient-brand oui-caret-[rgba(217,217,217,1)]"
             ),
           }}
           onKeyUp={onKeyUp}
@@ -98,11 +164,10 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           color="brand"
           angle={270}
           weight="semibold"
-          size={size === "sm" ? "2xs" : "sm"}
-          className={
-            size === "sm" ? "oui-leading-[18px]" : "oui-leading-[24px]"
-          }
+          size="sm"
+          className="oui-leading-[24px]"
           as="div"
+           data-testid="oui-markets-favorite-tab-subTab"
         >
           {item.name}
         </Text.gradient>
@@ -111,11 +176,10 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       content = (
         <Text
           weight="semibold"
-          size={size === "sm" ? "2xs" : "sm"}
-          className={
-            size === "sm" ? "oui-leading-[18px]" : "oui-leading-[24px]"
-          }
+          size="sm"
+          className="oui-leading-[24px]"
           as="div"
+          data-testid="oui-markets-favorite-tab-subTab"
         >
           {item.name}
         </Text>
@@ -126,7 +190,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
       <Box
         r="base"
         px={2}
-        height={size === "sm" ? 18 : 24}
+        height={24}
         className={cn(
           "oui-cursor-pointer oui-select-none",
           isActive
@@ -137,7 +201,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             : "oui-bg-line-6 oui-text-base-contrast-36 hover:oui-text-base-contrast"
         )}
         onClick={() => {
-          updateSelectedFavoriteTab(item);
+          updateSelectedTab(item);
           if (isActive) {
             setOpen(true);
           }
@@ -151,12 +215,12 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   return (
     <Flex
       my={3}
-      gapX={size === "sm" ? 2 : 3}
+      gapX={3}
       id="oui-markets-favorites-tabs-container"
-      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer hide-scrollbar"
+      className="oui-overflow-hidden oui-overflow-x-auto oui-cursor-pointer "
     >
       {favoriteTabs?.map((item: any) => {
-        const isActive = selectedFavoriteTab.id === item.id;
+        const isActive = curTab.id === item.id;
         return (
           <Tooltip
             key={item.id}
@@ -168,7 +232,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             }}
             // @ts-ignore
             content={
-              <Flex gapX={2} itemAlign="center" px={2} py={1}>
+              <Flex gapX={2} itemAlign="center" px={2} py={1} >
                 <EditIcon
                   className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer"
                   onClick={() => {
@@ -194,15 +258,15 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
         );
       })}
       <Flex
-        className="oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
-        width={size === "sm" ? 28 : 36}
-        height={size === "sm" ? 18 : 24}
+        className="oui-bg-line-6 oui-cursor-pointer oui-text-base-contrast-36 hover:oui-text-base-contrast"
+        width={32}
+        height={18}
         r="base"
         justify="center"
         itemAlign="center"
         onClick={addTab}
       >
-        <AddIcon2 className="oui-w-4 oui-h-4" />
+        <AddIcon className="oui-w-4 oui-h-4" />
       </Flex>
       <Text size="xs" ref={spanRef} className="oui-invisible">
         {value}
