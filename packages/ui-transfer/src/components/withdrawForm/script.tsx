@@ -14,6 +14,7 @@ import {Decimal, int2hex, praseChainIdToNumber} from "@orderly.network/utils";
 import {toast} from "@orderly.network/ui";
 import {useAppContext} from "@orderly.network/react-app";
 import { InputStatus } from "../../types";
+import { CurrentChain } from "../depositForm/hooks";
 
 export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>
 
@@ -132,7 +133,7 @@ export const useWithdrawForm = ({onClose}: {onClose:(() => void) | undefined}) =
             ...connectedChain,
             id: chainId,
             info: chain!,
-        };
+        } as CurrentChain;
     }, [connectedChain, findByChainId]);
 
 

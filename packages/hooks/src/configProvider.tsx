@@ -24,6 +24,8 @@ import { StatusProvider } from "./statusProvider";
 import { SDKError } from "@orderly.network/types";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import type { Chains } from "./orderly/useChains";
+import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
+import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 // import { useParamsCheck } from "./useParamsCheck";
 
 type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
@@ -80,12 +82,12 @@ export const OrderlyConfigProvider = (
     console.error("[OrderlyConfigProvider]: brokerId is required");
   }
 
-  if (typeof walletAdapters === "undefined") {
-    console.error(
-      "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
-        "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
-    );
-  }
+  // if (typeof walletAdapters === "undefined") {
+  //   console.error(
+  //     "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
+  //       "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
+  //   );
+  // }
 
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
@@ -121,6 +123,14 @@ export const OrderlyConfigProvider = (
     );
   });
 
+  const innerWalletAdapters = useConstant<WalletAdapter[]>(() => {
+    return (
+      walletAdapters || [
+        new DefaultEVMAdapterWalletAdapter(new EthersProvider()),
+      ]
+    );
+  });
+
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
 
@@ -132,7 +142,7 @@ export const OrderlyConfigProvider = (
         innerConfigStore,
         innerKeyStore,
         // innerGetWalletAdapter,
-        walletAdapters,
+        innerWalletAdapters,
         {
           contracts,
         }
@@ -164,7 +174,7 @@ export const OrderlyConfigProvider = (
         getWalletAdapter: innerGetWalletAdapter,
         networkId: networkId,
         filteredChains: filteredChains,
-        walletAdapters,
+        walletAdapters: innerWalletAdapters,
         // apiBaseUrl,
         customChains,
       }}
