@@ -8,12 +8,16 @@ import { PositionsRowProvider } from "./desktop/positionRowContext";
 import { ReactNode } from "react";
 import { PositionCellWidget } from "./mWeb/positionCell";
 
-export const Positions = (props: PositionsBuilderState & PositionsProps) => {
+export const Positions = (props: PositionsBuilderState) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
   const column = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
   });
+
+  console.log("xxxx positions", props);
+  
+
   return (
     <div>
       <DataTable<API.PositionTPSLExt>

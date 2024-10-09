@@ -152,8 +152,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       style={{ height: dataListSplitSize, minHeight: dataListMinHeight }}
     >
       <DataListWidget
-        {...props.dataList}
+        current={undefined}
         tabletMediaQuery={props.tabletMediaQuery}
+        symbol={props.symbol}
+        
       />
     </Box>
   );

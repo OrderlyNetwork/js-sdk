@@ -1,7 +1,7 @@
-import { useLocalStorage } from "@orderly.network/hooks";
 import { PositionsProps } from "@orderly.network/ui-positions";
-import { useEffect, useState } from "react";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
+import { usePositionsCount } from "../../../provider/usePositionsCount";
+import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
 
 export enum DataListTabType {
   positions = "Positions",
@@ -11,21 +11,42 @@ export enum DataListTabType {
   orderHistory = "Order history",
 }
 
-export const useDataListScript = (props: {
-  current?: DataListTabType;
-  config: PositionsProps & {
-    symbol?: string;
-  };
-  tabletMediaQuery: string;
-}) => {
-  const { current, config, tabletMediaQuery } = props;
-  const loalStorage = useTradingLocalStorage();
+export const useDataListScript = (
+  props: {
+    current?: DataListTabType;
+    tabletMediaQuery: string;
+  } & PositionsProps
+) => {
+  const {
+    current,
+    tabletMediaQuery,
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    symbol,
+    calcMode,
+    includedPendingOrder,
+  } = props;
+  const loalStorage = useTradingLocalStorage({
+    pnlNotionalDecimalPrecision,
+  });
+
+  const { positionCount } = usePositionsCount(props.symbol);
+  const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(
+    props.symbol
+  );
 
   return {
     current,
-    config,
-    ...loalStorage,
     tabletMediaQuery,
+
+    sharePnLConfig,
+    symbol,
+    calcMode,
+    includedPendingOrder,
+    ...loalStorage,
+    positionCount,
+    pendingOrderCount,
+    tpSlOrderCount,
   };
 };
 

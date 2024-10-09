@@ -2,6 +2,8 @@ import { API } from "@orderly.network/types";
 import { DataListTabType } from "../components/desktop/dataList/dataList.script";
 import { PositionsProps } from "@orderly.network/ui-positions";
 import { ReactNode } from "react";
+import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+
 
 export type layoutInfo = {
   width?: number;
@@ -158,7 +160,8 @@ export type TradingPageProps = BaseTradingPageProps & {
 export type TradingPageV2Props = BaseTradingPageProps & {
   dataList: {
     current?: DataListTabType;
-    config: Partial<Omit<PositionsProps, "pnlNotionalDecimalPrecision">>;
+    sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   };
   /** default is  `(max-width: 768px)`*/
   tabletMediaQuery?: string;

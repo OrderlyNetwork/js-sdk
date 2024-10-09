@@ -24,7 +24,7 @@ import {
   findTPSLFromOrders,
 } from "./utils";
 
-type PriceMode = "markPrice" | "lastPrice";
+export type PriceMode = "markPrice" | "lastPrice";
 
 export interface PositionReturn {
   data: any[];
