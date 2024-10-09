@@ -1,5 +1,19 @@
 # @orderly.network/trading-rewards
 
+## 1.0.1-preReleaseV2-1.11
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@1.0.1-preReleaseV2-1.11
+  - @orderly.network/ui-scaffold@1.0.1-preReleaseV2-1.11
+  - @orderly.network/hooks@1.5.13-preReleaseV2-1.11
+  - @orderly.network/types@1.5.13-preReleaseV2-1.11
+  - @orderly.network/utils@1.5.13-preReleaseV2-1.11
+  - @orderly.network/react-app@1.0.1-preReleaseV2-1.11
+  - @orderly.network/ui@1.0.1-preReleaseV2-1.11
+
 ## 1.0.1-preReleaseV2-1.10
 
 ### Patch Changes
