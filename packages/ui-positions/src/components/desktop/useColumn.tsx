@@ -1,4 +1,4 @@
-import { Column, Flex, Text } from "@orderly.network/ui";
+import { Box, cn, Column, Flex, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
 import { TPSLButton } from "./tpsl/tpsl.ui";
 import {
@@ -8,7 +8,11 @@ import {
 } from "./listElement";
 import { CloseButton } from "./closeButton";
 import { Decimal } from "@orderly.network/utils";
-import { SharePnLBottomSheetId, SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
+import {
+  SharePnLBottomSheetId,
+  SharePnLConfig,
+  SharePnLDialogId,
+} from "@orderly.network/ui-share";
 import { ShareButtonWidget } from "./shareButton";
 import { API } from "@orderly.network/types";
 import { TriggerPrice } from "./triggerPrice";
@@ -31,17 +35,21 @@ export const useColumn = (props: {
           }
           return r2.symbol.localeCompare(r1.symbol);
         },
-        render: (value: string) => (
-          <Text.formatted
-            rule={"symbol"}
-            onClick={(e) => {
-              // props.onSymbolChange?.({ symbol: value } as API.Symbol);
-              // e.stopPropagation();
-              // e.preventDefault();
-            }}
-          >
-            {value}
-          </Text.formatted>
+        render: (value: string, record) => (
+          <Flex gap={2}>
+            <Box width={4} height={20} className={cn("oui-rounded-[1px]", record.position_qty > 0 ? 'oui-bg-trade-profit' : 'oui-bg-trade-loss')} />
+
+            <Text.formatted
+              rule={"symbol"}
+              onClick={(e) => {
+                // props.onSymbolChange?.({ symbol: value } as API.Symbol);
+                // e.stopPropagation();
+                // e.preventDefault();
+              }}
+            >
+              {value}
+            </Text.formatted>
+          </Flex>
         ),
       },
       {
@@ -73,7 +81,10 @@ export const useColumn = (props: {
         dataIndex: "average_open_price",
         render: (value: string, record: any) => {
           return (
-            <Text.numeral dp={record?.symbolInfo?.("quote_dp")} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral
+              dp={record?.symbolInfo?.("quote_dp")}
+              rm={Decimal.ROUND_DOWN}
+            >
               {value}
             </Text.numeral>
           );
@@ -88,7 +99,10 @@ export const useColumn = (props: {
 
         render: (value: string, record: any) => {
           return (
-            <Text.numeral dp={record?.symbolInfo?.("quote_dp")} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral
+              dp={record?.symbolInfo?.("quote_dp")}
+              rm={Decimal.ROUND_DOWN}
+            >
               {value}
             </Text.numeral>
           );
@@ -104,7 +118,10 @@ export const useColumn = (props: {
           return Number(value) === 0 ? (
             "--"
           ) : (
-            <Text.numeral dp={record?.symbolInfo?.("quote_dp")} rm={Decimal.ROUND_DOWN}>
+            <Text.numeral
+              dp={record?.symbolInfo?.("quote_dp")}
+              rm={Decimal.ROUND_DOWN}
+            >
               {value}
             </Text.numeral>
           );
