@@ -11,6 +11,8 @@ import {
 import { DatePicker, DatePickerProps } from "../../pickers/datepicker";
 import { CombineSelect } from "../../select/combine";
 import { DateRange } from "react-day-picker";
+import { cn } from "../..";
+
 
 type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol";
 
@@ -48,6 +50,7 @@ export type DataFilterItems = (DataFilterGeneral &
 export type DataFilterProps = {
   items: DataFilterItems;
   onFilter: (filter: { name: string; value: any }) => void;
+  className?: string;
 };
 
 const FilterDatePicker = (props: DatePickerProps) => {
@@ -135,7 +138,7 @@ export const DataTableFilter = (props: DataFilterProps) => {
       gapX={3}
       py={3}
       width={"100%"}
-      className="oui-data-grid-filter-bar oui-border-b oui-border-line"
+      className={cn("oui-data-grid-filter-bar oui-border-b oui-border-line", props.className)}
     >
       {props.items.map((item, index: number) => {
         if (item.type === "date") {
