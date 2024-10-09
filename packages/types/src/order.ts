@@ -89,7 +89,7 @@ export interface AlgoOrder extends BaseOrder, OrderExt {
   // symbol: string;
   algo_type: AlgoOrderRootType;
   trigger_price_type: string;
-  trigger_price: number | string;
+  trigger_price: string;
   child_orders: AlgoOrderChildOrders;
 }
 

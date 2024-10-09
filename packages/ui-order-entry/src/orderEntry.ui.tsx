@@ -1,34 +1,40 @@
-import { uesOrderEntryScriptReturn } from "./useOrderEntry.script";
+import { type uesOrderEntryScriptReturn } from "./useOrderEntry.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import {
+  Box,
   Button,
   cn,
   Divider,
   Flex,
   Input,
+  inputFormatter,
   InputProps,
   modal,
+  PopoverContent,
+  PopoverRoot,
+  PopoverTrigger,
   Select,
   Slider,
   Switch,
   Text,
   textVariants,
-  inputFormatter,
-  Box,
-  PopoverRoot,
-  PopoverContent,
-  PopoverTrigger,
 } from "@orderly.network/ui";
 import {
+  FocusEventHandler,
+  forwardRef,
   PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  API,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { OrderTPSL } from "./components/tpsl";
-import { API } from "@orderly.network/types";
 
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import {
@@ -37,6 +43,9 @@ import {
 } from "./components/orderEntryContext";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
+import { InputType } from "./types";
+
+type Refs = uesOrderEntryScriptReturn["refs"];
 
 export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
   const {
@@ -49,6 +58,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
     helper,
     submit,
     metaState,
+    refs,
   } = props;
 
   const { errors, validated } = metaState;
@@ -117,7 +127,6 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           return true;
         },
         (errors) => {
-          console.log("validation errors+++++", errors);
           setErrorMsgVisible(true);
         }
       )
@@ -192,6 +201,9 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           onChange={(key, value) => {
             props.setOrderValue(key, value);
           }}
+          refs={props.refs}
+          onBlur={props.onBlur}
+          onFocus={props.onFocus}
         />
         <QuantitySlider
           maxQty={maxQty}
@@ -272,11 +284,12 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
               setNeedConfirm={setNeedConfirm}
               onValueChange={setOrderValue}
               orderTypeExtra={formattedOrder["order_type_ext"]}
+              showExtra={formattedOrder["order_type"] === OrderType.LIMIT}
             />
           )}
         </Flex>
         {pinned && (
-          <Box p={2} r={"md"} intensity={700}>
+          <Box p={2} r={"md"} intensity={700} position={"relative"}>
             <AdditionalInfoWidget
               pinned={pinned}
               setPinned={setPinned}
@@ -284,7 +297,28 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
               setNeedConfirm={setNeedConfirm}
               onValueChange={setOrderValue}
               orderTypeExtra={formattedOrder["order_type_ext"]}
+              showExtra={formattedOrder["order_type"] === OrderType.LIMIT}
             />
+            <button
+              onClick={() => {
+                setPinned(false);
+              }}
+              className={"oui-absolute oui-top-2 oui-right-2"}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.67 1.953A2.667 2.667 0 0 0 2.005 4.62v6.667a2.667 2.667 0 0 0 2.667 2.666h6.666a2.667 2.667 0 0 0 2.667-2.666V4.62a2.667 2.667 0 0 0-2.667-2.667zm1.334 3.334c.17 0 .349.057.48.187l1.52 1.52 1.52-1.52a.68.68 0 0 1 .48-.187c.17 0 .349.057.48.187.26.26.26.698 0 .958L8.962 7.954l1.52 1.52c.26.262.26.699 0 .96a.687.687 0 0 1-.958 0l-1.52-1.522-1.52 1.52a.687.687 0 0 1-.96 0 .687.687 0 0 1 0-.958l1.521-1.52-1.52-1.521a.687.687 0 0 1 0-.96.68.68 0 0 1 .479-.186"
+                  fill="#fff"
+                  fillOpacity=".2"
+                />
+              </svg>
+            </button>
           </Box>
         )}
       </div>
@@ -307,8 +341,11 @@ const OrderQuantityInput = (props: {
     key: "order_quantity" | "order_price" | "trigger_price" | "total",
     value: any
   ) => void;
+  refs: Refs;
+  onFocus: (type: InputType) => FocusEventHandler;
+  onBlur: (type: InputType) => FocusEventHandler;
 }) => {
-  const { type, symbolInfo, errors, values } = props;
+  const { type, symbolInfo, errors, values, onFocus, onBlur } = props;
 
   const parseErrorMsg = (key: string) => {
     if (errors && errors[key]) {
@@ -325,10 +362,13 @@ const OrderQuantityInput = (props: {
             suffix={symbolInfo.quote}
             error={parseErrorMsg("trigger_price")}
             id={"trigger"}
+            ref={props.refs.triggerPriceInputRef}
             value={values.trigger_price}
             onChange={(e) => {
               props.onChange("trigger_price", e.target.value);
             }}
+            onFocus={onFocus(InputType.TRIGGER_PRICE)}
+            onBlur={onBlur(InputType.TRIGGER_PRICE)}
           />
         </div>
       ) : null}
@@ -341,10 +381,13 @@ const OrderQuantityInput = (props: {
             id={"price"}
             value={values.price}
             error={parseErrorMsg("order_price")}
+            ref={props.refs.priceInputRef}
             // helperText="Price per unit"
             onChange={(e) => {
               props.onChange("order_price", e.target.value);
             }}
+            onFocus={onFocus(InputType.PRICE)}
+            onBlur={onBlur(InputType.PRICE)}
           />
         </div>
       ) : null}
@@ -361,6 +404,8 @@ const OrderQuantityInput = (props: {
           onChange={(e) => {
             props.onChange("order_quantity", e.target.value);
           }}
+          onFocus={onFocus(InputType.QUANTITY)}
+          onBlur={onBlur(InputType.QUANTITY)}
         />
         <CustomInput
           label={"Total≈"}
@@ -371,6 +416,8 @@ const OrderQuantityInput = (props: {
           onChange={(e) => {
             props.onChange("total", e.target.value);
           }}
+          onFocus={onFocus(InputType.TOTAL)}
+          onBlur={onBlur(InputType.TOTAL)}
         />
       </Flex>
     </div>
@@ -378,22 +425,27 @@ const OrderQuantityInput = (props: {
 };
 
 // ----------- Custom Input Component start ------------
-const CustomInput = (props: {
-  label: string;
-  suffix: string;
-  id: string;
-  className?: string;
-  name?: string;
-  onChange?: InputProps["onChange"];
-  value?: InputProps["value"];
-  autoFocus?: InputProps["autoFocus"];
-  error?: string;
-
-  // helperText?: InputProps["helperText"];
-}) => {
+const CustomInput = forwardRef<
+  HTMLInputElement,
+  {
+    label: string;
+    suffix: string;
+    id: string;
+    className?: string;
+    name?: string;
+    onChange?: InputProps["onChange"];
+    value?: InputProps["value"];
+    autoFocus?: InputProps["autoFocus"];
+    error?: string;
+    onFocus: InputProps["onFocus"];
+    onBlur: InputProps["onBlur"];
+    // helperText?: InputProps["helperText"];
+  }
+>((props, ref) => {
   const { errorMsgVisible } = useContext(OrderEntryContext);
   return (
     <Input.tooltip
+      ref={ref}
       tooltip={errorMsgVisible ? props.error : ""}
       autoComplete={"off"}
       autoFocus={props.autoFocus}
@@ -406,6 +458,8 @@ const CustomInput = (props: {
       suffix={props.suffix}
       value={props.value}
       onChange={props.onChange}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
       formatters={[
         inputFormatter.numberFormatter,
         inputFormatter.currencyFormatter,
@@ -423,7 +477,9 @@ const CustomInput = (props: {
       }}
     />
   );
-};
+});
+
+CustomInput.displayName = "CustomInput";
 
 const InputLabel = (props: PropsWithChildren<{ id: string }>) => {
   return (
@@ -522,6 +578,7 @@ function AssetInfo(props: {
         <Text.numeral
           unit={props.quote}
           size={"2xs"}
+          className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
           {props.estLiqPrice ?? "--"}
@@ -572,6 +629,7 @@ function AdditionalConfigButton(props: {
   orderTypeExtra?: OrderType;
   needConfirm: boolean;
   setNeedConfirm: (value: boolean) => void;
+  showExtra: boolean;
 }) {
   // const []
   const [open, setOpen] = useState(false);

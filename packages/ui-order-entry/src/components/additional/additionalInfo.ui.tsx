@@ -8,6 +8,7 @@ export type AdditionalInfoProps = {
   setNeedConfirm: (value: boolean) => void;
   orderTypeExtra?: OrderType;
   onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
+  showExtra?: boolean;
 };
 
 export const AdditionalInfo = (props: AdditionalInfoProps) => {
@@ -23,14 +24,11 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
   };
   return (
     <div className={"oui-text-base-contrast-54"}>
-      <Flex
-        justify={pinned ? "between" : "stretch"}
-        itemAlign={"center"}
-        mb={3}
-      >
+      {props.showExtra && (
         <Flex
           gapX={5}
           justify={pinned ? "start" : "between"}
+          mb={3}
           width={pinned ? "unset" : "100%"}
         >
           <Flex itemAlign={"center"}>
@@ -79,28 +77,8 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             </label>
           </Flex>
         </Flex>
-        {pinned && (
-          <button
-            onClick={() => {
-              props.setPinned(false);
-            }}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M4.67 1.953A2.667 2.667 0 0 0 2.005 4.62v6.667a2.667 2.667 0 0 0 2.667 2.666h6.666a2.667 2.667 0 0 0 2.667-2.666V4.62a2.667 2.667 0 0 0-2.667-2.667zm1.334 3.334c.17 0 .349.057.48.187l1.52 1.52 1.52-1.52a.68.68 0 0 1 .48-.187c.17 0 .349.057.48.187.26.26.26.698 0 .958L8.962 7.954l1.52 1.52c.26.262.26.699 0 .96a.687.687 0 0 1-.958 0l-1.52-1.522-1.52 1.52a.687.687 0 0 1-.96 0 .687.687 0 0 1 0-.958l1.521-1.52-1.52-1.521a.687.687 0 0 1 0-.96.68.68 0 0 1 .479-.186"
-                fill="#fff"
-                fillOpacity=".2"
-              />
-            </svg>
-          </button>
-        )}
-      </Flex>
+      )}
+
       <Flex gapX={6}>
         <Flex>
           <Checkbox

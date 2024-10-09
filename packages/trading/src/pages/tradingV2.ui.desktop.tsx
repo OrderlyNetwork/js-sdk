@@ -12,6 +12,7 @@ import {
 } from "@orderly.network/markets";
 import { LayoutSwitch } from "../components/desktop/layout/layoutSwitch";
 import SplitLayout from "../components/desktop/layout/splitLayout";
+import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 
 export type DesktopLayoutProps = TradingV2State & {
   className?: string;
@@ -65,6 +66,9 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
         <AssetViewWidget />
+      </Box>
+      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
+        <OrderEntryWidget symbol={props.symbol} />
       </Box>
       <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
         <RiskRateWidget />

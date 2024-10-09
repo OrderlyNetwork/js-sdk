@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import {
   TooltipContent,
   TooltipPortal,
@@ -13,7 +13,10 @@ export type InputWithTooltipProps = InputProps & {
   tooltip?: string;
 };
 
-export const InputWithTooltip = (props: InputWithTooltipProps) => {
+export const InputWithTooltip = forwardRef<
+  HTMLInputElement,
+  InputWithTooltipProps
+>((props, ref) => {
   const { tooltip, ...inputProps } = props;
   const [open, setOpen] = useState(false);
 
@@ -29,7 +32,7 @@ export const InputWithTooltip = (props: InputWithTooltipProps) => {
     <TooltipRoot open={open}>
       <TooltipTrigger asChild>
         <div>
-          <Input {...inputProps} />
+          <Input {...inputProps} ref={ref} />
         </div>
       </TooltipTrigger>
       <TooltipPortal>
@@ -40,4 +43,6 @@ export const InputWithTooltip = (props: InputWithTooltipProps) => {
       </TooltipPortal>
     </TooltipRoot>
   );
-};
+});
+
+InputWithTooltip.displayName = "InputWithTooltip";
