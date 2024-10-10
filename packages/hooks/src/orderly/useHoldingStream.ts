@@ -3,6 +3,7 @@ import { usePrivateQuery } from "../usePrivateQuery";
 import { useMemo } from "react";
 import { useWS } from "../useWS";
 import useSWRSubscription from "swr/subscription";
+import { getTimestamp } from "@orderly.network/utils";
 
 export const useHoldingStream = () => {
   const ws = useWS();
@@ -27,7 +28,7 @@ export const useHoldingStream = () => {
         id: "balance",
         event: "subscribe",
         topic: "balance",
-        ts: Date.now(),
+        ts: getTimestamp(),
       },
       {
         onMessage: (data: any) => {

@@ -40,7 +40,7 @@ export const UnsettlePnlInfo = ({hasPositions, unsettledPnl, onSettlle}: IProps)
                     </Text>
                 </Flex>
                 </Tooltip>
-                <Text.numeral showIdentifier coloring weight="semibold" dp={6}>
+                <Text.numeral showIdentifier coloring weight="semibold" dp={6} data-testid="oui-testid-withdraw-dialog-unsettledPnl-value">
                     {unsettledPnl}
                 </Text.numeral>
                 <Text>USDC</Text>
