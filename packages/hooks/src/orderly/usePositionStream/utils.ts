@@ -1,8 +1,8 @@
 import {
   API,
   AlgoOrderEntity,
-  AlgoOrderType,
   AlgoOrderRootType,
+  AlgoOrderType,
   OrderStatus,
 } from "@orderly.network/types";
 
@@ -58,7 +58,8 @@ export const findPositionTPSLFromOrders = (
     // console.log(order.symbol, symbol, order.algo_type);
     return (
       order.symbol === symbol &&
-      order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
+      (order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL ||
+        order.algo_type === AlgoOrderRootType.TP_SL) &&
       (order.root_algo_status === OrderStatus.NEW ||
         order.root_algo_status === OrderStatus.REPLACED ||
         order.root_algo_status === OrderStatus.PARTIAL_FILLED)
