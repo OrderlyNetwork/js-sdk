@@ -15,6 +15,11 @@ export const useTradingV2Script = () => {
     false
   );
 
+  const [positions, setPositions] = useLocalStorage(
+    "orderly_assets_orderEntry_margin_positions",
+    [0, 1, 2]
+  );
+
   // Order entry and side market list position, default Order entry in right
   const [layout, setLayout] = useLocalStorage(
     "orderly_order_entry_side_markets_layout",
@@ -43,6 +48,13 @@ export const useTradingV2Script = () => {
     setAnimating(true);
   };
 
+  const updatePositions = (currentIdx: number, targetIdx: number) => {
+    const pos = [...positions];
+    [pos[currentIdx], pos[targetIdx]] = [pos[targetIdx], pos[currentIdx]];
+    console.log("pos", positions, pos);
+    setPositions(pos);
+  };
+
   const map = {
     collapsed,
     onCollapse,
@@ -56,7 +68,9 @@ export const useTradingV2Script = () => {
     setMainSplitSize,
     isMedium,
     animating,
-    setAnimating
+    setAnimating,
+    positions: positions as number[],
+    updatePositions,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
