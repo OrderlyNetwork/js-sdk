@@ -41,14 +41,27 @@ export const PnlInputProvider = (
         <span className={"oui-text-xs oui-text-base-contrast-54"}>
           {`Est.${mode === PnLMode.PnL ? "ROI" : "PNL"}:`}
         </span>
-        <Text.numeral
-          className={cn(
-            "oui-text-xs oui-ml-1",
-            type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
-          )}
-        >
-          {values.PnL}
-        </Text.numeral>
+        {mode === PnLMode.PnL ? (
+          <Text.numeral
+            rule={"percentages"}
+            className={cn(
+              "oui-text-xs oui-ml-1",
+              type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+            )}
+          >
+            {values.ROI}
+          </Text.numeral>
+        ) : (
+          <Text.numeral
+            rule={"price"}
+            className={cn(
+              "oui-text-xs oui-ml-1",
+              type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+            )}
+          >
+            {values.PnL}
+          </Text.numeral>
+        )}
       </Flex>
     );
   }, [mode, props.values.PnL]);

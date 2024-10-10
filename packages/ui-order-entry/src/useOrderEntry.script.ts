@@ -4,10 +4,10 @@ import {
   useMarginRatio,
   useOrderEntryNext,
 } from "@orderly.network/hooks";
-import { useLeverage } from "@orderly.network/hooks";
-import { useEffect, useRef, FocusEvent } from "react";
+import { useEffect, useRef, FocusEvent, useMemo } from "react";
 import { removeTrailingZeros } from "@orderly.network/utils";
 import { InputType } from "./types";
+import { convertValueToPercentage } from "@orderly.network/ui";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -24,6 +24,16 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const currentFocusInput = useRef<InputType>(InputType.NONE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
+
+  const currentQtyPercentage = useMemo(() => {
+    return (
+      convertValueToPercentage(
+        Number(formattedOrder.order_quantity ?? 0),
+        0,
+        state.maxQty
+      ) / 100
+    );
+  }, [formattedOrder.order_quantity, state.maxQty]);
 
   const onFocus = (type: InputType) => (_: FocusEvent) => {
     currentFocusInput.current = type;
@@ -99,8 +109,13 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     });
   };
 
+  const setMaxQty = () => {
+    setValue("order_quantity", state.maxQty);
+  };
+
   return {
     ...state,
+    currentQtyPercentage,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     setOrderValue: setValue,
@@ -109,6 +124,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
     formattedOrder,
     cancelTP_SL,
+    setMaxQty,
     symbolInfo,
     onFocus,
     onBlur,

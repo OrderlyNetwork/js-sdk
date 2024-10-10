@@ -207,6 +207,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
         />
         <QuantitySlider
           maxQty={maxQty}
+          currentQtyPercentage={props.currentQtyPercentage}
           value={
             !formattedOrder.order_quantity
               ? 0
@@ -214,8 +215,8 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
           }
           tick={symbolInfo.base_tick}
           dp={symbolInfo.base_dp}
-          setMaxQty={(value) => {
-            // console.log("value:", value);
+          setMaxQty={props.setMaxQty}
+          onValueChange={(value) => {
             setOrderValue("order_quantity", value);
           }}
           side={props.side}
@@ -250,12 +251,14 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
               PnL: formattedOrder.tp_pnl ?? "",
               Offset: formattedOrder.tp_offset ?? "",
               "Offset%": formattedOrder.tp_offset_percentage ?? "",
+              ROI: formattedOrder.tp_ROI ?? "",
             },
             sl: {
               trigger_price: formattedOrder.sl_trigger_price ?? "",
               PnL: formattedOrder.sl_pnl ?? "",
               Offset: formattedOrder.sl_offset ?? "",
               "Offset%": formattedOrder.sl_offset_percentage ?? "",
+              ROI: formattedOrder.sl_ROI ?? "",
             },
           }}
           onChange={(key, value) => {
@@ -500,9 +503,11 @@ const QuantitySlider = (props: {
   side: OrderSide;
   value: number;
   maxQty: number;
+  currentQtyPercentage: number;
   tick: number;
   dp: number;
-  setMaxQty: (value: number) => void;
+  setMaxQty: () => void;
+  onValueChange: (value: number) => void;
 }) => {
   const color = useMemo(
     () => (props.side === OrderSide.BUY ? "buy" : "sell"),
@@ -518,11 +523,11 @@ const QuantitySlider = (props: {
         markCount={4}
         max={props.maxQty}
         step={props.tick}
-        onValueChange={props.setMaxQty}
+        onValueChange={props.onValueChange}
       />
       <Flex justify={"between"} pt={2}>
         <Text.numeral rule={"percentages"} size={"2xs"} color={color}>
-          0
+          {props.currentQtyPercentage}
         </Text.numeral>
         <Flex>
           <button
@@ -530,6 +535,7 @@ const QuantitySlider = (props: {
               size: "2xs",
               className: "oui-mr-1",
             })}
+            onClick={() => props.setMaxQty()}
           >
             Max buy
           </button>

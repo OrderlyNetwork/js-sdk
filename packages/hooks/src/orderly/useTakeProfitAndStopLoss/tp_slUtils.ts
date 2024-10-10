@@ -246,6 +246,16 @@ export function priceToPnl(
   return decimal.toNumber();
 }
 
+export function calcTPSL_ROI(inputs: {
+  pnl: number | string;
+  qty: number | string;
+  price: number | string;
+}) {
+  return new Decimal(inputs.pnl)
+    .div(new Decimal(inputs.qty).abs().mul(new Decimal(inputs.price)))
+    .toString();
+}
+
 // function formatPrice(price: number | string, symbol?: API.SymbolExt) {
 //   if (typeof price !== "string") {
 //     price = `${price}`;
@@ -323,6 +333,7 @@ export function tpslCalculateHelper(
           [`${keyPrefix}offset`]: "",
           [`${keyPrefix}offset_percentage`]: "",
           [`${keyPrefix}pnl`]: "",
+          [`${keyPrefix}ROI`]: "",
         };
       }
       break;
@@ -377,6 +388,7 @@ export function tpslCalculateHelper(
       [`${keyPrefix}offset`]: "",
       [`${keyPrefix}offset_percentage`]: "",
       [`${keyPrefix}pnl`]: "",
+      [`${keyPrefix}ROI`]: "",
       [key]: inputs.value,
     };
 
@@ -418,5 +430,10 @@ export function tpslCalculateHelper(
         },
         options
       ),
+    // [`${keyPrefix}ROI`]: calcROI({
+    //   pnl: Number(pnl ?? 0),
+    //   qty,
+    //   price: Number(trigger_price!),
+    // }),
   };
 }

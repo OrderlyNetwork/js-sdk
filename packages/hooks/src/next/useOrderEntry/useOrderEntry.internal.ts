@@ -1,4 +1,9 @@
-import { type API, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  type API,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 
 import { useCallback, useEffect } from "react";
 import {
@@ -12,8 +17,8 @@ import {
   useOrderStore,
 } from "./orderEntry.store";
 import { OrderCreator } from "../../services/orderCreator/interface";
-import { OrderlyOrder } from "@orderly.network/types";
 import { hasTPSL } from "./helper";
+import { calcTPSL_ROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -137,6 +142,25 @@ const useOrderEntryNextInternal = (
           markPrice,
           symbolInfo
         );
+      }
+    }
+
+    {
+      // whether it is necessary to calculate tpsl ROI;
+      if (newValues.tp_pnl && newValues.order_quantity) {
+        newValues.tp_ROI = calcTPSL_ROI({
+          qty: newValues.order_quantity,
+          price: newValues.order_price || markPrice,
+          pnl: newValues.tp_pnl,
+        });
+      }
+
+      if (newValues.sl_pnl && newValues.order_quantity) {
+        newValues.sl_ROI = calcTPSL_ROI({
+          qty: newValues.order_quantity,
+          price: newValues.order_price || markPrice,
+          pnl: newValues.sl_pnl,
+        });
       }
     }
 
