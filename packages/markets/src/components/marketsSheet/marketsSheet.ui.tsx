@@ -47,7 +47,6 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
         )
       }
       autoComplete="off"
-      autoFocus
     />
   );
 

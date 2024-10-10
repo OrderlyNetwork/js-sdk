@@ -7,6 +7,7 @@ import { useMarketsListFullColumns } from "./column";
 
 export type MarketsListFullProps = UseMarketsListFullReturn & {
   initialSort: TInitialSort;
+  type?: "all" | "new";
 };
 
 export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
@@ -19,6 +20,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
     favorite,
     onSort,
     initialSort,
+    type,
   } = props;
 
   const { onSymbolChange } = useMarketsContext();
@@ -42,6 +44,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
             onSymbolChange?.(record);
             favorite.addToHistory(record);
           },
+          "data-testid": `oui-testid-markets-${type === 'new' ? 'newListing' : 'all'}-tr-${record.symbol}`
         };
       }}
       generatedRowKey={(record) => record.symbol}

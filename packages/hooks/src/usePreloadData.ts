@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useConfig, useQuery, useSWR } from ".";
 import { request } from "@orderly.network/net/src/fetch";
 import { getGlobalObject } from "@orderly.network/utils";
 
 export const usePreLoadData = () => {
+  const [timestampOffsetInitialized, setTimestampOffsetInitialized] =
+    useState(false);
   const { error: tokenError, data: tokenData } = useQuery(
     "https://api-evm.orderly.org/v1/public/token",
     {
@@ -33,16 +35,24 @@ export const usePreLoadData = () => {
     }
   );
 
-  if (typeof systemInfo !== "undefined") {
-    const sd = systemInfo.timestamp;
-    const ld = Date.now();
-    // @ts-ignore
-    getGlobalObject().__ORDERLY_timestamp_offset = sd - ld;
-  }
+  useEffect(() => {
+    if (timestampOffsetInitialized) return;
+    if (typeof systemInfo !== "undefined") {
+      const sd = systemInfo.timestamp;
+      const ld = Date.now();
+      // @ts-ignore
+      const diff = sd - ld;
+      if (isNaN(diff)) {
+        return;
+      }
+      (getGlobalObject() as any).__ORDERLY_timestamp_offset = diff;
+      setTimestampOffsetInitialized(true);
+    }
+  }, [systemInfo, timestampOffsetInitialized]);
 
   const isDone = useMemo(() => {
-    return !!tokenData;
-  }, [tokenData]);
+    return !!tokenData && timestampOffsetInitialized;
+  }, [timestampOffsetInitialized, tokenData]);
 
   return {
     error: tokenError,

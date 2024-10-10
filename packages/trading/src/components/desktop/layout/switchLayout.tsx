@@ -3,12 +3,12 @@ import { FC, SVGProps } from "react";
 
 export type LayoutPosition = "left" | "right";
 
-export type LayoutSwitchProps = {
+export type SwitchLayoutProps = {
   layout?: LayoutPosition;
   onLayout?: (layout: LayoutPosition) => void;
 };
 
-export const LayoutSwitch: FC<LayoutSwitchProps> = (props) => {
+export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
   const { layout, onLayout } = props;
   return (
     <Flex className="oui-gap-x-[6px]" pl={3}>

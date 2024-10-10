@@ -223,8 +223,8 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    // symbol: "PERP_ETH_USDC",
     symbol: "PERP_ETH_USDC",
+    // symbol: "PERP_ORDER_USDC",
     tradingViewConfig: {
       scriptSRC: "/tradingview/charting_library/charting_library.js",
       library_path: "/tradingview/charting_library/",
@@ -246,7 +246,6 @@ export const Default: Story = {};
 
 export const DataList: Story = {
   render: (arg) => {
-
     return (<Box p={3}>
       <DataListWidget sharePnLConfig={sharePnLConfig} tabletMediaQuery={arg.tabletMediaQuery!} />
     </Box>);
@@ -293,7 +292,6 @@ export const RiskRate: Story = {
 
 export const OrderBook: Story = {
   render: (arg) => {
-
     return (
       <div className="oui-h-[500px] oui-m-3 oui-flex oui-items-start oui-justify-center">
         <Box className="oui-w-1/2 oui-bg-base-9" r="2xl" py={3}>
@@ -307,7 +305,6 @@ export const OrderBook: Story = {
 
 export const OrderBookAndTrades: Story = {
   render: (arg) => {
-
     return (
       <Flex
         p={10}

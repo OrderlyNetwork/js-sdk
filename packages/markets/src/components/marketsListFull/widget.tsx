@@ -20,6 +20,7 @@ export const MarketsListFullWidget: React.FC<MarketsListFullWidgetProps> = (
   return (
     <MarketsListFull
       {...state}
+      type={props.type}
       initialSort={{
         sortKey: sortStore?.sortKey || props.sortKey,
         sort: (sortStore?.sortOrder as SortOrder) || props.sortOrder,

@@ -10,9 +10,9 @@ import {
   SideMarketsWidget,
   TokenInfoBarFullWidget,
 } from "@orderly.network/markets";
-import { LayoutSwitch } from "../components/desktop/layout/layoutSwitch";
+import { SwitchLayout } from "../components/desktop/layout/switchLayout";
 import { SplitLayout } from "../components/desktop/layout/splitLayout";
-import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
+import { RemovablePanel } from "../components/desktop/layout/removablePanel";
 
 export type DesktopLayoutProps = TradingV2State & {
   className?: string;
@@ -33,6 +33,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     isMedium,
     animating,
     setAnimating,
+    positions,
+    updatePositions,
   } = props;
 
   const tokenInfoBarHeight = 54;
@@ -73,26 +75,44 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
+  const assetsOrderEntryMargin = [
+    <RemovablePanel
+      key="assets"
+      className="oui-border oui-border-line-12"
+      index={positions.findIndex((item) => item === 0)}
+      onLayout={updatePositions}
+    >
+      <AssetViewWidget />
+    </RemovablePanel>,
+    <RemovablePanel
+      key="orderEntry"
+      className="oui-h-[200px]"
+      index={positions.findIndex((item) => item === 1)}
+      onLayout={updatePositions}
+    >
+      OrderEntry
+    </RemovablePanel>,
+    <RemovablePanel
+      key="margin"
+      index={positions.findIndex((item) => item === 2)}
+      onLayout={updatePositions}
+    >
+      <RiskRateWidget />
+    </RemovablePanel>,
+  ];
+
   const orderEntryView = (
     <Flex
       gapY={3}
       direction="column"
+      height="100%"
       style={{
         minWidth: orderEntryMinWidth,
         maxWidth: orderEntryMaxWidth,
         width: mainSplitSize,
       }}
-      height="100%"
     >
-      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
-        <AssetViewWidget />
-      </Box>
-      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
-        <OrderEntryWidget symbol={props.symbol} />
-      </Box>
-      <Box className="oui-bg-base-9 oui-rounded-2xl oui-p-3 oui-space-y-8 oui-w-full">
-        <RiskRateWidget />
-      </Box>
+      {positions.map((index) => assetsOrderEntryMargin[index])}
     </Flex>
   );
 
@@ -110,7 +130,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       <TokenInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
-        trailing={<LayoutSwitch layout={layout} onLayout={onLayout} />}
+        trailing={<SwitchLayout layout={layout} onLayout={onLayout} />}
       />
     </Box>
   );
@@ -159,7 +179,6 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         current={undefined}
         tabletMediaQuery={props.tabletMediaQuery}
         symbol={props.symbol}
-
       />
     </Box>
   );
