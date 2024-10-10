@@ -15,8 +15,7 @@ export const Positions = (props: PositionsBuilderState) => {
     sharePnLConfig,
   });
 
-  console.log("xxxx positions", props);
-  
+  // console.log("xxxx positions", props);
 
   return (
     <div>
