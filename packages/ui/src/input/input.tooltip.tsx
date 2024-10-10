@@ -8,25 +8,31 @@ import {
   TooltipTrigger,
 } from "../tooltip";
 import { Input, InputProps } from "./input";
+import type { TooltipContentProps } from "@radix-ui/react-tooltip";
 
 export type InputWithTooltipProps = InputProps & {
-  tooltip?: string;
+  tooltip?: React.ReactNode;
+  tooltipProps?: {
+    content?: TooltipContentProps;
+  };
 };
 
 export const InputWithTooltip = forwardRef<
   HTMLInputElement,
   InputWithTooltipProps
 >((props, ref) => {
-  const { tooltip, ...inputProps } = props;
+  const { tooltip, tooltipProps, ...inputProps } = props;
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof tooltip !== "undefined" && tooltip.length > 0) {
+    if (typeof tooltip !== "undefined" && tooltip !== "" && tooltip !== null) {
       setOpen(true);
     } else {
       setOpen(false);
     }
   }, [tooltip]);
+
+  console.log("InputWithTooltip", tooltipProps?.content);
 
   return (
     <TooltipRoot open={open}>
@@ -36,7 +42,7 @@ export const InputWithTooltip = forwardRef<
         </div>
       </TooltipTrigger>
       <TooltipPortal>
-        <TooltipContent>
+        <TooltipContent {...tooltipProps?.content}>
           {props.tooltip}
           <TooltipArrow />
         </TooltipContent>

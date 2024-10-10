@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { cn, Flex, Input, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { OrderlyOrder } from "@orderly.network/types";
-import { PNL_Values } from "./pnlInput/useBuilder.script";
+import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
 import { OrderType } from "@orderly.network/types";
+import { OrderEntryContext } from "./orderEntryContext";
 
 type OrderValueKeys = keyof OrderlyOrder;
 
@@ -39,7 +40,7 @@ export const OrderTPSL = (props: {
     <div>
       <Flex itemAlign={"center"} gapX={1}>
         <Switch
-          id={"tpsl"}
+          id={"order_entry_tpsl"}
           checked={open}
           disabled={
             props.orderType !== OrderType.LIMIT &&
@@ -52,7 +53,7 @@ export const OrderTPSL = (props: {
             }
           }}
         />
-        <label htmlFor={"tpsl"} className={"oui-text-xs"}>
+        <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
           TP/SL
         </label>
       </Flex>
@@ -114,47 +115,85 @@ const TPSLInputRow = (props: {
   error?: string;
   onChange: (key: OrderValueKeys, value: any) => void;
 }) => {
+  const { values } = props;
   const priceKey =
     props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
 
-  const [tooltip, setTooltip] = useState(props.error);
+  const { errorMsgVisible } = useContext(OrderEntryContext);
+
+  const [tips, setTips] = useState<
+    | {
+        msg: string;
+        type: "Error" | "PnL";
+      }
+    | undefined
+  >(props.error ? { msg: props.error, type: "Error" } : undefined);
+
+  function updateTips() {
+    if (!values.PnL) {
+      setTips(undefined);
+      return;
+    }
+    // if (mode === PnLMode.PnL) {
+    //   setTips({
+    //     msg: values.Offset,
+    //     type: "ROI",
+    //   });
+    // } else {
+    //   setTips({
+    //     msg: values.PnL,
+    //     type: "PnL",
+    //   });
+    // }
+  }
+
+  const triggerPriceToolTipEle = useMemo(() => {
+    if (typeof tips === "undefined" || !errorMsgVisible) return null;
+    if (!!tips && tips.type === "Error") return tips.msg;
+  }, [tips, errorMsgVisible]);
+
   return (
     <div>
       <Grid cols={2} gapX={1}>
-        <div>
-          <Input.tooltip
-            prefix={"TP Price"}
-            size={"md"}
-            placeholder="USDC"
-            align="right"
-            onFocus={() => {
-              setTooltip(!props.error ? props.error : "ROI");
-            }}
-            onBlur={() => {
-              setTooltip(props.error);
-            }}
-            tooltip={tooltip}
-            color={props.error ? "danger" : undefined}
-            autoComplete={"off"}
-            value={props.values.trigger_price}
-            classNames={{ additional: "oui-text-base-contrast-54" }}
-            onChange={(event) => {
-              props.onChange(priceKey, event.target.value);
-            }}
-          />
-        </div>
-        <div>
-          <PnlInputWidget
-            onChange={props.onChange}
-            quote={"USDC"}
-            type={props.type}
-            values={{
-              PnL: props.values.PnL,
-              Offset: props.values.Offset,
-              "Offset%": props.values["Offset%"],
-            }}
-          />
-        </div>
+        <Input.tooltip
+          prefix={"TP Price"}
+          size={"md"}
+          placeholder="USDC"
+          align="right"
+          onFocus={() => {
+            // const tips =
+            // setTooltip(!props.error ? props.error : "ROI");
+          }}
+          onBlur={() => {
+            setTips(
+              props.error ? { msg: props.error, type: "Error" } : undefined
+            );
+          }}
+          tooltip={triggerPriceToolTipEle}
+          tooltipProps={{
+            content: {
+              side: props.type === "TP" ? "top" : "bottom",
+            },
+          }}
+          color={props.error ? "danger" : undefined}
+          autoComplete={"off"}
+          value={props.values.trigger_price}
+          classNames={{ additional: "oui-text-base-contrast-54" }}
+          onChange={(event) => {
+            props.onChange(priceKey, event.target.value);
+          }}
+        />
+
+        <PnlInputWidget
+          onChange={props.onChange}
+          quote={"USDC"}
+          type={props.type}
+          values={{
+            PnL: props.values.PnL,
+            Offset: props.values.Offset,
+            "Offset%": props.values["Offset%"],
+          }}
+        />
       </Grid>
     </div>
   );

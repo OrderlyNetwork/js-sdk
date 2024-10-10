@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { MenuItem } from "@orderly.network/ui";
 import { commify, Decimal } from "@orderly.network/utils";
@@ -42,6 +42,15 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     "TP/SL_Mode",
     PnLMode.PERCENTAGE
   );
+  const tipsShowCounter = useRef(0);
+
+  const [tips, setTips] = useState<
+    | {
+        msg: string;
+        type: "ROI" | "PnL";
+      }
+    | undefined
+  >();
 
   const key = useMemo<PNL_Keys>(() => {
     switch (mode) {
@@ -80,6 +89,49 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const onValueChange = (value: string) => {
     props.onChange(key, value);
   };
+
+  const onFocus = () => {
+    updateTips();
+  };
+
+  /**
+   * hide tips when input is blurred
+   */
+  const onBlur = () => {
+    setTips(undefined);
+  };
+
+  function updateTips() {
+    if (!values.PnL) {
+      setTips(undefined);
+      return;
+    }
+    tipsShowCounter.current++;
+    if (mode === PnLMode.PnL) {
+      setTips({
+        msg: values.Offset,
+        type: "ROI",
+      });
+    } else {
+      setTips({
+        msg: values.PnL,
+        type: "PnL",
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (!tips) return;
+    updateTips();
+  }, [values, mode]);
+
+  /**
+   * only update tips when value is changed at the first time
+   */
+  useEffect(() => {
+    if (tipsShowCounter.current > 1) return;
+    updateTips();
+  }, [value]);
 
   const formatter = (options: {
     dp?: number;
@@ -133,9 +185,12 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     onModeChange: (mode: PnLMode) => {
       setMode(mode);
     },
+    onFocus,
+    onBlur,
     value,
     onValueChange,
     quote_db: props.quote_dp,
+    tips,
   };
 };
 

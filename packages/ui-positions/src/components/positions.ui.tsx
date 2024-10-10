@@ -15,9 +15,6 @@ export const Positions = (props: PositionsBuilderState) => {
     sharePnLConfig,
   });
 
-  console.log("xxxx positions", props);
-  
-
   return (
     <div>
       <DataTable<API.PositionTPSLExt>

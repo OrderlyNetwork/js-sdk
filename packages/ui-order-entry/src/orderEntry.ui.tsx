@@ -446,7 +446,7 @@ const CustomInput = forwardRef<
   return (
     <Input.tooltip
       ref={ref}
-      tooltip={errorMsgVisible ? props.error : ""}
+      tooltip={errorMsgVisible ? props.error : undefined}
       autoComplete={"off"}
       autoFocus={props.autoFocus}
       size={"lg"}
