@@ -1,4 +1,11 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  ChangeEventHandler,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { cn, Flex, Input, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
@@ -6,6 +13,10 @@ import { OrderlyOrder } from "@orderly.network/types";
 import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
 import { OrderType } from "@orderly.network/types";
 import { OrderEntryContext } from "./orderEntryContext";
+import {
+  PnlInputProvider,
+  usePnlInputContext,
+} from "./pnlInput/pnlInputContext";
 
 type OrderValueKeys = keyof OrderlyOrder;
 
@@ -91,23 +102,75 @@ const TPSLInputForm = React.forwardRef<
       ref={ref}
       className={"oui-transition-all oui-pt-2 oui-pb-2 oui-px-1 oui-space-y-1"}
     >
-      <TPSLInputRow
-        type={"TP"}
-        error={props.errors ? props.errors["tp_trigger_price"]?.message : ""}
-        onChange={props.onChange}
-        values={props.values.tp}
-      />
-      <TPSLInputRow
-        type={"SL"}
-        error={props.errors ? props.errors["sl_trigger_price"]?.message : ""}
-        onChange={props.onChange}
-        values={props.values.sl}
-      />
+      <PnlInputProvider values={props.values.tp} type={"TP"}>
+        <TPSLInputRow
+          type={"TP"}
+          error={props.errors ? props.errors["tp_trigger_price"]?.message : ""}
+          onChange={props.onChange}
+          values={props.values.tp}
+        />
+      </PnlInputProvider>
+      <PnlInputProvider values={props.values.sl} type={"SL"}>
+        <TPSLInputRow
+          type={"SL"}
+          error={props.errors ? props.errors["sl_trigger_price"]?.message : ""}
+          onChange={props.onChange}
+          values={props.values.sl}
+        />
+      </PnlInputProvider>
     </div>
   );
 });
 
 TPSLInputForm.displayName = "TPSLInputForm";
+
+//------- TPSLTriggerPriceInput start -------
+const TPSLTriggerPriceInput = (props: {
+  type: "TP" | "SL";
+  error: string | undefined;
+  values: Est_Values;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+}) => {
+  const { errorMsgVisible } = useContext(OrderEntryContext);
+  const { tipsEle } = usePnlInputContext();
+
+  const [tipVisible, setTipVisible] = useState(false);
+
+  const triggerPriceToolTipEle = useMemo(() => {
+    if (props.error && errorMsgVisible) return props.error;
+    if (tipVisible) return tipsEle;
+
+    return null;
+  }, [props.error, errorMsgVisible, tipVisible, tipsEle]);
+
+  return (
+    <Input.tooltip
+      prefix={"TP Price"}
+      size={"md"}
+      placeholder="USDC"
+      align="right"
+      onFocus={() => {
+        setTipVisible(true);
+      }}
+      onBlur={() => {
+        setTipVisible(false);
+      }}
+      tooltip={triggerPriceToolTipEle}
+      tooltipProps={{
+        content: {
+          side: props.type === "TP" ? "top" : "bottom",
+        },
+      }}
+      color={props.error ? "danger" : undefined}
+      autoComplete={"off"}
+      value={props.values.trigger_price}
+      classNames={{ additional: "oui-text-base-contrast-54" }}
+      onChange={props.onChange}
+    />
+  );
+};
+
+//------- TPSLTriggerPriceInput end -------
 
 const TPSLInputRow = (props: {
   type: "TP" | "SL";
@@ -115,86 +178,30 @@ const TPSLInputRow = (props: {
   error?: string;
   onChange: (key: OrderValueKeys, value: any) => void;
 }) => {
-  const { values } = props;
   const priceKey =
     props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
 
-  const { errorMsgVisible } = useContext(OrderEntryContext);
-
-  const [tips, setTips] = useState<
-    | {
-        msg: string;
-        type: "Error" | "PnL";
-      }
-    | undefined
-  >(props.error ? { msg: props.error, type: "Error" } : undefined);
-
-  function updateTips() {
-    if (!values.PnL) {
-      setTips(undefined);
-      return;
-    }
-    // if (mode === PnLMode.PnL) {
-    //   setTips({
-    //     msg: values.Offset,
-    //     type: "ROI",
-    //   });
-    // } else {
-    //   setTips({
-    //     msg: values.PnL,
-    //     type: "PnL",
-    //   });
-    // }
-  }
-
-  const triggerPriceToolTipEle = useMemo(() => {
-    if (typeof tips === "undefined" || !errorMsgVisible) return null;
-    if (!!tips && tips.type === "Error") return tips.msg;
-  }, [tips, errorMsgVisible]);
-
   return (
-    <div>
-      <Grid cols={2} gapX={1}>
-        <Input.tooltip
-          prefix={"TP Price"}
-          size={"md"}
-          placeholder="USDC"
-          align="right"
-          onFocus={() => {
-            // const tips =
-            // setTooltip(!props.error ? props.error : "ROI");
-          }}
-          onBlur={() => {
-            setTips(
-              props.error ? { msg: props.error, type: "Error" } : undefined
-            );
-          }}
-          tooltip={triggerPriceToolTipEle}
-          tooltipProps={{
-            content: {
-              side: props.type === "TP" ? "top" : "bottom",
-            },
-          }}
-          color={props.error ? "danger" : undefined}
-          autoComplete={"off"}
-          value={props.values.trigger_price}
-          classNames={{ additional: "oui-text-base-contrast-54" }}
-          onChange={(event) => {
-            props.onChange(priceKey, event.target.value);
-          }}
-        />
+    <Grid cols={2} gapX={1}>
+      <TPSLTriggerPriceInput
+        type={props.type}
+        error={props.error}
+        values={props.values}
+        onChange={(event) => {
+          props.onChange(priceKey, event.target.value);
+        }}
+      />
 
-        <PnlInputWidget
-          onChange={props.onChange}
-          quote={"USDC"}
-          type={props.type}
-          values={{
-            PnL: props.values.PnL,
-            Offset: props.values.Offset,
-            "Offset%": props.values["Offset%"],
-          }}
-        />
-      </Grid>
-    </div>
+      <PnlInputWidget
+        onChange={props.onChange}
+        quote={"USDC"}
+        type={props.type}
+        values={{
+          PnL: props.values.PnL,
+          Offset: props.values.Offset,
+          "Offset%": props.values["Offset%"],
+        }}
+      />
+    </Grid>
   );
 };

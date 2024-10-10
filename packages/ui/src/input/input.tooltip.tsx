@@ -32,8 +32,6 @@ export const InputWithTooltip = forwardRef<
     }
   }, [tooltip]);
 
-  console.log("InputWithTooltip", tooltipProps?.content);
-
   return (
     <TooltipRoot open={open}>
       <TooltipTrigger asChild>

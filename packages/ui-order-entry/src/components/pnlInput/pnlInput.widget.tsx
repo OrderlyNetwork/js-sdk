@@ -1,5 +1,5 @@
 import { PNLInput } from "./pnlInput.ui";
-import { BuilderProps, usePNLInputBuilder } from "./useBuilder.script";
+import { BuilderProps, PnLMode, usePNLInputBuilder } from "./useBuilder.script";
 
 export const PnlInputWidget = (
   props: BuilderProps & {
@@ -9,5 +9,7 @@ export const PnlInputWidget = (
 ) => {
   const { testId, quote, ...rest } = props;
   const state = usePNLInputBuilder(rest);
-  return <PNLInput {...state} testId={testId} quote={quote} type={props.type} />;
+  return (
+    <PNLInput {...state} testId={testId} quote={quote} type={props.type} />
+  );
 };

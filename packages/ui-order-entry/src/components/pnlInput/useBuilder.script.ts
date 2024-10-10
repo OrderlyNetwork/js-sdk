@@ -6,6 +6,7 @@ import type {
   InputFormatter,
   InputFormatterOptions,
 } from "@orderly.network/ui";
+import { usePnlInputContext } from "./pnlInputContext";
 
 export enum PnLMode {
   PnL = "PnL",
@@ -17,6 +18,7 @@ export type PNL_Values = {
   PnL: string;
   Offset: string;
   "Offset%": string;
+  ROI: string;
 };
 
 type PNL_Keys =
@@ -38,19 +40,13 @@ export type BuilderProps = {
 
 export const usePNLInputBuilder = (props: BuilderProps) => {
   const { type, values } = props;
-  const [mode, setMode] = useLocalStorage<PnLMode>(
-    "TP/SL_Mode",
-    PnLMode.PERCENTAGE
-  );
-  const tipsShowCounter = useRef(0);
+  // const [mode, setMode] = useLocalStorage<PnLMode>(
+  //   "TP/SL_Mode",
+  //   PnLMode.PERCENTAGE
+  // );
+  const { mode, setMode, tipsEle } = usePnlInputContext();
 
-  const [tips, setTips] = useState<
-    | {
-        msg: string;
-        type: "ROI" | "PnL";
-      }
-    | undefined
-  >();
+  const [tipVisible, setTipVisible] = useState(false);
 
   const key = useMemo<PNL_Keys>(() => {
     switch (mode) {
@@ -91,47 +87,17 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   };
 
   const onFocus = () => {
-    updateTips();
+    // updateTips();
+    setTipVisible(true);
   };
 
   /**
    * hide tips when input is blurred
    */
   const onBlur = () => {
-    setTips(undefined);
+    // setTips(undefined);
+    setTipVisible(false);
   };
-
-  function updateTips() {
-    if (!values.PnL) {
-      setTips(undefined);
-      return;
-    }
-    tipsShowCounter.current++;
-    if (mode === PnLMode.PnL) {
-      setTips({
-        msg: values.Offset,
-        type: "ROI",
-      });
-    } else {
-      setTips({
-        msg: values.PnL,
-        type: "PnL",
-      });
-    }
-  }
-
-  useEffect(() => {
-    if (!tips) return;
-    updateTips();
-  }, [values, mode]);
-
-  /**
-   * only update tips when value is changed at the first time
-   */
-  useEffect(() => {
-    if (tipsShowCounter.current > 1) return;
-    updateTips();
-  }, [value]);
 
   const formatter = (options: {
     dp?: number;
@@ -190,7 +156,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     value,
     onValueChange,
     quote_db: props.quote_dp,
-    tips,
+    tips: tipVisible ? tipsEle : undefined,
   };
 };
 
