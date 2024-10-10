@@ -14,13 +14,7 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
       <Flex direction="column" px={2} gapY={1}>
         {props.dataSource?.map((item) => {
           const content = (
-            <Flex
-              intensity={800}
-              p={2}
-              className="oui-gap-x-7"
-              r="base"
-              key={item.symbol}
-            >
+            <Flex intensity={800} p={2} className="oui-gap-x-7" r="base">
               <Flex direction="column" itemAlign="start" gapY={1}>
                 <Flex gapX={1}>
                   <TokenIcon
@@ -76,6 +70,7 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
               // @ts-ignore
               content={content}
               delayDuration={0}
+              key={item.symbol}
             >
               <Flex
                 direction="column"
