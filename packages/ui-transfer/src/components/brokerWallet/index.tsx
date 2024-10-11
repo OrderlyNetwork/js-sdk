@@ -23,7 +23,7 @@ export const BrokerWallet: FC = () => {
 
   return (
     <Flex justify="between">
-      <Text size="sm">{`Your ${brokerName} account`}</Text>
+      <Text size="sm" intensity={98}>{`Your ${brokerName} account`}</Text>
       {icon}
     </Flex>
   );

@@ -2,25 +2,28 @@ import { useState } from "react";
 import { useTradingPageContext } from "../../../provider/context";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
 import { PositionsProps } from "@orderly.network/ui-positions";
+import { useOrderStream } from "@orderly.network/hooks";
 import { usePositionsCount } from "../../../provider/usePositionsCount";
 import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
 import { modal } from "@orderly.network/ui";
-import { useOrderStream } from "@orderly.network/hooks";
+import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 
-export enum BottomTabType {
+export enum DataListTabType {
   position = "Position",
   pending = "Pending",
   tp_sl = "TP/SL",
   history = "History",
 }
 
-export const useBottomTabScript = (props: {
+export const useDataListScript = (props: {
   symbol: string;
-  config: Partial<Omit<PositionsProps, "pnlNotionalDecimalPrecision">>;
+  className?: string;
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
 }) => {
-  const { symbol, config } = props;
+  const { symbol, sharePnLConfig } = props;
   // TODO: default tab should be position
-  const [tab, setTab] = useState<BottomTabType>(BottomTabType.pending);
+  const [tab, setTab] = useState<DataListTabType>(DataListTabType.pending);
   const { tabletMediaQuery } = useTradingPageContext();
   const loalStorage = useTradingLocalStorage();
 
@@ -34,19 +37,19 @@ export const useBottomTabScript = (props: {
       okLabel: "Confirm",
       message:
         "Are you sure you want to cancel all of your pending orders, including TP/SL orders?",
-        actions: {
-          secondary: {
-            fullWidth: true,
-          },
-          primary: {
-            className: "!oui-w-full"
-          },
+      actions: {
+        secondary: {
+          fullWidth: true,
         },
+        primary: {
+          className: "!oui-w-full",
+        },
+      },
       onCancel: () => {},
       onOk: async () => {
         try {
           // await cancelAll(null, { source_type: "ALL" });
-          if (tab === BottomTabType.tp_sl) {
+          if (tab === DataListTabType.tp_sl) {
             await cancelAllTPSLOrders();
           } else {
             await cancelAllOrders();
@@ -70,7 +73,7 @@ export const useBottomTabScript = (props: {
     tab,
     setTab,
     tabletMediaQuery,
-    config,
+    sharePnLConfig,
     symbol,
     positionCount,
     pendingOrderCount,
@@ -80,4 +83,4 @@ export const useBottomTabScript = (props: {
   };
 };
 
-export type BottomTabState = ReturnType<typeof useBottomTabScript>;
+export type DataListState = ReturnType<typeof useDataListScript>;
