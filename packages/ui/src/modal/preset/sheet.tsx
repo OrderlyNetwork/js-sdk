@@ -12,6 +12,7 @@ import React from "react";
 
 export interface SheetProps {
   title: string | React.ReactNode;
+  leading?: React.ReactNode;
   content?: React.ReactNode;
   // contentClassName?: string;
   classNames?: {
@@ -31,7 +32,7 @@ const SimpleSheet = create<SheetProps>((props) => {
         onOpenAutoFocus={(event) => event.preventDefault()}
         {...props.contentProps}
       >
-        <SheetHeader>
+        <SheetHeader leading={props.leading}>
           <SheetTitle>{props.title}</SheetTitle>
         </SheetHeader>
         <div className={classNames.body}>{props.content}</div>
