@@ -125,7 +125,7 @@ const OrdersView: FC<
             Show all instruments
           </Text>
         </Flex>
-        <Button variant="outlined" size="xs" color="secondary">
+        <Button variant="outlined" size="xs" color="secondary" onClick={props.onCloseAll}>
           Close All
         </Button>
       </Flex>

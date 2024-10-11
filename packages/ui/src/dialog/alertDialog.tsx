@@ -42,6 +42,8 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       actions["secondary"] = {
         label: cancelLabel,
         onClick: onCancel,
+        size: "md",
+        fullWidth: true,
         ...props.actions?.secondary,
       } as DialogAction;
     }
@@ -50,6 +52,7 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       actions["primary"] = {
         label: okLabel,
         size: "md",
+        fullWidth: true,
         className: "oui-w-[154px]",
         onClick: onOk,
         ...props.actions?.primary,
@@ -67,8 +70,8 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       actions={actions}
       onOpenChange={onOpenChange}
       classNames={{
-        content: "oui-bg-base-8 oui-font-semibold oui-border oui-border-line-6",
-        footer: "oui-justify-center",
+        content: "oui-bg-base-8 oui-font-semibold oui-border oui-border-line-6 oui-p-4",
+        footer: "oui-justify-center oui-pb-0",
       }}
     >
       {message}
