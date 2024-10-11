@@ -9,6 +9,7 @@ import {
 } from "@orderly.network/markets";
 import { Box, modal } from "@orderly.network/ui";
 import { SecondaryLogo } from "../components/base/secondaryLogo";
+import { DataList, DataListWidget } from "../components/mWeb/dataList";
 
 export const MobileLayout: FC<TradingV2State> = (props) => {
   const onSymbol = () => {
@@ -37,10 +38,10 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
       {topBar}
       <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
       <OrderBookAndEntryWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
-      <BottomTabWidget
+      <DataListWidget
         symbol={props.symbol}
         className="oui-mx-1 oui-bg-base-9 oui-rounded-xl oui-p-2"
-        config={props.dataList.config}
+        sharePnLConfig={props.dataList.sharePnLConfig}
       />
     </div>
   );
