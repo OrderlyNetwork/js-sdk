@@ -72,7 +72,7 @@ const buttonVariants = tv({
     {
       variant: "contained",
       color: "buy",
-      className: ["oui-bg-success", "oui-text-success-contrast"],
+      className: ["oui-bg-trade-profit", "oui-text-success-contrast"],
     },
     {
       variant: "contained",
@@ -87,7 +87,7 @@ const buttonVariants = tv({
     {
       variant: "contained",
       color: "sell",
-      className: ["oui-bg-danger", "oui-text-danger-contrast"],
+      className: ["oui-bg-trade-loss", "oui-text-danger-contrast"],
     },
     {
       variant: "contained",

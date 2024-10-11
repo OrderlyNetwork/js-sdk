@@ -76,17 +76,21 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     dp?: number;
     mode: PnLMode;
   }): InputFormatter => {
-    const { dp = 2 } = options;
     return {
       onRenderBefore: (
         value: string | number,
         options: InputFormatterOptions
       ) => {
-        if (value === "") return value;
+        // console.log("???", options);
+        const { isFocused } = options;
+        value = `${value}`;
+        if (value === "" || value === "-") return "";
 
-        if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
-          return commify(value);
-        }
+        // if (type === "SL" && mode === PnLMode.PnL) {
+        //   if (isFocused) {
+        //     value = value.startsWith("-") ? value : "-" + value;
+        //   }
+        // }
 
         if (mode === PnLMode.PERCENTAGE) {
           return `${new Decimal(value).mul(100).todp(2, 4).toString()}${
@@ -95,9 +99,11 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           // return (Number(value) * 100).toFixed(2);
         }
 
-        return `${value}`;
+        return value;
       },
-      onSendBefore: (value: string) => {
+      onSendBefore: (value: string, options: InputFormatterOptions) => {
+        const { isFocused } = options;
+
         if (mode === PnLMode.PERCENTAGE) {
           if (value !== "") {
             percentageSuffix.current = value.endsWith(".") ? "." : "";
@@ -105,6 +111,21 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           }
         } else {
           // value = todpIfNeed(value, quote_dp);
+          if (isFocused) {
+            if (type === "SL" && mode === PnLMode.PnL) {
+              // if (
+              //   typeof values[PnLMode.PnL] !== "undefined" &&
+              //   values[PnLMode.PnL] !== ""
+              // )
+              //   return value;
+              const num = Number(value);
+              if (!isNaN(num) && num !== 0) {
+                value = (Math.abs(num) * -1).toString();
+              } else {
+                value = "";
+              }
+            }
+          }
         }
         return value;
       },
@@ -114,11 +135,13 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   return {
     mode,
     modes,
+    type: props.type,
     formatter,
     onModeChange: (mode: PnLMode) => {
       setMode(mode);
     },
     value,
+    pnl: values[PnLMode.PnL],
     onValueChange,
     quote_db: props.quote_dp,
   };

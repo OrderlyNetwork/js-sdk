@@ -111,12 +111,12 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         options: InputFormatterOptions
       ) => {
         value = `${value}`; // convert to string
-        if (value === "") return value;
 
         if (type === "SL" && mode === PnLMode.PnL) {
           value = value.startsWith("-") ? value : "-" + value;
         }
 
+        if (value === "" || value === "-") return "";
         // if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
         //   return commify(value);
         // }

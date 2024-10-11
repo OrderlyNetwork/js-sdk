@@ -93,8 +93,9 @@ export const useTaskProfitAndStopLossInternal = (
     algo_order_id: options?.defaultOrder?.algo_order_id,
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    quantity:
-      options?.defaultOrder?.quantity || Math.abs(position.position_qty),
+    quantity: "",
+    // quantity:
+    //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
   });
 
@@ -103,7 +104,7 @@ export const useTaskProfitAndStopLossInternal = (
 
   const [doCreateOrder, { isMutating: isCreateMutating }] =
     useMutation("/v1/algo/order");
-  const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
+  const [doUpdateuseMaOrder] = useMutation("/v1/algo/order", "PUT");
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
 
   const [errors, setErrors] = useState<ValidateError | null>(null);
@@ -135,9 +136,9 @@ export const useTaskProfitAndStopLossInternal = (
     setOrder((prev) => {
       const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
 
-      if (key === "sl_pnl") {
-        value = value ? `-${value}` : "";
-      }
+      // if (key === "sl_pnl") {
+      //   value = value ? `-${value}` : "";
+      // }
 
       const newValue = tpslCalculateHelper(
         key,

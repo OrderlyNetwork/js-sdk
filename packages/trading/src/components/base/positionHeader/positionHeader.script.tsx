@@ -9,14 +9,20 @@ export const usePositionHeaderScript = (props: {
   symbol?: string;
   tabletMediaQuery: string;
 }) => {
-  const { pnlNotionalDecimalPrecision, unPnlPriceBasis, symbol, tabletMediaQuery } = props;
+  const {
+    pnlNotionalDecimalPrecision,
+    unPnlPriceBasis,
+    symbol,
+    tabletMediaQuery,
+  } = props;
   const calcMode = unPnlPriceBasis;
 
   const [data] = usePositionStream(symbol, {
     calcMode,
   });
   const aggregated = useDataTap(data.aggregated);
-  const unrealPnL = aggregated?.unrealPnL;
+
+  const unrealPnL = aggregated?.total_unreal_pnl;
   const unrealPnlROI = aggregated?.unrealPnlROI;
   const notional = aggregated?.notional;
   const { showAllSymbol, setShowAllSymbol } = useTradingLocalStorage();

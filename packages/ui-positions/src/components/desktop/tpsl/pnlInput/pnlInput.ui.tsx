@@ -5,12 +5,32 @@ import {
   SimpleDropdownMenu,
 } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
+import { inputFormatter } from "@orderly.network/ui";
+import { useMemo } from "react";
 
 export type PNLInputProps = PNLInputState & { testId?: string; quote: string };
 
 export const PNLInput = (props: PNLInputProps) => {
-  const { mode, modes, onModeChange, onValueChange, quote, quote_db, value } =
-    props;
+  const {
+    mode,
+    modes,
+    onModeChange,
+    onValueChange,
+    quote,
+    quote_db,
+    value,
+    pnl,
+  } = props;
+
+  const color = useMemo(() => {
+    const num = Number(pnl);
+
+    if (isNaN(num) || num === 0) return "";
+
+    if (num > 0) return "oui-text-trade-profit";
+    if (num < 0) return "oui-text-trade-loss";
+  }, [pnl]);
+
   return (
     <Input
       prefix={mode}
@@ -21,7 +41,15 @@ export const PNLInput = (props: PNLInputProps) => {
       data-testid={props.testId}
       autoComplete={"off"}
       onValueChange={onValueChange}
-      formatters={[props.formatter({ dp: quote_db, mode })]}
+      formatters={[
+        inputFormatter.numberFormatter,
+        props.formatter({ dp: quote_db, mode }),
+        inputFormatter.currencyFormatter,
+      ]}
+      // className={color}
+      classNames={{
+        input: color,
+      }}
       // value={props.value}
       suffix={
         <PNLMenus

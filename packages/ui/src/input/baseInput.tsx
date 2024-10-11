@@ -55,6 +55,8 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     const innerInputRef = useRef<HTMLInputElement>(null);
     const prevInputValue = useRef<string | null>(null);
 
+    const isFocused = useRef<boolean>(false);
+
     const innerFormatters = useMemo<InputFormatter[]>(() => {
       return formatters ?? [];
     }, [formatters]);
@@ -75,7 +77,9 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         if (value === null || value === undefined) return "";
         let index = 0;
         while (index < innerFormatters.length) {
-          value = innerFormatters[index].onRenderBefore(value, {});
+          value = innerFormatters[index].onRenderBefore(value, {
+            isFocused: isFocused.current,
+          });
 
           index++;
         }
@@ -92,7 +96,9 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         if (value === null || value === undefined) return "";
         let index = 0;
         while (index < innerFormatters.length) {
-          value = innerFormatters[index].onSendBefore(value, { dp: 2 });
+          value = innerFormatters[index].onSendBefore(value, {
+            isFocused: isFocused.current,
+          });
           index++;
         }
 
@@ -154,21 +160,22 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       setCursor(event.target.selectionStart);
     };
 
-    // const onInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    //   // setShowTooltip(!!error);
-    //   //   props.onFocus?.();
-    // };
-    //
-    // const onInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    //   // setShowTooltip(false);
-    // };
+    const onInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+      isFocused.current = true;
+      inputProps.onFocus?.(event);
+    };
+
+    const onInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+      isFocused.current = false;
+      inputProps.onBlur?.(event);
+    };
     return (
       <input
         type="text"
         {...inputProps}
         ref={innerInputRef}
-        // onBlur={onInputBlur}
-        // onFocus={onInputFocus}
+        onBlur={onInputBlur}
+        onFocus={onInputFocus}
         onChange={onInputChange}
         value={formattedValue}
         id={id}

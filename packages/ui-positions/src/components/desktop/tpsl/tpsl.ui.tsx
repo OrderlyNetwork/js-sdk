@@ -13,19 +13,29 @@ import {
   cn,
   inputFormatter,
   Checkbox,
+  convertValueToPercentage,
 } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { TPSLBuilderState } from "./useTPSL.script";
 
-import { PNL_Values } from "./pnlInput/useBuilder.script";
+import type { PNL_Values } from "./pnlInput/useBuilder.script";
+import { registerSimpleDialog } from "@orderly.network/ui";
+import { usePositionsRowContext } from "../positionRowContext";
+import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
+import { OrderSide } from "@orderly.network/types";
 
 export type TPSLProps = {
   onCancel?: () => void;
   onComplete?: () => void;
 };
 
+//------------- TPSL form start ---------------
 export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
-  const { TPSL_OrderEntity, symbolInfo, onCancel, onComplete } = props;
+  const { TPSL_OrderEntity, symbolInfo, onCancel, onComplete, status, errors } =
+    props;
+
+  console.log("errors", errors);
+
   return (
     <div id="orderly-tp_sl-order-edit-content">
       {!props.isEditing && (
@@ -34,7 +44,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           quantity={(props.orderQuantity ?? props.maxQty) as number}
           tick={symbolInfo("base_tick")}
           onQuantityChange={props.setQuantity}
-          quote="BTC"
+          quote={symbolInfo("base")}
         />
       )}
 
@@ -73,13 +83,17 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         <Button
           size={"md"}
           data-testid={"tpsl-confirm"}
-          disabled={!props.valid}
+          disabled={!props.valid || status.isCreateMutating}
+          loading={status.isCreateMutating}
           onClick={() => {
-            // if (props.needConfirm) {
-            //   //show confirm dialog
-            // } else {
-            props.onSubmit();
-            // }
+            props.onSubmit().then(
+              () => {
+                onComplete?.();
+              },
+              () => {
+                console.log("--->>>cancel order");
+              }
+            );
           }}
         >
           Confirm
@@ -88,6 +102,8 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     </div>
   );
 };
+
+//----------
 
 // ------------- Quantity input start------------
 const TPSLQuantity = (props: {
@@ -100,6 +116,8 @@ const TPSLQuantity = (props: {
 }) => {
   const isPosition = props.quantity === props.maxQty;
   const inputRef = useRef<HTMLInputElement>(null);
+  const currentQtyPercentage =
+    convertValueToPercentage(props.quantity, 0, props.maxQty) / 100;
 
   const setTPSL = () => {
     props.onQuantityChange?.(0);
@@ -166,7 +184,7 @@ const TPSLQuantity = (props: {
         </Button>
       </Flex>
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
-        <Slider.signle
+        <Slider.single
           markCount={5}
           color="primaryLight"
           max={props.maxQty}
@@ -180,7 +198,7 @@ const TPSLQuantity = (props: {
       </Flex>
       <Flex justify={"between"}>
         <Text.numeral rule={"percentages"} color={"primaryLight"} size={"2xs"}>
-          0
+          {currentQtyPercentage}
         </Text.numeral>
         <Flex itemAlign={"center"} gap={1}>
           <button
@@ -313,32 +331,29 @@ const PriceInput = (props: {
     />
   );
 };
-// ------------ TP/SL Price input end------------
-
-export const TPSLButton = () => {
-  return (
-    <Button variant="outlined" size="sm" color="secondary">
-      TP/SL
-    </Button>
-  );
-};
 
 export type PositionTPSLConfirmProps = {
   symbol: string;
-  isPosition: boolean;
+  // isPosition: boolean;
   qty: number;
   tpPrice?: number;
   slPrice?: number;
-  // type
+  maxQty: number;
+  side: OrderSide;
 };
 
 // ------------ Position TP/SL Confirm dialog start------------
 export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
-  const { symbol, tpPrice, slPrice, qty } = props;
+  const { symbol, tpPrice, slPrice, qty, maxQty, side } = props;
+  const [needConfirm, setNeedConfirm] = useLocalStorage(
+    "orderly_order_confirm",
+    true
+  );
   const textClassName = textVariants({
     size: "xs",
     intensity: 54,
   });
+  const isPositionTPSL = qty >= maxQty;
   return (
     <>
       <Flex pt={5} pb={4}>
@@ -348,12 +363,25 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           </Text.formatted>
         </Box>
         <Flex gap={1}>
-          <Badge size="xs" color={"primaryLight"}>
-            Position
-          </Badge>
-          <Badge size="xs" color="neutral">
+          {isPositionTPSL && (
+            <Badge size="xs" color={"primaryLight"}>
+              Position
+            </Badge>
+          )}
+
+          {/* <Badge size="xs" color="neutral">
             TP/SL
-          </Badge>
+          </Badge> */}
+          <TPSLOrderType tpPrice={tpPrice} slPrice={slPrice} />
+          {side === OrderSide.BUY ? (
+            <Badge size="xs" color="success">
+              Buy
+            </Badge>
+          ) : (
+            <Badge size="xs" color="danger">
+              Sell
+            </Badge>
+          )}
         </Flex>
       </Flex>
       <Divider />
@@ -368,9 +396,15 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         <Flex>
           <Box grow>Qty.</Box>
 
-          <div>Entire position</div>
+          <div>
+            {isPositionTPSL ? (
+              <span>Entire position</span>
+            ) : (
+              <Text.numeral intensity={98}>{qty}</Text.numeral>
+            )}
+          </div>
         </Flex>
-        {typeof tpPrice === "number" ? (
+        {typeof tpPrice === "number" && tpPrice > 0 ? (
           <Flex>
             <Box grow>TP Price</Box>
             <Text.numeral
@@ -380,31 +414,41 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               size={"sm"}
               unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
             >
-              52.32
+              {tpPrice}
+            </Text.numeral>
+          </Flex>
+        ) : null}
+        {typeof slPrice === "number" && slPrice > 0 ? (
+          <Flex>
+            <Box grow>SL Price</Box>
+            <Text.numeral
+              as={"div"}
+              coloring
+              unit={"USDC"}
+              size={"sm"}
+              className="oui-text-trade-loss"
+              unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
+            >
+              {slPrice}
             </Text.numeral>
           </Flex>
         ) : null}
 
         <Flex>
-          <Box grow>SL Price</Box>
-          <Text.numeral
-            as={"div"}
-            coloring
-            unit={"USDC"}
-            size={"sm"}
-            unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
-          >
-            52.32
-          </Text.numeral>
-        </Flex>
-        <Flex>
           <Box grow>Price</Box>
-          <div>Market</div>
+          <div className="oui-text-base-contrast">Market</div>
         </Flex>
       </Flex>
       <Box py={2}>
         <Flex gap={1}>
-          <Checkbox id="disabledConfirm" />
+          <Checkbox
+            id="disabledConfirm"
+            color="white"
+            checked={!needConfirm}
+            onCheckedChange={(check) => {
+              setNeedConfirm(!check);
+            }}
+          />
           <label
             htmlFor="disabledConfirm"
             className={textVariants({
@@ -422,3 +466,32 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 };
 
 //------------- Position TP/SL Confirm dialog end------------
+
+const TPSLOrderType = (props: { tpPrice?: number; slPrice?: number }) => {
+  const { tpPrice, slPrice } = props;
+  if (!!tpPrice && !!slPrice) {
+    return (
+      <Badge size="xs" color="neutral">
+        TP/SL
+      </Badge>
+    );
+  }
+
+  if (!!tpPrice) {
+    return (
+      <Badge size="xs" color="neutral">
+        TP
+      </Badge>
+    );
+  }
+
+  if (!!slPrice) {
+    return (
+      <Badge size="xs" color="neutral">
+        SL
+      </Badge>
+    );
+  }
+
+  return null;
+};

@@ -2,6 +2,7 @@ import { modal, SimpleDialog } from "@orderly.network/ui";
 import { TPSLWidget, TPSLWidgetProps } from "../tpsl.widget";
 import { TPSLEditorBuilderState } from "./tpslDialog.script";
 import { PositionTPSLConfirm } from "../tpsl.ui";
+import { OrderSide } from "@orderly.network/types";
 
 type Props = {
   // onConfirm: () => Promise<boolean>;
@@ -27,8 +28,9 @@ export const TPSLDialog = (props: Props) => {
               content: (
                 <PositionTPSLConfirm
                   symbol={"PERP_ETH_USDC"}
-                  isPosition={false}
                   qty={0}
+                  maxQty={0}
+                  side={OrderSide.BUY}
                 />
               ),
             });

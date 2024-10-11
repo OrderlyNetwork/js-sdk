@@ -26,6 +26,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const priceInputRef = useRef<HTMLInputElement | null>(null);
 
   const currentQtyPercentage = useMemo(() => {
+    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) return 1;
     return (
       convertValueToPercentage(
         Number(formattedOrder.order_quantity ?? 0),

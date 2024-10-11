@@ -13,6 +13,7 @@ import {
 import { SwitchLayout } from "../components/desktop/layout/switchLayout";
 import { SplitLayout } from "../components/desktop/layout/splitLayout";
 import { RemovablePanel } from "../components/desktop/layout/removablePanel";
+import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 
 export type DesktopLayoutProps = TradingV2State & {
   className?: string;
@@ -86,11 +87,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </RemovablePanel>,
     <RemovablePanel
       key="orderEntry"
-      className="oui-h-[200px]"
       index={positions.findIndex((item) => item === 1)}
       onLayout={updatePositions}
     >
-      OrderEntry
+      <OrderEntryWidget symbol={props.symbol} />
     </RemovablePanel>,
     <RemovablePanel
       key="margin"

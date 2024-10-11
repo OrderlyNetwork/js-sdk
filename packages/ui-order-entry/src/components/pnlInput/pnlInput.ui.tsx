@@ -34,26 +34,6 @@ export const PNLInput = (props: PNLInputProps) => {
 
   const id = useMemo(() => `${type.toLowerCase()}_${mode.toLowerCase()}`, []);
 
-  // const tooltipEle = useMemo(() => {
-  //   if (!tips) return null;
-  //
-  //   return (
-  //     <Flex>
-  //       <span className={"oui-text-xs oui-text-base-contrast-54"}>
-  //         {`Est.${tips.type}:`}
-  //       </span>
-  //       <Text.numeral
-  //         className={cn(
-  //           "oui-text-xs oui-ml-1",
-  //           type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
-  //         )}
-  //       >
-  //         {tips.msg}
-  //       </Text.numeral>
-  //     </Flex>
-  //   );
-  // }, [tips?.msg]);
-
   return (
     <Input.tooltip
       prefix={mode}

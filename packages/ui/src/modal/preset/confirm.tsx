@@ -82,7 +82,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
                 if (typeof props.onCancel === "function") {
                   return props.onCancel();
                 }
-                return true;
+                return Promise.reject('cancel');
               })
               .then(
                 (data?: any) => {
@@ -105,6 +105,6 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
   );
 });
 
-export const confirm = (props: ConfirmProps) => {
+export const confirm = <T = any, >(props: ConfirmProps):Promise<T> => {
   return modalActions.show(ConfirmDialog, props);
 };

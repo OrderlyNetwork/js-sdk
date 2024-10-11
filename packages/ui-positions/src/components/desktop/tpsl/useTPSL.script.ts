@@ -1,4 +1,5 @@
 import {
+  type ComputedAlgoOrder,
   useLocalStorage,
   useSymbolsInfo,
   useTPSLOrder,
@@ -14,7 +15,13 @@ export type TPSLBuilderOptions = {
    * either show the confirm dialog or not,
    * if the Promise reject or return false, cancel the sumbit action
    */
-  onConfirm?: () => Promise<boolean>;
+  onConfirm?: (
+    order: ComputedAlgoOrder,
+    options: {
+      position: API.Position;
+      submit: () => Promise<void>;
+    }
+  ) => Promise<boolean>;
 };
 
 export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
@@ -23,16 +30,17 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const symbol = isEditing ? order.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
 
-  const [tpslOrder, { submit, setValue, validate, errors }] = useTPSLOrder(
-    {
-      symbol,
-      position_qty: position.position_qty,
-      average_open_price: position.average_open_price,
-    },
-    {
-      defaultOrder: order,
-    }
-  );
+  const [tpslOrder, { submit, setValue, validate, errors, isCreateMutating }] =
+    useTPSLOrder(
+      {
+        symbol,
+        position_qty: position.position_qty,
+        average_open_price: position.average_open_price,
+      },
+      {
+        defaultOrder: order,
+      }
+    );
 
   const setQuantity = (value: number | string) => {
     setValue("quantity", value);
@@ -117,19 +125,21 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   }, [tpslOrder.quantity, maxQty, dirty]);
 
   const onSubmit = async () => {
-    console.log("submitting", typeof options.onConfirm);
-
     return Promise.resolve()
       .then(() => {
         if (typeof options.onConfirm !== "function") {
-          return true;
+          return submit().then(() => true);
         }
-        return options.onConfirm();
+        return options.onConfirm(tpslOrder, {
+          position,
+          submit,
+        });
       })
-      .then((isConfirm) => {
-        if (isConfirm) {
-          return submit();
-        }
+      .then((isSuccess) => {
+        console.log("result", isSuccess);
+        // if (isConfirm) {
+        //   return submit();
+        // }
         // return;
       });
   };
@@ -149,6 +159,10 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     // needConfirm,
     onSubmit,
     valid,
+    errors,
+    status: {
+      isCreateMutating,
+    },
   } as const;
 };
 
