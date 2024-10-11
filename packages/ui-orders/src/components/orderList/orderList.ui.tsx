@@ -1,11 +1,10 @@
 import { FC } from "react";
 import {
-  Divider,
   Flex,
-  Text,
   Pagination,
   Filter,
   ListView,
+  Button,
 } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
@@ -15,7 +14,7 @@ import { OrderListProvider } from "./orderListContext";
 import { TabType } from "../orders.widget";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 import { useOrderColumn } from "./desktop/useColumn";
-import { OrderCell, OrderCellWidget } from "./mWeb";
+import { OrderCellWidget } from "./mWeb";
 
 export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
   const columns = useOrderColumn(props.type);
@@ -39,7 +38,9 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
           }}
           onRow={(record, index) => {
             return {
-              className: grayCell(record) ? "oui-text-base-contrast-20" : "oui-text-base-contrast-80",
+              className: grayCell(record)
+                ? "oui-text-base-contrast-20"
+                : "oui-text-base-contrast-80",
             };
           }}
           generatedRowKey={(record, index) =>
@@ -68,6 +69,11 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
                 props.onFilter(value);
               }}
               className="oui-px-3"
+              trailing={
+                [TabType.pending, TabType.tp_sl].includes(props.type) && (
+                  <CancelAll {...props} />
+                )
+              }
             />
           )}
 
@@ -102,7 +108,13 @@ export const MobileOrderList: FC<
         className={props.classNames?.root}
         dataSource={props.dataSource}
         renderItem={(item, index) => {
-          let children = <OrderCellWidget item={item} index={index} className={props.classNames?.cell}/>;
+          let children = (
+            <OrderCellWidget
+              item={item}
+              index={index}
+              className={props.classNames?.cell}
+            />
+          );
           if (props.type === TabType.tp_sl) {
             children = (
               <TPSLOrderRowProvider order={item}>
@@ -116,5 +128,18 @@ export const MobileOrderList: FC<
         }}
       />
     </OrderListProvider>
+  );
+};
+
+const CancelAll: FC<OrdersBuilderState> = (props) => {
+  return (
+    <Button
+      variant="outlined"
+      color="secondary"
+      size="xs"
+      onClick={(e) => props.onCancelAll()}
+    >
+      Cancel all
+    </Button>
   );
 };

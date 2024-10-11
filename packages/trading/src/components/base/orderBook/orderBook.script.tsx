@@ -45,14 +45,14 @@ export const useOrderBookScript = (props: {
 
       const restSpace = height - SPACE - cellsHeight;
 
-      console.log(
-        "restSpace",
-        level,
-        height,
-        SPACE,
-        cellsHeight,
-        restSpace
-      );
+      // console.log(
+      //   "restSpace",
+      //   level,
+      //   height,
+      //   SPACE,
+      //   cellsHeight,
+      //   restSpace
+      // );
 
       if (restSpace > 10) {
         setCellHeight(DEFAULT_CELL_HEIGHT + restSpace / level / 2);
