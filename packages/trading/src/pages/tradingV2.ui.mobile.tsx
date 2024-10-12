@@ -1,15 +1,15 @@
 import { FC } from "react";
 import { TradingV2State } from "./tradingV2.script";
-import { TopTabWidget } from "../components/mWeb/topTab";
-import { OrderBookAndEntryWidget } from "../components/mWeb/orderBookAndEntry";
+import { TopTabWidget } from "../components/mobile/topTab";
+import { OrderBookAndEntryWidget } from "../components/mobile/orderBookAndEntry";
 import {
   MarketsSheetWidget,
   TokenInfoBarWidget,
 } from "@orderly.network/markets";
 import { Box, modal } from "@orderly.network/ui";
 import { SecondaryLogo } from "../components/base/secondaryLogo";
-import { DataListWidget } from "../components/mWeb/dataList";
-import { BottomNavBarWidget } from "../components/mWeb/bottomNavBar";
+import { DataListWidget } from "../components/mobile/dataList";
+import { BottomNavBarWidget } from "../components/mobile/bottomNavBar";
 
 export const MobileLayout: FC<TradingV2State> = (props) => {
   const onSymbol = () => {
