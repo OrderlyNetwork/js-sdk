@@ -49,6 +49,7 @@ export const PNLInput = (props: PNLInputProps) => {
       // className={color}
       classNames={{
         input: color,
+        prefix: "oui-text-base-contrast-54",
       }}
       // value={props.value}
       suffix={

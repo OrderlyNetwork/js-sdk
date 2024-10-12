@@ -137,10 +137,6 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
       })
       .then((isSuccess) => {
         console.log("result", isSuccess);
-        // if (isConfirm) {
-        //   return submit();
-        // }
-        // return;
       });
   };
 

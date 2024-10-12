@@ -521,6 +521,7 @@ const QuantitySlider = (props: {
         value={props.value}
         color={color}
         markCount={4}
+        showTip
         max={props.maxQty}
         step={props.tick}
         onValueChange={props.onValueChange}

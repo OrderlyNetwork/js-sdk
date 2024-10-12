@@ -50,7 +50,13 @@ const SimpleDropdownMenu = (props: PropsWithChildren<DropdownMenuProps>) => {
     <DropdownMenuRoot>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
-        <DropdownMenuContent size={size} {...contentProps}>
+        <DropdownMenuContent
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+          }}
+          size={size}
+          {...contentProps}
+        >
           {items}
         </DropdownMenuContent>
       </DropdownMenuPortal>

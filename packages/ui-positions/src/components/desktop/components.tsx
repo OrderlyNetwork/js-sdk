@@ -14,11 +14,11 @@ import { useState } from "react";
 
 // ------------ TP/SL Price input end------------
 export const TPSLButton = () => {
-  const { position } = usePositionsRowContext();
+  const { position, baseDp, quoteDp } = usePositionsRowContext();
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
 
-  const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
+  const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
 
   return (
     <PopoverRoot
@@ -79,6 +79,7 @@ export const TPSLButton = () => {
                     tpPrice={Number(order.tp_trigger_price)}
                     slPrice={Number(order.sl_trigger_price)}
                     side={order.side!}
+                    dp={baseDp ?? 2}
                   />
                 ),
               })

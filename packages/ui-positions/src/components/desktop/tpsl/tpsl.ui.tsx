@@ -19,10 +19,8 @@ import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { TPSLBuilderState } from "./useTPSL.script";
 
 import type { PNL_Values } from "./pnlInput/useBuilder.script";
-import { registerSimpleDialog } from "@orderly.network/ui";
-import { usePositionsRowContext } from "../positionRowContext";
-import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
-import { OrderSide } from "@orderly.network/types";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { API, OrderSide } from "@orderly.network/types";
 
 export type TPSLProps = {
   onCancel?: () => void;
@@ -139,6 +137,10 @@ const TPSLQuantity = (props: {
             align="right"
             value={isPosition ? "" : props.quantity}
             autoComplete="off"
+            classNames={{
+              prefix: "oui-text-base-contrast-54",
+              root: "oui-bg-base-5",
+            }}
             formatters={[
               inputFormatter.numberFormatter,
               inputFormatter.currencyFormatter,
@@ -189,6 +191,7 @@ const TPSLQuantity = (props: {
           color="primaryLight"
           max={props.maxQty}
           min={0}
+          showTip
           step={props.tick}
           value={props.quantity}
           onValueChange={(value) => {
@@ -249,12 +252,19 @@ const TPSLPrice = (props: {
     <>
       <div>
         <Flex justify={"between"}>
-          <Text size={"sm"}>Task profit</Text>
+          <Text size={"sm"} intensity={80}>
+            Task profit
+          </Text>
           <Flex>
             <Text size={"2xs"} intensity={36}>
               Est. PNL:
             </Text>
-            <Text.numeral size={"2xs"} coloring showIdentifier>
+            <Text.numeral
+              size={"2xs"}
+              coloring
+              showIdentifier
+              className="oui-ml-1"
+            >
               {props.tp_pnl ?? "-"}
             </Text.numeral>
           </Flex>
@@ -278,12 +288,19 @@ const TPSLPrice = (props: {
       </div>
       <div>
         <Flex justify={"between"}>
-          <Text size={"sm"}>Stop loss</Text>
+          <Text size={"sm"} intensity={80}>
+            Stop loss
+          </Text>
           <Flex>
             <Text size={"2xs"} intensity={36}>
               Est. PNL:
             </Text>
-            <Text.numeral size={"2xs"} coloring showIdentifier>
+            <Text.numeral
+              size={"2xs"}
+              coloring
+              showIdentifier
+              className="oui-ml-1"
+            >
               {props.sl_pnl ?? "-"}
             </Text.numeral>
           </Flex>
@@ -323,6 +340,9 @@ const PriceInput = (props: {
       align={"right"}
       autoComplete={"off"}
       value={props.value}
+      classNames={{
+        prefix: "oui-text-base-contrast-54",
+      }}
       onValueChange={props.onValueChange}
       formatters={[
         inputFormatter.numberFormatter,
@@ -340,13 +360,16 @@ export type PositionTPSLConfirmProps = {
   slPrice?: number;
   maxQty: number;
   side: OrderSide;
+
+  // symbolConfig:API.SymbolExt
+  dp: number;
 };
 
 // ------------ Position TP/SL Confirm dialog start------------
 export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
-  const { symbol, tpPrice, slPrice, qty, maxQty, side } = props;
+  const { symbol, tpPrice, slPrice, qty, maxQty, side, dp } = props;
   const [needConfirm, setNeedConfirm] = useLocalStorage(
-    "orderly_order_confirm",
+    "orderly_position_tp_sl_confirm",
     true
   );
   const textClassName = textVariants({
@@ -354,6 +377,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     intensity: 54,
   });
   const isPositionTPSL = qty >= maxQty;
+
   return (
     <>
       <Flex pt={5} pb={4}>
@@ -398,9 +422,11 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
           <div>
             {isPositionTPSL ? (
-              <span>Entire position</span>
+              <span className="oui-text-base-contrast">Entire position</span>
             ) : (
-              <Text.numeral intensity={98}>{qty}</Text.numeral>
+              <Text.numeral intensity={98} dp={dp}>
+                {qty}
+              </Text.numeral>
             )}
           </div>
         </Flex>
