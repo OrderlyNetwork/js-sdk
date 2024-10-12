@@ -1,22 +1,36 @@
 import { FC } from "react";
-import {
-  ArrowRightShortIcon,
-  Button,
-  Flex,
-  Text,
-} from "@orderly.network/ui";
+import { ArrowRightShortIcon, Button, Flex, Text } from "@orderly.network/ui";
 import { AccountSheetState } from "./accountSheet.script";
 import { CopyIcon, HeadIcon, OrderlyIcon, USDCIcon } from "./icons";
+import { Decimal } from "@orderly.network/utils";
 
 export const AccountSheet: FC<AccountSheetState> = (props) => {
   return (
     <Flex direction={"column"} gap={4}>
       <AccountInfo {...props} />
-      <ReferralInfo {...props} />
+      {(props.isAffiliate || props.isTrader) && <ReferralInfo {...props} />}
       <TradingRewardsInfo {...props} />
-      <Flex>
-        <Button variant="outlined" color="danger" size="md" onClick={props.onDisconnect}>
-            Disconnect
+      <Flex gap={3} width={"100%"} justify={"center"}>
+        {props.showGetTestUSDC && (
+          <Button
+            variant="outlined"
+            color="primary"
+            size="md"
+            onClick={props.onGetTestUSDC}
+            fullWidth
+            loading={props.gettingTestUSDC}
+          >
+            Get test USDC
+          </Button>
+        )}
+        <Button
+          variant="outlined"
+          color="danger"
+          size="md"
+          onClick={props.onDisconnect}
+          className={props.showGetTestUSDC ? "oui-w-full" : "oui-w-[50%]"}
+        >
+          Disconnect
         </Button>
       </Flex>
     </Flex>
@@ -68,13 +82,16 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
       className="oui-bg-base-6"
       width={"100%"}
     >
-      <Flex justify={"between"} width={"100%"}>
-        <Text>Referral</Text>
-        <button onClick={props.onGotoAffliate} className="oui-cursor-pointer">
+      <button
+        onClick={props.onClickReferral}
+        className="oui-cursor-pointer oui-w-full"
+      >
+        <Flex justify={"between"} width={"100%"}>
+          <Text size="2xs">Referral</Text>
           <ArrowRightShortIcon color="white" opacity={0.98} />
-        </button>
-      </Flex>
-      {props.isAffliate && (
+        </Flex>
+      </button>
+      {props.isAffiliate && (
         <Flex
           gradient="primary"
           p={4}
@@ -91,7 +108,14 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
           </Flex>
           <Flex className="oui-gap-[6px]">
             <USDCIcon />
-            <Text.numeral dp={2}>{props.affiliate}</Text.numeral>
+            <Text.numeral
+              dp={2}
+              padding={false}
+              rm={Decimal.ROUND_DOWN}
+              rule="price"
+            >
+              {props.affiliateComission30D ?? "--"}
+            </Text.numeral>
           </Flex>
         </Flex>
       )}
@@ -112,7 +136,14 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
           </Flex>
           <Flex className="oui-gap-[6px]">
             <USDCIcon />
-            <Text.numeral dp={2}>{props.trader}</Text.numeral>
+            <Text.numeral
+              dp={2}
+              padding={false}
+              rm={Decimal.ROUND_DOWN}
+              rule="price"
+            >
+              {props.traderComission30D ?? "--"}
+            </Text.numeral>
           </Flex>
         </Flex>
       )}
@@ -130,15 +161,20 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
       className="oui-bg-base-6"
       width={"100%"}
     >
-      <Flex justify={"between"} width={"100%"}>
-        <Text>{`Trading rewards (epoch ${props.curEpochId})`}</Text>
-        <button
-          onClick={props.onGotoTradingRewards}
-          className="oui-cursor-pointer"
-        >
+      <button
+        onClick={props.onClickTradingRewards}
+        className="oui-cursor-pointer oui-w-full"
+      >
+        <Flex justify={"between"} width={"100%"}>
+          <span className="oui-text-2xs">
+          Trading rewards
+          <Text intensity={54}>{" (epoch "}</Text>
+          {props.curEpochId}
+          <Text  intensity={54}>{" )"}</Text>
+          </span>
           <ArrowRightShortIcon color="white" opacity={0.98} />
-        </button>
-      </Flex>
+        </Flex>
+      </button>
       <Flex
         p={4}
         r="lg"
@@ -153,7 +189,14 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
 
         <Flex className="oui-gap-[6px]">
           <OrderlyIcon />
-          <Text.numeral dp={2}>{props.estRewards}</Text.numeral>
+          <Text.numeral
+            dp={2}
+            padding={false}
+            rm={Decimal.ROUND_DOWN}
+            rule="price"
+          >
+            {props.estRewards}
+          </Text.numeral>
         </Flex>
       </Flex>
     </Flex>

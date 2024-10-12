@@ -4,8 +4,9 @@ import { BottomNavBarState } from "./bottomNavBar.script";
 
 export const BottomNavBar: FC<BottomNavBarState> = (props) => {
   return (
-    <Flex height={44}>
+    <Flex height={64} className="oui-bg-base-9" gap={1} justify={"center"}>
       <Button
+        size="sm"
         onClick={() => {
           props.onShowAccountSheet();
         }}
@@ -13,6 +14,7 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
         Account Sheet
       </Button>
       <Button
+        size="sm"
         onClick={() => {
           props.onShowPortfolioSheet();
         }}
