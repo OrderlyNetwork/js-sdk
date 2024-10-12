@@ -1,0 +1,1 @@
+export { DefaultSolanaWalletAdapter} from "./walletAdapter";

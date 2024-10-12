@@ -74,6 +74,12 @@
       "@orderly.network/default-evm-adapter": [
         "../../packages/default-evm-adapter/src"
       ],
+      "@orderly.network/default-solana-adapter": [
+        "../../packages/default-solana-adapter/src"
+      ],
+      "@orderly.network/wallet-connector": [
+        "../../packages/wallet-connector/src"
+      ],
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
       ],

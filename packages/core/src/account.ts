@@ -715,7 +715,7 @@ export class Account {
   private async _getAccountInfo() {
     const brokerId = this.configStore.get("brokerId");
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${this.address}&broker_id=${brokerId}`
+      `/v1/get_account?address=${this.address}&broker_id=${brokerId}&chain_type=${this.stateValue.chainNamespace}`
     );
     return res;
   }

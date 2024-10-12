@@ -20,6 +20,7 @@
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/default-evm-adapter": "workspace:*",
+    "@orderly.network/default-solana-adapter": "workspace:*",
     "@orderly.network/web3-provider-ethers": "workspace:*"
   },
   "devDependencies": {

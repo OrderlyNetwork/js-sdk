@@ -21,5 +21,5 @@ export const EVENT_NAMES = {
 
 export enum ChainNamespace {
   evm = "evm",
-  solana = "solana",
+  solana = "SOL",
 }

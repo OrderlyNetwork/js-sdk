@@ -46,6 +46,7 @@ class WalletAdapterManager {
       contractManager?: IContract;
     }
   ) {
+    console.log('-- this.walletAdapters', this.walletAdapters, chainNamespace);
     const adapter = this.walletAdapters.find(
       (adapter) => adapter.chainNamespace === chainNamespace
     );

@@ -1,10 +1,26 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
+import {nodePolyfills} from 'vite-plugin-node-polyfills';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    nodePolyfills({
+      include: ['path', 'stream', 'util'],
+      exclude: ['http'],
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true,
+      },
+      overrides: {
+        fs: 'memfs',
+      },
+      protocolImports: true,
+    }),
+  ],
   resolve: {
     alias: {
       "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
@@ -82,6 +98,14 @@ export default defineConfig({
       "@orderly.network/default-evm-adapter": resolve(
         __dirname,
         "../../packages/default-evm-adapter/src"
+      ),
+      "@orderly.network/default-solana-adapter": resolve(
+        __dirname,
+        "../../packages/default-solana-adapter/src"
+      ),
+      "@orderly.network/wallet-connector": resolve(
+        __dirname,
+        "../../packages/wallet-connector/src"
       ),
       "@orderly.network/react/dist": resolve(
         __dirname,
