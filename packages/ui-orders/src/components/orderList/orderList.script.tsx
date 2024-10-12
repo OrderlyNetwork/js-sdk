@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   AlgoOrderRootType,
   OrderStatus,
@@ -6,7 +6,7 @@ import {
 } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
 import { TabType } from "../orders.widget";
-import { DataFilterItems, usePagination } from "@orderly.network/ui";
+import { DataFilterItems, modal, usePagination } from "@orderly.network/ui";
 import { differenceInDays, setHours } from "date-fns";
 
 export const useOrderListScript = (props: {
@@ -47,7 +47,10 @@ export const useOrderListScript = (props: {
       updateOrder,
       cancelAlgoOrder,
       updateAlgoOrder,
+      cancelAllOrders,
+      cancelAllTPSLOrders,
       meta,
+      refresh,
     },
   ] = useOrderStream({
     symbol: props.symbol,
@@ -59,6 +62,45 @@ export const useOrderListScript = (props: {
     includes,
     excludes,
   });
+
+  const onCancelAll = useCallback(() => {
+    modal.alert({
+      title: "Cancel all orders",
+      okLabel: "Confirm",
+      message:
+        "Are you sure you want to cancel all of your pending orders, including TP/SL orders?",
+        actions: {
+          secondary: {
+            fullWidth: true,
+          },
+          primary: {
+            className: "!oui-w-full"
+          },
+        },
+      onCancel: () => {},
+      onOk: async () => {
+        try {
+          // await cancelAll(null, { source_type: "ALL" });
+          if (type === TabType.tp_sl) {
+            await cancelAllTPSLOrders();
+          } else {
+            await cancelAllOrders();
+          }
+          refresh();
+          return Promise.resolve(true);
+        } catch (error) {
+          // @ts-ignore
+          if (error?.message !== undefined) {
+            // @ts-ignore
+            toast.error(error.message);
+          }
+          return Promise.resolve(false);
+        } finally {
+          Promise.resolve();
+        }
+      },
+    });
+  }, [type]);
 
   return {
     type,
@@ -80,6 +122,7 @@ export const useOrderListScript = (props: {
     // filter
     onFilter,
     filterItems,
+    onCancelAll,
   };
 };
 

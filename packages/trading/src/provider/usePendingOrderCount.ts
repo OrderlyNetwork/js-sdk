@@ -9,6 +9,9 @@ export const usePendingOrderCount = (symbol?: string) => {
   const [data] = useOrderStream({
     symbol: showAllSymbol ? undefined : symbol,
     status: OrderStatus.INCOMPLETE,
+    
+  }, {
+    keeplive: true,
   });
 
   const pendingOrderCount = useMemo(() => {
@@ -26,7 +29,6 @@ export const usePendingOrderCount = (symbol?: string) => {
     ];
     return data?.filter((item) => includes.includes(item.algo_type))?.length;
   }, [data]);
-
   return {
     pendingOrderCount,
     tpSlOrderCount,
