@@ -1,6 +1,6 @@
 import { tv } from "../utils/tv";
 import { Slot } from "@radix-ui/react-slot";
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { type VariantProps } from "tailwind-variants";
 import {
   ComponentPropsWithout,
@@ -72,9 +72,10 @@ interface CopyableTextProps extends BasicTextProps {
   /**
    * Callback when the text is copied.
    */
-  onCopy?: () => void;
+  onCopy?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   /** default is 12 */
   copyIconSize?: number;
+  copyIconTestid?: string;
 }
 
 type TextSpanProps = { as?: "span" } & ComponentPropsWithout<

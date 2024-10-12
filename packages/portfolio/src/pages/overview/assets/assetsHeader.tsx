@@ -25,7 +25,8 @@ export const AssetsHeader: FC<Props> = (props) => {
           color="secondary"
           onClick={() => props.onWithdraw?.()}
           icon={<ArrowUpSquareFillIcon />}
-        >
+          data-testid="oui-testid-portfolio-assets-withdraw-btn"
+          >
           Withdraw
         </Button>
         <Button
@@ -33,6 +34,7 @@ export const AssetsHeader: FC<Props> = (props) => {
           size="md"
           onClick={() => props.onDeposit?.()}
           icon={<ArrowDownSquareFillIcon />}
+          data-testid="oui-testid-portfolio-assets-deposit-btn"
         >
           Deposit
         </Button>

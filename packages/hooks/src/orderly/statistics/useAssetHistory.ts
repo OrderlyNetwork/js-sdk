@@ -49,6 +49,7 @@ const useAssetsHistory = (options: {
     {
       formatter: (data) => data,
       revalidateOnFocus: false,
+      errorRetryInterval: 60 * 1000,
     }
   );
   const updateList = useDebouncedCallback(

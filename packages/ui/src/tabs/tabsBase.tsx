@@ -179,6 +179,7 @@ const TabsTrigger = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> &
     VariantProps<typeof tabsVariants> & {
       icon?: React.ReactElement;
+      "data-testid"?: string;
     }
 >(({ className, size, children, icon, variant, ...props }, ref) => {
   // console.log("variant", variant);

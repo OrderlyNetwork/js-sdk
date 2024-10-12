@@ -40,7 +40,7 @@ export const UnsettlePnlInfo = ({hasPositions, unsettledPnl, onSettlle}: IProps)
                     </Text>
                 </Flex>
                 </Tooltip>
-                <Text.numeral showIdentifier coloring weight="semibold" dp={6}>
+                <Text.numeral showIdentifier coloring weight="semibold" dp={6} data-testid="oui-testid-withdraw-dialog-unsettledPnl-value">
                     {unsettledPnl}
                 </Text.numeral>
                 <Text>USDC</Text>
@@ -48,6 +48,7 @@ export const UnsettlePnlInfo = ({hasPositions, unsettledPnl, onSettlle}: IProps)
             <Flex itemAlign='center' gap={1} className='oui-cursor-pointer'>
                 <RefreshIcon/>
                 <Text
+                    data-testid="oui-testid-withdraw-dialog-settle-text"
                     size="2xs"
                     color="primaryLight"
                     className=" oui-select-none"

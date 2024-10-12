@@ -4,7 +4,7 @@ import { WS } from "@orderly.network/net";
 import useConstant from "use-constant";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { OrderlyContext } from "./orderlyContext";
-import { getGlobalObject } from "@orderly.network/utils";
+import { getGlobalObject, getTimestamp } from "@orderly.network/utils";
 
 const WS_NAME = "nativeWebsocketClient";
 
@@ -23,7 +23,7 @@ export const useWS = () => {
         privateUrl: configStore.get("privateWsUrl"),
         onSigntureRequest: async (accountId: string) => {
           const signer = account.signer;
-          const timestamp = new Date().getTime();
+          const timestamp = getTimestamp();
           const result = await signer.signText(timestamp.toString());
 
           return { ...result, timestamp };

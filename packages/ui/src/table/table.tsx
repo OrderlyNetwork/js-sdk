@@ -61,7 +61,7 @@ const TableBody = React.forwardRef<
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => {
   const { tbody } = tableVariants();
-  return <tbody ref={ref} className={tbody({ className })} {...props} />;
+  return <tbody ref={ref} className={tbody({ className })} {...props} data-testid="oui-table-body" />;
 });
 TableBody.displayName = "TableBody";
 

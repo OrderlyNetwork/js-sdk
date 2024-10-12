@@ -12,8 +12,8 @@ export type WalletRewardsItem = {
 };
 
 export type WalletRewards = {
-  wallet_lifetime_trading_rewards_order: number;
-  wallet_lifetime_trading_rewards_escrow: number;
+  wallet_lifetime_trading_rewards_order: string;
+  wallet_lifetime_trading_rewards_escrow: string;
   rows: WalletRewardsItem[];
 };
 

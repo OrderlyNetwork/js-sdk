@@ -22,6 +22,7 @@ import { cnBase, VariantProps } from "tailwind-variants";
 type tabConfig = {
   title: ReactNode;
   icon?: ReactElement;
+  testid?: string;
 
   value: string;
   content: ReactNode;
@@ -95,6 +96,7 @@ const Tabs: FC<TabsProps> = (props) => {
                   icon={tab.icon}
                   variant={rest.variant}
                   size={rest.size}
+                  data-testid={tab.testid}
                 >
                   {tab.title}
                 </TabsTrigger>
@@ -128,10 +130,11 @@ type TabPanelProps = {
   value: any;
   title: string | React.ReactNode;
   icon?: React.ReactElement;
+  testid?: string;
 };
 
 const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
-  const { title, value, icon } = props;
+  const { title, value, icon, testid } = props;
   const { registerTab } = useContext(TabsContext);
 
   useEffect(() => {
@@ -139,6 +142,7 @@ const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
       title,
       value,
       icon,
+      testid,
       content: props.children,
     };
     registerTab(tabConfig);

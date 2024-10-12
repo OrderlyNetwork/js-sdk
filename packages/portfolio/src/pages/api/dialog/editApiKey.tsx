@@ -43,6 +43,7 @@ export const EditAPIKeyDialog: FC<{
       actions={{
         primary: {
           label: "Confirm",
+          "data-testid": "oui-testid-apiKey-editApiKey-dialog-confirm-btn",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           onClick: async () => {
             if (ipText.length > 0) {
@@ -76,6 +77,7 @@ export const EditAPIKeyDialog: FC<{
             IP restriction (optional)
           </Text>
           <textarea
+            data-testid="oui-testid-apiKey-editApiKey-dialog-textarea"
             placeholder="Add IP addresses, separated by commas."
             className={cn(
               "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",

@@ -1,7 +1,7 @@
 import { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 import { useEffect, useMemo, useState } from "react";
-import { timeConvertString } from "@orderly.network/utils";
+import { getTimestamp, timeConvertString } from "@orderly.network/utils";
 
 export const useFundingRate = (symbol: string) => {
   if (!symbol) {
@@ -27,7 +27,7 @@ export const useFundingRate = (symbol: string) => {
       return;
     }
     const timer = setInterval(() => {
-      const diff = new Date(next_funding_time).getTime() - Date.now();
+      const diff = new Date(next_funding_time).getTime() - getTimestamp();
       const result = timeConvertString(diff);
       if (result.length === 3) {
         setCountDown(
@@ -47,7 +47,7 @@ export const useFundingRate = (symbol: string) => {
 
     const { next_funding_time, est_funding_rate = 0 } = data;
 
-    if (Date.now() > next_funding_time) {
+    if (getTimestamp() > next_funding_time) {
       return null;
     }
 

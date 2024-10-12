@@ -288,6 +288,7 @@ const Marks = (props: SliderMarksProps) => {
             />
             {!props.disabled && markLabelVisible && (
               <span
+                data-testid={`oui-testid-slider-mark-label-${mark.label}`}
                 key={index}
                 className={cn(
                   "oui-absolute oui-top-[16px] oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer oui-translate-x-[-50%]",

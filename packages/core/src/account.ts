@@ -311,7 +311,7 @@ export class Account {
         orderlyKeyStatus.orderly_key &&
         orderlyKeyStatus.key_status === "ACTIVE"
       ) {
-        const now = Date.now();
+        const now = getTimestamp();
         const expiration = orderlyKeyStatus.expiration;
         if (now > expiration) {
           // orderlyKey is expired, remove orderlyKey
@@ -729,7 +729,7 @@ export class Account {
   }
 
   private async _getSettleNonce() {
-    const timestamp = Date.now().toString();
+    const timestamp = getTimestamp().toString();
     const url = "/v1/settle_nonce";
     const message = [timestamp, "GET", url].join("");
 
