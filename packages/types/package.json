@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "dev": "tsup --watch --tsconfig tsconfig.build.json",
-    "build": "tsup --tsconfig tsconfig.build.json",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "docs": "typedoc",
     "test": "jest"
   },
@@ -27,5 +27,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "superstruct": "^2.0.2"
   }
 }

@@ -26,7 +26,7 @@ const sharePnLConfig = {
     "/pnl/poster_bg_4.png",
     "/pnl/poster_bg_5.png"
   ],
-  color: "rgba(255, 255, 255, 0.98)", 
+  color: "rgba(255, 255, 255, 0.98)",
   profitColor: "rgba(255,68,124,1)",
   lossColor: "rgba(0,180,158,1)",
   brandColor: "rgba(51,95,252,1)",
@@ -38,9 +38,9 @@ const sharePnLConfig = {
 
 const mainNavProps = {
   mainMenus: [
-    { name: "Trading", href: "/", testid: "oui-main-nav-trading"  },
+    { name: "Trading", href: "/", testid: "oui-main-nav-trading" },
     { name: "Reward", href: "/rewards", testid: "oui-main-nav-reward" },
-    { name: "Markets", href: "/markets", testid: "oui-main-nav-markets"  },
+    { name: "Markets", href: "/markets", testid: "oui-main-nav-markets" },
     {
       name: "Reward",
       href: "/rewards",
@@ -185,15 +185,23 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
       return (
         <ConnectorProvider>
           <OrderlyApp
-            brokerId={"orderly"}
+            // brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-          // configStore={configStore}
+            configStore={configStore}
+            appIcons={{
+              main: {
+                  img: "/orderly-logo.svg",
+              },
+              secondary: {
+                  img: "/orderly-logo-secondary.svg",
+              },
+          }}
           >
             <Scaffold
               leftSidebar={null}
@@ -216,6 +224,7 @@ const meta = {
   argTypes: {},
   args: {
     symbol: "PERP_ETH_USDC",
+    // symbol: "PERP_ORDER_USDC",
     tradingViewConfig: {
       scriptSRC: "/tradingview/charting_library/charting_library.js",
       library_path: "/tradingview/charting_library/",
@@ -223,12 +232,9 @@ const meta = {
     },
 
     dataList: {
-      config: {
-        sharePnLConfig
-      }
-    }
-
-
+      sharePnLConfig
+    },
+    tabletMediaQuery: "(max-width: 768px)"
   }
 } satisfies Meta<typeof TradingPageV2>;
 
@@ -239,12 +245,9 @@ export const Default: Story = {};
 
 
 export const DataList: Story = {
-  render: () => {
-
+  render: (arg) => {
     return (<Box p={3}>
-      <DataListWidget config={{
-        sharePnLConfig
-      }} />
+      <DataListWidget sharePnLConfig={sharePnLConfig} tabletMediaQuery={arg.tabletMediaQuery!} />
     </Box>);
   }
 };
@@ -289,13 +292,12 @@ export const RiskRate: Story = {
 
 export const OrderBook: Story = {
   render: (arg) => {
-
     return (
-      <Flex justify={"center"} className="oui-h-[500px]">
-        <Box className="oui-w-1/2 oui-bg-base-9" r="base" p={3}>
-          <OrderBookWidget symbol={arg.symbol} />
+      <div className="oui-h-[500px] oui-m-3 oui-flex oui-items-start oui-justify-center">
+        <Box className="oui-w-1/2 oui-bg-base-9" r="2xl" py={3}>
+          <OrderBookWidget symbol={arg.symbol} tabletMediaQuery={arg.tabletMediaQuery!} />
         </Box>
-      </Flex>
+      </div>
     );
   }
 };
@@ -303,16 +305,15 @@ export const OrderBook: Story = {
 
 export const OrderBookAndTrades: Story = {
   render: (arg) => {
-
     return (
-      <Flex 
-        p={10} 
-        justify={"center"} 
-        itemAlign={"start"} 
+      <Flex
+        p={10}
+        justify={"center"}
+        itemAlign={"start"}
         className="oui-bg-[rgba(255,255,255,0.3)]"
       >
         <Box className="oui-w-[50vw] oui-h-[600px]" >
-          <OrderBookAndTradesWidget symbol={arg.symbol} />
+          <OrderBookAndTradesWidget symbol={arg.symbol} tabletMediaQuery={arg.tabletMediaQuery!} />
         </Box>
       </Flex>
     );

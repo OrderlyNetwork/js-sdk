@@ -10,8 +10,6 @@ export const RegularCell: FC<{
 }> = (props) => {
   const { order, base_dp, quote_dp } = props;
   const isAlgoOrder = order?.algo_order_id !== undefined;
-  // console.log("price node", order);
-
   const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
   return (
     <>

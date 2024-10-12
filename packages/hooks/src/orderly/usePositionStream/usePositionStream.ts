@@ -19,7 +19,7 @@ import { useMarkPricesStream } from "../useMarkPricesStream";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 import { findPositionTPSLFromOrders, findTPSLFromOrder } from "./utils";
 
-type PriceMode = "markPrice" | "lastPrice";
+export type PriceMode = "markPrice" | "lastPrice";
 
 export interface PositionReturn {
   data: any[];
@@ -192,6 +192,7 @@ export const usePositionStream = (
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
         unrealized_pnl_ROI: unrealPnlROI,
+        symbolInfo: info
       };
     });
 

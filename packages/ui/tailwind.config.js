@@ -19,6 +19,7 @@ module.exports = withTV({
     "../ui-orders/src/**/*.{ts,js,tsx,jsx}",
     "../ui-positions/src/**/*.{ts,js,tsx,jsx}",
     "../ui-leverage/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-share/src/**/*.{ts,js,tsx,jsx}",
     "../trading-rewards/src/**/*.{ts,js,tsx,jsx}",
     "../portfolio/src/**/*.{ts,js,tsx,jsx}",
     "../ui-scaffold/src/**/*.{ts,js,tsx,jsx}",
@@ -26,6 +27,7 @@ module.exports = withTV({
     "../markets/src/**/*.{ts,js,tsx,jsx}",
     "../chart/src/**/*.{ts,js,tsx,jsx}",
     "../ui-transfer/src/**/*.{ts,js,tsx,jsx}",
+    "../trading/src/**/*.{ts,js,tsx,jsx}",
   ],
   prefix: "oui-",
   theme: {
@@ -69,6 +71,7 @@ module.exports = withTV({
         13: "3.25rem",
       },
       maxWidth: {
+        xs: "var(--oui-spacing-sm, 20rem)",
         sm: "var(--oui-spacing-sm, 22.5rem)",
         md: "var(--oui-spacing-md, 26.25rem)",
         lg: "var(--oui-spacing-lg, 30rem)",
@@ -160,12 +163,32 @@ module.exports = withTV({
       },
       animation: {
         "rotate-360": "rotate 1s linear infinite",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "collapsible-down": "collapsible-down 0.2s ease-out",
+        "collapsible-up": "collapsible-up 0.2s ease-out",
       },
       keyframes: {
         rotate: {
           "0%": { transform: "rotate(0deg)" },
           "50%": { transform: "rotate(240deg)" },
           "100%": { transform: "rotate(360deg)" },
+        },
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
+        "collapsible-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-collapsible-content-height)" },
+        },
+        "collapsible-up": {
+          from: { height: "var(--radix-collapsible-content-height)" },
+          to: { height: 0 },
         },
       },
     },

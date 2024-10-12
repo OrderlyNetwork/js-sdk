@@ -1,6 +1,6 @@
 import { modal } from "@orderly.network/ui";
 import { API, OrderEntity } from "@orderly.network/types";
-import { FC, PropsWithChildren, createContext, useCallback } from "react";
+import { FC, PropsWithChildren, createContext, useCallback, useContext } from "react";
 
 import { checkNotional, useSymbolsInfo } from "@orderly.network/hooks";
 
@@ -22,6 +22,10 @@ export interface OrderListContextState {
 export const OrderListContext = createContext<OrderListContextState>(
   {} as OrderListContextState
 );
+
+export const useOrderListContext = () => {
+  return useContext(OrderListContext);
+}
 
 export interface OrderListProviderProps {
   cancelOrder: (orderId: number, symbol: string) => Promise<any>;
@@ -75,7 +79,9 @@ export const OrderListProvider: FC<
 
       const orderEntry = await modal.sheet({
         title: "Edit Order",
-        contentClassName: "orderly-edit-order-sheet-content",
+        classNames: {
+          content: "oui-edit-order-sheet-content",
+        },
         content: (
           // <OrderEditFormSheet
           //   order={order}

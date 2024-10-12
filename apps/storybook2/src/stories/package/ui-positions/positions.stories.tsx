@@ -5,7 +5,7 @@ import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import { Button, modal } from "@orderly.network/ui";
 import { PositionsWidget } from '@orderly.network/ui-positions';
-import { Box } from "@orderly.network/ui";
+import { Box, Button, modal } from "@orderly.network/ui";
 
 const meta = {
   title: "Package/ui-positions/list",
@@ -30,6 +30,23 @@ const meta = {
 
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
+    sharePnLConfig: {
+      backgroundImages: [
+        "/pnl/poster_bg_1.png",
+        "/pnl/poster_bg_2.png",
+        "/pnl/poster_bg_3.png",
+        "/pnl/poster_bg_4.png",
+        "/pnl/poster_bg_5.png",
+      ],
+      color: "rgba(255, 255, 255, 0.98)",
+      profitColor: "rgba(255,68,124,1)",
+      lossColor: "rgba(0,180,158,1)",
+      brandColor: "rgba(51,95,252,1)",
+
+      // ref
+      refLink: "https://orderly.network",
+      refSlogan: "NEW BE",
+    }
   },
 } satisfies Meta<typeof PositionsWidget>;
 
@@ -41,3 +58,23 @@ export const Defaut: Story = {
     (Stroy) => <Box height={'360px'}>{Stroy()}</Box >
   ]
 };
+
+
+export const MarketClose: Story = {
+
+  render: () => {
+
+    return <Button onClick={() => {
+      modal.show("MarketCloseConfirmID", {
+        base: "ETH",
+        quantity: 222.22,
+        onConfirm: async () => {
+          return Promise.resolve(0);
+        },
+        submitting: false,
+      });
+    }}>
+      Show market close 
+    </Button>
+  }
+}

@@ -22,7 +22,7 @@ export const MarketProvider = (props: any) => {
 
   const getTestUSDC = useCallback(() => {
     return doGetTestUSDC({
-      chain_id: account.wallet?.chainId.toString(),
+      chain_id: account.walletAdapter?.chainId.toString(),
       user_address: state.address,
       broker_id: brokerId,
     })

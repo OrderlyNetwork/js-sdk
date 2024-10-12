@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from "react";
 import {
+  Chain,
+  ConnectedChain,
   useChains,
   useConfig,
   useWalletConnector,
@@ -7,6 +9,11 @@ import {
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+
+export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
+  id: number;
+  info?: Chain;
+};
 
 export function useChainSelect() {
   const networkId = useConfig("networkId") as NetworkId;
@@ -29,7 +36,7 @@ export function useChainSelect() {
       ...connectedChain,
       id: chainId,
       info: chain!,
-    };
+    } as CurrentChain;
   }, [connectedChain, findByChainId]);
 
   const onChainChange = useCallback(

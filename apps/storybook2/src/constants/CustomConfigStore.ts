@@ -23,7 +23,7 @@ const API_URLS: Record<ENV_NAME, URLS> = {
     operatorUrl: "https://testnet-operator-evm.orderly.org",
   },
   dev: {
-    apiBaseUrl: "https://dev-api-iap-v2.orderly.org",
+    apiBaseUrl: "https://dev-api-v2.orderly.org",
     publicWsUrl: "wss://dev-ws-v2.orderly.org",
     privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
     operatorUrl: "https://dev-operator-v2.orderly.network",
@@ -57,6 +57,7 @@ export class CustomConfigStore implements ConfigStore {
       ["networkId", networkId],
     ]);
   }
+
   get<T>(key: ConfigKey): T {
     if (key === Markets_key) {
       const jsonStr = localStorage.getItem(Markets_key);
@@ -76,9 +77,11 @@ export class CustomConfigStore implements ConfigStore {
     }
     return this.map.get(key);
   }
+
   getOr<T>(key: ConfigKey, defaultValue: T): T {
     return this.map.get(key) ?? defaultValue;
   }
+
   set<T>(key: ConfigKey, value: T): void {
     if (key === Markets_key) {
       const jsonStr = JSON.stringify(value);
@@ -86,6 +89,7 @@ export class CustomConfigStore implements ConfigStore {
     }
     this.map.set(key, value);
   }
+
   clear(): void {
     throw new Error("Method not implemented.");
   }

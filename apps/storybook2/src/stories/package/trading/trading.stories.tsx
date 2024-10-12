@@ -1,11 +1,9 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from '@storybook/test';
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-// import {CustomConfigStore} from "../CustomConfig Store";
-import { TradingPage } from "@orderly.network/trading";
+import { TradingPage} from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
@@ -24,7 +22,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({networkId, brokerId: "woofi_pro", env: "qa"});
+      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging" });
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -32,7 +30,7 @@ const meta = {
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-            // configStore={configStore}
+          // configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}
@@ -157,7 +155,7 @@ const meta = {
                         icon: <OrderlyIcon size={14} />,
                         activeIcon: <OrderlyActiveIcon size={14} />,
                       },
-            
+
                       {
                         name: "ARB incentives",
                         href: "https://mirror.xyz/woofi.eth/9NVYvKwfldZf1JPoKkNQ2YMXnNbgVUyHkgMJIvXv9dg",
@@ -209,7 +207,7 @@ const meta = {
       },
       refLink: "https://orderly.netowork/referral?abc=123",
     },
-    shareOptions:{
+    shareOptions: {
       pnl: {
         backgroundImages: [
           "/pnl/poster_bg_1.png",
@@ -227,17 +225,17 @@ const meta = {
     tradingReward: {
       onClickTradingReward: () => {
         console.log("hahahahah");
-        
+
       }
     },
-    onSymbolChange:fn(),
+    onSymbolChange: fn(),
+
+
   },
 } satisfies Meta<typeof TradingPage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// @ts-ignore
 export const Page: Story = {};
 
-// export const LayoutPage: Story = {}

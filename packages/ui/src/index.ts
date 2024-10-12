@@ -26,6 +26,7 @@ export * from "./pickers";
 export * from "./slider";
 export * from "./toast";
 export * from "./listView";
+export * from "./collapsible";
 
 export * from "./dropdown";
 
@@ -65,3 +66,4 @@ export { default as toast } from "react-hot-toast";
 
 //===== tailwind
 export * as OUITailwind from "./tailwind";
+export * from "./hooks";

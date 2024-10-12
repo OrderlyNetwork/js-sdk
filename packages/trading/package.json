@@ -5,15 +5,30 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup --tsconfig tsconfig.build.json"
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "dependencies": {
     "@orderly.network/react": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/react-app": "workspace:*"
+    "@orderly.network/ui-orders": "workspace:*",
+    "@orderly.network/ui-positions": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/ui-transfer": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-tradingview": "workspace:*",
+    "@orderly.network/ui-leverage": "workspace:*",
+    "@orderly.network/ui-share": "workspace:*",
+    "@orderly.network/markets": "workspace:*",
+    "@radix-ui/react-tooltip": "^1.0.6",
+    "@uiw/react-split": "^5.9.3",
+    "lucide-react": "^0.343.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
@@ -22,6 +37,7 @@
     "react-dom": "^18.2.0",
     "typescript": "^5.1.6",
     "tsup": "^7.1.0",
+    "tailwindcss": "^3.4.4",
     "tsconfig": "workspace:*"
   },
   "peerDependencies": {

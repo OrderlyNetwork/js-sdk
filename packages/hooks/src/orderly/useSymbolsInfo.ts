@@ -1,7 +1,10 @@
+import { useMemo } from "react";
 import { useQuery } from "../useQuery";
 import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
 import { getPrecisionByNumber } from "@orderly.network/utils";
+
+export type SymbolInfo = ReturnType<typeof useSymbolsInfo>;
 
 export const useSymbolsInfo = () => {
   const { data } = useQuery<Record<string, API.SymbolExt>>(`/v1/public/info`, {
@@ -34,5 +37,5 @@ export const useSymbolsInfo = () => {
     },
   });
 
-  return createGetter<API.SymbolExt, string>(data);
+  return useMemo(() => createGetter<API.SymbolExt, string>(data), [data]);
 };

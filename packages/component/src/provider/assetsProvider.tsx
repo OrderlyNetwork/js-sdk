@@ -1,4 +1,3 @@
-// import { modal } from "@orderly.network/ui";
 import { FC, PropsWithChildren, createContext, useCallback } from "react";
 import {
   useAccountInstance,
@@ -8,13 +7,11 @@ import {
   useEventEmitter,
   useMediaQuery,
 } from "@orderly.network/hooks";
-import { toast } from "@/toast";
 import { capitalizeString } from "@orderly.network/utils";
 import { MEDIA_TABLET } from "@orderly.network/types";
 
-import { modal } from "@orderly.network/ui";
+import { modal, toast } from "@orderly.network/ui";
 import {
-  DepositAndWithdraw,
   DepositAndWithdrawWithDialogId,
   DepositAndWithdrawWithSheetId,
 } from "@orderly.network/ui-transfer";
