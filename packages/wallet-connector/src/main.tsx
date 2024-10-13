@@ -1,8 +1,9 @@
 import React, { useEffect, type PropsWithChildren, useMemo } from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
-import { WalletDisconnectButton, WalletMultiButton, useWalletModal} from "@solana/wallet-adapter-react-ui";
+import { useWalletModal} from "@solana/wallet-adapter-react-ui";
 import {useWallet } from "@solana/wallet-adapter-react";
 import { ChainNamespace } from "@orderly.network/core";
+import {clusterApiUrl, Connection} from "@solana/web3.js";
 
 export function Main(props: PropsWithChildren) {
   const { setVisible, visible } = useWalletModal();
@@ -12,6 +13,7 @@ export function Main(props: PropsWithChildren) {
     connecting : solanaConnecting,
     disconnect: solanaDisconnect,
     signMessage,
+      sendTransaction,
     publicKey,
   } = useWallet();
 
@@ -56,26 +58,30 @@ export function Main(props: PropsWithChildren) {
     if (!publicKey) {
      return null;
     }
+    const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+
 
     return {
       label:'',
       icon: '',
       provider: {
         signMessage: signMessage,
+        connection,
+        sendTransaction,
       },
       accounts:[{
         address: publicKey.toBase58(),
       }],
       chains: [
         {
-          id: 902902902,
+          id: 901901901,
           namespace: ChainNamespace.solana,
         }
       ]
     }
 
 
-  }, [publicKey]);
+  }, [publicKey, signMessage]);
   const setChanin = () => {}
 
   return (
@@ -87,17 +93,12 @@ export function Main(props: PropsWithChildren) {
         wallet,
         setChanin,
         connectedChain: {
-          id: 902902902,
+          id: 901901901,
           namespace: ChainNamespace.solana,
         }
 
       }}
     >
-      <div suppressHydrationWarning>
-
-        <WalletMultiButton />
-        <WalletDisconnectButton />
-      </div>
         {props.children}
     </WalletConnectorContext.Provider>
 );

@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     nodePolyfills({
-      include: ['path', 'stream', 'util'],
+      include: ['path', 'stream', 'util', 'assert'],
       exclude: ['http'],
       globals: {
         Buffer: true,
@@ -106,6 +106,10 @@ export default defineConfig({
       "@orderly.network/wallet-connector": resolve(
         __dirname,
         "../../packages/wallet-connector/src"
+      ),
+      "@orderly.network/types": resolve(
+          __dirname,
+          "../../packages/types/src"
       ),
       "@orderly.network/react/dist": resolve(
         __dirname,

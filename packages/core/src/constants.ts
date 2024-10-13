@@ -13,6 +13,13 @@ export const mainnetVaultAddress = "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9";
 export const mainnetVerifyAddress =
   "0x6F7a338F2aA472838dEFD3283eB360d4Dff5D203";
 
+// todo
+export const solanaMainnetVaultAddress = '';
+export const solanaStagingVualtAddress = '';
+export const solanaDevVaultAddress = 'EYJq9eU4GMRUriUJBgGoZ8YLQBXcWaciXuSsEXE7ieQS';
+export const solanaQaVaultAddress = '5zBjLor7vEraAt4zp2H82sy9MSqFoDnNa1Lx6EYKTYRZ';
+export const solanaUSDCAddress = '9shwxWDUNhtwkHocsUAmrNAQfBH2DHh4njdAEdHZZkF2';
+
 export const EVENT_NAMES = {
   statusChanged: "change:status",
   validateStart: "validate:start",
