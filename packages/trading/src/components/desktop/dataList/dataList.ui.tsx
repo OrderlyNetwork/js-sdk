@@ -75,9 +75,7 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.orderHistory}
         title={DataListTabType.orderHistory}
       >
-        <DesktopOrderListWidget
-          type={TabType.orderHistory}
-        />
+        <DesktopOrderListWidget type={TabType.orderHistory} />
       </TabPanel>
     </Tabs>
   );
@@ -88,7 +86,7 @@ const PositionsView: FC<DataListState> = (props) => {
     <Flex direction={"column"}>
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        symbol={props.symbol}
+        symbol={props.showAllSymbol ? undefined : props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
         tabletMediaQuery={props.tabletMediaQuery}
       />

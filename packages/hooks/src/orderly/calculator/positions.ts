@@ -9,8 +9,25 @@ import { BaseCalculator } from "./baseCalculator";
 import { propOr } from "ramda";
 import { zero } from "@orderly.network/utils";
 
+const NAME_PREFIX = "positionCalculator";
+const AllPositions = "all";
+
 class PositionCalculator extends BaseCalculator<API.PositionInfo> {
-  name = "positionCalculator";
+  // name = "positionCalculator";
+  name: string;
+  // private id!: string;
+
+  // private state;
+  private symbol: string;
+  // private id: string;
+
+  constructor(symbol: string = AllPositions) {
+    super();
+
+    this.name = `${NAME_PREFIX}_${symbol}`;
+
+    this.symbol = symbol;
+  }
 
   calc(
     scope: CalculatorScope,
@@ -33,16 +50,14 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   update(data: API.PositionsTPSLExt | null) {
     if (!!data) {
-      usePositionStore.getState().actions.setPositions(data);
+      usePositionStore.getState().actions.setPositions(this.symbol, data);
     }
   }
 
   private calcByPrice(markPrice: Record<string, number>, ctx: CalculatorCtx) {
-    // console.log("!!!! calcByPrice", price, ctx.positions);
-
     let positions =
       ctx.get((output: Record<string, any>) => output[this.name]) ||
-      usePositionStore.getState().positions;
+      usePositionStore.getState().positions[this.symbol];
 
     if (!positions) {
       return null;
@@ -143,9 +158,13 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   private preprocess(data: API.PositionInfo): API.PositionInfo {
     // console.log("!!!! PositionCalculator preprocess", data);
+    let rows = data.rows.filter((item) => item.position_qty !== 0);
+    if (this.symbol !== AllPositions) {
+      rows = rows.filter((item: API.Position) => item.symbol === this.symbol);
+    }
     return {
       ...data,
-      rows: data.rows.filter((item) => item.position_qty !== 0),
+      rows,
     };
   }
 }

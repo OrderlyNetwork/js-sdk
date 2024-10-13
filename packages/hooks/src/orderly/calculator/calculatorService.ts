@@ -19,6 +19,11 @@ class CalculatorService {
 
   private calcQueue: CalcItem[] = [];
 
+  /**
+   * Reference count for each calculator, used to determine if a calculator is still in use.
+   */
+  private referenceCount: Map<string, number> = new Map();
+
   constructor(
     private readonly scheduler: CalculatorScheduler,
     calculators: [string, Calculator[]][]
@@ -27,15 +32,29 @@ class CalculatorService {
   }
 
   register(scope: string, calculator: Calculator) {
+    const count = this.referenceCount.get(calculator.name);
+    if (typeof count !== "undefined" && count > 0) {
+      this.referenceCount.set(calculator.name, count + 1);
+
+      return;
+    }
+
     const queue = this.calculators.get(scope);
     if (Array.isArray(queue)) {
       queue.push(calculator);
     } else {
       this.calculators.set(scope, [calculator]);
     }
+
+    this.referenceCount.set(calculator.name, 1);
   }
 
   unregister(scope: string, calculator: Calculator) {
+    const count = this.referenceCount.get(calculator.name);
+    if (typeof count !== "undefined" && count > 1) {
+      this.referenceCount.set(calculator.name, count - 1);
+      return;
+    }
     const queue = this.calculators.get(scope);
     if (Array.isArray(queue)) {
       const index = queue.indexOf(calculator);
@@ -47,6 +66,9 @@ class CalculatorService {
 
   async calc(scope: CalculatorScope, data: any, options?: CalcOptions) {
     const ctx = new CalculatorContext(scope, data);
+
+    // console.log("[calc:]", this.referenceCount);
+
     // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
     if (!ctx.isReady && !options?.skipPending) {
       this.pendingCalc.push({ scope, data, options });

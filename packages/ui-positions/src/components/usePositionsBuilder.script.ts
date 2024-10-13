@@ -1,4 +1,8 @@
-import { PriceMode, usePositionStream } from "@orderly.network/hooks";
+import {
+  PriceMode,
+  useLocalStorage,
+  usePositionStream,
+} from "@orderly.network/hooks";
 import { PositionsProps } from "../types/types";
 
 export const usePositionsBuilder = (props: PositionsProps) => {
@@ -9,6 +13,10 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
   } = props;
+  // const [showAllSymbol] = useLocalStorage(
+  //   "showAllSymbol",
+  //   true
+  // );
   const [data, info, { isLoading }] = usePositionStream(symbol, {
     calcMode,
     includedPendingOrder,

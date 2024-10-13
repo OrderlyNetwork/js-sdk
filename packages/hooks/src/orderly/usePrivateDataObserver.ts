@@ -14,6 +14,7 @@ import { usePrivateQuery } from "../usePrivateQuery";
 import { useAppStore } from "./appStore";
 import { useCalculatorService } from "../useCalculatorService";
 import { CalculatorScope } from "../types";
+import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -26,6 +27,7 @@ export const usePrivateDataObserver = (options: {
   const { setAccountInfo, updateHolding } = useAppStore(
     (state) => state.actions
   );
+  // const statusActions = useApiStatusActions();
   const calculatorService = useCalculatorService();
   // fetch the data of current account
 
@@ -42,12 +44,14 @@ export const usePrivateDataObserver = (options: {
   /**
    * fetch the positions of current account
    */
-  const { data: positions } = usePrivateQuery<API.PositionInfo>(
-    "/v1/positions",
-    {
+  const { data: positions, isLoading: isPositionLoading } =
+    usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
-    }
-  );
+    });
+
+  // useEffect(() => {
+  //   statusActions.updateApiLoading("positions", isPositionLoading);
+  // }, [isPositionLoading]);
 
   useEffect(() => {
     if (

@@ -13,7 +13,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
   calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx) {
     const positions = ctx.get<API.PositionsTPSLExt>(
-      (output: Record<string, any>) => output.positionCalculator
+      (output: Record<string, any>) => output.positionCalculator_all
     );
 
     let holding = ctx.holding;

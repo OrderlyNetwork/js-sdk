@@ -32,7 +32,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
   const { TPSL_OrderEntity, symbolInfo, onCancel, onComplete, status, errors } =
     props;
 
-  console.log("errors", errors);
+  // console.log("errors", errors);
 
   return (
     <div id="orderly-tp_sl-order-edit-content">

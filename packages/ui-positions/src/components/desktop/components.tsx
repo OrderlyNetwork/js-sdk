@@ -52,7 +52,8 @@ export const TPSLButton = () => {
         <TPSLWidget
           position={position}
           onComplete={() => {
-            console.log("tpsl order completed");
+            // console.log("tpsl order completed");
+            setOpen(false);
           }}
           onCancel={() => {
             setOpen(false);

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { account, positions } from "@orderly.network/perp";
 import { type SWRConfiguration } from "swr";
@@ -23,11 +23,16 @@ import {
   findTPSLFromOrder,
   findTPSLFromOrders,
 } from "./utils";
-import { usePositionActions, usePositionStore } from "./usePositionStore";
+import {
+  POSITION_EMPTY,
+  usePositionActions,
+  usePositionStore,
+} from "./usePositionStore";
 import { useCalculatorService } from "../../useCalculatorService";
 import { CalculatorScope } from "../../types";
 import { useAppStore } from "../appStore";
 import { omit } from "ramda";
+import { PositionCalculator } from "../calculator/positions";
 // import { usePosition } from "./usePosition";
 
 export type PriceMode = "markPrice" | "lastPrice";
@@ -36,7 +41,7 @@ export const usePositionStream = (
   /**
    * If symbol is passed, only the position of that symbol will be returned.
    */
-  symbol?: string,
+  symbol: string = "all",
   options?: SWRConfiguration & {
     calcMode?: PriceMode;
     /**
@@ -47,25 +52,46 @@ export const usePositionStream = (
 ) => {
   // const updatePosition = usePosition((state) => state.updatePosition);
   //
-  const symbolInfo = useSymbolsInfo();
+  // const symbolInfo = useSymbolsInfo();
   // const {setPositions} = usePositionActions();
 
   const { includedPendingOrder = false } = options || {};
+
+  const positionCalculator = useRef<PositionCalculator | null>(null);
+  const calcutlatorService = useCalculatorService();
 
   const { data: accountInfo } =
     usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   // get TP/SL orders;
 
-  const [tpslOrders] = useOrderStream({
-    status: OrderStatus.INCOMPLETE,
-    includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
-  });
+  // const [tpslOrders] = useOrderStream({
+  //   status: OrderStatus.INCOMPLETE,
+  //   includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+  // });
   //
 
-  // console.log("---------------");
-
   const [priceMode, setPriceMode] = useState(options?.calcMode || "markPrice");
+
+  useEffect(() => {
+    if (symbol === "all") return;
+
+    // console.log("---------------", symbol);
+
+    positionCalculator.current = new PositionCalculator(symbol);
+
+    calcutlatorService.register(
+      CalculatorScope.POSITION,
+      positionCalculator.current
+    );
+
+    return () => {
+      calcutlatorService.unregister(
+        CalculatorScope.POSITION,
+        positionCalculator.current!
+      );
+    };
+  }, [symbol]);
 
   useEffect(() => {
     if (options?.calcMode && priceMode !== options?.calcMode) {
@@ -76,10 +102,14 @@ export const usePositionStream = (
   const formattedPositions: [
     API.PositionTPSLExt[],
     Omit<API.PositionsTPSLExt, "rows">
-  ] = usePositionStore((state) => [
-    state.positions.rows,
-    omit(["rows"], state.positions),
-  ]);
+  ] = usePositionStore((state) => {
+    // console.log("state.positions", state.positions[symbol]);
+    // if (!state.positions[symbol]) {
+    //   debugger;
+    // }
+    const positions = state.positions[symbol] ?? POSITION_EMPTY;
+    return [positions.rows, omit(["rows"], positions)];
+  });
 
   const { totalCollateral, totalValue, totalUnrealizedROI } = useAppStore(
     (state) => state.portfolio
