@@ -4,7 +4,6 @@ import { PositionsProps } from "@orderly.network/ui-positions";
 import { ReactNode } from "react";
 import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 
-
 export type layoutInfo = {
   width?: number;
   height?: number;
@@ -73,7 +72,6 @@ export type ShareOptions = {
   };
 };
 
-
 export enum TradingFeatures {
   Sider = "sider",
   TopNavBar = "topNavBar",
@@ -93,7 +91,7 @@ export type BasicSymbolInfo = {
   base_tick: number;
   base: string;
   quote: string;
-}
+};
 
 export interface TradingPageState extends TradingPageV2Props {
   symbolInfo: {
@@ -138,8 +136,14 @@ export type ReferralProps = {
   slogan?: string;
 };
 
-export type TradingRewardProps = {
-  onClickTradingReward?: () => void;
+export type ReferralPropsV2 = {
+  saveRefCode?: boolean;
+  onClickReferral?: () => void;
+  onBoundRefCode?: (success: boolean, error: any) => void;
+};
+
+export type TradingRewardsProps = {
+  onClickTradingRewards?: () => void;
 };
 
 type BaseTradingPageProps = {
@@ -149,20 +153,22 @@ type BaseTradingPageProps = {
   // enableFeatures?: TradingFeatures[];
   disableFeatures?: TradingFeatures[];
   overrideFeatures?: Record<TradingFeatures, ReactNode>;
-}
+};
 
 export type TradingPageProps = BaseTradingPageProps & {
   shareOptions: ShareOptions;
   referral: ReferralProps;
-  tradingReward: TradingRewardProps;
+  tradingReward: TradingRewardsProps;
 };
 
 export type TradingPageV2Props = BaseTradingPageProps & {
   dataList: {
-    current?: DataListTabType;
     sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+      Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   };
   /** default is  `(max-width: 768px)`*/
   tabletMediaQuery?: string;
+  referral: ReferralPropsV2;
+  tradingRewards: TradingRewardsProps;
+  bottomSheetLeading?: React.ReactNode | string;
 };

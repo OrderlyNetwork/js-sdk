@@ -1,15 +1,15 @@
 import { FC } from "react";
 import { TradingV2State } from "./tradingV2.script";
-import { TopTabWidget } from "../components/mWeb/topTab";
-import { OrderBookAndEntryWidget } from "../components/mWeb/orderBookAndEntry";
+import { TopTabWidget } from "../components/mobile/topTab";
+import { OrderBookAndEntryWidget } from "../components/mobile/orderBookAndEntry";
 import {
   MarketsSheetWidget,
   TokenInfoBarWidget,
 } from "@orderly.network/markets";
 import { Box, modal } from "@orderly.network/ui";
 import { SecondaryLogo } from "../components/base/secondaryLogo";
-import { DataListWidget } from "../components/mWeb/dataList";
-import { BottomNavBarWidget } from "../components/mWeb/bottomNavBar";
+import { DataListWidget } from "../components/mobile/dataList";
+import { BottomNavBarWidget } from "../components/mobile/bottomNavBar";
 
 export const MobileLayout: FC<TradingV2State> = (props) => {
   const onSymbol = () => {
@@ -24,9 +24,9 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
   };
 
   const topBar = (
-    <Box intensity={900} px={3} height={54} className="oui-sticky-0">
+    <Box intensity={900} px={3} height={54}>
       <TokenInfoBarWidget
-        symbol="PERP_BTC_USDC"
+        symbol={props.symbol}
         trailing={<SecondaryLogo />}
         onSymbol={onSymbol}
       />
@@ -34,7 +34,7 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
   );
 
   return (
-    <div className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-screen oui-gap-1">
+    <div className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-full oui-gap-1 oui-pb-[64px] oui-relative">
       <header>{topBar}</header>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
@@ -47,9 +47,9 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
         />
       </main>
 
-      <footer>
+      <div className="oui-fixed oui-left-0 oui-right-0 oui-bottom-0">
         <BottomNavBarWidget />
-      </footer>
+      </div>
     </div>
   );
 };

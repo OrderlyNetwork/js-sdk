@@ -67,3 +67,4 @@ export { default as toast } from "react-hot-toast";
 
 //===== tailwind
 export * as OUITailwind from "./tailwind";
+export * from "./hooks";

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Box, Button, ButtonProps } from "@orderly.network/ui";
+import { Box, Button, ButtonProps, cn, useScreen } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { NetworkId } from "@orderly.network/types";
 import { DepositAction } from "../../types";
@@ -25,6 +25,8 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     networkId,
   } = props;
 
+  const { isMobile } = useScreen();
+
   const buttonParams = useMemo(() => {
     const params: Record<DepositAction, ButtonProps> = {
       [DepositAction.Approve]: {
@@ -32,30 +34,36 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
         onClick: onApprove,
         // approve not disabled button
         disabled: false,
-        "data-testid": "oui-testid-deposit-dialog-approve-btn"
+        "data-testid": "oui-testid-deposit-dialog-approve-btn",
       },
       [DepositAction.Increase]: {
         children: `increase ${symbol} authorized amount`,
         onClick: onApprove,
-        "data-testid": "oui-testid-deposit-dialog-increase-btn"
+        "data-testid": "oui-testid-deposit-dialog-increase-btn",
       },
       [DepositAction.Deposit]: {
         children: "Deposit",
         onClick: onDeposit,
-        "data-testid": "oui-testid-deposit-dialog-deposit-btn"
+        "data-testid": "oui-testid-deposit-dialog-deposit-btn",
       },
     };
 
     return params[actionType];
   }, [onApprove, onDeposit, actionType, symbol]);
 
+  const buttonSize = isMobile ? "md" : "lg";
+
   return (
-    <Box className="oui-min-w-[184px]">
-      <AuthGuard networkId={networkId} buttonProps={{ fullWidth: true }}>
+    <Box className={cn(isMobile ? "oui-w-full" : "oui-min-w-[184px]")}>
+      <AuthGuard
+        networkId={networkId}
+        buttonProps={{ fullWidth: true, size: buttonSize }}
+      >
         <Button
           fullWidth
           disabled={disabled}
           loading={loading}
+          size={buttonSize}
           {...buttonParams}
         />
       </AuthGuard>

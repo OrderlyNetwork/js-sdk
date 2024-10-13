@@ -223,7 +223,7 @@ const meta = {
       },
     },
     tradingReward: {
-      onClickTradingReward: () => {
+      onClickTradingRewards: () => {
         console.log("hahahahah");
 
       }

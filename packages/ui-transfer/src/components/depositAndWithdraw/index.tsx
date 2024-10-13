@@ -18,7 +18,6 @@ export type DepositAndWithdrawProps = {
 };
 
 export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
-  console.log("DepositAndWithdraw", props);
   const [activeTab, setActiveTab] = useState<string>(
     props.activeTab || "deposit"
   );
@@ -47,6 +46,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
 registerSimpleDialog(DepositAndWithdrawWithDialogId, DepositAndWithdraw, {
   size: "md",
   bodyClassName: "oui-pt-3",
+  contentClassName: "oui-border oui-border-line-6",
 });
 
 registerSimpleSheet(DepositAndWithdrawWithSheetId, DepositAndWithdraw);
