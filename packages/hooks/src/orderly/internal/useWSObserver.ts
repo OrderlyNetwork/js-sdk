@@ -24,6 +24,7 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
         // call the calculator service
         calculatorService.calc(CalculatorScope.MARK_PRICE, data, {
           skipPending: true,
+          skipWhenOnPause: true,
         });
       },
 

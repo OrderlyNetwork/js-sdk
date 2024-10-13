@@ -15,15 +15,41 @@ class ShardingScheduler implements CalculatorScheduler {
     data: any,
     ctx: CalculatorCtx
   ): Promise<any> {
-    for (let index = 0; index < calculators.length; index++) {
-      const calculator = calculators[index];
-      const result = calculator.calc(scope, data, ctx);
-      // console.log("item calc ======>>>>>>", scope, calculator.name, result);
-      if (result) {
-        ctx.saveOutput(calculator.name, result);
+    return new Promise((resolve, reject) => {
+      try {
+        this.computation<Calculator, any>(
+          calculators,
+          (shard) => {
+            const results = [];
+            for (let index = 0; index < shard.length; index++) {
+              const calculator = shard[index];
+              const result = calculator.calc(scope, data, ctx);
+              console.log("item calc ======>>>>>>", scope);
+              if (result) {
+                ctx.saveOutput(calculator.name, result);
+                results.push(result);
+              }
+            }
+
+            return results;
+          },
+          (results) => {
+            resolve(results);
+          }
+        );
+      } catch (error) {
+        reject(error);
       }
-    }
-    return Promise.resolve();
+    });
+    // for (let index = 0; index < calculators.length; index++) {
+    //   const calculator = calculators[index];
+    //   const result = calculator.calc(scope, data, ctx);
+    //   // console.log("item calc ======>>>>>>", scope, calculator.name, result);
+    //   if (result) {
+    //     ctx.saveOutput(calculator.name, result);
+    //   }
+    // }
+    // return Promise.resolve();
   }
 
   update(scope: CalculatorScope, calculators: Calculator[], data: any) {
@@ -36,12 +62,12 @@ class ShardingScheduler implements CalculatorScheduler {
 
   private computation<T, R>(
     data: T[],
-    processor: ShardProcessor<T, R>,
+    processor: ShardProcessor<T, R[]>,
     onComplete: (results: R[]) => void
   ): void {
     let index = 0; // Current starting index of the shard
-    const results: R[] = []; // Used to store the calculation results of each shard
-    const estimatedShardSize = 100; // Initial estimated shard size
+    const results: R[][] = []; // Used to store the calculation results of each shard
+    const estimatedShardSize = 2; // Initial estimated shard size
 
     // Function to process shards
     function processNextShard(deadline: IdleDeadline) {
@@ -67,7 +93,7 @@ class ShardingScheduler implements CalculatorScheduler {
         // There are still unprocessed data shards, request the next idle callback
         requestIdleCallback(processNextShard);
       } else {
-        onComplete(results);
+        onComplete(results.flat());
       }
     }
 

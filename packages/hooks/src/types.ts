@@ -46,5 +46,4 @@ export interface CalculatorScheduler {
     ctx: CalculatorCtx
   ) => Promise<any>;
   update: (scope: CalculatorScope, calculators: Calculator[], data: any) => any;
-  // run: (calculators: Calculator[]) => void;
 }

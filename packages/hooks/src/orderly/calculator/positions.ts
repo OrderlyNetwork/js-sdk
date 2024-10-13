@@ -1,6 +1,6 @@
 import { API } from "@orderly.network/types";
 
-import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
+import { CalculatorCtx, CalculatorScope } from "../../types";
 
 import { account, positions } from "@orderly.network/perp";
 
@@ -19,6 +19,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   // private state;
   private symbol: string;
+
   // private id: string;
 
   constructor(symbol: string = AllPositions) {
@@ -71,9 +72,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       })),
     };
 
-    const formattedPositions = this.format(positions, ctx);
-
-    return formattedPositions;
+    return this.format(positions, ctx);
   }
 
   private calcByPosition(positions: API.PositionInfo, ctx: CalculatorCtx) {

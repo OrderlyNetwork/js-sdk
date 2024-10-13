@@ -4,6 +4,10 @@ import { CalculatorContext } from "./calculatorContext";
 type CalcOptions = {
   skipUpdate?: boolean;
   skipPending?: boolean;
+  /**
+   * Skip calculation when the tab is unactivated.
+   */
+  skipWhenOnPause?: boolean;
 };
 
 type CalcItem = {
@@ -78,6 +82,11 @@ class CalculatorService {
     // handle pending calc
     await this.handlePendingCalc();
 
+    /**
+     * if the tab is not activated and this action allows skip, then skip
+     */
+    if (options?.skipWhenOnPause && !this.windowIsVisible) return;
+
     this.calcQueue.push({ scope, data, options });
 
     await this.handleCalcQueue(ctx);
@@ -111,6 +120,11 @@ class CalculatorService {
         requestAnimationFrame(() => this.handleCalcQueue());
       }
     }
+  }
+
+  private get windowIsVisible() {
+    if (typeof document === "undefined") return true;
+    return document.visibilityState === "visible";
   }
 }
 
