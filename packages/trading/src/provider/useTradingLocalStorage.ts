@@ -13,6 +13,11 @@ export const useTradingLocalStorage = (props?: {
     "showAllSymbol",
     true
   );
+  
+  const [hideAssets, setHideAssets] = useLocalStorage(
+    "hideAssets",
+    false
+  );
 
   return {
     unPnlPriceBasis,
@@ -21,5 +26,7 @@ export const useTradingLocalStorage = (props?: {
     setPnlNotionalDecimalPrecision,
     showAllSymbol,
     setShowAllSymbol,
+    hideAssets,
+    setHideAssets,
   };
 };
