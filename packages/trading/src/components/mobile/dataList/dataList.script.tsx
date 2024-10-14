@@ -5,7 +5,7 @@ import { PositionsProps } from "@orderly.network/ui-positions";
 import { useOrderStream } from "@orderly.network/hooks";
 import { usePositionsCount } from "../../../provider/usePositionsCount";
 import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
-import { modal } from "@orderly.network/ui";
+import { modal, Text } from "@orderly.network/ui";
 import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 
 export enum DataListTabType {
@@ -32,20 +32,15 @@ export const useDataListScript = (props: {
   const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(symbol);
 
   const onCloseAll = () => {
-    modal.alert({
+    modal.confirm({
       title: "Cancel all orders",
-      okLabel: "Confirm",
-      message:
-        "Are you sure you want to cancel all of your pending orders, including TP/SL orders?",
-      actions: {
-        secondary: {
-          fullWidth: true,
-        },
-        primary: {
-          className: "!oui-w-full",
-        },
-      },
-      onCancel: () => {},
+      content: (
+        <Text size="2xs">
+          Are you sure you want to cancel all of your pending orders, including
+          TP/SL orders?
+        </Text>
+      ),
+
       onOk: async () => {
         try {
           // await cancelAll(null, { source_type: "ALL" });
