@@ -6,7 +6,8 @@ import {
 } from "@orderly.network/hooks";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
 import { useCallback, useMemo } from "react";
-import { toast } from "@orderly.network/ui";
+import { modal, toast } from "@orderly.network/ui";
+import { DepositAndWithdrawWithSheetId } from "@orderly.network/ui-transfer";
 
 export const usePortfolioSheetScript = () => {
   const { account } = useAccount();
@@ -32,10 +33,24 @@ export const usePortfolioSheetScript = () => {
         return Promise.resolve(res);
       });
   }, [account]);
+  const onDeposit = useCallback(() => {
+
+     modal.show(DepositAndWithdrawWithSheetId, {
+        activeTab: 'desposit',
+      });
+
+  }, []);
+  const onWithdraw = useCallback(() => {
+    modal.show(DepositAndWithdrawWithSheetId, {
+        activeTab: 'withdraw',
+      });
+  }, []);
   return {
     ...assets,
     ...marginRatio,
     onSettlePnL,
+    onDeposit,
+    onWithdraw,
   };
 };
 
@@ -79,8 +94,21 @@ const useMarginRatioAndLeverage = () => {
     positionsInfo,
     marginRatio,
     currentLeverage,
+    marginRatioVal,
     mmr,
   };
 };
+
+export function getMarginRatioColor(marginRatio: number, mmr: number | null) {
+    if (mmr === null) {
+      return { isRed: false, isYellow: false, isGreen: true };
+    }
+    const imr = mmr * 2;
+  
+    const high = marginRatio <= imr;
+    const mid = marginRatio > imr && marginRatio < 1;
+    const low = marginRatio >= 1;
+    return { high, mid, low };
+  }
 
 export type PortfolioSheetState = ReturnType<typeof usePortfolioSheetScript>;

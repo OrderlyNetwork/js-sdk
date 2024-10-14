@@ -1,7 +1,9 @@
 import { FC, useCallback } from "react";
 import {
+  ArrowDownShortIcon,
   ArrowUpShortIcon,
   Button,
+  cn,
   Divider,
   EyeCloseIcon,
   EyeIcon,
@@ -13,8 +15,12 @@ import {
   Statistic,
   Text,
 } from "@orderly.network/ui";
-import { PortfolioSheetState } from "./portfolioSheet.script";
+import {
+  getMarginRatioColor,
+  PortfolioSheetState,
+} from "./portfolioSheet.script";
 import { USDCIcon } from "../accountSheet/icons";
+import { RiskIndicator } from "./riskIndicator";
 
 export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
   return (
@@ -73,6 +79,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           onClick={(e) => {
             props.toggleHideAssets();
           }}
+          className="oui-cursor-pointer"
         >
           Total value (USDC)
         </Text.formatted>
@@ -150,6 +157,11 @@ const Asset: FC<PortfolioSheetState> = (props) => {
   );
 };
 const MarginRatio: FC<PortfolioSheetState> = (props) => {
+  const { high, mid, low } = getMarginRatioColor(
+    props.marginRatioVal,
+    props.mmr
+  );
+
   return (
     <Grid cols={2} rows={1} width={"100%"}>
       <Statistic
@@ -158,15 +170,26 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
           label: "oui-text-2xs oui-text-base-contrast-36",
         }}
       >
-        <Text.numeral
-          size="xs"
-          color="primary"
-          dp={2}
-          padding={false}
-          visible={!props.hideAssets}
-        >
-          1111
-        </Text.numeral>
+        <Flex gap={2}>
+          <Text.numeral
+            size="xs"
+            color="primary"
+            dp={2}
+            padding={false}
+            visible={!props.hideAssets}
+          >
+            {props.marginRatioVal}
+          </Text.numeral>
+          {!props.hideAssets && (
+            <RiskIndicator
+              className={cn(
+                low && "oui-rotate-0",
+                mid && "oui-rotate-90",
+                high && "oui-rotate-180"
+              )}
+            />
+          )}
+        </Flex>
       </Statistic>
       <Statistic
         label="Free / Total Collateral (USDC)"
@@ -181,7 +204,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
             padding={false}
             visible={!props.hideAssets}
           >
-            1111
+            {props.freeCollateral}
           </Text.numeral>
           <Text size="xs">/</Text>
           <Text.numeral
@@ -190,7 +213,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
             padding={false}
             visible={!props.hideAssets}
           >
-            1111
+            {props.totalCollateral}
           </Text.numeral>
         </Flex>
       </Statistic>
@@ -214,7 +237,7 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           }
           suffix="x"
         >
-          {1.29}
+          {props.currentLeverage}
         </Text.numeral>
       </Flex>
       <Slider markCount={4} />
@@ -237,7 +260,7 @@ const AvaiableBalance: FC<PortfolioSheetState> = (props) => {
       <Flex className="oui-gap-[6px]">
         <USDCIcon size={24} />
         <Text.numeral dp={2} size="base" visible={!props.hideAssets}>
-          {123.223}
+          {props.availableBalance}
         </Text.numeral>
       </Flex>
     </Flex>
@@ -258,14 +281,16 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         icon={<ArrowUpShortIcon color="white" opacity={0.8} />}
         size="md"
         fullWidth
-        className="oui-bg-base-2"
+        className="oui-bg-base-2 hover:oui-bg-base-2/50"
+        onClick={props.onWithdraw}
       >
         Withdraw
       </Button>
       <Button
-        icon={<ArrowUpShortIcon color="white" opacity={0.8} />}
+        icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
         size="md"
         fullWidth
+        onClick={props.onDeposit}
       >
         Deposit
       </Button>
