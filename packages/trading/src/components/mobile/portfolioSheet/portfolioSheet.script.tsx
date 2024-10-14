@@ -1,12 +1,13 @@
 import {
   useAccount,
   useCollateral,
+  useLeverage,
   useMarginRatio,
   usePositionStream,
 } from "@orderly.network/hooks";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
-import { useCallback, useMemo } from "react";
-import { modal, toast } from "@orderly.network/ui";
+import { useCallback, useMemo, useState } from "react";
+import { modal, SliderMarks, toast } from "@orderly.network/ui";
 import { DepositAndWithdrawWithSheetId } from "@orderly.network/ui-transfer";
 
 export const usePortfolioSheetScript = () => {
@@ -45,6 +46,9 @@ export const usePortfolioSheetScript = () => {
         activeTab: 'withdraw',
       });
   }, []);
+
+
+
   return {
     ...assets,
     ...marginRatio,
@@ -88,14 +92,65 @@ const useMarginRatioAndLeverage = () => {
     );
   }, [marginRatio, aggregated]);
 
+  const [maxLeverage, { update, config: leverageLevers, isMutating }] =
+    useLeverage();
+
+    const marks = useMemo((): SliderMarks => {
+        return (
+          leverageLevers?.map((e: number) => ({
+            label: `${e}x`,
+            value: e,
+          })) || []
+        );
+      }, [leverageLevers]);
+
+  const [leverage, setLeverage] = useState(maxLeverage ?? 0);
+
+  const step = 100 / ((marks?.length || 0) - 1);
+
+  const leverageValue = useMemo(() => {
+    const index = leverageLevers.findIndex((item: any) => item === leverage);
+
+    return index * step;
+  }, [leverageLevers, leverage, step]);
+
+  const onLeverageChange = (leverage: number) => {
+    setLeverage(leverage);
+    // updateLeverage(leverage);
+  };
+
+  const onSave = async () => {
+    try {
+      update({ leverage }).then(
+        (res: any) => {
+          toast.success("Leverage updated");
+        },
+        (err: Error) => {
+          toast.error(err.message);
+        }
+      );
+    } catch (e) {}
+  };
+
+  const onValueCommit = useCallback((value: number[]) => {
+
+    onSave();
+  }, []);
+
   return {
     aggregated,
     totalUnrealizedROI,
     positionsInfo,
     marginRatio,
-    currentLeverage,
     marginRatioVal,
     mmr,
+
+    currentLeverage,
+    step,
+    marks,
+    onLeverageChange,
+    onValueCommit,
+    value: leverageValue,
   };
 };
 

@@ -182,11 +182,15 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
           </Text.numeral>
           {!props.hideAssets && (
             <RiskIndicator
-              className={cn(
-                low && "oui-rotate-0",
-                mid && "oui-rotate-90",
-                high && "oui-rotate-180"
-              )}
+              className={
+                low
+                  ? "oui-rotate-0"
+                  : mid
+                  ? "oui-rotate-90"
+                  : high
+                  ? "oui-rotate-180"
+                  : ""
+              }
             />
           )}
         </Flex>
@@ -222,7 +226,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
 };
 const Leverage: FC<PortfolioSheetState> = (props) => {
   return (
-    <Flex direction={"column"} gap={2} width={"100%"}>
+    <Flex direction={"column"} gap={2} width={"100%"} pb={6}>
       <Flex width={"100%"} justify={"between"}>
         <Text size="2xs" intensity={54}>
           Max account leverage
@@ -240,7 +244,17 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           {props.currentLeverage}
         </Text.numeral>
       </Flex>
-      <Slider markCount={4} />
+      <Slider
+        step={props.step}
+        markLabelVisible={true}
+        marks={props.marks}
+        value={[props.value]}
+        onValueChange={(e) => {
+          const value = props.marks?.[e[0] / 10]?.value;
+          if (typeof value !== "undefined") props.onLeverageChange(value);
+        }}
+        onValueCommit={props.onValueCommit}
+      />
     </Flex>
   );
 };
