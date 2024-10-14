@@ -1,5 +1,12 @@
 # @orderly.network/cli
 
+## 0.3.13-sol.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@1.5.13-sol.0
+
 ## 0.3.12
 
 ### Patch Changes
