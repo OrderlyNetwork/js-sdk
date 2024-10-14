@@ -40,7 +40,7 @@ export const useMaxQty = (
 
   const { totalCollateral } = useCollateral();
 
-  const markPrices = useMarkPricesStream();
+  const { data: markPrices } = useMarkPricesStream();
 
   // const [orders] = useOrderStream({ status: OrderStatus.NEW });
 

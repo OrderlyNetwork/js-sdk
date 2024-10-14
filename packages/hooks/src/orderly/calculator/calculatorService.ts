@@ -69,9 +69,12 @@ class CalculatorService {
   }
 
   async calc(scope: CalculatorScope, data: any, options?: CalcOptions) {
+    if (scope !== CalculatorScope.POSITION) {
+      if (!options?.skipWhenOnPause) {
+        console.error(`----`);
+      }
+    }
     const ctx = new CalculatorContext(scope, data);
-
-    // console.log("[calc:]", this.referenceCount);
 
     // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
     if (!ctx.isReady && !options?.skipPending) {
@@ -117,7 +120,8 @@ class CalculatorService {
         }
       }
       if (this.calcQueue.length) {
-        requestAnimationFrame(() => this.handleCalcQueue());
+        // requestAnimationFrame(() => this.handleCalcQueue());
+        setTimeout(() => this.handleCalcQueue(ctx), 0);
       }
     }
   }

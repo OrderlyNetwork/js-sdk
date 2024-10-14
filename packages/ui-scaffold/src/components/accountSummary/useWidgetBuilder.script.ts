@@ -47,7 +47,7 @@ export const useTotalValueBuilderScript = () => {
     freeCollateral: unavailable ? null : freeCollateral,
     maxLeverage: unavailable ? null : maxLeverage,
     currentLeverage: unavailable ? null : currentLeverage,
-    unrealPnL: unavailable ? null : aggregated?.unrealPnL,
+    unrealPnL: unavailable ? null : aggregated?.total_unreal_pnl,
     unrealized_pnl_ROI: unavailable ? null : totalUnrealizedROI,
     type,
     onTypeChange,

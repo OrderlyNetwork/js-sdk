@@ -91,13 +91,17 @@ class ShardingScheduler implements CalculatorScheduler {
 
       if (index < data.length) {
         // There are still unprocessed data shards, request the next idle callback
-        requestIdleCallback(processNextShard);
+        requestIdleCallback(processNextShard, {
+          timeout: 1000,
+        });
       } else {
         onComplete(results.flat());
       }
     }
 
-    requestIdleCallback(processNextShard);
+    requestIdleCallback(processNextShard, {
+      timeout: 1000,
+    });
   }
 }
 

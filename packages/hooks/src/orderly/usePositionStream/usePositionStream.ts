@@ -103,10 +103,6 @@ export const usePositionStream = (
     API.PositionTPSLExt[],
     Omit<API.PositionsTPSLExt, "rows">
   ] = usePositionStore((state) => {
-    // console.log("state.positions", state.positions[symbol]);
-    // if (!state.positions[symbol]) {
-    //   debugger;
-    // }
     const positions = state.positions[symbol] ?? POSITION_EMPTY;
     return [positions.rows, omit(["rows"], positions)];
   });

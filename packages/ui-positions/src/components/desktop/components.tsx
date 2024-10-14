@@ -48,6 +48,7 @@ export const TPSLButton = () => {
           visible ? "oui-visible" : "oui-invisible"
         )}
         align="end"
+        side={"top"}
       >
         <TPSLWidget
           position={position}

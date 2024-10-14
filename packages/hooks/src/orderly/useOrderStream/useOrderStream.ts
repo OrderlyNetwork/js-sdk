@@ -67,7 +67,7 @@ export const useOrderStream = (
     excludes = [],
   } = params;
 
-  const markPrices = useMarkPricesStream();
+  const { data: markPrices } = useMarkPricesStream();
 
   const { registerKeyHandler: regesterKeyHandler, unregisterKeyHandler } =
     useDataCenterContext();

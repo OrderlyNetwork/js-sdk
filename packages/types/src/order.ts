@@ -139,8 +139,8 @@ export interface OrderEntity {
   order_type: OrderType;
   algo_type?: AlgoOrderRootType;
   order_type_ext?: OrderType;
-  order_price?: string | number;
-  order_quantity?: string | number;
+  order_price?: string;
+  order_quantity?: string;
   order_amount?: number;
   // Whether to display in the orderbook, default=order_quantity, not displayed when =0,
   visible_quantity?: number;
@@ -149,10 +149,10 @@ export interface OrderEntity {
   broker_id?: string;
 
   // internal fields
-  total?: string | number;
+  total?: string;
   // hideInOrderbook?: boolean;
   isStopOrder?: boolean;
-  trigger_price?: string | number;
+  trigger_price?: string;
   order_tag?: string;
 }
 
@@ -180,7 +180,7 @@ export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
   reduce_only?: boolean;
   side: OrderSide;
   symbol: string;
-  trigger_price: number | string;
+  trigger_price: string;
   trigger_price_type: TriggerPriceType;
   type: OrderType;
   visible_quantity?: number;

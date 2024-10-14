@@ -17,12 +17,12 @@ export type MarginRatioReturn = {
 export const useMarginRatio = (): MarginRatioReturn => {
   // const [{ rows, aggregated }] = usePositionStream();
 
-  const positions = usePositionStore((state) => state.positions);
+  const positions = usePositionStore((state) => state.positions.all);
 
   const { rows } = positions;
   const { notional } = positions;
 
-  const markPrices = useMarkPricesStream();
+  const { data: markPrices } = useMarkPricesStream();
   //
   // const markPrices = useMarkPrices();
   //

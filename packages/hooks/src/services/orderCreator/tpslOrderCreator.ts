@@ -96,7 +96,7 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
           _order["is_activated"] = false;
         } else if (oldOrder.trigger_price !== order.trigger_price) {
           // _order["order_id"] = Number(oldOrder.algo_order_id);
-          _order["trigger_price"] = order.trigger_price as number;
+          _order["trigger_price"] = order.trigger_price;
         }
 
         if (Object.keys(_order).length > 0) {

@@ -5,7 +5,7 @@ import { immer } from "zustand/middleware/immer";
 
 export const DEFAULT_POSITIONS = "positions";
 
-export const POSITION_EMPTY = {
+export const POSITION_EMPTY: API.PositionsTPSLExt = {
   rows: [],
   margin_ratio: 0,
   initial_margin_ratio: 0,
@@ -17,7 +17,9 @@ export const POSITION_EMPTY = {
   total_collateral_value: 0,
   free_collateral: 0,
   total_pnl_24_h: 0,
+  unrealPnL: 0,
   total_unreal_pnl: 0,
+  unsettledPnL: 0,
   total_unsettled_pnl: 0,
   notional: 0,
 };

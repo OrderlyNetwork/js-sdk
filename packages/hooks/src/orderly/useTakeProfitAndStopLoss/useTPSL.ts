@@ -104,7 +104,7 @@ export const useTaskProfitAndStopLossInternal = (
 
   const [doCreateOrder, { isMutating: isCreateMutating }] =
     useMutation("/v1/algo/order");
-  const [doUpdateuseMaOrder] = useMutation("/v1/algo/order", "PUT");
+  const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
 
   const [errors, setErrors] = useState<ValidateError | null>(null);
@@ -331,7 +331,8 @@ export const useTaskProfitAndStopLossInternal = (
   };
 
   const updateOrder = (orderId: number): Promise<any> => {
-    const orderCreator = getOrderCreator() as TPSLPositionOrderCreator;
+    const orderCreator =
+      getOrderCreator() as unknown as TPSLPositionOrderCreator;
 
     const [updatedOrderEntity, orderEntity] = orderCreator.crateUpdateOrder(
       // @ts-ignore

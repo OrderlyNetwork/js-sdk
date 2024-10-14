@@ -3,6 +3,7 @@ import {
   OrderEntity,
   OrderType,
   OrderlyOrder,
+  AlgoOrderRootType,
 } from "@orderly.network/types";
 
 export type VerifyResult = {

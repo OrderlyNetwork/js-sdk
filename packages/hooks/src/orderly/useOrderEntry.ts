@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   API,
   OrderEntity,
+  OrderlyOrder,
   OrderSide,
   OrderType,
   SDKError,
@@ -59,7 +60,7 @@ export type UseOrderEntryReturn = {
   formattedOrder: Partial<OrderEntity>;
   helper: {
     calculate: (
-      values: Partial<OrderEntity>,
+      values: Partial<OrderlyOrder>,
       field: keyof OrderEntity,
       value: any
     ) => Partial<OrderEntity>;
@@ -479,8 +480,8 @@ export function useOrderEntry(
 
   const calculate = useCallback(
     (
-      values: Partial<OrderEntity>,
-      field: keyof OrderEntity,
+      values: Partial<OrderlyOrder>,
+      field: keyof OrderlyOrder,
       value: any
     ): Partial<OrderEntity> => {
       const fieldHandler = getCalculateHandler(field);
@@ -555,7 +556,7 @@ export function useOrderEntry(
       fieldDirty.current.order_quantity = true;
     }
 
-    const values = calculate(parsedData, item.key, item.value);
+    const values = calculate(parsedData, item.key as any, item.value);
 
     values.isStopOrder = values.order_type?.startsWith("STOP") || false;
 
@@ -768,6 +769,7 @@ export function useOrderEntry(
     estLiqPrice,
     estLeverage,
     helper: {
+      //@ts-ignore
       calculate,
       validator,
       // clearErrors,

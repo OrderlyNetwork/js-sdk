@@ -148,8 +148,12 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     return {
       ...data,
+
+      unrealPnL: unrealPnL_total.toNumber(),
       total_unreal_pnl: unrealPnL_total.toNumber(),
       notional: notional_total.toNumber(),
+
+      unsettledPnL: unsettlementPnL_total.toNumber(),
       total_unsettled_pnl: unsettlementPnL_total.toNumber(),
       rows,
     };

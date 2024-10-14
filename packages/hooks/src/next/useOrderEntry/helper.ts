@@ -1,5 +1,4 @@
-import { OrderSide, SDKError } from "@orderly.network/types";
-import { OrderlyOrder, OrderType } from "@orderly.network/types";
+import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
 
 import { order as orderUtils } from "@orderly.network/perp";
 
@@ -27,7 +26,7 @@ export const hasTPSL = (order: Partial<OrderlyOrder>): boolean => {
 };
 
 export const getPriceAndQty = (
-  symbolOrOrder: OrderlyOrder,
+  symbolOrOrder: Partial<OrderlyOrder>,
   askAndBid: number[]
 ): { quantity: number; price: number } | null => {
   let quantity = Number(symbolOrOrder.order_quantity);
@@ -52,18 +51,18 @@ export const getPriceAndQty = (
     return null;
 
   /**
-     * price
-     * if order_type = market order,
-     order side = long, then order_price_i = ask0
-     order side = short, then order_price_i = bid0
-     if order_type = limit order
-     order side = long
-     limit_price >= ask0, then order_price_i = ask0
-     limit_price < ask0, then order_price_i = limit_price
-     order side = short
-     limit_price <= bid0, then order_price_i = bid0
-     limit_price > ask0, then order_price_i = ask0
-     */
+   * price
+   * if order_type = market order,
+   order side = long, then order_price_i = ask0
+   order side = short, then order_price_i = bid0
+   if order_type = limit order
+   order side = long
+   limit_price >= ask0, then order_price_i = ask0
+   limit_price < ask0, then order_price_i = limit_price
+   order side = short
+   limit_price <= bid0, then order_price_i = bid0
+   limit_price > ask0, then order_price_i = ask0
+   */
   let price: number | undefined;
 
   if (
@@ -100,7 +99,7 @@ export const getPriceAndQty = (
 };
 
 export const calcEstLiqPrice = (
-  order: OrderlyOrder,
+  order: Partial<OrderlyOrder>,
   askAndBid: number[],
   inputs: {
     futures_taker_fee_rate: number;
@@ -160,7 +159,7 @@ export const calcEstLiqPrice = (
 };
 
 export const calcEstLeverage = (
-  order: OrderlyOrder,
+  order: Partial<OrderlyOrder>,
   askAndBid: number[],
   inputs: {
     totalCollateral: number;
@@ -176,7 +175,7 @@ export const calcEstLeverage = (
   const { price, quantity } = result;
   if (!price || !quantity) return null;
 
-  const leverage = orderUtils.estLeverage({
+  return orderUtils.estLeverage({
     totalCollateral,
     positions,
     newOrder: {
@@ -185,6 +184,4 @@ export const calcEstLeverage = (
       price: result.price,
     },
   });
-
-  return leverage;
 };

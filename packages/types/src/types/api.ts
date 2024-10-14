@@ -207,7 +207,15 @@ export declare namespace API {
     total_collateral_value: number;
     free_collateral: number;
     total_pnl_24_h: number;
+    /**
+     * @deprecated use total_unreal_pnl instead
+     */
+    unrealPnL: number;
     total_unreal_pnl: number;
+    /**
+     * @deprecated use total_unsettled_pnl instead
+     */
+    unsettledPnL: number;
     total_unsettled_pnl: number;
     notional: number;
   }
