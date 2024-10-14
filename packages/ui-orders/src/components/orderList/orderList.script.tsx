@@ -6,7 +6,12 @@ import {
 } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
 import { TabType } from "../orders.widget";
-import { DataFilterItems, modal, usePagination } from "@orderly.network/ui";
+import {
+  DataFilterItems,
+  modal,
+  usePagination,
+  Text,
+} from "@orderly.network/ui";
 import { differenceInDays, setHours } from "date-fns";
 
 export const useOrderListScript = (props: {
@@ -37,7 +42,6 @@ export const useOrderListScript = (props: {
     return undefined;
   }, [type]);
 
-
   const [
     data,
     {
@@ -64,20 +68,15 @@ export const useOrderListScript = (props: {
   });
 
   const onCancelAll = useCallback(() => {
-    modal.alert({
+    modal.confirm({
       title: "Cancel all orders",
-      okLabel: "Confirm",
-      message:
-        "Are you sure you want to cancel all of your pending orders, including TP/SL orders?",
-        actions: {
-          secondary: {
-            fullWidth: true,
-          },
-          primary: {
-            className: "!oui-w-full"
-          },
-        },
-      onCancel: () => {},
+      content: (
+        <Text size="sm">
+          Are you sure you want to cancel all of your pending orders, including
+          TP/SL orders?
+        </Text>
+      ),
+      onCancel: async () => {},
       onOk: async () => {
         try {
           // await cancelAll(null, { source_type: "ALL" });
