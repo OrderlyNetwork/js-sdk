@@ -22,6 +22,7 @@ export const POSITION_EMPTY: API.PositionsTPSLExt = {
   unsettledPnL: 0,
   total_unsettled_pnl: 0,
   notional: 0,
+  unrealPnlROI: 0,
 };
 
 type PositionState = {

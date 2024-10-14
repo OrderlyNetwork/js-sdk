@@ -1,12 +1,14 @@
 import { API } from "@orderly.network/types";
 import { CalculatorCtx, CalculatorScope } from "../../types";
-import { useAppStore } from "../appStore";
+import { Portfolio, useAppStore } from "../appStore";
 
 export class CalculatorContext implements CalculatorCtx {
   accountInfo: API.AccountInfo;
   symbolsInfo: Record<string, API.SymbolExt>;
   fundingRates: Record<string, API.FundingRate>;
   holding: API.Holding[];
+  // portfolio
+  portfolio: Portfolio;
   markPrices: Record<string, number> | null;
   private output: Record<string, any>;
 
@@ -21,6 +23,8 @@ export class CalculatorContext implements CalculatorCtx {
       API.FundingRate
     >;
     this.holding = useAppStore.getState().portfolio.holding as API.Holding[];
+
+    this.portfolio = useAppStore.getState().portfolio as Portfolio;
 
     // console.log("!!!! CalculatorContext", this.holding);
 

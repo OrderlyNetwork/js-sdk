@@ -116,13 +116,6 @@ const useOrderEntryNextInternal = (
       markPrice: number;
     }
   ) => {
-    // console.group("setValue");
-    // console.log("key", key);
-    // console.log("value", value);
-    // console.log("additional", additional);
-    // console.log("symbolInfo", symbolInfo);
-    // console.groupEnd();
-
     if (!symbolInfo) {
       orderEntryActions.updateOrderByKey(key, value);
       console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
@@ -152,25 +145,26 @@ const useOrderEntryNextInternal = (
       (key === "order_quantity" || key === "order_price") &&
       hasTPSL(newValues)
     ) {
-      if (typeof newValues.tp_trigger_price !== "undefined") {
-        newValues = calculate(
-          newValues,
-          "tp_trigger_price",
-          newValues.tp_trigger_price,
-          markPrice,
-          symbolInfo
-        );
-      }
+      calculateTPSL(newValues, markPrice, symbolInfo);
+      // if (typeof newValues.tp_trigger_price !== "undefined") {
+      //   newValues = calculate(
+      //     newValues,
+      //     "tp_trigger_price",
+      //     newValues.tp_trigger_price,
+      //     markPrice,
+      //     symbolInfo
+      //   );
+      // }
 
-      if (typeof newValues.sl_trigger_price !== "undefined") {
-        newValues = calculate(
-          newValues,
-          "sl_trigger_price",
-          newValues.sl_trigger_price,
-          markPrice,
-          symbolInfo
-        );
-      }
+      // if (typeof newValues.sl_trigger_price !== "undefined") {
+      //   newValues = calculate(
+      //     newValues,
+      //     "sl_trigger_price",
+      //     newValues.sl_trigger_price,
+      //     markPrice,
+      //     symbolInfo
+      //   );
+      // }
     }
 
     {
@@ -192,9 +186,37 @@ const useOrderEntryNextInternal = (
       }
     }
 
+    // calculateTPSL(newValues, markPrice);
+
     orderEntryActions.updateOrder(newValues);
 
     return newValues;
+  };
+
+  const calculateTPSL = (
+    newValues: Partial<FullOrderState>,
+    markPrice: number,
+    symbolInfo: API.SymbolExt
+  ) => {
+    if (typeof newValues.tp_trigger_price !== "undefined") {
+      newValues = calculate(
+        newValues,
+        "tp_trigger_price",
+        newValues.tp_trigger_price,
+        markPrice,
+        symbolInfo
+      );
+    }
+
+    if (typeof newValues.sl_trigger_price !== "undefined") {
+      newValues = calculate(
+        newValues,
+        "sl_trigger_price",
+        newValues.sl_trigger_price,
+        markPrice,
+        symbolInfo
+      );
+    }
   };
 
   const setValues = useCallback(
@@ -244,6 +266,9 @@ const useOrderEntryNextInternal = (
       options.symbolInfo
     );
 
+    if (hasTPSL(newValues)) {
+      calculateTPSL(newValues, markPrice, options.symbolInfo);
+    }
     orderEntryActions.updateOrder(newValues);
   }, []);
 

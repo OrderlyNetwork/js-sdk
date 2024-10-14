@@ -26,6 +26,7 @@ export const usePositionHeaderScript = (props: {
   const unrealPnlROI = aggregated?.unrealPnlROI;
   const notional = aggregated?.notional;
   const { showAllSymbol, setShowAllSymbol } = useTradingLocalStorage();
+
   return {
     pnlNotionalDecimalPrecision,
     unrealPnL,

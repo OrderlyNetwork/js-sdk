@@ -116,14 +116,27 @@ export const usePositionStream = (
     keyof Omit<API.PositionInfo, "rows">
   >(formattedPositions[1] as any, 1);
 
+  const positionsRows = useMemo(() => {
+    let rows = formattedPositions[0];
+    if (!includedPendingOrder) {
+      rows = rows.filter((item) => item.position_qty !== 0);
+    } else {
+      rows = rows.filter(
+        (item) =>
+          item.position_qty !== 0 ||
+          item.pending_long_qty !== 0 ||
+          item.pending_short_qty !== 0
+      );
+    }
+
+    return rows;
+  }, [formattedPositions, includedPendingOrder]);
+
   return [
     {
-      // rows: positionsRows,
-      rows: formattedPositions[0],
-      aggregated: {
-        ...(formattedPositions?.[1] ?? {}),
-        unrealPnlROI: totalUnrealizedROI,
-      },
+      rows: positionsRows,
+      // rows: formattedPositions[0],
+      aggregated: formattedPositions?.[1] ?? {},
       totalCollateral,
       totalValue,
       totalUnrealizedROI,

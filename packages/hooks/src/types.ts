@@ -1,5 +1,6 @@
 import { API } from "@orderly.network/types";
 import { StateCreator } from "zustand";
+import { Portfolio } from "./orderly/appStore";
 
 // export type ImmerStateCreator<T> = StateCreator<CommonState, [["zustand/immer", never], never], [], T>;
 
@@ -10,6 +11,7 @@ export interface CalculatorCtx {
   fundingRates: Record<string, API.FundingRate>;
   markPrices: Record<string, number> | null;
   holding: API.Holding[];
+  portfolio: Portfolio;
   get: <T extends any>(fn: (output: Record<string, any>) => T) => T;
   outputToValue: () => any;
 
@@ -29,6 +31,7 @@ export enum CalculatorScope {
   ORDER = "order",
   TICK_PRICE = "tickPrice",
   ORDER_BOOK = "orderBook",
+  PORTFOLIO = "portfolio",
 }
 
 export interface Calculator<T = any> {

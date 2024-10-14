@@ -24,7 +24,7 @@ class ShardingScheduler implements CalculatorScheduler {
             for (let index = 0; index < shard.length; index++) {
               const calculator = shard[index];
               const result = calculator.calc(scope, data, ctx);
-              console.log("item calc ======>>>>>>", scope);
+              // console.log("item calc ======>>>>>>", scope);
               if (result) {
                 ctx.saveOutput(calculator.name, result);
                 results.push(result);

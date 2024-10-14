@@ -23,9 +23,15 @@ export const useCalculatorService = () => {
       calculatorService = new CalculatorService(new ShardingScheduler(), [
         [
           CalculatorScope.MARK_PRICE,
-          [markPriceCalculator, positionCalculator, portfolioCalculator],
+          [
+            markPriceCalculator,
+            positionCalculator,
+            portfolioCalculator,
+            positionCalculator,
+          ],
         ],
-        [CalculatorScope.POSITION, [positionCalculator]],
+        [CalculatorScope.POSITION, [positionCalculator, portfolioCalculator]],
+        [CalculatorScope.PORTFOLIO, [portfolioCalculator]],
       ]);
 
       SimpleDI.registerByName(CalculatorServiceID, calculatorService);

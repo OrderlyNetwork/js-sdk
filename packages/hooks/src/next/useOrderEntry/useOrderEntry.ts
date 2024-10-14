@@ -56,6 +56,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   const positions = usePositions();
 
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
+  const markPrice = actions.getMarkPriceBySymbol(symbol);
 
   const {
     formattedOrder,
@@ -94,6 +95,13 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
       ee.off("orderbook:update", onOrderBookUpdate);
     };
   }, []);
+
+  useEffect(() => {
+    // console.log("markPrice", markPrice);
+    if (formattedOrder.order_type === OrderType.MARKET && markPrice) {
+      orderEntryActions.onMarkPriceChange(markPrice);
+    }
+  }, [markPrice, formattedOrder.order_type]);
 
   const prepareData = useCallback(() => {
     return {

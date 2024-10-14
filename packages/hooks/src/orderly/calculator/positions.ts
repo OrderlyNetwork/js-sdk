@@ -8,6 +8,8 @@ import { usePositionStore } from "../usePositionStream/usePositionStore";
 import { BaseCalculator } from "./baseCalculator";
 import { propOr } from "ramda";
 import { zero } from "@orderly.network/utils";
+import { parseHolding } from "../../utils/parseHolding";
+import { markets } from "storybook2/src/constants/mockdata";
 
 const NAME_PREFIX = "positionCalculator";
 const AllPositions = "all";
@@ -64,6 +66,9 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       return null;
     }
 
+    if (!Array.isArray(positions.rows) || !positions.rows.length)
+      return positions;
+
     positions = {
       ...positions,
       rows: positions.rows.map((item: API.PositionTPSLExt) => ({
@@ -83,7 +88,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     data: API.PositionInfo | API.PositionsTPSLExt,
     ctx: CalculatorCtx
   ): API.PositionsTPSLExt {
-    const { accountInfo, symbolsInfo, fundingRates } = ctx;
+    const { accountInfo, symbolsInfo, fundingRates, portfolio } = ctx;
 
     if (!accountInfo || !fundingRates) {
       return data as API.PositionsTPSLExt;
@@ -93,7 +98,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       notional_total = zero,
       unsettlementPnL_total = zero;
 
-    const rows = data.rows.map((item) => {
+    let rows = data.rows.map((item) => {
       const info = symbolsInfo[item.symbol];
 
       const notional = positions.notional(item.position_qty, item.mark_price);
@@ -132,13 +137,26 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
         lastSumUnitaryFunding: item.last_sum_unitary_funding,
       });
 
+      const MMR = positions.MMR({
+        baseMMR: info["base_mmr"],
+        baseIMR: info["base_imr"],
+        IMRFactor: accountInfo.imr_factor[item.symbol] as number,
+        positionNotional: notional,
+        IMR_factor_power: 4 / 5,
+      });
+
       unrealPnL_total = unrealPnL_total.add(unrealPnl);
       notional_total = notional_total.add(notional);
       unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
 
       return {
         ...item,
-        mm: 0,
+        mm: positions.maintenanceMargin({
+          positionQty: item.position_qty,
+          markPrice: item.mark_price,
+          MMR,
+        }),
+        mmr: MMR,
         notional,
         unsettlement_pnl: unsettlementPnL,
         unrealized_pnl: unrealPnl,
@@ -146,22 +164,53 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       };
     });
 
+    const unrealPnl = unrealPnL_total.toNumber();
+    const unsettlementPnL = unsettlementPnL_total.toNumber();
+    let totalUnrealizedROI = 0;
+
+    if (portfolio) {
+      const { totalValue, totalCollateral } = portfolio;
+
+      rows = rows.map((item) => {
+        const est_liq_price = positions.liqPrice({
+          markPrice: item.mark_price,
+          totalCollateral: totalCollateral.toNumber(),
+          positionQty: item.position_qty,
+          positions: rows,
+          MMR: item.mmr,
+        });
+        return {
+          ...item,
+          est_liq_price,
+        };
+      });
+
+      if (!totalValue.eq(zero)) {
+        totalUnrealizedROI = account.totalUnrealizedROI({
+          totalUnrealizedPnL: unrealPnl,
+          totalValue: totalValue.toNumber(),
+        });
+      }
+    }
+
     return {
       ...data,
 
-      unrealPnL: unrealPnL_total.toNumber(),
-      total_unreal_pnl: unrealPnL_total.toNumber(),
+      unrealPnL: unrealPnl,
+      total_unreal_pnl: unrealPnl,
       notional: notional_total.toNumber(),
 
-      unsettledPnL: unsettlementPnL_total.toNumber(),
-      total_unsettled_pnl: unsettlementPnL_total.toNumber(),
+      unsettledPnL: unsettlementPnL,
+      total_unsettled_pnl: unsettlementPnL,
+      unrealPnlROI: totalUnrealizedROI,
       rows,
     };
   }
 
   private preprocess(data: API.PositionInfo): API.PositionInfo {
     // console.log("!!!! PositionCalculator preprocess", data);
-    let rows = data.rows.filter((item) => item.position_qty !== 0);
+    // let rows = data.rows.filter((item) => item.position_qty !== 0);
+    let rows = data.rows;
     if (this.symbol !== AllPositions) {
       rows = rows.filter((item: API.Position) => item.symbol === this.symbol);
     }
