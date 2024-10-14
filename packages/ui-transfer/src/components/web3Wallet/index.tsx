@@ -16,10 +16,12 @@ export const Web3Wallet: FC = () => {
 
   return (
     <Flex justify="between">
-      <Text size="sm">Your Web3 Wallet</Text>
+      <Text size="sm" intensity={98}>
+        Your Web3 Wallet
+      </Text>
 
       <Flex gapX={1}>
-        <WalletIcon size={'xs'} name={walletName} />
+        <WalletIcon size={"xs"} name={walletName} />
         <Text size="sm" intensity={54}>
           {address}
         </Text>

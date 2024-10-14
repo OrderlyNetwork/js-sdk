@@ -88,7 +88,10 @@
       ],
       "@orderly.network/react": [
         "../../packages/component/src"
-      ]
+      ],
+      "@orderly.network/ui-cross-deposit": [
+        "../../packages/ui-cross-deposit/src"
+      ],
     }
   },
   "include": [

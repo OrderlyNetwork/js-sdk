@@ -1,28 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
-import { usePrivateQuery } from "../../usePrivateQuery";
 import { account, positions } from "@orderly.network/perp";
-import { type SWRConfiguration } from "swr";
-import { createGetter } from "../../utils/createGetter";
-import { useFundingRates } from "../useFundingRates";
 import {
+  AlgoOrderRootType,
   type API,
   OrderEntity,
-  AlgoOrderType,
-  AlgoOrderRootType,
   OrderStatus,
 } from "@orderly.network/types";
-import { useSymbolsInfo } from "../useSymbolsInfo";
-import { useMarkPricesStream } from "../useMarkPricesStream";
-import { pathOr, propOr } from "ramda";
-import { parseHolding } from "../../utils/parseHolding";
 import { Decimal, zero } from "@orderly.network/utils";
-import { useMarketsStream } from "../useMarketsStream";
+import { pathOr, propOr } from "ramda";
+import { useEffect, useMemo, useState } from "react";
+import { type SWRConfiguration } from "swr";
+import { usePrivateQuery } from "../../usePrivateQuery";
+import { createGetter } from "../../utils/createGetter";
+import { parseHolding } from "../../utils/parseHolding";
 import { useOrderStream } from "../orderlyHooks";
-import {
-  findPositionTPSLFromOrders,
-  findTPSLFromOrder,
-  findTPSLFromOrders,
-} from "./utils";
+import { useFundingRates } from "../useFundingRates";
+import { useMarketsStream } from "../useMarketsStream";
+import { useMarkPricesStream } from "../useMarkPricesStream";
+import { useSymbolsInfo } from "../useSymbolsInfo";
+import { findPositionTPSLFromOrders, findTPSLFromOrder } from "./utils";
 
 type PriceMode = "markPrice" | "lastPrice";
 
@@ -87,11 +82,16 @@ export const usePositionStream = (
 
   // get TP/SL orders;
 
-  const [tpslOrders] = useOrderStream({
+  const [tpslOrders, { refresh }] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
     includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
   });
   //
+
+  const refreshAlgoAndPosition = () => {
+    refresh();
+    refreshPositions();
+  };
 
   // console.log("---------------");
 
@@ -352,7 +352,7 @@ export const usePositionStream = (
       // showSymbol,
       error,
       // loadMore: () => {},
-      refresh: refreshPositions,
+      refresh: refreshAlgoAndPosition,
     },
   ] as const;
 };
