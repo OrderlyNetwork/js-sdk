@@ -28,7 +28,6 @@ import {
   PEER_SEED, PRICE_FEED_SEED, SEND_CONFIG_SEED,
   SEND_LIBRARY_CONFIG_SEED, ULN_SEED
 } from "@layerzerolabs/lz-solana-sdk-v2";
-import { AnchorProvider} from "@coral-xyz/anchor";
 
 export const getUSDCAccounts = (usdc: PublicKey, owner: PublicKey): PublicKey => {
   const usdcTokenAccount = getAssociatedTokenAddressSync(

@@ -18,7 +18,7 @@ export const solanaMainnetVaultAddress = '';
 export const solanaStagingVualtAddress = '';
 export const solanaDevVaultAddress = 'EYJq9eU4GMRUriUJBgGoZ8YLQBXcWaciXuSsEXE7ieQS';
 export const solanaQaVaultAddress = '5zBjLor7vEraAt4zp2H82sy9MSqFoDnNa1Lx6EYKTYRZ';
-export const solanaUSDCAddress = '9shwxWDUNhtwkHocsUAmrNAQfBH2DHh4njdAEdHZZkF2';
+export const solanaUSDCAddress = '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU';
 
 export const EVENT_NAMES = {
   statusChanged: "change:status",
