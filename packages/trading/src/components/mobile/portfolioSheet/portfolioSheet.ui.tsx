@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import {
   ArrowUpShortIcon,
   Button,
@@ -7,6 +7,7 @@ import {
   EyeIcon,
   Flex,
   Grid,
+  modal,
   RefreshIcon,
   Slider,
   Statistic,
@@ -31,6 +32,31 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
 };
 
 const Asset: FC<PortfolioSheetState> = (props) => {
+  const onUnsettleClick = useCallback(() => {
+    return modal.confirm({
+      title: "Settle PnL",
+      // maxWidth: "xs",
+      content: (
+        <Text intensity={54} size="xs">
+          Are you sure you want to settle your PnL? Settlement will take up to 1
+          minute before you can withdraw your available balance.
+        </Text>
+      ),
+      onCancel: () => {
+        return Promise.reject();
+      },
+      onOk: () => {
+        if (typeof props.onSettlePnL !== "function") return Promise.resolve();
+        return props.onSettlePnL().catch((e) => {});
+      },
+    });
+  }, []);
+
+  const clsName =
+    props.totalUnrealizedROI > 0
+      ? "oui-text-success-darken"
+      : "oui-text-danger-darken";
+
   return (
     <Flex direction={"column"} gap={3} width={"100%"}>
       <Flex direction={"column"} itemAlign={"start"} width={"100%"}>
@@ -50,8 +76,14 @@ const Asset: FC<PortfolioSheetState> = (props) => {
         >
           Total value (USDC)
         </Text.formatted>
-        <Text.numeral size="base" coloring dp={2} padding={false}>
-          {123}
+        <Text.numeral
+          size="base"
+          coloring
+          dp={2}
+          padding={false}
+          visible={!props.hideAssets}
+        >
+          {props.totalValue}
         </Text.numeral>
       </Flex>
       <Grid cols={2} rows={1} width={"100%"}>
@@ -62,20 +94,28 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           }}
         >
           <Flex gap={1}>
-            <Text.numeral size="xs" coloring dp={2} padding={false}>
-              1111
-            </Text.numeral>
             <Text.numeral
               size="xs"
+              coloring
               dp={2}
               padding={false}
-              rule="percentages"
-              prefix={"("}
-              suffix={")"}
-              className=""
+              visible={!props.hideAssets}
             >
-              1111
+              {props.aggregated.unrealPnL}
             </Text.numeral>
+            {!props.hideAssets && (
+              <Text.numeral
+                size="xs"
+                dp={2}
+                padding={false}
+                rule="percentages"
+                prefix={"("}
+                suffix={")"}
+                className={clsName}
+              >
+                {props.totalUnrealizedROI}
+              </Text.numeral>
+            )}
           </Flex>
         </Statistic>
         <Statistic
@@ -85,10 +125,19 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           }}
         >
           <Flex justify={"between"} width={"100%"}>
-            <Text.numeral size="xs" coloring dp={2} padding={false}>
-              1111
+            <Text.numeral
+              size="xs"
+              coloring
+              dp={2}
+              padding={false}
+              visible={!props.hideAssets}
+            >
+              {props.aggregated.unsettledPnL}
             </Text.numeral>
-            <button className="oui-flex oui-gap-1 oui-items-center">
+            <button
+              className="oui-flex oui-gap-1 oui-items-center"
+              onClick={onUnsettleClick}
+            >
               <RefreshIcon opacity={1} color="primary" size={12} />
               <Text size="2xs" color="primary">
                 Settle PnL
@@ -109,7 +158,13 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
           label: "oui-text-2xs oui-text-base-contrast-36",
         }}
       >
-        <Text.numeral size="xs" color="primary" dp={2} padding={false}>
+        <Text.numeral
+          size="xs"
+          color="primary"
+          dp={2}
+          padding={false}
+          visible={!props.hideAssets}
+        >
           1111
         </Text.numeral>
       </Statistic>
@@ -120,11 +175,21 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
         }}
       >
         <Flex justify={"start"} width={"100%"} gap={1}>
-          <Text.numeral size="xs" dp={2} padding={false}>
+          <Text.numeral
+            size="xs"
+            dp={2}
+            padding={false}
+            visible={!props.hideAssets}
+          >
             1111
           </Text.numeral>
           <Text size="xs">/</Text>
-          <Text.numeral size="xs" dp={2} padding={false}>
+          <Text.numeral
+            size="xs"
+            dp={2}
+            padding={false}
+            visible={!props.hideAssets}
+          >
             1111
           </Text.numeral>
         </Flex>
@@ -171,7 +236,7 @@ const AvaiableBalance: FC<PortfolioSheetState> = (props) => {
       </Text>
       <Flex className="oui-gap-[6px]">
         <USDCIcon size={24} />
-        <Text.numeral dp={2} size="base">
+        <Text.numeral dp={2} size="base" visible={!props.hideAssets}>
           {123.223}
         </Text.numeral>
       </Flex>
