@@ -1,6 +1,7 @@
 import { modal } from "@orderly.network/ui";
 import { AccountSheetWidget } from "../accountSheet";
 import { useTradingPageContext } from "../../../provider/context";
+import { PortfolioSheetWidget } from "../portfolioSheet";
 
 export const useBottomNavBarScript = () => {
   const { referral, tradingRewards, bottomSheetLeading } = useTradingPageContext();
@@ -16,7 +17,9 @@ export const useBottomNavBarScript = () => {
   };
   const onShowPortfolioSheet = () => {
     modal.sheet({
-      title: "Account",
+      title: "Asset & Margin",
+      leading: bottomSheetLeading,
+      content: (<PortfolioSheetWidget />)
     });
   };
   return {
