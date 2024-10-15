@@ -87,13 +87,16 @@ export interface RegularOrder extends BaseOrder, OrderExt {
 
 export interface AlgoOrder extends BaseOrder, OrderExt {
   // symbol: string;
+  quantity: string;
+  type: OrderType;
+  price: string;
   algo_type: AlgoOrderRootType;
   trigger_price_type: string;
   trigger_price: string;
   child_orders: AlgoOrderChildOrders[];
 }
 
-export interface BracketOrder extends BaseOrder, OrderExt {
+export interface BracketOrder extends AlgoOrder, OrderExt {
   /**
    * Computed take profit
    */
@@ -125,7 +128,7 @@ export interface ChildOrder {
   symbol: string;
   algo_type: AlgoOrderType;
   side: string;
-  type: string;
+  type: OrderType;
   trigger_price: string;
 
   reduce_only: boolean;

@@ -76,7 +76,10 @@ const useOrderEntryNextInternal = (
         | "sl_offset"
         | "sl_offset_percentage"
         | "sl_ROI"
-        | "sl_trigger_price",
+        | "sl_trigger_price"
+        | "quantity"
+        | "price"
+        | "type",
       value: any,
       markPrice: number,
       config: Pick<API.SymbolExt, "base_dp" | "quote_dp">
@@ -294,8 +297,6 @@ const useOrderEntryNextInternal = (
       ...options,
       symbol: symbolInfo!,
     });
-
-    console.log("generateOrder order:", order);
 
     return order;
   };

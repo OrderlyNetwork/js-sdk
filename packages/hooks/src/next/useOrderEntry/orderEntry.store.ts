@@ -122,9 +122,15 @@ export const useOrderStore = create<
             state.entry.order_price = "";
             state.entry.order_quantity = "";
             state.entry.trigger_price = "";
-            state.entry.tp_trigger_price = "";
-            state.entry.sl_trigger_price = "";
             state.entry.total = "";
+            state.entry.tp_trigger_price = "";
+            state.entry.tp_pnl = "";
+            state.entry.tp_offset = "";
+            state.entry.tp_offset_percentage = "";
+            state.entry.sl_trigger_price = "";
+            state.entry.sl_pnl = "";
+            state.entry.sl_offset = "";
+            state.entry.sl_offset_percentage = "";
           },
           true
           // "resetOrder"

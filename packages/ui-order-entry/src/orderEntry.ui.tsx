@@ -18,6 +18,7 @@ import {
   Switch,
   Text,
   textVariants,
+  toast,
 } from "@orderly.network/ui";
 import {
   FocusEventHandler,
@@ -135,6 +136,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
       })
       .catch((error) => {
         console.log("catch:", error);
+        toast.error(`Error:${error.message}`);
       });
   };
 

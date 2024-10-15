@@ -17,6 +17,7 @@ import {
   calcEstLeverage,
   calcEstLiqPrice,
   getCreateOrderUrl,
+  getOrderCreator,
   tpslFields,
 } from "./helper";
 import { produce } from "immer";
@@ -46,7 +47,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   });
   // const [submitted, setSubmitted] = useState<boolean>(false);
   // const [validated, setValidated] = useState<boolean>(false);
-  const askAndBid = useRef<number[]>([2558.14, 2489.75]); // 0: ask0, 1: bid0
+  const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
 
   // const [errors, setErrors] = useState<VerifyResult | null>(null);
 
@@ -170,7 +171,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   };
 
   async function validateFunc(order: Partial<OrderlyOrder>) {
-    const creator = OrderFactory.create(order.order_type!);
+    const creator = getOrderCreator(order);
 
     return validate(order, creator, prepareData());
   }
@@ -180,7 +181,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
    */
   const validateOrder = (): Promise<VerifyResult | null> => {
     return new Promise<VerifyResult | null>(async (resolve, reject) => {
-      const creator = OrderFactory.create(formattedOrder.order_type!);
+      const creator = getOrderCreator(formattedOrder);
 
       const errors = await validate(formattedOrder, creator, prepareData());
       const keys = Object.keys(errors);
@@ -237,7 +238,7 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     /**
      * validate order
      */
-    const creator = OrderFactory.create(formattedOrder.order_type);
+    const creator = getOrderCreator(formattedOrder);
     const errors = await validate(formattedOrder, creator, prepareData());
     // setMeta((prev) => ({ ...prev, submitted: true, validated: true }));
     setMeta(

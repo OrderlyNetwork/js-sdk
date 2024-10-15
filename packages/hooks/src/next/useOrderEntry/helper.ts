@@ -1,13 +1,31 @@
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  AlgoOrderRootType,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 
 import { order as orderUtils } from "@orderly.network/perp";
+import { OrderFactory } from "../../services/orderCreator/factory";
 
 export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
   const isAlgoOrder =
     order?.order_type === OrderType.STOP_LIMIT ||
     order?.order_type === OrderType.STOP_MARKET ||
-    order?.order_type === OrderType.CLOSE_POSITION;
+    order?.order_type === OrderType.CLOSE_POSITION ||
+    (order.algo_type && order.algo_type === AlgoOrderRootType.BRACKET) ||
+    isBracketOrder(order);
   return isAlgoOrder ? "/v1/algo/order" : "/v1/order";
+};
+
+export const getOrderCreator = (order: Partial<OrderlyOrder>) => {
+  let type;
+  if (isBracketOrder(order)) {
+    type = AlgoOrderRootType.BRACKET;
+  } else {
+    type = order.order_type;
+  }
+  return OrderFactory.create(type!);
 };
 
 export const tpslFields = [
@@ -20,6 +38,10 @@ export const tpslFields = [
   "tp_offset_percentage",
   "sl_offset_percentage",
 ] as (keyof OrderlyOrder)[];
+
+export const isBracketOrder = (order: Partial<OrderlyOrder>): boolean => {
+  return !!order.tp_trigger_price || !!order.sl_trigger_price;
+};
 
 export const hasTPSL = (order: Partial<OrderlyOrder>): boolean => {
   return tpslFields.some((field) => !!order[field]);
