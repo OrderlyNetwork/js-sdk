@@ -5,6 +5,7 @@ import {OrderlyApp} from "@orderly.network/react-app";
 import {AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget, Scaffold} from "@orderly.network/ui-scaffold";
 import {CustomConfigStore} from "../CustomConfigStore.ts";
 import {DepositAndWithdrawWithDialogId} from "@orderly.network/ui-transfer";
+import {APIManagerModule, PortfolioLayoutWidget} from "@orderly.network/portfolio";
 
 const networkId = "testnet";
 
@@ -13,13 +14,7 @@ const configStore = new CustomConfigStore({networkId, env: "qa", brokerName: 'WO
 const meta = {
 
     title: "Package/solana/connect",
-    component: Scaffold,
-    subComponents: {
-        AccountMenuWidget,
-        AccountSummaryWidget,
-        ChainMenuWidget,
-        // ChainMenu,
-    },
+    component: WalletConnectorProvider,
     decorators: [
         (Story: any) => (
             <WalletConnectorProvider>
@@ -51,12 +46,23 @@ export default meta;
 export const Default: Story = {
     args: {
         children: (
-            <Box m={3} justify={"center"} height={"400px"} intensity={500} r={"lg"}>
+            <Scaffold>
+
                 <Button onClick={() => {
                     modal.show(DepositAndWithdrawWithDialogId, {activeTab: 'deposit'})
 
                 }}>Show Deposit Dialog</Button>
-            </Box>
+            </Scaffold>
         ),
     },
 };
+
+export const APIKey: Story = {
+    args: {
+        children: (
+            <PortfolioLayoutWidget>
+                <APIManagerModule.ApiManagerPage />
+            </PortfolioLayoutWidget>
+        )
+    }
+}

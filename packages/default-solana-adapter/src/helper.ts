@@ -1,6 +1,6 @@
 import {
   AddOrderlyKeyInputs,
-  RegisterAccountInputs,
+  RegisterAccountInputs, type SettleInputs,
   type SignatureDomain,
   type WithdrawInputs
 } from "@orderly.network/core";
@@ -15,6 +15,7 @@ export function addOrderlyKeyMessage(inputs: AddOrderlyKeyInputs & {chainId: num
     expiration = 365,
     timestamp = Date.now(),
     scope,
+      tag,
     chainId,
   } = inputs;
   const message = {
@@ -24,7 +25,10 @@ export function addOrderlyKeyMessage(inputs: AddOrderlyKeyInputs & {chainId: num
     scope: scope || "read,trading",
     chainId,
     timestamp,
-    expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
+      ...(typeof tag !== "undefined" ? { tag } : {}),
+
+
+      expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
   };
 
   const brokerIdHash = solidityPackedKeccak256(['string'], [message.brokerId]);
@@ -116,4 +120,32 @@ export function withdrawMessage(  inputs: WithdrawInputs & {
   const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(msgToSignHex);
   return [message, msgToSignTextEncoded];
 
+}
+
+export function settleMessage(  inputs: SettleInputs & {
+  chainId: number;
+}) {
+  const { settlePnlNonce, brokerId, chainId, timestamp} = inputs;
+
+  const  message = {
+        brokerId: brokerId,
+        chainId: chainId,
+        timestamp: timestamp,
+        chainType: 'SOL',
+        settleNonce: settlePnlNonce,
+      };
+  const brokerIdHash = solidityPackedKeccak256(['string'], [brokerId]);
+
+  const abicoder = AbiCoder.defaultAbiCoder();
+  const msgToSign = keccak256(
+      hexToBytes(
+          abicoder.encode(
+              ['bytes32', 'uint256', 'uint64', 'uint64'],
+              [brokerIdHash, message.chainId, message.settleNonce, message.timestamp]
+          )
+      )
+  );
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(msgToSignHex);
+  return [message, msgToSignTextEncoded];
 }

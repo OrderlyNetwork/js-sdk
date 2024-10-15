@@ -6,7 +6,7 @@ import {
 import {API, MaxUint256} from "@orderly.network/types";
 import * as ed from "@noble/ed25519";
 import { encode as bs58encode, decode as bs58Decode } from "bs58";
-import {addOrderlyKeyMessage, registerAccountMessage, withdrawMessage} from "./helper";
+import {addOrderlyKeyMessage, registerAccountMessage, settleMessage, withdrawMessage} from "./helper";
 import { bytesToHex } from "ethereum-cryptography/utils";
 import { getAccount } from "@solana/spl-token";
 import {
@@ -127,6 +127,8 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     });
     const signRes = await this._provider.signMessage(toSignatureMessage as Uint8Array);
     const signature = '0x' + bytesToHex(signRes);
+    console.log('-- verify contract', inputs.verifyContract);
+
 
 
     return {
@@ -137,8 +139,8 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       domain: {
         name:'',
         version:'',
-        chainId:902902902,
-        verifyingContract:'0x8794E7260517B1766fc7b55cAfcd56e6bf08600e',
+        chainId:this.chainId,
+        verifyingContract:inputs.verifyContract!,
       },
       signatured: signature,
     };
@@ -164,17 +166,24 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   }
 
   async generateSettleMessage(inputs: SettleInputs): Promise<Message & {domain: SignatureDomain}> {
+    const [message, toSignatureMessage] = await settleMessage({
+      ...inputs,
+      chainId: this.chainId,
+    });
+    const res = await this._provider.signMessage(toSignatureMessage as Uint8Array);
+    const signature = '0x' + bytesToHex(res);
     return {
       message: {
+        ...message,
         chainType: "SOL"
       },
       domain: {
         name:'',
         version:'',
-        chainId:902902902,
-        verifyingContract:'',
+        chainId: this.chainId,
+        verifyingContract:inputs.verifyContract!,
       },
-      signatured: ""
+      signatured: signature,
     };
   }
 

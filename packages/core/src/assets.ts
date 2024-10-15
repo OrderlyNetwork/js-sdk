@@ -59,6 +59,8 @@ export class Assets {
         nonce,
         timestamp,
         // domain,
+        verifyContract: this.contractManger.getContractInfoByEnv().verifyContractAddress,
+
       });
 
     const data = {

@@ -566,6 +566,7 @@ export class Account {
         // chainId: this.walletClient.chainId,
         brokerId: this.configStore.get("brokerId"),
         // domain,
+        verifyContract: this.contractManger.getContractInfoByEnv().verifyContractAddress,
       });
 
     // const EIP_712signatured = await this.signTypedData(toSignatureMessage);
