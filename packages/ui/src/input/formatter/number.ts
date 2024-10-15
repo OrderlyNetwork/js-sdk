@@ -13,6 +13,10 @@ export const numberFormatter: InputFormatter = {
   ): string {
     if (value.startsWith(".")) return `0${value}`;
 
+    // if (/^0{2,}$/.test(value)) {
+    //   return "0";
+    // }
+
     value = value
       .replace(/[^\d.]/g, "")
       .replace(".", "$#$")

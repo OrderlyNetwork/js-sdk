@@ -1,4 +1,4 @@
-import { registerSimpleDialog } from "@orderly.network/ui";
+import { registerSimpleSheet } from "@orderly.network/ui";
 import { TPSL, TPSLProps } from "./tpsl.ui";
 import { TPSLBuilderOptions, useTPSLBuilder } from "./useTPSL.script";
 

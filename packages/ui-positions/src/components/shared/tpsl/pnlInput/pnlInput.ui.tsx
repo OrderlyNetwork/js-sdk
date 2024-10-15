@@ -34,7 +34,10 @@ export const PNLInput = (props: PNLInputProps) => {
   return (
     <Input
       prefix={mode}
-      size={"md"}
+      size={{
+        initial: "lg",
+        lg: "md",
+      }}
       placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
       align={"right"}
       value={value}

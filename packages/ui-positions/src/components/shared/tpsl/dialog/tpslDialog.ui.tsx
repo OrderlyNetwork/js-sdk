@@ -18,7 +18,7 @@ export const TPSLDialog = (props: Props) => {
         <TPSLWidget
           {...rest}
           onConfirm={() => {
-            console.log("onConfirm ********", needConfirm);
+            console.log("onConfirm ********", props);
 
             if (!needConfirm) {
               return Promise.resolve(true);
@@ -27,10 +27,11 @@ export const TPSLDialog = (props: Props) => {
             return modal.confirm({
               content: (
                 <PositionTPSLConfirm
-                  symbol={"PERP_ETH_USDC"}
-                  qty={0}
+                  symbol={rest.order?.symbol!}
+                  qty={rest.order?.quantity as number}
                   maxQty={0}
-                  side={OrderSide.BUY}
+                  side={rest.order?.side as OrderSide}
+                  dp={2}
                 />
               ),
             });
