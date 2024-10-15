@@ -35,6 +35,7 @@ export type WithdrawInputs = {
   timestamp: number;
   // chainType: ChainType;
   // domain: SignatureDomain;
+  verifyContract?: string;
 };
 
 export type SettleInputs = {
@@ -44,6 +45,7 @@ export type SettleInputs = {
   timestamp: number;
   // chainType: ChainType;
   // domain: any;
+  verifyContract?: string;
 };
 
 export type AddOrderlyKeyInputs = {
