@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/markets",
-  "version": "1.0.1-sol.0",
+  "version": "1.0.1-sol.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

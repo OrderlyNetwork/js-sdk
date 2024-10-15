@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 1.5.13-sol.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.13-sol.1
+
 ## 1.5.13-sol.0
 
 ### Patch Changes
