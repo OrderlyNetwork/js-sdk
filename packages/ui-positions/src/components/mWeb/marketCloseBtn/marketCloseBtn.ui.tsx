@@ -10,6 +10,7 @@ export const MarketCloseBtn: FC<MarketCloseBtnState> = (props) => {
       <Button
         variant="outlined"
         color="secondary"
+        size="sm"
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();

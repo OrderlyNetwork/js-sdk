@@ -16,6 +16,7 @@ export const DataList: FC<DataListState& {
           variant="contained"
           value={props.tab}
           onValueChange={(e: any) => props.setTab(e)}
+          size="lg"
           className={props.className}
         >
           <TabPanel

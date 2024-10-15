@@ -26,7 +26,7 @@ const badgeVariants = tv({
       neutral: "",
     },
     size: {
-      xs: "oui-px-2 oui-py-0.5 oui-text-3xs oui-rounded oui-h-[18px]",
+      xs: "oui-px-2 oui-py-0.5 oui-text-2xs oui-rounded oui-h-[18px]",
       sm: "oui-px-2 oui-py-0.5 oui-text-2xs oui-rounded",
       md: "oui-px-2 oui-py-0.5 oui-text-sm",
       lg: "oui-px-2 oui-py-1 oui-text-base",

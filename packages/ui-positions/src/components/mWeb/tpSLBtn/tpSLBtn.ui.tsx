@@ -8,6 +8,7 @@ export const TpSLBtn: FC<TpSLBtnState> = (props) => {
     <Button
       variant="outlined"
       color="secondary"
+      size="sm"
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();
