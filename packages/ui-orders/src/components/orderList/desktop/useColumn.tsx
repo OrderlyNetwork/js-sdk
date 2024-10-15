@@ -61,6 +61,7 @@ export const useOrderColumn = (_type: TabType) => {
             fillAndQuantity({ width: 162, className: "oui-pr-0" }),
             price({ width: 162, className: "oui-pr-0" }),
             triggerPrice({ width: 162, className: "oui-pr-0" }),
+            tpslTriggerPrice({ width: 130 }),
             estTotal({ width: 162 }),
             reduceOnly({ width: 162 }),
             hidden({ width: 162 }),
@@ -211,9 +212,9 @@ function instrument(option?: {
                   color={
                     e.toLocaleLowerCase() === "position"
                       ? showGray
-                        ? "neutural"
+                        ? "neutral"
                         : "primary"
-                      : "neutural"
+                      : "neutral"
                   }
                   size="xs"
                 >
@@ -387,7 +388,7 @@ function tpslTriggerPrice(option?: {
   return {
     title: "Trigger",
     className: option?.className,
-    dataIndex: "trigger_price",
+    dataIndex: "tpsl_trigger_price",
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => <OrderTriggerPrice />,

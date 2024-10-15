@@ -93,7 +93,7 @@ const UnrealPnL: FC<
       : "oui-text-base-contrast-80";
 
   const unrealPnLROIClsName =
-    typeof props.unrealPnL === "number"
+    typeof props.unrealPnL === "number" && props.unrealPnlROI
       ? props.unrealPnlROI > 0
         ? "oui-text-success-darken"
         : "oui-text-danger-darken"
@@ -101,20 +101,21 @@ const UnrealPnL: FC<
 
   return (
     <Statistic label="Unreal. PnL" classNames={props.classNames}>
-      <Flex>
+      <Flex gap={1}>
         <Text.numeral
           dp={props.pnlNotionalDecimalPrecision}
           rm={Decimal.ROUND_DOWN}
           intensity={80}
           className={unrealPnLClsName}
         >
-          {props.unrealPnL}
+          {props.unrealPnL ?? "--"}
         </Text.numeral>
         {props.unrealPnlROI && (
           <Text.numeral
             prefix="("
             suffix=")"
             rule="percentages"
+            size="2xs"
             dp={props.pnlNotionalDecimalPrecision}
             rm={Decimal.ROUND_DOWN}
             className={unrealPnLROIClsName}
@@ -145,7 +146,7 @@ const Notional: FC<
         rm={Decimal.ROUND_DOWN}
         intensity={80}
       >
-        {props.notional}
+        {props.notional ?? "--"}
       </Text.numeral>
     </Statistic>
   );
