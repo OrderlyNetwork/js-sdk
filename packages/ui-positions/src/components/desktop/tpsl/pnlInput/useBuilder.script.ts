@@ -127,6 +127,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             }
           }
         }
+
         return value;
       },
     };

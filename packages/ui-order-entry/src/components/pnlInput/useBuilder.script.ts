@@ -139,6 +139,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         } else {
           // value = todpIfNeed(value, quote_dp);
         }
+        if (value === "" || value === "-") return "";
         return value;
       },
     };
