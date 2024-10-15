@@ -2,7 +2,7 @@ import { FC, useMemo } from "react";
 import { useSymbolsInfo, utils } from "@orderly.network/hooks";
 import { API, AlgoOrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
-import { cn, Text, Tooltip } from "@orderly.network/ui"
+import { cn, Text, Tooltip } from "@orderly.network/ui";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const OrderTriggerPrice = () => {
@@ -21,8 +21,7 @@ export const OrderTriggerPrice = () => {
   );
 };
 
-
-const TPSLTriggerPrice: FC<{
+export const TPSLTriggerPrice: FC<{
   takeProfitPrice: number | undefined;
   stopLossPrice: number | undefined;
   className?: string;
@@ -168,7 +167,6 @@ const TPSLTriggerPrice: FC<{
   return content;
 };
 
-
 const TriggerPriceItem: FC<{
   qty: number;
   price: number;
@@ -211,9 +209,7 @@ const TriggerPriceItem: FC<{
           <span>{pnl === 0 ? "" : pnl > 0 ? "+" : "-"}</span>
         }
         surfix={
-          <span className="oui-text-base-contrast-36 oui-ml-1">
-            USDC
-          </span>
+          <span className="oui-text-base-contrast-36 oui-ml-1">USDC</span>
         }
       >{`${Math.abs(pnl)}`}</Text.numeral>
     </div>

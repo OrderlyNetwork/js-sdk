@@ -14,23 +14,28 @@ import {
 } from "./items";
 import { EditBtnWidget } from "./editBtn";
 import { CancelBtnWidget } from "./cancelBtn";
+import { BracketOrderPriceWidget } from "./bracketOrderPrice";
+import { TabType } from "../../orders.widget";
 
 export const OrderCell: FC<
   OrderCellState & {
     className?: string;
   }
 > = (props) => {
+  console.log("order cell", props);
+  
   return (
     <Flex
       direction={"column"}
       width={"100%"}
       gap={2}
+      itemAlign={"start"}
       className={props.className}
     >
       <Header {...props} />
       <Divider className="oui-w-full" />
       <Body {...props} />
-      <TPSL {...props} />
+      {props.type === TabType.pending && <BracketOrderPriceWidget {...props} />}
       <Btns {...props} />
     </Flex>
   );
