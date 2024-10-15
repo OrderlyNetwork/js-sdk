@@ -1,12 +1,16 @@
 import { API } from "@orderly.network/types";
 import { useOrderCellScript } from "./orderCell.script";
 import { OrderCell } from "./orderCell.ui";
+import { TabType } from "../../orders.widget";
 
 export const OrderCellWidget = (props: {
-    item: API.OrderExt;
+    item: API.AlgoOrderExt;
     index: number;
     className?: string;
+    type: TabType;
 }) => {
-    const state = useOrderCellScript(props);
-    return (<OrderCell {...state} className={props.className}/>);
+    const { className, ...rest} = props;
+    
+    const state = useOrderCellScript(rest);
+    return (<OrderCell {...state} className={className}/>);
 };

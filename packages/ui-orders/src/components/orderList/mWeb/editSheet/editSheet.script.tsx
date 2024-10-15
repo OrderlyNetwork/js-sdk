@@ -5,6 +5,8 @@ import { Decimal } from "@orderly.network/utils";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { OrderEntity } from "@orderly.network/types";
 import { useOrderListContext } from "../../orderListContext";
+import { OrderType } from "../items";
+import { AlgoOrderRootType } from "@orderly.network/types";
 
 export const useEditSheetScript = (props: {
   state: OrderCellState;
@@ -17,7 +19,7 @@ export const useEditSheetScript = (props: {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const isAlgoOrder = order?.algo_order_id !== undefined;
+  const isAlgoOrder = order?.algo_order_id !== undefined && order.algo_type !== AlgoOrderRootType.BRACKET;
   const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
   const isMarketOrder = isStopMarket || order?.type === "MARKET";
 
@@ -49,7 +51,7 @@ export const useEditSheetScript = (props: {
   );
 
   const orderType = useMemo(() => {
-    if (isAlgoOrder) {
+    if (isAlgoOrder && order.algo_type !== AlgoOrderRootType.BRACKET) {
       return `STOP_${order.type}`;
     }
 
@@ -84,6 +86,8 @@ export const useEditSheetScript = (props: {
       reduce_only: Boolean(order.reduce_only),
     };
 
+    console.log("validator", values, order);
+    
     const errors = await helper.validator(values);
     if (errors.total?.message !== undefined) {
       toast.error(errors.total?.message);

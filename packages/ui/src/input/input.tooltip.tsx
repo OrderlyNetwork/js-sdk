@@ -14,6 +14,8 @@ export type InputWithTooltipProps = InputProps & {
   tooltip?: React.ReactNode;
   tooltipProps?: {
     content?: TooltipContentProps;
+    arrow?: TooltipContentProps;
+
   };
 };
 
@@ -42,7 +44,7 @@ export const InputWithTooltip = forwardRef<
       <TooltipPortal>
         <TooltipContent {...tooltipProps?.content}>
           {props.tooltip}
-          <TooltipArrow />
+          <TooltipArrow {...tooltipProps?.arrow}/>
         </TooltipContent>
       </TooltipPortal>
     </TooltipRoot>

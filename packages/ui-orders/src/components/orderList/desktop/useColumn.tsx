@@ -28,7 +28,8 @@ import { Price } from "./price";
 import { TriggerPrice } from "./triggerPrice";
 import { CancelButton } from "./cancelBtn";
 import { Renew } from "./renew";
-import { OrderTriggerPrice } from "./tpslTriggerPrice";
+import { OrderTriggerPrice, TPSLTriggerPrice } from "./tpslTriggerPrice";
+import { BarcketOrderPrice } from "./barcketOrderPrice";
 
 export const useOrderColumn = (_type: TabType) => {
   const columns =
@@ -61,7 +62,7 @@ export const useOrderColumn = (_type: TabType) => {
             fillAndQuantity({ width: 162, className: "oui-pr-0" }),
             price({ width: 162, className: "oui-pr-0" }),
             triggerPrice({ width: 162, className: "oui-pr-0" }),
-            tpslTriggerPrice({ width: 130 }),
+            barcketOrderPrice({ width: 130}),
             estTotal({ width: 162 }),
             reduceOnly({ width: 162 }),
             hidden({ width: 162 }),
@@ -384,14 +385,30 @@ function tpslTriggerPrice(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
+  title?: string;
 }): Column<API.Order> {
   return {
-    title: "Trigger",
+    title: option?.title ?? "Trigger",
     className: option?.className,
     dataIndex: "tpsl_trigger_price",
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => <OrderTriggerPrice />,
+  };
+}
+
+function barcketOrderPrice(option?: {
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+}) {
+  return {
+    title: "TP/SL",
+    className: option?.className,
+    dataIndex: "barcketOrderPrice",
+    width: option?.width,
+    onSort: option?.enableSort,
+    render: (value: string, record: any) => <BarcketOrderPrice order={record} />,
   };
 }
 

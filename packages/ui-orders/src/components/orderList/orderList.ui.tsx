@@ -113,6 +113,7 @@ export const MobileOrderList: FC<
               item={item}
               index={index}
               className={props.classNames?.cell}
+              type={props.type}
             />
           );
           if (props.type === TabType.tp_sl) {
