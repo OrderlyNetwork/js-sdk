@@ -15,6 +15,7 @@ export function addOrderlyKeyMessage(inputs: AddOrderlyKeyInputs & {chainId: num
     expiration = 365,
     timestamp = Date.now(),
     scope,
+      tag,
     chainId,
   } = inputs;
   const message = {
@@ -24,7 +25,10 @@ export function addOrderlyKeyMessage(inputs: AddOrderlyKeyInputs & {chainId: num
     scope: scope || "read,trading",
     chainId,
     timestamp,
-    expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
+      ...(typeof tag !== "undefined" ? { tag } : {}),
+
+
+      expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
   };
 
   const brokerIdHash = solidityPackedKeccak256(['string'], [message.brokerId]);
