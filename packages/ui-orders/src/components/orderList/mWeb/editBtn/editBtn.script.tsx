@@ -8,8 +8,9 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const { state } = props;
   const { editAlgoOrder, editOrder } = useOrderListContext();
   const onShowEditSheet = useCallback(() => {
-    modal.sheet({
+    modal.dialog({
       title: "Edit order",
+      size: "xs",
       content: (
         <EditSheetWidget
           state={state}

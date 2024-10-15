@@ -7,6 +7,9 @@ import { modalActions } from "../modalContext";
 export interface DialogProps {
   title: string;
   content: ReactNode;
+  size?: "xs" | "sm" | "md" | "lg";
+
+
 }
 
 const Dialog = create<DialogProps>((props) => {
@@ -17,6 +20,7 @@ const Dialog = create<DialogProps>((props) => {
       title={props.title}
       closable
       onOpenChange={onOpenChange}
+      size={props.size}
       // // @ts-ignore
       // onOk={() => {
       //   resolve(true);

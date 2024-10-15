@@ -22,7 +22,6 @@ export const OrderCell: FC<
     className?: string;
   }
 > = (props) => {
-  console.log("order cell", props);
   
   return (
     <Flex

@@ -12,16 +12,12 @@ export const useBracketOrderPriceScript = (props: OrderCellState) => {
     return markPrices.data[order.symbol];
   }, [markPrices.data[order.symbol]]);
 
-  console.log("print order", order.algo_type, order);
-
   const { sl_trigger_price, tp_trigger_price } = useMemo(() => {
     if (!("algo_type" in order) || !Array.isArray(order.child_orders)) {
       return {};
     }
     return utils.findTPSLFromOrder(order.child_orders[0]);
   }, [order]);
-
-  //   console.log("BarcketOrderPrice", sl_trigger_price, tp_trigger_price);
 
   const pnl = useMemo(() => {
     const entryPrice = order.trigger_price ?? order.price;

@@ -3,14 +3,14 @@ import { Decimal } from "@orderly.network/utils";
 import { OrderCellState } from "./orderCell.script";
 import { FC, useCallback, useMemo } from "react";
 import { upperCaseFirstLetter } from "../../../utils/util";
-import { API } from "@orderly.network/types";
+import { AlgoOrderRootType, API } from "@orderly.network/types";
 
 export const Symbol: FC<OrderCellState> = (props) => {
   const { item } = props;
   const isBuy = item.quantity > 0;
   return (
     <Text.formatted
-    intensity={80}
+      intensity={80}
       rule="symbol"
       formatString="base-type"
       size="sm"
@@ -34,7 +34,9 @@ export const OrderType: FC<OrderCellState> = (props) => {
       typeof item.type === "string"
         ? item.type.replace("_ORDER", "").toLowerCase()
         : item.type;
-    if (item.algo_order_id) {
+    const isAlgoOrder =
+      item.algo_order_id && item.algo_type !== AlgoOrderRootType.BRACKET;
+    if (isAlgoOrder) {
       return `Stop ${type}`;
     }
     return upperCaseFirstLetter(item.type);
@@ -96,7 +98,9 @@ export const Filled: FC<OrderCellState> = (props) => {
         padding={false}
         rm={Decimal.ROUND_DOWN}
       >
-        {item.algo_order_id ? item.total_executed_quantity : (item as unknown as API.OrderExt).executed}
+        {item.algo_order_id
+          ? item.total_executed_quantity
+          : (item as unknown as API.OrderExt).executed}
       </Text.numeral>
     </Statistic>
   );
