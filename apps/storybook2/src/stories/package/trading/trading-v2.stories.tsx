@@ -43,12 +43,12 @@ const meta = {
             configStore={configStore}
             appIcons={{
               main: {
-                  img: "/orderly-logo.svg",
+                img: "/orderly-logo.svg"
               },
               secondary: {
-                  img: "/orderly-logo-secondary.svg",
-              },
-          }}
+                img: "/orderly-logo-secondary.svg"
+              }
+            }}
           >
             <Scaffold
               leftSidebar={null}
@@ -70,8 +70,8 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    symbol: "PERP_ETH_USDC",
-    // symbol: "PERP_ORDER_USDC",
+    // symbol: "PERP_ETH_USDC",
+    symbol: "PERP_ORDER_USDC",
     tradingViewConfig: {
       scriptSRC: "/tradingview/charting_library/charting_library.js",
       library_path: "/tradingview/charting_library/",
@@ -175,7 +175,7 @@ export const OrderBookAndTrades: Story = {
         itemAlign={"start"}
         className="oui-bg-[rgba(255,255,255,0.3)]"
       >
-        <Box className="oui-w-[50vw] oui-h-[600px]" >
+        <Box className="oui-w-[50vw] oui-h-[600px]">
           <OrderBookAndTradesWidget symbol={arg.symbol} tabletMediaQuery={arg.tabletMediaQuery!} />
         </Box>
       </Flex>

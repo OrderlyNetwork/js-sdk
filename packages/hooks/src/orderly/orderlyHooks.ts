@@ -72,3 +72,10 @@ export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
 
 export { useMaintenanceStatus } from "./useMaintenanceStatus";
+
+///------ store ------
+export {
+  // markPriceActions,
+  useMarkPriceBySymbol,
+} from "./useMarkPrice/useMarkPriceStore";
+export { usePositionActions } from "./usePositionStream/usePositionStore";

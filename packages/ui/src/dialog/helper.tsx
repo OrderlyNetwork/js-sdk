@@ -4,7 +4,7 @@ import { SimpleDialog, SimpleDialogProps } from "./simpleDialog";
 import { ModalArgs } from "../modal/types";
 
 
-function createDialogComponent<P extends Partial<SimpleDialogProps>>(
+export function createDialogComponent<P extends Partial<SimpleDialogProps>>(
   Comp: ElementType
 ) {
   return modal.create((props: P) => {

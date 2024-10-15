@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement, ReactNode } from "react";
+import { JSXElementConstructor, ReactElement } from "react";
 
 export interface ModalState {
   id: string;

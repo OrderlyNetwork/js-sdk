@@ -55,7 +55,7 @@ const Row = (props: {
     <Flex justify={"between"}  width={"100%"} className="oui-text-xs">
       <Text intensity={36}>{title}</Text>
       <Flex gap={1}>
-        <Text.numeral rule={rule} dp={dp}>
+        <Text.numeral rule={rule} dp={dp} intensity={80}>
           {value}
         </Text.numeral>
         {showUSDC && <Text intensity={36}>USDC</Text>}

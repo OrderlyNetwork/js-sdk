@@ -1,6 +1,5 @@
 import { Box, cn, Column, Flex, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
-import { TPSLButton } from "./tpsl/tpsl.ui";
 import {
   renderPriceInput,
   renderQuantity,
@@ -16,6 +15,7 @@ import {
 import { ShareButtonWidget } from "./shareButton";
 import { API } from "@orderly.network/types";
 import { TriggerPrice } from "./triggerPrice";
+import { TPSLButton } from "./components";
 
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
@@ -253,10 +253,10 @@ export const useColumn = (props: {
         fixed: "right",
         render: (value: string) => {
           return (
-            <div className="oui-flex oui-space-x-2">
+            <Flex gapX={2} justify={"end"}>
               <CloseButton />
               <TPSLButton />
-            </div>
+            </Flex>
           );
         },
       },

@@ -1,4 +1,9 @@
-import { OrderEntity } from "@orderly.network/types";
+import {
+  OrderEntity,
+  OrderSide,
+  OrderType,
+  OrderlyOrder,
+} from "@orderly.network/types";
 import { BaseOrderCreator } from "./baseCreator";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
@@ -7,16 +12,16 @@ import { pick } from "ramda";
 
 const { maxPrice, minPrice, scropePrice } = orderUntil;
 
-export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
-  create(values: OrderEntity, config?: ValuesDepConfig): OrderEntity {
+export class LimitOrderCreator<
+  T extends OrderEntity = OrderlyOrder
+> extends BaseOrderCreator<T> {
+  create(values: OrderlyOrder, config?: ValuesDepConfig): T {
     const order = {
       ...this.baseOrder(values),
       order_price: values.order_price,
     };
 
     this.totalToQuantity(order, config!);
-
-    // console.log("create", order);
 
     return pick(
       [
@@ -27,14 +32,17 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
         "reduce_only",
         "side",
         "order_type",
+        "algo_type",
+        "child_orders",
       ],
       order
     );
 
     // return order;
   }
+
   validate(
-    values: OrderFormEntity,
+    values: OrderlyOrder,
     config: ValuesDepConfig
   ): Promise<VerifyResult> {
     return this.baseValidate(values, config).then((errors) => {
@@ -45,7 +53,7 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
       if (!order_price) {
         errors.order_price = {
           type: "required",
-          message: "price is required",
+          message: "Price is required",
         };
       } else {
         const price = new Decimal(order_price);
@@ -105,7 +113,11 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
         }
       }
 
+      // errors = this.validateBracketOrder(values, config, errors);
+
       return errors;
     });
   }
+
+  orderType = OrderType.LIMIT;
 }

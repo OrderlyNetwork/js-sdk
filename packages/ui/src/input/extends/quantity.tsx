@@ -6,6 +6,7 @@ export type QuantityInputProps = {
   tokens: string[];
 } & Omit<InputProps, "onClear" | "suffix">;
 
+//@ts-ignore
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
   (props, ref) => {
     const { tokens, ...rest } = props;
@@ -58,3 +59,5 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     );
   }
 );
+
+QuantityInput.displayName = "QuantityInput";

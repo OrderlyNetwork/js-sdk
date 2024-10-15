@@ -24,6 +24,7 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
+    "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/markets": "workspace:*",
     "@radix-ui/react-tooltip": "^1.0.6",

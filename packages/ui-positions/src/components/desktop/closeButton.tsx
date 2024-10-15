@@ -12,6 +12,7 @@ import {
   Badge,
 } from "@orderly.network/ui";
 import { usePositionsRowContext } from "./positionRowContext";
+// import { useSymbolContext } from "../providers/symbolProvider";
 import { FC, useMemo, useState } from "react";
 import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";

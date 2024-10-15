@@ -32,6 +32,7 @@ export { EditIcon } from "./edit";
 export { EyeIcon } from "./eye";
 export { ShareIcon } from "./share";
 export { EyeCloseIcon } from "./eyeClose";
+export { RefreshIcon } from "./refresh";
 
 export { TokenIcon } from "./tokenIcon";
 export { ChainIcon } from "./chainIcon";

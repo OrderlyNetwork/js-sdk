@@ -11,14 +11,16 @@ const TooltipRoot = TooltipPrimitive.Root;
 
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
-const TooltipArrow = TooltipPrimitive.Arrow;
+// const TooltipArrow = TooltipPrimitive.Arrow;
+
+const TooltipPortal = TooltipPrimitive.Portal;
 
 const tooltipVariants = tv({
   base: [
     "oui-z-50",
     "oui-overflow-hidden",
     "oui-rounded-md",
-    "oui-bg-base-6",
+    "oui-bg-base-8",
     "oui-px-2",
     "oui-py-1",
     "oui-text-xs",
@@ -52,6 +54,23 @@ const TooltipContent = React.forwardRef<
   );
 });
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+
+const TooltipArrow = (props: { className?: string }) => {
+  const { className, ...arrowProps } = props;
+  return (
+    <TooltipPrimitive.Arrow
+      width={12}
+      height={6}
+      {...arrowProps}
+      className={cn(
+        "oui-fill-base-8",
+        className
+      )({
+        twMerge: true,
+      })}
+    />
+  );
+};
 
 export type TooltipProps = React.ComponentPropsWithoutRef<
   typeof TooltipPrimitive.Root
@@ -93,22 +112,14 @@ const Tooltip = React.forwardRef<
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipContent ref={ref} {...props}>
           {content}
-          <TooltipPrimitive.Arrow
-            width={12}
-            height={6}
-            {...arrowProps}
-            className={cn(
-              "oui-fill-base-8",
-              className
-            )({
-              twMerge: true,
-            })}
-          />
+          <TooltipArrow />
         </TooltipContent>
       </TooltipPrimitive.Root>
     );
   }
 );
+
+Tooltip.displayName = "Tooltip";
 
 export {
   Tooltip,
@@ -117,4 +128,5 @@ export {
   TooltipContent,
   TooltipProvider,
   TooltipArrow,
+  TooltipPortal,
 };

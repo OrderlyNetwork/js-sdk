@@ -28,11 +28,11 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         className="oui-text-sm"
       >
         <Flex width={"100%"} justify={"between"}>
-          <Text.formatted rule={"symbol"} showIcon>
+          <Text.formatted rule={"symbol"} showIcon intensity={80}>
             {item.symbol}
           </Text.formatted>
           <Flex gap={1}>
-            <Badge color="neutural" size="xs">
+            <Badge color="neutral" size="xs">
               Limit
             </Badge>
             {isBuy && (
@@ -54,11 +54,19 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             {props.curMarkPrice}
           </Text.numeral>
         </Flex>
-        <Flex width={"100%"} direction={"column"} gap={2}>
+        <Flex width={"100%"} direction={"column"} itemAlign={"stretch"} gap={2}>
           {props.isAlgoOrder && (
-            <Input
-              prefix="Trigger price"
-              suffix={props.quote}
+            <Input.tooltip
+              prefix={
+                <Text intensity={54} className="oui-px-3">
+                  Trigger price
+                </Text>
+              }
+              suffix={
+                <Text intensity={54} className="oui-px-3">
+                  {props.quote}
+                </Text>
+              }
               align="right"
               fullWidth
               autoComplete="off"
@@ -68,12 +76,31 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               ]}
               value={props.triggerPrice}
               onValueChange={(e) => props.setTriggerPrice(e)}
-              helpText={props.errors.trigger_price?.message}
+              tooltip={props.errors.trigger_price?.message}
+              tooltipProps={{
+                content: {
+                  className: "oui-bg-base-6"
+                },
+                arrow: {
+                  className: "oui-fill-base-6"
+                }
+              }}
+              classNames={{
+                input: "oui-text-base-contrast-80 oui-w-full",
+              }}
             />
           )}
-          <Input
-            prefix="Price"
-            suffix={props.quote}
+          <Input.tooltip
+            prefix={
+              <Text intensity={54} className="oui-px-3">
+                Price
+              </Text>
+            }
+            suffix={
+              <Text intensity={54} className="oui-px-3">
+                {props.quote}
+              </Text>
+            }
             align="right"
             fullWidth
             autoComplete="off"
@@ -84,11 +111,30 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             disabled={!props.priceEdit}
             value={props.price}
             onValueChange={(e) => props.setPrice(e)}
-            helpText={props.errors.order_price?.message}
+            tooltip={props.errors.order_price?.message}
+            tooltipProps={{
+              content: {
+                className: "oui-bg-base-6"
+              },
+              arrow: {
+                className: "oui-fill-base-6"
+              }
+            }}
+            classNames={{
+              input: "oui-text-base-contrast-80",
+            }}
           />
-          <Input
-            prefix="Quantity"
-            suffix={props.base}
+          <Input.tooltip
+            prefix={
+              <Text intensity={54} className="oui-px-3">
+                {"Quantity"}
+              </Text>
+            }
+            suffix={
+              <Text intensity={54} className="oui-px-3">
+                {props.base}
+              </Text>
+            }
             align="right"
             fullWidth
             autoComplete="off"
@@ -99,7 +145,18 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             ]}
             value={props.quantity}
             onValueChange={(e) => props.setQuantity(e)}
-            helpText={props.errors.order_quantity?.message}
+            tooltip={props.errors.order_quantity?.message}
+            tooltipProps={{
+              content: {
+                className: "oui-bg-base-6"
+              },
+              arrow: {
+                className: "oui-fill-base-6"
+              }
+            }}
+            classNames={{
+              input: "oui-text-base-contrast-80",
+            }}
           />
           <Slider
             markCount={4}
@@ -174,9 +231,9 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           },
         }}
         classNames={{
-            content: "oui-p-4",
-            body: "oui-p-0",
-            footer: "oui-pt-3 oui-pb-0",
+          content: "oui-p-4",
+          body: "oui-p-0",
+          footer: "oui-pt-3 oui-pb-0",
         }}
       >
         <ConfirmDialogContent {...props} />

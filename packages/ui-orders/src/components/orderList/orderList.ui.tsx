@@ -49,7 +49,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
             }_index${index}`
           }
           renderRowContainer={(record: any, index, children) => {
-            if (props.type === TabType.tp_sl) {
+            if (props.type === TabType.tp_sl || props.type === TabType.pending) {
               children = (
                 <TPSLOrderRowProvider order={record}>
                   {children}
@@ -113,6 +113,7 @@ export const MobileOrderList: FC<
               item={item}
               index={index}
               className={props.classNames?.cell}
+              type={props.type}
             />
           );
           if (props.type === TabType.tp_sl) {

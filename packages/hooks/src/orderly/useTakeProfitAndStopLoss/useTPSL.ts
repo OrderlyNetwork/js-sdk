@@ -6,7 +6,7 @@ import {
   OrderSide,
   SDKError,
 } from "@orderly.network/types";
-import { UpdateOrderKey, calculateHelper } from "./utils";
+import { UpdateOrderKey, tpslCalculateHelper } from "./tp_slUtils";
 import { useMutation } from "../../useMutation";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { AlgoOrderRootType } from "@orderly.network/types";
@@ -16,22 +16,24 @@ import { useSymbolsInfo } from "../useSymbolsInfo";
 import { useMarkPrice } from "../useMarkPrice";
 import { omit } from "ramda";
 
-export type ComputedAlgoOrder = Partial<
-  AlgoOrderEntity<AlgoOrderRootType.TP_SL> & {
-    /**
-     * Computed take profit
-     */
-    tp_pnl: number;
-    tp_offset: number;
-    tp_offset_percentage: number;
+export type TPSLComputedData = {
+  /**
+   * Computed take profit
+   */
+  tp_pnl: number;
+  tp_offset: number;
+  tp_offset_percentage: number;
 
-    /**
-     * Computed stop loss
-     */
-    sl_pnl: number;
-    sl_offset: number;
-    sl_offset_percentage: number;
-  }
+  /**
+   * Computed stop loss
+   */
+  sl_pnl: number;
+  sl_offset: number;
+  sl_offset_percentage: number;
+};
+
+export type ComputedAlgoOrder = Partial<
+  AlgoOrderEntity<AlgoOrderRootType.TP_SL> & TPSLComputedData
 >;
 
 export type ValidateError = {
@@ -91,8 +93,9 @@ export const useTaskProfitAndStopLossInternal = (
     algo_order_id: options?.defaultOrder?.algo_order_id,
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    quantity:
-      options?.defaultOrder?.quantity || Math.abs(position.position_qty),
+    quantity: "",
+    // quantity:
+    //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
   });
 
@@ -133,11 +136,11 @@ export const useTaskProfitAndStopLossInternal = (
     setOrder((prev) => {
       const side = position.position_qty! > 0 ? OrderSide.BUY : OrderSide.SELL;
 
-      if (key === "sl_pnl") {
-        value = value ? `-${value}` : "";
-      }
+      // if (key === "sl_pnl") {
+      //   value = value ? `-${value}` : "";
+      // }
 
-      const newValue = calculateHelper(
+      const newValue = tpslCalculateHelper(
         key,
         {
           key,
@@ -328,7 +331,8 @@ export const useTaskProfitAndStopLossInternal = (
   };
 
   const updateOrder = (orderId: number): Promise<any> => {
-    const orderCreator = getOrderCreator() as TPSLPositionOrderCreator;
+    const orderCreator =
+      getOrderCreator() as unknown as TPSLPositionOrderCreator;
 
     const [updatedOrderEntity, orderEntity] = orderCreator.crateUpdateOrder(
       // @ts-ignore
