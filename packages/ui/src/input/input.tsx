@@ -144,6 +144,7 @@ const inputVariants = tv(
   }
 );
 
+// @ts-ignore
 interface InputProps<T = string>
   extends BaseInputProps<T>,
     VariantProps<typeof inputVariants> {

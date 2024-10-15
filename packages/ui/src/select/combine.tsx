@@ -6,8 +6,9 @@ import { CaretDownIcon } from "../icon";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { PopoverRoot, PopoverAnchor, PopoverContent } from "../popover";
 import { selectVariants } from "./selectPrimitive";
-import { SizeType } from "../helpers/sizeType";
+// import { SizeType } from "../helpers/sizeType";
 import { ScrollArea } from "../scrollarea";
+import { type SelectVariantProps } from "./select";
 
 export type CombineSelectProps = {
   placeholder?: string;
@@ -135,7 +136,7 @@ export const CombineSelect = (props: CombineSelectProps) => {
 
 const SelectItem = (props: {
   option: SelectOption;
-  size?: SizeType;
+  size?: SelectVariantProps["size"];
   activated: boolean;
   onClick: (item: SelectOption) => void;
 }) => {
