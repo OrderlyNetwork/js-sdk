@@ -56,8 +56,16 @@ export const useAccount = () => {
   // );
 
   const createOrderlyKey = useCallback(
-    async (remember: boolean) => {
-      return account.createOrderlyKey(remember ? 365 : 30);
+    async (
+      remember: boolean,
+      scope?: string,
+      shouldMutateAppState: boolean = true
+    ) => {
+      return account.createOrderlyKey(
+        remember ? 365 : 30,
+        scope,
+        shouldMutateAppState
+      );
     },
     [account]
   );
