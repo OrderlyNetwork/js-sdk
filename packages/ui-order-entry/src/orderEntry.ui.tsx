@@ -145,8 +145,12 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
       }}
     >
       <div className={"oui-space-y-3 oui-text-base-contrast-54"}>
-        <Flex gapX={2}>
-          <Flex className={"oui-flex-1 oui-gap-x-[6px]"}>
+        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
+          <div
+            className={
+              "oui-grid oui-grid-cols-2 oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]"
+            }
+          >
             <Button
               onClick={() => {
                 props.setOrderValue("side", OrderSide.BUY);
@@ -167,8 +171,8 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
             >
               Sell
             </Button>
-          </Flex>
-          <div className={"oui-flex-1"}>
+          </div>
+          <div className={"oui-w-full lg:oui-flex-1"}>
             <OrderTypeSelect
               type={formattedOrder.order_type}
               onChange={(type) => {

@@ -295,6 +295,8 @@ const useOrderEntryNextInternal = (
       symbol: symbolInfo!,
     });
 
+    console.log("generateOrder order:", order);
+
     return order;
   };
 

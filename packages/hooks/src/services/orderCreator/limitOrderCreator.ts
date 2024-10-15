@@ -30,6 +30,7 @@ export class LimitOrderCreator extends BaseOrderCreator<OrderEntity> {
         "reduce_only",
         "side",
         "order_type",
+        "algo_type",
         "child_orders",
       ],
       order

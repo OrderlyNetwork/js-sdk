@@ -90,7 +90,7 @@ export interface AlgoOrder extends BaseOrder, OrderExt {
   algo_type: AlgoOrderRootType;
   trigger_price_type: string;
   trigger_price: string;
-  child_orders: AlgoOrderChildOrders;
+  child_orders: AlgoOrderChildOrders[];
 }
 
 export interface BracketOrder extends BaseOrder, OrderExt {

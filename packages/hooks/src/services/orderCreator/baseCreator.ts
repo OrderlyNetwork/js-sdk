@@ -60,7 +60,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
     return {
       ...order,
-      child_orders: bracketOrder,
+      algo_type: AlgoOrderRootType.BRACKET,
+      child_orders: [bracketOrder],
     };
   }
 

@@ -1,10 +1,4 @@
-import {
-  Badge,
-  cn,
-  Flex,
-  Statistic,
-  Text,
-} from "@orderly.network/ui";
+import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
@@ -168,6 +162,9 @@ export const MarkPrice: FC<PositionCellState> = (props) => {
 export const LiqPrice: FC<PositionCellState> = (props) => {
   const { item } = props;
 
+  const liqPrice =
+    item.est_liq_price && item.est_liq_price > 0 ? item.est_liq_price : "-";
+
   return (
     <Statistic
       label={"Liq. price"}
@@ -178,7 +175,7 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
       }}
     >
       <Text.numeral dp={props.quote_dp} rm={Decimal.ROUND_DOWN} color="warning">
-        {item.mark_price}
+        {liqPrice}
       </Text.numeral>
     </Statistic>
   );

@@ -39,7 +39,7 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
         <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
-        <OrderBookAndEntryWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
+        <OrderBookAndEntryWidget />
         <DataListWidget
           symbol={props.symbol}
           className="oui-mx-1 oui-bg-base-9 oui-rounded-xl oui-p-2"
