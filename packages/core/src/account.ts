@@ -404,7 +404,11 @@ export class Account {
     );
   }
 
-  async createOrderlyKey(expiration?: number): Promise<any> {
+  async createOrderlyKey(
+    expiration?: number,
+    scope: string = "trading,read",
+    shouldMutateAppState: boolean = true
+  ): Promise<any> {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
     }
@@ -426,6 +430,7 @@ export class Account {
       expiration,
       brokerId: this.configStore.get("brokerId"),
       timestamp,
+      scope,
     });
 
     const address = this.stateValue.address;
@@ -455,17 +460,18 @@ export class Account {
     //
 
     if (res.success) {
-      this.keyStore.setKey(address, keyPair);
-      const nextState = {
-        ...this.stateValue,
-        status: AccountStatusEnum.EnableTrading,
-        // accountId: res.data.account_id,
-        // userId: res.data.user_id,
-      };
+      if (shouldMutateAppState) {
+        this.keyStore.setKey(address, keyPair);
+        const nextState = {
+          ...this.stateValue,
+          status: AccountStatusEnum.EnableTrading,
+          // accountId: res.data.account_id,
+          // userId: res.data.user_id,
+        };
 
-      this._ee.emit("change:status", nextState);
-
-      return res;
+        this._ee.emit("change:status", nextState);
+      }
+      return { publicKey, secretKey: keyPair.secretKey, expiration, scope };
     } else {
       throw new Error(res.message);
     }
