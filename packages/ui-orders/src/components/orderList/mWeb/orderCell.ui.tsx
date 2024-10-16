@@ -4,7 +4,7 @@ import { OrderCellState } from "./orderCell.script";
 import {
   OrderTime,
   Symbol,
-  OrderType,
+  OrderTypeView,
   Qty,
   Filled,
   EstTotal,
@@ -18,6 +18,7 @@ import {
   SLPrice,
   AvgPrice,
   OrderPrice,
+  RealizedPnL,
 } from "./items";
 import { EditBtnWidget } from "./editBtn";
 import { CancelBtnWidget } from "./cancelBtn";
@@ -29,8 +30,7 @@ export const OrderCell: FC<
     className?: string;
   }
 > = (props) => {
-  console.log("cell", props);
-  
+
   return (
     <Flex
       direction={"column"}
@@ -43,7 +43,7 @@ export const OrderCell: FC<
       <Divider className="oui-w-full" />
       <Body {...props} />
       {props.type === TabType.pending && <BracketOrderPriceWidget {...props} />}
-      <Btns {...props} />
+      {props.type !== TabType.orderHistory && <Btns {...props} />}
     </Flex>
   );
 };
@@ -56,7 +56,7 @@ export const Header: FC<OrderCellState> = (props) => {
         <OrderTime {...props} />
       </Flex>
       <Flex width={"100%"}>
-        <OrderType {...props} />
+        <OrderTypeView {...props} />
       </Flex>
     </Flex>
   );
@@ -117,9 +117,10 @@ function itemsWithType(props: OrderCellState) {
         <>
           <Qty {...props} />
           <Filled {...props} />
-          <TriggerPrice {...props} />
+          <TriggerPrice {...props} align="end" />
           <AvgPrice {...props} />
           <OrderPrice {...props} />
+          <RealizedPnL {...props} />
         </>
       );
   }

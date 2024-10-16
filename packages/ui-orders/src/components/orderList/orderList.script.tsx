@@ -229,7 +229,7 @@ const useFilter = (
       case TabType.rejected:
         return [sideFilter];
       case TabType.orderHistory:
-        return [sideFilter];
+        return [sideFilter, statusFilter];
     }
   }, [type, ordersSide, orderStatus, dateRange]);
 
