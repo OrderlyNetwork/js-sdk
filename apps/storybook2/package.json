@@ -29,6 +29,7 @@
     "@orderly.network/ui-leverage": "workspace:*",
     "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-orders": "workspace:*",
+    "@orderly.network/ui-tpsl": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",

@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/ui-orders",
+  "name": "@orderly.network/ui-tpsl",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -12,17 +12,14 @@
   },
   "keywords": [
     "Orderly",
-    "Exchange",
-    "DeFi"
+    "UI",
+    "TPSL"
   ],
   "dependencies": {
+    "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*",
-    "@orderly.network/ui-tpsl": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "date-fns": "^3.6.0"
+    "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
