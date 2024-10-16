@@ -4,6 +4,7 @@ import { OrderCellState } from "./orderCell.script";
 import { FC, useCallback, useMemo } from "react";
 import { upperCaseFirstLetter } from "../../../utils/util";
 import { AlgoOrderRootType, API } from "@orderly.network/types";
+import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const Symbol: FC<OrderCellState> = (props) => {
   const { item } = props;
@@ -235,6 +236,129 @@ export const LimitPrice: FC<OrderCellState> = (props) => {
           {item.price ?? "--"}
         </Text.numeral>
       )}
+    </Statistic>
+  );
+};
+
+export const TPTrigger: FC<OrderCellState> = (props) => {
+  const { tp_trigger_price } = useTPSLOrderRowContext();
+
+  return (
+    <Statistic
+      label={"TP trigger"}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+        className="oui-border-b oui-border-dashed oui-border-base-contrast-36"
+      >
+        {tp_trigger_price ?? "--"}
+      </Text.numeral>
+    </Statistic>
+  );
+};
+
+export const SLTrigger: FC<OrderCellState> = (props) => {
+  const { sl_trigger_price } = useTPSLOrderRowContext();
+
+  return (
+    <Statistic
+      label={"TP trigger"}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {sl_trigger_price ?? "--"}
+      </Text.numeral>
+    </Statistic>
+  );
+};
+
+export const TPPrice: FC<OrderCellState> = (props) => {
+  const { tp_trigger_price } = useTPSLOrderRowContext();
+
+  return (
+    <Statistic
+      label={"TP price"}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {tp_trigger_price ?? "MARKET"}
+      </Text.numeral>
+    </Statistic>
+  );
+};
+export const SLPrice: FC<OrderCellState> = (props) => {
+  const { sl_trigger_price } = useTPSLOrderRowContext();
+
+  return (
+    <Statistic
+      label={"TP price"}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {sl_trigger_price ?? "MARKET"}
+      </Text.numeral>
+    </Statistic>
+  );
+};
+
+export const TPSLQuantity: FC<OrderCellState> = (props) => {
+  const { item } = props;
+
+  const quantity = useMemo(() => {
+    if (item.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+      return "Entire position";
+    }
+
+    return item.quantity;
+  }, [item]);
+
+  return (
+    <Statistic
+      label={"Quantity"}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {quantity}
+      </Text.numeral>
     </Statistic>
   );
 };

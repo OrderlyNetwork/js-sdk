@@ -3,13 +3,10 @@ import { API } from "@orderly.network/types";
 import { useMemo } from "react";
 import { Flex, Tooltip, Text, cn } from "@orderly.network/ui";
 import { useSymbolContext } from "../symbolProvider";
+import { calcBracketRoiAndPnL } from "../../../utils/util";
 
-export const BarcketOrderPrice = (props: { order: API.AlgoOrder }) => {
+export const BarcketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
   const { order } = props;
-  const markPrices = useMarkPricesStream();
-  const markPrice = useMemo(() => {
-    return markPrices.data[order.symbol];
-  }, [markPrices.data[order.symbol]]);
   const { quote_dp, base_dp } = useSymbolContext();
 
   const { sl_trigger_price, tp_trigger_price } = useMemo(() => {
@@ -19,41 +16,7 @@ export const BarcketOrderPrice = (props: { order: API.AlgoOrder }) => {
     return utils.findTPSLFromOrder(props.order.child_orders[0]);
   }, [props.order]);
 
-  const pnl = useMemo(() => {
-    const entryPrice = order.trigger_price ?? order.price;
-    if (
-      order?.algo_type &&
-      order?.algo_type === "BRACKET" &&
-      entryPrice &&
-      markPrice
-    ) {
-      return utils.priceToPnl(
-        {
-          qty: order.quantity,
-          price: markPrice,
-          entryPrice: entryPrice,
-          // @ts-ignore
-          orderSide: order.side,
-          // @ts-ignore
-          orderType: order.algo_type,
-        },
-        {
-          symbol: { quote_dp: quote_dp },
-        }
-      );
-    }
-    return undefined;
-  }, [markPrice]);
-  const roi = useMemo(() => {
-    if (pnl) {
-      return utils.calcTPSL_ROI({
-        pnl: pnl,
-        qty: order.quantity,
-        price: markPrice,
-      });
-    }
-    return undefined;
-  }, [markPrice, pnl]);
+  const { pnl, roi } = calcBracketRoiAndPnL(order);
 
   if (!tp_trigger_price && !sl_trigger_price) {
     return "--";
@@ -64,29 +27,31 @@ export const BarcketOrderPrice = (props: { order: API.AlgoOrder }) => {
       // @ts-ignore
       content={
         <Flex direction={"column"} itemAlign={"start"} gap={1}>
-          {roi && (
+          {typeof pnl.tpPnL !== "undefined" && (
             <Text.numeral
               // @ts-ignore
-              prefix={<Text intensity={54}>{"Est. ROI: "}</Text>}
+              prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
+              suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
-              rule="percentages"
               coloring
             >
-              {roi}
+              {pnl.tpPnL}
             </Text.numeral>
           )}
-          {pnl && (
+          {typeof pnl.slPnL !== "undefined" && (
             <Text.numeral
               // @ts-ignore
-              prefix={<Text intensity={54}>{"Est. PnL: "}</Text>}
+              prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
+              suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
               coloring
             >
-              {pnl}
+              {pnl.slPnL}
             </Text.numeral>
           )}
         </Flex>
       }
+      className="oui-bg-base-6"
     >
       <Flex
         direction={"column"}
