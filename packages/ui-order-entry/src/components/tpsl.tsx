@@ -200,6 +200,7 @@ const TPSLInputRow = (props: {
           PnL: props.values.PnL,
           Offset: props.values.Offset,
           "Offset%": props.values["Offset%"],
+          ROI: props.values.ROI,
         }}
       />
     </Grid>

@@ -12,6 +12,9 @@
       "@orderly.network/ui-positions": [
         "../ui-positions/src"
       ],
+      "@orderly.network/ui-tpsl": [
+        "../ui-tpsl/src"
+      ],
       "@orderly.network/ui-orders": [
         "../ui-orders/src"
       ],

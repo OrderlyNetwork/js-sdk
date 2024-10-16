@@ -1,4 +1,4 @@
-import { OrderlyOrder, OrderType } from "@orderly.network/types";
+import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { tpslCalculateHelper } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 
@@ -315,7 +315,10 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
       key: input,
       value,
       entryPrice: price, // order price or mark price
-      qty: values.order_quantity!,
+      qty:
+        values.side === OrderSide.BUY
+          ? Number(values.order_quantity)
+          : Number(values.order_quantity) * -1,
       orderSide: values.side!,
       // values: newValues,
     },

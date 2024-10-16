@@ -57,7 +57,10 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     setValue(type, value);
   };
 
-  const maxQty = useMemo(() => position.position_qty, [position.position_qty]);
+  const maxQty = useMemo(
+    () => Math.abs(Number(position.position_qty)),
+    [position.position_qty]
+  );
 
   const dirty = useMemo(() => {
     const quantity =

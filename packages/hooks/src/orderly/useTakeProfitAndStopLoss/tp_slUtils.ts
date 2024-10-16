@@ -168,8 +168,6 @@ export function pnlToPrice(inputs: {
 }) {
   const { qty, pnl, entryPrice, orderType, orderSide } = inputs;
 
-  // console.log("pnlToPrice", inputs);
-
   if (!pnl) {
     return;
   }

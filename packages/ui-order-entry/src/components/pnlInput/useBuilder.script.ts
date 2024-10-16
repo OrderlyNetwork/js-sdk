@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { MenuItem } from "@orderly.network/ui";
-import { commify, Decimal } from "@orderly.network/utils";
+import { commify, Decimal, todpIfNeed } from "@orderly.network/utils";
 import type {
   InputFormatter,
   InputFormatterOptions,
@@ -126,22 +126,28 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             percentageSuffix.current
           }`;
           // return (Number(value) * 100).toFixed(2);
+        } else if (mode === PnLMode.OFFSET) {
+          value = todpIfNeed(value, dp);
+        } else {
+          // value = new Decimal(value).todp(2).toString();
         }
 
         return `${value}`;
       },
       onSendBefore: (value: string) => {
+        if (/^\-?0{2,}$/.test(value)) {
+          return "0";
+        }
+
         if (mode === PnLMode.PERCENTAGE) {
           if (value !== "") {
             percentageSuffix.current = value.endsWith(".") ? "." : "";
             value = new Decimal(value).div(100).todp(4, 4).toString();
           }
         } else {
-          // value = todpIfNeed(value, quote_dp);
+          value = todpIfNeed(value, dp);
         }
-        if (/^\-?0{2,}$/.test(value)) {
-          return "0";
-        }
+
         if (value === "" || value === "-") return "";
 
         return value;

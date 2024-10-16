@@ -1,6 +1,5 @@
-import { usePositionsRowContext } from "./positionRowContext";
-
 import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
+import { usePositionsRowContext } from "./positionRowContext";
 
 // ------------ TP/SL Price input end------------
 export const TPSLButton = () => {
