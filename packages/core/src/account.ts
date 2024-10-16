@@ -542,7 +542,7 @@ export class Account {
 
   async settle(): Promise<any> {
     if (!this.walletAdapter) {
-      return Promise.reject("walletClient is undefined");
+      return Promise.reject("walletAdapter is undefined");
     }
     const nonce = await this._getSettleNonce();
     const address = this.stateValue.address;
