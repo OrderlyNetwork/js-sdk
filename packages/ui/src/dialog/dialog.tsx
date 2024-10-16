@@ -52,7 +52,7 @@ const dialogVariants = tv({
       "oui-dialog-close-btn",
       "oui-absolute",
       "oui-right-4",
-      "oui-top-5",
+      "oui-top-4",
       // "oui-opacity-70",
       "oui-ring-offset-background",
       "oui-transition-opacity",
@@ -87,7 +87,7 @@ const dialogVariants = tv({
       // "oui-pb-2",
       "oui-min-h-11",
       "oui-flex",
-      "oui-items-start",
+      "oui-items-center",
       "oui-text-base-contrast",
     ],
     desc: [

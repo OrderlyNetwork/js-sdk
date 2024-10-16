@@ -86,14 +86,14 @@ export const useEditSheetScript = (props: {
       reduce_only: Boolean(order.reduce_only),
     };
 
-    console.log("validator", values, order);
+    // console.log("validator", values, order);
     
     const errors = await helper.validator(values);
     if (errors.total?.message !== undefined) {
       toast.error(errors.total?.message);
       return;
     }
-    console.log("errors is", values, errors);
+    // console.log("errors is", values, errors);
 
     setErrors(errors);
     if (Object.keys(errors).length > 0) {
