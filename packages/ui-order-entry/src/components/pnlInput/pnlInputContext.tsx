@@ -26,7 +26,12 @@ export const usePnlInputContext = () => {
 };
 
 export const PnlInputProvider = (
-  props: PropsWithChildren<{ values: PNL_Values; type: "TP" | "SL" }>
+  props: PropsWithChildren<{
+    values: PNL_Values & {
+      trigger_price?: string;
+    };
+    type: "TP" | "SL";
+  }>
 ) => {
   const { type, values } = props;
   const [mode, setMode] = useLocalStorage<PnLMode>(
@@ -35,7 +40,7 @@ export const PnlInputProvider = (
   );
 
   const tipsEle = useMemo(() => {
-    if (!values.PnL) return null;
+    if (!values.PnL || !props.values.trigger_price) return null;
     return (
       <Flex>
         <span className={"oui-text-xs oui-text-base-contrast-54"}>
@@ -64,7 +69,7 @@ export const PnlInputProvider = (
         )}
       </Flex>
     );
-  }, [mode, props.values.PnL]);
+  }, [mode, props.values.PnL, props.values.trigger_price]);
 
   return (
     <PnlInputContext.Provider

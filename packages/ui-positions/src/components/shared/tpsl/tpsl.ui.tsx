@@ -133,7 +133,10 @@ const TPSLQuantity = (props: {
           <Input
             ref={inputRef}
             prefix={"Quantity"}
-            size={"md"}
+            size={{
+              initial: "lg",
+              lg: "md",
+            }}
             align="right"
             value={isPosition ? "" : props.quantity}
             autoComplete="off"
@@ -175,7 +178,10 @@ const TPSLQuantity = (props: {
             }
           }}
           variant={"outlined"}
-          size={"md"}
+          size={{
+            lg: "md",
+            md: "lg",
+          }}
           className={cn(
             isPosition
               ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
@@ -335,7 +341,10 @@ const PriceInput = (props: {
   return (
     <Input
       prefix={`${props.type} price`}
-      size={"md"}
+      size={{
+        initial: "lg",
+        lg: "md",
+      }}
       placeholder={"USDC"}
       align={"right"}
       autoComplete={"off"}

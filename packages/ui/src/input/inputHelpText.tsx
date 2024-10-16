@@ -25,9 +25,13 @@ const inputHelpTextVariants = tv({
   },
 });
 
+export type InputHelpTextVariantProps = VariantProps<
+  typeof inputHelpTextVariants
+>;
+
 interface InputHelpTextProps
   extends ComponentPropsWithout<"div", RemovedProps>,
-    VariantProps<typeof inputHelpTextVariants> {
+    InputHelpTextVariantProps {
   asChild?: boolean;
 }
 

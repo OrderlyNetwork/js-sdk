@@ -1,6 +1,6 @@
 import React from "react";
 import { Input, InputProps } from "./input";
-import { InputHelpText } from "./inputHelpText";
+import { InputHelpText, type InputHelpTextVariantProps } from "./inputHelpText";
 import { tv } from "../utils/tv";
 import { VariantProps } from "tailwind-variants";
 import { Slot } from "@radix-ui/react-slot";
@@ -46,14 +46,24 @@ export const TextField: React.FC<TextFieldProps> = React.forwardRef<
 
   return (
     <div className={root({ className, direction })}>
-      <InputLabel className={cn(props.classNames?.label) || labelClassName()}>{label}</InputLabel>
+      <InputLabel className={cn(props.classNames?.label) || labelClassName()}>
+        {label}
+      </InputLabel>
       <div>
         <Input {...inputProps} />
-        {(helpText?.length || 0 > 0) && <InputHelpText color={inputProps.color}>{helpText}</InputHelpText>}
+        {(helpText?.length || 0 > 0) && (
+          <InputHelpText
+            color={inputProps.color as InputHelpTextVariantProps["color"]}
+          >
+            {helpText}
+          </InputHelpText>
+        )}
       </div>
     </div>
   );
 });
+
+TextField.displayName = "TextField";
 
 interface InputLabelProps extends React.HTMLAttributes<HTMLLabelElement> {
   asChild?: boolean;

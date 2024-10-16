@@ -7,9 +7,9 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { usePositionsRowContext } from "./positionRowContext";
-import { TPSLWidget } from "./tpsl/tpsl.widget";
+import { TPSLWidget } from "../shared/tpsl/tpsl.widget";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { PositionTPSLConfirm } from "./tpsl/tpsl.ui";
+import { PositionTPSLConfirm } from "../shared/tpsl/tpsl.ui";
 import { useState } from "react";
 
 // ------------ TP/SL Price input end------------

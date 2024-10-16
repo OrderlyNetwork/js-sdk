@@ -6,6 +6,7 @@ import {
   cn,
   Divider,
   Flex,
+  Grid,
   Input,
   inputFormatter,
   InputProps,
@@ -45,6 +46,7 @@ import {
 import { useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
+import { SDKError } from "@orderly.network/types";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
@@ -136,7 +138,9 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
       })
       .catch((error) => {
         console.log("catch:", error);
-        toast.error(`Error:${error.message}`);
+        if (error instanceof SDKError) {
+          toast.error(`Error:${error.message}`);
+        }
       });
   };
 
@@ -401,7 +405,7 @@ const OrderQuantityInput = (props: {
         </div>
       ) : null}
 
-      <Flex className={"oui-space-x-1 oui-group"}>
+      <Grid cols={2} className={"oui-space-x-1 oui-group"}>
         <CustomInput
           label={"Quantity"}
           suffix={symbolInfo.base}
@@ -428,7 +432,7 @@ const OrderQuantityInput = (props: {
           onFocus={onFocus(InputType.TOTAL)}
           onBlur={onBlur(InputType.TOTAL)}
         />
-      </Flex>
+      </Grid>
     </div>
   );
 };

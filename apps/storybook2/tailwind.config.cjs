@@ -1,9 +1,10 @@
 const path = require("path");
 // const { chartPlugin } = require("@orderly.network/chart");
 import { chartPlugin } from "@orderly.network/chart";
+import {withTV} from 'tailwind-variants/transformer'
 
 /** @type {import("tailwindcss").Config} */
-module.exports = {
+module.exports = withTV({
   content: [
     "./src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui/src/**/*.{ts,js,tsx,jsx,mdx}",
@@ -16,7 +17,7 @@ module.exports = {
     // "../../packages/affiliate/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/markets/src/**/*.{ts,js,tsx,jsx,mdx}",
     // "../../packages/chart/src/**/*.{ts,js,tsx,jsx,mdx}",
-    "../../packages/ui-transfer/src/**/*.{ts,js,tsx,jsx,mdx}",
+    // "../../packages/ui-transfer/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/trading/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-order-entry/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
@@ -24,4 +25,4 @@ module.exports = {
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
   ],
   plugins: [chartPlugin()],
-};
+});

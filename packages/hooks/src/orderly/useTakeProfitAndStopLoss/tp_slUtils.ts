@@ -251,8 +251,11 @@ export function calcTPSL_ROI(inputs: {
   qty: number | string;
   price: number | string;
 }) {
+  const qtyNum = Number(inputs.qty);
+  const priceNum = Number(inputs.price);
+  if (qtyNum === 0 || priceNum === 0) return "0";
   return new Decimal(inputs.pnl)
-    .div(new Decimal(inputs.qty).abs().mul(new Decimal(inputs.price)))
+    .div(new Decimal(qtyNum).abs().mul(new Decimal(priceNum)))
     .toString();
 }
 
