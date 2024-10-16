@@ -17,6 +17,7 @@ import { useNeedSwapAndCross } from "../../hooks/useNeedSwapAndCross";
 import { useSwapFee } from "../../hooks/useSwapFee";
 import { SwapDialog } from "../swap/swapDialog";
 import { NetworkInfos, SwapMode, TokenInfo } from "../../types";
+import { getSwapTestData } from "./testData";
 
 export type UseCrossDepositFormScriptReturn = ReturnType<
   typeof useCrossDepositFormScript
@@ -137,14 +138,16 @@ export const useCrossDepositFormScript = (
   }, [options.onClose]);
 
   const onSwapDeposit = useCallback(async () => {
+    // const _params = getSwapTestData(needCrossSwap);
+    // return modal.show(SwapDialog, _params);
+
     return enquiry()
       .then((transaction) => {
         const amountValue = needCrossSwap
           ? transaction.route_infos?.dst.amounts[1]
           : transaction.route_infos?.amounts[1];
 
-        // @ts-ignore
-        return modal.show(SwapDialog, {
+        const params = {
           mode: needCrossSwap ? SwapMode.Cross : SwapMode.Single,
           src: {
             chain: currentChain?.id,
@@ -168,7 +171,9 @@ export const useCrossDepositFormScript = (
           transactionData: transaction,
           slippage,
           brokerName,
-        });
+        };
+
+        return modal.show(SwapDialog, params);
       })
       .then((isSuccss) => {
         if (isSuccss) {

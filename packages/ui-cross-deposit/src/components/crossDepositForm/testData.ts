@@ -2,6 +2,77 @@ import { SwapMode } from "../../types";
 
 export function getSwapTestData(needCrossSwap: boolean) {
   return {
+    mode: 0,
+    src: {
+      chain: 42161,
+      token: "USDC.e",
+      displayDecimals: 2,
+      amount: "1",
+      decimals: 6,
+    },
+    dst: {
+      chain: 42161,
+      token: "USDC",
+      displayDecimals: 2,
+      amount: "0.999959",
+      decimals: 6,
+    },
+    chain: {
+      name: "Arbitrum",
+      public_rpc_url: "https://arb1.arbitrum.io/rpc",
+      chain_id: 42161,
+      currency_symbol: "ETH",
+      bridge_enable: true,
+      mainnet: true,
+      explorer_base_url: "https://arbiscan.io/",
+      est_txn_mins: 2,
+      woofi_dex_cross_chain_router:
+        "0xac8951A442fe70342f9597044B7b7657D5ad55ec",
+      woofi_dex_depositor: "0x4E21a65A9F4672EF2cdfb7FA6B0f1e39d6e4E50e",
+      bridgeless: true,
+      shortName: "arbitrum",
+    },
+    nativeToken: {
+      address: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      symbol: "ETH",
+      decimals: 18,
+      woofi_dex_precision: 4,
+      swap_enable: true,
+      precision: 4,
+    },
+    depositFee: 4525448866798n,
+    transactionData: {
+      outcomes: {
+        token: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        symbol: "USDC",
+        decimals: 6,
+        amount: "999959",
+      },
+      fees_from: "0.000050000000000000",
+      mark_prices: { from_token: 0.99980648, native_token: 2615.686055027 },
+      price: 0.999959,
+      route_infos: {
+        tokens: [
+          "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+          "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        ],
+        symbols: ["USDC.e", "USDC"],
+        amounts: ["1000000", "999959"],
+        decimals: [6, 6],
+      },
+      infos: {
+        network: "arbitrum",
+        from_token: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+        from_amount: "1000000",
+        to_token: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        min_to_amount: "989959",
+      },
+    },
+    slippage: 1,
+    brokerName: "Woofi Pro",
+  };
+
+  return {
     mode: needCrossSwap ? SwapMode.Cross : SwapMode.Single,
     src: {
       chain: 56,

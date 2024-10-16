@@ -201,7 +201,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
 
   const swapButton = (
     <Flex justify="center" mt={8}>
-      <Button className="oui-w-[184px]" onClick={props.onConfirm}>
+      <Button className="oui-w-full lg:oui-w-[184px]" onClick={props.onConfirm}>
         Confirm to swap
       </Button>
     </Flex>

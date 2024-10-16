@@ -130,7 +130,11 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
           </Text>
         )}
 
-        <Button className="oui-w-[184px]" disabled={disabled} onClick={onOk}>
+        <Button
+          className="oui-w-full lg:oui-w-[184px]"
+          disabled={disabled}
+          onClick={onOk}
+        >
           OK
         </Button>
       </Flex>
