@@ -44,25 +44,26 @@ export const BracketOrderPrice: FC<BarcketOrderPriceState> = (props) => {
         }}
       >
         <Flex direction={"column"} itemAlign={"start"} gap={1}>
-          {props.roi && (
+          {typeof props.pnl?.tpPnL !== "undefined" && (
             <Text.numeral
               // @ts-ignore
-              prefix={<Text intensity={54}>{"Est. ROI: "}</Text>}
+              prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
+              suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={props.quote_dp}
-              rule="percentages"
               coloring
             >
-              {props.roi}
+              {props.pnl?.tpPnL}
             </Text.numeral>
           )}
-          {props.pnl && (
+          {typeof props.pnl?.slPnL !== "undefined" && (
             <Text.numeral
               // @ts-ignore
-              prefix={<Text intensity={54}>{"Est. PnL: "}</Text>}
+              prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
+              suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={props.quote_dp}
               coloring
             >
-              {props.pnl}
+              {props.pnl?.slPnL}
             </Text.numeral>
           )}
         </Flex>
