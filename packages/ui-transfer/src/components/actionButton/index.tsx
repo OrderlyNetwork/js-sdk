@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Box, Button, ButtonProps, cn, useScreen } from "@orderly.network/ui";
+import { Box, Button, ButtonProps } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { NetworkId } from "@orderly.network/types";
 import { DepositAction } from "../../types";
@@ -25,8 +25,6 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     networkId,
   } = props;
 
-  const { isMobile } = useScreen();
-
   const buttonParams = useMemo(() => {
     const params: Record<DepositAction, ButtonProps> = {
       [DepositAction.Approve]: {
@@ -51,13 +49,16 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     return params[actionType];
   }, [onApprove, onDeposit, actionType, symbol]);
 
-  const buttonSize = isMobile ? "md" : "lg";
+  const buttonSize = { initial: "md", lg: "lg" } as const;
 
   return (
-    <Box className={cn(isMobile ? "oui-w-full" : "oui-min-w-[184px]")}>
+    <Box className="oui-w-full lg:oui-w-auto lg:oui-min-w-[184px]">
       <AuthGuard
         networkId={networkId}
-        buttonProps={{ fullWidth: true, size: buttonSize }}
+        buttonProps={{
+          fullWidth: true,
+          size: buttonSize,
+        }}
       >
         <Button
           fullWidth

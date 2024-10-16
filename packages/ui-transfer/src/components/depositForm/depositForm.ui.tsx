@@ -41,60 +41,62 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
-      <Web3Wallet />
+      <Box className="oui-mb-6 lg:oui-mb-8">
+        <Web3Wallet />
 
-      <Box mt={3} mb={1}>
-        <ChainSelect
-          chains={chains}
-          value={currentChain!}
-          onValueChange={onChainChange}
-          wrongNetwork={wrongNetwork}
-          loading={settingChain}
-        />
-        <QuantityInput
-          classNames={{
-            root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
-          }}
-          value={quantity}
-          onValueChange={onQuantityChange}
-          tokens={tokens}
+        <Box mt={3} mb={1}>
+          <ChainSelect
+            chains={chains}
+            value={currentChain!}
+            onValueChange={onChainChange}
+            wrongNetwork={wrongNetwork}
+            loading={settingChain}
+          />
+          <QuantityInput
+            classNames={{
+              root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
+            }}
+            value={quantity}
+            onValueChange={onQuantityChange}
+            tokens={tokens}
+            token={token}
+            onTokenChange={onTokenChange}
+            status={inputStatus}
+            hintMessage={hintMessage}
+            fetchBalance={fetchBalance}
+          />
+        </Box>
+
+        <AvailableQuantity
           token={token}
-          onTokenChange={onTokenChange}
-          status={inputStatus}
-          hintMessage={hintMessage}
-          fetchBalance={fetchBalance}
+          amount={amount}
+          maxQuantity={maxQuantity}
+          loading={balanceRevalidating}
+          onClick={() => {
+            onQuantityChange(maxQuantity);
+          }}
         />
+
+        <ExchangeDivider />
+
+        <BrokerWallet />
+
+        <QuantityInput
+          readOnly
+          token={dst as any}
+          value={quantity}
+          classNames={{
+            root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
+          }}
+        />
+
+        <Flex direction="column" mt={1} gapY={1} itemAlign="start">
+          <SwapCoin token={token} dst={dst} price={1} />
+          <Fee {...fee} />
+        </Flex>
       </Box>
 
-      <AvailableQuantity
-        token={token}
-        amount={amount}
-        maxQuantity={maxQuantity}
-        loading={balanceRevalidating}
-        onClick={() => {
-          onQuantityChange(maxQuantity);
-        }}
-      />
-
-      <ExchangeDivider />
-
-      <BrokerWallet />
-
-      <QuantityInput
-        readOnly
-        token={dst as any}
-        value={quantity}
-        classNames={{
-          root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
-        }}
-      />
-
-      <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-        <SwapCoin token={token} dst={dst} price={1} />
-        <Fee {...fee} />
-      </Flex>
-
-      <Flex justify="center" mt={8}>
+      <Flex justify="center">
         <ActionButton
           actionType={actionType}
           symbol={token?.symbol}

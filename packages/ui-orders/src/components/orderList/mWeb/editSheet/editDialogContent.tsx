@@ -12,7 +12,7 @@ import {
 } from "@orderly.network/ui";
 import { EditSheetState } from "./editSheet.script";
 import { FC } from "react";
-import { commify } from "@orderly.network/utils";
+import { commify, Decimal } from "@orderly.network/utils";
 import { OrderSide } from "@orderly.network/types";
 
 export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
@@ -30,7 +30,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
           {props.item.symbol}
         </Text.formatted>
         <Flex gap={1}>
-          <Badge color="neutural" size="xs">
+          <Badge color="neutral" size="xs">
             Limit
           </Badge>
           <Badge
@@ -52,29 +52,40 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
         {isAlgoOrder && (
           <Flex justify={"between"} width={"100%"} gap={1}>
             <Text>Trigger price</Text>
-            <Text.formatted
-              intensity={98}
-              suffix={<Text intensity={54}>USDC</Text>}
+            <Text.numeral
+              intensity={80}
+              dp={props.quote_dp}
+              padding={false}
+              rm={Decimal.ROUND_DOWN}
+              suffix={<Text intensity={54}>{" USDC"}</Text>}
             >
               {triggerPrice}
-            </Text.formatted>
+            </Text.numeral>
           </Flex>
         )}
 
         <Flex justify={"between"} width={"100%"} gap={1}>
           <Text>Price</Text>
-          <Text.formatted
-            intensity={98}
-            suffix={<Text intensity={54}>USDC</Text>}
+          <Text.numeral
+            intensity={80}
+            dp={props.quote_dp}
+            padding={false}
+            rm={Decimal.ROUND_DOWN}
+            suffix={<Text intensity={54}>{" USDC"}</Text>}
           >
             {price}
-          </Text.formatted>
+          </Text.numeral>
         </Flex>
         <Flex justify={"between"} width={"100%"} gap={1}>
           <Text>Qty.</Text>
-          <Text color={side === OrderSide.BUY ? "buy" : "sell"}>
+          <Text.numeral
+            color={side === OrderSide.BUY ? "buy" : "sell"}
+            dp={props.base_dp}
+            padding={false}
+            rm={Decimal.ROUND_DOWN}
+          >
             {quantity}
-          </Text>
+          </Text.numeral>
         </Flex>
       </Flex>
 

@@ -79,6 +79,7 @@ export const themePlugin = () =>
         "--oui-gradient-brand-end": "89 176 254",
 
         // Spacing
+        "--oui-spacing-xs": "20rem",
         "--oui-spacing-sm": "22.5rem",
         "--oui-spacing-md": "26.25rem",
         "--oui-spacing-lg": "30rem",

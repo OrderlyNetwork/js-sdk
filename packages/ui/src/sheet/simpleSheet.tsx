@@ -1,31 +1,47 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
+import { FC, PropsWithChildren } from "react";
 import { Sheet, SheetContent, SheetHeader } from ".";
+import { SheetBody, SheetContentProps, SheetTitle } from "./sheet";
+import { Divider } from "../divider";
 
 export interface SimpleSheetProps {
-  title: ReactNode;
-  open: boolean;
-  onClose?: () => void;
+  title?: string | React.ReactNode;
+  leading?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   classNames?: {
     content?: string;
+    body?: string;
     header?: string;
   };
+  contentProps?: SheetContentProps;
+  closable?: boolean;
 }
 
 export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
+  const {
+    open,
+    onOpenChange,
+    classNames,
+    contentProps,
+    closable = true,
+  } = props;
   return (
-    <Sheet
-      open={props.open}
-      onOpenChange={(open) => {
-        if (!open) {
-          props.onClose?.();
-        }
-      }}
-    >
-      <SheetContent className={props.classNames?.content}>
-        <SheetHeader className={props.classNames?.header}>
-          {props.title}
-        </SheetHeader>
-        {props.children}
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        className={classNames?.content}
+        closeable={closable}
+        {...contentProps}
+      >
+        {props.title && (
+          <>
+            <SheetHeader leading={props.leading}>
+              <SheetTitle>{props.title}</SheetTitle>
+            </SheetHeader>
+            <Divider />
+          </>
+        )}
+        <SheetBody className={classNames?.body}>{props.children}</SheetBody>
       </SheetContent>
     </Sheet>
   );

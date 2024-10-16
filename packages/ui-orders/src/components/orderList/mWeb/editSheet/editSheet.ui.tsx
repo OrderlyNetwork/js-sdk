@@ -144,7 +144,12 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               inputFormatter.rangeFormatter({ max: props.maxQty }),
             ]}
             value={props.quantity}
-            onValueChange={(e) => props.setQuantity(e)}
+            onValueChange={(e) => {
+              props.setQuantity(e);
+              if (e.endsWith(".")) return;
+              const sliderValue = new Decimal(e).div(props.maxQty).mul(100).toNumber();
+              props.setSliderValue(sliderValue);
+            }}
             tooltip={props.errors.order_quantity?.message}
             tooltipProps={{
               content: {
@@ -231,7 +236,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           },
         }}
         classNames={{
-          content: "oui-p-4",
+          content: "oui-pb-4",
           body: "oui-p-0",
           footer: "oui-pt-3 oui-pb-0",
         }}

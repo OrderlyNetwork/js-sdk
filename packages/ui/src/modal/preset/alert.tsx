@@ -1,40 +1,23 @@
-import { FC, ReactNode, useCallback, useState } from "react";
+import { ReactNode, useCallback } from "react";
 import { modalActions } from "../modalContext";
-
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
 import { AlertDialog, AlertDialogProps } from "../../dialog/alertDialog";
 
 export const CreatedAlertDialog = create<AlertDialogProps>((props) => {
-  const { onOk, onCancel, actions, ...rest } = props;
+  const { onOk } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
-  const [loading, setLoading] = useState(false);
 
-  const onOkHandler = useCallback(async (): Promise<any> => {
-    try {
-      setLoading(true);
-      await onOk?.();
-      hide();
-    } catch (err) {
-
-    } finally {
-      setLoading(false);
-    }
+  const onOkHandler = useCallback((): Promise<any> => {
+    return Promise.resolve().then(onOk).then(hide);
   }, [onOk]);
-
-  const onCancelHandler = useCallback(() => {
-    onCancel?.();
-    hide();
-  }, [onCancel]);
 
   return (
     <AlertDialog
       open={visible}
       onOpenChange={onOpenChange}
       onOk={onOkHandler}
-      onCancel={onCancelHandler}
-      actions={{...{primary: {loading}, ...actions }}}
-      {...rest}
+      {...props}
     />
   );
 });

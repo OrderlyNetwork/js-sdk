@@ -296,7 +296,7 @@ export const LimitConfirmDialog: FC<{
           {order.symbol}
         </Text.formatted>
         <Flex gap={1}>
-          <Badge color="neutural" size="xs">
+          <Badge color="neutral" size="xs">
             Limit
           </Badge>
           <Badge
