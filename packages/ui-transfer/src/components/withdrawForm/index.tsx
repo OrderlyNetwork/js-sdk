@@ -1,3 +1,3 @@
-export {WithdrawFormUI} from './ui';
-export {WithdrawFormWidget} from './widget';
-export {useWithdrawForm} from './script'
+export { WithdrawFormUI } from "./withdrawForm.ui";
+export { WithdrawFormWidget } from "./widget";
+export { useWithdrawForm } from "./withdrawForm.script";

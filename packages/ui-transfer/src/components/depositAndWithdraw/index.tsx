@@ -45,8 +45,9 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
 
 registerSimpleDialog(DepositAndWithdrawWithDialogId, DepositAndWithdraw, {
   size: "md",
-  bodyClassName: "oui-pt-3",
   contentClassName: "oui-border oui-border-line-6",
 });
 
-registerSimpleSheet(DepositAndWithdrawWithSheetId, DepositAndWithdraw);
+registerSimpleSheet(DepositAndWithdrawWithSheetId, DepositAndWithdraw, {
+  classNames: { body: "" },
+});
