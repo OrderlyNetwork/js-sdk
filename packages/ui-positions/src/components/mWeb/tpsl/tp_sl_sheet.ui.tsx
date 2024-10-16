@@ -11,8 +11,7 @@ export const TPSLSheetUI = (props: TPSLWidgetProps & TPSLSheetState) => {
   const { position, symbolInfo } = props;
   return (
     <>
-      <Divider intensity={4} />
-      <Flex justify={"between"} py={3} itemAlign={"center"}>
+      <Flex justify={"between"} pb={3} itemAlign={"center"}>
         <Text.formatted rule="symbol" className="oui-text-xs" showIcon>
           {position.symbol}
         </Text.formatted>

@@ -20,14 +20,15 @@ export const PositionTPSLPopover = (props: {
   baseDP?: number;
   quoteDP?: number;
   buttonProps?: ButtonProps;
+  isEditing?: boolean;
 }) => {
-  const { position, order, baseDP, quoteDP, buttonProps } = props;
+  const { position, order, baseDP, quoteDP, buttonProps, isEditing } = props;
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
 
   const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
 
-  console.log("PositionTPSLPopover", props);
+  // console.log("PositionTPSLPopover", props);
 
   return (
     <PopoverRoot
@@ -91,7 +92,8 @@ export const PositionTPSLPopover = (props: {
                     tpPrice={Number(order.tp_trigger_price)}
                     slPrice={Number(order.sl_trigger_price)}
                     side={order.side!}
-                    dp={baseDP ?? 2}
+                    quoteDP={quoteDP ?? 2}
+                    baseDP={baseDP ?? 2}
                   />
                 ),
               })

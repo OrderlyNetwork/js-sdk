@@ -115,6 +115,10 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   ]);
 
   const valid = useMemo(() => {
+    /**
+     * if the order is a POSITIONAL_TP_SL and the quantity is less than the maxQty,
+     * and the tp/sl trigger price is not set, then the order is not valid
+     */
     if (
       order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
       Number(tpslOrder.quantity) < maxQty &&
@@ -124,8 +128,8 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
       return false;
     }
 
-    return dirty > 0 && !!tpslOrder.quantity;
-  }, [tpslOrder.quantity, maxQty, dirty]);
+    return dirty > 0 && !!tpslOrder.quantity && !errors;
+  }, [tpslOrder.quantity, maxQty, dirty, errors]);
 
   const onSubmit = async () => {
     return Promise.resolve()

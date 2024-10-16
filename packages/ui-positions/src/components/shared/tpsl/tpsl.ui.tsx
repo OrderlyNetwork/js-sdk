@@ -32,7 +32,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
   const { TPSL_OrderEntity, symbolInfo, onCancel, onComplete, status, errors } =
     props;
 
-  // console.log("errors", errors);
+  console.log("errors", errors);
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
@@ -54,6 +54,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         quote_db={symbolInfo("quote_dp")}
         onPriceChange={props.setOrderPrice}
         onPnLChange={props.setPnL}
+        errors={errors}
         tp_values={{
           PnL: `${TPSL_OrderEntity.tp_pnl ?? ""}`,
           Offset: `${TPSL_OrderEntity.tp_offset ?? ""}`,
@@ -239,6 +240,7 @@ const TPSLQuantity = (props: {
 
 // ------------ TP/SL Price and PNL input start------------
 const TPSLPrice = (props: {
+  errors: Record<string, string> | null;
   tp_pnl?: number;
   sl_pnl?: number;
   quote: string;
@@ -278,6 +280,7 @@ const TPSLPrice = (props: {
         <Grid cols={2} gap={2} pt={2} pb={4}>
           <PriceInput
             type={"TP"}
+            error={props.errors?.tp_trigger_price}
             value={props.tp_trigger_price}
             onValueChange={(value) => {
               props.onPriceChange("tp_trigger_price", value);
@@ -315,6 +318,7 @@ const TPSLPrice = (props: {
           <PriceInput
             type={"SL"}
             value={props.sl_trigger_price}
+            error={props.errors?.sl_trigger_price}
             onValueChange={(value) => {
               props.onPriceChange("sl_trigger_price", value);
             }}
@@ -336,15 +340,17 @@ const TPSLPrice = (props: {
 const PriceInput = (props: {
   type: string;
   value?: string | number;
+  error?: string;
   onValueChange: (value: string) => void;
 }) => {
   return (
-    <Input
+    <Input.tooltip
       prefix={`${props.type} price`}
       size={{
         initial: "lg",
         lg: "md",
       }}
+      tooltip={props.error}
       placeholder={"USDC"}
       align={"right"}
       autoComplete={"off"}

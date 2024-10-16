@@ -32,8 +32,6 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
   const { TPSL_OrderEntity, symbolInfo, onCancel, onComplete, status, errors } =
     props;
 
-  // console.log("errors", errors);
-
   return (
     <div id="orderly-tp_sl-order-edit-content">
       {!props.isEditing && (
@@ -54,6 +52,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         quote_db={symbolInfo("quote_dp")}
         onPriceChange={props.setOrderPrice}
         onPnLChange={props.setPnL}
+        errors={errors}
         tp_values={{
           PnL: `${TPSL_OrderEntity.tp_pnl ?? ""}`,
           Offset: `${TPSL_OrderEntity.tp_offset ?? ""}`,
@@ -249,6 +248,7 @@ const TPSLPrice = (props: {
   sl_values: PNL_Values;
   tp_trigger_price?: number | string;
   sl_trigger_price?: number | string;
+  errors: Record<string, { message: string }> | null;
 }) => {
   const onPnLChange = (key: string, value: number | string) => {
     // console.log(key, value);
@@ -279,6 +279,7 @@ const TPSLPrice = (props: {
           <PriceInput
             type={"TP"}
             value={props.tp_trigger_price}
+            error={props.errors?.tp_trigger_price?.message}
             onValueChange={(value) => {
               props.onPriceChange("tp_trigger_price", value);
             }}
@@ -315,6 +316,7 @@ const TPSLPrice = (props: {
           <PriceInput
             type={"SL"}
             value={props.sl_trigger_price}
+            error={props.errors?.sl_trigger_price?.message}
             onValueChange={(value) => {
               props.onPriceChange("sl_trigger_price", value);
             }}
@@ -336,15 +338,17 @@ const TPSLPrice = (props: {
 const PriceInput = (props: {
   type: string;
   value?: string | number;
+  error?: string;
   onValueChange: (value: string) => void;
 }) => {
   return (
-    <Input
+    <Input.tooltip
       prefix={`${props.type} price`}
       size={{
         initial: "lg",
         lg: "md",
       }}
+      tooltip={props.error}
       placeholder={"USDC"}
       align={"right"}
       autoComplete={"off"}
@@ -371,12 +375,14 @@ export type PositionTPSLConfirmProps = {
   side: OrderSide;
 
   // symbolConfig:API.SymbolExt
-  dp: number;
+  baseDP: number;
+  quoteDP: number;
 };
 
 // ------------ Position TP/SL Confirm dialog start------------
 export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
-  const { symbol, tpPrice, slPrice, qty, maxQty, side, dp } = props;
+  const { symbol, tpPrice, slPrice, qty, maxQty, side, quoteDP, baseDP } =
+    props;
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_position_tp_sl_confirm",
     true
@@ -433,7 +439,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
             {isPositionTPSL ? (
               <span className="oui-text-base-contrast">Entire position</span>
             ) : (
-              <Text.numeral intensity={98} dp={dp}>
+              <Text.numeral intensity={98} dp={baseDP}>
                 {qty}
               </Text.numeral>
             )}
@@ -447,6 +453,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               coloring
               unit={"USDC"}
               size={"sm"}
+              dp={quoteDP}
               unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
             >
               {tpPrice}
@@ -461,6 +468,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               coloring
               unit={"USDC"}
               size={"sm"}
+              dp={quoteDP}
               className="oui-text-trade-loss"
               unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
             >
