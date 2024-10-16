@@ -13,6 +13,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { differenceInDays, setHours } from "date-fns";
+import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export const useOrderListScript = (props: {
   type: TabType;
@@ -101,9 +102,13 @@ export const useOrderListScript = (props: {
     });
   }, [type]);
 
+  const formattedData = useFormatOrderHistory(
+    data ?? []
+  );
+
   return {
     type,
-    dataSource: data,
+    dataSource: type !== TabType.tp_sl ? formattedData : data,
     isLoading,
     loadMore,
     cancelOrder,

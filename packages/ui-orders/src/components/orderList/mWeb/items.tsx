@@ -1,20 +1,10 @@
-import {
-  Badge,
-  cn,
-  Flex,
-  Statistic,
-  Text,
-  textVariants,
-  Tooltip,
-} from "@orderly.network/ui";
+import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { OrderCellState } from "./orderCell.script";
-import { FC, PropsWithChildren, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { parseBadgesFor, upperCaseFirstLetter } from "../../../utils/util";
 import { AlgoOrderRootType, API } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-import { order } from "../../../../../perp/dist";
-import { utils } from "@orderly.network/hooks";
 
 export const Symbol: FC<OrderCellState> = (props) => {
   const { item } = props;
@@ -39,18 +29,35 @@ export const Symbol: FC<OrderCellState> = (props) => {
 };
 
 export const OrderType: FC<OrderCellState> = (props) => {
-  
+  const { item } = props;
+  const orderType = useCallback(() => {
+    const type =
+      typeof item.type === "string"
+        ? item.type.replace("_ORDER", "").toLowerCase()
+        : item.type;
+    const isAlgoOrder =
+      item.algo_order_id && item.algo_type !== AlgoOrderRootType.BRACKET;
+    if (isAlgoOrder) {
+      return `Stop ${type}`;
+    }
+    return upperCaseFirstLetter(item.type);
+  }, [item]);
   return (
     <Flex direction={"row"} gap={1}>
-      {parseBadgesFor(props.item)?.map((e) => (
-        <Badge
-          color={e.toLocaleLowerCase() === "position" ? "primary" : "neutral"}
-          size="xs"
-        >
-          {e}
-        </Badge>
-      ))}
-    </Flex>
+              {parseBadgesFor(props.item)?.map((e, index) => (
+                <Badge
+                  key={index}
+                  color={
+                    e.toLocaleLowerCase() === "position"
+                      ? "primary"
+                      : "neutral"
+                  }
+                  size="xs"
+                >
+                  {e}
+                </Badge>
+              ))}
+            </Flex>
   );
 };
 
@@ -104,9 +111,10 @@ export const Filled: FC<OrderCellState> = (props) => {
         padding={false}
         rm={Decimal.ROUND_DOWN}
       >
-        {item.algo_order_id
+        {/* {item.algo_order_id
           ? item.total_executed_quantity
-          : (item as unknown as API.OrderExt).executed}
+          : (item as unknown as API.OrderExt).executed} */}
+          {item.total_executed_quantity}
       </Text.numeral>
     </Statistic>
   );
@@ -246,81 +254,7 @@ export const LimitPrice: FC<OrderCellState> = (props) => {
 };
 
 export const TPTrigger: FC<OrderCellState> = (props) => {
-  const { tp_trigger_price, position } = useTPSLOrderRowContext();
-
-  const price = position?.average_open_price;
-
-  let quantity = props.item.quantity;
-
-  if (quantity === 0) {
-    if (
-      props.item.child_orders[0].type === "CLOSE_POSITION" &&
-      typeof position?.position_qty !== "undefined"
-    ) {
-      quantity = position?.position_qty;
-    }
-  }
-
-  const pnl =
-    tp_trigger_price && typeof price !== "undefined"
-      ? utils.priceToPnl(
-          {
-            qty: quantity,
-            price: tp_trigger_price,
-            entryPrice: price,
-            // @ts-ignore
-            orderSide: props.item.side,
-            // @ts-ignore
-            orderType: props.item.type,
-          },
-          {
-            symbol: { quote_dp: props.quote_dp },
-          }
-        )
-      : undefined;
-
-  console.log("SLTrigger", tp_trigger_price, price, pnl);
-
-  let child = (
-    <Text.numeral
-      dp={props.quote_dp}
-      rm={Decimal.ROUND_DOWN}
-      // intensity={80}
-      padding={false}
-      className={cn(
-        typeof pnl !== "undefined"
-          ? "oui-border-b oui-border-dashed oui-border-base-contrast-36"
-          : undefined,
-        "!oui-text-trade-profit oui-ab"
-      )}
-    >
-      {tp_trigger_price ?? "--"}
-    </Text.numeral>
-  );
-
-  if (typeof pnl !== "undefined") {
-    child = (
-      <SimpleTooltip
-        content={
-          <Text.numeral
-            prefix={
-              <Text intensity={54}>
-                TP PnL: {<Text className="oui-text-trade-profit">+</Text>}
-              </Text>
-            }
-            dp={props.quote_dp}
-            rm={Decimal.ROUND_DOWN}
-            padding={false}
-            coloring
-          >
-            {pnl}
-          </Text.numeral>
-        }
-      >
-        {child}
-      </SimpleTooltip>
-    );
-  }
+  const { tp_trigger_price } = useTPSLOrderRowContext();
 
   return (
     <Statistic
@@ -330,98 +264,45 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      {child}
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+        className="oui-border-b oui-border-dashed oui-border-base-contrast-36"
+      >
+        {tp_trigger_price ?? "--"}
+      </Text.numeral>
     </Statistic>
   );
 };
 
 export const SLTrigger: FC<OrderCellState> = (props) => {
-  const { sl_trigger_price, position } = useTPSLOrderRowContext();
-
-  const price = position?.average_open_price;
-
-  let quantity = props.item.quantity;
-
-  if (quantity === 0) {
-    if (
-      props.item.child_orders[0].type === "CLOSE_POSITION" &&
-      typeof position?.position_qty !== "undefined"
-    ) {
-      quantity = position?.position_qty;
-    }
-  }
-
-  const pnl =
-    sl_trigger_price && typeof price !== "undefined"
-      ? utils.priceToPnl(
-          {
-            qty: quantity,
-            price: sl_trigger_price,
-            entryPrice: price,
-            // @ts-ignore
-            orderSide: props.item.side,
-            // @ts-ignore
-            orderType: props.item.type,
-          },
-          {
-            symbol: { quote_dp: props.quote_dp },
-          }
-        )
-      : undefined;
-
-  console.log("SLTrigger", sl_trigger_price, price, pnl);
-
-  let child = (
-    <Text.numeral
-      dp={props.quote_dp}
-      rm={Decimal.ROUND_DOWN}
-      // intensity={80}
-      padding={false}
-      className={cn(
-        typeof pnl !== "undefined"
-          ? "oui-border-b oui-border-dashed oui-border-base-contrast-36"
-          : undefined,
-        "!oui-text-trade-loss oui-ab"
-      )}
-    >
-      {sl_trigger_price ?? "--"}
-    </Text.numeral>
-  );
-
-  if (typeof pnl !== "undefined") {
-    child = (
-      <SimpleTooltip
-        content={
-          <Text.numeral
-            prefix={<Text intensity={54}>{"SL PnL: "}&nbsp;</Text>}
-            dp={props.quote_dp}
-            rm={Decimal.ROUND_DOWN}
-            padding={false}
-            coloring
-          >
-            {pnl}
-          </Text.numeral>
-        }
-      >
-        {child}
-      </SimpleTooltip>
-    );
-  }
+  const { sl_trigger_price } = useTPSLOrderRowContext();
 
   return (
     <Statistic
-      label={"SL trigger"}
+      label={"TP trigger"}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
     >
-      {child}
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {sl_trigger_price ?? "--"}
+      </Text.numeral>
     </Statistic>
   );
 };
 
 export const TPPrice: FC<OrderCellState> = (props) => {
+  const { tp_trigger_price } = useTPSLOrderRowContext();
+
   return (
     <Statistic
       label={"TP price"}
@@ -435,14 +316,15 @@ export const TPPrice: FC<OrderCellState> = (props) => {
         rm={Decimal.ROUND_DOWN}
         intensity={80}
         padding={false}
-        placeholder="Market"
       >
-        {"MARKET"}
+        {tp_trigger_price ?? "MARKET"}
       </Text.numeral>
     </Statistic>
   );
 };
 export const SLPrice: FC<OrderCellState> = (props) => {
+  const { sl_trigger_price } = useTPSLOrderRowContext();
+
   return (
     <Statistic
       label={"TP price"}
@@ -456,9 +338,8 @@ export const SLPrice: FC<OrderCellState> = (props) => {
         rm={Decimal.ROUND_DOWN}
         intensity={80}
         padding={false}
-        placeholder="Market"
       >
-        {"MARKET"}
+        {sl_trigger_price ?? "MARKET"}
       </Text.numeral>
     </Statistic>
   );
@@ -482,14 +363,12 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
-      align="end"
     >
       <Text.numeral
         dp={props.quote_dp}
         rm={Decimal.ROUND_DOWN}
         intensity={80}
         padding={false}
-        placeholder="Entire position"
       >
         {quantity}
       </Text.numeral>
@@ -497,23 +376,47 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
   );
 };
 
-const SimpleTooltip: FC<
-  PropsWithChildren<{
-    content: string | React.ReactNode;
-  }>
-> = (props) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <Tooltip content={props.content} open={open} onOpenChange={setOpen}>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          setOpen((e) => !e);
-        }}
-      >
-        {props.children}
-      </div>
-    </Tooltip>
-  );
+
+export const AvgPrice: FC<OrderCellState> = (props) => {
+
+  return (<Statistic
+    label={<Text>Avg price{<Text intensity={20}>(USDC)</Text>}</Text>}
+    classNames={{
+      root: "oui-text-xs",
+      label: "oui-text-2xs",
+    }}
+  >
+    <Text.numeral
+      dp={props.quote_dp}
+      rm={Decimal.ROUND_DOWN}
+      intensity={80}
+      padding={false}
+      
+    >
+      {/* @ts-ignore */}
+      {props.item?.average_executed_price ?? "--"}
+    </Text.numeral>
+  </Statistic>)
+};
+
+export const OrderPrice: FC<OrderCellState> = (props) => {
+
+  return (<Statistic
+    label={<Text>Order price{<Text intensity={20}>(USDC)</Text>}</Text>}
+    classNames={{
+      root: "oui-text-xs",
+      label: "oui-text-2xs",
+    }}
+  >
+    <Text.numeral
+      dp={props.quote_dp}
+      rm={Decimal.ROUND_DOWN}
+      intensity={80}
+      padding={false}
+      placeholder="Market"
+    >
+      {/* @ts-ignore */}
+      {props.item?.price ?? "--"}
+    </Text.numeral>
+  </Statistic>)
 };

@@ -60,7 +60,6 @@ export const DataList: FC<DataListState& {
           <TabPanel title={DataListTabType.history} value={DataListTabType.history}>
             <OrdersView
               type={TabType.orderHistory}
-              ordersStatus={OrderStatus.INCOMPLETE}
               {...props}
             />
           </TabPanel>
@@ -92,7 +91,7 @@ const PositionsView: FC<DataListState> = (props) => {
   const OrdersView: FC<
   DataListState & {
       type: TabType;
-      ordersStatus: OrderStatus;
+      ordersStatus?: OrderStatus;
     }
   > = (props) => {
     return (

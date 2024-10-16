@@ -16,6 +16,8 @@ import {
   TPSLQuantity,
   SLTrigger,
   SLPrice,
+  AvgPrice,
+  OrderPrice,
 } from "./items";
 import { EditBtnWidget } from "./editBtn";
 import { CancelBtnWidget } from "./cancelBtn";
@@ -116,6 +118,8 @@ function itemsWithType(props: OrderCellState) {
           <Qty {...props} />
           <Filled {...props} />
           <TriggerPrice {...props} />
+          <AvgPrice {...props} />
+          <OrderPrice {...props} />
         </>
       );
   }

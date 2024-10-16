@@ -2,6 +2,7 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { tv } from "../utils/tv";
 import { cn } from "tailwind-variants";
+import { TooltipContentProps } from "@radix-ui/react-tooltip";
 // import { cn } from "..";
 
 const TooltipProvider = TooltipPrimitive.Provider;
@@ -83,7 +84,11 @@ export type TooltipProps = React.ComponentPropsWithoutRef<
 
 const Tooltip = React.forwardRef<
   React.ElementRef<typeof TooltipContent>,
-  TooltipProps
+  TooltipProps & {
+    tooltipProps?: {
+      arrow?: TooltipContentProps;
+    };
+  }
 >(
   (
     {
@@ -96,6 +101,7 @@ const Tooltip = React.forwardRef<
       delayDuration,
       disableHoverableContent,
       arrow,
+      tooltipProps,
       ...props
     },
     ref
@@ -112,7 +118,7 @@ const Tooltip = React.forwardRef<
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipContent ref={ref} {...props}>
           {content}
-          <TooltipArrow />
+          <TooltipArrow {...tooltipProps?.arrow}/>
         </TooltipContent>
       </TooltipPrimitive.Root>
     );
