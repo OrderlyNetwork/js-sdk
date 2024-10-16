@@ -24,6 +24,7 @@
       "@orderly.network/chart": ["../../packages/chart/src"],
       "@orderly.network/ui-connector": ["../../packages/ui-connector/src"],
       "@orderly.network/react-app": ["../../packages/app/src"],
+      "@orderly.network/core": ["../../packages/core/src"],
       "@orderly.network/hooks": ["../../packages/hooks/src"],
       "@orderly.network/trading-rewards": [
         "../../packages/trading-rewards/src"
@@ -42,7 +43,6 @@
         "../../packages/ui-chain-selector/src"
       ],
       "@orderly.network/ui-tradingview": ["../../packages/ui-tradingview/src"],
-
       "@orderly.network/react": ["../../packages/component/src"],
     }
   },

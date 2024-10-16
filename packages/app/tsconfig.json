@@ -13,7 +13,10 @@
       ],
       "@orderly.network/utils": [
         "../utils/src"
-      ]
+      ],
+      "@orderly.network/web3-provider-ethers": [
+        "../web3-provider-ethers/src"
+      ],
     }
   }
 }
