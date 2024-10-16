@@ -5,11 +5,13 @@ export type RemovablePanelProps = {
   className?: string;
   index: number;
   onLayout: (currentIdx: number, targetIdx: number) => void;
+  showIndicator?: boolean;
 };
 
 export const RemovablePanel: React.FC<
   PropsWithChildren<RemovablePanelProps>
 > = (props) => {
+  const { showIndicator = true } = props;
   const [open, setOpen] = useState(false);
   return (
     <Box
@@ -53,14 +55,16 @@ export const RemovablePanel: React.FC<
         )}
         arrow={{ className: "oui-fill-transparent" }}
       >
-        <div className="oui-absolute oui-right-[1px] oui-top-[18px]">
-          <IndicatorIcon
-            className={cn(
-              "oui-text-base-contrast-20 hover:oui-text-base-contrast-80",
-              "oui-cursor-pointer"
-            )}
-          />
-        </div>
+        {showIndicator && (
+          <div className="oui-absolute oui-right-[1px] oui-top-[18px]">
+            <IndicatorIcon
+              className={cn(
+                "oui-text-base-contrast-20 hover:oui-text-base-contrast-80",
+                "oui-cursor-pointer"
+              )}
+            />
+          </div>
+        )}
       </Tooltip>
     </Box>
   );
