@@ -53,7 +53,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
         <SimpleSheet
           title={"Limit close"}
           open={sheetOpen}
-          onClose={() => setSheetOpen(false)}
+          onOpenChange={setSheetOpen}
         >
           <Flex
             direction={"column"}
