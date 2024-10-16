@@ -1,7 +1,7 @@
 const path = require("path");
 // const { chartPlugin } = require("@orderly.network/chart");
 import { chartPlugin } from "@orderly.network/chart";
-import {withTV} from 'tailwind-variants/transformer'
+import { withTV } from "tailwind-variants/transformer";
 
 /** @type {import("tailwindcss").Config} */
 module.exports = withTV({
@@ -11,13 +11,13 @@ module.exports = withTV({
     "../../packages/ui-connector/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-orders/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-positions/src/**/*.{ts,js,tsx,jsx,mdx}",
-    // "../../packages/trading-rewards/src/**/*.{ts,js,tsx,jsx,mdx}",
-    // "../../packages/portfolio/src/**/*.{ts,js,tsx,jsx,mdx}",
-    // "../../packages/ui-scaffold/src/**/*.{ts,js,tsx,jsx,mdx}",
-    // "../../packages/affiliate/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/trading-rewards/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/portfolio/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-scaffold/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/affiliate/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/markets/src/**/*.{ts,js,tsx,jsx,mdx}",
-    // "../../packages/chart/src/**/*.{ts,js,tsx,jsx,mdx}",
-    // "../../packages/ui-transfer/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/chart/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-transfer/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/trading/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-order-entry/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
