@@ -107,8 +107,8 @@ export const MobileOrderList: FC<
       <ListView
         className={props.classNames?.root}
         dataSource={props.dataSource}
-        loadMore={props.loadMore}
-        isLoading={props.isLoading}
+        // loadMore={props.loadMore}
+        // isLoading={props.isLoading}
         renderItem={(item, index) => {
           let children = (
             <OrderCellWidget
