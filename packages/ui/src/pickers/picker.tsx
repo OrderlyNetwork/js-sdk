@@ -47,10 +47,12 @@ export interface PickerProps
     VariantProps<typeof pickerVariants> {
   loading?: boolean;
   label?: string;
+  placeholder?: string;
   options: SelectOption[];
   value?: SelectOption | string | number;
   onValueChange?: (value: any) => void;
 }
+
 
 export type PickerRef = {};
 export const Picker = forwardRef<PickerRef, PickerProps>(

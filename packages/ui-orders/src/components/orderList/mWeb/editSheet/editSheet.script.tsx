@@ -5,7 +5,7 @@ import { Decimal } from "@orderly.network/utils";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { OrderEntity } from "@orderly.network/types";
 import { useOrderListContext } from "../../orderListContext";
-import { OrderType } from "../items";
+import { OrderTypeView } from "../items";
 import { AlgoOrderRootType } from "@orderly.network/types";
 
 export const useEditSheetScript = (props: {

@@ -15,7 +15,6 @@ export type InputWithTooltipProps = InputProps & {
   tooltipProps?: {
     content?: TooltipContentProps;
     arrow?: TooltipContentProps;
-
   };
 };
 

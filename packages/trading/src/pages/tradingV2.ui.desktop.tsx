@@ -36,6 +36,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     setAnimating,
     positions,
     updatePositions,
+    canTrading,
   } = props;
 
   const tokenInfoBarHeight = 54;
@@ -82,6 +83,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       className="oui-border oui-border-line-12"
       index={positions.findIndex((item) => item === 0)}
       onLayout={updatePositions}
+      showIndicator={canTrading}
     >
       <AssetViewWidget />
     </RemovablePanel>,
@@ -89,6 +91,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       key="orderEntry"
       index={positions.findIndex((item) => item === 1)}
       onLayout={updatePositions}
+      showIndicator={canTrading}
     >
       <OrderEntryWidget symbol={props.symbol} />
     </RemovablePanel>,
@@ -96,6 +99,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       key="margin"
       index={positions.findIndex((item) => item === 2)}
       onLayout={updatePositions}
+      showIndicator={canTrading}
     >
       <RiskRateWidget />
     </RemovablePanel>,

@@ -5,6 +5,8 @@ import {
   Filter,
   ListView,
   Button,
+  Grid,
+  Picker,
 } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
@@ -49,7 +51,10 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
             }_index${index}`
           }
           renderRowContainer={(record: any, index, children) => {
-            if (props.type === TabType.tp_sl || props.type === TabType.pending) {
+            if (
+              props.type === TabType.tp_sl ||
+              props.type === TabType.pending
+            ) {
               children = (
                 <TPSLOrderRowProvider order={record}>
                   {children}
@@ -94,8 +99,11 @@ export const MobileOrderList: FC<
       root?: string;
       cell?: string;
     };
+    showFilter?: boolean;
   }
 > = (props) => {
+  console.log(props.filterItems);
+
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -104,32 +112,68 @@ export const MobileOrderList: FC<
       editAlgoOrder={props.updateAlgoOrder}
       // cancelTPSLOrder={props.cancelTPSLOrder}
     >
-      <ListView
-        className={props.classNames?.root}
-        dataSource={props.dataSource}
-        loadMore={props.loadMore}
-        isLoading={props.isLoading}
-        renderItem={(item, index) => {
-          let children = (
-            <OrderCellWidget
-              item={item}
-              index={index}
-              className={props.classNames?.cell}
-              type={props.type}
-            />
-          );
-          if (props.type === TabType.tp_sl) {
-            children = (
-              <TPSLOrderRowProvider order={item}>
-                {children}
-              </TPSLOrderRowProvider>
+      <Grid cols={1} rows={2} className="oui-grid-rows-[auto,1fr] oui-w-full" gap={2}>
+        {/* <Filter
+          items={props.filterItems}
+          onFilter={(value: any) => {
+            props.onFilter(value);
+          }}
+          className="oui-px-3"
+          
+        /> */}
+
+        {props.showFilter ? (
+          <Flex gap={2}>
+          {props.filterItems.map((item) => {
+            return (
+              <Picker
+                options={item.options}
+                size={"sm"}
+                value={item.value}
+                className="oui-text-2xs oui-text-base-contrast-54 "
+                placeholder={
+                  item.name === "side"
+                    ? "All sides"
+                    : item.name === "status"
+                    ? "All status"
+                    : ""
+                }
+                onValueChange={(value) => {
+                  //
+                  props.onFilter?.({ name: item.name, value: value });
+                }}
+              />
             );
-          }
-          return (
-            <SymbolProvider symbol={item.symbol}>{children}</SymbolProvider>
-          );
-        }}
-      />
+          })}
+        </Flex>
+        ) : <div></div>}
+        <ListView
+          className={props.classNames?.root}
+          dataSource={props.dataSource}
+          loadMore={props.loadMore}
+          isLoading={props.isLoading}
+          renderItem={(item, index) => {
+            let children = (
+              <OrderCellWidget
+                item={item}
+                index={index}
+                className={props.classNames?.cell}
+                type={props.type}
+              />
+            );
+            if (props.type === TabType.tp_sl) {
+              children = (
+                <TPSLOrderRowProvider order={item}>
+                  {children}
+                </TPSLOrderRowProvider>
+              );
+            }
+            return (
+              <SymbolProvider symbol={item.symbol}>{children}</SymbolProvider>
+            );
+          }}
+        />
+      </Grid>
     </OrderListProvider>
   );
 };

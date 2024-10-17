@@ -1,5 +1,11 @@
 import { utils } from "@orderly.network/hooks";
-import { AlgoOrderRootType, AlgoOrderType, API, OrderStatus } from "@orderly.network/types";
+import {
+  AlgoOrderRootType,
+  AlgoOrderType,
+  API,
+  OrderStatus,
+  OrderType,
+} from "@orderly.network/types";
 
 export const upperCaseFirstLetter = (str: string) => {
   if (str === undefined) return str;
@@ -8,13 +14,33 @@ export const upperCaseFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 };
 
-
-
 export function parseBadgesFor(record: any): undefined | string[] {
   if (typeof record.type !== "undefined") {
-    return typeof record.type === "string"
+    const list = new Array<string>();
+
+    if (!!record.parent_algo_type) {
+      if (record.algo_type === AlgoOrderType.STOP_LOSS) {
+        const types =
+          record.type === OrderType.CLOSE_POSITION
+            ? ["Position", "SL"]
+            : ["SL"];
+        list.push(...types);
+      }
+
+      if (record.algo_type === AlgoOrderType.TAKE_PROFIT) {
+        const types =
+          record.type === OrderType.CLOSE_POSITION
+            ? ["Position", "TP"]
+            : ["TP"];
+        list.push(...types);
+      }
+
+      return list;
+    }
+
+    return (typeof record.type === "string"
       ? [record.type.replace("_ORDER", "").toLowerCase() as string]
-      : [record.type as string];
+      : [record.type as string]).map((e) => upperCaseFirstLetter(e));
   }
 
   if (typeof record.algo_type !== "undefined") {
@@ -37,6 +63,7 @@ export function parseBadgesFor(record: any): undefined | string[] {
     if (tpOrder || slOrder) {
       list.push(tpOrder && slOrder ? "TP/SL" : tpOrder ? "TP" : "SL");
     }
+
     return list;
   }
 
@@ -49,9 +76,6 @@ export function grayCell(record: any): boolean {
     (record as API.AlgoOrder).algo_status === OrderStatus.CANCELLED
   );
 }
-
-
-
 
 function findBracketTPSLOrder(order: API.AlgoOrderExt) {
   if (order.algo_type !== AlgoOrderRootType.BRACKET) {

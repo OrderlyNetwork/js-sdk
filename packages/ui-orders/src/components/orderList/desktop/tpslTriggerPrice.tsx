@@ -42,7 +42,7 @@ export const TPSLTriggerPrice: FC<{
     let quantity = order.quantity;
 
     if (quantity === 0) {
-      if (order.child_orders[0].type === "CLOSE_POSITION") {
+      if (order.child_orders?.[0].type === "CLOSE_POSITION") {
         quantity = position.position_qty;
       }
     }
@@ -93,7 +93,7 @@ export const TPSLTriggerPrice: FC<{
       children.push(
         <Text.numeral
           className={cn(
-            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20"
+            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-36"
           )}
           key={"tp"}
           rule="price"
@@ -117,7 +117,7 @@ export const TPSLTriggerPrice: FC<{
         <Text.numeral
           key={"sl"}
           className={cn(
-            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 "
+            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-36"
           )}
           rule={"price"}
           precision={symbolInfo[order!.symbol]("quote_dp", 2)}
@@ -161,7 +161,11 @@ export const TPSLTriggerPrice: FC<{
 
   if (props.tooltip) {
     // @ts-ignore
-    return <Tooltip content={pnl}>{content}</Tooltip>;
+    return <Tooltip content={pnl} className="oui-bg-base-5" tooltipProps={{
+      arrow: {
+        className: "oui-fill-base-5"
+      }
+    }}>{content}</Tooltip>;
   }
 
   return content;

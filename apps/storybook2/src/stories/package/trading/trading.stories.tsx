@@ -22,15 +22,15 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
       return (
         <ConnectorProvider>
           <OrderlyApp
-            brokerId={"orderly"}
+            // brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
-          // configStore={configStore}
+          configStore={configStore}
           >
             <Scaffold
               leftSidebar={null}

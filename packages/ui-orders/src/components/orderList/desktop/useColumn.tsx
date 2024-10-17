@@ -1,5 +1,6 @@
 import {
   AlgoOrderRootType,
+  AlgoOrderType,
   API,
   OrderSide,
   OrderStatus,
@@ -31,6 +32,7 @@ import { Renew } from "./renew";
 import { OrderTriggerPrice, TPSLTriggerPrice } from "./tpslTriggerPrice";
 import { BarcketOrderPrice } from "./barcketOrderPrice";
 import { TP_SLEditButton } from "./tpslEdit";
+import { TPSLOrderPrice } from "./tpslPrice";
 
 export const useOrderColumn = (_type: TabType) => {
   const columns =
@@ -76,7 +78,7 @@ export const useOrderColumn = (_type: TabType) => {
             side({ width: 176 }),
             quantity({ width: 176 }),
             tpslTriggerPrice({ width: 176 }),
-            price({ width: 176, disableEdit: true }),
+            tpslPrice({ width: 176, disableEdit: true }),
             notional({ width: 176 }),
             reduceOnly({ width: 176 }),
             orderTime({ width: 176 }),
@@ -276,12 +278,22 @@ function type(option?: {
     width: option?.width,
     className: option?.className,
     formatter: (value: string, record: any) => {
-      const type =
-        typeof record.type === "string"
-          ? record.type.replace("_ORDER", "").toLowerCase()
-          : record.type;
+      if (!!record.parent_algo_type) {
+        if (record.algo_type === AlgoOrderType.STOP_LOSS) {
+          return record.type === OrderType.CLOSE_POSITION
+            ? `Position SL`
+            : "SL";
+        }
+
+        if (record.algo_type === AlgoOrderType.TAKE_PROFIT) {
+          return record.type === OrderType.CLOSE_POSITION
+            ? `Position TP`
+            : "TP";
+        }
+      }
+
       if (record.algo_order_id) {
-        return `Stop ${type}`;
+        return `Stop ` + `${record.type}`.toLowerCase();
       }
       return upperCaseFirstLetter(value);
     },
@@ -301,6 +313,12 @@ function fillAndQuantity(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
+      if (
+        record.type === OrderType.CLOSE_POSITION &&
+        record.status !== OrderStatus.FILLED
+      ) {
+        return "Entire position";
+      }
       return <OrderQuantity order={record} disableEdit={option?.disableEdit} />;
       // return value;
     },
@@ -343,6 +361,25 @@ function price(option?: {
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
       return <Price order={record} disableEdit={option?.disableEdit} />;
+    },
+  };
+}
+
+function tpslPrice(option?: {
+  title?: string;
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+  disableEdit?: boolean;
+}): Column<API.Order> {
+  return {
+    title: option?.title ?? "Price",
+    dataIndex: "price",
+    className: option?.className,
+    width: option?.width,
+    onSort: option?.enableSort,
+    render: (value: string, record: any) => {
+      return <TPSLOrderPrice />;
     },
   };
 }

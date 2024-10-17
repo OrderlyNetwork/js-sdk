@@ -1,9 +1,14 @@
-import { Badge, cn, Statistic, Text } from "@orderly.network/ui";
+import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { OrderCellState } from "./orderCell.script";
 import { FC, useCallback, useMemo } from "react";
-import { upperCaseFirstLetter } from "../../../utils/util";
-import { AlgoOrderRootType, API } from "@orderly.network/types";
+import { parseBadgesFor, upperCaseFirstLetter } from "../../../utils/util";
+import {
+  AlgoOrderRootType,
+  API,
+  OrderStatus,
+  OrderType,
+} from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const Symbol: FC<OrderCellState> = (props) => {
@@ -28,7 +33,7 @@ export const Symbol: FC<OrderCellState> = (props) => {
   );
 };
 
-export const OrderType: FC<OrderCellState> = (props) => {
+export const OrderTypeView: FC<OrderCellState> = (props) => {
   const { item } = props;
   const orderType = useCallback(() => {
     const type =
@@ -43,9 +48,17 @@ export const OrderType: FC<OrderCellState> = (props) => {
     return upperCaseFirstLetter(item.type);
   }, [item]);
   return (
-    <Badge color="neutral" size="xs">
-      {orderType()}
-    </Badge>
+    <Flex direction={"row"} gap={1}>
+      {parseBadgesFor(props.item)?.map((e, index) => (
+        <Badge
+          key={index}
+          color={e.toLocaleLowerCase() === "position" ? "primary" : "neutral"}
+          size="xs"
+        >
+          {e}
+        </Badge>
+      ))}
+    </Flex>
   );
 };
 
@@ -67,6 +80,11 @@ export const OrderTime: FC<OrderCellState> = (props) => {
 export const Qty: FC<OrderCellState> = (props) => {
   const { item } = props;
 
+  const isEntirePosition =
+    item.type === OrderType.CLOSE_POSITION &&
+    // @ts-ignore
+    item?.status !== OrderStatus.FILLED;
+
   return (
     <Statistic
       label={"Qty."}
@@ -75,8 +93,14 @@ export const Qty: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.base_dp} padding={false} coloring>
-        {item.quantity}
+      <Text.numeral
+        dp={props.base_dp}
+        padding={false}
+        coloring
+        placeholder="Entire position"
+        intensity={80}
+      >
+        {isEntirePosition ? "--" : item.quantity}
       </Text.numeral>
     </Statistic>
   );
@@ -99,9 +123,10 @@ export const Filled: FC<OrderCellState> = (props) => {
         padding={false}
         rm={Decimal.ROUND_DOWN}
       >
-        {item.algo_order_id
+        {/* {item.algo_order_id
           ? item.total_executed_quantity
-          : (item as unknown as API.OrderExt).executed}
+          : (item as unknown as API.OrderExt).executed} */}
+        {item.total_executed_quantity}
       </Text.numeral>
     </Statistic>
   );
@@ -165,7 +190,11 @@ export const EstTotal: FC<OrderCellState> = (props) => {
   );
 };
 
-export const TriggerPrice: FC<OrderCellState> = (props) => {
+export const TriggerPrice: FC<
+  OrderCellState & {
+    align?: "start" | "end";
+  }
+> = (props) => {
   const { item } = props;
 
   return (
@@ -175,6 +204,7 @@ export const TriggerPrice: FC<OrderCellState> = (props) => {
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
+      align={props.align}
     >
       <Text.numeral
         dp={props.quote_dp}
@@ -358,6 +388,75 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
         padding={false}
       >
         {quantity}
+      </Text.numeral>
+    </Statistic>
+  );
+};
+
+export const AvgPrice: FC<OrderCellState> = (props) => {
+  return (
+    <Statistic
+      label={<Text>Avg price{<Text intensity={20}>(USDC)</Text>}</Text>}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {/* @ts-ignore */}
+        {props.item?.average_executed_price ?? "--"}
+      </Text.numeral>
+    </Statistic>
+  );
+};
+
+export const OrderPrice: FC<OrderCellState> = (props) => {
+  return (
+    <Statistic
+      label={<Text>Order price{<Text intensity={20}>(USDC)</Text>}</Text>}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+        placeholder="Market"
+      >
+        {/* @ts-ignore */}
+        {props.item?.price ?? "--"}
+      </Text.numeral>
+    </Statistic>
+  );
+};
+
+export const RealizedPnL: FC<OrderCellState> = (props) => {
+  return (
+    <Statistic
+      label={<Text>Real. PnL{<Text intensity={20}>(USDC)</Text>}</Text>}
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+      align="end"
+    >
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+        coloring
+      >
+        {/* @ts-ignore */}
+        {props.item?.realized_pnl ?? "--"}
       </Text.numeral>
     </Statistic>
   );
