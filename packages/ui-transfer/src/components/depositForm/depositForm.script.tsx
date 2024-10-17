@@ -152,7 +152,7 @@ export function useDepositFee(options: {
 
   const feeProps = useMemo(() => {
     const dstGasFee = new Decimal(depositFee.toString())
-      .div(new Decimal(10).pow(18))
+      .div(new Decimal(10).pow(9))
       .toString();
 
     const feeAmount = new Decimal(dstGasFee).mul(symbolPrice || 0).toString();

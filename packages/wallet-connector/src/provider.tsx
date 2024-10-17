@@ -1,25 +1,25 @@
 import InitSolana from "./initSolana";
-import { Main } from "./main";
-import React, { type PropsWithChildren, useState } from "react";
+import {Main} from "./main";
+import React, {type PropsWithChildren, useState} from "react";
+import {EvmInitialProps, SolanaInitialProps} from "./types";
 
 export interface WalletConnectorProviderProps {
-  apiKey?: string;
-  // options?: ConnectorInitOptions;
-  // skip board configuration if already initialized
-  skipInit?: boolean;
+
+    solanaInitial?: SolanaInitialProps;
+    evmInitial?: EvmInitialProps;
 }
 
 export function WalletConnectorProvider(
-  props: PropsWithChildren<WalletConnectorProviderProps>
+    props: PropsWithChildren<WalletConnectorProviderProps>
 ) {
 
-  return (
-    <InitSolana>
+    return (
+        <InitSolana {...(props.solanaInitial ?? {})}>
 
-      <Main>
-        {props.children}
-      </Main>
+            <Main>
+                {props.children}
+            </Main>
 
-    </InitSolana>
-  );
+        </InitSolana>
+    );
 }
