@@ -416,10 +416,19 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
 
   const quantity = useMemo(() => {
     if (item.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
-      return "Entire position";
+      return <span className="oui-text-base-contrast-80">Entire position</span>;
     }
 
-    return item.quantity;
+    return (
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {item.quantity}
+      </Text.numeral>
+    );
   }, [item]);
 
   return (
@@ -429,15 +438,9 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
+      align="end"
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-        intensity={80}
-        padding={false}
-      >
-        {quantity}
-      </Text.numeral>
+      {quantity}
     </Statistic>
   );
 };

@@ -82,7 +82,6 @@ const Statistic = React.forwardRef<
       const { className: valueClass, ...restValueProps } = valueProps ?? {};
       return (
         <Numeral
-          children={children}
           {...restValueProps}
           className={cnBase(
             valueClassName({
@@ -91,7 +90,9 @@ const Statistic = React.forwardRef<
             "oui-font-semibold",
             !valueProps?.coloring && "oui-text-base-contrast-80"
           )}
-        />
+        >
+          {children}
+        </Numeral>
       );
     }
     return children;
