@@ -83,6 +83,7 @@ export const useTaskProfitAndStopLossInternal = (
       >
     >;
     isCreateMutating: boolean;
+    isUpdateMutating: boolean;
   }
 ] => {
   const isEditing = !!options?.defaultOrder;
@@ -109,7 +110,10 @@ export const useTaskProfitAndStopLossInternal = (
 
   const [doCreateOrder, { isMutating: isCreateMutating }] =
     useMutation("/v1/algo/order");
-  const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
+  const [doUpdateOrder, { isMutating: isUpdateMutating }] = useMutation(
+    "/v1/algo/order",
+    "PUT"
+  );
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
 
   const [errors, setErrors] = useState<ValidateError | null>(null);
@@ -381,6 +385,7 @@ export const useTaskProfitAndStopLossInternal = (
       validate,
       errors,
       isCreateMutating,
+      isUpdateMutating,
     },
   ];
 };

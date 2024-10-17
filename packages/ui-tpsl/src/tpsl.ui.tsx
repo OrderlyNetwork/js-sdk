@@ -83,7 +83,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           size={"md"}
           data-testid={"tpsl-confirm"}
           disabled={!props.valid || status.isCreateMutating}
-          loading={status.isCreateMutating}
+          loading={status.isCreateMutating || status.isUpdateMutating}
           onClick={() => {
             props.onSubmit().then(
               () => {

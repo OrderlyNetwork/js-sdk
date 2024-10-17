@@ -27,8 +27,6 @@ export const TPSLSheetUI = (props: TPSLWidgetProps & TPSLSheetState) => {
             return Promise.resolve(true);
           }
 
-          // setVisible(false);
-
           return modal
             .confirm({
               title: "Confirm Order",

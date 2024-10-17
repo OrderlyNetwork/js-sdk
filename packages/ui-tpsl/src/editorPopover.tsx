@@ -19,6 +19,9 @@ export const PositionTPSLPopover = (props: {
   label: string;
   baseDP?: number;
   quoteDP?: number;
+  /**
+   * Button props
+   */
   buttonProps?: ButtonProps;
   isEditing?: boolean;
 }) => {

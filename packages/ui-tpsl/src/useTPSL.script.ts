@@ -32,17 +32,19 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
   const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
 
-  const [tpslOrder, { submit, setValue, validate, errors, isCreateMutating }] =
-    useTPSLOrder(
-      {
-        symbol,
-        position_qty: position.position_qty,
-        average_open_price: position.average_open_price,
-      },
-      {
-        defaultOrder: order,
-      }
-    );
+  const [
+    tpslOrder,
+    { submit, setValue, validate, errors, isCreateMutating, isUpdateMutating },
+  ] = useTPSLOrder(
+    {
+      symbol,
+      position_qty: position.position_qty,
+      average_open_price: position.average_open_price,
+    },
+    {
+      defaultOrder: order,
+    }
+  );
 
   const setQuantity = (value: number | string) => {
     setValue("quantity", value);
@@ -187,6 +189,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     errors,
     status: {
       isCreateMutating,
+      isUpdateMutating,
     },
   } as const;
 };
