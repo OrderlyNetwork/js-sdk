@@ -188,7 +188,7 @@ const Tip: FC<{
         className="oui-max-w-[400px] oui-w-full oui-text-2xs oui-shadow-md oui-rounded-base oui-p-3 oui-bg-base-6 oui-flex oui-flex-col oui-gap-2"
         align="center"
         side="left"
-        sideOffset={12}
+        sideOffset={0}
         onPointerEnter={(e) => e.preventDefault()}
       >
         <Row

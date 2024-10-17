@@ -120,7 +120,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
       {isPendingOrder && (
         <div
           className={cn(
-            "oui-absolute oui-rounded-full oui-left-[-8px] oui-h-[4px] oui-w-[4px] oui-pointer-events-none",
+            "oui-absolute oui-rounded-full oui-left-[4px] oui-h-[4px] oui-w-[4px] oui-pointer-events-none",
             props.type === OrderBookCellType.ASK && "oui-bg-trade-loss",
             props.type === OrderBookCellType.BID && "oui-bg-trade-profit"
           )}
