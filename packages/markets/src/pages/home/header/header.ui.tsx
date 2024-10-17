@@ -96,10 +96,14 @@ const BlockList: React.FC<BlockListProps> = (props) => {
           </Flex>
         ),
         value: total24Amount,
+        rule: "human",
+        dp: 2,
       },
       {
         label: "Open interest",
         value: totalOpenInterest,
+        rule: "human",
+        dp: 2,
       },
       {
         label: "Assets (TVL)",
@@ -126,6 +130,8 @@ const BlockList: React.FC<BlockListProps> = (props) => {
 type BlockItemProps = {
   label: ReactNode;
   value?: number;
+  rule?: string;
+  dp?: number;
 };
 
 const BlockItem: React.FC<BlockItemProps> = (props) => {
@@ -135,7 +141,13 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
         {props.label}
       </Text>
 
-      <Text.numeral size="base" currency="$" dp={0} rm={Decimal.ROUND_DOWN}>
+      <Text.numeral
+        size="base"
+        currency="$"
+        dp={props.dp || 0}
+        rm={Decimal.ROUND_DOWN}
+        rule={props.rule as any}
+      >
         {props.value!}
       </Text.numeral>
     </Box>

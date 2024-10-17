@@ -215,8 +215,8 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
     if (!markPrice || !accountInfo) return null;
 
     return calcEstLiqPrice(formattedOrder, askAndBid.current, {
-      baseIMR: symbolInfo.base_imr,
-      baseMMR: symbolInfo.base_mmr,
+      baseIMR: symbolInfo?.base_imr,
+      baseMMR: symbolInfo?.base_mmr,
       markPrice,
       totalCollateral,
       futures_taker_fee_rate: accountInfo.futures_taker_fee_rate,

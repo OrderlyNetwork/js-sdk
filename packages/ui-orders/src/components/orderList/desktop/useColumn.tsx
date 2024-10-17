@@ -397,6 +397,8 @@ function avgPrice(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
+      console.log("average_executed_price", record.average_executed_price);
+      
       return <Text>{commifyOptional(value)}</Text>;
     },
   };
@@ -607,9 +609,9 @@ function avgOpen(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
-    render: (value: string) => (
+    render: (value: string, record) => (
       <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {value}
+        {record.average_executed_price}
       </Text.numeral>
     ),
   };
