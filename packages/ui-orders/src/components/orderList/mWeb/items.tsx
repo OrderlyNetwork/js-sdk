@@ -1,7 +1,14 @@
-import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
+import { Badge, cn, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { OrderCellState } from "./orderCell.script";
-import { FC, useCallback, useMemo } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { parseBadgesFor, upperCaseFirstLetter } from "../../../utils/util";
 import {
   AlgoOrderRootType,
@@ -271,7 +278,7 @@ export const LimitPrice: FC<OrderCellState> = (props) => {
 };
 
 export const TPTrigger: FC<OrderCellState> = (props) => {
-  const { tp_trigger_price } = useTPSLOrderRowContext();
+  const { tp_trigger_price, tpPnL } = useTPSLOrderRowContext();
 
   return (
     <Statistic
@@ -281,21 +288,42 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-        intensity={80}
-        padding={false}
-        className="oui-border-b oui-border-dashed oui-border-base-contrast-36"
+      <MobileTooltip
+        content={
+          tpPnL && (
+            <Text.numeral
+              size="2xs"
+              showIdentifier
+              // @ts-ignore
+              prefix={<Text intensity={54}>TP PnL:&nbsp;&nbsp;</Text>}
+              suffix={<Text intensity={20}>&nbsp;USDC</Text>}
+              coloring
+            >
+              {tpPnL}
+            </Text.numeral>
+          )
+        }
+        classNames={{
+          content: "oui-bg-base-6 oui-ml-2",
+          arrow: "oui-fill-base-6",
+        }}
       >
-        {tp_trigger_price ?? "--"}
-      </Text.numeral>
+        <Text.numeral
+          dp={props.quote_dp}
+          rm={Decimal.ROUND_DOWN}
+          intensity={80}
+          padding={false}
+          className="oui-border-b oui-border-dashed oui-border-base-contrast-36"
+        >
+          {tp_trigger_price ?? "--"}
+        </Text.numeral>
+      </MobileTooltip>
     </Statistic>
   );
 };
 
 export const SLTrigger: FC<OrderCellState> = (props) => {
-  const { sl_trigger_price } = useTPSLOrderRowContext();
+  const { sl_trigger_price, slPnL } = useTPSLOrderRowContext();
 
   return (
     <Statistic
@@ -305,14 +333,35 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-        intensity={80}
-        padding={false}
+      <MobileTooltip
+        content={
+          slPnL && (
+            <Text.numeral
+              size="2xs"
+              // @ts-ignore
+              prefix={<Text intensity={54}>SL PnL:&nbsp;&nbsp;</Text>}
+              suffix={<Text intensity={20}>&nbsp;USDC</Text>}
+              coloring
+            >
+              {slPnL}
+            </Text.numeral>
+          )
+        }
+        classNames={{
+          content: "oui-bg-base-6 oui-ml-2",
+          arrow: "oui-fill-base-6",
+        }}
       >
-        {sl_trigger_price ?? "--"}
-      </Text.numeral>
+        <Text.numeral
+          dp={props.quote_dp}
+          rm={Decimal.ROUND_DOWN}
+          intensity={80}
+          padding={false}
+          className="oui-border-b oui-border-dashed oui-border-base-contrast-36"
+        >
+          {sl_trigger_price ?? "--"}
+        </Text.numeral>
+      </MobileTooltip>
     </Statistic>
   );
 };
@@ -459,5 +508,35 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
         {props.item?.realized_pnl ?? "--"}
       </Text.numeral>
     </Statistic>
+  );
+};
+
+export const MobileTooltip: FC<
+  PropsWithChildren<{
+    content?: string | ReactNode;
+    classNames?: {
+      content?: string;
+      arrow?: string;
+    };
+  }>
+> = (props) => {
+  const { classNames, content } = props;
+  const [open, setOpen] = useState(false);
+  if (typeof content === "undefined") return props.children;
+  return (
+    <Tooltip
+      // @ts-ignore
+      content={content}
+      className={classNames?.content}
+      open={open}
+      onOpenChange={setOpen}
+      tooltipProps={{
+        arrow: {
+          className: classNames?.arrow,
+        },
+      }}
+    >
+      <div onClick={() => setOpen((e) => !e)}>{props.children}</div>
+    </Tooltip>
   );
 };

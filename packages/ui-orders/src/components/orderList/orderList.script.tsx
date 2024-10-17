@@ -202,8 +202,16 @@ const useFilter = (
           value: undefined,
         },
         {
-          label: "Pending",
-          value: OrderStatus.INCOMPLETE,
+          label: "Open",
+          value: OrderStatus.OPEN,
+        },
+        {
+          label: "Filled",
+          value: OrderStatus.FILLED,
+        },
+        {
+          label: "Partial filled",
+          value: OrderStatus.PARTIAL_FILLED,
         },
         {
           label: "Canceled",

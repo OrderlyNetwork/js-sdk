@@ -2,36 +2,70 @@ import { FC } from "react";
 import { cn, Flex, SimpleDialog, Text } from "@orderly.network/ui";
 import { BarcketOrderPriceState } from "./bracketOrderPrice.script";
 import { Decimal } from "@orderly.network/utils";
+import { MobileTooltip } from "../items";
 
 export const BracketOrderPrice: FC<BarcketOrderPriceState> = (props) => {
   if (!props.sl_trigger_price && !props.tp_trigger_price) return <></>;
 
   return (
     <>
-      <button
-        onClick={() => {
-          props.setOpen(!props.open);
+      <MobileTooltip
+        classNames={{
+          content: "oui-bg-base-6 oui-ml-2",
+          arrow: "oui-fill-base-6",
         }}
+        content={
+          <Flex direction={"column"} itemAlign={"start"} gap={1}>
+            {typeof props.pnl?.tpPnL !== "undefined" && (
+              <Text.numeral
+                // @ts-ignore
+                prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
+                suffix={<Text intensity={20}>{" USDC"}</Text>}
+                dp={props.quote_dp}
+                coloring
+              >
+                {props.pnl?.tpPnL}
+              </Text.numeral>
+            )}
+            {typeof props.pnl?.slPnL !== "undefined" && (
+              <Text.numeral
+                // @ts-ignore
+                prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
+                suffix={<Text intensity={20}>{" USDC"}</Text>}
+                dp={props.quote_dp}
+                coloring
+              >
+                {props.pnl?.slPnL}
+              </Text.numeral>
+            )}
+          </Flex>
+        }
       >
-        <Flex gap={1}>
-          {props.tp_trigger_price && (
-            <Price
-              type="TP"
-              value={props.tp_trigger_price}
-              quote_dp={props.quote_dp}
-            />
-          )}
-          {props.sl_trigger_price && (
-            <Price
-              type="SL"
-              value={props.sl_trigger_price}
-              quote_dp={props.quote_dp}
-            />
-          )}
-        </Flex>
-      </button>
+        <button
+          onClick={() => {
+            props.setOpen(!props.open);
+          }}
+        >
+          <Flex gap={1}>
+            {props.tp_trigger_price && (
+              <Price
+                type="TP"
+                value={props.tp_trigger_price}
+                quote_dp={props.quote_dp}
+              />
+            )}
+            {props.sl_trigger_price && (
+              <Price
+                type="SL"
+                value={props.sl_trigger_price}
+                quote_dp={props.quote_dp}
+              />
+            )}
+          </Flex>
+        </button>
+      </MobileTooltip>
 
-      <SimpleDialog
+      {/* <SimpleDialog
         title="TP/SL"
         open={props.open}
         onOpenChange={props.setOpen}
@@ -67,7 +101,7 @@ export const BracketOrderPrice: FC<BarcketOrderPriceState> = (props) => {
             </Text.numeral>
           )}
         </Flex>
-      </SimpleDialog>
+      </SimpleDialog> */}
     </>
   );
   // return (
