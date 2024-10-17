@@ -42,11 +42,11 @@ export const Orders = (props: OrdersBuilderState) => {
           ordersStatus={OrderStatus.REJECTED}
         />
       </TabPanel>
-      <TabPanel value={TabType.orderHistory} title="Order history">
+      {/* <TabPanel value={TabType.orderHistory} title="Order history">
         <DesktopOrderListWidget
           type={TabType.orderHistory}
         />
-      </TabPanel>
+      </TabPanel> */}
     </Tabs>
   );
 };
