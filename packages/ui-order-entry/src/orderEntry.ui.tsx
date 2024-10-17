@@ -50,7 +50,9 @@ import { SDKError } from "@orderly.network/types";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
-export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
+export const OrderEntry = (props: uesOrderEntryScriptReturn & {
+  containerRef: any;
+}) => {
   const {
     side,
     formattedOrder,
@@ -150,7 +152,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn) => {
         errorMsgVisible,
       }}
     >
-      <div className={"oui-space-y-3 oui-text-base-contrast-54"}>
+      <div className={"oui-space-y-3 oui-text-base-contrast-54"} ref={props.containerRef}>
         <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
           <div
             className={

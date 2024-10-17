@@ -102,7 +102,6 @@ export const MobileOrderList: FC<
     showFilter?: boolean;
   }
 > = (props) => {
-  console.log(props.filterItems);
 
   return (
     <OrderListProvider
