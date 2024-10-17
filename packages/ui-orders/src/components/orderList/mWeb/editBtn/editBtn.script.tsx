@@ -13,29 +13,37 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const { order, position } = useTPSLOrderRowContext();
   const onShowEditSheet = useCallback(() => {
     if (props.state.type === TabType.tp_sl) {
-      modal.sheet({
-        title: "TP/SL",
-        content: (
-          <PositionTPSLSheet
-            isEditing
-            order={props.state.item}
-            position={position!}
-            symbolInfo={props.state.origin}
-          />
-        ),
-      });
+      modal
+        .sheet({
+          title: "TP/SL",
+          content: (
+            <PositionTPSLSheet
+              isEditing
+              order={props.state.item}
+              position={position!}
+              symbolInfo={props.state.origin}
+            />
+          ),
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
-      modal.sheet({
-        title: "Edit order",
-        // size: "xs",
-        content: (
-          <EditSheetWidget
-            state={state}
-            editAlgoOrder={editAlgoOrder}
-            editOrder={editOrder}
-          />
-        ),
-      });
+      modal
+        .sheet({
+          title: "Edit order",
+          // size: "xs",
+          content: (
+            <EditSheetWidget
+              state={state}
+              editAlgoOrder={editAlgoOrder}
+              editOrder={editOrder}
+            />
+          ),
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, [state]);
 

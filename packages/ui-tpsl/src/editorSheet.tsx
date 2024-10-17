@@ -25,7 +25,7 @@ type TPSLSheetProps = {
 };
 
 export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
-  const { position, symbolInfo } = props;
+  const { position, symbolInfo, isEditing } = props;
   const { resolve, hide, updateArgs } = useModal();
 
   const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
@@ -60,13 +60,14 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
 
           return modal
             .confirm({
-              title: "Confirm Order",
+              title: isEditing ? "Edit Order" : "Confirm Order",
               bodyClassName: "oui-pb-0 lg:oui-pb-0",
               onOk: () => {
                 return options.submit();
               },
               content: (
                 <PositionTPSLConfirm
+                  isEditing={isEditing}
                   symbol={order.symbol!}
                   qty={Number(order.quantity)}
                   maxQty={Number(position.position_qty)}

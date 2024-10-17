@@ -21,6 +21,7 @@ import { TPSLBuilderState } from "./useTPSL.script";
 import type { PNL_Values } from "./pnlInput/useBuilder.script";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { API, OrderSide } from "@orderly.network/types";
+import { transSymbolformString } from "@orderly.network/utils";
 
 export type TPSLProps = {
   onCancel?: () => void;
@@ -376,16 +377,25 @@ export type PositionTPSLConfirmProps = {
   slPrice?: number;
   maxQty: number;
   side: OrderSide;
-
   // symbolConfig:API.SymbolExt
   baseDP: number;
   quoteDP: number;
+  isEditing?: boolean;
 };
 
 // ------------ Position TP/SL Confirm dialog start------------
 export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
-  const { symbol, tpPrice, slPrice, qty, maxQty, side, quoteDP, baseDP } =
-    props;
+  const {
+    symbol,
+    tpPrice,
+    slPrice,
+    qty,
+    maxQty,
+    side,
+    quoteDP,
+    baseDP,
+    isEditing,
+  } = props;
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_position_tp_sl_confirm",
     true
@@ -398,9 +408,26 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
   return (
     <>
+      {isEditing && (
+        <Text
+          as="div"
+          size="2xs"
+          intensity={80}
+          className="oui-mb-3"
+        >{`You agree to edit your ${transSymbolformString(
+          symbol
+        )} order.`}</Text>
+      )}
+
       <Flex pb={4}>
         <Box grow>
-          <Text.formatted rule={"symbol"} size="base" showIcon as="div">
+          <Text.formatted
+            rule={"symbol"}
+            size="base"
+            showIcon
+            as="div"
+            intensity={80}
+          >
             {symbol}
           </Text.formatted>
         </Box>

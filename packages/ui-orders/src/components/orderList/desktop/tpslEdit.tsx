@@ -5,6 +5,11 @@ import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 export const TP_SLEditButton = (props: { order: API.Order }) => {
   const { position, order } = useTPSLOrderRowContext();
   return (
-    <PositionTPSLPopover position={position!} order={order} label="Edit" />
+    <PositionTPSLPopover
+      position={position!}
+      order={order}
+      label="Edit"
+      isEditing
+    />
   );
 };

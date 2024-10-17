@@ -81,13 +81,14 @@ export const PositionTPSLPopover = (props: {
 
             return modal
               .confirm({
-                title: "Confirm Order",
+                title: isEditing ? "Edit Order" : "Confirm Order",
                 // bodyClassName: "lg:oui-py-0",
                 onOk: () => {
                   return options.submit();
                 },
                 content: (
                   <PositionTPSLConfirm
+                    isEditing={isEditing}
                     symbol={order.symbol!}
                     qty={Number(order.quantity)}
                     maxQty={Number(position.position_qty)}
