@@ -158,7 +158,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               <DataItem
                 label="24h volume"
                 value={
-                  <Text.numeral rule="price" dp={quotoDp}>
+                  <Text.numeral rule="human" dp={2}>
                     {data?.["24h_amount"]}
                   </Text.numeral>
                 }
@@ -174,7 +174,9 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
                   label="Open interest"
                   value={
                     <>
-                      <Text.numeral rule="price">{openInterest}</Text.numeral>
+                      <Text.numeral rule="human" dp={2}>
+                        {openInterest}
+                      </Text.numeral>
                       <Text intensity={36}>{` USDC`}</Text>
                     </>
                   }
