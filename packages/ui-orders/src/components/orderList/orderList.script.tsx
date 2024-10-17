@@ -19,8 +19,9 @@ export const useOrderListScript = (props: {
   type: TabType;
   ordersStatus?: OrderStatus;
   symbol?: string;
+  enableLoadMore?: boolean;
 }) => {
-  const { ordersStatus, type } = props;
+  const { ordersStatus, type, enableLoadMore = false } = props;
 
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
@@ -61,7 +62,7 @@ export const useOrderListScript = (props: {
     symbol: props.symbol,
     status: orderStatus,
     side: ordersSide,
-    page: page,
+    page: enableLoadMore ? undefined : page,
     size: pageSize,
     dateRange,
     includes,
