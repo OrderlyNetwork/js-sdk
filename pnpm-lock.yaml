@@ -1444,7 +1444,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(typescript@5.2.2)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
 
   packages/perp:
     dependencies:
@@ -1670,6 +1670,9 @@ importers:
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/ui-chain-selector':
+        specifier: workspace:*
+        version: link:../ui-chain-selector
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
@@ -2402,7 +2405,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(postcss@8.4.47)(ts-node@10.9.2)(typescript@5.2.2)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2

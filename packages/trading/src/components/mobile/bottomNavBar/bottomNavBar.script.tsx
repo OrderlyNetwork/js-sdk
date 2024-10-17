@@ -6,12 +6,14 @@ import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage
 import { useAccount } from "@orderly.network/hooks";
 import { isTestnet } from "@orderly.network/utils";
 import { useMemo } from "react";
+import { useAppContext } from "@orderly.network/react-app";
 
 export const useBottomNavBarScript = () => {
   
 
-  
+  const { wrongNetwork } = useAppContext();
   return {
+    wrongNetwork,
   };
 };
 

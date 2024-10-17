@@ -13,7 +13,14 @@ import { commifyOptional } from "@orderly.network/utils";
 export const Balance: FC<BalanceState> = (props) => {
   return (
     <Flex gap={3}>
-      <Flex direction={"column"} itemAlign={"start"} className="oui-text-[11px]">
+      <Flex
+        direction={"column"}
+        itemAlign={"start"}
+        className="oui-text-[11px] oui-cursor-pointer"
+        onClick={(e) => {
+          props.onShowPortfolioSheet();
+        }}
+      >
         <Flex>
           <Text intensity={54}>Total value</Text>
           <button
@@ -37,13 +44,13 @@ export const Balance: FC<BalanceState> = (props) => {
           dp={2}
           visible={!props.hideAssets}
         >
-          {props.total}
+          {props.isEnableTrading ? props.total ?? "--" : "--"}
         </Text.numeral>
       </Flex>
-      {!props.wrongNetwork && (
+      {!props.wrongNetwork && props.isEnableTrading && (
         <Divider direction="vertical" className="oui-h-[26px]" />
       )}
-      {!props.wrongNetwork && (
+      {!props.wrongNetwork && props.isEnableTrading && (
         <Button variant={"outlined"} className="oui-h-[28px] oui-text-2xs">
           {commifyOptional(props.currentLeverage, { fix: 2 })}
         </Button>

@@ -24,8 +24,8 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
     >
       <BalanceWidget />
 
-      <Flex>
-        <ChainWidget />
+      <Flex gap={2}>
+        {!props.wrongNetwork && <ChainWidget />}
         <AccountWidget />
       </Flex>
     </Flex>

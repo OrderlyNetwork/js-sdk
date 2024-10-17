@@ -7,7 +7,7 @@ import { Numeral } from "./numeral";
 import { Text as BaseText, textVariants } from "./text";
 import type { TextProps } from "./text";
 export type { NumeralProps } from "./numeral";
-export { parseNumber } from "./utils";
+export { parseNumber, formatAddress } from "./utils";
 
 export type TextType = typeof BaseText & {
   formatted: typeof FormattedText;

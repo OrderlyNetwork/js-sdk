@@ -2,8 +2,9 @@ import { modal } from "@orderly.network/ui";
 import { useTradingLocalStorage } from "../../../../provider/useTradingLocalStorage";
 import { PortfolioSheetWidget } from "../../portfolioSheet";
 import { useTradingPageContext } from "../../../../provider/context";
-import { useAppContext } from "@orderly.network/react-app";
-import { useCollateral, useMarginRatio } from "@orderly.network/hooks";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { useAccount, useCollateral, useMarginRatio } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export const useBalanceScript = () => {
   const { bottomSheetLeading } =
@@ -11,23 +12,32 @@ export const useBalanceScript = () => {
 
   const { hideAssets, setHideAssets } = useTradingLocalStorage();
   const { wrongNetwork } = useAppContext();
+  const { state } = useAccount();
 
   const { currentLeverage } = useMarginRatio();
   const { totalValue } = useCollateral();
+  const isEnableTrading = state.status >= AccountStatusEnum.EnableTrading;
 
   const onShowPortfolioSheet = () => {
-    modal.sheet({
-      title: "Asset & Margin",
-      leading: bottomSheetLeading,
-      content: <PortfolioSheetWidget />,
-    });
+    if (isEnableTrading) {
+        modal.sheet({
+          title: "Asset & Margin",
+          leading: bottomSheetLeading,
+          content: <PortfolioSheetWidget />,
+        });
+    }
   };
+  const total = useDataTap(totalValue);
+
+  console.log("balance", total);
+  
   return {
     currentLeverage,
-    total: totalValue,
+    total,
     hideAssets, setHideAssets,
     onShowPortfolioSheet,
     wrongNetwork,
+    isEnableTrading,
   };
 };
 
