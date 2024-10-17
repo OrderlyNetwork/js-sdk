@@ -64,53 +64,8 @@ export const BracketOrderPrice: FC<BarcketOrderPriceState> = (props) => {
           </Flex>
         </button>
       </MobileTooltip>
-
-      {/* <SimpleDialog
-        title="TP/SL"
-        open={props.open}
-        onOpenChange={props.setOpen}
-        actions={{
-          primary: {
-            label: "OK",
-            onClick: () => props.setOpen(false),
-            fullWidth: true,
-          },
-        }}
-      >
-        <Flex direction={"column"} itemAlign={"start"} gap={1}>
-          {typeof props.pnl?.tpPnL !== "undefined" && (
-            <Text.numeral
-              // @ts-ignore
-              prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
-              suffix={<Text intensity={20}>{" USDC"}</Text>}
-              dp={props.quote_dp}
-              coloring
-            >
-              {props.pnl?.tpPnL}
-            </Text.numeral>
-          )}
-          {typeof props.pnl?.slPnL !== "undefined" && (
-            <Text.numeral
-              // @ts-ignore
-              prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
-              suffix={<Text intensity={20}>{" USDC"}</Text>}
-              dp={props.quote_dp}
-              coloring
-            >
-              {props.pnl?.slPnL}
-            </Text.numeral>
-          )}
-        </Flex>
-      </SimpleDialog> */}
     </>
   );
-  // return (
-  //   <Tooltip
-
-  //   >
-
-  //   </Tooltip>
-  // );
 };
 
 const Price = (props: {
