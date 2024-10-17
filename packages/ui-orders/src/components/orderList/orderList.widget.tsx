@@ -27,7 +27,10 @@ export const MobileOrderListWidget = (props: {
     },
     showFilter?: boolean;
 }) => {
-    const state = useOrderListScript(props);
+    const state = useOrderListScript({
+        ...props,
+        enableLoadMore: true,
+    });
     return (
         <MobileOrderList {...state} classNames={props.classNames} showFilter={props.showFilter}/>
     );

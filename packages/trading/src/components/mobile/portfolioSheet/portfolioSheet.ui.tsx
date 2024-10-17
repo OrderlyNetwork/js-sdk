@@ -24,8 +24,7 @@ import { RiskIndicator } from "./riskIndicator";
 
 export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
   return (
-    <Flex direction={"column"} gap={4} width={"100%"} pt={3}>
-      <Divider className="oui-w-full" />
+    <Flex direction={"column"} gap={4} width={"100%"}>
       <Asset {...props} />
       <Divider className="oui-w-full" />
       <MarginRatio {...props} />

@@ -39,6 +39,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     canTrading,
   } = props;
 
+  const topBarHeight = 49;
+  const bottomBarHeight = 29;
+  const space = 12;
+
   const tokenInfoBarHeight = 54;
 
   const marketsWidth = collapsed ? 70 : 280;
@@ -51,8 +55,16 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const orderbookMinHeight = 464;
   const orderbookMaxHeight = 728;
 
-  const tradingViewMinWidth = 468;
-  const dataListMinHeight = 350;
+  const tradingViewMinWidth = 540;
+  const dataListMinHeight = canTrading ? 379 : 277;
+
+  const screenMinHeight =
+    topBarHeight +
+    bottomBarHeight +
+    tokenInfoBarHeight +
+    orderbookMinHeight +
+    dataListMinHeight +
+    space * 4;
 
   const marketsView = (
     <Box
@@ -146,6 +158,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       intensity={900}
       r="2xl"
       style={{ flex: 1, minWidth: tradingViewMinWidth }}
+      className="oui-overflow-hidden"
     >
       <TradingviewWidget
         symbol={props.symbol}
@@ -158,12 +171,15 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
 
   const orderbookView = (
     <Box
+      intensity={900}
+      r="2xl"
       height="100%"
       style={{
         minWidth: orderbookMinWidth,
         maxWidth: orderbookMaxWidth,
         width: orderBookSplitSize,
       }}
+      className="oui-overflow-hidden"
     >
       <OrderBookAndTradesWidget
         symbol={props.symbol}
@@ -178,6 +194,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       r="2xl"
       p={3}
       style={{ height: dataListSplitSize, minHeight: dataListMinHeight }}
+      className="oui-overflow-hidden"
     >
       <DataListWidget
         current={undefined}
@@ -251,7 +268,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       {tokenInfoBarView}
       <SplitLayout
-        className="oui-w-full"
+        className="oui-w-full !oui-h-[calc(100%_-_54px)]"
         mode="vertical"
         onSizeChange={setDataListSplitSize}
       >
@@ -267,7 +284,13 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       : setMainSplitSize(width);
 
   return (
-    <Flex className={props.className} width="100%" p={3} gap={3}>
+    <Flex
+      style={{ minHeight: screenMinHeight }}
+      className={props.className}
+      width="100%"
+      p={3}
+      gap={3}
+    >
       {!isMedium && layout === "right" && marketsView}
       <SplitLayout
         className="oui-flex oui-flex-1 oui-overflow-hidden"
