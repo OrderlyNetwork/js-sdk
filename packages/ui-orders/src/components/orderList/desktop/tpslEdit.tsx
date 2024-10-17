@@ -1,13 +1,13 @@
+import { API } from "@orderly.network/types";
 import { Button } from "@orderly.network/ui";
-import { TPSLEditorWidget } from "@orderly.network/ui-positions";
 
-export const TP_SLEdit = (props: { order: any }) => {
+export const TP_SLEditButton = (props: { order: API.Order }) => {
   return (
     <>
       <Button size="sm" variant={"outlined"} color={"secondary"}>
         Edit
       </Button>
-      <TPSLEditorWidget position={props.order} />
+      {/* <TPSLEditorWidget position={props.order} /> */}
     </>
   );
 };

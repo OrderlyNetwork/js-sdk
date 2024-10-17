@@ -1,44 +1,25 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "../../sheet/sheet";
+import { ReactNode } from "react";
 import { modalActions } from "../modalContext";
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
-import React from "react";
+import { SimpleSheet, SimpleSheetProps } from "../../sheet/simpleSheet";
 
-export interface SheetProps {
-  title: string | React.ReactNode;
-  content?: React.ReactNode;
-  // contentClassName?: string;
-  classNames?: {
-    content?: string;
-    body?: string;
-  };
-}
-
-const SimpleSheet = create<SheetProps>((props) => {
-  const { classNames = {} } = props;
+export type SheetProps = Pick<
+  SimpleSheetProps,
+  "title" | "classNames" | "leading" | "contentProps" | "closable"
+> & {
+  content: ReactNode;
+};
+const BaseSheet = create<SheetProps>((props) => {
   const { visible, hide, resolve, onOpenChange } = useModal();
+
   return (
-    <Sheet open={visible} onOpenChange={onOpenChange}>
-      <SheetContent
-        className={classNames.content}
-        onOpenAutoFocus={(event) => {
-          event.preventDefault();
-        }}
-      >
-        <SheetHeader>
-          <SheetTitle>{props.title}</SheetTitle>
-        </SheetHeader>
-        <div className={classNames.body}>{props.content}</div>
-      </SheetContent>
-    </Sheet>
+    <SimpleSheet open={visible} onOpenChange={onOpenChange} {...props}>
+      {props.content}
+    </SimpleSheet>
   );
 });
 
 export const sheet = (props: SheetProps) => {
-  return modalActions.show(SimpleSheet, props);
+  return modalActions.show(BaseSheet, props);
 };

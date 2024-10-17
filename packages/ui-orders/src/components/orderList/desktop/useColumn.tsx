@@ -1,5 +1,6 @@
 import {
   AlgoOrderRootType,
+  AlgoOrderType,
   API,
   OrderSide,
   OrderStatus,
@@ -28,7 +29,10 @@ import { Price } from "./price";
 import { TriggerPrice } from "./triggerPrice";
 import { CancelButton } from "./cancelBtn";
 import { Renew } from "./renew";
-import { OrderTriggerPrice } from "./tpslTriggerPrice";
+import { OrderTriggerPrice, TPSLTriggerPrice } from "./tpslTriggerPrice";
+import { BarcketOrderPrice } from "./barcketOrderPrice";
+import { TP_SLEditButton } from "./tpslEdit";
+import { TPSLOrderPrice } from "./tpslPrice";
 
 export const useOrderColumn = (_type: TabType) => {
   const columns =
@@ -61,6 +65,7 @@ export const useOrderColumn = (_type: TabType) => {
             fillAndQuantity({ width: 162, className: "oui-pr-0" }),
             price({ width: 162, className: "oui-pr-0" }),
             triggerPrice({ width: 162, className: "oui-pr-0" }),
+            barcketOrderPrice({ width: 130 }),
             estTotal({ width: 162 }),
             reduceOnly({ width: 162 }),
             hidden({ width: 162 }),
@@ -73,7 +78,7 @@ export const useOrderColumn = (_type: TabType) => {
             side({ width: 176 }),
             quantity({ width: 176 }),
             tpslTriggerPrice({ width: 176 }),
-            price({ width: 176, disableEdit: true }),
+            tpslPrice({ width: 176, disableEdit: true }),
             notional({ width: 176 }),
             reduceOnly({ width: 176 }),
             orderTime({ width: 176 }),
@@ -206,14 +211,15 @@ function instrument(option?: {
           </Text.formatted>
           {option?.showType && (
             <Flex direction={"row"} gap={1}>
-              {parseBadgesFor(record)?.map((e) => (
+              {parseBadgesFor(record)?.map((e, index) => (
                 <Badge
+                  key={index}
                   color={
                     e.toLocaleLowerCase() === "position"
                       ? showGray
-                        ? "neutural"
+                        ? "neutral"
                         : "primary"
-                      : "neutural"
+                      : "neutral"
                   }
                   size="xs"
                 >
@@ -272,12 +278,22 @@ function type(option?: {
     width: option?.width,
     className: option?.className,
     formatter: (value: string, record: any) => {
-      const type =
-        typeof record.type === "string"
-          ? record.type.replace("_ORDER", "").toLowerCase()
-          : record.type;
+      if (!!record.parent_algo_type) {
+        if (record.algo_type === AlgoOrderType.STOP_LOSS) {
+          return record.type === OrderType.CLOSE_POSITION
+            ? `Position SL`
+            : "SL";
+        }
+
+        if (record.algo_type === AlgoOrderType.TAKE_PROFIT) {
+          return record.type === OrderType.CLOSE_POSITION
+            ? `Position TP`
+            : "TP";
+        }
+      }
+
       if (record.algo_order_id) {
-        return `Stop ${type}`;
+        return `Stop ` + `${record.type}`.toLowerCase();
       }
       return upperCaseFirstLetter(value);
     },
@@ -297,6 +313,12 @@ function fillAndQuantity(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
+      if (
+        record.type === OrderType.CLOSE_POSITION &&
+        record.status !== OrderStatus.FILLED
+      ) {
+        return "Entire position";
+      }
       return <OrderQuantity order={record} disableEdit={option?.disableEdit} />;
       // return value;
     },
@@ -343,6 +365,25 @@ function price(option?: {
   };
 }
 
+function tpslPrice(option?: {
+  title?: string;
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+  disableEdit?: boolean;
+}): Column<API.Order> {
+  return {
+    title: option?.title ?? "Price",
+    dataIndex: "price",
+    className: option?.className,
+    width: option?.width,
+    onSort: option?.enableSort,
+    render: (value: string, record: any) => {
+      return <TPSLOrderPrice />;
+    },
+  };
+}
+
 function avgPrice(option?: {
   enableSort?: boolean;
   width?: number;
@@ -356,6 +397,8 @@ function avgPrice(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
+      console.log("average_executed_price", record.average_executed_price);
+      
       return <Text>{commifyOptional(value)}</Text>;
     },
   };
@@ -383,14 +426,32 @@ function tpslTriggerPrice(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
+  title?: string;
 }): Column<API.Order> {
   return {
-    title: "Trigger",
+    title: option?.title ?? "Trigger",
     className: option?.className,
-    dataIndex: "trigger_price",
+    dataIndex: "tpsl_trigger_price",
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => <OrderTriggerPrice />,
+  };
+}
+
+function barcketOrderPrice(option?: {
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+}) {
+  return {
+    title: "TP/SL",
+    className: option?.className,
+    dataIndex: "barcketOrderPrice",
+    width: option?.width,
+    onSort: option?.enableSort,
+    render: (value: string, record: any) => (
+      <BarcketOrderPrice order={record} />
+    ),
   };
 }
 
@@ -548,9 +609,9 @@ function avgOpen(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
-    render: (value: string) => (
+    render: (value: string, record) => (
       <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {value}
+        {record.average_executed_price}
       </Text.numeral>
     ),
   };
@@ -598,9 +659,7 @@ function tpslAction(option?: {
     render: (_: string, record: any) => {
       return (
         <Flex gap={3}>
-          <Button size="sm" variant={"outlined"} color={"secondary"}>
-            Edit
-          </Button>
+          <TP_SLEditButton order={record} />
           <CancelButton order={record} />
         </Flex>
       );

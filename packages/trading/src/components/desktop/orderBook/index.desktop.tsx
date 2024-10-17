@@ -4,7 +4,7 @@ import { DesktopAsks } from "./asks.desktop";
 import { DesktopMarkPrice } from "./markPrice.desktop";
 import { DesktopHeader } from "./header.desktop";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
-import { cn, Spinner } from "@orderly.network/ui";
+import { cn, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookProvider } from "../../base/orderBook/orderContext";
 
@@ -83,9 +83,37 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       symbolInfo={props.symbolInfo}
       tabletMediaQuery={props.tabletMediaQuery}
     >
-      <div
+      <Grid
+        cols={1}
+        rows={5}
         id="oui-orderbook-desktop"
-        className={cn("oui-h-full oui-w-full oui-relative", props.className)}
+        ref={divRef}
+        className="oui-grid-rows-[auto,auto,1fr,auto,1fr] oui-relative oui-h-full oui-w-full"
+      >
+        <DesktopDepthSelect
+          depths={props.depths}
+          value={props.activeDepth}
+          onChange={onDepthChange}
+        />
+        <DesktopHeader quote={quote} base={base} />
+        <DesktopAsks data={[...props.asks]} />
+        <DesktopMarkPrice
+          lastPrice={lastPrice}
+          markPrice={markPrice}
+          asks={[...props.asks]}
+          bids={[...props.bids]}
+          symbolInfo={props.symbolInfo}
+        />
+        <DesktopBids data={[...props.bids]} />
+        {isLoading && (
+          <div className="oui-absolute oui-left-0 oui-top-0 oui-right-0 oui-bottom-0 oui-z-10 oui-flex oui-items-center oui-justify-center oui-bg-bg-8/70">
+            <Spinner />
+          </div>
+        )}
+      </Grid>
+      {/* <div
+        id="oui-orderbook-desktop"
+        className={cn("oui-h-full oui-w-full oui-relative oui-bg-red-300", props.className)}
         ref={divRef}
       >
         <DesktopDepthSelect
@@ -108,7 +136,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
             <Spinner />
           </div>
         )}
-      </div>
+      </div> */}
     </OrderBookProvider>
   );
 };

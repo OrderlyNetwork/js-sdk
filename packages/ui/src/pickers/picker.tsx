@@ -47,10 +47,12 @@ export interface PickerProps
     VariantProps<typeof pickerVariants> {
   loading?: boolean;
   label?: string;
+  placeholder?: string;
   options: SelectOption[];
   value?: SelectOption | string | number;
   onValueChange?: (value: any) => void;
 }
+
 
 export type PickerRef = {};
 export const Picker = forwardRef<PickerRef, PickerProps>(
@@ -120,7 +122,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       >
         <div
           className={cn(
-            "oui-space-x-1 oui-text-base-contrast/80 ",
+            "oui-space-x-1 oui-text-base-contrast-54 ",
             "oui-rounded-md",
             "oui-bg-base-8",
             pickerVariants({

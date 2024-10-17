@@ -19,7 +19,7 @@ class EthersProvider implements Web3Provider {
   }
 
   set provider(provider: Eip1193Provider) {
-    this._provider = new BrowserProvider(provider);
+    this._provider = new BrowserProvider(provider, "any");
   }
 
   get browserProvider(): BrowserProvider {

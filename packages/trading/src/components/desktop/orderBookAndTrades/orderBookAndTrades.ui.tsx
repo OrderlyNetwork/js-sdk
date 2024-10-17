@@ -40,7 +40,7 @@ const TwoColLayout: FC<OrderBookAndTradesState & {
         r="2xl"
         className="oui-bg-base-9"
       >
-        <Title title="Order book" className="oui-pl-3" />
+        <Title title="Order book" className="oui-pl-3 oui-text-sm" />
         <OrderBookWidget
           symbol={props.symbol}
           tabletMediaQuery={props.tabletMediaQuery}
@@ -58,7 +58,7 @@ const TwoColLayout: FC<OrderBookAndTradesState & {
         r="2xl"
         className="oui-bg-base-9 oui-h-full"
       >
-        <Title title="Last trades" />
+        <Title title="Last trades" className="oui-text-sm"/>
         <LastTradesWidget
           symbol={props.symbol}
           style={{
@@ -90,6 +90,11 @@ const TabLayout: FC<OrderBookAndTradesState & {
         onValueChange={(tab) => {
           props.setTab(tab as any);
         }}
+        classNames={{
+          tabsList: 'oui-pl-3',
+          tabsContent: props.tab === "lastTrades" ? 'oui-pl-3' : ''
+        }}
+        size="lg"
       >
         <TabPanel value="orderBook" title={"Order book"} >
           <OrderBookWidget

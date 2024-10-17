@@ -12,12 +12,18 @@ import { AlgoOrderRootType } from "@orderly.network/types";
 
 import { TPSLOrderCreator } from "./tpslOrderCreator";
 import { TPSLPositionOrderCreator } from "./tpslPositionOrderCreator";
+import { isBracketOrder } from "../../next/useOrderEntry/helper";
+import { BracketOrderCreator } from "./bracketOrderCreator";
+import { OrderlyOrder } from "@orderly.network/types";
 
 export class OrderFactory {
   static create(type: OrderType | AlgoOrderRootType): OrderCreator<any> {
     switch (type) {
-      case OrderType.LIMIT:
+      case AlgoOrderRootType.BRACKET:
+        return new BracketOrderCreator();
+      case OrderType.LIMIT: {
         return new LimitOrderCreator();
+      }
       case OrderType.MARKET:
         return new MarketOrderCreator();
       //   case OrderType.ASK:
@@ -30,7 +36,6 @@ export class OrderFactory {
         return new FOKOrderCreator();
       case OrderType.POST_ONLY:
         return new PostOnlyOrderCreator();
-
       case OrderType.STOP_LIMIT:
         return new StopLimitOrderCreator();
       case OrderType.STOP_MARKET:

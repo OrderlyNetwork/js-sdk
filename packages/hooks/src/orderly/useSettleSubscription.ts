@@ -1,5 +1,6 @@
 import useSWRSubscription from "swr/subscription";
 import { useWS } from "../useWS";
+import { getTimestamp } from "@orderly.network/utils";
 
 export const useSettleSubscription = (options?: {
   onMessage?: (data: any) => void;
@@ -12,7 +13,7 @@ export const useSettleSubscription = (options?: {
         id: "settle",
         event: "subscribe",
         topic: "settle",
-        ts: Date.now(),
+        ts: getTimestamp(),
       },
       {
         onMessage: (data: any) => {

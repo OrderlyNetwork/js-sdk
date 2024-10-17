@@ -32,7 +32,7 @@ export class Assets {
     allowCrossChainWithdraw: boolean;
   }) {
     if (!this.account.walletAdapter) {
-      throw new Error("walletClient is undefined");
+      throw new Error("walletAdapter is undefined");
     }
     if (!this.account.stateValue.address)
       throw new Error("account address is required");
@@ -117,7 +117,7 @@ export class Assets {
   }
 
   private async getWithdrawalNonce(): Promise<number> {
-    const timestamp = Date.now().toString();
+    const timestamp = getTimestamp().toString();
     const url = "/v1/withdraw_nonce";
     const message = [timestamp, "GET", url].join("");
 
@@ -266,7 +266,7 @@ export class Assets {
     }
 
     if (!this.account.walletAdapter) {
-      throw new Error("walletClient is undefined");
+      throw new Error("walletAdapter is undefined");
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const parsedAmount =
@@ -294,7 +294,7 @@ export class Assets {
   }) {
     const { address, amount, decimals } = inputs;
     if (!this.account.walletAdapter) {
-      throw new Error("walletClient is undefined");
+      throw new Error("walletAdapter is undefined");
     }
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
@@ -315,7 +315,7 @@ export class Assets {
 
   async getDepositFee(amount: string, chain: API.NetworkInfos) {
     if (!this.account.walletAdapter)
-      throw new Error("walletClient is undefined");
+      throw new Error("walletAdapter is undefined");
 
     const brokerId = this.configStore.get<string>("brokerId");
 
@@ -343,7 +343,7 @@ export class Assets {
 
   async deposit(amount: string, fee: bigint = 0n) {
     if (!this.account.walletAdapter)
-      throw new Error("walletClient is undefined");
+      throw new Error("walletAdapter is undefined");
 
     const brokerId = this.configStore.get<string>("brokerId");
 

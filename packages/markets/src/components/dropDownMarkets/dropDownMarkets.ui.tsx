@@ -36,6 +36,7 @@ export const DropDownMarkets: React.FC<
           onCloseAutoFocus={(e) => e.preventDefault()}
           onClick={(e) => e.stopPropagation()}
           align="start"
+          alignOffset={-32}
           sideOffset={20}
           className={cn(
             "oui-markets-dropdown-menu-content oui-bg-base-8",

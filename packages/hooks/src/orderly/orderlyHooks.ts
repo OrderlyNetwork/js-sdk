@@ -28,6 +28,7 @@ export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
 export { useFundingRates } from "./useFundingRates";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
+export type { PriceMode } from "./usePositionStream/usePositionStream";
 export { useOrderStream } from "./useOrderStream/useOrderStream";
 export { useMarketTradeStream } from "./useMarketTradeStream";
 
@@ -71,3 +72,10 @@ export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
 
 export { useMaintenanceStatus } from "./useMaintenanceStatus";
+
+///------ store ------
+export {
+  // markPriceActions,
+  useMarkPriceBySymbol,
+} from "./useMarkPrice/useMarkPriceStore";
+export { usePositionActions } from "./usePositionStream/usePositionStore";

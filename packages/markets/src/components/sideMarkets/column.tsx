@@ -9,7 +9,7 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { Column } from "../Table";
+import { Column } from "../dataTable";
 
 export const getSideMarketsColumns = (
   favorite: FavoriteInstance,
@@ -65,7 +65,12 @@ export const getSideMarketsColumns = (
                 </Badge>
               </Flex>
 
-              <Text.numeral rule="human" dp={2} rm={Decimal.ROUND_DOWN}>
+              <Text.numeral
+                intensity={54}
+                rule="human"
+                dp={2}
+                rm={Decimal.ROUND_DOWN}
+              >
                 {value}
               </Text.numeral>
             </Flex>

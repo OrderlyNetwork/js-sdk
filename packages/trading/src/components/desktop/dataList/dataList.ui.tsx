@@ -22,23 +22,47 @@ export const DataList: FC<DataListState> = (props) => {
           setShowAllSymbol={props.setShowAllSymbol}
         />
       }
+      size="lg"
+      classNames={{
+        tabsList: "oui-px-3",
+      }}
     >
       <TabPanel
         value={DataListTabType.positions}
-        title={DataListTabType.positions}
+        title={
+          (props.positionCount ?? 0) > 0
+            ? `${DataListTabType.positions}(${props.positionCount})`
+            : DataListTabType.positions
+        }
       >
         <PositionsView {...props} />
       </TabPanel>
-      <TabPanel value={DataListTabType.pending} title={DataListTabType.pending}>
+      <TabPanel
+        value={DataListTabType.pending}
+        title={
+          (props.pendingOrderCount ?? 0) > 0
+            ? `${DataListTabType.pending}(${props.pendingOrderCount})`
+            : DataListTabType.pending
+        }
+      >
         <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
         />
       </TabPanel>
-      <TabPanel value={DataListTabType.tp_sl} title={DataListTabType.tp_sl}>
+      <TabPanel
+        value={DataListTabType.tp_sl}
+        title={
+          (props.tpSlOrderCount ?? 0) > 0
+            ? `${DataListTabType.tp_sl}(${props.tpSlOrderCount})`
+            : DataListTabType.tp_sl
+        }
+      >
         <DesktopOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
         />
       </TabPanel>
       <TabPanel value={DataListTabType.filled} title={DataListTabType.filled}>
@@ -62,12 +86,18 @@ const PositionsView: FC<DataListState> = (props) => {
     <Flex direction={"column"}>
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        symbol={props.config?.symbol}
+        symbol={props.showAllSymbol ? undefined : props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
         tabletMediaQuery={props.tabletMediaQuery}
       />
       <Divider className="oui-w-full" />
-      <PositionsWidget  {...props.config} pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision} />
+      <PositionsWidget
+        symbol={props.showAllSymbol ? undefined : props.symbol}
+        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+        sharePnLConfig={props.sharePnLConfig}
+        calcMode={props.calcMode}
+        includedPendingOrder={props.includedPendingOrder}
+      />
     </Flex>
   );
 };

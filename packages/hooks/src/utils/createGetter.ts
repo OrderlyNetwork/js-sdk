@@ -52,7 +52,7 @@ export function createGetter<
         if (key) {
           return getValue((target as any)[property]?.[key], defaultValue);
         } else {
-          return target[property];
+          return getValue(target[property], defaultValue);
         }
       };
     },

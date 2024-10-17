@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId } from '@orderly.network/ui-transfer';
+import { DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId, DepositAndWithdrawWithSheetId } from '@orderly.network/ui-transfer';
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 import {customChains} from "./customChains.ts";
@@ -76,6 +76,19 @@ export const DepositDialog: Story = {
     ],
 };
 
+export const DepositSheet: Story = {
+    decorators: [
+        (Story) => (
+            <Flex justify='center' itemAlign='center' height="100vh">
+                <Button onClick={() => {
+                    modal.show(DepositAndWithdrawWithSheetId, { activeTab: 'deposit' })
+
+                }}>Show Deposit Sheet</Button>
+            </Flex>
+        ),
+    ],
+};
+
 export const WithdrawDialog: Story = {
     decorators: [
         (Story) => (
@@ -84,6 +97,19 @@ export const WithdrawDialog: Story = {
                     modal.show(DepositAndWithdrawWithDialogId, { activeTab: 'withdraw' })
 
                 }}>Show Withdraw Dialog</Button>
+            </Flex>
+        ),
+    ],
+};
+
+export const WithdrawSheet: Story = {
+    decorators: [
+        (Story) => (
+            <Flex justify='center' itemAlign='center' height="100vh">
+                <Button onClick={() => {
+                    modal.show(DepositAndWithdrawWithSheetId, { activeTab: 'withdraw' })
+
+                }}>Show Withdraw Sheet</Button>
             </Flex>
         ),
     ],

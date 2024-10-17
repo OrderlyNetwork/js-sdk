@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {  
+import {
   API,
   OrderEntity,
+  OrderlyOrder,
   OrderSide,
   OrderType,
   SDKError,
@@ -23,6 +24,7 @@ import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
+import { usePositions } from "./usePositionStream/usePositionStore";
 // import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
@@ -58,7 +60,7 @@ export type UseOrderEntryReturn = {
   formattedOrder: Partial<OrderEntity>;
   helper: {
     calculate: (
-      values: Partial<OrderEntity>,
+      values: Partial<OrderlyOrder>,
       field: keyof OrderEntity,
       value: any
     ) => Partial<OrderEntity>;
@@ -141,16 +143,17 @@ export function useOrderEntry(
 
   const ee = useEventEmitter();
 
+  const positions = usePositions();
+
   const fieldDirty = useRef<{ [K in keyof OrderEntity]?: boolean }>({});
   const submitted = useRef<boolean>(false);
   const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
 
-  const onOrderbookUpdate = useDebouncedCallback((data: number[]) => {
+  const onOrderBookUpdate = useDebouncedCallback((data: number[]) => {
     askAndBid.current = data;
   }, 200);
 
-  const { freeCollateral, totalCollateral, positions, accountInfo } =
-    useCollateral();
+  const { freeCollateral, totalCollateral, accountInfo } = useCollateral();
 
   const symbolInfo = useSymbolsInfo();
   // const tokenInfo = useTokenInfo();
@@ -255,7 +258,7 @@ export function useOrderEntry(
   const parseString2Number = (
     order: OrderParams & Record<string, any>,
     key: keyof OrderParams,
-    dp?: number,
+    dp?: number
   ) => {
     if (typeof order[key] !== "string") return;
     // fix: delete the comma then remove the forward one of the string
@@ -274,7 +277,10 @@ export function useOrderEntry(
       const endOfPoint = `${order[key]}`.endsWith(".");
       const decimalPart = `${order[key]}`.split(".");
       if (hasPoint && !endOfPoint) {
-        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(0,quoteDP)}`;
+        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(
+          0,
+          quoteDP
+        )}`;
       }
     }
   };
@@ -383,8 +389,6 @@ export function useOrderEntry(
       return Promise.reject(new SDKError("orderCreator is null"));
     }
 
-    
-
     return new Promise((resolve, reject) => {
       return orderCreator
         .validate(values, {
@@ -476,8 +480,8 @@ export function useOrderEntry(
 
   const calculate = useCallback(
     (
-      values: Partial<OrderEntity>,
-      field: keyof OrderEntity,
+      values: Partial<OrderlyOrder>,
+      field: keyof OrderlyOrder,
       value: any
     ): Partial<OrderEntity> => {
       const fieldHandler = getCalculateHandler(field);
@@ -486,7 +490,13 @@ export function useOrderEntry(
         orderEntityFormatHandle(baseDP, quoteDP),
         fieldHandler,
         baseInputHandle
-      )([values, field, value, markPrice, { baseDP, quoteDP }]);
+      )([
+        values,
+        field,
+        value,
+        markPrice,
+        { base_dp: baseDP, quote_dp: quoteDP },
+      ]);
 
       return newValues as Partial<OrderEntity>;
     },
@@ -538,7 +548,7 @@ export function useOrderEntry(
       return orderDataCache.current as Partial<OrderEntity>;
     }
 
-    // set field dirty
+    // set the field dirty
     if (typeof parsedData.order_price !== "undefined") {
       fieldDirty.current.order_price = true;
     }
@@ -546,7 +556,7 @@ export function useOrderEntry(
       fieldDirty.current.order_quantity = true;
     }
 
-    const values = calculate(parsedData, item.key, item.value);
+    const values = calculate(parsedData, item.key as any, item.value);
 
     values.isStopOrder = values.order_type?.startsWith("STOP") || false;
 
@@ -590,10 +600,10 @@ export function useOrderEntry(
       }
     }
 
-    ee.on("orderbook:update", onOrderbookUpdate);
+    ee.on("orderbook:update", onOrderBookUpdate);
 
     return () => {
-      ee.off("orderbook:update", onOrderbookUpdate);
+      ee.off("orderbook:update", onOrderBookUpdate);
     };
   }, [optionsValue?.watchOrderbook]);
 
@@ -629,15 +639,15 @@ export function useOrderEntry(
     /**
      * price
      * if order_type = market order,
-        order side = long, then order_price_i = ask0
-        order side = short, then order_price_i = bid0
-      if order_type = limit order
-        order side = long
-          limit_price >= ask0, then order_price_i = ask0
-          limit_price < ask0, then order_price_i = limit_price
-        order side = short
-          limit_price <= bid0, then order_price_i = bid0
-          limit_price > ask0, then order_price_i = ask0
+     order side = long, then order_price_i = ask0
+     order side = short, then order_price_i = bid0
+     if order_type = limit order
+     order side = long
+     limit_price >= ask0, then order_price_i = ask0
+     limit_price < ask0, then order_price_i = limit_price
+     order side = short
+     limit_price <= bid0, then order_price_i = bid0
+     limit_price > ask0, then order_price_i = ask0
      */
     let price: number | undefined;
 
@@ -759,6 +769,7 @@ export function useOrderEntry(
     estLiqPrice,
     estLeverage,
     helper: {
+      //@ts-ignore
       calculate,
       validator,
       // clearErrors,

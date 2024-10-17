@@ -31,6 +31,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
       placeholder="Search market"
       className="oui-w-[240px] oui-my-1"
       size="sm"
+      data-testid="oui-testid-markets-searchMarket-input"
       prefix={
         <Box pl={3} pr={1}>
           <SearchIcon className="oui-text-base-contrast-36" />
@@ -60,17 +61,32 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         onValueChange={onTabChange}
         trailing={search}
       >
-        <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
+        <TabPanel
+          title="Favorites"
+          icon={<FavoritesIcon />}
+          value="favorites"
+          testid="oui-testid-markets-favorites-tab"
+        >
           <FavoritesListFullWidget />
         </TabPanel>
-        <TabPanel title="All markets" icon={<AllMarketsIcon />} value="all">
+        <TabPanel
+          title="All markets"
+          icon={<AllMarketsIcon />}
+          value="all"
+          testid="oui-testid-markets-all-tab"
+        >
           <MarketsListFullWidget
             type="all"
             sortKey="24h_amount"
             sortOrder="desc"
           />
         </TabPanel>
-        <TabPanel title="New listings" icon={<NewListingsIcon />} value="new">
+        <TabPanel
+          title="New listings"
+          icon={<NewListingsIcon />}
+          value="new"
+          testid="oui-testid-markets-newListings-tab"
+        >
           <MarketsListFullWidget
             type="new"
             sortKey="created_time"

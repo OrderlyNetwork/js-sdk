@@ -40,6 +40,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
       <Button
         variant="outlined"
         color="secondary"
+        size="sm"
         onClick={() => {
           updatePriceChange("limit");
           setSheetOpen(true);
@@ -52,7 +53,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
         <SimpleSheet
           title={"Limit close"}
           open={sheetOpen}
-          onClose={() => setSheetOpen(false)}
+          onOpenChange={setSheetOpen}
         >
           <Flex
             direction={"column"}
@@ -66,7 +67,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 {item.symbol}
               </Text.formatted>
               <Flex gap={1}>
-                <Badge color="neutural" size="xs">
+                <Badge color="neutral" size="xs">
                   Limit
                 </Badge>
                 {isBuy && (

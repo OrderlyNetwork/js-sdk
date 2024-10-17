@@ -24,10 +24,14 @@ export const MobileOrderListWidget = (props: {
     classNames?: {
         root?: string;
         cell?: string;
-    }
+    },
+    showFilter?: boolean;
 }) => {
-    const state = useOrderListScript(props);
+    const state = useOrderListScript({
+        ...props,
+        enableLoadMore: true,
+    });
     return (
-        <MobileOrderList {...state} classNames={props.classNames}/>
+        <MobileOrderList {...state} classNames={props.classNames} showFilter={props.showFilter}/>
     );
 };

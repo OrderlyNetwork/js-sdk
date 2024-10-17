@@ -70,6 +70,7 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
               // @ts-ignore
               content={content}
               delayDuration={0}
+              key={item.symbol}
             >
               <Flex
                 direction="column"

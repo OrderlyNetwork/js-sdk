@@ -21,7 +21,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
         });
       }}
     >
-      <ShareIcon color="white" size={16} />
+      <ShareIcon color="white" opacity={0.54} size={16} />
     </button>
   );
 };

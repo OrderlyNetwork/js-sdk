@@ -55,6 +55,7 @@ export const useMarketsListFullColumns = (
               justify="center"
               itemAlign="center"
               onClick={isFavoriteList ? onDelSymbol : undefined}
+              data-testid="oui-testid-markets-table-row-favorite-icon"
             >
               {value ? (
                 <FavoritesIcon className="oui-text-[rgba(255,154,46,1)]" />
@@ -196,6 +197,7 @@ export const useMarketsListFullColumns = (
                       e.stopPropagation();
                       favorite.pinToTop(record);
                     }}
+                    data-testid="oui-markets-favorites-pinned-icon"
                   >
                     <MoveToTopIcon className="oui-text-base-contrast-20 hover:oui-text-base-contrast" />
                   </Box>

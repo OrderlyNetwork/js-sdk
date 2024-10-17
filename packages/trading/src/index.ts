@@ -10,5 +10,6 @@ export * from "./components/desktop/assetView";
 export * from "./components/base/orderBook";
 export * from "./components/desktop/riskRate";
 export * from "./components/desktop/orderBookAndTrades";
+export * from "./components/desktop/layout/splitLayout/splitLayout";
 export * from "./pages";
 export * from "./provider";

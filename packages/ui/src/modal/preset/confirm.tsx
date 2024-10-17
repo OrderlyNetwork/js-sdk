@@ -1,27 +1,30 @@
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
-import { DialogBody, SimpleDialog } from "../../dialog";
+import { DialogBody, SimpleDialog, SimpleDialogProps } from "../../dialog";
 import { modalActions } from "../modalContext";
 import { Text } from "../../typography";
 import { useMemo } from "react";
+import { useScreen } from "../../hooks";
 
-export interface ConfirmProps {
-  title?: string;
+export type ConfirmProps = {
   content?: React.ReactNode;
   footer?: React.ReactNode;
   onOk?: () => Promise<any>;
   onCancel?: () => Promise<any>;
   contentClassName?: string;
-  size?: "sm" | "md" | "lg";
   bodyClassName?: string;
   // closeableSize?: number;
   // okId?: string;
   // cancelId?: string;
-}
+} & Pick<SimpleDialogProps, "title" | "classNames" | "size">;
 
 export const ConfirmDialog = create<ConfirmProps>((props) => {
-  const { size = "sm" } = props;
+  const { size } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
+
+  const { isMobile } = useScreen();
+
+  const defaultSize = isMobile ? "xs" : "sm";
 
   return (
     <SimpleDialog
@@ -31,10 +34,11 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
           {props.title}
         </Text>
       }
-      size={size}
+      size={size || defaultSize}
       classNames={{
         content: props.contentClassName,
         body: props.bodyClassName,
+        ...props.classNames,
       }}
       // maxWidth={props.maxWidth}
       closable
@@ -82,7 +86,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
                 if (typeof props.onCancel === "function") {
                   return props.onCancel();
                 }
-                return true;
+                return Promise.reject('cancel');
               })
               .then(
                 (data?: any) => {
@@ -98,13 +102,11 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
         },
       }}
     >
-      <Text className="" size="sm">
-        {props.content}
-      </Text>
+      <div className="oui-text-2xs lg:oui-text-sm">{props.content}</div>
     </SimpleDialog>
   );
 });
 
-export const confirm = (props: ConfirmProps) => {
+export const confirm = <T = any, >(props: ConfirmProps):Promise<T> => {
   return modalActions.show(ConfirmDialog, props);
 };

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   AlgoOrderRootType,
   OrderStatus,
@@ -6,15 +6,22 @@ import {
 } from "@orderly.network/types";
 import { useOrderStream } from "@orderly.network/hooks";
 import { TabType } from "../orders.widget";
-import { DataFilterItems, usePagination } from "@orderly.network/ui";
+import {
+  DataFilterItems,
+  modal,
+  usePagination,
+  Text,
+} from "@orderly.network/ui";
 import { differenceInDays, setHours } from "date-fns";
+import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export const useOrderListScript = (props: {
   type: TabType;
   ordersStatus?: OrderStatus;
   symbol?: string;
+  enableLoadMore?: boolean;
 }) => {
-  const { ordersStatus, type } = props;
+  const { ordersStatus, type, enableLoadMore = false } = props;
 
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
   const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
@@ -37,7 +44,6 @@ export const useOrderListScript = (props: {
     return undefined;
   }, [type]);
 
-
   const [
     data,
     {
@@ -47,22 +53,63 @@ export const useOrderListScript = (props: {
       updateOrder,
       cancelAlgoOrder,
       updateAlgoOrder,
+      cancelAllOrders,
+      cancelAllTPSLOrders,
       meta,
+      refresh,
     },
   ] = useOrderStream({
     symbol: props.symbol,
     status: orderStatus,
     side: ordersSide,
-    page: page,
+    page: enableLoadMore ? undefined : page,
     size: pageSize,
     dateRange,
     includes,
     excludes,
   });
 
+  const onCancelAll = useCallback(() => {
+    modal.confirm({
+      title: "Cancel all orders",
+      content: (
+        <Text size="sm">
+          Are you sure you want to cancel all of your pending orders, including
+          TP/SL orders?
+        </Text>
+      ),
+      onCancel: async () => {},
+      onOk: async () => {
+        try {
+          // await cancelAll(null, { source_type: "ALL" });
+          if (type === TabType.tp_sl) {
+            await cancelAllTPSLOrders();
+          } else {
+            await cancelAllOrders();
+          }
+          refresh();
+          return Promise.resolve(true);
+        } catch (error) {
+          // @ts-ignore
+          if (error?.message !== undefined) {
+            // @ts-ignore
+            toast.error(error.message);
+          }
+          return Promise.resolve(false);
+        } finally {
+          Promise.resolve();
+        }
+      },
+    });
+  }, [type]);
+
+  const formattedData = useFormatOrderHistory(
+    data ?? []
+  );
+
   return {
     type,
-    dataSource: data,
+    dataSource: type !== TabType.tp_sl ? formattedData : data,
     isLoading,
     loadMore,
     cancelOrder,
@@ -80,6 +127,7 @@ export const useOrderListScript = (props: {
     // filter
     onFilter,
     filterItems,
+    onCancelAll,
   };
 };
 
@@ -154,8 +202,16 @@ const useFilter = (
           value: undefined,
         },
         {
-          label: "Pending",
-          value: OrderStatus.INCOMPLETE,
+          label: "Open",
+          value: OrderStatus.OPEN,
+        },
+        {
+          label: "Filled",
+          value: OrderStatus.FILLED,
+        },
+        {
+          label: "Partial filled",
+          value: OrderStatus.PARTIAL_FILLED,
         },
         {
           label: "Canceled",
@@ -182,7 +238,7 @@ const useFilter = (
       case TabType.rejected:
         return [sideFilter];
       case TabType.orderHistory:
-        return [sideFilter];
+        return [sideFilter, statusFilter];
     }
   }, [type, ordersSide, orderStatus, dateRange]);
 

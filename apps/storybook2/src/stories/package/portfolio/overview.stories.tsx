@@ -2,8 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
 import {
   OverviewModule,
-  PortfolioLayoutWidget
+  PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
+// import { OverviewContextProvider } from "@orderly.network/portfolio";
 
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
@@ -21,13 +22,12 @@ const meta = {
   component: OverviewModule.OverviewPage,
   subcomponents: {
     Assets: OverviewModule.AssetWidget,
-    DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget
+    DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
   },
   decorators: [
     (Story, args) => {
-
       const config = new CustomConfigStore({
-        env: "dev"
+        env: "qa",
       });
       return (
         <ConnectorProvider>
@@ -35,17 +35,17 @@ const meta = {
             brokerId={"orderly"}
             brokerName={""}
             networkId={"testnet"}
-            onChainChanged={args.onChainChanged}
-            configStore={config}
+            onChainChanged={args.args.onChainChanged}
+            // configStore={config}
           >
             <Story />
           </OrderlyApp>
         </ConnectorProvider>
       );
-    }
+    },
   ],
   parameters: {
-    layout: "fullscreen"
+    layout: "fullscreen",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   // tags: ['autodocs'],
@@ -57,17 +57,15 @@ const meta = {
         type: "number",
         min: 0,
         max: 10,
-        step: 1
-      }
-    }
-
+        step: 1,
+      },
+    },
   },
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
-
-    onChainChanged: fn()
-  }
-} satisfies Meta<typeof OverviewModule.OverviewPage>;
+    onChainChanged: fn(),
+  },
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -96,8 +94,8 @@ export const Assets: Story = {
           <Story />
         </Box>
       </Flex>
-    )
-  ]
+    ),
+  ],
 };
 
 export const AssetHistory: Story = {
@@ -112,8 +110,8 @@ export const AssetHistory: Story = {
       <Card intensity={900}>
         <Story />
       </Card>
-    )
-  ]
+    ),
+  ],
 };
 
 export const Performance: Story = {
@@ -134,8 +132,8 @@ export const Performance: Story = {
           <Story />
         </Box>
       </Flex>
-    )
-  ]
+    ),
+  ],
 };
 
 export const PerformanceAndData: Story = {
@@ -153,17 +151,15 @@ export const PerformanceAndData: Story = {
         </div>
       </Grid>
     );
-  }
+  },
 
-  // decorators: [
-  //   (Story) => (
-  //     <Flex justify={"center"}  className="oui-w-full">
-
-  //         <Story />
-
-  //     </Flex>
-  //   ),
-  // ],
+  decorators: [
+    (Story) => (
+      <OverviewModule.OverviewContextProvider>
+        <Story />
+      </OverviewModule.OverviewContextProvider>
+    ),
+  ],
 };
 
 export const AssetHistoryChart: Story = {
@@ -178,8 +174,8 @@ export const AssetHistoryChart: Story = {
       <Box width={"580px"}>
         <Story />
       </Box>
-    )
-  ]
+    ),
+  ],
 };
 
 export const FundingHistory: Story = {
@@ -193,8 +189,8 @@ export const FundingHistory: Story = {
       <Box height={"550px"} className="oui-bg-base-9">
         <Story />
       </Box>
-    )
-  ]
+    ),
+  ],
 };
 
 export const DistributionHistory: Story = {
@@ -206,10 +202,12 @@ export const DistributionHistory: Story = {
   decorators: [
     (Story) => (
       <Box height={"550px"} className="oui-bg-base-9">
-        <Story />
+        <OverviewModule.OverviewContextProvider>
+          <Story />
+        </OverviewModule.OverviewContextProvider>
       </Box>
-    )
-  ]
+    ),
+  ],
 };
 
 export const Page: Story = {
@@ -219,7 +217,7 @@ export const Page: Story = {
         routerAdapter={{
           onRouteChange: (op) => {
             console.log("router adapter", op);
-          }
+          },
         }}
 
         // leftSideProps={{
@@ -230,5 +228,5 @@ export const Page: Story = {
         <OverviewModule.OverviewPage />
       </PortfolioLayoutWidget>
     );
-  }
+  },
 };

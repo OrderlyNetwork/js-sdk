@@ -12,6 +12,7 @@ import {
   Badge,
 } from "@orderly.network/ui";
 import { usePositionsRowContext } from "./positionRowContext";
+// import { useSymbolContext } from "../providers/symbolProvider";
 import { FC, useMemo, useState } from "react";
 import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
@@ -295,7 +296,7 @@ export const LimitConfirmDialog: FC<{
           {order.symbol}
         </Text.formatted>
         <Flex gap={1}>
-          <Badge color="neutural" size="xs">
+          <Badge color="neutral" size="xs">
             Limit
           </Badge>
           <Badge

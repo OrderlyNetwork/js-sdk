@@ -12,6 +12,8 @@ import {
 import { cnBase, VariantProps } from "tailwind-variants";
 import { ScrollArea } from "../scrollarea";
 
+export type SelectVariantProps = VariantProps<typeof selectVariants>;
+
 export type SelectProps<T> = SelectPrimitive.SelectProps & {
   placeholder?: string;
   valueFormatter?: (
@@ -23,7 +25,7 @@ export type SelectProps<T> = SelectPrimitive.SelectProps & {
   contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
   showCaret?: boolean;
   maxHeight?: number;
-} & VariantProps<typeof selectVariants>;
+} & SelectVariantProps;
 
 export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
   const {

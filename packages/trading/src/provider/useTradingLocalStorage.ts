@@ -1,15 +1,22 @@
 import { useLocalStorage } from "@orderly.network/hooks";
 
-export const useTradingLocalStorage = () => {
+export const useTradingLocalStorage = (props?: {
+  pnlNotionalDecimalPrecision?: number;
+}) => {
   const [unPnlPriceBasis, setUnPnlPriceBasic] = useLocalStorage(
     "unPnlPriceBasis",
     "markPrice"
   );
   const [pnlNotionalDecimalPrecision, setPnlNotionalDecimalPrecision] =
-    useLocalStorage("pnlNotionalDecimalPrecision", 2);
+    useLocalStorage("pnlNotionalDecimalPrecision", props?.pnlNotionalDecimalPrecision ?? 2);
   const [showAllSymbol, setShowAllSymbol] = useLocalStorage(
     "showAllSymbol",
     true
+  );
+  
+  const [hideAssets, setHideAssets] = useLocalStorage(
+    "hideAssets",
+    false
   );
 
   return {
@@ -19,5 +26,7 @@ export const useTradingLocalStorage = () => {
     setPnlNotionalDecimalPrecision,
     showAllSymbol,
     setShowAllSymbol,
+    hideAssets,
+    setHideAssets,
   };
 };

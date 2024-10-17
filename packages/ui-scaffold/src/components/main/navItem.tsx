@@ -224,6 +224,7 @@ const SubMenu = (props: {
       onClick={() => {
         props.onClick(item);
       }}
+      data-testid={item.testid}
     >
       {!!props.item.icon && (
         <div className="oui-translate-y-1 oui-relative oui-w-6 oui-h-6">

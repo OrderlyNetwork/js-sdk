@@ -21,7 +21,6 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
-import { CirclePlusIcon } from "../../icons";
 import "../../style/index.css";
 
 export type FavoritesDropdownMenuProps =
@@ -242,7 +241,8 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
           onCloseAutoFocus={(e) => e.preventDefault()}
           onClick={(e) => e.stopPropagation()}
           align="start"
-          sideOffset={20}
+          alignOffset={-12}
+          sideOffset={24}
           className="oui-markets-favorite-dropdown-menu-content oui-bg-base-8"
         >
           <Box px={5} pb={5} width={360}>

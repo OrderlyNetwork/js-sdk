@@ -4,7 +4,7 @@ import { fn } from '@storybook/test';
 import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 // import { Button, modal } from "@orderly.network/ui";
-import { TPSLWidget, PositionTPSLConfirm , TPSLEditorWidget} from '@orderly.network/ui-positions';
+import { TPSLWidget, PositionTPSLConfirm , TPSLEditorWidget} from '@orderly.network/ui-tpsl';
 import { Box } from "@orderly.network/ui";
 
 const meta = {

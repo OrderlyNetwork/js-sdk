@@ -79,9 +79,13 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-cross-deposit/src"
       ),
-      "@orderly.network/web3-onboard": resolve(
+      // "@orderly.network/web3-onboard": resolve(
+      //   __dirname,
+      //   "../../packages/onboard/src"
+      // ),
+      "@orderly.network/ui-order-entry": resolve(
         __dirname,
-        "../../packages/onboard/src"
+        "../../packages/ui-order-entry/src"
       ),
       "@orderly.network/default-evm-adapter": resolve(
         __dirname,
@@ -91,6 +95,7 @@ export default defineConfig({
         __dirname,
         "../../packages/component/dist"
       ),
+
       "@orderly.network/react": resolve(
         __dirname,
         "../../packages/component/src"

@@ -2,6 +2,7 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { tv } from "../utils/tv";
 import { cn } from "tailwind-variants";
+import { TooltipContentProps } from "@radix-ui/react-tooltip";
 // import { cn } from "..";
 
 const TooltipProvider = TooltipPrimitive.Provider;
@@ -11,14 +12,16 @@ const TooltipRoot = TooltipPrimitive.Root;
 
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
-const TooltipArrow = TooltipPrimitive.Arrow;
+// const TooltipArrow = TooltipPrimitive.Arrow;
+
+const TooltipPortal = TooltipPrimitive.Portal;
 
 const tooltipVariants = tv({
   base: [
     "oui-z-50",
     "oui-overflow-hidden",
     "oui-rounded-md",
-    "oui-bg-base-6",
+    "oui-bg-base-8",
     "oui-px-2",
     "oui-py-1",
     "oui-text-xs",
@@ -53,6 +56,23 @@ const TooltipContent = React.forwardRef<
 });
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
+const TooltipArrow = (props: { className?: string }) => {
+  const { className, ...arrowProps } = props;
+  return (
+    <TooltipPrimitive.Arrow
+      width={12}
+      height={6}
+      {...arrowProps}
+      className={cn(
+        "oui-fill-base-8",
+        className
+      )({
+        twMerge: true,
+      })}
+    />
+  );
+};
+
 export type TooltipProps = React.ComponentPropsWithoutRef<
   typeof TooltipPrimitive.Root
 > &
@@ -64,7 +84,11 @@ export type TooltipProps = React.ComponentPropsWithoutRef<
 
 const Tooltip = React.forwardRef<
   React.ElementRef<typeof TooltipContent>,
-  TooltipProps
+  TooltipProps & {
+    tooltipProps?: {
+      arrow?: TooltipContentProps;
+    };
+  }
 >(
   (
     {
@@ -77,6 +101,7 @@ const Tooltip = React.forwardRef<
       delayDuration,
       disableHoverableContent,
       arrow,
+      tooltipProps,
       ...props
     },
     ref
@@ -93,22 +118,14 @@ const Tooltip = React.forwardRef<
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
         <TooltipContent ref={ref} {...props}>
           {content}
-          <TooltipPrimitive.Arrow
-            width={12}
-            height={6}
-            {...arrowProps}
-            className={cn(
-              "oui-fill-base-8",
-              className
-            )({
-              twMerge: true,
-            })}
-          />
+          <TooltipArrow {...tooltipProps?.arrow}/>
         </TooltipContent>
       </TooltipPrimitive.Root>
     );
   }
 );
+
+Tooltip.displayName = "Tooltip";
 
 export {
   Tooltip,
@@ -117,4 +134,5 @@ export {
   TooltipContent,
   TooltipProvider,
   TooltipArrow,
+  TooltipPortal,
 };

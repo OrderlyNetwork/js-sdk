@@ -3,8 +3,10 @@ import { OrderlyApp } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
   TokenInfoBarWidget,
+  TokenInfoBarFullWidget,
+  MarketsSheetWidget
 } from "@orderly.network/markets";
-import { Box, Button, Flex } from "@orderly.network/ui";
+import { Box, Flex, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 
 const networkId = "testnet";
@@ -12,7 +14,7 @@ const configStore = new CustomConfigStore({ networkId, env: "staging" });
 
 const meta = {
   title: "Package/Markets/TokenInfoBar",
-  component: TokenInfoBarWidget,
+  component: TokenInfoBarFullWidget,
   decorators: [
     (Story: any) => (
       <ConnectorProvider>
@@ -27,18 +29,17 @@ const meta = {
       </ConnectorProvider>
     ),
   ],
-} satisfies Meta<typeof TokenInfoBarWidget>;
+} satisfies Meta<typeof TokenInfoBarFullWidget>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 
-export const TokenInfoBar: Story = {
+export const DepositTokenInfoBar: Story = {
   render: (args) => {
     return <Flex direction='column' itemAlign='start' gapY={5}>
-      <Box width={600} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget
-          height={54}
+      <Box width={600} intensity={900} r="2xl" px={3} height={54}>
+        <TokenInfoBarFullWidget          
           symbol="PERP_BTC_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
           onSymbolChange={(symbol) => {
@@ -46,9 +47,8 @@ export const TokenInfoBar: Story = {
           }}
         />
       </Box>
-      <Box width={900} intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget
-          height={54}
+      <Box width={900} intensity={900} r="2xl" px={3} height={54}>
+        <TokenInfoBarFullWidget
           symbol="PERP_BTC_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
           onSymbolChange={(symbol) => {
@@ -56,9 +56,8 @@ export const TokenInfoBar: Story = {
           }}
         />
       </Box>
-      <Box width='100%' intensity={900} r="2xl" px={3}>
-        <TokenInfoBarWidget
-          height={54}
+      <Box width='100%' intensity={900} r="2xl" px={3} height={54}>
+        <TokenInfoBarFullWidget
           symbol="PERP_BTC_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
           onSymbolChange={(symbol) => {
@@ -67,5 +66,33 @@ export const TokenInfoBar: Story = {
         />
       </Box>
     </Flex>
+  },
+};
+
+export const MobileTokenInfoBar: Story = {
+  render: (args) => {
+    const onSymbol = () => {
+      modal.sheet({
+        title: null,        
+        classNames: {
+          content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
+        },
+        content: <MarketsSheetWidget
+                  onSymbolChange={(symbol) => {
+                  console.log('onSymbolChange', symbol);
+                }}/>,
+        contentProps: { side: "left", closeable:false },
+      });
+    };
+
+    return (
+      <Box width={430} intensity={900} px={3} height={54}>
+        <TokenInfoBarWidget          
+          symbol="PERP_BTC_USDC"
+          trailing={<Box pl={3}>Trailing</Box>}    
+          onSymbol={onSymbol}
+        />
+      </Box>
+    )    
   },
 };

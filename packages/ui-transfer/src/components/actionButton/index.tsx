@@ -32,30 +32,39 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
         onClick: onApprove,
         // approve not disabled button
         disabled: false,
-        "data-testid": "oui-testid-deposit-dialog-approve-btn"
+        "data-testid": "oui-testid-deposit-dialog-approve-btn",
       },
       [DepositAction.Increase]: {
         children: `increase ${symbol} authorized amount`,
         onClick: onApprove,
-        "data-testid": "oui-testid-deposit-dialog-increase-btn"
+        "data-testid": "oui-testid-deposit-dialog-increase-btn",
       },
       [DepositAction.Deposit]: {
         children: "Deposit",
         onClick: onDeposit,
-        "data-testid": "oui-testid-deposit-dialog-deposit-btn"
+        "data-testid": "oui-testid-deposit-dialog-deposit-btn",
       },
     };
 
     return params[actionType];
   }, [onApprove, onDeposit, actionType, symbol]);
 
+  const buttonSize = { initial: "md", lg: "lg" } as const;
+
   return (
-    <Box className="oui-min-w-[184px]">
-      <AuthGuard networkId={networkId} buttonProps={{ fullWidth: true }}>
+    <Box className="oui-w-full lg:oui-w-auto lg:oui-min-w-[184px]">
+      <AuthGuard
+        networkId={networkId}
+        buttonProps={{
+          fullWidth: true,
+          size: buttonSize,
+        }}
+      >
         <Button
           fullWidth
           disabled={disabled}
           loading={loading}
+          size={buttonSize}
           {...buttonParams}
         />
       </AuthGuard>

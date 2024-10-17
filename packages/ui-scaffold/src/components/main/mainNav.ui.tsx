@@ -39,7 +39,6 @@ export type MainNavProps = {
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
-  console.log("MainNavProps", props);
   const { className, logo, products, classNames, campaigns, campaignPosition } =
     props;
 

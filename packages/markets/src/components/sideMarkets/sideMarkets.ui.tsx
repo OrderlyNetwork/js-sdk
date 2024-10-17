@@ -1,4 +1,4 @@
-import { FC, CSSProperties } from "react";
+import { FC } from "react";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import {
   UseSideMarketsScriptOptions,
@@ -9,8 +9,8 @@ import { ExpandMarketsWidget } from "../expandMarkets";
 import { FavoritesListWidget } from "../favoritesList";
 import { RecentListWidget } from "../recentList";
 import { MarketsListWidget } from "../marketsList";
-import "../../style/index.css";
 import { useMarketsContext } from "../marketsProvider";
+import "../../style/index.css";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn & {
   className?: string;

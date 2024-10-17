@@ -54,7 +54,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
 
   return (
     <div
-      className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-3xs oui-relative oui-cursor-pointer"
+      className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-xs oui-relative oui-cursor-pointer"
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
         if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
@@ -120,7 +120,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
       {isPendingOrder && (
         <div
           className={cn(
-            "oui-absolute oui-rounded-full oui-left-[-8px] oui-h-[4px] oui-w-[4px] oui-pointer-events-none",
+            "oui-absolute oui-rounded-full oui-left-[4px] oui-h-[4px] oui-w-[4px] oui-pointer-events-none",
             props.type === OrderBookCellType.ASK && "oui-bg-trade-loss",
             props.type === OrderBookCellType.BID && "oui-bg-trade-profit"
           )}

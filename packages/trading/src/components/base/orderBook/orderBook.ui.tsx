@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Box, Flex, Text } from "@orderly.network/ui";
 import { OrderBookState } from "./orderBook.script";
 import { DesktopOrderBook } from "../../desktop/orderBook/index.desktop";
-import { OrderBook as MWebOrderBook } from "../../mWeb/orderBook";
+import { OrderBook as MWebOrderBook } from "../../mobile/orderBook";
 
 export const OrderBook: FC<
   OrderBookState & {
@@ -30,9 +30,9 @@ export const OrderBook: FC<
           className={props.className}
           symbolInfo={props.symbolInfo}
           tabletMediaQuery={props.tabletMediaQuery}
-          />
-        ) : (
-          <DesktopOrderBook
+        />
+      ) : (
+        <DesktopOrderBook
           level={props.level}
           asks={props.asks!}
           bids={props.bids!}

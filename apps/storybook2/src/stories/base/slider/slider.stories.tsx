@@ -46,6 +46,7 @@ const meta = {
     // size:'default'
     color: 'primary',
     step: 10,
+    showTip:true,
     // onValueChange: fn(),
   },
 } satisfies Meta<typeof Slider>;
