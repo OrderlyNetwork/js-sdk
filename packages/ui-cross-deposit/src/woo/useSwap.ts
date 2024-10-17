@@ -67,8 +67,8 @@ export const useSwap = (): any => {
       },
       config: { dst: any; src: any }
     ) => {
-      if (!account.walletClient) {
-        throw new Error("walletClient is undefined");
+      if (!account.walletAdapter) {
+        throw new Error("walletAdapter is undefined");
       }
 
       if (!account.address) {
@@ -88,7 +88,7 @@ export const useSwap = (): any => {
       };
 
       try {
-        const result = await account.walletClient.sendTransaction(
+        const result = await account.walletAdapter.sendTransaction(
           woofiDexDepositorAdress,
           "swap",
           txPayload,

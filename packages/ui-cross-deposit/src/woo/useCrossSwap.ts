@@ -130,8 +130,8 @@ export const useCrossSwap = (): any => {
       airdropNativeAmount: bigint;
     };
   }) => {
-    if (!account.walletClient) {
-      throw new Error("walletClient is undefined");
+    if (!account.walletAdapter) {
+      throw new Error("walletAdapter is undefined");
     }
 
     if (!account.address) {
@@ -146,7 +146,7 @@ export const useCrossSwap = (): any => {
     if (loading) return;
     start();
 
-    const quotoLZFee = await account.walletClient.call(
+    const quotoLZFee = await account.walletAdapter.call(
       crossChainRouteAddress,
       "quoteLayerZeroFee",
       [account.address, dst, dstValutDeposit()],
@@ -156,7 +156,7 @@ export const useCrossSwap = (): any => {
     );
 
     try {
-      const result = await account.walletClient.sendTransaction(
+      const result = await account.walletAdapter.sendTransaction(
         crossChainRouteAddress,
         "crossSwap",
         {

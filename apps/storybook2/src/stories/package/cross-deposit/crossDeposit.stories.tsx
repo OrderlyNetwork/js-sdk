@@ -5,7 +5,7 @@ import { CrossDepositFormWidget, installCrossDeposit } from '@orderly.network/ui
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { customChains } from "./customChains";
-import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
+import { DepositAndWithdrawWithDialogId, DepositAndWithdrawWithSheetId } from "@orderly.network/ui-transfer";
 installCrossDeposit()
 
 const networkId = "mainnet";
@@ -22,13 +22,18 @@ const meta = {
     decorators: [
         (Story: any) => (
             <ConnectorProvider>
-                <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId={networkId} configStore={configStore} appIcons={{
-                    main: {
-                        img: "/orderly-logo.svg",
-                    },
-                    secondary: {
-                        img: "/orderly-logo-secondary.svg",
-                    },
+                <OrderlyApp
+                    // brokerId="orderly"
+                    // brokerName="Orderly"
+                    networkId={networkId}
+                    configStore={configStore}
+                    appIcons={{
+                        main: {
+                            img: "/orderly-logo.svg",
+                        },
+                        secondary: {
+                            img: "/orderly-logo-secondary.svg",
+                        },
                 }}
                 customChains={customChains as any}>
                     <Story />
@@ -61,6 +66,19 @@ export const CrossDepositDialog: Story = {
                     modal.show(DepositAndWithdrawWithDialogId, { activeTab: 'deposit' })
 
                 }}>Show Deposit Dialog</Button>
+            </Flex>
+        ),
+    ],
+};
+
+export const CrossDepositSheet: Story = {
+    decorators: [
+        (Story) => (
+            <Flex justify='center' itemAlign='center' height="100vh">
+                <Button onClick={() => {
+                    modal.show(DepositAndWithdrawWithSheetId, { activeTab: 'deposit' })
+
+                }}>Show Deposit Sheet</Button>
             </Flex>
         ),
     ],

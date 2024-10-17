@@ -288,7 +288,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           decimals: options?.decimals,
         })
         .then((result: any) => {
-          return account.walletClient
+          return account.walletAdapter
             ?.pollTransactionReceiptWithBackoff(result.hash)
             .then((receipt) => {
               if (receipt.status === 1) {

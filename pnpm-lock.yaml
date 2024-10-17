@@ -1444,7 +1444,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(typescript@5.2.2)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
 
   packages/perp:
     dependencies:
@@ -2083,7 +2083,7 @@ importers:
     dependencies:
       '@layerzerolabs/scan-client':
         specifier: ^0.0.6
-        version: 0.0.6(axios@1.7.2)
+        version: 0.0.6(axios@1.7.7)
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../core
@@ -2463,7 +2463,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(postcss@8.4.47)(ts-node@10.9.2)(typescript@5.2.2)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -8227,12 +8227,12 @@ packages:
     resolution: {integrity: sha512-Lg3PnLp0QXpxwLIAuuJboLeRaIhrgJjeuh797QADg3xz8wGLugQOS5DpsE8A6i6Adgzf+bacllkKZG3J0tGfDw==}
     dev: true
 
-  /@layerzerolabs/scan-client@0.0.6(axios@1.7.2):
+  /@layerzerolabs/scan-client@0.0.6(axios@1.7.7):
     resolution: {integrity: sha512-K6Dpktj8bsPK/bE4DjgPclWn/mOZm/zm6lwRaaZvPkfPhmLQx43j5voBod9hqT2hSh26lC7ZkFAb+8aVUpPISQ==}
     peerDependencies:
       axios: '*'
     dependencies:
-      axios: 1.7.2
+      axios: 1.7.7
     dev: false
 
   /@ledgerhq/connect-kit-loader@1.1.8:

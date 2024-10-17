@@ -35,10 +35,10 @@ export const useWooCrossSwapQuery = () => {
         orderlyNativeFees: bigint;
       }
     ) => {
-      if (!account.walletClient) {
-        throw new Error("walletClient is not ready");
+      if (!account.walletAdapter) {
+        throw new Error("walletAdapter is not ready");
       }
-      const quotoLZFee = await account.walletClient.call(
+      const quotoLZFee = await account.walletAdapter.call(
         crossChainRouteAddress,
         "quoteLayerZeroFee",
         [account.address, dst, dstValutDeposit()],
