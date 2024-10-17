@@ -51,7 +51,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
   }) {
     const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
 
-    if (!holding || !positions || !markPrices) {
+    if (!holding || !positions || !markPrices || !accountInfo) {
       return null;
     }
 

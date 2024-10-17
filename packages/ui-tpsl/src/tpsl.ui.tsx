@@ -353,6 +353,7 @@ const PriceInput = (props: {
       align={"right"}
       autoComplete={"off"}
       value={props.value}
+      color={props.error ? "danger" : undefined}
       classNames={{
         prefix: "oui-text-base-contrast-54",
       }}

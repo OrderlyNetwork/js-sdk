@@ -187,7 +187,7 @@ const ModalContainer: FC = () => {
   return (
     <>
       {components.map((component) => {
-        console.log("component", component);
+        // console.log("component", component);
 
         const Comp: ElementType = component.comp;
         return (

@@ -6,7 +6,7 @@ import { TPSLSheetTitle } from "./positionInfo";
 
 export const TP_SL_SheetWidget = (props: TPSLWidgetProps) => {
   const state = useTPSLSheetScript(props);
-  console.log("TP_SL_SheetWidget", props);
+
   return <TPSLSheetUI {...props} {...state} />;
 };
 export const POSITION_TP_SL_SHEET_ID = "POSITION_TP_SL_SHEET_ID";

@@ -28,8 +28,6 @@ export const PositionTPSLPopover = (props: {
 
   const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
 
-  // console.log("PositionTPSLPopover", props);
-
   return (
     <PopoverRoot
       onOpenChange={(isOpen) => {

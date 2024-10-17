@@ -131,6 +131,10 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     return dirty > 0 && !!tpslOrder.quantity && !errors;
   }, [tpslOrder.quantity, maxQty, dirty, errors]);
 
+  const isPositionTPSL = useMemo(() => {
+    return Number(tpslOrder.quantity) >= maxQty;
+  }, [tpslOrder.quantity, maxQty]);
+
   useEffect(() => {
     const type =
       Number(tpslOrder.quantity) < maxQty
@@ -168,7 +172,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     maxQty,
     setQuantity,
     orderQuantity: tpslOrder.quantity,
-    isPosition: tpslOrder.quantity === position.position_qty,
+    isPosition: isPositionTPSL,
 
     TPSL_OrderEntity: tpslOrder,
     setOrderValue: setValue,

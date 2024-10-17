@@ -3,7 +3,6 @@ import { TPSL, TPSLProps } from "./tpsl.ui";
 import { TPSLBuilderOptions, useTPSLBuilder } from "./useTPSL.script";
 
 export type TPSLWidgetProps = {
-  // onOrderChange?: (order: any) => void;
   onTPSLTypeChange?: (type: AlgoOrderRootType) => void;
 } & TPSLBuilderOptions &
   TPSLProps;

@@ -23,8 +23,6 @@ export const create = <P extends {}>(
   return ({ id, defaultVisible, keepMounted, ...props }) => {
     const { args, show } = useModal(id);
 
-    console.log("*****", props, args);
-
     const modals = useContext(ModalContext);
     const shouldMount = !!modals[id];
 
