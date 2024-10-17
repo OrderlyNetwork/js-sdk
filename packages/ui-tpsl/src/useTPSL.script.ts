@@ -1,19 +1,18 @@
 import {
   type ComputedAlgoOrder,
-  useLocalStorage,
   useSymbolsInfo,
   useTPSLOrder,
 } from "@orderly.network/hooks";
 import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 export type TPSLBuilderOptions = {
   position: API.Position;
   order?: API.AlgoOrder;
-
+  onTPSLTypeChange?: (type: AlgoOrderRootType) => void;
   /**
    * either show the confirm dialog or not,
-   * if the Promise reject or return false, cancel the sumbit action
+   * if the Promise reject or return false, cancel the submit action
    */
   onConfirm?: (
     order: ComputedAlgoOrder,
@@ -29,6 +28,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const isEditing = !!order;
   const symbol = isEditing ? order.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
+  const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
 
   const [tpslOrder, { submit, setValue, validate, errors, isCreateMutating }] =
     useTPSLOrder(
@@ -130,6 +130,21 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
     return dirty > 0 && !!tpslOrder.quantity && !errors;
   }, [tpslOrder.quantity, maxQty, dirty, errors]);
+
+  useEffect(() => {
+    const type =
+      Number(tpslOrder.quantity) < maxQty
+        ? AlgoOrderRootType.TP_SL
+        : AlgoOrderRootType.POSITIONAL_TP_SL;
+    if (
+      typeof options.onTPSLTypeChange === "function" &&
+      prevTPSLType.current !== type
+    ) {
+      options.onTPSLTypeChange(type);
+    }
+
+    prevTPSLType.current = type;
+  }, [tpslOrder.quantity, maxQty]);
 
   const onSubmit = async () => {
     return Promise.resolve()

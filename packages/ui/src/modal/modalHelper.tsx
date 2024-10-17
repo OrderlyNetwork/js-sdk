@@ -19,8 +19,11 @@ export const create = <P extends {}>(
   Comp: React.ComponentType<P>
 ): FC<P & ModalHocProps> => {
   // return higher order component
+  // eslint-disable-next-line react/display-name
   return ({ id, defaultVisible, keepMounted, ...props }) => {
     const { args, show } = useModal(id);
+
+    console.log("*****", props, args);
 
     const modals = useContext(ModalContext);
     const shouldMount = !!modals[id];

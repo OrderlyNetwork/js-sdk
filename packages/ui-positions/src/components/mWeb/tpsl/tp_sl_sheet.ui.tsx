@@ -1,13 +1,11 @@
-import { Text, Flex, Divider, Box, Badge } from "@orderly.network/ui";
-import {
-  TPSLWidget,
-  type TPSLWidgetProps,
-} from "../../shared/tpsl/tpsl.widget";
+import { Text, Flex, Divider, Badge } from "@orderly.network/ui";
+
 import { TPSLSheetState } from "./tp_sl_sheet.script";
 import { PositionInfo } from "./positionInfo";
+import { TPSLWidget, TPSLWidgetProps } from "@orderly.network/ui-tpsl";
+import { AlgoOrderRootType } from "@orderly.network/types";
 
 export const TPSLSheetUI = (props: TPSLWidgetProps & TPSLSheetState) => {
-  // console.log("TPSLSheetUI", props);
   const { position, symbolInfo } = props;
   return (
     <>
@@ -19,16 +17,29 @@ export const TPSLSheetUI = (props: TPSLWidgetProps & TPSLSheetState) => {
           <Badge size="xs" color="neutral">
             TP/SL
           </Badge>
-          <Badge size="xs" color="buy">
-            Buy
-          </Badge>
+          {position.position_qty > 0 ? (
+            <Badge size="xs" color="buy">
+              Buy
+            </Badge>
+          ) : (
+            <Badge size="xs" color="sell">
+              Sell
+            </Badge>
+          )}
         </Flex>
       </Flex>
       <Divider intensity={8} />
       <PositionInfo position={position} symbolInfo={symbolInfo} />
 
       {/* {!props.canModifyQty && <Divider className="oui-mb-3" />} */}
-      <TPSLWidget {...props} />
+      <TPSLWidget
+        {...props}
+        onTPSLTypeChange={(type) => {
+          props.updateSheetTitle(
+            type === AlgoOrderRootType.TP_SL ? "TP/SL" : "Position TP/SL"
+          );
+        }}
+      />
     </>
   );
 };

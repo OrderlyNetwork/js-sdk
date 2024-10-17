@@ -10,7 +10,9 @@ function createSheetComponent<P extends Partial<SimpleSheetProps>>(
     const { title, leading, classNames, contentProps, closable, ...rest } =
       props;
 
-    const { visible, hide, resolve, reject, onOpenChange } = useModal();
+    const { visible, hide, resolve, reject, onOpenChange, args } = useModal();
+
+    // console.log("-------", args);
 
     return (
       <SimpleSheet

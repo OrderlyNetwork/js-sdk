@@ -1,6 +1,17 @@
 import { useMarkPrice } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
-import { Box, Flex, Text } from "@orderly.network/ui";
+import { Box, Flex, Text, useModal } from "@orderly.network/ui";
+import { useEffect, useMemo, useState } from "react";
+
+export const TPSLSheetTitle = () => {
+  const modal = useModal();
+
+  const title = useMemo<string>(() => {
+    return (modal.args?.title || "TP/SL") as string;
+  }, [modal.args?.title]);
+
+  return <span>{title}</span>;
+};
 
 export const PositionInfo = (props: {
   position: API.Position;

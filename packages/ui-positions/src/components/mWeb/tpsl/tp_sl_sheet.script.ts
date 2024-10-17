@@ -1,14 +1,18 @@
 import { API } from "@orderly.network/types";
-import { useMarkPrice, useSymbolsInfo } from "@orderly.network/hooks";
+import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useModal } from "@orderly.network/ui";
 
 export const useTPSLSheetScript = (props: { position: API.Position }) => {
   const symbolInfo = useSymbolsInfo()[props.position.symbol]();
-  //   const symbolInfo = useSymbolContext();
+  const modal = useModal();
 
-  //   const { data: markPrice } = useMarkPrice(props.position.symbol);
+  const updateSheetTitle = (title: string) => {
+    modal.updateArgs({ title });
+  };
+
   return {
     symbolInfo,
-    // markPrice,
+    updateSheetTitle,
   };
 };
 
