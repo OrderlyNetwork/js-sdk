@@ -102,8 +102,6 @@ export const MobileOrderList: FC<
     showFilter?: boolean;
   }
 > = (props) => {
-  console.log(props.filterItems);
-
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -112,7 +110,12 @@ export const MobileOrderList: FC<
       editAlgoOrder={props.updateAlgoOrder}
       // cancelTPSLOrder={props.cancelTPSLOrder}
     >
-      <Grid cols={1} rows={2} className="oui-grid-rows-[auto,1fr] oui-w-full" gap={2}>
+      <Grid
+        cols={1}
+        rows={2}
+        className="oui-grid-rows-[auto,1fr] oui-w-full"
+        gap={2}
+      >
         {/* <Filter
           items={props.filterItems}
           onFilter={(value: any) => {
@@ -124,29 +127,31 @@ export const MobileOrderList: FC<
 
         {props.showFilter ? (
           <Flex gap={2}>
-          {props.filterItems.map((item) => {
-            return (
-              <Picker
-                options={item.options}
-                size={"sm"}
-                value={item.value}
-                className="oui-text-2xs oui-text-base-contrast-54 "
-                placeholder={
-                  item.name === "side"
-                    ? "All sides"
-                    : item.name === "status"
-                    ? "All status"
-                    : ""
-                }
-                onValueChange={(value) => {
-                  //
-                  props.onFilter?.({ name: item.name, value: value });
-                }}
-              />
-            );
-          })}
-        </Flex>
-        ) : <div></div>}
+            {props.filterItems.map((item) => {
+              return (
+                <Picker
+                  options={item.options}
+                  size={"sm"}
+                  value={item.value}
+                  className="oui-text-2xs oui-text-base-contrast-54 "
+                  placeholder={
+                    item.name === "side"
+                      ? "All sides"
+                      : item.name === "status"
+                      ? "All status"
+                      : ""
+                  }
+                  onValueChange={(value) => {
+                    //
+                    props.onFilter?.({ name: item.name, value: value });
+                  }}
+                />
+              );
+            })}
+          </Flex>
+        ) : (
+          <div></div>
+        )}
         <ListView
           className={props.classNames?.root}
           dataSource={props.dataSource}

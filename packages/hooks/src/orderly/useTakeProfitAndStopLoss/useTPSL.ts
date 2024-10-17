@@ -85,6 +85,7 @@ export const useTaskProfitAndStopLossInternal = (
     isCreateMutating: boolean;
   }
 ] => {
+  const isEditing = !!options?.defaultOrder;
   const [order, setOrder] = useState<
     ComputedAlgoOrder & {
       ignoreValidate?: boolean;
@@ -93,7 +94,11 @@ export const useTaskProfitAndStopLossInternal = (
     algo_order_id: options?.defaultOrder?.algo_order_id,
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    quantity: "",
+    quantity: isEditing
+      ? options.defaultOrder?.quantity === 0
+        ? Math.abs(position.position_qty)
+        : options?.defaultOrder?.quantity
+      : "",
     // quantity:
     //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,

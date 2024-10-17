@@ -1,5 +1,6 @@
 import {
   type ComputedAlgoOrder,
+  useLocalStorage,
   useSymbolsInfo,
   useTPSLOrder,
 } from "@orderly.network/hooks";
@@ -29,6 +30,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const symbol = isEditing ? order.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
+  const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
 
   const [tpslOrder, { submit, setValue, validate, errors, isCreateMutating }] =
     useTPSLOrder(
@@ -132,6 +134,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   }, [tpslOrder.quantity, maxQty, dirty, errors]);
 
   const isPositionTPSL = useMemo(() => {
+    if (tpslOrder.algo_order_id && tpslOrder.quantity == 0) return true;
     return Number(tpslOrder.quantity) >= maxQty;
   }, [tpslOrder.quantity, maxQty]);
 
@@ -153,7 +156,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const onSubmit = async () => {
     return Promise.resolve()
       .then(() => {
-        if (typeof options.onConfirm !== "function") {
+        if (typeof options.onConfirm !== "function" || !needConfirm) {
           return submit().then(() => true);
         }
         return options.onConfirm(tpslOrder, {

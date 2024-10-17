@@ -34,17 +34,19 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
-      {!props.isEditing && (
-        <TPSLQuantity
-          maxQty={props.maxQty}
-          quantity={(props.orderQuantity ?? props.maxQty) as number}
-          tick={symbolInfo("base_tick")}
-          onQuantityChange={props.setQuantity}
-          quote={symbolInfo("base")}
-        />
+      {(!props.isEditing || (props.isEditing && !props.isPosition)) && (
+        <>
+          <TPSLQuantity
+            maxQty={props.maxQty}
+            quantity={(props.orderQuantity ?? props.maxQty) as number}
+            tick={symbolInfo("base_tick")}
+            onQuantityChange={props.setQuantity}
+            quote={symbolInfo("base")}
+          />
+          <Divider my={4} intensity={8} />
+        </>
       )}
 
-      <Divider my={4} intensity={8} />
       <TPSLPrice
         sl_pnl={TPSL_OrderEntity.sl_pnl}
         tp_pnl={TPSL_OrderEntity.tp_pnl}
@@ -396,7 +398,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
   return (
     <>
-      <Flex pt={5} pb={4}>
+      <Flex pb={4}>
         <Box grow>
           <Text.formatted rule={"symbol"} size="base" showIcon as="div">
             {symbol}

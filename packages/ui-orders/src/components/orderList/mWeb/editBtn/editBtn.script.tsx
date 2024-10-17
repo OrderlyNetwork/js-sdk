@@ -4,6 +4,7 @@ import { EditSheetWidget } from "../editSheet";
 import { useCallback } from "react";
 import { useOrderListContext } from "../../orderListContext";
 import { TabType } from "../../../orders.widget";
+import { TPSLWidget } from "@orderly.network/ui-tpsl";
 
 export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const { state } = props;
@@ -11,6 +12,11 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const onShowEditSheet = useCallback(() => {
     if (props.state.type === TabType.tp_sl) {
       // TODO: show tp/sl edit
+      console.log("++show tp/sl edit", props);
+      // modal.sheet({
+      //   title: "Edit TP/SL",
+      //   content:<TPSLWidget/>
+      // })
     } else {
       modal.sheet({
         title: "Edit order",

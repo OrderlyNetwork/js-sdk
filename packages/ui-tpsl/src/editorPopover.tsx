@@ -61,6 +61,7 @@ export const PositionTPSLPopover = (props: {
       >
         <TPSLWidget
           position={position}
+          order={order}
           onComplete={() => {
             // console.log("tpsl order completed");
             setOpen(false);
@@ -78,7 +79,7 @@ export const PositionTPSLPopover = (props: {
             return modal
               .confirm({
                 title: "Confirm Order",
-                bodyClassName: "oui-p-0",
+                // bodyClassName: "lg:oui-py-0",
                 onOk: () => {
                   return options.submit();
                 },
