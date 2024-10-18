@@ -58,15 +58,16 @@ type SymbolText = {
 const DEFAULT_SYMBOL_FORMAT = "base-quote";
 const DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-export type FormattedTextProps = TextProps & CopyableTextProps & {
-  // asChildren?: boolean;
-  // rule?: Omit<TextRule, "status"|'address'|'date'>;
-  loading?: boolean;
+export type FormattedTextProps = TextProps &
+  CopyableTextProps & {
+    // asChildren?: boolean;
+    // rule?: Omit<TextRule, "status"|'address'|'date'>;
+    loading?: boolean;
 
-  suffix?: React.ReactNode;
-  prefix?: React.ReactNode;
-  // showIcon?: boolean;
-} & (
+    suffix?: React.ReactNode;
+    prefix?: React.ReactNode;
+    // showIcon?: boolean;
+  } & (
     | BaseText
     | DateText
     | AddressText
@@ -191,6 +192,12 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       );
     }, [content, suffix]);
 
-    return <Text {...rest} ref={ref} children={contentWithFix} />;
+    return (
+      <Text {...rest} ref={ref}>
+        {contentWithFix}
+      </Text>
+    );
   }
 );
+
+FormattedText.displayName = "FormattedText";

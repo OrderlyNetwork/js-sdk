@@ -83,8 +83,10 @@ export const useTaskProfitAndStopLossInternal = (
       >
     >;
     isCreateMutating: boolean;
+    isUpdateMutating: boolean;
   }
 ] => {
+  const isEditing = !!options?.defaultOrder;
   const [order, setOrder] = useState<
     ComputedAlgoOrder & {
       ignoreValidate?: boolean;
@@ -93,7 +95,11 @@ export const useTaskProfitAndStopLossInternal = (
     algo_order_id: options?.defaultOrder?.algo_order_id,
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    quantity: "",
+    quantity: isEditing
+      ? options.defaultOrder?.quantity === 0
+        ? Math.abs(position.position_qty)
+        : options?.defaultOrder?.quantity
+      : "",
     // quantity:
     //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
@@ -104,7 +110,10 @@ export const useTaskProfitAndStopLossInternal = (
 
   const [doCreateOrder, { isMutating: isCreateMutating }] =
     useMutation("/v1/algo/order");
-  const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
+  const [doUpdateOrder, { isMutating: isUpdateMutating }] = useMutation(
+    "/v1/algo/order",
+    "PUT"
+  );
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
 
   const [errors, setErrors] = useState<ValidateError | null>(null);
@@ -376,6 +385,7 @@ export const useTaskProfitAndStopLossInternal = (
       validate,
       errors,
       isCreateMutating,
+      isUpdateMutating,
     },
   ];
 };

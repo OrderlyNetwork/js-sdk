@@ -7,23 +7,23 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
-      "@orderly.network/portfolio": resolve(
-        __dirname,
-        "../../packages/portfolio/src"
-      ),
-      "@orderly.network/trading-rewards": resolve(
-        __dirname,
-        "../../packages/trading-rewards/src"
-      ),
+      // "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
+      // "@orderly.network/portfolio": resolve(
+      //   __dirname,
+      //   "../../packages/portfolio/src"
+      // ),
+      // "@orderly.network/trading-rewards": resolve(
+      //   __dirname,
+      //   "../../packages/trading-rewards/src"
+      // ),
       "@orderly.network/markets": resolve(
         __dirname,
         "../../packages/markets/src"
       ),
-      "@orderly.network/affiliate": resolve(
-        __dirname,
-        "../../packages/affiliate/src"
-      ),
+      // "@orderly.network/affiliate": resolve(
+      //   __dirname,
+      //   "../../packages/affiliate/src"
+      // ),
       "@orderly.network/ui": resolve(__dirname, "../../packages/ui/src"),
       "@orderly.network/hooks": resolve(__dirname, "../../packages/hooks/src"),
       // "@orderly.network/utils": resolve(__dirname, "../../packages/utils/src"),
@@ -35,10 +35,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-connector/src"
       ),
-      // "@orderly.network/ui-scaffold": resolve(
-      //   __dirname,
-      //   "../../packages/ui-scaffold/src"
-      // ),
+      "@orderly.network/ui-scaffold": resolve(
+        __dirname,
+        "../../packages/ui-scaffold/src"
+      ),
       // "@orderly.network/ui-leverage": resolve(
       //   __dirname,
       //   "../../packages/ui-leverage/src"
@@ -55,10 +55,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-transfer/src"
       ),
-      "@orderly.network/ui-share": resolve(
-        __dirname,
-        "../../packages/ui-share/src"
-      ),
+      // "@orderly.network/ui-share": resolve(
+      //   __dirname,
+      //   "../../packages/ui-share/src"
+      // ),
       // "@orderly.network/ui-tradingview": resolve(
       //   __dirname,
       //   "../../packages/ui-tradingview/src"
@@ -87,18 +87,22 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-order-entry/src"
       ),
-      "@orderly.network/default-evm-adapter": resolve(
+      "@orderly.network/ui-tpsl": resolve(
         __dirname,
-        "../../packages/default-evm-adapter/src"
+        "../../packages/ui-tpsl/src"
       ),
+      // "@orderly.network/default-evm-adapter": resolve(
+      //   __dirname,
+      //   "../../packages/default-evm-adapter/src"
+      // ),
       "@orderly.network/react/dist": resolve(
         __dirname,
         "../../packages/component/dist"
       ),
-      "@orderly.network/react": resolve(
-        __dirname,
-        "../../packages/component/src"
-      ),
+      // "@orderly.network/react": resolve(
+      //   __dirname,
+      //   "../../packages/component/src"
+      // ),
       "@": resolve(__dirname, "../../packages/component/src"),
     },
   },

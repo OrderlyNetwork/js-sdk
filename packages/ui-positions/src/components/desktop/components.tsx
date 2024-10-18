@@ -6,6 +6,11 @@ export const TPSLButton = () => {
   const { position, baseDp, quoteDp } = usePositionsRowContext();
 
   return (
-    <PositionTPSLPopover position={position} label="TP/SL" baseDP={baseDp} />
+    <PositionTPSLPopover
+      position={position}
+      label="TP/SL"
+      baseDP={baseDp}
+      quoteDP={quoteDp}
+    />
   );
 };

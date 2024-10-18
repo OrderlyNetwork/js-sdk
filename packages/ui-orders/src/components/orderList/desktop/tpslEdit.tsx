@@ -1,13 +1,15 @@
 import { API } from "@orderly.network/types";
-import { Button } from "@orderly.network/ui";
+import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
+import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const TP_SLEditButton = (props: { order: API.Order }) => {
+  const { position, order } = useTPSLOrderRowContext();
   return (
-    <>
-      <Button size="sm" variant={"outlined"} color={"secondary"}>
-        Edit
-      </Button>
-      {/* <TPSLEditorWidget position={props.order} /> */}
-    </>
+    <PositionTPSLPopover
+      position={position!}
+      order={order}
+      label="Edit"
+      isEditing
+    />
   );
 };

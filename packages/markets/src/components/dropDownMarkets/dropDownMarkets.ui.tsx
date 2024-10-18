@@ -19,7 +19,6 @@ import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
 import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
 import { getDropDownMarketsColumns } from "./column";
-import "../../style/index.css";
 
 export type DropDownMarketsProps = UseDropDownMarketsScriptReturn & {
   contentClassName?: string;

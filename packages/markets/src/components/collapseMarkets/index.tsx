@@ -10,7 +10,7 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
   const { onSymbolChange } = useMarketsContext();
 
   return (
-    <div className="oui-overflow-y-auto custom-scrollbar oui-h-full">
+    <div className="oui-overflow-y-auto oui-custom-scrollbar oui-h-full">
       <Flex direction="column" px={2} gapY={1}>
         {props.dataSource?.map((item) => {
           const content = (

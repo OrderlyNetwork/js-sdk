@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
+import { API } from "@orderly.network/types";
 
 interface SymbolContextState {
   base_dp: number;
@@ -14,6 +15,7 @@ interface SymbolContextState {
   base: string;
   quote: string;
   symbol: string;
+  origin: API.SymbolExt;
 }
 
 export const SymbolContext = createContext({} as SymbolContextState);
@@ -40,6 +42,7 @@ export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
         base: symbolInfo("base"),
         quote: symbolInfo("quote"),
         symbol: props.symbol,
+        origin: symbolInfo(),
       }}
     >
       {props.children}

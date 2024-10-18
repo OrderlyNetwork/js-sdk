@@ -5,9 +5,7 @@ export {
   PositionsWidget,
   MobilePositionsWidget,
 } from "./components/positions.widget";
-export { TPSLWidget } from "./components/shared/tpsl/tpsl.widget";
-export { TPSLEditorWidget } from "./components/shared/tpsl/dialog/tpslDialog.widget";
-export { PositionTPSLConfirm } from "./components/shared/tpsl/tpsl.ui";
+
 export type { PositionsProps } from "./types/types";
 
 export const MarketCloseConfirmID = "MarketCloseConfirmID";

@@ -10,7 +10,6 @@ import { FavoritesListWidget } from "../favoritesList";
 import { RecentListWidget } from "../recentList";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
-import "../../style/index.css";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn & {
   className?: string;

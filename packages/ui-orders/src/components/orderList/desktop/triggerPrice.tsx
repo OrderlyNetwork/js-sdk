@@ -9,7 +9,7 @@ import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
 
 export const TriggerPrice = (props: {
-  order: API.OrderExt;
+  order: API.AlgoOrderExt;
   disableEdit?: boolean;
 }) => {
   const { order } = props;
@@ -21,6 +21,7 @@ export const TriggerPrice = (props: {
   }, [order.trigger_price]);
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
+  const isBracketOrder = (order?.algo_type === 'BRACKET');
   const [open, setOpen] = useState(false);
   const [editting, setEditting] = useState(false);
 
@@ -129,7 +130,7 @@ export const TriggerPrice = (props: {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  if (!isAlgoOrder) {
+  if (!isAlgoOrder || isBracketOrder) {
     return <Text>{`--`}</Text>;
   }
   const trigger = () => {

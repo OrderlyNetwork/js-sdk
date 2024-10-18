@@ -57,6 +57,8 @@ export function useModal(modal?: any, args?: any): ModalHandler {
 
   const modalInfo = modals[id];
 
+  // console.log("modalInfo", modalInfo);
+
   const show = useCallback(
     (args?: Record<string, unknown>) => modalActions.show(id, args),
     [id]
@@ -79,7 +81,16 @@ export function useModal(modal?: any, args?: any): ModalHandler {
   );
 
   const setStates = useCallback(
-    (states: Record<string, unknown>) => modalActions.setStates(id, states),
+    (states: Record<string, unknown>) => {
+      modalActions.setStates(id, states);
+    },
+    [id]
+  );
+
+  const updateArgs = useCallback(
+    (args: Record<string, unknown>) => {
+      modalActions.updateArgs(id, args);
+    },
     [id]
   );
 
@@ -107,6 +118,7 @@ export function useModal(modal?: any, args?: any): ModalHandler {
   return {
     id,
     args: modalInfo?.args,
+    states: modalInfo?.states,
     visible: !!modalInfo?.visible,
     keepMounted: !!modalInfo?.keepMounted,
 
@@ -114,6 +126,7 @@ export function useModal(modal?: any, args?: any): ModalHandler {
     hide,
     onOpenChange,
     setStates,
+    updateArgs,
     remove,
     /**
      * resolve the show Promise
@@ -124,7 +137,7 @@ export function useModal(modal?: any, args?: any): ModalHandler {
      */
     reject,
     /**
-     * emit when modal is hiddened
+     * emit when modal is hidden
      */
     resolveHide,
   };

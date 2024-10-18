@@ -1,19 +1,24 @@
-import { useState } from "react";
-import { useSymbolContext } from "../../../providers/symbolProvider";
 import { PositionCellState } from "../positionCell/positionCell.script";
 import { modal } from "@orderly.network/ui";
-import { usePositionsRowContext } from "../../desktop/positionRowContext";
-import { POSITION_TP_SL_SHEET_ID } from "../tpsl/tp_sl_sheet.widget";
+import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
+import { API } from "@orderly.network/types";
+import { useSymbolsInfo } from "@orderly.network/hooks";
 
 export const useTpSLBtnScript = (props: { state: PositionCellState }) => {
-  const symbolInfo = useSymbolContext();
-  const ctx = usePositionsRowContext();
+  const symbolInfo: API.SymbolExt = useSymbolsInfo()[props.state.item.symbol]();
 
   const openTP_SL = () => {
-    modal.show(POSITION_TP_SL_SHEET_ID, {
-      position: ctx.position,
+    modal.sheet({
+      title: "TP/SL",
+      content: (
+        <PositionTPSLSheet
+          position={props.state.item}
+          symbolInfo={symbolInfo}
+        />
+      ),
     });
   };
+
   return {
     openTP_SL,
     ...props,

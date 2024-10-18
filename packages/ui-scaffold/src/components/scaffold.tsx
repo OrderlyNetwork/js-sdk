@@ -39,6 +39,7 @@ export type LayoutProps = {
   footerIsSticky?: boolean;
   footerConfig?: FooterConfig;
   classNames?: {
+    root?: string;
     content?: string;
     body?: string;
     leftSidebar?: string;
@@ -75,7 +76,11 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
 
   return (
     <div
-      className="oui-flex oui-flex-col oui-overflow-auto"
+      className={cn(
+        "oui-flex oui-flex-col",
+        "oui-overflow-auto oui-custom-scrollbar",
+        classNames?.root
+      )}
       style={{
         height: `calc(100vh - ${footerHeight}px)`,
       }}

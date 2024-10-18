@@ -5,15 +5,15 @@ import {
   useTPSLOrder,
 } from "@orderly.network/hooks";
 import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 export type TPSLBuilderOptions = {
   position: API.Position;
   order?: API.AlgoOrder;
-
+  onTPSLTypeChange?: (type: AlgoOrderRootType) => void;
   /**
    * either show the confirm dialog or not,
-   * if the Promise reject or return false, cancel the sumbit action
+   * if the Promise reject or return false, cancel the submit action
    */
   onConfirm?: (
     order: ComputedAlgoOrder,
@@ -29,18 +29,22 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const isEditing = !!order;
   const symbol = isEditing ? order.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
+  const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
+  const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
 
-  const [tpslOrder, { submit, setValue, validate, errors, isCreateMutating }] =
-    useTPSLOrder(
-      {
-        symbol,
-        position_qty: position.position_qty,
-        average_open_price: position.average_open_price,
-      },
-      {
-        defaultOrder: order,
-      }
-    );
+  const [
+    tpslOrder,
+    { submit, setValue, validate, errors, isCreateMutating, isUpdateMutating },
+  ] = useTPSLOrder(
+    {
+      symbol,
+      position_qty: position.position_qty,
+      average_open_price: position.average_open_price,
+    },
+    {
+      defaultOrder: order,
+    }
+  );
 
   const setQuantity = (value: number | string) => {
     setValue("quantity", value);
@@ -115,6 +119,10 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   ]);
 
   const valid = useMemo(() => {
+    /**
+     * if the order is a POSITIONAL_TP_SL and the quantity is less than the maxQty,
+     * and the tp/sl trigger price is not set, then the order is not valid
+     */
     if (
       order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
       Number(tpslOrder.quantity) < maxQty &&
@@ -124,13 +132,33 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
       return false;
     }
 
-    return dirty > 0 && !!tpslOrder.quantity;
-  }, [tpslOrder.quantity, maxQty, dirty]);
+    return dirty > 0 && !!tpslOrder.quantity && !errors;
+  }, [tpslOrder.quantity, maxQty, dirty, errors]);
+
+  const isPositionTPSL = useMemo(() => {
+    if (tpslOrder.algo_order_id && tpslOrder.quantity == 0) return true;
+    return Number(tpslOrder.quantity) >= maxQty;
+  }, [tpslOrder.quantity, maxQty]);
+
+  useEffect(() => {
+    const type =
+      Number(tpslOrder.quantity) < maxQty
+        ? AlgoOrderRootType.TP_SL
+        : AlgoOrderRootType.POSITIONAL_TP_SL;
+    if (
+      typeof options.onTPSLTypeChange === "function" &&
+      prevTPSLType.current !== type
+    ) {
+      options.onTPSLTypeChange(type);
+    }
+
+    prevTPSLType.current = type;
+  }, [tpslOrder.quantity, maxQty]);
 
   const onSubmit = async () => {
     return Promise.resolve()
       .then(() => {
-        if (typeof options.onConfirm !== "function") {
+        if (typeof options.onConfirm !== "function" || !needConfirm) {
           return submit().then(() => true);
         }
         return options.onConfirm(tpslOrder, {
@@ -149,7 +177,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     maxQty,
     setQuantity,
     orderQuantity: tpslOrder.quantity,
-    isPosition: tpslOrder.quantity === position.position_qty,
+    isPosition: isPositionTPSL,
 
     TPSL_OrderEntity: tpslOrder,
     setOrderValue: setValue,
@@ -161,6 +189,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     errors,
     status: {
       isCreateMutating,
+      isUpdateMutating,
     },
   } as const;
 };

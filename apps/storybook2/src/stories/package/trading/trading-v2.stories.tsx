@@ -54,6 +54,9 @@ const meta = {
               leftSidebar={null}
               // @ts-ignore
               mainNavProps={mainNavProps}
+              classNames={{
+                // content: "oui-min-w-[1440px]",
+             }}
             >
               <Story />
             </Scaffold>
@@ -72,6 +75,7 @@ const meta = {
   args: {
     symbol: "PERP_ETH_USDC",
     // symbol: "PERP_ORDER_USDC",
+    // symbol: "PERP_1000BONK_USDC",
     tradingViewConfig: {
       scriptSRC: "/tradingview/charting_library/charting_library.js",
       library_path: "/tradingview/charting_library/",

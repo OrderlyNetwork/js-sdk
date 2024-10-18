@@ -10,7 +10,6 @@ import { UseMarketsSheetScriptReturn } from "./marketsSheet.script";
 import { SearchIcon } from "../../icons";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
-import "../../style/index.css";
 import { getMarketsSheetColumns } from "./column";
 
 export type MarketsSheetProps = UseMarketsSheetScriptReturn & {

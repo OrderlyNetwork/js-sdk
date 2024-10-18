@@ -1670,6 +1670,9 @@ importers:
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/ui-chain-selector':
+        specifier: workspace:*
+        version: link:../ui-chain-selector
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector

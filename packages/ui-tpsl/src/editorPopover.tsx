@@ -19,15 +19,17 @@ export const PositionTPSLPopover = (props: {
   label: string;
   baseDP?: number;
   quoteDP?: number;
+  /**
+   * Button props
+   */
   buttonProps?: ButtonProps;
+  isEditing?: boolean;
 }) => {
-  const { position, order, baseDP, quoteDP, buttonProps } = props;
+  const { position, order, baseDP, quoteDP, buttonProps, isEditing } = props;
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
 
   const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
-
-  console.log("PositionTPSLPopover", props);
 
   return (
     <PopoverRoot
@@ -62,6 +64,7 @@ export const PositionTPSLPopover = (props: {
       >
         <TPSLWidget
           position={position}
+          order={order}
           onComplete={() => {
             // console.log("tpsl order completed");
             setOpen(false);
@@ -78,20 +81,22 @@ export const PositionTPSLPopover = (props: {
 
             return modal
               .confirm({
-                title: "Confirm Order",
-                bodyClassName: "oui-p-0",
+                title: isEditing ? "Edit Order" : "Confirm Order",
+                // bodyClassName: "lg:oui-py-0",
                 onOk: () => {
                   return options.submit();
                 },
                 content: (
                   <PositionTPSLConfirm
+                    isEditing={isEditing}
                     symbol={order.symbol!}
                     qty={Number(order.quantity)}
                     maxQty={Number(position.position_qty)}
                     tpPrice={Number(order.tp_trigger_price)}
                     slPrice={Number(order.sl_trigger_price)}
                     side={order.side!}
-                    dp={baseDP ?? 2}
+                    quoteDP={quoteDP ?? 2}
+                    baseDP={baseDP ?? 2}
                   />
                 ),
               })
