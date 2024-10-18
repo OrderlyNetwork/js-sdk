@@ -21,7 +21,7 @@ export const TriggerPrice = (props: {
   }, [order.trigger_price]);
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
-  const isBracketOrder = (order?.algo_type === 'BRACKET');
+  const isBracketOrder = order?.algo_type === "BRACKET";
   const [open, setOpen] = useState(false);
   const [editting, setEditting] = useState(false);
 
@@ -174,7 +174,15 @@ export const TriggerPrice = (props: {
         />
       }
     >
-      <div ref={componentRef}>{trigger()}</div>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        ref={componentRef}
+      >
+        {trigger()}
+      </div>
     </Popover>
   );
 };

@@ -30,8 +30,7 @@ export const Price = (props: {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editOrder, editAlgoOrder, checkMinNotional } =
-    useOrderListContext();
+  const { editOrder, editAlgoOrder, checkMinNotional } = useOrderListContext();
 
   const { base, quote_dp } = useSymbolContext();
   const closePopover = () => {
@@ -193,7 +192,6 @@ export const Price = (props: {
 
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
-  
   if (isAlgoMarketOrder || price === "Market") {
     return <span>Market</span>;
   }
@@ -240,7 +238,15 @@ export const Price = (props: {
         />
       }
     >
-      <div ref={componentRef}>{trigger()}</div>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        ref={componentRef}
+      >
+        {trigger()}
+      </div>
     </Popover>
   );
 };
