@@ -108,27 +108,47 @@ const buttonVariants = tv(
       {
         variant: "outlined",
         color: "primary",
-        className: ["oui-border-primary", "oui-text-primary"],
+        className: [
+          "oui-border-primary",
+          "oui-text-primary",
+          "hover:oui-bg-primary/20",
+        ],
       },
       {
         variant: "outlined",
         color: "secondary",
-        className: ["oui-border-base-4", "oui-text-base-contrast-54"],
+        className: [
+          "oui-border-base-4",
+          "oui-text-base-contrast-54",
+          "hover:oui-bg-base-4/20",
+        ],
       },
       {
         variant: "outlined",
         color: "success",
-        className: ["oui-border-success", "oui-text-success"],
+        className: [
+          "oui-border-success",
+          "oui-text-success",
+          "hover:oui-bg-success/20",
+        ],
       },
       {
         variant: "outlined",
         color: "warning",
-        className: ["oui-border-warning", "oui-text-warning"],
+        className: [
+          "oui-border-warning",
+          "oui-text-warning",
+          "hover:oui-bg-warning/20",
+        ],
       },
       {
         variant: "outlined",
         color: "danger",
-        className: ["oui-border-danger", "oui-text-danger"],
+        className: [
+          "oui-border-danger",
+          "oui-text-danger",
+          "hover:oui-bg-danger/20",
+        ],
       },
       {
         variant: "outlined",

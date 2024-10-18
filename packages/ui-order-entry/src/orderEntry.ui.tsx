@@ -15,6 +15,7 @@ import {
   PopoverRoot,
   PopoverTrigger,
   Select,
+  SelectItem,
   Slider,
   Switch,
   Text,
@@ -50,9 +51,11 @@ import { SDKError } from "@orderly.network/types";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
-export const OrderEntry = (props: uesOrderEntryScriptReturn & {
-  containerRef: any;
-}) => {
+export const OrderEntry = (
+  props: uesOrderEntryScriptReturn & {
+    containerRef: any;
+  }
+) => {
   const {
     side,
     formattedOrder,
@@ -152,7 +155,10 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn & {
         errorMsgVisible,
       }}
     >
-      <div className={"oui-space-y-3 oui-text-base-contrast-54"} ref={props.containerRef}>
+      <div
+        className={"oui-space-y-3 oui-text-base-contrast-54"}
+        ref={props.containerRef}
+      >
         <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
           <div
             className={
@@ -257,6 +263,7 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn & {
           onCancelTPSL={props.cancelTP_SL}
           orderType={formattedOrder.order_type}
           errors={validated ? errors : null}
+          isReduceOnly={formattedOrder.reduce_only}
           values={{
             tp: {
               trigger_price: formattedOrder.tp_trigger_price ?? "",
@@ -283,7 +290,6 @@ export const OrderEntry = (props: uesOrderEntryScriptReturn & {
               id={"reduceOnly"}
               checked={props.formattedOrder.reduce_only}
               onCheckedChange={(checked) => {
-                // console.log(checked);
                 props.setOrderValue("reduce_only", checked);
               }}
             />
@@ -567,16 +573,24 @@ const OrderTypeSelect = (props: {
   type: OrderType;
   onChange: (type: OrderType) => void;
 }) => {
+  const options = [
+    { label: "Limit order", value: OrderType.LIMIT },
+    { label: "Market order", value: OrderType.MARKET },
+    { label: "Stop limit", value: OrderType.STOP_LIMIT },
+    { label: "Stop market", value: OrderType.STOP_MARKET },
+  ];
   return (
     <Select.options
       value={props.type}
-      options={[
-        { label: "Limit", value: OrderType.LIMIT },
-        { label: "Market", value: OrderType.MARKET },
-        { label: "Stop Limit", value: OrderType.STOP_LIMIT },
-        { label: "Stop Market", value: OrderType.STOP_MARKET },
-      ]}
+      options={options}
       onValueChange={props.onChange}
+      valueFormatter={(value, option) => {
+        const item = options.find((o) => o.value === value);
+        if (!item) {
+          return <Text size={"2xs"}>{option.placeholder}</Text>;
+        }
+        return <Text size={"2xs"}>{item?.label.replace(" order", "")}</Text>;
+      }}
       size={"md"}
     />
   );

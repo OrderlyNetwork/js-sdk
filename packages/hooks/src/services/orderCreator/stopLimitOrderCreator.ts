@@ -63,8 +63,6 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       const { symbol } = config;
       const { price_range, price_scope, quote_max, quote_min } = symbol;
 
-      console.log("stopLimitOrderCreator values", values);
-
       if (!trigger_price) {
         errors.trigger_price = {
           type: "required",

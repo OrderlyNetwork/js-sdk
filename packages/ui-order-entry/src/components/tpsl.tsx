@@ -31,6 +31,7 @@ export const OrderTPSL = (props: {
   onChange: (key: OrderValueKeys, value: any) => void;
   values: TPSL_Values;
   orderType: OrderType;
+  isReduceOnly?: boolean;
   errors: any;
 }) => {
   const [open, setOpen] = useState(false);
@@ -47,6 +48,13 @@ export const OrderTPSL = (props: {
     }
   }, [props.orderType]);
 
+  if (
+    (props.orderType !== OrderType.LIMIT &&
+      props.orderType !== OrderType.MARKET) ||
+    props.isReduceOnly
+  )
+    return null;
+
   return (
     <div>
       <Flex itemAlign={"center"} gapX={1}>
@@ -54,8 +62,9 @@ export const OrderTPSL = (props: {
           id={"order_entry_tpsl"}
           checked={open}
           disabled={
-            props.orderType !== OrderType.LIMIT &&
-            props.orderType !== OrderType.MARKET
+            (props.orderType !== OrderType.LIMIT &&
+              props.orderType !== OrderType.MARKET) ||
+            props.isReduceOnly
           }
           onCheckedChange={(checked) => {
             setOpen(checked);
@@ -186,7 +195,7 @@ const TPSLInputRow = (props: {
       <TPSLTriggerPriceInput
         type={props.type}
         error={props.error}
-        values={props.values}
+        values={props.values ?? ""}
         onChange={(event) => {
           props.onChange(priceKey, event.target.value);
         }}

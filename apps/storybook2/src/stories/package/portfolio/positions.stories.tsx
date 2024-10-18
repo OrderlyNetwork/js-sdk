@@ -3,6 +3,7 @@ import { PositionsModule, } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 // import {Box} from "@orderly.network/ui";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { Flex, Text, Divider } from "@orderly.network/ui";
 
 
 const meta = {
@@ -15,7 +16,7 @@ const meta = {
     (Story) => (
       <ConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <Story />
+            <Story />
         </OrderlyApp>
       </ConnectorProvider>
     ),

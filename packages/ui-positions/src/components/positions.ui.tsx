@@ -5,7 +5,8 @@ import { SymbolProvider } from "../providers/symbolProvider";
 import { PositionsProps } from "../types/types";
 import { useColumn } from "./desktop/useColumn";
 import { PositionsRowProvider } from "./desktop/positionRowContext";
-import { PositionCellWidget } from "./mWeb/positionCell";
+import { PositionCellWidget } from "./mobile/positionCell";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 export const Positions = (props: PositionsBuilderState) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
@@ -18,7 +19,7 @@ export const Positions = (props: PositionsBuilderState) => {
 
   return (
     <div>
-      <DataTable<API.PositionTPSLExt>
+      <AuthGuardDataTable<API.PositionTPSLExt>
         loading={props.isLoading}
         id="oui-desktop-positions-content"
         classNames={{
@@ -28,8 +29,8 @@ export const Positions = (props: PositionsBuilderState) => {
         columns={column}
         bordered
         dataSource={props.dataSource}
-        generatedRowKey={(record) => record.symbol}
-        renderRowContainer={(record, index, children) => {
+        generatedRowKey={(record: any) => record.symbol}
+        renderRowContainer={(record :any, index: number, children: any) => {
           return (
             <SymbolProvider symbol={record.symbol}>
               <PositionsRowProvider position={record}>
