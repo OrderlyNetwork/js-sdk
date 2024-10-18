@@ -97,7 +97,7 @@ export const TPSLTriggerPrice: FC<{
           )}
           key={"tp"}
           rule="price"
-          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
+          dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.takeProfitPrice}
           // @ts-ignore
           prefix={
@@ -120,7 +120,7 @@ export const TPSLTriggerPrice: FC<{
             "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-36"
           )}
           rule={"price"}
-          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
+          dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.stopLossPrice}
           // @ts-ignore
           prefix={
@@ -195,11 +195,16 @@ const TriggerPriceItem: FC<{
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
 
+  console.log("trigger price item", "dp", symbolInfo.quote_dp);
+  
+
   return (
     <div className="oui-flex oui-items-center">
       <span className="oui-text-base-contrast-54 oui-mr-1">{`${type} PnL:`}</span>
       <Text.numeral
         rule="price"
+        dp={symbolInfo.quote_dp}
+        padding={false}
         className={
           pnl === 0
             ? "oui-text-base-contrast-36"
