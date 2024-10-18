@@ -5,7 +5,9 @@ import { AuthGuard } from "@orderly.network/ui-connector";
 
 export const Account: FC<AccountState> = (props) => {
   return (
-    <AuthGuard>
+    <AuthGuard buttonProps={{
+        size: "sm"
+    }}>
       <Button variant="gradient" size={"sm"} className="oui-max-w-[83px]" onClick={(e) => {
         props.onShowAccountSheet();
       }}>
