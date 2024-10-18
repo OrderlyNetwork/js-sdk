@@ -16,10 +16,10 @@ export default defineConfig({
       //   __dirname,
       //   "../../packages/trading-rewards/src"
       // ),
-      // "@orderly.network/markets": resolve(
-      //   __dirname,
-      //   "../../packages/markets/src"
-      // ),
+      "@orderly.network/markets": resolve(
+        __dirname,
+        "../../packages/markets/src"
+      ),
       // "@orderly.network/affiliate": resolve(
       //   __dirname,
       //   "../../packages/affiliate/src"
@@ -35,10 +35,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-connector/src"
       ),
-      // "@orderly.network/ui-scaffold": resolve(
-      //   __dirname,
-      //   "../../packages/ui-scaffold/src"
-      // ),
+      "@orderly.network/ui-scaffold": resolve(
+        __dirname,
+        "../../packages/ui-scaffold/src"
+      ),
       // "@orderly.network/ui-leverage": resolve(
       //   __dirname,
       //   "../../packages/ui-leverage/src"
