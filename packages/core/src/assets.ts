@@ -4,8 +4,7 @@ import {ConfigStore} from "./configStore/configStore";
 import {IContract} from "./contract";
 import {MessageFactor} from "./signer";
 import {formatByUnits, getTimestamp, parseBrokerHash, parseTokenHash,} from "./utils";
-import {API, ApiError, MaxUint256,} from "@orderly.network/types";
-import {ChainNamespace} from "./constants";
+import {API, ApiError, MaxUint256, ChainNamespace} from "@orderly.network/types";
 
 export class Assets {
   constructor(

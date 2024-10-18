@@ -1,5 +1,4 @@
-import { API } from "@orderly.network/types";
-import { ChainNamespace } from "../constants";
+import { API, ChainNamespace } from "@orderly.network/types";
 import { SignatureDomain } from "../utils";
 
 import type { BigNumberish } from "ethers/src.ts/utils";

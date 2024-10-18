@@ -633,3 +633,9 @@ export const TestnetChains = [
 
 export const defaultMainnetChains = [Arbitrum, Base, Optimism];
 export const defaultTestnetChains = [ArbitrumSepolia];
+
+
+export enum ChainNamespace {
+  evm = "EVM",
+  solana = "SOL",
+}

@@ -1,7 +1,6 @@
 import {
   AddOrderlyKeyInputs,
   BaseWalletAdapter,
-  ChainNamespace,
   IContract,
   Message,
   RegisterAccountInputs,
@@ -12,7 +11,7 @@ import {
 import { EVMAdapterOptions } from "./types";
 import * as ed from "@noble/ed25519";
 import { encode as bs58encode, decode as bs58Decode } from "bs58";
-import { API, definedTypes } from "@orderly.network/types";
+import { API, ChainNamespace} from "@orderly.network/types";
 import {
   addOrderlyKeyMessage,
   registerAccountMessage,

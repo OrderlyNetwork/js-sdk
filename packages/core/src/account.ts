@@ -2,13 +2,13 @@ import {BaseSigner, MessageFactor, Signer} from "./signer";
 
 import {ConfigStore} from "./configStore/configStore";
 import {OrderlyKeyStore} from "./keyStore";
-import {AccountStatusEnum, SDKError} from "@orderly.network/types";
+import {AccountStatusEnum, SDKError, ChainNamespace} from "@orderly.network/types";
 import {getTimestamp, isHex, parseAccountId, parseBrokerHash} from "./utils";
 
 import EventEmitter from "eventemitter3";
 import {BaseContract, IContract} from "./contract";
 import {Assets} from "./assets";
-import {ChainNamespace, EVENT_NAMES} from "./constants";
+import {EVENT_NAMES} from "./constants";
 import {WalletAdapterManager} from "./walletAdapterManager";
 import {WalletAdapter} from "./wallet/walletAdapter";
 import {BaseOrderlyKeyPair} from "./keyPair";

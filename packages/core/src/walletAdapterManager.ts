@@ -1,6 +1,5 @@
 import { WalletAdapter } from "./wallet/walletAdapter";
-import { ChainNamespace } from "./constants";
-import { SDKError } from "@orderly.network/types";
+import { ChainNamespace} from "@orderly.network/types";
 import { Eip1193Provider } from "ethers";
 import { IContract } from "./contract";
 

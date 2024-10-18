@@ -2,8 +2,7 @@ import React, { useEffect, type PropsWithChildren, useMemo } from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
 import { useWalletModal} from "@solana/wallet-adapter-react-ui";
 import {useConnection, useWallet} from "@solana/wallet-adapter-react";
-import { ChainNamespace } from "@orderly.network/core";
-import {clusterApiUrl, Connection} from "@solana/web3.js";
+import { ChainNamespace } from "@orderly.network/types";
 
 export function Main(props: PropsWithChildren) {
   const { setVisible, visible } = useWalletModal();
