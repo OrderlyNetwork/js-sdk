@@ -352,7 +352,7 @@ export class Assets {
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
-    let vaultAddress = contractAddress.solanaVaultAddress;
+    let vaultAddress = contractAddress.vaultAddress;
     if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
       vaultAddress = contractAddress.solanaVaultAddress;
       // @ts-ignore

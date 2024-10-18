@@ -47,7 +47,7 @@ class WalletAdapterManager {
   ) {
     console.log('-- this.walletAdapters', this.walletAdapters, chainNamespace);
     const adapter = this.walletAdapters.find(
-      (adapter) => adapter.chainNamespace === chainNamespace
+      (adapter) => adapter.chainNamespace === chainNamespace.toUpperCase()
     );
 
     if (!adapter) {
