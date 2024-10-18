@@ -1,5 +1,24 @@
 # @orderly.network/trading
 
+## 2.0.0-alpha.1
+
+### Patch Changes
+
+- test
+- Updated dependencies
+  - @orderly.network/ui-tradingview@2.0.0-alpha.1
+  - @orderly.network/ui-connector@2.0.0-alpha.1
+  - @orderly.network/ui-positions@2.0.0-alpha.1
+  - @orderly.network/ui-leverage@2.0.0-alpha.1
+  - @orderly.network/ui-transfer@2.0.0-alpha.1
+  - @orderly.network/react@2.0.0-alpha.1
+  - @orderly.network/ui-orders@2.0.0-alpha.1
+  - @orderly.network/hooks@2.0.0-alpha.1
+  - @orderly.network/types@2.0.0-alpha.1
+  - @orderly.network/utils@2.0.0-alpha.1
+  - @orderly.network/react-app@2.0.0-alpha.1
+  - @orderly.network/ui@2.0.0-alpha.1
+
 ## 2.0.0-alpha.0
 
 ### Major Changes

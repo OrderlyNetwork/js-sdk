@@ -45,6 +45,7 @@
     "@orderly.network/web3-provider-ethers": "1.0.0"
   },
   "changesets": [
-    "little-shoes-collect"
+    "little-shoes-collect",
+    "swift-knives-pump"
   ]
 }
