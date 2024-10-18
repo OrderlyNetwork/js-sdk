@@ -6,8 +6,7 @@ import {
   SettleInputs,
   AddOrderlyKeyInputs,
 } from "./walletAdapter";
-import { ChainNamespace } from "../constants";
-import { API, SDKError } from "@orderly.network/types";
+import { API, SDKError, ChainNamespace } from "@orderly.network/types";
 import * as ed from "@noble/ed25519";
 import { encode as bs58encode, decode as bs58Decode } from "bs58";
 import { IContract } from "../contract";

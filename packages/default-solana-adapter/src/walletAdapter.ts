@@ -1,9 +1,9 @@
 import { SolanaAdapterOption, SolanaWalletProvider } from "./types";
 import {
   AddOrderlyKeyInputs,
-  BaseWalletAdapter, ChainNamespace, Message, RegisterAccountInputs, SettleInputs, SignatureDomain, WithdrawInputs
+  BaseWalletAdapter, Message, RegisterAccountInputs, SettleInputs, SignatureDomain, WithdrawInputs
 } from "@orderly.network/core";
-import {API, MaxUint256} from "@orderly.network/types";
+import {API, MaxUint256, ChainNamespace} from "@orderly.network/types";
 import * as ed from "@noble/ed25519";
 import { encode as bs58encode, decode as bs58Decode } from "bs58";
 import {

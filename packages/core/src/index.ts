@@ -44,7 +44,6 @@ export type {
   AddOrderlyKeyInputs,
 } from "./wallet/walletAdapter";
 export { BaseWalletAdapter } from "./wallet/baseWalletAdapter";
-export { ChainNamespace } from "./constants";
 export type { Ed25519Keypair } from "./types";
 export type { SignatureDomain } from "./utils";
 

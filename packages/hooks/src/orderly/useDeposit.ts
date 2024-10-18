@@ -7,13 +7,13 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   DEPOSIT_FEE_RATE,
   isNativeTokenChecker, MaxUint256,
+  ChainNamespace,
   NetworkId,
 } from "@orderly.network/types";
 import {Decimal, isTestnet} from "@orderly.network/utils";
 import {useChains} from "./useChains";
 import {useConfig} from "../useConfig";
 import {useDebouncedCallback} from "use-debounce";
-import {ChainNamespace} from "@orderly.network/core";
 
 export type useDepositOptions = {
   // from address
