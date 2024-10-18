@@ -33,6 +33,7 @@ import { CalculatorScope } from "../../types";
 import { useAppStore } from "../appStore";
 import { omit } from "ramda";
 import { PositionCalculator } from "../calculator/positions";
+import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
 // import { usePosition } from "./usePosition";
 
 export type PriceMode = "markPrice" | "lastPrice";
@@ -60,8 +61,8 @@ export const usePositionStream = (
   const positionCalculator = useRef<PositionCalculator | null>(null);
   const calcutlatorService = useCalculatorService();
 
-  const { data: accountInfo } =
-    usePrivateQuery<API.AccountInfo>("/v1/client/info");
+  // const { data: accountInfo } =
+  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   // get TP/SL orders;
 
@@ -70,6 +71,10 @@ export const usePositionStream = (
   //   includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
   // });
   //
+
+  const { positions: positionStatus } = useApiStatusStore(
+    (state) => state.apis
+  );
 
   const [priceMode, setPriceMode] = useState(options?.calcMode || "markPrice");
 
@@ -146,8 +151,8 @@ export const usePositionStream = (
       /**
        * @deprecated use `isLoading` instead
        */
-      // loading: isLoading,
-      // isLoading,
+      loading: positionStatus.loading,
+      isLoading: positionStatus.loading,
       // isValidating,
       // // showSymbol,
       // error,

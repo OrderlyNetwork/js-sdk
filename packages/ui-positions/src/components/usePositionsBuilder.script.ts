@@ -17,17 +17,17 @@ export const usePositionsBuilder = (props: PositionsProps) => {
   //   "showAllSymbol",
   //   true
   // );
-  const [data, info, { 
-    // isLoading
-   }] = usePositionStream(symbol, {
+  const [data, info, { isLoading }] = usePositionStream(symbol, {
     calcMode,
     includedPendingOrder,
   });
+
   return {
     dataSource: data?.rows,
-    isLoading: false, // will be use isLoading when usePositionStream support
+    isLoading, // will be use isLoading when usePositionStream support
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
+
     symbol,
   };
 };

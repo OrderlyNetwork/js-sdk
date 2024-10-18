@@ -27,7 +27,7 @@ export const usePrivateDataObserver = (options: {
   const { setAccountInfo, updateHolding } = useAppStore(
     (state) => state.actions
   );
-  // const statusActions = useApiStatusActions();
+  const statusActions = useApiStatusActions();
   const calculatorService = useCalculatorService();
   // fetch the data of current account
 
@@ -49,9 +49,9 @@ export const usePrivateDataObserver = (options: {
       formatter: (data) => data,
     });
 
-  // useEffect(() => {
-  //   statusActions.updateApiLoading("positions", isPositionLoading);
-  // }, [isPositionLoading]);
+  useEffect(() => {
+    statusActions.updateApiLoading("positions", isPositionLoading);
+  }, [isPositionLoading, statusActions]);
 
   useEffect(() => {
     if (
