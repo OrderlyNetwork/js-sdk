@@ -35,8 +35,7 @@ export const OrderQuantity = (props: {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>();
 
-  const { editOrder, editAlgoOrder, checkMinNotional } =
-    useOrderListContext();
+  const { editOrder, editAlgoOrder, checkMinNotional } = useOrderListContext();
   const { onUpdateOrder: onUpdateTPSLOrder, position } =
     useTPSLOrderRowContext();
 
@@ -68,7 +67,13 @@ export const OrderQuantity = (props: {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const clickHandler = () => {
-    console.log("xxxxx click handler", checkMinNotional, quantity);
+    console.log(
+      "xxxxx click handler",
+      checkMinNotional,
+      quantity,
+      error,
+      quantity
+    );
 
     if (!!error) {
       return;
@@ -219,6 +224,7 @@ export const OrderQuantity = (props: {
         handleKeyDown={handleKeyDown}
         onClick={onClick}
         onClose={cancelPopover}
+        hintInfo={error}
       />
     );
   };
@@ -238,7 +244,15 @@ export const OrderQuantity = (props: {
         />
       }
     >
-      <div ref={componentRef}>{trigger()}</div>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        ref={componentRef}
+      >
+        {trigger()}
+      </div>
     </Popover>
   );
 };

@@ -38,12 +38,13 @@ export const ConfirmContent: FC<{
       <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-mt-5">
         <Button
           color="secondary"
+          size={"md"}
           onClick={cancelPopover}
           disabled={isSubmitting}
         >
           Cancel
         </Button>
-        <Button loading={isSubmitting} onClick={onConfirm}>
+        <Button size={"md"} loading={isSubmitting} onClick={onConfirm}>
           Confirm
         </Button>
       </div>
