@@ -54,15 +54,19 @@ const TwoColLayout: FC<OrderBookAndTradesState & {
       <Flex
         direction={"column"}
         itemAlign={"start"}
-        p={3}
+        py={3}
         r="2xl"
         className="oui-bg-base-9 oui-h-full"
       >
-        <Title title="Last trades" className="oui-text-sm"/>
+        <Title title="Last trades" className="oui-text-sm oui-px-3"/>
         <LastTradesWidget
           symbol={props.symbol}
           style={{
             height: props.containerSize && props.containerSize.height - 29 - 24,
+          }}
+          classNames={{
+            listHeader: "oui-px-3",
+            list: "oui-px-3"
           }}
         />
       </Flex>
@@ -77,7 +81,7 @@ const TabLayout: FC<OrderBookAndTradesState & {
       // pl={3}
       pt={3}
       pb={3}
-      pr={props.tab === "lastTrades" ? 3 : 0}
+      pr={0}
       r="2xl"
       className="oui-bg-base-9"
       style={{
@@ -92,7 +96,7 @@ const TabLayout: FC<OrderBookAndTradesState & {
         }}
         classNames={{
           tabsList: 'oui-pl-3',
-          tabsContent: props.tab === "lastTrades" ? 'oui-pl-3' : ''
+          // tabsContent: props.tab === "lastTrades" ? 'oui-pl-3' : ''
         }}
         size="lg"
       >
@@ -112,6 +116,11 @@ const TabLayout: FC<OrderBookAndTradesState & {
             symbol={props.symbol}
             style={{
               height: props.containerSize && props.containerSize.height - 29 - 18,
+            }}
+            classNames={{
+              listHeader: "oui-px-3",
+              list: "oui-px-3",
+
             }}
           />
         </TabPanel>
