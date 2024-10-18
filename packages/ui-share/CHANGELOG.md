@@ -1,5 +1,16 @@
 # @orderly.network/ui-share
 
+## 2.0.0-alpha.2
+
+### Patch Changes
+
+- test
+- Updated dependencies
+  - @orderly.network/hooks@2.0.0-alpha.2
+  - @orderly.network/types@2.0.0-alpha.2
+  - @orderly.network/utils@2.0.0-alpha.2
+  - @orderly.network/ui@2.0.0-alpha.2
+
 ## 2.0.0-alpha.1
 
 ### Patch Changes

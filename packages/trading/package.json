@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -8,7 +8,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup --tsconfig tsconfig.build.json"
   },
-  "keywords": [],
+  "keywords": [
+    "Orderly",
+    "UI",
+    "Exchange",
+    "DApp"
+  ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/react": "workspace:*",
     "@orderly.network/ui": "workspace:*",
