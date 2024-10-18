@@ -58,13 +58,15 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const tradingViewMinWidth = 540;
   const dataListMinHeight = canTrading ? 379 : 277;
 
-  const screenMinHeight =
+  const minScreenHeight =
     topBarHeight +
     bottomBarHeight +
     tokenInfoBarHeight +
     orderbookMinHeight +
     dataListMinHeight +
     space * 4;
+
+  const minScreenWidth = 1440;
 
   const marketsView = (
     <Box
@@ -285,7 +287,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
 
   return (
     <Flex
-      style={{ minHeight: screenMinHeight }}
+      style={{
+        minHeight: minScreenHeight,
+        minWidth: minScreenWidth,
+      }}
       className={props.className}
       width="100%"
       p={3}

@@ -139,7 +139,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
         <div className="oui-relative oui-overflow-hidden oui-h-full">
           <div
             ref={containerRef}
-            className="oui-overflow-x-auto hide-scrollbar oui-h-full"
+            className="oui-overflow-x-auto oui-hide-scrollbar oui-h-full"
           >
             <Flex gapX={8} height="100%">
               <div ref={leadingElementRef}>

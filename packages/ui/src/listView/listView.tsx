@@ -99,14 +99,15 @@ const ListViewInner = <T extends unknown, D extends unknown>(
       style={props.style}
       ref={containerRef}
       className={cn(
-        "oui-relative oui-min-h-[180px] oui-scrollbar-vertical oui-overflow-auto",
+        "oui-relative oui-min-h-[180px] oui-custom-scrollbar oui-overflow-auto",
         props.className
       )}
     >
       <div
         className={cn(
           "oui-space-y-3 oui-h-full oui-w-full",
-          emptyDataSouce && "oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0",
+          emptyDataSouce &&
+            "oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0",
           props.contentClassName
         )}
       >

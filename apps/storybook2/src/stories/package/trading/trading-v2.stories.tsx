@@ -54,6 +54,9 @@ const meta = {
               leftSidebar={null}
               // @ts-ignore
               mainNavProps={mainNavProps}
+              classNames={{
+                // content: "oui-min-w-[1440px]",
+             }}
             >
               <Story />
             </Scaffold>

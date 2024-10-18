@@ -14,7 +14,6 @@ import {
   UseFavoritesTabScriptReturn,
 } from "./favoritesTabs.script";
 import { AddIcon, AddIcon2, EditIcon, TrashIcon } from "../../icons";
-import "../../style/index.css";
 
 export type FavoritesTabProps = UseFavoritesTabScriptReturn &
   Pick<UseFavoritesTabScriptOptions, "size">;
