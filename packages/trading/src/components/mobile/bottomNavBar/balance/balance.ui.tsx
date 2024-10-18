@@ -51,7 +51,9 @@ export const Balance: FC<BalanceState> = (props) => {
         <Divider direction="vertical" className="oui-h-[26px]" />
       )}
       {!props.wrongNetwork && props.isEnableTrading && (
-        <Button variant={"outlined"} className="oui-h-[28px] oui-text-2xs">
+        <Button variant={"outlined"} onClick={(e) => {
+            props.onShowPortfolioSheet();
+        }} className="oui-h-[28px] oui-text-2xs">
           {commifyOptional(props.currentLeverage, { fix: 2 })}
         </Button>
       )}
