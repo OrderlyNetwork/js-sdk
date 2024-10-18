@@ -34,6 +34,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
           columns={columns}
           loading={props.isLoading}
           dataSource={props.dataSource}
+          bordered
           ignoreLoadingCheck={true}
           classNames={{
             root: "oui-items-start",
