@@ -152,6 +152,7 @@ export function useDepositFee(options: {
 
   const feeProps = useMemo(() => {
     const dstGasFee = new Decimal(depositFee.toString())
+        // todo solana is 9, evm is 18
       .div(new Decimal(10).pow(9))
       .toString();
 
