@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/cli",
-  "version": "0.3.13-sol.1",
+  "version": "0.3.13-sol.2",
   "description": "",
   "bin": {
     "orderly": "./bin/cli.js"
