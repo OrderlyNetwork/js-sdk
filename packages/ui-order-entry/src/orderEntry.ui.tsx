@@ -584,24 +584,11 @@ const OrderTypeSelect = (props: {
       value={props.type}
       options={options}
       onValueChange={props.onChange}
-      // optionRenderer={(option) => {
-      //   return (
-      //     <SelectItem
-      //       key={option.value}
-      //       value={option.value}
-      //       textValue={
-      //         option.value === OrderType.LIMIT ||
-      //         option.value === OrderType.MARKET
-      //           ? `${option.label} order`
-      //           : option.label
-      //       }
-      //     >
-      //       {option.label}
-      //     </SelectItem>
-      //   );
-      // }}
       valueFormatter={(value, option) => {
         const item = options.find((o) => o.value === value);
+        if (!item) {
+          return <Text size={"2xs"}>{option.placeholder}</Text>;
+        }
         return <Text size={"2xs"}>{item?.label.replace(" order", "")}</Text>;
       }}
       size={"md"}

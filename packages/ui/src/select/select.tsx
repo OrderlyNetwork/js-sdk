@@ -41,8 +41,6 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
     ...rest
   } = props;
 
-  console.log("Select", props);
-
   return (
     <SelectRoot {...rest}>
       <SelectTrigger

@@ -28,8 +28,6 @@ export const useBalanceScript = () => {
     }
   };
   const total = useDataTap(totalValue);
-
-  console.log("balance", total);
   
   return {
     currentLeverage,

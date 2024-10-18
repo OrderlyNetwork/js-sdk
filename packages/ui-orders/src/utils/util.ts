@@ -38,9 +38,19 @@ export function parseBadgesFor(record: any): undefined | string[] {
       return list;
     }
 
-    return (typeof record.type === "string"
-      ? [record.type.replace("_ORDER", "").toLowerCase() as string]
-      : [record.type as string]).map((e) => upperCaseFirstLetter(e));
+    const types = (
+      typeof record.type === "string"
+        ? [record.type.replace("_ORDER", "").toLowerCase() as string]
+        : [record.type as string]
+    ).map((e) => upperCaseFirstLetter(e));
+
+    const type =
+      typeof record.type === "string"
+        ? record.type.replace("_ORDER", "").toLowerCase()
+        : upperCaseFirstLetter(record.type);
+
+    if (record.algo_order_id === undefined || (record.algo_order_id && record.algo_type === 'BRACKET')) return [upperCaseFirstLetter(type)];
+    return [`Stop ${type}`]
   }
 
   if (typeof record.algo_type !== "undefined") {
@@ -50,12 +60,12 @@ export function parseBadgesFor(record: any): undefined | string[] {
       list.push("Position");
     }
 
-    const tpOrder = record.child_orders.find(
+    const tpOrder = record?.child_orders?.find(
       (order: any) =>
         order.algo_type === AlgoOrderType.TAKE_PROFIT && !!order.trigger_price
     );
 
-    const slOrder = record.child_orders.find(
+    const slOrder = record?.child_orders?.find(
       (order: any) =>
         order.algo_type === AlgoOrderType.STOP_LOSS && !!order.trigger_price
     );

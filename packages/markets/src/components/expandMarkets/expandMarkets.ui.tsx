@@ -12,7 +12,6 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
-import "../../style/index.css";
 
 export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
 
