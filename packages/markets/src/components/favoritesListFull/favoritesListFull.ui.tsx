@@ -36,8 +36,9 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
         bordered
         classNames={{
           header: "oui-text-base-contrast-36",
-          body: "oui-text-base-contrast-80 !oui-min-h-[187.5px]",
+          body: "oui-text-base-contrast-80",
         }}
+        minHeight={187.5}
         columns={columns}
         dataSource={dataSource}
         emptyView={emptyView}
