@@ -1,5 +1,17 @@
 # @orderly.network/ui-order-entry
 
+## 1.0.1-developV2.15
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@1.0.1-developV2.15
+  - @orderly.network/hooks@1.5.13-developV2.15
+  - @orderly.network/types@1.5.13-developV2.15
+  - @orderly.network/utils@1.5.13-developV2.15
+  - @orderly.network/ui@1.0.1-developV2.15
+
 ## 1.0.1-developV2.14
 
 ### Patch Changes
