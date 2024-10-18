@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.13-sol.3
+
+### Patch Changes
+
+- update
+
 ## 0.3.13-sol.2
 
 ### Patch Changes

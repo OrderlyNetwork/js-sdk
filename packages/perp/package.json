@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/perp",
-  "version": "3.3.13-sol.2",
+  "version": "3.3.13-sol.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

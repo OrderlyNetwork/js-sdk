@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "1.5.13-sol.2",
+  "version": "1.5.13-sol.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.js",

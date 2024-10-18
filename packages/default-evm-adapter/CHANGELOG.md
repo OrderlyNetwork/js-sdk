@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 1.0.1-sol.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.13-sol.3
+  - @orderly.network/core@1.5.13-sol.3
+
 ## 1.0.1-sol.2
 
 ### Patch Changes

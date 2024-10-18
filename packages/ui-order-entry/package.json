@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-order-entry",
-  "version": "1.0.1-sol.2",
+  "version": "1.0.1-sol.3",
   "description": "",
   "main": "dist/index.js",
   "scripts": {

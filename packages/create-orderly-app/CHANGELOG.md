@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.13-sol.2
+
+### Patch Changes
+
+- update
+
 ## 1.5.13-sol.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/chart
 
+## 1.0.1-sol.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@1.5.13-sol.3
+  - @orderly.network/ui@1.0.1-sol.3
+
 ## 1.0.1-sol.2
 
 ### Patch Changes
