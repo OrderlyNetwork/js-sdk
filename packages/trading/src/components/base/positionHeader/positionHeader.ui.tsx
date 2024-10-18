@@ -87,14 +87,14 @@ const UnrealPnL: FC<
 > = (props) => {
   const unrealPnLClsName =
     typeof props.unrealPnL === "number"
-      ? props.unrealPnL > 0
+      ? props.unrealPnL >= 0
         ? "oui-text-trade-profit"
         : "oui-text-trade-loss"
       : "oui-text-base-contrast-80";
 
   const unrealPnLROIClsName =
     typeof props.unrealPnL === "number" && props.unrealPnlROI
-      ? props.unrealPnlROI > 0
+      ? props.unrealPnlROI >= 0
         ? "oui-text-success-darken"
         : "oui-text-danger-darken"
       : "oui-text-base-contrast-80";
@@ -110,7 +110,7 @@ const UnrealPnL: FC<
         >
           {props.unrealPnL ?? "--"}
         </Text.numeral>
-        {props.unrealPnlROI && (
+        {typeof props.unrealPnlROI !== 'undefined' && (
           <Text.numeral
             prefix="("
             suffix=")"
