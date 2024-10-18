@@ -137,8 +137,8 @@ export function getEndpointSettingPda(): PublicKey {
   )[0];
 }
 
-export function getNoncePda(OAPP_PROGRAM_ID: PublicKey, oappConfigPda: PublicKey, dstEid: number): PublicKey {
-  const bufferDstEid = Buffer.alloc(4);
+export function getPeerAddress(OAPP_PROGRAM_ID: PublicKey): Uint8Array{
+
   let peer_address = DEV_PEER_ADDRESS;
   if (OAPP_PROGRAM_ID.toBase58() === DEV_OAPP_PROGRAM_ID.toBase58()) {
     peer_address = DEV_PEER_ADDRESS;
@@ -149,6 +149,12 @@ export function getNoncePda(OAPP_PROGRAM_ID: PublicKey, oappConfigPda: PublicKey
   if (OAPP_PROGRAM_ID.toBase58() === STAGING_OAPP_PROGRAM_ID.toBase58()) {
     peer_address = STAGING_PEER_ADDRESS;
   }
+  return peer_address;
+}
+
+export function getNoncePda(OAPP_PROGRAM_ID: PublicKey, oappConfigPda: PublicKey, dstEid: number): PublicKey {
+  const bufferDstEid = Buffer.alloc(4);
+  const peer_address = getPeerAddress(OAPP_PROGRAM_ID);
 
   bufferDstEid.writeUInt32BE(dstEid);
   return PublicKey.findProgramAddressSync(
@@ -231,6 +237,20 @@ export  function getLookupTableAddress( OAPP_PROGRAM_ID: PublicKey): PublicKey {
   }
 
   return DEV_LOOKUP_TABLE_ADDRESS
+}
+
+export function getMessageLibPda(programId?: PublicKey): PublicKey {
+  return PublicKey.findProgramAddressSync(
+      [Buffer.from(MESSAGE_LIB_SEED, "utf8")],
+      programId ? programId : SEND_LIB_PROGRAM_ID
+  )[0];
+}
+
+export function getMessageLibInfoPda(msgLibPda: PublicKey, programId?: PublicKey): PublicKey {
+  return PublicKey.findProgramAddressSync(
+      [Buffer.from(MESSAGE_LIB_SEED, "utf8"), msgLibPda.toBytes()],
+      programId ? programId :ENDPOINT_PROGRAM_ID
+  )[0];
 }
 
 

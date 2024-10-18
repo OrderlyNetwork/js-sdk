@@ -1503,6 +1503,22 @@
           }
         ]
       }
+    },
+    {
+      "name": "MessagingFee",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nativeFee",
+            "type": "u64"
+          },
+          {
+            "name": "lzTokenFee",
+            "type": "u64"
+          }
+        ]
+      }
     }
   ],
   "events": [

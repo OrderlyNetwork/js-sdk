@@ -1503,6 +1503,22 @@ export type SolanaVault = {
           }
         ]
       }
+    },
+    {
+      "name": "MessagingFee",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nativeFee",
+            "type": "u64"
+          },
+          {
+            "name": "lzTokenFee",
+            "type": "u64"
+          }
+        ]
+      }
     }
   ],
   "events": [
@@ -3318,6 +3334,22 @@ export const IDL: SolanaVault = {
           },
           {
             "name": "RebalanceMint"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MessagingFee",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nativeFee",
+            "type": "u64"
+          },
+          {
+            "name": "lzTokenFee",
+            "type": "u64"
           }
         ]
       }

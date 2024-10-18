@@ -318,12 +318,17 @@ export class Assets {
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
-
     const contractAddress = this.contractManger.getContractInfoByEnv();
+    let vaultAddress = contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
+      vaultAddress = contractAddress.solanaVaultAddress;
+      // @ts-ignore
+      depositData['USDCAddress'] = contractAddress.solanaUSDCAddress
+    }
 
     return await this.account.walletAdapter.callOnChain(
       chain,
-      contractAddress.vaultAddress,
+      vaultAddress,
       "getDepositFee",
       [this.account.stateValue.address, depositData],
       {

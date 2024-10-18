@@ -1,7 +1,7 @@
 import React, { useEffect, type PropsWithChildren, useMemo } from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
 import { useWalletModal} from "@solana/wallet-adapter-react-ui";
-import {useWallet } from "@solana/wallet-adapter-react";
+import {useConnection, useWallet} from "@solana/wallet-adapter-react";
 import { ChainNamespace } from "@orderly.network/core";
 import {clusterApiUrl, Connection} from "@solana/web3.js";
 
@@ -16,6 +16,7 @@ export function Main(props: PropsWithChildren) {
       sendTransaction,
     publicKey,
   } = useWallet();
+  const {connection} = useConnection();
 
   const connect = async () => {
     console.log('-- connect solana');
@@ -34,7 +35,8 @@ export function Main(props: PropsWithChildren) {
   };
 
   const disconnect = async () => {
-    solanaDisconnect();
+    await solanaDisconnect();
+    return []
   }
 
   useEffect(() => {
@@ -58,9 +60,6 @@ export function Main(props: PropsWithChildren) {
     if (!publicKey) {
      return null;
     }
-    const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
-
-
     return {
       label:'',
       icon: '',
@@ -81,7 +80,7 @@ export function Main(props: PropsWithChildren) {
     }
 
 
-  }, [publicKey, signMessage]);
+  }, [publicKey, signMessage, connection]);
   const setChanin = () => {}
 
   return (
