@@ -1,5 +1,16 @@
 # @orderly.network/web3-modal
 
+## 2.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
+
+### Patch Changes
+
+- b033ce0: test
+- b15becb: test
+
 ## 2.0.0-alpha.2
 
 ### Patch Changes
