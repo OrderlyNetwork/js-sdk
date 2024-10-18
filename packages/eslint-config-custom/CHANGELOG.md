@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.0-alpha.0
+
+### Major Changes
+
+- integrate solana
+
 ## 0.3.12
 
 ### Patch Changes

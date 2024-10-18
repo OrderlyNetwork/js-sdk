@@ -1,5 +1,17 @@
 # @orderly.network/futures
 
+## 4.0.0-alpha.0
+
+### Major Changes
+
+- integrate solana
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.0.0-alpha.0
+  - @orderly.network/utils@2.0.0-alpha.0
+
 ## 3.3.12
 
 ### Patch Changes
