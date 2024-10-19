@@ -6,31 +6,28 @@ import { useMemo } from "react";
 export const usePendingOrderCount = (symbol?: string) => {
   const { showAllSymbol } = useTradingLocalStorage();
 
-  const [data] = useOrderStream({
-    symbol: showAllSymbol ? undefined : symbol,
-    status: OrderStatus.INCOMPLETE,
-    
-  }, {
-    keeplive: true,
-  });
+  const [_, { total: pendingCount }] = useOrderStream(
+    {
+      status: OrderStatus.INCOMPLETE,
+      excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+    },
+    {
+      keeplive: true,
+    }
+  );
 
-  const pendingOrderCount = useMemo(() => {
-    const excludes = [
-      AlgoOrderRootType.POSITIONAL_TP_SL,
-      AlgoOrderRootType.TP_SL,
-    ];
-    return data?.filter((item) => !excludes.includes(item.algo_type))?.length;
-  }, [data]);
+  const [__, { total: tpslCount }] = useOrderStream(
+    {
+      status: OrderStatus.INCOMPLETE,
+      includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+    },
+    {
+      keeplive: true,
+    }
+  );
 
-  const tpSlOrderCount = useMemo(() => {
-    const includes = [
-      AlgoOrderRootType.POSITIONAL_TP_SL,
-      AlgoOrderRootType.TP_SL,
-    ];
-    return data?.filter((item) => includes.includes(item.algo_type))?.length;
-  }, [data]);
   return {
-    pendingOrderCount,
-    tpSlOrderCount,
+    pendingOrderCount: pendingCount,
+    tpSlOrderCount: tpslCount,
   };
 };
