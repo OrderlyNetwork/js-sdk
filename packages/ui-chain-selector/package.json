@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-chain-selector",
-  "version": "1.0.1-developV2.17",
+  "version": "1.0.1-developV2.18",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
