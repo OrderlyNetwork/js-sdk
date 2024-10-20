@@ -8,8 +8,6 @@ import { usePositionStore } from "../usePositionStream/usePositionStore";
 import { BaseCalculator } from "./baseCalculator";
 import { propOr } from "ramda";
 import { zero } from "@orderly.network/utils";
-import { parseHolding } from "../../utils/parseHolding";
-import { markets } from "storybook2/src/constants/mockdata";
 
 const NAME_PREFIX = "positionCalculator";
 const AllPositions = "all";
@@ -111,7 +109,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
       const imr = account.IMR({
         maxLeverage: accountInfo.max_leverage,
-        baseIMR: info["base_imr"],
+        baseIMR: info?.["base_imr"],
         IMR_Factor: accountInfo.imr_factor[item.symbol] as number,
         positionNotional: notional,
         ordersNotional: 0,
@@ -138,8 +136,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       });
 
       const MMR = positions.MMR({
-        baseMMR: info["base_mmr"],
-        baseIMR: info["base_imr"],
+        baseMMR: info?.["base_mmr"],
+        baseIMR: info?.["base_imr"],
         IMRFactor: accountInfo.imr_factor[item.symbol] as number,
         positionNotional: notional,
         IMR_factor_power: 4 / 5,
