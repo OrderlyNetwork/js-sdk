@@ -55,6 +55,7 @@ const meta = {
               // @ts-ignore
               mainNavProps={mainNavProps}
               classNames={{
+                footer: "oui-bg-base-10",
                 // content: "oui-min-w-[1440px]",
              }}
             >

@@ -34,6 +34,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
         header: "oui-text-base-contrast-36",
         body: "oui-text-base-contrast-80",
       }}
+      minHeight={275.5}
       columns={columns}
       loading={loading}
       dataSource={dataSource}
@@ -44,7 +45,9 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
             onSymbolChange?.(record);
             favorite.addToHistory(record);
           },
-          "data-testid": `oui-testid-markets-${type === 'new' ? 'newListing' : 'all'}-tr-${record.symbol}`
+          "data-testid": `oui-testid-markets-${
+            type === "new" ? "newListing" : "all"
+          }-tr-${record.symbol}`,
         };
       }}
       generatedRowKey={(record) => record.symbol}

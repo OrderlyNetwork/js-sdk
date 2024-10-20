@@ -35,7 +35,7 @@ export const FooterUI: FC<FooterReturns> = (props) => {
       justify={"between"}
       height={29}
       px={3}
-      className="oui-hidden lg:oui-flex oui-bg-base-9 oui-border-t-2 oui-border-line-6"
+      className="oui-hidden lg:oui-flex oui-bg-base-10 oui-border-t-[1px] oui-border-line-12"
     >
       <Flex>
         <Flex
