@@ -72,7 +72,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   //   orderbookMinWidth +
   //   orderEntryMinWidth +
   //   5 * space;
-  const minScreenWidth = 1440;
+  // const minScreenWidth = 1440;
 
   const marketsView = (
     <Box
@@ -124,6 +124,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       <RiskRateWidget />
     </RemovablePanel>,
   ];
+  console.log("positions", positions);
 
   const orderEntryView = (
     <Flex
@@ -276,7 +277,9 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       className="oui-flex-1 oui-overflow-hidden"
       gap={3}
       style={{
-        minWidth: minScreenWidth - orderEntryMinWidth - space * 2,
+        minWidth: isMedium
+          ? marketsWidth + tradingViewMinWidth + orderbookMinWidth + space * 2
+          : tradingViewMinWidth + orderbookMinWidth + space,
       }}
     >
       {tokenInfoBarView}
