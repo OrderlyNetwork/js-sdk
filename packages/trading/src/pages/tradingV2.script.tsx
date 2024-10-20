@@ -87,11 +87,8 @@ export const useTradingV2Script = () => {
   }, [state.status, wrongNetwork]);
 
   const pos = useMemo(() => {
-    if (canTrading) {
-      return [0, 1, 2];
-    }
-    return positions as number[];
-  }, [canTrading]);
+    return canTrading ? (positions as number[]) : [0, 1, 2];
+  }, [canTrading, positions]);
 
   const map = {
     collapsed,
