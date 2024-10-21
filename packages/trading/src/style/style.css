@@ -74,54 +74,11 @@
 
   --orderly-color-divider: 42 46 52;
 
-  --orderly-font-family:  "DIN2014-Demi", "PingFangSC-Medium", "Noto Sans",
+  --orderly-font-family:  "DIN2014", "PingFangSC-Medium", "Noto Sans",
     sans-serif;
 
   --orderly-referral-bg-gradient-from: 39 43 147;
   --orderly-referral-bg-gradient-to: 41 137 226;
   --orderly-referral-text-gradient-from: 38 254 254;
   --orderly-referral-text-gradient-to: 89 176 254;
-}
-
-
-@font-face {
-  font-family: 'DIN2014-Regular';
-  src: url('../../public/fonts/DIN2014/din-2014_regular.woff2') format('woff2'),
-      url('../../public/fonts/DIN2014/din-2014_regular.woff') format('woff');
-  font-weight: normal;
-}
-
-@font-face {
-  font-family: 'DIN2014-Demi';
-  src: url('../../public/fonts/DIN2014/din-2014_demi.woff2') format('woff2'),
-      url('../../public/fonts/DIN2014/din-2014_demi.woff') format('woff');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: 'DIN2014-Bold';
-  src: url('../../public/fonts/DIN2014/din-2014_bold.woff2') format('woff2'),
-      url('../../public/fonts/DIN2014/din-2014_bold.woff') format('woff');
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: 'DIN2014';
-  src: url('../../public/fonts/DIN2014/din-2014_regular.woff2') format('woff2'),
-      url('../../public/fonts/DIN2014/din-2014_regular.woff') format('woff');
-  font-weight: normal;
-}
-
-@font-face {
-  font-family: 'DIN2014';
-  src: url('../../public/fonts/DIN2014/din-2014_demi.woff2') format('woff2'),
-      url('../../public/fonts/DIN2014/din-2014_demi.woff') format('woff');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: 'DIN2014';
-  src: url('../../public/fonts/DIN2014/din-2014_bold.woff2') format('woff2'),
-      url('../../public/fonts/DIN2014/din-2014_bold.woff') format('woff');
-  font-weight: 700;
 }
