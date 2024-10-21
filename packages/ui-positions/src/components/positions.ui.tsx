@@ -51,7 +51,7 @@ export const MobilePositions = (
 
   return (
     <ListView
-      className="oui-w-full"
+      className="oui-w-full oui-hide-scrollbar oui-overflow-y-hidden"
       dataSource={props.dataSource}
       renderItem={(item, index) => (
         <SymbolProvider symbol={item.symbol}>

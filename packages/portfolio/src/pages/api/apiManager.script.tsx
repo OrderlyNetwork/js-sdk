@@ -42,7 +42,7 @@ export const useApiManagerScript = () => {
     {
       generateOrderlyKey,
       setIPRestriction,
-      removeOrderkyKey,
+      removeOrderlyKey,
       resetOrderlyKeyIPRestriction,
       refresh,
       isLoading,
@@ -131,7 +131,7 @@ export const useApiManagerScript = () => {
 
   const doDelete = (item: APIKeyItem): Promise<any> => {
     return new Promise(async (resolve) => {
-      await removeOrderkyKey(item.orderly_key)
+      await removeOrderlyKey(item.orderly_key)
         .then(
           async (data) => {
             if (data?.success) {

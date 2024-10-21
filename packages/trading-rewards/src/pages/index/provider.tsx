@@ -9,7 +9,7 @@ import {
   useCurEpochEstimate,
   CurrentEpochEstimate,
   useWalletRewardsHistory,
-  WalletRewardsHisotryReturns,
+  WalletRewardsHistoryReturns,
   Brokers,
   useConfig,
 } from "@orderly.network/hooks";
@@ -24,7 +24,7 @@ export type TradingRewardsState = {
   totalOrderClaimedReward: [number | undefined, { refresh: () => void }];
   totalEsOrderClaimedReward: [number | undefined, { refresh: () => void }];
   curEpochEstimate?: CurrentEpochEstimate;
-  walletRewardsHistory: WalletRewardsHisotryReturns;
+  walletRewardsHistory: WalletRewardsHistoryReturns;
   titleConfig: TitleConfig;
 };
 

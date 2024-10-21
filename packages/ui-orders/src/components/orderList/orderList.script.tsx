@@ -201,10 +201,10 @@ const useFilter = (
           label: "All status",
           value: undefined,
         },
-        {
-          label: "Open",
-          value: OrderStatus.OPEN,
-        },
+        // {
+        //   label: "Open",
+        //   value: OrderStatus.OPEN,
+        // },
         {
           label: "Filled",
           value: OrderStatus.FILLED,

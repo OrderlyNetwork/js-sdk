@@ -106,7 +106,7 @@ const OrdersView: FC<
         type={props.type}
         ordersStatus={props.ordersStatus}
         classNames={{
-          root: "oui-w-full",
+          root: "oui-w-full oui-hide-scrollbar oui-overflow-y-hidden",
           cell: "oui-py-2",
         }}
         showFilter={props.type === TabType.orderHistory}
