@@ -1,5 +1,19 @@
 # @orderly.network/ui-tradingview
 
+## 1.0.1-developV2.20
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@1.0.1-developV2.20
+  - @orderly.network/ui-positions@1.0.1-developV2.20
+  - @orderly.network/hooks@1.5.13-developV2.20
+  - @orderly.network/types@1.5.13-developV2.20
+  - @orderly.network/utils@1.5.13-developV2.20
+  - @orderly.network/net@1.5.13-developV2.20
+  - @orderly.network/ui@1.0.1-developV2.20
+
 ## 1.0.1-developV2.19
 
 ### Patch Changes
