@@ -18,9 +18,9 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
   return (
     <Flex
       height={64}
-      className="oui-bg-base-9 oui-px-[14px] oui-pt-[14px]"
       gap={1}
       justify={"between"}
+      className="oui-bg-base-9 oui-px-[14px] oui-pt-[14px] oui-border-t oui-border-line-4"
     >
       <BalanceWidget />
 
