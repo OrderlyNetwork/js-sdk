@@ -313,7 +313,7 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
           rm={Decimal.ROUND_DOWN}
           intensity={80}
           padding={false}
-          className="oui-border-b oui-border-dashed oui-border-base-contrast-36"
+          className={tp_trigger_price ? "oui-border-b oui-border-dashed oui-border-base-contrast-36" : undefined}
         >
           {tp_trigger_price ?? "--"}
         </Text.numeral>
@@ -357,7 +357,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
           rm={Decimal.ROUND_DOWN}
           intensity={80}
           padding={false}
-          className="oui-border-b oui-border-dashed oui-border-base-contrast-36"
+          className={sl_trigger_price ? "oui-border-b oui-border-dashed oui-border-base-contrast-36" : undefined}
         >
           {sl_trigger_price ?? "--"}
         </Text.numeral>
