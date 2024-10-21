@@ -1,235 +1,58 @@
 # examples
 
-## 0.4.13-developV2.20
+## 1.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.20
-  - @orderly.network/web3-onboard@1.5.13-developV2.20
-  - @orderly.network/hooks@1.5.13-developV2.20
-  - @orderly.network/core@1.5.13-developV2.20
+- b033ce0: test
+- b15becb: test
+- Updated dependencies [113773f]
+- Updated dependencies [b033ce0]
+- Updated dependencies [b15becb]
+  - @orderly.network/react@2.0.0
+  - @orderly.network/web3-onboard@2.0.0
+  - @orderly.network/hooks@2.0.0
+  - @orderly.network/core@2.0.0
 
-## 0.4.13-developV2.19
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.19
-  - @orderly.network/web3-onboard@1.5.13-developV2.19
-  - @orderly.network/hooks@1.5.13-developV2.19
-  - @orderly.network/core@1.5.13-developV2.19
-
-## 0.4.13-developV2.18
+## 1.0.0-alpha.2
 
 ### Patch Changes
 
-- update
+- test
 - Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.18
-  - @orderly.network/web3-onboard@1.5.13-developV2.18
-  - @orderly.network/hooks@1.5.13-developV2.18
-  - @orderly.network/core@1.5.13-developV2.18
+  - @orderly.network/react@2.0.0-alpha.2
+  - @orderly.network/web3-onboard@2.0.0-alpha.2
+  - @orderly.network/hooks@2.0.0-alpha.2
+  - @orderly.network/core@2.0.0-alpha.2
 
-## 0.4.13-developV2.17
+## 1.0.0-alpha.1
 
 ### Patch Changes
 
-- update
+- test
 - Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.17
-  - @orderly.network/web3-onboard@1.5.13-developV2.17
-  - @orderly.network/hooks@1.5.13-developV2.17
-  - @orderly.network/core@1.5.13-developV2.17
+  - @orderly.network/react@2.0.0-alpha.1
+  - @orderly.network/web3-onboard@2.0.0-alpha.1
+  - @orderly.network/hooks@2.0.0-alpha.1
+  - @orderly.network/core@2.0.0-alpha.1
 
-## 0.4.13-developV2.16
+## 1.0.0-alpha.0
+
+### Major Changes
+
+- integrate solana
 
 ### Patch Changes
 
-- update
 - Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.16
-  - @orderly.network/web3-onboard@1.5.13-developV2.16
-  - @orderly.network/hooks@1.5.13-developV2.16
-  - @orderly.network/core@1.5.13-developV2.16
-
-## 0.4.13-developV2.15
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.15
-  - @orderly.network/web3-onboard@1.5.13-developV2.15
-  - @orderly.network/hooks@1.5.13-developV2.15
-  - @orderly.network/core@1.5.13-developV2.15
-
-## 0.4.13-developV2.14
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.14
-  - @orderly.network/web3-onboard@1.5.13-developV2.14
-  - @orderly.network/hooks@1.5.13-developV2.14
-  - @orderly.network/core@1.5.13-developV2.14
-
-## 0.4.13-developV2.13
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.13
-  - @orderly.network/web3-onboard@1.5.13-developV2.13
-  - @orderly.network/hooks@1.5.13-developV2.13
-  - @orderly.network/core@1.5.13-developV2.13
-
-## 0.4.13-developV2.12
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.12
-  - @orderly.network/web3-onboard@1.5.13-developV2.12
-  - @orderly.network/hooks@1.5.13-developV2.12
-  - @orderly.network/core@1.5.13-developV2.12
-
-## 0.4.13-developV2.11
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.11
-  - @orderly.network/web3-onboard@1.5.13-developV2.11
-  - @orderly.network/hooks@1.5.13-developV2.11
-  - @orderly.network/core@1.5.13-developV2.11
-
-## 0.4.13-developV2.10
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.10
-  - @orderly.network/web3-onboard@1.5.13-developV2.10
-  - @orderly.network/hooks@1.5.13-developV2.10
-  - @orderly.network/core@1.5.13-developV2.10
-
-## 0.4.13-developV2.9
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.9
-  - @orderly.network/web3-onboard@1.5.13-developV2.9
-  - @orderly.network/hooks@1.5.13-developV2.9
-  - @orderly.network/core@1.5.13-developV2.9
-
-## 0.4.13-developV2.8
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.8
-  - @orderly.network/web3-onboard@1.5.13-developV2.8
-  - @orderly.network/hooks@1.5.13-developV2.8
-  - @orderly.network/core@1.5.13-developV2.8
-
-## 0.4.13-developV2.7
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.7
-  - @orderly.network/web3-onboard@1.5.13-developV2.7
-  - @orderly.network/hooks@1.5.13-developV2.7
-  - @orderly.network/core@1.5.13-developV2.7
-
-## 0.4.13-developV2.6
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.6
-  - @orderly.network/web3-onboard@1.5.13-developV2.6
-  - @orderly.network/hooks@1.5.13-developV2.6
-  - @orderly.network/core@1.5.13-developV2.6
-
-## 0.4.13-developV2.5
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.5
-  - @orderly.network/web3-onboard@1.5.13-developV2.5
-  - @orderly.network/hooks@1.5.13-developV2.5
-  - @orderly.network/core@1.5.13-developV2.5
-
-## 0.4.13-developV2.4
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.4
-  - @orderly.network/web3-onboard@1.5.13-developV2.4
-  - @orderly.network/hooks@1.5.13-developV2.4
-  - @orderly.network/core@1.5.13-developV2.4
-
-## 0.4.13-developV2.3
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.3
-  - @orderly.network/web3-onboard@1.5.13-developV2.3
-  - @orderly.network/hooks@1.5.13-developV2.3
-  - @orderly.network/core@1.5.13-developV2.3
-
-## 0.4.13-developV2.2
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.2
-  - @orderly.network/web3-onboard@1.5.13-developV2.2
-  - @orderly.network/hooks@1.5.13-developV2.2
-  - @orderly.network/core@1.5.13-developV2.2
-
-## 0.4.13-developV2.1
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.1
-  - @orderly.network/web3-onboard@1.5.13-developV2.1
-  - @orderly.network/hooks@1.5.13-developV2.1
-  - @orderly.network/core@1.5.13-developV2.1
-
-## 0.4.13-developV2.0
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.13-developV2.0
-  - @orderly.network/web3-onboard@1.5.13-developV2.0
-  - @orderly.network/hooks@1.5.13-developV2.0
-  - @orderly.network/core@1.5.13-developV2.0
+  - @orderly.network/react@2.0.0-alpha.0
+  - @orderly.network/web3-onboard@2.0.0-alpha.0
+  - @orderly.network/hooks@2.0.0-alpha.0
+  - @orderly.network/core@2.0.0-alpha.0
 
 ## 0.4.12
 

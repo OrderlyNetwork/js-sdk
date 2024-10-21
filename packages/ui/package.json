@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui",
-  "version": "1.0.1-developV2.20",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -27,6 +27,12 @@
   },
   "keywords": [],
   "author": "orderly.network",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/utils": "workspace:*",
     "@radix-ui/react-avatar": "^1.0.3",

@@ -1,172 +1,38 @@
 # @orderly.network/cli
 
-## 0.3.13-developV2.20
+## 0.3.13
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.20
+- b033ce0: test
+- b15becb: test
+- Updated dependencies [113773f]
+- Updated dependencies [b033ce0]
+- Updated dependencies [b15becb]
+  - @orderly.network/core@2.0.0
 
-## 0.3.13-developV2.19
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.19
-
-## 0.3.13-developV2.18
+## 0.3.13-alpha.2
 
 ### Patch Changes
 
-- update
+- test
 - Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.18
+  - @orderly.network/core@2.0.0-alpha.2
 
-## 0.3.13-developV2.17
+## 0.3.13-alpha.1
 
 ### Patch Changes
 
-- update
+- test
 - Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.17
+  - @orderly.network/core@2.0.0-alpha.1
 
-## 0.3.13-developV2.16
+## 0.3.13-alpha.0
 
 ### Patch Changes
 
-- update
 - Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.16
-
-## 0.3.13-developV2.15
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.15
-
-## 0.3.13-developV2.14
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.14
-
-## 0.3.13-developV2.13
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.13
-
-## 0.3.13-developV2.12
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.12
-
-## 0.3.13-developV2.11
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.11
-
-## 0.3.13-developV2.10
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.10
-
-## 0.3.13-developV2.9
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.9
-
-## 0.3.13-developV2.8
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.8
-
-## 0.3.13-developV2.7
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.7
-
-## 0.3.13-developV2.6
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.6
-
-## 0.3.13-developV2.5
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.5
-
-## 0.3.13-developV2.4
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.4
-
-## 0.3.13-developV2.3
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.3
-
-## 0.3.13-developV2.2
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.2
-
-## 0.3.13-developV2.1
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.1
-
-## 0.3.13-developV2.0
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.13-developV2.0
+  - @orderly.network/core@2.0.0-alpha.0
 
 ## 0.3.12
 

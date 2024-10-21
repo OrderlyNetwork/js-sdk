@@ -35,7 +35,7 @@ export const useApiManagerScript = () => {
         user_id: number;
         account_id: string;
       }
-  >(`/v1/get_account?address=${account.address}&broker_id=${brokerId}`);
+  >(`/v1/get_account?address=${account.address}&broker_id=${brokerId}&chain_type=${account.walletAdapter?.chainNamespace}`);
 
   const [
     keys,

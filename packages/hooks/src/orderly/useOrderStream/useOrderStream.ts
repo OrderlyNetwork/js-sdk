@@ -69,7 +69,7 @@ export const useOrderStream = (
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const { registerKeyHandler: regesterKeyHandler, unregisterKeyHandler } =
+  const { registerKeyHandler, unregisterKeyHandler } =
     useDataCenterContext();
   const [
     doCancelOrder,
@@ -100,7 +100,7 @@ export const useOrderStream = (
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side
     )}`;
-    regesterKeyHandler?.(
+    registerKeyHandler?.(
       key,
       generateKeyFun({ status, symbol, side, size, page, dateRange })
     );

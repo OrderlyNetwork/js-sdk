@@ -1,22 +1,10 @@
-import { Account } from "./account";
-import { ConfigStore } from "./configStore/configStore";
+import {Account} from "./account";
+import {ConfigStore} from "./configStore/configStore";
 
-import { IContract } from "./contract";
-import { MessageFactor } from "./signer";
-import {
-  SignatureDomain,
-  formatByUnits,
-  getTimestamp,
-  parseAccountId,
-  parseBrokerHash,
-  parseTokenHash,
-} from "./utils";
-import {
-  API,
-  ApiError,
-  MaxUint256,
-  definedTypes,
-} from "@orderly.network/types";
+import {IContract} from "./contract";
+import {MessageFactor} from "./signer";
+import {formatByUnits, getTimestamp, parseBrokerHash, parseTokenHash,} from "./utils";
+import {API, ApiError, MaxUint256, ChainNamespace} from "@orderly.network/types";
 
 export class Assets {
   constructor(
@@ -70,6 +58,8 @@ export class Assets {
         nonce,
         timestamp,
         // domain,
+        verifyContract: this.contractManger.getContractInfoByEnv().verifyContractAddress,
+
       });
 
     const data = {
@@ -327,12 +317,17 @@ export class Assets {
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
-
     const contractAddress = this.contractManger.getContractInfoByEnv();
+    let vaultAddress = contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
+      vaultAddress = contractAddress.solanaVaultAddress;
+      // @ts-ignore
+      depositData['USDCAddress'] = contractAddress.solanaUSDCAddress
+    }
 
     return await this.account.walletAdapter.callOnChain(
       chain,
-      contractAddress.vaultAddress,
+      vaultAddress,
       "getDepositFee",
       [this.account.stateValue.address, depositData],
       {
@@ -357,13 +352,18 @@ export class Assets {
       tokenHash: parseTokenHash("USDC"),
       tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
-
+    let vaultAddress = contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
+      vaultAddress = contractAddress.solanaVaultAddress;
+      // @ts-ignore
+      depositData['USDCAddress'] = contractAddress.solanaUSDCAddress
+    }
     const result = await this.account.walletAdapter?.sendTransaction(
-      contractAddress.vaultAddress,
+      vaultAddress,
       "deposit",
       {
         from: this.account.stateValue.address!,
-        to: contractAddress.vaultAddress,
+        to: vaultAddress,
         data: [depositData],
         value: fee,
       },

@@ -22,6 +22,8 @@ module.exports = withTV({
     "../../packages/ui-cross-deposit/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-share/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-tradingview/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-tradingview/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/wallet-connector/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/trading/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-order-entry/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],

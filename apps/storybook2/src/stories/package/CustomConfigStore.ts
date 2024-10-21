@@ -24,7 +24,7 @@ const API_URLS: Record<ENV_NAME, URLS> = {
     operatorUrl: "https://testnet-operator-evm.orderly.org",
   },
   dev: {
-    apiBaseUrl: "https://dev-api-iap-v2.orderly.org",
+    apiBaseUrl: "https://dev-api-v2.orderly.org",
     publicWsUrl: "wss://dev-ws-v2.orderly.org",
     privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
     operatorUrl: "https://dev-operator-v2.orderly.network",

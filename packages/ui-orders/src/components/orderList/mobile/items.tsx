@@ -17,10 +17,11 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
+import { OrderSide } from "@orderly.network/types";
 
 export const Symbol: FC<OrderCellState> = (props) => {
   const { item } = props;
-  const isBuy = item.quantity > 0;
+  const isBuy = item.side === OrderSide.BUY;
   return (
     <Text.formatted
       intensity={80}

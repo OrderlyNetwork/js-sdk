@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-order-entry",
-  "version": "1.0.1-developV2.20",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -9,7 +9,12 @@
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
   },
   "keywords": [],
-  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",

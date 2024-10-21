@@ -1,85 +1,47 @@
 # @orderly.network/default-solana-adapter
 
-## 1.0.1-developV2.20
+## 2.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
 
 ### Patch Changes
 
-- update
+- b033ce0: test
+- b15becb: test
+- Updated dependencies [113773f]
+- Updated dependencies [b033ce0]
+- Updated dependencies [b15becb]
+  - @orderly.network/types@2.0.0
+  - @orderly.network/core@2.0.0
 
-## 1.0.1-developV2.19
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.18
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.17
+## 2.0.0-alpha.2
 
 ### Patch Changes
 
-- update
+- test
+- Updated dependencies
+  - @orderly.network/types@2.0.0-alpha.2
+  - @orderly.network/core@2.0.0-alpha.2
 
-## 1.0.1-developV2.16
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.15
+## 2.0.0-alpha.1
 
 ### Patch Changes
 
-- update
+- test
+- Updated dependencies
+  - @orderly.network/types@2.0.0-alpha.1
+  - @orderly.network/core@2.0.0-alpha.1
 
-## 1.0.1-developV2.14
+## 2.0.0-alpha.0
 
-### Patch Changes
+### Major Changes
 
-- update
-
-## 1.0.1-developV2.13
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.12
+- integrate solana
 
 ### Patch Changes
 
-- update
-
-## 1.0.1-developV2.11
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.10
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.9
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.8
-
-### Patch Changes
-
-- update
-
-## 1.0.1-developV2.0
-
-### Patch Changes
-
-- update
+- Updated dependencies
+  - @orderly.network/types@2.0.0-alpha.0
+  - @orderly.network/core@2.0.0-alpha.0

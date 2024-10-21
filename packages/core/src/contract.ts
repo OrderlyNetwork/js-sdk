@@ -4,6 +4,11 @@ import {
   mainnetVaultAddress,
   mainnetVerifyAddress,
   nativeUSDCAddress,
+  solanaDevVaultAddress,
+  solanaMainnetVaultAddress,
+  solanaQaVaultAddress,
+  solanaStagingVualtAddress,
+  solanaUSDCAddress,
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,
   stagingVerifyAddressOnArbitrumTestnet,
@@ -25,6 +30,8 @@ export type OrderlyContracts = {
   vaultAddress: string;
   vaultAbi: any;
   verifyContractAddress: string;
+  solanaUSDCAddress: string;
+  solanaVaultAddress: string;
 };
 
 export interface IContract {
@@ -37,6 +44,8 @@ export class BaseContract implements IContract {
 
   getContractInfoByEnv() {
     const networkId = this.configStore.get("networkId");
+    const env = this.configStore.get("env");
+    let verifyContractAddress = stagingVerifyAddressOnArbitrumTestnet;
 
     if (networkId === "mainnet") {
       return {
@@ -46,15 +55,25 @@ export class BaseContract implements IContract {
         vaultAbi: mainnetVaultAbi,
         verifyContractAddress: mainnetVerifyAddress,
         erc20Abi: mainnetUSDCAbi,
+        solanaUSDCAddress: solanaUSDCAddress,
+        solanaVaultAddress: solanaMainnetVaultAddress,
       };
+    }
+
+    let solanaVaultAddress =solanaStagingVualtAddress;
+    if (env === 'qa') {
+      solanaVaultAddress = solanaQaVaultAddress;
+      verifyContractAddress = '0x50F59504D3623Ad99302835da367676d1f7E3D44';
     }
 
     return {
       usdcAddress: nativeUSDCAddress,
       usdcAbi: stagingUSDCAbiOnArbitrumTestnet,
       vaultAddress: stagingVaultAddressOnArbitrumTestnet,
+      solanaVaultAddress: solanaVaultAddress,
+      solanaUSDCAddress: solanaUSDCAddress,
       vaultAbi: stagingVaultAbiOnArbitrumTestnet,
-      verifyContractAddress: stagingVerifyAddressOnArbitrumTestnet,
+      verifyContractAddress:verifyContractAddress,
       erc20Abi: stagingUSDCAbiOnArbitrumTestnet,
     };
   }

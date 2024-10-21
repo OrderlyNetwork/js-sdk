@@ -25,6 +25,7 @@ import { SDKError } from "@orderly.network/types";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import type { Chains } from "./orderly/useChains";
 import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
+import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 // import { useParamsCheck } from "./useParamsCheck";
 
@@ -82,12 +83,12 @@ export const OrderlyConfigProvider = (
     console.error("[OrderlyConfigProvider]: brokerId is required");
   }
 
-  if (typeof walletAdapters === "undefined") {
-    console.error(
-      "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
-        "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
-    );
-  }
+  // if (typeof walletAdapters === "undefined") {
+  //   console.error(
+  //     "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
+  //       "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
+  //   );
+  // }
 
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
@@ -127,6 +128,7 @@ export const OrderlyConfigProvider = (
     return (
       walletAdapters || [
         new DefaultEVMAdapterWalletAdapter(new EthersProvider()),
+        new DefaultSolanaWalletAdapter(),
       ]
     );
   });
@@ -142,7 +144,7 @@ export const OrderlyConfigProvider = (
         innerConfigStore,
         innerKeyStore,
         // innerGetWalletAdapter,
-        walletAdapters,
+        innerWalletAdapters,
         {
           contracts,
         }

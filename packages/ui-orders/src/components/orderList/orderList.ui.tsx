@@ -16,7 +16,7 @@ import { OrderListProvider } from "./orderListContext";
 import { TabType } from "../orders.widget";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 import { useOrderColumn } from "./desktop/useColumn";
-import { OrderCellWidget } from "./mWeb";
+import { OrderCellWidget } from "./mobile";
 
 export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
   const columns = useOrderColumn(props.type);
