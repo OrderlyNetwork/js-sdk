@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/chart",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -10,6 +10,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@types/d3-array": "^3.2.1",
     "@types/d3-axis": "^3.0.6",

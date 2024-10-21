@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-provider-ethers",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -10,6 +10,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@enzoferey/ethers-error-parser": "^0.2.3",
     "@orderly.network/default-evm-adapter": "workspace:*",

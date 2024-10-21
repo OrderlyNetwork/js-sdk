@@ -1,5 +1,39 @@
 # @orderly.network/cli
 
+## 0.3.13
+
+### Patch Changes
+
+- b033ce0: test
+- b15becb: test
+- Updated dependencies [113773f]
+- Updated dependencies [b033ce0]
+- Updated dependencies [b15becb]
+  - @orderly.network/core@2.0.0
+
+## 0.3.13-alpha.2
+
+### Patch Changes
+
+- test
+- Updated dependencies
+  - @orderly.network/core@2.0.0-alpha.2
+
+## 0.3.13-alpha.1
+
+### Patch Changes
+
+- test
+- Updated dependencies
+  - @orderly.network/core@2.0.0-alpha.1
+
+## 0.3.13-alpha.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.0.0-alpha.0
+
 ## 0.3.12
 
 ### Patch Changes

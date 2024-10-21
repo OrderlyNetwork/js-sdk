@@ -369,6 +369,7 @@ const InnerProvider = (props: PropsWithChildren<OrderlyAppProviderProps>) => {
           chain: {
             id: currentChainId,
             namespace: currentWallet.chains[0].namespace,
+            // name: currentWallet.chains[0].name,
           },
           wallet: {
             name: currentWallet.label,

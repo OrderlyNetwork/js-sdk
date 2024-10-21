@@ -1,5 +1,34 @@
 # eslint-config-custom
 
+## 1.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
+
+### Patch Changes
+
+- b033ce0: test
+- b15becb: test
+
+## 1.0.0-alpha.2
+
+### Patch Changes
+
+- test
+
+## 1.0.0-alpha.1
+
+### Patch Changes
+
+- test
+
+## 1.0.0-alpha.0
+
+### Major Changes
+
+- integrate solana
+
 ## 0.3.12
 
 ### Patch Changes
