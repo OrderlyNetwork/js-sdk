@@ -22,7 +22,7 @@ export type EpochInfoType = [
   {
     isLoading: boolean;
     curEpochInfo: EpochInfoItem | undefined;
-    isUnstart: boolean;
+    isNotStared: boolean;
     refresh: () => void;
   }
 ];
@@ -73,7 +73,7 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     },
   });
 
-  const isUnstart = useMemo(() => {
+  const isNotStared= useMemo(() => {
     // if (curEpochInfo) {
     //   return curEpochInfo?.start_time > Date.now();
     // }
@@ -86,5 +86,5 @@ export const useEpochInfo = (type: TWType): EpochInfoType => {
     return true;
   }, [epochInfo]);
 
-  return [epochInfo, { isLoading, curEpochInfo, isUnstart, refresh }];
+  return [epochInfo, { isLoading, curEpochInfo, isNotStared, refresh }];
 };

@@ -152,13 +152,3 @@ const SymbolControlHeader: FC<
     </Flex>
   );
 };
-
-const OrdereHistoryHeader: FC<
-  DataListState & {
-    type: TabType;
-    ordersStatus?: OrderStatus;
-  }
-> = (props) => {
-
-  return ( <></>);
-}
