@@ -114,7 +114,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
               rm={Decimal.ROUND_DOWN}
               rule="price"
             >
-              {props.affiliateComission30D ?? "--"}
+              {props.affiliateCommission30D ?? "--"}
             </Text.numeral>
           </Flex>
         </Flex>
@@ -142,7 +142,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
               rm={Decimal.ROUND_DOWN}
               rule="price"
             >
-              {props.traderComission30D ?? "--"}
+              {props.traderCommission30D ?? "--"}
             </Text.numeral>
           </Flex>
         </Flex>
