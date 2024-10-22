@@ -11,6 +11,7 @@ import {
 import { RiskRateState } from "./riskRate.script";
 // import { Pencil } from "lucide-react";
 import { LeverageWidgetId } from "@orderly.network/ui-leverage";
+import { TooltipContent } from "../assetView/assetView.ui";
 
 export const RiskRate: FC<RiskRateState> = (props) => {
   const { riskRate, riskRateColor, isConnected, currentLeverage, maxLeverage } =
@@ -63,12 +64,21 @@ export const RiskRate: FC<RiskRateState> = (props) => {
 
       <Flex className="oui-gap-2">
         <Flex direction="column" itemAlign="start" className="oui-flex-1">
-          <Tooltip content={(<div>hint test</div>) as any}>
+          <Tooltip
+            content={
+              (
+                <TooltipContent
+                  description="The Risk rate is used to assess the risk level of an account. When the Risk rate reaches 100%, the account will be liquidated"
+                  formula="Risk rate = Maintenance margin ratio / Margin ratio * 100%"
+                />
+              ) as any
+            }
+          >
             <Text
               size="2xs"
               color="neutral"
               weight="semibold"
-              className="oui-cursor-pointer"
+              className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-b-white/10"
             >
               Risk rate
             </Text>
