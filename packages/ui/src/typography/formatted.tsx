@@ -190,7 +190,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
           {suffix}
         </span>
       );
-    }, [content, suffix]);
+    }, [content, suffix, prefixElement]);
 
     return (
       <Text {...rest} ref={ref}>
