@@ -174,6 +174,7 @@ export const OrderEntry = (
               }}
               size={"md"}
               fullWidth
+              data-type={OrderSide.BUY}
               // color={side === OrderSide.BUY ? "buy" : "secondary"}
               className={cn(
                 side === OrderSide.BUY
@@ -187,6 +188,7 @@ export const OrderEntry = (
               onClick={() => {
                 props.setOrderValue("side", OrderSide.SELL);
               }}
+              data-type={OrderSide.SELL}
               fullWidth
               size={"md"}
               // color={side === OrderSide.SELL ? "sell" : "secondary"}
@@ -257,10 +259,11 @@ export const OrderEntry = (
             fullWidth
             id={"order-entry-submit-button"}
             // color={side === OrderSide.BUY ? "buy" : "sell"}
+            data-type={OrderSide.BUY}
             className={cn(
               side === OrderSide.BUY
-                ? "oui-bg-success-darken hover:oui-bg-success"
-                : "oui-bg-danger-darken hover:oui-bg-danger"
+                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success"
+                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger"
             )}
             onClick={() => {
               onSubmit();

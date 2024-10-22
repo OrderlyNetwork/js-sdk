@@ -48,7 +48,6 @@ export const MobilePositions = (
   props: PositionsBuilderState & PositionsProps
 ) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
-
   return (
     <ListView
       className="oui-w-full oui-hide-scrollbar oui-overflow-y-hidden"
