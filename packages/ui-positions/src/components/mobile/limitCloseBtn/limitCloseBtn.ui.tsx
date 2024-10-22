@@ -114,13 +114,20 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   inputFormatter.dpFormatter(props.base_dp),
                 ]}
                 value={props.quantity}
-                onValueChange={(e) => props.updateQuantity(e)}
+                onValueChange={(e) => {
+                  props.updateQuantity(e);
+                  const slider = new Decimal(e)
+                    .div(props.item.position_qty)
+                    .mul(100)
+                    .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+                    .toNumber();
+                  props.setSliderValue(slider);
+                }}
               />
               <Slider
                 markCount={4}
                 value={[props.sliderValue]}
                 onValueChange={(e) => {
-                  console.log("slider ", e);
                   props.setSliderValue(e[0]);
                   const qty = new Decimal(e[0])
                     .div(100)
