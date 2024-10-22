@@ -8,6 +8,7 @@ export const usePendingOrderCount = (symbol?: string) => {
 
   const [_, { total: pendingCount }] = useOrderStream(
     {
+      symbol: showAllSymbol ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
       excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
     },
@@ -15,9 +16,10 @@ export const usePendingOrderCount = (symbol?: string) => {
       keeplive: true,
     }
   );
-
+  
   const [__, { total: tpslCount }] = useOrderStream(
     {
+      symbol: showAllSymbol ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
     },
