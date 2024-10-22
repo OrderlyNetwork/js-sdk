@@ -1517,7 +1517,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(typescript@5.2.2)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
 
   packages/perp:
     dependencies:
@@ -2158,67 +2158,6 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
 
-  packages/ui-cross-deposit:
-    dependencies:
-      '@layerzerolabs/scan-client':
-        specifier: ^0.0.6
-        version: 0.0.6(axios@1.7.7)
-      '@orderly.network/core':
-        specifier: workspace:*
-        version: link:../core
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/react-app':
-        specifier: workspace:*
-        version: link:../app
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/ui-chain-selector':
-        specifier: workspace:*
-        version: link:../ui-chain-selector
-      '@orderly.network/ui-transfer':
-        specifier: workspace:*
-        version: link:../ui-transfer
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
-      ramda:
-        specifier: ^0.29.1
-        version: 0.29.1
-    devDependencies:
-      '@types/ramda':
-        specifier: ^0.29.1
-        version: 0.29.3
-      '@types/react':
-        specifier: ^18.3.2
-        version: 18.3.2
-      '@types/react-dom':
-        specifier: ^18.3.0
-        version: 18.3.0
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.2.0(react@18.3.1)
-      tailwindcss:
-        specifier: ^3.4.4
-        version: 3.4.4
-      tsconfig:
-        specifier: workspace:*
-        version: link:../tsconfig
-      tsup:
-        specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.2.2
-
   packages/ui-leverage:
     dependencies:
       '@orderly.network/hooks':
@@ -2746,13 +2685,13 @@ importers:
         version: 2.1.1(typescript@5.2.2)
       '@web3-onboard/core':
         specifier: ^2.21.5
-        version: 2.21.5(typescript@5.2.2)
+        version: 2.21.5
       '@web3-onboard/injected-wallets':
         specifier: ^2.10.15
         version: 2.11.0(typescript@5.2.2)
       '@web3-onboard/react':
         specifier: 2.8.16
-        version: 2.8.16(react@18.3.1)(typescript@5.2.2)
+        version: 2.8.16(react@18.3.1)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -2768,7 +2707,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(typescript@5.2.2)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
 
   packages/walletconnect:
     dependencies:
@@ -8125,7 +8064,7 @@ packages:
     resolution: {integrity: sha512-6ueQTeJZtwKjmh23bdkq/DMqH4l4bmfvtQH98blOSbiXv/OUiyijSW6jU22IT8BNM1ujCaEvJfTtyCYVH38EMQ==}
     dependencies:
       '@formatjs/intl-localematcher': 0.4.0
-      tslib: 2.7.0
+      tslib: 2.6.0
     dev: false
 
   /@formatjs/fast-memoize@1.2.1:
@@ -8153,7 +8092,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.17.0
       '@formatjs/icu-skeleton-parser': 1.6.0
-      tslib: 2.7.0
+      tslib: 2.6.0
     dev: false
 
   /@formatjs/icu-skeleton-parser@1.3.6:
@@ -8175,7 +8114,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.17.0
       '@formatjs/intl-localematcher': 0.4.0
-      tslib: 2.7.0
+      tslib: 2.6.0
     dev: false
 
   /@formatjs/intl-listformat@7.4.0:
@@ -8183,7 +8122,7 @@ packages:
     dependencies:
       '@formatjs/ecma402-abstract': 1.17.0
       '@formatjs/intl-localematcher': 0.4.0
-      tslib: 2.7.0
+      tslib: 2.6.0
     dev: false
 
   /@formatjs/intl-localematcher@0.2.25:
@@ -8212,7 +8151,7 @@ packages:
       '@formatjs/intl-displaynames': 6.5.0
       '@formatjs/intl-listformat': 7.4.0
       intl-messageformat: 10.5.0
-      tslib: 2.7.0
+      tslib: 2.6.0
       typescript: 5.2.2
     dev: false
 
@@ -8825,14 +8764,6 @@ packages:
       '@ethersproject/solidity': 5.7.0
       bs58: 5.0.0
       tiny-invariant: 1.3.3
-    dev: false
-
-  /@layerzerolabs/scan-client@0.0.6(axios@1.7.7):
-    resolution: {integrity: sha512-K6Dpktj8bsPK/bE4DjgPclWn/mOZm/zm6lwRaaZvPkfPhmLQx43j5voBod9hqT2hSh26lC7ZkFAb+8aVUpPISQ==}
-    peerDependencies:
-      axios: '*'
-    dependencies:
-      axios: 1.7.7
     dev: false
 
   /@ledgerhq/connect-kit-loader@1.1.8:
@@ -18220,29 +18151,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3-onboard/core@2.21.5(typescript@5.2.2):
-    resolution: {integrity: sha512-e23bmWj0+dC9sbu/TvzPJm0mUikUB/0yAL+Gqh2mmWOpr2GKBpROnRNhevne3IyeDf16mdkUo8wVEO6eGsiANg==}
-    dependencies:
-      '@web3-onboard/common': 2.4.2(typescript@5.2.2)
-      bignumber.js: 9.1.2
-      bnc-sdk: 4.6.9
-      bowser: 2.11.0
-      ethers: 5.5.3
-      eventemitter3: 4.0.7
-      joi: 17.9.1
-      lodash.merge: 4.6.2
-      lodash.partition: 4.6.0
-      nanoid: 4.0.2
-      rxjs: 7.8.1
-      svelte: 3.59.2
-      svelte-i18n: 3.7.4(svelte@3.59.2)
-    transitivePeerDependencies:
-      - bufferutil
-      - typescript
-      - utf-8-validate
-      - zod
-    dev: false
-
   /@web3-onboard/injected-wallets@2.11.0(typescript@5.1.6)(zod@3.21.4):
     resolution: {integrity: sha512-UzRo8suvnev9buTvLOrtegyMQpFlYSldvOiZEUzbrNx2PZ6TVz+pnvt85SeWE02wb2KMcYZ72uJ3jFhWa1ssug==}
     dependencies:
@@ -18312,20 +18220,18 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3-onboard/react@2.8.16(react@18.3.1)(typescript@5.2.2):
+  /@web3-onboard/react@2.8.16(react@18.3.1):
     resolution: {integrity: sha512-wnwVGN2fqz0Rax3Z3E6LQJlC0NlXcvz166ZgdFeVj8WPccChPuAdPfkJwWk+GggK7Mw/5n5ehPYltr6pspcX8A==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
-      '@web3-onboard/common': 2.4.2(typescript@5.2.2)
-      '@web3-onboard/core': 2.21.5(typescript@5.2.2)
+      '@web3-onboard/common': 2.3.4
+      '@web3-onboard/core': 2.21.5
       react: 18.3.1
       use-sync-external-store: 1.0.0(react@18.3.1)
     transitivePeerDependencies:
       - bufferutil
-      - typescript
       - utf-8-validate
-      - zod
     dev: false
 
   /@web3-onboard/walletconnect@2.5.1(@types/react@18.2.21)(react@18.2.0):
@@ -25480,7 +25386,7 @@ packages:
       '@formatjs/ecma402-abstract': 1.17.0
       '@formatjs/fast-memoize': 2.2.0
       '@formatjs/icu-messageformat-parser': 2.6.0
-      tslib: 2.7.0
+      tslib: 2.6.0
     dev: false
 
   /intl-messageformat@9.13.0:
@@ -26532,15 +26438,15 @@ packages:
     resolution: {integrity: sha512-Rm0BMWtxBcioHr1/OX5YCP8Uov4riHvKPknOGs804Zg9JGZgmIBkbtlxJC/7Z4msKYVbIJtfU+tKb8xlYNfdkw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@babel/core': 7.25.8
+      '@babel/core': 7.22.9
       '@babel/generator': 7.25.7
-      '@babel/plugin-syntax-jsx': 7.25.7(@babel/core@7.25.8)
-      '@babel/plugin-syntax-typescript': 7.25.7(@babel/core@7.25.8)
+      '@babel/plugin-syntax-jsx': 7.25.7(@babel/core@7.22.9)
+      '@babel/plugin-syntax-typescript': 7.25.7(@babel/core@7.22.9)
       '@babel/types': 7.25.8
       '@jest/expect-utils': 29.7.0
       '@jest/transform': 29.7.0
       '@jest/types': 29.6.3
-      babel-preset-current-node-syntax: 1.1.0(@babel/core@7.25.8)
+      babel-preset-current-node-syntax: 1.1.0(@babel/core@7.22.9)
       chalk: 4.1.2
       expect: 29.7.0
       graceful-fs: 4.2.11
@@ -31642,10 +31548,6 @@ packages:
 
   /ramda@0.29.0:
     resolution: {integrity: sha512-BBea6L67bYLtdbOqfp8f58fPMqEwx0doL+pAi8TZyp2YWz8R9G8z9x75CZI8W+ftqhFHCpEX2cRnUUXK130iKA==}
-
-  /ramda@0.29.1:
-    resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
-    dev: false
 
   /randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}

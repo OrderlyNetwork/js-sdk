@@ -93,7 +93,10 @@ export const OrderEntry = (
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (target.closest("#order-entry-submit-button")) {
+      if (
+        target.closest("#order-entry-submit-button")
+        // || target.closest(".orderly-order-entry")
+      ) {
         return;
       }
       setErrorMsgVisible((visible) => {
@@ -171,7 +174,13 @@ export const OrderEntry = (
               }}
               size={"md"}
               fullWidth
-              color={side === OrderSide.BUY ? "buy" : "secondary"}
+              data-type={OrderSide.BUY}
+              // color={side === OrderSide.BUY ? "buy" : "secondary"}
+              className={cn(
+                side === OrderSide.BUY
+                  ? "oui-bg-success-darken hover:oui-bg-success"
+                  : "oui-bg-base-4 hover:oui-bg-base-3"
+              )}
             >
               Buy
             </Button>
@@ -179,9 +188,15 @@ export const OrderEntry = (
               onClick={() => {
                 props.setOrderValue("side", OrderSide.SELL);
               }}
+              data-type={OrderSide.SELL}
               fullWidth
               size={"md"}
-              color={side === OrderSide.SELL ? "sell" : "secondary"}
+              // color={side === OrderSide.SELL ? "sell" : "secondary"}
+              className={cn(
+                side === OrderSide.SELL
+                  ? "oui-bg-danger-darken hover:oui-bg-danger"
+                  : "oui-bg-base-4 hover:oui-bg-base-3"
+              )}
             >
               Sell
             </Button>
@@ -243,7 +258,13 @@ export const OrderEntry = (
           <Button
             fullWidth
             id={"order-entry-submit-button"}
-            color={side === OrderSide.BUY ? "buy" : "sell"}
+            // color={side === OrderSide.BUY ? "buy" : "sell"}
+            data-type={OrderSide.BUY}
+            className={cn(
+              side === OrderSide.BUY
+                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success"
+                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger"
+            )}
             onClick={() => {
               onSubmit();
             }}
@@ -488,7 +509,7 @@ const CustomInput = forwardRef<
       ]}
       classNames={{
         root: cn(
-          "oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+          "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
           props.className
         ),
         input: "oui-mt-5 oui-mb-1 oui-h-5",
