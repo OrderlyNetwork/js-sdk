@@ -23,10 +23,9 @@ export const useDataListScript = (
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     symbol,
-    calcMode,
     includedPendingOrder,
   } = props;
-  const loalStorage = useTradingLocalStorage({
+  const localStorage = useTradingLocalStorage({
     pnlNotionalDecimalPrecision,
   });
 
@@ -41,9 +40,9 @@ export const useDataListScript = (
 
     sharePnLConfig,
     symbol,
-    calcMode,
+    calcMode: localStorage.unPnlPriceBasis,
     includedPendingOrder,
-    ...loalStorage,
+    ...localStorage,
     positionCount,
     pendingOrderCount,
     tpSlOrderCount,
