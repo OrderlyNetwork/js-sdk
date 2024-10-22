@@ -331,6 +331,25 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     });
   }, [formattedOrder, accountInfo, positions, totalCollateral, symbol]);
 
+  const resetErrors = () => {
+    setMeta(
+      produce((draft) => {
+        draft.errors = null;
+      })
+    );
+  };
+
+  const resetMetaState = () => {
+    setMeta(
+      produce((draft) => {
+        draft.errors = null;
+        draft.submitted = false;
+        draft.validated = false;
+        draft.dirty = {};
+      })
+    );
+  };
+
   const submitOrder = async () => {
     /**
      * validate order
@@ -359,24 +378,9 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
 
     if (result.success) {
       reset();
-      setMeta(
-        produce((draft) => {
-          draft.errors = null;
-          draft.submitted = false;
-          draft.validated = false;
-          draft.dirty = {};
-        })
-      );
+      resetMetaState();
     }
     // return submit();
-  };
-
-  const resetErrors = () => {
-    setMeta(
-      produce((draft) => {
-        draft.errors = null;
-      })
-    );
   };
 
   return {
@@ -384,6 +388,7 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     submit: submitOrder,
     reset,
     resetErrors,
+    resetMetaState,
     formattedOrder,
     maxQty,
     estLiqPrice,

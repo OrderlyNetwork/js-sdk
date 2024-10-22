@@ -188,7 +188,7 @@ export const OrderEntry = (
           </div>
           <div className={"oui-w-full lg:oui-flex-1"}>
             <OrderTypeSelect
-              type={formattedOrder.order_type}
+              type={formattedOrder.order_type!}
               onChange={(type) => {
                 setOrderValue("order_type", type);
               }}
@@ -261,7 +261,7 @@ export const OrderEntry = (
         <Divider />
         <OrderTPSL
           onCancelTPSL={props.cancelTP_SL}
-          orderType={formattedOrder.order_type}
+          orderType={formattedOrder.order_type!}
           errors={validated ? errors : null}
           isReduceOnly={formattedOrder.reduce_only}
           values={{
