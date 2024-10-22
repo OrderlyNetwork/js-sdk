@@ -27,7 +27,104 @@ import { usePositions } from "../../orderly/usePositionStream/usePositionStore";
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
-const useOrderEntryNext = (symbol: string, options: Options) => {
+type OrderEntryReturn = {
+  submit: (options?: { resetOnSuccess?: boolean }) => Promise<void>;
+  reset: () => void;
+  resetErrors: () => void;
+  resetMetaState: () => void;
+  formattedOrder: Partial<FullOrderState>;
+  maxQty: number;
+  /**
+   * The estimated liquidation price.
+   */
+  estLiqPrice: number | null;
+  /**
+   * The estimated leverage after order creation.
+   */
+  estLeverage: number | null;
+  helper: {
+    /**
+     * @deprecated Use `validate` instead.
+     */
+    validator: () => Promise<VerifyResult | null>;
+    /**
+     * Function to validate the order.
+     * @returns {Promise<VerifyResult | null>} The validation result.
+     */
+    validate: () => Promise<VerifyResult | null>;
+  };
+  freeCollateral: number;
+  /**
+   * set a single value to the order data;
+   * @param key
+   * @param value
+   * @returns
+   */
+  setValue: (key: keyof FullOrderState, value: any) => void;
+  setValues: (values: Partial<FullOrderState>) => void;
+  symbolInfo: API.SymbolExt;
+  /**
+   * Meta state including validation and submission status.
+   */
+  metaState: {
+    dirty: { [K in keyof OrderlyOrder]?: boolean };
+    submitted: boolean;
+    validated: boolean;
+    errors: VerifyResult | null;
+  };
+  /**
+   * Indicates if a mutation (order creation) is in progress.
+   */
+  isMutating: boolean;
+};
+
+/**
+ * Custom hook for managing order entry in the Orderly application.
+ *
+ * @param {string} symbol - The symbol for which the order is being created. This parameter is required.
+ *
+ * @param {Options} options - Additional options for configuring the order entry.
+ *
+ * @returns {OrderEntryReturn} An object containing various actions and state related to order entry.
+ *
+ * @throws {Error} Throws an error if the symbol is not provided or is not a string.
+ *
+ * @example
+ * ```typescript
+ * const {
+ *   submit,
+ *   formattedOrder, //
+ *   setValue,
+ *   setValues,
+ *   symbolInfo,
+ *   metaState,
+ *   isMutating,
+ *  // maxQty, freeCollateral ... same as v1
+ * } = useOrderEntry('BTC_USDC_PERP', options);
+ *
+ * // update the order type
+ * setValue('order_type', OrderType.LIMIT);
+ * // update the order price
+ * setValue('order_price', '70000');
+ * // update the order quantity
+ * setValue('order_quantity', 1);
+ *
+ * // how to set TP/SL
+ * setValue('tp_trigger_price', '71000'); // directly set TP trigger price
+ * // or set the tp pnl, the TP trigger price will be calculated based on the current order price
+ * // setValue('tp_pnl', '300'); // you can also set tp_offset or tp_offset_percentage, same as the usage of useTPSL hook;
+ * // SL is similar to TP setting
+ * setValue('sl_price', '69000');
+ *
+ * // Submit the order data to the backend, and reset the hook state after the order is successfully created.
+ * // Note: If the order data is invalid, an error will be thrown.
+ * // If you want to retain the current order data after a successful order creation,
+ * // you can pass {resetOnSuccess: false} to `submit` function to prevent the hook from automatically resetting the order status.
+ * // Of course, you can also call `reset()` to manually reset the order status and use `resetMetaState()` to clear the error state.
+ * await submit();
+ * ```
+ */
+const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
   if (!symbol) {
     throw new Error("symbol is required and must be a string");
   }
@@ -307,4 +404,4 @@ const useOrderEntryNext = (symbol: string, options: Options) => {
   };
 };
 
-export { useOrderEntryNext };
+export { useOrderEntry };

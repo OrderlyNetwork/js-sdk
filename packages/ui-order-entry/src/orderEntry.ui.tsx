@@ -434,6 +434,7 @@ const OrderQuantityInput = (props: {
           id={"total"}
           className={"!oui-rounded-bl !oui-rounded-tl"}
           value={values.total}
+          error={parseErrorMsg("total")}
           onChange={(e) => {
             props.onChange("total", e.target.value);
           }}
@@ -532,6 +533,10 @@ const QuantitySlider = (props: {
     [props.side]
   );
 
+  const maxLabel = useMemo(() => {
+    return props.side === OrderSide.BUY ? "Max buy" : "Max sell";
+  }, [props.side]);
+
   return (
     <div>
       <Slider.single
@@ -556,7 +561,7 @@ const QuantitySlider = (props: {
             })}
             onClick={() => props.setMaxQty()}
           >
-            Max buy
+            {maxLabel}
           </button>
           <Text.numeral size={"2xs"} color={color} dp={props.dp}>
             {props.maxQty}

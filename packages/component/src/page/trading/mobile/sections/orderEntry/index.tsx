@@ -1,7 +1,7 @@
 import { OrderEntry } from "@/block/orderEntry";
 import React, { FC, useContext, useEffect, useRef, useState } from "react";
 import {
-  useOrderEntry,
+  useOrderEntry_deprecated,
   useAccount,
   useEventEmitter,
   useLocalStorage,
@@ -82,7 +82,7 @@ export const MyOrderEntry: FC<MyOrderEntryProps> = (props) => {
   });
 
   // const [reduceOnly, setReduceOnly] = useState(false);
-  const formState = useOrderEntry(order, {
+  const formState = useOrderEntry_deprecated(order, {
     watchOrderbook: true,
   });
 

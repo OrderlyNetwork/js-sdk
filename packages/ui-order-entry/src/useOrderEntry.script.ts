@@ -2,7 +2,7 @@ import { OrderSide, OrderType } from "@orderly.network/types";
 import {
   useEventEmitter,
   useMarginRatio,
-  useOrderEntryNext,
+  useOrderEntry,
 } from "@orderly.network/hooks";
 import { useEffect, useRef, FocusEvent, useMemo } from "react";
 import { removeTrailingZeros } from "@orderly.network/utils";
@@ -15,7 +15,7 @@ export type OrderEntryScriptInputs = {
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
-    useOrderEntryNext(inputs.symbol, {});
+    useOrderEntry(inputs.symbol, {});
 
   // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();
