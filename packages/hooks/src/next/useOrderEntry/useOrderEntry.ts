@@ -203,10 +203,10 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
 
   const prepareData = useCallback(() => {
     return {
-      markPrice: actions.getMarkPriceBySymbol(symbol),
+      markPrice,
       maxQty,
     };
-  }, [actions, maxQty, symbol]);
+  }, [maxQty, markPrice]);
 
   const interactiveValidate = (order: Partial<OrderlyOrder>) => {
     validateFunc(order).then((errors) => {

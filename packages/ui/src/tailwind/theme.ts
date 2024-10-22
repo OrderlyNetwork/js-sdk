@@ -21,12 +21,12 @@ export const themePlugin = () =>
 
         "--oui-color-danger": "255 68 124",
         "--oui-color-danger-light": "255 68 124",
-        "--oui-color-danger-darken": "157 32 77",
+        "--oui-color-danger-darken": "217 45 107",
         "--oui-color-danger-contrast": "255 255 255",
 
         "--oui-color-success": "0 180 158",
         "--oui-color-success-light": "15 203 180",
-        "--oui-color-success-darken": "3 152 134",
+        "--oui-color-success-darken": "0 134 118",
         "--oui-color-success-contrast": "255 255 255",
 
         "--oui-color-warning": "210 95 0",
