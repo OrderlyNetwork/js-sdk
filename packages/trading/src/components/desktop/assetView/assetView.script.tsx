@@ -82,11 +82,11 @@ export const useAssetViewScript = () => {
   });
   const { marginRatio, mmr } = useMarginRatio();
   const isConnected = state.status >= AccountStatusEnum.Connected;
-  const marginRatioVal = marginRatio
+  const marginRatioVal = marginRatio;
 
   const renderMMR = useMemo(() => {
     if (!mmr) {
-      return null;
+      return "";
     }
     const bigMMR = new Decimal(mmr);
     return bigMMR.mul(100).todp(2, 0).toFixed(2);
