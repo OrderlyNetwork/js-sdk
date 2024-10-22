@@ -29,6 +29,7 @@ module.exports = withTV({
     "../chart/src/**/*.{ts,js,tsx,jsx}",
     "../ui-transfer/src/**/*.{ts,js,tsx,jsx}",
     "../trading/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-order-entry/src/**/*.{ts,js,tsx,jsx}",
   ],
   prefix: "oui-",
   theme: {
