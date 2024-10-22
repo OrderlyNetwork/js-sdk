@@ -4,8 +4,7 @@ export type {
   OrderBookItem,
   OrderbookOptions,
 } from "./useOrderbookStream";
-export { useOrderEntry } from "./useOrderEntry";
-export type { UseOrderEntryMetaState, OrderParams } from "./useOrderEntry";
+
 export { useSymbolsInfo } from "./useSymbolsInfo";
 export type { SymbolInfo } from "./useSymbolsInfo";
 export { useAccountInfo } from "./useAccountInfo";

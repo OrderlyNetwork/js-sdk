@@ -8,7 +8,10 @@ import { type API } from "@orderly.network/types";
 import { FC, useCallback, useEffect, useMemo } from "react";
 import { LimitConfirm } from "./limitConfirm";
 import { modal } from "@orderly.network/ui";
-import { useSymbolsInfo, useOrderEntry } from "@orderly.network/hooks";
+import {
+  useSymbolsInfo,
+  useOrderEntry_deprecated,
+} from "@orderly.network/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { toast } from "@/toast";
@@ -29,7 +32,7 @@ export const ClosePositionPane: FC<ClosePositionPaneProps> = (props) => {
 
   // const { hide, reject, resolve } = useModal();
 
-  const { markPrice, maxQty, helper, onSubmit } = useOrderEntry(
+  const { markPrice, maxQty, helper, onSubmit } = useOrderEntry_deprecated(
     position?.symbol!,
     side,
     true

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { OrderCellState } from "../orderCell.script";
-import { useLocalStorage, useOrderEntry } from "@orderly.network/hooks";
+import {
+  useLocalStorage,
+  useOrderEntry_deprecated,
+} from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { OrderEntity } from "@orderly.network/types";
@@ -19,7 +22,9 @@ export const useEditSheetScript = (props: {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const isAlgoOrder = order?.algo_order_id !== undefined && order.algo_type !== AlgoOrderRootType.BRACKET;
+  const isAlgoOrder =
+    order?.algo_order_id !== undefined &&
+    order.algo_type !== AlgoOrderRootType.BRACKET;
   const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
   const isMarketOrder = isStopMarket || order?.type === "MARKET";
 
@@ -44,7 +49,7 @@ export const useEditSheetScript = (props: {
     trigger_price?: { message: string };
   }>({});
 
-  const { markPrice, maxQty, helper, metaState } = useOrderEntry(
+  const { markPrice, maxQty, helper, metaState } = useOrderEntry_deprecated(
     // @ts-ignore
     order.symbol,
     order.side
@@ -87,7 +92,7 @@ export const useEditSheetScript = (props: {
     };
 
     // console.log("validator", values, order);
-    
+
     const errors = await helper.validator(values);
     if (errors.total?.message !== undefined) {
       toast.error(errors.total?.message);
@@ -114,7 +119,7 @@ export const useEditSheetScript = (props: {
 
   const onConfirm = () => {
     if (tempOrderEntity.current) {
-        onSubmit(tempOrderEntity.current)
+      onSubmit(tempOrderEntity.current);
     }
   };
 

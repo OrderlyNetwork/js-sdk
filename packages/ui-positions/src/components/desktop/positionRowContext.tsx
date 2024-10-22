@@ -9,7 +9,10 @@ import {
   useState,
 } from "react";
 
-import { useOrderEntry, useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  useOrderEntry_deprecated,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -62,9 +65,8 @@ export const PositionsRowProvider: FC<
   const curSymbolInfo = config?.[symbol];
   const quoteDp = curSymbolInfo("quote_dp");
   const baseDp = curSymbolInfo("base_dp");
-  
 
-  const { helper, onSubmit, submitting } = useOrderEntry(
+  const { helper, onSubmit, submitting } = useOrderEntry_deprecated(
     props.position?.symbol!,
     side,
     true

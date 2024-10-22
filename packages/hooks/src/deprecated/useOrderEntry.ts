@@ -7,7 +7,7 @@ import {
   OrderType,
   SDKError,
 } from "@orderly.network/types";
-import { useSymbolsInfo } from "./useSymbolsInfo";
+import { useSymbolsInfo } from "../orderly/useSymbolsInfo";
 import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
 import { useMutation } from "../useMutation";
 import { compose, head, includes, omit, pick } from "ramda";
@@ -16,15 +16,15 @@ import {
   getCalculateHandler,
   orderEntityFormatHandle,
 } from "../utils/orderEntryHelper";
-import { useCollateral } from "./useCollateral";
-import { useMaxQty } from "./useMaxQty";
+import { useCollateral } from "../orderly/useCollateral";
+import { useMaxQty } from "../orderly/useMaxQty";
 // import { availableOrderTypes } from "../utils/createOrder";
-import { useMarkPrice } from "./useMarkPrice";
+import { useMarkPrice } from "../orderly/useMarkPrice";
 import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
-import { usePositions } from "./usePositionStream/usePositionStore";
+import { usePositions } from "../orderly/usePositionStream/usePositionStore";
 // import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
