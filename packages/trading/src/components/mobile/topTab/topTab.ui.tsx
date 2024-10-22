@@ -1,22 +1,42 @@
 import { FC } from "react";
-import { Box, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import {
+  ArrowDownShortIcon,
+  ArrowDownUpIcon,
+  Box,
+  ChevronUpIcon,
+  Flex,
+  TabPanel,
+  Tabs,
+  Text,
+} from "@orderly.network/ui";
 import { TopTabState, TopTabType } from "./topTab.script";
 import { MWebLastTrades } from "../lastTrades/lastTrades.widget";
 import { TradeDataWidget } from "../tradeData";
 
-export const TopTab: FC<TopTabState & {
-  className?: string;
-}> = (props) => {
+export const TopTab: FC<
+  TopTabState & {
+    className?: string;
+  }
+> = (props) => {
   return (
     <Tabs
       variant="contained"
       value={props.tab}
-      onValueChange={(e) => props.setTab(e as any)}
+      contentVisible={props.visible}
+      onValueChange={(e) => {
+        props.setTab(e as any);
+        props.setVisible(true);
+      }}
       className={props.className}
       classNames={{
         tabsList: "oui-p-2",
         tabsContent: "oui-min-h-[176px] oui-max-h-[234px]",
       }}
+      trailing={
+        <button className="oui-px-5" onClick={props.toggleContentVisible}>
+          <ChevronIcon className={props.visible ? "oui-rotate-0" : "oui-rotate-180"}/>
+        </button>
+      }
     >
       <TabPanel title="Chart" value={TopTabType.chart}>
         <Text>Chart</Text>
@@ -30,5 +50,38 @@ export const TopTab: FC<TopTabState & {
         </Box>
       </TabPanel>
     </Tabs>
+  );
+};
+
+const ChevronIcon = (props: {
+  className?: string;
+}) => {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={props.className}
+    >
+      <path
+        d="M5.721 4.585 2.726 6.578a.51.51 0 0 0-.14.7.51.51 0 0 0 .702.14l2.714-1.806 2.715 1.806c.23.153.549.089.702-.14a.51.51 0 0 0-.14-.7L6.283 4.585a.51.51 0 0 0-.562 0"
+        fill="url(#a)"
+      />
+      <defs>
+        <linearGradient
+          id="a"
+          x1="9.502"
+          y1="6.001"
+          x2="2.502"
+          y2="6.001"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#59B0FE" />
+          <stop offset="1" stop-color="#26FEFE" />
+        </linearGradient>
+      </defs>
+    </svg>
   );
 };

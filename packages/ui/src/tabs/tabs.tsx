@@ -18,6 +18,7 @@ import {
 } from "./tabsBase";
 import { Flex } from "../flex";
 import { cnBase, VariantProps } from "tailwind-variants";
+import { cn } from "..";
 
 type tabConfig = {
   title: ReactNode;
@@ -26,6 +27,7 @@ type tabConfig = {
 
   value: string;
   content: ReactNode;
+  collapsed?: boolean;
 };
 
 type TabsContextState = {
@@ -45,11 +47,12 @@ type TabsProps<T = string> = {
     tabsList?: string;
     tabsContent?: string;
   };
+  contentVisible?: boolean;
 } & TabsPrimitive.TabsProps &
   VariantProps<typeof tabsVariants>;
 
 const Tabs: FC<TabsProps> = (props) => {
-  const { classNames, ...rest } = props;
+  const { classNames, contentVisible = true, ...rest } = props;
   // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
@@ -107,18 +110,25 @@ const Tabs: FC<TabsProps> = (props) => {
           {props.trailing}
         </Flex>
 
-        {Object.keys(tabList).map((key) => {
-          const tab = tabList[key];
-          return (
-            <TabsContent
-              key={key}
-              value={tab.value}
-              className={props.classNames?.tabsContent}
-            >
-              {tab.content}
-            </TabsContent>
-          );
-        })}
+        <div
+          className={cn(
+            "oui-grid",
+            contentVisible ? "oui-grid-rows-[1fr]" : "oui-grid-rows-[0fr] oui-hidden"
+          )}
+        >
+          {Object.keys(tabList).map((key) => {
+            const tab = tabList[key];
+            return (
+              <TabsContent
+                key={key}
+                value={tab.value}
+                className={props.classNames?.tabsContent}
+              >
+                {tab.content}
+              </TabsContent>
+            );
+          })}
+        </div>
       </TabsBase>
     </TabsContext.Provider>
   );
