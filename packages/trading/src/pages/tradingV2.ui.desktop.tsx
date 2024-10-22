@@ -209,6 +209,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         current={undefined}
         tabletMediaQuery={props.tabletMediaQuery}
         symbol={props.symbol}
+        sharePnLConfig={props.dataList.sharePnLConfig}
       />
     </Box>
   );

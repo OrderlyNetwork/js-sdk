@@ -52,7 +52,7 @@ export const MobileSharePnLContent: FC<{
 
   const [domain, setDomain] = useState("");
 
-  const posterRefs = shareOptions?.backgroundImages.map(() =>
+  const posterRefs = shareOptions?.backgroundImages?.map(() =>
     useRef<PosterRef | null>(null)
   );
 
@@ -132,7 +132,7 @@ export const MobileSharePnLContent: FC<{
           initIndex={selectIndex}
         >
           <CarouselContent style={{ height: `${carouselHeight}px` }}>
-            {shareOptions?.backgroundImages.map((item, index) => (
+            {shareOptions?.backgroundImages?.map((item, index) => (
               <CarouselItem key={index}>
                 <Poster
                   className="oui-transform oui-origin-top-left"
@@ -160,7 +160,7 @@ export const MobileSharePnLContent: FC<{
         </Carousel>
       </div>
 
-      <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto">
+      <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto oui-custom-scrollbar">
         <div className="oui-mt-4">
           <div className="oui-text-3xs oui-text-base-contrast-54">
             PnL display format
