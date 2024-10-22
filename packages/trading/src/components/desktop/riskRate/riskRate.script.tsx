@@ -25,7 +25,7 @@ export const useRiskRateScript = () => {
 
   const riskRate = useMemo(() => {
     if (!isConnected || marginRatio === null || mmr === null) {
-      return "--";
+      return "";
     }
 
     if (marginRatio === 0 || mmr === 0) {
