@@ -8,7 +8,7 @@ import {
   useAccount,
   useConfig,
   useMediaQuery,
-  useOrderEntry,
+  useOrderEntry_deprecated,
   useSymbolsInfo,
   useWS,
 } from "@orderly.network/hooks";
@@ -33,7 +33,6 @@ import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
 
 const chartKey = "SDK_Tradingview";
 
-
 const upColor = "#00B59F";
 const downColor = "#FB5CB8";
 const chartBG = "#16141c";
@@ -44,8 +43,7 @@ const textColor = "#FFFFFF";
 const qtyTextColor = "#F4F7F9";
 const font = "regular 11px Manrope";
 
-
-export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
+export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const {
     scriptSRC: tradingViewScriptSrc,
     libraryPath,
@@ -64,13 +62,16 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   const [side, setSide] = useState<OrderSide>(OrderSide.SELL);
   const symbolsInfo = useSymbolsInfo();
 
-  const {onSubmit, submitting} = useOrderEntry({
-    symbol: symbol ?? '',
-    side: side,
-    order_type: OrderType.MARKET,
-  }, {
-    watchOrderbook: true,
-  })
+  const { onSubmit, submitting } = useOrderEntry_deprecated(
+    {
+      symbol: symbol ?? "",
+      side: side,
+      order_type: OrderType.MARKET,
+    },
+    {
+      watchOrderbook: true,
+    }
+  );
   const [displayControlState, setDisplayControlState] =
     useState<DisplayControlSettingInterface>(() => {
       const displaySettingInfo = localStorage.getItem(
@@ -88,7 +89,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
         positionTpsl: true,
       };
     });
-
 
   const [interval, setInterval] = useState<string>(() => {
     const lastUsedInterval = localStorage.getItem(
@@ -152,7 +152,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     };
     setSide(side);
     modal.show("MarketCloseConfirmID", {
-      base: symbolInfo('base'),
+      base: symbolInfo("base"),
       quantity: data.balance,
       onConfirm: async () => {
         return onSubmit(order);
@@ -173,12 +173,12 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     closeConfirm: closePositionConfirmCallback,
     colorConfig,
     onToast: toast,
-    symbol: symbol ?? '',
+    symbol: symbol ?? "",
     mode,
   });
   const [createRenderer, removeRenderer] = useCreateRenderer(
     symbol!,
-    displayControlState,
+    displayControlState
   );
 
   const changeInterval = (newInterval: string) => {
@@ -188,7 +188,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     localStorage.setItem(TradingViewSDKLocalstorageKey.interval, newInterval);
     setInterval(newInterval);
     chart.current.setSymbol(symbol, interval);
-
   };
 
   const changeLineType = (newLineType: string) => {
@@ -212,15 +211,15 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     if (!chart.current) {
       return;
     }
-    chart.current.executeActionById('chartProperties');
-  }
+    chart.current.executeActionById("chartProperties");
+  };
 
   const openChartIndicators = () => {
     if (!chart.current) {
       return;
     }
-    chart.current.executeActionById('insertIndicator');
-  }
+    chart.current.executeActionById("insertIndicator");
+  };
 
   useEffect(() => {
     if (!tradingViewScriptSrc) {
@@ -228,7 +227,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     }
     if (!chartRef.current) {
       return;
-
     }
     if (!chartingLibrarySciprtReady) {
       const script = document.createElement("script");
@@ -247,7 +245,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
   }, [chartRef, chartingLibrarySciprtReady, tradingViewScriptSrc]);
 
   useEffect(() => {
-
     if (!symbol) {
       return;
     }
@@ -263,10 +260,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     // console.log('-- overrides', overrides);
     const studiesOverrides = customerStudiesOverrides
       ? Object.assign(
-        {},
-        defaultOverrides.studiesOverrides,
-        customerStudiesOverrides
-      )
+          {},
+          defaultOverrides.studiesOverrides,
+          customerStudiesOverrides
+        )
       : defaultOverrides.studiesOverrides;
     if (chartRef.current) {
       const options: any = {
@@ -291,10 +288,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
         },
         // todo broker effect sell/buy
         getBroker: (instance: any, host: any) => {
-            console.log("-- broker_factory");
-            brokerHostHandler(instance, host);
-            return getBrokerAdapter(host, broker);
-          }
+          console.log("-- broker_factory");
+          brokerHostHandler(instance, host);
+          return getBrokerAdapter(host, broker);
+        },
         // getBroker: undefined,
       };
 
@@ -313,7 +310,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     };
   }, [chartingLibrarySciprtReady, isMobile]);
 
-
   useEffect(() => {
     if (chart.current && chart.current.instance) {
       chart.current.instance.onChartReady(() => {
@@ -328,7 +324,6 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     };
   }, [chart.current, isLoggedIn]);
 
-
   useEffect(() => {
     if (!symbol || !chart.current) {
       return;
@@ -341,8 +336,9 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     };
   }, [symbol]);
 
-
-  return {tradingViewScriptSrc, chartRef,
+  return {
+    tradingViewScriptSrc,
+    chartRef,
     changeDisplaySetting,
     displayControlState,
     interval,
@@ -352,5 +348,5 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface){
     openChartSetting,
     openChartIndicators,
     symbol,
-  }
+  };
 }

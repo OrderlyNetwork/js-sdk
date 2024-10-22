@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 import { OrderEntry } from ".";
 
-import { useOrderEntry } from "@orderly.network/hooks";
+import { useOrderEntry_deprecated } from "@orderly.network/hooks";
 
 import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 
@@ -69,7 +69,7 @@ export const WithHook: Story = {
       symbol: symbol,
     });
     // const [reduceOnly, setReduceOnly] = useState(false);
-    const formState = useOrderEntry(order);
+    const formState = useOrderEntry_deprecated(order);
 
     console.log(formState);
 

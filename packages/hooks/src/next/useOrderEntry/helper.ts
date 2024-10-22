@@ -21,7 +21,7 @@ export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
 export const getOrderCreator = (order: Partial<OrderlyOrder>) => {
   let type;
   if (isBracketOrder(order)) {
-    type = AlgoOrderRootType.BRACKET;
+    type = `${AlgoOrderRootType.BRACKET}:${order.order_type}`;
   } else {
     type = order.order_type;
   }
