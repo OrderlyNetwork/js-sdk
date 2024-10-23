@@ -64,6 +64,7 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
         position={item}
         sharePnLConfig={props.sharePnLConfig}
         modalId={SharePnLBottomSheetId}
+        iconSize={12}
       />
     </Flex>
   );

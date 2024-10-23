@@ -24,7 +24,7 @@ export const PositionCell: FC<
   return (
     <Flex direction={"column"} width={"100%"} gap={2} className={cn(className)} pt={2}>
       <Header {...rest} />
-      <Divider className="oui-w-full" />
+      <Divider intensity={6} className="oui-w-full" />
       <Body {...rest} />
       <Buttons {...rest} />
     </Flex>

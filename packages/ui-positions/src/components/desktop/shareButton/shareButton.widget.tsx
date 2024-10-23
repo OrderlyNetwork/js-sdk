@@ -8,6 +8,7 @@ export const ShareButtonWidget = (props: {
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<PositionsProps, "position" | "refCode" | "leverage">>;
   modalId: string;
+  iconSize?: number;
 }) => {
   const state = useShareButtonScript(props);
   return <ShareButton {...state} />;

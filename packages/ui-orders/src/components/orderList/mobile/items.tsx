@@ -332,7 +332,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={"TP trigger"}
+      label={"SL trigger"}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -402,7 +402,7 @@ export const SLPrice: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={"TP price"}
+      label={"SL price"}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
