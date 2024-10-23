@@ -109,7 +109,7 @@ export const useOrderStream = (
 
       unregisterKeyHandler(key);
     };
-  }, [status, symbol, side, options?.keeplive, page, dateRange]);
+  }, [status, symbol, side, size, page, dateRange, options?.keeplive]);
 
   const ordersResponse = usePrivateInfiniteQuery(
     generateKeyFun({ status, symbol, side, size, page, dateRange }),

@@ -18,7 +18,7 @@ export const PositionPane: FC<{
 
   const calcMode = tabExtraData.unPnlPriceBasis === 0 ? "markPrice" : "lastPrice";
   
-  const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? "" : context.symbol, {calcMode});
+  const [data, info, { loading }] = usePositionStream(tabExtraData.showAllSymbol ? undefined : context.symbol, {calcMode});
   const { state } = useAccount();
 
   const {

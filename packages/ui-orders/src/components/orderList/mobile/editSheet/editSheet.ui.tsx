@@ -47,7 +47,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             )}
           </Flex>
         </Flex>
-        <Divider className="oui-w-full" />
+        <Divider intensity={8} className="oui-w-full" />
         <Flex width={"100%"} justify={"between"}>
           <Text>Last price</Text>
           <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp}>

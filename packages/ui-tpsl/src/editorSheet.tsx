@@ -91,6 +91,9 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
               }
             );
         }}
+        onCancel={() => {
+          hide();
+        }}
       />
     </>
   );

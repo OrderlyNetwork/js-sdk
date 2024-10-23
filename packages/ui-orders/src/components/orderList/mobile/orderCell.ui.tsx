@@ -40,7 +40,7 @@ export const OrderCell: FC<
       className={props.className}
     >
       <Header {...props} />
-      <Divider className="oui-w-full" />
+      <Divider intensity={6} className="oui-w-full" />
       <Body {...props} />
       {props.type === TabType.pending && <BracketOrderPriceWidget {...props} />}
       {props.type !== TabType.orderHistory && <Btns {...props} />}
