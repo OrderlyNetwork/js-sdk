@@ -16,7 +16,7 @@ export const usePendingOrderCount = (symbol?: string) => {
       keeplive: true,
     }
   );
-  
+
   const [__, { total: tpslCount }] = useOrderStream(
     {
       symbol: showAllSymbol ? undefined : symbol,

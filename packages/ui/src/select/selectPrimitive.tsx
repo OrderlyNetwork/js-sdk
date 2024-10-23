@@ -130,7 +130,7 @@ const selectVariants = tv(
         },
         md: {
           trigger: ["oui-h-8", "oui-text-xs"],
-          item: ["oui-h-7", "oui-text-2xs"],
+          item: ["oui-h-7", "oui-text-xs"],
           icon: ["oui-w-4", "oui-h-4"],
         },
         lg: {

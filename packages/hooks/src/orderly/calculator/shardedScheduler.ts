@@ -67,7 +67,7 @@ class ShardingScheduler implements CalculatorScheduler {
   ): void {
     let index = 0; // Current starting index of the shard
     const results: R[][] = []; // Used to store the calculation results of each shard
-    const estimatedShardSize = 2; // Initial estimated shard size
+    const estimatedShardSize = Math.min(data.length, 2); // Initial estimated shard size
 
     // Function to process shards
     function processNextShard(deadline: IdleDeadline) {

@@ -1,33 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { usePrivateQuery } from "../../usePrivateQuery";
-import { account, positions } from "@orderly.network/perp";
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../../utils/createGetter";
-import { useFundingRates } from "../useFundingRates";
-import {
-  type API,
-  OrderEntity,
-  AlgoOrderType,
-  AlgoOrderRootType,
-  OrderStatus,
-} from "@orderly.network/types";
-import { useSymbolsInfo } from "../useSymbolsInfo";
-import { useMarkPricesStream } from "../useMarkPricesStream";
-import { pathOr, propOr } from "ramda";
-import { parseHolding } from "../../utils/parseHolding";
-import { Decimal, zero } from "@orderly.network/utils";
-import { useMarketsStream } from "../useMarketsStream";
-import { useOrderStream } from "../orderlyHooks";
-import {
-  findPositionTPSLFromOrders,
-  findTPSLFromOrder,
-  findTPSLFromOrders,
-} from "./utils";
-import {
-  POSITION_EMPTY,
-  usePositionActions,
-  usePositionStore,
-} from "./usePositionStore";
+import { type API } from "@orderly.network/types";
+import { pathOr } from "ramda";
+import { POSITION_EMPTY, usePositionStore } from "./usePositionStore";
 import { useCalculatorService } from "../../useCalculatorService";
 import { CalculatorScope } from "../../types";
 import { useAppStore } from "../appStore";
@@ -56,6 +32,8 @@ export const usePositionStream = (
   // const symbolInfo = useSymbolsInfo();
   // const {setPositions} = usePositionActions();
 
+  const { calcMode } = options || {};
+
   const { includedPendingOrder = false } = options || {};
 
   const positionCalculator = useRef<PositionCalculator | null>(null);
@@ -76,9 +54,8 @@ export const usePositionStream = (
     (state) => state.apis
   );
 
-  const [priceMode, setPriceMode] = useState(options?.calcMode || "markPrice");
-
   useEffect(() => {
+    console.log("useEffect", symbol);
     if (symbol === "all") return;
 
     // console.log("---------------", symbol);
@@ -98,12 +75,6 @@ export const usePositionStream = (
     };
   }, [symbol]);
 
-  useEffect(() => {
-    if (options?.calcMode && priceMode !== options?.calcMode) {
-      setPriceMode(options?.calcMode);
-    }
-  }, [options?.calcMode]);
-
   const formattedPositions: [
     API.PositionTPSLExt[],
     Omit<API.PositionsTPSLExt, "rows">
@@ -115,11 +86,6 @@ export const usePositionStream = (
   const { totalCollateral, totalValue, totalUnrealizedROI } = useAppStore(
     (state) => state.portfolio
   );
-
-  const positionInfoGetter = createGetter<
-    Omit<API.PositionInfo, "rows">,
-    keyof Omit<API.PositionInfo, "rows">
-  >(formattedPositions[1] as any, 1);
 
   const positionsRows = useMemo(() => {
     let rows = formattedPositions[0];
@@ -134,8 +100,53 @@ export const usePositionStream = (
       );
     }
 
+    if (calcMode === "lastPrice") {
+      rows = rows.map((item) => {
+        const {
+          unrealized_pnl_index,
+          unrealized_pnl_ROI_index,
+
+          ...rust
+        } = item;
+
+        return {
+          ...rust,
+          unrealized_pnl: unrealized_pnl_index ?? 0,
+          unsettled_pnl_ROI: unrealized_pnl_ROI_index ?? 0,
+          // mark_price: item.last_price,
+        };
+      });
+    }
+
     return rows;
-  }, [formattedPositions, includedPendingOrder]);
+  }, [formattedPositions, includedPendingOrder, calcMode]);
+
+  const aggregated = useMemo(() => {
+    let data = formattedPositions[1];
+    if (!data) return {};
+
+    if (calcMode === "markPrice") return data;
+
+    const { total_unreal_pnl_index, unrealPnlROI_index, ...rest } = data;
+
+    return {
+      ...rest,
+      unrealPnL: total_unreal_pnl_index,
+      total_unreal_pnl: total_unreal_pnl_index,
+      unrealPnlROI: unrealPnlROI_index,
+    };
+  }, [calcMode]);
+
+  const positionInfoGetter = createGetter<
+    Omit<API.PositionInfo, "rows">,
+    keyof Omit<API.PositionInfo, "rows">
+  >(aggregated, 1);
+
+  // console.log(
+  //   "positionStatus++++",
+  //   positionsRows?.length,
+  //   positionStatus.loading
+  // );
 
   return [
     {

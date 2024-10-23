@@ -613,9 +613,9 @@ const OrderTypeSelect = (props: {
       valueFormatter={(value, option) => {
         const item = options.find((o) => o.value === value);
         if (!item) {
-          return <Text size={"2xs"}>{option.placeholder}</Text>;
+          return <Text size={"xs"}>{option.placeholder}</Text>;
         }
-        return <Text size={"2xs"}>{item?.label.replace(" order", "")}</Text>;
+        return <Text size={"xs"}>{item?.label.replace(" order", "")}</Text>;
       }}
       size={"md"}
     />

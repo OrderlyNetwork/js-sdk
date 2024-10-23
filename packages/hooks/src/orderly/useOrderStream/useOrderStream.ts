@@ -69,8 +69,7 @@ export const useOrderStream = (
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const { registerKeyHandler, unregisterKeyHandler } =
-    useDataCenterContext();
+  const { registerKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
