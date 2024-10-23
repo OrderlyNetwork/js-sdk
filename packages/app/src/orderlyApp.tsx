@@ -11,6 +11,7 @@ import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./provider/appContext";
 import { AppConfigProvider } from "./provider/configContext";
 import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
+import {DefaultSolanaWalletAdapter} from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
@@ -19,6 +20,7 @@ type OptionalConfig = Optional<OrderlyAppConfig, "walletAdapters">;
 const evmWalletAdapter = new DefaultEVMAdapterWalletAdapter(
   new EthersProvider()
 );
+const solanaWalletAdapter = new DefaultSolanaWalletAdapter();
 
 const OrderlyApp = (
   props: PropsWithChildren<OptionalConfig & AppStateProviderProps>
@@ -41,7 +43,7 @@ const OrderlyApp = (
       >
         <OrderlyConfigProvider
           {...configProps}
-          walletAdapters={[evmWalletAdapter]}
+          walletAdapters={[evmWalletAdapter, solanaWalletAdapter]}
         >
           <AppStateProvider onChainChanged={onChainChanged}>
             <TooltipProvider>

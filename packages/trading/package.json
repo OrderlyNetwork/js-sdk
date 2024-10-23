@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -10,7 +10,18 @@
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "Orderly",
+    "UI",
+    "Exchange",
+    "DApp"
+  ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/react": "workspace:*",
     "@orderly.network/ui": "workspace:*",

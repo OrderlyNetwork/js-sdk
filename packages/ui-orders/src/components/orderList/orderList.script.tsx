@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
 } from "@orderly.network/types";
-import { useOrderStream } from "@orderly.network/hooks";
+import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
 import { TabType } from "../orders.widget";
 import {
   DataFilterItems,
@@ -23,7 +23,10 @@ export const useOrderListScript = (props: {
 }) => {
   const { ordersStatus, type, enableLoadMore = false } = props;
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const defaultPageSize = 10;
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
+    pageSize: defaultPageSize,
+  });
   const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
     useFilter(type, {
       ordersStatus,
@@ -69,6 +72,15 @@ export const useOrderListScript = (props: {
     excludes,
   });
 
+  const localPageSizeKey = `oui-${type}_pageSize`;
+  const [typePageSize, setTypePageSize] = useLocalStorage(localPageSizeKey, defaultPageSize);
+
+  useEffect(() => {    
+    if (typePageSize !== pageSize) {
+      setTypePageSize(pageSize);
+    }
+  }, [pageSize, typePageSize]);
+
   const onCancelAll = useCallback(() => {
     modal.confirm({
       title: "Cancel all orders",
@@ -103,13 +115,12 @@ export const useOrderListScript = (props: {
     });
   }, [type]);
 
-  const formattedData = useFormatOrderHistory(
-    data ?? []
-  );
+  const formattedData = useFormatOrderHistory(data ?? []);
 
+  const dataSource = type !== TabType.tp_sl ? formattedData : data;
   return {
     type,
-    dataSource: type !== TabType.tp_sl ? formattedData : data,
+    dataSource,
     isLoading,
     loadMore,
     cancelOrder,
@@ -201,10 +212,10 @@ const useFilter = (
           label: "All status",
           value: undefined,
         },
-        {
-          label: "Open",
-          value: OrderStatus.OPEN,
-        },
+        // {
+        //   label: "Open",
+        //   value: OrderStatus.OPEN,
+        // },
         {
           label: "Filled",
           value: OrderStatus.FILLED,

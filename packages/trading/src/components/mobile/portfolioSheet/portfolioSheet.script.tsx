@@ -35,19 +35,15 @@ export const usePortfolioSheetScript = () => {
       });
   }, [account]);
   const onDeposit = useCallback(() => {
-
-     modal.show(DepositAndWithdrawWithSheetId, {
-        activeTab: 'desposit',
-      });
-
+    modal.show(DepositAndWithdrawWithSheetId, {
+      activeTab: "deposit",
+    });
   }, []);
   const onWithdraw = useCallback(() => {
     modal.show(DepositAndWithdrawWithSheetId, {
-        activeTab: 'withdraw',
-      });
+      activeTab: "withdraw",
+    });
   }, []);
-
-
 
   return {
     ...assets,
@@ -95,14 +91,14 @@ const useMarginRatioAndLeverage = () => {
   const [maxLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
 
-    const marks = useMemo((): SliderMarks => {
-        return (
-          leverageLevers?.map((e: number) => ({
-            label: `${e}x`,
-            value: e,
-          })) || []
-        );
-      }, [leverageLevers]);
+  const marks = useMemo((): SliderMarks => {
+    return (
+      leverageLevers?.map((e: number) => ({
+        label: `${e}x`,
+        value: e,
+      })) || []
+    );
+  }, [leverageLevers]);
 
   const [leverage, setLeverage] = useState(maxLeverage ?? 0);
 
@@ -133,7 +129,6 @@ const useMarginRatioAndLeverage = () => {
   };
 
   const onValueCommit = useCallback((value: number[]) => {
-
     onSave();
   }, []);
 
@@ -155,15 +150,15 @@ const useMarginRatioAndLeverage = () => {
 };
 
 export function getMarginRatioColor(marginRatio: number, mmr: number | null) {
-    if (mmr === null) {
-      return { isRed: false, isYellow: false, isGreen: true };
-    }
-    const imr = mmr * 2;
-  
-    const high = marginRatio <= imr;
-    const mid = marginRatio > imr && marginRatio < 1;
-    const low = marginRatio >= 1;
-    return { high, mid, low };
+  if (mmr === null) {
+    return { isRed: false, isYellow: false, isGreen: true };
   }
+  const imr = mmr * 2;
+
+  const high = marginRatio <= imr;
+  const mid = marginRatio > imr && marginRatio < 1;
+  const low = marginRatio >= 1;
+  return { high, mid, low };
+}
 
 export type PortfolioSheetState = ReturnType<typeof usePortfolioSheetScript>;

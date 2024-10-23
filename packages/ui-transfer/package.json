@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-transfer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -10,6 +10,12 @@
     "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
   },
   "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",

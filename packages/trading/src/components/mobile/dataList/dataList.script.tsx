@@ -25,7 +25,7 @@ export const useDataListScript = (props: {
   // TODO: default tab should be position
   const [tab, setTab] = useState<DataListTabType>(DataListTabType.pending);
   const { tabletMediaQuery } = useTradingPageContext();
-  const loalStorage = useTradingLocalStorage();
+  const localStorage = useTradingLocalStorage();
 
   const [_, { cancelAllOrders, cancelAllTPSLOrders }] = useOrderStream({});
   const { positionCount } = usePositionsCount(symbol);
@@ -73,7 +73,7 @@ export const useDataListScript = (props: {
     positionCount,
     pendingOrderCount,
     tpSlOrderCount,
-    ...loalStorage,
+    ...localStorage,
     onCloseAll,
   };
 };

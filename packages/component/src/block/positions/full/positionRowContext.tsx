@@ -13,7 +13,7 @@ import { LimitConfirm } from "../sections/limitConfirm";
 import { OrderSide } from "@orderly.network/types";
 import { useSymbolContext } from "@/provider/symbolProvider";
 
-import { useOrderEntry } from "@orderly.network/hooks";
+import { useOrderEntry_deprecated } from "@orderly.network/hooks";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -59,7 +59,7 @@ export const PositionsRowProvider: FC<
 
   const [type, setType] = useState<OrderType>(OrderType.MARKET);
 
-  const { helper, onSubmit, submitting } = useOrderEntry(
+  const { helper, onSubmit, submitting } = useOrderEntry_deprecated(
     props.position?.symbol!,
     side,
     true

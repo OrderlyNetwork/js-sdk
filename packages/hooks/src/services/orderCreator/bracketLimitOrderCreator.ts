@@ -4,7 +4,7 @@ import { BracketOrder } from "@orderly.network/types/src/order";
 
 import { LimitOrderCreator } from "./limitOrderCreator";
 
-export class BracketOrderCreator extends LimitOrderCreator {
+export class BracketLimitOrderCreator extends LimitOrderCreator {
   // orderType: OrderType;
   create(values: OrderlyOrder, config?: ValuesDepConfig): BracketOrder {
     const order = super.create(values, config);

@@ -1,5 +1,34 @@
 # @orderly.network/net
 
+## 2.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
+
+### Patch Changes
+
+- b033ce0: test
+- b15becb: test
+
+## 2.0.0-alpha.2
+
+### Patch Changes
+
+- test
+
+## 2.0.0-alpha.1
+
+### Patch Changes
+
+- test
+
+## 2.0.0-alpha.0
+
+### Major Changes
+
+- integrate solana
+
 ## 1.5.12
 
 ### Patch Changes

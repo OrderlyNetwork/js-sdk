@@ -1,4 +1,4 @@
-import { ChainNamespace } from "@orderly.network/core";
+import { ChainNamespace } from "@orderly.network/types";
 import type { EIP1193Provider } from "@web3-onboard/common";
 import { createContext, useContext } from "react";
 

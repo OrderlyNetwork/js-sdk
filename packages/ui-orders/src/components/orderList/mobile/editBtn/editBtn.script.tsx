@@ -33,6 +33,9 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
         .sheet({
           title: "Edit order",
           // size: "xs",
+          classNames: {
+            content: "oui-bg-base-8"
+          },
           content: (
             <EditSheetWidget
               state={state}

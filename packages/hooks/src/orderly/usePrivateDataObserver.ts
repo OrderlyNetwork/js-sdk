@@ -47,19 +47,26 @@ export const usePrivateDataObserver = (options: {
   const { data: positions, isLoading: isPositionLoading } =
     usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
+      onError: (error) => {
+        // console.error("fetch positions error", error);
+        statusActions.updateApiError("positions", error.message);
+      },
     });
 
   useEffect(() => {
-    statusActions.updateApiLoading("positions", isPositionLoading);
+    /// start load positions
+    if (isPositionLoading) {
+      statusActions.updateApiLoading("positions", isPositionLoading);
+    }
   }, [isPositionLoading, statusActions]);
 
   useEffect(() => {
-    if (
-      positions &&
-      Array.isArray(positions.rows) &&
-      positions.rows.length > 0
-    ) {
-      calculatorService.calc(CalculatorScope.POSITION, positions);
+    if (positions && Array.isArray(positions.rows)) {
+      if (positions.rows.length > 0) {
+        calculatorService.calc(CalculatorScope.POSITION, positions);
+      } else {
+        statusActions.updateApiLoading("positions", false);
+      }
     }
   }, [calculatorService, positions]);
 

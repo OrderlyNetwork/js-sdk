@@ -69,6 +69,7 @@ class CalculatorService {
   }
 
   async calc(scope: CalculatorScope, data: any, options?: CalcOptions) {
+    // console.log("[calc]:", scope, data, options);
     if (scope !== CalculatorScope.POSITION) {
       if (!options?.skipWhenOnPause) {
         console.error(`----`);
@@ -113,6 +114,7 @@ class CalculatorService {
       const { scope, data, options } = first;
       const ctx = context || new CalculatorContext(scope, data);
       const calculators = this.calculators.get(scope);
+      // console.log("[calculators]:", calculators);
       if (Array.isArray(calculators) && calculators.length) {
         await this.scheduler.calc(scope, calculators, data, ctx);
         if (!options?.skipUpdate) {

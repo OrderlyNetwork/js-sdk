@@ -51,7 +51,7 @@ export const DesktopSharePnLContent: FC<{
   }, []);
 
   const curBgImg = useMemo(() => {
-    return shareOptions?.backgroundImages[selectedSnap];
+    return shareOptions?.backgroundImages?.[selectedSnap];
   }, [shareOptions?.backgroundImages, selectedSnap]);
 
   const posterData = getPnLPosterData(

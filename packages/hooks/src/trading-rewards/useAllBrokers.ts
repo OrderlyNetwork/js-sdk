@@ -4,6 +4,7 @@ export type Brokers = {
   [key: string]: string;
 }
 
+/** get all brokers, will be callback a list */
 export const useAllBrokers = () => {
 
   const { data } = useQuery<Brokers | undefined>("/v1/public/broker/name", {

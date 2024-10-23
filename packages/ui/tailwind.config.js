@@ -17,6 +17,7 @@ module.exports = withTV({
     "./src/**/*.{ts,js,tsx,jsx}",
     "../ui-connector/src/**/*.{ts,js,tsx,jsx}",
     "../ui-orders/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-order-entry/src/**/*.{ts,js,tsx,jsx}",
     "../ui-positions/src/**/*.{ts,js,tsx,jsx}",
     "../ui-leverage/src/**/*.{ts,js,tsx,jsx}",
     "../ui-share/src/**/*.{ts,js,tsx,jsx}",
@@ -28,6 +29,7 @@ module.exports = withTV({
     "../chart/src/**/*.{ts,js,tsx,jsx}",
     "../ui-transfer/src/**/*.{ts,js,tsx,jsx}",
     "../trading/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-order-entry/src/**/*.{ts,js,tsx,jsx}",
   ],
   prefix: "oui-",
   theme: {

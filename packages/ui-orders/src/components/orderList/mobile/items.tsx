@@ -17,10 +17,11 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
+import { OrderSide } from "@orderly.network/types";
 
 export const Symbol: FC<OrderCellState> = (props) => {
   const { item } = props;
-  const isBuy = item.quantity > 0;
+  const isBuy = item.side === OrderSide.BUY;
   return (
     <Text.formatted
       intensity={80}
@@ -313,7 +314,11 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
           rm={Decimal.ROUND_DOWN}
           intensity={80}
           padding={false}
-          className={tp_trigger_price ? "oui-border-b oui-border-dashed oui-border-base-contrast-36" : undefined}
+          className={
+            tp_trigger_price
+              ? "oui-border-b oui-border-dashed oui-border-base-contrast-36"
+              : undefined
+          }
         >
           {tp_trigger_price ?? "--"}
         </Text.numeral>
@@ -327,7 +332,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={"TP trigger"}
+      label={"SL trigger"}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -357,7 +362,11 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
           rm={Decimal.ROUND_DOWN}
           intensity={80}
           padding={false}
-          className={sl_trigger_price ? "oui-border-b oui-border-dashed oui-border-base-contrast-36" : undefined}
+          className={
+            sl_trigger_price
+              ? "oui-border-b oui-border-dashed oui-border-base-contrast-36"
+              : undefined
+          }
         >
           {sl_trigger_price ?? "--"}
         </Text.numeral>
@@ -393,7 +402,7 @@ export const SLPrice: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={"TP price"}
+      label={"SL price"}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",

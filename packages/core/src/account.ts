@@ -1,19 +1,19 @@
-import { BaseSigner, MessageFactor } from "./signer";
+import {BaseSigner, MessageFactor, Signer} from "./signer";
 
-import { ConfigStore } from "./configStore/configStore";
-import { OrderlyKeyStore } from "./keyStore";
-import { Signer } from "./signer";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { SignatureDomain, getTimestamp, isHex, parseAccountId } from "./utils";
+import {ConfigStore} from "./configStore/configStore";
+import {OrderlyKeyStore} from "./keyStore";
+import {AccountStatusEnum, SDKError, ChainNamespace} from "@orderly.network/types";
+import {getTimestamp, isHex, parseAccountId, parseBrokerHash} from "./utils";
 
 import EventEmitter from "eventemitter3";
-import { BaseContract, IContract } from "./contract";
-import { Assets } from "./assets";
-import { SDKError } from "@orderly.network/types";
-import { ChainNamespace, EVENT_NAMES } from "./constants";
-import { WalletAdapterManager } from "./walletAdapterManager";
-import { WalletAdapter } from "./wallet/walletAdapter";
-import { BaseOrderlyKeyPair } from "./keyPair";
+import {BaseContract, IContract} from "./contract";
+import {Assets} from "./assets";
+import {EVENT_NAMES} from "./constants";
+import {WalletAdapterManager} from "./walletAdapterManager";
+import {WalletAdapter} from "./wallet/walletAdapter";
+import {BaseOrderlyKeyPair} from "./keyPair";
+import { PublicKey } from "@solana/web3.js";
+import {AbiCoder, keccak256} from "ethers";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -200,6 +200,12 @@ export class Account {
     //   throw new Error("brokerId is undefined");
     // }
     const brokerId = this.configStore.get<string>("brokerId");
+    if (this.walletAdapter?.chainNamespace === ChainNamespace.solana) {
+      const userAccount = new PublicKey(this.address);
+      const decodedUserAccount = Buffer.from(userAccount.toBytes());
+      const abicoder = AbiCoder.defaultAbiCoder()
+      return keccak256(abicoder.encode(['bytes32', 'bytes32'], [decodedUserAccount, parseBrokerHash(brokerId)]))
+    }
     return parseAccountId(this.address, brokerId);
   }
 
@@ -560,6 +566,7 @@ export class Account {
         // chainId: this.walletClient.chainId,
         brokerId: this.configStore.get("brokerId"),
         // domain,
+        verifyContract: this.contractManger.getContractInfoByEnv().verifyContractAddress,
       });
 
     // const EIP_712signatured = await this.signTypedData(toSignatureMessage);
@@ -715,7 +722,7 @@ export class Account {
   private async _getAccountInfo() {
     const brokerId = this.configStore.get("brokerId");
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${this.address}&broker_id=${brokerId}`
+      `/v1/get_account?address=${this.address}&broker_id=${brokerId}&chain_type=${this.stateValue.chainNamespace}`
     );
     return res;
   }

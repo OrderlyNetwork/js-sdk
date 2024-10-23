@@ -79,6 +79,7 @@ export const OrderEntry = (
     "orderly-order-additional-pinned",
     true
   );
+  const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY ? "Buy / Long" : "Sell / Short";
@@ -93,7 +94,10 @@ export const OrderEntry = (
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (target.closest("#order-entry-submit-button")) {
+      if (
+        target.closest("#order-entry-submit-button")
+        // || target.closest(".orderly-order-entry")
+      ) {
         return;
       }
       setErrorMsgVisible((visible) => {
@@ -171,7 +175,13 @@ export const OrderEntry = (
               }}
               size={"md"}
               fullWidth
-              color={side === OrderSide.BUY ? "buy" : "secondary"}
+              data-type={OrderSide.BUY}
+              // color={side === OrderSide.BUY ? "buy" : "secondary"}
+              className={cn(
+                side === OrderSide.BUY
+                  ? "oui-bg-success-darken hover:oui-bg-success"
+                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
+              )}
             >
               Buy
             </Button>
@@ -179,16 +189,23 @@ export const OrderEntry = (
               onClick={() => {
                 props.setOrderValue("side", OrderSide.SELL);
               }}
+              data-type={OrderSide.SELL}
               fullWidth
               size={"md"}
-              color={side === OrderSide.SELL ? "sell" : "secondary"}
+              // color={side === OrderSide.SELL ? "sell" : "secondary"}
+              className={cn(
+                side === OrderSide.SELL
+                  ? "oui-bg-danger-darken hover:oui-bg-danger"
+                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
+              )}
             >
               Sell
             </Button>
           </div>
           <div className={"oui-w-full lg:oui-flex-1"}>
             <OrderTypeSelect
-              type={formattedOrder.order_type}
+              type={formattedOrder.order_type!}
+              side={side}
               onChange={(type) => {
                 setOrderValue("order_type", type);
               }}
@@ -243,7 +260,13 @@ export const OrderEntry = (
           <Button
             fullWidth
             id={"order-entry-submit-button"}
-            color={side === OrderSide.BUY ? "buy" : "sell"}
+            // color={side === OrderSide.BUY ? "buy" : "sell"}
+            data-type={OrderSide.BUY}
+            className={cn(
+              side === OrderSide.BUY
+                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
+                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
+            )}
             onClick={() => {
               onSubmit();
             }}
@@ -261,7 +284,7 @@ export const OrderEntry = (
         <Divider />
         <OrderTPSL
           onCancelTPSL={props.cancelTP_SL}
-          orderType={formattedOrder.order_type}
+          orderType={formattedOrder.order_type!}
           errors={validated ? errors : null}
           isReduceOnly={formattedOrder.reduce_only}
           values={{
@@ -287,6 +310,7 @@ export const OrderEntry = (
         <Flex justify={"between"} itemAlign={"center"}>
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
+              className="oui-h-[14px]"
               id={"reduceOnly"}
               checked={props.formattedOrder.reduce_only}
               onCheckedChange={(checked) => {
@@ -306,6 +330,8 @@ export const OrderEntry = (
               onValueChange={setOrderValue}
               orderTypeExtra={formattedOrder["order_type_ext"]}
               showExtra={formattedOrder["order_type"] === OrderType.LIMIT}
+              hidden={hidden}
+              setHidden={setHidden}
             />
           )}
         </Flex>
@@ -319,6 +345,8 @@ export const OrderEntry = (
               onValueChange={setOrderValue}
               orderTypeExtra={formattedOrder["order_type_ext"]}
               showExtra={formattedOrder["order_type"] === OrderType.LIMIT}
+              hidden={hidden}
+              setHidden={setHidden}
             />
             <button
               onClick={() => {
@@ -415,7 +443,7 @@ const OrderQuantityInput = (props: {
 
       <Grid cols={2} className={"oui-space-x-1 oui-group"}>
         <CustomInput
-          label={"Quantity"}
+          label={"Qty"}
           suffix={symbolInfo.base}
           id="order_quantity_input"
           name="order_quantity_input"
@@ -434,6 +462,7 @@ const OrderQuantityInput = (props: {
           id={"total"}
           className={"!oui-rounded-bl !oui-rounded-tl"}
           value={values.total}
+          error={parseErrorMsg("total")}
           onChange={(e) => {
             props.onChange("total", e.target.value);
           }}
@@ -487,14 +516,14 @@ const CustomInput = forwardRef<
       ]}
       classNames={{
         root: cn(
-          "oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+          "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
           props.className
         ),
         input: "oui-mt-5 oui-mb-1 oui-h-5",
         prefix:
           "oui-absolute oui-left-2 oui-top-[7px] oui-text-base-contrast-36",
         suffix:
-          "oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-36 oui-text-2xs",
+          "oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-36 oui-text-2xs oui-justify-start oui-py-2",
       }}
     />
   );
@@ -532,6 +561,10 @@ const QuantitySlider = (props: {
     [props.side]
   );
 
+  const maxLabel = useMemo(() => {
+    return props.side === OrderSide.BUY ? "Max buy" : "Max sell";
+  }, [props.side]);
+
   return (
     <div>
       <Slider.single
@@ -556,7 +589,7 @@ const QuantitySlider = (props: {
             })}
             onClick={() => props.setMaxQty()}
           >
-            Max buy
+            {maxLabel}
           </button>
           <Text.numeral size={"2xs"} color={color} dp={props.dp}>
             {props.maxQty}
@@ -572,6 +605,7 @@ const QuantitySlider = (props: {
 const OrderTypeSelect = (props: {
   type: OrderType;
   onChange: (type: OrderType) => void;
+  side: OrderSide;
 }) => {
   const options = [
     { label: "Limit order", value: OrderType.LIMIT },
@@ -584,12 +618,22 @@ const OrderTypeSelect = (props: {
       value={props.type}
       options={options}
       onValueChange={props.onChange}
+      contentProps={{
+        className: "oui-bg-base-8",
+      }}
       valueFormatter={(value, option) => {
         const item = options.find((o) => o.value === value);
         if (!item) {
-          return <Text size={"2xs"}>{option.placeholder}</Text>;
+          return <Text size={"xs"}>{option.placeholder}</Text>;
         }
-        return <Text size={"2xs"}>{item?.label.replace(" order", "")}</Text>;
+        return (
+          <Text
+            size={"xs"}
+            color={props.side === OrderSide.BUY ? "buy" : "sell"}
+          >
+            {item?.label.replace(" order", "")}
+          </Text>
+        );
       }}
       size={"md"}
     />
@@ -663,6 +707,8 @@ function AdditionalConfigButton(props: {
   needConfirm: boolean;
   setNeedConfirm: (value: boolean) => void;
   showExtra: boolean;
+  hidden: boolean;
+  setHidden: (hidden: boolean) => void;
 }) {
   // const []
   const [open, setOpen] = useState(false);

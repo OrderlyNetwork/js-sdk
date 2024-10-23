@@ -38,16 +38,22 @@ export {
   WalletConnectorContext,
   type ConnectedChain,
   useWalletConnector,
-  type WalletState
+  type WalletState,
 } from "./walletConnectorContext";
 
 export * from "./orderly/orderlyHooks";
+
+export { useOrderEntry as useOrderEntry_deprecated } from "./deprecated/useOrderEntry";
+export type {
+  UseOrderEntryMetaState,
+  OrderParams,
+} from "./deprecated/useOrderEntry";
 
 import useSWR, {
   type SWRConfiguration,
   SWRConfig,
   useSWRConfig,
-  unstable_serialize
+  unstable_serialize,
 } from "swr";
 
 export {
@@ -55,7 +61,7 @@ export {
   SWRConfig,
   useSWRConfig,
   type SWRConfiguration,
-  unstable_serialize
+  unstable_serialize,
 };
 
 export * from "use-debounce";
@@ -66,7 +72,7 @@ export { usePoster } from "./usePoster";
 export { DefaultLayoutConfig } from "./services/painter/layout.config";
 export type {
   PosterLayoutConfig,
-  DrawOptions
+  DrawOptions,
 } from "./services/painter/basePaint";
 
 export * from "./orderly/orderlyHooks";

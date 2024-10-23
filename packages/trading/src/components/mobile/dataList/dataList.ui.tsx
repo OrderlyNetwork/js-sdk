@@ -84,7 +84,7 @@ const PositionsView: FC<DataListState> = (props) => {
       <div className="oui-mt-2"></div>
       <MobilePositionsWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
-        {...props.sharePnLConfig}
+        sharePnLConfig={props.sharePnLConfig}
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
       />
     </Flex>
@@ -138,7 +138,7 @@ const SymbolControlHeader: FC<
             props.setShowAllSymbol(!props.showAllSymbol);
           }}
         >
-          Show all instruments
+          Show all trading pair
         </Text>
       </Flex>
       <Button
@@ -152,13 +152,3 @@ const SymbolControlHeader: FC<
     </Flex>
   );
 };
-
-const OrdereHistoryHeader: FC<
-  DataListState & {
-    type: TabType;
-    ordersStatus?: OrderStatus;
-  }
-> = (props) => {
-
-  return ( <></>);
-}

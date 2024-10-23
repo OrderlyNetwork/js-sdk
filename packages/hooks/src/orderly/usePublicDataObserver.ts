@@ -3,6 +3,7 @@ import { type API } from "@orderly.network/types";
 // import { createGetter } from "../utils/createGetter";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useAppStore } from "./appStore";
+import { useMarketStore } from "./useMarket/market.store";
 
 const publicQueryOptions = {
   focusThrottleInterval: 1000 * 60 * 60 * 24,
@@ -14,6 +15,8 @@ export const usePublicDataObserver = () => {
   const { setSymbolsInfo, setFundingRates } = useAppStore(
     (state) => state.actions
   );
+
+  const { updateMarket } = useMarketStore((state) => state.actions);
 
   /**
    * symbol config
@@ -66,6 +69,21 @@ export const usePublicDataObserver = () => {
 
       // return obj;
       setFundingRates(obj);
+    },
+  });
+
+  /**
+   * markets info
+   */
+  useQuery<API.MarketInfo[]>(`/v1/public/futures`, {
+    // revalidateOnFocus: false,
+    ...publicQueryOptions,
+    onSuccess(data: API.MarketInfo[]) {
+      if (!data || !data?.length) {
+        return [];
+      }
+      // console.log(data);
+      updateMarket(data);
     },
   });
 };

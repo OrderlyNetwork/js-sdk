@@ -18,6 +18,7 @@ import { Decimal } from "@orderly.network/utils";
 import { ReactNode, useMemo } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
+import { useFundingRate } from "@orderly.network/hooks";
 
 export type Layout = "left" | "right";
 
@@ -166,7 +167,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               />
               <DataItem
                 label="Pred. funding rate"
-                value={fundingRateView}
+                value={<FundingRate symbol={symbol} />}
                 hint="Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions."
               />
               <div ref={tailingElementRef}>
@@ -260,5 +261,25 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
     >
       <ArrowLeftIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80" />
     </button>
+  );
+};
+
+const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
+  const data = useFundingRate(symbol);
+
+  if (data?.est_funding_rate === null) {
+    return "--";
+  }
+
+  return (
+    <div className="">
+      <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
+        {data.est_funding_rate!}
+      </Text.numeral>
+      <Text
+        intensity={36}
+        className="oui-tabular-nums"
+      >{` in ${data.countDown}`}</Text>
+    </div>
   );
 };

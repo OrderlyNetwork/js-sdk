@@ -47,8 +47,8 @@ export const useAccountSheetScript = (
   };
 
   const {
-    affiliateComission30D,
-    traderComission30D,
+    affiliateCommission30D,
+    traderCommission30D,
     isAffiliate,
     isTrader,
     onClickReferral,
@@ -107,11 +107,11 @@ export const useAccountSheetScript = (
     chainId,
     onCopyAddress,
 
-    affiliateComission30D,
+    affiliateCommission30D,
     onClickReferral,
     isAffiliate,
     isTrader,
-    traderComission30D,
+    traderCommission30D,
 
     curEpochId,
     onClickTradingRewards,
@@ -126,13 +126,13 @@ export const useAccountSheetScript = (
 
 const useReferral = (_onClickReferral?: () => void) => {
   const { data, isLoading, isAffiliate, isTrader } = useReferralInfo();
-  const affiliateComission30D = useMemo(() => {
+  const affiliateCommission30D = useMemo(() => {
     if (isAffiliate) {
       return data?.referrer_info["30d_referrer_rebate"];
     }
     return undefined;
   }, [data]);
-  const traderComission30D = useMemo(() => {
+  const traderCommission30D = useMemo(() => {
     if (isTrader) {
       return data?.referee_info["30d_referee_rebate"];
     }
@@ -145,14 +145,14 @@ const useReferral = (_onClickReferral?: () => void) => {
 
   return {
     onClickReferral,
-    affiliateComission30D,
-    traderComission30D,
+    affiliateCommission30D,
+    traderCommission30D,
     isAffiliate,
     isTrader,
 
     // WARNING: test data
-    // affiliateComission30D: 1234.43,
-    // traderComission30D:44343.33,
+    // affiliateCommission30D: 1234.43,
+    // traderCommission30D:44343.33,
     // isAffiliate: true,
     // isTrader: true,
   };

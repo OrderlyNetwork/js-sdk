@@ -47,6 +47,7 @@ interface AssetDetailProps {
   unit?: string;
   rule?: "percentages";
   isConnected?: boolean;
+  showPercentage?: boolean;
 }
 
 interface AssetValueListProps {
@@ -97,7 +98,10 @@ const useCurrentStatusText = (): StatusInfo => {
   }, [state.status, wrongNetwork]);
 };
 
-const TooltipContent: FC<TooltipContentProps> = ({ description, formula }) => (
+export const TooltipContent: FC<TooltipContentProps> = ({
+  description,
+  formula,
+}) => (
   <div className="oui-leading-[1.5] oui-text-2xs oui-text-base-contrast-80 oui-min-w-[204px] oui-max-w-[240px]">
     <span>{description}</span>
     <Divider className="oui-border-white/10" my={2} />
@@ -145,6 +149,7 @@ const AssetDetail: FC<AssetDetailProps> = ({
   unit,
   rule,
   isConnected,
+  showPercentage = false,
 }) => (
   <Flex justify="between">
     <Tooltip
@@ -156,25 +161,25 @@ const AssetDetail: FC<AssetDetailProps> = ({
         size="2xs"
         color="neutral"
         weight="semibold"
-        className="oui-cursor-pointer"
+        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-b-white/10"
       >
         {label}
       </Text>
     </Tooltip>
-    {isConnected !== false ? (
+    {isConnected !== false && value ? (
       <Text.numeral
         visible={visible}
         size="2xs"
         unit={unit}
-        unitClassName="oui-text-base-contrast-36"
+        unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
         as="div"
         rule={rule}
         padding={false}
       >
-        {value ?? "--"}
+        {value}
       </Text.numeral>
     ) : (
-      <Text className="oui-text-base-contrast-36">--</Text>
+      <Text className="oui-text-base-contrast-36">{(showPercentage ? "--%" : "--")}</Text>
     )}
   </Flex>
 );
@@ -208,7 +213,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
       >
         <Divider className="oui-flex-1" />
         <ChevronDownIcon
-          size={18}
+          size={12}
           color="white"
           className={cn("oui-transition-transform", open && "oui-rotate-180")}
         />
@@ -233,13 +238,16 @@ const AssetValueList: FC<AssetValueListProps> = ({
               value={marginRatioVal}
               isConnected={isConnected}
               rule="percentages"
+              showPercentage={true}
             />
             <AssetDetail
               label="Maintenance margin ratio"
-              description="The minimum margin ratio required to protect your positions from being liquidated."
+              description="The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated."
               formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
               visible={visible}
               value={renderMMR}
+              rule="percentages"
+              showPercentage={true}
             />
           </Box>
         </CollapsibleContent>
