@@ -110,13 +110,8 @@ const Tabs: FC<TabsProps> = (props) => {
           {props.trailing}
         </Flex>
 
-        <div
-          className={cn(
-            "oui-grid",
-            contentVisible ? "oui-grid-rows-[1fr]" : "oui-grid-rows-[0fr] oui-hidden"
-          )}
-        >
-          {Object.keys(tabList).map((key) => {
+        {contentVisible &&
+          Object.keys(tabList).map((key) => {
             const tab = tabList[key];
             return (
               <TabsContent
@@ -128,7 +123,6 @@ const Tabs: FC<TabsProps> = (props) => {
               </TabsContent>
             );
           })}
-        </div>
       </TabsBase>
     </TabsContext.Provider>
   );
