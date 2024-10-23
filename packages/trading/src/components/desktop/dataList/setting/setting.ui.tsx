@@ -25,7 +25,7 @@ export const Setting: FC<SettingState> = (props) => {
             props.setShowAllSymbol(checked);
           }}
         />
-        <label className="oui-text-xs oui-text-base-contrast-54" htmlFor="oui-checkbox-showAllInstruments">Show all instruments</label>
+        <label className="oui-text-xs oui-text-base-contrast-54" htmlFor="oui-checkbox-showAllInstruments">Show all trading pair</label>
       </Flex>
       <Button
         size="xs"
