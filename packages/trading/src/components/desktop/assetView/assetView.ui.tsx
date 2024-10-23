@@ -246,6 +246,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
               formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
               visible={visible}
               value={renderMMR}
+              rule="percentages"
               showPercentage={true}
             />
           </Box>
