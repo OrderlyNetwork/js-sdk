@@ -60,6 +60,7 @@ export const OrderTPSL = (props: {
       <Flex itemAlign={"center"} gapX={1}>
         <Switch
           id={"order_entry_tpsl"}
+          className="oui-h-[14px]"
           checked={open}
           disabled={
             (props.orderType !== OrderType.LIMIT &&
@@ -109,7 +110,7 @@ const TPSLInputForm = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={"oui-transition-all oui-pt-2 oui-pb-2 oui-px-1 oui-space-y-1"}
+      className={"oui-transition-all oui-pt-2 oui-pb-2 oui-px-[1px] oui-space-y-1"}
     >
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
@@ -154,7 +155,7 @@ const TPSLTriggerPriceInput = (props: {
 
   return (
     <Input.tooltip
-      prefix={"TP Price"}
+      prefix={`${props.type} Price`}
       size={"md"}
       placeholder="USDC"
       align="right"
@@ -173,7 +174,7 @@ const TPSLTriggerPriceInput = (props: {
       color={props.error ? "danger" : undefined}
       autoComplete={"off"}
       value={props.values.trigger_price}
-      classNames={{ additional: "oui-text-base-contrast-54" }}
+      classNames={{ additional: "oui-text-base-contrast-54", root: "oui-pr-2 md:oui-pr-3", prefix: "oui-pr-1 md:oui-pr-2" }}
       onChange={props.onChange}
     />
   );
