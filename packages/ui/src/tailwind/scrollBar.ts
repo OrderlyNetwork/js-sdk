@@ -11,6 +11,7 @@ export const scrollBarPlugin = () =>
       ".custom-scrollbar::-webkit-scrollbar-track": {
         backgroundColor: "transparent",
         borderRadius: "4px",
+        paddingTop: "20px",
       },
 
       ".custom-scrollbar::-webkit-scrollbar-thumb": {
