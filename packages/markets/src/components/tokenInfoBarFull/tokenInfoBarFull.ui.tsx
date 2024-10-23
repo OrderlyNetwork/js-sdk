@@ -167,7 +167,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               />
               <DataItem
                 label="Pred. funding rate"
-                value={<FundingRate symbol={data?.symbol} />}
+                value={<FundingRate symbol={symbol} />}
                 hint="Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions."
               />
               <div ref={tailingElementRef}>

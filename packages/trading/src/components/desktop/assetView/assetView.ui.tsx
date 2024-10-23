@@ -171,7 +171,7 @@ const AssetDetail: FC<AssetDetailProps> = ({
         visible={visible}
         size="2xs"
         unit={unit}
-        unitClassName="oui-text-base-contrast-36"
+        unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
         as="div"
         rule={rule}
         padding={false}
@@ -246,6 +246,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
               formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
               visible={visible}
               value={renderMMR}
+              rule="percentages"
               showPercentage={true}
             />
           </Box>
