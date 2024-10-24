@@ -96,7 +96,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     ee.on("orderbook:item:click", orderBookItemClickHandler);
 
     return () => {
-      console.log("useOrderEntry: removeListener");
       ee.off("orderbook:item:click", orderBookItemClickHandler);
     };
   }, [formattedOrder.order_type, formattedOrder.order_quantity, symbolInfo]);
