@@ -22,7 +22,7 @@ export const Transform = {
           }
           return value;
         },
-        enableSorting: column?.onSort ? true : false,
+        // enableSorting: column?.onSort ? true : false,
         meta: column,
         size: column.width,
       });
