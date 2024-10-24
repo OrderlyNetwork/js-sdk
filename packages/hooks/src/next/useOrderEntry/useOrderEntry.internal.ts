@@ -148,26 +148,7 @@ const useOrderEntryNextInternal = (
       (key === "order_quantity" || key === "order_price") &&
       hasTPSL(newValues)
     ) {
-      calculateTPSL(newValues, markPrice, symbolInfo);
-      // if (typeof newValues.tp_trigger_price !== "undefined") {
-      //   newValues = calculate(
-      //     newValues,
-      //     "tp_trigger_price",
-      //     newValues.tp_trigger_price,
-      //     markPrice,
-      //     symbolInfo
-      //   );
-      // }
-
-      // if (typeof newValues.sl_trigger_price !== "undefined") {
-      //   newValues = calculate(
-      //     newValues,
-      //     "sl_trigger_price",
-      //     newValues.sl_trigger_price,
-      //     markPrice,
-      //     symbolInfo
-      //   );
-      // }
+      newValues = calculateTPSL(key, newValues, markPrice, symbolInfo);
     }
 
     {
@@ -197,29 +178,53 @@ const useOrderEntryNextInternal = (
   };
 
   const calculateTPSL = (
+    key: string,
     newValues: Partial<FullOrderState>,
     markPrice: number,
     symbolInfo: API.SymbolExt
   ) => {
-    if (typeof newValues.tp_trigger_price !== "undefined") {
-      newValues = calculate(
-        newValues,
-        "tp_trigger_price",
-        newValues.tp_trigger_price,
-        markPrice,
-        symbolInfo
-      );
+    if (key === "order_price") {
+      if (typeof newValues.tp_pnl !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "tp_pnl",
+          newValues.tp_pnl,
+          markPrice,
+          symbolInfo
+        );
+      }
+      if (typeof newValues.sl_pnl !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "sl_pnl",
+          newValues.sl_pnl,
+          markPrice,
+          symbolInfo
+        );
+      }
+    } else {
+      if (typeof newValues.tp_trigger_price !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "tp_trigger_price",
+          newValues.tp_trigger_price,
+          markPrice,
+          symbolInfo
+        );
+      }
+
+      if (typeof newValues.sl_trigger_price !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "sl_trigger_price",
+          newValues.sl_trigger_price,
+          markPrice,
+          symbolInfo
+        );
+      }
     }
 
-    if (typeof newValues.sl_trigger_price !== "undefined") {
-      newValues = calculate(
-        newValues,
-        "sl_trigger_price",
-        newValues.sl_trigger_price,
-        markPrice,
-        symbolInfo
-      );
-    }
+    return newValues;
   };
 
   const setValues = useCallback(
@@ -270,7 +275,7 @@ const useOrderEntryNextInternal = (
     );
 
     if (hasTPSL(newValues)) {
-      calculateTPSL(newValues, markPrice, options.symbolInfo);
+      calculateTPSL("order_price", newValues, markPrice, options.symbolInfo);
     }
     orderEntryActions.updateOrder(newValues);
   }, []);
