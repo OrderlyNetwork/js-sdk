@@ -10,7 +10,7 @@ export enum TopTabType {
 
 export const useTopTabScript = () => {
   const [tab, setTab] = useState<TopTabType>(TopTabType.chart);
-  const { symbol } = useTradingPageContext();
+  const { symbol} = useTradingPageContext();
   const [visible, setVisible] = useState(true);
 
   const toggleContentVisible = () => {

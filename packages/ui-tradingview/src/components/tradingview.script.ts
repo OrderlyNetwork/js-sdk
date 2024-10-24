@@ -3,7 +3,7 @@ import {
   TradingviewWidgetPropsInterface,
 } from "../type";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getOveriides, withExchangePrefix } from "../utils/chart.util";
+import { getOveriides, withExchangePrefix, defaultColorConfig } from "../utils/chart.util";
 import {
   useAccount,
   useConfig,
@@ -18,7 +18,6 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-import { ColorConfigInterface } from "../tradingviewAdapter/type";
 import useBroker from "../tradingviewAdapter/hooks/useBroker";
 import useCreateRenderer from "../tradingviewAdapter/hooks/useCreateRenderer";
 import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
@@ -31,17 +30,12 @@ import { Decimal } from "@orderly.network/utils";
 import brokerHostHandler from "../tradingviewAdapter/renderer/brokerHostHandler";
 import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
 
-const chartKey = "SDK_Tradingview";
+const CHART_KEY = "SDK_Tradingview";
+const MOBILE_CHART_KEY = "SDK_Moblie_Tradingview";
 
-const upColor = "#00B59F";
-const downColor = "#FB5CB8";
-const chartBG = "#16141c";
-const pnlUpColor = "#27DEC8";
-const pnlDownColor = "#FFA5C0";
-const pnlZoreColor = "#808080";
-const textColor = "#FFFFFF";
-const qtyTextColor = "#F4F7F9";
-const font = "regular 11px Manrope";
+const getChartKey = (isMobile?:boolean) => {
+  return isMobile ? MOBILE_CHART_KEY : CHART_KEY;
+}
 
 export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const {
@@ -112,23 +106,12 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
   const isMobile = useMediaQuery(MEDIA_TABLET);
 
-  const defaultColorConfig: ColorConfigInterface = {
-    upColor,
-    downColor,
-    chartBG,
-    pnlUpColor,
-    pnlDownColor,
-    pnlZoreColor,
-    textColor,
-    qtyTextColor,
-    font,
-    closeIcon: "rgba(255, 255, 255, 0.54)",
-  };
-  const colorConfig = Object.assign(
+
+  const colorConfig = useMemo(() => Object.assign(
     {},
     defaultColorConfig,
     customerColorConfig ?? {}
-  );
+    ), [customerColorConfig]);
 
   const ws = useWS();
   const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] =
@@ -252,11 +235,12 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       return;
     }
 
-    const defaultOverrides = getOveriides();
+    const defaultOverrides = getOveriides( colorConfig,isMobile);
     const overrides = customerOverrides
       ? Object.assign({}, defaultOverrides.overrides, customerOverrides)
       : defaultOverrides.overrides;
 
+    console.log('-- overides', overrides, mode);
     // console.log('-- overrides', overrides);
     const studiesOverrides = customerStudiesOverrides
       ? Object.assign(
@@ -297,7 +281,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
       const chartProps: WidgetProps = {
         options,
-        chartKey: chartKey,
+        chartKey: getChartKey(isMobile),
         mode,
         onClick: () => {},
       };
@@ -308,7 +292,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     return () => {
       chart.current?.remove();
     };
-  }, [chartingLibrarySciprtReady, isMobile]);
+  }, [chartingLibrarySciprtReady, isMobile, mode, chart, chartRef, chartingLibrarySciprtReady, tradingViewScriptSrc, colorConfig]);
 
   useEffect(() => {
     if (chart.current && chart.current.instance) {

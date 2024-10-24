@@ -1,23 +1,18 @@
 import { FC } from "react";
-import {
-  ArrowDownShortIcon,
-  ArrowDownUpIcon,
-  Box,
-  ChevronUpIcon,
-  Flex,
-  TabPanel,
-  Tabs,
-  Text,
-} from "@orderly.network/ui";
+import { Box, TabPanel, Tabs } from "@orderly.network/ui";
 import { TopTabState, TopTabType } from "./topTab.script";
 import { MWebLastTrades } from "../lastTrades/lastTrades.widget";
 import { TradeDataWidget } from "../tradeData";
+import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { useTradingPageContext } from "../../../provider/context";
 
 export const TopTab: FC<
   TopTabState & {
     className?: string;
   }
 > = (props) => {
+ const {tradingViewConfig} = useTradingPageContext();
+
   return (
     <Tabs
       variant="contained"
@@ -34,12 +29,23 @@ export const TopTab: FC<
       }}
       trailing={
         <button className="oui-px-5" onClick={props.toggleContentVisible}>
-          <ChevronIcon className={props.visible ? "oui-rotate-0" : "oui-rotate-180"}/>
+          <ChevronIcon
+            className={props.visible ? "oui-rotate-0" : "oui-rotate-180"}
+          />
         </button>
       }
     >
       <TabPanel title="Chart" value={TopTabType.chart}>
-        <Text>Chart</Text>
+        <div className='oui-h-[234px] oui-pb-1'>
+
+        <TradingviewWidget
+          symbol={props.symbol}
+          libraryPath={tradingViewConfig?.library_path}
+          mode={3}
+          scriptSRC={tradingViewConfig?.scriptSRC}
+          customCssUrl={tradingViewConfig?.customCssUrl}
+        />
+        </div>
       </TabPanel>
       <TabPanel title="Trades" value={TopTabType.trades}>
         <MWebLastTrades symbol={props.symbol} />
