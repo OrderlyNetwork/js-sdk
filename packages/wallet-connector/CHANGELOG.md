@@ -1,5 +1,15 @@
 # @orderly.network/wallet-connector
 
+## 2.0.1-developV2.4
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-developV2.4
+  - @orderly.network/types@2.0.1-developV2.4
+  - @orderly.network/core@2.0.1-developV2.4
+
 ## 2.0.1-developV2.3
 
 ### Patch Changes
