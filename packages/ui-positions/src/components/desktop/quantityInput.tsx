@@ -61,16 +61,16 @@ export const QuantityInput = (props: { value: number }) => {
           value={quantity}
           onValueChange={(e) => {
             setQuantity(e);
-            if (type === OrderType.LIMIT) {
-              const value = new Decimal(e)
-                .div(props.value)
-                .mul(100)
-                .abs()
-                .toFixed(0, Decimal.ROUND_DOWN);
-                console.log("xxxxxx value", value);
-                
-              setSliderValue(Math.min(100, Number(value)));
-            }
+            // if (type === OrderType.LIMIT) {
+            const value = new Decimal(e)
+              .div(props.value)
+              .mul(100)
+              .abs()
+              .toFixed(0, Decimal.ROUND_DOWN);
+            // console.log("xxxxxx value", value);
+
+            setSliderValue(Math.min(100, Number(value)));
+            // }
           }}
         />
       </PopoverTrigger>
