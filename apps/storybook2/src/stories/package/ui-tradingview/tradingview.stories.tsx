@@ -4,6 +4,7 @@ import { OrderlyApp } from "@orderly.network/react-app";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { CustomConfigStore } from "../CustomConfigStore.ts";
 import { Box } from "@orderly.network/ui";
+import { Scaffold } from "@orderly.network/ui-scaffold";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: "Orderly", brokerId: "orderly" });
@@ -24,22 +25,23 @@ const meta = {
             img: "/orderly-logo-secondary.svg"
           }
         }}>
-          <Box height={600}>
+          <Scaffold>
 
-            <Story />
-          </Box>
+            <Box height={600}>
+
+              <Story />
+            </Box>
+          </Scaffold>
         </OrderlyApp>
       </ConnectorProvider>
     )
   ],
-  parameters: {
-
-  },
+  parameters: {},
 
   args: {
 
-    symbol: 'PERP_BTC_USDC',
-  },
+    symbol: "PERP_BTC_USDC"
+  }
 
 } satisfies Meta<typeof TradingviewWidget>;
 
@@ -51,12 +53,12 @@ const tradingviewProps = {
   symbol: "PERP_ETH_USDC",
   scriptSRC: "/tradingview/charting_library/charting_library.js",
   libraryPath: "/tradingview/charting_library/",
-  customCssUrl: "/tradingview/chart.css",
-}
+  customCssUrl: "/tradingview/chart.css"
+};
 
 export const Default: Story = {
   args: {
-    ...tradingviewProps,
+    ...tradingviewProps
   }
 };
 
@@ -65,23 +67,23 @@ export const NoTradingviewFile: Story = {
 
   render: () => {
     return <TradingviewWidget
-    symbol='PERP_BTC_USDC'/>
+      symbol="PERP_BTC_USDC" />;
   }
-}
+};
 
-const tradingviewProps2= {
+const tradingviewProps2 = {
   symbol: "PERP_ETH_USDC",
   scriptSRC: "/tradingviewWoofiPro/charting_library/charting_library.js",
   libraryPath: "/tradingviewWoofiPro/charting_library/",
-  customCssUrl: "/tradingviewWoofiPro/chart.css",
-}
+  customCssUrl: "/tradingviewWoofiPro/chart.css"
+};
 
 export const SellBuyOnTradingview: Story = {
   render: () => {
     return <TradingviewWidget
       {...tradingviewProps2}
 
-    />
-  },
+    />;
+  }
 
 };

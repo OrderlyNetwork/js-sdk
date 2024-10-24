@@ -1,4 +1,4 @@
-import { Box, cn, Column, Flex, Text } from "@orderly.network/ui";
+import { Box, cn, Column, Divider, Flex, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
 import {
   renderPriceInput,
@@ -16,6 +16,7 @@ import { ShareButtonWidget } from "./shareButton";
 import { API } from "@orderly.network/types";
 import { TriggerPrice } from "./triggerPrice";
 import { TPSLButton } from "./components";
+import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
@@ -28,7 +29,7 @@ export const useColumn = (props: {
         title: "Instrument",
         dataIndex: "symbol",
         fixed: "left",
-        width: 120,
+        width: 140,
         onSort: (r1, r2, sortOrder) => {
           if (sortOrder === "asc") {
             return r1.symbol.localeCompare(r2.symbol);
@@ -75,7 +76,7 @@ export const useColumn = (props: {
         // render: (value: string) => (
         //   <NumeralWithCtx
         //     coloring
-        //     className="orderly-font-semibold"
+        //     className="oui-font-semibold"
         //     tick="base_dp"
         //   >
         //     {value}
@@ -84,7 +85,7 @@ export const useColumn = (props: {
       },
       {
         title: "Avg. open",
-        className: "orderly-h-[48px]",
+        className: "oui-h-[48px]",
         width: 120,
         onSort: true,
         dataIndex: "average_open_price",
@@ -104,7 +105,7 @@ export const useColumn = (props: {
         dataIndex: "mark_price",
         width: 120,
         onSort: true,
-        className: "orderly-h-[48px]",
+        className: "oui-h-[48px]",
 
         render: (value: string, record: any) => {
           return (
@@ -130,8 +131,9 @@ export const useColumn = (props: {
             <Text.numeral
               dp={record?.symbolInfo?.("quote_dp")}
               rm={Decimal.ROUND_DOWN}
+              className={Number(value) > 0 ? "oui-text-warning-light" : ""}
             >
-              {value}
+              {value ?? "--"}
             </Text.numeral>
           );
         },
@@ -146,12 +148,7 @@ export const useColumn = (props: {
           coloring: true,
           // tick: "base_dp",
         },
-        // hint: (
-        //   <UnrealizedPnLPopoverCard
-        //     unPnlPriceBasis={props.unPnlPriceBasis}
-        //     setUnPnlPriceBasic={props.setUnPnlPriceBasic}
-        //   />
-        // ),
+        hint: <UnrealizedPnLPopoverCard />,
         render: (value: string, record: any) => {
           return (
             <Flex gap={2}>
@@ -160,7 +157,7 @@ export const useColumn = (props: {
                   dp={props.pnlNotionalDecimalPrecision}
                   rm={Decimal.ROUND_DOWN}
                   coloring
-                  className="orderly-font-semibold"
+                  className="oui-font-semibold"
                 >
                   {value}
                 </Text.numeral>
@@ -169,7 +166,7 @@ export const useColumn = (props: {
                   dp={props.pnlNotionalDecimalPrecision}
                   rm={Decimal.ROUND_DOWN}
                   coloring
-                  className="orderly-font-semibold"
+                  className="oui-font-semibold"
                   prefix="("
                   suffix=")"
                 >
@@ -200,17 +197,12 @@ export const useColumn = (props: {
       {
         title: "Est. total",
         dataIndex: "notional",
-        className: "orderly-h-[48px]",
+        className: "oui-h-[48px]",
         width: 100,
         onSort: true,
-        // render: (value: string) => (
-        //   <Numeral
-        //     precision={pnlNotionalDecimalPrecision}
-        //     className="orderly-font-semibold"
-        //   >
-        //     {value}
-        //   </Numeral>
-        // ),
+        render: (value: string) => (
+          <Text.numeral dp={pnlNotionalDecimalPrecision}>{value}</Text.numeral>
+        ),
       },
       {
         title: "Margin",
@@ -218,17 +210,18 @@ export const useColumn = (props: {
         onSort: true,
         width: 100,
         rule: "price",
-        // render: (value: string) => (
-        //   <Numeral className="orderly-font-semibold">{value}</Numeral>
-        // ),
-        // hint: (
-        //   <div>
-        //     <span>The minimum equity to keep your position. </span>
-        //     <Divider className="orderly-py-2 orderly-border-white/10" />
-        //     <span>Margin = Position size * Mark price * MMR</span>
-        //   </div>
-        // ),
-        // hintClassName: "orderly-p-2",
+        render: (value: string) => <Text.numeral>{value}</Text.numeral>,
+        hint: (
+          <Flex
+            direction={"column"}
+            gap={3}
+            className="oui-text-base-contrast-54 oui-bg-base-8 oui-rounded-sm"
+          >
+            <span>The minimum equity to keep your position. </span>
+            <Divider className="oui-w-full" />
+            <span>Margin = Position size * Mark price * MMR</span>
+          </Flex>
+        ),
       },
       {
         title: "Qty.",

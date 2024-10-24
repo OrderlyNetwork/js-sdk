@@ -249,6 +249,8 @@ export interface ColorConfigInterface{
     qtyTextColor?: string;
     font?: string;
     closeIcon?: string;
+    volumeUpColor?: string;
+    volumeDownColor?: string;
 }
 
 
