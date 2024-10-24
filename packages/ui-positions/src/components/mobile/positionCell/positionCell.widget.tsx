@@ -9,6 +9,7 @@ export const PositionCellWidget: FC<
     item: API.PositionTPSLExt;
     index: number;
     className?: string;
+    shareIconSize?: number;
   } & PositionsProps
 > = (props) => {
   const state = usePositionCellScript(props);

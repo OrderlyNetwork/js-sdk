@@ -1,5 +1,6 @@
 import { Checkbox, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
+import { useEffect } from "react";
 
 export type AdditionalInfoProps = {
   pinned: boolean;
@@ -9,6 +10,8 @@ export type AdditionalInfoProps = {
   orderTypeExtra?: OrderType;
   onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
   showExtra?: boolean;
+  hidden: boolean;
+  setHidden: (value: boolean) => void;
 };
 
 export const AdditionalInfo = (props: AdditionalInfoProps) => {
@@ -22,11 +25,19 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
       );
     }
   };
+
+  useEffect(() => {
+    props.onValueChange?.("visible_quantity", props.hidden ? 0 : 1);
+  }, [props.hidden]);
+
+
+  
+
   return (
     <div className={"oui-text-base-contrast-54"}>
       {props.showExtra && (
         <Flex
-          gapX={5}
+          gapX={3}
           justify={pinned ? "start" : "between"}
           mb={3}
           width={pinned ? "unset" : "100%"}
@@ -100,8 +111,9 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           <Checkbox
             id={"toggle_order_hidden"}
             color={"white"}
-            onCheckedChange={(checked) => {
-              props.onValueChange?.("visible_quantity", checked ? 0 : 1);
+            checked={props.hidden}
+            onCheckedChange={(checked: boolean) => {
+              props.setHidden(checked);
             }}
           />
           <label

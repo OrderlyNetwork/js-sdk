@@ -138,7 +138,7 @@ const SymbolControlHeader: FC<
             props.setShowAllSymbol(!props.showAllSymbol);
           }}
         >
-          Show all instruments
+          Show all trading pair
         </Text>
       </Flex>
       <Button
