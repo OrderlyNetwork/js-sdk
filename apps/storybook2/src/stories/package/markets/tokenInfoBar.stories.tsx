@@ -49,7 +49,7 @@ export const DepositTokenInfoBar: Story = {
       </Box>
       <Box width={900} intensity={900} r="2xl" px={3} height={54}>
         <TokenInfoBarFullWidget
-          symbol="PERP_BTC_USDC"
+          symbol="PERP_ETH_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
           onSymbolChange={(symbol) => {
             console.log('onSymbolChange', symbol);
@@ -58,7 +58,7 @@ export const DepositTokenInfoBar: Story = {
       </Box>
       <Box width='100%' intensity={900} r="2xl" px={3} height={54}>
         <TokenInfoBarFullWidget
-          symbol="PERP_BTC_USDC"
+          symbol="PERP_WOO_USDC"
           trailing={<Box pl={3}>Trailing</Box>}          
           onSymbolChange={(symbol) => {
             console.log('onSymbolChange', symbol);
