@@ -36,7 +36,6 @@ export default function useCreateRenderer(
   });
 
   useEffect(() => {
-    console.log('-- state.status', state.status, AccountStatusEnum.EnableTrading);
     if (state.status < AccountStatusEnum.EnableTrading) {
       renderer?.renderPositions([]);
       return;

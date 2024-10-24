@@ -78,6 +78,7 @@ const meta = {
     // symbol: "PERP_ORDER_USDC",
     // symbol: "PERP_1000BONK_USDC",
     tradingViewConfig: {
+      // scriptSRC: "",
       scriptSRC: "/tradingview/charting_library/charting_library.js",
       library_path: "/tradingview/charting_library/",
       customCssUrl: "/tradingview/chart.css"

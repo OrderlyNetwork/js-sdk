@@ -15,7 +15,7 @@ import {
   UnFavoritesIcon2,
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
-import { ReactNode, useMemo } from "react";
+import { ReactNode } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
 import { useFundingRate } from "@orderly.network/hooks";
@@ -110,24 +110,6 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
     </>
   );
 
-  const fundingRateView = useMemo(() => {
-    if (data?.est_funding_rate === null) {
-      return "--";
-    }
-
-    return (
-      <div className="">
-        <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
-          {fundingRate.est_funding_rate!}
-        </Text.numeral>
-        <Text
-          intensity={36}
-          className="oui-tabular-nums"
-        >{` in ${fundingRate.countDown}`}</Text>
-      </div>
-    );
-  }, [fundingRate]);
-
   return (
     <Flex className={cn("oui-font-semibold oui-h-full", props.className)}>
       <Flex gapX={6} className="oui-flex-1 oui-overflow-hidden oui-h-full">
@@ -148,12 +130,20 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               </div>
               <DataItem
                 label="Mark"
-                value={<Text.numeral>{data?.["mark_price"]}</Text.numeral>}
+                value={
+                  <Text.numeral dp={quotoDp}>
+                    {data?.["mark_price"]}
+                  </Text.numeral>
+                }
                 hint="Price for the computation of unrealized PnL and liquidation."
               />
               <DataItem
                 label="Index"
-                value={<Text.numeral>{data?.["index_price"]}</Text.numeral>}
+                value={
+                  <Text.numeral dp={quotoDp}>
+                    {data?.["index_price"]}
+                  </Text.numeral>
+                }
                 hint="Average of the last prices across other exchanges."
               />
               <DataItem

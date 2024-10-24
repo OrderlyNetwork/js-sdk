@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { MenuItem } from "@orderly.network/ui";
+import { cn, MenuItem } from "@orderly.network/ui";
 import { commify, Decimal, todpIfNeed } from "@orderly.network/utils";
 import type {
   InputFormatter,
@@ -83,6 +83,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const percentageSuffix = useRef<string>("");
 
   const onValueChange = (value: string) => {
+    // console.log("onValueChange", value);
     props.onChange(key, value);
   };
 
@@ -122,9 +123,25 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         // }
 
         if (mode === PnLMode.PERCENTAGE) {
-          return `${new Decimal(value).mul(100).todp(2, 4).toString()}${
-            percentageSuffix.current
-          }`;
+          // value = new Decimal(
+          //   value.replace(
+          //     new RegExp(percentageSuffix.current.replace(".", "\\.") + "$"),
+          //     ""
+          //   )
+          // )
+          //   .mul(100)
+          //   .toString();
+
+          // return `${todpIfNeed(value, 2)}${percentageSuffix.current}`;
+          return `${new Decimal(
+            value.replace(
+              new RegExp(percentageSuffix.current.replace(".", "\\.") + "$"),
+              ""
+            )
+          )
+            .mul(100)
+            .todp(2, 4)
+            .toString()}${percentageSuffix.current}`;
           // return (Number(value) * 100).toFixed(2);
         } else if (mode === PnLMode.OFFSET) {
           value = todpIfNeed(value, dp);
@@ -139,10 +156,20 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           return "0";
         }
 
+        // console.log("onSendBefore", value);
+
         if (mode === PnLMode.PERCENTAGE) {
           if (value !== "") {
-            percentageSuffix.current = value.endsWith(".") ? "." : "";
-            value = new Decimal(value).div(100).todp(4, 4).toString();
+            // percentageSuffix.current = value.endsWith(".") ? "." : "";
+            value = todpIfNeed(value, 2);
+            const endStr = value.match(/\.0{0,2}$/);
+            if (!!endStr) {
+              percentageSuffix.current = endStr[0];
+            } else {
+              percentageSuffix.current = "";
+            }
+            value = new Decimal(value).div(100).toString();
+            value = `${value}${percentageSuffix.current}`;
           }
         } else {
           value = todpIfNeed(value, dp);

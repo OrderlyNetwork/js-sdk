@@ -7,6 +7,7 @@ import {
   modal,
   gradientTextVariants,
   cn,
+  EditIcon,
 } from "@orderly.network/ui";
 import { RiskRateState } from "./riskRate.script";
 // import { Pencil } from "lucide-react";
@@ -123,10 +124,9 @@ export const RiskRate: FC<RiskRateState> = (props) => {
                   }}
                 >
                   <span>{`${maxLeverage ?? "--"}x`}</span>
-                  {/* {typeof maxLeverage !== "undefined" && (
-                    // @ts-ignore
-                    // <Pencil size={14} className="oui-text-base-contrast-54" />
-                  )} */}
+                  {typeof maxLeverage !== "undefined" && (
+                    <EditIcon size={12} color="white"/>
+                  )}
                 </button>
               ) : (
                 "--"

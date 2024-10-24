@@ -22,8 +22,7 @@ export const useDataListScript = (props: {
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
 }) => {
   const { symbol, sharePnLConfig } = props;
-  // TODO: default tab should be position
-  const [tab, setTab] = useState<DataListTabType>(DataListTabType.pending);
+  const [tab, setTab] = useState<DataListTabType>(DataListTabType.position);
   const { tabletMediaQuery } = useTradingPageContext();
   const localStorage = useTradingLocalStorage();
 

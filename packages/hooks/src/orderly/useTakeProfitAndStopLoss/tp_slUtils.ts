@@ -306,7 +306,13 @@ export function tpslCalculateHelper(
 
   let qty = Number(key === "quantity" ? inputs.value : inputs.qty);
 
-  if (qty === 0)
+  if (
+    qty === 0 &&
+    (key === "tp_pnl" ||
+      key === "sl_pnl" ||
+      key === "tp_trigger_price" ||
+      key === "sl_trigger_price")
+  ) {
     return {
       [`${keyPrefix}trigger_price`]: "",
       // [`${keyPrefix}offset`]: "",
@@ -314,14 +320,12 @@ export function tpslCalculateHelper(
       [`${keyPrefix}pnl`]: "",
       [key]: inputs.value,
     };
-
+  }
   let trigger_price, offset, offset_percentage, pnl;
 
   const entryPrice = new Decimal(inputs.entryPrice)
     .todp(options.symbol?.quote_dp ?? 2, Decimal.ROUND_UP)
     .toNumber();
-
-  // console.log("******* entryPrice", options.symbol?.quote_dp, entryPrice);
 
   switch (key) {
     case "tp_trigger_price":
@@ -372,9 +376,10 @@ export function tpslCalculateHelper(
     case "tp_offset_percentage":
     case "sl_offset_percentage": {
       offset_percentage = inputs.value;
+      console.log("offset_percentage", offset_percentage);
       trigger_price = offsetPercentageToPrice({
         qty,
-        percentage: Number(inputs.value),
+        percentage: Number(`${inputs.value}`.replace(/\.0{0,2}$/, "")),
         entryPrice,
         orderSide: inputs.orderSide,
         orderType,

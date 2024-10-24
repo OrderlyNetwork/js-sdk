@@ -110,7 +110,9 @@ const TPSLInputForm = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={"oui-transition-all oui-pt-2 oui-pb-2 oui-px-[1px] oui-space-y-1"}
+      className={
+        "oui-transition-all oui-pt-2 oui-pb-2 oui-px-[1px] oui-space-y-1"
+      }
     >
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
@@ -174,7 +176,11 @@ const TPSLTriggerPriceInput = (props: {
       color={props.error ? "danger" : undefined}
       autoComplete={"off"}
       value={props.values.trigger_price}
-      classNames={{ additional: "oui-text-base-contrast-54", root: "oui-pr-2 md:oui-pr-3", prefix: "oui-pr-1 md:oui-pr-2" }}
+      classNames={{
+        additional: "oui-text-base-contrast-54",
+        root: "oui-pr-2 md:oui-pr-3",
+        prefix: "oui-pr-1 md:oui-pr-2",
+      }}
       onChange={props.onChange}
     />
   );

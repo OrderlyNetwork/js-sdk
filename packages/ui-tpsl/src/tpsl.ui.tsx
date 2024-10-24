@@ -41,6 +41,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             maxQty={props.maxQty}
             quantity={(props.orderQuantity ?? props.maxQty) as number}
             tick={symbolInfo("base_tick")}
+            dp={symbolInfo("base_dp")}
             onQuantityChange={props.setQuantity}
             quote={symbolInfo("base")}
           />
@@ -109,6 +110,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
 const TPSLQuantity = (props: {
   maxQty: number;
   tick: number;
+  dp: number;
   quote: string;
   onQuantityChange?: (value: number | string) => void;
   quantity: number;
@@ -147,6 +149,7 @@ const TPSLQuantity = (props: {
               root: "oui-bg-base-5",
             }}
             formatters={[
+              inputFormatter.dpFormatter(props.dp),
               inputFormatter.numberFormatter,
               inputFormatter.currencyFormatter,
             ]}
@@ -216,7 +219,6 @@ const TPSLQuantity = (props: {
             className={"oui-leading-none"}
             style={{ lineHeight: 0 }}
             onClick={() => {
-              console.log("maxQty", props.maxQty);
               props.onQuantityChange?.(props.maxQty);
             }}
           >
@@ -363,6 +365,7 @@ const PriceInput = (props: {
       onValueChange={props.onValueChange}
       formatters={[
         inputFormatter.numberFormatter,
+        inputFormatter.dpFormatter(2),
         inputFormatter.currencyFormatter,
       ]}
     />
