@@ -45,7 +45,7 @@ export const PNLInput = (props: PNLInputProps) => {
       autoComplete={"off"}
       onValueChange={onValueChange}
       formatters={[
-        inputFormatter.numberFormatter,
+        // inputFormatter.numberFormatter,
         props.formatter({ dp: quote_db, mode }),
         inputFormatter.currencyFormatter,
       ]}
