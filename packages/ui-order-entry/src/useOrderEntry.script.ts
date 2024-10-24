@@ -99,7 +99,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       console.log("useOrderEntry: removeListener");
       ee.off("orderbook:item:click", orderBookItemClickHandler);
     };
-  }, [formattedOrder.order_type]);
+  }, [formattedOrder.order_type, formattedOrder.order_quantity, symbolInfo]);
 
   // cancel TP/SL
   const cancelTP_SL = () => {
