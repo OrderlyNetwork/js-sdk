@@ -50,7 +50,7 @@ export const useColumn = (props: {
             />
 
             <Text.formatted
-              rule={"symbol"}
+              // rule={"symbol"}
               formatString="base-type"
               onClick={(e) => {
                 // props.onSymbolChange?.({ symbol: value } as API.Symbol);
@@ -58,7 +58,7 @@ export const useColumn = (props: {
                 // e.preventDefault();
               }}
             >
-              {value}
+              {`${value.split("_")[1]}_PERP`}
             </Text.formatted>
           </Flex>
         ),

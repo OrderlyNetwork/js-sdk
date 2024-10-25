@@ -37,9 +37,9 @@ export const Setting: FC<SettingState> = (props) => {
           <DropdownMenuTrigger>
             <SettingFillIcon size={16} color="white" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="oui-p-2 oui-w-[360px]" alignOffset={2} align="end">
-            <div className="oui-flex oui-flex-col oui-text-3xs">
-              <Text className="oui-text-xs oui-pb-3">Portfolio Settings</Text>
+          <DropdownMenuContent className="oui-px-5 oui-py-3 oui-w-[360px]" alignOffset={2} align="end">
+            <div className="oui-flex oui-flex-col oui-text-sm">
+              <Text className="oui-text-base oui-pb-3">Portfolio Settings</Text>
               <Divider />
               <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
                 Decimal Precision for PnL & Notional
@@ -163,7 +163,7 @@ const RadioButton = (props: {
       className="oui-cursor-pointer"
       >
         {sel ? <SelIcon /> : <UnselIcon />}
-        <Text size="xs" intensity={sel ? 98 : 54}>{label}</Text>
+        <Text size="2xs" intensity={sel ? 98 : 54}>{label}</Text>
       </Flex>
     );
   };

@@ -32,7 +32,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
       return (
         <ConnectorProvider>
           <OrderlyApp
