@@ -1,5 +1,19 @@
 # storybook
 
+## 1.3.14-preReleaseV2-2.0
+
+### Patch Changes
+
+- update
+- update
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/web3-modal@1.5.14-preReleaseV2-2.0
+  - @orderly.network/react@1.5.14-preReleaseV2-2.0
+  - @orderly.network/web3-onboard@1.5.14-preReleaseV2-2.0
+  - @orderly.network/hooks@1.5.14-preReleaseV2-2.0
+  - @orderly.network/core@1.5.14-preReleaseV2-2.0
+
 ## 1.3.13
 
 ### Patch Changes

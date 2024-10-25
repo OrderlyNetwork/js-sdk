@@ -1,5 +1,15 @@
 # @orderly.network/utils
 
+## 1.5.14-preReleaseV2-2.0
+
+### Patch Changes
+
+- update
+- update
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/types@1.5.14-preReleaseV2-2.0
+
 ## 1.5.13
 
 ### Patch Changes

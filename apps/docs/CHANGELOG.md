@@ -1,5 +1,18 @@
 # @orderly/docs
 
+## 0.4.14-preReleaseV2-2.0
+
+### Patch Changes
+
+- update
+- update
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/react@1.5.14-preReleaseV2-2.0
+  - @orderly.network/web3-onboard@1.5.14-preReleaseV2-2.0
+  - @orderly.network/hooks@1.5.14-preReleaseV2-2.0
+  - @orderly.network/types@1.5.14-preReleaseV2-2.0
+
 ## 0.4.13
 
 ### Patch Changes

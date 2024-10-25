@@ -1,5 +1,18 @@
 # @orderly.network/ui-order-entry
 
+## 1.0.1-preReleaseV2-2.0
+
+### Patch Changes
+
+- update
+- update
+- Updated dependencies
+- Updated dependencies
+  - @orderly.network/hooks@1.5.14-preReleaseV2-2.0
+  - @orderly.network/types@1.5.14-preReleaseV2-2.0
+  - @orderly.network/utils@1.5.14-preReleaseV2-2.0
+  - @orderly.network/ui@1.0.1-preReleaseV2-2.0
+
 ## 1.0.1-preReleaseV2-1.11
 
 ### Patch Changes
