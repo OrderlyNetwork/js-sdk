@@ -3,9 +3,10 @@ import {
   useEventEmitter,
   useMarginRatio,
   useOrderEntry,
+  utils,
 } from "@orderly.network/hooks";
 import { useEffect, useRef, FocusEvent, useMemo } from "react";
-import { removeTrailingZeros } from "@orderly.network/utils";
+import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
 
@@ -36,6 +37,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     );
   }, [formattedOrder.order_quantity, state.maxQty]);
 
+  const formatQty = () => {
+    const quantity = utils.formatNumber(
+      formattedOrder?.order_quantity,
+      new Decimal(symbolInfo?.base_tick || "0").toNumber()
+    );
+    setValue("order_quantity", quantity);
+  };
+
   const onFocus = (type: InputType) => (_: FocusEvent) => {
     currentFocusInput.current = type;
   };
@@ -46,9 +55,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       currentFocusInput.current = InputType.NONE;
     }, 300);
 
-    // if (type === InputType.QUANTITY) {
-    //   formatQty();
-    // }
+    if (type === InputType.QUANTITY || type === InputType.TOTAL) {
+      formatQty();
+    }
   };
 
   useEffect(() => {
