@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { type SWRConfiguration } from "swr";
 import { createGetter } from "../../utils/createGetter";
-import { type API } from "@orderly.network/types";
+import {
+  AlgoOrderRootType,
+  OrderStatus,
+  type API,
+} from "@orderly.network/types";
 import { pathOr } from "ramda";
 import { POSITION_EMPTY, usePositionStore } from "./usePositionStore";
 import { useCalculatorService } from "../../useCalculatorService";
@@ -10,6 +14,8 @@ import { useAppStore } from "../appStore";
 import { omit } from "ramda";
 import { PositionCalculator } from "../calculator/positions";
 import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
+import { useOrderStream } from "../orderlyHooks";
+import { findPositionTPSLFromOrders, findTPSLFromOrder } from "./utils";
 // import { usePosition } from "./usePosition";
 
 export type PriceMode = "markPrice" | "lastPrice";
@@ -39,6 +45,20 @@ export const usePositionStream = (
   const positionCalculator = useRef<PositionCalculator | null>(null);
   const calcutlatorService = useCalculatorService();
 
+  // const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 10);
+
+  const [tpslOrders] = useOrderStream(
+    {
+      symbol: symbol === "all" ? undefined : symbol,
+      status: OrderStatus.INCOMPLETE,
+      includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+      size: 10,
+    },
+    {
+      keeplive: true,
+    }
+  );
+
   // const { data: accountInfo } =
   //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
@@ -55,7 +75,6 @@ export const usePositionStream = (
   );
 
   useEffect(() => {
-    console.log("useEffect", symbol);
     if (symbol === "all") return;
 
     // console.log("---------------", symbol);
@@ -118,8 +137,30 @@ export const usePositionStream = (
       });
     }
 
+    // console.log("tpslOrders", tpslOrders);
+
+    if (Array.isArray(tpslOrders) && tpslOrders.length) {
+      rows = rows.map((item) => {
+        const related_order = findPositionTPSLFromOrders(
+          tpslOrders,
+          item.symbol
+        );
+
+        const tp_sl_pricer = !!related_order
+          ? findTPSLFromOrder(related_order)
+          : undefined;
+
+        return {
+          ...item,
+          tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
+          sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
+          algo_order: related_order,
+        };
+      });
+    }
+
     return rows;
-  }, [formattedPositions, includedPendingOrder, calcMode]);
+  }, [formattedPositions, includedPendingOrder, calcMode, tpslOrders]);
 
   const aggregated = useMemo(() => {
     let data = formattedPositions[1];
@@ -141,12 +182,6 @@ export const usePositionStream = (
     Omit<API.PositionInfo, "rows">,
     keyof Omit<API.PositionInfo, "rows">
   >(aggregated, 1);
-
-  // console.log(
-  //   "positionStatus++++",
-  //   positionsRows?.length,
-  //   positionStatus.loading
-  // );
 
   return [
     {

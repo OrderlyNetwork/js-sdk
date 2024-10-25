@@ -179,7 +179,7 @@ export const OrderEntry = (
               // color={side === OrderSide.BUY ? "buy" : "secondary"}
               className={cn(
                 side === OrderSide.BUY
-                  ? "oui-bg-success-darken hover:oui-bg-success"
+                  ? "oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
               )}
             >
@@ -195,7 +195,7 @@ export const OrderEntry = (
               // color={side === OrderSide.SELL ? "sell" : "secondary"}
               className={cn(
                 side === OrderSide.SELL
-                  ? "oui-bg-danger-darken hover:oui-bg-danger"
+                  ? "oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
               )}
             >
