@@ -44,6 +44,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             dp={symbolInfo("base_dp")}
             onQuantityChange={props.setQuantity}
             quote={symbolInfo("base")}
+            isEditing={props.isEditing}
           />
           <Divider my={4} intensity={8} />
         </>
@@ -114,6 +115,7 @@ const TPSLQuantity = (props: {
   quote: string;
   onQuantityChange?: (value: number | string) => void;
   quantity: number;
+  isEditing?: boolean;
   setOrderValue?: (key: string, value: number | string) => void;
 }) => {
   const isPosition = props.quantity === props.maxQty;
@@ -174,27 +176,29 @@ const TPSLQuantity = (props: {
             }
           />
         </div>
-        <Button
-          onClick={() => {
-            const qty = isPosition ? 0 : props.maxQty;
-            props.onQuantityChange?.(qty);
-            if (qty === 0) {
-              setTPSL();
-            }
-          }}
-          variant={"outlined"}
-          size={{
-            lg: "md",
-            md: "lg",
-          }}
-          className={cn(
-            isPosition
-              ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
-              : "oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
-          )}
-        >
-          Position
-        </Button>
+        {!props.isEditing && (
+          <Button
+            onClick={() => {
+              const qty = isPosition ? 0 : props.maxQty;
+              props.onQuantityChange?.(qty);
+              if (qty === 0) {
+                setTPSL();
+              }
+            }}
+            variant={"outlined"}
+            size={{
+              lg: "md",
+              md: "lg",
+            }}
+            className={cn(
+              isPosition
+                ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
+                : "oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
+            )}
+          >
+            Position
+          </Button>
+        )}
       </Flex>
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
         <Slider.single

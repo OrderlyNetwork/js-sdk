@@ -32,7 +32,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", });
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -74,10 +74,10 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    // symbol: "PERP_ETH_USDC",
+    symbol: "PERP_ETH_USDC",
     // symbol: "PERP_ORDER_USDC",
     // symbol: "PERP_1000BONK_USDC",
-    symbol: "PERP_1000PEPE_USDC",
+    // symbol: "PERP_1000PEPE_USDC",
     tradingViewConfig: {
       // scriptSRC: "",
       scriptSRC: "/tradingview/charting_library/charting_library.js",

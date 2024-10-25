@@ -30,7 +30,7 @@ export const Positions = (props: PositionsBuilderState) => {
         bordered
         dataSource={props.dataSource}
         generatedRowKey={(record: any) => record.symbol}
-        renderRowContainer={(record :any, index: number, children: any) => {
+        renderRowContainer={(record: any, index: number, children: any) => {
           return (
             <SymbolProvider symbol={record.symbol}>
               <PositionsRowProvider position={record}>
