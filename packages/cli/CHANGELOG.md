@@ -1,5 +1,21 @@
 # @orderly.network/cli
 
+## 0.3.14
+
+### Patch Changes
+
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/core@1.5.14
+
+## 0.3.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/core@1.5.14-alpha.0
+
 ## 0.3.13
 
 ### Patch Changes
