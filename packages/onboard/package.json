@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-onboard",
-  "version": "1.5.12",
+  "version": "1.5.13",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
@@ -19,7 +19,8 @@
     "@orderly.network/types": "workspace:*",
     "@web3-onboard/core": "^2.21.5",
     "@web3-onboard/injected-wallets": "^2.10.15",
-    "@web3-onboard/react": "2.8.16"
+    "@web3-onboard/react": "2.8.16",
+    "@web3-onboard/bitget": "2.1.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.38",

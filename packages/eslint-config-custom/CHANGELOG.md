@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 0.3.13
+
+### Patch Changes
+
+- remove total validate of useOrderEntry
+
 ## 0.3.12
 
 ### Patch Changes

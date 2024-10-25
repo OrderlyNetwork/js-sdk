@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.13
+
+### Patch Changes
+
+- remove total validate of useOrderEntry
+- Updated dependencies
+  - @orderly.network/types@1.5.13
+  - @orderly.network/utils@1.5.13
+
 ## 3.3.12
 
 ### Patch Changes
