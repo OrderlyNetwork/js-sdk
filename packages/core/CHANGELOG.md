@@ -1,100 +1,12 @@
 # @orderly.network/core
 
-## 1.5.13-preReleaseV2-1.11
+## 1.5.13
 
 ### Patch Changes
 
-- update
+- remove total validate of useOrderEntry
 - Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.11
-
-## 1.5.13-preReleaseV2-1.10
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.10
-
-## 1.5.13-preReleaseV2-1.9
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.9
-
-## 1.5.13-preReleaseV2-1.8
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.8
-
-## 1.5.13-preReleaseV2-1.7
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.7
-
-## 1.5.13-preReleaseV2-1.6
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.6
-
-## 1.5.13-preReleaseV2-1.5
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.5
-
-## 1.5.13-preReleaseV2-1.4
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.4
-
-## 1.5.13-preReleaseV2-1.3
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.3
-
-## 1.5.13-preReleaseV2-1.2
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.2
-
-## 1.5.13-preReleaseV2-1.1
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.1
-
-## 1.5.13-preReleaseV2-1.0
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.13-preReleaseV2-1.0
+  - @orderly.network/types@1.5.13
 
 ## 1.5.12
 
