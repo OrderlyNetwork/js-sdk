@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 1.5.13
+
+### Patch Changes
+
+- remove total validate of useOrderEntry
+
 ## 1.5.12
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.13
+
+### Patch Changes
+
+- remove total validate of useOrderEntry
+- Updated dependencies
+  - @orderly.network/core@1.5.13
+
 ## 0.3.12
 
 ### Patch Changes

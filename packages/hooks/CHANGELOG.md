@@ -1,5 +1,17 @@
 # @orderly.network/hooks
 
+## 1.5.13
+
+### Patch Changes
+
+- remove total validate of useOrderEntry
+- Updated dependencies
+  - @orderly.network/core@1.5.13
+  - @orderly.network/net@1.5.13
+  - @orderly.network/perp@3.3.13
+  - @orderly.network/types@1.5.13
+  - @orderly.network/utils@1.5.13
+
 ## 1.5.12
 
 ### Patch Changes
