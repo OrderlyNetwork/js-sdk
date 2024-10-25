@@ -1,11 +1,12 @@
-import React, { Fragment, ReactNode } from "react";
+import React, { FC, Fragment } from "react";
 import { cnBase } from "tailwind-variants";
-import { flexRender, Row } from "@tanstack/react-table";
+import { Row } from "@tanstack/react-table";
 import { getColumnPinningProps } from "./utils/getColumnPinningProps";
 import { columnVariants, tableVariants } from "./className";
 import { TableViewProps } from "./tableView";
+import { TableCell } from "./tableCell";
 
-export type TableBodyProps<RecordType> = {
+type TableBodyProps<RecordType> = {
   className?: string;
   rows: Row<RecordType>[];
   bordered?: boolean;
@@ -32,18 +33,19 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
               ? props.onRow(row.original, row.index)
               : {};
 
+          const selected = row.getIsSelected();
+
           const rowView = (
             <Fragment key={row.id}>
               <tr
-                {...rest}
                 key={row.id}
                 className={cnBase(
                   "oui-table-tbody-tr",
                   "oui-group oui-rounded",
-                  // "hover:oui-bg-line-4"
-                  "hover:oui-bg-base-8",
-                  tableVariants({ size: props.size }),
+                  "hover:oui-bg-line-4",
+                  selected && "oui-bg-line-6 hover:oui-bg-line-6",
                   props.border?.body && "oui-border-b oui-border-b-line-4",
+                  tableVariants({ size: props.size }),
                   className
                 )}
                 onClick={(event) => {
@@ -52,6 +54,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                   }
                   onClick?.();
                 }}
+                {...rest}
               >
                 {row.getVisibleCells().map((cell) => {
                   const column = cell.column;
@@ -66,21 +69,15 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                       key={cell.id}
                       style={pinStyle}
                       className={cnBase(
-                        "oui-table-tbody-td",
+                        "oui-table-tbody-td oui-relative",
                         "oui-px-3",
                         columnVariants({ align }),
-                        // isPinned && "group-hover:oui-bg-line-4",
-                        isPinned && "group-hover:oui-bg-8",
                         pinClassName,
                         rowClassName
                       )}
                     >
-                      {
-                        flexRender(
-                          column.columnDef.cell,
-                          cell.getContext()
-                        ) as ReactNode
-                      }
+                      <TableCell cell={cell} />
+                      {isPinned && <PinnedCellHover selected={selected} />}
                     </td>
                   );
                 })}
@@ -108,5 +105,18 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
         })}
       </tbody>
     </table>
+  );
+};
+
+const PinnedCellHover: FC<{ selected: boolean }> = ({ selected }) => {
+  return (
+    <div
+      className={cnBase(
+        "oui-absolute oui-top-0 oui-left-0 oui-z-[-1]",
+        "oui-w-full oui-h-full",
+        "group-hover:oui-bg-line-4",
+        selected && "oui-bg-line-6 group-hover:oui-bg-line-6"
+      )}
+    />
   );
 };

@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { NumeralProps, type NumeralRule } from "../typography/numeral";
 import { FormattedTextProps, TextRule } from "../typography/formatted";
-import { CoreOptions, Row } from "@tanstack/react-table";
 export { type Column as TableColumn } from "@tanstack/react-table";
 
 export type ColumnFixed = "left" | "right";

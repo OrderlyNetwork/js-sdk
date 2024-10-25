@@ -11,13 +11,14 @@ import {
   ColumnFiltersState,
   ColumnFilter,
   getFilteredRowModel,
+  RowSelectionState,
 } from "@tanstack/react-table";
 import { Column, SortOrder } from "./type";
 import { cnBase, VariantProps } from "tailwind-variants";
 import { Transform } from "./transform";
 import { useWrap } from "./hooks/useWrap";
 import { useSyncScroll } from "./hooks/useSyncScroll";
-import { Pagination } from "./pagination";
+import { TablePagination } from "./tablePagination";
 import { TableHeader } from "./tableHeader";
 import { TableBody } from "./tableBody";
 import { tableVariants } from "./className";
@@ -73,6 +74,7 @@ export type TableViewProps<RecordType> = {
   generatedRowKey?: CoreOptions<any>["getRowId"];
   onRow?: (record: RecordType, index: number) => any;
   columnFilters?: ColumnFilter | ColumnFilter[];
+  rowSelection?: RowSelectionState;
 } & VariantProps<typeof tableVariants>;
 
 export function TableView<RecordType extends any>(
@@ -100,6 +102,11 @@ export function TableView<RecordType extends any>(
     [columns]
   );
 
+  const rowSelection = useMemo(
+    () => props.rowSelection || {},
+    [props.rowSelection]
+  );
+
   const { state: paginationState, config: paginationConfig } = useMemo(
     () => Transform.pagination(pagination),
     [pagination]
@@ -120,6 +127,7 @@ export function TableView<RecordType extends any>(
     state: {
       columnPinning,
       columnFilters,
+      rowSelection,
       ...paginationState,
     },
     // onColumnFiltersChange: setColumnFilters,
@@ -133,6 +141,8 @@ export function TableView<RecordType extends any>(
     manualSorting,
     // turn off client-side pagination
     manualPagination,
+    // only allow a single row to be selected at once
+    enableMultiRowSelection: false,
     ...paginationConfig,
   });
 
@@ -199,7 +209,7 @@ export function TableView<RecordType extends any>(
       </div>
 
       {showPagination && (
-        <Pagination
+        <TablePagination
           className={classNames?.pagination}
           count={props.dataSource?.length!}
           pageTotal={table.getPageCount()}

@@ -1,7 +1,10 @@
+import { FC } from "react";
 import { Flex } from "../flex";
 import { PaginationProps, Paginations } from "../pagination";
 
-export const Pagination = (props: Omit<PaginationProps, "classNames">) => {
+export const TablePagination: FC<Omit<PaginationProps, "classNames">> = (
+  props
+) => {
   if (props.pageTotal === 0) return null;
 
   return (
@@ -13,5 +16,3 @@ export const Pagination = (props: Omit<PaginationProps, "classNames">) => {
     </Flex>
   );
 };
-
-Pagination.displayName = "TablePagination";

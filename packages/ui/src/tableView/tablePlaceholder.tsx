@@ -1,16 +1,16 @@
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { Box } from "../box";
 import { Spinner } from "../spinner/spinner";
-import { EmptyDataState } from "./emptyDataState";
+import { TableEmpty } from "./tableEmpty";
 
-export const TablePlaceholder = (
-  props: React.HTMLAttributes<HTMLDivElement> & {
-    visible?: boolean;
-    loading?: boolean;
-    emptyView?: ReactNode;
-  }
-) => {
-  const { visible, loading, emptyView, ...divProps } = props;
+type TablePlaceholderProps = {
+  visible?: boolean;
+  loading?: boolean;
+  emptyView?: ReactNode;
+};
+
+export const TablePlaceholder: FC<TablePlaceholderProps> = (props) => {
+  const { visible, loading, emptyView } = props;
 
   if (!visible) return null;
 
@@ -21,10 +21,9 @@ export const TablePlaceholder = (
       top={0}
       right={0}
       bottom={0}
-      {...divProps}
       className="oui-flex oui-justify-center oui-items-center"
     >
-      {loading ? <Spinner /> : emptyView || <EmptyDataState />}
+      {loading ? <Spinner /> : emptyView || <TableEmpty />}
     </Box>
   );
 };

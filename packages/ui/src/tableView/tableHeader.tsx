@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { cnBase } from "tailwind-variants";
 import { getColumnPinningProps } from "./utils/getColumnPinningProps";
 import { TableColumn } from "./type";
@@ -12,7 +12,7 @@ type TableHeaderProps = {
   headerGroups: HeaderGroup<any>[];
 } & Pick<TableViewProps<any>, "bordered" | "border">;
 
-export const TableHeader: React.FC<TableHeaderProps> = (props) => {
+export const TableHeader: FC<TableHeaderProps> = (props) => {
   return (
     <table
       className={cnBase("oui-w-full", " oui-table-fixed oui-border-collapse")}
@@ -28,38 +28,39 @@ export const TableHeader: React.FC<TableHeaderProps> = (props) => {
               const { style: pinStyle, className: pinClassName } =
                 getColumnPinningProps(column, true);
 
+              const content = flexRender(
+                column.columnDef.header,
+                header.getContext()
+              ) as ReactNode;
+
               return (
                 <th
                   key={header.id}
                   style={pinStyle}
                   className={cnBase(
                     "oui-table-thead-th",
-                    " oui-whitespace-nowrap",
+                    "oui-whitespace-nowrap",
                     "oui-px-3 oui-py-[3px] oui-h-10",
-                    columnVariants({ align }),
                     (props.bordered || props.border?.header?.bottom) &&
                       "oui-border-b oui-border-line",
+                    columnVariants({ align }),
                     pinClassName,
                     rowClassName
                   )}
                 >
-                  <div
-                    className={cnBase(
-                      "oui-inline-flex oui-items-center oui-gap-x-1",
-                      column.getCanSort() &&
-                        "oui-cursor-pointer oui-select-none"
-                    )}
-                    onClick={column.getToggleSortingHandler()}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : (flexRender(
-                          column.columnDef.header,
-                          header.getContext()
-                        ) as ReactNode)}
-
-                    <SortIndicator column={column} />
-                  </div>
+                  {header.isPlaceholder ? null : (
+                    <div
+                      className={cnBase(
+                        "oui-inline-flex oui-items-center oui-gap-x-1",
+                        column.getCanSort() &&
+                          "oui-cursor-pointer oui-select-none"
+                      )}
+                      onClick={column.getToggleSortingHandler()}
+                    >
+                      {content}
+                      <SortIndicator column={column} />
+                    </div>
+                  )}
                 </th>
               );
             })}

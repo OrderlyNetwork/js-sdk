@@ -21,7 +21,7 @@ export function getColumnPinningProps(
   const fixedCls = cnBase(
     "before:oui-block before:oui-absolute before:oui-w-[32px] before:oui-h-full",
     "before:oui-top-0 before:oui-z-[-1]",
-    "before:oui-bg-[linear-gradient(90deg,rgba(7,8,10,0.80)_0%,rgba(7,8,10,0.36)_65%,rgba(7,8,10,0.00)_100%)]"
+    "before:oui-bg-[linear-gradient(90deg,rgba(var(--oui-color-base-10)_/_0.80)_0%,rgba(var(--oui-color-base-10)_/_0.36)_65%,rgba(var(--oui-color-base-10)_/_0.00)_100%)]"
   );
 
   const hoverCls = cnBase(
@@ -35,13 +35,12 @@ export function getColumnPinningProps(
     // isPinned === "right" && isHeader && "oui-translate-x-[-6px]",
     // !isPinned && !isHeader && "oui-translate-x-[-6px]",
     isPinned && "oui-bg-[var(--oui-table-background-color)]",
-    isPinned && !isHeader && "group-hover:oui-bg-base-8",
     isLastLeftPinnedColumn && cnBase(fixedCls, "before:oui-right-[-32px]"),
     isFirstRightPinnedColumn &&
       cnBase(
         fixedCls,
-        "before:oui-left-[-32px] before:oui-rotate-180",
-        isHeader && hoverCls
+        "before:oui-left-[-32px] before:oui-rotate-180"
+        // isHeader && hoverCls
       )
   );
 

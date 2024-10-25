@@ -14,14 +14,6 @@ export const Transform = {
     return columns?.map((column) => {
       return columnHelper.accessor(column.dataIndex, {
         header: () => column.title,
-        cell: (record) => {
-          const value = record.getValue();
-          const { original, index } = record.row;
-          if (typeof column.render === "function") {
-            return column.render(value, original, index);
-          }
-          return value;
-        },
         // enableSorting: column?.onSort ? true : false,
         meta: column,
         size: column.width,

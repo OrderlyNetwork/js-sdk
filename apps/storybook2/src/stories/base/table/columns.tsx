@@ -6,20 +6,24 @@ export const Columns: Column[] = [
     title: "Instrument",
     dataIndex: "symbol",
     width: 150,
-    render: (value) => {
-      return (
-        <Text.formatted
-          rule="symbol"
-          formatString="base-type"
-          size="xs"
-          weight="semibold"
-          showIcon
-          className="oui-whitespace-nowrap"
-        >
-          {value}
-        </Text.formatted>
-      );
+    rule: "symbol",
+    textProps: {
+      showIcon: true,
     },
+    // render: (value) => {
+    //   return (
+    //     <Text.formatted
+    //       rule="symbol"
+    //       formatString="base-type"
+    //       size="xs"
+    //       weight="semibold"
+    //       showIcon
+    //       className="oui-whitespace-nowrap"
+    //     >
+    //       {value}
+    //     </Text.formatted>
+    //   );
+    // },
     // fixed: "left",
   },
   {
@@ -42,17 +46,24 @@ export const Columns: Column[] = [
     width: 100,
     align: "right",
     onSort: true,
-    render: (value) => {
-      return (
-        <Text.numeral
-          rule="percentages"
-          coloring
-          rm={Decimal.ROUND_DOWN}
-          showIdentifier
-        >
-          {value}
-        </Text.numeral>
-      );
+    // render: (value) => {
+    //   return (
+    //     <Text.numeral
+    //       rule="percentages"
+    //       coloring
+    //       rm={Decimal.ROUND_DOWN}
+    //       showIdentifier
+    //     >
+    //       {value}
+    //     </Text.numeral>
+    //   );
+    // },
+    rule: "percentages",
+    numeralProps: {
+      coloring: true,
+      showIdentifier: true,
+      // ignoreDP: true,
+      rm: Decimal.ROUND_DOWN,
     },
   },
   {
