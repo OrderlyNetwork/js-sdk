@@ -249,7 +249,7 @@ export const OrderDetail = (props: {
         </Text.formatted>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>Total</Text>
+        <Text>Est. Total</Text>
         <Text.formatted
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
@@ -325,7 +325,7 @@ export const LimitConfirmDialog: FC<{
     <>
       <ConfirmHeader
         onClose={onCancel}
-        title="Limit close"
+        title="Limit Close"
         hideCloseIcon={props.hideCloseIcon}
       />
       <Text intensity={54} size="sm" className="oui-mt-5">
