@@ -407,6 +407,9 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     size: "xs",
     intensity: 54,
   });
+
+  console.log("PositionTPSLConfirm", qty, maxQty);
+
   const isPositionTPSL = qty >= maxQty;
 
   return (
@@ -426,6 +429,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         <Box grow>
           <Text.formatted
             rule={"symbol"}
+            formatString="base-type"
             size="base"
             showIcon
             as="div"
@@ -445,7 +449,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
             TP/SL
           </Badge> */}
           <TPSLOrderType tpPrice={tpPrice} slPrice={slPrice} />
-          {side === OrderSide.BUY ? (
+          {side === OrderSide.SELL ? (
             <Badge size="xs" color="success">
               Buy
             </Badge>

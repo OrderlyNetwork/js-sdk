@@ -142,12 +142,6 @@ export const usePositionStream = (
     keyof Omit<API.PositionInfo, "rows">
   >(aggregated, 1);
 
-  // console.log(
-  //   "positionStatus++++",
-  //   positionsRows?.length,
-  //   positionStatus.loading
-  // );
-
   return [
     {
       rows: positionsRows,
