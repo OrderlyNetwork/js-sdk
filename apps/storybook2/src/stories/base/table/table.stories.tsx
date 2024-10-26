@@ -44,7 +44,7 @@ export const Default: Story = {
     }, []);
 
     return (
-      <Box width={600} height={600} p={3} intensity={900}>
+      <Box width={800} height={600} p={3} intensity={900}>
         <Flex gapX={1}>
           <Input
             value={columnFilters.value}
@@ -94,7 +94,7 @@ export const Default: Story = {
           onPaginationChange={setPagination}
           loading={loading}
           classNames={{
-            root: "oui-h-[calc(100%_-_49px)]",
+            root: "!oui-h-[calc(100%_-_49px)]",
             // header: "oui-text-base oui-text-base-contrast-80",
             // body: "oui-text-base oui-text-base-contrast-36",
           }}

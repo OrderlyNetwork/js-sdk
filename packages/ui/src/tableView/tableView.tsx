@@ -8,7 +8,6 @@ import {
   PaginationState,
   OnChangeFn,
   CoreOptions,
-  ColumnFiltersState,
   ColumnFilter,
   getFilteredRowModel,
   RowSelectionState,
@@ -76,6 +75,8 @@ export type TableViewProps<RecordType> = {
   columnFilters?: ColumnFilter | ColumnFilter[];
   rowSelection?: RowSelectionState;
 } & VariantProps<typeof tableVariants>;
+
+const PaginationHeight = 40;
 
 export function TableView<RecordType extends any>(
   props: PropsWithChildren<TableViewProps<RecordType>>
@@ -148,7 +149,11 @@ export function TableView<RecordType extends any>(
 
   const wrapRef = useWrap();
 
-  const { theadRef, tbodyRef, isYScroll } = useSyncScroll();
+  const { theadRef, tbodyRef, isYScroll, headerHeight } = useSyncScroll([
+    dataSource,
+    pagination?.pageIndex,
+    pagination?.pageSize,
+  ]);
 
   const showPagination = pagination && !!dataSource?.length;
 
@@ -183,13 +188,18 @@ export function TableView<RecordType extends any>(
       </div>
       <div
         ref={tbodyRef}
+        style={{
+          height: showPagination
+            ? `calc(100% - ${PaginationHeight + headerHeight}px)`
+            : `calc(100% - ${headerHeight}px)`,
+        }}
         className={cnBase(
           "oui-text-base-contrast-80 oui-relative",
           "oui-overflow-auto oui-custom-scrollbar",
-          isYScroll ? "oui-w-[calc(100%_+_6px)]" : "oui-w-full",
-          showPagination
-            ? "oui-h-[calc(100%_-_80px)]"
-            : "oui-h-[calc(100%_-_40px)]"
+          isYScroll ? "oui-w-[calc(100%_+_6px)]" : "oui-w-full"
+          // showPagination
+          //   ? "oui-h-[calc(100%_-_80px)]"
+          //   : "oui-h-[calc(100%_-_40px)]"
         )}
       >
         <TableBody

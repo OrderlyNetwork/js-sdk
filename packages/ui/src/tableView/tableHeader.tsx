@@ -40,7 +40,7 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
                   className={cnBase(
                     "oui-table-thead-th",
                     "oui-whitespace-nowrap",
-                    "oui-px-3 oui-py-[3px] oui-h-10",
+                    "oui-px-3",
                     (props.bordered || props.border?.header?.bottom) &&
                       "oui-border-b oui-border-line",
                     columnVariants({ align }),

@@ -41,6 +41,32 @@ export const Columns: Column[] = [
     },
   },
   {
+    title: "Mark Price",
+    dataIndex: "mark_price",
+    width: 100,
+    align: "right",
+    render: (value, record) => {
+      return (
+        <Text.numeral dp={record.quote_dp || 2} currency="$">
+          {value}
+        </Text.numeral>
+      );
+    },
+  },
+  {
+    title: "Index Price",
+    dataIndex: "index_price",
+    width: 100,
+    align: "right",
+    render: (value, record) => {
+      return (
+        <Text.numeral dp={record.quote_dp || 2} currency="$">
+          {value}
+        </Text.numeral>
+      );
+    },
+  },
+  {
     title: "24h change",
     dataIndex: "change",
     width: 100,
@@ -95,41 +121,17 @@ export const Columns: Column[] = [
     },
   },
   {
-    title: "8h funding",
-    dataIndex: "8h_funding",
-    width: 100,
-    align: "right",
-    onSort: true,
-    render: (value) => {
-      if (value === null) {
-        return "--";
-      }
-      return (
-        <Text.numeral
-          rule="percentages"
-          coloring
-          dp={4}
-          rm={Decimal.ROUND_DOWN}
-          showIdentifier
-        >
-          {value}
-        </Text.numeral>
-      );
-    },
-    // fixed: "right",
-  },
-  {
     title: "Time",
     dataIndex: "created_time",
     width: 180,
     rule: "date",
-    render: (value) => {
-      return (
-        <Text.formatted rule="date" className="oui-whitespace-nowrap">
-          {value}
-        </Text.formatted>
-      );
-    },
+    // render: (value) => {
+    //   return (
+    //     <Text.formatted rule="date" className="oui-whitespace-nowrap">
+    //       {value}
+    //     </Text.formatted>
+    //   );
+    // },
     fixed: "right",
   },
 ];

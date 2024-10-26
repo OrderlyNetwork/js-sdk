@@ -24,16 +24,15 @@ export function getColumnPinningProps(
     "before:oui-bg-[linear-gradient(90deg,rgba(var(--oui-color-base-10)_/_0.80)_0%,rgba(var(--oui-color-base-10)_/_0.36)_65%,rgba(var(--oui-color-base-10)_/_0.00)_100%)]"
   );
 
-  const hoverCls = cnBase(
-    "after:oui-block after:oui-absolute after:oui-w-[6px] after:oui-h-full",
-    "after:oui-top-0 after:oui-right-[-6px] after:oui-bg-[var(--oui-table-background-color)]"
-  );
+  // const hoverCls = cnBase(
+  //   "after:oui-block after:oui-absolute after:oui-w-[6px] after:oui-h-full",
+  //   "after:oui-top-0 after:oui-right-[-6px] after:oui-bg-[var(--oui-table-background-color)]"
+  // );
 
   const className = cnBase(
     isPinned ? "oui-sticky" : "oui-relative",
     isPinned ? "oui-z-[1]" : "oui-z-0",
     // isPinned === "right" && isHeader && "oui-translate-x-[-6px]",
-    // !isPinned && !isHeader && "oui-translate-x-[-6px]",
     isPinned && "oui-bg-[var(--oui-table-background-color)]",
     isLastLeftPinnedColumn && cnBase(fixedCls, "before:oui-right-[-32px]"),
     isFirstRightPinnedColumn &&
