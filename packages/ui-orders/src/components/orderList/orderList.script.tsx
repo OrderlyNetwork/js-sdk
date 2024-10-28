@@ -25,7 +25,7 @@ export const useOrderListScript = (props: {
 }) => {
   const { ordersStatus, type, enableLoadMore = false, onSymbolChange } = props;
 
-  const defaultPageSize = 10;
+  const defaultPageSize = 50;
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
     pageSize: defaultPageSize,
   });

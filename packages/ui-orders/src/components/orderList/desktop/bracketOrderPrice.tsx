@@ -5,7 +5,7 @@ import { Flex, Tooltip, Text, cn } from "@orderly.network/ui";
 import { useSymbolContext } from "../symbolProvider";
 import { calcBracketRoiAndPnL } from "../../../utils/util";
 
-export const BarcketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
+export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
   const { order } = props;
   const { quote_dp, base_dp } = useSymbolContext();
 
