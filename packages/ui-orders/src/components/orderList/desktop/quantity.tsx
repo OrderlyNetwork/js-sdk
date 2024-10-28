@@ -27,7 +27,7 @@ export const OrderQuantity = (props: {
     order.quantity.toString()
   );
 
-  const [editting, setEditting] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     setQuantity(order.quantity.toString());
@@ -45,6 +45,7 @@ export const OrderQuantity = (props: {
   const setQuantity = (qty: string) => {
     originSetQuantity(qty);
     const positionQty = Math.abs(position?.position_qty || 0);
+    
     if (position && reduce_only && Number(qty) > positionQty) {
       setError(
         `Quantity should be less than position quantity : ${positionQty}`
@@ -56,32 +57,32 @@ export const OrderQuantity = (props: {
 
   const closePopover = () => {
     setOpen(false);
-    setEditting(false);
+    setEditing(false);
   };
   const cancelPopover = () => {
     setOpen(false);
     setQuantity(order.quantity.toString());
-    setEditting(false);
+    setEditing(false);
   };
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const clickHandler = () => {
-    console.log(
-      "xxxxx click handler",
-      checkMinNotional,
-      quantity,
-      error,
-      quantity
-    );
+    // console.log(
+    //   "xxxxx click handler",
+    //   checkMinNotional,
+    //   quantity,
+    //   error,
+    //   quantity
+    // );
 
     if (!!error) {
       return;
     }
 
     if (Number(quantity) === Number(order.quantity)) {
-      setEditting(false);
+      setEditing(false);
       return;
     }
 
@@ -204,12 +205,12 @@ export const OrderQuantity = (props: {
   }, [open]);
 
   const trigger = () => {
-    if (!editting || props.disableEdit) {
+    if (!editing || props.disableEdit) {
       return (
         <NormalState
           order={order}
           quantity={quantity}
-          setEditing={setEditting}
+          setEditing={setEditing}
           disableEdit={props.disableEdit}
         />
       );
@@ -220,8 +221,8 @@ export const OrderQuantity = (props: {
         inputRef={inputRef}
         dp={base_dp}
         value={quantity}
-        setPrice={setQuantity}
-        setEditting={setEditting}
+        setValue={setQuantity}
+        setEditing={setEditing}
         handleKeyDown={handleKeyDown}
         onClick={onClick}
         onClose={cancelPopover}
