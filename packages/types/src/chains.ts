@@ -511,6 +511,30 @@ export const PolygonAmoy = {
   chainLogo: "",
 };
 
+export const Sei = {
+  id: 1329,
+  chainInfo: {
+    chainId: `0x${(1329).toString(16)}`,
+    chainName: "Sei Network",
+    nativeCurrency: {
+      name: "SEI",
+      symbol: "SEI",
+      decimals: 6,
+      fix: 4,
+    },
+    rpcUrls: ["https://rpc.ankr.com/sei"],
+    blockExplorerUrls: ["https://seitrace.com"],
+  },
+  minGasBalance: 0.0002,
+  minCrossGasBalance: 0.002,
+  maxPrepayCrossGas: 0.03,
+  blockExplorerName: "Sei",
+  chainName: "Sei Network",
+  chainNameShort: "SEI",
+  requestRpc: "https://evm-rpc.sei-apis.com",
+  chainLogo: "",
+};
+
 export const chainsInfoMap: Map<number, Chain> = new Map([
   [Ethereum.id, Ethereum],
   [Avalanche.id, Avalanche],
@@ -532,6 +556,7 @@ export const chainsInfoMap: Map<number, Chain> = new Map([
   [BaseSepolia.id, BaseSepolia],
   [MantleSepolia.id, MantleSepolia],
   [PolygonAmoy.id, PolygonAmoy],
+  [Sei.id, Sei],
 ]);
 
 export const TestnetChains = [
