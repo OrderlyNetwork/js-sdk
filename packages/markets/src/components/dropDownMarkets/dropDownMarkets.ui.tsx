@@ -106,12 +106,26 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <div className={cls}>
-            <FavoritesListWidget getColumns={getDropDownMarketsColumns} />
+            <FavoritesListWidget
+              getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5",
+              }}
+              rowClassName="!oui-h-[34px]"
+            />
           </div>
         </TabPanel>
         <TabPanel title="Recent" value="recent">
           <div className={cls}>
-            <RecentListWidget getColumns={getDropDownMarketsColumns} />
+            <RecentListWidget
+              getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5",
+              }}
+              rowClassName="!oui-h-[34px]"
+            />
           </div>
         </TabPanel>
         <TabPanel title="All" value="all">
@@ -121,6 +135,11 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               sortKey="24h_amount"
               sortOrder="desc"
               getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5",
+              }}
+              rowClassName="!oui-h-[34px]"
             />
           </div>
         </TabPanel>

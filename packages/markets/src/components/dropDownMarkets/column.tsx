@@ -1,5 +1,12 @@
 import { MouseEventHandler, ReactNode } from "react";
-import { Flex, TokenIcon, Text, Badge, cn } from "@orderly.network/ui";
+import {
+  Flex,
+  TokenIcon,
+  Text,
+  Badge,
+  cn,
+  TableColumn,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   DeleteIcon,
@@ -9,7 +16,6 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { Column } from "../dataTable";
 
 export const getDropDownMarketsColumns = (
   favorite: FavoriteInstance,
@@ -19,7 +25,6 @@ export const getDropDownMarketsColumns = (
     {
       title: "Instrument",
       dataIndex: "symbol",
-      className: "oui-h-[36px]",
       render: (value, record) => {
         let favoritesIcon: ReactNode;
         if (!isFavoriteList) {
@@ -66,7 +71,6 @@ export const getDropDownMarketsColumns = (
       dataIndex: "24h_close",
       align: "right",
       onSort: true,
-      className: "oui-h-[36px]",
       render: (value, record) => {
         return (
           <Text.numeral dp={record.quote_dp || 2} size="2xs">
@@ -80,7 +84,6 @@ export const getDropDownMarketsColumns = (
       dataIndex: "change",
       align: "right",
       onSort: true,
-      className: "oui-h-[36px]",
       render: (value) => {
         return (
           <Text.numeral
@@ -100,7 +103,7 @@ export const getDropDownMarketsColumns = (
       dataIndex: "24h_amount",
       align: "right",
       onSort: true,
-      className: "oui-relative oui-h-[36px]",
+      className: "oui-relative",
       render: (value, record) => {
         const onDelSymbol: MouseEventHandler = (e) => {
           favorite.updateSymbolFavoriteState(
@@ -115,7 +118,7 @@ export const getDropDownMarketsColumns = (
           "oui-w-4 oui-h-4 oui-text-base-contrast-54 hover:oui-text-base-contrast";
 
         const actions = (
-          <div className={cn("oui-absolute oui-right-0 oui-top-1")}>
+          <div className={cn("oui-absolute oui-right-0 oui-top-[3px]")}>
             <Flex
               className={cn(
                 "oui-bg-[rgba(51,71,253,1)] oui-py-[6px]",
@@ -153,5 +156,5 @@ export const getDropDownMarketsColumns = (
         );
       },
     },
-  ] as Column[];
+  ] as TableColumn[];
 };

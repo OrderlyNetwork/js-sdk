@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, DataTable, Flex, Pagination, Text } from "@orderly.network/ui";
+import { cn, Flex, Text, TableView } from "@orderly.network/ui";
 import { UnFavoritesIcon } from "../../icons";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 import { useMarketsContext } from "../../components/marketsProvider";
@@ -9,8 +9,16 @@ import { useFavoritesListFullColumns } from "./column";
 export type FavoritesListFullProps = UseFavoritesListFullReturn;
 
 export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize, favorite, onSort, loading } =
-    props;
+  const {
+    dataSource,
+    meta,
+    setPage,
+    setPageSize,
+    favorite,
+    onSort,
+    loading,
+    pagination,
+  } = props;
 
   const { onSymbolChange } = useMarketsContext();
 
@@ -32,7 +40,29 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
     <div>
       <FavoritesTabWidget favorite={favorite} />
 
-      <DataTable
+      <TableView
+        bordered
+        // minHeight={187.5}
+        columns={columns}
+        dataSource={dataSource}
+        emptyView={emptyView}
+        loading={loading}
+        onRow={(record, index) => {
+          return {
+            className: cn("oui-h-[55px] oui-cursor-pointer"),
+            onClick: () => {
+              onSymbolChange?.(record);
+              favorite.addToHistory(record);
+            },
+          };
+        }}
+        generatedRowKey={(record) => record.symbol}
+        onSort={onSort}
+        pagination={pagination}
+        manualPagination
+      />
+
+      {/* <DataTable
         bordered
         classNames={{
           header: "oui-text-base-contrast-36",
@@ -63,7 +93,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
           onPageChange={setPage}
           onPageSizeChange={setPageSize}
         />
-      </DataTable>
+      </DataTable> */}
     </div>
   );
 };
