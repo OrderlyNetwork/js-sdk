@@ -113,7 +113,7 @@ export const useLayoutBuilder = (props: {
         ),
       },
       {
-        name: "Setting",
+        name: "Settings",
         href: "/portfolio/setting",
         icon: (
           <svg
