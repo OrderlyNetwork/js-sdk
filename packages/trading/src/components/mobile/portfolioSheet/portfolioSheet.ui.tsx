@@ -30,7 +30,7 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
       <MarginRatio {...props} />
       <Leverage {...props} />
       <Divider className="oui-w-full" />
-      <AvaiableBalance {...props} />
+      <AvailableBalance {...props} />
       <Buttons {...props} />
     </Flex>
   );
@@ -70,9 +70,9 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           intensity={36}
           suffix={
             props.hideAssets ? (
-              <EyeIcon color="primary" opacity={1} size={16} />
+              <EyeIcon opacity={1} size={16} className="oui-text-primary-light" />
             ) : (
-              <EyeCloseIcon color="primary" opacity={1} size={16} />
+              <EyeCloseIcon opacity={1} size={16} className="oui-text-primary-light" />
             )
           }
           onClick={(e) => {
@@ -144,8 +144,8 @@ const Asset: FC<PortfolioSheetState> = (props) => {
               className="oui-flex oui-gap-1 oui-items-center"
               onClick={onUnsettleClick}
             >
-              <RefreshIcon opacity={1} color="primary" size={12} />
-              <Text size="2xs" color="primary">
+              <RefreshIcon opacity={1}  size={12} className="oui-text-primary-light"/>
+              <Text size="2xs" color="primaryLight">
                 Settle PnL
               </Text>
             </button>
@@ -172,7 +172,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
         <Flex gap={2}>
           <Text.numeral
             size="xs"
-            color="primary"
+            color="primaryLight"
             dp={2}
             padding={false}
             visible={!props.hideAssets}
@@ -252,12 +252,13 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           const value = props.marks?.[e[0] / 10]?.value;
           if (typeof value !== "undefined") props.onLeverageChange(value);
         }}
+        color="primaryLight"
         onValueCommit={props.onValueCommit}
       />
     </Flex>
   );
 };
-const AvaiableBalance: FC<PortfolioSheetState> = (props) => {
+const AvailableBalance: FC<PortfolioSheetState> = (props) => {
   return (
     <Flex
       width={"100%"}
