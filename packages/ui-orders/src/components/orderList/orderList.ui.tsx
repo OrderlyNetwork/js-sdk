@@ -19,7 +19,7 @@ import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 
 export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
-  const columns = useOrderColumn(props.type);
+  const columns = useOrderColumn(props.type, props.onSymbolChange);
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -190,6 +190,8 @@ const CancelAll: FC<OrdersBuilderState> = (props) => {
       variant="outlined"
       color="secondary"
       size="xs"
+      disabled={(props.dataSource?.length ?? 0) == 0}
+      className="disabled:oui-bg-transport"
       onClick={(e) => props.onCancelAll()}
     >
       Cancel all

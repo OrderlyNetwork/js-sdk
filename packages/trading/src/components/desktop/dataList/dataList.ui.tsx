@@ -49,6 +49,7 @@ export const DataList: FC<DataListState> = (props) => {
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={props.showAllSymbol ? undefined : props.symbol}
+          onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
       <TabPanel
@@ -63,19 +64,24 @@ export const DataList: FC<DataListState> = (props) => {
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={props.showAllSymbol ? undefined : props.symbol}
+          onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
       <TabPanel value={DataListTabType.filled} title={DataListTabType.filled}>
         <DesktopOrderListWidget
           type={TabType.filled}
           ordersStatus={OrderStatus.FILLED}
+          onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
       <TabPanel
         value={DataListTabType.orderHistory}
         title={DataListTabType.orderHistory}
       >
-        <DesktopOrderListWidget type={TabType.orderHistory} />
+        <DesktopOrderListWidget
+          type={TabType.orderHistory}
+          onSymbolChange={props.onSymbolChange}
+        />
       </TabPanel>
     </Tabs>
   );
@@ -97,6 +103,7 @@ const PositionsView: FC<DataListState> = (props) => {
         sharePnLConfig={props.sharePnLConfig}
         calcMode={props.calcMode}
         includedPendingOrder={props.includedPendingOrder}
+        onSymbolChange={props.onSymbolChange}
       />
     </Flex>
   );

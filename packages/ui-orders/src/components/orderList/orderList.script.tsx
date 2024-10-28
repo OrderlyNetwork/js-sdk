@@ -3,6 +3,7 @@ import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
+  API,
 } from "@orderly.network/types";
 import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
 import { TabType } from "../orders.widget";
@@ -20,8 +21,9 @@ export const useOrderListScript = (props: {
   ordersStatus?: OrderStatus;
   symbol?: string;
   enableLoadMore?: boolean;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }) => {
-  const { ordersStatus, type, enableLoadMore = false } = props;
+  const { ordersStatus, type, enableLoadMore = false, onSymbolChange } = props;
 
   const defaultPageSize = 10;
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
@@ -139,6 +141,8 @@ export const useOrderListScript = (props: {
     onFilter,
     filterItems,
     onCancelAll,
+
+    onSymbolChange,
   };
 };
 
