@@ -13,6 +13,7 @@ export const Positions = (props: PositionsBuilderState) => {
   const column = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
+    onSymbolChange: props.onSymbolChange,
   });
 
   // console.log("xxxx positions", props);

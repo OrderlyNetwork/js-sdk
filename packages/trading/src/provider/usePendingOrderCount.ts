@@ -9,8 +9,8 @@ export const usePendingOrderCount = (symbol?: string) => {
 
   const pendingOrdersPageSizeKey = `oui-${TabType.pending}_pageSize`;
   const tpslOrdersPageSizeKey = `oui-${TabType.tp_sl}_pageSize`;
-  const [pendingOrderPageSize] = useLocalStorage(pendingOrdersPageSizeKey, 10);
-  const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 10);
+  const [pendingOrderPageSize] = useLocalStorage(pendingOrdersPageSizeKey, 50);
+  const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 50);
 
   const [pendingOrders, { total: pendingCount }] = useOrderStream(
     {

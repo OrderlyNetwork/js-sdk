@@ -21,6 +21,7 @@ import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
   const column = useMemo<Column<API.PositionTPSLExt>[]>(
@@ -52,10 +53,11 @@ export const useColumn = (props: {
             <Text.formatted
               // rule={"symbol"}
               formatString="base-type"
+              className="oui-cursor-pointer"
               onClick={(e) => {
-                // props.onSymbolChange?.({ symbol: value } as API.Symbol);
-                // e.stopPropagation();
-                // e.preventDefault();
+                props.onSymbolChange?.({ symbol: value } as API.Symbol);
+                e.stopPropagation();
+                e.preventDefault();
               }}
             >
               {`${value.split("_")[1]}_PERP`}

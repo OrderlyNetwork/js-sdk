@@ -21,7 +21,7 @@ export const Price = (props: {
   );
 
   const [open, setOpen] = useState(false);
-  const [editting, setEditting] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
   // console.log("price node", order);
@@ -35,12 +35,12 @@ export const Price = (props: {
   const { base, quote_dp } = useSymbolContext();
   const closePopover = () => {
     setOpen(false);
-    setEditting(false);
+    setEditing(false);
   };
   const cancelPopover = () => {
     setOpen(false);
     setPrice(order.price?.toString() ?? "Market");
-    setEditting(false);
+    setEditing(false);
   };
 
   const onClick = (event: any) => {
@@ -48,7 +48,7 @@ export const Price = (props: {
     event?.preventDefault();
 
     if (price === `${order.price}`) {
-      setEditting(false);
+      setEditing(false);
       return;
     }
 
@@ -151,7 +151,7 @@ export const Price = (props: {
   const hintInfo = useMemo(() => {
     if (!rangeInfo) return "";
     if (isStopMarket) return "";
-    if (!editting) return "";
+    if (!editing) return "";
 
     if (Number(price) > rangeInfo.max) {
       return `Price can not be greater than ${rangeInfo.max} USDC.`;
@@ -160,7 +160,7 @@ export const Price = (props: {
       return `Price can not be less than ${rangeInfo.min} USDC.`;
     }
     return "";
-  }, [isStopMarket, editting, rangeInfo, price]);
+  }, [isStopMarket, editing, rangeInfo, price]);
 
   useEffect(() => {
     {
@@ -197,12 +197,12 @@ export const Price = (props: {
   }
 
   const trigger = () => {
-    if (!editting || props.disableEdit) {
+    if (!editing || props.disableEdit) {
       return (
         <NormalState
           order={order}
           price={price}
-          setEditing={setEditting}
+          setEditing={setEditing}
           disableEdit={props.disableEdit}
         />
       );
@@ -213,8 +213,8 @@ export const Price = (props: {
         inputRef={inputRef}
         dp={quote_dp}
         value={price}
-        setPrice={setPrice}
-        setEditting={setEditting}
+        setValue={setPrice}
+        setEditing={setEditing}
         handleKeyDown={handleKeyDown}
         onClick={onClick}
         onClose={cancelPopover}
