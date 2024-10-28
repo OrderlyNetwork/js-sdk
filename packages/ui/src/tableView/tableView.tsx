@@ -1,31 +1,42 @@
-import { PropsWithChildren, ReactNode, useMemo, useState } from "react";
+import {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   getCoreRowModel,
   useReactTable,
   getExpandedRowModel,
   Row,
   getSortedRowModel,
-  PaginationState,
-  OnChangeFn,
   CoreOptions,
   ColumnFilter,
   getFilteredRowModel,
   RowSelectionState,
 } from "@tanstack/react-table";
-import { Column, SortOrder } from "./type";
-import { cnBase, VariantProps } from "tailwind-variants";
+import {
+  BodySize,
+  TableColumn,
+  HeaderSize,
+  PaginationMeta,
+  TableSort,
+  TableViewClassNames,
+} from "./type";
+import { cnBase } from "tailwind-variants";
 import { Transform } from "./transform";
 import { useWrap } from "./hooks/useWrap";
 import { useSyncScroll } from "./hooks/useSyncScroll";
 import { TablePagination } from "./tablePagination";
 import { TableHeader } from "./tableHeader";
 import { TableBody } from "./tableBody";
-import { tableVariants } from "./className";
 import { useInit } from "./hooks/useInit";
 import { TablePlaceholder } from "./tablePlaceholder";
+import { useSort } from "./hooks/useSort";
 
 export type TableViewProps<RecordType> = {
-  columns: Column<RecordType>[];
+  columns: TableColumn<RecordType>[];
   dataSource?: RecordType[] | null;
   /**
    * @description loading state
@@ -35,19 +46,13 @@ export type TableViewProps<RecordType> = {
   isValidating?: boolean;
   ignoreLoadingCheck?: boolean;
   className?: string;
-  classNames?: {
-    root?: string;
-    header?: string;
-    body?: string;
-    footer?: string;
-    pagination?: string;
-  };
+  classNames?: TableViewClassNames;
   showMaskElement?: boolean;
   emptyView?: ReactNode;
   bordered?: boolean;
   loadMore?: () => void;
-  onSort?: (options?: { sortKey: string; sort: SortOrder }) => void;
-  initialSort?: { sortKey: string; sort: SortOrder };
+  onSort?: (sort?: TableSort) => void;
+  initialSort?: TableSort;
   id?: string;
   minHeight?: number;
   initialMinHeight?: number;
@@ -56,15 +61,7 @@ export type TableViewProps<RecordType> = {
   manualSorting?: boolean;
   manualPagination?: boolean;
   manualFiltering?: boolean;
-  pagination?: PaginationState;
-  onPaginationChange?: OnChangeFn<PaginationState>;
-  border?: {
-    header?: {
-      top?: boolean;
-      bottom?: boolean;
-    };
-    body?: boolean;
-  };
+  pagination?: PaginationMeta;
   renderRowContainer?: (
     record: RecordType,
     index: number,
@@ -74,7 +71,11 @@ export type TableViewProps<RecordType> = {
   onRow?: (record: RecordType, index: number) => any;
   columnFilters?: ColumnFilter | ColumnFilter[];
   rowSelection?: RowSelectionState;
-} & VariantProps<typeof tableVariants>;
+  sizes?: {
+    header?: HeaderSize;
+    body?: BodySize;
+  };
+};
 
 const PaginationHeight = 40;
 
@@ -87,13 +88,15 @@ export function TableView<RecordType extends any>(
     className,
     classNames,
     pagination,
-    onPaginationChange,
     getRowCanExpand,
-    manualSorting,
+    // TODO: use internal sort feature
+    manualSorting = true,
     manualPagination,
     loading,
     ignoreLoadingCheck,
     emptyView,
+    initialSort,
+    onSort,
   } = props;
 
   const formatColumns = useMemo(() => Transform.columns(columns), [columns]);
@@ -112,6 +115,17 @@ export function TableView<RecordType extends any>(
     () => Transform.pagination(pagination),
     [pagination]
   );
+
+  const [sorting, setSorting] = useSort({
+    onSort,
+    initialSort,
+  });
+
+  // const { state: sortState, config: sortConfig } = useMemo(
+  //   () => Transform.sorting(onSort, initialSort),
+  //   [onSort, initialSort]
+  // );
+
   const initialized = useInit({ dataSource, loading, ignoreLoadingCheck });
 
   const columnFilters = useMemo(() => {
@@ -129,8 +143,11 @@ export function TableView<RecordType extends any>(
       columnPinning,
       columnFilters,
       rowSelection,
+      sorting,
       ...paginationState,
+      // ...sortState,
     },
+    onSortingChange: setSorting,
     // onColumnFiltersChange: setColumnFilters,
     getRowId: props.generatedRowKey,
     getCoreRowModel: getCoreRowModel(),
@@ -145,30 +162,31 @@ export function TableView<RecordType extends any>(
     // only allow a single row to be selected at once
     enableMultiRowSelection: false,
     ...paginationConfig,
+    // ...sortConfig,
   });
 
   const wrapRef = useWrap();
 
-  const { theadRef, tbodyRef, isYScroll, headerHeight } = useSyncScroll([
-    dataSource,
-    pagination?.pageIndex,
-    pagination?.pageSize,
-  ]);
+  const { theadRef, tbodyRef, isYScroll, isXScroll, headerHeight } =
+    useSyncScroll([dataSource, pagination?.page, pagination?.pageSize]);
 
-  const showPagination = pagination && !!dataSource?.length;
+  // filter data
+  const rows = table.getRowModel().rows;
 
-  const showPlaceholder =
-    ((dataSource?.length ?? 0) === 0 || loading) && initialized;
+  const hasData = !!(dataSource?.length && rows?.length);
+
+  const showPagination = pagination && hasData;
+
+  const showPlaceholder = initialized && (rows.length === 0 || loading);
 
   return (
     <div
       ref={wrapRef}
       className={cnBase(
         "oui-table-root",
-        "oui-overflow-hidden oui-px-3",
+        "oui-overflow-hidden",
         "oui-bg-base-9 oui-w-full oui-h-full",
         "oui-text-xs oui-font-semibold",
-        props.border?.header?.top && "oui-border-t oui-border-line",
         className,
         classNames?.root
       )}
@@ -177,12 +195,12 @@ export function TableView<RecordType extends any>(
         ref={theadRef}
         className={cnBase("oui-overflow-x-hidden", "oui-text-base-contrast-36")}
       >
-        {initialized && !!dataSource?.length && (
+        {initialized && hasData && (
           <TableHeader
             className={classNames?.header}
             headerGroups={table.getHeaderGroups()}
             bordered={props.bordered}
-            border={props.border}
+            size={props.sizes?.header}
           />
         )}
       </div>
@@ -194,22 +212,20 @@ export function TableView<RecordType extends any>(
             : `calc(100% - ${headerHeight}px)`,
         }}
         className={cnBase(
-          "oui-text-base-contrast-80 oui-relative",
+          "oui-text-base-contrast-80 oui-relative oui-min-h-[277px]",
           "oui-overflow-auto oui-custom-scrollbar",
-          isYScroll ? "oui-w-[calc(100%_+_6px)]" : "oui-w-full"
-          // showPagination
-          //   ? "oui-h-[calc(100%_-_80px)]"
-          //   : "oui-h-[calc(100%_-_40px)]"
+          isXScroll && isYScroll ? "oui-w-[calc(100%_+_6px)]" : "oui-w-full",
+          classNames?.scroll
         )}
       >
         <TableBody
           className={classNames?.body}
-          rows={table.getRowModel().rows}
+          rows={rows}
           bordered={props.bordered}
-          border={props.border}
-          size={props.size}
+          size={props.sizes?.body}
           renderRowContainer={props.renderRowContainer}
           expandRowRender={props.expandRowRender}
+          onRow={props.onRow}
         />
         <TablePlaceholder
           visible={showPlaceholder}
@@ -221,16 +237,12 @@ export function TableView<RecordType extends any>(
       {showPagination && (
         <TablePagination
           className={classNames?.pagination}
-          count={props.dataSource?.length!}
-          pageTotal={table.getPageCount()}
-          page={pagination.pageIndex}
-          pageSize={pagination.pageSize}
-          onPageChange={(pageIndex) => {
-            onPaginationChange?.({ ...pagination, pageIndex });
-          }}
-          onPageSizeChange={(pageSize) => {
-            onPaginationChange?.({ ...pagination, pageSize, pageIndex: 1 });
-          }}
+          count={pagination?.count!}
+          pageTotal={pagination?.pageTotal!}
+          page={pagination?.page}
+          pageSize={pagination?.pageSize}
+          onPageChange={pagination?.onPageChange}
+          onPageSizeChange={pagination?.onPageSizeChange}
         />
       )}
     </div>

@@ -1,37 +1,50 @@
 import { FC, ReactNode } from "react";
 import { cnBase } from "tailwind-variants";
 import { getColumnPinningProps } from "./utils/getColumnPinningProps";
-import { TableColumn } from "./type";
+import { HeaderSize, TanstackColumn } from "./type";
 import { AscendingIcon, DescendingIcon, SortingIcon } from "./icons";
 import { flexRender, HeaderGroup, SortDirection } from "@tanstack/react-table";
 import { TableViewProps } from "./tableView";
-import { columnVariants } from "./className";
+import { columnVariants, headerSizeVariants } from "./className";
 
 type TableHeaderProps = {
   className?: string;
   headerGroups: HeaderGroup<any>[];
-} & Pick<TableViewProps<any>, "bordered" | "border">;
+  size?: HeaderSize;
+} & Pick<TableViewProps<any>, "bordered">;
 
 export const TableHeader: FC<TableHeaderProps> = (props) => {
   return (
     <table
-      className={cnBase("oui-w-full", " oui-table-fixed oui-border-collapse")}
+      className={cnBase("oui-w-full", "oui-table-fixed oui-border-collapse")}
     >
-      <thead className={props.className}>
+      <thead>
         {props.headerGroups.map((headerGroup) => (
-          <tr key={headerGroup.id} className={cnBase("oui-table-thead-tr")}>
+          <tr
+            key={headerGroup.id}
+            className={cnBase(
+              "oui-table-thead-tr",
+              headerSizeVariants({ size: props.size }),
+              props.className
+            )}
+          >
             {headerGroup.headers.map((header) => {
               const column = header.column;
-              const { align, className: rowClassName } =
-                column.columnDef.meta || ({} as any);
+              const {
+                align,
+                className: rowClassName,
+                title,
+              } = column.columnDef.meta || ({} as any);
 
               const { style: pinStyle, className: pinClassName } =
                 getColumnPinningProps(column, true);
 
-              const content = flexRender(
-                column.columnDef.header,
-                header.getContext()
-              ) as ReactNode;
+              // const content = flexRender(
+              //   column.columnDef.header,
+              //   header.getContext()
+              // ) as ReactNode;
+
+              const content = title;
 
               return (
                 <th
@@ -41,8 +54,7 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
                     "oui-table-thead-th",
                     "oui-whitespace-nowrap",
                     "oui-px-3",
-                    (props.bordered || props.border?.header?.bottom) &&
-                      "oui-border-b oui-border-line",
+                    props.bordered && "oui-border-b oui-border-line",
                     columnVariants({ align }),
                     pinClassName,
                     rowClassName
@@ -71,7 +83,7 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
   );
 };
 
-const SortIndicator: FC<{ column: TableColumn<any> }> = ({ column }) => {
+const SortIndicator: FC<{ column: TanstackColumn<any> }> = ({ column }) => {
   if (column.getCanSort()) {
     return (
       {

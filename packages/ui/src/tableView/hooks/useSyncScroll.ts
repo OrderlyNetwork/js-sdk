@@ -26,7 +26,6 @@ export function useSyncScroll(deps: any[]) {
     if (theadRef.current && tbodyRef.current) {
       setIsXScroll(hasHorizontalScroll(tbodyRef.current));
       setIsYScroll(hasVerticalScroll(tbodyRef.current));
-
       setHeaderHeight(theadRef.current?.clientHeight);
     }
   }, [theadRef, tbodyRef, ...deps]);

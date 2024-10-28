@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { Cell, flexRender } from "@tanstack/react-table";
 import { FormattedText, isTextRule } from "../typography/formatted";
 import { isNumeralRule, Numeral } from "../typography/numeral";
-import { Column } from "./type";
+import { TableColumn } from "./type";
 
 type TableCellProps = {
   cell: Cell<any, any>;
@@ -13,7 +13,7 @@ export const TableCell: React.FC<TableCellProps> = (props) => {
 
   const { original: record, index } = cell.row;
   const { formatter, render, rule, textProps, numeralProps } = (cell.column
-    .columnDef.meta || {}) as Column;
+    .columnDef.meta || {}) as TableColumn;
 
   let value = cell.getValue();
 

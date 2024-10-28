@@ -1,7 +1,9 @@
 import { ReactNode } from "react";
 import { NumeralProps, type NumeralRule } from "../typography/numeral";
 import { FormattedTextProps, TextRule } from "../typography/formatted";
-export { type Column as TableColumn } from "@tanstack/react-table";
+import { VariantProps } from "tailwind-variants";
+import { bodySizeVariants, headerSizeVariants } from "./className";
+export { type Column as TanstackColumn } from "@tanstack/react-table";
 
 export type ColumnFixed = "left" | "right";
 
@@ -15,8 +17,9 @@ export type TableCellRenderer<T> =
   | string
   | ((value: any, record: T, index: number) => React.ReactNode);
 
-export type Column<RecordType extends unknown = any> = {
-  title: ReactNode;
+export type TableColumn<RecordType extends unknown = any> = {
+  type?: "data" | "action" | "group";
+  title?: ReactNode;
   hint?: ReactNode;
   hintClassName?: string;
   width?: number;
@@ -52,4 +55,27 @@ export type Column<RecordType extends unknown = any> = {
         record: RecordType,
         index: number
       ) => Omit<FormattedTextProps, "children" | "as" | "rule">);
+};
+
+export type HeaderSize = VariantProps<typeof headerSizeVariants>["size"];
+export type BodySize = VariantProps<typeof bodySizeVariants>["size"];
+
+export type PaginationMeta = {
+  count?: number;
+  page: number;
+  pageSize: number;
+  pageTotal?: number;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
+};
+
+export type TableSort = { sortKey: string; sort: SortOrder };
+
+export type TableViewClassNames = {
+  root?: string;
+  header?: string;
+  body?: string;
+  footer?: string;
+  pagination?: string;
+  scroll?: string;
 };

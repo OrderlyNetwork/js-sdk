@@ -2,23 +2,19 @@ import React, { FC, Fragment } from "react";
 import { cnBase } from "tailwind-variants";
 import { Row } from "@tanstack/react-table";
 import { getColumnPinningProps } from "./utils/getColumnPinningProps";
-import { columnVariants, tableVariants } from "./className";
+import { columnVariants, bodySizeVariants } from "./className";
 import { TableViewProps } from "./tableView";
 import { TableCell } from "./tableCell";
+import { BodySize } from "./type";
 
 type TableBodyProps<RecordType> = {
   className?: string;
   rows: Row<RecordType>[];
-  bordered?: boolean;
   justified?: boolean;
+  size?: BodySize;
 } & Pick<
   TableViewProps<any>,
-  | "border"
-  | "bordered"
-  | "size"
-  | "onRow"
-  | "renderRowContainer"
-  | "expandRowRender"
+  "bordered" | "onRow" | "renderRowContainer" | "expandRowRender"
 >;
 
 export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
@@ -44,8 +40,8 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                   "oui-group oui-rounded",
                   "hover:oui-bg-line-4",
                   selected && "oui-bg-line-6 hover:oui-bg-line-6",
-                  props.border?.body && "oui-border-b oui-border-b-line-4",
-                  tableVariants({ size: props.size }),
+                  props.bordered && "oui-border-b oui-border-b-line-4",
+                  bodySizeVariants({ size: props.size }),
                   className
                 )}
                 onClick={(event) => {

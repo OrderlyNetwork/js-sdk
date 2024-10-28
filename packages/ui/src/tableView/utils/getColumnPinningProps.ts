@@ -1,9 +1,9 @@
 import { CSSProperties } from "react";
 import { cnBase } from "tailwind-variants";
-import { TableColumn } from "../type";
+import { TanstackColumn } from "../type";
 
 export function getColumnPinningProps(
-  column: TableColumn<any>,
+  column: TanstackColumn<any>,
   isHeader?: boolean
 ) {
   const isPinned = column.getIsPinned();

@@ -6,10 +6,12 @@ import {
   Input,
   DataFilter,
   Flex,
+  cn,
+  usePagination,
 } from "@orderly.network/ui";
 import { Columns } from "./columns";
 import { DataSource } from "./dataSource";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const meta = {
   title: "Base/Table/TableView",
@@ -23,10 +25,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => {
     const [dataSource, setDataSource] = useState([] as any);
-    const [pagination, setPagination] = useState({
-      pageIndex: 1,
-      pageSize: 20,
-    });
+    const { page, pageSize, setPage, setPageSize } = usePagination();
 
     const [loading, setLoading] = useState(true);
 
@@ -42,6 +41,15 @@ export const Default: Story = {
         setLoading(false);
       }, 2000);
     }, []);
+
+    const pagination = useMemo(() => {
+      return {
+        page,
+        pageSize,
+        onPageChange: setPage,
+        onPageSizeChange: setPageSize,
+      };
+    }, [page, pageSize, setPage, setPageSize]);
 
     return (
       <Box width={800} height={600} p={3} intensity={900}>
@@ -89,15 +97,26 @@ export const Default: Story = {
           //     </pre>
           //   );
           // }}
-          border={{ header: { top: true, bottom: true }, body: true }}
+          bordered
           pagination={pagination}
-          onPaginationChange={setPagination}
           loading={loading}
+          // sizes={{
+          //   header: "xl",
+          //   body: "xl",
+          // }}
           classNames={{
-            root: "!oui-h-[calc(100%_-_49px)]",
+            root: cn(
+              "!oui-h-[calc(100%_-_49px)]",
+              "oui-px-3 oui-border-t oui-border-line"
+            ),
             // header: "oui-text-base oui-text-base-contrast-80",
             // body: "oui-text-base oui-text-base-contrast-36",
           }}
+          // onRow={(record) => {
+          //   return {
+          //     className: "oui-h-6",
+          //   };
+          // }}
           columnFilters={columnFilters}
           // generatedRowKey={(record) => record.symbol}
           // rowSelection={{ PERP_BTC_USDC: true }}
