@@ -16,7 +16,6 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
-import { useMemo } from "react";
 import {
   grayCell,
   parseBadgesFor,
@@ -34,15 +33,22 @@ import { BarcketOrderPrice } from "./barcketOrderPrice";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice } from "./tpslPrice";
 
-export const useOrderColumn = (_type: TabType) => {
+export const useOrderColumn = (
+  _type: TabType,
+  onSymbolChange?: (symbol: API.Symbol) => void
+) => {
   const columns =
     // useMemo(
     () => {
       switch (_type) {
         case TabType.all:
           return [
-            instrument({ width: 130, showType: true }),
-            side({ width: 130 }),
+            instrument({
+              width: 130,
+              showType: true,
+              onSymbolChange: onSymbolChange,
+            }),
+            // side({ width: 130 }),
             fillAndQuantity({
               width: 130,
               disableEdit: true,
@@ -60,8 +66,12 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.pending:
           return [
-            instrument({ width: 162, showType: true }),
-            side({ width: 162 }),
+            instrument({
+              width: 172,
+              showType: true,
+              onSymbolChange: onSymbolChange,
+            }),
+            // side({ width: 162 }),
             fillAndQuantity({ width: 162, className: "oui-pr-0" }),
             price({ width: 162, className: "oui-pr-0" }),
             triggerPrice({ width: 162, className: "oui-pr-0" }),
@@ -74,8 +84,12 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.tp_sl:
           return [
-            instrument({ width: 176, showType: true }),
-            side({ width: 176 }),
+            instrument({
+              width: 176,
+              showType: true,
+              onSymbolChange: onSymbolChange,
+            }),
+            // side({ width: 176 }),
             quantity({ width: 176 }),
             tpslTriggerPrice({ width: 176 }),
             tpslPrice({ width: 176, disableEdit: true }),
@@ -86,9 +100,9 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.filled:
           return [
-            instrument({ width: 124 }),
+            instrument({ width: 154, onSymbolChange: onSymbolChange }),
             type({ width: 124 }),
-            side({ width: 124 }),
+            // side({ width: 124 }),
             fillAndQuantity({
               width: 124,
               disableEdit: true,
@@ -106,8 +120,12 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.cancelled:
           return [
-            instrument({ showType: true, width: 124 }),
-            side({ width: 124 }),
+            instrument({
+              showType: true,
+              width: 154,
+              onSymbolChange: onSymbolChange,
+            }),
+            // side({ width: 124 }),
             fillAndQuantity({
               width: 124,
               disableEdit: true,
@@ -124,8 +142,12 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.rejected:
           return [
-            instrument({ showType: true, width: 124 }),
-            side({ width: 124 }),
+            instrument({
+              showType: true,
+              width: 154,
+              onSymbolChange: onSymbolChange,
+            }),
+            // side({ width: 124 }),
             fillAndQuantity({
               width: 124,
               disableEdit: true,
@@ -143,8 +165,12 @@ export const useOrderColumn = (_type: TabType) => {
           ];
         case TabType.orderHistory:
           return [
-            instrument({ showType: true, width: 124 }),
-            side({ width: 124 }),
+            instrument({
+              showType: true,
+              width: 154,
+              onSymbolChange: onSymbolChange,
+            }),
+            // side({ width: 124 }),
             fillAndQuantity({
               width: 124,
               disableEdit: true,
@@ -173,6 +199,7 @@ function instrument(option?: {
   showType?: boolean;
   enableSort?: boolean;
   width?: number;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }): Column<API.Order> {
   return {
     title: "Instrument",
@@ -188,46 +215,52 @@ function instrument(option?: {
         }
       : undefined,
     render: (value: string, record) => {
-      const badge =
-        typeof record.type === "string"
-          ? record.type.replace("_ORDER", "").toLowerCase()
-          : record.type;
-
       const showGray = grayCell(record);
 
       return (
-        <Flex direction="column" itemAlign={"start"}>
-          <Text.formatted
-            rule={"symbol"}
-            size="xs"
-            className=" oui-text-xs"
-            onClick={(e) => {
-              // props.onSymbolChange?.({ symbol: value } as API.Symbol);
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-          >
-            {value}
-          </Text.formatted>
-          {option?.showType && (
-            <Flex direction={"row"} gap={1}>
-              {parseBadgesFor(record)?.map((e, index) => (
-                <Badge
-                  key={index}
-                  color={
-                    e.toLocaleLowerCase() === "position"
-                      ? showGray
-                        ? "neutral"
-                        : "primary"
-                      : "neutral"
-                  }
-                  size="xs"
-                >
-                  {e}
-                </Badge>
-              ))}
-            </Flex>
-          )}
+        <Flex gap={2}>
+          <div
+            className={cn(
+              "oui-rounded-[1px] oui-w-1 oui-h-7 oui-shrink-0",
+              record.side === OrderSide.BUY
+                ? "oui-bg-trade-profit"
+                : "oui-bg-trade-loss"
+            )}
+          />
+          <Flex direction="column" itemAlign={"start"}>
+            <Text.formatted
+              // rule={"symbol"}
+              size="xs"
+              className="oui-cursor-pointer oui-text-xs"
+              onClick={(e) => {
+                option?.onSymbolChange?.({ symbol: value } as API.Symbol);
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            >
+              {`${value.split("_")[1]}_PERP`}
+            </Text.formatted>
+
+            {option?.showType && (
+              <Flex direction={"row"} gap={1}>
+                {parseBadgesFor(record)?.map((e, index) => (
+                  <Badge
+                    key={index}
+                    color={
+                      e.toLocaleLowerCase() === "position"
+                        ? showGray
+                          ? "neutral"
+                          : "primary"
+                        : "neutral"
+                    }
+                    size="xs"
+                  >
+                    {e}
+                  </Badge>
+                ))}
+              </Flex>
+            )}
+          </Flex>
         </Flex>
       );
     },
@@ -398,7 +431,7 @@ function avgPrice(option?: {
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
       console.log("average_executed_price", record.average_executed_price);
-      
+
       return <Text>{commifyOptional(value)}</Text>;
     },
   };

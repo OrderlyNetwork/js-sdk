@@ -20,7 +20,7 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
       height={64}
       gap={1}
       justify={"between"}
-      className="oui-bg-base-9 oui-px-[14px] oui-pt-[14px] oui-border-t oui-border-line-4"
+      className="oui-bg-base-9 oui-px-[14px] oui-pt-[7px] oui-border-t oui-border-line-4"
     >
       <BalanceWidget />
 

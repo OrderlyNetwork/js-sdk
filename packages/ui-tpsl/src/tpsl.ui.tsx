@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   Badge,
   Box,
@@ -41,8 +41,10 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             maxQty={props.maxQty}
             quantity={(props.orderQuantity ?? props.maxQty) as number}
             tick={symbolInfo("base_tick")}
+            dp={symbolInfo("base_dp")}
             onQuantityChange={props.setQuantity}
             quote={symbolInfo("base")}
+            isEditing={props.isEditing}
           />
           <Divider my={4} intensity={8} />
         </>
@@ -109,9 +111,11 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
 const TPSLQuantity = (props: {
   maxQty: number;
   tick: number;
+  dp: number;
   quote: string;
   onQuantityChange?: (value: number | string) => void;
   quantity: number;
+  isEditing?: boolean;
   setOrderValue?: (key: string, value: number | string) => void;
 }) => {
   const isPosition = props.quantity === props.maxQty;
@@ -147,6 +151,7 @@ const TPSLQuantity = (props: {
               root: "oui-bg-base-5",
             }}
             formatters={[
+              inputFormatter.dpFormatter(props.dp),
               inputFormatter.numberFormatter,
               inputFormatter.currencyFormatter,
             ]}
@@ -171,27 +176,29 @@ const TPSLQuantity = (props: {
             }
           />
         </div>
-        <Button
-          onClick={() => {
-            const qty = isPosition ? 0 : props.maxQty;
-            props.onQuantityChange?.(qty);
-            if (qty === 0) {
-              setTPSL();
-            }
-          }}
-          variant={"outlined"}
-          size={{
-            lg: "md",
-            md: "lg",
-          }}
-          className={cn(
-            isPosition
-              ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
-              : "oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
-          )}
-        >
-          Position
-        </Button>
+        {!props.isEditing && (
+          <Button
+            onClick={() => {
+              const qty = isPosition ? 0 : props.maxQty;
+              props.onQuantityChange?.(qty);
+              if (qty === 0) {
+                setTPSL();
+              }
+            }}
+            variant={"outlined"}
+            size={{
+              lg: "md",
+              md: "lg",
+            }}
+            className={cn(
+              isPosition
+                ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
+                : "oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
+            )}
+          >
+            Position
+          </Button>
+        )}
       </Flex>
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
         <Slider.single
@@ -216,7 +223,6 @@ const TPSLQuantity = (props: {
             className={"oui-leading-none"}
             style={{ lineHeight: 0 }}
             onClick={() => {
-              console.log("maxQty", props.maxQty);
               props.onQuantityChange?.(props.maxQty);
             }}
           >
@@ -344,6 +350,7 @@ const PriceInput = (props: {
   error?: string;
   onValueChange: (value: string) => void;
 }) => {
+  const [placeholder, setPlaceholder] = useState<string>("USDC");
   return (
     <Input.tooltip
       prefix={`${props.type} price`}
@@ -352,7 +359,7 @@ const PriceInput = (props: {
         lg: "md",
       }}
       tooltip={props.error}
-      placeholder={"USDC"}
+      placeholder={placeholder}
       align={"right"}
       autoComplete={"off"}
       value={props.value}
@@ -361,8 +368,15 @@ const PriceInput = (props: {
         prefix: "oui-text-base-contrast-54",
       }}
       onValueChange={props.onValueChange}
+      onFocus={() => {
+        setPlaceholder("");
+      }}
+      onBlur={() => {
+        setPlaceholder("USDC");
+      }}
       formatters={[
         inputFormatter.numberFormatter,
+        inputFormatter.dpFormatter(2),
         inputFormatter.currencyFormatter,
       ]}
     />
@@ -404,6 +418,9 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     size: "xs",
     intensity: 54,
   });
+
+  console.log("PositionTPSLConfirm", qty, maxQty);
+
   const isPositionTPSL = qty >= maxQty;
 
   return (
@@ -423,6 +440,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         <Box grow>
           <Text.formatted
             rule={"symbol"}
+            formatString="base-type"
             size="base"
             showIcon
             as="div"
@@ -442,7 +460,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
             TP/SL
           </Badge> */}
           <TPSLOrderType tpPrice={tpPrice} slPrice={slPrice} />
-          {side === OrderSide.BUY ? (
+          {side === OrderSide.SELL ? (
             <Badge size="xs" color="success">
               Buy
             </Badge>

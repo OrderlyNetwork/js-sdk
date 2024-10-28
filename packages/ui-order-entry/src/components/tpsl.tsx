@@ -110,7 +110,9 @@ const TPSLInputForm = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={"oui-transition-all oui-pt-2 oui-pb-2 oui-px-[1px] oui-space-y-1"}
+      className={
+        "oui-transition-all oui-pt-2 oui-pb-2 oui-px-[1px] oui-space-y-1"
+      }
     >
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
@@ -143,6 +145,8 @@ const TPSLTriggerPriceInput = (props: {
 }) => {
   const { errorMsgVisible } = useContext(OrderEntryContext);
   const { tipsEle } = usePnlInputContext();
+  const [prefix, setPrefix] = useState<string>(`${props.type} Price`);
+  const [placeholder, setPlaceholder] = useState<string>("USDC");
 
   const [tipVisible, setTipVisible] = useState(false);
 
@@ -155,14 +159,20 @@ const TPSLTriggerPriceInput = (props: {
 
   return (
     <Input.tooltip
-      prefix={`${props.type} Price`}
+      prefix={prefix}
       size={"md"}
-      placeholder="USDC"
+      placeholder={placeholder}
       align="right"
       onFocus={() => {
+        setPrefix(props.type);
+        setPlaceholder("");
         setTipVisible(true);
       }}
       onBlur={() => {
+        setPrefix(
+          !!props.values.trigger_price ? props.type : `${props.type} Price`
+        );
+        setPlaceholder("USDC");
         setTipVisible(false);
       }}
       tooltip={triggerPriceToolTipEle}
@@ -174,7 +184,11 @@ const TPSLTriggerPriceInput = (props: {
       color={props.error ? "danger" : undefined}
       autoComplete={"off"}
       value={props.values.trigger_price}
-      classNames={{ additional: "oui-text-base-contrast-54", root: "oui-pr-2 md:oui-pr-3", prefix: "oui-pr-1 md:oui-pr-2" }}
+      classNames={{
+        additional: "oui-text-base-contrast-54",
+        root: "oui-pr-2 md:oui-pr-3",
+        prefix: "oui-pr-1 md:oui-pr-2",
+      }}
       onChange={props.onChange}
     />
   );

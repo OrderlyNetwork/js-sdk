@@ -10,3 +10,9 @@ export const fetcher = (
 export type useQueryOptions<T> = SWRConfiguration & {
   formatter?: (data: any) => T;
 };
+
+// export const onErrorRetry:SWRConfiguration['onErrorRetry'] = (error, key, config, revalidate, { retryCount })=>{
+// // if(error.status === 5)
+// if(retryCount >= 5) return ;
+
+// }

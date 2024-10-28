@@ -9,7 +9,7 @@ import {
 } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 import { inputFormatter } from "@orderly.network/ui";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type PNLInputProps = PNLInputState & {
   testId?: string;
@@ -32,13 +32,21 @@ export const PNLInput = (props: PNLInputProps) => {
     onBlur,
   } = props;
 
+  const [prefix, setPrefix] = useState<string>(mode);
+  useEffect(() => {
+    setPrefix(mode);
+  }, [mode]);
+  const [placeholder, setPlaceholder] = useState<string>(
+    mode === PnLMode.PERCENTAGE ? "%" : quote
+  );
+
   const id = useMemo(() => `${type.toLowerCase()}_${mode.toLowerCase()}`, []);
 
   return (
     <Input.tooltip
-      prefix={mode}
+      prefix={prefix}
       size={"md"}
-      placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
+      placeholder={placeholder}
       id={id}
       align={"right"}
       value={value}
@@ -59,8 +67,16 @@ export const PNLInput = (props: PNLInputProps) => {
         additional: "oui-text-base-contrast-54",
         input: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
       }}
-      onFocus={onFocus}
-      onBlur={onBlur}
+      onFocus={() => {
+        setPrefix("");
+        setPlaceholder("");
+        onFocus();
+      }}
+      onBlur={() => {
+        setPrefix(!!value ? "" : mode);
+        setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+        onBlur();
+      }}
       suffix={
         <PNLMenus
           modes={modes}

@@ -122,7 +122,7 @@ export const OrderConfirmDialog = (props: Props) => {
               <Flex justify={"between"}>
                 <Text>TP Price</Text>
                 <Text.numeral
-                  unit={"ETH"}
+                  unit={"USDC"}
                   rule={"price"}
                   coloring
                   dp={quoteDP}
@@ -136,7 +136,7 @@ export const OrderConfirmDialog = (props: Props) => {
               <Flex justify={"between"}>
                 <Text>SL Price</Text>
                 <Text.numeral
-                  unit={"ETH"}
+                  unit={"USDC"}
                   rule={"price"}
                   coloring
                   className="oui-text-trade-loss"

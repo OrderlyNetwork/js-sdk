@@ -70,7 +70,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
                   isEditing={isEditing}
                   symbol={order.symbol!}
                   qty={Number(order.quantity)}
-                  maxQty={Number(position.position_qty)}
+                  maxQty={Math.abs(Number(position.position_qty))}
                   tpPrice={Number(order.tp_trigger_price)}
                   slPrice={Number(order.sl_trigger_price)}
                   side={order.side!}
@@ -130,7 +130,7 @@ export const PositionInfo = (props: {
           <Badge size="xs" color="neutral">
             TP/SL
           </Badge>
-          {position.position_qty > 0 ? (
+          {position.position_qty < 0 ? (
             <Badge size="xs" color="buy">
               Buy
             </Badge>
@@ -142,7 +142,7 @@ export const PositionInfo = (props: {
         </Flex>
       </Flex>
       <Divider intensity={8} />
-      <Box py={3}>
+      <Box py={3} className="oui-space-y-1">
         <Flex justify={"between"}>
           <Text size="sm" intensity={54}>
             Avg. open

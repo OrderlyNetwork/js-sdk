@@ -53,7 +53,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
           className="oui-text-2xs oui-text-base-contrast-54"
           htmlFor="oui-checkbox-showAllInstruments"
         >
-          Show all trading pair
+          Show all trading pairs
         </label>
       </Flex>
     </Flex>

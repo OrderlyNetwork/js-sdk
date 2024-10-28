@@ -21,6 +21,7 @@ export const OrderQuantity = (props: {
   disableEdit?: boolean;
 }) => {
   const { order } = props;
+  const { reduce_only } = order;
 
   const [quantity, originSetQuantity] = useState<string>(
     order.quantity.toString()
@@ -44,7 +45,7 @@ export const OrderQuantity = (props: {
   const setQuantity = (qty: string) => {
     originSetQuantity(qty);
     const positionQty = Math.abs(position?.position_qty || 0);
-    if (position && Number(qty) > positionQty) {
+    if (position && reduce_only && Number(qty) > positionQty) {
       setError(
         `Quantity should be less than position quantity : ${positionQty}`
       );
