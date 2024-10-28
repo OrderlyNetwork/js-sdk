@@ -233,37 +233,37 @@ export const OrderQuantity = (props: {
       );
     }
 
-    // return (
-    //   <EditState
-    //     inputRef={inputRef}
-    //     quantitySliderRef={quantitySliderRef}
-    //     base_dp={base_dp}
-    //     quantity={quantity}
-    //     setQuantity={setQuantity}
-    //     editing={editing}
-    //     setEditing={setEditing}
-    //     handleKeyDown={handleKeyDown}
-    //     onClick={onClick}
-    //     onClose={cancelPopover}
-    //     symbol={order.symbol}
-    //     reduce_only={reduce_only}
-    //     positionQty={position?.position_qty}
-    //     error={error}
-    //   />
-    // );
-
     return (
-      <InnerInput
-          inputRef={inputRef}
-          dp={base_dp}
-          value={quantity}
-          setValue={setQuantity}
-          setEditing={setEditing}
-          handleKeyDown={handleKeyDown}
-          onClick={onClick}
-          onClose={cancelPopover}
-          hintInfo={error} />
+      <EditState
+        inputRef={inputRef}
+        quantitySliderRef={quantitySliderRef}
+        base_dp={base_dp}
+        quantity={quantity}
+        setQuantity={setQuantity}
+        editing={editing}
+        setEditing={setEditing}
+        handleKeyDown={handleKeyDown}
+        onClick={onClick}
+        onClose={cancelPopover}
+        symbol={order.symbol}
+        reduce_only={reduce_only}
+        positionQty={position?.position_qty}
+        error={error}
+      />
     );
+
+    // return (
+    //   <InnerInput
+    //       inputRef={inputRef}
+    //       dp={base_dp}
+    //       value={quantity}
+    //       setValue={setQuantity}
+    //       setEditing={setEditing}
+    //       handleKeyDown={handleKeyDown}
+    //       onClick={onClick}
+    //       onClose={cancelPopover}
+    //       hintInfo={error} />
+    // );
   };
 
   return (
@@ -433,7 +433,7 @@ const EditState: FC<{
         align="start"
         side="bottom"
         onOpenAutoFocus={(event) => {
-          event.stopPropagation();
+          // event.stopPropagation();
           event.preventDefault();
         }}
       >
@@ -455,7 +455,12 @@ const EditState: FC<{
           >
             {`${sliderValue}`}
           </Text.numeral>
-          <Flex direction={"column"} width={"100%"} gap={2} className="oui-mt-[6px]">
+          <Flex
+            direction={"column"}
+            width={"100%"}
+            gap={2}
+            className="oui-mt-[6px]"
+          >
             <Slider
               markCount={4}
               value={[sliderValue ?? 0]}
@@ -468,6 +473,9 @@ const EditState: FC<{
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
                 setQuantity(quantity);
               }}
+              onValueCommit={(e) => {
+                inputRef.current.focus();
+              }}
             />
             <Buttons
               onClick={(value) => {
@@ -476,6 +484,10 @@ const EditState: FC<{
                   .mul(qty)
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
                 setQuantity(quantity);
+                setTimeout(() => {
+                  inputRef.current.focus();
+                  inputRef.current.setSelectionRange(quantity.length, quantity.length);
+                }, 100);
               }}
             />
           </Flex>
