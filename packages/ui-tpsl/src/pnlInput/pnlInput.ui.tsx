@@ -6,7 +6,7 @@ import {
 } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 import { inputFormatter } from "@orderly.network/ui";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type PNLInputProps = PNLInputState & { testId?: string; quote: string };
 
@@ -21,6 +21,10 @@ export const PNLInput = (props: PNLInputProps) => {
     value,
     pnl,
   } = props;
+
+  const [placeholder, setPlaceholder] = useState<string>(
+    mode === PnLMode.PERCENTAGE ? "%" : quote
+  );
 
   const color = useMemo(() => {
     const num = Number(pnl);
@@ -38,7 +42,7 @@ export const PNLInput = (props: PNLInputProps) => {
         initial: "lg",
         lg: "md",
       }}
-      placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
+      placeholder={placeholder}
       align={"right"}
       value={value}
       data-testid={props.testId}
@@ -53,6 +57,12 @@ export const PNLInput = (props: PNLInputProps) => {
       classNames={{
         input: color,
         prefix: "oui-text-base-contrast-54",
+      }}
+      onFocus={() => {
+        setPlaceholder("");
+      }}
+      onBlur={() => {
+        setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
       }}
       // value={props.value}
       suffix={

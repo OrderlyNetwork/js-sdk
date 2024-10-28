@@ -33,15 +33,14 @@ export const PNLInput = (props: PNLInputProps) => {
   } = props;
 
   const [prefix, setPrefix] = useState<string>(mode);
+  useEffect(() => {
+    setPrefix(mode);
+  }, [mode]);
   const [placeholder, setPlaceholder] = useState<string>(
     mode === PnLMode.PERCENTAGE ? "%" : quote
   );
 
   const id = useMemo(() => `${type.toLowerCase()}_${mode.toLowerCase()}`, []);
-
-  useEffect(() => {
-    setPrefix(mode);
-  }, [mode]);
 
   return (
     <Input.tooltip

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   Badge,
   Box,
@@ -350,6 +350,7 @@ const PriceInput = (props: {
   error?: string;
   onValueChange: (value: string) => void;
 }) => {
+  const [placeholder, setPlaceholder] = useState<string>("USDC");
   return (
     <Input.tooltip
       prefix={`${props.type} price`}
@@ -358,7 +359,7 @@ const PriceInput = (props: {
         lg: "md",
       }}
       tooltip={props.error}
-      placeholder={"USDC"}
+      placeholder={placeholder}
       align={"right"}
       autoComplete={"off"}
       value={props.value}
@@ -367,6 +368,12 @@ const PriceInput = (props: {
         prefix: "oui-text-base-contrast-54",
       }}
       onValueChange={props.onValueChange}
+      onFocus={() => {
+        setPlaceholder("");
+      }}
+      onBlur={() => {
+        setPlaceholder("USDC");
+      }}
       formatters={[
         inputFormatter.numberFormatter,
         inputFormatter.dpFormatter(2),
