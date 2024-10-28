@@ -17,6 +17,8 @@ export const InnerInput: FC<{
   handleKeyDown: (e: any) => void;
   onClick: (e: any) => void;
   onClose: (e: any) => void;
+  onFocus?: (e: any) => void;
+  onBlur?: (e: any) => void;
   dp: number;
   hintInfo?: string;
 }> = (props) => {
@@ -30,6 +32,8 @@ export const InnerInput: FC<{
     handleKeyDown,
     onClick,
     onClose,
+    onFocus,
+    onBlur,
     hintInfo,
   } = props;
 
@@ -59,6 +63,8 @@ export const InnerInput: FC<{
           e.stopPropagation();
           e.preventDefault();
         }}
+        onFocus={onFocus}
+        onBlur={onBlur}
         onKeyDown={handleKeyDown}
         autoFocus
         color={open ? "danger" : undefined}

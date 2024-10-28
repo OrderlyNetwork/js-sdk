@@ -3,18 +3,32 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { API, OrderSide } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
-import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
+import {
+  cn,
+  Flex,
+  Popover,
+  toast,
+  Text,
+  Slider,
+  Button,
+  PopoverTrigger,
+  PopoverRoot,
+  PopoverContent,
+} from "@orderly.network/ui";
 import { ConfirmContent, EditType } from "./editOrder/confirmContent";
 import { InnerInput } from "./editOrder/innerInput";
 import { useOrderListContext } from "../orderListContext";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
+import { useOrderEntry } from "@orderly.network/hooks";
+import { Decimal } from "@orderly.network/utils";
 
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
@@ -45,7 +59,7 @@ export const OrderQuantity = (props: {
   const setQuantity = (qty: string) => {
     originSetQuantity(qty);
     const positionQty = Math.abs(position?.position_qty || 0);
-    
+
     if (position && reduce_only && Number(qty) > positionQty) {
       setError(
         `Quantity should be less than position quantity : ${positionQty}`
@@ -185,11 +199,14 @@ export const OrderQuantity = (props: {
   }, [quantity]);
 
   const componentRef = useRef<HTMLDivElement | null>(null);
+  const quantitySliderRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: any) => {
     if (
       componentRef.current &&
+      quantitySliderRef.current &&
       !componentRef.current.contains(event.target as Node) &&
+      !quantitySliderRef.current.contains(event.target as Node) &&
       !open
     ) {
       cancelPopover();
@@ -216,18 +233,36 @@ export const OrderQuantity = (props: {
       );
     }
 
+    // return (
+    //   <EditState
+    //     inputRef={inputRef}
+    //     quantitySliderRef={quantitySliderRef}
+    //     base_dp={base_dp}
+    //     quantity={quantity}
+    //     setQuantity={setQuantity}
+    //     editing={editing}
+    //     setEditing={setEditing}
+    //     handleKeyDown={handleKeyDown}
+    //     onClick={onClick}
+    //     onClose={cancelPopover}
+    //     symbol={order.symbol}
+    //     reduce_only={reduce_only}
+    //     positionQty={position?.position_qty}
+    //     error={error}
+    //   />
+    // );
+
     return (
       <InnerInput
-        inputRef={inputRef}
-        dp={base_dp}
-        value={quantity}
-        setValue={setQuantity}
-        setEditing={setEditing}
-        handleKeyDown={handleKeyDown}
-        onClick={onClick}
-        onClose={cancelPopover}
-        hintInfo={error}
-      />
+          inputRef={inputRef}
+          dp={base_dp}
+          value={quantity}
+          setValue={setQuantity}
+          setEditing={setEditing}
+          handleKeyDown={handleKeyDown}
+          onClick={onClick}
+          onClose={cancelPopover}
+          hintInfo={error} />
     );
   };
 
@@ -305,6 +340,244 @@ const NormalState: FC<{
       >
         <Text size="2xs">{quantity}</Text>
       </Flex>
+    </Flex>
+  );
+};
+
+const EditState: FC<{
+  inputRef: any;
+  quantitySliderRef: any;
+  base_dp: number;
+  quantity: string;
+  setQuantity: (quantity: string) => void;
+  editing: boolean;
+  setEditing: (value: boolean) => void;
+  handleKeyDown: (e: any) => void;
+  onClick: (e: any) => void;
+  onClose: () => void;
+  error?: string;
+  symbol: string;
+  reduce_only: boolean;
+  positionQty?: number;
+}> = (props) => {
+  const [sliderOpen, setSliderOpen] = useState(false);
+
+  const {
+    inputRef,
+    quantitySliderRef,
+    base_dp,
+    quantity,
+    setQuantity,
+    editing,
+    setEditing,
+    handleKeyDown,
+    onClick,
+    onClose,
+    error,
+    symbol,
+    reduce_only,
+    positionQty,
+  } = props;
+
+  const { maxQty } = useOrderEntry(symbol, {});
+
+  const qty = useMemo(() => {
+    if (reduce_only) {
+      return positionQty ?? 0;
+    }
+    return maxQty;
+  }, [maxQty, reduce_only, positionQty]);
+
+  const [sliderValue, setSliderValue] = useState<number | undefined>(undefined);
+  // console.log("max qty", maxQty);
+
+  useEffect(() => {
+    if (sliderValue === undefined) {
+      const sliderValue = new Decimal(quantity).div(qty).mul(100).toNumber();
+      setSliderValue(sliderValue);
+    }
+  }, [sliderValue, qty, quantity]);
+
+  return (
+    <PopoverRoot open>
+      <PopoverTrigger>
+        <InnerInput
+          inputRef={inputRef}
+          dp={base_dp}
+          value={quantity}
+          setValue={(e: string) => {
+            setQuantity(e);
+            if (e.endsWith(".")) return;
+            const sliderValue = new Decimal(e)
+              .div(qty)
+              .mul(100)
+              .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+              .toNumber();
+            setSliderValue(sliderValue);
+          }}
+          setEditing={setEditing}
+          handleKeyDown={handleKeyDown}
+          onClick={onClick}
+          onClose={onClose}
+          hintInfo={error}
+          onFocus={(e) => {
+            setSliderOpen(true);
+          }}
+          onBlur={(e) => {
+            setSliderOpen(false);
+          }}
+        />
+      </PopoverTrigger>
+      <PopoverContent
+        className="oui-w-[360px] oui-rounded-xl"
+        align="start"
+        side="bottom"
+        onOpenAutoFocus={(event) => {
+          event.stopPropagation();
+          event.preventDefault();
+        }}
+      >
+        <Flex
+          p={1}
+          gap={2}
+          width={"100%"}
+          itemAlign={"start"}
+          ref={quantitySliderRef}
+        >
+          <Text.numeral
+            size="xs"
+            intensity={98}
+            className="oui-min-w-[30px] "
+            dp={2}
+            padding={false}
+            unit="%"
+            rm={Decimal.ROUND_DOWN}
+          >
+            {`${sliderValue}`}
+          </Text.numeral>
+          <Flex direction={"column"} width={"100%"} gap={2} className="oui-mt-[6px]">
+            <Slider
+              markCount={4}
+              value={[sliderValue ?? 0]}
+              onValueChange={(e) => {
+                const values = Array.from(e.values());
+                setSliderValue(values[0]);
+                const quantity = new Decimal(values[0])
+                  .div(100)
+                  .mul(qty)
+                  .toFixed(base_dp, Decimal.ROUND_DOWN);
+                setQuantity(quantity);
+              }}
+            />
+            <Buttons
+              onClick={(value) => {
+                setSliderValue(value * 100);
+                const quantity = new Decimal(value)
+                  .mul(qty)
+                  .toFixed(base_dp, Decimal.ROUND_DOWN);
+                setQuantity(quantity);
+              }}
+            />
+          </Flex>
+        </Flex>
+      </PopoverContent>
+    </PopoverRoot>
+  );
+
+  // return (
+  //   <Popover
+  //     open={editing}
+  //     onOpenChange={setSliderOpen}
+  //     content={
+  //       <Flex p={1} gap={2} width={"100%"} itemAlign={"start"}>
+  //         <Text size="xs" intensity={98} className="oui-min-w-[30px]">
+  //           {`${sliderValue}%`}
+  //         </Text>
+  //         <Flex direction={"column"} width={"100%"} gap={2}>
+  //           <Slider
+  //             markCount={4}
+  //             value={[sliderValue]}
+  //             onValueChange={(e) => {
+  //               const values = Array.from(e.values());
+  //               setSliderValue(values[0]);
+  //               // resetQuantity(values[0]);
+  //             }}
+  //           />
+  //           <Buttons
+  //             onClick={(value) => {
+  //               setSliderValue(value * 100);
+  //               // resetQuantity(value * 100);
+  //             }}
+  //           />
+  //         </Flex>
+  //       </Flex>
+  //     }
+  //   >
+  //     <InnerInput
+  //       inputRef={inputRef}
+  //       dp={base_dp}
+  //       value={quantity}
+  //       setValue={setQuantity}
+  //       setEditing={setEditing}
+  //       handleKeyDown={handleKeyDown}
+  //       onClick={onClick}
+  //       onClose={onClose}
+  //       hintInfo={error}
+  //       onFocus={(e) => {
+  //         setSliderOpen(true);
+  //       }}
+  //       onBlur={(e) => {
+  //         setSliderOpen(false);
+  //       }}
+  //     />
+  //   </Popover>
+  // );
+};
+
+const Buttons = (props: { onClick: (value: number) => void }) => {
+  const list = [
+    {
+      label: "0%",
+      value: 0,
+    },
+    {
+      label: "25%",
+      value: 0.25,
+    },
+    {
+      label: "50%",
+      value: 0.5,
+    },
+    {
+      label: "75%",
+      value: 0.75,
+    },
+    {
+      label: "Max",
+      value: 1,
+    },
+  ];
+
+  return (
+    <Flex gap={2} width={"100%"}>
+      {list.map((item, index) => {
+        return (
+          <Button
+            key={index}
+            variant="outlined"
+            color="secondary"
+            size="xs"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              props.onClick(item.value);
+            }}
+            className="oui-w-1/5"
+          >
+            {item.label}
+          </Button>
+        );
+      })}
     </Flex>
   );
 };
