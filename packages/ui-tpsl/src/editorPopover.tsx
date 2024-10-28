@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { TPSLWidget } from "./tpsl.widget";
 import { PositionTPSLConfirm } from "./tpsl.ui";
-import { API } from "@orderly.network/types";
+import { AlgoOrderRootType, API } from "@orderly.network/types";
 import { ButtonProps } from "@orderly.network/ui";
 
 export const PositionTPSLPopover = (props: {
@@ -65,6 +65,7 @@ export const PositionTPSLPopover = (props: {
         <TPSLWidget
           position={position}
           order={order}
+          isEditing={isEditing}
           onComplete={() => {
             // console.log("tpsl order completed");
             setOpen(false);
@@ -79,19 +80,36 @@ export const PositionTPSLPopover = (props: {
 
             setVisible(false);
 
+            const maxQty = Math.abs(Number(position.position_qty));
+
+            // console.log(
+            //   "order",
+            //   order,
+            //   isEditing ||
+            //     (!!order &&
+            //       order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
+            //       order.quantity === maxQty)
+            // );
+
+            const finalIsEditing =
+              isEditing ||
+              (!!order &&
+                order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
+                order.quantity === maxQty);
+
             return modal
               .confirm({
-                title: isEditing ? "Edit Order" : "Confirm Order",
+                title: finalIsEditing ? "Edit Order" : "Confirm Order",
                 // bodyClassName: "lg:oui-py-0",
                 onOk: () => {
                   return options.submit();
                 },
                 content: (
                   <PositionTPSLConfirm
-                    isEditing={isEditing}
+                    isEditing={finalIsEditing}
                     symbol={order.symbol!}
                     qty={Number(order.quantity)}
-                    maxQty={Math.abs(Number(position.position_qty))}
+                    maxQty={maxQty}
                     tpPrice={Number(order.tp_trigger_price)}
                     slPrice={Number(order.sl_trigger_price)}
                     side={order.side!}
