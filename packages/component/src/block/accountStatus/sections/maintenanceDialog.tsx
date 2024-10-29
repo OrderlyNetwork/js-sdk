@@ -33,7 +33,10 @@ export function MaintenanceDialog({
   }, [endTime]);
   return (
     <Dialog open={open}>
-      <DialogContent closable={false}>
+      <DialogContent
+        closable={false}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="orderly-text-xs  orderly-font-semibold desktop:!orderly-text-base">
             System upgrade in progress
