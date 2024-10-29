@@ -145,6 +145,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   }, [tpslOrder.quantity, maxQty, dirty, errors]);
 
   const isPositionTPSL = useMemo(() => {
+    if (!isEditing) return Number(tpslOrder.quantity) >= maxQty;
     /**
      * if current order is not a POSITIONAL_TP_SL, then it's always a general TP/SL
      */
@@ -153,7 +154,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     }
     if (tpslOrder.algo_order_id && tpslOrder.quantity == 0) return true;
     return Number(tpslOrder.quantity) >= maxQty;
-  }, [tpslOrder.quantity, maxQty, order?.algo_type]);
+  }, [tpslOrder.quantity, maxQty, order?.algo_type, isEditing]);
 
   useEffect(() => {
     const type =

@@ -97,14 +97,17 @@ class CalculatorService {
   }
 
   private async handlePendingCalc() {
+    // console.log("[handlePendingCalc]:", this.pendingCalc);
     if (this.pendingCalc.length === 0) return;
-    while (this.pendingCalc.length) {
-      const item = this.pendingCalc.shift();
-      if (item) {
-        const { scope, data } = item;
-        await this.calc(scope, data, { skipUpdate: false });
-      }
-    }
+    this.calcQueue = [...this.pendingCalc, ...this.calcQueue];
+    this.pendingCalc = [];
+    // while (this.pendingCalc.length) {
+    //   const item = this.pendingCalc.shift();
+    //   if (item) {
+    //     const { scope, data } = item;
+    //     await this.calc(scope, data, { skipUpdate: false });
+    //   }
+    // }
   }
 
   private async handleCalcQueue(context?: CalculatorContext) {
@@ -114,9 +117,13 @@ class CalculatorService {
       const { scope, data, options } = first;
       const ctx = context || new CalculatorContext(scope, data);
       const calculators = this.calculators.get(scope);
-      // console.log("[calculators]:", calculators);
       if (Array.isArray(calculators) && calculators.length) {
-        await this.scheduler.calc(scope, calculators, data, ctx);
+        try {
+          await this.scheduler.calc(scope, calculators, data, ctx);
+        } catch (e) {
+          console.error(e);
+        }
+
         if (!options?.skipUpdate) {
           this.scheduler.update(scope, calculators, ctx.outputToValue());
         }

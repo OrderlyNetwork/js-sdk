@@ -40,7 +40,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     isPosition,
   } = props;
 
-  console.log("TPSL", props);
+  // console.log("TPSL", props);
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
