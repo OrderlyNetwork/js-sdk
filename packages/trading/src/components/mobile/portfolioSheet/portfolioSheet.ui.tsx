@@ -30,7 +30,7 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
       <MarginRatio {...props} />
       <Leverage {...props} />
       <Divider className="oui-w-full" />
-      <AvailableBalance {...props} />
+      {/* <AvailableBalance {...props} /> */}
       <Buttons {...props} />
     </Flex>
   );
