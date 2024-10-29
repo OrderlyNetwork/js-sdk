@@ -75,9 +75,12 @@ export const useOrderListScript = (props: {
   });
 
   const localPageSizeKey = `oui-${type}_pageSize`;
-  const [typePageSize, setTypePageSize] = useLocalStorage(localPageSizeKey, defaultPageSize);
+  const [typePageSize, setTypePageSize] = useLocalStorage(
+    localPageSizeKey,
+    defaultPageSize
+  );
 
-  useEffect(() => {    
+  useEffect(() => {
     if (typePageSize !== pageSize) {
       setTypePageSize(pageSize);
     }
