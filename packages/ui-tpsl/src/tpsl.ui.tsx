@@ -30,8 +30,17 @@ export type TPSLProps = {
 
 //------------- TPSL form start ---------------
 export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
-  const { TPSL_OrderEntity, symbolInfo, onCancel, onComplete, status, errors } =
-    props;
+  const {
+    TPSL_OrderEntity,
+    symbolInfo,
+    onCancel,
+    onComplete,
+    status,
+    errors,
+    isPosition,
+  } = props;
+
+  // console.log("TPSL", props);
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
@@ -45,6 +54,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             onQuantityChange={props.setQuantity}
             quote={symbolInfo("base")}
             isEditing={props.isEditing}
+            isPosition={isPosition}
           />
           <Divider my={4} intensity={8} />
         </>
@@ -116,9 +126,11 @@ const TPSLQuantity = (props: {
   onQuantityChange?: (value: number | string) => void;
   quantity: number;
   isEditing?: boolean;
+  isPosition?: boolean;
   setOrderValue?: (key: string, value: number | string) => void;
 }) => {
-  const isPosition = props.quantity === props.maxQty;
+  // const isPosition = props.quantity === props.maxQty;
+  const { isPosition } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const currentQtyPercentage =
     convertValueToPercentage(props.quantity, 0, props.maxQty) / 100;

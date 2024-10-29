@@ -4,6 +4,7 @@ import {
   useSymbolsInfo,
   useTPSLOrder,
 } from "@orderly.network/hooks";
+import { SDKError } from "@orderly.network/types";
 import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
 import { useEffect, useMemo, useRef } from "react";
 
@@ -11,6 +12,7 @@ export type TPSLBuilderOptions = {
   position: API.Position;
   order?: API.AlgoOrder;
   onTPSLTypeChange?: (type: AlgoOrderRootType) => void;
+  isEditing?: boolean;
   /**
    * either show the confirm dialog or not,
    * if the Promise reject or return false, cancel the submit action
@@ -25,9 +27,12 @@ export type TPSLBuilderOptions = {
 };
 
 export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
-  const { position, order } = options;
-  const isEditing = !!order;
-  const symbol = isEditing ? order.symbol : position.symbol;
+  const { position, order, isEditing } = options;
+  // const isEditing = !!order;
+  if (isEditing && !order) {
+    throw new SDKError("order is required when isEditing is true");
+  }
+  const symbol = isEditing ? order!.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
   const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
@@ -43,6 +48,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     },
     {
       defaultOrder: order,
+      isEditing,
     }
   );
 
@@ -76,9 +82,11 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
     if (Number(tpslOrder.quantity) !== quantity) {
       diff = 1;
+    } else if (!isEditing && !!tpslOrder.quantity) {
+      diff = 1;
     }
 
-    if (order) {
+    if (order && isEditing) {
       const tp = order.child_orders.find(
         (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT
       );
@@ -116,6 +124,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     tpslOrder.sl_trigger_price,
     tpslOrder.quantity,
     order,
+    isEditing,
   ]);
 
   const valid = useMemo(() => {
@@ -136,9 +145,16 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   }, [tpslOrder.quantity, maxQty, dirty, errors]);
 
   const isPositionTPSL = useMemo(() => {
+    if (!isEditing) return Number(tpslOrder.quantity) >= maxQty;
+    /**
+     * if current order is not a POSITIONAL_TP_SL, then it's always a general TP/SL
+     */
+    if (!!order && order.algo_type !== AlgoOrderRootType.POSITIONAL_TP_SL) {
+      return false;
+    }
     if (tpslOrder.algo_order_id && tpslOrder.quantity == 0) return true;
     return Number(tpslOrder.quantity) >= maxQty;
-  }, [tpslOrder.quantity, maxQty]);
+  }, [tpslOrder.quantity, maxQty, order?.algo_type, isEditing]);
 
   useEffect(() => {
     const type =

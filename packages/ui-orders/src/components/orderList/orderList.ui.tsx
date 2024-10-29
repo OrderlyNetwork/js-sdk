@@ -19,7 +19,10 @@ import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 
 export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
-  const columns = useOrderColumn(props.type, props.onSymbolChange);
+  const columns = useOrderColumn({
+    _type: props.type,
+    onSymbolChange: props.onSymbolChange,
+  });
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}

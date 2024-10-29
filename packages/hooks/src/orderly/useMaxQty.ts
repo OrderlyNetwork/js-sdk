@@ -29,7 +29,7 @@ export const useMaxQty = (
 
   const positions = usePositions();
 
-  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+  const [orders] = useOrderStream({ status: OrderStatus.NEW, size: 100 });
 
   // const { data: accountInfo } =
   //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
