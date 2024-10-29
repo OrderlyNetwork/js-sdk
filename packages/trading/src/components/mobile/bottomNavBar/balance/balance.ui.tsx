@@ -54,7 +54,7 @@ export const Balance: FC<BalanceState> = (props) => {
         <Button variant={"outlined"} onClick={(e) => {
             props.onShowPortfolioSheet();
         }} className="oui-h-[28px] oui-text-2xs">
-          {commifyOptional(props.currentLeverage, { fix: 2 })}
+          {commifyOptional(props.currentLeverage, { fix: 2 }) + 'x'}
         </Button>
       )}
     </Flex>
