@@ -25,7 +25,7 @@ export const useFeeTierColumns = () => {
           if (volume_min && !volume_max) {
             return (
               <div>
-                {"Above "}
+                {/* {"Above "} */}
                 {numberToHumanStyle(volume_min, volume_min === 2500000 ? 1 : 0)}
               </div>
             );
