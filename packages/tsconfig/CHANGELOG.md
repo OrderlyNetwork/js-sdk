@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.15-alpha.0
+
+### Patch Changes
+
+- update SEI config;
+
 ## 0.3.14
 
 ### Patch Changes

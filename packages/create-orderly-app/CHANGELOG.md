@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.15-alpha.0
+
+### Patch Changes
+
+- update SEI config;
+
 ## 1.5.14
 
 ### Patch Changes

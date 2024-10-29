@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.15-alpha.0
+
+### Patch Changes
+
+- update SEI config;
+- Updated dependencies
+  - @orderly.network/types@1.5.15-alpha.0
+  - @orderly.network/utils@1.5.15-alpha.0
+
 ## 3.3.14
 
 ### Patch Changes
