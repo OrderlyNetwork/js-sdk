@@ -33,8 +33,9 @@ import { Decimal } from "@orderly.network/utils";
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
   disableEdit?: boolean;
+  otherOrderQuantity?: (order: any) => number | undefined;
 }) => {
-  const { order } = props;
+  const { order, otherOrderQuantity } = props;
   const { reduce_only } = order;
 
   const [quantity, originSetQuantity] = useState<string>(
@@ -249,6 +250,9 @@ export const OrderQuantity = (props: {
         reduce_only={reduce_only}
         positionQty={position?.position_qty}
         error={error}
+        confirmOpen={open}
+        side={order.side}
+        order={order}
       />
     );
 
@@ -280,6 +284,12 @@ export const OrderQuantity = (props: {
           onConfirm={onConfirm}
         />
       }
+      contentProps={{
+        onOpenAutoFocus: (e) => {
+          // e.preventDefault();
+          // e.stopPropagation();
+        },
+      }}
     >
       <div
         onClick={(e) => {
@@ -351,6 +361,7 @@ const EditState: FC<{
   quantity: string;
   setQuantity: (quantity: string) => void;
   editing: boolean;
+  confirmOpen: boolean;
   setEditing: (value: boolean) => void;
   handleKeyDown: (e: any) => void;
   onClick: (e: any) => void;
@@ -359,9 +370,9 @@ const EditState: FC<{
   symbol: string;
   reduce_only: boolean;
   positionQty?: number;
+  side?: string;
+  order: any;
 }> = (props) => {
-  const [sliderOpen, setSliderOpen] = useState(false);
-
   const {
     inputRef,
     quantitySliderRef,
@@ -377,19 +388,25 @@ const EditState: FC<{
     symbol,
     reduce_only,
     positionQty,
+    confirmOpen,
+    side,
+    order,
   } = props;
 
-  const { maxQty } = useOrderEntry(symbol, {});
+  const { maxQty } = useOrderEntry(symbol, {
+    initialOrder: {
+      side,
+    },
+  });
 
   const qty = useMemo(() => {
     if (reduce_only) {
       return positionQty ?? 0;
     }
-    return maxQty;
-  }, [maxQty, reduce_only, positionQty]);
+    return order.quantity + maxQty;
+  }, [order.quantity, maxQty, reduce_only, positionQty]);
 
   const [sliderValue, setSliderValue] = useState<number | undefined>(undefined);
-  // console.log("max qty", maxQty);
 
   useEffect(() => {
     if (sliderValue === undefined) {
@@ -399,7 +416,7 @@ const EditState: FC<{
   }, [sliderValue, qty, quantity]);
 
   return (
-    <PopoverRoot open>
+    <PopoverRoot open={!confirmOpen}>
       <PopoverTrigger>
         <InnerInput
           inputRef={inputRef}
@@ -420,12 +437,6 @@ const EditState: FC<{
           onClick={onClick}
           onClose={onClose}
           hintInfo={error}
-          onFocus={(e) => {
-            setSliderOpen(true);
-          }}
-          onBlur={(e) => {
-            setSliderOpen(false);
-          }}
         />
       </PopoverTrigger>
       <PopoverContent
@@ -486,7 +497,10 @@ const EditState: FC<{
                 setQuantity(quantity);
                 setTimeout(() => {
                   inputRef.current.focus();
-                  inputRef.current.setSelectionRange(quantity.length, quantity.length);
+                  inputRef.current.setSelectionRange(
+                    quantity.length,
+                    quantity.length
+                  );
                 }, 100);
               }}
             />

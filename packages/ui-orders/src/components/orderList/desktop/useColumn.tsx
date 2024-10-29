@@ -33,10 +33,11 @@ import { BracketOrderPrice } from "./bracketOrderPrice";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice } from "./tpslPrice";
 
-export const useOrderColumn = (
-  _type: TabType,
-  onSymbolChange?: (symbol: API.Symbol) => void
-) => {
+export const useOrderColumn = (props: {
+  _type: TabType;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+}) => {
+  const { _type, onSymbolChange } = props;
   const columns =
     // useMemo(
     () => {
