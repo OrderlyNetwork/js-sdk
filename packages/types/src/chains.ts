@@ -519,7 +519,7 @@ export const Sei = {
     nativeCurrency: {
       name: "SEI",
       symbol: "SEI",
-      decimals: 6,
+      decimals: 18,
       fix: 4,
     },
     rpcUrls: ["https://rpc.ankr.com/sei"],
