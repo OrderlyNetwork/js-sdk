@@ -85,8 +85,6 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       ) => {
         value = `${value}`; // convert to string
 
-        console.log("value", value);
-
         if (type === "SL" && mode === PnLMode.PnL) {
           value = value.startsWith("-") ? value : "-" + value;
         }
@@ -120,7 +118,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         }
 
         if (mode === PnLMode.PERCENTAGE) {
-          console.log("value", value);
+          // console.log("value", value);
           if (value !== "") {
             // percentageSuffix.current = value.endsWith(".") ? "." : "";
             value = todpIfNeed(value, 2);
@@ -133,7 +131,6 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             value = new Decimal(value).div(100).toString();
             value = `${value}${percentageSuffix.current}`;
           }
-          console.log("value 2", value);
         } else {
           value = todpIfNeed(value, dp);
         }

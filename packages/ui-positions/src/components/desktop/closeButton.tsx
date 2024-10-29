@@ -273,7 +273,7 @@ export const MarketCloseConfirm: FC<{
     root?: string;
   }
 }> = (props) => {
-  console.log("props", props);
+  
 
   const onCancel = () => {
     const func = props?.onClose ?? props.close;
