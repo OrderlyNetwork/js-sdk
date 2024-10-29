@@ -175,17 +175,18 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 .toFixed(props.base_dp, Decimal.ROUND_DOWN);
               props.setQuantity(qty);
             }}
+            color="primaryLight"
           />
           <Flex width={"100%"} justify={"between"}>
             <Text.numeral
-              color="primary"
+              color="primaryLight"
               size="2xs"
               dp={props.base_dp}
               padding={false}
               rule="percentages"
             >{`${props.percentages ?? 0}`}</Text.numeral>
             <Flex gap={1}>
-              <Text size="2xs" color="primary">
+              <Text size="2xs" color="primaryLight">
                 Max
               </Text>
               <Text.numeral intensity={54} size="2xs" dp={props.base_dp}>

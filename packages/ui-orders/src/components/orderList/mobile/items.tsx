@@ -60,7 +60,7 @@ export const OrderTypeView: FC<OrderCellState> = (props) => {
       {parseBadgesFor(props.item)?.map((e, index) => (
         <Badge
           key={index}
-          color={e.toLocaleLowerCase() === "position" ? "primary" : "neutral"}
+          color={e.toLocaleLowerCase() === "position" ? "primaryLight" : "neutral"}
           size="xs"
         >
           {e}

@@ -84,7 +84,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
         </Text.formatted>
         <Text.numeral
           size="base"
-          coloring
+          // coloring
           dp={2}
           padding={false}
           visible={!props.hideAssets}
