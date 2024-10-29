@@ -3,6 +3,7 @@ import { useTradingLocalStorage } from "./useTradingLocalStorage";
 import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 import { useEffect, useMemo } from "react";
 import { TabType } from "@orderly.network/ui-orders";
+import { useDataTap } from "@orderly.network/react-app";
 
 export const usePendingOrderCount = (symbol?: string) => {
   const { showAllSymbol } = useTradingLocalStorage();
@@ -36,8 +37,11 @@ export const usePendingOrderCount = (symbol?: string) => {
     }
   );
 
+  const pendingOrderCount = useDataTap(pendingCount) ?? 0;
+  const tpSlOrderCount = useDataTap(tpslCount) ?? 0;
+
   return {
-    pendingOrderCount: pendingCount,
-    tpSlOrderCount: tpslCount,
+    pendingOrderCount,
+    tpSlOrderCount,
   };
 };

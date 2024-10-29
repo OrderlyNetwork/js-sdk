@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
