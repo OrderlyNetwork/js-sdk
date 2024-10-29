@@ -87,14 +87,21 @@ export const useOrderListScript = (props: {
   }, [pageSize, typePageSize]);
 
   const onCancelAll = useCallback(() => {
+    const title =
+      props.type === TabType.pending
+        ? "Cancel all pending orders"
+        : props.type === TabType.tp_sl
+        ? "Cancel all TP/SL orders"
+        : "";
+    const content = TabType.pending
+      ? "Are you sure you want to cancel all of your pending orders?"
+      : props.type === TabType.tp_sl
+      ? "Are you sure you want to cancel all of your TP/SL orders?"
+      : "";
+
     modal.confirm({
-      title: "Cancel all orders",
-      content: (
-        <Text size="sm">
-          Are you sure you want to cancel all of your pending orders, including
-          TP/SL orders?
-        </Text>
-      ),
+      title: title,
+      content: <Text size="sm">{content}</Text>,
       onCancel: async () => {},
       onOk: async () => {
         try {

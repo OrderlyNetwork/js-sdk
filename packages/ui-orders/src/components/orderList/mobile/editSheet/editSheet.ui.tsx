@@ -14,10 +14,11 @@ import {
 import { EditSheetState } from "./editSheet.script";
 import { commify, Decimal } from "@orderly.network/utils";
 import { ConfirmDialogContent } from "./editDialogContent";
+import { OrderSide } from "@orderly.network/types";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
-  const isBuy = item.quantity > 0;
+  const isBuy = item.side === OrderSide.BUY;
   return (
     <>
       <Flex

@@ -100,7 +100,9 @@ const OrdersView: FC<
   return (
     <Flex direction={"column"} gap={2} py={2} width={"100%"}>
       <Divider className="oui-w-full" />
-      {props.type !== TabType.orderHistory && (<SymbolControlHeader {...props} />)}
+      {props.type !== TabType.orderHistory && (
+        <SymbolControlHeader {...props} />
+      )}
       <MobileOrderListWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
         type={props.type}
@@ -145,7 +147,9 @@ const SymbolControlHeader: FC<
         variant="outlined"
         size="xs"
         color="secondary"
-        onClick={props.onCloseAll}
+        onClick={(e) => {
+          props.onCloseAll(props.type);
+        }}
       >
         Close All
       </Button>
