@@ -24,7 +24,7 @@ export const usePrivateDataObserver = (options: {
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state } = useAccount();
-  const { setAccountInfo, updateHolding } = useAppStore(
+  const { setAccountInfo, restoreHolding, updateHolding } = useAppStore(
     (state) => state.actions
   );
   const statusActions = useApiStatusActions();
@@ -93,19 +93,9 @@ export const usePrivateDataObserver = (options: {
           const holding = data?.balances ?? ({} as Record<string, any>);
 
           if (holding) {
-            console.log("---->>>>>>!!!! holding", holding);
-            //TODO: update holding
-            // mutate((prevData) => {
-            //   return prevData?.map((item) => {
-            //     const token = holding[item.token];
-            //     return {
-            //       ...item,
-            //       frozen: token.frozen,
-            //       holding: token.holding,
-            //     };
-            //   });
-            // });
-            // next(holding);
+            // console.log("---->>>>>>!!!! holding", holding);
+
+            updateHolding(holding);
           }
         },
       }
@@ -116,7 +106,7 @@ export const usePrivateDataObserver = (options: {
 
   useEffect(() => {
     if (holding) {
-      updateHolding(holding);
+      restoreHolding(holding);
     }
   }, [holding]);
 

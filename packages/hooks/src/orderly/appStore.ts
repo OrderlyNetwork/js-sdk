@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { API } from "@orderly.network/types";
 import { immer } from "zustand/middleware/immer";
 import { Decimal, zero } from "@orderly.network/utils";
+import { WSMessage } from "@orderly.network/types";
 // import { devtools } from "zustand/middleware";
 
 export type AppStatus = {
@@ -42,7 +43,8 @@ export type AppActions = {
   ) => void;
 
   batchUpdateForPortfolio: (data: Partial<Portfolio>) => void;
-  updateHolding: (holding: API.Holding[]) => void;
+  restoreHolding: (holding: API.Holding[]) => void;
+  updateHolding: (msg: Record<string, WSMessage.Holding>) => void;
 };
 
 export const useAppStore = create<
@@ -125,10 +127,36 @@ export const useAppStore = create<
           // "batchUpdateForPortfolio"
         );
       },
-      updateHolding: (holding: API.Holding[]) => {
+      restoreHolding: (holding: API.Holding[]) => {
         set(
           (state) => {
             state.portfolio.holding = holding;
+          },
+          false
+          // "updateHolding"
+        );
+      },
+      updateHolding(msg) {
+        set(
+          (state) => {
+            if (state.portfolio.holding && state.portfolio.holding.length) {
+              for (const key in msg) {
+                const holding = state.portfolio.holding.find(
+                  (item) => item.token === key
+                );
+                if (holding) {
+                  holding.holding = msg[key].holding;
+                  holding.frozen = msg[key].frozen;
+                }
+                // else {
+                //   state.portfolio.holding.push({
+                //     token: key,
+                //     holding: msg[key].holding,
+                //     frozen: msg[key].frozen,
+                //   });
+                // }
+              }
+            }
           },
           false
           // "updateHolding"
