@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 1.5.15
+
+### Patch Changes
+
+- fed369e26: update SEI config;
+
 ## 1.5.15-alpha.0
 
 ### Patch Changes

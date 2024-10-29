@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.15
+
+### Patch Changes
+
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/core@1.5.15
+
 ## 0.3.15-alpha.0
 
 ### Patch Changes

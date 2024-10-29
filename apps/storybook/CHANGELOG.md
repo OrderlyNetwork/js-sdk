@@ -1,5 +1,17 @@
 # storybook
 
+## 1.3.15
+
+### Patch Changes
+
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/react@1.5.15
+  - @orderly.network/core@1.5.15
+  - @orderly.network/hooks@1.5.15
+  - @orderly.network/web3-onboard@1.5.15
+  - @orderly.network/web3-modal@1.5.15
+
 ## 1.3.15-alpha.0
 
 ### Patch Changes
