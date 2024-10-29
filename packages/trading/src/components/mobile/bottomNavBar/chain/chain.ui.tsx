@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Box, ChainIcon, Flex, modal, Text, toast } from "@orderly.network/ui";
 import { ChainState } from "./chain.script";
-import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
+import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
 
 export const Chain: FC<ChainState> = (props) => {
   return (
@@ -10,9 +10,10 @@ export const Chain: FC<ChainState> = (props) => {
         modal
           .show<{
             wrongNetwork: boolean;
-          }>(ChainSelectorId, {
+          }>(ChainSelectorSheetId, {
             // networkId: props.networkId,
             bridgeLessOnly: true,
+            isWrongNetwork: props.isWrongNetwork,
           })
           .then(
             (r) => {

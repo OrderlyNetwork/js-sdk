@@ -16,10 +16,12 @@ export const useChainScript = () => {
     }
     return undefined;
   }, [account.chainId]);
+  const { wrongNetwork } = useAppContext();
   return {
     chainId: account.chainId,
     isTestnetChain,
     networkId: config.get("networkId"),
+    isWrongNetwork: wrongNetwork,
   };
 };
 
