@@ -52,7 +52,6 @@ export const usePositionStream = (
       symbol: symbol === "all" ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
-      size: 100,
     },
     {
       keeplive: true,
