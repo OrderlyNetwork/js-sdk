@@ -105,7 +105,7 @@ export const TPSLOrderRowProvider: FC<
   });
 
   useEffect(() => {
-    if ("algo_type" in props.order) {
+    if ("algo_type" in props.order || ((props.order as any)?.reduce_only ?? false)) {
       const position = getRelatedPosition(props.order.symbol);
       if (position) {
         setPosition(position);

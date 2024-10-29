@@ -142,7 +142,7 @@ export const PositionInfo = (props: {
         </Flex>
       </Flex>
       <Divider intensity={8} />
-      <Box py={3}>
+      <Box py={3} className="oui-space-y-1">
         <Flex justify={"between"}>
           <Text size="sm" intensity={54}>
             Avg. open

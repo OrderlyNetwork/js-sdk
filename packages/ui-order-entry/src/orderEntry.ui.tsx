@@ -493,6 +493,7 @@ const CustomInput = forwardRef<
   }
 >((props, ref) => {
   const { errorMsgVisible } = useContext(OrderEntryContext);
+  const [placeholder, setPlaceholder] = useState<string>("0");
   return (
     <Input.tooltip
       ref={ref}
@@ -500,7 +501,7 @@ const CustomInput = forwardRef<
       autoComplete={"off"}
       autoFocus={props.autoFocus}
       size={"lg"}
-      placeholder={"0"}
+      placeholder={placeholder}
       id={props.id}
       name={props.name}
       color={props.error ? "danger" : undefined}
@@ -508,8 +509,14 @@ const CustomInput = forwardRef<
       suffix={props.suffix}
       value={props.value}
       onChange={props.onChange}
-      onFocus={props.onFocus}
-      onBlur={props.onBlur}
+      onFocus={(event) => {
+        setPlaceholder("");
+        props.onFocus?.(event);
+      }}
+      onBlur={(event) => {
+        setPlaceholder("0");
+        props.onBlur?.(event);
+      }}
       formatters={[
         inputFormatter.numberFormatter,
         inputFormatter.currencyFormatter,

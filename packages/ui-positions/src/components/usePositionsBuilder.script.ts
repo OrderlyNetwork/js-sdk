@@ -12,6 +12,7 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     includedPendingOrder,
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
+    onSymbolChange,
   } = props;
   // const [showAllSymbol] = useLocalStorage(
   //   "showAllSymbol",
@@ -29,6 +30,7 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     sharePnLConfig,
 
     symbol,
+    onSymbolChange,
   };
 };
 

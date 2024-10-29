@@ -88,7 +88,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
       >
         <Flex justify={"between"} width={"100%"}>
           <Text size="2xs">Referral</Text>
-          <ArrowRightShortIcon color="white" opacity={0.98} />
+          <ArrowRightShortIcon color="white" opacity={0.98} size={16} />
         </Flex>
       </button>
       {props.isAffiliate && (
@@ -172,7 +172,7 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
           {props.curEpochId}
           <Text  intensity={54}>{" )"}</Text>
           </span>
-          <ArrowRightShortIcon color="white" opacity={0.98} />
+          <ArrowRightShortIcon color="white" opacity={0.98}  size={16}/>
         </Flex>
       </button>
       <Flex

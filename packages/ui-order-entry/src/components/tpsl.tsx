@@ -145,6 +145,8 @@ const TPSLTriggerPriceInput = (props: {
 }) => {
   const { errorMsgVisible } = useContext(OrderEntryContext);
   const { tipsEle } = usePnlInputContext();
+  const [prefix, setPrefix] = useState<string>(`${props.type} Price`);
+  const [placeholder, setPlaceholder] = useState<string>("USDC");
 
   const [tipVisible, setTipVisible] = useState(false);
 
@@ -157,14 +159,20 @@ const TPSLTriggerPriceInput = (props: {
 
   return (
     <Input.tooltip
-      prefix={`${props.type} Price`}
+      prefix={prefix}
       size={"md"}
-      placeholder="USDC"
+      placeholder={placeholder}
       align="right"
       onFocus={() => {
+        setPrefix(props.type);
+        setPlaceholder("");
         setTipVisible(true);
       }}
       onBlur={() => {
+        setPrefix(
+          !!props.values.trigger_price ? props.type : `${props.type} Price`
+        );
+        setPlaceholder("USDC");
         setTipVisible(false);
       }}
       tooltip={triggerPriceToolTipEle}
