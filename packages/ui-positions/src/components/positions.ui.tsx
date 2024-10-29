@@ -51,7 +51,8 @@ export const MobilePositions = (
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
   return (
     <ListView
-      className="oui-w-full oui-hide-scrollbar oui-overflow-y-hidden"
+      className="oui-w-full oui-hide-scrollbar oui-overflow-y-hidden oui-space-y-0"
+      contentClassName="!oui-space-y-1"
       dataSource={props.dataSource}
       renderItem={(item, index) => (
         <SymbolProvider symbol={item.symbol}>

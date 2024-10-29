@@ -21,7 +21,8 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       gap={2}
       width={"100%"}
       itemAlign={"start"}
-      py={2}
+      p={2}
+      className="oui-bg-base-9 oui-rounded-b-xl"
     >
       <Flex width={"100%"} justify={"between"}>
         <UnrealPnL

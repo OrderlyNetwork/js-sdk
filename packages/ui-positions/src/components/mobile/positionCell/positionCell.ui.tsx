@@ -22,7 +22,14 @@ export const PositionCell: FC<
 > = (props) => {
   const { className, ...rest } = props;
   return (
-    <Flex direction={"column"} width={"100%"} gap={2} className={cn(className)} pt={2}>
+    <Flex
+      direction={"column"}
+      width={"100%"}
+      gap={2}
+      p={2}
+      r="xl"
+      className={cn(className, "oui-bg-base-8")}
+    >
       <Header {...rest} />
       <Divider intensity={6} className="oui-w-full" />
       <Body {...rest} />

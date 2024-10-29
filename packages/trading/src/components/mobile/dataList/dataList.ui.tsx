@@ -26,6 +26,9 @@ export const DataList: FC<
       onValueChange={(e: any) => props.setTab(e)}
       size="lg"
       className={props.className}
+      classNames={{
+        tabsList: "oui-bg-base-9 oui-rounded-t-xl"
+      }}
     >
       <TabPanel
         title={
@@ -74,18 +77,18 @@ export const DataList: FC<
 
 const PositionsView: FC<DataListState> = (props) => {
   return (
-    <Flex direction={"column"}>
+    <Flex direction={"column"} gap={2}>
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
         tabletMediaQuery={props.tabletMediaQuery}
       />
-      <div className="oui-mt-2"></div>
       <MobilePositionsWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
         sharePnLConfig={props.sharePnLConfig}
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+        
       />
     </Flex>
   );
