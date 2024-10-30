@@ -43,6 +43,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       <Divider className="oui-w-full" />
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
+        id="oui-checkbox-showAllInstruments"
           color="white"
           checked={props.showAllSymbol}
           onCheckedChange={(checked: boolean) => {
@@ -51,7 +52,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
         />
 
         <label
-          className="oui-text-2xs oui-text-base-contrast-54"
+          className="oui-text-2xs oui-text-base-contrast-54 oui-cursor-pointer"
           htmlFor="oui-checkbox-showAllInstruments"
         >
           Show all trading pairs

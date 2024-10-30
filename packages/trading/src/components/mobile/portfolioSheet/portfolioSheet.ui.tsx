@@ -172,6 +172,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
         <Flex gap={2}>
           <Text.numeral
             size="xs"
+            rule="percentages"
             color="primaryLight"
             dp={2}
             padding={false}
