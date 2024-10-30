@@ -25,9 +25,15 @@ export const Transform = {
       //     ...commonProps,
       //   });
       // }
-      return columnHelper.accessor(column.dataIndex, {
+      const { dataIndex, onSort } = column;
+
+      return columnHelper.accessor(dataIndex, {
         header: () => column.title,
-        enableSorting: column?.onSort ? true : false,
+        enableSorting: onSort ? true : false,
+        sortingFn:
+          typeof onSort === "function"
+            ? (rowA, rowB, columnId) => onSort?.(rowA.original, rowB.original)
+            : "alphanumeric",
         ...commonProps,
       });
     });

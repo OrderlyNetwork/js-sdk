@@ -29,7 +29,7 @@ export type TableColumn<RecordType extends unknown = any> = {
   align?: "left" | "center" | "right";
   onSort?:
     | boolean
-    | ((r1: RecordType, r2: RecordType, sortOrder: SortOrder) => number);
+    | ((r1: RecordType, r2: RecordType, sortOrder?: SortOrder) => number);
   formatter?: TableCellFormatter<RecordType>;
   render?: TableCellRenderer<RecordType>;
   getKey?: (record: RecordType, index: number) => string;

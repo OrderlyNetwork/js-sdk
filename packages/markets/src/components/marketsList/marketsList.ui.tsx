@@ -43,7 +43,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
         root: props.tableClassNames?.root,
         body: props.tableClassNames?.body,
         header: cn("oui-h-9", props.tableClassNames?.header),
-        scroll: props.tableClassNames?.scroll
+        scroll: props.tableClassNames?.scroll,
       }}
       columns={columns}
       loading={loading}
@@ -60,6 +60,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
       generatedRowKey={(record) => record.symbol}
       onSort={onSort}
       initialSort={initialSort}
+      manualSorting
     />
   );
 

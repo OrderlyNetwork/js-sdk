@@ -52,6 +52,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
       pagination={pagination}
       sizes={{ header: "xl" }}
       manualPagination
+      manualSorting
     />
   );
 

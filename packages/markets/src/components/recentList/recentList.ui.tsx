@@ -46,6 +46,7 @@ export const RecentList: FC<RecentListProps> = (props) => {
       }}
       generatedRowKey={(record) => record.symbol}
       onSort={onSort}
+      manualSorting
     />
   );
 

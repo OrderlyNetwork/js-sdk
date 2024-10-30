@@ -32,7 +32,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -116,7 +116,7 @@ export const Default: Story = {};
 
 export const DataList: Story = {
   render: (arg) => {
-    return (<Box p={3}>
+    return (<Box p={3} height={800}>
       <DataListWidget sharePnLConfig={sharePnLConfig} tabletMediaQuery={arg.tabletMediaQuery!} />
     </Box>);
   }

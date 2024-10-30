@@ -6,7 +6,10 @@ import { PositionsProps } from "../types/types";
 import { useColumn } from "./desktop/useColumn";
 import { PositionsRowProvider } from "./desktop/positionRowContext";
 import { PositionCellWidget } from "./mobile/positionCell";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import {
+  AuthGuardDataTable,
+  AuthGuardTableView,
+} from "@orderly.network/ui-connector";
 
 export const Positions = (props: PositionsBuilderState) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
@@ -20,13 +23,9 @@ export const Positions = (props: PositionsBuilderState) => {
 
   return (
     <div>
-      <AuthGuardDataTable<API.PositionTPSLExt>
+      <AuthGuardTableView<API.PositionTPSLExt>
         loading={props.isLoading}
         id="oui-desktop-positions-content"
-        classNames={{
-          header: "oui-text-base-contrast-36",
-          body: "oui-text-base-contrast-80",
-        }}
         columns={column}
         bordered
         dataSource={props.dataSource}

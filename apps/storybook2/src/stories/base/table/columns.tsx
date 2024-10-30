@@ -24,7 +24,7 @@ export const Columns: Column[] = [
     //     </Text.formatted>
     //   );
     // },
-    // fixed: "left",
+    fixed: "left",
   },
   {
     title: "Price",
@@ -109,7 +109,7 @@ export const Columns: Column[] = [
   {
     title: "Open interest",
     dataIndex: "openInterest",
-    width: 100,
+    width: 150,
     align: "right",
     onSort: true,
     render: (value) => {

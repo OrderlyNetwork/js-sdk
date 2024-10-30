@@ -31,7 +31,8 @@
       "@orderly.network/hooks": ["../hooks/src"],
       "@orderly.network/utils": ["../utils/src"],
       "@orderly.network/ui-tpsl": ["../ui-tpsl/src"],
-      "@orderly.network/types": ["../types/src"]
+      "@orderly.network/types": ["../types/src"],
+      "@orderly.network/ui-connector": ["../ui-connector/src"],
     }
   }
 }

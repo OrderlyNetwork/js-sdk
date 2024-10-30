@@ -60,6 +60,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
         onSort={onSort}
         pagination={pagination}
         manualPagination
+        manualSorting
       />
 
       {/* <DataTable

@@ -53,6 +53,7 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
         }}
         generatedRowKey={(record) => record.symbol}
         onSort={onSort}
+        manualSorting
       />
 
       {/* <DataTable

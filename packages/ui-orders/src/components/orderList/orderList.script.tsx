@@ -13,6 +13,7 @@ import {
   modal,
   usePagination,
   Text,
+  PaginationMeta,
 } from "@orderly.network/ui";
 import { differenceInDays, setHours } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
@@ -130,8 +131,17 @@ export const useOrderListScript = (props: {
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
+  const dataSource =
+    useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
   
-  const dataSource = useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
+  const pagination = useMemo(() => {
+    return {
+      ...parseMeta(meta),
+      onPageChange: setPage,
+      onPageSizeChange: setPageSize,
+    } as PaginationMeta;
+  }, [meta, setPage, setPageSize]);
+
   return {
     type,
     dataSource,
@@ -141,13 +151,12 @@ export const useOrderListScript = (props: {
     updateOrder,
     cancelAlgoOrder,
     updateAlgoOrder,
-
-    // pagination
     page,
     pageSize,
     setPage,
     setPageSize,
     meta: parseMeta(meta),
+    pagination,
 
     // filter
     onFilter,
