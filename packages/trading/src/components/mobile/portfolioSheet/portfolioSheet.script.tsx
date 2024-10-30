@@ -88,7 +88,7 @@ const useMarginRatioAndLeverage = () => {
     );
   }, [marginRatio, aggregated]);
 
-  const [maxLeverage, { update, config: leverageLevers, isMutating }] =
+  const [curLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
 
   const marks = useMemo((): SliderMarks => {
@@ -100,22 +100,25 @@ const useMarginRatioAndLeverage = () => {
     );
   }, [leverageLevers]);
 
-  const [leverage, setLeverage] = useState(maxLeverage ?? 0);
+  const [leverage, setLeverage] = useState(curLeverage ?? 0);
+
+  const maxLeverage = leverageLevers?.reduce((a: number, item: any) => Math.max(a, Number(item), 0))
 
   const step = 100 / ((marks?.length || 0) - 1);
 
-  const leverageValue = useMemo(() => {
-    const index = leverageLevers.findIndex((item: any) => item === leverage);
+  // const leverageValue = useMemo(() => {
+  //   const index = leverageLevers.findIndex((item: any) => item === leverage);
 
-    return index * step;
-  }, [leverageLevers, leverage, step]);
+  //   return index * step;
+  // }, [leverageLevers, leverage, step]);
 
   const onLeverageChange = (leverage: number) => {
+    // maxLeverage / 100 * leverage;
     setLeverage(leverage);
     // updateLeverage(leverage);
   };
 
-  const onSave = async () => {
+  const onSave = async (leverage: number) => {
     try {
       update({ leverage }).then(
         (res: any) => {
@@ -129,7 +132,7 @@ const useMarginRatioAndLeverage = () => {
   };
 
   const onValueCommit = useCallback((value: number[]) => {
-    onSave();
+    onSave(value[0] + 1);
   }, []);
 
   return {
@@ -145,7 +148,9 @@ const useMarginRatioAndLeverage = () => {
     marks,
     onLeverageChange,
     onValueCommit,
-    value: leverageValue,
+    value: leverage,
+    maxLeverage,
+    onSaveLeverage: onSave,
   };
 };
 
