@@ -318,6 +318,10 @@ export const useEditSheetScript = (props: {
           ? (order as any).visible === 0
           : false;
       if (order.algo_order_id !== undefined) {
+        if (isStopMarket && "order_price" in values) {
+          const { order_price, ...rest } = values;
+          values = rest;
+        }
         future = editAlgoOrder(order.algo_order_id.toString(), {
           ...values,
         });
@@ -354,6 +358,11 @@ export const useEditSheetScript = (props: {
     return 0;
   }, [formattedOrder.order_quantity, maxQty]);
 
+  const isChanged =
+    order.price !== formattedOrder.order_price ||
+    `${order.quantity}` !== formattedOrder.order_quantity ||
+    `${order.trigger_price}` !== formattedOrder.trigger_price;
+
   return {
     ...state,
     curMarkPrice: markPrice,
@@ -379,6 +388,8 @@ export const useEditSheetScript = (props: {
     onClose: onClose,
     onSheetConfirm: onSheetConfirm,
     errors,
+    orderType,
+    isChanged,
 
     dialogOpen,
     setDialogOpen,
