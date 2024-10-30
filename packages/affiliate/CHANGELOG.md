@@ -1,5 +1,20 @@
 # @orderly.network/affiliate
 
+## 1.0.1-preReleaseV2-2.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@1.0.1-preReleaseV2-2.3
+  - @orderly.network/ui-scaffold@1.0.1-preReleaseV2-2.3
+  - @orderly.network/chart@1.0.1-preReleaseV2-2.3
+  - @orderly.network/hooks@1.5.14-preReleaseV2-2.3
+  - @orderly.network/types@1.5.14-preReleaseV2-2.3
+  - @orderly.network/utils@1.5.14-preReleaseV2-2.3
+  - @orderly.network/react-app@1.0.1-preReleaseV2-2.3
+  - @orderly.network/ui@1.0.1-preReleaseV2-2.3
+
 ## 1.0.1-preReleaseV2-2.2
 
 ### Patch Changes

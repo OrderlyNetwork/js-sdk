@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.5.14-preReleaseV2-2.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@1.5.14-preReleaseV2-2.3
+  - @orderly.network/types@1.5.14-preReleaseV2-2.3
+
 ## 1.5.14-preReleaseV2-2.2
 
 ### Patch Changes
