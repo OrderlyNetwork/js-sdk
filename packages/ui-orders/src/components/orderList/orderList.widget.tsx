@@ -26,6 +26,7 @@ export const MobileOrderListWidget = (props: {
     classNames?: {
         root?: string;
         cell?: string;
+        content?: string;
     },
     showFilter?: boolean;
 }) => {
