@@ -6,6 +6,7 @@ import {
   API,
 } from "@orderly.network/types";
 import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
+import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
 import {
   DataFilterItems,
@@ -129,7 +130,8 @@ export const useOrderListScript = (props: {
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
-  const dataSource = type !== TabType.tp_sl ? formattedData : data;
+  
+  const dataSource = useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
   return {
     type,
     dataSource,

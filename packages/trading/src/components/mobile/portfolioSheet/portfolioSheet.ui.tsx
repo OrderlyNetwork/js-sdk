@@ -30,7 +30,7 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
       <MarginRatio {...props} />
       <Leverage {...props} />
       <Divider className="oui-w-full" />
-      <AvailableBalance {...props} />
+      {/* <AvailableBalance {...props} /> */}
       <Buttons {...props} />
     </Flex>
   );
@@ -84,7 +84,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
         </Text.formatted>
         <Text.numeral
           size="base"
-          coloring
+          // coloring
           dp={2}
           padding={false}
           visible={!props.hideAssets}

@@ -4,6 +4,7 @@ import {
   usePositionStream,
 } from "@orderly.network/hooks";
 import { PositionsProps } from "../types/types";
+import { useDataTap } from "@orderly.network/react-app";
 
 export const usePositionsBuilder = (props: PositionsProps) => {
   const {
@@ -23,8 +24,10 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     includedPendingOrder,
   });
 
+  const dataSource = useDataTap(data?.rows) ?? undefined;
+
   return {
-    dataSource: data?.rows,
+    dataSource,
     isLoading, // will be use isLoading when usePositionStream support
     pnlNotionalDecimalPrecision,
     sharePnLConfig,

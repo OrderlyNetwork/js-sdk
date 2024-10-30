@@ -34,7 +34,7 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
   );
 
   return (
-    <div className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-full oui-gap-1 oui-pb-[64px] oui-relative">
+    <div className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-full oui-gap-1 oui-pb-[64px] oui-relative oui-bg-base-10">
       <header>{topBar}</header>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
@@ -42,7 +42,7 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
         <OrderBookAndEntryWidget />
         <DataListWidget
           symbol={props.symbol}
-          className="oui-mx-1 oui-bg-base-9 oui-rounded-xl oui-p-2"
+          className="oui-mx-1 oui-rounded-xl"
           sharePnLConfig={props.dataList.sharePnLConfig}
         />
       </main>
