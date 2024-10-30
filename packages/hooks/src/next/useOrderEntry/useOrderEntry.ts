@@ -76,6 +76,8 @@ type OrderEntryReturn = {
    * Indicates if a mutation (order creation) is in progress.
    */
   isMutating: boolean;
+
+  markPrice: number | undefined;
 };
 
 /**
@@ -406,6 +408,7 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     symbolInfo: symbolInfo || {},
     metaState: meta,
     isMutating,
+    markPrice,
   };
 };
 

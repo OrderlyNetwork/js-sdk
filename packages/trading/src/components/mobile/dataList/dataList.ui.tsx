@@ -101,7 +101,7 @@ const OrdersView: FC<
   }
 > = (props) => {
   return (
-    <Flex direction={"column"} gap={2} py={2} width={"100%"}>
+    <Flex direction={"column"} pb={2} width={"100%"}>
       <Divider className="oui-w-full" />
       {props.type !== TabType.orderHistory && (
         <SymbolControlHeader {...props} />
@@ -112,7 +112,8 @@ const OrdersView: FC<
         ordersStatus={props.ordersStatus}
         classNames={{
           root: "oui-w-full oui-hide-scrollbar oui-overflow-y-hidden",
-          cell: "oui-py-2",
+          content: "!oui-space-y-1",
+          cell: "oui-py-2 oui-bg-base-9 oui-p-2 oui-rounded-xl",
         }}
         showFilter={props.type === TabType.orderHistory}
       />
@@ -127,7 +128,7 @@ const SymbolControlHeader: FC<
   }
 > = (props) => {
   return (
-    <Flex width={"100%"} justify={"between"} gap={2}>
+    <Flex px={2} py={2} width={"100%"} justify={"between"} gap={2} className="oui-rounded-b-xl oui-bg-base-9">
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
           color="white"

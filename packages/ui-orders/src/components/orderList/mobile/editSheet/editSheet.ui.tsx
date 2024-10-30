@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
   Badge,
   Button,
@@ -10,6 +10,7 @@ import {
   SimpleDialog,
   Slider,
   Text,
+  toast,
 } from "@orderly.network/ui";
 import { EditSheetState } from "./editSheet.script";
 import { commify, Decimal } from "@orderly.network/utils";
@@ -19,6 +20,21 @@ import { OrderSide } from "@orderly.network/types";
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
   const isBuy = item.side === OrderSide.BUY;
+
+  // useEffect(() => {
+  //   if (props.errors?.order_price?.message) {
+  //     toast.error(props.errors?.order_price?.message);
+  //   } else if (props.errors?.order_quantity?.message) {
+  //     toast.error(props.errors?.order_quantity?.message);
+  //   } else if (props.errors?.total?.message) {
+  //     toast.error(props.errors?.total?.message);
+  //   } else if (props.errors?.trigger_price?.message) {
+  //     toast.error(props.errors?.trigger_price?.message);
+  //   }
+  // }, [props.errors]);
+
+  const percentages = (props.quantity && props.maxQty) ? Math.min(Number(props.quantity ) / props.maxQty, 1) : undefined;
+
   return (
     <>
       <Flex
@@ -52,7 +68,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         <Flex width={"100%"} justify={"between"}>
           <Text>Last price</Text>
           <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp}>
-            {props.curMarkPrice}
+            {props.curMarkPrice ?? '--'}
           </Text.numeral>
         </Flex>
         <Flex width={"100%"} direction={"column"} itemAlign={"stretch"} gap={2}>
@@ -68,6 +84,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                   {props.quote}
                 </Text>
               }
+              color={props.errors?.trigger_price?.message ? "danger" : undefined}
               align="right"
               fullWidth
               autoComplete="off"
@@ -77,14 +94,14 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               ]}
               value={props.triggerPrice}
               onValueChange={(e) => props.setTriggerPrice(e)}
-              tooltip={props.errors.trigger_price?.message}
+              tooltip={props.errors?.trigger_price?.message}
               tooltipProps={{
                 content: {
-                  className: "oui-bg-base-6"
+                  className: "oui-bg-base-6",
                 },
                 arrow: {
-                  className: "oui-fill-base-6"
-                }
+                  className: "oui-fill-base-6",
+                },
               }}
               classNames={{
                 input: "oui-text-base-contrast-80 oui-w-full",
@@ -102,6 +119,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 {props.quote}
               </Text>
             }
+            color={props.errors?.order_price?.message ? "danger" : undefined}
             align="right"
             fullWidth
             autoComplete="off"
@@ -110,16 +128,16 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               inputFormatter.dpFormatter(props.quote_dp),
             ]}
             disabled={!props.priceEdit}
-            value={props.price}
+            value={props.isStopMarket? 'Market' : props.price}
             onValueChange={(e) => props.setPrice(e)}
-            tooltip={props.errors.order_price?.message}
+            tooltip={props.errors?.order_price?.message}
             tooltipProps={{
               content: {
-                className: "oui-bg-base-6"
+                className: "oui-bg-base-5",
               },
               arrow: {
-                className: "oui-fill-base-6"
-              }
+                className: "oui-fill-base-5",
+              },
             }}
             classNames={{
               input: "oui-text-base-contrast-80",
@@ -136,6 +154,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 {props.base}
               </Text>
             }
+            color={props.errors?.order_quantity?.message ? "danger" : undefined}
             align="right"
             fullWidth
             autoComplete="off"
@@ -148,17 +167,20 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             onValueChange={(e) => {
               props.setQuantity(e);
               if (e.endsWith(".")) return;
-              const sliderValue = new Decimal(e).div(props.maxQty).mul(100).toNumber();
+              const sliderValue = new Decimal(e)
+                .div(props.maxQty)
+                .mul(100)
+                .toNumber();
               props.setSliderValue(sliderValue);
             }}
-            tooltip={props.errors.order_quantity?.message}
+            tooltip={props.errors?.order_quantity?.message}
             tooltipProps={{
               content: {
-                className: "oui-bg-base-6"
+                className: "oui-bg-base-6",
               },
               arrow: {
-                className: "oui-fill-base-6"
-              }
+                className: "oui-fill-base-6",
+              },
             }}
             classNames={{
               input: "oui-text-base-contrast-80",
@@ -181,10 +203,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             <Text.numeral
               color="primaryLight"
               size="2xs"
-              dp={props.base_dp}
+              dp={2}
               padding={false}
               rule="percentages"
-            >{`${props.percentages ?? 0}`}</Text.numeral>
+            >{`${percentages ?? 0}`}</Text.numeral>
             <Flex gap={1}>
               <Text size="2xs" color="primaryLight">
                 Max
@@ -210,7 +232,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              props.onComfirm();
+              props.onSheetConfirm();
             }}
             loading={props.submitting}
           >
@@ -227,7 +249,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         actions={{
           primary: {
             label: "Confirm",
-            onClick: props.onConfirm,
+            onClick: props.onDialogConfirm,
             loading: props.submitting,
             fullWidth: true,
           },

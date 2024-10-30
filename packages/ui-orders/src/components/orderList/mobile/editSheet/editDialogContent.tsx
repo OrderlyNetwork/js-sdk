@@ -59,7 +59,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
               rm={Decimal.ROUND_DOWN}
               suffix={<Text intensity={54}>{" USDC"}</Text>}
             >
-              {triggerPrice}
+              {triggerPrice ?? '--'}
             </Text.numeral>
           </Flex>
         )}
@@ -72,8 +72,9 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
             padding={false}
             rm={Decimal.ROUND_DOWN}
             suffix={<Text intensity={54}>{" USDC"}</Text>}
+            placeholder={props.isStopMarket ? "Market": '--'}
           >
-            {price}
+            {props.isStopMarket ? 'Market' : price ?? '--'}
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} width={"100%"} gap={1}>
@@ -84,7 +85,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
             padding={false}
             rm={Decimal.ROUND_DOWN}
           >
-            {quantity}
+            {quantity ?? '--'}
           </Text.numeral>
         </Flex>
       </Flex>

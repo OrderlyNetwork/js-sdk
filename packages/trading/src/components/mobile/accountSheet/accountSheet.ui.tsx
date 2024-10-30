@@ -14,11 +14,12 @@ export const AccountSheet: FC<AccountSheetState> = (props) => {
         {props.showGetTestUSDC && (
           <Button
             variant="outlined"
-            color="primary"
+            // color="primary"
             size="md"
             onClick={props.onGetTestUSDC}
             fullWidth
             loading={props.gettingTestUSDC}
+            className="oui-border-primary-light oui-text-primary-light"
           >
             Get test USDC
           </Button>
