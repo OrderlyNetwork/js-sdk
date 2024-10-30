@@ -13,5 +13,5 @@ export const MainNavWidget = (
 ) => {
   const { children, ...rest } = props;
   const state = useMainNavBuilder(rest);
-  return <MainNav {...state} children={children} />;
+  return <MainNav {...state}>{children}</MainNav>;
 };
