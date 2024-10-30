@@ -83,7 +83,6 @@ export function TableView<RecordType extends any>(
   props: PropsWithChildren<TableViewProps<RecordType>>
 ) {
   const {
-    dataSource,
     columns,
     className,
     classNames,
@@ -98,6 +97,14 @@ export function TableView<RecordType extends any>(
     initialSort,
     onSort,
   } = props;
+
+  const dataSource = useMemo(() => {
+    if (!props.dataSource) {
+      return [];
+    }
+
+    return props.dataSource;
+  }, [props.dataSource]);
 
   const formatColumns = useMemo(() => Transform.columns(columns), [columns]);
 
@@ -175,9 +182,23 @@ export function TableView<RecordType extends any>(
 
   const hasData = !!(dataSource?.length && rows?.length);
 
-  const showPagination = pagination && hasData;
-
   const showPlaceholder = initialized && (rows.length === 0 || loading);
+
+  const [showHeader, setShowHeader] = useState(false);
+  const [showPagination, setShowPagination] = useState(false);
+
+  useEffect(() => {
+    if (initialized && hasData && !loading) {
+      setShowHeader(true);
+    }
+  }, [initialized, hasData, loading]);
+
+  useEffect(() => {
+    if (pagination && hasData && !loading) {
+      setShowPagination(true);
+    }
+  }, [pagination, hasData, loading]);
+  console.log("showPagination", showPagination, paginationState);
 
   return (
     <div
@@ -195,7 +216,7 @@ export function TableView<RecordType extends any>(
         ref={theadRef}
         className={cnBase("oui-overflow-x-hidden", "oui-text-base-contrast-36")}
       >
-        {initialized && hasData && (
+        {showHeader && (
           <TableHeader
             className={classNames?.header}
             headerGroups={table.getHeaderGroups()}
@@ -237,9 +258,9 @@ export function TableView<RecordType extends any>(
       {showPagination && (
         <TablePagination
           className={classNames?.pagination}
-          count={pagination?.count!}
-          pageTotal={pagination?.pageTotal!}
-          page={pagination?.page}
+          count={pagination?.count! || rows?.length}
+          pageTotal={pagination?.pageTotal! || table.getPageCount()}
+          page={pagination?.page!}
           pageSize={pagination?.pageSize}
           onPageChange={pagination?.onPageChange}
           onPageSizeChange={pagination?.onPageSizeChange}

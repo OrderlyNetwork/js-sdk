@@ -139,7 +139,7 @@ export const DataFilter = (props: DataFilterProps) => {
       py={3}
       width={"100%"}
       className={cnBase(
-        // "oui-data-grid-filter-bar oui-border-b oui-border-line",
+        "oui-data-filter-bar oui-border-b oui-border-line",
         props.className
       )}
     >

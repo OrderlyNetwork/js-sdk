@@ -8,6 +8,7 @@ import {
   Flex,
   cn,
   usePagination,
+  PaginationMeta,
 } from "@orderly.network/ui";
 import { Columns } from "./columns";
 import { DataSource } from "./dataSource";
@@ -25,7 +26,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => {
     const [dataSource, setDataSource] = useState([] as any);
-    const { page, pageSize, setPage, setPageSize } = usePagination();
+    const { page, pageSize, setPage, setPageSize } = usePagination({
+      pageSize: 50,
+    });
 
     const [loading, setLoading] = useState(true);
 
@@ -48,12 +51,16 @@ export const Default: Story = {
         pageSize,
         onPageChange: setPage,
         onPageSizeChange: setPageSize,
-      };
+      } as PaginationMeta;
     }, [page, pageSize, setPage, setPageSize]);
+
+    useEffect(() => {
+      setPage(1);
+    }, [pageSize]);
 
     return (
       <Box width={800} height={600} p={3} intensity={900}>
-        <Flex gapX={1}>
+        <Flex gapX={1} mb={3}>
           <Input
             value={columnFilters.value}
             onValueChange={(value) => {
@@ -67,7 +74,7 @@ export const Default: Story = {
             size="sm"
             autoComplete="off"
           />
-          <DataFilter
+          {/* <DataFilter
             items={[
               {
                 type: "select",
@@ -84,7 +91,7 @@ export const Default: Story = {
             onFilter={(value) => {
               // onFilter(value);
             }}
-          />
+          /> */}
         </Flex>
         <TableView
           columns={Columns}
@@ -106,7 +113,7 @@ export const Default: Story = {
           // }}
           classNames={{
             root: cn(
-              "!oui-h-[calc(100%_-_49px)]",
+              "!oui-h-[calc(100%_-_40px)]",
               "oui-px-3 oui-border-t oui-border-line"
             ),
             // header: "oui-text-base oui-text-base-contrast-80",

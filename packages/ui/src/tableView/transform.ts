@@ -19,12 +19,12 @@ export const Transform = {
         size: column.width || 100,
       };
 
-      if (column.type === "action") {
-        return columnHelper.display({
-          id: `${"actions"}_${index}`,
-          ...commonProps,
-        });
-      }
+      // if (column.type === "action") {
+      //   return columnHelper.display({
+      //     // id: `${"actions"}_${index}`,
+      //     ...commonProps,
+      //   });
+      // }
       return columnHelper.accessor(column.dataIndex, {
         header: () => column.title,
         enableSorting: column?.onSort ? true : false,
@@ -53,7 +53,6 @@ export const Transform = {
       TableOptions<any>,
       "getPaginationRowModel" | "onPaginationChange"
     >;
-    console.log("pagination", pagination);
     if (pagination) {
       state = {
         pagination: {

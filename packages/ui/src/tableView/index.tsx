@@ -1,4 +1,4 @@
-export { TableView } from "./tableView";
+export { TableView, type TableViewProps } from "./tableView";
 export { DataFilter } from "./dataFilter";
 export {
   type PaginationMeta,
