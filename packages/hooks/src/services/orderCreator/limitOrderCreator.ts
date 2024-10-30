@@ -10,7 +10,7 @@ import { Decimal } from "@orderly.network/utils";
 import { order as orderUntil } from "@orderly.network/perp";
 import { pick } from "ramda";
 
-const { maxPrice, minPrice, scropePrice } = orderUntil;
+const { maxPrice, minPrice, scopePrice } = orderUntil;
 
 export class LimitOrderCreator<
   T extends OrderEntity = OrderlyOrder
@@ -61,7 +61,7 @@ export class LimitOrderCreator<
         const { price_range, price_scope, quote_max, quote_min } = symbol;
         const maxPriceNumber = maxPrice(config.markPrice, price_range);
         const minPriceNumber = minPrice(config.markPrice, price_range);
-        const scropePriceNumbere = scropePrice(
+        const scopePriceNumber = scopePrice(
           config.markPrice,
           price_scope,
           side
@@ -70,12 +70,12 @@ export class LimitOrderCreator<
         const priceRange =
           side === "BUY"
             ? {
-                min: scropePriceNumbere,
+                min: scopePriceNumber,
                 max: maxPriceNumber,
               }
             : {
                 min: minPriceNumber,
-                max: scropePriceNumbere,
+                max: scopePriceNumber,
               };
 
         /// if side is 'buy', only check max price,
