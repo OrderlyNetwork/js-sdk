@@ -26,6 +26,9 @@ export const DataList: FC<
       onValueChange={(e: any) => props.setTab(e)}
       size="lg"
       className={props.className}
+      classNames={{
+        tabsList: "oui-bg-base-9 oui-rounded-t-xl"
+      }}
     >
       <TabPanel
         title={
@@ -74,18 +77,18 @@ export const DataList: FC<
 
 const PositionsView: FC<DataListState> = (props) => {
   return (
-    <Flex direction={"column"}>
+    <Flex direction={"column"} gap={2}>
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
         tabletMediaQuery={props.tabletMediaQuery}
       />
-      <div className="oui-mt-2"></div>
       <MobilePositionsWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
         sharePnLConfig={props.sharePnLConfig}
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+        
       />
     </Flex>
   );
@@ -98,16 +101,19 @@ const OrdersView: FC<
   }
 > = (props) => {
   return (
-    <Flex direction={"column"} gap={2} py={2} width={"100%"}>
+    <Flex direction={"column"} pb={2} width={"100%"}>
       <Divider className="oui-w-full" />
-      {props.type !== TabType.orderHistory && (<SymbolControlHeader {...props} />)}
+      {props.type !== TabType.orderHistory && (
+        <SymbolControlHeader {...props} />
+      )}
       <MobileOrderListWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
         type={props.type}
         ordersStatus={props.ordersStatus}
         classNames={{
           root: "oui-w-full oui-hide-scrollbar oui-overflow-y-hidden",
-          cell: "oui-py-2",
+          content: "!oui-space-y-1",
+          cell: "oui-py-2 oui-bg-base-9 oui-p-2 oui-rounded-xl",
         }}
         showFilter={props.type === TabType.orderHistory}
       />
@@ -122,7 +128,7 @@ const SymbolControlHeader: FC<
   }
 > = (props) => {
   return (
-    <Flex width={"100%"} justify={"between"} gap={2}>
+    <Flex px={2} py={2} width={"100%"} justify={"between"} gap={2} className="oui-rounded-b-xl oui-bg-base-9">
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
           color="white"
@@ -145,7 +151,9 @@ const SymbolControlHeader: FC<
         variant="outlined"
         size="xs"
         color="secondary"
-        onClick={props.onCloseAll}
+        onClick={(e) => {
+          props.onCloseAll(props.type);
+        }}
       >
         Close All
       </Button>

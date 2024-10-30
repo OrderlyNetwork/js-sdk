@@ -26,10 +26,6 @@ export const POSITION_EMPTY: API.PositionsTPSLExt = {
 };
 
 type PositionState = {
-  // positions: API.PositionTPSLExt[];
-  // aggregated: API.PositionAggregated;
-  // positions: API.PositionsTPSLExt;
-  // [key: string]: API.PositionsTPSLExt;
   positions: {
     all: API.PositionsTPSLExt;
     [key: string]: API.PositionsTPSLExt;

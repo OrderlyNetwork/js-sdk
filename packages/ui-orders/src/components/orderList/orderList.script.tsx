@@ -6,6 +6,7 @@ import {
   API,
 } from "@orderly.network/types";
 import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
+import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
 import {
   DataFilterItems,
@@ -75,23 +76,33 @@ export const useOrderListScript = (props: {
   });
 
   const localPageSizeKey = `oui-${type}_pageSize`;
-  const [typePageSize, setTypePageSize] = useLocalStorage(localPageSizeKey, defaultPageSize);
+  const [typePageSize, setTypePageSize] = useLocalStorage(
+    localPageSizeKey,
+    defaultPageSize
+  );
 
-  useEffect(() => {    
+  useEffect(() => {
     if (typePageSize !== pageSize) {
       setTypePageSize(pageSize);
     }
   }, [pageSize, typePageSize]);
 
   const onCancelAll = useCallback(() => {
+    const title =
+      props.type === TabType.pending
+        ? "Cancel all pending orders"
+        : props.type === TabType.tp_sl
+        ? "Cancel all TP/SL orders"
+        : "";
+    const content = TabType.pending
+      ? "Are you sure you want to cancel all of your pending orders?"
+      : props.type === TabType.tp_sl
+      ? "Are you sure you want to cancel all of your TP/SL orders?"
+      : "";
+
     modal.confirm({
-      title: "Cancel all orders",
-      content: (
-        <Text size="sm">
-          Are you sure you want to cancel all of your pending orders, including
-          TP/SL orders?
-        </Text>
-      ),
+      title: title,
+      content: <Text size="sm">{content}</Text>,
       onCancel: async () => {},
       onOk: async () => {
         try {
@@ -119,7 +130,8 @@ export const useOrderListScript = (props: {
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
-  const dataSource = type !== TabType.tp_sl ? formattedData : data;
+  
+  const dataSource = useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
   return {
     type,
     dataSource,

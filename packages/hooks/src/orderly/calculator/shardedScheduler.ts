@@ -38,6 +38,7 @@ class ShardingScheduler implements CalculatorScheduler {
           }
         );
       } catch (error) {
+        console.error("ShardingScheduler calc error", error);
         reject(error);
       }
     });
@@ -67,7 +68,8 @@ class ShardingScheduler implements CalculatorScheduler {
   ): void {
     let index = 0; // Current starting index of the shard
     const results: R[][] = []; // Used to store the calculation results of each shard
-    const estimatedShardSize = Math.min(data.length, 2); // Initial estimated shard size
+    // const estimatedShardSize = Math.min(data.length, 2); // Initial estimated shard size
+    const estimatedShardSize = 1;
 
     // Function to process shards
     function processNextShard(deadline: IdleDeadline) {

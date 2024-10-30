@@ -60,7 +60,7 @@ export const useOrderStream = (
     status,
     symbol,
     side,
-    size = 100,
+    size = 50,
     page,
     dateRange,
     includes = ["ALL"],

@@ -93,7 +93,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
     const availableBalance = account.availableBalance({
       USDCHolding: usdc?.holding ?? 0,
-      unsettlementPnL: positions.total_unsettled_pnl,
+      unsettlementPnL: positions.total_unsettled_pnl ?? 0,
     });
 
     return {

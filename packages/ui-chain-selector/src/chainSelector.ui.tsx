@@ -19,7 +19,9 @@ export const ChainSelector = (props: {
       isWalletConnected: boolean;
     }
   ) => void;
+  isWrongNetwork?: boolean;
 }) => {
+  const { isWrongNetwork = true } = props;
   const [select, setSelect] = useState<number | undefined>();
   // props.currentChainId
   const onChange = async (chain: ChainItem) => {
@@ -41,7 +43,7 @@ export const ChainSelector = (props: {
 
   return (
     <>
-      <Box intensity={900} r="2xl" p={1}>
+      <Box intensity={900} r="2xl" p={1} className="oui-overflow-auto oui-max-h-[562px] oui-hide-scrollbar">
         {Array.isArray(props.chains.mainnet) && (
           <Text
             as="div"
@@ -81,11 +83,13 @@ export const ChainSelector = (props: {
           );
         })}
       </Box>
-      <Box pt={5} pb={4} className="oui-text-center">
-        <Text color="warning" size="xs">
-          Please switch to a supported network to continue.
-        </Text>
-      </Box>
+      {isWrongNetwork && (
+        <Box pt={5} pb={4} className="oui-text-center">
+          <Text color="warning" size="xs">
+            Please switch to a supported network to continue.
+          </Text>
+        </Box>
+      )}
     </>
   );
 };

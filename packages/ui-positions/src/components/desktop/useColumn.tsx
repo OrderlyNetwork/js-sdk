@@ -17,6 +17,7 @@ import { API } from "@orderly.network/types";
 import { TriggerPrice } from "./triggerPrice";
 import { TPSLButton } from "./components";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
+import { NumeralWithCtx } from "./numeralWithCtx";
 
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
@@ -93,13 +94,9 @@ export const useColumn = (props: {
         onSort: true,
         dataIndex: "average_open_price",
         render: (value: string, record: any) => {
+          // const ctx = usePositionsRowContext();
           return (
-            <Text.numeral
-              dp={record?.symbolInfo?.("quote_dp")}
-              rm={Decimal.ROUND_DOWN}
-            >
-              {value}
-            </Text.numeral>
+            <NumeralWithCtx rm={Decimal.ROUND_DOWN}>{value}</NumeralWithCtx>
           );
         },
       },
@@ -112,12 +109,7 @@ export const useColumn = (props: {
 
         render: (value: string, record: any) => {
           return (
-            <Text.numeral
-              dp={record?.symbolInfo?.("quote_dp")}
-              rm={Decimal.ROUND_DOWN}
-            >
-              {value}
-            </Text.numeral>
+            <NumeralWithCtx rm={Decimal.ROUND_DOWN}>{value}</NumeralWithCtx>
           );
         },
       },
@@ -131,13 +123,12 @@ export const useColumn = (props: {
           return Number(value) === 0 ? (
             "--"
           ) : (
-            <Text.numeral
-              dp={record?.symbolInfo?.("quote_dp")}
+            <NumeralWithCtx
               rm={Decimal.ROUND_DOWN}
               className={Number(value) > 0 ? "oui-text-warning-light" : ""}
             >
               {value ?? "--"}
-            </Text.numeral>
+            </NumeralWithCtx>
           );
         },
       },

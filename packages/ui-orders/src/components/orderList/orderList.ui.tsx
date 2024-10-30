@@ -19,7 +19,10 @@ import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 
 export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
-  const columns = useOrderColumn(props.type, props.onSymbolChange);
+  const columns = useOrderColumn({
+    _type: props.type,
+    onSymbolChange: props.onSymbolChange,
+  });
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -99,6 +102,7 @@ export const MobileOrderList: FC<
     classNames?: {
       root?: string;
       cell?: string;
+      content?: string;
     };
     showFilter?: boolean;
   }
@@ -127,7 +131,7 @@ export const MobileOrderList: FC<
         /> */}
 
         {props.showFilter ? (
-          <Flex gap={2}>
+          <Flex gap={2} p={2} className="oui-bg-base-9 oui-rounded-b-xl">
             {props.filterItems.map((item) => {
               return (
                 <Picker
@@ -155,6 +159,7 @@ export const MobileOrderList: FC<
         )}
         <ListView
           className={props.classNames?.root}
+          contentClassName={props.classNames?.content}
           dataSource={props.dataSource}
           loadMore={props.loadMore}
           isLoading={props.isLoading}

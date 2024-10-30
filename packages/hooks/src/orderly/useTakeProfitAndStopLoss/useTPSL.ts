@@ -51,6 +51,12 @@ export const useTaskProfitAndStopLossInternal = (
     Pick<API.PositionTPSLExt, "symbol" | "average_open_price" | "position_qty">,
   options?: {
     defaultOrder?: API.AlgoOrder;
+    /**
+     * If the order is editing, set to true
+     * if the isEditing is true, the defaultOrder must be provided
+     * Conversely, even if defaultOrder is provided and isEditing is false, a new TPSL order is still created
+     */
+    isEditing?: boolean;
   }
 ): [
   /**
@@ -86,7 +92,11 @@ export const useTaskProfitAndStopLossInternal = (
     isUpdateMutating: boolean;
   }
 ] => {
-  const isEditing = !!options?.defaultOrder;
+  const isEditing =
+    typeof options?.isEditing !== "undefined"
+      ? options!.isEditing
+      : !!options?.defaultOrder;
+
   const [order, setOrder] = useState<
     ComputedAlgoOrder & {
       ignoreValidate?: boolean;
@@ -96,7 +106,7 @@ export const useTaskProfitAndStopLossInternal = (
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
     quantity: isEditing
-      ? options.defaultOrder?.quantity === 0
+      ? options?.defaultOrder?.quantity === 0
         ? Math.abs(position.position_qty)
         : options?.defaultOrder?.quantity
       : "",
@@ -119,7 +129,7 @@ export const useTaskProfitAndStopLossInternal = (
   const [errors, setErrors] = useState<ValidateError | null>(null);
 
   useEffect(() => {
-    if (!options?.defaultOrder) return;
+    if (!isEditing || !options?.defaultOrder) return;
     const trigger_prices = findTPSLFromOrder(options.defaultOrder!);
     if (trigger_prices.tp_trigger_price) {
       setOrderValue("tp_trigger_price", trigger_prices.tp_trigger_price, {

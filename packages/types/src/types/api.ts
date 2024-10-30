@@ -481,6 +481,22 @@ export declare namespace WSMessage {
     maker: boolean;
   }
 
+  export interface Holding {
+    holding: number;
+    frozen: number;
+    interest: number;
+    pendingShortQty: number;
+    pendingExposure: number;
+    pendingLongQty: number;
+    pendingLongExposure: number;
+    version: number;
+    staked: number;
+    unbonding: number;
+    vault: number;
+    fee24H: number;
+    markPrice: number;
+  }
+
   export interface AlgoOrder {
     symbol: string;
     rootAlgoOrderId: number;

@@ -13,6 +13,7 @@ import { AppConfigProvider } from "./provider/configContext";
 import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
 import {DefaultSolanaWalletAdapter} from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+import { useExecutionReport } from "./hooks/useExecutionReport";
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
 type OptionalConfig = Optional<OrderlyAppConfig, "walletAdapters">;
@@ -34,6 +35,7 @@ const OrderlyApp = (
   } = props;
 
   useBootstrap();
+  useExecutionReport();
 
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName}>

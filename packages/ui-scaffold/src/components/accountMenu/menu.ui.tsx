@@ -30,80 +30,83 @@ export const AccountMenu = (props: AccountMenuProps) => {
 
   if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
-      <Tooltip
-        open
-        content={"Please connect wallet before starting to trade"}
-        align={"end"}
-        className="oui-bg-base-5"
-        arrow={{ className: "oui-fill-base-5" }}
+      <Button
+        data-testid="oui-testid-nav-bar-connectWallet-btn"
+        size="md"
+        variant="gradient"
+        angle={45}
+        className="wallet-connect-button"
+        loading={state.validating}
+        disabled={state.validating}
+        onClick={() => {
+          props
+            .connect()
+            .then((r) => {
+              console.log("*****", r);
+            })
+            .catch((e) => console.error(e));
+        }}
       >
-        <Button
-          data-testid="oui-testid-nav-bar-connectWallet-btn"
-          size="md"
-          variant="gradient"
-          angle={45}
-          className="wallet-connect-button"
-          loading={state.validating}
-          disabled={state.validating}
-          onClick={() => {
-            props
-              .connect()
-              .then((r) => {
-                console.log("*****", r);
-              })
-              .catch((e) => console.error(e));
-          }}
-        >
-          Connect wallet
-        </Button>
-      </Tooltip>
+        Connect wallet
+      </Button>
     );
-  }
+    // return (
+    //   <Tooltip
+    //     open
+    //     content={"Please connect wallet before starting to trade"}
+    //     align={"end"}
+    //     className="oui-bg-base-5"
+    //     arrow={{ className: "oui-fill-base-5" }}
+    //   >
 
-  console.log(
-    "🔗 account state",
-    state.status,
-    state.status <= AccountStatusEnum.NotSignedIn
-  );
+    //   </Tooltip>
+    // );
+  }
 
   if (state.status <= AccountStatusEnum.NotSignedIn) {
     return (
-      <Tooltip
-        open
-        content={"Please sign in before starting to trade"}
-        align={"end"}
-        className="oui-bg-base-5"
-        arrow={{ className: "oui-fill-base-5" }}
-      >
-        <Button size="md" onClick={() => props.onCrateAccount()}>
-          Sign in
-        </Button>
-      </Tooltip>
+      <Button size="md" onClick={() => props.onCrateAccount()}>
+        Sign in
+      </Button>
     );
+    // return (
+    //   <Tooltip
+    //     open
+    //     content={"Please sign in before starting to trade"}
+    //     align={"end"}
+    //     className="oui-bg-base-5"
+    //     arrow={{ className: "oui-fill-base-5" }}
+    //   >
+
+    //   </Tooltip>
+    // );
   }
 
   if (state.status <= AccountStatusEnum.DisabledTrading) {
     return (
-      <Tooltip
-        open
-        className="oui-bg-base-5"
-        arrow={{ className: "oui-fill-base-5" }}
-        content={"Please enable trading before starting to trade"}
-        align={"end"}
+      <Button
+        size="md"
+        onClick={() => {
+          props
+            .onCreateOrderlyKey()
+            .then((r) => console.log(r))
+            .catch((e) => console.error(e));
+        }}
       >
-        <Button
-          size="md"
-          onClick={() => {
-            props
-              .onCreateOrderlyKey()
-              .then((r) => console.log(r))
-              .catch((e) => console.error(e));
-          }}
-        >
-          Enable trading
-        </Button>
-      </Tooltip>
+        Enable trading
+      </Button>
     );
+    // return (
+    //   <Tooltip
+    //     open
+    //     className="oui-bg-base-5"
+    //     arrow={{ className: "oui-fill-base-5" }}
+    //     content={"Please enable trading before starting to trade"}
+    //     align={"end"}
+    //   >
+
+    //   </Tooltip>
+    // );
   }
 
   if (state.status === AccountStatusEnum.EnableTrading) {
@@ -146,7 +149,12 @@ const WalletMenu = (props: {
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger asChild>
-        <Button size="md" variant="gradient" angle={45} data-testid="oui-testid-nav-bar-address-btn">
+        <Button
+          size="md"
+          variant="gradient"
+          angle={45}
+          data-testid="oui-testid-nav-bar-address-btn"
+        >
           <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
             {address}
           </Text.formatted>
@@ -257,7 +265,7 @@ const WalletMenu = (props: {
               }}
               data-testid="oui-testid-nav-bar-dropDownMenuItem-disconnect"
             >
-              <Flex gap={2} className={"oui-text-danger-light"} >
+              <Flex gap={2} className={"oui-text-danger-light"}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
