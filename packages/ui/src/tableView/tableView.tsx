@@ -208,7 +208,7 @@ export function TableView<RecordType extends any>(
       <div
         className={cnBase(
           "oui-table-root oui-relative",
-          "oui-w-full",
+          "oui-w-full oui-min-h-[277px]",
           "oui-text-xs oui-font-semibold",
           "oui-overflow-auto oui-custom-scrollbar",
           showPagination ? "oui-h-[calc(100%_-_40px)]" : "oui-h-full",

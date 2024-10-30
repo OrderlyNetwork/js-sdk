@@ -22,7 +22,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
     <tbody
       className={cnBase(
         "oui-table-tbody",
-        "oui-text-base-contrast-80 oui-relative oui-min-h-[277px]",
+        "oui-text-base-contrast-80 oui-relative",
         props.className
       )}
     >

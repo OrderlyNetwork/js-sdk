@@ -218,7 +218,7 @@ export const useOrderColumn = (props: {
     }
   }, [_type]);
 
-  return columns;
+  return columns as TableColumn[];
 
   // return columns();
 };

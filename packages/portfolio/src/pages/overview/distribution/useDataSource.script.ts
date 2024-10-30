@@ -1,7 +1,7 @@
 import { useDistributionHistory } from "@orderly.network/hooks";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
-import { useRef, useState } from "react";
-import { usePagination } from "@orderly.network/ui";
+import { useMemo, useRef, useState } from "react";
+import { PaginationMeta, usePagination } from "@orderly.network/ui";
 import { parseDateRangeForFilter } from "../helper/date";
 import {
   addDays,
@@ -63,6 +63,14 @@ export const useDistributionHistoryHook = () => {
     }
   };
 
+  const pagination = useMemo(() => {
+    return {
+      ...parseMeta(meta),
+      onPageChange: setPage,
+      onPageSizeChange: setPageSize,
+    } as PaginationMeta;
+  }, [meta, setPage, setPageSize]);
+
   return {
     dataSource: data,
     meta: parseMeta(meta),
@@ -76,6 +84,7 @@ export const useDistributionHistoryHook = () => {
     onFilter,
     setPage,
     setPageSize,
+    pagination,
   } as const;
 };
 

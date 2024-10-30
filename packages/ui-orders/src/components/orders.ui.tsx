@@ -1,4 +1,4 @@
-import { DataTable, TabPanel, Tabs } from "@orderly.network/ui";
+import { TabPanel, Tabs } from "@orderly.network/ui";
 import { OrderStatus, API } from "@orderly.network/types";
 import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";
@@ -8,9 +8,7 @@ export const Orders = (props: OrdersBuilderState) => {
   return (
     <Tabs defaultValue={props.current || TabType.all} variant="contained">
       <TabPanel value={TabType.all} title="All">
-        <DesktopOrderListWidget
-          type={TabType.all}
-        />
+        <DesktopOrderListWidget type={TabType.all} />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
         <DesktopOrderListWidget
