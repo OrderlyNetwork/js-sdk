@@ -19,88 +19,90 @@ type TableBodyProps<RecordType> = {
 
 export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
   return (
-    <table
-      className={cnBase("oui-w-full", "oui-table-fixed oui-border-collapse")}
+    <tbody
+      className={cnBase(
+        "oui-table-tbody",
+        "oui-text-base-contrast-80 oui-relative oui-min-h-[277px]",
+        props.className
+      )}
     >
-      <tbody className={cnBase("oui-table-tbody", props.className)}>
-        {props.rows.map((row) => {
-          const { className, onClick, ...rest } =
-            typeof props.onRow === "function"
-              ? props.onRow(row.original, row.index)
-              : {};
+      {props.rows.map((row) => {
+        const { className, onClick, ...rest } =
+          typeof props.onRow === "function"
+            ? props.onRow(row.original, row.index)
+            : {};
 
-          const selected = row.getIsSelected();
+        const selected = row.getIsSelected();
 
-          const rowView = (
-            <Fragment key={row.id}>
-              <tr
-                key={row.id}
-                className={cnBase(
-                  "oui-table-tbody-tr",
-                  "oui-group oui-rounded",
-                  "hover:oui-bg-line-4",
-                  selected && "oui-bg-line-6 hover:oui-bg-line-6",
-                  props.bordered && "oui-border-b oui-border-b-line-4",
-                  bodySizeVariants({ size: props.size }),
-                  className
-                )}
-                onClick={(event) => {
-                  if (row.getCanExpand()) {
-                    row.getToggleExpandedHandler();
-                  }
-                  onClick?.();
-                }}
-                {...rest}
-              >
-                {row.getVisibleCells().map((cell) => {
-                  const column = cell.column;
-                  const isPinned = column.getIsPinned();
-                  const { style: pinStyle, className: pinClassName } =
-                    getColumnPinningProps(column);
-                  const { align, className: rowClassName } =
-                    column.columnDef.meta || ({} as any);
-
-                  return (
-                    <td
-                      key={cell.id}
-                      style={pinStyle}
-                      className={cnBase(
-                        "oui-table-tbody-td oui-relative",
-                        "oui-px-3",
-                        columnVariants({ align }),
-                        pinClassName,
-                        rowClassName
-                      )}
-                    >
-                      <TableCell cell={cell} />
-                      {isPinned && <PinnedCellHover selected={selected} />}
-                    </td>
-                  );
-                })}
-              </tr>
-
-              {row.getIsExpanded() && (
-                <tr className="oui-z-0">
-                  <td colSpan={row.getVisibleCells().length}>
-                    {props.expandRowRender?.(row, row.index)}
-                  </td>
-                </tr>
+        const rowView = (
+          <Fragment key={row.id}>
+            <tr
+              key={row.id}
+              className={cnBase(
+                "oui-table-tbody-tr",
+                "oui-group oui-rounded",
+                "hover:oui-bg-line-4",
+                selected && "oui-bg-line-6 hover:oui-bg-line-6",
+                props.bordered && "oui-border-b oui-border-b-line-4",
+                bodySizeVariants({ size: props.size }),
+                className
               )}
+              onClick={(event) => {
+                if (row.getCanExpand()) {
+                  row.getToggleExpandedHandler();
+                }
+                onClick?.();
+              }}
+              {...rest}
+            >
+              {row.getVisibleCells().map((cell) => {
+                const column = cell.column;
+                const isPinned = column.getIsPinned();
+                const { style: pinStyle, className: pinClassName } =
+                  getColumnPinningProps(column);
+                const { align, className: rowClassName } =
+                  column.columnDef.meta || ({} as any);
+
+                return (
+                  <td
+                    key={cell.id}
+                    style={pinStyle}
+                    className={cnBase(
+                      "oui-table-tbody-td oui-relative",
+                      "oui-px-3",
+                      columnVariants({ align }),
+                      pinClassName,
+                      rowClassName
+                    )}
+                  >
+                    <TableCell cell={cell} />
+                    {isPinned && <PinnedCellHover selected={selected} />}
+                  </td>
+                );
+              })}
+            </tr>
+
+            {row.getIsExpanded() && (
+              <tr className="oui-z-0">
+                <td colSpan={row.getVisibleCells().length}>
+                  {props.expandRowRender?.(row, row.index)}
+                </td>
+              </tr>
+            )}
+          </Fragment>
+        );
+
+        if (typeof props.renderRowContainer === "function") {
+          return (
+            <Fragment key={row.id}>
+              {props.renderRowContainer(row.original, row.index, rowView)}
             </Fragment>
           );
+        }
 
-          if (typeof props.renderRowContainer === "function") {
-            return (
-              <Fragment key={row.id}>
-                {props.renderRowContainer(row.original, row.index, rowView)}
-              </Fragment>
-            );
-          }
-
-          return rowView;
-        })}
-      </tbody>
-    </table>
+        return rowView;
+      })}
+    </tbody>
   );
 };
 

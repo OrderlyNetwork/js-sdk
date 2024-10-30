@@ -27,7 +27,6 @@ import {
 import { cnBase } from "tailwind-variants";
 import { Transform } from "./transform";
 import { useWrap } from "./hooks/useWrap";
-import { useSyncScroll } from "./hooks/useSyncScroll";
 import { TablePagination } from "./tablePagination";
 import { TableHeader } from "./tableHeader";
 import { TableBody } from "./tableBody";
@@ -174,9 +173,6 @@ export function TableView<RecordType extends any>(
 
   const wrapRef = useWrap();
 
-  const { theadRef, tbodyRef, isYScroll, isXScroll, headerHeight } =
-    useSyncScroll([dataSource, pagination?.page, pagination?.pageSize]);
-
   // filter data
   const rows = table.getRowModel().rows;
 
@@ -198,56 +194,53 @@ export function TableView<RecordType extends any>(
       setShowPagination(true);
     }
   }, [pagination, hasData, loading]);
-  console.log("showPagination", showPagination, paginationState);
 
   return (
     <div
       ref={wrapRef}
       className={cnBase(
-        "oui-table-root",
-        "oui-overflow-hidden",
-        "oui-bg-base-9 oui-w-full oui-h-full",
-        "oui-text-xs oui-font-semibold",
+        "oui-w-full oui-h-full",
+        "oui-bg-base-9",
         className,
         classNames?.root
       )}
     >
       <div
-        ref={theadRef}
-        className={cnBase("oui-overflow-x-hidden", "oui-text-base-contrast-36")}
-      >
-        {showHeader && (
-          <TableHeader
-            className={classNames?.header}
-            headerGroups={table.getHeaderGroups()}
-            bordered={props.bordered}
-            size={props.sizes?.header}
-          />
-        )}
-      </div>
-      <div
-        ref={tbodyRef}
-        style={{
-          height: showPagination
-            ? `calc(100% - ${PaginationHeight + headerHeight}px)`
-            : `calc(100% - ${headerHeight}px)`,
-        }}
         className={cnBase(
-          "oui-text-base-contrast-80 oui-relative oui-min-h-[277px]",
+          "oui-table-root oui-relative",
+          "oui-w-full oui-h-full",
+          "oui-text-xs oui-font-semibold",
           "oui-overflow-auto oui-custom-scrollbar",
-          isXScroll && isYScroll ? "oui-w-[calc(100%_+_6px)]" : "oui-w-full",
+          showPagination ? "oui-h-[calc(100%_-_40px)]" : "oui-h-full",
           classNames?.scroll
         )}
       >
-        <TableBody
-          className={classNames?.body}
-          rows={rows}
-          bordered={props.bordered}
-          size={props.sizes?.body}
-          renderRowContainer={props.renderRowContainer}
-          expandRowRender={props.expandRowRender}
-          onRow={props.onRow}
-        />
+        <table
+          className={cnBase(
+            "oui-w-full",
+            "oui-table-fixed oui-border-collapse"
+          )}
+        >
+          {showHeader && (
+            <TableHeader
+              className={classNames?.header}
+              headerGroups={table.getHeaderGroups()}
+              bordered={props.bordered}
+              size={props.sizes?.header}
+            />
+          )}
+
+          <TableBody
+            className={classNames?.body}
+            rows={rows}
+            bordered={props.bordered}
+            size={props.sizes?.body}
+            renderRowContainer={props.renderRowContainer}
+            expandRowRender={props.expandRowRender}
+            onRow={props.onRow}
+          />
+        </table>
+
         <TablePlaceholder
           visible={showPlaceholder}
           loading={loading}
