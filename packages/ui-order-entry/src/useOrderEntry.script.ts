@@ -38,11 +38,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [formattedOrder.order_quantity, state.maxQty]);
 
   const formatQty = () => {
+    if (symbolInfo.base_tick < 1) return;
     const quantity = utils.formatNumber(
       formattedOrder?.order_quantity,
       new Decimal(symbolInfo?.base_tick || "0").toNumber()
     );
-    setValue("order_quantity", quantity);
+    setValue("order_quantity", quantity, {
+      shouldUpdateLastChangedField: false,
+    });
   };
 
   const onFocus = (type: InputType) => (_: FocusEvent) => {

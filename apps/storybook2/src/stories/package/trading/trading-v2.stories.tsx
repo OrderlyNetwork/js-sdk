@@ -32,7 +32,7 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging" });
       return (
         <ConnectorProvider>
           <OrderlyApp
@@ -100,7 +100,7 @@ const meta = {
     },
     onSymbolChange: (symbol) => {
       console.log("will change symbol", symbol);
-      
+
     },
     tabletMediaQuery: "(max-width: 768px)",
     bottomSheetLeading: (<OrderlyIcon size={18} />)
@@ -189,4 +189,3 @@ export const OrderBookAndTrades: Story = {
     );
   }
 };
-
