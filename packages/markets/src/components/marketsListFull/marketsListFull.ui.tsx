@@ -50,7 +50,9 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
       onSort={onSort}
       initialSort={initialSort}
       pagination={pagination}
-      sizes={{ header: "xl" }}
+      classNames={{
+        header: "oui-h-12",
+      }}
       manualPagination
       manualSorting
     />

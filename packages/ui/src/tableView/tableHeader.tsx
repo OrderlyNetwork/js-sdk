@@ -1,35 +1,31 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import { cnBase } from "tailwind-variants";
 import { getColumnPinningProps } from "./utils/getColumnPinningProps";
-import { HeaderSize, TanstackColumn } from "./type";
+import { TanstackColumn } from "./type";
 import { AscendingIcon, DescendingIcon, SortingIcon } from "./icons";
-import { flexRender, HeaderGroup, SortDirection } from "@tanstack/react-table";
+import { HeaderGroup, SortDirection } from "@tanstack/react-table";
 import { TableViewProps } from "./tableView";
-import { columnVariants, headerSizeVariants } from "./className";
+import { alignVariants } from "./className";
 
 type TableHeaderProps = {
   className?: string;
   headerGroups: HeaderGroup<any>[];
-  size?: HeaderSize;
 } & Pick<TableViewProps<any>, "bordered">;
 
 export const TableHeader: FC<TableHeaderProps> = (props) => {
   return (
     <thead
       className={cnBase(
-        "oui-text-base-contrast-36",
-        "oui-sticky oui-top-0 oui-z-[2] oui-box-border",
-        "oui-bg-[var(--oui-table-background-color)]"
+        "oui-table-thead",
+        "oui-sticky oui-top-0 oui-z-[2]",
+        "oui-bg-[var(--oui-table-background-color)]",
+        "oui-text-base-contrast-36"
       )}
     >
       {props.headerGroups.map((headerGroup) => (
         <tr
           key={headerGroup.id}
-          className={cnBase(
-            "oui-table-thead-tr",
-            headerSizeVariants({ size: props.size }),
-            props.className
-          )}
+          className={cnBase("oui-table-thead-tr", "oui-h-10", props.className)}
         >
           {headerGroup.headers.map((header) => {
             const column = header.column;
@@ -61,7 +57,7 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
                     "after:oui-block after:oui-absolute after:oui-w-full after:oui-h-full after:oui-top-0 after:oui-left-0 after:oui-z-[-1] after:oui-border-b after:oui-border-line",
                   // use border-b will show bottom element content
                   // props.bordered && "oui-border-b oui-border-line"
-                  columnVariants({ align }),
+                  alignVariants({ align }),
                   pinClassName,
                   rowClassName
                 )}

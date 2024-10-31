@@ -17,9 +17,7 @@ import {
   RowSelectionState,
 } from "@tanstack/react-table";
 import {
-  BodySize,
   TableColumn,
-  HeaderSize,
   PaginationMeta,
   TableSort,
   TableViewClassNames,
@@ -42,19 +40,19 @@ export type TableViewProps<RecordType> = {
    * @default false
    */
   loading?: boolean;
-  isValidating?: boolean;
+  // isValidating?: boolean;
   ignoreLoadingCheck?: boolean;
   className?: string;
   classNames?: TableViewClassNames;
-  showMaskElement?: boolean;
+  // showMaskElement?: boolean;
   emptyView?: ReactNode;
   bordered?: boolean;
-  loadMore?: () => void;
+  // loadMore?: () => void;
   onSort?: (sort?: TableSort) => void;
   initialSort?: TableSort;
   id?: string;
-  minHeight?: number;
-  initialMinHeight?: number;
+  // minHeight?: number;
+  // initialMinHeight?: number;
   getRowCanExpand?: (row: Row<any>) => boolean;
   expandRowRender?: (row: Row<any>, index: number) => ReactNode;
   manualSorting?: boolean;
@@ -70,13 +68,7 @@ export type TableViewProps<RecordType> = {
   onRow?: (record: RecordType, index: number) => any;
   columnFilters?: ColumnFilter | ColumnFilter[];
   rowSelection?: RowSelectionState;
-  sizes?: {
-    header?: HeaderSize;
-    body?: BodySize;
-  };
 };
-
-const PaginationHeight = 40;
 
 export function TableView<RecordType extends any>(
   props: PropsWithChildren<TableViewProps<RecordType>>
@@ -87,13 +79,12 @@ export function TableView<RecordType extends any>(
     classNames,
     pagination,
     getRowCanExpand,
-    // TODO: use internal sort feature
-    manualSorting,
     manualPagination,
     loading,
     ignoreLoadingCheck,
     emptyView,
     initialSort,
+    manualSorting,
     onSort,
   } = props;
 
@@ -198,6 +189,7 @@ export function TableView<RecordType extends any>(
   return (
     <div
       ref={wrapRef}
+      id={props.id}
       className={cnBase(
         "oui-w-full oui-h-full",
         "oui-bg-base-9",
@@ -226,7 +218,6 @@ export function TableView<RecordType extends any>(
               className={classNames?.header}
               headerGroups={table.getHeaderGroups()}
               bordered={props.bordered}
-              size={props.sizes?.header}
             />
           )}
 
@@ -234,7 +225,6 @@ export function TableView<RecordType extends any>(
             className={classNames?.body}
             rows={rows}
             bordered={props.bordered}
-            size={props.sizes?.body}
             renderRowContainer={props.renderRowContainer}
             expandRowRender={props.expandRowRender}
             onRow={props.onRow}

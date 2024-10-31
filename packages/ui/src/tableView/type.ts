@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
 import { NumeralProps, type NumeralRule } from "../typography/numeral";
 import { FormattedTextProps, TextRule } from "../typography/formatted";
-import { VariantProps } from "tailwind-variants";
-import { bodySizeVariants, headerSizeVariants } from "./className";
 export { type Column as TanstackColumn } from "@tanstack/react-table";
 
 export type ColumnFixed = "left" | "right";
@@ -56,9 +54,6 @@ export type TableColumn<RecordType extends unknown = any> = {
         index: number
       ) => Omit<FormattedTextProps, "children" | "as" | "rule">);
 };
-
-export type HeaderSize = VariantProps<typeof headerSizeVariants>["size"];
-export type BodySize = VariantProps<typeof bodySizeVariants>["size"];
 
 export type PaginationMeta = {
   count?: number;
