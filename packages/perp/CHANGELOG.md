@@ -1,5 +1,41 @@
 # @orderly.network/futures
 
+## 3.3.15
+
+### Patch Changes
+
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/types@1.5.15
+  - @orderly.network/utils@1.5.15
+
+## 3.3.15-alpha.0
+
+### Patch Changes
+
+- update SEI config;
+- Updated dependencies
+  - @orderly.network/types@1.5.15-alpha.0
+  - @orderly.network/utils@1.5.15-alpha.0
+
+## 3.3.14
+
+### Patch Changes
+
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/types@1.5.14
+  - @orderly.network/utils@1.5.14
+
+## 3.3.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/types@1.5.14-alpha.0
+  - @orderly.network/utils@1.5.14-alpha.0
+
 ## 3.3.13
 
 ### Patch Changes

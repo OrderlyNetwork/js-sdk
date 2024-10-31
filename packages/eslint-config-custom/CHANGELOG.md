@@ -1,5 +1,29 @@
 # eslint-config-custom
 
+## 0.3.15
+
+### Patch Changes
+
+- fed369e26: update SEI config;
+
+## 0.3.15-alpha.0
+
+### Patch Changes
+
+- update SEI config;
+
+## 0.3.14
+
+### Patch Changes
+
+- 7c664bd63: fix bug;
+
+## 0.3.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
+
 ## 0.3.13
 
 ### Patch Changes

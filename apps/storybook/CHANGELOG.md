@@ -1,5 +1,53 @@
 # storybook
 
+## 1.3.15
+
+### Patch Changes
+
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/react@1.5.15
+  - @orderly.network/core@1.5.15
+  - @orderly.network/hooks@1.5.15
+  - @orderly.network/web3-onboard@1.5.15
+  - @orderly.network/web3-modal@1.5.15
+
+## 1.3.15-alpha.0
+
+### Patch Changes
+
+- update SEI config;
+- Updated dependencies
+  - @orderly.network/react@1.5.15-alpha.0
+  - @orderly.network/core@1.5.15-alpha.0
+  - @orderly.network/hooks@1.5.15-alpha.0
+  - @orderly.network/web3-onboard@1.5.15-alpha.0
+  - @orderly.network/web3-modal@1.5.15-alpha.0
+
+## 1.3.14
+
+### Patch Changes
+
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/react@1.5.14
+  - @orderly.network/core@1.5.14
+  - @orderly.network/hooks@1.5.14
+  - @orderly.network/web3-onboard@1.5.14
+  - @orderly.network/web3-modal@1.5.14
+
+## 1.3.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
+- Updated dependencies
+  - @orderly.network/react@1.5.14-alpha.0
+  - @orderly.network/core@1.5.14-alpha.0
+  - @orderly.network/hooks@1.5.14-alpha.0
+  - @orderly.network/web3-onboard@1.5.14-alpha.0
+  - @orderly.network/web3-modal@1.5.14-alpha.0
+
 ## 1.3.13
 
 ### Patch Changes
