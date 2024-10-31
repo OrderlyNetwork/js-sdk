@@ -27,7 +27,7 @@ import {
 import { useAppContext } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
 
-const useFirstTimeDeposit = () => {
+export const useFirstTimeDeposit = () => {
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
   const { totalValue } = useCollateral({

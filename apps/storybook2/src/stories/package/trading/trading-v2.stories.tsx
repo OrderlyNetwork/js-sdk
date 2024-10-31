@@ -74,8 +74,8 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    // symbol: "PERP_ETH_USDC",
-    symbol: "PERP_ORDER_USDC",
+    symbol: "PERP_ETH_USDC",
+    // symbol: "PERP_ORDER_USDC",
     // symbol: "PERP_1000BONK_USDC",
     // symbol: "PERP_1000PEPE_USDC",
     tradingViewConfig: {
@@ -116,7 +116,7 @@ export const Default: Story = {};
 
 export const DataList: Story = {
   render: (arg) => {
-    return (<Box p={3}>
+    return (<Box p={3} height={800}>
       <DataListWidget sharePnLConfig={sharePnLConfig} tabletMediaQuery={arg.tabletMediaQuery!} />
     </Box>);
   }

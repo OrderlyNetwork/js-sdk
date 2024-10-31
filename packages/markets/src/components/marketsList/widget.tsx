@@ -1,6 +1,6 @@
 import { MarketsList } from "./marketsList.ui";
 import { useMarketsListScript } from "./marketsList.script";
-import { SortOrder } from "@orderly.network/ui";
+import { SortOrder, TableViewClassNames } from "@orderly.network/ui";
 import { GetColumns } from "../../type";
 
 export type MarketsListWidgetProps = {
@@ -9,6 +9,8 @@ export type MarketsListWidgetProps = {
   sortOrder: SortOrder;
   getColumns?: GetColumns;
   collapsed?: boolean;
+  tableClassNames?: TableViewClassNames;
+  rowClassName?: string;
 };
 
 export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
@@ -25,6 +27,8 @@ export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
       }}
       getColumns={props.getColumns}
       collapsed={props.collapsed}
+      tableClassNames={props.tableClassNames}
+      rowClassName={props.rowClassName}
     />
   );
 };

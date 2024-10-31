@@ -28,7 +28,7 @@ export const DropDownMarkets: React.FC<
   PropsWithChildren<DropDownMarketsProps>
 > = (props) => {
   return (
-    <DropdownMenuRoot>
+    <DropdownMenuRoot open={props.open} onOpenChange={props.onOpenChange}>
       <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
@@ -38,11 +38,11 @@ export const DropDownMarkets: React.FC<
           alignOffset={-32}
           sideOffset={20}
           className={cn(
-            "oui-markets-dropdown-menu-content oui-bg-base-8",
+            "oui-markets-dropdown-menu-content oui-bg-base-8 oui-p-0",
             props.contentClassName
           )}
         >
-          <DropDownMarketsConetnt {...props} />
+          <DropDownMarketsConetnt {...props} hide={props.hide} />
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
@@ -77,7 +77,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       <CloseIcon
         size={12}
         className="oui-text-base-contrast-80 oui-cursor-pointer"
-        onClick={clearSearchValue}
+        onClick={props.hide}
         opacity={1}
       />
     </Flex>
@@ -106,12 +106,26 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <div className={cls}>
-            <FavoritesListWidget getColumns={getDropDownMarketsColumns} />
+            <FavoritesListWidget
+              getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
+            />
           </div>
         </TabPanel>
         <TabPanel title="Recent" value="recent">
           <div className={cls}>
-            <RecentListWidget getColumns={getDropDownMarketsColumns} />
+            <RecentListWidget
+              getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
+            />
           </div>
         </TabPanel>
         <TabPanel title="All" value="all">
@@ -121,6 +135,11 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               sortKey="24h_amount"
               sortOrder="desc"
               getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
             />
           </div>
         </TabPanel>

@@ -6,12 +6,14 @@ import {
   API,
 } from "@orderly.network/types";
 import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
+import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
 import {
   DataFilterItems,
   modal,
   usePagination,
   Text,
+  PaginationMeta,
 } from "@orderly.network/ui";
 import { differenceInDays, setHours } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
@@ -87,14 +89,21 @@ export const useOrderListScript = (props: {
   }, [pageSize, typePageSize]);
 
   const onCancelAll = useCallback(() => {
+    const title =
+      props.type === TabType.pending
+        ? "Cancel all pending orders"
+        : props.type === TabType.tp_sl
+        ? "Cancel all TP/SL orders"
+        : "";
+    const content = TabType.pending
+      ? "Are you sure you want to cancel all of your pending orders?"
+      : props.type === TabType.tp_sl
+      ? "Are you sure you want to cancel all of your TP/SL orders?"
+      : "";
+
     modal.confirm({
-      title: "Cancel all orders",
-      content: (
-        <Text size="sm">
-          Are you sure you want to cancel all of your pending orders, including
-          TP/SL orders?
-        </Text>
-      ),
+      title: title,
+      content: <Text size="sm">{content}</Text>,
       onCancel: async () => {},
       onOk: async () => {
         try {
@@ -122,7 +131,17 @@ export const useOrderListScript = (props: {
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
-  const dataSource = type !== TabType.tp_sl ? formattedData : data;
+  const dataSource =
+    useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
+  
+  const pagination = useMemo(() => {
+    return {
+      ...parseMeta(meta),
+      onPageChange: setPage,
+      onPageSizeChange: setPageSize,
+    } as PaginationMeta;
+  }, [meta, setPage, setPageSize]);
+
   return {
     type,
     dataSource,
@@ -132,13 +151,12 @@ export const useOrderListScript = (props: {
     updateOrder,
     cancelAlgoOrder,
     updateAlgoOrder,
-
-    // pagination
     page,
     pageSize,
     setPage,
     setPageSize,
     meta: parseMeta(meta),
+    pagination,
 
     // filter
     onFilter,
@@ -156,11 +174,11 @@ const useFilter = (
     ordersStatus?: OrderStatus;
   }
 ) => {
-  const [orderStatus, setOrderStatus] = useState<OrderStatus | undefined>(
-    option.ordersStatus
+  const [orderStatus, setOrderStatus] = useState<OrderStatus | 'all'>(
+    option.ordersStatus ?? 'all'
   );
-  const [ordersSide, setOrdersSide] = useState<OrderSide | undefined>(
-    undefined
+  const [ordersSide, setOrdersSide] = useState<OrderSide | 'all'>(
+    'all'
   );
   const [dateRange, setDateRange] = useState<{
     from?: Date;
@@ -191,7 +209,7 @@ const useFilter = (
       options: [
         {
           label: "All sides",
-          value: undefined,
+          value: 'all',
         },
         {
           label: "Buy",
@@ -217,7 +235,7 @@ const useFilter = (
       options: [
         {
           label: "All status",
-          value: undefined,
+          value: 'all',
         },
         // {
         //   label: "Open",
@@ -263,9 +281,9 @@ const useFilter = (
   return {
     filterItems,
     onFilter,
-    ordersSide,
+    ordersSide: ordersSide === 'all' ? undefined : ordersSide,
     dateRange,
-    orderStatus,
+    orderStatus: orderStatus === 'all' ? undefined : orderStatus,
   };
 };
 

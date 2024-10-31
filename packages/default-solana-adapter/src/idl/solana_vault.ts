@@ -359,13 +359,18 @@ export type SolanaVault = {
           "name": "enforcedOptions",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "vaultAuthority",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "OAppQuoteParams"
+            "defined": "DepositParams"
           }
         }
       ],
@@ -1091,36 +1096,17 @@ export type SolanaVault = {
       }
     },
     {
-      "name": "OAppQuoteParams",
+      "name": "MessagingFee",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "dstEid",
-            "type": "u32"
+            "name": "nativeFee",
+            "type": "u64"
           },
           {
-            "name": "to",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "options",
-            "type": "bytes"
-          },
-          {
-            "name": "message",
-            "type": {
-              "option": "bytes"
-            }
-          },
-          {
-            "name": "payInLzToken",
-            "type": "bool"
+            "name": "lzTokenFee",
+            "type": "u64"
           }
         ]
       }
@@ -1500,22 +1486,6 @@ export type SolanaVault = {
           },
           {
             "name": "RebalanceMint"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MessagingFee",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "nativeFee",
-            "type": "u64"
-          },
-          {
-            "name": "lzTokenFee",
-            "type": "u64"
           }
         ]
       }
@@ -2193,13 +2163,18 @@ export const IDL: SolanaVault = {
           "name": "enforcedOptions",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "vaultAuthority",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "OAppQuoteParams"
+            "defined": "DepositParams"
           }
         }
       ],
@@ -2925,36 +2900,17 @@ export const IDL: SolanaVault = {
       }
     },
     {
-      "name": "OAppQuoteParams",
+      "name": "MessagingFee",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "dstEid",
-            "type": "u32"
+            "name": "nativeFee",
+            "type": "u64"
           },
           {
-            "name": "to",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "options",
-            "type": "bytes"
-          },
-          {
-            "name": "message",
-            "type": {
-              "option": "bytes"
-            }
-          },
-          {
-            "name": "payInLzToken",
-            "type": "bool"
+            "name": "lzTokenFee",
+            "type": "u64"
           }
         ]
       }
@@ -3334,22 +3290,6 @@ export const IDL: SolanaVault = {
           },
           {
             "name": "RebalanceMint"
-          }
-        ]
-      }
-    },
-    {
-      "name": "MessagingFee",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "nativeFee",
-            "type": "u64"
-          },
-          {
-            "name": "lzTokenFee",
-            "type": "u64"
           }
         ]
       }

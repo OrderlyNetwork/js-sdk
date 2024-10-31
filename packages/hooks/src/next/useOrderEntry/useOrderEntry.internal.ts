@@ -262,23 +262,42 @@ const useOrderEntryNextInternal = (
     [calculate, orderEntryActions, symbolInfo]
   );
 
-  const onMarkPriceUpdated = useCallback((markPrice: number) => {
-    // console.log("markPrice", markPrice);
-    if (!options.symbolInfo) return;
-    const values = useOrderStore.getState().entry;
-    const newValues = calculate(
-      { ...values },
-      "order_price",
-      markPrice,
-      markPrice,
-      options.symbolInfo
-    );
+  const onMarkPriceUpdated = useCallback(
+    (markPrice: number, baseOn?: "total" | "order_quantity") => {
+      // console.log("******", baseOn);
+      if (!options.symbolInfo) return;
+      const values = useOrderStore.getState().entry;
+      let newValues;
+      if (baseOn === "total") {
+        newValues = calculate(
+          { ...values },
+          "total",
+          values.total,
+          markPrice,
+          options.symbolInfo
+        );
+      } else {
+        newValues = calculate(
+          { ...values },
+          "order_price",
+          markPrice,
+          markPrice,
+          options.symbolInfo
+        );
+      }
 
-    if (hasTPSL(newValues)) {
-      calculateTPSL("order_price", newValues, markPrice, options.symbolInfo);
-    }
-    orderEntryActions.updateOrder(newValues);
-  }, []);
+      if (hasTPSL(newValues)) {
+        newValues = calculateTPSL(
+          "order_price",
+          newValues,
+          markPrice,
+          options.symbolInfo
+        );
+      }
+      orderEntryActions.updateOrder(newValues);
+    },
+    [options.symbolInfo]
+  );
 
   const validate = (
     order: Partial<OrderlyOrder>,

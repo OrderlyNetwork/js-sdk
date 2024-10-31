@@ -79,6 +79,7 @@ export const PNLInput = (props: PNLInputProps) => {
       }}
       suffix={
         <PNLMenus
+          mode={prefix}
           modes={modes}
           onModeChange={(item) => onModeChange(item.value as PnLMode)}
         />
@@ -88,11 +89,13 @@ export const PNLInput = (props: PNLInputProps) => {
 };
 
 const PNLMenus = (props: {
+  mode?: string;
   modes: MenuItem[];
   onModeChange: (value: MenuItem) => void;
 }) => {
   return (
     <SimpleDropdownMenu
+      currentValue={props.mode}
       menu={props.modes}
       align={"end"}
       size={"xs"}

@@ -435,6 +435,7 @@ const OrderQuantityInput = (props: {
             onChange={(e) => {
               props.onChange("order_price", e.target.value);
             }}
+            formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
             onFocus={onFocus(InputType.PRICE)}
             onBlur={onBlur(InputType.PRICE)}
           />
@@ -453,6 +454,7 @@ const OrderQuantityInput = (props: {
           onChange={(e) => {
             props.onChange("order_quantity", e.target.value);
           }}
+          formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
           onFocus={onFocus(InputType.QUANTITY)}
           onBlur={onBlur(InputType.QUANTITY)}
         />
@@ -489,6 +491,7 @@ const CustomInput = forwardRef<
     error?: string;
     onFocus: InputProps["onFocus"];
     onBlur: InputProps["onBlur"];
+    formatters?: InputProps["formatters"];
     // helperText?: InputProps["helperText"];
   }
 >((props, ref) => {
@@ -518,6 +521,7 @@ const CustomInput = forwardRef<
         props.onBlur?.(event);
       }}
       formatters={[
+        ...(props.formatters ?? []),
         inputFormatter.numberFormatter,
         inputFormatter.currencyFormatter,
       ]}

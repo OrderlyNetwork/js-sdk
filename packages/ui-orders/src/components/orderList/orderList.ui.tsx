@@ -7,9 +7,11 @@ import {
   Button,
   Grid,
   Picker,
+  DataFilter,
+  cn,
 } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { AuthGuardTableView } from "@orderly.network/ui-connector";
 import { grayCell } from "../../utils/util";
 import { SymbolProvider } from "./symbolProvider";
 import { OrderListProvider } from "./orderListContext";
@@ -31,22 +33,40 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
       editAlgoOrder={props.updateAlgoOrder}
       // cancelTPSLOrder={props.cancelTPSLOrder}
     >
-      <Flex direction={"column"} width={"100%"} itemAlign={"start"}>
+      <Flex direction="column" width="100%" height="100%" itemAlign="start">
         {/* <Divider className="oui-w-full" /> */}
-        <AuthGuardDataTable
+        {props.filterItems.length > 0 && (
+          <DataFilter
+            items={props.filterItems}
+            onFilter={(value: any) => {
+              props.onFilter(value);
+            }}
+            className="oui-px-3"
+            trailing={
+              [TabType.pending, TabType.tp_sl].includes(props.type) && (
+                <CancelAll {...props} />
+              )
+            }
+          />
+        )}
+        <AuthGuardTableView
           columns={columns}
           loading={props.isLoading}
           dataSource={props.dataSource}
           bordered
           ignoreLoadingCheck={true}
           classNames={{
-            root: "oui-items-start",
+            header: "oui-h-[38px]",
+            root: "oui-px-3 oui-items-start !oui-h-[calc(100%_-_49px)]",
           }}
           onRow={(record, index) => {
             return {
-              className: grayCell(record)
-                ? "oui-text-base-contrast-20"
-                : "oui-text-base-contrast-80",
+              className: cn(
+                "oui-h-[48px]",
+                grayCell(record)
+                  ? "oui-text-base-contrast-20"
+                  : "oui-text-base-contrast-80"
+              ),
             };
           }}
           generatedRowKey={(record, index) =>
@@ -70,28 +90,8 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
               <SymbolProvider symbol={record.symbol}>{children}</SymbolProvider>
             );
           }}
-        >
-          {props.filterItems.length > 0 && (
-            <Filter
-              items={props.filterItems}
-              onFilter={(value: any) => {
-                props.onFilter(value);
-              }}
-              className="oui-px-3"
-              trailing={
-                [TabType.pending, TabType.tp_sl].includes(props.type) && (
-                  <CancelAll {...props} />
-                )
-              }
-            />
-          )}
-
-          <Pagination
-            {...props.meta}
-            onPageChange={props.setPage}
-            onPageSizeChange={props.setPageSize}
-          />
-        </AuthGuardDataTable>
+          pagination={props.pagination}
+        />
       </Flex>
     </OrderListProvider>
   );
@@ -102,6 +102,7 @@ export const MobileOrderList: FC<
     classNames?: {
       root?: string;
       cell?: string;
+      content?: string;
     };
     showFilter?: boolean;
   }
@@ -130,7 +131,7 @@ export const MobileOrderList: FC<
         /> */}
 
         {props.showFilter ? (
-          <Flex gap={2}>
+          <Flex gap={2} p={2} className="oui-bg-base-9 oui-rounded-b-xl">
             {props.filterItems.map((item) => {
               return (
                 <Picker
@@ -158,6 +159,7 @@ export const MobileOrderList: FC<
         )}
         <ListView
           className={props.classNames?.root}
+          contentClassName={props.classNames?.content}
           dataSource={props.dataSource}
           loadMore={props.loadMore}
           isLoading={props.isLoading}

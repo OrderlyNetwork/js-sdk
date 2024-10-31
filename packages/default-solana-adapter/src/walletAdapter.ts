@@ -288,6 +288,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
         vaultAddress: address,
         userAddress: this._address,
         connection: this._provider.connection,
+        depositData: params[1]
       })
 
 

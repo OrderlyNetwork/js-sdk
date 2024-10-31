@@ -1,11 +1,10 @@
 import { FC, useMemo } from "react";
-import { Box, cn } from "@orderly.network/ui";
+import { Box, cn, TableView } from "@orderly.network/ui";
 import { UseFavoritesListReturn } from "./favoritesList.script";
 import { useMarketsContext } from "../marketsProvider";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import type { FavoritesListWidgetProps } from "./widget";
-import DataTable from "../dataTable";
 import { CollapseMarkets } from "../collapseMarkets";
 
 export type FavoritesListProps = UseFavoritesListReturn &
@@ -33,7 +32,31 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
         <FavoritesTabWidget favorite={favorite} size="sm" />
       </Box>
 
-      <DataTable
+      <TableView
+        classNames={{
+          root: props.tableClassNames?.root,
+          body: props.tableClassNames?.body,
+          header: cn("oui-h-9", props.tableClassNames?.header),
+          scroll: props.tableClassNames?.scroll,
+        }}
+        columns={columns}
+        dataSource={dataSource}
+        loading={loading}
+        onRow={(record, index) => {
+          return {
+            className: cn("oui-h-[53px]", props.rowClassName),
+            onClick: () => {
+              onSymbolChange?.(record);
+              favorite.addToHistory(record);
+            },
+          };
+        }}
+        generatedRowKey={(record) => record.symbol}
+        onSort={onSort}
+        manualSorting
+      />
+
+      {/* <DataTable
         classNames={{
           body: "oui-pb-[53px]",
         }}
@@ -51,7 +74,7 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
         }}
         generatedRowKey={(record) => record.symbol}
         onSort={onSort}
-      />
+      /> */}
     </>
   );
 };

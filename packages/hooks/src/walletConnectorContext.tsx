@@ -16,7 +16,7 @@ export type WalletAccount = {
 export interface WalletState {
   label: string;
   icon: string;
-  provider: EIP1193Provider;
+  provider: EIP1193Provider | any;
   accounts: WalletAccount[];
   chains: ConnectedChain[];
   instance?: unknown;
@@ -33,6 +33,7 @@ export interface WalletConnectorContextState {
   connectedChain: ConnectedChain | null;
 
   settingChain: boolean;
+  namespace: ChainNamespace | null;
 }
 
 export const WalletConnectorContext =

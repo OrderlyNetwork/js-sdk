@@ -37,6 +37,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     positions,
     updatePositions,
     canTrading,
+    showPositionIcon,
   } = props;
 
   const topBarHeight = 48;
@@ -103,7 +104,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       className="oui-border oui-border-line-12"
       index={positions.findIndex((item) => item === 0)}
       onLayout={updatePositions}
-      showIndicator={canTrading}
+      showIndicator={showPositionIcon}
     >
       <AssetViewWidget />
     </RemovablePanel>,
@@ -111,7 +112,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       key="orderEntry"
       index={positions.findIndex((item) => item === 1)}
       onLayout={updatePositions}
-      showIndicator={canTrading}
+      showIndicator={showPositionIcon}
     >
       <OrderEntryWidget symbol={props.symbol} />
     </RemovablePanel>,
@@ -119,12 +120,11 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       key="margin"
       index={positions.findIndex((item) => item === 2)}
       onLayout={updatePositions}
-      showIndicator={canTrading}
+      showIndicator={showPositionIcon}
     >
       <RiskRateWidget />
     </RemovablePanel>,
   ];
-  console.log("positions", positions);
 
   const orderEntryView = (
     <Flex

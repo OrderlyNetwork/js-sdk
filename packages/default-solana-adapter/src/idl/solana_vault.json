@@ -359,13 +359,18 @@
           "name": "enforcedOptions",
           "isMut": false,
           "isSigner": false
+        },
+        {
+          "name": "vaultAuthority",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
         {
           "name": "params",
           "type": {
-            "defined": "OAppQuoteParams"
+            "defined": "DepositParams"
           }
         }
       ],
@@ -1091,36 +1096,17 @@
       }
     },
     {
-      "name": "OAppQuoteParams",
+      "name": "MessagingFee",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "dstEid",
-            "type": "u32"
+            "name": "nativeFee",
+            "type": "u64"
           },
           {
-            "name": "to",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "options",
-            "type": "bytes"
-          },
-          {
-            "name": "message",
-            "type": {
-              "option": "bytes"
-            }
-          },
-          {
-            "name": "payInLzToken",
-            "type": "bool"
+            "name": "lzTokenFee",
+            "type": "u64"
           }
         ]
       }
@@ -1503,22 +1489,6 @@
           }
         ]
       }
-    },
-    {
-      "name": "MessagingFee",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "nativeFee",
-            "type": "u64"
-          },
-          {
-            "name": "lzTokenFee",
-            "type": "u64"
-          }
-        ]
-      }
     }
   ],
   "events": [
@@ -1831,6 +1801,6 @@
     }
   ],
   "metadata": {
-    "address": "5zBjLor7vEraAt4zp2H82sy9MSqFoDnNa1Lx6EYKTYRZ"
+    "address": "EYJq9eU4GMRUriUJBgGoZ8YLQBXcWaciXuSsEXE7ieQS"
   }
 }

@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useAssetsHistory } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { PaginationMeta, usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { parseDateRangeForFilter } from "../helper/date";
 import {
@@ -60,6 +60,14 @@ const useAssetHistoryHook = () => {
     }
   };
 
+  const pagination = useMemo(() => {
+    return {
+      ...parseMeta(meta),
+      onPageChange: setPage,
+      onPageSizeChange: setPageSize,
+    } as PaginationMeta;
+  }, [meta, setPage, setPageSize]);
+
   return {
     dataSource: data,
     // page: meta?.currentPage,
@@ -76,6 +84,7 @@ const useAssetHistoryHook = () => {
     onFilter,
     setPage,
     setPageSize,
+    pagination,
   };
 };
 

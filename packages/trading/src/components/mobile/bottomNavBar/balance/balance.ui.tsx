@@ -32,9 +32,9 @@ export const Balance: FC<BalanceState> = (props) => {
             className="oui-px-1"
           >
             {props.hideAssets ? (
-              <EyeIcon color="primary" opacity={1} size={16} />
+              <EyeIcon color="primary" opacity={1} size={16} className="oui-text-primary-light" />
             ) : (
-              <EyeCloseIcon color="primary" opacity={1} size={16} />
+              <EyeCloseIcon color="primary" opacity={1} size={16} className="oui-text-primary-light"/>
             )}
           </button>
           <MaybeEqual />
@@ -53,8 +53,8 @@ export const Balance: FC<BalanceState> = (props) => {
       {!props.wrongNetwork && props.isEnableTrading && (
         <Button variant={"outlined"} onClick={(e) => {
             props.onShowPortfolioSheet();
-        }} className="oui-h-[28px] oui-text-2xs">
-          {commifyOptional(props.currentLeverage, { fix: 2 })}
+        }} className="oui-h-[28px] oui-text-2xs oui-text-primary-light oui-border-primary-light">
+          {commifyOptional(props.currentLeverage, { fix: 2 }) + 'x'}
         </Button>
       )}
     </Flex>

@@ -66,7 +66,7 @@ export type FormattedTextProps = TextProps &
 
     suffix?: React.ReactNode;
     prefix?: React.ReactNode;
-    // showIcon?: boolean;
+    showIcon?: boolean;
   } & (
     | BaseText
     | DateText
@@ -94,7 +94,6 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       copyable,
       copyIconSize,
       onCopy,
-      //@ts-ignore
       showIcon,
       //@ts-ignore
       iconSize = "xs",

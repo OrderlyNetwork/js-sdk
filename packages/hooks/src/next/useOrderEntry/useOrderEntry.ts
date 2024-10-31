@@ -60,7 +60,13 @@ type OrderEntryReturn = {
    * @param value
    * @returns
    */
-  setValue: (key: keyof FullOrderState, value: any) => void;
+  setValue: (
+    key: keyof FullOrderState,
+    value: any,
+    options?: {
+      shouldUpdateLastChangedField?: boolean;
+    }
+  ) => void;
   setValues: (values: Partial<FullOrderState>) => void;
   symbolInfo: API.SymbolExt;
   /**
@@ -76,6 +82,8 @@ type OrderEntryReturn = {
    * Indicates if a mutation (order creation) is in progress.
    */
   isMutating: boolean;
+
+  markPrice: number | undefined;
 };
 
 /**
@@ -142,9 +150,9 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     validated: false,
     errors: null,
   });
-  // const [submitted, setSubmitted] = useState<boolean>(false);
-  // const [validated, setValidated] = useState<boolean>(false);
+
   const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
+  const lastChangedField = useRef<keyof FullOrderState | undefined>();
 
   // const [errors, setErrors] = useState<VerifyResult | null>(null);
 
@@ -196,8 +204,15 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
 
   useEffect(() => {
     // console.log("markPrice", markPrice);
-    if (formattedOrder.order_type === OrderType.MARKET && markPrice) {
-      orderEntryActions.onMarkPriceChange(markPrice);
+    if (
+      (formattedOrder.order_type === OrderType.MARKET ||
+        formattedOrder.order_type === OrderType.STOP_MARKET) &&
+      markPrice
+    ) {
+      orderEntryActions.onMarkPriceChange(
+        markPrice,
+        lastChangedField.current as any
+      );
     }
   }, [markPrice, formattedOrder.order_type]);
 
@@ -240,7 +255,14 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     return true;
   };
 
-  const setValue = (key: keyof FullOrderState, value: any) => {
+  const setValue = (
+    key: keyof FullOrderState,
+    value: any,
+    options?: {
+      shouldUpdateLastChangedField?: boolean;
+    }
+  ) => {
+    const { shouldUpdateLastChangedField = true } = options || {};
     if (!canSetTPSLPrice(key, formattedOrder.order_type)) {
       return;
     }
@@ -249,6 +271,10 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
 
     if (values) {
       interactiveValidate(values);
+    }
+
+    if (shouldUpdateLastChangedField) {
+      lastChangedField.current = key;
     }
   };
 
@@ -406,6 +432,7 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     symbolInfo: symbolInfo || {},
     metaState: meta,
     isMutating,
+    markPrice,
   };
 };
 

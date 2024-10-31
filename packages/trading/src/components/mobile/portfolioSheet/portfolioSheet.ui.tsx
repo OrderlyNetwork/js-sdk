@@ -29,8 +29,8 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
       <Divider className="oui-w-full" />
       <MarginRatio {...props} />
       <Leverage {...props} />
-      <Divider className="oui-w-full" />
-      <AvailableBalance {...props} />
+      {/* <Divider className="oui-w-full" /> */}
+      {/* <AvailableBalance {...props} /> */}
       <Buttons {...props} />
     </Flex>
   );
@@ -70,9 +70,17 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           intensity={36}
           suffix={
             props.hideAssets ? (
-              <EyeIcon opacity={1} size={16} className="oui-text-primary-light" />
+              <EyeIcon
+                opacity={1}
+                size={16}
+                className="oui-text-primary-light"
+              />
             ) : (
-              <EyeCloseIcon opacity={1} size={16} className="oui-text-primary-light" />
+              <EyeCloseIcon
+                opacity={1}
+                size={16}
+                className="oui-text-primary-light"
+              />
             )
           }
           onClick={(e) => {
@@ -84,7 +92,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
         </Text.formatted>
         <Text.numeral
           size="base"
-          coloring
+          // coloring
           dp={2}
           padding={false}
           visible={!props.hideAssets}
@@ -144,7 +152,11 @@ const Asset: FC<PortfolioSheetState> = (props) => {
               className="oui-flex oui-gap-1 oui-items-center"
               onClick={onUnsettleClick}
             >
-              <RefreshIcon opacity={1}  size={12} className="oui-text-primary-light"/>
+              <RefreshIcon
+                opacity={1}
+                size={12}
+                className="oui-text-primary-light"
+              />
               <Text size="2xs" color="primaryLight">
                 Settle PnL
               </Text>
@@ -172,6 +184,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
         <Flex gap={2}>
           <Text.numeral
             size="xs"
+            rule="percentages"
             color="primaryLight"
             dp={2}
             padding={false}
@@ -225,7 +238,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
 };
 const Leverage: FC<PortfolioSheetState> = (props) => {
   return (
-    <Flex direction={"column"} gap={2} width={"100%"} pb={6}>
+    <Flex direction={"column"} gap={2} width={"100%"}>
       <Flex width={"100%"} justify={"between"}>
         <Text size="2xs" intensity={54}>
           Max account leverage
@@ -244,17 +257,41 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
         </Text.numeral>
       </Flex>
       <Slider
-        step={props.step}
-        markLabelVisible={true}
-        marks={props.marks}
+        step={1}
+        max={props.maxLeverage - 1}
+        // markLabelVisible={true}
+        // marks={props.marks}
+        markCount={4}
         value={[props.value]}
         onValueChange={(e) => {
-          const value = props.marks?.[e[0] / 10]?.value;
-          if (typeof value !== "undefined") props.onLeverageChange(value);
+          props.onLeverageChange(e[0]);
         }}
         color="primaryLight"
         onValueCommit={props.onValueCommit}
       />
+      <Flex justify={"between"} width={"100%"}>
+        {[1, 5, 10, 25, 50].map((item, index) => {
+          return (
+            <button
+              onClick={(e) => {
+                props.onSaveLeverage(item);
+                props.onLeverageChange(item - 1);
+              }}
+              className={cn(
+                " oui-text-2xs oui-pb-2",
+                index === 0
+                  ? "oui-pr-2"
+                  : index === 4
+                  ? "oui-pl-2"
+                  : "oui-px-2",
+                item - 1 >= 0 && "oui-text-primary-light"
+              )}
+            >
+              {`${item}x`}
+            </button>
+          );
+        })}
+      </Flex>
     </Flex>
   );
 };
