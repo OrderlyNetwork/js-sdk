@@ -11,7 +11,7 @@ import { OrderlyConfigProvider } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./provider/appContext";
 import { AppConfigProvider } from "./provider/configContext";
 import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
-import {DefaultSolanaWalletAdapter} from "@orderly.network/default-solana-adapter";
+import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 import { useExecutionReport } from "./hooks/useExecutionReport";
 
@@ -48,7 +48,7 @@ const OrderlyApp = (
           walletAdapters={[evmWalletAdapter, solanaWalletAdapter]}
         >
           <AppStateProvider onChainChanged={onChainChanged}>
-            <TooltipProvider>
+            <TooltipProvider delayDuration={300}>
               <ModalProvider>{props.children}</ModalProvider>
             </TooltipProvider>
           </AppStateProvider>
