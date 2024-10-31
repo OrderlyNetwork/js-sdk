@@ -14,7 +14,7 @@ export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
   const [collapsed, setCollapsed] = useState(options?.collapsed);
   // const [activeTab, setActiveTab] = useState<TabName>("all");
   const [activeTab, setActiveTab] = useLocalStorage(
-    "orderly_markets_sel_tab_key",
+    "orderly_side_markets_sel_tab_key",
     "all"
   );
 

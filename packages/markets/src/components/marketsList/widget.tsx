@@ -11,19 +11,18 @@ export type MarketsListWidgetProps = {
   collapsed?: boolean;
   tableClassNames?: TableViewClassNames;
   rowClassName?: string;
+  onSort?: (sortKey?: string, sortOrder?: SortOrder) => void;
 };
 
 export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
   const state = useMarketsListScript(props);
 
-  const sortStore = props.type === "all" ? state.tabSort?.all : undefined;
-
   return (
     <MarketsList
       {...state}
       initialSort={{
-        sortKey: sortStore?.sortKey || props.sortKey,
-        sort: (sortStore?.sortOrder as SortOrder) || props.sortOrder,
+        sortKey: props.sortKey,
+        sort: props.sortOrder,
       }}
       getColumns={props.getColumns}
       collapsed={props.collapsed}
