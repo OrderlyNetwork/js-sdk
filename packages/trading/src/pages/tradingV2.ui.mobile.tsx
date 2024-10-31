@@ -6,21 +6,14 @@ import {
   MarketsSheetWidget,
   TokenInfoBarWidget,
 } from "@orderly.network/markets";
-import { Box, modal } from "@orderly.network/ui";
+import { Box, SimpleSheet } from "@orderly.network/ui";
 import { SecondaryLogo } from "../components/base/secondaryLogo";
 import { DataListWidget } from "../components/mobile/dataList";
 import { BottomNavBarWidget } from "../components/mobile/bottomNavBar";
 
 export const MobileLayout: FC<TradingV2State> = (props) => {
   const onSymbol = () => {
-    modal.sheet({
-      title: null,
-      classNames: {
-        content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
-      },
-      content: <MarketsSheetWidget onSymbolChange={props.onSymbolChange} />,
-      contentProps: { side: "left", closeable: false },
-    });
+    props.onOpenMarketsSheetChange(true);
   };
 
   const topBar = (
@@ -30,6 +23,21 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
         trailing={<SecondaryLogo />}
         onSymbol={onSymbol}
       />
+      <SimpleSheet
+        open={props.openMarketsSheet}
+        onOpenChange={props.onOpenMarketsSheetChange}
+        classNames={{
+          content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
+        }}
+        contentProps={{ side: "left", closeable: false }}
+      >
+        <MarketsSheetWidget
+          onSymbolChange={(symbol) => {
+            console.log("onSymbolChange", symbol);
+            props.onOpenMarketsSheetChange(false);
+          }}
+        />
+      </SimpleSheet>
     </Box>
   );
 

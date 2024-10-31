@@ -13,6 +13,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 export type TradingV2State = ReturnType<typeof useTradingV2Script>;
 
 export const useTradingV2Script = () => {
+  const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
   const [animating, setAnimating] = useState(false);
   const { state } = useAccount();
@@ -107,6 +108,8 @@ export const useTradingV2Script = () => {
     positions: pos,
     updatePositions,
     canTrading,
+    openMarketsSheet,
+    onOpenMarketsSheetChange: setOpenMarketsSheet,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
