@@ -13,12 +13,17 @@ export type UseDropDownMarketsScriptReturn = ReturnType<
 export function useDropDownMarketsScript(
   options?: UseDropDownMarketsScriptOptions
 ) {
+  const [open, setOpen] = useState(false);
   // const [activeTab, setActiveTab] = useState<TabName>("favorites");
   const [activeTab, setActiveTab] = useLocalStorage(
     "orderly_markets_sel_tab_key",
     "all"
   );
   const { clearSearchValue } = useMarketsContext();
+
+  const hide = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     clearSearchValue?.();
@@ -27,5 +32,8 @@ export function useDropDownMarketsScript(
   return {
     activeTab,
     onTabChange: (value: string) => setActiveTab(value as TabName),
+    open,
+    onOpenChange: setOpen,
+    hide,
   };
 }

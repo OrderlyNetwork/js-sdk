@@ -28,7 +28,7 @@ export const DropDownMarkets: React.FC<
   PropsWithChildren<DropDownMarketsProps>
 > = (props) => {
   return (
-    <DropdownMenuRoot>
+    <DropdownMenuRoot open={props.open} onOpenChange={props.onOpenChange}>
       <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
@@ -42,7 +42,7 @@ export const DropDownMarkets: React.FC<
             props.contentClassName
           )}
         >
-          <DropDownMarketsConetnt {...props} />
+          <DropDownMarketsConetnt {...props} hide={props.hide} />
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
@@ -77,7 +77,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       <CloseIcon
         size={12}
         className="oui-text-base-contrast-80 oui-cursor-pointer"
-        onClick={clearSearchValue}
+        onClick={props.hide}
         opacity={1}
       />
     </Flex>

@@ -6,8 +6,9 @@ import {
   TokenInfoBarFullWidget,
   MarketsSheetWidget
 } from "@orderly.network/markets";
-import { Box, Flex, modal } from "@orderly.network/ui";
+import { Box, Flex, modal, SimpleSheet, useModal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
+import { useState } from "react";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging" });
@@ -71,18 +72,21 @@ export const DepositTokenInfoBar: Story = {
 
 export const MobileTokenInfoBar: Story = {
   render: (args) => {
-    const onSymbol = () => {
-      modal.sheet({
-        title: null,        
-        classNames: {
-          content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
-        },
-        content: <MarketsSheetWidget
-                  onSymbolChange={(symbol) => {
-                  console.log('onSymbolChange', symbol);
-                }}/>,
-        contentProps: { side: "left", closeable:false },
-      });
+    const [open, setOpen] = useState(false);
+
+    const onSymbol = async () => {
+      setOpen(true)
+      // modal.sheet({
+      //   title: null,        
+      //   classNames: {
+      //     content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
+      //   },
+      //   content: <MarketsSheetWidget
+      //             onSymbolChange={(symbol) => {
+      //               console.log('onSymbolChange', symbol);
+      //           }}/>,
+      //   contentProps: { side: "left", closeable:false },
+      // });
     };
 
     return (
@@ -92,6 +96,21 @@ export const MobileTokenInfoBar: Story = {
           trailing={<Box pl={3}>Trailing</Box>}    
           onSymbol={onSymbol}
         />
+        <SimpleSheet
+          open={open}
+          onOpenChange={setOpen}
+          classNames={{
+            content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
+          }}
+          contentProps={{ side: "left", closeable:false }}
+        >
+          <MarketsSheetWidget
+            onSymbolChange={(symbol) => {
+              console.log('onSymbolChange', symbol);
+              setOpen(false)
+            }}            
+          />
+        </SimpleSheet>
       </Box>
     )    
   },
