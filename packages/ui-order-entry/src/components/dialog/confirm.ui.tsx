@@ -141,6 +141,7 @@ export const OrderConfirmDialog = (props: Props) => {
                   coloring
                   className="oui-text-trade-loss"
                   unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+                  dp={quoteDP}
                 >
                   {order.sl_trigger_price}
                 </Text.numeral>

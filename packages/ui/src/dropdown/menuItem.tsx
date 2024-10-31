@@ -8,6 +8,8 @@ import {
 } from "./dropdown";
 import type { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
 import { SizeType } from "../helpers/sizeType";
+import { Flex } from "../flex";
+import { Box } from "../box";
 
 export type MenuItem = {
   label: string;
@@ -16,6 +18,7 @@ export type MenuItem = {
 };
 
 type DropdownMenuProps = {
+  currentValue?: string;
   menu: MenuItem[];
   onSelect?: (item: MenuItem) => void;
   render?: (item: MenuItem, index: number) => ReactNode;
@@ -23,7 +26,7 @@ type DropdownMenuProps = {
 } & DropdownMenuContentProps;
 
 const SimpleDropdownMenu = (props: PropsWithChildren<DropdownMenuProps>) => {
-  const { menu, render, size, children, ...contentProps } = props;
+  const { currentValue, menu, render, size, children, ...contentProps } = props;
 
   const items = useMemo(() => {
     if (typeof props.render === "function") {
@@ -42,10 +45,13 @@ const SimpleDropdownMenu = (props: PropsWithChildren<DropdownMenuProps>) => {
         size={size}
         data-testid={item.testId}
       >
-        {item.label}
+        <Flex justify={"between"} width={"100%"}>
+          {item.label}
+          {currentValue == item.value && <Box width={4} height={4} gradient="primary" r="full"/>}
+        </Flex>
       </DropdownMenuItem>
     ));
-  }, [props.menu, props.render]);
+  }, [props.menu, props.render, currentValue]);
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
