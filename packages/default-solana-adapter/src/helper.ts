@@ -254,12 +254,18 @@ export async function getDepositQuoteFee({
   vaultAddress,
   userAddress,
   connection,
-  depositParams,
+                                           depositData,
 }: {
   vaultAddress: string;
   userAddress: string;
   connection: Connection;
-  depositParams: any;
+  depositData:  {
+    tokenHash: string;
+    brokerHash: string;
+    accountId: string;
+    USDCAddress: string;
+    tokenAmount: string;
+  }
 }) {
   console.log("-- vaultAddress", vaultAddress);
   const appProgramId = new PublicKey(vaultAddress);
@@ -289,6 +295,8 @@ export async function getDepositQuoteFee({
   const messageLibPDA = getMessageLibPda(SEND_LIB_PROGRAM_ID);
   const messageLibInfoPDA = getMessageLibInfoPda(messageLibPDA);
   const vaultAuthorityPDA = getVaultAuthorityPda(appProgramId);
+
+  const depositParams = getDepositParams(userAddress, depositData)
 
   // deposit fee
   const quoteFee = await program.methods
@@ -435,6 +443,32 @@ export async function getDepositQuoteFee({
   );
   return decodedBuffer.readBigUInt64LE(0);
 }
+const getDepositParams = (userAddress: string, depositData:  {
+  tokenHash: string;
+  brokerHash: string;
+  accountId: string;
+  USDCAddress: string;
+  tokenAmount: string;
+}) => {
+  const brokerHash = depositData.brokerHash;
+  const codedBrokerHash = Array.from(Buffer.from(brokerHash.slice(2), "hex"));
+
+  const tokenHash = depositData.tokenHash;
+  const codedTokenHash = Array.from(Buffer.from(tokenHash.slice(2), "hex"));
+
+  const solAccountId = depositData.accountId;
+  const codedAccountId = Array.from(Buffer.from(solAccountId.slice(2), "hex"));
+  const userPublicKey = new PublicKey(userAddress);
+
+
+  return  {
+    accountId: codedAccountId,
+    brokerHash: codedBrokerHash,
+    tokenHash: codedTokenHash,
+    userAddress: Array.from(userPublicKey.toBuffer()),
+    tokenAmount: new BN(depositData.tokenAmount),
+  };
+}
 
 export async function deposit({
   vaultAddress,
@@ -455,6 +489,9 @@ export async function deposit({
     tokenAmount: string;
   };
 }) {
+  const brokerHash = depositData.brokerHash;
+  const tokenHash = depositData.tokenHash;
+
   const appProgramId = new PublicKey(vaultAddress);
   const program = new Program<SolanaVault>(VaultIDL, appProgramId, {
     connection,
@@ -464,16 +501,6 @@ export async function deposit({
   const userUSDCAccount = getUSDCAccounts(usdc, userPublicKey);
   const vaultAuthorityPda = getVaultAuthorityPda(appProgramId);
   const vaultUSDCAccount = getUSDCAccounts(usdc, vaultAuthorityPda);
-
-  const brokerHash = depositData.brokerHash;
-  const codedBrokerHash = Array.from(Buffer.from(brokerHash.slice(2), "hex"));
-
-  const tokenHash = depositData.tokenHash;
-  const codedTokenHash = Array.from(Buffer.from(tokenHash.slice(2), "hex"));
-
-  const solAccountId = depositData.accountId;
-  const codedAccountId = Array.from(Buffer.from(solAccountId.slice(2), "hex"));
-
   const allowedBrokerPDA = getBrokerPDA(appProgramId, brokerHash);
   const allowedTokenPDA = getTokenPDA(appProgramId, tokenHash);
   const oappConfigPDA = getOAppConfigPda(appProgramId);
@@ -501,19 +528,13 @@ export async function deposit({
   const priceFeedPDA = getPriceFeedPda();
   const dvnConfigPDA = getDvnConfigPda();
 
-  const vaultDepositParams = {
-    accountId: codedAccountId,
-    brokerHash: codedBrokerHash,
-    tokenHash: codedTokenHash,
-    userAddress: Array.from(userPublicKey.toBuffer()),
-    tokenAmount: new BN(depositData.tokenAmount),
-  };
+  const vaultDepositParams = getDepositParams(userAddress, depositData);
 
   const fee = await getDepositQuoteFee({
     vaultAddress,
     userAddress,
     connection,
-    depositParams: vaultDepositParams,
+    depositData,
   });
 
   const sendParam = {
