@@ -1,4 +1,5 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState} from "react";
+import {WalletState } from "@orderly.network/hooks";
 import {
   OrderlyContext,
   useAccount,
@@ -11,22 +12,27 @@ import {
   praseChainIdToNumber,
   windowGuard,
 } from "@orderly.network/utils";
-import { AccountStatusEnum, SDKError } from "@orderly.network/types";
-import type { WalletState } from "@orderly.network/hooks";
+import { AccountStatusEnum, SDKError, ChainNamespace } from "@orderly.network/types";
 
 const WALLET_KEY = "orderly:wallet-info";
 const CHAIN_NAMESPACE = "orderly:chain-namespace";
 
 export const useWalletStateHandle = (options: {
   // onChainChanged?: (chainId: number, isTestnet: boolean) => void;
+  currentChainId?: number;
 }) => {
   const {
     wallet: connectedWallet,
     connect,
     connectedChain,
+    namespace,
   } = useWalletConnector();
-
-  // console.log("🔗 wallet state handle", connectedWallet);
+  //
+  // console.log("🔗 wallet state handle", {
+  //   connectedWallet,
+  //   connectedChain,
+  //   namespace,
+  // });
 
   if (typeof connect !== "function") {
     throw new SDKError("Please provide a wallet connector provider");
@@ -59,6 +65,7 @@ export const useWalletStateHandle = (options: {
     };
   }, [connectedWallet]);
 
+
   useEffect(() => {
     if (!connectedChain) return;
 
@@ -81,6 +88,9 @@ export const useWalletStateHandle = (options: {
       /**
        * if locale address is exist, restore account state
        */
+      if (connectedChain?.namespace === ChainNamespace.solana) {
+        return;
+      }
       if (
         localAddress &&
         account.address !== localAddress &&
@@ -106,7 +116,7 @@ export const useWalletStateHandle = (options: {
    */
   useEffect(() => {
     // console.log("🔗 wallet state changed", connectedWallet);
-    //
+
     if (unsupported || !connectedChain) return;
     if (isManualConnect.current) return;
 
@@ -166,7 +176,7 @@ export const useWalletStateHandle = (options: {
     isManualConnect.current = true;
     // const walletState = await connect();
 
-    return connect()
+    return connect({chainId: options.currentChainId})
       .then(async (walletState) => {
         if (
           Array.isArray(walletState) &&
@@ -187,8 +197,6 @@ export const useWalletStateHandle = (options: {
           if (!account) {
             throw new Error("account is not initialized");
           }
-          // console.info("🤝 connect wallet", wallet);
-          // account.address = wallet.accounts[0].address;
           const status = await account.setAddress(wallet.accounts[0].address, {
             provider: wallet.provider,
             chain: {

@@ -1,86 +1,115 @@
-import React, { useEffect, type PropsWithChildren, useMemo } from "react";
+import React, {
+  type PropsWithChildren,
+  useEffect,
+  useMemo, useRef,
+  useState
+} from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
-import { useWalletModal} from "@solana/wallet-adapter-react-ui";
-import {useConnection, useWallet} from "@solana/wallet-adapter-react";
 import { ChainNamespace } from "@orderly.network/types";
+import { useSOL } from "./useSOL";
+import { useEvm } from "./useEvm";
+
+const SOL_CHAIN_IDS = [901901901];
 
 export function Main(props: PropsWithChildren) {
-  const { setVisible, visible } = useWalletModal();
-  const {
-    connect: connectSolanaWallet,
-    wallet: selectedSolanaWallet,
-    connecting : solanaConnecting,
-    disconnect: solanaDisconnect,
-    signMessage,
-      sendTransaction,
-    publicKey,
-  } = useWallet();
-  const {connection} = useConnection();
+  const sol = useSOL();
+  const evm = useEvm();
 
-  const connect = async () => {
-    console.log('-- connect solana');
-    if (!selectedSolanaWallet) {
-      setVisible(true)
+  const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
+
+  const newNamespace = useRef<ChainNamespace | null>();
+
+  const connect = async (options: any) => {
+    if ([901901901].includes(options.chainId)) {
+      newNamespace.current = ChainNamespace.solana;
+      // connect solana
+      return sol.connect().then((res) => {
+        console.log("-- connect sol", res);
+        if (res) {
+          return res;
+        }
+      });
     }
-    connectSolanaWallet().then(res => {
-      console.log('-- publickey', publicKey);
-      console.log('-- publick', publicKey?.toBase58());
-
-      console.log('-- res', res);
-    }).catch((err) => {
-      console.log('-- error',err);
-    })
-    return [];
+    newNamespace.current = ChainNamespace.evm;
+    return evm.connect().then((res) => {
+      if (res) {
+        return res;
+      }
+    });
   };
 
   const disconnect = async () => {
-    await solanaDisconnect();
-    return []
-  }
+    if (namespace === ChainNamespace.evm) {
+      return evm.disconnect();
+    }
+    if (namespace === ChainNamespace.solana) {
+      return sol.disconnect();
+    }
+  };
+
+  const connecting =
+    newNamespace.current == ChainNamespace.solana ? sol.connecting : evm.connecting;
+
+  const wallet = useMemo(() => {
+    if (namespace === ChainNamespace.solana && sol.connected) {
+      return sol.wallet;
+    }
+    if (namespace === ChainNamespace.evm && evm.connected) {
+      return evm.wallet;
+    }
+    return null;
+  }, [namespace, sol.connected, evm.connected]);
+
+  // const wallet = (namespace === ChainNamespace.solana && sol.connected) ? sol.wallet : (namespace === ChainNamespace.evm && evm.connected ? evm.wallet : null);
+
+  const connectedChain =
+    namespace === ChainNamespace.solana
+      ? sol.connectedChain
+      : evm.connectedChain;
+
+  const setChain = (chain: any) => {
+    // solana connect
+    let tempNamespace: ChainNamespace = ChainNamespace.evm;
+    if (SOL_CHAIN_IDS.includes(chain.chainId)) {
+      tempNamespace = ChainNamespace.solana;
+    }
+    if (namespace === tempNamespace && namespace === ChainNamespace.evm) {
+      // todo switch chan on block native
+
+      return evm.changeChain(chain);
+    }
+    if (namespace !== tempNamespace) {
+      return connect({ chainId: chain.chainId }).then();
+    }
+    console.log("-- set chain", chain);
+  };
 
   useEffect(() => {
-    if (!selectedSolanaWallet) return;
-    if (visible) return;
-    console.log('-- selectedSolanaWallet', selectedSolanaWallet, visible);
-
-    connectSolanaWallet().then(res => {
-      console.log('-- publick', publicKey?.toBase58());
-      console.log('-- res', res);
-    }).catch((err) => {
-      console.log('-- error',err);
-    })
-
-  }, [selectedSolanaWallet, visible]);
-
-  const connecting = false;
-  const wallet = useMemo(() => {
-    console.log('-- publiKey', publicKey);
-
-    if (!publicKey) {
-     return null;
-    }
-    return {
-      label:'',
-      icon: '',
-      provider: {
-        signMessage: signMessage,
-        connection,
-        sendTransaction,
-      },
-      accounts:[{
-        address: publicKey.toBase58(),
-      }],
-      chains: [
-        {
-          id: 901901901,
-          namespace: ChainNamespace.solana,
-        }
-      ]
+    // console.log("-- connect", {
+    //   sol: sol.connected,
+    //   evm: evm.connected,
+    // });
+    if (sol.connected && evm.connected) {
+      if (newNamespace.current === ChainNamespace.solana) {
+        evm.disconnect().then();
+        setNamespace(ChainNamespace.solana);
+        return;
+      } else {
+        setNamespace(ChainNamespace.evm);
+        sol.disconnect().then();
+        return;
+      }
     }
 
-
-  }, [publicKey, signMessage, connection]);
-  const setChanin = () => {}
+    if (sol.connected) {
+      setNamespace(ChainNamespace.solana);
+      return;
+    }
+    if (evm.connected) {
+      setNamespace(ChainNamespace.evm);
+      return;
+    }
+  }, [newNamespace.current, sol.connected, evm.connected]);
 
   return (
     <WalletConnectorContext.Provider
@@ -89,15 +118,12 @@ export function Main(props: PropsWithChildren) {
         disconnect,
         connecting,
         wallet,
-        setChanin,
-        connectedChain: {
-          id: 901901901,
-          namespace: ChainNamespace.solana,
-        }
-
+        setChain,
+        connectedChain,
+        namespace,
       }}
     >
-        {props.children}
+      {props.children}
     </WalletConnectorContext.Provider>
-);
+  );
 }
