@@ -48,7 +48,7 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
         columns={columns}
         dataSource={dataSource}
         loading={isLoading}
-        isValidating={isValidating}
+        // isValidating={isValidating}
         className="oui-font-semibold"
         classNames={{
           root: "oui-h-[calc(100%_-_49px)]",
