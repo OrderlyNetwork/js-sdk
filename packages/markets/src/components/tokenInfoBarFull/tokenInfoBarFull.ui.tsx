@@ -199,6 +199,7 @@ const DataItem: React.FC<DataItemProps> = (props) => {
         content={props.hint}
         className="oui-max-w-[240px] oui-bg-base-6"
         arrow={{ className: "oui-fill-base-6" }}
+        delayDuration={0}
       >
         <Text
           size="2xs"
