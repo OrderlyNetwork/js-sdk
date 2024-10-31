@@ -111,21 +111,33 @@ export const CollapseMarkets: Story = {
 
 export const Favorites: Story = {
   render: (args) => {
-    return <FavoritesListWidget />
+    return <FavoritesListWidget
+      tableClassNames={{
+      scroll: "oui-px-1",
+    }}/>
   },
   decorators
 };
 
 export const Recent: Story = {
   render: (args) => {
-    return <RecentListWidget />
+    return <RecentListWidget
+      tableClassNames={{
+      scroll: "oui-px-1",
+    }}/>
   },
   decorators
 };
 
 export const All: Story = {
   render: (args) => {
-    return <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
+    return <MarketsListWidget
+      type="all"
+      sortKey="24h_amount"
+      sortOrder="desc"
+      tableClassNames={{
+      scroll: "oui-px-1",
+    }} />
   },
   decorators
 };

@@ -4,16 +4,16 @@ import { Decimal } from "@orderly.network/utils";
 import { dataSource as defaultDataSource } from "./dataSource";
 import { AccountStatusEnum, API } from "@orderly.network/types";
 import { useDataTap } from "@orderly.network/react-app";
-import { Column } from "@orderly.network/ui";
+import { TableColumn } from "@orderly.network/ui";
 import { useFeeTierColumns } from "./column";
 
 export type useFeeTierScriptReturn = ReturnType<typeof useFeeTierScript>;
 
 export type UseFeeTierScriptOptions = {
   dataAdapter?: (
-    columns: Column[],
+    columns: TableColumn[],
     dataSource: any[]
-  ) => { columns: Column[]; dataSource: any[] };
+  ) => { columns: TableColumn[]; dataSource: any[] };
 };
 
 export function useFeeTierScript(options?: UseFeeTierScriptOptions) {

@@ -64,21 +64,45 @@ export const DropDownMarkets: Story = {
 
 export const Favorites: Story = {
   render: (args) => {
-    return <FavoritesListWidget getColumns={getDropDownMarketsColumns} />
+    return <FavoritesListWidget
+      getColumns={getDropDownMarketsColumns}
+      tableClassNames={{
+        root: "!oui-bg-base-8",
+        scroll: "oui-pb-5 oui-px-1",
+      }}
+      rowClassName="!oui-h-[34px]"
+    />
   },
   decorators
 };
 
 export const Recent: Story = {
   render: (args) => {
-    return <RecentListWidget getColumns={getDropDownMarketsColumns}/>
+    return <RecentListWidget
+      getColumns={getDropDownMarketsColumns}
+      tableClassNames={{
+        root: "!oui-bg-base-8",
+        scroll: "oui-pb-5 oui-px-1",
+      }}
+      rowClassName="!oui-h-[34px]"
+    />
   },
   decorators
 };
 
 export const All: Story = {
   render: (args) => {
-    return <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" getColumns={getDropDownMarketsColumns}/>
+    return <MarketsListWidget
+      type="all"
+      sortKey="24h_amount"
+      sortOrder="desc"
+      getColumns={getDropDownMarketsColumns}
+      tableClassNames={{
+        root: "!oui-bg-base-8",
+        scroll: "oui-pb-5 oui-px-1",
+      }}
+      rowClassName="!oui-h-[34px]"
+    />
   },
   decorators
 };
