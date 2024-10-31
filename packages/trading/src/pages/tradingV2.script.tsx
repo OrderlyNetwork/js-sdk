@@ -9,6 +9,7 @@ import { useSplitPersistent } from "../components/desktop/layout/useSplitPersist
 import { useMemo, useState } from "react";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useFirstTimeDeposit } from "../components/desktop/assetView/assetView.script";
 
 export type TradingV2State = ReturnType<typeof useTradingV2Script>;
 
@@ -19,6 +20,8 @@ export const useTradingV2Script = () => {
   const { state } = useAccount();
 
   const { wrongNetwork } = useAppContext();
+
+  const { isFirstTimeDeposit } = useFirstTimeDeposit();
 
   const [collapsed, setCollapsed] = useLocalStorage(
     "orderly_side_markets_collapsed",
@@ -87,9 +90,14 @@ export const useTradingV2Script = () => {
     return true;
   }, [state.status, wrongNetwork]);
 
+  const showPositionIcon = useMemo(
+    () => canTrading && !isFirstTimeDeposit,
+    [canTrading, isFirstTimeDeposit]
+  );
+
   const pos = useMemo(() => {
-    return canTrading ? (positions as number[]) : [0, 1, 2];
-  }, [canTrading, positions]);
+    return showPositionIcon ? (positions as number[]) : [0, 1, 2];
+  }, [showPositionIcon, positions]);
 
   const map = {
     collapsed,
@@ -108,6 +116,7 @@ export const useTradingV2Script = () => {
     positions: pos,
     updatePositions,
     canTrading,
+    showPositionIcon,
     openMarketsSheet,
     onOpenMarketsSheetChange: setOpenMarketsSheet,
   };
