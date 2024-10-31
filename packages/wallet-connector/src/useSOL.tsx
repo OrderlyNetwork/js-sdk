@@ -3,8 +3,12 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ChainNamespace } from "@orderly.network/types";
 import { WalletState } from "@orderly.network/hooks";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { SolanaChains } from "./config";
 
-export function useSOL() {
+
+
+export function useSOL({network}: {network: WalletAdapterNetwork}) {
   const [wallet, setWallet] = useState<WalletState| null>(null);
   const { connection } = useConnection();
   const { setVisible: setModalVisible, visible } = useWalletModal();
@@ -69,7 +73,6 @@ export function useSOL() {
       setModalVisible(true);
       selectModalVisibleRef.current = true;
     } else {
-      console.log('-j xxxx');
       solanaPromiseRef.current.walletSelectResolve(solanaWallet);
       if (!publicKey) {
         try {
@@ -81,6 +84,7 @@ export function useSOL() {
         solanaPromiseRef.current.connectResolve({
           userAddress: publicKey.toBase58(),
           signMessage,
+          sendTransaction,
         });
       }
     }
@@ -90,8 +94,11 @@ export function useSOL() {
       solanaPromiseRef.current.walletSelect,
       solanaPromiseRef.current.connect,
     ])
-      .then(([wallet, {userAddress, signMessage}]) => {
-        console.log('-- res',wallet, userAddress, signMessage);
+      .then(([wallet, {userAddress, signMessage, sendTransaction}]) => {
+        // console.log('-- connect sol res',{
+        //   wallet,
+        //   userAddress, signMessage, sendTransaction
+        // });
         const tempWallet = {
 
           label:wallet.adapter.name,
@@ -108,7 +115,7 @@ export function useSOL() {
           ],
           chains: [
             {
-              id: 901901901,
+              id: SolanaChains.get(network)!,
               namespace: ChainNamespace.solana,
             },
           ],
@@ -123,7 +130,7 @@ export function useSOL() {
         return Promise.reject(e);
       })
       .finally(() => {
-        console.log("-- finally");
+        isManual.current = false;
       });
   };
 
@@ -176,15 +183,21 @@ export function useSOL() {
       setConnected(false);
       return;
     }
-    console.log("-- publick", publicKey);
-    if (solanaPromiseRef.current) {
-      solanaPromiseRef.current.connectResolve({
-        userAddress: publicKey?.toBase58(),
-        signMessage,
-      });
-    }
+    console.log("-- publick",{
+      publicKey: publicKey.toBase58(),
+      isManual: isManual.current,
+
+    });
+
 
     if (isManual.current) {
+      if (solanaPromiseRef.current) {
+        solanaPromiseRef.current.connectResolve({
+          userAddress: publicKey?.toBase58(),
+          signMessage,
+          sendTransaction,
+        });
+      }
       return;
     }
     console.log("-- tt");
@@ -203,14 +216,32 @@ export function useSOL() {
       ],
       chains: [
         {
-          id: 901901901,
+          id: SolanaChains.get(network)!,
           namespace: ChainNamespace.solana,
         },
       ],
     });
     setConnected(true);
-  }, [publicKey, solanaWallet, signMessage, isManual.current]);
+  }, [publicKey, solanaWallet, signMessage, isManual, connection, sendTransaction, network]);
 
+  useEffect(() => {
+    if (!publicKey) {
+     return;
+    }
+    const id = connection.onAccountChange(publicKey, (updatedAccountInfo, context) => {
+      console.log('--- account change', updatedAccountInfo, context);
+
+    }, {commitment: 'confirmed'})
+
+    return () => {
+      if (id) {
+
+        connection.removeAccountChangeListener(id).then();
+      }
+
+    }
+
+  }, [connection, publicKey])
 
   useEffect(() => {
     if (!solanaWallet) {

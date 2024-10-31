@@ -5,14 +5,16 @@ import React, {
   useState
 } from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
+import {hex2int,int2hex} from "@orderly.network/utils";
 import { ChainNamespace } from "@orderly.network/types";
 import { useSOL } from "./useSOL";
 import { useEvm } from "./useEvm";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { SolanaChains } from "./config";
 
-const SOL_CHAIN_IDS = [901901901];
 
-export function Main(props: PropsWithChildren) {
-  const sol = useSOL();
+export function Main(props: PropsWithChildren<{solanaNetwork: WalletAdapterNetwork}>) {
+  const sol = useSOL({network: props.solanaNetwork});
   const evm = useEvm();
 
   const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
@@ -20,7 +22,7 @@ export function Main(props: PropsWithChildren) {
   const newNamespace = useRef<ChainNamespace | null>();
 
   const connect = async (options: any) => {
-    if ([901901901].includes(options.chainId)) {
+    if (Array.from(SolanaChains.values()).includes(options.chainId)) {
       newNamespace.current = ChainNamespace.solana;
       // connect solana
       return sol.connect().then((res) => {
@@ -32,9 +34,15 @@ export function Main(props: PropsWithChildren) {
     }
     newNamespace.current = ChainNamespace.evm;
     return evm.connect().then((res) => {
-      if (res) {
-        return res;
+      console.log('-- connect evm', res);
+      if (!res.length) {
+        return Promise.reject({message: 'user reject'})
+
       }
+      return res;
+    }).catch(e => {
+      console.log('-- connect evm error', e);
+      return Promise.reject(e);
     });
   };
 
@@ -50,17 +58,17 @@ export function Main(props: PropsWithChildren) {
   const connecting =
     newNamespace.current == ChainNamespace.solana ? sol.connecting : evm.connecting;
 
-  const wallet = useMemo(() => {
-    if (namespace === ChainNamespace.solana && sol.connected) {
-      return sol.wallet;
-    }
-    if (namespace === ChainNamespace.evm && evm.connected) {
-      return evm.wallet;
-    }
-    return null;
-  }, [namespace, sol.connected, evm.connected]);
-
-  // const wallet = (namespace === ChainNamespace.solana && sol.connected) ? sol.wallet : (namespace === ChainNamespace.evm && evm.connected ? evm.wallet : null);
+  // const wallet = useMemo(() => {
+  //   if (namespace === ChainNamespace.solana && sol.connected) {
+  //     return sol.wallet;
+  //   }
+  //   if (namespace === ChainNamespace.evm && evm.connected) {
+  //     return evm.wallet;
+  //   }
+  //   return null;
+  // }, [namespace, sol.connected, evm.connected]);
+  //
+  const wallet = (namespace === ChainNamespace.solana && sol.connected) ? sol.wallet : (namespace === ChainNamespace.evm && evm.connected ? evm.wallet : null);
 
   const connectedChain =
     namespace === ChainNamespace.solana
@@ -69,19 +77,27 @@ export function Main(props: PropsWithChildren) {
 
   const setChain = (chain: any) => {
     // solana connect
+    const chainId = (typeof chain.chainId === "number" ? chain.chainId : hex2int(chain.chainId));
+    // console.log('-- setchain chain',{
+    //   chain, chainId,
+    // });
+
     let tempNamespace: ChainNamespace = ChainNamespace.evm;
-    if (SOL_CHAIN_IDS.includes(chain.chainId)) {
+    if (Array.from(SolanaChains.values()).includes(chainId)) {
       tempNamespace = ChainNamespace.solana;
     }
+    console.log('--- namespace', {
+      namespace,
+      tempNamespace,
+    });
     if (namespace === tempNamespace && namespace === ChainNamespace.evm) {
       // todo switch chan on block native
 
       return evm.changeChain(chain);
     }
     if (namespace !== tempNamespace) {
-      return connect({ chainId: chain.chainId }).then();
+      return connect({ chainId: chainId }).then();
     }
-    console.log("-- set chain", chain);
   };
 
   useEffect(() => {
@@ -110,6 +126,10 @@ export function Main(props: PropsWithChildren) {
       return;
     }
   }, [newNamespace.current, sol.connected, evm.connected]);
+  // console.log('--main wallet', {
+  //   wallet,
+  //   'sol wallet': sol.wallet
+  // });
 
   return (
     <WalletConnectorContext.Provider

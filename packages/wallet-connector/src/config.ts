@@ -5,6 +5,7 @@ import { getChainsArray } from "./chains";
 import binanceModule from "@binance/w3w-blocknative-connector";
 // import bitgetWalletModule from "@web3-onboard/bitget";
 import { merge } from "lodash";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 // initialize the module with options
 const binance = binanceModule({ options: { lng: "en" } });
@@ -56,3 +57,6 @@ export const initConfig: (
 
   return init(mergedOptions);
 };
+
+export const SolanaChains = new Map([[WalletAdapterNetwork.Devnet,  901901901], [WalletAdapterNetwork.Mainnet, 900900900]]);
+
