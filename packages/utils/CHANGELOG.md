@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.0.1-developV2.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-developV2.8
+
 ## 2.0.1-developV2.7
 
 ### Patch Changes
