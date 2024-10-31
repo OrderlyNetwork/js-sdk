@@ -167,6 +167,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
+        dataIndex: "action",
         type: "action",
         width: 40,
         render: (value, record) => {

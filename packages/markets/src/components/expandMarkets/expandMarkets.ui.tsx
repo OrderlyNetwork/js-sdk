@@ -68,12 +68,20 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <div className={cls}>
-            <FavoritesListWidget />
+            <FavoritesListWidget
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
+            />
           </div>
         </TabPanel>
         <TabPanel title="Recent" value="recent">
           <div className={cls}>
-            <RecentListWidget />
+            <RecentListWidget
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
+            />
           </div>
         </TabPanel>
         <TabPanel title="All" value="all">
@@ -82,6 +90,9 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
               type="all"
               sortKey="24h_amount"
               sortOrder="desc"
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
             />
           </div>
         </TabPanel>

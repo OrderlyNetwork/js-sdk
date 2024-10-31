@@ -38,7 +38,7 @@ export const DropDownMarkets: React.FC<
           alignOffset={-32}
           sideOffset={20}
           className={cn(
-            "oui-markets-dropdown-menu-content oui-bg-base-8",
+            "oui-markets-dropdown-menu-content oui-bg-base-8 oui-p-0",
             props.contentClassName
           )}
         >
@@ -110,7 +110,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               getColumns={getDropDownMarketsColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",
-                scroll: "oui-pb-5",
+                scroll: "oui-pb-5 oui-px-1",
               }}
               rowClassName="!oui-h-[34px]"
             />
@@ -122,7 +122,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               getColumns={getDropDownMarketsColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",
-                scroll: "oui-pb-5",
+                scroll: "oui-pb-5 oui-px-1",
               }}
               rowClassName="!oui-h-[34px]"
             />
@@ -137,7 +137,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               getColumns={getDropDownMarketsColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",
-                scroll: "oui-pb-5",
+                scroll: "oui-pb-5 oui-px-1",
               }}
               rowClassName="!oui-h-[34px]"
             />

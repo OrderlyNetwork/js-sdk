@@ -68,7 +68,7 @@ export const Favorites: Story = {
       getColumns={getDropDownMarketsColumns}
       tableClassNames={{
         root: "!oui-bg-base-8",
-        scroll: "oui-pb-5",
+        scroll: "oui-pb-5 oui-px-1",
       }}
       rowClassName="!oui-h-[34px]"
     />
@@ -82,7 +82,7 @@ export const Recent: Story = {
       getColumns={getDropDownMarketsColumns}
       tableClassNames={{
         root: "!oui-bg-base-8",
-        scroll: "oui-pb-5",
+        scroll: "oui-pb-5 oui-px-1",
       }}
       rowClassName="!oui-h-[34px]"
     />
@@ -99,7 +99,7 @@ export const All: Story = {
       getColumns={getDropDownMarketsColumns}
       tableClassNames={{
         root: "!oui-bg-base-8",
-        scroll: "oui-pb-5",
+        scroll: "oui-pb-5 oui-px-1",
       }}
       rowClassName="!oui-h-[34px]"
     />
