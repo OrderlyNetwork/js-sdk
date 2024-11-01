@@ -119,6 +119,10 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     (data: any) => {
       return onConfirm(data, dirtyFields).then(
         (data: any) => {
+          if (isAlgoOrder && order.type === 'MARKET' && 'order_price' in data) {
+            const { order_price, ...rest} = data;
+            return onSubmit(rest);
+          }
           return onSubmit(data);
         },
         () => {}
