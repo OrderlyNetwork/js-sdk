@@ -58,7 +58,7 @@ export const TriggerPrice = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open]);
+  }, [open, order.trigger_price]);
 
   const onClick = (event: any) => {
     event?.stopPropagation();

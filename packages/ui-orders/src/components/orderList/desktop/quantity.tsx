@@ -220,7 +220,7 @@ export const OrderQuantity = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open]);
+  }, [open, order.quantity]);
 
   const trigger = () => {
     if (!editing || props.disableEdit) {

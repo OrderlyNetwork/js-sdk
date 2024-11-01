@@ -1,6 +1,14 @@
 import { API } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
-import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
 
@@ -131,8 +139,6 @@ export const Price = (props: {
         },
         (err: any) => {
           toast.error(err.message);
-
-          setPrice(order.price!.toString());
           cancelPopover();
         }
       )
@@ -164,7 +170,7 @@ export const Price = (props: {
 
   useEffect(() => {
     {
-      if (!!props.order.price) {
+      if (props.order.price !== null) {
         setPrice(`${props.order.price}`);
       }
     }
@@ -188,7 +194,7 @@ export const Price = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open]);
+  }, [open, order.price]);
 
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
