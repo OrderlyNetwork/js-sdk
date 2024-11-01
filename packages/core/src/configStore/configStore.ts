@@ -1,3 +1,5 @@
+import { ChainNamespace } from "@orderly.network/types";
+
 export type ConfigKey =
   | "apiBaseUrl"
   | "klineDataUrl"
@@ -9,6 +11,7 @@ export type ConfigKey =
   | "brokerName"
   | "networkId"
   | "env"
+  | "chainNamespace"
   | "PROD_URL"
   | "markets";
 
