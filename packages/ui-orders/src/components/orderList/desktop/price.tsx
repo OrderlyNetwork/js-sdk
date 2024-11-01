@@ -269,7 +269,7 @@ const NormalState: FC<{
     <div
       className={cn(
         "oui-flex oui-max-w-[110px] oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold",
-        grayCell(order) && "oui-text-base-conrast-20"
+        grayCell(order) && "oui-text-base-contrast-20"
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -280,7 +280,7 @@ const NormalState: FC<{
       <Flex
         r="base"
         className={cn(
-          "oui-min-w-[70px] oui-h-[28px]",
+          "oui-min-w-[70px] oui-h-[28px] oui-border oui-border-line",
           !props.disableEdit && "oui-bg-base-7 oui-px-2"
         )}
       >
