@@ -2,6 +2,7 @@ import { useAccount, useLeverage, useMarginRatio } from "@orderly.network/hooks"
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
+import { useDataTap } from "@orderly.network/react-app";
 
 const getRiskRateColor = (riskRate: null | number) => {
   if (riskRate === null) {
@@ -47,12 +48,17 @@ export const useRiskRateScript = () => {
     return getRiskRateColor(riskRateNumber);
   }, [riskRateNumber]);
 
+  const _curLeverage = useDataTap(currentLeverage);
+  const _maxLeverage = useDataTap(maxLeverage);
+  const _riskRate = useDataTap(riskRate);
+  
+
   return {
-    riskRate,
+    riskRate: _riskRate,
     riskRateColor,
     isConnected,
-    currentLeverage,
-    maxLeverage
+    currentLeverage: _curLeverage,
+    maxLeverage: _maxLeverage,
   };
 };
 

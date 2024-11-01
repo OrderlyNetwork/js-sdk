@@ -10,6 +10,7 @@ import {
   usePrivateQuery,
   useCollateral,
   useMarginRatio,
+  usePositionStream,
 } from "@orderly.network/hooks";
 import {
   MEDIA_TABLET,
@@ -24,7 +25,7 @@ import {
   DepositAndWithdrawWithSheetId,
   DepositAndWithdrawWithDialogId,
 } from "@orderly.network/ui-transfer";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
 
 export const useFirstTimeDeposit = () => {
@@ -82,7 +83,17 @@ export const useAssetViewScript = () => {
   });
   const { marginRatio, mmr } = useMarginRatio();
   const isConnected = state.status >= AccountStatusEnum.Connected;
-  const marginRatioVal = marginRatio;
+  const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
+    usePositionStream();
+  const marginRatioVal = useMemo(() => {
+    return Math.min(
+      10,
+      aggregated.notional === 0
+        ? // @ts-ignore
+          positionsInfo["margin_ratio"](10)
+        : marginRatio
+    );
+  }, [marginRatio, aggregated]);
 
   const renderMMR = useMemo(() => {
     if (!mmr) {
@@ -182,6 +193,11 @@ export const useAssetViewScript = () => {
     },
   });
 
+  const _freeCollateral = useDataTap(freeCollateral) ?? undefined;
+  const _marginRatioVal = useDataTap(marginRatioVal) ?? undefined;
+  const _mmr = useDataTap(mmr) ?? undefined;
+  const _totalValue = useDataTap(totalValue) ?? undefined;  
+
   return {
     onDeposit,
     onWithdraw,
@@ -190,11 +206,11 @@ export const useAssetViewScript = () => {
     toggleVisible,
     networkId,
     isFirstTimeDeposit,
-    totalValue,
+    totalValue: _totalValue,
     status: state.status,
-    freeCollateral,
-    marginRatioVal,
-    renderMMR,
+    freeCollateral: _freeCollateral,
+    marginRatioVal: _marginRatioVal,
+    renderMMR: _mmr,
     isConnected,
   };
 };
