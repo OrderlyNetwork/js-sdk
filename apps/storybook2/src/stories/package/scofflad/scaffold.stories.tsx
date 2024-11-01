@@ -10,7 +10,7 @@ import {
   ChainMenu,
   Scaffold,
 } from "@orderly.network/ui-scaffold";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { useChains } from "@orderly.network/hooks";
 import { fn } from "@storybook/test";
 
@@ -29,7 +29,7 @@ const meta = {
   },
   decorators: [
     (Story: any) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp
           brokerId={"orderly"}
           brokerName={""}
@@ -38,7 +38,7 @@ const meta = {
         >
           <Story />
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
   argTypes: {},

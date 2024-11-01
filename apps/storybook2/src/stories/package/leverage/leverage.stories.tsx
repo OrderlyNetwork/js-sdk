@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
 import { LeverageEditor,LeverageWidgetId } from '@orderly.network/ui-leverage';
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Button, modal } from "@orderly.network/ui";
 
 const meta = {
@@ -14,11 +14,11 @@ const meta = {
   // },
   decorators: [
     (Story) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
           <Story />
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
   parameters: {

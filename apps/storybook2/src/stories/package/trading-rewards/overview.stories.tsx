@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { TradingRewards, TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
 
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { useMemo, useState } from "react";
 
@@ -22,7 +22,7 @@ const meta = {
       const networkId = "testnet";
       const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging", brokerName:'WOOFi Pro' });
       return (
-        <ConnectorProvider>
+        <WalletConnectorProvider>
           <OrderlyApp
             // brokerId={"orderly"}
             // brokerName={"Orderly"}
@@ -31,7 +31,7 @@ const meta = {
           >
             <Story />
           </OrderlyApp>
-        </ConnectorProvider>
+        </WalletConnectorProvider>
       );
     },
   ],

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
 
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
 
@@ -25,7 +25,7 @@ const meta = {
         env: "qa",
       });
       return (
-        <ConnectorProvider>
+        <WalletConnectorProvider>
           <OrderlyApp
             brokerId={"orderly"}
             brokerName={"Orderly"}
@@ -92,7 +92,7 @@ const meta = {
               <Story />
             </ReferralProvider>
           </OrderlyApp>
-        </ConnectorProvider>
+        </WalletConnectorProvider>
       );
     },
   ],

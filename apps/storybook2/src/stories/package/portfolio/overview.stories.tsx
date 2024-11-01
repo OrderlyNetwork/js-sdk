@@ -9,7 +9,7 @@ import {
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
 import { fn } from "@storybook/test";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { useMemo } from "react";
 import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
 
@@ -30,7 +30,7 @@ const meta = {
         env: "qa",
       });
       return (
-        <ConnectorProvider>
+        <WalletConnectorProvider>
           <OrderlyApp
             brokerId={"orderly"}
             brokerName={""}
@@ -40,7 +40,7 @@ const meta = {
           >
             <Story />
           </OrderlyApp>
-        </ConnectorProvider>
+        </WalletConnectorProvider>
       );
     },
   ],
