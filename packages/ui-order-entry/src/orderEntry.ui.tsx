@@ -283,7 +283,10 @@ export const OrderEntry = (
         />
         <Divider />
         <OrderTPSL
-          onCancelTPSL={props.cancelTP_SL}
+          // onCancelTPSL={props.cancelTP_SL}
+          // onEnableTP_SL={props.enableTP_SL}
+          switchState={props.tpslSwitch}
+          onSwitchChanged={props.setTpslSwitch}
           orderType={formattedOrder.order_type!}
           errors={validated ? errors : null}
           isReduceOnly={formattedOrder.reduce_only}
@@ -329,7 +332,10 @@ export const OrderEntry = (
               setNeedConfirm={setNeedConfirm}
               onValueChange={setOrderValue}
               orderTypeExtra={formattedOrder["order_type_ext"]}
-              showExtra={formattedOrder["order_type"] === OrderType.LIMIT}
+              showExtra={
+                formattedOrder["order_type"] === OrderType.LIMIT &&
+                !props.tpslSwitch
+              }
               hidden={hidden}
               setHidden={setHidden}
             />
@@ -344,7 +350,10 @@ export const OrderEntry = (
               setNeedConfirm={setNeedConfirm}
               onValueChange={setOrderValue}
               orderTypeExtra={formattedOrder["order_type_ext"]}
-              showExtra={formattedOrder["order_type"] === OrderType.LIMIT}
+              showExtra={
+                formattedOrder["order_type"] === OrderType.LIMIT &&
+                !props.tpslSwitch
+              }
               hidden={hidden}
               setHidden={setHidden}
             />
