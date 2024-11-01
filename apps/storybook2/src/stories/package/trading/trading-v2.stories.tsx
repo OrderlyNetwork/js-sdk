@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
   AssetViewWidget,
   DataListWidget,
@@ -17,6 +16,7 @@ import { CustomConfigStore } from "../CustomConfigStore";
 import { Box, Flex } from "@orderly.network/ui";
 import { OrderlyIcon } from "./icons";
 import { mainNavProps, sharePnLConfig } from "./config";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 
 
@@ -34,7 +34,7 @@ const meta = {
       // const networkId = "mainnet";
       const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
       return (
-        <ConnectorProvider>
+        <WalletConnectorProvider>
           <OrderlyApp
             // brokerId={"orderly"}
             brokerName={"Orderly"}
@@ -62,7 +62,7 @@ const meta = {
               <Story />
             </Scaffold>
           </OrderlyApp>
-        </ConnectorProvider>
+        </WalletConnectorProvider>
       );
     }
   ],

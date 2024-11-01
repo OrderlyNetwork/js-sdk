@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box, Flex, ModalProvider } from "@orderly.network/ui";
 import { SideNavbarWidget } from "@orderly.network/ui-scaffold";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 const meta = {
   title: "Package/ui-scaffold/SideNavbar",
@@ -14,13 +14,13 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
           <ModalProvider>
             <Story />
           </ModalProvider>
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
   argTypes: {},

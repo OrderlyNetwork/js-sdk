@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { APIManagerModule, PortfolioLayoutWidget, SettingModule } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box } from "@orderly.network/ui";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { PortfolioLayout } from "../../../../../../packages/portfolio/src/layout/layout.ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { useState } from "react";
@@ -20,7 +20,7 @@ const meta = {
       //   env: "qa",
       // });
       return (
-        <ConnectorProvider>
+        <WalletConnectorProvider>
           <OrderlyApp
             brokerId={"orderly"}
             brokerName={"Orderly"}
@@ -29,7 +29,7 @@ const meta = {
           >
             <Story />
           </OrderlyApp>
-        </ConnectorProvider>
+        </WalletConnectorProvider>
       );
     },
   ],
