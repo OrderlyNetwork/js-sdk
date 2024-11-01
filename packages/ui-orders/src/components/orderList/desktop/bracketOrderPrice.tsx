@@ -33,7 +33,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
               prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
               suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
-              coloring
+              color="buy"
             >
               {pnl.tpPnL}
             </Text.numeral>
@@ -44,7 +44,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
               prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
               suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
-              coloring
+              color="sell"
             >
               {pnl.slPnL}
             </Text.numeral>
@@ -80,7 +80,7 @@ const Price = (props: {
       )}
       key={"tp"}
       rule="price"
-      precision={quote_dp}
+      dp={quote_dp}
       // @ts-ignore
       prefix={
         <span className={"oui-text-base-contrast-54"}>
