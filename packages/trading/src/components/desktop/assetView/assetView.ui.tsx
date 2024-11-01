@@ -33,7 +33,7 @@ interface TooltipContentProps {
 }
 
 interface TotalValueProps {
-  totalValue: number | null;
+  totalValue?: number;
   visible?: boolean;
   onToggleVisibility?: () => void;
 }
@@ -43,7 +43,7 @@ interface AssetDetailProps {
   description: ReactNode;
   formula: ReactNode;
   visible: boolean;
-  value: number | string;
+  value?: number | string;
   unit?: string;
   rule?: "percentages";
   isConnected?: boolean;
@@ -52,9 +52,9 @@ interface AssetDetailProps {
 
 interface AssetValueListProps {
   visible?: boolean;
-  freeCollateral: number | null;
-  marginRatioVal: number;
-  renderMMR: string;
+  freeCollateral?: number | null;
+  marginRatioVal?: number;
+  renderMMR?: string | number;
   isConnected: boolean;
 }
 
@@ -122,6 +122,7 @@ const TotalValue: FC<TotalValueProps> = ({
       className={gradientTextVariants({ color: "brand" })}
       as="div"
       padding={false}
+      dp={2}
     >
       {totalValue ?? "--"}
     </Text.numeral>
@@ -166,8 +167,7 @@ const AssetDetail: FC<AssetDetailProps> = ({
         {label}
       </Text>
     </Tooltip>
-    {isConnected !== false && value ? (
-      <Text.numeral
+    <Text.numeral
         visible={visible}
         size="2xs"
         unit={unit}
@@ -175,12 +175,11 @@ const AssetDetail: FC<AssetDetailProps> = ({
         as="div"
         rule={rule}
         padding={false}
+        dp={2}
+        // suffix={value && unit}
       >
-        {value}
+        {value ?? '--'}
       </Text.numeral>
-    ) : (
-      <Text className="oui-text-base-contrast-36">{(showPercentage ? "--%" : "--")}</Text>
-    )}
   </Flex>
 );
 
