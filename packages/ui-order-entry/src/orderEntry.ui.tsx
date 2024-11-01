@@ -25,6 +25,7 @@ import {
 import {
   FocusEventHandler,
   forwardRef,
+  HTMLAttributes,
   PropsWithChildren,
   useContext,
   useEffect,
@@ -318,6 +319,9 @@ export const OrderEntry = (
               checked={props.formattedOrder.reduce_only}
               onCheckedChange={(checked) => {
                 props.setOrderValue("reduce_only", checked);
+                if (checked) {
+                  props.setOrderValue("order_type_ext", "");
+                }
               }}
             />
             <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
@@ -357,30 +361,45 @@ export const OrderEntry = (
               hidden={hidden}
               setHidden={setHidden}
             />
-            <button
+            <PinButton
               onClick={() => {
                 setPinned(false);
               }}
-              className={"oui-absolute oui-top-2 oui-right-2"}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M4.67 1.953A2.667 2.667 0 0 0 2.005 4.62v6.667a2.667 2.667 0 0 0 2.667 2.666h6.666a2.667 2.667 0 0 0 2.667-2.666V4.62a2.667 2.667 0 0 0-2.667-2.667zm1.334 3.334c.17 0 .349.057.48.187l1.52 1.52 1.52-1.52a.68.68 0 0 1 .48-.187c.17 0 .349.057.48.187.26.26.26.698 0 .958L8.962 7.954l1.52 1.52c.26.262.26.699 0 .96a.687.687 0 0 1-.958 0l-1.52-1.522-1.52 1.52a.687.687 0 0 1-.96 0 .687.687 0 0 1 0-.958l1.521-1.52-1.52-1.521a.687.687 0 0 1 0-.96.68.68 0 0 1 .479-.186"
-                  fill="#fff"
-                  fillOpacity=".2"
-                />
-              </svg>
-            </button>
+              className={"oui-absolute oui-top-2 oui-right-2 oui-group"}
+            ></PinButton>
           </Box>
         )}
       </div>
     </OrderEntryProvider>
+  );
+};
+
+//------------------- pin button start -------------------
+const defaultPath =
+  "M10.007 1.302a.74.74 0 0 0-.486.214c-1.033.989-1.349 1.815-.972 2.948-.88.675-1.437.84-2.536.84-1.503 0-2.484.182-3.152.85v.02a1.583 1.583 0 0 0 0 2.248l1.867 1.882-3.181 3.18c-.26.26-.28.696-.02.956.261.26.699.26.959 0l3.193-3.194 1.87 1.861a1.585 1.585 0 0 0 2.25 0h.02c.668-.667.854-1.523.854-3.144 0-1.03.212-1.758.852-2.523 1.233.361 1.95.015 2.961-.995a.68.68 0 0 0 .188-.48c0-.234-.06-.593-.209-1.04a5.34 5.34 0 0 0-1.312-2.103 5.35 5.35 0 0 0-2.104-1.312c-.448-.15-.808-.208-1.042-.208";
+
+const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
+  const [path, setPath] = useState(defaultPath);
+  return (
+    <button {...props}>
+      <svg
+        width={16}
+        height={16}
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        onMouseEnter={() => {
+          setPath(
+            'M10.008 1.302a.74.74 0 0 0-.486.214c-1.033.989-1.349 1.815-.972 2.948-.88.675-1.437.84-2.536.84-1.503 0-2.484.182-3.152.85v.02a1.583 1.583 0 0 0 0 2.248l1.867 1.882-3.181 3.18c-.26.26-.28.696-.02.956.261.26.699.26.959 0l3.193-3.194 1.87 1.861a1.585 1.585 0 0 0 2.25 0h.02c.668-.667.854-1.523.854-3.144 0-1.03.212-1.758.853-2.523 1.232.361 1.95.015 2.96-.995a.68.68 0 0 0 .188-.48c0-.234-.06-.593-.209-1.04a5.34 5.34 0 0 0-1.312-2.103A5.35 5.35 0 0 0 11.05 1.51c-.448-.15-.808-.208-1.042-.208m.258 1.37c.708.131 1.421.6 1.93 1.107.507.508.94 1.13 1.119 1.945-.636.61-1.026.658-1.662.323a.67.67 0 0 0-.779.117c-1.214 1.213-1.533 2.314-1.533 3.8 0 1.292-.076 1.773-.48 2.206-.113.123-.27.104-.374 0L3.799 7.486a.24.24 0 0 1-.017-.34c.239-.29.769-.515 2.226-.514 1.742.001 2.668-.448 3.812-1.52a.67.67 0 0 0 .125-.77c-.343-.686-.29-1.047.321-1.67"'
+          );
+        }}
+        onMouseLeave={() => {
+          setPath(defaultPath);
+        }}
+      >
+        <path d={path} fill="#608CFF" />
+      </svg>
+    </button>
   );
 };
 

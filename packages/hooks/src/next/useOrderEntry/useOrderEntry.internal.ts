@@ -131,17 +131,16 @@ const useOrderEntryNextInternal = (
     let newValues = calculate({ ...values }, key, value, markPrice, symbolInfo);
 
     /// if the order type is market or stop market, recalculate the total use mark price
-    if (
-      key === "order_type" &&
-      (value === OrderType.MARKET || value === OrderType.STOP_MARKET)
-    ) {
-      newValues = calculate(
-        newValues,
-        "order_price",
-        markPrice,
-        markPrice,
-        symbolInfo
-      );
+    if (key === "order_type") {
+      if (value === OrderType.MARKET || value === OrderType.STOP_MARKET) {
+        newValues = calculate(
+          newValues,
+          "order_price",
+          markPrice,
+          markPrice,
+          symbolInfo
+        );
+      }
     }
 
     if (
@@ -268,32 +267,33 @@ const useOrderEntryNextInternal = (
       if (!options.symbolInfo) return;
       const values = useOrderStore.getState().entry;
       let newValues;
-      if (baseOn === "total") {
+
+      if (typeof baseOn === "undefined") {
         newValues = calculate(
           { ...values },
-          "total",
-          values.total,
+          "order_price",
+          markPrice,
           markPrice,
           options.symbolInfo
         );
       } else {
         newValues = calculate(
           { ...values },
-          "order_price",
-          markPrice,
+          baseOn,
+          values[baseOn],
           markPrice,
           options.symbolInfo
         );
       }
 
-      if (hasTPSL(newValues)) {
-        newValues = calculateTPSL(
-          "order_price",
-          newValues,
-          markPrice,
-          options.symbolInfo
-        );
-      }
+      // if (hasTPSL(newValues)) {
+      //   newValues = calculateTPSL(
+      //     "order_price",
+      //     newValues,
+      //     markPrice,
+      //     options.symbolInfo
+      //   );
+      // }
       orderEntryActions.updateOrder(newValues);
     },
     [options.symbolInfo]
