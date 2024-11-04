@@ -35,9 +35,14 @@ export function Main(
       });
     }
     newNamespace.current = ChainNamespace.evm;
+    const evmOption = options.autoSelect
+      ? {
+          autoSelect: options.autoSelect,
+        }
+      :undefined;
 
     return evm
-      .connect(options)
+      .connect(evmOption)
       .then((res) => {
         console.log("-- connect evm", res);
         if (!res.length) {
@@ -65,16 +70,8 @@ export function Main(
       ? sol.connecting
       : evm.connecting;
 
-  // const wallet = useMemo(() => {
-  //   if (namespace === ChainNamespace.solana && sol.connected) {
-  //     return sol.wallet;
-  //   }
-  //   if (namespace === ChainNamespace.evm && evm.connected) {
-  //     return evm.wallet;
-  //   }
-  //   return null;
-  // }, [namespace, sol.connected, evm.connected]);
-  //
+  // console.log('-- connecting', connecting);
+
   const wallet =
     namespace === ChainNamespace.solana && sol.connected
       ? sol.wallet
