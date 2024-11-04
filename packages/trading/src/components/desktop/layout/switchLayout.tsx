@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, SVGProps, useState } from "react";
 import {
+  Box,
   CloseIcon,
   cn,
   Divider,
@@ -45,6 +46,36 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
   props
 ) => {
   const [open, setOpen] = useState(false);
+
+  const renderItem = (position: LayoutPosition) => {
+    return (
+      <Flex
+        direction="column"
+        gapY={2}
+        onClick={() => {
+          props.onLayout?.(position);
+        }}
+      >
+        <Flex
+          justify={position === "right" ? "end" : "start"}
+          className={cn(
+            "oui-w-[148px] oui-h-[100px]",
+            "oui-bg-base-10 oui-rounded-[10px]",
+            "oui-border-[4px] oui-border-base-5 hover:oui-border-primary-light",
+            props.layout === position && "!oui-border-primary-light"
+          )}
+        >
+          <Box p={1}>
+            <OrderEntryIcon />
+          </Box>
+        </Flex>
+        <Text size="2xs" intensity={54}>
+          Advanced ({position})
+        </Text>
+      </Flex>
+    );
+  };
+
   const content = (
     <>
       <Flex
@@ -67,44 +98,8 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
       </Flex>
       <Divider />
       <Flex gapX={6} mt={5}>
-        <Flex
-          direction="column"
-          gapY={2}
-          onClick={() => {
-            props.onLayout?.("left");
-          }}
-        >
-          <LeftLayoutIcon
-            className={cn(
-              "oui-w-[140px]",
-              "oui-text-base-10 oui-rounded-[10px]",
-              "oui-border-[4px] oui-border-base-5 hover:oui-border-primary-light",
-              props.layout === "left" && "!oui-border-primary-light"
-            )}
-          />
-          <Text size="2xs" intensity={54}>
-            Advanced (Right)
-          </Text>
-        </Flex>
-
-        <Flex
-          direction="column"
-          gapY={2}
-          onClick={() => {
-            props.onLayout?.("right");
-          }}
-        >
-          <RightLayoutIcon
-            className={cn(
-              "oui-text-base-10 oui-rounded-[10px]",
-              "oui-border-[4px] oui-border-base-5 hover:oui-border-primary-light",
-              props.layout === "right" && "!oui-border-primary-light"
-            )}
-          />
-          <Text size="2xs" intensity={54}>
-            Advanced (Left)
-          </Text>
-        </Flex>
+        {renderItem("right")}
+        {renderItem("left")}
       </Flex>
     </>
   );
@@ -141,94 +136,41 @@ export const LayoutIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const LeftLayoutIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+export const OrderEntryIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
-    width="148"
-    height="100"
-    viewBox="0 0 148 100"
-    fill="currentColor"
-    {...props}
+    width="36"
+    height="84"
+    viewBox="0 0 36 84"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
   >
+    <rect width="36" height="17" rx="2" fill="#181C23" />
+    <rect y="19" width="36" height="54" rx="2" fill="#181C23" />
+    <rect y="75" width="36" height="9" rx="2" fill="#181C23" />
     <rect
-      x="2"
-      y="2"
-      width="144"
-      height="96"
-      // rx="10"
-      // fill="#07080A"
-      // stroke="#282E3A"
-      // stroke-width="4"
-    />
-    <rect x="104" y="8" width="36" height="17" rx="2" fill="#181C23" />
-    <rect x="104" y="27" width="36" height="54" rx="2" fill="#181C23" />
-    <rect x="104" y="83" width="36" height="9" rx="2" fill="#181C23" />
-    <rect x="107" y="87" width="30" height="1" rx=".5" fill="url(#a)" />
-    <rect x="107" y="30" width="14" height="6" rx="2" fill="#008676" />
-    <rect x="123" y="30" width="14" height="6" rx="2" fill="#D92D6B" />
-    <rect x="107" y="19" width="14" height="3" rx="1.5" fill="#333948" />
-    <rect x="123" y="19" width="14" height="3" rx="1.5" fill="#335FFC" />
-    <rect x="107" y="70" width="30" height="8" rx="2" fill="#008676" />
-    <defs>
-      <linearGradient
-        id="a"
-        x1="137"
-        y1="87.5"
-        x2="107"
-        y2="87.5"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stop-color="#59B0FE" />
-        <stop offset="1" stop-color="#26FEFE" />
-      </linearGradient>
-    </defs>
-  </svg>
-);
-
-export const RightLayoutIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    width="148"
-    height="100"
-    viewBox="0 0 148 100"
-    fill="currentColor"
-    {...props}
-  >
-    <rect
-      x="2"
-      y="2"
-      width="144"
-      height="96"
-      // rx="10"
-      fill="currentColor"
-      // stroke="#282E3A"
-      // stroke-width="4"
-    />
-    <rect x="8" y="8" width="36" height="17" rx="2" fill="#181C23" />
-    <rect x="8" y="27" width="36" height="54" rx="2" fill="#181C23" />
-    <rect x="8" y="83" width="36" height="9" rx="2" fill="#181C23" />
-    <rect
-      x="11"
-      y="87"
+      x="3"
+      y="79"
       width="30"
       height="1"
       rx="0.5"
-      fill="url(#paint0_linear_17214_42014)"
+      fill="url(#paint0_linear_17647_26849)"
     />
-    <rect x="11" y="30" width="14" height="6" rx="2" fill="#008676" />
-    <rect x="27" y="30" width="14" height="6" rx="2" fill="#D92D6B" />
-    <rect x="11" y="19" width="14" height="3" rx="1.5" fill="#333948" />
-    <rect x="27" y="19" width="14" height="3" rx="1.5" fill="#335FFC" />
-    <rect x="11" y="70" width="30" height="8" rx="2" fill="#008676" />
+    <rect x="3" y="22" width="14" height="6" rx="2" fill="#008676" />
+    <rect x="19" y="22" width="14" height="6" rx="2" fill="#D92D6B" />
+    <rect x="3" y="11" width="14" height="3" rx="1.5" fill="#333948" />
+    <rect x="19" y="11" width="14" height="3" rx="1.5" fill="#335FFC" />
+    <rect x="3" y="62" width="30" height="8" rx="2" fill="#008676" />
     <defs>
       <linearGradient
-        id="paint0_linear_17214_42014"
-        x1="41"
-        y1="87.5"
-        x2="11"
-        y2="87.5"
+        id="paint0_linear_17647_26849"
+        x1="33"
+        y1="79.5"
+        x2="3"
+        y2="79.5"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#59B0FE" />
-        <stop offset="1" stop-color="#26FEFE" />
+        <stop stopColor="#59B0FE" />
+        <stop offset="1" stopColor="#26FEFE" />
       </linearGradient>
     </defs>
   </svg>
