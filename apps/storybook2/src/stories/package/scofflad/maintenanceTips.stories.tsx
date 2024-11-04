@@ -8,7 +8,7 @@ import {
   ChainMenuWidget,
   Scaffold,
 } from "@orderly.network/ui-scaffold";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
 import { useState } from "react";
 
@@ -24,7 +24,7 @@ const meta = {
   },
   decorators: [
     (Story: any) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp
           configStore={configStore}
           brokerId={"orderly"}
@@ -37,7 +37,7 @@ const meta = {
             </Box>
           </ModalProvider>
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
   argTypes: {},

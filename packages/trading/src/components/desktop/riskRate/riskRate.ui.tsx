@@ -27,6 +27,14 @@ export const RiskRate: FC<RiskRateState> = (props) => {
     ? gradientTextVariants({ color: "brand" })
     : "";
 
+  const boxClsName = isHigh
+    ? "oui-bg-gradient-to-tr oui-from-[#791438] oui-to-[#ff447c] oui-h-1.5 oui-rounded-full"
+    : isMedium
+    ? "oui-bg-gradient-to-tr oui-from-[#792e00] oui-to-[#ffb65d] oui-h-1.5 oui-rounded-full"
+    : isLow
+    ? "oui-bg-gradient-to-tr oui-from-[#59b0fe] oui-to-[#26fefe] oui-h-1.5 oui-rounded-full"
+    : "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full";
+
   return (
     <Box data-risk={""} className="oui-space-y-2">
       <Flex
@@ -34,33 +42,10 @@ export const RiskRate: FC<RiskRateState> = (props) => {
         justify="start"
         className="oui-w-full oui-bg-base-6 oui-rounded-full oui-h-2 oui-px-[1px]"
       >
-        {isDefault ? (
-          <Box
-            className="oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full"
-            style={{ width: "100%" }}
-          />
-        ) : null}
-
-        {isHigh ? (
-          <Box
-            className="oui-bg-gradient-to-tr oui-from-[#791438] oui-to-[#ff447c] oui-h-1.5 oui-rounded-full"
-            style={{ width: riskRate }}
-          />
-        ) : null}
-
-        {isMedium ? (
-          <Box
-            className="oui-bg-gradient-to-tr oui-from-[#792e00] oui-to-[#ffb65d] oui-h-1.5 oui-rounded-full"
-            style={{ width: riskRate }}
-          />
-        ) : null}
-
-        {isLow ? (
-          <Box
-            className="oui-bg-gradient-to-tr oui-from-[#59b0fe] oui-to-[#26fefe] oui-h-1.5 oui-rounded-full"
-            style={{ width: riskRate }}
-          />
-        ) : null}
+        <Box
+          className={boxClsName}
+          style={riskRate ? { width: riskRate } : { width: "100%" }}
+        />
       </Flex>
 
       <Flex className="oui-gap-2">
@@ -90,12 +75,12 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             weight="semibold"
             className={cn(textColor)}
           >
-            {riskRate}
+            {riskRate ?? "--"}
           </Text>
         </Flex>
 
         <Flex direction="column" itemAlign="end" className="oui-flex-1">
-          <Tooltip content={(<div>hint test</div>) as any}>
+          <Tooltip open={false} content={(<div>hint test</div>) as any}>
             <Text
               size="2xs"
               color="neutral"
@@ -106,32 +91,26 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             </Text>
           </Tooltip>
           <Flex className="oui-gap-1">
-            {isConnected ? (
-              <Text.numeral suffix={"x"}>{currentLeverage}</Text.numeral>
-            ) : (
-              "--"
-            )}
+            <Text.numeral dp={2}  padding={false} suffix={currentLeverage ? "x" : undefined}>
+              {currentLeverage ?? "--"}
+            </Text.numeral>
 
             <span className={"oui-text-base-contrast-54"}>/</span>
 
-            {
-              // modal.show(LeverageWidgetId, { currentLeverage: 5 });
-              isConnected ? (
-                <button
-                  className="oui-flex oui-items-center oui-gap-1"
-                  onClick={() => {
-                    modal.show(LeverageWidgetId, { currentLeverage: 5 });
-                  }}
-                >
-                  <span>{`${maxLeverage ?? "--"}x`}</span>
-                  {typeof maxLeverage !== "undefined" && (
-                    <EditIcon size={12} color="white"/>
-                  )}
-                </button>
-              ) : (
-                "--"
-              )
-            }
+            <button
+              className="oui-flex oui-items-center oui-gap-1"
+              onClick={() => {
+                modal.show(LeverageWidgetId, { currentLeverage: 5 });
+              }}
+            >
+              <Text.numeral dp={2}  padding={false} suffix={maxLeverage ? "x" : undefined}>
+                {maxLeverage ?? "--"}
+              </Text.numeral>
+
+              {typeof maxLeverage !== "undefined" && maxLeverage !== null && (
+                <EditIcon size={12} color="white" />
+              )}
+            </button>
           </Flex>
         </Flex>
       </Flex>

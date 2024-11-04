@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMarketsContext } from "../marketsProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { useTabSort } from "../shared/hooks/useTabSort";
 
 export type UseDropDownMarketsScriptOptions = {};
 
@@ -16,9 +17,14 @@ export function useDropDownMarketsScript(
   const [open, setOpen] = useState(false);
   // const [activeTab, setActiveTab] = useState<TabName>("favorites");
   const [activeTab, setActiveTab] = useLocalStorage(
-    "orderly_markets_sel_tab_key",
+    "orderly_dropdown_markets_sel_tab_key",
     "all"
   );
+
+  const { tabSort, onTabSort } = useTabSort({
+    storageKey: "orderly_dropdown_markets_tab_sort",
+  });
+
   const { clearSearchValue } = useMarketsContext();
 
   const hide = () => {
@@ -35,5 +41,7 @@ export function useDropDownMarketsScript(
     open,
     onOpenChange: setOpen,
     hide,
+    tabSort,
+    onTabSort,
   };
 }

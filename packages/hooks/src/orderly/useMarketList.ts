@@ -1,9 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useId, useState } from "react";
 import { useMarketsStream } from "./useMarketsStream";
 import { OrderlyContext } from "../orderlyContext";
 import { API, WSMessage } from "@orderly.network/types";
 import { SymbolInfo, useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
+import { useEventEmitter } from "../useEventEmitter";
+import { MarketStoreKey } from "./useMarkets";
 
 export enum MarketsType {
   FAVORITES,
@@ -92,6 +94,8 @@ export const DefaultFavoriteTab = { name: "Popular", id: 1 };
 
 export const useMarketsStore = () => {
   const { configStore } = useContext(OrderlyContext);
+  const ee = useEventEmitter();
+  const id = useId();
 
   const getStore = () => {
     const store = configStore.get(MarketsStorageKey) as MarketsData;
@@ -154,6 +158,15 @@ export const useMarketsStore = () => {
   ) => {
     const tabs = updateTabs(favoriteTabs, tab, operator);
     setFavoriteTabs(tabs);
+    ee.emit("markets:changed", createEventData(id, "favoriteTabs", tabs));
+  };
+
+  const updateSelectedFavoriteTab = (tab: FavoriteTab) => {
+    setSelectedFavoriteTab(tab);
+    ee.emit(
+      "markets:changed",
+      createEventData(id, "lastSelectedFavoriteTab", tab)
+    );
   };
 
   const updateSymbolFavoriteState = (
@@ -163,17 +176,21 @@ export const useMarketsStore = () => {
   ) => {
     const list = updateSymbolFavorite({ favorites, symbol, tab, remove });
     setFavorites(list);
+    ee.emit("markets:changed", createEventData(id, "favorites", list));
   };
 
   const addToHistory = (symbol: API.MarketInfoExt) => {
     const list = addToTop(recent, symbol);
     setRecent(list);
+    ee.emit("markets:changed", id);
+    ee.emit("markets:changed", createEventData(id, "recent", list));
   };
 
   const pinToTop = (symbol: API.MarketInfoExt) => {
     const newList = moveToTop(favorites, symbol);
     if (newList) {
       setFavorites(newList);
+      ee.emit("markets:changed", createEventData(id, "favorites", newList));
     }
   };
 
@@ -202,6 +219,30 @@ export const useMarketsStore = () => {
     });
   }, [favoriteTabs, favorites, recent, tabSort, selectedFavoriteTab]);
 
+  useEffect(() => {
+    const event = ({ id: srcId, key, data }: MarketsEvent) => {
+      if (srcId === id) {
+        return;
+      }
+
+      if (key === "favoriteTabs") {
+        setFavoriteTabs(data);
+      } else if (key === "lastSelectedFavoriteTab") {
+        setSelectedFavoriteTab(data);
+      } else if (key === "favorites") {
+        setFavorites(data);
+      } else if (key === "recent") {
+        setRecent(data);
+      }
+    };
+
+    ee.on("markets:changed", event);
+
+    return () => {
+      ee.off("markets:changed", event);
+    };
+  }, [id]);
+
   return {
     favoriteTabs,
     favorites,
@@ -213,7 +254,7 @@ export const useMarketsStore = () => {
     updateSymbolFavoriteState,
     pinToTop,
     addToHistory,
-    updateSelectedFavoriteTab: setSelectedFavoriteTab,
+    updateSelectedFavoriteTab,
     updateTabsSortState,
   };
 };
@@ -452,4 +493,14 @@ function updateSymbolFavorite(params: {
   }
 
   return list;
+}
+
+type MarketsEvent = ReturnType<typeof createEventData>;
+
+function createEventData(id: string, key: MarketStoreKey, data: any) {
+  return {
+    id,
+    key,
+    data,
+  };
 }

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
 import { SharePnLDialogWidget, SharePnLDialogId, SharePnLBottomSheetId, SharePnLBottomSheetWidget } from '@orderly.network/ui-share';
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Button, Flex, modal } from "@orderly.network/ui";
 
 const meta = {
@@ -14,13 +14,13 @@ const meta = {
   // },
   decorators: [
     (Story) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
 
           <Story />
 
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
   parameters: {

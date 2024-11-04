@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
   AssetViewWidget,
   DataListWidget,
@@ -10,13 +9,15 @@ import {
   RiskRateWidget,
   TradingPageV2,
   OrderBookWidget,
-  OrderBookAndTradesWidget
+  OrderBookAndTradesWidget,
+  BottomNavBarWidget,
 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { Box, Flex } from "@orderly.network/ui";
 import { OrderlyIcon } from "./icons";
 import { mainNavProps, sharePnLConfig } from "./config";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 
 
@@ -33,8 +34,9 @@ const meta = {
       const networkId = "testnet";
       // const networkId = "mainnet";
       const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
+      // const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
       return (
-        <ConnectorProvider>
+        <WalletConnectorProvider>
           <OrderlyApp
             // brokerId={"orderly"}
             brokerName={"Orderly"}
@@ -62,7 +64,7 @@ const meta = {
               <Story />
             </Scaffold>
           </OrderlyApp>
-        </ConnectorProvider>
+        </WalletConnectorProvider>
       );
     }
   ],
@@ -141,7 +143,7 @@ export const AssetView: Story = {
   render: () => {
 
     return (
-      <Box p={3} m={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
+      <Box p={3} m={3} r="xl" className="oui-bg-base-9 oui-min-h-[200px] oui-w-[400px]">
         <AssetViewWidget />
       </Box>
     );
@@ -189,4 +191,11 @@ export const OrderBookAndTrades: Story = {
     );
   }
 };
+export  const Bottom: Story = {
+  render: (arg) => {
+    return (
+      <BottomNavBarWidget/>
+    )
+  }
+}
 

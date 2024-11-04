@@ -64,8 +64,9 @@ export const PNLInput = (props: PNLInputProps) => {
         inputFormatter.currencyFormatter,
       ]}
       classNames={{
+        root: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
         additional: "oui-text-base-contrast-54",
-        input: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
+        input: "oui-text-inherit",
       }}
       onFocus={() => {
         setPrefix("");
@@ -78,11 +79,18 @@ export const PNLInput = (props: PNLInputProps) => {
         onBlur();
       }}
       suffix={
-        <PNLMenus
-          mode={prefix}
-          modes={modes}
-          onModeChange={(item) => onModeChange(item.value as PnLMode)}
-        />
+        <>
+          {mode === PnLMode.PERCENTAGE && !!value && (
+            <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
+              %
+            </Text>
+          )}
+          <PNLMenus
+            mode={prefix}
+            modes={modes}
+            onModeChange={(item) => onModeChange(item.value as PnLMode)}
+          />
+        </>
       }
     />
   );

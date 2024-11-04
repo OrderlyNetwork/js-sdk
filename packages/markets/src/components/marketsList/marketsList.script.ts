@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  MarketsType,
-  useMarketList,
-  useSessionStorage,
-} from "@orderly.network/hooks";
+import { MarketsType, useMarketList } from "@orderly.network/hooks";
 import { MarketsListWidgetProps } from "./widget";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
@@ -19,14 +15,10 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
 
   const { searchValue } = useMarketsContext();
 
-  const [tabSort, setTabSort] = useSessionStorage(
-    "orderly_markets_tab_sort",
-    {} as any
-  );
-
-  const { onSort, getSortedList, sortKey, sortOrder } = useSort(
+  const { onSort, getSortedList } = useSort(
     options?.sortKey,
-    options?.sortOrder
+    options?.sortOrder,
+    options.onSort
   );
 
   const dataSource = useMemo(() => {
@@ -38,23 +30,10 @@ export const useMarketsListScript = (options: UseMarketsListScriptOptions) => {
     setLoading(false);
   }, [data]);
 
-  useEffect(() => {
-    if (options.type === "all") {
-      setTabSort({
-        ...tabSort,
-        all: {
-          sortKey,
-          sortOrder,
-        },
-      });
-    }
-  }, [sortKey, sortOrder, options.type]);
-
   return {
     loading,
     dataSource,
     favorite,
     onSort,
-    tabSort,
   };
 };

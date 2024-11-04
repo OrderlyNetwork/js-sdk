@@ -1,184 +1,34 @@
 # tsconfig
 
-## 0.3.13-developV2.29
+## 0.3.15
 
 ### Patch Changes
 
-- update
+- fed369e26: update SEI config;
 
-## 0.3.13-developV2.28
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.27
+## 0.3.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 
-## 0.3.13-developV2.26
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.25
+## 0.3.14
 
 ### Patch Changes
 
-- update
+- 7c664bd63: fix bug;
 
-## 0.3.13-developV2.24
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.23
+## 0.3.14-alpha.0
 
 ### Patch Changes
 
-- update
+- fix bug;
 
-## 0.3.13-developV2.22
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.21
+## 0.3.13
 
 ### Patch Changes
 
-- update
-
-## 0.3.13-developV2.20
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.19
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.18
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.17
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.16
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.15
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.14
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.13
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.12
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.11
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.10
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.9
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.8
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.7
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.6
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.5
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.4
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.3
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.2
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.1
-
-### Patch Changes
-
-- update
-
-## 0.3.13-developV2.0
-
-### Patch Changes
-
-- update
+- remove total validate of useOrderEntry
 
 ## 0.3.12
 

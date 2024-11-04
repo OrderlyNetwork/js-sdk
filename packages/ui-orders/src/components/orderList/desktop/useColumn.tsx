@@ -87,7 +87,7 @@ export const useOrderColumn = (props: {
           price({ width: 162, className: "oui-pr-0", enableSort: true }),
           triggerPrice({ width: 162, className: "oui-pr-0" }),
           bracketOrderPrice({ width: 130 }),
-          estTotal({ width: 162, enableSort: true }),
+          estTotal({ width: 162, enableSort: true, isPending: true }),
           reduceOnly({ width: 162 }),
           hidden({ width: 162 }),
           orderTime({ width: 162 }),
@@ -568,6 +568,7 @@ function estTotal(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
+  isPending?: boolean;
 }): TableColumn<API.Order> {
   return {
     title: "Est. total",
@@ -603,6 +604,19 @@ function estTotal(option?: {
           }
         : undefined,
     render: (value: string, record: any) => {
+      if (option?.isPending) {
+        const value = () => {
+          if (record.price && record.quantity) {
+            return new Decimal(record.price)
+              .mul(record.quantity)
+              .toFixed(2, Decimal.ROUND_DOWN);
+          }
+          return "--";
+        };
+
+        return <Text.numeral rm={Decimal.ROUND_DOWN}>{value()}</Text.numeral>;
+      }
+
       if (
         record.type === OrderType.CLOSE_POSITION &&
         record.status !== OrderStatus.FILLED
@@ -611,7 +625,7 @@ function estTotal(option?: {
       }
 
       return (
-        <Text.numeral rm={Decimal.ROUND_DOWN}>
+        <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
           {record.total_executed_quantity === 0 ||
           Number.isNaN(record.average_executed_price) ||
           record.average_executed_price === null

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   MarketsHomePage,
   MarketsHeaderWidget,
@@ -21,7 +21,7 @@ const meta = {
   subcomponents: {},
   decorators: [
     (Story: any) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp
           brokerId={"orderly"}
           brokerName={""}
@@ -30,7 +30,7 @@ const meta = {
         >
           <Story />
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
 } satisfies Meta<typeof MarketsHomePage>;

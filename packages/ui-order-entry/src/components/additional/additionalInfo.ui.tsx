@@ -30,65 +30,75 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
     props.onValueChange?.("visible_quantity", props.hidden ? 0 : 1);
   }, [props.hidden]);
 
-
-  
-
   return (
     <div className={"oui-text-base-contrast-54"}>
-      {props.showExtra && (
-        <Flex
-          gapX={3}
-          justify={pinned ? "start" : "between"}
-          mb={3}
-          width={pinned ? "unset" : "100%"}
-        >
-          <Flex itemAlign={"center"}>
-            <Checkbox
-              id={"toggle_order_post_only"}
-              color={"white"}
-              variant={"radio"}
-              checked={orderTypeExtra === OrderType.POST_ONLY}
-              onCheckedChange={onTypeToggle(OrderType.POST_ONLY)}
-            />
-            <label
-              htmlFor={"toggle_order_post_only"}
-              className={"oui-text-2xs oui-ml-1"}
-            >
-              Post only
-            </label>
-          </Flex>
-          <Flex itemAlign={"center"}>
-            <Checkbox
-              id={"toggle_order_iov"}
-              color={"white"}
-              variant={"radio"}
-              checked={orderTypeExtra === OrderType.IOC}
-              onCheckedChange={onTypeToggle(OrderType.IOC)}
-            />
-            <label
-              htmlFor={"toggle_order_iov"}
-              className={"oui-text-2xs oui-ml-1"}
-            >
-              IOC
-            </label>
-          </Flex>
-          <Flex itemAlign={"center"}>
-            <Checkbox
-              id={"toggle_order_fok"}
-              color={"white"}
-              variant={"radio"}
-              checked={orderTypeExtra === OrderType.FOK}
-              onCheckedChange={onTypeToggle(OrderType.FOK)}
-            />
-            <label
-              htmlFor={"toggle_order_fok"}
-              className={"oui-text-2xs oui-ml-1"}
-            >
-              FOK
-            </label>
-          </Flex>
+      {/* {props.showExtra && (
+
+      )} */}
+      <Flex
+        gapX={3}
+        justify={pinned ? "start" : "between"}
+        mb={3}
+        width={pinned ? "unset" : "100%"}
+      >
+        <Flex itemAlign={"center"}>
+          <Checkbox
+            id={"toggle_order_post_only"}
+            className="oui-peer"
+            color={"white"}
+            variant={"radio"}
+            disabled={!props.showExtra}
+            checked={orderTypeExtra === OrderType.POST_ONLY}
+            onCheckedChange={onTypeToggle(OrderType.POST_ONLY)}
+          />
+          <label
+            htmlFor={"toggle_order_post_only"}
+            className={
+              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
+            }
+          >
+            Post only
+          </label>
         </Flex>
-      )}
+        <Flex itemAlign={"center"}>
+          <Checkbox
+            id={"toggle_order_iov"}
+            color={"white"}
+            className="oui-peer"
+            variant={"radio"}
+            checked={orderTypeExtra === OrderType.IOC}
+            onCheckedChange={onTypeToggle(OrderType.IOC)}
+            disabled={!props.showExtra}
+          />
+          <label
+            htmlFor={"toggle_order_iov"}
+            className={
+              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
+            }
+          >
+            IOC
+          </label>
+        </Flex>
+        <Flex itemAlign={"center"}>
+          <Checkbox
+            id={"toggle_order_fok"}
+            color={"white"}
+            variant={"radio"}
+            className="oui-peer"
+            checked={orderTypeExtra === OrderType.FOK}
+            onCheckedChange={onTypeToggle(OrderType.FOK)}
+            disabled={!props.showExtra}
+          />
+          <label
+            htmlFor={"toggle_order_fok"}
+            className={
+              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
+            }
+          >
+            FOK
+          </label>
+        </Flex>
+      </Flex>
 
       <Flex gapX={6}>
         <Flex>

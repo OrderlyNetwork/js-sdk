@@ -6,7 +6,7 @@ import {
   useOrderEntry,
   utils,
 } from "@orderly.network/hooks";
-import { useEffect, useRef, FocusEvent, useMemo } from "react";
+import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
@@ -32,7 +32,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         side: localOrderSide,
       },
     });
-  
+  const [tpslSwitch, setTpslSwitch] = useState(false);
 
   // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();
@@ -137,6 +137,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     });
   };
 
+  const enableTP_SL = () => {
+    setValues({
+      order_type_ext: undefined,
+    });
+  };
+
   const setMaxQty = () => {
     setValue("order_quantity", state.maxQty);
   };
@@ -152,11 +158,19 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     if (key === "order_type") {
       setLocalOrderType(value);
     }
-    if (key === 'side') {
+    if (key === "side") {
       setLocalOrderSide(value);
     }
   };
 
+  const onTPSLSwitchChanged = (state: boolean) => {
+    setTpslSwitch(state);
+    if (state) {
+      enableTP_SL();
+    } else {
+      cancelTP_SL();
+    }
+  };
   return {
     ...state,
     currentQtyPercentage,
@@ -167,7 +181,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     currentLeverage,
 
     formattedOrder,
-    cancelTP_SL,
+    // cancelTP_SL,
+    // enableTP_SL,
+    tpslSwitch,
+    setTpslSwitch: onTPSLSwitchChanged,
     setMaxQty,
     symbolInfo,
     onFocus,

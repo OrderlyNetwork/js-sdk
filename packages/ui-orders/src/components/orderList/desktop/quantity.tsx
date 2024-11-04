@@ -220,7 +220,7 @@ export const OrderQuantity = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open]);
+  }, [open, order.quantity]);
 
   const trigger = () => {
     if (!editing || props.disableEdit) {
@@ -344,7 +344,7 @@ const NormalState: FC<{
       <Flex
         r="base"
         className={cn(
-          "oui-min-w-[70px] oui-h-[28px]",
+          "oui-min-w-[70px] oui-h-[28px] oui-border oui-border-line",
           !props.disableEdit && "oui-bg-base-7 oui-px-2"
         )}
       >

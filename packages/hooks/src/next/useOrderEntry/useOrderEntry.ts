@@ -204,6 +204,7 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
 
   useEffect(() => {
     // console.log("markPrice", markPrice);
+
     if (
       (formattedOrder.order_type === OrderType.MARKET ||
         formattedOrder.order_type === OrderType.STOP_MARKET) &&

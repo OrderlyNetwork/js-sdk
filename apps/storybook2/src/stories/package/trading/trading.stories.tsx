@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from '@storybook/test';
 
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { TradingPage} from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
@@ -24,7 +24,7 @@ const meta = {
       // const networkId = "mainnet";
       const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
       return (
-        <ConnectorProvider>
+        <WalletConnectorProvider>
           <OrderlyApp
             // brokerId={"orderly"}
             brokerName={"Orderly"}
@@ -178,7 +178,7 @@ const meta = {
               <Story />
             </Scaffold>
           </OrderlyApp>
-        </ConnectorProvider>
+        </WalletConnectorProvider>
       );
     },
   ],

@@ -52,10 +52,9 @@ export const DropDownMarkets: React.FC<
 export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   props
 ) => {
-  const { activeTab, onTabChange } = props;
+  const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
-  const { searchValue, onSearchValueChange, clearSearchValue } =
-    useMarketsContext();
+  const { searchValue, onSearchValueChange } = useMarketsContext();
 
   const search = (
     <Flex mx={3} gapX={3} pt={3} pb={2}>
@@ -132,8 +131,9 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
           <div className={cls}>
             <MarketsListWidget
               type="all"
-              sortKey="24h_amount"
-              sortOrder="desc"
+              sortKey={tabSort?.sortKey}
+              sortOrder={tabSort?.sortOrder}
+              onSort={onTabSort}
               getColumns={getDropDownMarketsColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",

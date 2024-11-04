@@ -1,58 +1,28 @@
 # create-orderly-app
 
-## 1.5.14-developV2.8
+## 1.5.15
 
 ### Patch Changes
 
-- update
+- fed369e26: update SEI config;
 
-## 1.5.14-developV2.7
-
-### Patch Changes
-
-- update
-
-## 1.5.14-developV2.6
+## 1.5.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 
-## 1.5.14-developV2.5
-
-### Patch Changes
-
-- update
-
-## 1.5.14-developV2.4
+## 1.5.14
 
 ### Patch Changes
 
-- update
+- 7c664bd63: fix bug;
 
-## 1.5.14-developV2.3
-
-### Patch Changes
-
-- update
-
-## 1.5.14-developV2.2
+## 1.5.14-alpha.0
 
 ### Patch Changes
 
-- update
-
-## 1.5.14-developV2.1
-
-### Patch Changes
-
-- update
-
-## 1.5.14-developV2.0
-
-### Patch Changes
-
-- update
+- fix bug;
 
 ## 1.5.13
 

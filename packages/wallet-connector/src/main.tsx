@@ -1,20 +1,22 @@
 import React, {
   type PropsWithChildren,
   useEffect,
-  useMemo, useRef,
-  useState
+  useMemo,
+  useRef,
+  useState,
 } from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
-import {hex2int,int2hex} from "@orderly.network/utils";
+import { hex2int, int2hex } from "@orderly.network/utils";
 import { ChainNamespace } from "@orderly.network/types";
 import { useSOL } from "./useSOL";
 import { useEvm } from "./useEvm";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { SolanaChains } from "./config";
 
-
-export function Main(props: PropsWithChildren<{solanaNetwork: WalletAdapterNetwork}>) {
-  const sol = useSOL({network: props.solanaNetwork});
+export function Main(
+  props: PropsWithChildren<{ solanaNetwork: WalletAdapterNetwork }>
+) {
+  const sol = useSOL({ network: props.solanaNetwork });
   const evm = useEvm();
 
   const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
@@ -33,17 +35,20 @@ export function Main(props: PropsWithChildren<{solanaNetwork: WalletAdapterNetwo
       });
     }
     newNamespace.current = ChainNamespace.evm;
-    return evm.connect().then((res) => {
-      console.log('-- connect evm', res);
-      if (!res.length) {
-        return Promise.reject({message: 'user reject'})
 
-      }
-      return res;
-    }).catch(e => {
-      console.log('-- connect evm error', e);
-      return Promise.reject(e);
-    });
+    return evm
+      .connect(options)
+      .then((res) => {
+        console.log("-- connect evm", res);
+        if (!res.length) {
+          return Promise.reject({ message: "user reject" });
+        }
+        return res;
+      })
+      .catch((e) => {
+        console.log("-- connect evm error", e);
+        return Promise.reject(e);
+      });
   };
 
   const disconnect = async () => {
@@ -56,7 +61,9 @@ export function Main(props: PropsWithChildren<{solanaNetwork: WalletAdapterNetwo
   };
 
   const connecting =
-    newNamespace.current == ChainNamespace.solana ? sol.connecting : evm.connecting;
+    newNamespace.current == ChainNamespace.solana
+      ? sol.connecting
+      : evm.connecting;
 
   // const wallet = useMemo(() => {
   //   if (namespace === ChainNamespace.solana && sol.connected) {
@@ -68,7 +75,12 @@ export function Main(props: PropsWithChildren<{solanaNetwork: WalletAdapterNetwo
   //   return null;
   // }, [namespace, sol.connected, evm.connected]);
   //
-  const wallet = (namespace === ChainNamespace.solana && sol.connected) ? sol.wallet : (namespace === ChainNamespace.evm && evm.connected ? evm.wallet : null);
+  const wallet =
+    namespace === ChainNamespace.solana && sol.connected
+      ? sol.wallet
+      : namespace === ChainNamespace.evm && evm.connected
+      ? evm.wallet
+      : null;
 
   const connectedChain =
     namespace === ChainNamespace.solana
@@ -77,7 +89,10 @@ export function Main(props: PropsWithChildren<{solanaNetwork: WalletAdapterNetwo
 
   const setChain = (chain: any) => {
     // solana connect
-    const chainId = (typeof chain.chainId === "number" ? chain.chainId : hex2int(chain.chainId));
+    const chainId =
+      typeof chain.chainId === "number"
+        ? chain.chainId
+        : hex2int(chain.chainId);
     // console.log('-- setchain chain',{
     //   chain, chainId,
     // });
@@ -86,7 +101,7 @@ export function Main(props: PropsWithChildren<{solanaNetwork: WalletAdapterNetwo
     if (Array.from(SolanaChains.values()).includes(chainId)) {
       tempNamespace = ChainNamespace.solana;
     }
-    console.log('--- namespace', {
+    console.log("--- namespace", {
       namespace,
       tempNamespace,
     });

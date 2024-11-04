@@ -1,76 +1,36 @@
 # @orderly.network/cli
 
-## 0.3.14-developV2.8
+## 0.3.15
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.8
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/core@1.5.15
 
-## 0.3.14-developV2.7
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.7
-
-## 0.3.14-developV2.6
+## 0.3.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 - Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.6
+  - @orderly.network/core@1.5.15-alpha.0
 
-## 0.3.14-developV2.5
+## 0.3.14
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.5
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/core@1.5.14
 
-## 0.3.14-developV2.4
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.4
-
-## 0.3.14-developV2.3
+## 0.3.14-alpha.0
 
 ### Patch Changes
 
-- update
+- fix bug;
 - Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.3
-
-## 0.3.14-developV2.2
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.2
-
-## 0.3.14-developV2.1
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.1
-
-## 0.3.14-developV2.0
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@2.0.1-developV2.0
+  - @orderly.network/core@1.5.14-alpha.0
 
 ## 0.3.13
 

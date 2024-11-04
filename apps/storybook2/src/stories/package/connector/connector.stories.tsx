@@ -26,11 +26,11 @@ const meta = {
   },
   decorators: [
     (Story: any) => (
-      // <ConnectorProvider>
+      // <WalletConnectorProvider>
       <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
         <Story />
       </OrderlyApp>
-      // </ConnectorProvider>
+      // </WalletConnectorProvider>
     ),
   ],
   argTypes: {},

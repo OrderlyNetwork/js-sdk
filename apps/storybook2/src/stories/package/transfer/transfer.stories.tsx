@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { DepositFormWidget, WithdrawFormWidget, DepositAndWithdrawWithDialogId, DepositAndWithdrawWithSheetId } from '@orderly.network/ui-transfer';
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
@@ -19,7 +19,7 @@ const meta = {
     },
     decorators: [
         (Story: any) => (
-            <ConnectorProvider>
+            <WalletConnectorProvider>
                 <OrderlyApp brokerId="orderly" brokerName="Orderly" networkId={networkId}
                             customChains={customChains as any}
                             configStore={configStore} appIcons={{
@@ -32,7 +32,7 @@ const meta = {
                 }}>
                     <Story />
                 </OrderlyApp>
-            </ConnectorProvider>
+            </WalletConnectorProvider>
         ),
     ],
 } satisfies Meta<typeof DepositFormWidget>;

@@ -79,7 +79,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
 
     if (rootOrder_.algo_type === "BRACKET") {
       // @ts-ignore
-      const childOrders = this.groupBarcketChildOrders([
+      const childOrders = this.groupBracketChildOrders([
         ...rootOrder_.child_orders,
       ]);
       rootOrder_.child_orders = [childOrders];
@@ -88,7 +88,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
     return rootOrder_;
   }
 
-  static groupBarcketChildOrders(orders: WSMessage.AlgoOrder[]): API.AlgoOrder {
+  static groupBracketChildOrders(orders: WSMessage.AlgoOrder[]): API.AlgoOrder {
     const innerOrders = [...orders];
     const rootOrderIndex = innerOrders.findIndex(
       (order) =>

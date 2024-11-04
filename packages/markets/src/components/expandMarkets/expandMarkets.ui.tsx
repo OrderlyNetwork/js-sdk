@@ -16,7 +16,7 @@ import { RecentListWidget } from "../recentList";
 export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
 
 export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
-  const { activeTab, onTabChange } = props;
+  const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
@@ -88,8 +88,9 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
           <div className={cls}>
             <MarketsListWidget
               type="all"
-              sortKey="24h_amount"
-              sortOrder="desc"
+              sortKey={tabSort?.sortKey}
+              sortOrder={tabSort?.sortOrder}
+              onSort={onTabSort}
               tableClassNames={{
                 scroll: "oui-px-1",
               }}
