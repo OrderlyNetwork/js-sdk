@@ -1,5 +1,6 @@
 import { ConfigKey, ConfigStore } from "@orderly.network/core";
 import { MarketsStorageKey } from "@orderly.network/hooks";
+import { ChainNamespace } from "@orderly.network/types/src";
 
 type ENV_NAME = "prod" | "staging" | "qa" | "dev";
 
@@ -7,7 +8,7 @@ type URLS = {
   apiBaseUrl: string;
   publicWsUrl: string;
   privateWsUrl: string;
-  operatorUrl: string;
+  operatorUrl: Record<keyof typeof ChainNamespace, string>;
 };
 
 const API_URLS: Record<ENV_NAME, URLS> = {
@@ -15,25 +16,38 @@ const API_URLS: Record<ENV_NAME, URLS> = {
     apiBaseUrl: "https://api-evm.orderly.org",
     publicWsUrl: "wss://ws-evm.orderly.org",
     privateWsUrl: "wss://ws-private-evm.orderly.org",
-    operatorUrl: "https://operator-evm.orderly.org",
+    operatorUrl: {
+      evm: "https://operator-evm.orderly.org",
+      solana: "https://operator-solana.orderly.org",
+    },
   },
   staging: {
     apiBaseUrl: "https://testnet-api-evm.orderly.org",
     publicWsUrl: "wss://testnet-ws-evm.orderly.org",
     privateWsUrl: "wss://testnet-ws-private-evm.orderly.org",
-    operatorUrl: "https://testnet-operator-evm.orderly.org",
+    operatorUrl: {
+      evm: "https://testnet-operator-evm.orderly.org",
+      solana: "https://testnet-operator-sol.orderly.org",
+    },
   },
   dev: {
     apiBaseUrl: "https://dev-api-v2.orderly.org",
     publicWsUrl: "wss://dev-ws-v2.orderly.org",
     privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
-    operatorUrl: "https://dev-operator-v2.orderly.network",
+    operatorUrl: {
+      evm: "https://dev-operator-v2.orderly.network",
+      // todo dev solana faucet url is not given
+      solana: 'https://qa-sol-operator.orderly.network',
+    },
   },
   qa: {
     apiBaseUrl: "https://qa-api-evm.orderly.org",
     publicWsUrl: "wss://qa-ws-evm.orderly.org",
     privateWsUrl: "wss://qa-ws-private-evm.orderly.org",
-    operatorUrl: "https://qa-operator-evm.orderly.network",
+    operatorUrl: {
+      evm: "https://qa-operator-evm.orderly.network",
+      solana: 'https://qa-sol-operator.orderly.network',
+    }
   },
 };
 
