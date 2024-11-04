@@ -1,10 +1,12 @@
 import type { PropsWithChildren } from "react";
-import { Adapter, WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { Adapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
 
 export type SolanaInitialProps = PropsWithChildren<{
   network?: WalletAdapterNetwork;
   endPoint?: string;
   wallets?: Adapter[];
+  // wallet not ready error handle
+  onError?: (error: WalletError, adapter?: Adapter)=> void;
 }>;
 
 export type EvmInitialProps = PropsWithChildren<{
