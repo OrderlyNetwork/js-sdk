@@ -304,6 +304,12 @@ export const AssetView: FC<AssetViewState> = ({
               <ArrowDownShortIcon color="white" opacity={1} />
               <Text>Deposit</Text>
             </Button>
+
+            <Box className='oui-mt-3'>
+
+              <FaucetWidget/>
+            </Box>
+
           </>
         ) : (
           <Box className="oui-space-y-4">
