@@ -64,7 +64,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         sl_pnl={TPSL_OrderEntity.sl_pnl}
         tp_pnl={TPSL_OrderEntity.tp_pnl}
         quote={symbolInfo("quote")}
-        quote_db={symbolInfo("quote_dp")}
+        quote_dp={symbolInfo("quote_dp")}
         onPriceChange={props.setOrderPrice}
         onPnLChange={props.setPnL}
         errors={errors}
@@ -262,7 +262,7 @@ const TPSLPrice = (props: {
   tp_pnl?: number;
   sl_pnl?: number;
   quote: string;
-  quote_db?: number;
+  quote_dp?: number;
   onPriceChange: TPSLBuilderState["setOrderPrice"];
   onPnLChange: TPSLBuilderState["setPnL"];
   tp_values: PNL_Values;
@@ -304,12 +304,13 @@ const TPSLPrice = (props: {
             onValueChange={(value) => {
               props.onPriceChange("tp_trigger_price", value);
             }}
+            quote_dp={props.quote_dp ?? 2}
           />
           <PnlInputWidget
             type={"TP"}
             onChange={onPnLChange}
             quote={props.quote}
-            quote_dp={props.quote_db}
+            quote_dp={props.quote_dp}
             values={props.tp_values}
           />
         </Grid>
@@ -341,12 +342,13 @@ const TPSLPrice = (props: {
             onValueChange={(value) => {
               props.onPriceChange("sl_trigger_price", value);
             }}
+            quote_dp={props.quote_dp ?? 2}
           />
           <PnlInputWidget
             type={"SL"}
             onChange={onPnLChange}
             quote={props.quote}
-            quote_dp={props.quote_db}
+            quote_dp={props.quote_dp}
             values={props.sl_values}
           />
         </Grid>
@@ -361,6 +363,7 @@ const PriceInput = (props: {
   value?: string | number;
   error?: string;
   onValueChange: (value: string) => void;
+  quote_dp: number;
 }) => {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
   return (
@@ -388,7 +391,7 @@ const PriceInput = (props: {
       }}
       formatters={[
         inputFormatter.numberFormatter,
-        inputFormatter.dpFormatter(2),
+        inputFormatter.dpFormatter(props.quote_dp),
         inputFormatter.currencyFormatter,
       ]}
     />

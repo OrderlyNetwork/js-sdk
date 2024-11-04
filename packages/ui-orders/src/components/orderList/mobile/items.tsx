@@ -60,7 +60,9 @@ export const OrderTypeView: FC<OrderCellState> = (props) => {
       {parseBadgesFor(props.item)?.map((e, index) => (
         <Badge
           key={index}
-          color={e.toLocaleLowerCase() === "position" ? "primaryLight" : "neutral"}
+          color={
+            e.toLocaleLowerCase() === "position" ? "primaryLight" : "neutral"
+          }
           size="xs"
         >
           {e}
@@ -376,7 +378,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
 };
 
 export const TPPrice: FC<OrderCellState> = (props) => {
-  const { tp_trigger_price } = useTPSLOrderRowContext();
+  // const { tp_trigger_price } = useTPSLOrderRowContext();
 
   return (
     <Statistic
@@ -386,20 +388,11 @@ export const TPPrice: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-        intensity={80}
-        padding={false}
-      >
-        {tp_trigger_price ?? "MARKET"}
-      </Text.numeral>
+      <Text color="buy">Market</Text>
     </Statistic>
   );
 };
 export const SLPrice: FC<OrderCellState> = (props) => {
-  const { sl_trigger_price } = useTPSLOrderRowContext();
-
   return (
     <Statistic
       label={"SL price"}
@@ -408,14 +401,7 @@ export const SLPrice: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-        intensity={80}
-        padding={false}
-      >
-        {sl_trigger_price ?? "MARKET"}
-      </Text.numeral>
+      <Text color="sell">Market</Text>
     </Statistic>
   );
 };
