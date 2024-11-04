@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { cn, Flex, Input, Switch } from "@orderly.network/ui";
+import { cn, Flex, Input, modal, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { OrderlyOrder } from "@orderly.network/types";
@@ -17,6 +17,7 @@ import {
   PnlInputProvider,
   usePnlInputContext,
 } from "./pnlInput/pnlInputContext";
+import { ExclamationFillIcon } from "@orderly.network/ui";
 
 type OrderValueKeys = keyof OrderlyOrder;
 
@@ -84,6 +85,19 @@ export const OrderTPSL = (props: {
         <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
           TP/SL
         </label>
+        <ExclamationFillIcon
+          color="white"
+          opacity={0.36}
+          size={14}
+          onClick={() => {
+            modal.dialog({
+              title: "Tips",
+              size: "xs",
+              content:
+                "TP/SL applies to the entire position. For partial TP/SL, set it in open positions.",
+            });
+          }}
+        />
       </Flex>
       <div
         className={cn(
