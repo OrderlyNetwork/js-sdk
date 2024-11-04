@@ -28,6 +28,6 @@ export const useBracketOrderPriceScript = (props: OrderCellState) => {
   };
 };
 
-export type BarcketOrderPriceState = ReturnType<
+export type BracketOrderPriceState = ReturnType<
   typeof useBracketOrderPriceScript
 >;
