@@ -43,7 +43,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       <Divider className="oui-w-full" />
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
-        id="oui-checkbox-showAllInstruments"
+          id="oui-checkbox-showAllInstruments"
           color="white"
           checked={props.showAllSymbol}
           onCheckedChange={(checked: boolean) => {
@@ -63,7 +63,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
 };
 const DesktopLayout: FC<PositionHeaderState> = (props) => {
   return (
-    <Flex px={3} py={2} gap={6} width={"100%"} justify={"start"}>
+    <Flex py={2} gap={6} width={"100%"} justify={"start"}>
       <UnrealPnL
         {...props}
         classNames={{ label: "oui-text-base-contrast-54" }}
@@ -112,7 +112,7 @@ const UnrealPnL: FC<
         >
           {props.unrealPnL ?? "--"}
         </Text.numeral>
-        {typeof props.unrealPnlROI !== 'undefined' && (
+        {typeof props.unrealPnlROI !== "undefined" && (
           <Text.numeral
             prefix="("
             suffix=")"

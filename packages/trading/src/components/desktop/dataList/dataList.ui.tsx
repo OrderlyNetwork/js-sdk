@@ -31,7 +31,7 @@ export const DataList: FC<DataListState> = (props) => {
       size="lg"
       className="oui-h-full"
       classNames={{
-        tabsList: "oui-px-3",
+        // tabsList: "oui-px-3",
         tabsContent: "oui-h-[calc(100%_-_32px)]",
       }}
     >
@@ -105,7 +105,7 @@ const PositionsView: FC<DataListState> = (props) => {
         tabletMediaQuery={props.tabletMediaQuery}
       />
       <Divider className="oui-w-full" />
-      <Box px={3} width="100%">
+      <Box width="100%">
         <PositionsWidget
           symbol={props.showAllSymbol ? undefined : props.symbol}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
