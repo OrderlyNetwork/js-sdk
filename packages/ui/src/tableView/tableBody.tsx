@@ -30,18 +30,12 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
             ? props.onRow(row.original, row.index)
             : {};
 
-        const selected = row.getIsSelected();
-
         const rowView = (
           <Fragment key={row.id}>
             <tr
               key={row.id}
               className={cnBase(
-                "oui-table-tbody-tr",
-                "oui-h-10",
-                "oui-group hover:oui-rounded",
-                "hover:oui-bg-line-4",
-                selected && "oui-bg-line-6 hover:oui-bg-line-6",
+                "oui-table-tbody-tr oui-group oui-h-10",
                 props.bordered && "oui-border-b oui-border-b-line-4",
                 className
               )}
@@ -55,7 +49,6 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
             >
               {row.getVisibleCells().map((cell) => {
                 const column = cell.column;
-                const isPinned = column.getIsPinned();
                 const { style: pinStyle, className: pinClassName } =
                   getColumnPinningProps(column);
                 const { align, className: rowClassName } =
@@ -74,7 +67,11 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                     )}
                   >
                     <TableCell cell={cell} />
-                    {isPinned && <PinnedCellHover selected={selected} />}
+                    <CellHover
+                      selected={row.getIsSelected()}
+                      isFirst={column.getIsFirstColumn()}
+                      isLast={column.getIsLastColumn()}
+                    />
                   </td>
                 );
               })}
@@ -104,14 +101,22 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
   );
 };
 
-const PinnedCellHover: FC<{ selected: boolean }> = ({ selected }) => {
+type CellHoverProps = {
+  selected: boolean;
+  isFirst: boolean;
+  isLast: boolean;
+};
+
+const CellHover: FC<CellHoverProps> = ({ selected, isFirst, isLast }) => {
   return (
     <div
       className={cnBase(
         "oui-absolute oui-top-0 oui-left-0 oui-z-[-1]",
         "oui-w-full oui-h-full",
         "group-hover:oui-bg-line-4",
-        selected && "oui-bg-line-6 group-hover:oui-bg-line-6"
+        selected && "oui-bg-line-6 group-hover:oui-bg-line-6",
+        isFirst && "oui-rounded-l",
+        isLast && "oui-rounded-r"
       )}
     />
   );
