@@ -54,6 +54,9 @@ export const QuantityInput = (props: { value: number }) => {
           onFocus={() => {
             setOpen(true);
           }}
+          classNames={{
+            root: "oui-outline-line focus-within:oui-outline-primary"
+          }}
           formatters={[
             inputFormatter.numberFormatter,
             ...(baseDp ? [inputFormatter.dpFormatter(baseDp)] : []),

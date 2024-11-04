@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export const usePagination = (initial?: {
   page?: number;
@@ -8,16 +8,19 @@ export const usePagination = (initial?: {
   const [page, setPage] = useState<number>(initial?.page ?? 1);
   const [pageSize, _setPageSize] = useState<number>(initial?.pageSize ?? 10);
 
-  const setPageSize = (size: number) => {
-    _setPageSize(size);
-    // check page > page total
-    if (dataTotal.current > 0) {
-      const totalPage = Math.ceil(dataTotal.current / size);
-      if (page > totalPage) {
-        setPage(totalPage);
+  const setPageSize = useCallback(
+    (size: number) => {
+      _setPageSize(size);
+      // check page > page total
+      if (dataTotal.current > 0) {
+        const totalPage = Math.ceil(dataTotal.current / size);
+        if (page > totalPage) {
+          setPage(totalPage);
+        }
       }
-    }
-  }
+    },
+    [page]
+  );
 
   /**
    * helper function to parse meta data,
@@ -45,7 +48,7 @@ export const usePagination = (initial?: {
     page,
     pageSize,
     setPage,
-    setPageSize: (pageSize: number) => setPageSize(pageSize),
+    setPageSize,
     parseMeta,
   };
 };

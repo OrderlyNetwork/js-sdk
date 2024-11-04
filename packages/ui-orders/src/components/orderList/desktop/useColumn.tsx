@@ -7,11 +7,9 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import {
-  Box,
-  Button,
   capitalizeFirstLetter,
   cn,
-  Column,
+  TableColumn,
   Flex,
   Text,
 } from "@orderly.network/ui";
@@ -32,197 +30,197 @@ import { OrderTriggerPrice, TPSLTriggerPrice } from "./tpslTriggerPrice";
 import { BracketOrderPrice } from "./bracketOrderPrice";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice } from "./tpslPrice";
+import { useMemo } from "react";
 
 export const useOrderColumn = (props: {
   _type: TabType;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }) => {
   const { _type, onSymbolChange } = props;
-  const columns =
-    // useMemo(
-    () => {
-      switch (_type) {
-        case TabType.all:
-          return [
-            instrument({
-              width: 130,
-              showType: true,
-              onSymbolChange: onSymbolChange,
-              enableSort: true,
-            }),
-            // side({ width: 130 }),
-            fillAndQuantity({
-              width: 130,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-              enableSort: true,
-            }),
-            price({
-              width: 130,
-              title: "Order price",
-              disableEdit: true,
-              enableSort: true,
-            }),
-            avgOpen({ width: 130, enableSort: true }),
-            tpslTriggerPrice({ width: 130 }),
-            estTotal({ width: 130, enableSort: true }),
-            fee({ width: 130 }),
-            status({ width: 130 }),
-            reduceOnly({ width: 130 }),
-            hidden({ width: 130 }),
-            cancelBtn({ width: 130 }),
-          ];
-        case TabType.pending:
-          return [
-            instrument({
-              width: 172,
-              showType: true,
-              onSymbolChange: onSymbolChange,
-              enableSort: true,
-            }),
-            // side({ width: 162 }),
-            fillAndQuantity({
-              width: 162,
-              className: "oui-pr-0",
-              enableSort: true,
-            }),
-            price({ width: 162, className: "oui-pr-0", enableSort: true }),
-            triggerPrice({ width: 162, className: "oui-pr-0" }),
-            bracketOrderPrice({ width: 130 }),
-            estTotal({ width: 162, enableSort: true }),
-            reduceOnly({ width: 162 }),
-            hidden({ width: 162 }),
-            orderTime({ width: 162 }),
-            cancelBtn({ width: 162 }),
-          ];
-        case TabType.tp_sl:
-          return [
-            instrument({
-              width: 176,
-              showType: true,
-              onSymbolChange: onSymbolChange,
-              enableSort: true,
-            }),
-            // side({ width: 176 }),
-            quantity({ width: 176 }),
-            tpslTriggerPrice({ width: 176 }),
-            tpslPrice({ width: 176, disableEdit: true }),
-            notional({ width: 176 }),
-            reduceOnly({ width: 176 }),
-            orderTime({ width: 176 }),
-            tpslAction({ width: 176 }),
-          ];
-        case TabType.filled:
-          return [
-            instrument({
-              width: 154,
-              onSymbolChange: onSymbolChange,
-              enableSort: true,
-            }),
-            type({ width: 124 }),
-            // side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-              enableSort: true,
-            }),
-            price({
-              width: 124,
-              title: "Order price",
-              disableEdit: true,
-              enableSort: true,
-            }),
-            avgPrice({ width: 124, enableSort: true }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124, enableSort: true }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-            orderTime({ width: 124 }),
-          ];
-        case TabType.cancelled:
-          return [
-            instrument({
-              showType: true,
-              width: 154,
-              onSymbolChange: onSymbolChange,
-              enableSort: true,
-            }),
-            // side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-              enableSort: true,
-            }),
-            price({ width: 124, disableEdit: true, enableSort: true }),
-            avgOpen({ width: 124, enableSort: true }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124, enableSort: true }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-          ];
-        case TabType.rejected:
-          return [
-            instrument({
-              showType: true,
-              width: 154,
-              onSymbolChange: onSymbolChange,
-              enableSort: true,
-            }),
-            // side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-              enableSort: true,
-            }),
-            price({ width: 124, disableEdit: true, enableSort: true }),
-            avgOpen({ width: 124, enableSort: true }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124, enableSort: true }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-            orderTime({ width: 124 }),
-          ];
-        case TabType.orderHistory:
-          return [
-            instrument({
-              showType: true,
-              width: 154,
-              onSymbolChange: onSymbolChange,
-              enableSort: true,
-            }),
-            // side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-              enableSort: true,
-            }),
-            price({ width: 124, disableEdit: true, enableSort: true }),
-            avgOpen({ width: 124, enableSort: true }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124, enableSort: true }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-            orderTime({ width: 124 }),
-            cancelBtn({ width: 124 }),
-          ];
-      }
-    };
 
-  // }, [_type]);
+  const columns = useMemo(() => {
+    switch (_type) {
+      case TabType.all:
+        return [
+          instrument({
+            width: 130,
+            showType: true,
+            onSymbolChange: onSymbolChange,
+            enableSort: true,
+          }),
+          // side({ width: 130 }),
+          fillAndQuantity({
+            width: 130,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+            enableSort: true,
+          }),
+          price({
+            width: 130,
+            title: "Order price",
+            disableEdit: true,
+            enableSort: true,
+          }),
+          avgOpen({ width: 130, enableSort: true }),
+          tpslTriggerPrice({ width: 130 }),
+          estTotal({ width: 130, enableSort: true }),
+          fee({ width: 130 }),
+          status({ width: 130 }),
+          reduceOnly({ width: 130 }),
+          hidden({ width: 130 }),
+          cancelBtn({ width: 130 }),
+        ];
+      case TabType.pending:
+        return [
+          instrument({
+            width: 172,
+            showType: true,
+            onSymbolChange: onSymbolChange,
+            enableSort: true,
+          }),
+          // side({ width: 162 }),
+          fillAndQuantity({
+            width: 162,
+            className: "oui-pr-0",
+            enableSort: true,
+          }),
+          price({ width: 162, className: "oui-pr-0", enableSort: true }),
+          triggerPrice({ width: 162, className: "oui-pr-0" }),
+          bracketOrderPrice({ width: 130 }),
+          estTotal({ width: 162, enableSort: true, isPending: true }),
+          reduceOnly({ width: 162 }),
+          hidden({ width: 162 }),
+          orderTime({ width: 162 }),
+          cancelBtn({ width: 162 }),
+        ];
+      case TabType.tp_sl:
+        return [
+          instrument({
+            width: 176,
+            showType: true,
+            onSymbolChange: onSymbolChange,
+            enableSort: true,
+          }),
+          // side({ width: 176 }),
+          quantity({ width: 176 }),
+          tpslTriggerPrice({ width: 176 }),
+          tpslPrice({ width: 176, disableEdit: true }),
+          notional({ width: 176 }),
+          reduceOnly({ width: 176 }),
+          orderTime({ width: 176 }),
+          tpslAction({ width: 176 }),
+        ];
+      case TabType.filled:
+        return [
+          instrument({
+            width: 154,
+            onSymbolChange: onSymbolChange,
+            enableSort: true,
+          }),
+          type({ width: 124 }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 124,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+            enableSort: true,
+          }),
+          price({
+            width: 124,
+            title: "Order price",
+            disableEdit: true,
+            enableSort: true,
+          }),
+          avgPrice({ width: 124, enableSort: true }),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124, enableSort: true }),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+          orderTime({ width: 124 }),
+        ];
+      case TabType.cancelled:
+        return [
+          instrument({
+            showType: true,
+            width: 154,
+            onSymbolChange: onSymbolChange,
+            enableSort: true,
+          }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 124,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+            enableSort: true,
+          }),
+          price({ width: 124, disableEdit: true, enableSort: true }),
+          avgOpen({ width: 124, enableSort: true }),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124, enableSort: true }),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+        ];
+      case TabType.rejected:
+        return [
+          instrument({
+            showType: true,
+            width: 154,
+            onSymbolChange: onSymbolChange,
+            enableSort: true,
+          }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 124,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+            enableSort: true,
+          }),
+          price({ width: 124, disableEdit: true, enableSort: true }),
+          avgOpen({ width: 124, enableSort: true }),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124, enableSort: true }),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+          orderTime({ width: 124 }),
+        ];
+      case TabType.orderHistory:
+        return [
+          instrument({
+            showType: true,
+            width: 154,
+            onSymbolChange: onSymbolChange,
+            enableSort: true,
+          }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 150,
+            disableEdit: true,
+            className: "oui-pl-6 oui-pr-0",
+            enableSort: true,
+          }),
+          price({ width: 124, disableEdit: true, enableSort: true }),
+          avgOpen({ width: 124, enableSort: true }),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124, enableSort: true }),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+          orderTime({ width: 150 }),
+          cancelBtn({ width: 80 }),
+        ];
+    }
+  }, [_type]);
 
-  return columns();
+  return columns as TableColumn[];
+
+  // return columns();
 };
 
 function instrument(option?: {
@@ -230,18 +228,20 @@ function instrument(option?: {
   enableSort?: boolean;
   width?: number;
   onSymbolChange?: (symbol: API.Symbol) => void;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Instrument",
     dataIndex: "symbol",
-    className: "oui-h-[48px]",
+    fixed: "left",
+    // className: "oui-h-[48px]",
     width: option?.width,
     onSort: option?.enableSort
-      ? (r1, r2, sortOrder) => {
-          if (sortOrder === "asc") {
-            return r1.symbol.localeCompare(r2.symbol);
-          }
-          return r2.symbol.localeCompare(r1.symbol);
+      ? (r1, r2) => {
+          return r1.symbol.localeCompare(r2.symbol);
+          // if (sortOrder === "asc") {
+          //   return r1.symbol.localeCompare(r2.symbol);
+          // }
+          // return r2.symbol.localeCompare(r1.symbol);
         }
       : undefined,
     render: (value: string, record) => {
@@ -301,18 +301,19 @@ function side(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Side",
     dataIndex: "side",
     width: option?.width,
-    className: "oui-h-[48px]",
+    // className: "oui-h-[48px]",
     onSort: option?.enableSort
       ? (r1, r2, sortOrder) => {
-          if (sortOrder === "asc") {
-            return r2.side.localeCompare(r1.side);
-          }
-          return r1.side.localeCompare(r2.side);
+          return r2.side.localeCompare(r1.side);
+          // if (sortOrder === "asc") {
+          //   return r2.side.localeCompare(r1.side);
+          // }
+          // return r1.side.localeCompare(r2.side);
         }
       : undefined,
     render: (value: string, record) => {
@@ -334,7 +335,7 @@ function type(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Type",
     dataIndex: "type",
@@ -368,7 +369,7 @@ function fillAndQuantity(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.AlgoOrderExt> {
+}): TableColumn<API.AlgoOrderExt> {
   return {
     title: "Filled / Quantity",
     dataIndex: "fill_quantity",
@@ -376,7 +377,7 @@ function fillAndQuantity(option?: {
     width: option?.width,
     onSort:
       option?.enableSort ?? false
-        ? (a, b, type) => {
+        ? (a, b) => {
             const aQuantity =
               (a.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
                 ? 0
@@ -385,12 +386,13 @@ function fillAndQuantity(option?: {
               (b.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
                 ? 0
                 : b.quantity) ?? 0;
-            console.log("sort quantity", aQuantity, bQuantity);
 
-            if (type == "asc") {
-              return compareNumbers(aQuantity, bQuantity);
-            }
-            return compareNumbers(bQuantity, aQuantity);
+            return compareNumbers(aQuantity, bQuantity);
+
+            // if (type == "asc") {
+            //   return compareNumbers(aQuantity, bQuantity);
+            // }
+            // return compareNumbers(bQuantity, aQuantity);
           }
         : undefined,
     render: (value: string, record: any) => {
@@ -410,7 +412,7 @@ function quantity(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.AlgoOrderExt> {
+}): TableColumn<API.AlgoOrderExt> {
   return {
     title: "Quantity",
     className: option?.className,
@@ -418,7 +420,7 @@ function quantity(option?: {
     width: option?.width,
     onSort:
       option?.enableSort ?? false
-        ? (a, b, type) => {
+        ? (a, b) => {
             const aQuantity =
               (a.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
                 ? 0
@@ -427,12 +429,11 @@ function quantity(option?: {
               (b.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
                 ? 0
                 : b.quantity) ?? 0;
-            console.log("sort quantity", aQuantity, bQuantity);
-
-            if (type == "asc") {
-              return compareNumbers(aQuantity, bQuantity);
-            }
-            return compareNumbers(bQuantity, aQuantity);
+            return compareNumbers(aQuantity, bQuantity);
+            // if (type == "asc") {
+            //   return compareNumbers(aQuantity, bQuantity);
+            // }
+            // return compareNumbers(bQuantity, aQuantity);
           }
         : undefined,
     render: (value: string, record: any) => {
@@ -451,7 +452,7 @@ function price(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: option?.title ?? "Price",
     dataIndex: "price",
@@ -460,10 +461,11 @@ function price(option?: {
     onSort:
       option?.enableSort ?? false
         ? (a, b, type) => {
-            if (type == "asc") {
-              return compareNumbers(a.price ?? 0, b.price ?? 0);
-            }
-            return compareNumbers(b.price ?? 0, a.price ?? 0);
+            return compareNumbers(a.price ?? 0, b.price ?? 0);
+            // if (type == "asc") {
+            //   return compareNumbers(a.price ?? 0, b.price ?? 0);
+            // }
+            // return compareNumbers(b.price ?? 0, a.price ?? 0);
           }
         : undefined,
     render: (value: string, record: any) => {
@@ -478,7 +480,7 @@ function tpslPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: option?.title ?? "Price",
     dataIndex: "price",
@@ -496,7 +498,7 @@ function avgPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Avg. price",
     dataIndex: "average_executed_price",
@@ -516,7 +518,7 @@ function triggerPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Trigger",
     className: option?.className,
@@ -534,7 +536,7 @@ function tpslTriggerPrice(option?: {
   width?: number;
   className?: string;
   title?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: option?.title ?? "Trigger",
     className: option?.className,
@@ -566,7 +568,8 @@ function estTotal(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+  isPending?: boolean;
+}): TableColumn<API.Order> {
   return {
     title: "Est. total",
     dataIndex: "executed",
@@ -593,13 +596,27 @@ function estTotal(option?: {
                   b.average_executed_price === null
                 ? 0
                 : b.total_executed_quantity * b.average_executed_price;
-            if (type === "asc") {
-              return compareNumbers(aTotal, bTotal);
-            }
-            return compareNumbers(bTotal, aTotal);
+            return compareNumbers(aTotal, bTotal);
+            // if (type === "asc") {
+            //   return compareNumbers(aTotal, bTotal);
+            // }
+            // return compareNumbers(bTotal, aTotal);
           }
         : undefined,
     render: (value: string, record: any) => {
+      if (option?.isPending) {
+        const value = () => {
+          if (record.price && record.quantity) {
+            return new Decimal(record.price)
+              .mul(record.quantity)
+              .toFixed(2, Decimal.ROUND_DOWN);
+          }
+          return "--";
+        };
+
+        return <Text.numeral rm={Decimal.ROUND_DOWN}>{value()}</Text.numeral>;
+      }
+
       if (
         record.type === OrderType.CLOSE_POSITION &&
         record.status !== OrderStatus.FILLED
@@ -608,7 +625,7 @@ function estTotal(option?: {
       }
 
       return (
-        <Text.numeral rm={Decimal.ROUND_DOWN}>
+        <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
           {record.total_executed_quantity === 0 ||
           Number.isNaN(record.average_executed_price) ||
           record.average_executed_price === null
@@ -626,7 +643,7 @@ function reduceOnly(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Reduce only",
     dataIndex: "reduce_only",
@@ -642,7 +659,7 @@ function hidden(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Hidden",
     dataIndex: "visible",
@@ -659,7 +676,7 @@ function orderTime(option?: {
   width?: number;
   className?: string;
   formatString?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Order time",
     dataIndex: "created_time",
@@ -682,7 +699,7 @@ function fee(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Fee",
     dataIndex: "total_fee",
@@ -696,7 +713,7 @@ function notional(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Notional",
     dataIndex: "notional",
@@ -715,7 +732,7 @@ function status(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Status",
     dataIndex: "status",
@@ -736,24 +753,28 @@ function avgOpen(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Avg. open",
     dataIndex: "average_executed_price",
     width: option?.width,
     onSort:
       option?.enableSort ?? false
-        ? (a, b, type) => {
-            if (type == "asc") {
-              return compareNumbers(
-                a.average_executed_price ?? 0,
-                b.average_executed_price ?? 0
-              );
-            }
+        ? (a, b) => {
             return compareNumbers(
-              b.average_executed_price ?? 0,
-              a.average_executed_price ?? 0
+              a.average_executed_price ?? 0,
+              b.average_executed_price ?? 0
             );
+            // if (type == "asc") {
+            //   return compareNumbers(
+            //     a.average_executed_price ?? 0,
+            //     b.average_executed_price ?? 0
+            //   );
+            // }
+            // return compareNumbers(
+            //   b.average_executed_price ?? 0,
+            //   a.average_executed_price ?? 0
+            // );
           }
         : undefined,
     className: option?.className,
@@ -768,10 +789,11 @@ function avgOpen(option?: {
 function cancelBtn(option?: {
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "",
-    dataIndex: "",
+    type: "action",
+    dataIndex: "action",
     width: option?.width,
     className: option?.className,
     align: "right",
@@ -796,10 +818,10 @@ function cancelBtn(option?: {
 function tpslAction(option?: {
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "",
-    dataIndex: "",
+    dataIndex: "action",
     width: option?.width,
     className: option?.className,
     align: "right",

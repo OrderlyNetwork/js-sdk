@@ -5,8 +5,6 @@ import {
   WalletModalProvider
 } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
-import { GlowWalletAdapter } from "@solana/wallet-adapter-glow";
-
 import "@solana/wallet-adapter-react-ui/styles.css";
 import {SolanaInitialProps} from "./types";
 
@@ -27,7 +25,7 @@ export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   return (
     <ConnectionProvider endpoint={endPoint}>
       <WalletProvider wallets={wallets}>
-        <WalletModalProvider>
+        <WalletModalProvider className='oui-pointer-events-auto'>
 
           {children}
         </WalletModalProvider>

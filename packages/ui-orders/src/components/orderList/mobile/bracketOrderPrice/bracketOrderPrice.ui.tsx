@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { cn, Flex, SimpleDialog, Text } from "@orderly.network/ui";
-import { BarcketOrderPriceState } from "./bracketOrderPrice.script";
+import { BracketOrderPriceState } from "./bracketOrderPrice.script";
 import { Decimal } from "@orderly.network/utils";
 import { MobileTooltip } from "../items";
 
-export const BracketOrderPrice: FC<BarcketOrderPriceState> = (props) => {
+export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
   if (!props.sl_trigger_price && !props.tp_trigger_price) return <></>;
 
   return (
@@ -46,7 +46,7 @@ export const BracketOrderPrice: FC<BarcketOrderPriceState> = (props) => {
             props.setOpen(!props.open);
           }}
         >
-          <Flex gap={1}>
+          <Flex gap={1} width={"1"}>
             {props.tp_trigger_price && (
               <Price
                 type="TP"
@@ -74,6 +74,7 @@ const Price = (props: {
   quote_dp: number;
 }) => {
   const { type, value, quote_dp } = props;
+  
   return value ? (
     <Text.numeral
       size="2xs"
@@ -83,7 +84,7 @@ const Price = (props: {
       )}
       key={"tp"}
       rule="price"
-      precision={quote_dp}
+      dp={quote_dp}
       padding={false}
       rm={Decimal.ROUND_DOWN}
       // @ts-ignore

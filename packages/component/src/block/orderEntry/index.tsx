@@ -248,7 +248,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         currentFocusInput.current = InputType.NONE;
       }, 300);
 
-      if (type === InputType.QUANTITY) {
+      if (type === InputType.QUANTITY || type === InputType.TOTAL) {
         formatQty();
       }
     };

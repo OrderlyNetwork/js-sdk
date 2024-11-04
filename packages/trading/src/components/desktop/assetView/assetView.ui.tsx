@@ -20,6 +20,7 @@ import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { FaucetWidget } from "./faucet/faucet.widget";
 
 interface StatusInfo {
   title: string;
@@ -33,7 +34,7 @@ interface TooltipContentProps {
 }
 
 interface TotalValueProps {
-  totalValue: number | null;
+  totalValue?: number;
   visible?: boolean;
   onToggleVisibility?: () => void;
 }
@@ -43,7 +44,7 @@ interface AssetDetailProps {
   description: ReactNode;
   formula: ReactNode;
   visible: boolean;
-  value: number | string;
+  value?: number | string;
   unit?: string;
   rule?: "percentages";
   isConnected?: boolean;
@@ -52,9 +53,9 @@ interface AssetDetailProps {
 
 interface AssetValueListProps {
   visible?: boolean;
-  freeCollateral: number | null;
-  marginRatioVal: number;
-  renderMMR: string;
+  freeCollateral?: number | null;
+  marginRatioVal?: number;
+  renderMMR?: string | number;
   isConnected: boolean;
 }
 
@@ -122,6 +123,7 @@ const TotalValue: FC<TotalValueProps> = ({
       className={gradientTextVariants({ color: "brand" })}
       as="div"
       padding={false}
+      dp={2}
     >
       {totalValue ?? "--"}
     </Text.numeral>
@@ -166,8 +168,7 @@ const AssetDetail: FC<AssetDetailProps> = ({
         {label}
       </Text>
     </Tooltip>
-    {isConnected !== false && value ? (
-      <Text.numeral
+    <Text.numeral
         visible={visible}
         size="2xs"
         unit={unit}
@@ -175,12 +176,11 @@ const AssetDetail: FC<AssetDetailProps> = ({
         as="div"
         rule={rule}
         padding={false}
+        dp={2}
+        // suffix={value && unit}
       >
-        {value}
+        {value ?? '--'}
       </Text.numeral>
-    ) : (
-      <Text className="oui-text-base-contrast-36">{(showPercentage ? "--%" : "--")}</Text>
-    )}
   </Flex>
 );
 
@@ -304,6 +304,12 @@ export const AssetView: FC<AssetViewState> = ({
               <ArrowDownShortIcon color="white" opacity={1} />
               <Text>Deposit</Text>
             </Button>
+
+            <Box className='oui-mt-3'>
+
+              <FaucetWidget/>
+            </Box>
+
           </>
         ) : (
           <Box className="oui-space-y-4">
@@ -338,6 +344,7 @@ export const AssetView: FC<AssetViewState> = ({
                 <Text>Deposit</Text>
               </Button>
             </Flex>
+            <FaucetWidget/>
           </Box>
         )}
       </AuthGuard>

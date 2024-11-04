@@ -376,7 +376,7 @@ export function tpslCalculateHelper(
     case "tp_offset_percentage":
     case "sl_offset_percentage": {
       offset_percentage = inputs.value;
-      console.log("offset_percentage", offset_percentage);
+      // console.log("offset_percentage", offset_percentage);
       trigger_price = offsetPercentageToPrice({
         qty,
         percentage: Number(`${inputs.value}`.replace(/\.0{0,2}$/, "")),

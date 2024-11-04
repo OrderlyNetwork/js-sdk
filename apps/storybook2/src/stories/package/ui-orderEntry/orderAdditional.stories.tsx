@@ -4,7 +4,7 @@ import {
   OrderEntry,
   AdditionalInfoWidget,
 } from "@orderly.network/ui-order-entry";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box } from "@orderly.network/ui";
 

@@ -60,6 +60,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       <SideMarketsHeader collapsed={collapsed} onCollapse={onCollapse} />
       <Box
         width="100%"
+        // px={1}
         className={cn(
           collapsed ? "oui-h-[calc(100%_-_52px)]" : "oui-h-[calc(100%_-_56px)]"
         )}
@@ -78,7 +79,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
   if (collapsed) {
     return (
       <ExpandIcon
-        className="oui-text-base-contrast-12 oui-cursor-pointer"
+        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer"
         onClick={() => {
           onCollapse?.(false);
         }}
@@ -92,7 +93,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
         Market
       </Text>
       <CollapseIcon
-        className="oui-text-base-contrast-12 oui-cursor-pointer"
+        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer"
         onClick={() => {
           onCollapse?.(true);
         }}

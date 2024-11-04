@@ -116,10 +116,12 @@ const Tooltip = React.forwardRef<
         disableHoverableContent={disableHoverableContent}
       >
         <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-        <TooltipContent ref={ref} {...props}>
-          {content}
-          <TooltipArrow {...tooltipProps?.arrow}/>
-        </TooltipContent>
+        <TooltipPortal>
+          <TooltipContent ref={ref} {...props}>
+            {content}
+            <TooltipArrow {...tooltipProps?.arrow} />
+          </TooltipContent>
+        </TooltipPortal>
       </TooltipPrimitive.Root>
     );
   }

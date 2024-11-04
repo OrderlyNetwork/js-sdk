@@ -131,17 +131,16 @@ const useOrderEntryNextInternal = (
     let newValues = calculate({ ...values }, key, value, markPrice, symbolInfo);
 
     /// if the order type is market or stop market, recalculate the total use mark price
-    if (
-      key === "order_type" &&
-      (value === OrderType.MARKET || value === OrderType.STOP_MARKET)
-    ) {
-      newValues = calculate(
-        newValues,
-        "order_price",
-        markPrice,
-        markPrice,
-        symbolInfo
-      );
+    if (key === "order_type") {
+      if (value === OrderType.MARKET || value === OrderType.STOP_MARKET) {
+        newValues = calculate(
+          newValues,
+          "order_price",
+          markPrice,
+          markPrice,
+          symbolInfo
+        );
+      }
     }
 
     if (
@@ -262,23 +261,43 @@ const useOrderEntryNextInternal = (
     [calculate, orderEntryActions, symbolInfo]
   );
 
-  const onMarkPriceUpdated = useCallback((markPrice: number) => {
-    // console.log("markPrice", markPrice);
-    if (!options.symbolInfo) return;
-    const values = useOrderStore.getState().entry;
-    const newValues = calculate(
-      { ...values },
-      "order_price",
-      markPrice,
-      markPrice,
-      options.symbolInfo
-    );
+  const onMarkPriceUpdated = useCallback(
+    (markPrice: number, baseOn?: "total" | "order_quantity") => {
+      // console.log("******", baseOn);
+      if (!options.symbolInfo) return;
+      const values = useOrderStore.getState().entry;
+      let newValues;
 
-    if (hasTPSL(newValues)) {
-      calculateTPSL("order_price", newValues, markPrice, options.symbolInfo);
-    }
-    orderEntryActions.updateOrder(newValues);
-  }, []);
+      if (typeof baseOn === "undefined") {
+        newValues = calculate(
+          { ...values },
+          "order_price",
+          markPrice,
+          markPrice,
+          options.symbolInfo
+        );
+      } else {
+        newValues = calculate(
+          { ...values },
+          baseOn,
+          values[baseOn],
+          markPrice,
+          options.symbolInfo
+        );
+      }
+
+      // if (hasTPSL(newValues)) {
+      //   newValues = calculateTPSL(
+      //     "order_price",
+      //     newValues,
+      //     markPrice,
+      //     options.symbolInfo
+      //   );
+      // }
+      orderEntryActions.updateOrder(newValues);
+    },
+    [options.symbolInfo]
+  );
 
   const validate = (
     order: Partial<OrderlyOrder>,

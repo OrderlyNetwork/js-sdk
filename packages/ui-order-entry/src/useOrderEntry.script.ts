@@ -1,11 +1,12 @@
 import { OrderSide, OrderType } from "@orderly.network/types";
 import {
   useEventEmitter,
+  useLocalStorage,
   useMarginRatio,
   useOrderEntry,
   utils,
 } from "@orderly.network/hooks";
-import { useEffect, useRef, FocusEvent, useMemo } from "react";
+import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
@@ -15,8 +16,23 @@ export type OrderEntryScriptInputs = {
 };
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
+  const [localOrderType, setLocalOrderType] = useLocalStorage(
+    "orderly-order-entry-order-type",
+    OrderType.LIMIT
+  );
+  const [localOrderSide, setLocalOrderSide] = useLocalStorage(
+    "orderly-order-entry-order-side",
+    OrderSide.BUY
+  );
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
-    useOrderEntry(inputs.symbol, {});
+    useOrderEntry(inputs.symbol, {
+      initialOrder: {
+        symbol: inputs.symbol,
+        order_type: localOrderType,
+        side: localOrderSide,
+      },
+    });
+  const [tpslSwitch, setTpslSwitch] = useState(false);
 
   // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();
@@ -38,11 +54,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [formattedOrder.order_quantity, state.maxQty]);
 
   const formatQty = () => {
+    if (symbolInfo.base_tick < 1) return;
     const quantity = utils.formatNumber(
       formattedOrder?.order_quantity,
       new Decimal(symbolInfo?.base_tick || "0").toNumber()
     );
-    setValue("order_quantity", quantity);
+    setValue("order_quantity", quantity, {
+      shouldUpdateLastChangedField: false,
+    });
   };
 
   const onFocus = (type: InputType) => (_: FocusEvent) => {
@@ -118,21 +137,54 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     });
   };
 
+  const enableTP_SL = () => {
+    setValues({
+      order_type_ext: undefined,
+    });
+  };
+
   const setMaxQty = () => {
     setValue("order_quantity", state.maxQty);
   };
 
+  const setOrderValue = (
+    key: any,
+    value: any,
+    options?: {
+      shouldUpdateLastChangedField?: boolean;
+    }
+  ) => {
+    setValue(key, value, options);
+    if (key === "order_type") {
+      setLocalOrderType(value);
+    }
+    if (key === "side") {
+      setLocalOrderSide(value);
+    }
+  };
+
+  const onTPSLSwitchChanged = (state: boolean) => {
+    setTpslSwitch(state);
+    if (state) {
+      enableTP_SL();
+    } else {
+      cancelTP_SL();
+    }
+  };
   return {
     ...state,
     currentQtyPercentage,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
-    setOrderValue: setValue,
+    setOrderValue,
 
     currentLeverage,
 
     formattedOrder,
-    cancelTP_SL,
+    // cancelTP_SL,
+    // enableTP_SL,
+    tpslSwitch,
+    setTpslSwitch: onTPSLSwitchChanged,
     setMaxQty,
     symbolInfo,
     onFocus,

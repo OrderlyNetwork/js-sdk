@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box, Column } from "@orderly.network/ui";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
 const meta = {
@@ -14,11 +14,11 @@ const meta = {
   subcomponents: {},
   decorators: [
     (Story: any) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
           <Story />
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
   parameters: {

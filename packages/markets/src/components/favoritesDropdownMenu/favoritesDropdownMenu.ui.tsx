@@ -100,7 +100,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
       );
     }
 
-    const overTabs = favoriteTabs.length > 10;
+    const overTabs = favoriteTabs.length >= 10;
 
     return (
       <Tooltip

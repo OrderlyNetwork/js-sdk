@@ -14,6 +14,7 @@ export { Logo, type LogoProps } from "./logo/logo";
 // export * from "./tag/tag";
 export * from "./tooltip";
 export * from "./table";
+export * from "./tableView";
 export * from "./scrollarea";
 export * from "./dialog";
 export * from "./sheet";

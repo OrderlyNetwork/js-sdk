@@ -40,14 +40,22 @@ export function sortList(list: any[], sortKey?: string, sortOrder?: SortOrder) {
   return sortedList;
 }
 
-export function useSort(defaultSortKey?: string, defaultSortOrder?: SortOrder) {
+export function useSort(
+  defaultSortKey?: string,
+  defaultSortOrder?: SortOrder,
+  onSortChange?: (sortKey?: string, sortOrder?: SortOrder) => void
+) {
   const [key, setKey] = useState<string>();
   const [order, setOrder] = useState<SortOrder>();
 
-  const onSort = useCallback((options?: TInitialSort) => {
-    setKey(options?.sortKey);
-    setOrder(options?.sort);
-  }, []);
+  const onSort = useCallback(
+    (options?: TInitialSort) => {
+      setKey(options?.sortKey);
+      setOrder(options?.sort);
+      onSortChange?.(options?.sortKey, options?.sort);
+    },
+    [onSortChange]
+  );
 
   const sortKey = key || defaultSortKey;
   const sortOrder = order || defaultSortOrder;

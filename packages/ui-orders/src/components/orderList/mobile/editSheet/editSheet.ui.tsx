@@ -16,6 +16,7 @@ import { EditSheetState } from "./editSheet.script";
 import { commify, Decimal } from "@orderly.network/utils";
 import { ConfirmDialogContent } from "./editDialogContent";
 import { OrderSide } from "@orderly.network/types";
+import { parseBadgesFor } from "../../../../utils/util";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
@@ -33,7 +34,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
   //   }
   // }, [props.errors]);
 
-  const percentages = (props.quantity && props.maxQty) ? Math.min(Number(props.quantity ) / props.maxQty, 1) : undefined;
+  const percentages =
+    props.quantity && props.maxQty
+      ? Math.min(Number(props.quantity) / props.maxQty, 1)
+      : undefined;
 
   return (
     <>
@@ -48,10 +52,20 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           <Text.formatted rule={"symbol"} showIcon intensity={80}>
             {item.symbol}
           </Text.formatted>
-          <Flex gap={1}>
-            <Badge color="neutral" size="xs">
-              Limit
-            </Badge>
+          <Flex direction={"row"} gap={1}>
+            {parseBadgesFor(props.item)?.map((e, index) => (
+              <Badge
+                key={index}
+                color={
+                  e.toLocaleLowerCase() === "position"
+                    ? "primaryLight"
+                    : "neutral"
+                }
+                size="xs"
+              >
+                {e}
+              </Badge>
+            ))}
             {isBuy && (
               <Badge color="success" size="xs">
                 Buy
@@ -68,7 +82,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         <Flex width={"100%"} justify={"between"}>
           <Text>Last price</Text>
           <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp}>
-            {props.curMarkPrice ?? '--'}
+            {props.curMarkPrice ?? "--"}
           </Text.numeral>
         </Flex>
         <Flex width={"100%"} direction={"column"} itemAlign={"stretch"} gap={2}>
@@ -84,7 +98,9 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                   {props.quote}
                 </Text>
               }
-              color={props.errors?.trigger_price?.message ? "danger" : undefined}
+              color={
+                props.errors?.trigger_price?.message ? "danger" : undefined
+              }
               align="right"
               fullWidth
               autoComplete="off"
@@ -128,7 +144,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               inputFormatter.dpFormatter(props.quote_dp),
             ]}
             disabled={!props.priceEdit}
-            value={props.isStopMarket? 'Market' : props.price}
+            value={props.isStopMarket ? "Market" : props.price}
             onValueChange={(e) => props.setPrice(e)}
             tooltip={props.errors?.order_price?.message}
             tooltipProps={{
@@ -235,6 +251,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               props.onSheetConfirm();
             }}
             loading={props.submitting}
+            disabled={!props.isChanged}
           >
             Confirm
           </Button>
@@ -244,7 +261,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
       <SimpleDialog
         open={props.dialogOpen}
         onOpenChange={props.setDialogOpen}
-        title="Confirm order"
+        title="Edit order"
         size="xs"
         actions={{
           primary: {

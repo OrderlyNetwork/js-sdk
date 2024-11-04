@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   ExpandMarketsWidget,
   FavoritesListWidget,
@@ -28,7 +28,7 @@ const meta = {
   subcomponents: {},
   decorators: [
     (Story: any) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp
           brokerId="orderly"
           brokerName="Orderly"
@@ -37,7 +37,7 @@ const meta = {
         >
           <Story />
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
 } satisfies Meta<typeof ExpandMarketsWidget>;
@@ -64,21 +64,45 @@ export const DropDownMarkets: Story = {
 
 export const Favorites: Story = {
   render: (args) => {
-    return <FavoritesListWidget getColumns={getDropDownMarketsColumns} />
+    return <FavoritesListWidget
+      getColumns={getDropDownMarketsColumns}
+      tableClassNames={{
+        root: "!oui-bg-base-8",
+        scroll: "oui-pb-5 oui-px-1",
+      }}
+      rowClassName="!oui-h-[34px]"
+    />
   },
   decorators
 };
 
 export const Recent: Story = {
   render: (args) => {
-    return <RecentListWidget getColumns={getDropDownMarketsColumns}/>
+    return <RecentListWidget
+      getColumns={getDropDownMarketsColumns}
+      tableClassNames={{
+        root: "!oui-bg-base-8",
+        scroll: "oui-pb-5 oui-px-1",
+      }}
+      rowClassName="!oui-h-[34px]"
+    />
   },
   decorators
 };
 
 export const All: Story = {
   render: (args) => {
-    return <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" getColumns={getDropDownMarketsColumns}/>
+    return <MarketsListWidget
+      type="all"
+      sortKey="24h_amount"
+      sortOrder="desc"
+      getColumns={getDropDownMarketsColumns}
+      tableClassNames={{
+        root: "!oui-bg-base-8",
+        scroll: "oui-pb-5 oui-px-1",
+      }}
+      rowClassName="!oui-h-[34px]"
+    />
   },
   decorators
 };

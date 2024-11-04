@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { cn, Flex, Input, Switch } from "@orderly.network/ui";
+import { cn, Flex, Input, modal, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { OrderlyOrder } from "@orderly.network/types";
@@ -17,6 +17,7 @@ import {
   PnlInputProvider,
   usePnlInputContext,
 } from "./pnlInput/pnlInputContext";
+import { ExclamationFillIcon } from "@orderly.network/ui";
 
 type OrderValueKeys = keyof OrderlyOrder;
 
@@ -27,14 +28,17 @@ type Est_Values = PNL_Values & {
 type TPSL_Values = { tp: Est_Values; sl: Est_Values };
 
 export const OrderTPSL = (props: {
-  onCancelTPSL: () => void;
+  // onCancelTPSL: () => void;
+  // onEnableTP_SL: () => void;
+  switchState: boolean;
+  onSwitchChanged: (state: boolean) => void;
   onChange: (key: OrderValueKeys, value: any) => void;
   values: TPSL_Values;
   orderType: OrderType;
   isReduceOnly?: boolean;
   errors: any;
 }) => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,9 +46,10 @@ export const OrderTPSL = (props: {
       props.orderType !== OrderType.LIMIT &&
       props.orderType !== OrderType.MARKET
     ) {
-      setOpen(false);
+      // setOpen(false);
+      props.onSwitchChanged(false);
 
-      props.onCancelTPSL();
+      // props.onCancelTPSL();
     }
   }, [props.orderType]);
 
@@ -61,31 +66,50 @@ export const OrderTPSL = (props: {
         <Switch
           id={"order_entry_tpsl"}
           className="oui-h-[14px]"
-          checked={open}
+          checked={props.switchState}
           disabled={
             (props.orderType !== OrderType.LIMIT &&
               props.orderType !== OrderType.MARKET) ||
             props.isReduceOnly
           }
           onCheckedChange={(checked) => {
-            setOpen(checked);
-            if (!checked) {
-              props.onCancelTPSL();
-            }
+            // setOpen(checked);
+            props.onSwitchChanged(checked);
+            // if (!checked) {
+            //   props.onCancelTPSL();
+            // } else {
+            //   props.onEnableTP_SL();
+            // }
           }}
         />
         <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
           TP/SL
         </label>
+        <ExclamationFillIcon
+          color="white"
+          opacity={0.36}
+          size={14}
+          onClick={() => {
+            modal.dialog({
+              title: "Tips",
+              size: "xs",
+              content:
+                "TP/SL applies to the entire position. For partial TP/SL, set it in open positions.",
+            });
+          }}
+        />
       </Flex>
       <div
         className={cn(
           "oui-max-h-0 oui-overflow-hidden oui-transition-all",
-          open && "oui-max-h-[100px]"
+          props.switchState && "oui-max-h-[100px]"
         )}
         onTransitionEnd={() => {
           console.log("transition end");
-          tpslFormRef.current?.style.setProperty("opacity", open ? "1" : "0");
+          tpslFormRef.current?.style.setProperty(
+            "opacity",
+            props.switchState ? "1" : "0"
+          );
         }}
       >
         <TPSLInputForm

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PositionsModule, } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 // import {Box} from "@orderly.network/ui";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Flex, Text, Divider } from "@orderly.network/ui";
 
 
@@ -14,11 +14,11 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <ConnectorProvider>
+      <WalletConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
             <Story />
         </OrderlyApp>
-      </ConnectorProvider>
+      </WalletConnectorProvider>
     ),
   ],
   parameters: {

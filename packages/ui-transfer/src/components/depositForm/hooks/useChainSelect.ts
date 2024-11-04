@@ -43,6 +43,10 @@ export function useChainSelect() {
     async (chain: API.NetworkInfos) => {
       const chainInfo = findByChainId(chain.chain_id);
 
+      if (!connectedChain) {
+       return;
+      }
+
       if (
         !chainInfo ||
         chainInfo.network_infos?.chain_id === currentChain?.id
