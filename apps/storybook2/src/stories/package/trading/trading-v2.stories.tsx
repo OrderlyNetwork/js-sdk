@@ -9,7 +9,8 @@ import {
   RiskRateWidget,
   TradingPageV2,
   OrderBookWidget,
-  OrderBookAndTradesWidget
+  OrderBookAndTradesWidget,
+  BottomNavBarWidget,
 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { CustomConfigStore } from "../CustomConfigStore";
@@ -33,6 +34,7 @@ const meta = {
       const networkId = "testnet";
       // const networkId = "mainnet";
       const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
+      // const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
       return (
         <WalletConnectorProvider>
           <OrderlyApp
@@ -141,7 +143,7 @@ export const AssetView: Story = {
   render: () => {
 
     return (
-      <Box p={3} m={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
+      <Box p={3} m={3} r="xl" className="oui-bg-base-9 oui-min-h-[200px] oui-w-[400px]">
         <AssetViewWidget />
       </Box>
     );
@@ -189,4 +191,11 @@ export const OrderBookAndTrades: Story = {
     );
   }
 };
+export  const Bottom: Story = {
+  render: (arg) => {
+    return (
+      <BottomNavBarWidget/>
+    )
+  }
+}
 

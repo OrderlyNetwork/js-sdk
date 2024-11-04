@@ -1,6 +1,6 @@
 import type {StoryObj} from "@storybook/react";
 import {Button, modal} from "@orderly.network/ui";
-import {WalletWalletConnectorProvider} from "@orderly.network/wallet-connector";
+import {WalletConnectorProvider} from "@orderly.network/wallet-connector";
 import {OrderlyApp} from "@orderly.network/react-app";
 import {Scaffold} from "@orderly.network/ui-scaffold";
 import {CustomConfigStore} from "../CustomConfigStore.ts";
@@ -17,7 +17,7 @@ const meta = {
     component: Scaffold,
     decorators: [
         (Story: any) => (
-            <WalletWalletConnectorProvider>
+            <WalletConnectorProvider>
                 <OrderlyApp
                     brokerId={"woofi_pro"}
                     brokerName={"WOOFiPRO"}
@@ -28,7 +28,7 @@ const meta = {
                     <Story/>
 
                 </OrderlyApp>
-            </WalletWalletConnectorProvider>
+            </WalletConnectorProvider>
         ),
     ],
     argTypes: {},

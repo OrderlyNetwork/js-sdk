@@ -20,6 +20,7 @@ import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { FaucetWidget } from "./faucet/faucet.widget";
 
 interface StatusInfo {
   title: string;
@@ -337,6 +338,7 @@ export const AssetView: FC<AssetViewState> = ({
                 <Text>Deposit</Text>
               </Button>
             </Flex>
+            <FaucetWidget/>
           </Box>
         )}
       </AuthGuard>
