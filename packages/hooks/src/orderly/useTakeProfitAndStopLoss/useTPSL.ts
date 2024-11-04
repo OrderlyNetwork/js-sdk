@@ -74,6 +74,7 @@ export const useTaskProfitAndStopLossInternal = (
      * Submit the TP/SL order
      */
     submit: () => Promise<void>;
+    deleteOrder: (orderId: number, symbol: string) => Promise<any>;
     // /**
     //  * Create the take profit and stop loss order, auto-detect the order type
     //  */
@@ -384,7 +385,7 @@ export const useTaskProfitAndStopLossInternal = (
     omit(["ignoreValidate"], order) as ComputedAlgoOrder,
     {
       submit,
-
+      deleteOrder,
       // create: submit,
 
       // update: updateOrder,/

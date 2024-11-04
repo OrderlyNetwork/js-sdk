@@ -91,6 +91,32 @@ export const PositionTPSLPopover = (props: {
             //       order.quantity === maxQty)
             // );
 
+            if (
+              (`${order.tp_trigger_price ?? ""}`).length === 0 &&
+              (`${order.sl_trigger_price ?? ""}`).length === 0 
+            ) {
+              return modal
+                .confirm({
+                  title: "Cancel Order",
+                  content:
+                    "Are you sure you want to cancel this Position TP/SL order?",
+                  onOk: () => {
+                    return options.cancel();
+                  },
+                })
+                .then(
+                  () => {
+                    setOpen(false);
+                    setVisible(true);
+                    return true;
+                  },
+                  () => {
+                    setVisible(true);
+                    return Promise.reject(false);
+                  }
+                );
+            }
+
             const finalIsEditing =
               isEditing ||
               (!!order &&
