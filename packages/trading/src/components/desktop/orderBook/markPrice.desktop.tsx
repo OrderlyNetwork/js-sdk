@@ -29,6 +29,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
           markPrice={markPrice}
           lastPrice={lastPrice}
           quote_dp={symbolInfo.quote_dp}
+          className="oui-text-base"
         />
         <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} tabletMediaQuery={tabletMediaQuery} />
       </Flex>
