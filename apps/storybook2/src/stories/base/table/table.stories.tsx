@@ -107,14 +107,10 @@ export const Default: Story = {
           bordered
           pagination={pagination}
           loading={loading}
-          // sizes={{
-          //   header: "xl",
-          //   body: "xl",
-          // }}
           classNames={{
             root: cn(
               "!oui-h-[calc(100%_-_40px)]",
-              "oui-px-3 oui-border-t oui-border-line"
+              "oui-border-t oui-border-line"
             ),
             // header: "oui-text-base oui-text-base-contrast-80",
             // body: "oui-text-base oui-text-base-contrast-36",
@@ -125,8 +121,8 @@ export const Default: Story = {
           //   };
           // }}
           columnFilters={columnFilters}
-          // generatedRowKey={(record) => record.symbol}
-          // rowSelection={{ PERP_BTC_USDC: true }}
+          generatedRowKey={(record) => record.symbol}
+          rowSelection={{ PERP_BTC_USDC: true }}
         />
       </Box>
     );
