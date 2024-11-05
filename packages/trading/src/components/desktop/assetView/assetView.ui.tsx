@@ -49,6 +49,7 @@ interface AssetDetailProps {
   rule?: "percentages";
   isConnected?: boolean;
   showPercentage?: boolean;
+  placeholder?: string;
 }
 
 interface AssetValueListProps {
@@ -152,6 +153,7 @@ const AssetDetail: FC<AssetDetailProps> = ({
   rule,
   isConnected,
   showPercentage = false,
+  placeholder,
 }) => (
   <Flex justify="between">
     <Tooltip
@@ -178,8 +180,9 @@ const AssetDetail: FC<AssetDetailProps> = ({
         padding={false}
         dp={2}
         // suffix={value && unit}
+        placeholder={placeholder}
       >
-        {value ?? '--'}
+        {value || '--'}
       </Text.numeral>
   </Flex>
 );
@@ -239,7 +242,8 @@ const AssetValueList: FC<AssetValueListProps> = ({
               isConnected={isConnected}
               rule="percentages"
               showPercentage={true}
-            />
+              placeholder="--%"
+              />
             <AssetDetail
               label="Maintenance margin ratio"
               description="The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated."
@@ -248,6 +252,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
               value={renderMMR}
               rule="percentages"
               showPercentage={true}
+              placeholder="--%"
             />
           </Box>
         </CollapsibleContent>
