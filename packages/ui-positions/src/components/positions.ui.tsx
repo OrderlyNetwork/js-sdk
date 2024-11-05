@@ -19,25 +19,23 @@ export const Positions = (props: PositionsBuilderState) => {
   // console.log("xxxx positions", props);
 
   return (
-    <div>
-      <AuthGuardTableView<API.PositionTPSLExt>
-        loading={props.isLoading}
-        id="oui-desktop-positions-content"
-        columns={column}
-        bordered
-        dataSource={props.dataSource}
-        generatedRowKey={(record: any) => record.symbol}
-        renderRowContainer={(record: any, index: number, children: any) => {
-          return (
-            <SymbolProvider symbol={record.symbol}>
-              <PositionsRowProvider position={record}>
-                {children}
-              </PositionsRowProvider>
-            </SymbolProvider>
-          );
-        }}
-      />
-    </div>
+    <AuthGuardTableView<API.PositionTPSLExt>
+      loading={props.isLoading}
+      id="oui-desktop-positions-content"
+      columns={column}
+      bordered
+      dataSource={props.dataSource}
+      generatedRowKey={(record: any) => record.symbol}
+      renderRowContainer={(record: any, index: number, children: any) => {
+        return (
+          <SymbolProvider symbol={record.symbol}>
+            <PositionsRowProvider position={record}>
+              {children}
+            </PositionsRowProvider>
+          </SymbolProvider>
+        );
+      }}
+    />
   );
 };
 
