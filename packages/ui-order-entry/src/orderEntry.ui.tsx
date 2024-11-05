@@ -499,6 +499,7 @@ const OrderQuantityInput = (props: {
           }}
           onFocus={onFocus(InputType.TOTAL)}
           onBlur={onBlur(InputType.TOTAL)}
+          formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
         />
       </Grid>
     </div>

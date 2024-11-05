@@ -1,7 +1,7 @@
-import { Column, Flex, Text } from "@orderly.network/ui";
+import { TableColumn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 
-export const Columns: Column[] = [
+export const Columns: TableColumn[] = [
   {
     title: "Instrument",
     dataIndex: "symbol",
