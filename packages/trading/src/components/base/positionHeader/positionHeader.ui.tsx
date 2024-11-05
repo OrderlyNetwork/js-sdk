@@ -63,7 +63,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
 };
 const DesktopLayout: FC<PositionHeaderState> = (props) => {
   return (
-    <Flex py={2} gap={6} width={"100%"} justify={"start"}>
+    <Flex py={2} px={3} gap={6} width={"100%"} justify={"start"}>
       <UnrealPnL
         {...props}
         classNames={{ label: "oui-text-base-contrast-54" }}

@@ -39,7 +39,7 @@ export type BuilderProps = {
 };
 
 export const usePNLInputBuilder = (props: BuilderProps) => {
-  const { type, values } = props;
+  const { type, values, quote_dp } = props;
   // const [mode, setMode] = useLocalStorage<PnLMode>(
   //   "TP/SL_Mode",
   //   PnLMode.PERCENTAGE
@@ -193,7 +193,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     onBlur,
     value,
     onValueChange,
-    quote_db: props.quote_dp,
+    quote_dp,
     tips: tipVisible ? tipsEle : undefined,
   };
 };

@@ -286,6 +286,7 @@ export const OrderEntry = (
         <OrderTPSL
           // onCancelTPSL={props.cancelTP_SL}
           // onEnableTP_SL={props.enableTP_SL}
+          quote_dp={props.symbolInfo.quote_dp}
           switchState={props.tpslSwitch}
           onSwitchChanged={props.setTpslSwitch}
           orderType={formattedOrder.order_type!}

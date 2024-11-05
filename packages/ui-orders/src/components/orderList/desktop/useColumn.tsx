@@ -105,7 +105,7 @@ export const useOrderColumn = (props: {
           quantity({ width: 176 }),
           tpslTriggerPrice({ width: 176 }),
           tpslPrice({ width: 176, disableEdit: true }),
-          notional({ width: 176 }),
+          tpslNotional({ width: 176 }),
           reduceOnly({ width: 176 }),
           orderTime({ width: 176 }),
           tpslAction({ width: 176 }),
@@ -117,7 +117,7 @@ export const useOrderColumn = (props: {
             onSymbolChange: onSymbolChange,
             enableSort: true,
           }),
-          type({ width: 124 }),
+          // type({ width: 124 }),
           // side({ width: 124 }),
           fillAndQuantity({
             width: 124,
@@ -720,11 +720,41 @@ function notional(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
-    render: (value: string) => (
-      <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {value}
-      </Text>
+    render: (value?: string) => (
+      <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+        {value ?? "--"}
+      </Text.numeral>
     ),
+  };
+}
+
+function tpslNotional(option?: {
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+}): TableColumn<API.Order> {
+  return {
+    title: "Notional",
+    dataIndex: "executed",
+    width: option?.width,
+    onSort: option?.enableSort,
+    className: option?.className,
+    render: (value: any, record: any) => {
+      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+        return "Entire position";
+      }
+
+      return (
+        <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+          {record.quantity === 0
+            ? "--"
+            : `${new Decimal(record.mark_price)
+                .mul(record.quantity)
+                .todp(2)
+                .toNumber()}`}
+        </Text.numeral>
+      );
+    },
   };
 }
 
@@ -739,13 +769,14 @@ function status(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
-    render: (value: string, record: any) => (
-      <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {capitalizeFirstLetter(
-          (record?.algo_status || record.status)?.toLocaleLowerCase()
-        )}
-      </Text>
-    ),
+    render: (value: string, record: any) => {
+      const status = value || record.algo_status;
+
+      if (status === "NEW") {
+        return upperCaseFirstLetter("pending");
+      }
+      return upperCaseFirstLetter(status);
+    },
   };
 }
 

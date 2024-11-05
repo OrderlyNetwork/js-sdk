@@ -1,10 +1,4 @@
-import {
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { PropsWithChildren, ReactNode, useMemo } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -31,6 +25,8 @@ import { TableBody } from "./tableBody";
 import { useInit } from "./hooks/useInit";
 import { TablePlaceholder } from "./tablePlaceholder";
 import { useSort } from "./hooks/useSort";
+import { useShowHeader } from "./hooks/useShowHeader";
+import { useShowPagination } from "./hooks/useShowPagination";
 
 export type TableViewProps<RecordType> = {
   columns: TableColumn<RecordType>[];
@@ -167,31 +163,26 @@ export function TableView<RecordType extends any>(
   // filter data
   const rows = table.getRowModel().rows;
 
-  const hasData = !!(dataSource?.length && rows?.length);
-
   const showPlaceholder = initialized && (rows.length === 0 || loading);
 
-  const [showHeader, setShowHeader] = useState(false);
-  const [showPagination, setShowPagination] = useState(false);
+  const showHeader = useShowHeader({
+    loading,
+    dataSource,
+  });
 
-  useEffect(() => {
-    if (initialized && hasData && !loading) {
-      setShowHeader(true);
-    }
-  }, [initialized, hasData, loading]);
-
-  useEffect(() => {
-    if (pagination && hasData && !loading) {
-      setShowPagination(true);
-    }
-  }, [pagination, hasData, loading]);
+  const showPagination = useShowPagination({
+    loading,
+    dataSource,
+    rows,
+    pagination,
+  });
 
   return (
     <div
       ref={wrapRef}
       id={props.id}
       className={cnBase(
-        "oui-w-full oui-h-full",
+        "oui-table-root oui-w-full oui-h-full",
         "oui-bg-base-9",
         className,
         classNames?.root
@@ -199,8 +190,8 @@ export function TableView<RecordType extends any>(
     >
       <div
         className={cnBase(
-          "oui-table-root oui-relative",
-          "oui-w-full oui-min-h-[277px]",
+          "oui-table-scroll oui-relative",
+          "oui-w-full oui-min-h-[162px]",
           "oui-text-xs oui-font-semibold",
           "oui-overflow-auto oui-custom-scrollbar",
           showPagination ? "oui-h-[calc(100%_-_40px)]" : "oui-h-full",

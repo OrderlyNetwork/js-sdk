@@ -217,7 +217,7 @@ const TriggerPriceItem: FC<{
           // @ts-ignore
           <span>{pnl === 0 ? "" : pnl > 0 ? "+" : "-"}</span>
         }
-        surfix={
+        suffix={
           <span className="oui-text-base-contrast-36 oui-ml-1">USDC</span>
         }
       >{`${Math.abs(pnl)}`}</Text.numeral>
