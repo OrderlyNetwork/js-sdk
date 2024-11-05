@@ -24,7 +24,7 @@ export const PNLInput = (props: PNLInputProps) => {
     onModeChange,
     onValueChange,
     quote,
-    quote_db,
+    quote_dp,
     value,
     type,
     tips,
@@ -60,7 +60,7 @@ export const PNLInput = (props: PNLInputProps) => {
       autoComplete={"off"}
       onValueChange={onValueChange}
       formatters={[
-        props.formatter({ dp: quote_db, mode, type }),
+        props.formatter({ dp: quote_dp, mode, type }),
         inputFormatter.currencyFormatter,
       ]}
       classNames={{

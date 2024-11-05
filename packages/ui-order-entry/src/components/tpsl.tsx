@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { cn, Flex, Input, modal, Switch } from "@orderly.network/ui";
+import { cn, Flex, Input, inputFormatter, modal, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { OrderlyOrder } from "@orderly.network/types";
@@ -37,6 +37,7 @@ export const OrderTPSL = (props: {
   orderType: OrderType;
   isReduceOnly?: boolean;
   errors: any;
+  quote_dp: number | undefined;
 }) => {
   // const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
@@ -117,6 +118,7 @@ export const OrderTPSL = (props: {
           onChange={props.onChange}
           values={props.values}
           errors={props.errors}
+          quote_dp={props.quote_dp}
         />
       </div>
     </div>
@@ -129,6 +131,7 @@ const TPSLInputForm = React.forwardRef<
     onChange: (key: OrderValueKeys, value: any) => void;
     values: TPSL_Values;
     errors: Record<string, { message: string }> | null;
+    quote_dp: number | undefined;
   }
 >((props, ref) => {
   return (
@@ -144,6 +147,7 @@ const TPSLInputForm = React.forwardRef<
           error={props.errors ? props.errors["tp_trigger_price"]?.message : ""}
           onChange={props.onChange}
           values={props.values.tp}
+          quote_dp={props.quote_dp}
         />
       </PnlInputProvider>
       <PnlInputProvider values={props.values.sl} type={"SL"}>
@@ -152,6 +156,7 @@ const TPSLInputForm = React.forwardRef<
           error={props.errors ? props.errors["sl_trigger_price"]?.message : ""}
           onChange={props.onChange}
           values={props.values.sl}
+          quote_dp={props.quote_dp}
         />
       </PnlInputProvider>
     </div>
@@ -165,7 +170,8 @@ const TPSLTriggerPriceInput = (props: {
   type: "TP" | "SL";
   error: string | undefined;
   values: Est_Values;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange: (value: string) => void;
+  quote_dp: number | undefined;
 }) => {
   const { errorMsgVisible } = useContext(OrderEntryContext);
   const { tipsEle } = usePnlInputContext();
@@ -180,6 +186,9 @@ const TPSLTriggerPriceInput = (props: {
 
     return null;
   }, [props.error, errorMsgVisible, tipVisible, tipsEle]);
+
+  const priceKey =
+    props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
 
   return (
     <Input.tooltip
@@ -213,7 +222,12 @@ const TPSLTriggerPriceInput = (props: {
         root: "oui-pr-2 md:oui-pr-3",
         prefix: "oui-pr-1 md:oui-pr-2",
       }}
-      onChange={props.onChange}
+      // onChange={props.onChange}
+      onValueChange={props.onChange}
+      formatters={[
+        inputFormatter.dpFormatter(props.quote_dp ?? 2),
+        inputFormatter.currencyFormatter,
+      ]}
     />
   );
 };
@@ -225,6 +239,7 @@ const TPSLInputRow = (props: {
   values: Est_Values;
   error?: string;
   onChange: (key: OrderValueKeys, value: any) => void;
+  quote_dp: number | undefined;
 }) => {
   const priceKey =
     props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
@@ -236,13 +251,15 @@ const TPSLInputRow = (props: {
         error={props.error}
         values={props.values ?? ""}
         onChange={(event) => {
-          props.onChange(priceKey, event.target.value);
+          props.onChange(priceKey, event);
         }}
+        quote_dp={props.quote_dp}
       />
 
       <PnlInputWidget
         onChange={props.onChange}
         quote={"USDC"}
+        quote_dp={props.quote_dp}
         type={props.type}
         values={{
           PnL: props.values.PnL,
