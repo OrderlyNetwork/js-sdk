@@ -1,21 +1,34 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import {
   useAccount,
   useConfig,
   useMutation,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
 import { modal, toast } from "@orderly.network/ui";
 
 export function useFaucetScript() {
-  const { connectedChain } = useWalletConnector();
+  const { connectedChain, namespace } = useWalletConnector();
   const { state, account } = useAccount();
   const config = useConfig();
+  const operatorUrl = useMemo(() => {
+    const operatorUrlObj = config.get("operatorUrl");
+    if (typeof operatorUrlObj === "object") {
+      if (namespace === ChainNamespace.solana) {
+        return operatorUrlObj["solana"];
+      } else {
+        return operatorUrlObj["evm"];
+      }
+    }
+    throw Error(
+      "Operator url should be Object, need solana and evm operator url"
+    );
+  }, [namespace, config]);
 
   const [getTestUSDC, { isMutating }] = useMutation(
-    `${config.get("operatorUrl")}/v1/faucet/usdc`
+    `${operatorUrl}/v1/faucet/usdc`
   );
   const loadingRef = useRef(false);
 
@@ -34,6 +47,11 @@ export function useFaucetScript() {
       return;
     }
     loadingRef.current = true;
+    const message = `${
+      namespace === ChainNamespace.solana ? '100' :'1,000'
+    } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
+
+
 
     return getTestUSDC({
       chain_id: account.walletAdapter?.chainId.toString(),
@@ -43,12 +61,11 @@ export function useFaucetScript() {
       (res) => {
         loadingRef.current = false;
         if (res.success) {
-          return modal.confirm({
+          return modal.alert({
             title: "Get test USDC",
-            content:
-              "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
+            message,
             onOk: () => {
-              return Promise.resolve();
+              return new Promise((resolve) => resolve(true));
             },
           });
         }

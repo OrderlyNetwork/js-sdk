@@ -1,6 +1,8 @@
 import plugin from "tailwindcss/plugin";
 
-export const chartPlugin = () =>
+import { PluginCreator } from "tailwindcss/types/config";
+
+export const chartPlugin: PluginCreator = () =>
   plugin(function ({ addComponents, addBase }) {
     addComponents(
       {

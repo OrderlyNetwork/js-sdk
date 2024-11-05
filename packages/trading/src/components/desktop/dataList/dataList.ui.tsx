@@ -31,7 +31,7 @@ export const DataList: FC<DataListState> = (props) => {
       size="lg"
       className="oui-h-full"
       classNames={{
-        tabsList: "oui-px-3",
+        // tabsList: "oui-px-3",
         tabsContent: "oui-h-[calc(100%_-_32px)]",
       }}
     >
@@ -97,7 +97,7 @@ export const DataList: FC<DataListState> = (props) => {
 
 const PositionsView: FC<DataListState> = (props) => {
   return (
-    <Flex direction={"column"} width="100%">
+    <Flex direction="column" width="100%" height="100%">
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.showAllSymbol ? undefined : props.symbol}
@@ -105,7 +105,7 @@ const PositionsView: FC<DataListState> = (props) => {
         tabletMediaQuery={props.tabletMediaQuery}
       />
       <Divider className="oui-w-full" />
-      <Box px={3} width="100%">
+      <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
         <PositionsWidget
           symbol={props.showAllSymbol ? undefined : props.symbol}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}

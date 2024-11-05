@@ -171,27 +171,44 @@ export function TableView<RecordType extends any>(
 
   const showPlaceholder = initialized && (rows.length === 0 || loading);
 
-  const [showHeader, setShowHeader] = useState(false);
-  const [showPagination, setShowPagination] = useState(false);
+  const [showHeader, setShowHeader] = useState(
+    ignoreLoadingCheck ? false : true
+  );
+  const [showPagination, setShowPagination] = useState(
+    ignoreLoadingCheck ? false : true
+  );
 
   useEffect(() => {
-    if (initialized && hasData && !loading) {
+    // if (initialized && showPlaceholder) {
+    //   setShowHeader(false);
+    // } else {
+    //   setShowHeader(true);
+    // }
+    // setShowHeader(!!dataSource.length);
+    // setShowHeader(!showPlaceholder);
+    if (props.dataSource === null || !props.dataSource?.length) {
+      setShowHeader(false);
+    } else {
       setShowHeader(true);
     }
-  }, [initialized, hasData, loading]);
+  }, [props.dataSource]);
 
   useEffect(() => {
     if (pagination && hasData && !loading) {
       setShowPagination(true);
     }
-  }, [pagination, hasData, loading]);
+
+    if (props.dataSource === null) {
+      setShowPagination(false);
+    }
+  }, [pagination, hasData, loading, props.dataSource]);
 
   return (
     <div
       ref={wrapRef}
       id={props.id}
       className={cnBase(
-        "oui-w-full oui-h-full",
+        "oui-table-root oui-w-full oui-h-full",
         "oui-bg-base-9",
         className,
         classNames?.root
@@ -199,8 +216,8 @@ export function TableView<RecordType extends any>(
     >
       <div
         className={cnBase(
-          "oui-table-root oui-relative",
-          "oui-w-full oui-min-h-[277px]",
+          "oui-table-scroll oui-relative",
+          "oui-w-full oui-min-h-[162px]",
           "oui-text-xs oui-font-semibold",
           "oui-overflow-auto oui-custom-scrollbar",
           showPagination ? "oui-h-[calc(100%_-_40px)]" : "oui-h-full",

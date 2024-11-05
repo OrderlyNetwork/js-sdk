@@ -237,10 +237,10 @@ const useFilter = (
           label: "All status",
           value: 'all',
         },
-        // {
-        //   label: "Open",
-        //   value: OrderStatus.OPEN,
-        // },
+        {
+          label: "Pending",
+          value: OrderStatus.INCOMPLETE,
+        },
         {
           label: "Filled",
           value: OrderStatus.FILLED,
@@ -274,7 +274,7 @@ const useFilter = (
       case TabType.rejected:
         return [sideFilter];
       case TabType.orderHistory:
-        return [sideFilter, statusFilter];
+        return [sideFilter, statusFilter, dateRangeFilter];
     }
   }, [type, ordersSide, orderStatus, dateRange]);
 

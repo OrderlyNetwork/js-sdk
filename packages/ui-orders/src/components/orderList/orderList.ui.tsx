@@ -41,7 +41,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
             onFilter={(value: any) => {
               props.onFilter(value);
             }}
-            className="oui-px-3"
+            // className="oui-px-3"
             trailing={
               [TabType.pending, TabType.tp_sl].includes(props.type) && (
                 <CancelAll {...props} />
@@ -57,7 +57,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
           ignoreLoadingCheck={true}
           classNames={{
             header: "oui-h-[38px]",
-            root: "oui-px-3 oui-items-start !oui-h-[calc(100%_-_49px)]",
+            root: "oui-items-start !oui-h-[calc(100%_-_49px)]",
           }}
           onRow={(record, index) => {
             return {

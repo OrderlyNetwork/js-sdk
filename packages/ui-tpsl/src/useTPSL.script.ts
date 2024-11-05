@@ -22,6 +22,7 @@ export type TPSLBuilderOptions = {
     options: {
       position: API.Position;
       submit: () => Promise<void>;
+      cancel: () => Promise<void>;
     }
   ) => Promise<boolean>;
 };
@@ -39,7 +40,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
   const [
     tpslOrder,
-    { submit, setValue, validate, errors, isCreateMutating, isUpdateMutating },
+    { submit, deleteOrder, setValue, validate, errors, isCreateMutating, isUpdateMutating },
   ] = useTPSLOrder(
     {
       symbol,
@@ -171,6 +172,13 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     prevTPSLType.current = type;
   }, [tpslOrder.quantity, maxQty]);
 
+  const cancel = (): Promise<void> => {
+    if (order?.algo_order_id && order?.symbol) {
+      return deleteOrder(order?.algo_order_id, order?.symbol)
+    }
+    return Promise.reject('order id or symbol is invalid');
+  };
+
   const onSubmit = async () => {
     return Promise.resolve()
       .then(() => {
@@ -180,6 +188,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
         return options.onConfirm(tpslOrder, {
           position,
           submit,
+          cancel,
         });
       })
       .then((isSuccess) => {

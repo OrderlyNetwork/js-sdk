@@ -16,8 +16,8 @@ export const CreatedAlertDialog = create<AlertDialogProps>((props) => {
     <AlertDialog
       open={visible}
       onOpenChange={onOpenChange}
-      onOk={onOkHandler}
       {...props}
+      onOk={onOkHandler}
     />
   );
 });

@@ -77,7 +77,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
         return object2underscore(order) as unknown as API.AlgoOrder;
       });
 
-    if (rootOrder_.algo_type === "BRACKET") {
+    if (rootOrder_.algo_type === "BRACKET" && rootOrder_.child_orders.length > 0) {
       // @ts-ignore
       const childOrders = this.groupBracketChildOrders([
         ...rootOrder_.child_orders,

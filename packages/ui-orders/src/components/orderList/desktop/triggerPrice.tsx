@@ -23,7 +23,7 @@ export const TriggerPrice = (props: {
   const isAlgoOrder = order?.algo_order_id !== undefined;
   const isBracketOrder = order?.algo_type === "BRACKET";
   const [open, setOpen] = useState(false);
-  const [editting, setEditting] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,12 +32,12 @@ export const TriggerPrice = (props: {
   const { base, quote_dp } = useSymbolContext();
   const closePopover = () => {
     setOpen(false);
-    setEditting(false);
+    setEditing(false);
   };
   const cancelPopover = () => {
     setPrice(order.trigger_price?.toString() ?? "0");
     setOpen(false);
-    setEditting(false);
+    setEditing(false);
   };
 
   const componentRef = useRef<HTMLDivElement | null>(null);
@@ -64,7 +64,7 @@ export const TriggerPrice = (props: {
     event?.stopPropagation();
     event?.preventDefault();
 
-    setEditting(false);
+    setEditing(false);
 
     if (Number(price) === Number(order.trigger_price)) {
       return;
@@ -134,12 +134,12 @@ export const TriggerPrice = (props: {
     return <Text>{`--`}</Text>;
   }
   const trigger = () => {
-    if (!editting || props.disableEdit) {
+    if (!editing || props.disableEdit) {
       return (
         <NormalState
           order={order}
           price={price}
-          setEditing={setEditting}
+          setEditing={setEditing}
           disableEdit={props.disableEdit}
         />
       );
@@ -151,7 +151,7 @@ export const TriggerPrice = (props: {
         dp={quote_dp}
         value={price}
         setValue={setPrice}
-        setEditing={setEditting}
+        setEditing={setEditing}
         handleKeyDown={handleKeyDown}
         onClick={onClick}
         onClose={cancelPopover}
@@ -210,8 +210,8 @@ const NormalState: FC<{
       <Flex
         r="base"
         className={cn(
-          "oui-min-w-[70px] oui-h-[28px] oui-border oui-border-line",
-          !props.disableEdit && "oui-bg-base-7 oui-px-2"
+          "oui-min-w-[70px] oui-h-[28px]",
+          !props.disableEdit && "oui-bg-base-7 oui-px-2 oui-border oui-border-line"
         )}
       >
         <Text size="2xs">{price}</Text>
