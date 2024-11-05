@@ -430,6 +430,8 @@ export class Account {
       this._ee.emit("change:status", nextState);
 
       return res;
+    } else {
+      throw new Error(res.message);
     }
   }
 

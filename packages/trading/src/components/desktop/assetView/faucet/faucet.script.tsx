@@ -14,18 +14,19 @@ export function useFaucetScript() {
   const { state, account } = useAccount();
   const config = useConfig();
   const operatorUrl = useMemo(() => {
-    const operatorUrlObj = config.get("operatorUrl");
-    if (typeof operatorUrlObj === "object") {
-      if (namespace === ChainNamespace.solana) {
-        return operatorUrlObj["solana"];
-      } else {
-        return operatorUrlObj["evm"];
-      }
-    }
-    throw Error(
-      "Operator url should be Object, need solana and evm operator url"
-    );
-  }, [namespace, config]);
+    const operatorUrl = config.get<string>("operatorUrl");
+    return operatorUrl;
+    // if (typeof operatorUrlObj === "object") {
+    //   if (namespace === ChainNamespace.solana) {
+    //     return operatorUrlObj["solana"];
+    //   } else {
+    //     return operatorUrlObj["evm"];
+    //   }
+    // }
+    // throw Error(
+    //   "Operator url should be Object, need solana and evm operator url"
+    // );
+  }, [config]);
 
   const [getTestUSDC, { isMutating }] = useMutation(
     `${operatorUrl}/v1/faucet/usdc`
@@ -48,10 +49,8 @@ export function useFaucetScript() {
     }
     loadingRef.current = true;
     const message = `${
-      namespace === ChainNamespace.solana ? '100' :'1,000'
+      namespace === ChainNamespace.solana ? "100" : "1,000"
     } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
-
-
 
     return getTestUSDC({
       chain_id: account.walletAdapter?.chainId.toString(),

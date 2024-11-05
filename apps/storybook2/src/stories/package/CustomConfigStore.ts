@@ -1,6 +1,6 @@
 import { ConfigKey, ConfigStore } from "@orderly.network/core";
 import { MarketsStorageKey } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types/src";
+import { ChainNamespace } from "@orderly.network/types";
 
 type ENV_NAME = "prod" | "staging" | "qa" | "dev";
 
@@ -37,7 +37,7 @@ const API_URLS: Record<ENV_NAME, URLS> = {
     operatorUrl: {
       evm: "https://dev-operator-v2.orderly.network",
       // todo dev solana faucet url is not given
-      solana: 'https://qa-sol-operator.orderly.network',
+      solana: "https://qa-sol-operator.orderly.network",
     },
   },
   qa: {
@@ -46,8 +46,8 @@ const API_URLS: Record<ENV_NAME, URLS> = {
     privateWsUrl: "wss://qa-ws-private-evm.orderly.org",
     operatorUrl: {
       evm: "https://qa-operator-evm.orderly.network",
-      solana: 'https://qa-sol-operator.orderly.network',
-    }
+      solana: "https://qa-sol-operator.orderly.network",
+    },
   },
 };
 
@@ -60,11 +60,13 @@ export class CustomConfigStore implements ConfigStore {
     const brokerName = init?.brokerName || "Orderly";
     const env = (init?.env as ENV_NAME) || "prod";
     const urls = API_URLS[env];
+    const chainNamespace = init?.chainNamespace || ChainNamespace.evm;
 
     this.map = new Map<ConfigKey, any>([
       ["brokerId", brokerId],
       ["brokerName", brokerName],
       ["env", env],
+      ["chainNamespace", chainNamespace],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],
       ["privateWsUrl", urls["privateWsUrl"]],
@@ -77,7 +79,12 @@ export class CustomConfigStore implements ConfigStore {
       const jsonStr = localStorage.getItem(MarketsStorageKey);
       return jsonStr ? JSON.parse(jsonStr) : "";
     }
-    return this.map.get(key);
+    const value = this.map.get(key);
+    if (typeof value !== "object" || value === null) {
+      return value;
+    }
+
+    return value[this.get("chainNamespace") as ChainNamespace] as T;
   }
   getOr<T>(key: ConfigKey, defaultValue: T): T {
     return this.map.get(key) ?? defaultValue;
