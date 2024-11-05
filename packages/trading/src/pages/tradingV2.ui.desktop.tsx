@@ -239,7 +239,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         // the style width is not set, and a child node style needs to be set to flex: 1 to adapt
         flex: 1,
         minHeight: orderbookMinHeight,
-        maxHeight: orderbookMaxHeight,
+        // maxHeight: orderbookMaxHeight,
       }}
       onSizeChange={setOrderbookSplitSize}
     >
@@ -255,7 +255,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           gapX={3}
           style={{
             minHeight: orderbookMinHeight,
-            maxHeight: orderbookMaxHeight,
+            // maxHeight: orderbookMaxHeight,
             // minWidth:
             //   marketsWidth +
             //   tradingViewMinWidth +
