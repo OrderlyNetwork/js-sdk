@@ -184,14 +184,14 @@ export const DesktopSharePnLContent: FC<{
 
       <BottomButtons onClickCopy={onCopy} onClickDownload={onDownload} />
 
-      <button
+      {/* <button
         onClick={() => {
           props.hide();
         }}
         className="oui-absolute oui-top-0 oui-right-0 oui-w-[40px] oui-h-[40px] oui-flex oui-justify-center oui-items-center"
       >
         <CloseIcon size={12} className="oui-fill-base-contrast-54" />
-      </button>
+      </button> */}
     </div>
   );
 };
