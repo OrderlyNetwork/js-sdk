@@ -15,7 +15,7 @@ export const UnrealizedPnLPopoverCard: FC<{}> = (props) => {
         widgets calculated using Mark Price.
       </Text>
       <Divider className="oui-w-full" />
-      <div className="oui-mb-2">Unrealized PnL Price Basis</div>
+      <div className="oui-mb-0">Unrealized PnL Price Basis</div>
       <UnPnlPriceBasisCheckBox
         value={unPnlPriceBasis}
         onValueChange={setUnPnlPriceBasic}

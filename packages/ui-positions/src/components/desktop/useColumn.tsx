@@ -1,4 +1,13 @@
-import { Box, cn, Divider, Flex, TableColumn, Text } from "@orderly.network/ui";
+import {
+  Box,
+  cn,
+  Divider,
+  Flex,
+  HoverCard,
+  TableColumn,
+  Text,
+  Tooltip,
+} from "@orderly.network/ui";
 import { useMemo } from "react";
 import {
   renderPriceInput,
@@ -117,10 +126,19 @@ export const useColumn = (props: {
           },
         },
         {
-          title: "Liq. price",
+          title: (
+            <Tooltip
+              className="oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-54 oui-p-3 oui-bg-base-8"
+              content={
+                "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions."
+              }
+            >
+              <Text>Liq. price</Text>
+            </Tooltip>
+          ),
           width: 100,
           onSort: true,
-          hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
+          // hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
           dataIndex: "est_liq_price",
           render: (value: string, record: any) => {
             return Number(value) === 0 ? (
@@ -136,7 +154,16 @@ export const useColumn = (props: {
           },
         },
         {
-          title: "Unreal. PnL",
+          title: (
+            <HoverCard
+              content={<UnrealizedPnLPopoverCard />}
+              side="top"
+              align="center"
+              className="oui-max-w-[280px] oui-text-2xs"
+            >
+              <Text>Unreal. PnL</Text>
+            </HoverCard>
+          ),
           dataIndex: "unrealized_pnl",
           width: 150,
           onSort: true,
@@ -145,7 +172,7 @@ export const useColumn = (props: {
             coloring: true,
             // tick: "base_dp",
           },
-          hint: <UnrealizedPnLPopoverCard />,
+          // hint: <UnrealizedPnLPopoverCard />,
           render: (value: string, record: any) => {
             return (
               <Flex gap={2}>
@@ -204,23 +231,40 @@ export const useColumn = (props: {
           ),
         },
         {
-          title: "Margin",
+          title: (
+            <Tooltip
+              className="oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-54 oui-p-3 oui-bg-base-8"
+              content={
+                <Flex
+                  direction={"column"}
+                  gap={3}
+                  className="oui-text-base-contrast-54 oui-bg-base-8 oui-rounded-sm"
+                >
+                  <span>The minimum equity to keep your position. </span>
+                  <Divider className="oui-w-full" />
+                  <span>Margin = Position size * Mark price * MMR</span>
+                </Flex>
+              }
+            >
+              <Text>Margin</Text>
+            </Tooltip>
+          ),
           dataIndex: "mm",
           onSort: true,
           width: 100,
           rule: "price",
           render: (value: string) => <Text.numeral>{value}</Text.numeral>,
-          hint: (
-            <Flex
-              direction={"column"}
-              gap={3}
-              className="oui-text-base-contrast-54 oui-bg-base-8 oui-rounded-sm"
-            >
-              <span>The minimum equity to keep your position. </span>
-              <Divider className="oui-w-full" />
-              <span>Margin = Position size * Mark price * MMR</span>
-            </Flex>
-          ),
+          // hint: (
+          //   <Flex
+          //     direction={"column"}
+          //     gap={3}
+          //     className="oui-text-base-contrast-54 oui-bg-base-8 oui-rounded-sm"
+          //   >
+          //     <span>The minimum equity to keep your position. </span>
+          //     <Divider className="oui-w-full" />
+          //     <span>Margin = Position size * Mark price * MMR</span>
+          //   </Flex>
+          // ),
         },
         {
           title: "Qty.",
