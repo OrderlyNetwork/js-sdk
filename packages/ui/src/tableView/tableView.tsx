@@ -1,10 +1,4 @@
-import {
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { PropsWithChildren, ReactNode, useMemo } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -31,6 +25,8 @@ import { TableBody } from "./tableBody";
 import { useInit } from "./hooks/useInit";
 import { TablePlaceholder } from "./tablePlaceholder";
 import { useSort } from "./hooks/useSort";
+import { useShowHeader } from "./hooks/useShowHeader";
+import { useShowPagination } from "./hooks/useShowPagination";
 
 export type TableViewProps<RecordType> = {
   columns: TableColumn<RecordType>[];
@@ -167,41 +163,19 @@ export function TableView<RecordType extends any>(
   // filter data
   const rows = table.getRowModel().rows;
 
-  const hasData = !!(dataSource?.length && rows?.length);
-
   const showPlaceholder = initialized && (rows.length === 0 || loading);
 
-  const [showHeader, setShowHeader] = useState(
-    ignoreLoadingCheck ? false : true
-  );
-  const [showPagination, setShowPagination] = useState(
-    ignoreLoadingCheck ? false : true
-  );
+  const showHeader = useShowHeader({
+    loading,
+    dataSource,
+  });
 
-  useEffect(() => {
-    // if (initialized && showPlaceholder) {
-    //   setShowHeader(false);
-    // } else {
-    //   setShowHeader(true);
-    // }
-    // setShowHeader(!!dataSource.length);
-    // setShowHeader(!showPlaceholder);
-    if (props.dataSource === null || !props.dataSource?.length) {
-      setShowHeader(false);
-    } else {
-      setShowHeader(true);
-    }
-  }, [props.dataSource]);
-
-  useEffect(() => {
-    if (pagination && hasData && !loading) {
-      setShowPagination(true);
-    }
-
-    if (props.dataSource === null) {
-      setShowPagination(false);
-    }
-  }, [pagination, hasData, loading, props.dataSource]);
+  const showPagination = useShowPagination({
+    loading,
+    dataSource,
+    rows,
+    pagination,
+  });
 
   return (
     <div
