@@ -33,8 +33,8 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       // const networkId = "mainnet";
-      // const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
+      const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
+      // const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "qa" });
       return (
         <WalletConnectorProvider>
           <OrderlyApp

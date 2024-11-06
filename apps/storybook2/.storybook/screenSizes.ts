@@ -1,5 +1,5 @@
 export const customViewports = {
-    "iphone6 PRO": {
+    "m_375": {
       "name": "SM 375",
       "styles": {
         "height": "667px",
@@ -7,7 +7,7 @@ export const customViewports = {
       },
       "type": "mobile"
     },
-    "iphone6p": {
+    "m_480": {
       "name": "MD 480",
       "styles": {
         "height": "853px",
@@ -15,7 +15,7 @@ export const customViewports = {
       },
       "type": "mobile"
     },
-    "ipad": {
+    "m_768": {
       "name": "LG 768",
       "styles": {
         "height": "1024px",
@@ -23,7 +23,7 @@ export const customViewports = {
       },
       "type": "tablet"
     },
-    "desktop 1024": {
+    "d_1024": {
       "name": "XL 1024",
       "styles": {
         "height": "1366px",
@@ -31,7 +31,7 @@ export const customViewports = {
       },
       "type": "tablet"
     },
-    "desktop 1280": {
+    "d_1280": {
       "name": "2XL 1280",
       "styles": {
         "height": "1366px",
@@ -39,7 +39,7 @@ export const customViewports = {
       },
       "type": "tablet"
     },
-    "desktop 1440": {
+    "d_1440": {
       "name": "3XL 1440",
       "styles": {
         "height": "1366px",
@@ -47,7 +47,7 @@ export const customViewports = {
       },
       "type": "tablet"
     },
-    "desktop 1920": {
+    "d_1920": {
       "name": "4XL 1920",
       "styles": {
         "height": "1366px",
