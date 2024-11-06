@@ -10,6 +10,8 @@ import { alignVariants } from "./className";
 type TableHeaderProps = {
   className?: string;
   headerGroups: HeaderGroup<any>[];
+  showLeftShadow?: boolean;
+  showRightShadow?: boolean;
 } & Pick<TableViewProps<any>, "bordered">;
 
 export const TableHeader: FC<TableHeaderProps> = (props) => {
@@ -35,15 +37,8 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
               title,
             } = column.columnDef.meta || ({} as any);
 
-            const { style: pinStyle, className: pinClassName } =
+            const { style: pinStyle, classNames: pinClassNames } =
               getColumnPinningProps(column, true);
-
-            // const content = flexRender(
-            //   column.columnDef.header,
-            //   header.getContext()
-            // ) as ReactNode;
-
-            const content = title;
 
             return (
               <th
@@ -58,8 +53,10 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
                   // use border-b will show bottom element content
                   // props.bordered && "oui-border-b oui-border-line"
                   alignVariants({ align }),
-                  pinClassName,
-                  rowClassName
+                  rowClassName,
+                  pinClassNames.content,
+                  props.showLeftShadow && pinClassNames.leftShadow,
+                  props.showRightShadow && pinClassNames.rightShadow
                 )}
               >
                 {header.isPlaceholder ? null : (
@@ -71,7 +68,7 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
                     )}
                     onClick={column.getToggleSortingHandler()}
                   >
-                    {content}
+                    {title}
                     <SortIndicator column={column} />
                   </div>
                 )}
