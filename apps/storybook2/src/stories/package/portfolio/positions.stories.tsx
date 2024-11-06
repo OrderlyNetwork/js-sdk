@@ -3,9 +3,10 @@ import { PositionsModule, } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 // import {Box} from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { Flex, Text, Divider } from "@orderly.network/ui";
 import { mainNavProps, sharePnLConfig } from "../trading/config";
 import { useTradingLocalStorage } from "@orderly.network/trading";
+import { Flex, Text, Divider, Box } from "@orderly.network/ui";
+
 
 const meta = {
   title: "Package/Portfolio/Positions",
@@ -17,7 +18,7 @@ const meta = {
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-            <Story />
+          <Box className="oui-h-[calc(100vh)]" p={6}><Story /></Box>
         </OrderlyApp>
       </WalletConnectorProvider>
     ),
