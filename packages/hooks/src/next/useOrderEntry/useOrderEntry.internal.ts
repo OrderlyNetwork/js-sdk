@@ -223,6 +223,24 @@ const useOrderEntryNextInternal = (
       }
     }
 
+    // whether it is necessary to calculate tpsl ROI;
+    if (newValues.tp_pnl && newValues.order_quantity) {
+        
+      newValues.tp_ROI = calcTPSL_ROI({
+        qty: newValues.order_quantity,
+        price: newValues.order_price || markPrice,
+        pnl: newValues.tp_pnl,
+      });
+    }
+
+    if (newValues.sl_pnl && newValues.order_quantity) {
+      newValues.sl_ROI = calcTPSL_ROI({
+        qty: newValues.order_quantity,
+        price: newValues.order_price || markPrice,
+        pnl: newValues.sl_pnl,
+      });
+    }
+
     return newValues;
   };
 
@@ -286,14 +304,14 @@ const useOrderEntryNextInternal = (
         );
       }
 
-      // if (hasTPSL(newValues)) {
-      //   newValues = calculateTPSL(
-      //     "order_price",
-      //     newValues,
-      //     markPrice,
-      //     options.symbolInfo
-      //   );
-      // }
+      if (hasTPSL(newValues)) {
+        newValues = calculateTPSL(
+          "order_price",
+          newValues,
+          markPrice,
+          options.symbolInfo
+        );
+      }
       orderEntryActions.updateOrder(newValues);
     },
     [options.symbolInfo]

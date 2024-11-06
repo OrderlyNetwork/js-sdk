@@ -424,14 +424,14 @@ const EditState: FC<{
           dp={base_dp}
           value={quantity}
           setValue={(e: string) => {
-            setQuantity(e);
+            setQuantity(Math.min(Number(e), qty).toString());
             if (e.endsWith(".")) return;
             const sliderValue = new Decimal(e)
               .div(qty)
               .mul(100)
               .toDecimalPlaces(2, Decimal.ROUND_DOWN)
               .toNumber();
-            setSliderValue(sliderValue);
+            setSliderValue(Math.min(100, sliderValue));
           }}
           setEditing={setEditing}
           handleKeyDown={handleKeyDown}
