@@ -49,20 +49,13 @@ export type {
   OrderParams,
 } from "./deprecated/useOrderEntry";
 
-import useSWR, {
-  type SWRConfiguration,
-  SWRConfig,
+export {
+  default as useSWR,
+  // SWRConfig,
   useSWRConfig,
+  type SWRConfiguration,
   unstable_serialize,
 } from "swr";
-
-export {
-  useSWR,
-  SWRConfig,
-  useSWRConfig,
-  type SWRConfiguration,
-  unstable_serialize,
-};
 
 export * from "use-debounce";
 
