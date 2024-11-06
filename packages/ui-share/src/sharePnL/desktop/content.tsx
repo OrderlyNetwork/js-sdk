@@ -66,8 +66,6 @@ export const DesktopSharePnLContent: FC<{
     props.referral
   );
 
-  console.log("posterData is", posterData);
-
   const onCopy = () => {
     posterRef.current
       ?.copy()

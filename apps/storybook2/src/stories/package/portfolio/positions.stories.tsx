@@ -4,7 +4,8 @@ import { OrderlyApp } from "@orderly.network/react-app";
 // import {Box} from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Flex, Text, Divider } from "@orderly.network/ui";
-
+import { mainNavProps, sharePnLConfig } from "../trading/config";
+import { useTradingLocalStorage } from "@orderly.network/trading";
 
 const meta = {
   title: "Package/Portfolio/Positions",
@@ -42,4 +43,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Page: Story = {};
+export const Page: Story = {
+  render: (child) => {
+
+    const local = useTradingLocalStorage();
+
+    return <PositionsModule.PositionsPage 
+      sharePnLConfig={sharePnLConfig}
+      pnlNotionalDecimalPrecision={local.pnlNotionalDecimalPrecision}
+      calcMode={local.unPnlPriceBasis}
+      onSymbolChange={(symbol) => {
+        console.log("symbol changed", symbol);
+        
+      }}
+    />;
+  }
+};
