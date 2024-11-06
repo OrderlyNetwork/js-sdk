@@ -1,6 +1,5 @@
 import { Flex, Text, Divider } from "@orderly.network/ui";
 import { PositionsProps, PositionsWidget } from "@orderly.network/ui-positions";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 
 
 export const PositionsPage = (props: PositionsProps) => {
