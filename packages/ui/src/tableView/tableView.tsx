@@ -27,6 +27,7 @@ import { TablePlaceholder } from "./tablePlaceholder";
 import { useSort } from "./hooks/useSort";
 import { useShowHeader } from "./hooks/useShowHeader";
 import { useShowPagination } from "./hooks/useShowPagination";
+import { useScroll } from "./hooks/useScroll";
 
 export type TableViewProps<RecordType> = {
   columns: TableColumn<RecordType>[];
@@ -159,6 +160,7 @@ export function TableView<RecordType extends any>(
   });
 
   const wrapRef = useWrap();
+  const { scrollRef, showLeftShadow, showRightShadow } = useScroll();
 
   // filter data
   const rows = table.getRowModel().rows;
@@ -189,6 +191,7 @@ export function TableView<RecordType extends any>(
       )}
     >
       <div
+        ref={scrollRef}
         className={cnBase(
           "oui-table-scroll oui-relative",
           "oui-w-full oui-min-h-[162px]",
@@ -209,6 +212,8 @@ export function TableView<RecordType extends any>(
               className={classNames?.header}
               headerGroups={table.getHeaderGroups()}
               bordered={props.bordered}
+              showLeftShadow={showLeftShadow}
+              showRightShadow={showRightShadow}
             />
           )}
 
@@ -219,6 +224,8 @@ export function TableView<RecordType extends any>(
             renderRowContainer={props.renderRowContainer}
             expandRowRender={props.expandRowRender}
             onRow={props.onRow}
+            showLeftShadow={showLeftShadow}
+            showRightShadow={showRightShadow}
           />
         </table>
 
