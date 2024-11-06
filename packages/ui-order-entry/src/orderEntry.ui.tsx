@@ -687,7 +687,7 @@ function AssetInfo(props: {
   quote: string;
   estLiqPrice: number | null;
   estLeverage: number | null;
-  currentLeverage: number;
+  currentLeverage: number | null;
 }) {
   return (
     <div className={"oui-space-y-1"}>
@@ -711,7 +711,7 @@ function AssetInfo(props: {
             intensity: 80,
           })}
         >
-          <Text.numeral unit="x">{props.currentLeverage}</Text.numeral>
+          <Text.numeral unit="x">{props.currentLeverage ?? '--'}</Text.numeral>
           {props.estLeverage && (
             <>
               <svg
