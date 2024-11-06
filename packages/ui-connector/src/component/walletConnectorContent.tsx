@@ -119,7 +119,12 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         },
         (reject) => {
           setLoading(false);
+
           if (reject === -1) return;
+          if (reject instanceof Error) {
+            toast.error(reject.message);
+            return;
+          }
           toast.error("User rejected the request");
         }
       )

@@ -40,18 +40,9 @@ export const useAccountSheetScript = (
   }, [state.status, connectedChain]);
 
   const operatorUrl = useMemo(() => {
-    const operatorUrlObj = config.get("operatorUrl");
-    if (typeof operatorUrlObj === "object") {
-      if (namespace === ChainNamespace.solana) {
-        return operatorUrlObj["solana"];
-      } else {
-        return operatorUrlObj["evm"];
-      }
-    }
-    throw Error(
-      "Operator url should be Object, need solana and evm operator url"
-    );
-  }, [namespace, config]);
+    const operatorUrl = config.get<string>("operatorUrl");
+    return operatorUrl;
+  }, [config]);
 
   const onCopyAddress = () => {
     navigator.clipboard.writeText(address ?? "");
@@ -89,7 +80,7 @@ export const useAccountSheetScript = (
     }
 
     const message = `${
-      namespace === ChainNamespace.solana ? '100' :'1,000'
+      namespace === ChainNamespace.solana ? "100" : "1,000"
     } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
 
     return getTestUSDC({

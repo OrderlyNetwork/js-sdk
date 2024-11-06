@@ -32,6 +32,7 @@ export type AppState = {
 };
 
 export type AppActions = {
+  cleanAll: () => void;
   setAccountInfo: (accountInfo: API.AccountInfo) => void;
   // setPositions: (positions: API.PositionExt[]) => void;
   setSymbolsInfo: (symbolsInfo: Record<string, API.SymbolExt>) => void;
@@ -70,6 +71,22 @@ export const useAppStore = create<
       ready: false,
     } as AppStatus,
     actions: {
+      cleanAll: () => {
+        set(
+          (state) => {
+            state.accountInfo = undefined;
+            state.portfolio = {
+              totalCollateral: zero,
+              totalValue: zero,
+              freeCollateral: zero,
+              availableBalance: 0,
+              unsettledPnL: 0,
+              totalUnrealizedROI: 0,
+            };
+          },
+          false
+        );
+      },
       setAccountInfo: (accountInfo: API.AccountInfo) => {
         set(
           (state) => {

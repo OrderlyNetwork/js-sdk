@@ -278,7 +278,6 @@ export function getPnlInfo(): {
   if (str && str.length > 0) {
     try {
       const json = JSON.parse(str);
-      console.log("local json", json);
 
       return json;
     } catch (e) {}

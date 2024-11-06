@@ -111,6 +111,14 @@ export class OrderLineService {
     ) {
       return OrderCombinationType.STOP_MARKET;
     }
+    if (algoType === AlgoType.BRACKET) {
+      if (type === OrderType.LIMIT) {
+        return OrderCombinationType.BRACKET_LIMIT;
+      }
+      if (type === OrderType.MARKET) {
+        return OrderCombinationType.BRACKET_MARKET;
+      }
+    }
     return OrderCombinationType.LIMIT;
   }
 
@@ -234,7 +242,7 @@ export class OrderLineService {
   static getOrderEditKey(pendingOrder: any) {
     const orderCombinationType = this.getCombinationType(pendingOrder);
 
-    if (orderCombinationType === OrderCombinationType.LIMIT) {
+    if ([OrderCombinationType.LIMIT, OrderCombinationType.BRACKET_LIMIT].includes(orderCombinationType) ) {
       return "price";
     }
 

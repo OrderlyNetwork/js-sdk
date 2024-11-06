@@ -10,6 +10,8 @@ type TableBodyProps<RecordType> = {
   className?: string;
   rows: Row<RecordType>[];
   justified?: boolean;
+  showLeftShadow?: boolean;
+  showRightShadow?: boolean;
 } & Pick<
   TableViewProps<any>,
   "bordered" | "onRow" | "renderRowContainer" | "expandRowRender"
@@ -49,7 +51,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
             >
               {row.getVisibleCells().map((cell) => {
                 const column = cell.column;
-                const { style: pinStyle, className: pinClassName } =
+                const { style: pinStyle, classNames: pinClassNames } =
                   getColumnPinningProps(column);
                 const { align, className: rowClassName } =
                   column.columnDef.meta || ({} as any);
@@ -62,8 +64,10 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                       "oui-table-tbody-td oui-relative",
                       "oui-px-3",
                       alignVariants({ align }),
-                      pinClassName,
-                      rowClassName
+                      rowClassName,
+                      pinClassNames.content,
+                      props.showLeftShadow && pinClassNames.leftShadow,
+                      props.showRightShadow && pinClassNames.rightShadow
                     )}
                   >
                     <TableCell cell={cell} />
