@@ -60,7 +60,7 @@ export const NavItem: FC<
       {...buttonProps}
       disabled={props.item.disabled}
       data-actived={isActive}
-      className={cn( 
+      className={cn(
         "oui-text-base-contrast-36 oui-text-sm oui-relative oui-group oui-rounded oui-px-3 oui-py-1 oui-h-[32px] hover:oui-bg-base-7",
         classNames?.navItem
       )}
@@ -94,8 +94,8 @@ export const NavItem: FC<
                     y2="5.994"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stop-color="#59B0FE" />
-                    <stop offset="1" stop-color="#26FEFE" />
+                    <stop stopColor="#59B0FE" />
+                    <stop offset="1" stopColor="#26FEFE" />
                   </linearGradient>
                 </defs>
               </svg>
