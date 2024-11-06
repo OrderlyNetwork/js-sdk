@@ -160,7 +160,9 @@ export function TableView<RecordType extends any>(
   });
 
   const wrapRef = useWrap();
-  const { scrollRef, showLeftShadow, showRightShadow } = useScroll();
+  const { scrollRef, showLeftShadow, showRightShadow } = useScroll([
+    dataSource,
+  ]);
 
   // filter data
   const rows = table.getRowModel().rows;
