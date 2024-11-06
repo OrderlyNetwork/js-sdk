@@ -15,7 +15,7 @@ import {
   Text,
   PaginationMeta,
 } from "@orderly.network/ui";
-import { differenceInDays, setHours } from "date-fns";
+import { addDays, addSeconds, differenceInDays, setHours } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export const useOrderListScript = (props: {
@@ -24,8 +24,21 @@ export const useOrderListScript = (props: {
   symbol?: string;
   enableLoadMore?: boolean;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  filterConfig?: {
+    side?: OrderSide | "all";
+    range?: {
+      from?: Date;
+      to?: Date;
+    };
+  };
 }) => {
-  const { ordersStatus, type, enableLoadMore = false, onSymbolChange } = props;
+  const {
+    ordersStatus,
+    type,
+    enableLoadMore = false,
+    onSymbolChange,
+    filterConfig,
+  } = props;
 
   const defaultPageSize = 50;
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
@@ -35,6 +48,7 @@ export const useOrderListScript = (props: {
     useFilter(type, {
       ordersStatus,
       setPage,
+      filterConfig,
     });
 
   const includes = useMemo(() => {
@@ -133,7 +147,7 @@ export const useOrderListScript = (props: {
 
   const dataSource =
     useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
-  
+
   const pagination = useMemo(() => {
     return {
       ...parseMeta(meta),
@@ -170,20 +184,33 @@ export const useOrderListScript = (props: {
 const useFilter = (
   type: TabType,
   option: {
+    ordersStatus?: OrderStatus | "all";
     setPage: (page: number) => void;
-    ordersStatus?: OrderStatus;
+    filterConfig?: {
+      side?: OrderSide | "all";
+      range?: {
+        from?: Date;
+        to?: Date;
+      };
+    };
   }
 ) => {
-  const [orderStatus, setOrderStatus] = useState<OrderStatus | 'all'>(
-    option.ordersStatus ?? 'all'
+  const [orderStatus, setOrderStatus] = useState<OrderStatus | "all">(
+    option.ordersStatus ?? "all"
   );
-  const [ordersSide, setOrdersSide] = useState<OrderSide | 'all'>(
-    'all'
+  const [ordersSide, setOrdersSide] = useState<OrderSide | "all">(
+    option.filterConfig?.side ?? "all"
   );
   const [dateRange, setDateRange] = useState<{
     from?: Date;
     to?: Date;
-  }>();
+  }>(
+    option?.filterConfig?.range ??
+      formatDatePickerRange({
+        from: new Date(),
+        to: offsetEndOfDay(addDays(new Date(), 7)),
+      })
+  );
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "side") {
@@ -197,7 +224,7 @@ const useFilter = (
     }
 
     if (filter.name === "dateRange") {
-      setDateRange(filter.value);
+      setDateRange(formatDatePickerRange(filter.value));
       option.setPage(1);
     }
   };
@@ -209,7 +236,7 @@ const useFilter = (
       options: [
         {
           label: "All sides",
-          value: 'all',
+          value: "all",
         },
         {
           label: "Buy",
@@ -235,7 +262,7 @@ const useFilter = (
       options: [
         {
           label: "All status",
-          value: 'all',
+          value: "all",
         },
         {
           label: "Pending",
@@ -281,9 +308,9 @@ const useFilter = (
   return {
     filterItems,
     onFilter,
-    ordersSide: ordersSide === 'all' ? undefined : ordersSide,
+    ordersSide: ordersSide === "all" ? undefined : ordersSide,
     dateRange,
-    orderStatus: orderStatus === 'all' ? undefined : orderStatus,
+    orderStatus: orderStatus === "all" ? undefined : orderStatus,
   };
 };
 
@@ -310,3 +337,24 @@ export const parseDateRangeForFilter = (dateRange: {
 
   return [from, to];
 };
+
+function offsetStartOfDay(date?: Date) {
+  if (date == null) return date;
+
+  const newDate = new Date(date);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+}
+
+function offsetEndOfDay(date?: Date) {
+  if (date == null) return date;
+
+  const newDate = new Date(date);
+  newDate.setHours(23, 59, 59, 999);
+  return newDate;
+}
+
+export const formatDatePickerRange = (option: { from?: Date; to?: Date }) => ({
+  from: offsetStartOfDay(option.from),
+  to: offsetEndOfDay(option.to),
+});

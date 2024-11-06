@@ -40,6 +40,10 @@ export const PNLInput = (props: PNLInputProps) => {
     mode === PnLMode.PERCENTAGE ? "%" : quote
   );
 
+  useEffect(() => {
+    setPrefix(!!value ? "" : mode);
+  }, [value]);
+
   const id = useMemo(() => `${type.toLowerCase()}_${mode.toLowerCase()}`, []);
 
   return (

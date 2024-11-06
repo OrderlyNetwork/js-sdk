@@ -41,6 +41,12 @@ export const Price = (props: {
   const { editOrder, editAlgoOrder, checkMinNotional } = useOrderListContext();
 
   const { base, quote_dp } = useSymbolContext();
+  const rangeInfo = useSymbolPriceRange(
+    order.symbol,
+    // @ts-ignore
+    order.side,
+    isAlgoOrder ? order.trigger_price : undefined
+  );
   const closePopover = () => {
     setOpen(false);
     setEditing(false);
@@ -51,9 +57,27 @@ export const Price = (props: {
     setEditing(false);
   };
 
+  const hintInfo = useMemo(() => {
+    if (!rangeInfo) return "";
+    if (isStopMarket) return "";
+    if (!editing) return "";
+
+    if (Number(price) > rangeInfo.max) {
+      return `Price can not be greater than ${rangeInfo.max} USDC.`;
+    }
+    if (Number(price) < rangeInfo.min) {
+      return `Price can not be less than ${rangeInfo.min} USDC.`;
+    }
+    return "";
+  }, [isStopMarket, editing, rangeInfo, price]);
+
   const onClick = (event: any) => {
     event?.stopPropagation();
     event?.preventDefault();
+
+    if (hintInfo.length > 0) {
+      return;
+    }
 
     if (price === `${order.price}`) {
       setEditing(false);
@@ -146,27 +170,6 @@ export const Price = (props: {
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const rangeInfo = useSymbolPriceRange(
-    order.symbol,
-    // @ts-ignore
-    order.side,
-    isAlgoOrder ? order.trigger_price : undefined
-  );
-
-  const hintInfo = useMemo(() => {
-    if (!rangeInfo) return "";
-    if (isStopMarket) return "";
-    if (!editing) return "";
-
-    if (Number(price) > rangeInfo.max) {
-      return `Price can not be greater than ${rangeInfo.max} USDC.`;
-    }
-    if (Number(price) < rangeInfo.min) {
-      return `Price can not be less than ${rangeInfo.min} USDC.`;
-    }
-    return "";
-  }, [isStopMarket, editing, rangeInfo, price]);
 
   useEffect(() => {
     {
@@ -281,7 +284,8 @@ const NormalState: FC<{
         r="base"
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
-          !props.disableEdit && "oui-bg-base-7 oui-px-2  oui-border oui-border-line"
+          !props.disableEdit &&
+            "oui-bg-base-7 oui-px-2  oui-border oui-border-line"
         )}
       >
         <Text size="2xs">{commifyOptional(price)}</Text>

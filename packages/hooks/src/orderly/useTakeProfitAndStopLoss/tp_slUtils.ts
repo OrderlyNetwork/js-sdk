@@ -245,7 +245,8 @@ export function priceToPnl(
   }
 
   if (symbol) {
-    return decimal.todp(symbol.quote_dp, Decimal.ROUND_DOWN).toNumber();
+    // return decimal.todp(symbol.quote_dp, Decimal.ROUND_DOWN).toNumber();
+    return decimal.todp(2, Decimal.ROUND_DOWN).toNumber();
   }
 
   return decimal.toNumber();
