@@ -36,6 +36,7 @@
       "@orderly.network/ui-scaffold": ["../ui-scaffold/src"],
       "@orderly.network/ui-leverage": ["../ui-leverage/src"],
       "@orderly.network/react-app": ["../app/src"],
+      "@orderly.network/ui-orders": ["../ui-orders/src"],
     }
   }
 }

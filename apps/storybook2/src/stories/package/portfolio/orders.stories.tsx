@@ -3,7 +3,7 @@ import { FeeTierModule, OrdersModule } from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 // import {Box} from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { Divider, Flex, Text } from "@orderly.network/ui";
+import { Box, Divider, Flex, Text } from "@orderly.network/ui";
 // import { } from '@orderly.network/ui-orders';
 
 const meta = {
@@ -15,8 +15,8 @@ const meta = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <Story />
+        <OrderlyApp brokerId={"woofi_pro"} brokerName={""} networkId={"testnet"}>
+          <Box className="oui-h-[calc(100vh)]" p={6}><Story /></Box>
         </OrderlyApp>
       </WalletConnectorProvider>
     ),
