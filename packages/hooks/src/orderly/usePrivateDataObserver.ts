@@ -45,7 +45,7 @@ export const usePrivateDataObserver = (options: {
   /**
    * fetch the positions of current account
    */
-  const { data: positions, isLoading: isPositionLoading, mutate } =
+  const { data: positions, isLoading: isPositionLoading } =
     usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
       onError: (error) => {

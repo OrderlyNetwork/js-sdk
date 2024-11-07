@@ -1,21 +1,21 @@
 import { FC } from "react";
 import { Box, cn, Flex } from "@orderly.network/ui";
-import { getOffsetSizeNum, TradingV2State } from "./tradingV2.script";
-import { DataListWidget } from "../components/desktop/dataList";
+import { getOffsetSizeNum, TradingState } from "./trading.script";
+import { DataListWidget } from "../../components/desktop/dataList";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
-import { AssetViewWidget } from "../components/desktop/assetView";
-import { RiskRateWidget } from "../components/desktop/riskRate";
-import { OrderBookAndTradesWidget } from "../components/desktop/orderBookAndTrades";
+import { AssetViewWidget } from "../../components/desktop/assetView";
+import { RiskRateWidget } from "../../components/desktop/riskRate";
+import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
 import {
   SideMarketsWidget,
   TokenInfoBarFullWidget,
 } from "@orderly.network/markets";
-import { SwitchLayout } from "../components/desktop/layout/switchLayout";
-import { SplitLayout } from "../components/desktop/layout/splitLayout";
-import { RemovablePanel } from "../components/desktop/layout/removablePanel";
+import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
+import { SplitLayout } from "../../components/desktop/layout/splitLayout";
+import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 
-export type DesktopLayoutProps = TradingV2State & {
+export type DesktopLayoutProps = TradingState & {
   className?: string;
 };
 
