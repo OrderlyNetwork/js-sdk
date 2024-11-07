@@ -58,7 +58,9 @@ export const useMarginRatio = (): MarginRatioReturn => {
 
     for (let index = 0; index < rows.length; index++) {
       const item = rows[index];
-      positionsMM = positionsMM.add(item.mm);
+      if (item.mm) {
+        positionsMM = positionsMM.add(item.mm);
+      }
     }
 
     return account.MMR({
