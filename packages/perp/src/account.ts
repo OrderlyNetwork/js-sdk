@@ -735,6 +735,7 @@ export function MMR(inputs: AccountMMRInputs): number | null {
   if (inputs.positionsNotional === 0) {
     return null;
   }
+  if (inputs.positionsMMR === 0) return null;
   return new Decimal(inputs.positionsMMR)
     .div(inputs.positionsNotional)
     .toNumber();

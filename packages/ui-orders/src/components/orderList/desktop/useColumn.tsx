@@ -264,7 +264,7 @@ function instrument(option?: {
                 e.preventDefault();
               }}
             >
-              {`${value.split("_")[1]}_PERP`}
+              {`${value.split("_")[1]}-PERP`}
             </Text.formatted>
 
             {option?.showType && (

@@ -445,6 +445,7 @@ const OrderQuantityInput = (props: {
             onChange={(e) => {
               props.onChange("trigger_price", e);
             }}
+            formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
             onFocus={onFocus(InputType.TRIGGER_PRICE)}
             onBlur={onBlur(InputType.TRIGGER_PRICE)}
           />
@@ -499,7 +500,7 @@ const OrderQuantityInput = (props: {
           }}
           onFocus={onFocus(InputType.TOTAL)}
           onBlur={onBlur(InputType.TOTAL)}
-          formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
+          formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
         />
       </Grid>
     </div>

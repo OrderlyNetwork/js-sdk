@@ -72,7 +72,7 @@ export const useColumn = (props: {
                   e.preventDefault();
                 }}
               >
-                {`${value.split("_")[1]}_PERP`}
+                {`${value.split("_")[1]}-PERP`}
               </Text.formatted>
             </Flex>
           ),

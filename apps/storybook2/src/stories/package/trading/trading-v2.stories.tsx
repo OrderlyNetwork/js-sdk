@@ -77,10 +77,11 @@ const meta = {
   argTypes: {},
   args: {
     // symbol: "PERP_ETH_USDC",
-    symbol: "PERP_BTC_USDC",
+    // symbol: "PERP_BTC_USDC",
     // symbol: "PERP_ORDER_USDC",
+    // symbol: "PERP_WOO_USDC",
     // symbol: "PERP_1000BONK_USDC",
-    // symbol: "PERP_1000PEPE_USDC",
+    symbol: "PERP_1000PEPE_USDC",
     tradingViewConfig: {
       // scriptSRC: "",
       scriptSRC: "/tradingview/charting_library/charting_library.js",

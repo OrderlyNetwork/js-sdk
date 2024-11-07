@@ -206,10 +206,12 @@ const useFilter = (
     to?: Date;
   }>(
     option?.filterConfig?.range ??
-      formatDatePickerRange({
-        from: new Date(),
-        to: offsetEndOfDay(addDays(new Date(), 7)),
-      })
+      (type === TabType.all || type === TabType.orderHistory)
+      ? formatDatePickerRange({
+          from: new Date(),
+          to: offsetEndOfDay(addDays(new Date(), 7)),
+        })
+      : {}
   );
 
   const onFilter = (filter: { name: string; value: any }) => {
