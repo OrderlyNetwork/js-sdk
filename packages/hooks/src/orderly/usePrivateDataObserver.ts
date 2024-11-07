@@ -45,7 +45,7 @@ export const usePrivateDataObserver = (options: {
   /**
    * fetch the positions of current account
    */
-  const { data: positions, isLoading: isPositionLoading } =
+  const { data: positions, isLoading: isPositionLoading, mutate } =
     usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
       onError: (error) => {
@@ -56,13 +56,14 @@ export const usePrivateDataObserver = (options: {
 
     // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
   useEffect(() => {
+    if (state.validating) return;
     if (state.status < AccountStatusEnum.EnableTrading) {
       cleanAll();
       calculatorService.calc(CalculatorScope.POSITION, {
         rows: [],
       });
     }
-  }, [state.status]);
+  }, [state.status, state.validating]);
 
   useEffect(() => {
     /// start load positions
