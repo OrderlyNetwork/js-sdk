@@ -20,7 +20,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
     pagination,
   } = props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const columns = useFavoritesListFullColumns(favorite, true);
 
@@ -57,6 +57,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
           };
         }}
         generatedRowKey={(record) => record.symbol}
+        rowSelection={{ [symbol!]: true }}
         onSort={onSort}
         pagination={pagination}
         manualPagination

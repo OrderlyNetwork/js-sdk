@@ -25,7 +25,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
     collapsed,
   } = props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const columns = useMemo(() => {
     return typeof getColumns === "function"
@@ -58,6 +58,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
         };
       }}
       generatedRowKey={(record) => record.symbol}
+      rowSelection={{ [symbol!]: true }}
       onSort={onSort}
       initialSort={initialSort}
       manualSorting
