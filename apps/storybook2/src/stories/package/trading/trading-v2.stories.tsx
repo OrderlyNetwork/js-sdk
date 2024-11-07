@@ -7,7 +7,7 @@ import {
   DataListWidget,
   LastTradesWidget,
   RiskRateWidget,
-  TradingPageV2,
+  TradingPage,
   OrderBookWidget,
   OrderBookAndTradesWidget,
   BottomNavBarWidget,
@@ -25,7 +25,7 @@ import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 const meta = {
   title: "Package/Trading/trading-v2",
-  component: TradingPageV2,
+  component: TradingPage,
 
   decorators: [
     (Story) => {
@@ -78,8 +78,8 @@ const meta = {
   args: {
     // symbol: "PERP_ETH_USDC",
     // symbol: "PERP_BTC_USDC",
-    // symbol: "PERP_ORDER_USDC",
-    symbol: "PERP_1000BONK_USDC",
+    symbol: "PERP_ORDER_USDC",
+    // symbol: "PERP_1000BONK_USDC",
     // symbol: "PERP_1000PEPE_USDC",
     tradingViewConfig: {
       // scriptSRC: "",
