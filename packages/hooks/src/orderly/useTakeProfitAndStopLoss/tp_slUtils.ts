@@ -136,11 +136,13 @@ export function priceToOffsetPercentage(inputs: {
       return new Decimal(price)
         .div(new Decimal(entryPrice))
         .minus(1)
+        .toDecimalPlaces(4, Decimal.ROUND_DOWN)
         .toNumber();
     }
 
     return new Decimal(1)
       .minus(new Decimal(price).div(new Decimal(entryPrice)))
+      .toDecimalPlaces(4, Decimal.ROUND_DOWN)
       .toNumber();
   }
 
@@ -149,10 +151,15 @@ export function priceToOffsetPercentage(inputs: {
       return new Decimal(1)
         .minus(new Decimal(price).div(new Decimal(entryPrice)))
         .abs()
+        .toDecimalPlaces(4, Decimal.ROUND_DOWN)
         .toNumber();
     }
 
-    return new Decimal(price).div(new Decimal(entryPrice)).minus(1).toNumber();
+    return new Decimal(price)
+      .div(new Decimal(entryPrice))
+      .minus(1)
+      .toDecimalPlaces(4, Decimal.ROUND_DOWN)
+      .toNumber();
   }
 }
 
@@ -238,7 +245,8 @@ export function priceToPnl(
   }
 
   if (symbol) {
-    return decimal.todp(symbol.quote_dp, Decimal.ROUND_DOWN).toNumber();
+    // return decimal.todp(symbol.quote_dp, Decimal.ROUND_DOWN).toNumber();
+    return decimal.todp(2, Decimal.ROUND_DOWN).toNumber();
   }
 
   return decimal.toNumber();

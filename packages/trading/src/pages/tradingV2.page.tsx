@@ -10,7 +10,6 @@ export const TradingPageV2 = (props: TradingPageV2Props) => {
       onSymbolChange={props.onSymbolChange}
       disableFeatures={props.disableFeatures}
       overrideFeatures={props.overrideFeatures}
-      dataList={props.dataList}
       referral={props.referral}
       tradingRewards={props.tradingRewards}
       bottomSheetLeading={props.bottomSheetLeading}

@@ -15,6 +15,7 @@ import { useAppStore } from "./appStore";
 import { useCalculatorService } from "../useCalculatorService";
 import { CalculatorScope } from "../types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -24,7 +25,7 @@ export const usePrivateDataObserver = (options: {
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state } = useAccount();
-  const { setAccountInfo, restoreHolding, updateHolding } = useAppStore(
+  const { setAccountInfo, restoreHolding, updateHolding, cleanAll } = useAppStore(
     (state) => state.actions
   );
   const statusActions = useApiStatusActions();
@@ -52,6 +53,16 @@ export const usePrivateDataObserver = (options: {
         statusActions.updateApiError("positions", error.message);
       },
     });
+
+    // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
+  useEffect(() => {
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      cleanAll();
+      calculatorService.calc(CalculatorScope.POSITION, {
+        rows: [],
+      });
+    }
+  }, [state.status]);
 
   useEffect(() => {
     /// start load positions

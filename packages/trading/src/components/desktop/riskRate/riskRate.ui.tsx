@@ -44,7 +44,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
       >
         <Box
           className={boxClsName}
-          style={riskRate ? { width: riskRate } : { width: "100%" }}
+          style={riskRate && riskRate !== '--' ? { width: riskRate } : { width: "100%" }}
         />
       </Flex>
 

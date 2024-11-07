@@ -443,8 +443,9 @@ const OrderQuantityInput = (props: {
             ref={props.refs.triggerPriceInputRef}
             value={values.trigger_price}
             onChange={(e) => {
-              props.onChange("trigger_price", e.target.value);
+              props.onChange("trigger_price", e);
             }}
+            formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
             onFocus={onFocus(InputType.TRIGGER_PRICE)}
             onBlur={onBlur(InputType.TRIGGER_PRICE)}
           />
@@ -462,7 +463,7 @@ const OrderQuantityInput = (props: {
             ref={props.refs.priceInputRef}
             // helperText="Price per unit"
             onChange={(e) => {
-              props.onChange("order_price", e.target.value);
+              props.onChange("order_price", e);
             }}
             formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
             onFocus={onFocus(InputType.PRICE)}
@@ -481,7 +482,7 @@ const OrderQuantityInput = (props: {
           value={values.quantity}
           error={parseErrorMsg("order_quantity")}
           onChange={(e) => {
-            props.onChange("order_quantity", e.target.value);
+            props.onChange("order_quantity", e);
           }}
           formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
           onFocus={onFocus(InputType.QUANTITY)}
@@ -495,10 +496,11 @@ const OrderQuantityInput = (props: {
           value={values.total}
           error={parseErrorMsg("total")}
           onChange={(e) => {
-            props.onChange("total", e.target.value);
+            props.onChange("total", e);
           }}
           onFocus={onFocus(InputType.TOTAL)}
           onBlur={onBlur(InputType.TOTAL)}
+          formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
         />
       </Grid>
     </div>
@@ -514,7 +516,8 @@ const CustomInput = forwardRef<
     id: string;
     className?: string;
     name?: string;
-    onChange?: InputProps["onChange"];
+    // onChange?: InputProps["onChange"];
+    onChange?: (value: string) => void;
     value?: InputProps["value"];
     autoFocus?: InputProps["autoFocus"];
     error?: string;
@@ -540,7 +543,8 @@ const CustomInput = forwardRef<
       prefix={<InputLabel id={props.id}>{props.label}</InputLabel>}
       suffix={props.suffix}
       value={props.value}
-      onChange={props.onChange}
+      // onChange={props.onChange}
+      onValueChange={props.onChange}
       onFocus={(event) => {
         setPlaceholder("");
         props.onFocus?.(event);
@@ -686,7 +690,7 @@ function AssetInfo(props: {
   quote: string;
   estLiqPrice: number | null;
   estLeverage: number | null;
-  currentLeverage: number;
+  currentLeverage: number | null;
 }) {
   return (
     <div className={"oui-space-y-1"}>
@@ -710,7 +714,7 @@ function AssetInfo(props: {
             intensity: 80,
           })}
         >
-          <Text.numeral unit="x">{props.currentLeverage}</Text.numeral>
+          <Text.numeral unit="x">{props.currentLeverage ?? '--'}</Text.numeral>
           {props.estLeverage && (
             <>
               <svg

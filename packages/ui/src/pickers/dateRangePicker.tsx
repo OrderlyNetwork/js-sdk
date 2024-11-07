@@ -145,7 +145,7 @@ DateRangePicker.displayName = "DateRangePicker";
 export { DateRangePicker };
 
 function useDebouncedCallback(callback: any, delay: number) {
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<any | null>(null);
 
   const debouncedCallback = useCallback(
     (args: any) => {

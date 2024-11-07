@@ -76,7 +76,8 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    symbol: "PERP_ETH_USDC",
+    // symbol: "PERP_ETH_USDC",
+    symbol: "PERP_BTC_USDC",
     // symbol: "PERP_ORDER_USDC",
     // symbol: "PERP_1000BONK_USDC",
     // symbol: "PERP_1000PEPE_USDC",
@@ -86,10 +87,7 @@ const meta = {
       library_path: "/tradingview/charting_library/",
       customCssUrl: "/tradingview/chart.css"
     },
-
-    dataList: {
-      sharePnLConfig
-    },
+    sharePnLConfig,
     referral: {
       onClickReferral: () => {
         console.log("click referral");

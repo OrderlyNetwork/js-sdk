@@ -27,7 +27,7 @@ import { useOrderListContext } from "../orderListContext";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
-import { useOrderEntry } from "@orderly.network/hooks";
+import { useMaxQty, useOrderEntry } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 
 export const OrderQuantity = (props: {
@@ -394,11 +394,19 @@ const EditState: FC<{
     order,
   } = props;
 
-  const { maxQty } = useOrderEntry(symbol, {
-    initialOrder: {
-      side,
-    },
-  });
+  // const { maxQty } = useOrderEntry(symbol, {
+  //   initialOrder: {
+  //     side,
+  //   },
+  // });
+
+  const maxQty = useMaxQty(
+    symbol,
+    order.side,
+    order.reduce_only
+  );
+
+
 
   const qty = useMemo(() => {
     if (reduce_only) {
@@ -424,14 +432,14 @@ const EditState: FC<{
           dp={base_dp}
           value={quantity}
           setValue={(e: string) => {
-            setQuantity(e);
+            setQuantity(Math.min(Number(e), qty).toString());
             if (e.endsWith(".")) return;
             const sliderValue = new Decimal(e)
               .div(qty)
               .mul(100)
               .toDecimalPlaces(2, Decimal.ROUND_DOWN)
               .toNumber();
-            setSliderValue(sliderValue);
+            setSliderValue(Math.min(100, sliderValue));
           }}
           setEditing={setEditing}
           handleKeyDown={handleKeyDown}

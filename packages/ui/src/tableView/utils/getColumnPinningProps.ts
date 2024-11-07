@@ -18,23 +18,32 @@ export function getColumnPinningProps(
     width: column.getSize(),
   };
 
-  const fixedCls = cnBase(
-    "before:oui-block before:oui-absolute before:oui-w-[32px] before:oui-h-full",
+  const contentCls = cnBase(
+    isPinned ? "oui-sticky" : "oui-relative",
+    isPinned ? "oui-z-[1]" : "oui-z-0",
+    isPinned && "oui-bg-[var(--oui-table-background-color)]"
+  );
+
+  const shadowCls = cnBase(
+    "before:oui-block before:oui-absolute",
+    "before:oui-w-[32px] before:oui-h-full",
     "before:oui-top-0 before:oui-z-[-1]",
     "before:oui-bg-[linear-gradient(90deg,rgba(var(--oui-color-base-10)_/_0.80)_0%,rgba(var(--oui-color-base-10)_/_0.36)_65%,rgba(var(--oui-color-base-10)_/_0.00)_100%)]"
   );
 
-  const className = cnBase(
-    isPinned ? "oui-sticky" : "oui-relative",
-    isPinned ? "oui-z-[1]" : "oui-z-0",
-    isPinned && "oui-bg-[var(--oui-table-background-color)]",
-    isLastLeftPinnedColumn && cnBase(fixedCls, "before:oui-right-[-32px]"),
+  const leftShadow =
+    isLastLeftPinnedColumn && cnBase(shadowCls, "before:oui-right-[-32px]");
+
+  const rightShadow =
     isFirstRightPinnedColumn &&
-      cnBase(fixedCls, "before:oui-left-[-32px] before:oui-rotate-180")
-  );
+    cnBase(shadowCls, "before:oui-left-[-32px] before:oui-rotate-180");
 
   return {
     style,
-    className,
+    classNames: {
+      content: contentCls,
+      leftShadow,
+      rightShadow,
+    },
   };
 }

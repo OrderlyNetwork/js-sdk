@@ -6,6 +6,7 @@ import { useOrderListContext } from "../../orderListContext";
 import { TabType } from "../../../orders.widget";
 import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
 import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
+import { useSymbolContext } from "../../symbolProvider";
 
 export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const { state } = props;

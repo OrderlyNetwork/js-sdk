@@ -49,6 +49,7 @@ interface AssetDetailProps {
   rule?: "percentages";
   isConnected?: boolean;
   showPercentage?: boolean;
+  placeholder?: string;
 }
 
 interface AssetValueListProps {
@@ -152,6 +153,7 @@ const AssetDetail: FC<AssetDetailProps> = ({
   rule,
   isConnected,
   showPercentage = false,
+  placeholder,
 }) => (
   <Flex justify="between">
     <Tooltip
@@ -163,24 +165,25 @@ const AssetDetail: FC<AssetDetailProps> = ({
         size="2xs"
         color="neutral"
         weight="semibold"
-        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-b-white/10"
+        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
       >
         {label}
       </Text>
     </Tooltip>
     <Text.numeral
-        visible={visible}
-        size="2xs"
-        unit={unit}
-        unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
-        as="div"
-        rule={rule}
-        padding={false}
-        dp={2}
-        // suffix={value && unit}
-      >
-        {value ?? '--'}
-      </Text.numeral>
+      visible={visible}
+      size="2xs"
+      unit={unit}
+      unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
+      as="div"
+      rule={rule}
+      padding={false}
+      dp={2}
+      // suffix={value && unit}
+      placeholder={placeholder}
+    >
+      {value || "--"}
+    </Text.numeral>
   </Flex>
 );
 
@@ -239,6 +242,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
               isConnected={isConnected}
               rule="percentages"
               showPercentage={true}
+              placeholder="--%"
             />
             <AssetDetail
               label="Maintenance margin ratio"
@@ -248,6 +252,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
               value={renderMMR}
               rule="percentages"
               showPercentage={true}
+              placeholder="--%"
             />
           </Box>
         </CollapsibleContent>
@@ -305,11 +310,9 @@ export const AssetView: FC<AssetViewState> = ({
               <Text>Deposit</Text>
             </Button>
 
-            <Box className='oui-mt-3'>
-
-              <FaucetWidget/>
+            <Box className="oui-mt-3">
+              <FaucetWidget />
             </Box>
-
           </>
         ) : (
           <Box className="oui-space-y-4">
@@ -344,7 +347,7 @@ export const AssetView: FC<AssetViewState> = ({
                 <Text>Deposit</Text>
               </Button>
             </Flex>
-            <FaucetWidget/>
+            <FaucetWidget />
           </Box>
         )}
       </AuthGuard>

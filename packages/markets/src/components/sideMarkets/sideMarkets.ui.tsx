@@ -18,7 +18,7 @@ export type SideMarketsProps = UseSideMarketsScriptReturn & {
 export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
   const { collapsed, onCollapse, activeTab, onTabChange, className } = props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const renderContent = () => {
     if (!collapsed) {
@@ -26,6 +26,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
         <ExpandMarketsWidget
           activeTab={activeTab}
           onTabChange={onTabChange}
+          symbol={symbol}
           onSymbolChange={onSymbolChange}
         />
       );
@@ -60,7 +61,6 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       <SideMarketsHeader collapsed={collapsed} onCollapse={onCollapse} />
       <Box
         width="100%"
-        // px={1}
         className={cn(
           collapsed ? "oui-h-[calc(100%_-_52px)]" : "oui-h-[calc(100%_-_56px)]"
         )}

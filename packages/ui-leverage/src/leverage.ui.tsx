@@ -21,7 +21,7 @@ export const Leverage = (props: LeverageScriptReturns) => {
             Current:
           </Text>
           <Text.numeral unit="x" size={"sm"} intensity={80}>
-            {currentLeverage}
+            {currentLeverage ?? "--"}
           </Text.numeral>
         </Flex>
       </Flex>

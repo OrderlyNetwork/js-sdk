@@ -220,7 +220,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                     className="orderly-text-base-contrast orderly-ml-1"
                     surfix="x"
                   >
-                    {currentLeverage}
+                    {currentLeverage ?? '--'}
                   </Numeral>
                 </span>
               </div>

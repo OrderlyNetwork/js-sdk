@@ -314,7 +314,7 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
         <Text.numeral
           dp={props.quote_dp}
           rm={Decimal.ROUND_DOWN}
-          intensity={80}
+          color="buy"
           padding={false}
           className={
             tp_trigger_price
@@ -362,7 +362,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
         <Text.numeral
           dp={props.quote_dp}
           rm={Decimal.ROUND_DOWN}
-          intensity={80}
+          color="sell"
           padding={false}
           className={
             sl_trigger_price
@@ -388,7 +388,7 @@ export const TPPrice: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text color="buy">Market</Text>
+      <Text intensity={80}>Market</Text>
     </Statistic>
   );
 };
@@ -401,7 +401,7 @@ export const SLPrice: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text color="sell">Market</Text>
+      <Text intensity={80}>Market</Text>
     </Statistic>
   );
 };

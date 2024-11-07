@@ -39,7 +39,6 @@ export const AuthGuardTableView = <RecordType extends unknown>(
 
   return (
     <TableView
-      {...rest}
       dataSource={data}
       ignoreLoadingCheck={
         wrongNetwork || state.status < status || props.ignoreLoadingCheck
@@ -54,6 +53,7 @@ export const AuthGuardTableView = <RecordType extends unknown>(
         />
       }
       manualPagination
+      {...rest}
     />
   );
 };

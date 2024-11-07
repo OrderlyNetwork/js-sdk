@@ -11,7 +11,7 @@ export const TopTab: FC<
     className?: string;
   }
 > = (props) => {
- const {tradingViewConfig} = useTradingPageContext();
+  const { tradingViewConfig } = useTradingPageContext();
 
   return (
     <Tabs
@@ -36,15 +36,14 @@ export const TopTab: FC<
       }
     >
       <TabPanel title="Chart" value={TopTabType.chart}>
-        <div className='oui-h-[234px] oui-pb-1'>
-
-        <TradingviewWidget
-          symbol={props.symbol}
-          libraryPath={tradingViewConfig?.library_path}
-          mode={3}
-          scriptSRC={tradingViewConfig?.scriptSRC}
-          customCssUrl={tradingViewConfig?.customCssUrl}
-        />
+        <div className="oui-h-[234px] oui-pb-1">
+          <TradingviewWidget
+            symbol={props.symbol}
+            libraryPath={tradingViewConfig?.library_path}
+            mode={3}
+            scriptSRC={tradingViewConfig?.scriptSRC}
+            customCssUrl={tradingViewConfig?.customCssUrl}
+          />
         </div>
       </TabPanel>
       <TabPanel title="Trades" value={TopTabType.trades}>
@@ -59,9 +58,7 @@ export const TopTab: FC<
   );
 };
 
-const ChevronIcon = (props: {
-  className?: string;
-}) => {
+const ChevronIcon = (props: { className?: string }) => {
   return (
     <svg
       width="12"
@@ -84,8 +81,8 @@ const ChevronIcon = (props: {
           y2="6.001"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#59B0FE" />
-          <stop offset="1" stop-color="#26FEFE" />
+          <stop stopColor="#59B0FE" />
+          <stop offset="1" stopColor="#26FEFE" />
         </linearGradient>
       </defs>
     </svg>

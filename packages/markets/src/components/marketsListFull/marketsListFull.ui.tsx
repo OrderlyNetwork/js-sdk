@@ -24,7 +24,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
     pagination,
   } = props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const columns = useMarketsListFullColumns(favorite, false);
 
@@ -47,6 +47,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
         };
       }}
       generatedRowKey={(record) => record.symbol}
+      rowSelection={{ [symbol!]: true }}
       onSort={onSort}
       initialSort={initialSort}
       pagination={pagination}

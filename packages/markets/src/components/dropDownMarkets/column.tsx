@@ -25,6 +25,7 @@ export const getDropDownMarketsColumns = (
     {
       title: "Instrument",
       dataIndex: "symbol",
+      width: 150,
       render: (value, record) => {
         let favoritesIcon: ReactNode;
         if (!isFavoriteList) {
@@ -71,6 +72,7 @@ export const getDropDownMarketsColumns = (
       dataIndex: "24h_close",
       align: "right",
       onSort: true,
+      width: 100,
       render: (value, record) => {
         return (
           <Text.numeral dp={record.quote_dp || 2} size="2xs">
@@ -84,6 +86,7 @@ export const getDropDownMarketsColumns = (
       dataIndex: "change",
       align: "right",
       onSort: true,
+      width: 80,
       render: (value) => {
         return (
           <Text.numeral
@@ -104,6 +107,7 @@ export const getDropDownMarketsColumns = (
       align: "right",
       onSort: true,
       className: "oui-relative",
+      width: 80,
       render: (value, record) => {
         const onDelSymbol: MouseEventHandler = (e) => {
           favorite.updateSymbolFavoriteState(
