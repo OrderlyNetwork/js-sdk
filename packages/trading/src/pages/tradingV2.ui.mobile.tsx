@@ -32,6 +32,7 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
         contentProps={{ side: "left", closeable: false }}
       >
         <MarketsSheetWidget
+          symbol={props.symbol}
           onSymbolChange={(symbol) => {
             console.log("onSymbolChange", symbol);
             props.onOpenMarketsSheetChange(false);
@@ -51,7 +52,7 @@ export const MobileLayout: FC<TradingV2State> = (props) => {
         <DataListWidget
           symbol={props.symbol}
           className="oui-mx-1 oui-rounded-xl"
-          sharePnLConfig={props.dataList.sharePnLConfig}
+          sharePnLConfig={props.sharePnLConfig}
         />
       </main>
 

@@ -69,6 +69,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   const symbolView = (
     <DropDownMarketsWidget
       contentClassName="oui-w-[429px] oui-h-[496px]"
+      symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     >
       <Flex gapX={1} className="oui-cursor-pointer">

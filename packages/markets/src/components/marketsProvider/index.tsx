@@ -9,6 +9,7 @@ import {
 import { API } from "@orderly.network/types";
 
 type MarketsContextState = {
+  symbol?: string;
   searchValue?: string;
   onSearchValueChange?: (searchValue: string) => void;
   clearSearchValue?: () => void;
@@ -17,6 +18,7 @@ type MarketsContextState = {
 export const MarketsContext = createContext({} as MarketsContextState);
 
 export type MarketsProviderProps = {
+  symbol?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
 };
 
@@ -35,6 +37,7 @@ export const MarketsProvider: FC<PropsWithChildren<MarketsProviderProps>> = (
         searchValue,
         onSearchValueChange: setSearchValue,
         clearSearchValue,
+        symbol: props.symbol,
         onSymbolChange: props.onSymbolChange,
       }}
     >
