@@ -28,7 +28,7 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
 
   return (
     <>
-      <Box px={3}>
+      <Box px={3} className="oui-my-[6px]">
         <FavoritesTabWidget favorite={favorite} size="sm" />
       </Box>
 

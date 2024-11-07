@@ -27,7 +27,8 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
           "oui-rounded-md",
           "oui-w-[69px] oui-h-[28px]",
           "oui-cursor-pointer oui-transition-all",
-          "oui-bg-base-4 oui-text-base-contrast-80"
+          "oui-bg-base-4",
+          "oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
         )}
         gapX={1}
         justify="center"
@@ -55,13 +56,14 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         onClick={() => {
           props.onLayout?.(position);
         }}
+        className="oui-group"
       >
         <Flex
           justify={position === "right" ? "end" : "start"}
           className={cn(
             "oui-w-[148px] oui-h-[100px]",
             "oui-bg-base-10 oui-rounded-[10px]",
-            "oui-border-[4px] oui-border-base-5 hover:oui-border-primary-light",
+            "oui-border-[4px] oui-border-base-5 group-hover:oui-border-primary-light",
             props.layout === position && "!oui-border-primary-light"
           )}
         >
@@ -69,7 +71,14 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
             <OrderEntryIcon />
           </Box>
         </Flex>
-        <Text size="2xs" intensity={54}>
+        <Text
+          size="2xs"
+          intensity={54}
+          className={cn(
+            "oui-text-base-contrast-54 group-hover:oui-text-base-contrast-80",
+            props.layout === position && "oui-text-base-contrast-80"
+          )}
+        >
           Advanced ({position})
         </Text>
       </Flex>

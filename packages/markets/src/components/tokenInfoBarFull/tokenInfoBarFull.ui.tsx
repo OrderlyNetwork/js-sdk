@@ -207,7 +207,7 @@ const DataItem: React.FC<DataItemProps> = (props) => {
           className={cn(
             "oui-break-normal oui-whitespace-nowrap",
             props.hint &&
-              "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-base-contrast-36"
+              "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
           )}
         >
           {props.label}

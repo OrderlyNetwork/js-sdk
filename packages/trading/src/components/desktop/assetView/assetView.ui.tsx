@@ -165,25 +165,25 @@ const AssetDetail: FC<AssetDetailProps> = ({
         size="2xs"
         color="neutral"
         weight="semibold"
-        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-b-white/10"
+        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
       >
         {label}
       </Text>
     </Tooltip>
     <Text.numeral
-        visible={visible}
-        size="2xs"
-        unit={unit}
-        unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
-        as="div"
-        rule={rule}
-        padding={false}
-        dp={2}
-        // suffix={value && unit}
-        placeholder={placeholder}
-      >
-        {value || '--'}
-      </Text.numeral>
+      visible={visible}
+      size="2xs"
+      unit={unit}
+      unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
+      as="div"
+      rule={rule}
+      padding={false}
+      dp={2}
+      // suffix={value && unit}
+      placeholder={placeholder}
+    >
+      {value || "--"}
+    </Text.numeral>
   </Flex>
 );
 
@@ -243,7 +243,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
               rule="percentages"
               showPercentage={true}
               placeholder="--%"
-              />
+            />
             <AssetDetail
               label="Maintenance margin ratio"
               description="The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated."
@@ -310,11 +310,9 @@ export const AssetView: FC<AssetViewState> = ({
               <Text>Deposit</Text>
             </Button>
 
-            <Box className='oui-mt-3'>
-
-              <FaucetWidget/>
+            <Box className="oui-mt-3">
+              <FaucetWidget />
             </Box>
-
           </>
         ) : (
           <Box className="oui-space-y-4">
@@ -349,7 +347,7 @@ export const AssetView: FC<AssetViewState> = ({
                 <Text>Deposit</Text>
               </Button>
             </Flex>
-            <FaucetWidget/>
+            <FaucetWidget />
           </Box>
         )}
       </AuthGuard>

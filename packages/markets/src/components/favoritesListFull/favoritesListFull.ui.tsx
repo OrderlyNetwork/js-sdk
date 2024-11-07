@@ -38,7 +38,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
 
   return (
     <div>
-      <FavoritesTabWidget favorite={favorite} />
+      <FavoritesTabWidget favorite={favorite} className="oui-my-3" />
 
       <TableView
         bordered
