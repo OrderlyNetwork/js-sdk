@@ -16,7 +16,9 @@ import {
 import { AddIcon, AddIcon2, EditIcon, TrashIcon } from "../../icons";
 
 export type FavoritesTabProps = UseFavoritesTabScriptReturn &
-  Pick<UseFavoritesTabScriptOptions, "size">;
+  Pick<UseFavoritesTabScriptOptions, "size"> & {
+    className?: string;
+  };
 
 export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   const {
@@ -235,7 +237,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   };
 
   return (
-    <Flex width="100%" gapX={3}>
+    <Flex width="100%" gapX={3} className={props.className}>
       <Flex
         ref={container}
         id="oui-markets-favorites-tabs-container"
@@ -243,7 +245,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           "oui-relative oui-cursor-pointer oui-hide-scrollbar",
           "oui-overflow-hidden oui-overflow-x-auto"
         )}
-        my={3}
+        // my={3}
         gapX={size === "sm" ? 2 : 3}
         width="100%"
       >
