@@ -61,9 +61,9 @@ export const useOrderColumn = (props: {
             disableEdit: true,
             enableSort: true,
           }),
-          avgOpen({ width: 130, enableSort: true }),
+          avgOpen({ width: 130, enableSort: true, }),
           tpslTriggerPrice({ width: 130 }),
-          estTotal({ width: 130, enableSort: true }),
+          estTotal({ width: 130, enableSort: true, }),
           fee({ width: 130 }),
           status({ width: 130 }),
           reduceOnly({ width: 130 }),
@@ -87,10 +87,10 @@ export const useOrderColumn = (props: {
           price({ width: 162, className: "oui-pr-0", enableSort: true }),
           triggerPrice({ width: 162, className: "oui-pr-0" }),
           bracketOrderPrice({ width: 130 }),
-          estTotal({ width: 162, enableSort: true, isPending: true }),
+          estTotal({ width: 162, isPending: true }),
           reduceOnly({ width: 162 }),
           hidden({ width: 162 }),
-          orderTime({ width: 162 }),
+          orderTime({ width: 162, enableSort: true }),
           cancelBtn({ width: 162 }),
         ];
       case TabType.tp_sl:
@@ -107,7 +107,7 @@ export const useOrderColumn = (props: {
           tpslPrice({ width: 176, disableEdit: true }),
           tpslNotional({ width: 176 }),
           reduceOnly({ width: 176 }),
-          orderTime({ width: 176 }),
+          orderTime({ width: 176, enableSort: true }),
           tpslAction({ width: 176 }),
         ];
       case TabType.filled:
@@ -116,7 +116,6 @@ export const useOrderColumn = (props: {
             showType: true,
             width: 154,
             onSymbolChange: onSymbolChange,
-            enableSort: true,
           }),
           // type({ width: 124 }),
           // side({ width: 124 }),
@@ -124,17 +123,15 @@ export const useOrderColumn = (props: {
             width: 124,
             disableEdit: true,
             className: "oui-pl-0 oui-pr-0",
-            enableSort: true,
           }),
           price({
             width: 124,
             title: "Order price",
             disableEdit: true,
-            enableSort: true,
           }),
-          avgPrice({ width: 124, enableSort: true }),
+          avgPrice({ width: 124 }),
           triggerPrice({ width: 124, disableEdit: true }),
-          estTotal({ width: 124, enableSort: true }),
+          estTotal({ width: 124 }),
           fee({ width: 124 }),
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
@@ -156,10 +153,10 @@ export const useOrderColumn = (props: {
             className: "oui-pl-0 oui-pr-0",
             enableSort: true,
           }),
-          price({ width: 124, disableEdit: true, enableSort: true }),
-          avgOpen({ width: 124, enableSort: true }),
+          price({ width: 124, disableEdit: true, enableSort: true, }),
+          avgOpen({ width: 124, enableSort: true,}),
           triggerPrice({ width: 124, disableEdit: true }),
-          estTotal({ width: 124, enableSort: true }),
+          estTotal({ width: 124, }),
           fee({ width: 124 }),
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
@@ -171,19 +168,19 @@ export const useOrderColumn = (props: {
             showType: true,
             width: 154,
             onSymbolChange: onSymbolChange,
-            enableSort: true,
+            
           }),
           // side({ width: 124 }),
           fillAndQuantity({
             width: 124,
             disableEdit: true,
             className: "oui-pl-0 oui-pr-0",
-            enableSort: true,
+            
           }),
-          price({ width: 124, disableEdit: true, enableSort: true }),
-          avgOpen({ width: 124, enableSort: true }),
+          price({ width: 124, disableEdit: true, }),
+          avgOpen({ width: 124,  }),
           triggerPrice({ width: 124, disableEdit: true }),
-          estTotal({ width: 124, enableSort: true }),
+          estTotal({ width: 124,  }),
           fee({ width: 124 }),
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
@@ -196,19 +193,17 @@ export const useOrderColumn = (props: {
             showType: true,
             width: 154,
             onSymbolChange: onSymbolChange,
-            enableSort: true,
           }),
           // side({ width: 124 }),
           fillAndQuantity({
             width: 150,
             disableEdit: true,
             className: "oui-pl-6 oui-pr-0",
-            enableSort: true,
           }),
-          price({ width: 124, disableEdit: true, enableSort: true }),
-          avgOpen({ width: 124, enableSort: true }),
+          price({ width: 124, disableEdit: true,  }),
+          avgOpen({ width: 124, }),
           triggerPrice({ width: 124, disableEdit: true }),
-          estTotal({ width: 124, enableSort: true }),
+          estTotal({ width: 124,}),
           fee({ width: 124 }),
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
@@ -269,7 +264,7 @@ function instrument(option?: {
                 e.preventDefault();
               }}
             >
-              {`${value.split("_")[1]}_PERP`}
+              {`${value.split("_")[1]}-PERP`}
             </Text.formatted>
 
             {option?.showType && (

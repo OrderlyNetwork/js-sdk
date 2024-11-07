@@ -63,6 +63,7 @@ export const SideMarkets: Story = {
         <SideMarketsWidget
           collapsed={collapsed}
           onCollapse={setCollapsed}
+          symbol="PERP_BTC_USDC"
           onSymbolChange={(symbol) => {
             console.log('onSymbolChange', symbol);
           }}

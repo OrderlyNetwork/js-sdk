@@ -99,7 +99,7 @@ export const PositionTPSLPopover = (props: {
                 .confirm({
                   title: "Cancel Order",
                   content:
-                    "Are you sure you want to cancel this Position TP/SL order?",
+                    "Are you sure you want to cancel this TP/SL order?",
                   onOk: () => {
                     return options.cancel();
                   },

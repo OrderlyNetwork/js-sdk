@@ -92,6 +92,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         <SideMarketsWidget
           collapsed={collapsed}
           onCollapse={onCollapse}
+          symbol={props.symbol}
           onSymbolChange={props.onSymbolChange}
         />
       )}
@@ -209,7 +210,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         current={undefined}
         tabletMediaQuery={props.tabletMediaQuery}
         symbol={props.symbol}
-        sharePnLConfig={props.dataList.sharePnLConfig}
+        sharePnLConfig={props.sharePnLConfig}
       />
     </Box>
   );

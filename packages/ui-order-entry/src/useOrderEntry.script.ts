@@ -32,7 +32,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         side: localOrderSide,
       },
     });
-  const [tpslSwitch, setTpslSwitch] = useState(false);
+  const [tpslSwitch, setTpslSwitch] = useLocalStorage("orderly-order-entry-tp_sl-switch",false);
 
   // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();

@@ -86,11 +86,7 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
 
   const mainNavConfig = useMemo(() => {
     const config = {
-      logo: {
-        //https://mintlify.s3-us-west-1.amazonaws.com/orderly/logo/dark.png
-        src: "https://testnet-dex-evm.woo.org/images/woofipro.svg",
-        alt: "woofipro",
-      },
+      logo: {},
       mainMenus: [
         // { name: "Trading", href: "/trading" },
         // { name: "Portfolio", href: "/portfolio" },

@@ -9,7 +9,7 @@ import { PositionCellWidget } from "./mobile/positionCell";
 import { AuthGuardTableView } from "@orderly.network/ui-connector";
 
 export const Positions = (props: PositionsBuilderState) => {
-  const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
+  const { pnlNotionalDecimalPrecision, sharePnLConfig, pagination } = props;
   const column = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
@@ -35,6 +35,8 @@ export const Positions = (props: PositionsBuilderState) => {
           </SymbolProvider>
         );
       }}
+      manualPagination={false}
+      pagination={pagination}
     />
   );
 };

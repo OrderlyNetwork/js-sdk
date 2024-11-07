@@ -12,6 +12,7 @@ export const numberFormatter: InputFormatter = {
     options: InputFormatterOptions
   ): string {
     if (value.startsWith(".")) return `0${value}`;
+    if (value === '00') return '0';
 
     // if (/^0{2,}$/.test(value)) {
     //   return "0";

@@ -62,6 +62,7 @@ export const OrderConfirmDialog = (props: Props) => {
           <Text.numeral
             rule={"price"}
             dp={baseDP}
+            padding={false}
             className="oui-text-base-contrast"
           >
             {order.order_quantity}
@@ -75,6 +76,8 @@ export const OrderConfirmDialog = (props: Props) => {
               rule={"price"}
               className={"oui-text-base-contrast"}
               unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+              dp={quoteDP}
+              padding={false}
             >
               {order.trigger_price}
             </Text.numeral>
@@ -90,6 +93,8 @@ export const OrderConfirmDialog = (props: Props) => {
               rule={"price"}
               className={"oui-text-base-contrast"}
               unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+              dp={quoteDP}
+              padding={false}
             >
               {order.order_price}
             </Text.numeral>
@@ -101,6 +106,7 @@ export const OrderConfirmDialog = (props: Props) => {
             unit={"USDC"}
             rule={"price"}
             dp={quoteDP}
+            padding={false}
             className={"oui-text-base-contrast"}
             unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
           >
@@ -126,6 +132,7 @@ export const OrderConfirmDialog = (props: Props) => {
                   rule={"price"}
                   coloring
                   dp={quoteDP}
+                  padding={false}
                   unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
                 >
                   {order.tp_trigger_price}
@@ -142,6 +149,7 @@ export const OrderConfirmDialog = (props: Props) => {
                   className="oui-text-trade-loss"
                   unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
                   dp={quoteDP}
+                  padding={false}
                 >
                   {order.sl_trigger_price}
                 </Text.numeral>

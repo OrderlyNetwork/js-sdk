@@ -12,7 +12,7 @@ export const RecentList: FC<RecentListProps> = (props) => {
   const { dataSource, favorite, onSort, loading, getColumns, collapsed } =
     props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const columns = useMemo(() => {
     return typeof getColumns === "function"
@@ -45,6 +45,7 @@ export const RecentList: FC<RecentListProps> = (props) => {
         };
       }}
       generatedRowKey={(record) => record.symbol}
+      rowSelection={{ [symbol!]: true }}
       onSort={onSort}
       manualSorting
     />

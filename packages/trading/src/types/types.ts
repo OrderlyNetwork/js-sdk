@@ -162,13 +162,11 @@ export type TradingPageProps = BaseTradingPageProps & {
 };
 
 export type TradingPageV2Props = BaseTradingPageProps & {
-  dataList: {
-    sharePnLConfig?: SharePnLConfig &
-      Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
-  };
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   /** default is  `(max-width: 768px)`*/
   tabletMediaQuery?: string;
-  referral: ReferralPropsV2;
-  tradingRewards: TradingRewardsProps;
+  referral?: ReferralPropsV2;
+  tradingRewards?: TradingRewardsProps;
   bottomSheetLeading?: React.ReactNode | string;
 };

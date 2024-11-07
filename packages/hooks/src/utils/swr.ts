@@ -35,7 +35,7 @@ export const generateKeyFun =
         search.set("start_t", `${dateRange.from.getTime()}`);
       }
 
-      if (dateRange.to && dateRange.from && dateRange.from.getTime() !== dateRange.to.getTime()) {
+      if (dateRange.to) {
         search.set("end_t", `${dateRange.to.getTime()}`);
       }
     }

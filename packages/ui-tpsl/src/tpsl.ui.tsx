@@ -19,7 +19,7 @@ import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { TPSLBuilderState } from "./useTPSL.script";
 
 import type { PNL_Values } from "./pnlInput/useBuilder.script";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage, utils } from "@orderly.network/hooks";
 import { API, OrderSide } from "@orderly.network/types";
 import { transSymbolformString } from "@orderly.network/utils";
 
@@ -49,7 +49,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           <TPSLQuantity
             maxQty={props.maxQty}
             quantity={(props.orderQuantity ?? props.maxQty) as number}
-            tick={symbolInfo("base_tick")}
+            baseTick={symbolInfo("base_tick")}
             dp={symbolInfo("base_dp")}
             onQuantityChange={props.setQuantity}
             quote={symbolInfo("base")}
@@ -120,7 +120,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
 // ------------- Quantity input start------------
 const TPSLQuantity = (props: {
   maxQty: number;
-  tick: number;
+  baseTick: number;
   dp: number;
   quote: string;
   onQuantityChange?: (value: number | string) => void;
@@ -142,6 +142,13 @@ const TPSLQuantity = (props: {
     setTimeout(() => {
       inputRef.current?.setSelectionRange(0, 1);
     }, 0);
+  };
+
+  const formatQuantity = (qty: string) => {
+    if (props.baseTick > 0) {
+      props.onQuantityChange?.(utils.formatNumber(qty, props.baseTick) ?? qty);
+    }
+    
   };
 
   return (
@@ -170,6 +177,7 @@ const TPSLQuantity = (props: {
             onValueChange={(value) => {
               props.onQuantityChange?.(value);
             }}
+            onBlur={(e) => formatQuantity(e.target.value)}
             suffix={
               isPosition ? (
                 <button
@@ -219,8 +227,11 @@ const TPSLQuantity = (props: {
           max={props.maxQty}
           min={0}
           showTip
-          step={props.tick}
+          step={props.baseTick}
           value={props.quantity}
+          onValueCommit={(value) => {
+            formatQuantity(`${value}`);
+          }}
           onValueChange={(value) => {
             props.onQuantityChange?.(value);
           }}
@@ -246,7 +257,7 @@ const TPSLQuantity = (props: {
             rule={"price"}
             size={"2xs"}
             intensity={54}
-            tick={props.tick}
+            tick={props.baseTick}
           >
             {props.maxQty}
           </Text.numeral>
@@ -434,7 +445,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     intensity: 54,
   });
 
-  console.log("PositionTPSLConfirm", qty, maxQty);
+  console.log("PositionTPSLConfirm", qty, maxQty, quoteDP);
 
   const isPositionTPSL = qty >= maxQty;
 
@@ -502,7 +513,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
             {isPositionTPSL ? (
               <span className="oui-text-base-contrast">Entire position</span>
             ) : (
-              <Text.numeral intensity={98} dp={baseDP}>
+              <Text.numeral intensity={98} dp={baseDP} padding={false}>
                 {qty}
               </Text.numeral>
             )}

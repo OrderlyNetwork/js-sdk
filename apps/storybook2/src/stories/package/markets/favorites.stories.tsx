@@ -62,12 +62,12 @@ export const Tabs: Story = {
     return (<>
       <Flex direction='column' itemAlign='start' gapY={2} p={2}>
         <div>Small</div>
-        <Box width={400} intensity={900} px={3}>
+        <Box width={400} intensity={900} p={3} >
           <FavoritesTabWidget favorite={favorite} size="sm" />
         </Box>
 
         <div>Default</div>        
-        <Box width={600} intensity={900} px={3}>
+        <Box width={600} intensity={900} p={3}>
           <FavoritesTabWidget favorite={favorite} />
         </Box>
       </Flex>

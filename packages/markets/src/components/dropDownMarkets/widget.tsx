@@ -11,7 +11,10 @@ export const DropDownMarketsWidget: React.FC<
 > = (props) => {
   const state = useDropDownMarketsScript();
   return (
-    <MarketsProvider onSymbolChange={props.onSymbolChange}>
+    <MarketsProvider
+      symbol={props.symbol}
+      onSymbolChange={props.onSymbolChange}
+    >
       <DropDownMarkets {...state} contentClassName={props.contentClassName}>
         {props.children}
       </DropDownMarkets>

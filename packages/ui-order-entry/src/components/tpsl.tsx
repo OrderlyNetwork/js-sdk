@@ -189,6 +189,12 @@ const TPSLTriggerPriceInput = (props: {
 
   const priceKey =
     props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
+  
+  useEffect(() => {
+    setPrefix(
+      !!props.values.trigger_price ? props.type : `${props.type} Price`
+    );
+  }, [props.values.trigger_price]);
 
   return (
     <Input.tooltip

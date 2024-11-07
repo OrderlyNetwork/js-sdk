@@ -16,7 +16,7 @@ export const OrdersPage = () => {
       </Flex>
       <Divider className="oui-w-full" />
       {/* 26(title height) + 1(divider) + 32 (padding) */}
-      <Box className="oui-h-[calc(100%_-_59px)]">
+      <Box width="100%" className="oui-h-[calc(100%_-_59px)]">
         <OrdersWidget />
       </Box>
     </Flex>

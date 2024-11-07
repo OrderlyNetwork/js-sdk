@@ -69,6 +69,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   const symbolView = (
     <DropDownMarketsWidget
       contentClassName="oui-w-[429px] oui-h-[496px]"
+      symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     >
       <Flex gapX={1} className="oui-cursor-pointer">
@@ -207,7 +208,7 @@ const DataItem: React.FC<DataItemProps> = (props) => {
           className={cn(
             "oui-break-normal oui-whitespace-nowrap",
             props.hint &&
-              "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-base-contrast-36"
+              "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
           )}
         >
           {props.label}

@@ -73,6 +73,7 @@ export const getSideMarketsColumns = (
 
               <Text.numeral
                 intensity={54}
+                size="2xs"
                 rule="human"
                 dp={2}
                 rm={Decimal.ROUND_DOWN}
