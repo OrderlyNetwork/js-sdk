@@ -139,7 +139,10 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
 
               {/* <SideNavbarWidget {...props.leftSideProps} /> */}
             </div>
-            <Box width={"100%"} className={classNames?.content}>
+            <Box
+              width={"100%"}
+              className={cn("oui-overflow-hidden", classNames?.content)}
+            >
               {props.children}
             </Box>
           </Grid>
