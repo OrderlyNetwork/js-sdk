@@ -1,3 +1,4 @@
+import { MainNavWidgetProps } from "@orderly.network/ui-scaffold";
 import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
 import { OrderlyActiveIcon } from "../../../components/icons/orderly";
 import { OrderlyIcon } from "./icons";
@@ -20,7 +21,7 @@ export const sharePnLConfig = {
   refSlogan: "NEW BE222",
 };
 
-export const mainNavProps = {
+export const mainNavProps: MainNavWidgetProps = {
   mainMenus: [
     { name: "Trading", href: "/", testid: "oui-main-nav-trading" },
     { name: "Reward", href: "/rewards", testid: "oui-main-nav-reward" },
