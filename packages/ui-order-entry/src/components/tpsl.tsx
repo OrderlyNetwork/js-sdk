@@ -88,8 +88,9 @@ export const OrderTPSL = (props: {
         </label>
         <ExclamationFillIcon
           color="white"
-          opacity={0.36}
+          // opacity={0.36}
           size={14}
+          opacity={1} className="oui-text-white/[.36] hover:oui-text-white/80 oui-cursor-pointer" 
           onClick={() => {
             modal.dialog({
               title: "Tips",

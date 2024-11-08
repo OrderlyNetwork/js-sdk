@@ -6,6 +6,7 @@ export type routerAdapter = {
     href: string;
     name: string;
     scope?: string;
+    target?: string;
   }) => void;
   currentPath?: string;
 };

@@ -59,7 +59,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
 
   const trigger = (
     <Flex
-      intensity={600}
+      intensity={500}
       className={cn(
         "oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line",
         selectable ? "oui-cursor-pointer" : "oui-cursor-auto"

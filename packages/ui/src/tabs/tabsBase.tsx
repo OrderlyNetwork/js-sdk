@@ -29,7 +29,7 @@ const tabsVariants = tv({
       "oui-box-content",
       "oui-font-medium",
 
-      "oui-text-base-contrast-36",
+      "oui-text-base-contrast-36 hover:oui-text-base-contrast-54",
       "oui-ring-offset-background",
       "oui-transition-all",
       "oui-space-x-1",
