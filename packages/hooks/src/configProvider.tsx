@@ -36,43 +36,43 @@ type filteredChains = {
 
 type filterChainsFunc = (config: ConfigStore) => filteredChains;
 
-// type BaseConfigProviderProps = {
-//   keyStore?: OrderlyKeyStore;
-//   contracts?: IContract;
-//   // getWalletAdapter?: getWalletAdapterFunc;
-//   walletAdapters?: WalletAdapter[];
-//   networkId: NetworkId;
-//   chainFilter?: filteredChains | filterChainsFunc;
-//   customChains?: Chains<undefined, undefined>;
-// };
-
-// export type ConfigProviderOptionalProps =
-//   | {
-//       brokerId: string;
-//       brokerName?: string;
-//       configStore?: never;
-//     }
-//   | {
-//       brokerId?: never;
-//       brokerName?: never;
-//       configStore: ConfigStore;
-//     };
-
-// export type ConfigProviderProps = BaseConfigProviderProps &
-//   ConfigProviderOptionalProps;
-
-export type ConfigProviderProps = {
-  configStore?: ConfigStore;
+export type BaseConfigProviderProps = {
   keyStore?: OrderlyKeyStore;
   contracts?: IContract;
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
-  brokerId: string;
-  brokerName?: string;
   networkId: NetworkId;
   chainFilter?: filteredChains | filterChainsFunc;
   customChains?: Chains<undefined, undefined>;
 };
+
+export type ConfigProviderExclusionProps =
+  | {
+      brokerId: string;
+      brokerName?: string;
+      configStore?: never;
+    }
+  | {
+      brokerId?: never;
+      brokerName?: never;
+      configStore: ConfigStore;
+    };
+
+export type ConfigProviderProps = BaseConfigProviderProps &
+  ConfigProviderExclusionProps;
+
+// export type ConfigProviderProps = {
+//   configStore?: ConfigStore;
+//   keyStore?: OrderlyKeyStore;
+//   contracts?: IContract;
+//   // getWalletAdapter?: getWalletAdapterFunc;
+//   walletAdapters?: WalletAdapter[];
+//   brokerId: string;
+//   brokerName?: string;
+//   networkId: NetworkId;
+//   chainFilter?: filteredChains | filterChainsFunc;
+//   customChains?: Chains<undefined, undefined>;
+// };
 
 export const OrderlyConfigProvider: FC<
   PropsWithChildren<ConfigProviderProps>
@@ -112,7 +112,7 @@ export const OrderlyConfigProvider: FC<
   if (
     typeof brokerId !== "undefined" &&
     typeof configStore !== "undefined" &&
-    brokerId !== configStore.get("brokerId")
+    brokerId !== (configStore as ConfigStore).get("brokerId")
   ) {
     throw new SDKError(
       "If you have provided a custom `configStore` and the `brokerId` is set in the `configStore`, please remove the `brokerId` prop."

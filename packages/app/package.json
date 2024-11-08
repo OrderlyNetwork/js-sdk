@@ -36,8 +36,7 @@
     "react-dom": "^18.2.0",
     "tsconfig": "workspace:*",
     "tailwindcss": "^3.4.4",
-    "tsup": "^7.3.0",
-    "@orderly.network/core": "workspace:*"
+    "tsup": "^7.3.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",

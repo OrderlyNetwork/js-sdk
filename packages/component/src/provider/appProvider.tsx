@@ -134,7 +134,8 @@ export const OrderlyAppProvider: FC<
 
   return (
     <OrderlyConfigProvider
-      configStore={configStore!}
+      // use never to fix type
+      configStore={configStore as never}
       keyStore={keyStore}
       walletAdapters={walletAdapters}
       brokerId={brokerId!}
