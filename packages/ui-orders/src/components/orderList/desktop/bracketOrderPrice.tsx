@@ -34,6 +34,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
               suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
               color="buy"
+              showIdentifier
             >
               {pnl.tpPnL}
             </Text.numeral>

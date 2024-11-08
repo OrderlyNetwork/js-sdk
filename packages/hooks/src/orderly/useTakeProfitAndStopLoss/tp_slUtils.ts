@@ -205,6 +205,8 @@ export function pnlToPrice(inputs: {
 
 /**
  * TP/SL price -> pnl
+ * @price trigger_price
+ * @entryPrice calculate price, maybe markPrice/limitPrice/order.price
  */
 export function priceToPnl(
   inputs: {
@@ -216,9 +218,11 @@ export function priceToPnl(
   },
   options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {}
 ): number {
-  const { qty, price, entryPrice, orderType, orderSide } = inputs;
+  const { qty: _qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
   let decimal = zero;
+  const qty =
+    orderSide === OrderSide.BUY ? Math.abs(_qty) : Math.abs(_qty) * -1;
 
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
