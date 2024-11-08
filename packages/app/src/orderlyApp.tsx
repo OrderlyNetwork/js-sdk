@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 import { OrderlyAppConfig } from "./types";
 import {
   ModalProvider,
@@ -7,7 +7,10 @@ import {
   TooltipProvider,
 } from "@orderly.network/ui";
 import { useBootstrap } from "./hooks/useBootstrap";
-import { OrderlyConfigProvider } from "@orderly.network/hooks";
+import {
+  ConfigProviderProps,
+  OrderlyConfigProvider,
+} from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./provider/appContext";
 import { AppConfigProvider } from "./provider/configContext";
 import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
@@ -15,17 +18,16 @@ import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adap
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 import { useExecutionReport } from "./hooks/useExecutionReport";
 
-type Optional<T, K extends keyof T> = Omit<T, K> & Partial<T>;
-type OptionalConfig = Optional<OrderlyAppConfig, "walletAdapters">;
-
 const evmWalletAdapter = new DefaultEVMAdapterWalletAdapter(
   new EthersProvider()
 );
 const solanaWalletAdapter = new DefaultSolanaWalletAdapter();
 
-const OrderlyApp = (
-  props: PropsWithChildren<OptionalConfig & AppStateProviderProps>
-) => {
+type OrderlyAppProps = PropsWithChildren<
+  OrderlyAppConfig & AppStateProviderProps
+>;
+
+const OrderlyApp = (props: OrderlyAppProps) => {
   const {
     onChainChanged,
     dateFormatting,
@@ -38,13 +40,13 @@ const OrderlyApp = (
   useExecutionReport();
 
   return (
-    <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName}>
+    <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName!}>
       <OrderlyThemeProvider
         dateFormatting={dateFormatting}
         components={components}
       >
         <OrderlyConfigProvider
-          {...configProps}
+          {...(configProps as ConfigProviderProps)}
           walletAdapters={[evmWalletAdapter, solanaWalletAdapter]}
         >
           <AppStateProvider onChainChanged={onChainChanged}>

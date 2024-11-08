@@ -1,6 +1,7 @@
 import { ComponentType, ReactNode } from "react";
-import { type Chains, ConfigProviderProps } from "@orderly.network/hooks";
+import { ConfigProviderProps } from "@orderly.network/hooks";
 import { ExtensionPosition } from "@orderly.network/ui";
+import { type ConfigStore } from "@orderly.network/core";
 
 type Logo = {
   // the logo image url
@@ -17,11 +18,29 @@ export type AppLogos = Partial<{
   secondary: Logo;
 }>;
 
-export interface OrderlyAppConfig extends ConfigProviderProps {
+export type OrderlyAppConfig = {
   appIcons?: AppLogos;
   dateFormatting?: string;
   // brokerName: string;
   components?: {
     [position in ExtensionPosition]: ComponentType;
   };
-}
+} & Partial<
+  Omit<
+    ConfigProviderProps,
+    "walletAdapters" | "brokerId" | "brokerName" | "configStore"
+  >
+> &
+  ConfigProviderOptionalProps;
+
+export type ConfigProviderOptionalProps =
+  | {
+      brokerId: string;
+      brokerName?: string;
+      configStore?: never;
+    }
+  | {
+      brokerId?: never;
+      brokerName?: never;
+      configStore: ConfigStore;
+    };

@@ -33,10 +33,10 @@ const meta = {
         <WalletConnectorProvider>
           <OrderlyApp
             // brokerId="orderly"
-            brokerName="Orderly"
+            // brokerName="Orderly"
+            configStore={configStore}
             networkId={networkId}
             onChainChanged={fn()}
-            configStore={configStore}
             appIcons={{
               main: {
                 img: "/orderly-logo.svg"
@@ -48,7 +48,6 @@ const meta = {
           >
             <Scaffold
               leftSidebar={null}
-              // @ts-ignore
               mainNavProps={mainNavProps}
               classNames={{
                 footer: "oui-bg-base-10",

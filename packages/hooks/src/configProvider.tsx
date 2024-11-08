@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import type { FC, PropsWithChildren } from "react";
 import React, { useLayoutEffect, useMemo } from "react";
 import { OrderlyProvider } from "./orderlyContext";
 import {
@@ -29,16 +29,6 @@ import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adap
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 // import { useParamsCheck } from "./useParamsCheck";
 
-type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
-  {
-    [K in U]-?: Required<Pick<T, K>> & Partial<Record<Exclude<U, K>, never>>;
-  }[U];
-
-type RequireAtLeastOne<T, R extends keyof T = keyof T> = Omit<T, R> &
-  {
-    [K in R]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<R, K>>>;
-  }[R];
-
 type filteredChains = {
   mainnet?: Chain[];
   testnet?: Chain[];
@@ -46,25 +36,47 @@ type filteredChains = {
 
 type filterChainsFunc = (config: ConfigStore) => filteredChains;
 
-export interface ConfigProviderProps {
+// type BaseConfigProviderProps = {
+//   keyStore?: OrderlyKeyStore;
+//   contracts?: IContract;
+//   // getWalletAdapter?: getWalletAdapterFunc;
+//   walletAdapters?: WalletAdapter[];
+//   networkId: NetworkId;
+//   chainFilter?: filteredChains | filterChainsFunc;
+//   customChains?: Chains<undefined, undefined>;
+// };
+
+// export type ConfigProviderOptionalProps =
+//   | {
+//       brokerId: string;
+//       brokerName?: string;
+//       configStore?: never;
+//     }
+//   | {
+//       brokerId?: never;
+//       brokerName?: never;
+//       configStore: ConfigStore;
+//     };
+
+// export type ConfigProviderProps = BaseConfigProviderProps &
+//   ConfigProviderOptionalProps;
+
+export type ConfigProviderProps = {
   configStore?: ConfigStore;
   keyStore?: OrderlyKeyStore;
   contracts?: IContract;
   // getWalletAdapter?: getWalletAdapterFunc;
-  walletAdapters: WalletAdapter[];
+  walletAdapters?: WalletAdapter[];
   brokerId: string;
-  brokerName: string;
+  brokerName?: string;
   networkId: NetworkId;
-
   chainFilter?: filteredChains | filterChainsFunc;
   customChains?: Chains<undefined, undefined>;
-}
+};
 
-export const OrderlyConfigProvider = (
-  props: PropsWithChildren<
-    RequireAtLeastOne<ConfigProviderProps, "brokerId" | "configStore">
-  >
-) => {
+export const OrderlyConfigProvider: FC<
+  PropsWithChildren<ConfigProviderProps>
+> = (props) => {
   const [account, setAccount] = React.useState<Account | null>(null);
   const {
     configStore,

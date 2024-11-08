@@ -27,7 +27,7 @@ const meta = {
         <WalletConnectorProvider>
           <OrderlyApp
             // brokerId={"orderly"}
-            brokerName={"Orderly"}
+            // brokerName={"Orderly"}
             networkId={networkId}
             onChainChanged={fn()}
             configStore={configStore}

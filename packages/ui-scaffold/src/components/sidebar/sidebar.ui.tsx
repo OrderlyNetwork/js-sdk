@@ -115,7 +115,7 @@ const MenuItem: FC<
 });
 
 const SideMenus: FC<{
-  menus: SideMenuItem[];
+  menus?: SideMenuItem[];
   current?: string;
   open?: boolean;
   onItemSelect?: (item: SideMenuItem) => void;
@@ -145,7 +145,7 @@ const SideMenus: FC<{
         </defs>
       </svg>
       <ul className="oui-space-y-4">
-        {props.menus.map((item, index) => {
+        {props.menus?.map((item, index) => {
           return (
             <MenuItem
               key={index}
@@ -204,7 +204,7 @@ const SideBarHeader: FC<SideBarHeaderProps> = (props) => {
 
 type SideBarProps = {
   title?: React.ReactNode;
-  items: SideMenuItem[];
+  items?: SideMenuItem[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   onItemSelect?: (item: SideMenuItem) => void;
