@@ -57,6 +57,7 @@ export const PNLInput = (props: PNLInputProps) => {
       classNames={{
         input: color,
         prefix: "oui-text-base-contrast-54",
+        root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
       }}
       onFocus={() => {
         setPlaceholder("");

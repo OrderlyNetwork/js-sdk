@@ -30,6 +30,8 @@ export const DesktopSharePnL: FC<SharePnLState> = (props) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  if (shareOptions == null) return <></>;
   return (
     <DesktopSharePnLContent
       position={position}
@@ -53,7 +55,7 @@ export const MobileSharePnL: FC<SharePnLState> = (props) => {
     shareOptions,
     hide,
   } = props;
-
+  if (shareOptions == null) return <></>;
   return (
     <MobileSharePnLContent
       position={position}

@@ -167,7 +167,7 @@ const TPSLQuantity = (props: {
             autoComplete="off"
             classNames={{
               prefix: "oui-text-base-contrast-54",
-              root: "oui-bg-base-5",
+              root: "oui-bg-base-5 oui-outline-line-12 focus-within:oui-outline-primary-light",
             }}
             formatters={[
               inputFormatter.dpFormatter(props.dp),
@@ -206,14 +206,15 @@ const TPSLQuantity = (props: {
               }
             }}
             variant={"outlined"}
-            size={{
-              lg: "md",
-              md: "lg",
-            }}
+            // size={{
+            //   lg: "md",
+            //   md: "lg",
+            // }}
             className={cn(
+              "oui-text-2xs oui-w-[68px] oui-h-[40px] xl:oui-h-[32px]",
               isPosition
                 ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
-                : "oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
+                : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
             )}
           >
             Position
@@ -392,6 +393,7 @@ const PriceInput = (props: {
       color={props.error ? "danger" : undefined}
       classNames={{
         prefix: "oui-text-base-contrast-54",
+        root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
       }}
       onValueChange={props.onValueChange}
       onFocus={() => {
@@ -503,8 +505,8 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         itemAlign={"stretch"}
         gapY={1}
         pt={4}
-        pb={5}
-        className={textClassName}
+        // pb={5}
+        className={cn(textClassName, "oui-pb-4 xl:oui-pb-5")}
       >
         <Flex>
           <Box grow>Qty.</Box>
@@ -556,7 +558,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <div className="oui-text-base-contrast">Market</div>
         </Flex>
       </Flex>
-      <Box py={2}>
+      <Box pt={2}>
         <Flex gap={1}>
           <Checkbox
             id="disabledConfirm"

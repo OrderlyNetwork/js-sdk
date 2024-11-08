@@ -76,7 +76,7 @@ const Price = (props: {
   return value ? (
     <Text.numeral
       className={cn(
-        "oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-36",
+        "oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12",
         type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
       )}
       key={"tp"}

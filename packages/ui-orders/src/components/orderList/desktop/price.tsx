@@ -285,7 +285,7 @@ const NormalState: FC<{
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
           !props.disableEdit &&
-            "oui-bg-base-7 oui-px-2  oui-border oui-border-line"
+            "oui-bg-base-7 oui-px-2  oui-border oui-border-line-12"
         )}
       >
         <Text size="2xs">{commifyOptional(price)}</Text>

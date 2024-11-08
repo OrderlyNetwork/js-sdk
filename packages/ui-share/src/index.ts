@@ -15,6 +15,9 @@ registerSimpleDialog(SharePnLDialogId, SharePnLDialogWidget, {
 
 registerSimpleSheet(SharePnLBottomSheetId, SharePnLBottomSheetWidget, {
   title: "Share PnL",
+  classNames: {
+    body: "oui-pb-4 oui-pt-0"
+  }
 });
 
 export * from "./sharePnL";

@@ -29,7 +29,7 @@ export const useSharePnLScript = (props: {
     baseDp:base_dp,
     quoteDp:quote_dp,
     referralInfo,
-    shareOptions: pnl as SharePnLConfig,
+    shareOptions: pnl as SharePnLConfig | undefined,
     hide,
   };
 };

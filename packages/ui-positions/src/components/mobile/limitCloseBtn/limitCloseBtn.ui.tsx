@@ -41,6 +41,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
         variant="outlined"
         color="secondary"
         size="sm"
+        className="oui-border-base-contrast-36"
         onClick={() => {
           updatePriceChange("limit");
           setSheetOpen(true);
@@ -84,8 +85,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
             </Flex>
             <Divider className="oui-w-full" />
             <Flex width={"100%"} justify={"between"}>
-              <Text>Last price</Text>
-              <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp}>
+              <Text intensity={54}>Last price</Text>
+              <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp} suffix={<Text intensity={36}>USDC</Text>}>
                 {props.curMarkPrice}
               </Text.numeral>
             </Flex>
@@ -102,6 +103,11 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 ]}
                 value={props.price}
                 onValueChange={(e) => props.updatePriceChange(e)}
+                classNames={{
+                  prefix: "oui-text-base-contrast-54",
+                  suffix: "oui-text-base-contrast-54",
+                  root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
+                }}
               />
               <Input
                 prefix="Quantity"
@@ -122,6 +128,11 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                     .toDecimalPlaces(2, Decimal.ROUND_DOWN)
                     .toNumber();
                   props.setSliderValue(slider);
+                }}
+                classNames={{
+                  prefix: "oui-text-base-contrast-54",
+                  suffix: "oui-text-base-contrast-54",
+                  root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
                 }}
               />
               <Slider
