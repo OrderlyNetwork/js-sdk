@@ -7,7 +7,7 @@ import { Box } from "@orderly.network/ui";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 
 const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging", brokerName: "Orderly", brokerId: "orderly" });
+const configStore = new CustomConfigStore({ networkId, env: "dev", brokerName: "Orderly", brokerId: "orderly" });
 
 
 const meta = {
