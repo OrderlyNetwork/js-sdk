@@ -206,14 +206,15 @@ const TPSLQuantity = (props: {
               }
             }}
             variant={"outlined"}
-            size={{
-              lg: "md",
-              md: "lg",
-            }}
+            // size={{
+            //   lg: "md",
+            //   md: "lg",
+            // }}
             className={cn(
+              "oui-text-2xs oui-w-[68px] oui-h-[40px] xl:oui-h-[32px]",
               isPosition
                 ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
-                : "oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
+                : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
             )}
           >
             Position
@@ -504,8 +505,8 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         itemAlign={"stretch"}
         gapY={1}
         pt={4}
-        pb={5}
-        className={textClassName}
+        // pb={5}
+        className={cn(textClassName, "oui-pb-4 xl:oui-pb-5")}
       >
         <Flex>
           <Box grow>Qty.</Box>
