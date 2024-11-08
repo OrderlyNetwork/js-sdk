@@ -560,7 +560,7 @@ const CustomInput = forwardRef<
       ]}
       classNames={{
         root: cn(
-          "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+          "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-2 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
           props.className
         ),
         input: "oui-mt-5 oui-mb-1 oui-h-5",

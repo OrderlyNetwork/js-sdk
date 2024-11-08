@@ -56,7 +56,7 @@ const textVariants = tv({
       98: "oui-text-base-contrast",
     },
     dashBoard: {
-      default: "oui-border-b oui-border-dashed oui-border-base-contrast-36",
+      default: "oui-border-b oui-border-dashed oui-border-base-contrast-12",
     }
   },
 });

@@ -556,7 +556,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <div className="oui-text-base-contrast">Market</div>
         </Flex>
       </Flex>
-      <Box py={2}>
+      <Box pt={2}>
         <Flex gap={1}>
           <Checkbox
             id="disabledConfirm"

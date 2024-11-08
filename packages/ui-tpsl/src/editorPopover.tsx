@@ -130,6 +130,9 @@ export const PositionTPSLPopover = (props: {
                 onOk: () => {
                   return options.submit();
                 },
+                classNames: {
+                  body: "!oui-pb-0"
+                },
                 content: (
                   <PositionTPSLConfirm
                     isEditing={finalIsEditing}
