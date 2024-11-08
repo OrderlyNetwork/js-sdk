@@ -159,7 +159,7 @@ export function TableView<RecordType extends any>(
     // ...sortConfig,
   });
 
-  const wrapRef = useWrap();
+  const wrapRef = useWrap([className, classNames?.root]);
   const { scrollRef, showLeftShadow, showRightShadow } = useScroll([
     dataSource,
   ]);
