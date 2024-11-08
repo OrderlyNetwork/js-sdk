@@ -167,7 +167,7 @@ const TPSLQuantity = (props: {
             autoComplete="off"
             classNames={{
               prefix: "oui-text-base-contrast-54",
-              root: "oui-bg-base-5",
+              root: "oui-bg-base-5 oui-outline-line-12 focus-within:oui-outline-primary",
             }}
             formatters={[
               inputFormatter.dpFormatter(props.dp),
@@ -392,6 +392,7 @@ const PriceInput = (props: {
       color={props.error ? "danger" : undefined}
       classNames={{
         prefix: "oui-text-base-contrast-54",
+        root: "oui-outline-line-12 focus-within:oui-outline-primary",
       }}
       onValueChange={props.onValueChange}
       onFocus={() => {
