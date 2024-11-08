@@ -3,17 +3,17 @@ import {
   useLocalStorage,
   useMediaQuery,
 } from "@orderly.network/hooks";
-import { useTradingPageContext } from "../provider/context";
-import { TradingPageState } from "../types/types";
-import { useSplitPersistent } from "../components/desktop/layout/useSplitPersistent";
+import { useTradingPageContext } from "../../provider/context";
+import { TradingPageState } from "../../types/types";
+import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
 import { useMemo, useState } from "react";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useFirstTimeDeposit } from "../components/desktop/assetView/assetView.script";
+import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
 
-export type TradingV2State = ReturnType<typeof useTradingV2Script>;
+export type TradingState = ReturnType<typeof useTradingScript>;
 
-export const useTradingV2Script = () => {
+export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
   const [animating, setAnimating] = useState(false);

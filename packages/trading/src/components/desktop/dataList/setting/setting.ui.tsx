@@ -25,7 +25,7 @@ export const Setting: FC<SettingState> = (props) => {
             props.setShowAllSymbol(checked);
           }}
         />
-        <label className="oui-text-xs oui-text-base-contrast-54" htmlFor="oui-checkbox-showAllInstruments">Show all trading pairs</label>
+        <label className="oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer" htmlFor="oui-checkbox-showAllInstruments">Show all trading pairs</label>
       </Flex>
       <Button
         size="xs"
@@ -35,7 +35,7 @@ export const Setting: FC<SettingState> = (props) => {
       >
         <DropdownMenuRoot open={open} onOpenChange={setOpen}>
           <DropdownMenuTrigger>
-            <SettingFillIcon size={16} color="white" />
+            <SettingFillIcon size={16} color="white" opacity={1} className="oui-text-white/[.36] hover:oui-text-white/80" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="oui-px-5 oui-py-3 oui-w-[360px]" alignOffset={2} align="end">
             <div className="oui-flex oui-flex-col oui-text-sm">

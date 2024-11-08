@@ -179,14 +179,13 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
             ...classNames,
             root: cn(
               "oui-h-[54px] oui-relative oui-px-3",
-              "oui-bg-base-5 oui-rounded-lg",
-              "oui-border oui-border-line",
+              "oui-border oui-border-line oui-rounded-lg",
               status === "error" &&
                 "focus-within:oui-outline-danger-light oui-outline-danger-light",
               status === "warning" &&
                 "focus-within:oui-outline-warning-light oui-outline-warning-light",
               props.readOnly
-                ? "oui-bg-base-6 focus-within:oui-outline-0"
+                ? "oui-bg-base-6 focus-within:oui-outline-0 oui-border-none"
                 : "oui-bg-base-5",
               classNames?.root
             ),

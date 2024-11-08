@@ -26,6 +26,7 @@ interface StatusInfo {
   title: string;
   description: string;
   titleColor?: any;
+  titleClsName?: string;
 }
 
 interface TooltipContentProps {
@@ -78,6 +79,8 @@ const useCurrentStatusText = (): StatusInfo => {
         return {
           title: "Connect wallet",
           description: "Please connect your wallet before starting to trade.",
+          titleClsName:
+            "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
         };
       case AccountStatusEnum.NotSignedIn:
         return {
@@ -274,16 +277,27 @@ export const AssetView: FC<AssetViewState> = ({
   renderMMR,
   isConnected,
 }) => {
-  const { title, description, titleColor } = useCurrentStatusText();
+  const { title, description, titleColor, titleClsName } =
+    useCurrentStatusText();
 
   return (
-    <Box>
+    <Box className="oui-relative">
       {title && description && (
         <Flex direction="column" gap={1} className="oui-mb-[32px]">
-          <Text size="lg" weight="bold" color={titleColor || "inherit"}>
+          <Text
+            size="lg"
+            weight="bold"
+            color={titleColor || "inherit"}
+            className={titleClsName}
+          >
             {title}
           </Text>
-          <Text size="2xs" color="neutral" weight="semibold">
+          <Text
+            size="2xs"
+            color="neutral"
+            weight="semibold"
+            className="oui-text-center"
+          >
             {description}
           </Text>
         </Flex>
@@ -346,11 +360,19 @@ export const AssetView: FC<AssetViewState> = ({
                 <ArrowDownShortIcon color="white" opacity={1} />
                 <Text>Deposit</Text>
               </Button>
-            </Flex>
+            </Flex> 
             <FaucetWidget />
           </Box>
         )}
       </AuthGuard>
+      <div
+        className="oui-pointer-events-none oui-rotate-180 oui-rounded-2xl oui-blur-[200px] oui-top-0 oui-bottom-0 oui-left-0 oui-right-0 oui-absolute"
+        style={{
+          background:
+            "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(159, 115, 241, 0) -48.92deg, rgba(242, 98, 181, 0) 125.18deg, #5FC5FF 193.41deg, #FFAC89 216.02deg, #8155FF 236.07deg, #789DFF 259.95deg, rgba(159, 115, 241, 0) 311.08deg, rgba(242, 98, 181, 0) 485.18deg)",
+            
+        }}
+      />
     </Box>
   );
 };

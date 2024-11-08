@@ -7,7 +7,11 @@ export const NewAppProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ConnectorProvider skipInit>
       <OrderlyThemeProvider>
-        <OrderlyConfigProvider networkId={"testnet"} brokerId={"orderly"}>
+        <OrderlyConfigProvider
+          networkId="testnet"
+          brokerId="orderly"
+          brokerName="Orderly"
+        >
           {children}
         </OrderlyConfigProvider>
       </OrderlyThemeProvider>

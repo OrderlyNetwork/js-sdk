@@ -6,12 +6,12 @@ import {
   TokenInfoBarFullWidget,
   MarketsSheetWidget
 } from "@orderly.network/markets";
-import { Box, Flex, modal, SimpleSheet, useModal } from "@orderly.network/ui";
+import { Box, Flex,  SimpleSheet } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
 import { useState } from "react";
 
 const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging" });
+const configStore = new CustomConfigStore({ networkId, brokerId:'orderly', env: "staging" });
 
 const meta = {
   title: "Package/Markets/TokenInfoBar",
@@ -20,9 +20,7 @@ const meta = {
     (Story: any) => (
       <WalletConnectorProvider>
         <OrderlyApp
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          networkId="testnet"
           configStore={configStore}
         >
           <Story />
@@ -76,17 +74,6 @@ export const MobileTokenInfoBar: Story = {
 
     const onSymbol = async () => {
       setOpen(true)
-      // modal.sheet({
-      //   title: null,        
-      //   classNames: {
-      //     content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
-      //   },
-      //   content: <MarketsSheetWidget
-      //             onSymbolChange={(symbol) => {
-      //               console.log('onSymbolChange', symbol);
-      //           }}/>,
-      //   contentProps: { side: "left", closeable:false },
-      // });
     };
 
     return (

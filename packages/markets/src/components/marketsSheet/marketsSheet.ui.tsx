@@ -62,6 +62,9 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           sortOrder={tabSort?.sortOrder}
           onSort={onTabSort}
           getColumns={getMarketsSheetColumns}
+          tableClassNames={{
+            root: "!oui-bg-base-8",
+          }}
         />
       </Box>
     </Box>

@@ -84,13 +84,13 @@ export const PNLInput = (props: PNLInputProps) => {
       }}
       suffix={
         <>
-          {mode === PnLMode.PERCENTAGE && !!value && (
+          {mode === PnLMode.PERCENTAGE && !!value &&  (
             <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
               %
             </Text>
           )}
           <PNLMenus
-            mode={prefix}
+            mode={mode}
             modes={modes}
             onModeChange={(item) => onModeChange(item.value as PnLMode)}
           />

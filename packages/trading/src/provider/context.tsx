@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useContext } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import { TradingPageState, TradingPageV2Props } from "../types/types";
+import { TradingPageState, TradingPageProps } from "../types/types";
 import { MEDIA_TABLET } from "@orderly.network/types";
 import { getBasicSymbolInfo } from "../utils/utils";
 
@@ -10,7 +10,7 @@ export const useTradingPageContext = () => {
 };
 
 export const TradingPageProvider = (
-  props: PropsWithChildren<TradingPageV2Props>
+  props: PropsWithChildren<TradingPageProps>
 ) => {
   const { tabletMediaQuery = MEDIA_TABLET, ...rest } = props;
   const symbolInfo = useSymbolsInfo()[props.symbol];
