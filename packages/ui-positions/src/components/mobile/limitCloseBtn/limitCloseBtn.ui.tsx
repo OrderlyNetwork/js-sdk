@@ -106,7 +106,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 classNames={{
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
-                  root: "oui-outline-line-12 focus-within:oui-outline-primary"
+                  root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
                 }}
               />
               <Input
@@ -132,7 +132,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 classNames={{
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
-                  root: "oui-outline-line-12 focus-within:oui-outline-primary"
+                  root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
                 }}
               />
               <Slider

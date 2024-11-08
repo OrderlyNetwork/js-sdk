@@ -48,7 +48,7 @@ export const PriceInput = () => {
           </DropdownMenuTrigger>
         }
         classNames={{
-          root: cn("oui-outline-line-12")
+          root: cn("oui-outline-line-12 focus-within:oui-outline-primary-light")
         }}
       />
       <DropdownMenuContent
