@@ -13,7 +13,7 @@ export enum CampaignPositionEnum {
 }
 
 export type MainNavWidgetProps = {
-  logo: {
+  logo?: {
     src: string;
     alt: string;
   };

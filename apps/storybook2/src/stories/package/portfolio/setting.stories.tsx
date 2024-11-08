@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { APIManagerModule, PortfolioLayoutWidget, SettingModule } from "@orderly.network/portfolio";
+import {
+  APIManagerModule,
+  PortfolioLayoutWidget,
+  SettingModule,
+} from "@orderly.network/portfolio";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Box } from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
@@ -47,22 +51,20 @@ export const Page: Story = {};
 
 export const Layout: Story = {
   render: (e) => {
-
     const [currentPath, setCurrentPath] = useState("/portfolio/apiKey");
     return (
-      <PortfolioLayoutWidget 
-        // items={[]} 
+      <PortfolioLayoutWidget
+        // items={[]}
         routerAdapter={{
           onRouteChange: (op) => {
             console.log("routerAdapter", op);
-            
+
             setCurrentPath(op.href);
           },
           // currentPath: currentPath
         }}
-        // @ts-ignore
         leftSideProps={{
-          current: currentPath
+          current: currentPath,
         }}
       >
         <SettingModule.SettingPage />

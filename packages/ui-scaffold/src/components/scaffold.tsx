@@ -24,10 +24,10 @@ export type LayoutProps = {
    * Custom left sidebar component,
    * if provided, the layout will use this component over the default sidebar component
    */
-  leftSidebar?: React.ReactNode;
   gap?: number;
   maxWidth?: number;
   bodyPadding?: SizeType;
+  leftSidebar?: React.ReactNode;
   leftSideProps?: SideBarProps;
   rightSidebar?: React.ReactNode;
   topBar?: React.ReactNode;
@@ -130,14 +130,11 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
             }}
           >
             <div className={cn(classNames?.leftSidebar)}>
-              {/* @ts-ignore */}
               {typeof props.leftSidebar !== "undefined" ? (
                 props.leftSidebar
               ) : (
                 <SideNavbarWidget {...props.leftSideProps} />
               )}
-
-              {/* <SideNavbarWidget {...props.leftSideProps} /> */}
             </div>
             <Box
               width={"100%"}

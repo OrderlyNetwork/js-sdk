@@ -40,6 +40,9 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
             const { style: pinStyle, classNames: pinClassNames } =
               getColumnPinningProps(column, true);
 
+            const canSort = column.getCanSort();
+            const isSorted = column.getIsSorted();
+
             return (
               <th
                 key={header.id}
@@ -63,13 +66,15 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
                   <div
                     className={cnBase(
                       "oui-inline-flex oui-items-center oui-gap-x-1",
-                      column.getCanSort() &&
-                        "oui-cursor-pointer oui-select-none"
+                      canSort &&
+                        "oui-cursor-pointer oui-select-none hover:oui-text-base-contrast-80"
                     )}
                     onClick={column.getToggleSortingHandler()}
                   >
                     {title}
-                    <SortIndicator column={column} />
+                    {canSort && (
+                      <SortIndicator isSorted={isSorted as SortDirection} />
+                    )}
                   </div>
                 )}
               </th>
@@ -81,14 +86,11 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
   );
 };
 
-const SortIndicator: FC<{ column: TanstackColumn<any> }> = ({ column }) => {
-  if (column.getCanSort()) {
-    return (
-      {
-        asc: <AscendingIcon />,
-        desc: <DescendingIcon />,
-      }[column.getIsSorted() as SortDirection] || <SortingIcon />
-    );
-  }
-  return null;
+const SortIndicator: FC<{ isSorted: SortDirection }> = ({ isSorted }) => {
+  return (
+    {
+      asc: <AscendingIcon />,
+      desc: <DescendingIcon />,
+    }[isSorted] || <SortingIcon />
+  );
 };
