@@ -30,7 +30,7 @@ export const MiddlePriceView: FC<{
 
   const down = middlePrice < prevLastPrice;
   const up = middlePrice > prevLastPrice;
-  
+
   return (
     <Flex
       gap={1}
@@ -39,7 +39,9 @@ export const MiddlePriceView: FC<{
         className
       )}
     >
-      <Text.numeral dp={quote_dp}>{middlePrice}</Text.numeral>
+      <Text.numeral dp={quote_dp} intensity={98}>
+        {middlePrice}
+      </Text.numeral>
       <Box width={19}>
         {down && (
           <ArrowDownShortIcon size={iconSize} color="danger" opacity={1} />
