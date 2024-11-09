@@ -5,6 +5,7 @@ import { ShareButtonState } from "./shareButton.script";
 import React from "react";
 
 export const ShareButton: FC<ShareButtonState> = (props) => {
+  if (props.sharePnLConfig == null) return <></>;
   return (
     <button
       type="button"

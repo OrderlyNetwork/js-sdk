@@ -1,5 +1,5 @@
 import { Box, cn, Grid, type SizeType } from "@orderly.network/ui";
-import { MainNavWidget } from "./main/mainNav.widget";
+import { MainNavWidget, MainNavWidgetProps } from "./main/mainNav.widget";
 import React, { PropsWithChildren, useContext } from "react";
 import { SideNavbarWidget } from "./sidebar";
 import { SideBarProps } from "./sidebar";
@@ -16,8 +16,8 @@ import {
 } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterConfig, FooterWidget } from "./footer";
-import { MainNavWidgetProps } from "./main/useWidgetBuilder.script";
 import { MaintenanceTipsWidget } from "./maintenanceTips";
+import { MainNavProps } from "./main/mainNav.ui";
 
 export type LayoutProps = {
   /**
@@ -32,7 +32,7 @@ export type LayoutProps = {
   rightSidebar?: React.ReactNode;
   topBar?: React.ReactNode;
   // topBarProps?:
-  mainNavProps?: PropsWithChildren<MainNavWidgetProps>;
+  mainNavProps?: MainNavWidgetProps;
   footer?: React.ReactNode;
   routerAdapter?: routerAdapter;
   footerHeight?: number;
@@ -93,7 +93,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           // unsupported,
           checkChainSupport: checkChainSupportHandle,
           footerConfig,
-          // mainNavProps: props.mainNavProps,
         }}
       >
         {/* Top main nav */}

@@ -10,6 +10,7 @@ export const TpSLBtn: FC<TpSLBtnState> = (props) => {
       variant="outlined"
       color="secondary"
       size="sm"
+      className="oui-border-base-contrast-36"
       onClick={(e) => {
         e.stopPropagation();
         e.preventDefault();

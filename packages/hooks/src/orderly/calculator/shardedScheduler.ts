@@ -7,6 +7,51 @@ import {
 
 type ShardProcessor<T, R> = (shard: T[]) => R;
 
+interface IdleDeadline {
+  timeRemaining: () => number;
+  readonly didTimeout: boolean;
+}
+
+/**
+ * Polyfill for requestIdleCallback
+ */
+const requestIdleCallbackPolyfill = (
+  callback: (deadline: IdleDeadline) => void,
+  options?: { timeout: number }
+): ReturnType<typeof setTimeout> => {
+  const startTime = Date.now();
+
+  return setTimeout(() => {
+    callback({
+      didTimeout: false,
+      timeRemaining: () => Math.max(0, 50 - (Date.now() - startTime)),
+    });
+  }, 1); // Use 1ms timeout as a fallback
+};
+
+/**
+ * Polyfill for cancelIdleCallback
+ */
+const cancelIdleCallbackPolyfill = (id: number) => {
+  clearTimeout(id);
+};
+
+/**
+ * Export the native requestIdleCallback or polyfill
+ */
+const safeRequestIdleCallback =
+  typeof window !== "undefined" && window.requestIdleCallback
+    ? window.requestIdleCallback.bind(window)
+    : requestIdleCallbackPolyfill;
+
+/**
+ * Export the native cancelIdleCallback or polyfill
+ */
+const safeCancelIdleCallback =
+  typeof window !== "undefined" && window.cancelIdleCallback
+    ? window.cancelIdleCallback.bind(window)
+    : cancelIdleCallbackPolyfill;
+
 class ShardingScheduler implements CalculatorScheduler {
   // run(calculators: Calculator[]) {}
   calc(
@@ -93,7 +138,7 @@ class ShardingScheduler implements CalculatorScheduler {
 
       if (index < data.length) {
         // There are still unprocessed data shards, request the next idle callback
-        requestIdleCallback(processNextShard, {
+        safeRequestIdleCallback(processNextShard, {
           timeout: 1000,
         });
       } else {
@@ -101,10 +146,10 @@ class ShardingScheduler implements CalculatorScheduler {
       }
     }
 
-    requestIdleCallback(processNextShard, {
+    safeRequestIdleCallback(processNextShard, {
       timeout: 1000,
     });
   }
 }
 
-export { ShardingScheduler };
+export { ShardingScheduler, safeRequestIdleCallback, safeCancelIdleCallback };

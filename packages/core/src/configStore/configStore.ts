@@ -1,5 +1,3 @@
-import { ChainNamespace } from "@orderly.network/types";
-
 export type ConfigKey =
   | "apiBaseUrl"
   | "klineDataUrl"

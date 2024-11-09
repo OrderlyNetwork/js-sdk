@@ -33,7 +33,11 @@ export { default as SimpleDI } from "./di/simpleDI";
 export { Account, type AccountState } from "./account";
 export * from "./configStore/configStore";
 
-export { DefaultConfigStore } from "./configStore/defaultConfigStore";
+export {
+  DefaultConfigStore,
+  API_URLS,
+  type URLS,
+} from "./configStore/defaultConfigStore";
 export type {
   ChainType,
   WalletAdapter,

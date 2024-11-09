@@ -1,4 +1,4 @@
-export type { ShareOptions } from "./types/types";
+export type { ShareOptions, TradingPageProps } from "./types/types";
 
 import "./style/style.css";
 import "@orderly.network/react/dist/styles.css";

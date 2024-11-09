@@ -120,7 +120,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 },
               }}
               classNames={{
-                input: "oui-text-base-contrast-80 oui-w-full",
+                input: "oui-text-base-contrast-98 oui-w-full",
+                root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
               }}
             />
           )}
@@ -156,7 +157,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               },
             }}
             classNames={{
-              input: "oui-text-base-contrast-80",
+              input: "oui-text-base-contrast-98",
+              root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
             }}
           />
           <Input.tooltip
@@ -199,7 +201,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               },
             }}
             classNames={{
-              input: "oui-text-base-contrast-80",
+              input: "oui-text-base-contrast-98",
+              root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
             }}
           />
           <Slider

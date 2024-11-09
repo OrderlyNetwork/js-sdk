@@ -1,4 +1,4 @@
-import { ConfigKey, ConfigStore } from "@orderly.network/core";
+import { ConfigKey, ConfigStore,} from "@orderly.network/core";
 import { MarketsStorageKey } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 

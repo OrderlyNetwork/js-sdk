@@ -32,7 +32,7 @@ const inputVariants = tv(
         "oui-outline-offset-0",
         "oui-outline-1",
         "oui-outline-transparent",
-        "focus-within:oui-outline-primary",
+        "focus-within:oui-outline-primary-light",
         "oui-input-root",
       ],
       additional: [

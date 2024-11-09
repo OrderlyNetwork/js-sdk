@@ -27,7 +27,7 @@ export const DataList: FC<
       size="lg"
       className={props.className}
       classNames={{
-        tabsList: "oui-bg-base-9 oui-rounded-t-xl"
+        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-1"
       }}
     >
       <TabPanel

@@ -79,7 +79,7 @@ const Price = (props: {
     <Text.numeral
       size="2xs"
       className={cn(
-        "oui-border-b oui-border-dashed oui-border-base-contrast-36",
+        "oui-border-b oui-border-dashed oui-border-base-contrast-12",
         type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
       )}
       key={"tp"}

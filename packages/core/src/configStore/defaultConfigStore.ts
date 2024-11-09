@@ -1,14 +1,15 @@
 import { ChainNamespace } from "@orderly.network/types";
 import { ConfigKey, ConfigStore } from "./configStore";
+import { NetworkId } from "@orderly.network/types";
 
-type URLS = {
+export type URLS = {
   apiBaseUrl: string;
   publicWsUrl: string;
   privateWsUrl: string;
   operatorUrl: Record<keyof typeof ChainNamespace, string>;
 };
 
-const API_URLS: { [key: string]: URLS } = {
+export const API_URLS: Record<NetworkId, URLS> = {
   mainnet: {
     apiBaseUrl: "https://api-evm.orderly.org",
     publicWsUrl: "wss://ws-evm.orderly.org",
@@ -34,7 +35,7 @@ export class DefaultConfigStore implements ConfigStore {
 
   constructor(init: Partial<Record<ConfigKey, any>>) {
     const env = init.env || "prod";
-    const networkId = init.networkId || "mainnet";
+    const networkId = (init.networkId || "mainnet") as NetworkId;
     const urls = API_URLS[networkId];
     const brokerId = init?.brokerId || "orderly";
     const brokerName = init?.brokerName || "Orderly";

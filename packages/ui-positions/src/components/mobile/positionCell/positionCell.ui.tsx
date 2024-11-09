@@ -28,7 +28,7 @@ export const PositionCell: FC<
       gap={2}
       p={2}
       r="xl"
-      className={cn(className, "oui-bg-base-8")}
+      className={cn(className, "oui-bg-base-9")}
     >
       <Header {...rest} />
       <Divider intensity={6} className="oui-w-full" />

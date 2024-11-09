@@ -1,6 +1,6 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-
 import { OrderlyApp } from "@orderly.network/react-app";
 import {
   AssetViewWidget,
@@ -69,11 +69,10 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    // symbol: "PERP_ETH_USDC",
-    symbol: "PERP_BTC_USDC",
-    // symbol: "PERP_ORDER_USDC",
-    // symbol: "PERP_1000BONK_USDC",
-    // symbol: "PERP_1000PEPE_USDC",
+    // symbol: "PERP_BTC_USDC",
+    // onSymbolChange: (symbol) => {
+    //   console.log("will change symbol", symbol);      
+    // },
     tradingViewConfig: {
       // scriptSRC: "",
       scriptSRC: "/tradingview/charting_library/charting_library.js",
@@ -90,11 +89,7 @@ const meta = {
       onClickTradingRewards: () => {
         console.log("click trading rewards");
       }
-    },
-    onSymbolChange: (symbol) => {
-      console.log("will change symbol", symbol);
-      
-    },
+    },   
     tabletMediaQuery: "(max-width: 768px)",
     bottomSheetLeading: (<OrderlyIcon size={18} />)
     // bottomSheetLeading: "Orderly"
@@ -104,7 +99,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  render: (arg) => {
+    const [symbol, setSymbol] = useState('PERP_BTC_USDC');
+
+    return (
+      <TradingPage
+        {...arg}
+        symbol={symbol}
+        onSymbolChange={(symbol) => {
+          setSymbol(symbol.symbol)
+        }}
+      />
+    )
+  }
+};
 
 
 export const DataList: Story = {

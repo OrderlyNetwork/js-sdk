@@ -1,5 +1,6 @@
 import {
   CaretDownIcon,
+  cn,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -15,6 +16,7 @@ import { OrderType } from "@orderly.network/types";
 export const PriceInput = () => {
   const { type, quoteDp, price, updatePriceChange, updateOrderType, position } =
     usePositionsRowContext();
+    const [hasFocus, setHasFocus] = useState(false);
 
   return (
     <DropdownMenuRoot>
@@ -30,6 +32,13 @@ export const PriceInput = () => {
           if (type === OrderType.MARKET) {
             updateOrderType(OrderType.LIMIT, `${position.mark_price}`);
           }
+          setHasFocus(true);
+        }}
+        onBlur={(e) => {
+          setTimeout(() => {
+            setHasFocus(false);
+          }, 100);
+
         }}
         suffix={
           <DropdownMenuTrigger asChild>
@@ -38,10 +47,14 @@ export const PriceInput = () => {
             </button>
           </DropdownMenuTrigger>
         }
+        classNames={{
+          root: cn("oui-outline-line-12 focus-within:oui-outline-primary-light")
+        }}
       />
       <DropdownMenuContent
         align="end"
         className="oui-w-[96px] oui-min-w-[96px]"
+        onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DropdownMenuGroup>
           <DropdownMenuItem

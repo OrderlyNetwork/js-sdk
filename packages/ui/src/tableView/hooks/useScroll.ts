@@ -10,8 +10,6 @@ export function useScroll(deps: any[]) {
       return;
     }
 
-    setShowRightShadow(hasHorizontalScroll(scrollRef.current));
-
     scrollRef.current.addEventListener("scroll", function (e) {
       setShowLeftShadow(scrollRef.current!.scrollLeft > 0);
       setShowRightShadow(!isScrolledToRight(scrollRef.current!));
@@ -22,7 +20,11 @@ export function useScroll(deps: any[]) {
     if (!scrollRef.current) {
       return;
     }
-    setShowRightShadow(hasHorizontalScroll(scrollRef.current));
+
+    const scrollAble = hasHorizontalScroll(scrollRef.current);
+    const scrollEnd = isScrolledToRight(scrollRef.current);
+
+    setShowRightShadow(scrollAble && !scrollEnd);
   }, [scrollRef, ...deps]);
 
   return {
@@ -38,6 +40,7 @@ function isScrolledToRight(element: HTMLDivElement) {
 }
 
 function hasHorizontalScroll(element: HTMLDivElement) {
+  console.log("hasHorizontalScroll", element.scrollWidth, element.clientWidth);
   return element.scrollWidth > element.clientWidth;
 }
 

@@ -169,8 +169,9 @@ export const DesktopSharePnLContent: FC<{
               Optional information to share
             </Text>
             <Flex mt={3} gap={4}>
-              {options.map((item) => (
+              {options.map((item, index) => (
                 <ShareOption
+                  key={index}
                   setShareOption={setShareOption}
                   type={item}
                   curType={shareOption}

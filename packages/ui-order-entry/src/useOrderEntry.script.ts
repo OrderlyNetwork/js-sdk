@@ -32,7 +32,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         side: localOrderSide,
       },
     });
-  const [tpslSwitch, setTpslSwitch] = useLocalStorage("orderly-order-entry-tp_sl-switch",false);
+  const [tpslSwitch, setTpslSwitch] = useLocalStorage(
+    "orderly-order-entry-tp_sl-switch",
+    false
+  );
 
   // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();
@@ -160,6 +163,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
     if (key === "side") {
       setLocalOrderSide(value);
+    }
+
+    if (
+      (key === "reduce_only" && value) ||
+      (key === "order_type" &&
+        (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
+    ) {
+      cancelTP_SL();
     }
   };
 

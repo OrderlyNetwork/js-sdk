@@ -93,7 +93,7 @@ export const TPSLTriggerPrice: FC<{
       children.push(
         <Text.numeral
           className={cn(
-            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-36"
+            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12"
           )}
           key={"tp"}
           rule="price"
@@ -117,7 +117,7 @@ export const TPSLTriggerPrice: FC<{
         <Text.numeral
           key={"sl"}
           className={cn(
-            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-36"
+            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12"
           )}
           rule={"price"}
           dp={symbolInfo[order!.symbol]("quote_dp", 2)}

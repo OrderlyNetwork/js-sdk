@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, useMemo } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -161,7 +161,7 @@ export function TableView<RecordType extends any>(
 
   const wrapRef = useWrap([className, classNames?.root]);
   const { scrollRef, showLeftShadow, showRightShadow } = useScroll([
-    dataSource,
+    dataSource?.length,
   ]);
 
   // filter data
