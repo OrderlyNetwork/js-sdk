@@ -161,9 +161,10 @@ export const OrderEntry = (
       }}
     >
       <div
-        className={"oui-space-y-3 oui-text-base-contrast-54"}
+        className={"oui-space-y-2 xl:oui-space-y-3 oui-text-base-contrast-54"}
         ref={props.containerRef}
       >
+        {/* Buy Sell button */}
         <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
           <div
             className={
@@ -213,6 +214,7 @@ export const OrderEntry = (
             />
           </div>
         </Flex>
+        {/* Available */}
         <Flex justify={"between"}>
           <Text size={"2xs"}>Available</Text>
           <Text.numeral
@@ -224,6 +226,7 @@ export const OrderEntry = (
             {freeCollateral}
           </Text.numeral>
         </Flex>
+        {/* Inputs (price,quantity,triggerPrice) */}
         <OrderQuantityInput
           type={props.type}
           symbolInfo={symbolInfo}
@@ -241,6 +244,7 @@ export const OrderEntry = (
           onBlur={props.onBlur}
           onFocus={props.onFocus}
         />
+        {/* Slider */}
         <QuantitySlider
           maxQty={maxQty}
           currentQtyPercentage={props.currentQtyPercentage}
@@ -257,6 +261,7 @@ export const OrderEntry = (
           }}
           side={props.side}
         />
+        {/* Submit button */}
         <AuthGuard buttonProps={{ fullWidth: true }}>
           <Button
             fullWidth
@@ -276,6 +281,7 @@ export const OrderEntry = (
             {buttonLabel}
           </Button>
         </AuthGuard>
+        {/* Asset info */}
         <AssetInfo
           quote={symbolInfo.quote}
           estLiqPrice={props.estLiqPrice}
@@ -283,6 +289,7 @@ export const OrderEntry = (
           currentLeverage={props.currentLeverage}
         />
         <Divider />
+        {/* TP SL switch and content */}
         <OrderTPSL
           // onCancelTPSL={props.cancelTP_SL}
           // onEnableTP_SL={props.enableTP_SL}
@@ -312,7 +319,8 @@ export const OrderEntry = (
             props.setOrderValue(key, value);
           }}
         />
-        <Flex justify={"between"} itemAlign={"center"}>
+        {/* reduce only switch and label */}
+        <Flex justify={"between"} itemAlign={"center"} className="!oui-mt-[0px] xl:!oui-mt-3">
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
               className="oui-h-[14px]"
@@ -329,6 +337,7 @@ export const OrderEntry = (
               Reduce only
             </label>
           </Flex>
+          {/* Additional info （fok，ioc、post only， order confirm hidden） */}
           {!pinned && (
             <AdditionalConfigButton
               pinned={pinned}
@@ -346,6 +355,7 @@ export const OrderEntry = (
             />
           )}
         </Flex>
+        {/* Additional info （fok，ioc、post only， order confirm hidden） */}
         {pinned && (
           <Box p={2} r={"md"} intensity={700} position={"relative"}>
             <AdditionalInfoWidget
@@ -693,7 +703,7 @@ function AssetInfo(props: {
   currentLeverage: number | null;
 }) {
   return (
-    <div className={"oui-space-y-1"}>
+    <div className={"oui-space-y-[2px] xl:oui-space-y-1"}>
       <Flex justify={"between"}>
         <Text size={"2xs"}>Est. Liq. price</Text>
         <Text.numeral
