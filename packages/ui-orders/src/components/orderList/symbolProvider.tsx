@@ -17,6 +17,8 @@ interface SymbolContextState {
   quote: string;
   symbol: string;
   origin: API.SymbolExt;
+  quote_min: number;
+  quote_max: number;
 }
 
 export const SymbolContext = createContext({} as SymbolContextState);
@@ -45,6 +47,8 @@ export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
         quote: symbolInfo("quote"),
         symbol: props.symbol,
         origin: symbolInfo(),
+        quote_max: symbolInfo("quote_max"),
+        quote_min: symbolInfo("quote_min")
       }}
     >
       {props.children}

@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
 
 import { ConfirmContent, EditType } from "./editOrder/confirmContent";
@@ -29,7 +29,17 @@ export const TriggerPrice = (props: {
 
   const { editAlgoOrder, checkMinNotional } = useOrderListContext();
 
-  const { base, quote_dp } = useSymbolContext();
+  const { base, quote_dp, quote_max, quote_min } = useSymbolContext();
+
+  const hintInfo = useMemo(() => {
+    if (!isAlgoOrder || isBracketOrder) if (!editing) return undefined;
+    if (Number(price) > quote_max) {
+      return `Trigger price must be less than ${quote_max}`;
+    } else if (Number(price) < quote_min) {
+      return `Trigger price must be greater than ${quote_min}`;
+    }
+  }, [editing, price, isAlgoOrder, isBracketOrder]);
+
   const closePopover = () => {
     setOpen(false);
     setEditing(false);
@@ -94,6 +104,9 @@ export const TriggerPrice = (props: {
   };
 
   const onConfirm = () => {
+    if ((hintInfo ?? "").length > 0) {
+      return;
+    }
     setIsSubmitting(true);
 
     let data: any = {
@@ -155,6 +168,7 @@ export const TriggerPrice = (props: {
         handleKeyDown={handleKeyDown}
         onClick={onClick}
         onClose={cancelPopover}
+        hintInfo={hintInfo}
       />
     );
   };
@@ -211,7 +225,8 @@ const NormalState: FC<{
         r="base"
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
-          !props.disableEdit && "oui-bg-base-7 oui-px-2 oui-border oui-border-line-12"
+          !props.disableEdit &&
+            "oui-bg-base-7 oui-px-2 oui-border oui-border-line-12"
         )}
       >
         <Text size="2xs">{price}</Text>
