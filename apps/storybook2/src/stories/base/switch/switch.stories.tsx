@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
 import { Switch } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof Switch> = {
   title: "Base/Switch",
   component: Switch,
   parameters: {
@@ -31,7 +30,7 @@ const meta = {
     // size:'default'
     // color: 'primary'
   },
-} satisfies Meta<typeof Switch>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

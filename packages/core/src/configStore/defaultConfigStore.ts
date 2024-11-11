@@ -42,15 +42,15 @@ export class DefaultConfigStore implements ConfigStore {
     const chainNamespace = init?.chainNamespace || ChainNamespace.evm;
 
     this.map = new Map<ConfigKey, any>([
+      ["env", env],
       ["brokerId", brokerId],
       ["brokerName", brokerName],
-      ["env", env],
+      ["networkId", networkId],
       ["chainNamespace", chainNamespace],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],
       ["privateWsUrl", urls["privateWsUrl"]],
       ["operatorUrl", urls["operatorUrl"]],
-      ["networkId", networkId],
     ]);
 
     // this.solanaMap = new Map<ConfigKey, any>([]);

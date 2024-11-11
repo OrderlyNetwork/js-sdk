@@ -1,15 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from '@storybook/test';
-
-import { OrderlyApp } from "@orderly.network/react-app";
+import { fn } from "@storybook/test";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { TradingPageV1 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { CustomConfigStore } from "../CustomConfigStore";
-import { OrderlyActiveIcon, OrderlyIcon } from "../../../components/icons/orderly";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
+import {
+  OrderlyActiveIcon,
+  OrderlyIcon,
+} from "../../../components/icons/orderly";
 import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
 
-const meta = {
+const meta: Meta<typeof TradingPageV1> = {
   title: "Package/Trading/trading-v1",
   component: TradingPageV1,
   // subcomponents: {
@@ -19,15 +21,16 @@ const meta = {
   decorators: [
     (Story) => {
       // const networkId = localStorage.getItem("preview-orderly-networkId");
-      // const networkId = "mainnet";
       const networkId = "testnet";
-      // const networkId = "mainnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "demo", env: "staging" });
+      const configStore = new CustomConfigStore({
+        networkId,
+        brokerId: "demo",
+        brokerName: "Orderly",
+        env: "staging",
+      });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
-            // brokerId={"orderly"}
-            // brokerName={"Orderly"}
+          <OrderlyAppProvider
             networkId={networkId}
             onChainChanged={fn()}
             configStore={configStore}
@@ -150,7 +153,8 @@ const meta = {
                       {
                         name: "Orderly airdrop",
                         href: "https://app.orderly.network",
-                        description: "Earn Orderly merits by trading on WOOFi Pro.",
+                        description:
+                          "Earn Orderly merits by trading on WOOFi Pro.",
                         target: "_blank",
                         icon: <OrderlyIcon size={14} />,
                         activeIcon: <OrderlyActiveIcon size={14} />,
@@ -159,7 +163,8 @@ const meta = {
                       {
                         name: "ARB incentives",
                         href: "https://mirror.xyz/woofi.eth/9NVYvKwfldZf1JPoKkNQ2YMXnNbgVUyHkgMJIvXv9dg",
-                        description: "Trade to win a share of 9,875 ARB each week.",
+                        description:
+                          "Trade to win a share of 9,875 ARB each week.",
                         target: "_blank",
                         icon: <ARBIcon size={14} />,
                         activeIcon: <ARBActiveIcon size={14} />,
@@ -177,7 +182,7 @@ const meta = {
             >
               <Story />
             </Scaffold>
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },
@@ -225,17 +230,13 @@ const meta = {
     tradingReward: {
       onClickTradingRewards: () => {
         console.log("hahahahah");
-
-      }
+      },
     },
     onSymbolChange: fn(),
-
-
   },
-} satisfies Meta<typeof TradingPageV1>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
-

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo } from "react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Flex, Text } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
@@ -35,11 +35,15 @@ const meta = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
           <Box intensity={900}>
             <Story />
           </Box>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],
@@ -129,7 +133,7 @@ export const CustomChainsMenu: Story = {
 
   decorators: [
     (Story) => (
-      <OrderlyApp
+      <OrderlyAppProvider
         brokerId={"orderly"}
         brokerName={""}
         networkId={"testnet"}
@@ -173,7 +177,7 @@ export const CustomChainsMenu: Story = {
         <Flex justify={"center"} itemAlign={"center"} p={3}>
           <Story />
         </Flex>
-      </OrderlyApp>
+      </OrderlyAppProvider>
     ),
   ],
 };

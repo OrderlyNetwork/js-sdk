@@ -1,6 +1,12 @@
-import { Box, cn, Grid, type SizeType } from "@orderly.network/ui";
+import { Box, cn, Grid } from "@orderly.network/ui";
 import { MainNavWidget, MainNavWidgetProps } from "./main/mainNav.widget";
-import React, { PropsWithChildren, useContext } from "react";
+import React, {
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SideNavbarWidget } from "./sidebar";
 import { SideBarProps } from "./sidebar";
 import {
@@ -9,15 +15,10 @@ import {
   useLocalStorage,
 } from "@orderly.network/hooks";
 import { useMemo } from "react";
-import {
-  ExpandableContext,
-  // MainNavProps,
-  routerAdapter,
-} from "./scaffoldContext";
+import { ExpandableContext, routerAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
-import { FooterConfig, FooterWidget } from "./footer";
+import { FooterProps, FooterWidget } from "./footer";
 import { MaintenanceTipsWidget } from "./maintenanceTips";
-import { MainNavProps } from "./main/mainNav.ui";
 
 export type LayoutProps = {
   /**
@@ -26,7 +27,6 @@ export type LayoutProps = {
    */
   gap?: number;
   maxWidth?: number;
-  bodyPadding?: SizeType;
   leftSidebar?: React.ReactNode;
   leftSideProps?: SideBarProps;
   rightSidebar?: React.ReactNode;
@@ -34,10 +34,8 @@ export type LayoutProps = {
   // topBarProps?:
   mainNavProps?: MainNavWidgetProps;
   footer?: React.ReactNode;
+  footerProps?: FooterProps;
   routerAdapter?: routerAdapter;
-  footerHeight?: number;
-  footerIsSticky?: boolean;
-  footerConfig?: FooterConfig;
   classNames?: {
     root?: string;
     content?: string;
@@ -49,12 +47,13 @@ export type LayoutProps = {
 };
 
 export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
-  const { classNames, footerConfig, routerAdapter } = props;
+  const { classNames, footerProps, routerAdapter } = props;
+  const [footerHeight, setFooterHeight] = useState(29);
+  const footerRef = useRef<HTMLDivElement>(null);
   const [expand, setExpand] = useLocalStorage(
     "orderly_scaffold_expanded",
     true
   );
-  // const [unsupported, setUnsupported] = useState(true);
   const [chains] = useChains();
 
   const sideBarDefaultWidth = useMemo(() => props.maxWidth || 185, []);
@@ -71,12 +70,21 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     setExpand(expand);
   };
 
-  const footerHeight =
-    props.footerHeight !== undefined ? props.footerHeight : 29;
+  useEffect(() => {
+    if (!footerRef) {
+      return;
+    }
+
+    const height = footerRef.current?.getBoundingClientRect().height;
+    setFooterHeight(height!);
+  }, [footerRef]);
 
   return (
     <div
       className={cn(
+        "oui-scaffold-root oui-font-semibold",
+        // default text and background color
+        "oui-text-base-contrast oui-bg-base-10",
         "oui-flex oui-flex-col",
         "oui-overflow-auto oui-custom-scrollbar",
         classNames?.root
@@ -90,15 +98,14 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           routerAdapter,
           expanded: expand,
           setExpand: onExpandChange,
-          // unsupported,
           checkChainSupport: checkChainSupportHandle,
-          footerConfig,
         }}
       >
         {/* Top main nav */}
         <Box
           className={cn(
-            "oui-hidden xl:oui-block",
+            "oui-scaffold-topNavbar oui-bg-base-9",
+            "oui-hidden xl:oui-block oui-min-w-[1440px]",
             // "oui-border-b oui-border-line-12",
             classNames?.topNavbar
           )}
@@ -120,7 +127,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
               classNames?.body
             )}
             style={{
-              // marginBottom: `${props.footerHeight ?? 29}px`,
               gridTemplateColumns: `${
                 expand ? sideBarDefaultWidth + "px" : "98px"
               } 1fr`,
@@ -146,13 +152,16 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         )}
 
         <Box
+          ref={footerRef}
           className={cn(
+            "oui-scaffold-footer oui-w-full oui-bg-base-10",
             "oui-fixed oui-bottom-0 oui-z-50",
-            "oui-w-full",
+            "oui-hidden lg:oui-flex",
+            "oui-border-t-[1px] oui-border-line-12",
             classNames?.footer
           )}
         >
-          {props.footer || <FooterWidget />}
+          {props.footer || <FooterWidget {...footerProps} />}
         </Box>
       </ExpandableContext.Provider>
     </div>

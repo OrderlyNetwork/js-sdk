@@ -1,15 +1,12 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  APIManagerModule,
   PortfolioLayoutWidget,
   SettingModule,
 } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { Box } from "@orderly.network/ui";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { PortfolioLayout } from "../../../../../../packages/portfolio/src/layout/layout.ui";
-import { CustomConfigStore } from "../CustomConfigStore";
-import { useState } from "react";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
 const meta = {
   title: "Package/Portfolio/setting",
@@ -18,21 +15,17 @@ const meta = {
   decorators: [
     (Story: any) => {
       const networkId = "testnet";
-      // const configStore = new CustomConfigStore({
-      //   networkId,
-      //   brokerId: "woofi_pro",
-      //   env: "qa",
-      // });
+      const configStore = new CustomConfigStore({
+        networkId,
+        brokerId: "orderly",
+        brokerName: "Orderly",
+        env: "qa",
+      });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
-            brokerId={"orderly"}
-            brokerName={"Orderly"}
-            networkId={networkId}
-            // configStore={configStore}
-          >
+          <OrderlyAppProvider networkId={networkId} configStore={configStore}>
             <Story />
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },
@@ -50,7 +43,7 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {};
 
 export const Layout: Story = {
-  render: (e) => {
+  render: () => {
     const [currentPath, setCurrentPath] = useState("/portfolio/apiKey");
     return (
       <PortfolioLayoutWidget
@@ -58,7 +51,6 @@ export const Layout: Story = {
         routerAdapter={{
           onRouteChange: (op) => {
             console.log("routerAdapter", op);
-
             setCurrentPath(op.href);
           },
           // currentPath: currentPath

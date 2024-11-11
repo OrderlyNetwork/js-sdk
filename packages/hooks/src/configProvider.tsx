@@ -4,7 +4,6 @@ import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
   // MemoryConfigStore,
-  DefaultConfigStore,
   OrderlyKeyStore,
   getWalletAdapterFunc,
   WalletAdapterOptions,
@@ -27,6 +26,7 @@ import type { Chains } from "./orderly/useChains";
 import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+import { ExtendedConfigStore } from "./extendedConfigStore";
 // import { useParamsCheck } from "./useParamsCheck";
 
 type filteredChains = {
@@ -121,7 +121,8 @@ export const OrderlyConfigProvider: FC<
 
   const innerConfigStore = useConstant<ConfigStore>(() => {
     return new ProxyConfigStore(
-      configStore || new DefaultConfigStore({ brokerId, brokerName, networkId })
+      configStore ||
+        new ExtendedConfigStore({ brokerId, brokerName, networkId })
     );
   });
 
@@ -186,7 +187,7 @@ export const OrderlyConfigProvider: FC<
         configStore: innerConfigStore,
         keyStore: innerKeyStore,
         // getWalletAdapter: innerGetWalletAdapter,
-        networkId: networkId,
+        networkId: innerConfigStore.get("networkId") || networkId,
         filteredChains: filteredChains,
         walletAdapters: innerWalletAdapters,
         // apiBaseUrl,

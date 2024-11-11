@@ -1,13 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
-
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { CustomConfigStore } from "../CustomConfigStore";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
 
-const meta = {
+const meta: Meta<typeof Dashboard.HomePage> = {
   title: "Package/Affiliate/homePage",
   component: Dashboard.HomePage,
   // subcomponents: {
@@ -20,18 +18,14 @@ const meta = {
       // const networkId = "mainnet";
       const networkId = "testnet";
       const configStore = new CustomConfigStore({
+        brokerId: "orderly",
+        brokerName: "Orderly",
         networkId,
-        brokerId: "woofi_pro",
         env: "qa",
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
-            brokerId={"orderly"}
-            brokerName={"Orderly"}
-            networkId={networkId}
-            configStore={configStore}
-          >
+          <OrderlyAppProvider networkId={networkId} configStore={configStore}>
             <ReferralProvider
               becomeAnAffiliateUrl="https://orderly.network"
               learnAffiliateUrl="https://orderly.network"
@@ -91,7 +85,7 @@ const meta = {
             >
               <Story />
             </ReferralProvider>
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },
@@ -118,7 +112,7 @@ const meta = {
     p: 5,
     // py: 2,
   },
-} satisfies Meta<typeof Dashboard.HomePage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -1,23 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { FeeTierModule, OrdersModule } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
-// import {Box} from "@orderly.network/ui";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { Box, Divider, Flex, Text } from "@orderly.network/ui";
-// import { } from '@orderly.network/ui-orders';
+import { Box } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/Portfolio/Orders",
   component: OrdersModule.OrdersPage,
-  subcomponents: {
-
-  },
+  subcomponents: {},
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"woofi_pro"} brokerName={""} networkId={"testnet"}>
-          <Box className="oui-h-[calc(100vh)]" p={6}><Story /></Box>
-        </OrderlyApp>
+        <OrderlyAppProvider
+          brokerId={"woofi_pro"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
+          <Box className="oui-h-[calc(100vh)]" p={6}>
+            <Story />
+          </Box>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],
@@ -37,7 +39,7 @@ const meta = {
   args: {
     // p: 5,
   },
-} satisfies Meta<typeof FeeTierModule.FeeTierPage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
