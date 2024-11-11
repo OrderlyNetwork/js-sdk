@@ -17,9 +17,11 @@ import { TooltipContent } from "../assetView/assetView.ui";
 export const RiskRate: FC<RiskRateState> = (props) => {
   const { riskRate, riskRateColor, isConnected, currentLeverage, maxLeverage } =
     props;
-  const { isHigh, isMedium, isLow, isDefault } = riskRateColor;
+  const { isHigh, isMedium, isLow, isDefault, wrongNetwork } = riskRateColor;
 
-  const textColor = isHigh
+  const textColor = wrongNetwork
+    ? ""
+    : isHigh
     ? "oui-text-danger"
     : isMedium
     ? "oui-text-warning"
@@ -27,7 +29,9 @@ export const RiskRate: FC<RiskRateState> = (props) => {
     ? gradientTextVariants({ color: "brand" })
     : "";
 
-  const boxClsName = isHigh
+  const boxClsName = wrongNetwork
+    ? "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full"
+    : isHigh
     ? "oui-bg-gradient-to-tr oui-from-[#791438] oui-to-[#ff447c] oui-h-1.5 oui-rounded-full"
     : isMedium
     ? "oui-bg-gradient-to-tr oui-from-[#792e00] oui-to-[#ffb65d] oui-h-1.5 oui-rounded-full"
@@ -44,7 +48,11 @@ export const RiskRate: FC<RiskRateState> = (props) => {
       >
         <Box
           className={boxClsName}
-          style={riskRate && riskRate !== '--' ? { width: riskRate } : { width: "100%" }}
+          style={
+            riskRate && riskRate !== "--"
+              ? { width: riskRate }
+              : { width: "100%" }
+          }
         />
       </Flex>
 
@@ -91,7 +99,11 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             </Text>
           </Tooltip>
           <Flex className="oui-gap-1">
-            <Text.numeral dp={2}  padding={false} suffix={currentLeverage ? "x" : undefined}>
+            <Text.numeral
+              dp={2}
+              padding={false}
+              suffix={currentLeverage ? "x" : undefined}
+            >
               {currentLeverage ?? "--"}
             </Text.numeral>
 
@@ -103,7 +115,11 @@ export const RiskRate: FC<RiskRateState> = (props) => {
                 modal.show(LeverageWidgetId, { currentLeverage: 5 });
               }}
             >
-              <Text.numeral dp={2}  padding={false} suffix={maxLeverage ? "x" : undefined}>
+              <Text.numeral
+                dp={2}
+                padding={false}
+                suffix={maxLeverage ? "x" : undefined}
+              >
                 {maxLeverage ?? "--"}
               </Text.numeral>
 
