@@ -5,6 +5,7 @@ import {
 } from "@orderly.network/types";
 import { ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
+import { OrderType } from "@orderly.network/types";
 
 export async function bracketOrderValidator<
   T extends AlgoOrderEntity<
@@ -16,11 +17,15 @@ export async function bracketOrderValidator<
   const { tp_trigger_price, sl_trigger_price, side } = values;
   const qty = Number(values.quantity);
   const maxQty = config.maxQty;
+  const type = values.order_type;
   const { quote_max, quote_min, price_scope, quote_dp } = config.symbol ?? {};
 
-  const mark_price = (values.order_price ?? config.markPrice) as
-    | number
-    | undefined;
+  const mark_price =
+    type === OrderType.MARKET
+      ? config.markPrice
+      : values.order_price
+      ? Number(values.order_price)
+      : undefined;
 
   if (!isNaN(qty) && qty > maxQty) {
     result.quantity = {
@@ -43,9 +48,9 @@ export async function bracketOrderValidator<
     const slTriggerPriceScope = new Decimal(mark_price * (1 - price_scope))
       .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
       .toNumber();
-    if (!!sl_trigger_price && Number(sl_trigger_price) >= slTriggerPriceScope) {
+    if (!!sl_trigger_price && Number(sl_trigger_price) < slTriggerPriceScope) {
       result.sl_trigger_price = {
-        message: `SL price must be less than ${slTriggerPriceScope}`,
+        message: `SL price must be greater than ${slTriggerPriceScope}`,
       };
     }
 
@@ -71,9 +76,9 @@ export async function bracketOrderValidator<
     const slTriggerPriceScope = new Decimal(mark_price * (1 + price_scope))
       .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
       .toNumber();
-    if (!!sl_trigger_price && Number(sl_trigger_price) <= slTriggerPriceScope) {
+    if (!!sl_trigger_price && Number(sl_trigger_price) > slTriggerPriceScope) {
       result.sl_trigger_price = {
-        message: `SL price must be greater than ${slTriggerPriceScope}`,
+        message: `SL price must be less than ${slTriggerPriceScope}`,
       };
     }
 

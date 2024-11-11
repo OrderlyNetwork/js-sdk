@@ -48,6 +48,7 @@ export abstract class BaseAlgoOrderCreator<
 
       const qty = Number(values.quantity);
       const maxQty = config.maxQty;
+      const orderType = values.order_type;
       const { quote_max, quote_min, price_scope, quote_dp } =
         config.symbol ?? {};
       if (!isNaN(qty) && qty > maxQty) {
@@ -68,9 +69,12 @@ export abstract class BaseAlgoOrderCreator<
         };
       }
 
-      const mark_price = (values.order_price ?? config.markPrice) as
-        | number
-        | undefined;
+      const mark_price =
+    orderType === OrderType.MARKET
+      ? config.markPrice
+      : values.order_price
+      ? Number(values.order_price)
+      : undefined;
 
       // there need use position side to validate
       // so if order's side is buy, then position's side is sell
@@ -80,10 +84,10 @@ export abstract class BaseAlgoOrderCreator<
           .toNumber();
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) >= slTriggerPriceScope
+          Number(sl_trigger_price) < slTriggerPriceScope
         ) {
           result.sl_trigger_price = {
-            message: `SL price must be less than ${slTriggerPriceScope}`,
+            message: `SL price must be greater than ${slTriggerPriceScope}`,
           };
         }
 
@@ -115,10 +119,10 @@ export abstract class BaseAlgoOrderCreator<
           .toNumber();
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) <= slTriggerPriceScope
+          Number(sl_trigger_price) > slTriggerPriceScope
         ) {
           result.sl_trigger_price = {
-            message: `SL price must be greater than ${slTriggerPriceScope}`,
+            message: `SL price must be less than ${slTriggerPriceScope}`,
           };
         }
 
