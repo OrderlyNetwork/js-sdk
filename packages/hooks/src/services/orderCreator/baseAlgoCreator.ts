@@ -10,10 +10,10 @@ import {
   ValuesDepConfig,
   VerifyResult,
 } from "./interface";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { values } from "ramda";
-import { config } from "@swc/core/spack";
-import { maxQty } from "@orderly.network/perp";
+// import { values } from "ramda";
+// import { config } from "@swc/core/spack";
+// import { maxQty } from "@orderly.network/perp";
+import { Decimal } from "@orderly.network/utils";
 
 export type AlgoOrderUpdateEntity = {
   trigger_price?: number;
@@ -48,7 +48,8 @@ export abstract class BaseAlgoOrderCreator<
 
       const qty = Number(values.quantity);
       const maxQty = config.maxQty;
-      const { quote_max, quote_min, price_scope } = config.symbol ?? {};
+      const { quote_max, quote_min, price_scope, quote_dp } =
+        config.symbol ?? {};
       if (!isNaN(qty) && qty > maxQty) {
         result.quantity = {
           message: `Quantity must be less than ${config.maxQty}`,
@@ -67,15 +68,22 @@ export abstract class BaseAlgoOrderCreator<
         };
       }
 
+      const mark_price = (values.order_price ?? config.markPrice) as
+        | number
+        | undefined;
+
       // there need use position side to validate
       // so if order's side is buy, then position's side is sell
-      if (side === OrderSide.BUY) {
+      if (side === OrderSide.BUY && mark_price) {
+        const slTriggerPriceScope = new Decimal(mark_price * (1 - price_scope))
+          .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
+          .toNumber();
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) >= config.markPrice * (1 - price_scope)
+          Number(sl_trigger_price) >= slTriggerPriceScope
         ) {
           result.sl_trigger_price = {
-            message: `SL price must be less than ${config.markPrice}`,
+            message: `SL price must be less than ${slTriggerPriceScope}`,
           };
         }
 
@@ -101,13 +109,16 @@ export abstract class BaseAlgoOrderCreator<
         }
       }
 
-      if (side === OrderSide.SELL) {
+      if (side === OrderSide.SELL && mark_price) {
+        const slTriggerPriceScope = new Decimal(mark_price * (1 + price_scope))
+          .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
+          .toNumber();
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) <= config.markPrice * (1 + price_scope)
+          Number(sl_trigger_price) <= slTriggerPriceScope
         ) {
           result.sl_trigger_price = {
-            message: `SL price must be greater than ${config.markPrice}`,
+            message: `SL price must be greater than ${slTriggerPriceScope}`,
           };
         }
 
