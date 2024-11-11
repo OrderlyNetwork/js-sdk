@@ -11,6 +11,7 @@ export type ConfigKey =
   | "env"
   | "chainNamespace"
   | "PROD_URL"
+  | "orderly_markets"
   | "markets";
 
 export interface ConfigStore {
