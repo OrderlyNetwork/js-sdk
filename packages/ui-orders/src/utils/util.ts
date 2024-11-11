@@ -135,7 +135,7 @@ export function calcBracketRoiAndPnL(order: API.AlgoOrderExt) {
 
   
 
-  const quantity = order.quantity;
+  const quantity = order.side === OrderSide.BUY ? order.quantity : order.quantity * -1;
 
   const tpPnL =
     tpOrder?.trigger_price &&
