@@ -3,7 +3,7 @@ import { ListViewFull } from "./listview";
 // @ts-ignore
 import {
   MarketsType,
-  useMarkets,
+  useMarket,
   FavoriteTab,
   Favorite,
   OrderlyContext,
@@ -37,7 +37,7 @@ export const FavoritesTabPane: FC<{
       getLastSelFavTab,
       updateSelectedFavoriteTab,
     },
-  ] = useMarkets(MarketsType.FAVORITES);
+  ] = useMarket(MarketsType.FAVORITES);
   const [currTab, setCurrTab] = useState(getLastSelFavTab || favoriteTabs[0]);
 
   const clickTab = (tab: any) => {

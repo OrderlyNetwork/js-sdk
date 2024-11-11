@@ -7,7 +7,7 @@ import {
 } from "@orderly.network/markets";
 import { Box, Button, Flex } from "@orderly.network/ui";
 import { CustomConfigStore } from "../CustomConfigStore";
-import { MarketsType, useMarketList } from "@orderly.network/hooks";
+import { MarketsType, useMarkets } from "@orderly.network/hooks";
 
 const networkId = "testnet";
 const configStore = new CustomConfigStore({ networkId, env: "staging" });
@@ -43,7 +43,7 @@ const decorators = [(Story:any) => (
 
 export const DropdownMenu: Story = {
   render: (args) => {
-    const [data, favorite] = useMarketList(MarketsType.ALL);
+    const [data, favorite] = useMarkets(MarketsType.ALL);
 
     return <FavoritesDropdownMenuWidget
       row={{ symbol: 'PERP_BTC_USDC' }}
@@ -57,7 +57,7 @@ export const DropdownMenu: Story = {
 
 export const Tabs: Story = {
   render: (args) => {
-    const [data, favorite] = useMarketList(MarketsType.ALL);
+    const [data, favorite] = useMarkets(MarketsType.ALL);
 
     return (<>
       <Flex direction='column' itemAlign='start' gapY={2} p={2}>
