@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
 import { Box, Flex } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof Flex> = {
   title: "Base/Layout/Flex",
   component: Flex,
   parameters: {
@@ -14,13 +13,13 @@ const meta = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
     //   backgroundColor: { control: 'color' },
-        p:{
-            control:{
-          type: 'number',
-            min: 0,
-            max: 10,
-            step: 1,
-        },
+    p: {
+      control: {
+        type: "number",
+        min: 0,
+        max: 10,
+        step: 1,
+      },
     },
     direction: {
       // type:'enum',
@@ -57,7 +56,7 @@ const meta = {
     // py: 2,
     direction: "row",
   },
-} satisfies Meta<typeof Flex>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -99,7 +98,7 @@ export const Responsive: Story = {
     gap: {
       initial: 10,
       sm: 2,
-      md:5,
+      md: 5,
     },
   },
 };
