@@ -1,36 +1,31 @@
-import type { StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import { Button, modal } from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrderlyApp } from "@orderly.network/react-app";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { CustomConfigStore } from../../../components/configStore/customConfigStore.tsts";
 import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
 import {
   APIManagerModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
+import { CustomConfigStore } from "@orderly.network/hooks";
 
 const networkId = "testnet";
 
 const configStore = new CustomConfigStore({
   networkId,
   env: "qa",
-  brokerName: "WOOFiPRO",
-  brokerId: "woofi_pro",
+  brokerId: "orderly",
+  brokerName: "Orderly",
 });
 
-const meta = {
+const meta: Meta<typeof Scaffold> = {
   title: "Package/solana/connect",
   component: Scaffold,
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp
-          brokerId={"woofi_pro"}
-          brokerName={"WOOFiPRO"}
-          networkId={"testnet"}
-          configStore={configStore}
-        >
+        <OrderlyApp networkId={networkId} configStore={configStore}>
           <Story />
         </OrderlyApp>
       </WalletConnectorProvider>
@@ -67,7 +62,7 @@ export const APIKey: Story = {
   args: {
     children: (
       <PortfolioLayoutWidget>
-        <APIManagerModule.ApiManagerPage />
+        <APIManagerModule.APIManagerPage />
       </PortfolioLayoutWidget>
     ),
   },
