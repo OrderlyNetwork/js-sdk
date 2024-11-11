@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { LeverageEditor, LeverageWidgetId } from "@orderly.network/ui-leverage";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Button, modal } from "@orderly.network/ui";
 
@@ -14,9 +14,13 @@ const meta: Meta<typeof LeverageEditor> = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

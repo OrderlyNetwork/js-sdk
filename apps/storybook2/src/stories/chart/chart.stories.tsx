@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PnlLineChart, VolBarChart, PnLBarChart } from "@orderly.network/chart";
 import { Box } from "@orderly.network/ui";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 const meta: Meta<typeof PnlLineChart> = {
@@ -21,12 +21,16 @@ const meta: Meta<typeof PnlLineChart> = {
   decorators: [
     (Story) => (
       <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
           <Box width="500px" height={"400px"}>
             {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
             <Story />
           </Box>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </ConnectorProvider>
     ),
   ],

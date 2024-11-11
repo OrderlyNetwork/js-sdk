@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import {
   AssetViewWidget,
   DataListWidget,
@@ -35,7 +35,7 @@ const meta: Meta<typeof TradingPage> = {
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
+          <OrderlyAppProvider
             // brokerId="orderly"
             // brokerName="Orderly"
             configStore={configStore}
@@ -60,7 +60,7 @@ const meta: Meta<typeof TradingPage> = {
             >
               <Story />
             </Scaffold>
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },

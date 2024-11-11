@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { FeeTierModule, OrdersModule } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Box } from "@orderly.network/ui";
 
@@ -11,7 +11,7 @@ const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp
+        <OrderlyAppProvider
           brokerId={"woofi_pro"}
           brokerName={""}
           networkId={"testnet"}
@@ -19,7 +19,7 @@ const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
           <Box className="oui-h-[calc(100vh)]" p={6}>
             <Story />
           </Box>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

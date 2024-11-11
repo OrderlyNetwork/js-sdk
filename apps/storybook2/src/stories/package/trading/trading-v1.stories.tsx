@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { TradingPageV1 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
@@ -30,7 +30,7 @@ const meta: Meta<typeof TradingPageV1> = {
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
+          <OrderlyAppProvider
             networkId={networkId}
             onChainChanged={fn()}
             configStore={configStore}
@@ -182,7 +182,7 @@ const meta: Meta<typeof TradingPageV1> = {
             >
               <Story />
             </Scaffold>
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo } from "react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Flex, Text } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
@@ -30,14 +30,14 @@ const meta = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp
+        <OrderlyAppProvider
           brokerId={"orderly"}
           brokerName={""}
           networkId={"testnet"}
           onChainChanged={fn()}
         >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

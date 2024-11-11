@@ -5,7 +5,7 @@ import {
   AdditionalInfoWidget,
 } from "@orderly.network/ui-order-entry";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box } from "@orderly.network/ui";
 import { OrderSide, OrderType } from "@orderly.network/types";
 
@@ -18,11 +18,15 @@ const meta = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
           <Box width={"360px"} r={"lg"} intensity={900} p={3}>
             <Story />
           </Box>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

@@ -3,7 +3,7 @@ import {
   OverviewModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
 import { fn } from "@storybook/test";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
@@ -22,14 +22,14 @@ const meta = {
     (Story, args) => {
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
+          <OrderlyAppProvider
             brokerId="orderly"
             brokerName="Orderly"
             networkId="testnet"
             onChainChanged={args.args.onChainChanged}
           >
             <Story />
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   TokenInfoBarWidget,
@@ -24,9 +24,9 @@ const meta: Meta<typeof TokenInfoBarFullWidget> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp networkId="testnet" configStore={configStore}>
+        <OrderlyAppProvider networkId="testnet" configStore={configStore}>
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

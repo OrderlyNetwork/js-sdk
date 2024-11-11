@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
@@ -25,7 +25,7 @@ const meta: Meta<typeof Dashboard.DashboardPage> = {
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp networkId={networkId} configStore={configStore}>
+          <OrderlyAppProvider networkId={networkId} configStore={configStore}>
             <ReferralProvider
               becomeAnAffiliateUrl="https://orderly.network"
               learnAffiliateUrl="https://orderly.network"
@@ -84,7 +84,7 @@ const meta: Meta<typeof Dashboard.DashboardPage> = {
             >
               <Story />
             </ReferralProvider>
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },

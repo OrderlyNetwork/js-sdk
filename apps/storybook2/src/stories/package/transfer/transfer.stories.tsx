@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   DepositFormWidget,
@@ -27,7 +27,7 @@ const meta: Meta<typeof DepositFormWidget> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp
+        <OrderlyAppProvider
           networkId={networkId}
           customChains={customChains as any}
           configStore={configStore}
@@ -41,7 +41,7 @@ const meta: Meta<typeof DepositFormWidget> = {
           }}
         >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

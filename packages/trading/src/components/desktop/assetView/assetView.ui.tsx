@@ -14,8 +14,6 @@ import {
   cn,
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger,
-  ChevronUpIcon,
 } from "@orderly.network/ui";
 import { AssetViewState } from "./assetView.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
@@ -61,8 +59,6 @@ interface AssetValueListProps {
   marginRatioVal?: number;
   renderMMR?: string | number;
   isConnected: boolean;
-  optionsOpen: boolean;
-  setOptionsOpen: (value: boolean) => void;
 }
 
 const useCurrentStatusText = (): StatusInfo => {
@@ -200,28 +196,36 @@ const AssetValueList: FC<AssetValueListProps> = ({
   marginRatioVal,
   renderMMR,
   isConnected,
-  optionsOpen,
-  setOptionsOpen,
 }) => {
+  const [optionsOpen, setOptionsOpen] = useLocalStorage(
+    "orderly_entry_asset_list_open",
+    false
+  );
+  const [open, setOpen] = useState<boolean>(optionsOpen);
+
+  const toggleOpen = useCallback(() => {
+    setOpen((prevOpen) => !prevOpen);
+    setOptionsOpen(!open);
+  }, [setOptionsOpen]);
+
   return (
-      <Collapsible open={optionsOpen} onOpenChange={setOptionsOpen}>
-        <Flex
-          justify="center"
-          gap={1}
-          itemAlign="center"
-          className="oui-cursor-pointer"
-          onClick={() => setOptionsOpen(!optionsOpen)}
-        >
-          <Divider className="oui-flex-1" />
-          <CollapsibleTrigger asChild>
-            {optionsOpen ? (
-              <ChevronDownIcon size={12} color="white" />
-            ) : (
-              <ChevronUpIcon size={12} color="white" />
-            )}
-          </CollapsibleTrigger>
-          <Divider className="oui-flex-1" />
-        </Flex>
+    <Box>
+      <Flex
+        justify="center"
+        gap={1}
+        itemAlign="center"
+        className="oui-cursor-pointer"
+        onClick={toggleOpen}
+      >
+        <Divider className="oui-flex-1" />
+        <ChevronDownIcon
+          size={12}
+          color="white"
+          className={cn("oui-transition-transform", open && "oui-rotate-180")}
+        />
+        <Divider className="oui-flex-1" />
+      </Flex>
+      <Collapsible open={open}>
         <CollapsibleContent>
           <Box className="oui-space-y-1.5">
             <AssetDetail
@@ -256,6 +260,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
           </Box>
         </CollapsibleContent>
       </Collapsible>
+    </Box>
   );
 };
 
@@ -271,8 +276,6 @@ export const AssetView: FC<AssetViewState> = ({
   marginRatioVal,
   renderMMR,
   isConnected,
-  optionsOpen,
-  setOptionsOpen,
 }) => {
   const { title, description, titleColor, titleClsName } =
     useCurrentStatusText();
@@ -338,8 +341,6 @@ export const AssetView: FC<AssetViewState> = ({
               marginRatioVal={marginRatioVal}
               renderMMR={renderMMR}
               isConnected={isConnected}
-              optionsOpen={optionsOpen}
-              setOptionsOpen={setOptionsOpen}
             />
             <Flex gap={3} itemAlign="center">
               <Button
@@ -359,7 +360,7 @@ export const AssetView: FC<AssetViewState> = ({
                 <ArrowDownShortIcon color="white" opacity={1} />
                 <Text>Deposit</Text>
               </Button>
-            </Flex>
+            </Flex> 
             <FaucetWidget />
           </Box>
         )}
@@ -369,6 +370,7 @@ export const AssetView: FC<AssetViewState> = ({
         style={{
           background:
             "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(159, 115, 241, 0) -48.92deg, rgba(242, 98, 181, 0) 125.18deg, #5FC5FF 193.41deg, #FFAC89 216.02deg, #8155FF 236.07deg, #789DFF 259.95deg, rgba(159, 115, 241, 0) 311.08deg, rgba(242, 98, 181, 0) 485.18deg)",
+            
         }}
       />
     </Box>

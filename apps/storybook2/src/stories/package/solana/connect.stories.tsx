@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, modal } from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
 import {
@@ -25,9 +25,9 @@ const meta: Meta<typeof Scaffold> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp networkId={networkId} configStore={configStore}>
+        <OrderlyAppProvider networkId={networkId} configStore={configStore}>
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

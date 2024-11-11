@@ -5,7 +5,7 @@ import {
   TradingRewardsLayoutWidget,
 } from "@orderly.network/trading-rewards";
 
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
@@ -29,9 +29,9 @@ const meta: Meta<typeof TradingRewards.HomePage> = {
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp networkId={networkId} configStore={configStore}>
+          <OrderlyAppProvider networkId={networkId} configStore={configStore}>
             <Story />
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },

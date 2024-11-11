@@ -3,7 +3,7 @@ import {
   FeeTierModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Column } from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { numberToHumanStyle } from "@orderly.network/utils";
@@ -15,9 +15,13 @@ const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

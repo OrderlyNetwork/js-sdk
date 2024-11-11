@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   APIManagerModule,
@@ -21,14 +21,14 @@ const meta: Meta<typeof APIManagerModule.APIManagerPage> = {
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
+          <OrderlyAppProvider
             brokerId={"orderly"}
             brokerName={"Orderly"}
             networkId={networkId}
             // configStore={configStore}
           >
             <Story />
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },

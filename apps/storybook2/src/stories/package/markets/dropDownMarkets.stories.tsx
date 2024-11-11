@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   ExpandMarketsWidget,
@@ -34,9 +34,9 @@ const meta: Meta<typeof ExpandMarketsWidget> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp networkId={networkId} configStore={configStore}>
+        <OrderlyAppProvider networkId={networkId} configStore={configStore}>
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

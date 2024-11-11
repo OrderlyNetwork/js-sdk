@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrdersWidget, TabType } from "@orderly.network/ui-orders";
 import { Flex, Text, Divider } from "@orderly.network/ui";
@@ -15,13 +15,13 @@ const meta: Meta<typeof OrdersWidget> = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp
+        <OrderlyAppProvider
           brokerId={"orderly"}
           brokerName={"Orderly"}
           networkId={"testnet"}
         >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

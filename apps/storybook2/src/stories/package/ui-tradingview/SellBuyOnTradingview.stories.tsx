@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore.ts";
 import { Box } from "@orderly.network/ui";
@@ -20,7 +20,7 @@ const meta: Meta<typeof TradingviewWidget> = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp
+        <OrderlyAppProvider
           networkId={networkId}
           configStore={configStore}
           appIcons={{
@@ -36,7 +36,7 @@ const meta: Meta<typeof TradingviewWidget> = {
           <Box height={600}>
             <Story />
           </Box>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

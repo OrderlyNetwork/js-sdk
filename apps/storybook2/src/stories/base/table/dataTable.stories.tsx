@@ -10,7 +10,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { OverviewModule } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { transSymbolformString } from "@orderly.network/utils";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
@@ -26,11 +26,15 @@ const meta = {
   decorators: [
     (Story: any) => (
       <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
           <Card>
             <Story />
           </Card>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </ConnectorProvider>
     ),
   ],

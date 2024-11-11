@@ -1,5 +1,5 @@
 import type { StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, ModalProvider } from "@orderly.network/ui";
 import {
   MaintenanceTipsUI,
@@ -29,13 +29,13 @@ const meta = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp configStore={configStore}>
+        <OrderlyAppProvider configStore={configStore}>
           <ModalProvider>
             <Box intensity={900}>
               <Story />
             </Box>
           </ModalProvider>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

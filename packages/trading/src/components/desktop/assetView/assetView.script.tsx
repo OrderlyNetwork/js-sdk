@@ -71,10 +71,6 @@ export const useFirstTimeDeposit = () => {
 };
 
 export const useAssetViewScript = () => {
-  const [optionsOpen, setOptionsOpen] = useLocalStorage(
-    "orderly_entry_asset_list_open",
-    false
-  );
   const account = useAccountInstance();
   const matches = useMediaQuery(MEDIA_TABLET);
 
@@ -216,7 +212,6 @@ export const useAssetViewScript = () => {
     marginRatioVal: _marginRatioVal,
     renderMMR: _mmr,
     isConnected,
-    optionsOpen, setOptionsOpen,
   };
 };
 

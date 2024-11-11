@@ -5,7 +5,7 @@ import {
   SharePnLBottomSheetId,
   SharePnLBottomSheetWidget,
 } from "@orderly.network/ui-share";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Button, Flex, modal } from "@orderly.network/ui";
 
@@ -19,9 +19,13 @@ const meta: Meta<typeof SharePnLDialogWidget> = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId={"orderly"}
+          brokerName={""}
+          networkId={"testnet"}
+        >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],
