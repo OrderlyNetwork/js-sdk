@@ -13,11 +13,14 @@ import { RiskRateState } from "./riskRate.script";
 // import { Pencil } from "lucide-react";
 import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 import { TooltipContent } from "../assetView/assetView.ui";
+import { useAppContext } from "@orderly.network/react-app";
 
 export const RiskRate: FC<RiskRateState> = (props) => {
   const { riskRate, riskRateColor, isConnected, currentLeverage, maxLeverage } =
     props;
-  const { isHigh, isMedium, isLow, isDefault, wrongNetwork } = riskRateColor;
+  const { isHigh, isMedium, isLow, isDefault } = riskRateColor;
+  const { wrongNetwork } = useAppContext();
+
 
   const textColor = wrongNetwork
     ? ""
