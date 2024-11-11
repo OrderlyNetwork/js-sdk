@@ -187,7 +187,7 @@ export const OrderlyConfigProvider: FC<
         configStore: innerConfigStore,
         keyStore: innerKeyStore,
         // getWalletAdapter: innerGetWalletAdapter,
-        networkId: networkId,
+        networkId: innerConfigStore.get("networkId") || networkId,
         filteredChains: filteredChains,
         walletAdapters: innerWalletAdapters,
         // apiBaseUrl,

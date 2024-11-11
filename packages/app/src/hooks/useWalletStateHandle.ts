@@ -1,7 +1,6 @@
-import { useContext, useEffect, useMemo, useRef, useState} from "react";
-import {WalletState } from "@orderly.network/hooks";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useConfig, WalletState } from "@orderly.network/hooks";
 import {
-  OrderlyContext,
   useAccount,
   useChains,
   useKeyStore,
@@ -12,7 +11,12 @@ import {
   praseChainIdToNumber,
   windowGuard,
 } from "@orderly.network/utils";
-import { AccountStatusEnum, SDKError, ChainNamespace } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  SDKError,
+  ChainNamespace,
+  NetworkId,
+} from "@orderly.network/types";
 
 const WALLET_KEY = "orderly:wallet-info";
 const CHAIN_NAMESPACE = "orderly:chain-namespace";
@@ -42,7 +46,7 @@ export const useWalletStateHandle = (options: {
 
   const { account } = useAccount();
   const keyStore = useKeyStore();
-  const { networkId } = useContext<any>(OrderlyContext);
+  const networkId = useConfig("networkId") as NetworkId;
   const [chains, { checkChainSupport }] = useChains();
 
   const [unsupported, setUnsupported] = useState(false);
@@ -64,7 +68,6 @@ export const useWalletStateHandle = (options: {
       namespace,
     };
   }, [connectedWallet]);
-
 
   useEffect(() => {
     if (!connectedChain) return;
@@ -176,7 +179,7 @@ export const useWalletStateHandle = (options: {
     isManualConnect.current = true;
     // const walletState = await connect();
 
-    return connect({chainId: options.currentChainId})
+    return connect({ chainId: options.currentChainId })
       .then(async (walletState) => {
         if (
           Array.isArray(walletState) &&
