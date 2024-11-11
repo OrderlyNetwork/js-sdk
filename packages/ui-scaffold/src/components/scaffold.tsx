@@ -82,7 +82,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   return (
     <div
       className={cn(
-        "oui-scaffold-root",
+        "oui-scaffold-root oui-font-semibold",
+        // default text and background color
+        "oui-text-base-contrast oui-bg-base-10",
         "oui-flex oui-flex-col",
         "oui-overflow-auto oui-custom-scrollbar",
         classNames?.root
@@ -96,15 +98,14 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           routerAdapter,
           expanded: expand,
           setExpand: onExpandChange,
-          // unsupported,
           checkChainSupport: checkChainSupportHandle,
         }}
       >
         {/* Top main nav */}
         <Box
           className={cn(
-            "oui-scaffold-topNavbar",
-            "oui-hidden xl:oui-block",
+            "oui-scaffold-topNavbar oui-bg-base-9",
+            "oui-hidden xl:oui-block oui-min-w-[1440px]",
             // "oui-border-b oui-border-line-12",
             classNames?.topNavbar
           )}
