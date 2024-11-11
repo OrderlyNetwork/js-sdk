@@ -5,7 +5,7 @@ import {
   SimpleDropdownMenu,
 } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
-import { inputFormatter } from "@orderly.network/ui";
+import { inputFormatter, Text } from "@orderly.network/ui";
 import { useEffect, useMemo, useState } from "react";
 
 export type PNLInputProps = PNLInputState & { testId?: string; quote: string };
@@ -22,6 +22,7 @@ export const PNLInput = (props: PNLInputProps) => {
     pnl,
   } = props;
 
+  const [prefix, setPrefix] = useState<string>(mode);
   const [placeholder, setPlaceholder] = useState<string>(
     mode === PnLMode.PERCENTAGE ? "%" : quote
   );
@@ -34,6 +35,13 @@ export const PNLInput = (props: PNLInputProps) => {
     if (num > 0) return "oui-text-trade-profit";
     if (num < 0) return "oui-text-trade-loss";
   }, [pnl]);
+
+  useEffect(() => {
+    setPrefix(mode);
+    setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+  }, [mode]);
+
+  
 
   return (
     <Input
@@ -57,7 +65,7 @@ export const PNLInput = (props: PNLInputProps) => {
       classNames={{
         input: color,
         prefix: "oui-text-base-contrast-54",
-        root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
+        root:  "oui-outline-line-12 focus-within:oui-outline-primary-light",
       }}
       onFocus={() => {
         setPlaceholder("");
@@ -67,21 +75,31 @@ export const PNLInput = (props: PNLInputProps) => {
       }}
       // value={props.value}
       suffix={
-        <PNLMenus
-          modes={modes}
-          onModeChange={(item) => onModeChange(item.value as PnLMode)}
-        />
+        <>
+          {mode === PnLMode.PERCENTAGE && !!value &&  (
+            <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
+              %
+            </Text>
+          )}
+          <PNLMenus
+            mode={mode}
+            modes={modes}
+            onModeChange={(item) => onModeChange(item.value as PnLMode)}
+          />
+        </>
       }
     />
   );
 };
 
 const PNLMenus = (props: {
+  mode?: string;
   modes: MenuItem[];
   onModeChange: (value: MenuItem) => void;
 }) => {
   return (
     <SimpleDropdownMenu
+      currentValue={props.mode}
       menu={props.modes}
       align={"end"}
       size={"xs"}
