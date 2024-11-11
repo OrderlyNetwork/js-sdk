@@ -9,10 +9,14 @@ import {
   Scaffold,
 } from "@orderly.network/ui-scaffold";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
-import { useState } from "react";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
-const configStore = new CustomConfigStore({ brokerId: "testnet", env: "dev" });
+const configStore = new CustomConfigStore({
+  brokerId: "orderly",
+  brokerName: "Orderly",
+  networkId: "testnet",
+  env: "dev",
+});
 
 const meta = {
   title: "Package/ui-scaffold/maintenanceTips",
@@ -25,12 +29,7 @@ const meta = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp
-          configStore={configStore}
-          brokerId={"orderly"}
-          brokerName={"Orderly"}
-          networkId={"testnet"}
-        >
+        <OrderlyApp configStore={configStore}>
           <ModalProvider>
             <Box intensity={900}>
               <Story />

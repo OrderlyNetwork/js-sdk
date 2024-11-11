@@ -10,29 +10,30 @@ import {
   MarketsProvider,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
-import { CustomConfigStore } from "../CustomConfigStore";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
 const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging" });
+const configStore = new CustomConfigStore({
+  networkId,
+  brokerId: "orderly",
+  brokerName: "Orderly",
+  env: "staging",
+});
 
-const meta = {
+const meta: Meta<typeof MarketsHomePage> = {
   title: "Package/Markets/HomePage",
   component: MarketsHomePage,
   subcomponents: {},
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp
-          brokerId="orderly"
-          networkId="testnet"
-          configStore={configStore}
-        >
+        <OrderlyApp networkId="testnet" configStore={configStore}>
           <Story />
         </OrderlyApp>
       </WalletConnectorProvider>
     ),
   ],
-} satisfies Meta<typeof MarketsHomePage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -97,7 +98,11 @@ export const AllMarkets: Story = {
 export const NewListings: Story = {
   render: (args) => {
     return (
-      <MarketsListFullWidget type="new" sortKey="created_time" sortOrder="desc" />
+      <MarketsListFullWidget
+        type="new"
+        sortKey="created_time"
+        sortOrder="desc"
+      />
     );
   },
 

@@ -8,7 +8,7 @@ import { Box, Column } from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
-const meta = {
+const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/Portfolio/FeeTier",
   component: FeeTierModule.FeeTierPage,
   subcomponents: {},
@@ -37,7 +37,7 @@ const meta = {
   args: {
     p: 5,
   },
-} satisfies Meta<typeof FeeTierModule.FeeTierPage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

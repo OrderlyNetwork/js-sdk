@@ -1,19 +1,16 @@
 import { FC, PropsWithChildren } from "react";
 import { OrderlyAppProvider } from "@orderly.network/react";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { CustomConfigStore } from "../constants/CustomConfigStore.ts";
 import { onboardOptions } from "../constants/onboardOptions.ts";
 
 export const AppProvider: FC<PropsWithChildren> = ({ children }) => {
   const networkId = "testnet";
-  const configStore = new CustomConfigStore({ networkId, env: "qa" });
   return (
     <ConnectorProvider options={onboardOptions}>
       <OrderlyAppProvider
         networkId={networkId ?? "testnet"}
         brokerId="orderly"
         brokerName="Orderly"
-        // configStore={configStore}
         // contracts={new CustomContractManager(configStore)}
         referral={{
           saveRefCode: true,

@@ -5,7 +5,8 @@ import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   APIManagerModule,
   PortfolioLayoutWidget,
-} from "@orderly.network/portfolio";import { CustomConfigStore } from "../CustomConfigStore";
+} from "@orderly.network/portfolio";../../../components/configStore/customConfigStore
+import { CustomConfigStore } from "../customConfigStore";
 
 const meta = {
   title: "Package/Portfolio/APIKey",
