@@ -36,6 +36,7 @@ export type {
   ConfigProviderExclusionProps,
 } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
+export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {
   WalletConnectorContext,

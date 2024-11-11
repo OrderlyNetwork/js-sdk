@@ -1,10 +1,5 @@
-import {
-  ConfigKey,
-  API_URLS,
-  type URLS,
-  DefaultConfigStore,
-} from "@orderly.network/core";
-import { MarketsStorageKey } from "@orderly.network/hooks";
+import { ConfigKey, API_URLS, type URLS } from "@orderly.network/core";
+import { ExtendedConfigStore } from "@orderly.network/hooks";
 
 type ENV_NAME = "prod" | "staging" | "qa" | "dev";
 
@@ -32,7 +27,7 @@ const APIS: Record<ENV_NAME, URLS> = {
   },
 };
 
-export class CustomConfigStore extends DefaultConfigStore {
+export class CustomConfigStore extends ExtendedConfigStore {
   constructor(init: Partial<Record<ConfigKey, any>>) {
     super(init);
     const env = (init?.env as ENV_NAME) || "prod";
@@ -49,30 +44,5 @@ export class CustomConfigStore extends DefaultConfigStore {
     for (const [key, value] of entries) {
       this.map.set(key, value);
     }
-  }
-
-  get<T>(key: ConfigKey): T {
-    if (key === MarketsStorageKey) {
-      const jsonStr = localStorage.getItem(MarketsStorageKey);
-      if (!jsonStr) {
-        // get old storage key data
-        const oldJsonStr = localStorage.getItem(
-          MarketsStorageKey.replace("orderly_", "")
-        );
-        return oldJsonStr ? JSON.parse(oldJsonStr) : ("" as T);
-      }
-
-      return JSON.parse(jsonStr);
-    }
-    return super.get(key);
-  }
-
-  set<T>(key: ConfigKey, value: T): void {
-    if (key === MarketsStorageKey) {
-      const jsonStr = JSON.stringify(value);
-      localStorage.setItem(MarketsStorageKey, jsonStr);
-      return;
-    }
-    super.set(key, value);
   }
 }
