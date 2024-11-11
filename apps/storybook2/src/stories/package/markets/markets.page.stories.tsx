@@ -23,9 +23,8 @@ const meta = {
     (Story: any) => (
       <WalletConnectorProvider>
         <OrderlyApp
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          networkId="testnet"
           configStore={configStore}
         >
           <Story />

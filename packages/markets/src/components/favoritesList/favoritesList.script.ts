@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarketList } from "@orderly.network/hooks";
+import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
 
 export type UseFavoritesListReturn = ReturnType<typeof useFavoritesListScript>;
 
 export const useFavoritesListScript = () => {
-  const [data, favorite] = useMarketList(MarketsType.FAVORITES);
+  const [data, favorite] = useMarkets(MarketsType.FAVORITES);
   const [loading, setLoading] = useState(true);
 
   const { favorites, selectedFavoriteTab } = favorite;
