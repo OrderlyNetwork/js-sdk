@@ -48,7 +48,7 @@ export const CumstomizeUrls: Story = {
   render: () => {
     return (
       <Scaffold
-        footerConfig={{
+        footerProps={{
           telegramUrl: "https://orderly.network",
           discordmUrl: "https://orderly.network",
           twitterUrl: "https://orderly.network",

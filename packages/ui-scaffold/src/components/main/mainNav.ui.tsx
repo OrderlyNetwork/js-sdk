@@ -6,7 +6,7 @@ import {
 } from "./mainNavItems";
 
 import { ProductsMenu, ProductsProps } from "./products";
-import { Flex } from "@orderly.network/ui";
+import { cn, Flex } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
 import { AccountMenuWidget } from "../accountMenu";
 import { AccountSummaryWidget } from "../accountSummary";
@@ -55,7 +55,11 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       height={"48px"}
       justify={"between"}
       px={3}
-      className={`orderly-main-nav ${className} ${classNames?.root} oui-font-semibold`}
+      className={cn(
+        "oui-main-nav oui-font-semibold",
+        className,
+        classNames?.root
+      )}
     >
       <Flex itemAlign={"center"} gap={4}>
         <MainLogo {...logo} />

@@ -50,14 +50,7 @@ const meta: Meta<typeof TradingPage> = {
               },
             }}
           >
-            <Scaffold
-              leftSidebar={null}
-              mainNavProps={mainNavProps}
-              classNames={{
-                footer: "oui-bg-base-10",
-                // content: "oui-min-w-[1440px]",
-              }}
-            >
+            <Scaffold leftSidebar={null} mainNavProps={mainNavProps}>
               <Story />
             </Scaffold>
           </OrderlyAppProvider>

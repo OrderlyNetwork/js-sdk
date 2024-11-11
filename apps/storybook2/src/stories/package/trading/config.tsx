@@ -158,7 +158,4 @@ export const mainNavProps: MainNavWidgetProps = {
   ],
   initialMenu: "/markets",
   initialProduct: "/trade",
-  classNames: {
-    root: "oui-min-w-[1440px] oui-bg-base-9",
-  },
 };
