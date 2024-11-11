@@ -35,12 +35,10 @@ export function useScroll(deps: any[]) {
 }
 
 function isScrolledToRight(element: HTMLDivElement) {
-  // console.log(element.scrollLeft, element.clientWidth, element.scrollWidth);
   return element.scrollLeft + element.clientWidth >= element.scrollWidth;
 }
 
 function hasHorizontalScroll(element: HTMLDivElement) {
-  console.log("hasHorizontalScroll", element.scrollWidth, element.clientWidth);
   return element.scrollWidth > element.clientWidth;
 }
 
