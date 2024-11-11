@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarketList } from "@orderly.network/hooks";
+import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { PaginationMeta, usePagination } from "@orderly.network/ui";
 import { MarketsListFullWidgetProps } from "./widget";
 import { getPagedData, searchBySymbol, useSort } from "../../utils";
@@ -19,7 +19,7 @@ export const useMarketsListFullScript = (
     pageSize: 10,
   });
 
-  const [data, favorite] = useMarketList(MarketsType.ALL);
+  const [data, favorite] = useMarkets(MarketsType.ALL);
 
   const { searchValue } = useMarketsContext();
 
@@ -70,7 +70,6 @@ export const useMarketsListFullScript = (
       } as PaginationMeta),
     [meta, setPage, setPageSize]
   );
-
 
   return {
     loading,

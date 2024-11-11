@@ -48,6 +48,7 @@ export abstract class BaseAlgoOrderCreator<
 
       const qty = Number(values.quantity);
       const maxQty = config.maxQty;
+      const { quote_max, quote_min, price_scope } = config.symbol ?? {};
       if (!isNaN(qty) && qty > maxQty) {
         result.quantity = {
           message: `Quantity must be less than ${config.maxQty}`,
@@ -71,7 +72,7 @@ export abstract class BaseAlgoOrderCreator<
       if (side === OrderSide.BUY) {
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) >= config.markPrice
+          Number(sl_trigger_price) >= config.markPrice * (1 - price_scope)
         ) {
           result.sl_trigger_price = {
             message: `SL price must be less than ${config.markPrice}`,
@@ -86,12 +87,24 @@ export abstract class BaseAlgoOrderCreator<
             message: `TP price must be greater than ${config.markPrice}`,
           };
         }
+
+        if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
+          result.tp_trigger_price = {
+            message: `TP price must be less than ${quote_max}`,
+          };
+        }
+
+        if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
+          result.sl_trigger_price = {
+            message: `TP price must be greater than ${quote_min}`,
+          };
+        }
       }
 
       if (side === OrderSide.SELL) {
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) <= config.markPrice
+          Number(sl_trigger_price) <= config.markPrice * (1 + price_scope)
         ) {
           result.sl_trigger_price = {
             message: `SL price must be greater than ${config.markPrice}`,
@@ -104,6 +117,18 @@ export abstract class BaseAlgoOrderCreator<
         ) {
           result.tp_trigger_price = {
             message: `TP price must be less than ${config.markPrice}`,
+          };
+        }
+
+        if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
+          result.tp_trigger_price = {
+            message: `TP price must be less than ${quote_max}`,
+          };
+        }
+
+        if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
+          result.sl_trigger_price = {
+            message: `TP price must be greater than ${quote_min}`,
           };
         }
       }

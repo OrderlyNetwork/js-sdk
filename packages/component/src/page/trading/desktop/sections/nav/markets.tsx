@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { Text } from "@/text";
 import { NetworkImage } from "@/icon";
 import { ChevronDown } from "lucide-react";
@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from "@/dropdown/dropdown";
 import { MemoizedMarkets } from "./myMarkets";
-import { useMarkets, MarketsType } from "@orderly.network/hooks";
 import {
   FavoriteIcon,
   UnFavoriteIcon,
