@@ -72,7 +72,7 @@ export abstract class BaseAlgoOrderCreator<
       if (side === OrderSide.BUY) {
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) >= config.markPrice
+          Number(sl_trigger_price) >= config.markPrice * (1 - price_scope)
         ) {
           result.sl_trigger_price = {
             message: `SL price must be less than ${config.markPrice}`,
@@ -104,7 +104,7 @@ export abstract class BaseAlgoOrderCreator<
       if (side === OrderSide.SELL) {
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) <= config.markPrice
+          Number(sl_trigger_price) <= config.markPrice * (1 + price_scope)
         ) {
           result.sl_trigger_price = {
             message: `SL price must be greater than ${config.markPrice}`,
