@@ -149,7 +149,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       formattedOrder.order_type || OrderType.LIMIT
     );
 
-    const submitting = useRef(false);
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
       // handle orderbook item click event
@@ -260,6 +260,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       //
       event.preventDefault();
 
+      if (submitting) return;
+      setSubmitting(true);
       if (!symbolConfig) {
         return Promise.reject("symbolConfig is null");
       }
@@ -348,20 +350,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           if (error !== "cancel" && !!error?.message) {
             toast.error(error.message || "Failed");
           }
+        }).finally(() => {
+          setSubmitting(false);
         });
     };
-
-    const innerSubmit = (event: FormEvent) => {
-      if (submitting.current) return;
-
-      submitting.current = true;
-
-      onSubmit(event);
-      setTimeout(() => {
-        submitting.current = false;
-      }, 200);
-    };
-
+    
     const onDeposit = useCallback((event: FormEvent) => {
       event.preventDefault();
       props.onDeposit?.();
@@ -419,7 +412,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       // @ts-ignore
 
       <form
-        onSubmit={innerSubmit}
+        onSubmit={onSubmit}
         onClick={() => {
           isClickForm.current = true;
         }}
