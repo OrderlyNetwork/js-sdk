@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -17,9 +17,13 @@ const meta = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],

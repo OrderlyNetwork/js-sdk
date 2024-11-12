@@ -52,14 +52,14 @@ export const useMarginRatio = (): MarginRatioReturn => {
 
   // MMR
   const mmr = useMemo<number | null>(() => {
-    if (!rows || rows.length <= 0) return null;
+    if (!rows || rows.length <= 0 || notional == null) return null;
     let positionsMM = zero;
     // const positionsNotional = positions.totalNotional(rows);
 
     for (let index = 0; index < rows.length; index++) {
       const item = rows[index];
       if (item.mm !== null) {
-        // console.log("calc add mm", item.mm, positionsMM);
+        // console.log("calc add mm", item.mm, positionsMM, notional);
         
         positionsMM = positionsMM.add(item.mm);
       }

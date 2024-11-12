@@ -1,7 +1,7 @@
-import { useMarketList } from "@orderly.network/hooks";
+import { useMarkets } from "@orderly.network/hooks";
 import { SortOrder, TableColumn } from "@orderly.network/ui";
 
-export type FavoriteInstance = ReturnType<typeof useMarketList>[1];
+export type FavoriteInstance = ReturnType<typeof useMarkets>[1];
 
 export type TInitialSort = {
   sortKey: string;

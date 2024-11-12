@@ -1,5 +1,6 @@
 import { OrderSide, OrderType } from "@orderly.network/types";
 import {
+  useAccount,
   useEventEmitter,
   useLocalStorage,
   useMarginRatio,
@@ -10,6 +11,8 @@ import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { useAppContext } from "@orderly.network/react-app";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -32,7 +35,18 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         side: localOrderSide,
       },
     });
-  const [tpslSwitch, setTpslSwitch] = useLocalStorage("orderly-order-entry-tp_sl-switch",false);
+  const [tpslSwitch, setTpslSwitch] = useLocalStorage(
+    "orderly-order-entry-tp_sl-switch",
+    false
+  );
+
+  const { state: accountState } = useAccount();
+  const { wrongNetwork } = useAppContext();
+  const canTrade = useMemo(() => {
+    return (
+      accountState.status === AccountStatusEnum.EnableTrading && !wrongNetwork
+    );
+  }, [accountState.status, wrongNetwork]);
 
   // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();
@@ -161,6 +175,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     if (key === "side") {
       setLocalOrderSide(value);
     }
+
+    if (
+      (key === "reduce_only" && value) ||
+      (key === "order_type" &&
+        (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
+    ) {
+      cancelTP_SL();
+    }
   };
 
   const onTPSLSwitchChanged = (state: boolean) => {
@@ -193,6 +215,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       triggerPriceInputRef,
       priceInputRef,
     },
+    
+    canTrade,
   };
 };
 

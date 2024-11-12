@@ -14,8 +14,15 @@ import {
   usePagination,
   Text,
   PaginationMeta,
+  useScreen,
 } from "@orderly.network/ui";
-import { addDays, addSeconds, differenceInDays, setHours } from "date-fns";
+import {
+  addDays,
+  addSeconds,
+  differenceInDays,
+  setHours,
+  subDays,
+} from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export const useOrderListScript = (props: {
@@ -201,18 +208,20 @@ const useFilter = (
   const [ordersSide, setOrdersSide] = useState<OrderSide | "all">(
     option.filterConfig?.side ?? "all"
   );
+
+  const defaultRange =
+    option.filterConfig?.range ??
+    (type === TabType.all || type === TabType.orderHistory
+      ? formatDatePickerRange({
+          to: new Date(),
+          from: offsetEndOfDay(subDays(new Date(), 7)),
+        })
+      : {});
+
   const [dateRange, setDateRange] = useState<{
     from?: Date;
     to?: Date;
-  }>(
-    option?.filterConfig?.range ??
-      (type === TabType.all || type === TabType.orderHistory)
-      ? formatDatePickerRange({
-          from: new Date(),
-          to: offsetEndOfDay(addDays(new Date(), 7)),
-        })
-      : {}
-  );
+  }>(defaultRange);
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "side") {

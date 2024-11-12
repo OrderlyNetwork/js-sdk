@@ -14,7 +14,7 @@ import {
   SimpleDialog,
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 
 const meta = {
   title: "Package/ui-connector",
@@ -27,9 +27,13 @@ const meta = {
   decorators: [
     (Story: any) => (
       // <WalletConnectorProvider>
-      <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+      <OrderlyAppProvider
+        brokerId="orderly"
+        brokerName="Orderly"
+        networkId="testnet"
+      >
         <Story />
-      </OrderlyApp>
+      </OrderlyAppProvider>
       // </WalletConnectorProvider>
     ),
   ],

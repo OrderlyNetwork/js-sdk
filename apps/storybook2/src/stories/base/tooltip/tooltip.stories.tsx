@@ -2,7 +2,7 @@ import { Tooltip, TooltipProvider } from "@orderly.network/ui";
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -15,9 +15,13 @@ const meta = {
   decorators: [
     (Story: any) => (
       <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </ConnectorProvider>
     ),
   ],

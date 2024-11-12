@@ -20,6 +20,7 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {

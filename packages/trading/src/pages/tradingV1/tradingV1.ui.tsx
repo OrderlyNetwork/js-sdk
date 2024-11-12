@@ -2,16 +2,15 @@ import {
   Layout,
   TradingPage,
   TradingPageProvider,
-  TooltipProvider,
 } from "@orderly.network/react";
-import { TradingPageProps } from "../types/types";
+import { TradingPageV1Props } from "../../types/types";
 
 const { Header, Content } = Layout;
 
 const { mobile: MobileTradingPage, desktop: DesktopTradingPage } = TradingPage;
 
 export const Trading = (
-  props: TradingPageProps & { wrongNetwork: boolean }
+  props: TradingPageV1Props & { wrongNetwork: boolean }
 ) => {
   return (
     <TradingPageProvider

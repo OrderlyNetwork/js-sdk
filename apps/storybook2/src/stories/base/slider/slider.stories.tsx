@@ -1,32 +1,29 @@
-import type { Meta, StoryObj } from '@storybook/react';
-// import { fn } from '@storybook/test';
-import { Slider } from '@orderly.network/ui';
-import { fn } from '@storybook/test';
+import type { Meta, StoryObj } from "@storybook/react";
+import { Slider } from "@orderly.network/ui";
 
-
-const meta = {
-  title: 'Base/Slider',
+const meta: Meta<typeof Slider> = {
+  title: "Base/Slider",
   component: Slider,
   decorators: [
     (Story) => (
-      <div style={{ width: '300px' }}>
+      <div style={{ width: "300px" }}>
         <Story />
       </div>
-    )
+    ),
   ],
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: 'centered',
+    layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
     color: {
       control: {
         type: "inline-radio",
       },
-      options: ["primary","primaryLight", 'sell', 'buy'],
+      options: ["primary", "primaryLight", "sell", "buy"],
     },
     step: {
       control: {
@@ -44,26 +41,25 @@ const meta = {
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
     // size:'default'
-    color: 'primary',
+    color: "primary",
     step: 10,
-    showTip:true,
+    showTip: true,
     // onValueChange: fn(),
   },
-} satisfies Meta<typeof Slider>;
-
+};
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
 export const MarksCount: Story = {
-  args:{
+  args: {
     markCount: 5,
-  }
-}
+  },
+};
 
 export const MarksItems: Story = {
-  args:{
+  args: {
     step: 11.1,
     markLabelVisible: true,
     color: "primary",
@@ -108,6 +104,6 @@ export const MarksItems: Story = {
         label: "50x",
         value: 50,
       },
-    ]
-  }
-}
+    ],
+  },
+};

@@ -1,13 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
-
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-// import { Button, modal } from "@orderly.network/ui";
-import { PositionsWidget } from '@orderly.network/ui-positions';
+import { PositionsWidget } from "@orderly.network/ui-positions";
 import { Box, Button, modal } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof PositionsWidget> = {
   title: "Package/ui-positions/list",
   component: PositionsWidget,
   // subcomponents: {
@@ -18,9 +15,13 @@ const meta = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],
@@ -46,35 +47,34 @@ const meta = {
       // ref
       refLink: "https://orderly.network",
       refSlogan: "NEW BE",
-    }
+    },
   },
-} satisfies Meta<typeof PositionsWidget>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Defaut: Story = {
-  decorators: [
-    (Stroy) => <Box height={'360px'}>{Stroy()}</Box >
-  ]
+  decorators: [(Stroy) => <Box height={"360px"}>{Stroy()}</Box>],
 };
 
-
 export const MarketClose: Story = {
-
   render: () => {
-
-    return <Button onClick={() => {
-      modal.show("MarketCloseConfirmID", {
-        base: "ETH",
-        quantity: 222.22,
-        onConfirm: async () => {
-          return Promise.resolve(0);
-        },
-        submitting: false,
-      });
-    }}>
-      Show market close 
-    </Button>
-  }
-}
+    return (
+      <Button
+        onClick={() => {
+          modal.show("MarketCloseConfirmID", {
+            base: "ETH",
+            quantity: 222.22,
+            onConfirm: async () => {
+              return Promise.resolve(0);
+            },
+            submitting: false,
+          });
+        }}
+      >
+        Show market close
+      </Button>
+    );
+  },
+};

@@ -56,7 +56,7 @@ const TooltipContent = React.forwardRef<
 });
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-const TooltipArrow = (props: { className?: string }) => {
+const TooltipArrow = (props: { className?: string, style?: React.CSSProperties }) => {
   const { className, ...arrowProps } = props;
   return (
     <TooltipPrimitive.Arrow

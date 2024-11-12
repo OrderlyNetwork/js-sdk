@@ -10,6 +10,7 @@ export const CancelBtn: FC<CancelBtnState> = (props) => {
         fullWidth
         color="secondary"
         size="sm"
+        className="oui-border-base-contrast-36"
         onClick={(e) => props.setOpen(true)}
       >
         Cancel

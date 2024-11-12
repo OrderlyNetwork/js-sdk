@@ -6,6 +6,7 @@ import {
 } from "@orderly.network/hooks";
 import { SDKError } from "@orderly.network/types";
 import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
 import { useEffect, useMemo, useRef } from "react";
 
 export type TPSLBuilderOptions = {
@@ -21,8 +22,8 @@ export type TPSLBuilderOptions = {
     order: ComputedAlgoOrder,
     options: {
       position: API.Position;
-      submit: () => Promise<void>;
-      cancel: () => Promise<void>;
+      submit: () => Promise<any>;
+      cancel: () => Promise<any>;
     }
   ) => Promise<boolean>;
 };
@@ -36,7 +37,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const symbol = isEditing ? order!.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
-  const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
+  const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
   const [
     tpslOrder,
@@ -183,7 +184,12 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     return Promise.resolve()
       .then(() => {
         if (typeof options.onConfirm !== "function" || !needConfirm) {
-          return submit().then(() => true);
+          return submit().then(() => true, (reject) => {
+            if (reject?.message) {
+              toast.error(reject.message);
+            }
+            return Promise.reject(false);
+          });
         }
         return options.onConfirm(tpslOrder, {
           position,

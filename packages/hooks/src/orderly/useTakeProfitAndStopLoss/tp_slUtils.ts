@@ -132,6 +132,7 @@ export function priceToOffsetPercentage(inputs: {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
 
   if (orderSide === OrderSide.BUY) {
+    if (entryPrice === 0) return 0;
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(price)
         .div(new Decimal(entryPrice))
@@ -147,6 +148,7 @@ export function priceToOffsetPercentage(inputs: {
   }
 
   if (orderSide === OrderSide.SELL) {
+    if (entryPrice === 0) return 0;
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(1)
         .minus(new Decimal(price).div(new Decimal(entryPrice)))
@@ -179,6 +181,8 @@ export function pnlToPrice(inputs: {
     return;
   }
 
+  if (qty === 0) return;
+
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(entryPrice)
@@ -205,6 +209,8 @@ export function pnlToPrice(inputs: {
 
 /**
  * TP/SL price -> pnl
+ * @price trigger_price
+ * @entryPrice calculate price, maybe markPrice/limitPrice/order.price
  */
 export function priceToPnl(
   inputs: {
@@ -219,6 +225,10 @@ export function priceToPnl(
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
   let decimal = zero;
+  // const qty =
+  //   orderSide === OrderSide.BUY ? Math.abs(_qty) : Math.abs(_qty) * -1;
+    
+    
 
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {

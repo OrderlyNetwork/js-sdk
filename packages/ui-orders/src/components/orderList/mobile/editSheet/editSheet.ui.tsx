@@ -38,7 +38,6 @@ export const EditSheet: FC<EditSheetState> = (props) => {
     props.quantity && props.maxQty
       ? Math.min(Number(props.quantity) / props.maxQty, 1)
       : undefined;
-
   return (
     <>
       <Flex
@@ -120,7 +119,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 },
               }}
               classNames={{
-                input: "oui-text-base-contrast-80 oui-w-full",
+                input: "oui-text-base-contrast-98 oui-w-full",
+                root: cn("oui-outline-line-12", props.errors?.trigger_price?.message && "oui-outline-danger" )
               }}
             />
           )}
@@ -156,7 +156,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               },
             }}
             classNames={{
-              input: "oui-text-base-contrast-80",
+              input: "oui-text-base-contrast-98",
+              root: cn("oui-outline-line-12", props.errors?.order_price?.message && "oui-outline-danger" )
             }}
           />
           <Input.tooltip
@@ -199,7 +200,8 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               },
             }}
             classNames={{
-              input: "oui-text-base-contrast-80",
+              input: "oui-text-base-contrast-98",
+              root: cn("oui-outline-line-12", props.errors?.order_quantity?.message && "oui-outline-danger" )
             }}
           />
           <Slider

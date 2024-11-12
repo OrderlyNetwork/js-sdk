@@ -31,9 +31,12 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
       trailing,
       size,
       icon,
+      disabled,
       ...rest
     } = props;
     const Comp = asChild ? Slot : "button";
+
+    const isDisabled = typeof disabled !== "undefined" ? disabled : loading;
 
     const iconElement = useMemo(() => {
       return icon
@@ -86,7 +89,7 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
     }, [size]);
 
     return (
-      <Comp {...rest} ref={forwardedRef}>
+      <Comp {...rest} disabled={isDisabled} ref={forwardedRef}>
         {loading ? (
           <>
             <span className="oui-invisible">{content}</span>

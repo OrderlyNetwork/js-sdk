@@ -10,14 +10,14 @@ export type { SymbolInfo } from "./useSymbolsInfo";
 export { useAccountInfo } from "./useAccountInfo";
 
 export { useMarketsStream } from "./useMarketsStream";
-export { useMarkets } from "./useMarkets";
+export { useMarket } from "./useMarket";
 export {
-  useMarketList,
+  useMarkets,
   useMarketsStore,
   MarketsStorageKey,
   MarketsType,
-} from "./useMarketList";
-export type { FavoriteTab, Favorite, Recent } from "./useMarketList";
+} from "./useMarkets";
+export type { FavoriteTab, Favorite, Recent } from "./useMarkets";
 export { useMarkPricesStream } from "./useMarkPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";

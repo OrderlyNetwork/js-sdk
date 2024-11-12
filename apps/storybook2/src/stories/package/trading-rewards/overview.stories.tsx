@@ -1,13 +1,15 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
-import { TradingRewards, TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
+import {
+  TradingRewards,
+  TradingRewardsLayoutWidget,
+} from "@orderly.network/trading-rewards";
 
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { CustomConfigStore } from "../CustomConfigStore";
-import { useMemo, useState } from "react";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
-const meta = {
+const meta: Meta<typeof TradingRewards.HomePage> = {
   title: "Package/TradingRewards",
   component: TradingRewards.HomePage,
   // subcomponents: {
@@ -16,21 +18,17 @@ const meta = {
   // },
   decorators: [
     (Story: any) => {
-
-      // const networkId = localStorage.getItem("preview-orderly-networkId");
-      // const networkId = "mainnet";
-      const networkId = "testnet";
-      const configStore = new CustomConfigStore({ networkId, brokerId: "woofi_pro", env: "staging", brokerName:'WOOFi Pro' });
+      const configStore = new CustomConfigStore({
+        networkId: "testnet",
+        brokerId: "orderly",
+        brokerName: "Orderly",
+        env: "staging",
+      });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
-            // brokerId={"orderly"}
-            // brokerName={"Orderly"}
-            networkId={networkId}
-            configStore={configStore}
-          >
+          <OrderlyAppProvider configStore={configStore}>
             <Story />
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },
@@ -57,38 +55,39 @@ const meta = {
     // p: 5,
     // py: 2,
   },
-} satisfies Meta<typeof TradingRewards.HomePage>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>; 
+type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
-
 
 export const LayoutPage: Story = {
   render: (args) => {
     const [currentPath, setCurrentPath] = useState("/rewards/affiliate");
 
-    return <TradingRewardsLayoutWidget
-      routerAdapter={{
-        onRouteChange: (options) => {
-          console.log("options", options);
-          setCurrentPath(options.href);
-          
-        },
-        currentPath: currentPath,
-      }}
-      // @ts-ignore
-      leftSideProps={
-        {
+    return (
+      <TradingRewardsLayoutWidget
+        routerAdapter={{
+          onRouteChange: (options) => {
+            console.log("options", options);
+            setCurrentPath(options.href);
+          },
+          currentPath: currentPath,
+        }}
+        // @ts-ignore
+        leftSideProps={{
           current: currentPath,
           // items
-        }
-      }
-    >
-      <TradingRewards.HomePage className="oui-py-6 oui-px-4 lg:oui-px-6 xl:oui-pl-4 lx:oui-pr-6" titleConfig={{
-        brokerName: "Mark"
-      }}/>
-    </TradingRewardsLayoutWidget>
+        }}
+      >
+        <TradingRewards.HomePage
+          className="oui-py-6 oui-px-4 lg:oui-px-6 xl:oui-pl-4 lx:oui-pr-6"
+          titleConfig={{
+            brokerName: "Mark",
+          }}
+        />
+      </TradingRewardsLayoutWidget>
+    );
   },
-}
+};

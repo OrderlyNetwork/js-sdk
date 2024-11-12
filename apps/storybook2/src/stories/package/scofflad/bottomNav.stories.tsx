@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Flex, ModalProvider } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
@@ -21,13 +21,17 @@ const meta = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
           <ModalProvider>
             <Box intensity={900}>
               <Story />
             </Box>
           </ModalProvider>
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],
@@ -44,7 +48,7 @@ export const CumstomizeUrls: Story = {
   render: () => {
     return (
       <Scaffold
-        footerConfig={{
+        footerProps={{
           telegramUrl: "https://orderly.network",
           discordmUrl: "https://orderly.network",
           twitterUrl: "https://orderly.network",

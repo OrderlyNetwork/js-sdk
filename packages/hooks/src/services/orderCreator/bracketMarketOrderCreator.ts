@@ -1,6 +1,7 @@
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { MarketOrderCreator } from "./marketOrderCreator";
 import { ValuesDepConfig, VerifyResult } from "./interface";
+import { bracketOrderValidator } from "./baseBracketOrderCreator";
 
 export class BracketMarketOrderCreator extends MarketOrderCreator {
   orderType = OrderType.MARKET;
@@ -13,10 +14,17 @@ export class BracketMarketOrderCreator extends MarketOrderCreator {
       price: order.order_price,
     };
   }
-  validate(
+
+  
+  async validate(
     values: OrderlyOrder,
     config: ValuesDepConfig
   ): Promise<VerifyResult> {
-    return super.validate(values, config);
+    const value = await super.validate(values, config);
+
+    const bracketData = await bracketOrderValidator(values as any, config);    
+
+    return {...value, ...bracketData};
+
   }
 }

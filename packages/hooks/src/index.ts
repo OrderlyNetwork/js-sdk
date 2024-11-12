@@ -31,8 +31,12 @@ export { useSimpleDI } from "./useSimpleDI";
 export * from "./orderlyContext";
 export * from "./statusProvider";
 export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
-export type { ConfigProviderProps } from "./configProvider";
+export type {
+  ConfigProviderProps,
+  ConfigProviderExclusionProps,
+} from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
+export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {
   WalletConnectorContext,

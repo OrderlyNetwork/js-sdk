@@ -27,7 +27,7 @@ import { useOrderListContext } from "../orderListContext";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
-import { useMaxQty, useOrderEntry } from "@orderly.network/hooks";
+import { useMaxQty, useOrderEntry, utils } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 
 export const OrderQuantity = (props: {
@@ -55,9 +55,9 @@ export const OrderQuantity = (props: {
   const { onUpdateOrder: onUpdateTPSLOrder, position } =
     useTPSLOrderRowContext();
 
-  const { base_dp, base } = useSymbolContext();
+  const { base_dp, base, base_tick } = useSymbolContext();
 
-  const setQuantity = (qty: string) => {
+  const setQuantity = async (qty: string): Promise<void> => {
     originSetQuantity(qty);
     const positionQty = Math.abs(position?.position_qty || 0);
 
@@ -68,6 +68,7 @@ export const OrderQuantity = (props: {
     } else {
       setError(undefined);
     }
+    return Promise.resolve();
   };
 
   const closePopover = () => {
@@ -239,6 +240,7 @@ export const OrderQuantity = (props: {
         inputRef={inputRef}
         quantitySliderRef={quantitySliderRef}
         base_dp={base_dp}
+        base_tick={base_tick}
         quantity={quantity}
         setQuantity={setQuantity}
         editing={editing}
@@ -346,7 +348,8 @@ const NormalState: FC<{
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
 
-          !props.disableEdit && "oui-bg-base-7 oui-px-2 oui-border oui-border-line"
+          !props.disableEdit &&
+            "oui-bg-base-7 oui-px-2 oui-border oui-border-line-12"
         )}
       >
         <Text size="2xs">{quantity}</Text>
@@ -359,8 +362,9 @@ const EditState: FC<{
   inputRef: any;
   quantitySliderRef: any;
   base_dp: number;
+  base_tick: number;
   quantity: string;
-  setQuantity: (quantity: string) => void;
+  setQuantity: (quantity: string) => Promise<void>;
   editing: boolean;
   confirmOpen: boolean;
   setEditing: (value: boolean) => void;
@@ -378,6 +382,7 @@ const EditState: FC<{
     inputRef,
     quantitySliderRef,
     base_dp,
+    base_tick,
     quantity,
     setQuantity,
     editing,
@@ -400,29 +405,34 @@ const EditState: FC<{
   //   },
   // });
 
-  const maxQty = useMaxQty(
-    symbol,
-    order.side,
-    order.reduce_only
-  );
-
-
+  const maxQty = useMaxQty(symbol, order.side, order.reduce_only);
 
   const qty = useMemo(() => {
     if (reduce_only) {
-      return positionQty ?? 0;
+      return Math.abs(positionQty ?? 0);
     }
-    return order.quantity + maxQty;
+    return order.quantity + Math.abs(maxQty);
   }, [order.quantity, maxQty, reduce_only, positionQty]);
 
   const [sliderValue, setSliderValue] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (sliderValue === undefined) {
-      const sliderValue = new Decimal(quantity).div(qty).mul(100).toNumber();
+      const sliderValue = new Decimal(quantity)
+        .div(qty)
+        .abs()
+        .mul(100)
+        .toNumber();
       setSliderValue(sliderValue);
     }
   }, [sliderValue, qty, quantity]);
+
+  const formatQuantity = async (qty: string | number): Promise<void> => {
+    if (base_tick > 0) {
+      qty = utils.formatNumber(qty, base_tick) ?? qty;
+    }
+    return setQuantity(`${qty}`);
+  };
 
   return (
     <PopoverRoot open={!confirmOpen}>
@@ -432,7 +442,7 @@ const EditState: FC<{
           dp={base_dp}
           value={quantity}
           setValue={(e: string) => {
-            setQuantity(Math.min(Number(e), qty).toString());
+            setQuantity(Math.abs(Math.min(Number(e), qty)).toString());
             if (e.endsWith(".")) return;
             const sliderValue = new Decimal(e)
               .div(qty)
@@ -445,6 +455,9 @@ const EditState: FC<{
           handleKeyDown={handleKeyDown}
           onClick={onClick}
           onClose={onClose}
+          onBlur={(e) => {
+            formatQuantity(e.target.value);
+          }}
           hintInfo={error}
         />
       </PopoverTrigger>
@@ -490,11 +503,19 @@ const EditState: FC<{
                 const quantity = new Decimal(values[0])
                   .div(100)
                   .mul(qty)
+                  .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
                 setQuantity(quantity);
               }}
-              onValueCommit={(e) => {
-                inputRef.current.focus();
+              onValueCommit={(values) => {
+                const quantity = new Decimal(values[0])
+                  .div(100)
+                  .mul(qty)
+                  .abs()
+                  .toFixed(base_dp, Decimal.ROUND_DOWN);
+                formatQuantity(quantity).finally(() => {
+                  inputRef.current.focus();
+                });
               }}
             />
             <Buttons
@@ -502,6 +523,7 @@ const EditState: FC<{
                 setSliderValue(value * 100);
                 const quantity = new Decimal(value)
                   .mul(qty)
+                  .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
                 setQuantity(quantity);
                 setTimeout(() => {

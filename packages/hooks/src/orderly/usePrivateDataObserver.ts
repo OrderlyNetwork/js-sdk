@@ -56,13 +56,14 @@ export const usePrivateDataObserver = (options: {
 
     // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
   useEffect(() => {
+    if (state.validating) return;
     if (state.status < AccountStatusEnum.EnableTrading) {
       cleanAll();
       calculatorService.calc(CalculatorScope.POSITION, {
         rows: [],
       });
     }
-  }, [state.status]);
+  }, [state.status, state.validating]);
 
   useEffect(() => {
     /// start load positions

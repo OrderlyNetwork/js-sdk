@@ -78,6 +78,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel value={DataListTabType.filled} title={DataListTabType.filled}>
         <DesktopOrderListWidget
           type={TabType.filled}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
           ordersStatus={OrderStatus.FILLED}
           onSymbolChange={props.onSymbolChange}
         />
@@ -88,6 +89,7 @@ export const DataList: FC<DataListState> = (props) => {
       >
         <DesktopOrderListWidget
           type={TabType.orderHistory}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>

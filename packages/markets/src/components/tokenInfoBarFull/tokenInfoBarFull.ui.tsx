@@ -80,6 +80,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
           formatString="base-type"
           size="xs"
           weight="semibold"
+          intensity={98}
         >
           {symbol}
         </Text.formatted>
@@ -89,7 +90,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   );
 
   const price = (
-    <Text.numeral dp={quotoDp || 2} currency="$" size="sm">
+    <Text.numeral dp={quotoDp || 2} currency="$" size="sm" intensity={98}>
       {data?.["24h_close"]}
     </Text.numeral>
   );

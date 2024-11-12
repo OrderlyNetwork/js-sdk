@@ -2,7 +2,7 @@ import { useAccount, useCollateral, useLeverage, useMarginRatio } from "@orderly
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
-import { useDataTap } from "@orderly.network/react-app";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 
 const getRiskRateColor = (riskRate: null | number) => {
   if (riskRate === null) {
@@ -13,6 +13,7 @@ const getRiskRateColor = (riskRate: null | number) => {
   const isMedium = riskRate >= 40 && riskRate < 80;
   const isHigh = riskRate >= 80;
   const isDefault = !isLow && !isMedium && !isHigh;
+
 
   return { isHigh, isMedium, isLow, isDefault };
 };

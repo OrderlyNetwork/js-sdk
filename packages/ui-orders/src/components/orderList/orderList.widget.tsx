@@ -1,4 +1,4 @@
-import { OrderStatus } from "@orderly.network/types";
+import { OrderSide, OrderStatus } from "@orderly.network/types";
 import { useOrderListScript } from "./orderList.script";
 import { DesktopOrderList, MobileOrderList } from "./orderList.ui";
 import { TabType } from "../orders.widget";
@@ -29,6 +29,13 @@ export const MobileOrderListWidget = (props: {
         content?: string;
     },
     showFilter?: boolean;
+    filterConfig?: {
+        side?: OrderSide | "all";
+        range?: {
+          from?: Date;
+          to?: Date;
+        };
+      };
 }) => {
     const state = useOrderListScript({
         ...props,

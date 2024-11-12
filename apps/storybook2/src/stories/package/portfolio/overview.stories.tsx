@@ -1,18 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
 import {
   OverviewModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-// import { OverviewContextProvider } from "@orderly.network/portfolio";
-
-import { OrderlyApp } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
 import { fn } from "@storybook/test";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { useMemo } from "react";
-import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
-
 import { DataViewer } from "../../../components/dataViewer";
 
 const { usePerformanceScript } = OverviewModule;
@@ -26,20 +20,16 @@ const meta = {
   },
   decorators: [
     (Story, args) => {
-      const config = new CustomConfigStore({
-        env: "qa",
-      });
       return (
         <WalletConnectorProvider>
-          <OrderlyApp
-            brokerId={"orderly"}
-            brokerName={""}
-            networkId={"testnet"}
+          <OrderlyAppProvider
+            brokerId="orderly"
+            brokerName="Orderly"
+            networkId="testnet"
             onChainChanged={args.args.onChainChanged}
-            // configStore={config}
           >
             <Story />
-          </OrderlyApp>
+          </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
     },

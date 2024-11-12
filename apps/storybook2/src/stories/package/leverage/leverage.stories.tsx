@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
-import { LeverageEditor,LeverageWidgetId } from '@orderly.network/ui-leverage';
-import { OrderlyApp } from "@orderly.network/react-app";
+import { LeverageEditor, LeverageWidgetId } from "@orderly.network/ui-leverage";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Button, modal } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof LeverageEditor> = {
   title: "Package/ui-leverage/LeverageEditor",
   component: LeverageEditor,
   // subcomponents: {
@@ -15,9 +14,13 @@ const meta = {
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
           <Story />
-        </OrderlyApp>
+        </OrderlyAppProvider>
       </WalletConnectorProvider>
     ),
   ],
@@ -39,9 +42,8 @@ const meta = {
     // },
   },
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: {
-  },
-} satisfies Meta<typeof LeverageEditor>;
+  args: {},
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -56,11 +58,16 @@ export const Defaut: Story = {
   ],
 };
 
-
 export const CommandStyle: Story = {
   render: () => {
-    return <Button onClick={()=>{
-      modal.show(LeverageWidgetId, { currentLeverage: 5 });
-    }}>Adjust leverage</Button>
+    return (
+      <Button
+        onClick={() => {
+          modal.show(LeverageWidgetId, { currentLeverage: 5 });
+        }}
+      >
+        Adjust leverage
+      </Button>
+    );
   },
-}
+};

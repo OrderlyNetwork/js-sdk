@@ -1,4 +1,5 @@
 import { utils } from "@orderly.network/hooks";
+import { OrderSide } from "@orderly.network/types";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -132,21 +133,25 @@ export function calcBracketRoiAndPnL(order: API.AlgoOrderExt) {
 
   if (typeof order.price === undefined || !order.price) return defaultCallback;
 
+  
+
+  const quantity = order.side === OrderSide.BUY ? order.quantity : order.quantity * -1;
+
   const tpPnL =
     tpOrder?.trigger_price &&
     utils.priceToPnl({
-      qty: order.quantity,
+      qty: quantity,
       price: tpOrder?.trigger_price,
       entryPrice: order.price,
       // @ts-ignore
       orderSide: order.side,
       // @ts-ignore
-      orderType: order.algo_type,
+      orderType: tpOrder.algo_type,
     });
   const slPnL =
     slOrder?.trigger_price &&
     utils.priceToPnl({
-      qty: order.quantity,
+      qty: quantity,
       // trigger price
       price: slOrder?.trigger_price,
       //
@@ -154,7 +159,7 @@ export function calcBracketRoiAndPnL(order: API.AlgoOrderExt) {
       // @ts-ignore
       orderSide: order.side,
       // @ts-ignore
-      orderType: order.algo_type,
+      orderType: slOrder.algo_type,
     });
 
   const tpRoi = tpPnL

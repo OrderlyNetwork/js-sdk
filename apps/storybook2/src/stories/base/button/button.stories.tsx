@@ -7,7 +7,7 @@ import {
   ArrowDownSquareFillIcon,
 } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof Button> = {
   title: "Base/Button",
   component: Button,
   parameters: {
@@ -29,7 +29,15 @@ const meta = {
       control: {
         type: "inline-radio",
       },
-      options: ["primary", "success", "danger", "warning", "gray", "darkGray", "light"],
+      options: [
+        "primary",
+        "success",
+        "danger",
+        "warning",
+        "gray",
+        "darkGray",
+        "light",
+      ],
     },
     loading: {
       control: {
@@ -67,14 +75,14 @@ const meta = {
     loading: false,
     shadow: "base",
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Variants: Story = {
   args: {
-    color: "danger"
+    color: "danger",
   },
 };
 

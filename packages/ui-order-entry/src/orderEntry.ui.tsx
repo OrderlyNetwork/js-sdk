@@ -45,7 +45,7 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useDebouncedCallback, useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
@@ -120,39 +120,43 @@ export const OrderEntry = (
     };
   }, [errorMsgVisible]);
 
-  const onSubmit = (): void => {
-    helper
-      .validate()
-      .then(
-        (order: any) => {
-          if (needConfirm) {
-            return modal.show(orderConfirmDialogId, {
-              order: formattedOrder,
+  const onSubmit = useDebouncedCallback(
+    () => {
+      helper
+        .validate()
+        .then(
+          (order: any) => {
+            if (needConfirm) {
+              return modal.show(orderConfirmDialogId, {
+                order: formattedOrder,
 
-              quote: symbolInfo.quote,
-              base: symbolInfo.base,
+                quote: symbolInfo.quote,
+                base: symbolInfo.base,
 
-              quoteDP: symbolInfo.quote_dp,
-              baseDP: symbolInfo.base_dp,
-            });
+                quoteDP: symbolInfo.quote_dp,
+                baseDP: symbolInfo.base_dp,
+              });
+            }
+
+            return true;
+          },
+          (errors) => {
+            setErrorMsgVisible(true);
           }
-
-          return true;
-        },
-        (errors) => {
-          setErrorMsgVisible(true);
-        }
-      )
-      .then(() => {
-        return submit();
-      })
-      .catch((error) => {
-        console.log("catch:", error);
-        if (error instanceof SDKError) {
-          toast.error(`Error:${error.message}`);
-        }
-      });
-  };
+        )
+        .then(() => {
+          return submit();
+        })
+        .catch((error) => {
+          console.log("catch:", error);
+          if (error instanceof SDKError) {
+            toast.error(`Error:${error.message}`);
+          }
+        });
+    },
+    300,
+    { leading: true, trailing: false }
+  );
 
   return (
     <OrderEntryProvider
@@ -161,9 +165,10 @@ export const OrderEntry = (
       }}
     >
       <div
-        className={"oui-space-y-3 oui-text-base-contrast-54"}
+        className={"oui-space-y-2 xl:oui-space-y-3 oui-text-base-contrast-54"}
         ref={props.containerRef}
       >
+        {/* Buy Sell button */}
         <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
           <div
             className={
@@ -179,9 +184,9 @@ export const OrderEntry = (
               data-type={OrderSide.BUY}
               // color={side === OrderSide.BUY ? "buy" : "secondary"}
               className={cn(
-                side === OrderSide.BUY
+                side === OrderSide.BUY && props.canTrade
                   ? "oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
-                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
+                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
             >
               Buy
@@ -195,9 +200,9 @@ export const OrderEntry = (
               size={"md"}
               // color={side === OrderSide.SELL ? "sell" : "secondary"}
               className={cn(
-                side === OrderSide.SELL
+                side === OrderSide.SELL && props.canTrade
                   ? "oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
-                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
+                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
             >
               Sell
@@ -207,12 +212,14 @@ export const OrderEntry = (
             <OrderTypeSelect
               type={formattedOrder.order_type!}
               side={side}
+              canTrade={props.canTrade}
               onChange={(type) => {
                 setOrderValue("order_type", type);
               }}
             />
           </div>
         </Flex>
+        {/* Available */}
         <Flex justify={"between"}>
           <Text size={"2xs"}>Available</Text>
           <Text.numeral
@@ -220,10 +227,13 @@ export const OrderEntry = (
             size={"2xs"}
             className={"oui-text-base-contrast-80"}
             unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
+            dp={2}
+            padding={false}
           >
-            {freeCollateral}
+            {props.canTrade ? freeCollateral : 0}
           </Text.numeral>
         </Flex>
+        {/* Inputs (price,quantity,triggerPrice) */}
         <OrderQuantityInput
           type={props.type}
           symbolInfo={symbolInfo}
@@ -241,7 +251,9 @@ export const OrderEntry = (
           onBlur={props.onBlur}
           onFocus={props.onFocus}
         />
+        {/* Slider */}
         <QuantitySlider
+          canTrade={props.canTrade}
           maxQty={maxQty}
           currentQtyPercentage={props.currentQtyPercentage}
           value={
@@ -257,6 +269,7 @@ export const OrderEntry = (
           }}
           side={props.side}
         />
+        {/* Submit button */}
         <AuthGuard buttonProps={{ fullWidth: true }}>
           <Button
             fullWidth
@@ -276,13 +289,16 @@ export const OrderEntry = (
             {buttonLabel}
           </Button>
         </AuthGuard>
+        {/* Asset info */}
         <AssetInfo
+          canTrade={props.canTrade}
           quote={symbolInfo.quote}
           estLiqPrice={props.estLiqPrice}
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
         />
         <Divider />
+        {/* TP SL switch and content */}
         <OrderTPSL
           // onCancelTPSL={props.cancelTP_SL}
           // onEnableTP_SL={props.enableTP_SL}
@@ -312,7 +328,12 @@ export const OrderEntry = (
             props.setOrderValue(key, value);
           }}
         />
-        <Flex justify={"between"} itemAlign={"center"}>
+        {/* reduce only switch and label */}
+        <Flex
+          justify={"between"}
+          itemAlign={"center"}
+          className="!oui-mt-[0px] xl:!oui-mt-3"
+        >
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
               className="oui-h-[14px]"
@@ -329,6 +350,7 @@ export const OrderEntry = (
               Reduce only
             </label>
           </Flex>
+          {/* Additional info （fok，ioc、post only， order confirm hidden） */}
           {!pinned && (
             <AdditionalConfigButton
               pinned={pinned}
@@ -346,6 +368,7 @@ export const OrderEntry = (
             />
           )}
         </Flex>
+        {/* Additional info （fok，ioc、post only， order confirm hidden） */}
         {pinned && (
           <Box p={2} r={"md"} intensity={700} position={"relative"}>
             <AdditionalInfoWidget
@@ -560,7 +583,7 @@ const CustomInput = forwardRef<
       ]}
       classNames={{
         root: cn(
-          "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-10 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+          "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-2 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
           props.className
         ),
         input: "oui-mt-5 oui-mb-1 oui-h-5",
@@ -591,6 +614,7 @@ const InputLabel = (props: PropsWithChildren<{ id: string }>) => {
 // ----------- Custom Input Component end ------------
 
 const QuantitySlider = (props: {
+  canTrade: boolean;
   side: OrderSide;
   value: number;
   maxQty: number;
@@ -600,9 +624,11 @@ const QuantitySlider = (props: {
   setMaxQty: () => void;
   onValueChange: (value: number) => void;
 }) => {
+  const { canTrade } = props;
   const color = useMemo(
-    () => (props.side === OrderSide.BUY ? "buy" : "sell"),
-    [props.side]
+    () =>
+      canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined,
+    [props.side, canTrade]
   );
 
   const maxLabel = useMemo(() => {
@@ -612,7 +638,7 @@ const QuantitySlider = (props: {
   return (
     <div>
       <Slider.single
-        disabled={props.maxQty === 0}
+        disabled={props.maxQty === 0 || !canTrade}
         value={props.value}
         color={color}
         markCount={4}
@@ -622,8 +648,14 @@ const QuantitySlider = (props: {
         onValueChange={props.onValueChange}
       />
       <Flex justify={"between"} pt={2}>
-        <Text.numeral rule={"percentages"} size={"2xs"} color={color}>
-          {props.currentQtyPercentage}
+        <Text.numeral
+          rule={"percentages"}
+          size={"2xs"}
+          color={color}
+          dp={2}
+          padding={false}
+        >
+          {canTrade ? props.currentQtyPercentage : 0}
         </Text.numeral>
         <Flex>
           <button
@@ -635,8 +667,13 @@ const QuantitySlider = (props: {
           >
             {maxLabel}
           </button>
-          <Text.numeral size={"2xs"} color={color} dp={props.dp}>
-            {props.maxQty}
+          <Text.numeral
+            size={"2xs"}
+            color={color}
+            dp={props.dp}
+            padding={false}
+          >
+            {canTrade ? props.maxQty : 0}
           </Text.numeral>
         </Flex>
       </Flex>
@@ -650,6 +687,7 @@ const OrderTypeSelect = (props: {
   type: OrderType;
   onChange: (type: OrderType) => void;
   side: OrderSide;
+  canTrade: boolean;
 }) => {
   const options = [
     { label: "Limit order", value: OrderType.LIMIT },
@@ -659,11 +697,12 @@ const OrderTypeSelect = (props: {
   ];
   return (
     <Select.options
+      currentValue={props.type}
       value={props.type}
       options={options}
       onValueChange={props.onChange}
       contentProps={{
-        className: "oui-bg-base-8",
+        className: "oui-bg-base-8 oui-w-full",
       }}
       valueFormatter={(value, option) => {
         const item = options.find((o) => o.value === value);
@@ -673,7 +712,13 @@ const OrderTypeSelect = (props: {
         return (
           <Text
             size={"xs"}
-            color={props.side === OrderSide.BUY ? "buy" : "sell"}
+            color={
+              props.canTrade
+                ? props.side === OrderSide.BUY
+                  ? "buy"
+                  : "sell"
+                : undefined
+            }
           >
             {item?.label.replace(" order", "")}
           </Text>
@@ -687,13 +732,15 @@ const OrderTypeSelect = (props: {
 // -----------Order type Select Component end ------------
 
 function AssetInfo(props: {
+  canTrade: boolean;
   quote: string;
   estLiqPrice: number | null;
   estLeverage: number | null;
   currentLeverage: number | null;
 }) {
+  const { canTrade } = props;
   return (
-    <div className={"oui-space-y-1"}>
+    <div className={"oui-space-y-[2px] xl:oui-space-y-1"}>
       <Flex justify={"between"}>
         <Text size={"2xs"}>Est. Liq. price</Text>
         <Text.numeral
@@ -702,7 +749,7 @@ function AssetInfo(props: {
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
-          {props.estLiqPrice ?? "--"}
+          {canTrade ? props.estLiqPrice ?? "--" : "--"}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"}>
@@ -714,7 +761,9 @@ function AssetInfo(props: {
             intensity: 80,
           })}
         >
-          <Text.numeral unit="x">{props.currentLeverage ?? '--'}</Text.numeral>
+          <Text.numeral unit={canTrade ? "x" : undefined}>
+            {canTrade ? props.currentLeverage ?? "--" : "--"}
+          </Text.numeral>
           {props.estLeverage && (
             <>
               <svg
@@ -769,13 +818,14 @@ function AdditionalConfigButton(props: {
             width="16"
             height="16"
             viewBox="0 0 16 16"
-            fill="none"
+            fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
+            className="oui-fill-white/[.36] hover:oui-fill-white/80"
           >
             <path
               d="M3.332 2.665a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V3.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667V7.332a.667.667 0 0 0-.667-.667zm-8 4a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667zm4 0a.667.667 0 0 0-.667.667v1.333c0 .368.299.667.667.667h1.333a.667.667 0 0 0 .667-.667v-1.333a.667.667 0 0 0-.667-.667z"
-              fill="#fff"
-              fillOpacity={open ? 0.8 : 0.36}
+              // fill="#fff"
+              // fillOpacity={open ? 0.8 : 0.36}
             />
           </svg>
         </button>

@@ -12,6 +12,7 @@ export const EditBtn: FC<EditBtnState> = (props) => {
         fullWidth
         color="secondary"
         size="sm"
+        className="oui-border-base-contrast-36"
         onClick={() => {
           props.onShowEditSheet();
         }}

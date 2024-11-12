@@ -318,7 +318,7 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
           padding={false}
           className={
             tp_trigger_price
-              ? "oui-border-b oui-border-dashed oui-border-base-contrast-36"
+              ? "oui-border-b oui-border-dashed oui-border-base-contrast-12"
               : undefined
           }
         >
@@ -366,7 +366,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
           padding={false}
           className={
             sl_trigger_price
-              ? "oui-border-b oui-border-dashed oui-border-base-contrast-36"
+              ? "oui-border-b oui-border-dashed oui-border-base-contrast-12"
               : undefined
           }
         >

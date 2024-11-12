@@ -1,8 +1,8 @@
-import { TradingPageProvider } from "../provider";
-import { TradingPageV2Props } from "../types/types";
-import { TradingV2Widget } from "./tradingV2.widget";
+import { TradingPageProvider } from "../../provider";
+import { TradingPageProps } from "../../types/types";
+import { TradingWidget } from "./trading.widget";
 
-export const TradingPageV2 = (props: TradingPageV2Props) => {
+export const TradingPage = (props: TradingPageProps) => {
   return (
     <TradingPageProvider
       symbol={props.symbol}
@@ -13,8 +13,9 @@ export const TradingPageV2 = (props: TradingPageV2Props) => {
       referral={props.referral}
       tradingRewards={props.tradingRewards}
       bottomSheetLeading={props.bottomSheetLeading}
+      sharePnLConfig={props.sharePnLConfig} 
     >
-      <TradingV2Widget />
+      <TradingWidget />
     </TradingPageProvider>
   );
 };

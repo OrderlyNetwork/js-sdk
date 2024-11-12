@@ -24,7 +24,6 @@ import { MobileSharePnLContent } from "./mobileSharePnl";
 import { OrderlyAppContext } from "@/provider";
 import { ReferralType } from "./sharePnLUtils";
 import { ShareConfigProps } from "./shareConfigProps";
-import { shadowVariants } from "@orderly.network/ui/src/layout/shadow";
 import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
 
 export const SharePoisitionView = modal.create<{

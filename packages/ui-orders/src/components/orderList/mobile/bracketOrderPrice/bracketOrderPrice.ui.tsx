@@ -22,7 +22,8 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
                 prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
                 dp={props.quote_dp}
-                coloring
+                color="buy"
+                showIdentifier
               >
                 {props.pnl?.tpPnL}
               </Text.numeral>
@@ -33,7 +34,7 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
                 prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
                 dp={props.quote_dp}
-                coloring
+                color="sell"
               >
                 {props.pnl?.slPnL}
               </Text.numeral>
@@ -79,7 +80,7 @@ const Price = (props: {
     <Text.numeral
       size="2xs"
       className={cn(
-        "oui-border-b oui-border-dashed oui-border-base-contrast-36",
+        "oui-border-b oui-border-dashed oui-border-base-contrast-12",
         type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
       )}
       key={"tp"}

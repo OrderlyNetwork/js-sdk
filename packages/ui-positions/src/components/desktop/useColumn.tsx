@@ -80,7 +80,10 @@ export const useColumn = (props: {
         {
           title: "Quantity",
           dataIndex: "position_qty",
-          onSort: true,
+          // onSort: true,
+          onSort: ((a,b) => {
+            return a.position_qty - b.position_qty;
+          }),
           width: 120,
           className: "oui-pl-6",
           // rule: "price",
