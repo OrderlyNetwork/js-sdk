@@ -26,10 +26,13 @@ type TPSLSheetProps = {
 };
 
 export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
-  const { position, symbolInfo, isEditing } = props;
+  const { position, order, symbolInfo, isEditing } = props;
   const { resolve, hide, updateArgs } = useModal();
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
+
+  const isPositionTPSL = order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL;
+
 
   const updateSheetTitle = (title: string) => {
     if (isEditing) return;
@@ -69,6 +72,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
               },
               content: (
                 <PositionTPSLConfirm
+                  isPositionTPSL={isPositionTPSL}
                   isEditing={isEditing}
                   symbol={order.symbol!}
                   qty={Number(order.quantity)}
