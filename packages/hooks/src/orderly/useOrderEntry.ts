@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {  
+import {
   API,
   OrderEntity,
   OrderSide,
@@ -255,7 +255,7 @@ export function useOrderEntry(
   const parseString2Number = (
     order: OrderParams & Record<string, any>,
     key: keyof OrderParams,
-    dp?: number,
+    dp?: number
   ) => {
     if (typeof order[key] !== "string") return;
     // fix: delete the comma then remove the forward one of the string
@@ -274,7 +274,10 @@ export function useOrderEntry(
       const endOfPoint = `${order[key]}`.endsWith(".");
       const decimalPart = `${order[key]}`.split(".");
       if (hasPoint && !endOfPoint) {
-        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(0,quoteDP)}`;
+        (order[key] as string) = `${decimalPart[0]}.${decimalPart[1].slice(
+          0,
+          quoteDP
+        )}`;
       }
     }
   };
@@ -383,8 +386,6 @@ export function useOrderEntry(
       return Promise.reject(new SDKError("orderCreator is null"));
     }
 
-    
-
     return new Promise((resolve, reject) => {
       return orderCreator
         .validate(values, {
@@ -428,7 +429,7 @@ export function useOrderEntry(
               })
             ).then((res) => {
               // resolve(res);
-              if (res.success) {
+              if (res && res.success) {
                 // TODO: remove when the WS service is fixed
 
                 // if (Array.isArray(res.data.rows)) {
