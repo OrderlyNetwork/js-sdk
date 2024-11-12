@@ -25,6 +25,7 @@ export type {
   AlgoOrder,
   OrderlyOrder,
   ChildOrder,
+  BracketOrder
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";

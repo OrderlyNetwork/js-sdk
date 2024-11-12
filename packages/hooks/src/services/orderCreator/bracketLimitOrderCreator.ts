@@ -1,6 +1,6 @@
 import { OrderEntity, OrderType, OrderlyOrder } from "@orderly.network/types";
 import { ValuesDepConfig, VerifyResult } from "./interface";
-import { BracketOrder } from "@orderly.network/types/src/order";
+import { BracketOrder } from "@orderly.network/types";
 
 import { LimitOrderCreator } from "./limitOrderCreator";
 import { bracketOrderValidator } from "./baseBracketOrderCreator";
@@ -27,9 +27,7 @@ export class BracketLimitOrderCreator extends LimitOrderCreator {
     const bracketData = await bracketOrderValidator(values as any, config);
 
     console.log("bracket limit order creator", value, bracketData);
-    
 
-    return {...value, ...bracketData};
-
+    return { ...value, ...bracketData };
   }
 }

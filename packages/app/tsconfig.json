@@ -5,17 +5,14 @@
       "@orderly.network/ui": [
         "../ui/src"
       ],
-      "@orderly.network/chart": [
-        "../chart/src"
-      ],
       "@orderly.network/hooks": [
         "../hooks/src"
       ],
       "@orderly.network/utils": [
         "../utils/src"
       ],
-      "@orderly.network/web3-provider-ethers": [
-        "../web3-provider-ethers/src"
+      "@orderly.network/types": [
+        "../types/src"
       ],
     }
   }

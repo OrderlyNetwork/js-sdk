@@ -1,7 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { DialogFooter } from "./dialog";
 import { Button, ButtonProps } from "../button";
-import { useFocusContext } from "react-day-picker";
 
 export type DialogAction<T = any> = {
   label: string;
