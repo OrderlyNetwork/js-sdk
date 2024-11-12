@@ -1,5 +1,6 @@
 import {
   CaretDownIcon,
+  cn,
   Input,
   MenuItem,
   SimpleDropdownMenu,
@@ -77,7 +78,7 @@ export const PNLInput = (props: PNLInputProps) => {
       suffix={
         <>
           {mode === PnLMode.PERCENTAGE && !!value &&  (
-            <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
+            <Text size={"2xs"} color="inherit" className={cn("oui-ml-[2px]", color)}>
               %
             </Text>
           )}
