@@ -204,7 +204,7 @@ export function MobileDisplayControl(props: IProps) {
           alignOffset={0}
           sideOffset={0}
           className={cn(
-            "oui-markets-dropdown-menu-content oui-bg-base-9 oui-w-screen oui-flex oui-flex-col oui-gap-2 oui-p-3"
+            "oui-tradingview-display-control-dropdown-menu-content oui-bg-base-9 oui-w-screen oui-flex oui-flex-col oui-gap-2 oui-p-3"
           )}
         >
           {MobileDisplayControlMap.map((row, id) => (
