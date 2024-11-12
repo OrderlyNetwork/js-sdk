@@ -17,7 +17,7 @@ export const PNLInput = (props: PNLInputProps) => {
     onModeChange,
     onValueChange,
     quote,
-    quote_db,
+    quote_dp,
     value,
     pnl,
   } = props;
@@ -58,7 +58,7 @@ export const PNLInput = (props: PNLInputProps) => {
       onValueChange={onValueChange}
       formatters={[
         // inputFormatter.numberFormatter,
-        props.formatter({ dp: quote_db, mode }),
+        props.formatter({ dp: quote_dp, mode }),
         inputFormatter.currencyFormatter,
       ]}
       // className={color}

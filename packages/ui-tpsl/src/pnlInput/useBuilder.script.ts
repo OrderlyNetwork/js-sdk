@@ -85,9 +85,9 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       ) => {
         value = `${value}`; // convert to string
 
-        if (type === "SL" && mode === PnLMode.PnL) {
-          value = value.startsWith("-") ? value : "-" + value;
-        }
+        // if (type === "SL" && mode === PnLMode.PnL) {
+        //   value = value.startsWith("-") ? value : "-" + value;
+        // }
 
         if (value === "" || value === "-") return "";
         // if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
@@ -213,7 +213,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     value,
     pnl: values[PnLMode.PnL],
     onValueChange,
-    quote_db: props.quote_dp,
+    quote_dp: props.quote_dp,
   };
 };
 
