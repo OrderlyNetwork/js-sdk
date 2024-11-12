@@ -13,7 +13,6 @@ import { useDebouncedCallback } from "@orderly.network/hooks";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   // const submittingRef = useRef<boolean>(false);
 
   const {
@@ -22,15 +21,13 @@ export const CloseButton = () => {
     quantity,
     closeOrderData,
     type,
-    submitting: orderProcessing,
+    submitting,
   } = usePositionsRowContext();
 
   const { base, quote } = useSymbolContext();
 
   const onConfirm = useDebouncedCallback(
     () => {
-      setSubmitting(true);
-
       return onSubmit()
         .then(
           (res) => {
@@ -43,14 +40,10 @@ export const CloseButton = () => {
               toast.error(error.message);
             }
           }
-        )
-        .finally(() => {
-          setSubmitting(false);
-          // submittingRef.current = false;
-        });
+        );
     },
-    300,
-    { leading: true }
+    500,
+    { leading: true, trailing: false }
   );
 
   const onClose = () => {
