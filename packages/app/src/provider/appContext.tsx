@@ -3,6 +3,7 @@ import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useAppState } from "../hooks/useAppState";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useSettleEvent } from "../hooks/useSettleEvent";
+import { useWalletConnectError } from "../hooks/useWalletConnectError";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -44,6 +45,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
 
   useWalletEvent();
   useSettleEvent();
+  useWalletConnectError();
 
   // const { networkStatus } = useAppState();
 

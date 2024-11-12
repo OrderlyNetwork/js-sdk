@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ChainNamespace } from "@orderly.network/types";
-import { WalletState } from "@orderly.network/hooks";
+import { useEventEmitter, WalletState } from "@orderly.network/hooks";
 import { WalletAdapterNetwork, WalletNotReadyError } from "@solana/wallet-adapter-base";
 import { SolanaChains } from "./config";
 
@@ -44,6 +44,7 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
     connectReject: () => {},
     connectResolve: () => {},
   });
+  const ee = useEventEmitter();
 
   const initPromiseRef = () => {
     console.log("-- init solana promise");
@@ -68,6 +69,7 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
 
     if (e instanceof WalletNotReadyError) {
       console.log('-- need toast wallet not ready');
+      ee.emit('wallet:connect-error', {message: 'Please open the wallet app and use the in-app browser.'});
 
     }
     return solanaDisconnect();
