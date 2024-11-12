@@ -31,6 +31,8 @@ export const PositionTPSLPopover = (props: {
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
+  const isPositionTPSL = order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL;
+
   return (
     <PopoverRoot
       onOpenChange={(isOpen) => {
@@ -135,6 +137,7 @@ export const PositionTPSLPopover = (props: {
                 },
                 content: (
                   <PositionTPSLConfirm
+                    isPositionTPSL={isPositionTPSL}
                     isEditing={finalIsEditing}
                     symbol={order.symbol!}
                     qty={Number(order.quantity)}
