@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Button from "@/button";
 import { usePositionsRowContext } from "./positionRowContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
@@ -9,29 +9,49 @@ import { CloseBaseConfirm } from "./marketConfirmDialog";
 import { cn } from "@/utils/css";
 import { LimitConfirmDialog } from "./limitConfirmDialog";
 import { toast } from "@/toast";
+import { useDebouncedCallback } from "@orderly.network/hooks";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  // const submittingRef = useRef<boolean>(false);
 
-  const { onSubmit, price, quantity, closeOrderData, type, submitting } =
-    usePositionsRowContext();
+  const {
+    onSubmit,
+    price,
+    quantity,
+    closeOrderData,
+    type,
+    submitting: orderProcessing,
+  } = usePositionsRowContext();
 
   const { base, quote } = useSymbolContext();
 
-  const onConfirm = () => {
-    return onSubmit().then(
-      (res) => {
-        setOpen(false);
-      },
-      (error: any) => {
-        if (typeof error === 'string') {
-          toast.error(error);
-        } else {
-          toast.error(error.message)
-        }
-      }
-    );
-  };
+  const onConfirm = useDebouncedCallback(
+    () => {
+      setSubmitting(true);
+
+      return onSubmit()
+        .then(
+          (res) => {
+            setOpen(false);
+          },
+          (error: any) => {
+            if (typeof error === "string") {
+              toast.error(error);
+            } else {
+              toast.error(error.message);
+            }
+          }
+        )
+        .finally(() => {
+          setSubmitting(false);
+          // submittingRef.current = false;
+        });
+    },
+    300,
+    { leading: true }
+  );
 
   const onClose = () => {
     setOpen(false);

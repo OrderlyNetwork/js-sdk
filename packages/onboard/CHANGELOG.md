@@ -1,42 +1,40 @@
 # @orderly.network/onboard
 
-## 1.5.14-preReleaseV2-2.3
+## 1.5.15
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.3
-  - @orderly.network/types@1.5.14-preReleaseV2-2.3
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/types@1.5.15
+  - @orderly.network/hooks@1.5.15
 
-## 1.5.14-preReleaseV2-2.2
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.2
-  - @orderly.network/types@1.5.14-preReleaseV2-2.2
-
-## 1.5.14-preReleaseV2-2.1
+## 1.5.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 - Updated dependencies
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.1
-  - @orderly.network/types@1.5.14-preReleaseV2-2.1
+  - @orderly.network/types@1.5.15-alpha.0
+  - @orderly.network/hooks@1.5.15-alpha.0
 
-## 1.5.14-preReleaseV2-2.0
+## 1.5.14
 
 ### Patch Changes
 
-- update
-- update
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/hooks@1.5.14
+  - @orderly.network/types@1.5.14
+
+## 1.5.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
 - Updated dependencies
-- Updated dependencies
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.0
-  - @orderly.network/types@1.5.14-preReleaseV2-2.0
+  - @orderly.network/hooks@1.5.14-alpha.0
+  - @orderly.network/types@1.5.14-alpha.0
 
 ## 1.5.13
 

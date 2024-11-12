@@ -1,38 +1,28 @@
 # @orderly.network/utils
 
-## 1.5.14-preReleaseV2-2.3
+## 1.5.15
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.14-preReleaseV2-2.3
+- fed369e26: update SEI config;
 
-## 1.5.14-preReleaseV2-2.2
+## 1.5.15-alpha.0
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.14-preReleaseV2-2.2
+- update SEI config;
 
-## 1.5.14-preReleaseV2-2.1
+## 1.5.14
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/types@1.5.14-preReleaseV2-2.1
+- 7c664bd63: fix bug;
 
-## 1.5.14-preReleaseV2-2.0
+## 1.5.14-alpha.0
 
 ### Patch Changes
 
-- update
-- update
-- Updated dependencies
-- Updated dependencies
-  - @orderly.network/types@1.5.14-preReleaseV2-2.0
+- fix bug;
 
 ## 1.5.13
 

@@ -1,50 +1,48 @@
 # @orderly/docs
 
-## 0.4.14-preReleaseV2-2.3
+## 0.4.15
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.14-preReleaseV2-2.3
-  - @orderly.network/web3-onboard@1.5.14-preReleaseV2-2.3
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.3
-  - @orderly.network/types@1.5.14-preReleaseV2-2.3
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/types@1.5.15
+  - @orderly.network/react@1.5.15
+  - @orderly.network/hooks@1.5.15
+  - @orderly.network/web3-onboard@1.5.15
 
-## 0.4.14-preReleaseV2-2.2
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/react@1.5.14-preReleaseV2-2.2
-  - @orderly.network/web3-onboard@1.5.14-preReleaseV2-2.2
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.2
-  - @orderly.network/types@1.5.14-preReleaseV2-2.2
-
-## 0.4.14-preReleaseV2-2.1
+## 0.4.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 - Updated dependencies
-  - @orderly.network/react@1.5.14-preReleaseV2-2.1
-  - @orderly.network/web3-onboard@1.5.14-preReleaseV2-2.1
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.1
-  - @orderly.network/types@1.5.14-preReleaseV2-2.1
+  - @orderly.network/types@1.5.15-alpha.0
+  - @orderly.network/react@1.5.15-alpha.0
+  - @orderly.network/hooks@1.5.15-alpha.0
+  - @orderly.network/web3-onboard@1.5.15-alpha.0
 
-## 0.4.14-preReleaseV2-2.0
+## 0.4.14
 
 ### Patch Changes
 
-- update
-- update
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/react@1.5.14
+  - @orderly.network/hooks@1.5.14
+  - @orderly.network/web3-onboard@1.5.14
+  - @orderly.network/types@1.5.14
+
+## 0.4.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
 - Updated dependencies
-- Updated dependencies
-  - @orderly.network/react@1.5.14-preReleaseV2-2.0
-  - @orderly.network/web3-onboard@1.5.14-preReleaseV2-2.0
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.0
-  - @orderly.network/types@1.5.14-preReleaseV2-2.0
+  - @orderly.network/react@1.5.14-alpha.0
+  - @orderly.network/hooks@1.5.14-alpha.0
+  - @orderly.network/web3-onboard@1.5.14-alpha.0
+  - @orderly.network/types@1.5.14-alpha.0
 
 ## 0.4.13
 

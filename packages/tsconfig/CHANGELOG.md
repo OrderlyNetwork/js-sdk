@@ -1,29 +1,28 @@
 # tsconfig
 
-## 0.3.14-preReleaseV2-2.3
+## 0.3.15
 
 ### Patch Changes
 
-- update
+- fed369e26: update SEI config;
 
-## 0.3.14-preReleaseV2-2.2
-
-### Patch Changes
-
-- update
-
-## 0.3.14-preReleaseV2-2.1
+## 0.3.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 
-## 0.3.14-preReleaseV2-2.0
+## 0.3.14
 
 ### Patch Changes
 
-- update
-- update
+- 7c664bd63: fix bug;
+
+## 0.3.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
 
 ## 0.3.13
 

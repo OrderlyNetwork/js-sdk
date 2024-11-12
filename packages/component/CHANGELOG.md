@@ -1,74 +1,56 @@
 # @orderly.network/react
 
-## 1.5.14-preReleaseV2-2.3
+## 1.5.15
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/trading-view@1.5.14-preReleaseV2-2.3
-  - @orderly.network/ui-connector@1.0.1-preReleaseV2-2.3
-  - @orderly.network/ui-leverage@1.0.1-preReleaseV2-2.3
-  - @orderly.network/ui-transfer@1.0.1-preReleaseV2-2.3
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.3
-  - @orderly.network/types@1.5.14-preReleaseV2-2.3
-  - @orderly.network/utils@1.5.14-preReleaseV2-2.3
-  - @orderly.network/core@1.5.14-preReleaseV2-2.3
-  - @orderly.network/net@1.5.14-preReleaseV2-2.3
-  - @orderly.network/ui@1.0.1-preReleaseV2-2.3
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/types@1.5.15
+  - @orderly.network/core@1.5.15
+  - @orderly.network/hooks@1.5.15
+  - @orderly.network/net@1.5.15
+  - @orderly.network/trading-view@1.5.15
+  - @orderly.network/utils@1.5.15
 
-## 1.5.14-preReleaseV2-2.2
+## 1.5.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 - Updated dependencies
-  - @orderly.network/trading-view@1.5.14-preReleaseV2-2.2
-  - @orderly.network/ui-connector@1.0.1-preReleaseV2-2.2
-  - @orderly.network/ui-leverage@1.0.1-preReleaseV2-2.2
-  - @orderly.network/ui-transfer@1.0.1-preReleaseV2-2.2
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.2
-  - @orderly.network/types@1.5.14-preReleaseV2-2.2
-  - @orderly.network/utils@1.5.14-preReleaseV2-2.2
-  - @orderly.network/core@1.5.14-preReleaseV2-2.2
-  - @orderly.network/net@1.5.14-preReleaseV2-2.2
-  - @orderly.network/ui@1.0.1-preReleaseV2-2.2
+  - @orderly.network/types@1.5.15-alpha.0
+  - @orderly.network/core@1.5.15-alpha.0
+  - @orderly.network/hooks@1.5.15-alpha.0
+  - @orderly.network/net@1.5.15-alpha.0
+  - @orderly.network/trading-view@1.5.15-alpha.0
+  - @orderly.network/utils@1.5.15-alpha.0
 
-## 1.5.14-preReleaseV2-2.1
+## 1.5.14
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/trading-view@1.5.14-preReleaseV2-2.1
-  - @orderly.network/ui-connector@1.0.1-preReleaseV2-2.1
-  - @orderly.network/ui-leverage@1.0.1-preReleaseV2-2.1
-  - @orderly.network/ui-transfer@1.0.1-preReleaseV2-2.1
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.1
-  - @orderly.network/types@1.5.14-preReleaseV2-2.1
-  - @orderly.network/utils@1.5.14-preReleaseV2-2.1
-  - @orderly.network/core@1.5.14-preReleaseV2-2.1
-  - @orderly.network/net@1.5.14-preReleaseV2-2.1
-  - @orderly.network/ui@1.0.1-preReleaseV2-2.1
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/core@1.5.14
+  - @orderly.network/hooks@1.5.14
+  - @orderly.network/net@1.5.14
+  - @orderly.network/trading-view@1.5.14
+  - @orderly.network/types@1.5.14
+  - @orderly.network/utils@1.5.14
 
-## 1.5.14-preReleaseV2-2.0
+## 1.5.14-alpha.0
 
 ### Patch Changes
 
-- update
-- update
+- fix bug;
 - Updated dependencies
-- Updated dependencies
-  - @orderly.network/trading-view@1.5.14-preReleaseV2-2.0
-  - @orderly.network/ui-connector@1.0.1-preReleaseV2-2.0
-  - @orderly.network/ui-leverage@1.0.1-preReleaseV2-2.0
-  - @orderly.network/ui-transfer@1.0.1-preReleaseV2-2.0
-  - @orderly.network/hooks@1.5.14-preReleaseV2-2.0
-  - @orderly.network/types@1.5.14-preReleaseV2-2.0
-  - @orderly.network/utils@1.5.14-preReleaseV2-2.0
-  - @orderly.network/core@1.5.14-preReleaseV2-2.0
-  - @orderly.network/net@1.5.14-preReleaseV2-2.0
-  - @orderly.network/ui@1.0.1-preReleaseV2-2.0
+  - @orderly.network/core@1.5.14-alpha.0
+  - @orderly.network/hooks@1.5.14-alpha.0
+  - @orderly.network/net@1.5.14-alpha.0
+  - @orderly.network/trading-view@1.5.14-alpha.0
+  - @orderly.network/types@1.5.14-alpha.0
+  - @orderly.network/utils@1.5.14-alpha.0
 
 ## 1.5.13
 

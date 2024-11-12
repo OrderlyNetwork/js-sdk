@@ -1,38 +1,36 @@
 # @orderly.network/cli
 
-## 0.3.14-preReleaseV2-2.3
+## 0.3.15
 
 ### Patch Changes
 
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.14-preReleaseV2-2.3
+- fed369e26: update SEI config;
+- Updated dependencies [fed369e26]
+  - @orderly.network/core@1.5.15
 
-## 0.3.14-preReleaseV2-2.2
-
-### Patch Changes
-
-- update
-- Updated dependencies
-  - @orderly.network/core@1.5.14-preReleaseV2-2.2
-
-## 0.3.14-preReleaseV2-2.1
+## 0.3.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 - Updated dependencies
-  - @orderly.network/core@1.5.14-preReleaseV2-2.1
+  - @orderly.network/core@1.5.15-alpha.0
 
-## 0.3.14-preReleaseV2-2.0
+## 0.3.14
 
 ### Patch Changes
 
-- update
-- update
+- 7c664bd63: fix bug;
+- Updated dependencies [7c664bd63]
+  - @orderly.network/core@1.5.14
+
+## 0.3.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
 - Updated dependencies
-- Updated dependencies
-  - @orderly.network/core@1.5.14-preReleaseV2-2.0
+  - @orderly.network/core@1.5.14-alpha.0
 
 ## 0.3.13
 

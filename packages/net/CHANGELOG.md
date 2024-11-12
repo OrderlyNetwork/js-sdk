@@ -1,29 +1,28 @@
 # @orderly.network/net
 
-## 1.5.14-preReleaseV2-2.3
+## 1.5.15
 
 ### Patch Changes
 
-- update
+- fed369e26: update SEI config;
 
-## 1.5.14-preReleaseV2-2.2
-
-### Patch Changes
-
-- update
-
-## 1.5.14-preReleaseV2-2.1
+## 1.5.15-alpha.0
 
 ### Patch Changes
 
-- update
+- update SEI config;
 
-## 1.5.14-preReleaseV2-2.0
+## 1.5.14
 
 ### Patch Changes
 
-- update
-- update
+- 7c664bd63: fix bug;
+
+## 1.5.14-alpha.0
+
+### Patch Changes
+
+- fix bug;
 
 ## 1.5.13
 
