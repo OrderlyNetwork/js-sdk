@@ -28,7 +28,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
   const { position, symbolInfo, isEditing } = props;
   const { resolve, hide, updateArgs } = useModal();
 
-  const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
+  const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
   const updateSheetTitle = (title: string) => {
     if (isEditing) return;

@@ -36,7 +36,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   const symbol = isEditing ? order!.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
-  const [needConfirm] = useLocalStorage("orderly_position_tp_sl_confirm", true);
+  const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
   const [
     tpslOrder,
