@@ -706,3 +706,5 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     );
   }
 );
+
+OrderEntry.displayName = "OrderEntry";
