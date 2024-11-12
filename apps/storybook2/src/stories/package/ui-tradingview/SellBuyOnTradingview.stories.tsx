@@ -50,16 +50,3 @@ const meta: Meta<typeof TradingviewWidget> = {
 type Story = StoryObj<typeof meta>;
 
 export default meta;
-
-const tradingviewProps2 = {
-  symbol: "PERP_ETH_USDC",
-  scriptSRC: "/tradingviewWoofiPro/charting_library/charting_library.js",
-  libraryPath: "/tradingviewWoofiPro/charting_library/",
-  customCssUrl: "/tradingviewWoofiPro/chart.css",
-};
-
-export const Default: Story = {
-  args: {
-    ...tradingviewProps2,
-  },
-};

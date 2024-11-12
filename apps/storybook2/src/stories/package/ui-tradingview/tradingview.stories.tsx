@@ -69,16 +69,3 @@ export const NoTradingviewFile: Story = {
     return <TradingviewWidget symbol="PERP_BTC_USDC" />;
   },
 };
-
-const tradingviewProps2 = {
-  symbol: "PERP_ETH_USDC",
-  scriptSRC: "/tradingviewWoofiPro/charting_library/charting_library.js",
-  libraryPath: "/tradingviewWoofiPro/charting_library/",
-  customCssUrl: "/tradingviewWoofiPro/chart.css",
-};
-
-export const SellBuyOnTradingview: Story = {
-  render: () => {
-    return <TradingviewWidget {...tradingviewProps2} />;
-  },
-};
