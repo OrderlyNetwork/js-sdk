@@ -71,9 +71,3 @@ div[data-section-name='extendLeftTradingLine'] {
 .calculator-3AwNSLGC .calculator__input-3AwNSLGC {
     display: flex !important;
 }
-
-
-.theme-dark:root {
-    --tv-color-platform-background: #16141c;
-    --tv-color-pane-background: #16141c;
-}

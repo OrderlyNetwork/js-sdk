@@ -12,6 +12,8 @@ import {
   createDefaultAuthorizationResultCache, createDefaultWalletNotFoundHandler,
   SolanaMobileWalletAdapter
 } from "@solana-mobile/wallet-adapter-mobile";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { getGlobalObject } from "@orderly.network/utils/src";
 
 export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   const network =props.network ?? WalletAdapterNetwork.Devnet;
@@ -32,12 +34,20 @@ export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   }
 
   const wallets =  useMemo(() => {
+    let uri = '';
+    if (typeof window !== "undefined") {
+      const location= (getGlobalObject() as any).location;
+      uri = `${location.protocol}//${location.host}`;
+    }
+
+
 
     return props.wallets ?? [
+      new PhantomWalletAdapter(),
       new SolanaMobileWalletAdapter({
         addressSelector: createDefaultAddressSelector(),
         appIdentity: {
-          uri: `${location.protocol}//${location.host}`,
+          uri,
         },
         authorizationResultCache: createDefaultAuthorizationResultCache(),
         chain: network,
