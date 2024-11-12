@@ -423,6 +423,7 @@ export type PositionTPSLConfirmProps = {
   baseDP: number;
   quoteDP: number;
   isEditing?: boolean;
+  isPositionTPSL: boolean;
 };
 
 // ------------ Position TP/SL Confirm dialog start------------
@@ -437,9 +438,10 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     quoteDP,
     baseDP,
     isEditing,
+    isPositionTPSL,
   } = props;
   const [needConfirm, setNeedConfirm] = useLocalStorage(
-    "orderly_position_tp_sl_confirm",
+    "orderly_order_confirm",
     true
   );
   const textClassName = textVariants({
@@ -447,9 +449,9 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     intensity: 54,
   });
 
-  console.log("PositionTPSLConfirm", qty, maxQty, quoteDP);
+  // console.log("PositionTPSLConfirm", qty, maxQty, quoteDP);
 
-  const isPositionTPSL = qty >= maxQty;
+  // const isPositionTPSL = qty >= maxQty;
 
   return (
     <>
@@ -563,7 +565,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <Checkbox
             id="disabledConfirm"
             color="white"
-            checked={!needConfirm}
+            checked={needConfirm}
             onCheckedChange={(check) => {
               setNeedConfirm(!check);
             }}

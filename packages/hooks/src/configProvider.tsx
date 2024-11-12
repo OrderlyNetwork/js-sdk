@@ -23,7 +23,7 @@ import { StatusProvider } from "./statusProvider";
 import { SDKError } from "@orderly.network/types";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import type { Chains } from "./orderly/useChains";
-import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
+import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 import { ExtendedConfigStore } from "./extendedConfigStore";
@@ -41,7 +41,6 @@ export type BaseConfigProviderProps = {
   contracts?: IContract;
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
-  networkId: NetworkId;
   chainFilter?: filteredChains | filterChainsFunc;
   customChains?: Chains<undefined, undefined>;
 };
@@ -50,29 +49,18 @@ export type ConfigProviderExclusionProps =
   | {
       brokerId: string;
       brokerName?: string;
+      networkId: NetworkId;
       configStore?: never;
     }
   | {
       brokerId?: never;
       brokerName?: never;
+      networkId?: never;
       configStore: ConfigStore;
     };
 
 export type ConfigProviderProps = BaseConfigProviderProps &
   ConfigProviderExclusionProps;
-
-// export type ConfigProviderProps = {
-//   configStore?: ConfigStore;
-//   keyStore?: OrderlyKeyStore;
-//   contracts?: IContract;
-//   // getWalletAdapter?: getWalletAdapterFunc;
-//   walletAdapters?: WalletAdapter[];
-//   brokerId: string;
-//   brokerName?: string;
-//   networkId: NetworkId;
-//   chainFilter?: filteredChains | filterChainsFunc;
-//   customChains?: Chains<undefined, undefined>;
-// };
 
 export const OrderlyConfigProvider: FC<
   PropsWithChildren<ConfigProviderProps>
@@ -140,7 +128,7 @@ export const OrderlyConfigProvider: FC<
   const innerWalletAdapters = useConstant<WalletAdapter[]>(() => {
     return (
       walletAdapters || [
-        new DefaultEVMAdapterWalletAdapter(new EthersProvider()),
+        new DefaultEVMWalletAdapter(new EthersProvider()),
         new DefaultSolanaWalletAdapter(),
       ]
     );

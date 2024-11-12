@@ -14,7 +14,7 @@ import {
   useChains,
   useLocalStorage,
 } from "@orderly.network/hooks";
-import { useMemo } from "react";
+import { useMemo, isValidElement } from "react";
 import { ExpandableContext, routerAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterProps, FooterWidget } from "./footer";
@@ -26,7 +26,7 @@ export type LayoutProps = {
    * if provided, the layout will use this component over the default sidebar component
    */
   gap?: number;
-  maxWidth?: number;
+  leftSidebarMaxWidth?: number;
   leftSidebar?: React.ReactNode;
   leftSideProps?: SideBarProps;
   rightSidebar?: React.ReactNode;
@@ -56,7 +56,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   );
   const [chains] = useChains();
 
-  const sideBarDefaultWidth = useMemo(() => props.maxWidth || 185, []);
+  const sideBarDefaultWidth = props.leftSidebarMaxWidth || 185;
   const { networkId } = useContext<any>(OrderlyContext);
 
   const checkChainSupportHandle = (chainId: number | string) => {
@@ -78,6 +78,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     const height = footerRef.current?.getBoundingClientRect().height;
     setFooterHeight(height!);
   }, [footerRef]);
+
+  const hasLeftSidebar =
+    !!props.leftSidebar || typeof props.leftSideProps !== "undefined";
 
   return (
     <div
@@ -114,7 +117,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         </Box>
         <MaintenanceTipsWidget />
         {/*--------- body start ------ */}
-        {props.leftSidebar === null ? (
+        {!hasLeftSidebar ? (
           // ----------No leftSidebar layout start ---------
           <Box className={classNames?.content}>{props.children}</Box>
         ) : (
@@ -135,7 +138,8 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
             }}
           >
             <div className={cn(classNames?.leftSidebar)}>
-              {typeof props.leftSidebar !== "undefined" ? (
+              {/* {typeof props.leftSidebar !== "undefined" ? ( */}
+              {isValidElement(props.leftSidebar) ? (
                 props.leftSidebar
               ) : (
                 <SideNavbarWidget {...props.leftSideProps} />

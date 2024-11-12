@@ -16,9 +16,9 @@ const meta: Meta<typeof PositionsWidget> = {
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Story />
         </OrderlyAppProvider>

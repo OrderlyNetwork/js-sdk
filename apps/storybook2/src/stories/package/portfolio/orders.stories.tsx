@@ -12,9 +12,9 @@ const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"woofi_pro"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Box className="oui-h-[calc(100vh)]" p={6}>
             <Story />

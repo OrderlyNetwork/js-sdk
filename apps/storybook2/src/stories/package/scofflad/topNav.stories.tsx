@@ -36,9 +36,9 @@ const meta = {
     (Story: any) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Box intensity={900}>
             <Story />
@@ -134,9 +134,9 @@ export const CustomChainsMenu: Story = {
   decorators: [
     (Story) => (
       <OrderlyAppProvider
-        brokerId={"orderly"}
-        brokerName={""}
-        networkId={"testnet"}
+        brokerId="orderly"
+        brokerName="Orderly"
+        networkId="testnet"
         customChains={{
           mainnet: [
             {
@@ -210,7 +210,7 @@ export const SubMainNav: Story = {
           {
             name: "Trading rewards",
             href: "/",
-            description: "Trade with WOOFi Pro to earn ORDER",
+            description: "Trade with Orderly to earn ORDER",
             icon: (
               <svg
                 width="20"
@@ -258,7 +258,7 @@ export const SubMainNav: Story = {
             name: "Trading rewards x2",
             href: "/trading-rewards",
             description:
-              "Trade with WOOFi Pro to earn ORDER x2 Trade with WOOFi Pro to earn ORDER",
+              "Trade with Orderly to earn ORDER x2 Trade with Orderly to earn ORDER",
             icon: (
               <svg
                 width="20"
@@ -306,20 +306,19 @@ export const SubMainNav: Story = {
             name: "Affiliate",
             href: "/markets",
             tag: "40% Rebate",
-            description: "Earn more as a WOOFi affiliate",
+            description: "Earn more as a Orderly affiliate",
           },
           {
             name: "Orderly airdrop",
             href: "https://app.orderly.network",
-            description: "Earn Orderly merits by trading on WOOFi Pro.",
+            description: "Earn Orderly merits by trading on Orderly.",
             target: "_blank",
             icon: <OrderlyIcon size={14} />,
             activeIcon: <OrderlyActiveIcon size={14} />,
           },
-
           {
             name: "ARB incentives",
-            href: "https://mirror.xyz/woofi.eth/9NVYvKwfldZf1JPoKkNQ2YMXnNbgVUyHkgMJIvXv9dg",
+            href: "https://app.orderly.network/tradingRewards",
             description: "Trade to win a share of 9,875 ARB each week.",
             target: "_blank",
             icon: <ARBIcon size={14} />,
@@ -358,7 +357,7 @@ export const CampaignsNav: Story = {
         {
           name: "Orderly airdrop",
           href: "https://app.orderly.network",
-          description: "Earn Orderly merits by trading on WOOFi Pro.",
+          description: "Earn Orderly merits by trading on Orderly.",
           target: "_blank",
           icon: <OrderlyIcon size={14} />,
           activeIcon: <OrderlyActiveIcon size={14} />,
@@ -366,7 +365,7 @@ export const CampaignsNav: Story = {
 
         {
           name: "ARB incentives",
-          href: "https://mirror.xyz/woofi.eth/9NVYvKwfldZf1JPoKkNQ2YMXnNbgVUyHkgMJIvXv9dg",
+          href: "https://app.orderly.network/tradingRewards",
           description: "Trade to win a share of 9,875 ARB each week.",
           target: "_blank",
           icon: <ARBIcon size={14} />,

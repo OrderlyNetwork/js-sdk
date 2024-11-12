@@ -300,8 +300,9 @@ export const useEditSheetScript = (props: {
 
   const onDialogConfirm = () => {
     if (formattedOrder) {
-      onSubmit(formattedOrder);
+      return onSubmit(formattedOrder);
     }
+    return Promise.reject();
   };
 
   const onClose = useCallback(() => {

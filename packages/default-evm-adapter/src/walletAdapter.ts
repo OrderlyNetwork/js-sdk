@@ -11,7 +11,7 @@ import {
 import { EVMAdapterOptions } from "./types";
 import * as ed from "@noble/ed25519";
 import { encode as bs58encode, decode as bs58Decode } from "bs58";
-import { API, ChainNamespace} from "@orderly.network/types";
+import { API, ChainNamespace } from "@orderly.network/types";
 import {
   addOrderlyKeyMessage,
   registerAccountMessage,
@@ -20,7 +20,7 @@ import {
 } from "./helper";
 import type { Web3Provider } from "./provider/web3Provider.interface";
 
-class DefaultEVMAdapterWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
+class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
   chainNamespace: ChainNamespace = ChainNamespace.evm;
   private _address!: string;
   private _chainId!: number;
@@ -268,4 +268,4 @@ class DefaultEVMAdapterWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions
   }
 }
 
-export { DefaultEVMAdapterWalletAdapter };
+export { DefaultEVMWalletAdapter };

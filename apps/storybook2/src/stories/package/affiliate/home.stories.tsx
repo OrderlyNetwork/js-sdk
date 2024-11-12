@@ -14,18 +14,15 @@ const meta: Meta<typeof Dashboard.HomePage> = {
   // },
   decorators: [
     (Story: any) => {
-      // const networkId = localStorage.getItem("preview-orderly-networkId");
-      // const networkId = "mainnet";
-      const networkId = "testnet";
       const configStore = new CustomConfigStore({
         brokerId: "orderly",
         brokerName: "Orderly",
-        networkId,
+        networkId: "testnet",
         env: "qa",
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyAppProvider networkId={networkId} configStore={configStore}>
+          <OrderlyAppProvider configStore={configStore}>
             <ReferralProvider
               becomeAnAffiliateUrl="https://orderly.network"
               learnAffiliateUrl="https://orderly.network"

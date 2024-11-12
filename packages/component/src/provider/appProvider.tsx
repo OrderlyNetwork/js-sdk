@@ -140,7 +140,7 @@ export const OrderlyAppProvider: FC<
       walletAdapters={walletAdapters}
       brokerId={brokerId!}
       brokerName={brokerName!}
-      networkId={networkId}
+      networkId={networkId!}
       contracts={contracts}
       chainFilter={chainFilter}
     >

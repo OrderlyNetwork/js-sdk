@@ -73,7 +73,7 @@ export const useTaskProfitAndStopLossInternal = (
     /**
      * Submit the TP/SL order
      */
-    submit: () => Promise<void>;
+    submit: () => Promise<any>;
     deleteOrder: (orderId: number, symbol: string) => Promise<any>;
     // /**
     //  * Create the take profit and stop loss order, auto-detect the order type

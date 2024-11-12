@@ -114,6 +114,8 @@ const MenuItem: FC<
   );
 });
 
+MenuItem.displayName = "LeftMenuItem";
+
 const SideMenus: FC<{
   menus?: SideMenuItem[];
   current?: string;

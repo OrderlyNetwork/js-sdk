@@ -195,7 +195,7 @@ const TriggerPriceItem: FC<{
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
 
-  console.log("trigger price item", "dp", symbolInfo.quote_dp);
+  // console.log("trigger price item", "dp", symbolInfo.quote_dp);
   
 
   return (

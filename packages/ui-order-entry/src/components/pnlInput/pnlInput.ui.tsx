@@ -35,6 +35,7 @@ export const PNLInput = (props: PNLInputProps) => {
   const [prefix, setPrefix] = useState<string>(mode);
   useEffect(() => {
     setPrefix(mode);
+    setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
   }, [mode]);
   const [placeholder, setPlaceholder] = useState<string>(
     mode === PnLMode.PERCENTAGE ? "%" : quote

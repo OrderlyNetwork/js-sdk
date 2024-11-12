@@ -1,6 +1,6 @@
 import React, {useMemo } from "react";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { Adapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
+import { Adapter, WalletAdapterNetwork, WalletError, WalletNotReadyError } from "@solana/wallet-adapter-base";
 import {
   WalletModalProvider
 } from "@solana/wallet-adapter-react-ui";
@@ -12,6 +12,8 @@ import {
   createDefaultAuthorizationResultCache, createDefaultWalletNotFoundHandler,
   SolanaMobileWalletAdapter
 } from "@solana-mobile/wallet-adapter-mobile";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { getGlobalObject } from "@orderly.network/utils";
 
 export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   const network =props.network ?? WalletAdapterNetwork.Devnet;
@@ -22,7 +24,7 @@ export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
     console.log('-- mobile wallet adapter', adapter);
 
-    return Promise.reject('wallet not ready');
+    return Promise.reject(new WalletNotReadyError('wallet not ready'));
   }
 
 
@@ -32,12 +34,20 @@ export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   }
 
   const wallets =  useMemo(() => {
+    let uri = '';
+    if (typeof window !== "undefined") {
+      const location= (getGlobalObject() as any).location;
+      uri = `${location.protocol}//${location.host}`;
+    }
+
+
 
     return props.wallets ?? [
+      new PhantomWalletAdapter(),
       new SolanaMobileWalletAdapter({
         addressSelector: createDefaultAddressSelector(),
         appIdentity: {
-          uri: `${location.protocol}//${location.host}`,
+          uri,
         },
         authorizationResultCache: createDefaultAuthorizationResultCache(),
         chain: network,

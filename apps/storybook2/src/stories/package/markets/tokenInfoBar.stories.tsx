@@ -10,9 +10,8 @@ import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import { useState } from "react";
 
-const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   brokerId: "orderly",
   brokerName: "Orderly",
   env: "staging",
@@ -24,7 +23,7 @@ const meta: Meta<typeof TokenInfoBarFullWidget> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyAppProvider networkId="testnet" configStore={configStore}>
+        <OrderlyAppProvider configStore={configStore}>
           <Story />
         </OrderlyAppProvider>
       </WalletConnectorProvider>
@@ -59,7 +58,7 @@ export const DepositTokenInfoBar: Story = {
         </Box>
         <Box width="100%" intensity={900} r="2xl" px={3} height={54}>
           <TokenInfoBarFullWidget
-            symbol="PERP_WOO_USDC"
+            symbol="PERP_ORDER_USDC"
             trailing={<Box pl={3}>Trailing</Box>}
             onSymbolChange={(symbol) => {
               console.log("onSymbolChange", symbol);

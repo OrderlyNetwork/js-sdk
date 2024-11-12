@@ -11,11 +11,11 @@ export const useCancelBtnScript = (props: { state: OrderCellState }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onCancel = (event?: any) => {
-    if (!onCancelOrder) return;
+    if (!onCancelOrder) return Promise.resolve();
     event?.preventDefault();
     event?.stopPropagation();
     setIsLoading(true);
-    onCancelOrder(state.item)
+    return onCancelOrder(state.item)
       .then(
         (res: any) => {
           setOpen(false);
@@ -23,8 +23,7 @@ export const useCancelBtnScript = (props: { state: OrderCellState }) => {
         (error: any) => {
           toast.error(error.message);
         }
-      )
-      .finally(() => {
+      ).finally(() => {
         setIsLoading(false);
       });
   };

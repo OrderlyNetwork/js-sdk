@@ -4,24 +4,23 @@ import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { Box } from "@orderly.network/ui";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { CustomConfigStore } from "../../../components/configStore/customConfigStore.ts";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
-const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   env: "staging",
   brokerName: "Orderly",
   brokerId: "orderly",
 });
 
-const meta: Meta<typeof TradingviewWidget> = {
+
+const meta = {
   title: "Package/ui-tradingview",
   component: TradingviewWidget,
   decorators: [
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          networkId={networkId}
           configStore={configStore}
           appIcons={{
             main: {
@@ -33,19 +32,24 @@ const meta: Meta<typeof TradingviewWidget> = {
           }}
         >
           <Scaffold>
+
             <Box height={600}>
+
               <Story />
             </Box>
           </Scaffold>
         </OrderlyAppProvider>
       </WalletConnectorProvider>
-    ),
+    )
   ],
   parameters: {},
+
   args: {
-    symbol: "PERP_BTC_USDC",
-  },
-};
+
+    symbol: "PERP_BTC_USDC"
+  }
+
+} satisfies Meta<typeof TradingviewWidget>;
 
 type Story = StoryObj<typeof meta>;
 
@@ -55,30 +59,20 @@ const tradingviewProps = {
   symbol: "PERP_ETH_USDC",
   scriptSRC: "/tradingview/charting_library/charting_library.js",
   libraryPath: "/tradingview/charting_library/",
-  customCssUrl: "/tradingview/chart.css",
+  customCssUrl: "/tradingview/chart.css"
 };
 
 export const Default: Story = {
   args: {
-    ...tradingviewProps,
-  },
+    ...tradingviewProps
+  }
 };
+
 
 export const NoTradingviewFile: Story = {
-  render: () => {
-    return <TradingviewWidget symbol="PERP_BTC_USDC" />;
-  },
-};
 
-const tradingviewProps2 = {
-  symbol: "PERP_ETH_USDC",
-  scriptSRC: "/tradingviewWoofiPro/charting_library/charting_library.js",
-  libraryPath: "/tradingviewWoofiPro/charting_library/",
-  customCssUrl: "/tradingviewWoofiPro/chart.css",
-};
-
-export const SellBuyOnTradingview: Story = {
   render: () => {
-    return <TradingviewWidget {...tradingviewProps2} />;
-  },
+    return <TradingviewWidget
+      symbol="PERP_BTC_USDC" />;
+  }
 };

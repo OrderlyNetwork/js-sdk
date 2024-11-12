@@ -1,13 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import {
-  SimpleDialog,
-  AlertDialog,
-  Button,
-  modal,
-  ModalProvider,
-} from "@orderly.network/ui";
-import { AppProvider } from "../../../components/appProvider.tsx";
+import { AlertDialog, Button, modal, ModalProvider } from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Dialog/CommandStyle",
