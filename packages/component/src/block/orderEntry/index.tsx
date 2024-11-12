@@ -23,6 +23,7 @@ import {
   useLocalStorage,
   useDebounce,
   useMediaQuery,
+  useDebouncedCallback,
 } from "@orderly.network/hooks";
 import { UseOrderEntryMetaState, utils } from "@orderly.network/hooks";
 import { AuthGuard } from "@orderly.network/ui-connector";
@@ -147,6 +148,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     const isMarketOrder = [OrderType.MARKET, OrderType.STOP_MARKET].includes(
       formattedOrder.order_type || OrderType.LIMIT
     );
+
+    const submitting = useRef(false);
 
     useEffect(() => {
       // handle orderbook item click event
@@ -348,6 +351,17 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         });
     };
 
+    const innerSubmit = (event: FormEvent) => {
+      if (submitting.current) return;
+
+      submitting.current = true;
+
+      onSubmit(event);
+      setTimeout(() => {
+        submitting.current = false;
+      }, 200);
+    };
+
     const onDeposit = useCallback((event: FormEvent) => {
       event.preventDefault();
       props.onDeposit?.();
@@ -405,7 +419,7 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       // @ts-ignore
 
       <form
-        onSubmit={onSubmit}
+        onSubmit={innerSubmit}
         onClick={() => {
           isClickForm.current = true;
         }}
