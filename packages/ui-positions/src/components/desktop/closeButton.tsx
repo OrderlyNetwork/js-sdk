@@ -19,6 +19,7 @@ import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { TokenIcon } from "@orderly.network/ui";
 import { useSymbolContext } from "../../providers/symbolProvider";
+import { useDebouncedCallback } from "@orderly.network/hooks";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
@@ -34,20 +35,24 @@ export const CloseButton = () => {
 
   const { base, quote } = useSymbolContext();
 
-  const onConfirm = () => {
-    return onSubmit().then(
-      (res) => {
-        setOpen(false);
-      },
-      (error: any) => {
-        if (typeof error === "string") {
-          toast.error(error);
-        } else {
-          toast.error(error.message);
+  const onConfirm = useDebouncedCallback(
+    () => {
+      return onSubmit().then(
+        (res) => {
+          setOpen(false);
+        },
+        (error: any) => {
+          if (typeof error === "string") {
+            toast.error(error);
+          } else {
+            toast.error(error.message);
+          }
         }
-      }
-    );
-  };
+      );
+    },
+    300,
+    { leading: true, trailing: false }
+  );
 
   const onClose = () => {
     setOpen(false);
