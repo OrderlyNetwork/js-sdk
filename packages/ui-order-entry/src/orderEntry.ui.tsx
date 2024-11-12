@@ -45,7 +45,7 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useDebouncedCallback, useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
@@ -120,39 +120,43 @@ export const OrderEntry = (
     };
   }, [errorMsgVisible]);
 
-  const onSubmit = (): void => {
-    helper
-      .validate()
-      .then(
-        (order: any) => {
-          if (needConfirm) {
-            return modal.show(orderConfirmDialogId, {
-              order: formattedOrder,
+  const onSubmit = useDebouncedCallback(
+    () => {
+      helper
+        .validate()
+        .then(
+          (order: any) => {
+            if (needConfirm) {
+              return modal.show(orderConfirmDialogId, {
+                order: formattedOrder,
 
-              quote: symbolInfo.quote,
-              base: symbolInfo.base,
+                quote: symbolInfo.quote,
+                base: symbolInfo.base,
 
-              quoteDP: symbolInfo.quote_dp,
-              baseDP: symbolInfo.base_dp,
-            });
+                quoteDP: symbolInfo.quote_dp,
+                baseDP: symbolInfo.base_dp,
+              });
+            }
+
+            return true;
+          },
+          (errors) => {
+            setErrorMsgVisible(true);
           }
-
-          return true;
-        },
-        (errors) => {
-          setErrorMsgVisible(true);
-        }
-      )
-      .then(() => {
-        return submit();
-      })
-      .catch((error) => {
-        console.log("catch:", error);
-        if (error instanceof SDKError) {
-          toast.error(`Error:${error.message}`);
-        }
-      });
-  };
+        )
+        .then(() => {
+          return submit();
+        })
+        .catch((error) => {
+          console.log("catch:", error);
+          if (error instanceof SDKError) {
+            toast.error(`Error:${error.message}`);
+          }
+        });
+    },
+    300,
+    { leading: true, trailing: false }
+  );
 
   return (
     <OrderEntryProvider
@@ -325,7 +329,11 @@ export const OrderEntry = (
           }}
         />
         {/* reduce only switch and label */}
-        <Flex justify={"between"} itemAlign={"center"} className="!oui-mt-[0px] xl:!oui-mt-3">
+        <Flex
+          justify={"between"}
+          itemAlign={"center"}
+          className="!oui-mt-[0px] xl:!oui-mt-3"
+        >
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
               className="oui-h-[14px]"
@@ -618,7 +626,8 @@ const QuantitySlider = (props: {
 }) => {
   const { canTrade } = props;
   const color = useMemo(
-    () => (canTrade ? props.side === OrderSide.BUY ? "buy" : "sell" : undefined),
+    () =>
+      canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined,
     [props.side, canTrade]
   );
 
@@ -639,7 +648,13 @@ const QuantitySlider = (props: {
         onValueChange={props.onValueChange}
       />
       <Flex justify={"between"} pt={2}>
-        <Text.numeral rule={"percentages"} size={"2xs"} color={color} dp={2} padding={false}>
+        <Text.numeral
+          rule={"percentages"}
+          size={"2xs"}
+          color={color}
+          dp={2}
+          padding={false}
+        >
           {canTrade ? props.currentQtyPercentage : 0}
         </Text.numeral>
         <Flex>
@@ -652,7 +667,12 @@ const QuantitySlider = (props: {
           >
             {maxLabel}
           </button>
-          <Text.numeral size={"2xs"} color={color} dp={props.dp} padding={false}>
+          <Text.numeral
+            size={"2xs"}
+            color={color}
+            dp={props.dp}
+            padding={false}
+          >
             {canTrade ? props.maxQty : 0}
           </Text.numeral>
         </Flex>
@@ -692,7 +712,13 @@ const OrderTypeSelect = (props: {
         return (
           <Text
             size={"xs"}
-            color={ props.canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined}
+            color={
+              props.canTrade
+                ? props.side === OrderSide.BUY
+                  ? "buy"
+                  : "sell"
+                : undefined
+            }
           >
             {item?.label.replace(" order", "")}
           </Text>
@@ -723,7 +749,7 @@ function AssetInfo(props: {
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
-          {canTrade ? (props.estLiqPrice ?? "--") : '--'}
+          {canTrade ? props.estLiqPrice ?? "--" : "--"}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"}>
@@ -735,7 +761,9 @@ function AssetInfo(props: {
             intensity: 80,
           })}
         >
-          <Text.numeral unit={canTrade ? "x" : undefined}>{canTrade ? (props.currentLeverage ?? '--') : '--'}</Text.numeral>
+          <Text.numeral unit={canTrade ? "x" : undefined}>
+            {canTrade ? props.currentLeverage ?? "--" : "--"}
+          </Text.numeral>
           {props.estLeverage && (
             <>
               <svg
