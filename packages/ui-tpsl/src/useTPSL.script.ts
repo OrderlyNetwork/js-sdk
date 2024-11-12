@@ -184,7 +184,12 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     return Promise.resolve()
       .then(() => {
         if (typeof options.onConfirm !== "function" || !needConfirm) {
-          return submit().then(() => true);
+          return submit().then(() => true, (reject) => {
+            if (reject?.message) {
+              toast.error(reject.message);
+            }
+            return Promise.reject(false);
+          });
         }
         return options.onConfirm(tpslOrder, {
           position,
