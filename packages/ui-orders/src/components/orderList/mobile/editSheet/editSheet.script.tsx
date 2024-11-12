@@ -348,7 +348,7 @@ export const useEditSheetScript = (props: {
 
   const sliderValue = useMemo(() => {
     const qty = formattedOrder.order_quantity;
-    if (qty) {
+    if (qty && Number(qty) !== 0) {
       const value = new Decimal(qty)
         .div(maxQty)
         .mul(100)
