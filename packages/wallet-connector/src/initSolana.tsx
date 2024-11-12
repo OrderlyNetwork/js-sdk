@@ -13,7 +13,7 @@ import {
   SolanaMobileWalletAdapter
 } from "@solana-mobile/wallet-adapter-mobile";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { getGlobalObject } from "@orderly.network/utils/src";
+import { getGlobalObject } from "@orderly.network/utils";
 
 export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   const network =props.network ?? WalletAdapterNetwork.Devnet;
