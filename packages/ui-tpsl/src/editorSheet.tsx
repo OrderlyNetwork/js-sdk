@@ -8,6 +8,7 @@ import {
   Box,
   Badge,
   Divider,
+  toast,
 } from "@orderly.network/ui";
 import { TPSLWidget, TPSLWidgetProps } from "./tpsl.widget";
 import { PositionTPSLConfirm } from "./tpsl.ui";
@@ -86,7 +87,11 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
                 // setVisible(true);
                 return true;
               },
-              () => {
+              (reject) => {
+                if (reject?.message) {
+                  toast.error(reject.message);
+                }
+                
                 // setVisible(true);
                 return Promise.reject(false);
               }

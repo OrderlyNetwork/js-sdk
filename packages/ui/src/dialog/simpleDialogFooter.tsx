@@ -1,6 +1,7 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { DialogFooter } from "./dialog";
 import { Button, ButtonProps } from "../button";
+import { useFocusContext } from "react-day-picker";
 
 export type DialogAction<T = any> = {
   label: string;
@@ -62,7 +63,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           }}
           className={actions.primary.className}
           disabled={actions.primary.disabled || primaryLoading}
-          loading={primaryLoading}
+          loading={actions.primary.loading ?? primaryLoading}
           size={actions.primary.size}
           fullWidth
         >

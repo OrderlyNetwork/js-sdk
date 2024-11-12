@@ -6,6 +6,7 @@ import {
 } from "@orderly.network/hooks";
 import { SDKError } from "@orderly.network/types";
 import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
 import { useEffect, useMemo, useRef } from "react";
 
 export type TPSLBuilderOptions = {
@@ -21,8 +22,8 @@ export type TPSLBuilderOptions = {
     order: ComputedAlgoOrder,
     options: {
       position: API.Position;
-      submit: () => Promise<void>;
-      cancel: () => Promise<void>;
+      submit: () => Promise<any>;
+      cancel: () => Promise<any>;
     }
   ) => Promise<boolean>;
 };

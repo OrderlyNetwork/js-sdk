@@ -563,7 +563,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <Checkbox
             id="disabledConfirm"
             color="white"
-            checked={!needConfirm}
+            checked={needConfirm}
             onCheckedChange={(check) => {
               setNeedConfirm(!check);
             }}
