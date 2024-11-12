@@ -20,9 +20,9 @@ const meta: Meta<typeof SharePnLDialogWidget> = {
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Story />
         </OrderlyAppProvider>

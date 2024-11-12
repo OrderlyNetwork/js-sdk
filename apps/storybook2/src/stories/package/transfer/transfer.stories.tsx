@@ -10,10 +10,8 @@ import {
 import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore.ts";
 
-const networkId = "mainnet";
-// const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   env: "prod",
   brokerName: "Orderly",
   brokerId: "orderly",
@@ -27,7 +25,6 @@ const meta: Meta<typeof DepositFormWidget> = {
     (Story: any) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          networkId={networkId}
           configStore={configStore}
           appIcons={{
             main: {

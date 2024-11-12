@@ -22,9 +22,9 @@ const meta: Meta<typeof PnlLineChart> = {
     (Story) => (
       <ConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Box width="500px" height={"400px"}>
             {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}

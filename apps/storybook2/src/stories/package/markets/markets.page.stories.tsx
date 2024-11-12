@@ -12,9 +12,8 @@ import {
 import { Box } from "@orderly.network/ui";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
-const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   brokerId: "orderly",
   brokerName: "Orderly",
   env: "staging",
@@ -27,7 +26,7 @@ const meta: Meta<typeof MarketsHomePage> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyAppProvider networkId="testnet" configStore={configStore}>
+        <OrderlyAppProvider configStore={configStore}>
           <Story />
         </OrderlyAppProvider>
       </WalletConnectorProvider>

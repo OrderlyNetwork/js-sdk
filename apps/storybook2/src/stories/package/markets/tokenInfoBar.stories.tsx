@@ -10,9 +10,8 @@ import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import { useState } from "react";
 
-const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   brokerId: "orderly",
   brokerName: "Orderly",
   env: "staging",
@@ -24,7 +23,7 @@ const meta: Meta<typeof TokenInfoBarFullWidget> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyAppProvider networkId="testnet" configStore={configStore}>
+        <OrderlyAppProvider configStore={configStore}>
           <Story />
         </OrderlyAppProvider>
       </WalletConnectorProvider>

@@ -36,9 +36,9 @@ const meta = {
     (Story: any) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Box intensity={900}>
             <Story />
@@ -134,9 +134,9 @@ export const CustomChainsMenu: Story = {
   decorators: [
     (Story) => (
       <OrderlyAppProvider
-        brokerId={"orderly"}
-        brokerName={""}
-        networkId={"testnet"}
+        brokerId="orderly"
+        brokerName="Orderly"
+        networkId="testnet"
         customChains={{
           mainnet: [
             {

@@ -16,9 +16,9 @@ const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
     (Story: any) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Story />
         </OrderlyAppProvider>

@@ -29,7 +29,7 @@ export type OrderlyAppConfig = {
 } & Partial<
   Omit<
     ConfigProviderProps,
-    "walletAdapters" | "brokerId" | "brokerName" | "configStore"
+    "walletAdapters" | "brokerId" | "brokerName" | "configStore" | "networkId"
   >
 > &
   ConfigProviderExclusionProps;

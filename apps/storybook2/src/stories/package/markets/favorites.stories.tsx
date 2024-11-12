@@ -9,9 +9,8 @@ import { Box, Button, Flex } from "@orderly.network/ui";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 
-const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   brokerId: "orderly",
   brokerName: "Orderly",
   env: "staging",
@@ -23,7 +22,7 @@ const meta: Meta<typeof FavoritesDropdownMenuWidget> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyAppProvider networkId={"testnet"} configStore={configStore}>
+        <OrderlyAppProvider configStore={configStore}>
           <Story />
         </OrderlyAppProvider>
       </WalletConnectorProvider>

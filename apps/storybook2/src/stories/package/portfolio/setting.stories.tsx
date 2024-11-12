@@ -14,16 +14,15 @@ const meta = {
   subcomponents: {},
   decorators: [
     (Story: any) => {
-      const networkId = "testnet";
       const configStore = new CustomConfigStore({
-        networkId,
+        networkId: "testnet",
         brokerId: "orderly",
         brokerName: "Orderly",
         env: "qa",
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyAppProvider networkId={networkId} configStore={configStore}>
+          <OrderlyAppProvider configStore={configStore}>
             <Story />
           </OrderlyAppProvider>
         </WalletConnectorProvider>

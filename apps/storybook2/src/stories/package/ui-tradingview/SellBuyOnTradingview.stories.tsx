@@ -6,9 +6,8 @@ import { CustomConfigStore } from "../../../components/configStore/customConfigS
 import { Box } from "@orderly.network/ui";
 import { AccountMenuWidget } from "@orderly.network/ui-scaffold";
 
-const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",  
   env: "staging",
   brokerName: "Orderly",
   brokerId: "orderly",
@@ -21,7 +20,6 @@ const meta: Meta<typeof TradingviewWidget> = {
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          networkId={networkId}
           configStore={configStore}
           appIcons={{
             main: {

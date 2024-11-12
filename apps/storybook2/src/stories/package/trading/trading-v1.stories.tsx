@@ -20,21 +20,15 @@ const meta: Meta<typeof TradingPageV1> = {
   // },
   decorators: [
     (Story) => {
-      // const networkId = localStorage.getItem("preview-orderly-networkId");
-      const networkId = "testnet";
       const configStore = new CustomConfigStore({
-        networkId,
+        networkId: "testnet",
         brokerId: "demo",
         brokerName: "Orderly",
         env: "staging",
       });
       return (
         <WalletConnectorProvider>
-          <OrderlyAppProvider
-            networkId={networkId}
-            onChainChanged={fn()}
-            configStore={configStore}
-          >
+          <OrderlyAppProvider onChainChanged={fn()} configStore={configStore}>
             <Scaffold
               leftSidebar={null}
               // @ts-ignore

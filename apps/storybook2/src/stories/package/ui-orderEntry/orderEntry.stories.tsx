@@ -19,9 +19,9 @@ const meta = {
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Box width={"360px"} r={"lg"} intensity={900} p={3}>
             <Story />

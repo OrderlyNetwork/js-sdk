@@ -25,10 +25,8 @@ const meta: Meta<typeof TradingPage> = {
 
   decorators: [
     (Story) => {
-      // const networkId = localStorage.getItem("preview-orderly-networkId");
-      const networkId = "testnet";
       const configStore = new CustomConfigStore({
-        networkId,
+        networkId: "testnet",
         brokerId: "demo",
         brokerName: "Orderly",
         env: "staging",
@@ -38,8 +36,8 @@ const meta: Meta<typeof TradingPage> = {
           <OrderlyAppProvider
             // brokerId="orderly"
             // brokerName="Orderly"
+            // networkId={networkId}
             configStore={configStore}
-            networkId={networkId}
             onChainChanged={fn()}
             appIcons={{
               main: {
