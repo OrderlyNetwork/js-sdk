@@ -21,7 +21,17 @@ export type SimpleDialogFooterProps = {
 
 export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
   const { actions } = props;
-  const [primaryLoading, setPrimaryLoading] = useState(false);
+  const [primaryLoading, setPrimaryLoading] = useState(actions?.primary?.loading ?? false);
+
+  useEffect(() => {
+    if (actions?.primary?.loading) {
+      setPrimaryLoading(actions?.primary?.loading);
+    }
+
+    return () => {
+      setPrimaryLoading(false);
+    }
+  }, [actions?.primary?.loading]);
 
   if (!actions) return null;
 
@@ -48,11 +58,13 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     }
 
     if (actions.primary && typeof actions.primary.onClick === "function") {
+      
       buttons.push(
         <Button
           data-testid={actions.primary?.["data-testid"]}
           key="primary"
           onClick={async (event) => {
+            if (primaryLoading) return;
             try {
               setPrimaryLoading(true);
               await actions.primary?.onClick(event);
@@ -63,7 +75,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           }}
           className={actions.primary.className}
           disabled={actions.primary.disabled || primaryLoading}
-          loading={actions.primary.loading ?? primaryLoading}
+          loading={primaryLoading}
           size={actions.primary.size}
           fullWidth
         >
