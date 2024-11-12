@@ -4,6 +4,7 @@ import {
   useLocalStorage,
   useTPSLOrder,
   useMediaQuery,
+  useDebouncedCallback,
 } from "@orderly.network/hooks";
 import {
   MEDIA_TABLET,
@@ -67,7 +68,7 @@ export const TPSLEditor: FC<{
     }
   }, [mode]);
 
-  const onSubmit = () => {
+  const onSubmit = useDebouncedCallback(() => {
     return submit().then(
       () => {
         setOpen(false);
@@ -77,7 +78,9 @@ export const TPSLEditor: FC<{
         toast.error(error.message);
       }
     );
-  };
+  }, 500, {
+    leading: true, trailing: false
+  });
 
   useEffect(() => {
     let type: AlgoOrderRootType;

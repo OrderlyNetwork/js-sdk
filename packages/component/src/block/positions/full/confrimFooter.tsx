@@ -1,4 +1,5 @@
 import Button from "@/button";
+import { useDebouncedCallback } from "@orderly.network/hooks";
 import { FC } from "react";
 
 export const ConfirmFooter: FC<{
@@ -6,6 +7,14 @@ export const ConfirmFooter: FC<{
   onCancel: () => void;
   submitting: boolean;
 }> = ({ onCancel, onConfirm, submitting }) => {
+
+
+  const innerOnConfirm = useDebouncedCallback(
+    onConfirm,
+    500,
+    { leading: true, trailing: false }
+  );
+
   return (
     <div
       id="orderly-positions-confirm-footer"
@@ -23,7 +32,7 @@ export const ConfirmFooter: FC<{
         </Button>
         <Button
           id="orderly-positions-confirm-footer-confirm-button"
-          onClick={onConfirm}
+          onClick={innerOnConfirm}
           fullWidth
           loading={submitting}
         >
