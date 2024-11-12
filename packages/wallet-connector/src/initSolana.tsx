@@ -1,6 +1,6 @@
 import React, {useMemo } from "react";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { Adapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
+import { Adapter, WalletAdapterNetwork, WalletError, WalletNotReadyError } from "@solana/wallet-adapter-base";
 import {
   WalletModalProvider
 } from "@solana/wallet-adapter-react-ui";
@@ -24,7 +24,7 @@ export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
     console.log('-- mobile wallet adapter', adapter);
 
-    return Promise.reject('wallet not ready');
+    return Promise.reject(new WalletNotReadyError('wallet not ready'));
   }
 
 
