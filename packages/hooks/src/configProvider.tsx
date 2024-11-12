@@ -23,7 +23,7 @@ import { StatusProvider } from "./statusProvider";
 import { SDKError } from "@orderly.network/types";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import type { Chains } from "./orderly/useChains";
-import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
+import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 import { ExtendedConfigStore } from "./extendedConfigStore";
@@ -140,7 +140,7 @@ export const OrderlyConfigProvider: FC<
   const innerWalletAdapters = useConstant<WalletAdapter[]>(() => {
     return (
       walletAdapters || [
-        new DefaultEVMAdapterWalletAdapter(new EthersProvider()),
+        new DefaultEVMWalletAdapter(new EthersProvider()),
         new DefaultSolanaWalletAdapter(),
       ]
     );

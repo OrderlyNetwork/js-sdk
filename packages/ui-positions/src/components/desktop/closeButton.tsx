@@ -87,7 +87,7 @@ export const CloseButton = () => {
             onConfirm={onConfirm}
             submitting={submitting}
             classNames={{
-              root: "oui-items-start"
+              root: "oui-items-start",
             }}
             hideCloseIcon
           />
@@ -107,49 +107,6 @@ export const CloseButton = () => {
       </SimpleDialog>
     </>
   );
-  // return (
-  //   <Popover
-  //     open={open}
-  //     onOpenChange={setOpen}
-  //     contentProps={{
-  //       className: "oui-w-[360px] oui-px-5 oui-rounded-xl",
-  //     }}
-  //     content={
-  //       type === OrderType.MARKET ? (
-  //         <MarketCloseConfirm
-  //           base={base}
-  //           quantity={quantity}
-  //           onClose={onClose}
-  //           onConfirm={onConfirm}
-  //           submitting={submitting}
-  //         />
-  //       ) : (
-  //         <LimitConfirmDialog
-  //           base={base}
-  //           quantity={quantity}
-  //           price={price}
-  //           onClose={onClose}
-  //           onConfirm={onConfirm}
-  //           submitting={submitting}
-  //           quoteDp={quoteDp}
-  //           order={closeOrderData}
-  //         />
-  //       )
-  //     }
-  //   >
-  //     <Button
-  //       variant="outlined"
-  //       size="sm"
-  //       color="secondary"
-  //       disabled={disabled}
-  //       onClick={(e) => {
-  //         e.stopPropagation();
-  //       }}
-  //     >
-  //       Close
-  //     </Button>
-  //   </Popover>
-  // );
 };
 
 export const ConfirmHeader: FC<{
@@ -271,13 +228,10 @@ export const MarketCloseConfirm: FC<{
   hideCloseIcon?: boolean;
   classNames?: {
     root?: string;
-  }
+  };
 }> = (props) => {
-  
-
   const onCancel = () => {
     const func = props?.onClose ?? props.close;
-    console.log("xxxxxxxxxxx func is", func);
     func?.();
   };
   return (
