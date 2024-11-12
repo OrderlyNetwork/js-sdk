@@ -1,5 +1,20 @@
 # @orderly.network/ui-cross-deposit
 
+## 1.0.1-preReleaseV2-3.4
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-chain-selector@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-transfer@1.0.1-preReleaseV2-3.4
+  - @orderly.network/hooks@1.5.16-preReleaseV2-3.0
+  - @orderly.network/types@1.5.16-preReleaseV2-3.0
+  - @orderly.network/utils@1.5.16-preReleaseV2-3.0
+  - @orderly.network/core@1.5.16-preReleaseV2-3.0
+  - @orderly.network/react-app@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui@1.0.1-preReleaseV2-3.4
+
 ## 1.0.1-preReleaseV2-2.3
 
 ### Patch Changes

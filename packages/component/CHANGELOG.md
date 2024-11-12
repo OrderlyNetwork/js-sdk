@@ -1,5 +1,22 @@
 # @orderly.network/react
 
+## 1.5.16-preReleaseV2-3.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/trading-view@1.5.16-preReleaseV2-3.0
+  - @orderly.network/ui-connector@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-leverage@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-transfer@1.0.1-preReleaseV2-3.4
+  - @orderly.network/hooks@1.5.16-preReleaseV2-3.0
+  - @orderly.network/types@1.5.16-preReleaseV2-3.0
+  - @orderly.network/utils@1.5.16-preReleaseV2-3.0
+  - @orderly.network/core@1.5.16-preReleaseV2-3.0
+  - @orderly.network/net@1.5.16-preReleaseV2-3.0
+  - @orderly.network/ui@1.0.1-preReleaseV2-3.4
+
 ## 1.5.15
 
 ### Patch Changes

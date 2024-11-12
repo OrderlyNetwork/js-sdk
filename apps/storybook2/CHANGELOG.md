@@ -1,5 +1,31 @@
 # storybook2
 
+## 0.0.1-preReleaseV2-3.16
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-chain-selector@1.0.1-preReleaseV2-3.4
+  - @orderly.network/trading-rewards@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-connector@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-positions@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-leverage@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-scaffold@1.0.1-preReleaseV2-3.4
+  - @orderly.network/affiliate@1.0.1-preReleaseV2-3.4
+  - @orderly.network/portfolio@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui-orders@1.0.1-preReleaseV2-3.4
+  - @orderly.network/markets@1.0.1-preReleaseV2-3.4
+  - @orderly.network/web3-onboard@1.5.16-preReleaseV2-3.0
+  - @orderly.network/trading@1.0.1-preReleaseV2-3.4
+  - @orderly.network/chart@1.0.1-preReleaseV2-3.4
+  - @orderly.network/hooks@1.5.16-preReleaseV2-3.0
+  - @orderly.network/types@1.5.16-preReleaseV2-3.0
+  - @orderly.network/utils@1.5.16-preReleaseV2-3.0
+  - @orderly.network/core@1.5.16-preReleaseV2-3.0
+  - @orderly.network/react-app@1.0.1-preReleaseV2-3.4
+  - @orderly.network/ui@1.0.1-preReleaseV2-3.4
+
 ## 0.0.1-preReleaseV2-2.15
 
 ### Patch Changes

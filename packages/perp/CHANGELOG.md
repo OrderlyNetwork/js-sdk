@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.16-preReleaseV2-3.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@1.5.16-preReleaseV2-3.0
+  - @orderly.network/utils@1.5.16-preReleaseV2-3.0
+
 ## 3.3.15
 
 ### Patch Changes
