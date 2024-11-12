@@ -163,6 +163,7 @@ export const TPSLEditor: FC<{
           title={title}
           maxWidth={props.isEditing ? "xs" : "sm"}
           onCancel={() => setOpen(false)}
+          // @ts-ignore
           onOk={() => onSubmit()}
           closable
         >
@@ -198,6 +199,7 @@ export const TPSLEditor: FC<{
             symbol={symbol}
             oldOrder={props.order}
             onCancel={() => setOpen(false)}
+            // @ts-ignore
             onConfirm={() => onSubmit()}
             quoteDp={quoteDp}
           />
