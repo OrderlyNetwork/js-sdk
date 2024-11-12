@@ -162,6 +162,7 @@ export const OrderConfirmFooter: FC<{
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [loading, setLoading] = useState(false);
+
   return (
     <div className="orderly-flex orderly-gap-2 orderly-px-5">
       <div className="orderly-flex-1 orderly-items-center orderly-h-[32px]">

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Button from "@/button";
 import { usePositionsRowContext } from "./positionRowContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
@@ -12,23 +12,38 @@ import { toast } from "@/toast";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const { onSubmit, price, quantity, closeOrderData, type, submitting } =
-    usePositionsRowContext();
+  const {
+    onSubmit,
+    price,
+    quantity,
+    closeOrderData,
+    type,
+    submitting: orderProcessing,
+  } = usePositionsRowContext();
 
   const { base, quote } = useSymbolContext();
 
   const onConfirm = () => {
+    if (submitting) {
+      return;
+    }
+    setSubmitting(true);
+
     return onSubmit().then(
       (res) => {
         setOpen(false);
+        setSubmitting(false);
+        // return res;
       },
       (error: any) => {
-        if (typeof error === 'string') {
+        if (typeof error === "string") {
           toast.error(error);
         } else {
-          toast.error(error.message)
+          toast.error(error.message);
         }
+        setSubmitting(false);
       }
     );
   };
