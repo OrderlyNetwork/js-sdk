@@ -180,9 +180,9 @@ export const OrderEntry = (
               data-type={OrderSide.BUY}
               // color={side === OrderSide.BUY ? "buy" : "secondary"}
               className={cn(
-                side === OrderSide.BUY
+                side === OrderSide.BUY && props.canTrade
                   ? "oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
-                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
+                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
             >
               Buy
@@ -196,9 +196,9 @@ export const OrderEntry = (
               size={"md"}
               // color={side === OrderSide.SELL ? "sell" : "secondary"}
               className={cn(
-                side === OrderSide.SELL
+                side === OrderSide.SELL && props.canTrade
                   ? "oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
-                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6"
+                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
             >
               Sell
@@ -208,6 +208,7 @@ export const OrderEntry = (
             <OrderTypeSelect
               type={formattedOrder.order_type!}
               side={side}
+              canTrade={props.canTrade}
               onChange={(type) => {
                 setOrderValue("order_type", type);
               }}
@@ -222,8 +223,10 @@ export const OrderEntry = (
             size={"2xs"}
             className={"oui-text-base-contrast-80"}
             unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
+            dp={2}
+            padding={false}
           >
-            {freeCollateral}
+            {props.canTrade ? freeCollateral : 0}
           </Text.numeral>
         </Flex>
         {/* Inputs (price,quantity,triggerPrice) */}
@@ -246,6 +249,7 @@ export const OrderEntry = (
         />
         {/* Slider */}
         <QuantitySlider
+          canTrade={props.canTrade}
           maxQty={maxQty}
           currentQtyPercentage={props.currentQtyPercentage}
           value={
@@ -283,6 +287,7 @@ export const OrderEntry = (
         </AuthGuard>
         {/* Asset info */}
         <AssetInfo
+          canTrade={props.canTrade}
           quote={symbolInfo.quote}
           estLiqPrice={props.estLiqPrice}
           estLeverage={props.estLeverage}
@@ -601,6 +606,7 @@ const InputLabel = (props: PropsWithChildren<{ id: string }>) => {
 // ----------- Custom Input Component end ------------
 
 const QuantitySlider = (props: {
+  canTrade: boolean;
   side: OrderSide;
   value: number;
   maxQty: number;
@@ -610,9 +616,10 @@ const QuantitySlider = (props: {
   setMaxQty: () => void;
   onValueChange: (value: number) => void;
 }) => {
+  const { canTrade } = props;
   const color = useMemo(
-    () => (props.side === OrderSide.BUY ? "buy" : "sell"),
-    [props.side]
+    () => (canTrade ? props.side === OrderSide.BUY ? "buy" : "sell" : undefined),
+    [props.side, canTrade]
   );
 
   const maxLabel = useMemo(() => {
@@ -622,7 +629,7 @@ const QuantitySlider = (props: {
   return (
     <div>
       <Slider.single
-        disabled={props.maxQty === 0}
+        disabled={props.maxQty === 0 || !canTrade}
         value={props.value}
         color={color}
         markCount={4}
@@ -632,8 +639,8 @@ const QuantitySlider = (props: {
         onValueChange={props.onValueChange}
       />
       <Flex justify={"between"} pt={2}>
-        <Text.numeral rule={"percentages"} size={"2xs"} color={color}>
-          {props.currentQtyPercentage}
+        <Text.numeral rule={"percentages"} size={"2xs"} color={color} dp={2} padding={false}>
+          {canTrade ? props.currentQtyPercentage : 0}
         </Text.numeral>
         <Flex>
           <button
@@ -645,8 +652,8 @@ const QuantitySlider = (props: {
           >
             {maxLabel}
           </button>
-          <Text.numeral size={"2xs"} color={color} dp={props.dp}>
-            {props.maxQty}
+          <Text.numeral size={"2xs"} color={color} dp={props.dp} padding={false}>
+            {canTrade ? props.maxQty : 0}
           </Text.numeral>
         </Flex>
       </Flex>
@@ -660,6 +667,7 @@ const OrderTypeSelect = (props: {
   type: OrderType;
   onChange: (type: OrderType) => void;
   side: OrderSide;
+  canTrade: boolean;
 }) => {
   const options = [
     { label: "Limit order", value: OrderType.LIMIT },
@@ -669,11 +677,12 @@ const OrderTypeSelect = (props: {
   ];
   return (
     <Select.options
+      currentValue={props.type}
       value={props.type}
       options={options}
       onValueChange={props.onChange}
       contentProps={{
-        className: "oui-bg-base-8",
+        className: "oui-bg-base-8 oui-w-full",
       }}
       valueFormatter={(value, option) => {
         const item = options.find((o) => o.value === value);
@@ -683,7 +692,7 @@ const OrderTypeSelect = (props: {
         return (
           <Text
             size={"xs"}
-            color={props.side === OrderSide.BUY ? "buy" : "sell"}
+            color={ props.canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined}
           >
             {item?.label.replace(" order", "")}
           </Text>
@@ -697,11 +706,13 @@ const OrderTypeSelect = (props: {
 // -----------Order type Select Component end ------------
 
 function AssetInfo(props: {
+  canTrade: boolean;
   quote: string;
   estLiqPrice: number | null;
   estLeverage: number | null;
   currentLeverage: number | null;
 }) {
+  const { canTrade } = props;
   return (
     <div className={"oui-space-y-[2px] xl:oui-space-y-1"}>
       <Flex justify={"between"}>
@@ -712,7 +723,7 @@ function AssetInfo(props: {
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
-          {props.estLiqPrice ?? "--"}
+          {canTrade ? (props.estLiqPrice ?? "--") : '--'}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"}>
@@ -724,7 +735,7 @@ function AssetInfo(props: {
             intensity: 80,
           })}
         >
-          <Text.numeral unit="x">{props.currentLeverage ?? '--'}</Text.numeral>
+          <Text.numeral unit={canTrade ? "x" : undefined}>{canTrade ? (props.currentLeverage ?? '--') : '--'}</Text.numeral>
           {props.estLeverage && (
             <>
               <svg

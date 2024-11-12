@@ -12,9 +12,8 @@ import {
 import { Box, Button } from "@orderly.network/ui";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
-const networkId = "testnet";
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   brokerId: "orderly",
   brokerName: "Orderly",
   env: "staging",
@@ -34,7 +33,7 @@ const meta: Meta<typeof ExpandMarketsWidget> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyAppProvider networkId={networkId} configStore={configStore}>
+        <OrderlyAppProvider configStore={configStore}>
           <Story />
         </OrderlyAppProvider>
       </WalletConnectorProvider>

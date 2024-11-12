@@ -439,7 +439,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     isEditing,
   } = props;
   const [needConfirm, setNeedConfirm] = useLocalStorage(
-    "orderly_position_tp_sl_confirm",
+    "orderly_order_confirm",
     true
   );
   const textClassName = textVariants({
@@ -563,7 +563,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <Checkbox
             id="disabledConfirm"
             color="white"
-            checked={!needConfirm}
+            checked={needConfirm}
             onCheckedChange={(check) => {
               setNeedConfirm(!check);
             }}

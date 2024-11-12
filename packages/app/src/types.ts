@@ -27,6 +27,9 @@ export type OrderlyAppConfig = {
     [position in ExtensionPosition]: ComponentType;
   };
 } & Partial<
-  Omit<ConfigProviderProps, "brokerId" | "brokerName" | "configStore">
+  Omit<
+    ConfigProviderProps,
+    "brokerId" | "brokerName" | "configStore" | "networkId"
+  >
 > &
   ConfigProviderExclusionProps;

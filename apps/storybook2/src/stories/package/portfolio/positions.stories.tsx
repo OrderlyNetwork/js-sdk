@@ -13,9 +13,9 @@ const meta: Meta<typeof PositionsModule.PositionsPage> = {
     (Story) => (
       <WalletConnectorProvider>
         <OrderlyAppProvider
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
         >
           <Box className="oui-h-[calc(100vh)]" p={6}>
             <Story />

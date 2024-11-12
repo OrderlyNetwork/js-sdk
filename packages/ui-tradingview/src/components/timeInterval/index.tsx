@@ -155,6 +155,7 @@ function DesktopTimeInterval(props: IProps) {
           key={item.value}
           className={cn(
             "oui-cursor-pointer oui-px-2",
+            "hover:oui-text-base-contrast-80",
             props.interval === item.value &&
               "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded"
           )}

@@ -8,12 +8,10 @@ import {
   APIManagerModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { CustomConfigStore } from "@orderly.network/hooks";
-
-const networkId = "testnet";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
 const configStore = new CustomConfigStore({
-  networkId,
+  networkId: "testnet",
   env: "qa",
   brokerId: "orderly",
   brokerName: "Orderly",
@@ -25,7 +23,7 @@ const meta: Meta<typeof Scaffold> = {
   decorators: [
     (Story: any) => (
       <WalletConnectorProvider>
-        <OrderlyAppProvider networkId={networkId} configStore={configStore}>
+        <OrderlyAppProvider configStore={configStore}>
           <Story />
         </OrderlyAppProvider>
       </WalletConnectorProvider>

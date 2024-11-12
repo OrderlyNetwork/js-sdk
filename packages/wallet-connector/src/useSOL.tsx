@@ -3,7 +3,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ChainNamespace } from "@orderly.network/types";
 import { WalletState } from "@orderly.network/hooks";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { WalletAdapterNetwork, WalletNotReadyError } from "@solana/wallet-adapter-base";
 import { SolanaChains } from "./config";
 
 
@@ -62,6 +62,16 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
       solanaPromiseRef.current.connectReject = reject;
     });
   };
+
+  const handleSolanaError = (e: Error) => {
+    console.log('solan connect error', e);
+
+    if (e instanceof WalletNotReadyError) {
+      console.log('-- need toast wallet not ready');
+
+    }
+    return solanaDisconnect();
+  }
 
   const connect = async () => {
     initPromiseRef();
@@ -127,6 +137,7 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
       })
       .catch((e) => {
         console.log("connect solana error", e);
+        handleSolanaError(e);
         return Promise.reject(e);
       })
       .finally(() => {
@@ -247,6 +258,10 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
     if (!solanaWallet) {
       return;
     }
+    if (!isManual.current) {
+      solanaDisconnect()
+      return;
+    }
     console.log("-- connect", solanaWallet);
 
     if (solanaPromiseRef.current) {
@@ -259,6 +274,7 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
       })
       .catch((e) => {
         solanaPromiseRef.current.connectReject(e);
+        handleSolanaError(e);
       });
   }, [solanaWallet, solanaConnect]);
 

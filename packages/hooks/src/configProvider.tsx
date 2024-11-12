@@ -41,7 +41,6 @@ export type BaseConfigProviderProps = {
   contracts?: IContract;
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
-  networkId: NetworkId;
   chainFilter?: filteredChains | filterChainsFunc;
   customChains?: Chains<undefined, undefined>;
 };
@@ -50,29 +49,18 @@ export type ConfigProviderExclusionProps =
   | {
       brokerId: string;
       brokerName?: string;
+      networkId: NetworkId;
       configStore?: never;
     }
   | {
       brokerId?: never;
       brokerName?: never;
+      networkId?: never;
       configStore: ConfigStore;
     };
 
 export type ConfigProviderProps = BaseConfigProviderProps &
   ConfigProviderExclusionProps;
-
-// export type ConfigProviderProps = {
-//   configStore?: ConfigStore;
-//   keyStore?: OrderlyKeyStore;
-//   contracts?: IContract;
-//   // getWalletAdapter?: getWalletAdapterFunc;
-//   walletAdapters?: WalletAdapter[];
-//   brokerId: string;
-//   brokerName?: string;
-//   networkId: NetworkId;
-//   chainFilter?: filteredChains | filterChainsFunc;
-//   customChains?: Chains<undefined, undefined>;
-// };
 
 export const OrderlyConfigProvider: FC<
   PropsWithChildren<ConfigProviderProps>
