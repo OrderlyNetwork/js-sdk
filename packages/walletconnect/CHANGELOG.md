@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 1.5.16-preReleaseV2-3.6
+
+### Patch Changes
+
+- update
+
 ## 1.5.16-preReleaseV2-3.5
 
 ### Patch Changes
