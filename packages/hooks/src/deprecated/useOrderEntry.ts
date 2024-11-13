@@ -737,7 +737,7 @@ export function useOrderEntry(
 
     const leverage = orderUtils.estLeverage({
       totalCollateral,
-      positions,
+      positions: positions === null ? [] : positions,
       newOrder: {
         symbol: parsedData.symbol,
         qty: result.quantity,
