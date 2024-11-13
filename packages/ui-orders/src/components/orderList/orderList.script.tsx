@@ -97,7 +97,7 @@ export const useOrderListScript = (props: {
     excludes,
   });
 
-  const localPageSizeKey = `oui-${type}_pageSize`;
+  const localPageSizeKey = `orderly_${type}_pageSize`;
   const [typePageSize, setTypePageSize] = useLocalStorage(
     localPageSizeKey,
     defaultPageSize
