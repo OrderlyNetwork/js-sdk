@@ -1,6 +1,6 @@
 import "./install";
 
-export { Button } from "./button";
+export * from "./button";
 export { Box, boxVariants } from "./box";
 export { Grid } from "./grid";
 export { Flex } from "./flex";

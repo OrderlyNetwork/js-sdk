@@ -14,6 +14,7 @@ import {
   inputFormatter,
   Checkbox,
   convertValueToPercentage,
+  ThrottledButton,
 } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { TPSLBuilderState } from "./useTPSL.script";
@@ -92,7 +93,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         >
           Cancel
         </Button>
-        <Button
+        <ThrottledButton
           size={"md"}
           data-testid={"tpsl-confirm"}
           disabled={!props.valid || status.isCreateMutating}
@@ -109,7 +110,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           }}
         >
           Confirm
-        </Button>
+        </ThrottledButton>
       </Grid>
     </div>
   );
@@ -565,7 +566,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <Checkbox
             id="disabledConfirm"
             color="white"
-            checked={needConfirm}
+            checked={!needConfirm}
             onCheckedChange={(check) => {
               setNeedConfirm(!check);
             }}

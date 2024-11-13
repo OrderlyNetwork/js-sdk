@@ -130,8 +130,10 @@ export const useWalletStateHandle = (options: {
     if (!!currentWalletAddress && currentWalletAddress !== account.address) {
       account.setAddress(currentWalletAddress, {
         provider: connectedWallet?.provider,
-        chain: currentChain as any,
-        wallet: {
+        chain: {
+          id: praseChainIdToNumber(currentChain!.id),
+          namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
+        },        wallet: {
           name: connectedWallet.label,
         },
       });
@@ -204,7 +206,7 @@ export const useWalletStateHandle = (options: {
             provider: wallet.provider,
             chain: {
               id: praseChainIdToNumber(wallet.chains[0].id),
-              namespace: wallet.chains[0].namespace,
+              namespace: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
             },
             wallet: {
               name: wallet.label,

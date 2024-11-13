@@ -627,7 +627,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -667,7 +667,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.3.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.49)(typescript@5.6.3)
 
   packages/chart:
     dependencies:
@@ -731,7 +731,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^8.1.0
-        version: 8.1.0(postcss@8.4.39)(typescript@5.6.3)
+        version: 8.1.0(postcss@8.4.49)(typescript@5.6.3)
 
   packages/cli:
     dependencies:
@@ -1447,7 +1447,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -1526,7 +1526,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.49)(typescript@5.6.3)
 
   packages/perp:
     dependencies:
@@ -1630,7 +1630,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -1867,7 +1867,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -2132,6 +2132,9 @@ importers:
       tsup:
         specifier: ^7.1.0
         version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.6.3)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.6.3
 
   packages/ui-connector:
     dependencies:
@@ -2171,7 +2174,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.3.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.49)(typescript@5.6.3)
 
   packages/ui-leverage:
     dependencies:
@@ -2211,7 +2214,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.49)(typescript@5.6.3)
 
   packages/ui-order-entry:
     dependencies:
@@ -2254,7 +2257,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -2306,7 +2309,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -2358,7 +2361,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -2612,7 +2615,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.39)(typescript@5.2.2)
+        version: 7.3.0(postcss@8.4.49)(ts-node@10.9.2)(typescript@5.2.2)
       typescript:
         specifier: ^5.1.6
         version: 5.2.2
@@ -2715,13 +2718,13 @@ importers:
         version: 2.1.1(typescript@5.6.3)
       '@web3-onboard/core':
         specifier: ^2.21.5
-        version: 2.21.5(typescript@5.6.3)
+        version: 2.21.5
       '@web3-onboard/injected-wallets':
         specifier: ^2.10.15
         version: 2.11.0(typescript@5.6.3)
       '@web3-onboard/react':
         specifier: 2.8.16
-        version: 2.8.16(react@18.3.1)(typescript@5.6.3)
+        version: 2.8.16(react@18.3.1)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -2737,7 +2740,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12)(postcss@8.4.49)(typescript@5.6.3)
 
   packages/walletconnect:
     dependencies:
@@ -18522,29 +18525,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3-onboard/core@2.21.5(typescript@5.6.3):
-    resolution: {integrity: sha512-e23bmWj0+dC9sbu/TvzPJm0mUikUB/0yAL+Gqh2mmWOpr2GKBpROnRNhevne3IyeDf16mdkUo8wVEO6eGsiANg==}
-    dependencies:
-      '@web3-onboard/common': 2.4.2(typescript@5.6.3)
-      bignumber.js: 9.1.2
-      bnc-sdk: 4.6.9
-      bowser: 2.11.0
-      ethers: 5.5.3
-      eventemitter3: 4.0.7
-      joi: 17.9.1
-      lodash.merge: 4.6.2
-      lodash.partition: 4.6.0
-      nanoid: 4.0.2
-      rxjs: 7.8.1
-      svelte: 3.59.2
-      svelte-i18n: 3.7.4(svelte@3.59.2)
-    transitivePeerDependencies:
-      - bufferutil
-      - typescript
-      - utf-8-validate
-      - zod
-    dev: false
-
   /@web3-onboard/injected-wallets@2.11.0(typescript@5.1.6)(zod@3.21.4):
     resolution: {integrity: sha512-UzRo8suvnev9buTvLOrtegyMQpFlYSldvOiZEUzbrNx2PZ6TVz+pnvt85SeWE02wb2KMcYZ72uJ3jFhWa1ssug==}
     dependencies:
@@ -18627,20 +18607,18 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@web3-onboard/react@2.8.16(react@18.3.1)(typescript@5.6.3):
+  /@web3-onboard/react@2.8.16(react@18.3.1):
     resolution: {integrity: sha512-wnwVGN2fqz0Rax3Z3E6LQJlC0NlXcvz166ZgdFeVj8WPccChPuAdPfkJwWk+GggK7Mw/5n5ehPYltr6pspcX8A==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
-      '@web3-onboard/common': 2.4.2(typescript@5.6.3)
-      '@web3-onboard/core': 2.21.5(typescript@5.6.3)
+      '@web3-onboard/common': 2.3.4
+      '@web3-onboard/core': 2.21.5
       react: 18.3.1
       use-sync-external-store: 1.0.0(react@18.3.1)
     transitivePeerDependencies:
       - bufferutil
-      - typescript
       - utf-8-validate
-      - zod
     dev: false
 
   /@web3-onboard/walletconnect@2.5.1(@types/react@18.2.21)(react@18.2.0):
@@ -35512,7 +35490,7 @@ packages:
       - ts-node
     dev: true
 
-  /tsup@8.1.0(postcss@8.4.39)(typescript@5.6.3):
+  /tsup@8.1.0(postcss@8.4.49)(typescript@5.6.3):
     resolution: {integrity: sha512-UFdfCAXukax+U6KzeTNO2kAARHcWxmKsnvSPXUcfA1D+kU05XDccCrkffCQpFaWDsZfV0jMyTsxU39VfCp6EOg==}
     engines: {node: '>=18'}
     hasBin: true
@@ -35539,8 +35517,8 @@ packages:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss: 8.4.39
-      postcss-load-config: 4.0.2(postcss@8.4.39)
+      postcss: 8.4.49
+      postcss-load-config: 4.0.2(postcss@8.4.49)(ts-node@10.9.2)
       resolve-from: 5.0.0
       rollup: 4.25.0
       source-map: 0.8.0-beta.0

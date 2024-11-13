@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { DialogFooter } from "./dialog";
-import { Button, ButtonProps } from "../button";
+import { Button, ButtonProps, ThrottledButton } from "../button";
 
 export type DialogAction<T = any> = {
   label: string;
@@ -59,7 +59,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     if (actions.primary && typeof actions.primary.onClick === "function") {
       
       buttons.push(
-        <Button
+        <ThrottledButton
           data-testid={actions.primary?.["data-testid"]}
           key="primary"
           onClick={async (event) => {
@@ -79,7 +79,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           fullWidth
         >
           {actions.primary.label}
-        </Button>
+        </ThrottledButton>
       );
     }
 

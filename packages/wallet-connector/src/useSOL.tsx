@@ -2,14 +2,16 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ChainNamespace } from "@orderly.network/types";
+import {useScreen} from '@orderly.network/ui';
 import { useEventEmitter, WalletState } from "@orderly.network/hooks";
-import { WalletAdapterNetwork, WalletNotReadyError } from "@solana/wallet-adapter-base";
+import { WalletAdapterNetwork, WalletNotReadyError, WalletReadyState } from "@solana/wallet-adapter-base";
 import { SolanaChains } from "./config";
 
 
 
 export function useSOL({network}: {network: WalletAdapterNetwork}) {
   const [wallet, setWallet] = useState<WalletState| null>(null);
+  const {isMobile} = useScreen();
   const { connection } = useConnection();
   const { setVisible: setModalVisible, visible } = useWalletModal();
   const {
@@ -72,7 +74,7 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
       ee.emit('wallet:connect-error', {message: 'Please open the wallet app and use the in-app browser.'});
 
     }
-    return solanaDisconnect();
+    solanaDisconnect().then();
   }
 
   const connect = async () => {
@@ -260,11 +262,13 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
     if (!solanaWallet) {
       return;
     }
-    if (!isManual.current) {
-      solanaDisconnect()
+    console.log('-- public key', publicKey, {isMobile});
+    if (isMobile && solanaWallet.readyState === WalletReadyState.Loadable && !isManual.current) {
+      solanaDisconnect().then();
       return;
     }
-    console.log("-- connect", solanaWallet);
+
+    console.log("-- solana refresh auto connect", solanaWallet);
 
     if (solanaPromiseRef.current) {
       solanaPromiseRef.current.walletSelectResolve(solanaWallet);
@@ -278,7 +282,7 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
         solanaPromiseRef.current.connectReject(e);
         handleSolanaError(e);
       });
-  }, [solanaWallet, solanaConnect]);
+  }, [solanaWallet, solanaConnect, publicKey, solanaDisconnect, handleSolanaError, isMobile]);
 
 
   return {
