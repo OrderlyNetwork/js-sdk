@@ -13,20 +13,7 @@ export function useFaucetScript() {
   const { connectedChain, namespace } = useWalletConnector();
   const { state, account } = useAccount();
   const config = useConfig();
-  const operatorUrl = useMemo(() => {
-    const operatorUrl = config.get<string>("operatorUrl");
-    return operatorUrl;
-    // if (typeof operatorUrlObj === "object") {
-    //   if (namespace === ChainNamespace.solana) {
-    //     return operatorUrlObj["solana"];
-    //   } else {
-    //     return operatorUrlObj["evm"];
-    //   }
-    // }
-    // throw Error(
-    //   "Operator url should be Object, need solana and evm operator url"
-    // );
-  }, [config]);
+  const operatorUrl = config.get<string>("operatorUrl");
 
   const [getTestUSDC, { isMutating }] = useMutation(
     `${operatorUrl}/v1/faucet/usdc`
