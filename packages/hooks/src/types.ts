@@ -41,7 +41,7 @@ export interface Calculator<T = any> {
   name: string;
   calc: (scope: CalculatorScope, data: any, ctx: CalculatorCtx) => T | null;
   cache: (result: T) => void;
-  update: (data: T) => void;
+  update: (data: T, scope: CalculatorScope) => void;
 }
 
 export interface CalculatorScheduler {

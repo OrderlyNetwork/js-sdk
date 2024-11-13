@@ -77,4 +77,4 @@ export {
   // markPriceActions,
   useMarkPriceBySymbol,
 } from "./useMarkPrice/useMarkPriceStore";
-export { usePositionActions } from "./usePositionStream/usePositionStore";
+export { usePositionActions } from "./usePositionStream/usePosition.store";

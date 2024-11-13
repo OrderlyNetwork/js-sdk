@@ -9,7 +9,7 @@ import { useCollateral } from "./useCollateral";
 
 import { pathOr } from "ramda";
 import { useOrderStream } from "./useOrderStream/useOrderStream";
-import { usePositions } from "./usePositionStream/usePositionStore";
+import { usePositions } from "./usePositionStream/usePosition.store";
 import { useAccountInfo } from "./appStore";
 
 // const positionsPath = pathOr([], [0, "rows"]);
@@ -92,9 +92,9 @@ export const useMaxQty = (
       OrderSide.SELL
     );
 
-    const otherPositions = positions.filter(
-      (item: API.Position) => item.symbol !== symbol
-    );
+    const otherPositions = !Array.isArray(positions)
+      ? []
+      : positions.filter((item: API.Position) => item.symbol !== symbol);
 
     const otherOrders = filterAlgoOrders.filter(
       (item: API.Order) => item.symbol !== symbol

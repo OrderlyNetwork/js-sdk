@@ -5,8 +5,12 @@ import { immer } from "zustand/middleware/immer";
 
 export const DEFAULT_POSITIONS = "positions";
 
-export const POSITION_EMPTY: API.PositionsTPSLExt = {
-  rows: [],
+type EmptyPosition = Omit<API.PositionsTPSLExt, "rows"> & {
+  rows: API.PositionsTPSLExt["rows"] | null;
+};
+
+export const POSITION_EMPTY: EmptyPosition = {
+  rows: null,
   margin_ratio: 0,
   initial_margin_ratio: 0,
   maintenance_margin_ratio: 0,
@@ -27,8 +31,8 @@ export const POSITION_EMPTY: API.PositionsTPSLExt = {
 
 type PositionState = {
   positions: {
-    all: API.PositionsTPSLExt;
-    [key: string]: API.PositionsTPSLExt;
+    all: EmptyPosition;
+    [key: string]: EmptyPosition;
   };
 };
 
@@ -37,6 +41,7 @@ type PositionActions = {
   setPositions: (key: string, positions: API.PositionsTPSLExt) => void;
   // setAggregated: (aggregated: API.PositionAggregated) => void;
   // getPositions: () => SWRResponse<API.PositionInfo>;
+  clearAll: () => void;
 };
 
 const usePositionStore = create<
@@ -53,6 +58,13 @@ const usePositionStore = create<
       setPositions: (key: string, positions: API.PositionsTPSLExt) => {
         set((state) => {
           state.positions[key] = positions;
+        });
+      },
+      clearAll: () => {
+        set((state) => {
+          state.positions = {
+            all: POSITION_EMPTY,
+          };
         });
       },
     },

@@ -4,7 +4,7 @@ import { CalculatorCtx, CalculatorScope } from "../../types";
 
 import { account, positions } from "@orderly.network/perp";
 
-import { usePositionStore } from "../usePositionStream/usePositionStore";
+import { usePositionStore } from "../usePositionStream/usePosition.store";
 import { BaseCalculator } from "./baseCalculator";
 import { propOr } from "ramda";
 import { zero } from "@orderly.network/utils";
@@ -59,7 +59,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     return data;
   }
 
-  update(data: API.PositionsTPSLExt | null) {
+  update(data: API.PositionsTPSLExt | null, scope: CalculatorScope) {
     if (!!data) {
       usePositionStore.getState().actions.setPositions(this.symbol, data);
     }
@@ -67,6 +67,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     /// update position loading status
     if (
       !!data &&
+      Array.isArray(data.rows) &&
       data.rows.length > 0 &&
       useApiStatusStore.getState().apis.positions.loading
     ) {
@@ -80,6 +81,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   ) {
     let positions = this.getPosition(markPrice, ctx);
 
+    // console.log("-------PositionCalculator calcByMarkPrice", positions);
+
     if (!positions) {
       return null;
     }
@@ -91,7 +94,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       ...positions,
       rows: positions.rows.map((item: API.PositionTPSLExt) => ({
         ...item,
-        mark_price: markPrice[item.symbol],
+        mark_price: markPrice[item.symbol] || item.mark_price,
       })),
     };
 
@@ -115,7 +118,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       ...positions,
       rows: positions.rows.map((item: API.PositionTPSLExt) => ({
         ...item,
-        index_price: indexPrice[item.symbol],
+        index_price:
+          indexPrice[item.symbol] || item.index_price || item.mark_price,
       })),
     };
 
@@ -300,6 +304,10 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     return positions;
   }
+
+  static logPosition = (symbol = "all") => {
+    return usePositionStore.getState().positions[symbol];
+  };
 }
 
 // const usePositionCalculator = () => new PositionCalculator();

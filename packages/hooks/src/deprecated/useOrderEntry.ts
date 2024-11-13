@@ -24,7 +24,7 @@ import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
-import { usePositions } from "../orderly/usePositionStream/usePositionStore";
+import { usePositions } from "../orderly/usePositionStream/usePosition.store";
 // import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {

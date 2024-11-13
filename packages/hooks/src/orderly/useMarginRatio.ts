@@ -3,7 +3,7 @@ import { account } from "@orderly.network/perp";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useCollateral } from "./useCollateral";
 import { zero } from "@orderly.network/utils";
-import { usePositionStore } from "./usePositionStream/usePositionStore";
+import { usePositionStore } from "./usePositionStream/usePosition.store";
 import { useAccount } from "../useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";
 
@@ -60,7 +60,7 @@ export const useMarginRatio = (): MarginRatioReturn => {
       const item = rows[index];
       if (item.mm !== null) {
         // console.log("calc add mm", item.mm, positionsMM, notional);
-        
+
         positionsMM = positionsMM.add(item.mm);
       }
     }

@@ -44,7 +44,7 @@ class MarketCalculator extends BaseCalculator<any> {
     return null;
   }
 
-  update(data: any) {
+  update(data: any, scope: CalculatorScope) {
     if (!data) return;
     useMarketStore.getState().actions.updateTicker(data);
   }

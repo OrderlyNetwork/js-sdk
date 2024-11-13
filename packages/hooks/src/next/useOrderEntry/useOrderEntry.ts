@@ -22,7 +22,7 @@ import {
 } from "./helper";
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
-import { usePositions } from "../../orderly/usePositionStream/usePositionStore";
+import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
