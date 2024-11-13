@@ -33,6 +33,7 @@ export enum ExtensionPositionEnum {
   Logo = "logo",
   Toast = "toast",
   /// Layout components
+  MainMenus = "mainMenus",
   PortfolioLayout = "portfolioLayout",
   TradingRewardsLayout = "tradingRewardsLayout",
   AffiliateLayoutLayout = "affiliateLayoutLayout",
