@@ -87,6 +87,29 @@ export const OrderTime: FC<OrderCellState> = (props) => {
   );
 };
 
+export const OrderState: FC<OrderCellState> = (props) => {
+  const { item } = props;
+
+  // @ts-ignore
+  const status = item.status || item.algo_status;
+
+  const label = () => {
+    if (status === "NEW") {
+      return upperCaseFirstLetter("pending");
+    }
+    return upperCaseFirstLetter(status);
+  }
+
+  return (
+    <Text.formatted
+      intensity={36}
+      size="2xs"
+    >
+      {label()}
+    </Text.formatted>
+  );
+};
+
 export const Qty: FC<OrderCellState> = (props) => {
   const { item } = props;
 

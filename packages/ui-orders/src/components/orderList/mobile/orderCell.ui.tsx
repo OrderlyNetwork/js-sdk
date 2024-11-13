@@ -19,6 +19,7 @@ import {
   AvgPrice,
   OrderPrice,
   RealizedPnL,
+  OrderState,
 } from "./items";
 import { EditBtnWidget } from "./editBtn";
 import { CancelBtnWidget } from "./cancelBtn";
@@ -55,8 +56,9 @@ export const Header: FC<OrderCellState> = (props) => {
         <Symbol {...props} />
         <OrderTime {...props} />
       </Flex>
-      <Flex width={"100%"}>
+      <Flex width={"100%"} justify={"between"}>
         <OrderTypeView {...props} />
+        {props.type === TabType.orderHistory && <OrderState {...props} />}
       </Flex>
     </Flex>
   );
