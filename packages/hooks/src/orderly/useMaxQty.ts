@@ -49,7 +49,10 @@ export const useMaxQty = (
 
     // const positions = positionsPath(positionsData);
 
-    const positionQty = account.getQtyFromPositions(positions, symbol);
+    const positionQty = account.getQtyFromPositions(
+      positions === null ? [] : positions,
+      symbol
+    );
 
     if (reduceOnly) {
       if (positionQty > 0) {
