@@ -260,11 +260,9 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
     if (!solanaWallet) {
       return;
     }
-    if (!isManual.current) {
-      solanaDisconnect()
-      return;
-    }
-    console.log("-- connect", solanaWallet);
+    console.log('-- public key', publicKey);
+
+    console.log("-- solana refresh auto connect", solanaWallet);
 
     if (solanaPromiseRef.current) {
       solanaPromiseRef.current.walletSelectResolve(solanaWallet);
@@ -278,7 +276,7 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
         solanaPromiseRef.current.connectReject(e);
         handleSolanaError(e);
       });
-  }, [solanaWallet, solanaConnect]);
+  }, [solanaWallet, solanaConnect, publicKey]);
 
 
   return {

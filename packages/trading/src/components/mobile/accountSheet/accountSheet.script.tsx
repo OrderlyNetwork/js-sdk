@@ -39,10 +39,7 @@ export const useAccountSheetScript = (
     );
   }, [state.status, connectedChain]);
 
-  const operatorUrl = useMemo(() => {
-    const operatorUrl = config.get<string>("operatorUrl");
-    return operatorUrl;
-  }, [config]);
+  const operatorUrl = config.get<string>("operatorUrl");
 
   const onCopyAddress = () => {
     navigator.clipboard.writeText(address ?? "");

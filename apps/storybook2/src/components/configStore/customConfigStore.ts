@@ -11,9 +11,8 @@ const APIS: Record<ENV_NAME, URLS> = {
     publicWsUrl: "wss://dev-ws-v2.orderly.org",
     privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
     operatorUrl: {
-      evm: "https://dev-operator-v2.orderly.network",
-      // todo dev solana faucet url is not given
-      solana: "https://qa-sol-operator.orderly.network",
+      EVM: "https://dev-operator-v2.orderly.network",
+      SOL: "https://qa-sol-operator.orderly.network",
     },
   },
   qa: {
@@ -21,8 +20,8 @@ const APIS: Record<ENV_NAME, URLS> = {
     publicWsUrl: "wss://qa-ws-evm.orderly.org",
     privateWsUrl: "wss://qa-ws-private-evm.orderly.org",
     operatorUrl: {
-      evm: "https://qa-operator-evm.orderly.network",
-      solana: "https://qa-sol-operator.orderly.network",
+      EVM: "https://qa-operator-evm.orderly.network",
+      SOL: "https://qa-sol-operator.orderly.network",
     },
   },
 };
