@@ -423,7 +423,7 @@ export type PositionTPSLConfirmProps = {
   baseDP: number;
   quoteDP: number;
   isEditing?: boolean;
-  isPositionTPSL: boolean;
+  isPositionTPSL?: boolean;
 };
 
 // ------------ Position TP/SL Confirm dialog start------------
@@ -438,7 +438,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     quoteDP,
     baseDP,
     isEditing,
-    isPositionTPSL,
+    isPositionTPSL: _isPositionTPSL,
   } = props;
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_order_confirm",
@@ -451,7 +451,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
   // console.log("PositionTPSLConfirm", qty, maxQty, quoteDP);
 
-  // const isPositionTPSL = qty >= maxQty;
+  const isPositionTPSL = _isPositionTPSL ?? qty >= maxQty;
 
   return (
     <>
