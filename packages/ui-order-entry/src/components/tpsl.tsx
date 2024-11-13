@@ -232,6 +232,7 @@ const TPSLTriggerPriceInput = (props: {
       // onChange={props.onChange}
       onValueChange={props.onChange}
       formatters={[
+        inputFormatter.numberFormatter,
         inputFormatter.dpFormatter(props.quote_dp ?? 2),
         inputFormatter.currencyFormatter,
       ]}
