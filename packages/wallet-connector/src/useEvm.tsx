@@ -24,7 +24,7 @@ export function useEvm() {
   ] = useSetChain();
 
   const connected = useMemo(() => {
-    return !!(wallet && wallet.accounts && wallet.accounts[0].address);
+    return !!(wallet && wallet.accounts && wallet.accounts[0] && wallet.accounts[0].address);
   }, [wallet]);
 
   const disconnect = async () => {
