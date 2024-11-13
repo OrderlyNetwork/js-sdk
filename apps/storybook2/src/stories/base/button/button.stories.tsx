@@ -5,7 +5,10 @@ import {
   Flex,
   ArrowUpSquareFillIcon,
   ArrowDownSquareFillIcon,
+  DebouncedButton,
+  ThrottledButton,
 } from "@orderly.network/ui";
+import { useState } from "react";
 
 const meta: Meta<typeof Button> = {
   title: "Base/Button",
@@ -122,6 +125,30 @@ export const IconButton: Story = {
         <Button {...args} trailing={<ArrowDownSquareFillIcon />}>
           Trailing element
         </Button>
+      </Flex>
+    );
+  },
+};
+
+export const Debounce: Story = {
+  render: (args) => {
+    return (
+      <Flex gapX={3}>
+        <ThrottledButton
+          throttleDuration={5000}
+          onClick={(event: any) => {
+            console.log("event 1", Date.now());
+          }}
+          children={`throttle 5000`}
+        />
+        <ThrottledButton
+          throttleDuration={1000}
+          onClick={(event: any) => {
+            console.log("event 2", Date.now());
+          }}
+          color={"danger"}
+          children={`throttle 1000`}
+        />
       </Flex>
     );
   },
