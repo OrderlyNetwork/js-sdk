@@ -47,6 +47,11 @@ export const useOrderListScript = (props: {
     filterConfig,
   } = props;
 
+  const manualPagination = useMemo(() => {
+    // pending and ts_sl list use client pagination
+    return ordersStatus !== OrderStatus.INCOMPLETE;
+  }, [ordersStatus]);
+
   const defaultPageSize = 50;
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
     pageSize: defaultPageSize,
@@ -90,8 +95,9 @@ export const useOrderListScript = (props: {
     symbol: props.symbol,
     status: orderStatus,
     side: ordersSide,
-    page: enableLoadMore ? undefined : page,
-    size: pageSize,
+    page: enableLoadMore ? undefined : manualPagination ? page : undefined,
+    // pending and ts_sl list get all data
+    size: manualPagination ? pageSize : 500,
     dateRange,
     includes,
     excludes,
@@ -156,12 +162,27 @@ export const useOrderListScript = (props: {
     useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
 
   const pagination = useMemo(() => {
+    const _meta = manualPagination
+      ? meta
+      : {
+          total: dataSource?.length,
+          current_page: page,
+          records_per_page: pageSize,
+        };
     return {
-      ...parseMeta(meta),
+      ...parseMeta(_meta),
       onPageChange: setPage,
       onPageSizeChange: setPageSize,
     } as PaginationMeta;
-  }, [meta, setPage, setPageSize]);
+  }, [
+    meta,
+    setPage,
+    setPageSize,
+    manualPagination,
+    page,
+    pageSize,
+    dataSource,
+  ]);
 
   return {
     type,
@@ -178,6 +199,7 @@ export const useOrderListScript = (props: {
     setPageSize,
     meta: parseMeta(meta),
     pagination,
+    manualPagination,
 
     // filter
     onFilter,
