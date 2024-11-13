@@ -9,8 +9,8 @@
     "codemod": "node ./bin/cli.js"
   },
   "keywords": [
-    "Orderly",
-    "Orderly SDK"
+    "orderly",
+    "codemod"
   ],
   "dependencies": {
     "enquirer": "^2.4.1",
