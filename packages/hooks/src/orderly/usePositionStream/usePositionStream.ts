@@ -7,14 +7,14 @@ import {
   type API,
 } from "@orderly.network/types";
 import { pathOr } from "ramda";
-import { POSITION_EMPTY, usePositionStore } from "./usePositionStore";
+import { POSITION_EMPTY, usePositionStore } from "./usePosition.store";
 import { useCalculatorService } from "../../useCalculatorService";
 import { CalculatorScope } from "../../types";
 import { useAppStore } from "../appStore";
 import { omit } from "ramda";
 import { PositionCalculator } from "../calculator/positions";
 import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
-import { useOrderStream } from "../orderlyHooks";
+import { useMarkPricesStream, useOrderStream } from "../orderlyHooks";
 import { findPositionTPSLFromOrders, findTPSLFromOrder } from "./utils";
 // import { usePosition } from "./usePosition";
 
@@ -44,6 +44,8 @@ export const usePositionStream = (
 
   const positionCalculator = useRef<PositionCalculator | null>(null);
   const calcutlatorService = useCalculatorService();
+
+  const markPrices = useMarkPricesStream();
 
   // const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 10);
 
@@ -94,10 +96,11 @@ export const usePositionStream = (
   }, [symbol]);
 
   const formattedPositions: [
-    API.PositionTPSLExt[],
+    API.PositionTPSLExt[] | null,
     Omit<API.PositionsTPSLExt, "rows">
   ] = usePositionStore((state) => {
     const positions = state.positions[symbol] ?? POSITION_EMPTY;
+
     return [positions.rows, omit(["rows"], positions)];
   });
 
@@ -107,6 +110,14 @@ export const usePositionStream = (
 
   const positionsRows = useMemo(() => {
     let rows = formattedPositions[0];
+    if (!rows) return [];
+
+    // rows.forEach((item) => {
+    //   if (item.position_qty > 0) {
+    //     console.log(markPrices.data[item.symbol], item.mark_price);
+    //   }
+    // });
+
     if (!includedPendingOrder) {
       rows = rows.filter((item) => item.position_qty !== 0);
     } else {
@@ -159,7 +170,13 @@ export const usePositionStream = (
     }
 
     return rows;
-  }, [formattedPositions, includedPendingOrder, calcMode, tpslOrders]);
+  }, [
+    formattedPositions,
+    includedPendingOrder,
+    calcMode,
+    tpslOrders,
+    markPrices,
+  ]);
 
   const aggregated = useMemo(() => {
     let data = formattedPositions[1];

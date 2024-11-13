@@ -1,5 +1,6 @@
 import { Calculator, CalculatorScheduler, CalculatorScope } from "../../types";
 import { CalculatorContext } from "./calculatorContext";
+import { PositionCalculator } from "./positions";
 
 type CalcOptions = {
   skipUpdate?: boolean;
@@ -69,13 +70,13 @@ class CalculatorService {
   }
 
   async calc(scope: CalculatorScope, data: any, options?: CalcOptions) {
-    // console.log("[calc]:", scope, data, options);
     if (scope !== CalculatorScope.POSITION) {
       if (!options?.skipWhenOnPause) {
         console.error(`----`);
       }
     }
     const ctx = new CalculatorContext(scope, data);
+    // console.log("-------------[calc]:", scope, ctx.isReady, data);
 
     // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
     if (!ctx.isReady && !options?.skipPending) {
@@ -100,14 +101,8 @@ class CalculatorService {
     // console.log("[handlePendingCalc]:", this.pendingCalc);
     if (this.pendingCalc.length === 0) return;
     this.calcQueue = [...this.pendingCalc, ...this.calcQueue];
+
     this.pendingCalc = [];
-    // while (this.pendingCalc.length) {
-    //   const item = this.pendingCalc.shift();
-    //   if (item) {
-    //     const { scope, data } = item;
-    //     await this.calc(scope, data, { skipUpdate: false });
-    //   }
-    // }
   }
 
   private async handleCalcQueue(context?: CalculatorContext) {

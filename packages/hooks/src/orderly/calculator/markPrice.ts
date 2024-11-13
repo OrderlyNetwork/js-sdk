@@ -9,7 +9,7 @@ class MarkPriceCalculator extends BaseCalculator<any> {
     return data;
   }
 
-  update(data: any) {
+  update(data: any, scope: CalculatorScope) {
     useMarkPriceStore.getState().actions.updateMarkPrice(data);
   }
 }

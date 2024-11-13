@@ -27,7 +27,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
           "oui-rounded-md",
           "oui-w-[69px] oui-h-[28px]",
           "oui-cursor-pointer oui-transition-all",
-          "oui-bg-base-4",
+          "oui-bg-base-6 hover:oui-bg-base-4",
           "oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
         )}
         gapX={1}

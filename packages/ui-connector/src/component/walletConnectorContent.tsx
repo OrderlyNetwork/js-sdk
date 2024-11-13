@@ -41,12 +41,12 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [firstShowDialog] = useLocalStorage(
-    "oui-first-show-wallet-connector-dialog",
+    "orderly-first-show-wallet-connector-dialog",
     undefined
   );
   useEffect(() => {
     return () => {
-      localStorage.setItem("oui-first-show-wallet-connector-dialog", "1");
+      localStorage.setItem("orderly-first-show-wallet-connector-dialog", "1");
     };
   }, []);
 

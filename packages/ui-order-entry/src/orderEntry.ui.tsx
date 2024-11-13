@@ -20,6 +20,7 @@ import {
   Switch,
   Text,
   textVariants,
+  ThrottledButton,
   toast,
 } from "@orderly.network/ui";
 import {
@@ -120,7 +121,7 @@ export const OrderEntry = (
     };
   }, [errorMsgVisible]);
 
-  const onSubmit = (): void => {
+  const onSubmit = () => {
     helper
       .validate()
       .then(
@@ -144,7 +145,9 @@ export const OrderEntry = (
         }
       )
       .then(() => {
-        return submit();
+        return submit().then(() => {
+          setOrderValue("order_quantity", "");
+        });
       })
       .catch((error) => {
         console.log("catch:", error);
@@ -165,7 +168,7 @@ export const OrderEntry = (
         ref={props.containerRef}
       >
         {/* Buy Sell button */}
-        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
+        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-3">
           <div
             className={
               "oui-grid oui-grid-cols-2 oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]"
@@ -267,7 +270,7 @@ export const OrderEntry = (
         />
         {/* Submit button */}
         <AuthGuard buttonProps={{ fullWidth: true }}>
-          <Button
+          <ThrottledButton
             fullWidth
             id={"order-entry-submit-button"}
             // color={side === OrderSide.BUY ? "buy" : "sell"}
@@ -283,7 +286,7 @@ export const OrderEntry = (
             loading={props.isMutating}
           >
             {buttonLabel}
-          </Button>
+          </ThrottledButton>
         </AuthGuard>
         {/* Asset info */}
         <AssetInfo
@@ -293,7 +296,7 @@ export const OrderEntry = (
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
         />
-        <Divider />
+        <Divider className="oui-w-full"/>
         {/* TP SL switch and content */}
         <OrderTPSL
           // onCancelTPSL={props.cancelTP_SL}
@@ -325,7 +328,11 @@ export const OrderEntry = (
           }}
         />
         {/* reduce only switch and label */}
-        <Flex justify={"between"} itemAlign={"center"} className="!oui-mt-[0px] xl:!oui-mt-3">
+        <Flex
+          justify={"between"}
+          itemAlign={"center"}
+          className="!oui-mt-[0px] xl:!oui-mt-3"
+        >
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
               className="oui-h-[14px]"
@@ -618,7 +625,8 @@ const QuantitySlider = (props: {
 }) => {
   const { canTrade } = props;
   const color = useMemo(
-    () => (canTrade ? props.side === OrderSide.BUY ? "buy" : "sell" : undefined),
+    () =>
+      canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined,
     [props.side, canTrade]
   );
 
@@ -638,8 +646,14 @@ const QuantitySlider = (props: {
         step={props.tick}
         onValueChange={props.onValueChange}
       />
-      <Flex justify={"between"} pt={2}>
-        <Text.numeral rule={"percentages"} size={"2xs"} color={color} dp={2} padding={false}>
+      <Flex justify={"between"} className="oui-pt-1 xl:oui-pt-2">
+        <Text.numeral
+          rule={"percentages"}
+          size={"2xs"}
+          color={color}
+          dp={2}
+          padding={false}
+        >
           {canTrade ? props.currentQtyPercentage : 0}
         </Text.numeral>
         <Flex>
@@ -652,7 +666,12 @@ const QuantitySlider = (props: {
           >
             {maxLabel}
           </button>
-          <Text.numeral size={"2xs"} color={color} dp={props.dp} padding={false}>
+          <Text.numeral
+            size={"2xs"}
+            color={color}
+            dp={props.dp}
+            padding={false}
+          >
             {canTrade ? props.maxQty : 0}
           </Text.numeral>
         </Flex>
@@ -692,7 +711,13 @@ const OrderTypeSelect = (props: {
         return (
           <Text
             size={"xs"}
-            color={ props.canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined}
+            color={
+              props.canTrade
+                ? props.side === OrderSide.BUY
+                  ? "buy"
+                  : "sell"
+                : undefined
+            }
           >
             {item?.label.replace(" order", "")}
           </Text>
@@ -723,7 +748,7 @@ function AssetInfo(props: {
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
-          {canTrade ? (props.estLiqPrice ?? "--") : '--'}
+          {canTrade ? props.estLiqPrice ?? "--" : "--"}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"}>
@@ -735,7 +760,9 @@ function AssetInfo(props: {
             intensity: 80,
           })}
         >
-          <Text.numeral unit={canTrade ? "x" : undefined}>{canTrade ? (props.currentLeverage ?? '--') : '--'}</Text.numeral>
+          <Text.numeral unit={canTrade ? "x" : undefined}>
+            {canTrade ? props.currentLeverage ?? "--" : "--"}
+          </Text.numeral>
           {props.estLeverage && (
             <>
               <svg

@@ -39,8 +39,6 @@ export const PositionCell: FC<
 };
 
 const Header: FC<PositionCellState> = (props) => {
-  const { item } = props;
-  const isBuy = item.position_qty > 0;
 
   return (
     <Flex justify={"between"} width={"100%"}>

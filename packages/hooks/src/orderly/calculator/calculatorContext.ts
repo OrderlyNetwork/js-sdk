@@ -49,7 +49,8 @@ export class CalculatorContext implements CalculatorCtx {
   // }
 
   get isReady(): boolean {
-    return !!this.accountInfo && !!this.symbolsInfo && !!this.fundingRates;
+    // return !!this.accountInfo && !!this.symbolsInfo && !!this.fundingRates;
+    return !!this.accountInfo;
   }
 
   saveOutput(name: string, data: any) {

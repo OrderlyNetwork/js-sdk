@@ -11,6 +11,7 @@ import {
   NumeralProps,
   Badge,
   SimpleDialog,
+  ThrottledButton,
 } from "@orderly.network/ui";
 import { usePositionsRowContext } from "./positionRowContext";
 // import { useSymbolContext } from "../providers/symbolProvider";
@@ -151,7 +152,7 @@ export const ConfirmFooter: FC<{
       >
         Cancel
       </Button>
-      <Button
+      <ThrottledButton
         id="oui-positions-confirm-footer-confirm-button"
         onClick={onConfirm}
         fullWidth
@@ -159,7 +160,7 @@ export const ConfirmFooter: FC<{
         size="md"
       >
         Confirm
-      </Button>
+      </ThrottledButton>
     </Flex>
   );
 };

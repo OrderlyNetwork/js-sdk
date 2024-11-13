@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { Button, toast } from "@orderly.network/ui";
+import { Button, ThrottledButton, toast } from "@orderly.network/ui";
 import { FC, useContext, useState } from "react";
 import { useOrderListContext } from "../orderListContext";
 
@@ -12,7 +12,7 @@ export const CancelButton: FC<{
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <Button
+    <ThrottledButton
       size="sm"
       variant={"outlined"}
       color={"secondary"}
@@ -35,6 +35,6 @@ export const CancelButton: FC<{
       loading = {isLoading}
     >
       Cancel
-    </Button>
+    </ThrottledButton>
   );
 };
