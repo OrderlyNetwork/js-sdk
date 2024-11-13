@@ -168,7 +168,7 @@ export const OrderEntry = (
         ref={props.containerRef}
       >
         {/* Buy Sell button */}
-        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
+        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-3">
           <div
             className={
               "oui-grid oui-grid-cols-2 oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]"
@@ -296,7 +296,7 @@ export const OrderEntry = (
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
         />
-        <Divider />
+        <Divider className="oui-w-full"/>
         {/* TP SL switch and content */}
         <OrderTPSL
           // onCancelTPSL={props.cancelTP_SL}
@@ -646,7 +646,7 @@ const QuantitySlider = (props: {
         step={props.tick}
         onValueChange={props.onValueChange}
       />
-      <Flex justify={"between"} pt={2}>
+      <Flex justify={"between"} className="oui-pt-1 xl:oui-pt-2">
         <Text.numeral
           rule={"percentages"}
           size={"2xs"}
