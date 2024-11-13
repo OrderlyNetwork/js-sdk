@@ -51,7 +51,13 @@ class PortfolioCalculator extends BaseCalculator<any> {
   }) {
     const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
 
-    if (!holding || !positions || !markPrices || !accountInfo) {
+    if (
+      !holding ||
+      !positions ||
+      !Array.isArray(positions.rows) ||
+      !markPrices ||
+      !accountInfo
+    ) {
       return null;
     }
 
@@ -106,7 +112,10 @@ class PortfolioCalculator extends BaseCalculator<any> {
     };
   }
 
-  update(data: { [K in keyof Portfolio]: number | Decimal } | null) {
+  update(
+    data: { [K in keyof Portfolio]: number | Decimal } | null,
+    scope: CalculatorScope
+  ) {
     if (!!data) {
       useAppStore.getState().actions.batchUpdateForPortfolio({
         totalCollateral: data.totalCollateral as Decimal,

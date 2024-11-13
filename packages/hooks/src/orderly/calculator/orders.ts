@@ -12,7 +12,7 @@ export class OrderCalculator extends BaseCalculator<API.OrderExt[]> {
     return [];
   }
 
-  update(data: any | null): void {
+  update(data: any | null, scope: CalculatorScope): void {
     // Implementation logic here
   }
 }

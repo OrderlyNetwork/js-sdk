@@ -24,7 +24,7 @@ import { order as orderUtils } from "@orderly.network/perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
-import { usePositions } from "../orderly/usePositionStream/usePositionStore";
+import { usePositions } from "../orderly/usePositionStream/usePosition.store";
 // import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
@@ -703,7 +703,7 @@ export function useOrderEntry(
       baseIMR,
       baseMMR,
       totalCollateral,
-      positions,
+      positions: positions === null ? [] : positions,
       IMR_Factor: accountInfo["imr_factor"][symbol],
       orderFee,
       newOrder: {
@@ -737,7 +737,7 @@ export function useOrderEntry(
 
     const leverage = orderUtils.estLeverage({
       totalCollateral,
-      positions,
+      positions: positions === null ? [] : positions,
       newOrder: {
         symbol: parsedData.symbol,
         qty: result.quantity,
