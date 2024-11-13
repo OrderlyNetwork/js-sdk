@@ -70,11 +70,13 @@ export abstract class BaseAlgoOrderCreator<
       }
 
       const mark_price =
-    orderType === OrderType.MARKET
+    orderType === OrderType.MARKET || orderType == null
       ? config.markPrice
       : values.order_price
       ? Number(values.order_price)
       : undefined;
+
+      
 
       // there need use position side to validate
       // so if order's side is buy, then position's side is sell
@@ -88,6 +90,15 @@ export abstract class BaseAlgoOrderCreator<
         ) {
           result.sl_trigger_price = {
             message: `SL price must be greater than ${slTriggerPriceScope}`,
+          };
+        }
+        
+        if (
+          !!sl_trigger_price &&
+          Number(sl_trigger_price) > config.markPrice
+        ) {
+          result.sl_trigger_price = {
+            message: `SL price must be less than ${config.markPrice}`,
           };
         }
 
@@ -123,6 +134,15 @@ export abstract class BaseAlgoOrderCreator<
         ) {
           result.sl_trigger_price = {
             message: `SL price must be less than ${slTriggerPriceScope}`,
+          };
+        }
+
+        if (
+          !!sl_trigger_price &&
+          Number(sl_trigger_price) < config.markPrice
+        ) {
+          result.sl_trigger_price = {
+            message: `SL price must be greater than ${config.markPrice}`,
           };
         }
 

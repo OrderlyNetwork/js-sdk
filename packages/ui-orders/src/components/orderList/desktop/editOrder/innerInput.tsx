@@ -55,6 +55,7 @@ export const InnerInput: FC<{
         formatters={[
           inputFormatter.numberFormatter,
           inputFormatter.dpFormatter(dp),
+          inputFormatter.currencyFormatter,
         ]}
         value={value}
         onValueChange={(e) => setValue(e)}
@@ -63,6 +64,7 @@ export const InnerInput: FC<{
           e.stopPropagation();
           e.preventDefault();
         }}
+        autoComplete="off"
         onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={handleKeyDown}
