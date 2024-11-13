@@ -34,8 +34,8 @@ export const MobileLayout: FC<TradingState> = (props) => {
         <MarketsSheetWidget
           symbol={props.symbol}
           onSymbolChange={(symbol) => {
-            console.log("onSymbolChange", symbol);
             props.onOpenMarketsSheetChange(false);
+            props.onSymbolChange?.(symbol);
           }}
         />
       </SimpleSheet>
