@@ -1,3 +1,3 @@
 export { Button, buttonVariants } from "./button";
-export { ThrottledButton } from "./throttleButton";
+export { ThrottledButton } from "./throttledButton";
 export type { ButtonProps } from "./button";

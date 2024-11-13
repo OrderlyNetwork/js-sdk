@@ -10,6 +10,7 @@ import {
   SimpleDialog,
   Slider,
   Text,
+  ThrottledButton,
   toast,
 } from "@orderly.network/ui";
 import { EditSheetState } from "./editSheet.script";
@@ -242,7 +243,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           >
             Cancel
           </Button>
-          <Button
+          <ThrottledButton
             fullWidth
             onClick={(e) => {
               e.stopPropagation();
@@ -253,7 +254,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             disabled={!props.isChanged}
           >
             Confirm
-          </Button>
+          </ThrottledButton>
         </Flex>
       </Flex>
 
