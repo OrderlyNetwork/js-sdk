@@ -211,7 +211,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
   }, []);
 
   return (
-    <Box>
+    <Box className="oui-group">
       <Flex
         justify="center"
         gap={1}
@@ -234,9 +234,9 @@ const AssetValueList: FC<AssetValueListProps> = ({
         }}
         className={cn(
           "oui-space-y-1.5 oui-select-none oui-overflow-hidden",
-          "oui-transition-all oui-duration-150",
-          // 'oui-will-change-[height]',
-          open ? "oui-h-[69px]" : "oui-h-0"
+          "oui-transition-[max-height] oui-duration-150",
+          "group-hover:oui-will-change-[max-height]",
+          open ? "oui-max-h-[69px]" : "oui-max-h-0"
         )}
       >
         <AssetDetail
