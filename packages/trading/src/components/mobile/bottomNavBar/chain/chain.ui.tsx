@@ -12,7 +12,7 @@ export const Chain: FC<ChainState> = (props) => {
             wrongNetwork: boolean;
           }>(ChainSelectorSheetId, {
             // networkId: props.networkId,
-            bridgeLessOnly: true,
+            bridgeLessOnly:false,
             isWrongNetwork: props.isWrongNetwork,
           })
           .then(

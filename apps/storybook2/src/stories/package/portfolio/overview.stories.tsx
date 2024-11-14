@@ -8,6 +8,7 @@ import { Box, Card, Flex, Grid } from "@orderly.network/ui";
 import { fn } from "@storybook/test";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { DataViewer } from "../../../components/dataViewer";
+import { CustomConfigStore } from "../../../components/configStore/customConfigStore.ts";
 
 const { usePerformanceScript } = OverviewModule;
 
@@ -20,12 +21,16 @@ const meta = {
   },
   decorators: [
     (Story, args) => {
+      const configStore = new CustomConfigStore({
+        networkId: "testnet",
+        brokerId: "woofi_pro",
+        brokerName: "woofipro",
+        env: "qa",
+      });
       return (
         <WalletConnectorProvider>
           <OrderlyAppProvider
-            brokerId="orderly"
-            brokerName="Orderly"
-            networkId="testnet"
+            configStore={configStore}
             onChainChanged={args.args.onChainChanged}
           >
             <Story />

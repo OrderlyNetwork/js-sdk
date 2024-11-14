@@ -3,7 +3,7 @@ import {
   TradingviewWidgetPropsInterface,
 } from "../type";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getOveriides, withExchangePrefix, defaultColorConfig } from "../utils/chart.util";
+import { getOveriides, withExchangePrefix, defaultColorConfig, chartBG } from "../utils/chart.util";
 import {
   useAccount,
   useConfig,
@@ -47,6 +47,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     fullscreen,
     symbol,
     theme,
+    loadingScreen: customerLoadingScreen,
     mode,
     colorConfig: customerColorConfig,
   } = props;
@@ -113,6 +114,14 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     customerColorConfig ?? {}
     ), [customerColorConfig]);
 
+  const loadingScreen = useMemo(() => {
+    if (typeof customerLoadingScreen === 'object') {
+      return customerLoadingScreen;
+    }
+    return {
+      backgroundColor: chartBG,
+    }
+  }, [customerLoadingScreen]);
   const ws = useWS();
   const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] =
     useState<boolean>(false);
@@ -261,6 +270,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         customCssUrl: tradingViewCustomCssUrl,
         interval: interval ?? "1",
         theme: theme ?? "dark",
+        loadingScreen: loadingScreen ?? {},
 
         overrides: overrides,
         studiesOverrides,

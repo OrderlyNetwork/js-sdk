@@ -11,6 +11,7 @@ export function FaucetUi(props: FaucetState) {
         fullWidth
         size="md"
         onClick={props.getFaucet}
+        loading={props.loading}
         className='oui-text-primary-light oui-border-primary-light oui-rounded'
       >Get test USDC</Button>
   )
