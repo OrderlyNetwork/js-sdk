@@ -1,5 +1,14 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.0.1-developV2.24
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.0.1-developV2.24
+  - @orderly.network/types@2.0.1-developV2.24
+
 ## 2.0.1-developV2.23
 
 ### Patch Changes
