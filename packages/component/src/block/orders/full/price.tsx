@@ -10,7 +10,10 @@ import { Check, X } from "lucide-react";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
-import { useSymbolPriceRange } from "@orderly.network/hooks";
+import {
+  useDebouncedCallback,
+  useSymbolPriceRange,
+} from "@orderly.network/hooks";
 import {
   Tooltip,
   TooltipArrow,
@@ -165,7 +168,6 @@ const EditingState: FC<{
     event?.stopPropagation();
     event?.preventDefault();
 
-    
     if (Number(price) === Number(order.price)) {
       setEditting(false);
       return;
@@ -199,71 +201,75 @@ const EditingState: FC<{
     }
   };
 
-  const onConfirm = () => {
-    setIsSubmitting(true);
+  const onConfirm = useDebouncedCallback(
+    () => {
+      setIsSubmitting(true);
 
-    let order_id = order.order_id;
-    let data: any = {
-      order_price: price,
-      order_quantity: order.quantity,
-      symbol: order.symbol,
-      order_type: order.type,
-      side: order.side,
-      // reduce_only: Boolean(order.reduce_only),
-    };
-    if (typeof order.reduce_only !== "undefined") {
-      data.reduce_only = order.reduce_only;
-    }
-
-    if (order.order_tag !== undefined) {
-      data = { ...data, order_tag: order.order_tag };
-    }
-
-    if (isAlgoOrder) {
-      order_id = order.algo_order_id as number;
-      data = {
-        ...data,
-        order_id,
-        price: price,
-        algo_order_id: order_id,
+      let order_id = order.order_id;
+      let data: any = {
+        order_price: price,
+        order_quantity: order.quantity,
+        symbol: order.symbol,
+        order_type: order.type,
+        side: order.side,
+        // reduce_only: Boolean(order.reduce_only),
       };
-    }
+      if (typeof order.reduce_only !== "undefined") {
+        data.reduce_only = order.reduce_only;
+      }
 
-    // @ts-ignore
-    if (order.visible_quantity === 0) {
-      data["visible_quantity"] = 0;
-    }
+      if (order.order_tag !== undefined) {
+        data = { ...data, order_tag: order.order_tag };
+      }
 
-    // @ts-ignore
-    if (order.tag !== undefined) {
+      if (isAlgoOrder) {
+        order_id = order.algo_order_id as number;
+        data = {
+          ...data,
+          order_id,
+          price: price,
+          algo_order_id: order_id,
+        };
+      }
+
       // @ts-ignore
-      data["order_tag"] = order.tag;
-    }
+      if (order.visible_quantity === 0) {
+        data["visible_quantity"] = 0;
+      }
 
-    let future;
-    if (order.algo_order_id !== undefined) {
-      future = editAlgoOrder(order.algo_order_id.toString(), data);
-    } else {
-      future = editOrder(order.order_id.toString(), data);
-    }
+      // @ts-ignore
+      if (order.tag !== undefined) {
+        // @ts-ignore
+        data["order_tag"] = order.tag;
+      }
 
-    // @ts-ignore
-    future
-      .then(
-        (result) => {
-          setPrice(price);
-          closePopover();
-          // setTimeout(() => inputRef.current?.blur(), 300);
-        },
-        (err) => {
-          toast.error(err.message);
-          // @ts-ignore
-          setPrice(order.price?.toString());
-          cancelPopover();
-        }
-      )
-      .finally(() => setIsSubmitting(false));
-  };
+      let future;
+      if (order.algo_order_id !== undefined) {
+        future = editAlgoOrder(order.algo_order_id.toString(), data);
+      } else {
+        future = editOrder(order.order_id.toString(), data);
+      }
+
+      // @ts-ignore
+      future
+        .then(
+          (result) => {
+            setPrice(price);
+            closePopover();
+            // setTimeout(() => inputRef.current?.blur(), 300);
+          },
+          (err) => {
+            toast.error(err.message);
+            // @ts-ignore
+            setPrice(order.price?.toString());
+            cancelPopover();
+          }
+        )
+        .finally(() => setIsSubmitting(false));
+    },
+    500,
+    { leading: true, trailing: false }
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
   // @ts-ignore
