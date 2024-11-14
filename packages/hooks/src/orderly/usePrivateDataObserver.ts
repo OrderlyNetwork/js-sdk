@@ -17,6 +17,7 @@ import { CalculatorScope } from "../types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { usePositionActions } from "./orderlyHooks";
+import { EVENT_NAMES } from "@orderly.network/core";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -25,7 +26,7 @@ export const usePrivateDataObserver = (options: {
   const ws = useWS();
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
-  const { state } = useAccount();
+  const { state, account } = useAccount();
   const { setAccountInfo, restoreHolding, updateHolding, cleanAll } =
     useAppStore((state) => state.actions);
   const statusActions = useApiStatusActions();
@@ -57,16 +58,26 @@ export const usePrivateDataObserver = (options: {
 
   // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
   useEffect(() => {
-    if (state.validating) return;
-    console.log("state.status+++++++", state.status, state.validating);
-    if (state.status < AccountStatusEnum.EnableTrading) {
+    account.on(EVENT_NAMES.switchAccount, () => {
       cleanAll();
       positionsActions.clearAll();
-      // calculatorService.calc(CalculatorScope.POSITION, {
-      //   rows: [],
-      // });
-    }
-  }, [state.status, state.validating]);
+    });
+
+    return () => {
+      account.off(EVENT_NAMES.switchAccount);
+    };
+    // if (state.validating) return;
+
+    // console.log("++++++++++state.status", state.status);
+
+    // if (state.status < AccountStatusEnum.EnableTrading) {
+    //   cleanAll();
+    //   positionsActions.clearAll();
+    //   // calculatorService.calc(CalculatorScope.POSITION, {
+    //   //   rows: [],
+    //   // });
+    // }
+  }, []);
 
   useEffect(() => {
     /// start load positions
@@ -76,13 +87,12 @@ export const usePrivateDataObserver = (options: {
   }, [isPositionLoading, statusActions]);
 
   useEffect(() => {
-    console.log("positions", positions);
     if (positions && Array.isArray(positions.rows)) {
-      if (positions.rows.length > 0) {
-        calculatorService.calc(CalculatorScope.POSITION, positions);
-      } else {
-        statusActions.updateApiLoading("positions", false);
-      }
+      // if (positions.rows.length > 0) {
+      calculatorService.calc(CalculatorScope.POSITION, positions);
+      // } else {
+      //   statusActions.updateApiLoading("positions", false);
+      // }
     }
   }, [calculatorService, positions]);
 
@@ -109,7 +119,7 @@ export const usePrivateDataObserver = (options: {
           const holding = data?.balances ?? ({} as Record<string, any>);
 
           if (holding) {
-            // console.log("---->>>>>>!!!! holding", holding);
+            console.log("---->>>>>>!!!! holding", holding);
 
             updateHolding(holding);
           }

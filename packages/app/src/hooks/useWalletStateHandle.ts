@@ -123,6 +123,7 @@ export const useWalletStateHandle = (options: {
       accountState.status > AccountStatusEnum.NotConnected
     ) {
       account.disconnect();
+      return;
     }
 
     if (unsupported || !connectedChain) return;
