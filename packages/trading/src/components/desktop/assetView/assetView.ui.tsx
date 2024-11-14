@@ -115,7 +115,7 @@ export const TooltipContent: FC<TooltipContentProps> = ({
 );
 
 const TotalValue: FC<TotalValueProps> = ({
-  totalValue = 0,
+  totalValue,
   visible = true,
   onToggleVisibility,
 }) => (
@@ -360,7 +360,7 @@ export const AssetView: FC<AssetViewState> = ({
                 <ArrowDownShortIcon color="white" opacity={1} />
                 <Text>Deposit</Text>
               </Button>
-            </Flex> 
+            </Flex>
             <FaucetWidget />
           </Box>
         )}
@@ -370,7 +370,6 @@ export const AssetView: FC<AssetViewState> = ({
         style={{
           background:
             "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(159, 115, 241, 0) -48.92deg, rgba(242, 98, 181, 0) 125.18deg, #5FC5FF 193.41deg, #FFAC89 216.02deg, #8155FF 236.07deg, #789DFF 259.95deg, rgba(159, 115, 241, 0) 311.08deg, rgba(242, 98, 181, 0) 485.18deg)",
-            
         }}
       />
     </Box>

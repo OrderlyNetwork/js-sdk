@@ -28,6 +28,9 @@ export interface AccountState {
    * whether the account is validating
    */
   validating: boolean;
+  /**
+   * whether the account is revalidating
+   */
   // revalidating?: boolean;
 
   accountId?: string;

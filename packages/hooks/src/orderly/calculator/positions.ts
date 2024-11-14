@@ -255,7 +255,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
         };
       });
 
-      if (!totalValue.eq(zero)) {
+      if (totalValue !== null && !totalValue.eq(zero)) {
         totalUnrealizedROI = account.totalUnrealizedROI({
           totalUnrealizedPnL: totalUnrealPnl,
           totalValue: totalValue.toNumber(),
