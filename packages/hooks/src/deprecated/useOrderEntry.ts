@@ -703,7 +703,7 @@ export function useOrderEntry(
       baseIMR,
       baseMMR,
       totalCollateral,
-      positions: positions === null ? [] : positions,
+      positions: positions == null ? [] : positions, 
       IMR_Factor: accountInfo["imr_factor"][symbol],
       orderFee,
       newOrder: {

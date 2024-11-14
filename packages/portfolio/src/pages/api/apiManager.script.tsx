@@ -147,7 +147,7 @@ export const useApiManagerScript = () => {
                 .getOrderlyKey()
                 ?.getPublicKey();
               if (item.orderly_key === curKey) {
-                account.destoryOrderlyKey();
+                account.destroyOrderlyKey();
               }
             }
             resolve(1);

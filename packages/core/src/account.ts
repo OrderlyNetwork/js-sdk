@@ -633,7 +633,7 @@ export class Account {
     }
   }
 
-  async destoryOrderlyKey(): Promise<void> {
+  async destroyOrderlyKey(): Promise<void> {
     if (!!this.stateValue.address) {
       // const key = await this.keyStore.getOrderlyKey()?.getPublicKey();
       this.keyStore.cleanKey(this.stateValue.address, "orderlyKey");
