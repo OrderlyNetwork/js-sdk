@@ -27,9 +27,9 @@ export const colorPlugin = () =>
         "--oui-success-darken": "0 119 105",
         "--oui-success-contrast": "255 255 255",
 
-        "--oui-warning": "255 207 115",
-        "--oui-warning-light": "255 207 115",
-        "--oui-warning-darken": "117 88 33",
+        "--oui-warning": "255 182 93",
+        "--oui-warning-light": "255 207 139",
+        "--oui-warning-darken": "255 125 0",
         "--oui-warning-contrast": "255 255 255",
 
         "--oui-fill": "36 32 47",
