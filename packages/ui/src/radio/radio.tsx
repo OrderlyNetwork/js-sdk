@@ -13,8 +13,8 @@ const radioVariants = tv({
       "w-4",
       "rounded-full",
       "border",
-      "border-primary",
-      "text-primary",
+      "border-primary-darken",
+      "text-primary-darken",
       "shadow",
       "focus:outline-none",
       "focus-visible:ring-1",
@@ -46,7 +46,7 @@ const RadioGroupItem = React.forwardRef<
   return (
     <RadioGroupPrimitive.Item ref={ref} className={item()} {...props}>
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Check className="h-3.5 w-3.5 fill-primary" />
+        <Check className="h-3.5 w-3.5 fill-primary-darken" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );

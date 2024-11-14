@@ -119,7 +119,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
         </Text>
         <Flex
           itemAlign={"center"}
-          className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
+          className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary-darken oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
           onClick={props.onReadApiGuide}
         >
           <Text>Read API guide</Text>

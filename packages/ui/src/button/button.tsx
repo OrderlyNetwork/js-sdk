@@ -35,7 +35,7 @@ const buttonVariants = tv(
         xl: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"], //54px
       },
       color: {
-        primary: ["hover:oui-bg-primary/80 active:oui-bg-primary/70"],
+        primary: ["hover:oui-bg-primary-darken/80 active:oui-bg-primary-darken/70"],
         secondary: "hover:oui-bg-base-4/80 active:oui-bg-base-4/70",
         success: "hover:oui-bg-success/80 active:oui-bg-success/70",
         buy: "hover:oui-bg-success/80 active:oui-bg-success/70",
@@ -58,7 +58,7 @@ const buttonVariants = tv(
       {
         variant: "contained",
         color: "primary",
-        className: ["oui-bg-primary", "oui-text-primary-contrast"],
+        className: ["oui-bg-primary-darken", "oui-text-primary-contrast"],
       },
       {
         variant: "contained",
@@ -78,7 +78,7 @@ const buttonVariants = tv(
       {
         variant: "contained",
         color: "warning",
-        className: ["oui-bg-warning-darken", "oui-text-warning-darken-contrast"],
+        className: ["oui-bg-warning-darken", "oui-text-warning-contrast"],
       },
       {
         variant: "contained",
@@ -109,9 +109,9 @@ const buttonVariants = tv(
         variant: "outlined",
         color: "primary",
         className: [
-          "oui-border-primary",
-          "oui-text-primary",
-          "hover:oui-bg-primary/20",
+          "oui-border-primary-darken",
+          "oui-text-primary-darken",
+          "hover:oui-bg-primary-darken/20",
         ],
       },
       {
@@ -137,7 +137,7 @@ const buttonVariants = tv(
         color: "warning",
         className: [
           "oui-border-warning-darken",
-          "oui-text-warning-darken",
+          "oui-text-warning-contrast",
           "hover:oui-bg-warning-darken/20",
         ],
       },
@@ -165,7 +165,7 @@ const buttonVariants = tv(
       {
         variant: "text",
         color: "primary",
-        className: ["oui-text-primary hover:oui-bg-primary/10"],
+        className: ["oui-text-primary-darken hover:oui-bg-primary-darken/10"],
       },
       {
         variant: "text",
@@ -175,7 +175,7 @@ const buttonVariants = tv(
       {
         variant: "text",
         color: "warning",
-        className: ["oui-text-warning-darken hover:oui-bg-warning-darken/10"],
+        className: ["oui-text-warning-contrast hover:oui-bg-warning-darken/10"],
       },
       {
         variant: "text",

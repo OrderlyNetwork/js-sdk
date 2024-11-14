@@ -153,7 +153,7 @@ export const MobileSharePnLContent: FC<{
           <div className="oui-mt-2 oui-mb-1 oui-flex oui-justify-center">
             <MyIdentifier
               dotClassName="oui-w-[16px] oui-h-[4px] oui-bg-base-300"
-              dotActiveClassName="!oui-bg-primary oui-w-[20px]"
+              dotActiveClassName="!oui-bg-primary-darken oui-w-[20px]"
               setSelectIndex={setSelectIndex}
             />
           </div>
@@ -302,7 +302,7 @@ const PnlFormatView: FC<{
     <div
       className={cn(
         "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-flex-1 oui-bg-base-4 hover:oui-cursor-pointer oui-flex oui-items-center oui-px-3 oui-referral-shadow",
-        isSelected && "oui-bg-primary oui-dot-sel"
+        isSelected && "oui-bg-primary-darken oui-dot-sel"
       )}
       onClick={() => {
         setPnlFormat(type);

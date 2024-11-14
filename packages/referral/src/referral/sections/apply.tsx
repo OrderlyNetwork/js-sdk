@@ -14,7 +14,7 @@ export const Apply = () => {
     }
 
 
-    return <ApplyIcon width={"100%"} height="100%" className="orderly-fill-primary"/>
+    return <ApplyIcon width={"100%"} height="100%" className="orderly-fill-primary-darken"/>
 
   }, [overwrite]);
 

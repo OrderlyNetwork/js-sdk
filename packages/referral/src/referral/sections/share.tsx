@@ -15,7 +15,7 @@ export const Share = () => {
     }
 
 
-    return <ShareIcon width={"100%"} height="100%" className="orderly-fill-primary" />
+    return <ShareIcon width={"100%"} height="100%" className="orderly-fill-primary-darken" />
 
   }, [overwrite]);
 

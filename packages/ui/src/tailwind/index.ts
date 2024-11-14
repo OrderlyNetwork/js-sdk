@@ -1,7 +1,6 @@
 
 export { basePlugin } from "./base";
 export { chartPlugin } from "./chart";
-export { colorPlugin } from "./color";
 export { componentsPlugin } from "./components";
 export { gradientPlugin } from "./gradient";
 export { positionPlugin } from "./position";

@@ -63,7 +63,7 @@ export const CarouselBackgroundImage: FC<{
               className={cn(
                 "oui-shrink-0 oui-w-[162px]",
                 selectedSnap === index &&
-                  "oui-outline oui-outline-1 oui-outline-primary"
+                  "oui-outline oui-outline-1 oui-outline-primary-darken"
               )}
             >
               <img src={e} className="oui-rounded-sm" />

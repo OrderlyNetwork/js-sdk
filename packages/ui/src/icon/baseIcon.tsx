@@ -8,7 +8,7 @@ import { type VariantProps, tv } from "tailwind-variants";
 const iconVariants = tv({
   variants: {
     color: {
-      primary: "oui-text-primary",
+      primary: "oui-text-primary-darken",
       success: "oui-text-success",
       danger: "oui-text-danger",
       warning: "oui-text-warning-darken",

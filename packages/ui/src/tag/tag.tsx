@@ -10,7 +10,7 @@ const tagVariants = tv({
   base: "tag",
   variants: {
     color: {
-      primary: "oui-text-primary",
+      primary: "oui-text-primary-darken",
       //   secondary: "tag-secondary",
       success: "oui-text-success",
       warning: "oui-text-warning-darken",

@@ -5,11 +5,11 @@ export const themePlugin = () =>
     addBase({
       ":root": {
         "--oui-font-family": '"Manrope", sans-serif',
-
+ 
         /* colors */
-        "--oui-color-primary": "51 95 252",
-        "--oui-color-primary-light": "96 140 255",
-        "--oui-color-primary-darken": "152 62 214",
+        "--oui-color-primary": "96 140 255",
+        "--oui-color-primary-light": "119 157 255",
+        "--oui-color-primary-darken": "51 95 252",
         "--oui-color-primary-contrast": "255 255 255",
 
         "--oui-color-link": "182 79 255",
@@ -29,9 +29,9 @@ export const themePlugin = () =>
         "--oui-color-success-darken": "0 134 118",
         "--oui-color-success-contrast": "255 255 255",
 
-        "--oui-warning": "255 182 93",
-        "--oui-warning-light": "255 207 139",
-        "--oui-warning-darken": "255 125 0",
+        "--oui-color-warning": "255 182 93",
+        "--oui-color-warning-light": "255 207 139",
+        "--oui-color-warning-darken": "255 125 0",
         "--oui-color-warning-contrast": "255 255 255",
 
         "--oui-color-fill": "36 32 47",

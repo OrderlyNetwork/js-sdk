@@ -246,7 +246,7 @@ function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
                   className={cn(
                     "oui-w-full  oui-text-2xs oui-flex oui-items-center oui-justify-center oui-h-6  oui-rounded",
                     item.value === props.interval
-                      ? "oui-text-base-contrast oui-bg-primary"
+                      ? "oui-text-base-contrast oui-bg-primary-darken"
                       : "oui-text-base-contrast-36 oui-bg-base-5"
                   )}
                   key={item.value}
