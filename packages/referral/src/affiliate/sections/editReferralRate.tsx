@@ -87,7 +87,7 @@ export const EditReferralRate = create<{
           </div>
           <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-2 orderly-flex">
             {`Your max commission rate: `}
-            <div className="orderly-text-warning orderly-pl-1">{`${new Decimal(
+            <div className="orderly-text-warning-darken orderly-pl-1">{`${new Decimal(
               code.max_rebate_rate
             )
               .mul(100)

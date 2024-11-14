@@ -88,7 +88,7 @@ export const EditReferralRate = modal.create<{
           </div>
           <div className="oui-text-xs oui-text-base-contrast-80 oui-mt-2 oui-flex">
             {`Your max commission rate: `}
-            <div className="oui-text-warning oui-pl-1">{`${new Decimal(
+            <div className="oui-text-warning-darken oui-pl-1">{`${new Decimal(
               code.max_rebate_rate
             )
               .mul(100)

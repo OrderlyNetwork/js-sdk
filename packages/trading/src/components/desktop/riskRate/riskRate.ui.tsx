@@ -27,7 +27,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
     : isHigh
     ? "oui-text-danger"
     : isMedium
-    ? "oui-text-warning"
+    ? "oui-text-warning-darken"
     : isLow
     ? gradientTextVariants({ color: "brand" })
     : "";

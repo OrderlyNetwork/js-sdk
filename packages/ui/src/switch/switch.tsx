@@ -64,8 +64,8 @@ const switchVariants = tv({
       },
       warning: {
         root: [
-          "data-[state=checked]:oui-bg-warning",
-          "data-[state=unchecked]:oui-bg-warning",
+          "data-[state=checked]:oui-bg-warning-darken",
+          "data-[state=unchecked]:oui-bg-warning-darken",
         ],
       },
     },

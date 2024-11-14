@@ -19,7 +19,7 @@ const spinnerVariants = tv({
       primary: "oui-fill-primary",
       success: "oui-fill-success",
       danger: "oui-fill-danger",
-      warning: "oui-fill-warning",
+      warning: "oui-fill-warning-darken",
       gray: "oui-fill-gray",
       darkGray: "oui-fill-darkGray",
       white: "oui-fill-white",

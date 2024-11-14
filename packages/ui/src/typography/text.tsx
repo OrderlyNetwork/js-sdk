@@ -36,7 +36,7 @@ const textVariants = tv({
       secondary: "oui-text-secondary",
       tertiary: "oui-text-tertiary",
       // quaternary: "oui-text-gray-300",
-      warning: "oui-text-warning",
+      warning: "oui-text-warning-darken",
       danger: "oui-text-danger",
       success: "oui-text-success",
       buy: "oui-text-trade-profit",

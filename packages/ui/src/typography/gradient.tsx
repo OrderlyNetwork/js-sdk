@@ -12,7 +12,7 @@ const gradientTextVariants = tv({
       primary: "oui-gradient-primary",
       brand: "oui-gradient-brand",
       success: "oui-gradient-success",
-      warning: "oui-gradient-warning",
+      warning: "oui-gradient-warning-darken",
       danger: "oui-gradient-danger",
       neutral: "oui-gradient-neutral",
       //   transparent: "oui-gradient-transparent",

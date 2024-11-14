@@ -92,7 +92,7 @@ const dialogVariants = tv({
     desc: [
       "oui-dialog-desc",
       "oui-text-xs",
-      "oui-text-warning",
+      "oui-text-warning-darken",
       "oui-pt-2",
       "oui-text-center",
       "oui-pb-3",

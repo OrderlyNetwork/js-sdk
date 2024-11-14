@@ -13,7 +13,7 @@ const tagVariants = tv({
       primary: "oui-text-primary",
       //   secondary: "tag-secondary",
       success: "oui-text-success",
-      warning: "oui-text-warning",
+      warning: "oui-text-warning-darken",
       danger: "oui-text-danger",
       //   info: "tag-info",
     },
