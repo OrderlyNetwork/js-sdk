@@ -1,5 +1,21 @@
 # @orderly.network/core
 
+## 1.5.16
+
+### Patch Changes
+
+- bba082a3e: fix bugs;
+- Updated dependencies [bba082a3e]
+  - @orderly.network/types@1.5.16
+
+## 1.5.16-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@1.5.16-alpha.0
+
 ## 1.5.15
 
 ### Patch Changes

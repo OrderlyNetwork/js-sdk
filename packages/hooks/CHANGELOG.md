@@ -1,5 +1,29 @@
 # @orderly.network/hooks
 
+## 1.5.16
+
+### Patch Changes
+
+- bba082a3e: fix bugs;
+- Updated dependencies [bba082a3e]
+  - @orderly.network/core@1.5.16
+  - @orderly.network/net@1.5.16
+  - @orderly.network/perp@3.3.16
+  - @orderly.network/types@1.5.16
+  - @orderly.network/utils@1.5.16
+
+## 1.5.16-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/core@1.5.16-alpha.0
+  - @orderly.network/net@1.5.16-alpha.0
+  - @orderly.network/perp@3.3.16-alpha.0
+  - @orderly.network/types@1.5.16-alpha.0
+  - @orderly.network/utils@1.5.16-alpha.0
+
 ## 1.5.15
 
 ### Patch Changes
