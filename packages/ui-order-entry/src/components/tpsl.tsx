@@ -96,7 +96,7 @@ export const OrderTPSL = (props: {
               title: "Tips",
               size: "xs",
               content:
-                (<Text intensity={54}>"TP/SL applies to the entire position. For partial TP/SL, set it in open positions."</Text>),
+                (<Text intensity={54}>TP/SL applies to the entire position. For partial TP/SL, set it in open positions.</Text>),
             });
           }}
         />
