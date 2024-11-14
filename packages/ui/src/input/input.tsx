@@ -87,8 +87,8 @@ const inputVariants = tv(
           input: ["oui-text-danger"],
         },
         warning: {
-          box: ["oui-outline-warning", "focus-within:oui-outline-warning"],
-          input: ["oui-text-warning"],
+          box: ["oui-outline-warning-darken", "focus-within:oui-outline-warning-darken"],
+          input: ["oui-text-warning-darken"],
         },
         default: {
           box: ["oui-outline-transparent"],

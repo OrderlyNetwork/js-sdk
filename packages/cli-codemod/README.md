@@ -1,14 +1,6 @@
 # Orderly Codemod
 
-`orderly-codemod` is a command-line tool to help update `OrderlyAppProvider` component from v1 to v2.
-
-## Installation
-
-Install `orderly-codemod` as a dependency in your project:
-
-```bash
-npm install @orderly.network/codemod
-```
+`orderly-codemod` is a command-line tool to help you migrate the package import and `OrderlyAppProvider` configuration from v1 to v2
 
 ## Usage
 
@@ -31,6 +23,8 @@ npx @orderly.network/codemod [OPTION] PATH
 
   Default: `tsx`.
 
+  Please note that when using TypeScript, you need to use the tsx parser; otherwise, the codemod cannot be correctly applied!
+
 - `--ext, --extensions <string>`  
   Specifies file extensions to transform, with multiple extensions separated by commas. Default: `tsx`.
 
@@ -48,7 +42,7 @@ npx @orderly.network/codemod [OPTION] PATH
 - **Custom extensions:**
 
   ```bash
-  npx @orderly.network/codemod -extensions jsx src/
+  npx @orderly.network/codemod --extensions jsx src/
   ```
 
 - **Ignore files in the `dist` folder:**
@@ -56,6 +50,8 @@ npx @orderly.network/codemod [OPTION] PATH
   ```bash
   npx @orderly.network/codemod --ignore dist src/
   ```
+
+Note: Applying a codemod may disrupt your existing code formatting, so don’t forget to run prettier and/or eslint after applying the codemod!
 
 ### Help
 

@@ -28,6 +28,8 @@ export {
   BaseContract as BaseContractManager,
 } from "./contract";
 
+export { EVENT_NAMES } from "./constants";
+
 export { default as SimpleDI } from "./di/simpleDI";
 
 export { Account, type AccountState } from "./account";

@@ -56,6 +56,8 @@ module.exports = function transformer(fileInfo, api) {
     locadlName: OrderlyAppProviderLocalName,
   });
 
+  // addComment({ root, j, locadlName: OrderlyAppProviderLocalName });
+
   // TODO: eslint file
   return root.toSource();
 };
@@ -161,10 +163,10 @@ function renameWalletConnectorProviderProps({ root, j, localName }) {
 }
 
 function addTradingPageProps({ root, j, srcElementName, dstElementName }) {
-  if (!srcElementName || !dstElementName) {
+  if (!srcElementName) {
     return;
   }
-  // find OrderlyAppProvider
+  // find srcElementName
   root
     .find(j.JSXElement, {
       openingElement: { name: { name: srcElementName } },
@@ -181,13 +183,30 @@ function addTradingPageProps({ root, j, srcElementName, dstElementName }) {
         (attr) => attr.name && attr.name.name === "referral"
       );
 
+      const attributes = openingElement.attributes;
+
       // remove shareOptions and referral
-      openingElement.attributes = openingElement.attributes.filter(
+      openingElement.attributes = attributes.filter(
         (attr) =>
           attr.name && !["shareOptions", "referral"].includes(attr.name.name)
       );
 
-      // find TradingPage
+      if (shareOptionsAttr && !dstElementName) {
+        addComment({
+          j,
+          attributes: openingElement.attributes,
+          attribute: shareOptionsAttr,
+        });
+      }
+
+      if (referralAttr && !dstElementName) {
+        addComment({
+          j,
+          attributes: openingElement.attributes,
+          attribute: referralAttr,
+        });
+      }
+
       root
         .find(j.JSXElement, {
           openingElement: { name: { name: dstElementName } },
@@ -195,7 +214,7 @@ function addTradingPageProps({ root, j, srcElementName, dstElementName }) {
         .forEach((tradingPagePath) => {
           const tradingPageOpeningElement = tradingPagePath.node.openingElement;
 
-          // add shareOptions={shareOptions.pnl} attributes
+          // add shareOptions={shareOptions.pnl} attributes to dstElementName
           if (shareOptionsAttr) {
             tradingPageOpeningElement.attributes.push(
               j.jsxAttribute(
@@ -210,7 +229,7 @@ function addTradingPageProps({ root, j, srcElementName, dstElementName }) {
             );
           }
 
-          // add referral={referral} attributes
+          // add referral={referral} attributes to dstElementName
           if (referralAttr) {
             tradingPageOpeningElement.attributes.push(
               j.jsxAttribute(j.jsxIdentifier("referral"), referralAttr.value)
@@ -232,8 +251,8 @@ function removeProps({ root, j, locadlName }) {
     "accountMenuItems",
     "onClickAccountMenuItem",
     "includeTestnet",
-    "shareOptions",
-    "referral",
+    // "shareOptions",
+    // "referral",
     "getWalletAdapter",
   ];
 
@@ -268,6 +287,33 @@ function findPath({ root, j, pkg, specifier }) {
   });
 
   return bool;
+}
+
+function addComment({ j, attribute, attributes }) {
+  attributes.splice(
+    attributes.length - 1,
+    0,
+    j.jsxText(
+      `// please manually move ${attribute.name?.name} to TradingPage\n/* ${j(
+        attribute
+      ).toSource()} */`
+    )
+  );
+  // const attrIndex = attributes.findIndex(
+  //   (attr) => attr.name && attr.name.name === attributeName
+  // );
+
+  // if (attrIndex !== -1) {
+  //   // insert
+  //   attributes.splice(
+  //     attributes.length - 1,
+  //     0,
+  //     j.jsxText(`// please manually move ${attributeName} to TradingPage`)
+  //   );
+  //   // comment
+  //   const attribute = attributes[attrIndex + 1];
+  //   attribute.comments = [j.commentBlock(` ${j(attribute).toSource()} `)];
+  // }
 }
 
 function createSharedDataFile() {

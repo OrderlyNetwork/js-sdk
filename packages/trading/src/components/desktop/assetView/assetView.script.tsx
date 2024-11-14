@@ -196,7 +196,7 @@ export const useAssetViewScript = () => {
   const _freeCollateral = useDataTap(freeCollateral) ?? undefined;
   const _marginRatioVal = useDataTap(marginRatioVal) ?? undefined;
   const _mmr = useDataTap(mmr) ?? undefined;
-  const _totalValue = useDataTap(totalValue) ?? undefined;  
+  const _totalValue = useDataTap(totalValue) ?? undefined;
 
   return {
     onDeposit,

@@ -75,7 +75,7 @@ export const ReferralCode: FC<{ className?: string }> = (props) => {
                 <div className="orderly-text-base 2xl:orderly-text-lg">Referral codes</div>
                 {/* <div className="orderly-flex orderly-text-base-contrast-54 orderly-text-2xs 2xl:orderly-text-xs">
                     Remaining referral codes:&nbsp;
-                    <span className="orderly-text-primary">{codes.length}</span>
+                    <span className="orderly-text-primary-darken">{codes.length}</span>
                 </div> */}
             </div>
             <CodeList dataSource={codes} copyLink={copyLink} editRate={editRate} setPinCode={setPinCode} />
@@ -337,7 +337,7 @@ const _CopyLink: FC<{ onClick: (event: any) => void, className?: string }> = (pr
         <Button
             size="small"
             variant={"outlined"}
-            className={cn("orderly-text-primary orderly-border-primary orderly-w-[90px] md:orderly-w-[125px]", props.className)}
+            className={cn("orderly-text-primary-darken orderly-border-primary-darken orderly-w-[90px] md:orderly-w-[125px]", props.className)}
             onClick={props.onClick}
         >
             Copy link

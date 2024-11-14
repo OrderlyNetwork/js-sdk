@@ -68,7 +68,6 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     if (
       !!data &&
       Array.isArray(data.rows) &&
-      data.rows.length > 0 &&
       useApiStatusStore.getState().apis.positions.loading
     ) {
       useApiStatusStore.getState().actions.updateApiLoading("positions", false);
@@ -256,7 +255,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
         };
       });
 
-      if (!totalValue.eq(zero)) {
+      if (totalValue !== null && !totalValue.eq(zero)) {
         totalUnrealizedROI = account.totalUnrealizedROI({
           totalUnrealizedPnL: totalUnrealPnl,
           totalValue: totalValue.toNumber(),

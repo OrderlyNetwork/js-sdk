@@ -3,6 +3,7 @@
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
 const { exec, execSync } = require("child_process");
+const path = require("path");
 
 main();
 
@@ -60,20 +61,22 @@ function getCommand(argv) {
   const { _, parser, extensions, ignore } = argv;
 
   const _path = _[0];
+  const fullPath = path.resolve(_path);
 
   const i =
     ignore === "node_modules"
       ? ignore
       : `node_modules --ignore-pattern=${ignore}`;
 
-  const command = `npx jscodeshift --parser=${parser} --extensions=${extensions} --ignore-pattern=${i} --transform=./command/transformer.js ${_path}`;
+  const command = `npx jscodeshift --parser=${parser} --extensions=${extensions} --ignore-pattern=${i} --transform=./command/transformer.js ${fullPath}`;
 
   // console.log("command: ", command);
   return command;
 }
 
 function execCommand(command) {
-  exec(command, (error, stdout, stderr) => {
+  const cwd = path.resolve(__dirname, "../");
+  exec(command, { cwd }, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error executing command: ${error.message}`);
       return;
