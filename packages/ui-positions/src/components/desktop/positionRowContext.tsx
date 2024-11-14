@@ -13,6 +13,7 @@ import {
   useOrderEntry_deprecated,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
+import { toast } from "@orderly.network/ui";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -32,6 +33,7 @@ export interface PositionsRowContextState {
   tpslOrder?: API.AlgoOrder;
   quoteDp?: number;
   baseDp?: number;
+  errors: any | undefined;
 }
 
 export const PositionsRowContext = createContext(
@@ -57,6 +59,8 @@ export const PositionsRowProvider: FC<
   const [side, setSide] = useState<OrderSide>(
     props.position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY
   );
+
+  const [errors, setErrors] = useState<any | undefined>(undefined);
 
   const [type, setType] = useState<OrderType>(OrderType.MARKET);
 
@@ -119,6 +123,14 @@ export const PositionsRowProvider: FC<
     setPrice(newValues["order_price"] as string);
   };
 
+  useEffect(() => {
+    let order = closeOrderData;
+    helper.validator(order).then((value: any) => {
+      console.log("callback", JSON.stringify(value));
+      setErrors(value);
+    });
+  }, [closeOrderData]);
+
   const postOrder = () => {
     return onSubmit(closeOrderData);
   };
@@ -141,6 +153,7 @@ export const PositionsRowProvider: FC<
         closeOrderData,
         quoteDp,
         baseDp,
+        errors,
       }}
     >
       {props.children}
