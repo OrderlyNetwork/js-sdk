@@ -3,7 +3,7 @@ import { FC, useMemo, useState } from "react";
 import { Text } from "@/text";
 import { NetworkImage } from "@/icon";
 import { Checkbox } from "@/checkbox";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useDebouncedCallback, useLocalStorage } from "@orderly.network/hooks";
 import { Label } from "@/label";
 import Button from "@/button";
 import { cn } from "@/utils";
@@ -162,6 +162,29 @@ export const OrderConfirmFooter: FC<{
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [loading, setLoading] = useState(false);
+
+  const onSubmit = useDebouncedCallback(
+    () => {
+      setLoading(true);
+      return Promise.resolve()
+        .then(() => {
+          if (typeof props.onOk === "function") {
+            return props.onOk();
+          }
+          return true;
+        })
+        .then((data?: any) => {
+          resolve(data);
+          hide();
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    300,
+    { leading: true }
+  );
+
   return (
     <div className="orderly-flex orderly-gap-2 orderly-px-5">
       <div className="orderly-flex-1 orderly-items-center orderly-h-[32px]">
@@ -170,7 +193,7 @@ export const OrderConfirmFooter: FC<{
       <div className="orderly-flex-1 orderly-flex orderly-gap-3 orderly-grid-cols-2">
         <Button
           id="orderly-desktop-confirm-order-dialog-cancel"
-          className="orderly-confirm-dialog-cancal-button orderly-h-[32px] orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
+          className="orderly-confirm-dialog-cancel-button orderly-h-[32px] orderly-text-xs desktop:orderly-text-xs orderly-font-bold"
           key="cancel"
           type="button"
           variant="contained"
@@ -200,19 +223,7 @@ export const OrderConfirmFooter: FC<{
           disabled={loading}
           loading={loading}
           fullWidth
-          onClick={() => {
-            return Promise.resolve()
-              .then(() => {
-                if (typeof props.onOk === "function") {
-                  return props.onOk();
-                }
-                return true;
-              })
-              .then((data?: any) => {
-                resolve(data);
-                hide();
-              });
-          }}
+          onClick={onSubmit}
         >
           Confirm
         </Button>

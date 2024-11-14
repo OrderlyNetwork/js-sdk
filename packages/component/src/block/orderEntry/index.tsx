@@ -23,6 +23,7 @@ import {
   useLocalStorage,
   useDebounce,
   useMediaQuery,
+  useDebouncedCallback,
 } from "@orderly.network/hooks";
 import { UseOrderEntryMetaState, utils } from "@orderly.network/hooks";
 import { AuthGuard } from "@orderly.network/ui-connector";
@@ -148,6 +149,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       formattedOrder.order_type || OrderType.LIMIT
     );
 
+    const [submitting, setSubmitting] = useState(false);
+
     useEffect(() => {
       // handle orderbook item click event
       const orderbookItemClickHandler = (item: number[]) => {
@@ -257,6 +260,8 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
       //
       event.preventDefault();
 
+      if (submitting) return;
+      setSubmitting(true);
       if (!symbolConfig) {
         return Promise.reject("symbolConfig is null");
       }
@@ -321,12 +326,12 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
         .then((isOk) => {
           return props.submit().then(
             (res) => {
-              // props.setValues({
-              //   trigger_price: "",
-              //   order_price: "",
-              //   order_quantity: "",
-              //   total: "",
-              // });
+              props.setValues({
+                // trigger_price: "",
+                // order_price: "",
+                order_quantity: "",
+                // total: "",
+              });
               // resetForm?.();
             },
             (err) => {
@@ -345,9 +350,11 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
           if (error !== "cancel" && !!error?.message) {
             toast.error(error.message || "Failed");
           }
+        }).finally(() => {
+          setSubmitting(false);
         });
     };
-
+    
     const onDeposit = useCallback((event: FormEvent) => {
       event.preventDefault();
       props.onDeposit?.();
@@ -706,3 +713,5 @@ export const OrderEntry = forwardRef<OrderEntryRef, OrderEntryProps>(
     );
   }
 );
+
+OrderEntry.displayName = "OrderEntry";

@@ -16,7 +16,7 @@ import Button from "@/button";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
-import { cleanStringStyle } from "@orderly.network/hooks";
+import { cleanStringStyle, useDebouncedCallback } from "@orderly.network/hooks";
 import { Input } from "@/input";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "@/block/tp_sl/tpslOrderRowContext";
@@ -36,12 +36,14 @@ export const OrderQuantity = (props: {
     setQuantity(order.quantity.toString());
   }, [props.order.quantity]);
 
-
   const componentRef = useRef<HTMLDivElement | null>(null);
 
   const handleClickOutside = (event: any) => {
-    if (componentRef.current && !componentRef.current.contains(event.target) && open <= 0) {
-      
+    if (
+      componentRef.current &&
+      !componentRef.current.contains(event.target) &&
+      open <= 0
+    ) {
       setQuantity(order.quantity.toString());
       setEditting(false);
     }
@@ -57,21 +59,23 @@ export const OrderQuantity = (props: {
 
   return (
     <span ref={componentRef} className="orderly-block">
-      {
-        (!editting && open <= 0) ? (
-          <NormalState order={order} quantity={quantity} setEditing={setEditting} />
-        ) : (
-          <EditingState
-            order={order}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            editting={editting}
-            setEditting={setEditting}
-            open={open}
-            setOpen={setOpen}
-          />
-        )
-      }
+      {!editting && open <= 0 ? (
+        <NormalState
+          order={order}
+          quantity={quantity}
+          setEditing={setEditting}
+        />
+      ) : (
+        <EditingState
+          order={order}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          editting={editting}
+          setEditting={setEditting}
+          open={open}
+          setOpen={setOpen}
+        />
+      )}
     </span>
   );
 
@@ -254,75 +258,85 @@ const EditingState: FC<{
     }
   };
 
-  const onConfirm = useCallback(() => {
-    setIsSubmitting(true);
+  const onConfirm = useDebouncedCallback(
+    () => {
+      setIsSubmitting(true);
 
-    let params: any = {
-      symbol: order.symbol,
-      order_type: order.type,
-      side: order.side,
-      order_price: order.price,
-      order_quantity: quantity,
-      // reduce_only: Boolean(order.reduce_only),
-      algo_order_id: order.algo_order_id,
-    };
+      let params: any = {
+        symbol: order.symbol,
+        order_type: order.type,
+        side: order.side,
+        order_price: order.price,
+        order_quantity: quantity,
+        // reduce_only: Boolean(order.reduce_only),
+        algo_order_id: order.algo_order_id,
+      };
 
-    if (
-      typeof params.algo_order_id !== "undefined" &&
-      params.order_type === "MARKET"
-    ) {
-      // stop market order
-      const { order_price, ...rest } = params;
-      params = rest;
-    }
-
-    if (typeof order.reduce_only !== "undefined") {
-      params.reduce_only = order.reduce_only;
-    }
-
-    if (order.order_tag !== undefined) {
-      params = { ...params, order_tag: order.order_tag };
-    }
-
-    // @ts-ignore
-    if (order.visible_quantity === 0) {
-      params["visible_quantity"] = 0;
-    }
-
-    // @ts-ignore
-    if (order.tag !== undefined) {
-      // @ts-ignore
-      params["order_tag"] = order.tag;
-    }
-
-    let future;
-
-    if ("algo_type" in order && order.algo_type === AlgoOrderRootType.TP_SL) {
-      future = onUpdateTPSLOrder(order as API.AlgoOrderExt, params);
-    } else {
-      if (order.algo_order_id !== undefined) {
-        future = editAlgoOrder(order.algo_order_id.toString(), params);
-      } else {
-        future = editOrder((order as API.OrderExt).order_id.toString(), params);
+      if (
+        typeof params.algo_order_id !== "undefined" &&
+        params.order_type === "MARKET"
+      ) {
+        // stop market order
+        const { order_price, ...rest } = params;
+        params = rest;
       }
-    }
 
-    // @ts-ignore
-    future
-      .then(
-        (result) => {
-          closePopover();
-          setQuantity(quantity.toString());
-          // setTimeout(() => inputRef.current?.blur(), 300);
-        },
-        (err) => {
-          toast.error(err.message);
-          setQuantity(order.quantity.toString());
-          cancelPopover();
+      if (typeof order.reduce_only !== "undefined") {
+        params.reduce_only = order.reduce_only;
+      }
+
+      if (order.order_tag !== undefined) {
+        params = { ...params, order_tag: order.order_tag };
+      }
+
+      // @ts-ignore
+      if (order.visible_quantity === 0) {
+        params["visible_quantity"] = 0;
+      }
+
+      // @ts-ignore
+      if (order.tag !== undefined) {
+        // @ts-ignore
+        params["order_tag"] = order.tag;
+      }
+
+      let future;
+
+      if ("algo_type" in order && order.algo_type === AlgoOrderRootType.TP_SL) {
+        future = onUpdateTPSLOrder(order as API.AlgoOrderExt, params);
+      } else {
+        if (order.algo_order_id !== undefined) {
+          future = editAlgoOrder(order.algo_order_id.toString(), params);
+        } else {
+          future = editOrder(
+            (order as API.OrderExt).order_id.toString(),
+            params
+          );
         }
-      )
-      .finally(() => setIsSubmitting(false));
-  }, [quantity]);
+      }
+
+      // @ts-ignore
+      future
+        .then(
+          (result) => {
+            closePopover();
+            setQuantity(quantity.toString());
+            // setTimeout(() => inputRef.current?.blur(), 300);
+          },
+          (err) => {
+            toast.error(err.message);
+            setQuantity(order.quantity.toString());
+            cancelPopover();
+          }
+        )
+        .finally(() => setIsSubmitting(false));
+    },
+    500,
+    {
+      leading: true,
+      trailing: false,
+    }
+  );
 
   return (
     <Popover
@@ -388,7 +402,7 @@ const EditingState: FC<{
             containerClassName="orderly-h-auto orderly-pl-7 orderly-flex-1"
             className="orderly-flex-1 orderly-pl-9 orderly-pr-9 orderly-bg-base-700 orderly-px-2 orderly-py-1 orderly-rounded"
             tooltipClassName="orderly-z-50"
-          /> 
+          />
         </PopoverAnchor>
         <div
           className={cn("orderly-absolute orderly-right-1 orderly-flex", {

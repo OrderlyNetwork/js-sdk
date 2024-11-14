@@ -11,7 +11,11 @@ import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { OrderListContext } from "../shared/orderListContext";
 import { toast } from "@/toast";
 import { Divider } from "@/divider";
-import { cleanStringStyle, useEventEmitter } from "@orderly.network/hooks";
+import {
+  cleanStringStyle,
+  useDebouncedCallback,
+  useEventEmitter,
+} from "@orderly.network/hooks";
 import { Input } from "@/input";
 
 export const TriggerPrice = (props: { order: API.OrderExt }) => {
@@ -127,11 +131,10 @@ const EditingState: FC<{
     setEditting(false);
   };
 
-  const onClick = (event :any) => {
+  const onClick = (event: any) => {
     event?.stopPropagation();
     event?.preventDefault();
 
-    
     if (Number(price) === Number(order.trigger_price)) {
       setEditting(false);
       return;
@@ -165,41 +168,48 @@ const EditingState: FC<{
     setEditting(false);
   };
 
-  const onConfirm = () => {
-    setIsSubmitting(true);
+  const onConfirm = useDebouncedCallback(
+    () => {
+      setIsSubmitting(true);
 
-    // @ts-ignore
-    let data: any = {
-      // price: price,
-      quantity: order.quantity,
-      trigger_price: price,
-      symbol: order.symbol,
-      // order_type: order.type,
-      // side: order.side,
-      // reduce_only: Boolean(order.reduce_only),
-      algo_order_id: order.algo_order_id,
-    };
+      // @ts-ignore
+      let data: any = {
+        // price: price,
+        quantity: order.quantity,
+        trigger_price: price,
+        symbol: order.symbol,
+        // order_type: order.type,
+        // side: order.side,
+        // reduce_only: Boolean(order.reduce_only),
+        algo_order_id: order.algo_order_id,
+      };
 
-    if (order.order_tag !== undefined) {
-      data = { ...data, order_tag: order.order_tag };
+      if (order.order_tag !== undefined) {
+        data = { ...data, order_tag: order.order_tag };
+      }
+      // @ts-ignore
+      editAlgoOrder(`${order.algo_order_id}`, data)
+        .then(
+          (result) => {
+            closePopover();
+            setPrice(price);
+            // setTimeout(() => inputRef.current?.blur(), 300);
+          },
+          (err) => {
+            toast.error(err.message);
+            // @ts-ignore
+            setPrice(order.trigger_price?.toString());
+            cancelPopover();
+          }
+        )
+        .finally(() => setIsSubmitting(false));
+    },
+    500,
+    {
+      leading: true,
+      trailing: false,
     }
-    // @ts-ignore
-    editAlgoOrder(`${order.algo_order_id}`, data)
-      .then(
-        (result) => {
-          closePopover();
-          setPrice(price);
-          // setTimeout(() => inputRef.current?.blur(), 300);
-        },
-        (err) => {
-          toast.error(err.message);
-          // @ts-ignore
-          setPrice(order.trigger_price?.toString());
-          cancelPopover();
-        }
-      )
-      .finally(() => setIsSubmitting(false));
-  };
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
 
