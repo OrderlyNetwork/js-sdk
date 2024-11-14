@@ -57,7 +57,7 @@ export const OrderQuantity = (props: {
 
   const { base_dp, base, base_tick } = useSymbolContext();
 
-  const setQuantity = async (qty: string): Promise<void> => {
+  const setQuantity = async (qty: string, maxQty?: number): Promise<void> => {
     originSetQuantity(qty);
     const positionQty = Math.abs(position?.position_qty || 0);
 
@@ -66,7 +66,12 @@ export const OrderQuantity = (props: {
         `Quantity should be less than position quantity : ${positionQty}`
       );
     } else {
-      setError(undefined);
+      const quantity = Number(qty);
+      if (maxQty && quantity > maxQty) {
+        setError(`Quantity should be less than ${maxQty}`)
+      } else {
+        setError(undefined);
+      }
     }
     return Promise.resolve();
   };
@@ -255,6 +260,7 @@ export const OrderQuantity = (props: {
         confirmOpen={open}
         side={order.side}
         order={order}
+        setError={setError}
       />
     );
 
@@ -327,7 +333,7 @@ const NormalState: FC<{
 
         order.side === OrderSide.BUY && "oui-text-trade-profit",
         order.side === OrderSide.SELL && "oui-text-trade-loss",
-        grayCell(order) && "oui-text-base-conrast-20"
+        grayCell(order) && "oui-text-base-contrast-20"
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -364,7 +370,7 @@ const EditState: FC<{
   base_dp: number;
   base_tick: number;
   quantity: string;
-  setQuantity: (quantity: string) => Promise<void>;
+  setQuantity: (quantity: string, maxQty: number) => Promise<void>;
   editing: boolean;
   confirmOpen: boolean;
   setEditing: (value: boolean) => void;
@@ -377,6 +383,7 @@ const EditState: FC<{
   positionQty?: number;
   side?: string;
   order: any;
+  setError: (err: string) => void;
 }> = (props) => {
   const {
     inputRef,
@@ -427,11 +434,11 @@ const EditState: FC<{
     }
   }, [sliderValue, qty, quantity]);
 
-  const formatQuantity = async (qty: string | number): Promise<void> => {
+  const formatQuantity = async (_qty: string | number): Promise<void> => {
     if (base_tick > 0) {
-      qty = utils.formatNumber(qty, base_tick) ?? qty;
+      _qty = utils.formatNumber(_qty, base_tick) ?? _qty;
     }
-    return setQuantity(`${qty}`);
+    return setQuantity(`${_qty}`, qty);
   };
 
   return (
@@ -443,7 +450,7 @@ const EditState: FC<{
           value={quantity}
           setValue={(e: string) => {
             const quantity = Math.abs(Math.min(Number(e), qty)).toString();
-            setQuantity(e);
+            setQuantity(e, qty);
             if (e.endsWith(".")) return;
             if (Number(quantity) === 0) {
               setSliderValue(0);
@@ -510,7 +517,7 @@ const EditState: FC<{
                   .mul(qty)
                   .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
-                setQuantity(quantity);
+                setQuantity(quantity, qty);
               }}
               onValueCommit={(values) => {
                 const quantity = new Decimal(values[0])
@@ -530,7 +537,7 @@ const EditState: FC<{
                   .mul(qty)
                   .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
-                setQuantity(quantity);
+                setQuantity(quantity, qty);
                 setTimeout(() => {
                   inputRef.current.focus();
                   inputRef.current.setSelectionRange(
