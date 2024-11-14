@@ -1,5 +1,29 @@
 # storybook
 
+## 1.3.16
+
+### Patch Changes
+
+- bba082a3e: fix bugs;
+- Updated dependencies [bba082a3e]
+  - @orderly.network/react@1.5.16
+  - @orderly.network/hooks@1.5.16
+  - @orderly.network/core@1.5.16
+  - @orderly.network/web3-onboard@1.5.16
+  - @orderly.network/web3-modal@1.5.16
+
+## 1.3.16-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@1.5.16-alpha.0
+  - @orderly.network/hooks@1.5.16-alpha.0
+  - @orderly.network/core@1.5.16-alpha.0
+  - @orderly.network/web3-onboard@1.5.16-alpha.0
+  - @orderly.network/web3-modal@1.5.16-alpha.0
+
 ## 1.3.15
 
 ### Patch Changes
