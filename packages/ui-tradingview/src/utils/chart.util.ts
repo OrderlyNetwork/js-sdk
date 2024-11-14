@@ -2,7 +2,7 @@ import { ColorConfigInterface } from "../tradingviewAdapter/type";
 
 const upColor = "#008676";
 const downColor = "#D92D6B";
-const chartBG = "#131519";
+export const chartBG = "#131519";
 const pnlUpColor = "#00B49E";
 const pnlDownColor = "#FF447C";
 const pnlZoreColor = "#333948";
