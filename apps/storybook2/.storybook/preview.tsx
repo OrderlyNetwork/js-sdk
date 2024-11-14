@@ -1,10 +1,9 @@
+import React from "react";
 import type { Preview } from "@storybook/react";
 import { withThemeByClassName } from "@storybook/addon-themes";
-
-import "../src/tailwind.css";
-// import "@orderly.network/chart/dist/styles.css";
-import { withWalletConnect } from "./addons/withWalletConnect";
 import { customViewports } from "./screenSizes";
+import OrderlyProvider from "./orderlyProvider";
+import "../src/tailwind.css";
 
 export const decorators = [
   withThemeByClassName({
@@ -14,10 +13,16 @@ export const decorators = [
     },
     defaultTheme: "dark",
   }),
-  // withWalletConnect,
 ];
 
 const preview: Preview = {
+  decorators: [
+    (Story: any) => (
+      <OrderlyProvider>
+        <Story />
+      </OrderlyProvider>
+    ),
+  ],
   parameters: {
     backgrounds: {
       values: [

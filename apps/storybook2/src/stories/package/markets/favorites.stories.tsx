@@ -1,33 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   FavoritesDropdownMenuWidget,
   FavoritesTabWidget,
 } from "@orderly.network/markets";
 import { Box, Button, Flex } from "@orderly.network/ui";
-import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
-
-const configStore = new CustomConfigStore({
-  networkId: "testnet",
-  brokerId: "orderly",
-  brokerName: "Orderly",
-  env: "staging",
-});
 
 const meta: Meta<typeof FavoritesDropdownMenuWidget> = {
   title: "Package/Markets/Favorites",
   subcomponents: {},
-  decorators: [
-    (Story: any) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider configStore={configStore}>
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
 };
 
 export default meta;

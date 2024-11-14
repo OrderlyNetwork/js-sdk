@@ -1,38 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Box, Flex, ModalProvider } from "@orderly.network/ui";
-import {
-  AccountMenuWidget,
-  FooterWidget,
-  AccountSummaryWidget,
-  ChainMenuWidget,
-  Scaffold,
-} from "@orderly.network/ui-scaffold";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { Box } from "@orderly.network/ui";
+import { FooterWidget, Scaffold } from "@orderly.network/ui-scaffold";
 
-const meta = {
+const meta: Meta<typeof FooterWidget> = {
   title: "Package/ui-scaffold/footer",
   component: FooterWidget,
-  // subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
   decorators: [
     (Story: any) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <ModalProvider>
-            <Box intensity={900}>
-              <Story />
-            </Box>
-          </ModalProvider>
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
+      <Box intensity={900}>
+        <Story />
+      </Box>
     ),
   ],
   argTypes: {},

@@ -1,13 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Button, modal } from "@orderly.network/ui";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
-import {
-  APIManagerModule,
-  PortfolioLayoutWidget,
-} from "@orderly.network/portfolio";
 import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import {
   SolflareWalletAdapter,
@@ -32,7 +26,6 @@ import { OrderlyIcon } from "../trading/icons.tsx";
 import { useState } from "react";
 
 const network = WalletAdapterNetwork.Devnet;
-
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
   console.log("-- mobile wallet adapter", adapter);
@@ -70,15 +63,15 @@ const meta: Meta<typeof TradingPage> = {
         brokerName: "Orderly",
         env: "staging",
       });
-      console.log('-- wallets', wallets);
+      console.log("-- wallets", wallets);
       return (
         <WalletConnectorProvider
           solanaInitial={{ wallets: wallets, onError: handleSolanaError }}
         >
           <OrderlyAppProvider configStore={configStore}>
-            <Scaffold leftSidebar={null} mainNavProps={mainNavProps}>
+            <Scaffold mainNavProps={mainNavProps}>
               <Story />
-            </Scaffold>{" "}
+            </Scaffold>
           </OrderlyAppProvider>
         </WalletConnectorProvider>
       );
@@ -87,15 +80,8 @@ const meta: Meta<typeof TradingPage> = {
   parameters: {
     layout: "fullscreen",
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  // tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    // symbol: "PERP_BTC_USDC",
-    // onSymbolChange: (symbol) => {
-    //   console.log("will change symbol", symbol);
-    // },
     tradingViewConfig: {
       // scriptSRC: "",
       scriptSRC: "/tradingview/charting_library/charting_library.js",
@@ -137,4 +123,3 @@ export const Default: Story = {
     );
   },
 };
-

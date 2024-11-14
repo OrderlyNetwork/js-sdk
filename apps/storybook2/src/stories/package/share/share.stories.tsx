@@ -5,8 +5,6 @@ import {
   SharePnLBottomSheetId,
   SharePnLBottomSheetWidget,
 } from "@orderly.network/ui-share";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Button, Flex, modal } from "@orderly.network/ui";
 
 const meta: Meta<typeof SharePnLDialogWidget> = {
@@ -16,37 +14,10 @@ const meta: Meta<typeof SharePnLDialogWidget> = {
   //     Assets: OverviewModule.AssetWidget,
   //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
   // },
-  decorators: [
-    (Story) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
   parameters: {
     layout: "centered",
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  // tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
-  argTypes: {
-    //   backgroundColor: { control: 'color' },
-    // p: {
-    //     control: {
-    //         type: "number",
-    //         min: 0,
-    //         max: 10,
-    //         step: 1,
-    //     },
-    // },
-  },
-  // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
+  argTypes: {},
   args: {
     pnl: {
       position: {

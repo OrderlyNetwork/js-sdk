@@ -1,6 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   APIManagerModule,
   PortfolioLayoutWidget,
@@ -10,24 +8,7 @@ const meta: Meta<typeof APIManagerModule.APIManagerPage> = {
   title: "Package/Portfolio/APIKey",
   component: APIManagerModule.APIManagerPage,
   subcomponents: {},
-  decorators: [
-    (Story: any) => {
-      return (
-        <WalletConnectorProvider>
-          <OrderlyAppProvider
-            brokerId="orderly"
-            brokerName="Orderly"
-            networkId="testnet"
-          >
-            <Story />
-          </OrderlyAppProvider>
-        </WalletConnectorProvider>
-      );
-    },
-  ],
-  parameters: {
-    // layout: "centered",
-  },
+  parameters: {},
   argTypes: {},
   args: {},
 };

@@ -3,28 +3,13 @@ import {
   FeeTierModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Box, Column } from "@orderly.network/ui";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { TableColumn } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/Portfolio/FeeTier",
   component: FeeTierModule.FeeTierPage,
   subcomponents: {},
-  decorators: [
-    (Story: any) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
   parameters: {
     layout: "centered",
   },
@@ -53,7 +38,7 @@ export const CustomData: Story = {
     return (
       <FeeTierModule.FeeTierPage
         dataAdapter={(columns, dataSource) => {
-          const cols: Column[] = [
+          const cols: TableColumn[] = [
             ...columns.slice(0, 2),
             {
               title: "or",
