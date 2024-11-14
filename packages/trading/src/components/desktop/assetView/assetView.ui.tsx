@@ -205,8 +205,10 @@ const AssetValueList: FC<AssetValueListProps> = ({
 
   const toggleOpen = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
-    setOptionsOpen(!open);
-  }, [setOptionsOpen]);
+    setTimeout(() => {
+      setOptionsOpen(!open);
+    }, 0);
+  }, []);
 
   return (
     <Box>
@@ -225,41 +227,48 @@ const AssetValueList: FC<AssetValueListProps> = ({
         />
         <Divider className="oui-flex-1" />
       </Flex>
-      <Collapsible open={open}>
-        <CollapsibleContent>
-          <Box className="oui-space-y-1.5">
-            <AssetDetail
-              label="Free collateral"
-              description="Free collateral for placing new orders."
-              formula="Free collateral = Total balance + Total unsettlement PnL - Total position initial margin"
-              visible={visible}
-              value={freeCollateral!}
-              unit="USDC"
-            />
-            <AssetDetail
-              label="Margin ratio"
-              description="The margin ratio represents the proportion of collateral relative to the total position value."
-              formula="Account margin ratio = (Total collateral value / Total position notional) * 100%"
-              visible={visible}
-              value={marginRatioVal}
-              isConnected={isConnected}
-              rule="percentages"
-              showPercentage={true}
-              placeholder="--%"
-            />
-            <AssetDetail
-              label="Maintenance margin ratio"
-              description="The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated."
-              formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
-              visible={visible}
-              value={renderMMR}
-              rule="percentages"
-              showPercentage={true}
-              placeholder="--%"
-            />
-          </Box>
-        </CollapsibleContent>
-      </Collapsible>
+
+      <Box
+        style={{
+          transform: "translateZ(0)",
+        }}
+        className={cn(
+          "oui-space-y-1.5 oui-select-none oui-overflow-hidden",
+          "oui-transition-all oui-duration-150",
+          // 'oui-will-change-[height]',
+          open ? "oui-h-[69px]" : "oui-h-0"
+        )}
+      >
+        <AssetDetail
+          label="Free collateral"
+          description="Free collateral for placing new orders."
+          formula="Free collateral = Total balance + Total unsettlement PnL - Total position initial margin"
+          visible={visible}
+          value={freeCollateral!}
+          unit="USDC"
+        />
+        <AssetDetail
+          label="Margin ratio"
+          description="The margin ratio represents the proportion of collateral relative to the total position value."
+          formula="Account margin ratio = (Total collateral value / Total position notional) * 100%"
+          visible={visible}
+          value={marginRatioVal}
+          isConnected={isConnected}
+          rule="percentages"
+          showPercentage={true}
+          placeholder="--%"
+        />
+        <AssetDetail
+          label="Maintenance margin ratio"
+          description="The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated."
+          formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
+          visible={visible}
+          value={renderMMR}
+          rule="percentages"
+          showPercentage={true}
+          placeholder="--%"
+        />
+      </Box>
     </Box>
   );
 };
