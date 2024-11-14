@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useConfig,
@@ -18,7 +18,7 @@ export function useFaucetScript() {
   const [getTestUSDC, { isMutating }] = useMutation(
     `${operatorUrl}/v1/faucet/usdc`
   );
-  const loadingRef = useRef(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const showFaucet = useMemo(() => {
     if (!connectedChain || !connectedChain.id) {
@@ -31,10 +31,10 @@ export function useFaucetScript() {
   }, [state, connectedChain]);
 
   const getFaucet = () => {
-    if (loadingRef.current) {
+    if (loading) {
       return;
     }
-    loadingRef.current = true;
+    setLoading(true);
     const message = `${
       namespace === ChainNamespace.solana ? "100" : "1,000"
     } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
@@ -45,7 +45,7 @@ export function useFaucetScript() {
       broker_id: config.get("brokerId"),
     }).then(
       (res) => {
-        loadingRef.current = false;
+        setLoading(false)
         if (res.success) {
           return modal.alert({
             title: "Get test USDC",
@@ -62,7 +62,7 @@ export function useFaucetScript() {
       }
     );
   };
-  return { getFaucet, showFaucet };
+  return { getFaucet, showFaucet, loading};
 }
 
 export type FaucetState = ReturnType<typeof useFaucetScript>;
