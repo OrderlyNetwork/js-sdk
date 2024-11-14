@@ -45,7 +45,7 @@ export const usePositionStream = (
   const positionCalculator = useRef<PositionCalculator | null>(null);
   const calcutlatorService = useCalculatorService();
 
-  const markPrices = useMarkPricesStream();
+  // const markPrices = useMarkPricesStream();
 
   // const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 10);
 
@@ -108,9 +108,98 @@ export const usePositionStream = (
     (state) => state.portfolio
   );
 
-  const positionsRows = useMemo(() => {
-    let rows = formattedPositions[0];
-    if (!rows) return [];
+  // const positionsRows = useMemo(() => {
+  //   let rows = formattedPositions[0];
+  //   if (!rows) return [];
+
+  //   // rows.forEach((item) => {
+  //   //   if (item.position_qty > 0) {
+  //   //     console.log(markPrices.data[item.symbol], item.mark_price);
+  //   //   }
+  //   // });
+
+  //   if (!includedPendingOrder) {
+  //     rows = rows.filter((item) => item.position_qty !== 0);
+  //   } else {
+  //     rows = rows.filter(
+  //       (item) =>
+  //         item.position_qty !== 0 ||
+  //         item.pending_long_qty !== 0 ||
+  //         item.pending_short_qty !== 0
+  //     );
+  //   }
+
+  //   if (calcMode === "lastPrice") {
+  //     rows = rows.map((item) => {
+  //       const {
+  //         unrealized_pnl_index,
+  //         unrealized_pnl_ROI_index,
+
+  //         ...rust
+  //       } = item;
+
+  //       return {
+  //         ...rust,
+  //         unrealized_pnl: unrealized_pnl_index ?? 0,
+  //         unsettled_pnl_ROI: unrealized_pnl_ROI_index ?? 0,
+  //         // mark_price: item.last_price,
+  //       };
+  //     });
+  //   }
+
+  //   // console.log("tpslOrders", tpslOrders);
+
+  //   if (Array.isArray(tpslOrders) && tpslOrders.length) {
+  //     rows = rows.map((item) => {
+  //       const related_order = findPositionTPSLFromOrders(
+  //         tpslOrders,
+  //         item.symbol
+  //       );
+
+  //       const tp_sl_pricer = !!related_order
+  //         ? findTPSLFromOrder(related_order)
+  //         : undefined;
+
+  //       return {
+  //         ...item,
+  //         tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
+  //         sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
+  //         algo_order: related_order,
+  //       };
+  //     });
+  //   }
+
+  //   return rows;
+  // }, [
+  //   formattedPositions,
+  //   includedPendingOrder,
+  //   calcMode,
+  //   tpslOrders,
+  //   markPrices,
+  // ]);
+
+  const aggregated = useMemo(() => {
+    let data = formattedPositions[1];
+    if (!data) return {};
+
+    if (calcMode === "markPrice") return data;
+
+    const { total_unreal_pnl_index, unrealPnlROI_index, ...rest } = data;
+
+    return {
+      ...rest,
+      unrealPnL: total_unreal_pnl_index,
+      total_unreal_pnl: total_unreal_pnl_index,
+      unrealPnlROI: unrealPnlROI_index,
+    };
+  }, [calcMode]);
+
+  let rows = formattedPositions[0];
+  {
+    // rows
+    if (!rows) {
+      rows = [];
+    }
 
     // rows.forEach((item) => {
     //   if (item.position_qty > 0) {
@@ -168,31 +257,7 @@ export const usePositionStream = (
         };
       });
     }
-
-    return rows;
-  }, [
-    formattedPositions,
-    includedPendingOrder,
-    calcMode,
-    tpslOrders,
-    markPrices,
-  ]);
-
-  const aggregated = useMemo(() => {
-    let data = formattedPositions[1];
-    if (!data) return {};
-
-    if (calcMode === "markPrice") return data;
-
-    const { total_unreal_pnl_index, unrealPnlROI_index, ...rest } = data;
-
-    return {
-      ...rest,
-      unrealPnL: total_unreal_pnl_index,
-      total_unreal_pnl: total_unreal_pnl_index,
-      unrealPnlROI: unrealPnlROI_index,
-    };
-  }, [calcMode]);
+  }
 
   const positionInfoGetter = createGetter<
     Omit<API.PositionInfo, "rows">,
@@ -201,7 +266,7 @@ export const usePositionStream = (
 
   return [
     {
-      rows: positionsRows,
+      rows,
       // rows: formattedPositions[0],
       aggregated: formattedPositions?.[1] ?? {},
       totalCollateral,

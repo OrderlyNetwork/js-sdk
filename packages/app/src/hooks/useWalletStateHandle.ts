@@ -44,7 +44,7 @@ export const useWalletStateHandle = (options: {
 
   const isManualConnect = useRef<boolean>(false);
 
-  const { account } = useAccount();
+  const { account, state: accountState } = useAccount();
   const keyStore = useKeyStore();
   const networkId = useConfig("networkId") as NetworkId;
   const [chains, { checkChainSupport }] = useChains();
@@ -118,7 +118,12 @@ export const useWalletStateHandle = (options: {
    * handle wallet connection
    */
   useEffect(() => {
-    // console.log("🔗 wallet state changed", connectedWallet);
+    if (
+      connectedWallet === null &&
+      accountState.status > AccountStatusEnum.NotConnected
+    ) {
+      account.disconnect();
+    }
 
     if (unsupported || !connectedChain) return;
     if (isManualConnect.current) return;
@@ -133,7 +138,8 @@ export const useWalletStateHandle = (options: {
         chain: {
           id: praseChainIdToNumber(currentChain!.id),
           namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
-        },        wallet: {
+        },
+        wallet: {
           name: connectedWallet.label,
         },
       });
@@ -164,6 +170,7 @@ export const useWalletStateHandle = (options: {
     currentWalletAddress,
     currentChain,
     account.address,
+    accountState,
     account.chainId,
     unsupported,
   ]);
@@ -206,7 +213,8 @@ export const useWalletStateHandle = (options: {
             provider: wallet.provider,
             chain: {
               id: praseChainIdToNumber(wallet.chains[0].id),
-              namespace: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
+              namespace:
+                wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
             },
             wallet: {
               name: wallet.label,

@@ -1,10 +1,16 @@
 const { jscodeshift } = require("jscodeshift");
+const fs = require("fs");
+const path = require("path");
 
-module.exports = function transformer(file, api) {
+// const sharedDataFilePath = path.join(__dirname, "sharedData.json");
+
+module.exports = function transformer(fileInfo, api) {
   const j = api.jscodeshift;
-  const root = j(file.source);
+  const root = j(fileInfo.source);
 
-  renamePackageImport({
+  // const sharedData = getSharedData({ root, j, fileInfo });
+
+  const OrderlyAppProviderLocalName = renamePackageImport({
     root,
     j,
     srcPkg: "@orderly.network/react",
@@ -13,7 +19,7 @@ module.exports = function transformer(file, api) {
     dstSpecifier: "OrderlyAppProvider",
   });
 
-  renamePackageImport({
+  const tradingPageLocalName = renamePackageImport({
     root,
     j,
     srcPkg: "@orderly.network/react",
@@ -22,7 +28,7 @@ module.exports = function transformer(file, api) {
     dstSpecifier: "TradingPage",
   });
 
-  renamePackageImport({
+  const walletConnectorProviderLocalName = renamePackageImport({
     root,
     j,
     srcPkg: "@orderly.network/web3-onboard",
@@ -31,21 +37,26 @@ module.exports = function transformer(file, api) {
     dstSpecifier: "WalletConnectorProvider",
   });
 
-  renameConnectProps({
+  renameWalletConnectorProviderProps({
     root,
     j,
+    locadlName: walletConnectorProviderLocalName,
   });
 
-  moveProps({
+  addTradingPageProps({
     root,
     j,
+    srcElementName: OrderlyAppProviderLocalName,
+    dstElementName: tradingPageLocalName,
   });
 
   removeProps({
     root,
     j,
+    locadlName: OrderlyAppProviderLocalName,
   });
 
+  // TODO: eslint file
   return root.toSource();
 };
 
@@ -57,6 +68,7 @@ function renamePackageImport({
   srcSpecifier,
   dstSpecifier,
 }) {
+  let localName;
   // find srcPkg
   const reactNode = root.find(j.ImportDeclaration, {
     source: { value: srcPkg },
@@ -65,7 +77,7 @@ function renamePackageImport({
   reactNode.forEach((path) => {
     const specifiers = path.node.specifiers;
 
-    const orderlyAppProviderSpecifier = specifiers.find(
+    const targetSpecifier = specifiers.find(
       (specifier) => specifier.imported.name === srcSpecifier
     );
 
@@ -73,11 +85,22 @@ function renamePackageImport({
       (specifier) => specifier.imported.name !== srcSpecifier
     );
 
-    if (orderlyAppProviderSpecifier) {
+    if (targetSpecifier) {
+      localName = targetSpecifier.local.name;
+
+      const isRename =
+        targetSpecifier.local.name !== targetSpecifier.imported.name;
+
       // insertAfter dstPkg
       reactNode.insertAfter(
         j.importDeclaration(
-          [j.importSpecifier(j.identifier(dstSpecifier))],
+          [
+            j.importSpecifier(
+              j.identifier(dstSpecifier),
+              // rename import
+              isRename ? j.identifier(localName) : j.identifier(dstSpecifier)
+            ),
+          ],
           j.literal(dstPkg)
         )
       );
@@ -91,21 +114,26 @@ function renamePackageImport({
       }
     }
   });
+
+  return localName;
 }
 
-function renameConnectProps({ root, j }) {
+function renameWalletConnectorProviderProps({ root, j, localName }) {
+  if (!localName) {
+    return;
+  }
   root
     .find(j.JSXElement, {
-      openingElement: { name: { name: "ConnectorProvider" } },
+      openingElement: { name: { name: localName } },
     })
     .forEach((path) => {
       const openingElement = path.node.openingElement;
       const closingElement = path.node.closingElement;
 
-      openingElement.name.name = "WalletConnectorProvider";
+      openingElement.name.name = localName;
       // rename components name
       if (closingElement) {
-        closingElement.name.name = "WalletConnectorProvider";
+        closingElement.name.name = localName;
       }
 
       const optionsAttribute = openingElement.attributes.find(
@@ -132,38 +160,14 @@ function renameConnectProps({ root, j }) {
     });
 }
 
-function removeProps({ root, j }) {
-  const properties = [
-    "theme",
-    "topBar",
-    "topBarProps",
-    "footerStatusBarProps",
-    "accountMenuItems",
-    "onClickAccountMenuItem",
-    "includeTestnet",
-    "shareOptions",
-    "referral",
-    "getWalletAdapter",
-  ];
-
-  root
-    .find(j.JSXElement, {
-      openingElement: { name: { name: "OrderlyAppProvider" } },
-    })
-    .forEach((path) => {
-      const openingElement = path.node.openingElement;
-      // filter attributes
-      openingElement.attributes = openingElement.attributes.filter(
-        (attr) => !properties.includes(attr.name && attr.name.name)
-      );
-    });
-}
-
-function moveProps({ root, j }) {
+function addTradingPageProps({ root, j, srcElementName, dstElementName }) {
+  if (!srcElementName || !dstElementName) {
+    return;
+  }
   // find OrderlyAppProvider
   root
     .find(j.JSXElement, {
-      openingElement: { name: { name: "OrderlyAppProvider" } },
+      openingElement: { name: { name: srcElementName } },
     })
     .forEach((path) => {
       const openingElement = path.node.openingElement;
@@ -186,7 +190,7 @@ function moveProps({ root, j }) {
       // find TradingPage
       root
         .find(j.JSXElement, {
-          openingElement: { name: { name: "TradingPage" } },
+          openingElement: { name: { name: dstElementName } },
         })
         .forEach((tradingPagePath) => {
           const tradingPageOpeningElement = tradingPagePath.node.openingElement;
@@ -214,4 +218,100 @@ function moveProps({ root, j }) {
           }
         });
     });
+}
+
+function removeProps({ root, j, locadlName }) {
+  if (!locadlName) {
+    return;
+  }
+  const properties = [
+    "theme",
+    "topBar",
+    "topBarProps",
+    "footerStatusBarProps",
+    "accountMenuItems",
+    "onClickAccountMenuItem",
+    "includeTestnet",
+    "shareOptions",
+    "referral",
+    "getWalletAdapter",
+  ];
+
+  root
+    .find(j.JSXElement, {
+      openingElement: { name: { name: locadlName } },
+    })
+    .forEach((path) => {
+      const openingElement = path.node.openingElement;
+      // filter attributes
+      openingElement.attributes = openingElement.attributes.filter(
+        (attr) => !properties.includes(attr.name && attr.name.name)
+      );
+    });
+}
+
+function findPath({ root, j, pkg, specifier }) {
+  const reactNode = root.find(j.ImportDeclaration, {
+    source: { value: pkg },
+  });
+
+  let bool = false;
+
+  reactNode.forEach((path) => {
+    const spec = path.node.specifiers.find(
+      (_spec) => _spec.imported.name === specifier
+    );
+
+    if (spec) {
+      bool = true;
+    }
+  });
+
+  return bool;
+}
+
+function createSharedDataFile() {
+  fs.writeFileSync(
+    sharedDataFilePath,
+    JSON.stringify({
+      tradingPagePath: [],
+      orderlyAppProviderPath: [],
+    }),
+    "utf8"
+  );
+}
+
+function getSharedData({ root, j, fileInfo }) {
+  // read share data
+  let sharedData = JSON.parse(fs.readFileSync(sharedDataFilePath, "utf8"));
+
+  const hasOrderlyAppProvider = findPath({
+    root,
+    j,
+    pkg: "@orderly.network/react",
+    specifier: "OrderlyAppProvider",
+  });
+
+  if (hasOrderlyAppProvider) {
+    sharedData.orderlyAppProviderPath = [
+      ...sharedData.orderlyAppProviderPath,
+      fileInfo.path,
+    ];
+  }
+  const hasTradingPage = findPath({
+    root,
+    j,
+    pkg: "@orderly.network/react",
+    specifier: "TradingPage",
+  });
+  if (hasTradingPage) {
+    sharedData.tradingPagePath = [...sharedData.tradingPagePath, fileInfo.path];
+  }
+
+  sharedData.count += 1;
+
+  // update share data
+  fs.writeFileSync(sharedDataFilePath, JSON.stringify(sharedData), "utf8");
+
+  return sharedData;
 }
