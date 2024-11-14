@@ -6,11 +6,11 @@
     "orderly-codemod": "bin/cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "codemod": "node ./bin/cli.js"
   },
   "keywords": [
-    "Orderly",
-    "Orderly SDK"
+    "orderly",
+    "codemod"
   ],
   "dependencies": {
     "enquirer": "^2.4.1",

@@ -63,7 +63,9 @@ export function useChainSelect() {
             : toast.error("Switch chain failed");
         })
         .catch((error) => {
-          toast.error(`Switch chain failed: ${error.message}`);
+          if (error && error.message) {
+            toast.error(`Switch chain failed: ${error.message}`);
+          }
         });
     },
     [currentChain, setChain, findByChainId]

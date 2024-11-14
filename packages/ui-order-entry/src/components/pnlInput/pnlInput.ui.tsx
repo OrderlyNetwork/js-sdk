@@ -67,6 +67,7 @@ export const PNLInput = (props: PNLInputProps) => {
       formatters={[
         props.formatter({ dp: quote_dp, mode, type }),
         inputFormatter.currencyFormatter,
+        // inputFormatter.identifierFormatter(),
       ]}
       classNames={{
         root: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",

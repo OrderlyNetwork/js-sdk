@@ -110,7 +110,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
       }
 
       return prefix;
-    }, [prefix]);
+    }, [prefix, showIcon, rule, iconSize, children]);
 
     const suffix = useMemo(() => {
       if (typeof props.suffix !== "undefined") return props.suffix;

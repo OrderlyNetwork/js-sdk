@@ -442,8 +442,13 @@ const EditState: FC<{
           dp={base_dp}
           value={quantity}
           setValue={(e: string) => {
-            setQuantity(Math.abs(Math.min(Number(e), qty)).toString());
+            const quantity = Math.abs(Math.min(Number(e), qty)).toString();
+            setQuantity(e);
             if (e.endsWith(".")) return;
+            if (Number(quantity) === 0) {
+              setSliderValue(0);
+              return;
+            }
             const sliderValue = new Decimal(e)
               .div(qty)
               .mul(100)

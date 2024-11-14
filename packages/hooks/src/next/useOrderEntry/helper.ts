@@ -163,7 +163,7 @@ export const calcEstLiqPrice = (
     baseIMR,
     baseMMR,
     totalCollateral,
-    positions,
+    positions: positions == null ? [] : positions, 
     IMR_Factor: imr_factor,
     orderFee,
     newOrder: {

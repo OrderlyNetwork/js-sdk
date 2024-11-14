@@ -92,8 +92,9 @@ export const useAssetsHistoryData = (
   const calculateLastPnl = (inputs: {
     lastItem: API.DailyRow;
     assetHistory: API.AssetHistoryRow[];
-    totalValue: number;
+    totalValue: number | null;
   }) => {
+    if (totalValue == null) return null;
     // today daily pnl = totalValue - lastItem.account_value - deposit + withdraw
     let value = new Decimal(totalValue).sub(inputs.lastItem.account_value);
 
@@ -134,7 +135,7 @@ export const useAssetsHistoryData = (
     return value.toNumber();
   };
 
-  const calculate = (data: API.DailyRow[], totalValue: number) => {
+  const calculate = (data: API.DailyRow[], totalValue: number | null) => {
     const lastItem = data[data.length - 1];
     const todayFormattedStr = format(today, "yyyy-MM-dd");
 
@@ -143,11 +144,11 @@ export const useAssetsHistoryData = (
       date: todayFormattedStr,
       perp_volume: 0,
       account_value: !!totalValue ? totalValue : lastItem?.account_value ?? 0,
-      pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }),
+      pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }) ?? 0,
     };
   };
 
-  const mergeData = (data: API.DailyRow[], totalValue: number) => {
+  const mergeData = (data: API.DailyRow[], totalValue: number | null) => {
     if (!Array.isArray(data) || data.length === 0) {
       return data;
     }

@@ -16,7 +16,7 @@ export type Portfolio = {
   holding?: API.Holding[];
   totalCollateral: Decimal;
   freeCollateral: Decimal;
-  totalValue: Decimal;
+  totalValue: Decimal | null;
   availableBalance: number;
   unsettledPnL: number;
   totalUnrealizedROI: number;
@@ -58,7 +58,7 @@ export const useAppStore = create<
     // accountInfo: null,
     portfolio: {
       totalCollateral: zero,
-      totalValue: zero,
+      totalValue: null,
       freeCollateral: zero,
       availableBalance: 0,
       unsettledPnL: 0,
@@ -72,20 +72,17 @@ export const useAppStore = create<
     } as AppStatus,
     actions: {
       cleanAll: () => {
-        set(
-          (state) => {
-            state.accountInfo = undefined;
-            state.portfolio = {
-              totalCollateral: zero,
-              totalValue: zero,
-              freeCollateral: zero,
-              availableBalance: 0,
-              unsettledPnL: 0,
-              totalUnrealizedROI: 0,
-            };
-          },
-          false
-        );
+        set((state) => {
+          state.accountInfo = undefined;
+          state.portfolio = {
+            totalCollateral: zero,
+            totalValue: null,
+            freeCollateral: zero,
+            availableBalance: 0,
+            unsettledPnL: 0,
+            totalUnrealizedROI: 0,
+          };
+        }, false);
       },
       setAccountInfo: (accountInfo: API.AccountInfo) => {
         set(

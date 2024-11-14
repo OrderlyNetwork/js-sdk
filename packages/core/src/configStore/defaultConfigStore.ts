@@ -1,12 +1,13 @@
 import { ChainNamespace } from "@orderly.network/types";
 import { ConfigKey, ConfigStore } from "./configStore";
 import { NetworkId } from "@orderly.network/types";
+type ChainNamespaceType = typeof ChainNamespace[keyof typeof ChainNamespace];
 
 export type URLS = {
   apiBaseUrl: string;
   publicWsUrl: string;
   privateWsUrl: string;
-  operatorUrl: Record<keyof typeof ChainNamespace, string>;
+  operatorUrl: Record<ChainNamespaceType, string>;
 };
 
 export const API_URLS: Record<NetworkId, URLS> = {
@@ -15,8 +16,8 @@ export const API_URLS: Record<NetworkId, URLS> = {
     publicWsUrl: "wss://ws-evm.orderly.org",
     privateWsUrl: "wss://ws-private-evm.orderly.org",
     operatorUrl: {
-      evm: "https://operator-evm.orderly.org",
-      solana: "https://operator-solana.orderly.org",
+      EVM: "https://operator-evm.orderly.org",
+      SOL: "https://operator-solana.orderly.org",
     },
   },
   testnet: {
@@ -24,8 +25,8 @@ export const API_URLS: Record<NetworkId, URLS> = {
     publicWsUrl: "wss://testnet-ws-evm.orderly.org",
     privateWsUrl: "wss://testnet-ws-private-evm.orderly.org",
     operatorUrl: {
-      evm: "https://testnet-operator-evm.orderly.org",
-      solana: "https://testnet-operator-sol.orderly.org",
+      EVM: "https://testnet-operator-evm.orderly.org",
+      SOL: "https://testnet-operator-sol.orderly.org",
     },
   },
 };

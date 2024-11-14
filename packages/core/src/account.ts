@@ -28,6 +28,9 @@ export interface AccountState {
    * whether the account is validating
    */
   validating: boolean;
+  /**
+   * whether the account is revalidating
+   */
   // revalidating?: boolean;
 
   accountId?: string;
@@ -133,6 +136,11 @@ export class Account {
         "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method."
       );
       return this.stateValue.status;
+    } else {
+      /// emit switch account event
+      if (this.stateValue.status > AccountStatusEnum.NotConnected) {
+        this._ee.emit(EVENT_NAMES.switchAccount, address);
+      }
     }
 
     wallet.chain.id = this.parseChainId(wallet?.chain?.id);
@@ -154,7 +162,7 @@ export class Account {
       // revalidating: this._state.validating,
     };
 
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
     // if (wallet) {
     //   // this.walletClient = new this.walletAdapterClass(wallet);
@@ -236,7 +244,7 @@ export class Account {
   }
 
   private _bindEvents() {
-    this._ee.addListener("change:status", (state: AccountState) => {
+    this._ee.addListener(EVENT_NAMES.statusChanged, (state: AccountState) => {
       this._state = state;
     });
   }
@@ -261,7 +269,7 @@ export class Account {
           accountId: accountInfo.account_id,
           userId: accountInfo.user_id,
         };
-        this._ee.emit("change:status", nextState);
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
         //
       } else {
         nextState = {
@@ -270,7 +278,7 @@ export class Account {
           status: AccountStatusEnum.NotSignedIn,
         };
 
-        this._ee.emit("change:status", nextState);
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
         return AccountStatusEnum.NotSignedIn;
       }
@@ -287,7 +295,7 @@ export class Account {
       // };
 
       if (!orderlyKey) {
-        this._ee.emit("change:status", {
+        this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
           isNew: false,
           validating: false,
@@ -315,7 +323,7 @@ export class Account {
         const expiration = orderlyKeyStatus.expiration;
         if (now > expiration) {
           // orderlyKey is expired, remove orderlyKey
-          this._ee.emit("change:status", {
+          this._ee.emit(EVENT_NAMES.statusChanged, {
             ...this.stateValue,
             validating: false,
           });
@@ -328,7 +336,7 @@ export class Account {
         //   status: AccountStatusEnum.EnableTrading,
         // };
 
-        this._ee.emit("change:status", {
+        this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
           validating: false,
           status: AccountStatusEnum.EnableTrading,
@@ -336,7 +344,7 @@ export class Account {
 
         return AccountStatusEnum.EnableTrading;
       }
-      this._ee.emit("change:status", {
+      this._ee.emit(EVENT_NAMES.statusChanged, {
         ...this.stateValue,
         validating: false,
         // status: AccountStatusEnum.DisabledTrading,
@@ -347,7 +355,7 @@ export class Account {
       return AccountStatusEnum.NotConnected;
     } catch (err) {
       // return this.stateValue.status;
-      this._ee.emit("change:status", {
+      this._ee.emit(EVENT_NAMES.statusChanged, {
         ...this.stateValue,
         validating: false,
         // status: AccountStatusEnum.DisabledTrading,
@@ -427,7 +435,7 @@ export class Account {
         isNew: true,
       };
 
-      this._ee.emit("change:status", nextState);
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
     } else {
@@ -485,7 +493,7 @@ export class Account {
         // userId: res.data.user_id,
       };
 
-      this._ee.emit("change:status", nextState);
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
     } else {
@@ -625,7 +633,7 @@ export class Account {
     }
   }
 
-  async destoryOrderlyKey(): Promise<void> {
+  async destroyOrderlyKey(): Promise<void> {
     if (!!this.stateValue.address) {
       // const key = await this.keyStore.getOrderlyKey()?.getPublicKey();
       this.keyStore.cleanKey(this.stateValue.address, "orderlyKey");
@@ -635,7 +643,7 @@ export class Account {
       ...this.stateValue,
       status: AccountStatusEnum.DisabledTrading,
     };
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   async disconnect(): Promise<void> {
@@ -651,7 +659,7 @@ export class Account {
       userId: undefined,
       address: undefined,
     };
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   switchChainId(chainId: number | string) {
@@ -671,7 +679,7 @@ export class Account {
       this.walletAdapter.chainId = chainId as number;
     }
 
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   private parseChainId(chainId: string | number): number {

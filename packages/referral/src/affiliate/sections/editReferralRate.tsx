@@ -87,7 +87,7 @@ export const EditReferralRate = create<{
           </div>
           <div className="orderly-text-xs orderly-text-base-contrast-80 orderly-mt-2 orderly-flex">
             {`Your max commission rate: `}
-            <div className="orderly-text-warning orderly-pl-1">{`${new Decimal(
+            <div className="orderly-text-warning-darken orderly-pl-1">{`${new Decimal(
               code.max_rebate_rate
             )
               .mul(100)
@@ -99,7 +99,7 @@ export const EditReferralRate = create<{
           </div>
           <Input
             ref={inputRef}
-            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
+            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary-darken"
             placeholder="Enter code"
             type="text"
             inputMode="decimal"
@@ -130,7 +130,7 @@ export const EditReferralRate = create<{
             Referee receives
           </div>
           <Input
-            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
+            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary-darken"
             placeholder="Enter code"
             type="text"
             inputMode="decimal"

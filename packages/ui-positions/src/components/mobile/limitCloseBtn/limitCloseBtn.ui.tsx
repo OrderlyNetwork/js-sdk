@@ -10,6 +10,7 @@ import {
   SimpleSheet,
   Slider,
   Text,
+  ThrottledButton,
 } from "@orderly.network/ui";
 import { LimitCloseBtnState } from "./limitCloseBtn.script";
 import { Decimal } from "@orderly.network/utils";
@@ -173,7 +174,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               >
                 Cancel
               </Button>
-              <Button
+              <ThrottledButton
                 fullWidth
                 onClick={(e) => {
                   e.stopPropagation();
@@ -182,7 +183,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 }}
               >
                 Confirm
-              </Button>
+              </ThrottledButton>
             </Flex>
           </Flex>
         </SimpleSheet>

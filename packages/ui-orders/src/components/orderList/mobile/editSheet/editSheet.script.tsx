@@ -241,6 +241,8 @@ export const useEditSheetScript = (props: {
   const isMarketOrder = isStopMarket || order?.type === "MARKET";
   const [submitting, setSubmitting] = useState(false);
 
+  // const [sliderValue, setSliderValue] = useState(0);
+
   const orderType = useMemo(() => {
     if (isAlgoOrder && order.algo_type !== AlgoOrderRootType.BRACKET) {
       return `STOP_${order.type}`;
@@ -284,6 +286,7 @@ export const useEditSheetScript = (props: {
           if (orderConfirm) {
             setDialogOpen(true);
           } else {
+            // @ts-ignore
             onSubmit(formattedOrder);
           }
         },
@@ -300,6 +303,7 @@ export const useEditSheetScript = (props: {
 
   const onDialogConfirm = () => {
     if (formattedOrder) {
+      // @ts-ignore
       return onSubmit(formattedOrder);
     }
     return Promise.reject();
@@ -348,7 +352,7 @@ export const useEditSheetScript = (props: {
 
   const sliderValue = useMemo(() => {
     const qty = formattedOrder.order_quantity;
-    if (qty) {
+    if (qty && Number(qty) !== 0) {
       const value = new Decimal(qty)
         .div(maxQty)
         .mul(100)
@@ -377,7 +381,7 @@ export const useEditSheetScript = (props: {
     quantity: formattedOrder.order_quantity,
     setQuantity: (value: string) => setValue("order_quantity", value),
     maxQty,
-    sliderValue: sliderValue,
+    sliderValue,
     setSliderValue: (value: number) => {
       const quantity = new Decimal(value)
         .div(100)

@@ -27,7 +27,7 @@ const pickerVariants = tv({
       true: "oui-opacity-50 oui-cursor-not-allowed",
     },
     color: {
-      // primary: "text-primary",
+      // primary: "text-primary-darken",
       base: "oui-text-base-contract",
       buy: "oui-text-trade-profit",
       sell: "oui-text-trade-loss",

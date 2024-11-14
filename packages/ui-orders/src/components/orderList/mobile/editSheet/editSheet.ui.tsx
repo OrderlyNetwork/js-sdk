@@ -10,10 +10,10 @@ import {
   SimpleDialog,
   Slider,
   Text,
+  ThrottledButton,
   toast,
 } from "@orderly.network/ui";
 import { EditSheetState } from "./editSheet.script";
-import { commify, Decimal } from "@orderly.network/utils";
 import { ConfirmDialogContent } from "./editDialogContent";
 import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
@@ -120,7 +120,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               }}
               classNames={{
                 input: "oui-text-base-contrast-98 oui-w-full",
-                root: cn("oui-outline-line-12", props.errors?.trigger_price?.message && "oui-outline-danger" )
+                root: cn(
+                  "oui-outline-line-12",
+                  props.errors?.trigger_price?.message && "oui-outline-danger"
+                ),
               }}
             />
           )}
@@ -157,7 +160,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             }}
             classNames={{
               input: "oui-text-base-contrast-98",
-              root: cn("oui-outline-line-12", props.errors?.order_price?.message && "oui-outline-danger" )
+              root: cn(
+                "oui-outline-line-12",
+                props.errors?.order_price?.message && "oui-outline-danger"
+              ),
             }}
           />
           <Input.tooltip
@@ -183,12 +189,6 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             value={props.quantity}
             onValueChange={(e) => {
               props.setQuantity(e);
-              if (e.endsWith(".")) return;
-              const sliderValue = new Decimal(e)
-                .div(props.maxQty)
-                .mul(100)
-                .toNumber();
-              props.setSliderValue(sliderValue);
             }}
             tooltip={props.errors?.order_quantity?.message}
             tooltipProps={{
@@ -201,7 +201,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             }}
             classNames={{
               input: "oui-text-base-contrast-98",
-              root: cn("oui-outline-line-12", props.errors?.order_quantity?.message && "oui-outline-danger" )
+              root: cn(
+                "oui-outline-line-12",
+                props.errors?.order_quantity?.message && "oui-outline-danger"
+              ),
             }}
           />
           <Slider
@@ -209,11 +212,6 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             value={[props.sliderValue ?? 0]}
             onValueChange={(e) => {
               props.setSliderValue(e[0]);
-              const qty = new Decimal(e[0])
-                .div(100)
-                .mul(props.maxQty)
-                .toFixed(props.base_dp, Decimal.ROUND_DOWN);
-              props.setQuantity(qty);
             }}
             color="primaryLight"
           />
@@ -245,7 +243,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           >
             Cancel
           </Button>
-          <Button
+          <ThrottledButton
             fullWidth
             onClick={(e) => {
               e.stopPropagation();
@@ -256,7 +254,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             disabled={!props.isChanged}
           >
             Confirm
-          </Button>
+          </ThrottledButton>
         </Flex>
       </Flex>
 

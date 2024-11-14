@@ -33,6 +33,7 @@ module.exports = withTV({
     "../ui-tpsl/src/**/*.{ts,js,tsx,jsx}",
     "../ui-tradingview/src/**/*.{ts,js,tsx,jsx}",
     "../ui-chain-selector/src/**/*.{ts,js,tsx,jsx}",
+    "../wallet-connector/src/**/*.{ts,js,tsx,jsx}",
   ],
   prefix: "oui-",
   theme: {
@@ -86,7 +87,7 @@ module.exports = withTV({
         primary: {
           DEFAULT: "rgb(var(--oui-color-primary) / <alpha-value>)",
           light: "rgb(var(--oui-color-primary-light) / <alpha-value>)",
-          // darken: "rgb(var(--oui-color-primary-darken) / <alpha-value>)",
+          darken: "rgb(var(--oui-color-primary-darken) / <alpha-value>)",
           contrast: "rgb(var(--oui-color-primary-contrast) / <alpha-value>)",
         },
         secondary: {

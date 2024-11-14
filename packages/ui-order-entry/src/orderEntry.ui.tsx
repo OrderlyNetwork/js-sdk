@@ -20,6 +20,7 @@ import {
   Switch,
   Text,
   textVariants,
+  ThrottledButton,
   toast,
 } from "@orderly.network/ui";
 import {
@@ -45,7 +46,7 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { useDebouncedCallback, useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
@@ -120,43 +121,41 @@ export const OrderEntry = (
     };
   }, [errorMsgVisible]);
 
-  const onSubmit = useDebouncedCallback(
-    () => {
-      helper
-        .validate()
-        .then(
-          (order: any) => {
-            if (needConfirm) {
-              return modal.show(orderConfirmDialogId, {
-                order: formattedOrder,
+  const onSubmit = () => {
+    helper
+      .validate()
+      .then(
+        (order: any) => {
+          if (needConfirm) {
+            return modal.show(orderConfirmDialogId, {
+              order: formattedOrder,
 
-                quote: symbolInfo.quote,
-                base: symbolInfo.base,
+              quote: symbolInfo.quote,
+              base: symbolInfo.base,
 
-                quoteDP: symbolInfo.quote_dp,
-                baseDP: symbolInfo.base_dp,
-              });
-            }
-
-            return true;
-          },
-          (errors) => {
-            setErrorMsgVisible(true);
+              quoteDP: symbolInfo.quote_dp,
+              baseDP: symbolInfo.base_dp,
+            });
           }
-        )
-        .then(() => {
-          return submit();
-        })
-        .catch((error) => {
-          console.log("catch:", error);
-          if (error instanceof SDKError) {
-            toast.error(`Error:${error.message}`);
-          }
+
+          return true;
+        },
+        (errors) => {
+          setErrorMsgVisible(true);
+        }
+      )
+      .then(() => {
+        return submit().then(() => {
+          setOrderValue("order_quantity", "");
         });
-    },
-    300,
-    { leading: true, trailing: false }
-  );
+      })
+      .catch((error) => {
+        console.log("catch:", error);
+        if (error instanceof SDKError) {
+          toast.error(`Error:${error.message}`);
+        }
+      });
+  };
 
   return (
     <OrderEntryProvider
@@ -169,7 +168,7 @@ export const OrderEntry = (
         ref={props.containerRef}
       >
         {/* Buy Sell button */}
-        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-2">
+        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-3">
           <div
             className={
               "oui-grid oui-grid-cols-2 oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]"
@@ -271,7 +270,7 @@ export const OrderEntry = (
         />
         {/* Submit button */}
         <AuthGuard buttonProps={{ fullWidth: true }}>
-          <Button
+          <ThrottledButton
             fullWidth
             id={"order-entry-submit-button"}
             // color={side === OrderSide.BUY ? "buy" : "sell"}
@@ -287,7 +286,7 @@ export const OrderEntry = (
             loading={props.isMutating}
           >
             {buttonLabel}
-          </Button>
+          </ThrottledButton>
         </AuthGuard>
         {/* Asset info */}
         <AssetInfo
@@ -297,7 +296,7 @@ export const OrderEntry = (
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
         />
-        <Divider />
+        <Divider className="oui-w-full"/>
         {/* TP SL switch and content */}
         <OrderTPSL
           // onCancelTPSL={props.cancelTP_SL}
@@ -647,7 +646,7 @@ const QuantitySlider = (props: {
         step={props.tick}
         onValueChange={props.onValueChange}
       />
-      <Flex justify={"between"} pt={2}>
+      <Flex justify={"between"} className="oui-pt-1 xl:oui-pt-2">
         <Text.numeral
           rule={"percentages"}
           size={"2xs"}

@@ -19,7 +19,7 @@ const inputHelpTextVariants = tv({
     color: {
       success: ["oui-text-success"],
       danger: ["oui-text-danger"],
-      warning: ["oui-text-warning"],
+      warning: ["oui-text-warning-darken"],
       default: ["oui-text-base-contrast-54"],
     },
   },

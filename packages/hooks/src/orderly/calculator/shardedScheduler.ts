@@ -69,7 +69,7 @@ class ShardingScheduler implements CalculatorScheduler {
             for (let index = 0; index < shard.length; index++) {
               const calculator = shard[index];
               const result = calculator.calc(scope, data, ctx);
-              // console.log("item calc ======>>>>>>", scope);
+
               if (result) {
                 ctx.saveOutput(calculator.name, result);
                 results.push(result);
@@ -101,7 +101,11 @@ class ShardingScheduler implements CalculatorScheduler {
   update(scope: CalculatorScope, calculators: Calculator[], data: any) {
     for (let index = 0; index < calculators.length; index++) {
       const calculator = calculators[index];
-      calculator.update(data[calculator.name]);
+      const item = data[calculator.name];
+
+      if (!!item) {
+        calculator.update(item, scope);
+      }
     }
     return Promise.resolve();
   }
@@ -113,8 +117,8 @@ class ShardingScheduler implements CalculatorScheduler {
   ): void {
     let index = 0; // Current starting index of the shard
     const results: R[][] = []; // Used to store the calculation results of each shard
-    // const estimatedShardSize = Math.min(data.length, 2); // Initial estimated shard size
-    const estimatedShardSize = 1;
+    const estimatedShardSize = Math.min(data.length, 2); // Initial estimated shard size
+    // const estimatedShardSize = 1;
 
     // Function to process shards
     function processNextShard(deadline: IdleDeadline) {

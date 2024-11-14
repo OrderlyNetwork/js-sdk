@@ -44,9 +44,9 @@ function Calendar({
           "oui-h-7 oui-w-7 oui-p-0 oui-rounded-md oui-font-normal aria-selected:oui-opacity-100 oui-text-base-contrast-80 hover:oui-bg-base-5"
         ),
         day_range_start:
-          "day-range-start  oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
+          "day-range-start  oui-bg-primary-darken oui-text-base-contrast-80 hover:oui-bg-primary-darken",
         day_range_end:
-          "day-range-end oui-bg-primary oui-text-base-contrast-80 hover:oui-bg-primary",
+          "day-range-end oui-bg-primary-darken oui-text-base-contrast-80 hover:oui-bg-primary-darken",
         day_selected: "oui-bg-base-4 ",
         day_today: "oui-bg-accent ",
         day_outside:

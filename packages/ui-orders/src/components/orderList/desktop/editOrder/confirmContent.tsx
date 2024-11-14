@@ -1,4 +1,4 @@
-import { Button, CloseIcon } from "@orderly.network/ui";
+import { Button, CloseIcon, ThrottledButton } from "@orderly.network/ui";
 import { commify } from "@orderly.network/utils";
 import { FC, useMemo } from "react";
 
@@ -33,7 +33,7 @@ export const ConfirmContent: FC<{
     <div className="oui-pt-5 oui-relative">
       <div className="oui-text-base-contrast-54 oui-text-2xs desktop:oui-text-sm">
         {label}
-        <span className="oui-text-warning">{commify(value)}</span>.
+        <span className="oui-text-warning-darken">{commify(value)}</span>.
       </div>
       <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-mt-5">
         <Button
@@ -44,9 +44,9 @@ export const ConfirmContent: FC<{
         >
           Cancel
         </Button>
-        <Button size={"md"} loading={isSubmitting} onClick={onConfirm}>
+        <ThrottledButton size={"md"} loading={isSubmitting} onClick={onConfirm}>
           Confirm
-        </Button>
+        </ThrottledButton>
       </div>
       <button
         className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54"

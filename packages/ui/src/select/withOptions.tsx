@@ -3,6 +3,7 @@ import { Select, SelectProps } from "./select";
 import { SelectGroup, SelectItem } from "./selectPrimitive";
 import { Flex } from "../flex";
 import { Box } from "../box";
+import { cn } from "..";
 
 export type SelectOption = {
   label: string;
@@ -27,7 +28,7 @@ export const defaultOptionRenderer = (
   option: SelectOption,
   currentValue?: string
 ) => (
-  <SelectItem key={option.value} value={option.value} className="oui-relative">
+  <SelectItem key={option.value} value={option.value} className={cn("oui-relative")}>
     {option.label}
     {currentValue == option.value && (
       <Box

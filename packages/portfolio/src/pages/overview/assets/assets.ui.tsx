@@ -23,7 +23,7 @@ type Props = {
   onWithdraw?: () => void;
   onDeposit?: () => void;
   onLeverageEdit?: () => void;
-  portfolioValue: number;
+  portfolioValue: number | null;
   visible: boolean;
   toggleVisible: () => void;
   wrongNetwork: boolean;
@@ -87,7 +87,7 @@ export const AssetsUI = (props: Props) => {
                 color: "brand",
               })}
             >
-              {props.portfolioValue}
+              {props.portfolioValue ?? '--'}
             </Text.numeral>
           </Either>
         </Statistic>

@@ -16,7 +16,7 @@ import { AppConfigProvider } from "./configContext";
 
 import { useExecutionReport } from "../hooks/useExecutionReport";
 
-type OrderlyAppProviderProps = PropsWithChildren<
+export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps
 >;
 

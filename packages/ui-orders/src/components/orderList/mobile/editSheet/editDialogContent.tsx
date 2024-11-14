@@ -115,9 +115,9 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
           id="oui-checkbox-disableOrderConfirmation"
           //   className="oui-h-[10px] oui-w-[10px]"
           //   size={10}
-          checked={props.orderConfirm}
+          checked={!props.orderConfirm}
           onCheckedChange={(e: boolean) => {
-            props.setOrderConfirm(e);
+            props.setOrderConfirm(!e);
           }}
         />
         <label

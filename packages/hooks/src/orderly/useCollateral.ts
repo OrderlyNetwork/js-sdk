@@ -16,7 +16,7 @@ import { useAppStore } from "./appStore";
 export type CollateralOutputs = {
   totalCollateral: number;
   freeCollateral: number;
-  totalValue: number;
+  totalValue: number | null;
   availableBalance: number;
   unsettledPnL: number;
 
@@ -116,7 +116,7 @@ export const useCollateral = (
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
     freeCollateral: freeCollateral.toDecimalPlaces(dp).toNumber(),
-    totalValue: totalValue.toDecimalPlaces(dp).toNumber(),
+    totalValue: totalValue?.toDecimalPlaces(dp).toNumber() ?? null,
     availableBalance,
     unsettledPnL,
 
