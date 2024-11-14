@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 0.4.16
+
+### Patch Changes
+
+- bba082a3e: fix bugs;
+- Updated dependencies [bba082a3e]
+  - @orderly.network/react@1.5.16
+  - @orderly.network/hooks@1.5.16
+  - @orderly.network/web3-onboard@1.5.16
+  - @orderly.network/types@1.5.16
+
 ## 0.4.16-alpha.0
 
 ### Patch Changes
