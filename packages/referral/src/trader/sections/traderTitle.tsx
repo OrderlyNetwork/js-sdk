@@ -35,7 +35,7 @@ export const TraderTitle: FC<{
         <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg">
           Your referrer
         </div>
-        <div className="orderly-ml-3 orderly-flex orderly-items-center orderly-justify-center orderly-px-[10px] orderly-py-2 orderly-text-primary orderly-text-[13px] md:orderly-text-[14px] 2xl:orderly-text-[16px] orderly-bg-base-600 orderly-rounded">
+        <div className="orderly-ml-3 orderly-flex orderly-items-center orderly-justify-center orderly-px-[10px] orderly-py-2 orderly-text-primary-darken orderly-text-[13px] md:orderly-text-[14px] 2xl:orderly-text-[16px] orderly-bg-base-600 orderly-rounded">
           {code || "-"}
         </div>
       </div>
@@ -43,7 +43,7 @@ export const TraderTitle: FC<{
         <div className="orderly-text-xs md:orderly-text-base 2xl:orderly-text-lg orderly-text-base-contrast-54">
           Rebate:
         </div>
-        <div className="orderly-text-lg md:orderly-text-xl lg:orderly-text-[24px] 2xl:orderly-text-[26px] orderly-text-primary orderly-ml-3">
+        <div className="orderly-text-lg md:orderly-text-xl lg:orderly-text-[24px] 2xl:orderly-text-[26px] orderly-text-primary-darken orderly-ml-3">
           <GradientText texts={[{ text: rebateText, gradient: true }]} />
         </div>
       </div>

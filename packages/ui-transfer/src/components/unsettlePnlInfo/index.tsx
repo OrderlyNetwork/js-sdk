@@ -49,7 +49,7 @@ export const UnsettlePnlInfo = ({
           }
         >
           <Flex itemAlign="center" justify="start" gap={1}>
-            <ExclamationFillIcon size={14} className="oui-text-warning" />
+            <ExclamationFillIcon size={14} className="oui-text-warning-darken" />
             <Text className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer">
               Unsettled:
             </Text>

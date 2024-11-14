@@ -87,7 +87,7 @@ module.exports = withTV({
         primary: {
           DEFAULT: "rgb(var(--oui-color-primary) / <alpha-value>)",
           light: "rgb(var(--oui-color-primary-light) / <alpha-value>)",
-          // darken: "rgb(var(--oui-color-primary-darken) / <alpha-value>)",
+          darken: "rgb(var(--oui-color-primary-darken) / <alpha-value>)",
           contrast: "rgb(var(--oui-color-primary-contrast) / <alpha-value>)",
         },
         secondary: {

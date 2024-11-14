@@ -6,7 +6,7 @@ import {
 } from "../helpers/component-props";
 
 const spinnerVariants = tv({
-  base: "oui-text-gray-200 oui-animate-spin dark:oui-text-gray-600 oui-fill-primary",
+  base: "oui-text-gray-200 oui-animate-spin dark:oui-text-gray-600 oui-fill-primary-darken",
   variants: {
     size: {
       xs: "oui-w-3 oui-h-3",
@@ -16,10 +16,10 @@ const spinnerVariants = tv({
       xl: "oui-w-10 oui-h-10",
     },
     color: {
-      primary: "oui-fill-primary",
+      primary: "oui-fill-primary-darken",
       success: "oui-fill-success",
       danger: "oui-fill-danger",
-      warning: "oui-fill-warning",
+      warning: "oui-fill-warning-darken",
       gray: "oui-fill-gray",
       darkGray: "oui-fill-darkGray",
       white: "oui-fill-white",
