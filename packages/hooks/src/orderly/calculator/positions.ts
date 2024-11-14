@@ -68,7 +68,6 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     if (
       !!data &&
       Array.isArray(data.rows) &&
-      data.rows.length > 0 &&
       useApiStatusStore.getState().apis.positions.loading
     ) {
       useApiStatusStore.getState().actions.updateApiLoading("positions", false);
