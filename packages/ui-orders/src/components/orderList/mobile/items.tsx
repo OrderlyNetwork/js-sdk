@@ -34,6 +34,9 @@ export const Symbol: FC<OrderCellState> = (props) => {
           {isBuy ? "Buy" : "Sell"}
         </Badge>
       }
+      onClick={() => {
+        props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
+      }}
       // showIcon
     >
       {item.symbol}
@@ -98,13 +101,10 @@ export const OrderState: FC<OrderCellState> = (props) => {
       return upperCaseFirstLetter("pending");
     }
     return upperCaseFirstLetter(status);
-  }
+  };
 
   return (
-    <Text.formatted
-      intensity={36}
-      size="2xs"
-    >
+    <Text.formatted intensity={36} size="2xs">
       {label()}
     </Text.formatted>
   );

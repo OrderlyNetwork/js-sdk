@@ -124,11 +124,6 @@ export default defineConfig({
         __dirname,
         "../../packages/component/dist"
       ),
-      "@orderly.network/react": resolve(
-        __dirname,
-        "../../packages/component/src"
-      ),
-      "@": resolve(__dirname, "../../packages/component/src"),
     },
   },
 });

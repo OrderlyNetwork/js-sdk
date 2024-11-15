@@ -244,7 +244,8 @@ const AssetValueList: FC<AssetValueListProps> = ({
           description="Free collateral for placing new orders."
           formula="Free collateral = Total balance + Total unsettlement PnL - Total position initial margin"
           visible={visible}
-          value={freeCollateral!}
+          // TODO: change AssetDetail value
+          value={freeCollateral! === 0 ? ("0" as any) : freeCollateral}
           unit="USDC"
         />
         <AssetDetail
