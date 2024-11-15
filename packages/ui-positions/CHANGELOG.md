@@ -1,5 +1,20 @@
 # @orderly.network/ui-positions
 
+## 2.0.1-developV2.28
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.1-developV2.28
+  - @orderly.network/ui-share@2.0.1-developV2.28
+  - @orderly.network/ui-tpsl@1.0.1-developV2.49
+  - @orderly.network/hooks@2.0.1-developV2.28
+  - @orderly.network/types@2.0.1-developV2.28
+  - @orderly.network/utils@2.0.1-developV2.28
+  - @orderly.network/react-app@2.0.1-developV2.28
+  - @orderly.network/ui@2.0.1-developV2.28
+
 ## 2.0.1-developV2.27
 
 ### Patch Changes
