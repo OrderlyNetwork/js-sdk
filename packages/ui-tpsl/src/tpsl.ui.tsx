@@ -147,9 +147,13 @@ const TPSLQuantity = (props: {
 
   const formatQuantity = (qty: string) => {
     if (props.baseTick > 0) {
-      props.onQuantityChange?.(utils.formatNumber(qty, props.baseTick) ?? qty);
+      const quantity = Number(qty);
+      if (quantity) {
+        props.onQuantityChange?.(Math.min(props.maxQty, quantity));
+      } else {
+        props.onQuantityChange?.(utils.formatNumber(qty, props.baseTick) ?? qty);
+      }
     }
-    
   };
 
   return (
@@ -177,6 +181,12 @@ const TPSLQuantity = (props: {
             ]}
             onValueChange={(value) => {
               props.onQuantityChange?.(value);
+              const qty = Number(value);
+              if (qty && qty > props.maxQty) {
+                const qty = isPosition ? 0 : props.maxQty;
+                props.onQuantityChange?.(qty);
+                inputRef.current?.blur();
+              }
             }}
             onBlur={(e) => formatQuantity(e.target.value)}
             suffix={
