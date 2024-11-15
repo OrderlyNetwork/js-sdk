@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PositionsModule } from "@orderly.network/portfolio";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { sharePnLConfig } from "../trading/config";
 import { useTradingLocalStorage } from "@orderly.network/trading";
 import { Box } from "@orderly.network/ui";
@@ -11,17 +9,9 @@ const meta: Meta<typeof PositionsModule.PositionsPage> = {
   component: PositionsModule.PositionsPage,
   decorators: [
     (Story) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Box className="oui-h-[calc(100vh)]" p={6}>
-            <Story />
-          </Box>
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
+      <Box className="oui-h-[calc(100vh)]" p={6}>
+        <Story />
+      </Box>
     ),
   ],
   parameters: {

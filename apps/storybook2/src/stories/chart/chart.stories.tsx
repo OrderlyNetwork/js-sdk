@@ -1,37 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PnlLineChart, VolBarChart, PnLBarChart } from "@orderly.network/chart";
 import { Box } from "@orderly.network/ui";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
 
 const meta: Meta<typeof PnlLineChart> = {
   title: "Chart/Chart",
   component: PnlLineChart,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  // tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
-  // argTypes: {
-  //   backgroundColor: { control: 'color' },
-
-  // },
   decorators: [
     (Story) => (
-      <ConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Box width="500px" height={"400px"}>
-            {/* 👇 Decorators in Storybook also accept a function. Replace <Story/> with Story() to enable it  */}
-            <Story />
-          </Box>
-        </OrderlyAppProvider>
-      </ConnectorProvider>
+      <Box width="500px" height={"400px"}>
+        <Story />
+      </Box>
     ),
   ],
   args: {},

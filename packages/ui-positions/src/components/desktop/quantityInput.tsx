@@ -24,6 +24,7 @@ export const QuantityInput = (props: { value: number }) => {
     updateQuantity: setQuantity,
     quantity,
     type,
+    errors,
   } = usePositionsRowContext();
 
   useEffect(() => {
@@ -55,16 +56,22 @@ export const QuantityInput = (props: { value: number }) => {
             setOpen(true);
           }}
           classNames={{
-            root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
+            root: "oui-outline-line-12 "
           }}
           formatters={[
             inputFormatter.numberFormatter,
             ...(baseDp ? [inputFormatter.dpFormatter(baseDp)] : []),
           ]}
+          // tooltip={errors?.order_quantity?.message}
+          // color={errors?.order_quantity?.message ? "danger" : undefined}
           value={quantity}
           onValueChange={(e) => {
             setQuantity(e);
             // if (type === OrderType.LIMIT) {
+            if (e == '0' || e == "") {
+              setSliderValue(0);
+              return;
+            }
             const value = new Decimal(e)
               .div(props.value)
               .mul(100)
