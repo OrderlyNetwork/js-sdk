@@ -80,9 +80,8 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   const sideBarExpandWidth = props.leftSideProps?.maxWidth || 185;
   const sideBarCollaspedWidth = props.leftSideProps?.minWidth || 98;
 
-  const hasLeftSidebar =
-    !!props.leftSidebar || typeof props.leftSideProps !== "undefined";
-
+  const hasLeftSidebar = !!props.leftSidebar;
+  
   return (
     <div
       className={cn(

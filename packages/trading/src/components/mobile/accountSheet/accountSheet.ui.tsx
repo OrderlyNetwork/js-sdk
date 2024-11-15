@@ -8,7 +8,7 @@ export const AccountSheet: FC<AccountSheetState> = (props) => {
   return (
     <Flex direction={"column"} gap={4}>
       <AccountInfo {...props} />
-      {(props.isAffiliate || props.isTrader) && <ReferralInfo {...props} />}
+      <ReferralInfo {...props} />
       <TradingRewardsInfo {...props} />
       <Flex gap={3} width={"100%"} justify={"center"}>
         {props.showGetTestUSDC && (

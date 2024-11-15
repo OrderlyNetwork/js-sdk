@@ -1,4 +1,9 @@
-import { Box, ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import {
+  Box,
+  cn,
+  ExtensionPositionEnum,
+  ExtensionSlot,
+} from "@orderly.network/ui";
 import { LayoutProvider } from "./context";
 import {
   Scaffold,
@@ -22,12 +27,11 @@ export const TradingRewardsLayout = (
 
   return (
     <Scaffold
-      footerHeight={29}
       classNames={{
         content: "lg:oui-mb-0",
         topNavbar: "oui-bg-base-9",
         leftSidebar:
-          "oui-m-3 oui-p-4 oui-broder oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9",
+          "oui-m-3 oui-p-4 oui-border oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9",
       }}
       leftSidebar={props.hideSideBar ? null : <LeftSidebar {...rest} />}
       routerAdapter={props.routerAdapter}

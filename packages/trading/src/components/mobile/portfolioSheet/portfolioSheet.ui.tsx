@@ -274,7 +274,7 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
         }}
         showTip={props.showSliderTip}
         tipFormatter={(value, min, max, percent) => {
-          return `${value}x`;
+          return `${value+1}x`;
         }}
       />
       <Flex justify={"between"} width={"100%"}>

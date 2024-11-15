@@ -13,6 +13,7 @@ import {
   Flex,
   Input,
   inputFormatter,
+  modal,
   Text,
   TextField,
   Tooltip,
@@ -178,10 +179,50 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
       <DialogTrigger>
-        <Tooltip content={props.wrongNetwork ? 'Please switch to a supported network to continue.' : "Please connect your wallet to use this function"}>
-          <Button variant="contained" color="light" disabled={!props.isSignIn || props.wrongNetwork}>
-            Enter code
-          </Button>
+        <Tooltip
+          content={
+            props.wrongNetwork
+              ? "Please switch to a supported network to continue."
+              : "Please connect your wallet to use this function"
+          }
+        >
+          {props.isMobile ? (
+            <Button
+              variant="contained"
+              color="light"
+              onClick={(event) => {
+                if (!props.isSignIn || props.wrongNetwork) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  modal.alert({
+                    title: "Tips",
+                    message: (
+                      <Text intensity={54}>
+                        {props.wrongNetwork
+                          ? "Please switch to a supported network to continue."
+                          : "Please connect your wallet to use this function"}
+                      </Text>
+                    ),
+                  });
+                }
+              }}
+              className={
+                !props.isSignIn || props.wrongNetwork
+                  ? "oui-bg-white/[.54] oui-text-black/[.36] hover:oui-bg-white/[.54]"
+                  : undefined
+              }
+            >
+              Enter code
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="light"
+              disabled={!props.isSignIn || props.wrongNetwork}
+            >
+              Enter code
+            </Button>
+          )}
         </Tooltip>
       </DialogTrigger>
       <DialogContent className="oui-w-[320px] oui-font-semibold">
@@ -216,7 +257,11 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
                 ? "This referral code does not exist."
                 : undefined
             }
-            color={!props.isExist && !props.isLoading && props.code.length > 0? "danger" : undefined}
+            color={
+              !props.isExist && !props.isLoading && props.code.length > 0
+                ? "danger"
+                : undefined
+            }
           />
 
           <Flex
