@@ -11,12 +11,15 @@ export const Chain: FC<ChainState> = (props) => {
           .show<{
             wrongNetwork: boolean;
           }>(ChainSelectorSheetId, {
-            // networkId: props.networkId,
+            networkId: props.networkId,
             bridgeLessOnly:false,
             isWrongNetwork: props.isWrongNetwork,
           })
           .then(
-            (r) => {
+            (r: any) => {
+              if (r?.chainId) {
+                props.setChainId(r?.chainId);
+              }
               toast.success("Network switched");
             },
             (error) => console.log("[switchChain error]", error)
@@ -29,7 +32,7 @@ export const Chain: FC<ChainState> = (props) => {
             Testnet
           </Text>
         ) : (
-          <ChainIcon chainId={"1"} size="2xs" />
+          <ChainIcon chainId={props.chainId ?? '1'} size="2xs" />
         )}
         <div className="oui-absolute oui-right-0 oui-bottom-0">
           <svg
