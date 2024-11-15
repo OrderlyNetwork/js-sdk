@@ -20,6 +20,7 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     updatePriceChange,
     updateOrderType,
     updateQuantity,
+    errors,
   } = usePositionsRowContext();
   const setPrice = useRef(false);
 
@@ -65,7 +66,7 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     if (!sheetOpen) {
       updateOrderType(OrderType.MARKET);
       setPrice.current = false;
-      setSliderValue(100);
+      // setSliderValue(100);
     }
   }, [sheetOpen]);
 
@@ -87,6 +88,7 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     submitting,
     updatePriceChange,
     updateQuantity,
+    errors,
 
     // slider
     sliderValue,

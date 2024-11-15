@@ -28,7 +28,7 @@ import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
 import { useMaxQty, useOrderEntry, utils } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { commifyOptional, Decimal } from "@orderly.network/utils";
 
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
@@ -68,7 +68,7 @@ export const OrderQuantity = (props: {
     } else {
       const quantity = Number(qty);
       if (maxQty && quantity > maxQty) {
-        setError(`Quantity should be less than ${maxQty}`)
+        setError(`Quantity should be less than ${commifyOptional(maxQty, { fix :base_dp })}`)
       } else {
         setError(undefined);
       }
