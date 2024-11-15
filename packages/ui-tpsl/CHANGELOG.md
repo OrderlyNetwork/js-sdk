@@ -1,5 +1,16 @@
 # @orderly.network/ui-tpsl
 
+## 1.0.1-developV2.52
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-developV2.31
+  - @orderly.network/types@2.0.1-developV2.31
+  - @orderly.network/utils@2.0.1-developV2.31
+  - @orderly.network/ui@2.0.1-developV2.31
+
 ## 1.0.1-developV2.51
 
 ### Patch Changes
