@@ -35,15 +35,6 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const PureComponent = {
-  args: {
-    orderEntity: {
-      side: OrderSide.BUY,
-      type: OrderType.LIMIT,
-    },
-  },
-};
-
 export const WithHook: Story = {
   render: (args) => {
     return <OrderEntryWidget {...args} />;

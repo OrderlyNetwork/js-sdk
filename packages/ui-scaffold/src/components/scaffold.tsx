@@ -26,7 +26,6 @@ export type LayoutProps = {
    * if provided, the layout will use this component over the default sidebar component
    */
   gap?: number;
-  leftSidebarMaxWidth?: number;
   leftSidebar?: React.ReactNode;
   leftSideProps?: SideBarProps;
   rightSidebar?: React.ReactNode;
@@ -56,7 +55,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   );
   const [chains] = useChains();
 
-  const sideBarDefaultWidth = props.leftSidebarMaxWidth || 185;
   const { networkId } = useContext<any>(OrderlyContext);
 
   const checkChainSupportHandle = (chainId: number | string) => {
@@ -78,6 +76,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
     const height = footerRef.current?.getBoundingClientRect().height;
     setFooterHeight(height!);
   }, [footerRef]);
+
+  const sideBarExpandWidth = props.leftSideProps?.maxWidth || 185;
+  const sideBarCollaspedWidth = props.leftSideProps?.minWidth || 98;
 
   const hasLeftSidebar =
     !!props.leftSidebar || typeof props.leftSideProps !== "undefined";
@@ -131,7 +132,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
             )}
             style={{
               gridTemplateColumns: `${
-                expand ? sideBarDefaultWidth + "px" : "98px"
+                expand
+                  ? `${sideBarExpandWidth}px`
+                  : `${sideBarCollaspedWidth}px`
               } 1fr`,
               // gridTemplateRows: "auto 1fr",
               // gridTemplateAreas: `"left main" "left main"`,
