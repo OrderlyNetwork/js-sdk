@@ -4,6 +4,7 @@ import { ShareButtonWidget } from "../../desktop/shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { PositionCellState } from "./positionCell.script";
 import { FC } from "react";
+import { API } from "@orderly.network/types";
 export const Symbol: FC<PositionCellState> = (props) => {
   const { item } = props;
   const isBuy = item.position_qty > 0;
@@ -18,6 +19,9 @@ export const Symbol: FC<PositionCellState> = (props) => {
         </Badge>
       }
       showIcon
+      onClick={() => {
+        props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
+      }}
     >
       {item.symbol}
     </Text.formatted>
@@ -183,18 +187,24 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
   );
 };
 
-
 export const TPSLPrice: FC<PositionCellState> = (props) => {
-  const { item } = props; 
+  const { item } = props;
 
-  if (item.tp_trigger_price == null && item.sl_trigger_price == null) return <></>;
+  if (item.tp_trigger_price == null && item.sl_trigger_price == null)
+    return <></>;
 
-  return (<Flex  className="oui-text-2xs oui-text-base-contrast-36">
-    <Text>TP/SL:&nbsp;</Text>
-    <Flex className="oui-gap-[2px]">
-    {item.tp_trigger_price && <Text.numeral color="buy">{item.tp_trigger_price}</Text.numeral>}
-    {item.sl_trigger_price && '/'}
-    {item.sl_trigger_price && <Text.numeral color="sell">{item.sl_trigger_price}</Text.numeral>}
+  return (
+    <Flex className="oui-text-2xs oui-text-base-contrast-36">
+      <Text>TP/SL:&nbsp;</Text>
+      <Flex className="oui-gap-[2px]">
+        {item.tp_trigger_price && (
+          <Text.numeral color="buy">{item.tp_trigger_price}</Text.numeral>
+        )}
+        {item.sl_trigger_price && "/"}
+        {item.sl_trigger_price && (
+          <Text.numeral color="sell">{item.sl_trigger_price}</Text.numeral>
+        )}
+      </Flex>
     </Flex>
-  </Flex>);
-}
+  );
+};
