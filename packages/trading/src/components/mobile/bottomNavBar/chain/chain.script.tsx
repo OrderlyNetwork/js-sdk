@@ -19,12 +19,23 @@ export const useChainScript = () => {
     return undefined;
   }, [chainId]);
   const { wrongNetwork } = useAppContext();
+  const networkId = config.get("networkId");
+  const defaultChainId = useMemo(() => {
+
+    if (networkId === 'testnet') {
+
+      return 421614;
+    }
+    return 42161;
+
+  }, []);
   
   return {
+    defaultChainId,
     chainId,
     setChainId,
     isTestnetChain,
-    networkId: config.get("networkId"),
+    networkId,
     isWrongNetwork: wrongNetwork,
   };
 };
