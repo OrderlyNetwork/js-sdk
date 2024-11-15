@@ -10,6 +10,7 @@ import {
   AvgOpen,
   MarkPrice,
   LiqPrice,
+  TPSLPrice,
 } from "./items";
 import { LimitCloseBtnWidget } from "../limitCloseBtn";
 import { MarketCloseBtnWidget } from "../marketCloseBtn";
@@ -28,11 +29,13 @@ export const PositionCell: FC<
       gap={2}
       p={2}
       r="xl"
+      itemAlign={"start"}
       className={cn(className, "oui-bg-base-9")}
     >
       <Header {...rest} />
       <Divider intensity={6} className="oui-w-full" />
       <Body {...rest} />
+      <TPSLPrice {...rest}/>
       <Buttons {...rest} />
     </Flex>
   );

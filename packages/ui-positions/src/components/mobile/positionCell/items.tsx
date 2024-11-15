@@ -182,3 +182,19 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
     </Statistic>
   );
 };
+
+
+export const TPSLPrice: FC<PositionCellState> = (props) => {
+  const { item } = props; 
+
+  if (item.tp_trigger_price == null && item.sl_trigger_price == null) return <></>;
+
+  return (<Flex  className="oui-text-2xs oui-text-base-contrast-36">
+    <Text>TP/SL:&nbsp;</Text>
+    <Flex className="oui-gap-[2px]">
+    {item.tp_trigger_price && <Text.numeral color="buy">{item.tp_trigger_price}</Text.numeral>}
+    {item.sl_trigger_price && '/'}
+    {item.sl_trigger_price && <Text.numeral color="sell">{item.sl_trigger_price}</Text.numeral>}
+    </Flex>
+  </Flex>);
+}
