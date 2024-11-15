@@ -105,6 +105,7 @@ type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
     markCount?: number;
     markLabelVisible?: boolean;
     showTip?: boolean;
+    tipFormatter?: (value: number, min : number, max: number, percent: number) => string | React.ReactNode;
     classNames?: {
       root?: string;
       thumb?: string;
@@ -238,6 +239,7 @@ const BaseSlider = React.forwardRef<
               })}
               max={props.max ?? 100}
               min={0}
+              tipFormatter={props.tipFormatter}
             />
           )}
         </SliderPrimitive.Thumb>
@@ -359,6 +361,7 @@ export interface SliderTipProps {
   className?: string;
   min: number;
   max: number;
+  tipFormatter?: (value: number, min: number, max: number, percent: number) => string | React.ReactNode;
 }
 
 export const SliderTip: React.FC<SliderTipProps> = (props) => {
@@ -367,7 +370,7 @@ export const SliderTip: React.FC<SliderTipProps> = (props) => {
   const percent = convertValueToPercentage(value, min, max);
   return (
     <span className={className} style={{ lineHeight: "19px" }}>
-      {`${percent.toFixed()}%`}
+      {props.tipFormatter?.(value,min,max,percent) ?? `${percent.toFixed()}%`}
     </span>
   );
 };
