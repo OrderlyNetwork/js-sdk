@@ -265,10 +265,14 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
         value={[props.value]}
         onValueChange={(e) => {
           props.onLeverageChange(e[0]);
+          props.setShowSliderTip(true);
         }}
         color="primaryLight"
-        onValueCommit={props.onValueCommit}
-        showTip
+        onValueCommit={(e) => {
+          props.onValueCommit(e);
+          props.setShowSliderTip(false);
+        }}
+        showTip={props.showSliderTip}
         tipFormatter={(value, min, max, percent) => {
           return `${value}x`;
         }}
