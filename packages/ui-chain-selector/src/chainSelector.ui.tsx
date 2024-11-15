@@ -22,7 +22,7 @@ export const ChainSelector = (props: {
   isWrongNetwork?: boolean;
 }) => {
   const { isWrongNetwork = true } = props;
-  const [select, setSelect] = useState<number | undefined>();
+  const [select, setSelect] = useState<number | undefined>(props.currentChainId);
   // props.currentChainId
   const onChange = async (chain: ChainItem) => {
     setSelect(chain.id);
