@@ -97,7 +97,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           padding={false}
           visible={!props.hideAssets}
         >
-          {props.totalValue}
+          {props.totalValue ?? '--'}
         </Text.numeral>
       </Flex>
       <Grid cols={2} rows={1} width={"100%"}>
@@ -253,7 +253,7 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           }
           suffix="x"
         >
-          {props.currentLeverage}
+          {props.currentLeverage ?? '--'}
         </Text.numeral>
       </Flex>
       <Slider
@@ -261,16 +261,24 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
         max={props.maxLeverage - 1}
         // markLabelVisible={true}
         // marks={props.marks}
-        markCount={4}
+        markCount={5}
         value={[props.value]}
         onValueChange={(e) => {
           props.onLeverageChange(e[0]);
+          props.setShowSliderTip(true);
         }}
         color="primaryLight"
-        onValueCommit={props.onValueCommit}
+        onValueCommit={(e) => {
+          props.onValueCommit(e);
+          props.setShowSliderTip(false);
+        }}
+        showTip={props.showSliderTip}
+        tipFormatter={(value, min, max, percent) => {
+          return `${value}x`;
+        }}
       />
       <Flex justify={"between"} width={"100%"}>
-        {[1, 5, 10, 25, 50].map((item, index) => {
+        {[1, 10, 20, 30, 40, 50].map((item, index) => {
           return (
             <button
               onClick={(e) => {

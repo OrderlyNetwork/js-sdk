@@ -14,6 +14,7 @@ export const usePortfolioSheetScript = () => {
   const { account } = useAccount();
   const assets = useAssets();
   const marginRatio = useMarginRatioAndLeverage();
+  const [showSliderTip, setShowSliderTip] = useState(false);
   const onSettlePnL = useCallback(async () => {
     return account
       .settle()
@@ -44,6 +45,7 @@ export const usePortfolioSheetScript = () => {
       activeTab: "withdraw",
     });
   }, []);
+  
 
   return {
     ...assets,
@@ -51,6 +53,7 @@ export const usePortfolioSheetScript = () => {
     onSettlePnL,
     onDeposit,
     onWithdraw,
+    showSliderTip, setShowSliderTip,
   };
 };
 

@@ -126,7 +126,6 @@ export const PositionsRowProvider: FC<
   useEffect(() => {
     let order = closeOrderData;
     helper.validator(order).then((value: any) => {
-      console.log("callback", JSON.stringify(value));
       setErrors(value);
     });
   }, [closeOrderData]);
