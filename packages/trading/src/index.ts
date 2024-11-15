@@ -1,8 +1,5 @@
 export type { ShareOptions, TradingPageProps } from "./types/types";
 
-import "./style/style.css";
-import "@orderly.network/react/dist/styles.css";
-
 export * from "./components/desktop/dataList";
 export * from "./components/base/lastTrades";
 export * from "./components/desktop/assetView";
