@@ -2,6 +2,7 @@ import { RefferalAPI as API, useAccount } from "@orderly.network/hooks";
 import { TabTypes, useReferralContext } from "../../../hooks";
 import { MockData } from "../../../utils/mockData";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useScreen } from "@orderly.network/ui";
 
 export type AsAnAffiliateReturns = {
   isAffiliate: boolean;
@@ -11,6 +12,7 @@ export type AsAnAffiliateReturns = {
   becomeAnAffiliate?: () => void;
   isSignIn: boolean;
   wrongNetwork: boolean;
+  isMobile: boolean;
 };
 
 export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
@@ -36,6 +38,8 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     setShowHome(false);
   };
 
+  const  { isMobile } = useScreen();
+
   return {
     isSignIn,
     isAffiliate,
@@ -47,5 +51,6 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     onEnterAffiliatePage,
     becomeAnAffiliate,
     wrongNetwork,
+    isMobile,
   };
 };
