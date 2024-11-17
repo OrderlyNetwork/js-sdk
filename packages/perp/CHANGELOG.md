@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.1-developV2.32
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-developV2.32
+  - @orderly.network/utils@2.0.1-developV2.32
+
 ## 4.0.1-developV2.31
 
 ### Patch Changes
