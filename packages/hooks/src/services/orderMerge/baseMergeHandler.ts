@@ -21,6 +21,7 @@ export abstract class BaseMergeHandler<
    */
   formatOrder(message: T): D {
     const data = this.pre(message);
+    // if order status is REPLACED, maybe not update status
 
     if (!data.created_time) {
       data.created_time = (data as any).timestamp;
