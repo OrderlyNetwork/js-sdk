@@ -116,10 +116,6 @@ export default defineConfig({
         "../../packages/wallet-connector/src"
       ),
       "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
-      "@orderly.network/react/dist": resolve(
-        __dirname,
-        "../../packages/component/dist"
-      ),
     },
   },
 });
