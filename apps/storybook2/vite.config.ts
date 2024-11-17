@@ -7,8 +7,9 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 export default defineConfig({
   plugins: [
     react(),
+    // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
     nodePolyfills({
-      include: ["path", "stream", "util", "assert"],
+      include: ["path", "stream", "util", "assert", "crypto"],
       exclude: ["http"],
       globals: {
         Buffer: true,
