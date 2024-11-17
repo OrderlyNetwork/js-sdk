@@ -9,17 +9,13 @@ import { log } from "console";
 import { useMemo, useState } from "react";
 
 export const useLeverageScript = () => {
-  const { currentLeverage } = useMarginRatio();
-
   const { hide } = useModal();
 
-  const [maxLeverage, { update, config: leverageLevers, isMutating }] =
+  const { currentLeverage } = useMarginRatio();
+  const [showSliderTip, setShowSliderTip] = useState(false);
+
+  const [curLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
-  const onLeverageChange = (leverage: number) => {
-    setLeverage(leverage);
-    // updateLeverage(leverage);
-  };
-  const [leverage, setLeverage] = useState(maxLeverage ?? 0);
 
   const marks = useMemo((): SliderMarks => {
     return (
@@ -30,13 +26,25 @@ export const useLeverageScript = () => {
     );
   }, [leverageLevers]);
 
+  const [leverage, setLeverage] = useState(curLeverage ?? 0);
+
+  const maxLeverage = leverageLevers?.reduce((a: number, item: any) =>
+    Math.max(a, Number(item), 0)
+  );
+
   const step = 100 / ((marks?.length || 0) - 1);
 
-  const leverageValue = useMemo(() => {
-    const index = leverageLevers.findIndex((item: any) => item === leverage);
+  // const leverageValue = useMemo(() => {
+  //   const index = leverageLevers.findIndex((item: any) => item === leverage);
 
-    return index * step;
-  }, [leverageLevers, leverage, step]);
+  //   return index * step;
+  // }, [leverageLevers, leverage, step]);
+
+  const onLeverageChange = (leverage: number) => {
+    // maxLeverage / 100 * leverage;
+    setLeverage(leverage);
+    // updateLeverage(leverage);
+  };
 
   const onCancel = () => hide();
   const onSave = async () => {
@@ -53,15 +61,19 @@ export const useLeverageScript = () => {
     } catch (e) {}
   };
 
+
   return {
     currentLeverage,
-    value: leverageValue,
+    value: leverage,
     marks,
     onLeverageChange,
     step,
     onCancel,
     onSave,
     isLoading: isMutating,
+    showSliderTip,
+    setShowSliderTip,
+    maxLeverage,
   };
 };
 
