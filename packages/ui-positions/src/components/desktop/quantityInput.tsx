@@ -46,7 +46,7 @@ export const QuantityInput = (props: { value: number }) => {
   }, []);
 
   const resetQuantity = (percent: number) => {
-    setQuantity(`${props.value * (percent / 100)}`);
+    onBlur(`${props.value * (percent / 100)}`);
   };
 
   const onBlur = (value: string) => {
