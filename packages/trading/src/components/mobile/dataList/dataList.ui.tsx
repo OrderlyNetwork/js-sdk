@@ -80,7 +80,7 @@ const PositionsView: FC<DataListState> = (props) => {
     <Flex direction={"column"} gap={2}>
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        symbol={props.symbol}
+        symbol={props.showAllSymbol ? undefined : props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
         tabletMediaQuery={props.tabletMediaQuery}
       />
