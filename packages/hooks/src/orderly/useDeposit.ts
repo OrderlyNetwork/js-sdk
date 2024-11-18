@@ -1,19 +1,20 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {useAccount} from "../useAccount";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useAccount } from "../useAccount";
 import {
   AccountStatusEnum,
   API,
   ARBITRUM_MAINNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   DEPOSIT_FEE_RATE,
-  isNativeTokenChecker, MaxUint256,
+  isNativeTokenChecker,
+  MaxUint256,
   ChainNamespace,
   NetworkId,
 } from "@orderly.network/types";
-import {Decimal, isTestnet} from "@orderly.network/utils";
-import {useChains} from "./useChains";
-import {useConfig} from "../useConfig";
-import {useDebouncedCallback} from "use-debounce";
+import { Decimal, isTestnet } from "@orderly.network/utils";
+import { useChains } from "./useChains";
+import { useConfig } from "../useConfig";
+import { useDebouncedCallback } from "use-debounce";
 
 export type useDepositOptions = {
   // from address
@@ -54,7 +55,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           ? options?.srcChainId!
           : ARBITRUM_TESTNET_CHAINID
       ) as API.Chain;
-      console.log('--  chain', chain, options );
+      console.log("--  chain", chain, options);
     } else {
       chain = findByChainId(options?.srcChainId!) as API.Chain;
       // if is orderly un-supported chain
@@ -157,7 +158,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   }) => {
     const { address, vaultAddress, decimals } = inputs;
     const key = `${address}-${vaultAddress}`;
-    console.log('--- get allowance', vaultAddress)
+    console.log("--- get allowance", vaultAddress);
 
     if (prevAddress.current === key) return;
 
@@ -190,7 +191,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     prevAddress.current = address;
 
-    console.log('-- ttttt  agetAllowanceByDefaultAddress', address)
+    console.log("-- ttttt  agetAllowanceByDefaultAddress", address);
     const allowance = await account.assetsManager.getAllowance({
       address,
       decimals,
@@ -236,7 +237,13 @@ export const useDeposit = (options?: useDepositOptions) => {
       setAllowance(account.walletAdapter.formatUnits(MaxUint256));
       return;
     }
-    console.log('-- dst chainid', dst.chainId, options?.srcChainId, dst, options)
+    console.log(
+      "-- dst chainid",
+      dst.chainId,
+      options?.srcChainId,
+      dst,
+      options
+    );
     if (dst.chainId !== options?.srcChainId) {
       queryAllowance(params);
     } else {
@@ -257,6 +264,23 @@ export const useDeposit = (options?: useDepositOptions) => {
     dst.symbol,
   ]);
 
+  const updateAllowanceWhenTxSuccess = useCallback(
+    (txHash: string) => {
+      return account.walletAdapter
+        ?.pollTransactionReceiptWithBackoff(txHash)
+        .then((receipt) => {
+          if (receipt.status === 1) {
+            account.assetsManager
+              .getAllowance({ address: options?.address })
+              .then((allowance) => {
+                setAllowance(() => allowance);
+              });
+          }
+        });
+    },
+    [account, options?.address]
+  );
+
   const approve = useCallback(
     async (amount?: string) => {
       if (!options?.address) {
@@ -267,38 +291,24 @@ export const useDeposit = (options?: useDepositOptions) => {
           address: options.address,
           amount,
         })
-        .then((result: any) => {
-          return account.walletAdapter
-            ?.pollTransactionReceiptWithBackoff(result.hash)
-            .then((receipt) => {
-              if (receipt.status === 1) {
-                account.assetsManager
-                  .getAllowance({ address: options.address })
-                  .then((allowance) => {
-                    setAllowance(() => allowance);
-                  });
-              }
-            });
+        .then((res: any) => {
+          return updateAllowanceWhenTxSuccess(res.hash);
         });
     },
-    [account, getAllowance, options, dst]
+    [account, getAllowance, options?.address, dst]
   );
 
   const deposit = useCallback(async () => {
     // only support orderly deposit
-    console.log('-- start deposit')
+    console.log("-- start deposit");
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
-        account.assetsManager
-          .getAllowance({ address: options?.address })
-          .then((allowance) => {
-            setAllowance(() => allowance);
-          });
+        updateAllowanceWhenTxSuccess(res.hash);
         setBalance((value) => new Decimal(value).sub(quantity).toString());
         return res;
       });
-  }, [account, fetchBalance, quantity, depositFee]);
+  }, [account, fetchBalance, quantity, depositFee, options?.address]);
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
