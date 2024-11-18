@@ -128,7 +128,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   ): API.PositionsTPSLExt {
     const { accountInfo, symbolsInfo, fundingRates, portfolio } = ctx;
 
-    if (!accountInfo || !fundingRates) {
+    if (!accountInfo || !fundingRates || !symbolsInfo) {
       return data as API.PositionsTPSLExt;
     }
 
