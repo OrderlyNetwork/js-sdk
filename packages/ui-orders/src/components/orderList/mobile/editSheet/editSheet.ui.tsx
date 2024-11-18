@@ -17,6 +17,7 @@ import { EditSheetState } from "./editSheet.script";
 import { ConfirmDialogContent } from "./editDialogContent";
 import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
+import { utils } from "@orderly.network/hooks";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
@@ -38,6 +39,16 @@ export const EditSheet: FC<EditSheetState> = (props) => {
     props.quantity && props.maxQty
       ? Math.min(Number(props.quantity) / props.maxQty, 1)
       : undefined;
+
+
+      const onBlur = (value: string) => {
+        const baseTick = props.baseTick;
+        if (baseTick && baseTick > 0) {
+          const formatQty = utils.formatNumber(value, baseTick) ?? value;
+          props.setQuantity(formatQty);
+        }
+      };
+
   return (
     <>
       <Flex
@@ -190,6 +201,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             onValueChange={(e) => {
               props.setQuantity(e);
             }}
+            onBlur={(event) => onBlur(event.target.value)}
             tooltip={props.errors?.order_quantity?.message}
             tooltipProps={{
               content: {

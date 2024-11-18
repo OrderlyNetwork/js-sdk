@@ -276,7 +276,7 @@ export const useEditSheetScript = (props: {
     },
   });
 
-  const { base_dp } = symbolInfo;
+  const { base_dp, base_tick } = symbolInfo;
 
   const onSheetConfirm = () => {
     helper
@@ -395,6 +395,7 @@ export const useEditSheetScript = (props: {
     errors,
     orderType,
     isChanged,
+    baseTick: base_tick,
 
     dialogOpen,
     setDialogOpen,
