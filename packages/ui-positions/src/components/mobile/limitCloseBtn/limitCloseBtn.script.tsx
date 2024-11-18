@@ -21,6 +21,7 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     updateOrderType,
     updateQuantity,
     errors,
+    baseTick,
   } = usePositionsRowContext();
   const setPrice = useRef(false);
 
@@ -79,6 +80,7 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     base_dp,
     base,
     quote,
+    baseTick,
 
     onClose,
     onConfirm,

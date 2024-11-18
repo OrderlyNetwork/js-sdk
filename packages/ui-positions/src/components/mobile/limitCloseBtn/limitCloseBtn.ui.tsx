@@ -17,6 +17,7 @@ import {
 import { LimitCloseBtnState } from "./limitCloseBtn.script";
 import { Decimal } from "@orderly.network/utils";
 import { LimitConfirmDialog } from "../../desktop/closeButton";
+import { utils } from "@orderly.network/hooks";
 
 export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
   const {
@@ -37,6 +38,13 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
     onCloseDialog,
   } = props;
   const isBuy = item.position_qty > 0;
+
+  const onBlur = (value: string) => {
+    if (props.baseTick && props.baseTick > 0) {
+      const formatQty = utils.formatNumber(value, props.baseTick) ?? value;
+      props.updateQuantity(formatQty);
+    }
+  };
 
   return (
     <>
@@ -136,6 +144,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   props.errors?.order_quantity?.message ? "danger" : undefined
                 }
                 value={props.quantity}
+                onBlur={(event) => onBlur(event.target.value)}
                 onValueChange={(e) => {
                   props.updateQuantity(e);
                   const slider = new Decimal(e)
