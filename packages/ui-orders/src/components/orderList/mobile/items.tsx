@@ -19,7 +19,7 @@ import {
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderSide } from "@orderly.network/types";
 
-export const Symbol: FC<OrderCellState> = (props) => {
+export const SymbolToken: FC<OrderCellState> = (props) => {
   const { item } = props;
   const isBuy = item.side === OrderSide.BUY;
   return (
