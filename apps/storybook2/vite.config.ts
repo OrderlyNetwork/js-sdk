@@ -7,8 +7,9 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 export default defineConfig({
   plugins: [
     react(),
+    // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
     nodePolyfills({
-      include: ["path", "stream", "util", "assert"],
+      include: ["path", "stream", "util", "assert", "crypto"],
       exclude: ["http"],
       globals: {
         Buffer: true,
@@ -120,10 +121,6 @@ export default defineConfig({
         "../../packages/wallet-connector/src"
       ),
       "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
-      "@orderly.network/react/dist": resolve(
-        __dirname,
-        "../../packages/component/dist"
-      ),
     },
   },
 });
