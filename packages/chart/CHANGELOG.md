@@ -1,5 +1,14 @@
 # @orderly.network/chart
 
+## 2.0.1-developV2.37
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@2.0.1-developV2.37
+  - @orderly.network/ui@2.0.1-developV2.37
+
 ## 2.0.1-developV2.36
 
 ### Patch Changes
