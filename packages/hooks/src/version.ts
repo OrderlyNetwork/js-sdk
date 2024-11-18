@@ -8,7 +8,7 @@ declare global {
 }
 if(typeof window !== 'undefined') {
     window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-    window.__ORDERLY_VERSION__["@orderly.network/hooks"] = "2.0.1-developV2.37";
+    window.__ORDERLY_VERSION__["@orderly.network/hooks"] = "2.0.1-developV2.38";
 };
 
-export default "2.0.1-developV2.37";
+export default "2.0.1-developV2.38";

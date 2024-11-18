@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.0.1-developV2.38
+
+### Patch Changes
+
+- update
+
 ## 2.0.1-developV2.37
 
 ### Patch Changes
