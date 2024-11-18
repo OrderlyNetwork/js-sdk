@@ -68,7 +68,11 @@ export const OrderQuantity = (props: {
     } else {
       const quantity = Number(qty);
       if (maxQty && quantity > maxQty) {
-        setError(`Quantity should be less than ${commifyOptional(maxQty, { fix :base_dp })}`)
+        setError(
+          `Quantity should be less than ${commifyOptional(maxQty, {
+            fix: base_dp,
+          })}`
+        );
       } else {
         setError(undefined);
       }
@@ -533,10 +537,12 @@ const EditState: FC<{
             <Buttons
               onClick={(value) => {
                 setSliderValue(value * 100);
-                const quantity = new Decimal(value)
+                let quantity = new Decimal(value)
                   .mul(qty)
                   .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
+                quantity = utils.formatNumber(quantity, base_tick) ?? quantity;
+
                 setQuantity(quantity, qty);
                 setTimeout(() => {
                   inputRef.current.focus();
