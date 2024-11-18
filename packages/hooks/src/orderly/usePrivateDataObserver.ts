@@ -51,7 +51,6 @@ export const usePrivateDataObserver = (options: {
     usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
       onError: (error) => {
-        // console.error("fetch positions error", error);
         statusActions.updateApiError("positions", error.message);
       },
     });
@@ -60,6 +59,7 @@ export const usePrivateDataObserver = (options: {
   useEffect(() => {
     const handler = (state: AccountState) => {
       if (!state.accountId) {
+        calculatorService.stop();
         cleanAll();
         positionsActions.clearAll();
       }
