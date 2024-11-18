@@ -273,6 +273,27 @@ export const useDeposit = (options?: useDepositOptions) => {
     dst.symbol,
   ]);
 
+  const updateAllowanceWhenTxSuccess = useCallback(
+    (txHash: string, vaultAddress?: string) => {
+      return account.walletAdapter
+        ?.pollTransactionReceiptWithBackoff(txHash)
+        .then((receipt) => {
+          if (receipt.status === 1) {
+            account.assetsManager
+              .getAllowance({
+                address: options?.address,
+                vaultAddress,
+                decimals: options?.decimals,
+              })
+              .then((allowance) => {
+                setAllowance(() => allowance);
+              });
+          }
+        });
+    },
+    [account, options?.address, options?.decimals]
+  );
+
   const approve = useCallback(
     async (amount?: string) => {
       if (!options?.address) {
@@ -288,21 +309,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           decimals: options?.decimals,
         })
         .then((result: any) => {
-          return account.walletAdapter
-            ?.pollTransactionReceiptWithBackoff(result.hash)
-            .then((receipt) => {
-              if (receipt.status === 1) {
-                account.assetsManager
-                  .getAllowance({
-                    address: options.address,
-                    vaultAddress,
-                    decimals: options?.decimals,
-                  })
-                  .then((allowance) => {
-                    setAllowance(() => allowance);
-                  });
-              }
-            });
+          return updateAllowanceWhenTxSuccess(result.hash, vaultAddress);
         });
     },
     [account, getAllowance, dst, options?.address, options?.decimals]
@@ -313,18 +320,10 @@ export const useDeposit = (options?: useDepositOptions) => {
     const vaultAddress = getVaultAddress();
     return account.assetsManager
       .deposit(quantity, depositFee)
-      .then((res: any) => {
-        account.assetsManager
-          .getAllowance({
-            address: options?.address,
-            vaultAddress,
-            decimals: options?.decimals,
-          })
-          .then((allowance) => {
-            setAllowance(() => allowance);
-          });
+      .then((result: any) => {
+        updateAllowanceWhenTxSuccess(result.hash, vaultAddress);
         setBalance((value) => new Decimal(value).sub(quantity).toString());
-        return res;
+        return result;
       });
   }, [
     account,
