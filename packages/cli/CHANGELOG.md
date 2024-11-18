@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.16-developV2.26
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@2.0.1-developV2.35
+
 ## 0.3.16-developV2.25
 
 ### Patch Changes
