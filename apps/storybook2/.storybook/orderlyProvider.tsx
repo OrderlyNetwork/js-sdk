@@ -2,13 +2,21 @@ import React, { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
-import { Adapter, WalletAdapterNetwork, type WalletError, WalletNotReadyError } from "@solana/wallet-adapter-base";
+import {
+  Adapter,
+  WalletAdapterNetwork,
+  type WalletError,
+  WalletNotReadyError,
+} from "@solana/wallet-adapter-base";
 import {
   createDefaultAddressSelector,
   createDefaultAuthorizationResultCache,
-  SolanaMobileWalletAdapter
+  SolanaMobileWalletAdapter,
 } from "@solana-mobile/wallet-adapter-mobile";
-import { PhantomWalletAdapter, SolflareWalletAdapter } from "@solana/wallet-adapter-wallets";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -47,7 +55,8 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   return (
     <WalletConnectorProvider
       solanaInitial={{ wallets: wallets, onError: handleSolanaError }}
-    >      <OrderlyAppProvider
+    >
+      <OrderlyAppProvider
         // brokerId="orderly"
         // brokerName="Orderly"
         // networkId="testnet"

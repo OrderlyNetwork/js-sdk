@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { OrderCellState } from "../orderCell.script";
 import {
+  useDebouncedCallback,
   useLocalStorage,
   useOrderEntry,
   useOrderEntry_deprecated,
+  useThrottledCallback,
+  utils,
 } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { modal, toast, useModal } from "@orderly.network/ui";
@@ -290,8 +293,11 @@ export const useEditSheetScript = (props: {
             onSubmit(formattedOrder);
           }
         },
-        () => {
+        (error) => {
           // rejected
+          if (error?.total?.message) {
+            toast.error(error?.total.message);
+          }
         }
       )
       .catch((err) => {});
@@ -352,7 +358,7 @@ export const useEditSheetScript = (props: {
 
   const sliderValue = useMemo(() => {
     const qty = formattedOrder.order_quantity;
-    if (qty && Number(qty) !== 0) {
+    if (qty && Number(qty) !== 0 && maxQty !== 0) {
       const value = new Decimal(qty)
         .div(maxQty)
         .mul(100)
@@ -368,28 +374,43 @@ export const useEditSheetScript = (props: {
     `${order.quantity}` !== formattedOrder.order_quantity ||
     `${order.trigger_price}` !== formattedOrder.trigger_price;
 
+  const setSliderValue = useThrottledCallback(
+    (value: number) => {
+      
+      const quantity = new Decimal(value)
+        .div(100)
+        .mul(maxQty)
+        .toDecimalPlaces(base_dp, Decimal.ROUND_DOWN)
+        .toNumber();
+      setValue("order_quantity", utils.formatNumber(quantity, base_tick));
+    },
+    50,
+    {}
+  );
+
+  const setOrderValue = (key: any, value: string | number) => {
+  
+    setValue(key, value);
+  };
+
   return {
     ...state,
     curMarkPrice: markPrice,
     isAlgoOrder,
     isStopMarket,
     price: formattedOrder.order_price,
-    setPrice: (value: string) => setValue("order_price", value),
+    setPrice: (value: string) => setOrderValue("order_price", value),
     priceEdit: !isStopMarket,
     triggerPrice: formattedOrder.trigger_price,
-    setTriggerPrice: (value: string) => setValue("trigger_price", value),
+    setTriggerPrice: (value: string) => setOrderValue("trigger_price", value),
     quantity: formattedOrder.order_quantity,
-    setQuantity: (value: string) => setValue("order_quantity", value),
+    setQuantity: (value: string) => {
+      console.trace("set quantity");
+      setOrderValue("order_quantity", value);
+    },
     maxQty,
     sliderValue,
-    setSliderValue: (value: number) => {
-      const quantity = new Decimal(value)
-        .div(100)
-        .mul(maxQty)
-        .toDecimalPlaces(base_dp, Decimal.ROUND_DOWN)
-        .toNumber();
-      setValue("order_quantity", quantity);
-    },
+    setSliderValue,
     onClose: onClose,
     onSheetConfirm: onSheetConfirm,
     errors,

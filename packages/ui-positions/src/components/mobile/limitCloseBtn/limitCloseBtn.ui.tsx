@@ -170,7 +170,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                     .div(100)
                     .mul(props.item.position_qty)
                     .toFixed(props.base_dp, Decimal.ROUND_DOWN);
-                  props.updateQuantity(qty);
+                  // props.updateQuantity(qty);
+                  onBlur(qty);
                 }}
               />
               <Flex width={"100%"} justify={"between"}>
