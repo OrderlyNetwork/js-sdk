@@ -92,10 +92,6 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-chain-selector/src"
       ),
-      // "@orderly.network/web3-onboard": resolve(
-      //   __dirname,
-      //   "../../packages/onboard/src"
-      // ),
       "@orderly.network/ui-order-entry": resolve(
         __dirname,
         "../../packages/ui-order-entry/src"
