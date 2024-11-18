@@ -16,6 +16,10 @@ class IndexPriceCalculator extends BaseCalculator<any> {
     if (!data) return;
     useIndexPriceStore.getState().actions.updateIndexPrice(data);
   }
+
+  static getValue() {
+    return useIndexPriceStore.getState().indexPrices;
+  }
 }
 
 export { IndexPriceCalculator };

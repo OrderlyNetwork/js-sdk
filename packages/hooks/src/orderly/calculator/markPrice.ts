@@ -2,8 +2,9 @@ import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
 import { BaseCalculator } from "./baseCalculator";
 import { useMarkPriceStore } from "../useMarkPrice/useMarkPriceStore";
 
+export const MarketCalculatorName = "markPriceCalculator";
 class MarkPriceCalculator extends BaseCalculator<any> {
-  name: string = "markPriceCalculator";
+  name: string = MarketCalculatorName;
 
   calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx) {
     return data;

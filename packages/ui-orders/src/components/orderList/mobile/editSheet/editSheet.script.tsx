@@ -3,6 +3,7 @@ import { OrderCellState } from "../orderCell.script";
 import {
   useDebouncedCallback,
   useLocalStorage,
+  useMaxQty,
   useOrderEntry,
   useOrderEntry_deprecated,
   useThrottledCallback,
@@ -14,6 +15,7 @@ import { OrderEntity } from "@orderly.network/types";
 import { useOrderListContext } from "../../orderListContext";
 import { OrderTypeView } from "../items";
 import { AlgoOrderRootType } from "@orderly.network/types";
+import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
 
 // export const useEditSheetScript = (props: {
 //   state: OrderCellState;
@@ -265,7 +267,7 @@ export const useEditSheetScript = (props: {
     setValues,
     symbolInfo,
     markPrice,
-    maxQty,
+
     metaState: { errors },
     helper,
   } = useOrderEntry(order.symbol, {
@@ -279,7 +281,21 @@ export const useEditSheetScript = (props: {
     },
   });
 
+  const { reduce_only } = order;
+
   const { base_dp, base_tick } = symbolInfo;
+
+  const { position } = useTPSLOrderRowContext();
+  const positionQty = position?.position_qty;
+
+  const _maxQty = useMaxQty(order.symbol, order.side as any, order.reduce_only);
+
+  const maxQty = useMemo(() => {
+    if (reduce_only) {
+      return Math.abs(positionQty ?? 0);
+    }
+    return order.quantity + Math.abs(_maxQty);
+  }, [order.quantity, _maxQty, reduce_only, positionQty]);
 
   const onSheetConfirm = () => {
     helper
@@ -376,7 +392,6 @@ export const useEditSheetScript = (props: {
 
   const setSliderValue = useThrottledCallback(
     (value: number) => {
-      
       const quantity = new Decimal(value)
         .div(100)
         .mul(maxQty)
@@ -389,7 +404,6 @@ export const useEditSheetScript = (props: {
   );
 
   const setOrderValue = (key: any, value: string | number) => {
-  
     setValue(key, value);
   };
 
