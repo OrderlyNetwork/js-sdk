@@ -208,6 +208,9 @@ export const useTaskProfitAndStopLossInternal = (
         });
       }
 
+      // TODO: need to optimizations code
+      _setOrderValue(key, value, options);
+
       return;
     }
 

@@ -148,11 +148,11 @@ const TPSLQuantity = (props: {
   const formatQuantity = (qty: string) => {
     if (props.baseTick > 0) {
       const quantity = Number(qty);
-      if (quantity) {
-        props.onQuantityChange?.(Math.min(props.maxQty, quantity));
-      } else {
+      // if (quantity) {
+      //   props.onQuantityChange?.(Math.min(props.maxQty, quantity));
+      // } else {
         props.onQuantityChange?.(utils.formatNumber(qty, props.baseTick) ?? qty);
-      }
+      // }
     }
   };
 
