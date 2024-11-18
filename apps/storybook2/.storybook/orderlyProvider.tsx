@@ -70,7 +70,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             img: "/orderly-logo-secondary.svg",
           },
         }}
-        // customChains={customChains as any}
+        customChains={customChains as any}
       >
         {props.children}
       </OrderlyAppProvider>
