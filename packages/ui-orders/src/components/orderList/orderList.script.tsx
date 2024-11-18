@@ -48,15 +48,13 @@ export const useOrderListScript = (props: {
   } = props;
 
   const manualPagination = useMemo(() => {
-    return false;
     // pending and ts_sl list use client pagination
     return ordersStatus !== OrderStatus.INCOMPLETE;
   }, [ordersStatus]);
 
   const defaultPageSize = 50;
   const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
-    // pending and ts_sl list get all data
-    pageSize: manualPagination ? defaultPageSize : 500,
+    pageSize: defaultPageSize,
   });
   const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
     useFilter(type, {
@@ -64,9 +62,6 @@ export const useOrderListScript = (props: {
       setPage,
       filterConfig,
     });
-
-    console.log("tab type", props.type, pageSize);
-    
 
   const includes = useMemo(() => {
     if (type === TabType.tp_sl) {
@@ -100,8 +95,9 @@ export const useOrderListScript = (props: {
     symbol: props.symbol,
     status: orderStatus,
     side: ordersSide,
-    page: enableLoadMore ? undefined : manualPagination ? page : undefined,
-    size: pageSize,
+    page: enableLoadMore || !manualPagination ? undefined : page,
+    // pending and ts_sl list get all data
+    size: manualPagination ? pageSize : 500,
     dateRange,
     includes,
     excludes,
