@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { usePositionsRowContext } from "./positionRowContext";
 import { Decimal } from "@orderly.network/utils";
 import { OrderType } from "@orderly.network/types";
+import { utils } from "@orderly.network/hooks";
 
 export const QuantityInput = (props: { value: number }) => {
   // const [quantity, setQuantity] = useState(`${props.value}`);
@@ -25,6 +26,7 @@ export const QuantityInput = (props: { value: number }) => {
     quantity,
     type,
     errors,
+    baseTick,
   } = usePositionsRowContext();
 
   useEffect(() => {
@@ -47,6 +49,13 @@ export const QuantityInput = (props: { value: number }) => {
     setQuantity(`${props.value * (percent / 100)}`);
   };
 
+  const onBlur = (value: string) => {
+    if (baseTick && baseTick > 0) {
+      const formatQty = utils.formatNumber(value, baseTick) ?? value;
+      setQuantity(formatQty);
+    }
+  };
+
   return (
     <PopoverRoot>
       <PopoverTrigger>
@@ -65,6 +74,7 @@ export const QuantityInput = (props: { value: number }) => {
           // tooltip={errors?.order_quantity?.message}
           // color={errors?.order_quantity?.message ? "danger" : undefined}
           value={quantity}
+          onBlur={(event) => onBlur(event.target.value)}
           onValueChange={(e) => {
             setQuantity(e);
             // if (type === OrderType.LIMIT) {

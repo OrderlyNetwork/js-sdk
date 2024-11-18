@@ -5,7 +5,8 @@ import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { PositionCellState } from "./positionCell.script";
 import { FC } from "react";
 import { API } from "@orderly.network/types";
-export const Symbol: FC<PositionCellState> = (props) => {
+
+export const SymbolToken: FC<PositionCellState> = (props) => {
   const { item } = props;
   const isBuy = item.position_qty > 0;
   return (

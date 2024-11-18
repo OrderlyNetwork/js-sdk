@@ -12,8 +12,10 @@ import {
 import {
   useOrderEntry_deprecated,
   useSymbolsInfo,
+  utils,
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
+import { commifyOptional } from "@orderly.network/utils";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -33,6 +35,7 @@ export interface PositionsRowContextState {
   tpslOrder?: API.AlgoOrder;
   quoteDp?: number;
   baseDp?: number;
+  baseTick?: number;
   errors: any | undefined;
 }
 
@@ -69,6 +72,7 @@ export const PositionsRowProvider: FC<
   const curSymbolInfo = config?.[symbol];
   const quoteDp = curSymbolInfo("quote_dp");
   const baseDp = curSymbolInfo("base_dp");
+  const baseTick = curSymbolInfo("base_tick");
 
   const { helper, onSubmit, submitting } = useOrderEntry_deprecated(
     props.position?.symbol!,
@@ -152,6 +156,7 @@ export const PositionsRowProvider: FC<
         closeOrderData,
         quoteDp,
         baseDp,
+        baseTick,
         errors,
       }}
     >

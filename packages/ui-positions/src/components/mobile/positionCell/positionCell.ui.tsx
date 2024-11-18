@@ -3,7 +3,7 @@ import { cn, Divider, Flex, Grid } from "@orderly.network/ui";
 import { PositionCellState } from "./positionCell.script";
 import {
   UnrealPnL,
-  Symbol,
+  SymbolToken,
   Qty,
   Margin,
   Notional,
@@ -35,17 +35,16 @@ export const PositionCell: FC<
       <Header {...rest} />
       <Divider intensity={6} className="oui-w-full" />
       <Body {...rest} />
-      <TPSLPrice {...rest}/>
+      <TPSLPrice {...rest} />
       <Buttons {...rest} />
     </Flex>
   );
 };
 
 const Header: FC<PositionCellState> = (props) => {
-
   return (
     <Flex justify={"between"} width={"100%"}>
-      <Symbol {...props} />
+      <SymbolToken {...props} />
       <UnrealPnL {...props} />
     </Flex>
   );
