@@ -101,3 +101,11 @@ function rounding(
 }
 
 export const NumberReg = /^([0-9]{1,}[.]?[0-9]*)/;
+
+
+export function formatAddress(address: string, range?: [number, number]) {
+  if (address === undefined || address === null) return '';
+  const [start, end] = range ?? [6, 4];
+  const reg = new RegExp(`^(.{${start}})(.*)(.{${end}})$`);
+  return `${address.replace(reg, "$1...$3")}`;
+}

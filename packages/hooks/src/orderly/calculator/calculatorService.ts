@@ -1,5 +1,6 @@
 import { Calculator, CalculatorScheduler, CalculatorScope } from "../../types";
 import { CalculatorContext } from "./calculatorContext";
+import { PositionCalculator } from "./positions";
 
 type CalcOptions = {
   skipUpdate?: boolean;
@@ -75,6 +76,7 @@ class CalculatorService {
       }
     }
     const ctx = new CalculatorContext(scope, data);
+    // console.log("-------------[calc]:", scope, ctx.isReady, data);
 
     // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
     if (!ctx.isReady && !options?.skipPending) {
@@ -96,14 +98,11 @@ class CalculatorService {
   }
 
   private async handlePendingCalc() {
+    // console.log("[handlePendingCalc]:", this.pendingCalc);
     if (this.pendingCalc.length === 0) return;
-    while (this.pendingCalc.length) {
-      const item = this.pendingCalc.shift();
-      if (item) {
-        const { scope, data } = item;
-        await this.calc(scope, data, { skipUpdate: false });
-      }
-    }
+    this.calcQueue = [...this.pendingCalc, ...this.calcQueue];
+
+    this.pendingCalc = [];
   }
 
   private async handleCalcQueue(context?: CalculatorContext) {
@@ -114,7 +113,12 @@ class CalculatorService {
       const ctx = context || new CalculatorContext(scope, data);
       const calculators = this.calculators.get(scope);
       if (Array.isArray(calculators) && calculators.length) {
-        await this.scheduler.calc(scope, calculators, data, ctx);
+        try {
+          await this.scheduler.calc(scope, calculators, data, ctx);
+        } catch (e) {
+          console.error(e);
+        }
+
         if (!options?.skipUpdate) {
           this.scheduler.update(scope, calculators, ctx.outputToValue());
         }

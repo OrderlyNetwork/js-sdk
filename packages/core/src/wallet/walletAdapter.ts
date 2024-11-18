@@ -1,5 +1,4 @@
-import { API } from "@orderly.network/types";
-import { ChainNamespace } from "../constants";
+import { API, ChainNamespace } from "@orderly.network/types";
 import { SignatureDomain } from "../utils";
 
 import type { BigNumberish } from "ethers/src.ts/utils";
@@ -35,6 +34,7 @@ export type WithdrawInputs = {
   timestamp: number;
   // chainType: ChainType;
   // domain: SignatureDomain;
+  verifyContract?: string;
 };
 
 export type SettleInputs = {
@@ -44,6 +44,7 @@ export type SettleInputs = {
   timestamp: number;
   // chainType: ChainType;
   // domain: any;
+  verifyContract?: string;
 };
 
 export type AddOrderlyKeyInputs = {

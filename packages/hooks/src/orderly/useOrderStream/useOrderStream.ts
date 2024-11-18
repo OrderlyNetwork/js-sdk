@@ -60,7 +60,7 @@ export const useOrderStream = (
     status,
     symbol,
     side,
-    size = 100,
+    size = 50,
     page,
     dateRange,
     includes = ["ALL"],
@@ -69,8 +69,7 @@ export const useOrderStream = (
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const { registerKeyHandler: regesterKeyHandler, unregisterKeyHandler } =
-    useDataCenterContext();
+  const { registerKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
@@ -99,8 +98,9 @@ export const useOrderStream = (
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side
-    )}`;
-    regesterKeyHandler?.(
+    )}${formatKey(size.toString())}`;
+
+    registerKeyHandler?.(
       key,
       generateKeyFun({ status, symbol, side, size, page, dateRange })
     );
@@ -110,7 +110,7 @@ export const useOrderStream = (
 
       unregisterKeyHandler(key);
     };
-  }, [status, symbol, side, options?.keeplive, page, dateRange]);
+  }, [status, symbol, side, size, page, dateRange, options?.keeplive]);
 
   const ordersResponse = usePrivateInfiniteQuery(
     generateKeyFun({ status, symbol, side, size, page, dateRange }),

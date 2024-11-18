@@ -1,6 +1,9 @@
 import React, { FC, ReactElement } from "react";
 import { Select, SelectProps } from "./select";
 import { SelectGroup, SelectItem } from "./selectPrimitive";
+import { Flex } from "../flex";
+import { Box } from "../box";
+import { cn } from "..";
 
 export type SelectOption = {
   label: string;
@@ -9,6 +12,7 @@ export type SelectOption = {
 
 export type SelectWithOptionsProps<T = string> = SelectProps<T> & {
   // options: SelectOption[] | (() => Promise<SelectOption[]>);
+  currentValue?: string;
   options: SelectOption[];
   optionRenderer?: (
     option: SelectOption
@@ -20,9 +24,21 @@ export type SelectWithOptionsProps<T = string> = SelectProps<T> & {
   // loading?: boolean;
 };
 
-export const defaultOptionRenderer = (option: SelectOption) => (
-  <SelectItem key={option.value} value={option.value}>
+export const defaultOptionRenderer = (
+  option: SelectOption,
+  currentValue?: string
+) => (
+  <SelectItem key={option.value} value={option.value} className={cn("oui-relative")}>
     {option.label}
+    {currentValue == option.value && (
+      <Box
+        width={4}
+        height={4}
+        gradient="primary"
+        r="full"
+        className="oui-absolute oui-right-2 oui-top-1/2 -oui-translate-y-1/2"
+      />
+    )}
   </SelectItem>
 );
 
@@ -31,6 +47,7 @@ export const SelectWithOptions: FC<SelectWithOptionsProps> = (props) => {
     children,
     options,
     optionRenderer = defaultOptionRenderer,
+    currentValue,
     ...rest
   } = props;
 
@@ -46,7 +63,7 @@ export const SelectWithOptions: FC<SelectWithOptionsProps> = (props) => {
           //   size: props.size,
           //   index,
           // });
-          return React.cloneElement(optionRenderer(option), {
+          return React.cloneElement(optionRenderer(option, currentValue), {
             size: props.size,
             key: index,
             index,

@@ -4,7 +4,6 @@ export class BackgroundPaint extends BasePaint {
   private img: HTMLImageElement | null = null;
 
   async draw(options: DrawOptions) {
-    console.log("BackgroundPaint draw: ", options.backgroundColor);
 
     if (
       typeof options.backgroundImg !== "undefined" &&

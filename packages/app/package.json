@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react-app",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Create React App with Orderly Network components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -14,13 +14,17 @@
     "React",
     "DApp"
   ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/default-evm-adapter": "workspace:*",
-    "@orderly.network/web3-provider-ethers": "workspace:*"
+    "@orderly.network/types": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

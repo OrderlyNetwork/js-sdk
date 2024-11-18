@@ -2,29 +2,18 @@ import { modal } from "@orderly.network/ui";
 import { AccountSheetWidget } from "../accountSheet";
 import { useTradingPageContext } from "../../../provider/context";
 import { PortfolioSheetWidget } from "../portfolioSheet";
+import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
+import { useAccount } from "@orderly.network/hooks";
+import { isTestnet } from "@orderly.network/utils";
+import { useMemo } from "react";
+import { useAppContext } from "@orderly.network/react-app";
 
 export const useBottomNavBarScript = () => {
-  const { referral, tradingRewards, bottomSheetLeading } = useTradingPageContext();
+  
 
-  console.log("referral, tradingRewards", referral, tradingRewards,bottomSheetLeading );
-
-  const onShowAccountSheet = () => {
-    modal.sheet({
-      title: "Account",
-      leading: bottomSheetLeading,
-      content: <AccountSheetWidget {...referral} {...tradingRewards} />,
-    });
-  };
-  const onShowPortfolioSheet = () => {
-    modal.sheet({
-      title: "Asset & Margin",
-      leading: bottomSheetLeading,
-      content: (<PortfolioSheetWidget />)
-    });
-  };
+  const { wrongNetwork } = useAppContext();
   return {
-    onShowAccountSheet,
-    onShowPortfolioSheet,
+    wrongNetwork,
   };
 };
 

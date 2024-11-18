@@ -6,7 +6,14 @@ import {
   SharePnLConfig,
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
-import { CloseIcon, Divider, Flex, toast, Text, Box } from "@orderly.network/ui";
+import {
+  CloseIcon,
+  Divider,
+  Flex,
+  toast,
+  Text,
+  Box,
+} from "@orderly.network/ui";
 import { Poster } from "../poster";
 import { CarouselBackgroundImage } from "./carousel";
 import { PnlFormatView } from "./pnlFormat";
@@ -51,7 +58,7 @@ export const DesktopSharePnLContent: FC<{
   }, []);
 
   const curBgImg = useMemo(() => {
-    return shareOptions?.backgroundImages[selectedSnap];
+    return shareOptions?.backgroundImages?.[selectedSnap];
   }, [shareOptions?.backgroundImages, selectedSnap]);
 
   const posterData = getPnLPosterData(
@@ -65,8 +72,6 @@ export const DesktopSharePnLContent: FC<{
     props.quoteDp,
     props.referral
   );
-
-  console.log("posterData is", posterData);
 
   const onCopy = () => {
     posterRef.current
@@ -108,7 +113,7 @@ export const DesktopSharePnLContent: FC<{
   return (
     <div className="oui-h-full oui-flex oui-flex-col oui-relative oui-w-full">
       <div className="oui-flex-1 oui-h-full oui-overflow-y-auto">
-        <Box mt={9} height={422} >
+        <Box mt={9} height={422}>
           <Flex itemAlign={"center"} justify={"center"}>
             <Poster
               // className="oui-mx-11"
@@ -142,8 +147,9 @@ export const DesktopSharePnLContent: FC<{
             PnL display format
           </Text>
           <Flex pt={3} gap={3} itemAlign={"center"}>
-            {formats.map((e) => (
+            {formats.map((e, index) => (
               <PnlFormatView
+                key={index}
                 setPnlFormat={setPnlFormat}
                 type={e}
                 curType={pnlFormat}
@@ -163,8 +169,9 @@ export const DesktopSharePnLContent: FC<{
               Optional information to share
             </Text>
             <Flex mt={3} gap={4}>
-              {options.map((item) => (
+              {options.map((item, index) => (
                 <ShareOption
+                  key={index}
                   setShareOption={setShareOption}
                   type={item}
                   curType={shareOption}
@@ -184,14 +191,14 @@ export const DesktopSharePnLContent: FC<{
 
       <BottomButtons onClickCopy={onCopy} onClickDownload={onDownload} />
 
-      <button
+      {/* <button
         onClick={() => {
           props.hide();
         }}
         className="oui-absolute oui-top-0 oui-right-0 oui-w-[40px] oui-h-[40px] oui-flex oui-justify-center oui-items-center"
       >
         <CloseIcon size={12} className="oui-fill-base-contrast-54" />
-      </button>
+      </button> */}
     </div>
   );
 };

@@ -28,10 +28,10 @@ export const findTPSLFromOrder = (
 
   let sl_trigger_price;
 
-  const tpOrder = order.child_orders?.find(
+  const tpOrder = order?.child_orders?.find(
     (order: any) => order.algo_type === AlgoOrderType.TAKE_PROFIT
   );
-  const slOrder = order.child_orders?.find(
+  const slOrder = order?.child_orders?.find(
     (order: any) => order.algo_type === AlgoOrderType.STOP_LOSS
   );
 

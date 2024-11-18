@@ -1,9 +1,8 @@
 import { FC, useMemo } from "react";
-import { cn } from "@orderly.network/ui";
+import { cn, TableView, TableViewClassNames } from "@orderly.network/ui";
 import { type UseMarketsListReturn } from "./marketsList.script";
 import { GetColumns, TInitialSort } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
-import DataTable from "../dataTable";
 import { getSideMarketsColumns } from "../sideMarkets/column";
 import { CollapseMarkets } from "../collapseMarkets";
 
@@ -11,6 +10,8 @@ export type MarketsListProps = UseMarketsListReturn & {
   initialSort: TInitialSort;
   getColumns?: GetColumns;
   collapsed?: boolean;
+  tableClassNames?: TableViewClassNames;
+  rowClassName?: string;
 };
 
 export const MarketsList: FC<MarketsListProps> = (props) => {
@@ -24,7 +25,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
     collapsed,
   } = props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const columns = useMemo(() => {
     return typeof getColumns === "function"
@@ -37,16 +38,19 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
   }
 
   return (
-    <DataTable
+    <TableView
       classNames={{
-        body: "oui-pb-[53px]",
+        root: props.tableClassNames?.root,
+        body: props.tableClassNames?.body,
+        header: cn("oui-h-9", props.tableClassNames?.header),
+        scroll: props.tableClassNames?.scroll,
       }}
       columns={columns}
       loading={loading}
       dataSource={dataSource}
       onRow={(record, index) => {
         return {
-          className: cn("group", "oui-h-[53px]"),
+          className: cn("oui-h-[53px]", props.rowClassName),
           onClick: () => {
             onSymbolChange?.(record);
             favorite.addToHistory(record);
@@ -54,8 +58,33 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
         };
       }}
       generatedRowKey={(record) => record.symbol}
+      rowSelection={{ [symbol!]: true }}
       onSort={onSort}
       initialSort={initialSort}
+      manualSorting
     />
   );
+
+  // return (
+  //   <DataTable
+  //     classNames={{
+  //       body: "oui-pb-[53px]",
+  //     }}
+  //     columns={columns}
+  //     loading={loading}
+  //     dataSource={dataSource}
+  //     onRow={(record, index) => {
+  //       return {
+  //         className: cn("group", "oui-h-[53px]"),
+  //         onClick: () => {
+  //           onSymbolChange?.(record);
+  //           favorite.addToHistory(record);
+  //         },
+  //       };
+  //     }}
+  //     generatedRowKey={(record) => record.symbol}
+  //     onSort={onSort}
+  //     initialSort={initialSort}
+  //   />
+  // );
 };

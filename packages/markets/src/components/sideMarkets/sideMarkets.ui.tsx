@@ -10,7 +10,6 @@ import { FavoritesListWidget } from "../favoritesList";
 import { RecentListWidget } from "../recentList";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
-import "../../style/index.css";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn & {
   className?: string;
@@ -19,7 +18,7 @@ export type SideMarketsProps = UseSideMarketsScriptReturn & {
 export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
   const { collapsed, onCollapse, activeTab, onTabChange, className } = props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const renderContent = () => {
     if (!collapsed) {
@@ -27,6 +26,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
         <ExpandMarketsWidget
           activeTab={activeTab}
           onTabChange={onTabChange}
+          symbol={symbol}
           onSymbolChange={onSymbolChange}
         />
       );
@@ -79,7 +79,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
   if (collapsed) {
     return (
       <ExpandIcon
-        className="oui-text-base-contrast-12 oui-cursor-pointer"
+        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer"
         onClick={() => {
           onCollapse?.(false);
         }}
@@ -93,7 +93,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
         Market
       </Text>
       <CollapseIcon
-        className="oui-text-base-contrast-12 oui-cursor-pointer"
+        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer"
         onClick={() => {
           onCollapse?.(true);
         }}

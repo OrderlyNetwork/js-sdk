@@ -25,7 +25,7 @@ const switchVariants = tv({
       "focus-visible:oui-ring-offset-background",
       "disabled:oui-cursor-not-allowed",
       "disabled:oui-opacity-50",
-      "data-[state=checked]:oui-bg-primary",
+      "data-[state=checked]:oui-bg-primary-darken",
       "data-[state=unchecked]:oui-bg-input",
     ],
     thumb: [
@@ -34,7 +34,7 @@ const switchVariants = tv({
       "oui-h-[10px]",
       "oui-w-[10px]",
       "oui-rounded-full",
-      "oui-bg-white/60",
+      "oui-bg-white/80",
       "oui-shadow-lg",
       "oui-ring-0",
       "oui-transition-transform",
@@ -46,7 +46,7 @@ const switchVariants = tv({
     color: {
       primary: {
         root: [
-          "data-[state=checked]:oui-bg-primary",
+          "data-[state=checked]:oui-bg-primary-darken",
           "data-[state=unchecked]:oui-bg-base-1",
         ],
       },
@@ -64,8 +64,8 @@ const switchVariants = tv({
       },
       warning: {
         root: [
-          "data-[state=checked]:oui-bg-warning",
-          "data-[state=unchecked]:oui-bg-warning",
+          "data-[state=checked]:oui-bg-warning-darken",
+          "data-[state=unchecked]:oui-bg-warning-darken",
         ],
       },
     },

@@ -1,37 +1,57 @@
-const upColor = "#00B59F";
-const downColor = "#FB5CB8";
-const chartBG = "#16141c";
-const pnlUpColor = "#27DEC8";
-const pnlDownColor = "#FFA5C0";
-const pnlZoreColor = "#808080";
+import { ColorConfigInterface } from "../tradingviewAdapter/type";
+
+const upColor = "#008676";
+const downColor = "#D92D6B";
+export const chartBG = "#131519";
+const pnlUpColor = "#00B49E";
+const pnlDownColor = "#FF447C";
+const pnlZoreColor = "#333948";
 const textColor = "#FFFFFF";
 const qtyTextColor = "#F4F7F9";
 const font = "regular 11px Manrope";
 
-export const getOveriides = () => {
+export const defaultColorConfig: ColorConfigInterface = {
+  upColor,
+  downColor,
+  chartBG,
+  pnlUpColor,
+  pnlDownColor,
+  pnlZoreColor,
+  textColor,
+  qtyTextColor,
+  font,
+  volumeUpColor: '#0C3E3A',
+  volumeDownColor: '#5A1E36',
+  closeIcon: "rgba(255, 255, 255, 0.8)",
+};
+
+
+
+export const getOveriides = (colorConfig: ColorConfigInterface,isMobile?:boolean) => {
   const overrides = {
-    "paneProperties.background": chartBG,
+    "paneProperties.background":colorConfig.chartBG,
     // "paneProperties.background": "#ffff00",
     // "mainSeriesProperties.style": 1,
     "paneProperties.backgroundType": "solid",
     // "paneProperties.background": "#151822",
 
-    "mainSeriesProperties.candleStyle.upColor": upColor,
-    "mainSeriesProperties.candleStyle.downColor": downColor,
-    "mainSeriesProperties.candleStyle.borderColor": upColor,
-    "mainSeriesProperties.candleStyle.borderUpColor": upColor,
-    "mainSeriesProperties.candleStyle.borderDownColor": downColor,
-    "mainSeriesProperties.candleStyle.wickUpColor": upColor,
-    "mainSeriesProperties.candleStyle.wickDownColor": downColor,
+    "mainSeriesProperties.candleStyle.upColor":colorConfig.upColor,
+    "mainSeriesProperties.candleStyle.downColor": colorConfig.downColor,
+    "mainSeriesProperties.candleStyle.borderColor": colorConfig.upColor,
+    "mainSeriesProperties.candleStyle.borderUpColor": colorConfig.upColor,
+    "mainSeriesProperties.candleStyle.borderDownColor": colorConfig.downColor,
+    "mainSeriesProperties.candleStyle.wickUpColor": colorConfig.upColor,
+    "mainSeriesProperties.candleStyle.wickDownColor": colorConfig.downColor,
     "paneProperties.separatorColor": "#2B2833",
     "paneProperties.vertGridProperties.color": "#26232F",
     "paneProperties.horzGridProperties.color": "#26232F",
+    "scalesProperties.fontSize": isMobile ? 8 : 12,
     "scalesProperties.textColor": "#97969B",
     "paneProperties.legendProperties.showSeriesTitle": false,
   };
   const studiesOverrides = {
-    "volume.volume.color.0": "#613155",
-    "volume.volume.color.1": "#14494A",
+    "volume.volume.color.0": colorConfig.volumeDownColor,
+    "volume.volume.color.1": colorConfig.volumeUpColor,
   };
 
   return {

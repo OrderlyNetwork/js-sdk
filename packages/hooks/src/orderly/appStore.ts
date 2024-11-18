@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { API } from "@orderly.network/types";
 import { immer } from "zustand/middleware/immer";
 import { Decimal, zero } from "@orderly.network/utils";
+import { WSMessage } from "@orderly.network/types";
 // import { devtools } from "zustand/middleware";
 
 export type AppStatus = {
@@ -15,7 +16,7 @@ export type Portfolio = {
   holding?: API.Holding[];
   totalCollateral: Decimal;
   freeCollateral: Decimal;
-  totalValue: Decimal;
+  totalValue: Decimal | null;
   availableBalance: number;
   unsettledPnL: number;
   totalUnrealizedROI: number;
@@ -31,6 +32,7 @@ export type AppState = {
 };
 
 export type AppActions = {
+  cleanAll: () => void;
   setAccountInfo: (accountInfo: API.AccountInfo) => void;
   // setPositions: (positions: API.PositionExt[]) => void;
   setSymbolsInfo: (symbolsInfo: Record<string, API.SymbolExt>) => void;
@@ -42,7 +44,8 @@ export type AppActions = {
   ) => void;
 
   batchUpdateForPortfolio: (data: Partial<Portfolio>) => void;
-  updateHolding: (holding: API.Holding[]) => void;
+  restoreHolding: (holding: API.Holding[]) => void;
+  updateHolding: (msg: Record<string, WSMessage.Holding>) => void;
 };
 
 export const useAppStore = create<
@@ -55,7 +58,7 @@ export const useAppStore = create<
     // accountInfo: null,
     portfolio: {
       totalCollateral: zero,
-      totalValue: zero,
+      totalValue: null,
       freeCollateral: zero,
       availableBalance: 0,
       unsettledPnL: 0,
@@ -68,6 +71,19 @@ export const useAppStore = create<
       ready: false,
     } as AppStatus,
     actions: {
+      cleanAll: () => {
+        set((state) => {
+          state.accountInfo = undefined;
+          state.portfolio = {
+            totalCollateral: zero,
+            totalValue: null,
+            freeCollateral: zero,
+            availableBalance: 0,
+            unsettledPnL: 0,
+            totalUnrealizedROI: 0,
+          };
+        }, false);
+      },
       setAccountInfo: (accountInfo: API.AccountInfo) => {
         set(
           (state) => {
@@ -125,10 +141,36 @@ export const useAppStore = create<
           // "batchUpdateForPortfolio"
         );
       },
-      updateHolding: (holding: API.Holding[]) => {
+      restoreHolding: (holding: API.Holding[]) => {
         set(
           (state) => {
             state.portfolio.holding = holding;
+          },
+          false
+          // "updateHolding"
+        );
+      },
+      updateHolding(msg) {
+        set(
+          (state) => {
+            if (state.portfolio.holding && state.portfolio.holding.length) {
+              for (const key in msg) {
+                const holding = state.portfolio.holding.find(
+                  (item) => item.token === key
+                );
+                if (holding) {
+                  holding.holding = msg[key].holding;
+                  holding.frozen = msg[key].frozen;
+                }
+                // else {
+                //   state.portfolio.holding.push({
+                //     token: key,
+                //     holding: msg[key].holding,
+                //     frozen: msg[key].frozen,
+                //   });
+                // }
+              }
+            }
           },
           false
           // "updateHolding"

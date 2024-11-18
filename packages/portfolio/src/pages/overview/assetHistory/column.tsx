@@ -2,19 +2,17 @@ import { useMemo } from "react";
 import {
   capitalizeFirstLetter,
   Text,
-  type Column,
-  Box,
   Flex,
   TokenIcon,
-  Tooltip,
   toast,
+  type TableColumn,
 } from "@orderly.network/ui";
 import { useQuery } from "@orderly.network/hooks";
 
 export const useAssetHistoryColumns = () => {
   const { data: chains } = useQuery("/v1/public/chain_info");
 
-  const columns = useMemo<Column[]>(() => {
+  const columns = useMemo(() => {
     return [
       {
         title: "Token",
@@ -100,7 +98,7 @@ export const useAssetHistoryColumns = () => {
         },
         // formatter: "date",
       },
-    ];
+    ] as TableColumn[];
   }, [chains]);
 
   return columns;

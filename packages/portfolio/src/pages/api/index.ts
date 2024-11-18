@@ -1,2 +1,2 @@
 export { APIManagerWidget } from "./apiManager.widget";
-export { ApiManagerPage } from "./apiManager.page";
+export { APIManagerPage } from "./apiManager.page";

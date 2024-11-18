@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { Box, Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { DataListState, DataListTabType } from "./dataList.script";
 import { PositionsWidget } from "@orderly.network/ui-positions";
 import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
@@ -8,6 +8,12 @@ import { PositionHeaderWidget } from "../../base/positionHeader";
 import { SettingWidget } from "./setting";
 
 export const DataList: FC<DataListState> = (props) => {
+  // return (
+  //   <DesktopOrderListWidget
+  //     type={TabType.orderHistory}
+  //     onSymbolChange={props.onSymbolChange}
+  //   />
+  // );
   return (
     <Tabs
       defaultValue={props.current || DataListTabType.positions}
@@ -23,8 +29,10 @@ export const DataList: FC<DataListState> = (props) => {
         />
       }
       size="lg"
+      className="oui-h-full"
       classNames={{
-        tabsList: "oui-px-3",
+        // tabsList: "oui-px-3",
+        tabsContent: "oui-h-[calc(100%_-_32px)]",
       }}
     >
       <TabPanel
@@ -49,6 +57,7 @@ export const DataList: FC<DataListState> = (props) => {
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={props.showAllSymbol ? undefined : props.symbol}
+          onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
       <TabPanel
@@ -63,19 +72,26 @@ export const DataList: FC<DataListState> = (props) => {
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={props.showAllSymbol ? undefined : props.symbol}
+          onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
       <TabPanel value={DataListTabType.filled} title={DataListTabType.filled}>
         <DesktopOrderListWidget
           type={TabType.filled}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
           ordersStatus={OrderStatus.FILLED}
+          onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
       <TabPanel
         value={DataListTabType.orderHistory}
         title={DataListTabType.orderHistory}
       >
-        <DesktopOrderListWidget type={TabType.orderHistory} />
+        <DesktopOrderListWidget
+          type={TabType.orderHistory}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
+          onSymbolChange={props.onSymbolChange}
+        />
       </TabPanel>
     </Tabs>
   );
@@ -83,7 +99,7 @@ export const DataList: FC<DataListState> = (props) => {
 
 const PositionsView: FC<DataListState> = (props) => {
   return (
-    <Flex direction={"column"}>
+    <Flex direction="column" width="100%" height="100%">
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.showAllSymbol ? undefined : props.symbol}
@@ -91,13 +107,16 @@ const PositionsView: FC<DataListState> = (props) => {
         tabletMediaQuery={props.tabletMediaQuery}
       />
       <Divider className="oui-w-full" />
-      <PositionsWidget
-        symbol={props.showAllSymbol ? undefined : props.symbol}
-        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        sharePnLConfig={props.sharePnLConfig}
-        calcMode={props.calcMode}
-        includedPendingOrder={props.includedPendingOrder}
-      />
+      <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
+        <PositionsWidget
+          symbol={props.showAllSymbol ? undefined : props.symbol}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          sharePnLConfig={props.sharePnLConfig}
+          calcMode={props.calcMode}
+          includedPendingOrder={props.includedPendingOrder}
+          onSymbolChange={props.onSymbolChange}
+        />
+      </Box>
     </Flex>
   );
 };

@@ -1,6 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
   MarketsHomePage,
   MarketsHeaderWidget,
@@ -10,30 +8,12 @@ import {
   MarketsProvider,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
-import { CustomConfigStore } from "../CustomConfigStore";
 
-const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging" });
-
-const meta = {
+const meta: Meta<typeof MarketsHomePage> = {
   title: "Package/Markets/HomePage",
   component: MarketsHomePage,
   subcomponents: {},
-  decorators: [
-    (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyApp
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
-          configStore={configStore}
-        >
-          <Story />
-        </OrderlyApp>
-      </ConnectorProvider>
-    ),
-  ],
-} satisfies Meta<typeof MarketsHomePage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -98,7 +78,11 @@ export const AllMarkets: Story = {
 export const NewListings: Story = {
   render: (args) => {
     return (
-      <MarketsListFullWidget type="new" sortKey="created_time" sortOrder="desc" />
+      <MarketsListFullWidget
+        type="new"
+        sortKey="created_time"
+        sortOrder="desc"
+      />
     );
   },
 

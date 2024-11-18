@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Button, cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { Button, cn, Flex, modal, Text, Tooltip } from "@orderly.network/ui";
 import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
@@ -124,15 +124,53 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
 
     return (
       <>
-        <Tooltip content={props.wrongNetwork ? 'Please switch to a supported network to continue.' : "Please connect your wallet to use this function"}>
-          <Button
-            variant="contained"
-            color="light"
-            onClick={props.becomeAnAffiliate}
-            disabled={!props.isSignIn || props.wrongNetwork}
-          >
-            Become an affiliate
-          </Button>
+        <Tooltip
+          content={
+            props.wrongNetwork
+              ? "Please switch to a supported network to continue."
+              : "Please connect your wallet to use this function"
+          }
+        >
+          {props.isMobile ? (
+            <Button
+              variant="contained"
+              color="light"
+              onClick={(event) => {
+                if (!props.isSignIn || props.wrongNetwork) {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  modal.alert({
+                    title: "Tips",
+                    message: (
+                      <Text intensity={54}>
+                        {props.wrongNetwork
+                          ? "Please switch to a supported network to continue."
+                          : "Please connect your wallet to use this function"}
+                      </Text>
+                    ),
+                  });
+                } else {
+                  props.becomeAnAffiliate?.();
+                }
+              }}
+              className={
+                !props.isSignIn || props.wrongNetwork
+                  ? "oui-bg-white/[.54] oui-text-black/[.36] hover:oui-bg-white/[.54]"
+                  : undefined
+              }
+            >
+              Become an affiliate
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="light"
+              onClick={props.becomeAnAffiliate}
+              disabled={!props.isSignIn || props.wrongNetwork}
+            >
+              Become an affiliate
+            </Button>
+          )}
         </Tooltip>
         <Flex
           direction={"column"}

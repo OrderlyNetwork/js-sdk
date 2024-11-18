@@ -2,6 +2,7 @@ import { PositionsProps } from "@orderly.network/ui-positions";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
 import { usePositionsCount } from "../../../provider/usePositionsCount";
 import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
+import { useTradingPageContext } from "../../../provider/context";
 
 export enum DataListTabType {
   positions = "Positions",
@@ -23,12 +24,12 @@ export const useDataListScript = (
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     symbol,
-    calcMode,
     includedPendingOrder,
   } = props;
-  const loalStorage = useTradingLocalStorage({
+  const localStorage = useTradingLocalStorage({
     pnlNotionalDecimalPrecision,
   });
+  const { onSymbolChange } = useTradingPageContext();
 
   const { positionCount } = usePositionsCount(props.symbol);
   const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(
@@ -41,12 +42,13 @@ export const useDataListScript = (
 
     sharePnLConfig,
     symbol,
-    calcMode,
+    calcMode: localStorage.unPnlPriceBasis,
     includedPendingOrder,
-    ...loalStorage,
+    ...localStorage,
     positionCount,
     pendingOrderCount,
     tpSlOrderCount,
+    onSymbolChange,
   };
 };
 

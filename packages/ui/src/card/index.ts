@@ -8,3 +8,6 @@ export {
 } from "./cardBase";
 
 export { Card } from "./card";
+
+
+export * from "./hoverCard";

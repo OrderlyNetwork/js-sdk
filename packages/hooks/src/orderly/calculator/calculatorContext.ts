@@ -1,6 +1,7 @@
 import { API } from "@orderly.network/types";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { Portfolio, useAppStore } from "../appStore";
+import { useMarketStore } from "../useMarket/market.store";
 
 export class CalculatorContext implements CalculatorCtx {
   accountInfo: API.AccountInfo;
@@ -10,6 +11,7 @@ export class CalculatorContext implements CalculatorCtx {
   // portfolio
   portfolio: Portfolio;
   markPrices: Record<string, number> | null;
+  // markets: Record<string, API.MarketInfoExt> | null;
   private output: Record<string, any>;
 
   constructor(scope: CalculatorScope, data: any) {
@@ -30,6 +32,7 @@ export class CalculatorContext implements CalculatorCtx {
 
     // const positions = usePositionStore.getState().positions;
     this.markPrices = scope === CalculatorScope.MARK_PRICE ? data : null;
+    // this.markets = useMarketStore.getState().marketMap;
 
     this.output = {
       // rows: positions,
@@ -46,7 +49,8 @@ export class CalculatorContext implements CalculatorCtx {
   // }
 
   get isReady(): boolean {
-    return !!this.accountInfo && !!this.symbolsInfo && !!this.fundingRates;
+    // return !!this.accountInfo && !!this.symbolsInfo && !!this.fundingRates;
+    return !!this.accountInfo;
   }
 
   saveOutput(name: string, data: any) {

@@ -5,6 +5,8 @@ import { withFixedStyle } from "./colHOC";
 import { TableContext } from "./tableContext";
 import { cnBase } from "tailwind-variants";
 import { AscendingIcon, DescendingIcon, SortingIcon } from "./icons";
+import { Tooltip } from "../../tooltip";
+import { cn, HoverCard } from "../..";
 
 const TheadColItem = (
   props: ColProps & {
@@ -47,36 +49,36 @@ const TheadColItem = (
     );
   }
 
-  // if (!!column.hint) {
-  //   if (typeof column.hint === "string") {
-  //     content = (
-  //       <Tooltip
-  //         content={column.hint}
-  //         className={cn(
-  //           "oui-max-w-[270px] oui-text-4xs",
-  //           column.hintClassName && column.hintClassName
-  //         )}
-  //       >
-  //         {content}
-  //       </Tooltip>
-  //     );
-  //   } else {
-  //     content = (
-  //       <HoverCard
-  //         // @ts-ignore
-  //         content={column.hint}
-  //         side="top"
-  //         align="center"
-  //         className={cn(
-  //           "oui-max-w-[270px] oui-text-4xs",
-  //           column.hintClassName && column.hintClassName
-  //         )}
-  //       >
-  //         {content}
-  //       </HoverCard>
-  //     );
-  //   }
-  // }
+  if (!!column.hint) {
+    if (typeof column.hint === "string") {
+      content = (
+        <Tooltip
+          content={column.hint}
+          className={cn(
+            "oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-54 oui-p-3 oui-bg-base-8",
+            column.hintClassName && column.hintClassName
+          )}
+        >
+          {content}
+        </Tooltip>
+      );
+    } else {
+      content = (
+        <HoverCard
+          // @ts-ignore
+          content={column.hint}
+          side="top"
+          align="center"
+          className={cn(
+            "oui-max-w-[280px] oui-text-2xs",
+            column.hintClassName && column.hintClassName
+          )}
+        >
+          {content}
+        </HoverCard>
+      );
+    }
+  }
 
   return (
     <td

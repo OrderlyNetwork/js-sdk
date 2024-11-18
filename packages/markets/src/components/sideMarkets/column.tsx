@@ -1,5 +1,12 @@
 import { MouseEventHandler, ReactNode } from "react";
-import { Flex, TokenIcon, Text, Badge, cn } from "@orderly.network/ui";
+import {
+  Flex,
+  TokenIcon,
+  Text,
+  Badge,
+  cn,
+  TableColumn,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   DeleteIcon,
@@ -9,7 +16,6 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { Column } from "../dataTable";
 
 export const getSideMarketsColumns = (
   favorite: FavoriteInstance,
@@ -67,6 +73,7 @@ export const getSideMarketsColumns = (
 
               <Text.numeral
                 intensity={54}
+                size="2xs"
                 rule="human"
                 dp={2}
                 rm={Decimal.ROUND_DOWN}
@@ -155,5 +162,5 @@ export const getSideMarketsColumns = (
         );
       },
     },
-  ] as Column[];
+  ] as TableColumn[];
 };

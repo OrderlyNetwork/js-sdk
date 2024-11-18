@@ -88,7 +88,7 @@ export const EditReferralRate = modal.create<{
           </div>
           <div className="oui-text-xs oui-text-base-contrast-80 oui-mt-2 oui-flex">
             {`Your max commission rate: `}
-            <div className="oui-text-warning oui-pl-1">{`${new Decimal(
+            <div className="oui-text-warning-darken oui-pl-1">{`${new Decimal(
               code.max_rebate_rate
             )
               .mul(100)
@@ -100,7 +100,7 @@ export const EditReferralRate = modal.create<{
           </div>
           <Input
             ref={inputRef}
-            containerClassName="oui-h-[40px] oui-mt-3 oui-bg-base-700 oui-outline oui-outline-1 oui-outline-base-contrast-12 focus-within:oui-outline-primary"
+            containerClassName="oui-h-[40px] oui-mt-3 oui-bg-base-700 oui-outline oui-outline-1 oui-outline-base-contrast-12 focus-within:oui-outline-primary-darken"
             placeholder="Enter code"
             type="text"
             inputMode="decimal"
@@ -132,7 +132,7 @@ export const EditReferralRate = modal.create<{
             Referee receives
           </div>
           <Input
-            containerClassName="oui-h-[40px] oui-mt-3 oui-bg-base-700 oui-outline oui-outline-1 oui-outline-base-contrast-12 focus-within:oui-outline-primary"
+            containerClassName="oui-h-[40px] oui-mt-3 oui-bg-base-700 oui-outline oui-outline-1 oui-outline-base-contrast-12 focus-within:oui-outline-primary-darken"
             placeholder="Enter code"
             type="text"
             inputMode="decimal"

@@ -1,15 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
 import {
-  SimpleDialog,
-  AlertDialog,
   Button,
   modal,
   Sheet,
   ModalProvider,
   registerSimpleSheet,
 } from "@orderly.network/ui";
-import { AppProvider } from "../../../components/appProvider.tsx";
 import { useEffect } from "@storybook/preview-api";
 
 const meta = {

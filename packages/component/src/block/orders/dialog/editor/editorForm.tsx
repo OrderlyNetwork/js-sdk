@@ -5,7 +5,10 @@ import { Input } from "@/input";
 import { Slider } from "@/slider";
 import { Statistic } from "@/statistic";
 import { Text } from "@/text";
-import { useOrderEntry, useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  useOrderEntry_deprecated,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
 import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { Controller, useForm } from "react-hook-form";
 import { modal } from "@orderly.network/ui";
@@ -29,7 +32,7 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
   const isMarket = order.type === "MARKET";
   // const { hide, reject, resolve } = useModal();
   // @ts-ignore
-  const { markPrice, maxQty, helper, metaState } = useOrderEntry(
+  const { markPrice, maxQty, helper, metaState } = useOrderEntry_deprecated(
     // @ts-ignore
     order.symbol,
     order.side
@@ -116,6 +119,10 @@ export const OrderEditForm: FC<OrderEditFormProps> = (props) => {
     (data: any) => {
       return onConfirm(data, dirtyFields).then(
         (data: any) => {
+          if (isAlgoOrder && order.type === 'MARKET' && 'order_price' in data) {
+            const { order_price, ...rest} = data;
+            return onSubmit(rest);
+          }
           return onSubmit(data);
         },
         () => {}

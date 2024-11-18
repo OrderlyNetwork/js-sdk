@@ -64,7 +64,7 @@ function Link(props: { url: string; children?: any }) {
     <span
       onClick={() => window.open(props.url)}
       style={{
-        color: "rgba(var(--orderly-color-primary, 1))",
+        color: "rgba(var(--orderly-color-primary-darken, 1))",
       }}
     >
       {props.children}

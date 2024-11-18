@@ -1,6 +1,5 @@
 import { WalletAdapter } from "./wallet/walletAdapter";
-import { ChainNamespace } from "./constants";
-import { SDKError } from "@orderly.network/types";
+import { ChainNamespace} from "@orderly.network/types";
 import { Eip1193Provider } from "ethers";
 import { IContract } from "./contract";
 
@@ -46,8 +45,9 @@ class WalletAdapterManager {
       contractManager?: IContract;
     }
   ) {
+    console.log('-- this.walletAdapters', this.walletAdapters, chainNamespace);
     const adapter = this.walletAdapters.find(
-      (adapter) => adapter.chainNamespace === chainNamespace
+      (adapter) => adapter.chainNamespace === chainNamespace.toUpperCase()
     );
 
     if (!adapter) {

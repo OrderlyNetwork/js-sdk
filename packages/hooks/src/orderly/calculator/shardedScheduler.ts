@@ -7,6 +7,51 @@ import {
 
 type ShardProcessor<T, R> = (shard: T[]) => R;
 
+interface IdleDeadline {
+  timeRemaining: () => number;
+  readonly didTimeout: boolean;
+}
+
+/**
+ * Polyfill for requestIdleCallback
+ */
+const requestIdleCallbackPolyfill = (
+  callback: (deadline: IdleDeadline) => void,
+  options?: { timeout: number }
+): ReturnType<typeof setTimeout> => {
+  const startTime = Date.now();
+
+  return setTimeout(() => {
+    callback({
+      didTimeout: false,
+      timeRemaining: () => Math.max(0, 50 - (Date.now() - startTime)),
+    });
+  }, 1); // Use 1ms timeout as a fallback
+};
+
+/**
+ * Polyfill for cancelIdleCallback
+ */
+const cancelIdleCallbackPolyfill = (id: number) => {
+  clearTimeout(id);
+};
+
+/**
+ * Export the native requestIdleCallback or polyfill
+ */
+const safeRequestIdleCallback =
+  typeof window !== "undefined" && window.requestIdleCallback
+    ? window.requestIdleCallback.bind(window)
+    : requestIdleCallbackPolyfill;
+
+/**
+ * Export the native cancelIdleCallback or polyfill
+ */
+const safeCancelIdleCallback =
+  typeof window !== "undefined" && window.cancelIdleCallback
+    ? window.cancelIdleCallback.bind(window)
+    : cancelIdleCallbackPolyfill;
+
 class ShardingScheduler implements CalculatorScheduler {
   // run(calculators: Calculator[]) {}
   calc(
@@ -24,7 +69,7 @@ class ShardingScheduler implements CalculatorScheduler {
             for (let index = 0; index < shard.length; index++) {
               const calculator = shard[index];
               const result = calculator.calc(scope, data, ctx);
-              // console.log("item calc ======>>>>>>", scope);
+
               if (result) {
                 ctx.saveOutput(calculator.name, result);
                 results.push(result);
@@ -38,6 +83,7 @@ class ShardingScheduler implements CalculatorScheduler {
           }
         );
       } catch (error) {
+        console.error("ShardingScheduler calc error", error);
         reject(error);
       }
     });
@@ -55,7 +101,11 @@ class ShardingScheduler implements CalculatorScheduler {
   update(scope: CalculatorScope, calculators: Calculator[], data: any) {
     for (let index = 0; index < calculators.length; index++) {
       const calculator = calculators[index];
-      calculator.update(data[calculator.name]);
+      const item = data[calculator.name];
+
+      if (!!item) {
+        calculator.update(item, scope);
+      }
     }
     return Promise.resolve();
   }
@@ -67,7 +117,8 @@ class ShardingScheduler implements CalculatorScheduler {
   ): void {
     let index = 0; // Current starting index of the shard
     const results: R[][] = []; // Used to store the calculation results of each shard
-    const estimatedShardSize = 2; // Initial estimated shard size
+    const estimatedShardSize = Math.min(data.length, 2); // Initial estimated shard size
+    // const estimatedShardSize = 1;
 
     // Function to process shards
     function processNextShard(deadline: IdleDeadline) {
@@ -91,7 +142,7 @@ class ShardingScheduler implements CalculatorScheduler {
 
       if (index < data.length) {
         // There are still unprocessed data shards, request the next idle callback
-        requestIdleCallback(processNextShard, {
+        safeRequestIdleCallback(processNextShard, {
           timeout: 1000,
         });
       } else {
@@ -99,10 +150,10 @@ class ShardingScheduler implements CalculatorScheduler {
       }
     }
 
-    requestIdleCallback(processNextShard, {
+    safeRequestIdleCallback(processNextShard, {
       timeout: 1000,
     });
   }
 }
 
-export { ShardingScheduler };
+export { ShardingScheduler, safeRequestIdleCallback, safeCancelIdleCallback };

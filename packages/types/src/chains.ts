@@ -511,6 +511,30 @@ export const PolygonAmoy = {
   chainLogo: "",
 };
 
+export const Sei = {
+  id: 1329,
+  chainInfo: {
+    chainId: `0x${(1329).toString(16)}`,
+    chainName: "Sei Network",
+    nativeCurrency: {
+      name: "SEI",
+      symbol: "SEI",
+      decimals: 18,
+      fix: 4,
+    },
+    rpcUrls: ["https://evm-rpc.sei-apis.com"],
+    blockExplorerUrls: ["https://seitrace.com/"],
+  },
+  minGasBalance: 0.0002,
+  minCrossGasBalance: 0.002,
+  maxPrepayCrossGas: 0.03,
+  blockExplorerName: "SEI",
+  chainName: "Sei Network",
+  chainNameShort: "SEI",
+  requestRpc: "https://evm-rpc.sei-apis.com",
+  chainLogo: "",
+};
+
 export const chainsInfoMap: Map<number, Chain> = new Map([
   [Ethereum.id, Ethereum],
   [Avalanche.id, Avalanche],
@@ -532,8 +556,18 @@ export const chainsInfoMap: Map<number, Chain> = new Map([
   [BaseSepolia.id, BaseSepolia],
   [MantleSepolia.id, MantleSepolia],
   [PolygonAmoy.id, PolygonAmoy],
+  [Sei.id, Sei],
 ]);
 
+export const SolanaDevnet= {
+  // todo solana chain config
+  name: "Solana Devnet",
+  public_rpc_url: "",
+  chain_id: 901901901,
+  currency_symbol: "SOL",
+  explorer_base_url: "",
+  vault_address: ""
+};
 export const TestnetChains = [
   {
     network_infos: {
@@ -554,6 +588,17 @@ export const TestnetChains = [
         decimals: 6,
       },
     ],
+  },
+  {
+    network_infos: SolanaDevnet,
+    token_infos: [
+      {
+        symbol: "USDC",
+        address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+        decimals: 6,
+      },
+
+    ]
   },
   // {
   //   network_infos: {
@@ -613,3 +658,9 @@ export const TestnetChains = [
 
 export const defaultMainnetChains = [Arbitrum, Base, Optimism];
 export const defaultTestnetChains = [ArbitrumSepolia];
+
+
+export enum ChainNamespace {
+  evm = "EVM",
+  solana = "SOL",
+}

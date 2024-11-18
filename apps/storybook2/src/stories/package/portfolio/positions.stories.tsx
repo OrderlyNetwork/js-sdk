@@ -1,44 +1,42 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PositionsModule, } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
-// import {Box} from "@orderly.network/ui";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { PositionsModule } from "@orderly.network/portfolio";
+import { sharePnLConfig } from "../trading/config";
+import { useTradingLocalStorage } from "@orderly.network/trading";
+import { Box } from "@orderly.network/ui";
 
-
-const meta = {
+const meta: Meta<typeof PositionsModule.PositionsPage> = {
   title: "Package/Portfolio/Positions",
   component: PositionsModule.PositionsPage,
-  subcomponents: {
-
-  },
   decorators: [
     (Story) => (
-      <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <Story />
-        </OrderlyApp>
-      </ConnectorProvider>
+      <Box className="oui-h-[calc(100vh)]" p={6}>
+        <Story />
+      </Box>
     ),
   ],
   parameters: {
     layout: "fullscreen",
   },
-  argTypes: {
-    // p: {
-    //   control: {
-    //     type: "number",
-    //     min: 0,
-    //     max: 10,
-    //     step: 1,
-    //   },
-    // },
-  },
-  args: {
-    // p: 5,
-  },
-} satisfies Meta<typeof PositionsModule.PositionsPage>;
+  argTypes: {},
+  args: {},
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Page: Story = {};
+export const Page: Story = {
+  render: () => {
+    const local = useTradingLocalStorage();
+
+    return (
+      <PositionsModule.PositionsPage
+        sharePnLConfig={sharePnLConfig}
+        pnlNotionalDecimalPrecision={local.pnlNotionalDecimalPrecision}
+        calcMode={local.unPnlPriceBasis}
+        onSymbolChange={(symbol) => {
+          console.log("symbol changed", symbol);
+        }}
+      />
+    );
+  },
+};

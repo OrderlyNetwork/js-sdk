@@ -20,7 +20,7 @@ export const ArrowDownIcon: FC<IconProps> = (props) => {
       <path
         d="M3.41 5.07129L8 9.30958L12.59 5.07129L14 6.37609L8 11.9284L2 6.37609L3.41 5.07129Z"
         // fill="white"
-        // fill-opacity="0.54"
+        // fillOpacity="0.54"
       />
     </svg>
   );

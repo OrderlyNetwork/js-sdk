@@ -12,7 +12,10 @@ export const MarketsSheetWidget: React.FC<MarketsSheetWidgetProps> = (
   const state = useMarketsSheetScript();
 
   return (
-    <MarketsProvider onSymbolChange={props.onSymbolChange}>
+    <MarketsProvider
+      symbol={props.symbol}
+      onSymbolChange={props.onSymbolChange}
+    >
       <MarketsSheet {...state} className={props.className} />
     </MarketsProvider>
   );

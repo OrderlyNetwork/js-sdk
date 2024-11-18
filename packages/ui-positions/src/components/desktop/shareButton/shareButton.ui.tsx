@@ -5,6 +5,7 @@ import { ShareButtonState } from "./shareButton.script";
 import React from "react";
 
 export const ShareButton: FC<ShareButtonState> = (props) => {
+  if (props.sharePnLConfig == null) return <></>;
   return (
     <button
       type="button"
@@ -21,7 +22,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
         });
       }}
     >
-      <ShareIcon color="white" opacity={0.54} size={16} />
+      <ShareIcon color="white" opacity={0.54} size={props.iconSize ?? 16} />
     </button>
   );
 };

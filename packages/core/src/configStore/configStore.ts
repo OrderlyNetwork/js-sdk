@@ -9,7 +9,9 @@ export type ConfigKey =
   | "brokerName"
   | "networkId"
   | "env"
+  | "chainNamespace"
   | "PROD_URL"
+  | "orderly_markets"
   | "markets";
 
 export interface ConfigStore {

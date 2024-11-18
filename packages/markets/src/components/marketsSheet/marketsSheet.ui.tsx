@@ -1,16 +1,8 @@
-import {
-  Box,
-  CloseCircleFillIcon,
-  cn,
-  Flex,
-  Input,
-  Text,
-} from "@orderly.network/ui";
+import { Box, CloseCircleFillIcon, cn, Input, Text } from "@orderly.network/ui";
 import { UseMarketsSheetScriptReturn } from "./marketsSheet.script";
 import { SearchIcon } from "../../icons";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
-import "../../style/index.css";
 import { getMarketsSheetColumns } from "./column";
 
 export type MarketsSheetProps = UseMarketsSheetScriptReturn & {
@@ -18,7 +10,7 @@ export type MarketsSheetProps = UseMarketsSheetScriptReturn & {
 };
 
 export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
-  const { className } = props;
+  const { className, tabSort, onTabSort } = props;
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
@@ -66,9 +58,13 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
       <Box width="100%" mt={2} className="oui-h-[calc(100vh_-_88px)]">
         <MarketsListWidget
           type="all"
-          sortKey="24h_amount"
-          sortOrder="desc"
+          sortKey={tabSort?.sortKey}
+          sortOrder={tabSort?.sortOrder}
+          onSort={onTabSort}
           getColumns={getMarketsSheetColumns}
+          tableClassNames={{
+            root: "!oui-bg-base-8",
+          }}
         />
       </Box>
     </Box>

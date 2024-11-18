@@ -1,5 +1,8 @@
 import { ComponentType, ReactNode } from "react";
-import { type Chains, ConfigProviderProps } from "@orderly.network/hooks";
+import {
+  ConfigProviderExclusionProps,
+  ConfigProviderProps,
+} from "@orderly.network/hooks";
 import { ExtensionPosition } from "@orderly.network/ui";
 
 type Logo = {
@@ -17,11 +20,16 @@ export type AppLogos = Partial<{
   secondary: Logo;
 }>;
 
-export interface OrderlyAppConfig extends ConfigProviderProps {
+export type OrderlyAppConfig = {
   appIcons?: AppLogos;
   dateFormatting?: string;
-  // brokerName: string;
   components?: {
     [position in ExtensionPosition]: ComponentType;
   };
-}
+} & Partial<
+  Omit<
+    ConfigProviderProps,
+    "brokerId" | "brokerName" | "configStore" | "networkId"
+  >
+> &
+  ConfigProviderExclusionProps;

@@ -17,18 +17,18 @@ export function minPrice(markprice: number, range: number) {
 }
 
 /**
- * Scrope price when placing an order
+ * Scope price when placing an order
  * @returns number
  */
-export function scropePrice(
+export function scopePrice(
   price: number,
-  scrope: number,
+  scope: number,
   side: "BUY" | "SELL"
 ): number {
   if (side === "BUY") {
-    return price * (1 - scrope);
+    return price * (1 - scope);
   }
-  return price * (1 + scrope);
+  return price * (1 + scope);
 }
 
 /**

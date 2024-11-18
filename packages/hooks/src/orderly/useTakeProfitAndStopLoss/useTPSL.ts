@@ -51,6 +51,12 @@ export const useTaskProfitAndStopLossInternal = (
     Pick<API.PositionTPSLExt, "symbol" | "average_open_price" | "position_qty">,
   options?: {
     defaultOrder?: API.AlgoOrder;
+    /**
+     * If the order is editing, set to true
+     * if the isEditing is true, the defaultOrder must be provided
+     * Conversely, even if defaultOrder is provided and isEditing is false, a new TPSL order is still created
+     */
+    isEditing?: boolean;
   }
 ): [
   /**
@@ -67,7 +73,8 @@ export const useTaskProfitAndStopLossInternal = (
     /**
      * Submit the TP/SL order
      */
-    submit: () => Promise<void>;
+    submit: () => Promise<any>;
+    deleteOrder: (orderId: number, symbol: string) => Promise<any>;
     // /**
     //  * Create the take profit and stop loss order, auto-detect the order type
     //  */
@@ -83,8 +90,14 @@ export const useTaskProfitAndStopLossInternal = (
       >
     >;
     isCreateMutating: boolean;
+    isUpdateMutating: boolean;
   }
 ] => {
+  const isEditing =
+    typeof options?.isEditing !== "undefined"
+      ? options!.isEditing
+      : !!options?.defaultOrder;
+
   const [order, setOrder] = useState<
     ComputedAlgoOrder & {
       ignoreValidate?: boolean;
@@ -93,7 +106,11 @@ export const useTaskProfitAndStopLossInternal = (
     algo_order_id: options?.defaultOrder?.algo_order_id,
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    quantity: "",
+    quantity: isEditing
+      ? options?.defaultOrder?.quantity === 0
+        ? Math.abs(position.position_qty)
+        : options?.defaultOrder?.quantity
+      : "",
     // quantity:
     //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
@@ -104,13 +121,16 @@ export const useTaskProfitAndStopLossInternal = (
 
   const [doCreateOrder, { isMutating: isCreateMutating }] =
     useMutation("/v1/algo/order");
-  const [doUpdateOrder] = useMutation("/v1/algo/order", "PUT");
+  const [doUpdateOrder, { isMutating: isUpdateMutating }] = useMutation(
+    "/v1/algo/order",
+    "PUT"
+  );
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
 
   const [errors, setErrors] = useState<ValidateError | null>(null);
 
   useEffect(() => {
-    if (!options?.defaultOrder) return;
+    if (!isEditing || !options?.defaultOrder) return;
     const trigger_prices = findTPSLFromOrder(options.defaultOrder!);
     if (trigger_prices.tp_trigger_price) {
       setOrderValue("tp_trigger_price", trigger_prices.tp_trigger_price, {
@@ -365,7 +385,7 @@ export const useTaskProfitAndStopLossInternal = (
     omit(["ignoreValidate"], order) as ComputedAlgoOrder,
     {
       submit,
-
+      deleteOrder,
       // create: submit,
 
       // update: updateOrder,/
@@ -376,6 +396,7 @@ export const useTaskProfitAndStopLossInternal = (
       validate,
       errors,
       isCreateMutating,
+      isUpdateMutating,
     },
   ];
 };

@@ -15,9 +15,10 @@ import {
   UnFavoritesIcon2,
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
-import { ReactNode, useMemo } from "react";
+import { ReactNode } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
+import { useFundingRate } from "@orderly.network/hooks";
 
 export type Layout = "left" | "right";
 
@@ -68,6 +69,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   const symbolView = (
     <DropDownMarketsWidget
       contentClassName="oui-w-[429px] oui-h-[496px]"
+      symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     >
       <Flex gapX={1} className="oui-cursor-pointer">
@@ -78,6 +80,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
           formatString="base-type"
           size="xs"
           weight="semibold"
+          intensity={98}
         >
           {symbol}
         </Text.formatted>
@@ -87,7 +90,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   );
 
   const price = (
-    <Text.numeral dp={quotoDp || 2} currency="$" size="sm">
+    <Text.numeral dp={quotoDp || 2} currency="$" size="sm" intensity={98}>
       {data?.["24h_close"]}
     </Text.numeral>
   );
@@ -109,24 +112,6 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
     </>
   );
 
-  const fundingRateView = useMemo(() => {
-    if (data?.est_funding_rate === null) {
-      return "--";
-    }
-
-    return (
-      <div className="">
-        <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
-          {fundingRate.est_funding_rate!}
-        </Text.numeral>
-        <Text
-          intensity={36}
-          className="oui-tabular-nums"
-        >{` in ${fundingRate.countDown}`}</Text>
-      </div>
-    );
-  }, [fundingRate]);
-
   return (
     <Flex className={cn("oui-font-semibold oui-h-full", props.className)}>
       <Flex gapX={6} className="oui-flex-1 oui-overflow-hidden oui-h-full">
@@ -139,7 +124,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
         <div className="oui-relative oui-overflow-hidden oui-h-full">
           <div
             ref={containerRef}
-            className="oui-overflow-x-auto hide-scrollbar oui-h-full"
+            className="oui-overflow-x-auto oui-hide-scrollbar oui-h-full"
           >
             <Flex gapX={8} height="100%">
               <div ref={leadingElementRef}>
@@ -147,18 +132,26 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               </div>
               <DataItem
                 label="Mark"
-                value={<Text.numeral>{data?.["mark_price"]}</Text.numeral>}
+                value={
+                  <Text.numeral dp={quotoDp}>
+                    {data?.["mark_price"]}
+                  </Text.numeral>
+                }
                 hint="Price for the computation of unrealized PnL and liquidation."
               />
               <DataItem
                 label="Index"
-                value={<Text.numeral>{data?.["index_price"]}</Text.numeral>}
+                value={
+                  <Text.numeral dp={quotoDp}>
+                    {data?.["index_price"]}
+                  </Text.numeral>
+                }
                 hint="Average of the last prices across other exchanges."
               />
               <DataItem
                 label="24h volume"
                 value={
-                  <Text.numeral rule="price" dp={quotoDp}>
+                  <Text.numeral rule="human" dp={2}>
                     {data?.["24h_amount"]}
                   </Text.numeral>
                 }
@@ -166,7 +159,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               />
               <DataItem
                 label="Pred. funding rate"
-                value={fundingRateView}
+                value={<FundingRate symbol={symbol} />}
                 hint="Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions."
               />
               <div ref={tailingElementRef}>
@@ -174,7 +167,9 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
                   label="Open interest"
                   value={
                     <>
-                      <Text.numeral rule="price">{openInterest}</Text.numeral>
+                      <Text.numeral rule="human" dp={2}>
+                        {openInterest}
+                      </Text.numeral>
                       <Text intensity={36}>{` USDC`}</Text>
                     </>
                   }
@@ -202,9 +197,11 @@ const DataItem: React.FC<DataItemProps> = (props) => {
   return (
     <Flex direction="column" itemAlign="start">
       <Tooltip
+        open={props.hint ? undefined : false}
         content={props.hint}
         className="oui-max-w-[240px] oui-bg-base-6"
         arrow={{ className: "oui-fill-base-6" }}
+        delayDuration={300}
       >
         <Text
           size="2xs"
@@ -212,7 +209,7 @@ const DataItem: React.FC<DataItemProps> = (props) => {
           className={cn(
             "oui-break-normal oui-whitespace-nowrap",
             props.hint &&
-              "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-base-contrast-36"
+              "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
           )}
         >
           {props.label}
@@ -258,5 +255,25 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
     >
       <ArrowLeftIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80" />
     </button>
+  );
+};
+
+const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
+  const data = useFundingRate(symbol);
+
+  if (data?.est_funding_rate === null) {
+    return "--";
+  }
+
+  return (
+    <div className="">
+      <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
+        {data.est_funding_rate!}
+      </Text.numeral>
+      <Text
+        intensity={36}
+        className="oui-tabular-nums"
+      >{` in ${data.countDown}`}</Text>
+    </div>
   );
 };

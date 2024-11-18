@@ -5,11 +5,11 @@ export const themePlugin = () =>
     addBase({
       ":root": {
         "--oui-font-family": '"Manrope", sans-serif',
-
+ 
         /* colors */
-        "--oui-color-primary": "51 95 252",
-        "--oui-color-primary-light": "96 140 255",
-        "--oui-color-primary-darken": "152 62 214",
+        "--oui-color-primary": "96 140 255",
+        "--oui-color-primary-light": "119 157 255",
+        "--oui-color-primary-darken": "51 95 252",
         "--oui-color-primary-contrast": "255 255 255",
 
         "--oui-color-link": "182 79 255",
@@ -21,17 +21,17 @@ export const themePlugin = () =>
 
         "--oui-color-danger": "255 68 124",
         "--oui-color-danger-light": "255 68 124",
-        "--oui-color-danger-darken": "157 32 77",
+        "--oui-color-danger-darken": "217 45 107",
         "--oui-color-danger-contrast": "255 255 255",
 
         "--oui-color-success": "0 180 158",
         "--oui-color-success-light": "15 203 180",
-        "--oui-color-success-darken": "3 152 134",
+        "--oui-color-success-darken": "0 134 118",
         "--oui-color-success-contrast": "255 255 255",
 
-        "--oui-color-warning": "210 95 0",
-        "--oui-color-warning-light": "255 207 115",
-        "--oui-color-warning-darken": "117 88 33",
+        "--oui-color-warning": "255 182 93",
+        "--oui-color-warning-light": "255 207 139",
+        "--oui-color-warning-darken": "255 125 0",
         "--oui-color-warning-contrast": "255 255 255",
 
         "--oui-color-fill": "36 32 47",

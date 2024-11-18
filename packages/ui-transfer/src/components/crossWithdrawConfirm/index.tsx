@@ -66,7 +66,7 @@ export const CrossWithdrawConfirm = ({
       </Flex>
       <Flex
         justify="center"
-        className="oui-text-warning oui-text-2xs lg:oui-text-xs oui-text-center"
+        className="oui-text-warning-darken oui-text-2xs lg:oui-text-xs oui-text-center"
         mb={3}
       >
         Withdrawals that require cross-chain rebalancing can't be cancelled or

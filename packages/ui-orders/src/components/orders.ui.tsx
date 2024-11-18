@@ -1,4 +1,4 @@
-import { DataTable, TabPanel, Tabs } from "@orderly.network/ui";
+import { TabPanel, Tabs } from "@orderly.network/ui";
 import { OrderStatus, API } from "@orderly.network/types";
 import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";
@@ -6,11 +6,16 @@ import { DesktopOrderListWidget } from "./orderList";
 
 export const Orders = (props: OrdersBuilderState) => {
   return (
-    <Tabs defaultValue={props.current || TabType.all} variant="contained">
+    <Tabs
+      defaultValue={props.current || TabType.all}
+      variant="contained"
+      className="oui-h-full"
+      classNames={{
+        tabsContent: "oui-h-[calc(100%_-_28px)]",
+      }}
+    >
       <TabPanel value={TabType.all} title="All">
-        <DesktopOrderListWidget
-          type={TabType.all}
-        />
+        <DesktopOrderListWidget type={TabType.all} />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
         <DesktopOrderListWidget
@@ -42,11 +47,11 @@ export const Orders = (props: OrdersBuilderState) => {
           ordersStatus={OrderStatus.REJECTED}
         />
       </TabPanel>
-      <TabPanel value={TabType.orderHistory} title="Order history">
+      {/* <TabPanel value={TabType.orderHistory} title="Order history">
         <DesktopOrderListWidget
           type={TabType.orderHistory}
         />
-      </TabPanel>
+      </TabPanel> */}
     </Tabs>
   );
 };

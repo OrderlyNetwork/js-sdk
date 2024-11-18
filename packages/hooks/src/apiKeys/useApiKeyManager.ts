@@ -64,7 +64,7 @@ export const useApiKeyManager = (queryParams?: {
     []
   );
 
-  const removeOrderkyKey = useCallback((orderly_key: string): Promise<any> => {
+  const removeOrderlyKey = useCallback((orderly_key: string): Promise<any> => {
     return doRemoveOrderKey({
       orderly_key,
     });
@@ -97,7 +97,7 @@ export const useApiKeyManager = (queryParams?: {
       isLoading,
       generateOrderlyKey,
       setIPRestriction,
-      removeOrderkyKey,
+      removeOrderlyKey,
       resetOrderlyKeyIPRestriction,
     },
   ] as const;

@@ -4,7 +4,7 @@ import { useWS } from "../useWS";
 import useSWRSubscription from "swr/subscription";
 import { WSMessage } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { useConfig } from "../useConfig";
+import { useMarketStore } from "./useMarket/market.store";
 
 export const useMarketsStream = () => {
   // get listing of all markets from /public/info
@@ -75,6 +75,8 @@ export const useMarketsStream = () => {
       return item;
     });
   }, [futures, tickers]);
+
+  // const value = useMarketStore((state) => state.market);
 
   return { data: value };
 };

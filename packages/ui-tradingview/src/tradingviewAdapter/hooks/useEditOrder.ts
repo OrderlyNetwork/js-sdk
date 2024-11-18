@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useEventEmitter, useOrderStream } from "@orderly.network/hooks";
 import { OrderStatus } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { TpslAlgoType } from "../renderer/tpsl.util";
+import { BracketAlgoType, TpslAlgoType } from "../renderer/tpsl.util";
 
 export default function useEditOrder(onToast: any) {
   const ee = useEventEmitter();
@@ -29,7 +29,18 @@ export default function useEditOrder(onToast: any) {
                 onToast.error(e.message);
               }
             });
-        } else {
+        } else if (BracketAlgoType.includes(order.algo_type)) {
+          // @ts-ignore
+          return updateAlgoOrder(order.algo_order_id, {
+            order_price: new Decimal(lineValue.value).toString(),
+          })
+            .then((res) => {})
+            .catch((e) => {
+              if (onToast) {
+                onToast.error(e.message);
+              }
+            });
+        }  else {
           const values: any = {
             quantity: order.quantity,
             trigger_price: order.trigger_price,

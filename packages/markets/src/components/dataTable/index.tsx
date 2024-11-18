@@ -96,7 +96,7 @@ const DataTable: FC<TableProps> = (props) => {
 
       <div
         className={cn(
-          "oui-relative oui-h-full oui-overflow-y-auto custom-scrollbar",
+          "oui-relative oui-h-full oui-overflow-y-auto oui-custom-scrollbar",
           "oui-text-2xs oui-text-base-contrast-80",
           classNames?.body
         )}

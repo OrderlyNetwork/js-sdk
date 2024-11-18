@@ -8,7 +8,7 @@ abstract class BaseCalculator<T> implements Calculator<T> {
     data: any,
     ctx: CalculatorCtx
   ): T | null;
-  abstract update(data: T | null): void;
+  abstract update(data: T | null, scope: CalculatorScope): void;
 
   cache(data: T) {
     this._cache = data;

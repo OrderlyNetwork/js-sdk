@@ -52,7 +52,7 @@ export const MobileSharePnLContent: FC<{
 
   const [domain, setDomain] = useState("");
 
-  const posterRefs = shareOptions?.backgroundImages.map(() =>
+  const posterRefs = shareOptions?.backgroundImages?.map(() =>
     useRef<PosterRef | null>(null)
   );
 
@@ -132,7 +132,7 @@ export const MobileSharePnLContent: FC<{
           initIndex={selectIndex}
         >
           <CarouselContent style={{ height: `${carouselHeight}px` }}>
-            {shareOptions?.backgroundImages.map((item, index) => (
+            {shareOptions?.backgroundImages?.map((item, index) => (
               <CarouselItem key={index}>
                 <Poster
                   className="oui-transform oui-origin-top-left"
@@ -153,14 +153,14 @@ export const MobileSharePnLContent: FC<{
           <div className="oui-mt-2 oui-mb-1 oui-flex oui-justify-center">
             <MyIdentifier
               dotClassName="oui-w-[16px] oui-h-[4px] oui-bg-base-300"
-              dotActiveClassName="!oui-bg-primary oui-w-[20px]"
+              dotActiveClassName="!oui-bg-primary-darken oui-w-[20px]"
               setSelectIndex={setSelectIndex}
             />
           </div>
         </Carousel>
       </div>
 
-      <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto">
+      <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto oui-custom-scrollbar">
         <div className="oui-mt-4">
           <div className="oui-text-3xs oui-text-base-contrast-54">
             PnL display format
@@ -245,9 +245,9 @@ export const MobileSharePnLContent: FC<{
                       console.log("set message to empty");
 
                       setMessage("");
-                        setTimeout(() => {
-                          inputRef.current?.focus();
-                        }, 50);
+                      setTimeout(() => {
+                        inputRef.current?.focus();
+                      }, 50);
                       e.stopPropagation();
                     }}
                   >
@@ -302,7 +302,7 @@ const PnlFormatView: FC<{
     <div
       className={cn(
         "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-flex-1 oui-bg-base-4 hover:oui-cursor-pointer oui-flex oui-items-center oui-px-3 oui-referral-shadow",
-        isSelected && "oui-bg-primary oui-dot-sel"
+        isSelected && "oui-bg-primary-darken oui-dot-sel"
       )}
       onClick={() => {
         setPnlFormat(type);
@@ -420,7 +420,7 @@ const ChoicesFillIcon = () => {
         clipRule="evenodd"
         d="M2.01416 11.9989C2.01416 6.47589 6.49136 1.9989 12.0142 1.9989C17.5372 1.9989 22.0142 6.47589 22.0142 11.9989C22.0142 17.5219 17.5372 21.9989 12.0142 21.9989C6.49136 21.9989 2.01416 17.5219 2.01416 11.9989ZM16.9853 7.31211C17.2125 7.09537 17.5236 7 17.8218 7C18.1201 7 18.4312 7.09537 18.6583 7.31211C19.1139 7.74546 19.1139 8.47384 18.6583 8.9072L10.5077 16.675C10.0534 17.1083 9.28909 17.1083 8.83472 16.675L5.34077 13.3459C4.88641 12.9126 4.88641 12.1841 5.34077 11.7508C5.79631 11.3175 6.56057 11.3175 7.01493 11.7508L9.67122 14.2822L16.9853 7.31211Z"
         fill="white"
-        fill-opacity="1"
+        fillOpacity="1"
       />
     </svg>
   );

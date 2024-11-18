@@ -1,5 +1,13 @@
-import { FC, ReactNode } from "react";
-import { Box, cn, Flex, ListView, ScrollArea, Text } from "@orderly.network/ui";
+import React, { FC, ReactNode } from "react";
+import {
+  Box,
+  cn,
+  Flex,
+  Grid,
+  ListView,
+  ScrollArea,
+  Text,
+} from "@orderly.network/ui";
 import { LastTradesState } from "./lastTrades.script";
 import { OrderSide } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
@@ -20,18 +28,20 @@ export const LastTrades: FC<
   }
 > = (props) => {
   return (
-    <div
+    <Box
       className={cn(
         "oui-grid oui-grid-rows=[auto,1fr] oui-h-full oui-w-full",
         props.classNames?.root
       )}
       style={props.style}
     >
-      <Header
-        base={props.base}
-        quote={props.quote}
-        className={props.classNames?.listHeader}
-      />
+      <Box className="oui-pr-1">
+        <Header
+          base={props.base}
+          quote={props.quote}
+          className={props.classNames?.listHeader}
+        />
+      </Box>
       <List
         data={props.data}
         isLoading={props.isLoading}
@@ -40,7 +50,7 @@ export const LastTrades: FC<
         classNames={props.classNames?.listItem}
         className={props.classNames?.list}
       />
-    </div>
+    </Box>
   );
 };
 
@@ -58,19 +68,33 @@ const Row = (props: {
 }) => {
   const { key, left, mid, right, classNames } = props;
   return (
-    <Flex
+    // <Flex
+    //   key={key}
+    //   height={20}
+    //   gap={2}
+    //   width={"100%"}
+    //   className={cn("oui-text-xs oui-tabular-nums", classNames?.root)}
+    // >
+    //   <Box className={cn("oui-flex-1", classNames?.left)}>{left}</Box>
+    //   <Box className={cn("oui-flex-1", classNames?.mid)}>{mid}</Box>
+    //   <Box className={cn("oui-flex-1 oui-text-right", classNames?.right)}>
+    //     {right}
+    //   </Box>
+    // </Flex>
+
+    <Grid
+      cols={3}
+      gapX={2}
       key={key}
-      height={20}
-      gap={2}
-      width={"100%"}
+      width="100%"
       className={cn("oui-text-xs oui-tabular-nums", classNames?.root)}
     >
-      <Box className={cn("oui-flex-1", classNames?.left)}>{left}</Box>
-      <Box className={cn("oui-flex-1", classNames?.mid)}>{mid}</Box>
-      <Box className={cn("oui-flex-1 oui-text-right", classNames?.right)}>
+      <div className={cn("oui-flex-1", classNames?.left)}>{left}</div>
+      <div className={cn("oui-flex-1", classNames?.mid)}>{mid}</div>
+      <div className={cn("oui-flex-1 oui-text-right", classNames?.right)}>
         {right}
-      </Box>
-    </Flex>
+      </div>
+    </Grid>
   );
 };
 
@@ -110,7 +134,7 @@ const List = (props: {
         props.className,
         "oui-overflow-auto"
       )}
-      contentClassName="!oui-space-y-0"
+      contentClassName="!oui-space-y-0 oui-pr-[-4px]"
       renderItem={(item, index) => {
         return (
           <Row

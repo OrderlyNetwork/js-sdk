@@ -10,6 +10,7 @@ import { PositionCalculator } from "./orderly/calculator/positions";
 import { MarkPriceCalculator } from "./orderly/calculator/markPrice";
 import { CalculatorScope } from "./types";
 import { PortfolioCalculator } from "./orderly/calculator/portfolio";
+import { IndexPriceCalculator } from "./orderly/calculator/indexPrice";
 
 export const useCalculatorService = () => {
   const { get } = useSimpleDI<CalculatorService>();
@@ -20,6 +21,7 @@ export const useCalculatorService = () => {
       const positionCalculator = new PositionCalculator();
       const portfolioCalculator = new PortfolioCalculator();
       const markPriceCalculator = new MarkPriceCalculator();
+      const indexPriceCalculator = new IndexPriceCalculator();
       calculatorService = new CalculatorService(new ShardingScheduler(), [
         [
           CalculatorScope.MARK_PRICE,
@@ -32,6 +34,11 @@ export const useCalculatorService = () => {
         ],
         [CalculatorScope.POSITION, [positionCalculator, portfolioCalculator]],
         [CalculatorScope.PORTFOLIO, [portfolioCalculator]],
+        // indexPrice
+        [
+          CalculatorScope.INDEX_PRICE,
+          [indexPriceCalculator, positionCalculator],
+        ],
       ]);
 
       SimpleDI.registerByName(CalculatorServiceID, calculatorService);

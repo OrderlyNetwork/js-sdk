@@ -1,4 +1,5 @@
 import { ChartMode, ColorConfigInterface } from "./tradingviewAdapter/type";
+import { LoadingScreenOptions } from "./tradingviewAdapter/charting_library";
 
 export interface TradingviewWidgetPropsInterface {
   symbol?: string;
@@ -12,6 +13,7 @@ export interface TradingviewWidgetPropsInterface {
   libraryPath?: string;
   fullscreen?: boolean;
   theme?: string;
+  loadingScreen?: LoadingScreenOptions;
 }
 
 export interface TradingviewUIPropsInterface {

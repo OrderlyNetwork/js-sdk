@@ -1,9 +1,15 @@
 import { MouseEventHandler } from "react";
-import { Flex, TokenIcon, Text, Badge, cn } from "@orderly.network/ui";
+import {
+  Flex,
+  TokenIcon,
+  Text,
+  Badge,
+  cn,
+  TableColumn,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { DeleteIcon, TopIcon } from "../../icons";
 import { FavoriteInstance } from "../../type";
-import { Column } from "../dataTable";
 
 export const getMarketsSheetColumns = (
   favorite: FavoriteInstance,
@@ -125,5 +131,5 @@ export const getMarketsSheetColumns = (
         );
       },
     },
-  ] as Column[];
+  ] as TableColumn[];
 };

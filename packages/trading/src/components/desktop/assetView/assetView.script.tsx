@@ -10,6 +10,7 @@ import {
   usePrivateQuery,
   useCollateral,
   useMarginRatio,
+  usePositionStream,
 } from "@orderly.network/hooks";
 import {
   MEDIA_TABLET,
@@ -24,10 +25,10 @@ import {
   DepositAndWithdrawWithSheetId,
   DepositAndWithdrawWithDialogId,
 } from "@orderly.network/ui-transfer";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
 
-const useFirstTimeDeposit = () => {
+export const useFirstTimeDeposit = () => {
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
   const { totalValue } = useCollateral({
@@ -82,11 +83,21 @@ export const useAssetViewScript = () => {
   });
   const { marginRatio, mmr } = useMarginRatio();
   const isConnected = state.status >= AccountStatusEnum.Connected;
-  const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
+  const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
+    usePositionStream();
+  const marginRatioVal = useMemo(() => {
+    return Math.min(
+      10,
+      aggregated.notional === 0
+        ? // @ts-ignore
+          positionsInfo["margin_ratio"](10)
+        : marginRatio
+    );
+  }, [marginRatio, aggregated]);
 
   const renderMMR = useMemo(() => {
     if (!mmr) {
-      return "--";
+      return "";
     }
     const bigMMR = new Decimal(mmr);
     return bigMMR.mul(100).todp(2, 0).toFixed(2);
@@ -182,6 +193,11 @@ export const useAssetViewScript = () => {
     },
   });
 
+  const _freeCollateral = useDataTap(freeCollateral) ?? undefined;
+  const _marginRatioVal = useDataTap(marginRatioVal) ?? undefined;
+  const _mmr = useDataTap(mmr) ?? undefined;
+  const _totalValue = useDataTap(totalValue) ?? undefined;
+
   return {
     onDeposit,
     onWithdraw,
@@ -190,11 +206,11 @@ export const useAssetViewScript = () => {
     toggleVisible,
     networkId,
     isFirstTimeDeposit,
-    totalValue,
+    totalValue: _totalValue,
     status: state.status,
-    freeCollateral,
-    marginRatioVal,
-    renderMMR,
+    freeCollateral: _freeCollateral,
+    marginRatioVal: _marginRatioVal,
+    renderMMR: _mmr,
     isConnected,
   };
 };

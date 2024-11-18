@@ -5,10 +5,13 @@ import { ListViewFull } from "./full/listview";
 import { useDataSource } from "./useDataSource";
 import { MoveDirection } from "./full/search";
 import { ListViewRef } from "@/listView/listView";
-import { MarketsProps, SortCondition, SortDirection, SortKey } from "./shared/types";
+import {
+  MarketsProps,
+  SortCondition,
+  SortDirection,
+  SortKey,
+} from "./shared/types";
 import { TradingPageContext } from "@/page/trading/context/tradingPageContext";
-import { API } from "@orderly.network/types";
-import { useMarkets, MarketsType } from "@orderly.network/hooks";
 import { RecentTabPane } from "./full/recentTabPane";
 import { AllTabPane } from "./full/allTabPane";
 import { FavoritesTabPane } from "./full/favoritesTabPane";
@@ -22,8 +25,6 @@ interface Props {
 export const MarketsFull: FC<MarketsProps & Props> = (props) => {
   const [searchKey, setSearchKey] = useState<string>("");
   const [activeIndex, setActiveIndex] = useState<number>(-1);
-
-
 
   // const [dataSource, { searchKey, onSearch, onSort }] = useDataSource(
   //   props.dataSource
@@ -78,12 +79,13 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
     // }
   };
 
-  const onMoving = (direction: MoveDirection) => {
-
-  };
+  const onMoving = (direction: MoveDirection) => {};
 
   return (
-    <div id="orderly-markets-desktop" className="orderly-grid grid-rows-[40px_1fr] orderly-tabular-nums orderly-pb-2">
+    <div
+      id="orderly-markets-desktop"
+      className="orderly-grid grid-rows-[40px_1fr] orderly-tabular-nums orderly-pb-2"
+    >
       <Header
         onSearch={setSearchKey}
         keyword={searchKey}
@@ -107,7 +109,6 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
         maxHeight={props.maxHeight}
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
-
         // onSort={onSort}
         // onItemClick={onSymbolClick}
         fitlerKey={searchKey}
@@ -117,20 +118,17 @@ export const MarketsFull: FC<MarketsProps & Props> = (props) => {
 };
 
 const MarketsBody: FC<{
-  onClose?: () => void,
-  maxHeight: number | undefined,
-  activeIndex: number,
-  setActiveIndex: React.Dispatch<React.SetStateAction<number>>,
-  fitlerKey: string,
+  onClose?: () => void;
+  maxHeight: number | undefined;
+  activeIndex: number;
+  setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
+  fitlerKey: string;
 }> = (props) => {
-  const {
-    activeIndex,
-    setActiveIndex,
-    fitlerKey,
-  } = props;
+  const { activeIndex, setActiveIndex, fitlerKey } = props;
 
-  const [activeTab, setActiveTab] = useState(localStorage.getItem("markets_sel_tab_key") || "all");
-
+  const [activeTab, setActiveTab] = useState(
+    localStorage.getItem("markets_sel_tab_key") || "all"
+  );
 
   const { onSymbolChange } = useContext(TradingPageContext);
 
@@ -141,7 +139,6 @@ const MarketsBody: FC<{
     },
     [onSymbolChange]
   );
-
 
   const updateActiveTab = (value: string) => {
     setActiveTab(value);
@@ -156,7 +153,12 @@ const MarketsBody: FC<{
       onTabChange={updateActiveTab}
       tabBarClassName="orderly-h-[48px] orderly-text-sm desktop:orderly-font-semibold orderly-bg-base-800"
     >
-      <TabPane id="orderly-markets-desktop-favorites-pane" title="Favorites" value="favorites" className="orderly-px-0">
+      <TabPane
+        id="orderly-markets-desktop-favorites-pane"
+        title="Favorites"
+        value="favorites"
+        className="orderly-px-0"
+      >
         <FavoritesTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
@@ -166,7 +168,12 @@ const MarketsBody: FC<{
           onItemClick={onSymbolClick}
         />
       </TabPane>
-      <TabPane id="orderly-markets-desktop-recent-pane" title="Recent" value="recent" className="orderly-px-0">
+      <TabPane
+        id="orderly-markets-desktop-recent-pane"
+        title="Recent"
+        value="recent"
+        className="orderly-px-0"
+      >
         <RecentTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
@@ -176,7 +183,12 @@ const MarketsBody: FC<{
           onItemClick={onSymbolClick}
         />
       </TabPane>
-      <TabPane id="orderly-markets-desktop-all-pane" title="All" value="all" className="orderly-px-0">
+      <TabPane
+        id="orderly-markets-desktop-all-pane"
+        title="All"
+        value="all"
+        className="orderly-px-0"
+      >
         <AllTabPane
           onClose={props.onClose}
           maxHeight={props.maxHeight}
@@ -188,5 +200,4 @@ const MarketsBody: FC<{
       </TabPane>
     </Tabs>
   );
-}
-
+};

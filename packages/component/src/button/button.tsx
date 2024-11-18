@@ -174,6 +174,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
+    const isDisabled = Boolean(
+      typeof disabled !== "undefined" ? disabled : loading
+    );
     const children = useMemo(() => {
       if (!!loading) {
         return (
@@ -198,7 +201,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className,
           `orderly-button orderly-button-variant-${variant} orderly-button-color-${color} orderly-button-size-${size} orderly-button-full-width-${fullWidth}`
         )}
-        disabled={Boolean(disabled)}
+        disabled={isDisabled}
         {...props}
         ref={ref}
       >

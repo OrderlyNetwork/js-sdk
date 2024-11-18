@@ -10,6 +10,8 @@ import {
   cn,
   NumeralProps,
   Badge,
+  SimpleDialog,
+  ThrottledButton,
 } from "@orderly.network/ui";
 import { usePositionsRowContext } from "./positionRowContext";
 // import { useSymbolContext } from "../providers/symbolProvider";
@@ -29,6 +31,7 @@ export const CloseButton = () => {
     type,
     submitting,
     quoteDp,
+    errors,
   } = usePositionsRowContext();
 
   const { base, quote } = useSymbolContext();
@@ -62,21 +65,39 @@ export const CloseButton = () => {
 
     return !price || !quantity;
   }, [price, quantity, type]);
+
   return (
-    <Popover
-      open={open}
-      onOpenChange={setOpen}
-      contentProps={{
-        className: "oui-w-[360px] oui-px-5 oui-rounded-xl",
-      }}
-      content={
-        type === OrderType.MARKET ? (
+    <>
+      <Button
+        variant="outlined"
+        size="sm"
+        color="secondary"
+        disabled={disabled}
+        onClick={(e) => {
+          e.stopPropagation();
+          const quantityMsg = errors?.order_quantity?.message;
+          const priceMsg = errors?.order_price?.message;
+          if (quantityMsg || priceMsg) {
+            toast.error(quantityMsg ?? priceMsg);
+            return;
+          }
+          setOpen(true);
+        }}
+      >
+        Close
+      </Button>
+      <SimpleDialog open={open} onOpenChange={setOpen} size="sm">
+        {type === OrderType.MARKET ? (
           <MarketCloseConfirm
             base={base}
             quantity={quantity}
             onClose={onClose}
             onConfirm={onConfirm}
             submitting={submitting}
+            classNames={{
+              root: "oui-items-start",
+            }}
+            hideCloseIcon
           />
         ) : (
           <LimitConfirmDialog
@@ -88,22 +109,11 @@ export const CloseButton = () => {
             submitting={submitting}
             quoteDp={quoteDp}
             order={closeOrderData}
+            hideCloseIcon
           />
-        )
-      }
-    >
-      <Button
-        variant="outlined"
-        size="sm"
-        color="secondary"
-        disabled={disabled}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        Close
-      </Button>
-    </Popover>
+        )}
+      </SimpleDialog>
+    </>
   );
 };
 
@@ -149,7 +159,7 @@ export const ConfirmFooter: FC<{
       >
         Cancel
       </Button>
-      <Button
+      <ThrottledButton
         id="oui-positions-confirm-footer-confirm-button"
         onClick={onConfirm}
         fullWidth
@@ -157,7 +167,7 @@ export const ConfirmFooter: FC<{
         size="md"
       >
         Confirm
-      </Button>
+      </ThrottledButton>
     </Flex>
   );
 };
@@ -204,7 +214,7 @@ export const OrderDetail = (props: {
         </Text.formatted>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>Total</Text>
+        <Text>Est. Total</Text>
         <Text.formatted
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
@@ -224,16 +234,16 @@ export const MarketCloseConfirm: FC<{
   onConfirm?: () => Promise<any>;
   submitting?: boolean;
   hideCloseIcon?: boolean;
+  classNames?: {
+    root?: string;
+  };
 }> = (props) => {
-  console.log("props", props);
-
   const onCancel = () => {
     const func = props?.onClose ?? props.close;
-    console.log("xxxxxxxxxxx func is", func);
     func?.();
   };
   return (
-    <Flex direction={"column"}>
+    <Flex direction={"column"} className={props.classNames?.root}>
       <ConfirmHeader
         onClose={onCancel}
         title="Market Close"
@@ -277,7 +287,7 @@ export const LimitConfirmDialog: FC<{
     <>
       <ConfirmHeader
         onClose={onCancel}
-        title="Limit close"
+        title="Limit Close"
         hideCloseIcon={props.hideCloseIcon}
       />
       <Text intensity={54} size="sm" className="oui-mt-5">

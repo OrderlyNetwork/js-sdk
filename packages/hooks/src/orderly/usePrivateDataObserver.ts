@@ -15,6 +15,9 @@ import { useAppStore } from "./appStore";
 import { useCalculatorService } from "../useCalculatorService";
 import { CalculatorScope } from "../types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { usePositionActions } from "./orderlyHooks";
+import { AccountState, EVENT_NAMES } from "@orderly.network/core";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -23,12 +26,12 @@ export const usePrivateDataObserver = (options: {
   const ws = useWS();
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
-  const { state } = useAccount();
-  const { setAccountInfo, updateHolding } = useAppStore(
-    (state) => state.actions
-  );
-  // const statusActions = useApiStatusActions();
+  const { state, account } = useAccount();
+  const { setAccountInfo, restoreHolding, updateHolding, cleanAll } =
+    useAppStore((state) => state.actions);
+  const statusActions = useApiStatusActions();
   const calculatorService = useCalculatorService();
+  const positionsActions = usePositionActions();
   // fetch the data of current account
 
   const { data: clientInfo } =
@@ -47,19 +50,62 @@ export const usePrivateDataObserver = (options: {
   const { data: positions, isLoading: isPositionLoading } =
     usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
+      onError: (error) => {
+        // console.error("fetch positions error", error);
+        statusActions.updateApiError("positions", error.message);
+      },
     });
 
-  // useEffect(() => {
-  //   statusActions.updateApiLoading("positions", isPositionLoading);
-  // }, [isPositionLoading]);
+  // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
+  useEffect(() => {
+    const handler = (state: AccountState) => {
+      if (!state.accountId) {
+        cleanAll();
+        positionsActions.clearAll();
+      }
+    };
+
+    account.on(EVENT_NAMES.statusChanged, handler);
+
+    return () => {
+      account.off(EVENT_NAMES.statusChanged, handler);
+    };
+
+    // account.on(EVENT_NAMES.switchAccount, () => {
+    //   cleanAll();
+    //   positionsActions.clearAll();
+    // });
+
+    // return () => {
+    //   account.off(EVENT_NAMES.switchAccount);
+    // };
+    // if (state.validating) return;
+
+    // console.log("++++++++++state.status", state.status);
+
+    // if (state.status < AccountStatusEnum.EnableTrading) {
+    //   cleanAll();
+    //   positionsActions.clearAll();
+    //   // calculatorService.calc(CalculatorScope.POSITION, {
+    //   //   rows: [],
+    //   // });
+    // }
+  }, []);
 
   useEffect(() => {
-    if (
-      positions &&
-      Array.isArray(positions.rows) &&
-      positions.rows.length > 0
-    ) {
+    /// start load positions
+    if (isPositionLoading) {
+      statusActions.updateApiLoading("positions", isPositionLoading);
+    }
+  }, [isPositionLoading, statusActions]);
+
+  useEffect(() => {
+    if (positions && Array.isArray(positions.rows)) {
+      // if (positions.rows.length > 0) {
       calculatorService.calc(CalculatorScope.POSITION, positions);
+      // } else {
+      //   statusActions.updateApiLoading("positions", false);
+      // }
     }
   }, [calculatorService, positions]);
 
@@ -87,18 +133,8 @@ export const usePrivateDataObserver = (options: {
 
           if (holding) {
             console.log("---->>>>>>!!!! holding", holding);
-            //TODO: update holding
-            // mutate((prevData) => {
-            //   return prevData?.map((item) => {
-            //     const token = holding[item.token];
-            //     return {
-            //       ...item,
-            //       frozen: token.frozen,
-            //       holding: token.holding,
-            //     };
-            //   });
-            // });
-            // next(holding);
+
+            updateHolding(holding);
           }
         },
       }
@@ -109,7 +145,7 @@ export const usePrivateDataObserver = (options: {
 
   useEffect(() => {
     if (holding) {
-      updateHolding(holding);
+      restoreHolding(holding);
     }
   }, [holding]);
 

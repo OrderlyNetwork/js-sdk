@@ -44,6 +44,7 @@ export enum PositionSide {
 }
 
 export enum OrderStatus {
+  /** @deprecated */
   OPEN = "OPEN",
   NEW = "NEW",
   FILLED = "FILLED",

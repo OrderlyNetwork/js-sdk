@@ -1,10 +1,11 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useId, useState } from "react";
 import { useMarketsStream } from "./useMarketsStream";
 import { OrderlyContext } from "../orderlyContext";
-import { API } from "@orderly.network/types";
-import { useSymbolsInfo } from "./useSymbolsInfo";
-import { useFundingRates } from "./useFundingRates";
+import { API, WSMessage } from "@orderly.network/types";
+import { SymbolInfo, useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
+import { useEventEmitter } from "../useEventEmitter";
+import { MarketStoreKey } from "./useMarket";
 
 export enum MarketsType {
   FAVORITES,
@@ -26,106 +27,126 @@ export interface Recent {
   name: string;
 }
 
-export interface TabSort {
-  sortKey: string;
-  sortOrder: string;
-}
-
-export type MarketStoreKey =
-  | "recent"
-  | "favorites"
-  | "favoriteTabs"
-  | "lastSelectedFavoriteTab"
-  | "tabSort";
+export type TabSort = Record<
+  string,
+  {
+    sortKey: string;
+    sortOrder: string;
+  }
+>;
 
 /*
+example data:
 {
   markets: {
-      recent: [
-          { "name": `${symbol.name}` },
-          { "name": `${symbol.name}` },
-      ],
-      favorites: [
-          { "name": `${symbol.name}`, "tabs": [{ "name": "Popular", "id": 1 }] },
-      ],
-      favoriteTabs: [
-          { "name": "Popular", "id": 1 },
-      ],
-      "lastSelectFavoriteTab": { "name": "Popular", "id": 1 },
-      "tabSort": { "all": { "sortKey": "24h_amount", "sortOrder": "desc" }}        
+    recent: [
+      { "name": `${symbol.name}` },
+      { "name": `${symbol.name}` },
+    ],
+    favorites: [
+      { "name": `${symbol.name}`, "tabs": [{ "name": "Popular", "id": 1 }] },
+    ],
+    favoriteTabs: [
+      { "name": "Popular", "id": 1 },
+    ],
+    "selectedFavoriteTab": { "name": "Popular", "id": 1 },
+    "tabSort": { "all": { "sortKey": "24h_amount", "sortOrder": "desc" }}        
   }
 }
 */
+export type MarketsData = {
+  favoriteTabs?: FavoriteTab[];
+  favorites?: Favorite[];
+  recent?: Recent[];
+  selectedFavoriteTab?: FavoriteTab;
+  tabSort?: TabSort;
+};
 
-const DefaultTab = { name: "Popular", id: 1 };
-const marketsKey = "markets";
+export type MarketsKey = keyof MarketsData;
 
-export const useMarkets = (type: MarketsType) => {
+export type MarketsItem = {
+  symbol: string;
+  index_price: number;
+  mark_price: number;
+  sum_unitary_funding: number;
+  est_funding_rate: number;
+  last_funding_rate: number;
+  next_funding_time: number;
+  open_interest: number;
+  "24h_open": number;
+  "24h_close": number;
+  "24h_high": number;
+  "24h_low": number;
+  "24h_volume": number;
+  "24h_amount": number;
+  "24h_volumn": number;
+  change: number;
+  "8h_funding": number;
+  quote_dp: number;
+  created_time: number;
+  openInterest: number;
+  isFavorite: boolean;
+  leverage?: number;
+};
+
+export const MarketsStorageKey = "orderly_markets";
+export const DefaultFavoriteTab = { name: "Popular", id: 1 };
+
+export const useMarketsStore = () => {
   const { configStore } = useContext(OrderlyContext);
+  const ee = useEventEmitter();
+  const id = useId();
 
-  const symbolsInfo = useSymbolsInfo();
-  const fundingRates = useFundingRates();
-  const { data: futures } = useMarketsStream();
+  const getStore = () => {
+    const store = configStore.get(MarketsStorageKey) as MarketsData;
+    return store || getDefaultStoreData();
+  };
 
-  const updateStore = (key: MarketStoreKey, data: any) => {
-    configStore.set(marketsKey, {
-      ...configStore.getOr(marketsKey, {}),
-      [key]: data,
+  const getStoreByKey = <Key extends MarketsKey>(
+    key: Key,
+    defaultValue: MarketsData[Key]
+  ) => {
+    const store = getStore();
+    return (store[key] || defaultValue)!;
+  };
+
+  const updateStore = (data: MarketsData) => {
+    configStore.set(MarketsStorageKey, {
+      ...getStore(),
+      ...data,
     });
   };
 
-  const getStore = <T>(key: MarketStoreKey, defaultValue: T) => {
-    return (configStore.get(marketsKey)[key as any] as T) || defaultValue;
+  const getFavoriteTabs = () => {
+    return getStoreByKey("favoriteTabs", [{ ...DefaultFavoriteTab }]);
   };
 
-  if (!configStore.get(marketsKey)) {
-    const jsonStr = localStorage.getItem(marketsKey);
-    if (jsonStr) {
-      configStore.set(marketsKey, JSON.parse(jsonStr));
-    } else {
-      configStore.set(marketsKey, {
-        recent: [],
-        favorites: [
-          { name: "PERP_ETH_USDC", tabs: [{ ...DefaultTab }] },
-          { name: "PERP_BTC_USDC", tabs: [{ ...DefaultTab }] },
-        ],
-        favoriteTabs: [{ ...DefaultTab }],
-        lastSelectedFavoriteTab: { ...DefaultTab },
-      });
-    }
-  }
+  const getSelectedFavoriteTab = () => {
+    return getStoreByKey("selectedFavoriteTab", { ...DefaultFavoriteTab });
+  };
 
-  const getFavoriteTabs = useMemo(() => {
-    return getStore("favoriteTabs", [{ ...DefaultTab }]);
-  }, []);
+  const getFavorites = () => {
+    const favs = getStoreByKey("favorites", []);
+    const tabs = getFavoriteTabs();
+    return filterInvalidTabs(favs, tabs);
+  };
 
-  const getFavorites = useMemo(() => {
-    const curData = getStore<Favorite[]>("favorites", []);
-    const tabs = getFavoriteTabs;
-    const result = [] as Favorite[];
-    for (let index = 0; index < curData.length; index++) {
-      const favData = curData[index];
-      var favTabs = favData.tabs.filter(
-        (tab) => tabs.findIndex((item) => tab.id === item.id) !== -1
-      );
-      if (favTabs.length > 0) {
-        result.push({ ...favData, tabs: favTabs });
-      }
-    }
-    updateStore("favorites", result);
+  const getRecent = () => {
+    return getStoreByKey("recent", []);
+  };
 
-    return result;
-  }, [configStore]);
+  const getTabSort = () => {
+    return getStoreByKey("tabSort", {});
+  };
 
   const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs);
+  const [selectedFavoriteTab, setSelectedFavoriteTab] = useState(
+    getSelectedFavoriteTab
+  );
   const [favorites, setFavorites] = useState(getFavorites);
+  const [recent, setRecent] = useState(getRecent);
 
-  const [recent, setRecent] = useState(
-    getStore<Recent[]>("recent", []).filter((e) => e)
-  );
-  const [tabSort, setTabSort] = useState(
-    getStore<Record<string, TabSort>>("tabSort", {})
-  );
+  const [tabSort, setTabSort] = useState(getTabSort);
 
   const updateFavoriteTabs = (
     tab: FavoriteTab | FavoriteTab[],
@@ -135,46 +156,17 @@ export const useMarkets = (type: MarketsType) => {
       delete?: boolean;
     }
   ) => {
-    const saveTabs = (tabs: FavoriteTab[]) => {
-      setFavoriteTabs(tabs);
-      updateStore("favoriteTabs", tabs);
-    };
-
-    if (Array.isArray(tab)) {
-      saveTabs(tab);
-      return;
-    }
-
-    var tabs = [...favoriteTabs];
-    const index = tabs.findIndex((item) => item.id === tab.id);
-    if (operator?.add) {
-      tabs.push(tab);
-    } else if (operator?.update) {
-      if (index !== -1) {
-        tabs[index] = tab;
-      }
-    } else if (operator?.delete) {
-      if (index !== -1) {
-        tabs.splice(index, 1);
-      }
-    }
-    saveTabs(tabs);
+    const tabs = updateTabs(favoriteTabs, tab, operator);
+    setFavoriteTabs(tabs);
+    ee.emit("markets:changed", createEventData(id, "favoriteTabs", tabs));
   };
 
-  const updateFavorites = (favorites: Favorite[]) => {
-    updateStore("favorites", favorites);
-    setFavorites(favorites);
-  };
-
-  const addToHistory = (symbol: API.MarketInfoExt) => {
-    const curData = [...recent];
-    const index = curData.findIndex((item) => item.name == symbol.symbol);
-    if (index !== -1) {
-      curData.splice(index, 1);
-    }
-    curData.unshift({ name: symbol.symbol });
-    updateStore("recent", curData);
-    setRecent(curData);
+  const updateSelectedFavoriteTab = (tab: FavoriteTab) => {
+    setSelectedFavoriteTab(tab);
+    ee.emit(
+      "markets:changed",
+      createEventData(id, "lastSelectedFavoriteTab", tab)
+    );
   };
 
   const updateSymbolFavoriteState = (
@@ -182,141 +174,24 @@ export const useMarkets = (type: MarketsType) => {
     tab: FavoriteTab | FavoriteTab[],
     remove: boolean = false
   ) => {
-    const curData = [...favorites];
-    const index = curData.findIndex((item) => item.name == symbol.symbol);
-
-    if (index === -1) {
-      // can not find
-      if (Array.isArray(tab)) {
-        if (tab.length > 0) {
-          curData.unshift({ name: symbol.symbol, tabs: tab });
-        }
-      } else {
-        if (!remove) {
-          // insert
-          curData.unshift({ name: symbol.symbol, tabs: [tab] });
-        }
-      }
-    } else {
-      const favorite = curData[index];
-      if (Array.isArray(tab)) {
-        if (tab.length === 0) {
-          // remove
-          curData.splice(index, 1);
-        } else {
-          // overrides
-          curData[index] = { ...favorite, tabs: tab };
-        }
-      } else {
-        if (remove) {
-          const tabs = favorite.tabs.filter((item) => item.id != tab.id);
-          if (tabs.length === 0) {
-            // del favorite
-            curData.splice(index, 1);
-          } else {
-            curData[index] = { ...favorite, tabs };
-          }
-        } else {
-          // insert
-          const tabs = favorite.tabs;
-          tabs.push(tab);
-          curData[index] = { ...favorite, tabs };
-        }
-      }
-    }
-
-    updateStore("favorites", curData);
-    setFavorites(() => curData);
+    const list = updateSymbolFavorite({ favorites, symbol, tab, remove });
+    setFavorites(list);
+    ee.emit("markets:changed", createEventData(id, "favorites", list));
   };
 
-  const marketsList = useMemo(() => {
-    const list = futures?.map((item: any) => {
-      const { open_interest = 0, index_price = 0 } = item;
-
-      const info = symbolsInfo[item.symbol];
-      const rate = fundingRates[item.symbol];
-      const est_funding_rate = rate("est_funding_rate");
-      const funding_period = info("funding_period");
-      const change =
-        item.change === undefined
-          ? get24hChange(item["24h_close"], item["24h_open"])
-          : item.change;
-
-      return {
-        ...item,
-        change,
-        "8h_funding": get8hFunding(est_funding_rate, funding_period),
-        quote_dp: info("quote_dp"),
-        created_time: info("created_time"),
-        openInterest: new Decimal(open_interest || 0)
-          .mul(index_price || 0)
-          .toNumber(),
-      };
-    });
-    return list || [];
-  }, [symbolsInfo, futures, fundingRates]);
-
-  const getData = (type: MarketsType) => {
-    // get data
-    const localData =
-      type === MarketsType.FAVORITES ? [...favorites] : [...recent];
-    // filter
-    const keys = localData.map((item) => item.name);
-    const filter =
-      type == MarketsType.ALL
-        ? marketsList
-        : marketsList?.filter((item) => keys.includes(item.symbol));
-
-    const favoritesData = [...favorites];
-    const favoriteKeys = favoritesData.map((item) => item.name);
-    if (filter) {
-      for (let index = 0; index < filter.length; index++) {
-        const element = filter[index];
-        const isFavorite =
-          type == MarketsType.FAVORITES
-            ? true
-            : favoriteKeys.includes(element.symbol);
-
-        const fIndex = favoritesData.findIndex(
-          (item) => item.name === element.symbol
-        );
-        const tabs = fIndex === -1 ? [] : favoritesData[fIndex].tabs;
-
-        let imr = undefined;
-        if (symbolsInfo) {
-          imr = symbolsInfo?.[element.symbol]("base_imr");
-        }
-
-        filter[index] = {
-          ...filter[index],
-          isFavorite,
-          tabs,
-          leverage: imr ? 1 / imr : undefined,
-        };
-      }
-    }
-
-    return filter;
+  const addToHistory = (symbol: API.MarketInfoExt) => {
+    const list = addToTop(recent, symbol);
+    setRecent(list);
+    ee.emit("markets:changed", id);
+    ee.emit("markets:changed", createEventData(id, "recent", list));
   };
 
   const pinToTop = (symbol: API.MarketInfoExt) => {
-    const index = favorites.findIndex((item) => item.name === symbol.symbol);
-    if (index !== -1) {
-      const element = favorites[index];
-      const list = [...favorites];
-      list.splice(index, 1);
-      list.unshift(element);
-      updateStore("favorites", list);
-      setFavorites(list);
+    const newList = moveToTop(favorites, symbol);
+    if (newList) {
+      setFavorites(newList);
+      ee.emit("markets:changed", createEventData(id, "favorites", newList));
     }
-  };
-
-  const getLastSelFavTab = () => {
-    return getStore<FavoriteTab>("lastSelectedFavoriteTab", { ...DefaultTab });
-  };
-
-  const updateSelectedFavoriteTab = (tab: FavoriteTab) => {
-    updateStore("lastSelectedFavoriteTab", tab);
   };
 
   const updateTabsSortState = (
@@ -324,36 +199,133 @@ export const useMarkets = (type: MarketsType) => {
     sortKey: string,
     sortOrder: "desc" | "asc"
   ) => {
-    const map = getStore<Record<string, TabSort>>("tabSort", {});
+    const map = getStoreByKey("tabSort", {});
 
     map[tabId] = {
       sortKey,
       sortOrder,
     };
 
-    updateStore("tabSort", map);
     setTabSort(map);
   };
 
-  const markets = getData(type);
-
-  return [
-    markets || [],
-    {
+  useEffect(() => {
+    updateStore({
       favoriteTabs,
       favorites,
       recent,
       tabSort,
-      addToHistory,
-      updateFavorites,
-      updateFavoriteTabs,
-      updateSymbolFavoriteState,
-      pinToTop,
-      getLastSelFavTab,
-      updateSelectedFavoriteTab,
-      updateTabsSortState,
-    },
-  ] as const;
+      selectedFavoriteTab,
+    });
+  }, [favoriteTabs, favorites, recent, tabSort, selectedFavoriteTab]);
+
+  useEffect(() => {
+    const event = ({ id: srcId, key, data }: MarketsEvent) => {
+      if (srcId === id) {
+        return;
+      }
+
+      if (key === "favoriteTabs") {
+        setFavoriteTabs(data);
+      } else if (key === "lastSelectedFavoriteTab") {
+        setSelectedFavoriteTab(data);
+      } else if (key === "favorites") {
+        setFavorites(data);
+      } else if (key === "recent") {
+        setRecent(data);
+      }
+    };
+
+    ee.on("markets:changed", event);
+
+    return () => {
+      ee.off("markets:changed", event);
+    };
+  }, [id]);
+
+  return {
+    favoriteTabs,
+    favorites,
+    recent,
+    tabSort,
+    selectedFavoriteTab,
+    updateFavorites: setFavorites,
+    updateFavoriteTabs,
+    updateSymbolFavoriteState,
+    pinToTop,
+    addToHistory,
+    updateSelectedFavoriteTab,
+    updateTabsSortState,
+  };
+};
+
+export const useMarkets = (type: MarketsType = MarketsType.ALL) => {
+  const { data: futures } = useMarketsStream();
+  const symbolsInfo = useSymbolsInfo();
+
+  const [markets, setMarkets] = useState<MarketsItem[]>([]);
+
+  const store = useMarketsStore();
+
+  const { favorites, recent } = store;
+
+  useEffect(() => {
+    const markets = addFieldToMarkets(futures, symbolsInfo);
+    const filterList = filterMarkets({ markets, favorites, recent, type });
+    setMarkets(filterList);
+  }, [futures, symbolsInfo, favorites, recent, type]);
+
+  return [markets, store] as const;
+};
+
+const addFieldToMarkets = (
+  futures: WSMessage.Ticker[] | null,
+  symbolsInfo: SymbolInfo
+) => {
+  return (futures || [])?.map((item: any) => {
+    const info = symbolsInfo[item.symbol];
+
+    return {
+      ...item,
+      quote_dp: info("quote_dp"),
+      created_time: info("created_time"),
+      leverage: getLeverage(info("base_imr")),
+      openInterest: getOpenInterest(item.open_interest, item.index_price),
+      "8h_funding": get8hFunding(item.est_funding_rate, info("funding_period")),
+      change: get24hChange({
+        change: item.change,
+        close: item["24h_close"],
+        open: item["24h_open"],
+      }),
+    } as MarketsItem;
+  });
+};
+
+const filterMarkets = (params: {
+  markets: MarketsItem[];
+  favorites: Favorite[];
+  recent: Recent[];
+  type: MarketsType;
+}) => {
+  const { markets, favorites, recent, type } = params;
+  let curData: MarketsItem[] = [];
+  if (type === MarketsType.ALL) {
+    curData = markets;
+  } else {
+    const storageData = type === MarketsType.FAVORITES ? favorites : recent;
+
+    const keys = storageData.map((item) => item.name);
+
+    curData = markets?.filter((item) => keys.includes(item.symbol));
+  }
+
+  const favoriteKeys = favorites.map((item) => item.name);
+
+  return curData?.map((item) => ({
+    ...item,
+    isFavorite:
+      type == MarketsType.FAVORITES ? true : favoriteKeys.includes(item.symbol),
+  }));
 };
 
 function get8hFunding(est_funding_rate: number, funding_period: number) {
@@ -373,11 +345,162 @@ function get8hFunding(est_funding_rate: number, funding_period: number) {
   return funding8h;
 }
 
-function get24hChange(close: number, open: number) {
+function get24hChange(params: { change: number; close: number; open: number }) {
+  const { change, close, open } = params;
+
+  if (change !== undefined) {
+    return change;
+  }
+
   if (close !== undefined && open !== undefined) {
     if (open === 0) {
       return 0;
     }
     return new Decimal(close).minus(open).div(open).toNumber();
   }
+}
+
+function getLeverage(base_imr: number) {
+  return base_imr ? 1 / base_imr : undefined;
+}
+
+function getOpenInterest(open_interest?: number, index_price?: number) {
+  return new Decimal(open_interest || 0).mul(index_price || 0).toNumber();
+}
+
+function getDefaultStoreData(): MarketsData {
+  return {
+    recent: [],
+    favorites: [
+      { name: "PERP_ETH_USDC", tabs: [{ ...DefaultFavoriteTab }] },
+      { name: "PERP_BTC_USDC", tabs: [{ ...DefaultFavoriteTab }] },
+    ],
+    favoriteTabs: [{ ...DefaultFavoriteTab }],
+    selectedFavoriteTab: { ...DefaultFavoriteTab },
+    tabSort: {},
+  };
+}
+
+function filterInvalidTabs(favorites: Favorite[], tabs: FavoriteTab[]) {
+  return favorites
+    .map((favorite) => {
+      return {
+        ...favorite,
+        tabs: favorite.tabs.filter(
+          (tab) => !!tabs.find((item) => item.id === tab.id)
+        ),
+      };
+    })
+    .filter((item) => !!item.tabs.length);
+}
+
+export function updateTabs(
+  favoriteTabs: FavoriteTab[],
+  tab: FavoriteTab | FavoriteTab[],
+  operator?: {
+    add?: boolean;
+    update?: boolean;
+    delete?: boolean;
+  }
+) {
+  if (Array.isArray(tab)) {
+    return tab;
+  }
+
+  const tabs = [...favoriteTabs];
+  const index = tabs.findIndex((item) => item.id === tab.id);
+
+  if (operator?.add) {
+    tabs.push(tab);
+  } else if (operator?.update && index !== -1) {
+    tabs[index] = tab;
+  } else if (operator?.delete && index !== -1) {
+    tabs.splice(index, 1);
+  }
+
+  return tabs;
+}
+
+function addToTop(recent: Recent[], symbol: API.MarketInfoExt) {
+  const list = [...recent];
+  const index = list.findIndex((item) => item.name == symbol.symbol);
+  if (index !== -1) {
+    list.splice(index, 1);
+  }
+  list.unshift({ name: symbol.symbol });
+  return list;
+}
+
+function moveToTop(favorites: Favorite[], symbol: API.MarketInfoExt) {
+  const index = favorites.findIndex((item) => item.name === symbol.symbol);
+  if (index !== -1) {
+    const item = favorites[index];
+    const list = [...favorites];
+    list.splice(index, 1);
+    list.unshift(item);
+    return list;
+  }
+}
+
+/**
+ * if tab is arrary, the remove params is not work
+ * if tab is empty array, will be delete, otherwise will be override
+ */
+function updateSymbolFavorite(params: {
+  favorites: Favorite[];
+  tab: FavoriteTab | FavoriteTab[];
+  symbol: API.MarketInfoExt;
+  remove: boolean;
+}) {
+  const { favorites, symbol, tab, remove = false } = params;
+
+  const list = [...favorites];
+  const index = list.findIndex((item) => item.name == symbol.symbol);
+
+  const tabs = Array.isArray(tab) ? tab : [tab];
+
+  // can not find
+  if (index === -1) {
+    if (tabs.length && !remove) {
+      // insert
+      list.unshift({ name: symbol.symbol, tabs });
+    }
+  } else {
+    const favorite = list[index];
+    if (Array.isArray(tab)) {
+      if (!tab.length) {
+        // remove
+        list.splice(index, 1);
+      } else {
+        // update
+        list[index] = { ...favorite, tabs: tab };
+      }
+    } else {
+      if (remove) {
+        const tabs = favorite.tabs.filter((item) => item.id != tab.id);
+        if (!tabs.length) {
+          // remove
+          list.splice(index, 1);
+        } else {
+          // update
+          list[index] = { ...favorite, tabs };
+        }
+      } else {
+        // insert
+        list[index] = { ...favorite, tabs: [...favorite.tabs, tab] };
+      }
+    }
+  }
+
+  return list;
+}
+
+type MarketsEvent = ReturnType<typeof createEventData>;
+
+function createEventData(id: string, key: MarketStoreKey, data: any) {
+  return {
+    id,
+    key,
+    data,
+  };
 }

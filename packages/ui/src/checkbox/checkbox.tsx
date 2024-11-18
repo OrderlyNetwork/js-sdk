@@ -11,7 +11,7 @@ const checkboxVariants = tv({
     "oui-shrink-0",
     "oui-rounded-sm",
     "oui-border",
-    // "oui-border-primary",
+    // "oui-border-primary-darken",
     "focus-visible:oui-outline-none",
     // "focus-visible:oui-ring-1",
     // "focus-visible:oui-ring-ring",
@@ -22,7 +22,7 @@ const checkboxVariants = tv({
   ],
   variants: {
     color: {
-      blue: "oui-border-primary data-[state=checked]:oui-bg-primary data-[state=checked]:oui-text-base-contrast",
+      blue: "oui-border-primary-darken data-[state=checked]:oui-bg-primary-darken data-[state=checked]:oui-text-base-contrast",
       white: "oui-border-base-contrast-54 ",
       // data-[state=checked]:oui-bg-white/80 data-[state=checked]:oui-text-[rgba(0,0,0,0.88)]
     },

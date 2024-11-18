@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
 
 import { ConfirmContent, EditType } from "./editOrder/confirmContent";
@@ -9,7 +9,7 @@ import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
 
 export const TriggerPrice = (props: {
-  order: API.OrderExt;
+  order: API.AlgoOrderExt;
   disableEdit?: boolean;
 }) => {
   const { order } = props;
@@ -21,22 +21,33 @@ export const TriggerPrice = (props: {
   }, [order.trigger_price]);
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
+  const isBracketOrder = order?.algo_type === "BRACKET";
   const [open, setOpen] = useState(false);
-  const [editting, setEditting] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { editAlgoOrder, checkMinNotional } = useOrderListContext();
 
-  const { base, quote_dp } = useSymbolContext();
+  const { base, quote_dp, quote_max, quote_min } = useSymbolContext();
+
+  const hintInfo = useMemo(() => {
+    if (!isAlgoOrder || isBracketOrder) if (!editing) return undefined;
+    if (Number(price) > quote_max) {
+      return `Trigger price must be less than ${quote_max}`;
+    } else if (Number(price) < quote_min) {
+      return `Trigger price must be greater than ${quote_min}`;
+    }
+  }, [editing, price, isAlgoOrder, isBracketOrder]);
+
   const closePopover = () => {
     setOpen(false);
-    setEditting(false);
+    setEditing(false);
   };
   const cancelPopover = () => {
     setPrice(order.trigger_price?.toString() ?? "0");
     setOpen(false);
-    setEditting(false);
+    setEditing(false);
   };
 
   const componentRef = useRef<HTMLDivElement | null>(null);
@@ -57,13 +68,13 @@ export const TriggerPrice = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open]);
+  }, [open, order.trigger_price]);
 
   const onClick = (event: any) => {
     event?.stopPropagation();
     event?.preventDefault();
 
-    setEditting(false);
+    setEditing(false);
 
     if (Number(price) === Number(order.trigger_price)) {
       return;
@@ -93,6 +104,9 @@ export const TriggerPrice = (props: {
   };
 
   const onConfirm = () => {
+    if ((hintInfo ?? "").length > 0) {
+      return;
+    }
     setIsSubmitting(true);
 
     let data: any = {
@@ -129,16 +143,16 @@ export const TriggerPrice = (props: {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  if (!isAlgoOrder) {
+  if (!isAlgoOrder || isBracketOrder) {
     return <Text>{`--`}</Text>;
   }
   const trigger = () => {
-    if (!editting || props.disableEdit) {
+    if (!editing || props.disableEdit) {
       return (
         <NormalState
           order={order}
           price={price}
-          setEditing={setEditting}
+          setEditing={setEditing}
           disableEdit={props.disableEdit}
         />
       );
@@ -149,11 +163,12 @@ export const TriggerPrice = (props: {
         inputRef={inputRef}
         dp={quote_dp}
         value={price}
-        setPrice={setPrice}
-        setEditting={setEditting}
+        setValue={setPrice}
+        setEditing={setEditing}
         handleKeyDown={handleKeyDown}
         onClick={onClick}
         onClose={cancelPopover}
+        hintInfo={hintInfo}
       />
     );
   };
@@ -173,7 +188,15 @@ export const TriggerPrice = (props: {
         />
       }
     >
-      <div ref={componentRef}>{trigger()}</div>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        ref={componentRef}
+      >
+        {trigger()}
+      </div>
     </Popover>
   );
 };
@@ -190,7 +213,7 @@ const NormalState: FC<{
     <div
       className={cn(
         "oui-flex oui-max-w-[110px] oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold",
-        grayCell(order) && "oui-text-base-conrast-20"
+        grayCell(order) && "oui-text-base-contrast-20"
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -202,7 +225,8 @@ const NormalState: FC<{
         r="base"
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
-          !props.disableEdit && "oui-bg-base-7 oui-px-2"
+          !props.disableEdit &&
+            "oui-bg-base-7 oui-px-2 oui-border oui-border-line-12"
         )}
       >
         <Text size="2xs">{price}</Text>

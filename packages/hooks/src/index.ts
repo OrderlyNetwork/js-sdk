@@ -31,32 +31,35 @@ export { useSimpleDI } from "./useSimpleDI";
 export * from "./orderlyContext";
 export * from "./statusProvider";
 export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
-export type { ConfigProviderProps } from "./configProvider";
+export type {
+  ConfigProviderProps,
+  ConfigProviderExclusionProps,
+} from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
+export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {
   WalletConnectorContext,
   type ConnectedChain,
   useWalletConnector,
-  type WalletState
+  type WalletState,
 } from "./walletConnectorContext";
 
 export * from "./orderly/orderlyHooks";
 
-import useSWR, {
-  type SWRConfiguration,
-  SWRConfig,
-  useSWRConfig,
-  unstable_serialize
-} from "swr";
+export { useOrderEntry as useOrderEntry_deprecated } from "./deprecated/useOrderEntry";
+export type {
+  UseOrderEntryMetaState,
+  OrderParams,
+} from "./deprecated/useOrderEntry";
 
 export {
-  useSWR,
-  SWRConfig,
+  default as useSWR,
+  // SWRConfig,
   useSWRConfig,
   type SWRConfiguration,
-  unstable_serialize
-};
+  unstable_serialize,
+} from "swr";
 
 export * from "use-debounce";
 
@@ -66,7 +69,7 @@ export { usePoster } from "./usePoster";
 export { DefaultLayoutConfig } from "./services/painter/layout.config";
 export type {
   PosterLayoutConfig,
-  DrawOptions
+  DrawOptions,
 } from "./services/painter/basePaint";
 
 export * from "./orderly/orderlyHooks";

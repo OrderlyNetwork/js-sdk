@@ -19,7 +19,6 @@ import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
 import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
 import { getDropDownMarketsColumns } from "./column";
-import "../../style/index.css";
 
 export type DropDownMarketsProps = UseDropDownMarketsScriptReturn & {
   contentClassName?: string;
@@ -29,7 +28,7 @@ export const DropDownMarkets: React.FC<
   PropsWithChildren<DropDownMarketsProps>
 > = (props) => {
   return (
-    <DropdownMenuRoot>
+    <DropdownMenuRoot open={props.open} onOpenChange={props.onOpenChange}>
       <DropdownMenuTrigger asChild>{props.children}</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
@@ -39,11 +38,11 @@ export const DropDownMarkets: React.FC<
           alignOffset={-32}
           sideOffset={20}
           className={cn(
-            "oui-markets-dropdown-menu-content oui-bg-base-8",
+            "oui-markets-dropdown-menu-content oui-bg-base-8 oui-p-0",
             props.contentClassName
           )}
         >
-          <DropDownMarketsConetnt {...props} />
+          <DropDownMarketsConetnt {...props} hide={props.hide} />
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
@@ -53,10 +52,9 @@ export const DropDownMarkets: React.FC<
 export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
   props
 ) => {
-  const { activeTab, onTabChange } = props;
+  const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
-  const { searchValue, onSearchValueChange, clearSearchValue } =
-    useMarketsContext();
+  const { searchValue, onSearchValueChange } = useMarketsContext();
 
   const search = (
     <Flex mx={3} gapX={3} pt={3} pb={2}>
@@ -78,7 +76,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       <CloseIcon
         size={12}
         className="oui-text-base-contrast-80 oui-cursor-pointer"
-        onClick={clearSearchValue}
+        onClick={props.hide}
         opacity={1}
       />
     </Flex>
@@ -107,21 +105,41 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <div className={cls}>
-            <FavoritesListWidget getColumns={getDropDownMarketsColumns} />
+            <FavoritesListWidget
+              getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
+            />
           </div>
         </TabPanel>
         <TabPanel title="Recent" value="recent">
           <div className={cls}>
-            <RecentListWidget getColumns={getDropDownMarketsColumns} />
+            <RecentListWidget
+              getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
+            />
           </div>
         </TabPanel>
         <TabPanel title="All" value="all">
           <div className={cls}>
             <MarketsListWidget
               type="all"
-              sortKey="24h_amount"
-              sortOrder="desc"
+              sortKey={tabSort?.sortKey}
+              sortOrder={tabSort?.sortOrder}
+              onSort={onTabSort}
               getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
             />
           </div>
         </TabPanel>

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useConfig, useQuery, useSWR } from ".";
-import { request } from "@orderly.network/net/src/fetch";
 import { getGlobalObject } from "@orderly.network/utils";
 
 export const usePreLoadData = () => {

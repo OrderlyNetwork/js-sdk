@@ -12,12 +12,11 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
-import "../../style/index.css";
 
 export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
 
 export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
-  const { activeTab, onTabChange } = props;
+  const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
@@ -69,20 +68,32 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <div className={cls}>
-            <FavoritesListWidget />
+            <FavoritesListWidget
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
+            />
           </div>
         </TabPanel>
         <TabPanel title="Recent" value="recent">
           <div className={cls}>
-            <RecentListWidget />
+            <RecentListWidget
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
+            />
           </div>
         </TabPanel>
         <TabPanel title="All" value="all">
           <div className={cls}>
             <MarketsListWidget
               type="all"
-              sortKey="24h_amount"
-              sortOrder="desc"
+              sortKey={tabSort?.sortKey}
+              sortOrder={tabSort?.sortOrder}
+              onSort={onTabSort}
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
             />
           </div>
         </TabPanel>

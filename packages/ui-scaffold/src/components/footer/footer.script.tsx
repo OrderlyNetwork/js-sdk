@@ -1,19 +1,13 @@
 import { useWsStatus, WsNetworkStatus } from "@orderly.network/hooks";
-import { FooterConfig } from ".";
-import { useScaffoldContext } from "../scaffoldContext";
 
 export type FooterReturns = {
-    wsStatus: WsNetworkStatus,
-    config?: FooterConfig,
+  wsStatus: WsNetworkStatus;
 };
 
 export const useFooterScript = (): FooterReturns => {
+  const wsStatus = useWsStatus();
 
-    const wsStatus = useWsStatus();
-    const { footerConfig } = useScaffoldContext();
-
-    return {
-        wsStatus,
-        config: footerConfig,
-    };
+  return {
+    wsStatus,
+  };
 };

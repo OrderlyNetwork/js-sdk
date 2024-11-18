@@ -39,6 +39,15 @@
       "@orderly.network/ui-transfer": ["../../packages/ui-transfer/src"],
       "@orderly.network/trading": ["../../packages/trading/src"],
       "@orderly.network/ui-order-entry": ["../../packages/ui-order-entry/src"],
+      "@orderly.network/default-evm-adapter": [
+        "../../packages/default-evm-adapter/src"
+      ],
+      "@orderly.network/default-solana-adapter": [
+        "../../packages/default-solana-adapter/src"
+      ],
+      "@orderly.network/wallet-connector": [
+        "../../packages/wallet-connector/src"
+      ],
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
       ],
@@ -46,7 +55,7 @@
         "../../packages/ui-cross-deposit/src"
       ],
       "@orderly.network/ui-tradingview": ["../../packages/ui-tradingview/src"],
-      "@orderly.network/react": ["../../packages/component/src"],
+      "@orderly.network/ui-tpsl": ["../../packages/ui-tpsl/src"],
     }
   },
   "include": [

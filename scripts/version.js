@@ -145,7 +145,32 @@ async function updateCreateOrderlyPkg() {
 
   await wirteVersionFile(
     path.resolve(packageSrc, "types/src", "version.ts"),
-    generateVersionFile("@orderly.network/type", typePackageJson.content.version)
+    generateVersionFile(
+      "@orderly.network/type",
+      typePackageJson.content.version
+    )
+  );
+  const evmAdapterPackageJson = await PackageJson.load(
+    path.resolve(packageSrc, "default-evm-adapter")
+  );
+
+  await wirteVersionFile(
+    path.resolve(packageSrc, "default-evm-adapter/src", "version.ts"),
+    generateVersionFile(
+      "@orderly.network/default-evm-adapter",
+      evmAdapterPackageJson.content.version
+    )
+  );
+  const solanaAdapterPackageJson = await PackageJson.load(
+    path.resolve(packageSrc, "default-solana-adapter")
+  );
+
+  await wirteVersionFile(
+    path.resolve(packageSrc, "default-solana-adapter/src", "version.ts"),
+    generateVersionFile(
+      "@orderly.network/default-solana-adapter",
+      solanaAdapterPackageJson.content.version
+    )
   );
 }
 

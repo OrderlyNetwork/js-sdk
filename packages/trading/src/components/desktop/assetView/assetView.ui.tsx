@@ -20,11 +20,13 @@ import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { FaucetWidget } from "./faucet/faucet.widget";
 
 interface StatusInfo {
   title: string;
   description: string;
   titleColor?: any;
+  titleClsName?: string;
 }
 
 interface TooltipContentProps {
@@ -33,7 +35,7 @@ interface TooltipContentProps {
 }
 
 interface TotalValueProps {
-  totalValue: number | null;
+  totalValue?: number;
   visible?: boolean;
   onToggleVisibility?: () => void;
 }
@@ -43,17 +45,19 @@ interface AssetDetailProps {
   description: ReactNode;
   formula: ReactNode;
   visible: boolean;
-  value: number | string;
+  value?: number | string;
   unit?: string;
   rule?: "percentages";
   isConnected?: boolean;
+  showPercentage?: boolean;
+  placeholder?: string;
 }
 
 interface AssetValueListProps {
   visible?: boolean;
-  freeCollateral: number | null;
-  marginRatioVal: number;
-  renderMMR: string;
+  freeCollateral?: number | null;
+  marginRatioVal?: number;
+  renderMMR?: string | number;
   isConnected: boolean;
 }
 
@@ -75,6 +79,8 @@ const useCurrentStatusText = (): StatusInfo => {
         return {
           title: "Connect wallet",
           description: "Please connect your wallet before starting to trade.",
+          titleClsName:
+            "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
         };
       case AccountStatusEnum.NotSignedIn:
         return {
@@ -97,7 +103,10 @@ const useCurrentStatusText = (): StatusInfo => {
   }, [state.status, wrongNetwork]);
 };
 
-const TooltipContent: FC<TooltipContentProps> = ({ description, formula }) => (
+export const TooltipContent: FC<TooltipContentProps> = ({
+  description,
+  formula,
+}) => (
   <div className="oui-leading-[1.5] oui-text-2xs oui-text-base-contrast-80 oui-min-w-[204px] oui-max-w-[240px]">
     <span>{description}</span>
     <Divider className="oui-border-white/10" my={2} />
@@ -106,7 +115,7 @@ const TooltipContent: FC<TooltipContentProps> = ({ description, formula }) => (
 );
 
 const TotalValue: FC<TotalValueProps> = ({
-  totalValue = 0,
+  totalValue,
   visible = true,
   onToggleVisibility,
 }) => (
@@ -118,6 +127,7 @@ const TotalValue: FC<TotalValueProps> = ({
       className={gradientTextVariants({ color: "brand" })}
       as="div"
       padding={false}
+      dp={2}
     >
       {totalValue ?? "--"}
     </Text.numeral>
@@ -145,6 +155,8 @@ const AssetDetail: FC<AssetDetailProps> = ({
   unit,
   rule,
   isConnected,
+  showPercentage = false,
+  placeholder,
 }) => (
   <Flex justify="between">
     <Tooltip
@@ -156,26 +168,25 @@ const AssetDetail: FC<AssetDetailProps> = ({
         size="2xs"
         color="neutral"
         weight="semibold"
-        className="oui-cursor-pointer"
+        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
       >
         {label}
       </Text>
     </Tooltip>
-    {isConnected !== false ? (
-      <Text.numeral
-        visible={visible}
-        size="2xs"
-        unit={unit}
-        unitClassName="oui-text-base-contrast-36"
-        as="div"
-        rule={rule}
-        padding={false}
-      >
-        {value ?? "--"}
-      </Text.numeral>
-    ) : (
-      <Text className="oui-text-base-contrast-36">--</Text>
-    )}
+    <Text.numeral
+      visible={visible}
+      size="2xs"
+      unit={unit}
+      unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
+      as="div"
+      rule={rule}
+      padding={false}
+      dp={2}
+      // suffix={value && unit}
+      placeholder={placeholder}
+    >
+      {value || "--"}
+    </Text.numeral>
   </Flex>
 );
 
@@ -194,11 +205,13 @@ const AssetValueList: FC<AssetValueListProps> = ({
 
   const toggleOpen = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
-    setOptionsOpen(!open);
-  }, [setOptionsOpen]);
+    setTimeout(() => {
+      setOptionsOpen(!open);
+    }, 0);
+  }, []);
 
   return (
-    <Box>
+    <Box className="oui-group">
       <Flex
         justify="center"
         gap={1}
@@ -208,42 +221,55 @@ const AssetValueList: FC<AssetValueListProps> = ({
       >
         <Divider className="oui-flex-1" />
         <ChevronDownIcon
-          size={18}
+          size={12}
           color="white"
           className={cn("oui-transition-transform", open && "oui-rotate-180")}
         />
         <Divider className="oui-flex-1" />
       </Flex>
-      <Collapsible open={open}>
-        <CollapsibleContent>
-          <Box className="oui-space-y-1.5">
-            <AssetDetail
-              label="Free collateral"
-              description="Free collateral for placing new orders."
-              formula="Free collateral = Total balance + Total unsettlement PnL - Total position initial margin"
-              visible={visible}
-              value={freeCollateral!}
-              unit="USDC"
-            />
-            <AssetDetail
-              label="Margin ratio"
-              description="The margin ratio represents the proportion of collateral relative to the total position value."
-              formula="Account margin ratio = (Total collateral value / Total position notional) * 100%"
-              visible={visible}
-              value={marginRatioVal}
-              isConnected={isConnected}
-              rule="percentages"
-            />
-            <AssetDetail
-              label="Maintenance margin ratio"
-              description="The minimum margin ratio required to protect your positions from being liquidated."
-              formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
-              visible={visible}
-              value={renderMMR}
-            />
-          </Box>
-        </CollapsibleContent>
-      </Collapsible>
+
+      <Box
+        style={{
+          transform: "translateZ(0)",
+        }}
+        className={cn(
+          "oui-space-y-1.5 oui-select-none oui-overflow-hidden",
+          "oui-transition-[max-height] oui-duration-150",
+          "group-hover:oui-will-change-[max-height]",
+          open ? "oui-max-h-[69px]" : "oui-max-h-0"
+        )}
+      >
+        <AssetDetail
+          label="Free collateral"
+          description="Free collateral for placing new orders."
+          formula="Free collateral = Total balance + Total unsettlement PnL - Total position initial margin"
+          visible={visible}
+          // TODO: change AssetDetail value
+          value={freeCollateral! === 0 ? ("0" as any) : freeCollateral}
+          unit="USDC"
+        />
+        <AssetDetail
+          label="Margin ratio"
+          description="The margin ratio represents the proportion of collateral relative to the total position value."
+          formula="Account margin ratio = (Total collateral value / Total position notional) * 100%"
+          visible={visible}
+          value={marginRatioVal}
+          isConnected={isConnected}
+          rule="percentages"
+          showPercentage={true}
+          placeholder="--%"
+        />
+        <AssetDetail
+          label="Maintenance margin ratio"
+          description="The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated."
+          formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
+          visible={visible}
+          value={renderMMR}
+          rule="percentages"
+          showPercentage={true}
+          placeholder="--%"
+        />
+      </Box>
     </Box>
   );
 };
@@ -261,16 +287,27 @@ export const AssetView: FC<AssetViewState> = ({
   renderMMR,
   isConnected,
 }) => {
-  const { title, description, titleColor } = useCurrentStatusText();
+  const { title, description, titleColor, titleClsName } =
+    useCurrentStatusText();
 
   return (
-    <Box>
+    <Box className="oui-relative">
       {title && description && (
         <Flex direction="column" gap={1} className="oui-mb-[32px]">
-          <Text size="lg" weight="bold" color={titleColor || "inherit"}>
+          <Text
+            size="lg"
+            weight="bold"
+            color={titleColor || "inherit"}
+            className={titleClsName}
+          >
             {title}
           </Text>
-          <Text size="2xs" color="neutral" weight="semibold">
+          <Text
+            size="2xs"
+            color="neutral"
+            weight="semibold"
+            className="oui-text-center"
+          >
             {description}
           </Text>
         </Flex>
@@ -296,6 +333,10 @@ export const AssetView: FC<AssetViewState> = ({
               <ArrowDownShortIcon color="white" opacity={1} />
               <Text>Deposit</Text>
             </Button>
+
+            <Box className="oui-mt-3">
+              <FaucetWidget />
+            </Box>
           </>
         ) : (
           <Box className="oui-space-y-4">
@@ -330,9 +371,17 @@ export const AssetView: FC<AssetViewState> = ({
                 <Text>Deposit</Text>
               </Button>
             </Flex>
+            <FaucetWidget />
           </Box>
         )}
       </AuthGuard>
+      <div
+        className="oui-pointer-events-none oui-rotate-180 oui-rounded-2xl oui-blur-[200px] oui-top-0 oui-bottom-0 oui-left-0 oui-right-0 oui-absolute"
+        style={{
+          background:
+            "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(159, 115, 241, 0) -48.92deg, rgba(242, 98, 181, 0) 125.18deg, #5FC5FF 193.41deg, #FFAC89 216.02deg, #8155FF 236.07deg, #789DFF 259.95deg, rgba(159, 115, 241, 0) 311.08deg, rgba(242, 98, 181, 0) 485.18deg)",
+        }}
+      />
     </Box>
   );
 };

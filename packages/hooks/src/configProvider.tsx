@@ -1,10 +1,9 @@
-import type { PropsWithChildren } from "react";
+import type { FC, PropsWithChildren } from "react";
 import React, { useLayoutEffect, useMemo } from "react";
 import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
   // MemoryConfigStore,
-  DefaultConfigStore,
   OrderlyKeyStore,
   getWalletAdapterFunc,
   WalletAdapterOptions,
@@ -24,19 +23,11 @@ import { StatusProvider } from "./statusProvider";
 import { SDKError } from "@orderly.network/types";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import type { Chains } from "./orderly/useChains";
-import { DefaultEVMAdapterWalletAdapter } from "@orderly.network/default-evm-adapter";
+import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
+import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+import { ExtendedConfigStore } from "./extendedConfigStore";
 // import { useParamsCheck } from "./useParamsCheck";
-
-type RequireOnlyOne<T, U extends keyof T = keyof T> = Omit<T, U> &
-  {
-    [K in U]-?: Required<Pick<T, K>> & Partial<Record<Exclude<U, K>, never>>;
-  }[U];
-
-type RequireAtLeastOne<T, R extends keyof T = keyof T> = Omit<T, R> &
-  {
-    [K in R]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<R, K>>>;
-  }[R];
 
 type filteredChains = {
   mainnet?: Chain[];
@@ -45,25 +36,35 @@ type filteredChains = {
 
 type filterChainsFunc = (config: ConfigStore) => filteredChains;
 
-export interface ConfigProviderProps {
-  configStore?: ConfigStore;
+export type BaseConfigProviderProps = {
   keyStore?: OrderlyKeyStore;
   contracts?: IContract;
   // getWalletAdapter?: getWalletAdapterFunc;
-  walletAdapters: WalletAdapter[];
-  brokerId: string;
-  brokerName: string;
-  networkId: NetworkId;
-
+  walletAdapters?: WalletAdapter[];
   chainFilter?: filteredChains | filterChainsFunc;
   customChains?: Chains<undefined, undefined>;
-}
+};
 
-export const OrderlyConfigProvider = (
-  props: PropsWithChildren<
-    RequireAtLeastOne<ConfigProviderProps, "brokerId" | "configStore">
-  >
-) => {
+export type ConfigProviderExclusionProps =
+  | {
+      brokerId: string;
+      brokerName?: string;
+      networkId: NetworkId;
+      configStore?: never;
+    }
+  | {
+      brokerId?: never;
+      brokerName?: never;
+      networkId?: never;
+      configStore: ConfigStore;
+    };
+
+export type ConfigProviderProps = BaseConfigProviderProps &
+  ConfigProviderExclusionProps;
+
+export const OrderlyConfigProvider: FC<
+  PropsWithChildren<ConfigProviderProps>
+> = (props) => {
   const [account, setAccount] = React.useState<Account | null>(null);
   const {
     configStore,
@@ -82,12 +83,12 @@ export const OrderlyConfigProvider = (
     console.error("[OrderlyConfigProvider]: brokerId is required");
   }
 
-  if (typeof walletAdapters === "undefined") {
-    console.error(
-      "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
-        "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
-    );
-  }
+  // if (typeof walletAdapters === "undefined") {
+  //   console.error(
+  //     "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
+  //       "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
+  //   );
+  // }
 
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
@@ -99,7 +100,7 @@ export const OrderlyConfigProvider = (
   if (
     typeof brokerId !== "undefined" &&
     typeof configStore !== "undefined" &&
-    brokerId !== configStore.get("brokerId")
+    brokerId !== (configStore as ConfigStore).get("brokerId")
   ) {
     throw new SDKError(
       "If you have provided a custom `configStore` and the `brokerId` is set in the `configStore`, please remove the `brokerId` prop."
@@ -108,7 +109,8 @@ export const OrderlyConfigProvider = (
 
   const innerConfigStore = useConstant<ConfigStore>(() => {
     return new ProxyConfigStore(
-      configStore || new DefaultConfigStore({ brokerId, brokerName, networkId })
+      configStore ||
+        new ExtendedConfigStore({ brokerId, brokerName, networkId })
     );
   });
 
@@ -126,7 +128,8 @@ export const OrderlyConfigProvider = (
   const innerWalletAdapters = useConstant<WalletAdapter[]>(() => {
     return (
       walletAdapters || [
-        new DefaultEVMAdapterWalletAdapter(new EthersProvider()),
+        new DefaultEVMWalletAdapter(new EthersProvider()),
+        new DefaultSolanaWalletAdapter(),
       ]
     );
   });
@@ -142,7 +145,7 @@ export const OrderlyConfigProvider = (
         innerConfigStore,
         innerKeyStore,
         // innerGetWalletAdapter,
-        walletAdapters,
+        innerWalletAdapters,
         {
           contracts,
         }
@@ -172,7 +175,7 @@ export const OrderlyConfigProvider = (
         configStore: innerConfigStore,
         keyStore: innerKeyStore,
         // getWalletAdapter: innerGetWalletAdapter,
-        networkId: networkId,
+        networkId: innerConfigStore.get("networkId") || networkId,
         filteredChains: filteredChains,
         walletAdapters: innerWalletAdapters,
         // apiBaseUrl,

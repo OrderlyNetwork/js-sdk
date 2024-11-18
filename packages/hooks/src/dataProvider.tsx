@@ -29,7 +29,6 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
    *  hidden view while the required data is not ready
    */
   const { error, done } = usePreLoadData();
-  const { get } = useSimpleDI<CalculatorService>();
 
   const calculatorService = useCalculatorService();
 

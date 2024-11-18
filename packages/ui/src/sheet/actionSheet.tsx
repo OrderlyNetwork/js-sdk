@@ -46,7 +46,7 @@ export const ActionItem: FC<ActionSheetItemProps> = (props) => {
       className={cn(
         "oui-flex oui-justify-center oui-items-center oui-text-lg oui-h-[52px] oui-cursor-pointer",
 
-        props.active && "oui-text-primary"
+        props.active && "oui-text-primary-darken"
       )}
       onClick={onItemClick}
     >

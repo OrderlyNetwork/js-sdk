@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Decimal } from "@orderly.network/utils";
-import { useMarketList, useQuery, MarketsType } from "@orderly.network/hooks";
+import { useMarkets, useQuery, MarketsType } from "@orderly.network/hooks";
 import { sortList, useSize } from "../../../utils";
 
 // export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
@@ -43,7 +43,7 @@ export const useMarketsHeaderScript = () => {
 };
 
 export function useDataSource() {
-  const [markets, favorite] = useMarketList(MarketsType.ALL);
+  const [markets, favorite] = useMarkets(MarketsType.ALL);
   const { data: balance } = useQuery("/v1/public/balance/stats");
 
   const news = useMemo(

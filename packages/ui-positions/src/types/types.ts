@@ -1,5 +1,6 @@
 import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 import { PriceMode } from "@orderly.network/hooks";
+import { API } from "@orderly.network/types";
 
 
 export type PositionsProps = {
@@ -10,4 +11,5 @@ export type PositionsProps = {
   symbol?: string;
   calcMode?: PriceMode;
   includedPendingOrder?: boolean;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 };

@@ -93,7 +93,7 @@ export type BasicSymbolInfo = {
   quote: string;
 };
 
-export interface TradingPageState extends TradingPageV2Props {
+export interface TradingPageState extends TradingPageProps {
   symbolInfo: {
     base_dp: number;
     quote_dp: number;
@@ -155,20 +155,18 @@ type BaseTradingPageProps = {
   overrideFeatures?: Record<TradingFeatures, ReactNode>;
 };
 
-export type TradingPageProps = BaseTradingPageProps & {
+export type TradingPageV1Props = BaseTradingPageProps & {
   shareOptions: ShareOptions;
   referral: ReferralProps;
   tradingReward: TradingRewardsProps;
 };
 
-export type TradingPageV2Props = BaseTradingPageProps & {
-  dataList: {
-    sharePnLConfig?: SharePnLConfig &
-      Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
-  };
+export type TradingPageProps = BaseTradingPageProps & {
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   /** default is  `(max-width: 768px)`*/
   tabletMediaQuery?: string;
-  referral: ReferralPropsV2;
-  tradingRewards: TradingRewardsProps;
+  referral?: ReferralPropsV2;
+  tradingRewards?: TradingRewardsProps;
   bottomSheetLeading?: React.ReactNode | string;
 };

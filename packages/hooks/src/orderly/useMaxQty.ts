@@ -9,7 +9,7 @@ import { useCollateral } from "./useCollateral";
 
 import { pathOr } from "ramda";
 import { useOrderStream } from "./useOrderStream/useOrderStream";
-import { usePositions } from "./usePositionStream/usePositionStore";
+import { usePositions } from "./usePositionStream/usePosition.store";
 import { useAccountInfo } from "./appStore";
 
 // const positionsPath = pathOr([], [0, "rows"]);
@@ -29,7 +29,7 @@ export const useMaxQty = (
 
   const positions = usePositions();
 
-  const [orders] = useOrderStream({ status: OrderStatus.NEW });
+  const [orders] = useOrderStream({ status: OrderStatus.NEW, size: 100 });
 
   // const { data: accountInfo } =
   //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
@@ -49,7 +49,10 @@ export const useMaxQty = (
 
     // const positions = positionsPath(positionsData);
 
-    const positionQty = account.getQtyFromPositions(positions, symbol);
+    const positionQty = account.getQtyFromPositions(
+      positions === null ? [] : positions,
+      symbol
+    );
 
     if (reduceOnly) {
       if (positionQty > 0) {
@@ -92,9 +95,9 @@ export const useMaxQty = (
       OrderSide.SELL
     );
 
-    const otherPositions = positions.filter(
-      (item: API.Position) => item.symbol !== symbol
-    );
+    const otherPositions = !Array.isArray(positions)
+      ? []
+      : positions.filter((item: API.Position) => item.symbol !== symbol);
 
     const otherOrders = filterAlgoOrders.filter(
       (item: API.Order) => item.symbol !== symbol

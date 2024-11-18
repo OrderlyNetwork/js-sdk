@@ -4,8 +4,8 @@ import {
   OrderEntry,
   AdditionalInfoWidget,
 } from "@orderly.network/ui-order-entry";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { OrderlyApp } from "@orderly.network/react-app";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box } from "@orderly.network/ui";
 
 const meta = {

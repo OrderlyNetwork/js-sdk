@@ -13,7 +13,10 @@ export const SideMarketsWidget: React.FC<SideMarketsWidgetProps> = (props) => {
   });
 
   return (
-    <MarketsProvider onSymbolChange={props.onSymbolChange}>
+    <MarketsProvider
+      symbol={props.symbol}
+      onSymbolChange={props.onSymbolChange}
+    >
       <SideMarkets {...state} className={props.className} />
     </MarketsProvider>
   );

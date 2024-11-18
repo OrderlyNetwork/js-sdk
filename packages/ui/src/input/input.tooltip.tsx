@@ -15,15 +15,15 @@ export type InputWithTooltipProps = InputProps & {
   tooltipProps?: {
     content?: TooltipContentProps;
     arrow?: TooltipContentProps;
-
   };
+  triggerClassName?: string;
 };
 
 export const InputWithTooltip = forwardRef<
   HTMLInputElement,
   InputWithTooltipProps
 >((props, ref) => {
-  const { tooltip, tooltipProps, ...inputProps } = props;
+  const { tooltip, tooltipProps, triggerClassName, ...inputProps } = props;
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export const InputWithTooltip = forwardRef<
   return (
     <TooltipRoot open={open}>
       <TooltipTrigger asChild>
-        <div>
+        <div className={triggerClassName}>
           <Input {...inputProps} ref={ref} />
         </div>
       </TooltipTrigger>

@@ -1,0 +1,745 @@
+import {
+  AddOrderlyKeyInputs,
+  RegisterAccountInputs,
+  type SettleInputs,
+  type SignatureDomain,
+  type WithdrawInputs,
+} from "@orderly.network/core";
+import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
+import { AbiCoder, decodeBase58, solidityPackedKeccak256 } from "ethers";
+import { keccak256 } from "ethereum-cryptography/keccak";
+import {
+  ComputeBudgetProgram,
+  Connection,
+  PublicKey,
+  SystemProgram,
+  TransactionMessage,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { BN, Program } from "@coral-xyz/anchor";
+import { IDL as VaultIDL, SolanaVault } from "./idl/solana_vault";
+import {
+  getBrokerPDA,
+  getDefaultSendConfigPda,
+  getDefaultSendLibConfigPda,
+  getDvnConfigPda,
+  getEndorcedOptionsPda,
+  getEndpointSettingPda,
+  getEventAuthorityPda,
+  getExecutorConfigPda,
+  getLookupTableAccount,
+  getLookupTableAddress,
+  getMessageLibInfoPda,
+  getMessageLibPda,
+  getNoncePda,
+  getOAppConfigPda,
+  getPeerAddress,
+  getPeerPda,
+  getPriceFeedPda,
+  getSendConfigPda,
+  getSendLibConfigPda,
+  getSendLibInfoPda,
+  getSendLibPda,
+  getTokenPDA,
+  getUlnEventAuthorityPda,
+  getUlnSettingPda,
+  getUSDCAccounts,
+  getVaultAuthorityPda,
+} from "./solana.util";
+import {
+  DST_EID,
+  DVN_PROGRAM_ID,
+  ENDPOINT_PROGRAM_ID,
+  EXECUTOR_PROGRAM_ID,
+  PRICE_FEED_PROGRAM_ID,
+  SEND_LIB_PROGRAM_ID,
+  TREASURY_PROGRAM_ID,
+} from "./constant";
+import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
+
+export function addOrderlyKeyMessage(
+  inputs: AddOrderlyKeyInputs & { chainId: number }
+) {
+  const {
+    publicKey,
+    brokerId,
+    expiration = 365,
+    timestamp = Date.now(),
+    scope,
+    tag,
+    chainId,
+  } = inputs;
+  const message = {
+    brokerId: brokerId,
+    chainType: "SOL",
+    orderlyKey: publicKey,
+    scope: scope || "read,trading",
+    chainId,
+    timestamp,
+    ...(typeof tag !== "undefined" ? { tag } : {}),
+
+    expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
+  };
+
+  const brokerIdHash = solidityPackedKeccak256(["string"], [message.brokerId]);
+
+  const orderlyKeyHash = solidityPackedKeccak256(
+    ["string"],
+    [message.orderlyKey]
+  );
+  const scopeHash = solidityPackedKeccak256(["string"], [message.scope]);
+  const abicoder = AbiCoder.defaultAbiCoder();
+  const msgToSign = keccak256(
+    hexToBytes(
+      abicoder.encode(
+        ["bytes32", "bytes32", "bytes32", "uint256", "uint256", "uint256"],
+        [
+          brokerIdHash,
+          orderlyKeyHash,
+          scopeHash,
+          message.chainId,
+          message.timestamp,
+          message.expiration,
+        ]
+      )
+    )
+  );
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
+    msgToSignHex
+  );
+  return [message, msgToSignTextEncoded];
+}
+
+export function registerAccountMessage(
+  inputs: RegisterAccountInputs & {
+    chainId: number;
+  }
+) {
+  const { chainId, registrationNonce, brokerId, timestamp } = inputs;
+
+  const message = {
+    brokerId,
+    chainId,
+    timestamp,
+    registrationNonce,
+  };
+  const brokerIdHash = solidityPackedKeccak256(["string"], [message.brokerId]);
+  const abicoder = AbiCoder.defaultAbiCoder();
+  const msgToSign = keccak256(
+    hexToBytes(
+      abicoder.encode(
+        ["bytes32", "uint256", "uint256", "uint256"],
+        [
+          brokerIdHash,
+          message.chainId,
+          message.timestamp,
+          message.registrationNonce,
+        ]
+      )
+    )
+  );
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
+    msgToSignHex
+  );
+  return [message, msgToSignTextEncoded];
+}
+
+export function withdrawMessage(
+  inputs: WithdrawInputs & {
+    chainId: number;
+  }
+) {
+  const { chainId, receiver, token, amount, nonce, brokerId } = inputs;
+  const timestamp = Date.now();
+
+  const message = {
+    brokerId,
+    chainId,
+    receiver,
+    token: token,
+    amount: amount,
+    withdrawNonce: nonce,
+    timestamp,
+    chainType: "SOL",
+  };
+
+  const brokerIdHash = solidityPackedKeccak256(["string"], [message.brokerId]);
+  const tokenSymbolHash = solidityPackedKeccak256(["string"], [message.token]);
+  const salt = keccak256(Buffer.from("Orderly Network"));
+  const abicoder = AbiCoder.defaultAbiCoder();
+  const msgToSign = keccak256(
+    hexToBytes(
+      abicoder.encode(
+        [
+          "bytes32",
+          "bytes32",
+          "uint256",
+          "bytes32",
+          "uint256",
+          "uint64",
+          "uint64",
+          "bytes32",
+        ],
+        [
+          brokerIdHash,
+          tokenSymbolHash,
+          chainId,
+          hexToBytes(decodeBase58(message.receiver).toString(16)),
+          message.amount,
+          message.withdrawNonce,
+          timestamp,
+          salt,
+        ]
+      )
+    )
+  );
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
+    msgToSignHex
+  );
+  return [message, msgToSignTextEncoded];
+}
+
+export function settleMessage(
+  inputs: SettleInputs & {
+    chainId: number;
+  }
+) {
+  const { settlePnlNonce, brokerId, chainId, timestamp } = inputs;
+
+  const message = {
+    brokerId: brokerId,
+    chainId: chainId,
+    timestamp: timestamp,
+    chainType: "SOL",
+    settleNonce: settlePnlNonce,
+  };
+  const brokerIdHash = solidityPackedKeccak256(["string"], [brokerId]);
+
+  const abicoder = AbiCoder.defaultAbiCoder();
+  const msgToSign = keccak256(
+    hexToBytes(
+      abicoder.encode(
+        ["bytes32", "uint256", "uint64", "uint64"],
+        [brokerIdHash, message.chainId, message.settleNonce, message.timestamp]
+      )
+    )
+  );
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
+    msgToSignHex
+  );
+  return [message, msgToSignTextEncoded];
+}
+
+export enum MsgType {
+  Deposit = 0,
+  // Add other message types if needed
+}
+
+export interface LzMessage {
+  msgType: MsgType;
+  payload: Buffer;
+}
+
+export function encodeLzMessage(message: LzMessage): Buffer {
+  const msgTypeBuffer = Buffer.alloc(1);
+  msgTypeBuffer.writeUInt8(message.msgType);
+  return Buffer.concat([msgTypeBuffer, message.payload]);
+}
+
+export async function getDepositQuoteFee({
+  vaultAddress,
+  userAddress,
+  connection,
+                                           depositData,
+}: {
+  vaultAddress: string;
+  userAddress: string;
+  connection: Connection;
+  depositData:  {
+    tokenHash: string;
+    brokerHash: string;
+    accountId: string;
+    USDCAddress: string;
+    tokenAmount: string;
+  }
+}) {
+  console.log("-- vaultAddress", vaultAddress);
+  const appProgramId = new PublicKey(vaultAddress);
+  const program = new Program<SolanaVault>(VaultIDL, appProgramId, {
+    connection,
+  });
+  const userPublicKey = new PublicKey(userAddress);
+
+  const oappConfigPDA = getOAppConfigPda(appProgramId);
+  const peerPDA = getPeerPda(appProgramId, oappConfigPDA, DST_EID);
+  const endorcedPDA = getEndorcedOptionsPda(
+    appProgramId,
+    oappConfigPDA,
+    DST_EID
+  );
+  const sendLibConfigPDA = getSendLibConfigPda(oappConfigPDA, DST_EID);
+  const defaultSendLibPDA = getDefaultSendLibConfigPda(DST_EID);
+
+  const endpointSettingPDA = getEndpointSettingPda();
+  const noncePDA = getNoncePda(appProgramId, oappConfigPDA, DST_EID);
+  const sendConfigPDA = getSendConfigPda(oappConfigPDA, DST_EID);
+  const defaultSendConfigPDA = getDefaultSendConfigPda(DST_EID);
+  const executorConfigPDA = getExecutorConfigPda();
+  const priceFeedPDA = getPriceFeedPda();
+  const dvnConfigPDA = getDvnConfigPda();
+
+  const messageLibPDA = getMessageLibPda(SEND_LIB_PROGRAM_ID);
+  const messageLibInfoPDA = getMessageLibInfoPda(messageLibPDA);
+  const vaultAuthorityPDA = getVaultAuthorityPda(appProgramId);
+
+  const depositParams = getDepositParams(userAddress, depositData)
+
+  // deposit fee
+  const quoteFee = await program.methods
+    .oappQuote(depositParams)
+    .accounts({
+      oappConfig: oappConfigPDA,
+      peer: peerPDA,
+      enforcedOptions: endorcedPDA,
+      vaultAuthority: vaultAuthorityPDA,
+    })
+    .remainingAccounts([
+      // ENDPOINT solana/programs/programs/uln/src/instructions/endpoint/send.rs
+      {
+        pubkey: ENDPOINT_PROGRAM_ID,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: SEND_LIB_PROGRAM_ID,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: sendLibConfigPDA, // send_library_config
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: defaultSendLibPDA, // default_send_library_config
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: messageLibInfoPDA, // send_library_info
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: endpointSettingPDA, // endpoint settings
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: noncePDA, // nonce
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: messageLibPDA,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: sendConfigPDA,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: defaultSendConfigPDA,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: EXECUTOR_PROGRAM_ID,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: executorConfigPDA,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: PRICE_FEED_PROGRAM_ID,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: priceFeedPDA,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: DVN_PROGRAM_ID,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: dvnConfigPDA,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: PRICE_FEED_PROGRAM_ID,
+        isWritable: false,
+        isSigner: false,
+      },
+      {
+        pubkey: priceFeedPDA,
+        isWritable: false,
+        isSigner: false,
+      },
+    ])
+    .instruction();
+
+  const lastBlockHash = await connection.getLatestBlockhash();
+
+  const lookupTableAddress = getLookupTableAddress(appProgramId);
+  const lookupTableAccount = await getLookupTableAccount(
+    connection,
+    lookupTableAddress
+  );
+  if (!lookupTableAccount) {
+    console.log("-- lookup table account error");
+    throw new Error("-- lookup table account error");
+  }
+  const feeMsg = new TransactionMessage({
+    payerKey: userPublicKey,
+    recentBlockhash: lastBlockHash.blockhash,
+    instructions: [quoteFee],
+  }).compileToV0Message([lookupTableAccount]);
+
+  const feeTx = new VersionedTransaction(feeMsg);
+
+  const feeRes = await connection.simulateTransaction(feeTx);
+
+  // console.log('-- feeRes', feeRes);
+  const returnPrefix = `Program return: ${program.programId} `;
+  const returnLogEntry = feeRes.value.logs!.find((log) =>
+    log.startsWith(returnPrefix)
+  );
+  if (!returnLogEntry) {
+    throw new Error("get deposit fee error");
+  }
+
+  // Slice out the prefix to get the base64 return data
+  const encodedReturnData = returnLogEntry.slice(returnPrefix.length);
+
+  // Convert the Base64 return data
+  const decodedBuffer = Buffer.from(encodedReturnData, "base64");
+  console.log(
+    decodedBuffer.readBigUInt64LE(0),
+    decodedBuffer.readBigUInt64LE(1)
+  );
+  return decodedBuffer.readBigUInt64LE(0);
+}
+const getDepositParams = (userAddress: string, depositData:  {
+  tokenHash: string;
+  brokerHash: string;
+  accountId: string;
+  USDCAddress: string;
+  tokenAmount: string;
+}) => {
+  const brokerHash = depositData.brokerHash;
+  const codedBrokerHash = Array.from(Buffer.from(brokerHash.slice(2), "hex"));
+
+  const tokenHash = depositData.tokenHash;
+  const codedTokenHash = Array.from(Buffer.from(tokenHash.slice(2), "hex"));
+
+  const solAccountId = depositData.accountId;
+  const codedAccountId = Array.from(Buffer.from(solAccountId.slice(2), "hex"));
+  const userPublicKey = new PublicKey(userAddress);
+
+
+  return  {
+    accountId: codedAccountId,
+    brokerHash: codedBrokerHash,
+    tokenHash: codedTokenHash,
+    userAddress: Array.from(userPublicKey.toBuffer()),
+    tokenAmount: new BN(depositData.tokenAmount),
+  };
+}
+
+export async function deposit({
+  vaultAddress,
+  userAddress,
+  connection,
+  sendTransaction,
+  depositData,
+}: {
+  vaultAddress: string;
+  userAddress: string;
+  connection: Connection;
+  sendTransaction: WalletAdapterProps["sendTransaction"];
+  depositData: {
+    tokenHash: string;
+    brokerHash: string;
+    accountId: string;
+    USDCAddress: string;
+    tokenAmount: string;
+  };
+}) {
+  const brokerHash = depositData.brokerHash;
+  const tokenHash = depositData.tokenHash;
+
+  const appProgramId = new PublicKey(vaultAddress);
+  const program = new Program<SolanaVault>(VaultIDL, appProgramId, {
+    connection,
+  });
+  const usdc = new PublicKey(depositData.USDCAddress);
+  const userPublicKey = new PublicKey(userAddress);
+  const userUSDCAccount = getUSDCAccounts(usdc, userPublicKey);
+  const vaultAuthorityPda = getVaultAuthorityPda(appProgramId);
+  const vaultUSDCAccount = getUSDCAccounts(usdc, vaultAuthorityPda);
+  const allowedBrokerPDA = getBrokerPDA(appProgramId, brokerHash);
+  const allowedTokenPDA = getTokenPDA(appProgramId, tokenHash);
+  const oappConfigPDA = getOAppConfigPda(appProgramId);
+  console.log("-- oappconfig pda", oappConfigPDA.toBase58());
+  // const lzPDA = getLzReceiveTypesPda(appProgramId, oappConfigPDA);
+  const peerPDA = getPeerPda(appProgramId, oappConfigPDA, DST_EID);
+  const endorcedPDA = getEndorcedOptionsPda(
+    appProgramId,
+    oappConfigPDA,
+    DST_EID
+  );
+  const sendLibPDA = getSendLibPda();
+  const sendLibConfigPDA = getSendLibConfigPda(oappConfigPDA, DST_EID);
+  const defaultSendLibPDA = getDefaultSendLibConfigPda(DST_EID);
+  const sendLibInfoPDA = getSendLibInfoPda(sendLibPDA);
+
+  const endpointSettingPDA = getEndpointSettingPda();
+  const noncePDA = getNoncePda(appProgramId, oappConfigPDA, DST_EID);
+  const eventAuthorityPDA = getEventAuthorityPda();
+  const ulnSettingPDA = getUlnSettingPda();
+  const sendConfigPDA = getSendConfigPda(oappConfigPDA, DST_EID);
+  const defaultSendConfigPDA = getDefaultSendConfigPda(DST_EID);
+  const ulnEventAuthorityPDA = getUlnEventAuthorityPda();
+  const executorConfigPDA = getExecutorConfigPda();
+  const priceFeedPDA = getPriceFeedPda();
+  const dvnConfigPDA = getDvnConfigPda();
+
+  const vaultDepositParams = getDepositParams(userAddress, depositData);
+
+  const fee = await getDepositQuoteFee({
+    vaultAddress,
+    userAddress,
+    connection,
+    depositData,
+  });
+
+  const sendParam = {
+    nativeFee: new BN(fee.toString()),
+    lzTokenFee: new BN(0),
+  };
+
+  // const sendParam = {
+  //     nativeFee: new BN(1_000_000_000),
+  //     lzTokenFee:new BN(0),
+  //
+  // }
+  console.log("--- value params", {
+    vaultDepositParams,
+    sendParam,
+  });
+  const ixDepositEntry = await program.methods
+    .deposit(vaultDepositParams, sendParam)
+    .accounts({
+      userTokenAccount: userUSDCAccount,
+      vaultAuthority: vaultAuthorityPda,
+      vaultTokenAccount: vaultUSDCAccount,
+      depositToken: usdc,
+      user: userPublicKey,
+      peer: peerPDA,
+      enforcedOptions: endorcedPDA,
+      oappConfig: oappConfigPDA,
+      allowedBroker: allowedBrokerPDA,
+      allowedToken: allowedTokenPDA,
+    })
+    .remainingAccounts([
+      // ENDPOINT solana/programs/programs/uln/src/instructions/endpoint/send.rs
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: ENDPOINT_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 0
+        pubkey: oappConfigPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: SEND_LIB_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 7
+        pubkey: sendLibConfigPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 9
+        pubkey: defaultSendLibPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 8
+        pubkey: sendLibInfoPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 14
+        pubkey: endpointSettingPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: true,
+        // 15
+        pubkey: noncePDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 3
+        pubkey: eventAuthorityPDA,
+      },
+      // ULN solana/programs/programs/uln/src/instructions/endpoint/send.rs
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: ENDPOINT_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 13
+        pubkey: ulnSettingPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 10
+        pubkey: sendConfigPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 11
+        pubkey: defaultSendConfigPDA,
+      },
+      {
+        isSigner: true,
+        isWritable: false,
+        pubkey: userPublicKey,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: TREASURY_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: SystemProgram.programId,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 12
+        pubkey: ulnEventAuthorityPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: SEND_LIB_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: EXECUTOR_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: true,
+        // 16
+        pubkey: executorConfigPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: PRICE_FEED_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 17
+        pubkey: priceFeedPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: DVN_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: true,
+        // 18
+        pubkey: dvnConfigPDA,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        pubkey: PRICE_FEED_PROGRAM_ID,
+      },
+      {
+        isSigner: false,
+        isWritable: false,
+        // 17
+        pubkey: priceFeedPDA,
+      },
+    ])
+    .instruction();
+
+  const lookupTableAddress = getLookupTableAddress(appProgramId);
+  const lookupTableAccount = await getLookupTableAccount(
+    connection,
+    lookupTableAddress
+  );
+  if (!lookupTableAccount) {
+    console.log("-- lookup table account error");
+    return;
+  }
+
+  const ixAddComputeBudget = ComputeBudgetProgram.setComputeUnitLimit({
+    units: 400_000,
+  });
+
+  const lastBlockHash = await connection.getLatestBlockhash();
+  const msg = new TransactionMessage({
+    payerKey: userPublicKey,
+    recentBlockhash: lastBlockHash.blockhash,
+    instructions: [ixDepositEntry, ixAddComputeBudget],
+  }).compileToV0Message([lookupTableAccount]);
+
+  const tx = new VersionedTransaction(msg);
+
+  const res = await sendTransaction(tx, connection);
+  console.log("res", res);
+  return res;
+}

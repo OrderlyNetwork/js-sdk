@@ -1,7 +1,6 @@
 import { FC, useCallback, useMemo, useState } from "react";
 import { DesktopOrderBookCell } from "./cell.desktop";
 
-
 import {
   Tooltip,
   TooltipContent,
@@ -10,6 +9,7 @@ import {
   Flex,
   TooltipRoot,
   TooltipArrow,
+  cn,
 } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookCellType } from "../../base/orderBook/types";
@@ -185,10 +185,16 @@ const Tip: FC<{
         />
       </TooltipTrigger>
       <TooltipContent
-        className="oui-max-w-[400px] oui-w-full oui-text-2xs oui-shadow-md oui-rounded-base oui-p-3 oui-bg-base-6 oui-flex oui-flex-col oui-gap-2"
-        align="center"
+        className={cn(
+          "oui-max-w-[400px] oui-w-full oui-text-2xs oui-shadow-md oui-rounded-base oui-p-3 oui-bg-base-6 oui-flex oui-flex-col oui-gap-2",
+          // type === OrderBookCellType.ASK ? `oui-mb-${30}` : "oui-mt-0"
+        )}
+        align={
+          type === OrderBookCellType.ASK ? "end" : "start"
+        }
+        alignOffset={-25.4}
         side="left"
-        sideOffset={12}
+        sideOffset={2}
         onPointerEnter={(e) => e.preventDefault()}
       >
         <Row
@@ -207,7 +213,15 @@ const Tip: FC<{
           contentDp={quoteDp}
         />
 
-        <TooltipArrow className="oui-fill-base-6" />
+        <TooltipArrow
+          className="oui-fill-base-6"
+          style={{
+            transform:
+              type === OrderBookCellType.ASK
+                ? "translateX(80%)"
+                : "translateX(-80%)",
+          }}
+        />
       </TooltipContent>
     </TooltipRoot>
   );

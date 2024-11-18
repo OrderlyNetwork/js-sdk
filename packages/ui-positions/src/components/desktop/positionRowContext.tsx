@@ -9,7 +9,11 @@ import {
   useState,
 } from "react";
 
-import { useOrderEntry, useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  useOrderEntry_deprecated,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
+import { toast } from "@orderly.network/ui";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -29,6 +33,7 @@ export interface PositionsRowContextState {
   tpslOrder?: API.AlgoOrder;
   quoteDp?: number;
   baseDp?: number;
+  errors: any | undefined;
 }
 
 export const PositionsRowContext = createContext(
@@ -55,6 +60,8 @@ export const PositionsRowProvider: FC<
     props.position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY
   );
 
+  const [errors, setErrors] = useState<any | undefined>(undefined);
+
   const [type, setType] = useState<OrderType>(OrderType.MARKET);
 
   const config = useSymbolsInfo();
@@ -62,9 +69,8 @@ export const PositionsRowProvider: FC<
   const curSymbolInfo = config?.[symbol];
   const quoteDp = curSymbolInfo("quote_dp");
   const baseDp = curSymbolInfo("base_dp");
-  
 
-  const { helper, onSubmit, submitting } = useOrderEntry(
+  const { helper, onSubmit, submitting } = useOrderEntry_deprecated(
     props.position?.symbol!,
     side,
     true
@@ -117,6 +123,13 @@ export const PositionsRowProvider: FC<
     setPrice(newValues["order_price"] as string);
   };
 
+  useEffect(() => {
+    let order = closeOrderData;
+    helper.validator(order).then((value: any) => {
+      setErrors(value);
+    });
+  }, [closeOrderData]);
+
   const postOrder = () => {
     return onSubmit(closeOrderData);
   };
@@ -139,6 +152,7 @@ export const PositionsRowProvider: FC<
         closeOrderData,
         quoteDp,
         baseDp,
+        errors,
       }}
     >
       {props.children}

@@ -8,7 +8,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
 export const ShareIcon: FC<IconProps> = (props) => {
     const { size = 60, viewBox, ...rest } = props;
     return (
-        // <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="orderly-w-[60px] orderly-fill-primary" {...rest}>
+        // <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="orderly-w-[60px] orderly-fill-primary-darken" {...rest}>
         //     <path d="M30 41.25C30 47.4632 24.9632 52.5 18.75 52.5C12.5368 52.5 7.5 47.4632 7.5 41.25C7.5 35.0368 12.5368 30 18.75 30C24.9632 30 30 35.0368 30 41.25Z"  />
         //     <path fillRule="evenodd" clipRule="evenodd" d="M18.75 40.5C19.9926 40.5 21 39.4926 21 38.25C21 37.0074 19.9926 36 18.75 36C17.5074 36 16.5 37.0074 16.5 38.25C16.5 39.4926 17.5074 40.5 18.75 40.5ZM18.75 42.75C21.2353 42.75 23.25 40.7353 23.25 38.25C23.25 35.7647 21.2353 33.75 18.75 33.75C16.2647 33.75 14.25 35.7647 14.25 38.25C14.25 40.7353 16.2647 42.75 18.75 42.75Z" fill="white" fillOpacity="0.98" />
         //     <path fillRule="evenodd" clipRule="evenodd" d="M10.5273 48.9276C10.8156 45.8824 13.3798 43.5 16.5004 43.5H21.0004C24.121 43.5 26.6852 45.8824 26.9734 48.9276C26.3158 49.6317 25.5687 50.2512 24.7504 50.7682V49.5C24.7504 47.4289 23.0715 45.75 21.0004 45.75H16.5004C14.4293 45.75 12.7504 47.4289 12.7504 49.5V50.7682C11.9321 50.2512 11.185 49.6317 10.5273 48.9276Z" fill="white" fillOpacity="0.98" />
@@ -16,7 +16,7 @@ export const ShareIcon: FC<IconProps> = (props) => {
         // </svg>
 
 
-        <svg width="60" height="60" viewBox="0 0 60 60" fill="#335FFC" xmlns="http://www.w3.org/2000/svg" className="orderly-w-[60px] orderly-fill-primary" {...rest}>
+        <svg width="60" height="60" viewBox="0 0 60 60" fill="#335FFC" xmlns="http://www.w3.org/2000/svg" className="orderly-w-[60px] orderly-fill-primary-darken" {...rest}>
             <path d="M30 41.25C30 47.4632 24.9632 52.5 18.75 52.5C12.5368 52.5 7.5 47.4632 7.5 41.25C7.5 35.0368 12.5368 30 18.75 30C24.9632 30 30 35.0368 30 41.25Z"  />
             <path fillRule="evenodd" clipRule="evenodd" d="M18.75 40.5C19.9926 40.5 21 39.4926 21 38.25C21 37.0074 19.9926 36 18.75 36C17.5074 36 16.5 37.0074 16.5 38.25C16.5 39.4926 17.5074 40.5 18.75 40.5ZM18.75 42.75C21.2353 42.75 23.25 40.7353 23.25 38.25C23.25 35.7647 21.2353 33.75 18.75 33.75C16.2647 33.75 14.25 35.7647 14.25 38.25C14.25 40.7353 16.2647 42.75 18.75 42.75Z" fill="white" fillOpacity="0.98" />
             <path fillRule="evenodd" clipRule="evenodd" d="M10.5273 48.9276C10.8156 45.8824 13.3798 43.5 16.5004 43.5H21.0004C24.121 43.5 26.6852 45.8824 26.9734 48.9276C26.3158 49.6317 25.5687 50.2512 24.7504 50.7682V49.5C24.7504 47.4289 23.0715 45.75 21.0004 45.75H16.5004C14.4293 45.75 12.7504 47.4289 12.7504 49.5V50.7682C11.9321 50.2512 11.185 49.6317 10.5273 48.9276Z" fill="white" fillOpacity="0.98" />

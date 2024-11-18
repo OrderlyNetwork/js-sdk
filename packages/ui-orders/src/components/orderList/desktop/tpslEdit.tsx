@@ -1,13 +1,19 @@
-import { Button } from "@orderly.network/ui";
-import { TPSLEditorWidget } from "@orderly.network/ui-positions";
+import { API } from "@orderly.network/types";
+import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
+import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
+import { useSymbolContext } from "../symbolProvider";
 
-export const TP_SLEdit = (props: { order: any }) => {
+export const TP_SLEditButton = (props: { order: API.Order }) => {
+  const { position, order } = useTPSLOrderRowContext();
+  const { quote_dp, base_dp } = useSymbolContext();
   return (
-    <>
-      <Button size="sm" variant={"outlined"} color={"secondary"}>
-        Edit
-      </Button>
-      <TPSLEditorWidget position={props.order} />
-    </>
+    <PositionTPSLPopover
+      quoteDP={quote_dp}
+      baseDP={base_dp}
+      position={position!}
+      order={order}
+      label="Edit"
+      isEditing
+    />
   );
 };

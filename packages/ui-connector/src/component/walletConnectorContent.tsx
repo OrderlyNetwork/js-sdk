@@ -41,12 +41,12 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [firstShowDialog] = useLocalStorage(
-    "oui-first-show-wallet-connector-dialog",
+    "orderly-first-show-wallet-connector-dialog",
     undefined
   );
   useEffect(() => {
     return () => {
-      localStorage.setItem("oui-first-show-wallet-connector-dialog", "1");
+      localStorage.setItem("orderly-first-show-wallet-connector-dialog", "1");
     };
   }, []);
 
@@ -119,7 +119,12 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         },
         (reject) => {
           setLoading(false);
+
           if (reject === -1) return;
+          if (reject instanceof Error) {
+            toast.error(reject.message);
+            return;
+          }
           toast.error("User rejected the request");
         }
       )

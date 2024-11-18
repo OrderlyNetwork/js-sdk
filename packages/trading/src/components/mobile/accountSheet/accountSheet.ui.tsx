@@ -8,17 +8,18 @@ export const AccountSheet: FC<AccountSheetState> = (props) => {
   return (
     <Flex direction={"column"} gap={4}>
       <AccountInfo {...props} />
-      {(props.isAffiliate || props.isTrader) && <ReferralInfo {...props} />}
+      <ReferralInfo {...props} />
       <TradingRewardsInfo {...props} />
       <Flex gap={3} width={"100%"} justify={"center"}>
         {props.showGetTestUSDC && (
           <Button
             variant="outlined"
-            color="primary"
+            // color="primary"
             size="md"
             onClick={props.onGetTestUSDC}
             fullWidth
             loading={props.gettingTestUSDC}
+            className="oui-border-primary-light oui-text-primary-light"
           >
             Get test USDC
           </Button>
@@ -88,7 +89,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
       >
         <Flex justify={"between"} width={"100%"}>
           <Text size="2xs">Referral</Text>
-          <ArrowRightShortIcon color="white" opacity={0.98} />
+          <ArrowRightShortIcon color="white" opacity={0.98} size={16} />
         </Flex>
       </button>
       {props.isAffiliate && (
@@ -114,7 +115,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
               rm={Decimal.ROUND_DOWN}
               rule="price"
             >
-              {props.affiliateComission30D ?? "--"}
+              {props.affiliateCommission30D ?? "--"}
             </Text.numeral>
           </Flex>
         </Flex>
@@ -142,7 +143,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
               rm={Decimal.ROUND_DOWN}
               rule="price"
             >
-              {props.traderComission30D ?? "--"}
+              {props.traderCommission30D ?? "--"}
             </Text.numeral>
           </Flex>
         </Flex>
@@ -172,7 +173,7 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
           {props.curEpochId}
           <Text  intensity={54}>{" )"}</Text>
           </span>
-          <ArrowRightShortIcon color="white" opacity={0.98} />
+          <ArrowRightShortIcon color="white" opacity={0.98}  size={16}/>
         </Flex>
       </button>
       <Flex

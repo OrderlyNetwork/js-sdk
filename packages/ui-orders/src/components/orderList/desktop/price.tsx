@@ -1,6 +1,14 @@
 import { API } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
-import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
 
@@ -21,7 +29,7 @@ export const Price = (props: {
   );
 
   const [open, setOpen] = useState(false);
-  const [editting, setEditting] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
   // console.log("price node", order);
@@ -30,26 +38,49 @@ export const Price = (props: {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { editOrder, editAlgoOrder, checkMinNotional } =
-    useOrderListContext();
+  const { editOrder, editAlgoOrder, checkMinNotional } = useOrderListContext();
 
   const { base, quote_dp } = useSymbolContext();
+  const rangeInfo = useSymbolPriceRange(
+    order.symbol,
+    // @ts-ignore
+    order.side,
+    isAlgoOrder ? order.trigger_price : undefined
+  );
   const closePopover = () => {
     setOpen(false);
-    setEditting(false);
+    setEditing(false);
   };
   const cancelPopover = () => {
     setOpen(false);
     setPrice(order.price?.toString() ?? "Market");
-    setEditting(false);
+    setEditing(false);
   };
+
+  const hintInfo = useMemo(() => {
+    if (!rangeInfo) return "";
+    if (isStopMarket) return "";
+    if (!editing) return "";
+
+    if (Number(price) > rangeInfo.max) {
+      return `Price can not be greater than ${rangeInfo.max} USDC.`;
+    }
+    if (Number(price) < rangeInfo.min) {
+      return `Price can not be less than ${rangeInfo.min} USDC.`;
+    }
+    return "";
+  }, [isStopMarket, editing, rangeInfo, price]);
 
   const onClick = (event: any) => {
     event?.stopPropagation();
     event?.preventDefault();
 
+    if (hintInfo.length > 0) {
+      return;
+    }
+
     if (price === `${order.price}`) {
-      setEditting(false);
+      setEditing(false);
       return;
     }
 
@@ -132,8 +163,6 @@ export const Price = (props: {
         },
         (err: any) => {
           toast.error(err.message);
-
-          setPrice(order.price!.toString());
           cancelPopover();
         }
       )
@@ -141,27 +170,6 @@ export const Price = (props: {
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const rangeInfo = useSymbolPriceRange(
-    order.symbol,
-    // @ts-ignore
-    order.side,
-    isAlgoOrder ? order.trigger_price : undefined
-  );
-
-  const hintInfo = useMemo(() => {
-    if (!rangeInfo) return "";
-    if (isStopMarket) return "";
-    if (!editting) return "";
-
-    if (Number(price) > rangeInfo.max) {
-      return `Price can not be greater than ${rangeInfo.max} USDC.`;
-    }
-    if (Number(price) < rangeInfo.min) {
-      return `Price can not be less than ${rangeInfo.min} USDC.`;
-    }
-    return "";
-  }, [isStopMarket, editting, rangeInfo, price]);
 
   useEffect(() => {
     {
@@ -189,22 +197,21 @@ export const Price = (props: {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [open]);
+  }, [open, order.price]);
 
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
-  
   if (isAlgoMarketOrder || price === "Market") {
     return <span>Market</span>;
   }
 
   const trigger = () => {
-    if (!editting || props.disableEdit) {
+    if (!editing || props.disableEdit) {
       return (
         <NormalState
           order={order}
           price={price}
-          setEditing={setEditting}
+          setEditing={setEditing}
           disableEdit={props.disableEdit}
         />
       );
@@ -215,8 +222,8 @@ export const Price = (props: {
         inputRef={inputRef}
         dp={quote_dp}
         value={price}
-        setPrice={setPrice}
-        setEditting={setEditting}
+        setValue={setPrice}
+        setEditing={setEditing}
         handleKeyDown={handleKeyDown}
         onClick={onClick}
         onClose={cancelPopover}
@@ -240,7 +247,15 @@ export const Price = (props: {
         />
       }
     >
-      <div ref={componentRef}>{trigger()}</div>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        ref={componentRef}
+      >
+        {trigger()}
+      </div>
     </Popover>
   );
 };
@@ -257,7 +272,7 @@ const NormalState: FC<{
     <div
       className={cn(
         "oui-flex oui-max-w-[110px] oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold",
-        grayCell(order) && "oui-text-base-conrast-20"
+        grayCell(order) && "oui-text-base-contrast-20"
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -269,7 +284,8 @@ const NormalState: FC<{
         r="base"
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
-          !props.disableEdit && "oui-bg-base-7 oui-px-2"
+          !props.disableEdit &&
+            "oui-bg-base-7 oui-px-2  oui-border oui-border-line-12"
         )}
       >
         <Text size="2xs">{commifyOptional(price)}</Text>

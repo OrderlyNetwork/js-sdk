@@ -1,22 +1,7 @@
-import {
-  ArrowLeftRightIcon,
-  Button,
-  Card,
-  DataTable,
-  Divider,
-  EmptyDataState,
-  Flex,
-  PlusIcon,
-  Switch,
-  Text,
-} from "@orderly.network/ui";
-
+import { FC } from "react";
+import { Card, Flex, Switch, Text } from "@orderly.network/ui";
 import { SettingScriptReturns } from "./setting.script";
-import { FC, useState } from "react";
-import { Column } from "@orderly.network/ui";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { AuthGuard, AuthGuardEmpty, AuthGuardTooltip } from "@orderly.network/ui-connector";
-import { APIKeyItem } from "@orderly.network/hooks";
+import { AuthGuardTooltip } from "@orderly.network/ui-connector";
 
 export const Setting: FC<SettingScriptReturns> = (props) => {
   return (

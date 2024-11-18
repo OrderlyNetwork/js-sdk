@@ -27,7 +27,7 @@ const pickerVariants = tv({
       true: "oui-opacity-50 oui-cursor-not-allowed",
     },
     color: {
-      // primary: "text-primary",
+      // primary: "text-primary-darken",
       base: "oui-text-base-contract",
       buy: "oui-text-trade-profit",
       sell: "oui-text-trade-loss",
@@ -47,10 +47,12 @@ export interface PickerProps
     VariantProps<typeof pickerVariants> {
   loading?: boolean;
   label?: string;
+  placeholder?: string;
   options: SelectOption[];
   value?: SelectOption | string | number;
   onValueChange?: (value: any) => void;
 }
+
 
 export type PickerRef = {};
 export const Picker = forwardRef<PickerRef, PickerProps>(

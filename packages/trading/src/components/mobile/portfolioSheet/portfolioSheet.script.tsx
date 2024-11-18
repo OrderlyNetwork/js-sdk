@@ -14,6 +14,7 @@ export const usePortfolioSheetScript = () => {
   const { account } = useAccount();
   const assets = useAssets();
   const marginRatio = useMarginRatioAndLeverage();
+  const [showSliderTip, setShowSliderTip] = useState(false);
   const onSettlePnL = useCallback(async () => {
     return account
       .settle()
@@ -35,19 +36,16 @@ export const usePortfolioSheetScript = () => {
       });
   }, [account]);
   const onDeposit = useCallback(() => {
-
-     modal.show(DepositAndWithdrawWithSheetId, {
-        activeTab: 'desposit',
-      });
-
+    modal.show(DepositAndWithdrawWithSheetId, {
+      activeTab: "deposit",
+    });
   }, []);
   const onWithdraw = useCallback(() => {
     modal.show(DepositAndWithdrawWithSheetId, {
-        activeTab: 'withdraw',
-      });
+      activeTab: "withdraw",
+    });
   }, []);
-
-
+  
 
   return {
     ...assets,
@@ -55,6 +53,7 @@ export const usePortfolioSheetScript = () => {
     onSettlePnL,
     onDeposit,
     onWithdraw,
+    showSliderTip, setShowSliderTip,
   };
 };
 
@@ -92,34 +91,37 @@ const useMarginRatioAndLeverage = () => {
     );
   }, [marginRatio, aggregated]);
 
-  const [maxLeverage, { update, config: leverageLevers, isMutating }] =
+  const [curLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
 
-    const marks = useMemo((): SliderMarks => {
-        return (
-          leverageLevers?.map((e: number) => ({
-            label: `${e}x`,
-            value: e,
-          })) || []
-        );
-      }, [leverageLevers]);
+  const marks = useMemo((): SliderMarks => {
+    return (
+      leverageLevers?.map((e: number) => ({
+        label: `${e}x`,
+        value: e,
+      })) || []
+    );
+  }, [leverageLevers]);
 
-  const [leverage, setLeverage] = useState(maxLeverage ?? 0);
+  const [leverage, setLeverage] = useState(curLeverage ?? 0);
+
+  const maxLeverage = leverageLevers?.reduce((a: number, item: any) => Math.max(a, Number(item), 0))
 
   const step = 100 / ((marks?.length || 0) - 1);
 
-  const leverageValue = useMemo(() => {
-    const index = leverageLevers.findIndex((item: any) => item === leverage);
+  // const leverageValue = useMemo(() => {
+  //   const index = leverageLevers.findIndex((item: any) => item === leverage);
 
-    return index * step;
-  }, [leverageLevers, leverage, step]);
+  //   return index * step;
+  // }, [leverageLevers, leverage, step]);
 
   const onLeverageChange = (leverage: number) => {
+    // maxLeverage / 100 * leverage;
     setLeverage(leverage);
     // updateLeverage(leverage);
   };
 
-  const onSave = async () => {
+  const onSave = async (leverage: number) => {
     try {
       update({ leverage }).then(
         (res: any) => {
@@ -133,8 +135,7 @@ const useMarginRatioAndLeverage = () => {
   };
 
   const onValueCommit = useCallback((value: number[]) => {
-
-    onSave();
+    onSave(value[0] + 1);
   }, []);
 
   return {
@@ -150,20 +151,22 @@ const useMarginRatioAndLeverage = () => {
     marks,
     onLeverageChange,
     onValueCommit,
-    value: leverageValue,
+    value: leverage,
+    maxLeverage,
+    onSaveLeverage: onSave,
   };
 };
 
 export function getMarginRatioColor(marginRatio: number, mmr: number | null) {
-    if (mmr === null) {
-      return { isRed: false, isYellow: false, isGreen: true };
-    }
-    const imr = mmr * 2;
-  
-    const high = marginRatio <= imr;
-    const mid = marginRatio > imr && marginRatio < 1;
-    const low = marginRatio >= 1;
-    return { high, mid, low };
+  if (mmr === null) {
+    return { isRed: false, isYellow: false, isGreen: true };
   }
+  const imr = mmr * 2;
+
+  const high = marginRatio <= imr;
+  const mid = marginRatio > imr && marginRatio < 1;
+  const low = marginRatio >= 1;
+  return { high, mid, low };
+}
 
 export type PortfolioSheetState = ReturnType<typeof usePortfolioSheetScript>;

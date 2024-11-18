@@ -318,7 +318,7 @@ export const Dot: React.FC<{
   className?: string;
   activeClassName?: string;
 }> = ({ index, active, onClick, className, activeClassName }) => {
-  const activedClassName = activeClassName || "oui-bg-primary";
+  const activedClassName = activeClassName || "oui-bg-primary-darken";
   console.log("activedClassName is", activedClassName);
   
   return (

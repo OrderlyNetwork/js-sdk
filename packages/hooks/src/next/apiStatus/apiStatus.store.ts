@@ -8,6 +8,7 @@ export type ApiStatus = {
 
 type ApiStatusState = {
   apis: {
+    positions: ApiStatus;
     [Key: string]: ApiStatus;
   };
 };
@@ -24,7 +25,11 @@ export const useApiStatusStore = create<
   }
 >()(
   immer((set) => ({
-    apis: {},
+    apis: {
+      positions: {
+        loading: false,
+      },
+    },
     actions: {
       updateStatus: (key, status) => {
         set((state) => {

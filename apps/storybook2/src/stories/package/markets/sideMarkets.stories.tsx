@@ -1,6 +1,5 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import {
   ExpandMarketsWidget,
   FavoritesListWidget,
@@ -8,48 +7,27 @@ import {
   RecentListWidget,
   SideMarketsWidget,
 } from "@orderly.network/markets";
-import { Box, cn } from "@orderly.network/ui";
-import { CustomConfigStore } from "../CustomConfigStore";
-import { useState } from "react";
+import { Box } from "@orderly.network/ui";
 
-const networkId = "testnet";
-const configStore = new CustomConfigStore({ networkId, env: "staging" });
+const decorators = [
+  (Story: any) => (
+    <Box width={280} height={600} intensity={900}>
+      <Story />
+    </Box>
+  ),
+];
 
-
-const decorators = [(Story: any) => (
-  <Box width={280} height={600} intensity={900}>
-    <Story />
-  </Box>
-)]
-
-const meta = {
+const meta: Meta<typeof ExpandMarketsWidget> = {
   title: "Package/Markets/SideMarkets",
-  subcomponents: {},
-  decorators: [
-    (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyApp
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-          configStore={configStore}
-        >
-          <Story />
-        </OrderlyApp>
-      </ConnectorProvider>
-    ),
-  ],
-} satisfies Meta<typeof ExpandMarketsWidget>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-
-
 export const SideMarkets: Story = {
   render: (args) => {
     const [collapsed, setCollapsed] = useState(false);
-    const width = collapsed ? 70 : 280
+    const width = collapsed ? 70 : 280;
 
     return (
       <Box
@@ -63,14 +41,15 @@ export const SideMarkets: Story = {
         <SideMarketsWidget
           collapsed={collapsed}
           onCollapse={setCollapsed}
+          symbol="PERP_BTC_USDC"
           onSymbolChange={(symbol) => {
-            console.log('onSymbolChange', symbol);
+            console.log("onSymbolChange", symbol);
           }}
         />
       </Box>
-    )
+    );
   },
-  decorators: []
+  decorators: [],
   // decorators:[(Story: any) => (
   //   <Box height={600} intensity={900}>
   //     <Story />
@@ -83,21 +62,24 @@ export const ExpandMarkets: Story = {
     return (
       <ExpandMarketsWidget
         onSymbolChange={(symbol) => {
-          console.log('onSymbolChange', symbol);
+          console.log("onSymbolChange", symbol);
         }}
-      />)
+      />
+    );
   },
-  decorators
+  decorators,
 };
 
 export const CollapseMarkets: Story = {
   render: (args) => {
-    return <MarketsListWidget
-      type="all"
-      sortKey="24h_amount"
-      sortOrder="desc"
-      collapsed={true}
-    />
+    return (
+      <MarketsListWidget
+        type="all"
+        sortKey="24h_amount"
+        sortOrder="desc"
+        collapsed={true}
+      />
+    );
   },
   decorators: [
     (Story) => (
@@ -108,24 +90,44 @@ export const CollapseMarkets: Story = {
   ],
 };
 
-
 export const Favorites: Story = {
   render: (args) => {
-    return <FavoritesListWidget />
+    return (
+      <FavoritesListWidget
+        tableClassNames={{
+          scroll: "oui-px-1",
+        }}
+      />
+    );
   },
-  decorators
+  decorators,
 };
 
 export const Recent: Story = {
   render: (args) => {
-    return <RecentListWidget />
+    return (
+      <RecentListWidget
+        tableClassNames={{
+          scroll: "oui-px-1",
+        }}
+      />
+    );
   },
-  decorators
+  decorators,
 };
 
 export const All: Story = {
   render: (args) => {
-    return <MarketsListWidget type="all" sortKey="24h_amount" sortOrder="desc" />
+    return (
+      <MarketsListWidget
+        type="all"
+        sortKey="24h_amount"
+        sortOrder="desc"
+        tableClassNames={{
+          scroll: "oui-px-1",
+        }}
+      />
+    );
   },
-  decorators
+  decorators,
 };

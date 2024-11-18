@@ -159,6 +159,7 @@ export enum OrderCombinationType {
     TRAILING_STOP = 'TRAILING_STOP',
     POSITIONAL_TP_SL = 'POSITIONAL_TP_SL',
     TP_SL = 'TP_SL',
+    BRACKET= 'BRACKET',
     BRACKET_LIMIT = 'BRACKET_LIMIT',
     BRACKET_MARKET = 'BRACKET_MARKET',
     STOP_BRACKET_LIMIT = 'STOP_BRACKET_LIMIT',
@@ -249,6 +250,8 @@ export interface ColorConfigInterface{
     qtyTextColor?: string;
     font?: string;
     closeIcon?: string;
+    volumeUpColor?: string;
+    volumeDownColor?: string;
 }
 
 

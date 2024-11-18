@@ -5,15 +5,13 @@ import {
   useCurEpochEstimate,
   useEpochInfo,
   useMutation,
-  usePrivateQuery,
   useReferralInfo,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { isTestnet } from "@orderly.network/utils";
 import { useMemo } from "react";
-import { useTradingPageContext } from "../../../provider/context";
 import { ReferralPropsV2, TradingRewardsProps } from "../../../types/types";
 
 export const useAccountSheetScript = (
@@ -25,9 +23,9 @@ export const useAccountSheetScript = (
   const chainId = account.chainId;
   const { hide } = useModal();
 
-  console.log("props,", props);
+  const config = useConfig();
 
-  const { connectedChain, disconnect } = useWalletConnector();
+  const { connectedChain, disconnect, namespace } = useWalletConnector();
   const showGetTestUSDC = useMemo(() => {
     const chainId = connectedChain?.id;
     if (chainId === undefined) {
@@ -41,14 +39,16 @@ export const useAccountSheetScript = (
     );
   }, [state.status, connectedChain]);
 
+  const operatorUrl = config.get<string>("operatorUrl");
+
   const onCopyAddress = () => {
     navigator.clipboard.writeText(address ?? "");
     toast.success("Copy success");
   };
 
   const {
-    affiliateComission30D,
-    traderComission30D,
+    affiliateCommission30D,
+    traderCommission30D,
     isAffiliate,
     isTrader,
     onClickReferral,
@@ -65,9 +65,8 @@ export const useAccountSheetScript = (
     await account.disconnect();
     hide();
   };
-  const config = useConfig();
   const [getTestUSDC, { isMutating: gettingTestUSDC }] = useMutation(
-    `${config.get("operatorUrl")}/v1/faucet/usdc`
+    `${operatorUrl}/v1/faucet/usdc`
   );
   const onGetTestUSDC = () => {
     if (state.status < AccountStatusEnum.EnableTrading) {
@@ -77,6 +76,10 @@ export const useAccountSheetScript = (
       return;
     }
 
+    const message = `${
+      namespace === ChainNamespace.solana ? "100" : "1,000"
+    } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
+
     return getTestUSDC({
       chain_id: account.walletAdapter?.chainId.toString(),
       user_address: state.address,
@@ -84,12 +87,11 @@ export const useAccountSheetScript = (
     }).then(
       (res: any) => {
         if (res.success) {
-          return modal.confirm({
+          return modal.alert({
             title: "Get test USDC",
-            content:
-              "1,000 USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
+            message,
             onOk: () => {
-              return Promise.resolve();
+              return Promise.resolve(true);
             },
           });
         }
@@ -107,11 +109,11 @@ export const useAccountSheetScript = (
     chainId,
     onCopyAddress,
 
-    affiliateComission30D,
+    affiliateCommission30D,
     onClickReferral,
     isAffiliate,
     isTrader,
-    traderComission30D,
+    traderCommission30D,
 
     curEpochId,
     onClickTradingRewards,
@@ -126,13 +128,13 @@ export const useAccountSheetScript = (
 
 const useReferral = (_onClickReferral?: () => void) => {
   const { data, isLoading, isAffiliate, isTrader } = useReferralInfo();
-  const affiliateComission30D = useMemo(() => {
+  const affiliateCommission30D = useMemo(() => {
     if (isAffiliate) {
       return data?.referrer_info["30d_referrer_rebate"];
     }
     return undefined;
   }, [data]);
-  const traderComission30D = useMemo(() => {
+  const traderCommission30D = useMemo(() => {
     if (isTrader) {
       return data?.referee_info["30d_referee_rebate"];
     }
@@ -145,14 +147,14 @@ const useReferral = (_onClickReferral?: () => void) => {
 
   return {
     onClickReferral,
-    affiliateComission30D,
-    traderComission30D,
+    affiliateCommission30D,
+    traderCommission30D,
     isAffiliate,
     isTrader,
 
     // WARNING: test data
-    // affiliateComission30D: 1234.43,
-    // traderComission30D:44343.33,
+    // affiliateCommission30D: 1234.43,
+    // traderCommission30D:44343.33,
     // isAffiliate: true,
     // isTrader: true,
   };

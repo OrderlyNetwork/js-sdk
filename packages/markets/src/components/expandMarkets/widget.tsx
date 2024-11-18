@@ -17,7 +17,10 @@ export const ExpandMarketsWidget: React.FC<ExpandMarketsWidgetProps> = (
   });
 
   return (
-    <MarketsProvider onSymbolChange={props.onSymbolChange}>
+    <MarketsProvider
+      symbol={props.symbol}
+      onSymbolChange={props.onSymbolChange}
+    >
       <ExpandMarkets {...state} />
     </MarketsProvider>
   );

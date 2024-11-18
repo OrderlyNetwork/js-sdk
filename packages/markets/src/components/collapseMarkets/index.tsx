@@ -7,10 +7,10 @@ export type CollapseMarketsProps = {
 };
 
 export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   return (
-    <div className="oui-overflow-y-auto custom-scrollbar oui-h-full">
+    <div className="oui-overflow-y-auto oui-custom-scrollbar oui-h-full">
       <Flex direction="column" px={2} gapY={1}>
         {props.dataSource?.map((item) => {
           const content = (
@@ -80,7 +80,11 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
                 width={54}
                 height={54}
                 r="lg"
-                className={cn("oui-cursor-pointer", "hover:oui-bg-base-6")}
+                className={cn(
+                  "oui-cursor-pointer",
+                  "hover:oui-bg-base-7",
+                  symbol === item.symbol && "oui-bg-base-6 hover:oui-bg-base-6"
+                )}
                 onClick={() => {
                   onSymbolChange?.(item);
                 }}

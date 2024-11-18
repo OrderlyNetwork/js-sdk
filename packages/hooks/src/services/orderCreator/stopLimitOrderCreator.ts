@@ -12,7 +12,7 @@ import { BaseOrderCreator } from "./baseCreator";
 import { OrderType } from "@orderly.network/types";
 import { pick, values } from "ramda";
 
-const { maxPrice, minPrice, scropePrice } = orderUntil;
+const { maxPrice, minPrice, scopePrice: scopePrice } = orderUntil;
 
 export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
   create(
@@ -63,8 +63,6 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       const { symbol } = config;
       const { price_range, price_scope, quote_max, quote_min } = symbol;
 
-      console.log("stopLimitOrderCreator values", values);
-
       if (!trigger_price) {
         errors.trigger_price = {
           type: "required",
@@ -96,7 +94,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
 
           const maxPriceNumber = maxPrice(trigger_price, price_range);
           const minPriceNumber = minPrice(trigger_price, price_range);
-          const scropePriceNumbere = scropePrice(
+          const scropePriceNumbere = scopePrice(
             trigger_price,
             price_scope,
             side

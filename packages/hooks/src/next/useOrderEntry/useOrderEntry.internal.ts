@@ -131,43 +131,23 @@ const useOrderEntryNextInternal = (
     let newValues = calculate({ ...values }, key, value, markPrice, symbolInfo);
 
     /// if the order type is market or stop market, recalculate the total use mark price
-    if (
-      key === "order_type" &&
-      (value === OrderType.MARKET || value === OrderType.STOP_MARKET)
-    ) {
-      newValues = calculate(
-        newValues,
-        "order_price",
-        markPrice,
-        markPrice,
-        symbolInfo
-      );
+    if (key === "order_type") {
+      if (value === OrderType.MARKET || value === OrderType.STOP_MARKET) {
+        newValues = calculate(
+          newValues,
+          "order_price",
+          markPrice,
+          markPrice,
+          symbolInfo
+        );
+      }
     }
 
     if (
       (key === "order_quantity" || key === "order_price") &&
       hasTPSL(newValues)
     ) {
-      calculateTPSL(newValues, markPrice, symbolInfo);
-      // if (typeof newValues.tp_trigger_price !== "undefined") {
-      //   newValues = calculate(
-      //     newValues,
-      //     "tp_trigger_price",
-      //     newValues.tp_trigger_price,
-      //     markPrice,
-      //     symbolInfo
-      //   );
-      // }
-
-      // if (typeof newValues.sl_trigger_price !== "undefined") {
-      //   newValues = calculate(
-      //     newValues,
-      //     "sl_trigger_price",
-      //     newValues.sl_trigger_price,
-      //     markPrice,
-      //     symbolInfo
-      //   );
-      // }
+      newValues = calculateTPSL(key, newValues, markPrice, symbolInfo);
     }
 
     {
@@ -197,29 +177,71 @@ const useOrderEntryNextInternal = (
   };
 
   const calculateTPSL = (
+    key: string,
     newValues: Partial<FullOrderState>,
     markPrice: number,
     symbolInfo: API.SymbolExt
   ) => {
-    if (typeof newValues.tp_trigger_price !== "undefined") {
-      newValues = calculate(
-        newValues,
-        "tp_trigger_price",
-        newValues.tp_trigger_price,
-        markPrice,
-        symbolInfo
-      );
+    if (key === "order_price") {
+      if (typeof newValues.tp_pnl !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "tp_pnl",
+          newValues.tp_pnl,
+          markPrice,
+          symbolInfo
+        );
+      }
+      if (typeof newValues.sl_pnl !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "sl_pnl",
+          newValues.sl_pnl,
+          markPrice,
+          symbolInfo
+        );
+      }
+    } else {
+      if (typeof newValues.tp_trigger_price !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "tp_trigger_price",
+          newValues.tp_trigger_price,
+          markPrice,
+          symbolInfo
+        );
+      }
+
+      if (typeof newValues.sl_trigger_price !== "undefined") {
+        newValues = calculate(
+          newValues,
+          "sl_trigger_price",
+          newValues.sl_trigger_price,
+          markPrice,
+          symbolInfo
+        );
+      }
     }
 
-    if (typeof newValues.sl_trigger_price !== "undefined") {
-      newValues = calculate(
-        newValues,
-        "sl_trigger_price",
-        newValues.sl_trigger_price,
-        markPrice,
-        symbolInfo
-      );
-    }
+    // whether it is necessary to calculate tpsl ROI;
+    // if (newValues.tp_pnl && newValues.order_quantity) {
+
+    //   newValues.tp_ROI = calcTPSL_ROI({
+    //     qty: newValues.order_quantity,
+    //     price: newValues.order_price || markPrice,
+    //     pnl: newValues.tp_pnl,
+    //   });
+    // }
+
+    // if (newValues.sl_pnl && newValues.order_quantity) {
+    //   newValues.sl_ROI = calcTPSL_ROI({
+    //     qty: newValues.order_quantity,
+    //     price: newValues.order_price || markPrice,
+    //     pnl: newValues.sl_pnl,
+    //   });
+    // }
+
+    return newValues;
   };
 
   const setValues = useCallback(
@@ -257,23 +279,63 @@ const useOrderEntryNextInternal = (
     [calculate, orderEntryActions, symbolInfo]
   );
 
-  const onMarkPriceUpdated = useCallback((markPrice: number) => {
-    // console.log("markPrice", markPrice);
-    if (!options.symbolInfo) return;
-    const values = useOrderStore.getState().entry;
-    const newValues = calculate(
-      { ...values },
-      "order_price",
-      markPrice,
-      markPrice,
-      options.symbolInfo
-    );
+  const onMarkPriceUpdated = useCallback(
+    (markPrice: number, baseOn?: "total" | "order_quantity") => {
+      // console.log("******", baseOn);
+      if (!options.symbolInfo) return;
+      const values = useOrderStore.getState().entry;
+      let newValues;
 
-    if (hasTPSL(newValues)) {
-      calculateTPSL(newValues, markPrice, options.symbolInfo);
-    }
-    orderEntryActions.updateOrder(newValues);
-  }, []);
+      if (typeof baseOn === "undefined") {
+        newValues = calculate(
+          { ...values },
+          "order_price",
+          markPrice,
+          markPrice,
+          options.symbolInfo
+        );
+      } else {
+        newValues = calculate(
+          { ...values },
+          baseOn,
+          values[baseOn],
+          markPrice,
+          options.symbolInfo
+        );
+      }
+
+      // if (hasTPSL(newValues)) {
+      //   newValues = calculateTPSL(
+      //     "order_price",
+      //     newValues,
+      //     markPrice,
+      //     options.symbolInfo
+      //   );
+      // }
+
+      if (hasTPSL(newValues)) {
+        // whether it is necessary to calculate tpsl ROI;
+        if (newValues.tp_pnl && newValues.order_quantity) {
+          newValues.tp_ROI = calcTPSL_ROI({
+            qty: newValues.order_quantity,
+            price: newValues.order_price || markPrice,
+            pnl: newValues.tp_pnl,
+          });
+        }
+
+        if (newValues.sl_pnl && newValues.order_quantity) {
+          newValues.sl_ROI = calcTPSL_ROI({
+            qty: newValues.order_quantity,
+            price: newValues.order_price || markPrice,
+            pnl: newValues.sl_pnl,
+          });
+        }
+      }
+
+      orderEntryActions.updateOrder(newValues);
+    },
+    [options.symbolInfo]
+  );
 
   const validate = (
     order: Partial<OrderlyOrder>,

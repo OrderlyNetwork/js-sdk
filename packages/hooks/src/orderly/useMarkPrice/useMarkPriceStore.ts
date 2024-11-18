@@ -1,6 +1,4 @@
 import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
-import { devtools } from "zustand/middleware";
 
 type MarkPriceStore = {
   markPrices: Record<string, number>;

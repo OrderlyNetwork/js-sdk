@@ -1,31 +1,66 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
+  API,
 } from "@orderly.network/types";
-import { useOrderStream } from "@orderly.network/hooks";
+import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
+import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
 import {
   DataFilterItems,
   modal,
   usePagination,
   Text,
+  PaginationMeta,
+  useScreen,
 } from "@orderly.network/ui";
-import { differenceInDays, setHours } from "date-fns";
+import {
+  addDays,
+  addSeconds,
+  differenceInDays,
+  setHours,
+  subDays,
+} from "date-fns";
+import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export const useOrderListScript = (props: {
   type: TabType;
   ordersStatus?: OrderStatus;
   symbol?: string;
+  enableLoadMore?: boolean;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+  filterConfig?: {
+    side?: OrderSide | "all";
+    range?: {
+      from?: Date;
+      to?: Date;
+    };
+  };
 }) => {
-  const { ordersStatus, type } = props;
+  const {
+    ordersStatus,
+    type,
+    enableLoadMore = false,
+    onSymbolChange,
+    filterConfig,
+  } = props;
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const manualPagination = useMemo(() => {
+    // pending and ts_sl list use client pagination
+    return ordersStatus !== OrderStatus.INCOMPLETE;
+  }, [ordersStatus]);
+
+  const defaultPageSize = 50;
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
+    pageSize: defaultPageSize,
+  });
   const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
     useFilter(type, {
       ordersStatus,
       setPage,
+      filterConfig,
     });
 
   const includes = useMemo(() => {
@@ -60,22 +95,42 @@ export const useOrderListScript = (props: {
     symbol: props.symbol,
     status: orderStatus,
     side: ordersSide,
-    page: page,
-    size: pageSize,
+    page: enableLoadMore || !manualPagination ? undefined : page,
+    // pending and ts_sl list get all data
+    size: manualPagination ? pageSize : 500,
     dateRange,
     includes,
     excludes,
   });
 
+  const localPageSizeKey = `orderly_${type}_pageSize`;
+  const [typePageSize, setTypePageSize] = useLocalStorage(
+    localPageSizeKey,
+    defaultPageSize
+  );
+
+  useEffect(() => {
+    if (typePageSize !== pageSize) {
+      setTypePageSize(pageSize);
+    }
+  }, [pageSize, typePageSize]);
+
   const onCancelAll = useCallback(() => {
+    const title =
+      props.type === TabType.pending
+        ? "Cancel all pending orders"
+        : props.type === TabType.tp_sl
+        ? "Cancel all TP/SL orders"
+        : "";
+    const content = TabType.pending
+      ? "Are you sure you want to cancel all of your pending orders?"
+      : props.type === TabType.tp_sl
+      ? "Are you sure you want to cancel all of your TP/SL orders?"
+      : "";
+
     modal.confirm({
-      title: "Cancel all orders",
-      content: (
-        <Text size="sm">
-          Are you sure you want to cancel all of your pending orders, including
-          TP/SL orders?
-        </Text>
-      ),
+      title: title,
+      content: <Text size="sm">{content}</Text>,
       onCancel: async () => {},
       onOk: async () => {
         try {
@@ -101,47 +156,94 @@ export const useOrderListScript = (props: {
     });
   }, [type]);
 
+  const formattedData = useFormatOrderHistory(data ?? []);
+
+  const dataSource =
+    useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
+
+  const pagination = useMemo(() => {
+    const _meta = manualPagination
+      ? meta
+      : {
+          total: dataSource?.length,
+          current_page: page,
+          records_per_page: pageSize,
+        };
+    return {
+      ...parseMeta(_meta),
+      onPageChange: setPage,
+      onPageSizeChange: setPageSize,
+    } as PaginationMeta;
+  }, [
+    meta,
+    setPage,
+    setPageSize,
+    manualPagination,
+    page,
+    pageSize,
+    dataSource,
+  ]);
+
   return {
     type,
-    dataSource: data,
+    dataSource,
     isLoading,
     loadMore,
     cancelOrder,
     updateOrder,
     cancelAlgoOrder,
     updateAlgoOrder,
-
-    // pagination
     page,
     pageSize,
     setPage,
     setPageSize,
     meta: parseMeta(meta),
+    pagination,
+    manualPagination,
 
     // filter
     onFilter,
     filterItems,
     onCancelAll,
+
+    onSymbolChange,
   };
 };
 
 const useFilter = (
   type: TabType,
   option: {
+    ordersStatus?: OrderStatus | "all";
     setPage: (page: number) => void;
-    ordersStatus?: OrderStatus;
+    filterConfig?: {
+      side?: OrderSide | "all";
+      range?: {
+        from?: Date;
+        to?: Date;
+      };
+    };
   }
 ) => {
-  const [orderStatus, setOrderStatus] = useState<OrderStatus | undefined>(
-    option.ordersStatus
+  const [orderStatus, setOrderStatus] = useState<OrderStatus | "all">(
+    option.ordersStatus ?? "all"
   );
-  const [ordersSide, setOrdersSide] = useState<OrderSide | undefined>(
-    undefined
+  const [ordersSide, setOrdersSide] = useState<OrderSide | "all">(
+    option.filterConfig?.side ?? "all"
   );
+
+  const defaultRange =
+    option.filterConfig?.range ??
+    (type === TabType.all || type === TabType.orderHistory
+      ? formatDatePickerRange({
+          to: new Date(),
+          from: offsetEndOfDay(subDays(new Date(), 7)),
+        })
+      : {});
+
   const [dateRange, setDateRange] = useState<{
     from?: Date;
     to?: Date;
-  }>();
+  }>(defaultRange);
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "side") {
@@ -155,7 +257,7 @@ const useFilter = (
     }
 
     if (filter.name === "dateRange") {
-      setDateRange(filter.value);
+      setDateRange(formatDatePickerRange(filter.value));
       option.setPage(1);
     }
   };
@@ -167,7 +269,7 @@ const useFilter = (
       options: [
         {
           label: "All sides",
-          value: undefined,
+          value: "all",
         },
         {
           label: "Buy",
@@ -193,11 +295,19 @@ const useFilter = (
       options: [
         {
           label: "All status",
-          value: undefined,
+          value: "all",
         },
         {
           label: "Pending",
           value: OrderStatus.INCOMPLETE,
+        },
+        {
+          label: "Filled",
+          value: OrderStatus.FILLED,
+        },
+        {
+          label: "Partial filled",
+          value: OrderStatus.PARTIAL_FILLED,
         },
         {
           label: "Canceled",
@@ -224,16 +334,16 @@ const useFilter = (
       case TabType.rejected:
         return [sideFilter];
       case TabType.orderHistory:
-        return [sideFilter];
+        return [sideFilter, statusFilter, dateRangeFilter];
     }
   }, [type, ordersSide, orderStatus, dateRange]);
 
   return {
     filterItems,
     onFilter,
-    ordersSide,
+    ordersSide: ordersSide === "all" ? undefined : ordersSide,
     dateRange,
-    orderStatus,
+    orderStatus: orderStatus === "all" ? undefined : orderStatus,
   };
 };
 
@@ -260,3 +370,24 @@ export const parseDateRangeForFilter = (dateRange: {
 
   return [from, to];
 };
+
+function offsetStartOfDay(date?: Date) {
+  if (date == null) return date;
+
+  const newDate = new Date(date);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+}
+
+function offsetEndOfDay(date?: Date) {
+  if (date == null) return date;
+
+  const newDate = new Date(date);
+  newDate.setHours(23, 59, 59, 999);
+  return newDate;
+}
+
+export const formatDatePickerRange = (option: { from?: Date; to?: Date }) => ({
+  from: offsetStartOfDay(option.from),
+  to: offsetEndOfDay(option.to),
+});

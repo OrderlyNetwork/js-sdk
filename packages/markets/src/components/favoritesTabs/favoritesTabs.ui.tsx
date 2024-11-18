@@ -14,10 +14,11 @@ import {
   UseFavoritesTabScriptReturn,
 } from "./favoritesTabs.script";
 import { AddIcon, AddIcon2, EditIcon, TrashIcon } from "../../icons";
-import "../../style/index.css";
 
 export type FavoritesTabProps = UseFavoritesTabScriptReturn &
-  Pick<UseFavoritesTabScriptOptions, "size">;
+  Pick<UseFavoritesTabScriptOptions, "size"> & {
+    className?: string;
+  };
 
 export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   const {
@@ -84,46 +85,51 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   };
 
   const renderAdd = () => {
-    const overTabs = favoriteTabs.length > 10;
+    const overTabs = favoriteTabs.length >= 10;
 
-    return (
-      <Tooltip
-        open={overTabs ? undefined : false}
-        // @ts-ignore
-        content={
-          <Text size="2xs" intensity={80}>
-            Maximum 10 groups in the favorite list
-          </Text>
-        }
-        className="oui-bg-base-6"
-        delayDuration={0}
-        arrow={{ className: "oui-fill-base-6" }}
+    const icon = (
+      <Flex
+        className={cn(
+          "oui-inline-flex",
+          overTabs ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
+          overTabs
+            ? "oui-bg-base-3"
+            : "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
+        )}
+        width={addIconWidth}
+        height={tabHeight}
+        r="base"
+        justify="center"
+        itemAlign="center"
+        onClick={overTabs ? undefined : addTab}
       >
-        <div>
-          <Flex
-            className={cn(
-              "oui-inline-flex",
-              overTabs ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
-              overTabs
-                ? "oui-bg-base-3"
-                : "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
-            )}
-            width={addIconWidth}
-            height={tabHeight}
-            r="base"
-            justify="center"
-            itemAlign="center"
-            onClick={overTabs ? undefined : addTab}
-          >
-            {overTabs ? (
-              <AddIcon className="oui-text-base-contrast-36 oui-w-3 oui-h-3" />
-            ) : (
-              <AddIcon2 className="oui-w-3 oui-h-3" />
-            )}
-          </Flex>
-        </div>
-      </Tooltip>
+        {overTabs ? (
+          <AddIcon className="oui-text-base-contrast-36 oui-w-3 oui-h-3" />
+        ) : (
+          <AddIcon2 className="oui-w-3 oui-h-3" />
+        )}
+      </Flex>
     );
+
+    if (overTabs) {
+      return (
+        <Tooltip
+          // @ts-ignore
+          content={
+            <Text size="2xs" intensity={80}>
+              Maximum 10 groups in the favorite list
+            </Text>
+          }
+          className="oui-bg-base-6"
+          delayDuration={0}
+          arrow={{ className: "oui-fill-base-6" }}
+        >
+          {icon}
+        </Tooltip>
+      );
+    }
+
+    return icon;
   };
 
   const renderInput = (isActive: boolean) => {
@@ -231,7 +237,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   };
 
   return (
-    <Flex width="100%" gapX={3}>
+    <Flex width="100%" gapX={3} className={props.className}>
       <Flex
         ref={container}
         id="oui-markets-favorites-tabs-container"
@@ -239,7 +245,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
           "oui-relative oui-cursor-pointer oui-hide-scrollbar",
           "oui-overflow-hidden oui-overflow-x-auto"
         )}
-        my={3}
+        // my={3}
         gapX={size === "sm" ? 2 : 3}
         width="100%"
       >

@@ -1,21 +1,19 @@
 import {
   AlgoOrderRootType,
+  AlgoOrderType,
   API,
   OrderSide,
   OrderStatus,
   OrderType,
 } from "@orderly.network/types";
 import {
-  Box,
-  Button,
   capitalizeFirstLetter,
   cn,
-  Column,
+  TableColumn,
   Flex,
   Text,
 } from "@orderly.network/ui";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
-import { useMemo } from "react";
 import {
   grayCell,
   parseBadgesFor,
@@ -29,201 +27,266 @@ import { TriggerPrice } from "./triggerPrice";
 import { CancelButton } from "./cancelBtn";
 import { Renew } from "./renew";
 import { OrderTriggerPrice, TPSLTriggerPrice } from "./tpslTriggerPrice";
-import { BarcketOrderPrice } from "./barcketOrderPrice";
+import { BracketOrderPrice } from "./bracketOrderPrice";
+import { TP_SLEditButton } from "./tpslEdit";
+import { TPSLOrderPrice } from "./tpslPrice";
+import { useMemo } from "react";
 
-export const useOrderColumn = (_type: TabType) => {
-  const columns =
-    // useMemo(
-    () => {
-      switch (_type) {
-        case TabType.all:
-          return [
-            instrument({ width: 130, showType: true }),
-            side({ width: 130 }),
-            fillAndQuantity({
-              width: 130,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-            }),
-            price({ width: 130, title: "Order price", disableEdit: true }),
-            avgOpen({ width: 130 }),
-            tpslTriggerPrice({ width: 130 }),
-            estTotal({ width: 130 }),
-            fee({ width: 130 }),
-            status({ width: 130 }),
-            reduceOnly({ width: 130 }),
-            hidden({ width: 130 }),
-            cancelBtn({ width: 130 }),
-          ];
-        case TabType.pending:
-          return [
-            instrument({ width: 162, showType: true }),
-            side({ width: 162 }),
-            fillAndQuantity({ width: 162, className: "oui-pr-0" }),
-            price({ width: 162, className: "oui-pr-0" }),
-            triggerPrice({ width: 162, className: "oui-pr-0" }),
-            barcketOrderPrice({ width: 130}),
-            estTotal({ width: 162 }),
-            reduceOnly({ width: 162 }),
-            hidden({ width: 162 }),
-            orderTime({ width: 162 }),
-            cancelBtn({ width: 162 }),
-          ];
-        case TabType.tp_sl:
-          return [
-            instrument({ width: 176, showType: true }),
-            side({ width: 176 }),
-            quantity({ width: 176 }),
-            tpslTriggerPrice({ width: 176 }),
-            price({ width: 176, disableEdit: true }),
-            notional({ width: 176 }),
-            reduceOnly({ width: 176 }),
-            orderTime({ width: 176 }),
-            tpslAction({ width: 176 }),
-          ];
-        case TabType.filled:
-          return [
-            instrument({ width: 124 }),
-            type({ width: 124 }),
-            side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-            }),
-            price({ width: 124, title: "Order price", disableEdit: true }),
-            avgPrice({ width: 124 }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124 }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-            orderTime({ width: 124 }),
-          ];
-        case TabType.cancelled:
-          return [
-            instrument({ showType: true, width: 124 }),
-            side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-            }),
-            price({ width: 124, disableEdit: true }),
-            avgOpen({ width: 124 }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124 }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-          ];
-        case TabType.rejected:
-          return [
-            instrument({ showType: true, width: 124 }),
-            side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-            }),
-            price({ width: 124, disableEdit: true }),
-            avgOpen({ width: 124 }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124 }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-            orderTime({ width: 124 }),
-          ];
-        case TabType.orderHistory:
-          return [
-            instrument({ showType: true, width: 124 }),
-            side({ width: 124 }),
-            fillAndQuantity({
-              width: 124,
-              disableEdit: true,
-              className: "oui-pl-0 oui-pr-0",
-            }),
-            price({ width: 124, disableEdit: true }),
-            avgOpen({ width: 124 }),
-            triggerPrice({ width: 124, disableEdit: true }),
-            estTotal({ width: 124 }),
-            fee({ width: 124 }),
-            status({ width: 124 }),
-            reduceOnly({ width: 124 }),
-            hidden({ width: 124 }),
-            orderTime({ width: 124 }),
-            cancelBtn({ width: 124 }),
-          ];
-      }
-    };
+export const useOrderColumn = (props: {
+  _type: TabType;
+  onSymbolChange?: (symbol: API.Symbol) => void;
+}) => {
+  const { _type, onSymbolChange } = props;
 
-  // }, [_type]);
+  const columns = useMemo(() => {
+    switch (_type) {
+      case TabType.all:
+        return [
+          instrument({
+            width: 130,
+            showType: true,
+            onSymbolChange: onSymbolChange,
+            enableSort: false,
+          }),
+          // side({ width: 130 }),
+          fillAndQuantity({
+            width: 130,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+            enableSort: false,
+          }),
+          price({
+            width: 130,
+            title: "Order price",
+            disableEdit: true,
+            enableSort: false,
+          }),
+          avgOpen({ width: 130, enableSort: false, }),
+          tpslTriggerPrice({ width: 130 }),
+          estTotal({ width: 130, enableSort: false, }),
+          fee({ width: 130 }),
+          status({ width: 130 }),
+          reduceOnly({ width: 130 }),
+          hidden({ width: 130 }),
+          cancelBtn({ width: 130 }),
+        ];
+      case TabType.pending:
+        return [
+          instrument({
+            width: 172,
+            showType: true,
+            onSymbolChange: onSymbolChange,
+            enableSort: false,
+          }),
+          // side({ width: 162 }),
+          fillAndQuantity({
+            width: 162,
+            className: "oui-pr-0",
+            enableSort: false,
+          }),
+          price({ width: 162, className: "oui-pr-0", enableSort: false }),
+          triggerPrice({ width: 162, className: "oui-pr-0" }),
+          bracketOrderPrice({ width: 130 }),
+          estTotal({ width: 162, isPending: true }),
+          reduceOnly({ width: 162 }),
+          hidden({ width: 162 }),
+          orderTime({ width: 162, enableSort: false }),
+          pendingTabCancelBtn({ width: 162 }),
+        ];
+      case TabType.tp_sl:
+        return [
+          instrument({
+            width: 176,
+            showType: true,
+            onSymbolChange: onSymbolChange,
+            enableSort: false,
+          }),
+          // side({ width: 176 }),
+          quantity({ width: 176 }),
+          tpslTriggerPrice({ width: 176 }),
+          tpslPrice({ width: 176, disableEdit: true }),
+          tpslNotional({ width: 176 }),
+          reduceOnly({ width: 176 }),
+          orderTime({ width: 176, enableSort: false }),
+          tpslAction({ width: 176 }),
+        ];
+      case TabType.filled:
+        return [
+          instrument({
+            showType: true,
+            width: 154,
+            onSymbolChange: onSymbolChange,
+          }),
+          // type({ width: 124 }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 124,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+          }),
+          price({
+            width: 124,
+            title: "Order price",
+            disableEdit: true,
+          }),
+          avgPrice({ width: 124 }),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124 }),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+          orderTime({ width: 124 }),
+        ];
+      case TabType.cancelled:
+        return [
+          instrument({
+            showType: true,
+            width: 154,
+            onSymbolChange: onSymbolChange,
+            enableSort: false,
+          }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 124,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+            enableSort: false,
+          }),
+          price({ width: 124, disableEdit: true, enableSort: false, }),
+          avgOpen({ width: 124, enableSort: false,}),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124, }),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+        ];
+      case TabType.rejected:
+        return [
+          instrument({
+            showType: true,
+            width: 154,
+            onSymbolChange: onSymbolChange,
+            
+          }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 124,
+            disableEdit: true,
+            className: "oui-pl-0 oui-pr-0",
+            
+          }),
+          price({ width: 124, disableEdit: true, }),
+          avgOpen({ width: 124,  }),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124,  }),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+          orderTime({ width: 124 }),
+        ];
+      case TabType.orderHistory:
+        return [
+          instrument({
+            showType: true,
+            width: 154,
+            onSymbolChange: onSymbolChange,
+          }),
+          // side({ width: 124 }),
+          fillAndQuantity({
+            width: 150,
+            disableEdit: true,
+            className: "oui-pl-6 oui-pr-0",
+          }),
+          price({ width: 124, disableEdit: true,  }),
+          avgOpen({ width: 124, }),
+          triggerPrice({ width: 124, disableEdit: true }),
+          estTotal({ width: 124,}),
+          fee({ width: 124 }),
+          status({ width: 124 }),
+          reduceOnly({ width: 124 }),
+          hidden({ width: 124 }),
+          orderTime({ width: 150 }),
+          cancelBtn({ width: 80 }),
+        ];
+    }
+  }, [_type]);
 
-  return columns();
+  return columns as TableColumn[];
+
+  // return columns();
 };
 
 function instrument(option?: {
   showType?: boolean;
   enableSort?: boolean;
   width?: number;
-}): Column<API.Order> {
+  onSymbolChange?: (symbol: API.Symbol) => void;
+}): TableColumn<API.Order> {
   return {
     title: "Instrument",
     dataIndex: "symbol",
-    className: "oui-h-[48px]",
+    fixed: "left",
+    // className: "oui-h-[48px]",
     width: option?.width,
     onSort: option?.enableSort
-      ? (r1, r2, sortOrder) => {
-          if (sortOrder === "asc") {
-            return r1.symbol.localeCompare(r2.symbol);
-          }
-          return r2.symbol.localeCompare(r1.symbol);
+      ? (r1, r2) => {
+          return r1.symbol.localeCompare(r2.symbol);
+          // if (sortOrder === "asc") {
+          //   return r1.symbol.localeCompare(r2.symbol);
+          // }
+          // return r2.symbol.localeCompare(r1.symbol);
         }
       : undefined,
     render: (value: string, record) => {
-      const badge =
-        typeof record.type === "string"
-          ? record.type.replace("_ORDER", "").toLowerCase()
-          : record.type;
-
       const showGray = grayCell(record);
 
       return (
-        <Flex direction="column" itemAlign={"start"}>
-          <Text.formatted
-            rule={"symbol"}
-            size="xs"
-            className=" oui-text-xs"
-            onClick={(e) => {
-              // props.onSymbolChange?.({ symbol: value } as API.Symbol);
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-          >
-            {value}
-          </Text.formatted>
-          {option?.showType && (
-            <Flex direction={"row"} gap={1}>
-              {parseBadgesFor(record)?.map((e) => (
-                <Badge
-                  color={
-                    e.toLocaleLowerCase() === "position"
-                      ? showGray
-                        ? "neutral"
-                        : "primary"
-                      : "neutral"
-                  }
-                  size="xs"
-                >
-                  {e}
-                </Badge>
-              ))}
-            </Flex>
-          )}
+        <Flex gap={2}>
+          <div
+            className={cn(
+              "oui-rounded-[1px] oui-w-1 oui-h-7 oui-shrink-0",
+              record.side === OrderSide.BUY
+                ? "oui-bg-trade-profit"
+                : "oui-bg-trade-loss"
+            )}
+          />
+          <Flex direction="column" itemAlign={"start"}>
+            <Text.formatted
+              // rule={"symbol"}
+              size="xs"
+              className="oui-cursor-pointer oui-text-xs"
+              onClick={(e) => {
+                option?.onSymbolChange?.({ symbol: value } as API.Symbol);
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            >
+              {`${value.split("_")[1]}-PERP`}
+            </Text.formatted>
+
+            {option?.showType && (
+              <Flex direction={"row"} gap={1}>
+                {parseBadgesFor(record)?.map((e, index) => (
+                  <Badge
+                    key={index}
+                    color={
+                      e.toLocaleLowerCase() === "position"
+                        ? showGray
+                          ? "neutral"
+                          : "primary"
+                        : "neutral"
+                    }
+                    size="xs"
+                  >
+                    {e}
+                  </Badge>
+                ))}
+              </Flex>
+            )}
+          </Flex>
         </Flex>
       );
     },
@@ -234,18 +297,19 @@ function side(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Side",
     dataIndex: "side",
     width: option?.width,
-    className: "oui-h-[48px]",
+    // className: "oui-h-[48px]",
     onSort: option?.enableSort
       ? (r1, r2, sortOrder) => {
-          if (sortOrder === "asc") {
-            return r2.side.localeCompare(r1.side);
-          }
-          return r1.side.localeCompare(r2.side);
+          return r2.side.localeCompare(r1.side);
+          // if (sortOrder === "asc") {
+          //   return r2.side.localeCompare(r1.side);
+          // }
+          // return r1.side.localeCompare(r2.side);
         }
       : undefined,
     render: (value: string, record) => {
@@ -267,19 +331,29 @@ function type(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Type",
     dataIndex: "type",
     width: option?.width,
     className: option?.className,
     formatter: (value: string, record: any) => {
-      const type =
-        typeof record.type === "string"
-          ? record.type.replace("_ORDER", "").toLowerCase()
-          : record.type;
+      if (!!record.parent_algo_type) {
+        if (record.algo_type === AlgoOrderType.STOP_LOSS) {
+          return record.type === OrderType.CLOSE_POSITION
+            ? `Position SL`
+            : "SL";
+        }
+
+        if (record.algo_type === AlgoOrderType.TAKE_PROFIT) {
+          return record.type === OrderType.CLOSE_POSITION
+            ? `Position TP`
+            : "TP";
+        }
+      }
+
       if (record.algo_order_id) {
-        return `Stop ${type}`;
+        return `Stop ` + `${record.type}`.toLowerCase();
       }
       return upperCaseFirstLetter(value);
     },
@@ -291,14 +365,39 @@ function fillAndQuantity(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.AlgoOrderExt> {
   return {
     title: "Filled / Quantity",
     dataIndex: "fill_quantity",
     className: option?.className,
     width: option?.width,
-    onSort: option?.enableSort,
+    onSort:
+      option?.enableSort ?? false
+        ? (a, b) => {
+            const aQuantity =
+              (a.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+                ? 0
+                : a.quantity) ?? 0;
+            const bQuantity =
+              (b.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+                ? 0
+                : b.quantity) ?? 0;
+
+            return compareNumbers(aQuantity, bQuantity);
+
+            // if (type == "asc") {
+            //   return compareNumbers(aQuantity, bQuantity);
+            // }
+            // return compareNumbers(bQuantity, aQuantity);
+          }
+        : undefined,
     render: (value: string, record: any) => {
+      if (
+        record.type === OrderType.CLOSE_POSITION &&
+        record.status !== OrderStatus.FILLED
+      ) {
+        return "Entire position";
+      }
       return <OrderQuantity order={record} disableEdit={option?.disableEdit} />;
       // return value;
     },
@@ -309,13 +408,30 @@ function quantity(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.AlgoOrderExt> {
   return {
     title: "Quantity",
     className: option?.className,
     dataIndex: "quantity",
     width: option?.width,
-    onSort: option?.enableSort,
+    onSort:
+      option?.enableSort ?? false
+        ? (a, b) => {
+            const aQuantity =
+              (a.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+                ? 0
+                : a.quantity) ?? 0;
+            const bQuantity =
+              (b.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+                ? 0
+                : b.quantity) ?? 0;
+            return compareNumbers(aQuantity, bQuantity);
+            // if (type == "asc") {
+            //   return compareNumbers(aQuantity, bQuantity);
+            // }
+            // return compareNumbers(bQuantity, aQuantity);
+          }
+        : undefined,
     render: (value: string, record: any) => {
       if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
         return "Entire position";
@@ -332,7 +448,35 @@ function price(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
+  return {
+    title: option?.title ?? "Price",
+    dataIndex: "price",
+    className: option?.className,
+    width: option?.width,
+    onSort:
+      option?.enableSort ?? false
+        ? (a, b, type) => {
+            return compareNumbers(a.price ?? 0, b.price ?? 0);
+            // if (type == "asc") {
+            //   return compareNumbers(a.price ?? 0, b.price ?? 0);
+            // }
+            // return compareNumbers(b.price ?? 0, a.price ?? 0);
+          }
+        : undefined,
+    render: (value: string, record: any) => {
+      return <Price order={record} disableEdit={option?.disableEdit} />;
+    },
+  };
+}
+
+function tpslPrice(option?: {
+  title?: string;
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+  disableEdit?: boolean;
+}): TableColumn<API.Order> {
   return {
     title: option?.title ?? "Price",
     dataIndex: "price",
@@ -340,7 +484,7 @@ function price(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
-      return <Price order={record} disableEdit={option?.disableEdit} />;
+      return <TPSLOrderPrice />;
     },
   };
 }
@@ -350,7 +494,7 @@ function avgPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Avg. price",
     dataIndex: "average_executed_price",
@@ -358,6 +502,8 @@ function avgPrice(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     render: (value: string, record: any) => {
+      // console.log("average_executed_price", record.average_executed_price);
+
       return <Text>{commifyOptional(value)}</Text>;
     },
   };
@@ -368,7 +514,7 @@ function triggerPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Trigger",
     className: option?.className,
@@ -386,7 +532,7 @@ function tpslTriggerPrice(option?: {
   width?: number;
   className?: string;
   title?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: option?.title ?? "Trigger",
     className: option?.className,
@@ -397,7 +543,7 @@ function tpslTriggerPrice(option?: {
   };
 }
 
-function barcketOrderPrice(option?: {
+function bracketOrderPrice(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
@@ -405,10 +551,12 @@ function barcketOrderPrice(option?: {
   return {
     title: "TP/SL",
     className: option?.className,
-    dataIndex: "barcketOrderPrice",
+    dataIndex: "bracketOrderPrice",
     width: option?.width,
     onSort: option?.enableSort,
-    render: (value: string, record: any) => <BarcketOrderPrice order={record} />,
+    render: (value: string, record: any) => (
+      <BracketOrderPrice order={record} />
+    ),
   };
 }
 
@@ -416,13 +564,55 @@ function estTotal(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+  isPending?: boolean;
+}): TableColumn<API.Order> {
   return {
     title: "Est. total",
     dataIndex: "executed",
     width: option?.width,
     className: option?.className,
+    onSort:
+      option?.enableSort ?? false
+        ? (a, b, type) => {
+            const aTotal =
+              a.type === OrderType.CLOSE_POSITION &&
+              a.status !== OrderStatus.FILLED
+                ? 0
+                : a.total_executed_quantity === 0 ||
+                  Number.isNaN(a.average_executed_price) ||
+                  a.average_executed_price === null
+                ? 0
+                : a.total_executed_quantity * a.average_executed_price;
+            const bTotal =
+              b.type === OrderType.CLOSE_POSITION &&
+              b.status !== OrderStatus.FILLED
+                ? 0
+                : b.total_executed_quantity === 0 ||
+                  Number.isNaN(b.average_executed_price) ||
+                  b.average_executed_price === null
+                ? 0
+                : b.total_executed_quantity * b.average_executed_price;
+            return compareNumbers(aTotal, bTotal);
+            // if (type === "asc") {
+            //   return compareNumbers(aTotal, bTotal);
+            // }
+            // return compareNumbers(bTotal, aTotal);
+          }
+        : undefined,
     render: (value: string, record: any) => {
+      if (option?.isPending) {
+        const value = () => {
+          if (record.price && record.quantity) {
+            return new Decimal(record.price)
+              .mul(record.quantity)
+              .toFixed(2, Decimal.ROUND_DOWN);
+          }
+          return "--";
+        };
+
+        return <Text.numeral rm={Decimal.ROUND_DOWN}>{value()}</Text.numeral>;
+      }
+
       if (
         record.type === OrderType.CLOSE_POSITION &&
         record.status !== OrderStatus.FILLED
@@ -431,7 +621,7 @@ function estTotal(option?: {
       }
 
       return (
-        <Text.numeral rm={Decimal.ROUND_DOWN}>
+        <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
           {record.total_executed_quantity === 0 ||
           Number.isNaN(record.average_executed_price) ||
           record.average_executed_price === null
@@ -449,7 +639,7 @@ function reduceOnly(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Reduce only",
     dataIndex: "reduce_only",
@@ -465,7 +655,7 @@ function hidden(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Hidden",
     dataIndex: "visible",
@@ -482,7 +672,7 @@ function orderTime(option?: {
   width?: number;
   className?: string;
   formatString?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Order time",
     dataIndex: "created_time",
@@ -505,7 +695,7 @@ function fee(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Fee",
     dataIndex: "total_fee",
@@ -519,18 +709,48 @@ function notional(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Notional",
     dataIndex: "notional",
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
-    render: (value: string) => (
-      <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {value}
-      </Text>
+    render: (value?: string) => (
+      <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+        {value ?? "--"}
+      </Text.numeral>
     ),
+  };
+}
+
+function tpslNotional(option?: {
+  enableSort?: boolean;
+  width?: number;
+  className?: string;
+}): TableColumn<API.Order> {
+  return {
+    title: "Notional",
+    dataIndex: "executed",
+    width: option?.width,
+    onSort: option?.enableSort,
+    className: option?.className,
+    render: (value: any, record: any) => {
+      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+        return "Entire position";
+      }
+
+      return (
+        <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+          {record.quantity === 0
+            ? "--"
+            : `${new Decimal(record.mark_price)
+                .mul(record.quantity)
+                .todp(2)
+                .toNumber()}`}
+        </Text.numeral>
+      );
+    },
   };
 }
 
@@ -538,20 +758,21 @@ function status(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Status",
     dataIndex: "status",
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
-    render: (value: string, record: any) => (
-      <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {capitalizeFirstLetter(
-          (record?.algo_status || record.status)?.toLocaleLowerCase()
-        )}
-      </Text>
-    ),
+    render: (value: string, record: any) => {
+      const status = value || record.algo_status;
+
+      if (status === "NEW") {
+        return upperCaseFirstLetter("pending");
+      }
+      return upperCaseFirstLetter(status);
+    },
   };
 }
 
@@ -559,16 +780,34 @@ function avgOpen(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "Avg. open",
-    dataIndex: "average_open_price",
+    dataIndex: "average_executed_price",
     width: option?.width,
-    onSort: option?.enableSort,
+    onSort:
+      option?.enableSort ?? false
+        ? (a, b) => {
+            return compareNumbers(
+              a.average_executed_price ?? 0,
+              b.average_executed_price ?? 0
+            );
+            // if (type == "asc") {
+            //   return compareNumbers(
+            //     a.average_executed_price ?? 0,
+            //     b.average_executed_price ?? 0
+            //   );
+            // }
+            // return compareNumbers(
+            //   b.average_executed_price ?? 0,
+            //   a.average_executed_price ?? 0
+            // );
+          }
+        : undefined,
     className: option?.className,
-    render: (value: string) => (
+    render: (value: string, record) => (
       <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {value}
+        {record.average_executed_price}
       </Text.numeral>
     ),
   };
@@ -577,10 +816,11 @@ function avgOpen(option?: {
 function cancelBtn(option?: {
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "",
-    dataIndex: "",
+    type: "action",
+    dataIndex: "action",
     width: option?.width,
     className: option?.className,
     align: "right",
@@ -602,13 +842,31 @@ function cancelBtn(option?: {
   };
 }
 
+function pendingTabCancelBtn(option?: {
+  width?: number;
+  className?: string;
+}): TableColumn<API.Order> {
+  return {
+    title: "",
+    type: "action",
+    dataIndex: "action",
+    width: option?.width,
+    className: option?.className,
+    align: "right",
+    fixed: "right",
+    render: (_: string, record: any) => {
+      return <CancelButton order={record} />;
+    },
+  };
+}
+
 function tpslAction(option?: {
   width?: number;
   className?: string;
-}): Column<API.Order> {
+}): TableColumn<API.Order> {
   return {
     title: "",
-    dataIndex: "",
+    dataIndex: "action",
     width: option?.width,
     className: option?.className,
     align: "right",
@@ -616,12 +874,16 @@ function tpslAction(option?: {
     render: (_: string, record: any) => {
       return (
         <Flex gap={3}>
-          <Button size="sm" variant={"outlined"} color={"secondary"}>
-            Edit
-          </Button>
+          <TP_SLEditButton order={record} />
           <CancelButton order={record} />
         </Flex>
       );
     },
   };
+}
+
+function compareNumbers(a: number, b: number): number {
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
 }

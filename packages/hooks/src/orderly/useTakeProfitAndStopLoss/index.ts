@@ -13,6 +13,7 @@ export const useTPSLOrder = (
      * it is usually used when editing order
      */
     defaultOrder?: API.AlgoOrder;
+    isEditing?: boolean;
   }
 ): ReturnType<typeof useTaskProfitAndStopLossInternal> => {
   if (!position) {

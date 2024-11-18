@@ -1,4 +1,4 @@
-import {ChartActionId, Overrides, ThemeName} from "../charting_library";
+import { ChartActionId, LoadingScreenOptions, Overrides, ThemeName } from "../charting_library";
 import type {AbstractDatafeed} from "../datafeed/abstract-datafeed";
 import type {
     ChartMode,
@@ -47,6 +47,7 @@ export interface WidgetOptions {
     overrides?: Overrides;
     studiesOverrides?: Overrides;
     theme?: ThemeName;
+    loadingScreen? : LoadingScreenOptions;
     interval: ResolutionString;
     locale: string;
     timezone?: string;
@@ -117,7 +118,6 @@ export class Widget {
                     currentInterval = 1;
 
                 }
-                console.log('current interval', currentInterval, symbol)
                 this._instance?.setSymbol(symbol, currentInterval as any, callback);
             });
         } catch (e) {
@@ -231,7 +231,6 @@ export class Widget {
                               onClick,
                           }: WidgetProps) {
         const getBroker = options.getBroker;
-        console.log('-- getbroker', getBroker);
 
         const widgetOptions: TradingTerminalWidgetOptions = {
             fullscreen: options.fullscreen ?? true,
@@ -246,6 +245,7 @@ export class Widget {
             studies_overrides: options.studiesOverrides,
             locale: options.locale as LanguageCode,
             theme: options.theme,
+            loading_screen: options.loadingScreen,
             overrides: options.overrides,
             container: options.container,
             favorites: {
@@ -265,7 +265,6 @@ export class Widget {
             },
             broker_factory: getBroker
                 ? (host) => {
-                  console.log('--- this broker', this._broker);
                     if (this._broker) {
                         this._broker.remove();
                     }
@@ -279,7 +278,6 @@ export class Widget {
         };
 
         this._datafeed = options.datafeed;
-        console.log('-- options', widgetOptions);
 
         if (chartKey) {
             this._chartKey = chartKey;

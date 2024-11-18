@@ -16,7 +16,7 @@ export const PinBtn: FC<{
         <UnPinIcon
           size={props.size}
           fillOpacity={1}
-          className="orderly-fill-primary hover:orderly-fill-primary/80"
+          className="orderly-fill-primary-darken hover:orderly-fill-primary-darken/80"
         />
       ) : (
         <PinnedIcon

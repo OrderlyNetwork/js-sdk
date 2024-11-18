@@ -1,10 +1,6 @@
 import { FC, useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
-import {
-  Flex,
-  Text,
-  Tooltip,
-} from "@orderly.network/ui";
+import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { MiddlePriceView } from "../../base/orderBook/midPriceView";
@@ -23,22 +19,37 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
   const { showTotal, tabletMediaQuery } = useOrderBookContext();
 
   return (
-    <Flex py={1} pl={3} pr={showTotal ? 3 : 6} justify={"between"}>
-      <Flex gap={2}>
+    <div className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-xs oui-relative oui-cursor-pointer">
+      <div
+        className={cn(
+          "oui-basis-7/12 oui-flex oui-flex-row oui-items-center oui-mr-2 oui-justify-between",
+          showTotal && "oui-basis-5/12"
+        )}
+      >
         <MiddlePriceView
           markPrice={markPrice}
           lastPrice={lastPrice}
           quote_dp={symbolInfo.quote_dp}
+          className="oui-text-base"
         />
-        <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} tabletMediaQuery={tabletMediaQuery} />
-      </Flex>
-      <Spread asks={asks} bids={bids} />
-    </Flex>
+        <MarkPriceView
+          markPrice={markPrice}
+          quote_dp={symbolInfo.quote_dp}
+          tabletMediaQuery={tabletMediaQuery}
+        />
+      </div>
+      <div
+        className={cn(
+          "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative oui-justify-end",
+          showTotal && "oui-basis-7/12",
+          "oui-pr-3"
+        )}
+      >
+        <Spread asks={asks} bids={bids} />
+      </div>
+    </div>
   );
 };
-
-
-
 
 const Spread: FC<{
   asks: number[][];
@@ -85,4 +96,3 @@ const Spread: FC<{
     </div>
   );
 };
-

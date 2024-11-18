@@ -1,57 +1,24 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
 import {
   OverviewModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-// import { OverviewContextProvider } from "@orderly.network/portfolio";
-
-import { OrderlyApp } from "@orderly.network/react-app";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
-import { fn } from "@storybook/test";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { useMemo } from "react";
-import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
-
 import { DataViewer } from "../../../components/dataViewer";
 
 const { usePerformanceScript } = OverviewModule;
 
-const meta = {
+const meta: Meta<typeof OverviewModule.OverviewPage> = {
   title: "Package/Portfolio/Overview",
   component: OverviewModule.OverviewPage,
   subcomponents: {
     Assets: OverviewModule.AssetWidget,
     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
   },
-  decorators: [
-    (Story, args) => {
-      const config = new CustomConfigStore({
-        env: "qa",
-      });
-      return (
-        <ConnectorProvider>
-          <OrderlyApp
-            brokerId={"orderly"}
-            brokerName={""}
-            networkId={"testnet"}
-            onChainChanged={args.args.onChainChanged}
-            // configStore={config}
-          >
-            <Story />
-          </OrderlyApp>
-        </ConnectorProvider>
-      );
-    },
-  ],
   parameters: {
     layout: "fullscreen",
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  // tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
-    //   backgroundColor: { control: 'color' },
     p: {
       control: {
         type: "number",
@@ -60,10 +27,6 @@ const meta = {
         step: 1,
       },
     },
-  },
-  // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-  args: {
-    onChainChanged: fn(),
   },
 };
 

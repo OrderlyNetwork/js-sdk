@@ -43,6 +43,10 @@ export function useChainSelect() {
     async (chain: API.NetworkInfos) => {
       const chainInfo = findByChainId(chain.chain_id);
 
+      if (!connectedChain) {
+       return;
+      }
+
       if (
         !chainInfo ||
         chainInfo.network_infos?.chain_id === currentChain?.id
@@ -59,7 +63,9 @@ export function useChainSelect() {
             : toast.error("Switch chain failed");
         })
         .catch((error) => {
-          toast.error(`Switch chain failed: ${error.message}`);
+          if (error && error.message) {
+            toast.error(`Switch chain failed: ${error.message}`);
+          }
         });
     },
     [currentChain, setChain, findByChainId]

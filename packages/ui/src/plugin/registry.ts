@@ -54,11 +54,12 @@ export class OrderlyExtensionRegistry {
     if (this.extensionMap.has(position)) {
       const existingPlugin = this.extensionMap.get(position);
       if (!existingPlugin?.__isInternal) {
-        throw new Error(`Plugin already registered at position [${position}]`);
+        console.warn("`Plugin already registered at position [${position}]`");
+        // throw new Error(`Plugin already registered at position [${position}]`);
+        return;
       }
     }
-
-    this.extensionMap.set(position, plugin);
+    this.extensionMap.set(position, plugin as Extension<any>);
   }
 
   setBuilder<Props>(

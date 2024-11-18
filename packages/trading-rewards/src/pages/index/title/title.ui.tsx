@@ -55,7 +55,7 @@ const MultiLineText: FC<{
         <span
           key={index}
           className={`${
-            item.isLink ? "oui-text-primary-light hover:oui-text-primary oui-cursor-pointer" : ""
+            item.isLink ? "oui-text-primary-light hover:oui-text-primary-darken oui-cursor-pointer" : ""
           }`}
           dangerouslySetInnerHTML={{ __html: item.content }}
         />
@@ -65,7 +65,7 @@ const MultiLineText: FC<{
 
   return (
     <div
-      className="oui-text-sm oui-text-base-contrast-54 oui-font-normal oui-flex oui-gap-1 oui-items-center hover:oui-text-primary oui-text-primary-light oui-cursor-pointer"
+      className="oui-text-sm oui-text-base-contrast-54 oui-font-normal oui-flex oui-gap-1 oui-items-center hover:oui-text-primary-darken oui-text-primary-light oui-cursor-pointer"
       onClick={() => [
         window.open(
           props.docOpenOptions?.url,

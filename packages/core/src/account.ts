@@ -1,19 +1,23 @@
-import { BaseSigner, MessageFactor } from "./signer";
+import { BaseSigner, MessageFactor, Signer } from "./signer";
 
 import { ConfigStore } from "./configStore/configStore";
 import { OrderlyKeyStore } from "./keyStore";
-import { Signer } from "./signer";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { SignatureDomain, getTimestamp, isHex, parseAccountId } from "./utils";
+import {
+  AccountStatusEnum,
+  SDKError,
+  ChainNamespace,
+} from "@orderly.network/types";
+import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
 
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
 import { Assets } from "./assets";
-import { SDKError } from "@orderly.network/types";
-import { ChainNamespace, EVENT_NAMES } from "./constants";
+import { EVENT_NAMES } from "./constants";
 import { WalletAdapterManager } from "./walletAdapterManager";
 import { WalletAdapter } from "./wallet/walletAdapter";
 import { BaseOrderlyKeyPair } from "./keyPair";
+import { PublicKey } from "@solana/web3.js";
+import { AbiCoder, keccak256 } from "ethers";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -24,6 +28,9 @@ export interface AccountState {
    * whether the account is validating
    */
   validating: boolean;
+  /**
+   * whether the account is revalidating
+   */
   // revalidating?: boolean;
 
   accountId?: string;
@@ -129,6 +136,11 @@ export class Account {
         "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method."
       );
       return this.stateValue.status;
+    } else {
+      /// emit switch account event
+      if (this.stateValue.status > AccountStatusEnum.NotConnected) {
+        this._ee.emit(EVENT_NAMES.switchAccount, address);
+      }
     }
 
     wallet.chain.id = this.parseChainId(wallet?.chain?.id);
@@ -150,7 +162,7 @@ export class Account {
       // revalidating: this._state.validating,
     };
 
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
     // if (wallet) {
     //   // this.walletClient = new this.walletAdapterClass(wallet);
@@ -160,7 +172,7 @@ export class Account {
     //   } as WalletAdapterOptions);
     // }
 
-    console.log("------+++++++------- setAddress", this.walletAdapter, wallet);
+    // console.log("------+++++++------- setAddress", this.walletAdapter, wallet);
 
     this.walletAdapterManager.switchWallet(
       wallet.chain.namespace,
@@ -171,6 +183,11 @@ export class Account {
         contractManager: this.contractManger,
       }
     );
+
+    /**
+     * update chainNamespace
+     */
+    this.configStore.set("chainNamespace", wallet.chain.namespace);
 
     this._ee.emit(EVENT_NAMES.validateStart);
 
@@ -200,6 +217,17 @@ export class Account {
     //   throw new Error("brokerId is undefined");
     // }
     const brokerId = this.configStore.get<string>("brokerId");
+    if (this.walletAdapter?.chainNamespace === ChainNamespace.solana) {
+      const userAccount = new PublicKey(this.address);
+      const decodedUserAccount = Buffer.from(userAccount.toBytes());
+      const abicoder = AbiCoder.defaultAbiCoder();
+      return keccak256(
+        abicoder.encode(
+          ["bytes32", "bytes32"],
+          [decodedUserAccount, parseBrokerHash(brokerId)]
+        )
+      );
+    }
     return parseAccountId(this.address, brokerId);
   }
 
@@ -216,7 +244,7 @@ export class Account {
   }
 
   private _bindEvents() {
-    this._ee.addListener("change:status", (state: AccountState) => {
+    this._ee.addListener(EVENT_NAMES.statusChanged, (state: AccountState) => {
       this._state = state;
     });
   }
@@ -241,7 +269,7 @@ export class Account {
           accountId: accountInfo.account_id,
           userId: accountInfo.user_id,
         };
-        this._ee.emit("change:status", nextState);
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
         //
       } else {
         nextState = {
@@ -250,7 +278,7 @@ export class Account {
           status: AccountStatusEnum.NotSignedIn,
         };
 
-        this._ee.emit("change:status", nextState);
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
         return AccountStatusEnum.NotSignedIn;
       }
@@ -267,7 +295,7 @@ export class Account {
       // };
 
       if (!orderlyKey) {
-        this._ee.emit("change:status", {
+        this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
           isNew: false,
           validating: false,
@@ -295,7 +323,7 @@ export class Account {
         const expiration = orderlyKeyStatus.expiration;
         if (now > expiration) {
           // orderlyKey is expired, remove orderlyKey
-          this._ee.emit("change:status", {
+          this._ee.emit(EVENT_NAMES.statusChanged, {
             ...this.stateValue,
             validating: false,
           });
@@ -308,7 +336,7 @@ export class Account {
         //   status: AccountStatusEnum.EnableTrading,
         // };
 
-        this._ee.emit("change:status", {
+        this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
           validating: false,
           status: AccountStatusEnum.EnableTrading,
@@ -316,7 +344,7 @@ export class Account {
 
         return AccountStatusEnum.EnableTrading;
       }
-      this._ee.emit("change:status", {
+      this._ee.emit(EVENT_NAMES.statusChanged, {
         ...this.stateValue,
         validating: false,
         // status: AccountStatusEnum.DisabledTrading,
@@ -327,7 +355,7 @@ export class Account {
       return AccountStatusEnum.NotConnected;
     } catch (err) {
       // return this.stateValue.status;
-      this._ee.emit("change:status", {
+      this._ee.emit(EVENT_NAMES.statusChanged, {
         ...this.stateValue,
         validating: false,
         // status: AccountStatusEnum.DisabledTrading,
@@ -407,9 +435,11 @@ export class Account {
         isNew: true,
       };
 
-      this._ee.emit("change:status", nextState);
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
+    } else {
+      throw new Error(res.message);
     }
   }
 
@@ -463,7 +493,7 @@ export class Account {
         // userId: res.data.user_id,
       };
 
-      this._ee.emit("change:status", nextState);
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
     } else {
@@ -560,6 +590,8 @@ export class Account {
         // chainId: this.walletClient.chainId,
         brokerId: this.configStore.get("brokerId"),
         // domain,
+        verifyContract:
+          this.contractManger.getContractInfoByEnv().verifyContractAddress,
       });
 
     // const EIP_712signatured = await this.signTypedData(toSignatureMessage);
@@ -601,7 +633,7 @@ export class Account {
     }
   }
 
-  async destoryOrderlyKey(): Promise<void> {
+  async destroyOrderlyKey(): Promise<void> {
     if (!!this.stateValue.address) {
       // const key = await this.keyStore.getOrderlyKey()?.getPublicKey();
       this.keyStore.cleanKey(this.stateValue.address, "orderlyKey");
@@ -611,7 +643,7 @@ export class Account {
       ...this.stateValue,
       status: AccountStatusEnum.DisabledTrading,
     };
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   async disconnect(): Promise<void> {
@@ -627,7 +659,7 @@ export class Account {
       userId: undefined,
       address: undefined,
     };
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   switchChainId(chainId: number | string) {
@@ -647,7 +679,7 @@ export class Account {
       this.walletAdapter.chainId = chainId as number;
     }
 
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   private parseChainId(chainId: string | number): number {
@@ -715,7 +747,7 @@ export class Account {
   private async _getAccountInfo() {
     const brokerId = this.configStore.get("brokerId");
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${this.address}&broker_id=${brokerId}`
+      `/v1/get_account?address=${this.address}&broker_id=${brokerId}&chain_type=${this.stateValue.chainNamespace}`
     );
     return res;
   }

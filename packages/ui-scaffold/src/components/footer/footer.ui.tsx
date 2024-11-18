@@ -1,6 +1,5 @@
 import { FC, useMemo } from "react";
-import { cn, Divider, Flex, Text } from "@orderly.network/ui";
-
+import { Divider, Flex, Text } from "@orderly.network/ui";
 import {
   CommuntiyDiscordIcon,
   CommuntiyTelegramIcon,
@@ -8,12 +7,11 @@ import {
   OrderlyNetworkTextIcon,
   SignalIcon,
 } from "../icons/index";
-
 import { FooterReturns } from "./footer.script";
-import { BaseIcon, BaseIconProps } from "@orderly.network/ui/src/icon/baseIcon";
 import { WsNetworkStatus } from "@orderly.network/hooks";
+import { FooterProps } from "./footer.widget";
 
-export const FooterUI: FC<FooterReturns> = (props) => {
+export const Footer: FC<FooterReturns & FooterProps> = (props) => {
   const signalClsName = useMemo(() => {
     switch (props.wsStatus) {
       case WsNetworkStatus.Connected:
@@ -30,13 +28,7 @@ export const FooterUI: FC<FooterReturns> = (props) => {
   };
 
   return (
-    <Flex
-      direction={"row"}
-      justify={"between"}
-      height={29}
-      px={3}
-      className="oui-hidden lg:oui-flex oui-bg-base-9 oui-border-t-2 oui-border-line-6"
-    >
+    <Flex direction={"row"} justify={"between"} height={28} px={3} width={"100%"}>
       <Flex>
         <Flex
           direction={"row"}
@@ -60,28 +52,28 @@ export const FooterUI: FC<FooterReturns> = (props) => {
             Join our community
           </Text>
           <Flex direction={"row"} gap={1}>
-            {typeof props.config?.telegramUrl !== "undefined" && (
+            {typeof props.telegramUrl !== "undefined" && (
               <CommuntiyTelegramIcon
                 className="oui-fill-white/[.54] hover:oui-fill-white/[.98] oui-cursor-pointer"
                 fill="currentColor"
                 fillOpacity={1}
-                onClick={(e) => openUrl(props.config?.telegramUrl)}
+                onClick={(e) => openUrl(props.telegramUrl)}
               />
             )}
-            {typeof props.config?.discordmUrl !== "undefined" && (
+            {typeof props.discordmUrl !== "undefined" && (
               <CommuntiyDiscordIcon
                 className="oui-fill-white/[.54] hover:oui-fill-white/[.98] oui-cursor-pointer"
                 fill="currentColor"
                 fillOpacity={1}
-                onClick={(e) => openUrl(props.config?.discordmUrl)}
+                onClick={(e) => openUrl(props.discordmUrl)}
               />
             )}
-            {typeof props.config?.twitterUrl !== "undefined" && (
+            {typeof props.twitterUrl !== "undefined" && (
               <CommuntiyXIcon
                 className="oui-fill-white/[.54] hover:oui-fill-white/[.98] oui-cursor-pointer"
                 fill="currentColor"
                 fillOpacity={1}
-                onClick={(e) => openUrl(props.config?.twitterUrl)}
+                onClick={(e) => openUrl(props.twitterUrl)}
               />
             )}
           </Flex>

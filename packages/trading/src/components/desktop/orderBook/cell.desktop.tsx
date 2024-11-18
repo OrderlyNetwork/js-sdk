@@ -65,7 +65,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
     >
       <div
         className={cn(
-          "oui-basis-7/12 oui-flex oui-felx-row oui-items-center oui-mr-2",
+          "oui-basis-7/12 oui-flex oui-flex-row oui-items-center oui-mr-2",
           showTotal && "oui-basis-5/12"
         )}
       >
@@ -85,13 +85,13 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
       </div>
       <div
         className={cn(
-          "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative",
+          "oui-basis-5/12 oui-flex oui-items-center oui-fex-row oui-overflow-hidden oui-relative oui-justify-end",
           showTotal && "oui-basis-7/12"
         )}
       >
         <div
           className={cn(
-            "oui-flex-1 oui-pr-6 oui-text-right",
+            "oui-flex-1 oui-pr-3 oui-text-right",
             showTotal && "oui-pr-3"
           )}
         >
@@ -120,7 +120,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
       {isPendingOrder && (
         <div
           className={cn(
-            "oui-absolute oui-rounded-full oui-left-[-8px] oui-h-[4px] oui-w-[4px] oui-pointer-events-none",
+            "oui-absolute oui-rounded-full oui-left-[4px] oui-h-[4px] oui-w-[4px] oui-pointer-events-none",
             props.type === OrderBookCellType.ASK && "oui-bg-trade-loss",
             props.type === OrderBookCellType.BID && "oui-bg-trade-profit"
           )}

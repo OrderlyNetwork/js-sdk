@@ -51,11 +51,17 @@ class PortfolioCalculator extends BaseCalculator<any> {
   }) {
     const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
 
-    if (!holding || !positions || !markPrices) {
+    if (
+      !holding ||
+      !positions ||
+      !Array.isArray(positions.rows) ||
+      !markPrices ||
+      !accountInfo
+    ) {
       return null;
     }
 
-    const unsettlementPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
+    const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
     const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
     const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
@@ -64,11 +70,11 @@ class PortfolioCalculator extends BaseCalculator<any> {
     const totalCollateral = account.totalCollateral({
       USDCHolding: USDC_holding,
       nonUSDCHolding: nonUSDC,
-      unsettlementPnL: unsettlementPnL,
+      unsettlementPnL: unsettledPnL,
     });
 
     const totalValue = account.totalValue({
-      totalUnsettlementPnL: unsettlementPnL,
+      totalUnsettlementPnL: unsettledPnL,
       USDCHolding: USDC_holding,
       nonUSDCHolding: nonUSDC,
     });
@@ -93,7 +99,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
     const availableBalance = account.availableBalance({
       USDCHolding: usdc?.holding ?? 0,
-      unsettlementPnL: positions.total_unsettled_pnl,
+      unsettlementPnL: positions.total_unsettled_pnl ?? 0,
     });
 
     return {
@@ -102,10 +108,14 @@ class PortfolioCalculator extends BaseCalculator<any> {
       totalUnrealizedROI,
       freeCollateral,
       availableBalance,
+      unsettledPnL,
     };
   }
 
-  update(data: { [K in keyof Portfolio]: number | Decimal } | null) {
+  update(
+    data: { [K in keyof Portfolio]: number | Decimal } | null,
+    scope: CalculatorScope
+  ) {
     if (!!data) {
       useAppStore.getState().actions.batchUpdateForPortfolio({
         totalCollateral: data.totalCollateral as Decimal,
@@ -113,6 +123,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
         freeCollateral: data.freeCollateral as Decimal,
         availableBalance: data.availableBalance as number,
         totalUnrealizedROI: data.totalUnrealizedROI as number,
+        unsettledPnL: data.unsettledPnL as number,
       });
     }
   }

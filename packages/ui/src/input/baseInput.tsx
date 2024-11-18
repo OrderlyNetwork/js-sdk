@@ -94,12 +94,12 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         if (!Array.isArray(innerFormatters) || innerFormatters.length === 0)
           return value;
         if (value === null || value === undefined) return "";
-        let index = 0;
-        while (index < innerFormatters.length) {
+        let index = innerFormatters.length - 1;
+        while (index > -1) {
           value = innerFormatters[index].onSendBefore(value, {
             isFocused: isFocused.current,
           });
-          index++;
+          index--;
         }
 
         return value;

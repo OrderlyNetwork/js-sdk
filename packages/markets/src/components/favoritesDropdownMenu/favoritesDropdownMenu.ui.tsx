@@ -21,7 +21,6 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
-import "../../style/index.css";
 
 export type FavoritesDropdownMenuProps =
   PropsWithChildren<UseFavoritesDropdownMenuScriptReturn>;
@@ -101,7 +100,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
       );
     }
 
-    const overTabs = favoriteTabs.length > 10;
+    const overTabs = favoriteTabs.length >= 10;
 
     return (
       <Tooltip
@@ -169,7 +168,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
     <Box>
       <Box
         my={2}
-        className="oui-max-h-[288px] oui-overflow-y-auto custom-scrollbar"
+        className="oui-max-h-[288px] oui-overflow-y-auto oui-custom-scrollbar"
       >
         {favoriteTabs?.slice(0, 10)?.map((item) => {
           const checked = !!selectedTabs.find((tab) => tab.id === item.id);

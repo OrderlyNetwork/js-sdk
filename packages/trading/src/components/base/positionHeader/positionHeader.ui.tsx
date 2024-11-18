@@ -21,7 +21,8 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       gap={2}
       width={"100%"}
       itemAlign={"start"}
-      py={2}
+      p={2}
+      className="oui-bg-base-9 oui-rounded-b-xl"
     >
       <Flex width={"100%"} justify={"between"}>
         <UnrealPnL
@@ -42,6 +43,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       <Divider className="oui-w-full" />
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
+          id="oui-checkbox-showAllInstruments"
           color="white"
           checked={props.showAllSymbol}
           onCheckedChange={(checked: boolean) => {
@@ -50,10 +52,10 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
         />
 
         <label
-          className="oui-text-2xs oui-text-base-contrast-54"
+          className="oui-text-2xs oui-text-base-contrast-54 oui-cursor-pointer"
           htmlFor="oui-checkbox-showAllInstruments"
         >
-          Show all instruments
+          Show all trading pairs
         </label>
       </Flex>
     </Flex>
@@ -61,7 +63,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
 };
 const DesktopLayout: FC<PositionHeaderState> = (props) => {
   return (
-    <Flex px={3} py={2} gap={6} width={"100%"} justify={"start"}>
+    <Flex py={2} px={3} gap={6} width={"100%"} justify={"start"}>
       <UnrealPnL
         {...props}
         classNames={{ label: "oui-text-base-contrast-54" }}
@@ -87,14 +89,14 @@ const UnrealPnL: FC<
 > = (props) => {
   const unrealPnLClsName =
     typeof props.unrealPnL === "number"
-      ? props.unrealPnL > 0
+      ? props.unrealPnL >= 0
         ? "oui-text-trade-profit"
         : "oui-text-trade-loss"
       : "oui-text-base-contrast-80";
 
   const unrealPnLROIClsName =
     typeof props.unrealPnL === "number" && props.unrealPnlROI
-      ? props.unrealPnlROI > 0
+      ? props.unrealPnlROI >= 0
         ? "oui-text-success-darken"
         : "oui-text-danger-darken"
       : "oui-text-base-contrast-80";
@@ -110,7 +112,7 @@ const UnrealPnL: FC<
         >
           {props.unrealPnL ?? "--"}
         </Text.numeral>
-        {props.unrealPnlROI && (
+        {typeof props.unrealPnlROI !== "undefined" && (
           <Text.numeral
             prefix="("
             suffix=")"

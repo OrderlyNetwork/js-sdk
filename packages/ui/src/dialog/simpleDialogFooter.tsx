@@ -1,6 +1,6 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { DialogFooter } from "./dialog";
-import { Button, ButtonProps } from "../button";
+import { Button, ButtonProps, ThrottledButton } from "../button";
 
 export type DialogAction<T = any> = {
   label: string;
@@ -20,7 +20,17 @@ export type SimpleDialogFooterProps = {
 
 export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
   const { actions } = props;
-  const [primaryLoading, setPrimaryLoading] = useState(false);
+  const [primaryLoading, setPrimaryLoading] = useState(actions?.primary?.loading ?? false);
+
+  useEffect(() => {
+    if (actions?.primary?.loading) {
+      setPrimaryLoading(actions?.primary?.loading);
+    }
+
+    return () => {
+      setPrimaryLoading(false);
+    }
+  }, [actions?.primary?.loading]);
 
   if (!actions) return null;
 
@@ -47,11 +57,13 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     }
 
     if (actions.primary && typeof actions.primary.onClick === "function") {
+      
       buttons.push(
-        <Button
+        <ThrottledButton
           data-testid={actions.primary?.["data-testid"]}
           key="primary"
           onClick={async (event) => {
+            if (primaryLoading) return;
             try {
               setPrimaryLoading(true);
               await actions.primary?.onClick(event);
@@ -67,7 +79,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
           fullWidth
         >
           {actions.primary.label}
-        </Button>
+        </ThrottledButton>
       );
     }
 

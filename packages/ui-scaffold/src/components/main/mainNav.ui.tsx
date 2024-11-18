@@ -6,14 +6,14 @@ import {
 } from "./mainNavItems";
 
 import { ProductsMenu, ProductsProps } from "./products";
-import { Flex, Logo } from "@orderly.network/ui";
+import { cn, Flex } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
 import { AccountMenuWidget } from "../accountMenu";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
-import type { MainNavItem } from "./navItem";
 import { CampaignPositionEnum } from "./useWidgetBuilder.script";
 import { CampaignButton, CampaignProps } from "./campaignButton";
+import { MainLogo } from "./mainLogo";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
@@ -55,10 +55,14 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       height={"48px"}
       justify={"between"}
       px={3}
-      className={`orderly-main-nav ${className} ${classNames?.root} oui-font-semibold`}
+      className={cn(
+        "oui-main-nav oui-font-semibold",
+        className,
+        classNames?.root
+      )}
     >
       <Flex itemAlign={"center"} gap={4}>
-        <Logo {...logo} />
+        <MainLogo {...logo} />
         <ProductsMenu {...products} className={classNames?.products} />
         <MainNavItems {...props.mainMenus} classNames={classNames?.mainNav} />
       </Flex>

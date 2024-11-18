@@ -7,6 +7,7 @@ import { usePositionsCount } from "../../../provider/usePositionsCount";
 import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
 import { modal, Text } from "@orderly.network/ui";
 import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { TabType } from "@orderly.network/ui-orders";
 
 export enum DataListTabType {
   position = "Position",
@@ -22,24 +23,30 @@ export const useDataListScript = (props: {
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
 }) => {
   const { symbol, sharePnLConfig } = props;
-  // TODO: default tab should be position
-  const [tab, setTab] = useState<DataListTabType>(DataListTabType.pending);
-  const { tabletMediaQuery } = useTradingPageContext();
-  const loalStorage = useTradingLocalStorage();
+  const [tab, setTab] = useState<DataListTabType>(DataListTabType.position);
+  const { tabletMediaQuery, onSymbolChange } = useTradingPageContext();
+  const localStorage = useTradingLocalStorage();
 
   const [_, { cancelAllOrders, cancelAllTPSLOrders }] = useOrderStream({});
   const { positionCount } = usePositionsCount(symbol);
   const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(symbol);
 
-  const onCloseAll = () => {
+  const onCloseAll = (type: TabType) => {
+    const title =
+      type === TabType.pending
+        ? "Cancel all pending orders"
+        : type === TabType.tp_sl
+        ? "Cancel all TP/SL orders"
+        : "";
+    const content =
+      type === TabType.pending
+        ? "Are you sure you want to cancel all of your pending orders?"
+        : type === TabType.tp_sl
+        ? "Are you sure you want to cancel all of your TP/SL orders?"
+        : "";
     modal.confirm({
-      title: "Cancel all orders",
-      content: (
-        <Text size="2xs">
-          Are you sure you want to cancel all of your pending orders, including
-          TP/SL orders?
-        </Text>
-      ),
+      title: title,
+      content: <Text size="2xs">{content}</Text>,
 
       onOk: async () => {
         try {
@@ -73,8 +80,9 @@ export const useDataListScript = (props: {
     positionCount,
     pendingOrderCount,
     tpSlOrderCount,
-    ...loalStorage,
+    ...localStorage,
     onCloseAll,
+    onSymbolChange,
   };
 };
 

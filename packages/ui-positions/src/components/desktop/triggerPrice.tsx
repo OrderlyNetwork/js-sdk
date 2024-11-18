@@ -150,7 +150,7 @@ export const TPSLTriggerPrice: FC<{
           )}
           key={"tp"}
           rule="price"
-          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
+          dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.takeProfitPrice}
           prefix={
             !props.stopLossPrice || direction === "column" ? (
@@ -172,7 +172,7 @@ export const TPSLTriggerPrice: FC<{
             "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 "
           )}
           rule={"price"}
-          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
+          dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.stopLossPrice}
           prefix={
             !props.takeProfitPrice || direction === "column" ? (

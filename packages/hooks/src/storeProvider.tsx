@@ -11,7 +11,7 @@ import { devtools } from "zustand/middleware/devtools";
 // import {
 //   PositionSlice,
 //   positionSlice,
-// } from "./orderly/usePositionStream/usePositionStore";
+// } from "./orderly/usePositionStream/usePosition.store";
 // import { useStoreWithEqualityFn } from 'zustand/traditional'
 
 type OrderlyStoreState = {

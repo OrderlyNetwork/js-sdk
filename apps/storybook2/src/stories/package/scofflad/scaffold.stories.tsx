@@ -1,18 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useMemo } from "react";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
-  MainNavWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
-  ChainMenu,
   Scaffold,
 } from "@orderly.network/ui-scaffold";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { useChains } from "@orderly.network/hooks";
-import { fn } from "@storybook/test";
+import { leftSidebarMenus } from "./data";
 
 const meta = {
   title: "Package/ui-scaffold/Scaffold",
@@ -27,48 +21,21 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  decorators: [
-    (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyApp
-          brokerId={"orderly"}
-          brokerName={""}
-          networkId={"testnet"}
-          onChainChanged={fn()}
-        >
-          <Story />
-        </OrderlyApp>
-      </ConnectorProvider>
-    ),
-  ],
   argTypes: {},
-  args: {
-    leftSideProps: {
-      // items: [
-      //   {
-      //     name: "Home",
-      //     icon: <HomeIcon />,
-      //     href: "/",
-      //   },
-      //   {
-      //     name: "Trade",
-      //     icon: <TradeIcon />,
-      //     href: "/trade",
-      //   },
-      //   {
-      //     name: "Wallet",
-      //     icon: <WalletIcon />,
-      //     href: "/wallet",
-      //   },
-      //   {
-      //     name: "Settings",
-      //     icon: <SettingsIcon />,
-      //     href: "/settings",
-      //   }],
-      className:
-        "oui-border oui-border-line-12 oui-m-4 oui-p-3 oui-rounded-lg oui-h-[calc(100vh_-_180px)]",
-    },
-  },
+  // args: {
+  //   leftSideProps: {
+  //     items: leftSidebarMenus,
+  //     className:
+  //       "oui-border oui-border-line-12 oui-m-4 oui-p-3 oui-rounded-lg oui-h-[calc(100vh_-_180px)]",
+  //   },
+  //   children: (
+  //     <Flex m={3} justify={"center"} height={"400px"} intensity={500} r={"lg"}>
+  //       <Text size={"3xl"} intensity={54}>
+  //         Content
+  //       </Text>
+  //     </Flex>
+  //   ),
+  // },
 };
 
 export default meta;
@@ -76,15 +43,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
+    leftSideProps: {
+      items: leftSidebarMenus,
+      className:
+        "oui-border oui-border-line-12 oui-m-4 oui-p-3 oui-rounded-lg oui-h-[calc(100vh_-_180px)]",
+    },
     children: (
-      <Box m={3} justify={"center"} height={"400px"} intensity={500} r={"lg"} />
+      <Flex m={3} justify={"center"} height={"400px"} intensity={500} r={"lg"}>
+        <Text size={"3xl"} intensity={54}>
+          Content
+        </Text>
+      </Flex>
     ),
   },
 };
 
 export const NoLeftSidebar: Story = {
   args: {
-    leftSidebar: null,
     children: (
       <Flex m={3} justify={"center"} height={"400px"} intensity={500} r={"lg"}>
         <Text size={"3xl"} intensity={54}>

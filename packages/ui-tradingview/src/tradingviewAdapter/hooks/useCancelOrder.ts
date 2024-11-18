@@ -1,12 +1,13 @@
 import { useCallback } from "react";
 import { useOrderStream } from "@orderly.network/hooks";
-import { TpslAlgoType } from "../renderer/tpsl.util";
+import { BracketAlgoType, TpslAlgoType } from "../renderer/tpsl.util";
 import { OrderStatus } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
 
 export default function useCancelOrder() {
   const [
     pendingOrders,
-    { cancelOrder, cancelAlgoOrder, cancelTPSLChildOrder },
+    { cancelOrder, cancelAlgoOrder, cancelTPSLChildOrder},
   ] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
   });
@@ -31,7 +32,7 @@ export default function useCancelOrder() {
         }
         return cancelAlgoOrder(order.algo_order_id, order.symbol).then();
       }
-      cancelOrder(order.order_id, order.symbol).then();
+      return cancelOrder(order.order_id, order.symbol).then();
     },
     [cancelOrder, pendingOrders]
   );

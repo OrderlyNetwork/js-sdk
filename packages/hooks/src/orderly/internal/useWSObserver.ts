@@ -31,8 +31,46 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
       onError: (error: any) => {},
     });
 
+    // const marketSubscription = ws.subscribe("tickers", {
+    //   onMessage: (message: any) => {
+    //     // console.log("tickers", message);
+    //     if (Array.isArray(message)) {
+    //       calculatorService.calc(CalculatorScope.MARKET, message, {
+    //         skipPending: true,
+    //         skipWhenOnPause: true,
+    //       });
+    //       // calculatorService.calc(CalculatorScope.MARKET, message.splice(0), {
+    //       //   skipPending: true,
+    //       //   skipWhenOnPause: true,
+    //       // });
+    //     }
+    //   },
+    // });
+
+    const indexPriceSubscription = ws.subscribe("indexprices", {
+      onMessage: (message: any) => {
+        if (!Array.isArray(message)) return;
+
+        const prices: Record<string, number> = Object.create(null);
+
+        for (let index = 0; index < message.length; index++) {
+          const element = message[index];
+          // NOTICE: force change spot to perp, because there is no perp now
+          prices[(element.symbol as string).replace("SPOT", "PERP")] =
+            element.price;
+        }
+
+        calculatorService.calc(CalculatorScope.INDEX_PRICE, prices, {
+          skipPending: true,
+          skipWhenOnPause: true,
+        });
+      },
+    });
+
     return () => {
       markPriceSubscription?.();
+      indexPriceSubscription?.();
+      // marketSubscription?.();
     };
   }, []);
 };

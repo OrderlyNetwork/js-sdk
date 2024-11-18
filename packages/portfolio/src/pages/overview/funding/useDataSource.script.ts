@@ -1,7 +1,7 @@
 import { useFundingFeeHistory } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { PaginationMeta, usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { parseDateRangeForFilter } from "../helper/date";
 import { addDays, getDate, getMonth, getYear, isSameDay, set } from "date-fns";
 
@@ -58,6 +58,14 @@ export const useFundingHistoryHook = () => {
     }
   };
 
+  const pagination = useMemo(() => {
+    return {
+      ...parseMeta(meta),
+      onPageChange: setPage,
+      onPageSizeChange: setPageSize,
+    } as PaginationMeta;
+  }, [meta, setPage, setPageSize]);
+
   return {
     dataSource: data,
     meta: parseMeta(meta),
@@ -71,6 +79,7 @@ export const useFundingHistoryHook = () => {
     onFilter,
     setPage,
     setPageSize,
+    pagination,
   } as const;
 };
 

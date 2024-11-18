@@ -11,10 +11,10 @@ span {
     letter-spacing: 0.03em;
 }
 .theme-dark:root {
-    --tv-color-pane-background: #181c23;
-    --tv-color-platform-background: #181c23;
-    --up: #00B59F;
-   --down: #FF67C2;
+    --tv-color-pane-background: #131519;
+    --tv-color-platform-background: #131519;
+    --up: #008676;
+   --down: #D92D6B;
     --white-1: rgba(255, 255, 255, 0.98);
 }
 /* Disabled instant orders placement control */
@@ -70,10 +70,4 @@ div[data-section-name='extendLeftTradingLine'] {
 }
 .calculator-3AwNSLGC .calculator__input-3AwNSLGC {
     display: flex !important;
-}
-
-
-.theme-dark:root {
-    --tv-color-platform-background: #16141c;
-    --tv-color-pane-background: #16141c;
 }

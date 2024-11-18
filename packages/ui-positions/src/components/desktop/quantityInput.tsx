@@ -24,6 +24,7 @@ export const QuantityInput = (props: { value: number }) => {
     updateQuantity: setQuantity,
     quantity,
     type,
+    errors,
   } = usePositionsRowContext();
 
   useEffect(() => {
@@ -54,23 +55,32 @@ export const QuantityInput = (props: { value: number }) => {
           onFocus={() => {
             setOpen(true);
           }}
+          classNames={{
+            root: "oui-outline-line-12 "
+          }}
           formatters={[
             inputFormatter.numberFormatter,
             ...(baseDp ? [inputFormatter.dpFormatter(baseDp)] : []),
           ]}
+          // tooltip={errors?.order_quantity?.message}
+          // color={errors?.order_quantity?.message ? "danger" : undefined}
           value={quantity}
           onValueChange={(e) => {
             setQuantity(e);
-            if (type === OrderType.LIMIT) {
-              const value = new Decimal(e)
-                .div(props.value)
-                .mul(100)
-                .abs()
-                .toFixed(0, Decimal.ROUND_DOWN);
-                console.log("xxxxxx value", value);
-                
-              setSliderValue(Math.min(100, Number(value)));
+            // if (type === OrderType.LIMIT) {
+            if (e == '0' || e == "") {
+              setSliderValue(0);
+              return;
             }
+            const value = new Decimal(e)
+              .div(props.value)
+              .mul(100)
+              .abs()
+              .toFixed(0, Decimal.ROUND_DOWN);
+            // console.log("xxxxxx value", value);
+
+            setSliderValue(Math.min(100, Number(value)));
+            // }
           }}
         />
       </PopoverTrigger>

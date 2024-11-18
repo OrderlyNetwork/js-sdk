@@ -9,10 +9,10 @@ const gradientTextVariants = tv({
   base: "oui-text-transparent oui-bg-clip-text",
   variants: {
     color: {
-      primary: "oui-gradient-primary",
+      primary: "oui-gradient-primary-darken",
       brand: "oui-gradient-brand",
       success: "oui-gradient-success",
-      warning: "oui-gradient-warning",
+      warning: "oui-gradient-warning-darken",
       danger: "oui-gradient-danger",
       neutral: "oui-gradient-neutral",
       //   transparent: "oui-gradient-transparent",

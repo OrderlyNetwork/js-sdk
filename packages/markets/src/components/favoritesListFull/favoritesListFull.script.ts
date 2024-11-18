@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarketList } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { MarketsType, useMarkets } from "@orderly.network/hooks";
+import { PaginationMeta, usePagination } from "@orderly.network/ui";
 import { getPagedData, searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 
@@ -9,8 +9,10 @@ export type UseFavoritesListFullReturn = ReturnType<
 >;
 
 export const useFavoritesListFullScript = () => {
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
-  const [data, favorite] = useMarketList(MarketsType.FAVORITES);
+  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
+    pageSize: 10,
+  });
+  const [data, favorite] = useMarkets(MarketsType.FAVORITES);
   const [loading, setLoading] = useState(true);
 
   const { favorites, selectedFavoriteTab } = favorite;
@@ -63,6 +65,16 @@ export const useFavoritesListFullScript = () => {
     setPage(1);
   }, [pageSize, searchValue]);
 
+  const pagination = useMemo(
+    () =>
+      ({
+        ...meta,
+        onPageChange: setPage,
+        onPageSizeChange: setPageSize,
+      } as PaginationMeta),
+    [meta, setPage, setPageSize]
+  );
+
   return {
     loading,
     dataSource: pagedData,
@@ -71,5 +83,6 @@ export const useFavoritesListFullScript = () => {
     setPageSize,
     favorite,
     onSort,
+    pagination,
   };
 };

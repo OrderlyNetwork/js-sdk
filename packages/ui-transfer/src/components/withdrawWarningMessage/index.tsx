@@ -77,7 +77,7 @@ export const WithdrawWarningMessage = ({
   if (content) {
     return (
       <Flex
-        className="oui-text-warning oui-text-xs oui-justify-center oui-text-center"
+        className="oui-text-warning-darken oui-text-xs oui-justify-center oui-text-center"
         mb={3}
       >
         {content}

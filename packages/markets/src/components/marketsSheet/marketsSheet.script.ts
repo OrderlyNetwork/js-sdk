@@ -1,3 +1,5 @@
+import { useTabSort } from "../shared/hooks/useTabSort";
+
 export type UseMarketsSheetScriptOptions = {};
 
 export type UseMarketsSheetScriptReturn = ReturnType<
@@ -5,5 +7,8 @@ export type UseMarketsSheetScriptReturn = ReturnType<
 >;
 
 export function useMarketsSheetScript(options?: UseMarketsSheetScriptOptions) {
-  return {};
+  const { tabSort, onTabSort } = useTabSort({
+    storageKey: "orderly_side_markets_tab_sort",
+  });
+  return { tabSort, onTabSort };
 }

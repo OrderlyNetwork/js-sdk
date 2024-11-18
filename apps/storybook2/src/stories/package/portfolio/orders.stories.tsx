@@ -1,23 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { FeeTierModule, OrdersModule } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
-// import {Box} from "@orderly.network/ui";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
-// import { } from '@orderly.network/ui-orders';
+import { Box } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/Portfolio/Orders",
   component: OrdersModule.OrdersPage,
-  subcomponents: {
-
-  },
+  subcomponents: {},
   decorators: [
     (Story) => (
-      <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <Story />
-        </OrderlyApp>
-      </ConnectorProvider>
+      <Box className="oui-h-[calc(100vh)]" p={6}>
+        <Story />
+      </Box>
     ),
   ],
   parameters: {
@@ -36,7 +29,7 @@ const meta = {
   args: {
     // p: 5,
   },
-} satisfies Meta<typeof FeeTierModule.FeeTierPage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

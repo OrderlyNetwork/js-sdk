@@ -25,47 +25,62 @@ export const Setting: FC<SettingState> = (props) => {
             props.setShowAllSymbol(checked);
           }}
         />
-        <label className="oui-text-xs oui-text-base-contrast-54" htmlFor="oui-checkbox-showAllInstruments">Show all instruments</label>
+        <label
+          className="oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer"
+          htmlFor="oui-checkbox-showAllInstruments"
+        >
+          Show all trading pairs
+        </label>
       </Flex>
-      <Button
-        size="xs"
-        type="button"
-        variant="contained"
-        className="oui-bg-transparent hover:oui-bg-transparent"
-      >
-        <DropdownMenuRoot open={open} onOpenChange={setOpen}>
-          <DropdownMenuTrigger>
-            <SettingFillIcon size={16} color="white" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="oui-p-2" alignOffset={2} align="end">
-            <div className="oui-flex oui-flex-col oui-text-3xs">
-              <Text className="oui-text-xs oui-pb-3">Portfolio Settings</Text>
-              <Divider />
-              <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-                Decimal Precision for PnL & Notional
-              </Text>
-              <DecimalPrecisionCheckbox
-                value={props.pnlNotionalDecimalPrecision}
-                onValueChange={(e) => {
-                  props.setPnlNotionalDecimalPrecision(e);
-                  setOpen(false);
-                }}
-              />
-              <Divider className="oui-my-3" />
-              <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-                Unrealized PnL Price Basis
-              </Text>
-              <UnPnlPriceBasisCheckBox
-                value={props.unPnlPriceBasis}
-                onValueChange={(e) => {
-                  props.setUnPnlPriceBasic(e);
-                  setOpen(false);
-                }}
-              />
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenuRoot>
-      </Button>
+
+      <DropdownMenuRoot open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button
+            size="xs"
+            type="button"
+            variant="contained"
+            className="oui-bg-transparent hover:oui-bg-transparent"
+          >
+            <SettingFillIcon
+              size={16}
+              color="white"
+              opacity={1}
+              className="oui-text-white/[.36] hover:oui-text-white/80"
+            />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className="oui-px-5 oui-py-3 oui-w-[360px]"
+          alignOffset={2}
+          align="end"
+        >
+          <div className="oui-flex oui-flex-col oui-text-sm">
+            <Text className="oui-text-base oui-pb-3">Portfolio Settings</Text>
+            <Divider />
+            <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
+              Decimal Precision for PnL & Notional
+            </Text>
+            <DecimalPrecisionCheckbox
+              value={props.pnlNotionalDecimalPrecision}
+              onValueChange={(e) => {
+                props.setPnlNotionalDecimalPrecision(e);
+                setOpen(false);
+              }}
+            />
+            <Divider className="oui-my-3" />
+            <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
+              Unrealized PnL Price Basis
+            </Text>
+            <UnPnlPriceBasisCheckBox
+              value={props.unPnlPriceBasis}
+              onValueChange={(e) => {
+                props.setUnPnlPriceBasic(e);
+                setOpen(false);
+              }}
+            />
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenuRoot>
     </Flex>
   );
 };
@@ -147,61 +162,63 @@ const DecimalPrecisionCheckbox = (props: {
 // };
 
 const RadioButton = (props: {
-    sel: boolean;
+  sel: boolean;
   label: any;
   value: any;
   onCheckChange: (value: any) => void;
-  }) => {
-    const { sel, label, value, onCheckChange } = props;
-    return (
-      <Flex
+}) => {
+  const { sel, label, value, onCheckChange } = props;
+  return (
+    <Flex
       onClick={(e) => {
         onCheckChange(value);
         e.stopPropagation();
       }}
       gap={1}
       className="oui-cursor-pointer"
-      >
-        {sel ? <SelIcon /> : <UnselIcon />}
-        <Text size="xs" intensity={sel ? 98 : 54}>{label}</Text>
-      </Flex>
-    );
-  };
-  
-  const SelIcon = () => {
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="currentColor"
-        xmlns="http://www.w3.org/2000/svg"
-        className="oui-fill-white"
-      >
-        <path
-          d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667"
-          fill="#fff"
-          fillOpacity=".36"
-        />
-        <circle cx="8" cy="8" r="3.333" />
-      </svg>
-    );
-  };
-  
-  const UnselIcon = () => {
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667"
-          fill="#fff"
-          fillOpacity=".54"
-        />
-      </svg>
-    );
-  };
+    >
+      {sel ? <SelIcon /> : <UnselIcon />}
+      <Text size="2xs" intensity={sel ? 98 : 54}>
+        {label}
+      </Text>
+    </Flex>
+  );
+};
+
+const SelIcon = () => {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      className="oui-fill-white"
+    >
+      <path
+        d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667"
+        fill="#fff"
+        fillOpacity=".36"
+      />
+      <circle cx="8" cy="8" r="3.333" />
+    </svg>
+  );
+};
+
+const UnselIcon = () => {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667"
+        fill="#fff"
+        fillOpacity=".54"
+      />
+    </svg>
+  );
+};

@@ -9,7 +9,7 @@ import {
 } from "@orderly.network/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 import { inputFormatter } from "@orderly.network/ui";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type PNLInputProps = PNLInputState & {
   testId?: string;
@@ -24,7 +24,7 @@ export const PNLInput = (props: PNLInputProps) => {
     onModeChange,
     onValueChange,
     quote,
-    quote_db,
+    quote_dp,
     value,
     type,
     tips,
@@ -32,13 +32,26 @@ export const PNLInput = (props: PNLInputProps) => {
     onBlur,
   } = props;
 
+  const [prefix, setPrefix] = useState<string>(mode);
+  useEffect(() => {
+    setPrefix(mode);
+    setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+  }, [mode]);
+  const [placeholder, setPlaceholder] = useState<string>(
+    mode === PnLMode.PERCENTAGE ? "%" : quote
+  );
+
+  useEffect(() => {
+    setPrefix(!!value ? "" : mode);
+  }, [value]);
+
   const id = useMemo(() => `${type.toLowerCase()}_${mode.toLowerCase()}`, []);
 
   return (
     <Input.tooltip
-      prefix={mode}
+      prefix={prefix}
       size={"md"}
-      placeholder={mode === PnLMode.PERCENTAGE ? "%" : quote}
+      placeholder={placeholder}
       id={id}
       align={"right"}
       value={value}
@@ -52,31 +65,51 @@ export const PNLInput = (props: PNLInputProps) => {
       autoComplete={"off"}
       onValueChange={onValueChange}
       formatters={[
-        props.formatter({ dp: quote_db, mode, type }),
+        props.formatter({ dp: quote_dp, mode, type }),
         inputFormatter.currencyFormatter,
+        // inputFormatter.identifierFormatter(),
       ]}
       classNames={{
+        root: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
         additional: "oui-text-base-contrast-54",
-        input: type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
+        input: "oui-text-inherit",
       }}
-      onFocus={onFocus}
-      onBlur={onBlur}
+      onFocus={() => {
+        setPrefix("");
+        setPlaceholder("");
+        onFocus();
+      }}
+      onBlur={() => {
+        setPrefix(!!value ? "" : mode);
+        setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+        onBlur();
+      }}
       suffix={
-        <PNLMenus
-          modes={modes}
-          onModeChange={(item) => onModeChange(item.value as PnLMode)}
-        />
+        <>
+          {mode === PnLMode.PERCENTAGE && !!value &&  (
+            <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
+              %
+            </Text>
+          )}
+          <PNLMenus
+            mode={mode}
+            modes={modes}
+            onModeChange={(item) => onModeChange(item.value as PnLMode)}
+          />
+        </>
       }
     />
   );
 };
 
 const PNLMenus = (props: {
+  mode?: string;
   modes: MenuItem[];
   onModeChange: (value: MenuItem) => void;
 }) => {
   return (
     <SimpleDropdownMenu
+      currentValue={props.mode}
       menu={props.modes}
       align={"end"}
       size={"xs"}

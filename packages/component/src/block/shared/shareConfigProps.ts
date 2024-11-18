@@ -1,4 +1,4 @@
-import { PosterLayoutConfig } from "@orderly.network/hooks/src/services/painter/basePaint";
+import { PosterLayoutConfig } from "@orderly.network/hooks";
 
 export interface ShareConfigProps {
     pnl: {

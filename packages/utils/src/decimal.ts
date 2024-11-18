@@ -209,8 +209,4 @@ export const todpIfNeed = (value: string | number, dp: number) => {
   }
 
   return `${numbers[0]}.${numbers[1].substring(0, dp)}`;
-
-  // return value.substring(0, value.indexOf(".") + dp + 1);
-
-  // return new Decimal(value).todp(dp, round).toNumber();
 };

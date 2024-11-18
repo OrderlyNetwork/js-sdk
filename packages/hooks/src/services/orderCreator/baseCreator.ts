@@ -228,13 +228,15 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     }
   ) {
     const { tp_trigger_price, sl_trigger_price, side, order_price } = values;
+    const { markPrice } = config;
 
     if (!tp_trigger_price && !sl_trigger_price) return errors;
 
     const hasTPPrice = !!tp_trigger_price;
     const hasSLPrice = !!sl_trigger_price;
     const { symbol } = config;
-    const { price_range, price_scope, quote_max, quote_min } = symbol;
+    const { price_range, price_scope, quote_max, quote_min, quote_dp } = symbol;
+    const _orderPrice = order_price || markPrice;
 
     if (hasTPPrice) {
       const tpPrice = new Decimal(tp_trigger_price);
@@ -252,19 +254,19 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       }
 
       if (side === OrderSide.BUY) {
-        if (tpPrice.lte(order_price)) {
+        if (tpPrice.lte(_orderPrice)) {
           errors.tp_trigger_price = {
             type: "tpPrice < order_price",
-            message: `TP must be greater than ${order_price}`,
+            message: `TP must be greater than ${_orderPrice}`,
           };
         }
       }
 
       if (side === OrderSide.SELL) {
-        if (tpPrice.gte(order_price)) {
+        if (tpPrice.gte(_orderPrice)) {
           errors.tp_trigger_price = {
             type: "tpPrice > order_price",
-            message: `TP price must be less than ${order_price}`,
+            message: `TP price must be less than ${_orderPrice}`,
           };
         }
       }
@@ -286,24 +288,68 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       }
 
       if (side === OrderSide.BUY) {
-        if (slPrice.gte(order_price)) {
+        if (slPrice.gte(_orderPrice)) {
           errors.sl_trigger_price = {
             type: "slPrice > order_price",
-            message: `SL price must be less than ${order_price}`,
+            message: `SL price must be less than ${_orderPrice}`,
           };
         }
         //SL price < mark_price * price_scope
       }
 
       if (side === OrderSide.SELL) {
-        if (slPrice.lte(order_price)) {
+        if (slPrice.lte(_orderPrice)) {
           errors.sl_trigger_price = {
             type: "slPrice < order_price",
-            message: `SL price must be greater than ${order_price}`,
+            message: `SL price must be greater than ${_orderPrice}`,
           };
         }
       }
     }
+
+    // if (side === OrderSide.BUY && hasTPPrice && hasSLPrice) {
+    //   const slPrice = new Decimal(sl_trigger_price);
+    //   const tpPrice = new Decimal(tp_trigger_price);
+
+    //   if (tpPrice.lte(_orderPrice)) {
+    //     errors.tp_trigger_price = {
+    //       type: "min",
+    //       message: `TP price must be greater than ${_orderPrice}`,
+    //     };
+    //   }
+    //   if (slPrice.gte(_orderPrice)) {
+    //     errors.sl_trigger_price = {
+    //       type: "max",
+    //       message: `SL price must be less than ${_orderPrice}`,
+    //     };
+    //   }
+
+    //   const slPriceScope = slPrice
+    //     .mul(1 - price_scope)
+    //     .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
+    //     .toNumber();
+
+    //   if (slPrice.lt(slPriceScope)) {
+    //     errors.sl_trigger_price = {
+    //       type: "max",
+    //       message: `SL price must be less than ${_orderPrice}`,
+    //     };
+    //   }
+    // } else if (side === OrderSide.SELL && hasTPPrice && hasSLPrice) {
+    //   const slPrice = new Decimal(sl_trigger_price);
+    //   const tpPrice = new Decimal(tp_trigger_price);
+
+    //   if (tpPrice.gte(_orderPrice)) {
+    //     errors.tp_trigger_price = {
+    //       type: "max",
+    //       message: `TP price must be less than ${_orderPrice}`,
+    //     };
+    //   }
+
+    //   if (slPrice.lte(_orderPrice)) {
+
+    //   }
+    // }
 
     return errors;
   }

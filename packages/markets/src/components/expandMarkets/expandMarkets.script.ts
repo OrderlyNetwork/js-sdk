@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMarketsContext } from "../marketsProvider";
+import { SortOrder } from "@orderly.network/ui";
+import { useTabSort } from "../shared/hooks/useTabSort";
 
 export type TabName = "favorites" | "recent" | "all";
 
@@ -17,6 +19,10 @@ export function useExpandMarketsScript(
 ) {
   const [activeTab, setActiveTab] = useState<TabName>(options?.activeTab!);
 
+  const { tabSort, onTabSort } = useTabSort({
+    storageKey: "orderly_side_markets_tab_sort",
+  });
+
   const { clearSearchValue } = useMarketsContext();
 
   const onTabChange = useCallback(
@@ -29,7 +35,6 @@ export function useExpandMarketsScript(
     },
     [options?.onTabChange]
   );
-
   useEffect(() => {
     setActiveTab(options?.activeTab || "favorites");
   }, [options?.activeTab]);
@@ -41,5 +46,7 @@ export function useExpandMarketsScript(
   return {
     activeTab,
     onTabChange,
+    tabSort,
+    onTabSort,
   };
 }

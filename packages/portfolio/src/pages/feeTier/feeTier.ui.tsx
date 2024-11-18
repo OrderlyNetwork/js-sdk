@@ -4,9 +4,9 @@ import {
   Flex,
   Text,
   Card,
-  Column,
   Divider,
-  DataTable,
+  TableView,
+  TableColumn,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useFeeTierScriptReturn } from "./feeTier.script";
@@ -131,7 +131,7 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 };
 
 type FeeTierTableProps = {
-  columns: Column[];
+  columns: TableColumn[];
   dataSource?: any[];
   page?: number;
   pageSize?: number;
@@ -185,12 +185,10 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
           }}
         />
       )}
-      <DataTable
+      <TableView
         bordered
         className="oui-font-semibold"
         classNames={{
-          header: "oui-text-base-contrast-36",
-          body: "oui-text-base-contrast-80",
           root: "oui-bg-transparent",
         }}
         onRow={onRow}

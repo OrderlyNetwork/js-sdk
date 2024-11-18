@@ -1,12 +1,5 @@
 import { MouseEventHandler, useMemo } from "react";
-import {
-  type Column,
-  Flex,
-  TokenIcon,
-  Text,
-  Box,
-  Tooltip,
-} from "@orderly.network/ui";
+import { Flex, Text, Box, Tooltip, TableColumn } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   FavoritesIcon,
@@ -21,21 +14,12 @@ export const useMarketsListFullColumns = (
   favorite: FavoriteInstance,
   isFavoriteList = false
 ) => {
-  const columns = useMemo<Column[]>(() => {
+  const columns = useMemo(() => {
     return [
       {
-        title: (
-          <Flex
-            width="100%"
-            height="100%"
-            justify="center"
-            itemAlign="center"
-            mr={3}
-          >
-            <UnFavoritesIcon />
-          </Flex>
-        ),
+        title: <UnFavoritesIcon className="oui-mt-1" />,
         dataIndex: "isFavorite",
+        align: "center",
         width: 30,
         render: (value, record) => {
           const onDelSymbol: MouseEventHandler = (e) => {
@@ -183,8 +167,8 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: "",
-        dataIndex: "",
+        dataIndex: "action",
+        type: "action",
         width: 40,
         render: (value, record) => {
           if (isFavoriteList) {
@@ -208,7 +192,7 @@ export const useMarketsListFullColumns = (
           return null;
         },
       },
-    ];
+    ] as TableColumn[];
   }, [favorite, isFavoriteList]);
 
   return columns;

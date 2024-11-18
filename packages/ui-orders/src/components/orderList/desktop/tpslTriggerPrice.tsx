@@ -42,7 +42,7 @@ export const TPSLTriggerPrice: FC<{
     let quantity = order.quantity;
 
     if (quantity === 0) {
-      if (order.child_orders[0].type === "CLOSE_POSITION") {
+      if (order.child_orders?.[0].type === "CLOSE_POSITION") {
         quantity = position.position_qty;
       }
     }
@@ -93,11 +93,11 @@ export const TPSLTriggerPrice: FC<{
       children.push(
         <Text.numeral
           className={cn(
-            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20"
+            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12"
           )}
           key={"tp"}
           rule="price"
-          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
+          dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.takeProfitPrice}
           // @ts-ignore
           prefix={
@@ -117,10 +117,10 @@ export const TPSLTriggerPrice: FC<{
         <Text.numeral
           key={"sl"}
           className={cn(
-            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 "
+            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12"
           )}
           rule={"price"}
-          precision={symbolInfo[order!.symbol]("quote_dp", 2)}
+          dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.stopLossPrice}
           // @ts-ignore
           prefix={
@@ -161,7 +161,11 @@ export const TPSLTriggerPrice: FC<{
 
   if (props.tooltip) {
     // @ts-ignore
-    return <Tooltip content={pnl}>{content}</Tooltip>;
+    return <Tooltip content={pnl} className="oui-bg-base-5" tooltipProps={{
+      arrow: {
+        className: "oui-fill-base-5"
+      }
+    }}>{content}</Tooltip>;
   }
 
   return content;
@@ -191,11 +195,16 @@ const TriggerPriceItem: FC<{
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
 
+  // console.log("trigger price item", "dp", symbolInfo.quote_dp);
+  
+
   return (
     <div className="oui-flex oui-items-center">
       <span className="oui-text-base-contrast-54 oui-mr-1">{`${type} PnL:`}</span>
       <Text.numeral
         rule="price"
+        dp={symbolInfo.quote_dp}
+        padding={false}
         className={
           pnl === 0
             ? "oui-text-base-contrast-36"
@@ -208,7 +217,7 @@ const TriggerPriceItem: FC<{
           // @ts-ignore
           <span>{pnl === 0 ? "" : pnl > 0 ? "+" : "-"}</span>
         }
-        surfix={
+        suffix={
           <span className="oui-text-base-contrast-36 oui-ml-1">USDC</span>
         }
       >{`${Math.abs(pnl)}`}</Text.numeral>

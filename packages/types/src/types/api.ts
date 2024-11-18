@@ -212,6 +212,7 @@ export declare namespace API {
      */
     unrealPnL: number;
     total_unreal_pnl: number;
+    total_unreal_pnl_index?: number;
     /**
      * @deprecated use total_unsettled_pnl instead
      */
@@ -219,6 +220,7 @@ export declare namespace API {
     total_unsettled_pnl: number;
     notional: number;
     unrealPnlROI: number;
+    unrealPnlROI_index?: number;
   }
 
   export interface Position {
@@ -231,10 +233,13 @@ export declare namespace API {
     settle_price: number;
     average_open_price: number;
     unrealized_pnl: number;
+    unrealized_pnl_index?: number;
     unrealized_pnl_ROI: number;
     unsettled_pnl: number;
     unsettled_pnl_ROI: number;
+    unrealized_pnl_ROI_index?: number;
     mark_price: number;
+    index_price?: number;
     est_liq_price: number | null;
     timestamp: number;
     /**
@@ -413,6 +418,7 @@ export declare namespace WSMessage {
     volume: number;
     amount: number;
     count: number;
+    change: number;
   }
 
   export interface MarkPrice {
@@ -473,6 +479,22 @@ export declare namespace WSMessage {
     timestamp: number;
     reduceOnly: boolean;
     maker: boolean;
+  }
+
+  export interface Holding {
+    holding: number;
+    frozen: number;
+    interest: number;
+    pendingShortQty: number;
+    pendingExposure: number;
+    pendingLongQty: number;
+    pendingLongExposure: number;
+    version: number;
+    staked: number;
+    unbonding: number;
+    vault: number;
+    fee24H: number;
+    markPrice: number;
   }
 
   export interface AlgoOrder {

@@ -44,7 +44,7 @@ const DesktopLayout: FC<{
         <Text.numeral
           dp={quote_dp}
           color="warning"
-          className="oui-underline oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-warning"
+          className="oui-underline oui-text-base oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-warning-darken"
         >
           {props.markPrice}
         </Text.numeral>
@@ -75,7 +75,7 @@ const MobileLayout: FC<{
         <Text.numeral
           dp={quote_dp}
           color="warning"
-          className="oui-underline oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-warning"
+          className="oui-underline oui-decoration-dashed oui-decoration-1 oui-underline-offset-4 oui-decoration-warning-darken"
         >
           {props.markPrice}
         </Text.numeral>

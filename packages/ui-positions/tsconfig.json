@@ -27,10 +27,11 @@
     "paths": {
       "@orderly.network/ui": ["../ui/src"],
       "@orderly.network/ui-share": ["../ui-share/src"],
-      "@orderly.network/chart": ["../chart/src"],
       "@orderly.network/hooks": ["../hooks/src"],
       "@orderly.network/utils": ["../utils/src"],
-      "@orderly.network/types": ["../types/src"]
+      "@orderly.network/ui-tpsl": ["../ui-tpsl/src"],
+      "@orderly.network/types": ["../types/src"],
+      "@orderly.network/ui-connector": ["../ui-connector/src"],
     }
   }
 }

@@ -1,28 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { OrderlyApp } from "@orderly.network/react-app";
 import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Text, Flex } from "@orderly.network/ui";
 import { OverviewModule } from "@orderly.network/portfolio";
 
-const meta = {
+const meta: Meta<typeof AuthGuard> = {
   title: "Package/ui-connector/AuthGuard",
   component: AuthGuard,
-  // subComponents: { Logo },
   parameters: {
     layout: "centered",
   },
-  decorators: [
-    (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <Story />
-        </OrderlyApp>
-      </ConnectorProvider>
-    ),
-  ],
   argTypes: {},
   args: {},
 };

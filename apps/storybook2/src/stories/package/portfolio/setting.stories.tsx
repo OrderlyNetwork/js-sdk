@@ -1,41 +1,15 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { APIManagerModule, PortfolioLayoutWidget, SettingModule } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { Box } from "@orderly.network/ui";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { PortfolioLayout } from "../../../../../../packages/portfolio/src/layout/layout.ui";
-import { CustomConfigStore } from "../CustomConfigStore";
 import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+import {
+  PortfolioLayoutWidget,
+  SettingModule,
+} from "@orderly.network/portfolio";
 
-const meta = {
+const meta: Meta<typeof SettingModule.SettingPage> = {
   title: "Package/Portfolio/setting",
   component: SettingModule.SettingPage,
   subcomponents: {},
-  decorators: [
-    (Story: any) => {
-      const networkId = "testnet";
-      // const configStore = new CustomConfigStore({
-      //   networkId,
-      //   brokerId: "woofi_pro",
-      //   env: "qa",
-      // });
-      return (
-        <ConnectorProvider>
-          <OrderlyApp
-            brokerId={"orderly"}
-            brokerName={"Orderly"}
-            networkId={networkId}
-            // configStore={configStore}
-          >
-            <Story />
-          </OrderlyApp>
-        </ConnectorProvider>
-      );
-    },
-  ],
-  parameters: {
-    // layout: "centered",
-  },
+  parameters: {},
   argTypes: {},
   args: {},
 };
@@ -46,23 +20,20 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {};
 
 export const Layout: Story = {
-  render: (e) => {
-
+  render: () => {
     const [currentPath, setCurrentPath] = useState("/portfolio/apiKey");
     return (
-      <PortfolioLayoutWidget 
-        // items={[]} 
+      <PortfolioLayoutWidget
+        // items={[]}
         routerAdapter={{
           onRouteChange: (op) => {
             console.log("routerAdapter", op);
-            
             setCurrentPath(op.href);
           },
           // currentPath: currentPath
         }}
-        // @ts-ignore
         leftSideProps={{
-          current: currentPath
+          current: currentPath,
         }}
       >
         <SettingModule.SettingPage />

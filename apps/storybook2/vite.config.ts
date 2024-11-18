@@ -1,13 +1,30 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
+    nodePolyfills({
+      include: ["path", "stream", "util", "assert", "crypto"],
+      exclude: ["http"],
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true,
+      },
+      overrides: {
+        fs: "memfs",
+      },
+      protocolImports: true,
+    }),
+  ],
   resolve: {
     alias: {
-      "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
+      // "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
       "@orderly.network/portfolio": resolve(
         __dirname,
         "../../packages/portfolio/src"
@@ -26,7 +43,7 @@ export default defineConfig({
       ),
       "@orderly.network/ui": resolve(__dirname, "../../packages/ui/src"),
       "@orderly.network/hooks": resolve(__dirname, "../../packages/hooks/src"),
-      // "@orderly.network/utils": resolve(__dirname, "../../packages/utils/src"),
+      "@orderly.network/utils": resolve(__dirname, "../../packages/utils/src"),
       "@orderly.network/react-app": resolve(
         __dirname,
         "../../packages/app/src"
@@ -35,14 +52,14 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-connector/src"
       ),
-      // "@orderly.network/ui-scaffold": resolve(
-      //   __dirname,
-      //   "../../packages/ui-scaffold/src"
-      // ),
-      // "@orderly.network/ui-leverage": resolve(
-      //   __dirname,
-      //   "../../packages/ui-leverage/src"
-      // ),
+      "@orderly.network/ui-scaffold": resolve(
+        __dirname,
+        "../../packages/ui-scaffold/src"
+      ),
+      "@orderly.network/ui-leverage": resolve(
+        __dirname,
+        "../../packages/ui-leverage/src"
+      ),
       "@orderly.network/ui-positions": resolve(
         __dirname,
         "../../packages/ui-positions/src"
@@ -87,19 +104,23 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-order-entry/src"
       ),
-      "@orderly.network/default-evm-adapter": resolve(
+      "@orderly.network/ui-tpsl": resolve(
         __dirname,
-        "../../packages/default-evm-adapter/src"
+        "../../packages/ui-tpsl/src"
       ),
-      "@orderly.network/react/dist": resolve(
+      // "@orderly.network/default-evm-adapter": resolve(
+      //   __dirname,
+      //   "../../packages/default-evm-adapter/src"
+      // ),
+      "@orderly.network/default-solana-adapter": resolve(
         __dirname,
-        "../../packages/component/dist"
+        "../../packages/default-solana-adapter/src"
       ),
-      "@orderly.network/react": resolve(
+      "@orderly.network/wallet-connector": resolve(
         __dirname,
-        "../../packages/component/src"
+        "../../packages/wallet-connector/src"
       ),
-      "@": resolve(__dirname, "../../packages/component/src"),
+      "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
     },
   },
 });

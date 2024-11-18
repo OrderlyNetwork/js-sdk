@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, DataTable, Flex, Pagination, Text } from "@orderly.network/ui";
+import { cn, Flex, Text, TableView } from "@orderly.network/ui";
 import { UnFavoritesIcon } from "../../icons";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 import { useMarketsContext } from "../../components/marketsProvider";
@@ -9,10 +9,18 @@ import { useFavoritesListFullColumns } from "./column";
 export type FavoritesListFullProps = UseFavoritesListFullReturn;
 
 export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
-  const { dataSource, meta, setPage, setPageSize, favorite, onSort, loading } =
-    props;
+  const {
+    dataSource,
+    meta,
+    setPage,
+    setPageSize,
+    favorite,
+    onSort,
+    loading,
+    pagination,
+  } = props;
 
-  const { onSymbolChange } = useMarketsContext();
+  const { symbol, onSymbolChange } = useMarketsContext();
 
   const columns = useFavoritesListFullColumns(favorite, true);
 
@@ -30,14 +38,39 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
 
   return (
     <div>
-      <FavoritesTabWidget favorite={favorite} />
+      <FavoritesTabWidget favorite={favorite} className="oui-my-3" />
 
-      <DataTable
+      <TableView
+        bordered
+        // minHeight={187.5}
+        columns={columns}
+        dataSource={dataSource}
+        emptyView={emptyView}
+        loading={loading}
+        onRow={(record, index) => {
+          return {
+            className: cn("oui-h-[55px] oui-cursor-pointer"),
+            onClick: () => {
+              onSymbolChange?.(record);
+              favorite.addToHistory(record);
+            },
+          };
+        }}
+        generatedRowKey={(record) => record.symbol}
+        rowSelection={{ [symbol!]: true }}
+        onSort={onSort}
+        pagination={pagination}
+        manualPagination
+        manualSorting
+      />
+
+      {/* <DataTable
         bordered
         classNames={{
           header: "oui-text-base-contrast-36",
-          body: "oui-text-base-contrast-80 !oui-min-h-[187.5px]",
+          body: "oui-text-base-contrast-80",
         }}
+        minHeight={187.5}
         columns={columns}
         dataSource={dataSource}
         emptyView={emptyView}
@@ -62,7 +95,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
           onPageChange={setPage}
           onPageSizeChange={setPageSize}
         />
-      </DataTable>
+      </DataTable> */}
     </div>
   );
 };

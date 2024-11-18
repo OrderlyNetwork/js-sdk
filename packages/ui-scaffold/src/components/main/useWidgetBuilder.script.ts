@@ -4,6 +4,7 @@ import { useWalletConnector } from "@orderly.network/hooks";
 import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./navItem";
+import { type MainNavWidgetProps } from "./mainNav.widget";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 export enum CampaignPositionEnum {
@@ -12,33 +13,12 @@ export enum CampaignPositionEnum {
   navTailing = "navTailing",
 }
 
-export type MainNavWidgetProps = {
-  logo: {
-    src: string;
-    alt: string;
-  };
-  mainMenus: MainNavItem[];
+type UseMainNavBuilderProps = Omit<
+  MainNavWidgetProps,
+  "classNames" | "children"
+>;
 
-  products: MainNavItem[];
-
-  campaigns?: MainNavItem;
-  campaignPosition?: CampaignPositionEnum;
-
-  initialProduct: string;
-  /**
-   * initial menu path, if it has submenus, use array
-   * @type string | string[]
-   */
-  initialMenu: string | string[];
-
-  onItemClick?: (options: {
-    href: string;
-    name: string;
-    scope?: string;
-  }) => void;
-};
-
-export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
+export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
   const { onItemClick, campaignPosition = CampaignPositionEnum.navTailing } =
     props;
 
@@ -86,11 +66,7 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
 
   const mainNavConfig = useMemo(() => {
     const config = {
-      logo: {
-        //https://mintlify.s3-us-west-1.amazonaws.com/orderly/logo/dark.png
-        src: "https://testnet-dex-evm.woo.org/images/woofipro.svg",
-        alt: "woofipro",
-      },
+      logo: {},
       mainMenus: [
         // { name: "Trading", href: "/trading" },
         // { name: "Portfolio", href: "/portfolio" },
@@ -138,8 +114,6 @@ export const useMainNavBuilder = (props: Partial<MainNavWidgetProps>) => {
         }
 
         routerAdapter?.onRouteChange(args);
-
-        // routerAdapter?.onRouteChange(args);
       },
     };
   }
