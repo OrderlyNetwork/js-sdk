@@ -13,16 +13,15 @@ import {
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { Box, Flex } from "@orderly.network/ui";
 import { OrderlyIcon } from "./icons";
-import { mainNavProps, sharePnLConfig } from "./config";
+import config from "../../../config";
 
 const meta: Meta<typeof TradingPage> = {
   title: "Package/Trading/trading",
   component: TradingPage,
-
   decorators: [
     (Story) => {
       return (
-        <Scaffold mainNavProps={mainNavProps}>
+        <Scaffold mainNavProps={config.scaffold.mainNavProps}>
           <Story />
         </Scaffold>
       );
@@ -31,19 +30,10 @@ const meta: Meta<typeof TradingPage> = {
   parameters: {
     layout: "fullscreen",
   },
-  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  // tags: ['autodocs'],
-  // More on argTypes: https://storybook.js.org/docs/api/argtypes
+  tags: ["autodocs"],
   argTypes: {},
   args: {
     symbol: "PERP_BTC_USDC",
-    tradingViewConfig: {
-      // scriptSRC: "",
-      scriptSRC: "/tradingview/charting_library/charting_library.js",
-      library_path: "/tradingview/charting_library/",
-      customCssUrl: "/tradingview/chart.css",
-    },
-    sharePnLConfig,
     referral: {
       onClickReferral: () => {
         console.log("click referral");
@@ -70,6 +60,8 @@ export const Default: Story = {
     return (
       <TradingPage
         {...arg}
+        tradingViewConfig={config.tradingPage.tradingViewConfig}
+        sharePnLConfig={config.tradingPage.sharePnLConfig}
         symbol={symbol}
         onSymbolChange={(symbol) => {
           setSymbol(symbol.symbol);
@@ -84,7 +76,7 @@ export const DataList: Story = {
     return (
       <Box p={3} height={800}>
         <DataListWidget
-          sharePnLConfig={sharePnLConfig}
+          sharePnLConfig={config.tradingPage.sharePnLConfig}
           tabletMediaQuery={arg.tabletMediaQuery!}
         />
       </Box>

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PositionsModule } from "@orderly.network/portfolio";
-import { sharePnLConfig } from "../trading/config";
 import { useTradingLocalStorage } from "@orderly.network/trading";
 import { Box } from "@orderly.network/ui";
+import config from "../../../config";
 
 const meta: Meta<typeof PositionsModule.PositionsPage> = {
   title: "Package/Portfolio/Positions",
@@ -30,7 +30,7 @@ export const Page: Story = {
 
     return (
       <PositionsModule.PositionsPage
-        sharePnLConfig={sharePnLConfig}
+        sharePnLConfig={config.tradingPage.sharePnLConfig}
         pnlNotionalDecimalPrecision={local.pnlNotionalDecimalPrecision}
         calcMode={local.unPnlPriceBasis}
         onSymbolChange={(symbol) => {
