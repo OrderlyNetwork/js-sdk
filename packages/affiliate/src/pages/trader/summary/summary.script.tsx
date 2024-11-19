@@ -61,7 +61,7 @@ export const useSummaryScript = (): SummaryReturns => {
 
 
   const rebateText = useMemo(() => {
-    if (rebate !== undefined) {
+    if (!!rebate) {
       return (
         new Decimal(rebate)
           .mul(100)
