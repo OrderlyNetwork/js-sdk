@@ -12,7 +12,10 @@ import { Box } from "@orderly.network/ui";
 const meta: Meta<typeof MarketsHomePage> = {
   title: "Package/Markets/HomePage",
   component: MarketsHomePage,
-  subcomponents: {},
+  parameters: {
+    layout: "centered",
+    
+  },
 };
 
 export default meta;

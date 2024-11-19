@@ -28,7 +28,7 @@ const meta: Meta<typeof TradingPage> = {
     },
   ],
   parameters: {
-    layout: "fullscreen",
+    layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
@@ -88,9 +88,7 @@ export const LastTrades: Story = {
   render: (arg) => {
     return (
       <div className="oui-bg-base-10 oui-p-3">
-        <Box p={3} r="xl" className="oui-bg-base-9 oui-h-[200px]">
-          <LastTradesWidget symbol={arg.symbol} />
-        </Box>
+        <LastTradesWidget symbol={arg.symbol} />
       </div>
     );
   },

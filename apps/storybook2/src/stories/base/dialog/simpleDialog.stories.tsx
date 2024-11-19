@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { SimpleDialog } from "@orderly.network/ui";
+import { Button, SimpleDialog, Text } from "@orderly.network/ui";
+import { useState } from "react";
 
 const meta = {
   title: "Base/Dialog/SimpleDialog",
@@ -23,7 +24,7 @@ const meta = {
   },
   // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
-    open: true,
+    open: false,
     title: "Title",
     size: "md",
   },
@@ -45,4 +46,13 @@ export const Default: Story = {
       },
     },
   },
+  render: (arg) => {
+    const [open, setOpen] = useState(false);
+    return <>
+      <Button size={"lg"} onClick={(e) => setOpen((e) => !e)}>Open</Button>
+      <SimpleDialog open={open} onOpenChange={setOpen} title="Simple dialog">
+        <Text>Simple dialog</Text>
+      </SimpleDialog>
+    </>
+  }
 };

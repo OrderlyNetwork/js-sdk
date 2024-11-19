@@ -48,15 +48,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (args) => {
-    const [_, updateArgs, resetArgs] = useArgs();
-    return (
-      <PaginationItems
-        {...args}
-        onPageChange={(page) => {
-          updateArgs({ page });
-        }}
-      />
-    );
-  },
+  // render: (args) => {
+    // const [_, updateArgs, resetArgs] = useArgs();
+    // return (
+    //   <PaginationItems
+    //     {...args}
+    //     onPageChange={(page) => {
+    //       updateArgs({ page });
+    //     }}
+    //   />
+    // );
+  // },
 };

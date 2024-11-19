@@ -77,27 +77,27 @@ export const AssetHistory: Story = {
   ],
 };
 
-export const Performance: Story = {
-  render: (args) => {
-    return (
-      <OverviewModule.PerformanceWidget></OverviewModule.PerformanceWidget>
-    );
-  },
+// export const Performance: Story = {
+//   render: (args) => {
+//     return (
+//       <OverviewModule.PerformanceWidget></OverviewModule.PerformanceWidget>
+//     );
+//   },
 
-  decorators: [
-    (Story) => (
-      <Flex
-        justify={"center"}
-        itemAlign={"center"}
-        className="oui-w-full oui-h-screen"
-      >
-        <Box width={"880px"}>
-          <Story />
-        </Box>
-      </Flex>
-    ),
-  ],
-};
+//   decorators: [
+//     (Story) => (
+//       <Flex
+//         justify={"center"}
+//         itemAlign={"center"}
+//         className="oui-w-full oui-h-screen"
+//       >
+//         <Box width={"880px"}>
+//           <Story />
+//         </Box>
+//       </Flex>
+//     ),
+//   ],
+// };
 
 export const PerformanceAndData: Story = {
   render: (args) => {
@@ -125,21 +125,21 @@ export const PerformanceAndData: Story = {
   ],
 };
 
-export const AssetHistoryChart: Story = {
-  render: (args) => {
-    return (
-      <OverviewModule.AssetsChartWidget></OverviewModule.AssetsChartWidget>
-    );
-  },
+// export const AssetHistoryChart: Story = {
+//   render: (args) => {
+//     return (
+//       <OverviewModule.AssetsChartWidget></OverviewModule.AssetsChartWidget>
+//     );
+//   },
 
-  decorators: [
-    (Story) => (
-      <Box width={"580px"}>
-        <Story />
-      </Box>
-    ),
-  ],
-};
+//   decorators: [
+//     (Story) => (
+//       <Box width={"580px"}>
+//         <Story />
+//       </Box>
+//     ),
+//   ],
+// };
 
 export const FundingHistory: Story = {
   render: (args) => {
