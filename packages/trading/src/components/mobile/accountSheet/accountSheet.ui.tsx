@@ -57,7 +57,7 @@ export const AccountInfo: FC<AccountSheetState> = (props) => {
               <div className="oui-h-1 oui-w-1 oui-rounded-full oui-bg-success oui-pr-1" />
             }
           >
-            {props.chainId}
+            {props.chainName}
           </Text.formatted>
         </Flex>
       </Flex>
