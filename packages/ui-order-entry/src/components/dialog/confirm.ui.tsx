@@ -85,7 +85,7 @@ export const OrderConfirmDialog = (props: Props) => {
         )}
         <Flex justify={"between"}>
           <Text>Price</Text>
-          {order.order_type === OrderType.MARKET ? (
+          {order.order_type === OrderType.MARKET || order.order_type === OrderType.STOP_MARKET ? (
             <Text intensity={80}>Market</Text>
           ) : (
             <Text.numeral

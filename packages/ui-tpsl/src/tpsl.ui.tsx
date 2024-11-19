@@ -41,7 +41,6 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     isPosition,
   } = props;
 
-  // console.log("TPSL", props);
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
@@ -56,6 +55,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             quote={symbolInfo("base")}
             isEditing={props.isEditing}
             isPosition={isPosition}
+            errorMsg={props.errors?.quantity?.message}
           />
           <Divider my={4} intensity={8} />
         </>
@@ -129,6 +129,7 @@ const TPSLQuantity = (props: {
   isEditing?: boolean;
   isPosition?: boolean;
   setOrderValue?: (key: string, value: number | string) => void;
+  errorMsg?: string;
 }) => {
   // const isPosition = props.quantity === props.maxQty;
   const { isPosition } = props;
@@ -160,7 +161,7 @@ const TPSLQuantity = (props: {
     <>
       <Flex gap={2}>
         <div className={"oui-flex-1"}>
-          <Input
+          <Input.tooltip
             ref={inputRef}
             prefix={"Quantity"}
             size={{
@@ -172,8 +173,18 @@ const TPSLQuantity = (props: {
             autoComplete="off"
             classNames={{
               prefix: "oui-text-base-contrast-54",
-              root: "oui-bg-base-5 oui-outline-line-12 focus-within:oui-outline-primary-light",
+              root: cn("oui-bg-base-5 oui-outline-line-12", props.errorMsg && "oui-outline-danger"),
             }}
+            tooltipProps={{
+              content: {
+                className: "oui-bg-base-6 oui-text-base-contrast-80",
+              },
+              arrow: {
+                className: "oui-fill-base-6",
+              },
+            }}
+            tooltip={props.errorMsg}
+            color={props.errorMsg ? 'danger' : undefined}
             formatters={[
               inputFormatter.dpFormatter(props.dp),
               inputFormatter.numberFormatter,

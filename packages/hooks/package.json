@@ -26,7 +26,8 @@
     "dist"
   ],
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.9",
@@ -40,7 +41,7 @@
     "@types/jest": "^29.5.3",
     "@types/ramda": "^0.29.3",
     "@types/react": "^18.2.38",
-    "@web3-onboard/common": "^2.3.4",
+    "@web3-onboard/common": "2.4.2",
     "babel-jest": "^29.6.1",
     "jest": "^29.6.1",
     "jest-environment-jsdom": "^29.7.0",
