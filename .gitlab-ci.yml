@@ -1,11 +1,11 @@
 include:
-  - project: 'orderlynetwork/orderly-devops/orderly-common/common-ci'
+  - project: "orderlynetwork/orderly-devops/orderly-common/common-ci"
     ref: main
-    file: '/common-orderly-network-dev-v2.yaml'
+    file: "/common-orderly-network-dev-v2.yaml"
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_SUBMODULE_FORCE_HTTPS: "true"
   SERVICE_NAME: js-sdk-docs
   IMAGE_NAME: js-sdk-docs
-  DOCKER_FILE: ${CI_PROJECT_DIR}/apps/docs/Dockerfile
+  DOCKER_FILE: ${CI_PROJECT_DIR}/apps/storybook2/Dockerfile
