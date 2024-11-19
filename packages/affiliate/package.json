@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/affiliate",
-  "version": "2.0.1-developV2.43",
+  "version": "2.0.1-developV2.44",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
