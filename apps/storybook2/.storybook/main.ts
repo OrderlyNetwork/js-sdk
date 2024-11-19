@@ -48,6 +48,15 @@ const config: StorybookConfig = {
     },
     getAbsolutePath("@storybook/addon-themes"),
     getAbsolutePath("@storybook/addon-mdx-gfm"),
+    // https://storybook.js.org/addons/@storybook/addon-storysource
+    {
+      name: "@storybook/addon-storysource",
+      options: {
+        loaderOptions: {
+          injectStoryParameters: false,
+        },
+      },
+    },
     /**
      * custom addon
      */
