@@ -98,7 +98,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
             <Flex width={"100%"} justify={"between"}>
               <Text intensity={54}>Last price</Text>
               <Text.numeral
-                dp={(props.item as any)?.symbolInfo?.duote_dp}
+                dp={(props.item as any)?.symbolInfo?.quote_dp}
                 suffix={<Text intensity={36}>USDC</Text>}
               >
                 {props.curMarkPrice}

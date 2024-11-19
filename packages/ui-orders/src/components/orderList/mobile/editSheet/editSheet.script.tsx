@@ -4,18 +4,20 @@ import {
   useDebouncedCallback,
   useLocalStorage,
   useMaxQty,
-  useOrderEntry,
+  useOrderEntity,
+  // useOrderEntry,
   useOrderEntry_deprecated,
   useThrottledCallback,
   utils,
 } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { modal, toast, useModal } from "@orderly.network/ui";
-import { OrderEntity } from "@orderly.network/types";
+import { API, OrderEntity } from "@orderly.network/types";
 import { useOrderListContext } from "../../orderListContext";
 import { OrderTypeView } from "../items";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
+import { useSymbolContext } from "../../symbolProvider";
 
 // export const useEditSheetScript = (props: {
 //   state: OrderCellState;
@@ -261,45 +263,40 @@ export const useEditSheetScript = (props: {
     true
   );
 
+  const { base_dp, base_tick } = props.state;
+
   const {
     formattedOrder,
     setValue,
-    setValues,
     symbolInfo,
     markPrice,
-
-    metaState: { errors },
-    helper,
-  } = useOrderEntry(order.symbol, {
-    initialOrder: {
-      side: order.side,
-      order_type: orderType,
-      order_price: order.price,
-      order_quantity: order.quantity,
-      trigger_price: order.trigger_price,
-      reduce_only: order.reduce_only,
-    },
+    errors,
+    validate,
+    maxQty,
+  } = useOrderEntry({
+    order: order,
+    orderType,
   });
 
-  const { reduce_only } = order;
+  // const setValue = (key: any, value: any) => {
+  //   setFormattedOrder((oldValue) => ({
+  //     ...oldValue,
+  //     [key]: value,
+  //   }));
+  // };
 
-  const { base_dp, base_tick } = symbolInfo;
-
-  const { position } = useTPSLOrderRowContext();
-  const positionQty = position?.position_qty;
-
-  const _maxQty = useMaxQty(order.symbol, order.side as any, order.reduce_only);
-
-  const maxQty = useMemo(() => {
-    if (reduce_only) {
-      return Math.abs(positionQty ?? 0);
-    }
-    return order.quantity + Math.abs(_maxQty);
-  }, [order.quantity, _maxQty, reduce_only, positionQty]);
+  // console.log(
+  //   "formattedOrder",
+  //   formattedOrder,
+  //   errors,
+  //   maxQty,
+  //   base_dp,
+  //   base_tick,
+  //   order,
+  // );
 
   const onSheetConfirm = () => {
-    helper
-      .validate()
+    validate()
       .then(
         (result) => {
           if (orderConfirm) {
@@ -386,9 +383,9 @@ export const useEditSheetScript = (props: {
   }, [formattedOrder.order_quantity, maxQty]);
 
   const isChanged =
-    order.price !== formattedOrder.order_price ||
-    `${order.quantity}` !== formattedOrder.order_quantity ||
-    `${order.trigger_price}` !== formattedOrder.trigger_price;
+    order.price != formattedOrder.order_price ||
+    order.quantity != formattedOrder.order_quantity ||
+    order.trigger_price != formattedOrder.trigger_price;
 
   const setSliderValue = useThrottledCallback(
     (value: number) => {
@@ -444,3 +441,82 @@ export const useEditSheetScript = (props: {
 };
 
 export type EditSheetState = ReturnType<typeof useEditSheetScript>;
+
+const useOrderEntry = (props: {
+  order: API.AlgoOrderExt;
+  orderType: string;
+}) => {
+  const { order, orderType } = props;
+
+  // const {
+  //   formattedOrder,
+  //   setValue,
+  //   setValues,
+  //   symbolInfo,
+  //   markPrice,
+
+  //   metaState: { errors },
+  //   helper,
+  // } = useOrderEntry(order.symbol, {
+  //   initialOrder: {
+  //     side: order.side,
+  //     order_type: orderType,
+  //     order_price: order.price,
+  //     order_quantity: order.quantity,
+  //     trigger_price: order.trigger_price,
+  //     reduce_only: order.reduce_only,
+  //   },
+  // });
+
+  const [formattedOrder, setFormattedOrder] = useState({
+    side: order.side,
+    order_type: orderType,
+    order_price: order.price,
+    order_quantity: order.quantity,
+    trigger_price: order.trigger_price,
+    reduce_only: order.reduce_only,
+    symbol: order.symbol,
+  });
+
+  const { reduce_only } = order;
+
+  const { position } = useTPSLOrderRowContext();
+  const positionQty = position?.position_qty;
+
+  const _maxQty = useMaxQty(order.symbol, order.side as any, order.reduce_only);
+
+  const maxQty = useMemo(() => {
+    if (reduce_only) {
+      return Math.abs(positionQty ?? 0);
+    }
+    return order.quantity + Math.abs(_maxQty);
+  }, [order.quantity, _maxQty, reduce_only, positionQty]);
+
+  const { symbolInfo, markPrice, errors, validate } = useOrderEntity(
+    // @ts-ignore
+    {
+      ...formattedOrder,
+      symbol: order.symbol,
+    },
+    {
+      maxQty,
+    }
+  );
+
+  const setValue = (key: any, value: any) => {
+    setFormattedOrder((oldValue) => ({
+      ...oldValue,
+      [key]: value,
+    }));
+  };
+
+  return {
+    symbolInfo,
+    markPrice,
+    errors,
+    validate,
+    setValue,
+    formattedOrder,
+    maxQty,
+  };
+};
