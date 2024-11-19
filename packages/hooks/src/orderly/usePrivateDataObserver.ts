@@ -17,7 +17,7 @@ import { CalculatorScope } from "../types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { usePositionActions } from "./orderlyHooks";
-import { EVENT_NAMES } from "@orderly.network/core";
+import { AccountState, EVENT_NAMES } from "@orderly.network/core";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -51,21 +51,34 @@ export const usePrivateDataObserver = (options: {
     usePrivateQuery<API.PositionInfo>("/v1/positions", {
       formatter: (data) => data,
       onError: (error) => {
-        // console.error("fetch positions error", error);
         statusActions.updateApiError("positions", error.message);
       },
     });
 
   // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
   useEffect(() => {
-    account.on(EVENT_NAMES.switchAccount, () => {
-      cleanAll();
-      positionsActions.clearAll();
-    });
+    const handler = (state: AccountState) => {
+      if (!state.accountId) {
+        calculatorService.stop();
+        cleanAll();
+        positionsActions.clearAll();
+      }
+    };
+
+    account.on(EVENT_NAMES.statusChanged, handler);
 
     return () => {
-      account.off(EVENT_NAMES.switchAccount);
+      account.off(EVENT_NAMES.statusChanged, handler);
     };
+
+    // account.on(EVENT_NAMES.switchAccount, () => {
+    //   cleanAll();
+    //   positionsActions.clearAll();
+    // });
+
+    // return () => {
+    //   account.off(EVENT_NAMES.switchAccount);
+    // };
     // if (state.validating) return;
 
     // console.log("++++++++++state.status", state.status);

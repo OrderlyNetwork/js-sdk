@@ -1,30 +1,14 @@
-import { Tooltip, TooltipProvider } from "@orderly.network/ui";
+import { Tooltip } from "@orderly.network/ui";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-const meta = {
+const meta: Meta<typeof Tooltip> = {
   title: "Base/Tooltip",
   component: Tooltip,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
     layout: "centered",
   },
-  decorators: [
-    (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Story />
-        </OrderlyAppProvider>
-      </ConnectorProvider>
-    ),
-  ],
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes

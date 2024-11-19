@@ -98,7 +98,8 @@ export const useOrderStream = (
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side
-    )}`;
+    )}${formatKey(size.toString())}`;
+
     registerKeyHandler?.(
       key,
       generateKeyFun({ status, symbol, side, size, page, dateRange })

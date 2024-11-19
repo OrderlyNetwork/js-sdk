@@ -1,6 +1,5 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   ExpandMarketsWidget,
   FavoritesListWidget,
@@ -9,15 +8,6 @@ import {
   SideMarketsWidget,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
-import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
-import { useState } from "react";
-
-const configStore = new CustomConfigStore({
-  networkId: "testnet",
-  brokerId: "orderly",
-  brokerName: "Orderly",
-  env: "staging",
-});
 
 const decorators = [
   (Story: any) => (
@@ -29,16 +19,6 @@ const decorators = [
 
 const meta: Meta<typeof ExpandMarketsWidget> = {
   title: "Package/Markets/SideMarkets",
-  subcomponents: {},
-  decorators: [
-    (Story: any) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider configStore={configStore}>
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
 };
 
 export default meta;

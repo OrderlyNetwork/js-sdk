@@ -8,17 +8,19 @@ import { useDataTap } from "@orderly.network/react-app";
 export const usePendingOrderCount = (symbol?: string) => {
   const { showAllSymbol } = useTradingLocalStorage();
 
-  const pendingOrdersPageSizeKey = `oui-${TabType.pending}_pageSize`;
-  const tpslOrdersPageSizeKey = `oui-${TabType.tp_sl}_pageSize`;
-  const [pendingOrderPageSize] = useLocalStorage(pendingOrdersPageSizeKey, 50);
-  const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 50);
+  const pendingOrdersPageSizeKey = `orderly_${TabType.pending}_pageSize`;
+  const tpslOrdersPageSizeKey = `orderly_${TabType.tp_sl}_pageSize`;
+  // 
+  // const [pendingOrderPageSize] = useLocalStorage(pendingOrdersPageSizeKey, 500);
+  // const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 500);
 
   const [pendingOrders, { total: pendingCount }] = useOrderStream(
     {
       symbol: showAllSymbol ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
       excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
-      size: pendingOrderPageSize,
+      // size: pendingOrderPageSize,
+      // size: 500,
     },
     {
       keeplive: true,
@@ -30,7 +32,8 @@ export const usePendingOrderCount = (symbol?: string) => {
       symbol: showAllSymbol ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
-      size: tpslOrderPageSize,
+      // size: tpslOrderPageSize,
+      // size: 500,
     },
     {
       keeplive: true,

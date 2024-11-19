@@ -143,7 +143,7 @@ export const useAssetsHistoryData = (
       ...lastItem,
       date: todayFormattedStr,
       perp_volume: 0,
-      account_value: !!totalValue ? totalValue : lastItem?.account_value ?? 0,
+      account_value: totalValue !== null ? totalValue : lastItem?.account_value ?? 0,
       pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }) ?? 0,
     };
   };
@@ -170,7 +170,7 @@ export const useAssetsHistoryData = (
     /**
      * need the totalValue and data are all ready, else return null;
      */
-    if (!totalValue) return [];
+    if (totalValue == null) return [];
     return calculateData(data, isRealtime);
   }, [data, totalValue]);
 

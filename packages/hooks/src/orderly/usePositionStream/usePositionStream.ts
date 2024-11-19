@@ -43,7 +43,7 @@ export const usePositionStream = (
   const { includedPendingOrder = false } = options || {};
 
   const positionCalculator = useRef<PositionCalculator | null>(null);
-  const calcutlatorService = useCalculatorService();
+  const calculatorService = useCalculatorService();
 
   // const markPrices = useMarkPricesStream();
 
@@ -54,6 +54,7 @@ export const usePositionStream = (
       symbol: symbol === "all" ? undefined : symbol,
       status: OrderStatus.INCOMPLETE,
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+      size: 500,
     },
     {
       keeplive: true,
@@ -82,13 +83,13 @@ export const usePositionStream = (
 
     positionCalculator.current = new PositionCalculator(symbol);
 
-    calcutlatorService.register(
+    calculatorService.register(
       CalculatorScope.POSITION,
       positionCalculator.current
     );
 
     return () => {
-      calcutlatorService.unregister(
+      calculatorService.unregister(
         CalculatorScope.POSITION,
         positionCalculator.current!
       );

@@ -22,7 +22,7 @@ export const ChainSelector = (props: {
   isWrongNetwork?: boolean;
 }) => {
   const { isWrongNetwork = true } = props;
-  const [select, setSelect] = useState<number | undefined>();
+  const [select, setSelect] = useState<number | undefined>(props.currentChainId);
   // props.currentChainId
   const onChange = async (chain: ChainItem) => {
     setSelect(chain.id);
@@ -43,7 +43,7 @@ export const ChainSelector = (props: {
 
   return (
     <>
-      <Box intensity={900} r="2xl" p={1} className="oui-overflow-auto oui-max-h-[420px] xl:oui-max-h-[562px] oui-hide-scrollbar">
+      <Box intensity={900} r="2xl" p={1} className="oui-overflow-auto oui-max-h-[463px] xl:oui-max-h-[562px] oui-hide-scrollbar">
         {Array.isArray(props.chains.mainnet) && (
           <Text
             as="div"

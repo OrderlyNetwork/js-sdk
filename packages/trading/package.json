@@ -23,7 +23,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/react": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/ui-orders": "workspace:*",
@@ -39,9 +38,7 @@
     "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/markets": "workspace:*",
-    "@radix-ui/react-tooltip": "^1.0.6",
-    "@uiw/react-split": "^5.9.3",
-    "lucide-react": "^0.343.0"
+    "@uiw/react-split": "^5.9.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

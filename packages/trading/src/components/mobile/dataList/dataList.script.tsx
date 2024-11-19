@@ -24,7 +24,7 @@ export const useDataListScript = (props: {
 }) => {
   const { symbol, sharePnLConfig } = props;
   const [tab, setTab] = useState<DataListTabType>(DataListTabType.position);
-  const { tabletMediaQuery } = useTradingPageContext();
+  const { tabletMediaQuery, onSymbolChange } = useTradingPageContext();
   const localStorage = useTradingLocalStorage();
 
   const [_, { cancelAllOrders, cancelAllTPSLOrders }] = useOrderStream({});
@@ -82,6 +82,7 @@ export const useDataListScript = (props: {
     tpSlOrderCount,
     ...localStorage,
     onCloseAll,
+    onSymbolChange,
   };
 };
 

@@ -1,11 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Box, Flex, ModalProvider } from "@orderly.network/ui";
+import { Box } from "@orderly.network/ui";
 import { SideNavbarWidget } from "@orderly.network/ui-scaffold";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { leftSidebarMenus } from "./data";
 
-const meta = {
+const meta: Meta<typeof SideNavbarWidget> = {
   title: "Package/ui-scaffold/SideNavbar",
   component: SideNavbarWidget,
   // subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
@@ -13,21 +11,6 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-  decorators: [
-    (Story) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <ModalProvider>
-            <Story />
-          </ModalProvider>
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
   argTypes: {},
   args: {
     items: leftSidebarMenus,
@@ -46,9 +29,4 @@ export const Default: Story = {
       </Box>
     );
   },
-  // decorators: [
-  //   (Story) => (
-
-  //   ),
-  // ],
 };

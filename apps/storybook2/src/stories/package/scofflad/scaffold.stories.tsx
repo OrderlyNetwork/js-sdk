@@ -1,14 +1,11 @@
-import type { StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Box, Flex, Text, SettingIcon } from "@orderly.network/ui";
+import type { Meta, StoryObj } from "@storybook/react";
+import { Flex, Text } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
   Scaffold,
 } from "@orderly.network/ui-scaffold";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { fn } from "@storybook/test";
 import { leftSidebarMenus } from "./data";
 
 const meta = {
@@ -24,20 +21,6 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
-  decorators: [
-    (Story: any) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-          onChainChanged={fn()}
-        >
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
   argTypes: {},
   // args: {
   //   leftSideProps: {

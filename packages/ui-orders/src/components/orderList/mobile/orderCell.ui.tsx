@@ -3,7 +3,7 @@ import { Divider, Flex, Grid, Text } from "@orderly.network/ui";
 import { OrderCellState } from "./orderCell.script";
 import {
   OrderTime,
-  Symbol,
+  SymbolToken,
   OrderTypeView,
   Qty,
   Filled,
@@ -31,7 +31,6 @@ export const OrderCell: FC<
     className?: string;
   }
 > = (props) => {
-
   return (
     <Flex
       direction={"column"}
@@ -53,7 +52,7 @@ export const Header: FC<OrderCellState> = (props) => {
   return (
     <Flex direction={"column"} gap={1} width={"100%"}>
       <Flex justify={"between"} width={"100%"}>
-        <Symbol {...props} />
+        <SymbolToken {...props} />
         <OrderTime {...props} />
       </Flex>
       <Flex width={"100%"} justify={"between"}>

@@ -31,6 +31,7 @@ export const CloseButton = () => {
     type,
     submitting,
     quoteDp,
+    errors,
   } = usePositionsRowContext();
 
   const { base, quote } = useSymbolContext();
@@ -74,6 +75,12 @@ export const CloseButton = () => {
         disabled={disabled}
         onClick={(e) => {
           e.stopPropagation();
+          const quantityMsg = errors?.order_quantity?.message;
+          const priceMsg = errors?.order_price?.message;
+          if (quantityMsg || priceMsg) {
+            toast.error(quantityMsg ?? priceMsg);
+            return;
+          }
           setOpen(true);
         }}
       >

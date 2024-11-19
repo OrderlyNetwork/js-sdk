@@ -173,6 +173,7 @@ export const MobileOrderList: FC<
                 index={index}
                 className={props.classNames?.cell}
                 type={props.type}
+                onSymbolChange={props.onSymbolChange}
               />
             );
             if (props.type === TabType.tp_sl) {

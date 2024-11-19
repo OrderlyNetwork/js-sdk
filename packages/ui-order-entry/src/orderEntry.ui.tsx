@@ -296,7 +296,7 @@ export const OrderEntry = (
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
         />
-        <Divider className="oui-w-full"/>
+        <Divider className="oui-w-full" />
         {/* TP SL switch and content */}
         <OrderTPSL
           // onCancelTPSL={props.cancelTP_SL}
@@ -564,7 +564,7 @@ const CustomInput = forwardRef<
       color={props.error ? "danger" : undefined}
       prefix={<InputLabel id={props.id}>{props.label}</InputLabel>}
       suffix={props.suffix}
-      value={props.value}
+      value={props.value || ""}
       // onChange={props.onChange}
       onValueChange={props.onChange}
       onFocus={(event) => {

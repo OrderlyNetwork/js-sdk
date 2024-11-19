@@ -4,13 +4,14 @@ import { OrderCell } from "./orderCell.ui";
 import { TabType } from "../../orders.widget";
 
 export const OrderCellWidget = (props: {
-    item: API.AlgoOrderExt;
-    index: number;
-    className?: string;
-    type: TabType;
+  item: API.AlgoOrderExt;
+  index: number;
+  className?: string;
+  type: TabType;
+  onSymbolChange?: (symbol: API.Symbol) => void;
 }) => {
-    const { className, ...rest} = props;
-    
-    const state = useOrderCellScript(rest);
-    return (<OrderCell {...state} className={className}/>);
+  const { className, ...rest } = props;
+
+  const state = useOrderCellScript(rest);
+  return <OrderCell {...state} className={className} />;
 };

@@ -4,34 +4,12 @@ import {
   PortfolioLayoutWidget,
   SettingModule,
 } from "@orderly.network/portfolio";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 
-const meta = {
+const meta: Meta<typeof SettingModule.SettingPage> = {
   title: "Package/Portfolio/setting",
   component: SettingModule.SettingPage,
   subcomponents: {},
-  decorators: [
-    (Story: any) => {
-      const configStore = new CustomConfigStore({
-        networkId: "testnet",
-        brokerId: "orderly",
-        brokerName: "Orderly",
-        env: "qa",
-      });
-      return (
-        <WalletConnectorProvider>
-          <OrderlyAppProvider configStore={configStore}>
-            <Story />
-          </OrderlyAppProvider>
-        </WalletConnectorProvider>
-      );
-    },
-  ],
-  parameters: {
-    // layout: "centered",
-  },
+  parameters: {},
   argTypes: {},
   args: {},
 };

@@ -34,7 +34,7 @@ const switchVariants = tv({
       "oui-h-[10px]",
       "oui-w-[10px]",
       "oui-rounded-full",
-      "oui-bg-white/60",
+      "oui-bg-white/80",
       "oui-shadow-lg",
       "oui-ring-0",
       "oui-transition-transform",

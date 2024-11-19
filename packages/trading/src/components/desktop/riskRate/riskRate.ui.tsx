@@ -10,7 +10,6 @@ import {
   EditIcon,
 } from "@orderly.network/ui";
 import { RiskRateState } from "./riskRate.script";
-// import { Pencil } from "lucide-react";
 import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 import { TooltipContent } from "../assetView/assetView.ui";
 import { useAppContext } from "@orderly.network/react-app";

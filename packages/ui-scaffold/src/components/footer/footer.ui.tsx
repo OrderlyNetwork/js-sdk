@@ -28,7 +28,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
   };
 
   return (
-    <Flex direction={"row"} justify={"between"} height={28} px={3}>
+    <Flex direction={"row"} justify={"between"} height={28} px={3} width={"100%"}>
       <Flex>
         <Flex
           direction={"row"}

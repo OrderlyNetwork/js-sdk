@@ -1,6 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { Box, Button, modal } from "@orderly.network/ui";
 import { ChainSelectorWidget } from "@orderly.network/ui-chain-selector";
 
@@ -10,19 +8,6 @@ const meta: Meta<typeof ChainSelectorWidget> = {
   parameters: {
     layout: "centered",
   },
-  decorators: [
-    (Story: any) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
 };
 
 export default meta;

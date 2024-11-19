@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { usePositionsRowContext } from "./positionRowContext";
 import { Decimal } from "@orderly.network/utils";
 import { OrderType } from "@orderly.network/types";
+import { utils } from "@orderly.network/hooks";
 
 export const QuantityInput = (props: { value: number }) => {
   // const [quantity, setQuantity] = useState(`${props.value}`);
@@ -24,6 +25,8 @@ export const QuantityInput = (props: { value: number }) => {
     updateQuantity: setQuantity,
     quantity,
     type,
+    errors,
+    baseTick,
   } = usePositionsRowContext();
 
   useEffect(() => {
@@ -43,7 +46,14 @@ export const QuantityInput = (props: { value: number }) => {
   }, []);
 
   const resetQuantity = (percent: number) => {
-    setQuantity(`${props.value * (percent / 100)}`);
+    onBlur(`${props.value * (percent / 100)}`);
+  };
+
+  const onBlur = (value: string) => {
+    if (baseTick && baseTick > 0) {
+      const formatQty = utils.formatNumber(value, baseTick) ?? value;
+      setQuantity(formatQty);
+    }
   };
 
   return (
@@ -55,16 +65,23 @@ export const QuantityInput = (props: { value: number }) => {
             setOpen(true);
           }}
           classNames={{
-            root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
+            root: "oui-outline-line-12 "
           }}
           formatters={[
             inputFormatter.numberFormatter,
             ...(baseDp ? [inputFormatter.dpFormatter(baseDp)] : []),
           ]}
+          // tooltip={errors?.order_quantity?.message}
+          // color={errors?.order_quantity?.message ? "danger" : undefined}
           value={quantity}
+          onBlur={(event) => onBlur(event.target.value)}
           onValueChange={(e) => {
             setQuantity(e);
             // if (type === OrderType.LIMIT) {
+            if (e == '0' || e == "") {
+              setSliderValue(0);
+              return;
+            }
             const value = new Decimal(e)
               .div(props.value)
               .mul(100)

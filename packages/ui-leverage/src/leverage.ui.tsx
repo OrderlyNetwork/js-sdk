@@ -5,6 +5,7 @@ import {
   Flex,
   Slider,
   Text,
+  cn,
 } from "@orderly.network/ui";
 import { LeverageScriptReturns } from "./leverage.script";
 
@@ -27,7 +28,7 @@ export const Leverage = (props: LeverageScriptReturns) => {
       </Flex>
 
       <LeverageSlider {...props} />
-      <Flex direction={"row"} gap={2} width={"100%"} mt={8} pt={5}>
+      <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
         <Button
           variant="contained"
           color="gray"
@@ -54,15 +55,62 @@ const LeverageSlider = (props: LeverageScriptReturns) => {
   return (
     <Box pt={3} width={"100%"}>
       <Slider
-        step={props.step}
-        markLabelVisible={true}
-        marks={props.marks}
+        step={1}
+        max={props.maxLeverage}
+        min={1}
+        // markLabelVisible={true}
+        // marks={props.marks}
+        markCount={5}
         value={[props.value]}
         onValueChange={(e) => {
-          const value = props.marks?.[e[0] / 10]?.value;
-          if (typeof value !== "undefined") props.onLeverageChange(value);
+          props.onLeverageChange(e[0]);
+          props.setShowSliderTip(true);
+        }}
+        color="primaryLight"
+        onValueCommit={(e) => {
+          props.setShowSliderTip(false);
+        }}
+        showTip={props.showSliderTip}
+        tipFormatter={(value, min, max, percent) => {
+          return `${value}x`;
         }}
       />
+      <Flex justify={"between"} width={"100%"} pt={3}>
+        {[1, 10, 20, 30, 40, 50].map((item, index) => {
+          return (
+            <button
+              onClick={(e) => {
+                props.onLeverageChange(item);
+              }}
+              className={cn(
+                " oui-text-2xs oui-pb-3",
+                index === 0
+                  ? "oui-pr-2"
+                  : index === 5
+                  ? "oui-pl-2"
+                  : "oui-px-2 oui-ml-2",
+                item - 1 >= 0 && "oui-text-primary-light"
+              )}
+            >
+              {`${item}x`}
+            </button>
+          );
+        })}
+      </Flex>
     </Box>
   );
+  // return (
+  //   <Box pt={3} width={"100%"}>
+  //     <Slider
+  //       step={props.step}
+  //       markLabelVisible={true}
+  //       marks={props.marks}
+  //       value={[props.value]}
+  //       onValueChange={(e) => {
+  //         const value = props.marks?.[e[0] / 10]?.value;
+  //         if (typeof value !== "undefined") props.onLeverageChange(value);
+  //       }}
+  //     />
+  //   </Box>
+  // );
 };

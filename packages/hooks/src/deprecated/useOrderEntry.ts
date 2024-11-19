@@ -432,7 +432,7 @@ export function useOrderEntry(
               })
             ).then((res) => {
               // resolve(res);
-              if (res.success) {
+              if (res && res.success) {
                 // TODO: remove when the WS service is fixed
 
                 // if (Array.isArray(res.data.rows)) {

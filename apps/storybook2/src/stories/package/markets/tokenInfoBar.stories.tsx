@@ -1,34 +1,15 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   TokenInfoBarWidget,
   TokenInfoBarFullWidget,
   MarketsSheetWidget,
 } from "@orderly.network/markets";
 import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
-import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
-import { useState } from "react";
-
-const configStore = new CustomConfigStore({
-  networkId: "testnet",
-  brokerId: "orderly",
-  brokerName: "Orderly",
-  env: "staging",
-});
 
 const meta: Meta<typeof TokenInfoBarFullWidget> = {
   title: "Package/Markets/TokenInfoBar",
   component: TokenInfoBarFullWidget,
-  decorators: [
-    (Story: any) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider configStore={configStore}>
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
 };
 
 export default meta;

@@ -7,7 +7,7 @@ import {
 import { TabTypes, useReferralContext } from "../../../hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useState } from "react";
-import { toast } from "@orderly.network/ui";
+import { toast, useScreen } from "@orderly.network/ui";
 
 export const useAsTraderScript = () => {
   const {
@@ -72,6 +72,8 @@ export const useAsTraderScript = () => {
     }
   };
 
+  const { isMobile } = useScreen();
+
   return {
     isSignIn,
     isTrader,
@@ -88,6 +90,7 @@ export const useAsTraderScript = () => {
     onClickConfirm,
     isExist,
     wrongNetwork,
+    isMobile,
   };
 };
 

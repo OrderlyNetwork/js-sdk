@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { cn, Flex, Input, inputFormatter, modal, Switch } from "@orderly.network/ui";
+import { cn, Flex, Text, Input, inputFormatter, modal, Switch } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { OrderlyOrder } from "@orderly.network/types";
@@ -96,7 +96,7 @@ export const OrderTPSL = (props: {
               title: "Tips",
               size: "xs",
               content:
-                "TP/SL applies to the entire position. For partial TP/SL, set it in open positions.",
+                (<Text intensity={54}>TP/SL applies to the entire position. For partial TP/SL, set it in open positions.</Text>),
             });
           }}
         />

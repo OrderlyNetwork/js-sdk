@@ -27,7 +27,7 @@ export const DataList: FC<
       size="lg"
       className={props.className}
       classNames={{
-        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2"
+        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2",
       }}
     >
       <TabPanel
@@ -80,15 +80,15 @@ const PositionsView: FC<DataListState> = (props) => {
     <Flex direction={"column"} gap={2}>
       <PositionHeaderWidget
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        symbol={props.symbol}
+        symbol={props.showAllSymbol ? undefined : props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
         tabletMediaQuery={props.tabletMediaQuery}
       />
       <MobilePositionsWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
+        onSymbolChange={props.onSymbolChange}
         sharePnLConfig={props.sharePnLConfig}
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        
       />
     </Flex>
   );
@@ -108,6 +108,7 @@ const OrdersView: FC<
       )}
       <MobileOrderListWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
+        onSymbolChange={props.onSymbolChange}
         type={props.type}
         ordersStatus={props.ordersStatus}
         classNames={{
@@ -120,7 +121,7 @@ const OrdersView: FC<
           range: {
             from: undefined,
             to: undefined,
-          }
+          },
         }}
       />
     </Flex>
@@ -134,7 +135,14 @@ const SymbolControlHeader: FC<
   }
 > = (props) => {
   return (
-    <Flex px={2} py={2} width={"100%"} justify={"between"} gap={2} className="oui-rounded-b-xl oui-bg-base-9">
+    <Flex
+      px={2}
+      py={2}
+      width={"100%"}
+      justify={"between"}
+      gap={2}
+      className="oui-rounded-b-xl oui-bg-base-9"
+    >
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
           color="white"

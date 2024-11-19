@@ -29,6 +29,7 @@ export const useWalletStateHandle = (options: {
     wallet: connectedWallet,
     connect,
     connectedChain,
+    disconnect,
     namespace,
   } = useWalletConnector();
   //
@@ -121,6 +122,7 @@ export const useWalletStateHandle = (options: {
     if (
       connectedWallet === null &&
       accountState.status > AccountStatusEnum.NotConnected
+      && !accountState.validating
     ) {
       account.disconnect();
       return;
@@ -210,6 +212,7 @@ export const useWalletStateHandle = (options: {
           if (!account) {
             throw new Error("account is not initialized");
           }
+          console.log('-- aaaaa wallet', wallet);
           const status = await account.setAddress(wallet.accounts[0].address, {
             provider: wallet.provider,
             chain: {
@@ -222,6 +225,7 @@ export const useWalletStateHandle = (options: {
             },
             // label: ,
           });
+          console.log('-- xxxxxx status', status);
 
           return { wallet, status, wrongNetwork: false };
         }

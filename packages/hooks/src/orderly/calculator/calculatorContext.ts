@@ -2,19 +2,68 @@ import { API } from "@orderly.network/types";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { Portfolio, useAppStore } from "../appStore";
 import { useMarketStore } from "../useMarket/market.store";
+import { usePositionStore } from "../usePositionStream/usePosition.store";
+import { MarketCalculatorName } from "./markPrice";
 
 export class CalculatorContext implements CalculatorCtx {
-  accountInfo: API.AccountInfo;
-  symbolsInfo: Record<string, API.SymbolExt>;
-  fundingRates: Record<string, API.FundingRate>;
-  holding: API.Holding[];
+  accountInfo?: API.AccountInfo;
+  symbolsInfo?: Record<string, API.SymbolExt>;
+  fundingRates?: Record<string, API.FundingRate>;
+  // holding: API.Holding[];
   // portfolio
-  portfolio: Portfolio;
-  markPrices: Record<string, number> | null;
+  portfolio?: Portfolio;
+  markPrices?: Record<string, number> | null;
+  // positions: API.PositionTPSLExt[];
   // markets: Record<string, API.MarketInfoExt> | null;
   private output: Record<string, any>;
 
+  private static _instance: CalculatorContext;
+
+  static create(scope: CalculatorScope, data: any) {
+    if (!this._instance) {
+      this._instance = new CalculatorContext(scope, data);
+    }
+    return this._instance.update(scope, data);
+  }
+
   constructor(scope: CalculatorScope, data: any) {
+    // this.accountInfo = useAppStore.getState().accountInfo as API.AccountInfo;
+    // this.symbolsInfo = useAppStore.getState().symbolsInfo as Record<
+    //   string,
+    //   API.SymbolExt
+    // >;
+    this.setCtxData();
+
+    // this.holding = useAppStore.getState().portfolio.holding as API.Holding[];
+
+    // this.portfolio = useAppStore.getState().portfolio as Portfolio;
+
+    // console.log("!!!! CalculatorContext", this.holding);
+
+    // const positions = usePositionStore.getState().positions;
+    // this.markPrices = scope === CalculatorScope.MARK_PRICE ? data : null;
+    // this.markets = useMarketStore.getState().marketMap;
+
+    // this.positions = usePositionStore.getState().positions[this.symbol];
+
+    this.output = {
+      // rows: positions,
+    };
+  }
+
+  private update(scope: CalculatorScope, data: any) {
+    this.setCtxData();
+    this.markPrices =
+      scope === CalculatorScope.MARK_PRICE
+        ? data
+        : this.output[MarketCalculatorName];
+    this.portfolio =
+      this.output["portfolio"] ||
+      (useAppStore.getState().portfolio as Portfolio);
+    return this;
+  }
+
+  private setCtxData() {
     this.accountInfo = useAppStore.getState().accountInfo as API.AccountInfo;
     this.symbolsInfo = useAppStore.getState().symbolsInfo as Record<
       string,
@@ -24,23 +73,20 @@ export class CalculatorContext implements CalculatorCtx {
       string,
       API.FundingRate
     >;
-    this.holding = useAppStore.getState().portfolio.holding as API.Holding[];
-
-    this.portfolio = useAppStore.getState().portfolio as Portfolio;
-
-    // console.log("!!!! CalculatorContext", this.holding);
-
-    // const positions = usePositionStore.getState().positions;
-    this.markPrices = scope === CalculatorScope.MARK_PRICE ? data : null;
-    // this.markets = useMarketStore.getState().marketMap;
-
-    this.output = {
-      // rows: positions,
-    };
   }
 
   get(fn: (output: Record<string, any>) => any) {
     return fn(this.output);
+  }
+
+  getCacheValue(name: string, fallback: () => any) {
+    return this.output[name] || fallback();
+  }
+
+  clearCache() {
+    this.output = {};
+    this.accountInfo = undefined;
+    this.portfolio = undefined;
   }
 
   // get positions(): API.PositionTPSLExt[] {

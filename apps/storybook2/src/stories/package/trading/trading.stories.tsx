@@ -1,7 +1,5 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
 import {
   AssetViewWidget,
   DataListWidget,
@@ -13,11 +11,9 @@ import {
   BottomNavBarWidget,
 } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { CustomConfigStore } from "../../../components/configStore/customConfigStore";
 import { Box, Flex } from "@orderly.network/ui";
 import { OrderlyIcon } from "./icons";
 import { mainNavProps, sharePnLConfig } from "./config";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 const meta: Meta<typeof TradingPage> = {
   title: "Package/Trading/trading",
@@ -25,34 +21,10 @@ const meta: Meta<typeof TradingPage> = {
 
   decorators: [
     (Story) => {
-      const configStore = new CustomConfigStore({
-        networkId: "testnet",
-        brokerId: "demo",
-        brokerName: "Orderly",
-        env: "staging",
-      });
       return (
-        <WalletConnectorProvider>
-          <OrderlyAppProvider
-            // brokerId="orderly"
-            // brokerName="Orderly"
-            // networkId={networkId}
-            configStore={configStore}
-            onChainChanged={fn()}
-            appIcons={{
-              main: {
-                img: "/orderly-logo.svg",
-              },
-              secondary: {
-                img: "/orderly-logo-secondary.svg",
-              },
-            }}
-          >
-            <Scaffold leftSidebar={null} mainNavProps={mainNavProps}>
-              <Story />
-            </Scaffold>
-          </OrderlyAppProvider>
-        </WalletConnectorProvider>
+        <Scaffold mainNavProps={mainNavProps}>
+          <Story />
+        </Scaffold>
       );
     },
   ],
@@ -64,10 +36,7 @@ const meta: Meta<typeof TradingPage> = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    // symbol: "PERP_BTC_USDC",
-    // onSymbolChange: (symbol) => {
-    //   console.log("will change symbol", symbol);
-    // },
+    symbol: "PERP_BTC_USDC",
     tradingViewConfig: {
       // scriptSRC: "",
       scriptSRC: "/tradingview/charting_library/charting_library.js",

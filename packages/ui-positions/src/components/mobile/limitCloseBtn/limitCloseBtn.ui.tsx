@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import {
   Badge,
   Button,
+  cn,
   Divider,
   Flex,
   Input,
@@ -11,10 +12,12 @@ import {
   Slider,
   Text,
   ThrottledButton,
+  toast,
 } from "@orderly.network/ui";
 import { LimitCloseBtnState } from "./limitCloseBtn.script";
 import { Decimal } from "@orderly.network/utils";
 import { LimitConfirmDialog } from "../../desktop/closeButton";
+import { utils } from "@orderly.network/hooks";
 
 export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
   const {
@@ -35,6 +38,13 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
     onCloseDialog,
   } = props;
   const isBuy = item.position_qty > 0;
+
+  const onBlur = (value: string) => {
+    if (props.baseTick && props.baseTick > 0) {
+      const formatQty = utils.formatNumber(value, props.baseTick) ?? value;
+      props.updateQuantity(formatQty);
+    }
+  };
 
   return (
     <>
@@ -87,12 +97,15 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
             <Divider className="oui-w-full" />
             <Flex width={"100%"} justify={"between"}>
               <Text intensity={54}>Last price</Text>
-              <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp} suffix={<Text intensity={36}>USDC</Text>}>
+              <Text.numeral
+                dp={(props.item as any)?.symbolInfo?.quote_dp}
+                suffix={<Text intensity={36}>USDC</Text>}
+              >
                 {props.curMarkPrice}
               </Text.numeral>
             </Flex>
             <Flex width={"100%"} direction={"column"} gap={2}>
-              <Input
+              <Input.tooltip
                 prefix="Price"
                 suffix={props.quote}
                 align="right"
@@ -102,12 +115,22 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   inputFormatter.numberFormatter,
                   inputFormatter.dpFormatter(props.quote_dp),
                 ]}
+                triggerClassName="oui-w-full"
+                tooltip={props.errors?.order_price?.message}
+                color={
+                  props.errors?.order_price?.message ? "danger" : undefined
+                }
                 value={props.price}
                 onValueChange={(e) => props.updatePriceChange(e)}
                 classNames={{
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
-                  root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
+                  root: cn(
+                    "oui-outline-line-12 oui-w-full",
+                    props.errors?.order_price?.message
+                      ? "oui-outline-danger"
+                      : undefined
+                  ),
                 }}
               />
               <Input
@@ -120,7 +143,13 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   inputFormatter.numberFormatter,
                   inputFormatter.dpFormatter(props.base_dp),
                 ]}
+                // triggerClassName="oui-w-full"
+                // tooltip={props.errors?.order_quantity?.message}
+                // color={
+                //   props.errors?.order_quantity?.message ? "danger" : undefined
+                // }
                 value={props.quantity}
+                onBlur={(event) => onBlur(event.target.value)}
                 onValueChange={(e) => {
                   props.updateQuantity(e);
                   const slider = new Decimal(e)
@@ -133,7 +162,12 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 classNames={{
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
-                  root: "oui-outline-line-12 focus-within:oui-outline-primary-light"
+                  root: cn(
+                    "oui-outline-line-12 oui-w-full",
+                    // props.errors?.order_quantity?.message
+                    //   ? "oui-outline-danger"
+                    //   : undefined
+                  ),
                 }}
               />
               <Slider
@@ -146,7 +180,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                     .div(100)
                     .mul(props.item.position_qty)
                     .toFixed(props.base_dp, Decimal.ROUND_DOWN);
-                  props.updateQuantity(qty);
+                  // props.updateQuantity(qty);
+                  onBlur(qty);
                 }}
               />
               <Flex width={"100%"} justify={"between"}>
@@ -159,7 +194,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                     Max
                   </Text>
                   <Text.numeral intensity={54} size="2xs">
-                    {props.item.position_qty}
+                    {Math.abs(props.item.position_qty)}
                   </Text.numeral>
                 </Flex>
               </Flex>
@@ -179,8 +214,17 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
+                  const errors = props.errors;
+
+                  const quantityMsg = errors?.order_quantity?.message;
+                  const priceMsg = errors?.order_price?.message;
+                  if (quantityMsg || priceMsg) {
+                    toast.error(quantityMsg ?? priceMsg);
+                    return;
+                  }
                   setDialogOpen(true);
                 }}
+                // disabled={Object.keys(props.errors ?? {}).length > 0}
               >
                 Confirm
               </ThrottledButton>

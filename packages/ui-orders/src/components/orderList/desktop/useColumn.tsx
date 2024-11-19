@@ -91,7 +91,7 @@ export const useOrderColumn = (props: {
           reduceOnly({ width: 162 }),
           hidden({ width: 162 }),
           orderTime({ width: 162, enableSort: false }),
-          cancelBtn({ width: 162 }),
+          pendingTabCancelBtn({ width: 162 }),
         ];
       case TabType.tp_sl:
         return [
@@ -838,6 +838,24 @@ function cancelBtn(option?: {
       }
 
       return null;
+    },
+  };
+}
+
+function pendingTabCancelBtn(option?: {
+  width?: number;
+  className?: string;
+}): TableColumn<API.Order> {
+  return {
+    title: "",
+    type: "action",
+    dataIndex: "action",
+    width: option?.width,
+    className: option?.className,
+    align: "right",
+    fixed: "right",
+    render: (_: string, record: any) => {
+      return <CancelButton order={record} />;
     },
   };
 }

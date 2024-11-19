@@ -95,7 +95,7 @@ export const useOrderListScript = (props: {
     symbol: props.symbol,
     status: orderStatus,
     side: ordersSide,
-    page: enableLoadMore ? undefined : manualPagination ? page : undefined,
+    page: enableLoadMore || !manualPagination ? undefined : page,
     // pending and ts_sl list get all data
     size: manualPagination ? pageSize : 500,
     dateRange,

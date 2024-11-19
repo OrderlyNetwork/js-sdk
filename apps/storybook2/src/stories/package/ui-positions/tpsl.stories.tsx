@@ -1,31 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { TPSLWidget, PositionTPSLConfirm } from "@orderly.network/ui-tpsl";
 import { Box } from "@orderly.network/ui";
 
 const meta: Meta<typeof TPSLWidget> = {
   title: "Package/ui-positions/tpsl",
   component: TPSLWidget,
-  decorators: [
-    (Story) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
   parameters: {
     layout: "centered",
   },
-
-  // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {
     symbol: "PERP_BTC_USDC",
     position: {

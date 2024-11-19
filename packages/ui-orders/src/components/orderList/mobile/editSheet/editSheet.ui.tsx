@@ -17,6 +17,8 @@ import { EditSheetState } from "./editSheet.script";
 import { ConfirmDialogContent } from "./editDialogContent";
 import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
+import { utils } from "@orderly.network/hooks";
+import { Decimal } from "@orderly.network/utils";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
@@ -38,6 +40,15 @@ export const EditSheet: FC<EditSheetState> = (props) => {
     props.quantity && props.maxQty
       ? Math.min(Number(props.quantity) / props.maxQty, 1)
       : undefined;
+
+  const onBlur = (value: string) => {
+    const baseTick = props.baseTick;
+    if (baseTick && baseTick > 0) {
+      const formatQty = utils.formatNumber(value, baseTick) ?? value;
+      props.setQuantity(formatQty);
+    }
+  };
+
   return (
     <>
       <Flex
@@ -112,7 +123,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               tooltip={props.errors?.trigger_price?.message}
               tooltipProps={{
                 content: {
-                  className: "oui-bg-base-6",
+                  className: "oui-bg-base-6 oui-text-base-contrast-80",
                 },
                 arrow: {
                   className: "oui-fill-base-6",
@@ -184,12 +195,13 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             formatters={[
               inputFormatter.numberFormatter,
               inputFormatter.dpFormatter(props.base_dp),
-              inputFormatter.rangeFormatter({ max: props.maxQty }),
+              // inputFormatter.rangeFormatter({ max: props.maxQty }),
             ]}
             value={props.quantity}
             onValueChange={(e) => {
               props.setQuantity(e);
             }}
+            onBlur={(event) => onBlur(event.target.value)}
             tooltip={props.errors?.order_quantity?.message}
             tooltipProps={{
               content: {

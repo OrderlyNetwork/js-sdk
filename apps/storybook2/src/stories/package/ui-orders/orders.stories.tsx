@@ -1,6 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrdersWidget, TabType } from "@orderly.network/ui-orders";
 import { Flex, Text, Divider } from "@orderly.network/ui";
 import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
@@ -8,27 +6,9 @@ import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
 const meta: Meta<typeof OrdersWidget> = {
   title: "Package/ui-orders/widget",
   component: OrdersWidget,
-  // subcomponents: {
-  //     Assets: OverviewModule.AssetWidget,
-  //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
-  // },
-  decorators: [
-    (Story) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Story />
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
-    ),
-  ],
   parameters: {
     // layout: "centered",
   },
-  // // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
   args: {},
 };
 

@@ -1,15 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  OrderEntryWidget,
-  OrderEntry,
-  AdditionalInfoWidget,
-} from "@orderly.network/ui-order-entry";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
+import { OrderEntryWidget, OrderEntry } from "@orderly.network/ui-order-entry";
 import { Box } from "@orderly.network/ui";
 import { OrderSide, OrderType } from "@orderly.network/types";
 
-const meta = {
+const meta: Meta<typeof OrderEntry> = {
   title: "Package/ui-orderEntry/form",
   component: OrderEntry,
   parameters: {
@@ -17,17 +11,9 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <WalletConnectorProvider>
-        <OrderlyAppProvider
-          brokerId="orderly"
-          brokerName="Orderly"
-          networkId="testnet"
-        >
-          <Box width={"360px"} r={"lg"} intensity={900} p={3}>
-            <Story />
-          </Box>
-        </OrderlyAppProvider>
-      </WalletConnectorProvider>
+      <Box width={"360px"} r={"lg"} intensity={900} p={3}>
+        <Story />
+      </Box>
     ),
   ],
   argTypes: {
@@ -48,15 +34,6 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
-
-export const PureComponent = {
-  args: {
-    orderEntity: {
-      side: OrderSide.BUY,
-      type: OrderType.LIMIT,
-    },
-  },
-};
 
 export const WithHook: Story = {
   render: (args) => {

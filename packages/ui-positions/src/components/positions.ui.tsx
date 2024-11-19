@@ -58,6 +58,7 @@ export const MobilePositions = (
               index={index}
               pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
               sharePnLConfig={sharePnLConfig}
+              onSymbolChange={props.onSymbolChange}
             />
           </PositionsRowProvider>
         </SymbolProvider>

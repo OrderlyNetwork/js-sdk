@@ -1,5 +1,17 @@
 # tsconfig
 
+## 0.3.16
+
+### Patch Changes
+
+- bba082a3e: fix bugs;
+
+## 0.3.16-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+
 ## 0.3.15
 
 ### Patch Changes

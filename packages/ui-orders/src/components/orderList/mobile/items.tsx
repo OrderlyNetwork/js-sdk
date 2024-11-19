@@ -19,7 +19,7 @@ import {
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderSide } from "@orderly.network/types";
 
-export const Symbol: FC<OrderCellState> = (props) => {
+export const SymbolToken: FC<OrderCellState> = (props) => {
   const { item } = props;
   const isBuy = item.side === OrderSide.BUY;
   return (
@@ -34,6 +34,9 @@ export const Symbol: FC<OrderCellState> = (props) => {
           {isBuy ? "Buy" : "Sell"}
         </Badge>
       }
+      onClick={() => {
+        props.onSymbolChange?.({ symbol: item.symbol } as API.Symbol);
+      }}
       // showIcon
     >
       {item.symbol}
@@ -98,13 +101,10 @@ export const OrderState: FC<OrderCellState> = (props) => {
       return upperCaseFirstLetter("pending");
     }
     return upperCaseFirstLetter(status);
-  }
+  };
 
   return (
-    <Text.formatted
-      intensity={36}
-      size="2xs"
-    >
+    <Text.formatted intensity={36} size="2xs">
       {label()}
     </Text.formatted>
   );
