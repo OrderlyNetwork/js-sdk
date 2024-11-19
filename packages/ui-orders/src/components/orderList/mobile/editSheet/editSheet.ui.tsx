@@ -123,7 +123,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               tooltip={props.errors?.trigger_price?.message}
               tooltipProps={{
                 content: {
-                  className: "oui-bg-base-6",
+                  className: "oui-bg-base-6 oui-text-base-contrast-80",
                 },
                 arrow: {
                   className: "oui-fill-base-6",
