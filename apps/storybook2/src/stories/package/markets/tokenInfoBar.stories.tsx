@@ -10,6 +10,10 @@ import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
 const meta: Meta<typeof TokenInfoBarFullWidget> = {
   title: "Package/Markets/TokenInfoBar",
   component: TokenInfoBarFullWidget,
+  parameters: {
+    layout: "centered",
+    
+  },
 };
 
 export default meta;

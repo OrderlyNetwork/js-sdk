@@ -8,7 +8,9 @@ import { MarketsType, useMarkets } from "@orderly.network/hooks";
 
 const meta: Meta<typeof FavoritesDropdownMenuWidget> = {
   title: "Package/Markets/Favorites",
-  subcomponents: {},
+  parameters: {
+    layout: "centered",
+  },
 };
 
 export default meta;

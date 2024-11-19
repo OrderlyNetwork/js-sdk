@@ -5,8 +5,10 @@ import {
   Sheet,
   ModalProvider,
   registerSimpleSheet,
+  SimpleSheet,
 } from "@orderly.network/ui";
 import { useEffect } from "@storybook/preview-api";
+import { useState } from "react";
 
 const meta = {
   title: "Base/Sheet",
@@ -41,25 +43,20 @@ export const Default: Story = {};
 
 export const CommandStyle: Story = {
   render: () => {
-    const id = "SIMPLE_SHEET";
-    useEffect(() => {
-      registerSimpleSheet(
-        id,
-        (props: { id: string }) => <div>{`Sheet id: ${props.id}`}</div>,
-        {
-          title: "Bottom sheet",
-        }
-      );
-    }, []);
+    const [open, setOpen] = useState(false);
     return (
       <div>
         <Button
           onClick={() => {
-            modal.show(id, { id });
+            setOpen(true);
           }}
         >
           Open
         </Button>
+
+        <SimpleSheet title="Demo" open={open} onOpenChange={setOpen}>
+          SimpleSheet
+        </SimpleSheet>
       </div>
     );
   },

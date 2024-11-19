@@ -143,10 +143,10 @@ export const Intensity: Story = {
 
 export const Gradient: Story = {
   render: (args) => {
-    return <Text.gradient {...args}>One DEX to rule all chains</Text.gradient>;
+    return <Text.gradient {...args} >One DEX to rule all chains</Text.gradient>;
   },
   args: {
-    angle: 90,
+    color: "brand",
   },
   argTypes: {
     color: {

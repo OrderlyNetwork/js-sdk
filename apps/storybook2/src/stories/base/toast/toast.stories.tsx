@@ -51,7 +51,7 @@ export const toaster: Story = {
               toast.loading(<ToastTile title="ADFD" subtitle="DFLKSDF" />);
             }}
           >
-            loging with subtitle
+            loading with subtitle
           </button>
           <button
             onClick={(e) => {

@@ -14,12 +14,16 @@ const decorators = [
     <Box height={500} width={429} intensity={800}>
       <Story />
     </Box>
-  ),
+  )
 ];
 
 const meta: Meta<typeof ExpandMarketsWidget> = {
   title: "Package/Markets/DropDownMarkets",
   subcomponents: {},
+  parameters: {
+    layout: "centered",
+    
+  },
 };
 
 export default meta;

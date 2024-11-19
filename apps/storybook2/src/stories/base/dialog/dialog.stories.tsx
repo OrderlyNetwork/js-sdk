@@ -92,38 +92,38 @@ export const NoTitle: Story = {
   },
 };
 
-export const CustomHeader: Story = {
-  render: (args) => {
-    return (
-      <Dialog {...args}>
-        <DialogContent>
-          <Tabs defaultValue="account">
-            <DialogHeader>
-              <TabsList>
-                <TabsTrigger value="account" icon={<ExclamationFillIcon />}>
-                  Account
-                </TabsTrigger>
-                <TabsTrigger value="password">Password</TabsTrigger>
-              </TabsList>
-            </DialogHeader>
-            <Divider />
-            <DialogBody>
-              <TabsContent value="account">
-                Make changes to your account here.
-              </TabsContent>
-              <TabsContent value="password">
-                Change your password here.
-              </TabsContent>
-            </DialogBody>
-          </Tabs>
-        </DialogContent>
-      </Dialog>
-    );
-  },
-  args: {
-    open: true,
-  },
-};
+// export const CustomHeader: Story = {
+//   render: (args) => {
+//     return (
+//       <Dialog {...args}>
+//         <DialogContent>
+//           <Tabs defaultValue="account">
+//             <DialogHeader>
+//               <TabsList>
+//                 <TabsTrigger value="account" icon={<ExclamationFillIcon />}>
+//                   Account
+//                 </TabsTrigger>
+//                 <TabsTrigger value="password">Password</TabsTrigger>
+//               </TabsList>
+//             </DialogHeader>
+//             <Divider />
+//             <DialogBody>
+//               <TabsContent value="account">
+//                 Make changes to your account here.
+//               </TabsContent>
+//               <TabsContent value="password">
+//                 Change your password here.
+//               </TabsContent>
+//             </DialogBody>
+//           </Tabs>
+//         </DialogContent>
+//       </Dialog>
+//     );
+//   },
+//   args: {
+//     open: true,
+//   },
+// };
 
 export const Footer: Story = {
   render: (args) => (

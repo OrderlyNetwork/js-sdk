@@ -112,27 +112,27 @@ export const Chains: Story = {
   },
 };
 
-export const Combine: Story = {
-  render: (args) => {
-    const [{ value }, updateArgs] = useArgs();
-    return (
-      <Select.combine
-        {...args}
-        value={value}
-        onValueChange={(value) => updateArgs({ value })}
-      />
-    );
-  },
-  args: {
-    options: [
-      { label: "Apple", value: "apple" },
-      { label: "Banana", value: "banana" },
-      { label: "Blueberry", value: "blueberry" },
-      { label: "Grapes", value: "grapes" },
-    ],
-    value: "apple",
-  },
-};
+// export const Combine: Story = {
+//   render: (args) => {
+//     const [{ value }, updateArgs] = useArgs();
+//     return (
+//       <Select.combine
+//         {...args}
+//         value={value}
+//         onValueChange={(value) => updateArgs({ value })}
+//       />
+//     );
+//   },
+//   args: {
+//     options: [
+//       { label: "Apple", value: "apple" },
+//       { label: "Banana", value: "banana" },
+//       { label: "Blueberry", value: "blueberry" },
+//       { label: "Grapes", value: "grapes" },
+//     ],
+//     value: "apple",
+//   },
+// };
 
 export const Tokens: Story = {
   render: (args) => {

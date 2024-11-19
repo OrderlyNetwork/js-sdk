@@ -5,10 +5,6 @@ import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
 const meta: Meta<typeof Dashboard.DashboardPage> = {
   title: "Package/Affiliate/Dashboard",
   component: Dashboard.DashboardPage,
-  // subcomponents: {
-  //     Assets: OverviewModule.AssetWidget,
-  //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
-  // },
   decorators: [
     (Story: any) => {
       return (
@@ -72,7 +68,8 @@ const meta: Meta<typeof Dashboard.DashboardPage> = {
     },
   ],
   parameters: {
-    layout: "fullscreen",
+    layout: "centered",
+    
   },
   argTypes: {},
   args: {},

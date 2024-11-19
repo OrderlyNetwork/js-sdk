@@ -19,6 +19,10 @@ const decorators = [
 
 const meta: Meta<typeof ExpandMarketsWidget> = {
   title: "Package/Markets/SideMarkets",
+  parameters: {
+    layout: "centered",
+    
+  },
 };
 
 export default meta;
