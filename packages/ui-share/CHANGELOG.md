@@ -1,5 +1,16 @@
 # @orderly.network/ui-share
 
+## 2.0.1-developV2.43
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-developV2.43
+  - @orderly.network/types@2.0.1-developV2.43
+  - @orderly.network/utils@2.0.1-developV2.43
+  - @orderly.network/ui@2.0.1-developV2.43
+
 ## 2.0.1-developV2.42
 
 ### Patch Changes
