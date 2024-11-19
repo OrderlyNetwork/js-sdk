@@ -71,6 +71,8 @@ export const OrderEntry = (
     refs,
   } = props;
 
+  // console.log("props", props);
+
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
   const [needConfirm, setNeedConfirm] = useLocalStorage(

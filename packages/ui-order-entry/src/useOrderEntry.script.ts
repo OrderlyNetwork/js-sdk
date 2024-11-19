@@ -168,7 +168,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       shouldUpdateLastChangedField?: boolean;
     }
   ) => {
-    setValue(key, value, options);
     if (key === "order_type") {
       setLocalOrderType(value);
     }
@@ -181,8 +180,18 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       (key === "order_type" &&
         (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
     ) {
-      cancelTP_SL();
+      // cancelTP_SL();
+
+      setValues({
+        tp_trigger_price: "",
+        sl_trigger_price: "",
+        [key]: value,
+      });
+
+      return;
     }
+
+    setValue(key, value, options);
   };
 
   const onTPSLSwitchChanged = (state: boolean) => {
@@ -215,7 +224,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       triggerPriceInputRef,
       priceInputRef,
     },
-    
+
     canTrade,
   };
 };
