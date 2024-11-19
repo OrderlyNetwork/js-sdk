@@ -222,6 +222,23 @@ export const useDeposit = (options?: useDepositOptions) => {
     dst.symbol,
   ]);
 
+  const updateAllowanceWhenTxSuccess = useCallback(
+    (txHash: string) => {
+      return account.walletClient
+        ?.pollTransactionReceiptWithBackoff(txHash)
+        .then((receipt) => {
+          if (receipt.status === 1) {
+            account.assetsManager
+              .getAllowance(options?.address)
+              .then((allowance) => {
+                setAllowance(() => allowance);
+              });
+          }
+        });
+    },
+    [account, options?.address]
+  );
+
   const approve = useCallback(
     async (amount?: string) => {
       if (!options?.address) {
@@ -230,36 +247,35 @@ export const useDeposit = (options?: useDepositOptions) => {
       return account.assetsManager
         .approve(options.address, amount)
         .then((result: any) => {
-          return account.walletClient
-            ?.pollTransactionReceiptWithBackoff(result.hash)
-            .then((receipt) => {
-              if (receipt.status === 1) {
-                account.assetsManager
-                  .getAllowance(options.address)
-                  .then((allowance) => {
-                    setAllowance(() => allowance);
-                  });
-              }
-            });
+          return updateAllowanceWhenTxSuccess(result.hash);
         });
     },
-    [account, getAllowance, options, dst]
+    [account, getAllowance, options?.address, dst]
   );
 
   const deposit = useCallback(async () => {
+    if (!options?.address) {
+      throw new Error("address is required");
+    }
+    const _allowance = await account.assetsManager.getAllowance(
+      options?.address
+    );
+
+    setAllowance(() => _allowance);
+
+    if (new Decimal(quantity).greaterThan(_allowance)) {
+      throw new Error("Insufficient allowance");
+    }
+
     // only support orderly deposit
     return account.assetsManager
       .deposit(quantity, depositFee)
-      .then((res: any) => {
-        account.assetsManager
-          .getAllowance(options?.address)
-          .then((allowance) => {
-            setAllowance(() => allowance);
-          });
+      .then((result: any) => {
+        updateAllowanceWhenTxSuccess(result.hash);
         setBalance((value) => new Decimal(value).sub(quantity).toString());
-        return res;
+        return result;
       });
-  }, [account, fetchBalance, quantity, depositFee]);
+  }, [account, fetchBalance, quantity, depositFee, options?.address]);
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
