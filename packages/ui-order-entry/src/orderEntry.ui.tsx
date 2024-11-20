@@ -184,7 +184,7 @@ export const OrderEntry = (
               // color={side === OrderSide.BUY ? "buy" : "secondary"}
               className={cn(
                 side === OrderSide.BUY && props.canTrade
-                  ? "oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
+                  ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
             >
@@ -200,7 +200,7 @@ export const OrderEntry = (
               // color={side === OrderSide.SELL ? "sell" : "secondary"}
               className={cn(
                 side === OrderSide.SELL && props.canTrade
-                  ? "oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
+                  ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
             >
@@ -277,8 +277,8 @@ export const OrderEntry = (
             data-type={OrderSide.BUY}
             className={cn(
               side === OrderSide.BUY
-                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
-                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
+                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
             )}
             onClick={() => {
               onSubmit();

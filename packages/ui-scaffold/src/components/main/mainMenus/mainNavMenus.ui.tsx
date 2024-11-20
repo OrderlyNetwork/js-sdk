@@ -1,6 +1,6 @@
-import { FC } from "react";
-import { MainNavItem, NavItem } from "./mainMenus/navItem";
 import { Flex } from "@orderly.network/ui";
+import { MainNavItem, NavItem } from "./navItem";
+import { FC } from "react";
 
 export type MainNavClassNames = {
   root?: string;
@@ -15,7 +15,7 @@ export type MainNavItemsProps = {
   onItemClick?: (item: MainNavItem[]) => void;
 };
 
-export const MainNavItems: FC<MainNavItemsProps> = (props) => {
+export const MainNavMenusUI: FC<MainNavItemsProps> = (props) => {
   const { items, classNames } = props;
 
   if (!Array.isArray(items) || items.length === 0) return null;

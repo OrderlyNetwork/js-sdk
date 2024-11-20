@@ -15,15 +15,16 @@ import { AppStateProvider, AppStateProviderProps } from "./appContext";
 import { AppConfigProvider } from "./configContext";
 
 import { useExecutionReport } from "../hooks/useExecutionReport";
+import { OrderlyThemeProviderProps } from "@orderly.network/ui/src/provider/orderlyThemeProvider";
 
 export type OrderlyAppProviderProps = PropsWithChildren<
-  OrderlyAppConfig & AppStateProviderProps
+  OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
 >;
 
 const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
   const {
     onChainChanged,
-    dateFormatting,
+    // dateFormatting,
     components,
     appIcons,
     ...configProps
@@ -35,8 +36,9 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName!}>
       <OrderlyThemeProvider
-        dateFormatting={dateFormatting}
+        // dateFormatting={dateFormatting}
         components={components}
+        overrides={props.overrides}
       >
         <OrderlyConfigProvider {...(configProps as ConfigProviderProps)}>
           <AppStateProvider onChainChanged={onChainChanged}>

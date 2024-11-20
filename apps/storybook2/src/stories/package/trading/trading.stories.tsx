@@ -28,7 +28,7 @@ const meta: Meta<typeof TradingPage> = {
     },
   ],
   parameters: {
-    layout: "centered",
+    layout: "fullscreen",
   },
   tags: ["autodocs"],
   argTypes: {},

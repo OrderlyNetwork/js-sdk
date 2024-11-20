@@ -7,10 +7,14 @@ import {
 import { useOrderStream } from "@orderly.network/hooks";
 import { TabType } from "./orders.widget";
 
-export const useOrdersScript = (props: { current?: TabType }) => {
-  const { current } = props;
+export const useOrdersScript = (props: {
+  current?: TabType;
+  pnlNotionalDecimalPrecision?: number;
+}) => {
+  const { current, pnlNotionalDecimalPrecision } = props;
   return {
     current,
+    pnlNotionalDecimalPrecision,
   };
 };
 

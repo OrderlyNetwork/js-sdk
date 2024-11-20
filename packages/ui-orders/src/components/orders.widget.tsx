@@ -14,6 +14,7 @@ export enum TabType {
 
 export const OrdersWidget: FC<{
   current?: TabType;
+  pnlNotionalDecimalPrecision?: number;
 }> = (props) => {
   const state = useOrdersScript(props);
 

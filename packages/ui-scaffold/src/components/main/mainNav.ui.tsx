@@ -14,6 +14,8 @@ import { ChainMenuWidget } from "../chainMenu";
 import { CampaignPositionEnum } from "./useWidgetBuilder.script";
 import { CampaignButton, CampaignProps } from "./campaignButton";
 import { MainLogo } from "./mainLogo";
+import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
+import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
@@ -64,7 +66,11 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       <Flex itemAlign={"center"} gap={4}>
         <MainLogo {...logo} />
         <ProductsMenu {...products} className={classNames?.products} />
-        <MainNavItems {...props.mainMenus} classNames={classNames?.mainNav} />
+        {/* <MainNavItems {...props.mainMenus} classNames={classNames?.mainNav} /> */}
+        <MainNavMenusExtension
+          {...props.mainMenus}
+          classNames={classNames?.mainNav}
+        />
       </Flex>
       {children}
 
@@ -77,7 +83,9 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
         ) : null}
         <AccountSummaryWidget />
         <ChainMenuWidget />
-        {props.wrongNetwork && props.isConnected ? null : <AccountMenuWidget />}
+        {props.wrongNetwork && props.isConnected ? null : (
+          <WalletConnectButtonExtension />
+        )}
       </Flex>
     </Flex>
   );

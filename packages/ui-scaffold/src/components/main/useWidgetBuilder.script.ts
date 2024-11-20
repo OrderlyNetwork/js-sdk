@@ -3,7 +3,7 @@ import { useScaffoldContext } from "../scaffoldContext";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
-import type { MainNavItem } from "./navItem";
+import type { MainNavItem } from "./mainMenus/navItem";
 import { type MainNavWidgetProps } from "./mainNav.widget";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";

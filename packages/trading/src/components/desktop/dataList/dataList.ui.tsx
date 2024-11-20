@@ -79,6 +79,7 @@ export const DataList: FC<DataListState> = (props) => {
         <DesktopOrderListWidget
           type={TabType.filled}
           symbol={props.showAllSymbol ? undefined : props.symbol}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           ordersStatus={OrderStatus.FILLED}
           onSymbolChange={props.onSymbolChange}
         />
@@ -89,6 +90,7 @@ export const DataList: FC<DataListState> = (props) => {
       >
         <DesktopOrderListWidget
           type={TabType.orderHistory}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
         />
