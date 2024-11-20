@@ -12,6 +12,9 @@
     "orderly",
     "codemod"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "enquirer": "^2.4.1",
     "glob": "^11.0.0",
