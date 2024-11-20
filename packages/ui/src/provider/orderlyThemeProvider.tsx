@@ -26,7 +26,7 @@ const OrderlyThemeContext = createContext<OrderlyThemeContextState>(
 );
 
 export type OrderlyThemeProviderProps = {
-  dateFormatting?: string;
+  // dateFormatting?: string;
   components?: {
     [position in ExtensionPosition]: ComponentType;
   };

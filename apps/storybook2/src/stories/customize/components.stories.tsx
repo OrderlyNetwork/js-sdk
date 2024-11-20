@@ -1,19 +1,15 @@
 import type { StoryObj } from "@storybook/react";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Box, Flex, Text, SettingIcon } from "@orderly.network/ui";
-import {
-  AccountMenuWidget,
-  AccountSummaryWidget,
-  ChainMenuWidget,
-  Scaffold,
-} from "@orderly.network/ui-scaffold";
+import { Flex, Text, ExtensionPositionEnum } from "@orderly.network/ui";
+import { Scaffold } from "@orderly.network/ui-scaffold";
 import { fn } from "@storybook/test";
 
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 const meta = {
-  title: "Customize/Scaffold",
+  title: "Customize/Scaffold/components",
   component: Scaffold,
+  // tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
@@ -25,6 +21,30 @@ const meta = {
           brokerName="Orderly"
           networkId="testnet"
           onChainChanged={fn()}
+          components={{
+            [ExtensionPositionEnum.MainMenus]: (props) => {
+              return (
+                <div>
+                  <ul className="oui-flex oui-gap-x-2">
+                    {props.items.map((menu) => {
+                      const isActive = (props.current as string[]).includes(
+                        menu.href
+                      );
+                      console.log("isActive", isActive);
+                      return (
+                        <li
+                          key={menu.href}
+                          className={isActive ? "oui-text-primary" : ""}
+                        >
+                          {menu.name}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            },
+          }}
         >
           <Story />
         </OrderlyAppProvider>
@@ -44,5 +64,13 @@ export const Default: Story = {
         </Text>
       </Flex>
     ),
+    mainNavProps: {
+      mainMenus: [
+        { name: "Trading", href: "/" },
+        { name: "Reward", href: "/rewards" },
+        { name: "Markets", href: "/markets" },
+      ],
+      initialMenu: "/markets",
+    },
   },
 };
