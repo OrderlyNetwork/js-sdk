@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.0.1-alpha.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-alpha.0
+  - @orderly.network/core@2.0.1-alpha.0
+
 ## 2.0.0
 
 ### Major Changes
