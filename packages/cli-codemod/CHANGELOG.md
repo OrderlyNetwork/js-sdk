@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.0.1-developV2.36
+
+### Patch Changes
+
+- update
+
 ## 1.0.1-developV2.35
 
 ### Patch Changes
