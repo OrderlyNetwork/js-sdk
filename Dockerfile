@@ -1,28 +1,21 @@
-FROM node:18.16.0-slim as base
-
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-
+FROM node:18 AS base
 RUN npm install -g pnpm
 
-# RUN corepack enable
-COPY . /app
+FROM base AS deps
 WORKDIR /app
+# multi-monorepo project, need to copy all to install dependencies
+COPY . .
+RUN pnpm install --frozen-lockfile
 
-
-FROM base AS storybook
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app ./
 RUN pnpm build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store cd packages/component && pnpm build-storybook
+RUN pnpm build-storybook
 
-FROM base AS serve
-RUN pnpm add http-server -w
+FROM nginx:alpine AS runtime
 
-FROM base
-COPY --from=serve /app/node_modules /app/node_modules
-COPY --from=storybook /app/packages/component/storybook-static /app/storybook-static
+COPY --from=builder /app/apps/storybook2/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/apps/storybook2/storybook-static /usr/share/nginx/html
 
-
-EXPOSE 3030
-
-CMD ["pnpm", "http-server", "storybook-static", "-p", "3030"]
+EXPOSE 8080
