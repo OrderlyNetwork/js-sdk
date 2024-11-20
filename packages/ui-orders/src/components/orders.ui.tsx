@@ -15,41 +15,50 @@ export const Orders = (props: OrdersBuilderState) => {
       }}
     >
       <TabPanel value={TabType.all} title="All">
-        <DesktopOrderListWidget type={TabType.all} />
+        <DesktopOrderListWidget
+          type={TabType.all}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+        />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
         <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.tp_sl} title="TP/SL">
         <DesktopOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.filled} title="Filled">
         <DesktopOrderListWidget
           type={TabType.filled}
           ordersStatus={OrderStatus.FILLED}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.cancelled} title="Cancelled">
         <DesktopOrderListWidget
           type={TabType.cancelled}
           ordersStatus={OrderStatus.CANCELLED}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.rejected} title="Rejected">
         <DesktopOrderListWidget
           type={TabType.rejected}
           ordersStatus={OrderStatus.REJECTED}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       {/* <TabPanel value={TabType.orderHistory} title="Order history">
         <DesktopOrderListWidget
           type={TabType.orderHistory}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel> */}
     </Tabs>

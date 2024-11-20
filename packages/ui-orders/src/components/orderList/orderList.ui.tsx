@@ -24,6 +24,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
   const columns = useOrderColumn({
     _type: props.type,
     onSymbolChange: props.onSymbolChange,
+    pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
   });
   return (
     <OrderListProvider
