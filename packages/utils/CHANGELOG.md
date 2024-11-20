@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.0.1-alpha.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-alpha.1
+
 ## 2.0.1-alpha.0
 
 ### Patch Changes
