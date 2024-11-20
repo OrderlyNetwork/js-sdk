@@ -1,4 +1,9 @@
-export type { ShareOptions, TradingPageProps } from "./types/types";
+export type {
+  ShareOptions,
+  TradingPageProps,
+  ReferralProps,
+  TradingRewardsProps,
+} from "./types/types";
 
 export * from "./components/desktop/dataList";
 export * from "./components/base/lastTrades";

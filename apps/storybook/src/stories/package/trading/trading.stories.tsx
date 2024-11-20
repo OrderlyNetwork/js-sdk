@@ -44,7 +44,6 @@ const meta: Meta<typeof TradingPage> = {
         console.log("click trading rewards");
       },
     },
-    tabletMediaQuery: "(max-width: 768px)",
     bottomSheetLeading: <OrderlyIcon size={18} />,
     // bottomSheetLeading: "Orderly"
   },
