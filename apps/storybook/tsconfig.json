@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.build.json",
-  "compilerOptions": {
-    "paths": {
-      "@orderly.network/react": ["../../packages/component/src"],
-      "@orderly.network/referral": ["../../packages/referral/src"],
-    },
-  }
-}
