@@ -60,8 +60,7 @@ const config: StorybookConfig = {
     /**
      * custom addon
      */
-    // resolve(__dirname, "./addons/manager.ts"),
-    "./addons/manager.ts",
+    // "./addons/manager.ts",
   ],
 
   // framework: "@storybook/react-webpack5",
