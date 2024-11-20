@@ -157,6 +157,8 @@ const TPSLQuantity = (props: {
     }
   };
 
+  const errorMsg = (isPosition ? "" : props.quantity).toString().length > 0 ? props.errorMsg : undefined;
+
   return (
     <>
       <Flex gap={2}>
@@ -173,7 +175,7 @@ const TPSLQuantity = (props: {
             autoComplete="off"
             classNames={{
               prefix: "oui-text-base-contrast-54",
-              root: cn("oui-bg-base-5 oui-outline-line-12", props.errorMsg && "oui-outline-danger"),
+              root: cn("oui-bg-base-5 oui-outline-line-12", errorMsg && "oui-outline-danger"),
             }}
             tooltipProps={{
               content: {
@@ -183,8 +185,8 @@ const TPSLQuantity = (props: {
                 className: "oui-fill-base-6",
               },
             }}
-            tooltip={props.errorMsg}
-            color={props.errorMsg ? 'danger' : undefined}
+            tooltip={errorMsg}
+            color={errorMsg ? 'danger' : undefined}
             formatters={[
               inputFormatter.dpFormatter(props.dp),
               inputFormatter.numberFormatter,
