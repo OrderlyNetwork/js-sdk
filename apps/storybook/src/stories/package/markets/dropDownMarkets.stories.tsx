@@ -14,7 +14,7 @@ const decorators = [
     <Box height={500} width={429} intensity={800}>
       <Story />
     </Box>
-  )
+  ),
 ];
 
 const meta: Meta<typeof ExpandMarketsWidget> = {
@@ -22,7 +22,6 @@ const meta: Meta<typeof ExpandMarketsWidget> = {
   subcomponents: {},
   parameters: {
     layout: "centered",
-    
   },
 };
 
@@ -49,14 +48,16 @@ export const DropDownMarkets: Story = {
 export const Favorites: Story = {
   render: (args) => {
     return (
-      <FavoritesListWidget
-        getColumns={getDropDownMarketsColumns}
-        tableClassNames={{
-          root: "!oui-bg-base-8",
-          scroll: "oui-pb-5 oui-px-1",
-        }}
-        rowClassName="!oui-h-[34px]"
-      />
+      <Box pt={2}>
+        <FavoritesListWidget
+          getColumns={getDropDownMarketsColumns}
+          tableClassNames={{
+            root: "!oui-bg-base-8",
+            scroll: "oui-pb-5 oui-px-1",
+          }}
+          rowClassName="!oui-h-[34px]"
+        />
+      </Box>
     );
   },
   decorators,
