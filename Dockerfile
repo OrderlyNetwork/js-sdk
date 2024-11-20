@@ -15,7 +15,7 @@ RUN pnpm build-storybook
 
 FROM nginx:alpine AS runtime
 
-COPY --from=builder /app/apps/storybook2/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder /app/apps/storybook2/storybook-static /usr/share/nginx/html
+COPY --from=builder /app/apps/storybook/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/apps/storybook/storybook-static /usr/share/nginx/html
 
 EXPOSE 8080

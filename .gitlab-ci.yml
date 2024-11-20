@@ -8,4 +8,4 @@ variables:
   GIT_SUBMODULE_FORCE_HTTPS: "true"
   SERVICE_NAME: js-sdk-docs
   IMAGE_NAME: js-sdk-docs
-  DOCKER_FILE: ${CI_PROJECT_DIR}/apps/storybook2/Dockerfile
+  DOCKER_FILE: ${CI_PROJECT_DIR}/apps/docs/Dockerfile
