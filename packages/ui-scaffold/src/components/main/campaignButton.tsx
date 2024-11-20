@@ -1,5 +1,5 @@
 import { Divider } from "@orderly.network/ui";
-import { MainNavItem, NavItem } from "./navItem";
+import { MainNavItem, NavItem } from "./mainMenus/navItem";
 import { cn } from "@orderly.network/ui";
 
 export type CampaignProps = {

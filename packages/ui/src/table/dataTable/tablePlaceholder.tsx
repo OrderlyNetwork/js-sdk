@@ -33,7 +33,7 @@ export const TablePlaceholder = (
         <Spinner />
       ) : (
         emptyView || (
-          <ExtensionSlot position={ExtensionPositionEnum.EmptyDataState} />
+          <ExtensionSlot position={ExtensionPositionEnum.EmptyDataIdentifier} />
         )
       )}
     </Box>
