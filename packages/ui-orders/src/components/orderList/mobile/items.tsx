@@ -509,6 +509,8 @@ export const OrderPrice: FC<OrderCellState> = (props) => {
 };
 
 export const RealizedPnL: FC<OrderCellState> = (props) => {
+  // @ts-ignore
+  const realized_pnl = props?.item?.realized_pnl;
   return (
     <Statistic
       label={<Text>Real. PnL{<Text intensity={20}>(USDC)</Text>}</Text>}
@@ -521,12 +523,11 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
       <Text.numeral
         dp={props.quote_dp}
         rm={Decimal.ROUND_DOWN}
-        intensity={80}
         padding={false}
+        showIdentifier={(realized_pnl ?? 0) > 0}
         coloring
       >
-        {/* @ts-ignore */}
-        {props.item?.realized_pnl ?? "--"}
+        {realized_pnl ?? "--"}
       </Text.numeral>
     </Statistic>
   );
