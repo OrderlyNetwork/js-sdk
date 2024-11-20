@@ -654,7 +654,7 @@ function realizedPnL(option?: {
   pnlNotionalDecimalPrecision?: number;
 }): TableColumn<API.Order> {
   return {
-    title: "Realized Pnl",
+    title: "Real. PnL",
     dataIndex: "realized_pnl",
     width: option?.width,
     className: option?.className,
