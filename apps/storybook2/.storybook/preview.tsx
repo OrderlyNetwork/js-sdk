@@ -23,6 +23,7 @@ const preview: Preview = {
       </OrderlyProvider>
     ),
   ],
+  tags: ["autodocs"],
   parameters: {
     backgrounds: {
       values: [
@@ -40,7 +41,7 @@ const preview: Preview = {
     options: {
       storySort: {
         order: [
-          "Design Tokens",
+          // "Design Tokens",
           "Base",
           ["Overview"],
           "Package",

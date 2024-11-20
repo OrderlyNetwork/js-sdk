@@ -22,4 +22,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    src: "https://oss.orderly.network/static/symbol_logo/ETH.png",
+  },
+};

@@ -9,10 +9,9 @@ import {
   inputFormatter,
 } from "@orderly.network/ui";
 import { useState } from "react";
-import { useArgs } from "@storybook/preview-api";
 
 const meta = {
-  title: "Base/input/Input",
+  title: "Base/Input/Input",
   component: Input,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
@@ -63,17 +62,17 @@ export const Default: Story = {};
 
 export const Clearable: Story = {
   render: (args) => {
-    const [{ value }, updateArgs] = useArgs();
+    const [value, setValue] = useState("");
     return (
       <Input
         {...args}
         value={value}
         className="oui-w-60"
         onChange={(event) => {
-          updateArgs({ value: event.target.value });
+          setValue(event.target.value);
         }}
         onClear={() => {
-          updateArgs({ value: "" });
+          setValue("");
         }}
       />
     );

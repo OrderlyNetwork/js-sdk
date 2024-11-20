@@ -7,7 +7,6 @@ import {
   registerSimpleSheet,
   SimpleSheet,
 } from "@orderly.network/ui";
-import { useEffect } from "@storybook/preview-api";
 import { useState } from "react";
 
 const meta = {
@@ -38,8 +37,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {};
 
 export const CommandStyle: Story = {
   render: () => {

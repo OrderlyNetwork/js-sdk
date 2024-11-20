@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { AuthGuard, AuthGuardTableView } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Text, Flex } from "@orderly.network/ui";
 import { OverviewModule } from "@orderly.network/portfolio";
@@ -53,7 +53,7 @@ export const DataTable: Story = {
     } = OverviewModule.useFundingHistoryHook();
 
     return (
-      <AuthGuardDataTable
+      <AuthGuardTableView
         {...args}
         columns={args.columns}
         dataSource={dataSource}

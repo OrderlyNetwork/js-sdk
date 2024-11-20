@@ -4,7 +4,7 @@ import { Flex, Text, Divider } from "@orderly.network/ui";
 import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
 
 const meta: Meta<typeof OrdersWidget> = {
-  title: "Package/ui-orders/widget",
+  title: "Package/ui-orders/Orders",
   component: OrdersWidget,
   parameters: {
     // layout: "centered",

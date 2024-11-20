@@ -3,7 +3,7 @@ import { fn } from "@storybook/test";
 import { TextField } from "@orderly.network/ui";
 
 const meta: Meta<typeof TextField> = {
-  title: "Base/input/TextField",
+  title: "Base/Input/TextField",
   component: TextField,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

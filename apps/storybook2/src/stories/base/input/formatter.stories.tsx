@@ -13,7 +13,7 @@ import { useArgs } from "@storybook/preview-api";
 import { Decimal } from "@orderly.network/utils";
 
 const meta = {
-  title: "Base/input/formatter",
+  title: "Base/Input/formatter",
   component: Input,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout

@@ -153,6 +153,7 @@ export const OrderBookAndTrades: Story = {
     );
   },
 };
+
 export const Bottom: Story = {
   render: (arg) => {
     return <BottomNavBarWidget />;
