@@ -8,7 +8,7 @@ declare global {
 }
 if(typeof window !== 'undefined') {
     window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-    window.__ORDERLY_VERSION__["@orderly.network/react"] = "2.0.1-developV2.44";
+    window.__ORDERLY_VERSION__["@orderly.network/react"] = "2.0.1-developV2.45";
 };
 
-export default "2.0.1-developV2.44";
+export default "2.0.1-developV2.45";
