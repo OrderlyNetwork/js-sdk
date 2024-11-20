@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 3.3.17
+
+### Patch Changes
+
+- 78c301d16: fix bug;
+- Updated dependencies [78c301d16]
+  - @orderly.network/types@1.5.17
+  - @orderly.network/utils@1.5.17
+
 ## 3.3.17-alpha.0
 
 ### Patch Changes

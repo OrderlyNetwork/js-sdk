@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 1.5.17
+
+### Patch Changes
+
+- 78c301d16: fix bug;
+- Updated dependencies [78c301d16]
+  - @orderly.network/hooks@1.5.17
+  - @orderly.network/types@1.5.17
+
 ## 1.5.17-alpha.0
 
 ### Patch Changes
