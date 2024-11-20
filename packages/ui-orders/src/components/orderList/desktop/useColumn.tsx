@@ -36,8 +36,9 @@ import { useSymbolContext } from "../symbolProvider";
 export const useOrderColumn = (props: {
   _type: TabType;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  pnlNotionalDecimalPrecision?: number;
 }) => {
-  const { _type, onSymbolChange } = props;
+  const { _type, onSymbolChange, pnlNotionalDecimalPrecision } = props;
 
   const columns = useMemo(() => {
     switch (_type) {
@@ -64,7 +65,10 @@ export const useOrderColumn = (props: {
           }),
           avgOpen({ width: 130, enableSort: false }),
           tpslTriggerPrice({ width: 130 }),
-          realizedPnL({ width: 124 }),
+          realizedPnL({
+            width: 124,
+            pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
+          }),
           estTotal({ width: 130, enableSort: false }),
           fee({ width: 130 }),
           status({ width: 130 }),
@@ -133,7 +137,10 @@ export const useOrderColumn = (props: {
           }),
           avgPrice({ width: 124 }),
           triggerPrice({ width: 124, disableEdit: true }),
-          realizedPnL({ width: 124 }),
+          realizedPnL({
+            width: 124,
+            pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
+          }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
           status({ width: 124 }),
@@ -204,7 +211,10 @@ export const useOrderColumn = (props: {
           price({ width: 124, disableEdit: true }),
           avgOpen({ width: 124 }),
           triggerPrice({ width: 124, disableEdit: true }),
-          realizedPnL({ width: 124 }),
+          realizedPnL({
+            width: 124,
+            pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
+          }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
           status({ width: 124 }),
@@ -214,7 +224,7 @@ export const useOrderColumn = (props: {
           cancelBtn({ width: 80 }),
         ];
     }
-  }, [_type]);
+  }, [_type, pnlNotionalDecimalPrecision]);
 
   return columns as TableColumn[];
 
@@ -641,21 +651,27 @@ function realizedPnL(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
+  pnlNotionalDecimalPrecision?: number;
 }): TableColumn<API.Order> {
   return {
     title: "Realized Pnl",
     dataIndex: "realized_pnl",
     width: option?.width,
     className: option?.className,
-    render: (value: number | undefined) => {
+    render: (_value: number | undefined) => {
       const { quote_dp } = useSymbolContext();
+      const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
+      const value = new Decimal(_value ?? 0)
+        .toDecimalPlaces(dp, Decimal.ROUND_DOWN)
+        .toNumber();
       return (
         <Text.numeral
-          dp={quote_dp}
+          dp={dp}
           rm={Decimal.ROUND_DOWN}
           padding={false}
+          intensity={(value ?? 0) == 0 ? 80 : undefined}
           showIdentifier={(value ?? 0) > 0}
-          coloring
+          coloring={(value ?? 0) != 0}
         >
           {value ?? "--"}
         </Text.numeral>
