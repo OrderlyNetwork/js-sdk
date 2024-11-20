@@ -69,6 +69,11 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             img: "/orderly-logo-secondary.svg",
           },
         }}
+        // overrides={{
+        //   tabs: {
+        //     variant: "text",
+        //   },
+        // }}
       >
         {props.children}
       </OrderlyAppProvider>

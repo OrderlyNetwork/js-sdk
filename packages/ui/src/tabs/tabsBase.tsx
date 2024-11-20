@@ -184,9 +184,12 @@ const TabsTrigger = React.forwardRef<
     }
 >(({ className, size, children, icon, variant, ...props }, ref) => {
   // console.log("variant", variant);
-  const { trigger, icon: iconClassName } = tabsVariants({ size, variant });
-  const { getComponentTheme } = useOrderlyTheme();
-  const variantTheme = getComponentTheme("tabs", "contained");
+  // const { getComponentTheme } = useOrderlyTheme();
+  // const variantTheme = getComponentTheme("tabs", variant ?? "contained");
+  const { trigger, icon: iconClassName } = tabsVariants({
+    size,
+    variant,
+  });
   return (
     <TabsPrimitive.Trigger
       ref={ref}
