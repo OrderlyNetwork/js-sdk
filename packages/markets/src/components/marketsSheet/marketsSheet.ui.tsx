@@ -64,6 +64,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           getColumns={getMarketsSheetColumns}
           tableClassNames={{
             root: "!oui-bg-base-8",
+            scroll: "oui-pb-[env(safe-area-inset-bottom)]",
           }}
         />
       </Box>
