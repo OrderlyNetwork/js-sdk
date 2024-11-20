@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.0.1-developV2.48
+
+### Patch Changes
+
+- update
+
 ## 2.0.1-developV2.47
 
 ### Patch Changes

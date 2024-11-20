@@ -1,5 +1,17 @@
 # storybook
 
+## 2.0.1-developV2.48
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/web3-modal@2.0.1-developV2.48
+  - @orderly.network/react@2.0.1-developV2.48
+  - @orderly.network/web3-onboard@2.0.1-developV2.48
+  - @orderly.network/hooks@2.0.1-developV2.48
+  - @orderly.network/core@2.0.1-developV2.48
+
 ## 2.0.1-developV2.47
 
 ### Patch Changes
