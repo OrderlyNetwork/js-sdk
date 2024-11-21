@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-tpsl",
-  "version": "1.0.1-developV2.70",
+  "version": "1.0.1-developV2.71",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
