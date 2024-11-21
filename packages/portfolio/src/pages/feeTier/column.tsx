@@ -12,7 +12,7 @@ export const useFeeTierColumns = () => {
         width: 100,
       },
       {
-        title: "30 Day Volume (USDC)",
+        title: "30 day volume (USDC)",
         dataIndex: "volume",
         align: "center",
         width: 170,

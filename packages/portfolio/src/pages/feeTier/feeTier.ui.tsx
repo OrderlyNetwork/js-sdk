@@ -62,7 +62,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   return (
     <Flex direction="row" gapX={4} my={4} itemAlign={"stretch"}>
       <FeeTierHeaderItem
-        label="Your Tier"
+        label="Your tier"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
             {props.tier || "--"}
@@ -70,7 +70,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        label="30D Trading Volume (USDC)"
+        label="30D trading volume (USDC)"
         value={
           <Text.numeral rule="price" dp={2} rm={Decimal.ROUND_DOWN}>
             {typeof props.vol !== undefined ? `${props.vol}` : "-"}
@@ -78,7 +78,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        label="Take fee rate"
+        label="Taker fee rate"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
             {props.takerFeeRate || "--"}
