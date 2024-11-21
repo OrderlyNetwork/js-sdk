@@ -1,10 +1,7 @@
-import { IChartingLibraryWidget,  IOrderLineAdapter} from '../charting_library';
+import { IChartingLibraryWidget,  IOrderLineAdapter, IPositionLineAdapter} from '../charting_library';
 import useBroker from '../hooks/useBroker';
 import {ChartMode, ChartPosition} from '../type';
 import { Decimal,   commify} from "@orderly.network/utils";
-import {IPositionLineAdapter} from "@orderly.network/react/src/@types/charting_library";
-import {DialogContent} from "@orderly.network/react";
-
 
 export class PositionLineService{
     private instance: IChartingLibraryWidget;

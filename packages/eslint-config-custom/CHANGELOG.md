@@ -1,46 +1,33 @@
 # eslint-config-custom
 
-## 0.3.16
+## 1.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
 
 ### Patch Changes
 
-- bba082a3e: fix bugs;
+- b033ce0: test
+- b15becb: test
 
-## 0.3.16-alpha.0
-
-### Patch Changes
-
-- fix bugs;
-
-## 0.3.15
+## 1.0.0-alpha.2
 
 ### Patch Changes
 
-- fed369e26: update SEI config;
+- test
 
-## 0.3.15-alpha.0
-
-### Patch Changes
-
-- update SEI config;
-
-## 0.3.14
+## 1.0.0-alpha.1
 
 ### Patch Changes
 
-- 7c664bd63: fix bug;
+- test
 
-## 0.3.14-alpha.0
+## 1.0.0-alpha.0
 
-### Patch Changes
+### Major Changes
 
-- fix bug;
-
-## 0.3.13
-
-### Patch Changes
-
-- remove total validate of useOrderEntry
+- integrate solana
 
 ## 0.3.12
 

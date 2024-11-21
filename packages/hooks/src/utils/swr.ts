@@ -7,18 +7,42 @@ import { RegularOrderMergeHandler } from "../services/orderMerge/regularOrderMer
 // import { useSWRConfig, unstable_serialize } from "swr";
 
 export const generateKeyFun =
-  (args: { status?: string; symbol?: string; side?: string; size?: number }) =>
+  (args: {
+    status?: string;
+    symbol?: string;
+    side?: string;
+    size?: number;
+    page?: number;
+    dateRange?: {
+      from?: Date;
+      to?: Date;
+    };
+  }) =>
   (pageIndex: number, previousPageData: any): string | null => {
     // reached the end
     if (previousPageData && !previousPageData.rows?.length) return null;
 
-    const { status, symbol, side, size = 100 } = args;
+    const { status, symbol, side, size = 100, page, dateRange } = args;
 
     const search = new URLSearchParams([
       ["size", size.toString()],
       ["page", `${pageIndex + 1}`],
       ["source_type", "ALL"],
     ]);
+
+    if (dateRange) {
+      if (dateRange.from) {
+        search.set("start_t", `${dateRange.from.getTime()}`);
+      }
+
+      if (dateRange.to) {
+        search.set("end_t", `${dateRange.to.getTime()}`);
+      }
+    }
+
+    if (page) {
+      search.set("page", `${page}`);
+    }
 
     if (status) {
       search.set(`status`, status);

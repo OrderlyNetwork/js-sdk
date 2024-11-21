@@ -3,23 +3,34 @@ import { useModal, modal } from "../modal";
 import { SimpleDialog, SimpleDialogProps } from "./simpleDialog";
 import { ModalArgs } from "../modal/types";
 
-
-function createDialogComponent<P extends Partial<SimpleDialogProps>>(
+export function createDialogComponent<P extends Partial<SimpleDialogProps>>(
   Comp: ElementType
 ) {
   return modal.create((props: P) => {
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
-    // @ts-ignore
-    const { title, size, contentClassName, bodyClassName, ...rest } = props;
+
+    const {
+      title,
+      size,
+      // @ts-ignore deprecated
+      contentClassName,
+      // @ts-ignore deprecated
+      bodyClassName,
+      closable,
+      classNames,
+      ...rest
+    } = props;
     return (
       <SimpleDialog
         open={visible}
         onOpenChange={onOpenChange}
         size={size}
         title={title}
+        closable={closable}
         classNames={{
           content: contentClassName,
           body: bodyClassName,
+          ...classNames,
         }}
       >
         <Comp {...rest} close={hide} resolve={resolve} reject={reject} />
@@ -28,13 +39,11 @@ function createDialogComponent<P extends Partial<SimpleDialogProps>>(
   });
 }
 
-// export function registerDialog<Props = {}>() {}
-
-export const registerSimpleDialog = <Props = {},>(
+export function registerSimpleDialog<Props = {}>(
   id: string,
   comp: ElementType<Props>,
   props?: Partial<ModalArgs<Props>>
-) => {
+) {
   // @ts-ignore
   modal.register(id, createDialogComponent(comp), props);
-};
+}

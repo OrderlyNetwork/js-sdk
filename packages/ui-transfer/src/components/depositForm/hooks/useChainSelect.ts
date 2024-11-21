@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from "react";
 import {
+  Chain,
+  ConnectedChain,
   useChains,
   useConfig,
   useWalletConnector,
@@ -7,6 +9,11 @@ import {
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+
+export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
+  id: number;
+  info?: Chain;
+};
 
 export function useChainSelect() {
   const networkId = useConfig("networkId") as NetworkId;
@@ -29,12 +36,16 @@ export function useChainSelect() {
       ...connectedChain,
       id: chainId,
       info: chain!,
-    };
+    } as CurrentChain;
   }, [connectedChain, findByChainId]);
 
   const onChainChange = useCallback(
     async (chain: API.NetworkInfos) => {
       const chainInfo = findByChainId(chain.chain_id);
+
+      if (!connectedChain) {
+       return;
+      }
 
       if (
         !chainInfo ||
@@ -52,7 +63,9 @@ export function useChainSelect() {
             : toast.error("Switch chain failed");
         })
         .catch((error) => {
-          toast.error(`Switch chain failed: ${error.message}`);
+          if (error && error.message) {
+            toast.error(`Switch chain failed: ${error.message}`);
+          }
         });
     },
     [currentChain, setChain, findByChainId]

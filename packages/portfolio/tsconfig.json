@@ -25,7 +25,6 @@
     "moduleResolution": "node",
     "typeRoots": ["./node_modules/@types", "./src/@types"],
     "paths": {
-      "@orderly.network/react": ["../component/src"],
       "@orderly.network/ui": ["../ui/src"],
       "@orderly.network/chart": ["../chart/src"],
       "@orderly.network/hooks": ["../hooks/src"],
@@ -36,6 +35,7 @@
       "@orderly.network/ui-scaffold": ["../ui-scaffold/src"],
       "@orderly.network/ui-leverage": ["../ui-leverage/src"],
       "@orderly.network/react-app": ["../app/src"],
+      "@orderly.network/ui-orders": ["../ui-orders/src"],
     }
   }
 }

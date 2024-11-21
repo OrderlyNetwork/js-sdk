@@ -1,23 +1,23 @@
 import { FC, ReactNode, useMemo } from "react";
 import { SimpleDialog, SimpleDialogProps } from "./simpleDialog";
 import { DialogAction } from "./simpleDialogFooter";
+import { useScreen } from "../hooks";
+import { cnBase } from "tailwind-variants";
 
 export type AlertDialogProps = {
-  title?: string;
   message?: ReactNode;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
   onOk?: () => Promise<boolean>;
   onCancel?: () => void;
   okLabel?: string;
   cancelLabel?: string;
-  closeable?: boolean;
-} & {
   actions?: {
     primary?: Partial<DialogAction>;
     secondary?: Partial<DialogAction>;
   };
-};
+} & Pick<
+  SimpleDialogProps,
+  "open" | "onOpenChange" | "title" | "closable" | "classNames" | "size"
+>;
 
 /**
  * Generic alert dialog, often used for confirmation/alert/information dialogs.
@@ -32,7 +32,11 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
     onCancel,
     okLabel = "OK",
     cancelLabel = "Cancel",
+    size,
+    classNames,
   } = props;
+
+  const { isMobile } = useScreen();
 
   const actions = useMemo(() => {
     if (typeof onOk !== "function" && typeof onCancel !== "function")
@@ -42,6 +46,8 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       actions["secondary"] = {
         label: cancelLabel,
         onClick: onCancel,
+        size: "md",
+        fullWidth: true,
         ...props.actions?.secondary,
       } as DialogAction;
     }
@@ -50,7 +56,8 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
       actions["primary"] = {
         label: okLabel,
         size: "md",
-        className: "oui-w-[154px]",
+        fullWidth: true,
+        className: "oui-w-full lg:oui-w-[154px]",
         onClick: onOk,
         ...props.actions?.primary,
       } as DialogAction;
@@ -59,16 +66,26 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
     return actions;
   }, [onOk, onCancel, okLabel, cancelLabel, props.actions]);
 
+  const defaultSize = isMobile ? "xs" : "sm";
+
   return (
     <SimpleDialog
       open={open}
       title={title}
-      size={"sm"}
+      size={size || defaultSize}
       actions={actions}
       onOpenChange={onOpenChange}
       classNames={{
-        content: "oui-bg-base-8 oui-font-semibold oui-border oui-border-line-6",
-        footer: "oui-justify-center",
+        content: cnBase(
+          "oui-bg-base-8 oui-font-semibold oui-border oui-border-line-6",
+          "oui-p-4 oui-pt-0 lg:oui-p-5 lg:oui-pt-0",
+          classNames?.content
+        ),
+        body: cnBase("oui-py-4 lg:oui-py-5", classNames?.body),
+        footer: cnBase(
+          "oui-justify-center oui-pb-0 oui-pt-2 lg:oui-pt-3",
+          classNames?.footer
+        ),
       }}
     >
       {message}

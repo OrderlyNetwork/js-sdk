@@ -1,26 +1,23 @@
-import { BaseSigner, MessageFactor } from "./signer";
+import { BaseSigner, MessageFactor, Signer } from "./signer";
 
 import { ConfigStore } from "./configStore/configStore";
 import { OrderlyKeyStore } from "./keyStore";
 import {
-  IWalletAdapter,
-  WalletAdapterOptions,
-  getWalletAdapterFunc,
-} from "./wallet/adapter";
-import { Signer } from "./signer";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { SignatureDomain, getTimestamp, isHex, parseAccountId } from "./utils";
+  AccountStatusEnum,
+  SDKError,
+  ChainNamespace,
+} from "@orderly.network/types";
+import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
 
 import EventEmitter from "eventemitter3";
 import { BaseContract, IContract } from "./contract";
 import { Assets } from "./assets";
-import {
-  generateAddOrderlyKeyMessage,
-  generateRegisterAccountMessage,
-  generateSettleMessage,
-} from "./helper";
-import { SDKError } from "@orderly.network/types";
 import { EVENT_NAMES } from "./constants";
+import { WalletAdapterManager } from "./walletAdapterManager";
+import { WalletAdapter } from "./wallet/walletAdapter";
+import { BaseOrderlyKeyPair } from "./keyPair";
+import { PublicKey } from "@solana/web3.js";
+import { AbiCoder, keccak256 } from "ethers";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -31,11 +28,15 @@ export interface AccountState {
    * whether the account is validating
    */
   validating: boolean;
+  /**
+   * whether the account is revalidating
+   */
   // revalidating?: boolean;
 
   accountId?: string;
   userId?: string;
   address?: string;
+  chainNamespace?: ChainNamespace;
   /** new account */
   isNew?: boolean;
 
@@ -69,29 +70,26 @@ export class Account {
 
   private _ee = new EventEmitter();
 
+  private walletAdapterManager: WalletAdapterManager;
+
   assetsManager: Assets;
 
   private _state: AccountState = {
     status: AccountStatusEnum.NotConnected,
     // balance: "",
     // checking: false,
-    validating: false, // if address is exist, validating is available
+    validating: false, // if address exists, validating is available
     // leverage: Number.NaN,
     isNew: false,
   };
 
   private readonly contractManger;
 
-  // private contract: IContract;
-
-  walletClient?: IWalletAdapter;
-
-  // private config =
-
   constructor(
     private readonly configStore: ConfigStore,
     readonly keyStore: OrderlyKeyStore,
-    private readonly getWalletAdapter: getWalletAdapterFunc, // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
+    // private readonly getWalletAdapter: getWalletAdapterFunc, // private readonly walletAdapterClass: { new (options: any): WalletAdapter } // private walletClient?: WalletClient
+    walletAdapters: WalletAdapter[],
     options?: Partial<{
       /**
        * smart contract configuration class
@@ -109,6 +107,7 @@ export class Account {
     }
 
     this.assetsManager = new Assets(configStore, this.contractManger, this);
+    this.walletAdapterManager = new WalletAdapterManager(walletAdapters);
 
     this._bindEvents();
   }
@@ -119,16 +118,17 @@ export class Account {
 
   async setAddress(
     address: string,
-    wallet?: {
+    wallet: {
       provider: any;
-      chain: { id: string | number };
-      wallet?: {
+      chain: { id: string | number; namespace: ChainNamespace };
+      wallet: {
         name: string;
       };
       [key: string]: any;
     }
   ): Promise<AccountStatusEnum> {
     if (!address) throw new SDKError("Address is required");
+    if (!wallet) throw new SDKError("Wallet is required");
     if (!wallet?.chain?.id) throw new SDKError("Chain id is required");
 
     if (this.stateValue.address === address) {
@@ -136,16 +136,12 @@ export class Account {
         "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method."
       );
       return this.stateValue.status;
+    } else {
+      /// emit switch account event
+      if (this.stateValue.status > AccountStatusEnum.NotConnected) {
+        this._ee.emit(EVENT_NAMES.switchAccount, address);
+      }
     }
-
-    // if (
-    //   typeof wallet?.chain?.id === "string" &&
-    //   (isHex(wallet?.chain?.id) ||
-    //     (wallet?.chain?.id.startsWith("0x") &&
-    //       isHex(wallet?.chain?.id.slice(2))))
-    // ) {
-    //   wallet.chain.id = parseInt(wallet.chain.id, 16);
-    // }
 
     wallet.chain.id = this.parseChainId(wallet?.chain?.id);
 
@@ -155,25 +151,43 @@ export class Account {
       ...this.stateValue,
       status: AccountStatusEnum.Connected,
       address,
+      chainNamespace: wallet.chain.namespace,
       accountId: undefined, // if address change, accountId should be reset
       connectWallet: {
         // ...wallet?.wallet,
-        name: wallet.wallet?.name || "unknown",
+        name: wallet.wallet.name || "unknown",
         chainId: wallet.chain.id,
       },
       validating: true,
       // revalidating: this._state.validating,
     };
 
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
-    if (wallet) {
-      // this.walletClient = new this.walletAdapterClass(wallet);
-      this.walletClient = this.getWalletAdapter({
-        ...wallet,
-        address,
-      } as WalletAdapterOptions);
-    }
+    // if (wallet) {
+    //   // this.walletClient = new this.walletAdapterClass(wallet);
+    //   this.walletClient = this.getWalletAdapter({
+    //     ...wallet,
+    //     address,
+    //   } as WalletAdapterOptions);
+    // }
+
+    // console.log("------+++++++------- setAddress", this.walletAdapter, wallet);
+
+    this.walletAdapterManager.switchWallet(
+      wallet.chain.namespace,
+      address,
+      wallet.chain.id,
+      {
+        provider: wallet.provider,
+        contractManager: this.contractManger,
+      }
+    );
+
+    /**
+     * update chainNamespace
+     */
+    this.configStore.set("chainNamespace", wallet.chain.namespace);
 
     this._ee.emit(EVENT_NAMES.validateStart);
 
@@ -183,6 +197,7 @@ export class Account {
 
     return finallyState;
   }
+
   get stateValue(): AccountState {
     // return this._state$.getValue();
     return this._state;
@@ -202,6 +217,17 @@ export class Account {
     //   throw new Error("brokerId is undefined");
     // }
     const brokerId = this.configStore.get<string>("brokerId");
+    if (this.walletAdapter?.chainNamespace === ChainNamespace.solana) {
+      const userAccount = new PublicKey(this.address);
+      const decodedUserAccount = Buffer.from(userAccount.toBytes());
+      const abicoder = AbiCoder.defaultAbiCoder();
+      return keccak256(
+        abicoder.encode(
+          ["bytes32", "bytes32"],
+          [decodedUserAccount, parseBrokerHash(brokerId)]
+        )
+      );
+    }
     return parseAccountId(this.address, brokerId);
   }
 
@@ -210,30 +236,15 @@ export class Account {
   }
 
   get chainId(): number | string | undefined {
-    return this.walletClient?.chainId;
+    // return this.walletClient?.chainId;
+    if (!this.walletAdapterManager.isAdapterExist) {
+      return;
+    }
+    return this.walletAdapterManager.chainId;
   }
 
-  /**
-   * set user positions count
-   */
-  // set position(position: string[]) {
-  //   const nextState = {
-  //     ...this.stateValue,
-  //     positon: position,
-  //   };
-  //   this._ee.emit("change:status", nextState);
-  // }
-
-  // set orders(orders: string[]) {
-  //   const nextState = {
-  //     ...this.stateValue,
-  //     orders,
-  //   };
-  //   this._ee.emit("change:status", nextState);
-  // }
-
   private _bindEvents() {
-    this._ee.addListener("change:status", (state: AccountState) => {
+    this._ee.addListener(EVENT_NAMES.statusChanged, (state: AccountState) => {
       this._state = state;
     });
   }
@@ -244,7 +255,7 @@ export class Account {
     //
     let nextState: AccountState;
     try {
-      // check account is exist
+      // check account exists
       const accountInfo = await this._checkAccountExist(address);
       //
 
@@ -258,19 +269,16 @@ export class Account {
           accountId: accountInfo.account_id,
           userId: accountInfo.user_id,
         };
-        this._ee.emit("change:status", nextState);
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
         //
       } else {
-        // account is not exist, add account
-        // await this.addAccount(address);
-
         nextState = {
           ...this.stateValue,
           validating: false,
           status: AccountStatusEnum.NotSignedIn,
         };
 
-        this._ee.emit("change:status", nextState);
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
         return AccountStatusEnum.NotSignedIn;
       }
@@ -287,7 +295,7 @@ export class Account {
       // };
 
       if (!orderlyKey) {
-        this._ee.emit("change:status", {
+        this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
           isNew: false,
           validating: false,
@@ -315,7 +323,7 @@ export class Account {
         const expiration = orderlyKeyStatus.expiration;
         if (now > expiration) {
           // orderlyKey is expired, remove orderlyKey
-          this._ee.emit("change:status", {
+          this._ee.emit(EVENT_NAMES.statusChanged, {
             ...this.stateValue,
             validating: false,
           });
@@ -328,7 +336,7 @@ export class Account {
         //   status: AccountStatusEnum.EnableTrading,
         // };
 
-        this._ee.emit("change:status", {
+        this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
           validating: false,
           status: AccountStatusEnum.EnableTrading,
@@ -336,7 +344,7 @@ export class Account {
 
         return AccountStatusEnum.EnableTrading;
       }
-      this._ee.emit("change:status", {
+      this._ee.emit(EVENT_NAMES.statusChanged, {
         ...this.stateValue,
         validating: false,
         // status: AccountStatusEnum.DisabledTrading,
@@ -347,7 +355,7 @@ export class Account {
       return AccountStatusEnum.NotConnected;
     } catch (err) {
       // return this.stateValue.status;
-      this._ee.emit("change:status", {
+      this._ee.emit(EVENT_NAMES.statusChanged, {
         ...this.stateValue,
         validating: false,
         // status: AccountStatusEnum.DisabledTrading,
@@ -372,9 +380,9 @@ export class Account {
   }
 
   async createAccount(): Promise<any> {
-    if (!this.walletClient) {
-      return Promise.reject("walletClient is undefined");
-    }
+    // if (!this.walletClient) {
+    //   return Promise.reject("walletClient is undefined");
+    // }
 
     const { nonce, timestamp } = await this._getRegisterationNonce();
 
@@ -384,14 +392,24 @@ export class Account {
       throw new Error("address is undefined");
     }
 
-    const [message, toSignatureMessage] = generateRegisterAccountMessage({
-      registrationNonce: nonce,
-      chainId: this.walletClient.chainId,
-      brokerId: this.configStore.get("brokerId"),
-      timestamp,
-    });
+    // const [message, toSignatureMessage] = generateRegisterAccountMessage({
+    //   registrationNonce: nonce,
+    //   chainId: this.walletClient.chainId,
+    //   brokerId: this.configStore.get("brokerId"),
+    //   timestamp,
+    // });
 
-    const signatured = await this.signTypedData(toSignatureMessage);
+    // const signatured = await this.signTypedData(toSignatureMessage);
+
+    const { message, signatured } =
+      await this.walletAdapterManager.adapter!.generateRegisterAccountMessage({
+        registrationNonce: nonce,
+        // chainId: this.walletClient.chainId,
+        brokerId: this.configStore.get("brokerId"),
+        timestamp,
+      });
+
+    // const signatured = await this.signTypedData(toSignatureMessage);
 
     const res = await this._simpleFetch("/v1/register_account", {
       method: "POST",
@@ -417,21 +435,12 @@ export class Account {
         isNew: true,
       };
 
-      this._ee.emit("change:status", nextState);
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
+    } else {
+      throw new Error(res.message);
     }
-  }
-
-  async signTypedData(toSignatureMessage: Record<string, any>) {
-    if (!this.walletClient) {
-      return Promise.reject("walletClient is undefined");
-    }
-    return await this.walletClient.signTypedData(
-      // address,
-      this.stateValue.address!,
-      JSON.stringify(toSignatureMessage)
-    );
   }
 
   async createApiKey(
@@ -454,6 +463,8 @@ export class Account {
         };
       }
     } catch (e) {
+      console.log("createApiKey error", e);
+
       if (`${e}`.includes("user rejected action"))
         throw new Error("User rejected the request.");
       throw e;
@@ -472,6 +483,7 @@ export class Account {
       expiration,
       options
     );
+
     if (res.success) {
       this.keyStore.setKey(address, keyPair);
       const nextState = {
@@ -481,7 +493,7 @@ export class Account {
         // userId: res.data.user_id,
       };
 
-      this._ee.emit("change:status", nextState);
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
     } else {
@@ -500,30 +512,27 @@ export class Account {
       throw new Error("account id is undefined");
     }
 
-    if (!this.walletClient) {
-      throw new Error("walletClient is undefined");
+    // if (!this.walletAdapterManager) {
+    //   throw new Error("walletAdapterManager is undefined");
+    // }
+
+    if (!this.walletAdapter) {
+      throw new Error("walletAdapter is undefined");
+    }
+
+    if (!this.walletAdapterManager.isAdapterExist) {
+      throw new Error("wallet adapter is not exist");
     }
 
     if (typeof expiration !== "number") {
       throw new Error("the 'expiration' must be valid number");
     }
 
-    const primaryType = "AddOrderlyKey";
-    const keyPair = this.keyStore.generateKey();
+    // const primaryType = "AddOrderlyKey";
+    // const keyPair = this.keyStore.generateKey();
+    const secretKey = this.walletAdapter.generateSecretKey();
+    const keyPair = new BaseOrderlyKeyPair(secretKey);
     const publicKey = await keyPair.getPublicKey();
-
-    const timestamp = await this._getTimestampFromServer();
-
-    const [message, toSignatureMessage] = generateAddOrderlyKeyMessage({
-      publicKey,
-      chainId: this.walletClient.chainId,
-      primaryType,
-      expiration,
-      brokerId: this.configStore.get("brokerId"),
-      timestamp,
-      scope: options?.scope,
-      tag: options?.tag,
-    });
 
     const address = this.stateValue.address;
 
@@ -531,10 +540,19 @@ export class Account {
       throw new Error("address is undefined");
     }
 
-    //
-    const signatured = await this.signTypedData(toSignatureMessage);
+    const { message, signatured } =
+      await this.walletAdapter.generateAddOrderlyKeyMessage({
+        // chainId: number;
+        brokerId: this.configStore.get("brokerId"),
+        publicKey,
+        expiration,
+        timestamp: getTimestamp(),
+        // domain: any;
+        scope: options?.scope,
+        tag: options?.tag,
+      });
 
-    // this.walletClient.verify(toSignatureMessage, signatured);
+    console.log("generateAPiKey", publicKey, address);
 
     const res = await this._simpleFetch("/v1/orderly_key", {
       method: "POST",
@@ -553,27 +571,33 @@ export class Account {
   }
 
   async settle(): Promise<any> {
-    if (!this.walletClient) {
-      return Promise.reject("walletClient is undefined");
+    if (!this.walletAdapter) {
+      return Promise.reject("walletAdapter is undefined");
     }
     const nonce = await this._getSettleNonce();
     const address = this.stateValue.address;
 
-    const domain = this.getDomain(true);
+    // const domain = this.getDomain(true);
 
     const url = "/v1/settle_pnl";
 
-    const [message, toSignatureMessage] = generateSettleMessage({
-      settlePnlNonce: nonce,
-      chainId: this.walletClient.chainId,
-      brokerId: this.configStore.get("brokerId"),
-      domain,
-    });
+    const timestamp = getTimestamp();
 
-    const EIP_712signatured = await this.signTypedData(toSignatureMessage);
+    const { message, signatured, domain } =
+      await this.walletAdapter.generateSettleMessage({
+        settlePnlNonce: nonce,
+        timestamp,
+        // chainId: this.walletClient.chainId,
+        brokerId: this.configStore.get("brokerId"),
+        // domain,
+        verifyContract:
+          this.contractManger.getContractInfoByEnv().verifyContractAddress,
+      });
+
+    // const EIP_712signatured = await this.signTypedData(toSignatureMessage);
 
     const data = {
-      signature: EIP_712signatured,
+      signature: signatured,
       message,
       userAddress: address,
       verifyingContract: domain.verifyingContract,
@@ -609,7 +633,7 @@ export class Account {
     }
   }
 
-  async destoryOrderlyKey(): Promise<void> {
+  async destroyOrderlyKey(): Promise<void> {
     if (!!this.stateValue.address) {
       // const key = await this.keyStore.getOrderlyKey()?.getPublicKey();
       this.keyStore.cleanKey(this.stateValue.address, "orderlyKey");
@@ -619,7 +643,7 @@ export class Account {
       ...this.stateValue,
       status: AccountStatusEnum.DisabledTrading,
     };
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   async disconnect(): Promise<void> {
@@ -635,7 +659,7 @@ export class Account {
       userId: undefined,
       address: undefined,
     };
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   switchChainId(chainId: number | string) {
@@ -651,11 +675,11 @@ export class Account {
       // revalidating: this._state.validating,
     };
 
-    if (this.walletClient) {
-      this.walletClient.chainId = chainId as number;
+    if (this.walletAdapter) {
+      this.walletAdapter.chainId = chainId as number;
     }
 
-    this._ee.emit("change:status", nextState);
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
   private parseChainId(chainId: string | number): number {
@@ -689,8 +713,8 @@ export class Account {
     return this._singer;
   }
 
-  get wallet() {
-    return this.walletClient;
+  get walletAdapter() {
+    return this.walletAdapterManager.adapter;
   }
 
   private async _getRegisterationNonce() {
@@ -723,7 +747,7 @@ export class Account {
   private async _getAccountInfo() {
     const brokerId = this.configStore.get("brokerId");
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${this.address}&broker_id=${brokerId}`
+      `/v1/get_account?address=${this.address}&broker_id=${brokerId}&chain_type=${this.stateValue.chainNamespace}`
     );
     return res;
   }
@@ -759,28 +783,30 @@ export class Account {
     return fetch(requestUrl, init).then((res) => res.json());
   }
 
-  getDomain(onChainDomain?: boolean): SignatureDomain {
-    if (!this.walletClient) {
-      throw new Error("walletClient is undefined");
-    }
-    const chainId = this.walletClient.chainId;
-    // const {verifyContractAddress} = this.contract.getContractInfoByEnv();
-    return {
-      name: "Orderly",
-      version: "1",
-      chainId,
-      verifyingContract: onChainDomain
-        ? this.contractManger.getContractInfoByEnv().verifyContractAddress
-        : "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
-    };
-  }
+  // getDomain(onChainDomain?: boolean): SignatureDomain {
+  //   if (!this.walletClient) {
+  //     throw new Error("walletClient is undefined");
+  //   }
+  //   const chainId = this.walletClient.chainId;
+  //   // const {verifyContractAddress} = this.contract.getContractInfoByEnv();
+  //   return {
+  //     name: "Orderly",
+  //     version: "1",
+  //     chainId,
+  //     verifyingContract: onChainDomain
+  //       ? this.contractManger.getContractInfoByEnv().verifyContractAddress
+  //       : "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+  //   };
+  // }
 
   get on() {
     return this._ee.on.bind(this._ee);
   }
+
   get once() {
     return this._ee.once.bind(this._ee);
   }
+
   get off() {
     return this._ee.off.bind(this._ee);
   }

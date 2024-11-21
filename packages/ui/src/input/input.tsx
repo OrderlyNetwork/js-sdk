@@ -1,135 +1,150 @@
 import React, { type InputHTMLAttributes, useId } from "react";
-import { cnBase, type VariantProps } from "tailwind-variants";
+import { cnBase, cn, type VariantProps } from "tailwind-variants";
 import { BaseInput, BaseInputProps } from "./baseInput";
 import { InputPrefix } from "./prefix";
 import { InputSuffix } from "./suffix";
 import { tv } from "../utils/tv";
 
-const inputVariants = tv({
-  slots: {
-    input: [
-      "oui-w-full oui-bg-transparent",
-      "oui-bg-transparent",
-      "oui-flex-1",
-      "focus-visible:oui-outline-none",
-      "oui-flex",
-      "placeholder:oui-text-base-contrast-20",
-      "placeholder:oui-text-xs",
-      "oui-tabular-nums",
-      "oui-text-white",
-      "autofill:oui-bg-transparent",
-      "oui-input-input",
-      "disabled:oui-cursor-not-allowed",
-      "oui-peer",
-    ],
-    box: [
-      "oui-rounded",
-      "oui-bg-base-6",
-      "oui-flex",
-      "oui-items-center",
-      "oui-outline",
-      "oui-outline-offset-0",
-      "oui-outline-1",
-      "oui-outline-transparent",
-      "focus-within:oui-outline-primary",
-      "oui-input-root",
-    ],
-    additional: [
-      "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast/60",
-    ],
-    closeButton: [
-      "oui-cursor-pointer",
-      "oui-invisible",
-      "peer-focus:oui-visible",
-    ],
-  },
-  variants: {
-    size: {
-      xs: {
-        input: ["oui-h-6", "oui-text-2xs", "placeholder:oui-text-2xs"],
-        box: ["oui-h-6"],
-        additional: ["oui-text-2xs"],
+const inputVariants = tv(
+  {
+    slots: {
+      input: [
+        "oui-w-full oui-bg-transparent",
+        "oui-bg-transparent",
+        "oui-flex-1",
+        "focus-visible:oui-outline-none",
+        "oui-flex",
+        "placeholder:oui-text-base-contrast-20",
+        "placeholder:oui-text-xs",
+        "oui-tabular-nums",
+        "oui-text-white",
+        "autofill:oui-bg-transparent",
+        "oui-input-input",
+        "disabled:oui-cursor-not-allowed",
+        "oui-peer",
+      ],
+      box: [
+        "oui-rounded",
+        "oui-bg-base-6",
+        "oui-flex",
+        "oui-items-center",
+        "oui-outline",
+        "oui-outline-offset-0",
+        "oui-outline-1",
+        "oui-outline-transparent",
+        "focus-within:oui-outline-primary-light",
+        "oui-input-root",
+      ],
+      additional: [
+        "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-2 oui-text-base-contrast",
+      ],
+      closeButton: [
+        "oui-cursor-pointer",
+        "oui-invisible",
+        "peer-focus:oui-visible",
+      ],
+    },
+    variants: {
+      // variant: {
+      //   outline:{
+      //     box:
+      //   }
+      // },
+      size: {
+        xs: {
+          input: ["oui-h-6", "oui-text-2xs", "placeholder:oui-text-2xs"],
+          box: ["oui-h-6"],
+          additional: ["oui-text-2xs"],
+        },
+        sm: {
+          input: ["oui-h-7", "oui-text-2xs", "placeholder:oui-text-2xs"],
+          box: ["oui-h-7"],
+          additional: ["oui-text-2xs"],
+        },
+        md: {
+          input: ["oui-h-8", "oui-text-2xs", "placeholder:oui-text-2xs"],
+          box: ["oui-h-8"],
+          additional: ["oui-text-2xs"],
+        },
+        lg: {
+          input: ["oui-h-10", "oui-text-sm", "placeholder:oui-text-sm"],
+          box: ["oui-h-10 oui-rounded-md"],
+          additional: ["oui-text-sm"],
+        },
+        xl: {
+          input: ["oui-h-12", "oui-text-base", "placeholder:oui-text-base"],
+          box: ["oui-h-12 oui-rounded-md"],
+          additional: ["oui-text-sm"],
+        },
       },
-      sm: {
-        input: ["oui-h-7", "oui-text-2xs", "placeholder:oui-text-2xs"],
-        box: ["oui-h-7"],
-        additional: ["oui-text-2xs"],
+      color: {
+        success: {
+          box: ["oui-outline-success", "focus-within:oui-outline-success"],
+          input: ["oui-text-success"],
+        },
+        danger: {
+          box: ["oui-outline-danger", "focus-within:oui-outline-danger"],
+          input: ["oui-text-danger"],
+        },
+        warning: {
+          box: ["oui-outline-warning-darken", "focus-within:oui-outline-warning-darken"],
+          input: ["oui-text-warning-darken"],
+        },
+        default: {
+          box: ["oui-outline-transparent"],
+        },
       },
-      md: {
-        input: ["oui-h-8", "oui-text-2xs", "placeholder:oui-text-2xs"],
-        box: ["oui-h-8"],
-        additional: ["oui-text-2xs"],
+      disabled: {
+        true: {
+          input: ["oui-cursor-not-allowed", "oui-text-base-contrast-20"],
+          box: ["oui-bg-base-5"],
+        },
       },
-      lg: {
-        input: ["oui-h-10", "oui-text-sm", "placeholder:oui-text-sm"],
-        box: ["oui-h-10 oui-rounded-md"],
-        additional: ["oui-text-sm"],
+      pl: {
+        true: {
+          box: "oui-pl-3",
+        },
+        false: {
+          box: "oui-pl-0",
+        },
       },
-      xl: {
-        input: ["oui-h-12", "oui-text-base", "placeholder:oui-text-base"],
-        box: ["oui-h-12 oui-rounded-md"],
-        additional: ["oui-text-sm"],
+      pr: {
+        true: {
+          box: "oui-pr-3",
+        },
+        false: {
+          box: "oui-pr-0",
+        },
+      },
+      fullWidth: {
+        true: {
+          box: "oui-w-full",
+        },
+      },
+      align: {
+        center: {
+          input: "oui-text-center",
+        },
+        left: {
+          input: "oui-text-left",
+        },
+        right: {
+          input: "oui-text-right",
+        },
       },
     },
-    color: {
-      success: {
-        box: ["oui-outline-success"],
-      },
-      danger: {
-        box: ["oui-outline-danger"],
-      },
-      warning: {
-        box: ["oui-outline-warning"],
-      },
-      default: {
-        box: ["oui-outline-transparent"],
-      },
-    },
-    disabled: {
-      true: {
-        input: ["oui-cursor-not-allowed", "oui-text-base-contrast-20"],
-        box: ["oui-bg-base-5"],
-      },
-    },
-    pl: {
-      true: {
-        box: "oui-pl-3",
-      },
-      false: {
-        box: "oui-pl-0",
-      },
-    },
-    pr: {
-      true: {
-        box: "oui-pr-3",
-      },
-      false: {
-        box: "oui-pr-0",
-      },
-    },
-    fullWidth: {
-      true: {
-        box: "oui-w-full",
-      },
-    },
-    align: {
-      center: {
-        input: "oui-text-center",
-      },
-      left: {
-        input: "oui-text-left",
-      },
-      right: {
-        input: "oui-text-right",
-      },
-    },
-  },
-  //   compoundVariants: [{ size: "default", className: ["oui-bg-transparent"] }],
-  defaultVariants: {
-    size: "lg",
-  },
-});
+    //   compoundVariants: [{ size: "default", className: ["oui-bg-transparent"] }],
 
+    defaultVariants: {
+      size: "lg",
+    },
+  },
+  {
+    responsiveVariants: ["md", "lg"],
+  }
+);
+
+// @ts-ignore
 interface InputProps<T = string>
   extends BaseInputProps<T>,
     VariantProps<typeof inputVariants> {
@@ -142,6 +157,8 @@ interface InputProps<T = string>
     root?: string;
     additional?: string;
     clearButton?: string;
+    prefix?: string;
+    suffix?: string;
   };
 }
 
@@ -194,7 +211,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <InputPrefix
         id={id || cid}
         prefix={prefix}
-        className={additional({ className: classNames?.additional })}
+        className={additional({
+          className: cnBase(classNames?.additional, classNames?.prefix),
+        })}
       />
       <BaseInput
         {...inputProps}
@@ -206,7 +225,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <InputSuffix
         id={id || cid}
         suffix={suffixElement}
-        className={additional({ className: classNames?.additional })}
+        className={additional({
+          className: cnBase(classNames?.additional, classNames?.suffix),
+        })}
       />
     </div>
   );
@@ -241,6 +262,10 @@ const ClearButton = React.forwardRef<
     </button>
   );
 });
+
+ClearButton.displayName = "ClearButton";
+
+Input.displayName = "Input";
 
 export { Input, inputVariants };
 

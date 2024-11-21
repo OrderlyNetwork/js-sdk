@@ -1,2 +1,2 @@
 export { ChainTile } from "./chainSelector.ui";
-export { ChainSelectorWidget, ChainSelectorId } from "./chainSelector.widget";
+export { ChainSelectorWidget, ChainSelectorId, ChainSelectorSheetId } from "./chainSelector.widget";

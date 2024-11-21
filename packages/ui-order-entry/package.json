@@ -1,17 +1,26 @@
 {
   "name": "@orderly.network/ui-order-entry",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup && pnpm run build:css",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
   },
   "keywords": [],
-  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {

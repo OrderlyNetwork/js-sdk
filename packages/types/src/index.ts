@@ -15,9 +15,17 @@ export type {
   AlgoOrderEntity,
   TPSLOrderEntry,
   BaseAlgoOrderEntity,
+  AlgoOrderChildOrders,
   Optional,
   PositionSide,
+  BracketOrderEntry,
   RequireKeys,
+  BaseOrder,
+  RegularOrder,
+  AlgoOrder,
+  OrderlyOrder,
+  ChildOrder,
+  BracketOrder
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";
@@ -27,3 +35,4 @@ export * from "./wallet";
 export { ApiError, SDKError } from "./errors";
 
 export { definedTypes } from "./sign";
+export * as superstruct from "superstruct";

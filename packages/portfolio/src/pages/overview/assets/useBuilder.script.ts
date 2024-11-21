@@ -43,7 +43,7 @@ export const useAssetScript = () => {
     connect,
     portfolioValue: totalValue,
     freeCollateral,
-    unrealPnL: data.aggregated.unrealPnL,
+    unrealPnL: data.aggregated.total_unreal_pnl,
     unrealROI: data.totalUnrealizedROI,
     currentLeverage,
     onLeverageEdit,

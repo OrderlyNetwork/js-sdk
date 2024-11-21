@@ -1,0 +1,44 @@
+{
+  "name": "@orderly.network/default-solana-adapter",
+  "version": "2.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@solana/web3.js": "1.95.3",
+    "@coral-xyz/anchor": "0.29.0",
+    "@layerzerolabs/lz-solana-sdk-v2": "2.3.45-oft-rc.0",
+    "@layerzerolabs/lz-v2-utilities": "2.3.45-oft-rc.0",
+    "@solana/wallet-adapter-base": "0.9.23",
+    "@solana/spl-token": "0.4.8",
+    "ethereum-cryptography": "2.2.1",
+    "bs58": "^5.0.0",
+    "@noble/ed25519": "^2.0.0",
+    "ethers": "^6.13.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  },
+  "keywords": [
+    "Orderly",
+    "EVM",
+    "DEFI"
+  ]
+}

@@ -3,24 +3,13 @@ import {
   FeeTierModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, Column } from "@orderly.network/ui";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { TableColumn } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
-const meta = {
+const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/Portfolio/FeeTier",
   component: FeeTierModule.FeeTierPage,
   subcomponents: {},
-  decorators: [
-    (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <Story />
-        </OrderlyApp>
-      </ConnectorProvider>
-    ),
-  ],
   parameters: {
     layout: "centered",
   },
@@ -37,7 +26,7 @@ const meta = {
   args: {
     p: 5,
   },
-} satisfies Meta<typeof FeeTierModule.FeeTierPage>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -49,7 +38,7 @@ export const CustomData: Story = {
     return (
       <FeeTierModule.FeeTierPage
         dataAdapter={(columns, dataSource) => {
-          const cols: Column[] = [
+          const cols: TableColumn[] = [
             ...columns.slice(0, 2),
             {
               title: "or",

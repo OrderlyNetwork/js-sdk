@@ -4,4 +4,6 @@ export {
   TooltipProvider,
   TooltipTrigger,
   TooltipContent,
+  TooltipArrow,
+  TooltipPortal,
 } from "./tooltip";

@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useEffect,
+  forwardRef,
 } from "react";
 import { InputHTMLAttributes } from "react";
 import { InputFormatter } from "./formatter/inputFormatter";
@@ -32,7 +33,7 @@ export interface BaseInputProps<T = string>
   onValueChange?: (value: T) => void;
 }
 
-export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
+export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
   (props, ref) => {
     const {
       clearable,
@@ -54,6 +55,8 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     const innerInputRef = useRef<HTMLInputElement>(null);
     const prevInputValue = useRef<string | null>(null);
 
+    const isFocused = useRef<boolean>(false);
+
     const innerFormatters = useMemo<InputFormatter[]>(() => {
       return formatters ?? [];
     }, [formatters]);
@@ -74,7 +77,9 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
         if (value === null || value === undefined) return "";
         let index = 0;
         while (index < innerFormatters.length) {
-          value = innerFormatters[index].onRenderBefore(value, {});
+          value = innerFormatters[index].onRenderBefore(value, {
+            isFocused: isFocused.current,
+          });
 
           index++;
         }
@@ -89,10 +94,12 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
         if (!Array.isArray(innerFormatters) || innerFormatters.length === 0)
           return value;
         if (value === null || value === undefined) return "";
-        let index = 0;
-        while (index < innerFormatters.length) {
-          value = innerFormatters[index].onSendBefore(value, { dp: 2 });
-          index++;
+        let index = innerFormatters.length - 1;
+        while (index > -1) {
+          value = innerFormatters[index].onSendBefore(value, {
+            isFocused: isFocused.current,
+          });
+          index--;
         }
 
         return value;
@@ -153,21 +160,22 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
       setCursor(event.target.selectionStart);
     };
 
-    // const onInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    //   // setShowTooltip(!!error);
-    //   //   props.onFocus?.();
-    // };
-    //
-    // const onInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    //   // setShowTooltip(false);
-    // };
+    const onInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+      isFocused.current = true;
+      inputProps.onFocus?.(event);
+    };
+
+    const onInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+      isFocused.current = false;
+      inputProps.onBlur?.(event);
+    };
     return (
       <input
         type="text"
         {...inputProps}
         ref={innerInputRef}
-        // onBlur={onInputBlur}
-        // onFocus={onInputFocus}
+        onBlur={onInputBlur}
+        onFocus={onInputFocus}
         onChange={onInputChange}
         value={formattedValue}
         id={id}
@@ -175,3 +183,5 @@ export const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     );
   }
 );
+
+BaseInput.displayName = "BaseInput";

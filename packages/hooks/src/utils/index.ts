@@ -8,5 +8,6 @@ export { cleanStringStyle } from "./orderEntryHelper";
 
 export { getPositionBySymbol } from "./swr";
 
-export { priceToPnl } from "../orderly/useTakeProfitAndStopLoss/utils";
+export { priceToPnl, calcTPSL_ROI } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 export { formatNumber } from "./orderEntryHelper";
+export type { ValueOf } from "./createGetter";

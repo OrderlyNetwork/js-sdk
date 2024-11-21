@@ -41,14 +41,14 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     brokerName,
   } = useTradingRewardsContext();
   const epochInfos = epochList?.[0];
-  const { isUnstart } = epochList?.[1];
+  const { isNotStared } = epochList?.[1];
   const [history] = walletRewardsHistory;
   const { wrongNetwork } = useAppContext();
 
   const { data: accountHistory } = useAccountRewardsHistory(account.address);
 
   const data = useMemo(() => {
-    if (isUnstart) return [];
+    if (isNotStared) return [];
     const list = [...(epochInfos || [])];
 
     const combineData = list.map((e): ListType => {
@@ -123,7 +123,7 @@ export const useRewardsHistoryScript = (): RewardsHistoryReturns => {
     history,
     epochInfos,
     totalOrderClaimedReward,
-    isUnstart,
+    isNotStared,
     wrongNetwork,
     accountHistory,
   ]);

@@ -1,0 +1,34 @@
+{
+  "extends": "tsconfig/react-library.json",
+  "include": ["src"],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules",
+    "**/*.test.tsx",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/*.spec.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.js",
+    "**/*.stories.tsx"
+  ],
+  "compilerOptions": {
+    // "rootDir": "./src",
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "module": "esnext",
+    "outDir": "dist",
+    "declarationDir": "types",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "paths": {
+      "@orderly.network/ui": ["../ui/src"],
+      "@orderly.network/hooks": ["../hooks/src"],
+      "@orderly.network/utils": ["../utils/src"],
+      "@orderly.network/types": ["../types/src"]
+    }
+  }
+}

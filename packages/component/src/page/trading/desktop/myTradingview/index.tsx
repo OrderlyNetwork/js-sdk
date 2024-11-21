@@ -7,7 +7,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/popover";
 import { useEffect, useMemo, useState } from "react";
 import { SymbolProvider, useSymbolContext } from "@/provider/symbolProvider";
 import { toast } from "@/toast";
-import { useOrderEntry, useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  useOrderEntry_deprecated,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
 import { CloseBaseConfirm } from "@/block/positions/full/marketConfirmDialog";
 import { OrderSide, OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
@@ -30,7 +33,11 @@ interface IProps {
 export default function MyTradingView({ symbol, tradingViewConfig }: IProps) {
   const [open, setOpen] = useState(false);
   const [side, setSide] = useState<OrderSide>(OrderSide.BUY);
-  const { helper, onSubmit, submitting } = useOrderEntry(symbol, side, true);
+  const { helper, onSubmit, submitting } = useOrderEntry_deprecated(
+    symbol,
+    side,
+    true
+  );
   const symbolInfo = useSymbolsInfo()[symbol];
   const [orderData, setOrderData] = useState<any>();
   const [openSetting, setOpenSetting] = useState<boolean>(false);

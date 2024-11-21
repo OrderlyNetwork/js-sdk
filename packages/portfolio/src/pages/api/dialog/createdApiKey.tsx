@@ -38,7 +38,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           label: "Copy API info",
           "data-testid": "oui-testid-apiKey-createdApiKey-dialog-copy-btn",
           className:
-            "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary hover:oui-opacity-80",
+            "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary-darken hover:oui-opacity-80",
           size: "md",
           onClick: async () => {
             return props.onCopyApiKeyInfo();

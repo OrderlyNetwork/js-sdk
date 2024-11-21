@@ -8,6 +8,8 @@ import { alert } from "./preset/alert";
 import { dialog } from "./preset/dialog";
 
 import { confirm } from "./preset/confirm";
+export type { ConfirmProps } from "./preset/confirm";
+// import { actionSheet } from "@/modal/preset/actionSheet";
 export { ConfirmDialog } from "./preset/confirm";
 
 export type { ModalHocProps } from "./types";

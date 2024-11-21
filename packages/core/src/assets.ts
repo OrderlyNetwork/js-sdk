@@ -1,22 +1,10 @@
-import { Account } from "./account";
-import { ConfigStore } from "./configStore/configStore";
+import {Account} from "./account";
+import {ConfigStore} from "./configStore/configStore";
 
-import { IContract } from "./contract";
-import { MessageFactor } from "./signer";
-import {
-  SignatureDomain,
-  formatByUnits,
-  getTimestamp,
-  parseAccountId,
-  parseBrokerHash,
-  parseTokenHash,
-} from "./utils";
-import {
-  API,
-  ApiError,
-  MaxUint256,
-  definedTypes,
-} from "@orderly.network/types";
+import {IContract} from "./contract";
+import {MessageFactor} from "./signer";
+import {formatByUnits, getTimestamp, parseBrokerHash, parseTokenHash,} from "./utils";
+import {API, ApiError, MaxUint256, ChainNamespace} from "@orderly.network/types";
 
 export class Assets {
   constructor(
@@ -31,11 +19,11 @@ export class Assets {
     amount: string | number;
     allowCrossChainWithdraw: boolean;
   }) {
-    if (!this.account.walletClient) {
-      throw new Error("walletClient is undefined");
+    if (!this.account.walletAdapter) {
+      throw new Error("walletAdapter is undefined");
     }
     if (!this.account.stateValue.address)
-      throw new Error("account address is rqeuired");
+      throw new Error("account address is required");
 
     const { chainId, token, allowCrossChainWithdraw } = inputs;
     let { amount } = inputs;
@@ -43,24 +31,39 @@ export class Assets {
       amount = amount.toString();
     }
     const url = "/v1/withdraw_request";
-    // get withdrawl nonce
+    // get withdrawal nonce
     const nonce = await this.getWithdrawalNonce();
-    const domain = this.account.getDomain(true);
-    const [message, toSignatureMessage] = this._generateWithdrawMessage({
-      chainId,
-      receiver: this.account.stateValue.address!,
-      token,
-      amount: this.account.walletClient.parseUnits(amount),
-      nonce,
-      domain,
-    });
+    const timestamp = getTimestamp();
+    // const domain = this.account.getDomain(true);
+    // const [message, toSignatureMessage] = this._generateWithdrawMessage({
+    //   chainId,
+    //   receiver: this.account.stateValue.address!,
+    //   token,
+    //   amount: this.account.walletClient.parseUnits(amount),
+    //   nonce,
+    //   domain,
+    // });
 
-    const EIP_712signatured = await this.account.signTypedData(
-      toSignatureMessage
-    );
+    // const EIP_712signatured = await this.account.signTypedData(
+    //   toSignatureMessage
+    // );
+
+    const { message, signatured, domain } =
+      await this.account.walletAdapter.generateWithdrawMessage({
+        // chainId,
+        receiver: this.account.stateValue.address!,
+        token,
+        brokerId: this.configStore.get("brokerId"),
+        amount: this.account.walletAdapter.parseUnits(amount),
+        nonce,
+        timestamp,
+        // domain,
+        verifyContract: this.contractManger.getContractInfoByEnv().verifyContractAddress,
+
+      });
 
     const data = {
-      signature: EIP_712signatured,
+      signature: signatured,
       message,
       userAddress: this.account.stateValue.address,
       verifyingContract: domain.verifyingContract,
@@ -103,43 +106,6 @@ export class Assets {
     return res;
   }
 
-  private _generateWithdrawMessage(inputs: {
-    chainId: number;
-    receiver: string;
-    token: string;
-    amount: string;
-    nonce: number;
-    domain: SignatureDomain;
-  }) {
-    const { chainId, receiver, token, amount, domain, nonce } = inputs;
-    const primaryType = "Withdraw";
-    const timestamp = getTimestamp();
-
-    const typeDefinition = {
-      EIP712Domain: definedTypes.EIP712Domain,
-      [primaryType]: definedTypes[primaryType],
-    };
-
-    const message = {
-      brokerId: this.configStore.get("brokerId"),
-      chainId,
-      receiver,
-      token,
-      amount,
-      timestamp,
-      withdrawNonce: nonce,
-    };
-
-    const toSignatureMessage = {
-      domain,
-      message,
-      primaryType,
-      types: typeDefinition,
-    };
-
-    return [message, toSignatureMessage];
-  }
-
   private async getWithdrawalNonce(): Promise<number> {
     const timestamp = getTimestamp().toString();
     const url = "/v1/withdraw_nonce";
@@ -166,9 +132,10 @@ export class Assets {
   }
 
   async getNativeBalance(options?: { decimals?: number }): Promise<string> {
-    const result = await this.account.walletClient?.getBalance(
-      this.account.stateValue.address!
-    );
+    if (!this.account.walletAdapter) {
+      return "0";
+    }
+    const result = await this.account.walletAdapter.getBalance();
 
     // return this.account.walletClient!.formatUnits(result);
     return formatByUnits(result, options?.decimals);
@@ -180,12 +147,12 @@ export class Assets {
       decimals?: number;
     }
   ): Promise<string> {
-    if (!this.account.walletClient) {
+    if (!this.account.walletAdapter) {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
-    const result = await this.account.walletClient?.call(
+    const result = await this.account.walletAdapter?.call(
       address ?? contractAddress.usdcAddress,
       "balanceOf",
       [this.account.stateValue.address],
@@ -194,8 +161,8 @@ export class Assets {
       }
     );
 
-    return formatByUnits(result, options?.decimals);
-    // return this.account.walletClient?.formatUnits(result,options?.decimals);
+    // return formatByUnits(result, options?.decimals);
+    return this.account.walletAdapter?.formatUnits(result, options?.decimals);
   }
 
   async getBalanceByAddress(
@@ -204,12 +171,12 @@ export class Assets {
       decimals?: number;
     }
   ): Promise<string> {
-    if (!this.account.walletClient) {
+    if (!this.account.walletAdapter) {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
-    const result = await this.account.walletClient?.call(
+    const result = await this.account.walletAdapter?.call(
       address,
       "balanceOf",
       [this.account.stateValue.address],
@@ -241,11 +208,11 @@ export class Assets {
             decimals: undefined,
           };
 
-    if (!this.account.walletClient) {
+    if (!this.account.walletAdapter) {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
-    const result = await this.account.walletClient?.call(
+    const result = await this.account.walletAdapter?.call(
       address ?? contractAddress.usdcAddress,
       "allowance",
       [
@@ -257,7 +224,8 @@ export class Assets {
       }
     );
 
-    return this.account.walletClient?.formatUnits(result, decimals);
+    return this.account.walletAdapter?.formatUnits(result, decimals);
+    // return result;
   }
 
   // async approve(address?: string, amount?: string, vaultAddress?: string) {
@@ -287,16 +255,16 @@ export class Assets {
       throw new Error("address is required");
     }
 
-    if (!this.account.walletClient) {
-      throw new Error("walletClient is undefined");
+    if (!this.account.walletAdapter) {
+      throw new Error("walletAdapter is undefined");
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
-        ? this.account.walletClient.parseUnits(amount, decimals)
+        ? this.account.walletAdapter.parseUnits(amount, decimals)
         : MaxUint256.toString();
 
-    const result = await this.account.walletClient?.call(
+    const result = await this.account.walletAdapter?.call(
       // contractAddress.usdcAddress,
       address,
       "approve",
@@ -315,15 +283,15 @@ export class Assets {
     decimals?: number;
   }) {
     const { address, amount, decimals } = inputs;
-    if (!this.account.walletClient) {
-      throw new Error("walletClient is undefined");
+    if (!this.account.walletAdapter) {
+      throw new Error("walletAdapter is undefined");
     }
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
-        ? this.account.walletClient.parseUnits(amount, decimals)
+        ? this.account.walletAdapter.parseUnits(amount, decimals)
         : MaxUint256.toString();
     const orderlyContractAddress = this.contractManger.getContractInfoByEnv();
-    const result = await this.account.walletClient?.call(
+    const result = await this.account.walletAdapter?.call(
       address,
       "approve",
       [orderlyContractAddress.vaultAddress, parsedAmount],
@@ -336,8 +304,8 @@ export class Assets {
   }
 
   async getDepositFee(amount: string, chain: API.NetworkInfos) {
-    if (!this.account.walletClient)
-      throw new Error("walletClient is undefined");
+    if (!this.account.walletAdapter)
+      throw new Error("walletAdapter is undefined");
 
     const brokerId = this.configStore.get<string>("brokerId");
 
@@ -347,14 +315,19 @@ export class Assets {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
-      tokenAmount: this.account.walletClient?.parseUnits(amount),
+      tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
-
     const contractAddress = this.contractManger.getContractInfoByEnv();
+    let vaultAddress = contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
+      vaultAddress = contractAddress.solanaVaultAddress;
+      // @ts-ignore
+      depositData['USDCAddress'] = contractAddress.solanaUSDCAddress
+    }
 
-    return await this.account.walletClient.callOnChain(
+    return await this.account.walletAdapter.callOnChain(
       chain,
-      contractAddress.vaultAddress,
+      vaultAddress,
       "getDepositFee",
       [this.account.stateValue.address, depositData],
       {
@@ -364,8 +337,8 @@ export class Assets {
   }
 
   async deposit(amount: string, fee: bigint = 0n) {
-    if (!this.account.walletClient)
-      throw new Error("walletClient is undefined");
+    if (!this.account.walletAdapter)
+      throw new Error("walletAdapter is undefined");
 
     const brokerId = this.configStore.get<string>("brokerId");
 
@@ -377,15 +350,20 @@ export class Assets {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
-      tokenAmount: this.account.walletClient?.parseUnits(amount),
+      tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
-
-    const result = await this.account.walletClient?.sendTransaction(
-      contractAddress.vaultAddress,
+    let vaultAddress = contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
+      vaultAddress = contractAddress.solanaVaultAddress;
+      // @ts-ignore
+      depositData['USDCAddress'] = contractAddress.solanaUSDCAddress
+    }
+    const result = await this.account.walletAdapter?.sendTransaction(
+      vaultAddress,
       "deposit",
       {
         from: this.account.stateValue.address!,
-        to: contractAddress.vaultAddress,
+        to: vaultAddress,
         data: [depositData],
         value: fee,
       },

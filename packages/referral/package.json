@@ -1,15 +1,16 @@
 {
   "name": "@orderly.network/referral",
-  "version": "1.5.16",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "private": true,
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch --tsconfig tsconfig.build.json",
-    "build": "tsup --tsconfig tsconfig.build.json && pnpm run build-tailwind",
+    "dev": "tsup --watch",
+    "build:deprecated": "tsup && pnpm run build-tailwind",
     "build-tailwind": "npx tailwindcss -o ./dist/styles.css --minify",
     "docs:generate": "typedoc",
     "docs:parse": "@orderly.network/typedoc-json-parser",

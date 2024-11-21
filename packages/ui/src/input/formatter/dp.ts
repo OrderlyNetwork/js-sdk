@@ -14,6 +14,9 @@ export const dpFormatter = (
   const onBefore = (value: string | number, options: InputFormatterOptions) => {
     if (typeof value === "number") value = value.toString();
     if (!value || value.endsWith(".")) return value;
+    // if (config && config.tick !== null) {
+    //   return utils.formatNumber(value, config.tick) ?? value;
+    // }
     return truncateNumber(value, dp);
     // const { roundingMode = Decimal.ROUND_DOWN } = config ?? {};
     // let d = new Decimal(value);

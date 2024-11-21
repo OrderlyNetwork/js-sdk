@@ -15,13 +15,7 @@ export const InputAdditional: FC<
   const Comp = asChild ? Slot : "label";
 
   return (
-    <Comp
-      htmlFor={props.name}
-      className={cnBase(
-        "oui-h-full oui-flex oui-flex-col oui-justify-center oui-px-3 oui-text-base-contrast/60",
-        props.className
-      )}
-    >
+    <Comp htmlFor={props.name} className={props.className}>
       {props.children}
     </Comp>
   );

@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { Text, type Column } from "@orderly.network/ui";
+import { type TableColumn, Text } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
 export const useFeeTierColumns = () => {
-  const columns = useMemo<Column[]>(() => {
+  const columns = useMemo(() => {
     return [
       {
         title: "Tier",
@@ -59,7 +59,7 @@ export const useFeeTierColumns = () => {
           return <Text>{value}</Text>;
         },
       },
-    ];
+    ] as TableColumn[];
   }, []);
 
   return columns;

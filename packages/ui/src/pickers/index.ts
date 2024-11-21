@@ -12,3 +12,5 @@ DatePicker.range = DateRangePicker;
 
 export { DatePicker };
 export type { DatePickerProps } from "./datepicker";
+
+export { Picker } from "./picker";

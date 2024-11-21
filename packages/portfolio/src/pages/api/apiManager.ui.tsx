@@ -1,15 +1,11 @@
 import {
-  ArrowLeftRightIcon,
   Box,
   Button,
   Card,
   CopyIcon,
-  DataTable,
-  Divider,
-  EmptyDataState,
   Flex,
-  Pagination,
   PlusIcon,
+  TableColumn,
   Text,
   Tooltip,
 } from "@orderly.network/ui";
@@ -18,16 +14,13 @@ import {
   capitalizeFirstChar,
 } from "./apiManager.script";
 import { FC, useState } from "react";
-import { Column } from "@orderly.network/ui";
 import { CreateAPIKeyDialog } from "./dialog/createApiKey";
 import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
 import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
 import { EditAPIKeyDialog } from "./dialog/editApiKey";
-import { AccountStatusEnum } from "@orderly.network/types";
 import {
-  AuthGuard,
-  AuthGuardDataTable,
   AuthGuardEmpty,
+  AuthGuardTableView,
   AuthGuardTooltip,
 } from "@orderly.network/ui-connector";
 import { APIKeyItem } from "@orderly.network/hooks";
@@ -48,11 +41,11 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
         <AccountInfo {...props} />
         <Subtitle {...props} />
       </Flex>
-        <div>
-          <KeyList {...props} />
-          <CreateAPIKeyDialog {...props} />
-          <CreatedAPIKeyDialog {...props} />
-        </div>
+      <div>
+        <KeyList {...props} />
+        <CreateAPIKeyDialog {...props} />
+        <CreatedAPIKeyDialog {...props} />
+      </div>
     </Card>
   );
 };
@@ -126,7 +119,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
         </Text>
         <Flex
           itemAlign={"center"}
-          className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
+          className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary-darken oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
           onClick={props.onReadApiGuide}
         >
           <Text>Read API guide</Text>
@@ -169,7 +162,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const KeyList: FC<ApiManagerScriptReturns> = (props) => {
-  const columns: Column<APIKeyItem>[] = [
+  const columns: TableColumn<APIKeyItem>[] = [
     {
       title: "API key",
       dataIndex: "orderly_key",
@@ -257,24 +250,36 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
     },
   ];
   return (
-    <AuthGuardDataTable
+    <AuthGuardTableView
       bordered
       columns={columns}
       loading={props.isLoading}
       dataSource={props.keys}
       emptyView={<AuthGuardEmpty />}
-      classNames={{
-        header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
-        body: "oui-text-xs oui-text-base-contrast-80",
-      }}
-    >
-      <Pagination
-        {...props.meta}
-        onPageChange={props.onPageChange}
-        onPageSizeChange={props.onPageSizeChange}
-      />
-    </AuthGuardDataTable>
+      classNames={{}}
+      pagination={props.pagination}
+    />
   );
+
+  // return (
+  //   <AuthGuardDataTable
+  //     bordered
+  //     columns={columns}
+  //     loading={props.isLoading}
+  //     dataSource={props.keys}
+  //     emptyView={<AuthGuardEmpty />}
+  //     classNames={{
+  //       header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
+  //       body: "oui-text-xs oui-text-base-contrast-80",
+  //     }}
+  //   >
+  //     <Pagination
+  //       {...props.meta}
+  //       onPageChange={props.onPageChange}
+  //       onPageSizeChange={props.onPageSizeChange}
+  //     />
+  //   </AuthGuardDataTable>
+  // );
 };
 
 const EditButton: FC<{

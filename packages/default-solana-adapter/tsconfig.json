@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "paths": {
+      "@orderly.network/types": ["../types/src"],
+      "@orderly.network/core": ["../core/src"],
+    },
+  }
+}

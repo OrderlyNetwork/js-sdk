@@ -6,7 +6,8 @@
       "@orderly.network/ui": ["../ui/src"],
       "@orderly.network/hooks": ["../hooks/src"],
       "@orderly.network/ui-connector": ["../ui-connector/src"],
-      "@orderly.network/ui-chain-selector": ["../ui-chain-selector/src"]
+      "@orderly.network/ui-chain-selector": ["../ui-chain-selector/src"],
+      "@orderly.network/react-app": ["../app/src"],
     }
   }
 }

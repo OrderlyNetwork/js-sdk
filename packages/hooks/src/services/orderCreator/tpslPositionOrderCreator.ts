@@ -14,6 +14,8 @@ import { Decimal } from "@orderly.network/utils";
 export class TPSLPositionOrderCreator extends BaseAlgoOrderCreator<
   AlgoOrderEntity<AlgoOrderRootType.POSITIONAL_TP_SL>
 > {
+  type = AlgoOrderRootType.POSITIONAL_TP_SL;
+
   create(
     values: AlgoOrderEntity<AlgoOrderRootType.POSITIONAL_TP_SL>,
     config: ValuesDepConfig

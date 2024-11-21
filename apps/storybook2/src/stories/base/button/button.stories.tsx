@@ -5,9 +5,12 @@ import {
   Flex,
   ArrowUpSquareFillIcon,
   ArrowDownSquareFillIcon,
+  DebouncedButton,
+  ThrottledButton,
 } from "@orderly.network/ui";
+import { useState } from "react";
 
-const meta = {
+const meta: Meta<typeof Button> = {
   title: "Base/Button",
   component: Button,
   parameters: {
@@ -29,7 +32,15 @@ const meta = {
       control: {
         type: "inline-radio",
       },
-      options: ["primary", "success", "danger", "warning", "gray", "darkGray", "light"],
+      options: [
+        "primary",
+        "success",
+        "danger",
+        "warning",
+        "gray",
+        "darkGray",
+        "light",
+      ],
     },
     loading: {
       control: {
@@ -67,14 +78,14 @@ const meta = {
     loading: false,
     shadow: "base",
   },
-} satisfies Meta<typeof Button>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Variants: Story = {
   args: {
-    color: "danger"
+    color: "danger",
   },
 };
 
@@ -114,6 +125,30 @@ export const IconButton: Story = {
         <Button {...args} trailing={<ArrowDownSquareFillIcon />}>
           Trailing element
         </Button>
+      </Flex>
+    );
+  },
+};
+
+export const Debounce: Story = {
+  render: (args) => {
+    return (
+      <Flex gapX={3}>
+        <ThrottledButton
+          throttleDuration={5000}
+          onClick={(event: any) => {
+            console.log("event 1", Date.now());
+          }}
+          children={`throttle 5000`}
+        />
+        <ThrottledButton
+          throttleDuration={1000}
+          onClick={(event: any) => {
+            console.log("event 2", Date.now());
+          }}
+          color={"danger"}
+          children={`throttle 1000`}
+        />
       </Flex>
     );
   },

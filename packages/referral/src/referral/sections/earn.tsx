@@ -15,7 +15,7 @@ export const Earn = () => {
     }
 
 
-    return <EarnIcon width={"100%"} height="100%" className="orderly-fill-primary"/>
+    return <EarnIcon width={"100%"} height="100%" className="orderly-fill-primary-darken"/>
 
   }, [overwrite]);
 

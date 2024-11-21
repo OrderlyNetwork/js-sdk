@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-view",
-  "version": "1.5.16",
+  "version": "2.0.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "files": [
@@ -38,8 +38,8 @@
     "react": "^18.2.0"
   },
   "scripts": {
-    "dev": "tsup --watch --tsconfig tsconfig.build.json",
-    "build": "tsup --tsconfig tsconfig.build.json",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "docs:generate": "typedoc",
     "docs:parse": "@orderly.network/typedoc-json-parser",
     "test": "jest"

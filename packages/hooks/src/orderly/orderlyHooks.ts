@@ -4,13 +4,19 @@ export type {
   OrderBookItem,
   OrderbookOptions,
 } from "./useOrderbookStream";
-export { useOrderEntry } from "./useOrderEntry";
-export type { UseOrderEntryMetaState, OrderParams } from "./useOrderEntry";
+
 export { useSymbolsInfo } from "./useSymbolsInfo";
+export type { SymbolInfo } from "./useSymbolsInfo";
 export { useAccountInfo } from "./useAccountInfo";
 
 export { useMarketsStream } from "./useMarketsStream";
-export { useMarkets, MarketsType } from "./useMarkets";
+export { useMarket } from "./useMarket";
+export {
+  useMarkets,
+  useMarketsStore,
+  MarketsStorageKey,
+  MarketsType,
+} from "./useMarkets";
 export type { FavoriteTab, Favorite, Recent } from "./useMarkets";
 export { useMarkPricesStream } from "./useMarkPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
@@ -21,6 +27,7 @@ export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
 export { useFundingRates } from "./useFundingRates";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
+export type { PriceMode } from "./usePositionStream/usePositionStream";
 export { useOrderStream } from "./useOrderStream/useOrderStream";
 export { useMarketTradeStream } from "./useMarketTradeStream";
 
@@ -64,3 +71,10 @@ export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
 
 export { useMaintenanceStatus } from "./useMaintenanceStatus";
+
+///------ store ------
+export {
+  // markPriceActions,
+  useMarkPriceBySymbol,
+} from "./useMarkPrice/useMarkPriceStore";
+export { usePositionActions } from "./usePositionStream/usePosition.store";

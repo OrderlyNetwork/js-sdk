@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { ExtensionSlot } from "../../plugin/slot";
 import { Box } from "../../box";
 import { Spinner } from "../../spinner/spinner";
+import { ExtensionPositionEnum } from "../../plugin";
 
 export const TablePlaceholder = (
   props: React.HTMLAttributes<HTMLDivElement> & {
@@ -31,7 +32,9 @@ export const TablePlaceholder = (
       {loading ? (
         <Spinner />
       ) : (
-        emptyView || <ExtensionSlot position={"emptyDataState"} />
+        emptyView || (
+          <ExtensionSlot position={ExtensionPositionEnum.EmptyDataState} />
+        )
       )}
     </Box>
   );

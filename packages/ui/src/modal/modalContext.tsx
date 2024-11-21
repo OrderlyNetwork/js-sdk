@@ -73,6 +73,19 @@ function removeModal(id: string): ModalAction {
   };
 }
 
+function updateArgsAction(
+  id: string,
+  args: Record<string, unknown>
+): ModalAction {
+  return {
+    type: "UPDATE_ARGS",
+    payload: {
+      id,
+      args,
+    },
+  };
+}
+
 function setModalStates(
   id: string,
   states: Record<string, unknown>
@@ -113,18 +126,32 @@ const reducer = (state: ModalStore, action: ModalAction) => {
         },
       };
     }
-
     case "DESTROY_MODAL": {
       const newState = { ...state };
       delete newState[id];
       return newState;
+    }
+    case "UPDATE_ARGS": {
+      return {
+        ...state,
+        [id]: {
+          ...state[id],
+          args: {
+            ...state[id].args,
+            ...args,
+          },
+        },
+      };
     }
     case "SET_MODAL_STATES": {
       return {
         ...state,
         [id]: {
           ...state[id],
-          ...action.payload.states,
+          states: {
+            ...state.states,
+            ...action.payload.states,
+          },
         },
       };
     }
@@ -160,7 +187,7 @@ const ModalContainer: FC = () => {
   return (
     <>
       {components.map((component) => {
-        // console.log("component", component,);
+        // console.log("component", component);
 
         const Comp: ElementType = component.comp;
         return (
@@ -260,9 +287,14 @@ function setStates(id: string, states: Record<string, unknown>) {
   dispatch(setModalStates(id, states));
 }
 
+function updateArgs(id: string, args: Record<string, unknown>) {
+  dispatch(updateArgsAction(id, args));
+}
+
 export const modalActions = {
   show,
   hide,
   remove,
   setStates,
+  updateArgs,
 };

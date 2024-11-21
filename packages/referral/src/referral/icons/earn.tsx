@@ -14,7 +14,7 @@ export const EarnIcon: FC<IconProps> = (props) => {
             height={`${size}px`}
             fill="#335FFC"
             viewBox={`0 0 ${size} ${size}`}
-            className="orderly-fill-primary"
+            className="orderly-fill-primary-darken"
             {...rest}
         >
             <path fillRule="evenodd" clipRule="evenodd" d="M30 30C31.6569 30 33 28.6569 33 27C33 25.3431 31.6569 24 30 24C28.3431 24 27 25.3431 27 27C27 28.6569 28.3431 30 30 30ZM30 32.25C32.8995 32.25 35.25 29.8995 35.25 27C35.25 24.1005 32.8995 21.75 30 21.75C27.1005 21.75 24.75 24.1005 24.75 27C24.75 29.8995 27.1005 32.25 30 32.25Z" fill="white" fillOpacity="0.36" />

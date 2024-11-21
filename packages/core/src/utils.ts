@@ -6,6 +6,7 @@ import {
   formatUnits,
   Numeric,
 } from "ethers";
+import type { BigNumberish } from "ethers/src.ts/utils";
 
 export { parseUnits } from "ethers";
 
@@ -47,7 +48,7 @@ export function calculateStringHash(input: string) {
 // }
 
 export function formatByUnits(
-  amount: string,
+  amount: BigNumberish,
   unit: number | "ether" | "gwei" = "ether"
 ) {
   return formatUnits(amount, unit);
@@ -80,17 +81,14 @@ export const getGlobalObject = () => {
   throw new Error("cannot find the global object");
 };
 
-
-
 /// get timestamp
 export const getTimestamp = (): number => {
-
   if (typeof window !== "undefined") {
     // @ts-ignore
     const timeOffset = getGlobalObject()?.__ORDERLY_timestamp_offset;
-    if (typeof timeOffset === 'number') {
+    if (typeof timeOffset === "number") {
       return Date.now() + (timeOffset || 0);
     }
   }
   return Date.now();
-}
+};

@@ -19,12 +19,14 @@ const badgeVariants = tv({
       primaryLight: "",
       secondary: "",
       danger: "",
+      buy: "",
       success: "",
       warning: "",
-      neutural: "",
+      sell: "",
+      neutral: "",
     },
     size: {
-      xs: "oui-px-2 oui-py-0.5 oui-text-3xs oui-rounded oui-h-[18px]",
+      xs: "oui-px-2 oui-py-0.5 oui-text-2xs oui-rounded oui-h-[18px]",
       sm: "oui-px-2 oui-py-0.5 oui-text-2xs oui-rounded",
       md: "oui-px-2 oui-py-0.5 oui-text-sm",
       lg: "oui-px-2 oui-py-1 oui-text-base",
@@ -39,7 +41,7 @@ const badgeVariants = tv({
     {
       variant: "contained",
       color: "primary",
-      className: ["oui-bg-primary/15", "oui-text-primary"],
+      className: ["oui-bg-primary-darken/15", "oui-text-primary-darken"],
     },
     {
       variant: "contained",
@@ -53,23 +55,33 @@ const badgeVariants = tv({
     },
     {
       variant: "contained",
+      color: "sell",
+      className: ["oui-bg-danger/15", "oui-text-danger"],
+    },
+    {
+      variant: "contained",
       color: "success",
       className: ["oui-bg-success/15", "oui-text-success"],
     },
     {
       variant: "contained",
-      color: "warning",
-      className: ["oui-bg-warning/15", "oui-text-warning"],
+      color: "buy",
+      className: ["oui-bg-success/15", "oui-text-success"],
     },
     {
       variant: "contained",
-      color: "neutural",
+      color: "warning",
+      className: ["oui-bg-warning-darken/15", "oui-text-warning-darken"],
+    },
+    {
+      variant: "contained",
+      color: "neutral",
       className: ["oui-bg-line", "oui-text-base-contrast-36"],
     },
     {
       variant: "text",
       color: "primary",
-      className: ["oui-text-primary"],
+      className: ["oui-text-primary-darken"],
     },
     {
       variant: "text",
@@ -84,11 +96,11 @@ const badgeVariants = tv({
     {
       variant: "text",
       color: "warning",
-      className: ["oui-text-warning"],
+      className: ["oui-text-warning-darken"],
     },
     {
       variant: "text",
-      color: "neutural",
+      color: "neutral",
       className: ["oui-text-base-contrast-36"],
     },
   ],

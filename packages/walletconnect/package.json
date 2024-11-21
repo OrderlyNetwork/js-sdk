@@ -1,12 +1,12 @@
 {
   "name": "@orderly.network/web3-modal",
-  "version": "1.5.16",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
   "scripts": {
-    "dev": "tsup --watch --tsconfig tsconfig.build.json",
-    "build": "tsup --tsconfig tsconfig.build.json",
+    "dev": "tsup --watch",
+    "build": "tsup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

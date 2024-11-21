@@ -20,7 +20,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { ChainCell } from "./chainCell";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { Chain, Chains } from "@orderly.network/hooks/esm/orderly/useChains";
+import { Chain, Chains } from "@orderly.network/hooks";
 import type { NetworkId } from "@orderly.network/types";
 
 export interface ChainSelectProps {

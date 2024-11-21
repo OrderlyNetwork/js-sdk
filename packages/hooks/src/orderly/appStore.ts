@@ -1,0 +1,183 @@
+import { create } from "zustand";
+import { API } from "@orderly.network/types";
+import { immer } from "zustand/middleware/immer";
+import { Decimal, zero } from "@orderly.network/utils";
+import { WSMessage } from "@orderly.network/types";
+// import { devtools } from "zustand/middleware";
+
+export type AppStatus = {
+  positionsLoading: boolean;
+  ordersLoading: boolean;
+  fundingRatesLoading: boolean;
+  ready: boolean;
+};
+
+export type Portfolio = {
+  holding?: API.Holding[];
+  totalCollateral: Decimal;
+  freeCollateral: Decimal;
+  totalValue: Decimal | null;
+  availableBalance: number;
+  unsettledPnL: number;
+  totalUnrealizedROI: number;
+};
+
+export type AppState = {
+  accountInfo?: API.AccountInfo;
+  // positions: API.PositionExt[];
+  symbolsInfo?: Record<string, API.SymbolExt>;
+  fundingRates?: Record<string, API.FundingRate>;
+  portfolio: Portfolio;
+  appState: AppStatus;
+};
+
+export type AppActions = {
+  cleanAll: () => void;
+  setAccountInfo: (accountInfo: API.AccountInfo) => void;
+  // setPositions: (positions: API.PositionExt[]) => void;
+  setSymbolsInfo: (symbolsInfo: Record<string, API.SymbolExt>) => void;
+  setFundingRates: (fundingRates: Record<string, API.FundingRate>) => void;
+  updateAppStatus: (key: keyof AppStatus, value: boolean) => void;
+  updatePortfolio: (
+    key: keyof Omit<Portfolio, "usdc" | "holding">,
+    value: number | Decimal
+  ) => void;
+
+  batchUpdateForPortfolio: (data: Partial<Portfolio>) => void;
+  restoreHolding: (holding: API.Holding[]) => void;
+  updateHolding: (msg: Record<string, WSMessage.Holding>) => void;
+};
+
+export const useAppStore = create<
+  AppState & {
+    actions: AppActions;
+  }
+  //   [["zustand/devtools", never], ["zustand/immer", never]]
+>()(
+  immer((set) => ({
+    // accountInfo: null,
+    portfolio: {
+      totalCollateral: zero,
+      totalValue: null,
+      freeCollateral: zero,
+      availableBalance: 0,
+      unsettledPnL: 0,
+      totalUnrealizedROI: 0,
+    },
+    appState: {
+      positionsLoading: false,
+      ordersLoading: false,
+      fundingRatesLoading: false,
+      ready: false,
+    } as AppStatus,
+    actions: {
+      cleanAll: () => {
+        set((state) => {
+          state.accountInfo = undefined;
+          state.portfolio = {
+            totalCollateral: zero,
+            totalValue: null,
+            freeCollateral: zero,
+            availableBalance: 0,
+            unsettledPnL: 0,
+            totalUnrealizedROI: 0,
+          };
+        }, false);
+      },
+      setAccountInfo: (accountInfo: API.AccountInfo) => {
+        set(
+          (state) => {
+            state.accountInfo = accountInfo;
+          },
+          false
+          // "setAccountInfo"
+        );
+      },
+      setSymbolsInfo: (symbolsInfo: Record<string, API.SymbolExt>) => {
+        set(
+          (state) => {
+            state.symbolsInfo = symbolsInfo;
+          },
+          false
+          // "setSymbolsInfo"
+        );
+      },
+      setFundingRates: (fundingRates: Record<string, API.FundingRate>) => {
+        set(
+          (state) => {
+            state.fundingRates = fundingRates;
+          },
+          false
+          // "setFundingRates"
+        );
+      },
+      updateAppStatus: (key: keyof AppStatus, value: boolean) => {
+        set(
+          (state) => {
+            state.appState[key] = value;
+          },
+          false
+          // "updateAppStatus"
+        );
+      },
+      updatePortfolio: (
+        key: keyof Omit<Portfolio, "usdc" | "holding">,
+        value: any
+      ) => {
+        set(
+          (state) => {
+            state.portfolio[key] = value;
+          },
+          false
+          // "updatePortfolio"
+        );
+      },
+      batchUpdateForPortfolio: (data: Partial<Portfolio>) => {
+        set(
+          (state) => {
+            state.portfolio = { ...state.portfolio, ...data };
+          },
+          false
+          // "batchUpdateForPortfolio"
+        );
+      },
+      restoreHolding: (holding: API.Holding[]) => {
+        set(
+          (state) => {
+            state.portfolio.holding = holding;
+          },
+          false
+          // "updateHolding"
+        );
+      },
+      updateHolding(msg) {
+        set(
+          (state) => {
+            if (state.portfolio.holding && state.portfolio.holding.length) {
+              for (const key in msg) {
+                const holding = state.portfolio.holding.find(
+                  (item) => item.token === key
+                );
+                if (holding) {
+                  holding.holding = msg[key].holding;
+                  holding.frozen = msg[key].frozen;
+                }
+                // else {
+                //   state.portfolio.holding.push({
+                //     token: key,
+                //     holding: msg[key].holding,
+                //     frozen: msg[key].frozen,
+                //   });
+                // }
+              }
+            }
+          },
+          false
+          // "updateHolding"
+        );
+      },
+    },
+  }))
+);
+
+export const useAccountInfo = () => useAppStore((state) => state.accountInfo);

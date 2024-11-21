@@ -1,88 +1,74 @@
 # @orderly.network/hooks
 
-## 1.5.16
+## 2.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
 
 ### Patch Changes
 
-- bba082a3e: fix bugs;
-- Updated dependencies [bba082a3e]
-  - @orderly.network/core@1.5.16
-  - @orderly.network/net@1.5.16
-  - @orderly.network/perp@3.3.16
-  - @orderly.network/types@1.5.16
-  - @orderly.network/utils@1.5.16
+- b033ce0: test
+- b15becb: test
+- Updated dependencies [113773f]
+- Updated dependencies [b033ce0]
+- Updated dependencies [b15becb]
+  - @orderly.network/default-solana-adapter@2.0.0
+  - @orderly.network/web3-provider-ethers@2.0.0
+  - @orderly.network/default-evm-adapter@2.0.0
+  - @orderly.network/types@2.0.0
+  - @orderly.network/utils@2.0.0
+  - @orderly.network/core@2.0.0
+  - @orderly.network/perp@4.0.0
+  - @orderly.network/net@2.0.0
 
-## 1.5.16-alpha.0
+## 2.0.0-alpha.2
 
 ### Patch Changes
 
-- fix bugs;
+- test
 - Updated dependencies
-  - @orderly.network/core@1.5.16-alpha.0
-  - @orderly.network/net@1.5.16-alpha.0
-  - @orderly.network/perp@3.3.16-alpha.0
-  - @orderly.network/types@1.5.16-alpha.0
-  - @orderly.network/utils@1.5.16-alpha.0
+  - @orderly.network/default-solana-adapter@2.0.0-alpha.2
+  - @orderly.network/web3-provider-ethers@2.0.0-alpha.2
+  - @orderly.network/default-evm-adapter@2.0.0-alpha.2
+  - @orderly.network/types@2.0.0-alpha.2
+  - @orderly.network/utils@2.0.0-alpha.2
+  - @orderly.network/core@2.0.0-alpha.2
+  - @orderly.network/perp@4.0.0-alpha.2
+  - @orderly.network/net@2.0.0-alpha.2
 
-## 1.5.15
-
-### Patch Changes
-
-- fed369e26: update SEI config;
-- Updated dependencies [fed369e26]
-  - @orderly.network/types@1.5.15
-  - @orderly.network/core@1.5.15
-  - @orderly.network/net@1.5.15
-  - @orderly.network/perp@3.3.15
-  - @orderly.network/utils@1.5.15
-
-## 1.5.15-alpha.0
+## 2.0.0-alpha.1
 
 ### Patch Changes
 
-- update SEI config;
+- test
 - Updated dependencies
-  - @orderly.network/types@1.5.15-alpha.0
-  - @orderly.network/core@1.5.15-alpha.0
-  - @orderly.network/net@1.5.15-alpha.0
-  - @orderly.network/perp@3.3.15-alpha.0
-  - @orderly.network/utils@1.5.15-alpha.0
+  - @orderly.network/default-solana-adapter@2.0.0-alpha.1
+  - @orderly.network/web3-provider-ethers@2.0.0-alpha.1
+  - @orderly.network/default-evm-adapter@2.0.0-alpha.1
+  - @orderly.network/types@2.0.0-alpha.1
+  - @orderly.network/utils@2.0.0-alpha.1
+  - @orderly.network/core@2.0.0-alpha.1
+  - @orderly.network/perp@4.0.0-alpha.1
+  - @orderly.network/net@2.0.0-alpha.1
 
-## 1.5.14
+## 2.0.0-alpha.0
 
-### Patch Changes
+### Major Changes
 
-- 7c664bd63: fix bug;
-- Updated dependencies [7c664bd63]
-  - @orderly.network/core@1.5.14
-  - @orderly.network/net@1.5.14
-  - @orderly.network/perp@3.3.14
-  - @orderly.network/types@1.5.14
-  - @orderly.network/utils@1.5.14
-
-## 1.5.14-alpha.0
+- integrate solana
 
 ### Patch Changes
 
-- fix bug;
 - Updated dependencies
-  - @orderly.network/core@1.5.14-alpha.0
-  - @orderly.network/net@1.5.14-alpha.0
-  - @orderly.network/perp@3.3.14-alpha.0
-  - @orderly.network/types@1.5.14-alpha.0
-  - @orderly.network/utils@1.5.14-alpha.0
-
-## 1.5.13
-
-### Patch Changes
-
-- remove total validate of useOrderEntry
-- Updated dependencies
-  - @orderly.network/core@1.5.13
-  - @orderly.network/net@1.5.13
-  - @orderly.network/perp@3.3.13
-  - @orderly.network/types@1.5.13
-  - @orderly.network/utils@1.5.13
+  - @orderly.network/default-solana-adapter@2.0.0-alpha.0
+  - @orderly.network/web3-provider-ethers@2.0.0-alpha.0
+  - @orderly.network/default-evm-adapter@2.0.0-alpha.0
+  - @orderly.network/types@2.0.0-alpha.0
+  - @orderly.network/utils@2.0.0-alpha.0
+  - @orderly.network/core@2.0.0-alpha.0
+  - @orderly.network/perp@4.0.0-alpha.0
+  - @orderly.network/net@2.0.0-alpha.0
 
 ## 1.5.12
 

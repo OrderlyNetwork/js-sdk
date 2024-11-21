@@ -3,9 +3,33 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "paths": {
-      "@orderly.network/react": ["../component/src"],
-      "@orderly.network/ui": ["../ui/src"],
-      "@orderly.network/hooks": ["../hooks/src"],
-    },
+      "@orderly.network/ui": [
+        "../ui/src"
+      ],
+      "@orderly.network/ui-positions": [
+        "../ui-positions/src"
+      ],
+      "@orderly.network/ui-tpsl": [
+        "../ui-tpsl/src"
+      ],
+      "@orderly.network/ui-orders": [
+        "../ui-orders/src"
+      ],
+      "@orderly.network/ui-order-entry": [
+        "../ui-order-entry/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ],
+      "@orderly.network/markets": [
+        "../markets/src"
+      ]
+    }
   }
 }

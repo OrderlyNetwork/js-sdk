@@ -19,9 +19,11 @@ import {
   CaretUpIcon,
   SettingIcon,
   SettingFillIcon,
+  ArrowUpSquareFillIcon,
+  ArrowDownShortIcon,
 } from "@orderly.network/ui";
 
-const meta = {
+const meta: Meta<typeof Icon> = {
   title: "Base/Icon/Icons",
   component: Icon,
   parameters: {
@@ -64,7 +66,7 @@ const meta = {
     opacity: 1,
     size: 24,
   },
-} satisfies Meta<typeof Icon>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -89,11 +91,10 @@ export const Icons: Story = {
           <ArrowDownUpIcon {...args} />
           <CaretDownIcon {...args} />
           <CaretUpIcon {...args} />
+          <ArrowUpSquareFillIcon {...args} />
+          <ArrowDownShortIcon {...args} />
         </Flex>
       </Box>
     );
   },
 };
-
-
-

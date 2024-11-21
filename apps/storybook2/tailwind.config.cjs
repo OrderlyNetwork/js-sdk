@@ -1,9 +1,10 @@
 const path = require("path");
 // const { chartPlugin } = require("@orderly.network/chart");
 import { chartPlugin } from "@orderly.network/chart";
+import { withTV } from "tailwind-variants/transformer";
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+/** @type {import("tailwindcss").Config} */
+module.exports = withTV({
   content: [
     "./src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui/src/**/*.{ts,js,tsx,jsx,mdx}",
@@ -17,9 +18,16 @@ module.exports = {
     "../../packages/markets/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/chart/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-transfer/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-share/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-tradingview/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/wallet-connector/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/trading/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-order-entry/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-tpsl/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-chain-selector/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
   ],
   plugins: [chartPlugin()],
-};
+});

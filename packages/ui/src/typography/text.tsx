@@ -31,12 +31,12 @@ const textVariants = tv({
     color: {
       inherit: "oui-text-inherit",
       neutral: "oui-text-base-contrast-54",
-      primary: "oui-text-primary",
+      primary: "oui-text-primary-darken",
       primaryLight: "oui-text-primary-light",
       secondary: "oui-text-secondary",
       tertiary: "oui-text-tertiary",
       // quaternary: "oui-text-gray-300",
-      warning: "oui-text-warning",
+      warning: "oui-text-warning-darken",
       danger: "oui-text-danger",
       success: "oui-text-success",
       buy: "oui-text-trade-profit",
@@ -55,6 +55,9 @@ const textVariants = tv({
       80: "oui-text-base-contrast-80",
       98: "oui-text-base-contrast",
     },
+    dashBoard: {
+      default: "oui-border-b oui-border-dashed oui-border-base-contrast-12",
+    }
   },
 });
 

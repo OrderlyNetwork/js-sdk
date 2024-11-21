@@ -1,53 +1,66 @@
-import { DataTable, TabPanel, Tabs } from "@orderly.network/ui";
-import { useOrderColumn } from "./orderList/useColumn";
+import { TabPanel, Tabs } from "@orderly.network/ui";
 import { OrderStatus, API } from "@orderly.network/types";
 import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";
-import { OrderList, OrderListWidget } from "./orderList";
+import { DesktopOrderListWidget } from "./orderList";
 
 export const Orders = (props: OrdersBuilderState) => {
   return (
-    <Tabs defaultValue={props.current || TabType.all}>
+    <Tabs
+      defaultValue={props.current || TabType.all}
+      variant="contained"
+      className="oui-h-full"
+      classNames={{
+        tabsContent: "oui-h-[calc(100%_-_28px)]",
+      }}
+    >
       <TabPanel value={TabType.all} title="All">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.all}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.tp_sl} title="TP/SL">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.filled} title="Filled">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.filled}
           ordersStatus={OrderStatus.FILLED}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.cancelled} title="Cancelled">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.cancelled}
           ordersStatus={OrderStatus.CANCELLED}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
       <TabPanel value={TabType.rejected} title="Rejected">
-        <OrderListWidget
+        <DesktopOrderListWidget
           type={TabType.rejected}
           ordersStatus={OrderStatus.REJECTED}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
       </TabPanel>
-      <TabPanel value={TabType.orderHistory} title="Order history">
-        <OrderListWidget
+      {/* <TabPanel value={TabType.orderHistory} title="Order history">
+        <DesktopOrderListWidget
           type={TabType.orderHistory}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         />
-      </TabPanel>
+      </TabPanel> */}
     </Tabs>
   );
 };

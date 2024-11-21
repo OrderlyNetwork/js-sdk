@@ -1,6 +1,5 @@
 import type { StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, ModalProvider } from "@orderly.network/ui";
+import { Box } from "@orderly.network/ui";
 import {
   MaintenanceTipsUI,
   AccountMenuWidget,
@@ -8,11 +7,6 @@ import {
   ChainMenuWidget,
   Scaffold,
 } from "@orderly.network/ui-scaffold";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
-import { CustomConfigStore } from "../../../constants/CustomConfigStore.ts";
-import { useState } from "react";
-
-const configStore = new CustomConfigStore({ brokerId: "testnet", env: "dev" });
 
 const meta = {
   title: "Package/ui-scaffold/maintenanceTips",
@@ -24,20 +18,9 @@ const meta = {
   },
   decorators: [
     (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyApp
-          configStore={configStore}
-          brokerId={"orderly"}
-          brokerName={"Orderly"}
-          networkId={"testnet"}
-        >
-          <ModalProvider>
-            <Box intensity={900}>
-              <Story />
-            </Box>
-          </ModalProvider>
-        </OrderlyApp>
-      </ConnectorProvider>
+      <Box intensity={900}>
+        <Story />
+      </Box>
     ),
   ],
   argTypes: {},

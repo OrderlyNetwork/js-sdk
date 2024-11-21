@@ -15,4 +15,5 @@ export default defineConfig((options) => ({
       opts.drop = ["console", "debugger"];
     }
   },
+  tsconfig: "tsconfig.build.json",
 }));

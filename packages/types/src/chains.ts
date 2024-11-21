@@ -559,6 +559,15 @@ export const chainsInfoMap: Map<number, Chain> = new Map([
   [Sei.id, Sei],
 ]);
 
+export const SolanaDevnet= {
+  // todo solana chain config
+  name: "Solana Devnet",
+  public_rpc_url: "",
+  chain_id: 901901901,
+  currency_symbol: "SOL",
+  explorer_base_url: "",
+  vault_address: ""
+};
 export const TestnetChains = [
   {
     network_infos: {
@@ -579,6 +588,17 @@ export const TestnetChains = [
         decimals: 6,
       },
     ],
+  },
+  {
+    network_infos: SolanaDevnet,
+    token_infos: [
+      {
+        symbol: "USDC",
+        address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+        decimals: 6,
+      },
+
+    ]
   },
   // {
   //   network_infos: {
@@ -638,3 +658,9 @@ export const TestnetChains = [
 
 export const defaultMainnetChains = [Arbitrum, Base, Optimism];
 export const defaultTestnetChains = [ArbitrumSepolia];
+
+
+export enum ChainNamespace {
+  evm = "EVM",
+  solana = "SOL",
+}

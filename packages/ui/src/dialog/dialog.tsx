@@ -30,8 +30,7 @@ const dialogVariants = tv({
       // "oui-gap-4",
       // "oui-bg-base-8",
       "oui-text-base-contrast-54",
-      // "oui-py-4",
-      "oui-px-5",
+      "oui-px-4 lg:oui-px-5",
 
       "oui-shadow-lg",
       "oui-duration-200",
@@ -47,7 +46,7 @@ const dialogVariants = tv({
       "data-[state=open]:oui-slide-in-from-top-[48%]",
       "sm:oui-rounded-xl",
     ],
-    body: ["oui-dialog-body", "oui-py-5", "oui-text-xs"],
+    body: ["oui-dialog-body", "oui-py-4 lg:oui-py-5", "oui-text-xs"],
     close: [
       "oui-dialog-close-btn",
       "oui-absolute",
@@ -75,7 +74,7 @@ const dialogVariants = tv({
       "oui-justify-end",
       "oui-space-x-2",
       "oui-pb-5",
-      "oui-pt-3",
+      "oui-pt-2 lg:oui-pt-3",
       // "has-[&>*:nth-child(1)]:oui-bg-red-400",
       // "oui-has-[:checked]:oui-bg-indigo-50",
       // "has-[button]:oui-bg-red-50",
@@ -85,7 +84,7 @@ const dialogVariants = tv({
       "oui-text-base",
       // "oui-pt-3",
       // "oui-pb-2",
-      "oui-min-h-11",
+      "oui-min-h-11 lg:oui-min-h-[46px]",
       "oui-flex",
       "oui-items-center",
       "oui-text-base-contrast",
@@ -93,7 +92,7 @@ const dialogVariants = tv({
     desc: [
       "oui-dialog-desc",
       "oui-text-xs",
-      "oui-text-warning",
+      "oui-text-warning-darken",
       "oui-pt-2",
       "oui-text-center",
       "oui-pb-3",
@@ -102,6 +101,9 @@ const dialogVariants = tv({
   },
   variants: {
     size: {
+      xs: {
+        content: ["oui-max-w-xs"], //320
+      },
       sm: {
         content: ["oui-max-w-sm"], //360
       },
@@ -196,8 +198,11 @@ const DialogContent = React.forwardRef<
         >
           {children}
           {closable && (
-            <DialogPrimitive.Close className={close()} data-testid="oui-testid-dialog-content-close-btn">
-              <CloseIcon size={16} color="white" opacity={98} />
+            <DialogPrimitive.Close
+              className={close()}
+              data-testid="oui-testid-dialog-content-close-btn"
+            >
+              <CloseIcon size={16} color="white" opacity={0.98} />
               <span className="oui-sr-only">Close</span>
             </DialogPrimitive.Close>
           )}

@@ -7,7 +7,7 @@
       "@orderly.network/perp": ["../perp/src"],
       "@orderly.network/types": ["../types/src"],
       "@orderly.network/utils": ["../utils/src"],
+      "@orderly.network/default-evm-adapter": ["../default-evm-adapter/src"],
     }
-
   }
 }

@@ -96,7 +96,7 @@ export const ReferralInputCode = create<{
           </div>
 
           <Input
-            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary"
+            containerClassName="orderly-h-[40px] orderly-mt-3 orderly-bg-base-700 orderly-outline orderly-outline-1 orderly-outline-base-contrast-12 focus-within:orderly-outline-primary-darken"
             placeholder="Enter code"
             value={code}
             onChange={(e) => {

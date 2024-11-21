@@ -15,7 +15,7 @@ export const Subtitle: FC<SubtitleReturns> = (props) => {
       <Flex
         direction={"row"}
         gap={1}
-        className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
+        className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary-darken oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
         onClick={(e) => {
           if (props.onLearnAffiliate) {
             props.onLearnAffiliate?.();

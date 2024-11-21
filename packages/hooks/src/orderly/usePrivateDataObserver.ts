@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useWS } from "../useWS";
 import { mutate } from "swr";
-import { WSMessage } from "@orderly.network/types";
+import { API, WSMessage } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { unstable_serialize } from "swr/infinite";
 import { useEventEmitter } from "../useEventEmitter";
@@ -10,6 +10,14 @@ import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { object2underscore } from "../utils/ws";
 import { useLocalStorage } from "../useLocalStorage";
+import { usePrivateQuery } from "../usePrivateQuery";
+import { useAppStore } from "./appStore";
+import { useCalculatorService } from "../useCalculatorService";
+import { CalculatorScope } from "../types";
+import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { usePositionActions } from "./orderlyHooks";
+import { AccountState, EVENT_NAMES } from "@orderly.network/core";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -18,10 +26,128 @@ export const usePrivateDataObserver = (options: {
   const ws = useWS();
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
-  const { state } = useAccount();
+  const { state, account } = useAccount();
+  const { setAccountInfo, restoreHolding, updateHolding, cleanAll } =
+    useAppStore((state) => state.actions);
+  const statusActions = useApiStatusActions();
+  const calculatorService = useCalculatorService();
+  const positionsActions = usePositionActions();
+  // fetch the data of current account
 
-  // TODO: remove this when the WS service provides the correct data
-  // const algoOrderCacheQuneue = useRef<API.AlgoOrder[]>([]);
+  const { data: clientInfo } =
+    usePrivateQuery<API.AccountInfo>("/v1/client/info");
+
+  useEffect(() => {
+    if (clientInfo) {
+      setAccountInfo(clientInfo);
+    }
+  }, [clientInfo, setAccountInfo]);
+  //======================
+
+  /**
+   * fetch the positions of current account
+   */
+  const { data: positions, isLoading: isPositionLoading } =
+    usePrivateQuery<API.PositionInfo>("/v1/positions", {
+      formatter: (data) => data,
+      onError: (error) => {
+        statusActions.updateApiError("positions", error.message);
+      },
+    });
+
+  // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
+  useEffect(() => {
+    const handler = (state: AccountState) => {
+      if (!state.accountId) {
+        calculatorService.stop();
+        cleanAll();
+        positionsActions.clearAll();
+      }
+    };
+
+    account.on(EVENT_NAMES.statusChanged, handler);
+
+    return () => {
+      account.off(EVENT_NAMES.statusChanged, handler);
+    };
+
+    // account.on(EVENT_NAMES.switchAccount, () => {
+    //   cleanAll();
+    //   positionsActions.clearAll();
+    // });
+
+    // return () => {
+    //   account.off(EVENT_NAMES.switchAccount);
+    // };
+    // if (state.validating) return;
+
+    // console.log("++++++++++state.status", state.status);
+
+    // if (state.status < AccountStatusEnum.EnableTrading) {
+    //   cleanAll();
+    //   positionsActions.clearAll();
+    //   // calculatorService.calc(CalculatorScope.POSITION, {
+    //   //   rows: [],
+    //   // });
+    // }
+  }, []);
+
+  useEffect(() => {
+    /// start load positions
+    if (isPositionLoading) {
+      statusActions.updateApiLoading("positions", isPositionLoading);
+    }
+  }, [isPositionLoading, statusActions]);
+
+  useEffect(() => {
+    if (positions && Array.isArray(positions.rows)) {
+      // if (positions.rows.length > 0) {
+      calculatorService.calc(CalculatorScope.POSITION, positions);
+      // } else {
+      //   statusActions.updateApiLoading("positions", false);
+      // }
+    }
+  }, [calculatorService, positions]);
+
+  //======================
+
+  // useHolding
+  const { data: holding } = usePrivateQuery<API.Holding[]>(
+    "/v1/client/holding",
+    {
+      formatter: (data) => data.holding,
+    }
+  );
+
+  useEffect(() => {
+    const unsubscribe = ws.privateSubscribe(
+      {
+        id: "balance",
+        event: "subscribe",
+        topic: "balance",
+        ts: Date.now(),
+      },
+      {
+        onMessage: (data: any) => {
+          const holding = data?.balances ?? ({} as Record<string, any>);
+
+          if (holding) {
+            console.log("---->>>>>>!!!! holding", holding);
+
+            updateHolding(holding);
+          }
+        },
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (holding) {
+      restoreHolding(holding);
+    }
+  }, [holding]);
 
   const [subOrder, setSubOrder] = useLocalStorage(
     "orderly_subscribe_order",

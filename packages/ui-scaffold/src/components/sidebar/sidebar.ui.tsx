@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, SVGProps } from "react";
 import {
   Box,
   Flex,
@@ -114,8 +114,10 @@ const MenuItem: FC<
   );
 });
 
+MenuItem.displayName = "LeftMenuItem";
+
 const SideMenus: FC<{
-  menus: SideMenuItem[];
+  menus?: SideMenuItem[];
   current?: string;
   open?: boolean;
   onItemSelect?: (item: SideMenuItem) => void;
@@ -145,7 +147,7 @@ const SideMenus: FC<{
         </defs>
       </svg>
       <ul className="oui-space-y-4">
-        {props.menus.map((item, index) => {
+        {props.menus?.map((item, index) => {
           return (
             <MenuItem
               key={index}
@@ -179,41 +181,32 @@ const SideBarHeader: FC<SideBarHeaderProps> = (props) => {
       title
     );
 
+  const iconProps = {
+    className:
+      "oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer",
+    onClick: props.onToggle,
+  };
+
   return (
     <Flex
       justify={props.open ? "between" : "center"}
-      itemAlign={"center"}
+      itemAlign="center"
       className="oui-h-6"
     >
       {props.open ? titleElemet : null}
 
-      <button
-        onClick={() => {
-          props.onToggle?.();
-        }}
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="group-data-[state=closed]/bar:oui-rotate-90"
-        >
-          <path
-            d="M5.82552 17.4922C3.98469 17.4922 2.49219 15.9997 2.49219 14.1589V5.82552C2.49219 3.98469 3.98469 2.49219 5.82552 2.49219H14.1589C15.9997 2.49219 17.4922 3.98469 17.4922 5.82552V14.1589C17.4922 15.9997 15.9997 17.4922 14.1589 17.4922H5.82552ZM12.4922 13.3255C12.7055 13.3255 12.928 13.2538 13.0913 13.0913C13.4163 12.7655 13.4163 12.2189 13.0913 11.893L9.75802 8.55969L11.6589 6.65885H6.65885V11.6589L8.55969 9.75802L11.893 13.0913C12.0555 13.2538 12.2789 13.3255 12.4922 13.3255Z"
-            fill="white"
-            fillOpacity="0.2"
-          />
-        </svg>
-      </button>
+      {props.open ? (
+        <CollapseIcon {...iconProps} />
+      ) : (
+        <ExpandIcon {...iconProps} />
+      )}
     </Flex>
   );
 };
 
 type SideBarProps = {
   title?: React.ReactNode;
-  items: SideMenuItem[];
+  items?: SideMenuItem[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   onItemSelect?: (item: SideMenuItem) => void;
@@ -251,6 +244,32 @@ const SideBar = (props: SideBarProps) => {
 };
 
 SideBar.displayName = "SideBar";
+
+const ExpandIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M6.326 8.826a.84.84 0 0 0-.6.234L2.16 12.627v-2.135H.492v4.167c0 .46.373.833.834.833h4.166v-1.667H3.357l3.567-3.567a.857.857 0 0 0 0-1.198.84.84 0 0 0-.598-.234M10.502.492V2.16h2.135L9.07 5.726a.857.857 0 0 0 0 1.199.86.86 0 0 0 1.197 0l3.568-3.568v2.135h1.667V1.326a.834.834 0 0 0-.834-.834z" />
+  </svg>
+);
+
+const CollapseIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M14.668.492a.85.85 0 0 0-.599.234l-3.567 3.568V2.159H8.835v4.167c0 .46.373.833.833.833h4.167V5.492H11.7l3.569-3.567a.86.86 0 0 0 0-1.199.85.85 0 0 0-.6-.234m-12.5 8.334v1.666h2.135L.736 14.06a.86.86 0 0 0 0 1.198.86.86 0 0 0 1.198 0l3.568-3.567v2.134h1.666V9.66a.834.834 0 0 0-.833-.833z" />
+  </svg>
+);
 
 export { SideBar };
 

@@ -1,13 +1,30 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
+    nodePolyfills({
+      include: ["path", "stream", "util", "assert", "crypto"],
+      exclude: ["http"],
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true,
+      },
+      overrides: {
+        fs: "memfs",
+      },
+      protocolImports: true,
+    }),
+  ],
   resolve: {
     alias: {
-      "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
+      // "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
       "@orderly.network/portfolio": resolve(
         __dirname,
         "../../packages/portfolio/src"
@@ -55,6 +72,14 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-transfer/src"
       ),
+      "@orderly.network/ui-share": resolve(
+        __dirname,
+        "../../packages/ui-share/src"
+      ),
+      // "@orderly.network/ui-tradingview": resolve(
+      //   __dirname,
+      //   "../../packages/ui-tradingview/src"
+      // ),
       "@orderly.network/withdraw": resolve(
         __dirname,
         "../../packages/withdraw/src"
@@ -67,19 +92,27 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-chain-selector/src"
       ),
-      "@orderly.network/web3-onboard": resolve(
+      "@orderly.network/ui-order-entry": resolve(
         __dirname,
-        "../../packages/onboard/src"
+        "../../packages/ui-order-entry/src"
       ),
-      "@orderly.network/react/dist": resolve(
+      "@orderly.network/ui-tpsl": resolve(
         __dirname,
-        "../../packages/component/dist"
+        "../../packages/ui-tpsl/src"
       ),
-      "@orderly.network/react": resolve(
+      // "@orderly.network/default-evm-adapter": resolve(
+      //   __dirname,
+      //   "../../packages/default-evm-adapter/src"
+      // ),
+      "@orderly.network/default-solana-adapter": resolve(
         __dirname,
-        "../../packages/component/src"
+        "../../packages/default-solana-adapter/src"
       ),
-      "@": resolve(__dirname, "../../packages/component/src"),
+      "@orderly.network/wallet-connector": resolve(
+        __dirname,
+        "../../packages/wallet-connector/src"
+      ),
+      "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
     },
   },
 });

@@ -1,0 +1,46 @@
+{
+  "name": "@orderly.network/ui-tradingview",
+  "version": "2.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup && pnpm run build:css",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Orderly",
+    "Exchange",
+    "DeFi"
+  ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-positions": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/net": "workspace:*",
+    "date-fns": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.4",
+    "tsconfig": "workspace:*",
+    "eslint-config-custom": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  }
+}

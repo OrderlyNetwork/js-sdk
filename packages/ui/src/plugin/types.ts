@@ -36,6 +36,7 @@ export enum ExtensionPositionEnum {
   PortfolioLayout = "portfolioLayout",
   TradingRewardsLayout = "tradingRewardsLayout",
   AffiliateLayoutLayout = "affiliateLayoutLayout",
+  EmptyDataState = "emptyDataState",
 }
 
 export type DepositProps = {

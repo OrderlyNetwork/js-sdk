@@ -1,8 +1,10 @@
+import { ChainNamespace } from "@orderly.network/types";
 import type { EIP1193Provider } from "@web3-onboard/common";
 import { createContext, useContext } from "react";
 
 export type ConnectedChain = {
   id: number | string;
+  namespace: ChainNamespace;
 };
 export type WalletAccount = {
   address: string;
@@ -14,7 +16,7 @@ export type WalletAccount = {
 export interface WalletState {
   label: string;
   icon: string;
-  provider: EIP1193Provider;
+  provider: EIP1193Provider | any;
   accounts: WalletAccount[];
   chains: ConnectedChain[];
   instance?: unknown;
@@ -31,6 +33,7 @@ export interface WalletConnectorContextState {
   connectedChain: ConnectedChain | null;
 
   settingChain: boolean;
+  namespace: ChainNamespace | null;
 }
 
 export const WalletConnectorContext =

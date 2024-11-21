@@ -17,7 +17,7 @@ export type WalletRewards = {
   rows: WalletRewardsItem[];
 };
 
-export type WalletRewardsHisotryReturns = [
+export type WalletRewardsHistoryReturns = [
   WalletRewards | undefined,
   {
     refresh: () => void;
@@ -25,7 +25,7 @@ export type WalletRewardsHisotryReturns = [
   }
 ];
 
-export const useWalletRewardsHistory = (type: TWType): WalletRewardsHisotryReturns => {
+export const useWalletRewardsHistory = (type: TWType): WalletRewardsHistoryReturns => {
   const { account } = useAccount();
 
   const address = account.address;

@@ -13,7 +13,8 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { ExchangeIcon } from "../../icons";
-import { API, CurrentChain } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
+import { CurrentChain } from "../depositForm/hooks";
 
 type ChainSelectProps = {
   chains: API.NetworkInfos[];
@@ -58,7 +59,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
 
   const trigger = (
     <Flex
-      intensity={600}
+      intensity={500}
       className={cn(
         "oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line",
         selectable ? "oui-cursor-pointer" : "oui-cursor-auto"

@@ -1,34 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { OrderlyApp } from "@orderly.network/react-app";
-import { Box, Flex, ModalProvider } from "@orderly.network/ui";
-import {
-  AccountMenuWidget,
-  FooterWidget,
-  AccountSummaryWidget,
-  ChainMenuWidget,
-  Scaffold,
-} from "@orderly.network/ui-scaffold";
-import { ConnectorProvider } from "@orderly.network/web3-onboard";
+import { Box } from "@orderly.network/ui";
+import { FooterWidget, Scaffold } from "@orderly.network/ui-scaffold";
 
-const meta = {
+const meta: Meta<typeof FooterWidget> = {
   title: "Package/ui-scaffold/footer",
   component: FooterWidget,
-  // subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
   tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },
   decorators: [
     (Story: any) => (
-      <ConnectorProvider>
-        <OrderlyApp brokerId={"orderly"} brokerName={""} networkId={"testnet"}>
-          <ModalProvider>
-            <Box intensity={900}>
-              <Story />
-            </Box>
-          </ModalProvider>
-        </OrderlyApp>
-      </ConnectorProvider>
+      <Box intensity={900}>
+        <Story />
+      </Box>
     ),
   ],
   argTypes: {},
@@ -44,7 +29,7 @@ export const CumstomizeUrls: Story = {
   render: () => {
     return (
       <Scaffold
-        footerConfig={{
+        footerProps={{
           telegramUrl: "https://orderly.network",
           discordmUrl: "https://orderly.network",
           twitterUrl: "https://orderly.network",

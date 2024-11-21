@@ -1,4 +1,5 @@
 // import "./utils/dev";
+import type { Immer } from "immer";
 
 export { default as version } from "./version";
 
@@ -30,31 +31,35 @@ export { useSimpleDI } from "./useSimpleDI";
 export * from "./orderlyContext";
 export * from "./statusProvider";
 export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
-export type { ConfigProviderProps } from "./configProvider";
+export type {
+  ConfigProviderProps,
+  ConfigProviderExclusionProps,
+} from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
+export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {
   WalletConnectorContext,
+  type ConnectedChain,
   useWalletConnector,
   type WalletState,
 } from "./walletConnectorContext";
 
 export * from "./orderly/orderlyHooks";
 
-import useSWR, {
-  type SWRConfiguration,
-  SWRConfig,
-  useSWRConfig,
-  unstable_serialize,
-} from "swr";
+export { useOrderEntry as useOrderEntry_deprecated } from "./deprecated/useOrderEntry";
+export type {
+  UseOrderEntryMetaState,
+  OrderParams,
+} from "./deprecated/useOrderEntry";
 
 export {
-  useSWR,
-  SWRConfig,
+  default as useSWR,
+  // SWRConfig,
   useSWRConfig,
   type SWRConfiguration,
   unstable_serialize,
-};
+} from "swr";
 
 export * from "use-debounce";
 
@@ -81,3 +86,7 @@ export * from "./referral";
 export * from "./trading-rewards";
 
 export * from "./apiKeys";
+
+//--------- next hooks-----------
+// export { useOrderEntryNext } from "./next/useOrderEntry/useOrderEntry";
+export * from "./next/useOrderEntry";

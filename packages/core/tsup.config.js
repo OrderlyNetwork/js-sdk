@@ -32,4 +32,5 @@ export default defineConfig((options) => ({
       require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
     ];
   },
+  tsconfig: "tsconfig.build.json",
 }));

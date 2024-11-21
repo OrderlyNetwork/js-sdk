@@ -1,13 +1,10 @@
-import {WithdrawFormUI} from "./ui";
-import {useWithdrawForm} from "./script";
-import {DepositAndWithdrawProps} from "../depositAndWithdraw";
+import { WithdrawFormUI } from "./withdrawForm.ui";
+import { useWithdrawForm } from "./withdrawForm.script";
+import { DepositAndWithdrawProps } from "../depositAndWithdraw";
 
 export const WithdrawFormWidget = (dialogProps: DepositAndWithdrawProps) => {
-    const props = useWithdrawForm({
-        onClose: dialogProps.close,
-    });
-    return (
-        <WithdrawFormUI {...props} />
-    )
-
-}
+  const props = useWithdrawForm({
+    onClose: dialogProps.close,
+  });
+  return <WithdrawFormUI {...props} />;
+};

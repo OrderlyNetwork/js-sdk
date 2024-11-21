@@ -1,22 +1,34 @@
 import { useMemo } from "react";
-import { account, positions } from "@orderly.network/perp";
-import { usePositionStream } from "./usePositionStream/usePositionStream";
+import { account } from "@orderly.network/perp";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useCollateral } from "./useCollateral";
 import { zero } from "@orderly.network/utils";
+import { usePositionStore } from "./usePositionStream/usePosition.store";
+import { useAccount } from "../useAccount";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export type MarginRatioReturn = {
   // Margin Ratio
   marginRatio: number;
   // Current Leverage
-  currentLeverage: number;
+  currentLeverage: number | null;
   // account margin ratio, if user has no position, return null
   mmr: number | null;
 };
 
 export const useMarginRatio = (): MarginRatioReturn => {
-  const [{ rows, aggregated }] = usePositionStream();
+  // const [{ rows, aggregated }] = usePositionStream();
+
+  const positions = usePositionStore((state) => state.positions.all);
+
+  const { rows } = positions;
+  const { notional } = positions;
+  const { state } = useAccount();
+
   const { data: markPrices } = useMarkPricesStream();
+  //
+  // const markPrices = useMarkPrices();
+  //
 
   const { totalCollateral } = useCollateral();
   const marginRatio = useMemo(() => {
@@ -24,34 +36,40 @@ export const useMarginRatio = (): MarginRatioReturn => {
       return 0;
     }
 
-    const ratio = account.totalMarginRatio({
+    return account.totalMarginRatio({
       totalCollateral: totalCollateral,
       markPrices: markPrices,
       positions: rows ?? [],
     });
-    return ratio;
   }, [rows, markPrices, totalCollateral]);
 
   const currentLeverage = useMemo(() => {
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return null;
+    }
     return account.currentLeverage(marginRatio);
-  }, [marginRatio]);
+  }, [marginRatio, state.status]);
 
   // MMR
   const mmr = useMemo<number | null>(() => {
-    if (!rows || rows.length <= 0) return null;
+    if (!rows || rows.length <= 0 || notional == null) return null;
     let positionsMM = zero;
     // const positionsNotional = positions.totalNotional(rows);
 
     for (let index = 0; index < rows.length; index++) {
       const item = rows[index];
-      positionsMM = positionsMM.add(item.mm);
+      if (item.mm !== null) {
+        // console.log("calc add mm", item.mm, positionsMM, notional);
+
+        positionsMM = positionsMM.add(item.mm);
+      }
     }
 
     return account.MMR({
       positionsMMR: positionsMM.toNumber(),
-      positionsNotional: aggregated.notional,
+      positionsNotional: notional,
     });
-  }, [rows, aggregated]);
+  }, [rows, notional]);
 
   return { marginRatio, currentLeverage, mmr };
 };

@@ -6,157 +6,165 @@ import { tv } from "../utils/tv";
 
 import { CaretDownIcon, CaretUpIcon } from "../icon";
 
-const selectVariants = tv({
-  slots: {
-    trigger: [
-      "oui-flex",
-      "oui-group",
-      "oui-w-full",
-      "oui-items-center",
-      "oui-justify-between",
-      "oui-whitespace-nowrap",
-      "oui-rounded-md",
-      "oui-px-2",
-      // "oui-py-2",
+const selectVariants = tv(
+  {
+    slots: {
+      trigger: [
+        "oui-flex",
+        "oui-group",
+        "oui-w-full",
+        "oui-items-center",
+        "oui-justify-between",
+        "oui-whitespace-nowrap",
+        "oui-rounded-md",
+        "oui-px-2",
+        // "oui-py-2",
 
-      "oui-space-x-2",
-      // "oui-text-sm",
-      "oui-shadow-sm",
-      // "oui-ring-offset-background",
-      "oui-text-base-contrast-54",
-      "placeholder:oui-text-base-contrast-54",
-      "data-[state=open]:oui-text-base-contrast-80",
-      "focus:oui-outline-none",
-      "focus:oui-ring-1",
-      "focus:oui-ring-ring",
-      "disabled:oui-cursor-not-allowed",
-      "disabled:oui-opacity-50",
-      "[&>span]:oui-line-clamp-1",
-    ],
-    scrollUpButton:
-      "oui-flex oui-cursor-default oui-items-center oui-justify-center oui-py-1",
-    scrollDownButton:
-      "oui-flex oui-cursor-default oui-items-center oui-justify-center oui-py-1",
-    content: [
-      "oui-relative",
-      "oui-z-50",
-      "oui-max-h-96",
-      // "oui-min-w-[8rem]",
-      "oui-overflow-hidden",
-      "oui-rounded-md",
-      "oui-bg-base-8",
-      "oui-text-base-contrast",
-      // "oui-bg-popover",
-      // "oui-text-popover-foreground",
-      "oui-shadow-md",
-      "data-[state=open]:oui-animate-in",
-      "data-[state=closed]:aoui-nimate-out",
-      "data-[state=closed]:oui-fade-out-0",
-      "data-[state=open]:oui-fade-in-0",
-      "data-[state=closed]:oui-zoom-out-95",
-      "data-[state=open]:oui-zoom-in-95",
-      "data-[side=bottom]:oui-slide-in-from-top-2",
-      "data-[side=left]:oui-slide-in-from-right-2",
-      "data-[side=right]:oui-slide-in-from-left-2",
-      "data-[side=top]:oui-slide-in-from-bottom-2",
-    ],
-    viewport: ["oui-p-1"],
-    label: "oui-px-2 oui-py-1.5 oui-text-sm oui-font-semibold",
-    item: [
-      "oui-option-item",
-      "oui-relative",
-      "oui-flex",
-      // "oui-w-full",
-      "oui-cursor-default",
-      "oui-select-none",
-      "oui-items-center",
-      "oui-rounded-sm",
-      "oui-py-1",
-      "oui-pl-2",
-      "oui-pr-8",
-      "oui-text-sm",
-      "oui-outline-none",
-      "hover:oui-bg-base-6",
-      "hover:oui-rounded",
-      "focus:oui-bg-accent",
-      "focus:oui-text-accent-foreground",
-      "data-[disabled]:oui-pointer-events-none",
-      "data-[disabled]:oui-opacity-50",
-    ],
-    separator: "-oui-mx-1 oui-my-1 oui-h-px oui-bg-muted",
-    icon: "",
+        "oui-space-x-2",
+        // "oui-text-sm",
+        "oui-shadow-sm",
+        // "oui-ring-offset-background",
+        "oui-text-base-contrast-54",
+        "placeholder:oui-text-base-contrast-54",
+        "data-[state=open]:oui-text-base-contrast-80",
+        "focus:oui-outline-none",
+        "focus:oui-ring-1",
+        "focus:oui-ring-ring",
+        "disabled:oui-cursor-not-allowed",
+        "disabled:oui-opacity-50",
+        "[&>span]:oui-line-clamp-1",
+      ],
+      scrollUpButton:
+        "oui-flex oui-cursor-default oui-items-center oui-justify-center oui-py-1",
+      scrollDownButton:
+        "oui-flex oui-cursor-default oui-items-center oui-justify-center oui-py-1",
+      content: [
+        "oui-relative",
+        "oui-z-50",
+        "oui-max-h-96",
+        // "oui-min-w-[8rem]",
+        "oui-overflow-hidden",
+        "oui-rounded-md",
+        "oui-bg-base-8",
+        "oui-text-base-contrast",
+        // "oui-bg-popover",
+        // "oui-text-popover-foreground",
+        "oui-shadow-md",
+        "data-[state=open]:oui-animate-in",
+        "data-[state=closed]:aoui-nimate-out",
+        "data-[state=closed]:oui-fade-out-0",
+        "data-[state=open]:oui-fade-in-0",
+        "data-[state=closed]:oui-zoom-out-95",
+        "data-[state=open]:oui-zoom-in-95",
+        "data-[side=bottom]:oui-slide-in-from-top-2",
+        "data-[side=left]:oui-slide-in-from-right-2",
+        "data-[side=right]:oui-slide-in-from-left-2",
+        "data-[side=top]:oui-slide-in-from-bottom-2",
+      ],
+      viewport: ["oui-p-1"],
+      label: "oui-px-2 oui-py-1.5 oui-text-sm oui-font-semibold",
+      item: [
+        "oui-option-item",
+        "oui-relative",
+        "oui-flex",
+        // "oui-w-full",
+        "oui-cursor-default",
+        "oui-select-none",
+        "oui-items-center",
+        "oui-rounded-sm",
+        "oui-py-1",
+        "oui-pl-2",
+        "oui-pr-8",
+        "oui-text-sm",
+        "oui-text-base-contrast-54",
+        "oui-outline-none",
+        "hover:oui-bg-base-6",
+        "hover:oui-rounded",
+        "focus:oui-bg-accent",
+        "focus:oui-text-accent-foreground",
+        "data-[state=checked]:oui-bg-base-5",
+        "data-[state=checked]:oui-text-base-contrast-80",
+        "data-[disabled]:oui-pointer-events-none",
+        "data-[disabled]:oui-opacity-50",
+      ],
+      separator: "-oui-mx-1 oui-my-1 oui-h-px oui-bg-muted",
+      icon: "",
+    },
+    variants: {
+      variant: {
+        outlined: {
+          trigger: ["oui-border oui-border-line-6 oui-bg-line-4"],
+        },
+        contained: {
+          trigger: ["oui-bg-base-4"],
+        },
+        text: {
+          trigger: [],
+        },
+        // text
+      },
+      position: {
+        popper: {
+          content: [
+            "data-[side=bottom]:oui-translate-y-1",
+            "data-[side=left]:-oui-translate-x-1",
+            "data-[side=right]:oui-translate-x-1",
+            "data-[side=top]:-oui-translate-y-1",
+          ],
+          viewport:
+            "oui-h-[var(--radix-select-trigger-height)] oui-w-full oui-min-w-[var(--radix-select-trigger-width)]",
+        },
+        "item-aligned": {
+          content: "",
+          viewport: "",
+        },
+      },
+      size: {
+        xs: {
+          trigger: ["oui-h-6", "oui-text-2xs"],
+          item: ["oui-h-6", "oui-text-2xs"],
+          icon: ["oui-w-3", "oui-h-3"],
+        },
+        sm: {
+          trigger: ["oui-h-7", "oui-text-2xs"],
+          item: ["oui-h-7", "oui-text-2xs"],
+          icon: ["oui-w-4", "oui-h-4"],
+        },
+        md: {
+          trigger: ["oui-h-8", "oui-text-xs"],
+          item: ["oui-h-7", "oui-text-xs"],
+          icon: ["oui-w-4", "oui-h-4"],
+        },
+        lg: {
+          trigger: ["oui-h-10", "oui-text-sm", "oui-px-3"],
+          item: ["oui-h-8", "oui-text-2xs"],
+          icon: ["oui-w-5", "oui-h-5"],
+        },
+        xl: {
+          trigger: ["oui-h-12", "oui-text-2xs", "oui-px-3"],
+          item: ["oui-h-12", "oui-text-2xs"],
+          icon: ["oui-w-6", "oui-h-6"],
+        },
+      },
+      error: {
+        true: {
+          trigger: [
+            "oui-border-danger",
+            "focus:oui-ring-danger",
+            "focus:oui-ring-ring-danger",
+          ],
+        },
+      },
+    },
+    defaultVariants: {
+      size: "lg",
+      variant: "outlined",
+    },
   },
-  variants: {
-    variant: {
-      outlined: {
-        trigger: ["oui-border oui-border-line-6 oui-bg-line-4"],
-      },
-      contained: {
-        trigger: ["oui-bg-base-4"],
-      },
-      text: {
-        trigger: [],
-      },
-      // text
-    },
-    position: {
-      popper: {
-        content: [
-          "data-[side=bottom]:oui-translate-y-1",
-          "data-[side=left]:-oui-translate-x-1",
-          "data-[side=right]:oui-translate-x-1",
-          "data-[side=top]:-oui-translate-y-1",
-        ],
-        viewport:
-          "oui-h-[var(--radix-select-trigger-height)] oui-w-full oui-min-w-[var(--radix-select-trigger-width)]",
-      },
-      "item-aligned": {
-        content: "",
-        viewport: "",
-      },
-    },
-    size: {
-      xs: {
-        trigger: ["oui-h-6", "oui-text-2xs"],
-        item: ["oui-h-6", "oui-text-2xs"],
-        icon: ["oui-w-3", "oui-h-3"],
-      },
-      sm: {
-        trigger: ["oui-h-7", "oui-text-2xs"],
-        item: ["oui-h-7", "oui-text-2xs"],
-        icon: ["oui-w-4", "oui-h-4"],
-      },
-      md: {
-        trigger: ["oui-h-8", "oui-text-2xs"],
-        item: ["oui-h-7", "oui-text-2xs"],
-        icon: ["oui-w-4", "oui-h-4"],
-      },
-      lg: {
-        trigger: ["oui-h-10", "oui-text-sm", "oui-px-3"],
-        item: ["oui-h-8", "oui-text-2xs"],
-        icon: ["oui-w-5", "oui-h-5"],
-      },
-      xl: {
-        trigger: ["oui-h-12", "oui-text-2xs", "oui-px-3"],
-        item: ["oui-h-12", "oui-text-2xs"],
-        icon: ["oui-w-6", "oui-h-6"],
-      },
-    },
-    error: {
-      true: {
-        trigger: [
-          "oui-border-danger",
-          "focus:oui-ring-danger",
-          "focus:oui-ring-ring-danger",
-        ],
-      },
-    },
-  },
-  defaultVariants: {
-    size: "lg",
-    variant: "outlined",
-  },
-});
+  {
+    responsiveVariants: ["md", "lg"],
+  }
+);
 
 const SelectRoot = SelectPrimitive.Root;
 

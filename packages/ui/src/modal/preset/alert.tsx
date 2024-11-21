@@ -1,6 +1,5 @@
-import { FC, ReactNode, useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 import { modalActions } from "../modalContext";
-
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
 import { AlertDialog, AlertDialogProps } from "../../dialog/alertDialog";
@@ -17,14 +16,12 @@ export const CreatedAlertDialog = create<AlertDialogProps>((props) => {
     <AlertDialog
       open={visible}
       onOpenChange={onOpenChange}
-      onOk={onOkHandler}
       {...props}
+      onOk={onOkHandler}
     />
   );
 });
 
 export const alert = (props: AlertDialogProps) => {
-  console.log("alert", props);
-
   return modalActions.show(CreatedAlertDialog, props);
 };

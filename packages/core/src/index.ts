@@ -28,12 +28,30 @@ export {
   BaseContract as BaseContractManager,
 } from "./contract";
 
+export { EVENT_NAMES } from "./constants";
+
 export { default as SimpleDI } from "./di/simpleDI";
 
 export { Account, type AccountState } from "./account";
 export * from "./configStore/configStore";
 
-export { DefaultConfigStore } from "./configStore/defaultConfigStore";
+export {
+  DefaultConfigStore,
+  API_URLS,
+  type URLS,
+} from "./configStore/defaultConfigStore";
+export type {
+  ChainType,
+  WalletAdapter,
+  Message,
+  RegisterAccountInputs,
+  WithdrawInputs,
+  SettleInputs,
+  AddOrderlyKeyInputs,
+} from "./wallet/walletAdapter";
+export { BaseWalletAdapter } from "./wallet/baseWalletAdapter";
+export type { Ed25519Keypair } from "./types";
+export type { SignatureDomain } from "./utils";
 
 export * from "./wallet";
 

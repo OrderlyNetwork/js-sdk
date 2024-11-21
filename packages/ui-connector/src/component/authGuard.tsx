@@ -11,6 +11,7 @@ import {
   modal,
   Text,
   toast,
+  useScreen,
   type ButtonProps,
 } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
@@ -19,10 +20,15 @@ import {
   WalletConnectorModalId,
   WalletConnectorSheetId,
 } from "./walletConnector";
-import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
+import { ChainSelectorId, ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
 import { alertMessages, DESCRIPTIONS, LABELS } from "../constants/message";
 import { Flex } from "@orderly.network/ui";
 import { Box } from "@orderly.network/ui";
+
+type ChainProps = {
+    networkId?: NetworkId;
+    bridgeLessOnly?: boolean;
+}
 
 export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   fallback?: (props: {
@@ -144,6 +150,7 @@ const DefaultFallback = (props: {
   const { buttonProps, labels, descriptions } = props;
   const { connectWallet } = useAppContext();
   const { account } = useAccount();
+  const { isMobile } = useScreen();
   const matches = useMediaQuery(MEDIA_TABLET);
   // const { connect } = useWalletConnector();
   const onConnectOrderly = () => {
@@ -182,7 +189,7 @@ const DefaultFallback = (props: {
     modal
       .show<{
         wrongNetwork: boolean;
-      }>(ChainSelectorId, {
+      }>(isMobile ? ChainSelectorSheetId : ChainSelectorId, {
         networkId: props.networkId,
         bridgeLessOnly: props.bridgeLessOnly,
       })

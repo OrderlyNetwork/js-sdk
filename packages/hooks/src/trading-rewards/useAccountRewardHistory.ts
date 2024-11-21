@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAllBrokers } from "./useAllBrokers";
 import { usePrivateQuery } from "../usePrivateQuery";
-import { assert } from "ethers";
+// import { assert } from "ethers";
 
 export type AccountRewardsHistoryRow = {
   broker_id: string;

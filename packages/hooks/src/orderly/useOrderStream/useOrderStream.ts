@@ -27,6 +27,7 @@ export const useOrderStream = (
   params: {
     symbol?: string;
     status?: OrderStatus;
+    page?: number;
     size?: number;
     side?: OrderSide;
     /**
@@ -39,6 +40,10 @@ export const useOrderStream = (
      * @default []
      */
     excludes?: CombineOrderType[];
+    dateRange?: {
+      from?: Date;
+      to?: Date;
+    };
   },
   options?: {
     /**
@@ -55,14 +60,16 @@ export const useOrderStream = (
     status,
     symbol,
     side,
-    size = 100,
+    size = 50,
+    page,
+    dateRange,
     includes = ["ALL"],
     excludes = [],
   } = params;
 
-  const { data: markPrices = {} } = useMarkPricesStream();
+  const { data: markPrices } = useMarkPricesStream();
 
-  const { regesterKeyHandler, unregisterKeyHandler } = useDataCenterContext();
+  const { registerKeyHandler, unregisterKeyHandler } = useDataCenterContext();
   const [
     doCancelOrder,
     { error: cancelOrderError, isMutating: cancelMutating },
@@ -76,7 +83,7 @@ export const useOrderStream = (
   ] = useMutation("/v1/order", "PUT");
 
   const [
-    doCanceAlgolOrder,
+    doCancelAlgolOrder,
     { error: cancelAlgoOrderError, isMutating: cancelAlgoMutating },
   ] = useMutation("/v1/algo/order", "DELETE");
 
@@ -91,18 +98,22 @@ export const useOrderStream = (
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
       side
-    )}`;
-    regesterKeyHandler?.(key, generateKeyFun({ status, symbol, side, size }));
+    )}${formatKey(size.toString())}`;
+
+    registerKeyHandler?.(
+      key,
+      generateKeyFun({ status, symbol, side, size, page, dateRange })
+    );
 
     return () => {
       if (!options?.stopOnUnmount) return;
 
       unregisterKeyHandler(key);
     };
-  }, [status, symbol, side, options?.keeplive]);
+  }, [status, symbol, side, size, page, dateRange, options?.keeplive]);
 
   const ordersResponse = usePrivateInfiniteQuery(
-    generateKeyFun({ status, symbol, side, size }),
+    generateKeyFun({ status, symbol, side, size, page, dateRange }),
     {
       initialSize: 1,
       // revalidateFirstPage: false,
@@ -158,7 +169,7 @@ export const useOrderStream = (
     return flattenOrders.map((item) => {
       const order = {
         ...item,
-        mark_price: (markPrices as any)[item.symbol] ?? 0,
+        mark_price: (markPrices ?? ({} as any))[item.symbol] ?? 0,
       };
 
       ///TODO: remove this when BE provides the correct data
@@ -250,7 +261,7 @@ export const useOrderStream = (
     (orderId: number, type: CreateOrderType, symbol?: string) => {
       switch (type) {
         case "algoOrder":
-          return doCanceAlgolOrder(null, {
+          return doCancelAlgolOrder(null, {
             // @ts-ignore
             order_id: orderId,
             symbol,
@@ -340,6 +351,11 @@ export const useOrderStream = (
     []
   );
 
+  const meta = useMemo(() => {
+    // @ts-ignore
+    return ordersResponse.data?.[0]?.meta;
+  }, [ordersResponse.data?.[0]]);
+
   return [
     orders,
     {
@@ -356,6 +372,7 @@ export const useOrderStream = (
       cancelAlgoOrder,
       cancelTPSLChildOrder,
       updateTPSLOrder,
+      meta,
       errors: {
         cancelOrder: cancelOrderError,
         updateOrder: updateOrderError,

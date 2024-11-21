@@ -182,7 +182,21 @@ export declare namespace API {
     sum_unitary_funding: number;
   }
 
-  export interface PositionInfo {
+  export interface PositionInfo extends PositionAggregated {
+    // margin_ratio: number;
+    // initial_margin_ratio: number;
+    // maintenance_margin_ratio: number;
+    // open_margin_ratio: number;
+    // current_margin_ratio_with_orders: number;
+    // initial_margin_ratio_with_orders: number;
+    // maintenance_margin_ratio_with_orders: number;
+    // total_collateral_value: number;
+    // free_collateral: number;
+    rows: Position[];
+    // total_pnl_24_h: number;
+  }
+
+  export interface PositionAggregated {
     margin_ratio: number;
     initial_margin_ratio: number;
     maintenance_margin_ratio: number;
@@ -192,8 +206,21 @@ export declare namespace API {
     maintenance_margin_ratio_with_orders: number;
     total_collateral_value: number;
     free_collateral: number;
-    rows: Position[];
     total_pnl_24_h: number;
+    /**
+     * @deprecated use total_unreal_pnl instead
+     */
+    unrealPnL: number;
+    total_unreal_pnl: number;
+    total_unreal_pnl_index?: number;
+    /**
+     * @deprecated use total_unsettled_pnl instead
+     */
+    unsettledPnL: number;
+    total_unsettled_pnl: number;
+    notional: number;
+    unrealPnlROI: number;
+    unrealPnlROI_index?: number;
   }
 
   export interface Position {
@@ -206,10 +233,13 @@ export declare namespace API {
     settle_price: number;
     average_open_price: number;
     unrealized_pnl: number;
+    unrealized_pnl_index?: number;
     unrealized_pnl_ROI: number;
     unsettled_pnl: number;
     unsettled_pnl_ROI: number;
+    unrealized_pnl_ROI_index?: number;
     mark_price: number;
+    index_price?: number;
     est_liq_price: number | null;
     timestamp: number;
     /**
@@ -238,6 +268,10 @@ export declare namespace API {
      * related position tp/sl order
      */
     algo_order?: AlgoOrder;
+  }
+
+  export interface PositionsTPSLExt extends PositionAggregated {
+    rows: PositionTPSLExt[];
   }
 
   export interface Trade {
@@ -384,6 +418,7 @@ export declare namespace WSMessage {
     volume: number;
     amount: number;
     count: number;
+    change: number;
   }
 
   export interface MarkPrice {
@@ -444,6 +479,22 @@ export declare namespace WSMessage {
     timestamp: number;
     reduceOnly: boolean;
     maker: boolean;
+  }
+
+  export interface Holding {
+    holding: number;
+    frozen: number;
+    interest: number;
+    pendingShortQty: number;
+    pendingExposure: number;
+    pendingLongQty: number;
+    pendingLongExposure: number;
+    version: number;
+    staked: number;
+    unbonding: number;
+    vault: number;
+    fee24H: number;
+    markPrice: number;
   }
 
   export interface AlgoOrder {

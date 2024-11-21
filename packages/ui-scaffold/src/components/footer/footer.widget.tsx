@@ -1,9 +1,13 @@
 import { useFooterScript } from "./footer.script";
-import { FooterUI } from "./footer.ui";
+import { Footer } from "./footer.ui";
 
-export const FooterWidget = () => {
-    const state = useFooterScript();
-    return (
-        <FooterUI {...state}/>
-    );
+export type FooterProps = {
+  telegramUrl?: string;
+  twitterUrl?: string;
+  discordmUrl?: string;
+};
+
+export const FooterWidget = (props: FooterProps) => {
+  const state = useFooterScript();
+  return <Footer {...state} {...props} />;
 };

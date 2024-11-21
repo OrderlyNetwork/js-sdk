@@ -3,7 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { useCallback, useState } from "react";
 import { ChainListView } from ".";
 
-import { useAccount, useChains, useOrderEntry } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useChains,
+  useOrderEntry_deprecated,
+} from "@orderly.network/hooks";
 import { ChainSelect } from "./chainSelect";
 import { modal } from "@/modal";
 import { ChainDialog } from "./chainDialog";

@@ -2,7 +2,7 @@ import { useMemo, type FC } from "react";
 import { Avatar } from "../avatar";
 
 export type ChainIconProps = {
-  size?: "sm" | "md" | "lg";
+  size?: "2xs" | "sm" | "md" | "lg";
   chainId: string | number;
   className?: string;
 };

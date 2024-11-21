@@ -13,11 +13,18 @@ export const useChainSelectorBuilder = (options?: {
   const [chains, { checkChainSupport }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
 
-  const { onChainChanged } = useAppContext();
+  const { onChainChanged, currentChainId, setCurrentChainId } = useAppContext();
 
   const onChainChange = async (chain: { id: number }) => {
+    console.log('-- on chanin change ', chain, connectedChain, currentChainId);
     if (!connectedChain) {
-      return Promise.reject("No connected chain");
+      setCurrentChainId(chain.id);
+      return {
+        result: true,
+        wrongNetwork: false,
+        chainId: chain.id,
+      }
+      // return Promise.reject("No connected chain");
     }
     const result = await setChain({
       chainId: chain.id,
@@ -74,6 +81,6 @@ export const useChainSelectorBuilder = (options?: {
     chains: filteredChains,
     onChainChange,
     chainChangedCallback: onChainChanged,
-    currentChainId: connectedChain?.id as number | undefined,
+    currentChainId: (connectedChain?.id ?? currentChainId )  as number | undefined,
   };
 };

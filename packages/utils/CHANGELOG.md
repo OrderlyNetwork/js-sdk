@@ -1,46 +1,46 @@
 # @orderly.network/utils
 
-## 1.5.16
+## 2.0.0
+
+### Major Changes
+
+- 113773f: integrate solana
 
 ### Patch Changes
 
-- bba082a3e: fix bugs;
+- b033ce0: test
+- b15becb: test
+- Updated dependencies [113773f]
+- Updated dependencies [b033ce0]
+- Updated dependencies [b15becb]
+  - @orderly.network/types@2.0.0
 
-## 1.5.16-alpha.0
-
-### Patch Changes
-
-- fix bugs;
-
-## 1.5.15
-
-### Patch Changes
-
-- fed369e26: update SEI config;
-
-## 1.5.15-alpha.0
+## 2.0.0-alpha.2
 
 ### Patch Changes
 
-- update SEI config;
+- test
+- Updated dependencies
+  - @orderly.network/types@2.0.0-alpha.2
 
-## 1.5.14
-
-### Patch Changes
-
-- 7c664bd63: fix bug;
-
-## 1.5.14-alpha.0
+## 2.0.0-alpha.1
 
 ### Patch Changes
 
-- fix bug;
+- test
+- Updated dependencies
+  - @orderly.network/types@2.0.0-alpha.1
 
-## 1.5.13
+## 2.0.0-alpha.0
+
+### Major Changes
+
+- integrate solana
 
 ### Patch Changes
 
-- remove total validate of useOrderEntry
+- Updated dependencies
+  - @orderly.network/types@2.0.0-alpha.0
 
 ## 1.5.12
 

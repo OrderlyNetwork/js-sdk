@@ -3,15 +3,16 @@ import {
   AlgoOrderRootType,
   OrderEntity,
   TriggerPriceType,
+  OrderlyOrder,
 } from "@orderly.network/types";
 import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
 import { order as orderUntil } from "@orderly.network/perp";
 import { BaseOrderCreator } from "./baseCreator";
 import { OrderType } from "@orderly.network/types";
-import { pick } from "ramda";
+import { pick, values } from "ramda";
 
-const { maxPrice, minPrice, scropePrice } = orderUntil;
+const { maxPrice, minPrice, scopePrice: scopePrice } = orderUntil;
 
 export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
   create(
@@ -24,7 +25,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
     this.totalToQuantity(values, config!);
 
     const order: AlgoOrderEntity<AlgoOrderRootType.STOP> = {
-      ...this.baseOrder(values as unknown as OrderEntity),
+      ...this.baseOrder(values as unknown as OrderlyOrder),
 
       trigger_price: values.trigger_price!,
       algo_type: AlgoOrderRootType.STOP,
@@ -50,6 +51,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       order
     );
   }
+
   validate(
     values: OrderFormEntity,
     config: ValuesDepConfig
@@ -92,7 +94,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
 
           const maxPriceNumber = maxPrice(trigger_price, price_range);
           const minPriceNumber = minPrice(trigger_price, price_range);
-          const scropePriceNumbere = scropePrice(
+          const scropePriceNumbere = scopePrice(
             trigger_price,
             price_scope,
             side
@@ -148,4 +150,6 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       return errors;
     });
   }
+
+  orderType: OrderType.STOP_LIMIT = OrderType.STOP_LIMIT;
 }

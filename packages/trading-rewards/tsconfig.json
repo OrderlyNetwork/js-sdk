@@ -28,9 +28,6 @@
       "./src/@types"
     ],
     "paths": {
-      "@orderly.network/react": [
-        "../component/src"
-      ],
       "@orderly.network/ui": [
         "../ui/src"
       ],

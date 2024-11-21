@@ -1,8 +1,9 @@
-import { JSXElementConstructor, ReactElement, ReactNode } from "react";
+import { JSXElementConstructor, ReactElement } from "react";
 
 export interface ModalState {
   id: string;
   args?: Record<string, unknown>;
+  states?: Record<string, unknown>;
   visible?: boolean;
   delayVisible?: boolean;
   keepMounted?: boolean;
@@ -48,6 +49,7 @@ export interface ModalHandler<Props = Record<string, unknown>>
   remove: () => void;
 
   setStates: (states: Record<string, unknown>) => void;
+  updateArgs: (states: Record<string, unknown>) => void;
 
   resolveHide: (args?: unknown) => void;
 }

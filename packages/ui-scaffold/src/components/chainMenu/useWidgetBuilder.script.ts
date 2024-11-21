@@ -14,9 +14,8 @@ export const useChainMenuBuilderScript = () => {
   const { state } = useAccount();
   const { setChain, connectedChain } = useWalletConnector();
 
-  const [currentChainId, setCurrentChainId] = useState<number | undefined>();
 
-  const { wrongNetwork, onChainChanged } = useAppContext();
+  const { wrongNetwork, onChainChanged, currentChainId, setCurrentChainId } = useAppContext();
 
   const networkId = useConfig("networkId") as NetworkId;
 
@@ -40,6 +39,7 @@ export const useChainMenuBuilderScript = () => {
 
   const onChainChange = async (chain: { id: number; isTestnet: boolean }) => {
     // if (!connectedChain) return;
+    setCurrentChainId(chain.id);
 
     if (connectedChain) {
       const result = await setChain({

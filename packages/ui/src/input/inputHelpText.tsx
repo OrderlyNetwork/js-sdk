@@ -19,15 +19,19 @@ const inputHelpTextVariants = tv({
     color: {
       success: ["oui-text-success"],
       danger: ["oui-text-danger"],
-      warning: ["oui-text-warning"],
+      warning: ["oui-text-warning-darken"],
       default: ["oui-text-base-contrast-54"],
     },
   },
 });
 
+export type InputHelpTextVariantProps = VariantProps<
+  typeof inputHelpTextVariants
+>;
+
 interface InputHelpTextProps
   extends ComponentPropsWithout<"div", RemovedProps>,
-    VariantProps<typeof inputHelpTextVariants> {
+    InputHelpTextVariantProps {
   asChild?: boolean;
 }
 

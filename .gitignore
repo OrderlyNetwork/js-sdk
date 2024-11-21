@@ -1,6 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-.idea/
+.idea
 
 # dependencies
 node_modules
@@ -53,4 +53,4 @@ apps/docs/_doc_meta_
 
 hooks-example/
 
-.idea/
+.vscode

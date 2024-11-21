@@ -1,4 +1,3 @@
-import { cn } from "@orderly.network/react";
 import { Text } from "@orderly.network/ui";
 import { FC, PropsWithChildren } from "react";
 
