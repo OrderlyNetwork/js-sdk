@@ -8,16 +8,18 @@ import { Portfolio, useAppStore } from "../appStore";
 import { Decimal } from "@orderly.network/utils";
 import { createGetter } from "../../utils/createGetter";
 
+export const PortfolioCalculatorName = "portfolio";
 class PortfolioCalculator extends BaseCalculator<any> {
-  name = "portfolio";
+  name = PortfolioCalculatorName;
 
   calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx) {
     let markPrices, positions;
+    const portfolio = this.getPortfolio(ctx);
 
     if (scope === CalculatorScope.MARK_PRICE) {
       markPrices = data;
     } else {
-      markPrices = ctx.markPrices;
+      markPrices = ctx.get<Record<string, number>>((cache) => cache[this.name]);
     }
 
     if (scope === CalculatorScope.POSITION) {
@@ -28,7 +30,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       );
     }
 
-    let holding = ctx.holding;
+    let holding = portfolio.holding;
 
     const accountInfo = ctx.accountInfo;
     const symbolsInfo = ctx.symbolsInfo;
@@ -42,14 +44,23 @@ class PortfolioCalculator extends BaseCalculator<any> {
     });
   }
 
+  private getPortfolio(ctx: CalculatorCtx) {
+    return (
+      ctx.get<Portfolio>((output) => output[this.name]) ||
+      (useAppStore.getState().portfolio as Portfolio)
+    );
+  }
+
   private format(inputs: {
-    holding: API.Holding[];
+    holding?: API.Holding[];
     positions: API.PositionsTPSLExt;
     markPrices: Record<string, number> | null;
     accountInfo: API.AccountInfo;
     symbolsInfo: Record<string, API.SymbolExt>;
   }) {
     const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
+
+    // console.log("++++++++", inputs);
 
     if (
       !holding ||
@@ -101,6 +112,15 @@ class PortfolioCalculator extends BaseCalculator<any> {
       USDCHolding: usdc?.holding ?? 0,
       unsettlementPnL: positions.total_unsettled_pnl ?? 0,
     });
+
+    // console.log("PortfolioCalculator+++++++++++", {
+    //   totalCollateral,
+    //   totalValue,
+    //   totalUnrealizedROI,
+    //   freeCollateral,
+    //   availableBalance,
+    //   unsettledPnL,
+    // });
 
     return {
       totalCollateral,

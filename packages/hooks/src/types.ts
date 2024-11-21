@@ -6,13 +6,14 @@ import { Portfolio } from "./orderly/appStore";
 
 export interface CalculatorCtx {
   //  positions:
-  accountInfo: API.AccountInfo;
-  symbolsInfo: Record<string, API.SymbolExt>;
-  fundingRates: Record<string, API.FundingRate>;
-  markPrices: Record<string, number> | null;
-  holding: API.Holding[];
+  accountInfo?: API.AccountInfo;
+  symbolsInfo?: Record<string, API.SymbolExt>;
+  fundingRates?: Record<string, API.FundingRate>;
+  // markPrices: Record<string, number> | null;
+  // holding: API.Holding[];
+  // positions: API.PositionTPSLExt[];
   // markets: Record<string, API.MarketInfoExt> | null;
-  portfolio: Portfolio;
+  portfolio?: Portfolio;
   get: <T extends any>(fn: (output: Record<string, any>) => T) => T;
   outputToValue: () => any;
 
@@ -24,6 +25,8 @@ export interface CalculatorCtx {
   // get positions(): API.PositionTPSLExt[];
 
   // onQueueComplete: () => void;
+
+  clearCache: () => void;
 }
 
 export enum CalculatorScope {

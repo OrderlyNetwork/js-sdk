@@ -29,6 +29,10 @@ class CalculatorService {
    */
   private referenceCount: Map<string, number> = new Map();
 
+  private ctx?: CalculatorContext;
+
+  private isPaused = false;
+
   constructor(
     private readonly scheduler: CalculatorScheduler,
     calculators: [string, Calculator[]][]
@@ -75,42 +79,44 @@ class CalculatorService {
         console.error(`----`);
       }
     }
-    const ctx = new CalculatorContext(scope, data);
-    // console.log("-------------[calc]:", scope, ctx.isReady, data);
+    const ctx = CalculatorContext.create(scope, data);
 
-    // if accountInfo, symbolsInfo, fundingRates are not ready, push to pendingCalc
-    if (!ctx.isReady && !options?.skipPending) {
-      this.pendingCalc.push({ scope, data, options });
+    if (!ctx.isReady && options?.skipPending) {
       return;
     }
 
     // handle pending calc
-    await this.handlePendingCalc();
+    // await this.handlePendingCalc();
 
     /**
      * if the tab is not activated and this action allows skip, then skip
      */
     if (options?.skipWhenOnPause && !this.windowIsVisible) return;
 
+    // console.log("-------------[calc]:", scope, ctx.isReady, data);
     this.calcQueue.push({ scope, data, options });
 
+    // this.calcQueue.push({ scope, data, options });
+
     await this.handleCalcQueue(ctx);
+
+    this.ctx = ctx;
   }
 
-  private async handlePendingCalc() {
-    // console.log("[handlePendingCalc]:", this.pendingCalc);
-    if (this.pendingCalc.length === 0) return;
-    this.calcQueue = [...this.pendingCalc, ...this.calcQueue];
+  // private async handlePendingCalc() {
+  //   // console.log("[handlePendingCalc]:", this.pendingCalc);
+  //   if (this.pendingCalc.length === 0) return;
+  //   this.calcQueue = [...this.pendingCalc, ...this.calcQueue];
 
-    this.pendingCalc = [];
-  }
+  //   this.pendingCalc = [];
+  // }
 
   private async handleCalcQueue(context?: CalculatorContext) {
     const first = this.calcQueue.shift();
     if (first) {
-      // console.log("[calcQueue:]", first);
+      // console.log("[calcQueue:]", first.scope);
       const { scope, data, options } = first;
-      const ctx = context || new CalculatorContext(scope, data);
+      const ctx = context || CalculatorContext.create(scope, data);
       const calculators = this.calculators.get(scope);
       if (Array.isArray(calculators) && calculators.length) {
         try {
@@ -125,9 +131,14 @@ class CalculatorService {
       }
       if (this.calcQueue.length) {
         // requestAnimationFrame(() => this.handleCalcQueue());
-        setTimeout(() => this.handleCalcQueue(ctx), 0);
+        // setTimeout(() => this.handleCalcQueue(ctx), 0);
+        this.handleCalcQueue(ctx);
       }
     }
+  }
+  stop() {
+    this.calcQueue = [];
+    this.ctx?.clearCache();
   }
 
   private get windowIsVisible() {

@@ -8,11 +8,7 @@ import { usePositionStore } from "../usePositionStream/usePosition.store";
 import { BaseCalculator } from "./baseCalculator";
 import { propOr } from "ramda";
 import { zero } from "@orderly.network/utils";
-import { IndexPriceCalculatorName } from "./indexPrice";
-import {
-  useApiStatusActions,
-  useApiStatusStore,
-} from "../../next/apiStatus/apiStatus.store";
+import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
 
 const NAME_PREFIX = "positionCalculator";
 const AllPositions = "all";
@@ -60,13 +56,13 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   }
 
   update(data: API.PositionsTPSLExt | null, scope: CalculatorScope) {
-    if (!!data) {
-      usePositionStore.getState().actions.setPositions(this.symbol, data);
-    }
+    // console.log("PositionCalculator update", scope, data);
+    if (!data || !Array.isArray(data.rows)) return;
+
+    usePositionStore.getState().actions.setPositions(this.symbol, data);
 
     /// update position loading status
     if (
-      !!data &&
       Array.isArray(data.rows) &&
       useApiStatusStore.getState().apis.positions.loading
     ) {
@@ -82,11 +78,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     // console.log("-------PositionCalculator calcByMarkPrice", positions);
 
-    if (!positions) {
-      return null;
-    }
-
-    if (!Array.isArray(positions.rows) || !positions.rows.length)
+    if (!positions || !Array.isArray(positions.rows) || !positions.rows.length)
       return positions;
 
     positions = {
@@ -107,7 +99,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     let positions = this.getPosition(indexPrice, ctx);
 
     if (!positions) {
-      return null;
+      return positions;
     }
 
     if (!Array.isArray(positions.rows) || !positions.rows.length)
@@ -136,7 +128,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   ): API.PositionsTPSLExt {
     const { accountInfo, symbolsInfo, fundingRates, portfolio } = ctx;
 
-    if (!accountInfo || !fundingRates) {
+    if (!accountInfo || !fundingRates || !symbolsInfo) {
       return data as API.PositionsTPSLExt;
     }
 

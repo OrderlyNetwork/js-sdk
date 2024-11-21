@@ -98,7 +98,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
             <Flex width={"100%"} justify={"between"}>
               <Text intensity={54}>Last price</Text>
               <Text.numeral
-                dp={(props.item as any)?.symbolInfo?.duote_dp}
+                dp={(props.item as any)?.symbolInfo?.quote_dp}
                 suffix={<Text intensity={36}>USDC</Text>}
               >
                 {props.curMarkPrice}
@@ -125,10 +125,15 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 classNames={{
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
-                  root: cn("oui-outline-line-12 oui-w-full", props.errors?.order_price?.message ? "oui-outline-danger" : undefined),
+                  root: cn(
+                    "oui-outline-line-12 oui-w-full",
+                    props.errors?.order_price?.message
+                      ? "oui-outline-danger"
+                      : undefined
+                  ),
                 }}
               />
-              <Input.tooltip
+              <Input
                 prefix="Quantity"
                 suffix={props.base}
                 align="right"
@@ -138,11 +143,11 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   inputFormatter.numberFormatter,
                   inputFormatter.dpFormatter(props.base_dp),
                 ]}
-                triggerClassName="oui-w-full"
-                tooltip={props.errors?.order_quantity?.message}
-                color={
-                  props.errors?.order_quantity?.message ? "danger" : undefined
-                }
+                // triggerClassName="oui-w-full"
+                // tooltip={props.errors?.order_quantity?.message}
+                // color={
+                //   props.errors?.order_quantity?.message ? "danger" : undefined
+                // }
                 value={props.quantity}
                 onBlur={(event) => onBlur(event.target.value)}
                 onValueChange={(e) => {
@@ -157,7 +162,12 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 classNames={{
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
-                  root: cn("oui-outline-line-12 oui-w-full", props.errors?.order_quantity?.message ? "oui-outline-danger" : undefined),
+                  root: cn(
+                    "oui-outline-line-12 oui-w-full",
+                    // props.errors?.order_quantity?.message
+                    //   ? "oui-outline-danger"
+                    //   : undefined
+                  ),
                 }}
               />
               <Slider
@@ -170,7 +180,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                     .div(100)
                     .mul(props.item.position_qty)
                     .toFixed(props.base_dp, Decimal.ROUND_DOWN);
-                  props.updateQuantity(qty);
+                  // props.updateQuantity(qty);
+                  onBlur(qty);
                 }}
               />
               <Flex width={"100%"} justify={"between"}>

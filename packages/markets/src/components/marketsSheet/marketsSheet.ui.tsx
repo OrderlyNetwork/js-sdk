@@ -1,4 +1,11 @@
-import { Box, CloseCircleFillIcon, cn, Input, Text } from "@orderly.network/ui";
+import {
+  Box,
+  CloseCircleFillIcon,
+  cn,
+  Grid,
+  Input,
+  Text,
+} from "@orderly.network/ui";
 import { UseMarketsSheetScriptReturn } from "./marketsSheet.script";
 import { SearchIcon } from "../../icons";
 import { MarketsListWidget } from "../marketsList";
@@ -43,30 +50,38 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
   );
 
   return (
-    <Box
-      className={cn("oui-font-semibold", className)}
+    <Grid
+      cols={1}
+      className={cn("oui-font-semibold oui-grid-rows-[auto,1fr]", className)}
       height="100%"
       width="100%"
     >
       <Box px={3} mt={3}>
         <Text size="base" intensity={80}>
-          Market
+          Markets
         </Text>
         {search}
       </Box>
 
-      <Box width="100%" mt={2} className="oui-h-[calc(100vh_-_88px)]">
-        <MarketsListWidget
-          type="all"
-          sortKey={tabSort?.sortKey}
-          sortOrder={tabSort?.sortOrder}
-          onSort={onTabSort}
-          getColumns={getMarketsSheetColumns}
-          tableClassNames={{
-            root: "!oui-bg-base-8",
-          }}
-        />
-      </Box>
-    </Box>
+      <div className="oui-relative">
+        <Box
+          width="100%"
+          mt={2}
+          className="oui-absolute oui-left-0 oui-right-9 oui-top-0 oui-bottom-0"
+        >
+          <MarketsListWidget
+            type="all"
+            sortKey={tabSort?.sortKey}
+            sortOrder={tabSort?.sortOrder}
+            onSort={onTabSort}
+            getColumns={getMarketsSheetColumns}
+            tableClassNames={{
+              root: "!oui-bg-base-8",
+              scroll: "oui-pb-[calc(env(safe-area-inset-bottom))]",
+            }}
+          />
+        </Box>
+      </div>
+    </Grid>
   );
 };

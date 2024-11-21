@@ -23,7 +23,6 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
         // updateMarkPrice(data);
         // call the calculator service
         calculatorService.calc(CalculatorScope.MARK_PRICE, data, {
-          skipPending: true,
           skipWhenOnPause: true,
         });
       },
@@ -61,7 +60,6 @@ export const useWSObserver = (calculatorService: CalculatorService) => {
         }
 
         calculatorService.calc(CalculatorScope.INDEX_PRICE, prices, {
-          skipPending: true,
           skipWhenOnPause: true,
         });
       },
