@@ -8,4 +8,4 @@ variables:
   GIT_SUBMODULE_FORCE_HTTPS: "true"
   SERVICE_NAME: storybook
   IMAGE_NAME: storybook
-  DOCKER_FILE: ${CI_PROJECT_DIR}/apps/docs/Dockerfile
+  DOCKER_FILE: ${CI_PROJECT_DIR}/Dockerfile
