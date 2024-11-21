@@ -43,7 +43,7 @@ export const themePlugin = () =>
         "--oui-color-base-4": "57 52 74",
         "--oui-color-base-5": "51 46 66",
         "--oui-color-base-6": "43 38 56",
-        "--oui-color-base-7": "32 36 47",
+        "--oui-color-base-7": "36 32 47",
         "--oui-color-base-8": "29 26 38",
         "--oui-color-base-9": "22 20 28",
         "--oui-color-base-10": "14 13 18",
