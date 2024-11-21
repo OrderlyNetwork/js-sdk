@@ -3,7 +3,7 @@ import { PositionsWidget } from "@orderly.network/ui-positions";
 import { Box, Button, modal } from "@orderly.network/ui";
 
 const meta: Meta<typeof PositionsWidget> = {
-  title: "Package/ui-positions/list",
+  title: "Package/ui-positions/Positions",
   component: PositionsWidget,
   parameters: {
     layout: "fullscreen",

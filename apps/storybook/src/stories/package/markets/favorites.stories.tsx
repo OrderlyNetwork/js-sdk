@@ -7,7 +7,7 @@ import { Box, Button, Flex } from "@orderly.network/ui";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 
 const meta: Meta<typeof FavoritesDropdownMenuWidget> = {
-  title: "Package/Markets/Favorites",
+  title: "Package/markets/Favorites",
   parameters: {
     layout: "centered",
   },

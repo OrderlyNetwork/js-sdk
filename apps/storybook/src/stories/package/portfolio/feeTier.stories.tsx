@@ -7,7 +7,7 @@ import { TableColumn } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
-  title: "Package/Portfolio/FeeTier",
+  title: "Package/portfolio/FeeTier",
   component: FeeTierModule.FeeTierPage,
   subcomponents: {},
   parameters: {

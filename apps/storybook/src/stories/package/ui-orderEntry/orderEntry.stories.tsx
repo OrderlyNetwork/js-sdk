@@ -4,7 +4,7 @@ import { Box } from "@orderly.network/ui";
 import { OrderSide, OrderType } from "@orderly.network/types";
 
 const meta: Meta<typeof OrderEntry> = {
-  title: "Package/ui-orderEntry/form",
+  title: "Package/ui-order-entry/form",
   component: OrderEntry,
   parameters: {
     layout: "centered",

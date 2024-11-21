@@ -6,7 +6,7 @@ import {
 } from "@orderly.network/trading-rewards";
 
 const meta: Meta<typeof TradingRewards.HomePage> = {
-  title: "Package/TradingRewards",
+  title: "Package/trading-rewards",
   component: TradingRewards.HomePage,
   parameters: {
     layout: "fullscreen",

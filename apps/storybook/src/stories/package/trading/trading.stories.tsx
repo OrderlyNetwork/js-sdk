@@ -16,7 +16,7 @@ import { OrderlyIcon } from "./icons";
 import config from "../../../config";
 
 const meta: Meta<typeof TradingPage> = {
-  title: "Package/Trading/trading",
+  title: "Package/trading/TradingPage",
   component: TradingPage,
   decorators: [
     (Story) => {

@@ -9,7 +9,7 @@ import { DataViewer } from "../../../components/dataViewer";
 const { usePerformanceScript } = OverviewModule;
 
 const meta: Meta<typeof OverviewModule.OverviewPage> = {
-  title: "Package/Portfolio/Overview",
+  title: "Package/portfolio/Overview",
   component: OverviewModule.OverviewPage,
   subcomponents: {
     Assets: OverviewModule.AssetWidget,

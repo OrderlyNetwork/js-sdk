@@ -18,7 +18,7 @@ const decorators = [
 ];
 
 const meta: Meta<typeof ExpandMarketsWidget> = {
-  title: "Package/Markets/DropDownMarkets",
+  title: "Package/markets/DropDownMarkets",
   subcomponents: {},
   parameters: {
     layout: "centered",

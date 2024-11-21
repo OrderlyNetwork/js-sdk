@@ -3,7 +3,7 @@ import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
 import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
 
 const meta: Meta<typeof Dashboard.DashboardPage> = {
-  title: "Package/Affiliate/Dashboard",
+  title: "Package/affiliate/Dashboard",
   component: Dashboard.DashboardPage,
   decorators: [
     (Story: any) => {

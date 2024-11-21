@@ -6,7 +6,7 @@ import {
 } from "@orderly.network/portfolio";
 
 const meta: Meta<typeof SettingModule.SettingPage> = {
-  title: "Package/Portfolio/setting",
+  title: "Package/portfolio/setting",
   component: SettingModule.SettingPage,
   subcomponents: {},
   parameters: {},

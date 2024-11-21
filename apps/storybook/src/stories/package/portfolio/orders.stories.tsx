@@ -3,7 +3,7 @@ import { FeeTierModule, OrdersModule } from "@orderly.network/portfolio";
 import { Box } from "@orderly.network/ui";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
-  title: "Package/Portfolio/Orders",
+  title: "Package/portfolio/Orders",
   component: OrdersModule.OrdersPage,
   subcomponents: {},
   decorators: [

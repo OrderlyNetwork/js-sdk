@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/portfolio";
 
 const meta: Meta<typeof APIManagerModule.APIManagerPage> = {
-  title: "Package/Portfolio/APIKey",
+  title: "Package/portfolio/APIKey",
   component: APIManagerModule.APIManagerPage,
   subcomponents: {},
   parameters: {},

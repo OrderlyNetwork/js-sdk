@@ -5,7 +5,7 @@ import { Box } from "@orderly.network/ui";
 import config from "../../../config";
 
 const meta: Meta<typeof PositionsModule.PositionsPage> = {
-  title: "Package/Portfolio/Positions",
+  title: "Package/portfolio/Positions",
   component: PositionsModule.PositionsPage,
   decorators: [
     (Story) => (

@@ -4,7 +4,7 @@ import { TPSLWidget, PositionTPSLConfirm } from "@orderly.network/ui-tpsl";
 import { Box } from "@orderly.network/ui";
 
 const meta: Meta<typeof TPSLWidget> = {
-  title: "Package/ui-positions/tpsl",
+  title: "Package/ui-tpsl/TPSL",
   component: TPSLWidget,
   parameters: {
     layout: "centered",

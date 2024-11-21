@@ -4,7 +4,7 @@ import { Box } from "@orderly.network/ui";
 import { useState } from "react";
 
 const meta: Meta<typeof AdditionalInfoWidget> = {
-  title: "Package/ui-orderEntry/additional",
+  title: "Package/ui-order-entry/additional",
   component: AdditionalInfoWidget,
   decorators: [
     (Story) => (

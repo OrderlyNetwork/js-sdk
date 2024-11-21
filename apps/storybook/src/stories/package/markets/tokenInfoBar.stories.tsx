@@ -8,11 +8,10 @@ import {
 import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
 
 const meta: Meta<typeof TokenInfoBarFullWidget> = {
-  title: "Package/Markets/TokenInfoBar",
+  title: "Package/markets/TokenInfoBar",
   component: TokenInfoBarFullWidget,
   parameters: {
     layout: "centered",
-    
   },
 };
 
