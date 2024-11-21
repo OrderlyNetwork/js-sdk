@@ -14,6 +14,10 @@ export type UseFeeTierScriptOptions = {
     columns: TableColumn[],
     dataSource: any[]
   ) => { columns: TableColumn[]; dataSource: any[] };
+  onRow?: (record: any, index: number) => {
+    normal: any,
+    active: any,
+  };
 };
 
 export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
@@ -95,5 +99,6 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
     ...authData,
     columns,
     dataSource,
+    onRow: options?.onRow,
   };
 }

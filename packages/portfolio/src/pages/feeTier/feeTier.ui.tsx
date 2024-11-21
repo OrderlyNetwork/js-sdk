@@ -41,7 +41,12 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
         takerFeeRate={takerFeeRate!}
         makerFeeRate={makerFeeRate!}
       />
-      <FeeTierTable dataSource={dataSource} columns={columns} tier={tier} />
+      <FeeTierTable
+        dataSource={dataSource}
+        columns={columns}
+        tier={tier}
+        onRow={props.onRow}
+      />
     </Card>
   );
 };
@@ -137,6 +142,13 @@ type FeeTierTableProps = {
   pageSize?: number;
   dataCount?: number;
   tier?: number | null;
+  onRow?: (
+    record: any,
+    index: number
+  ) => {
+    normal: any,
+    active: any,
+  };
 };
 
 export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
@@ -156,17 +168,30 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
   }, [props.tier]);
   const onRow = useCallback(
     (record: any, index: number) => {
+      const config = props?.onRow?.(record, index) ?? {
+        normal: undefined,
+        active: undefined,
+      };
       if (index + 1 == props.tier) {
-        return {
+        const innerConfig = {
           id: "oui-fee-tier-current",
+          'data-state': "active",
           className:
-            "oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+            "group oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+        };
+        return {
+          ...innerConfig,
+          ...config.active,
         };
       }
 
-      return { className: "oui-h-12" };
+      return {
+        'data-state': "none",
+        ...{ className: "oui-h-12" },
+        ...config.normal,
+      };
     },
-    [props.tier]
+    [props.tier, props.onRow]
   );
 
   return (
