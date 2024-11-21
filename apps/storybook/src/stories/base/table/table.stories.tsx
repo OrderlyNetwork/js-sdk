@@ -1,10 +1,8 @@
-import type { StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 import {
   Box,
-  Text,
   TableView,
   Input,
-  DataFilter,
   Flex,
   cn,
   usePagination,
@@ -14,8 +12,8 @@ import { Columns } from "./columns";
 import { DataSource } from "./dataSource";
 import { useEffect, useMemo, useState } from "react";
 
-const meta = {
-  title: "Base/Table/TableView",
+const meta: Meta<typeof TableView> = {
+  title: "Base/Table/Table",
   component: TableView,
   decorators: [(Story: any) => <Story />],
 };
@@ -36,7 +34,6 @@ export const Default: Story = {
       id: "symbol",
       value: "",
     });
-    const [type, setType] = useState<string>("All");
 
     useEffect(() => {
       setTimeout(() => {
@@ -74,24 +71,6 @@ export const Default: Story = {
             size="sm"
             autoComplete="off"
           />
-          {/* <DataFilter
-            items={[
-              {
-                type: "select",
-                name: "type",
-                options: [
-                  { label: "All", value: "All" },
-                  { label: "Referral commission", value: "REFERRER_REBATE" },
-                  { label: "Referee rebate", value: "REFEREE_REBATE" },
-                  { label: "Broker fee", value: "BROKER_FEE" },
-                ],
-                value: type,
-              },
-            ]}
-            onFilter={(value) => {
-              // onFilter(value);
-            }}
-          /> */}
         </Flex>
         <TableView
           columns={Columns}

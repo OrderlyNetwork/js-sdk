@@ -1,14 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  OrderEntryWidget,
-  OrderEntry,
-  AdditionalInfoWidget,
-} from "@orderly.network/ui-order-entry";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
+import { AdditionalInfoWidget } from "@orderly.network/ui-order-entry";
 import { Box } from "@orderly.network/ui";
+import { useState } from "react";
 
-const meta = {
+const meta: Meta<typeof AdditionalInfoWidget> = {
   title: "Package/ui-orderEntry/additional",
   component: AdditionalInfoWidget,
   decorators: [
@@ -25,4 +20,20 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Basic: Story = {};
+export const Basic: Story = {
+  render: () => {
+    const [pinned, setPinned] = useState(false);
+    const [needConfirm, setNeedConfirm] = useState(false);
+    const [hidden, setHidden] = useState(false);
+    return (
+      <AdditionalInfoWidget
+        pinned={pinned}
+        setPinned={setPinned}
+        needConfirm={needConfirm}
+        setNeedConfirm={setNeedConfirm}
+        hidden={hidden}
+        setHidden={setHidden}
+      />
+    );
+  },
+};
