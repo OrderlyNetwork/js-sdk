@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.0.1-developV2.52
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-developV2.52
+  - @orderly.network/types@2.0.1-developV2.52
+
 ## 2.0.1-developV2.51
 
 ### Patch Changes
