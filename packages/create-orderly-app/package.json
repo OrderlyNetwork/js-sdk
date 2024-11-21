@@ -1,12 +1,11 @@
 {
   "name": "create-orderly-app",
-  "version": "1.5.16",
+  "version": "1.5.17",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
   "scripts": {
     "dev": "pnpm watch",
-    "build": "tsup",
     "watch": "tsup --watch",
     "script": "ts-node ./scripts/index.ts",
     "test": "jest"
