@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 import {
   DataTableProps,
+  ExtensionPositionEnum,
   ExtensionSlot,
   TableView,
   TableViewProps,
@@ -79,7 +80,7 @@ const GuardView = (props: GuardViewProps) => {
           size: "md",
         }}
       >
-        <ExtensionSlot position={"emptyDataState"} />
+        <ExtensionSlot position={ExtensionPositionEnum.EmptyDataIdentifier} />
       </AuthGuard>
     </Flex>
   );

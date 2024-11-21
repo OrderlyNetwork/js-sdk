@@ -2,8 +2,11 @@ import React, { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 import { useMemo, useRef } from "react";
 import { useEndReached } from "./useEndReached";
 import { Spinner } from "../spinner";
-import { cn, EmptyDataState, Flex } from "..";
+
 import { EmptyView } from "../empty";
+import { EmptyDataState } from "../table/dataTable/emptyDataState";
+import { Flex } from "../flex";
+import { cnBase } from "tailwind-variants";
 
 export interface ListViewProps<T, D extends unknown> {
   dataSource: T[] | null | undefined;
@@ -98,13 +101,13 @@ const ListViewInner = <T extends unknown, D extends unknown>(
     <div
       style={props.style}
       ref={containerRef}
-      className={cn(
+      className={cnBase(
         "oui-relative oui-min-h-[180px] oui-custom-scrollbar oui-overflow-auto",
         props.className
       )}
     >
       <div
-        className={cn(
+        className={cnBase(
           "oui-space-y-3 oui-h-full oui-w-full",
           emptyDataSouce &&
             "oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0",
