@@ -8,8 +8,8 @@ import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { useThrottledCallback } from "use-debounce";
 
 export const useOrderEntity = (
-    order: {
-      symbol: string,
+  order: {
+    symbol: string;
     side: OrderSide;
     reduce_only?: boolean;
     [key: string]: any;

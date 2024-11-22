@@ -302,9 +302,9 @@ export const useDeposit = (options?: useDepositOptions) => {
     if (!options?.address) {
       throw new Error("address is required");
     }
-    const _allowance = await account.assetsManager.getAllowance(
-      options?.address
-    );
+    const _allowance = await account.assetsManager.getAllowance({
+      address: options?.address,
+    });
 
     setAllowance(() => _allowance);
 
