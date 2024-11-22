@@ -161,11 +161,14 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
       .getElementById("oui-fee-tier-current")
       ?.getBoundingClientRect();
 
-    if (elementRect && parentRect) {
+    if (elementRect && parentRect && !!props.tier) {
       const offsetTop = elementRect.top - parentRect.top;
       setTop(offsetTop);
+    } else {
+      setTop(undefined);
     }
   }, [props.tier]);
+
   const onRow = useCallback(
     (record: any, index: number) => {
       const config = props?.onRow?.(record, index) ?? {
