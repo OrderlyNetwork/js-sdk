@@ -60,8 +60,6 @@ class PortfolioCalculator extends BaseCalculator<any> {
   }) {
     const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
 
-    // console.log("++++++++", inputs);
-
     if (
       !holding ||
       !positions ||
@@ -113,15 +111,6 @@ class PortfolioCalculator extends BaseCalculator<any> {
       unsettlementPnL: positions.total_unsettled_pnl ?? 0,
     });
 
-    // console.log("PortfolioCalculator+++++++++++", {
-    //   totalCollateral,
-    //   totalValue,
-    //   totalUnrealizedROI,
-    //   freeCollateral,
-    //   availableBalance,
-    //   unsettledPnL,
-    // });
-
     return {
       totalCollateral,
       totalValue,
@@ -129,6 +118,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       freeCollateral,
       availableBalance,
       unsettledPnL,
+      holding,
     };
   }
 
@@ -144,6 +134,9 @@ class PortfolioCalculator extends BaseCalculator<any> {
         availableBalance: data.availableBalance as number,
         totalUnrealizedROI: data.totalUnrealizedROI as number,
         unsettledPnL: data.unsettledPnL as number,
+        holding: Array.isArray(data.holding)
+          ? (data.holding as API.Holding[])
+          : [],
       });
     }
   }
