@@ -69,8 +69,11 @@ export const themePlugin = () =>
         "--oui-gradient-danger-start": "153 24 76",
         "--oui-gradient-danger-end": "245 97 139",
 
-        "--oui-gradient-brand-start": "38 254 255",
-        "--oui-gradient-brand-end": "89 176 254",
+        "--oui-gradient-brand-start": "40 0 97",
+        "--oui-gradient-brand-end": "189 107 237",
+        "--oui-gradient-brand-stop-start": "6.62%",
+        "--oui-gradient-brand-stop-end": "86.5%",
+        "--oui-gradient-brand-angle": "17.44deg",
         
         "--oui-gradient-warning-start": "152 58 8",
         "--oui-gradient-warning-end": "255 209 70",

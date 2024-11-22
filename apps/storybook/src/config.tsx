@@ -24,7 +24,7 @@ const config: OrderlyConfig = {
     mainNavProps: {
       mainMenus: [
         { name: "Trading", href: "/", testid: "oui-main-nav-trading" },
-        { name: "Reward", href: "/rewards", testid: "oui-main-nav-reward" },
+        { name: "Rewards", href: "/rewards", testid: "oui-main-nav-reward" },
         { name: "Markets", href: "/markets", testid: "oui-main-nav-markets" },
       ],
       products: [
@@ -34,7 +34,7 @@ const config: OrderlyConfig = {
       initialMenu: "/markets",
       initialProduct: "/trade",
       campaigns: {
-        name: "Reward",
+        name: "Rewards",
         href: "/rewards",
         icon: "box-ani.gif",
         children: [
@@ -74,8 +74,8 @@ const config: OrderlyConfig = {
                     y2="10"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="#59B0FE" />
-                    <stop offset="1" stopColor="#26FEFE" />
+                    <stop stopColor="#2D0061" />
+                    <stop offset="1" stopColor="#BD6BED" />
                   </linearGradient>
                 </defs>
                 <path
@@ -122,8 +122,8 @@ const config: OrderlyConfig = {
                     y2="10"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="#59B0FE" />
-                    <stop offset="1" stopColor="#26FEFE" />
+                    <stop stopColor="#2D0061" />
+                    <stop offset="1" stopColor="#BD6BED" />
                   </linearGradient>
                 </defs>
                 <path

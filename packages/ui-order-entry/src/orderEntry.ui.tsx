@@ -409,7 +409,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         width={16}
         height={16}
         viewBox="0 0 16 16"
-        fill="none"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         onMouseEnter={() => {
           setPath(
@@ -419,8 +419,9 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         onMouseLeave={() => {
           setPath(defaultPath);
         }}
+        className="oui-text-primary-darken "
       >
-        <path d={path} fill="#608CFF" />
+        <path d={path} />
       </svg>
     </button>
   );
