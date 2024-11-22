@@ -57,8 +57,8 @@ export const themePlugin = () =>
         "--oui-color-trading-profit-contrast": "255 255 255",
 
         /* gradients */
-        "--oui-gradient-primary-start": "231 219 249",
-        "--oui-gradient-primary-end": "159 107 225",
+        "--oui-gradient-primary-start": "40 0 97",
+        "--oui-gradient-primary-end": "189 107 237",
 
         "--oui-gradient-secondary-start": "81 42 121",
         "--oui-gradient-secondary-end": "176 132 233",
@@ -69,8 +69,8 @@ export const themePlugin = () =>
         "--oui-gradient-danger-start": "153 24 76",
         "--oui-gradient-danger-end": "245 97 139",
 
-        "--oui-gradient-brand-start": "40 0 97",
-        "--oui-gradient-brand-end": "189 107 237",
+        "--oui-gradient-brand-start": "231 219 249",
+        "--oui-gradient-brand-end": "159 107 225",
         "--oui-gradient-brand-stop-start": "6.62%",
         "--oui-gradient-brand-stop-end": "86.5%",
         "--oui-gradient-brand-angle": "17.44deg",

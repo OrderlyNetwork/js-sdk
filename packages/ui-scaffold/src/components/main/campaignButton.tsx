@@ -15,14 +15,6 @@ export const CampaignButton = (props: CampaignProps) => {
     <>
       <NavItem
         item={props.item}
-        style={{
-          // @ts-ignore
-          "--oui-gradient-angle": "188deg",
-          "--oui-gradient-primary-stop-start": "26%",
-          "--oui-gradient-primary-stop-end": "80%",
-          // "--oui-gradient-primary-start": "var(--oui-gradient-primary-end)",
-          // "--oui-gradient-primary-end": "var(--oui-gradient-primary-start)",
-        }}
         onClick={props.onItemClick}
         classNames={{
           navItem: cn("oui-gradient-primary oui-text-white", props.className),
