@@ -114,7 +114,7 @@ export const getSideMarketsColumns = (
             <Flex
               className={cn(
                 "oui-inline-flex",
-                "oui-bg-[rgba(51,71,253,1)] oui-py-[6px]"
+                "oui-bg-primary-darken oui-py-[6px]"
               )}
               r="base"
               width={52}

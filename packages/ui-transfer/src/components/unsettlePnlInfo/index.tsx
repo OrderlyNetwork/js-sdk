@@ -70,7 +70,7 @@ export const UnsettlePnlInfo = ({
         <Text>USDC</Text>
       </Flex>
       <Flex itemAlign="center" gap={1} className="oui-cursor-pointer">
-        <RefreshIcon />
+        <RefreshIcon className="oui-text-primary" />
         <Text
           data-testid="oui-testid-withdraw-dialog-settle-text"
           size="2xs"
