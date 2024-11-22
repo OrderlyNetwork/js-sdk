@@ -134,6 +134,9 @@ class PortfolioCalculator extends BaseCalculator<any> {
         availableBalance: data.availableBalance as number,
         totalUnrealizedROI: data.totalUnrealizedROI as number,
         unsettledPnL: data.unsettledPnL as number,
+        holding: Array.isArray(data.holding)
+          ? (data.holding as API.Holding[])
+          : [],
       });
     }
   }
