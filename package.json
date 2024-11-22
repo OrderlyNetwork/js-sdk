@@ -19,6 +19,7 @@
     "@changesets/cli": "^2.26.2",
     "@npmcli/package-json": "^5.0.0",
     "@turbo/gen": "^2.0.11",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.0",
@@ -33,8 +34,8 @@
     "@orderly.network/hooks": "workspace:^",
     "@orderly.network/react": "workspace:^",
     "@orderly.network/trading-view": "workspace:^",
-    "@orderly.network/web3-onboard": "workspace:^",
-    "@orderly.network/wallet-connector": "workspace:^"
+    "@orderly.network/wallet-connector": "workspace:^",
+    "@orderly.network/web3-onboard": "workspace:^"
   },
   "resolutions": {
     "@storybook/node-logger": "7.6.16"
