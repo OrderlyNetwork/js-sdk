@@ -49,7 +49,10 @@ export const UnsettlePnlInfo = ({
           }
         >
           <Flex itemAlign="center" justify="start" gap={1}>
-            <ExclamationFillIcon size={14} className="oui-text-warning-darken" />
+            <ExclamationFillIcon
+              size={14}
+              className="oui-text-warning-darken"
+            />
             <Text className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer">
               Unsettled:
             </Text>
@@ -71,7 +74,7 @@ export const UnsettlePnlInfo = ({
         <Text
           data-testid="oui-testid-withdraw-dialog-settle-text"
           size="2xs"
-          color="primaryLight"
+          color="primary"
           className=" oui-select-none"
           onClick={settlePnlDialog}
         >

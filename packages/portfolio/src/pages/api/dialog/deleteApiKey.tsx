@@ -53,7 +53,7 @@ export const DeleteAPIKeyDialog: FC<{
     >
       <Flex className="oui-text-xs">
         Delete your API key &nbsp;
-        <Text color="primaryLight">{formatKey(item?.orderly_key)}</Text>&nbsp;?
+        <Text color="primary">{formatKey(item?.orderly_key)}</Text>&nbsp;?
       </Flex>
     </SimpleDialog>
   );

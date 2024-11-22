@@ -248,7 +248,7 @@ const TPSLQuantity = (props: {
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
         <Slider.single
           markCount={5}
-          color="primaryLight"
+          color="primary"
           max={props.maxQty}
           min={0}
           showTip
@@ -263,7 +263,7 @@ const TPSLQuantity = (props: {
         />
       </Flex>
       <Flex justify={"between"}>
-        <Text.numeral rule={"percentages"} color={"primaryLight"} size={"2xs"}>
+        <Text.numeral rule={"percentages"} color={"primary"} size={"2xs"}>
           {currentQtyPercentage}
         </Text.numeral>
         <Flex itemAlign={"center"} gap={1}>
@@ -274,7 +274,7 @@ const TPSLQuantity = (props: {
               props.onQuantityChange?.(props.maxQty);
             }}
           >
-            <Text color={"primaryLight"} size={"2xs"}>
+            <Text color={"primary"} size={"2xs"}>
               Max
             </Text>
           </button>
@@ -505,7 +505,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         </Box>
         <Flex gap={1}>
           {isPositionTPSL && (
-            <Badge size="xs" color={"primaryLight"}>
+            <Badge size="xs" color={"primary"}>
               Position
             </Badge>
           )}

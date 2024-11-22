@@ -66,7 +66,7 @@ const LeverageSlider = (props: LeverageScriptReturns) => {
           props.onLeverageChange(e[0]);
           props.setShowSliderTip(true);
         }}
-        color="primaryLight"
+        color="primary"
         onValueCommit={(e) => {
           props.setShowSliderTip(false);
         }}

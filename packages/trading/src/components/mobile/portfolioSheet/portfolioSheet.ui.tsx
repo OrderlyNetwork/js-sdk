@@ -157,7 +157,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
                 size={12}
                 className="oui-text-primary-light"
               />
-              <Text size="2xs" color="primaryLight">
+              <Text size="2xs" color="primary">
                 Settle PnL
               </Text>
             </button>
@@ -185,7 +185,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
           <Text.numeral
             size="xs"
             rule="percentages"
-            color="primaryLight"
+            color="primary"
             dp={2}
             padding={false}
             visible={!props.hideAssets}
@@ -268,7 +268,7 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           props.onLeverageChange(e[0]);
           props.setShowSliderTip(true);
         }}
-        color="primaryLight"
+        color="primary"
         onValueCommit={(e) => {
           props.onValueCommit(e);
           props.setShowSliderTip(false);

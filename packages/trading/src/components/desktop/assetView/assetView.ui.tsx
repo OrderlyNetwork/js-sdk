@@ -86,13 +86,13 @@ const useCurrentStatusText = (): StatusInfo => {
         return {
           title: "Sign in",
           description: "Please sign in before starting to trade.",
-          titleColor: "primaryLight",
+          titleColor: "primary",
         };
       case AccountStatusEnum.DisabledTrading:
         return {
           title: "Enable trading",
           description: "Enable trading before starting to trade.",
-          titleColor: "primaryLight",
+          titleColor: "primary",
         };
       default:
         return {

@@ -66,7 +66,7 @@ export const getSideMarketsColumns = (
                 >
                   {record.symbol}
                 </Text.formatted>
-                <Badge size="xs" color="primaryLight">
+                <Badge size="xs" color="primary">
                   {record.leverage}x
                 </Badge>
               </Flex>

@@ -41,7 +41,7 @@ const badgeVariants = tv({
     {
       variant: "contained",
       color: "primary",
-      className: ["oui-bg-primary-darken/15", "oui-text-primary-darken"],
+      className: ["oui-bg-primary/15", "oui-text-primary"],
     },
     {
       variant: "contained",
@@ -81,7 +81,7 @@ const badgeVariants = tv({
     {
       variant: "text",
       color: "primary",
-      className: ["oui-text-primary-darken"],
+      className: ["oui-text-primary"],
     },
     {
       variant: "text",

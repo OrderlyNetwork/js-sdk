@@ -38,7 +38,7 @@ export const TokenInfoBar: FC<TokenInfoBarProps> = (props) => {
       <Flex gapX={3} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={3}>
           {symbolView}
-          <Badge size="xs" color="primaryLight">
+          <Badge size="xs" color="primary">
             {leverage}x
           </Badge>
         </Flex>
