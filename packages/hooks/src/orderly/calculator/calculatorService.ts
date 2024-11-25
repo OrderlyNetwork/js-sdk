@@ -41,34 +41,44 @@ class CalculatorService {
   }
 
   register(scope: string, calculator: Calculator) {
-    const count = this.referenceCount.get(calculator.name);
+    const ref_count_name = `${scope}_${calculator.name}`;
+    const count = this.referenceCount.get(ref_count_name);
+
     if (typeof count !== "undefined" && count > 0) {
-      this.referenceCount.set(calculator.name, count + 1);
+      this.referenceCount.set(ref_count_name, count + 1);
 
       return;
     }
 
-    const queue = this.calculators.get(scope);
-    if (Array.isArray(queue)) {
-      queue.push(calculator);
+    const calculators = this.calculators.get(scope);
+
+    if (Array.isArray(calculators)) {
+      calculators.push(calculator);
+
+      // this.calculators.set(scope, [...calculators, calculator]);
     } else {
       this.calculators.set(scope, [calculator]);
     }
 
-    this.referenceCount.set(calculator.name, 1);
+    this.referenceCount.set(ref_count_name, 1);
   }
 
   unregister(scope: string, calculator: Calculator) {
-    const count = this.referenceCount.get(calculator.name);
+    const ref_count_name = `${scope}_${calculator.name}`;
+    const count = this.referenceCount.get(ref_count_name);
+
+    // console.log("unregister", scope, calculator.name, count);
+
     if (typeof count !== "undefined" && count > 1) {
-      this.referenceCount.set(calculator.name, count - 1);
+      this.referenceCount.set(ref_count_name, count - 1);
       return;
     }
-    const queue = this.calculators.get(scope);
-    if (Array.isArray(queue)) {
-      const index = queue.indexOf(calculator);
+    const calculators = this.calculators.get(scope);
+    if (Array.isArray(calculators)) {
+      const index = calculators.findIndex((c) => c.name === calculator.name);
+      // console.log("<<<<<=======unregister", scope, calculator.name, index);
       if (index > -1) {
-        queue.splice(index, 1);
+        calculators.splice(index, 1);
       }
     }
   }
@@ -118,6 +128,7 @@ class CalculatorService {
       const { scope, data, options } = first;
       const ctx = context || CalculatorContext.create(scope, data);
       const calculators = this.calculators.get(scope);
+
       if (Array.isArray(calculators) && calculators.length) {
         try {
           await this.scheduler.calc(scope, calculators, data, ctx);

@@ -70,26 +70,6 @@ export const usePrivateDataObserver = (options: {
     return () => {
       account.off(EVENT_NAMES.statusChanged, handler);
     };
-
-    // account.on(EVENT_NAMES.switchAccount, () => {
-    //   cleanAll();
-    //   positionsActions.clearAll();
-    // });
-
-    // return () => {
-    //   account.off(EVENT_NAMES.switchAccount);
-    // };
-    // if (state.validating) return;
-
-    // console.log("++++++++++state.status", state.status);
-
-    // if (state.status < AccountStatusEnum.EnableTrading) {
-    //   cleanAll();
-    //   positionsActions.clearAll();
-    //   // calculatorService.calc(CalculatorScope.POSITION, {
-    //   //   rows: [],
-    //   // });
-    // }
   }, []);
 
   useEffect(() => {

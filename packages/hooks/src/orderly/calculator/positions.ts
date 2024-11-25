@@ -119,6 +119,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   private calcByPosition(positions: API.PositionInfo, ctx: CalculatorCtx) {
     if (positions.rows.length === 0) return positions as API.PositionsTPSLExt;
+    // need to clear the position if the position has been closed
+    // positions = this.sliceClosedPosition(positions);
     return this.format(positions, ctx);
   }
 
@@ -276,10 +278,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   }
 
   private preprocess(data: API.PositionInfo): API.PositionInfo {
-    // console.log("!!!! PositionCalculator preprocess", data);
-    // let rows = data.rows.filter((item) => item.position_qty !== 0);
     let rows = data.rows;
-    if (this.symbol !== AllPositions) {
+    if (this.symbol !== AllPositions && Array.isArray(rows)) {
       rows = rows.filter((item: API.Position) => item.symbol === this.symbol);
     }
     return {
@@ -293,7 +293,30 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       ctx.get((output: Record<string, any>) => output[this.name]) ||
       usePositionStore.getState().positions[this.symbol];
 
-    return positions;
+    if (this.symbol === AllPositions) {
+      return positions;
+    }
+
+    if (positions && Array.isArray(positions.rows)) {
+      return positions;
+    }
+
+    return this.preprocess(
+      usePositionStore.getState().positions[AllPositions] as API.PositionInfo
+    );
+  }
+
+  private sliceClosedPosition(positions: API.PositionInfo) {
+    if (this.symbol === AllPositions) {
+      return positions;
+    }
+
+    return {
+      ...positions,
+      rows: positions.rows.filter(
+        (item: API.Position) => item.symbol === this.symbol
+      ),
+    };
   }
 
   static logPosition = (symbol = "all") => {

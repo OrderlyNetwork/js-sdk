@@ -2,6 +2,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
+  capitalizeFirstLetter,
   cn,
   Divider,
   Flex,
@@ -96,14 +97,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           // props.onCompleted?.();
         },
         (reject) => {
-          console.log("enable trading reject", reject);
           setLoading(false);
           if (reject === -1) return;
-          let msg = reject.toString();
-          if (msg.includes("rejected")) {
-            msg = "User rejected the request.";
-          }
-          toast.error(msg);
+          toast.error(paseErrorMsg(reject));
         }
       )
       .catch((e) => {
@@ -125,11 +121,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           setLoading(false);
 
           if (reject === -1) return;
-          let msg = reject.toString();
-          if (msg.includes("rejected")) {
-            msg = "User rejected the request.";
-          }
-          toast.error(msg);
+          toast.error(paseErrorMsg(reject));
         }
       )
       .catch((e) => {
@@ -313,3 +305,27 @@ const RememberMe = () => {
     </Tooltip>
   );
 };
+
+
+function paseErrorMsg(reject: any): string {
+  console.log("wallet callback error", reject);
+  console.log("message *** ", "reject keys", Object.keys(reject));
+  Object.keys(reject).forEach((key) => {
+    console.log("key", key, "-", reject[key]);
+  });
+  let msg = "Something when wrong";
+
+  // if (typeof reject?.info?.error === "object" && "message" in reject?.info?.error) {
+  //   msg = reject?.info?.error?.message;
+  // }
+
+  // if (typeof reject?.shortMessage === 'string') {
+  //   msg = reject.shortMessage;
+  // }
+
+  if (msg.includes("rejected")) {
+    msg = "User rejected the request.";
+  }
+
+  return capitalizeFirstLetter(msg) ?? msg;
+}
