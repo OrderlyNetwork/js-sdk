@@ -315,13 +315,13 @@ function paseErrorMsg(reject: any): string {
   });
   let msg = "Something when wrong";
 
-  if (typeof reject?.info?.error === "object" && "message" in reject?.info?.error) {
-    msg = reject?.info?.error?.message;
-  }
+  // if (typeof reject?.info?.error === "object" && "message" in reject?.info?.error) {
+  //   msg = reject?.info?.error?.message;
+  // }
 
-  if (typeof reject?.shortMessage === 'string') {
-    msg = reject.shortMessage;
-  }
+  // if (typeof reject?.shortMessage === 'string') {
+  //   msg = reject.shortMessage;
+  // }
 
   if (msg.includes("rejected")) {
     msg = "User rejected the request.";
