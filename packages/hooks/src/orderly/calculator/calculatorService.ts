@@ -43,7 +43,7 @@ class CalculatorService {
   register(scope: string, calculator: Calculator) {
     const ref_count_name = `${scope}_${calculator.name}`;
     const count = this.referenceCount.get(ref_count_name);
-
+    // console.log("register", scope, calculator.name, count);
     if (typeof count !== "undefined" && count > 0) {
       this.referenceCount.set(ref_count_name, count + 1);
 
@@ -59,6 +59,8 @@ class CalculatorService {
     } else {
       this.calculators.set(scope, [calculator]);
     }
+
+    // console.log("register=====>>>>>>", scope, calculator.name);
 
     this.referenceCount.set(ref_count_name, 1);
   }
@@ -81,6 +83,8 @@ class CalculatorService {
         calculators.splice(index, 1);
       }
     }
+
+    this.referenceCount.delete(ref_count_name);
   }
 
   async calc(scope: CalculatorScope, data: any, options?: CalcOptions) {
@@ -128,7 +132,12 @@ class CalculatorService {
       const { scope, data, options } = first;
       const ctx = context || CalculatorContext.create(scope, data);
       const calculators = this.calculators.get(scope);
-
+      // if (scope === CalculatorScope.MARK_PRICE) {
+      //   console.log(
+      //     "calculators",
+      //     calculators?.map((c) => c.name)
+      //   );
+      // }
       if (Array.isArray(calculators) && calculators.length) {
         try {
           await this.scheduler.calc(scope, calculators, data, ctx);
