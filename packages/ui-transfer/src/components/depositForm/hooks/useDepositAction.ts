@@ -34,9 +34,9 @@ export function useDepositAction(options: Options) {
       .then((res: any) => {
         toast.success("Approve success");
       })
-      .catch((error) => {
-        console.log("approve error", error);
-        toast.error(error?.errorCode || "Approve failed");
+      .catch((err) => {
+        console.error("approve error", err);
+        toast.error(err.message || err.errorCode || "Approve failed");
       })
       .finally(() => {
         setSubmitting(false);
@@ -50,8 +50,9 @@ export function useDepositAction(options: Options) {
         ee.emit("deposit:requested");
         onSuccess?.();
       })
-      .catch((error) => {
-        toast.error(error?.errorCode || "Deposit failed");
+      .catch((err) => {
+        console.error("deposit error", err);
+        toast.error(err.message || err.errorCode || "Deposit failed");
       });
   }, [deposit, onSuccess, ee]);
 

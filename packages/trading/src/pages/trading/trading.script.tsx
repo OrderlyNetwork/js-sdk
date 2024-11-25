@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import {
   useAccount,
   useLocalStorage,
@@ -6,7 +7,6 @@ import {
 import { useTradingPageContext } from "../../provider/context";
 import { TradingPageState } from "../../types/types";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
-import { useMemo, useState } from "react";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
@@ -18,14 +18,16 @@ export const useTradingScript = () => {
   const props = useTradingPageContext();
   const [animating, setAnimating] = useState(false);
   const { state } = useAccount();
-
   const { wrongNetwork } = useAppContext();
 
   const { isFirstTimeDeposit } = useFirstTimeDeposit();
 
-  const [collapsed, setCollapsed] = useLocalStorage(
+  const isSmall = useMediaQuery("(max-width: 1440px)");
+  const isMedium = useMediaQuery("(max-width: 1680px)");
+
+  const [collapsed, setCollapsed] = useLocalStorage<boolean | undefined>(
     "orderly_side_markets_collapsed",
-    false
+    undefined
   );
 
   const [positions, setPositions] = useLocalStorage(
@@ -53,8 +55,6 @@ export const useTradingScript = () => {
     "280px",
     layout
   );
-
-  const isMedium = useMediaQuery("(max-width: 1680px)");
 
   const onCollapse = (collapsed: boolean) => {
     setCollapsed(collapsed);
@@ -99,8 +99,13 @@ export const useTradingScript = () => {
     return showPositionIcon ? (positions as number[]) : [0, 1, 2];
   }, [showPositionIcon, positions]);
 
+  const _collapsed = useMemo(
+    () => (collapsed === undefined ? isSmall : collapsed),
+    [isSmall, collapsed]
+  );
+
   const map = {
-    collapsed,
+    collapsed: _collapsed,
     onCollapse,
     layout,
     onLayout: setLayout,

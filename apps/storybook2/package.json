@@ -1,5 +1,5 @@
 {
-  "name": "storybook2",
+  "name": "@orderly.network/storybook",
   "private": true,
   "version": "1.0.0",
   "type": "module",
