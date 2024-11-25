@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "private": true,
   "files": [
     "dist"
   ],
@@ -39,7 +40,7 @@
   },
   "scripts": {
     "dev": "tsup --watch",
-    "build": "tsup",
+    "_build": "tsup",
     "docs:generate": "typedoc",
     "docs:parse": "@orderly.network/typedoc-json-parser",
     "test": "jest"
