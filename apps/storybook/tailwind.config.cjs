@@ -1,7 +1,7 @@
 const path = require("path");
-// const { chartPlugin } = require("@orderly.network/chart");
 import { chartPlugin } from "@orderly.network/chart";
 import { withTV } from "tailwind-variants/transformer";
+import { customThemePlugin } from "./src/tailwind/customTheme";
 
 /** @type {import("tailwindcss").Config} */
 module.exports = withTV({
@@ -29,5 +29,5 @@ module.exports = withTV({
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
   ],
-  plugins: [chartPlugin()],
+  plugins: [chartPlugin(), customThemePlugin()],
 });

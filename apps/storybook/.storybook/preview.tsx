@@ -1,19 +1,9 @@
 import React from "react";
 import type { Preview } from "@storybook/react";
-import { withThemeByClassName } from "@storybook/addon-themes";
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { customViewports } from "./screenSizes";
 import OrderlyProvider from "./orderlyProvider";
 import "../src/tailwind.css";
-
-export const decorators = [
-  withThemeByClassName({
-    themes: {
-      light: "light",
-      dark: "dark",
-    },
-    defaultTheme: "dark",
-  }),
-];
 
 const preview: Preview = {
   decorators: [
@@ -22,16 +12,17 @@ const preview: Preview = {
         <Story />
       </OrderlyProvider>
     ),
+    withThemeByDataAttribute({
+      themes: {
+        orderly: "orderly",
+        custom: "custom",
+      },
+      defaultTheme: "orderly",
+      attributeName: "data-oui-theme",
+    }),
   ],
   tags: ["autodocs"],
   parameters: {
-    backgrounds: {
-      values: [
-        { name: "Dark", value: "#07080A" },
-        { name: "Light", value: "#07080A" },
-      ],
-      default: "Dark",
-    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

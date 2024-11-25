@@ -1,9 +1,6 @@
-// import type { StorybookConfig } from "@storybook/react-vite";
-import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
-
-// import type { StorybookConfig } from "@storybook/react-webpack5";
 import { StorybookConfig } from "@storybook/react-vite";
-
+// import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
+// import type { StorybookConfig } from "@storybook/react-webpack5";
 import { join, dirname, resolve } from "path";
 
 /**

@@ -5,7 +5,7 @@ export const themePlugin = () =>
     addBase({
       ":root": {
         "--oui-font-family": '"Manrope", sans-serif',
- 
+
         /* colors */
         "--oui-color-primary": "176 132 233",
         "--oui-color-primary-light": "213 190 244",
@@ -74,14 +74,14 @@ export const themePlugin = () =>
         "--oui-gradient-brand-stop-start": "6.62%",
         "--oui-gradient-brand-stop-end": "86.5%",
         "--oui-gradient-brand-angle": "17.44deg",
-        
+
         "--oui-gradient-warning-start": "152 58 8",
         "--oui-gradient-warning-end": "255 209 70",
 
         "--oui-gradient-neutral-start": "27 29 24",
         "--oui-gradient-neutral-end": "38 41 46",
 
-        // Spacing
+        /* spacing */
         "--oui-spacing-xs": "20rem",
         "--oui-spacing-sm": "22.5rem",
         "--oui-spacing-md": "26.25rem",
