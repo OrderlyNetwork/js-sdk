@@ -17,7 +17,7 @@ export default function useCreateRenderer(
   const rendererRef = useRef<Renderer>();
   const { state } = useAccount();
 
-  const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
+  const [{ rows: positions }, positionsInfo] = usePositionStream();
   const [pendingOrders] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
     symbol: symbol,
@@ -45,14 +45,14 @@ export default function useCreateRenderer(
       renderer?.renderPositions([]);
       return;
     }
-    const positionList = (positions ?? []).map((item) => {
+    const positionList = (positions ?? []).filter(_ => (_.symbol === symbol)).map((item) => {
       return {
         symbol: item.symbol,
         open: item.average_open_price,
         balance: item.position_qty,
         closablePosition: 9999,
         // @ts-ignore
-        unrealPnl: item.unrealized_pnl,
+        unrealPnl: item.unrealized_pnl ?? 0,
         interest: 0,
         unrealPnlDecimal: 2,
         basePriceDecimal: 4,
