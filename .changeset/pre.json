@@ -45,7 +45,8 @@
     "@orderly.network/web3-provider-ethers": "1.0.0",
     "@orderly.network/ui-tpsl": "1.0.0",
     "@orderly.network/wallet-connector": "2.0.0",
-    "@orderly.network/codemod": "1.0.0"
+    "@orderly.network/codemod": "1.0.0",
+    "@orderly.network/storybook1": "2.0.0"
   },
   "changesets": [
     "blue-grapes-relate",
@@ -116,6 +117,7 @@
     "soft-islands-obey",
     "spicy-squids-accept",
     "strange-chairs-jog",
+    "strong-ducks-jump",
     "tender-dodos-rescue",
     "thick-panthers-cheer",
     "three-starfishes-ring",
