@@ -2,6 +2,9 @@ include:
   - project: "orderlynetwork/orderly-devops/orderly-common/common-ci"
     ref: main
     file: "/common-orderly-network-dev-v2.yaml"
+  - project: "orderlynetwork/orderly-devops/orderly-common/common-ci"
+    ref: main
+    file: "/common-orderly-network-prod-evm.yaml"
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
