@@ -313,7 +313,7 @@ function paseErrorMsg(reject: any): string {
   Object.keys(reject).forEach((key) => {
     console.log("key", key, "-", reject[key]);
   });
-  let msg = "Something when wrong";
+  let msg = "Something went wrong";
 
   // if (typeof reject?.info?.error === "object" && "message" in reject?.info?.error) {
   //   msg = reject?.info?.error?.message;
