@@ -96,14 +96,10 @@ const BlockList: React.FC<BlockListProps> = (props) => {
           </Flex>
         ),
         value: total24Amount,
-        rule: "human",
-        dp: 2,
       },
       {
         label: "Open interest",
         value: totalOpenInterest,
-        rule: "human",
-        dp: 2,
       },
       {
         label: "Assets (TVL)",
