@@ -24,11 +24,7 @@ const preview: Preview = {
   tags: ["autodocs"],
   parameters: {
     backgrounds: {
-      values: [
-        { name: "Dark", value: "#07080A" },
-        { name: "Light", value: "#07080A" },
-      ],
-      default: "Dark",
+      default: "dark",
     },
     controls: {
       matchers: {
