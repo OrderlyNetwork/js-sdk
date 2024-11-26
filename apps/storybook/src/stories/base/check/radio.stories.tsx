@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Checkbox } from "@orderly.network/ui";
 
 const meta: Meta<typeof Checkbox> = {
-  title: "Base/Checkbox/Checkbox",
+  title: "Base/Checkbox/Radio",
   component: Checkbox,
   parameters: {
     layout: "centered",
@@ -16,13 +16,18 @@ const meta: Meta<typeof Checkbox> = {
       options: ["primary", "white"],
     },
   },
+  args: {
+    color: "white",
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Radio: Story = {
+  render: () => <Checkbox variant="radio" />,
+};
 
 export const Primary: Story = {
-  render: () => <Checkbox color="primary" />,
+  render: () => <Checkbox variant="radio" color="primary" />,
 };
