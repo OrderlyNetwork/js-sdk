@@ -22,13 +22,13 @@ class PortfolioCalculator extends BaseCalculator<any> {
       markPrices = ctx.get<Record<string, number>>((cache) => cache[this.name]);
     }
 
-    if (scope === CalculatorScope.POSITION) {
-      positions = data;
-    } else {
+    // if (scope === CalculatorScope.POSITION) {
+    //   positions = data;
+    // } else {
       positions = ctx.get<API.PositionsTPSLExt>(
         (output: Record<string, any>) => output.positionCalculator_all
       );
-    }
+    // }
 
     let holding = portfolio.holding;
 
