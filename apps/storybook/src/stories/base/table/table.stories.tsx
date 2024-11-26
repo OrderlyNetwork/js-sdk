@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   Box,
-  TableView,
+  DataTable,
   Input,
   Flex,
   cn,
@@ -12,9 +12,9 @@ import { Columns } from "./columns";
 import { DataSource } from "./dataSource";
 import { useEffect, useMemo, useState } from "react";
 
-const meta: Meta<typeof TableView> = {
+const meta: Meta<typeof DataTable> = {
   title: "Base/Table/Table",
-  component: TableView,
+  component: DataTable,
   decorators: [(Story: any) => <Story />],
 };
 
@@ -72,7 +72,7 @@ export const Default: Story = {
             autoComplete="off"
           />
         </Flex>
-        <TableView
+        <DataTable
           columns={Columns}
           dataSource={dataSource}
           // getRowCanExpand={() => true}
