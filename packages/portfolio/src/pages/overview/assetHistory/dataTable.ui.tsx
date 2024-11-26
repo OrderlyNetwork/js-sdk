@@ -58,44 +58,4 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
       />
     </>
   );
-
-  // return (
-  //   <AuthGuardDataTable
-  //     bordered
-  //     loading={isLoading}
-  //     classNames={{
-  //       header: "oui-text-base-contrast-36",
-  //       body: "oui-text-base-contrast-80",
-  //     }}
-  //     columns={columns}
-  //     dataSource={dataSource}
-  //   >
-  //     <Filter
-  //       items={[
-  //         {
-  //           type: "select",
-  //           name: "side",
-  //           options: SIDES,
-  //           value: side,
-  //         },
-  //         {
-  //           type: "range",
-  //           name: "dateRange",
-  //           value: {
-  //             from: dateRange[0],
-  //             to: dateRange[1],
-  //           },
-  //         },
-  //       ]}
-  //       onFilter={(value) => {
-  //         onFilter(value);
-  //       }}
-  //     />
-  //     <Pagination
-  //       {...meta}
-  //       onPageChange={setPage}
-  //       onPageSizeChange={setPageSize}
-  //     />
-  //   </AuthGuardDataTable>
-  // );
 };

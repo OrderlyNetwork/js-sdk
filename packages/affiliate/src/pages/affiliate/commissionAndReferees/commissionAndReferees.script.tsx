@@ -7,9 +7,9 @@ import {
   useRefereeInfo,
   useReferralRebateSummary,
 } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { PaginationMeta, usePagination } from "@orderly.network/ui";
 
-export interface ListReturns<T> {
+export type ListReturns<T> = {
   data: T;
   meta: {
     count: number;
@@ -23,7 +23,8 @@ export interface ListReturns<T> {
   setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   isLoading?: boolean;
   loadMore?: () => void;
-}
+  pagination: PaginationMeta;
+};
 
 export type CommissionAndRefereesReturns = {
   commission: ListReturns<RefferalAPI.ReferralRebateSummary[] | undefined>;
@@ -79,7 +80,7 @@ const useCommissionDataScript = (): ListReturns<
 
   const onPageSizeChange = (pageSize: number) => {
     console.log("page size change", pageSize);
-    
+
     setPageSize(pageSize);
     // if (meta?.total) {
     //   const state = parseMeta({
@@ -92,7 +93,7 @@ const useCommissionDataScript = (): ListReturns<
     //     current_page: page,
     //     records_per_page: pageSize,
     //   }, state);
-      
+
     //   setPage(state.page);
     // }
   };
@@ -101,11 +102,22 @@ const useCommissionDataScript = (): ListReturns<
   //   setPage(page + 1);
   // };
 
+  const pagination = useMemo(
+    () =>
+      ({
+        ...parseMeta(meta),
+        onPageChange: setPage,
+        onPageSizeChange: setPageSize,
+      } as PaginationMeta),
+    [meta, setPage, setPageSize]
+  );
+
   return {
     data: commissionData || undefined,
     meta: parseMeta(meta),
     onPageChange,
     onPageSizeChange,
+    pagination,
     dateRange: commissionRange,
     setDateRange: setCommissionRange,
     isLoading,
@@ -139,7 +151,7 @@ const useRefereesDataScript = (): ListReturns<
           : undefined,
       size: pageSize,
       page: !isLG ? page : undefined,
-      sort: "descending_code_binding_time"
+      sort: "descending_code_binding_time",
     });
 
   useEffect(() => {
@@ -158,11 +170,22 @@ const useRefereesDataScript = (): ListReturns<
   //   setPage(page + 1);
   // };
 
+  const pagination = useMemo(
+    () =>
+      ({
+        ...parseMeta(meta),
+        onPageChange: setPage,
+        onPageSizeChange: setPageSize,
+      } as PaginationMeta),
+    [meta, setPage, setPageSize]
+  );
+
   return {
     data: commissionData || undefined,
     meta: parseMeta(meta),
     onPageChange,
     onPageSizeChange,
+    pagination,
     dateRange: commissionRange,
     setDateRange: setCommissionRange,
     isLoading,

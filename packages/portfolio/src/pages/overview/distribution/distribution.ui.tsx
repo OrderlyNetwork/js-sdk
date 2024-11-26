@@ -58,45 +58,4 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
     </>
   );
 
-  // return (
-  //   <AuthGuardDataTable
-  //     bordered
-  //     columns={columns}
-  //     dataSource={dataSource}
-  //     loading={isLoading}
-  //     isValidating={isValidating}
-  //     className="oui-font-semibold"
-  //     classNames={{
-  //       header: "oui-text-base-contrast-36",
-  //       body: "oui-text-base-contrast-80",
-  //     }}
-  //   >
-  //     <Filter
-  //       items={[
-  //         {
-  //           type: "select",
-  //           name: "type",
-  //           options: TYPES,
-  //           value: type,
-  //         },
-  //         {
-  //           type: "range",
-  //           name: "dateRange",
-  //           value: {
-  //             from: dateRange[0],
-  //             to: dateRange[1],
-  //           },
-  //         },
-  //       ]}
-  //       onFilter={(value) => {
-  //         onFilter(value);
-  //       }}
-  //     />
-  //     <Pagination
-  //       {...meta}
-  //       onPageChange={setPage}
-  //       onPageSizeChange={setPageSize}
-  //     />
-  //   </AuthGuardDataTable>
-  // );
 };

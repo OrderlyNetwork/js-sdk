@@ -58,39 +58,4 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
       manualSorting
     />
   );
-
-  // return (
-  //   <DataTable
-  //     bordered
-  //     classNames={{
-  //       header: "oui-text-base-contrast-36",
-  //       body: "oui-text-base-contrast-80",
-  //     }}
-  //     minHeight={275.5}
-  //     columns={columns}
-  //     loading={loading}
-  //     dataSource={dataSource}
-  //     onRow={(record, index) => {
-  //       return {
-  //         className: cn("oui-h-[55px] oui-border-line-4 oui-cursor-pointer"),
-  //         onClick: () => {
-  //           onSymbolChange?.(record);
-  //           favorite.addToHistory(record);
-  //         },
-  //         "data-testid": `oui-testid-markets-${
-  //           type === "new" ? "newListing" : "all"
-  //         }-tr-${record.symbol}`,
-  //       };
-  //     }}
-  //     generatedRowKey={(record) => record.symbol}
-  //     onSort={onSort}
-  //     initialSort={initialSort}
-  //   >
-  //     <Pagination
-  //       {...meta}
-  //       onPageChange={setPage}
-  //       onPageSizeChange={setPageSize}
-  //     />
-  //   </DataTable>
-  // );
 };

@@ -1,12 +1,11 @@
 import {
   Box,
-  Column,
-  DataTable,
   Divider,
   Flex,
   ListView,
-  Pagination,
   Text,
+  TableView,
+  TableColumn,
 } from "@orderly.network/ui";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
@@ -167,7 +166,7 @@ const MobileCell: FC<{
 
 const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   const { data } = props;
-  const columns: Column<ListType>[] = [
+  const columns: TableColumn<ListType>[] = [
     {
       title: "Epoch",
       dataIndex: "epoch_id",
@@ -263,23 +262,19 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   ];
 
   return (
-    <DataTable<ListType>
+    <TableView
       bordered
       columns={columns}
       loading={props.isLoading}
       dataSource={data}
-      classNames={{
-        header: "oui-text-base-contrast-36 oui-bg-base-9",
-        body: "oui-text-base-contrast-80",
-      }}
       emptyView={<AuthGuardEmpty status={AccountStatusEnum.SignedIn} />}
-    >
-      <Pagination
-        {...props.meta}
-        onPageChange={props.onPageChange}
-        onPageSizeChange={props.onPageSizeChange}
-      />
-    </DataTable>
+      onRow={(record) => {
+        return {
+          className: "oui-h-[59px]",
+        };
+      }}
+      pagination={props.pagination}
+    />
   );
 };
 

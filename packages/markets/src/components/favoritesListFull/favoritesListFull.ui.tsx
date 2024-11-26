@@ -63,39 +63,6 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
         manualPagination
         manualSorting
       />
-
-      {/* <DataTable
-        bordered
-        classNames={{
-          header: "oui-text-base-contrast-36",
-          body: "oui-text-base-contrast-80",
-        }}
-        minHeight={187.5}
-        columns={columns}
-        dataSource={dataSource}
-        emptyView={emptyView}
-        loading={loading}
-        onRow={(record, index) => {
-          return {
-            className: cn(
-              "group",
-              "oui-h-[55px] oui-border-line-4 oui-cursor-pointer"
-            ),
-            onClick: () => {
-              onSymbolChange?.(record);
-              favorite.addToHistory(record);
-            },
-          };
-        }}
-        generatedRowKey={(record) => record.symbol}
-        onSort={onSort}
-      >
-        <Pagination
-          {...meta}
-          onPageChange={setPage}
-          onPageSizeChange={setPageSize}
-        />
-      </DataTable> */}
     </div>
   );
 };

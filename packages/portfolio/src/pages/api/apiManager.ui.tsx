@@ -260,26 +260,6 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       pagination={props.pagination}
     />
   );
-
-  // return (
-  //   <AuthGuardDataTable
-  //     bordered
-  //     columns={columns}
-  //     loading={props.isLoading}
-  //     dataSource={props.keys}
-  //     emptyView={<AuthGuardEmpty />}
-  //     classNames={{
-  //       header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
-  //       body: "oui-text-xs oui-text-base-contrast-80",
-  //     }}
-  //   >
-  //     <Pagination
-  //       {...props.meta}
-  //       onPageChange={props.onPageChange}
-  //       onPageSizeChange={props.onPageSizeChange}
-  //     />
-  //   </AuthGuardDataTable>
-  // );
 };
 
 const EditButton: FC<{

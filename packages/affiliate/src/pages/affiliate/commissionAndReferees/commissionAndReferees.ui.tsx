@@ -1,16 +1,12 @@
-import { FC, ReactNode, useCallback, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import {
-  Column,
-  DataTable,
   DatePicker,
   Divider,
   Flex,
   ListView,
-  Pagination,
-  ScrollArea,
   Statistic,
   TabPanel,
-  Table,
+  TableColumn,
   Tabs,
   Text,
   cn,
@@ -19,9 +15,8 @@ import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
 import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
-import { addDays } from "date-fns";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { commifyOptional } from "@orderly.network/utils";
+import { AuthGuardTableView } from "@orderly.network/ui-connector";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
   props
@@ -83,7 +78,7 @@ const MobileCellItem: FC<{
 const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
   const isLG = useMediaQuery("(max-width: 767px)");
   const columns = useMemo(() => {
-    const cols: Column[] = [
+    const cols: TableColumn[] = [
       {
         title: "Commission (USDC)",
         dataIndex: "referral_rebate",
@@ -176,23 +171,19 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
     }
 
     return (
-      <AuthGuardDataTable
+      <AuthGuardTableView
         bordered
         columns={columns}
         loading={props.commission.isLoading}
         ignoreLoadingCheck={true}
         dataSource={props.commission.data}
-        classNames={{
-          header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
-          body: "oui-text-xs oui-text-base-contrast-80",
+        pagination={props.commission.pagination}
+        onRow={(record) => {
+          return {
+            className: "oui-h-[41px]",
+          };
         }}
-      >
-        <Pagination
-          {...props.commission.meta}
-          onPageChange={props.commission.onPageChange}
-          onPageSizeChange={props.commission.onPageSizeChange}
-        />
-      </AuthGuardDataTable>
+      />
     );
   }, [isLG, props.commission]);
 
@@ -216,7 +207,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   const isLG = useMediaQuery("(max-width: 767px)");
 
   const columns = useMemo(() => {
-    const cols: Column[] = [
+    const cols: TableColumn[] = [
       {
         title: "Referee address ",
         dataIndex: "user_address",
@@ -331,23 +322,19 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
     }
 
     return (
-      <AuthGuardDataTable
+      <AuthGuardTableView
         bordered
         loading={props.referees.isLoading}
         ignoreLoadingCheck={true}
         columns={columns}
         dataSource={props.referees.data}
-        classNames={{
-          header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
-          body: "oui-text-xs oui-text-base-contrast-80",
+        pagination={props.referees.pagination}
+        onRow={(record) => {
+          return {
+            className: "oui-h-[41px]",
+          };
         }}
-      >
-        <Pagination
-          {...props.referees.meta}
-          onPageChange={props.referees.onPageChange}
-          onPageSizeChange={props.referees.onPageSizeChange}
-        />
-      </AuthGuardDataTable>
+      />
     );
   }, [isLG, props.referees]);
 

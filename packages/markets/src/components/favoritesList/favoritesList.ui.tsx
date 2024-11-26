@@ -56,26 +56,6 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
         onSort={onSort}
         manualSorting
       />
-
-      {/* <DataTable
-        classNames={{
-          body: "oui-pb-[53px]",
-        }}
-        columns={columns}
-        dataSource={dataSource}
-        loading={loading}
-        onRow={(record, index) => {
-          return {
-            className: cn("oui-h-[53px]"),
-            onClick: () => {
-              onSymbolChange?.(record);
-              favorite.addToHistory(record);
-            },
-          };
-        }}
-        generatedRowKey={(record) => record.symbol}
-        onSort={onSort}
-      /> */}
     </>
   );
 };

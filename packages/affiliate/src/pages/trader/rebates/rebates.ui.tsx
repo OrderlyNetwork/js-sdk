@@ -1,20 +1,17 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import {
-  Column,
-  DataTable,
   DatePicker,
   Divider,
   Flex,
   ListView,
-  Pagination,
   Statistic,
+  TableColumn,
   Text,
 } from "@orderly.network/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
 import { commifyOptional } from "@orderly.network/utils";
-import { subDays } from "date-fns";
 import { useMediaQuery } from "@orderly.network/hooks";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { AuthGuardTableView } from "@orderly.network/ui-connector";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (
@@ -68,7 +65,7 @@ const Title: FC<RebatesReturns> = (props) => {
 const List: FC<RebatesReturns> = (props) => {
   const layout767 = useMediaQuery("(max-width: 767px)");
 
-  const columns: Column<RebatesItem>[] = [
+  const columns: TableColumn<RebatesItem>[] = [
     {
       title: "Rebates (USDC)",
       dataIndex: "referee_rebate",
@@ -112,30 +109,27 @@ const List: FC<RebatesReturns> = (props) => {
         dataSource={props.dataSource}
         className="oui-h-[197px] oui-w-full"
         renderItem={(item, index) => {
-          return (<Cell item={item}/>)
+          return <Cell item={item} />;
         }}
       />
     );
   }
 
   return (
-    <AuthGuardDataTable
+    <AuthGuardTableView
       bordered
       loading={props.isLoading}
       columns={columns}
       dataSource={props.dataSource}
       ignoreLoadingCheck={true}
-      classNames={{
-        header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
-        body: "oui-text-xs oui-text-base-contrast-80",
+      onRow={(record) => {
+        return {
+          className: "oui-h-[41px]",
+        };
       }}
-    >
-      <Pagination
-        {...props.meta}
-        onPageChange={props.onPageChange}
-        onPageSizeChange={props.onPageSizeChange}
-      />
-    </AuthGuardDataTable>
+      pagination={props.pagination}
+      manualPagination={false}
+    />
   );
 };
 
@@ -179,7 +173,7 @@ const Cell = (props: { item: RebatesItem }) => {
           </Text.formatted>
         </Statistic>
       </Flex>
-      <Divider className="oui-w-full oui-mt-3"/>
+      <Divider className="oui-w-full oui-mt-3" />
     </Flex>
   );
 };

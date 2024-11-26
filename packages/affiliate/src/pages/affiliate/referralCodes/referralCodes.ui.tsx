@@ -1,15 +1,14 @@
 import { FC, ReactNode, useMemo } from "react";
 import {
-  Box,
   Button,
-  Column,
-  DataTable,
+  TableView,
   Divider,
   Flex,
   ListView,
   Statistic,
   Text,
   cn,
+  TableColumn,
 } from "@orderly.network/ui";
 import { ReferralCodesReturns, ReferralCodeType } from "./referralCodes.script";
 import { PinBtn } from "../../../components/pinButton";
@@ -210,7 +209,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   const moreColumn = useMediaQuery("(min-width: 1024px)");
 
   const columns = useMemo(() => {
-    const cols: Column[] = [
+    const cols: TableColumn[] = [
       {
         title: "Referral Codes",
         dataIndex: "code",
@@ -286,8 +285,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
     }
 
     cols.push({
-      title: "",
-      dataIndex: "",
+      dataIndex: "link",
       align: "right",
       width: 74,
       className: "!oui-px-0",
@@ -305,23 +303,22 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       ),
     });
 
-    console.log("cols", cols);
-
     return cols;
   }, [moreColumn]);
 
-  console.log("codes", props.codes);
-
   return (
-    <DataTable
+    <TableView
       bordered
       columns={columns}
       dataSource={props.codes}
-      scroll={{ y: 200 }}
       classNames={{
-        header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9 oui-px-0",
-        body: "oui-text-xs oui-text-base-contrast-80",
-        root: "2xl:oui-flex-1 2xl:oui-max-h-[230px] 3xl:oui-max-h-[300px]"
+        header: "oui-px-0",
+        root: "2xl:oui-flex-1 2xl:oui-max-h-[230px] 3xl:oui-max-h-[300px]",
+      }}
+      onRow={(record) => {
+        return {
+          className: "oui-h-[45px]",
+        };
       }}
     />
   );

@@ -64,27 +64,4 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
       manualSorting
     />
   );
-
-  // return (
-  //   <DataTable
-  //     classNames={{
-  //       body: "oui-pb-[53px]",
-  //     }}
-  //     columns={columns}
-  //     loading={loading}
-  //     dataSource={dataSource}
-  //     onRow={(record, index) => {
-  //       return {
-  //         className: cn("group", "oui-h-[53px]"),
-  //         onClick: () => {
-  //           onSymbolChange?.(record);
-  //           favorite.addToHistory(record);
-  //         },
-  //       };
-  //     }}
-  //     generatedRowKey={(record) => record.symbol}
-  //     onSort={onSort}
-  //     initialSort={initialSort}
-  //   />
-  // );
 };
