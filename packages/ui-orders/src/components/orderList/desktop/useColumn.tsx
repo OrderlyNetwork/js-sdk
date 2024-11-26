@@ -579,7 +579,7 @@ function estTotal(option?: {
   isPending?: boolean;
 }): TableColumn<API.Order> {
   return {
-    title: "Est. total",
+    title: "Notional",
     dataIndex: "executed",
     width: option?.width,
     className: option?.className,

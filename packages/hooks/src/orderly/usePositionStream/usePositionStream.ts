@@ -79,8 +79,6 @@ export const usePositionStream = (
   useEffect(() => {
     if (symbol === "all") return;
 
-    // console.log("---------------", symbol);
-
     positionCalculator.current = new PositionCalculator(symbol);
 
     calculatorService.register(
@@ -88,9 +86,29 @@ export const usePositionStream = (
       positionCalculator.current
     );
 
+    calculatorService.register(
+      CalculatorScope.MARK_PRICE,
+      positionCalculator.current
+    );
+
+    calculatorService.register(
+      CalculatorScope.INDEX_PRICE,
+      positionCalculator.current
+    );
+
     return () => {
       calculatorService.unregister(
         CalculatorScope.POSITION,
+        positionCalculator.current!
+      );
+
+      calculatorService.unregister(
+        CalculatorScope.MARK_PRICE,
+        positionCalculator.current!
+      );
+
+      calculatorService.unregister(
+        CalculatorScope.INDEX_PRICE,
         positionCalculator.current!
       );
     };
@@ -102,82 +120,14 @@ export const usePositionStream = (
   ] = usePositionStore((state) => {
     const positions = state.positions[symbol] ?? POSITION_EMPTY;
 
+    // console.log("******", symbol, state.positions);
+
     return [positions.rows, omit(["rows"], positions)];
   });
 
   const { totalCollateral, totalValue, totalUnrealizedROI } = useAppStore(
     (state) => state.portfolio
   );
-
-  // const positionsRows = useMemo(() => {
-  //   let rows = formattedPositions[0];
-  //   if (!rows) return [];
-
-  //   // rows.forEach((item) => {
-  //   //   if (item.position_qty > 0) {
-  //   //     console.log(markPrices.data[item.symbol], item.mark_price);
-  //   //   }
-  //   // });
-
-  //   if (!includedPendingOrder) {
-  //     rows = rows.filter((item) => item.position_qty !== 0);
-  //   } else {
-  //     rows = rows.filter(
-  //       (item) =>
-  //         item.position_qty !== 0 ||
-  //         item.pending_long_qty !== 0 ||
-  //         item.pending_short_qty !== 0
-  //     );
-  //   }
-
-  //   if (calcMode === "lastPrice") {
-  //     rows = rows.map((item) => {
-  //       const {
-  //         unrealized_pnl_index,
-  //         unrealized_pnl_ROI_index,
-
-  //         ...rust
-  //       } = item;
-
-  //       return {
-  //         ...rust,
-  //         unrealized_pnl: unrealized_pnl_index ?? 0,
-  //         unsettled_pnl_ROI: unrealized_pnl_ROI_index ?? 0,
-  //         // mark_price: item.last_price,
-  //       };
-  //     });
-  //   }
-
-  //   // console.log("tpslOrders", tpslOrders);
-
-  //   if (Array.isArray(tpslOrders) && tpslOrders.length) {
-  //     rows = rows.map((item) => {
-  //       const related_order = findPositionTPSLFromOrders(
-  //         tpslOrders,
-  //         item.symbol
-  //       );
-
-  //       const tp_sl_pricer = !!related_order
-  //         ? findTPSLFromOrder(related_order)
-  //         : undefined;
-
-  //       return {
-  //         ...item,
-  //         tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
-  //         sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
-  //         algo_order: related_order,
-  //       };
-  //     });
-  //   }
-
-  //   return rows;
-  // }, [
-  //   formattedPositions,
-  //   includedPendingOrder,
-  //   calcMode,
-  //   tpslOrders,
-  //   markPrices,
-  // ]);
 
   const aggregated = useMemo(() => {
     let data = formattedPositions[1];
