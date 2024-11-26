@@ -323,7 +323,7 @@ function paseErrorMsg(reject: any): string {
   //   msg = reject.shortMessage;
   // }
 
-  if (msg.includes("rejected")) {
+  if (reject.toString().includes("rejected")) {
     msg = "User rejected the request.";
   }
 

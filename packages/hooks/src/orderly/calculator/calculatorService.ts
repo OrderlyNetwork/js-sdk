@@ -80,6 +80,7 @@ class CalculatorService {
       const index = calculators.findIndex((c) => c.name === calculator.name);
       // console.log("<<<<<=======unregister", scope, calculator.name, index);
       if (index > -1) {
+        calculators[index].destroy?.();
         calculators.splice(index, 1);
       }
     }
@@ -132,12 +133,7 @@ class CalculatorService {
       const { scope, data, options } = first;
       const ctx = context || CalculatorContext.create(scope, data);
       const calculators = this.calculators.get(scope);
-      // if (scope === CalculatorScope.MARK_PRICE) {
-      //   console.log(
-      //     "calculators",
-      //     calculators?.map((c) => c.name)
-      //   );
-      // }
+
       if (Array.isArray(calculators) && calculators.length) {
         try {
           await this.scheduler.calc(scope, calculators, data, ctx);

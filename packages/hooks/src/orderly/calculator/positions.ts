@@ -9,6 +9,7 @@ import { BaseCalculator } from "./baseCalculator";
 import { propOr } from "ramda";
 import { zero } from "@orderly.network/utils";
 import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
+import { CalculatorContext } from "./calculatorContext";
 
 const NAME_PREFIX = "positionCalculator";
 const AllPositions = "all";
@@ -36,7 +37,6 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     data: any,
     ctx: CalculatorCtx
   ): API.PositionsTPSLExt | null {
-    // console.log("PositionCalculator calc", scope);
     if (scope === CalculatorScope.MARK_PRICE) {
       return this.calcByMarkPrice(data as Record<string, number>, ctx);
     }
@@ -56,7 +56,9 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   }
 
   update(data: API.PositionsTPSLExt | null, scope: CalculatorScope) {
-    // console.log("PositionCalculator update", scope, data);
+    // if (this.symbol !== AllPositions) {
+    //   console.log("PositionCalculator update", scope, this.name, data);
+    // }
     if (!data || !Array.isArray(data.rows)) return;
 
     usePositionStore.getState().actions.setPositions(this.symbol, data);
@@ -75,6 +77,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     ctx: CalculatorCtx
   ) {
     let positions = this.getPosition(markPrice, ctx);
+    // positions = this.checkIsClosed(positions, ctx);
 
     // console.log("-------PositionCalculator calcByMarkPrice", positions);
 
@@ -97,6 +100,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     ctx: CalculatorCtx
   ) {
     let positions = this.getPosition(indexPrice, ctx);
+    // positions = this.checkIsClosed(positions, ctx);
 
     if (!positions) {
       return positions;
@@ -119,8 +123,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   private calcByPosition(positions: API.PositionInfo, ctx: CalculatorCtx) {
     if (positions.rows.length === 0) return positions as API.PositionsTPSLExt;
+
     // need to clear the position if the position has been closed
-    // positions = this.sliceClosedPosition(positions);
     return this.format(positions, ctx);
   }
 
@@ -301,22 +305,19 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       return positions;
     }
 
-    return this.preprocess(
-      usePositionStore.getState().positions[AllPositions] as API.PositionInfo
-    );
+    return this.preprocess(this.getAllPositions(ctx) as API.PositionInfo);
   }
 
-  private sliceClosedPosition(positions: API.PositionInfo) {
-    if (this.symbol === AllPositions) {
-      return positions;
-    }
+  destroy() {
+    usePositionStore.getState().actions.closePosition(this.symbol);
+    CalculatorContext.instance?.deleteByName(this.name);
+  }
 
-    return {
-      ...positions,
-      rows: positions.rows.filter(
-        (item: API.Position) => item.symbol === this.symbol
-      ),
-    };
+  private getAllPositions(ctx: CalculatorCtx) {
+    return (
+      ctx.get((output: Record<string, any>) => output[AllPositions]) ||
+      usePositionStore.getState().positions[AllPositions]
+    );
   }
 
   static logPosition = (symbol = "all") => {
