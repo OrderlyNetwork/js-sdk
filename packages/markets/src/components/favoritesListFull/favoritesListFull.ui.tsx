@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, Flex, Text, TableView } from "@orderly.network/ui";
+import { cn, Flex, Text, DataTable } from "@orderly.network/ui";
 import { UnFavoritesIcon } from "../../icons";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 import { useMarketsContext } from "../../components/marketsProvider";
@@ -40,7 +40,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
     <div>
       <FavoritesTabWidget favorite={favorite} className="oui-my-3" />
 
-      <TableView
+      <DataTable
         bordered
         // minHeight={187.5}
         columns={columns}

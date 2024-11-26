@@ -7,10 +7,10 @@ import {
   SortingTableState,
   TableOptions,
 } from "@tanstack/react-table";
-import { PaginationMeta, TableColumn, TableSort } from "./type";
+import { PaginationMeta, Column, TableSort } from "./type";
 
 export const Transform = {
-  columns: (columns: TableColumn[]) => {
+  columns: (columns: Column[]) => {
     const columnHelper = createColumnHelper<any>();
 
     return columns?.map((column, index) => {
@@ -39,7 +39,7 @@ export const Transform = {
     });
   },
 
-  columnPinning: (columns: TableColumn[]) => {
+  columnPinning: (columns: Column[]) => {
     const left: string[] = [];
     const right: string[] = [];
     columns?.map((column) => {

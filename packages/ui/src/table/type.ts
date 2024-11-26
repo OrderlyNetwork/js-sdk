@@ -15,7 +15,7 @@ export type TableCellRenderer<T> =
   | string
   | ((value: any, record: T, index: number) => React.ReactNode);
 
-export type TableColumn<RecordType extends unknown = any> = {
+export type Column<RecordType extends unknown = any> = {
   type?: "data" | "action" | "group";
   title?: ReactNode;
   hint?: ReactNode;
@@ -66,7 +66,7 @@ export type PaginationMeta = {
 
 export type TableSort = { sortKey: string; sort: SortOrder };
 
-export type TableViewClassNames = {
+export type DataTableClassNames = {
   root?: string;
   header?: string;
   body?: string;

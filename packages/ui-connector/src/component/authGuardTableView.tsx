@@ -2,8 +2,8 @@ import { PropsWithChildren } from "react";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
-  TableView,
-  TableViewProps,
+  DataTable,
+  DataTableProps,
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { alertMessages, DESCRIPTIONS } from "../constants/message";
@@ -14,10 +14,10 @@ import { useAccount } from "@orderly.network/hooks";
 
 export const AuthGuardTableView = <RecordType extends unknown>(
   props: PropsWithChildren<
-    TableViewProps<RecordType> &
+    DataTableProps<RecordType> &
       Omit<GuardViewProps, "status"> & {
         status?: AccountStatusEnum;
-        classNames?: TableViewProps<RecordType>["classNames"] & {
+        classNames?: DataTableProps<RecordType>["classNames"] & {
           authGuardDescription?: string;
         };
       }
@@ -38,7 +38,7 @@ export const AuthGuardTableView = <RecordType extends unknown>(
   const { wrongNetwork } = useAppContext();
 
   return (
-    <TableView
+    <DataTable
       dataSource={data}
       ignoreLoadingCheck={
         wrongNetwork || state.status < status || props.ignoreLoadingCheck

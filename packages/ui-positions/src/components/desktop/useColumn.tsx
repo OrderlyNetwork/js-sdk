@@ -4,7 +4,7 @@ import {
   Divider,
   Flex,
   HoverCard,
-  TableColumn,
+  Column,
   Text,
   Tooltip,
 } from "@orderly.network/ui";
@@ -81,9 +81,9 @@ export const useColumn = (props: {
           title: "Quantity",
           dataIndex: "position_qty",
           // onSort: true,
-          onSort: ((a,b) => {
+          onSort: (a, b) => {
             return a.position_qty - b.position_qty;
-          }),
+          },
           width: 120,
           className: "oui-pl-6",
           // rule: "price",
@@ -299,7 +299,7 @@ export const useColumn = (props: {
             );
           },
         },
-      ] as TableColumn<API.PositionTPSLExt>[],
+      ] as Column<API.PositionTPSLExt>[],
     [pnlNotionalDecimalPrecision, sharePnLConfig]
   );
 

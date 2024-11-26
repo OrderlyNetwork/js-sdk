@@ -4,7 +4,7 @@ import { getColumnPinningProps } from "./utils/getColumnPinningProps";
 import { TanstackColumn } from "./type";
 import { AscendingIcon, DescendingIcon, SortingIcon } from "./icons";
 import { HeaderGroup, SortDirection } from "@tanstack/react-table";
-import { TableViewProps } from "./tableView";
+import { DataTableProps } from "./dataTable";
 import { alignVariants } from "./className";
 
 type TableHeaderProps = {
@@ -12,7 +12,7 @@ type TableHeaderProps = {
   headerGroups: HeaderGroup<any>[];
   showLeftShadow?: boolean;
   showRightShadow?: boolean;
-} & Pick<TableViewProps<any>, "bordered">;
+} & Pick<DataTableProps<any>, "bordered">;
 
 export const TableHeader: FC<TableHeaderProps> = (props) => {
   return (

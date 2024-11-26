@@ -1,14 +1,14 @@
 import { FC, ReactNode, useMemo } from "react";
 import {
   Button,
-  TableView,
+  DataTable,
   Divider,
   Flex,
   ListView,
   Statistic,
   Text,
   cn,
-  TableColumn,
+  Column,
 } from "@orderly.network/ui";
 import { ReferralCodesReturns, ReferralCodeType } from "./referralCodes.script";
 import { PinBtn } from "../../../components/pinButton";
@@ -209,7 +209,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   const moreColumn = useMediaQuery("(min-width: 1024px)");
 
   const columns = useMemo(() => {
-    const cols: TableColumn[] = [
+    const cols: Column[] = [
       {
         title: "Referral Codes",
         dataIndex: "code",
@@ -307,7 +307,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
   }, [moreColumn]);
 
   return (
-    <TableView
+    <DataTable
       bordered
       columns={columns}
       dataSource={props.codes}

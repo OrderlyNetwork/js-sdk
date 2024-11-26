@@ -5,8 +5,8 @@ import {
   Text,
   Card,
   Divider,
-  TableView,
-  TableColumn,
+  DataTable,
+  Column,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useFeeTierScriptReturn } from "./feeTier.script";
@@ -136,7 +136,7 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 };
 
 type FeeTierTableProps = {
-  columns: TableColumn[];
+  columns: Column[];
   dataSource?: any[];
   page?: number;
   pageSize?: number;
@@ -146,8 +146,8 @@ type FeeTierTableProps = {
     record: any,
     index: number
   ) => {
-    normal: any,
-    active: any,
+    normal: any;
+    active: any;
   };
 };
 
@@ -178,7 +178,7 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
       if (index + 1 == props.tier) {
         const innerConfig = {
           id: "oui-fee-tier-current",
-          'data-state': "active",
+          "data-state": "active",
           className:
             "group oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
         };
@@ -189,7 +189,7 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
       }
 
       return {
-        'data-state': "none",
+        "data-state": "none",
         ...{ className: "oui-h-12" },
         ...config.normal,
       };
@@ -213,7 +213,7 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
           }}
         />
       )}
-      <TableView
+      <DataTable
         bordered
         className="oui-font-semibold"
         classNames={{

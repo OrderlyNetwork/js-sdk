@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, TableView } from "@orderly.network/ui";
+import { cn, DataTable } from "@orderly.network/ui";
 import { type UseMarketsListFullReturn } from "./marketsListFull.script";
 import { TInitialSort } from "../../type";
 import { useMarketsContext } from "../../components/marketsProvider";
@@ -29,7 +29,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
   const columns = useMarketsListFullColumns(favorite, false);
 
   return (
-    <TableView
+    <DataTable
       bordered
       columns={columns}
       loading={loading}

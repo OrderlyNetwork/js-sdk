@@ -1,12 +1,5 @@
 import { MouseEventHandler, ReactNode } from "react";
-import {
-  Flex,
-  TokenIcon,
-  Text,
-  Badge,
-  cn,
-  TableColumn,
-} from "@orderly.network/ui";
+import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   DeleteIcon,
@@ -160,5 +153,5 @@ export const getDropDownMarketsColumns = (
         );
       },
     },
-  ] as TableColumn[];
+  ] as Column[];
 };

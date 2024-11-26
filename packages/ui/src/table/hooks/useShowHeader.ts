@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
-import { TableViewProps } from "../tableView";
+import { DataTableProps } from "../dataTable";
 
 export function useShowHeader(
-  params: Pick<TableViewProps<any>, "dataSource" | "loading">
+  params: Pick<DataTableProps<any>, "dataSource" | "loading">
 ) {
   const { dataSource, loading } = params;
 
@@ -12,7 +12,7 @@ export function useShowHeader(
     if (loading && !dataSource?.length) {
       return initShowHeader.current;
     }
-    
+
     return !!dataSource?.length;
   }, [loading, dataSource]);
 

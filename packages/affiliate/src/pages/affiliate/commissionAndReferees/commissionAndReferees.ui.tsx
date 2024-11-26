@@ -6,7 +6,7 @@ import {
   ListView,
   Statistic,
   TabPanel,
-  TableColumn,
+  Column,
   Tabs,
   Text,
   cn,
@@ -78,7 +78,7 @@ const MobileCellItem: FC<{
 const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
   const isLG = useMediaQuery("(max-width: 767px)");
   const columns = useMemo(() => {
-    const cols: TableColumn[] = [
+    const cols: Column[] = [
       {
         title: "Commission (USDC)",
         dataIndex: "referral_rebate",
@@ -207,7 +207,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
   const isLG = useMediaQuery("(max-width: 767px)");
 
   const columns = useMemo(() => {
-    const cols: TableColumn[] = [
+    const cols: Column[] = [
       {
         title: "Referee address ",
         dataIndex: "user_address",

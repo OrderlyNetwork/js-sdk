@@ -13,7 +13,7 @@ export { Badge } from "./badge/badge";
 export { Logo, type LogoProps } from "./logo/logo";
 // export * from "./tag/tag";
 export * from "./tooltip";
-export * from "./tableView";
+export * from "./table";
 export * from "./scrollarea";
 export * from "./dialog";
 export * from "./sheet";

@@ -3,7 +3,7 @@ import {
   FeeTierModule,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { TableColumn } from "@orderly.network/ui";
+import { Column } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
@@ -38,7 +38,7 @@ export const CustomData: Story = {
     return (
       <FeeTierModule.FeeTierPage
         dataAdapter={(columns, dataSource) => {
-          const cols: TableColumn[] = [
+          const cols: Column[] = [
             ...columns.slice(0, 2),
             {
               title: "or",

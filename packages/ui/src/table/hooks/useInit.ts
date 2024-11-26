@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { TableViewProps } from "../tableView";
+import { DataTableProps } from "../dataTable";
 
 export function useInit(
   params: Pick<
-    TableViewProps<any>,
+    DataTableProps<any>,
     "dataSource" | "loading" | "ignoreLoadingCheck"
   >
 ) {

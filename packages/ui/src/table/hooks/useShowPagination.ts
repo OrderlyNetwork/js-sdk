@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef } from "react";
-import { TableViewProps } from "../tableView";
+import { DataTableProps } from "../dataTable";
 import { Row } from "@tanstack/react-table";
 
 export function useShowPagination(
-  params: Pick<TableViewProps<any>, "dataSource" | "loading" | "pagination"> & {
+  params: Pick<DataTableProps<any>, "dataSource" | "loading" | "pagination"> & {
     rows: Row<any>[];
   }
 ) {

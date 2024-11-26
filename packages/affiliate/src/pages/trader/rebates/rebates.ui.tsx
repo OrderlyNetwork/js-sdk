@@ -5,7 +5,7 @@ import {
   Flex,
   ListView,
   Statistic,
-  TableColumn,
+  Column,
   Text,
 } from "@orderly.network/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
@@ -65,7 +65,7 @@ const Title: FC<RebatesReturns> = (props) => {
 const List: FC<RebatesReturns> = (props) => {
   const layout767 = useMediaQuery("(max-width: 767px)");
 
-  const columns: TableColumn<RebatesItem>[] = [
+  const columns: Column<RebatesItem>[] = [
     {
       title: "Rebates (USDC)",
       dataIndex: "referee_rebate",

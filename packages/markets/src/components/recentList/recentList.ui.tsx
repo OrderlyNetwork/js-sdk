@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { cn, TableView } from "@orderly.network/ui";
+import { cn, DataTable } from "@orderly.network/ui";
 import { UseRecentListReturn } from "./recentList.script";
 import { useMarketsContext } from "../marketsProvider";
 import { getSideMarketsColumns } from "../sideMarkets/column";
@@ -25,7 +25,7 @@ export const RecentList: FC<RecentListProps> = (props) => {
   }
 
   return (
-    <TableView
+    <DataTable
       classNames={{
         root: props.tableClassNames?.root,
         body: props.tableClassNames?.body,

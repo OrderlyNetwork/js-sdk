@@ -4,8 +4,8 @@ import {
   Flex,
   ListView,
   Text,
-  TableView,
-  TableColumn,
+  DataTable,
+  Column,
 } from "@orderly.network/ui";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
@@ -166,7 +166,7 @@ const MobileCell: FC<{
 
 const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   const { data } = props;
-  const columns: TableColumn<ListType>[] = [
+  const columns: Column<ListType>[] = [
     {
       title: "Epoch",
       dataIndex: "epoch_id",
@@ -262,7 +262,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   ];
 
   return (
-    <TableView
+    <DataTable
       bordered
       columns={columns}
       loading={props.isLoading}

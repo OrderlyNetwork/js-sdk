@@ -3,7 +3,7 @@ import { cnBase } from "tailwind-variants";
 import { Row } from "@tanstack/react-table";
 import { getColumnPinningProps } from "./utils/getColumnPinningProps";
 import { alignVariants } from "./className";
-import { TableViewProps } from "./tableView";
+import { DataTableProps } from "./dataTable";
 import { TableCell } from "./tableCell";
 
 type TableBodyProps<RecordType> = {
@@ -13,7 +13,7 @@ type TableBodyProps<RecordType> = {
   showLeftShadow?: boolean;
   showRightShadow?: boolean;
 } & Pick<
-  TableViewProps<any>,
+  DataTableProps<any>,
   "bordered" | "onRow" | "renderRowContainer" | "expandRowRender"
 >;
 

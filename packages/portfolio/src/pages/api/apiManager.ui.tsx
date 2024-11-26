@@ -5,7 +5,7 @@ import {
   CopyIcon,
   Flex,
   PlusIcon,
-  TableColumn,
+  Column,
   Text,
   Tooltip,
 } from "@orderly.network/ui";
@@ -162,7 +162,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const KeyList: FC<ApiManagerScriptReturns> = (props) => {
-  const columns: TableColumn<APIKeyItem>[] = [
+  const columns: Column<APIKeyItem>[] = [
     {
       title: "API key",
       dataIndex: "orderly_key",

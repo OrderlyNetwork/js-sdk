@@ -1,12 +1,12 @@
 import { RecentList } from "./recentList.ui";
 import { useRecentListScript } from "./recentList.script";
 import { GetColumns } from "../../type";
-import { TableViewClassNames } from "@orderly.network/ui";
+import { DataTableClassNames } from "@orderly.network/ui";
 
 export type RecentListWidgetProps = {
   getColumns?: GetColumns;
   collapsed?: boolean;
-  tableClassNames?: TableViewClassNames;
+  tableClassNames?: DataTableClassNames;
   rowClassName?: string;
 };
 

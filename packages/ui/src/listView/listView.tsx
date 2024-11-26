@@ -4,7 +4,7 @@ import { useEndReached } from "./useEndReached";
 import { Spinner } from "../spinner";
 import { Flex } from "../flex";
 import { cnBase } from "tailwind-variants";
-import { EmptyDataState } from "../tableView";
+import { EmptyDataState } from "../table";
 
 export interface ListViewProps<T, D extends unknown> {
   dataSource: T[] | null | undefined;

@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
+import { PropsWithChildren, ReactNode, useMemo } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -10,12 +10,7 @@ import {
   getFilteredRowModel,
   RowSelectionState,
 } from "@tanstack/react-table";
-import {
-  TableColumn,
-  PaginationMeta,
-  TableSort,
-  TableViewClassNames,
-} from "./type";
+import { Column, PaginationMeta, TableSort, DataTableClassNames } from "./type";
 import { cnBase } from "tailwind-variants";
 import { Transform } from "./transform";
 import { useWrap } from "./hooks/useWrap";
@@ -29,8 +24,8 @@ import { useShowHeader } from "./hooks/useShowHeader";
 import { useShowPagination } from "./hooks/useShowPagination";
 import { useScroll } from "./hooks/useScroll";
 
-export type TableViewProps<RecordType> = {
-  columns: TableColumn<RecordType>[];
+export type DataTableProps<RecordType> = {
+  columns: Column<RecordType>[];
   dataSource?: RecordType[] | null;
   /**
    * @description loading state
@@ -40,7 +35,7 @@ export type TableViewProps<RecordType> = {
   // isValidating?: boolean;
   ignoreLoadingCheck?: boolean;
   className?: string;
-  classNames?: TableViewClassNames;
+  classNames?: DataTableClassNames;
   // showMaskElement?: boolean;
   emptyView?: ReactNode;
   bordered?: boolean;
@@ -67,8 +62,8 @@ export type TableViewProps<RecordType> = {
   rowSelection?: RowSelectionState;
 };
 
-export function TableView<RecordType extends any>(
-  props: PropsWithChildren<TableViewProps<RecordType>>
+export function DataTable<RecordType extends any>(
+  props: PropsWithChildren<DataTableProps<RecordType>>
 ) {
   const {
     columns,

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Flex, Text, type TableColumn } from "@orderly.network/ui";
+import { Flex, Text, type Column } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 
 export const useFundingHistoryColumns = () => {
@@ -69,7 +69,7 @@ export const useFundingHistoryColumns = () => {
           ignoreDP: true,
         },
       },
-    ] as TableColumn<API.FundingFeeRow & { annual_rate: number }>[];
+    ] as Column<API.FundingFeeRow & { annual_rate: number }>[];
   }, []);
 
   return columns;
