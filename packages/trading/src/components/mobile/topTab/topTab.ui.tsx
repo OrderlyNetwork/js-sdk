@@ -30,7 +30,7 @@ export const TopTab: FC<
       trailing={
         <button className="oui-px-5" onClick={props.toggleContentVisible}>
           <ChevronIcon
-            className={(props.visible ? "oui-rotate-0" : "oui-rotate-180")}
+            className={props.visible ? "oui-rotate-0" : "oui-rotate-180"}
           />
         </button>
       }
@@ -66,7 +66,10 @@ const ChevronIcon = (props: { className?: string }) => {
       viewBox="0 0 12 12"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn("oui-fill-base-contrast-54 hover:oui-fill-base-contrast-80",props.className)}
+      className={cn(
+        "oui-fill-base-contrast-54 hover:oui-fill-base-contrast-80",
+        props.className
+      )}
     >
       <path
         d="M5.721 4.585 2.726 6.578a.51.51 0 0 0-.14.7.51.51 0 0 0 .702.14l2.714-1.806 2.715 1.806c.23.153.549.089.702-.14a.51.51 0 0 0-.14-.7L6.283 4.585a.51.51 0 0 0-.562 0"
@@ -81,8 +84,8 @@ const ChevronIcon = (props: { className?: string }) => {
           y2="6.001"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#59B0FE" />
-          <stop offset="1" stopColor="#26FEFE" />
+          <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
+          <stop offset="1" stopColor="rgba(var(--oui-gradient-brand-start))" />
         </linearGradient> */}
       </defs>
     </svg>

@@ -41,8 +41,11 @@ export const useLayoutBuilder = (props: {
                 y2="9"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#59B0FE" />
-                <stop offset="1" stopColor="#26FEFE" />
+                <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
+                <stop
+                  offset="1"
+                  stopColor="rgba(var(--oui-gradient-brand-start))"
+                />
               </linearGradient>
             </defs>
           </svg>
