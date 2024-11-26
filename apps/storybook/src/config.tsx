@@ -74,8 +74,11 @@ const config: OrderlyConfig = {
                     y2="10"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="#2D0061" />
-                    <stop offset="1" stopColor="#BD6BED" />
+                    <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+                    <stop
+                      offset="1"
+                      stopColor="rgb(var(--oui-gradient-brand-start))"
+                    />
                   </linearGradient>
                 </defs>
                 <path
@@ -122,8 +125,11 @@ const config: OrderlyConfig = {
                     y2="10"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="#2D0061" />
-                    <stop offset="1" stopColor="#BD6BED" />
+                    <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+                    <stop
+                      offset="1"
+                      stopColor="rgb(var(--oui-gradient-brand-start))"
+                    />
                   </linearGradient>
                 </defs>
                 <path

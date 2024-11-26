@@ -84,8 +84,8 @@ const ChevronIcon = (props: { className?: string }) => {
           y2="6.001"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
-          <stop offset="1" stopColor="rgba(var(--oui-gradient-brand-start))" />
+          <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
         </linearGradient> */}
       </defs>
     </svg>

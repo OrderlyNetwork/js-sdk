@@ -234,10 +234,10 @@ export const SubMainNav: Story = {
                     y2="10"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
+                    <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
                     <stop
                       offset="1"
-                      stopColor="rgba(var(--oui-gradient-brand-start))"
+                      stopColor="rgb(var(--oui-gradient-brand-start))"
                     />
                   </linearGradient>
                 </defs>
@@ -285,10 +285,10 @@ export const SubMainNav: Story = {
                     y2="10"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
+                    <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
                     <stop
                       offset="1"
-                      stopColor="rgba(var(--oui-gradient-brand-start))"
+                      stopColor="rgb(var(--oui-gradient-brand-start))"
                     />
                   </linearGradient>
                 </defs>

@@ -94,10 +94,10 @@ export const NavItem: FC<
                     y2="5.994"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
+                    <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
                     <stop
                       offset="1"
-                      stopColor="rgba(var(--oui-gradient-brand-start))"
+                      stopColor="rgb(var(--oui-gradient-brand-start))"
                     />
                   </linearGradient>
                 </defs>
@@ -370,11 +370,8 @@ const OutlinkIcon = () => {
             y2="9.992"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
-            <stop
-              offset="1"
-              stopColor="rgba(var(--oui-gradient-brand-start))"
-            />
+            <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+            <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
           </linearGradient>
         </defs>
       </svg>
