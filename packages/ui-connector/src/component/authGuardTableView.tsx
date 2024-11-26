@@ -1,6 +1,5 @@
 import { PropsWithChildren } from "react";
 import {
-  DataTableProps,
   ExtensionPositionEnum,
   ExtensionSlot,
   TableView,
@@ -18,7 +17,7 @@ export const AuthGuardTableView = <RecordType extends unknown>(
     TableViewProps<RecordType> &
       Omit<GuardViewProps, "status"> & {
         status?: AccountStatusEnum;
-        classNames?: DataTableProps<RecordType>["classNames"] & {
+        classNames?: TableViewProps<RecordType>["classNames"] & {
           authGuardDescription?: string;
         };
       }

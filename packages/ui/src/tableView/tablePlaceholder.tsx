@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { Box } from "../box";
 import { Spinner } from "../spinner/spinner";
-import { TableEmpty } from "./tableEmpty";
+import { ExtensionPositionEnum, ExtensionSlot } from "../plugin";
 
 type TablePlaceholderProps = {
   visible?: boolean;
@@ -23,7 +23,13 @@ export const TablePlaceholder: FC<TablePlaceholderProps> = (props) => {
       bottom={0}
       className="oui-flex oui-justify-center oui-items-center"
     >
-      {loading ? <Spinner /> : emptyView || <TableEmpty />}
+      {loading ? (
+        <Spinner />
+      ) : (
+        emptyView || (
+          <ExtensionSlot position={ExtensionPositionEnum.EmptyDataIdentifier} />
+        )
+      )}
     </Box>
   );
 };

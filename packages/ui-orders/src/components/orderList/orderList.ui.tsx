@@ -1,8 +1,6 @@
 import { FC } from "react";
 import {
   Flex,
-  Pagination,
-  Filter,
   ListView,
   Button,
   Grid,

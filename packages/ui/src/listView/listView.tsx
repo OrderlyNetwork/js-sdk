@@ -2,11 +2,9 @@ import React, { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 import { useMemo, useRef } from "react";
 import { useEndReached } from "./useEndReached";
 import { Spinner } from "../spinner";
-
-import { EmptyView } from "../empty";
-import { EmptyDataState } from "../table/dataTable/emptyDataState";
 import { Flex } from "../flex";
 import { cnBase } from "tailwind-variants";
+import { EmptyDataState } from "../tableView";
 
 export interface ListViewProps<T, D extends unknown> {
   dataSource: T[] | null | undefined;
