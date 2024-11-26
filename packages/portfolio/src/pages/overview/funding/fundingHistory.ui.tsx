@@ -3,7 +3,7 @@ import { useFundingHistoryColumns } from "./column";
 import { FC } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
-import { AuthGuardTableView } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
@@ -64,7 +64,7 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
           onFilter(value);
         }}
       />
-      <AuthGuardTableView
+      <AuthGuardDataTable
         bordered
         columns={columns}
         dataSource={dataSource}

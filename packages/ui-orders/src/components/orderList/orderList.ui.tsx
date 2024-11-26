@@ -9,7 +9,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
-import { AuthGuardTableView } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { grayCell } from "../../utils/util";
 import { SymbolProvider } from "./symbolProvider";
 import { OrderListProvider } from "./orderListContext";
@@ -48,7 +48,7 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
             }
           />
         )}
-        <AuthGuardTableView
+        <AuthGuardDataTable
           columns={columns}
           loading={props.isLoading}
           dataSource={props.dataSource}

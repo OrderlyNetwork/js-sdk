@@ -12,7 +12,7 @@ import { Flex } from "@orderly.network/ui";
 import { AuthGuard } from "./authGuard";
 import { useAccount } from "@orderly.network/hooks";
 
-export const AuthGuardTableView = <RecordType extends unknown>(
+export const AuthGuardDataTable = <RecordType extends unknown>(
   props: PropsWithChildren<
     DataTableProps<RecordType> &
       Omit<GuardViewProps, "status"> & {

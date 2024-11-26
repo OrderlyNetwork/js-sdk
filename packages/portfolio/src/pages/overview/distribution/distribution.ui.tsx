@@ -2,7 +2,7 @@ import { DataFilter } from "@orderly.network/ui";
 import { TYPES, useColumns } from "./column";
 import { FC } from "react";
 import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
-import { AuthGuardTableView } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
@@ -43,7 +43,7 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
           onFilter(value);
         }}
       />
-      <AuthGuardTableView
+      <AuthGuardDataTable
         bordered
         columns={columns}
         dataSource={dataSource}
@@ -57,5 +57,4 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
       />
     </>
   );
-
 };

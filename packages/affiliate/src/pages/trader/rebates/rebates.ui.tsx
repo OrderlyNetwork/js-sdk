@@ -11,7 +11,7 @@ import {
 import { RebatesItem, RebatesReturns } from "./rebates.script";
 import { commifyOptional } from "@orderly.network/utils";
 import { useMediaQuery } from "@orderly.network/hooks";
-import { AuthGuardTableView } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (
@@ -116,7 +116,7 @@ const List: FC<RebatesReturns> = (props) => {
   }
 
   return (
-    <AuthGuardTableView
+    <AuthGuardDataTable
       bordered
       loading={props.isLoading}
       columns={columns}

@@ -16,7 +16,7 @@ import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
 import { commifyOptional } from "@orderly.network/utils";
-import { AuthGuardTableView } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
   props
@@ -171,7 +171,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
     }
 
     return (
-      <AuthGuardTableView
+      <AuthGuardDataTable
         bordered
         columns={columns}
         loading={props.commission.isLoading}
@@ -322,7 +322,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
     }
 
     return (
-      <AuthGuardTableView
+      <AuthGuardDataTable
         bordered
         loading={props.referees.isLoading}
         ignoreLoadingCheck={true}

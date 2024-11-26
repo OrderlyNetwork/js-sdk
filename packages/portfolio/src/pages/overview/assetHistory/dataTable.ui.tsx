@@ -2,7 +2,7 @@ import { FC } from "react";
 import { DataFilter } from "@orderly.network/ui";
 import { SIDES, useAssetHistoryColumns } from "./column";
 import { type UseAssetHistoryReturn } from "./useDataSource.script";
-import { AuthGuardTableView } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 type AssetHistoryProps = {
   // dataSource?: any[];
@@ -48,7 +48,7 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
         }}
       />
 
-      <AuthGuardTableView
+      <AuthGuardDataTable
         bordered
         loading={isLoading}
         classNames={{ root: "oui-h-[calc(100%_-_49px)]" }}

@@ -20,7 +20,7 @@ import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
 import { EditAPIKeyDialog } from "./dialog/editApiKey";
 import {
   AuthGuardEmpty,
-  AuthGuardTableView,
+  AuthGuardDataTable,
   AuthGuardTooltip,
 } from "@orderly.network/ui-connector";
 import { APIKeyItem } from "@orderly.network/hooks";
@@ -250,7 +250,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
     },
   ];
   return (
-    <AuthGuardTableView
+    <AuthGuardDataTable
       bordered
       columns={columns}
       loading={props.isLoading}
