@@ -36,10 +36,11 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
 
       )} */}
       <Flex
-        gapX={3}
+        // gapX={3}
         justify={pinned ? "start" : "between"}
         mb={3}
         width={pinned ? "unset" : "100%"}
+        className="oui-gap-x-2 md:oui-gap-x-3"
       >
         <Flex itemAlign={"center"}>
           <Checkbox
