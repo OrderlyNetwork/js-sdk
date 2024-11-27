@@ -20,7 +20,7 @@
     "wagmi": "^1.4.12"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
+    "react": ">=18",
     "viem": "^1.21.4",
     "wagmi": "^1.4.12"
   },
