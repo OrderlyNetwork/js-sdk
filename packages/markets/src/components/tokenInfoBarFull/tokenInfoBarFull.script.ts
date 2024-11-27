@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 export type UseTokenInfoBarFullScriptOptions = {
   symbol: string;
+  deps?: any[];
 };
 
 export type UseTokenInfoBarFullScriptReturn = ReturnType<
@@ -18,7 +19,7 @@ export type UseTokenInfoBarFullScriptReturn = ReturnType<
 export function useTokenInfoBarFullScript(
   options: UseTokenInfoBarFullScriptOptions
 ) {
-  const { symbol } = options;
+  const { symbol, deps = [] } = options;
 
   const data = useTickerStream(symbol);
   const fundingRate = useFundingRate(symbol);
@@ -74,7 +75,7 @@ export function useTokenInfoBarFullScript(
     return () => {
       intersectionObserver.disconnect();
     };
-  }, []);
+  }, deps);
 
   const onScoll = (direction: string) => {
     if (direction === "left")

@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { MarketsProviderProps } from "../marketsProvider";
 import {
   useTokenInfoBarFullScript,
@@ -9,11 +10,11 @@ export type TokenInfoBarFullWidgetPros = UseTokenInfoBarFullScriptOptions &
   Pick<TokenInfoBarFullProps, "className" | "trailing"> &
   Pick<MarketsProviderProps, "onSymbolChange">;
 
-export const TokenInfoBarFullWidget: React.FC<TokenInfoBarFullWidgetPros> = (
+export const TokenInfoBarFullWidget: FC<TokenInfoBarFullWidgetPros> = (
   props
 ) => {
   const { symbol, ...rest } = props;
 
-  const state = useTokenInfoBarFullScript({ symbol });
+  const state = useTokenInfoBarFullScript({ symbol, deps: [props.trailing] });
   return <TokenInfoBarFull {...state} {...rest} />;
 };
