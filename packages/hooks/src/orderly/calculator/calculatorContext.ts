@@ -19,6 +19,10 @@ export class CalculatorContext implements CalculatorCtx {
 
   private static _instance: CalculatorContext;
 
+  static get instance() {
+    return this._instance;
+  }
+
   static create(scope: CalculatorScope, data: any) {
     if (!this._instance) {
       this._instance = new CalculatorContext(scope, data);
@@ -87,6 +91,10 @@ export class CalculatorContext implements CalculatorCtx {
     this.output = {};
     this.accountInfo = undefined;
     this.portfolio = undefined;
+  }
+
+  deleteByName(name: string) {
+    delete this.output[name];
   }
 
   // get positions(): API.PositionTPSLExt[] {

@@ -101,7 +101,7 @@ export const OrderConfirmDialog = (props: Props) => {
           )}
         </Flex>
         <Flex justify={"between"}>
-          <Text>Est. Total</Text>
+          <Text>Notional</Text>
           <Text.numeral
             unit={"USDC"}
             rule={"price"}

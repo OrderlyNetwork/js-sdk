@@ -204,7 +204,7 @@ export const EstTotal: FC<OrderCellState> = (props) => {
   return (
     <Statistic
       align="end"
-      label={<Text>ESt. Total{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={<Text>Notional{<Text intensity={20}>(USDC)</Text>}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
