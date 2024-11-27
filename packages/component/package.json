@@ -2,6 +2,7 @@
   "name": "@orderly.network/react",
   "version": "2.0.0",
   "description": "",
+  "private": true,
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +21,7 @@
     "dev": "pnpm run storybook",
     "storybook": "storybook dev -p 6060",
     "build-storybook": "storybook build",
-    "build": "rimraf -rf dist esm lib && pnpm build:tsup",
+    "_build": "rimraf -rf dist esm lib && pnpm build:tsup",
     "build:swc": "rimraf -rf dist esm lib && pnpm build:swc:esm && pnpm build:swc:cjs && pnpm run build-tailwind",
     "build:swc:esm": "pnpm generateType:esm && swc src -d esm --strip-leading-paths && tsc-alias --project tsconfig.build.json --outDir esm",
     "build:swc:cjs": "pnpm generateType:cjs && swc src -d lib --config module.type=commonjs --strip-leading-paths && tsc-alias --project tsconfig.build.json --outDir lib",
@@ -31,8 +32,8 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "18.2.0"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",

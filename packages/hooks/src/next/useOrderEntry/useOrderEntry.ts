@@ -407,6 +407,7 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
       reset();
       resetMetaState();
     }
+    return result;
     // return submit();
   };
 
