@@ -15,6 +15,6 @@ export const TokenInfoBarFullWidget: FC<TokenInfoBarFullWidgetPros> = (
 ) => {
   const { symbol, ...rest } = props;
 
-  const state = useTokenInfoBarFullScript({ symbol, deps: [props.trailing] });
+  const state = useTokenInfoBarFullScript({ symbol });
   return <TokenInfoBarFull {...state} {...rest} />;
 };
