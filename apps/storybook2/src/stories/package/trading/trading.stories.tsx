@@ -36,7 +36,7 @@ const meta: Meta<typeof TradingPage> = {
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {},
   args: {
-    symbol: "PERP_BTC_USDC",
+    symbol: "PERP_ETH_USDC",
     tradingViewConfig: {
       // scriptSRC: "",
       scriptSRC: "/tradingview/charting_library/charting_library.js",
