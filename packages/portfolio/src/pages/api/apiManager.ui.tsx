@@ -258,6 +258,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       emptyView={<AuthGuardEmpty />}
       classNames={{}}
       pagination={props.pagination}
+      manualPagination={false}
     />
   );
 };

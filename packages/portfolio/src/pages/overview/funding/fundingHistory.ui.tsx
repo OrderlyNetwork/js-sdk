@@ -8,15 +8,7 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
 export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
-  const {
-    dataSource,
-    queryParameter,
-    onFilter,
-    isLoading,
-    meta,
-    setPage,
-    setPageSize,
-  } = props;
+  const { dataSource, queryParameter, onFilter, isLoading } = props;
   const columns = useFundingHistoryColumns();
   const symbols = useSymbolsInfo();
 

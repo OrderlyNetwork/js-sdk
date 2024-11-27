@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+import { usePagination } from "@orderly.network/ui";
 import { MarketsListFullWidgetProps } from "./widget";
-import { getPagedData, searchBySymbol, useSort } from "../../utils";
+import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 
 export type UseMarketsListFullScriptOptions = MarketsListFullWidgetProps;
@@ -15,7 +15,7 @@ export const useMarketsListFullScript = (
   options: UseMarketsListFullScriptOptions
 ) => {
   const [loading, setLoading] = useState(true);
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
+  const { pageSize, setPage, pagination } = usePagination({
     pageSize: 10,
   });
 
@@ -28,22 +28,10 @@ export const useMarketsListFullScript = (
     options?.sortOrder
   );
 
-  const { totalData, pagedData } = useMemo(() => {
+  const dataSource = useMemo(() => {
     const list = getSortedList(data);
-    const totalData = searchBySymbol(list, searchValue);
-    return {
-      totalData,
-      pagedData: getPagedData(totalData, pageSize, page),
-    };
-  }, [data, pageSize, page, getSortedList, searchValue]);
-
-  const meta = useMemo(() => {
-    return parseMeta({
-      total: totalData?.length,
-      current_page: page,
-      records_per_page: pageSize,
-    });
-  }, [data, page, pageSize, totalData]);
+    return searchBySymbol(list, searchValue);
+  }, [data, getSortedList, searchValue]);
 
   useEffect(() => {
     setLoading(false);
@@ -61,22 +49,9 @@ export const useMarketsListFullScript = (
     }
   }, [sortKey, sortOrder, options.type]);
 
-  const pagination = useMemo(
-    () =>
-      ({
-        ...meta,
-        onPageChange: setPage,
-        onPageSizeChange: setPageSize,
-      } as PaginationMeta),
-    [meta, setPage, setPageSize]
-  );
-
   return {
     loading,
-    dataSource: pagedData,
-    meta,
-    setPage,
-    setPageSize,
+    dataSource,
     favorite,
     onSort,
     pagination,

@@ -7,16 +7,8 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
 export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
-  const {
-    dataSource,
-    queryParameter,
-    onFilter,
-    isLoading,
-    isValidating,
-    meta,
-    setPage,
-    setPageSize,
-  } = props;
+  const { dataSource, queryParameter, onFilter, isLoading, isValidating } =
+    props;
   const columns = useColumns();
   const { type, dateRange } = queryParameter;
 

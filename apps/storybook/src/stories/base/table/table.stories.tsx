@@ -6,11 +6,10 @@ import {
   Flex,
   cn,
   usePagination,
-  PaginationMeta,
 } from "@orderly.network/ui";
 import { Columns } from "./columns";
 import { DataSource } from "./dataSource";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const meta: Meta<typeof DataTable> = {
   title: "Base/Table/Table",
@@ -24,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => {
     const [dataSource, setDataSource] = useState([] as any);
-    const { page, pageSize, setPage, setPageSize } = usePagination({
+    const { pageSize, setPage, pagination } = usePagination({
       pageSize: 50,
     });
 
@@ -41,15 +40,6 @@ export const Default: Story = {
         setLoading(false);
       }, 2000);
     }, []);
-
-    const pagination = useMemo(() => {
-      return {
-        page,
-        pageSize,
-        onPageChange: setPage,
-        onPageSizeChange: setPageSize,
-      } as PaginationMeta;
-    }, [page, pageSize, setPage, setPageSize]);
 
     useEffect(() => {
       setPage(1);

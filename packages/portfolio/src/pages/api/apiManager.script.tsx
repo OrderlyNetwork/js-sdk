@@ -3,13 +3,12 @@ import {
   OrderlyContext,
   ScopeType,
   useAccount,
-  useAccountInfo,
   useApiKeyManager,
   useQuery,
 } from "@orderly.network/hooks";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { PaginationMeta, toast, usePagination } from "@orderly.network/ui";
+import { toast, usePagination } from "@orderly.network/ui";
 import { useContext, useMemo, useState } from "react";
 
 export type GenerateKeyInfo = {
@@ -207,38 +206,7 @@ export const useApiManagerScript = () => {
     accountStatus: AccountStatusEnum.EnableTrading,
   });
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
-    page: 1,
-  });
-
-  const totalCount = useMemo(() => keyList?.length, [keyList]);
-  const onPageChange = (page: number) => {
-    setPage(page);
-  };
-
-  const onPageSizeChange = (pageSize: number) => {
-    setPageSize(pageSize);
-  };
-
-  const newData = useMemo(() => {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return keyList?.slice(startIndex, endIndex);
-  }, [keyList, page, pageSize]);
-
-  const meta = parseMeta({
-    total: totalCount ?? 0,
-    current_page: page,
-    records_per_page: pageSize,
-  });
-
-  const pagination = useMemo(() => {
-    return {
-      ...meta,
-      onPageChange: setPage,
-      onPageSizeChange: setPageSize,
-    } as PaginationMeta;
-  }, [meta, setPage, setPageSize]);
+  const { pagination } = usePagination();
 
   return {
     address: address ?? "--",
@@ -256,7 +224,7 @@ export const useApiManagerScript = () => {
     doEdit,
     canCreateApiKey,
     status: state.status,
-    keys: newData,
+    keys: keyList,
     generateKey,
     onCopyAccountId,
     wrongNetwork,
@@ -265,10 +233,6 @@ export const useApiManagerScript = () => {
     onCopyIP,
     verifyIP,
     isLoading,
-
-    meta: meta,
-    onPageChange,
-    onPageSizeChange,
     pagination,
   };
 };

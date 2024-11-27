@@ -9,16 +9,7 @@ import { useFavoritesListFullColumns } from "./column";
 export type FavoritesListFullProps = UseFavoritesListFullReturn;
 
 export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
-  const {
-    dataSource,
-    meta,
-    setPage,
-    setPageSize,
-    favorite,
-    onSort,
-    loading,
-    pagination,
-  } = props;
+  const { dataSource, favorite, onSort, loading, pagination } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
@@ -60,7 +51,6 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
         rowSelection={{ [symbol!]: true }}
         onSort={onSort}
         pagination={pagination}
-        manualPagination
         manualSorting
       />
     </div>

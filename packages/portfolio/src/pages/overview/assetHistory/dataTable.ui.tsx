@@ -12,15 +12,7 @@ type AssetHistoryProps = {
 } & UseAssetHistoryReturn;
 
 export const AssetHistory: FC<AssetHistoryProps> = (props) => {
-  const {
-    dataSource,
-    meta,
-    setPage,
-    setPageSize,
-    queryParameter,
-    onFilter,
-    isLoading,
-  } = props;
+  const { dataSource, queryParameter, onFilter, isLoading } = props;
   const { side, dateRange } = queryParameter;
   const columns = useAssetHistoryColumns();
 

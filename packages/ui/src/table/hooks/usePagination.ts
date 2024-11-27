@@ -1,4 +1,5 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { PaginationMeta } from "../type";
 
 export const usePagination = (initial?: {
   page?: number;
@@ -44,11 +45,40 @@ export const usePagination = (initial?: {
     };
   };
 
+  /** server pagination */
+  const parsePagination = useCallback(
+    (meta?: {
+      total: number;
+      current_page: number;
+      records_per_page: number;
+    }) => {
+      return {
+        ...parseMeta(meta),
+        onPageChange: setPage,
+        onPageSizeChange: setPageSize,
+      } as PaginationMeta;
+    },
+    [page, pageSize]
+  );
+
+  /** manual pagination */
+  const pagination = useMemo(
+    () => ({
+      page,
+      pageSize,
+      onPageChange: setPage,
+      onPageSizeChange: setPageSize,
+    }),
+    [parsePagination]
+  );
+
   return {
     page,
     pageSize,
     setPage,
     setPageSize,
     parseMeta,
+    pagination,
+    parsePagination,
   };
 };

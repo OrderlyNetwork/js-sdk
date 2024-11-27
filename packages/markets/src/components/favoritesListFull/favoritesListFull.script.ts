@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
-import { getPagedData, searchBySymbol, useSort } from "../../utils";
+import { usePagination } from "@orderly.network/ui";
+import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 
 export type UseFavoritesListFullReturn = ReturnType<
@@ -9,7 +9,7 @@ export type UseFavoritesListFullReturn = ReturnType<
 >;
 
 export const useFavoritesListFullScript = () => {
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
+  const { pageSize, setPage, pagination } = usePagination({
     pageSize: 10,
   });
   const [data, favorite] = useMarkets(MarketsType.FAVORITES);
@@ -40,21 +40,10 @@ export const useFavoritesListFullScript = () => {
     return searchBySymbol(filterList, searchValue);
   }, [data, selectedFavoriteTab, favorites, searchValue]);
 
-  const { totalData, pagedData } = useMemo(() => {
-    const totalData = getSortedList(filterData);
-    return {
-      totalData,
-      pagedData: getPagedData(totalData, pageSize, page),
-    };
-  }, [filterData, pageSize, page, getSortedList]);
-
-  const meta = useMemo(() => {
-    return parseMeta({
-      total: totalData?.length,
-      current_page: page,
-      records_per_page: pageSize,
-    });
-  }, [data, page, pageSize, totalData]);
+  const dataSource = useMemo(
+    () => getSortedList(filterData),
+    [filterData, getSortedList]
+  );
 
   useEffect(() => {
     setLoading(false);
@@ -65,22 +54,9 @@ export const useFavoritesListFullScript = () => {
     setPage(1);
   }, [pageSize, searchValue]);
 
-  const pagination = useMemo(
-    () =>
-      ({
-        ...meta,
-        onPageChange: setPage,
-        onPageSizeChange: setPageSize,
-      } as PaginationMeta),
-    [meta, setPage, setPageSize]
-  );
-
   return {
     loading,
-    dataSource: pagedData,
-    meta,
-    setPage,
-    setPageSize,
+    dataSource,
     favorite,
     onSort,
     pagination,

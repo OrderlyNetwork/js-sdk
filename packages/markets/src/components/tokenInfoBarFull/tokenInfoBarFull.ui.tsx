@@ -15,7 +15,7 @@ import {
   UnFavoritesIcon2,
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
 import { useFundingRate } from "@orderly.network/hooks";

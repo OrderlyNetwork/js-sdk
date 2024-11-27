@@ -5,10 +5,9 @@ import {
   RefferalAPI,
   useDaily,
 } from "@orderly.network/hooks";
-import { useReferralContext } from "../../../hooks";
 import { compareDate, formatDateTimeToUTC } from "../../../utils/utils";
 import { subDays, toDate } from "date-fns";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+import { usePagination } from "@orderly.network/ui";
 
 export type RebatesItem = RefferalAPI.RefereeRebateSummary & {
   vol?: number;
@@ -61,48 +60,7 @@ export const useRebatesScript = () => {
     displayDate = formatDateTimeToUTC(dataSource?.[0].date);
   }
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
-
-  const totalCount = useMemo(() => dataSource.length, [dataSource]);
-  // const onPageChange = (page: number) => {
-  //   setPage(page);
-  // };
-
-  // const onPageSizeChange = (pageSize: number) => {
-  //   setPageSize(pageSize);
-  // };
-
-  // const newData = useMemo(() => {
-  //   const startIndex = (page - 1) * pageSize;
-  //   const endIndex = startIndex + pageSize;
-  //   return dataSource.slice(startIndex, endIndex);
-  // }, [dataSource, page, pageSize]);
-
-  // const meta = parseMeta({
-  //   total: totalCount,
-  //   current_page: page,
-  //   records_per_page: pageSize,
-  // });
-
-  const meta = useMemo(() => {
-    return parseMeta({
-      total: totalCount,
-      current_page: page,
-      records_per_page: pageSize,
-    });
-  }, [dataSource, page, pageSize, totalCount]);
-
-  const pagination = useMemo(
-    () =>
-      ({
-        ...meta,
-        onPageChange: setPage,
-        onPageSizeChange: setPageSize,
-      } as PaginationMeta),
-    [meta, setPage, setPageSize]
-  );
-
-  console.log("pagination", pagination);
+  const { pagination } = usePagination();
 
   return {
     dateRange,

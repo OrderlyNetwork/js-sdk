@@ -6,7 +6,7 @@ import {
   useAccountRewardsHistory,
   WalletRewardsItem,
 } from "@orderly.network/hooks";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+import { usePagination } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
 import { RewardsTooltipProps } from "../curEpoch/rewardsTooltip";
 import { getTimestamp } from "@orderly.network/utils";
@@ -116,53 +116,11 @@ export const useRewardsHistoryScript = () => {
     accountHistory,
   ]);
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
-
-  const totalCount = useMemo(() => data.length, [data]);
-  // const onPageChange = (page: number) => {
-  //   setPage(page);
-  // };
-
-  // const onPageSizeChange = (pageSize: number) => {
-  //   setPageSize(pageSize);
-  // };
-
-  // const newData = useMemo(() => {
-  //   const startIndex = (page - 1) * pageSize;
-  //   const endIndex = startIndex + pageSize;
-  //   return data.slice(startIndex, endIndex);
-  // }, [data, page, pageSize]);
-
-  // const meta = parseMeta({
-  //   total: totalCount,
-  //   current_page: page,
-  //   records_per_page: pageSize,
-  // });
-
-  const meta = useMemo(() => {
-    return parseMeta({
-      total: totalCount,
-      current_page: page,
-      records_per_page: pageSize,
-    });
-  }, [page, pageSize, totalCount]);
-
-  const pagination = useMemo(
-    () =>
-      ({
-        ...meta,
-        onPageChange: setPage,
-        onPageSizeChange: setPageSize,
-      } as PaginationMeta),
-    [meta, setPage, setPageSize]
-  );
+  const { pagination } = usePagination();
 
   return {
     data,
     originalData: data,
-    // meta,
-    // onPageChange,
-    // onPageSizeChange,
     pagination,
     isLoading: epochList[1].isLoading,
   };

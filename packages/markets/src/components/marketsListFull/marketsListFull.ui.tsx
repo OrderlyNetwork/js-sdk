@@ -14,9 +14,6 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
   const {
     loading,
     dataSource,
-    meta,
-    setPage,
-    setPageSize,
     favorite,
     onSort,
     initialSort,
@@ -54,7 +51,6 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
       classNames={{
         header: "oui-h-12",
       }}
-      manualPagination
       manualSorting
     />
   );

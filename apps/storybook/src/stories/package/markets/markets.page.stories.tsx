@@ -13,8 +13,7 @@ const meta: Meta<typeof MarketsHomePage> = {
   title: "Package/markets/HomePage",
   component: MarketsHomePage,
   parameters: {
-    layout: "centered",
-    
+    // layout: "centered",
   },
 };
 
