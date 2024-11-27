@@ -42,6 +42,8 @@ type PositionActions = {
   // setAggregated: (aggregated: API.PositionAggregated) => void;
   // getPositions: () => SWRResponse<API.PositionInfo>;
   clearAll: () => void;
+
+  closePosition: (symbol: string) => void;
 };
 
 const usePositionStore = create<
@@ -58,6 +60,12 @@ const usePositionStore = create<
       setPositions: (key: string, positions: API.PositionsTPSLExt) => {
         set((state) => {
           state.positions[key] = positions;
+        });
+      },
+      closePosition: (symbol: string) => {
+        set((state) => {
+          // state.positions[symbol] = POSITION_EMPTY;
+          delete state.positions[symbol];
         });
       },
       clearAll: () => {
