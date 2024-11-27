@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.18-fix-peer-deps.0
+
+### Patch Changes
+
+- update
+
 ## 0.3.17
 
 ### Patch Changes
