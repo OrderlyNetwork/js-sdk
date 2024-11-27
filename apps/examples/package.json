@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/examples",
-  "version": "1.0.1-preReleaseV2.4",
+  "version": "1.0.1-preReleaseV2.5",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3330",
