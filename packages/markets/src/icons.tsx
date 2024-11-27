@@ -39,32 +39,6 @@ export const TrashIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const AddIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <mask
-      id="a"
-      style={{ maskType: "alpha" }}
-      maskUnits="userSpaceOnUse"
-      x="0"
-      y="0"
-      width="16"
-      height="16"
-    >
-      <path fill="#D9D9D9" d="M0 0h16v16H0z" />
-    </mask>
-    <g mask="url(#a)">
-      <path d="M7.333 8.667h-4V7.333h4v-4h1.333v4h4v1.334h-4v4H7.333z" />
-    </g>
-  </svg>
-);
-
 export const AllMarketsIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="12"
@@ -277,7 +251,33 @@ export const DeleteIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const AddIcon2: FC<SVGProps<SVGSVGElement>> = (props) => (
+export const AddIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <mask
+      id="a"
+      style={{ maskType: "alpha" }}
+      maskUnits="userSpaceOnUse"
+      x="0"
+      y="0"
+      width="16"
+      height="16"
+    >
+      <path d="M0 0h16v16H0z" />
+    </mask>
+    <g mask="url(#a)">
+      <path d="M7.333 8.667h-4V7.333h4v-4h1.333v4h4v1.334h-4v4H7.333z" />
+    </g>
+  </svg>
+);
+
+export const ActiveAddIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="12"
@@ -298,8 +298,8 @@ export const AddIcon2: FC<SVGProps<SVGSVGElement>> = (props) => (
         y2="5.96487"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stopColor="#59B0FE" />
-        <stop offset="1" stopColor="#26FEFE" />
+        <stop stopColor="rgba(var(--oui-gradient-brand-end))" />
+        <stop offset="1" stopColor="rgba(var(--oui-gradient-brand-start))" />
       </linearGradient>
     </defs>
   </svg>

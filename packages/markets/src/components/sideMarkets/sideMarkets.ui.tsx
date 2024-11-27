@@ -90,7 +90,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
   return (
     <Flex justify="between" px={3} width="100%">
       <Text size="base" intensity={80}>
-        Market
+        Markets
       </Text>
       <CollapseIcon
         className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer"

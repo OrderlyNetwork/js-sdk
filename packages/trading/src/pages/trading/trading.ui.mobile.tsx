@@ -27,7 +27,8 @@ export const MobileLayout: FC<TradingState> = (props) => {
         open={props.openMarketsSheet}
         onOpenChange={props.onOpenMarketsSheetChange}
         classNames={{
-          content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px]",
+          body: "oui-h-full oui-pb-[env(safe-area-inset-bottom)]",
+          content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px] oui-h-full ",
         }}
         contentProps={{ side: "left", closeable: false }}
       >
@@ -43,7 +44,12 @@ export const MobileLayout: FC<TradingState> = (props) => {
   );
 
   return (
-    <div className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-full oui-gap-1 oui-pb-[64px] oui-relative oui-bg-base-10">
+    <div
+      style={{
+        paddingBottom: "calc(64px + env(safe-area-inset-bottom))",
+      }}
+      className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-screen oui-gap-1 oui-relative oui-bg-base-10"
+    >
       <header>{topBar}</header>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">

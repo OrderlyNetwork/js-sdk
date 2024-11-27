@@ -299,6 +299,19 @@ export const useDeposit = (options?: useDepositOptions) => {
   );
 
   const deposit = useCallback(async () => {
+    if (!options?.address) {
+      throw new Error("address is required");
+    }
+    const _allowance = await account.assetsManager.getAllowance({
+      address: options?.address,
+    });
+
+    setAllowance(() => _allowance);
+
+    if (new Decimal(quantity).greaterThan(_allowance)) {
+      throw new Error("Insufficient allowance");
+    }
+
     // only support orderly deposit
     console.log("-- start deposit");
     return account.assetsManager

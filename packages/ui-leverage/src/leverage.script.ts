@@ -28,8 +28,9 @@ export const useLeverageScript = () => {
 
   const [leverage, setLeverage] = useState(curLeverage ?? 0);
 
-  const maxLeverage = leverageLevers?.reduce((a: number, item: any) =>
-    Math.max(a, Number(item), 0)
+  const maxLeverage = leverageLevers?.reduce(
+    (a: number, item: any) => Math.max(a, Number(item), 0),
+    0
   );
 
   const step = 100 / ((marks?.length || 0) - 1);
@@ -60,7 +61,6 @@ export const useLeverageScript = () => {
       );
     } catch (e) {}
   };
-
 
   return {
     currentLeverage,

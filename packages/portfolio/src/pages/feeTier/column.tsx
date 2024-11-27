@@ -12,12 +12,14 @@ export const useFeeTierColumns = () => {
         width: 100,
       },
       {
-        title: "30 Day Volume (USDC)",
+        title: "30 day volume (USDC)",
         dataIndex: "volume",
         align: "center",
         width: 170,
         render: (value, row) => {
-          const { volume_min, volume_max } = row;
+          const { volume_min, volume_max, volume_node } = row;
+
+          if (volume_node) return volume_node;
           if (!volume_min && !volume_max) {
             return <div style={{ fontVariantLigatures: "none" }}>--</div>;
           }

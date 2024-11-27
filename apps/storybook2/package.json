@@ -1,5 +1,5 @@
 {
-  "name": "storybook2",
+  "name": "@orderly.network/storybook",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -36,7 +36,6 @@
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/ui-tradingview": "workspace:*",
-    "@web3-onboard/injected-wallets": "^2.11.0",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/wallet-connector": "workspace:*",
     "@storybook/components": "^8.1.5",

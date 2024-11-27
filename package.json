@@ -1,11 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --concurrency=19",
-    "react": "pnpm --filter @orderly.network/react dev",
-    "react:watch": "pnpm --filter @orderly.network/react watch",
-    "example": "pnpm --filter @orderly.network/examples dev",
+    "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 turbo run build",
+    "build-storybook": "cross-env NODE_OPTIONS=--max_old_space_size=4096 pnpm --filter @orderly.network/storybook build-storybook",
+    "storybook": "pnpm --filter @orderly.network/storybook storybook",
+    "dev": "turbo run dev --concurrency=20",
     "lint": "turbo run lint",
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",
@@ -20,6 +19,7 @@
     "@changesets/cli": "^2.26.2",
     "@npmcli/package-json": "^5.0.0",
     "@turbo/gen": "^2.0.11",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.0",
@@ -34,9 +34,8 @@
     "@orderly.network/hooks": "workspace:^",
     "@orderly.network/react": "workspace:^",
     "@orderly.network/trading-view": "workspace:^",
-    "@orderly.network/web3-onboard": "workspace:^",
-    "@orderly.network/wallet-connector": "workspace:^"
-
+    "@orderly.network/wallet-connector": "workspace:^",
+    "@orderly.network/web3-onboard": "workspace:^"
   },
   "resolutions": {
     "@storybook/node-logger": "7.6.16"

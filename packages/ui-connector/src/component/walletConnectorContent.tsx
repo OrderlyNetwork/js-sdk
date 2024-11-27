@@ -99,7 +99,11 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           console.log("enable trading reject", reject);
           setLoading(false);
           if (reject === -1) return;
-          toast.error(reject.message ?? "User rejected the request");
+          let msg = reject.toString();
+          if (msg.includes("rejected")) {
+            msg = "User rejected the request.";
+          }
+          toast.error(msg);
         }
       )
       .catch((e) => {
@@ -121,11 +125,11 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           setLoading(false);
 
           if (reject === -1) return;
-          if (reject instanceof Error) {
-            toast.error(reject.message);
-            return;
+          let msg = reject.toString();
+          if (msg.includes("rejected")) {
+            msg = "User rejected the request.";
           }
-          toast.error("User rejected the request");
+          toast.error(msg);
         }
       )
       .catch((e) => {

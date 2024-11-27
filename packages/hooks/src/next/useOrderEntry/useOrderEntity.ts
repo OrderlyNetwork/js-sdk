@@ -5,6 +5,7 @@ import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStor
 import { OrderSide, SDKError } from "@orderly.network/types";
 import { useMaxQty } from "../../orderly/useMaxQty";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
+import { useThrottledCallback } from "use-debounce";
 
 export const useOrderEntity = (
   order: {
@@ -35,18 +36,18 @@ export const useOrderEntity = (
       markPrice: actions.getMarkPriceBySymbol(order.symbol),
       maxQty: finalMaxQty,
     };
-  }, [finalMaxQty, order.symbol]);
+  }, [finalMaxQty, order.symbol, order]);
 
   const symbolInfo = useSymbolsInfo();
 
   const validate = () => {
     return new Promise<VerifyResult | null>(async (resolve, reject) => {
       const creator = getOrderCreator(order);
-      const symbol = symbolInfo[order.symbol]();
+      const _symbol = symbolInfo[order.symbol]();
 
       const errors = await creator?.validate(order, {
-        symbol,
-        maxQty,
+        symbol: _symbol,
+        maxQty: finalMaxQty,
         markPrice,
       });
       const keys = Object.keys(errors);
@@ -54,22 +55,37 @@ export const useOrderEntity = (
         setErrors(errors);
 
         reject(errors);
+      } else {
+        setErrors({});
       }
       // create order
       const orderEntity = creator.create(order, {
         ...prepareData(),
-        symbol,
+        symbol: _symbol,
       });
       resolve(orderEntity);
     });
   };
 
+  const autoCheck = useThrottledCallback(
+    () => {
+      validate().then(
+        () => {},
+        (reject) => {}
+      );
+    },
+    50,
+    {}
+  );
+
   useEffect(() => {
-    validate();
-  }, [order]);
+    autoCheck();
+  }, [order.order_price, order.order_quantity, order.trigger_price]);
 
   return {
     validate,
     errors,
+    markPrice,
+    symbolInfo,
   };
 };

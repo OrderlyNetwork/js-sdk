@@ -10,7 +10,8 @@ export const DesktopOrderListWidget = (props: {
   /** if has value, will be fetch current symbol orders*/
   symbol?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
-}) => {
+  pnlNotionalDecimalPrecision?: number;
+}) => {  
   const state = useOrderListScript(props);
   return <DesktopOrderList {...state} />;
 };

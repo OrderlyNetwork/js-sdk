@@ -19,7 +19,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
   const { showTotal, tabletMediaQuery } = useOrderBookContext();
 
   return (
-    <div className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-xs oui-relative oui-cursor-pointer">
+    <div className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-xs oui-relative oui-cursor-pointer oui-py-[6px]">
       <div
         className={cn(
           "oui-basis-7/12 oui-flex oui-flex-row oui-items-center oui-mr-2 oui-justify-between",

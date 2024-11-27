@@ -13,7 +13,7 @@ import {
   UseFavoritesTabScriptOptions,
   UseFavoritesTabScriptReturn,
 } from "./favoritesTabs.script";
-import { AddIcon, AddIcon2, EditIcon, TrashIcon } from "../../icons";
+import { AddIcon, ActiveAddIcon, EditIcon, TrashIcon } from "../../icons";
 
 export type FavoritesTabProps = UseFavoritesTabScriptReturn &
   Pick<UseFavoritesTabScriptOptions, "size"> & {
@@ -45,6 +45,9 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
   const addIconWidth = size === "sm" ? 28 : 36;
   const tabHeight = size === "sm" ? 18 : 24;
   const overLen = value?.length > 15;
+
+  const gradientColor =
+    "oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)]";
 
   const onDel = (item: any) => {
     modal.confirm({
@@ -92,9 +95,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
         className={cn(
           "oui-inline-flex",
           overTabs ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
-          overTabs
-            ? "oui-bg-base-3"
-            : "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
+          overTabs ? "oui-bg-base-3" : gradientColor
         )}
         width={addIconWidth}
         height={tabHeight}
@@ -104,9 +105,9 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
         onClick={overTabs ? undefined : addTab}
       >
         {overTabs ? (
-          <AddIcon className="oui-text-base-contrast-36 oui-w-3 oui-h-3" />
+          <AddIcon className="oui-text-base-contrast-54 oui-w-3 oui-h-3 oui-z-[1]" />
         ) : (
-          <AddIcon2 className="oui-w-3 oui-h-3" />
+          <ActiveAddIcon className="oui-w-3 oui-h-3" />
         )}
       </Flex>
     );
@@ -165,12 +166,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
               "oui-p-0 oui-rounded oui-px-2 oui-my-[1px]",
               "focus-visible:oui-outline-none focus-within:oui-outline-transparent",
               size === "sm" ? "oui-h-[18px]" : "oui-h-[24px]",
-              isActive &&
-                cn(
-                  overLen
-                    ? "oui-bg-danger/15"
-                    : "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
-                )
+              isActive && cn(overLen ? "oui-bg-danger/15" : gradientColor)
             ),
             input: cn(
               "oui-font-semibold oui-caret-[rgba(217,217,217,1)]",
@@ -223,7 +219,7 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
             ? "oui-markets-favorites-active-tab-item"
             : "oui-markets-favorites-tab-item",
           isActive
-            ? "oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.12)_0%,rgba(38,254,254,0.12)_100%)]"
+            ? gradientColor
             : "oui-bg-line-6 oui-text-base-contrast-36 hover:oui-text-base-contrast"
         )}
         onClick={() => {

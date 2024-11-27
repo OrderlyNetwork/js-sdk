@@ -38,6 +38,7 @@ export const useOrderListScript = (props: {
       to?: Date;
     };
   };
+  pnlNotionalDecimalPrecision?: number;
 }) => {
   const {
     ordersStatus,
@@ -45,6 +46,7 @@ export const useOrderListScript = (props: {
     enableLoadMore = false,
     onSymbolChange,
     filterConfig,
+    pnlNotionalDecimalPrecision,
   } = props;
 
   const manualPagination = useMemo(() => {
@@ -200,6 +202,7 @@ export const useOrderListScript = (props: {
     meta: parseMeta(meta),
     pagination,
     manualPagination,
+    pnlNotionalDecimalPrecision,
 
     // filter
     onFilter,

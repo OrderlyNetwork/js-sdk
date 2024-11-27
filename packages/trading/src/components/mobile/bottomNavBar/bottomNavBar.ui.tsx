@@ -16,18 +16,25 @@ import { BalanceWidget } from "./balance";
 
 export const BottomNavBar: FC<BottomNavBarState> = (props) => {
   return (
-    <Flex
-      height={64}
-      gap={1}
-      justify={"between"}
-      className="oui-bg-base-9 oui-px-[14px] oui-pt-[7px] oui-border-t oui-border-line-4"
-    >
-      <BalanceWidget />
+    <div className="oui-bg-base-9 oui-border-t oui-border-line-4">
+      <Flex
+        height={64}
+        gap={1}
+        justify={"between"}
+        itemAlign={"center"}
+        className=" oui-px-[14px] oui-pt-[7px] "
+        // style={{
+        //   height: "calc(64px + env(safe-area-inset-bottom))"
+        // }}
+      >
+        <BalanceWidget />
 
-      <Flex gap={2}>
-        {!props.wrongNetwork && <ChainWidget />}
-        <AccountWidget />
+        <Flex gap={2}>
+          {!props.wrongNetwork && <ChainWidget />}
+          <AccountWidget />
+        </Flex>
       </Flex>
-    </Flex>
+      <div className="oui-h-[env(safe-area-inset-bottom)]" />
+    </div>
   );
 };
