@@ -32,8 +32,8 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "18.2.0"
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
