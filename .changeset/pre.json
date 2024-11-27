@@ -1,6 +1,6 @@
 {
   "mode": "pre",
-  "tag": "alphaV2",
+  "tag": "fix-peer-deps",
   "initialVersions": {
     "@orderly/docs": "1.0.0",
     "@orderly.network/storybook": "1.0.0",
