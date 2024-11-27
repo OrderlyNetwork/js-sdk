@@ -53,6 +53,7 @@ export const usePrivateDataObserver = (options: {
       onError: (error) => {
         statusActions.updateApiError("positions", error.message);
       },
+      // revalidateOnFocus: false,
     });
 
   // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
@@ -96,6 +97,7 @@ export const usePrivateDataObserver = (options: {
     "/v1/client/holding",
     {
       formatter: (data) => data.holding,
+      // revalidateOnFocus: false,
     }
   );
 
