@@ -113,7 +113,14 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   );
 
   return (
-    <Flex className={cn("oui-font-semibold oui-h-[54px]", props.className)}>
+    <Flex
+      className={cn("oui-font-semibold oui-h-[54px]", props.className)}
+      // fix Safari text opacity transition bug
+      style={{
+        transform: "translateZ(0)",
+        willChange: "transform",
+      }}
+    >
       <Flex gapX={6} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={1}>
           {favoriteIcon}
@@ -206,11 +213,6 @@ const DataItem: React.FC<DataItemProps> = (props) => {
         <Text
           size="2xs"
           intensity={36}
-          // fix Safari text opacity transition bug
-          style={{
-            transform: "translateZ(0)",
-            willChange: "transform",
-          }}
           className={cn(
             "oui-break-normal oui-whitespace-nowrap",
             props.hint &&
