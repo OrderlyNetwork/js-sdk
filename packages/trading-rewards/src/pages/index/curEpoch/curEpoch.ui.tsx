@@ -7,6 +7,7 @@ import { commify, commifyOptional } from "@orderly.network/utils";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { RewardsTooltip } from "./rewardsTooltip";
+import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 
 export const CurEpoch: FC<CurEpochReturns> = (props) => {
   const state = props;
@@ -16,6 +17,10 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
   const curEpochId = curEpochInfo?.epoch_id;
   const max_reward_amount = curEpochInfo?.max_reward_amount;
   const token = curEpochInfo?.epoch_token;
+
+  const isOrder = curEpochInfo
+    ? `${curEpochInfo?.epoch_token}`.toLowerCase() === "order"
+    : undefined;
   return (
     <Flex
       id="oui-tradingRewards-home-currentEpoch"
@@ -46,6 +51,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
           />
         </Flex>
         <EstRewards
+          isOrder={isOrder}
           direction={state.notConnected ? "row" : "column"}
           justify={state.notConnected ? "between" : "center"}
           hideData={state.hideData}
@@ -84,6 +90,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
 };
 
 const EstRewards: FC<{
+  isOrder?: boolean;
   estRewards?: number | string;
   direction: "row" | "column";
   justify: "center" | "between";
@@ -116,7 +123,8 @@ const EstRewards: FC<{
         My est. rewards
       </Text>
       <Flex direction={"row"} gap={3}>
-        <OrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />
+        {props.isOrder == true && (<OrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />)}
+        {props.isOrder == false && (<EsOrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />)}
         <Text
           children={commifyOptional(props.estRewards, { fix: 2 })}
           className="oui-text-xl md:oui-text-2xl xl:oui-text-[32px]"
