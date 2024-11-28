@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Box, cn, Flex } from "@orderly.network/ui";
 import { getOffsetSizeNum, TradingState } from "./trading.script";
 import { DataListWidget } from "../../components/desktop/dataList";
@@ -142,6 +142,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Flex>
   );
 
+  const trailing = useMemo(() => {
+    return <SwitchLayout layout={layout} onLayout={onLayout} />;
+  }, [layout, onLayout]);
+
   const tokenInfoBarView = (
     <Box
       intensity={900}
@@ -156,7 +160,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       <TokenInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
-        trailing={<SwitchLayout layout={layout} onLayout={onLayout} />}
+        trailing={trailing}
       />
     </Box>
   );

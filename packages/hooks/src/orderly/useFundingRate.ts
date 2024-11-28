@@ -1,7 +1,7 @@
 import { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 import { useEffect, useMemo, useState } from "react";
-import { getTimestamp, timeConvertString } from "@orderly.network/utils";
+import { Decimal, getTimestamp, timeConvertString } from "@orderly.network/utils";
 
 export const useFundingRate = (symbol: string) => {
   if (!symbol) {
@@ -51,7 +51,7 @@ export const useFundingRate = (symbol: string) => {
       return null;
     }
 
-    return (Number(est_funding_rate) * 100).toFixed(4);
+    return new Decimal((Number(est_funding_rate) * 100)).toFixed(4, Decimal.ROUND_DOWN);
   }, [data]);
 
   return {
