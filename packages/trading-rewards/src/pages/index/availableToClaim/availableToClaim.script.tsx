@@ -1,12 +1,14 @@
 import {
   ENVType,
   useGetEnv,
+  useWalletConnector,
   useWalletRewardsHistory,
 } from "@orderly.network/hooks";
 import { useTradingRewardsContext } from "../provider";
 import { useCallback, useMemo } from "react";
 import { useDataTap } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
+import { ChainNamespace } from "@orderly.network/types";
 
 export type AvailableReturns = {
   order?: number;
@@ -23,9 +25,23 @@ export const useAvailableScript = (): AvailableReturns => {
   const [orderClaimedRewardData] = totalOrderClaimedReward;
   const [esOrderClaimedRewardData] = totalEsOrderClaimedReward;
 
+  const { namespace } = useWalletConnector();
+
   const [data] = walletRewardsHistory;
-  const lifetimeOrderReward = data?.wallet_lifetime_trading_rewards_order;
-  const lifetimeEsOrderReward = data?.wallet_lifetime_trading_rewards_escrow;
+  
+  const lifetimeOrderReward = useMemo(() => {
+    if (namespace === ChainNamespace.evm) {
+      return data?.wallet_lifetime_trading_rewards_order;
+    }
+    return data?.wallet_pending_trading_rewards_order;
+  }, [namespace, data]);
+
+  const lifetimeEsOrderReward = useMemo(() => {
+    if (namespace === ChainNamespace.evm) {
+      return data?.wallet_lifetime_trading_rewards_escrow;
+    }
+    return data?.wallet_pending_trading_rewards_escrow;
+  }, [data, namespace]);
 
   const env = useGetEnv();
   const goToClaim = (e: any) => {
