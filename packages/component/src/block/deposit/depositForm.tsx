@@ -101,7 +101,7 @@ export const DepositForm: FC<DepositFormProps> = (props) => {
         onOk?.(res);
       })
       .catch((error) => {
-        toast.error(error?.errorCode || "Deposit failed");
+        toast.error(error.message || error.errorCode || "Deposit failed");
       })
       .finally(() => {
         setSubmitting(false);

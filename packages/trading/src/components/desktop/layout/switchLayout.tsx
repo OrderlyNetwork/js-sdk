@@ -36,7 +36,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
       >
         <LayoutIcon />
         <Text size="2xs" weight="semibold">
-          layout
+          Layout
         </Text>
       </Flex>
     </SwitchLayoutDropDown>

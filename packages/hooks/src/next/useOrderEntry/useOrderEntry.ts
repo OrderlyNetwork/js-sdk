@@ -377,12 +377,13 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     );
   };
 
-  const submitOrder = async () => {
+  const submitOrder = async (options?: { resetOnSuccess?: boolean }) => {
     /**
      * validate order
      */
     const creator = getOrderCreator(formattedOrder);
     const errors = await validate(formattedOrder, creator, prepareData());
+    const { resetOnSuccess = true } = options || {};
     // setMeta((prev) => ({ ...prev, submitted: true, validated: true }));
     setMeta(
       produce((draft) => {
@@ -403,10 +404,11 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
 
     const result = await doCreateOrder(order);
 
-    if (result.success) {
+    if (result.success && resetOnSuccess) {
       reset();
       resetMetaState();
     }
+    return result;
     // return submit();
   };
 

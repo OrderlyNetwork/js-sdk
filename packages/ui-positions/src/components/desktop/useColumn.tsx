@@ -222,7 +222,7 @@ export const useColumn = (props: {
         },
 
         {
-          title: "Est. total",
+          title: "Notional",
           dataIndex: "notional",
           className: "oui-h-[48px]",
           width: 100,

@@ -53,6 +53,7 @@ export const usePrivateDataObserver = (options: {
       onError: (error) => {
         statusActions.updateApiError("positions", error.message);
       },
+      // revalidateOnFocus: false,
     });
 
   // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
@@ -70,26 +71,6 @@ export const usePrivateDataObserver = (options: {
     return () => {
       account.off(EVENT_NAMES.statusChanged, handler);
     };
-
-    // account.on(EVENT_NAMES.switchAccount, () => {
-    //   cleanAll();
-    //   positionsActions.clearAll();
-    // });
-
-    // return () => {
-    //   account.off(EVENT_NAMES.switchAccount);
-    // };
-    // if (state.validating) return;
-
-    // console.log("++++++++++state.status", state.status);
-
-    // if (state.status < AccountStatusEnum.EnableTrading) {
-    //   cleanAll();
-    //   positionsActions.clearAll();
-    //   // calculatorService.calc(CalculatorScope.POSITION, {
-    //   //   rows: [],
-    //   // });
-    // }
   }, []);
 
   useEffect(() => {
@@ -116,6 +97,7 @@ export const usePrivateDataObserver = (options: {
     "/v1/client/holding",
     {
       formatter: (data) => data.holding,
+      // revalidateOnFocus: false,
     }
   );
 

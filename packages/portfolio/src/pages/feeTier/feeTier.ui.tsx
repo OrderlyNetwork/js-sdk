@@ -41,7 +41,12 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
         takerFeeRate={takerFeeRate!}
         makerFeeRate={makerFeeRate!}
       />
-      <FeeTierTable dataSource={dataSource} columns={columns} tier={tier} />
+      <FeeTierTable
+        dataSource={dataSource}
+        columns={columns}
+        tier={tier}
+        onRow={props.onRow}
+      />
     </Card>
   );
 };
@@ -57,7 +62,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   return (
     <Flex direction="row" gapX={4} my={4} itemAlign={"stretch"}>
       <FeeTierHeaderItem
-        label="Your Tier"
+        label="Your tier"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
             {props.tier || "--"}
@@ -65,7 +70,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        label="30D Trading Volume (USDC)"
+        label="30D trading volume (USDC)"
         value={
           <Text.numeral rule="price" dp={2} rm={Decimal.ROUND_DOWN}>
             {typeof props.vol !== undefined ? `${props.vol}` : "-"}
@@ -73,7 +78,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        label="Take fee rate"
+        label="Taker fee rate"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
             {props.takerFeeRate || "--"}
@@ -81,7 +86,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        label="Marker fee rate"
+        label="Maker fee rate"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
             {props.makerFeeRate || "--"}
@@ -137,6 +142,13 @@ type FeeTierTableProps = {
   pageSize?: number;
   dataCount?: number;
   tier?: number | null;
+  onRow?: (
+    record: any,
+    index: number
+  ) => {
+    normal: any,
+    active: any,
+  };
 };
 
 export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
@@ -149,24 +161,40 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
       .getElementById("oui-fee-tier-current")
       ?.getBoundingClientRect();
 
-    if (elementRect && parentRect) {
+    if (elementRect && parentRect && !!props.tier) {
       const offsetTop = elementRect.top - parentRect.top;
       setTop(offsetTop);
+    } else {
+      setTop(undefined);
     }
   }, [props.tier]);
+
   const onRow = useCallback(
     (record: any, index: number) => {
+      const config = props?.onRow?.(record, index) ?? {
+        normal: undefined,
+        active: undefined,
+      };
       if (index + 1 == props.tier) {
-        return {
+        const innerConfig = {
           id: "oui-fee-tier-current",
+          'data-state': "active",
           className:
-            "oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+            "group oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+        };
+        return {
+          ...innerConfig,
+          ...config.active,
         };
       }
 
-      return { className: "oui-h-12" };
+      return {
+        'data-state': "none",
+        ...{ className: "oui-h-12" },
+        ...config.normal,
+      };
     },
-    [props.tier]
+    [props.tier, props.onRow]
   );
 
   return (

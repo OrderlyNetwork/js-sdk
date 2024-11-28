@@ -145,8 +145,13 @@ export const OrderEntry = (
         }
       )
       .then(() => {
-        return submit().then(() => {
-          setOrderValue("order_quantity", "");
+        return submit().then((result: any) => {
+          console.log(result);
+          if (result.success) {
+            setOrderValue("order_quantity", "");
+          } else {
+            toast.error(result.message);
+          }
         });
       })
       .catch((error) => {

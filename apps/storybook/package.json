@@ -1,7 +1,9 @@
 {
-  "name": "@orderly.network/storybook",
+  "name": "@orderly.network/storybook1",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
   "private": true,
-  "version": "1.0.1-alpha.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

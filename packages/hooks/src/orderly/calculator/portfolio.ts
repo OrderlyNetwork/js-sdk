@@ -7,6 +7,7 @@ import { parseHolding } from "../../utils/parseHolding";
 import { Portfolio, useAppStore } from "../appStore";
 import { Decimal } from "@orderly.network/utils";
 import { createGetter } from "../../utils/createGetter";
+import { MarketCalculatorName } from "./markPrice";
 
 export const PortfolioCalculatorName = "portfolio";
 class PortfolioCalculator extends BaseCalculator<any> {
@@ -19,16 +20,18 @@ class PortfolioCalculator extends BaseCalculator<any> {
     if (scope === CalculatorScope.MARK_PRICE) {
       markPrices = data;
     } else {
-      markPrices = ctx.get<Record<string, number>>((cache) => cache[this.name]);
-    }
-
-    if (scope === CalculatorScope.POSITION) {
-      positions = data;
-    } else {
-      positions = ctx.get<API.PositionsTPSLExt>(
-        (output: Record<string, any>) => output.positionCalculator_all
+      markPrices = ctx.get<Record<string, number>>(
+        (cache) => cache[MarketCalculatorName]
       );
     }
+
+    // if (scope === CalculatorScope.POSITION) {
+    //   positions = data;
+    // } else {
+    positions = ctx.get<API.PositionsTPSLExt>(
+      (output: Record<string, any>) => output.positionCalculator_all
+    );
+    // }
 
     let holding = portfolio.holding;
 
@@ -59,8 +62,6 @@ class PortfolioCalculator extends BaseCalculator<any> {
     symbolsInfo: Record<string, API.SymbolExt>;
   }) {
     const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
-
-    // console.log("++++++++", inputs);
 
     if (
       !holding ||
@@ -113,15 +114,6 @@ class PortfolioCalculator extends BaseCalculator<any> {
       unsettlementPnL: positions.total_unsettled_pnl ?? 0,
     });
 
-    // console.log("PortfolioCalculator+++++++++++", {
-    //   totalCollateral,
-    //   totalValue,
-    //   totalUnrealizedROI,
-    //   freeCollateral,
-    //   availableBalance,
-    //   unsettledPnL,
-    // });
-
     return {
       totalCollateral,
       totalValue,
@@ -129,6 +121,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       freeCollateral,
       availableBalance,
       unsettledPnL,
+      holding,
     };
   }
 
@@ -144,6 +137,9 @@ class PortfolioCalculator extends BaseCalculator<any> {
         availableBalance: data.availableBalance as number,
         totalUnrealizedROI: data.totalUnrealizedROI as number,
         unsettledPnL: data.unsettledPnL as number,
+        holding: Array.isArray(data.holding)
+          ? (data.holding as API.Holding[])
+          : [],
       });
     }
   }

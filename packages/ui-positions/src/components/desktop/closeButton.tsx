@@ -214,7 +214,7 @@ export const OrderDetail = (props: {
         </Text.formatted>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>Est. Total</Text>
+        <Text>Notional</Text>
         <Text.formatted
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}

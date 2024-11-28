@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-type AccountProfolioState = {
+type AccountPortfolioState = {
   totalCollateral: number;
   freeCollateral: number;
   totalValue: number;
@@ -11,10 +11,10 @@ type AccountProfolioState = {
   maxLeverage: number;
 };
 
-export type PortfolioStore = {} & AccountProfolioState;
+export type PortfolioStore = {} & AccountPortfolioState;
 
 export type PortfolioActions = {
-  updatePortfolio: (portfolio: AccountProfolioState) => void;
+  updatePortfolio: (portfolio: AccountPortfolioState) => void;
 };
 
 const usePortfolioStore = create<
@@ -29,13 +29,13 @@ const usePortfolioStore = create<
       unsettledPnL: 0,
       maxLeverage: 0,
       actions: {
-        updatePortfolio: (portfolio: Partial<AccountProfolioState>) => {
+        updatePortfolio: (portfolio: Partial<AccountPortfolioState>) => {
           set(
             (state) => {
               Object.keys(portfolio).forEach((key) => {
                 if (key in state) {
-                  state[key as keyof AccountProfolioState] = portfolio[
-                    key as keyof AccountProfolioState
+                  state[key as keyof AccountPortfolioState] = portfolio[
+                    key as keyof AccountPortfolioState
                   ] as number;
                 }
               });
