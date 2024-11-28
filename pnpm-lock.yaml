@@ -2042,6 +2042,67 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.15))(postcss@8.4.49)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.15))(@types/node@22.9.0)(typescript@5.6.3))(typescript@5.6.3)
 
+  packages/ui-cross-deposit:
+    dependencies:
+      '@layerzerolabs/scan-client':
+        specifier: ^0.0.6
+        version: 0.0.6(axios@1.7.7)
+      '@orderly.network/core':
+        specifier: workspace:*
+        version: link:../core
+      '@orderly.network/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
+      '@orderly.network/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@orderly.network/ui-chain-selector':
+        specifier: workspace:*
+        version: link:../ui-chain-selector
+      '@orderly.network/ui-transfer':
+        specifier: workspace:*
+        version: link:../ui-transfer
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
+      ramda:
+        specifier: ^0.29.1
+        version: 0.29.1
+    devDependencies:
+      '@types/ramda':
+        specifier: ^0.29.1
+        version: 0.29.3
+      '@types/react':
+        specifier: ^18.3.2
+        version: 18.3.2
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
+      react:
+        specifier: ^18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.2.0(react@18.2.0)
+      tailwindcss:
+        specifier: ^3.4.4
+        version: 3.4.4(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.15))(@types/node@22.9.0)(typescript@5.6.3))
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^7.1.0
+        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.15))(postcss@8.4.49)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.15))(@types/node@22.9.0)(typescript@5.6.3))(typescript@5.6.3)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.6.3
+
   packages/ui-leverage:
     dependencies:
       '@orderly.network/hooks':
@@ -5041,6 +5102,11 @@ packages:
 
   '@layerzerolabs/lz-v2-utilities@2.3.45-oft-rc.0':
     resolution: {integrity: sha512-hGSpKFtY+cgWQ983E0s8CK8odp1hrgqFHce7/wXrnCJdGHzcPL4jLAVjEA8ddusbL2umNkoMVZE/RC7IkCFXuA==}
+
+  '@layerzerolabs/scan-client@0.0.6':
+    resolution: {integrity: sha512-K6Dpktj8bsPK/bE4DjgPclWn/mOZm/zm6lwRaaZvPkfPhmLQx43j5voBod9hqT2hSh26lC7ZkFAb+8aVUpPISQ==}
+    peerDependencies:
+      axios: '*'
 
   '@ledgerhq/devices@6.27.1':
     resolution: {integrity: sha512-jX++oy89jtv7Dp2X6gwt3MMkoajel80JFWcdc0HCouwDsV1mVJ3SQdwl/bQU0zd8HI6KebvUP95QTwbQLLK/RQ==}
@@ -14998,6 +15064,9 @@ packages:
   ramda@0.29.0:
     resolution: {integrity: sha512-BBea6L67bYLtdbOqfp8f58fPMqEwx0doL+pAi8TZyp2YWz8R9G8z9x75CZI8W+ftqhFHCpEX2cRnUUXK130iKA==}
 
+  ramda@0.29.1:
+    resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
+
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
@@ -21652,6 +21721,10 @@ snapshots:
       '@ethersproject/solidity': 5.7.0
       bs58: 5.0.0
       tiny-invariant: 1.3.3
+
+  '@layerzerolabs/scan-client@0.0.6(axios@1.7.7)':
+    dependencies:
+      axios: 1.7.7
 
   '@ledgerhq/devices@6.27.1':
     dependencies:
@@ -36740,6 +36813,8 @@ snapshots:
   radix3@1.1.2: {}
 
   ramda@0.29.0: {}
+
+  ramda@0.29.1: {}
 
   randombytes@2.1.0:
     dependencies:
