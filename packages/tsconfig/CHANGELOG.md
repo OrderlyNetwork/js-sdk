@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.18-preReleaseV2.7
+
+### Patch Changes
+
+- update
+
 ## 0.3.18-preReleaseV2.6
 
 ### Patch Changes
