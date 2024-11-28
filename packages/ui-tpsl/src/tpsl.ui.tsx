@@ -316,7 +316,7 @@ const TPSLPrice = (props: {
       <div>
         <Flex justify={"between"}>
           <Text size={"sm"} intensity={80}>
-            Task profit
+            Take profit
           </Text>
           <Flex>
             <Text size={"2xs"} intensity={36}>

@@ -113,7 +113,14 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   );
 
   return (
-    <Flex className={cn("oui-font-semibold oui-h-full", props.className)}>
+    <Flex
+      className={cn("oui-font-semibold oui-h-[54px]", props.className)}
+      // fix Safari text opacity transition bug
+      style={{
+        transform: "translateZ(0)",
+        willChange: "transform",
+      }}
+    >
       <Flex gapX={6} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={1}>
           {favoriteIcon}
@@ -199,7 +206,7 @@ const DataItem: React.FC<DataItemProps> = (props) => {
       <Tooltip
         open={props.hint ? undefined : false}
         content={props.hint}
-        className="oui-max-w-[240px] oui-bg-base-6"
+        className="oui-max-w-[240px] oui-bg-base-6 "
         arrow={{ className: "oui-fill-base-6" }}
         delayDuration={300}
       >

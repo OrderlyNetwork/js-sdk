@@ -163,7 +163,7 @@ export const useAssetsHistoryData = (
   const calculateData = (data: API.DailyRow[], realtime: boolean) => {
     const _data = !realtime ? data : mergeData(data, totalValue);
 
-    return _data.slice(_data.length - periodValue);
+    return _data.slice(Math.max(0,_data.length - periodValue));
   };
 
   const calculatedData = useMemo(() => {
