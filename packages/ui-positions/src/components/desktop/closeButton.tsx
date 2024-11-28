@@ -20,6 +20,7 @@ import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { TokenIcon } from "@orderly.network/ui";
 import { useSymbolContext } from "../../providers/symbolProvider";
+import { useLocalStorage } from "@orderly.network/hooks";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
@@ -36,6 +37,8 @@ export const CloseButton = () => {
 
   const { base, quote } = useSymbolContext();
 
+  const [orderConfirm ] = useLocalStorage("orderly_order_confirm", true);
+  
   const onConfirm = () => {
     return onSubmit().then(
       (res) => {
@@ -72,13 +75,18 @@ export const CloseButton = () => {
         variant="outlined"
         size="sm"
         color="secondary"
-        disabled={disabled}
+        disabled={disabled || submitting}
+        loading={submitting}
         onClick={(e) => {
           e.stopPropagation();
           const quantityMsg = errors?.order_quantity?.message;
           const priceMsg = errors?.order_price?.message;
           if (quantityMsg || priceMsg) {
             toast.error(quantityMsg ?? priceMsg);
+            return;
+          }
+          if (!orderConfirm) {
+            onSubmit();
             return;
           }
           setOpen(true);
