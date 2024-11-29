@@ -33,17 +33,26 @@ const useOrderEntryNextInternal = (
   } = {}
 ) => {
   // const orderEntity = useOrderEntryFromStore();
-  const { actions: orderEntryActions, entry: orderEntity } = useOrderStore();
 
   const {
     // markPrice,
-    initialOrder = {
-      side: OrderSide.BUY,
-      order_type: OrderType.LIMIT,
-      order_price: "",
-    },
+    // initialOrder = {
+    //   side: OrderSide.BUY,
+    //   order_type: OrderType.LIMIT,
+    //   order_price: "",
+    // },
     symbolInfo,
   } = options;
+  const initialOrder = {
+    side: OrderSide.BUY,
+    order_type: OrderType.LIMIT,
+    order_price: "",
+    symbol,
+    ...options.initialOrder,
+  };
+
+  const { actions: orderEntryActions, entry: orderEntity } =
+    useOrderStore(initialOrder);
 
   // const orderEntryActions = useOrderStore((state) => state.actions);
 
@@ -104,12 +113,6 @@ const useOrderEntryNextInternal = (
   );
 
   useEffect(() => {
-    if (initialOrder) {
-      orderEntryActions.restoreOrder(initialOrder);
-    }
-  }, []);
-
-  useEffect(() => {
     /// reset the symbol
     orderEntryActions.updateOrderByKey("symbol", symbol);
   }, [symbol]);
@@ -126,6 +129,8 @@ const useOrderEntryNextInternal = (
       console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
       return;
     }
+
+    console.log("setValue //////", key, value, orderEntity, additional);
 
     // const values = useOrderStore.getState().entry;
     const { markPrice } = additional ?? { markPrice: 0 };
@@ -178,6 +183,8 @@ const useOrderEntryNextInternal = (
     }
 
     // calculateTPSL(newValues, markPrice);
+
+    console.log("newValues++++++", newValues);
 
     orderEntryActions.updateOrder(newValues);
 

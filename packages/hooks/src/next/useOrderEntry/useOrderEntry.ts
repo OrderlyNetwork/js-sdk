@@ -23,12 +23,17 @@ import {
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
+import { SDKError } from "@orderly.network/types";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
 type OrderEntryReturn = {
-  submit: (options?: { resetOnSuccess?: boolean }) => Promise<void>;
+  submit: (options?: { resetOnSuccess?: boolean }) => Promise<{
+    success: boolean;
+    data: Record<string, any>;
+    timestamp: number;
+  }>;
   reset: () => void;
   resetErrors: () => void;
   resetMetaState: () => void;
@@ -132,9 +137,12 @@ type OrderEntryReturn = {
  * await submit();
  * ```
  */
-const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
+const useOrderEntry = (
+  symbol: string,
+  options: Options = {}
+): OrderEntryReturn => {
   if (!symbol) {
-    throw new Error("symbol is required and must be a string");
+    throw new SDKError("symbol is required and must be a string");
   }
 
   const ee = useEventEmitter();

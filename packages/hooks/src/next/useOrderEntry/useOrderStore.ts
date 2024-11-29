@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { produce } from "immer";
-import {
-  OrderlyOrder,
-  OrderSide,
-  OrderType,
-  RequireKeys,
-} from "@orderly.network/types";
+import { OrderlyOrder, RequireKeys } from "@orderly.network/types";
 
 export type FullOrderState = OrderlyOrder;
 
@@ -14,44 +9,24 @@ type OrderEntryStateEntity = RequireKeys<
   "side" | "order_type" | "symbol"
 >;
 
-type OrderEntryState = {
-  entry: OrderEntryStateEntity;
-  estLeverage: number | null;
-  estLiquidationPrice: number | null;
-  errors: Partial<Record<keyof FullOrderState, string>>;
-};
-
-type OrderEntryActions = {
-  updateOrder: (order: Partial<FullOrderState>) => void;
-  updateOrderByKey: <K extends keyof FullOrderState>(
-    key: K,
-    value: FullOrderState[K]
-  ) => void;
-  restoreOrder: (order?: Partial<FullOrderState>) => void;
-  updateOrderComputed: (data: {
-    estLeverage: number | null;
-    estLiquidationPrice: number | null;
-  }) => void;
-  resetOrder: (order?: Partial<FullOrderState>) => void;
-  hasTP_SL: () => boolean;
-};
-
 const initialOrderState = {
   order_price: "",
   order_quantity: "",
   trigger_price: "",
   tp_trigger_price: "",
   sl_trigger_price: "",
+  tp_pnl: "",
+  sl_pnl: "",
+  tp_offset_percentage: "",
+  sl_offset_percentage: "",
+  tp_offset: "",
+  sl_offset: "",
   total: "",
-  symbol: "",
+  // symbol: "",
 };
 
-export const useOrderStore = () => {
-  const [entry, setEntry] = useState<OrderEntryStateEntity>({
-    side: OrderSide.BUY,
-    order_type: OrderType.LIMIT,
-    ...initialOrderState,
-  });
+export const useOrderStore = (initialOrder: OrderEntryStateEntity) => {
+  const [entry, setEntry] = useState<OrderEntryStateEntity>(initialOrder);
   const [estLeverage, setEstLeverage] = useState<number | null>(null);
   const [estLiquidationPrice, setEstLiquidationPrice] = useState<number | null>(
     null
@@ -65,6 +40,7 @@ export const useOrderStore = () => {
       produce((draft) => {
         return { ...draft, ...order };
       })
+      // (prev) => ({ ...prev, ...order })
     );
   };
 
@@ -94,9 +70,8 @@ export const useOrderStore = () => {
   const resetOrder = (order?: Partial<FullOrderState>) => {
     setEntry(
       produce((draft) => ({
-        side: OrderSide.BUY,
-        order_type: OrderType.LIMIT,
-        ...initialOrderState,
+        ...draft,
+        ...(order ?? initialOrderState),
       }))
     );
   };

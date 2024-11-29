@@ -140,7 +140,13 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     return () => {
       ee.off("orderbook:item:click", orderBookItemClickHandler);
     };
-  }, [formattedOrder.order_type, formattedOrder.order_quantity, symbolInfo]);
+  }, [
+    formattedOrder.order_type,
+    formattedOrder.order_quantity,
+    formattedOrder.side,
+    formattedOrder.symbol,
+    symbolInfo,
+  ]);
 
   // cancel TP/SL
   const cancelTP_SL = () => {
