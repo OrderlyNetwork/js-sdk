@@ -1,6 +1,6 @@
 {
   "name": "create-orderly-app",
-  "version": "1.5.17",
+  "version": "1.5.18-migrationStoreState.0",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
@@ -52,8 +52,8 @@
   },
   "orderly": {
     "version": {
-      "@orderly.network/react": "2.0.0",
-      "@orderly.network/web3-onboard": "2.0.0"
+      "@orderly.network/react": "2.0.1-migrationStoreState.0",
+      "@orderly.network/web3-onboard": "2.0.1-migrationStoreState.0"
     }
   }
 }

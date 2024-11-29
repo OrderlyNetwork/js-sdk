@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.0.1-migrationStoreState.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@2.0.1-migrationStoreState.0
+  - @orderly.network/hooks@2.0.1-migrationStoreState.0
+  - @orderly.network/utils@2.0.1-migrationStoreState.0
+
 ## 2.0.0
 
 ### Major Changes
