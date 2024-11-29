@@ -4,14 +4,14 @@ import {
   mainnetVaultAddress,
   mainnetVerifyAddress,
   nativeUSDCAddress,
-  solanaDevVaultAddress,
+  solanaDevVaultAddress, solanaMainnetUSDCAddress,
   solanaMainnetVaultAddress,
   solanaQaVaultAddress,
   solanaStagingVualtAddress,
   solanaUSDCAddress,
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,
-  stagingVerifyAddressOnArbitrumTestnet,
+  stagingVerifyAddressOnArbitrumTestnet
 } from "./constants";
 
 import mainnetUSDCAbi from "./wallet/abis/mainnetUSDCAbi.json";
@@ -55,7 +55,7 @@ export class BaseContract implements IContract {
         vaultAbi: mainnetVaultAbi,
         verifyContractAddress: mainnetVerifyAddress,
         erc20Abi: mainnetUSDCAbi,
-        solanaUSDCAddress: solanaUSDCAddress,
+        solanaUSDCAddress: solanaMainnetUSDCAddress,
         solanaVaultAddress: solanaMainnetVaultAddress,
       };
     }
