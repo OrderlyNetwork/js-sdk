@@ -33,7 +33,7 @@ export const AvailableToClaim: FC<AvailableReturns> = (props) => {
       </Flex>
       <Flex direction={"row"} gap={3} width={"100%"}>
         <Statics title="ORDER" value={props.order} />
-        <Statics title="esORDER" value={props.esorder} isEsOrder />
+        <Statics title="esORDER" value={props.esOrder} isEsOrder />
       </Flex>
     </Flex>
   );
