@@ -1,48 +1,88 @@
-import { ENVType, useGetEnv, useWalletRewardsHistory } from "@orderly.network/hooks";
+import {
+  ENVType,
+  useGetEnv,
+  useWalletConnector,
+  useWalletRewardsHistory,
+} from "@orderly.network/hooks";
 import { useTradingRewardsContext } from "../provider";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useDataTap } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
+import { ChainNamespace } from "@orderly.network/types";
 
 export type AvailableReturns = {
   order?: number;
-  esorder?: number;
+  esOrder?: number;
   goToClaim?: (e: any) => void;
 };
 
 export const useAvailableScript = (): AvailableReturns => {
-  const { totalOrderClaimedReward, walletRewardsHistory } = useTradingRewardsContext();
-  const [totalClaimedReward] = totalOrderClaimedReward;
+  const {
+    totalOrderClaimedReward,
+    walletRewardsHistory,
+    totalEsOrderClaimedReward,
+  } = useTradingRewardsContext();
+  const [orderClaimedRewardData] = totalOrderClaimedReward;
+  const [esOrderClaimedRewardData] = totalEsOrderClaimedReward;
 
-  const [data]  = walletRewardsHistory;
-  const totalGetReward = data?.wallet_lifetime_trading_rewards_order;
+  const { namespace } = useWalletConnector();
+
+  const [data] = walletRewardsHistory;
+  
+  const lifetimeOrderReward = useMemo(() => {
+    if (namespace === ChainNamespace.evm) {
+      return data?.wallet_lifetime_trading_rewards_order;
+    }
+    return data?.wallet_pending_trading_rewards_order;
+  }, [namespace, data]);
+
+  const lifetimeEsOrderReward = useMemo(() => {
+    if (namespace === ChainNamespace.evm) {
+      return data?.wallet_lifetime_trading_rewards_escrow;
+    }
+    return data?.wallet_pending_trading_rewards_escrow;
+  }, [data, namespace]);
 
   const env = useGetEnv();
   const goToClaim = (e: any) => {
-    const url = `https://${env !== ENVType.prod ? `${env}-` : ""}app.orderly.network/tradingRewards`;
+    const url = `https://${
+      env !== ENVType.prod ? `${env}-` : ""
+    }app.orderly.network/tradingRewards`;
     window.open(url, "_blank");
   };
 
-  const availableOrder = useMemo(() => {
-    if (
-      typeof totalClaimedReward !== "undefined" &&
-      typeof totalGetReward !== "undefined"
-    ) {
-      const fixStr = new Decimal(totalGetReward).sub(totalClaimedReward).toFixed(18, Decimal.ROUND_DOWN);
-      return Number(fixStr);
-    }
+  const calculateRemainingReward = useCallback(
+    (totalReward: string | undefined, claimedReward: number | undefined) => {
+      if (
+        typeof claimedReward !== "undefined" &&
+        typeof totalReward !== "undefined"
+      ) {
+        const remainingReward = new Decimal(totalReward)
+          .sub(claimedReward)
+          .toFixed(18, Decimal.ROUND_DOWN);
+        return Number(remainingReward);
+      }
+      return undefined;
+    },
+    []
+  );
 
-    return undefined;
-  }, [totalGetReward, totalClaimedReward]);
+  const availableOrder = useMemo(
+    () => calculateRemainingReward(lifetimeOrderReward, orderClaimedRewardData),
+    [lifetimeOrderReward, orderClaimedRewardData, calculateRemainingReward]
+  );
 
-  const order = availableOrder;
-  const esorder = 0;
+  const availableEsOrder = useMemo(
+    () =>
+      calculateRemainingReward(lifetimeEsOrderReward, esOrderClaimedRewardData),
+    [lifetimeEsOrderReward, esOrderClaimedRewardData, calculateRemainingReward]
+  );
 
-  const orderValue = useDataTap<number | undefined>(order);
-  const esorderValue = useDataTap<number | undefined>(esorder);
+  const orderValue = useDataTap<number | undefined>(availableOrder);
+  const esorderValue = useDataTap<number | undefined>(availableEsOrder);
   return {
     order: orderValue ?? undefined,
-    esorder: esorderValue ?? undefined,
+    esOrder: esorderValue ?? undefined,
     goToClaim,
   };
 };
