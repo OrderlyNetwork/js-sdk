@@ -1,6 +1,6 @@
 import {
   ENVType,
-  useGetEnv,
+  useConfig,
   useWalletConnector,
   useWalletRewardsHistory,
 } from "@orderly.network/hooks";
@@ -43,10 +43,10 @@ export const useAvailableScript = (): AvailableReturns => {
     return data?.wallet_pending_trading_rewards_escrow;
   }, [data, namespace]);
 
-  const env = useGetEnv();
+  const env = useConfig()?.get("env");
   const goToClaim = (e: any) => {
     const url = `https://${
-      env !== ENVType.prod ? `${env}-` : ""
+      env !== "prod" ? `${env}-` : ""
     }app.orderly.network/tradingRewards`;
     window.open(url, "_blank");
   };
