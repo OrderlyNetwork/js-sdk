@@ -346,6 +346,7 @@ export class Assets {
 
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
+    console.log('-- contractaddress', contractAddress);
     const depositData = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),

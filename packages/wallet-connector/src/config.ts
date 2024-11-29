@@ -58,5 +58,10 @@ export const initConfig: (
   return init(mergedOptions);
 };
 
+export enum SolanaChainIdEnum {
+  MAINNET = 900900900,
+  DEVNET = 901901901,
+}
+
 export const SolanaChains = new Map([[WalletAdapterNetwork.Devnet,  901901901], [WalletAdapterNetwork.Mainnet, 900900900]]);
 

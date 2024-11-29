@@ -21,7 +21,7 @@ import { IDL as VaultIDL, SolanaVault } from "./idl/solana_vault";
 import {
   getBrokerPDA,
   getDefaultSendConfigPda,
-  getDefaultSendLibConfigPda,
+  getDefaultSendLibConfigPda, getDstEID,
   getDvnConfigPda,
   getEndorcedOptionsPda,
   getEndpointSettingPda,
@@ -44,10 +44,9 @@ import {
   getUlnEventAuthorityPda,
   getUlnSettingPda,
   getUSDCAccounts,
-  getVaultAuthorityPda,
+  getVaultAuthorityPda
 } from "./solana.util";
 import {
-  DST_EID,
   DVN_PROGRAM_ID,
   ENDPOINT_PROGRAM_ID,
   EXECUTOR_PROGRAM_ID,
@@ -269,6 +268,8 @@ export async function getDepositQuoteFee({
 }) {
   console.log("-- vaultAddress", vaultAddress);
   const appProgramId = new PublicKey(vaultAddress);
+  const DST_EID = getDstEID(appProgramId);
+
   const program = new Program<SolanaVault>(VaultIDL, appProgramId, {
     connection,
   });
@@ -423,7 +424,7 @@ export async function getDepositQuoteFee({
 
   const feeRes = await connection.simulateTransaction(feeTx);
 
-  // console.log('-- feeRes', feeRes);
+  console.log('-- feeRes', feeRes);
   const returnPrefix = `Program return: ${program.programId} `;
   const returnLogEntry = feeRes.value.logs!.find((log) =>
     log.startsWith(returnPrefix)
@@ -492,6 +493,7 @@ export async function deposit({
   const brokerHash = depositData.brokerHash;
   const tokenHash = depositData.tokenHash;
 
+  console.log('-- vault address', vaultAddress);
   const appProgramId = new PublicKey(vaultAddress);
   const program = new Program<SolanaVault>(VaultIDL, appProgramId, {
     connection,
@@ -505,6 +507,7 @@ export async function deposit({
   const allowedTokenPDA = getTokenPDA(appProgramId, tokenHash);
   const oappConfigPDA = getOAppConfigPda(appProgramId);
   console.log("-- oappconfig pda", oappConfigPDA.toBase58());
+  const DST_EID = getDstEID(appProgramId);
   // const lzPDA = getLzReceiveTypesPda(appProgramId, oappConfigPDA);
   const peerPDA = getPeerPda(appProgramId, oappConfigPDA, DST_EID);
   const endorcedPDA = getEndorcedOptionsPda(
