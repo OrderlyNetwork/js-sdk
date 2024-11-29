@@ -1,6 +1,6 @@
-import { CurrentEpochEstimate } from "@orderly.network/hooks";
+import { CurrentEpochEstimate, useConfig } from "@orderly.network/hooks";
 import { useTradingRewardsContext } from "../provider";
-import { ENVType, useGetEnv } from "@orderly.network/hooks";
+import { ENVType } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
 import { useMemo } from "react";
@@ -8,10 +8,10 @@ import { useMemo } from "react";
 export const useStakeBoosterScript = () => {
   const { curEpochEstimate } = useTradingRewardsContext();
 
-  const env = useGetEnv();
+  const env = useConfig()?.get("env");
   const stakeNow = (e: any) => {
     const url = `https://${
-      env !== ENVType.prod ? `${env}-` : ""
+      env !== "prod" ? `${env}-` : ""
     }app.orderly.network/staking`;
     window.open(url, "_blank");
   };

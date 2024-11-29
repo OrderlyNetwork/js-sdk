@@ -20,6 +20,6 @@ export type {
 } from "./useWalletRewardsHistory";
 
 
-export { useGetEnv, ENVType }from "./useGetEnv";
+export type { ENVType } from "./useGetEnv";
 
 export { TWType } from "./types";
