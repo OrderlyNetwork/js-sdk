@@ -1,13 +1,13 @@
 import {Connection, PublicKey} from "@solana/web3.js";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import {
-  BROKER_SEED,
+  BROKER_SEED, DEV_DST_EID,
   DEV_LOOKUP_TABLE_ADDRESS,
   DEV_OAPP_PROGRAM_ID,
   DEV_PEER_ADDRESS,
   DVN_PROGRAM_ID,
   ENDPOINT_PROGRAM_ID,
-  EXECUTOR_PROGRAM_ID,
+  EXECUTOR_PROGRAM_ID, MAIN_DST_EID, MAINNET_LOOKUP_TABLE_ADDRESS, MAINNET_OAPP_PROGRAM_ID, MAINNET_PEER_ADDRESS,
   PRICE_FEED_PROGRAM_ID,
   QA_LOOKUP_TABLE_ADDRESS,
   QA_OAPP_PROGRAM_ID,
@@ -149,6 +149,9 @@ export function getPeerAddress(OAPP_PROGRAM_ID: PublicKey): Uint8Array{
   if (OAPP_PROGRAM_ID.toBase58() === STAGING_OAPP_PROGRAM_ID.toBase58()) {
     peer_address = STAGING_PEER_ADDRESS;
   }
+  if (OAPP_PROGRAM_ID.toBase58() === MAINNET_OAPP_PROGRAM_ID.toBase58()) {
+    peer_address =MAINNET_PEER_ADDRESS;
+  }
   return peer_address;
 }
 
@@ -224,6 +227,14 @@ export function getDvnConfigPda(): PublicKey {
   )[0];
 }
 
+export function getDstEID(OAPP_PROGRAM_ID: PublicKey) {
+  if (OAPP_PROGRAM_ID.toBase58() ===MAINNET_OAPP_PROGRAM_ID.toBase58()) {
+    return MAIN_DST_EID;
+  }
+
+  return DEV_DST_EID
+}
+
 export  function getLookupTableAddress( OAPP_PROGRAM_ID: PublicKey): PublicKey {
   if (OAPP_PROGRAM_ID.toBase58() === DEV_OAPP_PROGRAM_ID.toBase58()) {
     console.log("DEV_LOOKUP_TABLE_ADDRESS: ", DEV_LOOKUP_TABLE_ADDRESS.toBase58());
@@ -234,6 +245,9 @@ export  function getLookupTableAddress( OAPP_PROGRAM_ID: PublicKey): PublicKey {
   }
   if (OAPP_PROGRAM_ID.toBase58() === STAGING_OAPP_PROGRAM_ID.toBase58()) {
     return STAGING_LOOKUP_TABLE_ADDRESS;
+  }
+  if (OAPP_PROGRAM_ID.toBase58() ===MAINNET_OAPP_PROGRAM_ID.toBase58()) {
+    return MAINNET_LOOKUP_TABLE_ADDRESS;
   }
 
   return DEV_LOOKUP_TABLE_ADDRESS
