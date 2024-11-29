@@ -31,6 +31,9 @@ export const API_URLS: Record<NetworkId, URLS> = {
   },
 };
 
+/**
+ * @env The value of env can only be one of dev/qa/staging/prod, default is prod
+ */
 export class DefaultConfigStore implements ConfigStore {
   protected map: Map<ConfigKey, any>;
 

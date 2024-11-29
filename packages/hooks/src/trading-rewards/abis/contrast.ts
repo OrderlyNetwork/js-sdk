@@ -27,7 +27,7 @@ interface ContractDataInterface {
 }
 
 export function getOrderlyChainRPC(env: ENVType) {
-    if (env === ENVType.prod) {
+    if (env === "prod") {
         return "https://rpc.orderly.network";
     }
     return "https://testnet-rpc.orderly.org";

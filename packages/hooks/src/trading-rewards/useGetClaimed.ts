@@ -3,8 +3,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { getContractByEnv } from "./abis/contrast";
 import { toOrder } from "./utils";
-import { useGetEnv } from "./useGetEnv";
 import { useAccount } from "../useAccount";
+import { useConfig } from "../useConfig";
+import { ENVType } from "./useGetEnv";
 
 export enum DistributionId {
   order = 0,
@@ -28,7 +29,13 @@ export const useGetClaimed = (
   // const rpc = useRef<string | undefined>(undefined);
   // const provider = useRef<ethers.AbstractProvider | undefined>(undefined);
   // const contract = useRef<ethers.Contract | undefined>(undefined);
-  const env = useGetEnv();
+  // const env = useGetEnv();
+  const keyStore = useConfig();
+  const env = keyStore.get("env") ?? 'prod';
+
+  if (!["dev", "qa", "staging", "prod"].includes(env)) {
+    throw Error("The value of env only be on of dev/qa/staging/prod");
+  }
 
   // useEffect(() => {
   //   const params = getContractByEnv(env);
@@ -42,7 +49,7 @@ export const useGetClaimed = (
   // }, []);
 
   const refresh = useCallback(() => {
-    const params = getContractByEnv(env);
+    const params = getContractByEnv(env as ENVType);
     if (
       typeof address === "undefined"
       // ||
