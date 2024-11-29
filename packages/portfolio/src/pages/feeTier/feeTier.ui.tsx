@@ -86,7 +86,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        label="Marker fee rate"
+        label="Maker fee rate"
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
             {props.makerFeeRate || "--"}

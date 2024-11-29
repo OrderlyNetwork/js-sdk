@@ -7,6 +7,7 @@ import { parseHolding } from "../../utils/parseHolding";
 import { Portfolio, useAppStore } from "../appStore";
 import { Decimal } from "@orderly.network/utils";
 import { createGetter } from "../../utils/createGetter";
+import { MarketCalculatorName } from "./markPrice";
 
 export const PortfolioCalculatorName = "portfolio";
 class PortfolioCalculator extends BaseCalculator<any> {
@@ -19,16 +20,18 @@ class PortfolioCalculator extends BaseCalculator<any> {
     if (scope === CalculatorScope.MARK_PRICE) {
       markPrices = data;
     } else {
-      markPrices = ctx.get<Record<string, number>>((cache) => cache[this.name]);
-    }
-
-    if (scope === CalculatorScope.POSITION) {
-      positions = data;
-    } else {
-      positions = ctx.get<API.PositionsTPSLExt>(
-        (output: Record<string, any>) => output.positionCalculator_all
+      markPrices = ctx.get<Record<string, number>>(
+        (cache) => cache[MarketCalculatorName]
       );
     }
+
+    // if (scope === CalculatorScope.POSITION) {
+    //   positions = data;
+    // } else {
+    positions = ctx.get<API.PositionsTPSLExt>(
+      (output: Record<string, any>) => output.positionCalculator_all
+    );
+    // }
 
     let holding = portfolio.holding;
 
