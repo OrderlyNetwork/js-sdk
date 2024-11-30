@@ -261,13 +261,23 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     value: any,
     options?: {
       shouldUpdateLastChangedField?: boolean;
+      shouldUpdateDirty?: boolean;
     }
   ) => {
-    const { shouldUpdateLastChangedField = true } = options || {};
+    const { shouldUpdateLastChangedField = true, shouldUpdateDirty = true } =
+      options || {};
     if (!canSetTPSLPrice(key, formattedOrder.order_type)) {
       return;
     }
-    fieldDirty.current[key] = true;
+    // fieldDirty.current[key] = true;
+    if (shouldUpdateDirty) {
+      setMeta(
+        produce((draft) => {
+          draft.dirty[key] = true;
+        })
+      );
+    }
+
     const values = setValueInternal(key, value, prepareData());
 
     if (values) {
