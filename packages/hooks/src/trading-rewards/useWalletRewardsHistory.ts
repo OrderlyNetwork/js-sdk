@@ -14,6 +14,8 @@ export type WalletRewardsItem = {
 export type WalletRewards = {
   wallet_lifetime_trading_rewards_order: string;
   wallet_lifetime_trading_rewards_escrow: string;
+  wallet_pending_trading_rewards_order: string;
+  wallet_pending_trading_rewards_escrow: string;
   rows: WalletRewardsItem[];
 };
 
@@ -25,11 +27,12 @@ export type WalletRewardsHistoryReturns = [
   }
 ];
 
-export const useWalletRewardsHistory = (type: TWType): WalletRewardsHistoryReturns => {
+export const useWalletRewardsHistory = (
+  type: TWType
+): WalletRewardsHistoryReturns => {
   const { account } = useAccount();
 
   const address = account.address;
-  const isNotSupportChain = false;
 
   const path =
     type === TWType.normal
@@ -44,13 +47,13 @@ export const useWalletRewardsHistory = (type: TWType): WalletRewardsHistoryRetur
     formatter: (res) => {
       return {
         wallet_lifetime_trading_rewards_order:
-          res?.group_lifetime_mm_rewards_order ||
-          res?.wallet_lifetime_trading_rewards_order ||
-          0,
+          res?.wallet_lifetime_trading_rewards_order ?? 0,
         wallet_lifetime_trading_rewards_escrow:
-          res?.group_lifetime_mm_rewards_escrow ||
-          res?.wallet_lifetime_trading_rewards_escrow ||
-          0,
+          res?.wallet_lifetime_trading_rewards_escrow ?? 0,
+        wallet_pending_trading_rewards_order:
+          res.wallet_pending_trading_rewards_order ?? 0,
+        wallet_pending_trading_rewards_escrow:
+          res.wallet_pending_trading_rewards_escrow ?? 0,
         rows: (res?.rows || []).map((item: any) => ({
           ...item,
           r_wallet: item?.total_reward || item?.r_wallet,

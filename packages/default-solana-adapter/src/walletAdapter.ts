@@ -17,50 +17,12 @@ import {
 import { bytesToHex } from "ethereum-cryptography/utils";
 import { getAccount } from "@solana/spl-token";
 import {
-  getBrokerPDA,
-  getDefaultSendConfigPda,
-  getDefaultSendLibConfigPda,
-  getDvnConfigPda,
-  getEndorcedOptionsPda,
-  getEndpointSettingPda,
-  getEventAuthorityPda,
-  getExecutorConfigPda,
-  getLookupTableAccount,
-  getLookupTableAddress,
-  getMessageLibInfoPda,
-  getMessageLibPda,
-  getNoncePda,
-  getOAppConfigPda, getPeerAddress,
-  getPeerPda,
-  getPriceFeedPda,
-  getSendConfigPda,
-  getSendLibConfigPda,
-  getSendLibInfoPda,
-  getSendLibPda,
-  getTokenPDA,
-  getUlnEventAuthorityPda,
-  getUlnSettingPda,
   getUSDCAccounts,
-  getVaultAuthorityPda
 } from "./solana.util";
 import {
-  ComputeBudgetProgram,
   PublicKey,
-  SystemProgram,
-  TransactionMessage,
-  VersionedTransaction
-} from "@solana/web3.js";
-import {BN, Program} from "@coral-xyz/anchor";
-import {SolanaVault,  IDL as VaultIDL} from "./idl/solana_vault";
-import {
-  DST_EID, DVN_PROGRAM_ID,
-  ENDPOINT_PROGRAM_ID,
-  EXECUTOR_PROGRAM_ID,
-  PRICE_FEED_PROGRAM_ID,
-  SEND_LIB_PROGRAM_ID,
-  TREASURY_PROGRAM_ID
-} from "./constant";
 
+} from "@solana/web3.js";
 class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> {
   chainNamespace: ChainNamespace = ChainNamespace.solana;
 
