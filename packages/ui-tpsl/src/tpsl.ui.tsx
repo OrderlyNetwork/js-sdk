@@ -164,6 +164,7 @@ const TPSLQuantity = (props: {
       <Flex gap={2}>
         <div className={"oui-flex-1"}>
           <Input.tooltip
+            data-testid="oui-testid-tpsl-popUp-quantity-input"
             ref={inputRef}
             prefix={"Quantity"}
             size={{
@@ -404,6 +405,7 @@ const PriceInput = (props: {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
   return (
     <Input.tooltip
+      data-testid={`oui-testid-tpsl-popUp-${props.type.toLowerCase()}-input`}
       prefix={`${props.type} price`}
       size={{
         initial: "lg",

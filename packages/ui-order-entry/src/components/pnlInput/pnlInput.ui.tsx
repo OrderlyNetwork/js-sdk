@@ -12,7 +12,10 @@ import { inputFormatter } from "@orderly.network/ui";
 import { useEffect, useMemo, useState } from "react";
 
 export type PNLInputProps = PNLInputState & {
-  testId?: string;
+  testIds?: {
+    input?: string;
+    dropDown?: string;
+  };
   quote: string;
   type: "TP" | "SL";
 };
@@ -61,7 +64,7 @@ export const PNLInput = (props: PNLInputProps) => {
           side: props.type === "TP" ? "top" : "bottom",
         },
       }}
-      data-testid={props.testId}
+      data-testid={props.testIds?.input}
       autoComplete={"off"}
       onValueChange={onValueChange}
       formatters={[
@@ -86,7 +89,7 @@ export const PNLInput = (props: PNLInputProps) => {
       }}
       suffix={
         <>
-          {mode === PnLMode.PERCENTAGE && !!value &&  (
+          {mode === PnLMode.PERCENTAGE && !!value && (
             <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
               %
             </Text>

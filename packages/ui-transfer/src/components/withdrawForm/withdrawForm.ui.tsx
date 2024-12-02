@@ -61,6 +61,7 @@ export const WithdrawFormUI = ({
             onTokenChange={() => {}}
             status={inputStatus}
             hintMessage={hintMessage}
+            testId="oui-testid-withdraw-dialog-quantity-input"
           />
         </Box>
 

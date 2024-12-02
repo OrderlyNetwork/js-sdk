@@ -192,6 +192,7 @@ export const OrderEntry = (
                   ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
+              data-testid="oui-testid-orderEntry-side-buy-button"
             >
               Buy
             </Button>
@@ -208,6 +209,7 @@ export const OrderEntry = (
                   ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
+              data-testid="oui-testid-orderEntry-side-sell-button"
             >
               Sell
             </Button>
@@ -340,6 +342,7 @@ export const OrderEntry = (
         >
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
+              data-testid="oui-testid-orderEntry-reduceOnly-switch"
               className="oui-h-[14px]"
               id={"reduceOnly"}
               checked={props.formattedOrder.reduce_only}
@@ -669,6 +672,7 @@ const QuantitySlider = (props: {
               className: "oui-mr-1",
             })}
             onClick={() => props.setMaxQty()}
+            data-testid="oui-testid-orderEntry-maxQty-value-button"
           >
             {maxLabel}
           </button>
@@ -702,6 +706,7 @@ const OrderTypeSelect = (props: {
   ];
   return (
     <Select.options
+      testid="oui-testid-orderEntry-orderType-button"
       currentValue={props.type}
       value={props.type}
       options={options}
@@ -815,6 +820,7 @@ function AdditionalConfigButton(props: {
     <PopoverRoot open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          data-testid="oui-testid-orderEntry-additional-button"
           onClick={() => {
             setOpen(true);
           }}

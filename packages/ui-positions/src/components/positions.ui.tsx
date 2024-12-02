@@ -37,6 +37,9 @@ export const Positions = (props: PositionsBuilderState) => {
       }}
       manualPagination={false}
       pagination={pagination}
+      testIds={{
+        body: "oui-testid-dataList-position-tab-body"
+      }}
     />
   );
 };
