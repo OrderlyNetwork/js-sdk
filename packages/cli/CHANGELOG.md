@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.18-migrationStoreState.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@2.0.1-migrationStoreState.1
+
 ## 0.3.18-migrationStoreState.0
 
 ### Patch Changes

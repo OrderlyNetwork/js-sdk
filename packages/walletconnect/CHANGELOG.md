@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 2.0.1-migrationStoreState.1
+
+### Patch Changes
+
+- update
+
 ## 2.0.1-migrationStoreState.0
 
 ### Patch Changes

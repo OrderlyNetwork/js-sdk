@@ -47,6 +47,7 @@
     "@orderly.network/web3-provider-ethers": "2.0.0"
   },
   "changesets": [
+    "early-paws-serve",
     "tidy-yaks-punch"
   ]
 }
