@@ -17,6 +17,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
+import { customChains } from "./customChains";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -69,6 +70,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             img: "/orderly-logo-secondary.svg",
           },
         }}
+        customChains={customChains as any}
       >
         {props.children}
       </OrderlyAppProvider>
