@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.0.1-migrationStoreState.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@2.0.1-migrationStoreState.2
+
 ## 2.0.1-migrationStoreState.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.0.1-migrationStoreState.2
+
+### Patch Changes
+
+- update
+
 ## 2.0.1-migrationStoreState.1
 
 ### Patch Changes

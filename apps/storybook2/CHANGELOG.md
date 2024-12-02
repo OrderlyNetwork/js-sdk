@@ -1,5 +1,37 @@
 # storybook2
 
+## 1.0.1-migrationStoreState.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-migrationStoreState.2
+  - @orderly.network/default-evm-adapter@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-chain-selector@2.0.1-migrationStoreState.2
+  - @orderly.network/wallet-connector@2.0.1-migrationStoreState.2
+  - @orderly.network/trading-rewards@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-order-entry@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-tradingview@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-connector@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-positions@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-leverage@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-scaffold@2.0.1-migrationStoreState.2
+  - @orderly.network/affiliate@2.0.1-migrationStoreState.2
+  - @orderly.network/portfolio@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-orders@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-share@2.0.1-migrationStoreState.2
+  - @orderly.network/markets@2.0.1-migrationStoreState.2
+  - @orderly.network/trading@2.0.1-migrationStoreState.2
+  - @orderly.network/ui-tpsl@1.0.1-migrationStoreState.2
+  - @orderly.network/chart@2.0.1-migrationStoreState.2
+  - @orderly.network/hooks@2.0.1-migrationStoreState.2
+  - @orderly.network/types@2.0.1-migrationStoreState.2
+  - @orderly.network/utils@2.0.1-migrationStoreState.2
+  - @orderly.network/core@2.0.1-migrationStoreState.2
+  - @orderly.network/react-app@2.0.1-migrationStoreState.2
+  - @orderly.network/ui@2.0.1-migrationStoreState.2
+
 ## 1.0.1-migrationStoreState.1
 
 ### Patch Changes

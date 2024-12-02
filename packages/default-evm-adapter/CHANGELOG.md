@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.0.1-migrationStoreState.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-migrationStoreState.2
+  - @orderly.network/core@2.0.1-migrationStoreState.2
+
 ## 2.0.1-migrationStoreState.1
 
 ### Patch Changes
