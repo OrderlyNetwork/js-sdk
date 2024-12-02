@@ -1,7 +1,8 @@
 {
   "name": "@orderly.network/react",
-  "version": "2.0.1-migrationStoreState.1",
+  "version": "2.0.0",
   "description": "",
+  "private": true,
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
