@@ -91,6 +91,7 @@ const LeverageSlider = (props: LeverageScriptReturns) => {
                   : "oui-px-2 oui-ml-2",
                 item - 1 >= 0 && "oui-text-primary-light"
               )}
+              data-testid={`oui-testid-leverage-${item}-btn`}
             >
               {`${item}x`}
             </button>

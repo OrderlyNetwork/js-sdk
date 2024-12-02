@@ -18,7 +18,11 @@ import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 
-export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
+export const DesktopOrderList: FC<OrdersBuilderState & {
+  testIds?: {
+    tableBody?: string;
+  }
+}> = (props) => {
   const columns = useOrderColumn({
     _type: props.type,
     onSymbolChange: props.onSymbolChange,
@@ -201,6 +205,7 @@ const CancelAll: FC<OrdersBuilderState> = (props) => {
       disabled={(props.dataSource?.length ?? 0) == 0}
       className="disabled:oui-bg-transport"
       onClick={(e) => props.onCancelAll()}
+      data-testid={`oui-testid-dataList-${props.type.toLowerCase()}-cancelAll-button`}
     >
       Cancel all
     </Button>

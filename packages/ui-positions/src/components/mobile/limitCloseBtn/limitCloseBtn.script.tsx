@@ -1,4 +1,4 @@
-import { useMarkPricesStream } from "@orderly.network/hooks";
+import { useLocalStorage, useMarkPricesStream } from "@orderly.network/hooks";
 import { PositionCellState } from "../positionCell/positionCell.script";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSymbolContext } from "../../../providers/symbolProvider";
@@ -26,6 +26,10 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
   const setPrice = useRef(false);
 
   const [sliderValue, setSliderValue] = useState(100);
+
+
+  const [orderConfirm ] = useLocalStorage("orderly_order_confirm", true);
+
 
   const onConfirm = () => {
     return onSubmit().then(
@@ -81,6 +85,8 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     base,
     quote,
     baseTick,
+
+    orderConfirm,
 
     onClose,
     onConfirm,

@@ -25,6 +25,7 @@ export type QuantityInputProps = {
   onTokenChange?: (token: API.TokenInfo) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
   loading?: boolean;
+  testId?: string;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
@@ -159,7 +160,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     return (
       <>
         <Input
-          data-testid="oui-testid-withdraw_deposit-dialog-quantity-input"
+          data-testid={props.testId}
           ref={inputRef}
           autoComplete="off"
           placeholder={_placeholder}

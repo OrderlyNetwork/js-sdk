@@ -211,6 +211,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               </Button>
               <ThrottledButton
                 fullWidth
+                disabled={submitting}
+                loading={submitting}
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
@@ -220,6 +222,10 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   const priceMsg = errors?.order_price?.message;
                   if (quantityMsg || priceMsg) {
                     toast.error(quantityMsg ?? priceMsg);
+                    return;
+                  }
+                  if (!props.orderConfirm) {
+                    onConfirm();
                     return;
                   }
                   setDialogOpen(true);

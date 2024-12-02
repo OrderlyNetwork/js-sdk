@@ -6,7 +6,15 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { cn, Flex, Text, Input, inputFormatter, modal, Switch } from "@orderly.network/ui";
+import {
+  cn,
+  Flex,
+  Text,
+  Input,
+  inputFormatter,
+  modal,
+  Switch,
+} from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { OrderlyOrder } from "@orderly.network/types";
@@ -90,13 +98,18 @@ export const OrderTPSL = (props: {
           color="white"
           // opacity={0.36}
           size={14}
-          opacity={1} className="oui-text-white/[.36] hover:oui-text-white/80 oui-cursor-pointer" 
+          opacity={1}
+          className="oui-text-white/[.36] hover:oui-text-white/80 oui-cursor-pointer"
           onClick={() => {
             modal.dialog({
               title: "Tips",
               size: "xs",
-              content:
-                (<Text intensity={54}>TP/SL applies to the entire position. For partial TP/SL, set it in open positions.</Text>),
+              content: (
+                <Text intensity={54}>
+                  TP/SL applies to the entire position. For partial TP/SL, set
+                  it in open positions.
+                </Text>
+              ),
             });
           }}
         />
@@ -149,6 +162,11 @@ const TPSLInputForm = React.forwardRef<
           onChange={props.onChange}
           values={props.values.tp}
           quote_dp={props.quote_dp}
+          testIds={{
+            first: "oui-testid-orderEntry-tpsl-tpPrice-input",
+            second: "oui-testid-orderEntry-tpsl-tpPnl-input",
+            dropDown: "oui-testid-orderEntry-tpsl-tp-dropDown-trigger-button",
+          }}
         />
       </PnlInputProvider>
       <PnlInputProvider values={props.values.sl} type={"SL"}>
@@ -158,6 +176,11 @@ const TPSLInputForm = React.forwardRef<
           onChange={props.onChange}
           values={props.values.sl}
           quote_dp={props.quote_dp}
+          testIds={{
+            first: "oui-testid-orderEntry-tpsl-slPrice-input",
+            second: "oui-testid-orderEntry-tpsl-slPnl-input",
+            dropDown: "oui-testid-orderEntry-tpsl-sl-dropDown-trigger-button",
+          }}
         />
       </PnlInputProvider>
     </div>
@@ -173,6 +196,7 @@ const TPSLTriggerPriceInput = (props: {
   values: Est_Values;
   onChange: (value: string) => void;
   quote_dp: number | undefined;
+  testId?: string;
 }) => {
   const { errorMsgVisible } = useContext(OrderEntryContext);
   const { tipsEle } = usePnlInputContext();
@@ -190,7 +214,7 @@ const TPSLTriggerPriceInput = (props: {
 
   const priceKey =
     props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
-  
+
   useEffect(() => {
     setPrefix(
       !!props.values.trigger_price ? props.type : `${props.type} Price`
@@ -199,6 +223,7 @@ const TPSLTriggerPriceInput = (props: {
 
   return (
     <Input.tooltip
+      data-testid={props.testId}
       prefix={prefix}
       size={"md"}
       placeholder={placeholder}
@@ -248,6 +273,11 @@ const TPSLInputRow = (props: {
   error?: string;
   onChange: (key: OrderValueKeys, value: any) => void;
   quote_dp: number | undefined;
+  testIds?: {
+    first?: string;
+    second?: string;
+    dropDown?: string;
+  };
 }) => {
   const priceKey =
     props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
@@ -255,6 +285,7 @@ const TPSLInputRow = (props: {
   return (
     <Grid cols={2} gapX={1}>
       <TPSLTriggerPriceInput
+        testId={props.testIds?.first}
         type={props.type}
         error={props.error}
         values={props.values ?? ""}
@@ -265,6 +296,10 @@ const TPSLInputRow = (props: {
       />
 
       <PnlInputWidget
+        testIds={{
+          input: props.testIds?.second,
+          dropDown: props.testIds?.dropDown,
+        }}
         onChange={props.onChange}
         quote={"USDC"}
         quote_dp={props.quote_dp}
