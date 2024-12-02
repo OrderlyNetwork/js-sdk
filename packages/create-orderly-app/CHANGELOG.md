@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.18-preReleaseV2.12
+
+### Patch Changes
+
+- update
+
 ## 1.5.18-preReleaseV2.11
 
 ### Patch Changes

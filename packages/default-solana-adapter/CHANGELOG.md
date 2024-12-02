@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.0.1-preReleaseV2.12
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-preReleaseV2.12
+  - @orderly.network/core@2.0.1-preReleaseV2.12
+
 ## 2.0.1-preReleaseV2.11
 
 ### Patch Changes
