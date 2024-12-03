@@ -50,12 +50,18 @@ const configStore = new CustomConfigStore({
   brokerId: "demo",
   brokerName: "Orderly",
   env: "staging",
+  // networkId: "mainnet",
+  // brokerId: "woofi_pro",
+  // brokerName: "WOOFI",
+  // env: "prod",
 });
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   return (
     <WalletConnectorProvider
       solanaInitial={{ wallets: wallets, onError: handleSolanaError }}
+      // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
+
     >
       <OrderlyAppProvider
         // brokerId="orderly"

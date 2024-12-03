@@ -13,6 +13,7 @@ export function FaucetUi(props: FaucetState) {
         onClick={props.getFaucet}
         loading={props.loading}
         className='oui-text-primary-light oui-border-primary-light oui-rounded'
+        data-testid="oui-testid-assetView-getFaucet-button"
       >Get test USDC</Button>
   )
 }

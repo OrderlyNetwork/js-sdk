@@ -3,13 +3,16 @@ import { BuilderProps, PnLMode, usePNLInputBuilder } from "./useBuilder.script";
 
 export const PnlInputWidget = (
   props: BuilderProps & {
-    testId?: string;
+    testIds?: {
+      input?: string;
+      dropDown?: string;
+    };
     quote: string;
   }
 ) => {
-  const { testId, quote, ...rest } = props;
+  const { testIds, quote, ...rest } = props;
   const state = usePNLInputBuilder(rest);
   return (
-    <PNLInput {...state} testId={testId} quote={quote} type={props.type} />
+    <PNLInput {...state} testIds={testIds} quote={quote} type={props.type} />
   );
 };

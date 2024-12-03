@@ -12,6 +12,7 @@ type TableBodyProps<RecordType> = {
   justified?: boolean;
   showLeftShadow?: boolean;
   showRightShadow?: boolean;
+  testId?: string;
 } & Pick<
   DataTableProps<any>,
   "bordered" | "onRow" | "renderRowContainer" | "expandRowRender"
@@ -25,6 +26,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
         "oui-text-base-contrast-80",
         props.className
       )}
+      data-testid={props.testId}
     >
       {props.rows.map((row) => {
         const { className, onClick, ...rest } =

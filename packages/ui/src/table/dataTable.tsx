@@ -60,6 +60,11 @@ export type DataTableProps<RecordType> = {
   onRow?: (record: RecordType, index: number) => any;
   columnFilters?: ColumnFilter | ColumnFilter[];
   rowSelection?: RowSelectionState;
+
+  // test id
+  testIds?: {
+    body?: string;
+  }
 };
 
 export function DataTable<RecordType extends any>(
@@ -223,6 +228,7 @@ export function DataTable<RecordType extends any>(
             onRow={props.onRow}
             showLeftShadow={showLeftShadow}
             showRightShadow={showRightShadow}
+            testId={props.testIds?.body}
           />
         </table>
 

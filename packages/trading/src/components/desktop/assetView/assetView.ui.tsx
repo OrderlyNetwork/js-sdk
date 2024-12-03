@@ -329,7 +329,12 @@ export const AssetView: FC<AssetViewState> = ({
                 </Text>
               </Flex>
             </Box>
-            <Button fullWidth size="md" onClick={onDeposit}>
+            <Button
+              data-testid="oui-testid-assetView-deposit-button"
+              fullWidth
+              size="md"
+              onClick={onDeposit}
+            >
               <ArrowDownShortIcon color="white" opacity={1} />
               <Text>Deposit</Text>
             </Button>
@@ -358,6 +363,7 @@ export const AssetView: FC<AssetViewState> = ({
                 color="secondary"
                 size="md"
                 onClick={onWithdraw}
+                data-testid="oui-testid-assetView-withdraw-button"
               >
                 <ArrowDownShortIcon
                   color="white"
@@ -366,7 +372,12 @@ export const AssetView: FC<AssetViewState> = ({
                 />
                 <Text>Withdraw</Text>
               </Button>
-              <Button fullWidth size="md" onClick={onDeposit}>
+              <Button
+                data-testid="oui-testid-assetView-deposit-button"
+                fullWidth
+                size="md"
+                onClick={onDeposit}
+              >
                 <ArrowDownShortIcon color="white" opacity={1} />
                 <Text>Deposit</Text>
               </Button>
