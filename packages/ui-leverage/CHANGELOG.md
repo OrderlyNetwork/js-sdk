@@ -1,5 +1,15 @@
 # @orderly.network/ui-leverage
 
+## 2.0.1-migrationStoreState.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-migrationStoreState.3
+  - @orderly.network/types@2.0.1-migrationStoreState.3
+  - @orderly.network/ui@2.0.1-migrationStoreState.3
+
 ## 2.0.1-migrationStoreState.2
 
 ### Patch Changes

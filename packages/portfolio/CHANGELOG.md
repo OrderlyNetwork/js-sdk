@@ -1,5 +1,24 @@
 # @orderly.network/portfolio
 
+## 2.0.1-migrationStoreState.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.1-migrationStoreState.3
+  - @orderly.network/ui-positions@2.0.1-migrationStoreState.3
+  - @orderly.network/ui-leverage@2.0.1-migrationStoreState.3
+  - @orderly.network/ui-scaffold@2.0.1-migrationStoreState.3
+  - @orderly.network/ui-transfer@2.0.1-migrationStoreState.3
+  - @orderly.network/ui-orders@2.0.1-migrationStoreState.3
+  - @orderly.network/chart@2.0.1-migrationStoreState.3
+  - @orderly.network/hooks@2.0.1-migrationStoreState.3
+  - @orderly.network/types@2.0.1-migrationStoreState.3
+  - @orderly.network/utils@2.0.1-migrationStoreState.3
+  - @orderly.network/react-app@2.0.1-migrationStoreState.3
+  - @orderly.network/ui@2.0.1-migrationStoreState.3
+
 ## 2.0.1-migrationStoreState.2
 
 ### Patch Changes

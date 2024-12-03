@@ -1,5 +1,16 @@
 # examples
 
+## 1.0.1-migrationStoreState.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@2.0.1-migrationStoreState.1
+  - @orderly.network/web3-onboard@2.0.1-migrationStoreState.3
+  - @orderly.network/hooks@2.0.1-migrationStoreState.3
+  - @orderly.network/core@2.0.1-migrationStoreState.3
+
 ## 1.0.1-migrationStoreState.2
 
 ### Patch Changes

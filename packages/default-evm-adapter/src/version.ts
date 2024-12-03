@@ -8,7 +8,7 @@ declare global {
 }
 if(typeof window !== 'undefined') {
     window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-    window.__ORDERLY_VERSION__["@orderly.network/default-evm-adapter"] = "2.0.1-migrationStoreState.2";
+    window.__ORDERLY_VERSION__["@orderly.network/default-evm-adapter"] = "2.0.1-migrationStoreState.3";
 };
 
-export default "2.0.1-migrationStoreState.2";
+export default "2.0.1-migrationStoreState.3";

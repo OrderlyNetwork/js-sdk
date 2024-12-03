@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.1-migrationStoreState.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-migrationStoreState.3
+  - @orderly.network/utils@2.0.1-migrationStoreState.3
+
 ## 4.0.1-migrationStoreState.2
 
 ### Patch Changes

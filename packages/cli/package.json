@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/cli",
-  "version": "0.3.18-migrationStoreState.2",
+  "version": "0.3.18-migrationStoreState.3",
   "description": "",
   "bin": {
     "orderly": "./bin/cli.js"
