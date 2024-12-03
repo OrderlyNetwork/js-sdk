@@ -36,6 +36,7 @@ export const useOrderStore = (initialOrder: OrderEntryStateEntity) => {
   >({});
 
   const updateOrder = (order: Partial<FullOrderState>) => {
+    // setEntry((prev) => ({ ...prev, ...order }));
     setEntry(
       produce((draft) => {
         return { ...draft, ...order };

@@ -184,11 +184,17 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     ) {
       // cancelTP_SL();
 
-      setValues({
+      const data = {
         tp_trigger_price: "",
         sl_trigger_price: "",
         [key]: value,
-      });
+      };
+
+      if (key === "order_type") {
+        data["order_type_ext" as any] = "";
+      }
+
+      setValues(data);
 
       return;
     }
@@ -211,6 +217,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     setOrderValue,
+    setOrderValues: setValues,
 
     currentLeverage,
 

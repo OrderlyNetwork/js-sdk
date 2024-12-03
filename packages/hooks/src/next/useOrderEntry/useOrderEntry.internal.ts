@@ -13,7 +13,6 @@ import {
 import { compose, head } from "ramda";
 import {
   type FullOrderState,
-  useOrderEntryFromStore,
   // useOrderStore,
 } from "./orderEntry.store";
 import { OrderCreator } from "../../services/orderCreator/interface";
@@ -122,8 +121,6 @@ const useOrderEntryNextInternal = (
       return;
     }
 
-    console.log("setValue //////", key, value, orderEntity, additional);
-
     // const values = useOrderStore.getState().entry;
     const { markPrice } = additional ?? { markPrice: 0 };
 
@@ -176,7 +173,7 @@ const useOrderEntryNextInternal = (
 
     // calculateTPSL(newValues, markPrice);
 
-    console.log("newValues++++++", newValues);
+    // console.log("newValues++++++", newValues);
 
     orderEntryActions.updateOrder(newValues);
 
@@ -338,7 +335,7 @@ const useOrderEntryNextInternal = (
 
       orderEntryActions.updateOrder(newValues);
     },
-    [options.symbolInfo, orderEntity]
+    [calculate, options.symbolInfo, orderEntity, orderEntryActions]
   );
 
   const validate = (
