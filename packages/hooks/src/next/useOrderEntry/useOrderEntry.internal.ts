@@ -34,15 +34,7 @@ const useOrderEntryNextInternal = (
 ) => {
   // const orderEntity = useOrderEntryFromStore();
 
-  const {
-    // markPrice,
-    // initialOrder = {
-    //   side: OrderSide.BUY,
-    //   order_type: OrderType.LIMIT,
-    //   order_price: "",
-    // },
-    symbolInfo,
-  } = options;
+  const { symbolInfo } = options;
   const initialOrder = {
     side: OrderSide.BUY,
     order_type: OrderType.LIMIT,
@@ -115,7 +107,7 @@ const useOrderEntryNextInternal = (
   useEffect(() => {
     /// reset the symbol
     orderEntryActions.updateOrderByKey("symbol", symbol);
-  }, [symbol]);
+  }, [orderEntryActions, symbol]);
 
   const setValue = (
     key: keyof FullOrderState,

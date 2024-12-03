@@ -146,7 +146,7 @@ const useOrderEntry = (
   }
 
   const ee = useEventEmitter();
-  const fieldDirty = useRef<{ [K in keyof OrderlyOrder]?: boolean }>({});
+
   const [meta, setMeta] = useState<{
     dirty: { [K in keyof OrderlyOrder]?: boolean };
     submitted: boolean;

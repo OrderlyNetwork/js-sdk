@@ -159,6 +159,7 @@ export const OrderEntry = (
       })
       .catch((error) => {
         console.log("catch:", error);
+        if (error === "cancel") return;
         toast.error(error.message);
         // toast.error(`Error:${error.message}`);
 
