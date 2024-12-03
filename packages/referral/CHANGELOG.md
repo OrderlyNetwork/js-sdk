@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.0.1-alpha.4
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/react@2.0.1-alpha.4
+  - @orderly.network/hooks@2.0.1-alpha.4
+  - @orderly.network/utils@2.0.1-alpha.4
+
 ## 2.0.0
 
 ### Major Changes

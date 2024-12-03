@@ -1,5 +1,20 @@
 # @orderly.network/ui-positions
 
+## 2.0.1-alpha.4
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.1-alpha.4
+  - @orderly.network/ui-share@2.0.1-alpha.4
+  - @orderly.network/ui-tpsl@1.0.1-alpha.0
+  - @orderly.network/hooks@2.0.1-alpha.4
+  - @orderly.network/types@2.0.1-alpha.4
+  - @orderly.network/utils@2.0.1-alpha.4
+  - @orderly.network/react-app@2.0.1-alpha.4
+  - @orderly.network/ui@2.0.1-alpha.4
+
 ## 2.0.0
 
 ### Major Changes
