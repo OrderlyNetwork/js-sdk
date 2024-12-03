@@ -177,7 +177,7 @@ export const MobileOrderList: FC<
                 onSymbolChange={props.onSymbolChange}
               />
             );
-            if (props.type === TabType.tp_sl) {
+            if ([TabType.tp_sl, TabType.pending].includes(props.type)) {
               children = (
                 <TPSLOrderRowProvider order={item}>
                   {children}
