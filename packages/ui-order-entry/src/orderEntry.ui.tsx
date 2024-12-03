@@ -352,9 +352,9 @@ export const OrderEntry = (
               checked={props.formattedOrder.reduce_only}
               onCheckedChange={(checked) => {
                 props.setOrderValue("reduce_only", checked);
-                if (checked) {
-                  props.setOrderValue("order_type_ext", "");
-                }
+                // if (checked) {
+                //   props.setOrderValue("order_type_ext", "");
+                // }
               }}
             />
             <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
