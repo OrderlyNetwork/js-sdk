@@ -115,6 +115,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
           let newType;
 
           if (formattedOrder.order_type === OrderType.STOP_MARKET) {
+            setValue("trigger_price", removeTrailingZeros(item[0]));
+            focusInputElement(triggerPriceInputRef.current);
             newType = OrderType.STOP_LIMIT;
           } else if (formattedOrder.order_type === OrderType.MARKET) {
             newType = OrderType.LIMIT;
@@ -140,13 +142,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     return () => {
       ee.off("orderbook:item:click", orderBookItemClickHandler);
     };
-  }, [
-    formattedOrder.order_type,
-    formattedOrder.order_quantity,
-    formattedOrder.side,
-    formattedOrder.symbol,
-    symbolInfo,
-  ]);
+  }, [formattedOrder, symbolInfo]);
 
   // cancel TP/SL
   const cancelTP_SL = () => {
@@ -208,6 +204,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       cancelTP_SL();
     }
   };
+
   return {
     ...state,
     currentQtyPercentage,

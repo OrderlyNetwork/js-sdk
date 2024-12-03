@@ -146,7 +146,7 @@ const useOrderEntry = (
   }
 
   const ee = useEventEmitter();
-  const fieldDirty = useRef<{ [K in keyof OrderlyOrder]?: boolean }>({});
+
   const [meta, setMeta] = useState<{
     dirty: { [K in keyof OrderlyOrder]?: boolean };
     submitted: boolean;
@@ -251,9 +251,16 @@ const useOrderEntry = (
     });
   };
 
-  const canSetTPSLPrice = (key: keyof OrderlyOrder, orderType: OrderType) => {
+  const canSetTPSLPrice = (
+    key: keyof OrderlyOrder,
+    value: any,
+    orderType: OrderType
+  ) => {
     if (
       tpslFields.includes(key) &&
+      value !== "" &&
+      value !== undefined &&
+      value !== null &&
       orderType !== OrderType.LIMIT &&
       orderType !== OrderType.MARKET
     ) {
@@ -274,7 +281,7 @@ const useOrderEntry = (
   ) => {
     const { shouldUpdateLastChangedField = true, shouldUpdateDirty = true } =
       options || {};
-    if (!canSetTPSLPrice(key, formattedOrder.order_type)) {
+    if (!canSetTPSLPrice(key, value, formattedOrder.order_type)) {
       return;
     }
     // fieldDirty.current[key] = true;
@@ -300,7 +307,11 @@ const useOrderEntry = (
   const setValues = (values: Partial<FullOrderState>) => {
     if (
       !Object.keys(values).every((key) =>
-        canSetTPSLPrice(key as keyof FullOrderState, formattedOrder.order_type)
+        canSetTPSLPrice(
+          key as keyof FullOrderState,
+          values[key as keyof FullOrderState],
+          formattedOrder.order_type
+        )
       )
     ) {
       return;
