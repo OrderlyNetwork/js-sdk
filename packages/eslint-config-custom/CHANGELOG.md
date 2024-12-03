@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.1-developV2-1.3
+
+### Patch Changes
+
+- update
+
 ## 1.0.1-developV2-1.2
 
 ### Patch Changes
