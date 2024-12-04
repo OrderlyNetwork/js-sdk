@@ -1,5 +1,15 @@
 import { APIManagerWidget } from "./apiManager.widget";
 
-export const APIManagerPage = () => {
-    return <APIManagerWidget />
+/**
+ * API key manager page
+ * @param filterTags filterTags
+ * @param keyStatus filterTags default is "ACTIVE"
+ * @returns
+ */
+export const APIManagerPage = (props: {
+  filterTags?: [string];
+  keyStatus?: string;
+}) => {
+  const { filterTags, keyStatus = "ACTIVE" } = props;
+  return <APIManagerWidget filterTags={filterTags} keyStatus={keyStatus}/>;
 };
