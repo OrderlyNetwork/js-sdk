@@ -1,9 +1,10 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PaginationMeta } from "../type";
 
 export const usePagination = (initial?: {
   page?: number;
   pageSize?: number;
+  resetPageWhenPageSizeChange?: boolean;
 }) => {
   const dataTotal = useRef(0);
   const [page, setPage] = useState<number>(initial?.page ?? 1);
@@ -71,6 +72,13 @@ export const usePagination = (initial?: {
     }),
     [parsePagination]
   );
+
+  useEffect(() => {
+    // reset page when page size change
+    if (initial?.resetPageWhenPageSizeChange !== false) {
+      setPage(1);
+    }
+  }, [pageSize, initial?.resetPageWhenPageSizeChange]);
 
   return {
     page,
