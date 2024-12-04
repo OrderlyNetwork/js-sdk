@@ -66,7 +66,7 @@ export const useApiManagerScript = (props?: {
       .then((pubKey) => {
         setCurPubKey(pubKey);
       });
-  }, [account]);
+  }, [account, state]);
 
   const onCreateApiKey = () => {
     setShowCreateDialog(true);
