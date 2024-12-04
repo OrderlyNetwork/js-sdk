@@ -6,8 +6,10 @@ import {
   type WithdrawInputs,
 } from "@orderly.network/core";
 import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
-import { AbiCoder, decodeBase58, solidityPackedKeccak256 } from "ethers";
+import { AbiCoder,solidityPackedKeccak256 } from "ethers";
 import { keccak256 } from "ethereum-cryptography/keccak";
+import {decode as bs58Decode } from "bs58";
+
 import {
   ComputeBudgetProgram,
   Connection,
@@ -168,6 +170,7 @@ export function withdrawMessage(
   const tokenSymbolHash = solidityPackedKeccak256(["string"], [message.token]);
   const salt = keccak256(Buffer.from("Orderly Network"));
   const abicoder = AbiCoder.defaultAbiCoder();
+
   const msgToSign = keccak256(
     hexToBytes(
       abicoder.encode(
@@ -185,7 +188,7 @@ export function withdrawMessage(
           brokerIdHash,
           tokenSymbolHash,
           chainId,
-          hexToBytes(decodeBase58(message.receiver).toString(16)),
+          bs58Decode(message.receiver),
           message.amount,
           message.withdrawNonce,
           timestamp,

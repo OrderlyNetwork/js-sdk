@@ -9,7 +9,7 @@ import {
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast, usePagination } from "@orderly.network/ui";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 export type GenerateKeyInfo = {
   key: string;
@@ -18,7 +18,11 @@ export type GenerateKeyInfo = {
   permissions?: string;
 };
 
-export const useApiManagerScript = () => {
+export const useApiManagerScript = (props?: {
+  filterTags?: [string];
+  keyStatus?: string;
+}) => {
+  const { filterTags, keyStatus } = props ?? {};
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCreatedDialog, setShowCreatedDialog] = useState(false);
   const [generateKey, setGenerateKey] = useState<GenerateKeyInfo | undefined>();
@@ -50,8 +54,19 @@ export const useApiManagerScript = () => {
       error,
     },
   ] = useApiKeyManager({
-    keyInfo: { keyStatus: "ACTIVE" },
+    keyInfo: { keyStatus: keyStatus },
   });
+
+  const [curPubKey, setCurPubKey] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    account.keyStore
+      .getOrderlyKey()
+      ?.getPublicKey()
+      .then((pubKey) => {
+        setCurPubKey(pubKey);
+      });
+  }, [account, state]);
 
   const onCreateApiKey = () => {
     setShowCreateDialog(true);
@@ -188,10 +203,14 @@ export const useApiManagerScript = () => {
   const onCopyIP = () => toast.success("Restricted IP copied");
 
   const keyList = useMemo(() => {
-    return keys?.filter(
-      (e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"
-    );
-  }, [keys]);
+    return keys?.filter((e) => {
+      const filterTag = filterTags ? filterTags?.includes(e.tag) : true;
+      const filterCurKey = curPubKey
+        ? !e.orderly_key.includes(curPubKey)
+        : true;
+      return filterTag && filterCurKey;
+    });
+  }, [keys, filterTags, curPubKey]);
 
   const verifyIP = (ip: string) => {
     const ipRegex =

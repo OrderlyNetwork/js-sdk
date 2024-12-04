@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DateRange } from "../../../utils/types";
 import {
   useRefereeRebateSummary,
@@ -60,7 +60,11 @@ export const useRebatesScript = () => {
     displayDate = formatDateTimeToUTC(dataSource?.[0].date);
   }
 
-  const { pagination } = usePagination();
+  const { pagination, setPage } = usePagination();
+
+  useEffect(() => {
+    setPage(1);
+  }, [dateRange]);
 
   return {
     dateRange,
