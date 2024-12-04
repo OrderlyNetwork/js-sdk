@@ -39,6 +39,7 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
           },
           content: (
             <EditSheetWidget
+              position={position}
               state={state}
               editAlgoOrder={editAlgoOrder}
               editOrder={editOrder}
