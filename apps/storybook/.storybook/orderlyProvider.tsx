@@ -17,6 +17,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
+import { customChains } from "./customChains";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -60,7 +61,6 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
     <WalletConnectorProvider
       solanaInitial={{ wallets: wallets, onError: handleSolanaError }}
       // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
-
     >
       <OrderlyAppProvider
         // brokerId="orderly"
@@ -80,6 +80,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         //     variant: "text",
         //   },
         // }}
+        customChains={customChains as any}
       >
         {props.children}
       </OrderlyAppProvider>
