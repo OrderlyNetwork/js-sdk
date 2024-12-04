@@ -1,5 +1,18 @@
 # @orderly.network/ui-order-entry
 
+## 2.0.1-developV2-1.7
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.1-developV2-1.7
+  - @orderly.network/hooks@2.0.1-developV2-1.7
+  - @orderly.network/types@2.0.1-developV2-1.7
+  - @orderly.network/utils@2.0.1-developV2-1.7
+  - @orderly.network/react-app@2.0.1-developV2-1.7
+  - @orderly.network/ui@2.0.1-developV2-1.7
+
 ## 2.0.1-developV2-1.6
 
 ### Patch Changes
