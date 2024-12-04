@@ -235,8 +235,9 @@ export const useEditSheetScript = (props: {
   editAlgoOrder: (id: string, order: OrderEntity) => Promise<any>;
   editOrder: (id: string, order: OrderEntity) => Promise<any>;
   autoCheckInput?: boolean;
+  position?: API.PositionTPSLExt;
 }) => {
-  const { state, editAlgoOrder, editOrder, autoCheckInput = true } = props;
+  const { state, editAlgoOrder, editOrder, autoCheckInput = true, position } = props;
   const { item: order } = state;
   const { hide } = useModal();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -276,6 +277,7 @@ export const useEditSheetScript = (props: {
   } = useOrderEntry({
     order: order,
     orderType,
+    position,
   });
 
   // const setValue = (key: any, value: any) => {
@@ -445,8 +447,9 @@ export type EditSheetState = ReturnType<typeof useEditSheetScript>;
 const useOrderEntry = (props: {
   order: API.AlgoOrderExt;
   orderType: string;
+  position?: API.PositionTPSLExt;
 }) => {
-  const { order, orderType } = props;
+  const { order, orderType, position } = props;
 
   // const {
   //   formattedOrder,
@@ -480,7 +483,6 @@ const useOrderEntry = (props: {
 
   const { reduce_only } = order;
 
-  const { position } = useTPSLOrderRowContext();
   const positionQty = position?.position_qty;
 
   const _maxQty = useMaxQty(order.symbol, order.side as any, order.reduce_only);
