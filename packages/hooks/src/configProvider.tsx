@@ -107,16 +107,16 @@ export const OrderlyConfigProvider: FC<
     );
   }
 
-  const innerConfigStore = useConstant<ConfigStore>(() => {
+  const innerConfigStore = useMemo<ConfigStore>(() => {
     return new ProxyConfigStore(
       configStore ||
         new ExtendedConfigStore({ brokerId, brokerName, networkId })
     );
-  });
+  }, [configStore, brokerId, brokerName, networkId]);
 
-  const innerKeyStore = useConstant<OrderlyKeyStore>(() => {
+  const innerKeyStore = useMemo<OrderlyKeyStore>(() => {
     return keyStore || new LocalStorageStore(networkId);
-  });
+  }, [networkId, keyStore]);
 
   // const innerGetWalletAdapter = useConstant<getWalletAdapterFunc>(() => {
   //   return (
