@@ -115,6 +115,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
           let newType;
 
           if (formattedOrder.order_type === OrderType.STOP_MARKET) {
+            setValue("trigger_price", removeTrailingZeros(item[0]));
+            focusInputElement(triggerPriceInputRef.current);
             newType = OrderType.STOP_LIMIT;
           } else if (formattedOrder.order_type === OrderType.MARKET) {
             newType = OrderType.LIMIT;
@@ -140,7 +142,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     return () => {
       ee.off("orderbook:item:click", orderBookItemClickHandler);
     };
-  }, [formattedOrder.order_type, formattedOrder.order_quantity, symbolInfo]);
+  }, [formattedOrder, symbolInfo]);
 
   // cancel TP/SL
   const cancelTP_SL = () => {
@@ -168,7 +170,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       shouldUpdateLastChangedField?: boolean;
     }
   ) => {
-    setValue(key, value, options);
     if (key === "order_type") {
       setLocalOrderType(value);
     }
@@ -181,8 +182,24 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       (key === "order_type" &&
         (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
     ) {
-      cancelTP_SL();
+      // cancelTP_SL();
+
+      const data = {
+        tp_trigger_price: "",
+        sl_trigger_price: "",
+        [key]: value,
+      };
+
+      if (key === "order_type") {
+        data["order_type_ext" as any] = "";
+      }
+
+      setValues(data);
+
+      return;
     }
+
+    setValue(key, value, options);
   };
 
   const onTPSLSwitchChanged = (state: boolean) => {
@@ -193,12 +210,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       cancelTP_SL();
     }
   };
+
   return {
     ...state,
     currentQtyPercentage,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     setOrderValue,
+    setOrderValues: setValues,
 
     currentLeverage,
 
@@ -215,7 +234,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       triggerPriceInputRef,
       priceInputRef,
     },
-    
+
     canTrade,
   };
 };

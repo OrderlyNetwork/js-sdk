@@ -50,6 +50,7 @@ import { useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
+import { ApiError } from "@orderly.network/types";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
@@ -70,6 +71,8 @@ export const OrderEntry = (
     metaState,
     refs,
   } = props;
+
+  // console.log("props", props);
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
@@ -148,7 +151,7 @@ export const OrderEntry = (
         return submit().then((result: any) => {
           console.log(result);
           if (result.success) {
-            setOrderValue("order_quantity", "");
+            // setOrderValue("order_quantity", "");
           } else {
             toast.error(result.message);
           }
@@ -156,9 +159,13 @@ export const OrderEntry = (
       })
       .catch((error) => {
         console.log("catch:", error);
-        if (error instanceof SDKError) {
-          toast.error(`Error:${error.message}`);
-        }
+        if (error === "cancel") return;
+        toast.error(error.message);
+        // toast.error(`Error:${error.message}`);
+
+        // if (error instanceof ApiError) {
+        // toast.error(error.message);
+        // }
       });
   };
 
@@ -348,9 +355,9 @@ export const OrderEntry = (
               checked={props.formattedOrder.reduce_only}
               onCheckedChange={(checked) => {
                 props.setOrderValue("reduce_only", checked);
-                if (checked) {
-                  props.setOrderValue("order_type_ext", "");
-                }
+                // if (checked) {
+                //   props.setOrderValue("order_type_ext", "");
+                // }
               }}
             />
             <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
