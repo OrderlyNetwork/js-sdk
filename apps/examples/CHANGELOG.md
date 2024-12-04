@@ -1,5 +1,16 @@
 # examples
 
+## 1.0.1-preReleaseV2.14
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@2.0.1-preReleaseV2.14
+  - @orderly.network/web3-onboard@2.0.1-preReleaseV2.14
+  - @orderly.network/hooks@2.0.1-preReleaseV2.14
+  - @orderly.network/core@2.0.1-preReleaseV2.14
+
 ## 1.0.1-preReleaseV2.13
 
 ### Patch Changes
