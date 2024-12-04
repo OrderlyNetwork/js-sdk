@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 2.0.1-developV2-1.4
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.1-developV2-1.4
+
 ## 2.0.1-developV2-1.3
 
 ### Patch Changes
