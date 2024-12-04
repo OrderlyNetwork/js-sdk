@@ -127,15 +127,15 @@ export const useMaxQty = (
       IMR_Factor: accountInfo.imr_factor[symbol],
     });
   }, [
-    orders,
-    // positionsData,
+    symbol,
+    positions,
+    reduceOnly,
     markPrices,
+    orders,
     accountInfo,
     symbolInfo,
-    symbol,
     side,
     totalCollateral,
-    reduceOnly,
   ]);
 
   // console.log("+++++++++++maxQty++++++++++++++ ", maxQty);

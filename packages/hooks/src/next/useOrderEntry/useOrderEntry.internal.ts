@@ -13,12 +13,12 @@ import {
 import { compose, head } from "ramda";
 import {
   type FullOrderState,
-  useOrderEntryFromStore,
-  useOrderStore,
+  // useOrderStore,
 } from "./orderEntry.store";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import { hasTPSL } from "./helper";
 import { calcTPSL_ROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
+import { useOrderStore } from "./useOrderStore";
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -31,19 +31,21 @@ const useOrderEntryNextInternal = (
     symbolInfo?: API.SymbolExt;
   } = {}
 ) => {
-  const orderEntity = useOrderEntryFromStore();
+  // const orderEntity = useOrderEntryFromStore();
 
-  const {
-    // markPrice,
-    initialOrder = {
-      side: OrderSide.BUY,
-      order_type: OrderType.LIMIT,
-      order_price: "",
-    },
-    symbolInfo,
-  } = options;
+  const { symbolInfo } = options;
+  const initialOrder = {
+    side: OrderSide.BUY,
+    order_type: OrderType.LIMIT,
+    order_price: "",
+    symbol,
+    ...options.initialOrder,
+  };
 
-  const orderEntryActions = useOrderStore((state) => state.actions);
+  const { actions: orderEntryActions, entry: orderEntity } =
+    useOrderStore(initialOrder);
+
+  // const orderEntryActions = useOrderStore((state) => state.actions);
 
   const calculate = useCallback(
     (
@@ -102,15 +104,9 @@ const useOrderEntryNextInternal = (
   );
 
   useEffect(() => {
-    if (initialOrder) {
-      orderEntryActions.restoreOrder(initialOrder);
-    }
-  }, []);
-
-  useEffect(() => {
     /// reset the symbol
     orderEntryActions.updateOrderByKey("symbol", symbol);
-  }, [symbol]);
+  }, [orderEntryActions, symbol]);
 
   const setValue = (
     key: keyof FullOrderState,
@@ -125,10 +121,16 @@ const useOrderEntryNextInternal = (
       return;
     }
 
-    const values = useOrderStore.getState().entry;
+    // const values = useOrderStore.getState().entry;
     const { markPrice } = additional ?? { markPrice: 0 };
 
-    let newValues = calculate({ ...values }, key, value, markPrice, symbolInfo);
+    let newValues = calculate(
+      { ...orderEntity },
+      key,
+      value,
+      markPrice,
+      symbolInfo
+    );
 
     /// if the order type is market or stop market, recalculate the total use mark price
     if (key === "order_type") {
@@ -170,6 +172,8 @@ const useOrderEntryNextInternal = (
     }
 
     // calculateTPSL(newValues, markPrice);
+
+    // console.log("newValues++++++", newValues);
 
     orderEntryActions.updateOrder(newValues);
 
@@ -244,51 +248,48 @@ const useOrderEntryNextInternal = (
     return newValues;
   };
 
-  const setValues = useCallback(
-    (
-      values: Partial<FullOrderState>,
-      additional?: {
-        markPrice: number;
-      }
-    ) => {
-      if (!symbolInfo) {
-        orderEntryActions.updateOrder(values);
-        console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
-        return;
-      }
+  const setValues = (
+    values: Partial<FullOrderState>,
+    additional?: {
+      markPrice: number;
+    }
+  ) => {
+    if (!symbolInfo) {
+      orderEntryActions.updateOrder(values);
+      console.warn("[ORDERLY]:symbolInfo is required to calculate the order");
+      return;
+    }
 
-      const prevValues = useOrderStore.getState().entry;
-      let newValues: Partial<FullOrderState> = { ...prevValues };
+    // const prevValues = useOrderStore.getState().entry;
+    let newValues: Partial<FullOrderState> = { ...orderEntity };
 
-      Object.keys(values).forEach((key) => {
-        newValues = calculate(
-          newValues,
-          key as keyof FullOrderState,
-          values[key as keyof FullOrderState],
-          additional?.markPrice ?? 0,
-          symbolInfo!
-        );
+    Object.keys(values).forEach((key) => {
+      newValues = calculate(
+        newValues,
+        key as keyof FullOrderState,
+        values[key as keyof FullOrderState],
+        additional?.markPrice ?? 0,
+        symbolInfo!
+      );
 
-        // orderEntryActions.updateOrder(newValues);
-      });
+      // orderEntryActions.updateOrder(newValues);
+    });
 
-      orderEntryActions.updateOrder(newValues);
+    orderEntryActions.updateOrder(newValues);
 
-      return newValues;
-    },
-    [calculate, orderEntryActions, symbolInfo]
-  );
+    return newValues;
+  };
 
   const onMarkPriceUpdated = useCallback(
     (markPrice: number, baseOn?: "total" | "order_quantity") => {
       // console.log("******", baseOn);
       if (!options.symbolInfo) return;
-      const values = useOrderStore.getState().entry;
+      // const values = useOrderStore.getState().entry;
       let newValues;
 
       if (typeof baseOn === "undefined") {
         newValues = calculate(
-          { ...values },
+          { ...orderEntity },
           "order_price",
           markPrice,
           markPrice,
@@ -296,9 +297,9 @@ const useOrderEntryNextInternal = (
         );
       } else {
         newValues = calculate(
-          { ...values },
+          { ...orderEntity },
           baseOn,
-          values[baseOn],
+          orderEntity[baseOn],
           markPrice,
           options.symbolInfo
         );
@@ -334,7 +335,7 @@ const useOrderEntryNextInternal = (
 
       orderEntryActions.updateOrder(newValues);
     },
-    [options.symbolInfo]
+    [calculate, options.symbolInfo, orderEntity, orderEntryActions]
   );
 
   const validate = (
@@ -364,7 +365,6 @@ const useOrderEntryNextInternal = (
   };
 
   const submitOrder = useCallback(() => {
-    console.log("submitOrder orderEntity:", orderEntity);
     // const order = OrderFactory.create(values.type);
     // order.submit(values);
   }, [orderEntity]);
