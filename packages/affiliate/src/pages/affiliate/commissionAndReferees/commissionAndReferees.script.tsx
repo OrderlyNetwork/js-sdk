@@ -46,7 +46,7 @@ const useCommissionDataScript = (): ListReturns<
 
   const isLG = useMediaQuery("(max-width: 767px)");
 
-  const { page, pageSize, parsePagination } = usePagination();
+  const { page, pageSize, setPage, parsePagination } = usePagination();
 
   const [commissionData, { refresh, isLoading, loadMore, meta }] =
     useReferralRebateSummary({
@@ -75,6 +75,10 @@ const useCommissionDataScript = (): ListReturns<
     [parsePagination, meta]
   );
 
+  useEffect(() => {
+    setPage(1);
+  }, [commissionRange]);
+
   return {
     data: commissionData || undefined,
     pagination,
@@ -97,7 +101,7 @@ const useRefereesDataScript = (): ListReturns<
 
   const isLG = useMediaQuery("(max-width: 767px)");
 
-  const { page, pageSize, parsePagination } = usePagination();
+  const { page, pageSize, setPage, parsePagination } = usePagination();
 
   const [commissionData, { refresh, isLoading, loadMore, meta }] =
     useRefereeInfo({
@@ -126,6 +130,10 @@ const useRefereesDataScript = (): ListReturns<
     () => parsePagination(meta),
     [parsePagination, meta]
   );
+
+  useEffect(() => {
+    setPage(1);
+  }, [commissionRange]);
 
   return {
     data: commissionData || undefined,
