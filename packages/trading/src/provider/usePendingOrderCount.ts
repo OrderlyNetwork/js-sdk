@@ -10,7 +10,7 @@ export const usePendingOrderCount = (symbol?: string) => {
 
   const pendingOrdersPageSizeKey = `orderly_${TabType.pending}_pageSize`;
   const tpslOrdersPageSizeKey = `orderly_${TabType.tp_sl}_pageSize`;
-  // 
+  //
   // const [pendingOrderPageSize] = useLocalStorage(pendingOrdersPageSizeKey, 500);
   // const [tpslOrderPageSize] = useLocalStorage(tpslOrdersPageSizeKey, 500);
 
@@ -20,7 +20,7 @@ export const usePendingOrderCount = (symbol?: string) => {
       status: OrderStatus.INCOMPLETE,
       excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
       // size: pendingOrderPageSize,
-      // size: 500,
+      size: 500,
     },
     {
       keeplive: true,
@@ -33,7 +33,7 @@ export const usePendingOrderCount = (symbol?: string) => {
       status: OrderStatus.INCOMPLETE,
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
       // size: tpslOrderPageSize,
-      // size: 500,
+      size: 500,
     },
     {
       keeplive: true,
