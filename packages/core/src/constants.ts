@@ -29,3 +29,4 @@ export const EVENT_NAMES = {
   validateEnd: "validate:end",
   switchAccount: "switch:account",
 };
+export const stagingStoryTestnetVaultAddress ='0x65B99E978d1eeE9CfEdfD463EC7A81317e5A5073';
