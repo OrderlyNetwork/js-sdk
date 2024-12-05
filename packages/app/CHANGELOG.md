@@ -1,5 +1,16 @@
 # @orderly.network/react-app
 
+## 2.0.1-developV2-1.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-developV2-1.9
+  - @orderly.network/types@2.0.1-developV2-1.9
+  - @orderly.network/utils@2.0.1-developV2-1.9
+  - @orderly.network/ui@2.0.1-developV2-1.9
+
 ## 2.0.1-developV2-1.8
 
 ### Patch Changes
