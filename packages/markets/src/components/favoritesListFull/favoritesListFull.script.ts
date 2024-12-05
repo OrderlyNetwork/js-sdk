@@ -50,9 +50,8 @@ export const useFavoritesListFullScript = () => {
   }, [favorites]);
 
   useEffect(() => {
-    // reset page when size change and search data
     setPage(1);
-  }, [pageSize, searchValue]);
+  }, [searchValue]);
 
   return {
     loading,

@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => {
     const [dataSource, setDataSource] = useState([] as any);
-    const { pageSize, setPage, pagination } = usePagination({
+    const { pagination } = usePagination({
       pageSize: 50,
     });
 
@@ -40,10 +40,6 @@ export const Default: Story = {
         setLoading(false);
       }, 2000);
     }, []);
-
-    useEffect(() => {
-      setPage(1);
-    }, [pageSize]);
 
     return (
       <Box width={800} height={600} p={3} intensity={900}>

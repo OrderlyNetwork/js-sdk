@@ -38,9 +38,8 @@ export const useMarketsListFullScript = (
   }, [data]);
 
   useEffect(() => {
-    // reset page when size change and search data
     setPage(1);
-  }, [pageSize, searchValue]);
+  }, [searchValue]);
 
   useEffect(() => {
     // Only all markets store sort

@@ -46,6 +46,12 @@ export const useOrderListScript = (props: {
     usePagination({
       pageSize: defaultPageSize,
     });
+
+  // when symbol change, reset page
+  useEffect(() => {
+    setPage(1);
+  }, [props.symbol]);
+
   const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
     useFilter(type, {
       ordersStatus,
