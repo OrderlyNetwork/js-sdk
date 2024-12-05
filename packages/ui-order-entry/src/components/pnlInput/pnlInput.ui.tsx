@@ -98,6 +98,7 @@ export const PNLInput = (props: PNLInputProps) => {
             mode={mode}
             modes={modes}
             onModeChange={(item) => onModeChange(item.value as PnLMode)}
+            testId={props.testIds?.dropDown}
           />
         </>
       }
@@ -109,6 +110,7 @@ const PNLMenus = (props: {
   mode?: string;
   modes: MenuItem[];
   onModeChange: (value: MenuItem) => void;
+  testId?: string;
 }) => {
   return (
     <SimpleDropdownMenu
@@ -120,7 +122,7 @@ const PNLMenus = (props: {
       onCloseAutoFocus={(event) => event.preventDefault()}
       onSelect={(item) => props.onModeChange(item as MenuItem)}
     >
-      <button className={"oui-p-2"}>
+      <button className={"oui-p-2"} data-testid={props.testId}>
         <CaretDownIcon size={12} color={"white"} />
       </button>
     </SimpleDropdownMenu>

@@ -408,6 +408,7 @@ export const OrderEntry = (
                 setPinned(false);
               }}
               className={"oui-absolute oui-top-2 oui-right-2 oui-group"}
+              data-testid="oui-testid-orderEntry-pinned-button"
             ></PinButton>
           </Box>
         )}
@@ -684,7 +685,7 @@ const QuantitySlider = (props: {
             })}
             onClick={() => props.setMaxQty()}
             data-testid="oui-testid-orderEntry-maxQty-value-button"
-          >
+            >
             {maxLabel}
           </button>
           <Text.numeral
@@ -692,6 +693,7 @@ const QuantitySlider = (props: {
             color={color}
             dp={props.dp}
             padding={false}
+            data-testid="oui-testid-orderEntry-maxQty-value"
           >
             {canTrade ? props.maxQty : 0}
           </Text.numeral>
