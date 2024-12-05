@@ -64,7 +64,6 @@ export class BaseContract implements IContract {
 
     let solanaVaultAddress =solanaStagingVualtAddress;
     let storyTestnetVaultAddress = stagingStoryTestnetVaultAddress;
-    console.log('-- env', env);
     if (env === 'qa') {
       solanaVaultAddress = solanaQaVaultAddress;
       verifyContractAddress = '0x50F59504D3623Ad99302835da367676d1f7E3D44';

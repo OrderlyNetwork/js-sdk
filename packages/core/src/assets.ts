@@ -223,12 +223,16 @@ export class Assets {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
+    let tempVaultAddress= vaultAddress || contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.storyTestnetVaultAddress ?? "";
+    }
     const result = await this.account.walletAdapter?.call(
       address ?? contractAddress.usdcAddress,
       "allowance",
       [
         this.account.stateValue.address,
-        vaultAddress || contractAddress.vaultAddress,
+        tempVaultAddress,
       ],
       {
         abi: contractAddress.usdcAbi,
@@ -275,11 +279,16 @@ export class Assets {
         ? this.account.walletAdapter.parseUnits(amount, decimals)
         : MaxUint256.toString();
 
+    let tempVaultAddress= vaultAddress || contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.storyTestnetVaultAddress ?? '';
+    }
+
     const result = await this.account.walletAdapter?.call(
       // contractAddress.usdcAddress,
       address,
       "approve",
-      [vaultAddress || contractAddress.vaultAddress, parsedAmount],
+      [tempVaultAddress, parsedAmount],
       {
         abi: contractAddress.usdcAbi,
       }
