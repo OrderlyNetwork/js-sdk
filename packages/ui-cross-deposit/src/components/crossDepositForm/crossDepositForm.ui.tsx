@@ -83,6 +83,7 @@ export const CrossDepositForm: FC<UseCrossDepositFormScriptReturn> = (
               status={inputStatus}
               hintMessage={hintMessage}
               fetchBalance={fetchBalance}
+              data-testid="oui-testid-deposit-dialog-quantity-input"
             />
           </Box>
 
