@@ -16,25 +16,24 @@ export function checkNotional(props: {
       const calcNotional = new Decimal(price).mul(new Decimal(qty)).toNumber();
       const notional = Number.parseFloat(`${min_notional}`);
 
-      let minQty = new Decimal(notional)
-        .div(price)
-        .toDecimalPlaces(base_dp, Decimal.ROUND_DOWN)
-        .add(base_tick ?? 0);
-      if (base_tick && base_tick > 0) {
-        minQty = new Decimal(
-          getRoundedDownDivision(minQty.toNumber(), base_tick)
-        );
+      if (calcNotional < notional) {
+        let minQty = new Decimal(notional)
+          .div(price)
+          .toDecimalPlaces(base_dp, Decimal.ROUND_DOWN)
+          .add(base_tick ?? 0);
+        if (base_tick && base_tick > 0) {
+          minQty = new Decimal(
+            getRoundedDownDivision(minQty.toNumber(), base_tick)
+          );
+        }
+        const newMinNotional = minQty
+          .mul(price)
+          .add(quote_tick ?? 0)
+          .toFixed(quote_dp);
+        return `The order value should be greater or equal to ${newMinNotional} USDC`;
       }
-      const newMinNotional = minQty
-        .mul(price)
-        .add(quote_tick ?? 0)
-        .toFixed(quote_dp);
 
-      const str =
-        calcNotional < notional
-          ? `The order value should be greater or equal to ${newMinNotional} USDC`
-          : undefined;
-      return str;
+      return undefined;
     } catch (e) {
       return undefined;
     }
@@ -43,9 +42,8 @@ export function checkNotional(props: {
   return undefined;
 }
 
-
 /**
- * 
+ *
  * 452, 100 callback: 400
  * 333, 10 callback:  330
  * 222, 1 callback:  222
