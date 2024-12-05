@@ -135,7 +135,7 @@ const useMarginRatioAndLeverage = () => {
   };
 
   const onValueCommit = useCallback((value: number[]) => {
-    onSave(value[0] + 1);
+    onSave(value[0]);
   }, []);
 
   return {
