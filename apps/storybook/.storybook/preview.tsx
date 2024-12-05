@@ -16,6 +16,7 @@ const preview: Preview = {
       themes: {
         orderly: "orderly",
         custom: "custom",
+        roundless: "roundless",
       },
       defaultTheme: "orderly",
       attributeName: "data-oui-theme",

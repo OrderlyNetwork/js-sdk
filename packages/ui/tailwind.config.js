@@ -63,6 +63,16 @@ module.exports = withTV({
     lineHeight: {
       "3xs": "0.625rem",
     },
+    borderRadius: {
+      none: "0",
+      sm: "var(--oui-rounded-sm, 0.125rem)", // 2px
+      DEFAULT: "var(--oui-rounded, 0.25rem)", // 4px
+      md: "var(--oui-rounded-md, 0.375rem)", // 6px
+      lg: "var(--oui-rounded-lg, 0.5rem)", // 8px
+      xl: "var(--oui-rounded-xl, 0.75rem)", // 12px
+      "2xl": "var(--oui-rounded-2xl, 1rem)", // 16px
+      full: "var(--oui-rounded-full, 9999px)",
+    },
     // boxShadow: {
     //   sm: "var(--oui-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))",
     //   DEFAULT:
