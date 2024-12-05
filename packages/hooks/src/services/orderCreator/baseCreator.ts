@@ -80,7 +80,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     let { order_quantity, total, order_price, reduce_only, order_type } =
       values;
 
-    const { min_notional, base_tick, quote_dp, quote_tick } = symbol || {};
+    const { min_notional, base_tick, quote_dp, quote_tick, base_dp } = symbol || {};
 
     if (!order_quantity) {
       // calculate order_quantity from total
@@ -148,6 +148,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       qty: order_quantity,
       min_notional,
       quote_dp,
+      base_dp,
     });
 
     if (notionalHintStr !== undefined && !reduce_only) {
