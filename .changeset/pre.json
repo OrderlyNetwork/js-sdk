@@ -46,11 +46,13 @@
     "@orderly.network/web3-provider-ethers": "2.0.0"
   },
   "changesets": [
+    "fifty-olives-exist",
     "lemon-cycles-flow",
     "neat-pens-notice",
     "orange-fishes-fry",
     "perfect-numbers-lay",
     "perfect-tools-chew",
+    "poor-balloons-sip",
     "rotten-melons-clean",
     "stupid-doors-give",
     "tame-owls-lay",

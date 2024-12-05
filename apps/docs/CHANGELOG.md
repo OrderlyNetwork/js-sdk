@@ -1,5 +1,27 @@
 # @orderly/docs
 
+## 1.0.1-developV2-1.14
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@2.0.1-developV2-1.14
+  - @orderly.network/web3-onboard@2.0.1-developV2-1.14
+  - @orderly.network/hooks@2.0.1-developV2-1.14
+  - @orderly.network/types@2.0.1-developV2-1.14
+
+## 1.0.1-developV2-1.13
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@2.0.1-developV2-1.13
+  - @orderly.network/web3-onboard@2.0.1-developV2-1.13
+  - @orderly.network/hooks@2.0.1-developV2-1.13
+  - @orderly.network/types@2.0.1-developV2-1.13
+
 ## 1.0.1-developV2-1.12
 
 ### Patch Changes

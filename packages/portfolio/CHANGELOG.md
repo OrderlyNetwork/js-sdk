@@ -1,5 +1,43 @@
 # @orderly.network/portfolio
 
+## 2.0.1-developV2-1.14
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.1-developV2-1.14
+  - @orderly.network/ui-positions@2.0.1-developV2-1.14
+  - @orderly.network/ui-leverage@2.0.1-developV2-1.14
+  - @orderly.network/ui-scaffold@2.0.1-developV2-1.14
+  - @orderly.network/ui-transfer@2.0.1-developV2-1.14
+  - @orderly.network/ui-orders@2.0.1-developV2-1.14
+  - @orderly.network/chart@2.0.1-developV2-1.14
+  - @orderly.network/hooks@2.0.1-developV2-1.14
+  - @orderly.network/types@2.0.1-developV2-1.14
+  - @orderly.network/utils@2.0.1-developV2-1.14
+  - @orderly.network/react-app@2.0.1-developV2-1.14
+  - @orderly.network/ui@2.0.1-developV2-1.14
+
+## 2.0.1-developV2-1.13
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.1-developV2-1.13
+  - @orderly.network/ui-positions@2.0.1-developV2-1.13
+  - @orderly.network/ui-leverage@2.0.1-developV2-1.13
+  - @orderly.network/ui-scaffold@2.0.1-developV2-1.13
+  - @orderly.network/ui-transfer@2.0.1-developV2-1.13
+  - @orderly.network/ui-orders@2.0.1-developV2-1.13
+  - @orderly.network/chart@2.0.1-developV2-1.13
+  - @orderly.network/hooks@2.0.1-developV2-1.13
+  - @orderly.network/types@2.0.1-developV2-1.13
+  - @orderly.network/utils@2.0.1-developV2-1.13
+  - @orderly.network/react-app@2.0.1-developV2-1.13
+  - @orderly.network/ui@2.0.1-developV2-1.13
+
 ## 2.0.1-developV2-1.12
 
 ### Patch Changes
