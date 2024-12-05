@@ -1,5 +1,15 @@
 # @orderly.network/ui-leverage
 
+## 2.0.1-developV2-1.11
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-developV2-1.11
+  - @orderly.network/types@2.0.1-developV2-1.11
+  - @orderly.network/ui@2.0.1-developV2-1.11
+
 ## 2.0.1-developV2-1.10
 
 ### Patch Changes
