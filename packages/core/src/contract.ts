@@ -8,7 +8,7 @@ import {
   solanaMainnetVaultAddress,
   solanaQaVaultAddress,
   solanaStagingVualtAddress,
-  solanaUSDCAddress,
+  solanaUSDCAddress, stagingStoryTestnetVaultAddress,
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,
   stagingVerifyAddressOnArbitrumTestnet
@@ -32,6 +32,8 @@ export type OrderlyContracts = {
   verifyContractAddress: string;
   solanaUSDCAddress: string;
   solanaVaultAddress: string;
+  // only for testnet, mainnet vault on evm chain is all same address
+  storyTestnetVaultAddress?: string;
 };
 
 export interface IContract {
@@ -61,9 +63,11 @@ export class BaseContract implements IContract {
     }
 
     let solanaVaultAddress =solanaStagingVualtAddress;
+    let storyTestnetVaultAddress = stagingStoryTestnetVaultAddress;
     if (env === 'qa') {
       solanaVaultAddress = solanaQaVaultAddress;
       verifyContractAddress = '0x50F59504D3623Ad99302835da367676d1f7E3D44';
+      storyTestnetVaultAddress ='0xFeA61647309cA4624EfF3c86EEEeb76a6F3eaFf7';
     }
 
     return {
@@ -75,6 +79,7 @@ export class BaseContract implements IContract {
       vaultAbi: stagingVaultAbiOnArbitrumTestnet,
       verifyContractAddress:verifyContractAddress,
       erc20Abi: stagingUSDCAbiOnArbitrumTestnet,
+      storyTestnetVaultAddress:storyTestnetVaultAddress,
     };
   }
 }
