@@ -1,5 +1,22 @@
 # @orderly.network/react
 
+## 2.0.1-alpha.5
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/trading-view@2.0.1-alpha.5
+  - @orderly.network/ui-connector@2.0.1-alpha.5
+  - @orderly.network/ui-leverage@2.0.1-alpha.5
+  - @orderly.network/ui-transfer@2.0.1-alpha.5
+  - @orderly.network/hooks@2.0.1-alpha.5
+  - @orderly.network/types@2.0.1-alpha.5
+  - @orderly.network/utils@2.0.1-alpha.5
+  - @orderly.network/core@2.0.1-alpha.5
+  - @orderly.network/net@2.0.1-alpha.5
+  - @orderly.network/ui@2.0.1-alpha.5
+
 ## 2.0.1-alpha.4
 
 ### Patch Changes
