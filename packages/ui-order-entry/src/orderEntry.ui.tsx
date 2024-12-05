@@ -145,17 +145,21 @@ export const OrderEntry = (
         },
         (errors) => {
           setErrorMsgVisible(true);
+          return Promise.reject();
         }
       )
       .then(() => {
-        return submit().then((result: any) => {
-          console.log(result);
-          if (result.success) {
-            // setOrderValue("order_quantity", "");
-          } else {
-            toast.error(result.message);
-          }
-        });
+        return submit().then(
+          (result: any) => {
+            console.log(result);
+            if (result.success) {
+              // setOrderValue("order_quantity", "");
+            } else {
+              toast.error(result.message);
+            }
+          },
+          (reject) => {}// can not remove this line
+        );
       })
       .catch((error) => {
         console.log("catch:", error);
