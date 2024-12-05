@@ -125,14 +125,14 @@ export const OrderlyConfigProvider: FC<
   //   );
   // });
 
-  const innerWalletAdapters = useConstant<WalletAdapter[]>(() => {
+  const innerWalletAdapters = useMemo<WalletAdapter[]>(() => {
     return (
       walletAdapters || [
         new DefaultEVMWalletAdapter(new EthersProvider()),
         new DefaultSolanaWalletAdapter(),
       ]
     );
-  });
+  }, [walletAdapters]);
 
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });

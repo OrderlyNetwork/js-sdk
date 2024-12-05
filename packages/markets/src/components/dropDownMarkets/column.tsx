@@ -118,7 +118,7 @@ export const getDropDownMarketsColumns = (
           <div className={cn("oui-absolute oui-right-1 oui-top-[3px]")}>
             <Flex
               className={cn(
-                "oui-bg-[rgba(51,71,253,1)] oui-py-[6px]",
+                "oui-bg-primary-darken oui-py-[6px]",
                 "oui-hidden group-hover:oui-inline-flex"
               )}
               r="base"
