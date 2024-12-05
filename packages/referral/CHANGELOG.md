@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.0.1-developV2-1.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/react@2.0.1-developV2-1.8
+  - @orderly.network/hooks@2.0.1-developV2-1.8
+  - @orderly.network/utils@2.0.1-developV2-1.8
+
 ## 2.0.1-developV2-1.7
 
 ### Patch Changes
