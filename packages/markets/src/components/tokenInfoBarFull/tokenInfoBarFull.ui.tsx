@@ -140,7 +140,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               <DataItem
                 label="Mark"
                 value={
-                  <Text.numeral dp={quotoDp} data-testid="oui-testid-tokenInfo-${props.label.toLowerCase()}-value">
+                  <Text.numeral dp={quotoDp} data-testid="oui-testid-tokenInfo-markPrice-value">
                     {data?.["mark_price"]}
                   </Text.numeral>
                 }
