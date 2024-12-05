@@ -58,6 +58,9 @@ export const DesktopOrderList: FC<OrdersBuilderState & {
           dataSource={props.dataSource}
           bordered
           ignoreLoadingCheck={true}
+          testIds={{
+            body: props.testIds?.tableBody
+          }}
           classNames={{
             header: "oui-h-[38px]",
             root: "oui-items-start !oui-h-[calc(100%_-_49px)]",

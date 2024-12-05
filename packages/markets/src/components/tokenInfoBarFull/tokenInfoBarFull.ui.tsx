@@ -140,7 +140,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               <DataItem
                 label="Mark"
                 value={
-                  <Text.numeral dp={quotoDp}>
+                  <Text.numeral dp={quotoDp} data-testid="oui-testid-tokenInfo-${props.label.toLowerCase()}-value">
                     {data?.["mark_price"]}
                   </Text.numeral>
                 }
@@ -226,7 +226,6 @@ const DataItem: React.FC<DataItemProps> = (props) => {
         size="2xs"
         intensity={98}
         className="oui-leading-[20px] oui-break-normal oui-whitespace-nowrap"
-        data-testid={`oui-testid-tokenInfo-${props.label.toLowerCase()}-value`}
       >
         {props.value}
       </Text>

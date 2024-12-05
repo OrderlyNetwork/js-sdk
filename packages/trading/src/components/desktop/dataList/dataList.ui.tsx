@@ -80,7 +80,7 @@ export const DataList: FC<DataListState> = (props) => {
           symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
           testIds={{
-            tableBody: "oui-testid-dataList-pending-tpsl-body"
+            tableBody: "oui-testid-dataList-tpsl-table-body"
           }}
         />
       </TabPanel>
@@ -96,7 +96,7 @@ export const DataList: FC<DataListState> = (props) => {
           ordersStatus={OrderStatus.FILLED}
           onSymbolChange={props.onSymbolChange}
           testIds={{
-            tableBody: "oui-testid-dataList-pending-filled-body"
+            tableBody: "oui-testid-dataList-filled-table-body"
           }}
         />
       </TabPanel>
@@ -111,7 +111,7 @@ export const DataList: FC<DataListState> = (props) => {
           symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
           testIds={{
-            tableBody: "oui-testid-dataList-pending-orderHistory-body"
+            tableBody: "oui-testid-dataList-orderHistory-table-body"
           }}
         />
       </TabPanel>
