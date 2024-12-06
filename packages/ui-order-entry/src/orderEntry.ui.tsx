@@ -145,28 +145,33 @@ export const OrderEntry = (
         },
         (errors) => {
           setErrorMsgVisible(true);
-
+         
           if (typeof errors === "object") {
-            if (errors.total) return Promise.reject();
+            if (
+              errors.total != null ||
+              errors.order_quantity != null ||
+              errors.order_price != null ||
+              errors.trigger_price != null
+            )
+              return Promise.reject();
           }
         }
       )
       .then(() => {
-        return submit().then(
-          (result: any) => {
-            console.log(result);
-            if (result.success) {
-              // setOrderValue("order_quantity", "");
-            } else {
-              toast.error(result.message);
-            }
-          },
-        );
+        return submit().then((result: any) => {
+          console.log(result);
+          if (result.success) {
+            // setOrderValue("order_quantity", "");
+          } else {
+            toast.error(result.message);
+          }
+        });
       })
       .catch((error) => {
         console.log("catch:", error);
         if (error === "cancel") return;
-        toast.error(error.message);
+        if (typeof error === "object" && error.message)
+          toast.error(error.message);
         // toast.error(`Error:${error.message}`);
 
         // if (error instanceof ApiError) {
