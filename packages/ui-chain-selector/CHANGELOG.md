@@ -1,5 +1,16 @@
 # @orderly.network/ui-chain-selector
 
+## 2.0.1-developV2-1.16
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-developV2-1.16
+  - @orderly.network/types@2.0.1-developV2-1.16
+  - @orderly.network/react-app@2.0.1-developV2-1.16
+  - @orderly.network/ui@2.0.1-developV2-1.16
+
 ## 2.0.1-developV2-1.15
 
 ### Patch Changes
