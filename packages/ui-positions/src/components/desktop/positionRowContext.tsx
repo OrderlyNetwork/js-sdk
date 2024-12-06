@@ -135,7 +135,16 @@ export const PositionsRowProvider: FC<
   }, [closeOrderData]);
 
   const postOrder = () => {
-    return onSubmit(closeOrderData);
+    return onSubmit(closeOrderData)
+    .catch((error) => {
+      if (typeof error === "string") {
+        toast.error(error);
+      } else {
+        toast.error(error.message);
+      }
+      return Promise.resolve();
+    })
+    ;
   };
 
   return (
