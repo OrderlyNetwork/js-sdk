@@ -145,7 +145,10 @@ export const OrderEntry = (
         },
         (errors) => {
           setErrorMsgVisible(true);
-          return Promise.reject();
+
+          if (typeof errors === "object") {
+            if (errors.total) return Promise.reject();
+          }
         }
       )
       .then(() => {
@@ -158,7 +161,6 @@ export const OrderEntry = (
               toast.error(result.message);
             }
           },
-          (reject) => {}// can not remove this line
         );
       })
       .catch((error) => {
@@ -685,7 +687,7 @@ const QuantitySlider = (props: {
             })}
             onClick={() => props.setMaxQty()}
             data-testid="oui-testid-orderEntry-maxQty-value-button"
-            >
+          >
             {maxLabel}
           </button>
           <Text.numeral
