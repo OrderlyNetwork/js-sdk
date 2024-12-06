@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.18-alpha.2
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/core@2.0.1-alpha.6
+
 ## 0.3.18-alpha.1
 
 ### Patch Changes

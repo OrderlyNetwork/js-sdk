@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.0.1-alpha.6
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-alpha.6
+  - @orderly.network/web3-provider-ethers@2.0.1-alpha.6
+  - @orderly.network/default-evm-adapter@2.0.1-alpha.6
+  - @orderly.network/types@2.0.1-alpha.6
+  - @orderly.network/utils@2.0.1-alpha.6
+  - @orderly.network/core@2.0.1-alpha.6
+  - @orderly.network/perp@4.0.1-alpha.2
+  - @orderly.network/net@2.0.1-alpha.6
+
 ## 2.0.1-alpha.5
 
 ### Patch Changes
