@@ -3,7 +3,7 @@ import { NumeralWithCtx } from "./numeralWithCtx";
 import { PriceInput } from "./priceInput";
 import { QuantityInput } from "./quantityInput";
 import { Decimal } from "@orderly.network/utils";
-import { useSymbolContext } from "../../providers/symbolProvider";
+import { useSymbolContext } from "../../../providers/symbolProvider";
 
 export const renderQuantity = (value: number, record: any) => {
 

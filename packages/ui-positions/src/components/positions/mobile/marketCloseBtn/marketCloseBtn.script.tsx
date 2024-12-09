@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSymbolContext } from "../../../providers/symbolProvider";
+import { useSymbolContext } from "../../../../providers/symbolProvider";
 import { usePositionsRowContext } from "../../desktop/positionRowContext";
 import { PositionCellState } from "../positionCell/positionCell.script";
 import { toast } from "@orderly.network/ui";
