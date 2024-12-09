@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { type TableColumn, Text } from "@orderly.network/ui";
+import { type Column, Text } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
 
 export const useFeeTierColumns = () => {
@@ -61,7 +61,7 @@ export const useFeeTierColumns = () => {
           return <Text>{value}</Text>;
         },
       },
-    ] as TableColumn[];
+    ] as Column[];
   }, []);
 
   return columns;

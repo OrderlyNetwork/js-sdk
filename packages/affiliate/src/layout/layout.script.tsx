@@ -33,8 +33,11 @@ export const useLayoutBuilder = (): SideBarProps => {
                 y2="9"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#59B0FE" />
-                <stop offset="1" stopColor="#26FEFE" />
+                <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+                <stop
+                  offset="1"
+                  stopColor="rgb(var(--oui-gradient-brand-start))"
+                />
               </linearGradient>
             </defs>
           </svg>
@@ -64,7 +67,6 @@ export const useLayoutBuilder = (): SideBarProps => {
     ];
   }, []);
 
-
   return {
     items,
     current,
@@ -73,7 +75,7 @@ export const useLayoutBuilder = (): SideBarProps => {
     //   setSideOpen(open);
     // },
     onItemSelect: (item) => {
-        // @ts-ignore
+      // @ts-ignore
       setCurrent(item.href);
     },
   };

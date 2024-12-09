@@ -1,5 +1,10 @@
 import { PropsWithChildren } from "react";
-import { DataTable, DataTableProps, ExtensionSlot } from "@orderly.network/ui";
+import {
+  ExtensionPositionEnum,
+  ExtensionSlot,
+  DataTable,
+  DataTableProps,
+} from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { alertMessages, DESCRIPTIONS } from "../constants/message";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
@@ -34,7 +39,6 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
 
   return (
     <DataTable
-      {...rest}
       dataSource={data}
       ignoreLoadingCheck={
         wrongNetwork || state.status < status || props.ignoreLoadingCheck
@@ -48,6 +52,8 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
           visible={!state.validating}
         />
       }
+      manualPagination
+      {...rest}
     />
   );
 };
@@ -73,7 +79,7 @@ const GuardView = (props: GuardViewProps) => {
           size: "md",
         }}
       >
-        <ExtensionSlot position={"emptyDataState"} />
+        <ExtensionSlot position={ExtensionPositionEnum.EmptyDataIdentifier} />
       </AuthGuard>
     </Flex>
   );

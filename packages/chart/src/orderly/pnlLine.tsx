@@ -112,7 +112,7 @@ const PnlLineChart = (props: PnlLineChartProps) => {
           <Line
             type="natural"
             dataKey="pnl"
-            stroke={colors.primaryLight}
+            stroke={colors.primary}
             strokeWidth={2}
             dot={false}
             isAnimationActive={false}

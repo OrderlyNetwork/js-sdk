@@ -31,7 +31,7 @@ const textVariants = tv({
     color: {
       inherit: "oui-text-inherit",
       neutral: "oui-text-base-contrast-54",
-      primary: "oui-text-primary-darken",
+      primary: "oui-text-primary",
       primaryLight: "oui-text-primary-light",
       secondary: "oui-text-secondary",
       tertiary: "oui-text-tertiary",
@@ -57,7 +57,7 @@ const textVariants = tv({
     },
     dashBoard: {
       default: "oui-border-b oui-border-dashed oui-border-base-contrast-12",
-    }
+    },
   },
 });
 

@@ -6,4 +6,4 @@
 [![Types NPM Version](https://img.shields.io/npm/v/@orderly.network/types?label=@orderly.network/types&color=blue)](https://www.npmjs.com/package/@orderly.network/types)
 [![Components NPM Version](https://img.shields.io/npm/v/@orderly.network/react?label=@orderly.network/react&color=blue)](https://www.npmjs.com/package/@orderly.network/react)
 
-Monorepo for all Orderly Network EVM SDKs. Please check out our [documentation](https://sdk.orderly.network/).
+Monorepo for all Orderly Network EVM SDKs. Please check out our [documentation](https://orderly.network/docs/sdks).

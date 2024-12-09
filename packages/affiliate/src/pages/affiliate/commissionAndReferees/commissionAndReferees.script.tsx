@@ -7,23 +7,16 @@ import {
   useRefereeInfo,
   useReferralRebateSummary,
 } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { PaginationMeta, usePagination } from "@orderly.network/ui";
 
-export interface ListReturns<T> {
+export type ListReturns<T> = {
   data: T;
-  meta: {
-    count: number;
-    page: number;
-    pageSize: number;
-    pageTotal: number;
-  };
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
   dateRange?: DateRange;
   setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
   isLoading?: boolean;
   loadMore?: () => void;
-}
+  pagination: PaginationMeta;
+};
 
 export type CommissionAndRefereesReturns = {
   commission: ListReturns<RefferalAPI.ReferralRebateSummary[] | undefined>;
@@ -53,7 +46,7 @@ const useCommissionDataScript = (): ListReturns<
 
   const isLG = useMediaQuery("(max-width: 767px)");
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const { page, pageSize, setPage, parsePagination } = usePagination();
 
   const [commissionData, { refresh, isLoading, loadMore, meta }] =
     useReferralRebateSummary({
@@ -73,39 +66,22 @@ const useCommissionDataScript = (): ListReturns<
     refresh();
   }, [commissionRange]);
 
-  const onPageChange = (page: number) => {
-    setPage(page);
-  };
-
-  const onPageSizeChange = (pageSize: number) => {
-    console.log("page size change", pageSize);
-    
-    setPageSize(pageSize);
-    // if (meta?.total) {
-    //   const state = parseMeta({
-    //     total: meta?.total,
-    //     current_page: page,
-    //     records_per_page: pageSize,
-    //   });
-    //   console.log("page size change 222", {
-    //     total: meta?.total,
-    //     current_page: page,
-    //     records_per_page: pageSize,
-    //   }, state);
-      
-    //   setPage(state.page);
-    // }
-  };
-
   // const loadMore = () => {
   //   setPage(page + 1);
   // };
 
+  const pagination = useMemo(
+    () => parsePagination(meta),
+    [parsePagination, meta]
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [commissionRange]);
+
   return {
     data: commissionData || undefined,
-    meta: parseMeta(meta),
-    onPageChange,
-    onPageSizeChange,
+    pagination,
     dateRange: commissionRange,
     setDateRange: setCommissionRange,
     isLoading,
@@ -125,7 +101,7 @@ const useRefereesDataScript = (): ListReturns<
 
   const isLG = useMediaQuery("(max-width: 767px)");
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const { page, pageSize, setPage, parsePagination } = usePagination();
 
   const [commissionData, { refresh, isLoading, loadMore, meta }] =
     useRefereeInfo({
@@ -139,30 +115,29 @@ const useRefereesDataScript = (): ListReturns<
           : undefined,
       size: pageSize,
       page: !isLG ? page : undefined,
-      sort: "descending_code_binding_time"
+      sort: "descending_code_binding_time",
     });
 
   useEffect(() => {
     refresh();
   }, [commissionRange]);
 
-  const onPageChange = (page: number) => {
-    setPage(page);
-  };
-
-  const onPageSizeChange = (pageSize: number) => {
-    setPageSize(pageSize);
-  };
-
   // const loadMore = () => {
   //   setPage(page + 1);
   // };
 
+  const pagination = useMemo(
+    () => parsePagination(meta),
+    [parsePagination, meta]
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [commissionRange]);
+
   return {
     data: commissionData || undefined,
-    meta: parseMeta(meta),
-    onPageChange,
-    onPageSizeChange,
+    pagination,
     dateRange: commissionRange,
     setDateRange: setCommissionRange,
     isLoading,

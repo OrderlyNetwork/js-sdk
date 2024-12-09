@@ -21,6 +21,7 @@ import {
 } from "./portfolioSheet.script";
 import { USDCIcon } from "../accountSheet/icons";
 import { RiskIndicator } from "./riskIndicator";
+import { LeverageSlider } from "@orderly.network/ui-leverage";
 
 export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
   return (
@@ -97,7 +98,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           padding={false}
           visible={!props.hideAssets}
         >
-          {props.totalValue ?? '--'}
+          {props.totalValue ?? "--"}
         </Text.numeral>
       </Flex>
       <Grid cols={2} rows={1} width={"100%"}>
@@ -157,7 +158,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
                 size={12}
                 className="oui-text-primary-light"
               />
-              <Text size="2xs" color="primaryLight">
+              <Text size="2xs" color="primary">
                 Settle PnL
               </Text>
             </button>
@@ -185,7 +186,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
           <Text.numeral
             size="xs"
             rule="percentages"
-            color="primaryLight"
+            color="primary"
             dp={2}
             padding={false}
             visible={!props.hideAssets}
@@ -253,54 +254,17 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           }
           suffix="x"
         >
-          {props.currentLeverage ?? '--'}
+          {props.currentLeverage ?? "--"}
         </Text.numeral>
       </Flex>
-      <Slider
-        step={1}
-        max={props.maxLeverage}
-        min={1}
-        // markLabelVisible={true}
-        // marks={props.marks}
-        markCount={5}
-        value={[props.value]}
-        onValueChange={(e) => {
-          props.onLeverageChange(e[0]);
-          props.setShowSliderTip(true);
-        }}
-        color="primaryLight"
-        onValueCommit={(e) => {
-          props.onValueCommit(e);
-          props.setShowSliderTip(false);
-        }}
-        showTip={props.showSliderTip}
-        tipFormatter={(value, min, max, percent) => {
-          return `${value+1}x`;
-        }}
+      <LeverageSlider
+        value={props.value}
+        maxLeverage={props.maxLeverage}
+        onLeverageChange={props.onLeverageChange}
+        setShowSliderTip={props.setShowSliderTip}
+        showSliderTip={props.showSliderTip}
+        onValueCommit={props.onValueCommit}
       />
-      <Flex justify={"between"} width={"100%"}>
-        {[1, 10, 20, 30, 40, 50].map((item, index) => {
-          return (
-            <button
-              onClick={(e) => {
-                props.onSaveLeverage(item);
-                props.onLeverageChange(item);
-              }}
-              className={cn(
-                " oui-text-2xs oui-pb-3",
-                index === 0
-                  ? "oui-pr-2"
-                  : index === 5
-                  ? "oui-pl-2"
-                  : "oui-px-2 oui-ml-2",
-                item - 1 >= 0 && "oui-text-primary-light"
-              )}
-            >
-              {`${item}x`}
-            </button>
-          );
-        })}
-      </Flex>
     </Flex>
   );
 };

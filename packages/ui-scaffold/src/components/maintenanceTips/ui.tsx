@@ -24,7 +24,10 @@ export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
   if (showDialog) {
     return (
       <Dialog open={true}>
-        <DialogContent closable={false}>
+        <DialogContent
+          closable={false}
+          onOpenAutoFocus={(event) => event.preventDefault()}
+        >
           <DialogHeader>
             <DialogTitle>System upgrade in progress</DialogTitle>
           </DialogHeader>

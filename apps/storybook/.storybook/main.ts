@@ -1,25 +1,54 @@
-import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
-import { StorybookConfig } from "@storybook/react-webpack5";
-import path from "path";
+import { StorybookConfig } from "@storybook/react-vite";
+// import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
+// import type { StorybookConfig } from "@storybook/react-webpack5";
+import { join, dirname, resolve } from "path";
 
-// import { remarkNpm2Yarn } from 'remark-npm2yarn'
+/**
+ * This function is used to resolve the absolute path of a package.
+ * It is needed in projects that use Yarn PnP or are set up within a monorepo.
+ */
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}
 
 const config: StorybookConfig = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
-  staticDirs: ["../public"],
+  stories: [
+    "../src/stories/**/*.mdx",
+    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+  ],
+
   addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
+    // getAbsolutePath("@storybook/addon-onboarding"),
+    getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("@storybook/addon-essentials"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("@storybook/addon-interactions"),
     {
-      name: "@storybook/addon-styling",
+      name: "@storybook/addon-styling-webpack",
       options: {
-        // Check out https://github.com/storybookjs/addon-styling/blob/main/docs/api.md
-        // For more details on this addon's options.
-        postCss: true,
+        rules: [
+          // Replaces existing CSS rules to support PostCSS
+          {
+            test: /\.css$/,
+            use: [
+              "style-loader",
+              {
+                loader: "css-loader",
+                options: { importLoaders: 1 },
+              },
+              {
+                // Gets options from `postcss.config.js` in your project root
+                loader: "postcss-loader",
+                options: { implementation: require.resolve("postcss") },
+              },
+            ],
+          },
+        ],
       },
     },
-    "@storybook/addon-mdx-gfm",
+    getAbsolutePath("@storybook/addon-themes"),
+    getAbsolutePath("@storybook/addon-mdx-gfm"),
+    // https://storybook.js.org/addons/@storybook/addon-storysource
     {
       name: "@storybook/addon-storysource",
       options: {
@@ -28,69 +57,22 @@ const config: StorybookConfig = {
         },
       },
     },
-    "@storybook/addon-styling-webpack"
+    /**
+     * custom addon
+     */
+    // "./addons/manager.ts",
   ],
+
+  // framework: "@storybook/react-webpack5",
   framework: {
-    name: "@storybook/react-webpack5",
-    options: {
-      fastRefresh: true,
-    },
-  },
-  docs: {
-    autodocs: "tag",
-  },
-  webpackFinal: async (config) => {
-    if (config.resolve) {
-      config.resolve.plugins = [
-        ...(config.resolve.plugins || []),
-        new TsconfigPathsPlugin({
-          extensions: config.resolve.extensions,
-          // custom tsconfig
-          configFile: path.resolve(__dirname, "../tsconfig.build.json"),
-        }),
-      ];
-
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        // "@orderly.network/hooks": path.resolve(__dirname, "../../../packages/hooks/src"),
-        // "@orderly.network/react": path.resolve(
-        //   __dirname,
-        //   "../../../packages/component/src"
-        // ),
-        "@orderly.network/referral": path.resolve(
-          __dirname,
-          "../../../packages/referral/src"
-        ),
-      };
-
-      // if (config.module) {
-      //   config.module.rules.push({
-      //     test: /\.css$/,
-      //     use: [
-      //       'style-loader',
-      //       'css-loader',
-      //       {
-      //         loader: 'postcss-loader',
-      //         options: {
-      //           postcssOptions: {
-      //             ident: 'postcss',
-      //             plugin: [
-      //               require('tailwindcss'),
-      //               require('autoprefixer'),
-      //             ]
-      //           }
-      //         }
-      //       }
-      //     ]
-      //   });
-      // }
-    }
-    return config;
+    name: getAbsolutePath("@storybook/react-vite"),
+    options: {},
   },
 
-  babel: async (config, option) => {
-    config.presets = [...config.presets!, "@babel/preset-typescript"];
-    return config;
+  docs: {},
+
+  typescript: {
+    reactDocgen: "react-docgen-typescript",
   },
 };
 export default config;

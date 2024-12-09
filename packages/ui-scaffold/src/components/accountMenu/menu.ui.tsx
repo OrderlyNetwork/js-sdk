@@ -179,6 +179,7 @@ const WalletMenu = (props: {
               </Flex>
               <Flex gap={2}>
                 <button
+                  data-testid="oui-testid-nav-bar-dropDownMenuItem-copyAddress"
                   onClick={async () => {
                     // copy
                     await navigator.clipboard.writeText(address);

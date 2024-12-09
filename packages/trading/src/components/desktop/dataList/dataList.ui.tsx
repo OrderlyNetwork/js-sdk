@@ -36,6 +36,7 @@ export const DataList: FC<DataListState> = (props) => {
       }}
     >
       <TabPanel
+        testid="oui-testid-dataList-position-tab"
         value={DataListTabType.positions}
         title={
           (props.positionCount ?? 0) > 0
@@ -46,6 +47,7 @@ export const DataList: FC<DataListState> = (props) => {
         <PositionsView {...props} />
       </TabPanel>
       <TabPanel
+        testid="oui-testid-dataList-pending-tab"
         value={DataListTabType.pending}
         title={
           (props.pendingOrderCount ?? 0) > 0
@@ -58,9 +60,13 @@ export const DataList: FC<DataListState> = (props) => {
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
+          testIds={{
+            tableBody: "oui-testid-dataList-pending-table-body"
+          }}
         />
       </TabPanel>
       <TabPanel
+        testid="oui-testid-dataList-tpsl-tab"
         value={DataListTabType.tp_sl}
         title={
           (props.tpSlOrderCount ?? 0) > 0
@@ -73,18 +79,29 @@ export const DataList: FC<DataListState> = (props) => {
           ordersStatus={OrderStatus.INCOMPLETE}
           symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
+          testIds={{
+            tableBody: "oui-testid-dataList-tpsl-table-body"
+          }}
         />
       </TabPanel>
-      <TabPanel value={DataListTabType.filled} title={DataListTabType.filled}>
+      <TabPanel
+        testid="oui-testid-dataList-filled-tab"
+        value={DataListTabType.filled}
+        title={DataListTabType.filled}
+      >
         <DesktopOrderListWidget
           type={TabType.filled}
           symbol={props.showAllSymbol ? undefined : props.symbol}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           ordersStatus={OrderStatus.FILLED}
           onSymbolChange={props.onSymbolChange}
+          testIds={{
+            tableBody: "oui-testid-dataList-filled-table-body"
+          }}
         />
       </TabPanel>
       <TabPanel
+        testid="oui-testid-dataList-orderHistory-tab"
         value={DataListTabType.orderHistory}
         title={DataListTabType.orderHistory}
       >
@@ -93,6 +110,9 @@ export const DataList: FC<DataListState> = (props) => {
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
+          testIds={{
+            tableBody: "oui-testid-dataList-orderHistory-table-body"
+          }}
         />
       </TabPanel>
     </Tabs>

@@ -69,109 +69,50 @@ async function updateCreateOrderlyPkg() {
 
   // update all orderly packages version
 
-  await wirteVersionFile(
-    path.resolve(packageSrc, "component/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/react",
-      reactPakageJson.content.version
-    )
-  );
+  const packagePathMap = {
+    "@orderly.network/default-evm-adapter": "default-evm-adapter",
+    "@orderly.network/default-solana-adapter": "default-solana-adapter",
+    "@orderly.network/web3-provider-ethers": "web3-provider-ethers",
+    "@orderly.network/wallet-connector": "wallet-connector",
 
-  await wirteVersionFile(
-    path.resolve(packageSrc, "onboard/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/web3-onboard",
-      web3OnboardPakageJson.content.version
-    )
-  );
+    "@orderly.network/core": "core",
+    "@orderly.network/hooks": "hooks",
+    "@orderly.network/net": "net",
+    "@orderly.network/perp": "perp",
+    "@orderly.network/utils": "utils",
+    "@orderly.network/types": "types",
+    "@orderly.network/react-app": "app",
 
-  const hooksPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "hooks")
-  );
+    "@orderly.network/affiliate": "affiliate",
+    "@orderly.network/trading-rewards": "trading-rewards",
+    "@orderly.network/portfolio": "portfolio",
+    "@orderly.network/markets": "markets",
+    "@orderly.network/trading": "trading",
 
-  await wirteVersionFile(
-    path.resolve(packageSrc, "hooks/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/hooks",
-      hooksPakageJson.content.version
-    )
-  );
+    "@orderly.network/ui": "ui",
+    "@orderly.network/ui-connector": "ui-connector",
+    "@orderly.network/ui-leverage": "ui-leverage",
+    "@orderly.network/ui-orders": "ui-orders",
+    "@orderly.network/ui-positions": "ui-positions",
+    "@orderly.network/ui-scaffold": "ui-scaffold",
+    "@orderly.network/ui-chain-selector": "ui-chain-selector",
+    "@orderly.network/ui-transfer": "ui-transfer",
+    "@orderly.network/ui-order-entry": "ui-order-entry",
+    "@orderly.network/ui-share": "ui-share",
+    "@orderly.network/ui-tpsl": "ui-tpsl",
+    "@orderly.network/ui-tradingview": "ui-tradingview",
+    "@orderly.network/chart": "chart",
+  };
 
-  const corePakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "core")
-  );
-
-  await wirteVersionFile(
-    path.resolve(packageSrc, "core/src", "version.ts"),
-    generateVersionFile("@orderly.network/core", corePakageJson.content.version)
-  );
-
-  const perpPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "perp")
-  );
-
-  await wirteVersionFile(
-    path.resolve(packageSrc, "perp/src", "version.ts"),
-    generateVersionFile("@orderly.network/perp", perpPakageJson.content.version)
-  );
-
-  const networkPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "net")
-  );
-
-  await wirteVersionFile(
-    path.resolve(packageSrc, "net/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/net",
-      networkPakageJson.content.version
-    )
-  );
-
-  const tradingViewPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "trading-view")
-  );
-
-  await wirteVersionFile(
-    path.resolve(packageSrc, "trading-view/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/trading-view",
-      tradingViewPakageJson.content.version
-    )
-  );
-
-  const typePackageJson = await PackageJson.load(
-    path.resolve(packageSrc, "types")
-  );
-
-  await wirteVersionFile(
-    path.resolve(packageSrc, "types/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/type",
-      typePackageJson.content.version
-    )
-  );
-  const evmAdapterPackageJson = await PackageJson.load(
-    path.resolve(packageSrc, "default-evm-adapter")
-  );
-
-  await wirteVersionFile(
-    path.resolve(packageSrc, "default-evm-adapter/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/default-evm-adapter",
-      evmAdapterPackageJson.content.version
-    )
-  );
-  const solanaAdapterPackageJson = await PackageJson.load(
-    path.resolve(packageSrc, "default-solana-adapter")
-  );
-
-  await wirteVersionFile(
-    path.resolve(packageSrc, "default-solana-adapter/src", "version.ts"),
-    generateVersionFile(
-      "@orderly.network/default-solana-adapter",
-      solanaAdapterPackageJson.content.version
-    )
-  );
+  for (const pkgName of Object.keys(packagePathMap)) {
+    const pakageJson = await PackageJson.load(
+      path.resolve(packageSrc, packagePathMap[pkgName])
+    );
+    await wirteVersionFile(
+      path.resolve(packageSrc, `${packagePathMap[pkgName]}/src`, "version.ts"),
+      generateVersionFile(pkgName, pakageJson.content.version)
+    );
+  }
 }
 
 const main = async () => {

@@ -1,12 +1,5 @@
 import { MouseEventHandler, ReactNode } from "react";
-import {
-  Flex,
-  TokenIcon,
-  Text,
-  Badge,
-  cn,
-  TableColumn,
-} from "@orderly.network/ui";
+import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   DeleteIcon,
@@ -66,7 +59,7 @@ export const getSideMarketsColumns = (
                 >
                   {record.symbol}
                 </Text.formatted>
-                <Badge size="xs" color="primaryLight">
+                <Badge size="xs" color="primary">
                   {record.leverage}x
                 </Badge>
               </Flex>
@@ -162,5 +155,5 @@ export const getSideMarketsColumns = (
         );
       },
     },
-  ] as TableColumn[];
+  ] as Column[];
 };

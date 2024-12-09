@@ -12,7 +12,10 @@ import { inputFormatter } from "@orderly.network/ui";
 import { useEffect, useMemo, useState } from "react";
 
 export type PNLInputProps = PNLInputState & {
-  testId?: string;
+  testIds?: {
+    input?: string;
+    dropDown?: string;
+  };
   quote: string;
   type: "TP" | "SL";
 };
@@ -61,7 +64,7 @@ export const PNLInput = (props: PNLInputProps) => {
           side: props.type === "TP" ? "top" : "bottom",
         },
       }}
-      data-testid={props.testId}
+      data-testid={props.testIds?.input}
       autoComplete={"off"}
       onValueChange={onValueChange}
       formatters={[
@@ -86,7 +89,7 @@ export const PNLInput = (props: PNLInputProps) => {
       }}
       suffix={
         <>
-          {mode === PnLMode.PERCENTAGE && !!value &&  (
+          {mode === PnLMode.PERCENTAGE && !!value && (
             <Text size={"2xs"} color="inherit" className="oui-ml-[2px]">
               %
             </Text>
@@ -95,6 +98,7 @@ export const PNLInput = (props: PNLInputProps) => {
             mode={mode}
             modes={modes}
             onModeChange={(item) => onModeChange(item.value as PnLMode)}
+            testId={props.testIds?.dropDown}
           />
         </>
       }
@@ -106,6 +110,7 @@ const PNLMenus = (props: {
   mode?: string;
   modes: MenuItem[];
   onModeChange: (value: MenuItem) => void;
+  testId?: string;
 }) => {
   return (
     <SimpleDropdownMenu
@@ -117,7 +122,7 @@ const PNLMenus = (props: {
       onCloseAutoFocus={(event) => event.preventDefault()}
       onSelect={(item) => props.onModeChange(item as MenuItem)}
     >
-      <button className={"oui-p-2"}>
+      <button className={"oui-p-2"} data-testid={props.testId}>
         <CaretDownIcon size={12} color={"white"} />
       </button>
     </SimpleDropdownMenu>

@@ -116,11 +116,13 @@ export const RiskRate: FC<RiskRateState> = (props) => {
               onClick={() => {
                 modal.show(LeverageWidgetId, { currentLeverage: 5 });
               }}
+              data-testid="oui-testid-riskRate-leverage-button"
             >
               <Text.numeral
                 dp={2}
                 padding={false}
                 suffix={maxLeverage ? "x" : undefined}
+                data-testid="oui-testid-riskRate-leverage-value"
               >
                 {maxLeverage ?? "--"}
               </Text.numeral>
