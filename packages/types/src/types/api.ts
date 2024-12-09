@@ -406,6 +406,26 @@ export declare namespace API {
     pnl: number;
     snapshot_time?: number;
   }
+
+  export interface PositionHistory {
+    position_id: number;                // Unique identifier for the position
+    status: "open" | "closed";          // Status of the position
+    type: string;                       // Type of the position activity
+    symbol: string;                     // Trading pair symbol
+    avg_open_price: number;             // Average open price of the position
+    avg_close_price: number;            // Average close price of the position
+    max_position_qty: number;           // Maximum quantity held in the position
+    closed_position_qty: number;         // Quantity closed in the position
+    side: "LONG" | "SHORT";             // Side of the position
+    trading_fee: number;                // Fee charged for trading
+    accumulated_funding_fee: number;    // Accumulated funding fee for the position
+    insurance_fund_fee: number;         // Fee contributed to the insurance fund
+    liquidator_fee: number;             // Fee paid to the liquidator
+    realized_pnl: number;               // Realized profit and loss
+    open_timestamp: number;             // Timestamp when the position was opened
+    close_timestamp: number;            // Timestamp when the position was closed
+    last_update_timestamp: number;      // Timestamp of the last update to the position
+  }
 }
 
 export declare namespace WSMessage {

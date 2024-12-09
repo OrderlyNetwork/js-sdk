@@ -1,8 +1,8 @@
 import { ListView } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 import { PositionsBuilderState } from "./usePositionsBuilder.script";
-import { SymbolProvider } from "../providers/symbolProvider";
-import { PositionsProps } from "../types/types";
+import { SymbolProvider } from "../../providers/symbolProvider";
+import { PositionsProps } from "../../types/types";
 import { useColumn } from "./desktop/useColumn";
 import { PositionsRowProvider } from "./desktop/positionRowContext";
 import { PositionCellWidget } from "./mobile/positionCell";

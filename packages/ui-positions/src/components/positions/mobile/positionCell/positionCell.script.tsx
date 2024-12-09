@@ -1,7 +1,7 @@
 import { API } from "@orderly.network/types";
-import { PositionsProps } from "../../../types/types";
+import { PositionsProps } from "../../../../types/types";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useSymbolContext } from "../../../providers/symbolProvider";
+import { useSymbolContext } from "../../../../providers/symbolProvider";
 
 export const usePositionCellScript = (
   props: {

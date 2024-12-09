@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PositionsWidget } from "@orderly.network/ui-positions";
+import { PositionHistoryWidget, PositionsWidget } from "@orderly.network/ui-positions";
 import { Box, Button, modal } from "@orderly.network/ui";
 
 const meta: Meta<typeof PositionsWidget> = {
@@ -17,6 +17,16 @@ type Story = StoryObj<typeof meta>;
 export const Defaut: Story = {
   decorators: [(Stroy) => <Box height={"360px"}>{Stroy()}</Box>],
 };
+
+export const PositionHistory: Story = {
+  render: (arg) => {
+    return (
+      <PositionHistoryWidget />
+    );
+  }
+};
+
+
 
 export const MarketClose: Story = {
   render: () => {
