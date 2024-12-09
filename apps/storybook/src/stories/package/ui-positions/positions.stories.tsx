@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PositionHistoryWidget, PositionsWidget } from "@orderly.network/ui-positions";
-import { Box, Button, modal } from "@orderly.network/ui";
+import {
+  MobilePositionHistoryWidget,
+  MobilePositionsWidget,
+  PositionHistoryWidget,
+  PositionsWidget,
+} from "@orderly.network/ui-positions";
+import { Box, Button, modal, useScreen } from "@orderly.network/ui";
 
 const meta: Meta<typeof PositionsWidget> = {
   title: "Package/ui-positions/Positions",
@@ -15,18 +20,35 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Defaut: Story = {
-  decorators: [(Stroy) => <Box height={"360px"}>{Stroy()}</Box>],
+  decorators: [
+    (Stroy) => (
+      <Box height={"360px"} className="oui-bg-base-10">
+        {Stroy()}
+      </Box>
+    ),
+  ],
 };
 
 export const PositionHistory: Story = {
+  decorators: [
+    (Stroy) => (
+      <Box height={"360px"} className="oui-bg-base-10">
+        {Stroy()}
+      </Box>
+    ),
+  ],
   render: (arg) => {
-    return (
-      <PositionHistoryWidget />
-    );
-  }
+    const { isMobile } = useScreen();
+    if (isMobile) {
+      return (
+        <MobilePositionHistoryWidget
+          classNames={{ cell: "oui-p-2 oui-bg-base-9" }}
+        />
+      );
+    }
+    return <PositionHistoryWidget />;
+  },
 };
-
-
 
 export const MarketClose: Story = {
   render: () => {
