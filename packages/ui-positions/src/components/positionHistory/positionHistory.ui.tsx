@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Flex, Text } from "@orderly.network/ui";
-import { PositionHistoryState } from "./positionHistory.script";
+import { PositionHistoryExt, PositionHistoryState } from "./positionHistory.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { API } from "@orderly.network/types";
 import { usePositionHistoryColumn } from "./desktop/usePositionHistoryColumn";
@@ -14,7 +14,7 @@ export const PositionHistory: FC<PositionHistoryState> = (props) => {
     })
 
     return (
-        <AuthGuardDataTable<API.PositionHistory>
+        <AuthGuardDataTable<PositionHistoryExt>
         loading={props.isLoading}
         id="oui-desktop-positions-content"
         columns={column}
