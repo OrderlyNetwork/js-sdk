@@ -1,5 +1,5 @@
 import { usePositionStream } from "@orderly.network/hooks";
-import { PositionsProps } from "../types/types";
+import { PositionsProps } from "../../types/types";
 import { useDataTap } from "@orderly.network/react-app";
 import { usePagination } from "@orderly.network/ui";
 

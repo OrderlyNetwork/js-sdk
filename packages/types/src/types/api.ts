@@ -409,13 +409,14 @@ export declare namespace API {
 
   export interface PositionHistory {
     position_id: number;                // Unique identifier for the position
-    position_status: string;          // Status of the position
+    liquidation_id: number;                // Unique identifier for the position
+    position_status: string;            // Status of the position
     type: string;                       // Type of the position activity
     symbol: string;                     // Trading pair symbol
     avg_open_price: number;             // Average open price of the position
     avg_close_price: number;            // Average close price of the position
     max_position_qty: number;           // Maximum quantity held in the position
-    closed_position_qty: number;         // Quantity closed in the position
+    closed_position_qty: number;        // Quantity closed in the position
     side: "LONG" | "SHORT";             // Side of the position
     trading_fee: number;                // Fee charged for trading
     accumulated_funding_fee: number;    // Accumulated funding fee for the position
@@ -424,7 +425,7 @@ export declare namespace API {
     realized_pnl: number;               // Realized profit and loss
     open_timestamp: number;             // Timestamp when the position was opened
     close_timestamp: number;            // Timestamp when the position was closed
-    last_update_timestamp: number;      // Timestamp of the last update to the position
+    last_update_time: number;           // Timestamp of the last update to the position
   }
 }
 

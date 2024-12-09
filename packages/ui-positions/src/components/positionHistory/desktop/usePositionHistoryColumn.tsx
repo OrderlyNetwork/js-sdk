@@ -12,12 +12,12 @@ import {
 import { ReactNode } from "react";
 import { useMemo } from "react";
 import { PositionHistoryExt } from "../positionHistory.script";
+import { useSymbolContext } from "../../../providers/symbolProvider";
 
 export const usePositionHistoryColumn = (props: {
   onSymbolChange?: (symbol: API.Symbol) => void;
-  symbolsInfo: any;
 }) => {
-  const { symbolsInfo, onSymbolChange } = props;
+  const { onSymbolChange } = props;
 
   const column = useMemo(
     () =>
@@ -39,10 +39,8 @@ export const usePositionHistoryColumn = (props: {
         {
           title: "Closed / Max closed",
           dataIndex: "close_maxClose",
-          width: 140,
-          render: (value: string, record) => (
-            <Quantity record={record} symbolsInfo={symbolsInfo} />
-          ),
+          width: 175,
+          render: (value: string, record) => <Quantity record={record} />,
         },
         // net pnl
         {
@@ -72,7 +70,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // time opened
         {
-          title: "Avg. close",
+          title: "Time opened",
           dataIndex: "open_timestamp",
           width: 140,
           onSort: true,
@@ -84,7 +82,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // time close
         {
-          title: "Avg. close",
+          title: "Time closed",
           dataIndex: "close_timestamp",
           width: 140,
           onSort: true,
@@ -96,18 +94,18 @@ export const usePositionHistoryColumn = (props: {
         },
         // updated time
         {
-          title: "Avg. close",
+          title: "Updated time",
           dataIndex: "last_update_timestamp",
           width: 140,
           onSort: true,
           render: (_: any, record) => (
             <Text.formatted rule={"date"} formatString="yyyy-MM-dd hh:mm:ss">
-              {record.last_update_timestamp}
+              {record.last_update_time}
             </Text.formatted>
           ),
         },
       ] as Column<PositionHistoryExt>[],
-    [symbolsInfo]
+    []
   );
 
   return column;
@@ -131,11 +129,40 @@ export const SymbolInfo = (props: {
       </Badge>
     );
 
-    if (record.type === "liquidated") {
+    if (record.type === "adl") {
+      <Badge color={"neutral"} size="xs">
+        {capitalizeFirstLetter(record.type)}
+      </Badge>;
+    } else if (record.type === "liquidation") {
       list.push(
-        <Badge size="xs" color="danger">
-          <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">{capitalizeFirstLetter(record.type)}</span>
-        </Badge>
+        <Tooltip
+          className="oui-min-w-[204px] oui-p-2"
+          // @ts-ignore
+          content={
+            <Flex direction={"column"}>
+              <Flex justify={"between"}>
+                <Text>Liquidation id</Text>
+                <Text.numeral coloring>{record.liquidation_id}</Text.numeral>
+              </Flex>
+              <Flex justify={"between"}>
+                <Text>Liquidator fee</Text>
+                <Text.numeral coloring>{record.liquidator_fee}</Text.numeral>
+              </Flex>
+              <Flex justify={"between"}>
+                <Text>Ins. Fund fee</Text>
+                <Text.numeral coloring>
+                  {record.insurance_fund_fee}
+                </Text.numeral>
+              </Flex>
+            </Flex>
+          }
+        >
+          <Badge size="xs" color="danger" className="oui-cursor-pointer">
+            <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
+              {capitalizeFirstLetter(record.type)}
+            </span>
+          </Badge>
+        </Tooltip>
       );
     }
 
@@ -172,29 +199,51 @@ export const SymbolInfo = (props: {
   );
 };
 
-export const Quantity = (props: {
-  record: PositionHistoryExt;
-  symbolsInfo: any;
-}) => {
-  const { record, symbolsInfo } = props;
+export const Quantity = (props: { record: PositionHistoryExt }) => {
+  const { record } = props;
 
-  const { base_dp } = symbolsInfo?.[record.symbol]();
+  const { base_dp } = useSymbolContext();
 
   return (
-    <Flex gap={1}>
+    <Flex gap={1} className="oui-overflow-hidden oui-whitespace-nowrap oui-text-ellipsis">
       <Text.numeral dp={base_dp}>{record.closed_position_qty}</Text.numeral>/
-      <Text.numeral dp={base_dp}>{record.max_position_qty}</Text.numeral>
-      <Text>{`${record.symbol.split("_")[1]}`}</Text>
+      <Text.numeral dp={base_dp} className="oui-truncate">{record.max_position_qty}</Text.numeral>
+      {/* <Text className="oui-truncate">{`${record.symbol.split("_")[1]}`}</Text> */}
     </Flex>
   );
 };
 
 export const NetPnL = (props: { record: PositionHistoryExt }) => {
   const { record } = props;
-  
+
   return (
-    <Tooltip>
-      <Text.numeral coloring>{record.netPnL ?? '--'}</Text.numeral>
+    <Tooltip
+      delayDuration={200}
+      // @ts-ignore
+      content={
+        <Flex direction={"column"}>
+          <Text intensity={80}>Net PnL</Text>
+          <Flex justify={"between"}>
+            <Text>Realized PnL</Text>
+            <Text.numeral coloring>{record.realized_pnl}</Text.numeral>
+          </Flex>
+          <Flex justify={"between"}>
+            <Text>Funding fee</Text>
+            <Text.numeral coloring>
+              {record.accumulated_funding_fee}
+            </Text.numeral>
+          </Flex>
+          <Flex justify={"between"}>
+            <Text>Trading fee</Text>
+            <Text.numeral coloring>{record.trading_fee}</Text.numeral>
+          </Flex>
+        </Flex>
+      }
+      className="oui-p-2 oui-min-w-[204px]"
+    >
+      <Text.numeral coloring className="oui-cursor-pointer">
+        {record.netPnL ?? "--"}
+      </Text.numeral>
     </Tooltip>
   );
 };
