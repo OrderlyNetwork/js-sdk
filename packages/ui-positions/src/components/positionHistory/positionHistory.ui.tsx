@@ -1,11 +1,17 @@
 import { FC } from "react";
-import { cn, DataFilter, Flex, ListView, Text } from "@orderly.network/ui";
+import {
+  cn,
+  DataFilter,
+  Flex,
+  Grid,
+  ListView,
+  Text,
+} from "@orderly.network/ui";
 import {
   PositionHistoryExt,
   PositionHistoryState,
 } from "./positionHistory.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { API } from "@orderly.network/types";
 import { usePositionHistoryColumn } from "./desktop/usePositionHistoryColumn";
 import { SymbolProvider } from "../../providers/symbolProvider";
 import { PositionHistoryCellWidget } from "./mobile";
@@ -62,25 +68,40 @@ export const MobilePositionHistory: FC<
   }
 > = (props) => {
   return (
-    <ListView
-      className={cn(
-        "oui-w-full oui-hide-scrollbar oui-overflow-y-hidden oui-space-y-0",
-        props.classNames?.root
-      )}
-      contentClassName={cn("!oui-space-y-1", props.classNames?.content)}
-      dataSource={props.dataSource}
-      renderItem={(item, index) => (
-        <SymbolProvider symbol={item.symbol}>
-          <PositionHistoryCellWidget
-            item={item}
-            index={index}
-            onSymbolChange={props.onSymbolChange}
-            classNames={{
-              root: props.classNames?.cell,
-            }}
-          />
-        </SymbolProvider>
-      )}
-    />
+    <Grid
+      cols={1}
+      rows={2}
+      className="oui-grid-rows-[auto,1fr] oui-w-full"
+      gap={2}
+    >
+      <Flex gap={2} p={2} className="oui-bg-base-9 oui-rounded-b-xl">
+        <DataFilter
+          items={props.filterItems}
+          onFilter={(value: any) => {
+            props.onFilter(value);
+          }}
+        />
+      </Flex>
+      <ListView
+        className={cn(
+          "oui-w-full oui-hide-scrollbar oui-overflow-y-hidden oui-space-y-0",
+          props.classNames?.root
+        )}
+        contentClassName={cn("!oui-space-y-1", props.classNames?.content)}
+        dataSource={props.dataSource}
+        renderItem={(item, index) => (
+          <SymbolProvider symbol={item.symbol}>
+            <PositionHistoryCellWidget
+              item={item}
+              index={index}
+              onSymbolChange={props.onSymbolChange}
+              classNames={{
+                root: props.classNames?.cell,
+              }}
+            />
+          </SymbolProvider>
+        )}
+      />
+    </Grid>
   );
 };

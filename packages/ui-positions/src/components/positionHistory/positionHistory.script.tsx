@@ -233,5 +233,5 @@ function offsetEndOfDay(date?: Date) {
 
 export const formatDatePickerRange = (option: { from?: Date; to?: Date }) => ({
   from: offsetStartOfDay(option.from),
-  to: offsetEndOfDay(option.to),
+  to: offsetEndOfDay(option.to ?? option.from),
 });
