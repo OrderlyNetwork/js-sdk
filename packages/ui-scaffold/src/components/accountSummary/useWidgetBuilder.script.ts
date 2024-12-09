@@ -16,10 +16,10 @@ export type AccountSummaryType =
   | "maxLeverage";
 
 export const useTotalValueBuilderScript = () => {
-  const [type, setType] = useLocalStorage<AccountSummaryType>(
-    "accountSummaryType",
-    "totalValue"
-  );
+  const [keys, setKeys] = useLocalStorage<string[]>("accountSummaryTypes", [
+    "totalValue",
+  ]);
+
   const { freeCollateral, totalValue } = useCollateral({
     dp: 2,
   });
@@ -35,8 +35,21 @@ export const useTotalValueBuilderScript = () => {
 
   const [maxLeverage] = useLeverage();
 
-  const onTypeChange = (type: AccountSummaryType) => {
-    setType(type);
+  const onToggleItemByKey = (key: string) => {
+    if (keys.includes(key)) {
+      setKeys(keys.filter((k: string) => k !== key));
+    } else {
+      setKeys([...keys, key]);
+    }
+  };
+
+  const onKeyToTop = (key: string) => {
+    if (!keys.includes(key)) {
+      setKeys([key, ...keys]);
+      return;
+    }
+
+    setKeys([key, ...keys.filter((k: string) => k !== key)]);
   };
 
   const unavailable =
@@ -49,10 +62,13 @@ export const useTotalValueBuilderScript = () => {
     currentLeverage: unavailable ? null : currentLeverage,
     unrealPnL: unavailable ? null : aggregated?.total_unreal_pnl,
     unrealized_pnl_ROI: unavailable ? null : totalUnrealizedROI,
-    type,
-    onTypeChange,
+    // type,
+    keys,
+    // onTypeChange,
     visible,
     wrongNetwork,
+    onToggleItemByKey,
+    onKeyToTop,
     onToggleVisibility: () => setVisible(!visible),
   };
 };
