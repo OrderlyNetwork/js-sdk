@@ -16,6 +16,11 @@ export enum DataListTabType {
   history = "History",
 }
 
+export enum DataListTabSubType {
+  positionHistory = "Position history",
+  orderHistory = "Order history",
+}
+
 export const useDataListScript = (props: {
   symbol: string;
   className?: string;
@@ -24,6 +29,7 @@ export const useDataListScript = (props: {
 }) => {
   const { symbol, sharePnLConfig } = props;
   const [tab, setTab] = useState<DataListTabType>(DataListTabType.position);
+  const [subTab, setSubTab] = useState<DataListTabSubType>(DataListTabSubType.positionHistory);
   const { tabletMediaQuery, onSymbolChange } = useTradingPageContext();
   const localStorage = useTradingLocalStorage();
 
@@ -74,6 +80,7 @@ export const useDataListScript = (props: {
   return {
     tab,
     setTab,
+    subTab, setSubTab,
     tabletMediaQuery,
     sharePnLConfig,
     symbol,

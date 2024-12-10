@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Box, Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { DataListState, DataListTabType } from "./dataList.script";
-import { PositionsWidget } from "@orderly.network/ui-positions";
+import { PositionHistoryWidget, PositionsWidget } from "@orderly.network/ui-positions";
 import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
 import { PositionHeaderWidget } from "../../base/positionHeader";
@@ -98,6 +98,16 @@ export const DataList: FC<DataListState> = (props) => {
           testIds={{
             tableBody: "oui-testid-dataList-filled-table-body"
           }}
+        />
+      </TabPanel>
+      <TabPanel
+        testid="oui-testid-dataList-positionHistory-tab"
+        value={DataListTabType.positionHistory}
+        title={DataListTabType.positionHistory}
+      >
+        <PositionHistoryWidget
+          symbol={props.showAllSymbol ? undefined : props.symbol}
+          onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
       <TabPanel
