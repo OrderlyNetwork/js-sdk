@@ -1,5 +1,16 @@
 # @orderly.network/ui-share
 
+## 2.0.1-preReleaseV2.16
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.1-preReleaseV2.16
+  - @orderly.network/types@2.0.1-preReleaseV2.16
+  - @orderly.network/utils@2.0.1-preReleaseV2.16
+  - @orderly.network/ui@2.0.1-preReleaseV2.16
+
 ## 2.0.1-preReleaseV2.15
 
 ### Patch Changes
