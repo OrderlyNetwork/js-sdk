@@ -11,7 +11,7 @@ export function useMaintenanceStatus() {
   const [startTime, setStartTime] = useState<number>();
   const [endTime, setEndTime] = useState<number>();
   const [brokerName, setBrokerName] = useState<string>("Orderly network");
-  const { data: systemInfo, mutate } = useQuery<any>(`/v1/public/system_info`, {
+  const { data: systemInfo, mutate } = useQuery<any>(`/v1/public/system_info?source=maintenance`, {
     revalidateOnFocus: false,
     errorRetryCount: 2,
     errorRetryInterval: 200,
@@ -21,7 +21,8 @@ export function useMaintenanceStatus() {
   const config = useConfig();
 
   useEffect(() => {
-    if (!systemInfo || !systemInfo.data) {
+    console.log('-- system info ---', systemInfo);
+    if (!systemInfo) {
       return;
     }
 
@@ -35,11 +36,11 @@ export function useMaintenanceStatus() {
     //   end_time: new Date("2024-08-30").getTime(),
     // };
     console.log("--systemInfo", systemInfo, brokerName);
-    if (systemInfo.data.scheduled_maintenance) {
-      setStartTime(systemInfo.data.scheduled_maintenance.start_time);
-      setEndTime(systemInfo.data.scheduled_maintenance.end_time);
+    if (systemInfo.scheduled_maintenance) {
+      setStartTime(systemInfo.scheduled_maintenance.start_time);
+      setEndTime(systemInfo.scheduled_maintenance.end_time);
     }
-    if (systemInfo.data.status === 2) {
+    if (systemInfo.status === 2) {
       setStatus(2);
     }
   }, [systemInfo, config]);
