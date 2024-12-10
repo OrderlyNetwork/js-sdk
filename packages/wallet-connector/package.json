@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/wallet-connector",
-  "version": "2.0.1-preReleaseV2.16",
+  "version": "2.0.1-preReleaseV2.17",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
