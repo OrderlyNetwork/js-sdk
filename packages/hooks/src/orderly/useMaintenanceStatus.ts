@@ -21,17 +21,17 @@ export function useMaintenanceStatus() {
   const config = useConfig();
 
   useEffect(() => {
-    console.log('-- system info ---', systemInfo);
     if (!systemInfo) {
       return;
     }
+
 
     const brokerName = config.get("brokerName");
     if (brokerName) {
       setBrokerName(brokerName);
     }
-    // systemInfo.data.status = 2;
-    // systemInfo.data.scheduled_maintenance = {
+    // systemInfo.status = 2;
+    // systemInfo.scheduled_maintenance = {
     //   start_time: new Date("2024-08-27").getTime(),
     //   end_time: new Date("2024-08-30").getTime(),
     // };
