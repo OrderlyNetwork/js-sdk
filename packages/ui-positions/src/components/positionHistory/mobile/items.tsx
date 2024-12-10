@@ -62,16 +62,16 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
     modal.alert({
       title: "Liquidation",
       message: (
-        <Flex direction={"column"}>
-          <Flex justify={"between"}>
+        <Flex direction={"column"} width={"100%"} gap={2} className="oui-text-2xs oui-text-base-contrast-54">
+          <Flex justify={"between"} width={"100%"}>
             <Text>Liquidation id</Text>
-            <Text.numeral coloring>{record.liquidation_id}</Text.numeral>
+            <Text.numeral intensity={98}>{record.liquidation_id}</Text.numeral>
           </Flex>
-          <Flex justify={"between"}>
+          <Flex justify={"between"} width={"100%"}>
             <Text>Liquidator fee</Text>
             <Text.numeral coloring>{record.liquidator_fee}</Text.numeral>
           </Flex>
-          <Flex justify={"between"}>
+          <Flex justify={"between"} width={"100%"}>
             <Text>Ins. Fund fee</Text>
             <Text.numeral coloring>{record.insurance_fund_fee}</Text.numeral>
           </Flex>
@@ -96,7 +96,7 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
       <Badge color={"neutral"} size="xs">
         {capitalizeFirstLetter(record.type)}
       </Badge>;
-    } else if (record.type === "trade") {
+    } else if (record.type === "liquidated") {
       list.push(
         <Badge size="xs" color="danger" className="oui-cursor-pointer" onClick={showAlert}>
             <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
