@@ -28,7 +28,13 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
   };
 
   return (
-    <Flex direction={"row"} justify={"between"} height={28} px={3} width={"100%"}>
+    <Flex
+      direction={"row"}
+      justify={"between"}
+      height={28}
+      px={3}
+      width={"100%"}
+    >
       <Flex>
         <Flex
           direction={"row"}
@@ -60,12 +66,12 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
                 onClick={(e) => openUrl(props.telegramUrl)}
               />
             )}
-            {typeof props.discordmUrl !== "undefined" && (
+            {typeof props.discordUrl !== "undefined" && (
               <CommuntiyDiscordIcon
                 className="oui-fill-white/[.54] hover:oui-fill-white/[.98] oui-cursor-pointer"
                 fill="currentColor"
                 fillOpacity={1}
-                onClick={(e) => openUrl(props.discordmUrl)}
+                onClick={(e) => openUrl(props.discordUrl)}
               />
             )}
             {typeof props.twitterUrl !== "undefined" && (
