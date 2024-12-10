@@ -19,7 +19,7 @@ export enum PositionHistorySide {
 export enum PositionHistoryStatus {
   all = "all",
   closed = "closed",
-  partial_closed = "partial close",
+  partial_closed = "partial_closed",
 }
 
 export const usePositionHistoryScript = (props: PositionHistoryProps) => {
@@ -151,9 +151,7 @@ const useFilter = () => {
       setDateRange(newDateRange);
       if (newDateRange.from && newDateRange.to)
       {
-        const diffDays = Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;
-        console.log("diff days", diffDays);
-        
+        const diffDays = Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;        
         if ([1,7,30,90].includes(diffDays)) {
           setFilterDays(diffDays as any);
         }

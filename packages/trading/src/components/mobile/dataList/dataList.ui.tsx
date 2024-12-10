@@ -198,7 +198,7 @@ const HistoryTab: FC<DataListState> = (props) => {
         <MobilePositionHistoryWidget
           symbol={props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
-          classNames={{ cell: "oui-p-2 oui-bg-base-9" }}
+          classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
         />
       </TabPanel>
       <TabPanel

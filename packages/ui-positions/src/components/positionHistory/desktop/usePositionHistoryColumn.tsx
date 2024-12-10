@@ -137,7 +137,7 @@ export const SymbolInfo = (props: {
       <Badge color={"neutral"} size="xs">
         {capitalizeFirstLetter(record.type)}
       </Badge>;
-    } else if (record.type === "liquidation") {
+    } else if (record.type === "liquidated") {
       list.push(
         <Tooltip
           className="oui-min-w-[204px] oui-bg-base-5"
