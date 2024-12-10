@@ -3,7 +3,7 @@ import { useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { PositionHistoryProps } from "./positionHistory.widget";
 import { API } from "@orderly.network/types";
-import { usePagination } from "@orderly.network/ui";
+import { usePagination, useScreen } from "@orderly.network/ui";
 import { useMemo, useState } from "react";
 import { differenceInDays, setHours, subDays } from "date-fns";
 
@@ -23,7 +23,7 @@ export enum PositionHistoryStatus {
 }
 
 export const usePositionHistoryScript = (props: PositionHistoryProps) => {
-  const { onSymbolChange } = props;
+  const { onSymbolChange, symbol } = props;
   const { data, isLoading } = usePrivateQuery<PositionHistoryExt[]>(
     "/v1/position_history?limit=1000",
     {
@@ -57,7 +57,6 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
 
   const { status, side, dateRange, filterItems, onFilter } = useFilter();
 
-
   const filterData = useMemo(() => {
     if (data == null) return data;
 
@@ -77,15 +76,13 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
         dateRange.from && dateRange.to
           ? time >= dateRange.from.getTime() && time <= dateRange.to.getTime()
           : true;
-          console.log("parse time", dateRange.from?.getTime(), dateRange.to?.getTime(), time);
-          
 
-      return sideFilter && statusFilter && dateFilter;
+      const symbolFilter = symbol ? item.symbol == symbol : true;
+
+      return sideFilter && statusFilter && dateFilter && symbolFilter;
     });
-  }, [status, side, dateRange, data]);
+  }, [status, side, dateRange, data, symbol]);
 
-  console.log("filter", status, side, dateRange.from?.getTime(), dateRange.to?.getTime());
-  
 
   const dataSource = useDataTap(filterData, {
     accountStatus: AccountStatusEnum.EnableTrading,
@@ -98,6 +95,7 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     pagination,
     filterItems,
     onFilter,
+    symbol,
   };
 };
 
@@ -132,6 +130,8 @@ const useFilter = () => {
       setDateRange(formatDatePickerRange(filter.value));
     }
   };
+
+  const { isMobile} = useScreen();
 
   const filterItems = useMemo((): any[] => {
     const sideFilter = {
@@ -180,6 +180,9 @@ const useFilter = () => {
       value: status,
     };
 
+    if (isMobile) {
+      return [sideFilter, statusFilter];
+    }
     return [sideFilter, statusFilter, dateRangeFilter];
   }, [side, status, dateRange]);
 

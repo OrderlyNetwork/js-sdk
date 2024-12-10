@@ -43,15 +43,16 @@ export const PositionHistory: FC<PositionHistoryState> = (props) => {
         generatedRowKey={(record: PositionHistoryExt) =>
           `${record.symbol}_${record.position_id}`
         }
-        renderRowContainer={(record: any, index: number, children: any) => {
-          return (
-            <SymbolProvider symbol={record.symbol}>{children}</SymbolProvider>
-          );
-        }}
+        renderRowContainer={(record: any, index: number, children: any) => (
+          <SymbolProvider symbol={record.symbol}>{children}</SymbolProvider>
+        )}
         manualPagination={false}
         pagination={pagination}
         testIds={{
           body: "oui-testid-dataList-positionHistory-tab-body",
+        }}
+        classNames={{
+            root: "!oui-h-[calc(100%_-_49px)]"
         }}
       />
     </Flex>
@@ -72,10 +73,11 @@ export const MobilePositionHistory: FC<
       cols={1}
       rows={2}
       className="oui-grid-rows-[auto,1fr] oui-w-full"
-      gap={2}
+      gap={1}
     >
       <Flex gap={2} p={2} className="oui-bg-base-9 oui-rounded-b-xl">
         <DataFilter
+        className="oui-pt-0 oui-pb-0 oui-border-none"
           items={props.filterItems}
           onFilter={(value: any) => {
             props.onFilter(value);
