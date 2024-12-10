@@ -353,7 +353,7 @@ function get24hChange(params: { change: number; close: number; open: number }) {
   }
 
   if (close !== undefined && open !== undefined) {
-    if (open === 0) {
+    if (open === 0 || open === null) {
       return 0;
     }
     return new Decimal(close).minus(open).div(open).toNumber();

@@ -10,6 +10,8 @@ import { Box, SimpleSheet } from "@orderly.network/ui";
 import { SecondaryLogo } from "../../components/base/secondaryLogo";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
+import { TipsWidget } from "../../components/mobile/tips/tips.widget";
+import { MaintenanceTipsWidget } from "@orderly.network/ui-scaffold";
 
 export const MobileLayout: FC<TradingState> = (props) => {
   const onSymbol = () => {
@@ -51,6 +53,10 @@ export const MobileLayout: FC<TradingState> = (props) => {
       className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-screen oui-gap-1 oui-relative oui-bg-base-10"
     >
       <header>{topBar}</header>
+
+      <div>
+        <MaintenanceTipsWidget/>
+      </div>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
         <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />

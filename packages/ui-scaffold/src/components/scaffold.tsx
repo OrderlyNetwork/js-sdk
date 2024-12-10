@@ -115,7 +115,9 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         >
           {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
-        <MaintenanceTipsWidget />
+        <div className='oui-scaffold-maintenance-tips oui-hidden xl:oui-block  oui-min-w-[1440px]'>
+          <MaintenanceTipsWidget />
+        </div>
         {/*--------- body start ------ */}
         {!hasLeftSidebar ? (
           // ----------No leftSidebar layout start ---------
