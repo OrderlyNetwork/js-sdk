@@ -136,20 +136,31 @@ export const SymbolInfo = (props: {
     } else if (record.type === "liquidation") {
       list.push(
         <Tooltip
-          className="oui-min-w-[204px] oui-p-2"
+          className="oui-min-w-[204px] oui-bg-base-5"
+          tooltipProps={{
+            arrow: {
+              className: "oui-fill-base-5",
+            },
+          }}
           // @ts-ignore
           content={
-            <Flex direction={"column"}>
-              <Flex justify={"between"}>
-                <Text>Liquidation id</Text>
-                <Text.numeral coloring>{record.liquidation_id}</Text.numeral>
+            <Flex
+              direction={"column"}
+              itemAlign={"start"}
+              className="oui-text-2xs"
+            >
+              <Flex justify={"between"} width={"100%"} gap={2}>
+                <Text intensity={54}>Liquidation id</Text>
+                <Text.numeral intensity={98}>
+                  {record.liquidation_id}
+                </Text.numeral>
               </Flex>
-              <Flex justify={"between"}>
-                <Text>Liquidator fee</Text>
+              <Flex justify={"between"} width={"100%"} gap={2}>
+                <Text intensity={54}>Liquidator fee</Text>
                 <Text.numeral coloring>{record.liquidator_fee}</Text.numeral>
               </Flex>
-              <Flex justify={"between"}>
-                <Text>Ins. Fund fee</Text>
+              <Flex justify={"between"} width={"100%"} gap={2}>
+                <Text intensity={54}>Ins. Fund fee</Text>
                 <Text.numeral coloring>
                   {record.insurance_fund_fee}
                 </Text.numeral>
@@ -157,11 +168,13 @@ export const SymbolInfo = (props: {
             </Flex>
           }
         >
-          <Badge size="xs" color="danger" className="oui-cursor-pointer">
-            <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
-              {capitalizeFirstLetter(record.type)}
-            </span>
-          </Badge>
+          <div>
+            <Badge size="xs" color="danger" className="oui-cursor-pointer">
+              <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
+                {capitalizeFirstLetter(record.type)}
+              </span>
+            </Badge>
+          </div>
         </Tooltip>
       );
     }
@@ -205,9 +218,14 @@ export const Quantity = (props: { record: PositionHistoryExt }) => {
   const { base_dp } = useSymbolContext();
 
   return (
-    <Flex gap={1} className="oui-overflow-hidden oui-whitespace-nowrap oui-text-ellipsis">
+    <Flex
+      gap={1}
+      className="oui-overflow-hidden oui-whitespace-nowrap oui-text-ellipsis"
+    >
       <Text.numeral dp={base_dp}>{record.closed_position_qty}</Text.numeral>/
-      <Text.numeral dp={base_dp} className="oui-truncate">{record.max_position_qty}</Text.numeral>
+      <Text.numeral dp={base_dp} className="oui-truncate">
+        {record.max_position_qty}
+      </Text.numeral>
       {/* <Text className="oui-truncate">{`${record.symbol.split("_")[1]}`}</Text> */}
     </Flex>
   );
@@ -216,34 +234,55 @@ export const Quantity = (props: { record: PositionHistoryExt }) => {
 export const NetPnL = (props: { record: PositionHistoryExt }) => {
   const { record } = props;
 
-  return (
-    <Tooltip
-      delayDuration={200}
-      // @ts-ignore
-      content={
-        <Flex direction={"column"}>
-          <Text intensity={80}>Net PnL</Text>
-          <Flex justify={"between"}>
-            <Text>Realized PnL</Text>
-            <Text.numeral coloring>{record.realized_pnl}</Text.numeral>
-          </Flex>
-          <Flex justify={"between"}>
-            <Text>Funding fee</Text>
-            <Text.numeral coloring>
-              {record.accumulated_funding_fee}
-            </Text.numeral>
-          </Flex>
-          <Flex justify={"between"}>
-            <Text>Trading fee</Text>
-            <Text.numeral coloring>{record.trading_fee}</Text.numeral>
-          </Flex>
-        </Flex>
-      }
-      className="oui-p-2 oui-min-w-[204px]"
+  const text = () => (
+    <Text.numeral
+      coloring
+      className={record.netPnL == null ? "" : "oui-cursor-pointer"}
     >
-      <Text.numeral coloring className="oui-cursor-pointer">
-        {record.netPnL ?? "--"}
-      </Text.numeral>
-    </Tooltip>
+      {record.netPnL ?? "--"}
+    </Text.numeral>
+  );
+
+  if (record.netPnL == null) return text();
+
+  return (
+    <Flex>
+      <Tooltip
+        // open={record.max_position_qty == 3.22}
+        delayDuration={200}
+        // @ts-ignore
+        content={
+          <Flex
+            direction={"column"}
+            itemAlign={"start"}
+            className="oui-text-2xs"
+          >
+            <Text intensity={80}>Net PnL</Text>
+            <Flex justify={"between"} width={"100%"} gap={2}>
+              <Text intensity={54}>Realized PnL</Text>
+              <Text.numeral coloring>{record.realized_pnl}</Text.numeral>
+            </Flex>
+            <Flex justify={"between"} width={"100%"} gap={2}>
+              <Text intensity={54}>Funding fee</Text>
+              <Text.numeral coloring>
+                {record.accumulated_funding_fee}
+              </Text.numeral>
+            </Flex>
+            <Flex justify={"between"} width={"100%"} gap={2}>
+              <Text intensity={54}>Trading fee</Text>
+              <Text.numeral coloring>{record.trading_fee}</Text.numeral>
+            </Flex>
+          </Flex>
+        }
+        className="oui-min-w-[204px] oui-bg-base-5"
+        tooltipProps={{
+          arrow: {
+            className: "oui-fill-base-5",
+          },
+        }}
+      >
+        <div>{text()}</div>
+      </Tooltip>
+    </Flex>
   );
 };
