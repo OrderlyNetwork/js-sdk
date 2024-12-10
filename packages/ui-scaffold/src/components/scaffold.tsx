@@ -1,4 +1,4 @@
-import { Box, cn, Grid } from "@orderly.network/ui";
+import { Box, cn, Grid, useScreen } from "@orderly.network/ui";
 import { MainNavWidget, MainNavWidgetProps } from "./main/mainNav.widget";
 import React, {
   PropsWithChildren,
@@ -81,7 +81,8 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
   const sideBarCollaspedWidth = props.leftSideProps?.minWidth || 98;
 
   const hasLeftSidebar = !!props.leftSidebar;
-  
+  const { isMobile } = useScreen();
+
   return (
     <div
       className={cn(
@@ -116,7 +117,11 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
         <div className='oui-scaffold-maintenance-tips oui-hidden xl:oui-block  oui-min-w-[1440px]'>
-          <MaintenanceTipsWidget />
+          {!isMobile &&
+
+            <MaintenanceTipsWidget />
+         }
+
         </div>
         {/*--------- body start ------ */}
         {!hasLeftSidebar ? (
