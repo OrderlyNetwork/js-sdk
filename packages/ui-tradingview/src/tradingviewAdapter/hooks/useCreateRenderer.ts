@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Renderer } from "../renderer/renderer";
 import {
-  useAccount,
+  useAccount, useLocalStorage,
   useOrderStream,
-  usePositionStream,
+  usePositionStream
 } from "@orderly.network/hooks";
 import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
 import { AlgoType } from "../type";
@@ -16,8 +16,13 @@ export default function useCreateRenderer(
   const [renderer, setRenderer] = useState<Renderer>();
   const rendererRef = useRef<Renderer>();
   const { state } = useAccount();
-
-  const [{ rows: positions }, positionsInfo] = usePositionStream();
+  const [unPnlPriceBasis] = useLocalStorage(
+    "unPnlPriceBasis",
+    "markPrice"
+  );
+  const [{ rows: positions }, positionsInfo] = usePositionStream(symbol, {
+    calcMode: unPnlPriceBasis,
+  });
   const [pendingOrders] = useOrderStream({
     status: OrderStatus.INCOMPLETE,
     symbol: symbol,

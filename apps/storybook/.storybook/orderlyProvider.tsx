@@ -46,9 +46,9 @@ const wallets = [
 ];
 const configStore = new CustomConfigStore({
   networkId: "testnet",
-  brokerId: "woofi_pro",
+  brokerId: "demo",
   brokerName: "Orderly",
-  env: "dev",
+  env: "staging",
   // networkId: "mainnet",
   // brokerId: "woofi_pro",
   // brokerName: "WOOFI",
