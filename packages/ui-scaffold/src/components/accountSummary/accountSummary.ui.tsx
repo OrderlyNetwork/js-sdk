@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, PropsWithChildren, useEffect } from "react";
 import {
   Box,
   EyeCloseIcon,
@@ -7,7 +7,6 @@ import {
   Popover,
   Text,
 } from "@orderly.network/ui";
-import { AccountSummaryType } from "./useWidgetBuilder.script";
 
 type AccountSummaryUi = {
   totalValue: number | null;
@@ -18,74 +17,10 @@ type AccountSummaryUi = {
   unrealPnL: number | null;
   visible?: boolean;
   onToggleVisibility?: () => void;
-  type: AccountSummaryType;
-  onTypeChange: (type: AccountSummaryType) => void;
-};
-
-export const AccountSummary = (props: AccountSummaryUi) => {
-  const { type, ...rest } = props;
-  let element;
-  switch (props.type) {
-    case "freeCollateral":
-      element = (
-        <FreeCollateral
-          freeCollateral={props.freeCollateral}
-          visible={props.visible}
-          onToggleVisibility={props.onToggleVisibility}
-        />
-      );
-      break;
-    case "unrealPnL":
-      element = (
-        <UnrealPnL
-          unrealPnL={props.unrealPnL}
-          unrealized_pnl_ROI={props.unrealized_pnl_ROI}
-          visible={props.visible}
-          onToggleVisibility={props.onToggleVisibility}
-        />
-      );
-      break;
-    case "currentLeverage":
-      element = <CurrentLeverage currentLeverage={props.currentLeverage} />;
-      break;
-    case "maxLeverage":
-      element = <MaxLeverage maxLeverage={props.maxLeverage} />;
-      break;
-    case "totalValue":
-    default:
-      element = (
-        <TotalValue
-          totalValue={props.totalValue}
-          onToggleVisibility={props.onToggleVisibility}
-          visible={props.visible}
-        />
-      );
-  }
-
-  return (
-    <Popover
-      content={
-        <AccountInfoPopover
-          totalValue={rest.totalValue}
-          freeCollateral={props.freeCollateral}
-          maxLeverage={props.maxLeverage}
-          currentLeverage={props.currentLeverage}
-          unrealized_pnl_ROI={props.unrealized_pnl_ROI}
-          unrealPnL={props.unrealPnL}
-          type={props.type}
-          onTypeChange={props.onTypeChange}
-          visible={props.visible}
-        />
-      }
-      contentProps={{
-        onOpenAutoFocus: (event) => event.preventDefault(),
-        sideOffset: 12,
-      }}
-      arrow
-    >
-      <div className={"oui-cursor-pointer"}>{element}</div>
-    </Popover>
-  );
+  // type: AccountSummaryType;
+  keys: AccountSummaryList;
+  onToggleItemByKey: (key: string) => void;
+  onKeyToTop: (key: string) => void;
 };
 
 //----------------- TotalValue -----------------
@@ -93,8 +28,14 @@ const TotalValue: FC<{
   totalValue: number | null;
   visible?: boolean;
   onToggleVisibility?: () => void;
+  visibleAvailable?: boolean;
 }> = (props) => {
-  const { totalValue = 0, visible = true, onToggleVisibility } = props;
+  const {
+    totalValue = 0,
+    visible = true,
+    onToggleVisibility,
+    visibleAvailable = true,
+  } = props;
   return (
     <Flex
       direction={"column"}
@@ -106,17 +47,23 @@ const TotalValue: FC<{
         <Text intensity={54} className="oui-whitespace-nowrap">
           Total Value
         </Text>
-        <button onClick={() => onToggleVisibility?.()}>
-          {visible ? (
-            <EyeIcon size={12} className="oui-text-primary-light" opacity={1} />
-          ) : (
-            <EyeCloseIcon
-              size={12}
-              className="oui-text-primary-light"
-              opacity={1}
-            />
-          )}
-        </button>
+        {visibleAvailable && (
+          <button onClick={() => onToggleVisibility?.()}>
+            {visible ? (
+              <EyeIcon
+                size={12}
+                className="oui-text-primary-light"
+                opacity={1}
+              />
+            ) : (
+              <EyeCloseIcon
+                size={12}
+                className="oui-text-primary-light"
+                opacity={1}
+              />
+            )}
+          </button>
+        )}
 
         <Text intensity={54}>≈</Text>
       </Flex>
@@ -137,8 +84,14 @@ const FreeCollateral: FC<{
   freeCollateral?: number | null;
   visible?: boolean;
   onToggleVisibility?: () => void;
+  visibleAvailable?: boolean;
 }> = (props) => {
-  const { freeCollateral, visible, onToggleVisibility } = props;
+  const {
+    freeCollateral,
+    visible,
+    onToggleVisibility,
+    visibleAvailable = true,
+  } = props;
   return (
     <Flex
       direction={"column"}
@@ -150,17 +103,23 @@ const FreeCollateral: FC<{
         <Text intensity={54} className="oui-whitespace-nowrap">
           Free collateral
         </Text>
-        <button onClick={() => onToggleVisibility?.()}>
-          {visible ? (
-            <EyeIcon size={12} className="oui-text-primary-light" opacity={1} />
-          ) : (
-            <EyeCloseIcon
-              size={12}
-              className="oui-text-primary-light"
-              opacity={1}
-            />
-          )}
-        </button>
+        {visibleAvailable && (
+          <button onClick={() => onToggleVisibility?.()}>
+            {visible ? (
+              <EyeIcon
+                size={12}
+                className="oui-text-primary-light"
+                opacity={1}
+              />
+            ) : (
+              <EyeCloseIcon
+                size={12}
+                className="oui-text-primary-light"
+                opacity={1}
+              />
+            )}
+          </button>
+        )}
       </Flex>
       {/* <Box>
         <Text intensity={54} className="oui-whitespace-nowrap">
@@ -230,8 +189,9 @@ const UnrealPnL: FC<{
   unrealPnL: number | null;
   visible?: boolean;
   onToggleVisibility?: () => void;
+  visibleAvailable?: boolean;
 }> = (props) => {
-  const { visible, onToggleVisibility } = props;
+  const { visible, onToggleVisibility, visibleAvailable = true } = props;
   return (
     <Flex
       direction={"column"}
@@ -243,17 +203,23 @@ const UnrealPnL: FC<{
         <Text intensity={54} className="oui-whitespace-nowrap">
           Unreal. PnL
         </Text>
-        <button onClick={() => onToggleVisibility?.()}>
-          {visible ? (
-            <EyeIcon size={12} className="oui-text-primary-light" opacity={1} />
-          ) : (
-            <EyeCloseIcon
-              size={12}
-              className="oui-text-primary-light"
-              opacity={1}
-            />
-          )}
-        </button>
+        {visibleAvailable && (
+          <button onClick={() => onToggleVisibility?.()}>
+            {visible ? (
+              <EyeIcon
+                size={12}
+                className="oui-text-primary-light"
+                opacity={1}
+              />
+            ) : (
+              <EyeCloseIcon
+                size={12}
+                className="oui-text-primary-light"
+                opacity={1}
+              />
+            )}
+          </button>
+        )}
       </Flex>
       {/* <Box>
         <Text intensity={54} className="oui-whitespace-nowrap">
@@ -286,54 +252,65 @@ const AccountInfoPopover = (props: {
   currentLeverage: number | null;
   unrealPnL: number | null;
   unrealized_pnl_ROI: number | null;
-  type: AccountSummaryType;
+  // type: AccountSummaryType;
+  keys: AccountSummaryList;
+  onToggleItemByKey: (key: string) => void;
   visible?: boolean;
-  onTypeChange: (type: AccountSummaryType) => void;
+  onKeyToTop: (key: string) => void;
 }) => {
-  const { totalValue } = props;
+  const { totalValue, keys } = props;
+
+  const onSetToTop = (key: SummaryKey) => (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    props.onKeyToTop(key);
+  };
+
   return (
     <Flex
       className={"oui-text-2xs oui-font-semibold"}
       direction={"column"}
       gapY={1}
     >
-      <Flex justify={"between"} width={"100%"}>
+      <DropdownMenu onSetTop={onSetToTop("totalValue")}>
         <Flex className={"oui-text-base-contrast-54"} gapX={2}>
           <IdentityButton
-            active={props.type === "totalValue"}
-            onClick={() => props.onTypeChange("totalValue")}
+            active={keys.includes("totalValue")}
+            onClick={() => props.onToggleItemByKey("totalValue")}
           />
           <span>Total Value</span>
         </Flex>
         <Text.numeral
           visible={props.visible}
           unit="USDC"
+          className="group-hover:-oui-translate-x-5 oui-transition-transform"
           unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
         >
           {totalValue ?? "-"}
         </Text.numeral>
-      </Flex>
-      <Flex justify={"between"} width={"100%"}>
+      </DropdownMenu>
+      <DropdownMenu onSetTop={onSetToTop("freeCollateral")}>
         <Flex className={"oui-text-base-contrast-54"} gapX={2}>
           <IdentityButton
-            active={props.type === "freeCollateral"}
-            onClick={() => props.onTypeChange("freeCollateral")}
+            active={keys.includes("freeCollateral")}
+            onClick={() => props.onToggleItemByKey("freeCollateral")}
           />
           <span>Free collateral</span>
         </Flex>
         <Text.numeral
           unit="USDC"
           visible={props.visible}
+          className="group-hover:-oui-translate-x-5 oui-transition-transform"
           unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
         >
           {props.freeCollateral ?? "-"}
         </Text.numeral>
-      </Flex>
-      <Flex justify={"between"} width={"100%"}>
+      </DropdownMenu>
+      <DropdownMenu onSetTop={onSetToTop("unrealPnL")}>
         <Flex className={"oui-text-base-contrast-54"} gapX={2}>
           <IdentityButton
-            active={props.type === "unrealPnL"}
-            onClick={() => props.onTypeChange("unrealPnL")}
+            active={keys.includes("unrealPnL")}
+            onClick={() => props.onToggleItemByKey("unrealPnL")}
           />
           <span>Unreal. PnL</span>
         </Flex>
@@ -341,6 +318,7 @@ const AccountInfoPopover = (props: {
           coloring
           showIdentifier
           visible={props.visible}
+          className="group-hover:-oui-translate-x-5 oui-transition-transform"
           suffix={
             <Text.numeral
               coloring
@@ -355,28 +333,66 @@ const AccountInfoPopover = (props: {
         >
           {props.unrealPnL ?? "-"}
         </Text.numeral>
-      </Flex>
-      <Flex justify={"between"} width={"100%"}>
+      </DropdownMenu>
+      <DropdownMenu onSetTop={onSetToTop("currentLeverage")}>
         <Flex className={"oui-text-base-contrast-54"} gapX={2}>
           <IdentityButton
-            active={props.type === "currentLeverage"}
-            onClick={() => props.onTypeChange("currentLeverage")}
+            active={keys.includes("currentLeverage")}
+            onClick={() => props.onToggleItemByKey("currentLeverage")}
           />
           <span>Current leverage</span>
         </Flex>
-        <Text.numeral unit="x">{props.currentLeverage ?? "-"}</Text.numeral>
-      </Flex>
-      <Flex justify={"between"} width={"100%"}>
+        <Text.numeral
+          className="group-hover:-oui-translate-x-5 oui-transition-transform"
+          unit="x"
+        >
+          {props.currentLeverage ?? "-"}
+        </Text.numeral>
+      </DropdownMenu>
+      <DropdownMenu onSetTop={onSetToTop("maxLeverage")}>
         <Flex className={"oui-text-base-contrast-54"} gapX={2}>
           <IdentityButton
-            active={props.type === "maxLeverage"}
-            onClick={() => props.onTypeChange("maxLeverage")}
+            active={keys.includes("maxLeverage")}
+            onClick={() => props.onToggleItemByKey("maxLeverage")}
           />
           <span>Max leverage</span>
         </Flex>
-        <Text color="primary">{`${props.maxLeverage ?? "-"}x`}</Text>
-      </Flex>
+        <Text
+          className="group-hover:-oui-translate-x-5 oui-transition-transform"
+          color="primary"
+        >{`${props.maxLeverage ?? "-"}x`}</Text>
+      </DropdownMenu>
     </Flex>
+  );
+};
+
+const DropdownMenu: FC<
+  PropsWithChildren<{
+    onSetTop: (event: React.MouseEvent) => void;
+  }>
+> = (props) => {
+  return (
+    <div className="oui-w-full oui-relative oui-group hover:oui-bg-base-6 oui-px-[6px] oui-py-1 oui-rounded">
+      <Flex justify={"between"} width={"100%"}>
+        {props.children}
+      </Flex>
+      <button
+        className="oui-absolute oui-right-1 oui-top-1"
+        onClick={props.onSetTop}
+      >
+        <svg
+          className="group-hover:oui-opacity-100 group-hover:oui-translate-x-0 oui-opacity-0 oui-translate-x-3 oui-transition-all oui-cursor-pointer oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="16" height="16" rx="2" fill="#3347FD" />
+          <path d="M3.507 3.999a.5.5 0 1 0 0 1h9a.5.5 0 0 0 0-1zm4 8.006a.5.5 0 0 0 1 0V7.724l1.5 1.484.703-.703-2.343-2.36a.515.515 0 0 0-.72 0l-2.343 2.36.703.703 1.5-1.484z" />
+        </svg>
+      </button>
+    </div>
   );
 };
 
@@ -415,5 +431,156 @@ const IdentityButton = (props: {
         </svg>
       )}
     </button>
+  );
+};
+
+type SummaryKey =
+  | "totalValue"
+  | "freeCollateral"
+  | "unrealPnL"
+  | "currentLeverage"
+  | "maxLeverage";
+
+type AccountSummaryList = Array<SummaryKey>;
+const AccountSummaryItems: Record<SummaryKey, JSX.ElementType> = {
+  totalValue: TotalValue,
+  freeCollateral: FreeCollateral,
+  unrealPnL: UnrealPnL,
+  currentLeverage: CurrentLeverage,
+  maxLeverage: MaxLeverage,
+};
+
+export const AccountSummary = (props: AccountSummaryUi) => {
+  const { keys, ...rest } = props;
+  let canToggleIndex = 0;
+  const sizeRef = React.useRef(0);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (Array.isArray(entries) && entries.length > 0) {
+        const width = entries[0].contentRect.width;
+        console.log("resize", width);
+        if (width > 1440) {
+          sizeRef.current = 5;
+        } else if (width > 1366) {
+          sizeRef.current = 4;
+        } else if (width > 1280) {
+          sizeRef.current = 3;
+        } else if (width > 1140) {
+          sizeRef.current = 2;
+        } else {
+          sizeRef.current = 1;
+        }
+      }
+    });
+
+    resizeObserver.observe(document.body);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  let elements = keys.slice(0, sizeRef.current).map((key, index) => {
+    switch (key) {
+      case "freeCollateral": {
+        return (
+          <FreeCollateral
+            freeCollateral={props.freeCollateral}
+            visible={props.visible}
+            onToggleVisibility={props.onToggleVisibility}
+            visibleAvailable={index === canToggleIndex}
+          />
+        );
+      }
+
+      case "unrealPnL":
+        return (
+          <UnrealPnL
+            unrealPnL={props.unrealPnL}
+            unrealized_pnl_ROI={props.unrealized_pnl_ROI}
+            visible={props.visible}
+            onToggleVisibility={props.onToggleVisibility}
+            visibleAvailable={index === canToggleIndex}
+          />
+        );
+      case "currentLeverage": {
+        canToggleIndex++;
+        return <CurrentLeverage currentLeverage={props.currentLeverage} />;
+      }
+      case "maxLeverage": {
+        canToggleIndex++;
+        return <MaxLeverage maxLeverage={props.maxLeverage} />;
+      }
+      case "totalValue":
+      default:
+        return (
+          <TotalValue
+            totalValue={props.totalValue}
+            onToggleVisibility={props.onToggleVisibility}
+            visible={props.visible}
+            visibleAvailable={index === canToggleIndex}
+          />
+        );
+    }
+  });
+
+  return (
+    <div className="oui-flex oui-items-center oui-gap-6">
+      <Items elements={elements} />
+      <Popover
+        content={
+          <AccountInfoPopover
+            totalValue={rest.totalValue}
+            freeCollateral={props.freeCollateral}
+            maxLeverage={props.maxLeverage}
+            currentLeverage={props.currentLeverage}
+            unrealized_pnl_ROI={props.unrealized_pnl_ROI}
+            unrealPnL={props.unrealPnL}
+            keys={keys}
+            onToggleItemByKey={props.onToggleItemByKey}
+            onKeyToTop={props.onKeyToTop}
+            visible={props.visible}
+          />
+        }
+        contentProps={{
+          onOpenAutoFocus: (event) => event.preventDefault(),
+          sideOffset: 12,
+          className: "oui-p-1",
+        }}
+        arrow
+      >
+        <div className="oui-cursor-pointer oui-group">
+          <Dot />
+        </div>
+      </Popover>
+    </div>
+  );
+};
+
+const Items: FC<{
+  elements: JSX.Element[];
+}> = (props) => {
+  return (
+    <div className="oui-flex oui-gap-6">
+      {props.elements.map((Element, index) => (
+        <>{Element}</>
+      ))}
+    </div>
+  );
+};
+
+const Dot = () => {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="oui-fill-base-contrast-36 hover:oui-fill-primary-light group-data-[state=open]:oui-fill-primary-light"
+    >
+      <path d="M10.007 8.335a1.666 1.666 0 1 1 0 3.333 1.666 1.666 0 0 1 0-3.333m-5.84 0a1.666 1.666 0 1 1 0 3.333 1.666 1.666 0 0 1 0-3.333m11.666 0a1.666 1.666 0 1 1 0 3.333 1.666 1.666 0 0 1 0-3.333" />
+    </svg>
   );
 };

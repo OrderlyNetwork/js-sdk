@@ -185,7 +185,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             checked={remember}
             onCheckedChange={setRemember}
             disabled={loading}
-            className="data-[state=checked]:oui-bg-[#3347FD]"
+            className="data-[state=checked]:oui-bg-primary-darken"
           />
         </Flex>
       )}
@@ -305,7 +305,6 @@ const RememberMe = () => {
     </Tooltip>
   );
 };
-
 
 function paseErrorMsg(reject: any): string {
   console.log("wallet callback error", reject);

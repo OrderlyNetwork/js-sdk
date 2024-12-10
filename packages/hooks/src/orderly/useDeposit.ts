@@ -5,10 +5,10 @@ import {
   API,
   ARBITRUM_MAINNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
+  ChainNamespace,
   DEPOSIT_FEE_RATE,
   isNativeTokenChecker,
   MaxUint256,
-  ChainNamespace,
   NetworkId,
 } from "@orderly.network/types";
 import { Decimal, isTestnet } from "@orderly.network/utils";
@@ -191,7 +191,6 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     prevAddress.current = address;
 
-    console.log("-- ttttt  agetAllowanceByDefaultAddress", address);
     const allowance = await account.assetsManager.getAllowance({
       address,
       decimals,
@@ -314,6 +313,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     // only support orderly deposit
     console.log("-- start deposit");
+    console.log('-- deposit fee', depositFee);
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
@@ -325,6 +325,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
+    const time = account.walletAdapter?.chainNamespace === ChainNamespace.solana ? 10000 : 3000;
     getBalanceListener.current = setTimeout(async () => {
       try {
         const balance = await fetchBalanceHandler(
@@ -337,7 +338,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       } catch (err) {
         console.log("fetchBalanceHandler error", err);
       }
-    }, 3000);
+    },time);
   };
 
   const getDepositFee = useCallback(

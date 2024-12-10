@@ -78,6 +78,15 @@ export const customThemePlugin = () =>
         "--oui-gradient-brand-start": "38 254 255",
         "--oui-gradient-brand-end": "89 176 254",
 
+        /* rounded */
+        "--oui-rounded-sm": "2px",
+        "--oui-rounded": "4px",
+        "--oui-rounded-md": "6px",
+        "--oui-rounded-lg": "8px",
+        "--oui-rounded-xl": " 12px",
+        "--oui-rounded-2xl": "16px",
+        "--oui-rounded-full": "9999px",
+
         /* spacing */
         "--oui-spacing-xs": "20rem",
         "--oui-spacing-sm": "22.5rem",

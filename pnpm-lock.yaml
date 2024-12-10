@@ -1645,6 +1645,9 @@ importers:
       '@orderly.network/ui-positions':
         specifier: workspace:*
         version: link:../ui-positions
+      '@orderly.network/ui-scaffold':
+        specifier: workspace:*
+        version: link:../ui-scaffold
       '@orderly.network/ui-share':
         specifier: workspace:*
         version: link:../ui-share
