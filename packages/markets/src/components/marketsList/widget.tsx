@@ -1,6 +1,6 @@
 import { MarketsList } from "./marketsList.ui";
 import { useMarketsListScript } from "./marketsList.script";
-import { SortOrder, TableViewClassNames } from "@orderly.network/ui";
+import { SortOrder, DataTableClassNames } from "@orderly.network/ui";
 import { GetColumns } from "../../type";
 
 export type MarketsListWidgetProps = {
@@ -9,7 +9,7 @@ export type MarketsListWidgetProps = {
   sortOrder: SortOrder;
   getColumns?: GetColumns;
   collapsed?: boolean;
-  tableClassNames?: TableViewClassNames;
+  tableClassNames?: DataTableClassNames;
   rowClassName?: string;
   onSort?: (sortKey?: string, sortOrder?: SortOrder) => void;
 };

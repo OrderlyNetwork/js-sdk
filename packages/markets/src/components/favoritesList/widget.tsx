@@ -1,12 +1,12 @@
 import { FavoritesList } from "./favoritesList.ui";
 import { useFavoritesListScript } from "./favoritesList.script";
 import { GetColumns } from "../../type";
-import { TableViewClassNames } from "@orderly.network/ui";
+import { DataTableClassNames } from "@orderly.network/ui";
 
 export type FavoritesListWidgetProps = {
   getColumns?: GetColumns;
   collapsed?: boolean;
-  tableClassNames?: TableViewClassNames;
+  tableClassNames?: DataTableClassNames;
   rowClassName?: string;
 };
 

@@ -44,6 +44,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
       >
         <Flex itemAlign={"center"}>
           <Checkbox
+            data-testid="oui-testid-orderEntry-postOnly-checkBox"
             id={"toggle_order_post_only"}
             className="oui-peer"
             color={"white"}
@@ -63,6 +64,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
         </Flex>
         <Flex itemAlign={"center"}>
           <Checkbox
+            data-testid="oui-testid-orderEntry-ioc-checkBox"
             id={"toggle_order_iov"}
             color={"white"}
             className="oui-peer"
@@ -82,6 +84,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
         </Flex>
         <Flex itemAlign={"center"}>
           <Checkbox
+            data-testid="oui-testid-orderEntry-fox-checkBox"
             id={"toggle_order_fok"}
             color={"white"}
             variant={"radio"}
@@ -104,6 +107,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
       <Flex gapX={6}>
         <Flex>
           <Checkbox
+            data-testid="oui-testid-orderEntry-orderConfirm-checkBox"
             id={"toggle_order_confirm"}
             color={"white"}
             checked={props.needConfirm}
@@ -120,6 +124,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
         </Flex>
         <Flex>
           <Checkbox
+            data-testid="oui-testid-orderEntry-hidden-checkBox"
             id={"toggle_order_hidden"}
             color={"white"}
             checked={props.hidden}
@@ -140,6 +145,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           <Divider className={"oui-my-3"} />
           <Flex>
             <Switch
+              data-testid="oui-testid-orderEntry-additional-keepVisible-switch"
               id={"toggle_order_keep_visible"}
               onCheckedChange={(checked) => {
                 props.setPinned(checked);

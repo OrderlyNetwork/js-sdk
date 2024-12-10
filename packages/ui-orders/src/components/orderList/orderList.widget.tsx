@@ -11,9 +11,13 @@ export const DesktopOrderListWidget = (props: {
   symbol?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
+  testIds?: {
+    tableBody?: string;
+  }
 }) => {  
-  const state = useOrderListScript(props);
-  return <DesktopOrderList {...state} />;
+  const { testIds, ...rest} = props;
+  const state = useOrderListScript(rest);
+  return <DesktopOrderList {...state} testIds={testIds} />;
 };
 
 export const MobileOrderListWidget = (props: {

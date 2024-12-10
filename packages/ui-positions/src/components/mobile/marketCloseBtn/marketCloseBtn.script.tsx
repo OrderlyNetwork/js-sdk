@@ -3,6 +3,7 @@ import { useSymbolContext } from "../../../providers/symbolProvider";
 import { usePositionsRowContext } from "../../desktop/positionRowContext";
 import { PositionCellState } from "../positionCell/positionCell.script";
 import { toast } from "@orderly.network/ui";
+import { useLocalStorage } from "@orderly.network/hooks";
 
 export const useMarketCloseBtnScript = (props: {
   state: PositionCellState;
@@ -20,6 +21,9 @@ export const useMarketCloseBtnScript = (props: {
     updateOrderType,
     updateQuantity,
   } = usePositionsRowContext();
+
+  const [orderConfirm ] = useLocalStorage("orderly_order_confirm", true);
+
 
   const onConfirm = () => {
     return onSubmit().then(
@@ -46,6 +50,8 @@ export const useMarketCloseBtnScript = (props: {
 
     dialogOpen,
     setDialogOpen,
+
+    orderConfirm,
 
     onSubmit,
     quantity,

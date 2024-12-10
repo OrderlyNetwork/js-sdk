@@ -173,7 +173,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               <Slider
                 markCount={4}
                 value={[props.sliderValue]}
-                color="primaryLight"
+                color="primary"
                 onValueChange={(e) => {
                   props.setSliderValue(e[0]);
                   const qty = new Decimal(e[0])
@@ -186,11 +186,11 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               />
               <Flex width={"100%"} justify={"between"}>
                 <Text
-                  color="primaryLight"
+                  color="primary"
                   size="2xs"
                 >{`${props.sliderValue}%`}</Text>
                 <Flex gap={1}>
-                  <Text size="2xs" color="primaryLight">
+                  <Text size="2xs" color="primary">
                     Max
                   </Text>
                   <Text.numeral intensity={54} size="2xs">
@@ -211,6 +211,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               </Button>
               <ThrottledButton
                 fullWidth
+                disabled={submitting}
+                loading={submitting}
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
@@ -220,6 +222,10 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   const priceMsg = errors?.order_price?.message;
                   if (quantityMsg || priceMsg) {
                     toast.error(quantityMsg ?? priceMsg);
+                    return;
+                  }
+                  if (!props.orderConfirm) {
+                    onConfirm();
                     return;
                   }
                   setDialogOpen(true);

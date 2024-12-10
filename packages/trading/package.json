@@ -37,13 +37,14 @@
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/markets": "workspace:*",
     "@uiw/react-split": "^5.9.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
-    "react": "^18.3.1",
+    "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.1.6",
     "tsup": "^7.1.0",
@@ -51,7 +52,7 @@
     "tsconfig": "workspace:*"
   },
   "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.2.0"
+    "react": ">=18",
+    "react-dom": ">=18"
   }
 }

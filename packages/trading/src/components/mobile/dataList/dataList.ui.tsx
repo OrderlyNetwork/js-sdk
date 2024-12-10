@@ -21,7 +21,6 @@ export const DataList: FC<
 > = (props) => {
   return (
     <Tabs
-      variant="contained"
       value={props.tab}
       onValueChange={(e: any) => props.setTab(e)}
       size="lg"

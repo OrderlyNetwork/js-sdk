@@ -108,14 +108,15 @@ const FlagIcon = (props: { size: number }) => {
       width={props.size}
       height={props.size}
       viewBox="0 0 18 18"
-      fill="none"
+      fill="currenColor"
       xmlns="http://www.w3.org/2000/svg"
+      className="oui-fill-warning-darken"
     >
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M3.75 1.5a.75.75 0 0 1 .75.75h6a.75.75 0 0 1 .75.75v1.5h3a.75.75 0 0 1 .75.75V12a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75v-1.5H4.5v5.25a.75.75 0 0 1-1.5 0V2.25a.75.75 0 0 1 .75-.75M4.5 9h5.25V3.75H4.5zm6.75-3v3.75a.75.75 0 0 1-.75.75H8.25v.75h5.25V6z"
-        fill="#FF7D00"
+        // fill="#FF7D00"
       />
     </svg>
   );

@@ -1,18 +1,9 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAssetsHistory } from "@orderly.network/hooks";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { parseDateRangeForFilter } from "../helper/date";
-import {
-  addDays,
-  getDate,
-  getMonth,
-  getYear,
-  isSameDay,
-  set,
-  setHours,
-  setMinutes,
-} from "date-fns";
+import { getDate, getMonth, getYear, set } from "date-fns";
 
 const useAssetHistoryHook = () => {
   // const [fileter, setFilter] = useState<FilterParams>({});
@@ -28,7 +19,7 @@ const useAssetHistoryHook = () => {
     today,
   ]);
   const [side, setSide] = useState<string>("All");
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const { page, pageSize, setPage, parsePagination } = usePagination();
 
   const [data, { meta, isLoading }] = useAssetsHistory({
     startTime: dateRange[0].getTime().toString(),
@@ -60,18 +51,13 @@ const useAssetHistoryHook = () => {
     }
   };
 
-  const pagination = useMemo(() => {
-    return {
-      ...parseMeta(meta),
-      onPageChange: setPage,
-      onPageSizeChange: setPageSize,
-    } as PaginationMeta;
-  }, [meta, setPage, setPageSize]);
+  const pagination = useMemo(
+    () => parsePagination(meta),
+    [parsePagination, meta]
+  );
 
   return {
     dataSource: data,
-    // page: meta?.currentPage,
-    meta: parseMeta(meta),
     total: meta?.total,
     isLoading,
     // onDateRangeChange,
@@ -79,11 +65,8 @@ const useAssetHistoryHook = () => {
       side,
       dateRange,
     },
-    // pageSize: meta.,
     // onSearch,
     onFilter,
-    setPage,
-    setPageSize,
     pagination,
   };
 };

@@ -60,9 +60,6 @@ module.exports = withTV({
       "5xl": ["var(--oui-font-size-5xl, 2.25rem)", "2.75rem"], // 36px
       "6xl": ["var(--oui-font-size-6xl, 3rem)", "3rem"], // 48px
     },
-    lineHeight: {
-      "3xs": "0.625rem",
-    },
     // boxShadow: {
     //   sm: "var(--oui-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05))",
     //   DEFAULT:

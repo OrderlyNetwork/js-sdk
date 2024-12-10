@@ -13,12 +13,9 @@ export function toOrder(value?: bigint): number | undefined {
 // input a number | string, return value*(10^18) string
 export function toUint(value?: number | string): string | undefined {
   if (typeof value === "undefined") return undefined;
-  // 创建 Decimal 对象
   const decimalValue = new Decimal(value);
 
-  // 计算 value * (10^18)
   const result = decimalValue.mul(new Decimal("1e18"));
 
-  // 将结果转换为字符串并返回
   return result.toFixed(0);
 }

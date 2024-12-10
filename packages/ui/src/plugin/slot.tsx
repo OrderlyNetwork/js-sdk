@@ -16,6 +16,7 @@ interface Props {
 export const ExtensionSlot: FC<Props> = (props) => {
   const { position, scope, defaultWidget: defaultValue, ...rest } = props;
   // const [component, setComponent] = useState<ReactNode | null>(null);
+
   //
 
   const elementProps = useExtensionBuilder(position, rest);

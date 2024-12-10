@@ -64,6 +64,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             status={inputStatus}
             hintMessage={hintMessage}
             fetchBalance={fetchBalance}
+            data-testId="oui-testid-deposit-dialog-quantity-input"
           />
         </Box>
 

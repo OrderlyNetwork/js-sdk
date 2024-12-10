@@ -13,6 +13,5 @@ export { useWalletConnectorBuilder } from "./component/useWalletConnectorBuilder
 
 export { AuthGuard } from "./component/authGuard";
 export { AuthGuardDataTable } from "./component/authGuardDataTable";
-export { AuthGuardTableView } from "./component/authGuardTableView";
 export { AuthGuardEmpty } from "./component/authGuardEmpty";
 export { AuthGuardTooltip } from "./component/authGuardTooltip";
