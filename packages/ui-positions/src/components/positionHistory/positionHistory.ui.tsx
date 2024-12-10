@@ -25,14 +25,36 @@ export const PositionHistory: FC<PositionHistoryState> = (props) => {
   return (
     <Flex direction="column" width="100%" height="100%" itemAlign="start">
       {/* <Divider className="oui-w-full" /> */}
-      {props.filterItems.length > 0 && (
-        <DataFilter
-          items={props.filterItems}
-          onFilter={(value: any) => {
-            props.onFilter(value);
-          }}
-        />
-      )}
+      <Flex gap={3}>
+        {props.filterItems.length > 0 && (
+          <DataFilter
+            items={props.filterItems}
+            onFilter={(value: any) => {
+              props.onFilter(value);
+            }}
+          />
+        )}
+        {[1, 7, 30, 90].map((value) => {
+          return (
+            <button className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm">
+              <div className="oui-z-10">
+                <Text.gradient
+                  color={props.filterDays === value ? "brand" : undefined}
+                  className={props.filterDays !== value ? "oui-text-base-contrast-54": ""}
+                >
+                  {`${value}D`}
+                </Text.gradient>
+              </div>
+              <div
+                className="oui-gradient-primary oui-opacity-[.12] oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0 oui-rounded"
+                onClick={() => {
+                  props.updateFilterDays(value as any);
+                }}
+              ></div>
+            </button>
+          );
+        })}
+      </Flex>
 
       <AuthGuardDataTable<PositionHistoryExt>
         loading={props.isLoading}
@@ -52,7 +74,7 @@ export const PositionHistory: FC<PositionHistoryState> = (props) => {
           body: "oui-testid-dataList-positionHistory-tab-body",
         }}
         classNames={{
-            root: "!oui-h-[calc(100%_-_49px)]"
+          root: "!oui-h-[calc(100%_-_49px)]",
         }}
       />
     </Flex>
@@ -77,7 +99,7 @@ export const MobilePositionHistory: FC<
     >
       <Flex gap={2} p={2} className="oui-bg-base-9 oui-rounded-b-xl">
         <DataFilter
-        className="oui-pt-0 oui-pb-0 oui-border-none"
+          className="oui-pt-0 oui-pb-0 oui-border-none"
           items={props.filterItems}
           onFilter={(value: any) => {
             props.onFilter(value);

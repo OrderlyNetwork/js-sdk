@@ -223,7 +223,7 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
         formatString="yyyy-MM-dd hh:mm:ss"
         rule={"date"}
       >
-        {item.close_timestamp}
+        {item.position_status === 'closed' ? item.close_timestamp : "--"}
       </Text.formatted>
     </Statistic>
   );

@@ -47,7 +47,10 @@ export const usePositionHistoryColumn = (props: {
           title: "Net PnL",
           dataIndex: "netPnL",
           width: 140,
-          onSort: true,
+          onSort: (a, b) => {
+            if (a.netPnL == null || b.netPnL == null) return -1;
+            return (a.netPnL ?? 0) - (b.netPnL ?? 0);
+          },
           render: (_: any, record) => <NetPnL record={record} />,
         },
         // avg open
@@ -63,7 +66,7 @@ export const usePositionHistoryColumn = (props: {
         {
           title: "Avg. close",
           dataIndex: "avg_close",
-          width: 140,
+          width: 175,
           render: (_: any, record) => (
             <Text.numeral>{record.avg_close_price}</Text.numeral>
           ),
@@ -72,8 +75,7 @@ export const usePositionHistoryColumn = (props: {
         {
           title: "Time opened",
           dataIndex: "open_timestamp",
-          width: 140,
-          onSort: true,
+          width: 175,          onSort: true,
           render: (_: any, record) => (
             <Text.formatted rule={"date"} formatString="yyyy-MM-dd hh:mm:ss">
               {record.open_timestamp}
@@ -84,11 +86,13 @@ export const usePositionHistoryColumn = (props: {
         {
           title: "Time closed",
           dataIndex: "close_timestamp",
-          width: 140,
+          width: 175,
           onSort: true,
           render: (_: any, record) => (
             <Text.formatted rule={"date"} formatString="yyyy-MM-dd hh:mm:ss">
-              {record.close_timestamp}
+              {record.position_status == "closed"
+                ? record.close_timestamp
+                : "--"}
             </Text.formatted>
           ),
         },
@@ -96,7 +100,7 @@ export const usePositionHistoryColumn = (props: {
         {
           title: "Updated time",
           dataIndex: "last_update_timestamp",
-          width: 140,
+          width: 175,
           onSort: true,
           render: (_: any, record) => (
             <Text.formatted rule={"date"} formatString="yyyy-MM-dd hh:mm:ss">
