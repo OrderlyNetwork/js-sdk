@@ -1,10 +1,21 @@
-import {Account} from "./account";
-import {ConfigStore} from "./configStore/configStore";
+import { Account } from "./account";
+import { ConfigStore } from "./configStore/configStore";
 
-import {IContract} from "./contract";
-import {MessageFactor} from "./signer";
-import {formatByUnits, getTimestamp, parseBrokerHash, parseTokenHash,} from "./utils";
-import {API, ApiError, MaxUint256, ChainNamespace} from "@orderly.network/types";
+import { IContract } from "./contract";
+import { MessageFactor } from "./signer";
+import {
+  formatByUnits,
+  getTimestamp,
+  parseBrokerHash,
+  parseTokenHash,
+} from "./utils";
+import {
+  API,
+  ApiError,
+  ChainNamespace,
+  MaxUint256,
+  STORY_TESTNET_CHAINID,
+} from "@orderly.network/types";
 
 export class Assets {
   constructor(
@@ -58,8 +69,8 @@ export class Assets {
         nonce,
         timestamp,
         // domain,
-        verifyContract: this.contractManger.getContractInfoByEnv().verifyContractAddress,
-
+        verifyContract:
+          this.contractManger.getContractInfoByEnv().verifyContractAddress,
       });
 
     const data = {
@@ -212,12 +223,16 @@ export class Assets {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
+    let tempVaultAddress= vaultAddress || contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.storyTestnetVaultAddress ?? "";
+    }
     const result = await this.account.walletAdapter?.call(
       address ?? contractAddress.usdcAddress,
       "allowance",
       [
         this.account.stateValue.address,
-        vaultAddress || contractAddress.vaultAddress,
+        tempVaultAddress,
       ],
       {
         abi: contractAddress.usdcAbi,
@@ -264,11 +279,16 @@ export class Assets {
         ? this.account.walletAdapter.parseUnits(amount, decimals)
         : MaxUint256.toString();
 
+    let tempVaultAddress= vaultAddress || contractAddress.vaultAddress;
+    if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.storyTestnetVaultAddress ?? '';
+    }
+
     const result = await this.account.walletAdapter?.call(
       // contractAddress.usdcAddress,
       address,
       "approve",
-      [vaultAddress || contractAddress.vaultAddress, parsedAmount],
+      [tempVaultAddress, parsedAmount],
       {
         abi: contractAddress.usdcAbi,
       }
@@ -322,8 +342,12 @@ export class Assets {
     if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
       vaultAddress = contractAddress.solanaVaultAddress;
       // @ts-ignore
-      depositData['USDCAddress'] = contractAddress.solanaUSDCAddress
+      depositData["USDCAddress"] = contractAddress.solanaUSDCAddress;
     }
+    if (chain.chain_id === STORY_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.storyTestnetVaultAddress ?? "";
+    }
+
 
     return await this.account.walletAdapter.callOnChain(
       chain,
@@ -356,7 +380,10 @@ export class Assets {
     if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
       vaultAddress = contractAddress.solanaVaultAddress;
       // @ts-ignore
-      depositData['USDCAddress'] = contractAddress.solanaUSDCAddress
+      depositData["USDCAddress"] = contractAddress.solanaUSDCAddress;
+    }
+    if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.storyTestnetVaultAddress ?? "";
     }
     const result = await this.account.walletAdapter?.sendTransaction(
       vaultAddress,

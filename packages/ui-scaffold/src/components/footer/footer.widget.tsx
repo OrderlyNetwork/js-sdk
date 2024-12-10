@@ -4,7 +4,7 @@ import { Footer } from "./footer.ui";
 export type FooterProps = {
   telegramUrl?: string;
   twitterUrl?: string;
-  discordmUrl?: string;
+  discordUrl?: string;
 };
 
 export const FooterWidget = (props: FooterProps) => {

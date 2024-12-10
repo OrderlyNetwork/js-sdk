@@ -60,9 +60,6 @@ module.exports = withTV({
       "5xl": ["var(--oui-font-size-5xl, 2.25rem)", "2.75rem"], // 36px
       "6xl": ["var(--oui-font-size-6xl, 3rem)", "3rem"], // 48px
     },
-    lineHeight: {
-      "3xs": "0.625rem",
-    },
     borderRadius: {
       none: "0",
       sm: "var(--oui-rounded-sm, 0.125rem)", // 2px
