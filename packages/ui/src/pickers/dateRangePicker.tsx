@@ -60,6 +60,17 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (
+      value?.from &&
+      value?.to &&
+      dateRange?.from &&
+      dateRange?.to &&
+      !areDatesEqual(value as any, dateRange as any)
+    )
+      setDateRange(value);
+  }, [value]);
+
   const { trigger } = selectVariants({ size, className });
 
   const formattedValue = useMemo(() => {
@@ -160,4 +171,29 @@ function useDebouncedCallback(callback: any, delay: number) {
     [callback, delay]
   );
   return debouncedCallback;
+}
+
+function areDatesEqual(
+  date1: { from: Date; to: Date },
+  date2: { from: Date; to: Date }
+): boolean {
+  const extractDateParts = (date: Date) => ({
+    year: date.getFullYear(),
+    month: date.getMonth(),
+    day: date.getDate(),
+  });
+
+  const from1 = extractDateParts(date1.from);
+  const to1 = extractDateParts(date1.to);
+  const from2 = extractDateParts(date2.from);
+  const to2 = extractDateParts(date2.to);
+
+  return (
+    from1.year === from2.year &&
+    from1.month === from2.month &&
+    from1.day === from2.day &&
+    to1.year === to2.year &&
+    to1.month === to2.month &&
+    to1.day === to2.day
+  );
 }

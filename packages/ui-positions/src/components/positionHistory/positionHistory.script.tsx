@@ -5,7 +5,7 @@ import { PositionHistoryProps } from "./positionHistory.widget";
 import { API } from "@orderly.network/types";
 import { usePagination, useScreen } from "@orderly.network/ui";
 import { useMemo, useState } from "react";
-import { differenceInDays, setHours, subDays } from "date-fns";
+import { differenceInDays, setDate, setHours, subDays } from "date-fns";
 
 export type PositionHistoryExt = API.PositionHistory & {
   netPnL?: number;
@@ -55,7 +55,15 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     pageSize: 10,
   });
 
-  const { status, side, dateRange, filterItems, onFilter } = useFilter();
+  const {
+    status,
+    side,
+    dateRange,
+    filterDays,
+    updateFilterDays,
+    filterItems,
+    onFilter,
+  } = useFilter();
 
   const filterData = useMemo(() => {
     if (data == null) return data;
@@ -83,7 +91,6 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     });
   }, [status, side, dateRange, data, symbol]);
 
-
   const dataSource = useDataTap(filterData, {
     accountStatus: AccountStatusEnum.EnableTrading,
   });
@@ -96,6 +103,8 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     filterItems,
     onFilter,
     symbol,
+    filterDays,
+    updateFilterDays,
   };
 };
 
@@ -108,14 +117,25 @@ const useFilter = () => {
   );
 
   const defaultRange = formatDatePickerRange({
-    to: new Date(),
+    to: offsetEndOfDay(new Date()),
     from: offsetEndOfDay(subDays(new Date(), 90)),
   });
+
+  /// default is 90d
+  const [filterDays, setFilterDays] = useState<1 | 7 | 30 | 90>(90);
 
   const [dateRange, setDateRange] = useState<{
     from?: Date;
     to?: Date;
   }>(defaultRange);
+
+  const updateFilterDays = (days: 1 | 7 | 30 | 90) => {
+    setFilterDays(days);
+    setDateRange({
+      from: offsetStartOfDay(subDays(new Date(), days - 1)),
+      to: offsetEndOfDay(new Date()),
+    });
+  };
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "side") {
@@ -127,11 +147,21 @@ const useFilter = () => {
     }
 
     if (filter.name === "dateRange") {
-      setDateRange(formatDatePickerRange(filter.value));
+      const newDateRange = formatDatePickerRange(filter.value);
+      setDateRange(newDateRange);
+      if (newDateRange.from && newDateRange.to)
+      {
+        const diffDays = Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;
+        console.log("diff days", diffDays);
+        
+        if ([1,7,30,90].includes(diffDays)) {
+          setFilterDays(diffDays as any);
+        }
+      }
     }
   };
 
-  const { isMobile} = useScreen();
+  const { isMobile } = useScreen();
 
   const filterItems = useMemo((): any[] => {
     const sideFilter = {
@@ -184,7 +214,7 @@ const useFilter = () => {
       return [sideFilter, statusFilter];
     }
     return [sideFilter, statusFilter, dateRangeFilter];
-  }, [side, status, dateRange]);
+  }, [side, status, dateRange]);  
 
   return {
     filterItems,
@@ -192,6 +222,8 @@ const useFilter = () => {
     side,
     dateRange,
     status,
+    filterDays,
+    updateFilterDays,
   };
 };
 
