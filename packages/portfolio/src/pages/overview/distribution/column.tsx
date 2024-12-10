@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { Flex, type TableColumn, Text, TokenIcon } from "@orderly.network/ui";
+import { Flex, type Column, Text, TokenIcon } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 
 export const useColumns = () => {
@@ -65,7 +65,7 @@ export const useColumns = () => {
         width: 80,
         // rule: "price",
       },
-    ] as TableColumn<API.FundingFeeRow & { annual_rate: number }>[];
+    ] as Column<API.FundingFeeRow & { annual_rate: number }>[];
   }, []);
 
   return columns;

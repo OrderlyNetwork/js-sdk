@@ -103,7 +103,7 @@ export interface TradingPageState extends TradingPageProps {
     symbol: string;
   };
   /** default is  `(max-width: 768px)`*/
-  tabletMediaQuery: string;
+  tabletMediaQuery?: string;
 }
 
 interface TradingViewConfigInterface {
@@ -132,14 +132,6 @@ export type ReferralProps = {
   saveRefCode?: boolean;
   onClickReferral?: () => void;
   onBoundRefCode?: (success: boolean, error: any) => void;
-  refLink?: string;
-  slogan?: string;
-};
-
-export type ReferralPropsV2 = {
-  saveRefCode?: boolean;
-  onClickReferral?: () => void;
-  onBoundRefCode?: (success: boolean, error: any) => void;
 };
 
 export type TradingRewardsProps = {
@@ -155,18 +147,10 @@ type BaseTradingPageProps = {
   overrideFeatures?: Record<TradingFeatures, ReactNode>;
 };
 
-export type TradingPageV1Props = BaseTradingPageProps & {
-  shareOptions: ShareOptions;
-  referral: ReferralProps;
-  tradingReward: TradingRewardsProps;
-};
-
 export type TradingPageProps = BaseTradingPageProps & {
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
-  /** default is  `(max-width: 768px)`*/
-  tabletMediaQuery?: string;
-  referral?: ReferralPropsV2;
+  referral?: ReferralProps;
   tradingRewards?: TradingRewardsProps;
   bottomSheetLeading?: React.ReactNode | string;
 };

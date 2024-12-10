@@ -1,5 +1,5 @@
 import { MouseEventHandler, useMemo } from "react";
-import { Flex, Text, Box, Tooltip, TableColumn } from "@orderly.network/ui";
+import { Flex, Text, Box, Tooltip, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   FavoritesIcon,
@@ -192,7 +192,7 @@ export const useMarketsListFullColumns = (
           return null;
         },
       },
-    ] as TableColumn[];
+    ] as Column[];
   }, [favorite, isFavoriteList]);
 
   return columns;

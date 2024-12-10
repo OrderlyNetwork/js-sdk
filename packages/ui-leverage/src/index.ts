@@ -12,3 +12,5 @@ registerSimpleDialog(LeverageWidgetId, LeverageEditor, {
 });
 
 export { LeverageWidgetId };
+
+export { LeverageSlider } from "./leverage.ui";

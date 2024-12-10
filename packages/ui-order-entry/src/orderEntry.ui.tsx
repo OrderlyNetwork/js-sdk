@@ -145,6 +145,16 @@ export const OrderEntry = (
         },
         (errors) => {
           setErrorMsgVisible(true);
+         
+          if (typeof errors === "object") {
+            if (
+              errors.total != null ||
+              errors.order_quantity != null ||
+              errors.order_price != null ||
+              errors.trigger_price != null
+            )
+              return Promise.reject();
+          }
         }
       )
       .then(() => {
@@ -160,7 +170,8 @@ export const OrderEntry = (
       .catch((error) => {
         console.log("catch:", error);
         if (error === "cancel") return;
-        toast.error(error.message);
+        if (typeof error === "object" && error.message)
+          toast.error(error.message);
         // toast.error(`Error:${error.message}`);
 
         // if (error instanceof ApiError) {
@@ -196,9 +207,10 @@ export const OrderEntry = (
               // color={side === OrderSide.BUY ? "buy" : "secondary"}
               className={cn(
                 side === OrderSide.BUY && props.canTrade
-                  ? "oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
+                  ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
+              data-testid="oui-testid-orderEntry-side-buy-button"
             >
               Buy
             </Button>
@@ -212,9 +224,10 @@ export const OrderEntry = (
               // color={side === OrderSide.SELL ? "sell" : "secondary"}
               className={cn(
                 side === OrderSide.SELL && props.canTrade
-                  ? "oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
+                  ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
                   : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
               )}
+              data-testid="oui-testid-orderEntry-side-sell-button"
             >
               Sell
             </Button>
@@ -289,8 +302,8 @@ export const OrderEntry = (
             data-type={OrderSide.BUY}
             className={cn(
               side === OrderSide.BUY
-                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success active:oui-bg-success"
-                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger active:oui-bg-danger"
+                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
             )}
             onClick={() => {
               onSubmit();
@@ -347,6 +360,7 @@ export const OrderEntry = (
         >
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
+              data-testid="oui-testid-orderEntry-reduceOnly-switch"
               className="oui-h-[14px]"
               id={"reduceOnly"}
               checked={props.formattedOrder.reduce_only}
@@ -401,6 +415,7 @@ export const OrderEntry = (
                 setPinned(false);
               }}
               className={"oui-absolute oui-top-2 oui-right-2 oui-group"}
+              data-testid="oui-testid-orderEntry-pinned-button"
             ></PinButton>
           </Box>
         )}
@@ -421,7 +436,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         width={16}
         height={16}
         viewBox="0 0 16 16"
-        fill="none"
+        fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         onMouseEnter={() => {
           setPath(
@@ -431,8 +446,9 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         onMouseLeave={() => {
           setPath(defaultPath);
         }}
+        className="oui-text-primary-darken "
       >
-        <path d={path} fill="#608CFF" />
+        <path d={path} />
       </svg>
     </button>
   );
@@ -675,6 +691,7 @@ const QuantitySlider = (props: {
               className: "oui-mr-1",
             })}
             onClick={() => props.setMaxQty()}
+            data-testid="oui-testid-orderEntry-maxQty-value-button"
           >
             {maxLabel}
           </button>
@@ -683,6 +700,7 @@ const QuantitySlider = (props: {
             color={color}
             dp={props.dp}
             padding={false}
+            data-testid="oui-testid-orderEntry-maxQty-value"
           >
             {canTrade ? props.maxQty : 0}
           </Text.numeral>
@@ -708,6 +726,7 @@ const OrderTypeSelect = (props: {
   ];
   return (
     <Select.options
+      testid="oui-testid-orderEntry-orderType-button"
       currentValue={props.type}
       value={props.type}
       options={options}
@@ -821,6 +840,7 @@ function AdditionalConfigButton(props: {
     <PopoverRoot open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
+          data-testid="oui-testid-orderEntry-additional-button"
           onClick={() => {
             setOpen(true);
           }}

@@ -51,13 +51,21 @@ export const Leverage = (props: LeverageScriptReturns) => {
   );
 };
 
-const LeverageSlider = (props: LeverageScriptReturns) => {
+export const LeverageSlider = (props: {
+  maxLeverage?: number;
+  value: number;
+  onLeverageChange: (value: number) => void;
+  setShowSliderTip: (value: boolean) => void;
+  showSliderTip: boolean;
+  className?: string;
+  onValueCommit?: (value: number[]) => void;
+}) => {
   return (
-    <Box pt={3} width={"100%"}>
+    <Box pt={3} width={"100%"} className={props.className}>
       <Slider
-        step={1}
+        // step={1.04}
         max={props.maxLeverage}
-        min={1}
+        // min={1}
         // markLabelVisible={true}
         // marks={props.marks}
         markCount={5}
@@ -66,13 +74,14 @@ const LeverageSlider = (props: LeverageScriptReturns) => {
           props.onLeverageChange(e[0]);
           props.setShowSliderTip(true);
         }}
-        color="primaryLight"
+        color="primary"
         onValueCommit={(e) => {
+          props.onValueCommit?.(e);
           props.setShowSliderTip(false);
         }}
         showTip={props.showSliderTip}
         tipFormatter={(value, min, max, percent) => {
-          return `${value}x`;
+          return `${Math.max(1,value)}x`;
         }}
       />
       <Flex justify={"between"} width={"100%"} pt={3}>
@@ -81,16 +90,18 @@ const LeverageSlider = (props: LeverageScriptReturns) => {
             <button
               onClick={(e) => {
                 props.onLeverageChange(item);
+                props.onValueCommit?.([item]);
               }}
               className={cn(
                 " oui-text-2xs oui-pb-3",
                 index === 0
                   ? "oui-pr-2"
                   : index === 5
-                  ? "oui-pl-2"
-                  : "oui-px-2 oui-ml-2",
-                item - 1 >= 0 && "oui-text-primary-light"
+                  ? "oui-pl-0"
+                  : "oui-px-0 oui-ml-2",
+                  props.value >= item && "oui-text-primary-light"
               )}
+              data-testid={`oui-testid-leverage-${item}-btn`}
             >
               {`${item}x`}
             </button>

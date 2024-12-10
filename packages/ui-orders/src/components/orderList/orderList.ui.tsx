@@ -1,8 +1,6 @@
 import { FC } from "react";
 import {
   Flex,
-  Pagination,
-  Filter,
   ListView,
   Button,
   Grid,
@@ -11,7 +9,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
-import { AuthGuardTableView } from "@orderly.network/ui-connector";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { grayCell } from "../../utils/util";
 import { SymbolProvider } from "./symbolProvider";
 import { OrderListProvider } from "./orderListContext";
@@ -20,7 +18,11 @@ import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 
-export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
+export const DesktopOrderList: FC<OrdersBuilderState & {
+  testIds?: {
+    tableBody?: string;
+  }
+}> = (props) => {
   const columns = useOrderColumn({
     _type: props.type,
     onSymbolChange: props.onSymbolChange,
@@ -50,12 +52,15 @@ export const DesktopOrderList: FC<OrdersBuilderState> = (props) => {
             }
           />
         )}
-        <AuthGuardTableView
+        <AuthGuardDataTable
           columns={columns}
           loading={props.isLoading}
           dataSource={props.dataSource}
           bordered
           ignoreLoadingCheck={true}
+          testIds={{
+            body: props.testIds?.tableBody
+          }}
           classNames={{
             header: "oui-h-[38px]",
             root: "oui-items-start !oui-h-[calc(100%_-_49px)]",
@@ -203,6 +208,7 @@ const CancelAll: FC<OrdersBuilderState> = (props) => {
       disabled={(props.dataSource?.length ?? 0) == 0}
       className="disabled:oui-bg-transport"
       onClick={(e) => props.onCancelAll()}
+      data-testid={`oui-testid-dataList-${props.type.toLowerCase()}-cancelAll-button`}
     >
       Cancel all
     </Button>

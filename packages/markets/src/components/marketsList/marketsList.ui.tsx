@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { cn, TableView, TableViewClassNames } from "@orderly.network/ui";
+import { cn, DataTable, DataTableClassNames } from "@orderly.network/ui";
 import { type UseMarketsListReturn } from "./marketsList.script";
 import { GetColumns, TInitialSort } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
@@ -10,7 +10,7 @@ export type MarketsListProps = UseMarketsListReturn & {
   initialSort: TInitialSort;
   getColumns?: GetColumns;
   collapsed?: boolean;
-  tableClassNames?: TableViewClassNames;
+  tableClassNames?: DataTableClassNames;
   rowClassName?: string;
 };
 
@@ -38,7 +38,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
   }
 
   return (
-    <TableView
+    <DataTable
       classNames={{
         root: props.tableClassNames?.root,
         body: props.tableClassNames?.body,
@@ -64,27 +64,4 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
       manualSorting
     />
   );
-
-  // return (
-  //   <DataTable
-  //     classNames={{
-  //       body: "oui-pb-[53px]",
-  //     }}
-  //     columns={columns}
-  //     loading={loading}
-  //     dataSource={dataSource}
-  //     onRow={(record, index) => {
-  //       return {
-  //         className: cn("group", "oui-h-[53px]"),
-  //         onClick: () => {
-  //           onSymbolChange?.(record);
-  //           favorite.addToHistory(record);
-  //         },
-  //       };
-  //     }}
-  //     generatedRowKey={(record) => record.symbol}
-  //     onSort={onSort}
-  //     initialSort={initialSort}
-  //   />
-  // );
 };

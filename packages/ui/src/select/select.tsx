@@ -25,6 +25,7 @@ export type SelectProps<T> = SelectPrimitive.SelectProps & {
   contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
   showCaret?: boolean;
   maxHeight?: number;
+  testid?: string;
 } & SelectVariantProps;
 
 export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
@@ -38,6 +39,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
     valueFormatter: valueRenderer,
     showCaret,
     maxHeight,
+    testid,
     ...rest
   } = props;
 
@@ -52,6 +54,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
           "oui-font-semibold focus:oui-ring-transparent",
           !showCaret && "oui-cursor-auto"
         )}
+        data-testid={testid}
       >
         {typeof valueRenderer === "function" ? (
           valueRenderer((props.value || props.defaultValue) as T, {

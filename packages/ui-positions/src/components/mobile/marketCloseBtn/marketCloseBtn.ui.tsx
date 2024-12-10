@@ -12,11 +12,18 @@ export const MarketCloseBtn: FC<MarketCloseBtnState> = (props) => {
         color="secondary"
         size="sm"
         className="oui-border-base-contrast-36"
+        disabled={props.submitting}
+        loading={props.submitting}
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
 
           props.updateOrderType(OrderType.MARKET);
+
+          if (!props.orderConfirm) {
+            props.onConfirm();
+            return;
+          }
           props.setDialogOpen(true);
         }}
       >

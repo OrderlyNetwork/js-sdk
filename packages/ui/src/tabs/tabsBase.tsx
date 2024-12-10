@@ -2,6 +2,7 @@ import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
+import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
 
 const tabsVariants = tv({
   slots: {
@@ -183,7 +184,12 @@ const TabsTrigger = React.forwardRef<
     }
 >(({ className, size, children, icon, variant, ...props }, ref) => {
   // console.log("variant", variant);
-  const { trigger, icon: iconClassName } = tabsVariants({ size, variant });
+  // const { getComponentTheme } = useOrderlyTheme();
+  // const variantTheme = getComponentTheme("tabs", variant ?? "contained");
+  const { trigger, icon: iconClassName } = tabsVariants({
+    size,
+    variant,
+  });
   return (
     <TabsPrimitive.Trigger
       ref={ref}

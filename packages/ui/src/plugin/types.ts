@@ -23,20 +23,23 @@ export interface Extension<Props extends any = {}> {
 export enum ExtensionPositionEnum {
   DepositForm = "depositForm",
   WithdrawForm = "withdrawForm",
-  ListEmpty = "listEmpty",
-  MainNav = "mainNav",
-  SideNav = "sideNav",
+  // ListEmpty = "listEmpty",
+  // Positions = "positions",
+  // Orders = "orders",
+  // MainNav = "mainNav",
+  // SideNav = "sideNav",
   /**
    * Wallet button
    */
-  WalletButton = "walletButton",
-  Logo = "logo",
-  Toast = "toast",
+  AccountMenu = "accountMenu",
+  // Logo = "logo",
+  // Toast = "toast",
   /// Layout components
-  PortfolioLayout = "portfolioLayout",
-  TradingRewardsLayout = "tradingRewardsLayout",
-  AffiliateLayoutLayout = "affiliateLayoutLayout",
-  EmptyDataState = "emptyDataState",
+  MainMenus = "mainMenus",
+  // PortfolioLayout = "portfolioLayout",
+  // TradingRewardsLayout = "tradingRewardsLayout",
+  // AffiliateLayoutLayout = "affiliateLayoutLayout",
+  EmptyDataIdentifier = "emptyDataIdentifier",
 }
 
 export type DepositProps = {

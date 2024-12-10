@@ -22,25 +22,35 @@ export type SelectWithOptionsProps<T = string> = SelectProps<T> & {
     // }
   ) => ReactElement;
   // loading?: boolean;
+  testid?: string;
 };
 
 export const defaultOptionRenderer = (
   option: SelectOption,
   currentValue?: string
-) => (
-  <SelectItem key={option.value} value={option.value} className={cn("oui-relative")}>
-    {option.label}
-    {currentValue == option.value && (
-      <Box
-        width={4}
-        height={4}
-        gradient="primary"
-        r="full"
-        className="oui-absolute oui-right-2 oui-top-1/2 -oui-translate-y-1/2"
-      />
-    )}
-  </SelectItem>
-);
+) => {
+  return (
+    <SelectItem
+      key={option.value}
+      value={option.value}
+      className={cn("oui-relative")}
+      data-testid={`oui-testid-selectItem-${option.value
+        .toLowerCase()
+        .replace(" ", "_")}`}
+    >
+      {option.label}
+      {currentValue == option.value && (
+        <Box
+          width={4}
+          height={4}
+          gradient="primary"
+          r="full"
+          className="oui-absolute oui-right-2 oui-top-1/2 -oui-translate-y-1/2"
+        />
+      )}
+    </SelectItem>
+  );
+};
 
 export const SelectWithOptions: FC<SelectWithOptionsProps> = (props) => {
   const {

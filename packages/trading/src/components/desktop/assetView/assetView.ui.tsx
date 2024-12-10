@@ -86,13 +86,13 @@ const useCurrentStatusText = (): StatusInfo => {
         return {
           title: "Sign in",
           description: "Please sign in before starting to trade.",
-          titleColor: "primaryLight",
+          titleColor: "primary",
         };
       case AccountStatusEnum.DisabledTrading:
         return {
           title: "Enable trading",
           description: "Enable trading before starting to trade.",
-          titleColor: "primaryLight",
+          titleColor: "primary",
         };
       default:
         return {
@@ -329,7 +329,12 @@ export const AssetView: FC<AssetViewState> = ({
                 </Text>
               </Flex>
             </Box>
-            <Button fullWidth size="md" onClick={onDeposit}>
+            <Button
+              data-testid="oui-testid-assetView-deposit-button"
+              fullWidth
+              size="md"
+              onClick={onDeposit}
+            >
               <ArrowDownShortIcon color="white" opacity={1} />
               <Text>Deposit</Text>
             </Button>
@@ -358,6 +363,7 @@ export const AssetView: FC<AssetViewState> = ({
                 color="secondary"
                 size="md"
                 onClick={onWithdraw}
+                data-testid="oui-testid-assetView-withdraw-button"
               >
                 <ArrowDownShortIcon
                   color="white"
@@ -366,7 +372,12 @@ export const AssetView: FC<AssetViewState> = ({
                 />
                 <Text>Withdraw</Text>
               </Button>
-              <Button fullWidth size="md" onClick={onDeposit}>
+              <Button
+                data-testid="oui-testid-assetView-deposit-button"
+                fullWidth
+                size="md"
+                onClick={onDeposit}
+              >
                 <ArrowDownShortIcon color="white" opacity={1} />
                 <Text>Deposit</Text>
               </Button>

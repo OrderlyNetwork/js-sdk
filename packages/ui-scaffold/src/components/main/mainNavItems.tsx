@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { MainNavItem, NavItem } from "./navItem";
+import { MainNavItem, NavItem } from "./mainMenus/navItem";
 import { Flex } from "@orderly.network/ui";
 
 export type MainNavClassNames = {

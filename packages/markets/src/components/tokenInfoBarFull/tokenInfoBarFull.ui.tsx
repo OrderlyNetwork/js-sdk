@@ -15,7 +15,7 @@ import {
   UnFavoritesIcon2,
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
 import { useFundingRate } from "@orderly.network/hooks";
@@ -140,7 +140,7 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               <DataItem
                 label="Mark"
                 value={
-                  <Text.numeral dp={quotoDp}>
+                  <Text.numeral dp={quotoDp} data-testid="oui-testid-tokenInfo-markPrice-value">
                     {data?.["mark_price"]}
                   </Text.numeral>
                 }

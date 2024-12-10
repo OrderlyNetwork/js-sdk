@@ -1,16 +1,12 @@
-import { FC, ReactNode, useCallback, useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import {
-  Column,
-  DataTable,
   DatePicker,
   Divider,
   Flex,
   ListView,
-  Pagination,
-  ScrollArea,
   Statistic,
   TabPanel,
-  Table,
+  Column,
   Tabs,
   Text,
   cn,
@@ -19,8 +15,7 @@ import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
 import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
-import { addDays } from "date-fns";
+import { commifyOptional } from "@orderly.network/utils";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
@@ -182,17 +177,13 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         loading={props.commission.isLoading}
         ignoreLoadingCheck={true}
         dataSource={props.commission.data}
-        classNames={{
-          header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
-          body: "oui-text-xs oui-text-base-contrast-80",
+        pagination={props.commission.pagination}
+        onRow={(record) => {
+          return {
+            className: "oui-h-[41px]",
+          };
         }}
-      >
-        <Pagination
-          {...props.commission.meta}
-          onPageChange={props.commission.onPageChange}
-          onPageSizeChange={props.commission.onPageSizeChange}
-        />
-      </AuthGuardDataTable>
+      />
     );
   }, [isLG, props.commission]);
 
@@ -337,17 +328,13 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         ignoreLoadingCheck={true}
         columns={columns}
         dataSource={props.referees.data}
-        classNames={{
-          header: "oui-text-xs oui-text-base-contrast-36 oui-bg-base-9",
-          body: "oui-text-xs oui-text-base-contrast-80",
+        pagination={props.referees.pagination}
+        onRow={(record) => {
+          return {
+            className: "oui-h-[41px]",
+          };
         }}
-      >
-        <Pagination
-          {...props.referees.meta}
-          onPageChange={props.referees.onPageChange}
-          onPageSizeChange={props.referees.onPageSizeChange}
-        />
-      </AuthGuardDataTable>
+      />
     );
   }, [isLG, props.referees]);
 

@@ -1,12 +1,5 @@
 import { MouseEventHandler, ReactNode } from "react";
-import {
-  Flex,
-  TokenIcon,
-  Text,
-  Badge,
-  cn,
-  TableColumn,
-} from "@orderly.network/ui";
+import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   DeleteIcon,
@@ -60,7 +53,7 @@ export const getDropDownMarketsColumns = (
             >
               {value}
             </Text.formatted>
-            <Badge size="xs" color="primaryLight">
+            <Badge size="xs" color="primary">
               {record.leverage}x
             </Badge>
           </Flex>
@@ -125,7 +118,7 @@ export const getDropDownMarketsColumns = (
           <div className={cn("oui-absolute oui-right-1 oui-top-[3px]")}>
             <Flex
               className={cn(
-                "oui-bg-[rgba(51,71,253,1)] oui-py-[6px]",
+                "oui-bg-primary-darken oui-py-[6px]",
                 "oui-hidden group-hover:oui-inline-flex"
               )}
               r="base"
@@ -160,5 +153,5 @@ export const getDropDownMarketsColumns = (
         );
       },
     },
-  ] as TableColumn[];
+  ] as Column[];
 };

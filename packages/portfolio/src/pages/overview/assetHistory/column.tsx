@@ -5,7 +5,7 @@ import {
   Flex,
   TokenIcon,
   toast,
-  type TableColumn,
+  type Column,
 } from "@orderly.network/ui";
 import { useQuery } from "@orderly.network/hooks";
 
@@ -98,7 +98,7 @@ export const useAssetHistoryColumns = () => {
         },
         // formatter: "date",
       },
-    ] as TableColumn[];
+    ] as Column[];
   }, [chains]);
 
   return columns;
