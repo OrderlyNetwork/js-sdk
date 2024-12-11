@@ -27,8 +27,9 @@ export const usePrivateDataObserver = (options: {
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state, account } = useAccount();
-  const { setAccountInfo, restoreHolding, updateHolding, cleanAll } =
-    useAppStore((state) => state.actions);
+  const { setAccountInfo, restoreHolding, cleanAll } = useAppStore(
+    (state) => state.actions
+  );
   const statusActions = useApiStatusActions();
   const calculatorService = useCalculatorService();
   const positionsActions = usePositionActions();
@@ -116,7 +117,8 @@ export const usePrivateDataObserver = (options: {
           if (holding) {
             console.log("---->>>>>>!!!! holding", holding);
 
-            updateHolding(holding);
+            // updateHolding(holding);
+            calculatorService.calc(CalculatorScope.PORTFOLIO, { holding });
           }
         },
       }
