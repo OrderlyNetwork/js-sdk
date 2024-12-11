@@ -16,6 +16,7 @@ import {
 import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
 import {
+  MobileLiquidationWidget,
   MobilePositionHistoryWidget,
   MobilePositionsWidget,
 } from "@orderly.network/ui-positions";
@@ -33,7 +34,7 @@ export const DataList: FC<
       size="lg"
       className={props.className}
       classNames={{
-        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2",
+        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2 oui-overflow-x-scroll oui-hide-scrollbar",
       }}
     >
       <TabPanel
@@ -76,6 +77,14 @@ export const DataList: FC<
       </TabPanel>
       <TabPanel title={DataListTabType.history} value={DataListTabType.history}>
         <HistoryTab {...props} />
+      </TabPanel>
+      <TabPanel
+        title={DataListTabType.liquidation}
+        value={DataListTabType.liquidation}
+      >
+        <MobileLiquidationWidget
+          symbol={props.showAllSymbol ? undefined : props.symbol}
+        />
       </TabPanel>
     </Tabs>
   );

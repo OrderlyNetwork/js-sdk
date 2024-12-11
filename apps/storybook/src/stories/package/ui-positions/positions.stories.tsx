@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
+  LiquidationWidget,
+  MobileLiquidationWidget,
   MobilePositionHistoryWidget,
   MobilePositionsWidget,
   PositionHistoryWidget,
@@ -47,6 +49,28 @@ export const PositionHistory: Story = {
       );
     }
     return <PositionHistoryWidget />;
+  },
+};
+
+
+export const Liquidation: Story = {
+  decorators: [
+    (Stroy) => (
+      <Box height={"360px"} className="oui-bg-base-10">
+        {Stroy()}
+      </Box>
+    ),
+  ],
+  render: (arg) => {
+    const { isMobile } = useScreen();
+    if (isMobile) {
+      return (
+        <MobileLiquidationWidget
+          classNames={{ cell: "oui-p-2 oui-bg-base-9" }}
+        />
+      );
+    }
+    return <LiquidationWidget />;
   },
 };
 

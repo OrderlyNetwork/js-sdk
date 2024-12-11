@@ -1,4 +1,4 @@
-import { PositionHistoryWidget, PositionsProps, PositionsWidget } from "@orderly.network/ui-positions";
+import { LiquidationWidget, PositionHistoryWidget, PositionsProps, PositionsWidget } from "@orderly.network/ui-positions";
 import { Flex, Text, Divider, Box, Tabs, TabPanel } from "@orderly.network/ui";
 import { useState } from "react";
 
@@ -35,7 +35,7 @@ export const PositionsPage = (props: PositionsProps) => {
             <PositionHistoryWidget {...props} />
           </TabPanel>
           <TabPanel value={TabsType.liquidation} title={TabsType.liquidation}>
-            <Text>Liquidation</Text>
+            <LiquidationWidget />
           </TabPanel>
         </Tabs>
       </Box>

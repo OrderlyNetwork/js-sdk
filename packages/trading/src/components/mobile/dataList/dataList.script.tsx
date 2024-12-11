@@ -14,6 +14,7 @@ export enum DataListTabType {
   pending = "Pending",
   tp_sl = "TP/SL",
   history = "History",
+  liquidation = "Liquidation",
 }
 
 export enum DataListTabSubType {

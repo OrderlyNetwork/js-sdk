@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, createContext, useContext } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 
-interface SymbolContextState {
+export interface SymbolContextState {
   base_dp: number;
   quote_dp: number;
   base_tick: number;
