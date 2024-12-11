@@ -62,6 +62,7 @@ export default function getOptions(
     enabled_features: [
       "hide_left_toolbar_by_default",
       "order_panel_close_button",
+      "iframe_loading_compatibility_mode",
     ],
     auto_save_delay: 0.1,
     broker_config: {
