@@ -61,8 +61,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
 
   return (
     <div
-      id="oui-order-book-list"
-      className="oui-flex oui-flex-col oui-gap-[1px]"
+      className="oui-order-book-list oui-flex oui-flex-col oui-gap-[1px]"
     >
       {data.map((item, index) => {
         return (

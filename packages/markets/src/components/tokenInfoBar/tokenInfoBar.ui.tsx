@@ -14,6 +14,7 @@ export type TokenInfoBarProps = Pick<MarketsProviderProps, "onSymbolChange"> &
     onSymbol?: () => void;
   };
 
+// TODO: rename to SymbolInfoBar
 export const TokenInfoBar: FC<TokenInfoBarProps> = (props) => {
   const { symbol, data, leverage, onSymbol } = props;
 
@@ -34,7 +35,13 @@ export const TokenInfoBar: FC<TokenInfoBarProps> = (props) => {
   );
 
   return (
-    <Flex className={cn("oui-font-semibold oui-h-full", props.className)}>
+    <Flex
+      className={cn(
+        "oui-symbol-info-bar-mobile",
+        "oui-font-semibold oui-h-full",
+        props.className
+      )}
+    >
       <Flex gapX={3} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={3}>
           {symbolView}
