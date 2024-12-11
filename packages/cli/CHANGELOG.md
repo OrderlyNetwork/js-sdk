@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.18-preReleaseV2.18
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@2.0.1-preReleaseV2.18
+
 ## 0.3.18-preReleaseV2.17
 
 ### Patch Changes
