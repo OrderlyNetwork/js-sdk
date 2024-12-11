@@ -6,6 +6,7 @@ import { API } from "@orderly.network/types";
 import { usePagination, useScreen } from "@orderly.network/ui";
 import { useMemo, useState } from "react";
 import { differenceInDays, setDate, setHours, subDays } from "date-fns";
+import { formatDatePickerRange, offsetEndOfDay, offsetStartOfDay } from "../../utils";
 
 export type PositionHistoryExt = API.PositionHistory & {
   netPnL?: number;
@@ -226,45 +227,3 @@ const useFilter = () => {
 };
 
 export type PositionHistoryState = ReturnType<typeof usePositionHistoryScript>;
-
-export const parseDateRangeForFilter = (dateRange: {
-  from: Date;
-  to?: Date;
-}) => {
-  let { from, to } = dateRange;
-
-  if (typeof to === "undefined") {
-    to = new Date();
-  }
-
-  const diff = differenceInDays(from, to);
-
-  // console.log("diff", diff);
-
-  if (diff === 0) {
-    return [from, setHours(to, 23)];
-  }
-
-  return [from, to];
-};
-
-function offsetStartOfDay(date?: Date) {
-  if (date == null) return date;
-
-  const newDate = new Date(date);
-  newDate.setHours(0, 0, 0, 0);
-  return newDate;
-}
-
-function offsetEndOfDay(date?: Date) {
-  if (date == null) return date;
-
-  const newDate = new Date(date);
-  newDate.setHours(23, 59, 59, 999);
-  return newDate;
-}
-
-export const formatDatePickerRange = (option: { from?: Date; to?: Date }) => ({
-  from: offsetStartOfDay(option.from),
-  to: offsetEndOfDay(option.to ?? option.from),
-});

@@ -427,6 +427,22 @@ export declare namespace API {
     close_timestamp: number;            // Timestamp when the position was closed
     last_update_time: number;           // Timestamp of the last update to the position
   }
+
+  export interface LiquidationPositionByPerp {
+    abs_liquidator_fee: number;
+    cost_position_transfer: number;
+    liquidator_fee: number;
+    position_qty: number;
+    symbol: string;
+    transfer_price: number;
+  }
+  
+  export interface Liquidation {
+    liquidation_id: number;
+    timestamp: number;
+    transfer_amount_to_insurance_fund: number;
+    positions_by_perp: LiquidationPositionByPerp[];
+  }
 }
 
 export declare namespace WSMessage {
