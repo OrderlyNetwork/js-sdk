@@ -84,6 +84,7 @@ export const DataList: FC<
       >
         <MobileLiquidationWidget
           symbol={props.showAllSymbol ? undefined : props.symbol}
+          classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
         />
       </TabPanel>
     </Tabs>
