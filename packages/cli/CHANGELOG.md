@@ -1,5 +1,21 @@
 # @orderly.network/cli
 
+## 0.3.18-preview.1
+
+### Patch Changes
+
+- preview
+- Updated dependencies
+  - @orderly.network/core@2.0.1-preview.1
+
+## 0.3.18-preview.0
+
+### Patch Changes
+
+- preview
+- Updated dependencies
+  - @orderly.network/core@2.0.1-preview.0
+
 ## 0.3.17
 
 ### Patch Changes
