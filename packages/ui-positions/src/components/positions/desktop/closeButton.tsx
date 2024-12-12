@@ -51,7 +51,13 @@ export const CloseButton = () => {
           toast.error(error.message);
         }
       }
-    );
+    ).catch((error) => {
+      if (typeof error === "string") {
+        toast.error(error);
+      } else {
+        toast.error(error.message);
+      }
+    });
   };
 
   const onClose = () => {

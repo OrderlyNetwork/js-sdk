@@ -68,7 +68,7 @@ const Identifier = (props: {
         ),
         completed: (
           <div>
-            <CheckedCircleFillIcon opacity={1} className="oui-text-[rgba(96,140,255,1)]"/>
+            <CheckedCircleFillIcon opacity={1} className="oui-text-primary" />
           </div>
         ),
       }}

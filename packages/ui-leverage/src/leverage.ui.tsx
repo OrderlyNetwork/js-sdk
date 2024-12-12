@@ -1,31 +1,14 @@
-import {
-  Box,
-  CloseIcon,
-  Button,
-  Flex,
-  Slider,
-  Text,
-  cn,
-} from "@orderly.network/ui";
+import { FC } from "react";
+import { Box, Button, Flex, Slider, Text, cn } from "@orderly.network/ui";
 import { LeverageScriptReturns } from "./leverage.script";
 
-export const Leverage = (props: LeverageScriptReturns) => {
+export type LeverageProps = LeverageScriptReturns;
+
+export const Leverage: FC<LeverageProps> = (props) => {
   const { currentLeverage = 0 } = props;
   return (
     <Flex itemAlign={"start"} direction={"column"} mb={0}>
-      <Flex justify={"between"} width={"100%"}>
-        <Text as="div" size={"sm"} intensity={54} className="oui-mt-2">
-          Max account leverage
-        </Text>
-        <Flex direction={"row"} gap={1}>
-          <Text size={"sm"} intensity={54}>
-            Current:
-          </Text>
-          <Text.numeral unit="x" size={"sm"} intensity={80}>
-            {currentLeverage ?? "--"}
-          </Text.numeral>
-        </Flex>
-      </Flex>
+      <LeverageHeader currentLeverage={currentLeverage} />
 
       <LeverageSlider {...props} />
       <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
@@ -51,7 +34,27 @@ export const Leverage = (props: LeverageScriptReturns) => {
   );
 };
 
-export const LeverageSlider = (props: {
+export type LeverageHeaderProps = Pick<LeverageProps, "currentLeverage">;
+
+export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
+  return (
+    <Flex justify={"between"} width={"100%"}>
+      <Text as="div" size={"sm"} intensity={54} className="oui-mt-2">
+        Max account leverage
+      </Text>
+      <Flex direction={"row"} gap={1}>
+        <Text size={"sm"} intensity={54}>
+          Current:
+        </Text>
+        <Text.numeral unit="x" size={"sm"} intensity={80}>
+          {props.currentLeverage ?? "--"}
+        </Text.numeral>
+      </Flex>
+    </Flex>
+  );
+};
+
+export type LeverageSliderProps = {
   maxLeverage?: number;
   value: number;
   onLeverageChange: (value: number) => void;
@@ -59,7 +62,9 @@ export const LeverageSlider = (props: {
   showSliderTip: boolean;
   className?: string;
   onValueCommit?: (value: number[]) => void;
-}) => {
+};
+
+export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
   return (
     <Box pt={3} width={"100%"} className={props.className}>
       <Slider
@@ -71,17 +76,19 @@ export const LeverageSlider = (props: {
         markCount={5}
         value={[props.value]}
         onValueChange={(e) => {
+          console.log("onValueChange");
           props.onLeverageChange(e[0]);
           props.setShowSliderTip(true);
         }}
         color="primary"
         onValueCommit={(e) => {
+          console.log("onValueCommit");
           props.onValueCommit?.(e);
           props.setShowSliderTip(false);
         }}
         showTip={props.showSliderTip}
         tipFormatter={(value, min, max, percent) => {
-          return `${Math.max(1,value)}x`;
+          return `${Math.max(1, value)}x`;
         }}
       />
       <Flex justify={"between"} width={"100%"} pt={3}>
@@ -99,7 +106,7 @@ export const LeverageSlider = (props: {
                   : index === 5
                   ? "oui-pl-0"
                   : "oui-px-0 oui-ml-2",
-                  props.value >= item && "oui-text-primary-light"
+                props.value >= item && "oui-text-primary-light"
               )}
               data-testid={`oui-testid-leverage-${item}-btn`}
             >

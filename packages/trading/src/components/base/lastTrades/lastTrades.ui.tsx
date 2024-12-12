@@ -130,6 +130,7 @@ const List = (props: {
     <ListView
       dataSource={props.data}
       className={cn(
+        "oui-last-trades-list",
         "oui-w-full oui-h-full",
         props.className,
         "oui-overflow-auto"

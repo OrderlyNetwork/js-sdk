@@ -37,6 +37,7 @@
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/markets": "workspace:*",
     "@uiw/react-split": "^5.9.3"
   },

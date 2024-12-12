@@ -81,6 +81,15 @@ export const themePlugin = () =>
         "--oui-gradient-neutral-start": "27 29 24",
         "--oui-gradient-neutral-end": "38 41 46",
 
+        /* rounded */
+        "--oui-rounded-sm": "2px",
+        "--oui-rounded": "4px",
+        "--oui-rounded-md": "6px",
+        "--oui-rounded-lg": "8px",
+        "--oui-rounded-xl": " 12px",
+        "--oui-rounded-2xl": "16px",
+        "--oui-rounded-full": "9999px",
+
         /* spacing */
         "--oui-spacing-xs": "20rem",
         "--oui-spacing-sm": "22.5rem",

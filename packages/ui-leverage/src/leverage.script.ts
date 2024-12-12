@@ -1,16 +1,14 @@
-import {
-  useDebounce,
-  useDebouncedCallback,
-  useLeverage,
-  useMarginRatio,
-} from "@orderly.network/hooks";
-import { SliderMarks, toast, useModal } from "@orderly.network/ui";
-import { log } from "console";
+import { useLeverage, useMarginRatio } from "@orderly.network/hooks";
+import { SliderMarks, toast } from "@orderly.network/ui";
 import { useMemo, useState } from "react";
 
-export const useLeverageScript = () => {
-  const { hide } = useModal();
+type UseLeverageScriptOptions = {
+  close?: () => void;
+};
 
+export type LeverageScriptReturns = ReturnType<typeof useLeverageScript>;
+
+export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
   const { currentLeverage } = useMarginRatio();
   const [showSliderTip, setShowSliderTip] = useState(false);
 
@@ -47,12 +45,11 @@ export const useLeverageScript = () => {
     // updateLeverage(leverage);
   };
 
-  const onCancel = () => hide();
   const onSave = async () => {
     try {
       update({ leverage }).then(
         (res: any) => {
-          hide();
+          options?.close?.();
           toast.success("Leverage updated");
         },
         (err: Error) => {
@@ -68,7 +65,7 @@ export const useLeverageScript = () => {
     marks,
     onLeverageChange,
     step,
-    onCancel,
+    onCancel: options?.close,
     onSave,
     isLoading: isMutating,
     showSliderTip,
@@ -76,5 +73,3 @@ export const useLeverageScript = () => {
     maxLeverage,
   };
 };
-
-export type LeverageScriptReturns = ReturnType<typeof useLeverageScript>;

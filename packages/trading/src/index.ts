@@ -13,5 +13,6 @@ export * from "./components/desktop/riskRate";
 export * from "./components/desktop/orderBookAndTrades";
 export * from "./components/desktop/layout/splitLayout/splitLayout";
 export * from "./components/mobile/bottomNavBar";
+export * from "./components/mobile/portfolioSheet";
 export * from "./pages/trading";
 export * from "./provider";

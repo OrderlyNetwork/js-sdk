@@ -44,6 +44,10 @@ export const useMaintenanceScript = (): MaintenanceTipInterface => {
   };
 
   useEffect(() => {
+    console.log('-- start time', {
+      startTime,
+      status,
+    });
     if (status === 2) {
       setShowTips(false);
       setShowDialog(true);

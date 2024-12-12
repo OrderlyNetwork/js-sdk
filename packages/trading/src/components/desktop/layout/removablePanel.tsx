@@ -94,7 +94,14 @@ export const TopIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect x="1.333" y="2.667" width="13.333" height="4" rx="2" fill="#608CFF" />
+    <rect
+      x="1.333"
+      y="2.667"
+      width="13.333"
+      height="4"
+      rx="2"
+      fill="rgb(var(--oui-color-primary))"
+    />
     <rect
       x="2.667"
       y="12"
@@ -125,7 +132,14 @@ export const MiddleIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect x="1.333" y="6" width="13.333" height="4" rx="2" fill="#608CFF" />
+    <rect
+      x="1.333"
+      y="6"
+      width="13.333"
+      height="4"
+      rx="2"
+      fill="rgb(var(--oui-color-primary))"
+    />
     <rect
       x="2.667"
       y="12"
@@ -156,7 +170,14 @@ export const BottomIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect x="1.333" y="9.333" width="13.333" height="4" rx="2" fill="#608CFF" />
+    <rect
+      x="1.333"
+      y="9.333"
+      width="13.333"
+      height="4"
+      rx="2"
+      fill="rgb(var(--oui-color-primary))"
+    />
     <rect
       x="2.667"
       y="6"
