@@ -185,7 +185,7 @@ const generateKeyFun =
     }
 
     if (start_t) {
-      search.set(`end_t`, `${start_t}`);
+      search.set(`start_t`, `${start_t}`);
     }
 
     return `/v1/liquidations?${search.toString()}`;
