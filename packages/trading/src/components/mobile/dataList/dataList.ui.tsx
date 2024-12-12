@@ -34,7 +34,8 @@ export const DataList: FC<
       size="lg"
       className={props.className}
       classNames={{
-        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2 oui-overflow-x-scroll oui-hide-scrollbar",
+        tabsList:
+          "oui-bg-base-9 oui-rounded-t-xl oui-p-2 oui-overflow-x-scroll oui-hide-scrollbar",
       }}
     >
       <TabPanel
@@ -193,30 +194,32 @@ const SymbolControlHeader: FC<
 
 const HistoryTab: FC<DataListState> = (props) => {
   return (
-    <Tabs
-      value={props.subTab}
-      onValueChange={(e: any) => props.setSubTab(e)}
-      size="md"
-      classNames={{
-        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2",
-      }}
-    >
-      <TabPanel
-        title={DataListTabSubType.positionHistory}
-        value={DataListTabSubType.positionHistory}
+    <div className="oui-min-h-[300px]">
+      <Tabs
+        value={props.subTab}
+        onValueChange={(e: any) => props.setSubTab(e)}
+        size="md"
+        classNames={{
+          tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2",
+        }}
       >
-        <MobilePositionHistoryWidget
-          symbol={props.showAllSymbol ? undefined : props.symbol}
-          onSymbolChange={props.onSymbolChange}
-          classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
-        />
-      </TabPanel>
-      <TabPanel
-        title={DataListTabSubType.orderHistory}
-        value={DataListTabSubType.orderHistory}
-      >
-        <OrdersView type={TabType.orderHistory} {...props} />
-      </TabPanel>
-    </Tabs>
+        <TabPanel
+          title={DataListTabSubType.positionHistory}
+          value={DataListTabSubType.positionHistory}
+        >
+          <MobilePositionHistoryWidget
+            symbol={props.showAllSymbol ? undefined : props.symbol}
+            onSymbolChange={props.onSymbolChange}
+            classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
+          />
+        </TabPanel>
+        <TabPanel
+          title={DataListTabSubType.orderHistory}
+          value={DataListTabSubType.orderHistory}
+        >
+          <OrdersView type={TabType.orderHistory} {...props} />
+        </TabPanel>
+      </Tabs>
+    </div>
   );
 };
