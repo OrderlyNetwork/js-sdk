@@ -1,5 +1,230 @@
 # @orderly.network/hooks
 
+## 2.0.1-developV2-1.14
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.14
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.14
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.14
+  - @orderly.network/types@2.0.1-developV2-1.14
+  - @orderly.network/utils@2.0.1-developV2-1.14
+  - @orderly.network/core@2.0.1-developV2-1.14
+  - @orderly.network/perp@4.0.1-developV2-1.14
+  - @orderly.network/net@2.0.1-developV2-1.14
+
+## 2.0.1-developV2-1.13
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.13
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.13
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.13
+  - @orderly.network/types@2.0.1-developV2-1.13
+  - @orderly.network/utils@2.0.1-developV2-1.13
+  - @orderly.network/core@2.0.1-developV2-1.13
+  - @orderly.network/perp@4.0.1-developV2-1.13
+  - @orderly.network/net@2.0.1-developV2-1.13
+
+## 2.0.1-developV2-1.12
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.12
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.12
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.12
+  - @orderly.network/types@2.0.1-developV2-1.12
+  - @orderly.network/utils@2.0.1-developV2-1.12
+  - @orderly.network/core@2.0.1-developV2-1.12
+  - @orderly.network/perp@4.0.1-developV2-1.12
+  - @orderly.network/net@2.0.1-developV2-1.12
+
+## 2.0.1-developV2-1.11
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.11
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.11
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.11
+  - @orderly.network/types@2.0.1-developV2-1.11
+  - @orderly.network/utils@2.0.1-developV2-1.11
+  - @orderly.network/core@2.0.1-developV2-1.11
+  - @orderly.network/perp@4.0.1-developV2-1.11
+  - @orderly.network/net@2.0.1-developV2-1.11
+
+## 2.0.1-developV2-1.10
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.10
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.10
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.10
+  - @orderly.network/types@2.0.1-developV2-1.10
+  - @orderly.network/utils@2.0.1-developV2-1.10
+  - @orderly.network/core@2.0.1-developV2-1.10
+  - @orderly.network/perp@4.0.1-developV2-1.10
+  - @orderly.network/net@2.0.1-developV2-1.10
+
+## 2.0.1-developV2-1.9
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.9
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.9
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.9
+  - @orderly.network/types@2.0.1-developV2-1.9
+  - @orderly.network/utils@2.0.1-developV2-1.9
+  - @orderly.network/core@2.0.1-developV2-1.9
+  - @orderly.network/perp@4.0.1-developV2-1.9
+  - @orderly.network/net@2.0.1-developV2-1.9
+
+## 2.0.1-developV2-1.8
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.8
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.8
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.8
+  - @orderly.network/types@2.0.1-developV2-1.8
+  - @orderly.network/utils@2.0.1-developV2-1.8
+  - @orderly.network/core@2.0.1-developV2-1.8
+  - @orderly.network/perp@4.0.1-developV2-1.8
+  - @orderly.network/net@2.0.1-developV2-1.8
+
+## 2.0.1-developV2-1.7
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.7
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.7
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.7
+  - @orderly.network/types@2.0.1-developV2-1.7
+  - @orderly.network/utils@2.0.1-developV2-1.7
+  - @orderly.network/core@2.0.1-developV2-1.7
+  - @orderly.network/perp@4.0.1-developV2-1.7
+  - @orderly.network/net@2.0.1-developV2-1.7
+
+## 2.0.1-developV2-1.6
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.6
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.6
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.6
+  - @orderly.network/types@2.0.1-developV2-1.6
+  - @orderly.network/utils@2.0.1-developV2-1.6
+  - @orderly.network/core@2.0.1-developV2-1.6
+  - @orderly.network/perp@4.0.1-developV2-1.6
+  - @orderly.network/net@2.0.1-developV2-1.6
+
+## 2.0.1-developV2-1.5
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.5
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.5
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.5
+  - @orderly.network/types@2.0.1-developV2-1.5
+  - @orderly.network/utils@2.0.1-developV2-1.5
+  - @orderly.network/core@2.0.1-developV2-1.5
+  - @orderly.network/perp@4.0.1-developV2-1.5
+  - @orderly.network/net@2.0.1-developV2-1.5
+
+## 2.0.1-developV2-1.4
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.4
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.4
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.4
+  - @orderly.network/types@2.0.1-developV2-1.4
+  - @orderly.network/utils@2.0.1-developV2-1.4
+  - @orderly.network/core@2.0.1-developV2-1.4
+  - @orderly.network/perp@4.0.1-developV2-1.4
+  - @orderly.network/net@2.0.1-developV2-1.4
+
+## 2.0.1-developV2-1.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.3
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.3
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.3
+  - @orderly.network/types@2.0.1-developV2-1.3
+  - @orderly.network/utils@2.0.1-developV2-1.3
+  - @orderly.network/core@2.0.1-developV2-1.3
+  - @orderly.network/perp@4.0.1-developV2-1.3
+  - @orderly.network/net@2.0.1-developV2-1.3
+
+## 2.0.1-developV2-1.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.2
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.2
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.2
+  - @orderly.network/types@2.0.1-developV2-1.2
+  - @orderly.network/utils@2.0.1-developV2-1.2
+  - @orderly.network/core@2.0.1-developV2-1.2
+  - @orderly.network/perp@4.0.1-developV2-1.2
+  - @orderly.network/net@2.0.1-developV2-1.2
+
+## 2.0.1-developV2-1.1
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.1
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.1
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.1
+  - @orderly.network/types@2.0.1-developV2-1.1
+  - @orderly.network/utils@2.0.1-developV2-1.1
+  - @orderly.network/core@2.0.1-developV2-1.1
+  - @orderly.network/perp@4.0.1-developV2-1.1
+  - @orderly.network/net@2.0.1-developV2-1.1
+
+## 2.0.1-developV2-1.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-developV2-1.0
+  - @orderly.network/web3-provider-ethers@2.0.1-developV2-1.0
+  - @orderly.network/default-evm-adapter@2.0.1-developV2-1.0
+  - @orderly.network/types@2.0.1-developV2-1.0
+  - @orderly.network/utils@2.0.1-developV2-1.0
+  - @orderly.network/core@2.0.1-developV2-1.0
+  - @orderly.network/perp@4.0.1-developV2-1.0
+  - @orderly.network/net@2.0.1-developV2-1.0
+
 ## 2.0.0
 
 ### Major Changes
