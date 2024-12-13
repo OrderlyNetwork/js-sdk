@@ -9,7 +9,9 @@ export enum DataListTabType {
   pending = "Pending",
   tp_sl = "TP/SL",
   filled = "Filled",
+  positionHistory="Position history",
   orderHistory = "Order history",
+  liquidation = "Liquidation",
 }
 
 export const useDataListScript = (

@@ -1,4 +1,4 @@
-import { PositionsProps } from "../types/types";
+import { PositionsProps } from "../../types/types";
 import { MobilePositions, Positions } from "./positions.ui";
 import { usePositionsBuilder } from "./usePositionsBuilder.script";
 

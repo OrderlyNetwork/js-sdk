@@ -19,7 +19,7 @@ import { FC, useMemo, useState } from "react";
 import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { TokenIcon } from "@orderly.network/ui";
-import { useSymbolContext } from "../../providers/symbolProvider";
+import { useSymbolContext } from "../../../providers/symbolProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
 
 export const CloseButton = () => {

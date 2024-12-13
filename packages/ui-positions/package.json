@@ -29,7 +29,8 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui-tpsl": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@orderly.network/utils": "workspace:*",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

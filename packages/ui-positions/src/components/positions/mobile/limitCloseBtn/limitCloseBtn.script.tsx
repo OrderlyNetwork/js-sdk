@@ -1,7 +1,7 @@
 import { useLocalStorage, useMarkPricesStream } from "@orderly.network/hooks";
 import { PositionCellState } from "../positionCell/positionCell.script";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSymbolContext } from "../../../providers/symbolProvider";
+import { useSymbolContext } from "../../../../providers/symbolProvider";
 import { usePositionsRowContext } from "../../desktop/positionRowContext";
 import { toast } from "@orderly.network/ui";
 import { OrderType } from "@orderly.network/types";
