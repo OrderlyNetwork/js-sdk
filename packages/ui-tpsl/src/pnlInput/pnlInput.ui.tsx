@@ -70,9 +70,11 @@ export const PNLInput = (props: PNLInputProps) => {
       }}
       onFocus={() => {
         setPlaceholder("");
+        props.setFocus(true);
       }}
       onBlur={() => {
         setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
+        props.setFocus(false);
       }}
       // value={props.value}
       suffix={
