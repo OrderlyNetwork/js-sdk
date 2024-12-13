@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { MenuItem } from "@orderly.network/ui";
 import { Decimal, todpIfNeed } from "@orderly.network/utils";
@@ -35,6 +35,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     PnLMode.PERCENTAGE
   );
 
+  const [focus, setFocus] = useState(true);
   const key = useMemo(() => {
     switch (mode) {
       case PnLMode.OFFSET:
@@ -85,9 +86,11 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
       ) => {
         value = `${value}`; // convert to string
 
-        // if (type === "SL" && mode === PnLMode.PnL) {
-        //   value = value.startsWith("-") ? value : "-" + value;
-        // }
+        if (focus) {
+          if (type === "SL" && mode === PnLMode.PnL) {
+            value = value.startsWith("-") ? value : "-" + value;
+          }
+        }
 
         if (value === "" || value === "-") return "";
         // if (mode === PnLMode.PnL || mode === PnLMode.OFFSET) {
@@ -131,6 +134,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             value = new Decimal(value).div(100).toString();
             value = `${value}${percentageSuffix.current}`;
           }
+        } else if (mode === PnLMode.PnL && type === "SL" && focus) {
+          value = value.startsWith("-") ? value : "-" + value;
         } else {
           value = todpIfNeed(value, dp);
         }
@@ -214,6 +219,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     pnl: values[PnLMode.PnL],
     onValueChange,
     quote_dp: props.quote_dp,
+    setFocus,
   };
 };
 
