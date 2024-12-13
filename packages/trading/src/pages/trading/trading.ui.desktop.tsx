@@ -165,6 +165,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
+  const { library_path, ...restTradingViewConfig } = props.tradingViewConfig;
+
   const tradingView = (
     <Box
       width="100%"
@@ -176,9 +178,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       <TradingviewWidget
         symbol={props.symbol}
-        libraryPath={props.tradingViewConfig?.library_path}
-        scriptSRC={props.tradingViewConfig?.scriptSRC}
-        customCssUrl={props.tradingViewConfig?.customCssUrl}
+        {...restTradingViewConfig}
+        libraryPath={library_path}
       />
     </Box>
   );
