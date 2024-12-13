@@ -46,6 +46,7 @@
     "@orderly.network/web3-provider-ethers": "2.0.0"
   },
   "changesets": [
+    "big-files-cheat",
     "brave-masks-cry",
     "brown-lemons-exercise",
     "early-beers-train",
