@@ -81,7 +81,7 @@ const Tabs: FC<TabsProps> = (props) => {
           itemAlign="center"
           width="100%"
           className={cnBase(
-            props.variant !== "contained" && "oui-border-b oui-border-b-line-6"
+            variantTheme !== "contained" && "oui-border-b oui-border-b-line-6"
           )}
         >
           {props.leading}
