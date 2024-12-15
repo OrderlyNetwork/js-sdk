@@ -42,7 +42,7 @@ const Container = styled.div`
 
 const Content = styled.div`
   padding: 20px;
-  background: #f5f5f5;
+  // background: #f5f5f5;
 `;
 
 export const CodeEditor = () => {
