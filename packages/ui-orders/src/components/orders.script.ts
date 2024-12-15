@@ -1,20 +1,29 @@
-import { useState } from "react";
-import {
-  AlgoOrderRootType,
-  OrderStatus,
-  OrderSide,
-} from "@orderly.network/types";
-import { useOrderStream } from "@orderly.network/hooks";
+import { ForwardedRef, useImperativeHandle, useRef } from "react";
 import { TabType } from "./orders.widget";
+import { OrderListInstance } from "./orderList/orderList.script";
 
-export const useOrdersScript = (props: {
+type UseOrdersScriptOptions = {
   current?: TabType;
   pnlNotionalDecimalPrecision?: number;
-}) => {
+  ref: ForwardedRef<OrderListInstance>;
+};
+
+export const useOrdersScript = (props: UseOrdersScriptOptions) => {
   const { current, pnlNotionalDecimalPrecision } = props;
+
+  const orderListRef = useRef<OrderListInstance>(null);
+
+  useImperativeHandle(props.ref, () => ({
+    download: () => {
+      console.log("orderListRef", orderListRef);
+      orderListRef.current?.download?.();
+    },
+  }));
+
   return {
     current,
     pnlNotionalDecimalPrecision,
+    orderListRef,
   };
 };
 

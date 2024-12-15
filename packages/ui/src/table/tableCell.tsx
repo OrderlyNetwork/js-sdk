@@ -8,6 +8,51 @@ type TableCellProps = {
   cell: Cell<any, any>;
 };
 
+export function getPlainTextByCell(cell: Cell<any, any>) {
+  const { original: record, index } = cell.row;
+  const { formatter, render, rule, textProps, numeralProps } = (cell.column
+    .columnDef.meta || {}) as Column;
+
+  let value = cell.getValue();
+
+  if (typeof formatter === "function") {
+    value = formatter(value, record, index);
+  }
+
+  if (typeof render === "function") {
+    return render(value, record, index);
+  }
+
+  if (typeof rule !== "undefined") {
+    if (isTextRule(rule)) {
+      const _textProps =
+        typeof textProps === "function"
+          ? textProps(value, record, index)
+          : textProps;
+      return (
+        <FormattedText rule={rule} {..._textProps}>
+          {value}
+        </FormattedText>
+      );
+    }
+
+    if (isNumeralRule(rule)) {
+      const _numeralProps =
+        typeof numeralProps === "function"
+          ? numeralProps(value, record, index)
+          : numeralProps;
+
+      return (
+        <Numeral rule={rule} {..._numeralProps}>
+          {value}
+        </Numeral>
+      );
+    }
+  }
+
+  return flexRender(cell.column.columnDef.cell, cell.getContext()) as ReactNode;
+}
+
 export const TableCell: React.FC<TableCellProps> = (props) => {
   const { cell } = props;
 

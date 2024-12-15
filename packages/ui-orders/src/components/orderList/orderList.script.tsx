@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  ForwardedRef,
+  useImperativeHandle,
+} from "react";
 import {
   AlgoOrderRootType,
   OrderStatus,
@@ -8,11 +16,15 @@ import {
 import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
-import { modal, usePagination, Text } from "@orderly.network/ui";
+import { modal, usePagination, Text, Table } from "@orderly.network/ui";
 import { differenceInDays, setHours, subDays } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
-export const useOrderListScript = (props: {
+export type OrderListInstance = {
+  download?: () => void;
+};
+
+export type useOrderListScriptOptions = {
   type: TabType;
   ordersStatus?: OrderStatus;
   symbol?: string;
@@ -26,7 +38,10 @@ export const useOrderListScript = (props: {
     };
   };
   pnlNotionalDecimalPrecision?: number;
-}) => {
+  ref?: ForwardedRef<OrderListInstance>;
+};
+
+export const useOrderListScript = (props: useOrderListScriptOptions) => {
   const {
     ordersStatus,
     type,
@@ -72,6 +87,28 @@ export const useOrderListScript = (props: {
     }
     return undefined;
   }, [type]);
+
+  const tableInstance = useRef<Table<any>>();
+
+  useImperativeHandle(props.ref, () => ({
+    download: () => {
+      console.log("tableInstance", props.ref);
+      
+      const TabType2Name: Record<TabType, string> = {
+        [TabType.all]: "All",
+        [TabType.pending]: "Pending",
+        [TabType.tp_sl]: "TP/SL",
+        [TabType.filled]: "Filled",
+        [TabType.cancelled]: "Cancelled",
+        [TabType.rejected]: "Rejected",
+        [TabType.orderHistory]: "Order history",
+      };
+
+      const filename = `Orders-${TabType2Name[type]}`;
+
+      tableInstance.current?.download(filename);
+    },
+  }));
 
   const [
     data,
@@ -183,6 +220,8 @@ export const useOrderListScript = (props: {
     onCancelAll,
 
     onSymbolChange,
+
+    tableInstance,
   };
 };
 

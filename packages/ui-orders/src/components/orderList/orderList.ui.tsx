@@ -7,6 +7,7 @@ import {
   Picker,
   DataFilter,
   cn,
+  TableFeatures,
 } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
@@ -18,11 +19,13 @@ import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 
-export const DesktopOrderList: FC<OrdersBuilderState & {
-  testIds?: {
-    tableBody?: string;
+export const DesktopOrderList: FC<
+  OrdersBuilderState & {
+    testIds?: {
+      tableBody?: string;
+    };
   }
-}> = (props) => {
+> = (props) => {
   const columns = useOrderColumn({
     _type: props.type,
     onSymbolChange: props.onSymbolChange,
@@ -59,7 +62,7 @@ export const DesktopOrderList: FC<OrdersBuilderState & {
           bordered
           ignoreLoadingCheck={true}
           testIds={{
-            body: props.testIds?.tableBody
+            body: props.testIds?.tableBody,
           }}
           classNames={{
             header: "oui-h-[38px]",
@@ -98,6 +101,10 @@ export const DesktopOrderList: FC<OrdersBuilderState & {
           }}
           pagination={props.pagination}
           manualPagination={props.manualPagination}
+          features={[TableFeatures.DownloadFeature]}
+          getTableInstance={(table) => {
+            props.tableInstance.current = table;
+          }}
         />
       </Flex>
     </OrderListProvider>

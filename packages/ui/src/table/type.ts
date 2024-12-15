@@ -1,11 +1,16 @@
 import { ReactNode } from "react";
 import { NumeralProps, type NumeralRule } from "../typography/numeral";
 import { FormattedTextProps, TextRule } from "../typography/formatted";
-export { type Column as TanstackColumn } from "@tanstack/react-table";
+export {
+  type Column as TanstackColumn,
+  type Table,
+} from "@tanstack/react-table";
 
 export type ColumnFixed = "left" | "right";
 
 export type SortOrder = "asc" | "desc";
+
+type PlainText = number | string | null | undefined;
 
 export type TableCellFormatter<T> =
   | string
@@ -14,6 +19,12 @@ export type TableCellFormatter<T> =
 export type TableCellRenderer<T> =
   | string
   | ((value: any, record: T, index: number) => React.ReactNode);
+
+export type TableCellPlainTextRenderer<T> = (
+  value: any,
+  record: T,
+  index: number
+) => PlainText;
 
 export type Column<RecordType extends unknown = any> = {
   type?: "data" | "action" | "group";
@@ -30,6 +41,7 @@ export type Column<RecordType extends unknown = any> = {
     | ((r1: RecordType, r2: RecordType, sortOrder?: SortOrder) => number);
   formatter?: TableCellFormatter<RecordType>;
   render?: TableCellRenderer<RecordType>;
+  renderPlantText?: TableCellPlainTextRenderer<RecordType>;
   getKey?: (record: RecordType, index: number) => string;
 
   /**
