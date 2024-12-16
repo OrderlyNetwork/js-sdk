@@ -235,7 +235,7 @@ const Colors = () => {
           {
             name: "Trade",
             description:
-              "Trade visual color, mainly used for trading elements.",
+              "Used for trading components, such as profit and loss indicators, buy/sell buttons, etc.",
             colors: [
               {
                 name: "--oui-color-trading-loss",
