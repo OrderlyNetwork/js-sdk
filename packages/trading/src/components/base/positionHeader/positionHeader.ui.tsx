@@ -1,17 +1,19 @@
 import { FC } from "react";
-import { Checkbox, Divider, Flex, Statistic, Text } from "@orderly.network/ui";
+import {
+  Checkbox,
+  Divider,
+  Flex,
+  Statistic,
+  Text,
+  useScreen,
+} from "@orderly.network/ui";
 import { PositionHeaderState } from "./positionHeader.script";
 import { Decimal } from "@orderly.network/utils";
-import { useMediaQuery } from "@orderly.network/hooks";
 
 export const PositionHeader: FC<PositionHeaderState> = (props) => {
-  const isMobileLayout = useMediaQuery(props.tabletMediaQuery);
+  const { isMobile } = useScreen();
 
-  return isMobileLayout ? (
-    <MobileLayout {...props} />
-  ) : (
-    <DesktopLayout {...props} />
-  );
+  return isMobile ? <MobileLayout {...props} /> : <DesktopLayout {...props} />;
 };
 
 const MobileLayout: FC<PositionHeaderState> = (props) => {
