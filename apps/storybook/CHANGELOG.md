@@ -1,5 +1,37 @@
 # storybook2
 
+## 2.0.1-preReleaseV2.22
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-preReleaseV2.22
+  - @orderly.network/default-evm-adapter@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-chain-selector@2.0.1-preReleaseV2.22
+  - @orderly.network/wallet-connector@2.0.1-preReleaseV2.22
+  - @orderly.network/trading-rewards@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-order-entry@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-tradingview@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-connector@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-positions@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-leverage@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-scaffold@2.0.1-preReleaseV2.22
+  - @orderly.network/affiliate@2.0.1-preReleaseV2.22
+  - @orderly.network/portfolio@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-orders@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-share@2.0.1-preReleaseV2.22
+  - @orderly.network/markets@2.0.1-preReleaseV2.22
+  - @orderly.network/trading@2.0.1-preReleaseV2.22
+  - @orderly.network/ui-tpsl@2.0.1-preReleaseV2.22
+  - @orderly.network/chart@2.0.1-preReleaseV2.22
+  - @orderly.network/hooks@2.0.1-preReleaseV2.22
+  - @orderly.network/types@2.0.1-preReleaseV2.22
+  - @orderly.network/utils@2.0.1-preReleaseV2.22
+  - @orderly.network/core@2.0.1-preReleaseV2.22
+  - @orderly.network/react-app@2.0.1-preReleaseV2.22
+  - @orderly.network/ui@2.0.1-preReleaseV2.22
+
 ## 2.0.1-preReleaseV2.21
 
 ### Patch Changes
