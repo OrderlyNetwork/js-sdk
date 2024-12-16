@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-orders",
-  "version": "2.0.1-preReleaseV2.20",
+  "version": "2.0.1-preReleaseV2.21",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
