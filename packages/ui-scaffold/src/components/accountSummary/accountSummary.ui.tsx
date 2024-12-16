@@ -466,7 +466,7 @@ type SummaryKey =
   | "currentLeverage"
   | "maxLeverage";
 
-type AccountSummaryList = Array<SummaryKey>;
+export type AccountSummaryList = Array<SummaryKey>;
 const AccountSummaryItems: Record<SummaryKey, JSX.ElementType> = {
   totalValue: TotalValue,
   freeCollateral: FreeCollateral,
