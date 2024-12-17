@@ -17,7 +17,6 @@ import {
 import { CloseButton } from "./closeButton";
 import { Decimal } from "@orderly.network/utils";
 import {
-  SharePnLBottomSheetId,
   SharePnLConfig,
   SharePnLDialogId,
 } from "@orderly.network/ui-share";

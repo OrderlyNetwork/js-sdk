@@ -98,6 +98,8 @@ export const DataList: FC<DataListState> = (props) => {
           testIds={{
             tableBody: "oui-testid-dataList-filled-table-body"
           }}
+          sharePnLConfig={props.sharePnLConfig}
+
         />
       </TabPanel>
       <TabPanel
@@ -123,6 +125,8 @@ export const DataList: FC<DataListState> = (props) => {
           testIds={{
             tableBody: "oui-testid-dataList-orderHistory-table-body"
           }}
+          sharePnLConfig={props.sharePnLConfig}
+
         />
       </TabPanel>
       <TabPanel

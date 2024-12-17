@@ -55,7 +55,7 @@ export function getPnLPosterData(
 
   switch (pnlType) {
     case "pnl": {
-      if (position.pnl) {
+      if (position.pnl != null) {
         positionData["pnl"] = new Decimal(position.pnl).toFixed(
           2,
           Decimal.ROUND_DOWN
@@ -64,7 +64,7 @@ export function getPnLPosterData(
       break;
     }
     case "roi": {
-      if (position.roi) {
+      if (position.roi != null) {
         positionData["ROI"] = new Decimal(position.roi).toFixed(
           2,
           Decimal.ROUND_DOWN
@@ -73,13 +73,13 @@ export function getPnLPosterData(
       break;
     }
     case "roi_pnl": {
-      if (position.pnl) {
+      if (position.pnl != null) {
         positionData["pnl"] = new Decimal(position.pnl).toFixed(
           2,
           Decimal.ROUND_DOWN
         );
       }
-      if (position.roi) {
+      if (position.roi != null) {
         positionData["ROI"] = new Decimal(position.roi).toFixed(
           2,
           Decimal.ROUND_DOWN
@@ -107,31 +107,39 @@ export function getPnLPosterData(
           break;
         }
         case "openPrice": {
-          informations.push({
-            title: "Open price",
-            value: formatFixed(position.openPrice, quoteDp || 2),
-          });
+          if (position.openPrice != null) {
+            informations.push({
+              title: "Open price",
+              value: formatFixed(position.openPrice, quoteDp || 2),
+            });
+          }
           break;
         }
         case "openTime": {
-          informations.push({
-            title: "Opened at",
-            value: formatOpenTime(position.openTime),
-          });
+          if (position.openTime != null) {
+            informations.push({
+              title: "Opened at",
+              value: formatOpenTime(position.openTime),
+            });
+          }
           break;
         }
         case "markPrice": {
-          informations.push({
-            title: "Mark price",
-            value: formatFixed(position.markPrice, quoteDp || 2),
-          });
+          if (position.markPrice != null) {
+            informations.push({
+              title: "Mark price",
+              value: formatFixed(position.markPrice, quoteDp || 2),
+            });
+          }
           break;
         }
         case "quantity": {
-          informations.push({
-            title: "Quantity",
-            value: formatFixed(position.quantity, baseDp || 2),
-          });
+          if (position.quantity != null) {
+            informations.push({
+              title: "Quantity",
+              value: formatFixed(position.quantity, baseDp || 2),
+            });
+          }
         }
         default:
           break;

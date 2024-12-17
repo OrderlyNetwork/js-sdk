@@ -35,12 +35,12 @@ export const DesktopSharePnLContent: FC<{
   const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
 
-  const hasRoiAndPnl = props.entity.roi && props.entity.pnl;
+  const hasRoiAndPnl = props.entity.roi != null && props.entity.pnl != null;
   const formats: PnLDisplayFormat[] = hasRoiAndPnl
     ? ["roi_pnl", "roi", "pnl"]
-    : props.entity.roi
+    : props.entity.roi != null
     ? ["roi"]
-    : props.entity.pnl
+    : props.entity.pnl != null
     ? ["pnl"]
     : [];
 
@@ -110,13 +110,13 @@ export const DesktopSharePnLContent: FC<{
   };
 
   
-
+  // check if the entity has the option, like formats
   const options: ShareOptions[] = [
-    "openPrice",
-    "markPrice",
-    "openTime",
-    "leverage",
-    "quantity",
+    ...(props.entity.openPrice ? ["openPrice"] as ShareOptions[] : []),
+    ...(props.entity.markPrice ? ["markPrice"] as ShareOptions[] : []),
+    ...(props.entity.openTime ? ["openTime"] as ShareOptions[] : []),
+    ...(props.leverage ? ["leverage"] as ShareOptions[] : []),
+    ...(props.entity.quantity ? ["quantity"] as ShareOptions[] : []),
   ];
 
   savePnlInfo(pnlFormat, shareOption, selectedSnap, message);

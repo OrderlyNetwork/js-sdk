@@ -88,8 +88,8 @@ export type ShareEntity = {
   side: "LONG" | "SHORT";
   pnl?: number;
   roi?: number;
-  openPrice: number;
-  openTime: number;
-  markPrice: number;
-  quantity: number;
+  openPrice?: number;   
+  openTime?: number;
+  markPrice?: number;
+  quantity?: number;
 }
