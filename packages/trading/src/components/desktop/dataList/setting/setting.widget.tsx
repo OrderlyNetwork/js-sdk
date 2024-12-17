@@ -1,14 +1,16 @@
 import { useSettingScript } from "./setting.script";
 import { Setting } from "./setting.ui";
 
-export const SettingWidget = (props: {
-    pnlNotionalDecimalPrecision: any;
-    setPnlNotionalDecimalPrecision: (value: number) => void;
-    unPnlPriceBasis: any;
-    setUnPnlPriceBasic: (value: string) => void;
-    showAllSymbol: any;
-    setShowAllSymbol: (value: boolean) => void;
-  }) => {
+export type SettingWidgetProps = {
+  pnlNotionalDecimalPrecision: any;
+  setPnlNotionalDecimalPrecision: (value: number) => void;
+  unPnlPriceBasis: any;
+  setUnPnlPriceBasic: (value: string) => void;
+  hideOtherSymbols: any;
+  setHideOtherSymbols: (value: boolean) => void;
+}
+
+export const SettingWidget = (props: SettingWidgetProps) => {
   const state = useSettingScript(props);
   return <Setting {...state} />;
 };
