@@ -143,7 +143,6 @@ const PositionsView: FC<DataListState> = (props) => {
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.showAllSymbol ? undefined : props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
-        tabletMediaQuery={props.tabletMediaQuery}
       />
       <Divider className="oui-w-full" />
       <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
