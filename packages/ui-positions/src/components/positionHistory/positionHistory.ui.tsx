@@ -17,9 +17,10 @@ import { SymbolProvider } from "../../providers/symbolProvider";
 import { PositionHistoryCellWidget } from "./mobile";
 
 export const PositionHistory: FC<PositionHistoryState> = (props) => {
-  const { onSymbolChange, pagination } = props;
+  const { onSymbolChange, pagination, pnlNotionalDecimalPrecision } = props;
   const column = usePositionHistoryColumn({
     onSymbolChange,
+    pnlNotionalDecimalPrecision,
   });
 
   return (

@@ -62,7 +62,12 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
     modal.alert({
       title: "Liquidation",
       message: (
-        <Flex direction={"column"} width={"100%"} gap={2} className="oui-text-2xs oui-text-base-contrast-54">
+        <Flex
+          direction={"column"}
+          width={"100%"}
+          gap={2}
+          className="oui-text-2xs oui-text-base-contrast-54"
+        >
           <Flex justify={"between"} width={"100%"}>
             <Text>Liquidation id</Text>
             <Text.numeral intensity={98}>{record.liquidation_id}</Text.numeral>
@@ -98,11 +103,16 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
       </Badge>;
     } else if (record.type === "liquidated") {
       list.push(
-        <Badge size="xs" color="danger" className="oui-cursor-pointer" onClick={showAlert}>
-            <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
-              {capitalizeFirstLetter(record.type)}
-            </span>
-          </Badge>
+        <Badge
+          size="xs"
+          color="danger"
+          className="oui-cursor-pointer"
+          onClick={showAlert}
+        >
+          <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
+            {capitalizeFirstLetter(record.type)}
+          </span>
+        </Badge>
       );
     }
 
@@ -117,7 +127,9 @@ export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={"Closed"}
+      label={
+        <Text>Closed{<Text intensity={20}>{` (${props.base})`}</Text>}</Text>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -135,7 +147,11 @@ export const MaxClosedQty: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={"Max closed"}
+      label={
+        <Text>
+          Max closed{<Text intensity={20}>{` (${props.base})`}</Text>}
+        </Text>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -153,7 +169,7 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={<Text>Avg. open{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={<Text>Avg. open{<Text intensity={20}>{" (USDC)"}</Text>}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -171,7 +187,7 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={<Text>Avg. closed{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={<Text>Avg. closed{<Text intensity={20}>{" (USDC)"}</Text>}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -209,6 +225,19 @@ export const OpenTime: FC<PositionHistoryCellState> = (props) => {
 export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
 
+  const child =
+    item.position_status == "closed" && item.close_timestamp ? (
+      <Text.formatted
+        intensity={80}
+        formatString="yyyy-MM-dd hh:mm:ss"
+        rule={"date"}
+      >
+        {item.close_timestamp}
+      </Text.formatted>
+    ) : (
+      "--"
+    );
+
   return (
     <Statistic
       label={"Time closed"}
@@ -218,13 +247,7 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
       }}
       align="end"
     >
-      <Text.formatted
-        intensity={80}
-        formatString="yyyy-MM-dd hh:mm:ss"
-        rule={"date"}
-      >
-        {item.position_status === 'closed' ? item.close_timestamp : "--"}
-      </Text.formatted>
+      {child}
     </Statistic>
   );
 };

@@ -4,7 +4,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { PositionHistoryProps } from "./positionHistory.widget";
 import { API } from "@orderly.network/types";
 import { usePagination, useScreen } from "@orderly.network/ui";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, setDate, setHours, subDays } from "date-fns";
 import { formatDatePickerRange, offsetEndOfDay, offsetStartOfDay } from "../../utils";
 
@@ -24,17 +24,17 @@ export enum PositionHistoryStatus {
 }
 
 export const usePositionHistoryScript = (props: PositionHistoryProps) => {
-  const { onSymbolChange, symbol } = props;
+  const { onSymbolChange, symbol, pnlNotionalDecimalPrecision } = props;
   const { data, isLoading } = usePrivateQuery<PositionHistoryExt[]>(
-    "/v1/position_history?limit=1000",
+    symbol ? `/v1/position_history?symbol=${symbol}&limit=1000` : "/v1/position_history?limit=1000",
     {
       formatter(data) {
         return (data.rows ?? null)?.map(
           (item: API.PositionHistory): PositionHistoryExt => {
             if (
-              item.realized_pnl &&
-              item.accumulated_funding_fee &&
-              item.trading_fee
+              item.realized_pnl != null &&
+              item.accumulated_funding_fee != null &&
+              item.trading_fee != null
             ) {
               const netPnL =
                 item.realized_pnl -
@@ -49,10 +49,11 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
           }
         );
       },
+      revalidateOnFocus: true,
     }
   );
 
-  const { pagination } = usePagination({
+  const { pagination, setPage } = usePagination({
     pageSize: 10,
   });
 
@@ -65,6 +66,10 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     filterItems,
     onFilter,
   } = useFilter();
+
+  useEffect(() => {
+    setPage(1);
+  }, [status, side, dateRange, filterDays]);
 
   const filterData = useMemo(() => {
     if (data == null) return data;
@@ -106,6 +111,7 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     symbol,
     filterDays,
     updateFilterDays,
+    pnlNotionalDecimalPrecision,
   };
 };
 

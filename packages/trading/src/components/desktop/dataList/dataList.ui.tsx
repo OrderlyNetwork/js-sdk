@@ -64,7 +64,7 @@ export const DataList: FC<DataListState> = (props) => {
         <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
-          symbol={!props.showAllSymbol ? undefined : props.symbol}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
           testIds={{
             tableBody: "oui-testid-dataList-pending-table-body",
@@ -83,7 +83,7 @@ export const DataList: FC<DataListState> = (props) => {
         <DesktopOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
-          symbol={!props.showAllSymbol ? undefined : props.symbol}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
           testIds={{
             tableBody: "oui-testid-dataList-tpsl-table-body",
@@ -97,7 +97,7 @@ export const DataList: FC<DataListState> = (props) => {
       >
         <DesktopOrderListWidget
           type={TabType.filled}
-          symbol={!props.showAllSymbol ? undefined : props.symbol}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           ordersStatus={OrderStatus.FILLED}
           onSymbolChange={props.onSymbolChange}
@@ -112,7 +112,8 @@ export const DataList: FC<DataListState> = (props) => {
         title={DataListTabType.positionHistory}
       >
         <PositionHistoryWidget
-          symbol={!props.showAllSymbol ? undefined : props.symbol}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
         />
       </TabPanel>
@@ -124,7 +125,7 @@ export const DataList: FC<DataListState> = (props) => {
         <DesktopOrderListWidget
           type={TabType.orderHistory}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          symbol={!props.showAllSymbol ? undefined : props.symbol}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
           testIds={{
             tableBody: "oui-testid-dataList-orderHistory-table-body",
