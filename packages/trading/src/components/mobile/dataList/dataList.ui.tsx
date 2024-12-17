@@ -163,9 +163,9 @@ const SymbolControlHeader: FC<
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
           color="white"
-          checked={props.showAllSymbol}
+          checked={!props.showAllSymbol}
           onCheckedChange={(checked: boolean) => {
-            props.setShowAllSymbol(checked);
+            props.setShowAllSymbol(!checked);
           }}
         />
         <Text
@@ -175,7 +175,7 @@ const SymbolControlHeader: FC<
             props.setShowAllSymbol(!props.showAllSymbol);
           }}
         >
-          Show all trading pairs
+          Hide other symbols
         </Text>
       </Flex>
       <Button

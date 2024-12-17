@@ -165,6 +165,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
+  const { library_path, ...restTradingViewConfig } = props.tradingViewConfig;
+
   const tradingView = (
     <Box
       width="100%"
@@ -174,7 +176,11 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       style={{ flex: 1, minWidth: tradingViewMinWidth }}
       className="oui-overflow-hidden"
     >
-      <TradingviewWidget symbol={props.symbol} {...props.tradingViewConfig} />
+      <TradingviewWidget
+        symbol={props.symbol}
+        {...restTradingViewConfig}
+        libraryPath={library_path}
+      />
     </Box>
   );
 

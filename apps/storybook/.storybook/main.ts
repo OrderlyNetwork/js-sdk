@@ -57,6 +57,8 @@ const config: StorybookConfig = {
         },
       },
     },
+    // "./addons/theme_tool/register.ts",
+    resolve(__dirname, "../src/addons/theme_tool/register.ts"),
     /**
      * custom addon
      */
