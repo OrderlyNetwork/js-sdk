@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.18-developV2-1.22
+
+### Patch Changes
+
+- update
+
 ## 0.3.18-developV2-1.21
 
 ### Patch Changes
