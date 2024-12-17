@@ -26,7 +26,7 @@
 */
 
 import { Decimal } from "@orderly.network/utils";
-import { PnLDisplayFormat, ShareOptions } from "../../types/types";
+import { PnLDisplayFormat, ShareEntity, ShareOptions } from "../../types/types";
 // import { PnLDisplayFormat, ShareOptions } from "./type";
 
 export type ReferralType = {
@@ -36,7 +36,7 @@ export type ReferralType = {
 };
 
 export function getPnLPosterData(
-  position: any,
+  position: ShareEntity,
   leverage: number | string,
   message: string,
   domain: string,
@@ -50,13 +50,13 @@ export function getPnLPosterData(
   const positionData: any = {
     symbol,
     currency,
-    side: position.position_qty > 0 ? "LONG" : "SHORT",
+    side: position.side,
   };
 
   switch (pnlType) {
     case "pnl": {
-      if ("unrealized_pnl" in position) {
-        positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(
+      if (position.pnl) {
+        positionData["pnl"] = new Decimal(position.pnl).toFixed(
           2,
           Decimal.ROUND_DOWN
         );
@@ -64,24 +64,26 @@ export function getPnLPosterData(
       break;
     }
     case "roi": {
-      if ("unrealized_pnl_ROI" in position) {
-        positionData["ROI"] = new Decimal(
-          position.unrealized_pnl_ROI * 100
-        ).toFixed(2, Decimal.ROUND_DOWN);
-      }
-      break;
-    }
-    case "roi_pnl": {
-      if ("unrealized_pnl" in position) {
-        positionData["pnl"] = new Decimal(position.unrealized_pnl).toFixed(
+      if (position.roi) {
+        positionData["ROI"] = new Decimal(position.roi).toFixed(
           2,
           Decimal.ROUND_DOWN
         );
       }
-      if ("unrealized_pnl_ROI" in position) {
-        positionData["ROI"] = new Decimal(
-          position.unrealized_pnl_ROI * 100
-        ).toFixed(2, Decimal.ROUND_DOWN);
+      break;
+    }
+    case "roi_pnl": {
+      if (position.pnl) {
+        positionData["pnl"] = new Decimal(position.pnl).toFixed(
+          2,
+          Decimal.ROUND_DOWN
+        );
+      }
+      if (position.roi) {
+        positionData["ROI"] = new Decimal(position.roi).toFixed(
+          2,
+          Decimal.ROUND_DOWN
+        );
       }
       break;
     }
@@ -107,28 +109,28 @@ export function getPnLPosterData(
         case "openPrice": {
           informations.push({
             title: "Open price",
-            value: formatFixed(position.average_open_price, quoteDp || 2),
+            value: formatFixed(position.openPrice, quoteDp || 2),
           });
           break;
         }
         case "openTime": {
           informations.push({
             title: "Opened at",
-            value: formatOpenTime(position.timestamp),
+            value: formatOpenTime(position.openTime),
           });
           break;
         }
         case "markPrice": {
           informations.push({
             title: "Mark price",
-            value: formatFixed(position.mark_price, quoteDp || 2),
+            value: formatFixed(position.markPrice, quoteDp || 2),
           });
           break;
         }
         case "quantity": {
           informations.push({
             title: "Quantity",
-            value: formatFixed(position.position_qty, baseDp || 2),
+            value: formatFixed(position.quantity, baseDp || 2),
           });
         }
         default:

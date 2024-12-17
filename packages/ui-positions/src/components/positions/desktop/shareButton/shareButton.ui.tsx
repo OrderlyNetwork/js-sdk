@@ -13,7 +13,16 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
         e.stopPropagation();
         modal.show(props.modalId, {
           pnl: {
-            position: props.position,
+            entity: {
+              symbol: props.position.symbol,
+              pnl: props.position.unrealized_pnl,
+              roi: props.position.unrealized_pnl_ROI,
+              side: props.position.position_qty > 0 ? "LONG" : "SHORT",
+              openPrice: props.position.average_open_price,
+              openTime: props.position.timestamp,
+              markPrice: props.position.mark_price,
+              quantity: props.position.position_qty,
+            },
             refCode: props.refCode,
             leverage: props.leverage,
             ...props.sharePnLConfig

@@ -7,12 +7,9 @@ export const useSharePnLScript = (props: {
     hide?: () => void;
 }) => {
   const { pnl, hide } = props;
-  const position = pnl?.position;
+  const entity = pnl?.entity;
   const symbolInfo = useSymbolsInfo();
   const { getFirstRefCode } = useReferralInfo();
-  const base_dp = symbolInfo[position?.symbol]("base_dp");
-  const quote_dp = symbolInfo[position?.symbol]("quote_dp");
-
   const referralInfo = useMemo((): ReferralType | undefined => {
     const code = getFirstRefCode()?.code;
     const info = {
@@ -20,14 +17,30 @@ export const useSharePnLScript = (props: {
       slogan: pnl?.refSlogan,
       link: pnl?.refLink,
     };
-
     return info;
   }, [getFirstRefCode, pnl]);
+
+  // print warning if entity is null
+  if (!entity) {
+    console.warn("Entity is null, the share pnl will not be displayed");
+  }
+
+  // convert base_dp and quote_dp useMemo
+  const base_dp = useMemo(() => {
+    if (!entity) return undefined;
+    return symbolInfo[entity?.symbol]("base_dp");
+  }, [entity, symbolInfo]);
+  const quote_dp = useMemo(() => {
+    if (!entity) return undefined;
+    return symbolInfo[entity?.symbol]("quote_dp");
+  }, [entity, symbolInfo]);
+
+
   return {
-    position,
+    entity,
     leverage: pnl?.leverage,
-    baseDp:base_dp,
-    quoteDp:quote_dp,
+    baseDp: base_dp,
+    quoteDp: quote_dp,
     referralInfo,
     shareOptions: pnl as SharePnLConfig | undefined,
     hide,

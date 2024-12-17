@@ -33,7 +33,7 @@ export type PosterLayoutConfig = {
 };
 
 export type SharePnLParams = {
-  position: any;
+  entity: ShareEntity;
   leverage?: number;
   refCode?: string;
   refSlogan?: string;
@@ -42,13 +42,13 @@ export type SharePnLParams = {
 
 export type SharePnLConfig = {
   /**
-   * defualt is Manrope
+   * default is Manrope
    */
   fontFamily?: string;
   /**
    * can not empty
    */
-  backgroundImages: string[];
+  backgroundImages?: string[];
   /**
    * posterLayoutConfig
    */
@@ -81,3 +81,15 @@ export type ReferralType = {
 
 export type PnLDisplayFormat = "roi_pnl" | "roi" | "pnl";
 export type ShareOptions = "openPrice" | "openTime" | "markPrice" | "quantity" | "leverage";
+
+
+export type ShareEntity = {
+  symbol: string;
+  side: "LONG" | "SHORT";
+  pnl?: number;
+  roi?: number;
+  openPrice: number;
+  openTime: number;
+  markPrice: number;
+  quantity: number;
+}

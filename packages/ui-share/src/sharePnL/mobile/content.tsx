@@ -4,6 +4,7 @@ import { PosterRef } from "../poster/poster";
 import {
   PnLDisplayFormat,
   ReferralType,
+  ShareEntity,
   ShareOptions,
   SharePnLConfig,
 } from "../../types/types";
@@ -26,7 +27,7 @@ import {
 } from "../carousel/carousel";
 
 export const MobileSharePnLContent: FC<{
-  position: any;
+  entity: ShareEntity;
   leverage: any;
   hide: any;
   baseDp?: number;
@@ -37,8 +38,17 @@ export const MobileSharePnLContent: FC<{
   const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
 
+  const hasRoiAndPnl = props.entity.roi && props.entity.pnl;
+  const formats: PnLDisplayFormat[] = hasRoiAndPnl
+    ? ["roi_pnl", "roi", "pnl"]
+    : props.entity.roi
+    ? ["roi"]
+    : props.entity.pnl
+    ? ["pnl"]
+    : [];
+
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
-    localPnlConfig.pnlFormat
+    formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat
   );
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
     new Set(localPnlConfig.options)
@@ -62,7 +72,7 @@ export const MobileSharePnLContent: FC<{
   }, []);
 
   const posterData = getPnLPosterData(
-    props.position,
+    props.entity,
     props.leverage,
     message,
     domain,
@@ -72,7 +82,7 @@ export const MobileSharePnLContent: FC<{
     props.quoteDp,
     props.referral
   );
-  // console.log("pster data", posterData, props.position);
+  // console.log("pster data", posterData, props.entity);
 
   const carouselRef = useRef<any>();
   const aspectRatio = 552 / 310;
@@ -160,27 +170,35 @@ export const MobileSharePnLContent: FC<{
         </Carousel>
       </div>
 
+      {/* @ts-ignore */}
       <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto oui-custom-scrollbar">
         <div className="oui-mt-4">
           <div className="oui-text-3xs oui-text-base-contrast-54">
             PnL display format
           </div>
-          <div className="oui-pt-3 oui-px-1 oui-flex oui-justify-between oui-gap-3">
-            <PnlFormatView
-              setPnlFormat={setPnlFormat}
-              type="roi_pnl"
-              curType={pnlFormat}
-            />
-            <PnlFormatView
-              setPnlFormat={setPnlFormat}
-              type="roi"
-              curType={pnlFormat}
-            />
-            <PnlFormatView
-              setPnlFormat={setPnlFormat}
-              type="pnl"
-              curType={pnlFormat}
-            />
+          <div className="oui-pt-3 oui-px-1 oui-justify-between oui-gap-3 oui-grid oui-grid-cols-3 oui-row-span-1">
+            {
+              props.entity.roi && props.entity.pnl && (
+                <PnlFormatView
+                  setPnlFormat={setPnlFormat}
+                  type="roi_pnl"
+                  curType={pnlFormat}
+                />
+            )}
+            {props.entity.roi && (
+              <PnlFormatView
+                setPnlFormat={setPnlFormat}
+                type="roi"
+                curType={pnlFormat}
+              />
+            )}
+            {props.entity.pnl && (
+              <PnlFormatView
+                setPnlFormat={setPnlFormat}
+                type="pnl"
+                curType={pnlFormat}
+              />
+            )}
           </div>
         </div>
 
