@@ -55,5 +55,5 @@
       "@orderly.network/ui-tpsl": ["../../packages/ui-tpsl/src"],
     }
   },
-  "include": ["src"]
+  "include": ["src",".storybook"]
 }

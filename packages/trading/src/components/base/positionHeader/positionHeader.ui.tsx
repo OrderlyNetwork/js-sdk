@@ -1,17 +1,19 @@
 import { FC } from "react";
-import { Checkbox, Divider, Flex, Statistic, Text } from "@orderly.network/ui";
+import {
+  Checkbox,
+  Divider,
+  Flex,
+  Statistic,
+  Text,
+  useScreen,
+} from "@orderly.network/ui";
 import { PositionHeaderState } from "./positionHeader.script";
 import { Decimal } from "@orderly.network/utils";
-import { useMediaQuery } from "@orderly.network/hooks";
 
 export const PositionHeader: FC<PositionHeaderState> = (props) => {
-  const isMobileLayout = useMediaQuery(props.tabletMediaQuery);
+  const { isMobile } = useScreen();
 
-  return isMobileLayout ? (
-    <MobileLayout {...props} />
-  ) : (
-    <DesktopLayout {...props} />
-  );
+  return isMobile ? <MobileLayout {...props} /> : <DesktopLayout {...props} />;
 };
 
 const MobileLayout: FC<PositionHeaderState> = (props) => {
@@ -43,19 +45,19 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       <Divider className="oui-w-full" />
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
-          id="oui-checkbox-showAllInstruments"
+          id="oui-checkbox-hideOtherSymbols"
           color="white"
-          checked={props.showAllSymbol}
+          checked={!props.showAllSymbol}
           onCheckedChange={(checked: boolean) => {
-            props.setShowAllSymbol(checked);
+            props.setShowAllSymbol(!checked);
           }}
         />
 
         <label
           className="oui-text-2xs oui-text-base-contrast-54 oui-cursor-pointer"
-          htmlFor="oui-checkbox-showAllInstruments"
+          htmlFor="oui-checkbox-hideOtherSymbols"
         >
-          Show all trading pairs
+          Hide other symbols
         </label>
       </Flex>
     </Flex>

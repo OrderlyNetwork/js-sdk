@@ -7,6 +7,7 @@ import {
 import { useCollateral, useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useState } from "react";
 
 export type AccountSummaryType =
   | "totalValue"
@@ -18,6 +19,14 @@ export type AccountSummaryType =
 export const useTotalValueBuilderScript = () => {
   const [keys, setKeys] = useLocalStorage<string[]>("accountSummaryTypes", [
     "totalValue",
+  ]);
+
+  const [elementKeys, setElementKeys] = useState<string[]>([
+    "totalValue",
+    "freeCollateral",
+    "unrealPnL",
+    "currentLeverage",
+    "maxLeverage",
   ]);
 
   const { freeCollateral, totalValue } = useCollateral({
@@ -46,10 +55,12 @@ export const useTotalValueBuilderScript = () => {
   const onKeyToTop = (key: string) => {
     if (!keys.includes(key)) {
       setKeys([key, ...keys]);
+      setElementKeys([key, ...elementKeys]);
       return;
     }
 
     setKeys([key, ...keys.filter((k: string) => k !== key)]);
+    setElementKeys([key, ...elementKeys.filter((k: string) => k !== key)]);
   };
 
   const unavailable =
@@ -64,6 +75,7 @@ export const useTotalValueBuilderScript = () => {
     unrealized_pnl_ROI: unavailable ? null : totalUnrealizedROI,
     // type,
     keys,
+    elementKeys,
     // onTypeChange,
     visible,
     wrongNetwork,

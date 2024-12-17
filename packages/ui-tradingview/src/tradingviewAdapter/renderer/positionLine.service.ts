@@ -61,7 +61,7 @@ export class PositionLineService {
 
   static getPositionPnL(unrealPnl: number, decimal: number) {
     let text = "PnL";
-    const pnl = new Decimal(unrealPnl).toFixed(decimal, Decimal.ROUND_FLOOR);
+    const pnl = new Decimal(unrealPnl).toFixed(decimal, Decimal.ROUND_DOWN);
     if (new Decimal(unrealPnl).eq(0)) {
       return `${text} 0`;
     }

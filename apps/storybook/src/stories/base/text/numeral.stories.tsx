@@ -1,16 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 // import { fn } from '@storybook/test';
-import {
-  Flex,
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableHead,
-  TableRow,
-  TableCell,
-  Text,
-} from "@orderly.network/ui";
+import { Flex, Text } from "@orderly.network/ui";
 
 const { numeral: Numeral } = Text;
 
