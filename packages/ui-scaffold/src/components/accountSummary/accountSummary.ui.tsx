@@ -19,6 +19,7 @@ type AccountSummaryUi = {
   onToggleVisibility?: () => void;
   // type: AccountSummaryType;
   keys: AccountSummaryList;
+  elementKeys: AccountSummaryList;
   onToggleItemByKey: (key: string) => void;
   onKeyToTop: (key: string) => void;
 };
@@ -254,11 +255,12 @@ const AccountInfoPopover = (props: {
   unrealized_pnl_ROI: number | null;
   // type: AccountSummaryType;
   keys: AccountSummaryList;
+  elementKeys: AccountSummaryList;
   onToggleItemByKey: (key: string) => void;
   visible?: boolean;
   onKeyToTop: (key: string) => void;
 }) => {
-  const { totalValue, keys } = props;
+  const { totalValue, keys, elementKeys } = props;
 
   const onSetToTop = (key: SummaryKey) => (event: React.MouseEvent) => {
     event.preventDefault();
@@ -266,102 +268,125 @@ const AccountInfoPopover = (props: {
     props.onKeyToTop(key);
   };
 
+  const elements = elementKeys.map((key) => {
+    switch (key) {
+      case "totalValue":
+        return (
+          <DropdownMenu onSetTop={onSetToTop("totalValue")} key={key}>
+            <Flex className={"oui-text-base-contrast-54"} gapX={2}>
+              <IdentityButton
+                active={keys.includes("totalValue")}
+                onClick={() => props.onToggleItemByKey("totalValue")}
+              />
+              <span>Total Value</span>
+            </Flex>
+            <Text.numeral
+              visible={props.visible}
+              unit="USDC"
+              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+            >
+              {totalValue ?? "-"}
+            </Text.numeral>
+          </DropdownMenu>
+        );
+      case "freeCollateral":
+        return (
+          <DropdownMenu onSetTop={onSetToTop("freeCollateral")} key={key}>
+            <Flex className={"oui-text-base-contrast-54"} gapX={2}>
+              <IdentityButton
+                active={keys.includes("freeCollateral")}
+                onClick={() => props.onToggleItemByKey("freeCollateral")}
+              />
+              <span>Free collateral</span>
+            </Flex>
+            <Text.numeral
+              unit="USDC"
+              visible={props.visible}
+              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+            >
+              {props.freeCollateral ?? "-"}
+            </Text.numeral>
+          </DropdownMenu>
+        );
+      case "unrealPnL":
+        return (
+          <DropdownMenu onSetTop={onSetToTop("unrealPnL")} key={key}>
+            <Flex className={"oui-text-base-contrast-54"} gapX={2}>
+              <IdentityButton
+                active={keys.includes("unrealPnL")}
+                onClick={() => props.onToggleItemByKey("unrealPnL")}
+              />
+              <span>Unreal. PnL</span>
+            </Flex>
+            <Text.numeral
+              coloring
+              showIdentifier
+              visible={props.visible}
+              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              suffix={
+                <Text.numeral
+                  coloring
+                  prefix={"("}
+                  visible={props.visible}
+                  suffix={")"}
+                  rule={"percentages"}
+                >
+                  {props.unrealized_pnl_ROI ?? "-"}
+                </Text.numeral>
+              }
+            >
+              {props.unrealPnL ?? "-"}
+            </Text.numeral>
+          </DropdownMenu>
+        );
+      case "currentLeverage":
+        return (
+          <DropdownMenu onSetTop={onSetToTop("currentLeverage")} key={key}>
+            <Flex className={"oui-text-base-contrast-54"} gapX={2}>
+              <IdentityButton
+                active={keys.includes("currentLeverage")}
+                onClick={() => props.onToggleItemByKey("currentLeverage")}
+              />
+              <span>Current leverage</span>
+            </Flex>
+            <Text.numeral
+              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              unit="x"
+            >
+              {props.currentLeverage ?? "-"}
+            </Text.numeral>
+          </DropdownMenu>
+        );
+      case "maxLeverage":
+        return (
+          <DropdownMenu onSetTop={onSetToTop("maxLeverage")} key={key}>
+            <Flex className={"oui-text-base-contrast-54"} gapX={2}>
+              <IdentityButton
+                active={keys.includes("maxLeverage")}
+                onClick={() => props.onToggleItemByKey("maxLeverage")}
+              />
+              <span>Max leverage</span>
+            </Flex>
+            <Text
+              className="group-hover:-oui-translate-x-5 oui-transition-transform"
+              color="primary"
+            >{`${props.maxLeverage ?? "-"}x`}</Text>
+          </DropdownMenu>
+        );
+      default:
+        return null;
+    }
+  });
+
   return (
     <Flex
       className={"oui-text-2xs oui-font-semibold"}
       direction={"column"}
       gapY={1}
     >
-      <DropdownMenu onSetTop={onSetToTop("totalValue")}>
-        <Flex className={"oui-text-base-contrast-54"} gapX={2}>
-          <IdentityButton
-            active={keys.includes("totalValue")}
-            onClick={() => props.onToggleItemByKey("totalValue")}
-          />
-          <span>Total Value</span>
-        </Flex>
-        <Text.numeral
-          visible={props.visible}
-          unit="USDC"
-          className="group-hover:-oui-translate-x-5 oui-transition-transform"
-          unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-        >
-          {totalValue ?? "-"}
-        </Text.numeral>
-      </DropdownMenu>
-      <DropdownMenu onSetTop={onSetToTop("freeCollateral")}>
-        <Flex className={"oui-text-base-contrast-54"} gapX={2}>
-          <IdentityButton
-            active={keys.includes("freeCollateral")}
-            onClick={() => props.onToggleItemByKey("freeCollateral")}
-          />
-          <span>Free collateral</span>
-        </Flex>
-        <Text.numeral
-          unit="USDC"
-          visible={props.visible}
-          className="group-hover:-oui-translate-x-5 oui-transition-transform"
-          unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-        >
-          {props.freeCollateral ?? "-"}
-        </Text.numeral>
-      </DropdownMenu>
-      <DropdownMenu onSetTop={onSetToTop("unrealPnL")}>
-        <Flex className={"oui-text-base-contrast-54"} gapX={2}>
-          <IdentityButton
-            active={keys.includes("unrealPnL")}
-            onClick={() => props.onToggleItemByKey("unrealPnL")}
-          />
-          <span>Unreal. PnL</span>
-        </Flex>
-        <Text.numeral
-          coloring
-          showIdentifier
-          visible={props.visible}
-          className="group-hover:-oui-translate-x-5 oui-transition-transform"
-          suffix={
-            <Text.numeral
-              coloring
-              prefix={"("}
-              visible={props.visible}
-              suffix={")"}
-              rule={"percentages"}
-            >
-              {props.unrealized_pnl_ROI ?? "-"}
-            </Text.numeral>
-          }
-        >
-          {props.unrealPnL ?? "-"}
-        </Text.numeral>
-      </DropdownMenu>
-      <DropdownMenu onSetTop={onSetToTop("currentLeverage")}>
-        <Flex className={"oui-text-base-contrast-54"} gapX={2}>
-          <IdentityButton
-            active={keys.includes("currentLeverage")}
-            onClick={() => props.onToggleItemByKey("currentLeverage")}
-          />
-          <span>Current leverage</span>
-        </Flex>
-        <Text.numeral
-          className="group-hover:-oui-translate-x-5 oui-transition-transform"
-          unit="x"
-        >
-          {props.currentLeverage ?? "-"}
-        </Text.numeral>
-      </DropdownMenu>
-      <DropdownMenu onSetTop={onSetToTop("maxLeverage")}>
-        <Flex className={"oui-text-base-contrast-54"} gapX={2}>
-          <IdentityButton
-            active={keys.includes("maxLeverage")}
-            onClick={() => props.onToggleItemByKey("maxLeverage")}
-          />
-          <span>Max leverage</span>
-        </Flex>
-        <Text
-          className="group-hover:-oui-translate-x-5 oui-transition-transform"
-          color="primary"
-        >{`${props.maxLeverage ?? "-"}x`}</Text>
-      </DropdownMenu>
+      {elements}
     </Flex>
   );
 };
@@ -441,7 +466,7 @@ type SummaryKey =
   | "currentLeverage"
   | "maxLeverage";
 
-type AccountSummaryList = Array<SummaryKey>;
+export type AccountSummaryList = Array<SummaryKey>;
 const AccountSummaryItems: Record<SummaryKey, JSX.ElementType> = {
   totalValue: TotalValue,
   freeCollateral: FreeCollateral,
@@ -538,6 +563,7 @@ export const AccountSummary = (props: AccountSummaryUi) => {
             unrealized_pnl_ROI={props.unrealized_pnl_ROI}
             unrealPnL={props.unrealPnL}
             keys={keys}
+            elementKeys={props.elementKeys}
             onToggleItemByKey={props.onToggleItemByKey}
             onKeyToTop={props.onKeyToTop}
             visible={props.visible}
