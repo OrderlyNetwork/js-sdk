@@ -99,7 +99,6 @@ const PositionsView: FC<DataListState> = (props) => {
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.showAllSymbol ? undefined : props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
-        tabletMediaQuery={props.tabletMediaQuery}
       />
       <MobilePositionsWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}

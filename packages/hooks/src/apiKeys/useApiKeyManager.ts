@@ -23,7 +23,7 @@ export const useApiKeyManager = (queryParams?: {
   keyInfo?: {
     page?: number;
     size?: number;
-    keyStatus?: string;
+    key_status?: string;
   };
 }) => {
   const { account } = useAccount();

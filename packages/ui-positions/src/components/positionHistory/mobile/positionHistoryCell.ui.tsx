@@ -85,7 +85,7 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
 
 export const Body: FC<PositionHistoryCellState> = (props) => {
   return (
-    <Grid cols={3} rows={2} width={"100%"} gap={1}>
+    <Grid cols={3} rows={2} width={"100%"} gap={0}>
       <ClosedQty {...props} />
       <MaxClosedQty {...props} />
       <OpenTime {...props} />

@@ -5,6 +5,7 @@ import { MobilePositionHistory, PositionHistory } from "./positionHistory.ui";
 export type PositionHistoryProps = {
   onSymbolChange?: (symbol: API.Symbol) => void;
   symbol?: string;
+  pnlNotionalDecimalPrecision?: number;
 };
 
 export const PositionHistoryWidget = (props: PositionHistoryProps) => {

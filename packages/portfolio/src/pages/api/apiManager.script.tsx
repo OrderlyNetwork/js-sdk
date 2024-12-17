@@ -54,7 +54,7 @@ export const useApiManagerScript = (props?: {
       error,
     },
   ] = useApiKeyManager({
-    keyInfo: { keyStatus: keyStatus },
+    keyInfo: { key_status: keyStatus },
   });
 
   const [curPubKey, setCurPubKey] = useState<string | undefined>(undefined);
