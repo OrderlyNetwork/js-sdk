@@ -35,6 +35,24 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
     let holding = portfolio.holding;
 
+    if (
+      scope === CalculatorScope.PORTFOLIO &&
+      data.holding &&
+      Array.isArray(holding)
+    ) {
+      holding = holding.map((item) => {
+        if (data.holding[item.token]) {
+          return {
+            ...item,
+            holding: data.holding[item.token].holding,
+            frozen: data.holding[item.token].frozen,
+          };
+        }
+
+        return item;
+      });
+    }
+
     const accountInfo = ctx.accountInfo;
     const symbolsInfo = ctx.symbolsInfo;
 
