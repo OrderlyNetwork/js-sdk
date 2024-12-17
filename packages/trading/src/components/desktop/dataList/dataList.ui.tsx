@@ -106,7 +106,7 @@ export const DataList: FC<DataListState> = (props) => {
           }}
         />
       </TabPanel>
-      <TabPanel
+      {/* <TabPanel
         testid="oui-testid-dataList-positionHistory-tab"
         value={DataListTabType.positionHistory}
         title={DataListTabType.positionHistory}
@@ -116,7 +116,7 @@ export const DataList: FC<DataListState> = (props) => {
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
         />
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel
         testid="oui-testid-dataList-orderHistory-tab"
         value={DataListTabType.orderHistory}
@@ -132,7 +132,7 @@ export const DataList: FC<DataListState> = (props) => {
           }}
         />
       </TabPanel>
-      <TabPanel
+      {/* <TabPanel
         testid="oui-testid-dataList-liquidation-tab"
         value={DataListTabType.liquidation}
         title={DataListTabType.liquidation}
@@ -140,7 +140,7 @@ export const DataList: FC<DataListState> = (props) => {
         <LiquidationWidget
           symbol={!props.showAllSymbol ? undefined : props.symbol}
         />
-      </TabPanel>
+      </TabPanel> */}
     </Tabs>
   );
 };

@@ -77,9 +77,10 @@ export const DataList: FC<
         />
       </TabPanel>
       <TabPanel title={DataListTabType.history} value={DataListTabType.history}>
-        <HistoryTab {...props} />
+        {/* <HistoryTab {...props} /> */}
+        <OrdersView type={TabType.orderHistory} {...props} />
       </TabPanel>
-      <TabPanel
+      {/* <TabPanel
         title={DataListTabType.liquidation}
         value={DataListTabType.liquidation}
       >
@@ -87,7 +88,7 @@ export const DataList: FC<
           symbol={props.showAllSymbol ? undefined : props.symbol}
           classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
         />
-      </TabPanel>
+      </TabPanel> */}
     </Tabs>
   );
 };

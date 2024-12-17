@@ -1,4 +1,9 @@
-import { LiquidationWidget, PositionHistoryWidget, PositionsProps, PositionsWidget } from "@orderly.network/ui-positions";
+import {
+  LiquidationWidget,
+  PositionHistoryWidget,
+  PositionsProps,
+  PositionsWidget,
+} from "@orderly.network/ui-positions";
 import { Flex, Text, Divider, Box, Tabs, TabPanel } from "@orderly.network/ui";
 import { useState } from "react";
 
@@ -25,7 +30,8 @@ export const PositionsPage = (props: PositionsProps) => {
       <Divider className="oui-w-full" />
       {/* 26(title height) + 1(divider) + 32 (padding) */}
       <Box width="100%" className="oui-h-[calc(100%_-_59px)]">
-        <Tabs value={tab} onValueChange={(e) => setTab(e as any)} classNames={{
+        <PositionsWidget {...props} />
+        {/* <Tabs value={tab} onValueChange={(e) => setTab(e as any)} classNames={{
           tabsList: "!oui-border-none oui-pb-1"
         }}>
           <TabPanel value={TabsType.positions} title={TabsType.positions}>
@@ -37,7 +43,7 @@ export const PositionsPage = (props: PositionsProps) => {
           <TabPanel value={TabsType.liquidation} title={TabsType.liquidation}>
             <LiquidationWidget />
           </TabPanel>
-        </Tabs>
+        </Tabs> */}
       </Box>
     </Flex>
   );
