@@ -2,6 +2,7 @@ import { usePositionStream } from "@orderly.network/hooks";
 import { PositionsProps } from "../../types/types";
 import { useDataTap } from "@orderly.network/react-app";
 import { usePagination } from "@orderly.network/ui";
+import { useEffect } from "react";
 
 export const usePositionsBuilder = (props: PositionsProps) => {
   const {
@@ -16,7 +17,7 @@ export const usePositionsBuilder = (props: PositionsProps) => {
   //   "showAllSymbol",
   //   true
   // );
-  const { pagination } = usePagination({
+  const { pagination, setPage } = usePagination({
     pageSize: 50,
   });
 
@@ -24,6 +25,10 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     calcMode,
     includedPendingOrder,
   });
+
+  useEffect(() => {
+    setPage(1);
+  }, [symbol]);
 
   const dataSource = useDataTap(data?.rows) ?? undefined;
 

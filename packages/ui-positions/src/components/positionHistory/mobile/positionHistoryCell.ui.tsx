@@ -85,7 +85,7 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
 
 export const Body: FC<PositionHistoryCellState> = (props) => {
   return (
-    <Grid cols={3} rows={2} width={"100%"} gap={0}>
+    <Grid cols={3} rows={2} width={"100%"} gap={0} className="oui-grid-cols-[1fr,1fr,135px]">
       <ClosedQty {...props} />
       <MaxClosedQty {...props} />
       <OpenTime {...props} />

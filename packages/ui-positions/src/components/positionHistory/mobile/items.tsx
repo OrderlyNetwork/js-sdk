@@ -127,9 +127,10 @@ export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={
-        <Text>Closed{<Text intensity={20}>{` (${props.base})`}</Text>}</Text>
-      }
+      // label={
+      //   <Text>Closed{<Text intensity={20}>{` (${props.base})`}</Text>}</Text>
+      // }
+      label={<Text>Closed</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -147,11 +148,12 @@ export const MaxClosedQty: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={
-        <Text>
-          Max closed{<Text intensity={20}>{` (${props.base})`}</Text>}
-        </Text>
-      }
+      // label={
+      //   <Text>
+      //     Max closed{<Text intensity={20}>{` (${props.base})`}</Text>}
+      //   </Text>
+      // }
+      label={<Text>Max closed</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -187,7 +189,7 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={<Text>Avg. closed{<Text intensity={20}>{" (USDC)"}</Text>}</Text>}
+      label={<Text>Avg. close{<Text intensity={20}>{" (USDC)"}</Text>}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -242,6 +244,7 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
     <Statistic
       label={"Time closed"}
       classNames={{
+        
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
