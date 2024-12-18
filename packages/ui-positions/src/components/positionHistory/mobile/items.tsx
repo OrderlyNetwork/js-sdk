@@ -14,6 +14,7 @@ import {
 } from "@orderly.network/ui";
 import { PositionHistoryCellState } from "./positionHistoryCell.script";
 import { PositionsRowContextState } from "../../positions/desktop/positionRowContext";
+import { commifyOptional } from "@orderly.network/utils";
 
 export const SymbolToken: FC<PositionHistoryCellState> = (props) => {
   const { side, symbol } = props.item;
@@ -70,15 +71,15 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
         >
           <Flex justify={"between"} width={"100%"}>
             <Text>Liquidation id</Text>
-            <Text.numeral intensity={98}>{record.liquidation_id}</Text.numeral>
+            <Text intensity={98}>{record.liquidation_id}</Text>
           </Flex>
           <Flex justify={"between"} width={"100%"}>
             <Text>Liquidator fee</Text>
-            <Text.numeral coloring>{record.liquidator_fee}</Text.numeral>
+            <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.liquidator_fee)}</Text>
           </Flex>
           <Flex justify={"between"} width={"100%"}>
             <Text>Ins. Fund fee</Text>
-            <Text.numeral coloring>{record.insurance_fund_fee}</Text.numeral>
+            <Text color={record.insurance_fund_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.insurance_fund_fee)}</Text>
           </Flex>
         </Flex>
       ),

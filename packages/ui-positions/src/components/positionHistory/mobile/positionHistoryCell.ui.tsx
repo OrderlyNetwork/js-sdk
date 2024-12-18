@@ -11,6 +11,7 @@ import {
   ClosedTime,
   MaxClosedQty,
 } from "./items";
+import { commifyOptional } from "@orderly.network/utils";
 
 export const PositionHistoryCell: FC<PositionHistoryCellState> = (props) => {
   return (
@@ -42,17 +43,15 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
         >
           <Flex justify={"between"} width={"100%"} gap={2}>
             <Text intensity={54}>Realized PnL</Text>
-            <Text.numeral coloring>{record.realized_pnl}</Text.numeral>
+            <Text color={record.realized_pnl >= 0 ? "profit" : "lose"}>{commifyOptional(record.realized_pnl)}</Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
             <Text intensity={54}>Funding fee</Text>
-            <Text.numeral coloring>
-              {record.accumulated_funding_fee}
-            </Text.numeral>
+            <Text color={record.accumulated_funding_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.accumulated_funding_fee)}</Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
             <Text intensity={54}>Trading fee</Text>
-            <Text.numeral coloring>{record.trading_fee}</Text.numeral>
+            <Text color={record.trading_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.trading_fee)}</Text>
           </Flex>
         </Flex>
       ),
