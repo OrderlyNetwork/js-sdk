@@ -1,5 +1,19 @@
 # @orderly.network/ui-orders
 
+## 2.0.1-developV2-1.23
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.1-developV2-1.23
+  - @orderly.network/ui-tpsl@2.0.1-developV2-1.23
+  - @orderly.network/hooks@2.0.1-developV2-1.23
+  - @orderly.network/types@2.0.1-developV2-1.23
+  - @orderly.network/utils@2.0.1-developV2-1.23
+  - @orderly.network/react-app@2.0.1-developV2-1.23
+  - @orderly.network/ui@2.0.1-developV2-1.23
+
 ## 2.0.1-developV2-1.22
 
 ### Patch Changes
