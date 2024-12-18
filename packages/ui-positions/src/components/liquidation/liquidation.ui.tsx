@@ -66,7 +66,7 @@ export const Liquidation: FC<LiquidationState> = (props) => {
         generatedRowKey={(record: API.Liquidation) =>
           `${record.liquidation_id}`
         }
-        manualPagination={false}
+        // manualPagination={false}
         pagination={props.pagination}
         testIds={{
           body: "oui-testid-dataList-liquidation-tab-body",
@@ -111,6 +111,7 @@ export const MobileLiquidation: FC<
         )}
         contentClassName={cn("!oui-space-y-1", props.classNames?.content)}
         dataSource={props.dataSource}
+        loadMore={props.loadMore}
         renderItem={(item, index) => (
           <LiquidationCellWidget
             item={item}

@@ -4,7 +4,7 @@ import {
 } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { API } from "@orderly.network/types";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   formatDatePickerRange,
   offsetEndOfDay,
@@ -15,7 +15,7 @@ import { usePagination, useScreen } from "@orderly.network/ui";
 import { LiquidationProps } from "./liquidation.widget";
 
 export const useLiquidationScript = (props: LiquidationProps) => {
-  const { symbol } = props;
+  const { symbol, enableLoadMore } = props;
   const { page, pageSize, setPage, pagination, parsePagination } =
     usePagination({
       pageSize: 10,
@@ -24,8 +24,9 @@ export const useLiquidationScript = (props: LiquidationProps) => {
   const { dateRange, filterDays, updateFilterDays, filterItems, onFilter } =
     useFilter();
 
-  const [data, { meta, isLoading }] = useLiquidation({
-    page,
+
+  const [data, { meta, isLoading, loadMore }] = useLiquidation({
+    page: enableLoadMore ? undefined : page,
     size: pageSize,
     symbol,
     start_t: dateRange.from != null ? dateRange.from.getTime() : undefined,
@@ -34,16 +35,18 @@ export const useLiquidationScript = (props: LiquidationProps) => {
 
   const dataSource = useDataTap(data);
 
-  const loadMore = () => {
-    setPage((page) => page + 1);
-  };
+  // useEffect(() => {
+  //   setPage(1);
+  // }, [dateRange, filterDays]);
+
+  // console.log("pagination", pagination, meta);
 
   return {
     dataSource,
     isLoading,
     loadMore,
 
-    pagination,
+    pagination: !enableLoadMore ? pagination : meta,
 
     // filter
     dateRange,
@@ -72,6 +75,7 @@ const useLiquidation = (props: {
     {
       initialSize: 1,
       formatter: (data) => data,
+      revalidateOnFocus: true,
     }
   );
 
@@ -86,7 +90,11 @@ const useLiquidation = (props: {
 
   const isLoading = ordersResponse.isLoading;
 
-  return [data, { meta, isLoading }] as const;
+  const loadMore = () => {
+    ordersResponse.setSize(ordersResponse.size + 1);
+  };
+
+  return [data, { meta, isLoading, loadMore }] as const;
 };
 
 const useFilter = () => {
@@ -96,7 +104,7 @@ const useFilter = () => {
   });
 
   /// default is 90d
-  const [filterDays, setFilterDays] = useState<1 | 7 | 30 | 90>(90);
+  const [filterDays, setFilterDays] = useState<1 | 7 | 30 | 90 | null>(90);
 
   const [dateRange, setDateRange] = useState<{
     from?: Date;
@@ -120,6 +128,8 @@ const useFilter = () => {
           Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;
         if ([1, 7, 30, 90].includes(diffDays)) {
           setFilterDays(diffDays as any);
+        } else {
+          setFilterDays(null);
         }
       }
     }
@@ -132,6 +142,8 @@ const useFilter = () => {
       type: "range",
       name: "dateRange",
       value: dateRange,
+      fromDate: offsetStartOfDay(subDays(new Date(), 89)),
+      toDate: offsetEndOfDay(new Date()),
     };
 
     if (isMobile) {
@@ -170,10 +182,6 @@ const generateKeyFun =
 
     if (page) {
       search.set("page", `${page}`);
-    }
-
-    if (status) {
-      search.set(`status`, status);
     }
 
     if (symbol) {

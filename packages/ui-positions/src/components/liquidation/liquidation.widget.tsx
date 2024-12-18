@@ -3,6 +3,7 @@ import { Liquidation, MobileLiquidation } from "./liquidation.ui";
 
 export type LiquidationProps = {
     symbol?: string;
+    enableLoadMore?: boolean;
 }
 
 export const LiquidationWidget = (props: LiquidationProps) => {

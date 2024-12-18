@@ -129,7 +129,7 @@ const useFilter = () => {
   });
 
   /// default is 90d
-  const [filterDays, setFilterDays] = useState<1 | 7 | 30 | 90>(90);
+  const [filterDays, setFilterDays] = useState<1 | 7 | 30 | 90 | null>(90);
 
   const [dateRange, setDateRange] = useState<{
     from?: Date;
@@ -161,6 +161,8 @@ const useFilter = () => {
         const diffDays = Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;        
         if ([1,7,30,90].includes(diffDays)) {
           setFilterDays(diffDays as any);
+        } else {
+          setFilterDays(null);
         }
       }
     }
@@ -193,6 +195,8 @@ const useFilter = () => {
       type: "range",
       name: "dateRange",
       value: dateRange,
+      fromDate: offsetStartOfDay(subDays(new Date(), 89)),
+      toDate: offsetEndOfDay(new Date()),
     };
 
     const statusFilter = {
@@ -208,7 +212,7 @@ const useFilter = () => {
           value: PositionHistoryStatus.closed,
         },
         {
-          label: "Partial closed",
+          label: "Partially Closed",
           value: PositionHistoryStatus.partial_closed,
         },
       ],
