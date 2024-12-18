@@ -216,7 +216,7 @@ export const OpenTime: FC<PositionHistoryCellState> = (props) => {
     >
       <Text.formatted
         intensity={80}
-        formatString="yyyy-MM-dd hh:mm:ss"
+        formatString="yyyy-MM-dd HH:mm:ss"
         rule={"date"}
       >
         {item.open_timestamp}
@@ -231,7 +231,7 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
     item.position_status == "closed" && item.close_timestamp ? (
       <Text.formatted
         intensity={80}
-        formatString="yyyy-MM-dd hh:mm:ss"
+        formatString="yyyy-MM-dd HH:mm:ss"
         rule={"date"}
       >
         {item.close_timestamp}

@@ -103,7 +103,7 @@ export const usePositionHistoryColumn = (props: {
           width: 175,
           onSort: true,
           render: (_: any, record) => (
-            <Text.formatted rule={"date"} formatString="yyyy-MM-dd hh:mm:ss">
+            <Text.formatted rule={"date"} formatString="yyyy-MM-dd HH:mm:ss">
               {record.open_timestamp}
             </Text.formatted>
           ),
@@ -119,7 +119,7 @@ export const usePositionHistoryColumn = (props: {
               return (
                 <Text.formatted
                   rule={"date"}
-                  formatString="yyyy-MM-dd hh:mm:ss"
+                  formatString="yyyy-MM-dd HH:mm:ss"
                 >
                   {record.close_timestamp ?? "--"}
                 </Text.formatted>
@@ -135,7 +135,7 @@ export const usePositionHistoryColumn = (props: {
           width: 175,
           onSort: true,
           render: (_: any, record) => (
-            <Text.formatted rule={"date"} formatString="yyyy-MM-dd hh:mm:ss">
+            <Text.formatted rule={"date"} formatString="yyyy-MM-dd HH:mm:ss">
               {record.last_update_time}
             </Text.formatted>
           ),

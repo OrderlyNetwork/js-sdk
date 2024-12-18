@@ -429,7 +429,7 @@ export declare namespace API {
   }
 
   export interface LiquidationPositionByPerp {
-    abs_liquidator_fee: number;
+    abs_liquidation_fee: number;
     cost_position_transfer: number;
     liquidator_fee: number;
     position_qty: number;

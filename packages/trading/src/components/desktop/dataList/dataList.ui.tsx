@@ -137,9 +137,11 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.liquidation}
         title={DataListTabType.liquidation}
       >
-        <LiquidationWidget
-          symbol={!props.showAllSymbol ? undefined : props.symbol}
-        />
+        <Box className="oui-h-[calc(100%_-_49px)]" width="100%">
+          <LiquidationWidget
+            symbol={!!props.showAllSymbol ? undefined : props.symbol}
+          />
+        </Box>
       </TabPanel>
     </Tabs>
   );
