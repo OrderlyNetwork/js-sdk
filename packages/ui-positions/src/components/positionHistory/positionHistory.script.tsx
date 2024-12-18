@@ -195,6 +195,8 @@ const useFilter = () => {
       type: "range",
       name: "dateRange",
       value: dateRange,
+      fromDate: offsetStartOfDay(subDays(new Date(), 89)),
+      toDate: offsetEndOfDay(new Date()),
     };
 
     const statusFilter = {
