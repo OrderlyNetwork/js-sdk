@@ -93,7 +93,7 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
         color={record.position_status !== "closed" ? "primaryLight" : "neutral"}
         size="xs"
       >
-        {capitalizeFirstLetter(record.position_status)}
+        {capitalizeFirstLetter(record.position_status.replace("_", " "))}
       </Badge>
     );
 
