@@ -26,6 +26,7 @@ export { useLeverage } from "./useLeverage";
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
 export { useFundingRates } from "./useFundingRates";
+export { useFundingRateHistory } from "./useFundingRateHistory";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
 export type { PriceMode } from "./usePositionStream/usePositionStream";
 export { useOrderStream } from "./useOrderStream/useOrderStream";

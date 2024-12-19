@@ -97,6 +97,19 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
             />
           </div>
         </TabPanel>
+        <TabPanel title="New listings" value="newListing">
+          <div className={cls}>
+            <MarketsListWidget
+              type="all"
+              sortKey={tabSort?.sortKey}
+              sortOrder={tabSort?.sortOrder}
+              onSort={onTabSort}
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
+            />
+          </div>
+        </TabPanel>
       </Tabs>
     </Box>
   );

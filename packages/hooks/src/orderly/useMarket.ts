@@ -10,6 +10,7 @@ export enum MarketsType {
   FAVORITES,
   RECENT,
   ALL,
+  NEW_LISTING,
 }
 
 export interface FavoriteTab {
@@ -26,6 +27,10 @@ export interface Recent {
   name: string;
 }
 
+export interface NewListing {
+  name: string;
+}
+
 export interface TabSort {
   sortKey: string;
   sortOrder: string;
@@ -36,6 +41,7 @@ export type MarketStoreKey =
   | "favorites"
   | "favoriteTabs"
   | "lastSelectedFavoriteTab"
+  | "newListing"
   | "tabSort";
 
 /*
@@ -123,6 +129,9 @@ export const useMarket = (type: MarketsType) => {
 
   const [recent, setRecent] = useState(
     getStore<Recent[]>("recent", []).filter((e) => e)
+  );
+  const [newListing, setNewListing] = useState(
+    getStore<NewListing[]>("newListing", []).filter((e) => e)
   );
   const [tabSort, setTabSort] = useState(
     getStore<Record<string, TabSort>>("tabSort", {})
