@@ -6,11 +6,13 @@ import { ChartPosition } from "../type";
 import { PositionLineService } from "./positionLine.service";
 import useBroker from "../hooks/useBroker";
 import { OrderLineService } from "./orderLine.service";
+import { ExecutionService } from "./execution.service";
 
 export class Renderer {
   private instance: IChartingLibraryWidget;
   private positionLineService: PositionLineService;
   private orderLineService: OrderLineService;
+  private executionService: ExecutionService;
 
   constructor(
     instance: IChartingLibraryWidget,
@@ -20,6 +22,7 @@ export class Renderer {
     this.instance = instance;
     this.positionLineService = new PositionLineService(instance, broker);
     this.orderLineService = new OrderLineService(instance, broker);
+    this.executionService = new ExecutionService(instance,broker);
   }
 
   async renderPositions(positions: ChartPosition[] | null) {
@@ -34,8 +37,19 @@ export class Renderer {
     this.orderLineService.renderPendingOrders(pendingOrders);
   }
 
+  async renderFilledOrders(filledOrders:any, basePriceDecimal: number) {
+    await this.chartReady();
+    await this.onDataLoaded();
+
+    this.executionService.renderExecutions(filledOrders, basePriceDecimal);
+  }
+
+
   remove() {
+    this.orderLineService.removeAll();
     this.positionLineService.removePositions();
+    this.executionService.destroy();
+
   }
 
   onDataLoaded(): Promise<void> {
