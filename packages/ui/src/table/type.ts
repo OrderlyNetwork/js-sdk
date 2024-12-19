@@ -41,6 +41,7 @@ export type Column<RecordType extends unknown = any> = {
     | ((r1: RecordType, r2: RecordType, sortOrder?: SortOrder) => number);
   formatter?: TableCellFormatter<RecordType>;
   render?: TableCellRenderer<RecordType>;
+  /** download feature need this field */
   renderPlantText?: TableCellPlainTextRenderer<RecordType>;
   getKey?: (record: RecordType, index: number) => string;
 

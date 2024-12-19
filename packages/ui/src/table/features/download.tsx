@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Table, TableFeature, RowData } from "@tanstack/react-table";
 import { getPlainTextByCell, TableCell } from "../tableCell";
 import { Column } from "../type";
+import ReactDOMServer from "react-dom/server";
 
 // Define types for our new feature's table APIs
 export interface DownloadInstance {
@@ -27,19 +28,17 @@ export const DownloadFeature: TableFeature<any> = {
       const rows = table.getRowModel().rows.map((row) =>
         row.getVisibleCells().map((cell) => {
           const { original: record, index } = cell.row;
-          const { formatter, render, rule, textProps, numeralProps } = (cell
-            .column.columnDef.meta || {}) as Column;
+          const { renderPlantText } = (cell.column.columnDef.meta ||
+            {}) as Column;
 
-          return cell.getValue();
+          const value = cell.getValue();
 
-          const CellElement = getPlainTextByCell(cell);
-          const value = jsxToPlainText(CellElement);
-          // console.log(
-          //   "value",
-          //   <TableCell cell={cell} />,
-          //   value,
-          //   cell.getValue()
-          // );
+          // const html = ReactDOMServer.renderToString(<TableCell cell={cell} />);
+
+          if (typeof renderPlantText === "function") {
+            return renderPlantText(value, record, index);
+          }
+
           return value;
         })
       );
@@ -75,18 +74,16 @@ function downloadCSV(data: any[], filename = `${Date.now()}.csv`) {
 
 export function jsxToPlainText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") {
-    return node.toString(); // 如果是字符串或数字，直接返回
+    return node.toString();
   }
 
   if (React.isValidElement(node)) {
-    // 如果是有效的 React 元素，递归提取其子节点文本
-    return jsxToPlainText(node.props.cell || node.props.children);
+    return jsxToPlainText(node.props.children || node.props.cell);
   }
 
   if (Array.isArray(node)) {
-    // 如果是数组，递归处理每个子节点
     return node.map(jsxToPlainText).join("");
   }
 
-  return ""; // 其他情况返回空字符串，例如 null、undefined、布尔值
+  return "--";
 }

@@ -252,6 +252,10 @@ function instrument(option?: {
           // return r2.symbol.localeCompare(r1.symbol);
         }
       : undefined,
+    renderPlantText: (value: string, record) => {
+      const badges = parseBadgesFor(record)?.join(",");
+      return `${value.split("_")[1]}-PERP (${badges})`;
+    },
     render: (value: string, record) => {
       const showGray = grayCell(record);
 

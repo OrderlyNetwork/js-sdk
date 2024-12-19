@@ -17,7 +17,7 @@ import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
 import { modal, usePagination, Text, Table } from "@orderly.network/ui";
-import { differenceInDays, setHours, subDays } from "date-fns";
+import { differenceInDays, setHours, subDays, format } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export type OrderListInstance = {
@@ -92,20 +92,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
 
   useImperativeHandle(props.ref, () => ({
     download: () => {
-      console.log("tableInstance", props.ref);
-      
-      const TabType2Name: Record<TabType, string> = {
-        [TabType.all]: "All",
-        [TabType.pending]: "Pending",
-        [TabType.tp_sl]: "TP/SL",
-        [TabType.filled]: "Filled",
-        [TabType.cancelled]: "Cancelled",
-        [TabType.rejected]: "Rejected",
-        [TabType.orderHistory]: "Order history",
-      };
-
-      const filename = `Orders-${TabType2Name[type]}`;
-
+      const filename = `orders_${format(new Date(), "yyyyMMdd_HHmmss")}`;
       tableInstance.current?.download(filename);
     },
   }));
