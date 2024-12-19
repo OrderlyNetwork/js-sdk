@@ -24,6 +24,9 @@ export const useLiquidationScript = (props: LiquidationProps) => {
   const { dateRange, filterDays, updateFilterDays, filterItems, onFilter } =
     useFilter();
 
+  useEffect(() => {
+    setPage(1);
+  }, [symbol, dateRange, filterDays]);
 
   const [data, { meta, isLoading, loadMore }] = useLiquidation({
     page: enableLoadMore ? undefined : page,
