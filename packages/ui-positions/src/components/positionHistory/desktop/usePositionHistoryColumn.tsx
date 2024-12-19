@@ -167,7 +167,7 @@ export const SymbolInfo = (props: {
 
     if (record.type === "adl") {
       list.push(
-        <Badge color={"neutral"} size="xs">
+        <Badge color={"danger"} size="xs">
           {capitalizeFirstLetter(record.type)}
         </Badge>
       );

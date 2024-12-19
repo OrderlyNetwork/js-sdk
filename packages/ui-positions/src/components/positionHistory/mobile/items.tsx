@@ -99,9 +99,11 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
     );
 
     if (record.type === "adl") {
-      <Badge color={"neutral"} size="xs">
-        {capitalizeFirstLetter(record.type)}
-      </Badge>;
+      list.push(
+        <Badge color={"danger"} size="xs">
+          {capitalizeFirstLetter(record.type)}
+        </Badge>
+      );
     } else if (record.type === "liquidated") {
       list.push(
         <Badge
