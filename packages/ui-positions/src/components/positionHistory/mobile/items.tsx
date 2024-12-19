@@ -75,11 +75,15 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
           </Flex>
           <Flex justify={"between"} width={"100%"}>
             <Text>Liquidator fee</Text>
-            <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.liquidator_fee)}</Text>
+            <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>
+              {commifyOptional(record.liquidator_fee)}
+            </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"}>
             <Text>Ins. Fund fee</Text>
-            <Text color={record.insurance_fund_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.insurance_fund_fee)}</Text>
+            <Text color={record.insurance_fund_fee >= 0 ? "profit" : "lose"}>
+              {commifyOptional(record.insurance_fund_fee)}
+            </Text>
           </Flex>
         </Flex>
       ),
@@ -94,7 +98,11 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
         color={record.position_status !== "closed" ? "primaryLight" : "neutral"}
         size="xs"
       >
-        {capitalizeFirstLetter(record.position_status.replace("_", " "))}
+        {capitalizeFirstLetter(
+          record.position_status === "partial_closed"
+            ? "Partially closed"
+            : record.position_status.replace("_", " ")
+        )}
       </Badge>
     );
 
@@ -247,7 +255,6 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
     <Statistic
       label={"Time closed"}
       classNames={{
-        
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}

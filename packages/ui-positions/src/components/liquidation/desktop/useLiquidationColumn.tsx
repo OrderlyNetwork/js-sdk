@@ -99,7 +99,7 @@ export const useLiquidationColumn = (props: {}) => {
                 {record.positions_by_perp?.map((item) => (
                   // <SymbolProvider symbol={item.symbol}>
                   // </SymbolProvider>
-                    <FormattedText value={abs_liquidation_fee} type="quote" />
+                    <FormattedText value={item.abs_liquidation_fee} type="quote" />
                 ))}
               </Flex>
             );

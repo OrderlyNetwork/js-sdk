@@ -46,7 +46,7 @@ export const useLiquidationScript = (props: LiquidationProps) => {
     isLoading,
     loadMore,
 
-    pagination: !enableLoadMore ? pagination : meta,
+    pagination: parsePagination(meta),
 
     // filter
     dateRange,

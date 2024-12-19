@@ -69,7 +69,7 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
 
   useEffect(() => {
     setPage(1);
-  }, [status, side, dateRange, filterDays]);
+  }, [status, side, dateRange, filterDays, symbol]);
 
   const filterData = useMemo(() => {
     if (data == null) return data;
