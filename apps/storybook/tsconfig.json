@@ -1,9 +1,61 @@
 {
-  "extends": "./tsconfig.build.json",
   "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "esModuleInterop": true,
+    "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@orderly.network/react": ["../../packages/component/src"],
-      "@orderly.network/referral": ["../../packages/referral/src"],
-    },
-  }
+      "@orderly.network/ui": ["../../packages/ui/src"],
+      "@orderly.network/portfolio": ["../../packages/portfolio/src"],
+      "@orderly.network/chart": ["../../packages/chart/src"],
+      "@orderly.network/ui-connector": ["../../packages/ui-connector/src"],
+      "@orderly.network/react-app": ["../../packages/app/src"],
+      "@orderly.network/core": ["../../packages/core/src"],
+      "@orderly.network/hooks": ["../../packages/hooks/src"],
+      "@orderly.network/trading-rewards": [
+        "../../packages/trading-rewards/src"
+      ],
+      "@orderly.network/affiliate": ["../../packages/affiliate/src"],
+      "@orderly.network/ui-scaffold": ["../../packages/ui-scaffold/src"],
+      "@orderly.network/ui-leverage": ["../../packages/ui-leverage/src"],
+      "@orderly.network/ui-positions": ["../../packages/ui-positions/src"],
+      "@orderly.network/ui-orders": ["../../packages/ui-orders/src"],
+      "@orderly.network/ui-share": ["../../packages/ui-share/src"],
+      "@orderly.network/markets": ["../../packages/markets/src"],
+      "@orderly.network/ui-transfer": ["../../packages/ui-transfer/src"],
+      "@orderly.network/trading": ["../../packages/trading/src"],
+      "@orderly.network/ui-order-entry": ["../../packages/ui-order-entry/src"],
+      "@orderly.network/default-evm-adapter": [
+        "../../packages/default-evm-adapter/src"
+      ],
+      "@orderly.network/default-solana-adapter": [
+        "../../packages/default-solana-adapter/src"
+      ],
+      "@orderly.network/wallet-connector": [
+        "../../packages/wallet-connector/src"
+      ],
+      "@orderly.network/ui-chain-selector": [
+        "../../packages/ui-chain-selector/src"
+      ],
+      "@orderly.network/ui-tradingview": ["../../packages/ui-tradingview/src"],
+      "@orderly.network/ui-tpsl": ["../../packages/ui-tpsl/src"],
+      "@orderly.network/ui-cross-deposit": ["../../packages/ui-cross-deposit/src"],
+
+    }
+  },
+  "include": ["src", ".storybook"]
 }

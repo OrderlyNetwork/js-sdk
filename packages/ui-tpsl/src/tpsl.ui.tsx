@@ -164,6 +164,7 @@ const TPSLQuantity = (props: {
       <Flex gap={2}>
         <div className={"oui-flex-1"}>
           <Input.tooltip
+            data-testid="oui-testid-tpsl-popUp-quantity-input"
             ref={inputRef}
             prefix={"Quantity"}
             size={{
@@ -248,7 +249,7 @@ const TPSLQuantity = (props: {
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
         <Slider.single
           markCount={5}
-          color="primaryLight"
+          color="primary"
           max={props.maxQty}
           min={0}
           showTip
@@ -263,7 +264,7 @@ const TPSLQuantity = (props: {
         />
       </Flex>
       <Flex justify={"between"}>
-        <Text.numeral rule={"percentages"} color={"primaryLight"} size={"2xs"}>
+        <Text.numeral rule={"percentages"} color={"primary"} size={"2xs"}>
           {currentQtyPercentage}
         </Text.numeral>
         <Flex itemAlign={"center"} gap={1}>
@@ -274,7 +275,7 @@ const TPSLQuantity = (props: {
               props.onQuantityChange?.(props.maxQty);
             }}
           >
-            <Text color={"primaryLight"} size={"2xs"}>
+            <Text color={"primary"} size={"2xs"}>
               Max
             </Text>
           </button>
@@ -316,7 +317,7 @@ const TPSLPrice = (props: {
       <div>
         <Flex justify={"between"}>
           <Text size={"sm"} intensity={80}>
-            Task profit
+            Take profit
           </Text>
           <Flex>
             <Text size={"2xs"} intensity={36}>
@@ -404,6 +405,7 @@ const PriceInput = (props: {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
   return (
     <Input.tooltip
+      data-testid={`oui-testid-tpsl-popUp-${props.type.toLowerCase()}-input`}
       prefix={`${props.type} price`}
       size={{
         initial: "lg",
@@ -505,7 +507,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         </Box>
         <Flex gap={1}>
           {isPositionTPSL && (
-            <Badge size="xs" color={"primaryLight"}>
+            <Badge size="xs" color={"primary"}>
               Position
             </Badge>
           )}

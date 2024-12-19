@@ -1,14 +1,21 @@
 import { registerSimpleDialog } from "@orderly.network/ui";
 import { LeverageEditor } from "./leverage.widget";
 
-const LeverageWidgetId = "leverageEditor";
+export { LeverageEditor, type LeverageEditorProps } from "./leverage.widget";
+export { Leverage, LeverageSlider, LeverageHeader } from "./leverage.ui";
+export type {
+  LeverageProps,
+  LeverageSliderProps,
+  LeverageHeaderProps,
+} from "./leverage.ui";
+export {
+  useLeverageScript,
+  type LeverageScriptReturns,
+} from "./leverage.script";
 
-export { LeverageEditor } from "./leverage.widget";
-export { Leverage } from "./leverage.ui";
+export const LeverageWidgetId = "leverageEditor";
 
 registerSimpleDialog(LeverageWidgetId, LeverageEditor, {
   title: "Max account leverage",
   size: "md",
 });
-
-export { LeverageWidgetId };

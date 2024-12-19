@@ -79,7 +79,7 @@ export const useMaxQty = (
     const getSymbolInfo = symbolInfo[symbol];
 
     const filterAlgoOrders = orders.filter(
-      (item) => item.algo_order_id === undefined
+      (item) => item.algo_order_id === undefined || item.algo_type === "BRACKET"
     );
 
     // current symbol buy order quantity
@@ -127,15 +127,15 @@ export const useMaxQty = (
       IMR_Factor: accountInfo.imr_factor[symbol],
     });
   }, [
-    orders,
-    // positionsData,
+    symbol,
+    positions,
+    reduceOnly,
     markPrices,
+    orders,
     accountInfo,
     symbolInfo,
-    symbol,
     side,
     totalCollateral,
-    reduceOnly,
   ]);
 
   // console.log("+++++++++++maxQty++++++++++++++ ", maxQty);

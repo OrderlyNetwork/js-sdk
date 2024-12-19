@@ -12,7 +12,7 @@ export const Chain: FC<ChainState> = (props) => {
             wrongNetwork: boolean;
           }>(ChainSelectorSheetId, {
             // networkId: props.networkId,
-            bridgeLessOnly:false,
+            bridgeLessOnly: false,
             isWrongNetwork: props.isWrongNetwork,
           })
           .then(
@@ -53,8 +53,11 @@ export const Chain: FC<ChainState> = (props) => {
                 y2="4.5"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#59B0FE" />
-                <stop offset="1" stopColor="#26FEFE" />
+                <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+                <stop
+                  offset="1"
+                  stopColor="rgb(var(--oui-gradient-brand-start))"
+                />
               </linearGradient>
             </defs>
           </svg>

@@ -5,7 +5,7 @@ import {
   CopyIcon,
   Flex,
   PlusIcon,
-  TableColumn,
+  Column,
   Text,
   Tooltip,
 } from "@orderly.network/ui";
@@ -20,7 +20,7 @@ import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
 import { EditAPIKeyDialog } from "./dialog/editApiKey";
 import {
   AuthGuardEmpty,
-  AuthGuardTableView,
+  AuthGuardDataTable,
   AuthGuardTooltip,
 } from "@orderly.network/ui-connector";
 import { APIKeyItem } from "@orderly.network/hooks";
@@ -162,7 +162,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const KeyList: FC<ApiManagerScriptReturns> = (props) => {
-  const columns: TableColumn<APIKeyItem>[] = [
+  const columns: Column<APIKeyItem>[] = [
     {
       title: "API key",
       dataIndex: "orderly_key",
@@ -250,7 +250,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
     },
   ];
   return (
-    <AuthGuardTableView
+    <AuthGuardDataTable
       bordered
       columns={columns}
       loading={props.isLoading}
@@ -258,28 +258,9 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       emptyView={<AuthGuardEmpty />}
       classNames={{}}
       pagination={props.pagination}
+      manualPagination={false}
     />
   );
-
-  // return (
-  //   <AuthGuardDataTable
-  //     bordered
-  //     columns={columns}
-  //     loading={props.isLoading}
-  //     dataSource={props.keys}
-  //     emptyView={<AuthGuardEmpty />}
-  //     classNames={{
-  //       header: "oui-bg-base-9 oui-text-xs oui-text-base-contrast-36",
-  //       body: "oui-text-xs oui-text-base-contrast-80",
-  //     }}
-  //   >
-  //     <Pagination
-  //       {...props.meta}
-  //       onPageChange={props.onPageChange}
-  //       onPageSizeChange={props.onPageSizeChange}
-  //     />
-  //   </AuthGuardDataTable>
-  // );
 };
 
 const EditButton: FC<{

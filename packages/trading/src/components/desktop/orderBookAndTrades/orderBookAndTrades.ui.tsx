@@ -4,9 +4,11 @@ import { OrderBookAndTradesState } from "./orderBookAndTrades.script";
 import { OrderBookWidget } from "../../base/orderBook";
 import { LastTradesWidget } from "../../base/lastTrades";
 
-export const OrderBookAndTrades: FC<OrderBookAndTradesState & {
-  tabletMediaQuery: string;
-}> = (props) => {
+export const OrderBookAndTrades: FC<
+  OrderBookAndTradesState & {
+    tabletMediaQuery: string;
+  }
+> = (props) => {
   return (
     <div ref={props.containerRef} className="oui-h-full">
       {(props.containerSize?.width || 0) >= 572 ? (
@@ -18,9 +20,11 @@ export const OrderBookAndTrades: FC<OrderBookAndTradesState & {
   );
 };
 
-const TwoColLayout: FC<OrderBookAndTradesState & {
-  tabletMediaQuery: string;
-}> = (props) => {
+const TwoColLayout: FC<
+  OrderBookAndTradesState & {
+    tabletMediaQuery: string;
+  }
+> = (props) => {
   return (
     <Grid
       cols={2}
@@ -58,7 +62,7 @@ const TwoColLayout: FC<OrderBookAndTradesState & {
         r="2xl"
         className="oui-bg-base-9 oui-h-full"
       >
-        <Title title="Last trades" className="oui-text-sm oui-px-3"/>
+        <Title title="Last trades" className="oui-text-sm oui-px-3" />
         <LastTradesWidget
           symbol={props.symbol}
           style={{
@@ -66,16 +70,18 @@ const TwoColLayout: FC<OrderBookAndTradesState & {
           }}
           classNames={{
             listHeader: "oui-px-3",
-            list: "oui-px-3"
+            list: "oui-px-3",
           }}
         />
       </Flex>
     </Grid>
   );
 };
-const TabLayout: FC<OrderBookAndTradesState & {
-  tabletMediaQuery: string;
-}> = (props) => {
+const TabLayout: FC<
+  OrderBookAndTradesState & {
+    tabletMediaQuery: string;
+  }
+> = (props) => {
   return (
     <Box
       // pl={3}
@@ -95,12 +101,12 @@ const TabLayout: FC<OrderBookAndTradesState & {
           props.setTab(tab as any);
         }}
         classNames={{
-          tabsList: 'oui-pl-3',
+          tabsList: "oui-pl-3",
           // tabsContent: props.tab === "lastTrades" ? 'oui-pl-3' : ''
         }}
         size="lg"
       >
-        <TabPanel value="orderBook" title={"Order book"} >
+        <TabPanel value="orderBook" title={"Order book"}>
           <OrderBookWidget
             symbol={props.symbol}
             tabletMediaQuery={props.tabletMediaQuery}
@@ -115,12 +121,13 @@ const TabLayout: FC<OrderBookAndTradesState & {
           <LastTradesWidget
             symbol={props.symbol}
             style={{
-              height: props.containerSize && props.containerSize.height - 29 - 18,
+              height:
+                props.containerSize && props.containerSize.height - 29 - 18,
             }}
             classNames={{
+              root: "oui-pt-[6px]",
               listHeader: "oui-px-3",
               list: "oui-px-3",
-
             }}
           />
         </TabPanel>
@@ -131,7 +138,11 @@ const TabLayout: FC<OrderBookAndTradesState & {
 
 const Title = (props: { title: string; className?: string }) => {
   return (
-    <Text size="base" intensity={80} className={cn("oui-pb-[5px]",props.className)}>
+    <Text
+      size="base"
+      intensity={80}
+      className={cn("oui-pb-[5px]", props.className)}
+    >
       {props.title}
     </Text>
   );

@@ -9,7 +9,7 @@ import {
 import {
   capitalizeFirstLetter,
   cn,
-  TableColumn,
+  Column,
   Flex,
   Text,
 } from "@orderly.network/ui";
@@ -226,7 +226,7 @@ export const useOrderColumn = (props: {
     }
   }, [_type, pnlNotionalDecimalPrecision]);
 
-  return columns as TableColumn[];
+  return columns as Column[];
 
   // return columns();
 };
@@ -236,9 +236,9 @@ function instrument(option?: {
   enableSort?: boolean;
   width?: number;
   onSymbolChange?: (symbol: API.Symbol) => void;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
-    title: "Instrument",
+    title: "Symbol",
     dataIndex: "symbol",
     fixed: "left",
     // className: "oui-h-[48px]",
@@ -309,7 +309,7 @@ function side(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Side",
     dataIndex: "side",
@@ -343,7 +343,7 @@ function type(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Type",
     dataIndex: "type",
@@ -377,7 +377,7 @@ function fillAndQuantity(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): TableColumn<API.AlgoOrderExt> {
+}): Column<API.AlgoOrderExt> {
   return {
     title: "Filled / Quantity",
     dataIndex: "fill_quantity",
@@ -420,7 +420,7 @@ function quantity(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.AlgoOrderExt> {
+}): Column<API.AlgoOrderExt> {
   return {
     title: "Quantity",
     className: option?.className,
@@ -460,7 +460,7 @@ function price(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: option?.title ?? "Price",
     dataIndex: "price",
@@ -488,7 +488,7 @@ function tpslPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: option?.title ?? "Price",
     dataIndex: "price",
@@ -506,7 +506,7 @@ function avgPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Avg. price",
     dataIndex: "average_executed_price",
@@ -526,7 +526,7 @@ function triggerPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Trigger",
     className: option?.className,
@@ -544,7 +544,7 @@ function tpslTriggerPrice(option?: {
   width?: number;
   className?: string;
   title?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: option?.title ?? "Trigger",
     className: option?.className,
@@ -577,7 +577,7 @@ function estTotal(option?: {
   width?: number;
   className?: string;
   isPending?: boolean;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Notional",
     dataIndex: "executed",
@@ -652,7 +652,7 @@ function realizedPnL(option?: {
   width?: number;
   className?: string;
   pnlNotionalDecimalPrecision?: number;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Real. PnL",
     dataIndex: "realized_pnl",
@@ -684,7 +684,7 @@ function reduceOnly(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Reduce only",
     dataIndex: "reduce_only",
@@ -700,7 +700,7 @@ function hidden(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Hidden",
     dataIndex: "visible",
@@ -717,7 +717,7 @@ function orderTime(option?: {
   width?: number;
   className?: string;
   formatString?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Order time",
     dataIndex: "created_time",
@@ -740,7 +740,7 @@ function fee(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Fee",
     dataIndex: "total_fee",
@@ -754,7 +754,7 @@ function notional(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Notional",
     dataIndex: "notional",
@@ -773,7 +773,7 @@ function tpslNotional(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Notional",
     dataIndex: "executed",
@@ -803,7 +803,7 @@ function status(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Status",
     dataIndex: "status",
@@ -825,7 +825,7 @@ function avgOpen(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "Avg. open",
     dataIndex: "average_executed_price",
@@ -861,7 +861,7 @@ function avgOpen(option?: {
 function cancelBtn(option?: {
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "",
     type: "action",
@@ -890,7 +890,7 @@ function cancelBtn(option?: {
 function pendingTabCancelBtn(option?: {
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "",
     type: "action",
@@ -908,7 +908,7 @@ function pendingTabCancelBtn(option?: {
 function tpslAction(option?: {
   width?: number;
   className?: string;
-}): TableColumn<API.Order> {
+}): Column<API.Order> {
   return {
     title: "",
     dataIndex: "action",

@@ -35,13 +35,16 @@ const buttonVariants = tv(
         xl: ["oui-px-4", "oui-rounded-lg", "oui-h-13", "oui-text-lg"], //54px
       },
       color: {
-        primary: ["hover:oui-bg-primary-darken/80 active:oui-bg-primary-darken/70"],
+        primary: [
+          "hover:oui-bg-primary-darken/80 active:oui-bg-primary-darken/70",
+        ],
         secondary: "hover:oui-bg-base-4/80 active:oui-bg-base-4/70",
         success: "hover:oui-bg-success/80 active:oui-bg-success/70",
         buy: "hover:oui-bg-success/80 active:oui-bg-success/70",
         danger: "hover:oui-bg-danger/80 active:oui-bg-danger/70",
         sell: "hover:oui-bg-danger/80 active:oui-bg-danger/70",
-        warning: "hover:oui-bg-warning-darken/80 active:oui-bg-warning-darken/70",
+        warning:
+          "hover:oui-bg-warning-darken/80 active:oui-bg-warning-darken/70",
         gray: "hover:oui-bg-base-2/80 active:oui-bg-base-2/70",
         light:
           "hover:oui-bg-white/80 active:oui-bg-white/50 disable:oui-bg-white/20",

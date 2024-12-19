@@ -1,18 +1,9 @@
 import { useDistributionHistory } from "@orderly.network/hooks";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
-import { useMemo, useRef, useState } from "react";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+import { useMemo, useState } from "react";
+import { usePagination } from "@orderly.network/ui";
 import { parseDateRangeForFilter } from "../helper/date";
-import {
-  addDays,
-  getDate,
-  getMonth,
-  getYear,
-  isSameDay,
-  set,
-  setHours,
-  setMinutes,
-} from "date-fns";
+import { getDate, getMonth, getYear, set } from "date-fns";
 
 export const useDistributionHistoryHook = () => {
   // const today = useRef(setMinutes(setHours(new Date(), 23), 59));
@@ -28,7 +19,7 @@ export const useDistributionHistoryHook = () => {
     today,
   ]);
   const [type, setType] = useState<string>("All");
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination();
+  const { page, pageSize, setPage, parsePagination } = usePagination();
 
   const [data, { isLoading, meta, isValidating }] = useDistributionHistory({
     // dataRange: dateRange.map((date) => date.getTime()),
@@ -63,17 +54,13 @@ export const useDistributionHistoryHook = () => {
     }
   };
 
-  const pagination = useMemo(() => {
-    return {
-      ...parseMeta(meta),
-      onPageChange: setPage,
-      onPageSizeChange: setPageSize,
-    } as PaginationMeta;
-  }, [meta, setPage, setPageSize]);
+  const pagination = useMemo(
+    () => parsePagination(meta),
+    [parsePagination, meta]
+  );
 
   return {
     dataSource: data,
-    meta: parseMeta(meta),
     isLoading,
     isValidating,
     // onDateRangeChange,
@@ -82,8 +69,6 @@ export const useDistributionHistoryHook = () => {
       dateRange,
     },
     onFilter,
-    setPage,
-    setPageSize,
     pagination,
   } as const;
 };

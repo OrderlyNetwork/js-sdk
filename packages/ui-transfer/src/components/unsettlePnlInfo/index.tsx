@@ -74,7 +74,7 @@ export const UnsettlePnlInfo = ({
         <Text
           data-testid="oui-testid-withdraw-dialog-settle-text"
           size="2xs"
-          color="primaryLight"
+          color="primary"
           className=" oui-select-none"
           onClick={settlePnlDialog}
         >

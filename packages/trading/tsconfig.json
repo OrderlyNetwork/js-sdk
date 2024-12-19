@@ -29,6 +29,27 @@
       ],
       "@orderly.network/markets": [
         "../markets/src"
+      ],
+      "@orderly.network/ui-tradingview": [
+        "../ui-tradingview/src"
+      ],
+      "@orderly.network/react-app": [
+        "../app/src"
+      ],
+      "@orderly.network/ui-transfer": [
+        "../ui-transfer/src"
+      ],
+      "@orderly.network/ui-connector": [
+        "../ui-connector/src"
+      ],
+      "@orderly.network/ui-leverage": [
+        "../ui-leverage/src"
+      ],
+      "@orderly.network/ui-chain-selector": [
+        "../ui-chain-selector/src"
+      ],
+      "@orderly.network/ui-share": [
+        "../ui-share/src"
       ]
     }
   }

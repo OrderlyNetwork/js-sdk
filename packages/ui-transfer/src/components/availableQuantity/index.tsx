@@ -39,7 +39,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
 
         <Text
           size="2xs"
-          color="primaryLight"
+          color="primary"
           className="oui-cursor-pointer oui-select-none"
           onClick={props.onClick}
         >

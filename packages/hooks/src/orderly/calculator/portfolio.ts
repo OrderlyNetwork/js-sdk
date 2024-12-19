@@ -7,6 +7,7 @@ import { parseHolding } from "../../utils/parseHolding";
 import { Portfolio, useAppStore } from "../appStore";
 import { Decimal } from "@orderly.network/utils";
 import { createGetter } from "../../utils/createGetter";
+import { MarketCalculatorName } from "./markPrice";
 
 export const PortfolioCalculatorName = "portfolio";
 class PortfolioCalculator extends BaseCalculator<any> {
@@ -19,18 +20,38 @@ class PortfolioCalculator extends BaseCalculator<any> {
     if (scope === CalculatorScope.MARK_PRICE) {
       markPrices = data;
     } else {
-      markPrices = ctx.get<Record<string, number>>((cache) => cache[this.name]);
+      markPrices = ctx.get<Record<string, number>>(
+        (cache) => cache[MarketCalculatorName]
+      );
     }
 
     // if (scope === CalculatorScope.POSITION) {
     //   positions = data;
     // } else {
-      positions = ctx.get<API.PositionsTPSLExt>(
-        (output: Record<string, any>) => output.positionCalculator_all
-      );
+    positions = ctx.get<API.PositionsTPSLExt>(
+      (output: Record<string, any>) => output.positionCalculator_all
+    );
     // }
 
     let holding = portfolio.holding;
+
+    if (
+      scope === CalculatorScope.PORTFOLIO &&
+      data.holding &&
+      Array.isArray(holding)
+    ) {
+      holding = holding.map((item) => {
+        if (data.holding[item.token]) {
+          return {
+            ...item,
+            holding: data.holding[item.token].holding,
+            frozen: data.holding[item.token].frozen,
+          };
+        }
+
+        return item;
+      });
+    }
 
     const accountInfo = ctx.accountInfo;
     const symbolsInfo = ctx.symbolsInfo;

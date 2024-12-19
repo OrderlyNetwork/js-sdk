@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { Box, cn, TableView } from "@orderly.network/ui";
+import { Box, cn, DataTable } from "@orderly.network/ui";
 import { UseFavoritesListReturn } from "./favoritesList.script";
 import { useMarketsContext } from "../marketsProvider";
 import { FavoritesTabWidget } from "../favoritesTabs";
@@ -32,7 +32,7 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
         <FavoritesTabWidget favorite={favorite} size="sm" />
       </Box>
 
-      <TableView
+      <DataTable
         classNames={{
           root: props.tableClassNames?.root,
           body: props.tableClassNames?.body,
@@ -56,26 +56,6 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
         onSort={onSort}
         manualSorting
       />
-
-      {/* <DataTable
-        classNames={{
-          body: "oui-pb-[53px]",
-        }}
-        columns={columns}
-        dataSource={dataSource}
-        loading={loading}
-        onRow={(record, index) => {
-          return {
-            className: cn("oui-h-[53px]"),
-            onClick: () => {
-              onSymbolChange?.(record);
-              favorite.addToHistory(record);
-            },
-          };
-        }}
-        generatedRowKey={(record) => record.symbol}
-        onSort={onSort}
-      /> */}
     </>
   );
 };

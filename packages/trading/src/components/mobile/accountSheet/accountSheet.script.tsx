@@ -14,10 +14,10 @@ import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { isTestnet } from "@orderly.network/utils";
 import { useMemo } from "react";
-import { ReferralPropsV2, TradingRewardsProps } from "../../../types/types";
+import { ReferralProps, TradingRewardsProps } from "../../../types/types";
 
 export const useAccountSheetScript = (
-  props: ReferralPropsV2 & TradingRewardsProps
+  props: ReferralProps & TradingRewardsProps
 ) => {
   const { account, state } = useAccount();
   const accountId = account.accountId;
@@ -40,7 +40,6 @@ export const useAccountSheetScript = (
       isTestnet(parseInt(chainId))
     );
   }, [state.status, connectedChain]);
-
 
   const chainName = useGetChains();
 
@@ -217,6 +216,5 @@ export function useGetChains() {
 
   return chainName;
 }
-
 
 export type AccountSheetState = ReturnType<typeof useAccountSheetScript>;

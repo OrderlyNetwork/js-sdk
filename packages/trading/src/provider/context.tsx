@@ -12,14 +12,13 @@ export const useTradingPageContext = () => {
 export const TradingPageProvider = (
   props: PropsWithChildren<TradingPageProps>
 ) => {
-  const { tabletMediaQuery = MEDIA_TABLET, ...rest } = props;
   const symbolInfo = useSymbolsInfo()[props.symbol];
 
   return (
     <TradingPageContext.Provider
       value={{
         ...props,
-        tabletMediaQuery: tabletMediaQuery,
+        tabletMediaQuery: MEDIA_TABLET,
         symbolInfo: {
           ...getBasicSymbolInfo(symbolInfo),
           symbol: props.symbol,

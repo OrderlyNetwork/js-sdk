@@ -1,17 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ChainNamespace } from "@orderly.network/types";
-import {useScreen} from '@orderly.network/ui';
+import { useScreen } from "@orderly.network/ui";
 import { useEventEmitter, WalletState } from "@orderly.network/hooks";
-import { WalletAdapterNetwork, WalletNotReadyError, WalletReadyState } from "@solana/wallet-adapter-base";
-import { SolanaChains } from "./config";
+import {
+  WalletAdapterNetwork,
+  WalletNotReadyError,
+  WalletReadyState,
+} from "@solana/wallet-adapter-base";
+import { SolanaChainIdEnum, SolanaChains } from "./config";
 
-
-
-export function useSOL({network}: {network: WalletAdapterNetwork}) {
-  const [wallet, setWallet] = useState<WalletState| null>(null);
-  const {isMobile} = useScreen();
+export function useSOL({ network }: { network: WalletAdapterNetwork }) {
+  const [wallet, setWallet] = useState<WalletState | null>(null);
+  const { isMobile } = useScreen();
   const { connection } = useConnection();
   const { setVisible: setModalVisible, visible } = useWalletModal();
   const {
@@ -23,7 +25,6 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
     disconnect: solanaDisconnect,
     connecting,
   } = useWallet();
-
 
   // 1 for open, 2 for close, null for default
   const selectModalVisibleRef = useRef<boolean>(false);
@@ -67,15 +68,16 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
   };
 
   const handleSolanaError = (e: Error) => {
-    console.log('solan connect error', e);
+    console.log("solan connect error", e);
 
     if (e instanceof WalletNotReadyError) {
-      console.log('-- need toast wallet not ready');
-      ee.emit('wallet:connect-error', {message: 'Please open the wallet app and use the in-app browser.'});
-
+      console.log("-- need toast wallet not ready");
+      ee.emit("wallet:connect-error", {
+        message: "Please open the wallet app and use the in-app browser.",
+      });
     }
     solanaDisconnect().then();
-  }
+  };
 
   const connect = async () => {
     initPromiseRef();
@@ -108,14 +110,13 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
       solanaPromiseRef.current.walletSelect,
       solanaPromiseRef.current.connect,
     ])
-      .then(([wallet, {userAddress, signMessage, sendTransaction}]) => {
+      .then(([wallet, { userAddress, signMessage, sendTransaction }]) => {
         // console.log('-- connect sol res',{
         //   wallet,
         //   userAddress, signMessage, sendTransaction
         // });
         const tempWallet = {
-
-          label:wallet.adapter.name,
+          label: wallet.adapter.name,
           icon: "",
           provider: {
             signMessage: signMessage,
@@ -133,11 +134,10 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
               namespace: ChainNamespace.solana,
             },
           ],
-        }
-        setWallet(tempWallet)
+        };
+        setWallet(tempWallet);
         setConnected(true);
         return [tempWallet];
-
       })
       .catch((e) => {
         console.log("connect solana error", e);
@@ -150,60 +150,57 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
   };
 
   const disconnect = async () => {
-    console.log('--- discconnect sol');
+    console.log("--- discconnect sol");
     await solanaDisconnect();
-    setWallet(null)
+    setWallet(null);
     setConnected(false);
     return [];
-  }
+  };
 
   const connectedChain = useMemo(() => {
     if (!publicKey) {
       return null;
     }
     return {
-      id: 901901901,
+      id:
+        network === WalletAdapterNetwork.Mainnet
+          ? SolanaChainIdEnum.MAINNET
+          : SolanaChainIdEnum.DEVNET,
       namespace: ChainNamespace.solana,
-    }
-
-
+    };
   }, [publicKey]);
 
-
-
-  
   useEffect(() => {
-
     if (selectModalVisibleRef.current) {
-      if (
-        !visible &&
-        !solanaWallet&&
-        solanaPromiseRef.current
-      ) {
-        console.log('-- select modal visible ref', selectModalVisibleRef.current);
+      if (!visible && !solanaWallet && solanaPromiseRef.current) {
+        console.log(
+          "-- select modal visible ref",
+          selectModalVisibleRef.current
+        );
         console.log("-- use reject solana select modal");
-        solanaPromiseRef.current.walletSelectReject('user reject');
-        selectModalVisibleRef.current =false;
+        solanaPromiseRef.current.walletSelectReject("user reject");
+        selectModalVisibleRef.current = false;
       } else if (solanaWallet) {
         selectModalVisibleRef.current = false;
       }
     }
-
-  }, [visible,solanaWallet, solanaPromiseRef.current, selectModalVisibleRef.current])
-
+  }, [
+    visible,
+    solanaWallet,
+    solanaPromiseRef.current,
+    selectModalVisibleRef.current,
+  ]);
 
   useEffect(() => {
     if (!solanaWallet || !publicKey) {
-      console.log('--- not connect sol', solanaWallet, publicKey);
+      console.log("--- not connect sol", solanaWallet, publicKey);
       setConnected(false);
       return;
     }
-    console.log("-- publick",{
+    console.log("-- publick", {
       publicKey: publicKey.toBase58(),
       isManual: isManual.current,
-
     });
-
 
     if (isManual.current) {
       if (solanaPromiseRef.current) {
@@ -237,33 +234,45 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
       ],
     });
     setConnected(true);
-  }, [publicKey, solanaWallet, signMessage, isManual, connection, sendTransaction, network]);
+  }, [
+    publicKey,
+    solanaWallet,
+    signMessage,
+    isManual,
+    connection,
+    sendTransaction,
+    network,
+  ]);
 
   useEffect(() => {
     if (!publicKey) {
-     return;
+      return;
     }
-    const id = connection.onAccountChange(publicKey, (updatedAccountInfo, context) => {
-      console.log('--- account change', updatedAccountInfo, context);
-
-    }, {commitment: 'confirmed'})
+    const id = connection.onAccountChange(
+      publicKey,
+      (updatedAccountInfo, context) => {
+        console.log("--- account change", updatedAccountInfo, context);
+      },
+      { commitment: "confirmed" }
+    );
 
     return () => {
       if (id) {
-
         connection.removeAccountChangeListener(id).then();
       }
-
-    }
-
-  }, [connection, publicKey])
+    };
+  }, [connection, publicKey]);
 
   useEffect(() => {
     if (!solanaWallet) {
       return;
     }
-    console.log('-- public key', publicKey, {isMobile});
-    if (isMobile && solanaWallet.readyState === WalletReadyState.Loadable && !isManual.current) {
+    console.log("-- public key", publicKey, { isMobile });
+    if (
+      isMobile &&
+      solanaWallet.readyState === WalletReadyState.Loadable &&
+      !isManual.current
+    ) {
       solanaDisconnect().then();
       return;
     }
@@ -282,8 +291,14 @@ export function useSOL({network}: {network: WalletAdapterNetwork}) {
         solanaPromiseRef.current.connectReject(e);
         handleSolanaError(e);
       });
-  }, [solanaWallet, solanaConnect, publicKey, solanaDisconnect, handleSolanaError, isMobile]);
-
+  }, [
+    solanaWallet,
+    solanaConnect,
+    publicKey,
+    solanaDisconnect,
+    handleSolanaError,
+    isMobile,
+  ]);
 
   return {
     connected,

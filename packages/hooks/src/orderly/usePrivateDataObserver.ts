@@ -27,8 +27,9 @@ export const usePrivateDataObserver = (options: {
   // const { mutate } = useSWRConfig();
   const ee = useEventEmitter();
   const { state, account } = useAccount();
-  const { setAccountInfo, restoreHolding, updateHolding, cleanAll } =
-    useAppStore((state) => state.actions);
+  const { setAccountInfo, restoreHolding, cleanAll } = useAppStore(
+    (state) => state.actions
+  );
   const statusActions = useApiStatusActions();
   const calculatorService = useCalculatorService();
   const positionsActions = usePositionActions();
@@ -53,6 +54,7 @@ export const usePrivateDataObserver = (options: {
       onError: (error) => {
         statusActions.updateApiError("positions", error.message);
       },
+      // revalidateOnFocus: false,
     });
 
   // check status, if state less than AccountStatusEnum.EnableTrading, will be clean positions
@@ -96,6 +98,7 @@ export const usePrivateDataObserver = (options: {
     "/v1/client/holding",
     {
       formatter: (data) => data.holding,
+      // revalidateOnFocus: false,
     }
   );
 
@@ -114,7 +117,8 @@ export const usePrivateDataObserver = (options: {
           if (holding) {
             console.log("---->>>>>>!!!! holding", holding);
 
-            updateHolding(holding);
+            // updateHolding(holding);
+            calculatorService.calc(CalculatorScope.PORTFOLIO, { holding });
           }
         },
       }

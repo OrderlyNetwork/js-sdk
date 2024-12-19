@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import { MainNav, MainNavProps } from "./mainNav.ui";
-import { MainNavItem } from "./navItem";
+import { MainNavItem } from "./mainMenus/navItem";
 import {
   CampaignPositionEnum,
   useMainNavBuilder,

@@ -8,21 +8,8 @@ import {
 import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
-import {
-  DataFilterItems,
-  modal,
-  usePagination,
-  Text,
-  PaginationMeta,
-  useScreen,
-} from "@orderly.network/ui";
-import {
-  addDays,
-  addSeconds,
-  differenceInDays,
-  setHours,
-  subDays,
-} from "date-fns";
+import { modal, usePagination, Text } from "@orderly.network/ui";
+import { differenceInDays, setHours, subDays } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export const useOrderListScript = (props: {
@@ -55,9 +42,16 @@ export const useOrderListScript = (props: {
   }, [ordersStatus]);
 
   const defaultPageSize = 50;
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
-    pageSize: defaultPageSize,
-  });
+  const { page, pageSize, setPage, pagination, parsePagination } =
+    usePagination({
+      pageSize: defaultPageSize,
+    });
+
+  // when symbol change, reset page
+  useEffect(() => {
+    setPage(1);
+  }, [props.symbol]);
+
   const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
     useFilter(type, {
       ordersStatus,
@@ -163,28 +157,12 @@ export const useOrderListScript = (props: {
   const dataSource =
     useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
 
-  const pagination = useMemo(() => {
-    const _meta = manualPagination
-      ? meta
-      : {
-          total: dataSource?.length,
-          current_page: page,
-          records_per_page: pageSize,
-        };
-    return {
-      ...parseMeta(_meta),
-      onPageChange: setPage,
-      onPageSizeChange: setPageSize,
-    } as PaginationMeta;
-  }, [
-    meta,
-    setPage,
-    setPageSize,
-    manualPagination,
-    page,
-    pageSize,
-    dataSource,
-  ]);
+  const _pagination = useMemo(() => {
+    if (manualPagination) {
+      return parsePagination(meta);
+    }
+    return pagination;
+  }, [meta, manualPagination, parsePagination, pagination]);
 
   return {
     type,
@@ -195,12 +173,7 @@ export const useOrderListScript = (props: {
     updateOrder,
     cancelAlgoOrder,
     updateAlgoOrder,
-    page,
-    pageSize,
-    setPage,
-    setPageSize,
-    meta: parseMeta(meta),
-    pagination,
+    pagination: _pagination,
     manualPagination,
     pnlNotionalDecimalPrecision,
 
@@ -392,5 +365,5 @@ function offsetEndOfDay(date?: Date) {
 
 export const formatDatePickerRange = (option: { from?: Date; to?: Date }) => ({
   from: offsetStartOfDay(option.from),
-  to: offsetEndOfDay(option.to),
+  to: offsetEndOfDay(option.to ?? option.from),
 });

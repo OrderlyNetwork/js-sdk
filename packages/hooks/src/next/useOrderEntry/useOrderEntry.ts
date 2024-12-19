@@ -23,12 +23,17 @@ import {
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
+import { SDKError } from "@orderly.network/types";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
 type OrderEntryReturn = {
-  submit: (options?: { resetOnSuccess?: boolean }) => Promise<void>;
+  submit: (options?: { resetOnSuccess?: boolean }) => Promise<{
+    success: boolean;
+    data: Record<string, any>;
+    timestamp: number;
+  }>;
   reset: () => void;
   resetErrors: () => void;
   resetMetaState: () => void;
@@ -132,13 +137,16 @@ type OrderEntryReturn = {
  * await submit();
  * ```
  */
-const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
+const useOrderEntry = (
+  symbol: string,
+  options: Options = {}
+): OrderEntryReturn => {
   if (!symbol) {
-    throw new Error("symbol is required and must be a string");
+    throw new SDKError("symbol is required and must be a string");
   }
 
   const ee = useEventEmitter();
-  const fieldDirty = useRef<{ [K in keyof OrderlyOrder]?: boolean }>({});
+
   const [meta, setMeta] = useState<{
     dirty: { [K in keyof OrderlyOrder]?: boolean };
     submitted: boolean;
@@ -243,9 +251,16 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     });
   };
 
-  const canSetTPSLPrice = (key: keyof OrderlyOrder, orderType: OrderType) => {
+  const canSetTPSLPrice = (
+    key: keyof OrderlyOrder,
+    value: any,
+    orderType: OrderType
+  ) => {
     if (
       tpslFields.includes(key) &&
+      value !== "" &&
+      value !== undefined &&
+      value !== null &&
       orderType !== OrderType.LIMIT &&
       orderType !== OrderType.MARKET
     ) {
@@ -261,13 +276,23 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     value: any,
     options?: {
       shouldUpdateLastChangedField?: boolean;
+      shouldUpdateDirty?: boolean;
     }
   ) => {
-    const { shouldUpdateLastChangedField = true } = options || {};
-    if (!canSetTPSLPrice(key, formattedOrder.order_type)) {
+    const { shouldUpdateLastChangedField = true, shouldUpdateDirty = true } =
+      options || {};
+    if (!canSetTPSLPrice(key, value, formattedOrder.order_type)) {
       return;
     }
-    fieldDirty.current[key] = true;
+    // fieldDirty.current[key] = true;
+    if (shouldUpdateDirty) {
+      setMeta(
+        produce((draft) => {
+          draft.dirty[key] = true;
+        })
+      );
+    }
+
     const values = setValueInternal(key, value, prepareData());
 
     if (values) {
@@ -282,7 +307,11 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
   const setValues = (values: Partial<FullOrderState>) => {
     if (
       !Object.keys(values).every((key) =>
-        canSetTPSLPrice(key as keyof FullOrderState, formattedOrder.order_type)
+        canSetTPSLPrice(
+          key as keyof FullOrderState,
+          values[key as keyof FullOrderState],
+          formattedOrder.order_type
+        )
       )
     ) {
       return;
@@ -377,12 +406,13 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
     );
   };
 
-  const submitOrder = async () => {
+  const submitOrder = async (options?: { resetOnSuccess?: boolean }) => {
     /**
      * validate order
      */
     const creator = getOrderCreator(formattedOrder);
     const errors = await validate(formattedOrder, creator, prepareData());
+    const { resetOnSuccess = true } = options || {};
     // setMeta((prev) => ({ ...prev, submitted: true, validated: true }));
     setMeta(
       produce((draft) => {
@@ -403,7 +433,7 @@ const useOrderEntry = (symbol: string, options: Options): OrderEntryReturn => {
 
     const result = await doCreateOrder(order);
 
-    if (result.success) {
+    if (result.success && resetOnSuccess) {
       reset();
       resetMetaState();
     }

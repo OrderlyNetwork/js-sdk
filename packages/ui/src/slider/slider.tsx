@@ -15,7 +15,7 @@ const sliderVariants = tv({
       "oui-w-[10px]",
       "oui-rounded-full",
       "oui-border-[2px]",
-      "oui-border-primary-darken",
+      "oui-border-primary",
       "oui-bg-base-6",
       "oui-shadow",
       "oui-group",
@@ -41,7 +41,7 @@ const sliderVariants = tv({
     trackInner:
       "oui-absolute oui-left-0 oui-right-0 oui-h-[2px] oui-top-[3px]  oui-pointer-events-none oui-bg-base-2",
     range:
-      "oui-absolute oui-h-[2px] oui-top-[3px] oui-bg-primary-darken data-[disabled]:oui-bg-base-2",
+      "oui-absolute oui-h-[2px] oui-top-[3px] oui-bg-primary data-[disabled]:oui-bg-base-2",
     mark: "oui-absolute oui-top-[1px] oui-w-[6px] oui-h-[6px] oui-rounded oui-border oui-border-base-2 oui-bg-base-6 oui-pointer-events-none oui-translate-x-[-50%]",
     tips: [
       "oui-absolute",
@@ -73,9 +73,9 @@ const sliderVariants = tv({
   variants: {
     color: {
       primary: {
-        thumb: ["oui-border-primary-darken", "oui-bg-base-5"],
-        range: "oui-bg-primary-darken",
-        tips: "oui-bg-primary-darken after:oui-border-t-primary-darken",
+        thumb: ["oui-border-primary", "oui-bg-base-5"],
+        range: "oui-bg-primary",
+        tips: "oui-bg-primary after:oui-border-t-primary",
       },
       primaryLight: {
         thumb: ["oui-border-primary-light", "oui-bg-base-5"],
@@ -105,7 +105,12 @@ type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
     markCount?: number;
     markLabelVisible?: boolean;
     showTip?: boolean;
-    tipFormatter?: (value: number, min : number, max: number, percent: number) => string | React.ReactNode;
+    tipFormatter?: (
+      value: number,
+      min: number,
+      max: number,
+      percent: number
+    ) => string | React.ReactNode;
     classNames?: {
       root?: string;
       thumb?: string;
@@ -283,7 +288,7 @@ const Marks = (props: SliderMarksProps) => {
   const colorCls = useMemo(() => {
     switch (color) {
       case "primary":
-        return "oui-border-primary-darken oui-bg-primary-darken";
+        return "oui-border-primary oui-bg-primary";
       case "buy":
         return "oui-border-trade-profit oui-bg-trade-profit";
       case "sell":
@@ -296,7 +301,7 @@ const Marks = (props: SliderMarksProps) => {
   const textCls = useMemo(() => {
     switch (color) {
       case "primary":
-        return "oui-text-primary-darken";
+        return "oui-text-primary";
       case "buy":
         return "oui-texttrade-profit";
       case "sell":
@@ -361,7 +366,12 @@ export interface SliderTipProps {
   className?: string;
   min: number;
   max: number;
-  tipFormatter?: (value: number, min: number, max: number, percent: number) => string | React.ReactNode;
+  tipFormatter?: (
+    value: number,
+    min: number,
+    max: number,
+    percent: number
+  ) => string | React.ReactNode;
 }
 
 export const SliderTip: React.FC<SliderTipProps> = (props) => {
@@ -370,7 +380,8 @@ export const SliderTip: React.FC<SliderTipProps> = (props) => {
   const percent = convertValueToPercentage(value, min, max);
   return (
     <span className={className} style={{ lineHeight: "19px" }}>
-      {props.tipFormatter?.(value,min,max,percent) ?? `${percent.toFixed()}%`}
+      {props.tipFormatter?.(value, min, max, percent) ??
+        `${percent.toFixed()}%`}
     </span>
   );
 };

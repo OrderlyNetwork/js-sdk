@@ -39,7 +39,7 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
               </Flex>
 
               <Flex direction="column" itemAlign="end" gapY={1}>
-                <Badge size="xs" color="primaryLight">
+                <Badge size="xs" color="primary">
                   {item.leverage}x
                 </Badge>
                 <Text.numeral

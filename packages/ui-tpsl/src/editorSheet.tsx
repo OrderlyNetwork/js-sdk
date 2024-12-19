@@ -136,7 +136,7 @@ export const PositionInfo = (props: {
           {position.symbol}
         </Text.formatted>
         <Flex gapX={1}>
-          {isPositionTPSL && <Badge size="xs" color="primaryLight">Position</Badge>}
+          {isPositionTPSL && <Badge size="xs" color="primary">Position</Badge>}
           <Badge size="xs" color="neutral">
             TP/SL
           </Badge>

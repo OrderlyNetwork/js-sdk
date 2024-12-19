@@ -40,7 +40,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
                 key={index}
                 color={
                   e.toLocaleLowerCase() === "position"
-                    ? "primaryLight"
+                    ? "primary"
                     : "neutral"
                 }
                 size="xs"

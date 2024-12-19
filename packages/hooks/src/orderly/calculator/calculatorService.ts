@@ -91,7 +91,7 @@ class CalculatorService {
   async calc(scope: CalculatorScope, data: any, options?: CalcOptions) {
     if (scope !== CalculatorScope.POSITION) {
       if (!options?.skipWhenOnPause) {
-        console.error(`----`);
+        console.log(`----`);
       }
     }
     const ctx = CalculatorContext.create(scope, data);

@@ -80,6 +80,7 @@ export const useAssetsHistoryData = (
   const [assetHistory] = useAssetsHistory({
     startTime: subDays(today, 2).getTime().toString(),
     endTime: endDate.getTime().toString(),
+    pageSize: 50,
   });
 
   const onPeriodChange = (value: PeriodType) => {
@@ -143,7 +144,8 @@ export const useAssetsHistoryData = (
       ...lastItem,
       date: todayFormattedStr,
       perp_volume: 0,
-      account_value: totalValue !== null ? totalValue : lastItem?.account_value ?? 0,
+      account_value:
+        totalValue !== null ? totalValue : lastItem?.account_value ?? 0,
       pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }) ?? 0,
     };
   };
@@ -163,7 +165,7 @@ export const useAssetsHistoryData = (
   const calculateData = (data: API.DailyRow[], realtime: boolean) => {
     const _data = !realtime ? data : mergeData(data, totalValue);
 
-    return _data.slice(_data.length - periodValue);
+    return _data.slice(Math.max(0, _data.length - periodValue));
   };
 
   const calculatedData = useMemo(() => {
@@ -172,7 +174,7 @@ export const useAssetsHistoryData = (
      */
     if (totalValue == null) return [];
     return calculateData(data, isRealtime);
-  }, [data, totalValue]);
+  }, [data, totalValue, assetHistory, isRealtime]);
 
   const aggregateValue = useMemo(() => {
     let vol = zero;

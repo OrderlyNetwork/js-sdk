@@ -68,7 +68,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 key={index}
                 color={
                   e.toLocaleLowerCase() === "position"
-                    ? "primaryLight"
+                    ? "primary"
                     : "neutral"
                 }
                 size="xs"
@@ -225,18 +225,18 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             onValueChange={(e) => {
               props.setSliderValue(e[0]);
             }}
-            color="primaryLight"
+            color="primary"
           />
           <Flex width={"100%"} justify={"between"}>
             <Text.numeral
-              color="primaryLight"
+              color="primary"
               size="2xs"
               dp={2}
               padding={false}
               rule="percentages"
             >{`${percentages ?? 0}`}</Text.numeral>
             <Flex gap={1}>
-              <Text size="2xs" color="primaryLight">
+              <Text size="2xs" color="primary">
                 Max
               </Text>
               <Text.numeral intensity={54} size="2xs" dp={props.base_dp}>

@@ -64,7 +64,7 @@ export const OrderTypeView: FC<OrderCellState> = (props) => {
         <Badge
           key={index}
           color={
-            e.toLocaleLowerCase() === "position" ? "primaryLight" : "neutral"
+            e.toLocaleLowerCase() === "position" ? "primary" : "neutral"
           }
           size="xs"
         >
@@ -104,7 +104,7 @@ export const OrderState: FC<OrderCellState> = (props) => {
   };
 
   return (
-    <Text.formatted intensity={36} size="2xs">
+    <Text.formatted intensity={80} size="2xs">
       {label()}
     </Text.formatted>
   );
@@ -151,7 +151,7 @@ export const Filled: FC<OrderCellState> = (props) => {
       }}
     >
       <Text.numeral
-        dp={props.quote_dp}
+        dp={props.base_dp}
         intensity={80}
         padding={false}
         rm={Decimal.ROUND_DOWN}

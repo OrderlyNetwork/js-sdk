@@ -1,12 +1,5 @@
 import { MouseEventHandler } from "react";
-import {
-  Flex,
-  TokenIcon,
-  Text,
-  Badge,
-  cn,
-  TableColumn,
-} from "@orderly.network/ui";
+import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { DeleteIcon, TopIcon } from "../../icons";
 import { FavoriteInstance } from "../../type";
@@ -37,7 +30,7 @@ export const getMarketsSheetColumns = (
               >
                 {record.symbol}
               </Text.formatted>
-              <Badge size="xs" color="primaryLight">
+              <Badge size="xs" color="primary">
                 {record.leverage}x
               </Badge>
             </Flex>
@@ -83,7 +76,7 @@ export const getMarketsSheetColumns = (
             <Flex
               className={cn(
                 "oui-inline-flex",
-                "oui-bg-[rgba(51,71,253,1)] oui-py-[6px]"
+                "oui-bg-primary-darken oui-py-[6px]"
               )}
               r="base"
               width={52}
@@ -131,5 +124,5 @@ export const getMarketsSheetColumns = (
         );
       },
     },
-  ] as TableColumn[];
+  ] as Column[];
 };

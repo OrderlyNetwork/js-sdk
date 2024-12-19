@@ -3,14 +3,13 @@ import {
   OrderlyContext,
   ScopeType,
   useAccount,
-  useAccountInfo,
   useApiKeyManager,
   useQuery,
 } from "@orderly.network/hooks";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { PaginationMeta, toast, usePagination } from "@orderly.network/ui";
-import { useContext, useMemo, useState } from "react";
+import { toast, usePagination } from "@orderly.network/ui";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 export type GenerateKeyInfo = {
   key: string;
@@ -19,7 +18,11 @@ export type GenerateKeyInfo = {
   permissions?: string;
 };
 
-export const useApiManagerScript = () => {
+export const useApiManagerScript = (props?: {
+  filterTags?: [string];
+  keyStatus?: string;
+}) => {
+  const { filterTags, keyStatus } = props ?? {};
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCreatedDialog, setShowCreatedDialog] = useState(false);
   const [generateKey, setGenerateKey] = useState<GenerateKeyInfo | undefined>();
@@ -51,8 +54,19 @@ export const useApiManagerScript = () => {
       error,
     },
   ] = useApiKeyManager({
-    keyInfo: { keyStatus: "ACTIVE" },
+    keyInfo: { key_status: keyStatus },
   });
+
+  const [curPubKey, setCurPubKey] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    account.keyStore
+      .getOrderlyKey()
+      ?.getPublicKey()
+      .then((pubKey) => {
+        setCurPubKey(pubKey);
+      });
+  }, [account, state]);
 
   const onCreateApiKey = () => {
     setShowCreateDialog(true);
@@ -189,10 +203,14 @@ export const useApiManagerScript = () => {
   const onCopyIP = () => toast.success("Restricted IP copied");
 
   const keyList = useMemo(() => {
-    return keys?.filter(
-      (e) => e.tag === "manualCreated" && e.key_status === "ACTIVE"
-    );
-  }, [keys]);
+    return keys?.filter((e) => {
+      const filterTag = filterTags ? filterTags?.includes(e.tag) : true;
+      const filterCurKey = curPubKey
+        ? !e.orderly_key.includes(curPubKey)
+        : true;
+      return filterTag && filterCurKey;
+    });
+  }, [keys, filterTags, curPubKey]);
 
   const verifyIP = (ip: string) => {
     const ipRegex =
@@ -207,38 +225,7 @@ export const useApiManagerScript = () => {
     accountStatus: AccountStatusEnum.EnableTrading,
   });
 
-  const { page, pageSize, setPage, setPageSize, parseMeta } = usePagination({
-    page: 1,
-  });
-
-  const totalCount = useMemo(() => keyList?.length, [keyList]);
-  const onPageChange = (page: number) => {
-    setPage(page);
-  };
-
-  const onPageSizeChange = (pageSize: number) => {
-    setPageSize(pageSize);
-  };
-
-  const newData = useMemo(() => {
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return keyList?.slice(startIndex, endIndex);
-  }, [keyList, page, pageSize]);
-
-  const meta = parseMeta({
-    total: totalCount ?? 0,
-    current_page: page,
-    records_per_page: pageSize,
-  });
-
-  const pagination = useMemo(() => {
-    return {
-      ...meta,
-      onPageChange: setPage,
-      onPageSizeChange: setPageSize,
-    } as PaginationMeta;
-  }, [meta, setPage, setPageSize]);
+  const { pagination } = usePagination();
 
   return {
     address: address ?? "--",
@@ -256,7 +243,7 @@ export const useApiManagerScript = () => {
     doEdit,
     canCreateApiKey,
     status: state.status,
-    keys: newData,
+    keys: keyList,
     generateKey,
     onCopyAccountId,
     wrongNetwork,
@@ -265,10 +252,6 @@ export const useApiManagerScript = () => {
     onCopyIP,
     verifyIP,
     isLoading,
-
-    meta: meta,
-    onPageChange,
-    onPageSizeChange,
     pagination,
   };
 };

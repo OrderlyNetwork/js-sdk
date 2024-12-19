@@ -2,7 +2,7 @@ import { getGlobalObject } from "@orderly.network/utils";
 import { Extension, ExtensionBuilder, ExtensionPosition } from "./types";
 
 const DEFAULT_BUILDER = (data: any) => {
-  console.warn("No builder provided for extension");
+  // console.warn("No builder provided for extension");
   return data || {};
 };
 
@@ -33,9 +33,13 @@ export class OrderlyExtensionRegistry {
   ) {
     // this.pluginMap.set(plugin.name, plugin);
 
+    if (!plugin.builder) {
+      console.warn("No builder provided for extension");
+    }
+
     for (let index = 0; index < plugin.positions.length; index++) {
       if (typeof plugin.builder !== "function") {
-        // get exsiting builder
+        // get existing builder
         const builder = this.extensionMap.get(plugin.positions[index])?.builder;
         plugin.builder =
           typeof builder === "undefined"

@@ -1,4 +1,5 @@
 {
+  "name": "orderly-web",
   "private": true,
   "scripts": {
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 turbo run build",
@@ -29,14 +30,6 @@
     "typedoc-plugin-markdown": "^4.2.3"
   },
   "packageManager": "pnpm@9.0.6",
-  "name": "orderly-web",
-  "dependencies": {
-    "@orderly.network/hooks": "workspace:^",
-    "@orderly.network/react": "workspace:^",
-    "@orderly.network/trading-view": "workspace:^",
-    "@orderly.network/wallet-connector": "workspace:^",
-    "@orderly.network/web3-onboard": "workspace:^"
-  },
   "resolutions": {
     "@storybook/node-logger": "7.6.16"
   }

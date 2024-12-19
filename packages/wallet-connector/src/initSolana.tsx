@@ -18,8 +18,16 @@ import { getGlobalObject } from "@orderly.network/utils";
 export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   const network =props.network ?? WalletAdapterNetwork.Devnet;
   const endPoint = useMemo(() => {
-    return props.endPoint ?? clusterApiUrl(network)
-  }, [network]);
+    if (network === WalletAdapterNetwork.Mainnet) {
+      // return 'https://rpc.ankr.com/solana';
+      return props.mainnetRpc ?? clusterApiUrl(network);
+      // return 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_417399a60de542759adf31a42a30e60e_61763d0a'
+    }
+    if (network === WalletAdapterNetwork.Devnet) {
+      return props.devnetRpc ?? clusterApiUrl(network);
+    }
+    return clusterApiUrl(network);
+  }, [network, props.mainnetRpc, props.devnetRpc]);
 
   const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
     console.log('-- mobile wallet adapter', adapter);

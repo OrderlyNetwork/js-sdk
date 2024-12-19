@@ -19,6 +19,7 @@ import {
 import { Flex } from "../flex";
 import { cnBase, VariantProps } from "tailwind-variants";
 import { cn } from "..";
+import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
 
 type tabConfig = {
   title: ReactNode;
@@ -52,7 +53,9 @@ type TabsProps<T = string> = {
   VariantProps<typeof tabsVariants>;
 
 const Tabs: FC<TabsProps> = (props) => {
-  const { classNames, contentVisible = true, ...rest } = props;
+  const { getComponentTheme } = useOrderlyTheme();
+  const { classNames, contentVisible = true, variant, ...rest } = props;
+  const variantTheme = getComponentTheme("tabs", variant ?? "contained");
   // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
@@ -78,7 +81,7 @@ const Tabs: FC<TabsProps> = (props) => {
           itemAlign="center"
           width="100%"
           className={cnBase(
-            props.variant !== "contained" && "oui-border-b oui-border-b-line-6"
+            variantTheme !== "contained" && "oui-border-b oui-border-b-line-6"
           )}
         >
           {props.leading}
@@ -87,7 +90,7 @@ const Tabs: FC<TabsProps> = (props) => {
               "oui-flex-1 oui-border-0",
               props.classNames?.tabsList
             )}
-            variant={rest.variant}
+            variant={variantTheme}
             size={rest.size}
           >
             {Object.keys(tabList).map((key) => {
@@ -97,7 +100,7 @@ const Tabs: FC<TabsProps> = (props) => {
                   key={key}
                   value={tab.value}
                   icon={tab.icon}
-                  variant={rest.variant}
+                  variant={variantTheme}
                   size={rest.size}
                   data-testid={tab.testid}
                 >
