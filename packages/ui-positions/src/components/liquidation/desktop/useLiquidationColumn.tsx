@@ -41,10 +41,10 @@ export const useLiquidationColumn = (props: {}) => {
             return <Text>{commifyOptional(value)}</Text>;
           },
         },
-        // Instrument
+        // Symbol
         {
-          title: "Instrument ",
-          dataIndex: "Instrument",
+          title: "Symbol ",
+          dataIndex: "Symbol",
           width: 202,
           render: (_: any, record) => (
             <Flex direction={"column"} itemAlign={"start"}>
@@ -99,7 +99,7 @@ export const useLiquidationColumn = (props: {}) => {
                 {record.positions_by_perp?.map((item) => (
                   // <SymbolProvider symbol={item.symbol}>
                   // </SymbolProvider>
-                    <FormattedText value={abs_liquidation_fee} type="quote" />
+                    <FormattedText value={item.abs_liquidation_fee} type="quote" />
                 ))}
               </Flex>
             );

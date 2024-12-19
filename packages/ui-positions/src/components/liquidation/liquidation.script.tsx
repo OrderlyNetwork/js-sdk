@@ -46,7 +46,7 @@ export const useLiquidationScript = (props: LiquidationProps) => {
     isLoading,
     loadMore,
 
-    pagination: !enableLoadMore ? pagination : meta,
+    pagination: parsePagination(meta),
 
     // filter
     dateRange,
@@ -100,7 +100,7 @@ const useLiquidation = (props: {
 const useFilter = () => {
   const defaultRange = formatDatePickerRange({
     to: offsetEndOfDay(new Date()),
-    from: offsetEndOfDay(subDays(new Date(), 90)),
+    from: offsetStartOfDay(subDays(new Date(), 89)),
   });
 
   /// default is 90d

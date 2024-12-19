@@ -17,8 +17,6 @@ import { LiquidationCellWidget } from "./mobile";
 export const Liquidation: FC<LiquidationState> = (props) => {
   const column = useLiquidationColumn({});
 
-  console.log("props", props);
-
   return (
     <Flex direction="column" width="100%" height="100%" itemAlign="start">
       {/* <Divider className="oui-w-full" /> */}

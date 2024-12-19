@@ -26,7 +26,7 @@ export const usePositionHistoryColumn = (props: {
       [
         // instrument
         {
-          title: "Instrument",
+          title: "Symbol",
           dataIndex: "symbol",
           fixed: "left",
           width: 200,
@@ -161,13 +161,17 @@ export const SymbolInfo = (props: {
         color={record.position_status !== "closed" ? "primaryLight" : "neutral"}
         size="xs"
       >
-        {capitalizeFirstLetter(record.position_status.replace("_", " "))}
+        {capitalizeFirstLetter(
+          record.position_status === "partial_closed"
+            ? "Partially closed"
+            : record.position_status.replace("_", " ")
+        )}
       </Badge>
     );
 
     if (record.type === "adl") {
       list.push(
-        <Badge color={"neutral"} size="xs">
+        <Badge color={"danger"} size="xs">
           {capitalizeFirstLetter(record.type)}
         </Badge>
       );
@@ -193,11 +197,17 @@ export const SymbolInfo = (props: {
               </Flex>
               <Flex justify={"between"} width={"100%"} gap={2}>
                 <Text intensity={54}>Liquidator fee</Text>
-                <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.liquidator_fee)}</Text>
+                <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>
+                  {commifyOptional(record.liquidator_fee)}
+                </Text>
               </Flex>
               <Flex justify={"between"} width={"100%"} gap={2}>
                 <Text intensity={54}>Ins. Fund fee</Text>
-                <Text color={record.insurance_fund_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.insurance_fund_fee)}</Text>
+                <Text
+                  color={record.insurance_fund_fee >= 0 ? "profit" : "lose"}
+                >
+                  {commifyOptional(record.insurance_fund_fee)}
+                </Text>
               </Flex>
             </Flex>
           }
@@ -280,7 +290,13 @@ export const NetPnL = (props: {
   const text = () => (
     <Text.numeral
       dp={pnlNotionalDecimalPrecision}
-      color={record.netPnL != null ? (record.netPnL > 0 ? "profit" : "lose") : undefined}
+      color={
+        record.netPnL != null
+          ? record.netPnL > 0
+            ? "profit"
+            : "lose"
+          : undefined
+      }
       className={
         netPnl == null
           ? ""
@@ -291,7 +307,12 @@ export const NetPnL = (props: {
     </Text.numeral>
   );
 
-  console.log("record.netPnL", record.symbol, record.max_position_qty, record.netPnL);
+  console.log(
+    "record.netPnL",
+    record.symbol,
+    record.max_position_qty,
+    record.netPnL
+  );
 
   if (record.netPnL == null) return text();
 
