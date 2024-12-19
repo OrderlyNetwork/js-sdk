@@ -26,7 +26,7 @@ export const usePositionHistoryColumn = (props: {
       [
         // instrument
         {
-          title: "Instrument",
+          title: "Symbol",
           dataIndex: "symbol",
           fixed: "left",
           width: 200,

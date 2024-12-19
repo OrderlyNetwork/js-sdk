@@ -38,7 +38,7 @@ export const useColumn = (props: {
     () =>
       [
         {
-          title: "Instrument",
+          title: "Symbol",
           dataIndex: "symbol",
           fixed: "left",
           width: 140,

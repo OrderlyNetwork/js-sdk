@@ -16,7 +16,7 @@ export const getDropDownMarketsColumns = (
 ) => {
   return [
     {
-      title: "Instrument",
+      title: "Symbol",
       dataIndex: "symbol",
       width: 150,
       render: (value, record) => {

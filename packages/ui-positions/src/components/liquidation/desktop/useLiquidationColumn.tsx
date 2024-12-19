@@ -41,10 +41,10 @@ export const useLiquidationColumn = (props: {}) => {
             return <Text>{commifyOptional(value)}</Text>;
           },
         },
-        // Instrument
+        // Symbol
         {
-          title: "Instrument ",
-          dataIndex: "Instrument",
+          title: "Symbol ",
+          dataIndex: "Symbol",
           width: 202,
           render: (_: any, record) => (
             <Flex direction={"column"} itemAlign={"start"}>
