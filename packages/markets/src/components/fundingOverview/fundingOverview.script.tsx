@@ -13,12 +13,12 @@ export type ProcessedFundingData = {
   symbol: string;
   estFunding: number;
   lastFunding: number;
-  funding1d: string;
-  funding3d: string;
-  funding7d: string;
-  funding14d: string;
-  funding30d: string;
-  funding90d: string;
+  funding1d: number | string;
+  funding3d: number | string;
+  funding7d: number | string;
+  funding14d: number | string;
+  funding30d: number | string;
+  funding90d: number | string;
   "1dPositive": number | string;
   "3dPositive": number | string;
   "7dPositive": number | string;
