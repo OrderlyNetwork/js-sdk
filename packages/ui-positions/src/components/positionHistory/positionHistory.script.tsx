@@ -125,7 +125,7 @@ const useFilter = () => {
 
   const defaultRange = formatDatePickerRange({
     to: offsetEndOfDay(new Date()),
-    from: offsetEndOfDay(subDays(new Date(), 90)),
+    from: offsetStartOfDay(subDays(new Date(), 89)),
   });
 
   /// default is 90d
