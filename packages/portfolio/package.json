@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/portfolio",
-  "version": "2.0.1-developV2-1.24",
+  "version": "2.0.1-developV2-1.25",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
