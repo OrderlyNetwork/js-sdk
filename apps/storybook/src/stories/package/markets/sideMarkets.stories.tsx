@@ -6,6 +6,7 @@ import {
   MarketsListWidget,
   RecentListWidget,
   SideMarketsWidget,
+  NewListingListWidget,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
 
@@ -21,7 +22,6 @@ const meta: Meta<typeof ExpandMarketsWidget> = {
   title: "Package/markets/SideMarkets",
   parameters: {
     layout: "centered",
-    
   },
 };
 
@@ -118,6 +118,27 @@ export const Recent: Story = {
     );
   },
   decorators,
+};
+
+export const NewListing: Story = {
+  render: (args) => {
+    return (
+      <Box
+        width={280}
+        height={600}
+        intensity={900}
+        pt={3}
+        r="2xl"
+        className="oui-transition-all oui-duration-300"
+      >
+        <NewListingListWidget
+          tableClassNames={{
+            scroll: "oui-px-1",
+          }}
+        />
+      </Box>
+    );
+  },
 };
 
 export const All: Story = {

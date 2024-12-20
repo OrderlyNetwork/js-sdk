@@ -1,4 +1,5 @@
 import type { Order } from './charting_library';
+import { OrderStatus } from "@orderly.network/types";
 
 export type {
     IBrokerConnectionAdapterHost,
@@ -62,14 +63,7 @@ export enum Side {
     Sell = -1,
 }
 
-export enum OrderStatus {
-    Canceled = 1,
-    Filled = 2,
-    Inactive = 3,
-    Placing = 4,
-    Rejected = 5,
-    Working = 6,
-}
+
 
 export enum ParentType {
     Order = 1,
@@ -215,7 +209,7 @@ export interface OrderInterface {
     avg_exec_price: number;
     reduce_only: boolean;
     create_time: string;
-    update_time: string;
+    updated_time: string;
     visible_quantity?: number;
     is_activated: boolean;
     callback_rate?: number;
@@ -237,6 +231,8 @@ export interface OrderInterface {
     total_fee?: number;
     fee_asset?: string;
     position_qty?: number;
+    average_executed_price?: number;
+    total_executed_quantity?:number;
 }
 
 export interface ColorConfigInterface{

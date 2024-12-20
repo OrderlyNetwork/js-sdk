@@ -10,6 +10,7 @@ export enum MarketsType {
   FAVORITES,
   RECENT,
   ALL,
+  NEW_LISTING,
 }
 
 export interface FavoriteTab {
@@ -35,6 +36,7 @@ export type MarketStoreKey =
   | "recent"
   | "favorites"
   | "favoriteTabs"
+  | "newListing"
   | "lastSelectedFavoriteTab"
   | "tabSort";
 
