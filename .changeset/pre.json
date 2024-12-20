@@ -1,6 +1,6 @@
 {
   "mode": "pre",
-  "tag": "20250102",
+  "tag": "internal-20250102",
   "initialVersions": {
     "@orderly/docs": "1.0.0",
     "@orderly.network/storybook": "1.0.0",
