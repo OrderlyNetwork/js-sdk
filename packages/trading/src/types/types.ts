@@ -106,7 +106,7 @@ export interface TradingPageState extends TradingPageProps {
   tabletMediaQuery?: string;
 }
 
-interface TradingViewConfigInterface {
+export interface TradingViewConfigInterface {
   scriptSRC?: string;
   library_path: string;
   overrides?: Record<string, string>;

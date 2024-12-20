@@ -17,6 +17,7 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
+import { NewListingListWidget } from "../newListingList";
 import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
 import { getDropDownMarketsColumns } from "./column";
 
@@ -134,6 +135,18 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
               sortKey={tabSort?.sortKey}
               sortOrder={tabSort?.sortOrder}
               onSort={onTabSort}
+              getColumns={getDropDownMarketsColumns}
+              tableClassNames={{
+                root: "!oui-bg-base-8",
+                scroll: "oui-pb-5 oui-px-1",
+              }}
+              rowClassName="!oui-h-[34px]"
+            />
+          </div>
+        </TabPanel>
+        <TabPanel title="New listings" value="newListing">
+          <div className={cls}>
+            <NewListingListWidget
               getColumns={getDropDownMarketsColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",

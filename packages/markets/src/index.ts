@@ -10,6 +10,7 @@ export * from "./components/expandMarkets";
 export * from "./components/favoritesList";
 export * from "./components/recentList";
 export * from "./components/marketsList";
+export * from "./components/newListingList";
 
 export * from "./components/collapseMarkets";
 export * from "./components/sideMarkets";
