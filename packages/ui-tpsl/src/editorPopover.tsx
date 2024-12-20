@@ -7,7 +7,7 @@ import {
   PopoverRoot,
   PopoverTrigger,
 } from "@orderly.network/ui";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { TPSLWidget } from "./tpsl.widget";
 import { PositionTPSLConfirm } from "./tpsl.ui";
 import { AlgoOrderRootType, API } from "@orderly.network/types";
@@ -16,7 +16,7 @@ import { ButtonProps } from "@orderly.network/ui";
 export const PositionTPSLPopover = (props: {
   position: API.Position;
   order?: API.AlgoOrder;
-  label: string;
+  label?: string;
   baseDP?: number;
   quoteDP?: number;
   /**
@@ -24,6 +24,7 @@ export const PositionTPSLPopover = (props: {
    */
   buttonProps?: ButtonProps;
   isEditing?: boolean;
+  children?: ReactNode;
 }) => {
   const { position, order, baseDP, quoteDP, buttonProps, isEditing } = props;
   const [open, setOpen] = useState(false);
@@ -31,7 +32,9 @@ export const PositionTPSLPopover = (props: {
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
-  const isPositionTPSL = isEditing ? order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL : undefined;
+  const isPositionTPSL = isEditing
+    ? order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+    : undefined;
 
   return (
     <PopoverRoot
@@ -43,18 +46,25 @@ export const PositionTPSLPopover = (props: {
       }}
       open={open}
     >
-      <PopoverTrigger asChild>
-        <Button
-          variant="outlined"
-          size="sm"
-          color="secondary"
-          {...buttonProps}
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          {props.label}
-        </Button>
+      <PopoverTrigger
+        asChild
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        {props.children || (
+          <Button
+            variant="outlined"
+            size="sm"
+            color="secondary"
+            {...buttonProps}
+            // onClick={() => {
+            //   setOpen(true);
+            // }}
+          >
+            {props.label}
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent
         className={cn(
@@ -94,14 +104,13 @@ export const PositionTPSLPopover = (props: {
             // );
 
             if (
-              (`${order.tp_trigger_price ?? ""}`).length === 0 &&
-              (`${order.sl_trigger_price ?? ""}`).length === 0 
+              `${order.tp_trigger_price ?? ""}`.length === 0 &&
+              `${order.sl_trigger_price ?? ""}`.length === 0
             ) {
               return modal
                 .confirm({
                   title: "Cancel Order",
-                  content:
-                    "Are you sure you want to cancel this TP/SL order?",
+                  content: "Are you sure you want to cancel this TP/SL order?",
                   onOk: () => {
                     return options.cancel();
                   },
@@ -133,7 +142,7 @@ export const PositionTPSLPopover = (props: {
                   return options.submit();
                 },
                 classNames: {
-                  body: "!oui-pb-0"
+                  body: "!oui-pb-0",
                 },
                 content: (
                   <PositionTPSLConfirm
