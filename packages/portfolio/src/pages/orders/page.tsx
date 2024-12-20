@@ -6,7 +6,6 @@ export const OrdersPage = () => {
   const ordersRef = useRef<OrderListInstance>(null);
 
   const onDownload = () => {
-    console.log("ordersRef", ordersRef);
     ordersRef.current?.download?.();
   };
 

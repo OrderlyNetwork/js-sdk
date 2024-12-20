@@ -33,12 +33,13 @@ import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
 import { useMemo } from "react";
 import { useSymbolContext } from "../symbolProvider";
 import { format } from "date-fns";
-import { utils } from "@orderly.network/hooks";
+import { SymbolInfo, utils } from "@orderly.network/hooks";
 
 export const useOrderColumn = (props: {
   _type: TabType;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
+  symbolsInfo?: SymbolInfo;
 }) => {
   const { _type, onSymbolChange, pnlNotionalDecimalPrecision } = props;
 
@@ -70,6 +71,7 @@ export const useOrderColumn = (props: {
           realizedPnL({
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
+            symbolsInfo: props.symbolsInfo,
           }),
           estTotal({ width: 130, enableSort: false }),
           fee({ width: 130 }),
@@ -148,7 +150,7 @@ export const useOrderColumn = (props: {
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
           hidden({ width: 124 }),
-          orderTime({ width: 124 }),
+          orderTime({ width: 176 }),
         ];
       case TabType.cancelled:
         return [
@@ -195,7 +197,7 @@ export const useOrderColumn = (props: {
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
           hidden({ width: 124 }),
-          orderTime({ width: 124 }),
+          orderTime({ width: 176 }),
         ];
       case TabType.orderHistory:
         return [
@@ -423,7 +425,7 @@ function fillAndQuantity(option?: {
       const first =
         "algo_type" in record && record.algo_type === AlgoOrderRootType.TP_SL
           ? ""
-          : `${executed}/`;
+          : `${executed} / `;
       return first + `${record.quantity}`;
     },
     render: (value: string, record: any) => {
@@ -468,10 +470,7 @@ function quantity(option?: {
           }
         : undefined,
     renderPlantText: (value: string, record: any) => {
-      if (
-        record.type === OrderType.CLOSE_POSITION &&
-        record.status !== OrderStatus.FILLED
-      ) {
+      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
         return "Entire position";
       }
 
@@ -511,7 +510,7 @@ function price(option?: {
           }
         : undefined,
     renderPlantText: (value: string, record: any) => {
-      return commifyOptional(record.price?.toString() ?? "Market");
+      return commifyOptional(record.price?.toString(), { fallback: "Market" });
     },
     render: (value: string, record: any) => {
       return <Price order={record} disableEdit={option?.disableEdit} />;
@@ -696,7 +695,16 @@ function estTotal(option?: {
           }
         : undefined,
     renderPlantText: (value: string, record: any) => {
-      return commifyOptional(estTotalValue(record, option?.isPending ?? false));
+      const estTotal = estTotalValue(record, option?.isPending ?? false);
+
+      if (estTotal === "Entire position") {
+        return "Entire position";
+      }
+
+      return commifyOptional(
+        estTotalValue(record, option?.isPending ?? false),
+        { fix: 2 }
+      );
     },
     render: (value: string, record: any) => {
       const estTotal = estTotalValue(record, option?.isPending ?? false);
@@ -719,6 +727,7 @@ function realizedPnL(option?: {
   width?: number;
   className?: string;
   pnlNotionalDecimalPrecision?: number;
+  symbolsInfo?: SymbolInfo;
 }): Column<API.Order> {
   return {
     title: "Real. PnL",
@@ -726,7 +735,9 @@ function realizedPnL(option?: {
     width: option?.width,
     className: option?.className,
     renderPlantText: (_value: string, record: any) => {
-      const dp = option?.pnlNotionalDecimalPrecision;
+      const info = option?.symbolsInfo?.[record.symbol];
+      const quote_dp = info?.("quote_dp");
+      const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
       const value = new Decimal(_value ?? 0)
         .toDecimalPlaces(dp, Decimal.ROUND_DOWN)
         .toNumber();

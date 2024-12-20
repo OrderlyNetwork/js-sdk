@@ -13,7 +13,11 @@ import {
   OrderSide,
   API,
 } from "@orderly.network/types";
-import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
+import {
+  useLocalStorage,
+  useOrderStream,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
 import { modal, usePagination, Text, Table } from "@orderly.network/ui";
@@ -50,6 +54,8 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     filterConfig,
     pnlNotionalDecimalPrecision,
   } = props;
+
+  const symbolsInfo = useSymbolsInfo();
 
   const manualPagination = useMemo(() => {
     // pending and ts_sl list use client pagination
@@ -209,6 +215,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     onSymbolChange,
 
     tableInstance,
+    symbolsInfo,
   };
 };
 

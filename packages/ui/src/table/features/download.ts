@@ -1,8 +1,5 @@
-import React, { ReactNode } from "react";
 import { Table, TableFeature, RowData } from "@tanstack/react-table";
-import { getPlainTextByCell, TableCell } from "../tableCell";
 import { Column } from "../type";
-import ReactDOMServer from "react-dom/server";
 
 // Define types for our new feature's table APIs
 export interface DownloadInstance {
@@ -22,25 +19,32 @@ export const DownloadFeature: TableFeature<any> = {
     table.getPlainTextData = () => {
       const header = table
         .getAllColumns()
-        .map((column) => jsxToPlainText((column.columnDef.meta as any).title));
-      // console.log("header", table.getAllColumns(), header);
+        // filter action column
+        .filter((column) => (column.columnDef.meta as any).type !== "action")
+        .map((column) => {
+          const { title, plantTextTitle } = column.columnDef.meta as any;
+          return plantTextTitle || title;
+        });
 
       const rows = table.getRowModel().rows.map((row) =>
-        row.getVisibleCells().map((cell) => {
-          const { original: record, index } = cell.row;
-          const { renderPlantText } = (cell.column.columnDef.meta ||
-            {}) as Column;
+        row
+          .getVisibleCells()
+          .filter(
+            (cell) => (cell.column.columnDef.meta as any).type !== "action"
+          )
+          .map((cell) => {
+            const { original: record, index } = cell.row;
+            const { renderPlantText } = (cell.column.columnDef.meta ||
+              {}) as Column;
 
-          const value = cell.getValue();
+            let value = cell.getValue();
 
-          // const html = ReactDOMServer.renderToString(<TableCell cell={cell} />);
+            if (typeof renderPlantText === "function") {
+              value = renderPlantText(value, record, index);
+            }
 
-          if (typeof renderPlantText === "function") {
-            return renderPlantText(value, record, index);
-          }
-
-          return value;
-        })
+            return `"${value}"`;
+          })
       );
 
       const data = [header, ...rows];
@@ -50,6 +54,7 @@ export const DownloadFeature: TableFeature<any> = {
 
     table.download = (filename?: string) => {
       const data = table.getPlainTextData();
+      console.log("downloadCSV", data);
       downloadCSV(data, filename);
     };
   },
@@ -70,20 +75,4 @@ function downloadCSV(data: any[], filename = `${Date.now()}.csv`) {
   link.click();
 
   URL.revokeObjectURL(url);
-}
-
-export function jsxToPlainText(node: ReactNode): string {
-  if (typeof node === "string" || typeof node === "number") {
-    return node.toString();
-  }
-
-  if (React.isValidElement(node)) {
-    return jsxToPlainText(node.props.children || node.props.cell);
-  }
-
-  if (Array.isArray(node)) {
-    return node.map(jsxToPlainText).join("");
-  }
-
-  return "--";
 }

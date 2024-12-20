@@ -30,6 +30,7 @@ export const DesktopOrderList: FC<
     _type: props.type,
     onSymbolChange: props.onSymbolChange,
     pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
+    symbolsInfo: props.symbolsInfo,
   });
   return (
     <OrderListProvider

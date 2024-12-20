@@ -15,7 +15,6 @@ export const useOrdersScript = (props: UseOrdersScriptOptions) => {
 
   useImperativeHandle(props.ref, () => ({
     download: () => {
-      console.log("orderListRef", orderListRef);
       orderListRef.current?.download?.();
     },
   }));

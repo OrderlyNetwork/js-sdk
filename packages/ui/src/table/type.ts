@@ -29,6 +29,10 @@ export type TableCellPlainTextRenderer<T> = (
 export type Column<RecordType extends unknown = any> = {
   type?: "data" | "action" | "group";
   title?: ReactNode;
+  /**
+   * when title is ReactElement, download feature need this field to render plant text
+   * */
+  plantTextTitle?: PlainText;
   hint?: ReactNode;
   hintClassName?: string;
   width?: number;
@@ -41,7 +45,9 @@ export type Column<RecordType extends unknown = any> = {
     | ((r1: RecordType, r2: RecordType, sortOrder?: SortOrder) => number);
   formatter?: TableCellFormatter<RecordType>;
   render?: TableCellRenderer<RecordType>;
-  /** download feature need this field */
+  /**
+   * when render return ReactElement, download feature need this field to render plant text
+   * */
   renderPlantText?: TableCellPlainTextRenderer<RecordType>;
   getKey?: (record: RecordType, index: number) => string;
 
