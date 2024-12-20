@@ -2,6 +2,7 @@ import { FC, useEffect, useMemo, useRef, useState } from "react";
 import {
   PnLDisplayFormat,
   ReferralType,
+  ShareEntity,
   ShareOptions,
   SharePnLConfig,
 } from "../../types/types";
@@ -23,7 +24,7 @@ import { BottomButtons } from "./bottomBtns";
 import { PosterRef } from "../poster/poster";
 
 export const DesktopSharePnLContent: FC<{
-  position: any;
+  entity: ShareEntity;
   leverage: number | string;
   hide: any;
   baseDp?: number;
@@ -34,8 +35,17 @@ export const DesktopSharePnLContent: FC<{
   const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
 
+  const hasRoiAndPnl = props.entity.roi != null && props.entity.pnl != null;
+  const formats: PnLDisplayFormat[] = hasRoiAndPnl
+    ? ["roi_pnl", "roi", "pnl"]
+    : props.entity.roi != null
+    ? ["roi"]
+    : props.entity.pnl != null
+    ? ["pnl"]
+    : [];
+
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
-    localPnlConfig.pnlFormat
+    formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat
   );
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
     new Set(localPnlConfig.options)
@@ -62,7 +72,7 @@ export const DesktopSharePnLContent: FC<{
   }, [shareOptions?.backgroundImages, selectedSnap]);
 
   const posterData = getPnLPosterData(
-    props.position,
+    props.entity,
     props.leverage,
     check ? message : "",
     domain,
@@ -99,13 +109,14 @@ export const DesktopSharePnLContent: FC<{
     props.hide?.();
   };
 
-  const formats: PnLDisplayFormat[] = ["roi_pnl", "roi", "pnl"];
+  
+  // check if the entity has the option, like formats
   const options: ShareOptions[] = [
-    "openPrice",
-    "markPrice",
-    "openTime",
-    "leverage",
-    "quantity",
+    ...(props.entity.openPrice ? ["openPrice"] as ShareOptions[] : []),
+    ...(props.entity.markPrice ? ["markPrice"] as ShareOptions[] : []),
+    ...(props.entity.openTime ? ["openTime"] as ShareOptions[] : []),
+    ...(props.leverage ? ["leverage"] as ShareOptions[] : []),
+    ...(props.entity.quantity ? ["quantity"] as ShareOptions[] : []),
   ];
 
   savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
