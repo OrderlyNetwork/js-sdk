@@ -11,6 +11,8 @@ export * from "./components/favoritesList";
 export * from "./components/recentList";
 export * from "./components/marketsList";
 export * from "./components/newListingList";
+export * from "./components/fundingOverview";
+export * from "./components/fundingComparison";
 
 export * from "./components/collapseMarkets";
 export * from "./components/sideMarkets";

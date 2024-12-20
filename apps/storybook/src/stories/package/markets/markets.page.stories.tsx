@@ -4,8 +4,10 @@ import {
   MarketsHeaderWidget,
   MarketsListFullWidget,
   FavoritesListFullWidget,
+  FundingOverviewWidget,
   MarketsDataListWidget,
   MarketsProvider,
+  FundingComparisonWidget,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
 
@@ -104,6 +106,34 @@ export const DataList: Story = {
         <MarketsDataListWidget />
       </MarketsProvider>
     );
+  },
+
+  decorators: [
+    (Story) => (
+      <Box>
+        <Story />
+      </Box>
+    ),
+  ],
+};
+
+export const FundingHistory: Story = {
+  render: (args) => {
+    return <FundingOverviewWidget />;
+  },
+
+  decorators: [
+    (Story) => (
+      <Box>
+        <Story />
+      </Box>
+    ),
+  ],
+};
+
+export const FundingComparison: Story = {
+  render: (args) => {
+    return <FundingComparisonWidget />;
   },
 
   decorators: [
