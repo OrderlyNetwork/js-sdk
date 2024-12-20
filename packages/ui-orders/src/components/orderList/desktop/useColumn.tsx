@@ -1013,6 +1013,7 @@ function tpslAction(option?: {
 }): Column<API.Order> {
   return {
     title: "",
+    type: "action",
     dataIndex: "action",
     width: option?.width,
     className: option?.className,
