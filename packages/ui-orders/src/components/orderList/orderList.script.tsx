@@ -11,6 +11,7 @@ import { TabType } from "../orders.widget";
 import { modal, usePagination, Text } from "@orderly.network/ui";
 import { differenceInDays, setHours, subDays } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
+import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 
 export const useOrderListScript = (props: {
   type: TabType;
@@ -18,6 +19,8 @@ export const useOrderListScript = (props: {
   symbol?: string;
   enableLoadMore?: boolean;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   filterConfig?: {
     side?: OrderSide | "all";
     range?: {
@@ -34,6 +37,7 @@ export const useOrderListScript = (props: {
     onSymbolChange,
     filterConfig,
     pnlNotionalDecimalPrecision,
+    sharePnLConfig,
   } = props;
 
   const manualPagination = useMemo(() => {
@@ -183,6 +187,8 @@ export const useOrderListScript = (props: {
     onCancelAll,
 
     onSymbolChange,
+
+    sharePnLConfig,
   };
 };
 

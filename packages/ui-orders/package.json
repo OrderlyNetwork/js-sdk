@@ -28,6 +28,7 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-tpsl": "workspace:*",
+    "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "date-fns": "^3.6.0"
   },

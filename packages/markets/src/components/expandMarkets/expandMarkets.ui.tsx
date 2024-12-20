@@ -12,6 +12,7 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
+import { NewListingListWidget } from "../newListingList";
 
 export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
 
@@ -99,11 +100,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         </TabPanel>
         <TabPanel title="New listings" value="newListing">
           <div className={cls}>
-            <MarketsListWidget
-              type="all"
-              sortKey={tabSort?.sortKey}
-              sortOrder={tabSort?.sortOrder}
-              onSort={onTabSort}
+            <NewListingListWidget
               tableClassNames={{
                 scroll: "oui-px-1",
               }}

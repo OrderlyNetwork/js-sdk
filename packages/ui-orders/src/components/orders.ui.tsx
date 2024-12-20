@@ -18,6 +18,7 @@ export const Orders = (props: OrdersBuilderState) => {
         <DesktopOrderListWidget
           type={TabType.all}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          sharePnLConfig={props.sharePnLConfig}
         />
       </TabPanel>
       <TabPanel value={TabType.pending} title="Pending">
@@ -39,6 +40,7 @@ export const Orders = (props: OrdersBuilderState) => {
           type={TabType.filled}
           ordersStatus={OrderStatus.FILLED}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          sharePnLConfig={props.sharePnLConfig}
         />
       </TabPanel>
       <TabPanel value={TabType.cancelled} title="Cancelled">

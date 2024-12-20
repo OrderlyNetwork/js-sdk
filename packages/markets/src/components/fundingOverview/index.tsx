@@ -1,3 +1,3 @@
-export * from "./fundingOverview.ui";
-export * from "./fundingOverview.script";
-export * from "./widget";
+export { FundingOverview } from "./fundingOverview.ui";
+export { useFundingOverviewScript } from "./fundingOverview.script";
+export { FundingOverviewWidget } from "./widget";

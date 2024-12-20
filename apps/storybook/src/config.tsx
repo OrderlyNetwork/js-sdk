@@ -167,7 +167,7 @@ const config: OrderlyConfig = {
     },
     footerProps: {
       telegramUrl: "https://orderly.network",
-      discordmUrl: "https://discord.com/invite/orderlynetwork",
+      discordUrl: "https://discord.com/invite/orderlynetwork",
       twitterUrl: "https://twitter.com/OrderlyNetwork",
     },
   },

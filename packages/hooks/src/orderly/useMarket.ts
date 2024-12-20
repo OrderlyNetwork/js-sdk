@@ -40,6 +40,7 @@ export type MarketStoreKey =
   | "recent"
   | "favorites"
   | "favoriteTabs"
+  | "newListing"
   | "lastSelectedFavoriteTab"
   | "newListing"
   | "tabSort";
