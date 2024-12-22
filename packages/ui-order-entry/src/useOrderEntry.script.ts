@@ -1,4 +1,9 @@
-import { OrderSide, OrderType } from "@orderly.network/types";
+import {
+  BBOOrderType,
+  OrderLevel,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import {
   useAccount,
   useEventEmitter,
@@ -13,6 +18,7 @@ import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
+import { getOrderLevelByBBO, getOrderTypeByBBO } from "./utils";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -27,6 +33,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     "orderly-order-entry-order-side",
     OrderSide.BUY
   );
+  const [localBBOType, setLocalBBOType] = useLocalStorage<
+    BBOOrderType | undefined
+  >("orderly_order_bbo_type", undefined);
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
     useOrderEntry(inputs.symbol, {
       initialOrder: {
@@ -55,6 +64,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const currentFocusInput = useRef<InputType>(InputType.NONE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
+  const [priceInputWidth, setPriceInputWidth] = useState(0);
 
   const currentQtyPercentage = useMemo(() => {
     if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) return 1;
@@ -199,6 +209,35 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       return;
     }
 
+    // if (
+    //   key === "order_type" &&
+    //   [OrderType.ASK, OrderType.BID].includes(value)
+    // ) {
+    //   const data = {
+    //     price: "",
+    //     [key]: value,
+    //   };
+
+    //   setValues(data);
+
+    //   return;
+    // }
+
+    // if (
+    //   key === "order_type" &&
+    //   ![OrderType.ASK, OrderType.BID].includes(value)
+    // ) {
+    //   const data = {
+    //     level: undefined,
+    //     order_type_ext: undefined,
+    //     [key]: value,
+    //   };
+
+    //   setValues(data);
+
+    //   return;
+    // }
+
     setValue(key, value, options);
   };
 
@@ -211,11 +250,55 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   };
 
+  useEffect(() => {
+    if (priceInputRef.current) {
+      const rect = priceInputRef.current.getBoundingClientRect();
+      setPriceInputWidth(rect?.width || 0);
+    }
+  }, [priceInputRef]);
+
+  const enableBBO =
+    localBBOType && formattedOrder.order_type === OrderType.LIMIT;
+
+  const toggleBBO = () => {
+    // setLocalBBOType(localBBOType ? undefined : BBOOrderType.COUNTERPARTY1);
+    if (localBBOType) {
+      setLocalBBOType(undefined);
+      setOrderValue("order_type_ext", undefined);
+    } else {
+      setLocalBBOType(BBOOrderType.COUNTERPARTY1);
+    }
+  };
+
+  const onBBOChange = (value: BBOOrderType) => {
+    setLocalBBOType(value);
+  };
+
+  useEffect(() => {
+    if (localBBOType && formattedOrder.order_type === OrderType.LIMIT) {
+      const orderType = getOrderTypeByBBO(localBBOType, formattedOrder.side!);
+      const orderLevel = getOrderLevelByBBO(localBBOType)!;
+      setValues({
+        order_type_ext: orderType,
+        level: orderLevel,
+      });
+    }
+  }, [localBBOType, formattedOrder.order_type, formattedOrder.side!]);
+
+  // console.log(
+  //   "===",
+  //   localBBOType,
+  //   formattedOrder.order_type,
+  //   formattedOrder.order_type_ext,
+  //   formattedOrder.level
+  // );
+
   return {
     ...state,
     currentQtyPercentage,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
+    level: formattedOrder.level as OrderLevel,
     setOrderValue,
     setOrderValues: setValues,
 
@@ -236,6 +319,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     },
 
     canTrade,
+
+    enableBBO,
+    bboType: localBBOType,
+    onBBOChange,
+    toggleBBO,
+    priceInputWidth,
   };
 };
 

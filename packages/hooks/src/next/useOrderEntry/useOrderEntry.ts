@@ -10,7 +10,6 @@ import type { FullOrderState } from "./orderEntry.store";
 import { API, OrderlyOrder, OrderType } from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
-import { OrderFactory } from "../../services/orderCreator/factory";
 import { VerifyResult } from "../../services/orderCreator/interface";
 import { useMutation } from "../../useMutation";
 import {
@@ -159,7 +158,7 @@ const useOrderEntry = (
     errors: null,
   });
 
-  const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
+  const askAndBid = useRef<number[][]>([[]]); // [[ask0, bid0],...,[ask4,bid4]]
   const lastChangedField = useRef<keyof FullOrderState | undefined>();
 
   // const [errors, setErrors] = useState<VerifyResult | null>(null);
@@ -195,8 +194,39 @@ const useOrderEntry = (
     formattedOrder.side,
     formattedOrder.reduce_only
   );
-  const onOrderBookUpdate = useDebouncedCallback((data: number[]) => {
+
+  const updateOrderPrice = () => {
+    const { order_type_ext, level } = formattedOrder;
+    const index = order_type_ext === OrderType.ASK ? 0 : 1;
+    const price = askAndBid.current?.[level!]?.[index];
+    if (!isNaN(price)) {
+      setValue("order_price", price, {
+        shouldUpdateLastChangedField: false,
+      });
+    }
+    // console.log("updateOrderPrice", askAndBid.current, price);
+  };
+
+  const updateOrderPriceByOrderBook = () => {
+    const { order_type, order_type_ext, order_quantity } = formattedOrder;
+    const hasQty = order_quantity && Number(order_quantity) !== 0;
+    const isBBO =
+      order_type === OrderType.LIMIT &&
+      [OrderType.ASK, OrderType.BID].includes(order_type_ext!);
+
+    if (lastChangedField.current !== "total" && hasQty && isBBO) {
+      updateOrderPrice();
+    }
+  };
+
+  useEffect(() => {
+    // when BBO type change, it will change order price
+    updateOrderPrice();
+  }, [formattedOrder.order_type_ext, formattedOrder.level]);
+
+  const onOrderBookUpdate = useDebouncedCallback((data: number[][]) => {
     askAndBid.current = data;
+    updateOrderPriceByOrderBook();
   }, 200);
 
   /**
@@ -367,7 +397,7 @@ const useOrderEntry = (
     const markPrice = actions.getMarkPriceBySymbol(symbol);
     if (!markPrice || !accountInfo) return null;
 
-    return calcEstLiqPrice(formattedOrder, askAndBid.current, {
+    return calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
       baseIMR: symbolInfo?.base_imr,
       baseMMR: symbolInfo?.base_mmr,
       markPrice,
@@ -380,7 +410,7 @@ const useOrderEntry = (
   }, [formattedOrder, accountInfo, positions, totalCollateral, symbol]);
 
   const estLeverage = useMemo(() => {
-    return calcEstLeverage(formattedOrder, askAndBid.current, {
+    return calcEstLeverage(formattedOrder, askAndBid.current[0], {
       totalCollateral,
       positions,
       symbol,

@@ -9,6 +9,8 @@ export {
   AlgoOrderRootType,
   AlgoOrderType,
   TriggerPriceType,
+  BBOOrderType,
+  OrderLevel,
 } from "./order";
 export type {
   OrderEntity,
@@ -25,7 +27,7 @@ export type {
   AlgoOrder,
   OrderlyOrder,
   ChildOrder,
-  BracketOrder
+  BracketOrder,
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";

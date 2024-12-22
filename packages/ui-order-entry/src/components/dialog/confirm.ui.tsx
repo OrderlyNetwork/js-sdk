@@ -13,6 +13,7 @@ import { OrderSide, OrderType } from "@orderly.network/types";
 import { OrderlyOrder } from "@orderly.network/types";
 import { useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { BBOType2Label, getBBOType } from "../../utils";
 
 type Props = {
   order: OrderlyOrder;
@@ -26,9 +27,43 @@ type Props = {
 export const OrderConfirmDialog = (props: Props) => {
   const { baseDP, quoteDP, order, onConfirm, onCancel } = props;
 
-  const { side, order_type, symbol } = order;
+  const { side, order_type, order_type_ext, level } = order;
 
   const [_, setNeedConfirm] = useLocalStorage("orderly_order_confirm", true);
+
+  const renderPrice = () => {
+    if (
+      order_type === OrderType.MARKET ||
+      order_type === OrderType.STOP_MARKET
+    ) {
+      return <Text intensity={80}>Market</Text>;
+    }
+
+    if (
+      order_type === OrderType.LIMIT &&
+      [OrderType.ASK, OrderType.BID].includes(order_type_ext!)
+    ) {
+      const bboType = getBBOType({
+        type: order_type_ext!,
+        side,
+        level,
+      });
+      return <Text intensity={80}>{BBOType2Label[bboType!]}</Text>;
+    }
+
+    return (
+      <Text.numeral
+        unit={"USDC"}
+        rule={"price"}
+        className={"oui-text-base-contrast"}
+        unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+        dp={quoteDP}
+        padding={false}
+      >
+        {order.order_price}
+      </Text.numeral>
+    );
+  };
 
   return (
     <>
@@ -37,7 +72,7 @@ export const OrderConfirmDialog = (props: Props) => {
           {order.symbol}
         </Text.formatted>
         <Flex justify={"end"} gapX={1}>
-          <OrderTypeTag type={order.order_type} />
+          <OrderTypeTag type={order_type} />
           {side === OrderSide.BUY ? (
             <Badge color={"buy"} size={"sm"}>
               Buy
@@ -85,20 +120,7 @@ export const OrderConfirmDialog = (props: Props) => {
         )}
         <Flex justify={"between"}>
           <Text>Price</Text>
-          {order.order_type === OrderType.MARKET || order.order_type === OrderType.STOP_MARKET ? (
-            <Text intensity={80}>Market</Text>
-          ) : (
-            <Text.numeral
-              unit={"USDC"}
-              rule={"price"}
-              className={"oui-text-base-contrast"}
-              unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-              dp={quoteDP}
-              padding={false}
-            >
-              {order.order_price}
-            </Text.numeral>
-          )}
+          {renderPrice()}
         </Flex>
         <Flex justify={"between"}>
           <Text>Notional</Text>

@@ -28,6 +28,7 @@ import {
   forwardRef,
   HTMLAttributes,
   PropsWithChildren,
+  ReactNode,
   useContext,
   useEffect,
   useMemo,
@@ -35,6 +36,8 @@ import {
 } from "react";
 import {
   API,
+  BBOOrderType,
+  OrderLevel,
   OrderlyOrder,
   OrderSide,
   OrderType,
@@ -51,6 +54,7 @@ import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.wi
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
 import { ApiError } from "@orderly.network/types";
+import { BBOType2Label } from "./utils";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
@@ -63,12 +67,17 @@ export const OrderEntry = (
     side,
     formattedOrder,
     setOrderValue,
+    setOrderValues,
     symbolInfo,
     maxQty,
     freeCollateral,
     helper,
     submit,
     metaState,
+    enableBBO,
+    bboType,
+    onBBOChange,
+    toggleBBO,
     refs,
   } = props;
 
@@ -145,7 +154,7 @@ export const OrderEntry = (
         },
         (errors) => {
           setErrorMsgVisible(true);
-         
+
           if (typeof errors === "object") {
             if (
               errors.total != null ||
@@ -266,14 +275,25 @@ export const OrderEntry = (
             price: formattedOrder.order_price,
             trigger_price: formattedOrder.trigger_price,
             total: formattedOrder.total,
+            level: formattedOrder.level,
+            side: formattedOrder.side,
+            order_type_ext: formattedOrder.order_type_ext,
           }}
           errors={validated ? errors : null}
           onChange={(key, value) => {
             props.setOrderValue(key, value);
           }}
+          onValuesChange={props.setOrderValues}
           refs={props.refs}
           onBlur={props.onBlur}
           onFocus={props.onFocus}
+          bbo={{
+            enableBBO,
+            bboType,
+            onBBOChange,
+            toggleBBO,
+          }}
+          priceInputWidth={props.priceInputWidth}
         />
         {/* Slider */}
         <QuantitySlider
@@ -464,16 +484,32 @@ const OrderQuantityInput = (props: {
     price?: string;
     trigger_price?: string;
     total?: string;
+    side?: OrderSide;
+    level?: OrderLevel;
+    order_type_ext?: OrderType;
   };
   onChange: (
-    key: "order_quantity" | "order_price" | "trigger_price" | "total",
+    key:
+      | "order_quantity"
+      | "order_price"
+      | "trigger_price"
+      | "total"
+      | "order_type"
+      | "order_type_ext"
+      | "level",
     value: any
   ) => void;
+  onValuesChange: (value: any) => void;
   refs: Refs;
   onFocus: (type: InputType) => FocusEventHandler;
   onBlur: (type: InputType) => FocusEventHandler;
+  bbo: Pick<
+    uesOrderEntryScriptReturn,
+    "enableBBO" | "bboType" | "onBBOChange" | "toggleBBO"
+  >;
+  priceInputWidth?: number;
 }) => {
-  const { type, symbolInfo, errors, values, onFocus, onBlur } = props;
+  const { type, symbolInfo, errors, values, onFocus, onBlur, bbo } = props;
 
   const parseErrorMsg = (key: string) => {
     if (errors && errors[key]) {
@@ -481,6 +517,38 @@ const OrderQuantityInput = (props: {
     }
     return "";
   };
+
+  const readOnly = bbo.enableBBO;
+
+  const priceSuffix =
+    type === OrderType.LIMIT ? (
+      <Flex direction="column" itemAlign="end" className="oui-text-2xs">
+        {symbolInfo.quote}
+        <Flex
+          height={20}
+          width={48}
+          justify="center"
+          itemAlign="center"
+          r="base"
+          className={cn(
+            "oui-border oui-cursor-pointer oui-mt-[2px] oui-select-none",
+            bbo.enableBBO ? "oui-border-primary" : "oui-border-line-12"
+          )}
+          onClick={bbo.toggleBBO}
+        >
+          <Text
+            className={cn(
+              bbo.enableBBO ? "oui-text-primary" : "oui-text-base-contrast-54"
+            )}
+          >
+            BBO
+          </Text>
+        </Flex>
+      </Flex>
+    ) : (
+      symbolInfo.quote
+    );
+
   return (
     <div className={"oui-space-y-1"}>
       {type === OrderType.STOP_LIMIT || type === OrderType.STOP_MARKET ? (
@@ -503,10 +571,10 @@ const OrderQuantityInput = (props: {
       ) : null}
 
       {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
-        <div className={"oui-group"}>
+        <div className="oui-relative oui-group">
           <CustomInput
             label={"Price"}
-            suffix={symbolInfo.quote}
+            suffix={priceSuffix}
             id={"price"}
             value={values.price}
             error={parseErrorMsg("order_price")}
@@ -518,7 +586,24 @@ const OrderQuantityInput = (props: {
             formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
             onFocus={onFocus(InputType.PRICE)}
             onBlur={onBlur(InputType.PRICE)}
+            readonly={readOnly}
+            classNames={{
+              root: cn(
+                // readOnly && "oui-pointer-events-none",
+                readOnly && "focus-within:oui-outline-transparent "
+              ),
+              input: cn(readOnly && "oui-cursor-auto"),
+            }}
           />
+          {bbo.enableBBO && (
+            <div className={cn("oui-absolute oui-left-0 oui-bottom-1")}>
+              <BBOOrderTypeSelect
+                value={bbo.bboType}
+                onChange={bbo.onBBOChange}
+                width={props.priceInputWidth}
+              />
+            </div>
+          )}
         </div>
       ) : null}
 
@@ -562,7 +647,7 @@ const CustomInput = forwardRef<
   HTMLInputElement,
   {
     label: string;
-    suffix: string;
+    suffix: ReactNode;
     id: string;
     className?: string;
     name?: string;
@@ -575,6 +660,8 @@ const CustomInput = forwardRef<
     onBlur: InputProps["onBlur"];
     formatters?: InputProps["formatters"];
     // helperText?: InputProps["helperText"];
+    classNames?: InputProps["classNames"];
+    readonly?: boolean;
   }
 >((props, ref) => {
   const { errorMsgVisible } = useContext(OrderEntryContext);
@@ -586,13 +673,13 @@ const CustomInput = forwardRef<
       autoComplete={"off"}
       autoFocus={props.autoFocus}
       size={"lg"}
-      placeholder={placeholder}
+      placeholder={props.readonly ? "" : placeholder}
       id={props.id}
       name={props.name}
       color={props.error ? "danger" : undefined}
       prefix={<InputLabel id={props.id}>{props.label}</InputLabel>}
       suffix={props.suffix}
-      value={props.value || ""}
+      value={props.readonly ? "" : props.value || ""}
       // onChange={props.onChange}
       onValueChange={props.onChange}
       onFocus={(event) => {
@@ -611,14 +698,20 @@ const CustomInput = forwardRef<
       classNames={{
         root: cn(
           "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-2 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
-          props.className
+          props.className,
+          props.classNames?.root
         ),
-        input: "oui-mt-5 oui-mb-1 oui-h-5",
-        prefix:
+        input: cn("oui-mt-5 oui-mb-1 oui-h-5", props?.classNames?.input),
+        prefix: cn(
           "oui-absolute oui-left-2 oui-top-[7px] oui-text-base-contrast-36",
-        suffix:
+          props.classNames?.prefix
+        ),
+        suffix: cn(
           "oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-36 oui-text-2xs oui-justify-start oui-py-2",
+          props.classNames?.suffix
+        ),
       }}
+      readOnly={props.readonly}
     />
   );
 });
@@ -867,3 +960,61 @@ function AdditionalConfigButton(props: {
     </PopoverRoot>
   );
 }
+
+// -----------BBO Select Component start ------------
+
+const BBOOrderTypeSelect = (props: {
+  value?: BBOOrderType;
+  onChange: (value: BBOOrderType) => void;
+  width?: number;
+}) => {
+  const options = [
+    {
+      label: BBOType2Label[BBOOrderType.COUNTERPARTY1],
+      value: BBOOrderType.COUNTERPARTY1,
+    },
+    {
+      label: BBOType2Label[BBOOrderType.COUNTERPARTY5],
+      value: BBOOrderType.COUNTERPARTY5,
+    },
+    {
+      label: BBOType2Label[BBOOrderType.QUEUE1],
+      value: BBOOrderType.QUEUE1,
+    },
+    {
+      label: BBOType2Label[BBOOrderType.QUEUE5],
+      value: BBOOrderType.QUEUE5,
+    },
+  ];
+
+  return (
+    <Select.options
+      testid="oui-testid-orderEntry-bbo-orderType-button"
+      currentValue={props.value}
+      value={props.value}
+      options={options}
+      onValueChange={props.onChange}
+      contentProps={{
+        className: "oui-bg-base-8 oui-w-full",
+        // style: {
+        //   minWidth: props.width,
+        // },
+      }}
+      size={"sm"}
+      classNames={{
+        trigger: "oui-border-none oui-bg-transparent",
+      }}
+      valueFormatter={(value, option) => {
+        const item = options.find((item) => item.value === value);
+
+        return (
+          <Box>
+            <Text size="sm">{item?.label}</Text>
+          </Box>
+        );
+      }}
+    />
+  );
+};
+
+// -----------BBO type Select Component end ------------
