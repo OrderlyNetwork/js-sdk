@@ -1,5 +1,17 @@
 # @orderly.network/ui-connector
 
+## 2.0.1-internal-20241224.2
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/ui-chain-selector@2.0.1-internal-20241224.2
+  - @orderly.network/hooks@2.0.1-internal-20241224.2
+  - @orderly.network/types@2.0.1-internal-20241224.2
+  - @orderly.network/react-app@2.0.1-internal-20241224.2
+  - @orderly.network/ui@2.0.1-internal-20241224.2
+
 ## 2.0.1-internal-20241224.1
 
 ### Patch Changes
