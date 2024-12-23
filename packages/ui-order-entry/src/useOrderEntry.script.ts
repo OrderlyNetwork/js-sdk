@@ -18,7 +18,7 @@ import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
-import { getOrderLevelByBBO, getOrderTypeByBBO } from "./utils";
+import { BBOStatus, getOrderLevelByBBO, getOrderTypeByBBO } from "./utils";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -36,6 +36,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [localBBOType, setLocalBBOType] = useLocalStorage<
     BBOOrderType | undefined
   >("orderly_order_bbo_type", undefined);
+
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
     useOrderEntry(inputs.symbol, {
       initialOrder: {
@@ -64,7 +65,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const currentFocusInput = useRef<InputType>(InputType.NONE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
-  const [priceInputWidth, setPriceInputWidth] = useState(0);
+  const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
+  const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
 
   const currentQtyPercentage = useMemo(() => {
     if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) return 1;
@@ -251,17 +253,27 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   };
 
   useEffect(() => {
-    if (priceInputRef.current) {
-      const rect = priceInputRef.current.getBoundingClientRect();
-      setPriceInputWidth(rect?.width || 0);
+    if (priceInputContainerRef.current) {
+      const rect = priceInputContainerRef.current.getBoundingClientRect();
+      setPriceInputContainerWidth(rect?.width || 0);
     }
-  }, [priceInputRef]);
+  }, [priceInputContainerRef]);
 
-  const enableBBO =
-    localBBOType && formattedOrder.order_type === OrderType.LIMIT;
+  const bboStatus = useMemo(() => {
+    const enable =
+      localBBOType && formattedOrder.order_type === OrderType.LIMIT;
+
+    if (enable && tpslSwitch) {
+      return BBOStatus.DISABLED;
+    }
+
+    return enable ? BBOStatus.ON : BBOStatus.OFF;
+  }, [localBBOType, formattedOrder.order_type, tpslSwitch]);
 
   const toggleBBO = () => {
-    // setLocalBBOType(localBBOType ? undefined : BBOOrderType.COUNTERPARTY1);
+    if (bboStatus === BBOStatus.DISABLED) {
+      return;
+    }
     if (localBBOType) {
       setLocalBBOType(undefined);
       setOrderValue("order_type_ext", undefined);
@@ -275,7 +287,20 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   };
 
   useEffect(() => {
-    if (localBBOType && formattedOrder.order_type === OrderType.LIMIT) {
+    if (bboStatus === BBOStatus.DISABLED) {
+      setValues({
+        order_type_ext: undefined,
+        level: undefined,
+      });
+    }
+  }, [bboStatus]);
+
+  useEffect(() => {
+    if (
+      localBBOType &&
+      formattedOrder.order_type === OrderType.LIMIT &&
+      !tpslSwitch
+    ) {
       const orderType = getOrderTypeByBBO(localBBOType, formattedOrder.side!);
       const orderLevel = getOrderLevelByBBO(localBBOType)!;
       setValues({
@@ -283,7 +308,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         level: orderLevel,
       });
     }
-  }, [localBBOType, formattedOrder.order_type, formattedOrder.side!]);
+  }, [
+    localBBOType,
+    formattedOrder.order_type,
+    formattedOrder.side!,
+    tpslSwitch,
+  ]);
 
   // console.log(
   //   "===",
@@ -316,15 +346,16 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     refs: {
       triggerPriceInputRef,
       priceInputRef,
+      priceInputContainerRef,
     },
 
     canTrade,
 
-    enableBBO,
+    bboStatus,
     bboType: localBBOType,
     onBBOChange,
     toggleBBO,
-    priceInputWidth,
+    priceInputContainerWidth,
   };
 };
 

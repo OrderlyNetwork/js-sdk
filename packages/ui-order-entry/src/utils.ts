@@ -5,6 +5,12 @@ import {
   OrderType,
 } from "@orderly.network/types";
 
+export enum BBOStatus {
+  ON = "on",
+  OFF = "off",
+  DISABLED = "disabled",
+}
+
 export const BBOType2Label: Record<BBOOrderType, string> = {
   [BBOOrderType.COUNTERPARTY1]: "Counterparty 1",
   [BBOOrderType.COUNTERPARTY5]: "Counterparty 5",

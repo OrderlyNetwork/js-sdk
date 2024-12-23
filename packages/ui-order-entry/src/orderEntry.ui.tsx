@@ -15,7 +15,6 @@ import {
   PopoverRoot,
   PopoverTrigger,
   Select,
-  SelectItem,
   Slider,
   Switch,
   Text,
@@ -24,6 +23,7 @@ import {
   toast,
 } from "@orderly.network/ui";
 import {
+  CSSProperties,
   FocusEventHandler,
   forwardRef,
   HTMLAttributes,
@@ -54,7 +54,7 @@ import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.wi
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
 import { ApiError } from "@orderly.network/types";
-import { BBOType2Label } from "./utils";
+import { BBOStatus, BBOType2Label } from "./utils";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
@@ -74,14 +74,11 @@ export const OrderEntry = (
     helper,
     submit,
     metaState,
-    enableBBO,
+    bboStatus,
     bboType,
     onBBOChange,
     toggleBBO,
-    refs,
   } = props;
-
-  // console.log("props", props);
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
@@ -288,12 +285,12 @@ export const OrderEntry = (
           onBlur={props.onBlur}
           onFocus={props.onFocus}
           bbo={{
-            enableBBO,
+            bboStatus,
             bboType,
             onBBOChange,
             toggleBBO,
           }}
-          priceInputWidth={props.priceInputWidth}
+          priceInputContainerWidth={props.priceInputContainerWidth}
         />
         {/* Slider */}
         <QuantitySlider
@@ -505,9 +502,9 @@ const OrderQuantityInput = (props: {
   onBlur: (type: InputType) => FocusEventHandler;
   bbo: Pick<
     uesOrderEntryScriptReturn,
-    "enableBBO" | "bboType" | "onBBOChange" | "toggleBBO"
+    "bboStatus" | "bboType" | "onBBOChange" | "toggleBBO"
   >;
-  priceInputWidth?: number;
+  priceInputContainerWidth?: number;
 }) => {
   const { type, symbolInfo, errors, values, onFocus, onBlur, bbo } = props;
 
@@ -518,7 +515,7 @@ const OrderQuantityInput = (props: {
     return "";
   };
 
-  const readOnly = bbo.enableBBO;
+  const readOnly = bbo.bboStatus === BBOStatus.ON;
 
   const priceSuffix =
     type === OrderType.LIMIT ? (
@@ -532,13 +529,19 @@ const OrderQuantityInput = (props: {
           r="base"
           className={cn(
             "oui-border oui-cursor-pointer oui-mt-[2px] oui-select-none",
-            bbo.enableBBO ? "oui-border-primary" : "oui-border-line-12"
+            bbo.bboStatus === BBOStatus.ON
+              ? "oui-border-primary"
+              : "oui-border-line-12",
+            bbo.bboStatus === BBOStatus.DISABLED && "oui-cursor-not-allowed"
           )}
           onClick={bbo.toggleBBO}
         >
           <Text
             className={cn(
-              bbo.enableBBO ? "oui-text-primary" : "oui-text-base-contrast-54"
+              bbo.bboStatus === BBOStatus.ON && "oui-text-primary",
+              bbo.bboStatus === BBOStatus.OFF && "oui-text-base-contrast-54",
+              bbo.bboStatus === BBOStatus.DISABLED &&
+                "oui-text-base-contrast-20"
             )}
           >
             BBO
@@ -571,7 +574,10 @@ const OrderQuantityInput = (props: {
       ) : null}
 
       {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
-        <div className="oui-relative oui-group">
+        <div
+          ref={props.refs.priceInputContainerRef}
+          className="oui-relative oui-group oui-w-full"
+        >
           <CustomInput
             label={"Price"}
             suffix={priceSuffix}
@@ -588,19 +594,18 @@ const OrderQuantityInput = (props: {
             onBlur={onBlur(InputType.PRICE)}
             readonly={readOnly}
             classNames={{
-              root: cn(
-                // readOnly && "oui-pointer-events-none",
-                readOnly && "focus-within:oui-outline-transparent "
-              ),
+              root: cn(readOnly && "focus-within:oui-outline-transparent "),
               input: cn(readOnly && "oui-cursor-auto"),
             }}
           />
-          {bbo.enableBBO && (
+          {bbo.bboStatus === BBOStatus.ON && (
             <div className={cn("oui-absolute oui-left-0 oui-bottom-1")}>
               <BBOOrderTypeSelect
                 value={bbo.bboType}
                 onChange={bbo.onBBOChange}
-                width={props.priceInputWidth}
+                contentStyle={{
+                  width: props.priceInputContainerWidth,
+                }}
               />
             </div>
           )}
@@ -966,7 +971,7 @@ function AdditionalConfigButton(props: {
 const BBOOrderTypeSelect = (props: {
   value?: BBOOrderType;
   onChange: (value: BBOOrderType) => void;
-  width?: number;
+  contentStyle?: CSSProperties;
 }) => {
   const options = [
     {
@@ -996,9 +1001,7 @@ const BBOOrderTypeSelect = (props: {
       onValueChange={props.onChange}
       contentProps={{
         className: "oui-bg-base-8 oui-w-full",
-        // style: {
-        //   minWidth: props.width,
-        // },
+        style: props.contentStyle,
       }}
       size={"sm"}
       classNames={{
