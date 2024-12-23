@@ -12,7 +12,7 @@ import {
 } from "@orderly.network/ui";
 import { TPSLWidget, TPSLWidgetProps } from "./tpsl.widget";
 import { PositionTPSLConfirm } from "./tpsl.ui";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocalStorage, useMarkPrice } from "@orderly.network/hooks";
 
 type TPSLSheetProps = {
@@ -31,8 +31,9 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
-  const isPositionTPSL = isEditing ? order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL : undefined;
-
+  const isPositionTPSL = isEditing
+    ? order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
+    : undefined;
 
   const updateSheetTitle = (title: string) => {
     if (isEditing) return;
@@ -63,9 +64,17 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
             return Promise.resolve(true);
           }
 
+          const maxQty = Math.abs(Number(position.position_qty));
+
+          const finalIsEditing =
+            isEditing ||
+            (!!order &&
+              order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
+              order.quantity === maxQty);
+
           return modal
             .confirm({
-              title: isEditing ? "Edit Order" : "Confirm Order",
+              title: finalIsEditing ? "Edit Order" : "Confirm Order",
               bodyClassName: "oui-pb-0 lg:oui-pb-0",
               onOk: () => {
                 return options.submit();
@@ -76,7 +85,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
                   isEditing={isEditing}
                   symbol={order.symbol!}
                   qty={Number(order.quantity)}
-                  maxQty={Math.abs(Number(position.position_qty))}
+                  maxQty={maxQty}
                   tpPrice={Number(order.tp_trigger_price)}
                   slPrice={Number(order.sl_trigger_price)}
                   side={order.side!}
@@ -95,7 +104,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
                 if (reject?.message) {
                   toast.error(reject.message);
                 }
-                
+
                 // setVisible(true);
                 return Promise.reject(false);
               }
@@ -136,7 +145,11 @@ export const PositionInfo = (props: {
           {position.symbol}
         </Text.formatted>
         <Flex gapX={1}>
-          {isPositionTPSL && <Badge size="xs" color="primary">Position</Badge>}
+          {isPositionTPSL && (
+            <Badge size="xs" color="primary">
+              Position
+            </Badge>
+          )}
           <Badge size="xs" color="neutral">
             TP/SL
           </Badge>

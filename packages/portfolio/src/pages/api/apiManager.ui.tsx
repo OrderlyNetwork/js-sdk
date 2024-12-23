@@ -233,6 +233,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
     },
     {
       title: "",
+      type: "action",
       dataIndex: "action",
       width: 120,
       render: (_, item) => {

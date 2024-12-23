@@ -2,7 +2,7 @@ import { FC } from "react";
 import { usePositionCellScript } from "./positionCell.script";
 import { PositionCell } from "./positionCell.ui";
 import { API } from "@orderly.network/types";
-import { PositionsProps } from "../../../types/types";
+import { PositionsProps } from "../../../../types/types";
 
 export const PositionCellWidget: FC<
   {
