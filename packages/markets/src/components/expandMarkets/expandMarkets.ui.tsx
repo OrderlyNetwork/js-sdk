@@ -62,7 +62,10 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         value={activeTab}
         onValueChange={onTabChange}
         classNames={{
-          tabsList: "oui-my-[6px] oui-px-3",
+          tabsList: cn(
+            "oui-my-[6px] oui-mx-3 ",
+            "oui-overflow-x-scroll oui-hide-scrollbar"
+          ),
           tabsContent: "oui-h-full",
         }}
         className={cls}
