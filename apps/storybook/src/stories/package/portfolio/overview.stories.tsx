@@ -182,11 +182,9 @@ export const Page: Story = {
             console.log("router adapter", op);
           },
         }}
-
-        // leftSideProps={{
-        //   current: '/portfolio',
-        //   items: items,
-        // }}
+        leftSideProps={{
+          current: "/portfolio",
+        }}
       >
         <OverviewModule.OverviewPage />
       </PortfolioLayoutWidget>
