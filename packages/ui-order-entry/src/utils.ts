@@ -18,6 +18,24 @@ export const BBOType2Label: Record<BBOOrderType, string> = {
   [BBOOrderType.QUEUE5]: "Queue 5",
 };
 
+/**
+ * if provide order_type, check order_type and order_type_ext, otherswise only check order_type_ext
+ */
+export function isBBOOrder(options: {
+  order_type?: OrderType;
+  order_type_ext?: OrderType;
+}) {
+  const { order_type, order_type_ext } = options;
+
+  const isBBO = [OrderType.ASK, OrderType.BID].includes(order_type_ext!);
+
+  if (order_type) {
+    return order_type === OrderType.LIMIT && isBBO;
+  }
+
+  return isBBO;
+}
+
 export function getOrderTypeByBBO(value: BBOOrderType, size: OrderSide) {
   if (
     [BBOOrderType.COUNTERPARTY1, BBOOrderType.COUNTERPARTY5].includes(value)

@@ -18,7 +18,12 @@ import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
-import { BBOStatus, getOrderLevelByBBO, getOrderTypeByBBO } from "./utils";
+import {
+  BBOStatus,
+  getOrderLevelByBBO,
+  getOrderTypeByBBO,
+  isBBOOrder,
+} from "./utils";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -36,6 +41,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [localBBOType, setLocalBBOType] = useLocalStorage<
     BBOOrderType | undefined
   >("orderly_order_bbo_type", undefined);
+
+  const lastBBOType = useRef<BBOOrderType>(localBBOType);
 
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
     useOrderEntry(inputs.symbol, {
@@ -246,12 +253,23 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     const enable =
       localBBOType && formattedOrder.order_type === OrderType.LIMIT;
 
-    if (enable && tpslSwitch) {
+    if (
+      enable &&
+      (tpslSwitch ||
+        [OrderType.POST_ONLY, OrderType.IOC, OrderType.FOK].includes(
+          formattedOrder.order_type_ext!
+        ))
+    ) {
       return BBOStatus.DISABLED;
     }
 
     return enable ? BBOStatus.ON : BBOStatus.OFF;
-  }, [localBBOType, formattedOrder.order_type, tpslSwitch]);
+  }, [
+    localBBOType,
+    tpslSwitch,
+    formattedOrder.order_type,
+    formattedOrder.order_type_ext!,
+  ]);
 
   const toggleBBO = () => {
     if (bboStatus === BBOStatus.DISABLED) {
@@ -259,31 +277,36 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
     if (localBBOType) {
       setLocalBBOType(undefined);
-      setOrderValue("order_type_ext", undefined);
+      // update formattedOrder values immediately instead of via useEffect
+      setValues({
+        order_type_ext: undefined,
+        level: undefined,
+      });
     } else {
-      setLocalBBOType(BBOOrderType.COUNTERPARTY1);
+      setLocalBBOType(lastBBOType.current || BBOOrderType.COUNTERPARTY1);
     }
   };
 
   const onBBOChange = (value: BBOOrderType) => {
     setLocalBBOType(value);
+    lastBBOType.current = value;
   };
 
   useEffect(() => {
     if (bboStatus === BBOStatus.DISABLED) {
+      const { order_type_ext } = formattedOrder;
       setValues({
-        order_type_ext: undefined,
+        // if order_type_ext is not bbo(ask, bid), keep previous value
+        order_type_ext: isBBOOrder({ order_type_ext })
+          ? undefined
+          : order_type_ext,
         level: undefined,
       });
     }
-  }, [bboStatus]);
+  }, [bboStatus, formattedOrder.order_type_ext]);
 
   useEffect(() => {
-    if (
-      localBBOType &&
-      formattedOrder.order_type === OrderType.LIMIT &&
-      !tpslSwitch
-    ) {
+    if (bboStatus === BBOStatus.ON) {
       const orderType = getOrderTypeByBBO(localBBOType, formattedOrder.side!);
       const orderLevel = getOrderLevelByBBO(localBBOType)!;
       setValues({
@@ -291,12 +314,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         level: orderLevel,
       });
     }
-  }, [
-    localBBOType,
-    formattedOrder.order_type,
-    formattedOrder.side!,
-    tpslSwitch,
-  ]);
+  }, [localBBOType, bboStatus, formattedOrder.side!]);
 
   // console.log(
   //   "===",

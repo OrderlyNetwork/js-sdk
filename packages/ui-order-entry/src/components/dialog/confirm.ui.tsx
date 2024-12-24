@@ -13,7 +13,7 @@ import { OrderSide, OrderType } from "@orderly.network/types";
 import { OrderlyOrder } from "@orderly.network/types";
 import { useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { BBOType2Label, getBBOType } from "../../utils";
+import { BBOType2Label, getBBOType, isBBOOrder } from "../../utils";
 
 type Props = {
   order: OrderlyOrder;
@@ -39,10 +39,7 @@ export const OrderConfirmDialog = (props: Props) => {
       return <Text intensity={80}>Market</Text>;
     }
 
-    if (
-      order_type === OrderType.LIMIT &&
-      [OrderType.ASK, OrderType.BID].includes(order_type_ext!)
-    ) {
+    if (isBBOOrder({ order_type, order_type_ext })) {
       const bboType = getBBOType({
         type: order_type_ext!,
         side,
