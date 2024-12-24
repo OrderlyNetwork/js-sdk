@@ -85,12 +85,6 @@ export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
     // if the type is market, price use markPrice
   }
 
-  if (![OrderType.ASK, OrderType.BID].includes(value)) {
-    values.level = undefined;
-    values.order_type_ext = undefined;
-  }
-
-  //
   // if (value === OrderType.STOP_MARKET || value === OrderType.STOP_LIMIT) {
   //   values.algo_type = AlgoOrderRootType.STOP;
   //   // values.type = OrderType.S

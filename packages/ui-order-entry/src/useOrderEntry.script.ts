@@ -211,34 +211,17 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       return;
     }
 
-    // if (
-    //   key === "order_type" &&
-    //   [OrderType.ASK, OrderType.BID].includes(value)
-    // ) {
-    //   const data = {
-    //     price: "",
-    //     [key]: value,
-    //   };
+    if (key === "order_type" && value !== OrderType.LIMIT) {
+      const data = {
+        level: undefined,
+        order_type_ext: undefined,
+        [key]: value,
+      };
 
-    //   setValues(data);
+      setValues(data);
 
-    //   return;
-    // }
-
-    // if (
-    //   key === "order_type" &&
-    //   ![OrderType.ASK, OrderType.BID].includes(value)
-    // ) {
-    //   const data = {
-    //     level: undefined,
-    //     order_type_ext: undefined,
-    //     [key]: value,
-    //   };
-
-    //   setValues(data);
-
-    //   return;
-    // }
+      return;
+    }
 
     setValue(key, value, options);
   };
