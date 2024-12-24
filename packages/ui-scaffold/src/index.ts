@@ -13,6 +13,7 @@ export {
   useScaffoldContext,
   ExpandableContext,
   type RouteOption,
+  type RouterAdapter,
 } from "./components/scaffoldContext";
 
 export * from "./components/footer";
