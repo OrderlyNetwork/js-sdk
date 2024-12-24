@@ -69,9 +69,9 @@ export const Liquidation: FC<LiquidationState> = (props) => {
         testIds={{
           body: "oui-testid-dataList-liquidation-tab-body",
         }}
-        // classNames={{
-        //   root: "!oui-h-[calc(100%_-_49px)]",
-        // }}
+        classNames={{
+          root: "!oui-h-[calc(100%_-_49px)]",
+        }}
       />
     </Flex>
   );

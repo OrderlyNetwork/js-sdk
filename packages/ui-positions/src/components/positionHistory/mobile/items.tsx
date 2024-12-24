@@ -69,10 +69,12 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
           gap={2}
           className="oui-text-2xs oui-text-base-contrast-54"
         >
-          <Flex justify={"between"} width={"100%"}>
-            <Text>Liquidation id</Text>
-            <Text intensity={98}>{record.liquidation_id}</Text>
-          </Flex>
+          {record.liquidation_id != null && (
+            <Flex justify={"between"} width={"100%"}>
+              <Text>Liquidation id</Text>
+              <Text intensity={98}>{record.liquidation_id}</Text>
+            </Flex>
+          )}
           <Flex justify={"between"} width={"100%"}>
             <Text>Liquidator fee</Text>
             <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>

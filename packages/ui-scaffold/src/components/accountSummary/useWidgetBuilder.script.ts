@@ -55,7 +55,7 @@ export const useTotalValueBuilderScript = () => {
   const onKeyToTop = (key: string) => {
     if (!keys.includes(key)) {
       setKeys([key, ...keys]);
-      setElementKeys([key, ...elementKeys]);
+      setElementKeys([key, ...elementKeys.filter((k: string) => k !== key)]);
       return;
     }
 
