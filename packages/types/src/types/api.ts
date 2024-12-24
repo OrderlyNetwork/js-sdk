@@ -409,7 +409,7 @@ export declare namespace API {
 
   export interface PositionHistory {
     position_id: number;                // Unique identifier for the position
-    liquidation_id: number;                // Unique identifier for the position
+    liquidation_id?: number;                // Unique identifier for the position
     position_status: string;            // Status of the position
     type: string;                       // Type of the position activity
     symbol: string;                     // Trading pair symbol
