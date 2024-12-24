@@ -79,7 +79,7 @@ export const useMaxQty = (
     const getSymbolInfo = symbolInfo[symbol];
 
     const filterAlgoOrders = orders.filter(
-      (item) => item.algo_order_id === undefined
+      (item) => item.algo_order_id === undefined || item.algo_type === "BRACKET"
     );
 
     // current symbol buy order quantity

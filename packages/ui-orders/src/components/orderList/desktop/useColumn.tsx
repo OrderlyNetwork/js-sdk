@@ -238,7 +238,7 @@ function instrument(option?: {
   onSymbolChange?: (symbol: API.Symbol) => void;
 }): Column<API.Order> {
   return {
-    title: "Instrument",
+    title: "Symbol",
     dataIndex: "symbol",
     fixed: "left",
     // className: "oui-h-[48px]",

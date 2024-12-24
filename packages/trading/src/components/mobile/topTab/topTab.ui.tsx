@@ -3,8 +3,9 @@ import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
 import { TopTabState, TopTabType } from "./topTab.script";
 import { MWebLastTrades } from "../lastTrades/lastTrades.widget";
 import { TradeDataWidget } from "../tradeData";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { TradingviewWidget } from "../tradingview/tradingview.widget";
 import { useTradingPageContext } from "../../../provider/context";
+import { KlineDragIcon } from "../../base/icons";
 
 export const TopTab: FC<
   TopTabState & {
@@ -25,7 +26,11 @@ export const TopTab: FC<
       className={props.className}
       classNames={{
         tabsList: "oui-p-2",
-        tabsContent: "oui-min-h-[176px] oui-max-h-[234px]",
+        tabsContent: "oui-min-h-[176px] oui-max-h-[396px]",
+      }}
+      style={{
+        marginBottom: props.tab === TopTabType.chart ? '8px' : 0,
+
       }}
       trailing={
         <button className="oui-px-5" onClick={props.toggleContentVisible}>
@@ -36,15 +41,8 @@ export const TopTab: FC<
       }
     >
       <TabPanel title="Chart" value={TopTabType.chart}>
-        <div className="oui-h-[234px] oui-pb-1">
-          <TradingviewWidget
-            symbol={props.symbol}
-            libraryPath={tradingViewConfig?.library_path}
-            mode={3}
-            scriptSRC={tradingViewConfig?.scriptSRC}
-            customCssUrl={tradingViewConfig?.customCssUrl}
-          />
-        </div>
+        <TradingviewWidget symbol={props.symbol} tradingViewConfig={tradingViewConfig}/>
+
       </TabPanel>
       <TabPanel title="Trades" value={TopTabType.trades}>
         <MWebLastTrades symbol={props.symbol} />

@@ -11,6 +11,7 @@ export enum MarketsType {
   FAVORITES,
   RECENT,
   ALL,
+  NEW_LISTING,
 }
 
 export interface FavoriteTab {
@@ -24,6 +25,10 @@ export interface Favorite {
 }
 
 export interface Recent {
+  name: string;
+}
+
+export interface NewListing {
   name: string;
 }
 
@@ -59,6 +64,7 @@ export type MarketsData = {
   favorites?: Favorite[];
   recent?: Recent[];
   selectedFavoriteTab?: FavoriteTab;
+  newListing?: NewListing[];
   tabSort?: TabSort;
 };
 
@@ -135,6 +141,10 @@ export const useMarketsStore = () => {
     return getStoreByKey("recent", []);
   };
 
+  const getNewListing = () => {
+    return getStoreByKey("newListing", []);
+  };
+
   const getTabSort = () => {
     return getStoreByKey("tabSort", {});
   };
@@ -145,6 +155,7 @@ export const useMarketsStore = () => {
   );
   const [favorites, setFavorites] = useState(getFavorites);
   const [recent, setRecent] = useState(getRecent);
+  const [newListing, setNewListing] = useState(getNewListing);
 
   const [tabSort, setTabSort] = useState(getTabSort);
 
@@ -214,10 +225,18 @@ export const useMarketsStore = () => {
       favoriteTabs,
       favorites,
       recent,
+      newListing,
       tabSort,
       selectedFavoriteTab,
     });
-  }, [favoriteTabs, favorites, recent, tabSort, selectedFavoriteTab]);
+  }, [
+    favoriteTabs,
+    favorites,
+    recent,
+    newListing,
+    tabSort,
+    selectedFavoriteTab,
+  ]);
 
   useEffect(() => {
     const event = ({ id: srcId, key, data }: MarketsEvent) => {
@@ -233,6 +252,8 @@ export const useMarketsStore = () => {
         setFavorites(data);
       } else if (key === "recent") {
         setRecent(data);
+      } else if (key === "newListing") {
+        setNewListing(data);
       }
     };
 
@@ -247,6 +268,7 @@ export const useMarketsStore = () => {
     favoriteTabs,
     favorites,
     recent,
+    newListing,
     tabSort,
     selectedFavoriteTab,
     updateFavorites: setFavorites,
@@ -267,13 +289,19 @@ export const useMarkets = (type: MarketsType = MarketsType.ALL) => {
 
   const store = useMarketsStore();
 
-  const { favorites, recent } = store;
+  const { favorites, recent, newListing } = store;
 
   useEffect(() => {
     const markets = addFieldToMarkets(futures, symbolsInfo);
-    const filterList = filterMarkets({ markets, favorites, recent, type });
+    const filterList = filterMarkets({
+      markets,
+      favorites,
+      recent,
+      newListing,
+      type,
+    });
     setMarkets(filterList);
-  }, [futures, symbolsInfo, favorites, recent, type]);
+  }, [futures, symbolsInfo, favorites, recent, newListing, type]);
 
   return [markets, store] as const;
 };
@@ -305,17 +333,27 @@ const filterMarkets = (params: {
   markets: MarketsItem[];
   favorites: Favorite[];
   recent: Recent[];
+  newListing: NewListing[];
   type: MarketsType;
 }) => {
-  const { markets, favorites, recent, type } = params;
+  const { markets, favorites, recent, newListing, type } = params;
   let curData: MarketsItem[] = [];
+
   if (type === MarketsType.ALL) {
     curData = markets;
+  } else if (type === MarketsType.NEW_LISTING) {
+    curData = markets
+      .filter((item) => isNewListing(item.created_time))
+      .sort((a, b) => b.created_time - a.created_time);
   } else {
-    const storageData = type === MarketsType.FAVORITES ? favorites : recent;
+    const storageData =
+      type === MarketsType.FAVORITES
+        ? favorites
+        : type === MarketsType.RECENT
+        ? recent
+        : newListing;
 
     const keys = storageData.map((item) => item.name);
-
     curData = markets?.filter((item) => keys.includes(item.symbol));
   }
 
@@ -324,14 +362,26 @@ const filterMarkets = (params: {
   return curData?.map((item) => ({
     ...item,
     isFavorite:
-      type == MarketsType.FAVORITES ? true : favoriteKeys.includes(item.symbol),
+      type === MarketsType.FAVORITES
+        ? true
+        : favoriteKeys.includes(item.symbol),
   }));
+};
+
+function isEmpty(value: any) {
+  return value === undefined || value === null;
+}
+
+const isNewListing = (createdTime: number): boolean => {
+  const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  return now - createdTime < thirtyDaysInMs;
 };
 
 function get8hFunding(est_funding_rate: number, funding_period: number) {
   let funding8h = 0;
 
-  if (est_funding_rate === undefined || est_funding_rate === null) {
+  if (isEmpty(est_funding_rate)) {
     return null;
   }
 
@@ -352,8 +402,8 @@ function get24hChange(params: { change: number; close: number; open: number }) {
     return change;
   }
 
-  if (close !== undefined && open !== undefined) {
-    if (open === 0 || open === null) {
+  if (!isEmpty(close) && !isEmpty(open)) {
+    if (open === 0) {
       return 0;
     }
     return new Decimal(close).minus(open).div(open).toNumber();

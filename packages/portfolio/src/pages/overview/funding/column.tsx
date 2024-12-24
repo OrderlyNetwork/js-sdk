@@ -6,7 +6,7 @@ export const useFundingHistoryColumns = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: "Instrument",
+        title: "Symbol",
         dataIndex: "symbol",
         width: 80,
         rule: "symbol",

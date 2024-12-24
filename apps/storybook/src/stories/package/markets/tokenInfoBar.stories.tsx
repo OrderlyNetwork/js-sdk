@@ -18,7 +18,7 @@ const meta: Meta<typeof TokenInfoBarFullWidget> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DepositTokenInfoBar: Story = {
+export const DesktopTokenInfoBar: Story = {
   render: (args) => {
     return (
       <Flex direction="column" itemAlign="start" gapY={5}>

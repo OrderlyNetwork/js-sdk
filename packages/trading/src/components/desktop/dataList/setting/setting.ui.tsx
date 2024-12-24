@@ -18,18 +18,18 @@ export const Setting: FC<SettingState> = (props) => {
     <Flex gap={0}>
       <Flex gap={1}>
         <Checkbox
-          id="oui-checkbox-showAllInstruments"
+          id="oui-checkbox-hideOtherSymbols"
           color="white"
-          checked={props.showAllSymbol}
+          checked={props.hideOtherSymbols}
           onCheckedChange={(checked: boolean) => {
-            props.setShowAllSymbol(checked);
+            props.setHideOtherSymbols(checked);
           }}
         />
         <label
           className="oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer"
-          htmlFor="oui-checkbox-showAllInstruments"
+          htmlFor="oui-checkbox-hideOtherSymbols"
         >
-          Show all trading pairs
+          Hide other symbols
         </label>
       </Flex>
 

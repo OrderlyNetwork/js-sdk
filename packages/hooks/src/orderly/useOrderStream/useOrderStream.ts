@@ -1,5 +1,5 @@
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   OrderSide,
   OrderEntity,
@@ -63,9 +63,10 @@ export const useOrderStream = (
     size = 50,
     page,
     dateRange,
-    includes = ["ALL"],
-    excludes = [],
   } = params;
+
+  const [includes, setIncludes] = useState<CombineOrderType[]>(params.includes ?? ['ALL'])
+  const [excludes, setExcludes] = useState<CombineOrderType[]>(params.excludes ?? []);
 
   const { data: markPrices } = useMarkPricesStream();
 

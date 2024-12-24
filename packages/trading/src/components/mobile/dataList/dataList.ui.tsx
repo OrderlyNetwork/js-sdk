@@ -8,10 +8,18 @@ import {
   Tabs,
   Text,
 } from "@orderly.network/ui";
-import { DataListState, DataListTabType } from "./dataList.script";
+import {
+  DataListState,
+  DataListTabSubType,
+  DataListTabType,
+} from "./dataList.script";
 import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
-import { MobilePositionsWidget } from "@orderly.network/ui-positions";
+import {
+  MobileLiquidationWidget,
+  MobilePositionHistoryWidget,
+  MobilePositionsWidget,
+} from "@orderly.network/ui-positions";
 import { PositionHeaderWidget } from "../../base/positionHeader";
 
 export const DataList: FC<
@@ -26,7 +34,8 @@ export const DataList: FC<
       size="lg"
       className={props.className}
       classNames={{
-        tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2",
+        tabsList:
+          "oui-bg-base-9 oui-rounded-t-xl oui-p-2 oui-overflow-x-scroll oui-hide-scrollbar",
       }}
     >
       <TabPanel
@@ -68,7 +77,17 @@ export const DataList: FC<
         />
       </TabPanel>
       <TabPanel title={DataListTabType.history} value={DataListTabType.history}>
-        <OrdersView type={TabType.orderHistory} {...props} />
+        <HistoryTab {...props} />
+      </TabPanel>
+      <TabPanel
+        title={DataListTabType.liquidation}
+        value={DataListTabType.liquidation}
+      >
+        <MobileLiquidationWidget
+          enableLoadMore={true}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
+          classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
+        />
       </TabPanel>
     </Tabs>
   );
@@ -81,7 +100,6 @@ const PositionsView: FC<DataListState> = (props) => {
         pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
         symbol={props.showAllSymbol ? undefined : props.symbol}
         unPnlPriceBasis={props.unPnlPriceBasis}
-        tabletMediaQuery={props.tabletMediaQuery}
       />
       <MobilePositionsWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
@@ -145,9 +163,9 @@ const SymbolControlHeader: FC<
       <Flex className="oui-gap-[2px] oui-cursor-pointer">
         <Checkbox
           color="white"
-          checked={props.showAllSymbol}
+          checked={!props.showAllSymbol}
           onCheckedChange={(checked: boolean) => {
-            props.setShowAllSymbol(checked);
+            props.setShowAllSymbol(!checked);
           }}
         />
         <Text
@@ -157,7 +175,7 @@ const SymbolControlHeader: FC<
             props.setShowAllSymbol(!props.showAllSymbol);
           }}
         >
-          Show all trading pairs
+          Hide other symbols
         </Text>
       </Flex>
       <Button
@@ -171,5 +189,37 @@ const SymbolControlHeader: FC<
         Close All
       </Button>
     </Flex>
+  );
+};
+
+const HistoryTab: FC<DataListState> = (props) => {
+  return (
+    <div className="oui-min-h-[300px]">
+      <Tabs
+        value={props.subTab}
+        onValueChange={(e: any) => props.setSubTab(e)}
+        size="md"
+        classNames={{
+          tabsList: "oui-bg-base-9 oui-rounded-t-xl oui-p-2",
+        }}
+      >
+        <TabPanel
+          title={DataListTabSubType.positionHistory}
+          value={DataListTabSubType.positionHistory}
+        >
+          <MobilePositionHistoryWidget
+            symbol={props.showAllSymbol ? undefined : props.symbol}
+            onSymbolChange={props.onSymbolChange}
+            classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
+          />
+        </TabPanel>
+        <TabPanel
+          title={DataListTabSubType.orderHistory}
+          value={DataListTabSubType.orderHistory}
+        >
+          <OrdersView type={TabType.orderHistory} {...props} />
+        </TabPanel>
+      </Tabs>
+    </div>
   );
 };

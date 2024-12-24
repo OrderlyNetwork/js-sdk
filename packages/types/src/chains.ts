@@ -535,20 +535,18 @@ export const Sei = {
   chainLogo: "",
 };
 
-
-
-export const StoryTestnet= {
+export const StoryTestnet = {
   name: "Story Odyssey Testnet",
   public_rpc_url: "https://rpc.odyssey.storyrpc.io/",
-  chain_id:1516,
+  chain_id: 1516,
   currency_symbol: "IP",
   explorer_base_url: "",
-  vault_address: ""
+  vault_address: "",
 };
 export const StoryOdysseyTestnet = {
   id: 1329,
   chainInfo: {
-    chainId: `0x${(StoryTestnet.chain_id).toString(16)}`,
+    chainId: `0x${StoryTestnet.chain_id.toString(16)}`,
     chainName: StoryTestnet.name,
     nativeCurrency: {
       name: "IP",
@@ -567,7 +565,7 @@ export const StoryOdysseyTestnet = {
   chainNameShort: "SEI",
   requestRpc: "https://evm-rpc.sei-apis.com",
   chainLogo: "",
-}
+};
 export const chainsInfoMap: Map<number, Chain> = new Map([
   [Ethereum.id, Ethereum],
   [Avalanche.id, Avalanche],
@@ -590,19 +588,20 @@ export const chainsInfoMap: Map<number, Chain> = new Map([
   [MantleSepolia.id, MantleSepolia],
   [PolygonAmoy.id, PolygonAmoy],
   [Sei.id, Sei],
-  [StoryOdysseyTestnet.id, StoryOdysseyTestnet]
+  [StoryOdysseyTestnet.id, StoryOdysseyTestnet],
 ]);
 
-export const SolanaDevnet= {
-  // todo solana chain config
-  name: "Solana Devnet",
-  public_rpc_url: "",
-  chain_id: 901901901,
-  currency_symbol: "SOL",
-  explorer_base_url: "",
-  vault_address: ""
-};
-
+export const SolanaDevnet = {
+  id: 901901901,
+  chainInfo: {
+    name: "Solana Devnet",
+    public_rpc_url: "",
+    chainId: 901901901,
+    currency_symbol: "SOL",
+    explorer_base_url: "",
+    vault_address: "",
+  },
+} as unknown as typeof Arbitrum;
 
 export const TestnetChains = [
   {
@@ -626,15 +625,21 @@ export const TestnetChains = [
     ],
   },
   {
-    network_infos: SolanaDevnet,
+    network_infos: {
+      name: "Solana Devnet",
+      public_rpc_url: "",
+      chain_id: 901901901,
+      currency_symbol: "SOL",
+      explorer_base_url: "",
+      vault_address: "",
+    },
     token_infos: [
       {
         symbol: "USDC",
         address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
         decimals: 6,
       },
-
-    ]
+    ],
   },
   {
     network_infos: StoryTestnet,
@@ -644,8 +649,7 @@ export const TestnetChains = [
         address: "0xF1815bd50389c46847f0Bda824eC8da914045D14",
         decimals: 6,
       },
-
-    ]
+    ],
   },
   // {
   //   network_infos: {
@@ -705,7 +709,6 @@ export const TestnetChains = [
 
 export const defaultMainnetChains = [Arbitrum, Base, Optimism];
 export const defaultTestnetChains = [ArbitrumSepolia];
-
 
 export enum ChainNamespace {
   evm = "EVM",

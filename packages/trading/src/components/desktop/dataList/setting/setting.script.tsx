@@ -1,28 +1,8 @@
-import { useLocalStorage } from "@orderly.network/hooks";
+import { SettingWidgetProps } from "./setting.widget";
 
-export const useSettingScript = (props: {
-  pnlNotionalDecimalPrecision: any;
-  setPnlNotionalDecimalPrecision: (value: number) => void;
-  unPnlPriceBasis: any;
-  setUnPnlPriceBasic: (value: string) => void;
-  showAllSymbol: any;
-  setShowAllSymbol: (value: boolean) => void;
-}) => {
-  const {
-    pnlNotionalDecimalPrecision,
-    setPnlNotionalDecimalPrecision,
-    unPnlPriceBasis,
-    setUnPnlPriceBasic,
-    showAllSymbol,
-    setShowAllSymbol,
-  } = props;
+export const useSettingScript = (props: SettingWidgetProps) => {
   return {
-    pnlNotionalDecimalPrecision,
-    setPnlNotionalDecimalPrecision,
-    unPnlPriceBasis,
-    setUnPnlPriceBasic,
-    showAllSymbol,
-    setShowAllSymbol,
+    ...props,
   };
 };
 

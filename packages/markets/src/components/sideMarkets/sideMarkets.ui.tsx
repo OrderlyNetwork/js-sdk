@@ -9,6 +9,7 @@ import { ExpandMarketsWidget } from "../expandMarkets";
 import { FavoritesListWidget } from "../favoritesList";
 import { RecentListWidget } from "../recentList";
 import { MarketsListWidget } from "../marketsList";
+import { NewListingListWidget } from "../newListingList";
 import { useMarketsContext } from "../marketsProvider";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn & {
@@ -38,6 +39,10 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
 
     if (activeTab === "recent") {
       return <RecentListWidget collapsed={collapsed} />;
+    }
+
+    if (activeTab === "newListing") {
+      return <NewListingListWidget collapsed={collapsed} />;
     }
 
     return (

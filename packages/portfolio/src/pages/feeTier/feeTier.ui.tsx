@@ -206,7 +206,7 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
         <Box
           angle={90}
           gradient="brand"
-          className="oui-rounded-[6px] oui-absolute oui-w-full"
+          className="oui-rounded-md oui-absolute oui-w-full"
           style={{
             top: `${top}px`,
             height: "48px",
