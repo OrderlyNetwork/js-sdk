@@ -191,10 +191,12 @@ export const SymbolInfo = (props: {
               itemAlign={"start"}
               className="oui-text-2xs"
             >
-              <Flex justify={"between"} width={"100%"} gap={2}>
-                <Text intensity={54}>Liquidation id</Text>
-                <Text intensity={98}>{record.liquidation_id}</Text>
-              </Flex>
+              {record.liquidation_id != null && (
+                <Flex justify={"between"} width={"100%"} gap={2}>
+                  <Text intensity={54}>Liquidation id</Text>
+                  <Text intensity={98}>{record.liquidation_id}</Text>
+                </Flex>
+              )}
               <Flex justify={"between"} width={"100%"} gap={2}>
                 <Text intensity={54}>Liquidator fee</Text>
                 <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>
