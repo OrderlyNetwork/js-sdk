@@ -1,7 +1,7 @@
-import { OrderEntity } from "@orderly.network/types";
+import { OrderEntity, OrderlyOrder } from "@orderly.network/types";
 import { pick } from "ramda";
 import { BaseOrderCreator } from "./baseCreator";
-import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
+import { ValuesDepConfig, VerifyResult } from "./interface";
 import { checkNotional } from "../../utils/createOrder";
 
 export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
@@ -26,13 +26,13 @@ export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
   }
 
   async validate(
-    values: OrderFormEntity,
+    values: OrderlyOrder,
     configs: ValuesDepConfig
   ): Promise<VerifyResult> {
     return this.baseValidate(values, configs).then((errors) => {
       delete errors["total"];
 
-      let { order_quantity, order_price, reduce_only } = values;
+      let { order_quantity, order_price, reduce_only, level } = values;
 
       const { symbol } = configs;
 
@@ -55,6 +55,14 @@ export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
           message: notionalHintStr,
         };
       }
+
+      if (level === undefined || level === null) {
+        errors.level = {
+          type: "required",
+          message: "Level is required",
+        };
+      }
+
       return errors;
     });
   }

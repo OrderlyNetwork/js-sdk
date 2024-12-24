@@ -32,7 +32,6 @@ export class OrderFactory {
       case OrderType.MARKET:
         return new MarketOrderCreator();
       case OrderType.ASK:
-        return new BBOOrderCreator();
       case OrderType.BID:
         return new BBOOrderCreator();
       case OrderType.IOC:
