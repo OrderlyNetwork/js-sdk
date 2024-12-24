@@ -7,7 +7,13 @@ import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import type { FullOrderState } from "./orderEntry.store";
-import { API, OrderlyOrder, OrderType } from "@orderly.network/types";
+import {
+  SDKError,
+  API,
+  OrderlyOrder,
+  OrderType,
+  OrderLevel,
+} from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
 import { VerifyResult } from "../../services/orderCreator/interface";
@@ -22,7 +28,6 @@ import {
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
-import { SDKError } from "@orderly.network/types";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -160,6 +165,8 @@ const useOrderEntry = (
 
   const askAndBid = useRef<number[][]>([[]]); // [[ask0, bid0],...,[ask4,bid4]]
   const lastChangedField = useRef<keyof FullOrderState | undefined>();
+  const lastOrderTypeExt = useRef<OrderType>();
+  const lastLevel = useRef<OrderLevel>();
 
   // const [errors, setErrors] = useState<VerifyResult | null>(null);
 
@@ -196,10 +203,19 @@ const useOrderEntry = (
   );
 
   const updateOrderPrice = () => {
-    const { order_type_ext, level } = formattedOrder;
+    const order_type_ext =
+      formattedOrder.order_type_ext ?? lastOrderTypeExt.current;
+    const level = formattedOrder.level ?? lastLevel.current;
+
+    if (!order_type_ext || level === undefined) {
+      return;
+    }
+    lastOrderTypeExt.current = order_type_ext;
+    lastLevel.current = level;
+
     const index = order_type_ext === OrderType.ASK ? 0 : 1;
     const price = askAndBid.current?.[level!]?.[index];
-    if (!isNaN(price)) {
+    if (price && !isNaN(price)) {
       setValue("order_price", price, {
         shouldUpdateLastChangedField: false,
       });
