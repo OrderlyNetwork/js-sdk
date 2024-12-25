@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.0.1-internal-20241226.2
+
+### Patch Changes
+
+- update
+
 ## 2.0.1-internal-20241226.1
 
 ### Patch Changes
