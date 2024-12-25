@@ -850,11 +850,16 @@ function avgOpen(option?: {
           }
         : undefined,
     className: option?.className,
-    render: (value: string, record) => (
-      <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {record.average_executed_price}
-      </Text.numeral>
-    ),
+    render: (value: string, record) => {
+      if (record.type === OrderType.MARKET && !value) {
+        return "--";
+      }
+      return (
+        <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+          {value}
+        </Text.numeral>
+      );
+    },
   };
 }
 

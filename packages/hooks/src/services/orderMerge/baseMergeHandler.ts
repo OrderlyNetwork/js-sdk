@@ -88,7 +88,9 @@ export abstract class BaseMergeHandler<
           // for new list, remove the order if it exists
           if (
             key.startsWith("orders:INCOMPLETE") ||
-            key.startsWith("orders:NEW")
+            key.startsWith("orders:NEW") ||
+            // all orders key
+            key.startsWith("orders:")
           ) {
             // if fullfilled, remove from the list
             if (this.isFullFilled()) {
