@@ -26,8 +26,9 @@ export const PositionsPage = (props: PositionsProps) => {
       {/* 26(title height) + 1(divider) + 32 (padding) */}
       <Box width="100%" className="oui-h-[calc(100%_-_59px)]">
         <Tabs value={tab} onValueChange={(e) => setTab(e as any)} classNames={{
-          tabsList: "!oui-border-none oui-pb-1"
-        }}>
+          tabsList: "!oui-border-none oui-pb-1",
+          tabsContent: "oui-h-[calc(100%_-_28px)]",
+        }} className="oui-h-full">
           <TabPanel value={TabsType.positions} title={TabsType.positions}>
             <PositionsWidget {...props} />
           </TabPanel>

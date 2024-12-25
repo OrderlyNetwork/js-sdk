@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useState, useMemo, useCallback, useEffect} from "react";
 import { useConfig } from "@orderly.network/hooks";
-import { useChains, useWalletConnector } from "@orderly.network/hooks";
+import { useChains, useWalletConnector, useLocalStorage } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
 
+const KEY = 'orderly_selected_chains'
+const MAX_STORAGE_CHAINS = 6
 export const useChainSelectorBuilder = (options?: {
   networkId?: NetworkId;
   bridgeLessOnly?: boolean;
@@ -12,40 +14,14 @@ export const useChainSelectorBuilder = (options?: {
   const config = useConfig();
   const [chains, { checkChainSupport }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
+  const [storageChainsIds, setStorageChainsIds] = useLocalStorage<string[]>(KEY, []);
 
   const { onChainChanged, currentChainId, setCurrentChainId } = useAppContext();
 
-  const onChainChange = async (chain: { id: number }) => {
-    console.log('-- on chanin change ', chain, connectedChain, currentChainId);
-    if (!connectedChain) {
-      setCurrentChainId(chain.id);
-      return {
-        result: true,
-        wrongNetwork: false,
-        chainId: chain.id,
-      }
-      // return Promise.reject("No connected chain");
-    }
-    const result = await setChain({
-      chainId: chain.id,
-    });
-
-    if (!result) return result;
-
-    return {
-      result,
-      wrongNetwork: !checkChainSupport(
-        chain.id,
-        config.get("networkId") as NetworkId
-      ),
-      chainId: chain.id,
-    };
-  };
-
   const filteredChains = useMemo(() => {
-    const filteredChains = bridgeLessOnly
-      ? chains.mainnet.filter((chain) => chain.network_infos.bridgeless)
-      : chains.mainnet;
+  const filteredChains = bridgeLessOnly
+    ? chains.mainnet.filter((chain) => chain.network_infos.bridgeless)
+    : chains.mainnet;
 
     const _chains = {
       mainnet: filteredChains.map((chain) => ({
@@ -62,22 +38,50 @@ export const useChainSelectorBuilder = (options?: {
       })),
     };
 
-    if (typeof networkId === "undefined") {
-      return _chains;
-    }
-
-    if (networkId === "testnet") {
-      return {
-        testnet: _chains.testnet,
-      };
-    }
-
-    return {
-      mainnet: _chains.mainnet,
-    };
+    return _chains
   }, [chains, networkId, bridgeLessOnly]);
 
+  const storageChains = useMemo(() =>  filteredChains?.mainnet?.filter(item => storageChainsIds.includes(item.id)) , [storageChainsIds, filteredChains]) || []; 
+
+  const saveChainIdToLocalStorage = useCallback((id: number) => {
+    // if (!storageChainsIds) return 
+    if(!filteredChains.mainnet?.filter(item => item.id === id)) return 
+    let _storageChains = storageChainsIds?.filter((storageChainsId: number) => storageChainsId !== id)
+    _storageChains = [id, ..._storageChains].slice(0, MAX_STORAGE_CHAINS)
+    setStorageChainsIds(_storageChains)
+  }, [filteredChains.mainnet, storageChainsIds, setStorageChainsIds]);
+  
+  const onChainChange = async (chain: { id: number }) => {
+    // console.log('-- on chanin change ', chain, connectedChain, currentChainId);
+    if (!connectedChain) {
+      setCurrentChainId(chain.id);
+      saveChainIdToLocalStorage(chain.id)
+      return {
+        result: true,
+        wrongNetwork: false,
+        chainId: chain.id,
+      }
+      // return Promise.reject("No connected chain");
+    }
+    const result = await setChain({
+      chainId: chain.id,
+    });
+
+    if (!result) return result;
+    saveChainIdToLocalStorage(chain.id)
+    return {
+      result,
+      wrongNetwork: !checkChainSupport(
+        chain.id,
+        config.get("networkId") as NetworkId
+      ),
+      chainId: chain.id,
+    };
+  };
+
+
   return {
+    storageChains,
     chains: filteredChains,
     onChainChange,
     chainChangedCallback: onChainChanged,

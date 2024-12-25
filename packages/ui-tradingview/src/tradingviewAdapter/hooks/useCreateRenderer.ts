@@ -78,8 +78,12 @@ export default function useCreateRenderer(
   }, [renderer, positions, symbol, displayControlSetting, state]);
 
   useEffect(() => {
+    if (!displayControlSetting || !displayControlSetting.buySell) {
+      renderer?.renderFilledOrders([], 6);
+      return;
+    }
     renderer?.renderFilledOrders(fillOrders?? [], base_dp ?? 6);
-  }, [renderer, fillOrders, base_dp]);
+  }, [renderer, fillOrders, base_dp, displayControlSetting]);
 
   useEffect(() => {
     let tpslOrder: any = [];
