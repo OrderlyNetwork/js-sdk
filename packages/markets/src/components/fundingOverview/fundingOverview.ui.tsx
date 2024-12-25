@@ -1,6 +1,6 @@
 // fundingOverview.ui.tsx
 import { FC, useState } from "react";
-import { DataTable, Text, Flex } from "@orderly.network/ui";
+import { DataTable, Text, Flex, cn } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 import {
   ProcessedFundingData,
@@ -221,6 +221,14 @@ export const FundingOverview: FC<FundingOverviewProps> = (props) => {
         dataSource={dataSource}
         loading={isLoading}
         bordered
+        onRow={() => {
+          return {
+            className: cn("oui-h-[48px] oui-cursor-pointer"),
+          };
+        }}
+        classNames={{
+          header: "oui-h-12",
+        }}
         emptyView={emptyView}
         pagination={pagination}
         onSort={onSort}

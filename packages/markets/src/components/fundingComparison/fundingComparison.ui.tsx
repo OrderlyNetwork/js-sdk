@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Column } from "@orderly.network/ui";
+import { cn, Column } from "@orderly.network/ui";
 import { Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { DataTable } from "@orderly.network/ui";
@@ -79,6 +79,14 @@ export const FundingComparison: FC<FundingComparisonProps> = ({
       columns={columns}
       dataSource={data}
       loading={isLoading}
+      onRow={() => {
+        return {
+          className: cn("oui-h-[48px] oui-cursor-pointer"),
+        };
+      }}
+      classNames={{
+        header: "oui-h-12",
+      }}
       bordered
       pagination={pagination}
     />
