@@ -33,7 +33,7 @@ registerSimpleDialog(ChainSelectorId, ChainSelectorWidget, {
 registerSimpleSheet(ChainSelectorSheetId, ChainSelectorWidget, {
   title: "Switch Network",
   classNames: {
-    content: "oui-bg-base-8 !important",
-    body: "oui-bg-base-8 !important",
+    content: "!oui-bg-base-8",
+    body: "!oui-bg-base-8",
   },
 });
