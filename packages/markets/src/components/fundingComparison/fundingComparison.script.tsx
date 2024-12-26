@@ -3,13 +3,11 @@ import { useMemo } from "react";
 import { usePagination } from "@orderly.network/ui";
 
 export const exchanges = [
-  "WOOFi Pro",
   "Binance",
   "OKX",
   "Bybit",
   "dYdX",
   "Bitget",
-  "Upbit",
   "Kucoin",
 ];
 

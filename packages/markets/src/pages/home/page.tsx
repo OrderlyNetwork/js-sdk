@@ -27,9 +27,6 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
           size="xl"
           value={activeTab}
           onValueChange={setActiveTab}
-          classNames={{
-            tabsList: "data-[state=active]:after:hidden",
-          }}
         >
           <TabPanel
             title="Markets"
