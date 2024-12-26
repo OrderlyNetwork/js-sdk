@@ -1,5 +1,35 @@
 # @orderly.network/hooks
 
+## 2.0.1-internal-20241226.4
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-internal-20241226.4
+  - @orderly.network/web3-provider-ethers@2.0.1-internal-20241226.4
+  - @orderly.network/default-evm-adapter@2.0.1-internal-20241226.4
+  - @orderly.network/types@2.0.1-internal-20241226.4
+  - @orderly.network/utils@2.0.1-internal-20241226.4
+  - @orderly.network/core@2.0.1-internal-20241226.4
+  - @orderly.network/perp@4.0.1-internal-20241226.4
+  - @orderly.network/net@2.0.1-internal-20241226.4
+
+## 2.0.1-internal-20241226.3
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/default-solana-adapter@2.0.1-internal-20241226.3
+  - @orderly.network/web3-provider-ethers@2.0.1-internal-20241226.3
+  - @orderly.network/default-evm-adapter@2.0.1-internal-20241226.3
+  - @orderly.network/types@2.0.1-internal-20241226.3
+  - @orderly.network/utils@2.0.1-internal-20241226.3
+  - @orderly.network/core@2.0.1-internal-20241226.3
+  - @orderly.network/perp@4.0.1-internal-20241226.3
+  - @orderly.network/net@2.0.1-internal-20241226.3
+
 ## 2.0.1-internal-20241226.2
 
 ### Patch Changes
