@@ -42,7 +42,7 @@ export const ChainMenu = (props: {
               }>(ChainSelectorId, {
                 networkId: props.networkId,
                 classNames: {
-                  body: "oui-pt-0",
+                  body: "!oui-pt-0",
                 },
               })
               .then(
