@@ -218,7 +218,8 @@ const ChainSelect = (props: ChainSelectProps) => {
         <SelectPrimitive.Content
           position={"popper"}
           className={content({
-            className: "xl:oui-max-h-[500px] oui-max-h-[562px] oui-bg-base-9",
+            className:
+              "xl:oui-max-h-[500px] oui-max-h-[562px] oui-bg-base-9 oui-w-[260px]",
           })}
           align={"end"}
           sideOffset={12}
@@ -233,7 +234,7 @@ const ChainSelect = (props: ChainSelectProps) => {
               variant="contained"
               size="sm"
               classNames={{
-                tabsList: "oui-mt-3",
+                tabsList: "oui-my-3 lg:oui-pl-4 sm:oui-pl-0",
               }}
               onValueChange={(e) => onTabChange(e)}
             >
@@ -244,7 +245,10 @@ const ChainSelect = (props: ChainSelectProps) => {
                 {!props.storageChains?.length ? (
                   <Flex className="oui-mt-2" />
                 ) : (
-                  <Flex gap={2} className="oui-text-center oui-mt-3">
+                  <Flex
+                    gap={2}
+                    className="oui-text-center oui-mb-3 lg:oui-pl-4 sm:oui-pl-0"
+                  >
                     {props.storageChains?.map((item) => {
                       return (
                         <RecommandChain
