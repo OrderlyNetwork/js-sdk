@@ -48,8 +48,6 @@ export const useFundingComparisonScript = () => {
     });
   }, [data, exchanges]);
 
-  console.log(data);
-
   return {
     data: processedData,
     isLoading,
