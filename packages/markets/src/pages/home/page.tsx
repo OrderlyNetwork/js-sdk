@@ -1,7 +1,8 @@
-import { FC } from "react";
-import { Box, cn, Text } from "@orderly.network/ui";
+import { FC, useState } from "react";
+import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { MarketsDataListWidget } from "./dataList";
 import { MarketsHeaderWidget } from "./header/widget";
+import { FundingWidget } from "./funding/widget";
 import {
   MarketsProvider,
   MarketsProviderProps,
@@ -12,6 +13,8 @@ export type MarketsHomePageProps = MarketsProviderProps & {
 };
 
 export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
+  const [activeTab, setActiveTab] = useState("markets");
+
   return (
     <MarketsProvider onSymbolChange={props.onSymbolChange}>
       <Box
@@ -19,13 +22,31 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
         className={cn("oui-font-semibold", props.className)}
         p={6}
       >
-        <Text size="2xl" weight="semibold">
-          Markets
-        </Text>
-
-        <MarketsHeaderWidget />
-
-        <MarketsDataListWidget />
+        <Tabs
+          variant="text"
+          size="xl"
+          value={activeTab}
+          onValueChange={setActiveTab}
+          classNames={{
+            tabsList: "data-[state=active]:after:hidden",
+          }}
+        >
+          <TabPanel
+            title="Markets"
+            value="markets"
+            testid="oui-testid-markets-tab"
+          >
+            <MarketsHeaderWidget />
+            <MarketsDataListWidget />
+          </TabPanel>
+          <TabPanel
+            title="Funding"
+            value="funding"
+            testid="oui-testid-funding-tab"
+          >
+            <FundingWidget />
+          </TabPanel>
+        </Tabs>
       </Box>
     </MarketsProvider>
   );
