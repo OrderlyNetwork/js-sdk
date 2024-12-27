@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.0.1-internal-20250102.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@2.0.1-internal-20250102.0
+
 ## 2.0.0
 
 ### Major Changes

@@ -45,5 +45,7 @@
     "@orderly.network/web3-modal": "2.0.0",
     "@orderly.network/web3-provider-ethers": "2.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "dirty-bees-begin"
+  ]
 }
