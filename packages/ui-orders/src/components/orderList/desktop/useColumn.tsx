@@ -155,6 +155,7 @@ export const useOrderColumn = (props: {
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
+            symbolsInfo: props.symbolsInfo,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
@@ -230,6 +231,7 @@ export const useOrderColumn = (props: {
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
+            symbolsInfo: props.symbolsInfo,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
@@ -758,7 +760,7 @@ function realizedPnL(option?: {
 
       return commifyOptional(value);
     },
-    render: (_value: number | undefined) => {
+    render: (_value: number | undefined, record: any) => {
       const { quote_dp } = useSymbolContext();
       const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
       const value = new Decimal(_value ?? 0)
