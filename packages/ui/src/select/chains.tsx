@@ -174,7 +174,6 @@ const ChainSelect = (props: ChainSelectProps) => {
       {...rest}
       value={`${currentChain}`}
       onValueChange={onChange}
-      open={open}
     >
       <SelectPrimitive.Trigger className={trigger()} asChild>
         <button
@@ -223,9 +222,9 @@ const ChainSelect = (props: ChainSelectProps) => {
           })}
           align={"end"}
           sideOffset={12}
-          // onCloseAutoFocus={(e) => {
-          //   e.preventDefault();
-          // }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+          }}
           {...contentProps}
         >
           <SelectPrimitive.Viewport className={viewport()}>
