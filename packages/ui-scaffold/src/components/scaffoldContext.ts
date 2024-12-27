@@ -7,13 +7,13 @@ export type RouteOption = {
   target?: string;
 };
 
-export type routerAdapter = {
+export type RouterAdapter = {
   onRouteChange: (option: RouteOption) => void;
   currentPath?: string;
 };
 
 export type ExpandableState = {
-  routerAdapter?: routerAdapter;
+  routerAdapter?: RouterAdapter;
   expanded?: boolean;
   setExpand: (expand: boolean) => void;
   checkChainSupport: (chainId: number | string) => boolean;

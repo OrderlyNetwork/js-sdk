@@ -3,6 +3,7 @@ import { usePositionsRowContext } from "./positionRowContext";
 import { AlgoOrderType, API, OrderSide } from "@orderly.network/types";
 import { useSymbolsInfo, utils } from "@orderly.network/hooks";
 import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { TPSLEditIcon } from "./components";
 
 export const TriggerPrice: FC<{
   stopLossPrice?: number;
@@ -22,7 +23,6 @@ export const TriggerPrice: FC<{
     />
   );
 };
-
 
 export const TriggerPriceItem: FC<{
   qty: number;
@@ -49,7 +49,7 @@ export const TriggerPriceItem: FC<{
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
 
   return (
-    <Flex >
+    <Flex>
       <Text intensity={54} className="oui-mr-1">{`${type} PnL:`}</Text>
       <Text.formatted
         rule="price"
@@ -60,9 +60,7 @@ export const TriggerPriceItem: FC<{
             ? "oui-text-trade-profit oui-gap-0"
             : "oui-text-trade-loss oui-gap-0"
         }
-        prefix={
-          (<Text>{pnl === 0 ? "" : pnl > 0 ? "+" : "-"}</Text>)
-        }
+        prefix={<Text>{pnl === 0 ? "" : pnl > 0 ? "+" : "-"}</Text>}
         suffix={
           <Text intensity={36} className="oui-ml-1">
             USDC
@@ -72,7 +70,6 @@ export const TriggerPriceItem: FC<{
     </Flex>
   );
 };
-
 
 export const TPSLTriggerPrice: FC<{
   takeProfitPrice: number | undefined;
@@ -154,9 +151,7 @@ export const TPSLTriggerPrice: FC<{
           children={props.takeProfitPrice}
           prefix={
             !props.stopLossPrice || direction === "column" ? (
-              <Text intensity={54}>
-                TP&nbsp;-&nbsp;
-              </Text>
+              <Text intensity={54}>TP&nbsp;-&nbsp;</Text>
             ) : (
               ""
             )
@@ -176,9 +171,7 @@ export const TPSLTriggerPrice: FC<{
           children={props.stopLossPrice}
           prefix={
             !props.takeProfitPrice || direction === "column" ? (
-              <Text intensity={54} >
-                SL&nbsp;-&nbsp;
-              </Text>
+              <Text intensity={54}>SL&nbsp;-&nbsp;</Text>
             ) : (
               ""
             )
@@ -210,8 +203,15 @@ export const TPSLTriggerPrice: FC<{
     </div>
   );
 
+  const showIcon = Array.isArray(child) ? !!child.length : !child;
+
   if (props.tooltip) {
-    return <Tooltip content={pnl}>{content}</Tooltip>;
+    return (
+      <Flex gapX={2}>
+        <Tooltip content={pnl}>{content}</Tooltip>
+        {showIcon && <TPSLEditIcon />}
+      </Flex>
+    );
   }
 
   return content;

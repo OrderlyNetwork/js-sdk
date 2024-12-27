@@ -190,7 +190,7 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.base_dp} padding={false} coloring intensity={80}>
+      <Text.numeral dp={props.quote_dp} padding={false} coloring intensity={80}>
         {item.avg_open_price}
       </Text.numeral>
     </Statistic>
@@ -208,8 +208,8 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.base_dp} padding={false} coloring intensity={80}>
-        {item.avg_open_price}
+      <Text.numeral dp={props.quote_dp} padding={false} coloring intensity={80}>
+        {item.avg_close_price}
       </Text.numeral>
     </Statistic>
   );

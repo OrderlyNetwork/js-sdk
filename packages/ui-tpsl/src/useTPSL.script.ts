@@ -3,6 +3,7 @@ import {
   useLocalStorage,
   useSymbolsInfo,
   useTPSLOrder,
+  utils,
 } from "@orderly.network/hooks";
 import { SDKError } from "@orderly.network/types";
 import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
@@ -41,7 +42,15 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
   const [
     tpslOrder,
-    { submit, deleteOrder, setValue, validate, errors, isCreateMutating, isUpdateMutating },
+    {
+      submit,
+      deleteOrder,
+      setValue,
+      validate,
+      errors,
+      isCreateMutating,
+      isUpdateMutating,
+    },
   ] = useTPSLOrder(
     {
       symbol,
@@ -159,6 +168,18 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   }, [tpslOrder.quantity, maxQty, order?.algo_type, isEditing]);
 
   useEffect(() => {
+    if (!isEditing && isPositionTPSL) {
+      const trigger_prices = utils.findTPSLFromOrder(order!);
+      if (!tpslOrder.tp_trigger_price && trigger_prices.tp_trigger_price) {
+        setOrderPrice("tp_trigger_price", trigger_prices.tp_trigger_price);
+      }
+      if (!tpslOrder.sl_trigger_price && trigger_prices.sl_trigger_price) {
+        setOrderPrice("sl_trigger_price", trigger_prices.sl_trigger_price);
+      }
+    }
+  }, [isEditing, isPositionTPSL, tpslOrder]);
+
+  useEffect(() => {
     const type =
       Number(tpslOrder.quantity) < maxQty
         ? AlgoOrderRootType.TP_SL
@@ -175,21 +196,24 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
   const cancel = (): Promise<void> => {
     if (order?.algo_order_id && order?.symbol) {
-      return deleteOrder(order?.algo_order_id, order?.symbol)
+      return deleteOrder(order?.algo_order_id, order?.symbol);
     }
-    return Promise.reject('order id or symbol is invalid');
+    return Promise.reject("order id or symbol is invalid");
   };
 
   const onSubmit = async () => {
     return Promise.resolve()
       .then(() => {
         if (typeof options.onConfirm !== "function" || !needConfirm) {
-          return submit().then(() => true, (reject) => {
-            if (reject?.message) {
-              toast.error(reject.message);
+          return submit().then(
+            () => true,
+            (reject) => {
+              if (reject?.message) {
+                toast.error(reject.message);
+              }
+              return Promise.reject(false);
             }
-            return Promise.reject(false);
-          });
+          );
         }
         return options.onConfirm(tpslOrder, {
           position,

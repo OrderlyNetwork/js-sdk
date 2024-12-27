@@ -3,6 +3,10 @@ import { useOrderListScript } from "./orderList.script";
 import { DesktopOrderList, MobileOrderList } from "./orderList.ui";
 import { TabType } from "../orders.widget";
 import { API } from "@orderly.network/types";
+import {
+  SharePnLConfig,
+  SharePnLParams,
+} from "@orderly.network/ui-share";
 
 export const DesktopOrderListWidget = (props: {
   type: TabType;
@@ -11,6 +15,9 @@ export const DesktopOrderListWidget = (props: {
   symbol?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+
   testIds?: {
     tableBody?: string;
   }
@@ -26,6 +33,8 @@ export const MobileOrderListWidget = (props: {
   /** if has value, will be fetch current symbol orders*/
   symbol?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   classNames?: {
     root?: string;
     cell?: string;

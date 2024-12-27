@@ -1,26 +1,36 @@
+import { FC, PropsWithChildren } from "react";
 import { Box } from "@orderly.network/ui";
 import {
   LayoutProps,
+  RouterAdapter,
   Scaffold,
   SideBar,
   SideBarProps,
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
-import { PropsWithChildren } from "react";
 
-export type PortfolioLayoutProps = {
+export type PortfolioLayoutProps = LayoutProps & {
   hideSideBar?: boolean;
-} & SideBarProps &
-  LayoutProps;
+  /** @deprecated use leftSideProps.items instead */
+  items?: SideBarProps["items"];
+};
 
-export const PortfolioLayout = (
-  props: PropsWithChildren<PortfolioLayoutProps>
+export const PortfolioLayout: FC<PropsWithChildren<PortfolioLayoutProps>> = (
+  props
 ) => {
-  const { children, ...rest } = props;
+  const { children, leftSideProps } = props;
 
   return (
     <Scaffold
-      leftSidebar={props.hideSideBar ? null : <LeftSidebar {...rest} />}
+      leftSidebar={
+        props.hideSideBar ? null : (
+          <LeftSidebar
+            items={props.items}
+            {...leftSideProps}
+            routerAdapter={props.routerAdapter}
+          />
+        )
+      }
       routerAdapter={props.routerAdapter}
       classNames={{
         content: "lg:oui-mb-0",
@@ -37,7 +47,11 @@ export const PortfolioLayout = (
   );
 };
 
-const LeftSidebar = (props: SideBarProps & LayoutProps) => {
+type LeftSidebarProps = SideBarProps & {
+  routerAdapter?: RouterAdapter;
+};
+
+const LeftSidebar: FC<LeftSidebarProps> = (props) => {
   const { expanded, setExpand } = useScaffoldContext();
 
   return (

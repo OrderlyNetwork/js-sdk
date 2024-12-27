@@ -6,8 +6,8 @@ import { ChainIcon } from "../icon";
 import { Flex } from "../flex";
 import { tv } from "../utils/tv";
 import { Box } from "../box";
-import { Either } from "../misc/either";
 import { Text } from "../typography";
+import { Tabs, TabPanel } from "../tabs";
 
 const chainSelectVariants = tv({
   extend: selectVariants,
@@ -42,6 +42,10 @@ const chainSelectVariants = tv({
     size: "md",
   },
 });
+const ChainSelectorType = {
+  Mainnet: "Mainnet",
+  Testnet: "Testnet",
+};
 
 type ChainItem = {
   name: string;
@@ -52,6 +56,8 @@ type ChainItem = {
 type ChainSelectProps = {
   value?: number;
   onChange?: (chain: ChainItem) => void;
+  storageChains?: ChainItem[];
+  networkId?: string;
   chains: {
     mainnet: ChainItem[];
     testnet: ChainItem[];
@@ -64,8 +70,6 @@ function ChainSelectItem(props: {
   chain: ChainItem;
   itemClassName: string;
   iconClassName: string;
-  feeClassName: string;
-  lowestFee?: boolean;
 }) {
   return (
     <SelectPrimitive.SelectItem
@@ -76,9 +80,6 @@ function ChainSelectItem(props: {
         <Flex gap={2} itemAlign={"center"}>
           <ChainIcon chainId={props.chain.id} className={props.iconClassName} />
           <Text size="2xs">{props.chain.name}</Text>
-          {props.lowestFee && (
-            <span className={props.feeClassName}>lowest fee</span>
-          )}
         </Flex>
         <SelectPrimitive.ItemIndicator>
           <Box width={"6px"} height={"6px"} gradient={"brand"} r={"full"} />
@@ -87,6 +88,32 @@ function ChainSelectItem(props: {
     </SelectPrimitive.SelectItem>
   );
 }
+
+const RecommandChain = (props: {
+  selected: boolean;
+  item: ChainItem;
+  onClick?: (chain: ChainItem) => void;
+}) => {
+  const { item } = props;
+  return (
+    <button
+      className={
+        props.selected
+          ? "oui-border oui-border-line-12 oui-rounded-md oui-border-primary-light"
+          : "oui-border oui-border-line-12 oui-rounded-md hover:oui-border-primary-light"
+      }
+      onClick={() => {
+        props.onClick?.(item);
+      }}
+    >
+      <Flex justify={"between"}>
+        <Flex itemAlign={"center"} width={"100%"} p={2} gap={1}>
+          <ChainIcon chainId={item.id} className="oui-w-[18px] oui-h-[18px]" />
+        </Flex>
+      </Flex>
+    </button>
+  );
+};
 
 const ChainSelect = (props: ChainSelectProps) => {
   const {
@@ -100,11 +127,12 @@ const ChainSelect = (props: ChainSelectProps) => {
     position,
     contentProps,
     value,
+    storageChains,
     ...rest
   } = props;
 
   // console.log("ChainSelectItem", props);
-
+  const [open, toggleOpen] = useState(false);
   const mergedChains = useMemo(() => {
     return [...chains.mainnet, ...chains.testnet];
   }, [chains]);
@@ -120,6 +148,8 @@ const ChainSelect = (props: ChainSelectProps) => {
     props.value
   );
 
+  const [selectedTab, setSelectedTab] = useState(ChainSelectorType.Mainnet);
+
   useEffect(() => {
     if (props.value !== currentChain) {
       setCurrentChain(props.value);
@@ -132,6 +162,11 @@ const ChainSelect = (props: ChainSelectProps) => {
     setCurrentChain(selected?.id);
     if (!selected) return;
     props.onChange?.(selected);
+    toggleOpen(false);
+  };
+
+  const onTabChange = (tab: string) => {
+    setSelectedTab(tab);
   };
 
   return (
@@ -141,7 +176,10 @@ const ChainSelect = (props: ChainSelectProps) => {
       onValueChange={onChange}
     >
       <SelectPrimitive.Trigger className={trigger()} asChild>
-        <button className="oui-relative oui-px-3 oui-box-border oui-min-w-11">
+        <button
+          className="oui-relative oui-px-3 oui-box-border oui-min-w-11"
+          onClick={() => toggleOpen(true)}
+        >
           {!!currentChain && (
             <ChainIcon chainId={currentChain} className={icon()} />
           )}
@@ -178,7 +216,10 @@ const ChainSelect = (props: ChainSelectProps) => {
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
           position={"popper"}
-          className={content({ className: "oui-w-[260px]" })}
+          className={content({
+            className:
+              "xl:oui-max-h-[500px] oui-max-h-[562px] oui-bg-base-9 oui-w-[260px]",
+          })}
           align={"end"}
           sideOffset={12}
           onCloseAutoFocus={(e) => {
@@ -187,50 +228,39 @@ const ChainSelect = (props: ChainSelectProps) => {
           {...contentProps}
         >
           <SelectPrimitive.Viewport className={viewport()}>
-            <Either
-              value={
-                Array.isArray(chains?.mainnet) && chains.mainnet.length > 0
-              }
+            <Tabs
+              value={selectedTab}
+              variant="contained"
+              size="sm"
+              classNames={{
+                tabsList: "oui-my-3 lg:oui-pl-4 sm:oui-pl-0",
+              }}
+              onValueChange={(e) => onTabChange(e)}
             >
-              <SelectPrimitive.Group>
-                <SelectPrimitive.Label
-                  className={
-                    "oui-text-2xs oui-text-base-contrast-54 oui-px-4 oui-pt-3"
-                  }
-                >
-                  Mainnet
-                </SelectPrimitive.Label>
-
-                {chains.mainnet.map((chain) => {
-                  return (
-                    <ChainSelectItem
-                      key={chain.id}
-                      chain={chain}
-                      itemClassName={item({
-                        className: "oui-rounded-lg",
-                      })}
-                      lowestFee={chain.lowestFee}
-                      iconClassName={itemSize()}
-                      feeClassName={tag()}
-                    />
-                  );
-                })}
-              </SelectPrimitive.Group>
-            </Either>
-            <Either
-              value={
-                Array.isArray(chains?.testnet) && chains.testnet.length > 0
-              }
-            >
-              <SelectPrimitive.Group>
-                <SelectPrimitive.Label
-                  className={
-                    "oui-text-2xs oui-text-base-contrast-54 oui-px-4 oui-leading-5"
-                  }
-                >
-                  Testnet
-                </SelectPrimitive.Label>
-                {chains.testnet.map((chain) => {
+              <TabPanel
+                value={ChainSelectorType.Mainnet}
+                title={ChainSelectorType.Mainnet}
+              >
+                {!props.storageChains?.length ? (
+                  <Flex className="oui-mt-2" />
+                ) : (
+                  <Flex
+                    gap={2}
+                    className="oui-text-center oui-mb-3 lg:oui-pl-4 sm:oui-pl-0"
+                  >
+                    {props.storageChains?.map((item) => {
+                      return (
+                        <RecommandChain
+                          item={item}
+                          key={item.id}
+                          selected={currentChain === item.id}
+                          onClick={(chain: ChainItem) => onChange(chain.id)}
+                        />
+                      );
+                    })}
+                  </Flex>
+                )}
+                {props.chains.mainnet?.map((chain, index) => {
                   return (
                     <ChainSelectItem
                       key={chain.id}
@@ -239,12 +269,28 @@ const ChainSelect = (props: ChainSelectProps) => {
                         className: "oui-rounded-lg",
                       })}
                       iconClassName={itemSize()}
-                      feeClassName={tag()}
                     />
                   );
                 })}
-              </SelectPrimitive.Group>
-            </Either>
+              </TabPanel>
+              <TabPanel
+                value={ChainSelectorType.Testnet}
+                title={ChainSelectorType.Testnet}
+              >
+                {props.chains.testnet?.map((chain, index) => {
+                  return (
+                    <ChainSelectItem
+                      key={chain.id}
+                      chain={chain}
+                      itemClassName={item({
+                        className: "oui-rounded-lg",
+                      })}
+                      iconClassName={itemSize()}
+                    />
+                  );
+                })}
+              </TabPanel>
+            </Tabs>
           </SelectPrimitive.Viewport>
         </SelectPrimitive.Content>
       </SelectPrimitive.Portal>
