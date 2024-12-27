@@ -56,12 +56,12 @@ export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
         };
       }
 
-      if (level === undefined || level === null) {
-        errors.level = {
-          type: "required",
-          message: "Level is required",
-        };
-      }
+      // if (level === undefined || level === null) {
+      //   errors.level = {
+      //     type: "required",
+      //     message: "Level is required",
+      //   };
+      // }
 
       return errors;
     });
