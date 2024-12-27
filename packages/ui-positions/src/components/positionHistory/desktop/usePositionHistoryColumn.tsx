@@ -309,13 +309,6 @@ export const NetPnL = (props: {
     </Text.numeral>
   );
 
-  console.log(
-    "record.netPnL",
-    record.symbol,
-    record.max_position_qty,
-    record.netPnL
-  );
-
   if (record.netPnL == null) return text();
 
   return (
@@ -352,7 +345,7 @@ export const NetPnL = (props: {
             <Flex justify={"between"} width={"100%"} gap={2}>
               <Text intensity={54}>Trading fee</Text>
               <Text
-                color={record.trading_fee >= 0 ? "lose" : "profit"}
+                color={record.trading_fee > 0 ? "lose" : "profit"}
                 className="oui-cursor-pointer"
               >
                 {commifyOptional(-record.trading_fee)}

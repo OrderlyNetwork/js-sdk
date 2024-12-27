@@ -43,15 +43,23 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
         >
           <Flex justify={"between"} width={"100%"} gap={2}>
             <Text intensity={54}>Realized PnL</Text>
-            <Text color={record.realized_pnl >= 0 ? "profit" : "lose"}>{commifyOptional(record.realized_pnl)}</Text>
+            <Text color={record.realized_pnl >= 0 ? "profit" : "lose"}>
+              {commifyOptional(record.realized_pnl)}
+            </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
             <Text intensity={54}>Funding fee</Text>
-            <Text color={record.accumulated_funding_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.accumulated_funding_fee)}</Text>
+            <Text
+              color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
+            >
+              {commifyOptional(-record.accumulated_funding_fee)}
+            </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
             <Text intensity={54}>Trading fee</Text>
-            <Text color={record.trading_fee >= 0 ? "profit" : "lose"}>{commifyOptional(record.trading_fee)}</Text>
+            <Text color={record.trading_fee > 0 ? "lose" : "profit"}>
+              {commifyOptional(-record.trading_fee)}
+            </Text>
           </Flex>
         </Flex>
       ),
@@ -84,7 +92,13 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
 
 export const Body: FC<PositionHistoryCellState> = (props) => {
   return (
-    <Grid cols={3} rows={2} width={"100%"} gap={0} className="oui-grid-cols-[1fr,1fr,135px]">
+    <Grid
+      cols={3}
+      rows={2}
+      width={"100%"}
+      gap={0}
+      className="oui-grid-cols-[1fr,1fr,135px]"
+    >
       <ClosedQty {...props} />
       <MaxClosedQty {...props} />
       <OpenTime {...props} />
