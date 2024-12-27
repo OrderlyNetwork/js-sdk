@@ -1,23 +1,42 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  ForwardedRef,
+  useImperativeHandle,
+} from "react";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
   API,
 } from "@orderly.network/types";
-import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
+import {
+  useLocalStorage,
+  useOrderStream,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { TabType } from "../orders.widget";
-import { modal, usePagination, Text } from "@orderly.network/ui";
-import { differenceInDays, setHours, subDays } from "date-fns";
+import { modal, usePagination, Text, Table } from "@orderly.network/ui";
+import { differenceInDays, setHours, subDays, format } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
+import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 
-export const useOrderListScript = (props: {
+export type OrderListInstance = {
+  download?: () => void;
+};
+
+export type useOrderListScriptOptions = {
   type: TabType;
   ordersStatus?: OrderStatus;
   symbol?: string;
   enableLoadMore?: boolean;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   filterConfig?: {
     side?: OrderSide | "all";
     range?: {
@@ -26,7 +45,10 @@ export const useOrderListScript = (props: {
     };
   };
   pnlNotionalDecimalPrecision?: number;
-}) => {
+  ref?: ForwardedRef<OrderListInstance>;
+};
+
+export const useOrderListScript = (props: useOrderListScriptOptions) => {
   const {
     ordersStatus,
     type,
@@ -34,7 +56,10 @@ export const useOrderListScript = (props: {
     onSymbolChange,
     filterConfig,
     pnlNotionalDecimalPrecision,
+    sharePnLConfig,
   } = props;
+
+  const symbolsInfo = useSymbolsInfo();
 
   const manualPagination = useMemo(() => {
     // pending and ts_sl list use client pagination
@@ -72,6 +97,15 @@ export const useOrderListScript = (props: {
     }
     return undefined;
   }, [type]);
+
+  const tableInstance = useRef<Table<any>>();
+
+  useImperativeHandle(props.ref, () => ({
+    download: () => {
+      const filename = `orders_${format(new Date(), "yyyyMMdd_HHmmss")}`;
+      tableInstance.current?.download(filename);
+    },
+  }));
 
   const [
     data,
@@ -183,6 +217,10 @@ export const useOrderListScript = (props: {
     onCancelAll,
 
     onSymbolChange,
+
+    sharePnLConfig,
+    tableInstance,
+    symbolsInfo,
   };
 };
 

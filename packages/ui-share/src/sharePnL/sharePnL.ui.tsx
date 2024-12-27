@@ -7,7 +7,7 @@ import { MobileSharePnLContent } from "./mobile/content";
 export const DesktopSharePnL: FC<SharePnLState> = (props) => {
   const {
     leverage,
-    position,
+    entity,
     baseDp,
     quoteDp,
     referralInfo,
@@ -31,10 +31,10 @@ export const DesktopSharePnL: FC<SharePnLState> = (props) => {
     };
   }, []);
 
-  if (shareOptions == null) return <></>;
+  if (shareOptions == null || entity == null) return <></>;
   return (
     <DesktopSharePnLContent
-      position={position}
+      entity={entity}
       leverage={`${leverage}`}
       hide={hide}
       baseDp={baseDp}
@@ -48,17 +48,17 @@ export const DesktopSharePnL: FC<SharePnLState> = (props) => {
 export const MobileSharePnL: FC<SharePnLState> = (props) => {
   const {
     leverage,
-    position,
+    entity,
     baseDp,
     quoteDp,
     referralInfo,
     shareOptions,
     hide,
   } = props;
-  if (shareOptions == null) return <></>;
+  if (shareOptions == null || entity == null) return <></>;
   return (
     <MobileSharePnLContent
-      position={position}
+      entity={entity}
       leverage={leverage}
       hide={hide}
       baseDp={baseDp}

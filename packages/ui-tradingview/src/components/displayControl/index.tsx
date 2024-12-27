@@ -28,12 +28,12 @@ const DisplayControlMap: {
     label: "Position",
     id: "position",
   },
-  // {
-  //   label: "Buy/Sell",
-  //   id: "buySell",
-  // },
   {
-    label: "Limit Orders",
+    label: "Buy/Sell",
+    id: "buySell",
+  },
+  {
+    label: "Limit orders",
     id: "limitOrders",
   },
   {
@@ -61,7 +61,7 @@ const MobileDisplayControlMap: {
     },
 
     {
-      label: "Limit Orders",
+      label: "Limit orders",
       id: "limitOrders",
     },
   ],

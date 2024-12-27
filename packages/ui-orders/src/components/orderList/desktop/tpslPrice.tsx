@@ -1,3 +1,4 @@
+import { utils } from "@orderly.network/hooks";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 
@@ -23,4 +24,17 @@ export const TPSLOrderPrice = () => {
       ) : null}
     </div>
   );
+};
+
+export function useTPSLOrderPrice (order: any)  {
+  // @ts-ignore
+  const { sl_trigger_price, tp_trigger_price } =
+  !("algo_type" in order) || !Array.isArray(order.child_orders)
+    ? {}
+    : utils.findTPSLFromOrder(order);
+  
+  const tpTriggerPrice = tp_trigger_price ? "TP - Market" : undefined;
+  const slTriggerPrice = sl_trigger_price ? "SL - Market" : undefined;
+
+  return { tpTriggerPrice, slTriggerPrice };
 };

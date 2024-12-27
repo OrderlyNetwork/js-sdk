@@ -191,10 +191,12 @@ export const SymbolInfo = (props: {
               itemAlign={"start"}
               className="oui-text-2xs"
             >
-              <Flex justify={"between"} width={"100%"} gap={2}>
-                <Text intensity={54}>Liquidation id</Text>
-                <Text intensity={98}>{record.liquidation_id}</Text>
-              </Flex>
+              {record.liquidation_id != null && (
+                <Flex justify={"between"} width={"100%"} gap={2}>
+                  <Text intensity={54}>Liquidation id</Text>
+                  <Text intensity={98}>{record.liquidation_id}</Text>
+                </Flex>
+              )}
               <Flex justify={"between"} width={"100%"} gap={2}>
                 <Text intensity={54}>Liquidator fee</Text>
                 <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>
@@ -285,7 +287,7 @@ export const NetPnL = (props: {
 }) => {
   const { record, pnlNotionalDecimalPrecision } = props;
 
-  const netPnl = record.netPnL != null ? Math.abs(record.netPnL) : undefined;
+  const netPnl = record.netPnL != null ? record.netPnL : undefined;
 
   const text = () => (
     <Text.numeral
@@ -305,13 +307,6 @@ export const NetPnL = (props: {
     >
       {netPnl ?? "--"}
     </Text.numeral>
-  );
-
-  console.log(
-    "record.netPnL",
-    record.symbol,
-    record.max_position_qty,
-    record.netPnL
   );
 
   if (record.netPnL == null) return text();
@@ -341,19 +336,19 @@ export const NetPnL = (props: {
             <Flex justify={"between"} width={"100%"} gap={2}>
               <Text intensity={54}>Funding fee</Text>
               <Text
-                color={record.accumulated_funding_fee >= 0 ? "profit" : "lose"}
+                color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
                 className="oui-cursor-pointer"
               >
-                {commifyOptional(record.accumulated_funding_fee)}
+                {commifyOptional(-record.accumulated_funding_fee)}
               </Text>
             </Flex>
             <Flex justify={"between"} width={"100%"} gap={2}>
               <Text intensity={54}>Trading fee</Text>
               <Text
-                color={record.trading_fee >= 0 ? "profit" : "lose"}
+                color={record.trading_fee > 0 ? "lose" : "profit"}
                 className="oui-cursor-pointer"
               >
-                {commifyOptional(record.trading_fee)}
+                {commifyOptional(-record.trading_fee)}
               </Text>
             </Flex>
           </Flex>

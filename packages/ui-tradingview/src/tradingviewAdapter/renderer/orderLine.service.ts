@@ -274,4 +274,12 @@ export class OrderLineService {
         .catch(() => this.renderPendingOrder(pendingOrder));
     });
   }
+
+
+  removeAll() {
+    this.pendingOrderLineMap.forEach((orderLine) => orderLine.remove());
+    this.pendingOrderLineMap.clear();
+    this.pendingOrders = [];
+    this.tpslCalService.clear();
+  }
 }

@@ -69,10 +69,12 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
           gap={2}
           className="oui-text-2xs oui-text-base-contrast-54"
         >
-          <Flex justify={"between"} width={"100%"}>
-            <Text>Liquidation id</Text>
-            <Text intensity={98}>{record.liquidation_id}</Text>
-          </Flex>
+          {record.liquidation_id != null && (
+            <Flex justify={"between"} width={"100%"}>
+              <Text>Liquidation id</Text>
+              <Text intensity={98}>{record.liquidation_id}</Text>
+            </Flex>
+          )}
           <Flex justify={"between"} width={"100%"}>
             <Text>Liquidator fee</Text>
             <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>
@@ -188,7 +190,7 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.base_dp} padding={false} coloring intensity={80}>
+      <Text.numeral dp={props.quote_dp} padding={false} coloring intensity={80}>
         {item.avg_open_price}
       </Text.numeral>
     </Statistic>
@@ -206,8 +208,8 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.base_dp} padding={false} coloring intensity={80}>
-        {item.avg_open_price}
+      <Text.numeral dp={props.quote_dp} padding={false} coloring intensity={80}>
+        {item.avg_close_price}
       </Text.numeral>
     </Statistic>
   );

@@ -6,6 +6,7 @@ import { useDataTap } from "@orderly.network/react-app";
 import { API } from "@orderly.network/types";
 import { useEffect, useMemo, useState } from "react";
 import {
+  areDatesEqual,
   formatDatePickerRange,
   offsetEndOfDay,
   offsetStartOfDay,
@@ -129,7 +130,32 @@ const useFilter = () => {
       if (newDateRange.from && newDateRange.to) {
         const diffDays =
           Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;
-        if ([1, 7, 30, 90].includes(diffDays)) {
+        const dateRangeMap: { [key: number]: { from: Date; to: Date } } = {
+          1: {
+            from: offsetStartOfDay(new Date())!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          7: {
+            from: offsetStartOfDay(subDays(new Date(), 6))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          30: {
+            from: offsetStartOfDay(subDays(new Date(), 29))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          90: {
+            from: offsetStartOfDay(subDays(new Date(), 89))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+        };
+
+        
+        const dateRange = dateRangeMap[diffDays];
+        if (
+          dateRange &&
+          areDatesEqual(dateRange.from, newDateRange.from) &&
+          areDatesEqual(dateRange.to, newDateRange.to)
+        ) {
           setFilterDays(diffDays as any);
         } else {
           setFilterDays(null);

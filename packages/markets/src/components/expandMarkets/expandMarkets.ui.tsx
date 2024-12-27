@@ -12,6 +12,7 @@ import { useMarketsContext } from "../marketsProvider";
 import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
+import { NewListingListWidget } from "../newListingList";
 
 export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
 
@@ -61,7 +62,10 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         value={activeTab}
         onValueChange={onTabChange}
         classNames={{
-          tabsList: "oui-my-[6px] oui-px-3",
+          tabsList: cn(
+            "oui-my-[6px] oui-mx-3 ",
+            "oui-overflow-x-scroll oui-hide-scrollbar"
+          ),
           tabsContent: "oui-h-full",
         }}
         className={cls}
@@ -91,6 +95,15 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
               sortKey={tabSort?.sortKey}
               sortOrder={tabSort?.sortOrder}
               onSort={onTabSort}
+              tableClassNames={{
+                scroll: "oui-px-1",
+              }}
+            />
+          </div>
+        </TabPanel>
+        <TabPanel title="New listings" value="newListing">
+          <div className={cls}>
+            <NewListingListWidget
               tableClassNames={{
                 scroll: "oui-px-1",
               }}
