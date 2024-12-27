@@ -1,11 +1,12 @@
 import { FC } from "react";
-import { Flex, modal, Text, ShareIcon } from "@orderly.network/ui";
-import { SharePnLDialogId } from "@orderly.network/ui-share";
+import { modal, ShareIcon } from "@orderly.network/ui";
 import { ShareButtonState } from "./shareButton.script";
-import React from "react";
+import { Decimal } from "@orderly.network/utils";
 
 export const ShareButton: FC<ShareButtonState> = (props) => {
   if (props.sharePnLConfig == null) return <></>;
+
+  const { position } = props;
   return (
     <button
       type="button"
@@ -14,19 +15,21 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
         modal.show(props.modalId, {
           pnl: {
             entity: {
-              symbol: props.position.symbol,
-              pnl: props.position.unrealized_pnl,
-              roi: props.position.unrealized_pnl_ROI,
-              side: props.position.position_qty > 0 ? "LONG" : "SHORT",
-              openPrice: props.position.average_open_price,
-              openTime: props.position.timestamp,
-              markPrice: props.position.mark_price,
-              quantity: props.position.position_qty,
+              symbol: position.symbol,
+              pnl: position.unrealized_pnl,
+              roi: new Decimal(position.unrealized_pnl_ROI * 100).toFixed(
+                2,
+                Decimal.ROUND_DOWN
+              ),
+              side: position.position_qty > 0 ? "LONG" : "SHORT",
+              openPrice: position.average_open_price,
+              openTime: position.timestamp,
+              markPrice: position.mark_price,
+              quantity: position.position_qty,
             },
             refCode: props.refCode,
             leverage: props.leverage,
-            ...props.sharePnLConfig
-
+            ...props.sharePnLConfig,
           },
         });
       }}
