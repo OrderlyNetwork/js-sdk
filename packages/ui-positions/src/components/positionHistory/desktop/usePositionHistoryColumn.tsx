@@ -307,13 +307,6 @@ export const NetPnL = (props: {
     </Text.numeral>
   );
 
-  console.log(
-    "record.netPnL",
-    record.symbol,
-    record.max_position_qty,
-    record.netPnL
-  );
-
   if (record.netPnL == null) return text();
 
   return (
