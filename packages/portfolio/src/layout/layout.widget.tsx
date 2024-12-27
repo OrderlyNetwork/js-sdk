@@ -1,13 +1,18 @@
-import { PropsWithChildren } from "react";
-import { PortfolioLayout } from "./layout.ui";
-import { useLayoutBuilder } from "./useLayoutBuilder.script";
-import type { LayoutProps } from "@orderly.network/ui-scaffold";
+import { FC, PropsWithChildren } from "react";
+import { PortfolioLayout, PortfolioLayoutProps } from "./layout.ui";
+import { usePortfolioLayoutScript } from "./layout.script";
 
-export const PortfolioLayoutWidget = (
-  props: PropsWithChildren<LayoutProps>
-) => {
-  const state = useLayoutBuilder({
-    current: props.leftSideProps?.current
+export type PortfolioLayoutWidgetProps = PortfolioLayoutProps;
+
+export const PortfolioLayoutWidget: FC<
+  PropsWithChildren<PortfolioLayoutWidgetProps>
+> = (props) => {
+  const state = usePortfolioLayoutScript({
+    current: props.leftSideProps?.current,
   });
-  return <PortfolioLayout {...state} {...props} children={props.children} />;
+  return (
+    <PortfolioLayout {...state} {...props}>
+      {props.children}
+    </PortfolioLayout>
+  );
 };

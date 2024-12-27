@@ -32,13 +32,21 @@ import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice } from "./tpslPrice";
 import { useMemo } from "react";
 import { useSymbolContext } from "../symbolProvider";
+import { ShareButtonWidget } from "../../shareButton";
+import {
+  SharePnLConfig,
+  SharePnLDialogId,
+  SharePnLParams,
+} from "@orderly.network/ui-share";
 
 export const useOrderColumn = (props: {
   _type: TabType;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
 }) => {
-  const { _type, onSymbolChange, pnlNotionalDecimalPrecision } = props;
+  const { _type, onSymbolChange, pnlNotionalDecimalPrecision, sharePnLConfig } = props;
 
   const columns = useMemo(() => {
     switch (_type) {
@@ -68,6 +76,7 @@ export const useOrderColumn = (props: {
           realizedPnL({
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
+            sharePnLConfig: sharePnLConfig,
           }),
           estTotal({ width: 130, enableSort: false }),
           fee({ width: 130 }),
@@ -140,6 +149,7 @@ export const useOrderColumn = (props: {
           realizedPnL({
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
+            sharePnLConfig: sharePnLConfig,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
@@ -214,6 +224,7 @@ export const useOrderColumn = (props: {
           realizedPnL({
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
+            sharePnLConfig: sharePnLConfig,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
@@ -224,7 +235,7 @@ export const useOrderColumn = (props: {
           cancelBtn({ width: 80 }),
         ];
     }
-  }, [_type, pnlNotionalDecimalPrecision]);
+  }, [_type, pnlNotionalDecimalPrecision, sharePnLConfig]);
 
   return columns as Column[];
 
@@ -652,29 +663,39 @@ function realizedPnL(option?: {
   width?: number;
   className?: string;
   pnlNotionalDecimalPrecision?: number;
+  sharePnLConfig?: SharePnLConfig &
+    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
 }): Column<API.Order> {
   return {
     title: "Real. PnL",
     dataIndex: "realized_pnl",
     width: option?.width,
     className: option?.className,
-    render: (_value: number | undefined) => {
+    render: (_value: number | undefined, record: any) => {
       const { quote_dp } = useSymbolContext();
       const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
       const value = new Decimal(_value ?? 0)
         .toDecimalPlaces(dp, Decimal.ROUND_DOWN)
         .toNumber();
+      // wraper flex
       return (
-        <Text.numeral
-          dp={dp}
-          rm={Decimal.ROUND_DOWN}
-          padding={false}
-          intensity={(value ?? 0) == 0 ? 80 : undefined}
-          showIdentifier={(value ?? 0) > 0}
-          coloring={(value ?? 0) != 0}
-        >
-          {value ?? "--"}
-        </Text.numeral>
+        <Flex gap={1}>
+          <Text.numeral
+            dp={dp}
+            rm={Decimal.ROUND_DOWN}
+            padding={false}
+            intensity={(value ?? 0) == 0 ? 80 : undefined}
+            showIdentifier={(value ?? 0) > 0}
+            coloring={(value ?? 0) != 0}
+          >
+            {value ?? "--"}
+          </Text.numeral>
+          <ShareButtonWidget
+            order={record}
+            sharePnLConfig={option?.sharePnLConfig}
+            modalId={SharePnLDialogId}
+          />
+        </Flex>
       );
     },
   };

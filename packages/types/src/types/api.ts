@@ -182,6 +182,26 @@ export declare namespace API {
     sum_unitary_funding: number;
   }
 
+  export interface FundingPeriodData {
+    rate: number;
+    positive: number;
+    negative: number;
+  }
+
+  export interface FundingHistory {
+    symbol: string;
+    data_start_time: string;
+    funding: {
+      last: FundingPeriodData;
+      "1d": FundingPeriodData;
+      "3d": FundingPeriodData;
+      "7d": FundingPeriodData;
+      "14d": FundingPeriodData;
+      "30d": FundingPeriodData;
+      "90d": FundingPeriodData;
+    };
+  }
+
   export interface PositionInfo extends PositionAggregated {
     // margin_ratio: number;
     // initial_margin_ratio: number;
@@ -436,7 +456,7 @@ export declare namespace API {
     symbol: string;
     transfer_price: number;
   }
-  
+
   export interface Liquidation {
     liquidation_id: number;
     timestamp: number;

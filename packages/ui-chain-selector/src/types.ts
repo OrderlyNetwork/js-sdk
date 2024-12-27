@@ -4,3 +4,8 @@ export type ChainItem = {
   lowestFee?: boolean;
   isTestnet?: boolean;
 };
+
+export enum ChainSelectorType {
+  Mainnet = 'Mainnet',
+  Testnet = 'Testnet'
+}

@@ -23,10 +23,12 @@ export const DesktopOrderList: FC<OrdersBuilderState & {
     tableBody?: string;
   }
 }> = (props) => {
+  const { sharePnLConfig, ...rest } = props;
   const columns = useOrderColumn({
     _type: props.type,
     onSymbolChange: props.onSymbolChange,
     pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
+    sharePnLConfig,
   });
   return (
     <OrderListProvider
@@ -180,6 +182,7 @@ export const MobileOrderList: FC<
                 className={props.classNames?.cell}
                 type={props.type}
                 onSymbolChange={props.onSymbolChange}
+                sharePnLConfig={props.sharePnLConfig}
               />
             );
             if ([TabType.tp_sl, TabType.pending].includes(props.type)) {

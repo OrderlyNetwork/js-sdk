@@ -1,4 +1,5 @@
-import { PositionsProps } from "../../../types/types";
+// import { PositionsProps } from "../../../types/types";
+import { PositionsProps } from "../../../../types/types";
 import { useShareButtonScript } from "./shareButton.script";
 import { ShareButton } from "./shareButton.ui";
 import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
