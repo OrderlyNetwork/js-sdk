@@ -215,7 +215,9 @@ export const useApiManagerScript = (props?: {
   const verifyIP = (ip: string) => {
     const ipRegex =
       /^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(,((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9]))*$/;
-    return ipRegex.test(ip) ? "" : "IP restriction format is incorrect.";
+    return ipRegex.test(ip)
+      ? ""
+      : "The IP restriction format is incorrect. Please use the correct format: [xx.xx.xxx.x],[xx.xxx.xxx.xxx]";
   };
 
   const address = useDataTap(data?.account_id, {
