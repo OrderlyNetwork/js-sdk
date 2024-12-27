@@ -52,7 +52,7 @@ export const ConfirmContent: FC<{
         className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54"
         onClick={cancelPopover}
       >
-        <CloseIcon size={18} />
+        <CloseIcon size={16} color="white" opacity={1} />
       </button>
     </div>
   );
