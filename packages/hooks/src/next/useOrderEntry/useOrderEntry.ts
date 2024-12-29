@@ -225,12 +225,12 @@ const useOrderEntry = (
 
   const updateOrderPriceByOrderBook = () => {
     const { order_type, order_type_ext, order_quantity } = formattedOrder;
-    const hasQty = order_quantity && Number(order_quantity) !== 0;
+    // const hasQty = order_quantity && Number(order_quantity) !== 0;
     const isBBO =
       order_type === OrderType.LIMIT &&
       [OrderType.ASK, OrderType.BID].includes(order_type_ext!);
 
-    if (lastChangedField.current !== "total" && hasQty && isBBO) {
+    if (lastChangedField.current !== "total" && isBBO) {
       updateOrderPrice();
     }
   };
