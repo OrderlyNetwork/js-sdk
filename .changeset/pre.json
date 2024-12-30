@@ -46,6 +46,7 @@
     "@orderly.network/web3-provider-ethers": "2.0.0"
   },
   "changesets": [
-    "dirty-bees-begin"
+    "dirty-bees-begin",
+    "sixty-queens-melt"
   ]
 }
