@@ -12,15 +12,26 @@ const git = simpleGit();
 async function main() {
   console.log("argv", process.argv);
   try {
+    await checkGitStatus();
     await generateChangeset();
     await publish();
     const successfullyPackages = await getVersions();
     await notifyTelegram(successfullyPackages);
   } catch (err: any) {
     const msg = err.message || err.stderr || JSON.stringify(err);
-    console.log("publish error", msg);
+    console.log("publish error: ", msg);
     await notifyTelegram(msg);
   }
+}
+
+async function checkGitStatus() {
+  const status = await git.status();
+  if (status.isClean()) {
+    return true;
+  }
+  throw new Error(
+    "publish error: There are uncommitted changes, please commit"
+  );
 }
 
 async function notifyTelegram(message: string) {
