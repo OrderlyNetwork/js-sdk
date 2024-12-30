@@ -76,7 +76,7 @@ export const useOrderColumn = (props: {
             enableSort: false,
           }),
           avgOpen({ width: 130, enableSort: false }),
-          tpslTriggerPrice({ width: 130 }),
+          tpslTriggerPrice({ width: 130, symbolsInfo: props.symbolsInfo }),
           realizedPnL({
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
@@ -123,7 +123,7 @@ export const useOrderColumn = (props: {
           }),
           // side({ width: 176 }),
           quantity({ width: 176 }),
-          tpslTriggerPrice({ width: 176 }),
+          tpslTriggerPrice({ width: 176, symbolsInfo: props.symbolsInfo }),
           tpslPrice({ width: 176, disableEdit: true }),
           tpslNotional({ width: 176 }),
           reduceOnly({ width: 176 }),
@@ -547,11 +547,10 @@ function tpslPrice(option?: {
     onSort: option?.enableSort,
     renderPlantText: (value: string, record: any) => {
       const { tpTriggerPrice, slTriggerPrice } = useTPSLOrderPrice(record);
-      const callback =
-        (tpTriggerPrice != null ? `TP: ${tpTriggerPrice}` : "") +
-        (slTriggerPrice != null
-          ? `${tpTriggerPrice ? "\n" : ""}SL: ${slTriggerPrice}`
-          : "");
+      const callback = `${tpTriggerPrice || ""}${
+        slTriggerPrice ? `${tpTriggerPrice ? "\n" : ""}${slTriggerPrice}` : ""
+      }`;
+
       return callback.length > 0 ? callback : "--";
     },
     render: (value: string, record: any) => {
@@ -607,6 +606,7 @@ function tpslTriggerPrice(option?: {
   width?: number;
   className?: string;
   title?: string;
+  symbolsInfo?: SymbolInfo;
 }): Column<API.Order> {
   return {
     title: option?.title ?? "Trigger",
@@ -614,17 +614,33 @@ function tpslTriggerPrice(option?: {
     dataIndex: "tpsl_trigger_price",
     width: option?.width,
     onSort: option?.enableSort,
-    renderPlantText: (value: string, order: any) => {
+    renderPlantText: (value: string, record: any) => {
+      const info = option?.symbolsInfo?.[record.symbol];
+      const quote_dp = info?.("quote_dp");
       // @ts-ignore
       const { sl_trigger_price, tp_trigger_price } =
-        !("algo_type" in order) || !Array.isArray(order.child_orders)
+        !("algo_type" in record) || !Array.isArray(record.child_orders)
           ? {}
-          : utils.findTPSLFromOrder(order);
+          : utils.findTPSLFromOrder(record);
+
+      console.log(
+        " sl_trigger_price, tp_trigger_price ",
+        sl_trigger_price,
+        tp_trigger_price
+      );
 
       const callback =
-        (tp_trigger_price != null ? `TP: ${tp_trigger_price}` : "") +
+        (tp_trigger_price != null
+          ? `TP: ${commifyOptional(tp_trigger_price, {
+              fix: quote_dp,
+              padEnd: true,
+            })}`
+          : "") +
         (sl_trigger_price != null
-          ? `${tp_trigger_price ? "\n" : ""}SL: ${sl_trigger_price}`
+          ? `${tp_trigger_price ? "\n" : ""}SL: ${commifyOptional(
+              sl_trigger_price,
+              { fix: quote_dp, padEnd: true }
+            )}`
           : "");
       return callback.length > 0 ? callback : "--";
     },
@@ -758,7 +774,9 @@ function realizedPnL(option?: {
         .toDecimalPlaces(dp, Decimal.ROUND_DOWN)
         .toNumber();
 
-      return commifyOptional(value);
+      const formatValue = commifyOptional(value);
+
+      return value > 0 ? `+${formatValue}` : formatValue;
     },
     render: (_value: number | undefined, record: any) => {
       const { quote_dp } = useSymbolContext();
