@@ -21,6 +21,7 @@ export type DesktopLayoutProps = TradingState & {
 
 export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const {
+    collapsable,
     collapsed,
     onCollapse,
     layout,
@@ -31,7 +32,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     setDataListSplitSize,
     mainSplitSize,
     setMainSplitSize,
-    isMedium,
+    is4XL,
     animating,
     setAnimating,
     positions,
@@ -90,6 +91,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       {!animating && (
         <SideMarketsWidget
+          collapsable={collapsable}
           collapsed={collapsed}
           onCollapse={onCollapse}
           symbol={props.symbol}
@@ -221,7 +223,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   );
 
   const renderTradingView = () => {
-    if (isMedium && layout === "right") {
+    if (is4XL && layout === "right") {
       return (
         <Flex
           gap={3}
@@ -255,7 +257,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   );
 
   const renderTradingViewAndOrderbookView = () => {
-    if (isMedium && layout === "left") {
+    if (is4XL && layout === "left") {
       return (
         <Flex
           gapX={3}
@@ -284,7 +286,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       className="oui-flex-1 oui-overflow-hidden"
       gap={3}
       style={{
-        minWidth: isMedium
+        minWidth: is4XL
           ? marketsWidth + tradingViewMinWidth + orderbookMinWidth + space * 2
           : tradingViewMinWidth + orderbookMinWidth + space,
       }}
@@ -317,7 +319,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       p={3}
       gap={3}
     >
-      {!isMedium && layout === "right" && marketsView}
+      {!is4XL && layout === "right" && marketsView}
       <SplitLayout
         className="oui-flex oui-flex-1 oui-overflow-hidden"
         onSizeChange={onSizeChange}
@@ -326,7 +328,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         {mainView}
         {layout === "right" && orderEntryView}
       </SplitLayout>
-      {!isMedium && layout === "left" && marketsView}
+      {!is4XL && layout === "left" && marketsView}
     </Flex>
   );
 };

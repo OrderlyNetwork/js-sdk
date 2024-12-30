@@ -22,8 +22,13 @@ export const useTradingScript = () => {
 
   const { isFirstTimeDeposit } = useFirstTimeDeposit();
 
-  const isSmall = useMediaQuery("(max-width: 1440px)");
-  const isMedium = useMediaQuery("(max-width: 1680px)");
+  /** 1024px - 1280px */
+  const isSmall = useMediaQuery("(min-width: 1024px) and (max-width: 1280px)");
+  /** max-width: 1440px */
+  const is3XL = useMediaQuery("(max-width: 1440px)");
+  /** max-width: 1680px */
+  const is4XL = useMediaQuery("(max-width: 1680px)");
+  console.log("is4XL", is4XL);
 
   const [collapsed, setCollapsed] = useLocalStorage<boolean | undefined>(
     "orderly_side_markets_collapsed",
@@ -99,12 +104,15 @@ export const useTradingScript = () => {
     return showPositionIcon ? (positions as number[]) : [0, 1, 2];
   }, [showPositionIcon, positions]);
 
-  const _collapsed = useMemo(
-    () => (collapsed === undefined ? isSmall : collapsed),
-    [isSmall, collapsed]
-  );
+  const _collapsed = useMemo(() => {
+    // under 1440px markets force collapsed
+    return is3XL ? true : collapsed;
+  }, [is3XL, collapsed]);
+
+  const collapsable = useMemo(() => !is3XL, [is3XL]);
 
   const map = {
+    collapsable,
     collapsed: _collapsed,
     onCollapse,
     layout,
@@ -115,7 +123,7 @@ export const useTradingScript = () => {
     setDataListSplitSize,
     mainSplitSize,
     setMainSplitSize,
-    isMedium,
+    is4XL,
     animating,
     setAnimating,
     positions: pos,
