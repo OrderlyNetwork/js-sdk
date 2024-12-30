@@ -103,10 +103,13 @@ async function publish() {
   await git.add(".");
 
   logger("git commit");
-  git.commit("publish");
+  await git.commit("publish");
 
   logger("git publish");
   await $`npm_config_registry=http://npm.orderly.network pnpm changeset publish`.verbose();
+
+  logger("git push");
+  await git.push();
 }
 
 async function generateChangeset() {
