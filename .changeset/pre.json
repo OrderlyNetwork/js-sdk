@@ -47,6 +47,7 @@
   },
   "changesets": [
     "dirty-bees-begin",
-    "sixty-queens-melt"
+    "sixty-queens-melt",
+    "unlucky-files-destroy"
   ]
 }
