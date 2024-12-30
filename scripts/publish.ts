@@ -91,7 +91,7 @@ async function getVersions() {
 
 async function publish() {
   logger("pnpm changeset version");
-  await $`pnpm changeset version1`.verbose();
+  await $`pnpm changeset version`.verbose();
 
   logger("pnpm version:g");
   await $`pnpm version:g`.verbose();
