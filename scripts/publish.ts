@@ -19,7 +19,7 @@ async function main() {
     await notifyTelegram(successfullyPackages);
   } catch (err: any) {
     const msg = err.message || err.stderr || JSON.stringify(err);
-    console.log("publish error", msg);
+    console.log("publish error: ", msg);
     await notifyTelegram(msg);
   }
 }
@@ -29,7 +29,9 @@ async function checkGitStatus() {
   if (status.isClean()) {
     return true;
   }
-  throw new Error("There are uncommitted changes, please commit");
+  throw new Error(
+    "publish error: There are uncommitted changes, please commit"
+  );
 }
 
 async function notifyTelegram(message: string) {
