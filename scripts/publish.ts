@@ -91,7 +91,7 @@ async function getVersions() {
 
 async function publish() {
   logger("pnpm changeset version");
-  await $`pnpm changeset version1`.verbose();
+  await $`pnpm changeset version`.verbose();
 
   logger("pnpm version:g");
   await $`pnpm version:g`.verbose();
@@ -103,10 +103,13 @@ async function publish() {
   await git.add(".");
 
   logger("git commit");
-  git.commit("publish");
+  await git.commit("publish");
 
   logger("git publish");
   await $`npm_config_registry=http://npm.orderly.network pnpm changeset publish`.verbose();
+
+  logger("git push");
+  await git.push();
 }
 
 async function generateChangeset() {
