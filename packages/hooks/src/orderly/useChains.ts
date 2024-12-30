@@ -149,7 +149,7 @@ export function useChains(
     );
 
     let testnetArr = needFetchFromAPI
-      ? ([...testTokenChains] as API.Chain[])
+      ? filterAndUpdateChains(testTokenChains, testChainInfos, undefined, true)
       : customChains?.testnet;
 
     tokenChains?.forEach((item) => {
@@ -311,7 +311,8 @@ export function fillChainsInfo(
 export function filterAndUpdateChains(
   chains: API.Chain[],
   chainInfos: any,
-  filter?: (chain: any) => boolean
+  filter?: (chain: any) => boolean,
+  isTestNet?: boolean
 ) {
   const filterChains: API.Chain[] = [];
 
@@ -332,9 +333,9 @@ export function filterAndUpdateChains(
         public_rpc_url,
         currency_symbol,
         bridge_enable: true,
-        mainnet: true,
+        mainnet: !isTestNet,
         explorer_base_url,
-        est_txn_mins: null,
+        // est_txn_mins: null,
       };
     }
 
