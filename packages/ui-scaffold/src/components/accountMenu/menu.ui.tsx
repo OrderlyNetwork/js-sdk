@@ -14,6 +14,14 @@ import {
   Text,
   Tooltip,
 } from "@orderly.network/ui";
+import {
+  useEventEmitter,
+  useConfig,
+  useAccount,
+  useNetworkInfo,
+} from "@orderly.network/hooks";
+import { EnumTrackerKeys } from "@orderly.network/types";
+import { useCallback, useEffect, useState } from "react";
 
 export type AccountMenuProps = {
   accountState: AccountState;
@@ -27,6 +35,27 @@ export type AccountMenuProps = {
 
 export const AccountMenu = (props: AccountMenuProps) => {
   const { accountState: state, onDisconnect, onOpenExplorer } = props;
+  const ee = useEventEmitter();
+  const { account, state: _state } = useAccount();
+  const config = useConfig();
+  const { wallet, network } = useNetworkInfo();
+  const [connect, setConnect] = useState(false);
+
+  const onConnectHandler = useCallback(() => {
+    ee.emit(EnumTrackerKeys["wallet:connected"], {
+      // @ts-ignore
+      wallet,
+      network,
+      sdk_version: window?.__ORDERLY_VERSION__?.["@orderly.network/net"] ?? "",
+      address: account?.address,
+      broker_id: config.get("brokerId"),
+      account_id: account?.accountId,
+    });
+  }, [account, config, wallet, network]);
+
+  useEffect(() => {
+    if (connect && wallet && network) onConnectHandler();
+  }, [connect, wallet, network]);
 
   if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
@@ -42,7 +71,8 @@ export const AccountMenu = (props: AccountMenuProps) => {
           props
             .connect()
             .then((r) => {
-              console.log("*****", r);
+              setConnect(true);
+              console.log("*****", r, _state);
             })
             .catch((e) => console.error(e));
         }}
@@ -127,6 +157,7 @@ export type AccountState = {
    * whether the account is validating
    */
   validating: boolean;
+  chainNamespace?: string;
 
   accountId?: string;
   userId?: string;
