@@ -623,12 +623,6 @@ function tpslTriggerPrice(option?: {
           ? {}
           : utils.findTPSLFromOrder(record);
 
-      console.log(
-        " sl_trigger_price, tp_trigger_price ",
-        sl_trigger_price,
-        tp_trigger_price
-      );
-
       const callback =
         (tp_trigger_price != null
           ? `TP: ${commifyOptional(tp_trigger_price, {
