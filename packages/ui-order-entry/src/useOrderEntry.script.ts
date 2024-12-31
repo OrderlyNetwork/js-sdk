@@ -250,20 +250,18 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [priceInputContainerRef]);
 
   const bboStatus = useMemo(() => {
-    const enable =
-      localBBOType && formattedOrder.order_type === OrderType.LIMIT;
-
     if (
-      enable &&
-      (tpslSwitch ||
-        [OrderType.POST_ONLY, OrderType.IOC, OrderType.FOK].includes(
-          formattedOrder.order_type_ext!
-        ))
+      tpslSwitch ||
+      [OrderType.POST_ONLY, OrderType.IOC, OrderType.FOK].includes(
+        formattedOrder.order_type_ext!
+      )
     ) {
       return BBOStatus.DISABLED;
     }
 
-    return enable ? BBOStatus.ON : BBOStatus.OFF;
+    return localBBOType && formattedOrder.order_type === OrderType.LIMIT
+      ? BBOStatus.ON
+      : BBOStatus.OFF;
   }, [
     localBBOType,
     tpslSwitch,

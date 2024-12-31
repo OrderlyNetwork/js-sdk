@@ -31,6 +31,7 @@ export type {
 } from "./order";
 export * from "./withdraw";
 export * from "./chains";
+export * from "./track";
 export type { Chain as ChainConfig, ChainInfo, NativeCurrency } from "./chains";
 export * from "./wallet";
 

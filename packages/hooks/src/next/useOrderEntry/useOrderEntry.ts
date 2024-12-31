@@ -207,7 +207,10 @@ const useOrderEntry = (
       formattedOrder.order_type_ext ?? lastOrderTypeExt.current;
     const level = formattedOrder.level ?? lastLevel.current;
 
-    if (!order_type_ext || level === undefined) {
+    if (
+      ![OrderType.ASK, OrderType.BID].includes(order_type_ext!) ||
+      level === undefined
+    ) {
       return;
     }
     lastOrderTypeExt.current = order_type_ext;
