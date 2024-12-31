@@ -46,7 +46,7 @@ const TotalValue: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          Total Value
+          Total value
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -278,7 +278,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("totalValue")}
                 onClick={() => props.onToggleItemByKey("totalValue")}
               />
-              <span>Total Value</span>
+              <span>Total value</span>
             </Flex>
             <Text.numeral
               visible={props.visible}
