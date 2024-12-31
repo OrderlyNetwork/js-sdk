@@ -47,6 +47,7 @@
   },
   "changesets": [
     "dirty-bees-begin",
+    "hot-experts-sniff",
     "sixty-queens-melt",
     "unlucky-files-destroy"
   ]

@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.1-internal-20250102.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.1-internal-20250102.3
+  - @orderly.network/utils@2.0.1-internal-20250102.3
+
 ## 4.0.1-internal-20250102.2
 
 ### Patch Changes
