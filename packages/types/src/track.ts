@@ -1,19 +1,19 @@
 export enum EnumTrackerKeys{
-  "wallet:connected" = "wallet:connected",
-  "withdraw:success" = "withdraw:success",
-  "withdraw:failed" = "withdraw:failed",
-  "deposit:success" = "deposit:success",
-  "deposit:failed" = "deposit:failed",
-  "signin:success" = "signin:success",
-  "place_order:success" = "place_order:success",
+  "WITHDRAW_SUCCESS" = "withdraw:success",
+  "WITHDRAW_FAILED" = "withdraw:failed",
+  "DEPOSIT_SUCCESS" = "deposit:success",
+  "DEPOSIT_FAILED" = "deposit:failed",
+  "SIGNIN_SUCCESS" = "signin:success",
+  "PLACEORDER_SUCCESS" = "place_order:success",
+  "WALLET_CONNECT" = "wallet:connected",
 }
 export const TrackerListenerKeyMap: { [key in EnumTrackerKeys]: string } = {
-  [EnumTrackerKeys["withdraw:success"]]: "withdraw_success",
-  [EnumTrackerKeys["withdraw:failed"]]: "withdraw_failure",
-  [EnumTrackerKeys["deposit:success"]]: "deposit_success",
-  [EnumTrackerKeys["deposit:failed"]]: "deposit_failure",
-  [EnumTrackerKeys["signin:success"]]: "sign_message_success",
-  [EnumTrackerKeys["wallet:connected"]]: "connect_wallet_success",
-  [EnumTrackerKeys["place_order:success"]]: "place_order_success",
+  [EnumTrackerKeys.WITHDRAW_SUCCESS]: "withdraw_success",
+  [EnumTrackerKeys.WITHDRAW_FAILED]: "withdraw_failure",
+  [EnumTrackerKeys.DEPOSIT_SUCCESS]: "deposit_success",
+  [EnumTrackerKeys.DEPOSIT_FAILED]: "deposit_failure",
+  [EnumTrackerKeys.SIGNIN_SUCCESS]: "sign_message_success",
+  [EnumTrackerKeys.WALLET_CONNECT]: "connect_wallet_success",
+  [EnumTrackerKeys.PLACEORDER_SUCCESS]: "place_order_success",
 };
 
