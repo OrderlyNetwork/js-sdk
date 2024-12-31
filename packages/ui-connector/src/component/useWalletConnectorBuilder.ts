@@ -4,14 +4,20 @@ import {
   useGetReferralCode,
   useLazyQuery,
   useMutation,
+  useNetworkInfo
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
 import { useEffect, useMemo, useState } from "react";
+import { useEventEmitter } from "@orderly.network/hooks";
+import { EnumTrackerKeys } from "@orderly.network/types";
+
 
 export const useWalletConnectorBuilder = () => {
   const { account, state, createOrderlyKey, createAccount } = useAccount();
   const [refCode, setRefCode] = useState("");
   const [helpText, setHelpText] = useState("");
+  const { wallet,network} = useNetworkInfo()
+  const ee = useEventEmitter();
 
   const { trigger: verifyRefCode } = useLazyQuery(
     `/v1/public/referral/verify_ref_code?referral_code=${refCode}`
@@ -36,6 +42,10 @@ export const useWalletConnectorBuilder = () => {
   }, [refCode]);
 
   const enableTradingComplted = () => {
+    ee.emit(EnumTrackerKeys["signin:success"], {
+      wallet,
+      network
+    });
     toast.success("Wallet connected");
     // validate ref code and bind referral code
     if (refCode.length >= 4 && refCode.length <= 10)

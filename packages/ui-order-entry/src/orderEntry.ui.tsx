@@ -43,13 +43,13 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { OrderTPSL } from "./components/tpsl";
-
+import { EnumTrackerKeys } from "@orderly.network/types";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage, useEventEmitter } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
@@ -82,6 +82,7 @@ export const OrderEntry = (
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
+  const ee = useEventEmitter();
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_order_confirm",
     true
@@ -167,6 +168,12 @@ export const OrderEntry = (
         return submit().then((result: any) => {
           console.log(result);
           if (result.success) {
+            ee.emit(EnumTrackerKeys["place_order:success"], {
+              side: side,
+              order_type: props.formattedOrder.order_type,
+              tp_sl: props.tpslSwitch,
+              reduce_only: !!props.formattedOrder.reduce_only,
+            });
             // setOrderValue("order_quantity", "");
           } else {
             toast.error(result.message);

@@ -1,6 +1,11 @@
 import { useCallback, useState } from "react";
 import { toast } from "@orderly.network/ui";
-import { useEventEmitter } from "@orderly.network/hooks";
+import {
+  useEventEmitter,
+  useNetworkInfo,
+} from "@orderly.network/hooks";
+import { EnumTrackerKeys } from "@orderly.network/types";
+
 
 type Options = {
   quantity: string;
@@ -23,8 +28,8 @@ export function useDepositAction(options: Options) {
     onSuccess,
   } = options;
   const [submitting, setSubmitting] = useState(false);
-
   const ee = useEventEmitter();
+  const {wallet,network} = useNetworkInfo()
 
   const onApprove = useCallback(async () => {
     if (submitting) return;
@@ -48,13 +53,23 @@ export function useDepositAction(options: Options) {
       .then((res: any) => {
         toast.success("Deposit requested");
         ee.emit("deposit:requested");
+        ee.emit(EnumTrackerKeys["deposit:success"], {
+          wallet,
+          network,
+          quantity,
+        });
         onSuccess?.();
       })
       .catch((err) => {
         console.error("deposit error", err);
+        ee.emit(EnumTrackerKeys["deposit:failed"], {
+          wallet,
+          network,
+          msg: JSON.stringify(err),
+        });
         toast.error(err.message || err.errorCode || "Deposit failed");
       });
-  }, [deposit, onSuccess, ee]);
+  }, [deposit, onSuccess, quantity]);
 
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
