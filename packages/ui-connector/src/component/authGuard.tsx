@@ -1,15 +1,8 @@
-import {
-  useAccount,
-  useMediaQuery,
-  useEventEmitter,
-  useConfig,
-  useNetworkInfo,
-} from "@orderly.network/hooks";
+import { useAccount, useMediaQuery } from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
   MEDIA_TABLET,
   NetworkId,
-  EnumTrackerKeys,
 } from "@orderly.network/types";
 import {
   Button,
@@ -22,14 +15,7 @@ import {
   type ButtonProps,
 } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
-import {
-  PropsWithChildren,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { PropsWithChildren, ReactElement, useMemo } from "react";
 import {
   WalletConnectorModalId,
   WalletConnectorSheetId,
@@ -91,29 +77,10 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     bridgeLessOnly,
     // ...rest
   } = props;
-  const { state, account } = useAccount();
+  const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
-  const [connect, setConnect] = useState(false);
-  const ee = useEventEmitter();
-  const config = useConfig();
-  const { wallet, network } = useNetworkInfo();
 
   const labels = { ...LABELS, ...props.labels };
-
-  useEffect(() => {
-    if (network && wallet && connect) {
-      ee.emit(EnumTrackerKeys["wallet:connected"], {
-        // @ts-ignore
-        wallet,
-        network,
-        sdk_version:
-          window?.__ORDERLY_VERSION__?.["@orderly.network/net"] ?? "",
-        address: account?.address,
-        broker_id: config.get("brokerId"),
-        account_id: account?.accountId,
-      });
-    }
-  }, [wallet, network, connect]);
 
   // return Match(state.status)
   //   .with(AccountStatusEnum.EnableTrading, () => props.children)
@@ -158,7 +125,6 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
         networkId={props.networkId}
         labels={labels}
         descriptions={descriptions}
-        setConnect={setConnect}
       />
     );
   }, [state.status, state.validating, buttonProps, wrongNetwork]);
@@ -182,16 +148,15 @@ const DefaultFallback = (props: {
   labels: alertMessages;
   bridgeLessOnly?: boolean;
   descriptions?: alertMessages;
-  setConnect?: (c: boolean) => void;
 }) => {
-  const { buttonProps, labels, descriptions, setConnect } = props;
+  const { buttonProps, labels, descriptions } = props;
   const { connectWallet } = useAppContext();
   const { account } = useAccount();
   const { isMobile } = useScreen();
   const matches = useMediaQuery(MEDIA_TABLET);
   const onConnectOrderly = () => {
     modal.show(matches ? WalletConnectorSheetId : WalletConnectorModalId).then(
-      (r) => {},
+      (r) => console.log(r),
       (error) => console.log(error)
     );
   };
@@ -208,7 +173,6 @@ const DefaultFallback = (props: {
         (res?.status ?? AccountStatusEnum.NotConnected) <
         AccountStatusEnum.EnableTrading
       ) {
-        setConnect?.(true);
         onConnectOrderly();
       }
     }
