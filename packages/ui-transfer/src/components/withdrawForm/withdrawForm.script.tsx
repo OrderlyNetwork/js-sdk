@@ -18,7 +18,6 @@ import { toast } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
 import { InputStatus } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
-import { EnumTrackerKeys } from "@orderly.network/types";
 
 export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>;
 
@@ -264,22 +263,12 @@ export const useWithdrawForm = ({
       .then((res) => {
         toast.success("Withdraw requested");
         ee.emit("withdraw:requested");
-        ee.emit(EnumTrackerKeys["withdraw:success"], {
-          wallet: walletName,
-          network: currentChain?.info?.network_infos?.name,
-          quantity,
-        });
         if (onClose) {
           onClose();
         }
         setQuantity("");
       })
       .catch((e) => {
-        ee.emit(EnumTrackerKeys["withdraw:failed"], {
-          wallet: walletName,
-          network: currentChain?.info?.network_infos?.name,
-          msg: JSON.stringify(e),
-        });
         if (e.message.indexOf("user rejected") !== -1) {
           toast.error("REJECTED_TRANSACTION");
           return;

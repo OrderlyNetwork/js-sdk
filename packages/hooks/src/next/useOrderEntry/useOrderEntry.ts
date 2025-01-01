@@ -13,6 +13,7 @@ import {
   OrderlyOrder,
   OrderType,
   OrderLevel,
+  EnumTrackerKeys
 } from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
@@ -24,6 +25,7 @@ import {
   getCreateOrderUrl,
   getOrderCreator,
   tpslFields,
+  hasTPSL
 } from "./helper";
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
@@ -481,6 +483,15 @@ const useOrderEntry = (
     const order = generateOrder(creator, prepareData());
 
     const result = await doCreateOrder(order);
+
+    if (result.success) {
+      ee.emit(EnumTrackerKeys.PLACEORDER_SUCCESS, {
+        side: order.side,
+        order_type: order.order_type,
+        tp_sl: hasTPSL(formattedOrder),
+        reduce_only: !!order.reduce_only,
+      });
+    }
 
     if (result.success && resetOnSuccess) {
       reset();
