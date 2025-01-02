@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useAccount } from "../useAccount";
+import { useAccount, } from "../useAccount";
+import {useEventEmitter} from '../useEventEmitter'
 import {
   AccountStatusEnum,
   API,
@@ -10,6 +11,7 @@ import {
   isNativeTokenChecker,
   MaxUint256,
   NetworkId,
+  EnumTrackerKeys
 } from "@orderly.network/types";
 import { Decimal, isTestnet } from "@orderly.network/utils";
 import { useChains } from "./useChains";
@@ -30,7 +32,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
-
+  const ee = useEventEmitter()
   const [_, { findByChainId }] = useChains(undefined);
 
   const [quantity, setQuantity] = useState<string>("");
@@ -317,9 +319,21 @@ export const useDeposit = (options?: useDepositOptions) => {
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
+          ee.emit(EnumTrackerKeys.DEPOSIT_SUCCESS, {
+            wallet:state?.connectWallet?.name,
+            network:targetChain?.network_infos.name,
+            quantity,
+          });
         updateAllowanceWhenTxSuccess(res.hash);
         setBalance((value) => new Decimal(value).sub(quantity).toString());
         return res;
+      }).catch(e => {
+          ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
+            wallet:state?.connectWallet?.name,
+            network:targetChain?.network_infos?.name,
+             msg: JSON.stringify(e),
+          });
+        throw e;
       });
   }, [account, fetchBalance, quantity, depositFee, options?.address]);
 

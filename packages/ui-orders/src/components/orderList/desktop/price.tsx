@@ -1,22 +1,14 @@
 import { API } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
-import {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
-
 import { ConfirmContent, EditType } from "./editOrder/confirmContent";
 import { InnerInput } from "./editOrder/innerInput";
 import { useOrderListContext } from "../orderListContext";
 import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
+import { OrderType } from "@orderly.network/types";
 
 export const Price = (props: {
   order: API.OrderExt;
@@ -24,15 +16,17 @@ export const Price = (props: {
 }) => {
   const { order } = props;
 
-  const [price, setPrice] = useState<string>(
-    order.price?.toString() ?? "Market"
-  );
+  const [price, setPrice] = useState<string>(() => {
+    if (order.type === OrderType.MARKET && !order.price) {
+      return "Market";
+    }
+    return order.price?.toString() ?? "Market";
+  });
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
-  // console.log("price node", order);
 
   const isStopMarket = order?.type === "MARKET" && isAlgoOrder;
 

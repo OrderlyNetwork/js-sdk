@@ -7,10 +7,16 @@ import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import type { FullOrderState } from "./orderEntry.store";
-import { API, OrderlyOrder, OrderType } from "@orderly.network/types";
+import {
+  SDKError,
+  API,
+  OrderlyOrder,
+  OrderType,
+  OrderLevel,
+  EnumTrackerKeys
+} from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
-import { OrderFactory } from "../../services/orderCreator/factory";
 import { VerifyResult } from "../../services/orderCreator/interface";
 import { useMutation } from "../../useMutation";
 import {
@@ -19,11 +25,11 @@ import {
   getCreateOrderUrl,
   getOrderCreator,
   tpslFields,
+  hasTPSL
 } from "./helper";
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
-import { SDKError } from "@orderly.network/types";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -159,8 +165,10 @@ const useOrderEntry = (
     errors: null,
   });
 
-  const askAndBid = useRef<number[]>([]); // 0: ask0, 1: bid0
+  const askAndBid = useRef<number[][]>([[]]); // [[ask0, bid0],...,[ask4,bid4]]
   const lastChangedField = useRef<keyof FullOrderState | undefined>();
+  const lastOrderTypeExt = useRef<OrderType>();
+  const lastLevel = useRef<OrderLevel>();
 
   // const [errors, setErrors] = useState<VerifyResult | null>(null);
 
@@ -195,8 +203,51 @@ const useOrderEntry = (
     formattedOrder.side,
     formattedOrder.reduce_only
   );
-  const onOrderBookUpdate = useDebouncedCallback((data: number[]) => {
+
+  const updateOrderPrice = () => {
+    const order_type_ext =
+      formattedOrder.order_type_ext ?? lastOrderTypeExt.current;
+    const level = formattedOrder.level ?? lastLevel.current;
+
+    if (
+      ![OrderType.ASK, OrderType.BID].includes(order_type_ext!) ||
+      level === undefined
+    ) {
+      return;
+    }
+    lastOrderTypeExt.current = order_type_ext;
+    lastLevel.current = level;
+
+    const index = order_type_ext === OrderType.ASK ? 0 : 1;
+    const price = askAndBid.current?.[level!]?.[index];
+    if (price && !isNaN(price)) {
+      setValue("order_price", price, {
+        shouldUpdateLastChangedField: false,
+      });
+    }
+    // console.log("updateOrderPrice", askAndBid.current, price);
+  };
+
+  const updateOrderPriceByOrderBook = () => {
+    const { order_type, order_type_ext, order_quantity } = formattedOrder;
+    // const hasQty = order_quantity && Number(order_quantity) !== 0;
+    const isBBO =
+      order_type === OrderType.LIMIT &&
+      [OrderType.ASK, OrderType.BID].includes(order_type_ext!);
+
+    if (lastChangedField.current !== "total" && isBBO) {
+      updateOrderPrice();
+    }
+  };
+
+  useEffect(() => {
+    // when BBO type change, it will change order price
+    updateOrderPrice();
+  }, [formattedOrder.order_type_ext, formattedOrder.level]);
+
+  const onOrderBookUpdate = useDebouncedCallback((data: number[][]) => {
     askAndBid.current = data;
+    updateOrderPriceByOrderBook();
   }, 200);
 
   /**
@@ -367,7 +418,7 @@ const useOrderEntry = (
     const markPrice = actions.getMarkPriceBySymbol(symbol);
     if (!markPrice || !accountInfo) return null;
 
-    return calcEstLiqPrice(formattedOrder, askAndBid.current, {
+    return calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
       baseIMR: symbolInfo?.base_imr,
       baseMMR: symbolInfo?.base_mmr,
       markPrice,
@@ -380,7 +431,7 @@ const useOrderEntry = (
   }, [formattedOrder, accountInfo, positions, totalCollateral, symbol]);
 
   const estLeverage = useMemo(() => {
-    return calcEstLeverage(formattedOrder, askAndBid.current, {
+    return calcEstLeverage(formattedOrder, askAndBid.current[0], {
       totalCollateral,
       positions,
       symbol,
@@ -432,6 +483,15 @@ const useOrderEntry = (
     const order = generateOrder(creator, prepareData());
 
     const result = await doCreateOrder(order);
+
+    if (result.success) {
+      ee.emit(EnumTrackerKeys.PLACEORDER_SUCCESS, {
+        side: order.side,
+        order_type: order.order_type,
+        tp_sl: hasTPSL(formattedOrder),
+        reduce_only: !!order.reduce_only,
+      });
+    }
 
     if (result.success && resetOnSuccess) {
       reset();

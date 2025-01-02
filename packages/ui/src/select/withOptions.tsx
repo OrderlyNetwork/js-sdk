@@ -33,7 +33,7 @@ export const defaultOptionRenderer = (
     <SelectItem
       key={option.value}
       value={option.value}
-      className={cn("oui-relative")}
+      className={cn("oui-relative oui-cursor-pointer")}
       data-testid={`oui-testid-selectItem-${option.value
         .toLowerCase()
         .replace(" ", "_")}`}
@@ -43,7 +43,7 @@ export const defaultOptionRenderer = (
         <Box
           width={4}
           height={4}
-          gradient="primary"
+          gradient="brand"
           r="full"
           className="oui-absolute oui-right-2 oui-top-1/2 -oui-translate-y-1/2"
         />

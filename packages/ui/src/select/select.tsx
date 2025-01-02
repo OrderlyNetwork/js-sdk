@@ -26,6 +26,9 @@ export type SelectProps<T> = SelectPrimitive.SelectProps & {
   showCaret?: boolean;
   maxHeight?: number;
   testid?: string;
+  classNames?: {
+    trigger?: string;
+  };
 } & SelectVariantProps;
 
 export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
@@ -40,6 +43,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
     showCaret,
     maxHeight,
     testid,
+    classNames,
     ...rest
   } = props;
 
@@ -51,8 +55,9 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
         variant={variant}
         showCaret={showCaret}
         className={cnBase(
-          "oui-font-semibold focus:oui-ring-transparent",
-          !showCaret && "oui-cursor-auto"
+          "oui-font-semibold focus:oui-ring-transparent oui-cursor-pointer",
+          // !showCaret && "oui-cursor-auto",
+          classNames?.trigger
         )}
         data-testid={testid}
       >

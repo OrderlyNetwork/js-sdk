@@ -50,6 +50,9 @@
       ],
       "@orderly.network/ui-share": [
         "../ui-share/src"
+      ],
+      "@orderly.network/ui-order": [
+        "../ui-order/src"
       ]
     }
   }

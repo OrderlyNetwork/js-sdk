@@ -19,6 +19,7 @@ export { useEventEmitter } from "./useEventEmitter";
 
 export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
+export { useNetworkInfo } from './useNetworkInfo'
 
 export { parseJSON } from "./utils/json";
 
@@ -36,6 +37,7 @@ export type {
   ConfigProviderExclusionProps,
 } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
+export { OrderlyTrackerProvider} from './trackerProvider'
 export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {

@@ -1,7 +1,6 @@
 import injectedModule from "@web3-onboard/injected-wallets";
 import { init } from "@web3-onboard/react";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
-import { getChainsArray } from "./chains";
 import binanceModule from "@binance/w3w-blocknative-connector";
 // import bitgetWalletModule from "@web3-onboard/bitget";
 import { merge } from "lodash";
@@ -22,7 +21,7 @@ export const initConfig: (
       autoConnectLastWallet: true,
     },
     wallets: [injectedModule(), binance],
-    chains: getChainsArray(),
+    chains: [],
     appMetadata: {
       name: "Orderly",
       // icon: blocknativeIcon,
