@@ -51,11 +51,14 @@
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
       ],
+      "@orderly.network/ui-cross-deposit": [
+        "../../packages/ui-cross-deposit/src"
+      ],
       "@orderly.network/ui-tradingview": ["../../packages/ui-tradingview/src"],
       "@orderly.network/ui-tpsl": ["../../packages/ui-tpsl/src"],
-      "@orderly.network/ui-cross-deposit": ["../../packages/ui-cross-deposit/src"],
-
     }
   },
-  "include": ["src", ".storybook"]
+  "include": [
+    "src"
+  ]
 }
