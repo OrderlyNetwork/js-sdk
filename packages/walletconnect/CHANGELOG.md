@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 2.0.1
+
+### Patch Changes
+
+- 0fd2e6038: add some features
+
 ## 2.0.1-alpha.8
 
 ### Patch Changes

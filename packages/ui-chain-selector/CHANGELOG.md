@@ -1,5 +1,16 @@
 # @orderly.network/ui-chain-selector
 
+## 2.0.1
+
+### Patch Changes
+
+- 0fd2e6038: add some features
+- Updated dependencies [0fd2e6038]
+  - @orderly.network/hooks@2.0.1
+  - @orderly.network/types@2.0.1
+  - @orderly.network/react-app@2.0.1
+  - @orderly.network/ui@2.0.1
+
 ## 2.0.1-alpha.8
 
 ### Patch Changes
