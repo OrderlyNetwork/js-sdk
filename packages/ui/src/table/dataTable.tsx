@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, useMemo } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -9,6 +9,8 @@ import {
   ColumnFilter,
   getFilteredRowModel,
   RowSelectionState,
+  TableFeature,
+  Table,
 } from "@tanstack/react-table";
 import { Column, PaginationMeta, TableSort, DataTableClassNames } from "./type";
 import { cnBase } from "tailwind-variants";
@@ -64,7 +66,9 @@ export type DataTableProps<RecordType> = {
   // test id
   testIds?: {
     body?: string;
-  }
+  };
+  features?: TableFeature[];
+  getTableInstance?: (table: Table<RecordType>) => void;
 };
 
 export function DataTable<RecordType extends any>(
@@ -131,6 +135,7 @@ export function DataTable<RecordType extends any>(
   }, [props.columnFilters]);
 
   const table = useReactTable({
+    _features: props.features,
     data: dataSource!,
     columns: formatColumns,
     state: {
@@ -158,6 +163,10 @@ export function DataTable<RecordType extends any>(
     ...paginationConfig,
     // ...sortConfig,
   });
+
+  useEffect(() => {
+    props.getTableInstance?.(table);
+  }, [table]);
 
   const wrapRef = useWrap([className, classNames?.root]);
   const { scrollRef, showLeftShadow, showRightShadow } = useScroll([

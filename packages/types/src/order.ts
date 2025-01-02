@@ -17,6 +17,21 @@ export enum OrderType {
   CLOSE_POSITION = "CLOSE_POSITION",
 }
 
+export enum BBOOrderType {
+  COUNTERPARTY1 = "counterparty1",
+  COUNTERPARTY5 = "counterparty5",
+  QUEUE1 = "queue1",
+  QUEUE5 = "queue5",
+}
+
+export enum OrderLevel {
+  ONE = 0,
+  TWO = 1,
+  THREE = 2,
+  FOUR = 3,
+  FIVE = 4,
+}
+
 export enum AlgoOrderRootType {
   TP_SL = "TP_SL",
   POSITIONAL_TP_SL = "POSITIONAL_TP_SL",
@@ -74,7 +89,7 @@ export interface BaseOrder {
   reduce_only: boolean;
   slippage: number;
   order_tag: string;
-  level: number;
+  level: OrderLevel;
   post_only_adjust: boolean;
 }
 
@@ -158,6 +173,7 @@ export interface OrderEntity {
   isStopOrder?: boolean;
   trigger_price?: string;
   order_tag?: string;
+  level?: OrderLevel;
 }
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

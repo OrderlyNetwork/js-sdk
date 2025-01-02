@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { forwardRef } from "react";
 import { useOrdersScript } from "./orders.script";
 import { Orders } from "./orders.ui";
 import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { OrderListInstance } from "./orderList/orderList.script";
 
 export enum TabType {
   all = "all",
@@ -13,13 +14,17 @@ export enum TabType {
   orderHistory = "orderHistory",
 }
 
-export const OrdersWidget: FC<{
+export type OrdersWidgetProps = {
   current?: TabType;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
-}> = (props) => {
-  const state = useOrdersScript(props);
-
-  return <Orders {...state} />;
 };
+
+export const OrdersWidget = forwardRef<OrderListInstance, OrdersWidgetProps>(
+  (props, ref) => {
+    const state = useOrdersScript({ ...props, ref });
+
+    return <Orders {...state} />;
+  }
+);

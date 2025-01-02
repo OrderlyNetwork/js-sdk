@@ -127,6 +127,7 @@ export type AccountState = {
    * whether the account is validating
    */
   validating: boolean;
+  chainNamespace?: string;
 
   accountId?: string;
   userId?: string;

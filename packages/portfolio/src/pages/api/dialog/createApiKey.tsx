@@ -63,7 +63,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             await props.doCreate(ipText, scopes.join(",") as ScopeType);
           },
           disabled: !trade && !read,
-          size: "md"
+          size: "md",
         },
       }}
       classNames={{
@@ -100,9 +100,14 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             }}
           />
           {hint.length > 0 && (
-            <Flex gap={1}>
-              <div className="oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"></div>
-              <Text color="danger" size="xs">
+            <Flex gap={1} className="oui-relative">
+              <div
+                className={cn(
+                  "oui-absolute oui-top-[10px]",
+                  "oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"
+                )}
+              />
+              <Text color="danger" size="xs" className="oui-ml-2">
                 {hint}
               </Text>
             </Flex>

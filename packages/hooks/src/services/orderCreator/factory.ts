@@ -15,6 +15,7 @@ import { TPSLPositionOrderCreator } from "./tpslPositionOrderCreator";
 import { BracketLimitOrderCreator } from "./bracketLimitOrderCreator";
 import { OrderlyOrder } from "@orderly.network/types";
 import { BracketMarketOrderCreator } from "./bracketMarketOrderCreator";
+import { BBOOrderCreator } from "./bboOrderCreator";
 
 export class OrderFactory {
   static create(
@@ -26,15 +27,13 @@ export class OrderFactory {
         return new BracketLimitOrderCreator();
       case `${AlgoOrderRootType.BRACKET}:${OrderType.MARKET}`:
         return new BracketMarketOrderCreator();
-      case OrderType.LIMIT: {
+      case OrderType.LIMIT:
         return new LimitOrderCreator();
-      }
       case OrderType.MARKET:
         return new MarketOrderCreator();
-      //   case OrderType.ASK:
-      //     return new AskOrderCreator();
-      //   case OrderType.BID:
-      //     return new BidOrderCreator();
+      case OrderType.ASK:
+      case OrderType.BID:
+        return new BBOOrderCreator();
       case OrderType.IOC:
         return new IOCOrderCreator();
       case OrderType.FOK:

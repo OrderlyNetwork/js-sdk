@@ -5,6 +5,7 @@ import { getColumnPinningProps } from "./utils/getColumnPinningProps";
 import { alignVariants } from "./className";
 import { DataTableProps } from "./dataTable";
 import { TableCell } from "./tableCell";
+import { jsxToPlainText } from "./features/download";
 
 type TableBodyProps<RecordType> = {
   className?: string;

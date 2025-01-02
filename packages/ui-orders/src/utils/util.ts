@@ -50,8 +50,19 @@ export function parseBadgesFor(record: any): undefined | string[] {
         ? record.type.replace("_ORDER", "").toLowerCase()
         : upperCaseFirstLetter(record.type);
 
-    if (record.algo_order_id === undefined || (record.algo_order_id && record.algo_type === 'BRACKET')) return [upperCaseFirstLetter(type)];
-    return [`Stop ${type}`]
+    // bbo(ask, bid) order as a limit type
+    if ([OrderType.ASK, OrderType.BID].includes(record.type)) {
+      return [upperCaseFirstLetter(OrderType.LIMIT)];
+    }
+
+    if (
+      record.algo_order_id === undefined ||
+      (record.algo_order_id && record.algo_type === "BRACKET")
+    ) {
+      return [upperCaseFirstLetter(type)];
+    }
+
+    return [`Stop ${type}`];
   }
 
   if (typeof record.algo_type !== "undefined") {
@@ -133,9 +144,8 @@ export function calcBracketRoiAndPnL(order: API.AlgoOrderExt) {
 
   if (typeof order.price === undefined || !order.price) return defaultCallback;
 
-  
-
-  const quantity = order.side === OrderSide.BUY ? order.quantity : order.quantity * -1;
+  const quantity =
+    order.side === OrderSide.BUY ? order.quantity : order.quantity * -1;
 
   const tpPnL =
     tpOrder?.trigger_price &&

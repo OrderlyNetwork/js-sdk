@@ -29,7 +29,7 @@ import { Renew } from "./renew";
 import { OrderTriggerPrice, TPSLTriggerPrice } from "./tpslTriggerPrice";
 import { BracketOrderPrice } from "./bracketOrderPrice";
 import { TP_SLEditButton } from "./tpslEdit";
-import { TPSLOrderPrice } from "./tpslPrice";
+import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
 import { useMemo } from "react";
 import { useSymbolContext } from "../symbolProvider";
 import { ShareButtonWidget } from "../../shareButton";
@@ -38,6 +38,8 @@ import {
   SharePnLDialogId,
   SharePnLParams,
 } from "@orderly.network/ui-share";
+import { format } from "date-fns";
+import { SymbolInfo, utils } from "@orderly.network/hooks";
 
 export const useOrderColumn = (props: {
   _type: TabType;
@@ -45,8 +47,10 @@ export const useOrderColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  symbolsInfo?: SymbolInfo;
 }) => {
-  const { _type, onSymbolChange, pnlNotionalDecimalPrecision, sharePnLConfig } = props;
+  const { _type, onSymbolChange, pnlNotionalDecimalPrecision, sharePnLConfig } =
+    props;
 
   const columns = useMemo(() => {
     switch (_type) {
@@ -72,11 +76,12 @@ export const useOrderColumn = (props: {
             enableSort: false,
           }),
           avgOpen({ width: 130, enableSort: false }),
-          tpslTriggerPrice({ width: 130 }),
+          tpslTriggerPrice({ width: 130, symbolsInfo: props.symbolsInfo }),
           realizedPnL({
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
+            symbolsInfo: props.symbolsInfo,
           }),
           estTotal({ width: 130, enableSort: false }),
           fee({ width: 130 }),
@@ -118,7 +123,7 @@ export const useOrderColumn = (props: {
           }),
           // side({ width: 176 }),
           quantity({ width: 176 }),
-          tpslTriggerPrice({ width: 176 }),
+          tpslTriggerPrice({ width: 176, symbolsInfo: props.symbolsInfo }),
           tpslPrice({ width: 176, disableEdit: true }),
           tpslNotional({ width: 176 }),
           reduceOnly({ width: 176 }),
@@ -150,13 +155,14 @@ export const useOrderColumn = (props: {
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
+            symbolsInfo: props.symbolsInfo,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
           hidden({ width: 124 }),
-          orderTime({ width: 124 }),
+          orderTime({ width: 176 }),
         ];
       case TabType.cancelled:
         return [
@@ -203,7 +209,7 @@ export const useOrderColumn = (props: {
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
           hidden({ width: 124 }),
-          orderTime({ width: 124 }),
+          orderTime({ width: 176 }),
         ];
       case TabType.orderHistory:
         return [
@@ -225,6 +231,7 @@ export const useOrderColumn = (props: {
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
+            symbolsInfo: props.symbolsInfo,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
@@ -263,6 +270,10 @@ function instrument(option?: {
           // return r2.symbol.localeCompare(r1.symbol);
         }
       : undefined,
+    renderPlantText: (value: string, record) => {
+      const badges = parseBadgesFor(record)?.join(",");
+      return `${value.split("_")[1]}-PERP (${badges})`;
+    },
     render: (value: string, record) => {
       const showGray = grayCell(record);
 
@@ -335,6 +346,7 @@ function side(option?: {
           // return r1.side.localeCompare(r2.side);
         }
       : undefined,
+    renderPlantText: (value: string, record) => upperCaseFirstLetter(value),
     render: (value: string, record) => {
       const clsName = grayCell(record)
         ? "oui-text-base-contrast-20"
@@ -414,6 +426,22 @@ function fillAndQuantity(option?: {
             // return compareNumbers(bQuantity, aQuantity);
           }
         : undefined,
+
+    renderPlantText: (value: string, record: any) => {
+      if (
+        record.type === OrderType.CLOSE_POSITION &&
+        record.status !== OrderStatus.FILLED
+      ) {
+        return "Entire position";
+      }
+
+      const executed = (record as API.OrderExt).total_executed_quantity;
+      const first =
+        "algo_type" in record && record.algo_type === AlgoOrderRootType.TP_SL
+          ? ""
+          : `${executed} / `;
+      return first + `${record.quantity}`;
+    },
     render: (value: string, record: any) => {
       if (
         record.type === OrderType.CLOSE_POSITION &&
@@ -455,6 +483,18 @@ function quantity(option?: {
             // return compareNumbers(bQuantity, aQuantity);
           }
         : undefined,
+    renderPlantText: (value: string, record: any) => {
+      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+        return "Entire position";
+      }
+
+      const executed = (record as API.OrderExt).total_executed_quantity;
+      const first =
+        "algo_type" in record && record.algo_type === AlgoOrderRootType.TP_SL
+          ? ""
+          : `${executed}/`;
+      return first + `${record.quantity}`;
+    },
     render: (value: string, record: any) => {
       if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
         return "Entire position";
@@ -481,12 +521,11 @@ function price(option?: {
       option?.enableSort ?? false
         ? (a, b, type) => {
             return compareNumbers(a.price ?? 0, b.price ?? 0);
-            // if (type == "asc") {
-            //   return compareNumbers(a.price ?? 0, b.price ?? 0);
-            // }
-            // return compareNumbers(b.price ?? 0, a.price ?? 0);
           }
         : undefined,
+    renderPlantText: (value: string, record: any) => {
+      return commifyOptional(record.price?.toString(), { fallback: "Market" });
+    },
     render: (value: string, record: any) => {
       return <Price order={record} disableEdit={option?.disableEdit} />;
     },
@@ -506,6 +545,14 @@ function tpslPrice(option?: {
     className: option?.className,
     width: option?.width,
     onSort: option?.enableSort,
+    renderPlantText: (value: string, record: any) => {
+      const { tpTriggerPrice, slTriggerPrice } = useTPSLOrderPrice(record);
+      const callback = `${tpTriggerPrice || ""}${
+        slTriggerPrice ? `${tpTriggerPrice ? "\n" : ""}${slTriggerPrice}` : ""
+      }`;
+
+      return callback.length > 0 ? callback : "--";
+    },
     render: (value: string, record: any) => {
       return <TPSLOrderPrice />;
     },
@@ -524,11 +571,7 @@ function avgPrice(option?: {
     className: option?.className,
     width: option?.width,
     onSort: option?.enableSort,
-    render: (value: string, record: any) => {
-      // console.log("average_executed_price", record.average_executed_price);
-
-      return <Text>{commifyOptional(value)}</Text>;
-    },
+    render: (value: string, record: any) => commifyOptional(value),
   };
 }
 
@@ -544,6 +587,14 @@ function triggerPrice(option?: {
     dataIndex: "trigger_price",
     width: option?.width,
     onSort: option?.enableSort,
+    renderPlantText: (value: string, record: any) => {
+      const isAlgoOrder = record?.algo_order_id !== undefined;
+      const isBracketOrder = record?.algo_type === "BRACKET";
+      if (!isAlgoOrder || isBracketOrder) {
+        return "--";
+      }
+      return commifyOptional(value);
+    },
     render: (value: string, record: any) => (
       <TriggerPrice order={record} disableEdit={option?.disableEdit} />
     ),
@@ -555,6 +606,7 @@ function tpslTriggerPrice(option?: {
   width?: number;
   className?: string;
   title?: string;
+  symbolsInfo?: SymbolInfo;
 }): Column<API.Order> {
   return {
     title: option?.title ?? "Trigger",
@@ -562,6 +614,30 @@ function tpslTriggerPrice(option?: {
     dataIndex: "tpsl_trigger_price",
     width: option?.width,
     onSort: option?.enableSort,
+    renderPlantText: (value: string, record: any) => {
+      const info = option?.symbolsInfo?.[record.symbol];
+      const quote_dp = info?.("quote_dp");
+      // @ts-ignore
+      const { sl_trigger_price, tp_trigger_price } =
+        !("algo_type" in record) || !Array.isArray(record.child_orders)
+          ? {}
+          : utils.findTPSLFromOrder(record);
+
+      const callback =
+        (tp_trigger_price != null
+          ? `TP: ${commifyOptional(tp_trigger_price, {
+              fix: quote_dp,
+              padEnd: true,
+            })}`
+          : "") +
+        (sl_trigger_price != null
+          ? `${tp_trigger_price ? "\n" : ""}SL: ${commifyOptional(
+              sl_trigger_price,
+              { fix: quote_dp, padEnd: true }
+            )}`
+          : "");
+      return callback.length > 0 ? callback : "--";
+    },
     render: (value: string, record: any) => <OrderTriggerPrice />,
   };
 }
@@ -577,6 +653,26 @@ function bracketOrderPrice(option?: {
     dataIndex: "bracketOrderPrice",
     width: option?.width,
     onSort: option?.enableSort,
+    renderPlantText: (value: string, record: any) => {
+      const getTPSLTriggerPrice = (): {
+        sl_trigger_price?: number;
+        tp_trigger_price?: number;
+      } => {
+        if (!("algo_type" in record) || !Array.isArray(record.child_orders)) {
+          return {};
+        }
+        return utils.findTPSLFromOrder(record.child_orders[0]);
+      };
+
+      const { sl_trigger_price, tp_trigger_price } = getTPSLTriggerPrice();
+
+      const callback =
+        (tp_trigger_price != null ? `TP: ${tp_trigger_price}` : "") +
+        (sl_trigger_price != null
+          ? `${tp_trigger_price ? "\n" : ""}SL: ${sl_trigger_price}`
+          : "");
+      return callback.length > 0 ? callback : "--";
+    },
     render: (value: string, record: any) => (
       <BracketOrderPrice order={record} />
     ),
@@ -622,36 +718,28 @@ function estTotal(option?: {
             // return compareNumbers(bTotal, aTotal);
           }
         : undefined,
-    render: (value: string, record: any) => {
-      if (option?.isPending) {
-        const value = () => {
-          if (record.price && record.quantity) {
-            return new Decimal(record.price)
-              .mul(record.quantity)
-              .toFixed(2, Decimal.ROUND_DOWN);
-          }
-          return "--";
-        };
+    renderPlantText: (value: string, record: any) => {
+      const estTotal = estTotalValue(record, option?.isPending ?? false);
 
-        return <Text.numeral rm={Decimal.ROUND_DOWN}>{value()}</Text.numeral>;
+      if (estTotal === "Entire position") {
+        return "Entire position";
       }
 
-      if (
-        record.type === OrderType.CLOSE_POSITION &&
-        record.status !== OrderStatus.FILLED
-      ) {
+      return commifyOptional(
+        estTotalValue(record, option?.isPending ?? false),
+        { fix: 2 }
+      );
+    },
+    render: (value: string, record: any) => {
+      const estTotal = estTotalValue(record, option?.isPending ?? false);
+
+      if (estTotal === "Entire position") {
         return "Entire position";
       }
 
       return (
         <Text.numeral rm={Decimal.ROUND_DOWN} dp={2}>
-          {record.total_executed_quantity === 0 ||
-          Number.isNaN(record.average_executed_price) ||
-          record.average_executed_price === null
-            ? "--"
-            : `${
-                record.total_executed_quantity * record.average_executed_price
-              }`}
+          {estTotal}
         </Text.numeral>
       );
     },
@@ -665,12 +753,25 @@ function realizedPnL(option?: {
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  symbolsInfo?: SymbolInfo;
 }): Column<API.Order> {
   return {
     title: "Real. PnL",
     dataIndex: "realized_pnl",
     width: option?.width,
     className: option?.className,
+    renderPlantText: (_value: string, record: any) => {
+      const info = option?.symbolsInfo?.[record.symbol];
+      const quote_dp = info?.("quote_dp");
+      const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
+      const value = new Decimal(_value ?? 0)
+        .toDecimalPlaces(dp, Decimal.ROUND_DOWN)
+        .toNumber();
+
+      const formatValue = commifyOptional(value);
+
+      return value > 0 ? `+${formatValue}` : formatValue;
+    },
     render: (_value: number | undefined, record: any) => {
       const { quote_dp } = useSymbolContext();
       const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
@@ -711,6 +812,9 @@ function reduceOnly(option?: {
     dataIndex: "reduce_only",
     width: option?.width,
     className: option?.className,
+    renderPlantText: (value: string, record: any) => {
+      return value ? "Yes" : "No";
+    },
     render: (value: boolean) => {
       return <Text>{value ? "Yes" : "No"}</Text>;
     },
@@ -727,6 +831,9 @@ function hidden(option?: {
     dataIndex: "visible",
     width: option?.width,
     className: option?.className,
+    renderPlantText: (value: number, record: any) => {
+      return value !== 0 ? "No" : "Yes";
+    },
     render: (value: number, record) => {
       return <Text>{record.visible_quantity !== 0 ? "No" : "Yes"}</Text>;
     },
@@ -745,6 +852,11 @@ function orderTime(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
+    renderPlantText: (value: string, record: any) => {
+      const date = new Date(value);
+      const formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
+      return formattedDate;
+    },
     render: (value: string) => (
       <Text.formatted
         rule={"date"}
@@ -782,6 +894,9 @@ function notional(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
+    renderPlantText: (value: number, record: any) => {
+      return commifyOptional(value, { fix: 2 });
+    },
     render: (value?: string) => (
       <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
         {value ?? "--"}
@@ -801,6 +916,19 @@ function tpslNotional(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
+    renderPlantText: (value: any, record: any) => {
+      if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
+        return "Entire position";
+      }
+      return commifyOptional(
+        record.quantity === 0
+          ? "--"
+          : `${new Decimal(record.mark_price)
+              .mul(record.quantity)
+              .todp(2)
+              .toNumber()}`
+      );
+    },
     render: (value: any, record: any) => {
       if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
         return "Entire position";
@@ -831,6 +959,13 @@ function status(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     className: option?.className,
+    renderPlantText: (value: string, record: any) => {
+      const status = value || record.algo_status;
+      if (status === "NEW") {
+        return upperCaseFirstLetter("pending");
+      }
+      return upperCaseFirstLetter(status);
+    },
     render: (value: string, record: any) => {
       const status = value || record.algo_status;
 
@@ -858,24 +993,22 @@ function avgOpen(option?: {
               a.average_executed_price ?? 0,
               b.average_executed_price ?? 0
             );
-            // if (type == "asc") {
-            //   return compareNumbers(
-            //     a.average_executed_price ?? 0,
-            //     b.average_executed_price ?? 0
-            //   );
-            // }
-            // return compareNumbers(
-            //   b.average_executed_price ?? 0,
-            //   a.average_executed_price ?? 0
-            // );
           }
         : undefined,
     className: option?.className,
-    render: (value: string, record) => (
-      <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-        {record.average_executed_price}
-      </Text.numeral>
-    ),
+    render: (value: string, record) => {
+      if (record.type === OrderType.MARKET && !value) {
+        return "--";
+      }
+      return (
+        <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+          {value}
+        </Text.numeral>
+      );
+    },
+    renderPlantText: (value: string, record: any) => {
+      return commifyOptional(value, { fix: 2 });
+    },
   };
 }
 
@@ -932,6 +1065,7 @@ function tpslAction(option?: {
 }): Column<API.Order> {
   return {
     title: "",
+    type: "action",
     dataIndex: "action",
     width: option?.width,
     className: option?.className,
@@ -952,4 +1086,33 @@ function compareNumbers(a: number, b: number): number {
   if (a > b) return 1;
   if (a < b) return -1;
   return 0;
+}
+
+// estTotal
+function estTotalValue(record: any, isPending: boolean): string {
+  if (isPending) {
+    const value = () => {
+      if (record.price && record.quantity) {
+        return new Decimal(record.price)
+          .mul(record.quantity)
+          .toFixed(2, Decimal.ROUND_DOWN);
+      }
+      return "--";
+    };
+
+    return value();
+  }
+
+  if (
+    record.type === OrderType.CLOSE_POSITION &&
+    record.status !== OrderStatus.FILLED
+  ) {
+    return "Entire position";
+  }
+
+  return record.total_executed_quantity === 0 ||
+    Number.isNaN(record.average_executed_price) ||
+    record.average_executed_price === null
+    ? "--"
+    : `${record.total_executed_quantity * record.average_executed_price}`;
 }
