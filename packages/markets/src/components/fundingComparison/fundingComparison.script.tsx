@@ -1,8 +1,9 @@
-import { useQuery } from "@orderly.network/hooks";
+import { useFundingRates, useQuery } from "@orderly.network/hooks";
 import { useMemo } from "react";
 import { usePagination } from "@orderly.network/ui";
 
 export const exchanges = [
+  "WOOFi Pro",
   "Binance",
   "OKX",
   "Bybit",
@@ -16,6 +17,8 @@ export const useFundingComparisonScript = () => {
     pageSize: 10,
   });
 
+  const fundingRates = useFundingRates();
+
   const { data, isLoading } = useQuery<
     Array<{
       symbol: string;
@@ -28,23 +31,29 @@ export const useFundingComparisonScript = () => {
 
   const processedData = useMemo(() => {
     if (!data?.length) return [];
-
-    return data.map((row) => {
+    return data.map((row: any) => {
       const exchangeData: any = {
         symbol: row.symbol,
       };
 
       exchanges.forEach((name, index) => {
         const normalizedName = name.toLowerCase();
+
+        if (normalizedName === "woofi pro") {
+          const rate = fundingRates[row.symbol];
+          exchangeData[`exchange_${index}`] = rate("last_funding_rate") ?? null;
+          return;
+        }
+
         const exchange = row.exchanges.find(
-          (e) => e.name.toLowerCase() === normalizedName
+          (e: any) => e.name.toLowerCase() === normalizedName
         );
         exchangeData[`exchange_${index}`] = exchange?.last ?? null;
       });
 
       return exchangeData;
     });
-  }, [data, exchanges]);
+  }, [data, exchanges, fundingRates]);
 
   return {
     data: processedData,
