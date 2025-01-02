@@ -6,9 +6,9 @@ import {
   type WithdrawInputs,
 } from "@orderly.network/core";
 import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
-import { AbiCoder,solidityPackedKeccak256 } from "ethers";
+import { AbiCoder, solidityPackedKeccak256 } from "ethers";
 import { keccak256 } from "ethereum-cryptography/keccak";
-import {decode as bs58Decode } from "bs58";
+import { decode as bs58Decode } from "bs58";
 
 import {
   ComputeBudgetProgram,
@@ -23,7 +23,8 @@ import { IDL as VaultIDL, SolanaVault } from "./idl/solana_vault";
 import {
   getBrokerPDA,
   getDefaultSendConfigPda,
-  getDefaultSendLibConfigPda, getDstEID,
+  getDefaultSendLibConfigPda,
+  getDstEID,
   getDvnConfigPda,
   getEndorcedOptionsPda,
   getEndpointSettingPda,
@@ -46,7 +47,7 @@ import {
   getUlnEventAuthorityPda,
   getUlnSettingPda,
   getUSDCAccounts,
-  getVaultAuthorityPda
+  getVaultAuthorityPda,
 } from "./solana.util";
 import {
   DVN_PROGRAM_ID,
@@ -256,18 +257,18 @@ export async function getDepositQuoteFee({
   vaultAddress,
   userAddress,
   connection,
-                                           depositData,
+  depositData,
 }: {
   vaultAddress: string;
   userAddress: string;
   connection: Connection;
-  depositData:  {
+  depositData: {
     tokenHash: string;
     brokerHash: string;
     accountId: string;
     USDCAddress: string;
     tokenAmount: string;
-  }
+  };
 }) {
   console.log("-- vaultAddress", vaultAddress);
   const appProgramId = new PublicKey(vaultAddress);
@@ -300,7 +301,7 @@ export async function getDepositQuoteFee({
   const messageLibInfoPDA = getMessageLibInfoPda(messageLibPDA);
   const vaultAuthorityPDA = getVaultAuthorityPda(appProgramId);
 
-  const depositParams = getDepositParams(userAddress, depositData)
+  const depositParams = getDepositParams(userAddress, depositData);
 
   // deposit fee
   const quoteFee = await program.methods
@@ -427,13 +428,25 @@ export async function getDepositQuoteFee({
 
   const feeRes = await connection.simulateTransaction(feeTx);
 
-  console.log('-- feeRes', feeRes);
+  console.log("-- feeRes", feeRes);
+  if (feeRes.value.err) {
+    const errorInfo =
+      typeof feeRes.value.err === "object"
+        ? JSON.stringify(feeRes.value.err)
+        : feeRes.value.err;
+
+    if (errorInfo.toString().includes("AccountNotFound")) {
+      throw new Error("Error: Account gas is insufficient.");
+    }
+
+    throw new Error(`Error: ${errorInfo}`);
+  }
   const returnPrefix = `Program return: ${program.programId} `;
   const returnLogEntry = feeRes.value.logs!.find((log) =>
     log.startsWith(returnPrefix)
   );
   if (!returnLogEntry) {
-    throw new Error("get deposit fee error");
+    throw new Error("Error: get deposit fee error");
   }
 
   // Slice out the prefix to get the base64 return data
@@ -447,13 +460,16 @@ export async function getDepositQuoteFee({
   );
   return decodedBuffer.readBigUInt64LE(0);
 }
-const getDepositParams = (userAddress: string, depositData:  {
-  tokenHash: string;
-  brokerHash: string;
-  accountId: string;
-  USDCAddress: string;
-  tokenAmount: string;
-}) => {
+const getDepositParams = (
+  userAddress: string,
+  depositData: {
+    tokenHash: string;
+    brokerHash: string;
+    accountId: string;
+    USDCAddress: string;
+    tokenAmount: string;
+  }
+) => {
   const brokerHash = depositData.brokerHash;
   const codedBrokerHash = Array.from(Buffer.from(brokerHash.slice(2), "hex"));
 
@@ -464,15 +480,14 @@ const getDepositParams = (userAddress: string, depositData:  {
   const codedAccountId = Array.from(Buffer.from(solAccountId.slice(2), "hex"));
   const userPublicKey = new PublicKey(userAddress);
 
-
-  return  {
+  return {
     accountId: codedAccountId,
     brokerHash: codedBrokerHash,
     tokenHash: codedTokenHash,
     userAddress: Array.from(userPublicKey.toBuffer()),
     tokenAmount: new BN(depositData.tokenAmount),
   };
-}
+};
 
 export async function deposit({
   vaultAddress,
@@ -496,7 +511,7 @@ export async function deposit({
   const brokerHash = depositData.brokerHash;
   const tokenHash = depositData.tokenHash;
 
-  console.log('-- vault address', vaultAddress);
+  console.log("-- vault address", vaultAddress);
   const appProgramId = new PublicKey(vaultAddress);
   const program = new Program<SolanaVault>(VaultIDL, appProgramId, {
     connection,

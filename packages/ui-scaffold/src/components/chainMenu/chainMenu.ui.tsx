@@ -21,7 +21,8 @@ export const ChainMenu = (props: {
   wrongNetwork: boolean;
   isConnected: boolean;
   accountStatus: AccountStatusEnum;
-  networkId: NetworkId
+  storageChains?: ChainItem[];
+  networkId: NetworkId;
 }) => {
   if (props.wrongNetwork && props.isConnected) {
     return (
@@ -38,8 +39,11 @@ export const ChainMenu = (props: {
             modal
               .show<{
                 wrongNetwork: boolean;
-              }>(ChainSelectorId,{
-                networkId:props.networkId
+              }>(ChainSelectorId, {
+                networkId: props.networkId,
+                classNames: {
+                  body: "!oui-pt-0",
+                },
               })
               .then(
                 (r) => {
@@ -72,6 +76,7 @@ export const ChainMenu = (props: {
         value={props.currentChainId}
         variant="contained"
         onChange={props.onChange}
+        storageChains={props.storageChains}
       />
     </Flex>
   );

@@ -4,6 +4,7 @@ import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { customViewports } from "./screenSizes";
 import OrderlyProvider from "./orderlyProvider";
 import "../src/tailwind.css";
+import { withThemeBuilder } from "./addons/themeBuilder/preview";
 
 const preview: Preview = {
   decorators: [
@@ -12,10 +13,12 @@ const preview: Preview = {
         <Story />
       </OrderlyProvider>
     ),
+    withThemeBuilder,
     withThemeByDataAttribute({
       themes: {
         orderly: "orderly",
         custom: "custom",
+        roundless: "roundless",
       },
       defaultTheme: "orderly",
       attributeName: "data-oui-theme",

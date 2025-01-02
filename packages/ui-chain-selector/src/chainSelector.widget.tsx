@@ -13,7 +13,12 @@ export const ChainSelectorWidget = (props: {
 }) => {
   const state = useChainSelectorBuilder(props);
   return (
-    <ChainSelector {...state} close={props.close} resolve={props.resolve} isWrongNetwork={props.isWrongNetwork} />
+    <ChainSelector
+      {...state}
+      close={props.close}
+      resolve={props.resolve}
+      isWrongNetwork={props.isWrongNetwork}
+    />
   );
 };
 
@@ -27,4 +32,8 @@ registerSimpleDialog(ChainSelectorId, ChainSelectorWidget, {
 
 registerSimpleSheet(ChainSelectorSheetId, ChainSelectorWidget, {
   title: "Switch Network",
-})
+  classNames: {
+    content: "!oui-bg-base-8",
+    body: "!oui-bg-base-8",
+  },
+});

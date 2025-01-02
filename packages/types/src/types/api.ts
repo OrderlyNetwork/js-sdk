@@ -182,6 +182,26 @@ export declare namespace API {
     sum_unitary_funding: number;
   }
 
+  export interface FundingPeriodData {
+    rate: number;
+    positive: number;
+    negative: number;
+  }
+
+  export interface FundingHistory {
+    symbol: string;
+    data_start_time: string;
+    funding: {
+      last: FundingPeriodData;
+      "1d": FundingPeriodData;
+      "3d": FundingPeriodData;
+      "7d": FundingPeriodData;
+      "14d": FundingPeriodData;
+      "30d": FundingPeriodData;
+      "90d": FundingPeriodData;
+    };
+  }
+
   export interface PositionInfo extends PositionAggregated {
     // margin_ratio: number;
     // initial_margin_ratio: number;
@@ -405,6 +425,43 @@ export declare namespace API {
     perp_volume: number;
     pnl: number;
     snapshot_time?: number;
+  }
+
+  export interface PositionHistory {
+    position_id: number;                // Unique identifier for the position
+    liquidation_id?: number;                // Unique identifier for the position
+    position_status: string;            // Status of the position
+    type: string;                       // Type of the position activity
+    symbol: string;                     // Trading pair symbol
+    avg_open_price: number;             // Average open price of the position
+    avg_close_price: number;            // Average close price of the position
+    max_position_qty: number;           // Maximum quantity held in the position
+    closed_position_qty: number;        // Quantity closed in the position
+    side: "LONG" | "SHORT";             // Side of the position
+    trading_fee: number;                // Fee charged for trading
+    accumulated_funding_fee: number;    // Accumulated funding fee for the position
+    insurance_fund_fee: number;         // Fee contributed to the insurance fund
+    liquidator_fee: number;             // Fee paid to the liquidator
+    realized_pnl: number;               // Realized profit and loss
+    open_timestamp: number;             // Timestamp when the position was opened
+    close_timestamp: number;            // Timestamp when the position was closed
+    last_update_time: number;           // Timestamp of the last update to the position
+  }
+
+  export interface LiquidationPositionByPerp {
+    abs_liquidation_fee: number;
+    cost_position_transfer: number;
+    liquidator_fee: number;
+    position_qty: number;
+    symbol: string;
+    transfer_price: number;
+  }
+
+  export interface Liquidation {
+    liquidation_id: number;
+    timestamp: number;
+    transfer_amount_to_insurance_fund: number;
+    positions_by_perp: LiquidationPositionByPerp[];
   }
 }
 

@@ -14,8 +14,8 @@ import {
   useChains,
   useLocalStorage,
 } from "@orderly.network/hooks";
-import { useMemo, isValidElement } from "react";
-import { ExpandableContext, routerAdapter } from "./scaffoldContext";
+import { isValidElement } from "react";
+import { ExpandableContext, RouterAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterProps, FooterWidget } from "./footer";
 import { MaintenanceTipsWidget } from "./maintenanceTips";
@@ -28,13 +28,13 @@ export type LayoutProps = {
   gap?: number;
   leftSidebar?: React.ReactNode;
   leftSideProps?: SideBarProps;
-  rightSidebar?: React.ReactNode;
+  // rightSidebar?: React.ReactNode;
   topBar?: React.ReactNode;
   // topBarProps?:
   mainNavProps?: MainNavWidgetProps;
   footer?: React.ReactNode;
   footerProps?: FooterProps;
-  routerAdapter?: routerAdapter;
+  routerAdapter?: RouterAdapter;
   classNames?: {
     root?: string;
     content?: string;
@@ -116,12 +116,8 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         >
           {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
-        <div className='oui-scaffold-maintenance-tips oui-hidden xl:oui-block  oui-min-w-[1440px]'>
-          {!isMobile &&
-
-            <MaintenanceTipsWidget />
-         }
-
+        <div className="oui-scaffold-maintenance-tips oui-hidden xl:oui-block  oui-min-w-[1440px]">
+          {!isMobile && <MaintenanceTipsWidget />}
         </div>
         {/*--------- body start ------ */}
         {!hasLeftSidebar ? (

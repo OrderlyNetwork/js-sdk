@@ -10,6 +10,7 @@ import { useBootstrap } from "../hooks/useBootstrap";
 import {
   ConfigProviderProps,
   OrderlyConfigProvider,
+  OrderlyTrackerProvider,
 } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./appContext";
 import { AppConfigProvider } from "./configContext";
@@ -42,9 +43,11 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
       >
         <OrderlyConfigProvider {...(configProps as ConfigProviderProps)}>
           <AppStateProvider onChainChanged={onChainChanged}>
-            <TooltipProvider delayDuration={300}>
-              <ModalProvider>{props.children}</ModalProvider>
-            </TooltipProvider>
+            <OrderlyTrackerProvider>
+              <TooltipProvider delayDuration={300}>
+                <ModalProvider>{props.children}</ModalProvider>
+              </TooltipProvider>
+            </OrderlyTrackerProvider>
           </AppStateProvider>
           <Toaster />
         </OrderlyConfigProvider>

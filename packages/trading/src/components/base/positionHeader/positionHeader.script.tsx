@@ -7,13 +7,11 @@ export const usePositionHeaderScript = (props: {
   pnlNotionalDecimalPrecision?: number;
   unPnlPriceBasis: "markPrice" | "lastPrice";
   symbol?: string;
-  tabletMediaQuery: string;
 }) => {
   const {
     pnlNotionalDecimalPrecision,
     unPnlPriceBasis,
     symbol,
-    tabletMediaQuery,
   } = props;
   const calcMode = unPnlPriceBasis;
 
@@ -32,7 +30,6 @@ export const usePositionHeaderScript = (props: {
     unrealPnL,
     unrealPnlROI,
     notional,
-    tabletMediaQuery,
     showAllSymbol,
     setShowAllSymbol,
   };

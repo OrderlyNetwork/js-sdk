@@ -194,7 +194,7 @@ export class DataPaint extends BasePaint {
     }
     // unrelPnL
     if (typeof options.data?.position.pnl !== "undefined") {
-      const prefix = options.data?.position.pnl! > 0 ? "+" : "";
+      const prefix = options.data?.position.pnl! >= 0 ? "+" : "";
       let text = `${prefix}${commify(options.data?.position.pnl)} ${
         options.data?.position.currency
       }`;

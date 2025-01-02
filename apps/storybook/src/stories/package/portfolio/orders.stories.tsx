@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { FeeTierModule, OrdersModule } from "@orderly.network/portfolio";
 import { Box } from "@orderly.network/ui";
+import config from "../../../config";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/portfolio/Orders",
@@ -27,6 +28,9 @@ const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
     // },
   },
   args: {
+    sharePnLConfig: {
+      ...config.tradingPage.sharePnLConfig,
+    },
     // p: 5,
   },
 };

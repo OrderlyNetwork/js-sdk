@@ -18,7 +18,6 @@ export const EditAPIKeyDialog: FC<{
   verifyIP: (ip: string) => string;
 }> = (props) => {
   const { item, open, setOpen, onUpdate } = props;
-  console.log("edit dialog", item.ip_restriction_list.join(","));
   const [ipText, setIpText] = useState(item.ip_restriction_list?.join(","));
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
@@ -95,9 +94,14 @@ export const EditAPIKeyDialog: FC<{
             }}
           />
           {hint.length > 0 && (
-            <Flex gap={1}>
-              <div className="oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"></div>
-              <Text color="danger" size="xs">
+            <Flex gap={1} className="oui-relative">
+              <div
+                className={cn(
+                  "oui-absolute oui-top-[10px]",
+                  "oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"
+                )}
+              />
+              <Text color="danger" size="xs" className="oui-ml-2">
                 {hint}
               </Text>
             </Flex>

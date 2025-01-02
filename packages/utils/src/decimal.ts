@@ -22,6 +22,11 @@ export const commifyOptional = (
     prefix?: string;
   }
 ): string => {
+  // if num convert to num failed, return fallback
+  if (typeof num === "string" && isNaN(Number(num))) {
+    return options?.fallback || "--";
+  }
+
   const prefix = options?.prefix || "";
   if (typeof num === "undefined") return prefix + (options?.fallback || "--");
   const value = commify(num, options?.fix);

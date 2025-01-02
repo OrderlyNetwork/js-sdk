@@ -16,8 +16,7 @@ export const ListBox: FC<OrderBookListProps> = (props) => {
 
   return (
     <Box
-      id="oui-order-book-list"
-      className="oui-flex oui-flex-col oui-gap-[1px] oui-w-full"
+      className="oui-order-book-list oui-flex oui-flex-col oui-gap-[1px] oui-w-full"
     >
       {data.map((item, index) => {
         return (

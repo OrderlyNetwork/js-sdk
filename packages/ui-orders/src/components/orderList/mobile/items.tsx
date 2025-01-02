@@ -18,6 +18,8 @@ import {
 } from "@orderly.network/types";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderSide } from "@orderly.network/types";
+import { ShareButtonWidget } from "../../shareButton";
+import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 
 export const SymbolToken: FC<OrderCellState> = (props) => {
   const { item } = props;
@@ -104,7 +106,7 @@ export const OrderState: FC<OrderCellState> = (props) => {
   };
 
   return (
-    <Text.formatted intensity={36} size="2xs">
+    <Text.formatted intensity={80} size="2xs">
       {label()}
     </Text.formatted>
   );
@@ -151,7 +153,7 @@ export const Filled: FC<OrderCellState> = (props) => {
       }}
     >
       <Text.numeral
-        dp={props.quote_dp}
+        dp={props.base_dp}
         intensity={80}
         padding={false}
         rm={Decimal.ROUND_DOWN}
@@ -520,16 +522,24 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
       }}
       align="end"
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        rm={Decimal.ROUND_DOWN}
-        padding={false}
-        intensity={(value ?? 0) == 0 ? 80 : undefined}
-        showIdentifier={(value ?? 0) > 0}
+      <Flex gap={1}>
+        <Text.numeral
+          dp={props.quote_dp}
+          rm={Decimal.ROUND_DOWN}
+          padding={false}
+          intensity={(value ?? 0) == 0 ? 80 : undefined}
+          showIdentifier={(value ?? 0) > 0}
         coloring={(value ?? 0) != 0}
       >
         {value ?? "--"}
-      </Text.numeral>
+        </Text.numeral>
+        <ShareButtonWidget
+          order={props.item}
+          sharePnLConfig={props.sharePnLConfig}
+          modalId={SharePnLBottomSheetId}
+          iconSize={12}
+        />
+      </Flex>
     </Statistic>
   );
 };

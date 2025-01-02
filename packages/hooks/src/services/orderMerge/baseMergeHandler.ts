@@ -1,4 +1,4 @@
-import { WSMessage, API } from "@orderly.network/types";
+import { WSMessage, API, OrderStatus } from "@orderly.network/types";
 import { IOrderMergeHandler } from "./interface";
 import { lensIndex, over } from "ramda";
 
@@ -26,7 +26,16 @@ export abstract class BaseMergeHandler<
     if (!data.created_time) {
       data.created_time = (data as any).timestamp;
     }
-
+    if (data.status === OrderStatus.FILLED && !data.updated_time) {
+      data.updated_time = data.timestamp;
+    }
+    if (data.child_orders && data.child_orders.length ) {
+      data.child_orders.map(child => {
+        if (child.algo_status === OrderStatus.FILLED && child.is_activated && !child.updated_time) {
+          child.updated_time = data.timestamp;
+        }
+      })
+    }
     if (data.type && data.type.endsWith("_ORDER")) {
       data.type = data.type.replace("_ORDER", "");
     }
@@ -79,7 +88,9 @@ export abstract class BaseMergeHandler<
           // for new list, remove the order if it exists
           if (
             key.startsWith("orders:INCOMPLETE") ||
-            key.startsWith("orders:NEW")
+            key.startsWith("orders:NEW") ||
+            // all orders key
+            key.startsWith("orders:")
           ) {
             // if fullfilled, remove from the list
             if (this.isFullFilled()) {

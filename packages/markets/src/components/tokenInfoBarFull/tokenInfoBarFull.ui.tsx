@@ -31,6 +31,7 @@ export type TokenInfoBarFullProps = Pick<
     trailing?: ReactNode;
   };
 
+// TODO: rename to SymbolInfoBarFull
 export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   const {
     symbol,
@@ -90,7 +91,13 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
   );
 
   const price = (
-    <Text.numeral dp={quotoDp || 2} currency="$" size="sm" intensity={98}>
+    <Text.numeral
+      dp={quotoDp || 2}
+      currency="$"
+      size="sm"
+      intensity={98}
+      className="oui-data-value"
+    >
       {data?.["24h_close"]}
     </Text.numeral>
   );
@@ -114,7 +121,11 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
 
   return (
     <Flex
-      className={cn("oui-font-semibold oui-h-[54px]", props.className)}
+      className={cn(
+        "oui-symbol-info-bar-desktop",
+        "oui-font-semibold oui-h-[54px]",
+        props.className
+      )}
       // fix Safari text opacity transition bug
       style={{
         transform: "translateZ(0)",
@@ -140,7 +151,10 @@ export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
               <DataItem
                 label="Mark"
                 value={
-                  <Text.numeral dp={quotoDp} data-testid="oui-testid-tokenInfo-markPrice-value">
+                  <Text.numeral
+                    dp={quotoDp}
+                    data-testid="oui-testid-tokenInfo-markPrice-value"
+                  >
                     {data?.["mark_price"]}
                   </Text.numeral>
                 }
@@ -214,6 +228,7 @@ const DataItem: React.FC<DataItemProps> = (props) => {
           size="2xs"
           intensity={36}
           className={cn(
+            "oui-data-label",
             "oui-break-normal oui-whitespace-nowrap",
             props.hint &&
               "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
@@ -225,7 +240,10 @@ const DataItem: React.FC<DataItemProps> = (props) => {
       <Text
         size="2xs"
         intensity={98}
-        className="oui-leading-[20px] oui-break-normal oui-whitespace-nowrap"
+        className={cn(
+          "oui-data-value",
+          "oui-leading-[20px] oui-break-normal oui-whitespace-nowrap"
+        )}
       >
         {props.value}
       </Text>
