@@ -50,10 +50,10 @@ const configStore = new CustomConfigStore({
   brokerId: "demo",
   brokerName: "Orderly",
   env: "staging",
-  // networkId: "mainnet",
+  // networkId: "testnet",
   // brokerId: "woofi_pro",
   // brokerName: "WOOFI",
-  // env: "prod",
+  // env: "qa",
 });
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {

@@ -31,6 +31,7 @@
       "@orderly.network/ui-tpsl": ["../ui-tpsl/src"],
       "@orderly.network/types": ["../types/src"],
       "@orderly.network/ui-connector": ["../ui-connector/src"],
+      "@orderly.network/ui-share": ["../ui-share/src"],
     }
   }
 }

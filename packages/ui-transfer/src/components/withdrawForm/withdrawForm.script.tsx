@@ -263,7 +263,6 @@ export const useWithdrawForm = ({
       .then((res) => {
         toast.success("Withdraw requested");
         ee.emit("withdraw:requested");
-
         if (onClose) {
           onClose();
         }

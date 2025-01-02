@@ -6,7 +6,12 @@ import { API } from "@orderly.network/types";
 import { usePagination, useScreen } from "@orderly.network/ui";
 import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, setDate, setHours, subDays } from "date-fns";
-import { formatDatePickerRange, offsetEndOfDay, offsetStartOfDay } from "../../utils";
+import {
+  areDatesEqual,
+  formatDatePickerRange,
+  offsetEndOfDay,
+  offsetStartOfDay,
+} from "../../utils";
 
 export type PositionHistoryExt = API.PositionHistory & {
   netPnL?: number;
@@ -26,7 +31,9 @@ export enum PositionHistoryStatus {
 export const usePositionHistoryScript = (props: PositionHistoryProps) => {
   const { onSymbolChange, symbol, pnlNotionalDecimalPrecision } = props;
   const { data, isLoading } = usePrivateQuery<PositionHistoryExt[]>(
-    symbol ? `/v1/position_history?symbol=${symbol}&limit=1000` : "/v1/position_history?limit=1000",
+    symbol
+      ? `/v1/position_history?symbol=${symbol}&limit=1000`
+      : "/v1/position_history?limit=1000",
     {
       formatter(data) {
         return (data.rows ?? null)?.map(
@@ -156,10 +163,35 @@ const useFilter = () => {
     if (filter.name === "dateRange") {
       const newDateRange = formatDatePickerRange(filter.value);
       setDateRange(newDateRange);
-      if (newDateRange.from && newDateRange.to)
-      {
-        const diffDays = Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;        
-        if ([1,7,30,90].includes(diffDays)) {
+      if (newDateRange.from && newDateRange.to) {
+        const diffDays =
+          Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;
+        const dateRangeMap: { [key: number]: { from: Date; to: Date } } = {
+          1: {
+            from: offsetStartOfDay(new Date())!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          7: {
+            from: offsetStartOfDay(subDays(new Date(), 6))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          30: {
+            from: offsetStartOfDay(subDays(new Date(), 29))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          90: {
+            from: offsetStartOfDay(subDays(new Date(), 89))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+        };
+
+        
+        const dateRange = dateRangeMap[diffDays];
+        if (
+          dateRange &&
+          areDatesEqual(dateRange.from, newDateRange.from) &&
+          areDatesEqual(dateRange.to, newDateRange.to)
+        ) {
           setFilterDays(diffDays as any);
         } else {
           setFilterDays(null);
@@ -223,7 +255,7 @@ const useFilter = () => {
       return [sideFilter, statusFilter];
     }
     return [sideFilter, statusFilter, dateRangeFilter];
-  }, [side, status, dateRange]);  
+  }, [side, status, dateRange]);
 
   return {
     filterItems,

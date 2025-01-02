@@ -133,6 +133,7 @@ const OrdersView: FC<
           content: "!oui-space-y-1",
           cell: "oui-py-2 oui-bg-base-9 oui-p-2 oui-rounded-xl",
         }}
+        sharePnLConfig={props.sharePnLConfig}
         showFilter={props.type === TabType.orderHistory}
         filterConfig={{
           range: {

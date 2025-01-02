@@ -4,6 +4,7 @@ import { PosterRef } from "../poster/poster";
 import {
   PnLDisplayFormat,
   ReferralType,
+  ShareEntity,
   ShareOptions,
   SharePnLConfig,
 } from "../../types/types";
@@ -26,7 +27,7 @@ import {
 } from "../carousel/carousel";
 
 export const MobileSharePnLContent: FC<{
-  position: any;
+  entity: ShareEntity;
   leverage: any;
   hide: any;
   baseDp?: number;
@@ -37,8 +38,17 @@ export const MobileSharePnLContent: FC<{
   const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
 
+  const hasRoiAndPnl = props.entity.roi != null && props.entity.pnl != null;
+  const formats: PnLDisplayFormat[] = hasRoiAndPnl
+    ? ["roi_pnl", "roi", "pnl"]
+    : props.entity.roi != null
+    ? ["roi"]
+    : props.entity.pnl != null
+    ? ["pnl"]
+    : [];
+
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
-    localPnlConfig.pnlFormat
+    formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat
   );
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
     new Set(localPnlConfig.options)
@@ -62,7 +72,7 @@ export const MobileSharePnLContent: FC<{
   }, []);
 
   const posterData = getPnLPosterData(
-    props.position,
+    props.entity,
     props.leverage,
     message,
     domain,
@@ -72,7 +82,7 @@ export const MobileSharePnLContent: FC<{
     props.quoteDp,
     props.referral
   );
-  // console.log("pster data", posterData, props.position);
+  // console.log("pster data", posterData, props.entity);
 
   const carouselRef = useRef<any>();
   const aspectRatio = 552 / 310;
@@ -160,27 +170,20 @@ export const MobileSharePnLContent: FC<{
         </Carousel>
       </div>
 
+      {/* @ts-ignore */}
       <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto oui-custom-scrollbar">
         <div className="oui-mt-4">
           <div className="oui-text-3xs oui-text-base-contrast-54">
             PnL display format
           </div>
-          <div className="oui-pt-3 oui-px-1 oui-flex oui-justify-between oui-gap-3">
-            <PnlFormatView
-              setPnlFormat={setPnlFormat}
-              type="roi_pnl"
-              curType={pnlFormat}
-            />
-            <PnlFormatView
-              setPnlFormat={setPnlFormat}
-              type="roi"
-              curType={pnlFormat}
-            />
-            <PnlFormatView
-              setPnlFormat={setPnlFormat}
-              type="pnl"
-              curType={pnlFormat}
-            />
+          <div className="oui-pt-3 oui-px-1 oui-justify-between oui-gap-3 oui-grid oui-grid-cols-3 oui-row-span-1">
+            {formats.map((item) => (
+              <PnlFormatView
+                setPnlFormat={setPnlFormat}
+                type={item}
+                curType={pnlFormat}
+              />
+            ))}
           </div>
         </div>
 
@@ -189,31 +192,41 @@ export const MobileSharePnLContent: FC<{
             Optional information to share
           </div>
           <div className="oui-flex oui-flex-wrap oui-gap-3 oui-mt-3">
-            <ShareOption
-              setShareOption={setShareOption}
-              type="openPrice"
-              curType={shareOption}
-            />
-            <ShareOption
-              setShareOption={setShareOption}
-              type="openTime"
-              curType={shareOption}
-            />
-            <ShareOption
-              setShareOption={setShareOption}
-              type="leverage"
-              curType={shareOption}
-            />
-            <ShareOption
-              setShareOption={setShareOption}
-              type="markPrice"
-              curType={shareOption}
-            />
-            <ShareOption
-              setShareOption={setShareOption}
-              type="quantity"
-              curType={shareOption}
-            />
+            {props.entity.openPrice && (
+              <ShareOption
+                setShareOption={setShareOption}
+                type="openPrice"
+                curType={shareOption}
+              />
+            )}
+            {props.entity.openTime && (
+              <ShareOption
+                setShareOption={setShareOption}
+                type="openTime"
+                curType={shareOption}
+              />
+            )}
+            {props.leverage && (
+              <ShareOption
+                setShareOption={setShareOption}
+                type="leverage"
+                curType={shareOption}
+              />
+            )}
+            {props.entity.markPrice && (
+              <ShareOption
+                setShareOption={setShareOption}
+                type="markPrice"
+                curType={shareOption}
+              />
+            )}
+            {props.entity.quantity && (
+              <ShareOption
+                setShareOption={setShareOption}
+                type="quantity"
+                curType={shareOption}
+              />
+            )}
           </div>
         </div>
 
@@ -295,6 +308,8 @@ const PnlFormatView: FC<{
         return "PnL";
     }
   }, [type]);
+
+  console.log("pnl format", type, curType);
 
   const isSelected = type === curType;
 

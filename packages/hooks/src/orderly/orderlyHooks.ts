@@ -17,7 +17,7 @@ export {
   MarketsStorageKey,
   MarketsType,
 } from "./useMarkets";
-export type { FavoriteTab, Favorite, Recent } from "./useMarkets";
+export type { FavoriteTab, Favorite, Recent, NewListing } from "./useMarkets";
 export { useMarkPricesStream } from "./useMarkPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
@@ -26,6 +26,7 @@ export { useLeverage } from "./useLeverage";
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
 export { useFundingRates } from "./useFundingRates";
+export { useFundingRateHistory } from "./useFundingRateHistory";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
 export type { PriceMode } from "./usePositionStream/usePositionStream";
 export { useOrderStream } from "./useOrderStream/useOrderStream";
