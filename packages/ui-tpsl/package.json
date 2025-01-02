@@ -15,6 +15,12 @@
     "UI",
     "TPSL"
   ],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
