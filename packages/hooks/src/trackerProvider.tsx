@@ -49,6 +49,8 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
 
   const handleEvent = useCallback(
     (key: any, params: any) => {
+      account?.accountId && amplitude.setUserId(account?.accountId);
+
       if (key === EnumTrackerKeys.WALLET_CONNECT) {
         if (walletConnectRef.current) return;
         const info = getChainInfo(
@@ -65,7 +67,6 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
         Object.keys(identify).map((subKey) => {
           identifyEvent.set(subKey, identify[subKey] as string);
         });
-        account?.accountId && amplitude.setUserId(account?.accountId);
         amplitude.identify(identifyEvent);
         const eventProperties = {
           wallet: connectWallet?.name,
@@ -87,6 +88,7 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
         });
         return;
       }
+
       amplitude.track(key, params);
     },
     [account?.accountId, brokerId, state?.connectWallet?.name]
