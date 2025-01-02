@@ -117,6 +117,7 @@ export const getFundingOverviewColumns = (
         <select
           value={selectedPeriod}
           onChange={(e) => setSelectedPeriod(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
           className="oui-w-12 oui-rounded-md oui-border oui-border-line oui-bg-[var(--oui-table-background-color)]"
         >
           {[
