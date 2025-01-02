@@ -1,5 +1,22 @@
 # @orderly.network/react
 
+## 2.0.1-internal-20250102.8
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.1-internal-20250102.8
+  - @orderly.network/hooks@2.0.1-internal-20250102.8
+  - @orderly.network/net@2.0.1-internal-20250102.8
+  - @orderly.network/trading-view@2.0.1-internal-20250102.8
+  - @orderly.network/types@2.0.1-internal-20250102.8
+  - @orderly.network/ui@2.0.1-internal-20250102.8
+  - @orderly.network/ui-connector@2.0.1-internal-20250102.8
+  - @orderly.network/ui-leverage@2.0.1-internal-20250102.8
+  - @orderly.network/ui-transfer@2.0.1-internal-20250102.8
+  - @orderly.network/utils@2.0.1-internal-20250102.8
+
 ## 2.0.1-internal-20250102.7
 
 ### Patch Changes
