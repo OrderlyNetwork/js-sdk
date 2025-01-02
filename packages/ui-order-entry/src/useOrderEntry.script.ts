@@ -242,13 +242,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   };
 
-  useEffect(() => {
-    if (priceInputContainerRef.current) {
-      const rect = priceInputContainerRef.current.getBoundingClientRect();
-      setPriceInputContainerWidth(rect?.width || 0);
-    }
-  }, [priceInputContainerRef]);
-
   const bboStatus = useMemo(() => {
     if (
       tpslSwitch ||
@@ -321,6 +314,42 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   //   formattedOrder.order_type_ext,
   //   formattedOrder.level
   // );
+
+  // useEffect(() => {
+  //   if (
+  //     priceInputContainerRef.current &&
+  //     // update BBO select width when is BBO order
+  //     isBBOOrder({ order_type_ext: formattedOrder.order_type_ext })
+  //   ) {
+  //     const width =
+  //       priceInputContainerRef.current.getBoundingClientRect()?.width;
+  //     if (width) {
+  //       setPriceInputContainerWidth(width);
+  //     }
+  //   }
+  // }, [priceInputContainerRef, formattedOrder.order_type_ext]);
+
+  useEffect(() => {
+    const element = priceInputContainerRef.current;
+
+    if (!element) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width;
+        if (width) {
+          // update BBO order select dropdown width when priceInputContainerRef width changed
+          setPriceInputContainerWidth(width);
+        }
+      }
+    });
+
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.unobserve(element);
+    };
+  }, [priceInputContainerRef, formattedOrder.order_type_ext]);
 
   return {
     ...state,
