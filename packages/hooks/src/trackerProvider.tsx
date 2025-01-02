@@ -48,7 +48,16 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
   console.log("env:", env);
 
   const handleEvent = useCallback(
-    (key: any, params: any) => {
+    (
+      key: keyof typeof TrackerListenerKeyMap,
+      params: {
+        address?: string;
+        connectWallet: {
+          chainId: number;
+          name: string;
+        };
+      }
+    ) => {
       account?.accountId && amplitude.setUserId(account?.accountId);
 
       if (key === EnumTrackerKeys.WALLET_CONNECT) {
@@ -56,7 +65,7 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
         const info = getChainInfo(
           params?.connectWallet?.chainId as number
         ).info;
-        const { address, connectWallet } = params;
+        const { address = "", connectWallet } = params;
         const identify: { [key: string]: string | undefined } = {
           address,
           broker_id: brokerId,
@@ -72,7 +81,7 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
           wallet: connectWallet?.name,
           network: info?.network_infos?.name,
         };
-        amplitude.track(key, eventProperties);
+        amplitude.track(TrackerListenerKeyMap[key], eventProperties);
         walletConnectRef.current = true;
         return;
       }
@@ -82,14 +91,14 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
           params?.connectWallet?.chainId as number
         ).info;
 
-        amplitude.track(key, {
+        amplitude.track(TrackerListenerKeyMap[key], {
           wallet: params?.connectWallet?.name,
           network: info?.network_infos?.name,
         });
         return;
       }
 
-      amplitude.track(key, params);
+      amplitude.track(TrackerListenerKeyMap[key], params);
     },
     [account?.accountId, brokerId, state?.connectWallet?.name]
   );
@@ -99,7 +108,7 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
     listenKeys.forEach((key) => {
       ee.on(key, (params = {}) => {
         setTimeout(() => {
-          handleEvent(key, params);
+          handleEvent(key as keyof typeof TrackerListenerKeyMap, params);
         }, 2000);
       });
     });
