@@ -1,22 +1,31 @@
-import { useState } from "react";
-import {
-  AlgoOrderRootType,
-  OrderStatus,
-  OrderSide,
-} from "@orderly.network/types";
-import { useOrderStream } from "@orderly.network/hooks";
+import { ForwardedRef, useImperativeHandle, useRef } from "react";
 import { TabType } from "./orders.widget";
+import { OrderListInstance } from "./orderList/orderList.script";
 import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
-export const useOrdersScript = (props: {
+
+type UseOrdersScriptOptions = {
   current?: TabType;
   pnlNotionalDecimalPrecision?: number;
+  ref: ForwardedRef<OrderListInstance>;
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
-}) => {
+};
+
+export const useOrdersScript = (props: UseOrdersScriptOptions) => {
   const { current, pnlNotionalDecimalPrecision, sharePnLConfig } = props;
+
+  const orderListRef = useRef<OrderListInstance>(null);
+
+  useImperativeHandle(props.ref, () => ({
+    download: () => {
+      orderListRef.current?.download?.();
+    },
+  }));
+
   return {
     current,
     pnlNotionalDecimalPrecision,
+    orderListRef,
     sharePnLConfig,
   };
 };

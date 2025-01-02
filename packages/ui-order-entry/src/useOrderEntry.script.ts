@@ -1,4 +1,9 @@
-import { OrderSide, OrderType } from "@orderly.network/types";
+import {
+  BBOOrderType,
+  OrderLevel,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import {
   useAccount,
   useEventEmitter,
@@ -13,6 +18,12 @@ import { InputType } from "./types";
 import { convertValueToPercentage } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
+import {
+  BBOStatus,
+  getOrderLevelByBBO,
+  getOrderTypeByBBO,
+  isBBOOrder,
+} from "./utils";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -27,6 +38,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     "orderly-order-entry-order-side",
     OrderSide.BUY
   );
+  const [localBBOType, setLocalBBOType] = useLocalStorage<
+    BBOOrderType | undefined
+  >("orderly_order_bbo_type", undefined);
+
+  const lastBBOType = useRef<BBOOrderType>(localBBOType);
+
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
     useOrderEntry(inputs.symbol, {
       initialOrder: {
@@ -55,6 +72,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const currentFocusInput = useRef<InputType>(InputType.NONE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
+  const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
+  const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
 
   const currentQtyPercentage = useMemo(() => {
     if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) return 1;
@@ -199,6 +218,18 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       return;
     }
 
+    if (key === "order_type" && value !== OrderType.LIMIT) {
+      const data = {
+        level: undefined,
+        order_type_ext: undefined,
+        [key]: value,
+      };
+
+      setValues(data);
+
+      return;
+    }
+
     setValue(key, value, options);
   };
 
@@ -211,11 +242,121 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   };
 
+  const bboStatus = useMemo(() => {
+    if (
+      tpslSwitch ||
+      [OrderType.POST_ONLY, OrderType.IOC, OrderType.FOK].includes(
+        formattedOrder.order_type_ext!
+      )
+    ) {
+      return BBOStatus.DISABLED;
+    }
+
+    return localBBOType && formattedOrder.order_type === OrderType.LIMIT
+      ? BBOStatus.ON
+      : BBOStatus.OFF;
+  }, [
+    localBBOType,
+    tpslSwitch,
+    formattedOrder.order_type,
+    formattedOrder.order_type_ext!,
+  ]);
+
+  const toggleBBO = () => {
+    if (bboStatus === BBOStatus.DISABLED) {
+      return;
+    }
+    if (localBBOType) {
+      setLocalBBOType(undefined);
+      // update formattedOrder values immediately instead of via useEffect
+      setValues({
+        order_type_ext: undefined,
+        level: undefined,
+      });
+    } else {
+      setLocalBBOType(lastBBOType.current || BBOOrderType.COUNTERPARTY1);
+    }
+  };
+
+  const onBBOChange = (value: BBOOrderType) => {
+    setLocalBBOType(value);
+    lastBBOType.current = value;
+  };
+
+  useEffect(() => {
+    if (bboStatus === BBOStatus.DISABLED) {
+      const { order_type_ext } = formattedOrder;
+      setValues({
+        // if order_type_ext is not bbo(ask, bid), keep previous value
+        order_type_ext: isBBOOrder({ order_type_ext })
+          ? undefined
+          : order_type_ext,
+        level: undefined,
+      });
+    }
+  }, [bboStatus, formattedOrder.order_type_ext]);
+
+  useEffect(() => {
+    if (bboStatus === BBOStatus.ON) {
+      const orderType = getOrderTypeByBBO(localBBOType, formattedOrder.side!);
+      const orderLevel = getOrderLevelByBBO(localBBOType)!;
+      setValues({
+        order_type_ext: orderType,
+        level: orderLevel,
+      });
+    }
+  }, [localBBOType, bboStatus, formattedOrder.side!]);
+
+  // console.log(
+  //   "===",
+  //   localBBOType,
+  //   formattedOrder.order_type,
+  //   formattedOrder.order_type_ext,
+  //   formattedOrder.level
+  // );
+
+  // useEffect(() => {
+  //   if (
+  //     priceInputContainerRef.current &&
+  //     // update BBO select width when is BBO order
+  //     isBBOOrder({ order_type_ext: formattedOrder.order_type_ext })
+  //   ) {
+  //     const width =
+  //       priceInputContainerRef.current.getBoundingClientRect()?.width;
+  //     if (width) {
+  //       setPriceInputContainerWidth(width);
+  //     }
+  //   }
+  // }, [priceInputContainerRef, formattedOrder.order_type_ext]);
+
+  useEffect(() => {
+    const element = priceInputContainerRef.current;
+
+    if (!element) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width;
+        if (width) {
+          // update BBO order select dropdown width when priceInputContainerRef width changed
+          setPriceInputContainerWidth(width);
+        }
+      }
+    });
+
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.unobserve(element);
+    };
+  }, [priceInputContainerRef, formattedOrder.order_type_ext]);
+
   return {
     ...state,
     currentQtyPercentage,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
+    level: formattedOrder.level as OrderLevel,
     setOrderValue,
     setOrderValues: setValues,
 
@@ -233,9 +374,16 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     refs: {
       triggerPriceInputRef,
       priceInputRef,
+      priceInputContainerRef,
     },
 
     canTrade,
+
+    bboStatus,
+    bboType: localBBOType,
+    onBBOChange,
+    toggleBBO,
+    priceInputContainerWidth,
   };
 };
 

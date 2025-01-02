@@ -12,9 +12,8 @@ import {
 import { ApiManagerScriptReturns } from "../apiManager.script";
 
 export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
-
   const ip = props.generateKey?.ip ?? "--";
-  
+
   return (
     <SimpleDialog
       size="sm"
@@ -53,6 +52,19 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       }}
     >
       <Flex direction={"column"} gap={4} itemAlign={"start"}>
+        <Statistic label="Account ID">
+          <Text.formatted
+            size="sm"
+            intensity={80}
+            copyable
+            copyIconSize={16}
+            className="oui-break-all"
+            onCopy={props.onCopyAccountId}
+            data-testid="oui-testid-apiKey-createdApiKey-dialog-key-span"
+          >
+            {props.address}
+          </Text.formatted>
+        </Statistic>
         <Statistic label="API key">
           <Text.formatted
             size="sm"
@@ -109,7 +121,11 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           </Flex>
         </Statistic>
         <Statistic label="Permissions">
-          <Text size="sm" intensity={80} data-testid="oui-testid-apiKey-createdApiKey-dialog-permissions-span">
+          <Text
+            size="sm"
+            intensity={80}
+            data-testid="oui-testid-apiKey-createdApiKey-dialog-permissions-span"
+          >
             {props.generateKey?.permissions}
           </Text>
         </Statistic>

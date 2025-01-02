@@ -2,11 +2,13 @@ import { useCallback, useMemo, useState } from "react";
 import { useHoldingStream } from "./useHoldingStream";
 import { useCollateral } from "./useCollateral";
 import { useAccount } from "../useAccount";
+import { useEventEmitter } from '../useEventEmitter'
 import { useChains } from "./useChains";
 import {
   API,
   ARBITRUM_MAINNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
+  EnumTrackerKeys
 } from "@orderly.network/types";
 import { useConfig } from "../useConfig";
 import { isTestnet } from "@orderly.network/utils";
@@ -24,24 +26,9 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
 
   const [_, { findByChainId }] = useChains(undefined);
 
-  // const withdrawQueue = useRef<number[]>([]);
+  const ee = useEventEmitter()
 
-  const withdraw = useCallback(
-    (inputs: {
-      chainId: number;
-      token: string;
-      amount: string;
-      allowCrossChainWithdraw: boolean;
-    }): Promise<any> => {
-      return account.assetsManager.withdraw(inputs).then((res: any) => {
-        // if (res.success) {
-        //   withdrawQueue.current.push(res.data.withdraw_id);
-        // }
-        return res;
-      });
-    },
-    [state]
-  );
+  // const withdrawQueue = useRef<number[]>([]);
 
   const { usdc } = useHoldingStream();
 
@@ -124,6 +111,37 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
       network: targetChain?.network_infos?.shortName,
     };
   }, [targetChain]);
+
+
+  const withdraw = useCallback(
+    (inputs: {
+      chainId: number;
+      token: string;
+      amount: string;
+      allowCrossChainWithdraw: boolean;
+    }): Promise<any> => {
+      return account.assetsManager.withdraw(inputs).then((res: any) => {
+        if (res.success) {
+        ee.emit(EnumTrackerKeys.WITHDRAW_SUCCESS, {
+          wallet:state?.connectWallet?.name,
+          network:targetChain?.network_infos.name,
+          quantity:inputs.amount,
+        });
+        //   withdrawQueue.current.push(res.data.withdraw_id);
+        }
+        return res;
+      }).catch((err) => {
+         ee.emit(EnumTrackerKeys.WITHDRAW_FAILED, {
+          wallet:state?.connectWallet?.name,
+          network:targetChain?.network_infos.name,
+          msg: JSON.stringify(err),
+        });
+        throw err
+      });
+    },
+    [state, targetChain, state]
+  );
+
 
   return {
     dst,
