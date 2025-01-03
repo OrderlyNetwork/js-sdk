@@ -52,6 +52,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
 
   return (
     <Flex
+      width="100%"
       as="header"
       itemAlign={"center"}
       height={"48px"}

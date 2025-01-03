@@ -1,5 +1,21 @@
 # @orderly.network/cli
 
+## 0.3.18
+
+### Patch Changes
+
+- 0fd2e6038: add some features
+- Updated dependencies [0fd2e6038]
+  - @orderly.network/core@2.0.1
+
+## 0.3.18-alpha.0
+
+### Patch Changes
+
+- add some features
+- Updated dependencies
+  - @orderly.network/core@2.0.1-alpha.8
+
 ## 0.3.17
 
 ### Patch Changes
