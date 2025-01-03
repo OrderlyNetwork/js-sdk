@@ -6,7 +6,7 @@ import {
   Divider,
   Tooltip,
 } from "@orderly.network/ui";
-import { UseTokenInfoBarFullScriptReturn } from "./tokenInfoBarFull.script";
+import { UseSymbolInfoBarFullScriptReturn } from "./symbolInfoBarFull.script";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 import {
   ArrowLeftIcon,
@@ -15,24 +15,23 @@ import {
   UnFavoritesIcon2,
 } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
 import { useFundingRate } from "@orderly.network/hooks";
 
 export type Layout = "left" | "right";
 
-export type TokenInfoBarFullProps = Pick<
+export type SymbolInfoBarFullProps = Pick<
   MarketsProviderProps,
   "onSymbolChange"
 > &
-  UseTokenInfoBarFullScriptReturn & {
+  UseSymbolInfoBarFullScriptReturn & {
     className?: string;
     trailing?: ReactNode;
   };
 
-// TODO: rename to SymbolInfoBarFull
-export const TokenInfoBarFull: React.FC<TokenInfoBarFullProps> = (props) => {
+export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
   const {
     symbol,
     isFavorite,

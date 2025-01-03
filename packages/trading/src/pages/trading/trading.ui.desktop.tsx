@@ -8,7 +8,7 @@ import { RiskRateWidget } from "../../components/desktop/riskRate";
 import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
 import {
   SideMarketsWidget,
-  TokenInfoBarFullWidget,
+  SymbolInfoBarFullWidget,
 } from "@orderly.network/markets";
 import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
@@ -166,7 +166,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     return <SwitchLayout layout={layout} onLayout={onLayout} />;
   }, [layout, onLayout]);
 
-  const tokenInfoBarView = (
+  const symbolInfoBarView = (
     <Box
       intensity={900}
       r="2xl"
@@ -177,7 +177,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         height: tokenInfoBarHeight,
       }}
     >
-      <TokenInfoBarFullWidget
+      <SymbolInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
         trailing={trailing}
@@ -208,11 +208,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
-  const orderbookWidget = (
-    <OrderBookAndTradesWidget
-      symbol={props.symbol}
-    />
-  );
+  const orderbookWidget = <OrderBookAndTradesWidget symbol={props.symbol} />;
 
   const orderbookView = (
     <Box
@@ -319,7 +315,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           : tradingViewMinWidth + orderbookMinWidth + space,
       }}
     >
-      {tokenInfoBarView}
+      {symbolInfoBarView}
       <SplitLayout
         className="oui-w-full !oui-h-[calc(100%_-_54px_-_12px)]"
         mode="vertical"
@@ -380,7 +376,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
             direction="column"
             gapY={3}
           >
-            {tokenInfoBarView}
+            {symbolInfoBarView}
             <Flex
               width="100%"
               height="100%"

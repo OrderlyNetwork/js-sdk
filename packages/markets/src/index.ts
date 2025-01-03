@@ -18,8 +18,8 @@ export * from "./components/collapseMarkets";
 export * from "./components/sideMarkets";
 export * from "./components/dropDownMarkets";
 export * from "./components/marketsSheet";
-export * from "./components/tokenInfoBar";
-export * from "./components/tokenInfoBarFull";
+export * from "./components/symbolInfoBar";
+export * from "./components/symbolInfoBarFull";
 
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";
