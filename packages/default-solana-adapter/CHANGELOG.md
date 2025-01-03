@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.0.2-hotfix-20250102.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.2-hotfix-20250102.0
+  - @orderly.network/types@2.0.2-hotfix-20250102.0
+
 ## 2.0.1
 
 ### Patch Changes

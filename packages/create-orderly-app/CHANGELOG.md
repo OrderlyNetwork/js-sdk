@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.19-hotfix-20250102.0
+
+### Patch Changes
+
+- publish
+
 ## 1.5.18
 
 ### Patch Changes
