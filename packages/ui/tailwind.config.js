@@ -44,7 +44,8 @@ module.exports = withTV({
       xl: "1024px",
       "2xl": "1280px",
       "3xl": "1440px",
-      "4xl": "1920px",
+      "4xl": "1680px",
+      "5xl": "1920px",
     },
     fontSize: {
       "3xs": ["var(--oui-font-size-3xs, 0.625rem)", "0.625rem"], // 10px

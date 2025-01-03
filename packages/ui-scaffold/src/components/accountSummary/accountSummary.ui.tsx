@@ -484,7 +484,6 @@ export const AccountSummary = (props: AccountSummaryUi) => {
     const resizeObserver = new ResizeObserver((entries) => {
       if (Array.isArray(entries) && entries.length > 0) {
         const width = entries[0].contentRect.width;
-        console.log("resize", width);
         if (width > 1440) {
           sizeRef.current = 5;
         } else if (width > 1366) {
