@@ -29,7 +29,6 @@ export interface OrderBookProps {
 
   className?: string;
   symbolInfo: BasicSymbolInfo;
-  tabletMediaQuery: string;
 }
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
@@ -45,7 +44,6 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
       pendingOrders={[]}
       showTotal={false}
       symbolInfo={props.symbolInfo}
-      tabletMediaQuery={props.tabletMediaQuery}
     >
       <Flex
         direction={"column"}

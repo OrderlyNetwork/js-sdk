@@ -211,7 +211,6 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const orderbookWidget = (
     <OrderBookAndTradesWidget
       symbol={props.symbol}
-      tabletMediaQuery={props.tabletMediaQuery}
     />
   );
 
@@ -233,7 +232,6 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const dataListWidget = (
     <DataListWidget
       current={undefined}
-      tabletMediaQuery={props.tabletMediaQuery}
       symbol={props.symbol}
       sharePnLConfig={props.sharePnLConfig}
     />

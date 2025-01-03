@@ -74,10 +74,7 @@ export const DataList: Story = {
   render: (arg) => {
     return (
       <Box p={3} height={800}>
-        <DataListWidget
-          sharePnLConfig={config.tradingPage.sharePnLConfig}
-          tabletMediaQuery={arg.tabletMediaQuery!}
-        />
+        <DataListWidget sharePnLConfig={config.tradingPage.sharePnLConfig} />
       </Box>
     );
   },
@@ -123,10 +120,7 @@ export const OrderBook: Story = {
     return (
       <div className="oui-h-[500px] oui-m-3 oui-flex oui-items-start oui-justify-center">
         <Box className="oui-w-1/2 oui-bg-base-9" r="2xl" py={3}>
-          <OrderBookWidget
-            symbol={arg.symbol}
-            tabletMediaQuery={arg.tabletMediaQuery!}
-          />
+          <OrderBookWidget symbol={arg.symbol} />
         </Box>
       </div>
     );
@@ -143,10 +137,7 @@ export const OrderBookAndTrades: Story = {
         className="oui-bg-[rgba(255,255,255,0.3)]"
       >
         <Box className="oui-w-[50vw] oui-h-[600px]">
-          <OrderBookAndTradesWidget
-            symbol={arg.symbol}
-            tabletMediaQuery={arg.tabletMediaQuery!}
-          />
+          <OrderBookAndTradesWidget symbol={arg.symbol} />
         </Box>
       </Flex>
     );
