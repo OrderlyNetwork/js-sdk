@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.2-hotfix-20250102.1
+
+### Patch Changes
+
+- publish
+
 ## 1.0.2-hotfix-20250102.0
 
 ### Patch Changes

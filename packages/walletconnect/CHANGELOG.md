@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 2.0.2-hotfix-20250102.1
+
+### Patch Changes
+
+- publish
+
 ## 2.0.2-hotfix-20250102.0
 
 ### Patch Changes
