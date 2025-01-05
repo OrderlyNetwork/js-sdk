@@ -115,53 +115,6 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
-  const assetsOrderEntryMargin = [
-    <RemovablePanel
-      key="assets"
-      className="oui-border oui-border-line-12"
-      index={positions.findIndex((item) => item === 0)}
-      onLayout={updatePositions}
-      showIndicator={showPositionIcon}
-    >
-      <AssetViewWidget />
-    </RemovablePanel>,
-    <RemovablePanel
-      key="orderEntry"
-      index={positions.findIndex((item) => item === 1)}
-      onLayout={updatePositions}
-      showIndicator={showPositionIcon}
-    >
-      <OrderEntryWidget symbol={props.symbol} />
-    </RemovablePanel>,
-    <RemovablePanel
-      key="margin"
-      index={positions.findIndex((item) => item === 2)}
-      onLayout={updatePositions}
-      showIndicator={showPositionIcon}
-    >
-      <RiskRateWidget />
-    </RemovablePanel>,
-  ];
-
-  const orderEntryWidget = positions.map(
-    (index) => assetsOrderEntryMargin[index]
-  );
-
-  const orderEntryView = (
-    <Flex
-      gapY={3}
-      direction="column"
-      height="100%"
-      style={{
-        minWidth: orderEntryMinWidth,
-        maxWidth: horizontalDraggable ? orderEntryMaxWidth : orderEntryMinWidth,
-        width: mainSplitSize,
-      }}
-    >
-      {orderEntryWidget}
-    </Flex>
-  );
-
   const trailing = useMemo(() => {
     return <SwitchLayout layout={layout} onLayout={onLayout} />;
   }, [layout, onLayout]);
@@ -243,6 +196,53 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       {dataListWidget}
     </Box>
+  );
+
+  const assetsOrderEntryMargin = [
+    <RemovablePanel
+      key="assets"
+      className="oui-border oui-border-line-12"
+      index={positions.findIndex((item) => item === 0)}
+      onLayout={updatePositions}
+      showIndicator={showPositionIcon}
+    >
+      <AssetViewWidget />
+    </RemovablePanel>,
+    <RemovablePanel
+      key="orderEntry"
+      index={positions.findIndex((item) => item === 1)}
+      onLayout={updatePositions}
+      showIndicator={showPositionIcon}
+    >
+      <OrderEntryWidget symbol={props.symbol} />
+    </RemovablePanel>,
+    <RemovablePanel
+      key="margin"
+      index={positions.findIndex((item) => item === 2)}
+      onLayout={updatePositions}
+      showIndicator={showPositionIcon}
+    >
+      <RiskRateWidget />
+    </RemovablePanel>,
+  ];
+
+  const orderEntryWidget = positions.map(
+    (index) => assetsOrderEntryMargin[index]
+  );
+
+  const orderEntryView = (
+    <Flex
+      gapY={3}
+      direction="column"
+      height="100%"
+      style={{
+        minWidth: orderEntryMinWidth,
+        maxWidth: horizontalDraggable ? orderEntryMaxWidth : orderEntryMinWidth,
+        width: mainSplitSize,
+      }}
+    >
+      {orderEntryWidget}
+    </Flex>
   );
 
   const renderTradingView = () => {
@@ -352,7 +352,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           gapX={3}
           itemAlign="stretch"
           className={cn(
-            "oui-flex-1 ",
+            "oui-flex-1",
             layout === "left" && "oui-flex-row-reverse"
           )}
           style={{
@@ -445,6 +445,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
             direction="column"
             style={{
               width: orderEntryMinWidth,
+              // force order entry render actual content height
               height: "max-content",
             }}
           >

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   AssetViewWidget,
@@ -10,10 +10,11 @@ import {
   OrderBookAndTradesWidget,
   BottomNavBarWidget,
 } from "@orderly.network/trading";
-import { Scaffold } from "@orderly.network/ui-scaffold";
 import { Box, Flex } from "@orderly.network/ui";
 import { OrderlyIcon } from "./icons";
 import config from "../../../config";
+import { OrderlyLayout } from "../../../components/layout";
+import { getSymbol, updateSymbol } from "../../../utils/storage";
 
 const meta: Meta<typeof TradingPage> = {
   title: "Package/trading/TradingPage",
@@ -21,9 +22,9 @@ const meta: Meta<typeof TradingPage> = {
   decorators: [
     (Story) => {
       return (
-        <Scaffold mainNavProps={config.scaffold.mainNavProps}>
+        <OrderlyLayout>
           <Story />
-        </Scaffold>
+        </OrderlyLayout>
       );
     },
   ],
@@ -52,9 +53,13 @@ const meta: Meta<typeof TradingPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Page: Story = {
   render: (arg) => {
-    const [symbol, setSymbol] = useState("PERP_BTC_USDC");
+    const [symbol, setSymbol] = useState(getSymbol() || "PERP_BTC_USDC");
+
+    useEffect(() => {
+      updateSymbol(symbol);
+    }, [symbol]);
 
     return (
       <TradingPage
