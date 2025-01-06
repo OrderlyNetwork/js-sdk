@@ -9,8 +9,6 @@ const LayoutContext = createContext<LayoutContextValue>({
   sideOpen: true,
 } as LayoutContextValue);
 
-// export
-
 export const LayoutProvider = (props: PropsWithChildren) => {
   const [sideOpen, setSideOpen] = useState(true);
   return (

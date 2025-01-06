@@ -1,14 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
-import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
+import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
+import { TradingRewardsLayout } from "../../../components/layout/tradingRewardsLayout";
 
 const meta: Meta<typeof Dashboard.AffiliatePage> = {
   title: "Package/affiliate/Affiliate",
   component: Dashboard.AffiliatePage,
-  // subcomponents: {
-  //     Assets: OverviewModule.AssetWidget,
-  //     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
-  // },
   decorators: [
     (Story: any) => {
       return (
@@ -71,25 +68,8 @@ const meta: Meta<typeof Dashboard.AffiliatePage> = {
       );
     },
   ],
-  parameters: {
-    layout: "fullscreen",
-  },
-  // tags: ['autodocs'],
-  argTypes: {
-    //   backgroundColor: { control: 'color' },
-    // p: {
-    //     control: {
-    //         type: "number",
-    //         min: 0,
-    //         max: 10,
-    //         step: 1,
-    //     },
-    // },
-  },
-  args: {
-    p: 5,
-    // py: 2,
-  },
+  argTypes: {},
+  args: {},
 };
 
 export default meta;
@@ -98,11 +78,16 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {};
 
 export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
   render: () => {
     return (
-      <TradingRewardsLayoutWidget>
+      <TradingRewardsLayout
+        currentPath={TradingRewardsLeftSidebarPath.Affiliate}
+      >
         <Dashboard.AffiliatePage />
-      </TradingRewardsLayoutWidget>
+      </TradingRewardsLayout>
     );
   },
 };

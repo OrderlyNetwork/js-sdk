@@ -8,7 +8,7 @@ import { RiskRateWidget } from "../../components/desktop/riskRate";
 import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
 import {
   SideMarketsWidget,
-  TokenInfoBarFullWidget,
+  SymbolInfoBarFullWidget,
 } from "@orderly.network/markets";
 import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
@@ -115,6 +115,89 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
+  const trailing = useMemo(() => {
+    return <SwitchLayout layout={layout} onLayout={onLayout} />;
+  }, [layout, onLayout]);
+
+  const symbolInfoBarView = (
+    <Box
+      intensity={900}
+      r="2xl"
+      px={3}
+      width="100%"
+      style={{
+        minHeight: tokenInfoBarHeight,
+        height: tokenInfoBarHeight,
+      }}
+    >
+      <SymbolInfoBarFullWidget
+        symbol={props.symbol}
+        onSymbolChange={props.onSymbolChange}
+        trailing={trailing}
+      />
+    </Box>
+  );
+
+  const { library_path, ...restTradingViewConfig } = props.tradingViewConfig;
+
+  const tradingviewWidget = (
+    <TradingviewWidget
+      symbol={props.symbol}
+      {...restTradingViewConfig}
+      libraryPath={library_path}
+    />
+  );
+
+  const tradingView = (
+    <Box
+      width="100%"
+      height="100%"
+      intensity={900}
+      r="2xl"
+      style={{ flex: 1, minWidth: tradingViewMinWidth }}
+      className="oui-overflow-hidden"
+    >
+      {tradingviewWidget}
+    </Box>
+  );
+
+  const orderbookWidget = <OrderBookAndTradesWidget symbol={props.symbol} />;
+
+  const orderbookView = (
+    <Box
+      r="2xl"
+      height="100%"
+      style={{
+        minWidth: orderbookMinWidth,
+        maxWidth: horizontalDraggable ? orderbookMaxWidth : orderbookMinWidth,
+        width: orderBookSplitSize,
+      }}
+      className="oui-overflow-hidden"
+    >
+      {orderbookWidget}
+    </Box>
+  );
+
+  const dataListWidget = (
+    <DataListWidget
+      current={undefined}
+      symbol={props.symbol}
+      sharePnLConfig={props.sharePnLConfig}
+    />
+  );
+
+  const dataListView = (
+    <Box
+      intensity={900}
+      r="2xl"
+      p={3}
+      style={{ height: dataListSplitSize, minHeight: dataListMinHeight }}
+      className="oui-overflow-hidden"
+    >
+      {dataListWidget}
+    </Box>
+  );
+
   const assetsOrderEntryMargin = [
     <RemovablePanel
       key="assets"
@@ -160,95 +243,6 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       {orderEntryWidget}
     </Flex>
-  );
-
-  const trailing = useMemo(() => {
-    return <SwitchLayout layout={layout} onLayout={onLayout} />;
-  }, [layout, onLayout]);
-
-  const tokenInfoBarView = (
-    <Box
-      intensity={900}
-      r="2xl"
-      px={3}
-      width="100%"
-      style={{
-        minHeight: tokenInfoBarHeight,
-        height: tokenInfoBarHeight,
-      }}
-    >
-      <TokenInfoBarFullWidget
-        symbol={props.symbol}
-        onSymbolChange={props.onSymbolChange}
-        trailing={trailing}
-      />
-    </Box>
-  );
-
-  const { library_path, ...restTradingViewConfig } = props.tradingViewConfig;
-
-  const tradingviewWidget = (
-    <TradingviewWidget
-      symbol={props.symbol}
-      {...restTradingViewConfig}
-      libraryPath={library_path}
-    />
-  );
-
-  const tradingView = (
-    <Box
-      width="100%"
-      height="100%"
-      intensity={900}
-      r="2xl"
-      style={{ flex: 1, minWidth: tradingViewMinWidth }}
-      className="oui-overflow-hidden"
-    >
-      {tradingviewWidget}
-    </Box>
-  );
-
-  const orderbookWidget = (
-    <OrderBookAndTradesWidget
-      symbol={props.symbol}
-      tabletMediaQuery={props.tabletMediaQuery}
-    />
-  );
-
-  const orderbookView = (
-    <Box
-      r="2xl"
-      height="100%"
-      style={{
-        minWidth: orderbookMinWidth,
-        maxWidth: horizontalDraggable ? orderbookMaxWidth : orderbookMinWidth,
-        width: orderBookSplitSize,
-      }}
-      className="oui-overflow-hidden"
-    >
-      {orderbookWidget}
-    </Box>
-  );
-
-  const dataListWidget = (
-    <DataListWidget
-      current={undefined}
-      tabletMediaQuery={props.tabletMediaQuery}
-      symbol={props.symbol}
-      sharePnLConfig={props.sharePnLConfig}
-    />
-  );
-
-  const dataListView = (
-    <Box
-      intensity={900}
-      r="2xl"
-      p={3}
-      style={{ height: dataListSplitSize, minHeight: dataListMinHeight }}
-      className="oui-overflow-hidden"
-    >
-      {dataListWidget}
-    </Box>
   );
 
   const renderTradingView = () => {
@@ -321,7 +315,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           : tradingViewMinWidth + orderbookMinWidth + space,
       }}
     >
-      {tokenInfoBarView}
+      {symbolInfoBarView}
       <SplitLayout
         className="oui-w-full !oui-h-[calc(100%_-_54px_-_12px)]"
         mode="vertical"
@@ -358,7 +352,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           gapX={3}
           itemAlign="stretch"
           className={cn(
-            "oui-flex-1 ",
+            "oui-flex-1",
             layout === "left" && "oui-flex-row-reverse"
           )}
           style={{
@@ -382,7 +376,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
             direction="column"
             gapY={3}
           >
-            {tokenInfoBarView}
+            {symbolInfoBarView}
             <Flex
               width="100%"
               height="100%"
@@ -451,6 +445,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
             direction="column"
             style={{
               width: orderEntryMinWidth,
+              // force order entry render actual content height
               height: "max-content",
             }}
           >

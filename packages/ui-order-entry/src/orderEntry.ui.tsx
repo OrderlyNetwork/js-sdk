@@ -533,7 +533,22 @@ const OrderQuantityInput = (props: {
               : "oui-border-line-12",
             bbo.bboStatus === BBOStatus.DISABLED && "oui-cursor-not-allowed"
           )}
-          onClick={bbo.toggleBBO}
+          onClick={() => {
+            if (bbo.bboStatus === BBOStatus.DISABLED) {
+              modal.dialog({
+                title: "Tips",
+                size: "xs",
+                content: (
+                  <Text intensity={54}>
+                    BBO is not supported when TP/SL, Post-Only, IOC, or FOK is
+                    selected.
+                  </Text>
+                ),
+              });
+            } else {
+              bbo.toggleBBO();
+            }
+          }}
         >
           <Text
             className={cn(

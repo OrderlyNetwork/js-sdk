@@ -1,15 +1,15 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  TokenInfoBarWidget,
-  TokenInfoBarFullWidget,
+  SymbolInfoBarWidget,
+  SymbolInfoBarFullWidget,
   MarketsSheetWidget,
 } from "@orderly.network/markets";
 import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
 
-const meta: Meta<typeof TokenInfoBarFullWidget> = {
-  title: "Package/markets/TokenInfoBar",
-  component: TokenInfoBarFullWidget,
+const meta: Meta<typeof SymbolInfoBarFullWidget> = {
+  title: "Package/markets/SymbolInfoBar",
+  component: SymbolInfoBarFullWidget,
   parameters: {
     layout: "centered",
   },
@@ -18,12 +18,12 @@ const meta: Meta<typeof TokenInfoBarFullWidget> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DesktopTokenInfoBar: Story = {
+export const DesktopSymbolInfoBar: Story = {
   render: (args) => {
     return (
       <Flex direction="column" itemAlign="start" gapY={5}>
         <Box width={600} intensity={900} r="2xl" px={3} height={54}>
-          <TokenInfoBarFullWidget
+          <SymbolInfoBarFullWidget
             symbol="PERP_BTC_USDC"
             trailing={<Box pl={3}>Trailing</Box>}
             onSymbolChange={(symbol) => {
@@ -32,7 +32,7 @@ export const DesktopTokenInfoBar: Story = {
           />
         </Box>
         <Box width={900} intensity={900} r="2xl" px={3} height={54}>
-          <TokenInfoBarFullWidget
+          <SymbolInfoBarFullWidget
             symbol="PERP_ETH_USDC"
             trailing={<Box pl={3}>Trailing</Box>}
             onSymbolChange={(symbol) => {
@@ -41,7 +41,7 @@ export const DesktopTokenInfoBar: Story = {
           />
         </Box>
         <Box width="100%" intensity={900} r="2xl" px={3} height={54}>
-          <TokenInfoBarFullWidget
+          <SymbolInfoBarFullWidget
             symbol="PERP_ORDER_USDC"
             trailing={<Box pl={3}>Trailing</Box>}
             onSymbolChange={(symbol) => {
@@ -54,7 +54,7 @@ export const DesktopTokenInfoBar: Story = {
   },
 };
 
-export const MobileTokenInfoBar: Story = {
+export const MobileSymbolInfoBar: Story = {
   render: (args) => {
     const [open, setOpen] = useState(false);
 
@@ -64,7 +64,7 @@ export const MobileTokenInfoBar: Story = {
 
     return (
       <Box width={430} intensity={900} px={3} height={54}>
-        <TokenInfoBarWidget
+        <SymbolInfoBarWidget
           symbol="PERP_BTC_USDC"
           trailing={<Box pl={3}>Trailing</Box>}
           onSymbol={onSymbol}

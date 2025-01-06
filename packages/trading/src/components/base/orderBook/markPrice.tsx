@@ -1,7 +1,12 @@
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types";
-import { Tooltip, cn, Flex, Text, SimpleDialog } from "@orderly.network/ui";
 import { FC, useState } from "react";
+import {
+  Tooltip,
+  cn,
+  Flex,
+  Text,
+  SimpleDialog,
+  useScreen,
+} from "@orderly.network/ui";
 /**
  * default style is desktop effect
  */
@@ -10,15 +15,10 @@ export const MarkPriceView: FC<{
   quote_dp: number;
   className?: string;
   iconSize?: number;
-  tabletMediaQuery?: string;
 }> = (props) => {
-  const isMobileLayout = useMediaQuery(props.tabletMediaQuery ?? MEDIA_TABLET);
+  const { isMobile } = useScreen();
 
-  return isMobileLayout ? (
-    <MobileLayout {...props} />
-  ) : (
-    <DesktopLayout {...props} />
-  );
+  return isMobile ? <MobileLayout {...props} /> : <DesktopLayout {...props} />;
 };
 
 const DesktopLayout: FC<{

@@ -1,12 +1,12 @@
-import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  PortfolioLayoutWidget,
+  PortfolioLeftSidebarPath,
   SettingModule,
 } from "@orderly.network/portfolio";
+import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
 
 const meta: Meta<typeof SettingModule.SettingPage> = {
-  title: "Package/portfolio/setting",
+  title: "Package/portfolio/Setting",
   component: SettingModule.SettingPage,
   subcomponents: {},
   parameters: {},
@@ -19,25 +19,15 @@ type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
 
-export const Layout: Story = {
+export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
   render: () => {
-    const [currentPath, setCurrentPath] = useState("/portfolio/apiKey");
     return (
-      <PortfolioLayoutWidget
-        // items={[]}
-        routerAdapter={{
-          onRouteChange: (op) => {
-            console.log("routerAdapter", op);
-            setCurrentPath(op.href);
-          },
-          // currentPath: currentPath
-        }}
-        leftSideProps={{
-          current: currentPath,
-        }}
-      >
+      <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Setting}>
         <SettingModule.SettingPage />
-      </PortfolioLayoutWidget>
+      </PortfolioLayout>
     );
   },
 };

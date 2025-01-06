@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   APIManagerModule,
-  PortfolioLayoutWidget,
+  PortfolioLeftSidebarPath,
 } from "@orderly.network/portfolio";
+import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
 
 const meta: Meta<typeof APIManagerModule.APIManagerPage> = {
   title: "Package/portfolio/APIKey",
@@ -18,12 +19,15 @@ type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
 
-export const Layout: Story = {
+export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
   render: (e) => {
     return (
-      <PortfolioLayoutWidget>
+      <PortfolioLayout currentPath={PortfolioLeftSidebarPath.ApiKey}>
         <APIManagerModule.APIManagerPage />
-      </PortfolioLayoutWidget>
+      </PortfolioLayout>
     );
   },
 };

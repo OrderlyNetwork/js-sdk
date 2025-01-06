@@ -2,6 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { SideMenuItem, useScaffoldContext } from "@orderly.network/ui-scaffold";
 import { useMediaQuery } from "@orderly.network/hooks";
 
+export enum PortfolioLeftSidebarPath {
+  Overview = "/portfolio",
+  Positions = "/portfolio/positions",
+  Orders = "/portfolio/orders",
+  FeeTier = "/portfolio/feeTier",
+  ApiKey = "/portfolio/apiKey",
+  Setting = "/portfolio/setting",
+}
+
 export type UseLayoutBuilderOptions = {
   current?: string;
 };
@@ -22,7 +31,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
     return [
       {
         name: "Overview",
-        href: "/portfolio",
+        href: PortfolioLeftSidebarPath.Overview,
         icon: (
           <svg
             width="18"
@@ -40,7 +49,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
       },
       {
         name: "Positions",
-        href: "/portfolio/positions",
+        href: PortfolioLeftSidebarPath.Positions,
         icon: (
           <svg
             width="18"
@@ -58,7 +67,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
       },
       {
         name: "Orders",
-        href: "/portfolio/orders",
+        href: PortfolioLeftSidebarPath.Orders,
         icon: (
           <svg
             width="18"
@@ -76,7 +85,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
       },
       {
         name: "Fee tier",
-        href: "/portfolio/feeTier",
+        href: PortfolioLeftSidebarPath.FeeTier,
         icon: (
           <svg
             width="18"
@@ -94,7 +103,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
       },
       {
         name: "API key",
-        href: "/portfolio/apiKey",
+        href: PortfolioLeftSidebarPath.ApiKey,
         icon: (
           <svg
             width="18"
@@ -112,7 +121,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
       },
       {
         name: "Settings",
-        href: "/portfolio/setting",
+        href: PortfolioLeftSidebarPath.Setting,
         icon: (
           <svg
             width="18"

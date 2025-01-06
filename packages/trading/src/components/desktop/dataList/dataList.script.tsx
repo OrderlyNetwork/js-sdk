@@ -9,7 +9,7 @@ export enum DataListTabType {
   pending = "Pending",
   tp_sl = "TP/SL",
   filled = "Filled",
-  positionHistory="Position history",
+  positionHistory = "Position history",
   orderHistory = "Order history",
   liquidation = "Liquidation",
 }
@@ -17,12 +17,10 @@ export enum DataListTabType {
 export const useDataListScript = (
   props: {
     current?: DataListTabType;
-    tabletMediaQuery: string;
   } & PositionsProps
 ) => {
   const {
     current,
-    tabletMediaQuery,
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     symbol,
@@ -40,8 +38,6 @@ export const useDataListScript = (
 
   return {
     current,
-    tabletMediaQuery,
-
     sharePnLConfig,
     symbol,
     calcMode: localStorage.unPnlPriceBasis,

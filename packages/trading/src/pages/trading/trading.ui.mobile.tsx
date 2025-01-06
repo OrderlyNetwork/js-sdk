@@ -4,13 +4,12 @@ import { TopTabWidget } from "../../components/mobile/topTab";
 import { OrderBookAndEntryWidget } from "../../components/mobile/orderBookAndEntry";
 import {
   MarketsSheetWidget,
-  TokenInfoBarWidget,
+  SymbolInfoBarWidget,
 } from "@orderly.network/markets";
 import { Box, SimpleSheet } from "@orderly.network/ui";
 import { SecondaryLogo } from "../../components/base/secondaryLogo";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
-import { TipsWidget } from "../../components/mobile/tips/tips.widget";
 import { MaintenanceTipsWidget } from "@orderly.network/ui-scaffold";
 
 export const MobileLayout: FC<TradingState> = (props) => {
@@ -20,7 +19,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
 
   const topBar = (
     <Box intensity={900} px={3} height={54}>
-      <TokenInfoBarWidget
+      <SymbolInfoBarWidget
         symbol={props.symbol}
         trailing={<SecondaryLogo />}
         onSymbol={onSymbol}
@@ -55,7 +54,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
       <header>{topBar}</header>
 
       <div>
-        <MaintenanceTipsWidget/>
+        <MaintenanceTipsWidget />
       </div>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">

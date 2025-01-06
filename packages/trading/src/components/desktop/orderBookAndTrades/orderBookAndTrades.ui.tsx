@@ -1,14 +1,10 @@
-import { FC, useEffect, useRef } from "react";
+import { FC } from "react";
 import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { OrderBookAndTradesState } from "./orderBookAndTrades.script";
 import { OrderBookWidget } from "../../base/orderBook";
 import { LastTradesWidget } from "../../base/lastTrades";
 
-export const OrderBookAndTrades: FC<
-  OrderBookAndTradesState & {
-    tabletMediaQuery: string;
-  }
-> = (props) => {
+export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
   return (
     <div ref={props.containerRef} className="oui-h-full">
       {(props.containerSize?.width || 0) >= 572 ? (
@@ -20,11 +16,7 @@ export const OrderBookAndTrades: FC<
   );
 };
 
-const TwoColLayout: FC<
-  OrderBookAndTradesState & {
-    tabletMediaQuery: string;
-  }
-> = (props) => {
+const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
   return (
     <Grid
       cols={2}
@@ -47,7 +39,6 @@ const TwoColLayout: FC<
         <Title title="Order book" className="oui-pl-3 oui-text-sm" />
         <OrderBookWidget
           symbol={props.symbol}
-          tabletMediaQuery={props.tabletMediaQuery}
           height={
             props.containerSize
               ? props.containerSize.height - 29 - 24
@@ -77,11 +68,7 @@ const TwoColLayout: FC<
     </Grid>
   );
 };
-const TabLayout: FC<
-  OrderBookAndTradesState & {
-    tabletMediaQuery: string;
-  }
-> = (props) => {
+const TabLayout: FC<OrderBookAndTradesState & {}> = (props) => {
   return (
     <Box
       // pl={3}
@@ -109,7 +96,6 @@ const TabLayout: FC<
         <TabPanel value="orderBook" title={"Order book"}>
           <OrderBookWidget
             symbol={props.symbol}
-            tabletMediaQuery={props.tabletMediaQuery}
             height={
               props.containerSize
                 ? props.containerSize.height - 29 - 18

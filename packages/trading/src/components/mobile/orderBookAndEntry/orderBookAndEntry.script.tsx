@@ -1,11 +1,12 @@
 import { useTradingPageContext } from "../../../provider/context";
 
 export const useOrderBookAndEntryScript = () => {
-
-    const { symbol, tabletMediaQuery, } = useTradingPageContext();
-    return {
-        symbol,tabletMediaQuery,
-    };
+  const { symbol } = useTradingPageContext();
+  return {
+    symbol,
+  };
 };
 
-export type OrderBookAndEntryState = ReturnType<typeof useOrderBookAndEntryScript>;
+export type OrderBookAndEntryState = ReturnType<
+  typeof useOrderBookAndEntryScript
+>;

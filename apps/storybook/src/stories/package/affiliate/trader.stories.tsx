@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
-import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
+import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
+import { TradingRewardsLayout } from "../../../components/layout/tradingRewardsLayout";
 
 const meta: Meta<typeof Dashboard.TraderPage> = {
   title: "Package/affiliate/Trader",
@@ -68,9 +69,6 @@ const meta: Meta<typeof Dashboard.TraderPage> = {
       );
     },
   ],
-  parameters: {
-    layout: "fullscreen",
-  },
   argTypes: {},
   args: {
     p: 5,
@@ -83,11 +81,16 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {};
 
 export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
   render: () => {
     return (
-      <TradingRewardsLayoutWidget>
+      <TradingRewardsLayout
+        currentPath={TradingRewardsLeftSidebarPath.Affiliate}
+      >
         <Dashboard.TraderPage />
-      </TradingRewardsLayoutWidget>
+      </TradingRewardsLayout>
     );
   },
 };

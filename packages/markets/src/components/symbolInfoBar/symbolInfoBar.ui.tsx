@@ -1,21 +1,20 @@
 import { FC, ReactNode } from "react";
 import { Flex, Text, cn, Divider, Badge } from "@orderly.network/ui";
-import { UseTokenInfoBarScriptReturn } from "./tokenInfoBar.script";
+import { UseSymbolInfoBarScriptReturn } from "./symbolInfoBar.script";
 import { TriangleDownIcon } from "../../icons";
 import { Decimal } from "@orderly.network/utils";
 import { MarketsProviderProps } from "../marketsProvider";
 
 export type Layout = "left" | "right";
 
-export type TokenInfoBarProps = Pick<MarketsProviderProps, "onSymbolChange"> &
-  UseTokenInfoBarScriptReturn & {
+export type SymbolInfoBarProps = Pick<MarketsProviderProps, "onSymbolChange"> &
+  UseSymbolInfoBarScriptReturn & {
     className?: string;
     trailing?: ReactNode;
     onSymbol?: () => void;
   };
 
-// TODO: rename to SymbolInfoBar
-export const TokenInfoBar: FC<TokenInfoBarProps> = (props) => {
+export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
   const { symbol, data, leverage, onSymbol } = props;
 
   const symbolView = (
