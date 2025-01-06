@@ -56,6 +56,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         gapY={2}
         onClick={() => {
           props.onLayout?.(position);
+          setOpen(false);
         }}
         className="oui-group"
       >
