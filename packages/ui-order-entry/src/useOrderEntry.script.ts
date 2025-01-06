@@ -263,9 +263,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   ]);
 
   const toggleBBO = () => {
-    if (bboStatus === BBOStatus.DISABLED) {
-      return;
-    }
     if (localBBOType) {
       setLocalBBOType(undefined);
       // update formattedOrder values immediately instead of via useEffect
