@@ -28,7 +28,9 @@ export const RestrictedAreas: FC<RestrictedInfo> = (props: RestrictedInfo) => {
               It seems you are accessing {props.brokerName} from an IP address (
               {props?.ip}) belonging to one of the following countries/regions:
             </div>
-            <div>{props.invalidRegions?.join(", ")}</div>
+            <div>
+              {props.invalidRegions?.join(", ")} , or a restricted IP address
+            </div>
             <br />
             {props?.contact?.url && props?.contact?.text && (
               <div>
