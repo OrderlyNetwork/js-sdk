@@ -19,6 +19,7 @@ import { ExpandableContext, RouterAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterProps, FooterWidget } from "./footer";
 import { MaintenanceTipsWidget } from "./maintenanceTips";
+import { RestrictedAreasWidget } from "./restrictedAreas";
 
 export type LayoutProps = {
   /**
@@ -161,7 +162,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           </Grid>
           // ---------- left & body layout end ---------
         )}
-
         <Box
           ref={footerRef}
           className={cn(
@@ -174,6 +174,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         >
           {props.footer || <FooterWidget {...footerProps} />}
         </Box>
+        <RestrictedAreasWidget />
       </ExpandableContext.Provider>
     </div>
   );
