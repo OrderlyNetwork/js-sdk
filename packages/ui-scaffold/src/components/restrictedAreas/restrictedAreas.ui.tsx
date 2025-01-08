@@ -26,9 +26,11 @@ export const RestrictedAreas: FC<RestrictedInfo> = (props: RestrictedInfo) => {
           <DialogBody className="oui-text-xs md:oui-text-xs sm:oui-text-2xs">
             <div>
               It seems you are accessing {props.brokerName} from an IP address (
-              {props?.ip}) belonging to one of the following countries/ regions:
+              {props?.ip}) belonging to one of the following countries/regions:
             </div>
-            <div>{props.invalidRegions?.join(", ")}</div>
+            <div>
+              {props.invalidRegions?.join(", ")} , or a restricted IP address
+            </div>
             <br />
             {props?.contact?.url && props?.contact?.text && (
               <div>
