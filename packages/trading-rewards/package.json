@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-rewards",
-  "version": "2.0.2-internal-20250109.2",
+  "version": "2.0.2-internal-20250109.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
