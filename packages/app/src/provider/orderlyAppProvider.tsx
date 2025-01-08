@@ -16,7 +16,6 @@ import { AppStateProvider, AppStateProviderProps } from "./appContext";
 import { AppConfigProvider } from "./configContext";
 import { useExecutionReport } from "../hooks/useExecutionReport";
 import { OrderlyThemeProviderProps } from "@orderly.network/ui/src/provider/orderlyThemeProvider";
-import { IRestrictedAreasParams } from "@orderly.network/hooks";
 
 export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps

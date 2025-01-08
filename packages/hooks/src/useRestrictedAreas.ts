@@ -48,6 +48,7 @@ export const useRestrictedAreas = (
   const [invalidWebCity, setInvalidWebCity] = useState<string[]>([]);
   const [invalidWebCountry, setInvalidWebCountry] = useState<string[]>([]);
   const [invalidRegions, setInvalidRegions] = useState<string[]>([]);
+  const [allInvalidAreas, setAllInvalidAreas] = useState<string[]>([]);
   const [city, setCity] = useState<string>("");
   const [region, setRegion] = useState<string>("");
   const [ip, setIp] = useState<string>("");
@@ -65,17 +66,30 @@ export const useRestrictedAreas = (
         const ipData: ApiResponse<IpInfoData> = await ipRes.json();
         if (areaResdata.success && ipData.success) {
           // invalid regions
-          const invalidCountries = areaResdata?.data?.invalid_web_country?.replace(/\s+/g, "")
+          const invalidCountries = areaResdata?.data?.invalid_web_country
+            ?.replace(/\s+/g, "")
             .split(",");
-          const invalidCities = areaResdata?.data?.invalid_web_city?.replace(/\s+/g, "")
+          const invalidCities = areaResdata?.data?.invalid_web_city
+            ?.replace(/\s+/g, "")
             .split(",");
           const combinedInvalidRegions = (
             enableDefault ? invalidCities.concat(invalidCountries) : []
-          ).concat(customRestrictedRegions?.map(item=>item?.replace(/\s+/g, "")?.toLocaleLowerCase()));
+          ).concat(
+            customRestrictedRegions?.map((item) =>
+              item?.replace(/\s+/g, "")?.toLocaleLowerCase()
+            )
+          );
+          const allInvalidAreas = [
+            enableDefault ? areaResdata?.data?.invalid_web_country : "",
+            enableDefault ? areaResdata?.data?.invalid_web_city : "",
+            customRestrictedRegions?.join(", "),
+          ].filter((item) => !!item)
+           
 
           setInvalidWebCity(invalidCities);
           setInvalidWebCountry(invalidCountries);
           setInvalidRegions(combinedInvalidRegions);
+          setAllInvalidAreas(allInvalidAreas)
 
           // user's current location
           const { city, region, ip } = ipData.data;
@@ -104,7 +118,7 @@ export const useRestrictedAreas = (
 
   return {
     ip,
-    invalidRegions,
+    invalidRegions: allInvalidAreas,
     restrictedAreasOpen,
     contact,
   };
