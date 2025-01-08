@@ -74,6 +74,20 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             img: "/orderly-logo-secondary.svg",
           },
         }}
+        restrictedInfo={{
+          enableDefault: false,
+          customRestrictedIps: [],
+          customRestrictedRegions: [
+            "Hong Kong",
+            "Afghanistan",
+            "American Samoa",
+            "Bahamas",
+            "Canada",
+            "Cuba",
+          ],
+          contact: { url: "x@orerly.network", text: "x@orerly.network" },
+        }}
+
         // overrides={{
         //   tabs: {
         //     variant: "text",
