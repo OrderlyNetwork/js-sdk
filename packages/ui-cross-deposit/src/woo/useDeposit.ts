@@ -403,7 +403,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
             wallet:state?.connectWallet?.name,
             network:targetChain?.network_infos?.name,
-             msg: JSON.stringify(e),
+            msg: JSON.stringify(e),
         });
         throw e
       }));
