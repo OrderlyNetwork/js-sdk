@@ -4,7 +4,7 @@ import {
   useChains,
   useConfig,
   useDebouncedCallback,
-  useEventEmitter
+  useEventEmitter,
 } from "@orderly.network/hooks";
 import {
   API,
@@ -13,7 +13,7 @@ import {
   AccountStatusEnum,
   DEPOSIT_FEE_RATE,
   NetworkId,
-    EnumTrackerKeys
+  EnumTrackerKeys,
 } from "@orderly.network/types";
 import { Decimal, isTestnet } from "@orderly.network/utils";
 import { isNativeTokenChecker } from "../woo/constants";
@@ -35,7 +35,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
-  const ee = useEventEmitter()
+  const ee = useEventEmitter();
 
   const [_, { findByChainId }] = useChains(undefined);
 
@@ -394,19 +394,20 @@ export const useDeposit = (options?: useDepositOptions) => {
         updateAllowanceWhenTxSuccess(result.hash);
         setBalance((value) => new Decimal(value).sub(quantity).toString());
         ee.emit(EnumTrackerKeys.DEPOSIT_SUCCESS, {
-            wallet:state?.connectWallet?.name,
-            network:targetChain?.network_infos.name,
-            quantity,
-          });
-        return result;
-      }).catch((e => {
-        ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
-            wallet:state?.connectWallet?.name,
-            network:targetChain?.network_infos?.name,
-             msg: JSON.stringify(e),
+          wallet: state?.connectWallet?.name,
+          network: targetChain?.network_infos.name,
+          quantity,
         });
-        throw e
-      }));
+        return result;
+      })
+      .catch((e) => {
+        ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
+          wallet: state?.connectWallet?.name,
+          network: targetChain?.network_infos?.name,
+          msg: JSON.stringify(e),
+        });
+        throw e;
+      });
   }, [
     state,
     account,
