@@ -75,13 +75,20 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             img: "/orderly-logo-secondary.svg",
           },
         }}
+<<<<<<< HEAD
         customChains={customChains as any}
+=======
+>>>>>>> cross-deposit-v2
         restrictedInfo={{
           enableDefault: false,
           customRestrictedIps: [],
           customRestrictedRegions: [],
           contact: { url: "x@orerly.network", text: "x@orerly.network" },
         }}
+<<<<<<< HEAD
+=======
+
+>>>>>>> cross-deposit-v2
         // overrides={{
         //   tabs: {
         //     variant: "text",
