@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
-import { TradingRewardsLayoutWidget } from "@orderly.network/trading-rewards";
+import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
+import { TradingRewardsLayout } from "../../../components/layout/tradingRewardsLayout";
 
 const meta: Meta<typeof Dashboard.DashboardPage> = {
   title: "Package/affiliate/Dashboard",
@@ -67,10 +68,6 @@ const meta: Meta<typeof Dashboard.DashboardPage> = {
       );
     },
   ],
-  parameters: {
-    layout: "centered",
-    
-  },
   argTypes: {},
   args: {},
 };
@@ -78,12 +75,21 @@ const meta: Meta<typeof Dashboard.DashboardPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Page: Story = {};
+export const Page: Story = {
+  parameters: {
+    layout: "centered",
+  },
+};
 
 export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
   render: () => {
     return (
-      <TradingRewardsLayoutWidget>
+      <TradingRewardsLayout
+        currentPath={TradingRewardsLeftSidebarPath.Affiliate}
+      >
         <Dashboard.DashboardPage
           classNames={{
             root: "oui-flex oui-justify-center",
@@ -91,7 +97,7 @@ export const LayoutPage: Story = {
             dashboard: "oui-py-6 oui-px-4 lg:oui-px-6 xl:oui-pl-3 lx:oui-pr-6",
           }}
         />
-      </TradingRewardsLayoutWidget>
+      </TradingRewardsLayout>
     );
   },
 };

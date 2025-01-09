@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { useSymbolsInfo, useTickerStream } from "@orderly.network/hooks";
 
-export type UseTokenInfoBarScriptOptions = {
+export type UseSymbolInfoBarScriptOptions = {
   symbol: string;
 };
 
-export type UseTokenInfoBarScriptReturn = ReturnType<
-  typeof useTokenInfoBarScript
+export type UseSymbolInfoBarScriptReturn = ReturnType<
+  typeof useSymbolInfoBarScript
 >;
 
-export function useTokenInfoBarScript(options: UseTokenInfoBarScriptOptions) {
+export function useSymbolInfoBarScript(options: UseSymbolInfoBarScriptOptions) {
   const { symbol } = options;
 
   const data = useTickerStream(symbol);

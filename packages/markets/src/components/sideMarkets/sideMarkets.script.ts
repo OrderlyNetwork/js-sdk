@@ -1,7 +1,8 @@
 import { useLocalStorage } from "@orderly.network/hooks";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export type UseSideMarketsScriptOptions = {
+  collapsable?: boolean;
   collapsed?: boolean;
   onCollapse?: (collapsed: boolean) => void;
 };
@@ -18,9 +19,10 @@ export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
     "all"
   );
 
-  useEffect(() => {
-    setCollapsed(options?.collapsed);
-  }, [options?.collapsed]);
+  const collapsable = useMemo(
+    () => options?.collapsable ?? true,
+    [options?.collapsable]
+  );
 
   const onCollapse = useCallback(
     (collapsed: boolean) => {
@@ -33,5 +35,15 @@ export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
     [options?.onCollapse]
   );
 
-  return { collapsed, onCollapse, activeTab, onTabChange: setActiveTab };
+  useEffect(() => {
+    setCollapsed(options?.collapsed);
+  }, [options?.collapsed]);
+
+  return {
+    collapsable,
+    collapsed,
+    onCollapse,
+    activeTab,
+    onTabChange: setActiveTab,
+  };
 }

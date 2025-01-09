@@ -1,15 +1,8 @@
-import {
-  Box,
-  cn,
-  ExtensionPositionEnum,
-  ExtensionSlot,
-} from "@orderly.network/ui";
-import { LayoutProvider } from "./context";
+import { Box } from "@orderly.network/ui";
 import {
   Scaffold,
   SideBar,
   SideBarProps,
-  SideMenuItem,
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
 import { PropsWithChildren } from "react";
@@ -41,6 +34,7 @@ export const TradingRewardsLayout = (
     </Scaffold>
   );
 };
+
 const LeftSidebar = (props: SideBarProps & LayoutProps) => {
   const { expanded, setExpand } = useScaffoldContext();
 

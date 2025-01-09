@@ -1,37 +1,38 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   FeeTierModule,
-  PortfolioLayoutWidget,
+  PortfolioLeftSidebarPath,
 } from "@orderly.network/portfolio";
 import { Column } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
+import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/portfolio/FeeTier",
   component: FeeTierModule.FeeTierPage,
   subcomponents: {},
-  parameters: {
-    layout: "centered",
-  },
-  argTypes: {
-    p: {
-      control: {
-        type: "number",
-        min: 0,
-        max: 10,
-        step: 1,
-      },
-    },
-  },
-  args: {
-    p: 5,
-  },
+  parameters: {},
+  argTypes: {},
+  args: {},
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {};
+
+export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  render: () => {
+    return (
+      <PortfolioLayout currentPath={PortfolioLeftSidebarPath.FeeTier}>
+        <FeeTierModule.FeeTierPage />
+      </PortfolioLayout>
+    );
+  },
+};
 
 export const CustomData: Story = {
   render: () => {
@@ -86,16 +87,6 @@ export const CustomData: Story = {
           };
         }}
       />
-    );
-  },
-};
-
-export const Layout: Story = {
-  render: () => {
-    return (
-      <PortfolioLayoutWidget>
-        <FeeTierModule.FeeTierPage />
-      </PortfolioLayoutWidget>
     );
   },
 };

@@ -45,15 +45,15 @@ const wallets = [
     onWalletNotFound: mobileWalletNotFoundHanlder,
   }),
 ];
+
+const { VITE_NETWORK_ID, VITE_BROKER_ID, VITE_BROKER_NAME, VITE_ENV } =
+  import.meta.env || {};
+
 const configStore = new CustomConfigStore({
-  networkId: "testnet",
-  brokerId: "demo",
-  brokerName: "Orderly",
-  env: "staging",
-  // networkId: "testnet",
-  // brokerId: "woofi_pro",
-  // brokerName: "WOOFI",
-  // env: "qa",
+  networkId: VITE_NETWORK_ID || "testnet",
+  brokerId: VITE_BROKER_ID || "demo",
+  brokerName: VITE_BROKER_NAME || "Orderly",
+  env: VITE_ENV || "staging",
 });
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
@@ -75,7 +75,13 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             img: "/orderly-logo-secondary.svg",
           },
         }}
-        customChains={customChains as any}
+        restrictedInfo={{
+          enableDefault: false,
+          customRestrictedIps: [],
+          customRestrictedRegions: [],
+          contact: { url: "x@orerly.network", text: "x@orerly.network" },
+        }}
+
         // overrides={{
         //   tabs: {
         //     variant: "text",

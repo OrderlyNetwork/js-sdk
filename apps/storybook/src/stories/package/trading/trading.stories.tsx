@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   AssetViewWidget,
@@ -10,10 +10,11 @@ import {
   OrderBookAndTradesWidget,
   BottomNavBarWidget,
 } from "@orderly.network/trading";
-import { Scaffold } from "@orderly.network/ui-scaffold";
 import { Box, Flex } from "@orderly.network/ui";
 import { OrderlyIcon } from "./icons";
 import config from "../../../config";
+import { OrderlyLayout } from "../../../components/layout";
+import { getSymbol, updateSymbol } from "../../../utils/storage";
 
 const meta: Meta<typeof TradingPage> = {
   title: "Package/trading/TradingPage",
@@ -21,9 +22,9 @@ const meta: Meta<typeof TradingPage> = {
   decorators: [
     (Story) => {
       return (
-        <Scaffold mainNavProps={config.scaffold.mainNavProps}>
+        <OrderlyLayout>
           <Story />
-        </Scaffold>
+        </OrderlyLayout>
       );
     },
   ],
@@ -52,9 +53,13 @@ const meta: Meta<typeof TradingPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Page: Story = {
   render: (arg) => {
-    const [symbol, setSymbol] = useState("PERP_BTC_USDC");
+    const [symbol, setSymbol] = useState(getSymbol() || "PERP_BTC_USDC");
+
+    useEffect(() => {
+      updateSymbol(symbol);
+    }, [symbol]);
 
     return (
       <TradingPage
@@ -74,10 +79,7 @@ export const DataList: Story = {
   render: (arg) => {
     return (
       <Box p={3} height={800}>
-        <DataListWidget
-          sharePnLConfig={config.tradingPage.sharePnLConfig}
-          tabletMediaQuery={arg.tabletMediaQuery!}
-        />
+        <DataListWidget sharePnLConfig={config.tradingPage.sharePnLConfig} />
       </Box>
     );
   },
@@ -123,10 +125,7 @@ export const OrderBook: Story = {
     return (
       <div className="oui-h-[500px] oui-m-3 oui-flex oui-items-start oui-justify-center">
         <Box className="oui-w-1/2 oui-bg-base-9" r="2xl" py={3}>
-          <OrderBookWidget
-            symbol={arg.symbol}
-            tabletMediaQuery={arg.tabletMediaQuery!}
-          />
+          <OrderBookWidget symbol={arg.symbol} />
         </Box>
       </div>
     );
@@ -143,10 +142,7 @@ export const OrderBookAndTrades: Story = {
         className="oui-bg-[rgba(255,255,255,0.3)]"
       >
         <Box className="oui-w-[50vw] oui-h-[600px]">
-          <OrderBookAndTradesWidget
-            symbol={arg.symbol}
-            tabletMediaQuery={arg.tabletMediaQuery!}
-          />
+          <OrderBookAndTradesWidget symbol={arg.symbol} />
         </Box>
       </Flex>
     );
