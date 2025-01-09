@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.19-internal-20250109.8
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.2-internal-20250109.8
+
 ## 0.3.19-internal-20250109.7
 
 ### Patch Changes
