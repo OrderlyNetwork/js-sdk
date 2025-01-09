@@ -48,6 +48,9 @@
       "@orderly.network/wallet-connector": [
         "../../packages/wallet-connector/src"
       ],
+      "@orderly.network/wallet-connector-privy": [
+        "../../packages/wallet-connector-privy/src"
+      ],
       "@orderly.network/ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
       ],

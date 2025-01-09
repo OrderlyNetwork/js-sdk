@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { WalletConnectorPrivyProvider } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
 import {
@@ -86,5 +87,33 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
     </WalletConnectorProvider>
   );
 };
+
+export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
+  return (
+    <WalletConnectorPrivyProvider>
+           <OrderlyAppProvider
+        // brokerId="orderly"
+        // brokerName="Orderly"
+        // networkId="testnet"
+        configStore={configStore}
+        appIcons={{
+          main: {
+            img: "/orderly-logo.svg",
+          },
+          secondary: {
+            img: "/orderly-logo-secondary.svg",
+          },
+        }}
+        // overrides={{
+        //   tabs: {
+        //     variant: "text",
+        //   },
+        // }}
+      >
+        {props.children}
+      </OrderlyAppProvider>
+    </WalletConnectorPrivyProvider>
+  )
+}
 
 export default OrderlyProvider;

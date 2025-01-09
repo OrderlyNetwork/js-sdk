@@ -1,0 +1,1 @@
+export { WalletConnectorPrivyProvider } from "./provider";
