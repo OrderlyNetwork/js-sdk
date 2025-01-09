@@ -66,10 +66,10 @@ export const useRestrictedAreas = (
         const ipData: ApiResponse<IpInfoData> = await ipRes.json();
         if (areaResdata.success && ipData.success) {
           // invalid regions
-          const invalidCountries = areaResdata?.data?.invalid_web_country
+          const invalidCountries = areaResdata?.data?.invalid_web_country?.toLocaleLowerCase()
             ?.replace(/\s+/g, "")
             .split(",");
-          const invalidCities = areaResdata?.data?.invalid_web_city
+          const invalidCities = areaResdata?.data?.invalid_web_city?.toLocaleLowerCase()
             ?.replace(/\s+/g, "")
             .split(",");
           const combinedInvalidRegions = (
