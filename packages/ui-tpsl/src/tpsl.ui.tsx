@@ -41,7 +41,6 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     isPosition,
   } = props;
 
-
   return (
     <div id="orderly-tp_sl-order-edit-content">
       {(!props.isEditing || (props.isEditing && !props.isPosition)) && (
@@ -152,12 +151,15 @@ const TPSLQuantity = (props: {
       // if (quantity) {
       //   props.onQuantityChange?.(Math.min(props.maxQty, quantity));
       // } else {
-        props.onQuantityChange?.(utils.formatNumber(qty, props.baseTick) ?? qty);
+      props.onQuantityChange?.(utils.formatNumber(qty, props.baseTick) ?? qty);
       // }
     }
   };
 
-  const errorMsg = (isPosition ? "" : props.quantity).toString().length > 0 ? props.errorMsg : undefined;
+  const errorMsg =
+    (isPosition ? "" : props.quantity).toString().length > 0
+      ? props.errorMsg
+      : undefined;
 
   return (
     <>
@@ -176,7 +178,10 @@ const TPSLQuantity = (props: {
             autoComplete="off"
             classNames={{
               prefix: "oui-text-base-contrast-54",
-              root: cn("oui-bg-base-5 oui-outline-line-12", errorMsg && "oui-outline-danger"),
+              root: cn(
+                "oui-bg-base-5 oui-outline-line-12",
+                errorMsg && "oui-outline-danger"
+              ),
             }}
             tooltipProps={{
               content: {
@@ -187,7 +192,7 @@ const TPSLQuantity = (props: {
               },
             }}
             tooltip={errorMsg}
-            color={errorMsg ? 'danger' : undefined}
+            color={errorMsg ? "danger" : undefined}
             formatters={[
               inputFormatter.dpFormatter(props.dp),
               inputFormatter.numberFormatter,
@@ -316,8 +321,8 @@ const TPSLPrice = (props: {
     <>
       <div>
         <Flex justify={"between"}>
-          <Text size={"sm"} intensity={80}>
-            Take profit
+          <Text size={"2xs"} intensity={80}>
+            Take profit <Text intensity={36}>(market order)</Text>
           </Text>
           <Flex>
             <Text size={"2xs"} intensity={36}>
@@ -354,8 +359,8 @@ const TPSLPrice = (props: {
       </div>
       <div>
         <Flex justify={"between"}>
-          <Text size={"sm"} intensity={80}>
-            Stop loss
+          <Text size={"2xs"} intensity={80}>
+            Stop loss <Text intensity={36}>(market order)</Text>
           </Text>
           <Flex>
             <Text size={"2xs"} intensity={36}>

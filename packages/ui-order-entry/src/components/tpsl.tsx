@@ -106,8 +106,10 @@ export const OrderTPSL = (props: {
               size: "xs",
               content: (
                 <Text intensity={54}>
-                  TP/SL applies to the entire position. For partial TP/SL, set
-                  it in open positions.
+                  Set TP/SL to trigger at a specified price and execute as a
+                  market order. By default, TP/SL applies to the entire
+                  position. For partial TP/SL, adjust settings in the open
+                  positions section.
                 </Text>
               ),
             });
