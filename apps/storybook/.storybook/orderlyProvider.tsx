@@ -79,14 +79,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         restrictedInfo={{
           enableDefault: false,
           customRestrictedIps: [],
-          customRestrictedRegions: [
-            "Hong Kong",
-            "Afghanistan",
-            "American Samoa",
-            "Bahamas",
-            "Canada",
-            "Cuba",
-          ],
+          customRestrictedRegions: [],
           contact: { url: "x@orerly.network", text: "x@orerly.network" },
         }}
         // overrides={{
