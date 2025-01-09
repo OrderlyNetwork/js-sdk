@@ -45,9 +45,11 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
             onChainChanged={onChainChanged}
             restrictedInfo={props.restrictedInfo}
           >
-            <TooltipProvider delayDuration={300}>
-              <ModalProvider>{props.children}</ModalProvider>
-            </TooltipProvider>
+            <OrderlyTrackerProvider>
+              <TooltipProvider delayDuration={300}>
+                <ModalProvider>{props.children}</ModalProvider>
+              </TooltipProvider>
+            </OrderlyTrackerProvider>
           </AppStateProvider>
           <Toaster />
         </OrderlyConfigProvider>
