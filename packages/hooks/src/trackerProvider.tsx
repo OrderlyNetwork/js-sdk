@@ -97,7 +97,6 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
         });
         return;
       }
-
       amplitude.track(TrackerListenerKeyMap[key], params);
     },
     [account?.accountId, brokerId, state?.connectWallet?.name]

@@ -5,6 +5,7 @@
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 turbo run build",
     "build-storybook": "cross-env NODE_OPTIONS=--max_old_space_size=4096 pnpm --filter @orderly.network/storybook build-storybook",
     "storybook": "pnpm --filter @orderly.network/storybook storybook",
+    "storybook:tradingPage": "pnpm --filter @orderly.network/storybook storybook:tradingPage",
     "dev": "turbo run dev --concurrency=20",
     "lint": "turbo run lint",
     "docs": "typedoc",
@@ -15,7 +16,7 @@
     "prepublishOnly": "pnpm build",
     "prepare": "husky install",
     "test": "turbo run test",
-    "publish": "ts-node ./scripts/publish.ts"
+    "release:patch": "ts-node ./scripts/publish.ts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

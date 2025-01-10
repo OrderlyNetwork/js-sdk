@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react";
+import React, { HTMLAttributes, useMemo } from "react";
 import { cn } from "@orderly.network/ui";
 import { SplitProps } from "@uiw/react-split";
 
@@ -7,11 +7,22 @@ export type SplitLineBarProps = Pick<SplitProps, "mode"> &
 
 export const SplitLineBar: React.FC<SplitLineBarProps> = (props) => {
   const { onMouseDown, mode = "horizontal", ...rest } = props;
+
+  const disable = useMemo(
+    () => props.className?.split(" ").includes("disable"),
+    [props.className]
+  );
+
+  const filterCls = useMemo(
+    () => props.className?.split(" ").filter((cls) => cls !== "disable"),
+    [props.className]
+  );
+
   return (
     <div
       {...rest}
       className={cn(
-        props.className,
+        filterCls,
         "!oui-transition-none",
         "!oui-shadow-none !oui-bg-transparent",
         "hover:!oui-bg-primary-light hover:!oui-shadow-[0px_0px_4px_0px] hover:!oui-shadow-primary-light/80",
@@ -19,7 +30,8 @@ export const SplitLineBar: React.FC<SplitLineBarProps> = (props) => {
         "focus:!oui-bg-primary-light focus:!oui-shadow-[0px_0px_4px_0px] focus:!oui-shadow-primary-light/80",
         mode === "horizontal"
           ? "!oui-w-[2px] !oui-min-w-[2px]  !oui-mx-1"
-          : "!oui-h-[2px] !oui-min-h-[2px]  !oui-my-1"
+          : "!oui-h-[2px] !oui-min-h-[2px]  !oui-my-1",
+        disable && "oui-pointer-events-none"
       )}
     >
       <div

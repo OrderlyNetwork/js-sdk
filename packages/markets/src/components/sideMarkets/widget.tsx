@@ -4,10 +4,16 @@ import { SideMarkets, SideMarketsProps } from "./sideMarkets.ui";
 import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 
 export type SideMarketsWidgetProps = MarketsProviderProps &
-  Partial<Pick<SideMarketsProps, "collapsed" | "onCollapse" | "className">>;
+  Partial<
+    Pick<
+      SideMarketsProps,
+      "collapsable" | "collapsed" | "onCollapse" | "className"
+    >
+  >;
 
 export const SideMarketsWidget: React.FC<SideMarketsWidgetProps> = (props) => {
   const state = useSideMarketsScript({
+    collapsable: props.collapsable,
     collapsed: props.collapsed,
     onCollapse: props.onCollapse,
   });

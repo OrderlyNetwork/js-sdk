@@ -30,7 +30,6 @@ export interface DesktopOrderBookProps {
   className?: string;
   pendingOrders?: number[];
   symbolInfo: BasicSymbolInfo;
-  tabletMediaQuery: string;
 }
 
 export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
@@ -81,7 +80,6 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       showTotal={showTotal}
       pendingOrders={props.pendingOrders || []}
       symbolInfo={props.symbolInfo}
-      tabletMediaQuery={props.tabletMediaQuery}
     >
       <Grid
         cols={1}

@@ -19,6 +19,7 @@ import { ExpandableContext, RouterAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterProps, FooterWidget } from "./footer";
 import { MaintenanceTipsWidget } from "./maintenanceTips";
+import { RestrictedAreasWidget } from "./restrictedAreas";
 
 export type LayoutProps = {
   /**
@@ -109,20 +110,22 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         <Box
           className={cn(
             "oui-scaffold-topNavbar oui-bg-base-9",
-            "oui-hidden xl:oui-block oui-min-w-[1440px]",
+            "oui-hidden xl:oui-block oui-min-w-[1018px]",
             // "oui-border-b oui-border-line-12",
             classNames?.topNavbar
           )}
         >
           {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
-        <div className="oui-scaffold-maintenance-tips oui-hidden xl:oui-block  oui-min-w-[1440px]">
+        <div className="oui-scaffold-maintenance-tips oui-hidden xl:oui-block  oui-min-w-[1018px]">
           {!isMobile && <MaintenanceTipsWidget />}
         </div>
         {/*--------- body start ------ */}
         {!hasLeftSidebar ? (
           // ----------No leftSidebar layout start ---------
-          <Box className={classNames?.content}>{props.children}</Box>
+          <Box height="100%" className={classNames?.content}>
+            {props.children}
+          </Box>
         ) : (
           // ----------No leftSidebar layout end ---------
           // ---------- left & body layout start ---------
@@ -159,7 +162,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
           </Grid>
           // ---------- left & body layout end ---------
         )}
-
         <Box
           ref={footerRef}
           className={cn(
@@ -172,6 +174,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         >
           {props.footer || <FooterWidget {...footerProps} />}
         </Box>
+        <RestrictedAreasWidget />
       </ExpandableContext.Provider>
     </div>
   );

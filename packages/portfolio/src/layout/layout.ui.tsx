@@ -26,6 +26,7 @@ export const PortfolioLayout: FC<PropsWithChildren<PortfolioLayoutProps>> = (
         props.hideSideBar ? null : (
           <LeftSidebar
             items={props.items}
+            current={props.routerAdapter?.currentPath}
             {...leftSideProps}
             routerAdapter={props.routerAdapter}
           />

@@ -8,10 +8,10 @@ export enum EnumTrackerKeys{
   "WALLET_CONNECT" = "wallet:connected",
 }
 export const TrackerListenerKeyMap: { [key in EnumTrackerKeys]: string } = {
-  [EnumTrackerKeys.WITHDRAW_SUCCESS]: "withdraw_success",
-  [EnumTrackerKeys.WITHDRAW_FAILED]: "withdraw_failure",
-  [EnumTrackerKeys.DEPOSIT_SUCCESS]: "deposit_success",
-  [EnumTrackerKeys.DEPOSIT_FAILED]: "deposit_failure",
+  [EnumTrackerKeys.WITHDRAW_SUCCESS]: "withdraw_request_success",
+  [EnumTrackerKeys.WITHDRAW_FAILED]: "withdraw_request_failure",
+  [EnumTrackerKeys.DEPOSIT_SUCCESS]: "deposit_request_success",
+  [EnumTrackerKeys.DEPOSIT_FAILED]: "deposit_request_failure",
   [EnumTrackerKeys.SIGNIN_SUCCESS]: "sign_message_success",
   [EnumTrackerKeys.WALLET_CONNECT]: "connect_wallet_success",
   [EnumTrackerKeys.PLACEORDER_SUCCESS]: "place_order_success",

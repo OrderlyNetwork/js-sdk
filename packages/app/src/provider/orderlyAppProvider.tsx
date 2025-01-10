@@ -14,7 +14,6 @@ import {
 } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./appContext";
 import { AppConfigProvider } from "./configContext";
-
 import { useExecutionReport } from "../hooks/useExecutionReport";
 import { OrderlyThemeProviderProps } from "@orderly.network/ui/src/provider/orderlyThemeProvider";
 
@@ -42,7 +41,10 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
         overrides={props.overrides}
       >
         <OrderlyConfigProvider {...(configProps as ConfigProviderProps)}>
-          <AppStateProvider onChainChanged={onChainChanged}>
+          <AppStateProvider
+            onChainChanged={onChainChanged}
+            restrictedInfo={props.restrictedInfo}
+          >
             <OrderlyTrackerProvider>
               <TooltipProvider delayDuration={300}>
                 <ModalProvider>{props.children}</ModalProvider>

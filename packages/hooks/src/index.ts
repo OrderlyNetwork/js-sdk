@@ -92,3 +92,9 @@ export * from "./apiKeys";
 //--------- next hooks-----------
 // export { useOrderEntryNext } from "./next/useOrderEntry/useOrderEntry";
 export * from "./next/useOrderEntry";
+
+export {
+  useRestrictedAreas,
+  type RestrictedAreasReturns,
+  type IRestrictedAreasParams,
+} from "./useRestrictedAreas";

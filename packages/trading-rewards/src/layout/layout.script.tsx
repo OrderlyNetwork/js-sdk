@@ -1,9 +1,13 @@
+import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import React, { useEffect } from "react";
-import { useMemo, useState } from "react";
 
-export const useLayoutBuilder = (props: {
+export enum TradingRewardsLeftSidebarPath {
+  Trading = "/rewards/trading",
+  Affiliate = "/rewards/affiliate",
+}
+
+export const useTradingRewardsLayoutScript = (props: {
   current?: string;
 }): SideBarProps & {
   hideSideBar: boolean;
@@ -18,7 +22,7 @@ export const useLayoutBuilder = (props: {
     return [
       {
         name: "Trading",
-        href: "/rewards/trading",
+        href: TradingRewardsLeftSidebarPath.Trading,
         icon: (
           <svg
             width="18"
@@ -53,7 +57,7 @@ export const useLayoutBuilder = (props: {
       },
       {
         name: "Affiliate",
-        href: "/rewards/affiliate",
+        href: TradingRewardsLeftSidebarPath.Affiliate,
         icon: (
           <svg
             width="18"

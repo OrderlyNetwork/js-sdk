@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   OverviewModule,
-  PortfolioLayoutWidget,
+  PortfolioLeftSidebarPath,
 } from "@orderly.network/portfolio";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
 import { DataViewer } from "../../../components/dataViewer";
+import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
 
 const { usePerformanceScript } = OverviewModule;
 
@@ -14,9 +15,6 @@ const meta: Meta<typeof OverviewModule.OverviewPage> = {
   subcomponents: {
     Assets: OverviewModule.AssetWidget,
     DepositsAndWithdrawWidget: OverviewModule.AssetHistoryWidget,
-  },
-  parameters: {
-    layout: "fullscreen",
   },
   argTypes: {
     p: {
@@ -33,7 +31,22 @@ const meta: Meta<typeof OverviewModule.OverviewPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// export const Page: Story = {};
+export const Page: Story = {
+  render: () => <OverviewModule.OverviewPage />,
+};
+
+export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  render: () => {
+    return (
+      <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Overview}>
+        <OverviewModule.OverviewPage />
+      </PortfolioLayout>
+    );
+  },
+};
 
 export const Assets: Story = {
   render: (args) => {
@@ -171,23 +184,4 @@ export const DistributionHistory: Story = {
       </Box>
     ),
   ],
-};
-
-export const Page: Story = {
-  render: () => {
-    return (
-      <PortfolioLayoutWidget
-        routerAdapter={{
-          onRouteChange: (op) => {
-            console.log("router adapter", op);
-          },
-        }}
-        leftSideProps={{
-          current: "/portfolio",
-        }}
-      >
-        <OverviewModule.OverviewPage />
-      </PortfolioLayoutWidget>
-    );
-  },
 };
