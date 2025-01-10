@@ -9,58 +9,45 @@ import {
   MarketsProvider,
   FundingComparisonWidget,
 } from "@orderly.network/markets";
-import { Box } from "@orderly.network/ui";
+import { OrderlyLayout } from "../../../components/layout";
 
 const meta: Meta<typeof MarketsHomePage> = {
   title: "Package/markets/HomePage",
   component: MarketsHomePage,
-  parameters: {
-    // layout: "centered",
-  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Page: Story = {
-  args: {
-    className: "oui-pb-10",
+  parameters: {
+    layout: "fullscreen",
   },
-  decorators: [
-    (Story) => (
-      <Box intensity={800}>
-        <Story />
-      </Box>
-    ),
-  ],
+};
+
+export const LayoutPage: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  render: (args) => {
+    return (
+      <OrderlyLayout initialMenu="/markets">
+        <MarketsHomePage />
+      </OrderlyLayout>
+    );
+  },
 };
 
 export const Header: Story = {
   render: (args) => {
     return <MarketsHeaderWidget />;
   },
-
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
 };
 
 export const Favorites: Story = {
   render: (args) => {
     return <FavoritesListFullWidget />;
   },
-
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
 };
 
 export const AllMarkets: Story = {
@@ -69,14 +56,6 @@ export const AllMarkets: Story = {
       <MarketsListFullWidget type="all" sortKey="24h_amount" sortOrder="desc" />
     );
   },
-
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
 };
 
 export const NewListings: Story = {
@@ -89,14 +68,6 @@ export const NewListings: Story = {
       />
     );
   },
-
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
 };
 
 export const DataList: Story = {
@@ -107,40 +78,16 @@ export const DataList: Story = {
       </MarketsProvider>
     );
   },
-
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
 };
 
 export const FundingHistory: Story = {
   render: (args) => {
     return <FundingOverviewWidget />;
   },
-
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
 };
 
 export const FundingComparison: Story = {
   render: (args) => {
     return <FundingComparisonWidget />;
   },
-
-  decorators: [
-    (Story) => (
-      <Box>
-        <Story />
-      </Box>
-    ),
-  ],
 };

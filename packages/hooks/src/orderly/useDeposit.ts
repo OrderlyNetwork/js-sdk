@@ -294,6 +294,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         })
         .then((res: any) => {
           return updateAllowanceWhenTxSuccess(res.hash);
+        }).catch(e => {
         });
     },
     [account, getAllowance, options?.address, dst]
@@ -316,6 +317,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     // only support orderly deposit
     console.log("-- start deposit");
     console.log('-- deposit fee', depositFee);
+
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {

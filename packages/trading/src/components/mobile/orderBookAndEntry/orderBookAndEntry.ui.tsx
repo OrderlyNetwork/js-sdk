@@ -45,7 +45,6 @@ export const OrderBookAndEntry: FC<
         <OrderBookWidget
           symbol={props.symbol}
           height={height ? height - 44 : undefined}
-          tabletMediaQuery={props.tabletMediaQuery}
         />
       </div>
       <div className="oui-bg-base-9 oui-rounded-xl oui-p-2" >
