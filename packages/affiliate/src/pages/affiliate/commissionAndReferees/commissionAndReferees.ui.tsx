@@ -110,6 +110,12 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         width: 216,
       },
       {
+        title: "Referral active users",
+        dataIndex: "daily_traded_referral",
+        render: (value) => <Text>{value}</Text>,
+        width: 216,
+      },
+      {
         title: "Date",
         dataIndex: "date",
         render: (value) => formatYMDTime(value),
@@ -153,6 +159,10 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
                       padEnd: true,
                     })}
                     prefix="$"
+                  />
+                  <MobileCellItem
+                    title="Referral active users"
+                    value={e.daily_traded_referral}
                   />
                   <MobileCellItem
                     title="Date"
