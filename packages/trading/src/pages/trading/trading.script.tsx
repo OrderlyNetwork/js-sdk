@@ -35,10 +35,14 @@ export const useTradingScript = () => {
   );
 
   const canTrading = useMemo(() => {
-    if (state.status < AccountStatusEnum.EnableTrading || wrongNetwork) {
-      return false;
+    if (
+      !wrongNetwork &&
+      (state.status >= AccountStatusEnum.EnableTrading ||
+        state.status === AccountStatusEnum.EnableTradingWithoutConnected)
+    ) {
+      return true;
     }
-    return true;
+    return false;
   }, [state.status, wrongNetwork]);
 
   const horizontalDraggable = useMemo(() => min3XL, [min3XL]);

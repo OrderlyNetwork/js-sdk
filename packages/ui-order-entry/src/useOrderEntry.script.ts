@@ -61,7 +61,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const { wrongNetwork } = useAppContext();
   const canTrade = useMemo(() => {
     return (
-      accountState.status === AccountStatusEnum.EnableTrading && !wrongNetwork
+      (accountState.status === AccountStatusEnum.EnableTrading ||
+        accountState.status ===
+          AccountStatusEnum.EnableTradingWithoutConnected) &&
+      !wrongNetwork
     );
   }, [accountState.status, wrongNetwork]);
 

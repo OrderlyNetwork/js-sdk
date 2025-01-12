@@ -14,7 +14,7 @@ export const usePrivateInfiniteQuery = <T>(
   }
 ) => {
   const { formatter, ...restOptions } = options || {};
-  const account = useAccount();
+  const { state } = useAccount();
 
   const middleware = Array.isArray(restOptions?.use)
     ? restOptions?.use ?? []
@@ -23,10 +23,15 @@ export const usePrivateInfiniteQuery = <T>(
   const result = useSWRInfinite<T>(
     (pageIndex: number, previousPageData) => {
       const queryKey = getKey(pageIndex, previousPageData);
-      if (account.state.status < AccountStatusEnum.EnableTrading || !queryKey) {
-        return null;
+      if (
+        !queryKey &&
+        (state.status >= AccountStatusEnum.EnableTrading ||
+          state.status === AccountStatusEnum.EnableTradingWithoutConnected)
+      ) {
+        return [queryKey, state.accountId];
       }
-      return [queryKey, account.state.accountId];
+
+      return null;
     },
     (url: string, init: RequestInit) => {
       return restOptions.fetcher?.(url, init) || get(url, init, formatter);

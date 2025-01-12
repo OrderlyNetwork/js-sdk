@@ -1,4 +1,8 @@
-import { usePrivateQuery, useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  useAccount,
+  usePrivateQuery,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { PositionHistoryProps } from "./positionHistory.widget";
@@ -30,6 +34,8 @@ export enum PositionHistoryStatus {
 
 export const usePositionHistoryScript = (props: PositionHistoryProps) => {
   const { onSymbolChange, symbol, pnlNotionalDecimalPrecision } = props;
+  const { state } = useAccount();
+
   const { data, isLoading } = usePrivateQuery<PositionHistoryExt[]>(
     symbol
       ? `/v1/position_history?symbol=${symbol}&limit=1000`
@@ -105,7 +111,10 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
   }, [status, side, dateRange, data, symbol]);
 
   const dataSource = useDataTap(filterData, {
-    accountStatus: AccountStatusEnum.EnableTrading,
+    accountStatus:
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+        ? AccountStatusEnum.EnableTradingWithoutConnected
+        : AccountStatusEnum.EnableTrading,
   });
 
   return {
@@ -185,7 +194,6 @@ const useFilter = () => {
           },
         };
 
-        
         const dateRange = dateRangeMap[diffDays];
         if (
           dateRange &&

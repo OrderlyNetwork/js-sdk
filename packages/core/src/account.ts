@@ -15,7 +15,7 @@ import { Assets } from "./assets";
 import { EVENT_NAMES } from "./constants";
 import { WalletAdapterManager } from "./walletAdapterManager";
 import { WalletAdapter } from "./wallet/walletAdapter";
-import { BaseOrderlyKeyPair } from "./keyPair";
+import { BaseOrderlyKeyPair, OrderlyKeyPair } from "./keyPair";
 import { PublicKey } from "@solana/web3.js";
 import { AbiCoder, keccak256 } from "ethers";
 
@@ -312,8 +312,6 @@ export class Account {
         publicKey
       );
 
-      //
-
       if (
         orderlyKeyStatus &&
         orderlyKeyStatus.orderly_key &&
@@ -330,11 +328,6 @@ export class Account {
           this.keyStore.cleanKey(address, "orderlyKey");
           return AccountStatusEnum.DisabledTrading;
         }
-
-        // const nextState = {
-        //   ...this.stateValue,
-        //   status: AccountStatusEnum.EnableTrading,
-        // };
 
         this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
@@ -369,7 +362,7 @@ export class Account {
     address: string
   ): Promise<{ account_id: string; user_id: string } | null> {
     // const brokerId = this.configStore.get("brokerId");
-    const res = await this._getAccountInfo();
+    const res = await this._getAccountInfo(address);
 
     if (res.success) {
       return res.data;
@@ -449,12 +442,9 @@ export class Account {
       tag?: string;
       scope?: string;
     }
-  ): Promise<{
-    key: string;
-    secretKey: string;
-  }> {
+  ) {
     try {
-      const { res, keyPair } = await this.generateAPiKey(expiration, options);
+      const { res, keyPair } = await this.generateApiKey(expiration, options);
       if (res.success) {
         const key = await keyPair.getPublicKey();
         return {
@@ -465,8 +455,10 @@ export class Account {
     } catch (e) {
       console.log("createApiKey error", e);
 
-      if (`${e}`.includes("user rejected action"))
+      if (`${e}`.includes("user rejected action")) {
         throw new Error("User rejected the request.");
+      }
+
       throw e;
     }
     throw new Error("create api key failed");
@@ -479,7 +471,7 @@ export class Account {
       scope?: string;
     }
   ): Promise<any> {
-    const { res, address, keyPair } = await this.generateAPiKey(
+    const { res, address, keyPair } = await this.generateApiKey(
       expiration,
       options
     );
@@ -501,7 +493,7 @@ export class Account {
     }
   }
 
-  private async generateAPiKey(
+  private async generateApiKey(
     expiration?: number,
     options?: {
       tag?: string;
@@ -531,6 +523,7 @@ export class Account {
     // const primaryType = "AddOrderlyKey";
     // const keyPair = this.keyStore.generateKey();
     const secretKey = this.walletAdapter.generateSecretKey();
+
     const keyPair = new BaseOrderlyKeyPair(secretKey);
     const publicKey = await keyPair.getPublicKey();
 
@@ -568,6 +561,51 @@ export class Account {
     });
 
     return { res, address, keyPair };
+  }
+
+  async importOrderlyKey(address: string, secretKey: string) {
+    if (!address || !secretKey) return;
+
+    const accountInfo = await this._checkAccountExist(address);
+    const accountId = accountInfo?.account_id;
+
+    if (!accountId) return;
+
+    const orderlyKey = new BaseOrderlyKeyPair(secretKey);
+    return this.checkOrderlyKey(address, orderlyKey, accountId);
+  }
+
+  async checkOrderlyKey(
+    address: string,
+    orderlyKey: OrderlyKeyPair,
+    accountId: string
+  ) {
+    if (!address || !orderlyKey || !accountId) return;
+    const publicKey = await orderlyKey.getPublicKey();
+
+    const orderlyKeyStatus = await this._checkOrderlyKeyState(
+      accountId,
+      publicKey
+    );
+
+    const { orderly_key, key_status, expiration } = orderlyKeyStatus || {};
+    const now = getTimestamp();
+
+    if (orderly_key && key_status === "ACTIVE" && expiration > now) {
+      this.keyStore.setAddress(address);
+      this.keyStore.setKey(address, orderlyKey);
+      this.keyStore.setAccountId(address, accountId);
+
+      const nextState = {
+        ...this.stateValue,
+        address,
+        accountId,
+        // userId: accountInfo.user_id,
+        status: AccountStatusEnum.EnableTradingWithoutConnected,
+      };
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
+      return true;
+    }
   }
 
   async settle(): Promise<any> {
@@ -744,10 +782,12 @@ export class Account {
     }
   }
 
-  private async _getAccountInfo() {
+  private async _getAccountInfo(address?: string) {
     const brokerId = this.configStore.get("brokerId");
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${this.address}&broker_id=${brokerId}&chain_type=${this.stateValue.chainNamespace}`
+      `/v1/get_account?address=${
+        address || this.address
+      }&broker_id=${brokerId}&chain_type=${this.stateValue.chainNamespace}`
     );
     return res;
   }
