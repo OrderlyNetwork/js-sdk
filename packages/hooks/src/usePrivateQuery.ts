@@ -15,14 +15,15 @@ export const usePrivateQuery = <T>(
   options?: useQueryOptions<T>
 ): SWRResponse<T> => {
   const { formatter, ...swrOptions } = options || {};
-  const account = useAccount();
+  const { state } = useAccount();
   const middleware = Array.isArray(options?.use) ? options?.use ?? [] : [];
 
   // @ts-ignore
   return useSWR<T>(
     () =>
-      account.state.status >= AccountStatusEnum.EnableTrading
-        ? [query, account.state.accountId]
+      state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+        ? [query, state.accountId]
         : null,
     (url: string, init: RequestInit) => {
       return fetcher(url, init, { formatter });

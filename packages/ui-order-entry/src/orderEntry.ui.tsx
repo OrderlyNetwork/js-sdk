@@ -35,6 +35,7 @@ import {
   useState,
 } from "react";
 import {
+  AccountStatusEnum,
   API,
   BBOOrderType,
   OrderLevel,
@@ -310,7 +311,14 @@ export const OrderEntry = (
           side={props.side}
         />
         {/* Submit button */}
-        <AuthGuard buttonProps={{ fullWidth: true }}>
+        <AuthGuard
+          buttonProps={{ fullWidth: true }}
+          status={
+            props.canTrade
+              ? AccountStatusEnum.EnableTradingWithoutConnected
+              : AccountStatusEnum.EnableTrading
+          }
+        >
           <ThrottledButton
             fullWidth
             id={"order-entry-submit-button"}
@@ -713,6 +721,7 @@ const CustomInput = forwardRef<
         ...(props.formatters ?? []),
         inputFormatter.numberFormatter,
         inputFormatter.currencyFormatter,
+        inputFormatter.decimalPointFormatter,
       ]}
       classNames={{
         root: cn(

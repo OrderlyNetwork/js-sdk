@@ -4,6 +4,7 @@ import {
   ConnectedChain,
   useChains,
   useConfig,
+  useLocalStorage,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { API, NetworkId } from "@orderly.network/types";
@@ -17,6 +18,10 @@ export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
 
 export function useChainSelect() {
   const networkId = useConfig("networkId") as NetworkId;
+  const [selectedChainId] = useLocalStorage<string>(
+    "orderly_selected_chainId",
+    ""
+  );
 
   const { connectedChain, settingChain, setChain } = useWalletConnector();
 
@@ -27,9 +32,14 @@ export function useChainSelect() {
   });
 
   const currentChain = useMemo(() => {
-    if (!connectedChain) return null;
+    // if (!connectedChain) return null;
 
-    const chainId = praseChainIdToNumber(connectedChain.id);
+    const chainId = connectedChain
+      ? praseChainIdToNumber(connectedChain.id)
+      : selectedChainId;
+
+    if (!chainId) return null;
+
     const chain = findByChainId(chainId);
 
     return {
@@ -37,14 +47,14 @@ export function useChainSelect() {
       id: chainId,
       info: chain!,
     } as CurrentChain;
-  }, [connectedChain, findByChainId]);
+  }, [findByChainId, connectedChain, selectedChainId]);
 
   const onChainChange = useCallback(
     async (chain: API.NetworkInfos) => {
       const chainInfo = findByChainId(chain.chain_id);
 
       if (!connectedChain) {
-       return;
+        return;
       }
 
       if (

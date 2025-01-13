@@ -1,12 +1,8 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import {
-  MainNavClassNames,
-  MainNavItems,
-  MainNavItemsProps,
-} from "./mainNavItems";
+import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
 
 import { ProductsMenu, ProductsProps } from "./products";
-import { cn, Flex } from "@orderly.network/ui";
+import { cn, Divider, Flex } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
 import { AccountMenuWidget } from "../accountMenu";
 import { AccountSummaryWidget } from "../accountSummary";
@@ -16,6 +12,8 @@ import { CampaignButton, CampaignProps } from "./campaignButton";
 import { MainLogo } from "./mainLogo";
 import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
+import { LinkDeviceIcon } from "../icons";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
@@ -38,6 +36,8 @@ export type MainNavProps = {
     chains?: string;
     campaignButton?: string;
   };
+  status?: AccountStatusEnum;
+  showQRCode?: () => void;
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
@@ -83,6 +83,15 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           />
         ) : null}
         <AccountSummaryWidget />
+        {props.status! >= AccountStatusEnum.SignedIn && (
+          <>
+            <Divider direction="vertical" className="oui-h-8" intensity={8} />
+            <LinkDeviceIcon
+              className="oui-text-base-contrast-80 oui-cursor-pointer"
+              onClick={props.showQRCode}
+            />
+          </>
+        )}
         <ChainMenuWidget />
         {props.wrongNetwork && props.isConnected ? null : (
           <WalletConnectButtonExtension />

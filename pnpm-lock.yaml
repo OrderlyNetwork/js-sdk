@@ -2340,6 +2340,9 @@ importers:
 
   packages/ui-scaffold:
     dependencies:
+      '@akamfoad/qr':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@date-fns/utc':
         specifier: 1.2.0
         version: 1.2.0
@@ -35191,7 +35194,7 @@ snapshots:
       graceful-fs: 4.2.11
       invariant: 2.2.4
       jest-worker: 29.7.0
-      micromatch: 4.0.7
+      micromatch: 4.0.8
       node-abort-controller: 3.1.1
       nullthrows: 1.1.1
       walker: 1.0.8

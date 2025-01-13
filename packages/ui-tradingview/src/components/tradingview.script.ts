@@ -3,7 +3,12 @@ import {
   TradingviewWidgetPropsInterface,
 } from "../type";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getOveriides, withExchangePrefix, defaultColorConfig, chartBG } from "../utils/chart.util";
+import {
+  getOveriides,
+  withExchangePrefix,
+  defaultColorConfig,
+  chartBG,
+} from "../utils/chart.util";
 import {
   useAccount,
   useConfig,
@@ -33,9 +38,9 @@ import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
 const CHART_KEY = "SDK_Tradingview";
 const MOBILE_CHART_KEY = "SDK_Moblie_Tradingview";
 
-const getChartKey = (isMobile?:boolean) => {
+const getChartKey = (isMobile?: boolean) => {
   return isMobile ? MOBILE_CHART_KEY : CHART_KEY;
-}
+};
 
 export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const {
@@ -107,20 +112,18 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
   const isMobile = useMediaQuery(MEDIA_TABLET);
 
-
-  const colorConfig = useMemo(() => Object.assign(
-    {},
-    defaultColorConfig,
-    customerColorConfig ?? {}
-    ), [customerColorConfig]);
+  const colorConfig = useMemo(
+    () => Object.assign({}, defaultColorConfig, customerColorConfig ?? {}),
+    [customerColorConfig]
+  );
 
   const loadingScreen = useMemo(() => {
-    if (typeof customerLoadingScreen === 'object') {
+    if (typeof customerLoadingScreen === "object") {
       return customerLoadingScreen;
     }
     return {
       backgroundColor: chartBG,
-    }
+    };
   }, [customerLoadingScreen]);
   const ws = useWS();
   const [chartingLibrarySciprtReady, setChartingLibrarySciprtReady] =
@@ -155,7 +158,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
   const chartRef = useRef<HTMLDivElement>(null);
   const isLoggedIn = useMemo(() => {
-    if (accountState.status < AccountStatusEnum.EnableTrading) {
+    if (
+      accountState.status < AccountStatusEnum.EnableTrading &&
+      accountState.status !== AccountStatusEnum.EnableTradingWithoutConnected
+    ) {
       return false;
     }
     return true;
@@ -244,12 +250,12 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       return;
     }
 
-    const defaultOverrides = getOveriides( colorConfig,isMobile);
+    const defaultOverrides = getOveriides(colorConfig, isMobile);
     const overrides = customerOverrides
       ? Object.assign({}, defaultOverrides.overrides, customerOverrides)
       : defaultOverrides.overrides;
 
-    console.log('-- overides', overrides, mode);
+    console.log("-- overides", overrides, mode);
     // console.log('-- overrides', overrides);
     const studiesOverrides = customerStudiesOverrides
       ? Object.assign(
@@ -302,7 +308,16 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     return () => {
       chart.current?.remove();
     };
-  }, [chartingLibrarySciprtReady, isMobile, mode, chart, chartRef, chartingLibrarySciprtReady, tradingViewScriptSrc, colorConfig]);
+  }, [
+    chartingLibrarySciprtReady,
+    isMobile,
+    mode,
+    chart,
+    chartRef,
+    chartingLibrarySciprtReady,
+    tradingViewScriptSrc,
+    colorConfig,
+  ]);
 
   useEffect(() => {
     if (chart.current && chart.current.instance) {

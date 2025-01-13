@@ -4,7 +4,8 @@ import {
   useAccount,
   useLocalStorage,
   useOrderStream,
-  usePositionStream, useSymbolsInfo
+  usePositionStream,
+  useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
 import { AlgoType } from "../type";
@@ -28,8 +29,7 @@ export default function useCreateRenderer(
 
   const config = useSymbolsInfo();
   const symbolInfo = config?.[symbol];
-  const base_dp = symbolInfo("base_dp")
-
+  const base_dp = symbolInfo("base_dp");
 
   const [fillOrders] = useOrderStream({
     symbol: symbol,
@@ -50,7 +50,10 @@ export default function useCreateRenderer(
   });
 
   useEffect(() => {
-    if (state.status < AccountStatusEnum.EnableTrading) {
+    if (
+      state.status < AccountStatusEnum.EnableTrading &&
+      state.status !== AccountStatusEnum.EnableTradingWithoutConnected
+    ) {
       renderer?.renderPositions([]);
       return;
     }
@@ -82,7 +85,7 @@ export default function useCreateRenderer(
       renderer?.renderFilledOrders([], 6);
       return;
     }
-    renderer?.renderFilledOrders(fillOrders?? [], base_dp ?? 6);
+    renderer?.renderFilledOrders(fillOrders ?? [], base_dp ?? 6);
   }, [renderer, fillOrders, base_dp, displayControlSetting]);
 
   useEffect(() => {
@@ -92,7 +95,10 @@ export default function useCreateRenderer(
     let stopOrder: any = [];
     let bracketOrder: any = [];
 
-    if (state.status < AccountStatusEnum.EnableTrading) {
+    if (
+      state.status < AccountStatusEnum.EnableTrading &&
+      state.status !== AccountStatusEnum.EnableTradingWithoutConnected
+    ) {
       renderer?.renderPendingOrders([]);
       return;
     }

@@ -15,6 +15,7 @@ import {
   RestrictedAreasReturns,
   IRestrictedAreasParams,
 } from "@orderly.network/hooks";
+import { useLinkDevice } from "../hooks/useLinkDevice";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -60,6 +61,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   useSettleEvent();
   useWalletConnectError();
   const restrictedInfo = useRestrictedAreas(props?.restrictedInfo ?? {});
+  useLinkDevice();
 
   // const { networkStatus } = useAppState();
 
