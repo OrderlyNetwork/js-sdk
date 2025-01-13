@@ -59,6 +59,7 @@ export const ChainSelector = (props: {
   const onChange = async (chain: ChainItem) => {
     setSelect(chain.id);
     const complete = await props.onChainChange?.(chain);
+    console.log('-- complete', complete);
 
     if (complete) {
       props.resolve?.(complete);

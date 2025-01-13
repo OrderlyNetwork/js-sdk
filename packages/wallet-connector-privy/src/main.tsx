@@ -5,7 +5,7 @@ import { useWallet } from "./useWallet";
 import { ChainNamespace } from "@orderly.network/types";
 
 export function Main(props: PropsWithChildren) {
-  const { wallet, connectedChain } = useWallet();
+  const { wallet, connectedChain, setChain } = useWallet();
   console.log('-- wallet', wallet);
   // const connectedChain =wallet ? wallet.chain : null;
   // console.log('-- connected chain', connectedChain);
@@ -17,7 +17,7 @@ export function Main(props: PropsWithChildren) {
         disconnect: () => Promise.resolve(),
         connecting: false,
         wallet: wallet,
-        setChain: () => Promise.resolve(),
+        setChain,
         connectedChain:connectedChain,
         namespace: ChainNamespace.evm,
       }}

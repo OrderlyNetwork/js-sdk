@@ -1,12 +1,12 @@
-import { useAccount, useConnect } from "wagmi";
-import { useEffect, useMemo, useState } from "react";
+import { useAccount, useConnect, useSwitchChain, } from "wagmi";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChainNamespace } from "@orderly.network/types";
 
 export function useWagmiWallet() {
   const [wallet, setWallet] = useState<undefined | any>();
   const { connect, connectors } = useConnect();
   const { connector, isConnected, address, chainId } = useAccount();
-  console.log("-- connectors --", connectors);
+  const {chains, error: switchNetworkError, switchChain} = useSwitchChain();
   const connectedChain = useMemo(() => {
     if (chainId) {
       return {
@@ -18,6 +18,20 @@ export function useWagmiWallet() {
     return null;
 
   }, [chainId])
+
+  const setChain = async (chainId: number) => {
+    return new Promise((resolve, reject) => {
+       switchChain({chainId}, {
+        onSuccess: () => {
+          return resolve(true);
+
+        }, onError: (e) => {
+          console.log('-- switch chain error', e);
+
+          return reject(e);
+        }})
+    })
+  }
 
   useEffect(() => {
     if (!connector || !isConnected) {
@@ -45,5 +59,5 @@ export function useWagmiWallet() {
       });
     });
   }, [connector, chainId, isConnected, address]);
-  return { connectors, connect, wallet, connectedChain };
+  return { connectors, connect, wallet, connectedChain, setChain };
 }
