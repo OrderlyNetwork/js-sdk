@@ -5,7 +5,8 @@ import {
   MarketsType,
 } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { useSort } from "../../utils";
+import { useSort, searchBySymbol } from "../../utils";
+import { useMarketsContext } from "../../components/marketsProvider";
 
 export type PeriodKey = "1d" | "3d" | "7d" | "14d" | "30d" | "90d";
 
@@ -46,6 +47,7 @@ export const useFundingOverviewScript = () => {
     getPositiveRates,
   } = useFundingRateHistory();
   const { onSort, getSortedList } = useSort();
+  const { searchValue } = useMarketsContext();
 
   const processedData = useMemo((): ProcessedFundingData[] => {
     if (!marketData?.length) return [];
@@ -79,9 +81,13 @@ export const useFundingOverviewScript = () => {
     });
   }, [marketData, historyData, getPositiveRates]);
 
+  const filteredData = useMemo(() => {
+    return searchBySymbol(processedData, searchValue);
+  }, [processedData, searchValue, pagination]);
+
   const dataSource = useMemo(
-    () => getSortedList(processedData),
-    [processedData, getSortedList]
+    () => getSortedList(filteredData),
+    [filteredData, getSortedList]
   );
 
   return { dataSource, isLoading: isHistoryLoading, pagination, onSort };
