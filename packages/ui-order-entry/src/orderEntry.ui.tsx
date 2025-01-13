@@ -713,6 +713,7 @@ const CustomInput = forwardRef<
         ...(props.formatters ?? []),
         inputFormatter.numberFormatter,
         inputFormatter.currencyFormatter,
+        inputFormatter.decimalPointFormatter,
       ]}
       classNames={{
         root: cn(
