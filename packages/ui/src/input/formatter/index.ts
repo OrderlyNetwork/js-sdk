@@ -9,3 +9,5 @@ export { dpFormatter } from "./dp";
 export { rangeFormatter } from "./range";
 
 export { identifierFormatter } from "./identifier";
+
+export { decimalPointFormatter } from "./decimalPoint";

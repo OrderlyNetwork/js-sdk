@@ -197,6 +197,7 @@ const TPSLQuantity = (props: {
               inputFormatter.dpFormatter(props.dp),
               inputFormatter.numberFormatter,
               inputFormatter.currencyFormatter,
+              inputFormatter.decimalPointFormatter,
             ]}
             onValueChange={(value) => {
               props.onQuantityChange?.(value);
@@ -437,6 +438,7 @@ const PriceInput = (props: {
         inputFormatter.numberFormatter,
         inputFormatter.dpFormatter(props.quote_dp),
         inputFormatter.currencyFormatter,
+        inputFormatter.decimalPointFormatter,
       ]}
     />
   );

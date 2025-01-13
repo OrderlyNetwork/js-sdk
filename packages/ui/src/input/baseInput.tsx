@@ -90,7 +90,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     );
 
     const formatToChange = useCallback(
-      (value: string) => {
+      (value: string, originValue?: string) => {
         if (!Array.isArray(innerFormatters) || innerFormatters.length === 0)
           return value;
         if (value === null || value === undefined) return "";
@@ -98,6 +98,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         while (index > -1) {
           value = innerFormatters[index].onSendBefore(value, {
             isFocused: isFocused.current,
+            originValue
           });
           index--;
         }
@@ -152,7 +153,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       if (typeof onValueChange === "function") {
         let value = event.target.value;
 
-        value = formatToChange(value);
+        value = formatToChange(value, String(props.value));
 
         onValueChange(value);
       }
