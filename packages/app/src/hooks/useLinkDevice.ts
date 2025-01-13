@@ -1,30 +1,34 @@
 import { useCallback, useEffect } from "react";
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useLocalStorage,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { useScreen } from "@orderly.network/ui";
-import { ChainNamespace } from "@orderly.network/types";
 
 type DecodedData = {
   addr: string;
   k: string;
   t: number;
-  id: number;
-  type: ChainNamespace;
-  utm_source: string;
+  id: string;
 };
 
 export function useLinkDevice() {
-  const { connectedChain } = useWalletConnector();
+  const { connectedChain, disconnect } = useWalletConnector();
+  const [selectedChainId, seSelectedChainId] = useLocalStorage<string>(
+    "orderly_selected_chainId",
+    ""
+  );
 
-  const { account } = useAccount();
+  const { account, state } = useAccount();
   const { isMobile } = useScreen();
 
-  useEffect(() => {
-    if (connectedChain) return;
-    const address = account.keyStore.getAddress();
-    const orderlyKey = account.keyStore.getOrderlyKey();
-    const accountId = account.keyStore.getAccountId(address!);
-    account.checkOrderlyKey(address!, orderlyKey!, accountId!);
-  }, [connectedChain]);
+  const onDisconnect = async () => {
+    await disconnect({
+      label: state.connectWallet?.name,
+    });
+    await account.disconnect();
+  };
 
   const linkDevice = useCallback(async () => {
     const url = new URL(window.location.href);
@@ -32,27 +36,38 @@ export function useLinkDevice() {
 
     if (!link) return;
 
-    const {
-      addr: address,
-      k: key,
-      id: chainId,
-      type: chainType,
-    } = decodeBase64(link) || {};
-    if (address && key && chainId) {
-      const res = await account.importOrderlyKey(address, key);
-      if (!res) return;
+    // if wallet connect, disconnect
+    // if (connectedChain) {
+    // await onDisconnect();
+    // return;
+    // }
 
+    const { addr: address, k: key, id: chainId } = decodeBase64(link) || {};
+    if (address && key && chainId) {
+      const isSuccess = await account.importOrderlyKey(address, key);
+      if (!isSuccess) return;
+      seSelectedChainId(chainId);
       url.searchParams.delete("link");
       const decodedUrl = decodeURIComponent(url.toString());
       history.replaceState(null, "", decodedUrl);
     }
-  }, [account]);
+  }, [account, connectedChain]);
 
   useEffect(() => {
     if (isMobile && !connectedChain) {
       linkDevice();
     }
-  }, [connectedChain, isMobile]);
+  }, [account, connectedChain, isMobile]);
+
+  // persist status when refresh page
+  useEffect(() => {
+    if (isMobile && !connectedChain && selectedChainId) {
+      const address = account.keyStore.getAddress();
+      const orderlyKey = account.keyStore.getOrderlyKey();
+      const accountId = account.keyStore.getAccountId(address!);
+      account.checkOrderlyKey(address!, orderlyKey!, accountId!);
+    }
+  }, [isMobile, connectedChain, selectedChainId]);
 }
 
 function decodeBase64(base64: string) {

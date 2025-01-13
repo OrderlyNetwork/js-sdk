@@ -72,18 +72,18 @@ const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
 
       <Flex
         className={cn(
-          "oui-w-[180px] oui-h-[180px] ",
+          "oui-w-[200px] oui-h-[200px] ",
           "oui-border oui-border-base-contrast-20 oui-rounded-2xl"
         )}
         justify="center"
         itemAlign="center"
       >
         <Flex
-          className="oui-w-[160px] oui-h-[160px] oui-rounded-lg oui-bg-white"
+          className="oui-w-[180px] oui-h-[180px] oui-rounded-lg oui-bg-white"
           justify="center"
           itemAlign="center"
         >
-          <QRCodeCanvas width={138} height={138} content={props.url} />
+          <QRCodeCanvas width={158} height={158} content={props.url} />
         </Flex>
       </Flex>
 

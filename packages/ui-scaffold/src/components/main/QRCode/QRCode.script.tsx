@@ -54,9 +54,7 @@ export function useQRCodeScript(options: UseQRCodeScriptOptions) {
         k: secretKey,
         t: timestamp,
         addr: account.address,
-        utm_source: "woofi-qrcode",
-        id: account.chainId,
-        // type: account.walletAdapter?.chainNamespace,
+        id: account.chainId?.toString(),
       };
       const url = createUrl(params);
       console.log("url", url);

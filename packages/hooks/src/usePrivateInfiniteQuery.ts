@@ -24,7 +24,7 @@ export const usePrivateInfiniteQuery = <T>(
     (pageIndex: number, previousPageData) => {
       const queryKey = getKey(pageIndex, previousPageData);
       if (
-        !queryKey &&
+        queryKey &&
         (state.status >= AccountStatusEnum.EnableTrading ||
           state.status === AccountStatusEnum.EnableTradingWithoutConnected)
       ) {
