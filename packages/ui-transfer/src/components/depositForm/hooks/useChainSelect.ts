@@ -36,7 +36,7 @@ export function useChainSelect() {
 
     const chainId = connectedChain
       ? praseChainIdToNumber(connectedChain.id)
-      : selectedChainId;
+      : parseInt(selectedChainId);
 
     if (!chainId) return null;
 

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Box, Button, modal, useScreen } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { NetworkId } from "@orderly.network/types";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { CrossWithdrawConfirm } from "../crossWithdrawConfirm";
 import { Decimal } from "@orderly.network/utils";
 import SwitchChainButton from "./SwitchChainButton";
@@ -71,6 +71,7 @@ export const WithdrawAction = (props: IProps) => {
   return (
     <Box className="oui-w-full lg:oui-w-auto lg:oui-min-w-[184px]">
       <AuthGuard
+        status={AccountStatusEnum.EnableTrading}
         networkId={networkId}
         bridgeLessOnly
         buttonProps={{ fullWidth: true, size: buttonSize }}

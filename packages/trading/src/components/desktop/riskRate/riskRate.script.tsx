@@ -1,4 +1,9 @@
-import { useAccount, useCollateral, useLeverage, useMarginRatio } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useCollateral,
+  useLeverage,
+  useMarginRatio,
+} from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
@@ -14,15 +19,16 @@ const getRiskRateColor = (riskRate: null | number) => {
   const isHigh = riskRate >= 80;
   const isDefault = !isLow && !isMedium && !isHigh;
 
-
   return { isHigh, isMedium, isLow, isDefault };
 };
 
 export const useRiskRateScript = () => {
   const { state } = useAccount();
 
-  const isConnected = state.status >= AccountStatusEnum.EnableTrading;
-  const { marginRatio,currentLeverage, mmr } = useMarginRatio();
+  const isConnected =
+    state.status >= AccountStatusEnum.EnableTrading ||
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
+  const { marginRatio, currentLeverage, mmr } = useMarginRatio();
   const [maxLeverage] = useLeverage();
 
   const riskRate = useMemo(() => {
@@ -52,7 +58,6 @@ export const useRiskRateScript = () => {
   const _curLeverage = useDataTap(currentLeverage);
   const _maxLeverage = useDataTap(maxLeverage);
   const _riskRate = useDataTap(riskRate);
-  
 
   return {
     riskRate: _riskRate,

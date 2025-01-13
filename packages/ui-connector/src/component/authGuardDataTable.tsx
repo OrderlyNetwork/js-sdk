@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
@@ -24,28 +24,38 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
   >
 ) => {
   const {
-    status = AccountStatusEnum.EnableTrading,
+    status,
     // message,
     labels,
     description,
     dataSource,
     ...rest
   } = props;
-  const data = useDataTap(dataSource, {
-    accountStatus: status,
-  });
   const { state } = useAccount();
+
+  const _status = useMemo(() => {
+    if (status === undefined) {
+      return state.status === AccountStatusEnum.EnableTradingWithoutConnected
+        ? AccountStatusEnum.EnableTradingWithoutConnected
+        : AccountStatusEnum.EnableTrading;
+    }
+    return status;
+  }, [status, state.status]);
+
+  const data = useDataTap(dataSource, {
+    accountStatus: _status,
+  });
   const { wrongNetwork } = useAppContext();
 
   return (
     <DataTable
       dataSource={data}
       ignoreLoadingCheck={
-        wrongNetwork || state.status < status || props.ignoreLoadingCheck
+        wrongNetwork || state.status < _status || props.ignoreLoadingCheck
       }
       emptyView={
         <GuardView
-          status={status}
+          status={_status}
           description={description}
           labels={labels}
           className={props.classNames?.authGuardDescription}

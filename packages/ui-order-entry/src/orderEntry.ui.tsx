@@ -311,14 +311,7 @@ export const OrderEntry = (
           side={props.side}
         />
         {/* Submit button */}
-        <AuthGuard
-          buttonProps={{ fullWidth: true }}
-          status={
-            props.canTrade
-              ? AccountStatusEnum.EnableTradingWithoutConnected
-              : AccountStatusEnum.EnableTrading
-          }
-        >
+        <AuthGuard buttonProps={{ fullWidth: true }}>
           <ThrottledButton
             fullWidth
             id={"order-entry-submit-button"}

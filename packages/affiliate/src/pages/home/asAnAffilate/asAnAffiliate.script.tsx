@@ -27,7 +27,9 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
   } = useReferralContext();
 
   const { state } = useAccount();
-  const isSignIn = state.status === AccountStatusEnum.EnableTrading;
+  const isSignIn =
+    state.status === AccountStatusEnum.EnableTrading ||
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
 
   const becomeAnAffiliate = () => {
     window.open(becomeAnAffiliateUrl, "_blank");
@@ -38,7 +40,7 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     setShowHome(false);
   };
 
-  const  { isMobile } = useScreen();
+  const { isMobile } = useScreen();
 
   return {
     isSignIn,
