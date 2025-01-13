@@ -1,4 +1,5 @@
 export enum AccountStatusEnum {
+  EnableTradingWithoutConnected = -1,
   NotConnected = 0,
   Connected = 1,
   NotSignedIn = 2,
