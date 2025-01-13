@@ -1,12 +1,8 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import {
-  MainNavClassNames,
-  MainNavItems,
-  MainNavItemsProps,
-} from "./mainNavItems";
+import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
 
 import { ProductsMenu, ProductsProps } from "./products";
-import { cn, Divider, Flex, modal } from "@orderly.network/ui";
+import { cn, Divider, Flex } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
 import { AccountMenuWidget } from "../accountMenu";
 import { AccountSummaryWidget } from "../accountSummary";
@@ -17,7 +13,6 @@ import { MainLogo } from "./mainLogo";
 import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { LinkDeviceIcon } from "../icons";
-import { QRCodeDialogId } from "./QRCode";
 import { AccountStatusEnum } from "@orderly.network/types";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
@@ -42,6 +37,7 @@ export type MainNavProps = {
     campaignButton?: string;
   };
   status?: AccountStatusEnum;
+  showQRCode?: () => void;
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
@@ -53,10 +49,6 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
 
     return <Flex grow>{props.children}</Flex>;
   }, [props.children]);
-
-  const showQRCode = () => {
-    modal.show(QRCodeDialogId);
-  };
 
   return (
     <Flex
@@ -96,7 +88,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
             <Divider direction="vertical" className="oui-h-8" intensity={8} />
             <LinkDeviceIcon
               className="oui-text-base-contrast-80 oui-cursor-pointer"
-              onClick={showQRCode}
+              onClick={props.showQRCode}
             />
           </>
         )}

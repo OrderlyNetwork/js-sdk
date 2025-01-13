@@ -1,5 +1,6 @@
-import { useAccount } from "@orderly.network/hooks";
 import { useCallback, useEffect, useState } from "react";
+import { useAccount, useChains, useEventEmitter } from "@orderly.network/hooks";
+import { EnumTrackerKeys } from "@orderly.network/types";
 
 export type UseQRCodeScriptReturn = ReturnType<typeof useQRCodeScript>;
 
@@ -13,8 +14,15 @@ export function useQRCodeScript(options: UseQRCodeScriptOptions) {
   const [seconds, setSeconds] = useState(60);
   const [secretKey, setSecretKey] = useState("");
   const [url, setUrl] = useState("");
+  const ee = useEventEmitter();
 
-  const { account } = useAccount();
+  const { state, account } = useAccount();
+
+  const [_, { findByChainId }] = useChains(undefined, {
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  });
 
   useEffect(() => {
     account
@@ -22,6 +30,12 @@ export function useQRCodeScript(options: UseQRCodeScriptOptions) {
       .then((res) => {
         setSecretKey(res.secretKey);
         setLoading(false);
+
+        const chain = findByChainId(account.chainId! as number);
+        ee.emit(EnumTrackerKeys.SIGN_LINK_DEVICE_MESSAGE_SUCCESS, {
+          wallet: state?.connectWallet?.name,
+          network: chain?.network_infos.name,
+        });
       })
       .catch((e) => {
         options.close?.();
@@ -66,7 +80,12 @@ export function useQRCodeScript(options: UseQRCodeScriptOptions) {
     navigator.clipboard.writeText(url);
   }, [url]);
 
-  return { loading, seconds, confirm, onConfirm: setConfirm, url, copyUrl };
+  const onConfirm = useCallback(() => {
+    setConfirm(true);
+    ee.emit(EnumTrackerKeys.LINK_DEVICE_MODAL_CLICK_CONFIRM, {});
+  }, []);
+
+  return { loading, seconds, confirm, onConfirm, url, copyUrl };
 }
 
 function createUrl(params: Record<string, any>) {
