@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useAccount, useChains, useEventEmitter } from "@orderly.network/hooks";
 import { EnumTrackerKeys } from "@orderly.network/types";
 
-export type UseQRCodeScriptReturn = ReturnType<typeof useQRCodeScript>;
+export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
 
-export type UseQRCodeScriptOptions = {
+export type UseLinkDeviceScriptOptions = {
   close?: () => void;
 };
 
-export function useQRCodeScript(options: UseQRCodeScriptOptions) {
+export function useLinkDeviceScript(options: UseLinkDeviceScriptOptions) {
   const [loading, setLoading] = useState(true);
   const [confirm, setConfirm] = useState(false);
   const [seconds, setSeconds] = useState(60);

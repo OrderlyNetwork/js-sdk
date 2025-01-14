@@ -10,20 +10,20 @@ import {
 import { qrcode as qr } from "@akamfoad/qr";
 
 import { MainLogo } from "../mainLogo";
-import { UseQRCodeScriptReturn } from "./QRCode.script";
+import { UseLinkDeviceScriptReturn } from "./linkDevice.script";
 
-export type QRCodeProps = UseQRCodeScriptReturn & {
+export type LinkDeviceProps = UseLinkDeviceScriptReturn & {
   close?: () => void;
 };
 
-export const QRCode: FC<QRCodeProps> = (props) => {
+export const LinkDevice: FC<LinkDeviceProps> = (props) => {
   if (props.loading) {
     return <Loading />;
   }
 
   if (props.confirm) {
     return (
-      <ScanQRCode
+      <QRCode
         close={props.close}
         seconds={props.seconds}
         url={props.url}
@@ -32,14 +32,14 @@ export const QRCode: FC<QRCodeProps> = (props) => {
     );
   }
 
-  return <LinkMobileDevice close={props.close} onConfirm={props.onConfirm} />;
+  return <LinkDeviceConfirm close={props.close} onConfirm={props.onConfirm} />;
 };
 
-type ScanQRCodeProps = Pick<QRCodeProps, "seconds" | "close" | "copyUrl"> & {
+type QRCodeProps = Pick<LinkDeviceProps, "seconds" | "close" | "copyUrl"> & {
   url?: string;
 };
 
-const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
+const QRCode: FC<QRCodeProps> = (props) => {
   const actions: SimpleDialogFooterProps["actions"] = {
     primary: {
       label: "Ok",
@@ -133,10 +133,6 @@ const QRCodeCanvas: FC<QRCodeCanvasProps> = (props) => {
     const width = props.width;
     const height = props.height;
 
-    // var canvas = document.createElement("canvas");
-    // canvasRef.current.width = width;
-    // canvasRef.current.height = height;
-
     const ctx = canvasRef.current.getContext("2d")!;
 
     const cells = qrcode.modules!;
@@ -158,9 +154,9 @@ const QRCodeCanvas: FC<QRCodeCanvasProps> = (props) => {
   return <canvas width={props.width} height={props.height} ref={canvasRef} />;
 };
 
-type LinkMobileDeviceProps = Pick<QRCodeProps, "close" | "onConfirm">;
+type LinkDeviceConfirmProps = Pick<LinkDeviceProps, "close" | "onConfirm">;
 
-const LinkMobileDevice: FC<LinkMobileDeviceProps> = (props) => {
+const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
   const actions: SimpleDialogFooterProps["actions"] = {
     secondary: {
       label: "Cancel",

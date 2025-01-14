@@ -11,7 +11,7 @@ import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./mainMenus/navItem";
 import { type MainNavWidgetProps } from "./mainNav.widget";
 import { modal } from "@orderly.network/ui";
-import { QRCodeDialogId } from "./QRCode";
+import { LinkDeviceDialogId } from "./linkDevice";
 import { EnumTrackerKeys } from "@orderly.network/types";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
@@ -210,7 +210,7 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
   });
 
   const showQRCode = () => {
-    modal.show(QRCodeDialogId);
+    modal.show(LinkDeviceDialogId);
 
     const chain = findByChainId(connectedChain?.id! as number);
 
