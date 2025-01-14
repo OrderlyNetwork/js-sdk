@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.0.2-internal-20250116.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.2-internal-20250116.3
+  - @orderly.network/types@2.0.2-internal-20250116.3
+
 ## 2.0.2-internal-20250116.2
 
 ### Patch Changes

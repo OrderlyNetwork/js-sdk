@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.0.2-internal-20250116.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.2-internal-20250116.3
+
 ## 2.0.2-internal-20250116.2
 
 ### Patch Changes
