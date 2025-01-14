@@ -1,5 +1,5 @@
 import { FC, SVGProps } from "react";
-import { cn, Flex, SimpleDialog, Text } from "@orderly.network/ui";
+import { Flex, SimpleDialog, Text, Tooltip } from "@orderly.network/ui";
 import { MainLogo } from "@orderly.network/ui-scaffold";
 import { UseScanQRCodeScriptReturn } from "./scanQRCode.script";
 import { QRCodeScanner } from "./scanner";
@@ -8,14 +8,21 @@ type ScanQRCodeProps = UseScanQRCodeScriptReturn;
 export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
   return (
     <>
-      <Flex
-        className="oui-rounded-md oui-bg-base-5 oui-px-[6px] oui-h-7 oui-cursor-pointer"
-        onClick={props.showDialog}
+      <Tooltip
+        open={props.showScanTooltip}
+        content="Link to Desktop via QR Code"
+        className="oui-bg-base-6 oui-text-warning-darken oui-text-2xs oui-font-semibold"
+        arrow={{ className: "!oui-fill-base-6" }}
       >
-        <ScanIcon className="oui-text-base-contrast-80" />
-      </Flex>
+        <Flex
+          className="oui-rounded-md oui-bg-base-5 oui-px-[6px] oui-h-7 oui-cursor-pointer"
+          onClick={props.showDialog}
+        >
+          <ScanIcon className="oui-text-base-contrast-80" />
+        </Flex>
+      </Tooltip>
       <SimpleDialog
-        title="Confirm"
+        title={<Text weight="semibold">Confirm</Text>}
         open={props.open}
         onOpenChange={props.onOpenChange}
         size="sm"
@@ -32,15 +39,20 @@ const ScanQRCodeContent: FC<ScanQRCodeProps> = (props) => {
       <MainLogo />
       <QRCodeScanner onSuccess={props.onScanSuccess} />
       {/* </Box> */}
-      <Text size="sm" intensity={98}>
+      <Text size="sm" intensity={98} weight="semibold">
         Scan QR Code
       </Text>
-      <span className="oui-flex-wrap oui-px-3">
+      <span className="oui-px-3 oui-text-center">
         <Text size="2xs" intensity={54}>
           Click the
         </Text>
         <LinkDeviceIcon className="oui-inline-block oui-text-base-contrast-80 oui-mx-1" />
-        <Text size="2xs" intensity={54} className="oui-break-words">
+        <Text
+          size="2xs"
+          intensity={54}
+          weight="regular"
+          className="oui-break-words"
+        >
           icon in the top right corner on desktop to generate a QR code to scan.
         </Text>
       </span>
