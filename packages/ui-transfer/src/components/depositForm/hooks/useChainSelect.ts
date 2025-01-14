@@ -18,9 +18,9 @@ export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
 
 export function useChainSelect() {
   const networkId = useConfig("networkId") as NetworkId;
-  const [selectedChainId] = useLocalStorage<string>(
+  const [selectedChainId] = useLocalStorage<number | undefined>(
     "orderly_selected_chainId",
-    ""
+    undefined
   );
 
   const { connectedChain, settingChain, setChain } = useWalletConnector();

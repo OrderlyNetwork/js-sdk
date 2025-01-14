@@ -68,10 +68,9 @@ export function useQRCodeScript(options: UseQRCodeScriptOptions) {
         k: secretKey,
         t: timestamp,
         addr: account.address,
-        id: account.chainId?.toString(),
+        id: account.chainId,
       };
       const url = createUrl(params);
-      console.log("url", url);
       setUrl(url);
     }
   }, [confirm, secretKey]);

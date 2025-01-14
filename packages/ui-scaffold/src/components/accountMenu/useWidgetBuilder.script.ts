@@ -1,13 +1,11 @@
 import {
   useAccount,
   useChains,
-  useLocalStorage,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { modal, toast } from "@orderly.network/ui";
-import { useCallback, useEffect, useMemo } from "react";
-import { useScaffoldContext } from "../scaffoldContext";
+import { useCallback } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
 import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
@@ -15,13 +13,7 @@ import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
 export const useAccountMenu = (): any => {
   const { disconnect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
-  const { checkChainSupport } = useScaffoldContext();
   const { connectWallet } = useAppContext();
-
-  const [selectedChainId, seSelectedChainId] = useLocalStorage<string>(
-    "orderly_selected_chainId",
-    ""
-  );
 
   const [_, { findByChainId }] = useChains();
 
@@ -113,11 +105,11 @@ export const useAccountMenu = (): any => {
   }, [state, connectedChain]);
 
   const onDisconnect = async () => {
+    localStorage.removeItem("orderly_selected_chainId");
     await disconnect({
       label: state.connectWallet?.name,
     });
     await account.disconnect();
-    selectedChainId && seSelectedChainId("");
   };
 
   return {

@@ -10,21 +10,22 @@ type DecodedData = {
   addr: string;
   k: string;
   t: number;
-  id: string;
+  id: number;
 };
 const WALLET_KEY = "orderly:wallet-info";
 
 export function useLinkDevice() {
   const { connectedChain, disconnect } = useWalletConnector();
-  const [selectedChainId, seSelectedChainId] = useLocalStorage<string>(
+  const [_, seSelectedChainId] = useLocalStorage<number | undefined>(
     "orderly_selected_chainId",
-    ""
+    undefined
   );
 
   const { account } = useAccount();
   const { isMobile } = useScreen();
 
   const onDisconnect = async (label: string) => {
+    // The cache must be cleared first, otherwise it will be auto connect wallet
     localStorage.removeItem(WALLET_KEY);
     await account.disconnect();
     await disconnect({ label });
@@ -34,6 +35,7 @@ export function useLinkDevice() {
     const linkData = getLinkDeviceData();
     const walletInfo = JSON.parse(localStorage.getItem(WALLET_KEY) ?? "{}");
     if (linkData && walletInfo) {
+      // clear connect data when link device
       onDisconnect(walletInfo.label);
     }
   }, []);
@@ -41,7 +43,7 @@ export function useLinkDevice() {
   const linkDevice = useCallback(async () => {
     const linkData = getLinkDeviceData();
     if (!linkData) return;
-    
+
     const { address, key, chainId } = linkData;
     const isSuccess = await account.importOrderlyKey(address, key);
     if (!isSuccess) return;
@@ -61,13 +63,15 @@ export function useLinkDevice() {
 
   // persist status when refresh page
   useEffect(() => {
-    if (!connectedChain && selectedChainId) {
+    // this can't use the value returned by useLocalStorage here, because it will trigger extra state change
+    const chainId = localStorage.getItem("orderly_selected_chainId");
+    if (isMobile && !connectedChain && chainId) {
       const address = account.keyStore.getAddress();
       const orderlyKey = account.keyStore.getOrderlyKey();
       const accountId = account.keyStore.getAccountId(address!);
       account.checkOrderlyKey(address!, orderlyKey!, accountId!);
     }
-  }, [isMobile, connectedChain, selectedChainId]);
+  }, [account, isMobile, connectedChain]);
 
   return { linkDevice };
 }
