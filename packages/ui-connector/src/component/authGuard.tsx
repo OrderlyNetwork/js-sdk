@@ -67,7 +67,7 @@ export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   const {
-    status = AccountStatusEnum.EnableTrading,
+    status,
     buttonProps,
     fallback,
     descriptions,
@@ -79,6 +79,15 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   } = props;
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
+
+  const _status = useMemo(() => {
+    if (status === undefined) {
+      return state.status === AccountStatusEnum.EnableTradingWithoutConnected
+        ? AccountStatusEnum.EnableTradingWithoutConnected
+        : AccountStatusEnum.EnableTrading;
+    }
+    return status;
+  }, [status, state.status]);
 
   const labels = { ...LABELS, ...props.labels };
 
@@ -134,7 +143,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
    */
 
   return (
-    <Either value={state.status >= status && !wrongNetwork} left={Left}>
+    <Either value={state.status >= _status && !wrongNetwork} left={Left}>
       {props.children}
     </Either>
   );

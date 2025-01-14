@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAccountInfo, usePrivateQuery } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useAccountInfo,
+  usePrivateQuery,
+} from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { dataSource as defaultDataSource } from "./dataSource";
 import { AccountStatusEnum, API } from "@orderly.network/types";
@@ -27,6 +31,7 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
   const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
   const { data } = useAccountInfo();
+  const { state } = useAccount();
 
   const cols = useFeeTierColumns();
 
@@ -94,7 +99,10 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
       makerFeeRate: futures_maker_fee_rate,
     },
     {
-      accountStatus: AccountStatusEnum.EnableTrading,
+      accountStatus:
+        state.status === AccountStatusEnum.EnableTradingWithoutConnected
+          ? AccountStatusEnum.EnableTradingWithoutConnected
+          : AccountStatusEnum.EnableTrading,
     }
   );
 

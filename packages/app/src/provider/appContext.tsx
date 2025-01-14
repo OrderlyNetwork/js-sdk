@@ -51,6 +51,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
   const [currentChainId, setCurrentChainId] = useState<number | undefined>();
+  useLinkDevice();
 
   const { connectWallet, wrongNetwork } = useWalletStateHandle({
     // onChainChanged: props.onChainChanged,
@@ -61,7 +62,6 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   useSettleEvent();
   useWalletConnectError();
   const restrictedInfo = useRestrictedAreas(props?.restrictedInfo ?? {});
-  useLinkDevice();
 
   // const { networkStatus } = useAppState();
 
