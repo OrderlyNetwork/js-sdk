@@ -2,7 +2,7 @@ import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Tooltip } from "@orderly.network/ui";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren, useMemo, useState } from "react";
 
 type AuthGuardProps = {
   content?: string;
@@ -29,6 +29,7 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
       wrongNetwork: "Please switch to a supported network to set up",
     },
   } = props;
+  const [open, setOpen] = useState(false);
   const { state } = useAccount();
   const isSupport = true;
   const { wrongNetwork } = useAppContext();
@@ -45,7 +46,6 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
       case AccountStatusEnum.DisabledTrading:
         return tooltip?.enableTrading;
       case AccountStatusEnum.EnableTrading: {
-        if (!isSupport) return tooltip?.wrongNetwork;
         return "";
       }
       default:
@@ -59,7 +59,6 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
       case AccountStatusEnum.NotSignedIn:
         return opactiy;
       case AccountStatusEnum.EnableTrading: {
-        if (!isSupport) return opactiy;
         return undefined;
       }
       default:
@@ -69,6 +68,8 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
 
   return (
     <Tooltip
+      open={hint ? open : false}
+      onOpenChange={setOpen}
       content={hint}
       className="oui-text-2xs"
       align={props.align}

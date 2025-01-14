@@ -1,6 +1,7 @@
 import {
   useAccount,
   useChains,
+  useLocalStorage,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
@@ -16,6 +17,11 @@ export const useAccountMenu = (): any => {
   const { account, state } = useAccount();
   const { checkChainSupport } = useScaffoldContext();
   const { connectWallet } = useAppContext();
+
+  const [selectedChainId, seSelectedChainId] = useLocalStorage<string>(
+    "orderly_selected_chainId",
+    ""
+  );
 
   const [_, { findByChainId }] = useChains();
 
@@ -106,6 +112,14 @@ export const useAccountMenu = (): any => {
     }
   }, [state, connectedChain]);
 
+  const onDisconnect = async () => {
+    await disconnect({
+      label: state.connectWallet?.name,
+    });
+    await account.disconnect();
+    selectedChainId && seSelectedChainId("");
+  };
+
   return {
     address: state.address,
     accountState: state,
@@ -113,12 +127,7 @@ export const useAccountMenu = (): any => {
     onCrateAccount,
     onCreateOrderlyKey,
     onOpenExplorer,
-    onDisconnect: async () => {
-      await disconnect({
-        label: state.connectWallet?.name,
-      });
-      await account.disconnect();
-    },
+    onDisconnect,
   } as const;
 };
 

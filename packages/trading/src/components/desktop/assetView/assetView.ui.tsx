@@ -314,7 +314,6 @@ export const AssetView: FC<AssetViewState> = ({
       )}
       <AuthGuard
         networkId={networkId}
-        status={AccountStatusEnum.EnableTrading}
         buttonProps={{ size: "md", fullWidth: true }}
       >
         {isFirstTimeDeposit ? (

@@ -11,7 +11,10 @@ export const usePerformanceScript = () => {
   const { wrongNetwork } = useAppContext();
   const { state } = useAccount();
   const filteredData = useDataTap(ctx.data, {
-    accountStatus: AccountStatusEnum.EnableTrading,
+    accountStatus:
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+        ? AccountStatusEnum.EnableTradingWithoutConnected
+        : AccountStatusEnum.EnableTrading,
     fallbackData: ctx.createFakeData(
       {
         account_value: 0,
@@ -45,7 +48,10 @@ export const usePerformanceScript = () => {
   return {
     ...ctx,
     data: _data,
-    invisible: wrongNetwork || state.status < AccountStatusEnum.EnableTrading,
+    invisible:
+      wrongNetwork ||
+      (state.status < AccountStatusEnum.EnableTrading &&
+        state.status !== AccountStatusEnum.EnableTradingWithoutConnected),
     visible,
   };
 };

@@ -64,7 +64,9 @@ export const useTotalValueBuilderScript = () => {
   };
 
   const unavailable =
-    wrongNetwork || state.status < AccountStatusEnum.EnableTrading;
+    wrongNetwork ||
+    (state.status < AccountStatusEnum.EnableTrading &&
+      state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
 
   return {
     totalValue: unavailable ? null : totalValue,

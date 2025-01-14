@@ -12,6 +12,7 @@ type DecodedData = {
   t: number;
   id: string;
 };
+const WALLET_KEY = "orderly:wallet-info";
 
 export function useLinkDevice() {
   const { connectedChain, disconnect } = useWalletConnector();
@@ -20,27 +21,27 @@ export function useLinkDevice() {
     ""
   );
 
-  const { account, state } = useAccount();
+  const { account } = useAccount();
   const { isMobile } = useScreen();
 
-  const onDisconnect = async () => {
-    await disconnect({
-      label: state.connectWallet?.name,
-    });
+  const onDisconnect = async (label: string) => {
+    localStorage.removeItem(WALLET_KEY);
     await account.disconnect();
+    await disconnect({ label });
   };
+
+  useEffect(() => {
+    const isLinkDevice = isLinkDeviceMode();
+    const walletInfo = JSON.parse(localStorage.getItem(WALLET_KEY) ?? "{}");
+    if (isLinkDevice && walletInfo) {
+      onDisconnect(walletInfo.label);
+    }
+  }, []);
 
   const linkDevice = useCallback(async () => {
     const url = new URL(window.location.href);
     const link = url.searchParams.get("link");
-
     if (!link) return;
-
-    // if wallet connect, disconnect
-    // if (connectedChain) {
-    // await onDisconnect();
-    // return;
-    // }
 
     const { addr: address, k: key, id: chainId } = decodeBase64(link) || {};
     if (address && key && chainId) {
@@ -61,13 +62,15 @@ export function useLinkDevice() {
 
   // persist status when refresh page
   useEffect(() => {
-    if (isMobile && !connectedChain && selectedChainId) {
+    if (!connectedChain && selectedChainId) {
       const address = account.keyStore.getAddress();
       const orderlyKey = account.keyStore.getOrderlyKey();
       const accountId = account.keyStore.getAccountId(address!);
       account.checkOrderlyKey(address!, orderlyKey!, accountId!);
     }
   }, [isMobile, connectedChain, selectedChainId]);
+
+  return { linkDevice };
 }
 
 function decodeBase64(base64: string) {
@@ -85,4 +88,10 @@ function decodeBase64(base64: string) {
   } catch (error) {
     console.error("Invalid or expired token.");
   }
+}
+
+export function isLinkDeviceMode() {
+  const url = new URL(window.location.href);
+  const link = url.searchParams.get("link");
+  return !!link;
 }
