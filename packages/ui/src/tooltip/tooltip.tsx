@@ -60,7 +60,6 @@ const TooltipArrow = (props: {
   className?: string;
   style?: React.CSSProperties;
 }) => {
-  console.log("TooltipArrow", props);
   const { className, ...arrowProps } = props;
   return (
     <TooltipPrimitive.Arrow
