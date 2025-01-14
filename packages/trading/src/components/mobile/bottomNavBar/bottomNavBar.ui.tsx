@@ -5,6 +5,7 @@ import { ChainWidget } from "./chain";
 import { AccountWidget } from "./account";
 import { BalanceWidget } from "./balance";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { ScanQRCodeWidget } from "./scanQRCode";
 
 export const BottomNavBar: FC<BottomNavBarState> = (props) => {
   const renderContent = () => {
@@ -26,7 +27,7 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
         gap={1}
         justify={"between"}
         itemAlign={"center"}
-        className=" oui-px-[14px] oui-pt-[7px] "
+        className=" oui-px-[14px] oui-pt-[7px]"
         // style={{
         //   height: "calc(64px + env(safe-area-inset-bottom))"
         // }}
@@ -34,6 +35,10 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
         <BalanceWidget />
 
         <Flex gap={2}>
+          {props.status !== AccountStatusEnum.EnableTradingWithoutConnected &&
+            props.status < AccountStatusEnum.EnableTrading && (
+              <ScanQRCodeWidget />
+            )}
           {renderContent()}
           <AccountWidget />
         </Flex>

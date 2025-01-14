@@ -136,6 +136,7 @@ export const useWalletStateHandle = (options: {
     if (isManualConnect.current) return;
 
     const linkData = getLinkDeviceData();
+    console.log("linkData", linkData);
 
     // updateAccount(currentWalletAddress!, connectedWallet!, currentChainId!);
     /**
