@@ -67,7 +67,10 @@ const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
       </Text>
 
       <Text size="sm" intensity={54}>
-        Countdown: <Text.gradient color="brand">{props.seconds}s</Text.gradient>
+        Countdown:{" "}
+        <Text.gradient color="brand" className="oui-tabular-nums">
+          {props.seconds}s
+        </Text.gradient>
       </Text>
 
       <Flex

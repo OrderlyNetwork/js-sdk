@@ -61,7 +61,7 @@ export function useQRCodeScript(options: UseQRCodeScriptOptions) {
 
   useEffect(() => {
     if (confirm && secretKey) {
-      const expirationSeconds = 600000;
+      const expirationSeconds = 60;
 
       const timestamp = Math.floor(Date.now() / 1000) + expirationSeconds;
       const params = {
