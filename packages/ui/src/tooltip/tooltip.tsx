@@ -56,7 +56,11 @@ const TooltipContent = React.forwardRef<
 });
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-const TooltipArrow = (props: { className?: string, style?: React.CSSProperties }) => {
+const TooltipArrow = (props: {
+  className?: string;
+  style?: React.CSSProperties;
+}) => {
+  console.log("TooltipArrow", props);
   const { className, ...arrowProps } = props;
   return (
     <TooltipPrimitive.Arrow
@@ -84,11 +88,7 @@ export type TooltipProps = React.ComponentPropsWithoutRef<
 
 const Tooltip = React.forwardRef<
   React.ElementRef<typeof TooltipContent>,
-  TooltipProps & {
-    tooltipProps?: {
-      arrow?: TooltipContentProps;
-    };
-  }
+  TooltipProps
 >(
   (
     {
@@ -101,7 +101,6 @@ const Tooltip = React.forwardRef<
       delayDuration,
       disableHoverableContent,
       arrow,
-      tooltipProps,
       ...props
     },
     ref
@@ -119,7 +118,7 @@ const Tooltip = React.forwardRef<
         <TooltipPortal>
           <TooltipContent ref={ref} {...props}>
             {content}
-            <TooltipArrow {...tooltipProps?.arrow} />
+            <TooltipArrow {...arrow} />
           </TooltipContent>
         </TooltipPortal>
       </TooltipPrimitive.Root>
