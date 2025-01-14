@@ -31,27 +31,26 @@ export function useLinkDevice() {
   };
 
   useEffect(() => {
-    const isLinkDevice = isLinkDeviceMode();
+    const linkData = getLinkDeviceData();
     const walletInfo = JSON.parse(localStorage.getItem(WALLET_KEY) ?? "{}");
-    if (isLinkDevice && walletInfo) {
+    if (linkData && walletInfo) {
       onDisconnect(walletInfo.label);
     }
   }, []);
 
   const linkDevice = useCallback(async () => {
-    const url = new URL(window.location.href);
-    const link = url.searchParams.get("link");
-    if (!link) return;
+    const linkData = getLinkDeviceData();
+    if (!linkData) return;
+    
+    const { address, key, chainId } = linkData;
+    const isSuccess = await account.importOrderlyKey(address, key);
+    if (!isSuccess) return;
+    seSelectedChainId(chainId);
 
-    const { addr: address, k: key, id: chainId } = decodeBase64(link) || {};
-    if (address && key && chainId) {
-      const isSuccess = await account.importOrderlyKey(address, key);
-      if (!isSuccess) return;
-      seSelectedChainId(chainId);
-      url.searchParams.delete("link");
-      const decodedUrl = decodeURIComponent(url.toString());
-      history.replaceState(null, "", decodedUrl);
-    }
+    const url = new URL(window.location.href);
+    url.searchParams.delete("link");
+    const decodedUrl = decodeURIComponent(url.toString());
+    history.replaceState(null, "", decodedUrl);
   }, [account, connectedChain]);
 
   useEffect(() => {
@@ -73,25 +72,37 @@ export function useLinkDevice() {
   return { linkDevice };
 }
 
+export function getLinkDeviceData() {
+  const url = new URL(window.location.href);
+  const link = url.searchParams.get("link");
+
+  if (!link) return;
+
+  const { addr: address, k: key, id: chainId } = decodeBase64(link) || {};
+
+  if (address && key && chainId) {
+    return {
+      address,
+      key,
+      chainId,
+    };
+  }
+}
+
 function decodeBase64(base64: string) {
   try {
     const data = JSON.parse(window.atob(base64)) as DecodedData;
     console.log("decodeBase64", data);
     const currentTime = Math.floor(Date.now() / 1000);
+    const expiredTime = data.t;
 
-    if (data.t < currentTime) {
-      console.error("The token has expired.");
+    if (!expiredTime || currentTime > expiredTime) {
+      console.error("Orderly key has expired.");
       return;
     }
 
     return data;
   } catch (error) {
-    console.error("Invalid or expired token.");
+    console.error("Invalid or expired orderly key.");
   }
-}
-
-export function isLinkDeviceMode() {
-  const url = new URL(window.location.href);
-  const link = url.searchParams.get("link");
-  return !!link;
 }

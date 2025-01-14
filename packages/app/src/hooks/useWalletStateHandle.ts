@@ -17,7 +17,7 @@ import {
   ChainNamespace,
   NetworkId,
 } from "@orderly.network/types";
-import { isLinkDeviceMode } from "./useLinkDevice";
+import { getLinkDeviceData } from "./useLinkDevice";
 
 const WALLET_KEY = "orderly:wallet-info";
 const CHAIN_NAMESPACE = "orderly:chain-namespace";
@@ -135,7 +135,7 @@ export const useWalletStateHandle = (options: {
     if (unsupported || !connectedChain) return;
     if (isManualConnect.current) return;
 
-    const isLinkDevice = isLinkDeviceMode();
+    const linkData = getLinkDeviceData();
 
     // updateAccount(currentWalletAddress!, connectedWallet!, currentChainId!);
     /**
@@ -144,7 +144,7 @@ export const useWalletStateHandle = (options: {
     if (
       !!currentWalletAddress &&
       currentWalletAddress !== account.address &&
-      !isLinkDevice
+      !linkData
     ) {
       account.setAddress(currentWalletAddress, {
         provider: connectedWallet?.provider,
