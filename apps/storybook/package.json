@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.0.2-internal-20250116.3",
+  "version": "1.0.2-internal-20250116.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
