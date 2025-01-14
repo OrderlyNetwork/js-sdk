@@ -5,4 +5,3 @@ export {
   type LinkDeviceProps,
 } from "./linkDevice.ui";
 export { useLinkDeviceScript } from "./linkDevice.script";
-export * from "./dialog";
