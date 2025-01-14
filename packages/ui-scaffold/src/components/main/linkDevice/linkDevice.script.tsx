@@ -4,11 +4,8 @@ import { EnumTrackerKeys } from "@orderly.network/types";
 
 export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
 
-export type UseLinkDeviceScriptOptions = {
-  close?: () => void;
-};
-
-export function useLinkDeviceScript(options: UseLinkDeviceScriptOptions) {
+export function useLinkDeviceScript() {
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [confirm, setConfirm] = useState(false);
   const [seconds, setSeconds] = useState(60);
@@ -24,27 +21,52 @@ export function useLinkDeviceScript(options: UseLinkDeviceScriptOptions) {
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
 
-  useEffect(() => {
-    account
-      .createApiKey(1)
-      .then((res) => {
-        setSecretKey(res.secretKey);
-        setLoading(false);
+  const createTrackParams = () => {
+    const chain = findByChainId(account.chainId as number);
+    return {
+      wallet: state?.connectWallet?.name,
+      network: chain?.network_infos.name,
+    };
+  };
 
-        const chain = findByChainId(account.chainId! as number);
-        ee.emit(EnumTrackerKeys.SIGN_LINK_DEVICE_MESSAGE_SUCCESS, {
-          wallet: state?.connectWallet?.name,
-          network: chain?.network_infos.name,
-        });
-      })
-      .catch((e) => {
-        options.close?.();
-      });
+  const getOrderlyKey = useCallback(async () => {
+    try {
+      const res = await account.createApiKey(1);
+      setSecretKey(res.secretKey);
+      setLoading(false);
+
+      ee.emit(
+        EnumTrackerKeys.SIGN_LINK_DEVICE_MESSAGE_SUCCESS,
+        createTrackParams()
+      );
+    } catch (e) {
+      console.error("getOrderlyKey", e);
+      hideDialog();
+    }
+  }, [account]);
+
+  const showDialog = useCallback(() => {
+    setOpen(true);
+    getOrderlyKey();
+    ee.emit(EnumTrackerKeys.CLICK_LINK_DEVICE_BUTTON, createTrackParams());
+  }, [account]);
+
+  const hideDialog = useCallback(() => {
+    setOpen(false);
   }, []);
+
+  const onConfirm = useCallback(() => {
+    setConfirm(true);
+    ee.emit(EnumTrackerKeys.LINK_DEVICE_MODAL_CLICK_CONFIRM, {});
+  }, []);
+
+  const copyUrl = useCallback(() => {
+    navigator.clipboard.writeText(url);
+  }, [url]);
 
   useEffect(() => {
     if (seconds === 0) {
-      options.close?.();
+      hideDialog();
       return;
     }
 
@@ -75,16 +97,18 @@ export function useLinkDeviceScript(options: UseLinkDeviceScriptOptions) {
     }
   }, [confirm, secretKey]);
 
-  const copyUrl = useCallback(() => {
-    navigator.clipboard.writeText(url);
-  }, [url]);
-
-  const onConfirm = useCallback(() => {
-    setConfirm(true);
-    ee.emit(EnumTrackerKeys.LINK_DEVICE_MODAL_CLICK_CONFIRM, {});
-  }, []);
-
-  return { loading, seconds, confirm, onConfirm, url, copyUrl };
+  return {
+    open,
+    onOpenChange: setOpen,
+    showDialog,
+    hideDialog,
+    loading,
+    seconds,
+    confirm,
+    onConfirm,
+    url,
+    copyUrl,
+  };
 }
 
 function createUrl(params: Record<string, any>) {
