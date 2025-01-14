@@ -57,7 +57,10 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
 
   const steps = useMemo(() => {
     const steps = [];
-    if (initAccountState < AccountStatusEnum.SignedIn) {
+    if (
+      initAccountState < AccountStatusEnum.SignedIn &&
+      initAccountState !== AccountStatusEnum.EnableTradingWithoutConnected
+    ) {
       steps.push({
         key: "signIn",
         title: "Sign In",
@@ -75,7 +78,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
     }
 
     return steps;
-  }, []);
+  }, [initAccountState]);
 
   const onEnableTrading = () => {
     setLoading(true);
@@ -214,7 +217,10 @@ const ActionButton: FC<{
   return (
     <Match
       value={() => {
-        if (state <= AccountStatusEnum.NotSignedIn) {
+        if (
+          state <= AccountStatusEnum.NotSignedIn &&
+          state !== AccountStatusEnum.EnableTradingWithoutConnected
+        ) {
           return "signIn";
         }
         return "enableTrading";

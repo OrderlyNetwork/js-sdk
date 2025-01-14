@@ -1,17 +1,14 @@
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
+import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 
 export const useBottomNavBarScript = () => {
   const { wrongNetwork } = useAppContext();
   const { account, state } = useAccount();
-  const [selectedChainId, seSelectedChainId] = useLocalStorage<string>(
-    "orderly_selected_chainId",
-    ""
-  );
 
+  /** link device, acally wallet not connect */
   const onDisconnect = async () => {
+    localStorage.removeItem("orderly_selected_chainId");
     await account.disconnect();
-    selectedChainId && seSelectedChainId("");
   };
 
   return {

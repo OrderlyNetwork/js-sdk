@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
 import {
   useAccount,
-  useChains,
   useEventEmitter,
   useWalletConnector,
 } from "@orderly.network/hooks";
@@ -10,9 +9,6 @@ import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./mainMenus/navItem";
 import { type MainNavWidgetProps } from "./mainNav.widget";
-import { modal } from "@orderly.network/ui";
-import { QRCodeDialogId } from "./QRCode";
-import { EnumTrackerKeys } from "@orderly.network/types";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 export enum CampaignPositionEnum {
@@ -43,7 +39,6 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
   const [currentProduct, setCurrentProduct] = useState(
     () => props?.initialProduct ?? props?.products?.[0].href ?? ""
   );
-  const ee = useEventEmitter();
 
   const onItemClickHandler = (scope: string) => (item: MainNavItem[]) => {
     const lastItem = item[item.length - 1];
@@ -203,23 +198,6 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
 
   // return converted;
 
-  const [_, { findByChainId }] = useChains(undefined, {
-    pick: "network_infos",
-    filter: (chain: any) =>
-      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-  });
-
-  const showQRCode = () => {
-    modal.show(QRCodeDialogId);
-
-    const chain = findByChainId(connectedChain?.id! as number);
-
-    ee.emit(EnumTrackerKeys.CLICK_LINK_DEVICE_BUTTON, {
-      wallet: state?.connectWallet?.name,
-      network: chain?.network_infos.name,
-    });
-  };
-
   return {
     // currentProduct,
     // logo: mainNavConfig.logo,
@@ -229,7 +207,6 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
     wrongNetwork,
     ...converted,
     status: state.status,
-    showQRCode,
   };
 };
 

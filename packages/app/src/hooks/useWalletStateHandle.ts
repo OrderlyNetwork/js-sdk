@@ -136,7 +136,6 @@ export const useWalletStateHandle = (options: {
     if (isManualConnect.current) return;
 
     const linkData = getLinkDeviceData();
-    console.log("linkData", linkData);
 
     // updateAccount(currentWalletAddress!, connectedWallet!, currentChainId!);
     /**
@@ -189,8 +188,6 @@ export const useWalletStateHandle = (options: {
     unsupported,
   ]);
 
-  // console.log("🔗 wallet state handle", connectedWallet);
-
   /**
    * User manually connects to wallet
    */
@@ -224,6 +221,14 @@ export const useWalletStateHandle = (options: {
             throw new Error("account is not initialized");
           }
           console.log("-- aaaaa wallet", wallet);
+          // clear link device data when connect wallt
+          if (
+            accountState.status ===
+            AccountStatusEnum.EnableTradingWithoutConnected
+          ) {
+            localStorage.removeItem("orderly_selected_chainId");
+            await account.disconnect();
+          }
           const status = await account.setAddress(wallet.accounts[0].address, {
             provider: wallet.provider,
             chain: {

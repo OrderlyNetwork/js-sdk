@@ -1,10 +1,8 @@
 import { FC, PropsWithChildren, useMemo } from "react";
 import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
-
 import { ProductsMenu, ProductsProps } from "./products";
 import { cn, Divider, Flex } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
-import { AccountMenuWidget } from "../accountMenu";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
 import { CampaignPositionEnum } from "./useWidgetBuilder.script";
@@ -12,8 +10,8 @@ import { CampaignButton, CampaignProps } from "./campaignButton";
 import { MainLogo } from "./mainLogo";
 import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
-import { LinkDeviceIcon } from "../icons";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { LinkDeviceWidget } from "./linkDevice";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
@@ -37,7 +35,6 @@ export type MainNavProps = {
     campaignButton?: string;
   };
   status?: AccountStatusEnum;
-  showQRCode?: () => void;
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
@@ -86,10 +83,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
         {props.status! >= AccountStatusEnum.SignedIn && (
           <>
             <Divider direction="vertical" className="oui-h-8" intensity={8} />
-            <LinkDeviceIcon
-              className="oui-text-base-contrast-80 oui-cursor-pointer"
-              onClick={props.showQRCode}
-            />
+            <LinkDeviceWidget />
           </>
         )}
         <ChainMenuWidget />

@@ -52,9 +52,9 @@ export const useWithdrawForm = ({
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
 
-  const [selectedChainId] = useLocalStorage<string>(
+  const [selectedChainId] = useLocalStorage<number | undefined>(
     "orderly_selected_chainId",
-    ""
+    undefined
   );
 
   const { data: balanceList } = useQuery<any>(`/v1/public/vault_balance`, {
