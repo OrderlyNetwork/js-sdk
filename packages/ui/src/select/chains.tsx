@@ -278,7 +278,7 @@ const ChainSelect = (props: ChainSelectProps) => {
                     })}
                   </Flex>
                 )}
-                <div className="oui-grid oui-grid-cols-2 lg:oui-grid-cols-3 oui-pl-4 oui-pr-4 oui-pb-3.5 xl:oui-max-h-[172px] oui-max-h-[268px] oui-overflow-y-auto">
+                <div className="oui-grid oui-grid-cols-1 lg:oui-grid-cols-3 oui-pl-4 oui-pr-4 oui-pb-3.5 oui-gap-1">
                   {props.chains.mainnet?.map((chain, index) => {
                     return (
                       <ChainSelectItem
@@ -299,7 +299,7 @@ const ChainSelect = (props: ChainSelectProps) => {
                 value={ChainSelectorType.Testnet}
                 title={ChainSelectorType.Testnet}
               >
-                <div className="oui-grid oui-grid-cols-2 lg:oui-grid-cols-3 oui-pl-4 oui-pr-4 oui-pb-3.5">
+                <div className="oui-grid oui-grid-cols-1 lg:oui-grid-cols-2 oui-pl-4 oui-pr-4 oui-pb-3.5 oui-gap-1">
                   {props.chains.testnet?.map((chain, index) => {
                     return (
                       <ChainSelectItem
