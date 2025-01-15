@@ -14,6 +14,7 @@ export function useSoalanWallet() {
     publicKey,
     signMessage,
     sendTransaction,
+    disconnect,
   } = useWallet();
   const { connection } = useConnection();
 
@@ -167,5 +168,5 @@ export function useSoalanWallet() {
     });
   }, [publicKey, walletSolana, signMessage, sendTransaction, connection]);
 
-  return { wallets, connectedChain, connect, wallet };
+  return { wallets, connectedChain, connect, wallet, disconnect };
 }

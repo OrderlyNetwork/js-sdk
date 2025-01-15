@@ -5,13 +5,14 @@ import { useWallet } from "./useWallet";
 import { usePrivyWallet } from "./usePrivyWallet";
 
 export function ConnectPanel() {
-  const { wallets: SOLWallets, wallet: walletSOL } = useSoalanWallet();
+  const { wallets: SOLWallets, wallet: walletSOL, disconnect: disconnectSOL } = useSoalanWallet();
   const {
     connectors: EVMWallets,
     wallet: walletEVM,
     connectedChain: connectedChainEVM,
+    disconnect: disconnectEVM,
   } = useWagmiWallet();
-  const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL } =
+  const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL , logout: disconnectPrivy} =
     usePrivyWallet();
   const { connect } = useWallet();
 
@@ -38,6 +39,9 @@ export function ConnectPanel() {
                   <div>{privyWalletEVM.accounts[0].address}</div>
                 </div>
               )}
+              <div onClick={disconnectPrivy}>
+                logout
+              </div>
             </div>
           ) : (
             <div>
@@ -54,6 +58,7 @@ export function ConnectPanel() {
             current sol wallet:
             <div>{walletSOL.label}</div>
             <div>{walletSOL.accounts[0].address}</div>
+            <div onClick={() => disconnectSOL()}>disconnect</div>
           </div>
         ) : (
           <div className="oui-flex oui-gap-2">
@@ -80,7 +85,7 @@ export function ConnectPanel() {
             <div>{walletEVM.label}</div>
             <div>current chain: {connectedChainEVM?.id}</div>
             <div>{walletEVM.accounts[0].address}</div>
-            <div>discconnect</div>
+            <div onClick={() => disconnectEVM()}>discconnect</div>
           </div>
         ) : (
           <div className="oui-flex oui-gap-2">

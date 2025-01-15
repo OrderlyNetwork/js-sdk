@@ -5,14 +5,14 @@ import { arbitrum, Chain, mainnet, okc, sepolia } from "viem/chains";
 import { metaMask, walletConnect } from "@wagmi/connectors";
 
 interface InitWagmiProps extends PropsWithChildren {
-  initialState?: any
-  initChains: readonly [Chain, ...Chain[]]
+  initialState?: any;
+  initChains:[Chain, ...Chain[]];
 }
 
 export function InitWagmi({children, initialState, initChains}: InitWagmiProps) {
   const [queryClient] = useState(() => new QueryClient());
   const [wagmiConfig, setWagmiConfig] = useState(() => createConfig({
-    chains: initChains.length ? initChains : [mainnet],
+    chains: (initChains && initChains.length) ? initChains : [mainnet],
     multiInjectedProviderDiscovery: false,
     connectors: [
       metaMask(),
