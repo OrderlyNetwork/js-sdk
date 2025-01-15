@@ -45,7 +45,7 @@ export type BaseConfigProviderProps = {
   customChains?: Chains<undefined, undefined>;
 };
 
-export type ConfigProviderExclusionProps =
+export type ExclusiveConfigProviderProps =
   | {
       brokerId: string;
       brokerName?: string;
@@ -60,7 +60,7 @@ export type ConfigProviderExclusionProps =
     };
 
 export type ConfigProviderProps = BaseConfigProviderProps &
-  ConfigProviderExclusionProps;
+  ExclusiveConfigProviderProps;
 
 export const OrderlyConfigProvider: FC<
   PropsWithChildren<ConfigProviderProps>

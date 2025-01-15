@@ -1,6 +1,6 @@
 import { ComponentType, ReactNode } from "react";
 import {
-  ConfigProviderExclusionProps,
+  ExclusiveConfigProviderProps,
   ConfigProviderProps,
 } from "@orderly.network/hooks";
 import { ExtensionPosition } from "@orderly.network/ui";
@@ -32,4 +32,4 @@ export type OrderlyAppConfig = {
     "brokerId" | "brokerName" | "configStore" | "networkId"
   >
 > &
-  ConfigProviderExclusionProps;
+  ExclusiveConfigProviderProps;
