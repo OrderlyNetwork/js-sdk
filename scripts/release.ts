@@ -77,7 +77,8 @@ async function release() {
 
   const remoteUrl = await getRemoteUrl();
   // if not provide, use local origin and git token
-  await $`git push ${remoteUrl}`;
+  // use --no-verify to ignore push hook
+  await $`git push --no-verify ${remoteUrl}`;
 }
 
 async function checkGitStatus() {
@@ -150,7 +151,6 @@ async function getVersions() {
   const successfullyPackages = publicPackages.join("\n");
 
   const message = `packages published successfully:\n${successfullyPackages}`;
-  console.log(message);
 
   return message;
 }
