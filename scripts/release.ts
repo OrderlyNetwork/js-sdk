@@ -55,7 +55,8 @@ async function release() {
 
   await $`pnpm version:g`;
 
-  await $`pnpm build`;
+  // add back "prepublishOnly": "pnpm build" in package.json
+  // await $`pnpm build`;
 
   // await authNPM();
 
