@@ -1,6 +1,6 @@
 {
   "name": "create-orderly-app",
-  "version": "1.5.20-test-patch.4",
+  "version": "1.5.20-test-patch.5",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
@@ -52,8 +52,8 @@
   },
   "orderly": {
     "version": {
-      "@orderly.network/react": "2.0.3-test-patch.4",
-      "@orderly.network/web3-onboard": "2.0.3-test-patch.4"
+      "@orderly.network/react": "2.0.3-test-patch.5",
+      "@orderly.network/web3-onboard": "2.0.3-test-patch.5"
     }
   }
 }

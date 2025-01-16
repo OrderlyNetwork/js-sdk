@@ -1,5 +1,19 @@
 # @orderly.network/trading-rewards
 
+## 2.0.3-test-patch.5
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.3-test-patch.5
+  - @orderly.network/hooks@2.0.3-test-patch.5
+  - @orderly.network/types@2.0.3-test-patch.5
+  - @orderly.network/ui@2.0.3-test-patch.5
+  - @orderly.network/ui-connector@2.0.3-test-patch.5
+  - @orderly.network/ui-scaffold@2.0.3-test-patch.5
+  - @orderly.network/utils@2.0.3-test-patch.5
+
 ## 2.0.3-test-patch.4
 
 ### Patch Changes
