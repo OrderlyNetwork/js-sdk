@@ -67,8 +67,8 @@ async function release() {
   await $`git restore .npmrc`;
 
   // set git commit user
-  await $`git config user.name "${git.name}"`;
-  await $`git config user.email "${git.email}"`;
+  await $`git config user.name ${git.name}`;
+  await $`git config user.email ${git.email}`;
 
   await $`git add .`;
 
