@@ -1,6 +1,6 @@
 {
   "name": "tsconfig",
-  "version": "0.3.19-test-patch.9",
+  "version": "0.3.19-test-patch.10",
   "private": true,
   "license": "MIT",
   "publishConfig": {
