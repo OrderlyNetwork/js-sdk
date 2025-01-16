@@ -203,12 +203,13 @@ async function notifyTelegram(message: string) {
   // max message length
   const maxLength = 4096;
 
-  let sendMessage = message;
+  let sendMessage = message.substring(0, maxLength);
 
   if (message.length > maxLength) {
+    // send first maxLength data
     sendMessage = message.substring(0, maxLength);
-    message = message.substring(maxLength);
-    await notifyTelegram(message);
+    // message = message.substring(maxLength);
+    // await notifyTelegram(message);
   }
 
   const url = `https://api.telegram.org/bot${telegram.token}/sendMessage`;
