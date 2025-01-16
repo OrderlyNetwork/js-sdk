@@ -82,7 +82,7 @@ async function release() {
 
 async function checkGitStatus() {
   const status = await simpleGit.status();
-  console.log("git status:");
+  console.log("checkGitStatus:", status);
   if (status.isClean()) {
     return true;
   }
