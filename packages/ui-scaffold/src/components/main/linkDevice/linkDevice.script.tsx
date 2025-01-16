@@ -4,11 +4,13 @@ import { EnumTrackerKeys } from "@orderly.network/types";
 
 export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
 
+const ExpireSeconds = 60;
+
 export function useLinkDeviceScript() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [confirm, setConfirm] = useState(false);
-  const [seconds, setSeconds] = useState(60);
+  const [seconds, setSeconds] = useState(ExpireSeconds);
   const [secretKey, setSecretKey] = useState("");
   const [url, setUrl] = useState("");
   const ee = useEventEmitter();
@@ -65,6 +67,17 @@ export function useLinkDeviceScript() {
   }, [url]);
 
   useEffect(() => {
+    //  when hide dialog, reset data
+    if (!open) {
+      setConfirm(false);
+      setLoading(true);
+      setSeconds(ExpireSeconds);
+      setSecretKey("");
+      setUrl("");
+    }
+  }, [open]);
+
+  useEffect(() => {
     if (seconds === 0) {
       hideDialog();
       return;
@@ -83,9 +96,7 @@ export function useLinkDeviceScript() {
 
   useEffect(() => {
     if (confirm && secretKey) {
-      const expirationSeconds = 60;
-
-      const timestamp = Math.floor(Date.now() / 1000) + expirationSeconds;
+      const timestamp = Math.floor(Date.now() / 1000) + ExpireSeconds;
       const params = {
         k: secretKey,
         t: timestamp,
