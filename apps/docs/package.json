@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "1.0.3-test-patch.7",
+  "version": "1.0.3-test-patch.8",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
