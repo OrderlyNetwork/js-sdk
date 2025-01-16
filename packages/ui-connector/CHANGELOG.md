@@ -1,5 +1,17 @@
 # @orderly.network/ui-connector
 
+## 2.0.3-test-patch.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.3-test-patch.0
+  - @orderly.network/hooks@2.0.3-test-patch.0
+  - @orderly.network/types@2.0.3-test-patch.0
+  - @orderly.network/ui@2.0.3-test-patch.0
+  - @orderly.network/ui-chain-selector@2.0.3-test-patch.0
+
 ## 2.0.2
 
 ### Patch Changes

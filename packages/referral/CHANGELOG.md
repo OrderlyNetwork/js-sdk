@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.0.3-test-patch.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.0.3-test-patch.0
+  - @orderly.network/hooks@2.0.3-test-patch.0
+  - @orderly.network/utils@2.0.3-test-patch.0
+
 ## 2.0.2
 
 ### Patch Changes

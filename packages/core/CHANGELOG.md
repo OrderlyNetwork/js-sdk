@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 2.0.3-test-patch.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.3-test-patch.0
+
 ## 2.0.2
 
 ### Patch Changes
