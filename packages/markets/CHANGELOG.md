@@ -1,5 +1,16 @@
 # @orderly.network/markets
 
+## 2.0.2-internal-20250116.15
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.2-internal-20250116.15
+  - @orderly.network/types@2.0.2-internal-20250116.15
+  - @orderly.network/ui@2.0.2-internal-20250116.15
+  - @orderly.network/utils@2.0.2-internal-20250116.15
+
 ## 2.0.2-internal-20250116.14
 
 ### Patch Changes
