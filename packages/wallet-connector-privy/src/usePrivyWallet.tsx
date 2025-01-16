@@ -6,17 +6,20 @@ import { int2hex } from "@orderly.network/utils/src";
 
 const getPrivyEmbeddedWalletChainId = (chainId: string) => {
   if (!chainId) {
-   return null;
+    return null;
   }
-  return chainId.split("eip155:")[1]
-}
+  return parseInt(chainId.split("eip155:")[1]);
+};
 
 export function usePrivyWallet() {
   const { login, logout, ready, authenticated } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
 
-
-  const {ready: solanaReady, wallets: walletsSOL, createWallet: createSolanaWallet } = useSolanaWallets();
+  const {
+    ready: solanaReady,
+    wallets: walletsSOL,
+    createWallet: createSolanaWallet,
+  } = useSolanaWallets();
   const { connection } = useConnection();
 
   const [walletEVM, setWalletEVM] = useState<any>();
@@ -25,13 +28,10 @@ export function usePrivyWallet() {
   const switchChain = (chainId: number) => {
     const wallet = walletsEVM[0];
     if (wallet) {
-
-      return wallet.switchChain(chainId)
+      return wallet.switchChain(chainId);
     }
-    return Promise.reject('no wallet')
-
-  }
-
+    return Promise.reject("no wallet");
+  };
 
   const connect = () => {
     login();
@@ -42,8 +42,7 @@ export function usePrivyWallet() {
       return true;
     }
     return false;
-
-  }, [ready, authenticated])
+  }, [ready, authenticated]);
 
   useEffect(() => {
     if (!authenticated || !walletsEVM || !walletsEVM[0]) {
@@ -53,7 +52,7 @@ export function usePrivyWallet() {
     const wallet = walletsEVM[0];
     wallet.getEthereumProvider().then((provider) => {
       setWalletEVM({
-        label:  "privy" ,
+        label: "privy",
         icon: "",
         provider: provider,
         accounts: [
@@ -67,14 +66,18 @@ export function usePrivyWallet() {
             namespace: ChainNamespace.evm,
           },
         ],
+        chain: {
+          id: getPrivyEmbeddedWalletChainId(wallet.chainId),
+          namespace: ChainNamespace.evm,
+        },
       });
     });
   }, [walletsEVM, authenticated]);
 
   useEffect(() => {
-    if(!authenticated) {
+    if (!authenticated) {
       setWalletSOL(null);
-     return;
+      return;
     }
     if (!solanaReady) {
       return;
@@ -101,12 +104,16 @@ export function usePrivyWallet() {
       ],
       chains: [
         {
-          id: "901901901",
+          id: 901901901,
           namespace: ChainNamespace.solana,
         },
       ],
+      chain: {
+        id: 901901901,
+        namespace: ChainNamespace.solana,
+      },
     });
   }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady]);
 
-  return { connect, walletEVM, walletSOL, isConnected, logout, switchChain};
+  return { connect, walletEVM, walletSOL, isConnected, logout, switchChain };
 }

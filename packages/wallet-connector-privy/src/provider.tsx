@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, useEffect, useState } from "react";
+import React, { type PropsWithChildren, useEffect, useRef, useState } from "react";
 import { Main } from "./main";
 import { InitSolana } from "./initSolana";
 import { InitWagmi } from "./initWagmi";
@@ -39,6 +39,7 @@ const processChainInfo = (chainInfo: any) =>
 
 export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   const [initChains, setInitChains] = useState<[Chain, ...Chain[]]>([mainnet]);
+  const initRef = useRef(false);
 
   useEffect(() => {
     // todo need consider customer chain from broker props
@@ -53,13 +54,14 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
         const mainnetChains = processChainInfo(mainnetChainInfo);
 
         setInitChains(testChains.concat(mainnetChains));
+        initRef.current = true;
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
 
-  if (!initChains.length) {
+  if (!initRef) {
     return;
   }
 

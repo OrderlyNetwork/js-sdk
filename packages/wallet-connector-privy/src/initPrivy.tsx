@@ -1,7 +1,7 @@
 import { PrivyClientConfig, PrivyProvider } from "@privy-io/react-auth";
-import React, { PropsWithChildren, useMemo } from "react";
+import React, { PropsWithChildren, useMemo, useState } from "react";
 import {toSolanaWalletConnectors} from '@privy-io/react-auth/solana';
-import { arbitrum, Chain, mainnet, okc } from "viem/chains";
+import { arbitrum, arbitrumSepolia, Chain, mainnet, okc, storyOdyssey, storyTestnet } from "viem/chains";
 const solanaConnectors = toSolanaWalletConnectors();
 
 interface InitPrivyProps extends PropsWithChildren{
@@ -26,10 +26,13 @@ export function InitPrivy(props:InitPrivyProps) {
           connectors: solanaConnectors,
         },
       },
-      supportedChains: (props.initChains && props.initChains.length) ? props.initChains : [mainnet],
+      defaultChain: arbitrumSepolia,
+      supportedChains: [mainnet, okc,arbitrumSepolia, storyTestnet, storyOdyssey],
     }
-  ), [props.initChains])
-  console.log('-- privyconfig', privyConfig);
+  ), [])
+  // const privyConfig = useMemo(():PrivyClientConfig  => (
+  // ), [props.initChains])
+  // console.log('-- privyconfig', privyConfig);
   // return children;
   if (!props.initChains.length) {
    return;

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useMemo, useState } from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
 import { ConnectPanel } from "./connectPanel";
 import { useWallet } from "./useWallet";
@@ -18,20 +18,24 @@ export function Main(props: PropsWithChildren) {
     })
   }
   console.log('-- wallet', wallet);
+  const value = useMemo(() => (
+    {
+      connect: connect,
+      disconnect: () => Promise.resolve(),
+      connecting: false,
+      wallet: wallet,
+      setChain,
+      connectedChain:connectedChain,
+      namespace: ChainNamespace.solana,
+    }
+  ), [connect, setChain, connectedChain, wallet]);
   // const connectedChain =wallet ? wallet.chain : null;
   // console.log('-- connected chain', connectedChain);
+  console.log('-- wallet provide value', value);
 
   return (
     <WalletConnectorContext.Provider
-      value={{
-        connect: connect,
-        disconnect: () => Promise.resolve(),
-        connecting: false,
-        wallet: wallet,
-        setChain,
-        connectedChain:connectedChain,
-        namespace: ChainNamespace.evm,
-      }}
+      value={value}
     >
       <ConnectDrawer open={openConnectDrawer} onChangeOpen={setOpenConnectDrawer} />
       {props.children}

@@ -66,6 +66,7 @@ export function useWallet() {
       console.log('-- setchan privy', chain, setChainPrivy);
       return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
         console.log('-- privy switch chain res', res);
+        return Promise.resolve(true)
 
       })
 
@@ -112,14 +113,23 @@ export function useWallet() {
     if (targetConnector.current) {
      return;
     }
+    console.log('-- setwallet', connectorKey);
+    if (wallet) {
+      return;
+    }
     if (connectorKey === 'privy') {
       if (privyWalletEVM) {
         setWallet(privyWalletEVM);
         setConnectedChain(privyWalletEVM.chains[0])
       }
+      // if (privyWalletSOL) {
+      //     setWallet(privyWalletSOL);
+      //     setConnectedChain(privyWalletSOL.chains[0])
+      //
+      // }
     }
 
-  }, [connectorKey, privyWalletEVM, privyWalletSOL])
+  }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet])
 
 
   return { connect, wallet, connectedChain, setChain };
