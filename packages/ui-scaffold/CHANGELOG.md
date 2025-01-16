@@ -1,5 +1,19 @@
 # @orderly.network/ui-scaffold
 
+## 2.0.2-internal-20250116.13
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.2-internal-20250116.13
+  - @orderly.network/hooks@2.0.2-internal-20250116.13
+  - @orderly.network/types@2.0.2-internal-20250116.13
+  - @orderly.network/ui@2.0.2-internal-20250116.13
+  - @orderly.network/ui-chain-selector@2.0.2-internal-20250116.13
+  - @orderly.network/ui-connector@2.0.2-internal-20250116.13
+  - @orderly.network/utils@2.0.2-internal-20250116.13
+
 ## 2.0.2-internal-20250116.12
 
 ### Patch Changes
