@@ -62,8 +62,8 @@ async function release() {
 
   await $`${npmRegistry} pnpm changeset publish`;
 
-  // restore .npmrc file change when publish success
-  await $`git restore .npmrc`;
+  // restore .npmrc file change when provider npm token and publish success
+  npm.token && (await $`git restore .npmrc`);
 
   // if not provide, use local user config
   git.name && (await $`git config user.name ${git.name}`);
@@ -82,7 +82,6 @@ async function release() {
 
 async function checkGitStatus() {
   const status = await simpleGit.status();
-  console.log("checkGitStatus:", status);
   if (status.isClean()) {
     return true;
   }
@@ -94,6 +93,7 @@ async function checkGitStatus() {
 async function ceheckBranch() {
   const status = await simpleGit.status();
   const currentBranch = status.current;
+  console.log("currentBranch: ", currentBranch);
   if (!currentBranch?.includes("internal/")) {
     throw new Error(
       'Release versions can only operate on branches prefixed with "internal/"'
@@ -131,8 +131,10 @@ async function getRepoPath() {
 
 /**
  * In the CI, create a temporary .npmrc file to access npm
+ * if not provide token, if will use ~/.npmrc file config
  * */
 async function authNPM() {
+  if (!npm.token) return;
   const registry = npm.registry!.replace("http://", "").replace("https://", "");
   const content = `\n//${registry}/:_authToken="${npm.token}"`;
   await $`echo ${content} >> .npmrc`;
