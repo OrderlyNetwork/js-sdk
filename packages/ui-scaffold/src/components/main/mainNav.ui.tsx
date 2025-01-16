@@ -80,7 +80,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           />
         ) : null}
         <AccountSummaryWidget />
-        {props.status! >= AccountStatusEnum.SignedIn && (
+        {!props.wrongNetwork && props.status! >= AccountStatusEnum.SignedIn && (
           <>
             <Divider direction="vertical" className="oui-h-8" intensity={8} />
             <LinkDeviceWidget />
