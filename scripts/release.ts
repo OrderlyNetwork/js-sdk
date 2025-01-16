@@ -55,7 +55,7 @@ async function release() {
 
   await $`pnpm version:g`;
 
-  // await $`pnpm build`;
+  await $`pnpm build`;
 
   await authNPM();
 
