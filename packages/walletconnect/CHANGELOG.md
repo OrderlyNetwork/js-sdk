@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 2.0.3-test-patch.6
+
+### Patch Changes
+
+- publish
+
 ## 2.0.3-test-patch.5
 
 ### Patch Changes

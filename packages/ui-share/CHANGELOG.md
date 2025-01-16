@@ -1,5 +1,16 @@
 # @orderly.network/ui-share
 
+## 2.0.3-test-patch.6
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.3-test-patch.6
+  - @orderly.network/types@2.0.3-test-patch.6
+  - @orderly.network/ui@2.0.3-test-patch.6
+  - @orderly.network/utils@2.0.3-test-patch.6
+
 ## 2.0.3-test-patch.5
 
 ### Patch Changes

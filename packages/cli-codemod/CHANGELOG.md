@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.0.3-test-patch.6
+
+### Patch Changes
+
+- publish
+
 ## 1.0.3-test-patch.5
 
 ### Patch Changes
