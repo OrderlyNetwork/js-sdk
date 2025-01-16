@@ -196,6 +196,10 @@ async function generateChangeset(versionType: VersionType = "patch") {
 }
 
 async function notifyTelegram(message: string) {
+  if (!telegram.chatId || !telegram.token) {
+    console.error("Not provider telegram chat id and token");
+    return;
+  }
   // max message length
   const maxLength = 4096;
 
