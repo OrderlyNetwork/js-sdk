@@ -57,7 +57,7 @@ async function release() {
 
   await $`pnpm build`;
 
-  await authNPM();
+  // await authNPM();
 
   await $`${
     npm.registry ? `npm_config_registry=${npm.registry}` : ""
