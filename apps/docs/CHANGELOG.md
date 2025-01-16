@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 1.0.3-test-patch.9
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.0.3-test-patch.9
+  - @orderly.network/hooks@2.0.3-test-patch.9
+  - @orderly.network/web3-onboard@2.0.3-test-patch.9
+  - @orderly.network/types@2.0.3-test-patch.9
+
 ## 1.0.3-test-patch.8
 
 ### Patch Changes

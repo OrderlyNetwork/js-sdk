@@ -1,5 +1,14 @@
 # @orderly.network/chart
 
+## 2.0.3-test-patch.9
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/ui@2.0.3-test-patch.9
+  - @orderly.network/utils@2.0.3-test-patch.9
+
 ## 2.0.3-test-patch.8
 
 ### Patch Changes

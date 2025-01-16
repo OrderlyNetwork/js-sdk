@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.19-test-patch.9
+
+### Patch Changes
+
+- publish
+
 ## 0.3.19-test-patch.8
 
 ### Patch Changes
