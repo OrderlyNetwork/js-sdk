@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.0.3-test-patch.11
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.0.3-test-patch.11
+
 ## 2.0.3-test-patch.10
 
 ### Patch Changes
