@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.0.2-internal-20250116.9
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.2-internal-20250116.9
+  - @orderly.network/types@2.0.2-internal-20250116.9
+
 ## 2.0.2-internal-20250116.8
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/chart
 
+## 2.0.2-internal-20250116.9
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/ui@2.0.2-internal-20250116.9
+  - @orderly.network/utils@2.0.2-internal-20250116.9
+
 ## 2.0.2-internal-20250116.8
 
 ### Patch Changes
