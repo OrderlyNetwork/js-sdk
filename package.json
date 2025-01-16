@@ -16,7 +16,7 @@
     "prepublishOnly": "pnpm build",
     "prepare": "husky install",
     "test": "turbo run test",
-    "release:patch": "GIT_REPO=orderlynetwork/orderly-fe/orderly-web GIT_TOKEN=glpat-VHkNuxhZsB1VUh7sp9Rx GIT_USERNAME=zhanguangao GIT_NAME='Jame Zhan' GIT_EMAIL=jame@orderly.network TELEGRAM_TOKEN=7396209259:AAGaB7x1-o9lrvu7_Gtndz-qTH-7kow1i9A TELEGRAM_CHAT_ID=-4765377845 NPM_REGISTRY=http://npm.orderly.network NPM_TOKEN=yDwOeXlUZQwMF2Gd/Rqm35tLOSKmvDGfD2K0TWLLaa4= ts-node ./scripts/release.ts"
+    "release:patch": "ts-node ./scripts/release.ts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

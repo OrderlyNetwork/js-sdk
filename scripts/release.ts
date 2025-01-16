@@ -2,13 +2,14 @@ import { getPackages } from "@manypkg/get-packages";
 import { shouldSkipPackage } from "@changesets/should-skip-package";
 import writeChangeset from "@changesets/write";
 import { read } from "@changesets/config";
-import SimpleGit from "simple-git";
 import { Release, VersionType } from "@changesets/types";
-import { $ } from "zx";
+import SimpleGit from "simple-git";
 import https from "https";
+import { $ } from "zx";
+
 const simpleGit = SimpleGit();
 
-// show command log
+// show command exection log
 $.verbose = true;
 
 const npm = {
@@ -17,7 +18,6 @@ const npm = {
 };
 
 const git = {
-  repo: process.env.GIT_REPO,
   token: process.env.GIT_TOKEN,
   username: process.env.GIT_USERNAME,
   name: process.env.GIT_NAME,
@@ -29,10 +29,6 @@ const telegram = {
   // get chat id by https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
   chatId: process.env.TELEGRAM_CHAT_ID,
 };
-
-// https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#clone-repository-using-personal-access-token
-// git clone https://<username>:<personal_token>@gitlab.com/gitlab-org/gitlab.git
-const remoteUrl = `https://${git.username}:${git.token}@gitlab.com/${git.repo}.git`;
 
 // set publish npm registry
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
@@ -66,22 +62,27 @@ async function release() {
 
   await $`${npmRegistry} pnpm changeset publish`;
 
-  // restore .npmrc file change
+  // restore .npmrc file change when publish success
   await $`git restore .npmrc`;
 
-  // set git commit user
-  await $`git config user.name ${git.name}`;
-  await $`git config user.email ${git.email}`;
+  // if not provide, use local user config
+  git.name && (await $`git config user.name ${git.name}`);
+  git.email && (await $`git config user.email ${git.email}`);
 
+  // add all file to stash
   await $`git add .`;
 
+  // commit code
   await $`git commit -m "publish"`;
 
+  const remoteUrl = await getRemoteUrl();
+  // if not provide, use local origin and git token
   await $`git push ${remoteUrl}`;
 }
 
 async function checkGitStatus() {
   const status = await simpleGit.status();
+  console.log("git status:");
   if (status.isClean()) {
     return true;
   }
@@ -100,7 +101,37 @@ async function ceheckBranch() {
   }
 }
 
-/** In the CI, create a temporary .npmrc file to access npm */
+/**
+ * if not provide, use local config
+ */
+async function getRemoteUrl() {
+  const repoPath = await getRepoPath();
+
+  if (git.token && git.username && repoPath) {
+    // https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#clone-repository-using-personal-access-token
+    // git clone https://<username>:<personal_token>@gitlab.com/gitlab-org/gitlab.git
+    return `https://${git.username}:${git.token}@gitlab.com/${repoPath}.git`;
+  }
+
+  return "";
+}
+
+/**
+ * https://github.com/OrderlyNetwork/orderly-sdk-js.git => OrderlyNetwork/orderly-sdk-js
+ * git@github.com:OrderlyNetwork/orderly-sdk-js.git => OrderlyNetwork/orderly-sdk-js
+ */
+async function getRepoPath() {
+  const res = await $`git remote get-url origin`;
+  const origin = res.stdout?.replace(/\s+/g, "");
+  const regex = /(?:github\.com|gitlab\.com)[:/](.+?\/.+?)\.git/;
+  const match = origin.match(regex);
+  const repoPath = match ? match[1] : null;
+  return repoPath;
+}
+
+/**
+ * In the CI, create a temporary .npmrc file to access npm
+ * */
 async function authNPM() {
   const registry = npm.registry!.replace("http://", "").replace("https://", "");
   const content = `\n//${registry}/:_authToken="${npm.token}"`;
@@ -122,6 +153,9 @@ async function getVersions() {
   return message;
 }
 
+/**
+ * generate changeset file
+ */
 async function generateChangeset(versionType: VersionType = "patch") {
   const cwd = process.cwd();
   const config = await read(cwd);
