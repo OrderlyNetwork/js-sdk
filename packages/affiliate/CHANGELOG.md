@@ -1,5 +1,20 @@
 # @orderly.network/affiliate
 
+## 2.0.2-internal-20250116.7
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.2-internal-20250116.7
+  - @orderly.network/chart@2.0.2-internal-20250116.7
+  - @orderly.network/hooks@2.0.2-internal-20250116.7
+  - @orderly.network/types@2.0.2-internal-20250116.7
+  - @orderly.network/ui@2.0.2-internal-20250116.7
+  - @orderly.network/ui-connector@2.0.2-internal-20250116.7
+  - @orderly.network/ui-scaffold@2.0.2-internal-20250116.7
+  - @orderly.network/utils@2.0.2-internal-20250116.7
+
 ## 2.0.2-internal-20250116.6
 
 ### Patch Changes
