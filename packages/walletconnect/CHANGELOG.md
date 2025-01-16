@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 2.0.2-internal-20250116.12
+
+### Patch Changes
+
+- publish
+
 ## 2.0.2-internal-20250116.11
 
 ### Patch Changes
