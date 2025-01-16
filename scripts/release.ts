@@ -44,7 +44,7 @@ async function main() {
     await generateChangeset();
     await release();
     const successfullyPackages = await getVersions();
-    await notifyTelegram(successfullyPackages);
+    // await notifyTelegram(successfullyPackages);
   } catch (err: any) {
     const msg = err.message || err.stderr || JSON.stringify(err);
     console.log("publish error: ", msg);
