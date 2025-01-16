@@ -45,6 +45,7 @@
     "@orderly.network/web3-provider-ethers": "2.0.2"
   },
   "changesets": [
+    "afraid-foxes-smash",
     "blue-dancers-drum",
     "red-years-hide",
     "short-houses-provide"

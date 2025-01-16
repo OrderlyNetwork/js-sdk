@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.0.3-test-patch.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.3-test-patch.3
+  - @orderly.network/types@2.0.3-test-patch.3
+
 ## 2.0.3-test-patch.2
 
 ### Patch Changes
