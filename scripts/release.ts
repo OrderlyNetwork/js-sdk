@@ -151,7 +151,6 @@ async function getVersions() {
   const successfullyPackages = publicPackages.join("\n");
 
   const message = `packages published successfully:\n${successfullyPackages}`;
-  console.log(message);
 
   return message;
 }
