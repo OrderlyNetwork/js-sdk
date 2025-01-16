@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.0.3-test-patch.8
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.3-test-patch.8
+  - @orderly.network/types@2.0.3-test-patch.8
+
 ## 2.0.3-test-patch.7
 
 ### Patch Changes
