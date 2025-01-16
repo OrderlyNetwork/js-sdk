@@ -3,11 +3,12 @@ import { shouldSkipPackage } from "@changesets/should-skip-package";
 import writeChangeset from "@changesets/write";
 import { read } from "@changesets/config";
 import SimpleGit from "simple-git";
-import { Release } from "@changesets/types";
+import { Release, VersionType } from "@changesets/types";
 import { $ } from "zx";
 import https from "https";
 const simpleGit = SimpleGit();
 
+// show command log
 $.verbose = true;
 
 const npm = {
@@ -25,12 +26,16 @@ const git = {
 
 const telegram = {
   token: process.env.TELEGRAM_TOKEN,
-  // https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
+  // get chat id by https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
   chatId: process.env.TELEGRAM_CHAT_ID,
 };
+
 // https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#clone-repository-using-personal-access-token
 // git clone https://<username>:<personal_token>@gitlab.com/gitlab-org/gitlab.git
 const remoteUrl = `https://${git.username}:${git.token}@gitlab.com/${git.repo}.git`;
+
+// set publish npm registry
+const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
 
 /** release patch version */
 async function main() {
@@ -59,9 +64,7 @@ async function release() {
 
   await authNPM();
 
-  await $`${
-    npm.registry ? `npm_config_registry=${npm.registry}` : ""
-  } pnpm changeset publish`;
+  await $`${npmRegistry} pnpm changeset publish`;
 
   // restore .npmrc file change
   await $`git restore .npmrc`;
@@ -119,7 +122,7 @@ async function getVersions() {
   return message;
 }
 
-async function generateChangeset() {
+async function generateChangeset(versionType: VersionType = "patch") {
   const cwd = process.cwd();
   const config = await read(cwd);
   const packages = await getPackages(cwd);
@@ -141,7 +144,7 @@ async function generateChangeset() {
   const releases: Release[] = changedPackagesNames.map((name) => ({
     name,
     // Now only the patch version needs to be automatically
-    type: "patch",
+    type: versionType,
   }));
 
   const changesetID = await writeChangeset(
