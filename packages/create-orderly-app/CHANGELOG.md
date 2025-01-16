@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.20-test-patch.12
+
+### Patch Changes
+
+- publish
+
 ## 1.5.20-test-patch.11
 
 ### Patch Changes

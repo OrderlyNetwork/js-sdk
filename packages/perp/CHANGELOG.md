@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.3-test-patch.12
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.3-test-patch.12
+  - @orderly.network/utils@2.0.3-test-patch.12
+
 ## 4.0.3-test-patch.11
 
 ### Patch Changes

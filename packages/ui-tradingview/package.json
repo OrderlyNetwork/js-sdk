@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-tradingview",
-  "version": "2.0.3-test-patch.11",
+  "version": "2.0.3-test-patch.12",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
