@@ -58,7 +58,7 @@ async function release() {
   // add back "prepublishOnly": "pnpm build" in package.json
   // await $`pnpm build`;
 
-  // await authNPM();
+  await authNPM();
 
   await $`${
     npm.registry ? `npm_config_registry=${npm.registry}` : ""
