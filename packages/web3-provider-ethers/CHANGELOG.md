@@ -1,5 +1,14 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.0.3-test-patch.7
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.0.3-test-patch.7
+  - @orderly.network/types@2.0.3-test-patch.7
+
 ## 2.0.3-test-patch.6
 
 ### Patch Changes

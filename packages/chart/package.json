@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/chart",
-  "version": "2.0.3-test-patch.6",
+  "version": "2.0.3-test-patch.7",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
