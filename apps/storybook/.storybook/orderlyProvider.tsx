@@ -17,6 +17,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
+import { customChains } from "./customChains";
 
 const network = WalletAdapterNetwork.Devnet;
 
