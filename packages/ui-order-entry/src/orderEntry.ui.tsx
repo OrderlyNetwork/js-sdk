@@ -35,6 +35,7 @@ import {
   useState,
 } from "react";
 import {
+  AccountStatusEnum,
   API,
   BBOOrderType,
   OrderLevel,
@@ -713,6 +714,7 @@ const CustomInput = forwardRef<
         ...(props.formatters ?? []),
         inputFormatter.numberFormatter,
         inputFormatter.currencyFormatter,
+        inputFormatter.decimalPointFormatter,
       ]}
       classNames={{
         root: cn(

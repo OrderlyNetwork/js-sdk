@@ -6,7 +6,7 @@ import { useAccount } from "@orderly.network/hooks";
 export const useAccountScript = () => {
   const { referral, tradingRewards, bottomSheetLeading } =
     useTradingPageContext();
-const { account } = useAccount();
+  const { account, state } = useAccount();
 
   const onShowAccountSheet = () => {
     modal.sheet({
@@ -15,9 +15,11 @@ const { account } = useAccount();
       content: <AccountSheetWidget {...referral} {...tradingRewards} />,
     });
   };
+
   return {
     onShowAccountSheet,
     address: account.address,
+    status: state.status,
   };
 };
 

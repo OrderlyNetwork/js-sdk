@@ -7,7 +7,14 @@ export type DialogAction<T = any> = {
   onClick: (event: any) => Promise<T> | T;
 } & Pick<
   ButtonProps,
-  "size" | "disabled" | "className" | "fullWidth" | "data-testid" | "loading"
+  | "size"
+  | "disabled"
+  | "className"
+  | "fullWidth"
+  | "data-testid"
+  | "loading"
+  | "variant"
+  | "color"
 >;
 
 export type SimpleDialogFooterProps = {
@@ -20,7 +27,9 @@ export type SimpleDialogFooterProps = {
 
 export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
   const { actions } = props;
-  const [primaryLoading, setPrimaryLoading] = useState(actions?.primary?.loading ?? false);
+  const [primaryLoading, setPrimaryLoading] = useState(
+    actions?.primary?.loading ?? false
+  );
 
   useEffect(() => {
     if (actions?.primary?.loading) {
@@ -29,7 +38,7 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
 
     return () => {
       setPrimaryLoading(false);
-    }
+    };
   }, [actions?.primary?.loading]);
 
   if (!actions) return null;
@@ -38,47 +47,57 @@ export const SimpleDialogFooter: FC<SimpleDialogFooterProps> = (props) => {
     const buttons = [];
 
     if (actions.secondary && typeof actions.secondary.onClick === "function") {
+      const {
+        fullWidth = true,
+        color = "gray",
+        label,
+        ...rest
+      } = actions.secondary;
+
       buttons.push(
         <Button
-          data-testid={actions.secondary?.["data-testid"]}
           key="secondary"
-          color="gray"
-          onClick={(event) => {
-            actions.secondary?.onClick?.(event);
-          }}
-          className={actions.secondary.className}
-          disabled={actions.secondary.disabled}
-          size={actions.secondary.size}
-          fullWidth={actions.secondary.fullWidth}
+          {...rest}
+          data-testid={actions.secondary?.["data-testid"]}
+          color={color}
+          fullWidth={fullWidth}
         >
-          {actions.secondary.label}
+          {label}
         </Button>
       );
     }
 
     if (actions.primary && typeof actions.primary.onClick === "function") {
-      
+      const {
+        fullWidth = true,
+        color,
+        disabled,
+        label,
+        onClick,
+        ...rest
+      } = actions.primary;
+
       buttons.push(
         <ThrottledButton
-          data-testid={actions.primary?.["data-testid"]}
           key="primary"
+          {...rest}
+          data-testid={actions.primary?.["data-testid"]}
           onClick={async (event) => {
             if (primaryLoading) return;
             try {
               setPrimaryLoading(true);
-              await actions.primary?.onClick(event);
+              await onClick(event);
             } catch (e) {
             } finally {
               setPrimaryLoading(false);
             }
           }}
-          className={actions.primary.className}
-          disabled={actions.primary.disabled || primaryLoading}
+          disabled={disabled || primaryLoading}
           loading={primaryLoading}
-          size={actions.primary.size}
-          fullWidth
+          fullWidth={fullWidth}
+          color={color}
         >
-          {actions.primary.label}
+          {label}
         </ThrottledButton>
       );
     }

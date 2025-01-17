@@ -1,6 +1,10 @@
 import { useMemo, useState } from "react";
 import { useScaffoldContext } from "../scaffoldContext";
-import { useWalletConnector } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useEventEmitter,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./mainMenus/navItem";
@@ -21,7 +25,7 @@ type UseMainNavBuilderProps = Omit<
 export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
   const { onItemClick, campaignPosition = CampaignPositionEnum.navTailing } =
     props;
-
+  const { state } = useAccount();
   const { routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
   const { wrongNetwork } = useAppContext();
@@ -202,6 +206,7 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
     isConnected: !!connectedChain,
     wrongNetwork,
     ...converted,
+    status: state.status,
   };
 };
 

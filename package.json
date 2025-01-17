@@ -16,7 +16,7 @@
     "prepublishOnly": "pnpm build",
     "prepare": "husky install",
     "test": "turbo run test",
-    "release:patch": "ts-node ./scripts/publish.ts"
+    "release:patch": "ts-node ./scripts/release.ts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

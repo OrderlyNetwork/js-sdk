@@ -21,7 +21,9 @@ export const useAsTraderScript = () => {
   } = useReferralContext();
 
   const { state } = useAccount();
-  const isSignIn = state.status === AccountStatusEnum.EnableTrading;
+  const isSignIn =
+    state.status === AccountStatusEnum.EnableTrading ||
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
   const onEnterTraderPage = () => {
     setTab(TabTypes.trader);
     setShowHome(false);

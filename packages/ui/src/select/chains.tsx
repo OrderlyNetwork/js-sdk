@@ -8,12 +8,14 @@ import { tv } from "../utils/tv";
 import { Box } from "../box";
 import { Text } from "../typography";
 import { Tabs, TabPanel } from "../tabs";
+import { cn } from "..";
+import { Grid } from "../grid/grid";
 
 const chainSelectVariants = tv({
   extend: selectVariants,
   slots: {
     icon: "",
-    item: ["oui-text-2xs", "oui-rounded-lg", "oui-cursor-pointer"],
+    item: ["oui-text-2xs", "oui-rounded-lg", "hover:oui-rounded-lg", "oui-cursor-pointer"],
     itemSize: "",
     tag: "oui-bg-success/20 oui-text-success oui-px-2 oui-rounded oui-font-semibold",
   },
@@ -169,6 +171,22 @@ const ChainSelect = (props: ChainSelectProps) => {
     setSelectedTab(tab);
   };
 
+  useEffect(() => {
+    if (currentChain) {
+      const isMainnet = props.chains.mainnet?.some(
+        (chain) => chain.id === currentChain
+      );
+      const isTestnet = props.chains.testnet?.some(
+        (chain) => chain.id === currentChain
+      );
+      if (isMainnet) {
+        onTabChange(ChainSelectorType.Mainnet);
+      } else if (isTestnet) {
+        onTabChange(ChainSelectorType.Testnet);
+      }
+    }
+  }, [currentChain, props.chains]);
+
   return (
     <SelectPrimitive.Root
       {...rest}
@@ -218,7 +236,7 @@ const ChainSelect = (props: ChainSelectProps) => {
           position={"popper"}
           className={content({
             className:
-              "xl:oui-max-h-[500px] oui-max-h-[562px] oui-bg-base-9 oui-w-[260px]",
+              "oui-bg-base-9 oui-w-[456px]",
           })}
           align={"end"}
           sideOffset={12}
@@ -260,35 +278,43 @@ const ChainSelect = (props: ChainSelectProps) => {
                     })}
                   </Flex>
                 )}
-                {props.chains.mainnet?.map((chain, index) => {
-                  return (
-                    <ChainSelectItem
-                      key={chain.id}
-                      chain={chain}
-                      itemClassName={item({
-                        className: "oui-rounded-lg",
-                      })}
-                      iconClassName={itemSize()}
-                    />
-                  );
-                })}
+                <div className="oui-grid oui-grid-cols-1 lg:oui-grid-cols-3 oui-pl-4 oui-pr-4 oui-pb-3.5 oui-gap-1">
+                  {props.chains.mainnet?.map((chain, index) => {
+                    return (
+                      <ChainSelectItem
+                        key={chain.id}
+                        chain={chain}
+                        itemClassName={
+                          item({
+                            className: "oui-rounded-md hover:oui-rounded-md",
+                          })
+                        }
+                        iconClassName={itemSize()}
+                      />
+                    );
+                  })}
+                </div>
               </TabPanel>
               <TabPanel
                 value={ChainSelectorType.Testnet}
                 title={ChainSelectorType.Testnet}
               >
-                {props.chains.testnet?.map((chain, index) => {
-                  return (
-                    <ChainSelectItem
-                      key={chain.id}
-                      chain={chain}
-                      itemClassName={item({
-                        className: "oui-rounded-lg",
-                      })}
-                      iconClassName={itemSize()}
-                    />
-                  );
-                })}
+                <div className="oui-grid oui-grid-cols-1 lg:oui-grid-cols-2 oui-pl-4 oui-pr-4 oui-pb-3.5 oui-gap-1">
+                  {props.chains.testnet?.map((chain, index) => {
+                    return (
+                      <ChainSelectItem
+                        key={chain.id}
+                        chain={chain}
+                        itemClassName={
+                          item({
+                            className: "oui-rounded-md hover:oui-rounded-md",
+                          })
+                        }
+                        iconClassName={itemSize()}
+                      />
+                    );
+                  })}
+                </div>
               </TabPanel>
             </Tabs>
           </SelectPrimitive.Viewport>

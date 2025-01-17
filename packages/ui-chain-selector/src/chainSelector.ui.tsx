@@ -110,7 +110,7 @@ export const ChainSelector = (props: {
             <Box
               r="2xl"
               p={1}
-              className="oui-bg-base-9 oui-mt-3 oui-overflow-auto oui-max-h-[562px] xl:oui-max-h-[500px] oui-hide-scrollbar "
+              className="oui-bg-base-9 oui-mt-3 oui-overflow-auto oui-max-h-[562px] xl:oui-max-h-[500px] oui-hide-scrollbar oui-grid oui-grid-cols-2 oui-rounded-lg oui-gap-1"
             >
               {props.chains.mainnet?.map((item, index) => {
                 return (
@@ -130,7 +130,7 @@ export const ChainSelector = (props: {
             value={ChainSelectorType.Testnet}
             title={ChainSelectorType.Testnet}
           >
-            <Box r="2xl" p={1} className="oui-bg-base-9 oui-mt-3">
+            <Box r="2xl" p={1} className="oui-bg-base-9 oui-mt-3 oui-grid oui-grid-cols-1 oui-rounded-lg oui-gap-1">
               {props.chains.testnet?.map((item, index) => {
                 return (
                   <ChainTile
@@ -173,8 +173,8 @@ export const ChainTile = (props: {
     <button
       className={
         props.selected
-          ? "oui-w-full oui-bg-base-6 oui-rounded-lg hover:oui-bg-base-6"
-          : "oui-w-full oui-rounded-lg hover:oui-bg-base-6 "
+          ? "oui-w-full oui-bg-base-6 oui-rounded-lg hover:oui-bg-base-7"
+          : "oui-w-full oui-rounded-lg hover:oui-bg-base-7 "
       }
       onClick={() => {
         props.onClick?.(item);

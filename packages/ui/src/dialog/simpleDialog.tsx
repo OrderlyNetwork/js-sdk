@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  DialogContentProps,
 } from "./dialog";
 import { Divider } from "../divider";
 import {
@@ -25,6 +26,8 @@ type SimpleDialogProps = {
     body?: string;
     footer?: string;
   };
+  /** if provider, it will overrides others content props */
+  contentProps?: DialogContentProps;
   // footer?: ReactNode;
 } & SimpleDialogFooterProps;
 
@@ -39,7 +42,10 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
         closable={props.closable}
         onOpenAutoFocus={(event) => event.preventDefault()}
         onCloseAutoFocus={(event) => event.preventDefault()}
+        /** prevent close dialog when click the mask  */
+        // onPointerDownOutside={(event) => event.preventDefault()}
         className={props.classNames?.content}
+        {...props.contentProps}
       >
         {props.title && (
           <>

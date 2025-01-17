@@ -19,7 +19,7 @@ export { useEventEmitter } from "./useEventEmitter";
 
 export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
-export { useNetworkInfo } from './useNetworkInfo'
+export { useNetworkInfo } from "./useNetworkInfo";
 
 export { parseJSON } from "./utils/json";
 
@@ -34,10 +34,10 @@ export * from "./statusProvider";
 export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
 export type {
   ConfigProviderProps,
-  ConfigProviderExclusionProps,
+  ExclusiveConfigProviderProps,
 } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
-export { OrderlyTrackerProvider} from './trackerProvider'
+export { OrderlyTrackerProvider } from "./trackerProvider";
 export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {
