@@ -25,7 +25,8 @@ export function useFaucetScript() {
       return false;
     }
     return (
-      state.status === AccountStatusEnum.EnableTrading &&
+      (state.status === AccountStatusEnum.EnableTrading ||
+        state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
       isTestnet(parseInt(connectedChain.id as string))
     );
   }, [state, connectedChain]);
@@ -45,7 +46,7 @@ export function useFaucetScript() {
       broker_id: config.get("brokerId"),
     }).then(
       (res) => {
-        setLoading(false)
+        setLoading(false);
         if (res.success) {
           return modal.alert({
             title: "Get test USDC",
@@ -62,7 +63,7 @@ export function useFaucetScript() {
       }
     );
   };
-  return { getFaucet, showFaucet, loading};
+  return { getFaucet, showFaucet, loading };
 }
 
 export type FaucetState = ReturnType<typeof useFaucetScript>;

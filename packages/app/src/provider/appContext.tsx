@@ -15,6 +15,7 @@ import {
   RestrictedAreasReturns,
   IRestrictedAreasParams,
 } from "@orderly.network/hooks";
+import { useLinkDevice } from "../hooks/useLinkDevice";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -50,6 +51,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
   const [currentChainId, setCurrentChainId] = useState<number | undefined>();
+  useLinkDevice();
 
   const { connectWallet, wrongNetwork } = useWalletStateHandle({
     // onChainChanged: props.onChainChanged,

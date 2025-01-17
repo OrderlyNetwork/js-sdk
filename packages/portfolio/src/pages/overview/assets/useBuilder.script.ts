@@ -23,7 +23,10 @@ export const useAssetScript = () => {
   const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
 
   const connected = useMemo(() => {
-    return state.status === AccountStatusEnum.EnableTrading;
+    return (
+      state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+    );
   }, [state]);
 
   const onLeverageEdit = () => {

@@ -1,11 +1,12 @@
+import { useMemo } from "react";
 import {
   TWType,
   useAccount,
-  useChain,
   useChains,
   useConfig,
   useCurEpochEstimate,
   useEpochInfo,
+  useLocalStorage,
   useMutation,
   useReferralInfo,
   useWalletConnector,
@@ -13,35 +14,40 @@ import {
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { isTestnet } from "@orderly.network/utils";
-import { useMemo } from "react";
 import { ReferralProps, TradingRewardsProps } from "../../../types/types";
 
 export const useAccountSheetScript = (
   props: ReferralProps & TradingRewardsProps
 ) => {
+  const [selectedChainId] = useLocalStorage<number | undefined>(
+    "orderly_selected_chainId",
+    undefined
+  );
   const { account, state } = useAccount();
   const accountId = account.accountId;
   const address = account.address;
-  const chainId = account.chainId;
   const { hide } = useModal();
 
   const config = useConfig();
 
   const { connectedChain, disconnect, namespace } = useWalletConnector();
+
+  const chainId = account.chainId || connectedChain?.id || selectedChainId;
+
   const showGetTestUSDC = useMemo(() => {
-    const chainId = connectedChain?.id;
-    if (chainId === undefined) {
-      return false;
+    if (chainId) {
+      return (
+        (state.status === AccountStatusEnum.EnableTrading ||
+          state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
+        // @ts-ignore
+        isTestnet(parseInt(chainId))
+      );
     }
 
-    return (
-      state.status === AccountStatusEnum.EnableTrading &&
-      // @ts-ignore
-      isTestnet(parseInt(chainId))
-    );
-  }, [state.status, connectedChain]);
+    return false;
+  }, [state.status, chainId]);
 
-  const chainName = useGetChains();
+  const chainName = useGetChains(chainId);
 
   const operatorUrl = config.get<string>("operatorUrl");
 
@@ -63,17 +69,24 @@ export const useAccountSheetScript = (
   );
 
   const onDisconnect = async () => {
+    // The cache must be cleared first, otherwise it will be possible entered link device mode
+    selectedChainId && localStorage.removeItem("orderly_selected_chainId");
     await disconnect({
       label: state.connectWallet?.name,
     });
     await account.disconnect();
     hide();
   };
+
   const [getTestUSDC, { isMutating: gettingTestUSDC }] = useMutation(
     `${operatorUrl}/v1/faucet/usdc`
   );
+
   const onGetTestUSDC = () => {
-    if (state.status < AccountStatusEnum.EnableTrading) {
+    if (
+      state.status < AccountStatusEnum.EnableTrading &&
+      state.status !== AccountStatusEnum.EnableTradingWithoutConnected
+    ) {
       // return modal.show(WalletConnectSheet, {
       //   status: state.status,
       // });
@@ -85,7 +98,7 @@ export const useAccountSheetScript = (
     } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
 
     return getTestUSDC({
-      chain_id: account.walletAdapter?.chainId.toString(),
+      chain_id: chainId?.toString(),
       user_address: state.address,
       broker_id: config.get("brokerId"),
     }).then(
@@ -190,9 +203,7 @@ const useTradingRewards = (_onClick?: () => void) => {
   };
 };
 
-export function useGetChains() {
-  const { connectedChain } = useWalletConnector();
-
+function useGetChains(chainId: number) {
   const [mainChains, { findByChainId }] = useChains("mainnet", {
     pick: "network_infos",
     filter: (chain: any) =>
@@ -201,7 +212,7 @@ export function useGetChains() {
 
   const chainName = useMemo(() => {
     // @ts-ignore
-    const chain = findByChainId(parseInt(connectedChain?.id!), "network_infos");
+    const chain = findByChainId(parseInt(chainId), "network_infos");
 
     if (!chain) {
       return "Unknown";
@@ -212,7 +223,7 @@ export function useGetChains() {
     // }
     // @ts-ignore
     return chain.name;
-  }, [connectedChain, findByChainId]);
+  }, [chainId, findByChainId]);
 
   return chainName;
 }

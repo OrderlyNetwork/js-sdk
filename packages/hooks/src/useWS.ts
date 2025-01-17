@@ -32,7 +32,9 @@ export const useWS = () => {
 
       // if user login, open the private websocket
       if (
-        account.stateValue.status === AccountStatusEnum.EnableTrading &&
+        (account.stateValue.status === AccountStatusEnum.EnableTrading ||
+          account.stateValue.status ===
+            AccountStatusEnum.EnableTradingWithoutConnected) &&
         account.stateValue.accountId
       ) {
         websocketClient.openPrivate(account.stateValue.accountId);
@@ -41,7 +43,9 @@ export const useWS = () => {
       // open the pirvate websocket when user login
       account.on("change:status", (nextState: AccountState) => {
         if (
-          nextState.status === AccountStatusEnum.EnableTrading &&
+          (nextState.status === AccountStatusEnum.EnableTrading ||
+            nextState.status ===
+              AccountStatusEnum.EnableTradingWithoutConnected) &&
           nextState.accountId
         ) {
           websocketClient.openPrivate(nextState.accountId);

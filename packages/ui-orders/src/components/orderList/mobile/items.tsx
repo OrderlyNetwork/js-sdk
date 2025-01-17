@@ -65,9 +65,7 @@ export const OrderTypeView: FC<OrderCellState> = (props) => {
       {parseBadgesFor(props.item)?.map((e, index) => (
         <Badge
           key={index}
-          color={
-            e.toLocaleLowerCase() === "position" ? "primary" : "neutral"
-          }
+          color={e.toLocaleLowerCase() === "position" ? "primary" : "neutral"}
           size="xs"
         >
           {e}
@@ -529,9 +527,9 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
           padding={false}
           intensity={(value ?? 0) == 0 ? 80 : undefined}
           showIdentifier={(value ?? 0) > 0}
-        coloring={(value ?? 0) != 0}
-      >
-        {value ?? "--"}
+          coloring={(value ?? 0) != 0}
+        >
+          {value ?? "--"}
         </Text.numeral>
         <ShareButtonWidget
           order={props.item}
@@ -563,11 +561,7 @@ export const MobileTooltip: FC<
       className={classNames?.content}
       open={open}
       onOpenChange={setOpen}
-      tooltipProps={{
-        arrow: {
-          className: classNames?.arrow,
-        },
-      }}
+      arrow={{ className: classNames?.arrow }}
     >
       <div onClick={() => setOpen((e) => !e)}>{props.children}</div>
     </Tooltip>

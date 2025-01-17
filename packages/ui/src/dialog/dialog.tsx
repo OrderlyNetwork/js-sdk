@@ -175,13 +175,17 @@ const DialogOverlay = React.forwardRef<
 });
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+export type DialogContentProps = React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Content
+> &
+  VariantProps<typeof dialogVariants> & {
+    closable?: boolean;
+    onClose?: () => void;
+  };
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
-    VariantProps<typeof dialogVariants> & {
-      closable?: boolean;
-      onClose?: () => void;
-    }
+  DialogContentProps
 >(
   (
     { className, children, size, closable = true, intensity, ...props },

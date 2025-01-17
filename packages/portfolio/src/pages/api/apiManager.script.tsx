@@ -31,7 +31,9 @@ export const useApiManagerScript = (props?: {
   const { wrongNetwork } = useAppContext();
 
   const { state, account } = useAccount();
-  const canCreateApiKey = state.status === AccountStatusEnum.EnableTrading;
+  const canCreateApiKey =
+    state.status === AccountStatusEnum.EnableTrading ||
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
   const { data } = useQuery<
     | undefined
     | {
@@ -220,11 +222,16 @@ export const useApiManagerScript = (props?: {
       : "The IP restriction format is incorrect. Please use the correct format: [xx.xx.xxx.x],[xx.xxx.xxx.xxx]";
   };
 
+  const accountStatus =
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected
+      ? AccountStatusEnum.EnableTradingWithoutConnected
+      : AccountStatusEnum.EnableTrading;
+
   const address = useDataTap(data?.account_id, {
-    accountStatus: AccountStatusEnum.EnableTrading,
+    accountStatus,
   });
   const uid = useDataTap(data?.user_id, {
-    accountStatus: AccountStatusEnum.EnableTrading,
+    accountStatus,
   });
 
   const { pagination } = usePagination();

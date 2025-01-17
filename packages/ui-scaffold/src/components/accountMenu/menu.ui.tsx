@@ -28,6 +28,19 @@ export type AccountMenuProps = {
 export const AccountMenu = (props: AccountMenuProps) => {
   const { accountState: state, onDisconnect, onOpenExplorer } = props;
 
+  if (
+    state.status === AccountStatusEnum.EnableTrading ||
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected
+  ) {
+    return (
+      <WalletMenu
+        address={state.address!}
+        onDisconnect={onDisconnect}
+        onOpenExplorer={onOpenExplorer}
+      />
+    );
+  }
+
   if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
       <Button
@@ -107,16 +120,6 @@ export const AccountMenu = (props: AccountMenuProps) => {
 
     //   </Tooltip>
     // );
-  }
-
-  if (state.status === AccountStatusEnum.EnableTrading) {
-    return (
-      <WalletMenu
-        address={state.address!}
-        onDisconnect={onDisconnect}
-        onOpenExplorer={onOpenExplorer}
-      />
-    );
   }
 };
 

@@ -3,6 +3,7 @@ import { useAssetsHistoryData } from "../shared/useAssetHistory";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { useOverviewContext } from "../providers/overviewCtx";
 import { useMemo } from "react";
+import { useAccount } from "@orderly.network/hooks";
 
 export const useAssetsLineChartScript = () => {
   // const assetHistory = useAssetsHistoryData("portfolio_asset_history_period", {
@@ -12,9 +13,13 @@ export const useAssetsLineChartScript = () => {
   const assetHistory = useOverviewContext();
 
   const { wrongNetwork } = useAppContext();
+  const { state } = useAccount();
 
   const filteredData = useDataTap(assetHistory.data, {
-    accountStatus: AccountStatusEnum.EnableTrading,
+    accountStatus:
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+        ? AccountStatusEnum.EnableTradingWithoutConnected
+        : AccountStatusEnum.EnableTrading,
     fallbackData: assetHistory.createFakeData(
       {
         account_value: 0,

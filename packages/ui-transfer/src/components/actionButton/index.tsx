@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Box, Button, ButtonProps } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { NetworkId } from "@orderly.network/types";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { DepositAction } from "../../types";
 
 export type ActionButtonProps = {
@@ -54,6 +54,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
   return (
     <Box className="oui-w-full lg:oui-w-auto lg:oui-min-w-[184px]">
       <AuthGuard
+        status={AccountStatusEnum.EnableTrading}
         networkId={networkId}
         buttonProps={{
           fullWidth: true,

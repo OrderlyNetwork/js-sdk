@@ -589,7 +589,7 @@ const Items: FC<{
   return (
     <div className="oui-flex oui-gap-6">
       {props.elements.map((Element, index) => (
-        <>{Element}</>
+        <div key={index}>{Element}</div>
       ))}
     </div>
   );

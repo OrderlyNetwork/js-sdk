@@ -179,10 +179,8 @@ export const SymbolInfo = (props: {
       list.push(
         <Tooltip
           className="oui-min-w-[204px] oui-bg-base-5"
-          tooltipProps={{
-            arrow: {
-              className: "oui-fill-base-5",
-            },
+          arrow={{
+            className: "oui-fill-base-5",
           }}
           // @ts-ignore
           content={
@@ -354,10 +352,8 @@ export const NetPnL = (props: {
           </Flex>
         }
         className="oui-min-w-[204px] oui-bg-base-5"
-        tooltipProps={{
-          arrow: {
-            className: "oui-fill-base-5",
-          },
+        arrow={{
+          className: "oui-fill-base-5",
         }}
       >
         <div>{text()}</div>

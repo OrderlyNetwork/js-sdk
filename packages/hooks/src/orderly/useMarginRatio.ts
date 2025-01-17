@@ -44,10 +44,14 @@ export const useMarginRatio = (): MarginRatioReturn => {
   }, [rows, markPrices, totalCollateral]);
 
   const currentLeverage = useMemo(() => {
-    if (state.status < AccountStatusEnum.EnableTrading) {
-      return null;
+    if (
+      state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+    ) {
+      return account.currentLeverage(marginRatio);
     }
-    return account.currentLeverage(marginRatio);
+
+    return null;
   }, [marginRatio, state.status]);
 
   // MMR

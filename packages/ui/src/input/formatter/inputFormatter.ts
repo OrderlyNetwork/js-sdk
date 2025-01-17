@@ -1,6 +1,8 @@
 export type InputFormatterOptions = {
   // dp: number;
   isFocused: boolean;
+  // originValue
+  originValue?: string;
 };
 
 type InputFormatterFn = () => InputFormatter;
