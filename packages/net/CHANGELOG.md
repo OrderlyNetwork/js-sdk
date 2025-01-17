@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.0.2-alpha.0
+
+### Patch Changes
+
+- update
+
 ## 2.0.1
 
 ### Patch Changes

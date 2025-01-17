@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.2-alpha.0
+
+### Patch Changes
+
+- update
+
 ## 1.0.1
 
 ### Patch Changes
