@@ -4,7 +4,7 @@ import {
   CommuntiyDiscordIcon,
   CommuntiyTelegramIcon,
   CommuntiyXIcon,
-  OrderlyNetworkTextIcon,
+  OrderlyTextIcon,
   SignalIcon,
 } from "../icons/index";
 import { FooterReturns } from "./footer.script";
@@ -89,7 +89,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
         <Text intensity={54} size="2xs">
           Powered by
         </Text>
-        <OrderlyNetworkTextIcon />
+        <OrderlyTextIcon />
       </Flex>
     </Flex>
   );
