@@ -3,6 +3,7 @@ import { useConnection } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChainNamespace } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils/src";
+import { Connection } from "@solana/web3.js";
 
 const getPrivyEmbeddedWalletChainId = (chainId: string) => {
   if (!chainId) {
@@ -20,7 +21,14 @@ export function usePrivyWallet() {
     wallets: walletsSOL,
     createWallet: createSolanaWallet,
   } = useSolanaWallets();
-  const { connection } = useConnection();
+  // const { connection } = useConnection();
+  // mainnetRpc: 'https://camilla-zmlqv1-fast-mainnet.helius-rpc.com',
+  // devnetRpc: 'https://caryl-ukn4ci-fast-devnet.helius-rpc.com',
+  const connection = useMemo(() => {
+
+    return new Connection('https://caryl-ukn4ci-fast-devnet.helius-rpc.com');
+    
+  }, [])
 
   const [walletEVM, setWalletEVM] = useState<any>();
   const [walletSOL, setWalletSOL] = useState<any>();
@@ -93,9 +101,10 @@ export function usePrivyWallet() {
       icon: "",
       provider: {
         signMessage: wallet.signMessage,
+        signTransaction: wallet.signTransaction,
         connection,
 
-        sendTransaction: wallet.signTransaction,
+        sendTransaction: wallet.sendTransaction,
       },
       accounts: [
         {

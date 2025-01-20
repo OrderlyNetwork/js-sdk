@@ -118,15 +118,16 @@ export function useWallet() {
       return;
     }
     if (connectorKey === 'privy') {
-      if (privyWalletEVM) {
-        setWallet(privyWalletEVM);
-        setConnectedChain(privyWalletEVM.chains[0])
-      }
-      // if (privyWalletSOL) {
-      //     setWallet(privyWalletSOL);
-      //     setConnectedChain(privyWalletSOL.chains[0])
-      //
+      // if (privyWalletEVM) {
+      //   setWallet(privyWalletEVM);
+      //   setConnectedChain(privyWalletEVM.chains[0])
       // }
+      if (privyWalletSOL) {
+        console.log('-- privy SOL wallet', privyWalletSOL);
+          setWallet(privyWalletSOL);
+          setConnectedChain(privyWalletSOL.chains[0])
+
+      }
     }
 
   }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet])
