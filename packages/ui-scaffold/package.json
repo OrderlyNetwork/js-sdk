@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-scaffold",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -19,6 +19,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@akamfoad/qr": "^0.4.0",
     "@date-fns/utc": "1.2.0",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",

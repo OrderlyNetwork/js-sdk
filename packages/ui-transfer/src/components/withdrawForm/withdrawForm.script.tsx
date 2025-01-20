@@ -5,6 +5,7 @@ import {
   useChains,
   useConfig,
   useEventEmitter,
+  useLocalStorage,
   usePositionStream,
   usePrivateQuery,
   useQuery,
@@ -50,6 +51,11 @@ export const useWithdrawForm = ({
   const [hintMessage, setHintMessage] = useState<string>();
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
+
+  const [selectedChainId] = useLocalStorage<number | undefined>(
+    "orderly_selected_chainId",
+    undefined
+  );
 
   const { data: balanceList } = useQuery<any>(`/v1/public/vault_balance`, {
     revalidateOnMount: true,
@@ -124,9 +130,14 @@ export const useWithdrawForm = ({
   );
 
   const currentChain = useMemo(() => {
-    if (!connectedChain) return null;
+    // if (!connectedChain) return null;
 
-    const chainId = praseChainIdToNumber(connectedChain.id);
+    const chainId = connectedChain
+      ? praseChainIdToNumber(connectedChain.id)
+      : parseInt(selectedChainId);
+
+    if (!chainId) return null;
+
     const chain = findByChainId(chainId);
 
     return {
@@ -134,7 +145,7 @@ export const useWithdrawForm = ({
       id: chainId,
       info: chain!,
     } as CurrentChain;
-  }, [connectedChain, findByChainId]);
+  }, [findByChainId, connectedChain, selectedChainId]);
 
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {

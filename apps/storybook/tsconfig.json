@@ -58,5 +58,5 @@
       "@orderly.network/ui-tpsl": ["../../packages/ui-tpsl/src"],
     }
   },
-  "include": ["src",".storybook"]
+  "include": ["src/**/*", ".storybook/**/*", "vite-env.d.ts"]
 }

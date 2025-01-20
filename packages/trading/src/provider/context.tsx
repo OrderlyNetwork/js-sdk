@@ -1,7 +1,6 @@
 import { createContext, PropsWithChildren, useContext } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { TradingPageState, TradingPageProps } from "../types/types";
-import { MEDIA_TABLET } from "@orderly.network/types";
 import { getBasicSymbolInfo } from "../utils/utils";
 
 export const TradingPageContext = createContext({} as TradingPageState);
@@ -18,7 +17,6 @@ export const TradingPageProvider = (
     <TradingPageContext.Provider
       value={{
         ...props,
-        tabletMediaQuery: MEDIA_TABLET,
         symbolInfo: {
           ...getBasicSymbolInfo(symbolInfo),
           symbol: props.symbol,

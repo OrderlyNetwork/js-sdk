@@ -102,8 +102,6 @@ export interface TradingPageState extends TradingPageProps {
     quote: string;
     symbol: string;
   };
-  /** default is  `(max-width: 768px)`*/
-  tabletMediaQuery?: string;
 }
 
 export interface TradingViewConfigInterface {

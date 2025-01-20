@@ -1,5 +1,4 @@
-import { ExtensionPosition } from "@orderly.network/ui";
-import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 import { AppLogos } from "../types";
 
 export type ThemeContextState = {
@@ -21,7 +20,6 @@ export const AppConfigProvider = (
     brokerName: string;
   }>
 ) => {
-  // const { appIcons } = props;
   return (
     <AppConfigContext.Provider value={props}>
       {props.children}

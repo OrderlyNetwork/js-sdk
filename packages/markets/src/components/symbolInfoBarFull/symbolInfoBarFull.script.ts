@@ -7,16 +7,16 @@ import {
 import { Decimal } from "@orderly.network/utils";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-export type UseTokenInfoBarFullScriptOptions = {
+export type UseSymbolInfoBarFullScriptOptions = {
   symbol: string;
 };
 
-export type UseTokenInfoBarFullScriptReturn = ReturnType<
-  typeof useTokenInfoBarFullScript
+export type UseSymbolInfoBarFullScriptReturn = ReturnType<
+  typeof useSymbolInfoBarFullScript
 >;
 
-export function useTokenInfoBarFullScript(
-  options: UseTokenInfoBarFullScriptOptions
+export function useSymbolInfoBarFullScript(
+  options: UseSymbolInfoBarFullScriptOptions
 ) {
   const { symbol } = options;
 

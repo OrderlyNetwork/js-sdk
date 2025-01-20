@@ -16,7 +16,7 @@ interface DesktopMarkPriceProps {
 
 export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
   const { markPrice = 0, lastPrice, asks, bids, symbolInfo } = props;
-  const { showTotal, tabletMediaQuery } = useOrderBookContext();
+  const { showTotal } = useOrderBookContext();
 
   return (
     <div className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-xs oui-relative oui-cursor-pointer oui-py-[6px]">
@@ -35,7 +35,6 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
         <MarkPriceView
           markPrice={markPrice}
           quote_dp={symbolInfo.quote_dp}
-          tabletMediaQuery={tabletMediaQuery}
         />
       </div>
       <div

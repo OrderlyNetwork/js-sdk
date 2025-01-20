@@ -1,16 +1,8 @@
-import {
-  API,
-  AccountStatusEnum,
-  AlgoOrderRootType,
-  OrderStatus,
-} from "@orderly.network/types";
 import { useMemo } from "react";
+import { API, AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 
 export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
   const formattedData = useMemo(() => {
-    // if (state.status < AccountStatusEnum.EnableTrading || !data) {
-    //     return [];
-    // }
     const _data = [];
 
     for (let index = 0; index < data.length; index++) {

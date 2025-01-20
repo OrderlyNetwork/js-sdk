@@ -31,6 +31,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
           "oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
         )}
         gapX={1}
+        ml={3}
         justify="center"
         itemAlign="center"
       >
@@ -55,6 +56,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         gapY={2}
         onClick={() => {
           props.onLayout?.(position);
+          setOpen(false);
         }}
         className="oui-group"
       >

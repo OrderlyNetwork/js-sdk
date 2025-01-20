@@ -35,7 +35,9 @@ export const useFirstTimeDeposit = () => {
     dp: 2,
   });
   const unavailable =
-    wrongNetwork || state.status < AccountStatusEnum.EnableTrading;
+    wrongNetwork ||
+    (state.status < AccountStatusEnum.EnableTrading &&
+      state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
   const getKeyMemo = useMemo(() => {
     const now = new Date();
     const ninetyDaysAgo = new Date();

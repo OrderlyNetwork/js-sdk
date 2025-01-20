@@ -1,5 +1,17 @@
 # @orderly.network/types
 
+## 2.0.2
+
+### Patch Changes
+
+- a3becba1a: update
+
+## 2.0.2-alpha.0
+
+### Patch Changes
+
+- update
+
 ## 2.0.1
 
 ### Patch Changes

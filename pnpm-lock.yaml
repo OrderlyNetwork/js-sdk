@@ -1702,6 +1702,9 @@ importers:
       '@uiw/react-split':
         specifier: ^5.9.3
         version: 5.9.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      jsqr:
+        specifier: ^1.4.0
+        version: 1.4.0
     devDependencies:
       '@types/react':
         specifier: ^18.3.2
@@ -2282,6 +2285,9 @@ importers:
 
   packages/ui-scaffold:
     dependencies:
+      '@akamfoad/qr':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@date-fns/utc':
         specifier: 1.2.0
         version: 1.2.0

@@ -1,9 +1,21 @@
-import { FC, createContext, PropsWithChildren, useContext, useState } from "react";
+import {
+  FC,
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useAppState } from "../hooks/useAppState";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useSettleEvent } from "../hooks/useSettleEvent";
 import { useWalletConnectError } from "../hooks/useWalletConnectError";
+import {
+  useRestrictedAreas,
+  RestrictedAreasReturns,
+  IRestrictedAreasParams,
+} from "@orderly.network/hooks";
+import { useLinkDevice } from "../hooks/useLinkDevice";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -18,6 +30,7 @@ type AppContextState = {
     state: { isTestnet: boolean; isWalletConnected: boolean }
   ) => void;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
+  restrictedInfo?: RestrictedAreasReturns;
 };
 
 const AppContext = createContext<AppContextState>({} as AppContextState);
@@ -31,12 +44,14 @@ export type AppStateProviderProps = {
     chainId: number,
     state: { isTestnet: boolean; isWalletConnected: boolean }
   ) => void;
+  restrictedInfo?: IRestrictedAreasParams;
 };
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
   const [currentChainId, setCurrentChainId] = useState<number | undefined>();
+  useLinkDevice();
 
   const { connectWallet, wrongNetwork } = useWalletStateHandle({
     // onChainChanged: props.onChainChanged,
@@ -46,6 +61,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   useWalletEvent();
   useSettleEvent();
   useWalletConnectError();
+  const restrictedInfo = useRestrictedAreas(props?.restrictedInfo ?? {});
 
   // const { networkStatus } = useAppState();
 
@@ -57,6 +73,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
         currentChainId,
         setCurrentChainId,
         onChainChanged: props.onChainChanged,
+        restrictedInfo,
       }}
     >
       {props.children}

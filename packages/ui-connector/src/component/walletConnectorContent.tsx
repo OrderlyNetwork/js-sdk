@@ -75,7 +75,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
     }
 
     return steps;
-  }, []);
+  }, [initAccountState]);
 
   const onEnableTrading = () => {
     setLoading(true);

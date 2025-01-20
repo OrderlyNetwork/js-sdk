@@ -17,6 +17,7 @@ import {
   ChainNamespace,
   NetworkId,
 } from "@orderly.network/types";
+import { getLinkDeviceData } from "./useLinkDevice";
 
 const WALLET_KEY = "orderly:wallet-info";
 const CHAIN_NAMESPACE = "orderly:chain-namespace";
@@ -71,7 +72,10 @@ export const useWalletStateHandle = (options: {
   }, [connectedWallet]);
 
   useEffect(() => {
-    if (!connectedChain) return;
+    if (!connectedChain) {
+      setUnsupported(false);
+      return;
+    }
 
     let isSupported = checkChainSupport(
       connectedChain.id,
@@ -121,8 +125,8 @@ export const useWalletStateHandle = (options: {
   useEffect(() => {
     if (
       connectedWallet === null &&
-      accountState.status > AccountStatusEnum.NotConnected
-      && !accountState.validating
+      accountState.status > AccountStatusEnum.NotConnected &&
+      !accountState.validating
     ) {
       account.disconnect();
       return;
@@ -131,11 +135,17 @@ export const useWalletStateHandle = (options: {
     if (unsupported || !connectedChain) return;
     if (isManualConnect.current) return;
 
+    const linkData = getLinkDeviceData();
+
     // updateAccount(currentWalletAddress!, connectedWallet!, currentChainId!);
     /**
      * switch account
      */
-    if (!!currentWalletAddress && currentWalletAddress !== account.address) {
+    if (
+      !!currentWalletAddress &&
+      currentWalletAddress !== account.address &&
+      !linkData
+    ) {
       account.setAddress(currentWalletAddress, {
         provider: connectedWallet?.provider,
         chain: {
@@ -178,8 +188,6 @@ export const useWalletStateHandle = (options: {
     unsupported,
   ]);
 
-  // console.log("🔗 wallet state handle", connectedWallet);
-
   /**
    * User manually connects to wallet
    */
@@ -212,7 +220,15 @@ export const useWalletStateHandle = (options: {
           if (!account) {
             throw new Error("account is not initialized");
           }
-          console.log('-- aaaaa wallet', wallet);
+          console.log("-- aaaaa wallet", wallet);
+          // clear link device data when connect wallt
+          if (
+            accountState.status ===
+            AccountStatusEnum.EnableTradingWithoutConnected
+          ) {
+            localStorage.removeItem("orderly_selected_chainId");
+            await account.disconnect();
+          }
           const status = await account.setAddress(wallet.accounts[0].address, {
             provider: wallet.provider,
             chain: {
@@ -225,7 +241,7 @@ export const useWalletStateHandle = (options: {
             },
             // label: ,
           });
-          console.log('-- xxxxxx status', status);
+          console.log("-- xxxxxx status", status);
 
           return { wallet, status, wrongNetwork: false };
         }

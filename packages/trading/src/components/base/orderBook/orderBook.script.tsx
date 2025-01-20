@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useTradingPageContext } from "../../../provider/context";
 import {
-  useMediaQuery,
   useOrderbookStream,
   useOrderStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { removeTrailingZeros } from "@orderly.network/utils";
-import { MEDIA_TABLET, OrderStatus } from "@orderly.network/types";
+import { OrderStatus } from "@orderly.network/types";
 import { getBasicSymbolInfo } from "../../../utils/utils";
+import { useScreen } from "@orderly.network/ui";
 
 const CELL_MAX = 30;
 const DEFAULT_CELL_HEIGHT = 20;
@@ -17,10 +16,9 @@ const SPACE = 104;
 
 export const useOrderBookScript = (props: {
   symbol: string;
-  tabletMediaQuery?: string;
   height?: number;
 }) => {
-  const { symbol, height, tabletMediaQuery = MEDIA_TABLET } = props;
+  const { symbol, height } = props;
   const symbolInfo = useSymbolsInfo()[props.symbol];
 
   const [cellHeight, setCellHeight] = useState(DEFAULT_CELL_HEIGHT);
@@ -77,7 +75,7 @@ export const useOrderBookScript = (props: {
     return allDepths?.map((e) => removeTrailingZeros(e)) || [];
   }, [allDepths, quote_dp]);
 
-  const isMWeb = useMediaQuery(tabletMediaQuery);
+  const { isMobile } = useScreen();
 
   return {
     level,
@@ -95,7 +93,7 @@ export const useOrderBookScript = (props: {
     onDepthChange,
     pendingOrders,
     symbolInfo: getBasicSymbolInfo(symbolInfo),
-    isMWeb,
+    isMobile,
   };
 };
 

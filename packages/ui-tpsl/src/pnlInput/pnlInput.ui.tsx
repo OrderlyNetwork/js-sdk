@@ -61,6 +61,7 @@ export const PNLInput = (props: PNLInputProps) => {
         // inputFormatter.numberFormatter,
         props.formatter({ dp: quote_dp, mode }),
         inputFormatter.currencyFormatter,
+        inputFormatter.decimalPointFormatter,
       ]}
       // className={color}
       classNames={{

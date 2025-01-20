@@ -161,11 +161,16 @@ export const TPSLTriggerPrice: FC<{
 
   if (props.tooltip) {
     // @ts-ignore
-    return <Tooltip content={pnl} className="oui-bg-base-5" tooltipProps={{
-      arrow: {
-        className: "oui-fill-base-5"
-      }
-    }}>{content}</Tooltip>;
+    return (
+      <Tooltip
+        // @ts-ignore
+        content={pnl}
+        className="oui-bg-base-5"
+        arrow={{ className: "oui-fill-base-5" }}
+      >
+        {content}
+      </Tooltip>
+    );
   }
 
   return content;
@@ -196,7 +201,6 @@ const TriggerPriceItem: FC<{
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
 
   // console.log("trigger price item", "dp", symbolInfo.quote_dp);
-  
 
   return (
     <div className="oui-flex oui-items-center">

@@ -53,6 +53,9 @@
       ],
       "@orderly.network/ui-order": [
         "../ui-order/src"
+      ],
+      "@orderly.network/ui-scaffold": [
+        "../ui-scaffold/src"
       ]
     }
   }

@@ -17,7 +17,14 @@ export type SideMarketsProps = UseSideMarketsScriptReturn & {
 };
 
 export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
-  const { collapsed, onCollapse, activeTab, onTabChange, className } = props;
+  const {
+    collapsable,
+    collapsed,
+    onCollapse,
+    activeTab,
+    onTabChange,
+    className,
+  } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
@@ -63,7 +70,11 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       height="100%"
       width="100%"
     >
-      <SideMarketsHeader collapsed={collapsed} onCollapse={onCollapse} />
+      <SideMarketsHeader
+        collapsable={collapsable}
+        collapsed={collapsed}
+        onCollapse={onCollapse}
+      />
       <Box
         width="100%"
         className={cn(
@@ -79,14 +90,21 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
 type SideMarketsHeaderProps = UseSideMarketsScriptOptions;
 
 export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
-  const { collapsed, onCollapse } = props;
+  const { collapsable, collapsed, onCollapse } = props;
+
+  const cls = cn(
+    "oui-text-base-contrast-36",
+    collapsable
+      ? "oui-cursor-pointer hover:oui-text-base-contrast-80"
+      : "oui-cursor-not-allowed"
+  );
 
   if (collapsed) {
     return (
       <ExpandIcon
-        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer"
+        className={cls}
         onClick={() => {
-          onCollapse?.(false);
+          collapsable && onCollapse?.(false);
         }}
       />
     );
@@ -98,9 +116,9 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
         Markets
       </Text>
       <CollapseIcon
-        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80 oui-cursor-pointer"
+        className={cls}
         onClick={() => {
-          onCollapse?.(true);
+          collapsable && onCollapse?.(true);
         }}
       />
     </Flex>
