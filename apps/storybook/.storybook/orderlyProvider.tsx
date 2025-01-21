@@ -14,8 +14,9 @@ import {
   SolanaMobileWalletAdapter,
 } from "@solana-mobile/wallet-adapter-mobile";
 import {
+  LedgerWalletAdapter,
   PhantomWalletAdapter,
-  SolflareWalletAdapter,
+  SolflareWalletAdapter
 } from "@solana/wallet-adapter-wallets";
 
 const network = WalletAdapterNetwork.Devnet;
@@ -34,6 +35,7 @@ const handleSolanaError = (error: WalletError, adapter?: Adapter) => {
 const wallets = [
   new PhantomWalletAdapter(),
   new SolflareWalletAdapter(),
+  new LedgerWalletAdapter(),
   new SolanaMobileWalletAdapter({
     addressSelector: createDefaultAddressSelector(),
     appIdentity: {
