@@ -458,6 +458,10 @@ export class Account {
       if (`${e}`.includes("user rejected action")) {
         throw new Error("User rejected the request.");
       }
+      if (`${e}`.includes("Ledger")) {
+        throw new Error("Ledger");
+      }
+
 
       throw e;
     }

@@ -117,7 +117,7 @@ export function registerAccountMessage(
   inputs: RegisterAccountInputs & {
     chainId: number;
   }
-) {
+){
   const { chainId, registrationNonce, brokerId, timestamp } = inputs;
 
   const message = {

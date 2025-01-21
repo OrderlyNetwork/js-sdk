@@ -99,6 +99,23 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         (reject) => {
           setLoading(false);
           if (reject === -1) return;
+          console.log('-- enable trading reject', reject.message);
+          if (reject.message === 'isLedger') {
+            modal.confirm({
+              title: 'Sign Message Failed',
+              content: "Are you using Ledger Wallet?",
+              footer: '<div>ok</div>',
+              onOk: async () => {
+                console.log('-- use ledger', true);
+              },
+              onCancel: async () =>{
+                console.log('-- use ledger', false);
+              },
+            }).then(res => {
+              console.log('-- dialog res', res);
+            });
+
+          }
           toast.error(paseErrorMsg(reject));
         }
       )

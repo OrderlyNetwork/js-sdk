@@ -18,6 +18,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
   const { setVisible: setModalVisible, visible } = useWalletModal();
   const {
     signMessage,
+    signTransaction,
     sendTransaction,
     publicKey,
     wallet: solanaWallet,
@@ -100,6 +101,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         solanaPromiseRef.current.connectResolve({
           userAddress: publicKey.toBase58(),
           signMessage,
+          signTransaction,
           sendTransaction,
         });
       }
@@ -110,7 +112,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
       solanaPromiseRef.current.walletSelect,
       solanaPromiseRef.current.connect,
     ])
-      .then(([wallet, { userAddress, signMessage, sendTransaction }]) => {
+      .then(([wallet, { userAddress, signMessage,signTransaction, sendTransaction }]) => {
         // console.log('-- connect sol res',{
         //   wallet,
         //   userAddress, signMessage, sendTransaction
@@ -121,6 +123,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
           provider: {
             signMessage: signMessage,
             connection,
+            signTransaction,
             sendTransaction,
           },
           accounts: [
@@ -207,6 +210,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         solanaPromiseRef.current.connectResolve({
           userAddress: publicKey?.toBase58(),
           signMessage,
+          signTransaction,
           sendTransaction,
         });
       }
@@ -218,8 +222,9 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
       icon: "",
       provider: {
         signMessage: signMessage,
-        connection,
+        signTransaction,
         sendTransaction,
+        connection,
       },
       accounts: [
         {
@@ -238,6 +243,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
     publicKey,
     solanaWallet,
     signMessage,
+    signTransaction,
     isManual,
     connection,
     sendTransaction,
