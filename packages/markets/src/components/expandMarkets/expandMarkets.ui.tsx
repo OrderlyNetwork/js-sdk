@@ -62,13 +62,12 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         value={activeTab}
         onValueChange={onTabChange}
         classNames={{
-          tabsList: cn(
-            "oui-my-[6px] oui-mx-3 ",
-            "oui-overflow-x-scroll oui-hide-scrollbar"
-          ),
+          tabsList: cn("oui-my-[6px]"),
           tabsContent: "oui-h-full",
+          scrollIndicator: "oui-mx-3",
         }}
         className={cls}
+        showScrollIndicator
       >
         <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
           <div className={cls}>
