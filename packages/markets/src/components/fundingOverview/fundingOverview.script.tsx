@@ -82,7 +82,7 @@ export const useFundingOverviewScript = () => {
   }, [marketData, historyData, getPositiveRates]);
 
   const filteredData = useMemo(() => {
-    return searchBySymbol(processedData, searchValue);
+    return searchBySymbol(processedData, searchValue, "base-type");
   }, [processedData, searchValue, pagination]);
 
   const dataSource = useMemo(
