@@ -144,43 +144,18 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
 
       const userPublicKey = new PublicKey(this.address);
 
-      // 设置交易的参数
       transaction.feePayer = userPublicKey;
 
-      // 创建一个全0的32字节 blockhash
       const zeroHash = new Uint8Array(32).fill(0);
       transaction.recentBlockhash = new PublicKey(zeroHash).toString();
 
-      // 打印交易的详细结构
-      console.log("Transaction structure before signing:");
-      console.log("Number of instructions:", transaction.instructions.length);
-      transaction.instructions.forEach((instruction, index) => {
-        console.log(`Instruction ${index}:`, {
-          programId: instruction.programId.toBase58(),
-          keys: instruction.keys,
-          data: this.uint8ArrayToHexString(instruction.data),
-        });
-      });
-
-      // 打印序列化的交易数据
-      const serializedTx = transaction
-        .serialize({ requireAllSignatures: false })
-        .toString("hex");
-      console.log("Serialized transaction (before signing):", serializedTx);
 
       // 签名交易
       const signedTransaction = await this._provider.signTransaction(
         transaction
       );
 
-      console.log("Signed transaction:", signedTransaction);
 
-      // 打印签名后交易的详细结构
-      console.log("Transaction structure after signing:");
-      console.log(
-        "Number of instructions:",
-        signedTransaction.instructions.length
-      );
       signedTransaction.instructions.forEach(
         (instruction: TransactionInstruction, index: number) => {
           console.log(`Instruction ${index}:`, {
@@ -190,18 +165,9 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
           });
         }
       );
-
-      // 打印序列化的已签名交易数据
-      const serializedSignedTx = signedTransaction.serialize().toString("hex");
-      console.log(
-        "Serialized transaction (after signing):",
-        serializedSignedTx
-      );
-
       // 获取交易的签名
       const signature = signedTransaction.signatures[0].signature;
       if (signature) {
-        console.log("Signature:", this.uint8ArrayToHexString(signature));
         return this.uint8ArrayToHexString(signature);
       } else {
         console.log("-- sign message error", signature);
@@ -240,7 +206,6 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     });
     const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
-    console.log("-- verify contract", inputs.verifyContract);
 
     return {
       message: {
@@ -264,7 +229,6 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       ...inputs,
       chainId: this.chainId,
     });
-    console.log("-- generateAddOrderlyKeyMessage", inputs);
     const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
     return {
@@ -279,7 +243,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   async generateSettleMessage(
     inputs: SettleInputs
   ): Promise<Message & { domain: SignatureDomain }> {
-    const [message, toSignatureMessage] = await settleMessage({
+    const [message, toSignatureMessage] = settleMessage({
       ...inputs,
       chainId: this.chainId,
     });
