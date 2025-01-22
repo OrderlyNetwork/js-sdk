@@ -144,7 +144,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         };
         if (wallet.adapter.name ==='Ledger') {
           if (!ledgerWallet.includes(userAddress)) {
-            ledgerWallet.push({ userAddress });
+            ledgerWallet.push( userAddress );
             setLedgerWallet([...ledgerWallet]);
           }
         }
@@ -251,7 +251,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
     });
     if (solanaWallet.adapter.name ==='Ledger') {
       if (!ledgerWallet.includes(userAddress)) {
-        ledgerWallet.push({ userAddress });
+        ledgerWallet.push( userAddress );
         setLedgerWallet([...ledgerWallet]);
       }
     }
