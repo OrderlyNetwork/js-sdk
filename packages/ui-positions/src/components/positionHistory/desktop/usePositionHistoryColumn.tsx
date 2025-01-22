@@ -268,10 +268,10 @@ export const Quantity = (props: { record: PositionHistoryExt }) => {
       itemAlign={"start"}
       className="oui-overflow-hidden oui-whitespace-nowrap oui-text-ellipsis"
     >
-      <Text.numeral dp={base_dp}>
+      <Text.numeral dp={base_dp} padding={false}>
         {Math.abs(record.closed_position_qty)}
       </Text.numeral>
-      <Text.numeral dp={base_dp} className="oui-truncate">
+      <Text.numeral dp={base_dp} padding={false} className="oui-truncate">
         {Math.abs(record.max_position_qty)}
       </Text.numeral>
       {/* <Text className="oui-truncate">{`${record.symbol.split("_")[1]}`}</Text> */}
