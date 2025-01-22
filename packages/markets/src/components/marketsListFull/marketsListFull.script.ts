@@ -30,7 +30,7 @@ export const useMarketsListFullScript = (
 
   const dataSource = useMemo(() => {
     const list = getSortedList(data);
-    return searchBySymbol(list, searchValue);
+    return searchBySymbol(list, searchValue, "base-type");
   }, [data, getSortedList, searchValue]);
 
   useEffect(() => {
