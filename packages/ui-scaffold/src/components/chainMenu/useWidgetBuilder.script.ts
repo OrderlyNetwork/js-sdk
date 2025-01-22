@@ -9,21 +9,25 @@ import { NetworkId } from "@orderly.network/types";
 import { useMemo, useCallback, useEffect, useState } from "react";
 import { useAppContext } from "@orderly.network/react-app";
 
-const KEY = 'orderly_selected_chains'
-const MAX_STORAGE_CHAINS = 6
+const KEY = "orderly_selected_chains";
+const MAX_STORAGE_CHAINS = 6;
 
 export const useChainMenuBuilderScript = () => {
   const [chains] = useChains();
   const { state } = useAccount();
   const { setChain, connectedChain } = useWalletConnector();
-  const [storageChainsIds, setStorageChainsIds] = useLocalStorage<string[]>(KEY, []);
-  const { wrongNetwork, onChainChanged, currentChainId, setCurrentChainId } = useAppContext();
+  const [storageChainsIds, setStorageChainsIds] = useLocalStorage<string[]>(
+    KEY,
+    []
+  );
+  const { wrongNetwork, onChainChanged, currentChainId, setCurrentChainId } =
+    useAppContext();
 
   const networkId = useConfig("networkId") as NetworkId;
 
   useEffect(() => {
     if (connectedChain) {
-      setCurrentChainId(
+      setCurrentChainId?.(
         typeof connectedChain.id === "number"
           ? connectedChain.id
           : parseInt(connectedChain.id)
@@ -35,11 +39,11 @@ export const useChainMenuBuilderScript = () => {
           ? chains.mainnet?.[0]?.network_infos
           : chains.testnet?.[0]?.network_infos;
       if (!firstChain) return;
-      setCurrentChainId(firstChain.chain_id);
+      setCurrentChainId?.(firstChain.chain_id);
     }
   }, [connectedChain, chains, currentChainId, networkId]);
 
-  const _chains = useMemo(()=>{
+  const _chains = useMemo(() => {
     return {
       mainnet: chains.mainnet.map((chain) => ({
         name: chain.network_infos.name,
@@ -53,17 +57,27 @@ export const useChainMenuBuilderScript = () => {
         lowestFee: chain.network_infos.bridgeless,
         isTestnet: true,
       })),
-    }
-  },[chains])
+    };
+  }, [chains]);
 
-  const storageChains = useMemo(() => _chains?.mainnet?.filter(item => storageChainsIds.includes(item.id)), [storageChainsIds, _chains]) || []; 
-  
-  const saveChainIdToLocalStorage = useCallback((id: number) => {
-    if(!_chains.mainnet?.filter(item => item.id === id)) return 
-    let _storageChains = storageChainsIds?.filter((storageChainsId: number) => storageChainsId !== id)
-    _storageChains = [id, ..._storageChains].slice(0, MAX_STORAGE_CHAINS)
-    setStorageChainsIds(_storageChains)
-  }, [_chains.mainnet, storageChainsIds, setStorageChainsIds]);
+  const storageChains =
+    useMemo(
+      () =>
+        _chains?.mainnet?.filter((item) => storageChainsIds.includes(item.id)),
+      [storageChainsIds, _chains]
+    ) || [];
+
+  const saveChainIdToLocalStorage = useCallback(
+    (id: number) => {
+      if (!_chains.mainnet?.filter((item) => item.id === id)) return;
+      let _storageChains = storageChainsIds?.filter(
+        (storageChainsId: number) => storageChainsId !== id
+      );
+      _storageChains = [id, ..._storageChains].slice(0, MAX_STORAGE_CHAINS);
+      setStorageChainsIds(_storageChains);
+    },
+    [_chains.mainnet, storageChainsIds, setStorageChainsIds]
+  );
 
   const onChainChange = async (chain: { id: number; isTestnet: boolean }) => {
     // if (!connectedChain) return;
@@ -84,8 +98,7 @@ export const useChainMenuBuilderScript = () => {
         isWalletConnected: false,
       });
     }
-    saveChainIdToLocalStorage(chain.id)
-
+    saveChainIdToLocalStorage(chain.id);
   };
 
   return {
