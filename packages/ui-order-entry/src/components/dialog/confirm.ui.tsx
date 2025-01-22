@@ -145,7 +145,7 @@ export const OrderConfirmDialog = (props: Props) => {
           >
             {order.tp_trigger_price && (
               <Flex justify={"between"}>
-                <Text>TP Price</Text>
+                <Text>TP Price (Mark)</Text>
                 <Text.numeral
                   unit={"USDC"}
                   rule={"price"}
@@ -160,7 +160,7 @@ export const OrderConfirmDialog = (props: Props) => {
             )}
             {order.sl_trigger_price && (
               <Flex justify={"between"}>
-                <Text>SL Price</Text>
+                <Text>SL Price (Mark)</Text>
                 <Text.numeral
                   unit={"USDC"}
                   rule={"price"}
