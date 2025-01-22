@@ -105,7 +105,7 @@ export const useAccountMenu = (): any => {
   }, [state, connectedChain]);
 
   const onDisconnect = async () => {
-    localStorage.removeItem("orderly_selected_chainId");
+    localStorage.removeItem("orderly_link_device");
     await disconnect({
       label: state.connectWallet?.name,
     });
