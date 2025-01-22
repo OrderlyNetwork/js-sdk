@@ -143,6 +143,11 @@ export const useAssetViewScript = () => {
           );
           return Promise.reject(e);
         }
+        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
+          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        }
+
+
       })
       .then((res) => {
         toast.success("Settlement requested");

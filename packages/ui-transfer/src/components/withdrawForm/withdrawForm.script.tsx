@@ -217,6 +217,10 @@ export const useWithdrawForm = ({
             "Settlement is only allowed once every 10 minutes. Please try again later."
           );
         }
+        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
+          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        }
+
         if (e.message.indexOf("user rejected") !== -1) {
           toast.error("REJECTED_TRANSACTION");
         }
@@ -284,6 +288,11 @@ export const useWithdrawForm = ({
           toast.error("REJECTED_TRANSACTION");
           return;
         }
+        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
+          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+          return;
+        }
+
         toast.error(e.message);
       })
       .finally(() => {

@@ -1,32 +1,38 @@
 import { SolanaAdapterOption, SolanaWalletProvider } from "./types";
 import {
   AddOrderlyKeyInputs,
-  BaseWalletAdapter, Message, RegisterAccountInputs, SettleInputs, SignatureDomain, WithdrawInputs
+  BaseWalletAdapter,
+  Message,
+  RegisterAccountInputs,
+  SettleInputs,
+  SignatureDomain,
+  WithdrawInputs,
 } from "@orderly.network/core";
-import {API, MaxUint256, ChainNamespace} from "@orderly.network/types";
+import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
 import * as ed from "@noble/ed25519";
 import { encode as bs58encode, decode as bs58Decode } from "bs58";
 import {
-  addOrderlyKeyMessage, deposit,
-  encodeLzMessage, getDepositQuoteFee,
+  addOrderlyKeyMessage,
+  checkIsLedgerWallet,
+  deposit,
+  encodeLzMessage,
+  getDepositQuoteFee,
   MsgType,
   registerAccountMessage,
   settleMessage,
-  withdrawMessage
+  withdrawMessage,
 } from "./helper";
 import { bytesToHex } from "ethereum-cryptography/utils";
 import { getAccount } from "@solana/spl-token";
-import {
-  getUSDCAccounts,
-} from "./solana.util";
+import { getUSDCAccounts } from "./solana.util";
 import {
   PublicKey,
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
+
 class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> {
   chainNamespace: ChainNamespace = ChainNamespace.solana;
-
 
   private _address!: string;
   private _chainId!: number;
@@ -83,17 +89,23 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
 
     return secretKey;
   }
+
   uint8ArrayToHexString(uint8Array: Uint8Array): string {
     return Array.from(uint8Array)
-      .map(byte => byte.toString(16).padStart(2, '0'))
-      .join('');
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
   }
 
-  async signMessage(message: Uint8Array, isLedger?:boolean): Promise<string>{
-    console.log('-- isledger',isLedger);
-    if (isLedger) {
-      // todo
+  async signMessage(message: Uint8Array): Promise<string> {
+    const isLedger = checkIsLedgerWallet(this._address);
+    // if (!isLedger) {
+    //   console.log("-- test error");
+    //   throw new Error(
+    //     "xxx Signing off chain messages with Ledger is not yet supported"
+    //   );
+    // }
 
+    if (isLedger) {
       // 创建一个 transaction
       const transaction = new Transaction();
 
@@ -101,8 +113,10 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       transaction.add(
         new TransactionInstruction({
           keys: [],
-          programId: new PublicKey('ComputeBudget111111111111111111111111111111'),
-          data: new Uint8Array([3, 0, 0, 0, 0, 0, 0, 0, 0]) as Buffer  // 第一个字节是指令类型(3)，后面8字节是值(0)
+          programId: new PublicKey(
+            "ComputeBudget111111111111111111111111111111"
+          ),
+          data: new Uint8Array([3, 0, 0, 0, 0, 0, 0, 0, 0]) as Buffer, // 第一个字节是指令类型(3)，后面8字节是值(0)
         })
       );
 
@@ -110,8 +124,10 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       transaction.add(
         new TransactionInstruction({
           keys: [],
-          programId: new PublicKey('ComputeBudget111111111111111111111111111111'),
-          data: new Uint8Array([2, 0, 0, 0, 0]) as Buffer  // 第一个字节是指令类型(2)，后面4字节是值(0)
+          programId: new PublicKey(
+            "ComputeBudget111111111111111111111111111111"
+          ),
+          data: new Uint8Array([2, 0, 0, 0, 0]) as Buffer, // 第一个字节是指令类型(2)，后面4字节是值(0)
         })
       );
 
@@ -119,7 +135,9 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       transaction.add(
         new TransactionInstruction({
           keys: [],
-          programId: new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr'),
+          programId: new PublicKey(
+            "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+          ),
           data: message as Buffer,
         })
       );
@@ -140,141 +158,142 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
         console.log(`Instruction ${index}:`, {
           programId: instruction.programId.toBase58(),
           keys: instruction.keys,
-          data: this.uint8ArrayToHexString(instruction.data)
+          data: this.uint8ArrayToHexString(instruction.data),
         });
       });
 
       // 打印序列化的交易数据
-      const serializedTx = transaction.serialize({requireAllSignatures: false}).toString('hex');
+      const serializedTx = transaction
+        .serialize({ requireAllSignatures: false })
+        .toString("hex");
       console.log("Serialized transaction (before signing):", serializedTx);
 
       // 签名交易
-      const signedTransaction = await this._provider.signTransaction(transaction);
+      const signedTransaction = await this._provider.signTransaction(
+        transaction
+      );
 
       console.log("Signed transaction:", signedTransaction);
 
       // 打印签名后交易的详细结构
       console.log("Transaction structure after signing:");
-      console.log("Number of instructions:", signedTransaction.instructions.length);
-      signedTransaction.instructions.forEach((instruction: TransactionInstruction, index: number) => {
-        console.log(`Instruction ${index}:`, {
-          programId: instruction.programId.toBase58(),
-          keys: instruction.keys,
-          data: this.uint8ArrayToHexString(instruction.data)
-        });
-      });
+      console.log(
+        "Number of instructions:",
+        signedTransaction.instructions.length
+      );
+      signedTransaction.instructions.forEach(
+        (instruction: TransactionInstruction, index: number) => {
+          console.log(`Instruction ${index}:`, {
+            programId: instruction.programId.toBase58(),
+            keys: instruction.keys,
+            data: this.uint8ArrayToHexString(instruction.data),
+          });
+        }
+      );
 
       // 打印序列化的已签名交易数据
-      const serializedSignedTx = signedTransaction.serialize().toString('hex');
-      console.log("Serialized transaction (after signing):", serializedSignedTx);
+      const serializedSignedTx = signedTransaction.serialize().toString("hex");
+      console.log(
+        "Serialized transaction (after signing):",
+        serializedSignedTx
+      );
 
       // 获取交易的签名
       const signature = signedTransaction.signatures[0].signature;
       if (signature) {
         console.log("Signature:", this.uint8ArrayToHexString(signature));
         return this.uint8ArrayToHexString(signature);
-      } else{
-        console.log('-- sign message error', signature);
-        throw new Error('Unsupported signature');
+      } else {
+        console.log("-- sign message error", signature);
+        throw new Error("Unsupported signature");
       }
-
     }
     const signRes = await this._provider.signMessage(message);
-    return  '0x' + bytesToHex(signRes);
+    return "0x" + bytesToHex(signRes);
   }
 
-  async generateRegisterAccountMessage(inputs: RegisterAccountInputs): Promise<Message> {
+  async generateRegisterAccountMessage(
+    inputs: RegisterAccountInputs
+  ): Promise<Message> {
     const [message, toSignatureMessage] = registerAccountMessage({
       ...inputs,
       chainId: this.chainId,
     });
 
-    const signature = await this.signMessage(toSignatureMessage as Uint8Array, true)
+    const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
     return {
       message: {
         ...message,
-        chainType: "SOL"
+        chainType: "SOL",
       },
       signatured: signature,
     };
   }
 
-  async generateWithdrawMessage(inputs: WithdrawInputs): Promise<Message & {domain: SignatureDomain}> {
-    const [message, toSignatureMessage] =withdrawMessage({
+  async generateWithdrawMessage(
+    inputs: WithdrawInputs
+  ): Promise<Message & { domain: SignatureDomain }> {
+    const [message, toSignatureMessage] = withdrawMessage({
       ...inputs,
       chainId: this.chainId,
     });
-    const signature = await this.signMessage(toSignatureMessage as Uint8Array, true)
+    const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
-    console.log('-- verify contract', inputs.verifyContract);
-
-
+    console.log("-- verify contract", inputs.verifyContract);
 
     return {
       message: {
         ...message,
-        chainType: "SOL"
+        chainType: "SOL",
       },
       domain: {
-        name:'',
-        version:'',
-        chainId:this.chainId,
-        verifyingContract:inputs.verifyContract!,
+        name: "",
+        version: "",
+        chainId: this.chainId,
+        verifyingContract: inputs.verifyContract!,
       },
       signatured: signature,
     };
   }
 
-  async generateAddOrderlyKeyMessage(inputs: AddOrderlyKeyInputs): Promise<Message> {
+  async generateAddOrderlyKeyMessage(
+    inputs: AddOrderlyKeyInputs
+  ): Promise<Message> {
     const [message, toSignatureMessage] = addOrderlyKeyMessage({
       ...inputs,
       chainId: this.chainId,
     });
-    console.log('-- generateAddOrderlyKeyMessage', inputs);
-    try {
+    console.log("-- generateAddOrderlyKeyMessage", inputs);
+    const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
-      console.log('-- test error');
-      // Signing off chain messages with Ledger is not yet supported.
-      const signature = await this.signMessage(toSignatureMessage as Uint8Array, true);
-
-      return {
-        message: {
-          ...message,
-          chainType: "SOL"
-        },
-        signatured: signature,
-      };
-    } catch (e) {
-      console.log('--  sign message error e', e);
-      if (e && e instanceof Error) {
-        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported')) {
-          throw new Error('isLedger');
-        }
-      }
-      throw e;
-
-    }
-
-
+    return {
+      message: {
+        ...message,
+        chainType: "SOL",
+      },
+      signatured: signature,
+    };
   }
 
-  async generateSettleMessage(inputs: SettleInputs): Promise<Message & {domain: SignatureDomain}> {
+  async generateSettleMessage(
+    inputs: SettleInputs
+  ): Promise<Message & { domain: SignatureDomain }> {
     const [message, toSignatureMessage] = await settleMessage({
       ...inputs,
       chainId: this.chainId,
     });
-    const signature = await this.signMessage(toSignatureMessage as Uint8Array, true)
+    const signature = await this.signMessage(toSignatureMessage as Uint8Array);
     return {
       message: {
         ...message,
-        chainType: "SOL"
+        chainType: "SOL",
       },
       domain: {
-        name:'',
-        version:'',
+        name: "",
+        version: "",
         chainId: this.chainId,
-        verifyingContract:inputs.verifyContract!,
+        verifyingContract: inputs.verifyContract!,
       },
       signatured: signature,
     };
@@ -284,63 +303,65 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     return BigInt(0);
   }
 
-  async call(address: string,
-             method: string,
-             params: any[],
-             options?: {
-               abi: any;
-             }) {
+  async call(
+    address: string,
+    method: string,
+    params: any[],
+    options?: {
+      abi: any;
+    }
+  ) {
     // console.log('-- solanan call', {
     //   address,
     //   method,
     //   params,
     //   options,
     // })
-    if (method === 'balanceOf') {
-
+    if (method === "balanceOf") {
       const usdcPublicKey = new PublicKey(address);
       const userPublicKey = new PublicKey(this._address);
-      const userUSDCAccount = getUSDCAccounts(usdcPublicKey,userPublicKey);
-      const usdcamount = await getAccount(this._provider.connection,userUSDCAccount, 'confirmed');
+      const userUSDCAccount = getUSDCAccounts(usdcPublicKey, userPublicKey);
+      const usdcamount = await getAccount(
+        this._provider.connection,
+        userUSDCAccount,
+        "confirmed"
+      );
       return usdcamount.amount;
     }
-    if (method === 'allowance') {
+    if (method === "allowance") {
       return MaxUint256;
     }
-    return BigInt(0)
-
-
+    return BigInt(0);
   }
-  
-  async sendTransaction(    contractAddress: string,
-                            method: string,
-                            payload: {
-                              from: string;
-                              to?: string;
-                              data: any[];
-                              value?: bigint;
-                            },
-                            options: {
-                              abi: any;
-                            }) {
-    console.log('-- solanan sendTransaction', {
+
+  async sendTransaction(
+    contractAddress: string,
+    method: string,
+    payload: {
+      from: string;
+      to?: string;
+      data: any[];
+      value?: bigint;
+    },
+    options: {
+      abi: any;
+    }
+  ) {
+    console.log("-- solanan sendTransaction", {
       contractAddress,
       method,
       payload,
       options,
-    })
-    if (method === 'deposit') {
+    });
+    if (method === "deposit") {
       return deposit({
         vaultAddress: contractAddress,
         userAddress: this._address,
         connection: this._provider.connection,
         depositData: payload.data[0],
         sendTransaction: this._provider.sendTransaction,
-
-      })
-
+      });
     }
-    
   }
 
   async callOnChain(
@@ -352,33 +373,29 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       abi: any;
     }
   ): Promise<any> {
-    console.log('-- params ', {
+    console.log("-- params ", {
       chain,
       address,
       method,
       params,
-    })
-    if (method === 'getDepositFee') {
+    });
+    if (method === "getDepositFee") {
       return getDepositQuoteFee({
         vaultAddress: address,
         userAddress: this._address,
         connection: this._provider.connection,
-        depositData: params[1]
-      })
-
-
+        depositData: params[1],
+      });
     }
     return 0;
-    
   }
+
   async pollTransactionReceiptWithBackoff(
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
     maxRetries?: number
-  ): Promise<any> {
-    
-  }
+  ): Promise<any> {}
 }
 
 export { DefaultSolanaWalletAdapter };
