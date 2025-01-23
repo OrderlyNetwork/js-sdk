@@ -106,32 +106,28 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     // }
 
     if (isLedger) {
-      // 创建一个 transaction
       const transaction = new Transaction();
 
-      // 添加 ComputeBudget 的 setComputeUnitLimit 指令 (值设为0)
       transaction.add(
         new TransactionInstruction({
           keys: [],
           programId: new PublicKey(
             "ComputeBudget111111111111111111111111111111"
           ),
-          data: new Uint8Array([3, 0, 0, 0, 0, 0, 0, 0, 0]) as Buffer, // 第一个字节是指令类型(3)，后面8字节是值(0)
+          data: new Uint8Array([3, 0, 0, 0, 0, 0, 0, 0, 0]) as Buffer,
         })
       );
 
-      // 添加 ComputeBudget 的 setComputeUnitPrice 指令 (值设为0)
       transaction.add(
         new TransactionInstruction({
           keys: [],
           programId: new PublicKey(
             "ComputeBudget111111111111111111111111111111"
           ),
-          data: new Uint8Array([2, 0, 0, 0, 0]) as Buffer, // 第一个字节是指令类型(2)，后面4字节是值(0)
+          data: new Uint8Array([2, 0, 0, 0, 0]) as Buffer, 
         })
       );
 
-      // 添加 Memo 指令
       transaction.add(
         new TransactionInstruction({
           keys: [],
@@ -150,7 +146,6 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       transaction.recentBlockhash = new PublicKey(zeroHash).toString();
 
 
-      // 签名交易
       const signedTransaction = await this._provider.signTransaction(
         transaction
       );
@@ -165,7 +160,6 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
           });
         }
       );
-      // 获取交易的签名
       const signature = signedTransaction.signatures[0].signature;
       if (signature) {
         return this.uint8ArrayToHexString(signature);
