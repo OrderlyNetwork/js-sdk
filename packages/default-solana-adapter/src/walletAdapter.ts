@@ -114,7 +114,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
           programId: new PublicKey(
             "ComputeBudget111111111111111111111111111111"
           ),
-          data: new Uint8Array([3, 0, 0, 0, 0, 0, 0, 0, 0]) as Buffer,
+          data: new Uint8Array([3, 0, 0, 0, 0, 0, 0, 0, 0]) as any,
         })
       );
 
@@ -124,7 +124,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
           programId: new PublicKey(
             "ComputeBudget111111111111111111111111111111"
           ),
-          data: new Uint8Array([2, 0, 0, 0, 0]) as Buffer, 
+          data: new Uint8Array([2, 0, 0, 0, 0]) as any, 
         })
       );
 
@@ -134,7 +134,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
           programId: new PublicKey(
             "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
           ),
-          data: message as Buffer,
+          data: message as any,
         })
       );
 
@@ -151,18 +151,9 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       );
 
 
-      signedTransaction.instructions.forEach(
-        (instruction: TransactionInstruction, index: number) => {
-          console.log(`Instruction ${index}:`, {
-            programId: instruction.programId.toBase58(),
-            keys: instruction.keys,
-            data: this.uint8ArrayToHexString(instruction.data),
-          });
-        }
-      );
       const signature = signedTransaction.signatures[0].signature;
       if (signature) {
-        return this.uint8ArrayToHexString(signature);
+        return this.uint8ArrayToHexString(signature as any);
       } else {
         console.log("-- sign message error", signature);
         throw new Error("Unsupported signature");
