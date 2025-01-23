@@ -7,7 +7,7 @@ export const useBottomNavBarScript = () => {
 
   /** link device, acally wallet not connect */
   const onDisconnect = async () => {
-    localStorage.removeItem("orderly_selected_chainId");
+    localStorage.removeItem("orderly_link_device");
     await account.disconnect();
   };
 

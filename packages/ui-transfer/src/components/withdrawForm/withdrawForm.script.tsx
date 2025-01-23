@@ -52,10 +52,7 @@ export const useWithdrawForm = ({
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
 
-  const [selectedChainId] = useLocalStorage<number | undefined>(
-    "orderly_selected_chainId",
-    undefined
-  );
+  const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
   const { data: balanceList } = useQuery<any>(`/v1/public/vault_balance`, {
     revalidateOnMount: true,
@@ -134,7 +131,7 @@ export const useWithdrawForm = ({
 
     const chainId = connectedChain
       ? praseChainIdToNumber(connectedChain.id)
-      : parseInt(selectedChainId);
+      : parseInt(linkDeviceStorage?.chainId);
 
     if (!chainId) return null;
 
@@ -145,7 +142,7 @@ export const useWithdrawForm = ({
       id: chainId,
       info: chain!,
     } as CurrentChain;
-  }, [findByChainId, connectedChain, selectedChainId]);
+  }, [findByChainId, connectedChain, linkDeviceStorage]);
 
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {

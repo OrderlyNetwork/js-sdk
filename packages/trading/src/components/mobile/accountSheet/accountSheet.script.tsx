@@ -19,10 +19,7 @@ import { ReferralProps, TradingRewardsProps } from "../../../types/types";
 export const useAccountSheetScript = (
   props: ReferralProps & TradingRewardsProps
 ) => {
-  const [selectedChainId] = useLocalStorage<number | undefined>(
-    "orderly_selected_chainId",
-    undefined
-  );
+  const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
   const { account, state } = useAccount();
   const accountId = account.accountId;
   const address = account.address;
@@ -32,7 +29,8 @@ export const useAccountSheetScript = (
 
   const { connectedChain, disconnect, namespace } = useWalletConnector();
 
-  const chainId = account.chainId || connectedChain?.id || selectedChainId;
+  const chainId =
+    account.chainId || connectedChain?.id || linkDeviceStorage?.chainId;
 
   const showGetTestUSDC = useMemo(() => {
     if (chainId) {
@@ -70,7 +68,7 @@ export const useAccountSheetScript = (
 
   const onDisconnect = async () => {
     // The cache must be cleared first, otherwise it will be possible entered link device mode
-    selectedChainId && localStorage.removeItem("orderly_selected_chainId");
+    localStorage.removeItem("orderly_link_device");
     await disconnect({
       label: state.connectWallet?.name,
     });

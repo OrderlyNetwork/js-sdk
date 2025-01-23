@@ -412,7 +412,8 @@ const PriceInput = (props: {
   return (
     <Input.tooltip
       data-testid={`oui-testid-tpsl-popUp-${props.type.toLowerCase()}-input`}
-      prefix={`${props.type} price`}
+      // prefix={`${props.type} price`}
+      prefix="Mark price"
       size={{
         initial: "lg",
         lg: "md",

@@ -18,10 +18,7 @@ export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
 
 export function useChainSelect() {
   const networkId = useConfig("networkId") as NetworkId;
-  const [selectedChainId] = useLocalStorage<number | undefined>(
-    "orderly_selected_chainId",
-    undefined
-  );
+  const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
   const { connectedChain, settingChain, setChain } = useWalletConnector();
 
@@ -36,7 +33,7 @@ export function useChainSelect() {
 
     const chainId = connectedChain
       ? praseChainIdToNumber(connectedChain.id)
-      : parseInt(selectedChainId);
+      : parseInt(linkDeviceStorage?.chainId);
 
     if (!chainId) return null;
 
@@ -47,7 +44,7 @@ export function useChainSelect() {
       id: chainId,
       info: chain!,
     } as CurrentChain;
-  }, [findByChainId, connectedChain, selectedChainId]);
+  }, [findByChainId, connectedChain, linkDeviceStorage]);
 
   const onChainChange = useCallback(
     async (chain: API.NetworkInfos) => {

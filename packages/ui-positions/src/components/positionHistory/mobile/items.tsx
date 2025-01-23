@@ -137,6 +137,10 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
 
 export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
+  const closedQty =
+    item.closed_position_qty != null
+      ? Math.abs(item.closed_position_qty)
+      : "--";
 
   return (
     <Statistic
@@ -150,7 +154,7 @@ export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
       }}
     >
       <Text.numeral dp={props.base_dp} padding={false} coloring intensity={80}>
-        {item.closed_position_qty}
+        {closedQty}
       </Text.numeral>
     </Statistic>
   );
@@ -158,7 +162,8 @@ export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
 
 export const MaxClosedQty: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
-
+  const maxClosedQty =
+    item.max_position_qty != null ? Math.abs(item.max_position_qty) : "--";
   return (
     <Statistic
       // label={
@@ -173,7 +178,7 @@ export const MaxClosedQty: FC<PositionHistoryCellState> = (props) => {
       }}
     >
       <Text.numeral dp={props.base_dp} padding={false} coloring intensity={80}>
-        {item.max_position_qty}
+        {maxClosedQty}
       </Text.numeral>
     </Statistic>
   );
@@ -181,6 +186,8 @@ export const MaxClosedQty: FC<PositionHistoryCellState> = (props) => {
 
 export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
+  const avgOpen =
+    item.avg_open_price != null ? Math.abs(item.avg_open_price) : "--";
 
   return (
     <Statistic
@@ -191,7 +198,7 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
       }}
     >
       <Text.numeral dp={props.quote_dp} padding={false} coloring intensity={80}>
-        {item.avg_open_price}
+        {avgOpen}
       </Text.numeral>
     </Statistic>
   );
@@ -199,6 +206,8 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
 
 export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
+  const avgClose =
+    item.avg_close_price != null ? Math.abs(item.avg_close_price) : "--";
 
   return (
     <Statistic
@@ -209,7 +218,7 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
       }}
     >
       <Text.numeral dp={props.quote_dp} padding={false} coloring intensity={80}>
-        {item.avg_close_price}
+        {avgClose}
       </Text.numeral>
     </Statistic>
   );
