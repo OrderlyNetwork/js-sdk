@@ -15,6 +15,7 @@ export const ScrollIndicator: FC<ScrollIndicatorProps> = (props) => {
   return (
     <div
       className={cnBase(
+        "oui-scroll-indicator",
         "oui-relative oui-overflow-hidden oui-select-none",
         props.className
       )}
