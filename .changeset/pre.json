@@ -47,6 +47,7 @@
   },
   "changesets": [
     "curly-swans-work",
+    "silent-keys-peel",
     "thirty-pugs-hug"
   ]
 }
