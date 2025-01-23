@@ -1,8 +1,8 @@
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useEffect } from "react";
 import { modal, toast } from "@orderly.network/ui";
+import { LedgerWalletKey } from "@orderly.network/types";
 
-const LedgerWalletKey = "orderly:ledger-wallet";
 
 export function useWalletConnectError() {
   const ee = useEventEmitter();

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
 import { useEventEmitter, useLocalStorage, WalletState } from "@orderly.network/hooks";
 import {
@@ -11,7 +11,6 @@ import {
 } from "@solana/wallet-adapter-base";
 import { SolanaChainIdEnum, SolanaChains } from "./config";
 
-const LedgerWalletKey = "orderly:ledger-wallet";
 
 
 export function useSOL({ network }: { network: WalletAdapterNetwork }) {

@@ -58,7 +58,7 @@ import {
   TREASURY_PROGRAM_ID,
 } from "./constant";
 import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
-const LedgerWalletKey = "orderly:ledger-wallet";
+import { LedgerWalletKey } from "@orderly.network/types";
 
 export function addOrderlyKeyMessage(
   inputs: AddOrderlyKeyInputs & { chainId: number }
