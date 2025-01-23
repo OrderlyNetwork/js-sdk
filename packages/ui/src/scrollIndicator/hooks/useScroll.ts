@@ -7,6 +7,8 @@ export function useScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const handleScroll = () => {
       const container = containerRef.current;
       if (!container) return;
@@ -16,15 +18,38 @@ export function useScroll() {
       );
     };
 
-    setTimeout(() => {
-      handleScroll();
-    }, 0);
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          handleScroll();
+        }
+      });
+    });
 
     const container = containerRef.current;
-    container?.addEventListener("scroll", handleScroll);
+    container.addEventListener("scroll", handleScroll);
+    intersectionObserver.observe(container);
 
     return () => {
-      container?.removeEventListener("scroll", handleScroll);
+      container.removeEventListener("scroll", handleScroll);
+      intersectionObserver.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const intersectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+        }
+      });
+    });
+
+    intersectionObserver.observe(containerRef.current);
+
+    return () => {
+      intersectionObserver.disconnect();
     };
   }, []);
 
