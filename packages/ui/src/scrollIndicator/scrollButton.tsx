@@ -22,6 +22,9 @@ export const ScrolButton: FC<ScrolButtonProps> = (props) => {
         onClick?.(leading ? "left" : "right");
       }}
       className={cnBase(
+        leading
+          ? "oui-scroll-indicator-leading"
+          : "oui-scroll-indicator-tailing",
         "oui-group oui-flex",
         "oui-absolute oui-top-0 oui-bottom-0",
         leading && "oui-left-0 oui-flex-row-reverse",
