@@ -64,6 +64,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
 
   return (
     <Flex
+      id="oui-side-markets"
       className={cn("oui-font-semibold", className)}
       direction="column"
       gapY={5}

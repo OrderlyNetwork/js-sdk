@@ -1,28 +1,41 @@
 import { useCallback, useEffect } from "react";
 import {
+  parseJSON,
   useAccount,
+  useConfig,
   useLocalStorage,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useScreen } from "@orderly.network/ui";
+import { ChainNamespace } from "@orderly.network/types";
 
 type DecodedData = {
-  addr: string;
+  /** secret key */
   k: string;
+  /* timestamp */
   t: number;
-  id: number;
+  /** address */
+  a: string;
+  /** chain id */
+  i: number;
+  /** chain namespace */
+  n: ChainNamespace;
 };
+
+type LinkDeviceStorage = { chainId: number; chainNamespace: ChainNamespace };
+
 const WALLET_KEY = "orderly:wallet-info";
 
 export function useLinkDevice() {
   const { connectedChain, disconnect } = useWalletConnector();
-  const [_, seSelectedChainId] = useLocalStorage<number | undefined>(
-    "orderly_selected_chainId",
-    undefined
+  const [_, setLinkDeviceStorage] = useLocalStorage(
+    "orderly_link_device",
+    {} as LinkDeviceStorage
   );
 
   const { account } = useAccount();
   const { isMobile } = useScreen();
+  const configStore = useConfig();
 
   const onDisconnect = async (label: string) => {
     // The cache must be cleared first, otherwise it will be auto connect wallet
@@ -40,20 +53,27 @@ export function useLinkDevice() {
     }
   }, []);
 
-  const linkDevice = useCallback(async () => {
+  const linkDevice = async () => {
     const linkData = getLinkDeviceData();
     if (!linkData) return;
 
-    const { address, key, chainId } = linkData;
-    const isSuccess = await account.importOrderlyKey(address, key);
+    const { address, secretKey, chainId, chainNamespace } = linkData;
+    const isSuccess = await account.importOrderlyKey({
+      address,
+      secretKey,
+      chainNamespace,
+    });
     if (!isSuccess) return;
-    seSelectedChainId(chainId);
+    setLinkDeviceStorage({
+      chainId,
+      chainNamespace,
+    });
 
     const url = new URL(window.location.href);
     url.searchParams.delete("link");
     const decodedUrl = decodeURIComponent(url.toString());
     history.replaceState(null, "", decodedUrl);
-  }, [account, connectedChain]);
+  };
 
   useEffect(() => {
     if (isMobile && !connectedChain) {
@@ -61,19 +81,40 @@ export function useLinkDevice() {
     }
   }, [account, connectedChain, isMobile]);
 
-  // persist status when refresh page
-  useEffect(() => {
+  const autoLinkDevice = async () => {
     // this can't use the value returned by useLocalStorage here, because it will trigger extra state change
-    const chainId = localStorage.getItem("orderly_selected_chainId");
-    if (isMobile && !connectedChain && chainId) {
+    const { chainId, chainNamespace } = getLinkDeviceStorage() || {};
+    if (isMobile && !connectedChain && chainId && chainNamespace) {
       const address = account.keyStore.getAddress();
       const orderlyKey = account.keyStore.getOrderlyKey();
       const accountId = account.keyStore.getAccountId(address!);
-      account.checkOrderlyKey(address!, orderlyKey!, accountId!);
+      const res = await account.checkOrderlyKey(
+        address!,
+        orderlyKey!,
+        accountId!
+      );
+      if (res) {
+        configStore.set("chainNamespace", chainNamespace);
+      }
     }
+  };
+
+  // persist status when refresh page
+  useEffect(() => {
+    autoLinkDevice();
   }, [account, isMobile, connectedChain]);
 
   return { linkDevice };
+}
+
+function getLinkDeviceStorage() {
+  try {
+    const linkDeviceStorage = localStorage.getItem("orderly_link_device");
+    const json = linkDeviceStorage ? parseJSON(linkDeviceStorage) : null;
+    return json as LinkDeviceStorage;
+  } catch (err) {
+    console.error("getLinkDeviceStorage", err);
+  }
 }
 
 export function getLinkDeviceData() {
@@ -82,13 +123,19 @@ export function getLinkDeviceData() {
 
   if (!link) return;
 
-  const { addr: address, k: key, id: chainId } = decodeBase64(link) || {};
+  const {
+    a: address,
+    k: secretKey,
+    i: chainId,
+    n: chainNamespace,
+  } = decodeBase64(link) || {};
 
-  if (address && key && chainId) {
+  if (address && secretKey && chainId && chainNamespace) {
     return {
       address,
-      key,
+      secretKey,
       chainId,
+      chainNamespace,
     };
   }
 }

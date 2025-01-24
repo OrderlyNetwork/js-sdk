@@ -14,7 +14,7 @@ export const useRecentListScript = () => {
   const { onSort, getSortedList } = useSort();
 
   const dataSource = useMemo(() => {
-    const searchResults = searchBySymbol(data, searchValue);
+    const searchResults = searchBySymbol(data, searchValue, "base");
     return getSortedList(searchResults);
   }, [data, searchValue, getSortedList]);
 
