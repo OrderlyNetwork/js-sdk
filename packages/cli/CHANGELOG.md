@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.20-solana-ledger.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.3-solana-ledger.1
+
 ## 0.3.20-solana-ledger.0
 
 ### Patch Changes

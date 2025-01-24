@@ -1,5 +1,18 @@
 # @orderly.network/ui-order-entry
 
+## 2.0.3-solana-ledger.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.3-solana-ledger.1
+  - @orderly.network/hooks@2.0.3-solana-ledger.1
+  - @orderly.network/types@2.0.3-solana-ledger.1
+  - @orderly.network/ui@2.0.3-solana-ledger.1
+  - @orderly.network/ui-connector@2.0.3-solana-ledger.1
+  - @orderly.network/utils@2.0.3-solana-ledger.1
+
 ## 2.0.3-solana-ledger.0
 
 ### Patch Changes

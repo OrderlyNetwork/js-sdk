@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 2.0.3-solana-ledger.1
+
+### Patch Changes
+
+- publish
+
 ## 2.0.3-solana-ledger.0
 
 ### Patch Changes

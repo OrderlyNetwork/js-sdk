@@ -46,6 +46,7 @@
     "@orderly.network/web3-provider-ethers": "2.0.2"
   },
   "changesets": [
-    "gentle-bats-dream"
+    "gentle-bats-dream",
+    "wicked-carpets-shop"
   ]
 }

@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.0.3-solana-ledger.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.3-solana-ledger.1
+  - @orderly.network/types@2.0.3-solana-ledger.1
+
 ## 2.0.3-solana-ledger.0
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/chart
 
+## 2.0.3-solana-ledger.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/ui@2.0.3-solana-ledger.1
+  - @orderly.network/utils@2.0.3-solana-ledger.1
+
 ## 2.0.3-solana-ledger.0
 
 ### Patch Changes

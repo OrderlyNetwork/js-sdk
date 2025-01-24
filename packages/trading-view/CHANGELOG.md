@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 2.0.3-solana-ledger.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.3-solana-ledger.1
+  - @orderly.network/hooks@2.0.3-solana-ledger.1
+  - @orderly.network/net@2.0.3-solana-ledger.1
+  - @orderly.network/types@2.0.3-solana-ledger.1
+  - @orderly.network/utils@2.0.3-solana-ledger.1
+
 ## 2.0.3-solana-ledger.0
 
 ### Patch Changes
