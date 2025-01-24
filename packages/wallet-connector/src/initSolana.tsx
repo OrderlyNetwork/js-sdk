@@ -1,4 +1,4 @@
-import React, {useMemo } from "react";
+import React, { useMemo } from "react";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { Adapter, WalletAdapterNetwork, WalletError, WalletNotReadyError } from "@solana/wallet-adapter-base";
 import {
@@ -6,7 +6,7 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css";
-import {SolanaInitialProps} from "./types";
+import { SolanaInitialProps } from "./types";
 import {
   createDefaultAddressSelector,
   createDefaultAuthorizationResultCache, createDefaultWalletNotFoundHandler,
@@ -14,9 +14,12 @@ import {
 } from "@solana-mobile/wallet-adapter-mobile";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { getGlobalObject } from "@orderly.network/utils";
+import { useScreen } from "@orderly.network/ui";
 
-export default function InitSolana({ children, ...props }:SolanaInitialProps) {
-  const network =props.network ?? WalletAdapterNetwork.Devnet;
+export default function InitSolana({ children, ...props }: SolanaInitialProps) {
+  const { isMobile } = useScreen();
+  const network = props.network ?? WalletAdapterNetwork.Devnet;
+
   const endPoint = useMemo(() => {
     if (network === WalletAdapterNetwork.Mainnet) {
       // return 'https://rpc.ankr.com/solana';
@@ -39,12 +42,16 @@ export default function InitSolana({ children, ...props }:SolanaInitialProps) {
   const handleSolanaError = (error: WalletError, adapter?: Adapter) => {
     console.log('-- solanan error', error);
     console.log('-- solana adapter', adapter);
+
+    if (!isMobile) {
+      window.open(adapter?.url, '_blank');
+    }
   }
 
-  const wallets =  useMemo(() => {
+  const wallets = useMemo(() => {
     let uri = '';
     if (typeof window !== "undefined") {
-      const location= (getGlobalObject() as any).location;
+      const location = (getGlobalObject() as any).location;
       uri = `${location.protocol}//${location.host}`;
     }
 
