@@ -18,7 +18,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter
 } from "@solana/wallet-adapter-wallets";
-import { customChains } from "./customChains";
+import config from "../src/config";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -26,11 +26,6 @@ const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
   console.log("-- mobile wallet adapter", adapter);
 
   return Promise.reject(new WalletNotReadyError("wallet not ready"));
-};
-
-const handleSolanaError = (error: WalletError, adapter?: Adapter) => {
-  console.log("-- solanan error", error);
-  console.log("-- solana adapter", adapter);
 };
 
 const wallets = [
@@ -62,7 +57,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   console.log('-- provider', configStore, VITE_ENV);
   return (
     <WalletConnectorProvider
-      solanaInitial={{ wallets: wallets, onError: handleSolanaError }}
+      solanaInitial={{ wallets: wallets}}
       // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
     >
       <OrderlyAppProvider
@@ -70,14 +65,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         // brokerName="Orderly"
         // networkId="testnet"
         configStore={configStore}
-        appIcons={{
-          main: {
-            img: "/orderly-logo.svg",
-          },
-          secondary: {
-            img: "/orderly-logo-secondary.svg",
-          },
-        }}
+        appIcons={config.orderlyAppProvider.appIcons}
         restrictedInfo={{
           enableDefault: false,
           customRestrictedIps: [],

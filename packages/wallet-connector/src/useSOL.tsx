@@ -75,10 +75,12 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
     console.log("solan connect error", e);
 
     if (e instanceof WalletNotReadyError) {
-      console.log("-- need toast wallet not ready");
-      ee.emit("wallet:connect-error", {
-        message: "Please open the wallet app and use the in-app browser.",
-      });
+      if (isMobile) {
+        console.log("-- need toast wallet not ready", e);
+        ee.emit("wallet:connect-error", {
+          message: "Please open the wallet app and use the in-app browser.",
+        });
+      }
     }
     solanaDisconnect().then();
   };

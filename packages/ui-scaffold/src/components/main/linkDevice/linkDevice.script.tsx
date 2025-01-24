@@ -107,8 +107,9 @@ export function useLinkDeviceScript() {
       const params = {
         k: secretKey,
         t: timestamp,
-        addr: account.address,
-        id: account.chainId,
+        a: account.address,
+        i: account.chainId,
+        n: account.walletAdapter?.chainNamespace,
       };
       const url = createUrl(params);
       setUrl(url);
