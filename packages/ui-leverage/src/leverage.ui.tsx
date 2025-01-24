@@ -70,7 +70,7 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
       <Slider
         // step={1.04}
         max={props.maxLeverage}
-        // min={1}
+        min={1}
         // markLabelVisible={true}
         // marks={props.marks}
         markCount={5}
@@ -88,7 +88,7 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
         }}
         showTip={props.showSliderTip}
         tipFormatter={(value, min, max, percent) => {
-          return `${Math.max(1, value)}x`;
+          return `${value}x`;
         }}
       />
       <Flex justify={"between"} width={"100%"} pt={3}>

@@ -18,8 +18,8 @@ import {
 } from "./tabsBase";
 import { Flex } from "../flex";
 import { cnBase, VariantProps } from "tailwind-variants";
-import { cn } from "..";
 import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
+import { ScrollIndicator } from "../scrollIndicator";
 
 type tabConfig = {
   title: ReactNode;
@@ -47,14 +47,22 @@ type TabsProps<T = string> = {
   classNames?: {
     tabsList?: string;
     tabsContent?: string;
+    scrollIndicator?: string;
   };
   contentVisible?: boolean;
+  showScrollIndicator?: boolean;
 } & TabsPrimitive.TabsProps &
   VariantProps<typeof tabsVariants>;
 
 const Tabs: FC<TabsProps> = (props) => {
   const { getComponentTheme } = useOrderlyTheme();
-  const { classNames, contentVisible = true, variant, ...rest } = props;
+  const {
+    classNames,
+    contentVisible = true,
+    variant,
+    showScrollIndicator,
+    ...rest
+  } = props;
   const variantTheme = getComponentTheme("tabs", variant ?? "contained");
   // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
@@ -66,6 +74,45 @@ const Tabs: FC<TabsProps> = (props) => {
         [config.value]: config,
       };
     });
+  };
+
+  const renderTabsList = () => {
+    const tabsList = (
+      <TabsList
+        variant={variantTheme}
+        size={rest.size}
+        className={cnBase(
+          "oui-flex-1 oui-border-0",
+          props.classNames?.tabsList
+        )}
+      >
+        {Object.keys(tabList).map((key) => {
+          const tab = tabList[key];
+          return (
+            <TabsTrigger
+              key={key}
+              value={tab.value}
+              icon={tab.icon}
+              variant={variantTheme}
+              size={rest.size}
+              data-testid={tab.testid}
+            >
+              {tab.title}
+            </TabsTrigger>
+          );
+        })}
+      </TabsList>
+    );
+
+    if (showScrollIndicator) {
+      return (
+        <ScrollIndicator className={props.classNames?.scrollIndicator}>
+          {tabsList}
+        </ScrollIndicator>
+      );
+    }
+
+    return tabsList;
   };
 
   return (
@@ -85,31 +132,7 @@ const Tabs: FC<TabsProps> = (props) => {
           )}
         >
           {props.leading}
-          <TabsList
-            className={cnBase(
-              "oui-flex-1 oui-border-0",
-              props.classNames?.tabsList
-            )}
-            variant={variantTheme}
-            size={rest.size}
-          >
-            {Object.keys(tabList).map((key) => {
-              const tab = tabList[key];
-              return (
-                <TabsTrigger
-                  key={key}
-                  value={tab.value}
-                  icon={tab.icon}
-                  variant={variantTheme}
-                  size={rest.size}
-                  data-testid={tab.testid}
-                >
-                  {tab.title}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-
+          {renderTabsList()}
           {props.trailing}
         </Flex>
 

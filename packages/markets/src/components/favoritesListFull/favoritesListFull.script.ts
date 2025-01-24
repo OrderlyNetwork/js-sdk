@@ -37,7 +37,7 @@ export const useFavoritesListFullScript = () => {
       })
       ?.filter((item) => item);
 
-    return searchBySymbol(filterList, searchValue);
+    return searchBySymbol(filterList, searchValue, "base-type");
   }, [data, selectedFavoriteTab, favorites, searchValue]);
 
   const dataSource = useMemo(

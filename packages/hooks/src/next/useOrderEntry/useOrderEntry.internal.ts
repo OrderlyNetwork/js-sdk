@@ -84,7 +84,7 @@ const useOrderEntryNextInternal = (
         | "type",
       value: any,
       markPrice: number,
-      config: Pick<API.SymbolExt, "base_dp" | "quote_dp">
+      config: API.SymbolExt
     ): Partial<FullOrderState> => {
       // console.log("calculate", values, fieldName, value, options);
       const fieldHandler = getCalculateHandler(fieldName);

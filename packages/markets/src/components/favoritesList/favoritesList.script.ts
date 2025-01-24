@@ -31,7 +31,7 @@ export const useFavoritesListScript = () => {
       })
       ?.filter((item) => item);
 
-    const searchResults = searchBySymbol(filterList, searchValue);
+    const searchResults = searchBySymbol(filterList, searchValue, "base");
     return getSortedList(searchResults);
   }, [data, selectedFavoriteTab, favorites, searchValue, getSortedList]);
 

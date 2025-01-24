@@ -18,6 +18,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter
 } from "@solana/wallet-adapter-wallets";
+import config from "../src/config";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -64,14 +65,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         // brokerName="Orderly"
         // networkId="testnet"
         configStore={configStore}
-        appIcons={{
-          main: {
-            img: "/orderly-logo.svg",
-          },
-          secondary: {
-            img: "/orderly-logo-secondary.svg",
-          },
-        }}
+        appIcons={config.orderlyAppProvider.appIcons}
         restrictedInfo={{
           enableDefault: false,
           customRestrictedIps: [],
