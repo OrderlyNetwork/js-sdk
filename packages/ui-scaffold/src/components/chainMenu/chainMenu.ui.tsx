@@ -28,6 +28,7 @@ export const ChainMenu = (props: {
     return (
       <Tooltip
         open
+        hideWhenDetached
         content={"Please switch to a supported network to continue."}
         className="oui-bg-base-5"
         arrow={{ className: "oui-fill-base-5" }}
