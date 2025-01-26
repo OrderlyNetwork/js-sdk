@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.0.3-solana-ledger.2
+
+### Patch Changes
+
+- publish
+
 ## 2.0.3-solana-ledger.1
 
 ### Patch Changes

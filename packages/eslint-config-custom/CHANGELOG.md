@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.3-solana-ledger.2
+
+### Patch Changes
+
+- publish
+
 ## 1.0.3-solana-ledger.1
 
 ### Patch Changes

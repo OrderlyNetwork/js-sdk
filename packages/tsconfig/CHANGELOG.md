@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.19-solana-ledger.2
+
+### Patch Changes
+
+- publish
+
 ## 0.3.19-solana-ledger.1
 
 ### Patch Changes
