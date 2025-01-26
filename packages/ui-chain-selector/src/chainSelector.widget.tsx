@@ -1,39 +1,42 @@
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
-import { useChainSelectorBuilder } from "./chainSelector.script";
-import { ChainSelector } from "./chainSelector.ui";
-import { NetworkId } from "@orderly.network/types";
+import {
+  useChainSelectorScript,
+  UseChainSelectorScriptOptions,
+} from "./chainSelector.script";
+import { ChainSelector, ChainSelectorProps } from "./chainSelector.ui";
 
-export const ChainSelectorWidget = (props: {
-  networkId?: NetworkId;
-  bridgeLessOnly?: boolean;
-  close?: () => void;
-  resolve?: (isSuccess: boolean) => void;
-  reject?: () => void;
-  isWrongNetwork?: boolean;
-}) => {
-  const state = useChainSelectorBuilder(props);
+export type ChainSelectorWidgetProps = UseChainSelectorScriptOptions &
+  Pick<ChainSelectorProps, "isWrongNetwork" | "size" | "className">;
+
+export const ChainSelectorWidget = (props: ChainSelectorWidgetProps) => {
+  const state = useChainSelectorScript(props);
+
   return (
     <ChainSelector
       {...state}
-      close={props.close}
-      resolve={props.resolve}
+      size={props.size}
       isWrongNetwork={props.isWrongNetwork}
     />
   );
 };
 
-export const ChainSelectorId = "ChainSelector";
+export const ChainSelectorDialogId = "ChainSelectorDialogId";
 export const ChainSelectorSheetId = "ChainSelectorSheetId";
 
-registerSimpleDialog(ChainSelectorId, ChainSelectorWidget, {
-  size: "sm",
+registerSimpleDialog(ChainSelectorDialogId, ChainSelectorWidget, {
+  size: "lg",
   title: "Switch Network",
+  isWrongNetwork: true,
 });
 
-registerSimpleSheet(ChainSelectorSheetId, ChainSelectorWidget, {
-  title: "Switch Network",
-  classNames: {
-    content: "!oui-bg-base-8",
-    body: "!oui-bg-base-8",
-  },
-});
+registerSimpleSheet(
+  ChainSelectorSheetId,
+  (props) => <ChainSelectorWidget size="md" isWrongNetwork {...props} />,
+  {
+    title: "Switch Network",
+    classNames: {
+      content: "!oui-bg-base-8",
+      body: "!oui-bg-base-8",
+    },
+  }
+);

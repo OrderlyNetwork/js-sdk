@@ -1,5 +1,5 @@
 import { Button, ButtonProps, Flex, modal, toast } from "@orderly.network/ui";
-import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
+import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 import { NetworkId } from "@orderly.network/types";
 
 interface IProps {
@@ -12,7 +12,7 @@ export default function SwitchChainButton(props: IProps) {
     modal
       .show<{
         wrongNetwork: boolean;
-      }>(ChainSelectorId, {
+      }>(ChainSelectorDialogId, {
         networkId: props.networkId,
         bridgeLessOnly: true,
       })

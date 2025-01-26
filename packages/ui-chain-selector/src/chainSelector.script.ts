@@ -1,90 +1,174 @@
-import { useState, useMemo, useCallback, useEffect} from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { useConfig } from "@orderly.network/hooks";
-import { useChains, useWalletConnector, useLocalStorage } from "@orderly.network/hooks";
+import {
+  useChains,
+  useWalletConnector,
+  useLocalStorage,
+} from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
+import { ChainType, TChainItem } from "./type";
 
-const KEY = 'orderly_selected_chains'
-const MAX_STORAGE_CHAINS = 6
-export const useChainSelectorBuilder = (options?: {
+const KEY = "orderly_selected_chains";
+const MAX_RECENT_CHAINS = 6;
+
+export type UseChainSelectorScriptReturn = ReturnType<
+  typeof useChainSelectorScript
+>;
+
+export type UseChainSelectorScriptOptions = {
   networkId?: NetworkId;
   bridgeLessOnly?: boolean;
-}) => {
+  close?: () => void;
+  resolve?: (isSuccess: boolean) => void;
+  reject?: () => void;
+  onChainBeforeChange?: (chain: TChainItem) => void;
+};
+
+export const useChainSelectorScript = (
+  options: UseChainSelectorScriptOptions
+) => {
   const { networkId, bridgeLessOnly } = options || {};
+
   const config = useConfig();
-  const [chains, { checkChainSupport }] = useChains();
+  const [_chains, { checkChainSupport }] = useChains();
   const { setChain, connectedChain } = useWalletConnector();
-  const [storageChainsIds, setStorageChainsIds] = useLocalStorage<string[]>(KEY, []);
 
-  const { onChainChanged, currentChainId, setCurrentChainId } = useAppContext();
+  const { onChainChanged, currentChainId, setCurrentChainId, wrongNetwork } =
+    useAppContext();
 
-  const filteredChains = useMemo(() => {
-  const filteredChains = bridgeLessOnly
-    ? chains.mainnet.filter((chain) => chain.network_infos.bridgeless)
-    : chains.mainnet;
+  const chains = useMemo(() => {
+    const bridgeLessChains = bridgeLessOnly
+      ? _chains.mainnet.filter((chain) => chain.network_infos.bridgeless)
+      : _chains.mainnet;
 
-    const _chains = {
-      mainnet: filteredChains.map((chain) => ({
+    return {
+      mainnet: bridgeLessChains.map((chain) => ({
         name: chain.network_infos.name,
         id: chain.network_infos.chain_id,
         lowestFee: chain.network_infos.bridgeless,
         isTestnet: false,
       })),
-      testnet: chains.testnet.map((chain) => ({
+      testnet: _chains.testnet.map((chain) => ({
         name: chain.network_infos.name,
         id: chain.network_infos.chain_id,
         lowestFee: chain.network_infos.bridgeless,
         isTestnet: true,
       })),
     };
+  }, [_chains, bridgeLessOnly]);
 
-    return _chains
-  }, [chains, networkId, bridgeLessOnly]);
+  const { recentChains, saveRecentChain } = useRecentChains(chains);
 
-  const storageChains = useMemo(() =>  filteredChains?.mainnet?.filter(item => storageChainsIds.includes(item.id)) , [storageChainsIds, filteredChains]) || []; 
+  const onChainChange = async (chain: TChainItem) => {
+    if (connectedChain) {
+      const result = await setChain({ chainId: chain.id });
 
-  const saveChainIdToLocalStorage = useCallback((id: number) => {
-    // if (!storageChainsIds) return 
-    if(!filteredChains.mainnet?.filter(item => item.id === id)) return 
-    let _storageChains = storageChainsIds?.filter((storageChainsId: number) => storageChainsId !== id)
-    _storageChains = [id, ..._storageChains].slice(0, MAX_STORAGE_CHAINS)
-    setStorageChainsIds(_storageChains)
-  }, [filteredChains.mainnet, storageChainsIds, setStorageChainsIds]);
-  
-  const onChainChange = async (chain: { id: number }) => {
-    // console.log('-- on chanin change ', chain, connectedChain, currentChainId);
-    if (!connectedChain) {
-      setCurrentChainId(chain.id);
-      saveChainIdToLocalStorage(chain.id)
+      if (!result) return result;
+
       return {
-        result: true,
-        wrongNetwork: false,
+        result,
+        wrongNetwork: !checkChainSupport(chain.id, config.get("networkId")),
         chainId: chain.id,
-      }
-      // return Promise.reject("No connected chain");
+      };
     }
-    const result = await setChain({
-      chainId: chain.id,
-    });
 
-    if (!result) return result;
-    saveChainIdToLocalStorage(chain.id)
+    setCurrentChainId(chain.id);
     return {
-      result,
-      wrongNetwork: !checkChainSupport(
-        chain.id,
-        config.get("networkId") as NetworkId
-      ),
+      result: true,
+      wrongNetwork: false,
       chainId: chain.id,
     };
+    // return Promise.reject("No connected chain");
   };
 
+  const [selectChainId, setSelectChainId] = useState<number | undefined>(
+    currentChainId
+  );
+  const [selectedTab, setSelectedTab] = useState<ChainType>(ChainType.Mainnet);
+
+  const onChange = async (chain: TChainItem) => {
+    setSelectChainId(chain.id);
+    options.onChainBeforeChange?.(chain);
+
+    const complete = await onChainChange?.(chain);
+
+    if (complete) {
+      options.resolve?.(complete);
+      options.close?.();
+      saveRecentChain(chain);
+      onChainChanged?.(chain.id, {
+        isTestnet: chain.isTestnet,
+        isWalletConnected: true,
+      });
+    } else {
+      setSelectChainId(undefined);
+      onChainChanged?.(chain.id, {
+        isTestnet: chain.isTestnet,
+        isWalletConnected: false,
+      });
+    }
+  };
+
+  const onTabChange = (tab: ChainType) => {
+    setSelectedTab(tab);
+  };
+
+  useEffect(() => {
+    if (currentChainId) {
+      const isMainnet = chains.mainnet?.some(
+        (chain) => chain.id === currentChainId
+      );
+      if (isMainnet) {
+        setSelectedTab(wrongNetwork ? ChainType.Testnet : ChainType.Mainnet);
+        return;
+      }
+
+      const isTestnet = chains.testnet?.some(
+        (chain) => chain.id === currentChainId
+      );
+
+      if (isTestnet) {
+        setSelectedTab(wrongNetwork ? ChainType.Mainnet : ChainType.Testnet);
+        return;
+      }
+    }
+  }, [currentChainId, chains, wrongNetwork]);
 
   return {
-    storageChains,
-    chains: filteredChains,
-    onChainChange,
-    chainChangedCallback: onChainChanged,
-    currentChainId: (connectedChain?.id ?? currentChainId )  as number | undefined,
+    recentChains,
+    chains,
+    selectChainId,
+    selectedTab,
+    onChange,
+    onTabChange,
   };
 };
+
+function useRecentChains(chains: Record<NetworkId, TChainItem[]>) {
+  const [recentChainsIds, setRecentChainsIds] = useLocalStorage<string[]>(
+    KEY,
+    []
+  );
+
+  const recentChains = useMemo<TChainItem[]>(() => {
+    return recentChainsIds?.map((id: string) =>
+      chains.mainnet?.find((item) => item.id === parseInt(id))
+    );
+  }, [chains, recentChainsIds]);
+
+  const saveRecentChain = useCallback(
+    (chain: TChainItem) => {
+      // only mainnet can save chain id to local storage
+      if (chain.isTestnet) {
+        return;
+      }
+      let ids = recentChainsIds?.filter((id: number) => id !== chain.id);
+      ids = [chain.id, ...ids].slice(0, MAX_RECENT_CHAINS);
+      setRecentChainsIds(ids);
+    },
+    [recentChainsIds]
+  );
+
+  return { recentChains, saveRecentChain };
+}
