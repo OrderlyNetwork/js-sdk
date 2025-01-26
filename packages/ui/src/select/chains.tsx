@@ -255,7 +255,7 @@ const ChainSelect = (props: ChainSelectProps) => {
                 value={ChainSelectorType.Mainnet}
                 title={ChainSelectorType.Mainnet}
               >
-                {props.storageChains?.length && (
+                {!!props.storageChains?.length && (
                   <Flex gap={2} className="oui-mt-3">
                     {props.storageChains?.map((item) => {
                       return (
