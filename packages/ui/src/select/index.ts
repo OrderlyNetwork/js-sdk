@@ -13,7 +13,6 @@ export {
   SelectScrollDownButton,
 } from "./selectPrimitive";
 
-import { ChainSelect } from "./chains";
 import { Select as SelectComponent } from "./select";
 
 import { SelectWithOptions } from "./withOptions";
@@ -21,14 +20,12 @@ import { TokenSelect } from "./tokens";
 
 export type SelectType = typeof SelectComponent & {
   options: typeof SelectWithOptions;
-  chains: typeof ChainSelect;
   tokens: typeof TokenSelect;
   combine: typeof CombineSelect;
 };
 
 const Select = SelectComponent as SelectType;
 Select.options = SelectWithOptions;
-Select.chains = ChainSelect;
 Select.combine = CombineSelect;
 Select.tokens = TokenSelect;
 
