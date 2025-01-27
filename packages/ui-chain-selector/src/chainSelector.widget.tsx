@@ -6,7 +6,7 @@ import {
 import { ChainSelector, ChainSelectorProps } from "./chainSelector.ui";
 
 export type ChainSelectorWidgetProps = UseChainSelectorScriptOptions &
-  Pick<ChainSelectorProps, "isWrongNetwork" | "size" | "className">;
+  Pick<ChainSelectorProps, "isWrongNetwork" | "variant" | "className">;
 
 export const ChainSelectorWidget = (props: ChainSelectorWidgetProps) => {
   const state = useChainSelectorScript(props);
@@ -14,7 +14,7 @@ export const ChainSelectorWidget = (props: ChainSelectorWidgetProps) => {
   return (
     <ChainSelector
       {...state}
-      size={props.size}
+      variant={props.variant}
       isWrongNetwork={props.isWrongNetwork}
     />
   );
@@ -26,17 +26,16 @@ export const ChainSelectorSheetId = "ChainSelectorSheetId";
 registerSimpleDialog(ChainSelectorDialogId, ChainSelectorWidget, {
   size: "lg",
   title: "Switch Network",
+  variant: "wide",
   isWrongNetwork: true,
 });
 
-registerSimpleSheet(
-  ChainSelectorSheetId,
-  (props) => <ChainSelectorWidget size="md" isWrongNetwork {...props} />,
-  {
-    title: "Switch Network",
-    classNames: {
-      content: "!oui-bg-base-8",
-      body: "!oui-bg-base-8",
-    },
-  }
-);
+registerSimpleSheet(ChainSelectorSheetId, ChainSelectorWidget, {
+  title: "Switch Network",
+  classNames: {
+    content: "!oui-bg-base-8",
+    body: "!oui-bg-base-8",
+  },
+  variant: "compact",
+  isWrongNetwork: true,
+});

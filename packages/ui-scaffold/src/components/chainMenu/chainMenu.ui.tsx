@@ -10,6 +10,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuRoot,
   DropdownMenuTrigger,
+  Spinner,
 } from "@orderly.network/ui";
 import {
   ChainSelectorDialogId,
@@ -58,6 +59,16 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
     );
   }
 
+  const renderIcon = () => {
+    if (props.loading) {
+      return <Spinner className="oui-w-[18px] oui-h-[18px]" />;
+    }
+
+    if (props.currentChainId) {
+      return <ChainIcon chainId={props.currentChainId} size="xs" />;
+    }
+  };
+
   const trigger = (
     <Flex
       intensity={500}
@@ -68,9 +79,7 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
         "oui-rounded-t-[6px] oui-rounded-bl-[6px] oui-rounded-br-[3px]"
       )}
     >
-      {!!props.currentChainId && (
-        <ChainIcon chainId={props.currentChainId} size="xs" />
-      )}
+      {renderIcon()}
       <svg
         width="10"
         height="10"
@@ -116,7 +125,8 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
         >
           <ChainSelectorWidget
             close={props.hide}
-            onChainBeforeChange={props.onChainBeforeChange}
+            onChainChangeBefore={props.onChainChangeBefore}
+            onChainChangeAfter={props.onChainChangeAfter}
           />
         </DropdownMenuContent>
       </DropdownMenuPortal>

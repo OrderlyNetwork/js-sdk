@@ -13,7 +13,11 @@ import { UseChainSelectorScriptReturn } from "./chainSelector.script";
 
 export type ChainSelectorProps = {
   isWrongNetwork?: boolean;
-  size?: "md" | "lg";
+  /**
+   * wide: This represents the wide screen (desktop) UI mode
+   * compact: This indicates a compact (mobile) UI pattern.
+   */
+  variant?: "wide" | "compact";
   className?: string;
 } & UseChainSelectorScriptReturn;
 
@@ -28,8 +32,8 @@ const chainSelectorVariants = tv({
     tip: "oui-text-center",
   },
   variants: {
-    size: {
-      md: {
+    variant: {
+      compact: {
         icon: "oui-w-6 oui-h-6",
         list: "oui-bg-base-9 oui-rounded-lg oui-p-1",
         mainnetList: "oui-grid-cols-2 oui-mt-4",
@@ -38,7 +42,7 @@ const chainSelectorVariants = tv({
         item: "oui-bg-base-6 hover:oui-bg-base-7",
         tip: "oui-pt-6",
       },
-      lg: {
+      wide: {
         icon: "oui-w-[18px] oui-h-[18px]",
         mainnetList: "oui-grid-cols-3 oui-mt-3",
         testnetList: "oui-grid-cols-2 oui-mt-3",
@@ -56,14 +60,14 @@ const chainSelectorVariants = tv({
   },
   compoundVariants: [
     {
-      size: "md",
+      variant: "compact",
       selected: true,
       className: {
         item: "hover:oui-bg-base-6",
       },
     },
     {
-      size: "lg",
+      variant: "wide",
       selected: true,
       className: {
         item: "hover:oui-bg-base-5",
@@ -71,24 +75,24 @@ const chainSelectorVariants = tv({
     },
   ],
   defaultVariants: {
-    size: "lg",
+    variant: "wide",
     selected: false,
   },
 });
 
 //------------------ ChainSelector start ------------------
 export const ChainSelector = (props: ChainSelectorProps) => {
-  const { isWrongNetwork, size = "lg" } = props;
+  const { isWrongNetwork, variant = "wide" } = props;
 
   const { list, recommandList, mainnetList, testnetList, icon, item, tip } =
-    chainSelectorVariants({ size });
+    chainSelectorVariants({ variant });
 
   return (
     <Box className={cn("oui-font-semibold", props.className)}>
       <Tabs
         value={props.selectedTab}
         variant="contained"
-        size={size === "lg" ? "md" : "lg"}
+        size={variant === "wide" ? "md" : "lg"}
         onValueChange={(e) => props.onTabChange(e as ChainType)}
       >
         <TabPanel value={ChainType.Mainnet} title={ChainType.Mainnet}>

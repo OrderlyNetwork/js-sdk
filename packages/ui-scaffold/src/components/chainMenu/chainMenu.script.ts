@@ -12,6 +12,7 @@ export type UseChainMenuScriptReturn = ReturnType<typeof useChainMenuScript>;
 
 export const useChainMenuScript = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [chains] = useChains();
   const { state } = useAccount();
   const { connectedChain } = useWalletConnector();
@@ -44,8 +45,13 @@ export const useChainMenuScript = () => {
     setOpen(false);
   };
 
-  const onChainBeforeChange = () => {
+  const onChainChangeBefore = () => {
+    setLoading(true);
     hide();
+  };
+
+  const onChainChangeAfter = () => {
+    setLoading(false);
   };
 
   return {
@@ -57,7 +63,9 @@ export const useChainMenuScript = () => {
     open,
     onOpenChange: setOpen,
     hide,
-    onChainBeforeChange,
+    onChainChangeBefore,
+    onChainChangeAfter,
+    loading,
   };
 };
 

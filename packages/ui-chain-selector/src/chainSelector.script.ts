@@ -22,7 +22,8 @@ export type UseChainSelectorScriptOptions = {
   close?: () => void;
   resolve?: (isSuccess: boolean) => void;
   reject?: () => void;
-  onChainBeforeChange?: (chain: TChainItem) => void;
+  onChainChangeBefore?: (chain: TChainItem) => void;
+  onChainChangeAfter?: (chain: TChainItem) => void;
 };
 
 export const useChainSelectorScript = (
@@ -89,11 +90,12 @@ export const useChainSelectorScript = (
 
   const onChange = async (chain: TChainItem) => {
     setSelectChainId(chain.id);
-    options.onChainBeforeChange?.(chain);
+    options.onChainChangeBefore?.(chain);
 
     const complete = await onChainChange?.(chain);
 
     if (complete) {
+      options.onChainChangeAfter?.(chain);
       options.resolve?.(complete);
       options.close?.();
       saveRecentChain(chain);
