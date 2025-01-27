@@ -34,7 +34,7 @@ export * from "./chains";
 export * from "./track";
 export type { Chain as ChainConfig, ChainInfo, NativeCurrency } from "./chains";
 export * from "./wallet";
-
+export * from "./storageKey";
 export { ApiError, SDKError } from "./errors";
 
 export { definedTypes } from "./sign";
