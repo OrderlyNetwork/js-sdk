@@ -21,10 +21,10 @@ export const Default: Story = {
   render: () => (
     <Flex r="lg" p={4} gapX={5}>
       <Box width={456} intensity={800} r="xl" p={4}>
-        <ChainSelectorWidget size="lg" />
+        <ChainSelectorWidget variant="wide" />
       </Box>
       <Box width={375} intensity={800} r="xl" p={4}>
-        <ChainSelectorWidget size="md" />
+        <ChainSelectorWidget variant="compact" />
       </Box>
     </Flex>
   ),

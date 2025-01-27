@@ -27,7 +27,7 @@ const chainSelectorVariants = tv({
     list: "oui-grid oui-grid-cols-1 oui-gap-1",
     mainnetList: '"',
     testnetList: '"',
-    recommandList: "",
+    recentList: "",
     item: "oui-w-full oui-rounded-md",
     tip: "oui-text-center",
   },
@@ -38,7 +38,7 @@ const chainSelectorVariants = tv({
         list: "oui-bg-base-9 oui-rounded-lg oui-p-1",
         mainnetList: "oui-grid-cols-2 oui-mt-4",
         testnetList: "oui-grid-cols-1 oui-mt-4",
-        recommandList: "oui-mt-4",
+        recentList: "oui-mt-4",
         item: "oui-bg-base-6 hover:oui-bg-base-7",
         tip: "oui-pt-6",
       },
@@ -46,7 +46,7 @@ const chainSelectorVariants = tv({
         icon: "oui-w-[18px] oui-h-[18px]",
         mainnetList: "oui-grid-cols-3 oui-mt-3",
         testnetList: "oui-grid-cols-2 oui-mt-3",
-        recommandList: "oui-mt-3",
+        recentList: "oui-mt-3",
         item: "oui-bg-base-5 hover:oui-bg-base-6",
         tip: "oui-pt-8",
       },
@@ -84,7 +84,7 @@ const chainSelectorVariants = tv({
 export const ChainSelector = (props: ChainSelectorProps) => {
   const { isWrongNetwork, variant = "wide" } = props;
 
-  const { list, recommandList, mainnetList, testnetList, icon, item, tip } =
+  const { list, recentList, mainnetList, testnetList, icon, item, tip } =
     chainSelectorVariants({ variant });
 
   return (
@@ -97,13 +97,13 @@ export const ChainSelector = (props: ChainSelectorProps) => {
       >
         <TabPanel value={ChainType.Mainnet} title={ChainType.Mainnet}>
           {!!props.recentChains?.length && (
-            <Flex gap={2} className={recommandList()}>
+            <Flex gap={2} className={recentList()}>
               {props.recentChains?.map((item) => {
                 return (
                   <RecentChainItem
                     key={item.id}
                     item={item}
-                    onClick={() => props.onChange(item)}
+                    onClick={() => props.onChainClick(item)}
                     iconClassName={icon()}
                   />
                 );
@@ -119,7 +119,7 @@ export const ChainSelector = (props: ChainSelectorProps) => {
                   key={chain.id}
                   selected={selected}
                   item={chain}
-                  onClick={() => props.onChange(chain)}
+                  onClick={() => props.onChainClick(chain)}
                   className={item({ selected })}
                 />
               );
@@ -136,7 +136,7 @@ export const ChainSelector = (props: ChainSelectorProps) => {
                   key={chain.id}
                   selected={selected}
                   item={chain}
-                  onClick={() => props.onChange(chain)}
+                  onClick={() => props.onChainClick(chain)}
                   className={item({ selected })}
                 />
               );

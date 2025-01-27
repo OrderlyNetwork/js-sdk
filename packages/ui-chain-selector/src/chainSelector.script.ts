@@ -38,6 +38,10 @@ export const useChainSelectorScript = (
   const { onChainChanged, currentChainId, setCurrentChainId, wrongNetwork } =
     useAppContext();
 
+  const [selectChainId, setSelectChainId] = useState<number | undefined>(
+    currentChainId
+  );
+
   const chains = useMemo(() => {
     const bridgeLessChains = bridgeLessOnly
       ? _chains.mainnet.filter((chain) => chain.network_infos.bridgeless)
@@ -83,12 +87,7 @@ export const useChainSelectorScript = (
     // return Promise.reject("No connected chain");
   };
 
-  const [selectChainId, setSelectChainId] = useState<number | undefined>(
-    currentChainId
-  );
-  const [selectedTab, setSelectedTab] = useState<ChainType>(ChainType.Mainnet);
-
-  const onChange = async (chain: TChainItem) => {
+  const onChainClick = async (chain: TChainItem) => {
     setSelectChainId(chain.id);
     options.onChainChangeBefore?.(chain);
 
@@ -111,6 +110,29 @@ export const useChainSelectorScript = (
       });
     }
   };
+
+  const { selectedTab, onTabChange } = useChainTab(
+    chains,
+    currentChainId,
+    wrongNetwork
+  );
+
+  return {
+    recentChains,
+    chains,
+    selectChainId,
+    onChainClick,
+    selectedTab,
+    onTabChange,
+  };
+};
+
+function useChainTab(
+  chains: Record<NetworkId, TChainItem[]>,
+  currentChainId?: number,
+  wrongNetwork?: boolean
+) {
+  const [selectedTab, setSelectedTab] = useState<ChainType>(ChainType.Mainnet);
 
   const onTabChange = (tab: ChainType) => {
     setSelectedTab(tab);
@@ -137,15 +159,8 @@ export const useChainSelectorScript = (
     }
   }, [currentChainId, chains, wrongNetwork]);
 
-  return {
-    recentChains,
-    chains,
-    selectChainId,
-    selectedTab,
-    onChange,
-    onTabChange,
-  };
-};
+  return { selectedTab, onTabChange };
+}
 
 function useRecentChains(chains: Record<NetworkId, TChainItem[]>) {
   const [recentChainsIds, setRecentChainsIds] = useLocalStorage<string[]>(
