@@ -1,9 +1,9 @@
 import {
   useAccount,
-  useCollateral,
+  useCollateral, useEventEmitter,
   useLeverage,
   useMarginRatio,
-  usePositionStream,
+  usePositionStream
 } from "@orderly.network/hooks";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
 import { useCallback, useMemo, useState } from "react";
@@ -14,6 +14,8 @@ export const usePortfolioSheetScript = () => {
   const { account } = useAccount();
   const assets = useAssets();
   const marginRatio = useMarginRatioAndLeverage();
+  const ee = useEventEmitter();
+
   const [showSliderTip, setShowSliderTip] = useState(false);
   const onSettlePnL = useCallback(async () => {
     return account
@@ -25,6 +27,11 @@ export const usePortfolioSheetScript = () => {
           );
           return Promise.reject(e);
         }
+        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
+          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+          return Promise.reject(e);
+        }
+
         if (e?.code === "ACTION_REJECTED") {
           toast.error("User rejected the request.");
           return Promise.reject(e);

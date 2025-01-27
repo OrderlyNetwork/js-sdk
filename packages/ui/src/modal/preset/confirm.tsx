@@ -10,7 +10,9 @@ export type ConfirmProps = {
   content?: React.ReactNode;
   footer?: React.ReactNode;
   onOk?: () => Promise<any>;
+  okLabel?: string;
   onCancel?: () => Promise<any>;
+  cancelLabel?: string;
   contentClassName?: string;
   bodyClassName?: string;
   // closeableSize?: number;
@@ -53,7 +55,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
       }}
       actions={{
         primary: {
-          label: "Confirm",
+          label: props.okLabel ?? "Confirm",
           className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
           "data-testid": "oui-testid-confirm-dialog-confirm-btn",
           onClick: () => {
@@ -77,7 +79,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
           },
         },
         secondary: {
-          label: "Cancel",
+          label: props.cancelLabel ?? "Cancel",
           className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
           "data-testid": "oui-testid-confirm-dialog-cancel-btn",
           onClick: () => {

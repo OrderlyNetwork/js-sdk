@@ -58,6 +58,7 @@ import {
   TREASURY_PROGRAM_ID,
 } from "./constant";
 import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
+import { LedgerWalletKey } from "@orderly.network/types";
 
 export function addOrderlyKeyMessage(
   inputs: AddOrderlyKeyInputs & { chainId: number }
@@ -117,7 +118,7 @@ export function registerAccountMessage(
   inputs: RegisterAccountInputs & {
     chainId: number;
   }
-) {
+){
   const { chainId, registrationNonce, brokerId, timestamp } = inputs;
 
   const message = {
@@ -763,4 +764,19 @@ export async function deposit({
   const res = await sendTransaction(tx, connection);
   console.log("res", res);
   return res;
+}
+
+export function checkIsLedgerWallet(userAddress: string): boolean{
+  const info = window.localStorage.getItem(LedgerWalletKey);
+  if (!info) {
+    return false;
+  }
+  const addressArr = JSON.parse(info ?? '[]');
+  console.log('-- addressArr', addressArr);
+  if (addressArr.includes(userAddress)) {
+    return true;
+  }
+  return false;
+
+
 }
