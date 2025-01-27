@@ -43,7 +43,7 @@ export default function InitSolana({ children, ...props }: SolanaInitialProps) {
     console.log('-- solanan error', error);
     console.log('-- solana adapter', adapter);
 
-    if (!isMobile) {
+    if (!isMobile && error instanceof WalletNotReadyError) {
       window.open(adapter?.url, '_blank');
     }
   }
