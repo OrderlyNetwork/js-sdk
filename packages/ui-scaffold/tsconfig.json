@@ -1,6 +1,5 @@
 {
   "extends": "./tsconfig.build.json",
-
   "compilerOptions": {
     "paths": {
       "@orderly.network/ui": ["../ui/src"],

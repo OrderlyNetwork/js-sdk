@@ -1,10 +1,9 @@
 {
   "extends": "./tsconfig.build.json",
-
   "compilerOptions": {
     "paths": {
       "@orderly.network/ui": ["../ui/src"],
-      "react":["./node_modules/@types/react"],
+      "react": ["./node_modules/@types/react"],
     }
   }
 }
