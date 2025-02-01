@@ -2,10 +2,27 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": ["../ui/src"],
-      "@orderly.network/hooks": ["../hooks/src"],
-      "@orderly.network/utils": ["../utils/src"],
-      "@orderly.network/types": ["../types/src"]
+      "@orderly.network/ui": [
+        "../ui/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/ui-connector": [
+        "../ui-connector/src"
+      ],
+      "@orderly.network/ui-positions": [
+        "../ui-positions/src"
+      ],
+      "@orderly.network/net": [
+        "../net/src"
+      ]
     }
   }
 }

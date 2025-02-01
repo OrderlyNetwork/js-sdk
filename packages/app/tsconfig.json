@@ -13,7 +13,7 @@
       ],
       "@orderly.network/types": [
         "../types/src"
-      ],
+      ]
     }
   }
 }

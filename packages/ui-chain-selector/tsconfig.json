@@ -10,6 +10,12 @@
       ],
       "@orderly.network/ui-connector": [
         "../ui-connector/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/react-app": [
+        "../app/src"
       ]
     }
   }
