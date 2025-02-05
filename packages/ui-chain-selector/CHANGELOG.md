@@ -1,5 +1,16 @@
 # @orderly.network/ui-chain-selector
 
+## 2.0.3-tsconfig-optimize.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.3-tsconfig-optimize.1
+  - @orderly.network/hooks@2.0.3-tsconfig-optimize.1
+  - @orderly.network/types@2.0.3-tsconfig-optimize.1
+  - @orderly.network/ui@2.0.3-tsconfig-optimize.1
+
 ## 2.0.3-tsconfig-optimize.0
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @orderly.network/web3-modal
 
+## 2.0.3-tsconfig-optimize.1
+
+### Patch Changes
+
+- publish
+
 ## 2.0.3-tsconfig-optimize.0
 
 ### Patch Changes

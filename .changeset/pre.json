@@ -46,6 +46,7 @@
     "@orderly.network/web3-provider-ethers": "2.0.2"
   },
   "changesets": [
-    "tall-turtles-brake"
+    "tall-turtles-brake",
+    "tender-parents-serve"
   ]
 }

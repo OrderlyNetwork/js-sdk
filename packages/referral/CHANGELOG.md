@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.0.3-tsconfig-optimize.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.0.3-tsconfig-optimize.1
+  - @orderly.network/hooks@2.0.3-tsconfig-optimize.1
+  - @orderly.network/utils@2.0.3-tsconfig-optimize.1
+
 ## 2.0.3-tsconfig-optimize.0
 
 ### Patch Changes
