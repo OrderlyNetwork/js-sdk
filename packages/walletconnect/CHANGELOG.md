@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.0.3-tsconfig-optimize.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.3-tsconfig-optimize.2
+
 ## 2.0.3-tsconfig-optimize.1
 
 ### Patch Changes

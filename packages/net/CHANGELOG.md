@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.0.3-tsconfig-optimize.2
+
+### Patch Changes
+
+- publish
+
 ## 2.0.3-tsconfig-optimize.1
 
 ### Patch Changes

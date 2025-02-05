@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/codemod",
-  "version": "1.0.3-tsconfig-optimize.1",
+  "version": "1.0.3-tsconfig-optimize.2",
   "description": "",
   "bin": {
     "orderly-codemod": "bin/cli.js"

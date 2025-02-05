@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.20-tsconfig-optimize.2
+
+### Patch Changes
+
+- publish
+
 ## 1.5.20-tsconfig-optimize.1
 
 ### Patch Changes

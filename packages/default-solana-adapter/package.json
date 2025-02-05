@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/default-solana-adapter",
-  "version": "2.0.3-tsconfig-optimize.1",
+  "version": "2.0.3-tsconfig-optimize.2",
   "description": "",
   "scripts": {
     "build": "tsup",

@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.0.3-tsconfig-optimize.2
+
+### Patch Changes
+
+- publish
+
 ## 1.0.3-tsconfig-optimize.1
 
 ### Patch Changes
