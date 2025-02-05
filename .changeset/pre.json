@@ -1,6 +1,6 @@
 {
   "mode": "pre",
-  "tag": "internal-20250206",
+  "tag": "tsconfig-optimize",
   "initialVersions": {
     "@orderly/docs": "1.0.2",
     "@orderly.network/storybook": "1.0.2",
