@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
 import { Box, Text } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
-import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
+import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 import { NetworkId } from "@orderly.network/types";
 
 type NoticeProps = {
@@ -16,7 +16,7 @@ export const Notice: FC<NoticeProps> = (props) => {
   const { message, needSwap, needCrossSwap, wrongNetwork, networkId } = props;
 
   const showChainSelect = () => {
-    modal.show(ChainSelectorId, { networkId });
+    modal.show(ChainSelectorDialogId, { networkId });
   };
 
   const content = useMemo(() => {
