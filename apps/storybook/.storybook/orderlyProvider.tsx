@@ -16,7 +16,7 @@ import {
 import {
   LedgerWalletAdapter,
   PhantomWalletAdapter,
-  SolflareWalletAdapter
+  SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import config from "../src/config";
 
@@ -54,10 +54,10 @@ const configStore = new CustomConfigStore({
 });
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
-  console.log('-- provider', configStore, VITE_ENV);
+  console.log("-- provider", configStore, VITE_ENV);
   return (
     <WalletConnectorProvider
-      solanaInitial={{ wallets: wallets}}
+      solanaInitial={{ wallets: wallets }}
       // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
     >
       <OrderlyAppProvider
