@@ -33,7 +33,7 @@ export function useLinkDeviceScript() {
 
   const getOrderlyKey = useCallback(async () => {
     try {
-      const res = await account.createApiKey(1);
+      const res = await account.createApiKey(30);
       setSecretKey(res.secretKey);
       setLoading(false);
 
@@ -45,9 +45,15 @@ export function useLinkDeviceScript() {
       console.error("getOrderlyKey", e);
 
       if (e instanceof Error) {
-
-        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
-          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        if (
+          e.message.indexOf(
+            "Signing off chain messages with Ledger is not yet supported"
+          ) !== -1
+        ) {
+          ee.emit("wallet:sign-message-with-ledger-error", {
+            message: e.message,
+            userAddress: account.address,
+          });
         }
       }
       hideDialog();

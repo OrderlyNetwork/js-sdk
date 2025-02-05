@@ -1,4 +1,10 @@
 {
   "extends": "./tsconfig.build.json",
-  "compilerOptions": {}
+  "compilerOptions": {
+    "paths": {
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ]
+    }
+  },
 }
