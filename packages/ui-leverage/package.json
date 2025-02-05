@@ -37,7 +37,6 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "react-dom": ">=18",
-    "@orderly.network/ui": "workspace:*"
+    "react-dom": ">=18"
   }
 }

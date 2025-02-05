@@ -27,6 +27,7 @@
   "author": "maogege",
   "license": "ISC",
   "dependencies": {
+    "@orderly.network/hooks": "workspace:*",
     "@web3modal/wagmi": "^3.5.3"
   }
 }
