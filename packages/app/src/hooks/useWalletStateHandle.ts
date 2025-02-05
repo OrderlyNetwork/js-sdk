@@ -226,7 +226,7 @@ export const useWalletStateHandle = (options: {
             accountState.status ===
             AccountStatusEnum.EnableTradingWithoutConnected
           ) {
-            localStorage.removeItem("orderly_selected_chainId");
+            localStorage.removeItem("orderly_link_device");
             await account.disconnect();
           }
           const status = await account.setAddress(wallet.accounts[0].address, {

@@ -1,22 +1,24 @@
 import { PropsWithoutRef, useEffect, useMemo, useState } from "react";
 import { selectVariants } from "./selectPrimitive";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { VariantProps } from "tailwind-variants";
+import { cnBase, VariantProps } from "tailwind-variants";
 import { ChainIcon } from "../icon";
 import { Flex } from "../flex";
 import { tv } from "../utils/tv";
 import { Box } from "../box";
 import { Text } from "../typography";
 import { Tabs, TabPanel } from "../tabs";
-import { cn } from "..";
-import { Grid } from "../grid/grid";
 
 const chainSelectVariants = tv({
   extend: selectVariants,
   slots: {
     icon: "",
-    item: ["oui-text-2xs", "oui-rounded-lg", "hover:oui-rounded-lg", "oui-cursor-pointer"],
-    itemSize: "",
+    item: [
+      "oui-text-2xs",
+      "oui-rounded-md",
+      "hover:oui-rounded-md",
+      "oui-cursor-pointer",
+    ],
     tag: "oui-bg-success/20 oui-text-success oui-px-2 oui-rounded oui-font-semibold",
   },
   variants: {
@@ -29,8 +31,7 @@ const chainSelectVariants = tv({
       },
       md: {
         icon: "oui-w-5 oui-h-5",
-        item: "oui-px-4 oui-py-3 oui-h-6 oui-box-content",
-        itemSize: "oui-w-6 oui-h-6",
+        item: "oui-px-4 oui-py-2 oui-h-6 oui-box-content",
       },
       lg: {
         icon: "oui-w-6 oui-h-6",
@@ -76,12 +77,12 @@ function ChainSelectItem(props: {
   return (
     <SelectPrimitive.SelectItem
       value={`${props.chain.id}`}
-      className={props.itemClassName}
+      className={cnBase(props.itemClassName)}
     >
       <Flex itemAlign={"center"} justify={"between"} width={"100%"}>
         <Flex gap={2} itemAlign={"center"}>
-          <ChainIcon chainId={props.chain.id} className={props.iconClassName} />
-          <Text size="2xs">{props.chain.name}</Text>
+          <ChainIcon chainId={props.chain.id} size="xs" />
+          <Text size="xs">{props.chain.name}</Text>
         </Flex>
         <SelectPrimitive.ItemIndicator>
           <Box width={"6px"} height={"6px"} gradient={"brand"} r={"full"} />
@@ -94,26 +95,28 @@ function ChainSelectItem(props: {
 const RecommandChain = (props: {
   selected: boolean;
   item: ChainItem;
-  onClick?: (chain: ChainItem) => void;
+  className?: string;
 }) => {
   const { item } = props;
   return (
-    <button
-      className={
-        props.selected
-          ? "oui-border oui-border-line-12 oui-rounded-md oui-border-primary-light"
-          : "oui-border oui-border-line-12 oui-rounded-md hover:oui-border-primary-light"
-      }
-      onClick={() => {
-        props.onClick?.(item);
-      }}
-    >
-      <Flex justify={"between"}>
-        <Flex itemAlign={"center"} width={"100%"} p={2} gap={1}>
-          <ChainIcon chainId={item.id} className="oui-w-[18px] oui-h-[18px]" />
+    <SelectPrimitive.SelectItem value={`${item.id}`}>
+      <div
+        className={cnBase(
+          "oui-border oui-border-line-12 oui-rounded-md hover:oui-border-primary-light",
+          // props.selected && "oui-border-primary-light",
+          props.className
+        )}
+      >
+        <Flex justify="between">
+          <Flex itemAlign="center" width="100%" p={2} gap={1}>
+            <ChainIcon
+              chainId={item.id}
+              className="oui-w-[18px] oui-h-[18px]"
+            />
+          </Flex>
         </Flex>
-      </Flex>
-    </button>
+      </div>
+    </SelectPrimitive.SelectItem>
   );
 };
 
@@ -133,18 +136,15 @@ const ChainSelect = (props: ChainSelectProps) => {
     ...rest
   } = props;
 
-  // console.log("ChainSelectItem", props);
-  const [open, toggleOpen] = useState(false);
   const mergedChains = useMemo(() => {
     return [...chains.mainnet, ...chains.testnet];
   }, [chains]);
 
-  const { trigger, icon, content, item, itemSize, viewport, tag } =
-    chainSelectVariants({
-      size,
-      variant,
-      error,
-    });
+  const { trigger, icon, content, item, viewport, tag } = chainSelectVariants({
+    size,
+    variant,
+    error,
+  });
 
   const [currentChain, setCurrentChain] = useState<number | undefined>(
     props.value
@@ -164,7 +164,6 @@ const ChainSelect = (props: ChainSelectProps) => {
     setCurrentChain(selected?.id);
     if (!selected) return;
     props.onChange?.(selected);
-    toggleOpen(false);
   };
 
   const onTabChange = (tab: string) => {
@@ -194,10 +193,7 @@ const ChainSelect = (props: ChainSelectProps) => {
       onValueChange={onChange}
     >
       <SelectPrimitive.Trigger className={trigger()} asChild>
-        <button
-          className="oui-relative oui-px-3 oui-box-border oui-min-w-11"
-          onClick={() => toggleOpen(true)}
-        >
+        <button className="oui-relative oui-px-3 oui-box-border oui-min-w-11">
           {!!currentChain && (
             <ChainIcon chainId={currentChain} className={icon()} />
           )}
@@ -235,61 +231,57 @@ const ChainSelect = (props: ChainSelectProps) => {
         <SelectPrimitive.Content
           position={"popper"}
           className={content({
-            className:
-              "oui-bg-base-9 oui-w-[456px]",
+            className: cnBase(
+              "oui-bg-base-8 oui-w-[456px] oui-rounded-xl",
+              "oui-border oui-border-line-6",
+              "oui-font-semibold"
+            ),
           })}
-          align={"end"}
-          sideOffset={12}
+          sideOffset={4}
+          collisionPadding={{ right: 16 }}
           onCloseAutoFocus={(e) => {
             e.preventDefault();
           }}
           {...contentProps}
         >
-          <SelectPrimitive.Viewport className={viewport()}>
+          <SelectPrimitive.Viewport className="oui-p-4">
             <Tabs
               value={selectedTab}
               variant="contained"
-              size="sm"
-              classNames={{
-                tabsList: "oui-my-3 lg:oui-pl-4 sm:oui-pl-0",
-              }}
+              size="md"
               onValueChange={(e) => onTabChange(e)}
             >
               <TabPanel
                 value={ChainSelectorType.Mainnet}
                 title={ChainSelectorType.Mainnet}
               >
-                {!props.storageChains?.length ? (
-                  <Flex className="oui-mt-2" />
-                ) : (
-                  <Flex
-                    gap={2}
-                    className="oui-text-center oui-mb-3 lg:oui-pl-4 sm:oui-pl-0"
-                  >
+                {!!props.storageChains?.length && (
+                  <Flex gap={2} className="oui-mt-3">
                     {props.storageChains?.map((item) => {
                       return (
                         <RecommandChain
                           item={item}
                           key={item.id}
                           selected={currentChain === item.id}
-                          onClick={(chain: ChainItem) => onChange(chain.id)}
                         />
                       );
                     })}
                   </Flex>
                 )}
-                <div className="oui-grid oui-grid-cols-1 lg:oui-grid-cols-3 oui-pl-4 oui-pr-4 oui-pb-3.5 oui-gap-1">
-                  {props.chains.mainnet?.map((chain, index) => {
+
+                <div
+                  className={cnBase(
+                    "oui-grid oui-grid-cols-1 lg:oui-grid-cols-3",
+                    "oui-mt-3 oui-gap-1"
+                  )}
+                >
+                  {props.chains.mainnet?.map((chain) => {
                     return (
                       <ChainSelectItem
                         key={chain.id}
                         chain={chain}
-                        itemClassName={
-                          item({
-                            className: "oui-rounded-md hover:oui-rounded-md",
-                          })
-                        }
-                        iconClassName={itemSize()}
+                        itemClassName={item()}
+                        iconClassName={icon()}
                       />
                     );
                   })}
@@ -299,18 +291,19 @@ const ChainSelect = (props: ChainSelectProps) => {
                 value={ChainSelectorType.Testnet}
                 title={ChainSelectorType.Testnet}
               >
-                <div className="oui-grid oui-grid-cols-1 lg:oui-grid-cols-2 oui-pl-4 oui-pr-4 oui-pb-3.5 oui-gap-1">
-                  {props.chains.testnet?.map((chain, index) => {
+                <div
+                  className={cnBase(
+                    "oui-grid oui-grid-cols-1 lg:oui-grid-cols-2",
+                    "oui-mt-3 oui-gap-1"
+                  )}
+                >
+                  {props.chains.testnet?.map((chain) => {
                     return (
                       <ChainSelectItem
                         key={chain.id}
                         chain={chain}
-                        itemClassName={
-                          item({
-                            className: "oui-rounded-md hover:oui-rounded-md",
-                          })
-                        }
-                        iconClassName={itemSize()}
+                        itemClassName={item()}
+                        iconClassName={icon()}
                       />
                     );
                   })}

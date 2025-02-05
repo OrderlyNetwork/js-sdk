@@ -60,7 +60,7 @@ export const useFundingComparisonScript = () => {
   }, [data, exchanges, fundingRates]);
 
   const filteredData = useMemo(() => {
-    return searchBySymbol(processedData, searchValue);
+    return searchBySymbol(processedData, searchValue, "base-type");
   }, [processedData, searchValue, pagination]);
 
   const dataSource = useMemo(

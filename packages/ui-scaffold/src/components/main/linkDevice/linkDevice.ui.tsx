@@ -99,18 +99,18 @@ const QRCode: FC<QRCodeProps> = (props) => {
 
       <Flex
         className={cn(
-          "oui-w-[200px] oui-h-[200px] ",
+          "oui-w-[240px] oui-h-[240px] ",
           "oui-border oui-border-base-contrast-20 oui-rounded-2xl"
         )}
         justify="center"
         itemAlign="center"
       >
         <Flex
-          className="oui-w-[180px] oui-h-[180px] oui-rounded-lg oui-bg-white"
+          className="oui-w-[220px] oui-h-[220px] oui-rounded-lg oui-bg-white"
           justify="center"
           itemAlign="center"
         >
-          <QRCodeCanvas width={158} height={158} content={props.url} />
+          <QRCodeCanvas width={196} height={196} content={props.url} />
         </Flex>
       </Flex>
 

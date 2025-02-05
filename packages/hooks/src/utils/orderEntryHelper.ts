@@ -1,4 +1,9 @@
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  API,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { tpslCalculateHelper } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 
@@ -9,10 +14,7 @@ type orderEntryInputs = [
   keyof OrderlyOrder,
   any,
   number,
-  {
-    base_dp: number;
-    quote_dp: number;
-  }
+  API.SymbolExt
 ];
 
 type orderEntryInputHandle = (inputs: orderEntryInputs) => orderEntryInputs;
@@ -279,13 +281,21 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   }
 
   const quantity = total.div(price);
+  let order_quantity = quantity
+    .toDecimalPlaces(Math.min(config.base_dp, quantity.dp()))
+    .toString();
+
+  if (config.base_tick >= 1) {
+    order_quantity = formatNumber(
+      order_quantity,
+      new Decimal(config?.base_tick || "0").toNumber()
+    )!;
+  }
 
   return [
     {
       ...values,
-      order_quantity: quantity
-        .toDecimalPlaces(Math.min(config.base_dp, quantity.dp()))
-        .toString(),
+      order_quantity,
     },
     input,
     value,

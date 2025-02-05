@@ -43,6 +43,13 @@ export function useLinkDeviceScript() {
       );
     } catch (e) {
       console.error("getOrderlyKey", e);
+
+      if (e instanceof Error) {
+
+        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
+          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        }
+      }
       hideDialog();
     }
   }, [account]);
@@ -100,8 +107,9 @@ export function useLinkDeviceScript() {
       const params = {
         k: secretKey,
         t: timestamp,
-        addr: account.address,
-        id: account.chainId,
+        a: account.address,
+        i: account.chainId,
+        n: account.walletAdapter?.chainNamespace,
       };
       const url = createUrl(params);
       setUrl(url);

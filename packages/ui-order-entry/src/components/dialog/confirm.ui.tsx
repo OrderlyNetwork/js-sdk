@@ -1,5 +1,6 @@
 import {
   Badge,
+  Box,
   Button,
   Checkbox,
   Divider,
@@ -145,7 +146,7 @@ export const OrderConfirmDialog = (props: Props) => {
           >
             {order.tp_trigger_price && (
               <Flex justify={"between"}>
-                <Text>TP Price</Text>
+                <Text>TP Price (Mark)</Text>
                 <Text.numeral
                   unit={"USDC"}
                   rule={"price"}
@@ -160,7 +161,7 @@ export const OrderConfirmDialog = (props: Props) => {
             )}
             {order.sl_trigger_price && (
               <Flex justify={"between"}>
-                <Text>SL Price</Text>
+                <Text>SL Price (Mark)</Text>
                 <Text.numeral
                   unit={"USDC"}
                   rule={"price"}
@@ -178,7 +179,7 @@ export const OrderConfirmDialog = (props: Props) => {
         </>
       ) : null}
 
-      <Flex gapX={1} pt={8} pb={3}>
+      <Flex gapX={1} pt={4} pb={5}>
         <Checkbox
           id="orderConfirm"
           color={"white"}
@@ -196,6 +197,16 @@ export const OrderConfirmDialog = (props: Props) => {
           Disable order confirmation
         </label>
       </Flex>
+
+      {order.tp_trigger_price || order.sl_trigger_price ? (
+        <Box py={3} px={3} className="oui-text-center">
+          <Text color="warning" size="xs">
+            TP/SL triggers at the specified mark price and executes as a market
+            order.
+          </Text>
+        </Box>
+      ) : null}
+
       <Grid cols={2} gapX={3}>
         <Button color={"secondary"} size={"md"} onClick={() => onCancel()}>
           Cancel
