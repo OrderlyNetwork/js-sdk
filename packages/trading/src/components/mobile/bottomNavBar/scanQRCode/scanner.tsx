@@ -5,6 +5,10 @@ type ScannerProps = {
   onSuccess?: (data: string) => void;
 };
 
+const WIDTH = 320;
+const HEIGHT = 320;
+const RATIO = 2;
+
 /**
  * QR Code Scanner
  * reference https://github.com/cozmo/jsQR/blob/master/docs/index.html
@@ -43,7 +47,6 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
         sy = (videoHeight - sHeight) / 2;
       }
 
-      // ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       ctx.drawImage(
         video,
         sx,
@@ -56,6 +59,7 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
         canvas.height
       );
 
+      // ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const res = jsQR(imageData.data, imageData.width, imageData.height, {
         inversionAttempts: "dontInvert",
@@ -75,14 +79,25 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
 
     // Use facingMode: environment to attemt to get the front camera on phones
     navigator?.mediaDevices
-      .getUserMedia({ video: { facingMode: "environment" } })
+      .getUserMedia({
+        video: {
+          facingMode: "environment",
+          width: { ideal: WIDTH * RATIO },
+          height: { ideal: HEIGHT * RATIO },
+        },
+      })
       .then((stream) => {
         video.srcObject = stream;
         // required to tell iOS safari we don't want fullscreen
         video.setAttribute("playsinline", "true");
         video.play();
+
         video.onloadeddata = () => {
           console.log("Video data loaded.");
+          // const videoTrack = stream.getVideoTracks()[0];
+          // const settings = videoTrack.getSettings();
+          // console.log("video size", `${settings.width}x${settings.height}`);
+
           requestAnimationFrame(tick);
         };
       })
@@ -105,15 +120,16 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
     <>
       <video
         ref={videoRef}
-        width={320}
-        height={320}
+        width={WIDTH}
+        height={HEIGHT}
         className="oui-bg-base-10 oui-rounded-2xl oui-hidden"
       />
       <canvas
         ref={canvasRef}
-        width={320}
-        height={320}
-        className={"oui-bg-base-10 oui-rounded-2xl"}
+        width={WIDTH * RATIO}
+        height={HEIGHT * RATIO}
+        style={{ width: WIDTH, height: HEIGHT }}
+        className="oui-bg-base-10 oui-rounded-2xl"
       />
     </>
   );
