@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.3-tsconfig-optimize.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.3-tsconfig-optimize.0
+  - @orderly.network/utils@2.0.3-tsconfig-optimize.0
+
 ## 4.0.2
 
 ### Patch Changes

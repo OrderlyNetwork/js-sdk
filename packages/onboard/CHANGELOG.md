@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.0.3-tsconfig-optimize.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.3-tsconfig-optimize.0
+  - @orderly.network/types@2.0.3-tsconfig-optimize.0
+
 ## 2.0.2
 
 ### Patch Changes

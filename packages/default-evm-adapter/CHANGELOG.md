@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.0.3-tsconfig-optimize.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.3-tsconfig-optimize.0
+  - @orderly.network/types@2.0.3-tsconfig-optimize.0
+
 ## 2.0.2
 
 ### Patch Changes
