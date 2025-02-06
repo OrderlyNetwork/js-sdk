@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Select, SelectItem } from "@orderly.network/ui";
-import { useArgs } from "@storybook/preview-api";
 
-const meta = {
+const meta: Meta<typeof Select> = {
   title: "Base/Select",
   component: Select,
-  subcomponents: { SelectItem },
   parameters: {
     layout: "centered",
   },
@@ -75,39 +73,6 @@ export const Filter: Story = {
       { label: "Grapes", value: "grapes" },
     ],
     value: "apple",
-  },
-};
-
-export const Chains: Story = {
-  render: (args) => {
-    return <Select.chains {...args} />;
-  },
-  args: {
-    size: "md",
-    error: false,
-    variant: "contained",
-    value: {
-      name: "ETH",
-      id: 1,
-    },
-    chains: {
-      mainnet: [
-        {
-          name: "ETH",
-          id: 1,
-        },
-        {
-          name: "Avalanche",
-          id: 43114,
-        },
-      ],
-      testnet: [
-        {
-          name: "Arbitrum",
-          id: 42161,
-        },
-      ],
-    },
   },
 };
 

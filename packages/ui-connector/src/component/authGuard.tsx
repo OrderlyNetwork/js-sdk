@@ -21,7 +21,7 @@ import {
   WalletConnectorSheetId,
 } from "./walletConnector";
 import {
-  ChainSelectorId,
+  ChainSelectorDialogId,
   ChainSelectorSheetId,
 } from "@orderly.network/ui-chain-selector";
 import { alertMessages, DESCRIPTIONS, LABELS } from "../constants/message";
@@ -199,7 +199,7 @@ const DefaultFallback = (props: {
     modal
       .show<{
         wrongNetwork: boolean;
-      }>(isMobile ? ChainSelectorSheetId : ChainSelectorId, {
+      }>(isMobile ? ChainSelectorSheetId : ChainSelectorDialogId, {
         networkId: props.networkId,
         bridgeLessOnly: props.bridgeLessOnly,
       })

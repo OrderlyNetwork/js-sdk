@@ -1,4 +1,4 @@
 {
-  "extends": "./tsconfig.build.json",
-  "compilerOptions": {}
+  "extends": "tsconfig/base.json",
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
 }
