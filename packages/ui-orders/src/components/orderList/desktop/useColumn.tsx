@@ -156,6 +156,7 @@ export const useOrderColumn = (props: {
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
             symbolsInfo: props.symbolsInfo,
+            hideShare: true,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
@@ -754,6 +755,7 @@ function realizedPnL(option?: {
   sharePnLConfig?: SharePnLConfig &
     Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
   symbolsInfo?: SymbolInfo;
+  hideShare?: boolean;
 }): Column<API.Order> {
   return {
     title: "Real. PnL",
@@ -791,11 +793,13 @@ function realizedPnL(option?: {
           >
             {value ?? "--"}
           </Text.numeral>
-          <ShareButtonWidget
-            order={record}
-            sharePnLConfig={option?.sharePnLConfig}
-            modalId={SharePnLDialogId}
-          />
+          {!option?.hideShare && (
+            <ShareButtonWidget
+              order={record}
+              sharePnLConfig={option?.sharePnLConfig}
+              modalId={SharePnLDialogId}
+            />
+          )}
         </Flex>
       );
     },
