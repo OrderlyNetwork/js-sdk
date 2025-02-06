@@ -10,4 +10,5 @@ export default defineConfig((options) => ({
   clean: !options.watch,
   dts: true,
   external: ["react", "react-dom"],
+  tsconfig: "tsconfig.build.json",
 }));

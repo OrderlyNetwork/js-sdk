@@ -4,15 +4,13 @@
     "skipLibCheck": true,
     "module": "esnext",
     "resolveJsonModule": true,
-    
     // "allowSyntheticDefaultImports": true,
-    "esModuleInterop":true
+    "esModuleInterop": true
   },
-  "include": ["**/*.ts", "**/*.tsx","**/*.d.ts", "tsup.config.js"],
-  "exclude": ["node_modules"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],
     "out": "docs",
-    "skipErrorChecking":true
-}
+    "skipErrorChecking": true
+  }
 }

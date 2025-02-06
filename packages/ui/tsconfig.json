@@ -1,9 +1,10 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "moduleResolution": "node",
     "paths": {
-      "@orderly.network/utils": ["../utils/src"],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ]
     },
   }
 }

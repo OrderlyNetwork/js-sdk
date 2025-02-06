@@ -8,7 +8,7 @@ import { modal, toast } from "@orderly.network/ui";
 import { useCallback } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
-import { ChainSelectorId } from "@orderly.network/ui-chain-selector";
+import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 
 export const useAccountMenu = (): any => {
   const { disconnect, connectedChain } = useWalletConnector();
@@ -45,7 +45,7 @@ export const useAccountMenu = (): any => {
     modal
       .show<{
         wrongNetwork: boolean;
-      }>(ChainSelectorId)
+      }>(ChainSelectorDialogId)
       .then(
         (r) => {
           if (!r.wrongNetwork) {

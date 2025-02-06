@@ -1,8 +1,7 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
-    "target": "ES2022",   
+    "target": "ES2022",
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
 }
