@@ -42,8 +42,7 @@ export function createDialogComponent<P extends Partial<SimpleDialogProps>>(
 export function registerSimpleDialog<Props = {}>(
   id: string,
   comp: ElementType<Props>,
-  props?: Partial<ModalArgs<Props>>
+  props?: Partial<SimpleDialogProps & Props>
 ) {
-  // @ts-ignore
   modal.register(id, createDialogComponent(comp), props);
 }

@@ -413,7 +413,12 @@ const DropdownMenu: FC<
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <rect width="16" height="16" rx="2" fill="#3347FD" />
+          <rect
+            width="16"
+            height="16"
+            rx="2"
+            fill="rgb(var(--oui-color-primary-darken))"
+          />
           <path d="M3.507 3.999a.5.5 0 1 0 0 1h9a.5.5 0 0 0 0-1zm4 8.006a.5.5 0 0 0 1 0V7.724l1.5 1.484.703-.703-2.343-2.36a.515.515 0 0 0-.72 0l-2.343 2.36.703.703 1.5-1.484z" />
         </svg>
       </button>

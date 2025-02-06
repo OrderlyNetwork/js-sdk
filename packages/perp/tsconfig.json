@@ -2,8 +2,12 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/types": ["../types/src"],
-      "@orderly.network/utils": ["../utils/src"],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ]
     },
   }
 }

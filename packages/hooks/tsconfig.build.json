@@ -3,11 +3,9 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{
+      "name": "next"
+    }],
     "jsx": "react-jsx",
     "typeRoots": [
       "node_modules/@types",
