@@ -4,7 +4,7 @@ import {
   ReferralType,
   ShareEntity,
   ShareOptions,
-  SharePnLConfig,
+  SharePnLOptions,
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
 import {
@@ -30,7 +30,7 @@ export const DesktopSharePnLContent: FC<{
   baseDp?: number;
   quoteDp?: number;
   referral?: ReferralType;
-  shareOptions: SharePnLConfig;
+  shareOptions: SharePnLOptions;
 }> = (props) => {
   const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
@@ -109,14 +109,13 @@ export const DesktopSharePnLContent: FC<{
     props.hide?.();
   };
 
-  
   // check if the entity has the option, like formats
   const options: ShareOptions[] = [
-    ...(props.entity.openPrice ? ["openPrice"] as ShareOptions[] : []),
-    ...(props.entity.markPrice ? ["markPrice"] as ShareOptions[] : []),
-    ...(props.entity.openTime ? ["openTime"] as ShareOptions[] : []),
-    ...(props.leverage ? ["leverage"] as ShareOptions[] : []),
-    ...(props.entity.quantity ? ["quantity"] as ShareOptions[] : []),
+    ...(props.entity.openPrice ? (["openPrice"] as ShareOptions[]) : []),
+    ...(props.entity.markPrice ? (["markPrice"] as ShareOptions[]) : []),
+    ...(props.entity.openTime ? (["openTime"] as ShareOptions[]) : []),
+    ...(props.leverage ? (["leverage"] as ShareOptions[]) : []),
+    ...(props.entity.quantity ? (["quantity"] as ShareOptions[]) : []),
   ];
 
   savePnlInfo(pnlFormat, shareOption, selectedSnap, message);

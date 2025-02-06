@@ -6,7 +6,7 @@ import {
   ReferralType,
   ShareEntity,
   ShareOptions,
-  SharePnLConfig,
+  SharePnLOptions,
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
 import {
@@ -33,7 +33,7 @@ export const MobileSharePnLContent: FC<{
   baseDp?: number;
   quoteDp?: number;
   referral?: ReferralType;
-  shareOptions: SharePnLConfig;
+  shareOptions: SharePnLOptions;
 }> = (props) => {
   const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();

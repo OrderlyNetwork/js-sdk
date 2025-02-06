@@ -1,12 +1,9 @@
 import { FC, SVGProps, useRef } from "react";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 import { Box, Button, Divider, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { OrderListInstance, OrdersWidget } from "@orderly.network/ui-orders";
 
-export const OrdersPage = (props: {
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
-}) => {
+export const OrdersPage = (props: { sharePnLConfig?: SharePnLConfig }) => {
   const { sharePnLConfig } = props;
 
   const ordersRef = useRef<OrderListInstance>(null);

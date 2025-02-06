@@ -1,10 +1,10 @@
-import { useReferralInfo, useSymbolsInfo } from "@orderly.network/hooks";
 import { useMemo } from "react";
-import { ReferralType, SharePnLConfig, SharePnLParams } from "../types/types";
+import { useReferralInfo, useSymbolsInfo } from "@orderly.network/hooks";
+import { ReferralType, SharePnLOptions, SharePnLParams } from "../types/types";
 
 export const useSharePnLScript = (props: {
-    pnl?: (SharePnLConfig & SharePnLParams) | undefined;
-    hide?: () => void;
+  pnl?: (SharePnLOptions & SharePnLParams) | undefined;
+  hide?: () => void;
 }) => {
   const { pnl, hide } = props;
   const entity = pnl?.entity;
@@ -35,14 +35,13 @@ export const useSharePnLScript = (props: {
     return symbolInfo[entity?.symbol]("quote_dp");
   }, [entity, symbolInfo]);
 
-
   return {
     entity,
     leverage: pnl?.leverage,
     baseDp: base_dp,
     quoteDp: quote_dp,
     referralInfo,
-    shareOptions: pnl as SharePnLConfig | undefined,
+    shareOptions: pnl as SharePnLOptions | undefined,
     hide,
   };
 };

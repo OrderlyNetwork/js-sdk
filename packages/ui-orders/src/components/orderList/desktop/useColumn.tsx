@@ -36,7 +36,6 @@ import { ShareButtonWidget } from "../../shareButton";
 import {
   SharePnLConfig,
   SharePnLDialogId,
-  SharePnLParams,
 } from "@orderly.network/ui-share";
 import { format } from "date-fns";
 import { SymbolInfo, utils } from "@orderly.network/hooks";
@@ -45,8 +44,7 @@ export const useOrderColumn = (props: {
   _type: TabType;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
   symbolsInfo?: SymbolInfo;
 }) => {
   const { _type, onSymbolChange, pnlNotionalDecimalPrecision, sharePnLConfig } =
@@ -752,8 +750,7 @@ function realizedPnL(option?: {
   width?: number;
   className?: string;
   pnlNotionalDecimalPrecision?: number;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
   symbolsInfo?: SymbolInfo;
   hideShare?: boolean;
 }): Column<API.Order> {

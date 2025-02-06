@@ -1,13 +1,10 @@
-// import { PositionsProps } from "../../../types/types";
-import { PositionsProps } from "../../../../types/types";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 import { useShareButtonScript } from "./shareButton.script";
 import { ShareButton } from "./shareButton.ui";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 
 export const ShareButtonWidget = (props: {
   position: any;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<PositionsProps, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
   modalId: string;
   iconSize?: number;
 }) => {
