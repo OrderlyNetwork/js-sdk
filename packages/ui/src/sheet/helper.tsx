@@ -33,7 +33,7 @@ function createSheetComponent<P extends Partial<SimpleSheetProps>>(
 export function registerSimpleSheet<Props = {}>(
   id: string,
   comp: ElementType<Props>,
-  props?: Omit<SheetProps, "content">
+  props?: Partial<SimpleSheetProps & Props>
 ) {
   modal.register(id, createSheetComponent(comp), props);
 }

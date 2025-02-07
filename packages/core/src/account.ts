@@ -359,10 +359,11 @@ export class Account {
   }
 
   private async _checkAccountExist(
-    address: string
+    address: string,
+    chainNamespace?: string
   ): Promise<{ account_id: string; user_id: string } | null> {
     // const brokerId = this.configStore.get("brokerId");
-    const res = await this._getAccountInfo(address);
+    const res = await this._getAccountInfo(address, chainNamespace);
 
     if (res.success) {
       return res.data;
@@ -563,16 +564,25 @@ export class Account {
     return { res, address, keyPair };
   }
 
-  async importOrderlyKey(address: string, secretKey: string) {
-    if (!address || !secretKey) return;
+  async importOrderlyKey(options: {
+    secretKey: string;
+    address: string;
+    chainNamespace: ChainNamespace;
+  }) {
+    const { address, secretKey, chainNamespace } = options;
+    if (!address || !secretKey || !chainNamespace) return;
 
-    const accountInfo = await this._checkAccountExist(address);
+    const accountInfo = await this._checkAccountExist(address, chainNamespace);
     const accountId = accountInfo?.account_id;
 
     if (!accountId) return;
 
     const orderlyKey = new BaseOrderlyKeyPair(secretKey);
-    return this.checkOrderlyKey(address, orderlyKey, accountId);
+    const res = await this.checkOrderlyKey(address, orderlyKey, accountId);
+    if (res) {
+      this.configStore.set("chainNamespace", chainNamespace);
+    }
+    return res;
   }
 
   async checkOrderlyKey(
@@ -782,12 +792,14 @@ export class Account {
     }
   }
 
-  private async _getAccountInfo(address?: string) {
+  private async _getAccountInfo(address?: string, chainNamespace?: string) {
     const brokerId = this.configStore.get("brokerId");
+
+    const addr = address || this.address;
+    const chainType = chainNamespace || this.stateValue.chainNamespace;
+
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${
-        address || this.address
-      }&broker_id=${brokerId}&chain_type=${this.stateValue.chainNamespace}`
+      `/v1/get_account?address=${addr}&broker_id=${brokerId}&chain_type=${chainType}`
     );
     return res;
   }

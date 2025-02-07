@@ -1,0 +1,1 @@
+export const LedgerWalletKey = "orderly:ledger-wallet";

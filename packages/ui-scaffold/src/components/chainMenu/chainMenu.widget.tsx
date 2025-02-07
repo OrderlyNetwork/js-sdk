@@ -1,8 +1,7 @@
 import { ChainMenu } from "./chainMenu.ui";
-import { useChainMenuBuilderScript } from "./useWidgetBuilder.script";
+import { useChainMenuScript } from "./chainMenu.script";
 
 export const ChainMenuWidget = () => {
-  const state = useChainMenuBuilderScript();
-  // @ts-ignore
+  const state = useChainMenuScript();
   return <ChainMenu {...state} />;
 };

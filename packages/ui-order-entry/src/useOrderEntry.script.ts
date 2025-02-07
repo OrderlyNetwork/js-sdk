@@ -110,7 +110,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       currentFocusInput.current = InputType.NONE;
     }, 300);
 
-    if (type === InputType.QUANTITY || type === InputType.TOTAL) {
+    if (type === InputType.QUANTITY) {
       formatQty();
     }
   };

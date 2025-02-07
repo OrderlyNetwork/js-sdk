@@ -16,7 +16,8 @@
     "prepublishOnly": "pnpm build",
     "prepare": "husky install",
     "test": "turbo run test",
-    "release:patch": "ts-node ./scripts/release.ts"
+    "release:patch": "ts-node ./scripts/release.ts",
+    "update:tsconfigPaths": "ts-node ./scripts/tsconfigPaths.ts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
@@ -27,10 +28,14 @@
     "@manypkg/get-packages": "^2.2.2",
     "@npmcli/package-json": "^5.0.0",
     "@turbo/gen": "^2.0.11",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.12.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "eslint-config-custom": "workspace:*",
+    "fs-extra": "^11.2.0",
     "husky": "^8.0.0",
+    "jsonc-parser": "^3.3.1",
     "prettier": "^2.5.1",
     "simple-git": "^3.27.0",
     "ts-node": "^10.9.2",

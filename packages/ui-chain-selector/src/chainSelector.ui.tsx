@@ -1,4 +1,3 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Box,
   Flex,
@@ -6,227 +5,194 @@ import {
   ChainIcon,
   Tabs,
   TabPanel,
-  TabsList,
+  cn,
+  tv,
 } from "@orderly.network/ui";
-import type { ChainItem } from "./types";
-import { ChainSelectorType } from "./types";
+import { ChainType, TChainItem } from "./type";
+import { UseChainSelectorScriptReturn } from "./chainSelector.script";
+
+export type ChainSelectorProps = {
+  isWrongNetwork?: boolean;
+  /**
+   * wide: This represents the wide screen (desktop) UI mode
+   * compact: This indicates a compact (mobile) UI pattern.
+   */
+  variant?: "wide" | "compact";
+  className?: string;
+} & UseChainSelectorScriptReturn;
+
+const chainSelectorVariants = tv({
+  slots: {
+    icon: "",
+    list: "oui-grid oui-grid-cols-1 oui-gap-1",
+    mainnetList: '"',
+    testnetList: '"',
+    recentList: "",
+    item: "oui-w-full oui-rounded-md",
+    tip: "oui-text-center",
+  },
+  variants: {
+    variant: {
+      compact: {
+        icon: "oui-w-6 oui-h-6",
+        list: "oui-bg-base-9 oui-rounded-lg oui-p-1",
+        mainnetList: "oui-grid-cols-2 oui-mt-4",
+        testnetList: "oui-grid-cols-1 oui-mt-4",
+        recentList: "oui-mt-4",
+        item: "oui-bg-base-6 hover:oui-bg-base-7",
+        tip: "oui-pt-6",
+      },
+      wide: {
+        icon: "oui-w-[18px] oui-h-[18px]",
+        mainnetList: "oui-grid-cols-3 oui-mt-3",
+        testnetList: "oui-grid-cols-2 oui-mt-3",
+        recentList: "oui-mt-3",
+        item: "oui-bg-base-5 hover:oui-bg-base-6",
+        tip: "oui-pt-8",
+      },
+    },
+    selected: {
+      true: {
+        item: "",
+      },
+      false: { item: "oui-bg-transparent" },
+    },
+  },
+  compoundVariants: [
+    {
+      variant: "compact",
+      selected: true,
+      className: {
+        item: "hover:oui-bg-base-6",
+      },
+    },
+    {
+      variant: "wide",
+      selected: true,
+      className: {
+        item: "hover:oui-bg-base-5",
+      },
+    },
+  ],
+  defaultVariants: {
+    variant: "wide",
+    selected: false,
+  },
+});
 
 //------------------ ChainSelector start ------------------
-export const ChainSelector = (props: {
-  chains: {
-    mainnet?: ChainItem[];
-    testnet?: ChainItem[];
-  };
-  storageChains?: ChainItem[];
-  onChainChange?: (chain: ChainItem) => Promise<any>;
-  currentChainId?: number;
-  close?: () => void;
-  resolve?: (isSuccess: boolean) => void;
-  chainChangedCallback?: (
-    chainId: number,
-    state: {
-      isTestnet: boolean;
-      isWalletConnected: boolean;
-    }
-  ) => void;
-  isWrongNetwork?: boolean;
-}) => {
-  const { isWrongNetwork = true } = props;
-  const [select, setSelect] = useState<number | undefined>(
-    props.currentChainId
-  );
-  const [selectedTab, setSelectedTab] = useState<ChainSelectorType>(
-    ChainSelectorType.Mainnet
-  );
+export const ChainSelector = (props: ChainSelectorProps) => {
+  const { isWrongNetwork, variant = "wide" } = props;
 
-  useEffect(() => {
-    if (props.currentChainId) {
-      const isMainnet = props.chains.mainnet?.some(
-        (chain) => chain.id === props.currentChainId
-      );
-      const isTestnet = props.chains.testnet?.some(
-        (chain) => chain.id === props.currentChainId
-      );
-      if (isMainnet) {
-        setSelectedTab(ChainSelectorType.Mainnet);
-      } else if (isTestnet) {
-        setSelectedTab(ChainSelectorType.Testnet);
-      }
-    }
-  }, [props.currentChainId, props.chains]);
-
-  // props.currentChainId
-  const onChange = async (chain: ChainItem) => {
-    setSelect(chain.id);
-    const complete = await props.onChainChange?.(chain);
-    console.log('-- complete', complete);
-
-    if (complete) {
-      props.resolve?.(complete);
-      props.close?.();
-
-      props.chainChangedCallback?.(chain.id, {
-        isTestnet: chain.isTestnet ?? false,
-        isWalletConnected: true,
-      });
-    } else {
-      setSelect(undefined);
-    }
-  };
-
-  const onTabChange = (tab: ChainSelectorType) => {
-    setSelectedTab(tab);
-  };
+  const { list, recentList, mainnetList, testnetList, icon, item, tip } =
+    chainSelectorVariants({ variant });
 
   return (
-    <>
-      <Box intensity={900} className="oui-bg-base-8">
-        <Tabs
-          value={selectedTab}
-          variant="contained"
-          size="sm"
-          classNames={{
-            tabsList: "oui-mt-3",
-          }}
-          onValueChange={(e) => onTabChange(e as ChainSelectorType)}
-        >
-          <TabPanel
-            value={ChainSelectorType.Mainnet}
-            title={ChainSelectorType.Mainnet}
-          >
-            {props.storageChains?.length ? (
-              <Flex gap={2} className="oui-text-center oui-my-3">
-                {props.storageChains?.map((item) => {
-                  return (
-                    <RecommandChain
-                      item={item}
-                      key={item.id}
-                      selected={select === item.id}
-                      onClick={(chain: ChainItem) => onChange(chain)}
-                    />
-                  );
-                })}
-              </Flex>
-            ) : null}
-            <Box
-              r="2xl"
-              p={1}
-              className="oui-bg-base-9 oui-mt-3 oui-overflow-auto oui-max-h-[562px] xl:oui-max-h-[500px] oui-hide-scrollbar oui-grid oui-grid-cols-2 oui-rounded-lg oui-gap-1"
-            >
-              {props.chains.mainnet?.map((item, index) => {
+    <Box className={cn("oui-font-semibold", props.className)}>
+      <Tabs
+        value={props.selectedTab}
+        variant="contained"
+        size={variant === "wide" ? "md" : "lg"}
+        onValueChange={(e) => props.onTabChange(e as ChainType)}
+      >
+        <TabPanel value={ChainType.Mainnet} title={ChainType.Mainnet}>
+          {!!props.recentChains?.length && (
+            <Flex gap={2} className={recentList()}>
+              {props.recentChains?.map((item) => {
                 return (
-                  <ChainTile
+                  <RecentChainItem
                     key={item.id}
-                    selected={select === item.id}
-                    // {...item}
                     item={item}
-                    onClick={(chain: ChainItem) => onChange(chain)}
+                    onClick={() => props.onChainClick(item)}
+                    iconClassName={icon()}
                   />
                 );
               })}
-            </Box>
-          </TabPanel>
+            </Flex>
+          )}
 
-          <TabPanel
-            value={ChainSelectorType.Testnet}
-            title={ChainSelectorType.Testnet}
-          >
-            <Box r="2xl" p={1} className="oui-bg-base-9 oui-mt-3 oui-grid oui-grid-cols-1 oui-rounded-lg oui-gap-1">
-              {props.chains.testnet?.map((item, index) => {
-                return (
-                  <ChainTile
-                    key={item.id}
-                    selected={select === item.id}
-                    // {...item}
-                    onClick={(chain: ChainItem) => onChange(chain)}
-                    item={item}
-                  />
-                );
-              })}
-            </Box>
-          </TabPanel>
-        </Tabs>
-      </Box>
+          <Box r="2xl" className={cn(list(), mainnetList())}>
+            {props.chains.mainnet?.map((chain) => {
+              const selected = props.selectChainId === chain.id;
+              return (
+                <ChainItem
+                  key={chain.id}
+                  selected={selected}
+                  item={chain}
+                  onClick={() => props.onChainClick(chain)}
+                  className={item({ selected })}
+                />
+              );
+            })}
+          </Box>
+        </TabPanel>
+
+        <TabPanel value={ChainType.Testnet} title={ChainType.Testnet}>
+          <Box r="2xl" className={cn(list(), testnetList())}>
+            {props.chains.testnet?.map((chain) => {
+              const selected = props.selectChainId === chain.id;
+              return (
+                <ChainItem
+                  key={chain.id}
+                  selected={selected}
+                  item={chain}
+                  onClick={() => props.onChainClick(chain)}
+                  className={item({ selected })}
+                />
+              );
+            })}
+          </Box>
+        </TabPanel>
+      </Tabs>
 
       {isWrongNetwork && (
-        <Box pt={5} pb={4} className="oui-text-center">
+        <Box className={tip()}>
           <Text color="warning" size="xs">
             Please switch to a supported network to continue.
           </Text>
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 // ------------------ ChainSelector end ------------------
 
 // ------------------ ChainItem start ------------------
-export const ChainTile = (props: {
-  // id: number;
-  // name: string;
-  // lowestFee?: boolean;
+export const ChainItem = (props: {
   selected: boolean;
-  item: ChainItem;
-  onClick?: (chain: ChainItem) => void;
+  item: TChainItem;
+  onClick?: () => void;
+  className?: string;
 }) => {
   const { item } = props;
   return (
-    <button
-      className={
-        props.selected
-          ? "oui-w-full oui-bg-base-6 oui-rounded-lg hover:oui-bg-base-7"
-          : "oui-w-full oui-rounded-lg hover:oui-bg-base-7 "
-      }
-      onClick={() => {
-        props.onClick?.(item);
-      }}
-    >
-      <Flex justify={"between"}>
-        <Flex itemAlign={"center"} width={"100%"} py={3} px={4} gap={2}>
-          <ChainIcon chainId={item.id} />
+    <button className={props.className} onClick={props.onClick}>
+      <Flex justify="between" className="oui-py-2.5" px={3}>
+        <Flex itemAlign="center" width="100%" className="oui-gap-x-[6px]">
+          <ChainIcon chainId={item.id} size="xs" />
           <Text size="2xs">{item.name}</Text>
-          {/* {item.lowestFee && (
-            <div className="oui-text-success oui-px-2 oui-bg-success/20 oui-rounded oui-text-2xs">
-              lowest fee
-            </div>
-          )} */}
         </Flex>
         {props.selected && (
-          <Box
-            gradient={"brand"}
-            r={"full"}
-            width={"6px"}
-            height={"6px"}
-            mr={4}
-          />
+          <Box gradient="brand" r="full" width={4} height={4} />
         )}
       </Flex>
     </button>
   );
 };
 
-// ------------------ Recommand Chain start ------------------
-export const RecommandChain = (props: {
-  selected: boolean;
-  item: ChainItem;
-  onClick?: (chain: ChainItem) => void;
+// ------------------ Recent ChainItem start ------------------
+export const RecentChainItem = (props: {
+  item: TChainItem;
+  onClick?: () => void;
+  iconClassName?: string;
 }) => {
-  const { item } = props;
   return (
     <button
-      className={
-        props.selected
-          ? "oui-border oui-border-line-12 oui-rounded-md oui-border-primary-light"
-          : "oui-border oui-border-line-12 oui-rounded-md hover:oui-border-primary-light"
-      }
-      onClick={() => {
-        props.onClick?.(item);
-      }}
+      className="oui-border oui-border-line-12 oui-rounded-lg hover:oui-border-primary-light"
+      onClick={props.onClick}
     >
-      <Flex justify={"between"}>
-        <Flex itemAlign={"center"} width={"100%"} p={2} gap={1}>
-          <ChainIcon chainId={item.id} className="oui-w-[18px] oui-h-[18px]" />
-        </Flex>
+      <Flex itemAlign="center" p={2}>
+        <ChainIcon chainId={props.item.id} className={props.iconClassName} />
       </Flex>
     </button>
   );

@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
-import { useEventEmitter, WalletState } from "@orderly.network/hooks";
+import { useEventEmitter, useLocalStorage, WalletState } from "@orderly.network/hooks";
 import {
   WalletAdapterNetwork,
   WalletNotReadyError,
   WalletReadyState,
 } from "@solana/wallet-adapter-base";
 import { SolanaChainIdEnum, SolanaChains } from "./config";
+
+
 
 export function useSOL({ network }: { network: WalletAdapterNetwork }) {
   const [wallet, setWallet] = useState<WalletState | null>(null);
@@ -18,6 +20,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
   const { setVisible: setModalVisible, visible } = useWalletModal();
   const {
     signMessage,
+    signTransaction,
     sendTransaction,
     publicKey,
     wallet: solanaWallet,
@@ -28,6 +31,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
 
   // 1 for open, 2 for close, null for default
   const selectModalVisibleRef = useRef<boolean>(false);
+  const [ledgerWallet, setLedgerWallet] = useLocalStorage<string[]>(LedgerWalletKey, [] as string[]);
 
   const [connected, setConnected] = useState(false);
 
@@ -71,10 +75,12 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
     console.log("solan connect error", e);
 
     if (e instanceof WalletNotReadyError) {
-      console.log("-- need toast wallet not ready");
-      ee.emit("wallet:connect-error", {
-        message: "Please open the wallet app and use the in-app browser.",
-      });
+      if (isMobile) {
+        console.log("-- need toast wallet not ready", e);
+        ee.emit("wallet:connect-error", {
+          message: "Please open the wallet app and use the in-app browser.",
+        });
+      }
     }
     solanaDisconnect().then();
   };
@@ -100,6 +106,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         solanaPromiseRef.current.connectResolve({
           userAddress: publicKey.toBase58(),
           signMessage,
+          signTransaction,
           sendTransaction,
         });
       }
@@ -110,7 +117,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
       solanaPromiseRef.current.walletSelect,
       solanaPromiseRef.current.connect,
     ])
-      .then(([wallet, { userAddress, signMessage, sendTransaction }]) => {
+      .then(([wallet, { userAddress, signMessage,signTransaction, sendTransaction }]) => {
         // console.log('-- connect sol res',{
         //   wallet,
         //   userAddress, signMessage, sendTransaction
@@ -121,6 +128,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
           provider: {
             signMessage: signMessage,
             connection,
+            signTransaction,
             sendTransaction,
           },
           accounts: [
@@ -135,6 +143,12 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
             },
           ],
         };
+        if (wallet.adapter.name ==='Ledger') {
+          if (!ledgerWallet.includes(userAddress)) {
+            ledgerWallet.push( userAddress );
+            setLedgerWallet([...ledgerWallet]);
+          }
+        }
         setWallet(tempWallet);
         setConnected(true);
         return [tempWallet];
@@ -207,23 +221,26 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         solanaPromiseRef.current.connectResolve({
           userAddress: publicKey?.toBase58(),
           signMessage,
+          signTransaction,
           sendTransaction,
         });
       }
       return;
     }
     console.log("-- tt");
+    const userAddress = publicKey.toBase58();
     setWallet({
       label: solanaWallet.adapter.name,
       icon: "",
       provider: {
         signMessage: signMessage,
-        connection,
+        signTransaction,
         sendTransaction,
+        connection,
       },
       accounts: [
         {
-          address: publicKey.toBase58(),
+          address: userAddress,
         },
       ],
       chains: [
@@ -233,11 +250,19 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         },
       ],
     });
+    if (solanaWallet.adapter.name ==='Ledger') {
+      if (!ledgerWallet.includes(userAddress)) {
+        ledgerWallet.push( userAddress );
+        setLedgerWallet([...ledgerWallet]);
+      }
+    }
+
     setConnected(true);
   }, [
     publicKey,
     solanaWallet,
     signMessage,
+    signTransaction,
     isManual,
     connection,
     sendTransaction,

@@ -495,7 +495,7 @@ export function useOrderEntry(
         field,
         value,
         markPrice,
-        { base_dp: baseDP, quote_dp: quoteDP },
+        { base_dp: baseDP, quote_dp: quoteDP } as API.SymbolExt,
       ]);
 
       return newValues as Partial<OrderEntity>;
@@ -703,7 +703,7 @@ export function useOrderEntry(
       baseIMR,
       baseMMR,
       totalCollateral,
-      positions: positions == null ? [] : positions, 
+      positions: positions == null ? [] : positions,
       IMR_Factor: accountInfo["imr_factor"][symbol],
       orderFee,
       newOrder: {

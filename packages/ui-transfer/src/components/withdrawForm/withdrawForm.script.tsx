@@ -52,10 +52,7 @@ export const useWithdrawForm = ({
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
 
-  const [selectedChainId] = useLocalStorage<number | undefined>(
-    "orderly_selected_chainId",
-    undefined
-  );
+  const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
   const { data: balanceList } = useQuery<any>(`/v1/public/vault_balance`, {
     revalidateOnMount: true,
@@ -134,7 +131,7 @@ export const useWithdrawForm = ({
 
     const chainId = connectedChain
       ? praseChainIdToNumber(connectedChain.id)
-      : parseInt(selectedChainId);
+      : parseInt(linkDeviceStorage?.chainId);
 
     if (!chainId) return null;
 
@@ -145,7 +142,7 @@ export const useWithdrawForm = ({
       id: chainId,
       info: chain!,
     } as CurrentChain;
-  }, [findByChainId, connectedChain, selectedChainId]);
+  }, [findByChainId, connectedChain, linkDeviceStorage]);
 
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {
@@ -217,6 +214,10 @@ export const useWithdrawForm = ({
             "Settlement is only allowed once every 10 minutes. Please try again later."
           );
         }
+        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
+          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        }
+
         if (e.message.indexOf("user rejected") !== -1) {
           toast.error("REJECTED_TRANSACTION");
         }
@@ -284,6 +285,11 @@ export const useWithdrawForm = ({
           toast.error("REJECTED_TRANSACTION");
           return;
         }
+        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
+          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+          return;
+        }
+
         toast.error(e.message);
       })
       .finally(() => {

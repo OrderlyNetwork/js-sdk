@@ -68,9 +68,27 @@ export function useSort(
   return { onSort, getSortedList, sortKey, sortOrder };
 }
 
-export function searchBySymbol(list: any[], searchValue = "") {
+export function searchBySymbol(
+  list: any[],
+  searchValue = "",
+  formatString?: string
+) {
   const reg = new RegExp(searchValue, "i");
-  return list?.filter((item) => reg.test(item.symbol));
+  return list?.filter((item) =>
+    reg.test(formatSymbol(item.symbol, formatString))
+  );
+}
+
+function formatSymbol(symbol: string, formatString: string = "base") {
+  const arr = symbol.split("_");
+  const type = arr[0];
+  const base = arr[1];
+  const quote = arr[2];
+
+  return formatString
+    .replace("type", type)
+    .replace("base", base)
+    .replace("quote", quote);
 }
 
 export function useSize() {
