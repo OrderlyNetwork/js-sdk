@@ -4,7 +4,7 @@ import { ConnectPanel } from "./connectPanel";
 import { useWallet } from "./useWallet";
 import { ChainNamespace } from "@orderly.network/types";
 import { modal, SimpleDialog } from "@orderly.network/ui";
-import { ConnectDrawer } from "./connectDrawer";
+import { ConnectDrawer } from "./components/connectDrawer";
 
 export function Main(props: PropsWithChildren) {
   const { wallet, connectedChain, setChain } = useWallet();
