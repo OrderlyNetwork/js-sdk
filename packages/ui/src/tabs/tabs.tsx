@@ -63,7 +63,7 @@ const Tabs: FC<TabsProps> = (props) => {
     showScrollIndicator,
     ...rest
   } = props;
-  const variantTheme = getComponentTheme("tabs", variant ?? "contained");
+  const tabsOverrides = getComponentTheme("tabs", { variant: "contained" });
   // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
@@ -79,7 +79,7 @@ const Tabs: FC<TabsProps> = (props) => {
   const renderTabsList = () => {
     const tabsList = (
       <TabsList
-        variant={variantTheme}
+        variant={tabsOverrides.variant!}
         size={rest.size}
         className={cnBase(
           "oui-flex-1 oui-border-0",
@@ -93,7 +93,7 @@ const Tabs: FC<TabsProps> = (props) => {
               key={key}
               value={tab.value}
               icon={tab.icon}
-              variant={variantTheme}
+              variant={tabsOverrides.variant}
               size={rest.size}
               data-testid={tab.testid}
             >
@@ -128,7 +128,8 @@ const Tabs: FC<TabsProps> = (props) => {
           itemAlign="center"
           width="100%"
           className={cnBase(
-            variantTheme !== "contained" && "oui-border-b oui-border-b-line-6"
+            tabsOverrides.variant !== "contained" &&
+              "oui-border-b oui-border-b-line-6"
           )}
         >
           {props.leading}
