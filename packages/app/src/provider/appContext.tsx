@@ -14,8 +14,10 @@ import {
   useRestrictedAreas,
   RestrictedAreasReturns,
   IRestrictedAreasParams,
+  Chains,
 } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
+import { API, NetworkId } from "@orderly.network/types";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -29,6 +31,10 @@ type AppContextState = {
     chainId: number,
     state: { isTestnet: boolean; isWalletConnected: boolean }
   ) => void;
+  currentChainFallback?: (
+    chains: Chains,
+    networkId: NetworkId
+  ) => API.Chain | undefined;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
   restrictedInfo?: RestrictedAreasReturns;
 };
@@ -40,12 +46,8 @@ export const useAppContext = () => {
 };
 
 export type AppStateProviderProps = {
-  onChainChanged?: (
-    chainId: number,
-    state: { isTestnet: boolean; isWalletConnected: boolean }
-  ) => void;
   restrictedInfo?: IRestrictedAreasParams;
-};
+} & Pick<AppContextState, "onChainChanged" | "currentChainFallback">;
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
@@ -73,6 +75,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
         currentChainId,
         setCurrentChainId,
         onChainChanged: props.onChainChanged,
+        currentChainFallback: props.currentChainFallback,
         restrictedInfo,
       }}
     >
