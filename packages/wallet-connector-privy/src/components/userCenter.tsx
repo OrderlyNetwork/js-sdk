@@ -17,10 +17,10 @@ export function UserCenter(props: any) {
         onClick={() => {
           props
             .connect()
-            .then((r) => {
+            .then((r: any) => {
               console.log("*****", r);
             })
-            .catch((e) => console.error(e));
+            .catch((e: any) => console.error(e));
         }}
       >
         Connect wallet
