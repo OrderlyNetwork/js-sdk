@@ -1,10 +1,11 @@
-import { Checkbox, cn, CopyIcon, formatAddress, SimpleDialog } from "@orderly.network/ui";
+import { Checkbox, cn, CopyIcon, formatAddress, SimpleDialog, toast, Tooltip } from "@orderly.network/ui";
 import React, { useMemo } from "react";
 import { useWallet } from "../useWallet";
 import { usePrivyWallet } from "../usePrivyWallet";
 import { EmailIcon, GoogleIcon, MoreIcon, ProtectedByPrivyIcon, TwitterIcon } from "./icons";
 import { Email } from "@privy-io/react-auth";
 import { ChainNamespace } from "@orderly.network/types";
+import { WalletCard } from "./walletCard";
 
 function PrivyConnectArea() {
   const { connect } = useWallet();
@@ -139,99 +140,7 @@ function MyWallet() {
   )
 }
 
-interface WalletCardProps {
-  type: ChainNamespace;
-  address: string;
-  isActive: boolean;
-  onActiveChange: (active: boolean) => void;
-}
 
-function WalletCard(props: WalletCardProps) {
-
-
-  return (
-    <div className={cn(
-      'oui-rounded-2xl  oui-p-4 oui-h-[110px] oui-flex oui-flex-col oui-justify-between',
-      props.type === ChainNamespace.evm ? 'oui-bg-[#283BEE]' : 'oui-bg-[#630EAD]'
-
-    )}>
-      <div className="oui-flex oui-items-center oui-justify-between">
-        <div className="oui-text-base-contrast oui-text-sm oui-font-semibold">
-          {formatAddress(props.address)}
-
-        </div>
-        <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-          <CopyIcon size={16} opacity={1} className="oui-text-base-contrast-80 oui-cursor-pointer hover:oui-text-base-contrast" onClick={() => {}} />
-          <MoreIcon className="oui-text-base-contrast-80 oui-cursor-pointer hover:oui-text-base-contrast" />
-        </div>
-      </div>
-
-      <div className="oui-flex oui-items-center oui-justify-between">
-        {props.type === ChainNamespace.evm
-          ?
-          (
-
-            <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-              <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-                <div className="oui-flex oui-items-center oui-justify-center oui-w-[18px] oui-h-[18px] oui-rounded-full oui-bg-[#282e3a]">
-                  <MoreIcon className="oui-text-base-contrast-54 oui-h-3 oui-w-3" />
-
-                </div>
-              </div>
-              <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">EVM</div>
-
-            </div>
-
-          )
-
-          :
-          <div className="oui-flex oui-items-center oui-justify-start oui-gap-1">
-            <div className="">
-              <img src='https://oss.orderly.network/static/sdk/solana-logo.png' className="oui-w-4" />
-            </div>
-            <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">Solana</div>
-          </div>
-        }
-        <div>
-          <Checkbox />
-        </div>
-
-
-      </div>
-    </div>
-  )
-}
-
-function SolanaWalletCard() {
-  return (
-    <div className="oui-rounded-2xl oui-bg-[#630EAD] oui-p-4 oui-h-[110px] oui-flex oui-flex-col oui-justify-between">
-      <div className="oui-flex oui-items-center oui-justify-between">
-        <div className="oui-text-base-contrast oui-text-sm oui-font-semibold">
-
-          6djQNwM26Z...c47bf3t2
-        </div>
-        <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-          <CopyIcon size={16} opacity={1} className="oui-text-base-contrast-80" />
-          <MoreIcon className="oui-text-base-contrast-80" />
-        </div>
-      </div>
-
-      <div className="oui-flex oui-items-center oui-justify-between">
-        <div className="oui-flex oui-items-center oui-justify-start oui-gap-1">
-          <div className="">
-            <img src='https://oss.orderly.network/static/sdk/solana-logo.png' className="oui-w-4" />
-          </div>
-          <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">Solana</div>
-        </div>
-        <div>
-          <Checkbox />
-        </div>
-
-      </div>
-
-    </div>
-  )
-}
 
 export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boolean) => void }) {
   const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL, logout: disconnectPrivy, isConnected: isConnectedPrivy } =

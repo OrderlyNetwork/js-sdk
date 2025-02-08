@@ -37,15 +37,13 @@ export function usePrivyWallet() {
   
   const linkedAccount = useMemo(() => {
     if (user && user.linkedAccounts) {
-
       const account = user.linkedAccounts[0];
       return {
         type: account.type,
-        address: account.address,
+        address: 'number' in account ? account.number : ('address' in account ? account.address : null),
       }
     }
     return null;
-  
   }, [user]);
 
 
