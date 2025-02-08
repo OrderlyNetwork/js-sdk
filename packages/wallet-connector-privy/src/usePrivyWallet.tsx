@@ -13,7 +13,7 @@ const getPrivyEmbeddedWalletChainId = (chainId: string) => {
 };
 
 export function usePrivyWallet() {
-  const { login, logout, ready, authenticated } = usePrivy();
+  const { login, logout, ready, authenticated, user } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
 
   const {
@@ -32,6 +32,22 @@ export function usePrivyWallet() {
 
   const [walletEVM, setWalletEVM] = useState<any>();
   const [walletSOL, setWalletSOL] = useState<any>();
+
+  console.log('--- user', user);
+  
+  const linkedAccount = useMemo(() => {
+    if (user && user.linkedAccounts) {
+
+      const account = user.linkedAccounts[0];
+      return {
+        type: account.type,
+        address: account.address,
+      }
+    }
+    return null;
+  
+  }, [user]);
+
 
   const switchChain = (chainId: number) => {
     const wallet = walletsEVM[0];
@@ -58,7 +74,7 @@ export function usePrivyWallet() {
       return;
     }
     const wallet = walletsEVM[0];
-    wallet.getEthereumProvider().then((provider) => {
+    wallet.getEthereumProvider().then((provider: any) => {
       setWalletEVM({
         label: "privy",
         icon: "",
@@ -124,5 +140,5 @@ export function usePrivyWallet() {
     });
   }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady]);
 
-  return { connect, walletEVM, walletSOL, isConnected, logout, switchChain };
+  return { connect, walletEVM, walletSOL, isConnected, logout, switchChain, linkedAccount };
 }

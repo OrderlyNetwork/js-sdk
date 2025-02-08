@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import { useWallet } from "../useWallet";
 import { usePrivyWallet } from "../usePrivyWallet";
 import { EmailIcon, GoogleIcon, ProtectedByPrivyIcon, TwitterIcon } from "./icons";
+import { Email } from "@privy-io/react-auth";
 
 function PrivyConnectArea() {
   const { connect } = useWallet();
@@ -52,7 +53,8 @@ function EVMConnectArea() {
       <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">EVM</div>
       <div className="oui-grid oui-grid-cols-2 oui-gap-[6px]">
         {['MetaMask', 'WalletConnect', 'Trezor', 'Ledger', 'Binance'].map((item, key) => (
-          <div key={key} className=" oui-flex oui-items-center oui-justify-center oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1">
+          <div key={key} className=" oui-flex oui-items-center oui-justify-start oui-gap-1 oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1">
+            <img className="oui-w-[18px] oui-h-[18px]" src='https://oss.orderly.network/static/wallet_icon/metamask.png' />
             <div className="oui-text-base-contrast oui-text-2xs">{item}</div>
           </div>
         ))}
@@ -95,21 +97,60 @@ function ConnectWallet() {
 
 }
 
+
+function RenderPrivyTypeIcon({ type }: { type: string }) {
+  if (type === 'email') {
+    return <EmailIcon />
+  }
+  if (type === 'google') {
+    return <GoogleIcon />
+  }
+  if (type === 'twitter') {
+    return <TwitterIcon />
+  }
+  return <EmailIcon />
+
+}
+
 function MyWallet() {
+  const { walletEVM, walletSOL, logout, linkedAccount } = usePrivyWallet();
+
   return (
     <div>
       <div className='oui-font-bold oui-text-base-contrast-80 oui-text-base'>My Wallet</div>
+      <div className="oui-flex oui-flex">
+        {linkedAccount &&
+          <div className="oui-flex oui-items-center oui-justify-start oui-gap-2">
+            <div><RenderPrivyTypeIcon type={linkedAccount.type} /></div>
+            <div>{linkedAccount.address}</div>
+
+          </div>
+        }
+
+
+      </div>
+    </div>
+  )
+}
+
+function EvmWalletCard() {
+  return (
+    <div>
+      
     </div>
   )
 }
 
 export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boolean) => void }) {
-  const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL, logout: disconnectPrivy } =
+  const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL, logout: disconnectPrivy, isConnected: isConnectedPrivy } =
     usePrivyWallet();
 
   const isConnected = useMemo(() => {
+    if (isConnectedPrivy) {
+      return true;
+    }
     return false;
-  }, [])
+  }, [isConnectedPrivy])
 
   return (
     <SimpleDialog
@@ -117,7 +158,7 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
       open={props.open}
       onOpenChange={props.onChangeOpen}
       contentProps={{
-        onOpenAutoFocus: (event) => event.preventDefault(),
+        // onPointerDownOutside: (event) => event.preventDefault(),
       }}
     >
       <div className='oui-z-0 oui-absolute -oui-top-[calc(100vh/2)] oui-h-[100vh] oui-left-[50px] oui-right-[50px]'
