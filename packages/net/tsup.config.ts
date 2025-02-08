@@ -8,5 +8,5 @@ export default defineConfig((options) => ({
   sourcemap: true,
   clean: !options.watch,
   dts: true,
-  tsconfig: "tsconfig.build.json",
+  tsconfig: "tsconfig.json",
 }));

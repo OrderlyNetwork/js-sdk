@@ -1,9 +1,6 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.tsx"
-  ],
+  "include": ["src"],
   "exclude": [
     "dist",
     "build",
@@ -19,17 +16,13 @@
   "compilerOptions": {
     // "rootDir": "./src",
     "jsx": "react-jsx",
-    "sourceMap": false,
+    "sourceMap": true,
     "module": "esnext",
     "outDir": "dist",
+    "declarationDir": "types",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "target": "ES2022",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/@types"
-    ],
     "moduleResolution": "node",
-    // "incremental": true,
+    "preserveSymlinks": true,
   }
 }

@@ -2,8 +2,12 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/types": ["../types/src"],
-      "@orderly.network/default-evm-adapter": ["../default-evm-adapter/src"],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/default-evm-adapter": [
+        "../default-evm-adapter/src"
+      ]
     },
   }
 }

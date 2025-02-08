@@ -22,8 +22,19 @@ export type UseChainSelectorScriptOptions = {
   close?: () => void;
   resolve?: (isSuccess: boolean) => void;
   reject?: () => void;
-  onChainChangeBefore?: (chain: TChainItem) => void;
-  onChainChangeAfter?: (chain: TChainItem) => void;
+  onChainChangeBefore?: (
+    chainId: number,
+    state: {
+      isTestnet: boolean;
+    }
+  ) => void;
+  onChainChangeAfter?: (
+    chainId: number,
+    state: {
+      isTestnet: boolean;
+      isWalletConnected: boolean;
+    }
+  ) => void;
 };
 
 export const useChainSelectorScript = (
@@ -87,27 +98,32 @@ export const useChainSelectorScript = (
     // return Promise.reject("No connected chain");
   };
 
+  const changedCallback = (chain: TChainItem, isWalletConnected: boolean) => {
+    const params = {
+      isTestnet: chain.isTestnet,
+      isWalletConnected,
+    };
+    options.onChainChangeAfter?.(chain.id, params);
+    onChainChanged?.(chain.id, params);
+  };
+
   const onChainClick = async (chain: TChainItem) => {
     setSelectChainId(chain.id);
-    options.onChainChangeBefore?.(chain);
+    options.onChainChangeBefore?.(chain.id, { isTestnet: chain.isTestnet });
+    try {
+      const complete = await onChainChange?.(chain);
 
-    const complete = await onChainChange?.(chain);
-
-    if (complete) {
-      options.onChainChangeAfter?.(chain);
-      options.resolve?.(complete);
-      options.close?.();
-      saveRecentChain(chain);
-      onChainChanged?.(chain.id, {
-        isTestnet: chain.isTestnet,
-        isWalletConnected: true,
-      });
-    } else {
-      setSelectChainId(undefined);
-      onChainChanged?.(chain.id, {
-        isTestnet: chain.isTestnet,
-        isWalletConnected: false,
-      });
+      if (complete) {
+        options.resolve?.(complete);
+        options.close?.();
+        saveRecentChain(chain);
+        changedCallback(chain, true);
+      } else {
+        setSelectChainId(undefined);
+        changedCallback(chain, false);
+      }
+    } catch (err) {
+      changedCallback(chain, false);
     }
   };
 
