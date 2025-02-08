@@ -84,7 +84,9 @@ export type ReferralType = {
 export type PnLDisplayFormat = "roi_pnl" | "roi" | "pnl";
 export type ShareOptions =
   | "openPrice"
+  | "closePrice"
   | "openTime"
+  | "closeTime"
   | "markPrice"
   | "quantity"
   | "leverage";
@@ -95,7 +97,9 @@ export type ShareEntity = {
   pnl?: number;
   roi?: number;
   openPrice?: number;
+  closePrice?: number;
   openTime?: number;
+  closeTime?: number;
   markPrice?: number;
   quantity?: number;
 };

@@ -25,7 +25,7 @@ import { PosterRef } from "../poster/poster";
 
 export const DesktopSharePnLContent: FC<{
   entity: ShareEntity;
-  leverage: number | string;
+  leverage?: number | string;
   hide: any;
   baseDp?: number;
   quoteDp?: number;
@@ -73,7 +73,7 @@ export const DesktopSharePnLContent: FC<{
 
   const posterData = getPnLPosterData(
     props.entity,
-    props.leverage,
+    props.leverage!,
     check ? message : "",
     domain,
     pnlFormat,
@@ -112,13 +112,16 @@ export const DesktopSharePnLContent: FC<{
   // check if the entity has the option, like formats
   const options: ShareOptions[] = [
     ...(props.entity.openPrice ? (["openPrice"] as ShareOptions[]) : []),
+    ...(props.entity.closePrice ? (["closePrice"] as ShareOptions[]) : []),
     ...(props.entity.markPrice ? (["markPrice"] as ShareOptions[]) : []),
     ...(props.entity.openTime ? (["openTime"] as ShareOptions[]) : []),
+    ...(props.entity.closeTime ? (["closeTime"] as ShareOptions[]) : []),
     ...(props.leverage ? (["leverage"] as ShareOptions[]) : []),
     ...(props.entity.quantity ? (["quantity"] as ShareOptions[]) : []),
   ];
 
-  savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
+  console.log("ShareOptions", options),
+    savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
 
   return (
     <div className="oui-h-full oui-flex oui-flex-col oui-relative oui-w-full">
@@ -178,7 +181,7 @@ export const DesktopSharePnLContent: FC<{
             <Text size="sm" intensity={80}>
               Optional information to share
             </Text>
-            <Flex mt={3} gap={4}>
+            <Flex mt={3} gap={4} className="oui-flex-wrap">
               {options.map((item, index) => (
                 <ShareOption
                   key={index}

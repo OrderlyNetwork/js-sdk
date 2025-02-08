@@ -14,8 +14,12 @@ export const ShareOption: FC<{
     switch (type) {
       case "openPrice":
         return "Open price";
+      case "closePrice":
+        return "Close price";
       case "openTime":
         return "Opened at";
+      case "closeTime":
+        return "Closed at";
       case "markPrice":
         return "Mark price";
       case "quantity":
@@ -62,7 +66,7 @@ export const ShareOption: FC<{
         }}
       />
 
-      <Text size="xs" intensity={54} >
+      <Text size="xs" intensity={54}>
         {text}
       </Text>
     </Flex>

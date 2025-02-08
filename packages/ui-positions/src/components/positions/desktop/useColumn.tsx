@@ -164,7 +164,7 @@ export const useColumn = (props: {
             </HoverCard>
           ),
           dataIndex: "unrealized_pnl",
-          width: 150,
+          width: 180,
           onSort: true,
           rule: "price",
           numeralProps: {

@@ -14,10 +14,13 @@ import { useMemo } from "react";
 import { PositionHistoryExt } from "../positionHistory.script";
 import { useSymbolContext } from "../../../providers/symbolProvider";
 import { commifyOptional } from "@orderly.network/utils";
+import { ShareButtonWidget } from "../../positions/desktop/shareButton";
+import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 
 export const usePositionHistoryColumn = (props: {
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
+  sharePnLConfig?: SharePnLConfig;
 }) => {
   const { onSymbolChange, pnlNotionalDecimalPrecision } = props;
 
@@ -54,10 +57,18 @@ export const usePositionHistoryColumn = (props: {
             return (a.netPnL ?? 0) - (b.netPnL ?? 0);
           },
           render: (_: any, record) => (
-            <NetPnL
-              record={record}
-              pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
-            />
+            <Flex gapX={1}>
+              <NetPnL
+                record={record}
+                pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+              />
+              <ShareButtonWidget
+                position={record}
+                sharePnLConfig={props.sharePnLConfig}
+                modalId={SharePnLDialogId}
+                isPositionHistory
+              />
+            </Flex>
           ),
         },
         // avg open
@@ -310,54 +321,48 @@ export const NetPnL = (props: {
   if (record.netPnL == null) return text();
 
   return (
-    <Flex>
-      <Tooltip
-        // open={record.max_position_qty == 3.22}
-        delayDuration={200}
-        // @ts-ignore
-        content={
-          <Flex
-            direction={"column"}
-            itemAlign={"start"}
-            className="oui-text-2xs"
-          >
-            <Text intensity={80}>Net PnL</Text>
-            <Flex justify={"between"} width={"100%"} gap={2}>
-              <Text intensity={54}>Realized PnL</Text>
-              <Text
-                color={record.realized_pnl >= 0 ? "profit" : "lose"}
-                className="oui-cursor-pointer"
-              >
-                {commifyOptional(record.realized_pnl)}
-              </Text>
-            </Flex>
-            <Flex justify={"between"} width={"100%"} gap={2}>
-              <Text intensity={54}>Funding fee</Text>
-              <Text
-                color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
-                className="oui-cursor-pointer"
-              >
-                {commifyOptional(-record.accumulated_funding_fee)}
-              </Text>
-            </Flex>
-            <Flex justify={"between"} width={"100%"} gap={2}>
-              <Text intensity={54}>Trading fee</Text>
-              <Text
-                color={record.trading_fee > 0 ? "lose" : "profit"}
-                className="oui-cursor-pointer"
-              >
-                {commifyOptional(-record.trading_fee)}
-              </Text>
-            </Flex>
+    <Tooltip
+      // open={record.max_position_qty == 3.22}
+      delayDuration={200}
+      // @ts-ignore
+      content={
+        <Flex direction={"column"} itemAlign={"start"} className="oui-text-2xs">
+          <Text intensity={80}>Net PnL</Text>
+          <Flex justify={"between"} width={"100%"} gap={2}>
+            <Text intensity={54}>Realized PnL</Text>
+            <Text
+              color={record.realized_pnl >= 0 ? "profit" : "lose"}
+              className="oui-cursor-pointer"
+            >
+              {commifyOptional(record.realized_pnl)}
+            </Text>
           </Flex>
-        }
-        className="oui-min-w-[204px] oui-bg-base-5"
-        arrow={{
-          className: "oui-fill-base-5",
-        }}
-      >
-        <div>{text()}</div>
-      </Tooltip>
-    </Flex>
+          <Flex justify={"between"} width={"100%"} gap={2}>
+            <Text intensity={54}>Funding fee</Text>
+            <Text
+              color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
+              className="oui-cursor-pointer"
+            >
+              {commifyOptional(-record.accumulated_funding_fee)}
+            </Text>
+          </Flex>
+          <Flex justify={"between"} width={"100%"} gap={2}>
+            <Text intensity={54}>Trading fee</Text>
+            <Text
+              color={record.trading_fee > 0 ? "lose" : "profit"}
+              className="oui-cursor-pointer"
+            >
+              {commifyOptional(-record.trading_fee)}
+            </Text>
+          </Flex>
+        </Flex>
+      }
+      className="oui-min-w-[204px] oui-bg-base-5"
+      arrow={{
+        className: "oui-fill-base-5",
+      }}
+    >
+      <div>{text()}</div>
+    </Tooltip>
   );
 };

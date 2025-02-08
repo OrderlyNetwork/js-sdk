@@ -212,6 +212,7 @@ const HistoryTab: FC<DataListState> = (props) => {
             symbol={props.showAllSymbol ? undefined : props.symbol}
             onSymbolChange={props.onSymbolChange}
             classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
+            sharePnLConfig={props.sharePnLConfig}
           />
         </TabPanel>
         <TabPanel

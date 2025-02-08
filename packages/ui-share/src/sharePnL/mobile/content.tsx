@@ -199,10 +199,24 @@ export const MobileSharePnLContent: FC<{
                 curType={shareOption}
               />
             )}
+            {props.entity.closePrice && (
+              <ShareOption
+                setShareOption={setShareOption}
+                type="closePrice"
+                curType={shareOption}
+              />
+            )}
             {props.entity.openTime && (
               <ShareOption
                 setShareOption={setShareOption}
                 type="openTime"
+                curType={shareOption}
+              />
+            )}
+            {props.entity.closeTime && (
+              <ShareOption
+                setShareOption={setShareOption}
+                type="closeTime"
                 curType={shareOption}
               />
             )}
@@ -340,8 +354,12 @@ const ShareOption: FC<{
     switch (type) {
       case "openPrice":
         return "Open price";
+      case "closePrice":
+        return "Close price";
       case "openTime":
         return "Opened at";
+      case "closeTime":
+        return "Closed at";
       case "markPrice":
         return "Mark price";
       case "quantity":
