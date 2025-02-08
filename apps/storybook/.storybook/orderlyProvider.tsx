@@ -94,14 +94,7 @@ export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
         // brokerName="Orderly"
         // networkId="testnet"
         configStore={configStore}
-        appIcons={{
-          main: {
-            img: "/orderly-logo.svg",
-          },
-          secondary: {
-            img: "/orderly-logo-secondary.svg",
-          },
-        }}
+        appIcons={config.orderlyAppProvider.appIcons}
         // overrides={{
         //   tabs: {
         //     variant: "text",
