@@ -2,8 +2,6 @@ import { Checkbox, cn, CopyIcon, formatAddress, SimpleDialog, toast, Tooltip } f
 import React, { useMemo } from "react";
 import { useWallet } from "../useWallet";
 import { usePrivyWallet } from "../usePrivyWallet";
-import { EmailIcon, GoogleIcon, MoreIcon, ProtectedByPrivyIcon, TwitterIcon } from "./icons";
-import { Email } from "@privy-io/react-auth";
 import { ChainNamespace } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
 
@@ -19,30 +17,30 @@ function PrivyConnectArea() {
           className="oui-cursor-pointer oui-rounded-[6px] oui-bg-[#333948] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1"
           onClick={() => connect("privy", "email")}
         >
-          <EmailIcon />
+          <img src="https://oss.orderly.network/static/sdk/email.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">Email</div>
         </div>
 
         <div
-          className="oui-rounded-[6px] oui-bg-[#335FFC] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1"
+          className="oui-rounded-[6px] oui-bg-[#335FFC] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1 oui-cursor-pointer"
           onClick={() => connect("privy", "email")}
         >
-          <GoogleIcon />
+          <img src="https://oss.orderly.network/static/sdk/google.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">Google</div>
         </div>
 
         <div
-          className="oui-rounded-[6px] oui-bg-[#07080A] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1"
+          className="oui-rounded-[6px] oui-bg-[#07080A] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1 oui-cursor-pointer"
           onClick={() => connect("privy", "email")}
         >
-          <TwitterIcon />
+          <img src="https://oss.orderly.network/static/sdk/twitter.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">X / Twitter</div>
         </div>
 
       </div>
       <div className="oui-h-3 oui-flex oui-justify-center oui-mt-4">
 
-        <ProtectedByPrivyIcon />
+        <img src="https://oss.orderly.network/static/sdk/privy-logo.png" className=" oui-h-[10px]" />
       </div>
       <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-5"></div>
     </div>
@@ -102,16 +100,15 @@ function ConnectWallet() {
 
 function RenderPrivyTypeIcon({ type }: { type: string }) {
   if (type === 'email') {
-    return <EmailIcon />
+    return <img src="https://oss.orderly.network/static/sdk/email.svg" className=" oui-h-[10px]" />
   }
   if (type === 'google') {
-    return <GoogleIcon />
+    return <img src="https://oss.orderly.network/static/sdk/google.svg" className=" oui-h-[10px]" />
   }
   if (type === 'twitter') {
-    return <TwitterIcon />
+    return <img src="https://oss.orderly.network/static/sdk/twitter.svg" className=" oui-h-[10px]" />
   }
-  return <EmailIcon />
-
+  return <img src="https://oss.orderly.network/static/sdk/email.svg" className=" oui-h-[10px]" />;
 }
 
 function MyWallet() {
