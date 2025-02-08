@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.0.3-alpha.0
+
+### Patch Changes
+
+- fix ledger issues
+- Updated dependencies
+  - @orderly.network/hooks@2.0.3-alpha.0
+  - @orderly.network/types@2.0.3-alpha.0
+
 ## 2.0.2
 
 ### Patch Changes
