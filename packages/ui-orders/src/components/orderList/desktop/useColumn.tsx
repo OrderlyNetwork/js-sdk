@@ -87,6 +87,7 @@ export const useOrderColumn = (props: {
           reduceOnly({ width: 130 }),
           hidden({ width: 130 }),
           cancelBtn({ width: 130 }),
+          orderTime({ width: 160, enableSort: false }),
         ];
       case TabType.pending:
         return [
