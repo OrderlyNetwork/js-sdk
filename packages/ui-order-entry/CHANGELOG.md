@@ -1,5 +1,31 @@
 # @orderly.network/ui-order-entry
 
+## 2.0.3
+
+### Patch Changes
+
+- cca30140b: fix ledger issues
+- Updated dependencies [cca30140b]
+  - @orderly.network/ui-connector@2.0.3
+  - @orderly.network/hooks@2.0.3
+  - @orderly.network/types@2.0.3
+  - @orderly.network/utils@2.0.3
+  - @orderly.network/react-app@2.0.3
+  - @orderly.network/ui@2.0.3
+
+## 2.0.3-alpha.0
+
+### Patch Changes
+
+- fix ledger issues
+- Updated dependencies
+  - @orderly.network/ui-connector@2.0.3-alpha.0
+  - @orderly.network/hooks@2.0.3-alpha.0
+  - @orderly.network/types@2.0.3-alpha.0
+  - @orderly.network/utils@2.0.3-alpha.0
+  - @orderly.network/react-app@2.0.3-alpha.0
+  - @orderly.network/ui@2.0.3-alpha.0
+
 ## 2.0.2
 
 ### Patch Changes

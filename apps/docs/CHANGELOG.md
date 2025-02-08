@@ -1,5 +1,27 @@
 # @orderly/docs
 
+## 1.0.3
+
+### Patch Changes
+
+- cca30140b: fix ledger issues
+- Updated dependencies [cca30140b]
+  - @orderly.network/react@2.0.3
+  - @orderly.network/web3-onboard@2.0.3
+  - @orderly.network/hooks@2.0.3
+  - @orderly.network/types@2.0.3
+
+## 1.0.3-alpha.0
+
+### Patch Changes
+
+- fix ledger issues
+- Updated dependencies
+  - @orderly.network/react@2.0.3-alpha.0
+  - @orderly.network/web3-onboard@2.0.3-alpha.0
+  - @orderly.network/hooks@2.0.3-alpha.0
+  - @orderly.network/types@2.0.3-alpha.0
+
 ## 1.0.2
 
 ### Patch Changes
