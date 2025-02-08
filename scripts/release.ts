@@ -95,9 +95,12 @@ async function ceheckBranch() {
   const status = await simpleGit.status();
   const currentBranch = status.current;
   console.log("currentBranch: ", currentBranch);
-  if (!currentBranch?.includes("internal/")) {
+  if (
+    !currentBranch?.startsWith("internal/") &&
+    !currentBranch?.startsWith("npm/")
+  ) {
     throw new Error(
-      'Release versions can only operate on branches prefixed with "internal/"'
+      'Release versions can only operate on branches prefixed with "internal/" or npm/'
     );
   }
 }
