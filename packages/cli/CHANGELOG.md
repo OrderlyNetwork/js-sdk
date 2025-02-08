@@ -1,5 +1,21 @@
 # @orderly.network/cli
 
+## 0.3.20
+
+### Patch Changes
+
+- cca30140b: fix ledger issues
+- Updated dependencies [cca30140b]
+  - @orderly.network/core@2.0.3
+
+## 0.3.20-alpha.0
+
+### Patch Changes
+
+- fix ledger issues
+- Updated dependencies
+  - @orderly.network/core@2.0.3-alpha.0
+
 ## 0.3.19
 
 ### Patch Changes
