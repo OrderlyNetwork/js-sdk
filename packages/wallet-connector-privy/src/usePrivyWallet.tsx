@@ -33,7 +33,6 @@ export function usePrivyWallet() {
   const [walletEVM, setWalletEVM] = useState<any>();
   const [walletSOL, setWalletSOL] = useState<any>();
 
-  console.log('--- user', user);
   
   const linkedAccount = useMemo(() => {
     if (user && user.linkedAccounts) {
@@ -50,7 +49,10 @@ export function usePrivyWallet() {
   const switchChain = (chainId: number) => {
     const wallet = walletsEVM[0];
     if (wallet) {
-      return wallet.switchChain(chainId);
+      return wallet.switchChain(chainId).then(res => {
+        console.log('switch chain res', res);
+        
+      });
     }
     return Promise.reject("no wallet");
   };

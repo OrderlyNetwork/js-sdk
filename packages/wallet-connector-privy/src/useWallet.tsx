@@ -3,11 +3,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSoalanWallet } from "./useSoalanWallet";
 import { usePrivyWallet } from "./usePrivyWallet";
 import { ChainNamespace } from "@orderly.network/types";
-import {useLocalStorage} from "@orderly.network/hooks";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { ConnectProps, SolanaChains } from "./types";
 
 const ConnectorKey = 'ConnectorKey';
 export function useWallet() {
-  const [connectorKey, setConnectorKey]= useLocalStorage(ConnectorKey, '')
+  const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
   const {
     connect: connectEVM,
     wallet: walletEVM,
@@ -26,23 +27,22 @@ export function useWallet() {
     switchChain: setChainPrivy,
   } = usePrivyWallet();
   const [wallet, setWallet] = useState<any>();
+  const [namespace, setNamespace] = useState<ChainNamespace>(ChainNamespace.evm);
 
-  // current target connector and namespace
-  const targetConnector= useRef<any>(null)
-  const targetChainNamespace = useRef<any>(null);
+  const isManual = useRef<boolean>(false);
 
-  const connect = (type: any, wallet: any) => {
+
+  const connect = (params: ConnectProps) => {
     console.log('--connect wallet', wallet);
     try {
-      if (type === "EVM") {
+      if (params.walletType === "EVM") {
         connectEVM({ connector: wallet });
       }
-      if (type === 'SOL') {
+      if (params.walletType === 'SOL') {
         connectSOL(wallet.name).then();
       }
-      if (type === 'privy') {
-        targetChainNamespace.current = ChainNamespace.evm;
-        targetConnector.current = 'privy';
+      if (params.walletType === 'privy') {
+        setConnectorKey('privy')
         connectPrivy();
 
       }
@@ -53,7 +53,7 @@ export function useWallet() {
 
   const isPrivy = useMemo(() => {
     if (connectorKey === 'privy') {
-     return true;
+      return true;
     }
     return false;
 
@@ -61,77 +61,76 @@ export function useWallet() {
 
   const [connectedChain, setConnectedChain] = useState<any>()
 
-  const setChain = (chain:{chainId: number | string}) => {
+  const setChain = (chain: { chainId: number | string }) => {
     if (isPrivy) {
       console.log('-- setchan privy', chain, setChainPrivy);
-      return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
-        console.log('-- privy switch chain res', res);
-        return Promise.resolve(true)
+      let tempNamespace: ChainNamespace = ChainNamespace.evm;
+      if (Array.from(SolanaChains.values()).includes(parseInt(chain.chainId as string))) {
+        tempNamespace = ChainNamespace.solana;
+      }
+      // todo need check current namespace
+      if (tempNamespace === ChainNamespace.evm) {
+        isManual.current = true;
+        setWallet(privyWalletEVM);
+        return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
+          console.log('-- privy switch chain res', res);
+        setConnectedChain(privyWalletEVM.chain)
+          return Promise.resolve(true)
 
-      })
+        })
+      }
+
+      if (tempNamespace === ChainNamespace.solana) {
+        isManual.current = true;
+        setWallet(privyWalletSOL);
+        setConnectedChain(privyWalletSOL.chain)
+        return Promise.resolve();
+
+      }
+      return setChainEvm(parseInt(chain.chainId as string));
 
     }
-    return setChainEvm(parseInt(chain.chainId as string));
-
   }
 
-  useEffect(() => {
-    if (targetConnector.current === 'privy') {
-      if (targetChainNamespace.current === ChainNamespace.evm) {
+
+
+    // useEffect(() => {
+    //   if (targetConnector.current === 'wagmi') {
+    //     if (targetChainNamespace.current === ChainNamespace.evm) {
+    //       setWallet(walletEVM);
+    //     } else {
+    //       setWallet(walletSOL)
+    //     }
+    //   }
+    // }, [walletEVM, walletSOL]);
+
+    useEffect(() => {
+      // check current connector and chain form localstorage
+      console.log('--- xxxxconnectorKey', connectorKey);
+
+      if (!connectorKey) {
+        return;
+      }
+      if (isManual.current) {
+        return;
+      }
+
+      if (connectorKey === 'privy') {
+        // todo need check chainNamespace in localstorage
         if (privyWalletEVM) {
-          setConnectorKey('privy')
-
-
           setWallet(privyWalletEVM);
-          setConnectedChain(privyWalletEVM.connectedChain);
+          setConnectedChain(privyWalletEVM.chain)
         }
-      } else {
         if (privyWalletSOL) {
-          setConnectorKey('privy')
-          setWallet(privyWalletSOL)
+          // console.log('-- privy SOL wallet', privyWalletSOL);
+          //   setWallet(privyWalletSOL);
+          //   setConnectedChain(privyWalletSOL.chains[0])
+
         }
       }
-    }
-  }, [privyWalletEVM, privyWalletSOL])
 
-  // useEffect(() => {
-  //   if (targetConnector.current === 'wagmi') {
-  //     if (targetChainNamespace.current === ChainNamespace.evm) {
-  //       setWallet(walletEVM);
-  //     } else {
-  //       setWallet(walletSOL)
-  //     }
-  //   }
-  // }, [walletEVM, walletSOL]);
-
-  useEffect(() =>{
-    // check current connector and chain form localstorage
-    if (!connectorKey) {
-     return;
-    }
-    // mark as reload
-    if (targetConnector.current) {
-     return;
-    }
-    console.log('-- setwallet', connectorKey);
-    if (wallet) {
-      return;
-    }
-    if (connectorKey === 'privy') {
-      // if (privyWalletEVM) {
-      //   setWallet(privyWalletEVM);
-      //   setConnectedChain(privyWalletEVM.chains[0])
-      // }
-      if (privyWalletSOL) {
-        console.log('-- privy SOL wallet', privyWalletSOL);
-          setWallet(privyWalletSOL);
-          setConnectedChain(privyWalletSOL.chains[0])
-
-      }
-    }
-
-  }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet])
+    }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet])
 
 
-  return { connect, wallet, connectedChain, setChain };
-}
+    return { connect, wallet, connectedChain, setChain, namespace };
+  }

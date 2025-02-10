@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { Button } from "@orderly.network/ui";
+import { Button, formatAddress, Text } from "@orderly.network/ui";
+import { useWalletConnector } from "@orderly.network/hooks";
+import { usePrivyWallet } from "../usePrivyWallet";
+import { RenderPrivyTypeIcon } from "./common";
 
 export function UserCenter(props: any) {
-  const { accountState: state } = props;
+  const { connect, wallet } = useWalletConnector();
+  const { linkedAccount } = usePrivyWallet();
+  const { accountState: state, } = props;
   if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
       <Button
@@ -28,5 +33,24 @@ export function UserCenter(props: any) {
     );
   }
   // if (accountStatus.status <= ) {}
-  return <div>user center</div>;
+  return (
+    <div onClick={() => connect()} >
+        <Button
+          size="md"
+          variant="gradient"
+          angle={45}
+          data-testid="oui-testid-nav-bar-address-btn"
+          className="oui-flex oui-items-center oui-justify-center oui-gap-2"
+        >
+          {linkedAccount &&
+            <RenderPrivyTypeIcon type={linkedAccount.type} size={18} />
+          }
+          <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
+            {formatAddress(wallet.accounts[0].address)}
+          </Text.formatted>
+        </Button>
+      </div>
+
+
+  )
 }

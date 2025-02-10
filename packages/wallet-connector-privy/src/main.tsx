@@ -7,7 +7,7 @@ import { modal, SimpleDialog } from "@orderly.network/ui";
 import { ConnectDrawer } from "./components/connectDrawer";
 
 export function Main(props: PropsWithChildren) {
-  const { wallet, connectedChain, setChain } = useWallet();
+  const { wallet, connectedChain, setChain, namespace } = useWallet();
 
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
 
@@ -26,9 +26,9 @@ export function Main(props: PropsWithChildren) {
       wallet: wallet,
       setChain,
       connectedChain:connectedChain,
-      namespace: ChainNamespace.solana,
+      namespace: namespace,
     }
-  ), [connect, setChain, connectedChain, wallet]);
+  ), [connect, setChain, connectedChain, wallet, namespace]);
   // const connectedChain =wallet ? wallet.chain : null;
   // console.log('-- connected chain', connectedChain);
   console.log('-- wallet provide value', value);

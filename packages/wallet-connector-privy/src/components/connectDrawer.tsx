@@ -4,9 +4,10 @@ import { useWallet } from "../useWallet";
 import { usePrivyWallet } from "../usePrivyWallet";
 import { ChainNamespace } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
+import { ConnectProps } from "../types";
+import { RenderPrivyTypeIcon } from "./common";
 
-function PrivyConnectArea() {
-  const { connect } = useWallet();
+function PrivyConnectArea({connect}: {connect: (type: any) => void}) {
   return (
     <div className="">
       <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">Login in</div>
@@ -15,7 +16,7 @@ function PrivyConnectArea() {
         <div
 
           className="oui-cursor-pointer oui-rounded-[6px] oui-bg-[#333948] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1"
-          onClick={() => connect("privy", "email")}
+          onClick={() => connect({walletType: 'privy', extraType: 'email'})}
         >
           <img src="https://oss.orderly.network/static/sdk/email.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">Email</div>
@@ -23,7 +24,7 @@ function PrivyConnectArea() {
 
         <div
           className="oui-rounded-[6px] oui-bg-[#335FFC] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1 oui-cursor-pointer"
-          onClick={() => connect("privy", "email")}
+          onClick={() => connect({walletType: 'privy', extraType: 'google'})}
         >
           <img src="https://oss.orderly.network/static/sdk/google.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">Google</div>
@@ -31,7 +32,7 @@ function PrivyConnectArea() {
 
         <div
           className="oui-rounded-[6px] oui-bg-[#07080A] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1 oui-cursor-pointer"
-          onClick={() => connect("privy", "email")}
+          onClick={() => connect({walletType: 'privy', extraType: 'twitter'})}
         >
           <img src="https://oss.orderly.network/static/sdk/twitter.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">X / Twitter</div>
@@ -81,13 +82,13 @@ function SOLConnectArea() {
   )
 }
 
-function ConnectWallet() {
+function ConnectWallet({connect}: {connect: (params: ConnectProps) => void}) {
   return (
     <div>
       <div className='oui-font-semibold oui-text-base-contrast-80 oui-text-base'>Connect Wallet</div>
       <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
 
-        <PrivyConnectArea />
+        <PrivyConnectArea connect={(type) => connect({walletType: 'privy', extraType: type})} />
         <EVMConnectArea />
         <SOLConnectArea />
       </div>
@@ -98,18 +99,7 @@ function ConnectWallet() {
 }
 
 
-function RenderPrivyTypeIcon({ type }: { type: string }) {
-  if (type === 'email') {
-    return <img src="https://oss.orderly.network/static/sdk/email.svg" className=" oui-h-[10px]" />
-  }
-  if (type === 'google') {
-    return <img src="https://oss.orderly.network/static/sdk/google.svg" className=" oui-h-[10px]" />
-  }
-  if (type === 'twitter') {
-    return <img src="https://oss.orderly.network/static/sdk/twitter.svg" className=" oui-h-[10px]" />
-  }
-  return <img src="https://oss.orderly.network/static/sdk/email.svg" className=" oui-h-[10px]" />;
-}
+
 
 function MyWallet() {
   const { walletEVM, walletSOL, logout, linkedAccount } = usePrivyWallet();
@@ -120,8 +110,8 @@ function MyWallet() {
       <div className="oui-flex oui-justify-between oui-items-center oui-mt-5">
         {linkedAccount &&
           <div className="oui-flex oui-items-center oui-justify-start oui-gap-2 oui-text-base-contrast">
-            <div><RenderPrivyTypeIcon type={linkedAccount.type} /></div>
-            <div>{linkedAccount.address}</div>
+            <div><RenderPrivyTypeIcon type={linkedAccount.type} size={24} /></div>
+            <div className="oui-text-xs">{linkedAccount.address}</div>
 
           </div>
         }
@@ -143,6 +133,8 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
   const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL, logout: disconnectPrivy, isConnected: isConnectedPrivy } =
     usePrivyWallet();
 
+  const { connect } = useWallet();
+
   const isConnected = useMemo(() => {
     if (isConnectedPrivy) {
       return true;
@@ -152,7 +144,9 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
 
   return (
     <SimpleDialog
-      classNames={{ content: 'oui-flex-col  oui-h-[calc(100vh_-_72px)] oui-right-0 oui-left-[calc(100%_-_300px)] oui-w-[300px] oui-translate-x-0 lg:oui-px-4' }}
+      classNames={{ content: 'oui-flex-col  oui-h-[calc(100vh_-_72px)] oui-right-0 oui-left-[calc(100%_-_300px)] oui-w-[300px] oui-translate-x-0 lg:oui-px-4',
+        body: 'oui-overflow-hidden ',
+       }}
       open={props.open}
       onOpenChange={props.onChangeOpen}
       contentProps={{
@@ -171,7 +165,7 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
         {isConnected ? (
           <MyWallet />
         ) : (
-          <ConnectWallet />
+          <ConnectWallet connect={(params) => {connect(params); props.onChangeOpen(false)}}/>
         )}
 
       </div>
