@@ -1,6 +1,7 @@
 import React from "react";
 import { ChainNamespace } from "@orderly.network/types";
 import {
+  ChainIcon,
   Checkbox,
   cn,
   CopyIcon,
@@ -14,6 +15,8 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { MoreIcon } from "./icons";
+import { useChains } from "@orderly.network/hooks";
+import { useWalletConnectorPrivy } from "../provider";
 
 interface WalletCardProps {
   type: ChainNamespace;
@@ -79,7 +82,10 @@ export function WalletCard(props: WalletCardProps) {
                 <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-relative oui-left-[-9px]">
 
                   <div className="oui-rounded-full oui-bg-[#282e3a] oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center">
-                    <MoreIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-h-3 oui-w-3 oui-relative oui-z-10" style={{ zIndex: 1 }} />
+                    <EVMChainDropdownMenu>
+
+                      <MoreIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-h-3 oui-w-3 oui-relative oui-z-10" style={{ zIndex: 1 }} />
+                    </EVMChainDropdownMenu>
                   </div>
                   <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">
                     EVM
@@ -112,32 +118,72 @@ export function WalletCard(props: WalletCardProps) {
 
 function PrivyWalletHandleOption() {
   return (
-    <div>
-      <DropdownMenuRoot>
-        <DropdownMenuTrigger asChild>
-          <button>
-            <MoreIcon className="oui-text-base-contrast-80 oui-cursor-pointer hover:oui-text-base-contrast" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuPortal>
-          <DropdownMenuContent
-            size={"xl"}
-            align={"end"}
-            onCloseAutoFocus={(e) => e.preventDefault()}
-            side='top'
-            style={{ width: "100px" }}
-            className={"oui-p-1 oui-rounded oui-font-semibold"}
-            sideOffset={0}
-          >
-            <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
-              <div>export</div>
-            </DropdownMenuItem>
-            {/* <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
+    <DropdownMenuRoot>
+      <DropdownMenuTrigger asChild>
+        <button>
+          <MoreIcon className="oui-text-base-contrast-80 oui-cursor-pointer hover:oui-text-base-contrast" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          size={"xl"}
+          align={"end"}
+          onCloseAutoFocus={(e) => e.preventDefault()}
+          side='top'
+          style={{ width: "100px" }}
+          className={"oui-p-1 oui-rounded oui-font-semibold"}
+          sideOffset={0}
+        >
+          <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
+            <div>export</div>
+          </DropdownMenuItem>
+          {/* <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
               <div>import</div>
             </DropdownMenuItem> */}
-          </DropdownMenuContent>
-        </DropdownMenuPortal>
-      </DropdownMenuRoot>
-    </div>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
   );
+}
+
+function EVMChainDropdownMenu({ children }: { children: React.ReactNode }) {
+  const { initChains } = useWalletConnectorPrivy();
+  console.log('-- initChains', initChains);
+
+  return (
+    <DropdownMenuRoot>
+      <DropdownMenuTrigger asChild>
+        <button>
+          {children}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuContent
+          size={"xl"}
+          align={"center"}
+          onCloseAutoFocus={(e) => e.preventDefault()}
+          side='bottom'
+          style={{ width: "275px" }}
+          className={"oui-p-2 oui-rounded oui-font-semibold"}
+          sideOffset={0}
+        >
+          <div className="oui-text-2xs oui-text-base-contrast oui-font-semibold">
+            Supported Evm chain
+          </div>
+          <div className="oui-grid oui-grid-cols-3 oui-gap-1 oui-mt-3 oui-text-2xs oui-text-base-contrast-54">
+            {initChains.map((item, key) =>
+              <div key={key} className="oui-flex oui-items-center oui-justify-center oui-gap-1">
+                <ChainIcon chainId={item.id} size="2xs" />
+                {/* <img src={`https://oss.orderly.network/static/sdk/chains/${item.id}.png`} className="oui-w-4 oui-h-4" /> */}
+                <div>
+
+                  {item.name}
+                </div>
+              </div>
+            )}
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
+    </DropdownMenuRoot>
+  )
 }

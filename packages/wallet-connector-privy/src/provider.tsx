@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, useEffect, useRef, useState } from "react";
+import React, { type PropsWithChildren, useEffect, useRef, useState, createContext, useContext, type RefObject } from "react";
 import { Main } from "./main";
 import { InitSolana } from "./initSolana";
 import { InitWagmi } from "./initWagmi";
@@ -37,45 +37,68 @@ const processChainInfo = (chainInfo: any) =>
     })
   ) || [];
 
+interface WalletConnectorPrivyContextType {
+  initChains: [Chain, ...Chain[]];
+  initRef: RefObject<boolean>;
+  fetchAllChains: () => Promise<void>;
+}
+
+const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
+  initChains: [mainnet],
+  initRef: null!,
+  fetchAllChains: async () => {},
+});
+
+export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
+
 export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   const [initChains, setInitChains] = useState<[Chain, ...Chain[]]>([mainnet]);
   const initRef = useRef(false);
 
-  useEffect(() => {
-    // todo need consider customer chain from broker props
-    Promise.all([
-      fetchChainInfo(
-        "https://testnet-api-evm.orderly.org/v1/public/chain_info"
-      ),
-      fetchChainInfo("https://api-evm.orderly.org/v1/public/chain_info"),
-    ])
-      .then(([testChainInfo, mainnetChainInfo]) => {
-        const testChains = processChainInfo(testChainInfo);
-        const mainnetChains = processChainInfo(mainnetChainInfo);
+  const fetchAllChains = async () => {
+    try {
+      const [testChainInfo, mainnetChainInfo] = await Promise.all([
+        fetchChainInfo("https://testnet-api-evm.orderly.org/v1/public/chain_info"),
+        fetchChainInfo("https://api-evm.orderly.org/v1/public/chain_info"),
+      ]);
 
-        setInitChains(testChains.concat(mainnetChains));
-        initRef.current = true;
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      const testChains = processChainInfo(testChainInfo);
+      const mainnetChains = processChainInfo(mainnetChainInfo);
+
+      setInitChains(testChains.concat(mainnetChains) as [Chain, ...Chain[]]);
+      initRef.current = true;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllChains();
   }, []);
 
   if (!initRef) {
-    return;
+    return null;
   }
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <ModalProvider>
-        <InitPrivy initChains={initChains} >
-          <InitWagmi initChains={initChains}>
-            <InitSolana>
-              <Main>{props.children}</Main>
-            </InitSolana>
-          </InitWagmi>
-        </InitPrivy>
-      </ModalProvider>
-    </TooltipProvider>
+    <walletConnectorPrivyContext.Provider 
+      value={{
+        initChains,
+        initRef,
+        fetchAllChains,
+      }}
+    >
+      <TooltipProvider delayDuration={300}>
+        <ModalProvider>
+          <InitPrivy initChains={initChains}>
+            <InitWagmi initChains={initChains}>
+              <InitSolana>
+                <Main>{props.children}</Main>
+              </InitSolana>
+            </InitWagmi>
+          </InitPrivy>
+        </ModalProvider>
+      </TooltipProvider>
+    </walletConnectorPrivyContext.Provider>
   );
 }
