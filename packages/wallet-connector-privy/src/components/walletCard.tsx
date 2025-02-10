@@ -22,6 +22,7 @@ import { MoreIcon } from "./icons";
 import { useChains } from "@orderly.network/hooks";
 import { useWalletConnectorPrivy } from "../provider";
 import { divide } from "lodash";
+import { usePrivyWallet } from "../usePrivyWallet";
 
 interface WalletCardProps {
   type: ChainNamespace;
@@ -124,6 +125,7 @@ export function WalletCard(props: WalletCardProps) {
 }
 
 function PrivyWalletHandleOption() {
+  const { exportWallet } = usePrivyWallet();
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger asChild>
@@ -142,7 +144,7 @@ function PrivyWalletHandleOption() {
           sideOffset={0}
         >
           <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
-            <div>export</div>
+            <div onClick={() => exportWallet()}>export</div>
           </DropdownMenuItem>
           {/* <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
               <div>import</div>

@@ -42,6 +42,8 @@ interface WalletConnectorPrivyContextType {
   mainnetChains: Chain[];
   testnetChains: Chain[];
   getChainsByNetwork: (network: 'mainnet' | 'testnet') => Chain[];
+  openConnectDrawer: boolean;
+  setOpenConnectDrawer: (open: boolean) => void;
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
@@ -49,6 +51,8 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   mainnetChains: [],
   testnetChains: [],
   getChainsByNetwork: () => [],
+  openConnectDrawer: false,
+  setOpenConnectDrawer: () => {},
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -58,6 +62,7 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
   const initRef = useRef(false);
+  const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
 
   const fetchAllChains = async () => {
     try {
@@ -97,6 +102,8 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
         mainnetChains,
         testnetChains,
         getChainsByNetwork,
+        openConnectDrawer,
+        setOpenConnectDrawer,
       }}
     >
       <TooltipProvider delayDuration={300}>

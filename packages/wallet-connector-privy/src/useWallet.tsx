@@ -37,9 +37,11 @@ export function useWallet() {
     console.log('--connect wallet', wallet);
     try {
       if (params.walletType === "EVM") {
-        connectEVM({ connector: wallet });
+        setConnectorKey('EVM');
+        connectEVM({ connector: params.connector!});
       }
       if (params.walletType === 'SOL') {
+        setConnectorKey('SOL');
         connectSOL(wallet.name).then();
       }
       if (params.walletType === 'privy') {
@@ -138,9 +140,23 @@ export function useWallet() {
           setConnectedChain(null);
         }
       }
+    } else {
+      console.log('-- walletEVM', walletEVM);
+      console.log('-- connectedChainEvm', connectedChainEvm);
+      
+      
+      if (walletEVM) {
+      
+
+      setWallet(walletEVM);
+      setConnectedChain(connectedChainEvm);
+      setNamespace(ChainNamespace.evm);
+      }
+
     }
 
-  }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet, storageChain])
+    
+  }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet, storageChain, walletEVM, walletSOL])
 
 
   return { connect, wallet, connectedChain, setChain, namespace, switchWallet };

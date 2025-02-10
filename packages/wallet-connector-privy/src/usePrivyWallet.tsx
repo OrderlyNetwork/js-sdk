@@ -5,6 +5,7 @@ import { ChainNamespace } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils/src";
 import { Connection } from "@solana/web3.js";
 
+
 const getPrivyEmbeddedWalletChainId = (chainId: string) => {
   if (!chainId) {
     return null;
@@ -13,7 +14,7 @@ const getPrivyEmbeddedWalletChainId = (chainId: string) => {
 };
 
 export function usePrivyWallet() {
-  const { login, logout, ready, authenticated, user } = usePrivy();
+  const { login, logout, ready, authenticated, user, exportWallet } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
 
   const {
@@ -140,5 +141,5 @@ export function usePrivyWallet() {
     });
   }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady]);
 
-  return { connect, walletEVM, walletSOL, isConnected, logout, switchChain, linkedAccount };
+  return { connect, walletEVM, walletSOL, isConnected, logout, switchChain, linkedAccount, exportWallet };
 }

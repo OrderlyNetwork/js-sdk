@@ -57,8 +57,9 @@ export function useWagmiWallet() {
           id: chainId,
           namespace: ChainNamespace.evm,
         }],
+        chain: connectedChain
       });
     });
-  }, [connector, chainId, isConnected, address]);
+  }, [connector, chainId, isConnected, address, connectedChain]);
   return { connectors, connect, wallet, connectedChain, setChain, disconnect };
 }

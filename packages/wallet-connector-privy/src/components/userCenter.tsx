@@ -33,6 +33,9 @@ export function UserCenter(props: any) {
     );
   }
   // if (accountStatus.status <= ) {}
+  if (!wallet) {
+    return
+  }
   return (
     <div onClick={() => connect()} >
         <Button
