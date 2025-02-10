@@ -38,6 +38,7 @@ export { useMaxQty } from "./useMaxQty";
 export { useMarginRatio } from "./useMarginRatio";
 
 export { useChains } from "./useChains";
+export { useStorageChain } from "./useStorageChain";
 export type {
   UseChainsOptions,
   Chain,

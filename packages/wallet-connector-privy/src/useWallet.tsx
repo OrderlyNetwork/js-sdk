@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSoalanWallet } from "./useSoalanWallet";
 import { usePrivyWallet } from "./usePrivyWallet";
 import { ChainNamespace } from "@orderly.network/types";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage, useStorageChain } from "@orderly.network/hooks";
 import { ConnectProps, SolanaChains } from "./types";
 
 const ConnectorKey = 'ConnectorKey';
@@ -28,6 +28,7 @@ export function useWallet() {
   } = usePrivyWallet();
   const [wallet, setWallet] = useState<any>();
   const [namespace, setNamespace] = useState<ChainNamespace>(ChainNamespace.evm);
+  const { storageChain, setStorageChain } = useStorageChain();
 
   const isManual = useRef<boolean>(false);
 
@@ -68,13 +69,12 @@ export function useWallet() {
       if (Array.from(SolanaChains.values()).includes(parseInt(chain.chainId as string))) {
         tempNamespace = ChainNamespace.solana;
       }
-      // todo need check current namespace
+      // TODO need check current namespace
       if (tempNamespace === ChainNamespace.evm) {
         isManual.current = true;
-        setWallet(privyWalletEVM);
         return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
           console.log('-- privy switch chain res', res);
-        setConnectedChain(privyWalletEVM.chain)
+          setStorageChain(parseInt(chain.chainId as string));
           return Promise.resolve(true)
 
         })
@@ -82,55 +82,60 @@ export function useWallet() {
 
       if (tempNamespace === ChainNamespace.solana) {
         isManual.current = true;
-        setWallet(privyWalletSOL);
-        setConnectedChain(privyWalletSOL.chain)
-        return Promise.resolve();
+        setStorageChain(parseInt(chain.chainId as string));
+        return Promise.resolve(true);
 
       }
-      return setChainEvm(parseInt(chain.chainId as string));
 
+    }
+  }
+
+  const switchWallet = (namespace: ChainNamespace) => {
+    // TODO need get chain from wallet
+    if (isPrivy) {
+
+    if (namespace === ChainNamespace.evm) {
+      if (privyWalletEVM) {
+        setStorageChain(privyWalletEVM.chain.id);
+      }
+
+    } else {
+      if (privyWalletSOL) {
+        setStorageChain(privyWalletSOL.chain.id);
+      }
+    }
     }
   }
 
 
 
-    // useEffect(() => {
-    //   if (targetConnector.current === 'wagmi') {
-    //     if (targetChainNamespace.current === ChainNamespace.evm) {
-    //       setWallet(walletEVM);
-    //     } else {
-    //       setWallet(walletSOL)
-    //     }
-    //   }
-    // }, [walletEVM, walletSOL]);
+  useEffect(() => {
+    // check current connector and chain form localstorage
+    console.log('--- xxxxconnectorKey', connectorKey, storageChain);
 
-    useEffect(() => {
-      // check current connector and chain form localstorage
-      console.log('--- xxxxconnectorKey', connectorKey);
+    if (!connectorKey) {
+      return;
+    }
 
-      if (!connectorKey) {
-        return;
-      }
-      if (isManual.current) {
-        return;
-      }
-
-      if (connectorKey === 'privy') {
-        // todo need check chainNamespace in localstorage
+    if (connectorKey === 'privy') {
+      if (storageChain?.namespace === ChainNamespace.evm) {
         if (privyWalletEVM) {
           setWallet(privyWalletEVM);
           setConnectedChain(privyWalletEVM.chain)
-        }
-        if (privyWalletSOL) {
-          // console.log('-- privy SOL wallet', privyWalletSOL);
-          //   setWallet(privyWalletSOL);
-          //   setConnectedChain(privyWalletSOL.chains[0])
-
+          setNamespace(ChainNamespace.evm);
         }
       }
+      if (storageChain?.namespace === ChainNamespace.solana) {
+        if (privyWalletSOL) {
+          setWallet(privyWalletSOL);
+          setConnectedChain(privyWalletSOL.chain)
+          setNamespace(ChainNamespace.solana);
+        }
+      }
+    }
 
-    }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet])
+  }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet, storageChain])
 
 
-    return { connect, wallet, connectedChain, setChain, namespace };
-  }
+  return { connect, wallet, connectedChain, setChain, namespace, switchWallet };
+}

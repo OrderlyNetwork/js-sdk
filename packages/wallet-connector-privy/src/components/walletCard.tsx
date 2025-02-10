@@ -80,7 +80,7 @@ export function WalletCard(props: WalletCardProps) {
           </div>
         )}
         <div>
-          <Checkbox />
+          <Checkbox checked={props.isActive} onCheckedChange={props.onActiveChange} />
         </div>
       </div>
     </div>
