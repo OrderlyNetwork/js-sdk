@@ -41,8 +41,6 @@ interface WalletConnectorPrivyContextType {
   initChains: [Chain, ...Chain[]];
   mainnetChains: Chain[];
   testnetChains: Chain[];
-  initRef: RefObject<boolean>;
-  fetchAllChains: () => Promise<void>;
   getChainsByNetwork: (network: 'mainnet' | 'testnet') => Chain[];
 }
 
@@ -50,8 +48,6 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   initChains: [mainnet],
   mainnetChains: [],
   testnetChains: [],
-  initRef: null!,
-  fetchAllChains: async () => {},
   getChainsByNetwork: () => [],
 });
 
@@ -100,8 +96,6 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
         initChains,
         mainnetChains,
         testnetChains,
-        initRef,
-        fetchAllChains,
         getChainsByNetwork,
       }}
     >

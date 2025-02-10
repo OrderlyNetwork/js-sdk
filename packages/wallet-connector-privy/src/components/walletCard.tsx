@@ -42,7 +42,9 @@ export function WalletCard(props: WalletCardProps) {
         "oui-rounded-2xl oui-relative oui-p-4 oui-h-[110px]  oui-overflow-hidden",
         props.type === ChainNamespace.evm
           ? "oui-bg-[#283BEE]"
-          : "oui-bg-[#630EAD]"
+          : "oui-bg-[#630EAD]",
+        props.isActive && props.type === ChainNamespace.solana && "oui-border-[2px] oui-border-[#faedff]",
+        props.isActive && props.type === ChainNamespace.evm && "oui-border-[2px] oui-border-[#B9D1FF]"
       )}
     >
       <div style={{

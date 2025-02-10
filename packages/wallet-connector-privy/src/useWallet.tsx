@@ -123,6 +123,9 @@ export function useWallet() {
           setWallet(privyWalletEVM);
           setConnectedChain(privyWalletEVM.chain)
           setNamespace(ChainNamespace.evm);
+        } else {
+          setWallet(null);
+          setConnectedChain(null);
         }
       }
       if (storageChain?.namespace === ChainNamespace.solana) {
@@ -130,6 +133,9 @@ export function useWallet() {
           setWallet(privyWalletSOL);
           setConnectedChain(privyWalletSOL.chain)
           setNamespace(ChainNamespace.solana);
+        } else {
+          setWallet(null);
+          setConnectedChain(null);
         }
       }
     }
