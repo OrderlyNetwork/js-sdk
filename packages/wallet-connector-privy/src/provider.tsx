@@ -39,20 +39,28 @@ const processChainInfo = (chainInfo: any) =>
 
 interface WalletConnectorPrivyContextType {
   initChains: [Chain, ...Chain[]];
+  mainnetChains: Chain[];
+  testnetChains: Chain[];
   initRef: RefObject<boolean>;
   fetchAllChains: () => Promise<void>;
+  getChainsByNetwork: (network: 'mainnet' | 'testnet') => Chain[];
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
   initChains: [mainnet],
+  mainnetChains: [],
+  testnetChains: [],
   initRef: null!,
   fetchAllChains: async () => {},
+  getChainsByNetwork: () => [],
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
 
 export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   const [initChains, setInitChains] = useState<[Chain, ...Chain[]]>([mainnet]);
+  const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
+  const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
   const initRef = useRef(false);
 
   const fetchAllChains = async () => {
@@ -65,11 +73,17 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
       const testChains = processChainInfo(testChainInfo);
       const mainnetChains = processChainInfo(mainnetChainInfo);
 
-      setInitChains(testChains.concat(mainnetChains) as [Chain, ...Chain[]]);
+      setTestnetChains(testChains);
+      setMainnetChains(mainnetChains);
+      setInitChains([...testChains, ...mainnetChains] as [Chain, ...Chain[]]);
       initRef.current = true;
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const getChainsByNetwork = (network: 'mainnet' | 'testnet'): Chain[] => {
+    return network === 'mainnet' ? mainnetChains : testnetChains;
   };
 
   useEffect(() => {
@@ -84,8 +98,11 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
     <walletConnectorPrivyContext.Provider 
       value={{
         initChains,
+        mainnetChains,
+        testnetChains,
         initRef,
         fetchAllChains,
+        getChainsByNetwork,
       }}
     >
       <TooltipProvider delayDuration={300}>

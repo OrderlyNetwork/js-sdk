@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChainNamespace } from "@orderly.network/types";
 import {
   ChainIcon,
@@ -11,12 +11,17 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   formatAddress,
+  Popover,
+  PopoverContent,
+  PopoverRoot,
+  PopoverTrigger,
   toast,
   Tooltip,
 } from "@orderly.network/ui";
 import { MoreIcon } from "./icons";
 import { useChains } from "@orderly.network/hooks";
 import { useWalletConnectorPrivy } from "../provider";
+import { divide } from "lodash";
 
 interface WalletCardProps {
   type: ChainNamespace;
@@ -82,10 +87,10 @@ export function WalletCard(props: WalletCardProps) {
                 <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-relative oui-left-[-9px]">
 
                   <div className="oui-rounded-full oui-bg-[#282e3a] oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center">
-                    <EVMChainDropdownMenu>
+                    <EVMChainPopover>
 
                       <MoreIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-h-3 oui-w-3 oui-relative oui-z-10" style={{ zIndex: 1 }} />
-                    </EVMChainDropdownMenu>
+                    </EVMChainPopover>
                   </div>
                   <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">
                     EVM
@@ -146,35 +151,23 @@ function PrivyWalletHandleOption() {
   );
 }
 
-function EVMChainDropdownMenu({ children }: { children: React.ReactNode }) {
-  const { initChains } = useWalletConnectorPrivy();
-  console.log('-- initChains', initChains);
+function EVMChainPopover({ children }: { children: React.ReactNode }) {
+  const { getChainsByNetwork } = useWalletConnectorPrivy();
+  const [chains] = useState(getChainsByNetwork('mainnet'));
+  const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   return (
-    <DropdownMenuRoot>
-      <DropdownMenuTrigger asChild>
-        <button>
-          {children}
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuPortal>
-        <DropdownMenuContent
-          size={"xl"}
-          align={"center"}
-          onCloseAutoFocus={(e) => e.preventDefault()}
-          side='bottom'
-          style={{ width: "275px" }}
-          className={"oui-p-2 oui-rounded oui-font-semibold"}
-          sideOffset={0}
-        >
+    <Popover
+      content={
+        <div>
           <div className="oui-text-2xs oui-text-base-contrast oui-font-semibold">
             Supported Evm chain
           </div>
-          <div className="oui-grid oui-grid-cols-3 oui-gap-1 oui-mt-3 oui-text-2xs oui-text-base-contrast-54">
-            {initChains.map((item, key) =>
-              <div key={key} className="oui-flex oui-items-center oui-justify-center oui-gap-1">
+          <div className="oui-grid oui-grid-cols-3 oui-gap-y-3 oui-gap-x-2 oui-mt-3 oui-text-2xs oui-text-base-contrast-54">
+            {chains.map((item, key) =>
+              <div key={key} className="oui-flex oui-items-center oui-justify-start oui-gap-1">
                 <ChainIcon chainId={item.id} size="2xs" />
-                {/* <img src={`https://oss.orderly.network/static/sdk/chains/${item.id}.png`} className="oui-w-4 oui-h-4" /> */}
                 <div>
 
                   {item.name}
@@ -182,8 +175,52 @@ function EVMChainDropdownMenu({ children }: { children: React.ReactNode }) {
               </div>
             )}
           </div>
-        </DropdownMenuContent>
-      </DropdownMenuPortal>
-    </DropdownMenuRoot>
+        </div>
+
+      }
+      arrow={true}
+      contentProps={{
+        side: "bottom",
+        align: "center",
+        className: 'oui-p-2'
+        
+      }}
+    >
+      <button>
+
+      {children}
+      </button>
+    </Popover >
+
+    // <PopoverRoot
+    //   onOpenChange={(isOpen) => {
+    //     if (visible) {
+    //       setOpen(isOpen);
+    //     }
+    //   }}
+    //   open={open}
+    // >
+    //   <PopoverTrigger
+    //     asChild
+    //     onClick={() => {
+    //       setOpen(true);
+    //     }}
+    //   >
+    //     <button>
+
+    //     {children}
+    //     </button>
+    //   </PopoverTrigger>
+    //   <PopoverContent
+    //     className={cn(
+    //       "oui-w-[320px]",
+    //       visible ? "oui-visible" : "oui-invisible"
+    //     )}
+    //     align="center"
+    //     side={"bottom"}
+    //   >
+
+    //   </PopoverContent>
+    // </PopoverRoot>
   )
 }
