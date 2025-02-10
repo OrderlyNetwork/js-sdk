@@ -185,9 +185,11 @@ function useRecentChains(chains: Record<NetworkId, TChainItem[]>) {
   );
 
   const recentChains = useMemo<TChainItem[]>(() => {
-    return recentChainsIds?.map((id: string) =>
-      chains.mainnet?.find((item) => item.id === parseInt(id))
-    );
+    return recentChainsIds
+      ?.map((id: string) =>
+        chains.mainnet?.find((item) => item.id === parseInt(id))
+      )
+      .filter((chains: TChainItem) => !!chains);
   }, [chains, recentChainsIds]);
 
   const saveRecentChain = useCallback(
