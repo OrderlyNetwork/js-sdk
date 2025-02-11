@@ -7,6 +7,7 @@ import { merge } from "lodash";
 import { type Chain, defineChain } from "viem";
 import { ModalProvider, TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
+import { ChainNamespace } from "@orderly.network/types";
 
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
@@ -44,6 +45,8 @@ interface WalletConnectorPrivyContextType {
   getChainsByNetwork: (network: 'mainnet' | 'testnet') => Chain[];
   openConnectDrawer: boolean;
   setOpenConnectDrawer: (open: boolean) => void;
+  targetNamespace: ChainNamespace | undefined;
+  setTargetNamespace: (namespace: ChainNamespace | undefined) => void;
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
@@ -53,6 +56,8 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   getChainsByNetwork: () => [],
   openConnectDrawer: false,
   setOpenConnectDrawer: () => {},
+  targetNamespace: undefined,
+  setTargetNamespace: () => {},
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -63,6 +68,7 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
+  const [targetNamespace, setTargetNamespace] = useState<ChainNamespace |undefined>();
 
   const fetchAllChains = async () => {
     try {
@@ -104,6 +110,8 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
         getChainsByNetwork,
         openConnectDrawer,
         setOpenConnectDrawer,
+        targetNamespace,
+        setTargetNamespace,
       }}
     >
       <TooltipProvider delayDuration={300}>

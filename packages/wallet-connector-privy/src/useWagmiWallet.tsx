@@ -33,6 +33,13 @@ export function useWagmiWallet() {
         }})
     })
   }
+  console.log('xxxx wagmi wallet', {
+    connector,
+    isConnected,
+    address,
+    chainId,
+    connectedChain
+  });
 
   useEffect(() => {
     if (!connector || !isConnected) {

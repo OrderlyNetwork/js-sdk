@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSolanaWallet } from "../useSolanaWallet";
 import { ChevronDownIcon, ChevronUpIcon, cn, Tooltip, } from "@orderly.network/ui";
 import { useWallet } from "../useWallet";
+import { useWalletConnectorPrivy } from "../provider";
+import { ChainNamespace } from "@orderly.network/types";
 export function AddSolanaWallet() {
   const { wallets } = useSolanaWallet();
   const {connect} = useWallet();
@@ -9,9 +11,28 @@ export function AddSolanaWallet() {
   const onToggleVisibility = () => {
     setVisible(!visible);
   }
+  const {targetNamespace} = useWalletConnectorPrivy();
   // TODO: need get value from useWalletConnectorPrivy
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  console.log('-- open and targetNamespace', open, targetNamespace);
+
   useEffect(() => {
+    let timer = 0;
+    if (targetNamespace === ChainNamespace.solana) {
+      timer = window.setTimeout(() => {
+        setOpen(true);
+      }, 200);
+    }
+    return () => {
+      if (timer) {
+        window.clearTimeout(timer);
+      }
+    }
+  }, [targetNamespace]);
+  useEffect(() => {
+    if (open === false){
+      return;
+    }
     const timeId = window.setTimeout(() => {
       setOpen(false);
     }, 5000);
@@ -20,7 +41,7 @@ export function AddSolanaWallet() {
         window.clearTimeout(timeId);
       }
     }
-  }, []);
+  }, [open]);
 
   return (
     <div className="oui-bg-[#07080A] oui-rounded-[8px] oui-px-2 oui-py-[11px]" >
