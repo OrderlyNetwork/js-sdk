@@ -1,12 +1,11 @@
 import { useWagmiWallet } from "./useWagmiWallet";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSoalanWallet } from "./useSoalanWallet";
+import { useSolanaWallet } from "./useSolanaWallet";
 import { usePrivyWallet } from "./usePrivyWallet";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { useLocalStorage, useStorageChain } from "@orderly.network/hooks";
 import { ConnectProps, SolanaChains } from "./types";
 
-const ConnectorKey = 'ConnectorKey';
 export function useWallet() {
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
   const {
@@ -19,7 +18,7 @@ export function useWallet() {
     connect: connectSOL,
     wallet: walletSOL,
     connectedChain: connectedChainSOL,
-  } = useSoalanWallet();
+  } = useSolanaWallet();
   const {
     connect: connectPrivy,
     walletSOL: privyWalletSOL,

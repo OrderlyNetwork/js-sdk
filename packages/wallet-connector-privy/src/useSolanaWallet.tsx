@@ -4,7 +4,7 @@ import { ChainNamespace } from "@orderly.network/types";
 
 const SOLChain = 901901901;
 
-export function useSoalanWallet() {
+export function useSolanaWallet() {
   const [wallet, setWallet] = useState<any>();
   const {
     wallets,
@@ -16,7 +16,7 @@ export function useSoalanWallet() {
     sendTransaction,
     disconnect,
   } = useWallet();
-  const { connection } = useConnection();
+  const { connection} = useConnection();
 
   const solanaPromiseRef = useRef<{
     walletSelect: Promise<any> | null;

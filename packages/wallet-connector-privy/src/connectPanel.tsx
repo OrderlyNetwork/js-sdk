@@ -1,11 +1,11 @@
 import React from "react";
-import { useSoalanWallet } from "./useSoalanWallet";
+import { useSolanaWallet } from "./useSolanaWallet";
 import { useWagmiWallet } from "./useWagmiWallet";
 import { useWallet } from "./useWallet";
 import { usePrivyWallet } from "./usePrivyWallet";
 
 export function ConnectPanel() {
-  const { wallets: SOLWallets, wallet: walletSOL, disconnect: disconnectSOL } = useSoalanWallet();
+  const { wallets: SOLWallets, wallet: walletSOL, disconnect: disconnectSOL } = useSolanaWallet();
   const {
     connectors: EVMWallets,
     wallet: walletEVM,

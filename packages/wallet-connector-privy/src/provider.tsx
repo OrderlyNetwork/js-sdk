@@ -107,7 +107,6 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
       }}
     >
       <TooltipProvider delayDuration={300}>
-        <ModalProvider>
           <InitPrivy initChains={initChains}>
             <InitWagmi initChains={initChains}>
               <InitSolana>
@@ -115,7 +114,6 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
               </InitSolana>
             </InitWagmi>
           </InitPrivy>
-        </ModalProvider>
       </TooltipProvider>
     </walletConnectorPrivyContext.Provider>
   );

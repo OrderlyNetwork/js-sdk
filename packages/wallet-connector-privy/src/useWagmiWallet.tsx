@@ -61,5 +61,5 @@ export function useWagmiWallet() {
       });
     });
   }, [connector, chainId, isConnected, address, connectedChain]);
-  return { connectors, connect, wallet, connectedChain, setChain, disconnect };
+  return { connectors, connect, wallet, connectedChain, setChain, disconnect, isConnected };
 }

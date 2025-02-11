@@ -2,12 +2,15 @@ import { Checkbox, cn, CopyIcon, formatAddress, SimpleDialog, toast, Tooltip } f
 import React, { useMemo } from "react";
 import { useWallet } from "../useWallet";
 import { usePrivyWallet } from "../usePrivyWallet";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
 import { ConnectProps } from "../types";
 import { RenderPrivyTypeIcon } from "./common";
 import { useWalletConnectorPrivy } from "../provider";
 import { useWagmiWallet } from "../useWagmiWallet";
+import { useSolanaWallet } from "../useSolanaWallet";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
   return (
@@ -104,20 +107,20 @@ function ConnectWallet() {
       <div className='oui-font-semibold oui-text-base-contrast-80 oui-text-base'>Connect Wallet</div>
       <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
         <PrivyConnectArea connect={(type) => handleConnect({ walletType: 'privy', extraType: type })} />
-        <EVMConnectArea connect={(connector) => handleConnect({ walletType: 'EVM',connector: connector })} />
+        <EVMConnectArea connect={(connector) => handleConnect({ walletType: 'EVM', connector: connector })} />
         <SOLConnectArea />
       </div>
     </div>
   )
 }
 
-function MyWallet() {
+function RenderPrivyWallet() {
   const { walletEVM, walletSOL, logout, linkedAccount } = usePrivyWallet();
   const { namespace, switchWallet } = useWallet();
 
   return (
     <div>
-      <div className='oui-font-bold oui-text-base-contrast-80 oui-text-base'>My Wallet</div>
+
       <div className="oui-flex oui-justify-between oui-items-center oui-mt-5">
         {linkedAccount &&
           <div className="oui-flex oui-items-center oui-justify-start oui-gap-2 oui-text-base-contrast">
@@ -138,16 +141,47 @@ function MyWallet() {
   )
 }
 
+function MyWallet() {
+  const {wallet: walletInWagmi} = useWagmiWallet();
+  const {wallet: walletInSolana} = useSolanaWallet();
+  const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
+  const { namespace, switchWallet } = useWallet();
+
+  return (
+    <div>
+      <div className='oui-font-bold oui-text-base-contrast-80 oui-text-base'>My Wallet</div>
+
+      {connectorKey === 'privy' && <RenderPrivyWallet />
+      }
+
+      {connectorKey !== 'privy'
+        &&
+        <RenderNoPrivyWallet />
+      }
+    </div>
+  )
+}
+
+
+
 export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boolean) => void }) {
   const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL, logout: disconnectPrivy, isConnected: isConnectedPrivy } =
     usePrivyWallet();
+  const { wallet: EvmWallet } = useWagmiWallet();
+  const { wallet: SolWallet } = useSolanaWallet();
 
   const isConnected = useMemo(() => {
     if (isConnectedPrivy) {
       return true;
     }
+    if (EvmWallet) {
+      return true;
+    }
+    if (SolWallet) {
+      return true;
+    }
     return false;
-  }, [isConnectedPrivy])
+  }, [isConnectedPrivy, EvmWallet, SolWallet])
 
   return (
     <SimpleDialog

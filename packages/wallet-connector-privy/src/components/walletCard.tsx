@@ -29,6 +29,7 @@ interface WalletCardProps {
   address: string;
   isActive: boolean;
   isPrivy?: boolean;
+  isBoth?: boolean;
   onActiveChange: (active: boolean) => void;
 }
 export function WalletCard(props: WalletCardProps) {
@@ -44,8 +45,8 @@ export function WalletCard(props: WalletCardProps) {
         props.type === ChainNamespace.evm
           ? "oui-bg-[#283BEE]"
           : "oui-bg-[#630EAD]",
-        props.isActive && props.type === ChainNamespace.solana && "oui-border-[2px] oui-border-[#faedff]",
-        props.isActive && props.type === ChainNamespace.evm && "oui-border-[2px] oui-border-[#B9D1FF]"
+        props.isActive && props.type === ChainNamespace.solana && props.isBoth && "oui-border-[2px] oui-border-[#faedff]",
+        props.isActive && props.type === ChainNamespace.evm && props.isBoth && "oui-border-[2px] oui-border-[#B9D1FF]"
       )}
     >
       <div style={{
@@ -114,9 +115,11 @@ export function WalletCard(props: WalletCardProps) {
               </div>
             </div>
           )}
-          <div>
+          {props.isBoth && <div>
             <Checkbox checked={props.isActive} onCheckedChange={props.onActiveChange} />
           </div>
+          }
+
         </div>
 
       </div>
@@ -187,12 +190,12 @@ function EVMChainPopover({ children }: { children: React.ReactNode }) {
         side: "bottom",
         align: "center",
         className: 'oui-p-2'
-        
+
       }}
     >
       <button>
 
-      {children}
+        {children}
       </button>
     </Popover >
 
