@@ -30,10 +30,10 @@ export function RenderNoPrivyWallet() {
       </div>
     )
   }
-  // TODO have both wagmi and solana wallet
+  // have both wagmi and solana wallet
   if (walletInWagmi && walletInSolana) {
     return (
-      <div className="oui-flex oui-flex-col oui-gap-5">
+      <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
         <WalletCard type={ChainNamespace.evm} address={walletInWagmi?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={false} isBoth={true} />
         <WalletCard type={ChainNamespace.solana} address={walletInSolana?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={false} isBoth={true} />
       </div>

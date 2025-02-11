@@ -177,7 +177,7 @@ function PrivyWalletHandleOption() {
 }
 
 
-function EVMChainPopover({ children }: { children: React.ReactNode }) {
+export function EVMChainPopover({ children }: { children: React.ReactNode }) {
   const { getChainsByNetwork } = useWalletConnectorPrivy();
   const [chains] = useState(getChainsByNetwork('mainnet'));
   const [open, setOpen] = useState(false);
