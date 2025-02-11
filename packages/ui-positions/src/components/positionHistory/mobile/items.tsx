@@ -77,14 +77,14 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
           )}
           <Flex justify={"between"} width={"100%"}>
             <Text>Liquidator fee</Text>
-            <Text color={record.liquidator_fee >= 0 ? "profit" : "lose"}>
-              {commifyOptional(record.liquidator_fee)}
+            <Text color="lose">
+              -{commifyOptional(record.liquidator_fee)}
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"}>
             <Text>Ins. Fund fee</Text>
-            <Text color={record.insurance_fund_fee >= 0 ? "profit" : "lose"}>
-              {commifyOptional(record.insurance_fund_fee)}
+            <Text color="lose">
+              -{commifyOptional(record.insurance_fund_fee)}
             </Text>
           </Flex>
         </Flex>
