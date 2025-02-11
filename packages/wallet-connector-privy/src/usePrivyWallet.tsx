@@ -13,7 +13,18 @@ const getPrivyEmbeddedWalletChainId = (chainId: string) => {
   return parseInt(chainId.split("eip155:")[1]);
 };
 
-export function usePrivyWallet() {
+interface PrivyWalletHook {
+  connect: () => void;
+  walletEVM: any;
+  walletSOL: any;
+  isConnected: boolean;
+  logout: () => void;
+  switchChain: (chainId: number) => Promise<any>;
+  linkedAccount: { type: string; address: string | null } | null;
+  exportWallet: any;
+}
+
+export function usePrivyWallet(): PrivyWalletHook {
   const { login, logout, ready, authenticated, user, exportWallet } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
 
