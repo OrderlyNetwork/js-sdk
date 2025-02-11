@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.3-internal-20250213.1
+
+### Patch Changes
+
+- publish
+
 ## 1.0.3-internal-20250213.0
 
 ### Patch Changes
