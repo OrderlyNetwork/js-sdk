@@ -18,11 +18,13 @@ import {
   toast,
   Tooltip,
 } from "@orderly.network/ui";
-import { MoreIcon } from "./icons";
+import { DisconnectIcon, MoreIcon } from "./icons";
 import { useChains } from "@orderly.network/hooks";
 import { useWalletConnectorPrivy } from "../provider";
 import { divide } from "lodash";
 import { usePrivyWallet } from "../usePrivyWallet";
+import { useWagmiWallet } from "../useWagmiWallet";
+import { useSolanaWallet } from "../useSolanaWallet";
 
 interface WalletCardProps {
   type: ChainNamespace;
@@ -77,7 +79,7 @@ export function WalletCard(props: WalletCardProps) {
                 onClick={() => copyAddress(props.address)}
               />
             </Tooltip>
-            {props.isPrivy ? <PrivyWalletHandleOption /> : <div>disconnect</div>}
+            {props.isPrivy ? <PrivyWalletHandleOption /> : <NonPrivyWalletHandleOption walletType={props.type} />}
           </div>
         </div>
 
@@ -126,6 +128,22 @@ export function WalletCard(props: WalletCardProps) {
     </div>
   );
 }
+function NonPrivyWalletHandleOption({ walletType }: { walletType: ChainNamespace }) {
+  const { disconnect: disconnectWagmi } = useWagmiWallet();
+  const { disconnect: disconnectSolana } = useSolanaWallet();
+  const disconnect = () => {
+    if (walletType === ChainNamespace.evm) {
+      disconnectWagmi();
+    } else {
+      disconnectSolana();
+    }
+  }
+  return (
+    <div onClick={() => disconnect()}>
+      <DisconnectIcon className="oui-text-base-contrast-80 oui-cursor-pointer hover:oui-text-base-contrast oui-w-4 oui-h-4" />
+    </div>
+  )
+}
 
 function PrivyWalletHandleOption() {
   const { exportWallet } = usePrivyWallet();
@@ -157,6 +175,7 @@ function PrivyWalletHandleOption() {
     </DropdownMenuRoot>
   );
 }
+
 
 function EVMChainPopover({ children }: { children: React.ReactNode }) {
   const { getChainsByNetwork } = useWalletConnectorPrivy();

@@ -53,6 +53,7 @@ export function useSolanaWallet() {
   const isManual = useRef(false);
 
   const connect = async (walletName: any) => {
+    console.log('connect solana wallet', walletName);
     initPromiseRef();
     isManual.current = true;
     if (!solanaPromiseRef.current) {
@@ -103,6 +104,10 @@ export function useSolanaWallet() {
                 namespace: ChainNamespace.solana,
               },
             ],
+            chain: {
+              id: SOLChain,
+              namespace: ChainNamespace.solana,
+            },
           };
           isManual.current = false;
           setWallet(tempWallet);
@@ -165,6 +170,10 @@ export function useSolanaWallet() {
           namespace: ChainNamespace.solana,
         },
       ],
+      chain: {
+        id: SOLChain,
+        namespace: ChainNamespace.solana,
+      },
     });
   }, [publicKey, walletSolana, signMessage, sendTransaction, connection]);
 

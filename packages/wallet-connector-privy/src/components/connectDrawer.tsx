@@ -134,8 +134,8 @@ function RenderPrivyWallet() {
 
       </div>
       <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
-        <WalletCard type={ChainNamespace.evm} address={walletEVM?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={true} />
-        <WalletCard type={ChainNamespace.solana} address={walletSOL?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={true} />
+        <WalletCard type={ChainNamespace.evm} address={walletEVM?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={true} isBoth={true}/>
+        <WalletCard type={ChainNamespace.solana} address={walletSOL?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={true} isBoth={true}/>
       </div>
     </div>
   )

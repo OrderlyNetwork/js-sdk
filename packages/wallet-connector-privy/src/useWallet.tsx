@@ -37,11 +37,11 @@ export function useWallet() {
     try {
       if (params.walletType === "EVM") {
         setConnectorKey('EVM');
-        connectEVM({ connector: params.connector!});
+        connectEVM({ connector: params.connector! });
       }
       if (params.walletType === 'SOL') {
         setConnectorKey('SOL');
-        connectSOL(wallet.name).then();
+        connectSOL(params.walletAdapter!.name).then();
       }
       if (params.walletType === 'privy') {
         setConnectorKey('privy')
@@ -95,16 +95,26 @@ export function useWallet() {
     // TODO need get chain from wallet
     if (isPrivy) {
 
-    if (namespace === ChainNamespace.evm) {
-      if (privyWalletEVM) {
-        setStorageChain(privyWalletEVM.chain.id);
-      }
+      if (namespace === ChainNamespace.evm) {
+        if (privyWalletEVM) {
+          setStorageChain(privyWalletEVM.chain.id);
+        }
 
-    } else {
-      if (privyWalletSOL) {
-        setStorageChain(privyWalletSOL.chain.id);
+      } else {
+        if (privyWalletSOL) {
+          setStorageChain(privyWalletSOL.chain.id);
+        }
       }
-    }
+    } else {
+      if (namespace === ChainNamespace.evm) {
+        if (walletEVM) {
+          setStorageChain(walletEVM.chain.id);
+        }
+      } else {
+        if (walletSOL) {
+          setStorageChain(walletSOL.chain.id);
+        }
+      }
     }
   }
 
@@ -141,20 +151,29 @@ export function useWallet() {
       }
     } else {
       console.log('-- walletEVM', walletEVM);
-      console.log('-- connectedChainEvm', connectedChainEvm);
-      
-      
-      if (walletEVM) {
-      
+      console.log('-- walletSOL', walletSOL);
 
-      setWallet(walletEVM);
-      setConnectedChain(connectedChainEvm);
-      setNamespace(ChainNamespace.evm);
+      console.log('-- connectedChainEvm', connectedChainEvm);
+      if (storageChain?.namespace === ChainNamespace.evm) {
+        if (walletEVM) {
+          setWallet(walletEVM);
+          setConnectedChain(connectedChainEvm);
+          setNamespace(ChainNamespace.evm);
+        }
+
       }
+      if (storageChain?.namespace === ChainNamespace.solana) {
+        if (walletSOL) {
+          setWallet(walletSOL);
+          setConnectedChain(connectedChainSOL);
+          setNamespace(ChainNamespace.solana);
+        }
+      }
+
 
     }
 
-    
+
   }, [connectorKey, privyWalletEVM, privyWalletSOL, wallet, storageChain, walletEVM, walletSOL])
 
 

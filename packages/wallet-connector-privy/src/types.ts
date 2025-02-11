@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { Adapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
+import { Adapter, WalletAdapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
 import { Connector } from "wagmi";
 
 export type SolanaInitialProps = PropsWithChildren<{
@@ -16,6 +16,7 @@ export interface ConnectProps {
   walletType: 'EVM' | 'SOL' | 'privy';
   extraType?: string;
   connector?:Connector;
+  walletAdapter?: WalletAdapter;
 }
 
 export const SolanaChains = new Map([[WalletAdapterNetwork.Devnet, 901901901], [WalletAdapterNetwork.Mainnet, 900900900]]);
