@@ -5,7 +5,7 @@ import {
   useAccount,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { API, NetworkId } from "@orderly.network/types";
+import { API, Chain, NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
 
 export type UseChainMenuScriptReturn = ReturnType<typeof useChainMenuScript>;
@@ -16,12 +16,10 @@ export const useChainMenuScript = () => {
   const [chains] = useChains();
   const { state } = useAccount();
   const { connectedChain } = useWalletConnector();
-  const {
-    wrongNetwork,
-    currentChainId,
-    setCurrentChainId,
-    currentChainFallback,
-  } = useAppContext();
+  const { wrongNetwork, currentChainId, setCurrentChainId, defaultChain } =
+    useAppContext();
+
+  console.log("currentChainId", currentChainId);
 
   const networkId = useConfig("networkId") as NetworkId;
 
@@ -34,20 +32,24 @@ export const useChainMenuScript = () => {
       );
     } else {
       if (!!currentChainId) return;
-      let fallbackChain: API.Chain | undefined;
+      let fallbackChain: Partial<Chain> | undefined;
 
       const firstChain =
         networkId === "mainnet" ? chains.mainnet?.[0] : chains.testnet?.[0];
 
-      if (typeof currentChainFallback === "function") {
-        fallbackChain = currentChainFallback(chains, networkId);
+      if (typeof defaultChain === "function") {
+        fallbackChain = defaultChain(networkId, chains);
+      } else if (typeof defaultChain === "object") {
+        fallbackChain =
+          networkId === "mainnet"
+            ? defaultChain?.mainnet
+            : defaultChain?.testnet;
       }
 
-      const defaultChain = fallbackChain! || firstChain;
+      const chainId = fallbackChain?.id || firstChain?.network_infos?.chain_id;
+      if (!chainId) return;
 
-      if (!defaultChain) return;
-
-      setCurrentChainId?.(defaultChain.network_infos?.chain_id);
+      setCurrentChainId?.(chainId);
     }
   }, [
     connectedChain,
@@ -55,7 +57,7 @@ export const useChainMenuScript = () => {
     currentChainId,
     networkId,
     setCurrentChainId,
-    currentChainFallback,
+    defaultChain,
   ]);
 
   const hide = () => {

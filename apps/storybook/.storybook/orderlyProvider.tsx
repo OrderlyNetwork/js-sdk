@@ -58,18 +58,6 @@ const configStore = new CustomConfigStore({
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   console.log("-- provider", configStore, VITE_ENV);
 
-  const currentChainFallback = (chains: Chains, networkId: NetworkId) => {
-    if (networkId === "testnet") {
-      return chains.testnet.find(
-        (chain) => chain.network_infos.chain_id === 901901901
-      );
-    }
-
-    return chains.mainnet.find(
-      (chain) => chain.network_infos.chain_id === 900900900
-    );
-  };
-
   return (
     <WalletConnectorProvider
       solanaInitial={{ wallets: wallets }}
@@ -95,7 +83,10 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         //     showTestnet: false,
         //   },
         // }}
-        // currentChainFallback={currentChainFallback}
+        // defaultChain={{
+        //   mainnet: { id: 900900900 },
+        //   testnet: { id: 901901901 },
+        // }}
       >
         {props.children}
       </OrderlyAppProvider>
