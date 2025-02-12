@@ -8,14 +8,17 @@ import { type Chain, defineChain } from "viem";
 import { ModalProvider, TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import { ChainNamespace } from "@orderly.network/types";
-
+import { injectUsercenter } from "./injectUsercenter";
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to fetch data from ${url}`);
   }
   return response.json();
+
 };
+// TODO: can't inject, don't know why
+injectUsercenter();
 
 const processChainInfo = (chainInfo: any) =>
   chainInfo?.data?.rows?.map((row: any) =>
