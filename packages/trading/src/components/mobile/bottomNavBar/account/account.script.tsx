@@ -19,7 +19,7 @@ export const useAccountScript = () => {
   return {
     onShowAccountSheet,
     address: account.address,
-    status: state.status,
+    state,
   };
 };
 

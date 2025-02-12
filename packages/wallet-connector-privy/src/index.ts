@@ -1,2 +1,2 @@
 export { WalletConnectorPrivyProvider } from "./provider";
-export {UserCenter} from './components/userCenter'
+export {UserCenter, MwebUserCenter} from './components/userCenter'

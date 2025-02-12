@@ -6,7 +6,7 @@ import { TradingPage } from "@orderly.network/trading";
 import config from "../../../config.tsx";
 import { OrderlyIcon } from "../trading/icons.tsx";
 import { useState } from "react";
-import { UserCenter } from "@orderly.network/wallet-connector-privy";
+import { UserCenter, MwebUserCenter } from "@orderly.network/wallet-connector-privy";
 
 const meta = {
     title: "Package/wallet-connector-privy",
@@ -65,13 +65,21 @@ export const Default: Story = {
     },
 };
 
+
 installExtension({
     name: "account-menu",
     scope: ["*"],
     positions: [ExtensionPositionEnum.AccountMenu],
     __isInternal: true,
-})((props) => {
+  })((props: any) => {
     return <UserCenter {...props} />
-});
-
-
+  });
+  
+  installExtension({
+    name: "mweb-account-menu",
+    scope: ["*"],
+    positions: [ExtensionPositionEnum.MwebAccountMenu],
+    __isInternal: true,
+  })((props: any) => {
+    return <MwebUserCenter {...props} />
+  });

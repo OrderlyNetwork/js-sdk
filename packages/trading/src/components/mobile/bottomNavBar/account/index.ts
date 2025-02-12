@@ -1,3 +1,3 @@
 export { Account } from "./account.ui";
-export { AccountWidget } from "./account.widget";
-export { useAccountScript } from "./account.script";
+export { AccountWidget, MwebAccountMenuExtension } from "./account.widget";
+export { useAccountScript} from "./account.script";

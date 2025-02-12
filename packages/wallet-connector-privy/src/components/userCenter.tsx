@@ -6,9 +6,27 @@ import { usePrivyWallet } from "../usePrivyWallet";
 import { RenderPrivyTypeIcon } from "./common";
 
 export function UserCenter(props: any) {
+ 
+  const { accountState: state, } = props;
+  return (
+    <RenderUserCenter state={state} />
+  )
+}
+
+export const MwebUserCenter = (props: any) => {
+  console.log('xxxx mweb user center', props);
+  const { state, } = props;
+
+  return (
+    <RenderUserCenter state={state} />
+  )
+}
+
+
+const RenderUserCenter = (props: any) => {
+  const { state, } = props;
   const { connect, wallet } = useWalletConnector();
   const { linkedAccount } = usePrivyWallet();
-  const { accountState: state, } = props;
   if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
       <Button
