@@ -4,7 +4,7 @@ import { useWallet } from "../useWallet";
 import { usePrivyWallet } from "../usePrivyWallet";
 import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
-import { ConnectProps } from "../types";
+import { ConnectProps, WalletType } from "../types";
 import { RenderPrivyTypeIcon } from "./common";
 import { useWalletConnectorPrivy } from "../provider";
 import { useWagmiWallet } from "../useWagmiWallet";
@@ -12,6 +12,7 @@ import { useSolanaWallet } from "../useSolanaWallet";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
 import { CloseIcon } from "./icons";
+import { WalletAdapter } from "@solana/wallet-adapter-base";
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
   return (
@@ -76,14 +77,18 @@ function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
 
 }
 
-function SOLConnectArea() {
+function SOLConnectArea({ connect }: { connect: (walletAdapter:WalletAdapter) => void }) {
+  const { wallets } = useSolanaWallet();
   return (
     <div>
       <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">SOL</div>
       <div className="oui-grid oui-grid-cols-2 oui-gap-[6px]">
-        {['Phantom', 'Solflare', 'Glow', 'Coinbase'].map((item, key) => (
-          <div key={key} className=" oui-flex oui-items-center oui-justify-center oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1">
-            <div className="oui-text-base-contrast oui-text-2xs">{item}</div>
+        {wallets.map((item, key) => (
+          <div key={key}
+            className=" oui-flex oui-items-center oui-justify-center oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1 oui-cursor-pointer"
+            onClick={() => connect(item.adapter)}
+          >
+            <div className="oui-text-base-contrast oui-text-2xs">{item.adapter.name}</div>
           </div>
         ))}
 
@@ -98,23 +103,23 @@ function ConnectWallet() {
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
-    if (params.walletType === 'privy') {
+    if (params.walletType === WalletType.PRIVY) {
       setOpenConnectDrawer(false);
     }
   };
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-5">
-      <PrivyConnectArea connect={(type) => handleConnect({ walletType: 'privy', extraType: type })} />
-      <EVMConnectArea connect={(connector) => handleConnect({ walletType: 'EVM', connector: connector })} />
-      <SOLConnectArea />
+      <PrivyConnectArea connect={(type) => handleConnect({ walletType: WalletType.PRIVY, extraType: type })} />
+      <EVMConnectArea connect={(connector) => handleConnect({ walletType: WalletType.EVM, connector: connector })} />
+      <SOLConnectArea connect={(walletAdapter) => handleConnect({ walletType: WalletType.SOL, walletAdapter: walletAdapter })} />
     </div>
   )
 }
 
 function RenderPrivyWallet() {
-  const { walletEVM, walletSOL, logout, linkedAccount } = usePrivyWallet();
-  const { namespace, switchWallet } = useWallet();
+  const { walletEVM, walletSOL, linkedAccount } = usePrivyWallet();
+  const { namespace, switchWallet, disconnect } = useWallet();
 
   return (
     <div>
@@ -127,13 +132,13 @@ function RenderPrivyWallet() {
 
           </div>
         }
-        <div className="oui-cursor-pointer oui-text-primary oui-text-2xs oui-font-semibold" onClick={logout}>Log out</div>
+        <div className="oui-cursor-pointer oui-text-primary oui-text-2xs oui-font-semibold" onClick={() => disconnect(WalletType.PRIVY)}>Log out</div>
 
 
       </div>
       <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
-        <WalletCard type={ChainNamespace.evm} address={walletEVM?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={true} isBoth={true} />
-        <WalletCard type={ChainNamespace.solana} address={walletSOL?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={true} isBoth={true} />
+        <WalletCard type={WalletType.EVM} address={walletEVM?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={true} isBoth={true} />
+        <WalletCard type={WalletType.SOL} address={walletSOL?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={true} isBoth={true} />
       </div>
     </div>
   )
@@ -158,7 +163,7 @@ function MyWallet() {
 
 
 export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boolean) => void }) {
-  const { walletEVM: privyWalletEVM, walletSOL: privyWalletSOL, logout: disconnectPrivy, isConnected: isConnectedPrivy } =
+  const { isConnected: isConnectedPrivy } =
     usePrivyWallet();
   const { wallet: EvmWallet } = useWagmiWallet();
   const { wallet: SolWallet } = useSolanaWallet();

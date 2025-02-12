@@ -6,6 +6,7 @@ import { useWallet } from "../useWallet";
 import { ChainNamespace } from "@orderly.network/types";
 import { AddSolanaWallet } from "./addSolanaWallet";
 import { AddEvmWallet } from "./addEvmWallet";
+import { WalletType } from "../types";
 export function RenderNoPrivyWallet() {
   const { wallet: walletInWagmi } = useWagmiWallet();
   const { wallet: walletInSolana } = useSolanaWallet();
@@ -14,7 +15,7 @@ export function RenderNoPrivyWallet() {
   if (walletInWagmi && !walletInSolana) {
     return (
       <div className="">
-        <WalletCard type={ChainNamespace.evm} address={walletInWagmi?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={false} isBoth={false} />
+        <WalletCard type={WalletType.EVM} address={walletInWagmi?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={false} isBoth={false} />
         <div className="oui-h-[1px] oui-bg-line oui-my-5" />
         <AddSolanaWallet />
       </div>
@@ -24,7 +25,7 @@ export function RenderNoPrivyWallet() {
   if (!walletInWagmi && walletInSolana) {
     return (
       <div className="">
-        <WalletCard type={ChainNamespace.solana} address={walletInSolana?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={false} isBoth={false} />
+        <WalletCard type={WalletType.SOL} address={walletInSolana?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={false} isBoth={false} />
         <div className="oui-h-[1px] oui-bg-line oui-my-5" />
         <AddEvmWallet />
       </div>
@@ -34,8 +35,8 @@ export function RenderNoPrivyWallet() {
   if (walletInWagmi && walletInSolana) {
     return (
       <div className="oui-flex oui-flex-col oui-gap-5">
-        <WalletCard type={ChainNamespace.evm} address={walletInWagmi?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={false} isBoth={true} />
-        <WalletCard type={ChainNamespace.solana} address={walletInSolana?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={false} isBoth={true} />
+        <WalletCard type={WalletType.EVM} address={walletInWagmi?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={false} isBoth={true} />
+        <WalletCard type={WalletType.SOL} address={walletInSolana?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={false} isBoth={true} />
       </div>
 
     )

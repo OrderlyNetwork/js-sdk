@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { ChainNamespace } from "@orderly.network/types";
 import {
   ChainIcon,
   Checkbox,
@@ -12,22 +11,16 @@ import {
   DropdownMenuTrigger,
   formatAddress,
   Popover,
-  PopoverContent,
-  PopoverRoot,
-  PopoverTrigger,
   toast,
   Tooltip,
 } from "@orderly.network/ui";
 import { DisconnectIcon, MoreIcon } from "./icons";
-import { useChains } from "@orderly.network/hooks";
 import { useWalletConnectorPrivy } from "../provider";
-import { divide } from "lodash";
 import { usePrivyWallet } from "../usePrivyWallet";
-import { useWagmiWallet } from "../useWagmiWallet";
-import { useSolanaWallet } from "../useSolanaWallet";
-
+import { useWallet } from "../useWallet";
+import { WalletType } from "../types";
 interface WalletCardProps {
-  type: ChainNamespace;
+  type: WalletType;
   address: string;
   isActive: boolean;
   isPrivy?: boolean;
@@ -44,11 +37,11 @@ export function WalletCard(props: WalletCardProps) {
     <div
       className={cn(
         "oui-rounded-2xl oui-relative oui-p-4 oui-h-[110px]  oui-overflow-hidden",
-        props.type === ChainNamespace.evm
+        props.type === WalletType.EVM
           ? "oui-bg-[#283BEE]"
           : "oui-bg-[#630EAD]",
-        props.isActive && props.type === ChainNamespace.solana && props.isBoth && "oui-border-[2px] oui-border-[#faedff]",
-        props.isActive && props.type === ChainNamespace.evm && props.isBoth && "oui-border-[2px] oui-border-[#B9D1FF]"
+        props.isActive && props.type === WalletType.SOL && props.isBoth && "oui-border-[2px] oui-border-[#faedff]",
+        props.isActive && props.type === WalletType.EVM && props.isBoth && "oui-border-[2px] oui-border-[#B9D1FF]"
       )}
     >
       <div style={{
@@ -84,7 +77,7 @@ export function WalletCard(props: WalletCardProps) {
         </div>
 
         <div className="oui-flex oui-items-center oui-justify-between">
-          {props.type === ChainNamespace.evm ? (
+          {props.type === WalletType.EVM ? (
             <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
               <div className="oui-flex oui-items-center oui-justify-center oui-relative">
                 <div className="oui-flex oui-items-center oui-justify-center oui-h-[18px] ">
@@ -128,18 +121,10 @@ export function WalletCard(props: WalletCardProps) {
     </div>
   );
 }
-function NonPrivyWalletHandleOption({ walletType }: { walletType: ChainNamespace }) {
-  const { disconnect: disconnectWagmi } = useWagmiWallet();
-  const { disconnect: disconnectSolana } = useSolanaWallet();
-  const disconnect = () => {
-    if (walletType === ChainNamespace.evm) {
-      disconnectWagmi();
-    } else {
-      disconnectSolana();
-    }
-  }
+function NonPrivyWalletHandleOption({ walletType }: { walletType: WalletType }) {
+  const { disconnect } = useWallet();
   return (
-    <div onClick={() => disconnect()}>
+    <div onClick={() => disconnect(walletType)}>
       <DisconnectIcon className="oui-text-base-contrast-80 oui-cursor-pointer hover:oui-text-base-contrast oui-w-4 oui-h-4" />
     </div>
   )

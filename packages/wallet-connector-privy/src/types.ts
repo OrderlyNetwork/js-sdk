@@ -12,8 +12,14 @@ export type SolanaInitialProps = PropsWithChildren<{
   onError?: (error: WalletError, adapter?: Adapter) => void;
 }>;
 
+export enum WalletType {
+  EVM = 'EVM',
+  SOL = 'SOL',
+  PRIVY = 'privy',
+}
+
 export interface ConnectProps {
-  walletType: 'EVM' | 'SOL' | 'privy';
+  walletType: WalletType;
   extraType?: string;
   connector?:Connector;
   walletAdapter?: WalletAdapter;

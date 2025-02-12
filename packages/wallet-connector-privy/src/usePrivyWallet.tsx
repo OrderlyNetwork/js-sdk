@@ -18,10 +18,10 @@ interface PrivyWalletHook {
   walletEVM: any;
   walletSOL: any;
   isConnected: boolean;
-  logout: () => void;
   switchChain: (chainId: number) => Promise<any>;
   linkedAccount: { type: string; address: string | null } | null;
   exportWallet: any;
+  disconnect: () => Promise<void>;
 }
 
 export function usePrivyWallet(): PrivyWalletHook {
@@ -72,6 +72,10 @@ export function usePrivyWallet(): PrivyWalletHook {
   const connect = () => {
     login();
   };
+
+  const disconnect = () => {
+    return logout();
+  }
 
   const isConnected = useMemo(() => {
     if (ready && authenticated) {
@@ -152,5 +156,5 @@ export function usePrivyWallet(): PrivyWalletHook {
     });
   }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady]);
 
-  return { connect, walletEVM, walletSOL, isConnected, logout, switchChain, linkedAccount, exportWallet };
+  return { connect, walletEVM, walletSOL, isConnected,disconnect, switchChain, linkedAccount, exportWallet };
 }
