@@ -26,6 +26,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
   const openUrl = (url?: string) => {
     window.open(url, "_blank");
   };
+  console.log("footor props", props);
 
   return (
     <Flex
@@ -83,6 +84,15 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
               />
             )}
           </Flex>
+          {typeof props?.trailing !== "undefined" && (
+            <>
+              <Divider
+                direction="vertical"
+                className="oui-h-[18px] oui-border-line-12"
+              />
+              {props?.trailing}
+            </>
+          )}
         </Flex>
       </Flex>
       <Flex direction={"row"} gap={1}>
