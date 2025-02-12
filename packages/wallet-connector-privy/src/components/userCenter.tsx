@@ -38,8 +38,7 @@ const RenderUserCenter = (props: any) => {
         loading={state.validating}
         disabled={state.validating}
         onClick={() => {
-          props
-            .connect()
+            connect()
             .then((r: any) => {
               console.log("*****", r);
             })

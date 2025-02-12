@@ -27,7 +27,7 @@ export function useWallet() {
     switchChain: setChainPrivy,
   } = usePrivyWallet();
   const [wallet, setWallet] = useState<any>();
-  const [namespace, setNamespace] = useState<ChainNamespace>(ChainNamespace.evm);
+  const [namespace, setNamespace] = useState<ChainNamespace | undefined>(undefined);
   const { storageChain, setStorageChain } = useStorageChain();
   const { setOpenConnectDrawer, setTargetNamespace } = useWalletConnectorPrivy();
 
@@ -150,6 +150,12 @@ export function useWallet() {
     }
   }
 
+  const setNullWalletStatus = () => {
+    setWallet(null);
+    setConnectedChain(null);
+    setNamespace(undefined);
+  }
+
 
 
   useEffect(() => {
@@ -170,8 +176,8 @@ export function useWallet() {
         setConnectedChain(privyWalletEVM.chain)
         setNamespace(ChainNamespace.evm);
       } else {
-        setWallet(null);
-        setConnectedChain(null);
+        setNullWalletStatus();
+        
       }
     }
     if (storageChain?.namespace === ChainNamespace.solana) {
@@ -180,8 +186,7 @@ export function useWallet() {
         setConnectedChain(privyWalletSOL.chain)
         setNamespace(ChainNamespace.solana);
       } else {
-        setWallet(null);
-        setConnectedChain(null);
+        setNullWalletStatus();
       }
     }
 
@@ -207,6 +212,8 @@ export function useWallet() {
         setWallet(walletEVM);
         setConnectedChain(connectedChainEvm);
         setNamespace(ChainNamespace.evm);
+      } else {
+        setNullWalletStatus();
       }
 
     }
@@ -215,6 +222,8 @@ export function useWallet() {
         setWallet(walletSOL);
         setConnectedChain(connectedChainSOL);
         setNamespace(ChainNamespace.solana);
+      } else {
+        setNullWalletStatus();
       }
     }
 
