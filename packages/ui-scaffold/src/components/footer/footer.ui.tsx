@@ -26,7 +26,6 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
   const openUrl = (url?: string) => {
     window.open(url, "_blank");
   };
-  console.log("footor props", props);
 
   return (
     <Flex

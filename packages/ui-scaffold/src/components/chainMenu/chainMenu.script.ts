@@ -19,8 +19,6 @@ export const useChainMenuScript = () => {
   const { wrongNetwork, currentChainId, setCurrentChainId, defaultChain } =
     useAppContext();
 
-  console.log("currentChainId", currentChainId);
-
   const networkId = useConfig("networkId") as NetworkId;
 
   useEffect(() => {
