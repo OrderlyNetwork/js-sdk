@@ -120,8 +120,7 @@ export const DesktopSharePnLContent: FC<{
     ...(props.entity.quantity ? (["quantity"] as ShareOptions[]) : []),
   ];
 
-  console.log("ShareOptions", options),
-    savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
+  savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
 
   return (
     <div className="oui-h-full oui-flex oui-flex-col oui-relative oui-w-full">
