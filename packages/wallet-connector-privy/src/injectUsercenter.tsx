@@ -16,9 +16,9 @@ export const injectUsercenter = () => {
   });
   
   installExtension({
-    name: "mweb-account-menu",
+    name: "mobile-account-menu",
     scope: ["*"],
-    positions: [ExtensionPositionEnum.MwebAccountMenu],
+    positions: [ExtensionPositionEnum.MobileAccountMenu],
     __isInternal: true,
   })((props: any) => {
     return <MwebUserCenter {...props} />

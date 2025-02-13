@@ -67,5 +67,5 @@ export const Default: Story = {
 
 
 // TODO need remove this, need inject in wallet-connector-privy package
-injectUsercenter();
+// injectUsercenter();
 

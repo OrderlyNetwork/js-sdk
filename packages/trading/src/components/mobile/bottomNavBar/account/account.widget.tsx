@@ -7,16 +7,16 @@ export const AccountWidget = () => {
     return (<Account {...state} />);
 };
 installExtension<any>({
-    name: "mweb-account-menu",
+    name: "mobile-account-menu",
     scope: ["*"],
-    positions: [ExtensionPositionEnum.MwebAccountMenu],
+    positions: [ExtensionPositionEnum.MobileAccountMenu],
     builder: useAccountScript,
     __isInternal: true,
   })((props:any) => {
     return <Account {...props} />;
   });
   
-  export const MwebAccountMenuExtension = () => {
-    return <ExtensionSlot position={ExtensionPositionEnum.MwebAccountMenu} />;
+  export const MobileAccountMenuExtension = () => {
+    return <ExtensionSlot position={ExtensionPositionEnum.MobileAccountMenu} />;
   };
   
