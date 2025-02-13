@@ -209,13 +209,15 @@ export const SymbolInfo = (props: {
               <Flex justify={"between"} width={"100%"} gap={2}>
                 <Text intensity={54}>Liquidator fee</Text>
                 <Text color="lose">
-                  -{commifyOptional(record.liquidator_fee)}
+                  {record.liquidator_fee > 0 && "-"}
+                  {commifyOptional(record.liquidator_fee)}
                 </Text>
               </Flex>
               <Flex justify={"between"} width={"100%"} gap={2}>
                 <Text intensity={54}>Ins. Fund fee</Text>
                 <Text color="lose">
-                  -{commifyOptional(record.insurance_fund_fee)}
+                  {record.insurance_fund_fee > 0 && "-"}
+                  {commifyOptional(record.insurance_fund_fee)}
                 </Text>
               </Flex>
             </Flex>
