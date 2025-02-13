@@ -8,8 +8,6 @@ const SharePnLDialogId = "sharePnLDialog";
 const SharePnLBottomSheetId = "sharePnLBottomSheet";
 
 registerSimpleDialog(SharePnLDialogId, SharePnLDialogWidget, {
-  //   title: "Max account leverage",
-  // size: "2xl",
   classNames: {
     content: "!oui-max-w-[624px] oui-p-0",
   },
@@ -24,4 +22,8 @@ registerSimpleSheet(SharePnLBottomSheetId, SharePnLBottomSheetWidget, {
 
 export * from "./sharePnL";
 export { SharePnLDialogId, SharePnLBottomSheetId };
-export type { SharePnLConfig, SharePnLParams } from "./types/types";
+export type {
+  SharePnLConfig,
+  SharePnLOptions,
+  SharePnLParams,
+} from "./types/types";

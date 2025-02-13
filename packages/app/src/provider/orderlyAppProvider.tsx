@@ -23,10 +23,11 @@ export type OrderlyAppProviderProps = PropsWithChildren<
 
 const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
   const {
-    onChainChanged,
     // dateFormatting,
     components,
     appIcons,
+    onChainChanged,
+    defaultChain,
     ...configProps
   } = props;
 
@@ -43,6 +44,7 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
         <OrderlyConfigProvider {...(configProps as ConfigProviderProps)}>
           <AppStateProvider
             onChainChanged={onChainChanged}
+            defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
           >
             <OrderlyTrackerProvider>

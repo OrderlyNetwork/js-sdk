@@ -1,8 +1,6 @@
 import { FC } from "react";
-import { Flex, modal, Text, ShareIcon } from "@orderly.network/ui";
-import { SharePnLDialogId } from "@orderly.network/ui-share";
+import { modal, ShareIcon } from "@orderly.network/ui";
 import { ShareButtonState } from "./shareButton.script";
-import React from "react";
 
 export const ShareButton: FC<ShareButtonState> = (props) => {
   if (props.sharePnLConfig == null) return <></>;
@@ -16,15 +14,14 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
             entity: {
               symbol: props.order.symbol,
               pnl: props.order.realized_pnl,
-              side: props.order.side == 'BUY' ? "LONG" : "SHORT",
+              side: props.order.side == "BUY" ? "LONG" : "SHORT",
               openPrice: props.order.average_executed_price,
               openTime: props.order.updated_time,
               quantity: props.order.quantity,
             },
             refCode: props.refCode,
             leverage: props.leverage,
-            ...props.sharePnLConfig
-
+            ...props.sharePnLConfig,
           },
         });
       }}

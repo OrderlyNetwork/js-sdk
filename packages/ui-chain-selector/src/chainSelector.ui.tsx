@@ -127,22 +127,24 @@ export const ChainSelector = (props: ChainSelectorProps) => {
           </Box>
         </TabPanel>
 
-        <TabPanel value={ChainType.Testnet} title={ChainType.Testnet}>
-          <Box r="2xl" className={cn(list(), testnetList())}>
-            {props.chains.testnet?.map((chain) => {
-              const selected = props.selectChainId === chain.id;
-              return (
-                <ChainItem
-                  key={chain.id}
-                  selected={selected}
-                  item={chain}
-                  onClick={() => props.onChainClick(chain)}
-                  className={item({ selected })}
-                />
-              );
-            })}
-          </Box>
-        </TabPanel>
+        {props.showTestnet && (
+          <TabPanel value={ChainType.Testnet} title={ChainType.Testnet}>
+            <Box r="2xl" className={cn(list(), testnetList())}>
+              {props.chains.testnet?.map((chain) => {
+                const selected = props.selectChainId === chain.id;
+                return (
+                  <ChainItem
+                    key={chain.id}
+                    selected={selected}
+                    item={chain}
+                    onClick={() => props.onChainClick(chain)}
+                    className={item({ selected })}
+                  />
+                );
+              })}
+            </Box>
+          </TabPanel>
+        )}
       </Tabs>
 
       {isWrongNetwork && (
