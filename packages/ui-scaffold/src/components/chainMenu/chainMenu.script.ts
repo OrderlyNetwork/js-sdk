@@ -5,7 +5,7 @@ import {
   useAccount,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { NetworkId } from "@orderly.network/types";
+import { API, Chain, NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
 
 export type UseChainMenuScriptReturn = ReturnType<typeof useChainMenuScript>;
@@ -16,30 +16,47 @@ export const useChainMenuScript = () => {
   const [chains] = useChains();
   const { state } = useAccount();
   const { connectedChain } = useWalletConnector();
-  const { wrongNetwork, currentChainId, setCurrentChainId } = useAppContext();
+  const { wrongNetwork, currentChainId, setCurrentChainId, defaultChain } =
+    useAppContext();
 
   const networkId = useConfig("networkId") as NetworkId;
 
   useEffect(() => {
     if (connectedChain) {
-      setCurrentChainId(
+      setCurrentChainId?.(
         typeof connectedChain.id === "number"
           ? connectedChain.id
           : parseInt(connectedChain.id)
       );
     } else {
       if (!!currentChainId) return;
+      let fallbackChain: Partial<Chain> | undefined;
 
       const firstChain =
-        networkId === "mainnet"
-          ? chains.mainnet?.[0]?.network_infos
-          : chains.testnet?.[0]?.network_infos;
+        networkId === "mainnet" ? chains.mainnet?.[0] : chains.testnet?.[0];
 
-      if (!firstChain) return;
+      if (typeof defaultChain === "function") {
+        fallbackChain = defaultChain(networkId, chains);
+      } else if (typeof defaultChain === "object") {
+        fallbackChain =
+          networkId === "mainnet"
+            ? defaultChain?.mainnet
+            : defaultChain?.testnet;
+      }
 
-      setCurrentChainId(firstChain.chain_id);
+      const chainId = fallbackChain?.id || firstChain?.network_infos?.chain_id;
+      if (!chainId) return;
+
+      setCurrentChainId?.(chainId);
     }
-  }, [connectedChain, chains, currentChainId, networkId, setCurrentChainId]);
+  }, [
+    connectedChain,
+    chains,
+    currentChainId,
+    networkId,
+    setCurrentChainId,
+    defaultChain,
+  ]);
 
   const hide = () => {
     setOpen(false);

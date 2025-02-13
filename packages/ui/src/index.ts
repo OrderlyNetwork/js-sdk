@@ -49,7 +49,10 @@ export type { SpinnerProps } from "./spinner";
 export type { ChainSelectProps, SelectProps } from "./select";
 export type { SizeType } from "./helpers/sizeType";
 
-export { OrderlyThemeProvider } from "./provider/orderlyThemeProvider";
+export {
+  OrderlyThemeProvider,
+  useOrderlyTheme,
+} from "./provider/orderlyThemeProvider";
 export * from "./plugin";
 
 //===== Misc widgets

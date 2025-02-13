@@ -4,7 +4,7 @@ import {
   ReferralType,
   ShareEntity,
   ShareOptions,
-  SharePnLConfig,
+  SharePnLOptions,
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
 import {
@@ -25,12 +25,12 @@ import { PosterRef } from "../poster/poster";
 
 export const DesktopSharePnLContent: FC<{
   entity: ShareEntity;
-  leverage: number | string;
+  leverage?: number | string;
   hide: any;
   baseDp?: number;
   quoteDp?: number;
   referral?: ReferralType;
-  shareOptions: SharePnLConfig;
+  shareOptions: SharePnLOptions;
 }> = (props) => {
   const { shareOptions } = props;
   const localPnlConfig = getPnlInfo();
@@ -73,7 +73,7 @@ export const DesktopSharePnLContent: FC<{
 
   const posterData = getPnLPosterData(
     props.entity,
-    props.leverage,
+    props.leverage!,
     check ? message : "",
     domain,
     pnlFormat,
@@ -109,14 +109,15 @@ export const DesktopSharePnLContent: FC<{
     props.hide?.();
   };
 
-  
   // check if the entity has the option, like formats
   const options: ShareOptions[] = [
-    ...(props.entity.openPrice ? ["openPrice"] as ShareOptions[] : []),
-    ...(props.entity.markPrice ? ["markPrice"] as ShareOptions[] : []),
-    ...(props.entity.openTime ? ["openTime"] as ShareOptions[] : []),
-    ...(props.leverage ? ["leverage"] as ShareOptions[] : []),
-    ...(props.entity.quantity ? ["quantity"] as ShareOptions[] : []),
+    ...(props.entity.openPrice ? (["openPrice"] as ShareOptions[]) : []),
+    ...(props.entity.closePrice ? (["closePrice"] as ShareOptions[]) : []),
+    ...(props.entity.markPrice ? (["markPrice"] as ShareOptions[]) : []),
+    ...(props.entity.openTime ? (["openTime"] as ShareOptions[]) : []),
+    ...(props.entity.closeTime ? (["closeTime"] as ShareOptions[]) : []),
+    ...(props.leverage ? (["leverage"] as ShareOptions[]) : []),
+    ...(props.entity.quantity ? (["quantity"] as ShareOptions[]) : []),
   ];
 
   savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
@@ -179,7 +180,7 @@ export const DesktopSharePnLContent: FC<{
             <Text size="sm" intensity={80}>
               Optional information to share
             </Text>
-            <Flex mt={3} gap={4}>
+            <Flex mt={3} gap={4} className="oui-flex-wrap">
               {options.map((item, index) => (
                 <ShareOption
                   key={index}

@@ -4,7 +4,7 @@ import { path } from "ramda";
 import { qrPaint } from "./qrPaint";
 
 export class DataPaint extends BasePaint {
-  private positionInfoCellWidth = 110;
+  private positionInfoCellWidth = 90;
 
   private DEFAULT_PROFIT_COLOR = "rgb(0,181,159)";
   private DEFAULT_LOSS_COLOR = "rgb(255,103,194)";
@@ -240,15 +240,19 @@ export class DataPaint extends BasePaint {
     };
     const { position } = layout;
 
-    const isVertical = (options.data?.position.informations.length ?? 0) === 2;
+    const informations = options.data?.position?.informations || [];
 
-    options.data?.position.informations.forEach((info, index) => {
+    const isVertical = (options.data?.position.informations.length ?? 0) === 2;
+    const col = informations.length > 4 ? 3 : 2;
+
+    informations.forEach((info, index) => {
       // let cellWidth = this.positionInfoCellWidth;
-      let left = position.left! + (index % 2) * this.positionInfoCellWidth;
+      let left = position.left! + (index % col) * this.positionInfoCellWidth;
+
       // let top = (position.top as number) + (index / 2) * 38 + this.transformTop;
       let top =
         (position.top as number) +
-        Math.floor(index / 2) * 38 +
+        Math.floor(index / col) * 38 +
         this.transformTop;
 
       this._drawText(info.title, {

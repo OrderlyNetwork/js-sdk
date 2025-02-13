@@ -15,12 +15,18 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { usePositionHistoryColumn } from "./desktop/usePositionHistoryColumn";
 import { SymbolProvider } from "../../providers/symbolProvider";
 import { PositionHistoryCellWidget } from "./mobile";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 
-export const PositionHistory: FC<PositionHistoryState> = (props) => {
+type PositionHistoryProps = PositionHistoryState & {
+  sharePnLConfig?: SharePnLConfig;
+};
+
+export const PositionHistory: FC<PositionHistoryProps> = (props) => {
   const { onSymbolChange, pagination, pnlNotionalDecimalPrecision } = props;
   const column = usePositionHistoryColumn({
     onSymbolChange,
     pnlNotionalDecimalPrecision,
+    sharePnLConfig: props.sharePnLConfig,
   });
 
   return (
@@ -41,7 +47,11 @@ export const PositionHistory: FC<PositionHistoryState> = (props) => {
               <div className="oui-z-10">
                 <Text.gradient
                   color={props.filterDays === value ? "brand" : undefined}
-                  className={props.filterDays !== value ? "oui-text-base-contrast-54": ""}
+                  className={
+                    props.filterDays !== value
+                      ? "oui-text-base-contrast-54"
+                      : ""
+                  }
                 >
                   {`${value}D`}
                 </Text.gradient>
@@ -89,6 +99,7 @@ export const MobilePositionHistory: FC<
       content?: string;
       cell?: string;
     };
+    sharePnLConfig?: SharePnLConfig;
   }
 > = (props) => {
   return (
@@ -123,6 +134,7 @@ export const MobilePositionHistory: FC<
               classNames={{
                 root: props.classNames?.cell,
               }}
+              sharePnLConfig={props.sharePnLConfig}
             />
           </SymbolProvider>
         )}

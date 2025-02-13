@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useTradingPageContext } from "../../../provider/context";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
-import { PositionsProps } from "@orderly.network/ui-positions";
 import { useOrderStream } from "@orderly.network/hooks";
 import { usePositionsCount } from "../../../provider/usePositionsCount";
 import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
 import { modal, Text } from "@orderly.network/ui";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TabType } from "@orderly.network/ui-orders";
 
 export enum DataListTabType {
@@ -25,8 +24,7 @@ export enum DataListTabSubType {
 export const useDataListScript = (props: {
   symbol: string;
   className?: string;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
 }) => {
   const { symbol, sharePnLConfig } = props;
   const [tab, setTab] = useState<DataListTabType>(DataListTabType.position);
