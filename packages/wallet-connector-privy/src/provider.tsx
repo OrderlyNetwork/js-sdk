@@ -3,9 +3,8 @@ import { Main } from "./main";
 import { InitSolana } from "./initSolana";
 import { InitWagmi } from "./initWagmi";
 import { InitPrivy } from "./initPrivy";
-import { merge } from "lodash";
 import { type Chain, defineChain } from "viem";
-import { ModalProvider, TooltipProvider } from "@orderly.network/ui";
+import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import { ChainNamespace } from "@orderly.network/types";
 import { injectUsercenter } from "./injectUsercenter";
@@ -58,9 +57,9 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   testnetChains: [],
   getChainsByNetwork: () => [],
   openConnectDrawer: false,
-  setOpenConnectDrawer: () => {},
+  setOpenConnectDrawer: () => { },
   targetNamespace: undefined,
-  setTargetNamespace: () => {},
+  setTargetNamespace: () => { },
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -71,7 +70,7 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
-  const [targetNamespace, setTargetNamespace] = useState<ChainNamespace |undefined>();
+  const [targetNamespace, setTargetNamespace] = useState<ChainNamespace | undefined>();
 
   const fetchAllChains = async () => {
     try {
@@ -105,7 +104,7 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   }
 
   return (
-    <walletConnectorPrivyContext.Provider 
+    <walletConnectorPrivyContext.Provider
       value={{
         initChains,
         mainnetChains,
@@ -118,13 +117,14 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
       }}
     >
       <TooltipProvider delayDuration={300}>
-          <InitPrivy initChains={initChains}>
-            <InitWagmi initChains={initChains}>
-              <InitSolana>
-                <Main>{props.children}</Main>
-              </InitSolana>
-            </InitWagmi>
-          </InitPrivy>
+
+        <InitPrivy initChains={initChains}>
+          <InitWagmi initChains={initChains}>
+            <InitSolana>
+              <Main>{props.children}</Main>
+            </InitSolana>
+          </InitWagmi>
+        </InitPrivy>
       </TooltipProvider>
     </walletConnectorPrivyContext.Provider>
   );

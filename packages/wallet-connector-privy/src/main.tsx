@@ -42,18 +42,3 @@ export function Main(props: PropsWithChildren) {
     </WalletConnectorContext.Provider>
   );
 }
-
-
-
-
-
-
-// TODO: mewb inject
-// installExtension({
-//     name: "account-menu",
-//     scope: ["*"],
-//     positions: [ExtensionPositionEnum.AccountMenu],
-//     __isInternal: true,
-// })((props) => {
-//     return <UserCenter {...props} />
-// });

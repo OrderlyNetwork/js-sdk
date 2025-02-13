@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChainNamespace } from "@orderly.network/types";
 
 export function useWagmiWallet() {
-  const [wallet, setWallet] = useState<undefined | any>();
+  const [wallet, setWallet] = useState<undefined | any>(undefined);
   const { connect, connectors } = useConnect();
   const {disconnect} = useDisconnect();
   const { connector, isConnected, address, chainId, } = useAccount();
@@ -37,8 +37,7 @@ export function useWagmiWallet() {
     connector,
     isConnected,
     address,
-    chainId,
-    connectedChain
+    wallet,
   });
 
   useEffect(() => {
