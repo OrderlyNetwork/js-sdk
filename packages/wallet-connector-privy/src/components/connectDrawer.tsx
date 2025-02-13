@@ -165,21 +165,21 @@ function MyWallet() {
 export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boolean) => void }) {
   const { isConnected: isConnectedPrivy } =
     usePrivyWallet();
-  const { wallet: EvmWallet } = useWagmiWallet();
-  const { wallet: SolWallet } = useSolanaWallet();
+  const {  isConnected: isConnectedEvm } = useWagmiWallet();
+  const { isConnected: isConnectedSolana } = useSolanaWallet();
 
   const isConnected = useMemo(() => {
     if (isConnectedPrivy) {
       return true;
     }
-    if (EvmWallet) {
+    if (isConnectedEvm) {
       return true;
     }
-    if (SolWallet) {
+    if (isConnectedSolana) {
       return true;
     }
     return false;
-  }, [isConnectedPrivy, EvmWallet, SolWallet])
+  }, [isConnectedPrivy, isConnectedEvm, isConnectedSolana])
 
   return (
     <SimpleDialog

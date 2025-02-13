@@ -11,7 +11,14 @@ export function Main(props: PropsWithChildren) {
   const { wallet, connectedChain, setChain, namespace } = useWallet();
   const { openConnectDrawer, setOpenConnectDrawer, setTargetNamespace } = useWalletConnectorPrivy();
 
-  const connect = () => {
+  const connect = (props: any) => {
+    console.log('xxxx main connect', props);
+    // fix wallet-connector package connect
+    if (props && props.autoSelect) {
+      return Promise.resolve([]);
+    }
+    
+    
     setTargetNamespace(undefined);
     return new Promise((resolve, reject) => {
       setOpenConnectDrawer(true);

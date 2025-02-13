@@ -11,6 +11,11 @@ export function RenderNoPrivyWallet() {
   const { wallet: walletInWagmi } = useWagmiWallet();
   const { wallet: walletInSolana } = useSolanaWallet();
   const { namespace, switchWallet } = useWallet();
+  console.log('xxxx RenderNoPrivyWallet', {
+    walletInWagmi,
+    walletInSolana,
+  });
+  
   // only have wagmi wallet
   if (walletInWagmi && !walletInSolana) {
     return (

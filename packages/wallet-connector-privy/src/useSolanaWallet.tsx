@@ -14,7 +14,7 @@ export function useSolanaWallet() {
     publicKey,
     signMessage,
     sendTransaction,
-    disconnect,
+    disconnect: disconnectSolana,
   } = useWallet();
   const { connection} = useConnection();
 
@@ -52,6 +52,14 @@ export function useSolanaWallet() {
 
   const isManual = useRef(false);
 
+  const disconnect = () => {
+    disconnectSolana().then(
+      () => {
+        setWallet(undefined);
+      }
+    );
+  }
+
   const connect = async (walletName: any) => {
     console.log('connect solana wallet', walletName);
     initPromiseRef();
@@ -85,6 +93,9 @@ export function useSolanaWallet() {
     ])
       .then(
         ([connectedWallet, { userAddress, signMessage, sendTransaction }]) => {
+          console.log('-- useSolanaWallet', {
+            userAddress,
+          });
           const tempWallet = {
             label: connectedWallet.adapter.name,
             icon: "",
@@ -130,7 +141,17 @@ export function useSolanaWallet() {
     };
   }, [publicKey]);
 
+  const isConnected = useMemo(() => {
+    return !!publicKey;
+  }, [publicKey]);
+
   useEffect(() => {
+    console.log('-- useSolanaWallet', {
+      walletSolana,
+      publicKey,
+      wallet,
+    });
+    
     if (!walletSolana) {
       return;
     }
@@ -177,5 +198,5 @@ export function useSolanaWallet() {
     });
   }, [publicKey, walletSolana, signMessage, sendTransaction, connection]);
 
-  return { wallets, connectedChain, connect, wallet, disconnect };
+  return { wallets, connectedChain, connect, wallet, disconnect, isConnected };
 }
