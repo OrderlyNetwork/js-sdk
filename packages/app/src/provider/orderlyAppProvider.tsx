@@ -27,7 +27,7 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
     components,
     appIcons,
     onChainChanged,
-    currentChainFallback,
+    defaultChain,
     ...configProps
   } = props;
 
@@ -44,7 +44,7 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
         <OrderlyConfigProvider {...(configProps as ConfigProviderProps)}>
           <AppStateProvider
             onChainChanged={onChainChanged}
-            currentChainFallback={currentChainFallback}
+            defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
           >
             <OrderlyTrackerProvider>
