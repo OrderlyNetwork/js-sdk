@@ -4,13 +4,9 @@ import { useTradingPageContext } from "../../../../provider/context";
 import { useAccount } from "@orderly.network/hooks";
 import { AccountState as AccountStateType } from "@orderly.network/core";
 
-interface AccountScriptReturn {
-  onShowAccountSheet: () => void;
-  address?: string ;
-  state: AccountStateType;
-}
 
-export const useAccountScript = (): AccountScriptReturn => {
+
+export const useAccountScript = () => {
   const { referral, tradingRewards, bottomSheetLeading } =
     useTradingPageContext();
   const { account, state } = useAccount();
@@ -26,7 +22,7 @@ export const useAccountScript = (): AccountScriptReturn => {
   return {
     onShowAccountSheet,
     address: account.address,
-    state,
+    state: state as AccountStateType,
   };
 };
 
