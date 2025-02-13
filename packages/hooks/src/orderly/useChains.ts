@@ -12,7 +12,7 @@ import { nativeTokenAddress } from "@orderly.network/types";
 import { OrderlyContext } from "../orderlyContext";
 
 // testnet only show arb sepolia and solana devnet
-const TestNetWhiteList = [421614, 901901901, 1516];
+const TestNetWhiteList = [421614, 901901901];
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;
