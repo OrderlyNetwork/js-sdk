@@ -98,12 +98,13 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
 
   async signMessage(message: Uint8Array): Promise<string> {
     const isLedger = checkIsLedgerWallet(this._address);
-    if (!isLedger) {
-      console.log("-- test error");
-      throw new Error(
-        "xxx Signing off chain messages with Ledger is not yet supported"
-      );
-    }
+    // test ledger wallet
+    // if (!isLedger) {
+    //   console.log("-- test error");
+    //   throw new Error(
+    //     "xxx Signing off chain messages with Ledger is not yet supported"
+    //   );
+    // }
 
     if (isLedger) {
       const transaction = new Transaction();
