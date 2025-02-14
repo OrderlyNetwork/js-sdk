@@ -3,7 +3,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
-import { useEventEmitter, useLocalStorage, WalletState } from "@orderly.network/hooks";
+import { useEventEmitter, useLocalStorage, useStorageLedgerAddress, WalletState } from "@orderly.network/hooks";
 import {
   WalletAdapterNetwork,
   WalletNotReadyError,
@@ -18,6 +18,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
   const { isMobile } = useScreen();
   const { connection } = useConnection();
   const { setVisible: setModalVisible, visible } = useWalletModal();
+  const { setLedgerAddress } = useStorageLedgerAddress();
   const {
     signMessage,
     signTransaction,
@@ -31,7 +32,6 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
 
   // 1 for open, 2 for close, null for default
   const selectModalVisibleRef = useRef<boolean>(false);
-  const [ledgerWallet, setLedgerWallet] = useLocalStorage<string[]>(LedgerWalletKey, [] as string[]);
 
   const [connected, setConnected] = useState(false);
 
@@ -46,19 +46,19 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
   }>({
     walletSelect: null,
     connect: null,
-    walletSelectResolve: () => {},
-    walletSelectReject: () => {},
-    connectReject: () => {},
-    connectResolve: () => {},
+    walletSelectResolve: () => { },
+    walletSelectReject: () => { },
+    connectReject: () => { },
+    connectResolve: () => { },
   });
   const ee = useEventEmitter();
 
   const initPromiseRef = () => {
     console.log("-- init solana promise");
-    solanaPromiseRef.current.walletSelectResolve = () => {};
-    solanaPromiseRef.current.walletSelectReject = () => {};
-    solanaPromiseRef.current.connectReject = () => {};
-    solanaPromiseRef.current.connectReject = () => {};
+    solanaPromiseRef.current.walletSelectResolve = () => { };
+    solanaPromiseRef.current.walletSelectReject = () => { };
+    solanaPromiseRef.current.connectReject = () => { };
+    solanaPromiseRef.current.connectReject = () => { };
     solanaPromiseRef.current.connect = null;
     solanaPromiseRef.current.walletSelect = null;
     solanaPromiseRef.current.walletSelect = new Promise((resolve, reject) => {
@@ -117,7 +117,7 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
       solanaPromiseRef.current.walletSelect,
       solanaPromiseRef.current.connect,
     ])
-      .then(([wallet, { userAddress, signMessage,signTransaction, sendTransaction }]) => {
+      .then(([wallet, { userAddress, signMessage, signTransaction, sendTransaction }]) => {
         // console.log('-- connect sol res',{
         //   wallet,
         //   userAddress, signMessage, sendTransaction
@@ -143,11 +143,8 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
             },
           ],
         };
-        if (wallet.adapter.name ==='Ledger') {
-          if (!ledgerWallet.includes(userAddress)) {
-            ledgerWallet.push( userAddress );
-            setLedgerWallet([...ledgerWallet]);
-          }
+        if (wallet.adapter.name === 'Ledger') {
+          setLedgerAddress(userAddress);
         }
         setWallet(tempWallet);
         setConnected(true);
@@ -250,11 +247,8 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         },
       ],
     });
-    if (solanaWallet.adapter.name ==='Ledger') {
-      if (!ledgerWallet.includes(userAddress)) {
-        ledgerWallet.push( userAddress );
-        setLedgerWallet([...ledgerWallet]);
-      }
+    if (solanaWallet.adapter.name === 'Ledger') {
+      setLedgerAddress(userAddress);
     }
 
     setConnected(true);
