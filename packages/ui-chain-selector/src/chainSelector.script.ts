@@ -8,6 +8,7 @@ import {
 import { NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
 import { ChainType, TChainItem } from "./type";
+import { useOrderlyTheme } from "@orderly.network/ui";
 
 const KEY = "orderly_selected_chains";
 const MAX_RECENT_CHAINS = 6;
@@ -53,6 +54,8 @@ export const useChainSelectorScript = (
     currentChainId
   );
 
+  const { getComponentTheme } = useOrderlyTheme();
+
   const chains = useMemo(() => {
     const bridgeLessChains = bridgeLessOnly
       ? _chains.mainnet.filter((chain) => chain.network_infos.bridgeless)
@@ -73,6 +76,21 @@ export const useChainSelectorScript = (
       })),
     };
   }, [_chains, bridgeLessOnly]);
+
+  const showTestnet = useMemo(() => {
+    const chainSelectorOverrides = getComponentTheme("chainSelector", {
+      showTestnet: true,
+    });
+
+    if (
+      chainSelectorOverrides.showTestnet === false ||
+      !chains.testnet.length
+    ) {
+      return false;
+    }
+
+    return true;
+  }, [chains.testnet]);
 
   const { recentChains, saveRecentChain } = useRecentChains(chains);
 
@@ -130,7 +148,8 @@ export const useChainSelectorScript = (
   const { selectedTab, onTabChange } = useChainTab(
     chains,
     currentChainId,
-    wrongNetwork
+    wrongNetwork,
+    showTestnet
   );
 
   return {
@@ -140,13 +159,15 @@ export const useChainSelectorScript = (
     onChainClick,
     selectedTab,
     onTabChange,
+    showTestnet,
   };
 };
 
 function useChainTab(
   chains: Record<NetworkId, TChainItem[]>,
   currentChainId?: number,
-  wrongNetwork?: boolean
+  wrongNetwork?: boolean,
+  showTestnet?: boolean
 ) {
   const [selectedTab, setSelectedTab] = useState<ChainType>(ChainType.Mainnet);
 
@@ -155,6 +176,11 @@ function useChainTab(
   };
 
   useEffect(() => {
+    if (!showTestnet) {
+      setSelectedTab(ChainType.Mainnet);
+      return;
+    }
+
     if (currentChainId) {
       const isMainnet = chains.mainnet?.some(
         (chain) => chain.id === currentChainId
@@ -173,7 +199,7 @@ function useChainTab(
         return;
       }
     }
-  }, [currentChainId, chains, wrongNetwork]);
+  }, [currentChainId, chains, wrongNetwork, showTestnet]);
 
   return { selectedTab, onTabChange };
 }
@@ -185,9 +211,11 @@ function useRecentChains(chains: Record<NetworkId, TChainItem[]>) {
   );
 
   const recentChains = useMemo<TChainItem[]>(() => {
-    return recentChainsIds?.map((id: string) =>
-      chains.mainnet?.find((item) => item.id === parseInt(id))
-    );
+    return recentChainsIds
+      ?.map((id: string) =>
+        chains.mainnet?.find((item) => item.id === parseInt(id))
+      )
+      .filter((chains: TChainItem) => !!chains);
   }, [chains, recentChainsIds]);
 
   const saveRecentChain = useCallback(

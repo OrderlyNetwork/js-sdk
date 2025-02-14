@@ -45,7 +45,6 @@ export const OrderlyTrackerProvider = ({ children }: PropsWithChildren) => {
   const networkId = useConfig("networkId") as NetworkId;
   const brokerId = useConfig("brokerId");
   const getChainInfo = useNetworkInfo(networkId);
-  console.log("env:", env);
 
   const handleEvent = useCallback(
     (

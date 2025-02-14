@@ -117,6 +117,7 @@ export const DataList: FC<DataListState> = (props) => {
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
           onSymbolChange={props.onSymbolChange}
+          sharePnLConfig={props.sharePnLConfig}
         />
       </TabPanel>
       <TabPanel

@@ -31,10 +31,11 @@ export const CumstomizeUrls: Story = {
       <Scaffold
         footerProps={{
           telegramUrl: "https://orderly.network",
-          discordmUrl: "https://orderly.network",
+          discordUrl: "https://orderly.network",
           twitterUrl: "https://orderly.network",
+          trailing: <a onClick={() => window.open('https://orderly.network')} style={{fontSize: '12px', color:'blue', cursor: 'pointer'}}>Product feedback</a>
         }}
-        footer={<FooterWidget />}
+      
       ></Scaffold>
     );
   },

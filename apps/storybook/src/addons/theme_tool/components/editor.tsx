@@ -1,8 +1,7 @@
 import { styled } from "@storybook/theming";
 import { ThemeMenu } from "./menu";
 import { ColorList, GradientColorList } from "./colorList";
-import EditorContext, { EditorProvider } from "./editorContext";
-import { useContext, useMemo } from "react";
+import { EditorProvider, useTheme } from "./editorContext";
 import { Radius } from "./radius";
 import { Typography } from "./typography";
 import { Toolbar } from "./toolbar";
@@ -54,7 +53,7 @@ export const ThemeEditor = () => {
 };
 
 const ViewMode = () => {
-  const { mode } = useContext(EditorContext);
+  const { mode } = useTheme();
   return mode === "visual" ? <VisualEditor /> : <CodeEditor />;
 };
 
@@ -101,7 +100,7 @@ const StyledMasker = styled.div`
 `;
 
 const Masker = () => {
-  const { loading } = useContext(EditorContext);
+  const { loading } = useTheme();
   return loading ? <StyledMasker>Loading...</StyledMasker> : null;
 };
 
@@ -125,7 +124,7 @@ const StyledResetButton = styled.button`
 `;
 
 const ResetButton = () => {
-  const { resetTheme } = useContext(EditorContext);
+  const { resetTheme } = useTheme();
   return (
     <ResetButtonWrap>
       <StyledResetButton onClick={resetTheme}>
@@ -152,7 +151,7 @@ const ResetButton = () => {
 };
 
 const Colors = () => {
-  const { theme, setTheme } = useContext(EditorContext);
+  const { theme, setTheme } = useTheme();
 
   return (
     <>
