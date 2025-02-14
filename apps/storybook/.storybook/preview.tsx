@@ -43,6 +43,7 @@ const preview: Preview = {
       storySort: {
         order: [
           "Overview",
+          "Design Tokens",
           "Base",
           "Package",
           [
