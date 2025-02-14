@@ -57,7 +57,6 @@ const configStore = new CustomConfigStore({
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   console.log("-- provider", configStore, VITE_ENV);
-
   return (
     <WalletConnectorProvider
       solanaInitial={{ wallets: wallets }}
