@@ -1,7 +1,6 @@
 import { styled } from "@storybook/theming";
 import { Label, StyledInput, Wrap } from "./radius";
-import { useContext } from "react";
-import EditorContext from "./editorContext";
+import { useTheme } from "./editorContext";
 
 const StyledGroupName = styled.h3`
   font-size: 14px;
@@ -40,11 +39,10 @@ const FONT_SIZES = [
 // };
 
 export const Typography = () => {
-  const { theme, setTheme } = useContext(EditorContext);
+  const { theme, setTheme } = useTheme();
+
   const handleChange = (name: string) => (value: string) => {
-    setTheme((prev: any) => ({ ...prev, [name]: value }), {
-      [name]: value,
-    });
+    setTheme({ ...theme, [name]: value });
   };
 
   return (
