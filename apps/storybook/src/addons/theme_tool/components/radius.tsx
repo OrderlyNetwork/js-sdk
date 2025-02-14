@@ -1,6 +1,5 @@
 import { styled } from "@storybook/theming";
-import { useContext } from "react";
-import EditorContext from "./editorContext";
+import { useTheme } from "./editorContext";
 
 export const Wrap = styled.div`
   display: flex;
@@ -16,28 +15,38 @@ const StyledGroupName = styled.h3`
   font-weight: 700;
 `;
 
-const RADIUS_SIZES = ["sm", "md", "lg", "xl", "2xl", "full"] as const;
+const RADIUS_SIZES = [
+  "sm",
+  "default",
+  "md",
+  "lg",
+  "xl",
+  "2xl",
+  "full",
+] as const;
 
 export const Radius = () => {
-  const { theme, setTheme } = useContext(EditorContext);
+  const { theme, setTheme } = useTheme();
+
   const handleChange = (name: string) => (value: string) => {
-    setTheme((prev: any) => ({ ...prev, [name]: value }), {
-      [name]: value,
-    });
+    setTheme({ ...theme, [name]: value });
   };
 
   return (
     <div>
       <StyledGroupName>Border Radius</StyledGroupName>
       <Wrap>
-        {RADIUS_SIZES.map((size) => (
-          <RadiusInput
-            key={size}
-            name={size}
-            value={theme[`--oui-rounded-${size}`]}
-            onChange={handleChange(`--oui-rounded-${size}`)}
-          />
-        ))}
+        {RADIUS_SIZES.map((size) => {
+          const suffix = size === "default" ? "" : `-${size}`;
+          return (
+            <RadiusInput
+              key={size}
+              name={size}
+              value={theme[`--oui-rounded${suffix}`]}
+              onChange={handleChange(`--oui-rounded${suffix}`)}
+            />
+          );
+        })}
       </Wrap>
     </div>
   );

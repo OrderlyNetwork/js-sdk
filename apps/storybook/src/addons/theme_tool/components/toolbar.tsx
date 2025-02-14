@@ -1,6 +1,5 @@
 import { styled } from "@storybook/theming";
-import { useContext } from "react";
-import { EditorContext } from "./editorContext";
+import { useTheme } from "./editorContext";
 
 const Wrap = styled.div`
   display: flex;
@@ -37,7 +36,7 @@ const TabButton = styled.button<{ active?: boolean }>`
 `;
 
 export const Toolbar = () => {
-  const { mode, setMode, loading } = useContext(EditorContext);
+  const { mode, setMode, loading } = useTheme();
   return (
     <Wrap>
       {/* <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
