@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.0.4-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/hooks@2.0.4-alpha.0
+
 ## 2.0.3
 
 ### Patch Changes
