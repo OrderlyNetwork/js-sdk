@@ -50,3 +50,4 @@ apps/docs/_doc_meta_
 hooks-example/
 
 .vscode
+.pnpm-store/
