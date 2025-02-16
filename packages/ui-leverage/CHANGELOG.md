@@ -1,5 +1,15 @@
 # @orderly.network/ui-leverage
 
+## 2.0.4-test-internal-patch.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.4-test-internal-patch.0
+  - @orderly.network/types@2.0.4-test-internal-patch.0
+  - @orderly.network/ui@2.0.4-test-internal-patch.0
+
 ## 2.0.3
 
 ### Patch Changes

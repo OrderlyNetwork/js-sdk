@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.0.4-test-internal-patch.0
+
+### Patch Changes
+
+- publish
+
 ## 2.0.3
 
 ### Patch Changes

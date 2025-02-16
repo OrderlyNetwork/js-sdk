@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.0.4-test-internal-patch.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.4-test-internal-patch.0
+
 ## 2.0.3
 
 ### Patch Changes

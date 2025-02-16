@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.0.4-test-internal-patch.0
+
+### Patch Changes
+
+- publish
+
 ## 1.0.3
 
 ### Patch Changes

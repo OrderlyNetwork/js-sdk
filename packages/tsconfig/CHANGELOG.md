@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.20-test-internal-patch.0
+
+### Patch Changes
+
+- publish
+
 ## 0.3.19
 
 ### Patch Changes

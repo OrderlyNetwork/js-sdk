@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.21-test-internal-patch.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.4-test-internal-patch.0
+
 ## 0.3.20
 
 ### Patch Changes
