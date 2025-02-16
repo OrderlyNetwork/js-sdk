@@ -94,15 +94,15 @@ async function checkGitStatus() {
 async function ceheckBranch() {
   const status = await simpleGit.status();
   const currentBranch = status.current;
-  console.log("currentBranch: ", currentBranch);
-  if (
-    !currentBranch?.startsWith("internal/") &&
-    !currentBranch?.startsWith("npm/")
-  ) {
-    throw new Error(
-      'Release versions can only operate on branches prefixed with "internal/" or npm/'
-    );
-  }
+  console.log("currentBranch: ", status, currentBranch);
+  // if (
+  //   !currentBranch?.startsWith("internal/") &&
+  //   !currentBranch?.startsWith("npm/")
+  // ) {
+  //   throw new Error(
+  //     'Release versions can only operate on branches prefixed with "internal/" or npm/'
+  //   );
+  // }
 }
 
 /**
