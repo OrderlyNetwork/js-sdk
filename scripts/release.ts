@@ -18,6 +18,7 @@ const npm = {
 };
 
 const git = {
+  branch: process.env.GIT_BRANCH,
   token: process.env.GIT_TOKEN,
   username: process.env.GIT_USERNAME,
   name: process.env.GIT_NAME,
@@ -92,17 +93,18 @@ async function checkGitStatus() {
 }
 
 async function ceheckBranch() {
-  const status = await simpleGit.status();
-  const currentBranch = status.current;
-  console.log("currentBranch: ", status, currentBranch);
-  // if (
-  //   !currentBranch?.startsWith("internal/") &&
-  //   !currentBranch?.startsWith("npm/")
-  // ) {
-  //   throw new Error(
-  //     'Release versions can only operate on branches prefixed with "internal/" or npm/'
-  //   );
-  // }
+  // const status = await simpleGit.status();
+  // const currentBranch = status.current;
+  const currentBranch = git.branch;
+  console.log("currentBranch: ", currentBranch);
+  if (
+    !currentBranch?.startsWith("internal/") &&
+    !currentBranch?.startsWith("npm/")
+  ) {
+    throw new Error(
+      'Release versions can only operate on branches prefixed with "internal/" or npm/'
+    );
+  }
 }
 
 /**
@@ -126,6 +128,7 @@ async function getRemoteUrl() {
  */
 async function getRepoPath() {
   const res = await $`git remote get-url origin`;
+  console.log("getRepoPath: ", res);
   const origin = res.stdout?.replace(/\s+/g, "");
   const regex = /(?:github\.com|gitlab\.com)[:/](.+?\/.+?)\.git/;
   const match = origin.match(regex);
