@@ -81,6 +81,7 @@ async function release() {
   await $`git commit -m "publish"`;
 
   const remoteUrl = await getRemoteUrl();
+  console.log("remoteUrl", remoteUrl);
   // if not provide, use local origin and git token
   // use --no-verify to ignore push hook
   await $`git push --no-verify ${remoteUrl}`;
