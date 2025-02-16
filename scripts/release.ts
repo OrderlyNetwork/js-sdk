@@ -12,6 +12,8 @@ const simpleGit = SimpleGit();
 // show command exection log
 $.verbose = true;
 
+console.log("env", process.env);
+
 const isCI = !!process.env.GIT_BRANCH;
 
 const npm = {

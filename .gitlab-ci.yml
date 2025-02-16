@@ -29,7 +29,7 @@ internal_patch:
       git config --global --add safe.directory "$CI_PROJECT_DIR"
 
       export GIT_BRANCH="$CI_COMMIT_BRANCH"
-      export GIT_TOKEN="$GIT_TOKEN_INTERNAL"
+      export GIT_TOKEN="$CI_JOB_TOKEN"
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
