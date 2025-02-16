@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { useOrdersScript } from "./orders.script";
 import { Orders } from "./orders.ui";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 import { OrderListInstance } from "./orderList/orderList.script";
 
 export enum TabType {
@@ -17,8 +17,7 @@ export enum TabType {
 export type OrdersWidgetProps = {
   current?: TabType;
   pnlNotionalDecimalPrecision?: number;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
 };
 
 export const OrdersWidget = forwardRef<OrderListInstance, OrdersWidgetProps>(

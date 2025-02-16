@@ -12,6 +12,8 @@ import {
   MaxClosedQty,
 } from "./items";
 import { commifyOptional } from "@orderly.network/utils";
+import { ShareButtonWidget } from "../../positions/desktop/shareButton";
+import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 
 export const PositionHistoryCell: FC<PositionHistoryCellState> = (props) => {
   return (
@@ -32,6 +34,7 @@ export const PositionHistoryCell: FC<PositionHistoryCellState> = (props) => {
 export const Header: FC<PositionHistoryCellState> = (props) => {
   const showAlert = () => {
     const { item: record } = props;
+
     modal.alert({
       title: "Net PnL",
       message: (
@@ -65,6 +68,7 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
       ),
     });
   };
+
   return (
     <Flex gap={1} width={"100%"}>
       <Flex
@@ -80,11 +84,21 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
         <Text size="2xs" intensity={36}>
           Net PnL
         </Text>
-        <button onClick={showAlert}>
-          <Text.numeral size="xs" coloring>
-            {props.item.netPnL ?? "--"}
-          </Text.numeral>
-        </button>
+        <Flex gapX={1}>
+          <button onClick={showAlert}>
+            <Text.numeral size="xs" coloring>
+              {props.item.netPnL ?? "--"}
+            </Text.numeral>
+          </button>
+
+          <ShareButtonWidget
+            position={props.item}
+            sharePnLConfig={props.sharePnLConfig}
+            modalId={SharePnLBottomSheetId}
+            iconSize={12}
+            isPositionHistory
+          />
+        </Flex>
       </Flex>
     </Flex>
   );

@@ -79,7 +79,7 @@ export class BaseSigner implements Signer {
 
     const u8 = Buffer.from(text);
 
-    const signature = await orderlyKeyPair.sign(u8);
+    const signature = await orderlyKeyPair.sign(u8 as unknown as Uint8Array);
 
     const signHex = Buffer.from(signature).toString("base64");
 

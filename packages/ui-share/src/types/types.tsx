@@ -32,6 +32,9 @@ export type PosterLayoutConfig = {
   updateTime?: layoutInfo;
 };
 
+export type SharePnLConfig = SharePnLOptions &
+  Partial<Omit<SharePnLParams, "refCode" | "leverage">>;
+
 export type SharePnLParams = {
   entity: ShareEntity;
   leverage?: number;
@@ -40,7 +43,7 @@ export type SharePnLParams = {
   refLink?: string;
 };
 
-export type SharePnLConfig = {
+export type SharePnLOptions = {
   /**
    * default is Manrope
    */
@@ -78,18 +81,25 @@ export type ReferralType = {
   slogan?: string;
 };
 
-
 export type PnLDisplayFormat = "roi_pnl" | "roi" | "pnl";
-export type ShareOptions = "openPrice" | "openTime" | "markPrice" | "quantity" | "leverage";
-
+export type ShareOptions =
+  | "openPrice"
+  | "closePrice"
+  | "openTime"
+  | "closeTime"
+  | "markPrice"
+  | "quantity"
+  | "leverage";
 
 export type ShareEntity = {
   symbol: string;
   side: "LONG" | "SHORT";
   pnl?: number;
   roi?: number;
-  openPrice?: number;   
+  openPrice?: number;
+  closePrice?: number;
   openTime?: number;
+  closeTime?: number;
   markPrice?: number;
   quantity?: number;
-}
+};

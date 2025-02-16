@@ -96,7 +96,9 @@ export function getPnLPosterData(
   }
   const array: ShareOptions[] = [
     "openPrice",
+    "closePrice",
     "openTime",
+    "closeTime",
     "markPrice",
     "quantity",
   ];
@@ -115,11 +117,29 @@ export function getPnLPosterData(
           }
           break;
         }
+        case "closePrice": {
+          if (position.closePrice != null) {
+            informations.push({
+              title: "Close price",
+              value: formatFixed(position.closePrice, quoteDp || 2),
+            });
+          }
+          break;
+        }
         case "openTime": {
           if (position.openTime != null) {
             informations.push({
               title: "Opened at",
               value: formatOpenTime(position.openTime),
+            });
+          }
+          break;
+        }
+        case "closeTime": {
+          if (position.closeTime != null) {
+            informations.push({
+              title: "Closed at",
+              value: formatOpenTime(position.closeTime),
             });
           }
           break;
@@ -295,7 +315,15 @@ export function getPnlInfo(): {
   return {
     bgIndex: 0,
     pnlFormat: "roi_pnl",
-    options: ["openPrice", "openTime", "markPrice", "quantity", "leverage"],
+    options: [
+      "openPrice",
+      "closePrice",
+      "openTime",
+      "closeTime",
+      "markPrice",
+      "quantity",
+      "leverage",
+    ],
     message: "",
   };
 }

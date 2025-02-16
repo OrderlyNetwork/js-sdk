@@ -1,33 +1,30 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { useChannel } from "@storybook/manager-api";
 import { EVENTS } from "../constants";
-import { styled } from "@storybook/theming";
 
-export type Theme = {
-  [key: string]: string;
-};
+export type Theme = Record<string, string>;
 
 type ViewMode = "visual" | "code";
 
-export const EditorContext = createContext<{
+export type EditorContextState = {
   theme: Theme;
   mode: ViewMode;
-  setTheme: (theme: Theme, changedValues: Record<string, string>) => void;
+  setTheme: (theme: Theme, changedValues?: Record<string, string>) => void;
   setMode: (mode: ViewMode) => void;
   resetTheme: () => void;
   loading: boolean;
-}>({
+};
+
+export const EditorContext = createContext<EditorContextState>({
   theme: {},
   mode: "visual",
-  setTheme: (theme: Theme, changedValues: Record<string, string>) => {
-    console.log(theme, changedValues);
-  },
-  setMode: (mode: ViewMode) => {
-    console.log(mode);
-  },
+  setTheme: (theme: Theme, changedValues?: Record<string, string>) => {},
+  setMode: (mode: ViewMode) => {},
   resetTheme: () => {},
   loading: false,
 });
+
+export const useTheme = () => useContext(EditorContext);
 
 export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
   const [mode, setMode] = useState<ViewMode>("visual");
@@ -45,11 +42,10 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleSetTheme = (
     theme: Theme,
-    changedValues: Record<string, string>
+    changedValues?: Record<string, string>
   ) => {
     setTheme(theme);
-    // console.log("++++theme", theme);
-    emit(EVENTS.CHANGE, { changedValues });
+    emit(EVENTS.CHANGE, { changedValues: changedValues || theme });
   };
 
   const resetTheme = () => {

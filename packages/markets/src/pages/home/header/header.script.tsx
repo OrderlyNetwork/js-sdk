@@ -78,12 +78,10 @@ export function useDataSource() {
   );
 
   const tvl = useMemo(() => {
-    if (balance) {
-      const { total_holding = 0, total_unsettled_balance = 0 } = balance as any;
-      return new Decimal(total_holding)
-        .plus(total_unsettled_balance)
-        .toNumber();
-    }
+    if (!balance) return 0;
+    
+    const { total_holding = 0 } = balance as any;
+    return new Decimal(total_holding).toNumber();
   }, [balance]);
 
   return {

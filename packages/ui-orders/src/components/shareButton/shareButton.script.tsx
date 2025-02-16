@@ -1,13 +1,12 @@
-import { useReferralInfo, useSymbolLeverage } from "@orderly.network/hooks";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
 import { useMemo } from "react";
+import { useReferralInfo, useSymbolLeverage } from "@orderly.network/hooks";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 
 export const useShareButtonScript = (props: {
   order: any;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
-    modalId: string;
-    iconSize?: number;
+  sharePnLConfig?: SharePnLConfig;
+  modalId: string;
+  iconSize?: number;
 }) => {
   const { sharePnLConfig, order, modalId, iconSize } = props;
   const { getFirstRefCode } = useReferralInfo();
