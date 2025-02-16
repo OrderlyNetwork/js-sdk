@@ -45,6 +45,8 @@ internal_patch:
       when: always
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "internal/patch"'
       when: always
+    - if: '$CI_COMMIT_BRANCH == "internal/patch"'
+      when: always
     - when: never
 
 npm_patch:
