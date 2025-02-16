@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.0.4-test-internal-patch.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.4-test-internal-patch.1
+
 ## 2.0.4-test-internal-patch.0
 
 ### Patch Changes

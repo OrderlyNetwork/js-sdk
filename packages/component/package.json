@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "2.0.4-test-internal-patch.0",
+  "version": "2.0.4-test-internal-patch.1",
   "description": "",
   "private": true,
   "main": "dist/index.js",
