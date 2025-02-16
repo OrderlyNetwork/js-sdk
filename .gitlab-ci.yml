@@ -24,6 +24,7 @@ internal_patch:
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
   script:
+    - git checkout "$CI_COMMIT_BRANCH"
     - | 
       git config --global --add safe.directory "$CI_PROJECT_DIR"
 

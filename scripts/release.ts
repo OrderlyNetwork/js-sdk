@@ -12,6 +12,8 @@ const simpleGit = SimpleGit();
 // show command exection log
 $.verbose = true;
 
+const isCI = !!process.env.GIT_BRANCH;
+
 const npm = {
   registry: process.env.NPM_REGISTRY,
   token: process.env.NPM_TOKEN,
@@ -93,9 +95,8 @@ async function checkGitStatus() {
 }
 
 async function ceheckBranch() {
-  // const status = await simpleGit.status();
-  // const currentBranch = status.current;
-  const currentBranch = git.branch;
+  const status = await simpleGit.status();
+  const currentBranch = git.branch || status.current;
   console.log("currentBranch: ", currentBranch);
   if (
     !currentBranch?.startsWith("internal/") &&
