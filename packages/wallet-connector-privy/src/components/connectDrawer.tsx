@@ -14,14 +14,9 @@ import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
 import { CloseIcon } from "./icons";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
 import { cn } from "@orderly.network/ui";
-import { Connector } from "wagmi";
 
-// 添加一个wallet icon映射
-const WALLET_ICONS: Record<string, string> = {
-  'injected': 'https://oss.orderly.network/static/wallet_icon/metamask.png',
-  'walletConnect': 'https://oss.orderly.network/static/wallet_icon/walletconnect.png',
-  'coinbaseWallet': 'https://oss.orderly.network/static/wallet_icon/coinbase.png',
-};
+import { getWalletIcon } from "../util";
+
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
   const { isMobile, isDesktop } = useScreen();
@@ -35,7 +30,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
         {isMobile &&
           <div className="oui-h-3 oui-flex oui-justify-center">
 
-            <img src="https://oss.orderly.network/static/sdk/privy-logo.png" className=" oui-h-[10px]" />
+            <img src="https://oss.orderly.network/static/sdk/privy/privy-logo.png" className=" oui-h-[10px]" />
           </div>
         }
 
@@ -53,7 +48,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           className="oui-cursor-pointer oui-rounded-[6px] oui-bg-[#333948] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1"
           onClick={() => connect({ walletType: 'privy', extraType: 'email' })}
         >
-          <img src="https://oss.orderly.network/static/sdk/email.svg" className="oui-w-[18px] oui-h-[18px]" />
+          <img src="https://oss.orderly.network/static/sdk/privy/email.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">Email</div>
         </div>
 
@@ -61,7 +56,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           className="oui-rounded-[6px] oui-bg-[#335FFC] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1 oui-cursor-pointer"
           onClick={() => connect({ walletType: 'privy', extraType: 'google' })}
         >
-          <img src="https://oss.orderly.network/static/sdk/google.svg" className="oui-w-[18px] oui-h-[18px]" />
+          <img src="https://oss.orderly.network/static/sdk/privy/google.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">Google</div>
         </div>
 
@@ -69,7 +64,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           className="oui-rounded-[6px] oui-bg-[#07080A] oui-px-2 oui-py-[11px] oui-flex oui-justify-center oui-items-center oui-gap-1 oui-cursor-pointer"
           onClick={() => connect({ walletType: 'privy', extraType: 'twitter' })}
         >
-          <img src="https://oss.orderly.network/static/sdk/twitter.svg" className="oui-w-[18px] oui-h-[18px]" />
+          <img src="https://oss.orderly.network/static/sdk/privy/twitter.svg" className="oui-w-[18px] oui-h-[18px]" />
           <div className="oui-text-base-contrast oui-text-2xs">X / Twitter</div>
         </div>
 
@@ -77,7 +72,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
       {isDesktop &&
         <div className="oui-h-3 oui-flex oui-justify-center oui-mt-4">
 
-          <img src="https://oss.orderly.network/static/sdk/privy-logo.png" className=" oui-h-[10px]" />
+          <img src="https://oss.orderly.network/static/sdk/privy/privy-logo.png" className=" oui-h-[10px]" />
         </div>
       }
       <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-4 md:oui-mt-5"></div>
@@ -88,23 +83,8 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
 function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
   const { connectors } = useWagmiWallet();
 
-  const getWalletIcon = (connector: Connector): string | undefined => {
-    // inject wallet icon
-    if (connector.id === 'injected') {
-      // 检查是否是MetaMask
-      if (typeof window !== 'undefined' && window.ethereum?.isMetaMask) {
-        return 'https://oss.orderly.network/static/wallet_icon/metamask.png';
-      }
-      // 检查是否是Coinbase Wallet
-      if (typeof window !== 'undefined' && window.ethereum?.isCoinbaseWallet) {
-        return 'https://oss.orderly.network/static/wallet_icon/coinbase.png';
-      }
-      // 其他注入钱包
-      return 'https://oss.orderly.network/static/wallet_icon/default.png';
-    }
-
-    return WALLET_ICONS[connector.id]
-  };
+ 
+  console.log('--connectors', connectors)
 
   return (
     <div className="">

@@ -63,7 +63,7 @@ const RenderUserCenter = (props: any) => {
           className="oui-flex oui-items-center oui-justify-center oui-gap-2"
         >
           {linkedAccount &&
-            <RenderPrivyTypeIcon type={linkedAccount.type} size={18} />
+            <RenderPrivyTypeIcon type={linkedAccount.type} size={18} isUsercenter={true} />
           }
           <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
             {formatAddress(wallet.accounts[0].address)}
