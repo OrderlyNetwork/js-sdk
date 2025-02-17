@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
-import { useConfig } from "@orderly.network/hooks";
+import { useConfig, useStorageChain } from "@orderly.network/hooks";
 import {
   useChains,
   useWalletConnector,
@@ -41,6 +41,7 @@ export const useChainSelectorScript = (
   options: UseChainSelectorScriptOptions
 ) => {
   const { networkId, bridgeLessOnly } = options || {};
+  const { setStorageChain } = useStorageChain();
 
   const config = useConfig();
   const [_chains, { checkChainSupport }] = useChains();
@@ -88,6 +89,8 @@ export const useChainSelectorScript = (
         chainId: chain.id,
       };
     }
+
+    setStorageChain(chain.id);
 
     setCurrentChainId(chain.id);
     return {

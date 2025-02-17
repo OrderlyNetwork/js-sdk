@@ -15,11 +15,13 @@ export function useWallet() {
     wallet: walletEVM,
     connectedChain: connectedChainEvm,
     setChain: setChainEvm,
+    isConnected: isConnectedEVM,
   } = useWagmiWallet();
   const {
     disconnect: disconnectSOL,
     connect: connectSOL,
     wallet: walletSOL,
+    isConnected: isConnectedSOL,
     connectedChain: connectedChainSOL,
   } = useSolanaWallet();
   const {
@@ -27,6 +29,7 @@ export function useWallet() {
     connect: connectPrivy,
     walletSOL: privyWalletSOL,
     walletEVM: privyWalletEVM,
+    isConnected: isConnectedPrivy,
     switchChain: setChainPrivy,
   } = usePrivyWallet();
   const [wallet, setWallet] = useState<any>();
@@ -104,7 +107,7 @@ export function useWallet() {
           setStorageChain(parseInt(chain.chainId as string));
         }
         if (tempNamespace === ChainNamespace.solana) {
-          if (walletSOL) {
+          if (isConnectedSOL && walletSOL) {
             setStorageChain(parseInt(chain.chainId as string));
           } else {
             setOpenConnectDrawer(true);
@@ -115,7 +118,7 @@ export function useWallet() {
       }
       if (storageChain.namespace === ChainNamespace.solana) {
         if (tempNamespace === ChainNamespace.evm) {
-          if (walletEVM) {
+          if (isConnectedEVM && walletEVM) {
             setStorageChain(parseInt(chain.chainId as string));
           } else {
             setOpenConnectDrawer(true);
@@ -211,7 +214,7 @@ export function useWallet() {
   }, [connectorKey, privyWalletEVM, privyWalletSOL, storageChain])
 
   useEffect(() => {
-    if (connectorKey !== WalletType.EVM && connectorKey !== WalletType.SOL) {
+    if (connectorKey === WalletType.PRIVY) {
       return;
     }
     // handle non-privy wallet connect
@@ -223,7 +226,7 @@ export function useWallet() {
     });
 
     if (storageChain?.namespace === ChainNamespace.evm) {
-      if (walletEVM) {
+      if (isConnectedEVM && walletEVM) {
         setWallet(walletEVM);
         setConnectedChain(connectedChainEvm);
         setNamespace(ChainNamespace.evm);
@@ -233,7 +236,7 @@ export function useWallet() {
 
     }
     if (storageChain?.namespace === ChainNamespace.solana) {
-      if (walletSOL) {
+      if (isConnectedSOL && walletSOL) {
         setWallet(walletSOL);
         setConnectedChain(connectedChainSOL);
         setNamespace(ChainNamespace.solana);
@@ -242,8 +245,8 @@ export function useWallet() {
       }
     }
 
-  }, [connectorKey, storageChain, walletEVM, walletSOL])
+  }, [connectorKey, storageChain, walletEVM, walletSOL, isConnectedEVM, isConnectedSOL])
 
 
-  return { connect, wallet, connectedChain, setChain, namespace, switchWallet, disconnect };
+  return { connect, wallet, connectedChain, setChain, namespace, switchWallet, disconnect, };
 }

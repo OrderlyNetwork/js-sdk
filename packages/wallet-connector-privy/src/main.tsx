@@ -3,9 +3,6 @@ import { WalletConnectorContext } from "@orderly.network/hooks";
 import { useWallet } from "./useWallet";
 import { ConnectDrawer } from "./components/connectDrawer";
 import { useWalletConnectorPrivy } from "./provider";
-import { installExtension } from "@orderly.network/ui";
-import { ExtensionPositionEnum } from "@orderly.network/ui";
-import { UserCenter } from "./components/userCenter";
 import { injectUsercenter } from "./injectUsercenter";
 
 export function Main(props: PropsWithChildren) {

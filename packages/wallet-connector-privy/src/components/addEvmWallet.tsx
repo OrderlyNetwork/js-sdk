@@ -1,15 +1,47 @@
 import { cn } from "@orderly.network/ui";
 import { Tooltip, ChevronDownIcon, ChevronUpIcon } from "@orderly.network/ui";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useWagmiWallet } from "../useWagmiWallet";
 import { useWallet } from "../useWallet";
 import { EVMChainPopover } from "./walletCard";
 import { MoreIcon } from "./icons";
+import { ChainNamespace } from "@orderly.network/types";
+import { useWalletConnectorPrivy } from "../provider";
+import { WalletType } from "../types";
 export function AddEvmWallet() {
   const [visible, setVisible] = useState(false);
   const { connect } = useWallet();
   const [open, setOpen] = useState(false);
   const { connectors } = useWagmiWallet();
+  const {targetNamespace} = useWalletConnectorPrivy();
+
+  useEffect(() => {
+    let timer = 0;
+    if (targetNamespace === ChainNamespace.evm) {
+      timer = window.setTimeout(() => {
+        setOpen(true);
+      }, 200);
+    }
+    return () => {
+      if (timer) {
+        window.clearTimeout(timer);
+      }
+    }
+  }, [targetNamespace]);
+  useEffect(() => {
+    if (open === false){
+      return;
+    }
+    const timeId = window.setTimeout(() => {
+      setOpen(false);
+    }, 5000);
+    return () => {
+      if (timeId) {
+        window.clearTimeout(timeId);
+      }
+    }
+  }, [open]);
+
   return (
     <div className="oui-bg-[#07080A] oui-rounded-[8px] oui-px-2 oui-py-[11px]" >
       <Tooltip className="oui-text-warning-darken oui-max-w-[200px]"
@@ -53,7 +85,7 @@ export function AddEvmWallet() {
           <div
             key={index}
             className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
-            onClick={() => connect({ walletType: 'EVM', connector: item })}
+            onClick={() => connect({ walletType: WalletType.EVM, connector: item })}
           >
             {item.name}
           </div>

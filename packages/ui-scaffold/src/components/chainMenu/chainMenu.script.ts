@@ -4,6 +4,7 @@ import {
   useConfig,
   useAccount,
   useWalletConnector,
+  useStorageChain,
 } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
@@ -17,7 +18,7 @@ export const useChainMenuScript = () => {
   const { state } = useAccount();
   const { connectedChain } = useWalletConnector();
   const { wrongNetwork, currentChainId, setCurrentChainId } = useAppContext();
-
+  const { storageChain, setStorageChain } = useStorageChain();
   const networkId = useConfig("networkId") as NetworkId;
 
   useEffect(() => {
@@ -36,6 +37,8 @@ export const useChainMenuScript = () => {
           : chains.testnet?.[0]?.network_infos;
 
       if (!firstChain) return;
+
+      setStorageChain(firstChain.chain_id);
 
       setCurrentChainId(firstChain.chain_id);
     }

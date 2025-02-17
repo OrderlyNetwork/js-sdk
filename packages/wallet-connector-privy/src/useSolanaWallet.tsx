@@ -176,7 +176,7 @@ export function useSolanaWallet() {
       label: walletSolana.adapter.name,
       icon: "",
       provider: {
-        signMessage: signMessage,
+        signMessage,
         connection,
         sendTransaction,
       },
