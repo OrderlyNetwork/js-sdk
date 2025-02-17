@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.0.4
+
+### Patch Changes
+
+- fd33fd79c: fix bugs;
+
 ## 2.0.4-alpha.0
 
 ### Patch Changes
