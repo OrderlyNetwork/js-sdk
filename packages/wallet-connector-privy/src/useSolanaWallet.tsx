@@ -61,7 +61,6 @@ export function useSolanaWallet() {
   }
 
   const connect = async (walletName: any) => {
-    console.log('connect solana wallet', walletName);
     initPromiseRef();
     isManual.current = true;
     if (!solanaPromiseRef.current) {
@@ -93,9 +92,9 @@ export function useSolanaWallet() {
     ])
       .then(
         ([connectedWallet, { userAddress, signMessage, sendTransaction }]) => {
-          console.log('-- useSolanaWallet', {
-            userAddress,
-          });
+          // console.log('-- in promise useSolanaWallet', {
+          //   userAddress,
+          // });
           const tempWallet = {
             label: connectedWallet.adapter.name,
             icon: "",
@@ -146,11 +145,11 @@ export function useSolanaWallet() {
   }, [publicKey]);
 
   useEffect(() => {
-    console.log('-- useSolanaWallet', {
-      walletSolana,
-      publicKey,
-      wallet,
-    });
+    // console.log('-- useSolanaWallet', {
+    //   walletSolana,
+    //   publicKey,
+    //   wallet,
+    // });
     
     if (!walletSolana) {
       return;

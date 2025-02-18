@@ -33,12 +33,6 @@ export function useWagmiWallet() {
         }})
     })
   }, [switchChain])
-  console.log('xxxx wagmi wallet', {
-    connector,
-    isConnected,
-    address,
-    wallet,
-  });
 
   useEffect(() => {
     if (!connector || !isConnected) {
@@ -48,10 +42,12 @@ export function useWagmiWallet() {
       return;
     }
     connector.getProvider().then((provider) => {
-      console.log('-- connector provider ',{
-        provider,
-        connector,
-      });
+      // console.log('-- connector provider ',{
+      //   provider,
+      //   connector,
+      //   address,
+      //   chainId,
+      // });
       setWallet({
         label: connector.name ,
         icon: "",

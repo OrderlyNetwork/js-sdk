@@ -39,7 +39,7 @@ const processChainInfo = (chainInfo: any) =>
   ) || [];
 
 interface WalletConnectorPrivyContextType {
-  initChains: [Chain, ...Chain[]];
+  initChains: Chain[];
   mainnetChains: Chain[];
   testnetChains: Chain[];
   getChainsByNetwork: (network: 'mainnet' | 'testnet') => Chain[];
@@ -63,7 +63,7 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
 
 export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
-  const [initChains, setInitChains] = useState<[Chain, ...Chain[]]>([mainnet]);
+  const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
   const initRef = useRef(false);
@@ -100,6 +100,7 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
   if (!initRef) {
     return null;
   }
+  
 
   return (
     <walletConnectorPrivyContext.Provider

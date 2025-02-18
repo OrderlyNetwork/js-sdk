@@ -16,6 +16,12 @@
       ],
       "@orderly.network/ui": [
         "../ui/src"
+      ],
+      "react": [
+        "./node_modules/react"
+      ],
+      "react-dom": [
+        "./node_modules/react-dom"
       ]
     }
   }

@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useSolanaWallet } from "./useSolanaWallet";
 import { usePrivyWallet } from "./usePrivyWallet";
 import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
-import { useLocalStorage, useStorageChain } from "@orderly.network/hooks";
+import { useLocalStorage, useStorageChain, WalletState } from "@orderly.network/hooks";
 import { ConnectProps, SolanaChains, WalletType } from "./types";
 import { useWalletConnectorPrivy } from "./provider";
 
@@ -32,8 +32,8 @@ export function useWallet() {
     isConnected: isConnectedPrivy,
     switchChain: setChainPrivy,
   } = usePrivyWallet();
-  const [wallet, setWallet] = useState<any>();
-  const [namespace, setNamespace] = useState<ChainNamespace | undefined>(undefined);
+  const [wallet, setWallet] = useState<WalletState | null>(null);
+  const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
   const { storageChain, setStorageChain } = useStorageChain();
   const { setOpenConnectDrawer, setTargetNamespace } = useWalletConnectorPrivy();
 
@@ -43,7 +43,6 @@ export function useWallet() {
   const connect = (params: ConnectProps) => {
 
     setTargetNamespace(undefined);
-    console.log('--connect wallet', wallet);
     try {
       if (params.walletType === WalletType.EVM) {
         setConnectorKey(WalletType.EVM);
@@ -73,7 +72,7 @@ export function useWallet() {
 
   const [connectedChain, setConnectedChain] = useState<any>()
 
-  const setChain = (chain: { chainId: number | string }) => {
+  const setChain = async (chain: { chainId: number | string }): Promise<boolean | undefined> => {
     let tempNamespace: ChainNamespace = ChainNamespace.evm;
     if (Array.from(SolanaChains.values()).includes(parseInt(chain.chainId as string))) {
       tempNamespace = ChainNamespace.solana;
@@ -103,8 +102,9 @@ export function useWallet() {
       if (storageChain.namespace === ChainNamespace.evm) {
         // if current namespace is evm, switch chain
         if (tempNamespace === ChainNamespace.evm) {
-          setChainEvm(parseInt(chain.chainId as string));
+          await setChainEvm(parseInt(chain.chainId as string));
           setStorageChain(parseInt(chain.chainId as string));
+          return Promise.resolve(true);
         }
         if (tempNamespace === ChainNamespace.solana) {
           if (isConnectedSOL && walletSOL) {
@@ -112,6 +112,7 @@ export function useWallet() {
           } else {
             setOpenConnectDrawer(true);
             setTargetNamespace(ChainNamespace.solana);
+            return Promise.resolve(true);
           }
         }
 
@@ -218,7 +219,7 @@ export function useWallet() {
       return;
     }
     // handle non-privy wallet connect
-    console.log('xxxx connector non-privy', {
+    console.log('xxxx non-privy', {
       connectorKey,
       storageChain,
       walletEVM,
