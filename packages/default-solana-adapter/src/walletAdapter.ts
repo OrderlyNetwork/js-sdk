@@ -6,7 +6,10 @@ import {
   RegisterAccountInputs,
   SettleInputs,
   SignatureDomain,
+  SimpleDI,
   WithdrawInputs,
+  Account,
+  MessageFactor,
 } from "@orderly.network/core";
 import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
 import * as ed from "@noble/ed25519";
@@ -26,10 +29,13 @@ import { bytesToHex } from "ethereum-cryptography/utils";
 import { getAccount } from "@solana/spl-token";
 import { getUSDCAccounts } from "./solana.util";
 import {
+  clusterApiUrl,
+  Connection,
   PublicKey,
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> {
   chainNamespace: ChainNamespace = ChainNamespace.solana;
@@ -37,6 +43,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   private _address!: string;
   private _chainId!: number;
   private _provider!: SolanaWalletProvider;
+  private _connection!: Connection;
 
   constructor() {
     super();
@@ -52,6 +59,46 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
 
   set chainId(chainId: number) {
     this._chainId = chainId;
+  }
+
+  get connection(): Connection {
+    if (this._connection) {
+      return this._connection;
+    }
+    if (this._provider.rpcUrl) {
+        this._connection = new Connection(this._provider.rpcUrl, {
+          commitment: "confirmed",
+        });
+      return this._connection;
+    }
+    if (this._provider.network === WalletAdapterNetwork.Devnet) {
+      this._connection = new Connection(clusterApiUrl(this._provider.network), {
+        commitment: "confirmed",
+      });
+      return this._connection;
+    }
+
+
+    const account = SimpleDI.get<Account>("account");
+    const url = '/v1/solana-rpc-proxy';
+    this._connection = new Connection(`${account.apiBaseUrl}${url}`, {
+      commitment: "confirmed",
+      fetchMiddleware: async (info, init, fetch) => {
+       
+        const payload: MessageFactor = {
+          url,
+          method: init?.method as "GET" | "POST" | "PUT" | "DELETE",
+          data: JSON.parse(init?.body as string),
+        }
+        // console.log('payload', payload);
+        const signature = await this.signMessageByOrderlyKey(payload);
+        for (const key of Object.keys(signature)) {
+          (init?.headers as any)[key] = signature[key as keyof typeof signature] as string;
+        }
+        return fetch(info, init);
+      }
+    });
+    return this._connection;
   }
 
   private setConfig(config: SolanaAdapterOption) {
@@ -124,7 +171,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
           programId: new PublicKey(
             "ComputeBudget111111111111111111111111111111"
           ),
-          data: new Uint8Array([2, 0, 0, 0, 0]) as any, 
+          data: new Uint8Array([2, 0, 0, 0, 0]) as any,
         })
       );
 
@@ -270,8 +317,10 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       const usdcPublicKey = new PublicKey(address);
       const userPublicKey = new PublicKey(this._address);
       const userUSDCAccount = getUSDCAccounts(usdcPublicKey, userPublicKey);
+      const connection = this.connection;
+
       const usdcamount = await getAccount(
-        this._provider.connection,
+        connection,
         userUSDCAccount,
         "confirmed"
       );
@@ -306,7 +355,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       return deposit({
         vaultAddress: contractAddress,
         userAddress: this._address,
-        connection: this._provider.connection,
+        connection: this.connection,
         depositData: payload.data[0],
         sendTransaction: this._provider.sendTransaction,
       });
@@ -332,7 +381,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       return getDepositQuoteFee({
         vaultAddress: address,
         userAddress: this._address,
-        connection: this._provider.connection,
+        connection: this.connection,
         depositData: params[1],
       });
     }
@@ -344,7 +393,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     baseInterval?: number,
     maxInterval?: number,
     maxRetries?: number
-  ): Promise<any> {}
+  ): Promise<any> { }
 }
 
 export { DefaultSolanaWalletAdapter };

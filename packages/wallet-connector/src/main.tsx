@@ -16,7 +16,7 @@ import { SolanaChains } from "./config";
 export function Main(
   props: PropsWithChildren<{ solanaNetwork: WalletAdapterNetwork }>
 ) {
-  const sol = useSOL({ network: props.solanaNetwork });
+  const sol = useSOL();
   const evm = useEvm();
 
   const [namespace, setNamespace] = useState<ChainNamespace | null>(null);

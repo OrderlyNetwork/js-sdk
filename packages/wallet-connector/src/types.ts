@@ -14,7 +14,6 @@ export type ConnectorInitOptions = Optional<
 >;
 export type SolanaInitialProps = PropsWithChildren<{
   network?: WalletAdapterNetwork;
-  endPoint?: string;
   mainnetRpc?: string;
   devnetRpc?: string;
   wallets?: Adapter[];
