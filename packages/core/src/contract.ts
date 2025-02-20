@@ -11,7 +11,10 @@ import {
   solanaUSDCAddress, stagingStoryTestnetVaultAddress,
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,
-  stagingVerifyAddressOnArbitrumTestnet
+  stagingVerifyAddressOnArbitrumTestnet,
+  stagingMonadTestnetVaultAddress,
+  MonadTestnetUSDCAddress,
+  qaMonadTestnetVaultAddress
 } from "./constants";
 
 import mainnetUSDCAbi from "./wallet/abis/mainnetUSDCAbi.json";
@@ -34,6 +37,8 @@ export type OrderlyContracts = {
   solanaVaultAddress: string;
   // only for testnet, mainnet vault on evm chain is all same address
   storyTestnetVaultAddress?: string;
+  monadTestnetVaultAddress?: string;
+  monadTestnetUSDCAddress?: string;
 };
 
 export interface IContract {
@@ -64,10 +69,13 @@ export class BaseContract implements IContract {
 
     let solanaVaultAddress =solanaStagingVualtAddress;
     let storyTestnetVaultAddress = stagingStoryTestnetVaultAddress;
+    let monadTestnetVaultAddress = stagingMonadTestnetVaultAddress;
+    let monadTestnetUSDCAddress = MonadTestnetUSDCAddress;
     if (env === 'qa') {
       solanaVaultAddress = solanaQaVaultAddress;
       verifyContractAddress = '0x50F59504D3623Ad99302835da367676d1f7E3D44';
       storyTestnetVaultAddress ='0xFeA61647309cA4624EfF3c86EEEeb76a6F3eaFf7';
+      monadTestnetVaultAddress = qaMonadTestnetVaultAddress;
     }
 
     return {
@@ -80,6 +88,8 @@ export class BaseContract implements IContract {
       verifyContractAddress:verifyContractAddress,
       erc20Abi: stagingUSDCAbiOnArbitrumTestnet,
       storyTestnetVaultAddress:storyTestnetVaultAddress,
+      monadTestnetVaultAddress: monadTestnetVaultAddress,
+      monadTestnetUSDCAddress: monadTestnetUSDCAddress,
     };
   }
 }
