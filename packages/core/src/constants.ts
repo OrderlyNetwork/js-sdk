@@ -30,7 +30,3 @@ export const EVENT_NAMES = {
   switchAccount: "switch:account",
 };
 export const stagingStoryTestnetVaultAddress ='0x65B99E978d1eeE9CfEdfD463EC7A81317e5A5073';
-// monad testnet constractconfig
-export const stagingMonadTestnetVaultAddress = '0x9442e24203e999db4aE87E35Dc0c8F3C610c29A0';
-export const MonadTestnetUSDCAddress = '0x77F77926C6596c78f285D230Cd0dC8dC3540e3a6';
-export const qaMonadTestnetVaultAddress = '0xdd6E018D747D70C705BA84B67B6eAD7748a57cDa';

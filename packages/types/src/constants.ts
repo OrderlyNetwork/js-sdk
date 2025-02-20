@@ -36,7 +36,6 @@ export enum NetworkStatusEnum {
 export const ARBITRUM_TESTNET_CHAINID = 421614;
 export const SOLANA_TESTNET_CHAINID = 901901901;
 export const STORY_TESTNET_CHAINID = 1516;
-export const MONAD_TESTNET_CHAINID = 10143;
 export const ARBITRUM_TESTNET_CHAINID_HEX = "0x66EEE";
 
 export const MANTLE_TESTNET_CHAINID = 5003;

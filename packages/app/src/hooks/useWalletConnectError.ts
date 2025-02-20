@@ -2,12 +2,10 @@ import { useEventEmitter } from "@orderly.network/hooks";
 import { useEffect } from "react";
 import { modal, toast } from "@orderly.network/ui";
 import { LedgerWalletKey } from "@orderly.network/types";
-import { useStorageLedgerAddress } from "@orderly.network/hooks"; 
 
 
 export function useWalletConnectError() {
   const ee = useEventEmitter();
-  const {setLedgerAddress} = useStorageLedgerAddress();  
 
 
   useEffect(() => {
@@ -24,8 +22,15 @@ export function useWalletConnectError() {
           size: 'sm',
           onOk: async () => {
             console.log('-- use ledger', true);
-            setLedgerAddress(data.userAddress);
-    
+            const info = window.localStorage.getItem(LedgerWalletKey);
+            if (!info) {
+              window.localStorage.setItem(LedgerWalletKey, JSON.stringify([data.userAddress]));
+            } else {
+              const ledgerWallet = JSON.parse(info ?? '[]');
+              ledgerWallet.push(data.userAddress);
+              window.localStorage.setItem(LedgerWalletKey, ledgerWallet);
+            }
+            // todo localstorage
             return Promise.resolve();
           },
           okLabel: 'OK',
