@@ -130,7 +130,11 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: "Open interest",
+        title: (
+          <Flex gapX={1}>
+            <OrderlyIcon /> Open interest
+          </Flex>
+        ),
         dataIndex: "openInterest",
         width: 100,
         align: "right",

@@ -14,6 +14,7 @@ import {
   ApiError,
   ChainNamespace,
   MaxUint256,
+  MONAD_TESTNET_CHAINID,
   STORY_TESTNET_CHAINID,
 } from "@orderly.network/types";
 
@@ -22,7 +23,7 @@ export class Assets {
     private readonly configStore: ConfigStore,
     private readonly contractManger: IContract,
     private readonly account: Account
-  ) {}
+  ) { }
 
   async withdraw(inputs: {
     chainId: number;
@@ -204,31 +205,36 @@ export class Assets {
     inputs?:
       | string
       | {
-          address?: string;
-          vaultAddress?: string;
-          decimals?: number;
-        },
+        address?: string;
+        vaultAddress?: string;
+        decimals?: number;
+      },
     _vaultAddress?: string
   ) {
     const { address, vaultAddress, decimals } =
       typeof inputs === "object"
         ? inputs
         : {
-            address: inputs,
-            vaultAddress: _vaultAddress,
-            decimals: undefined,
-          };
+          address: inputs,
+          vaultAddress: _vaultAddress,
+          decimals: undefined,
+        };
 
     if (!this.account.walletAdapter) {
       return "0";
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
-    let tempVaultAddress= vaultAddress || contractAddress.vaultAddress;
+    let tempVaultAddress = vaultAddress ?? contractAddress.vaultAddress;
+    let tempUSDCAddress = address;
     if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
       tempVaultAddress = contractAddress.storyTestnetVaultAddress ?? "";
     }
+    if (this.account.walletAdapter.chainId === MONAD_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
+      tempUSDCAddress = contractAddress.monadTestnetUSDCAddress;
+    }
     const result = await this.account.walletAdapter?.call(
-      address ?? contractAddress.usdcAddress,
+      tempUSDCAddress ?? '',
       "allowance",
       [
         this.account.stateValue.address,
@@ -248,11 +254,11 @@ export class Assets {
     inputs?:
       | string
       | {
-          address?: string;
-          amount?: string;
-          vaultAddress?: string;
-          decimals?: number;
-        },
+        address?: string;
+        amount?: string;
+        vaultAddress?: string;
+        decimals?: number;
+      },
     _amount?: string,
     _vaultAddress?: string
   ) {
@@ -260,11 +266,11 @@ export class Assets {
       typeof inputs === "object"
         ? inputs
         : {
-            address: inputs,
-            amount: _amount,
-            vaultAddress: _vaultAddress,
-            decimals: undefined,
-          };
+          address: inputs,
+          amount: _amount,
+          vaultAddress: _vaultAddress,
+          decimals: undefined,
+        };
 
     if (!address) {
       throw new Error("address is required");
@@ -279,14 +285,18 @@ export class Assets {
         ? this.account.walletAdapter.parseUnits(amount, decimals)
         : MaxUint256.toString();
 
-    let tempVaultAddress= vaultAddress || contractAddress.vaultAddress;
+    let tempVaultAddress = vaultAddress || contractAddress.vaultAddress;
+    let tempUSDCAddress = address;
     if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
       tempVaultAddress = contractAddress.storyTestnetVaultAddress ?? '';
     }
+    if (this.account.walletAdapter.chainId === MONAD_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.monadTestnetVaultAddress ?? '';
+      tempUSDCAddress = contractAddress.monadTestnetUSDCAddress ?? '';
+    }
 
     const result = await this.account.walletAdapter?.call(
-      // contractAddress.usdcAddress,
-      address,
+      tempUSDCAddress,
       "approve",
       [tempVaultAddress, parsedAmount],
       {
@@ -331,7 +341,13 @@ export class Assets {
 
     if (!brokerId) throw new Error("[Assets]:brokerId is required");
 
-    const depositData = {
+    const depositData: {
+      accountId?: string;
+      brokerHash: string;
+      tokenHash: string;
+      tokenAmount: string;
+      USDCAddress?: string;
+    } = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
@@ -346,6 +362,10 @@ export class Assets {
     }
     if (chain.chain_id === STORY_TESTNET_CHAINID) {
       vaultAddress = contractAddress.storyTestnetVaultAddress ?? "";
+    }
+    if (chain.chain_id === MONAD_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
+      // depositData["USDCAddress"] = contractAddress.monadTestnetUSDCAddress ?? "";
     }
 
 
@@ -370,7 +390,13 @@ export class Assets {
 
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
-    const depositData = {
+    const depositData: {
+      accountId?: string;
+      brokerHash: string;
+      tokenHash: string;
+      tokenAmount: string;
+      USDCAddress?: string;
+    } = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
@@ -385,6 +411,10 @@ export class Assets {
     if (this.account.walletAdapter.chainId === STORY_TESTNET_CHAINID) {
       vaultAddress = contractAddress.storyTestnetVaultAddress ?? "";
     }
+    if (this.account.walletAdapter.chainId === MONAD_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
+    }
+
     const result = await this.account.walletAdapter?.sendTransaction(
       vaultAddress,
       "deposit",

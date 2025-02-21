@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useAccount, } from "../useAccount";
-import {useEventEmitter} from '../useEventEmitter'
+import { useAccount } from "../useAccount";
+import { useEventEmitter } from "../useEventEmitter";
 import {
   AccountStatusEnum,
   API,
@@ -11,7 +11,7 @@ import {
   isNativeTokenChecker,
   MaxUint256,
   NetworkId,
-  EnumTrackerKeys
+  EnumTrackerKeys,
 } from "@orderly.network/types";
 import { Decimal, isTestnet } from "@orderly.network/utils";
 import { useChains } from "./useChains";
@@ -32,7 +32,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
-  const ee = useEventEmitter()
+  const ee = useEventEmitter();
   const [_, { findByChainId }] = useChains(undefined);
 
   const [quantity, setQuantity] = useState<string>("");
@@ -59,21 +59,17 @@ export const useDeposit = (options?: useDepositOptions) => {
       ) as API.Chain;
       console.log("--  chain", chain, options);
     } else {
-      chain = findByChainId(options?.srcChainId!) as API.Chain;
+      chain = findByChainId(options?.srcChainId!);
       // if is orderly un-supported chain
       if (!chain?.network_infos?.bridgeless) {
         // Orderly mainnet supported chain
-        chain = findByChainId(ARBITRUM_MAINNET_CHAINID) as API.Chain;
+        chain = findByChainId(ARBITRUM_MAINNET_CHAINID);
       }
     }
     return chain;
   }, [networkId, findByChainId, options?.srcChainId]);
 
   const dst = useMemo(() => {
-    if (!targetChain) {
-      throw new Error("dst chain not found");
-    }
-
     const USDC = targetChain?.token_infos.find(
       (token: API.TokenInfo) => token.symbol === "USDC"
     );
@@ -82,8 +78,8 @@ export const useDeposit = (options?: useDepositOptions) => {
       symbol: "USDC",
       address: USDC?.address,
       decimals: USDC?.decimals,
-      chainId: targetChain.network_infos.chain_id,
-      network: targetChain.network_infos.shortName,
+      chainId: targetChain?.network_infos?.chain_id,
+      network: targetChain?.network_infos?.shortName,
     };
   }, [targetChain]);
 
@@ -294,8 +290,8 @@ export const useDeposit = (options?: useDepositOptions) => {
         })
         .then((res: any) => {
           return updateAllowanceWhenTxSuccess(res.hash);
-        }).catch(e => {
-        });
+        })
+        .catch((e) => {});
     },
     [account, getAllowance, options?.address, dst]
   );
@@ -316,32 +312,36 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     // only support orderly deposit
     console.log("-- start deposit");
-    console.log('-- deposit fee', depositFee);
+    console.log("-- deposit fee", depositFee);
 
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
-          ee.emit(EnumTrackerKeys.DEPOSIT_SUCCESS, {
-            wallet:state?.connectWallet?.name,
-            network:targetChain?.network_infos.name,
-            quantity,
-          });
+        ee.emit(EnumTrackerKeys.DEPOSIT_SUCCESS, {
+          wallet: state?.connectWallet?.name,
+          network: targetChain?.network_infos.name,
+          quantity,
+        });
         updateAllowanceWhenTxSuccess(res.hash);
         setBalance((value) => new Decimal(value).sub(quantity).toString());
         return res;
-      }).catch(e => {
-          ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
-            wallet:state?.connectWallet?.name,
-            network:targetChain?.network_infos?.name,
-             msg: JSON.stringify(e),
-          });
+      })
+      .catch((e) => {
+        ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
+          wallet: state?.connectWallet?.name,
+          network: targetChain?.network_infos?.name,
+          msg: JSON.stringify(e),
+        });
         throw e;
       });
   }, [account, fetchBalance, quantity, depositFee, options?.address]);
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
-    const time = account.walletAdapter?.chainNamespace === ChainNamespace.solana ? 10000 : 3000;
+    const time =
+      account.walletAdapter?.chainNamespace === ChainNamespace.solana
+        ? 10000
+        : 3000;
     getBalanceListener.current = setTimeout(async () => {
       try {
         const balance = await fetchBalanceHandler(
@@ -354,14 +354,14 @@ export const useDeposit = (options?: useDepositOptions) => {
       } catch (err) {
         console.log("fetchBalanceHandler error", err);
       }
-    },time);
+    }, time);
   };
 
   const getDepositFee = useCallback(
     async (quantity: string) => {
       return account.assetsManager.getDepositFee(
         quantity,
-        targetChain?.network_infos
+        targetChain?.network_infos!
       );
     },
     [account, targetChain]
