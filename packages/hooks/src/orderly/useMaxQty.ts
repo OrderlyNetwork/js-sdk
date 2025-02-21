@@ -53,7 +53,15 @@ export const useMaxQty = (
       positions === null ? [] : positions,
       symbol
     );
-
+    /**
+     * Reduce-only mode handling:
+     * For long positions (positionQty > 0):
+     * - Buy orders return 0 (cannot increase long position)
+     * - Sell orders return absolute position quantity (can close long position)
+     * For short positions (positionQty < 0):
+     * - Buy orders return absolute position quantity (can close short position)
+     * - Sell orders return 0 (cannot increase short position)
+     */
     if (reduceOnly) {
       if (positionQty > 0) {
         if (side === OrderSide.BUY) {
