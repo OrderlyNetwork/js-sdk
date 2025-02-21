@@ -63,7 +63,7 @@ export const useWalletStateHandle = (options: {
     { id: number; namespace: string } | undefined
   >(() => {
     const id = connectedWallet?.chains?.[0]?.id;
-    const namespace = connectedWallet?.chains?.[0]?.namespace;
+    const namespace = connectedWallet?.chains?.[0]?.namespace as string;
     if (typeof id === "undefined") return undefined;
     return {
       id: parseChainIdToNumber(id),
