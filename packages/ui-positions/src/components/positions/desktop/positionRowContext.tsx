@@ -12,10 +12,8 @@ import {
 import {
   useOrderEntry_deprecated,
   useSymbolsInfo,
-  utils,
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
 
 export interface PositionsRowContextState {
   quantity: string;
@@ -59,9 +57,11 @@ export const PositionsRowProvider: FC<
   }, [props.position.position_qty]);
 
   const [price, setPrice] = useState<string>("");
-  const [side, setSide] = useState<OrderSide>(
-    props.position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY
-  );
+  // const [side, setSide] = useState<OrderSide>(
+  //   props.position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY
+  // );
+
+  const side = props.position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY;
 
   const [errors, setErrors] = useState<any | undefined>(undefined);
 
@@ -135,16 +135,14 @@ export const PositionsRowProvider: FC<
   }, [closeOrderData]);
 
   const postOrder = () => {
-    return onSubmit(closeOrderData)
-    .catch((error) => {
+    return onSubmit(closeOrderData).catch((error) => {
       if (typeof error === "string") {
         toast.error(error);
       } else {
         toast.error(error.message);
       }
       return Promise.resolve();
-    })
-    ;
+    });
   };
 
   return (
