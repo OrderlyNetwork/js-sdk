@@ -21,7 +21,7 @@ export const Web3Wallet: FC = () => {
       </Text>
 
       <Flex gapX={1}>
-        <WalletIcon size={"xs"} name={walletName} />
+        <WalletIcon size={"xs"} name={walletName ?? ""} />
         <Text size="sm" intensity={54}>
           {address}
         </Text>
