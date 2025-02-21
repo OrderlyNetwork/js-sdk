@@ -153,7 +153,7 @@ export const useWalletStateHandle = (options: {
           namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
         },
         wallet: {
-          name: connectedWallet.label,
+          name: connectedWallet?.label ?? "",
         },
       });
 
@@ -162,7 +162,7 @@ export const useWalletStateHandle = (options: {
         localStorage.setItem(
           WALLET_KEY,
           JSON.stringify({
-            label: connectedWallet.label,
+            label: connectedWallet?.label ?? "",
           })
         );
       });
