@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Button, formatAddress, Text } from "@orderly.network/ui";
 import { useWalletConnector } from "@orderly.network/hooks";
-import { usePrivyWallet } from "../usePrivyWallet";
+import { usePrivyWallet } from "../hooks/usePrivyWallet";
 import { RenderPrivyTypeIcon } from "./common";
 
 export function UserCenter(props: any) {

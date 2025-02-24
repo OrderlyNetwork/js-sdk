@@ -4,8 +4,8 @@ import { useSolanaWallet } from "./useSolanaWallet";
 import { usePrivyWallet } from "./usePrivyWallet";
 import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { useLocalStorage, useStorageChain, WalletState } from "@orderly.network/hooks";
-import { ConnectProps, SolanaChains, WalletType } from "./types";
-import { useWalletConnectorPrivy } from "./provider";
+import { ConnectProps, SolanaChains, WalletType } from "../types";
+import { useWalletConnectorPrivy } from "../provider";
 
 export function useWallet() {
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')

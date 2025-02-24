@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { Adapter, WalletAdapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
-import { Connector } from "wagmi";
-
+import { Connector, CreateConnectorFn, Storage } from "wagmi";
+import { PrivyClientConfig } from "@privy-io/react-auth";
 export type SolanaInitialProps = PropsWithChildren<{
   network?: WalletAdapterNetwork;
   endPoint?: string;
@@ -11,6 +11,7 @@ export type SolanaInitialProps = PropsWithChildren<{
   // wallet not ready error handle
   onError?: (error: WalletError, adapter?: Adapter) => void;
 }>;
+
 
 export enum WalletType {
   EVM = 'EVM',
@@ -23,6 +24,26 @@ export interface ConnectProps {
   extraType?: string;
   connector?:Connector;
   walletAdapter?: WalletAdapter;
+}
+
+export interface InitPrivy {
+  appid: string;
+  config?: PrivyClientConfig;
+}
+
+export interface InitWagmi{
+  connectors?: CreateConnectorFn[];
+  storage?: Storage;
+
+}
+
+export interface InitSolana{
+  network: WalletAdapterNetwork;
+  endPoint: string;
+  mainnetRpc: string;
+  devnetRpc: string;
+  wallets: Adapter[];
+  onError: (error: WalletError, adapter?: Adapter) => void;
 }
 
 export const SolanaChains = new Map([[WalletAdapterNetwork.Devnet, 901901901], [WalletAdapterNetwork.Mainnet, 900900900]]);

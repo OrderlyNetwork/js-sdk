@@ -1,9 +1,9 @@
 import React, { PropsWithChildren, useCallback, useEffect, useMemo } from "react";
 import { WalletConnectorContext, WalletState } from "@orderly.network/hooks";
-import { useWallet } from "./useWallet";
 import { ConnectDrawer } from "./components/connectDrawer";
 import { useWalletConnectorPrivy } from "./provider";
 import { injectUsercenter } from "./injectUsercenter";
+import { useWallet } from "./hooks/useWallet";
 
 export function Main(props: PropsWithChildren) {
   const { wallet, connectedChain, setChain, namespace } = useWallet();

@@ -1,12 +1,13 @@
 import React, { type PropsWithChildren, useEffect, useRef, useState, createContext, useContext, type RefObject } from "react";
 import { Main } from "./main";
-import { InitSolana } from "./initSolana";
-import { InitWagmi } from "./initWagmi";
-import { InitPrivy } from "./initPrivy";
 import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import { ChainNamespace } from "@orderly.network/types";
+import { InitPrivy, InitWagmi, InitSolana } from "./types";
+import { InitPrivyProvider } from "./providers/initPrivyProvider";
+import { InitSolanaProvider } from "./providers/initSolanaProvider";
+import { InitWagmiProvider } from "./providers/initWagmiProvider";
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) {
@@ -62,7 +63,13 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
 
-export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
+
+interface WalletConnectorPrivyProps extends PropsWithChildren {
+  privyConfig: InitPrivy;
+  wagmiConfig: InitWagmi;
+  solanaConfig: InitSolana;
+}
+export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
@@ -117,13 +124,13 @@ export function WalletConnectorPrivyProvider(props: PropsWithChildren) {
     >
       <TooltipProvider delayDuration={300}>
 
-        <InitPrivy initChains={initChains}>
-          <InitWagmi initChains={initChains}>
-            <InitSolana>
+        <InitPrivyProvider privyConfig={props.privyConfig} initChains={initChains}>
+          <InitWagmiProvider wagmiConfig={props.wagmiConfig} initChains={initChains}>
+            <InitSolanaProvider solanaConfig={props.solanaConfig}>
               <Main>{props.children}</Main>
-            </InitSolana>
-          </InitWagmi>
-        </InitPrivy>
+            </InitSolanaProvider>
+          </InitWagmiProvider>
+        </InitPrivyProvider>
       </TooltipProvider>
     </walletConnectorPrivyContext.Provider>
   );

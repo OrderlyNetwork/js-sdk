@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { WalletConnectorPrivyProvider } from "@orderly.network/wallet-connector-privy";
+import { WalletConnectorPrivyProvider, wagmiConnectors } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
 import {
@@ -22,6 +22,7 @@ import {
 import config from "../src/config";
 import { Chains } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
+
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -97,7 +98,39 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 
 export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
   return (
-    <WalletConnectorPrivyProvider>
+    <WalletConnectorPrivyProvider 
+    privyConfig={{
+      appid: 'cm50h5kjc011111gdn7i8cd2k',
+    }}
+    wagmiConfig={{
+      connectors: [
+        wagmiConnectors.injected(),
+        wagmiConnectors.walletConnect({
+          projectId: '93dba83e8d9915dc6a65ffd3ecfd19fd',
+          showQrModal: true,
+          storageOptions: {
+  
+          },
+          metadata: {
+            name: 'Orderly Network',
+            description: 'Orderly Network',
+            url: 'https://orderly.network',
+            icons: ['https://oss.orderly.network/static/sdk/chains.png']
+          }
+        }),
+      ]
+    }}
+    solanaConfig={{
+      network: WalletAdapterNetwork.Devnet,
+      endPoint: 'https://api.devnet.solana.com',
+      mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5',
+      devnetRpc: 'https://api.devnet.solana.com',
+      wallets: wallets,
+      onError: (error: WalletError, adapter?: Adapter) => {
+        console.log("-- error", error, adapter);
+      },
+    }}
+    >
            <OrderlyAppProvider
         // brokerId="orderly"
         // brokerName="Orderly"

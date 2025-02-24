@@ -2,14 +2,17 @@ import { PrivyClientConfig, PrivyProvider } from "@privy-io/react-auth";
 import React, { PropsWithChildren, useMemo, useState } from "react";
 import {toSolanaWalletConnectors} from '@privy-io/react-auth/solana';
 import { arbitrum, arbitrumSepolia, Chain, mainnet, okc, storyOdyssey, storyTestnet } from "viem/chains";
+import { InitPrivy } from "../types";
 const solanaConnectors = toSolanaWalletConnectors();
 
-interface InitPrivyProps extends PropsWithChildren{
-  initChains: Chain[];
+
+interface IProps extends PropsWithChildren{
+  privyConfig:InitPrivy;
+  initChains:Chain[];
 }
 
-export function InitPrivy(props:InitPrivyProps) {
-  const privyConfig = useMemo(():PrivyClientConfig  => (
+export function InitPrivyProvider({privyConfig, initChains, children}:IProps) {
+  const config = useMemo(():PrivyClientConfig  => (
     {
       appearance: {
         theme: 'light',
@@ -26,23 +29,23 @@ export function InitPrivy(props:InitPrivyProps) {
           connectors: solanaConnectors,
         },
       },
-      defaultChain: arbitrumSepolia,
-      supportedChains: [mainnet, okc,arbitrumSepolia, storyTestnet, storyOdyssey],
+      defaultChain: initChains[0],
+      supportedChains: initChains,
     }
-  ), [])
+  ), [initChains, privyConfig])
   // const privyConfig = useMemo(():PrivyClientConfig  => (
   // ), [props.initChains])
   // console.log('-- privyconfig', privyConfig);
   // return children;
-  if (!props.initChains.length) {
+  if (!initChains.length) {
    return;
   }
   return (
     <PrivyProvider
-      appId='cm50h5kjc011111gdn7i8cd2k'
-      config={privyConfig}
+      appId={privyConfig.appid}
+      config={config}
     >
-      {props.children}
+      {children}
     </PrivyProvider>
   )
 }
