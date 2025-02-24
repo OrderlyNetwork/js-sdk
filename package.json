@@ -17,6 +17,7 @@
     "prepare": "husky install",
     "test": "turbo run test",
     "release:patch": "ts-node ./scripts/release.ts",
+    "npm:patch": "ts-node ./scripts/release.ts",
     "update:tsconfigPaths": "ts-node ./scripts/tsconfigPaths.ts"
   },
   "devDependencies": {

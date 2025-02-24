@@ -23,7 +23,7 @@ import { TabType } from "../orders.widget";
 import { modal, usePagination, Text, Table } from "@orderly.network/ui";
 import { differenceInDays, setHours, subDays, format } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 
 export type OrderListInstance = {
   download?: () => void;
@@ -35,8 +35,7 @@ export type useOrderListScriptOptions = {
   symbol?: string;
   enableLoadMore?: boolean;
   onSymbolChange?: (symbol: API.Symbol) => void;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
   filterConfig?: {
     side?: OrderSide | "all";
     range?: {

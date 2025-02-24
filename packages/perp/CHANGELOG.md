@@ -1,5 +1,41 @@
 # @orderly.network/futures
 
+## 4.0.4
+
+### Patch Changes
+
+- fd33fd79c: fix bugs;
+- Updated dependencies [fd33fd79c]
+  - @orderly.network/types@2.0.4
+  - @orderly.network/utils@2.0.4
+
+## 4.0.4-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/types@2.0.4-alpha.0
+  - @orderly.network/utils@2.0.4-alpha.0
+
+## 4.0.3
+
+### Patch Changes
+
+- cca30140b: fix ledger issues
+- Updated dependencies [cca30140b]
+  - @orderly.network/types@2.0.3
+  - @orderly.network/utils@2.0.3
+
+## 4.0.3-alpha.0
+
+### Patch Changes
+
+- fix ledger issues
+- Updated dependencies
+  - @orderly.network/types@2.0.3-alpha.0
+  - @orderly.network/utils@2.0.3-alpha.0
+
 ## 4.0.2
 
 ### Patch Changes

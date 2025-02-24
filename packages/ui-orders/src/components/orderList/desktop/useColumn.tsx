@@ -36,7 +36,6 @@ import { ShareButtonWidget } from "../../shareButton";
 import {
   SharePnLConfig,
   SharePnLDialogId,
-  SharePnLParams,
 } from "@orderly.network/ui-share";
 import { format } from "date-fns";
 import { SymbolInfo, utils } from "@orderly.network/hooks";
@@ -45,8 +44,7 @@ export const useOrderColumn = (props: {
   _type: TabType;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
   symbolsInfo?: SymbolInfo;
 }) => {
   const { _type, onSymbolChange, pnlNotionalDecimalPrecision, sharePnLConfig } =
@@ -89,6 +87,7 @@ export const useOrderColumn = (props: {
           reduceOnly({ width: 130 }),
           hidden({ width: 130 }),
           cancelBtn({ width: 130 }),
+          orderTime({ width: 160, enableSort: false }),
         ];
       case TabType.pending:
         return [
@@ -156,6 +155,7 @@ export const useOrderColumn = (props: {
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
             symbolsInfo: props.symbolsInfo,
+            hideShare: true,
           }),
           estTotal({ width: 124 }),
           fee({ width: 124 }),
@@ -751,9 +751,9 @@ function realizedPnL(option?: {
   width?: number;
   className?: string;
   pnlNotionalDecimalPrecision?: number;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
   symbolsInfo?: SymbolInfo;
+  hideShare?: boolean;
 }): Column<API.Order> {
   return {
     title: "Real. PnL",
@@ -791,11 +791,13 @@ function realizedPnL(option?: {
           >
             {value ?? "--"}
           </Text.numeral>
-          <ShareButtonWidget
-            order={record}
-            sharePnLConfig={option?.sharePnLConfig}
-            modalId={SharePnLDialogId}
-          />
+          {!option?.hideShare && (
+            <ShareButtonWidget
+              order={record}
+              sharePnLConfig={option?.sharePnLConfig}
+              modalId={SharePnLDialogId}
+            />
+          )}
         </Flex>
       );
     },

@@ -14,8 +14,20 @@ import {
   useRestrictedAreas,
   RestrictedAreasReturns,
   IRestrictedAreasParams,
+  Chains,
 } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
+import { Chain, NetworkId } from "@orderly.network/types";
+
+type ReturnChain = Pick<Chain, "id"> & Partial<Omit<Chain, "id">>;
+
+type DefaultChain =
+  | {
+      mainnet?: ReturnChain;
+      testnet?: ReturnChain;
+    }
+  | ((networkId: NetworkId, chains: Chains) => ReturnChain)
+  | undefined;
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -29,6 +41,7 @@ type AppContextState = {
     chainId: number,
     state: { isTestnet: boolean; isWalletConnected: boolean }
   ) => void;
+  defaultChain?: DefaultChain;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
   restrictedInfo?: RestrictedAreasReturns;
 };
@@ -40,12 +53,8 @@ export const useAppContext = () => {
 };
 
 export type AppStateProviderProps = {
-  onChainChanged?: (
-    chainId: number,
-    state: { isTestnet: boolean; isWalletConnected: boolean }
-  ) => void;
   restrictedInfo?: IRestrictedAreasParams;
-};
+} & Pick<AppContextState, "onChainChanged" | "defaultChain">;
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
@@ -73,6 +82,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
         currentChainId,
         setCurrentChainId,
         onChainChanged: props.onChainChanged,
+        defaultChain: props.defaultChain,
         restrictedInfo,
       }}
     >

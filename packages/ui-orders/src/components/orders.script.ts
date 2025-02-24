@@ -1,14 +1,13 @@
 import { ForwardedRef, useImperativeHandle, useRef } from "react";
 import { TabType } from "./orders.widget";
 import { OrderListInstance } from "./orderList/orderList.script";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 
 type UseOrdersScriptOptions = {
   current?: TabType;
   pnlNotionalDecimalPrecision?: number;
   ref: ForwardedRef<OrderListInstance>;
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig
 };
 
 export const useOrdersScript = (props: UseOrdersScriptOptions) => {

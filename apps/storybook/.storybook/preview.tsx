@@ -3,8 +3,9 @@ import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { customViewports } from "./screenSizes";
 import OrderlyProvider, { OrderlyProviderPrivy } from "./orderlyProvider";
+import { withThemeBuilder } from "../src/addons/theme_tool/preview";
+
 import "../src/tailwind.css";
-import { withThemeBuilder } from "./addons/themeBuilder/preview";
 
 const preview: Preview = {
   decorators: [
@@ -39,7 +40,7 @@ const preview: Preview = {
     backgrounds: {
       values: [
         { name: "Dark", value: "rgb(var(--oui-color-base-10))" },
-        { name: "Light", value: "rgb(var(--oui-color-base-10))" },
+        { name: "Light", value: "rgb(255,255,255)" },
       ],
       default: "Dark",
     },
@@ -53,6 +54,7 @@ const preview: Preview = {
       storySort: {
         order: [
           "Overview",
+          "Design Tokens",
           "Base",
           "Package",
           [

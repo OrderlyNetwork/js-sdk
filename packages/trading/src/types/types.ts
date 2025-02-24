@@ -1,8 +1,6 @@
 import { API } from "@orderly.network/types";
-import { DataListTabType } from "../components/desktop/dataList/dataList.script";
-import { PositionsProps } from "@orderly.network/ui-positions";
 import { ReactNode } from "react";
-import { SharePnLConfig, SharePnLParams } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 
 export type layoutInfo = {
   width?: number;
@@ -146,8 +144,7 @@ type BaseTradingPageProps = {
 };
 
 export type TradingPageProps = BaseTradingPageProps & {
-  sharePnLConfig?: SharePnLConfig &
-    Partial<Omit<SharePnLParams, "position" | "refCode" | "leverage">>;
+  sharePnLConfig?: SharePnLConfig;
   referral?: ReferralProps;
   tradingRewards?: TradingRewardsProps;
   bottomSheetLeading?: React.ReactNode | string;

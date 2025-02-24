@@ -1,5 +1,73 @@
 # @orderly.network/react
 
+## 2.0.4
+
+### Patch Changes
+
+- fd33fd79c: fix bugs;
+- Updated dependencies [fd33fd79c]
+  - @orderly.network/hooks@2.0.4
+  - @orderly.network/core@2.0.4
+  - @orderly.network/ui@2.0.4
+  - @orderly.network/net@2.0.4
+  - @orderly.network/trading-view@2.0.4
+  - @orderly.network/types@2.0.4
+  - @orderly.network/ui-connector@2.0.4
+  - @orderly.network/ui-leverage@2.0.4
+  - @orderly.network/ui-transfer@2.0.4
+  - @orderly.network/utils@2.0.4
+
+## 2.0.4-alpha.0
+
+### Patch Changes
+
+- fix bugs;
+- Updated dependencies
+  - @orderly.network/hooks@2.0.4-alpha.0
+  - @orderly.network/core@2.0.4-alpha.0
+  - @orderly.network/ui@2.0.4-alpha.0
+  - @orderly.network/net@2.0.4-alpha.0
+  - @orderly.network/trading-view@2.0.4-alpha.0
+  - @orderly.network/types@2.0.4-alpha.0
+  - @orderly.network/ui-connector@2.0.4-alpha.0
+  - @orderly.network/ui-leverage@2.0.4-alpha.0
+  - @orderly.network/ui-transfer@2.0.4-alpha.0
+  - @orderly.network/utils@2.0.4-alpha.0
+
+## 2.0.3
+
+### Patch Changes
+
+- cca30140b: fix ledger issues
+- Updated dependencies [cca30140b]
+  - @orderly.network/trading-view@2.0.3
+  - @orderly.network/ui-connector@2.0.3
+  - @orderly.network/ui-leverage@2.0.3
+  - @orderly.network/ui-transfer@2.0.3
+  - @orderly.network/hooks@2.0.3
+  - @orderly.network/types@2.0.3
+  - @orderly.network/utils@2.0.3
+  - @orderly.network/core@2.0.3
+  - @orderly.network/net@2.0.3
+  - @orderly.network/ui@2.0.3
+
+## 2.0.3-alpha.0
+
+### Patch Changes
+
+- fix ledger issues
+- Updated dependencies
+  - @orderly.network/trading-view@2.0.3-alpha.0
+  - @orderly.network/ui-connector@2.0.3-alpha.0
+  - @orderly.network/ui-leverage@2.0.3-alpha.0
+  - @orderly.network/ui-transfer@2.0.3-alpha.0
+  - @orderly.network/hooks@2.0.3-alpha.0
+  - @orderly.network/types@2.0.3-alpha.0
+  - @orderly.network/utils@2.0.3-alpha.0
+  - @orderly.network/core@2.0.3-alpha.0
+  - @orderly.network/net@2.0.3-alpha.0
+  - @orderly.network/ui@2.0.3-alpha.0
+
 ## 2.0.2
 
 ### Patch Changes

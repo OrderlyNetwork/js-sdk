@@ -16,10 +16,7 @@ import {
 } from "./listElement";
 import { CloseButton } from "./closeButton";
 import { Decimal } from "@orderly.network/utils";
-import {
-  SharePnLConfig,
-  SharePnLDialogId,
-} from "@orderly.network/ui-share";
+import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { ShareButtonWidget } from "./shareButton";
 import { API } from "@orderly.network/types";
 import { TriggerPrice } from "./triggerPrice";
@@ -29,7 +26,7 @@ import { NumeralWithCtx } from "./numeralWithCtx";
 
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
-  sharePnLConfig?: SharePnLConfig;
+  sharePnLConfig?: SharePnLOptions;
   onSymbolChange?: (symbol: API.Symbol) => void;
 }) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
@@ -167,7 +164,7 @@ export const useColumn = (props: {
             </HoverCard>
           ),
           dataIndex: "unrealized_pnl",
-          width: 150,
+          width: 180,
           onSort: true,
           rule: "price",
           numeralProps: {

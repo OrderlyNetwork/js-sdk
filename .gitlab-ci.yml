@@ -12,3 +12,65 @@ variables:
   SERVICE_NAME: storybook
   IMAGE_NAME: storybook
   DOCKER_FILE: ${CI_PROJECT_DIR}/Dockerfile
+
+stages:
+  - check_tag
+  - build_docker
+  - deploy
+  - release # add release stage
+
+internal_patch:
+  stage: release
+  image:
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+  script:
+    - | 
+      git config --global --add safe.directory "$CI_PROJECT_DIR"
+
+      export GIT_TOKEN="$GIT_TOKEN_INTERNAL"
+      export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
+      export GIT_NAME="$GIT_NAME_INTERNAL"
+      export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
+      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
+      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+
+      npm install -g pnpm
+      pnpm install --frozen-lockfile
+      pnpm release:patch
+  tags:
+    - dev
+    - build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "internal/patch"'
+      when: always
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "internal/patch"'
+      when: always
+    - when: never
+
+npm_patch:
+  stage: release
+  image:
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+  script:
+    - | 
+      git config --global --add safe.directory "$CI_PROJECT_DIR"
+
+      export GIT_TOKEN="$GIT_TOKEN_NPM"
+      export GIT_USERNAME="$GIT_USERNAME_NPM"
+      export GIT_NAME="$GIT_NAME_NPM"
+      export GIT_EMAIL="$GIT_EMAIL_NPM"
+      export NPM_REGISTRY="$NPM_REGISTRY_NPM"
+      export NPM_TOKEN="$NPM_TOKEN_NPM"
+
+      npm install -g pnpm
+      pnpm install --frozen-lockfile
+      pnpm npm:patch
+  tags:
+    - dev
+    - build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "npm/patch"'
+      when: always
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "npm/patch"'
+      when: always
+    - when: never

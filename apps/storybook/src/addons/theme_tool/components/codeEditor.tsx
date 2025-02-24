@@ -1,87 +1,84 @@
-import { SyntaxHighlighter } from "@storybook/components";
 import { styled } from "@storybook/theming";
-import { useContext, useMemo } from "react";
-import { EditorContext } from "./editorContext";
-
-export function hexToRgb(hex: string) {
-  if (!/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    console.error("Invalid HEX color format");
-    return null;
-  }
-
-  let color = hex.substring(1);
-
-  if (color.length === 3) {
-    color = color
-      .split("")
-      .map((char) => char + char)
-      .join("");
-  }
-
-  const r = parseInt(color.substring(0, 2), 16);
-  const g = parseInt(color.substring(2, 4), 16);
-  const b = parseInt(color.substring(4, 6), 16);
-
-  // return [r, g, b];
-
-  return `${r} ${g} ${b}`;
-}
-
-export function isColorValue(value: string) {
-  return (
-    value.startsWith("--oui-color") ||
-    (value.startsWith("--oui-gradient") &&
-      !["stop-start", "stop-end", "angle"].some((item) => value.endsWith(item)))
-  );
-}
+import { useMemo } from "react";
+import { useTheme } from "./editorContext";
+import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
+import { css } from "@codemirror/lang-css";
+import { githubLight } from "@uiw/codemirror-theme-github";
+import { Button } from "@orderly.network/ui";
+import { object2Css, parseCssToJson } from "../utils";
 
 const Container = styled.div`
+  position: relative;
   max-width: 800px;
   margin: 0 auto;
-`;
-
-const Content = styled.div`
+  column-gap: 8px;
   padding: 20px;
-  // background: #f5f5f5;
 `;
 
 export const CodeEditor = () => {
-  const { theme } = useContext(EditorContext);
-  const code = useMemo(() => {
-    console.log(theme);
+  const { theme, setTheme } = useTheme();
+  console.log("theme", theme);
 
-    const newTheme: Record<string, string> = {};
+  const code = useMemo(() => object2Css(theme), [theme]);
 
-    for (const [key, value] of Object.entries(theme)) {
-      console.log(key, value);
-
-      if (value === "") continue;
-
-      let val = value;
-
-      if (isColorValue(key)) {
-        val = hexToRgb(value) ?? "";
-      }
-
-      newTheme[key] = val;
+  const onChange = (val: string, viewUpdate: ViewUpdate) => {
+    try {
+      const newTheme = parseCssToJson(val);
+      console.log("newTheme", newTheme);
+      setTheme(newTheme);
+    } catch (err) {
+      console.log("parseCssToJson", err);
     }
+  };
 
-    let code = JSON.stringify(newTheme, null, 2);
-    code = code.replace("{", "").replace("}", "");
-    code = code.replace(/"/g, "");
-    code = code.replace(/,(?=\s*$)/gm, ";");
-    code = code.replace(/\\/g, '"');
+  const copy = () => {
+    navigator.clipboard.writeText(code);
+  };
 
-    return code;
-  }, [theme]);
+  const download = () => {
+    const blob = new Blob([code], { type: "text/css" });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "theme.css";
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <Content>
-      <Container>
-        <SyntaxHighlighter copyable language="css">
-          {code}
-        </SyntaxHighlighter>
-      </Container>
-    </Content>
+    <Container>
+      <CodeMirror
+        value={code}
+        theme={githubLight}
+        extensions={[css()]}
+        onChange={onChange}
+      />
+
+      <div style={{ position: "fixed", right: 30, bottom: 30 }}>
+        <Button
+          size="md"
+          variant="outlined"
+          color="secondary"
+          onClick={copy}
+          style={{ color: "#000" }}
+        >
+          Copy
+        </Button>
+        <Button
+          size="md"
+          variant="outlined"
+          color="secondary"
+          onClick={download}
+          style={{ color: "#000", marginLeft: 8 }}
+        >
+          Download
+        </Button>
+      </div>
+    </Container>
   );
 };

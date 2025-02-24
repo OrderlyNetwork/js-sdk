@@ -5,6 +5,7 @@ export type FooterProps = {
   telegramUrl?: string;
   twitterUrl?: string;
   discordUrl?: string;
+  trailing?: React.ReactNode;
 };
 
 export const FooterWidget = (props: FooterProps) => {
