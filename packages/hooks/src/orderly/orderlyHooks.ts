@@ -80,4 +80,3 @@ export {
   useMarkPriceBySymbol,
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
-export {useStorageLedgerAddress} from './useStorageLedgerAddress';

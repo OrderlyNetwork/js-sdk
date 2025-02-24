@@ -61,7 +61,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
         classNames?.root
       )}
     >
-      <Flex itemAlign={"center"} gap={4}>
+      <Flex itemAlign={"center"} className="oui-gap-3 2xl:oui-gap-4">
         <MainLogo {...logo} />
         <ProductsMenu {...products} className={classNames?.products} />
         {/* <MainNavItems {...props.mainMenus} classNames={classNames?.mainNav} /> */}
@@ -72,7 +72,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       </Flex>
       {children}
 
-      <Flex itemAlign={"center"} gap={4}>
+      <Flex itemAlign={"center"} className="oui-gap-3 2xl:oui-gap-4">
         {campaignPosition === CampaignPositionEnum.navTailing && campaigns ? (
           <CampaignButton
             {...campaigns}

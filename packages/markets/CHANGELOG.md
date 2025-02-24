@@ -1,27 +1,5 @@
 # @orderly.network/markets
 
-## 2.0.4
-
-### Patch Changes
-
-- fd33fd79c: fix bugs;
-- Updated dependencies [fd33fd79c]
-  - @orderly.network/hooks@2.0.4
-  - @orderly.network/ui@2.0.4
-  - @orderly.network/types@2.0.4
-  - @orderly.network/utils@2.0.4
-
-## 2.0.4-alpha.0
-
-### Patch Changes
-
-- fix bugs;
-- Updated dependencies
-  - @orderly.network/hooks@2.0.4-alpha.0
-  - @orderly.network/ui@2.0.4-alpha.0
-  - @orderly.network/types@2.0.4-alpha.0
-  - @orderly.network/utils@2.0.4-alpha.0
-
 ## 2.0.3
 
 ### Patch Changes

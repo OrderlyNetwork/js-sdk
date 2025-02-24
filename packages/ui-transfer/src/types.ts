@@ -2,8 +2,8 @@ export type DST = {
   symbol: string;
   address?: string;
   decimals?: number;
-  chainId: number;
-  network: string;
+  chainId?: number;
+  network?: string;
 };
 
 export enum DepositAction {
