@@ -2740,6 +2740,9 @@ importers:
       '@types/react':
         specifier: ^18.2.38
         version: 18.3.2
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
       react:
         specifier: ^18.2.0
         version: 18.2.0

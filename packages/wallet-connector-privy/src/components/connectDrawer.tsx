@@ -16,6 +16,7 @@ import { WalletAdapter } from "@solana/wallet-adapter-base";
 import { cn } from "@orderly.network/ui";
 
 import { getWalletIcon } from "../util";
+import { Drawer } from "./drawer";
 
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
@@ -224,25 +225,9 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
   const { isMobile } = useScreen();
 
   return (
-    <SimpleDialog
-      classNames={{
-        content: cn(
-          'oui-flex-col oui-h-screen  oui-right-0 oui-left-[calc(100%_-_276px)]  oui-w-[276px] oui-translate-x-0 oui-px-4 oui-rounded-0',
-          'md:oui-h-[calc(100vh_-_72px)] md:oui-left-[calc(100%_-_300px)] md:oui-w-[300px] ',
-        ),
-        body: cn(
-          'oui-overflow-hidden oui-h-full oui-relative oui-flex oui-flex-col oui-justify-between',
-          'oui-rounded-0 oui-pb-6 oui-pt-0',
-          'md:oui-py-4'
-
-        ),
-      }}
-      open={props.open}
-      onOpenChange={props.onChangeOpen}
-      closable={false}
-      contentProps={{
-        // onPointerDownOutside: (event) => event.preventDefault(),
-      }}
+    <Drawer
+      isOpen={props.open}
+      onClose={() => props.onChangeOpen(false)}
     >
       {!isMobile &&
         <div className='oui-z-0 oui-absolute -oui-top-[calc(100vh/2)] oui-h-[100vh] oui-left-[50px] oui-right-[50px]'
@@ -274,6 +259,6 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
           By connecting your wallet, you acknowledge and agree to the <span className="oui-cursor-pointer oui-underline oui-text-primary">terms of use</span>.
         </div>
       }
-    </SimpleDialog>
+    </Drawer>
   )
 }
