@@ -123,8 +123,12 @@ const EstRewards: FC<{
         My est. rewards
       </Text>
       <Flex direction={"row"} gap={3}>
-        {props.isOrder == true && (<OrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />)}
-        {props.isOrder == false && (<EsOrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />)}
+        {props.isOrder == true && (
+          <OrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />
+        )}
+        {props.isOrder == false && (
+          <EsOrderlyIcon className="oui-w-5 oui-h-5 md:oui-w-6 md:oui-h-6 lg:oui-w-7 lg:oui-h-7 xl:oui-w-8 xl:oui-h-8" />
+        )}
         <Text
           children={commifyOptional(props.estRewards, { fix: 2 })}
           className="oui-text-xl md:oui-text-2xl xl:oui-text-[32px]"
@@ -199,7 +203,7 @@ const Countdown: FC<{
       const distance = targetTimestamp - now;
 
       if (distance < 0) {
-        clearInterval(intervalId);
+        clearInterval(intervalId as unknown as number);
         setTimeLeft({
           days: 0,
           hours: 0,
@@ -218,7 +222,7 @@ const Countdown: FC<{
       }
     }, 1000);
 
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId as unknown as number);
   }, [targetTimestamp]);
 
   const num = (value: string) => {

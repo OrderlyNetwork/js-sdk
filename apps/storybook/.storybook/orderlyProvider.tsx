@@ -19,6 +19,8 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import config from "../src/config";
+import { Chains } from "@orderly.network/hooks";
+import { NetworkId } from "@orderly.network/types";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -55,6 +57,7 @@ const configStore = new CustomConfigStore({
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   console.log("-- provider", configStore, VITE_ENV);
+
   return (
     <WalletConnectorProvider
       solanaInitial={{ wallets: wallets }}
@@ -72,11 +75,17 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
           customRestrictedRegions: [],
           contact: { url: "x@orerly.network", text: "x@orerly.network" },
         }}
-
         // overrides={{
         //   tabs: {
         //     variant: "text",
         //   },
+        //   chainSelector: {
+        //     showTestnet: false,
+        //   },
+        // }}
+        // defaultChain={{
+        //   mainnet: { id: 900900900 },
+        //   testnet: { id: 901901901 },
         // }}
       >
         {props.children}

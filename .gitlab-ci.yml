@@ -12,3 +12,72 @@ variables:
   SERVICE_NAME: storybook
   IMAGE_NAME: storybook
   DOCKER_FILE: ${CI_PROJECT_DIR}/Dockerfile
+
+stages:
+  - check_tag
+  - build_docker
+  - deploy
+  - release # add release stage
+
+internal_patch:
+  stage: release
+  image:
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+  script:
+    - git checkout "$CI_COMMIT_BRANCH"
+    - 'echo "Latest commit message: $CI_COMMIT_MESSAGE"'
+    - | 
+      git config --global --add safe.directory "$CI_PROJECT_DIR"
+
+      export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
+      export GIT_TOKEN="$GIT_TOKEN_INTERNAL"
+      export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
+      export GIT_NAME="$GIT_NAME_INTERNAL"
+      export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
+      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
+      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+
+      npm install -g pnpm
+      pnpm install --frozen-lockfile
+      pnpm release:patch
+  tags:
+    - dev
+    - build
+  rules:    
+    # Run this job if:
+    # 1. Branch name starts with "internal/" AND
+    # 2. Commit message does not contain "publish"
+    - if: '$CI_COMMIT_BRANCH =~ /^internal\// && $CI_COMMIT_MESSAGE !~ /publish/'
+      when: always
+    - when: never
+
+npm_patch:
+  stage: release
+  image:
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+  script:
+    - git checkout "$CI_COMMIT_BRANCH"
+    - | 
+      git config --global --add safe.directory "$CI_PROJECT_DIR"
+
+      export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
+      export GIT_TOKEN="$GIT_TOKEN_NPM"
+      export GIT_USERNAME="$GIT_USERNAME_NPM"
+      export GIT_NAME="$GIT_NAME_NPM"
+      export GIT_EMAIL="$GIT_EMAIL_NPM"
+      export NPM_REGISTRY="$NPM_REGISTRY_NPM"
+      export NPM_TOKEN="$NPM_TOKEN_NPM"
+
+      npm install -g pnpm
+      pnpm install --frozen-lockfile
+      pnpm release:patch
+  tags:
+    - dev
+    - build
+  rules:
+    # Run this job if:
+    # 1. Branch name is "npm/patch" AND
+    # 2. Commit message does not contain "publish"
+    - if: '$CI_COMMIT_BRANCH == "npm/patch" && $CI_COMMIT_MESSAGE !~ /publish/'
+      when: always
+    - when: never

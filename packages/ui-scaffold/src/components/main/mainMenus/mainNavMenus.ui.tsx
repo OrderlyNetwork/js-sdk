@@ -1,4 +1,4 @@
-import { Flex } from "@orderly.network/ui";
+import { cn, Flex } from "@orderly.network/ui";
 import { MainNavItem, NavItem } from "./navItem";
 import { FC } from "react";
 
@@ -21,7 +21,7 @@ export const MainNavMenusUI: FC<MainNavItemsProps> = (props) => {
   if (!Array.isArray(items) || items.length === 0) return null;
 
   return (
-    <Flex gap={2} className={classNames?.root}>
+    <Flex className={cn("oui-gap-[6px] 2xl:oui-gap-2", classNames?.root)}>
       {items?.map((item, index) => (
         <NavItem
           key={index}

@@ -222,30 +222,36 @@ export const usePrivateDataObserver = (options: {
     const key = ["/v1/positions", state.accountId];
     const unsubscribe = ws.privateSubscribe("position", {
       onMessage: (data: { positions: WSMessage.Position[] }) => {
-        const { positions: nextPostions } = data;
+        const { positions: nextPositions } = data;
 
         // updatePositions();
 
         mutate(
           key,
           (prevPositions: any) => {
-            // return nextPostions;
+            // return nextPositions;
             if (!!prevPositions) {
-              const newPostions = {
+              const newPositions = {
                 ...prevPositions,
                 rows: prevPositions.rows.map((row: any) => {
-                  const itemIndex = nextPostions.findIndex(
+                  const itemIndex = nextPositions.findIndex(
                     (item) => item.symbol === row.symbol
                   );
 
-                  // const item = nextPostions.find(
+                  // const item = nextPositions.find(
                   //   (item) => item.symbol === row.symbol
                   // );
 
                   if (itemIndex >= 0) {
-                    const itemArr = nextPostions.splice(itemIndex, 1);
+                    const itemArr = nextPositions.splice(itemIndex, 1);
 
                     const item = itemArr[0];
+
+                    // ignore the ws update with averageOpenPrice === 0
+                    if (item.averageOpenPrice === 0) {
+                      return row;
+                    }
+                    // console.log("---->>>>>>!!!! item", item);
 
                     return object2underscore(item);
                   }
@@ -254,16 +260,16 @@ export const usePrivateDataObserver = (options: {
                 }),
               };
 
-              if (nextPostions.length > 0) {
-                newPostions.rows = [
-                  ...newPostions.rows,
-                  ...nextPostions.map((item) => {
+              if (nextPositions.length > 0) {
+                newPositions.rows = [
+                  ...newPositions.rows,
+                  ...nextPositions.map((item) => {
                     return object2underscore(item);
                   }),
                 ];
               }
 
-              return newPostions;
+              return newPositions;
             }
           },
           {

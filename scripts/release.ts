@@ -12,6 +12,9 @@ const simpleGit = SimpleGit();
 // show command exection log
 $.verbose = true;
 
+// ci env
+const ciBranch = process.env.CI_COMMIT_BRANCH;
+
 const npm = {
   registry: process.env.NPM_REGISTRY,
   token: process.env.NPM_TOKEN,
@@ -30,18 +33,19 @@ const telegram = {
   chatId: process.env.TELEGRAM_CHAT_ID,
 };
 
+const releaseVersionType = process.env.RELEASE_VERSION_TYPE as VersionType;
+
 // set publish npm registry
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
 
 /** release patch version */
 async function main() {
   try {
-    await ceheckBranch();
     await checkGitStatus();
-    await generateChangeset();
+    await ceheckBranch();
     await release();
-    const successfullyPackages = await getVersions();
-    await notifyTelegram(successfullyPackages);
+    const successfulPackages = await getSuccessfulPackages();
+    await notifyTelegram(successfulPackages);
   } catch (err: any) {
     const msg = `release error: ${
       err.message || err.stderr || JSON.stringify(err)
@@ -52,8 +56,11 @@ async function main() {
 }
 
 async function release() {
+  await generateChangeset(releaseVersionType);
+
   await $`pnpm changeset version`;
 
+  // update the version file for each package
   await $`pnpm version:g`;
 
   await $`pnpm build`;
@@ -62,7 +69,7 @@ async function release() {
 
   await $`${npmRegistry} pnpm changeset publish`;
 
-  // restore .npmrc file change when provider npm token and publish success
+  // restore .npmrc file change when publish success
   npm.token && (await $`git restore .npmrc`);
 
   // if not provide, use local user config
@@ -93,11 +100,11 @@ async function checkGitStatus() {
 
 async function ceheckBranch() {
   const status = await simpleGit.status();
-  const currentBranch = status.current;
+  const currentBranch = ciBranch || status.current;
   console.log("currentBranch: ", currentBranch);
-  if (!currentBranch?.includes("internal/")) {
+  if (!/^((internal|npm)\/)/.test(currentBranch!)) {
     throw new Error(
-      'Release versions can only operate on branches prefixed with "internal/"'
+      'Release versions can only operate on branches prefixed with "internal/" or npm/'
     );
   }
 }
@@ -123,6 +130,7 @@ async function getRemoteUrl() {
  */
 async function getRepoPath() {
   const res = await $`git remote get-url origin`;
+  // console.log("getRepoPath: ", res);
   const origin = res.stdout?.replace(/\s+/g, "");
   const regex = /(?:github\.com|gitlab\.com)[:/](.+?\/.+?)\.git/;
   const match = origin.match(regex);
@@ -135,35 +143,35 @@ async function getRepoPath() {
  * if not provide token, if will use ~/.npmrc file config
  * */
 async function authNPM() {
-  if (!npm.token) return;
+  if (!npm.token) {
+    throw new Error("Please provider npm token");
+  }
   const registry = npm.registry!.replace("http://", "").replace("https://", "");
   const content = `\n//${registry}/:_authToken="${npm.token}"`;
   await $`echo ${content} >> .npmrc`;
 }
 
-async function getVersions() {
+async function getSuccessfulPackages() {
   const cwd = process.cwd();
   const packages = await getPackages(cwd);
+
   const publicPackages = packages.packages
     .filter((pkg) => !pkg.packageJson.private)
     .map((pkg) => `${pkg.packageJson.name}@${pkg.packageJson.version}`);
 
   const successfullyPackages = publicPackages.join("\n");
 
-  const message = `packages published successfully:\n${successfullyPackages}`;
-
-  return message;
+  return `packages published successfully:\n${successfullyPackages}`;
 }
 
 /**
  * generate changeset file
+ * Now only patch versions need to be updated automatically
  */
-async function generateChangeset(versionType: VersionType = "patch") {
+async function generateChangeset(versionType?: VersionType) {
   const cwd = process.cwd();
   const config = await read(cwd);
   const packages = await getPackages(cwd);
-
-  // const changesetBase = path.resolve(cwd, ".changeset");
 
   const versionablePackages = packages.packages.filter(
     (pkg) =>
@@ -177,10 +185,15 @@ async function generateChangeset(versionType: VersionType = "patch") {
     (pkg) => pkg.packageJson.name
   );
 
+  const type = ["major", "minor", "patch"].includes(versionType!)
+    ? versionType!
+    : "patch";
+
+  console.log("release version type: ", type);
+
   const releases: Release[] = changedPackagesNames.map((name) => ({
     name,
-    // Now only the patch version needs to be automatically
-    type: versionType,
+    type,
   }));
 
   const changesetID = await writeChangeset(

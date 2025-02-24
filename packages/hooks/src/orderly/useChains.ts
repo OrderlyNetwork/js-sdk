@@ -2,6 +2,7 @@ import {
   NetworkId,
   type API,
   Chain as FlatChain,
+  MONAD_TESTNET_CHAINID,
 } from "@orderly.network/types";
 import { useCallback, useContext, useMemo, useRef } from "react";
 import { SWRConfiguration } from "swr";
@@ -12,7 +13,7 @@ import { nativeTokenAddress } from "@orderly.network/types";
 import { OrderlyContext } from "../orderlyContext";
 
 // testnet only show arb sepolia and solana devnet
-const TestNetWhiteList = [421614, 901901901, 1516];
+const TestNetWhiteList = [421614, 901901901, MONAD_TESTNET_CHAINID];
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;

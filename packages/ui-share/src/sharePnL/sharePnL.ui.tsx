@@ -35,7 +35,7 @@ export const DesktopSharePnL: FC<SharePnLState> = (props) => {
   return (
     <DesktopSharePnLContent
       entity={entity}
-      leverage={`${leverage}`}
+      leverage={leverage}
       hide={hide}
       baseDp={baseDp}
       quoteDp={quoteDp}
