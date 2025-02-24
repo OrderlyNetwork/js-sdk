@@ -64,7 +64,7 @@ export function WalletCard(props: WalletCardProps) {
             {formatAddress(props.address)}
           </div>
           <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-            <Tooltip content="Copy">
+            <Tooltip content="Copy" className="oui-z-[65]">
               <CopyIcon
                 size={16}
                 opacity={1}
@@ -72,7 +72,7 @@ export function WalletCard(props: WalletCardProps) {
                 onClick={() => copyAddress(props.address)}
               />
             </Tooltip>
-            {props.isPrivy ? <PrivyWalletHandleOption /> : <NonPrivyWalletHandleOption walletType={props.type} />}
+            {props.isPrivy ? <PrivyWalletHandleOption address={props.address} type={props.type} /> : <NonPrivyWalletHandleOption walletType={props.type} />}
           </div>
         </div>
 
@@ -130,7 +130,7 @@ function NonPrivyWalletHandleOption({ walletType }: { walletType: WalletType }) 
   )
 }
 
-function PrivyWalletHandleOption() {
+function PrivyWalletHandleOption({ address, type }: { address: string, type: WalletType }) {
   const { exportWallet } = usePrivyWallet();
   return (
     <DropdownMenuRoot>
@@ -146,15 +146,12 @@ function PrivyWalletHandleOption() {
           onCloseAutoFocus={(e) => e.preventDefault()}
           side='top'
           style={{ width: "100px" }}
-          className={"oui-p-1 oui-rounded oui-font-semibold"}
+          className={"oui-p-1 oui-rounded oui-font-semibold oui-z-[65]"}
           sideOffset={0}
         >
           <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
-            <div onClick={() => exportWallet()}>export</div>
+            <div onClick={() => exportWallet(type)}>export</div>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
-              <div>import</div>
-            </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
@@ -170,6 +167,7 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
 
   return (
     <Popover
+
       content={
         <div>
           <div className="oui-text-2xs oui-text-base-contrast oui-font-semibold">
@@ -193,7 +191,7 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
       contentProps={{
         side: "bottom",
         align: "center",
-        className: 'oui-p-2'
+        className: 'oui-p-2 oui-z-[65]'
 
       }}
     >
@@ -203,35 +201,5 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
       </button>
     </Popover >
 
-    // <PopoverRoot
-    //   onOpenChange={(isOpen) => {
-    //     if (visible) {
-    //       setOpen(isOpen);
-    //     }
-    //   }}
-    //   open={open}
-    // >
-    //   <PopoverTrigger
-    //     asChild
-    //     onClick={() => {
-    //       setOpen(true);
-    //     }}
-    //   >
-    //     <button>
-
-    //     {children}
-    //     </button>
-    //   </PopoverTrigger>
-    //   <PopoverContent
-    //     className={cn(
-    //       "oui-w-[320px]",
-    //       visible ? "oui-visible" : "oui-invisible"
-    //     )}
-    //     align="center"
-    //     side={"bottom"}
-    //   >
-
-    //   </PopoverContent>
-    // </PopoverRoot>
   )
 }

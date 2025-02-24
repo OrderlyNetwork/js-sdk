@@ -7,12 +7,12 @@ import { ChainNamespace } from "@orderly.network/types";
 import { WalletType } from "../types";
 export function AddSolanaWallet() {
   const { wallets } = useSolanaWallet();
-  const {connect} = useWallet();
+  const { connect } = useWallet();
   const [visible, setVisible] = useState(false);
   const onToggleVisibility = () => {
     setVisible(!visible);
   }
-  const {targetNamespace} = useWalletConnectorPrivy();
+  const { targetNamespace } = useWalletConnectorPrivy();
   // TODO: need get value from useWalletConnectorPrivy
   const [open, setOpen] = useState(false);
   console.log('-- open and targetNamespace', open, targetNamespace);
@@ -31,7 +31,7 @@ export function AddSolanaWallet() {
     }
   }, [targetNamespace]);
   useEffect(() => {
-    if (open === false){
+    if (open === false) {
       return;
     }
     const timeId = window.setTimeout(() => {
@@ -47,7 +47,7 @@ export function AddSolanaWallet() {
   return (
     <div className="oui-bg-[#07080A] oui-rounded-[8px] oui-px-2 oui-py-[11px]" >
 
-      <Tooltip className="oui-text-warning-darken oui-max-w-[200px]" open={open} content="Connect an EVM-compatible wallet to continue using the EVM network.">
+      <Tooltip className="oui-text-warning-darken oui-max-w-[200px] oui-z-[65]" open={open} content="Connect an EVM-compatible wallet to continue using the EVM network.">
 
         <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 ">
           <img
@@ -79,10 +79,10 @@ export function AddSolanaWallet() {
           <div
             key={index}
             className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
-            onClick={() => connect({walletType: WalletType.SOL, walletAdapter: item.adapter})}
+            onClick={() => connect({ walletType: WalletType.SOL, walletAdapter: item.adapter })}
           >
-                        {item.adapter.icon && <img src={item.adapter.icon} className="oui-w-[18px] oui-h-[18px]" />}
-                        <div className="oui-text-base-contrast oui-text-2xs">{item.adapter.name}</div>
+            {item.adapter.icon && <img src={item.adapter.icon} className="oui-w-[18px] oui-h-[18px]" />}
+            <div className="oui-text-base-contrast oui-text-2xs">{item.adapter.name}</div>
           </div>
         )}
 

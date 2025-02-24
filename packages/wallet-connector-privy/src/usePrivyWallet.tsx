@@ -25,13 +25,14 @@ interface PrivyWalletHook {
 }
 
 export function usePrivyWallet(): PrivyWalletHook {
-  const { login, logout, ready, authenticated, user, exportWallet } = usePrivy();
+  const { login, logout, ready, authenticated, user, exportWallet: exportEvmWallet } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
 
   const {
     ready: solanaReady,
     wallets: walletsSOL,
     createWallet: createSolanaWallet,
+    exportWallet: exportSolanaWallet,
   } = useSolanaWallets();
   // const { connection } = useConnection();
   // mainnetRpc: 'https://camilla-zmlqv1-fast-mainnet.helius-rpc.com',
@@ -75,6 +76,15 @@ export function usePrivyWallet(): PrivyWalletHook {
 
   const disconnect = () => {
     return logout();
+  }
+
+  const exportWallet = (namespace: ChainNamespace) => {
+    if (namespace === ChainNamespace.evm) {
+      return exportEvmWallet();
+    } else if (namespace === ChainNamespace.solana) {
+      return exportSolanaWallet();
+    }
+    return Promise.reject("no namespace");
   }
 
   const isConnected = useMemo(() => {
@@ -127,7 +137,8 @@ export function usePrivyWallet(): PrivyWalletHook {
 
       return;
     }
-    const wallet = walletsSOL[0];
+    console.log('walletsSOL', walletsSOL);
+    const wallet = walletsSOL.find((w: any) => w.connectorType === 'embedded');
     setWalletSOL({
       label: "privy",
       icon: "",

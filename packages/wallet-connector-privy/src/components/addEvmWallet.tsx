@@ -46,7 +46,7 @@ export function AddEvmWallet() {
 
   return (
     <div className="oui-bg-[#07080A] oui-rounded-[8px] oui-px-2 oui-py-[11px]" >
-      <Tooltip className="oui-text-warning-darken oui-max-w-[200px]"
+      <Tooltip className="oui-text-warning-darken oui-max-w-[200px] oui-z-[65]"
         open={open}
         content="Connect an EVM-compatible wallet to continue using the EVM network.">
 
@@ -86,7 +86,7 @@ export function AddEvmWallet() {
         {connectors.map((item, index) =>
           <div
             key={index}
-            className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
+            className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer oui-text-2xs"
             onClick={() => connect({ walletType: WalletType.EVM, connector: item })}
           >
             {

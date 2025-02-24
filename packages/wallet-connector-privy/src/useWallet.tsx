@@ -172,7 +172,7 @@ export function useWallet() {
   const setNullWalletStatus = () => {
     setWallet(null);
     setConnectedChain(null);
-    setNamespace(undefined);
+    setNamespace(null);
   }
 
 

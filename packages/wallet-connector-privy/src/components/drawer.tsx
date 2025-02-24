@@ -28,12 +28,13 @@ export function Drawer({ children, isOpen, onClose }: DrawerProps) {
     <div className="oui-fixed oui-inset-0 oui-z-[60]">
       {/* 遮罩层 */}
       <div 
-        className="oui-absolute oui-inset-0 oui-bg-black/50 oui-transition-opacity"
+        className="oui-absolute oui-inset-0 oui-bg-[rgba(0,0,0,0.48)] oui-transition-opacity"
         onClick={onClose}
       />
       
       {/* 抽屉主体 */}
       <div className={`
+        oui-overflow-hidden
         oui-fixed oui-top-0 oui-top-1/2 oui-translate-y-[-50%] oui-right-0  
         oui-bg-[#131519] oui-shadow-lg
         oui-border oui-border-line-12

@@ -84,7 +84,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
 function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
   const { connectors } = useWagmiWallet();
 
- 
+
   console.log('--connectors', connectors)
 
   return (
@@ -208,19 +208,27 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
     usePrivyWallet();
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
+  const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
+  console.log('--isconnectprivy', {
+    isConnectedPrivy,
+    connectorKey,
+  });
+
 
   const isConnected = useMemo(() => {
-    if (isConnectedPrivy) {
+    if (connectorKey === WalletType.PRIVY && isConnectedPrivy) {
       return true;
     }
-    if (isConnectedEvm) {
-      return true;
-    }
-    if (isConnectedSolana) {
-      return true;
+    if (connectorKey !== WalletType.PRIVY) {
+      if (isConnectedEvm) {
+        return true;
+      }
+      if (isConnectedSolana) {
+        return true;
+      }
     }
     return false;
-  }, [isConnectedPrivy, isConnectedEvm, isConnectedSolana])
+  }, [isConnectedPrivy, isConnectedEvm, isConnectedSolana, connectorKey])
 
   const { isMobile } = useScreen();
 

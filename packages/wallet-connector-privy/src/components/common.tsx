@@ -4,7 +4,7 @@ export function RenderPrivyTypeIcon({ type, size, isUsercenter }: { type: string
     if (isUsercenter) {
       return <img src="https://oss.orderly.network/static/sdk/privy/email-black.svg" width={size}  />
     } else {
-    return <img src="https://oss.orderly.network/static/sdk/email.svg" width={size}  />
+    return <img src="https://oss.orderly.network/static/sdk/privy/email.svg" width={size}  />
     }
   }
   if (type === 'google') {
