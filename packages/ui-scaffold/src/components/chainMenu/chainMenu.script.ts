@@ -46,10 +46,10 @@ export const useChainMenuScript = () => {
             : defaultChain?.testnet;
       }
 
-      setStorageChain(firstChain.chain_id);
       const chainId = fallbackChain?.id || firstChain?.network_infos?.chain_id;
       if (!chainId) return;
 
+      setStorageChain(chainId);
 
       setCurrentChainId?.(chainId);
     }
