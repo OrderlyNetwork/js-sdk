@@ -98,11 +98,19 @@ const BlockList: React.FC<BlockListProps> = (props) => {
         value: total24Amount,
       },
       {
-        label: "Open interest",
+        label: (
+          <Flex gapX={1}>
+            <OrderlyIcon /> Open interest
+          </Flex>
+        ),
         value: totalOpenInterest,
       },
       {
-        label: "Assets (TVL)",
+        label: (
+          <Flex gapX={1}>
+            <OrderlyIcon /> Assets (TVL)
+          </Flex>
+        ),
         value: tvl,
       },
     ];

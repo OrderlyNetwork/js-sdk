@@ -110,14 +110,23 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         <Box
           className={cn(
             "oui-scaffold-topNavbar oui-bg-base-9",
-            "oui-hidden xl:oui-block oui-min-w-[1018px]",
+            "oui-hidden lg:oui-block",
+            // 1024px - 6px (scrollbar widt) = 1018px
+            "oui-min-w-[1018px]",
             // "oui-border-b oui-border-line-12",
             classNames?.topNavbar
           )}
         >
           {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
         </Box>
-        <div className="oui-scaffold-maintenance-tips oui-hidden xl:oui-block  oui-min-w-[1018px]">
+        <div
+          className={cn(
+            "oui-scaffold-maintenance-tips",
+            "oui-hidden lg:oui-block",
+            // 1024px - 6px (scrollbar widt) = 1018px
+            "oui-min-w-[1018px]"
+          )}
+        >
           {!isMobile && <MaintenanceTipsWidget />}
         </div>
         {/*--------- body start ------ */}
