@@ -1,10 +1,8 @@
 import { PrivyClientConfig, PrivyProvider } from "@privy-io/react-auth";
 import React, { PropsWithChildren, useMemo, useState } from "react";
 import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
-import { arbitrum, arbitrumSepolia, Chain, mainnet, okc, storyOdyssey, storyTestnet } from "viem/chains";
+import { Chain } from "viem/chains";
 import { InitPrivy } from "../types";
-import { SolanaChains } from "@orderly.network/types";
-import { clusterApiUrl } from "@solana/web3.js";
 const solanaConnectors = toSolanaWalletConnectors();
 
 
@@ -20,11 +18,8 @@ export function InitPrivyProvider({ privyConfig, initChains, children}: IProps) 
     return (
       {
         appearance: {
-          theme: 'light',
-          accentColor: '#676FFF',
-          logo: '/next.svg',
+          ...privyConfig.appearance,
           walletChainType: 'ethereum-and-solana',
-          walletList: [],
         },
         embeddedWallets: {
           createOnLogin: 'users-without-wallets'
@@ -34,16 +29,6 @@ export function InitPrivyProvider({ privyConfig, initChains, children}: IProps) 
             connectors: solanaConnectors,
           },
         },
-        solanaClusters: [
-          {
-            name: 'mainnet-beta',
-            rpcUrl: clusterApiUrl('mainnet-beta'),
-          },
-          {
-            name: 'devnet',
-            rpcUrl: clusterApiUrl('devnet'),
-          },
-        ],
         defaultChain: chains[0],
         supportedChains: chains,
       }

@@ -28,6 +28,7 @@ export interface ConnectProps {
 
 export interface InitPrivy {
   appid: string;
+  appearance: Omit<PrivyClientConfig['appearance'], 'walletChainType' | 'walletList'>;
   config?: PrivyClientConfig;
 }
 

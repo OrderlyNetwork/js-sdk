@@ -20,8 +20,6 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import config from "../src/config";
-import { Chains } from "@orderly.network/hooks";
-import { NetworkId } from "@orderly.network/types";
 
 
 const network = WalletAdapterNetwork.Devnet;
@@ -101,6 +99,11 @@ export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
     <WalletConnectorPrivyProvider 
     privyConfig={{
       appid: 'cm50h5kjc011111gdn7i8cd2k',
+      appearance: {
+        theme: 'dark',
+        accentColor: '#181C23',
+        logo: '/orderly-logo.svg',
+      }
     }}
     wagmiConfig={{
       connectors: [
