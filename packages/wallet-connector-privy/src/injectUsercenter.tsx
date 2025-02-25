@@ -7,16 +7,16 @@ import React from "react";
 
 export const injectUsercenter = () => {
   installExtension({
-    name: "account-menu",
+    name: "account-menu-privy",
     scope: ["*"],
     positions: [ExtensionPositionEnum.AccountMenu],
     __isInternal: true,
   })((props: any) => {
     return <UserCenter {...props} />
   });
-  
+
   installExtension({
-    name: "mobile-account-menu",
+    name: "mobile-account-menu-privy",
     scope: ["*"],
     positions: [ExtensionPositionEnum.MobileAccountMenu],
     __isInternal: true,

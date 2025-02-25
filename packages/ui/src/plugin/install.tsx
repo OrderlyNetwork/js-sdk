@@ -48,6 +48,7 @@ export const installExtension = <Props,>(
   
   return (component) => {
     const registry = OrderlyExtensionRegistry.getInstance();
+    console.log("[plugin] install:", options.name);
 
     registry.register<Props>({
       name: options.name,
