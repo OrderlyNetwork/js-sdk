@@ -209,10 +209,6 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
-  console.log('--isconnectprivy', {
-    isConnectedPrivy,
-    connectorKey,
-  });
 
 
   const isConnected = useMemo(() => {

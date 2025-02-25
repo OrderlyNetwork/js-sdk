@@ -78,13 +78,11 @@ export function useWallet() {
       tempNamespace = ChainNamespace.solana;
     }
     if (isPrivy) {
-      console.log('-- setchan privy', chain, setChainPrivy);
 
       // TODO need check current namespace
       if (tempNamespace === ChainNamespace.evm) {
         isManual.current = true;
         return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
-          console.log('-- privy switch chain res', res);
           setStorageChain(parseInt(chain.chainId as string));
           return Promise.resolve(true)
 
@@ -182,12 +180,12 @@ export function useWallet() {
     if (connectorKey !== WalletType.PRIVY) {
       return;
     }
-    console.log('xxxx connector privy', {
-      connectorKey,
-      storageChain,
-      privyWalletEVM,
-      privyWalletSOL
-    });
+    // console.log('xxxx connector privy', {
+    //   connectorKey,
+    //   storageChain,
+    //   privyWalletEVM,
+    //   privyWalletSOL
+    // });
 
     if (storageChain?.namespace === ChainNamespace.evm) {
       if (privyWalletEVM) {

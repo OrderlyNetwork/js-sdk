@@ -1,4 +1,4 @@
-import { usePrivy, useSolanaWallets, useWallets } from "@privy-io/react-auth";
+import { LinkedAccountWithMetadata, usePrivy, useSolanaWallets, useWallets, WalletWithMetadata } from "@privy-io/react-auth";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChainNamespace } from "@orderly.network/types";
@@ -34,20 +34,18 @@ export function usePrivyWallet(): PrivyWalletHook {
     createWallet: createSolanaWallet,
     exportWallet: exportSolanaWallet,
   } = useSolanaWallets();
-  // const { connection } = useConnection();
-  // mainnetRpc: 'https://camilla-zmlqv1-fast-mainnet.helius-rpc.com',
-  // devnetRpc: 'https://caryl-ukn4ci-fast-devnet.helius-rpc.com',
   const connection = useMemo(() => {
 
     return new Connection('https://caryl-ukn4ci-fast-devnet.helius-rpc.com');
-    
+
   }, [])
 
   const [walletEVM, setWalletEVM] = useState<any>();
   const [walletSOL, setWalletSOL] = useState<any>();
 
-  
+
   const linkedAccount = useMemo(() => {
+
     if (user && user.linkedAccounts) {
       const account = user.linkedAccounts[0];
       return {
@@ -62,10 +60,7 @@ export function usePrivyWallet(): PrivyWalletHook {
   const switchChain = (chainId: number) => {
     const wallet = walletsEVM[0];
     if (wallet) {
-      return wallet.switchChain(chainId).then(res => {
-        console.log('switch chain res', res);
-        
-      });
+      return wallet.switchChain(chainId)
     }
     return Promise.reject("no wallet");
   };
@@ -125,6 +120,12 @@ export function usePrivyWallet(): PrivyWalletHook {
   }, [walletsEVM, authenticated]);
 
   useEffect(() => {
+    // console.log('Solana wallet effect triggered:', {
+    //   authenticated,
+    //   solanaReady,
+    //   user,
+    //   walletsSOL,
+    // });
     if (!authenticated) {
       setWalletSOL(null);
       return;
@@ -132,40 +133,55 @@ export function usePrivyWallet(): PrivyWalletHook {
     if (!solanaReady) {
       return;
     }
-    if (!walletsSOL || !walletsSOL[0]) {
-      createSolanaWallet().then();
-
+    if (!user) {
       return;
     }
-    console.log('walletsSOL', walletsSOL);
-    const wallet = walletsSOL.find((w: any) => w.connectorType === 'embedded');
-    setWalletSOL({
-      label: "privy",
-      icon: "",
-      provider: {
-        signMessage: wallet.signMessage,
-        signTransaction: wallet.signTransaction,
-        connection,
+    const embededSolanaWallet = (user?.linkedAccounts as WalletWithMetadata[]).find(
+      (item: WalletWithMetadata) => item.chainType === 'solana' && item.connectorType === 'embedded'
+    );
 
-        sendTransaction: wallet.sendTransaction,
-      },
-      accounts: [
-        {
-          address: wallet.address,
+    if (!embededSolanaWallet) {
+      createSolanaWallet().then();
+      return;
+    }
+
+    if (!walletsSOL || !walletsSOL[0]) {
+      return;
+    }
+
+    const wallet = walletsSOL.find((w: any) => w.connectorType === 'embedded');
+    if (wallet && wallet.address !== walletSOL?.address) {
+      setWalletSOL({
+        label: "privy",
+        icon: "",
+        provider: {
+          signMessage: wallet.signMessage,
+          signTransaction: wallet.signTransaction,
+          connection,
+          sendTransaction: wallet.sendTransaction,
         },
-      ],
-      chains: [
-        {
+        accounts: [
+          {
+            address: wallet.address,
+          },
+        ],
+        chains: [
+          {
+            id: 901901901,
+            namespace: ChainNamespace.solana,
+          },
+        ],
+        chain: {
           id: 901901901,
           namespace: ChainNamespace.solana,
         },
-      ],
-      chain: {
-        id: 901901901,
-        namespace: ChainNamespace.solana,
-      },
-    });
-  }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady]);
+      });
+    }
 
-  return { connect, walletEVM, walletSOL, isConnected,disconnect, switchChain, linkedAccount, exportWallet };
+
+  }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady, user, walletSOL]);
+
+
+
+  return { connect, walletEVM, walletSOL, isConnected, disconnect, switchChain, linkedAccount, exportWallet };
 }
