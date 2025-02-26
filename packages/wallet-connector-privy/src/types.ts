@@ -12,6 +12,11 @@ export type SolanaInitialProps = PropsWithChildren<{
   onError?: (error: WalletError, adapter?: Adapter) => void;
 }>;
 
+export enum Network {
+  mainnet = 'mainnet',
+  testnet = 'testnet',
+}
+
 
 export enum WalletType {
   EVM = 'EVM',
@@ -48,3 +53,10 @@ export interface InitSolana{
 }
 
 export const SolanaChains = new Map([[WalletAdapterNetwork.Devnet, 901901901], [WalletAdapterNetwork.Mainnet, 900900900]]);
+
+export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
+  [WalletAdapterNetwork.Devnet,  901901901], 
+  [Network.testnet, 901901901],
+  [Network.mainnet, 900900900],
+  [WalletAdapterNetwork.Mainnet, 900900900],
+]);

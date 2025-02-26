@@ -1,9 +1,19 @@
 import { LinkedAccountWithMetadata, usePrivy, useSolanaWallets, useWallets, WalletWithMetadata } from "@privy-io/react-auth";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace, SolanaChains } from "@orderly.network/types";
 import { int2hex } from "@orderly.network/utils/src";
 import { Connection } from "@solana/web3.js";
+import { WalletState } from "@orderly.network/hooks";
+import { useWalletConnectorPrivy } from "../provider";
+import { SolanaChainsMap } from "../types";
+
+interface WalletStatePrivy extends WalletState {
+  chain: {
+    id: number;
+    namespace: ChainNamespace;
+  }
+}
 
 
 const getPrivyEmbeddedWalletChainId = (chainId: string) => {
@@ -15,8 +25,8 @@ const getPrivyEmbeddedWalletChainId = (chainId: string) => {
 
 interface PrivyWalletHook {
   connect: () => void;
-  walletEVM: any;
-  walletSOL: any;
+  walletEVM: WalletStatePrivy | null;
+  walletSOL: WalletStatePrivy | null;
   isConnected: boolean;
   switchChain: (chainId: number) => Promise<any>;
   linkedAccount: { type: string; address: string | null } | null;
@@ -25,6 +35,7 @@ interface PrivyWalletHook {
 }
 
 export function usePrivyWallet(): PrivyWalletHook {
+  const { network } = useWalletConnectorPrivy();
   const { login, logout, ready, authenticated, user, exportWallet: exportEvmWallet } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
 
@@ -40,8 +51,8 @@ export function usePrivyWallet(): PrivyWalletHook {
 
   }, [])
 
-  const [walletEVM, setWalletEVM] = useState<any>();
-  const [walletSOL, setWalletSOL] = useState<any>();
+  const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);
+  const [walletSOL, setWalletSOL] = useState<WalletStatePrivy | null>(null);
 
 
   const linkedAccount = useMemo(() => {
@@ -89,6 +100,7 @@ export function usePrivyWallet(): PrivyWalletHook {
     return false;
   }, [ready, authenticated]);
 
+
   useEffect(() => {
     if (!authenticated || !walletsEVM || !walletsEVM[0]) {
       setWalletEVM(null);
@@ -107,14 +119,15 @@ export function usePrivyWallet(): PrivyWalletHook {
         ],
         chains: [
           {
-            id: getPrivyEmbeddedWalletChainId(wallet.chainId),
+            id: getPrivyEmbeddedWalletChainId(wallet.chainId) ?? 1,
             namespace: ChainNamespace.evm,
           },
         ],
         chain: {
-          id: getPrivyEmbeddedWalletChainId(wallet.chainId),
+          id: getPrivyEmbeddedWalletChainId(wallet.chainId) ?? 1,
           namespace: ChainNamespace.evm,
         },
+
       });
     });
   }, [walletsEVM, authenticated]);
@@ -150,7 +163,12 @@ export function usePrivyWallet(): PrivyWalletHook {
     }
 
     const wallet = walletsSOL.find((w: any) => w.connectorType === 'embedded');
-    if (wallet && wallet.address !== walletSOL?.address) {
+    if (wallet) {
+      if (walletSOL && wallet.address === walletSOL.accounts[0].address) {
+        if (walletSOL.chain.id === SolanaChainsMap.get(network)!) {
+          return;
+        }
+      }
       setWalletSOL({
         label: "privy",
         icon: "",
@@ -167,19 +185,20 @@ export function usePrivyWallet(): PrivyWalletHook {
         ],
         chains: [
           {
-            id: 901901901,
+            id: SolanaChainsMap.get(network)!,
             namespace: ChainNamespace.solana,
           },
         ],
         chain: {
-          id: 901901901,
+          id: SolanaChainsMap.get(network)!,
           namespace: ChainNamespace.solana,
         },
       });
     }
 
 
-  }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady, user, walletSOL]);
+  }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady, user, walletSOL, network]);
+
 
 
 

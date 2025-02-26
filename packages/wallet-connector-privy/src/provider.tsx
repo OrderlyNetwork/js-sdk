@@ -4,10 +4,11 @@ import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import { ChainNamespace } from "@orderly.network/types";
-import { InitPrivy, InitWagmi, InitSolana } from "./types";
+import { InitPrivy, InitWagmi, InitSolana, Network } from "./types";
 import { InitPrivyProvider } from "./providers/initPrivyProvider";
 import { InitSolanaProvider } from "./providers/initSolanaProvider";
 import { InitWagmiProvider } from "./providers/initWagmiProvider";
+
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) {
@@ -48,6 +49,8 @@ interface WalletConnectorPrivyContextType {
   setOpenConnectDrawer: (open: boolean) => void;
   targetNamespace: ChainNamespace | undefined;
   setTargetNamespace: (namespace: ChainNamespace | undefined) => void;
+  network: Network;
+  setNetwork: (network: Network) => void;
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
@@ -59,6 +62,8 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   setOpenConnectDrawer: () => { },
   targetNamespace: undefined,
   setTargetNamespace: () => { },
+  network: Network.mainnet,
+  setNetwork: () => { },
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -68,8 +73,10 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   privyConfig: InitPrivy;
   wagmiConfig: InitWagmi;
   solanaConfig: InitSolana;
+  network: Network;
 }
 export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
+  const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
@@ -120,6 +127,8 @@ export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
         setOpenConnectDrawer,
         targetNamespace,
         setTargetNamespace,
+        network,
+        setNetwork,
       }}
     >
       <TooltipProvider delayDuration={300}>

@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { WalletConnectorPrivyProvider, wagmiConnectors } from "@orderly.network/wallet-connector-privy";
+import { Network, WalletConnectorPrivyProvider, wagmiConnectors } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
 import {
@@ -97,6 +97,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
   return (
     <WalletConnectorPrivyProvider 
+    network={Network.testnet}
     privyConfig={{
       appid: 'cm50h5kjc011111gdn7i8cd2k',
       appearance: {
