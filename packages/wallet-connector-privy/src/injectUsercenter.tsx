@@ -5,12 +5,10 @@ import { ExtensionPositionEnum } from "@orderly.network/ui";
 import { MwebUserCenter } from "./components/userCenter";
 import React from "react";
 
-export const injectUsercenter = () => {
-  installExtension({
+ installExtension({
     name: "account-menu-privy",
     scope: ["*"],
     positions: [ExtensionPositionEnum.AccountMenu],
-    __isInternal: true,
   })((props: any) => {
     return <UserCenter {...props} />
   });
@@ -19,8 +17,6 @@ export const injectUsercenter = () => {
     name: "mobile-account-menu-privy",
     scope: ["*"],
     positions: [ExtensionPositionEnum.MobileAccountMenu],
-    __isInternal: true,
   })((props: any) => {
     return <MwebUserCenter {...props} />
   });
-}

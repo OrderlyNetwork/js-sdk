@@ -6,7 +6,6 @@ import { TradingPage } from "@orderly.network/trading";
 import config from "../../../config.tsx";
 import { OrderlyIcon } from "../trading/icons.tsx";
 import { useState } from "react";
-import { UserCenter, MwebUserCenter, injectUsercenter } from "@orderly.network/wallet-connector-privy";
 
 const meta = {
     title: "Package/wallet-connector-privy",
@@ -64,8 +63,3 @@ export const Default: Story = {
         );
     },
 };
-
-
-// TODO need remove this, need inject in wallet-connector-privy package
-// injectUsercenter();
-

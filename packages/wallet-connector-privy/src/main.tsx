@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo } from "react
 import { WalletConnectorContext, WalletState } from "@orderly.network/hooks";
 import { ConnectDrawer } from "./components/connectDrawer";
 import { useWalletConnectorPrivy } from "./provider";
-import { injectUsercenter } from "./injectUsercenter";
+import  "./injectUsercenter";
 import { useWallet } from "./hooks/useWallet";
 
 export function Main(props: PropsWithChildren) {
@@ -44,9 +44,6 @@ export function Main(props: PropsWithChildren) {
     [connect, setChain, connectedChain, wallet, namespace]
   );
 
-  useEffect(() => {
-    injectUsercenter();
-  }, []);
 
   return (
     <WalletConnectorContext.Provider value={value}>

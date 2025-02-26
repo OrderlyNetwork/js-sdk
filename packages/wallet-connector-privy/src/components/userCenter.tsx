@@ -14,7 +14,6 @@ export function UserCenter(props: any) {
 }
 
 export const MwebUserCenter = (props: any) => {
-  console.log('xxxx mweb user center', props);
   const { state, } = props;
 
   return (
