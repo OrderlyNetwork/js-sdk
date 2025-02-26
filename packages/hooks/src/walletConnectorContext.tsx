@@ -1,3 +1,4 @@
+import { SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
 import { ChainNamespace } from "@orderly.network/types";
 import type { EIP1193Provider } from "@web3-onboard/common";
 import { createContext, useContext } from "react";
@@ -16,7 +17,7 @@ export type WalletAccount = {
 export interface WalletState {
   label: string;
   icon: string;
-  provider: EIP1193Provider | any;
+  provider: EIP1193Provider | SolanaWalletProvider;
   accounts: WalletAccount[];
   chains: ConnectedChain[];
   instance?: unknown;

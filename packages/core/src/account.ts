@@ -242,6 +242,9 @@ export class Account {
     }
     return this.walletAdapterManager.chainId;
   }
+  get apiBaseUrl(): string | undefined {
+    return this.configStore.get("apiBaseUrl");
+  }
 
   private _bindEvents() {
     this._ee.addListener(EVENT_NAMES.statusChanged, (state: AccountState) => {
