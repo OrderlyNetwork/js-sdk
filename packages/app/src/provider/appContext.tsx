@@ -36,7 +36,7 @@ export const useAppContext = () => {
 
 export type AppStateProviderProps = {
   restrictedInfo?: IRestrictedAreasParams;
-  defaultChain: DefaultChain;
+  defaultChain?: DefaultChain;
 } & Pick<AppContextState, "onChainChanged">;
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
