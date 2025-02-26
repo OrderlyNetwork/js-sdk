@@ -6,7 +6,6 @@ export function installCrossDeposit() {
     name: "cross-deposit-form",
     scope: ["*"],
     positions: [ExtensionPositionEnum.DepositForm],
-    __isInternal: true,
   })((props: any) => {
     return <CrossDepositFormWidget onClose={props.onClose} />;
   });
