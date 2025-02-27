@@ -25,6 +25,7 @@ const git = {
   username: process.env.GIT_USERNAME,
   name: process.env.GIT_NAME,
   email: process.env.GIT_EMAIL,
+  commitMessage: process.env.GIT_COMMIT_MESSAGE,
 };
 
 const telegram = {
@@ -65,7 +66,7 @@ async function release() {
 
   await $`pnpm build`;
 
-  await authNPM();
+  npm.token && (await authNPM());
 
   await $`${npmRegistry} pnpm changeset publish`;
 
@@ -79,13 +80,15 @@ async function release() {
   // add all file to stash
   await $`git add .`;
 
-  // commit code
-  await $`git commit -m "publish"`;
+  if (git.commitMessage) {
+    // commit code
+    await $`git commit -m ${git.commitMessage}`;
 
-  const remoteUrl = await getRemoteUrl();
-  // if not provide, use local origin and git token
-  // use --no-verify to ignore push hook
-  await $`git push --no-verify ${remoteUrl}`;
+    const remoteUrl = await getRemoteUrl();
+    // if not provide, use local origin and git token
+    // use --no-verify to ignore push hook
+    await $`git push --no-verify ${remoteUrl}`;
+  }
 }
 
 async function checkGitStatus() {
@@ -143,9 +146,6 @@ async function getRepoPath() {
  * if not provide token, if will use ~/.npmrc file config
  * */
 async function authNPM() {
-  if (!npm.token) {
-    throw new Error("Please provider npm token");
-  }
   const registry = npm.registry!.replace("http://", "").replace("https://", "");
   const content = `\n//${registry}/:_authToken="${npm.token}"`;
   await $`echo ${content} >> .npmrc`;
