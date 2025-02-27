@@ -1,5 +1,27 @@
 # @orderly.network/ui-chain-selector
 
+## 2.0.5
+
+### Patch Changes
+
+- 7f737173b: update
+- Updated dependencies [7f737173b]
+  - @orderly.network/hooks@2.0.5
+  - @orderly.network/types@2.0.5
+  - @orderly.network/react-app@2.0.5
+  - @orderly.network/ui@2.0.5
+
+## 2.0.5-alpha.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/hooks@2.0.5-alpha.0
+  - @orderly.network/types@2.0.5-alpha.0
+  - @orderly.network/react-app@2.0.5-alpha.0
+  - @orderly.network/ui@2.0.5-alpha.0
+
 ## 2.0.3
 
 ### Patch Changes
