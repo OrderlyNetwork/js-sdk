@@ -1,5 +1,14 @@
 # @orderly.network/chart
 
+## 2.0.5-alpha.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/utils@2.0.5-alpha.0
+  - @orderly.network/ui@2.0.5-alpha.0
+
 ## 2.0.3
 
 ### Patch Changes
