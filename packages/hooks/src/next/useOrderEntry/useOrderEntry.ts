@@ -13,7 +13,7 @@ import {
   OrderlyOrder,
   OrderType,
   OrderLevel,
-  EnumTrackerKeys
+  EnumTrackerKeys,
 } from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
@@ -25,7 +25,7 @@ import {
   getCreateOrderUrl,
   getOrderCreator,
   tpslFields,
-  hasTPSL
+  hasTPSL,
 } from "./helper";
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
@@ -418,7 +418,13 @@ const useOrderEntry = (
     const markPrice = actions.getMarkPriceBySymbol(symbol);
     if (!markPrice || !accountInfo) return null;
 
-    return calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
+    const orderQuantity = Number(formattedOrder.order_quantity);
+
+    if (orderQuantity === 0 || orderQuantity > maxQty) {
+      return null;
+    }
+
+    const estLiqPrice = calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
       baseIMR: symbolInfo?.base_imr,
       baseMMR: symbolInfo?.base_mmr,
       markPrice,
@@ -428,15 +434,22 @@ const useOrderEntry = (
       symbol,
       positions,
     });
-  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol]);
+
+    return estLiqPrice;
+  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol, maxQty]);
 
   const estLeverage = useMemo(() => {
+    const orderQuantity = Number(formattedOrder.order_quantity);
+    if (orderQuantity === 0 || orderQuantity > maxQty) {
+      return null;
+    }
+
     return calcEstLeverage(formattedOrder, askAndBid.current[0], {
       totalCollateral,
       positions,
       symbol,
     });
-  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol]);
+  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol, maxQty]);
 
   const resetErrors = () => {
     setMeta(

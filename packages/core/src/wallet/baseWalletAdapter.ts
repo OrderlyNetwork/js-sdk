@@ -10,9 +10,11 @@ import { API, SDKError, ChainNamespace } from "@orderly.network/types";
 import * as ed from "@noble/ed25519";
 import { encode as bs58encode, decode as bs58Decode } from "bs58";
 import { IContract } from "../contract";
-import { SignatureDomain } from "../utils";
+import { getTimestamp, SignatureDomain } from "../utils";
 import { ethers } from "ethers";
 import type { BigNumberish } from "ethers/src.ts/utils";
+import { SimpleDI } from "../di/simpleDI";
+import { Account } from "../account";
 
 abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
   // private readonly contractManager: ContractManager;
@@ -36,6 +38,16 @@ abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
   abstract getBalance(): Promise<bigint>;
 
   abstract chainNamespace: ChainNamespace;
+
+  async signMessageByOrderlyKey(payload: any ) {
+    // signature
+    let account = SimpleDI.get<Account>("account");
+    const signer = account.signer;
+    const signature = await signer.sign(payload, getTimestamp());
+    signature["orderly-account-id"] = account.accountId;
+    return signature;
+
+  }
 
   abstract call(
     address: string,

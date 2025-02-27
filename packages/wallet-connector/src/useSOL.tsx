@@ -10,13 +10,14 @@ import {
   WalletReadyState,
 } from "@solana/wallet-adapter-base";
 import { SolanaChainIdEnum, SolanaChains } from "./config";
+import { useSolanaContext } from "./SolanaProvider";
 
 
 
-export function useSOL({ network }: { network: WalletAdapterNetwork }) {
+export function useSOL() {
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const { isMobile } = useScreen();
-  const { connection } = useConnection();
+  const { endpoint, network} = useSolanaContext();
   const { setVisible: setModalVisible, visible } = useWalletModal();
   const {
     signMessage,
@@ -126,8 +127,9 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
           label: wallet.adapter.name,
           icon: "",
           provider: {
+            rpcUrl: endpoint,
+            network: network,
             signMessage: signMessage,
-            connection,
             signTransaction,
             sendTransaction,
           },
@@ -227,7 +229,6 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
       }
       return;
     }
-    console.log("-- tt");
     const userAddress = publicKey.toBase58();
     setWallet({
       label: solanaWallet.adapter.name,
@@ -236,8 +237,9 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
         signMessage: signMessage,
         signTransaction,
         sendTransaction,
-        connection,
-      },
+        rpcUrl: endpoint,
+        network: network,     
+       },
       accounts: [
         {
           address: userAddress,
@@ -264,29 +266,11 @@ export function useSOL({ network }: { network: WalletAdapterNetwork }) {
     signMessage,
     signTransaction,
     isManual,
-    connection,
     sendTransaction,
+    endpoint,
     network,
   ]);
 
-  useEffect(() => {
-    if (!publicKey) {
-      return;
-    }
-    const id = connection.onAccountChange(
-      publicKey,
-      (updatedAccountInfo, context) => {
-        console.log("--- account change", updatedAccountInfo, context);
-      },
-      { commitment: "confirmed" }
-    );
-
-    return () => {
-      if (id) {
-        connection.removeAccountChangeListener(id).then();
-      }
-    };
-  }, [connection, publicKey]);
 
   useEffect(() => {
     if (!solanaWallet) {

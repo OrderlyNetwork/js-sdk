@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, ChainIcon, Flex, modal, Text, toast } from "@orderly.network/ui";
+import { Box, ChainIcon, modal, toast } from "@orderly.network/ui";
 import { ChainState } from "./chain.script";
 import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
 
@@ -13,12 +13,12 @@ export const Chain: FC<ChainState> = (props) => {
           }>(ChainSelectorSheetId, {
             // networkId: props.networkId,
             bridgeLessOnly: false,
-            isWrongNetwork: props.isWrongNetwork,
+            isWrongNetwork: props.wrongNetwork,
           })
           .then(
             (r: any) => {
               if (r?.chainId) {
-                props.setChainId(r?.chainId);
+                props.setCurrentChainId(r?.chainId);
               }
               toast.success("Network switched");
             },
@@ -27,14 +27,7 @@ export const Chain: FC<ChainState> = (props) => {
       }}
     >
       <Box className="oui-relative oui-rounded-t-[6px] oui-rounded-bl-[6px] oui-rounded-br-[3px] oui-bg-base-5 oui-px-2 oui-h-7 oui-flex oui-items-center">
-        {/* {props.isTestnetChain ? (
-          <Text size="2xs" intensity={80}>
-            Testnet
-          </Text>
-        ) : (
-          <ChainIcon chainId={props.chainId ?? '1'} size="2xs" />
-        )} */}
-        <ChainIcon chainId={props.chainId ?? props.defaultChainId} size="2xs" />
+        <ChainIcon chainId={props.currentChainId!} size="2xs" />
         <div className="oui-absolute oui-right-0 oui-bottom-0">
           <svg
             width="9"
