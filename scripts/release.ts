@@ -66,7 +66,7 @@ async function release() {
 
   await $`pnpm build`;
 
-  await authNPM();
+  npm.token && (await authNPM());
 
   await $`${npmRegistry} pnpm changeset publish`;
 
@@ -146,9 +146,6 @@ async function getRepoPath() {
  * if not provide token, if will use ~/.npmrc file config
  * */
 async function authNPM() {
-  if (!npm.token) {
-    throw new Error("Please provider npm token");
-  }
   const registry = npm.registry!.replace("http://", "").replace("https://", "");
   const content = `\n//${registry}/:_authToken="${npm.token}"`;
   await $`echo ${content} >> .npmrc`;
