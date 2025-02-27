@@ -1,5 +1,20 @@
 # @orderly.network/ui-positions
 
+## 2.0.6-internal-20250306.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.6-internal-20250306.0
+  - @orderly.network/hooks@2.0.6-internal-20250306.0
+  - @orderly.network/types@2.0.6-internal-20250306.0
+  - @orderly.network/ui@2.0.6-internal-20250306.0
+  - @orderly.network/ui-connector@2.0.6-internal-20250306.0
+  - @orderly.network/ui-share@2.0.6-internal-20250306.0
+  - @orderly.network/ui-tpsl@2.0.6-internal-20250306.0
+  - @orderly.network/utils@2.0.6-internal-20250306.0
+
 ## 2.0.5
 
 ### Patch Changes
