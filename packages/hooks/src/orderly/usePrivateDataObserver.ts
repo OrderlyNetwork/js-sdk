@@ -248,7 +248,7 @@ export const usePrivateDataObserver = (options: {
                     const item = itemArr[0];
 
                     // ignore the ws update with averageOpenPrice === 0
-                    if (item.averageOpenPrice === 0) {
+                    if (item.averageOpenPrice === 0 && item.positionQty !== 0) {
                       return row;
                     }
                     // console.log("---->>>>>>!!!! item", item);
