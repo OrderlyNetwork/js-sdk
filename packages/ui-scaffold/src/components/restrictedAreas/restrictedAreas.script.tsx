@@ -9,11 +9,15 @@ export type UseRestrictedAreasScriptReturn = ReturnType<
 };
 
 export const useRestrictedAreasScript = () => {
-  const { restrictedInfo } = useAppContext();
+  const { restrictedInfo, setDisabledConnect } = useAppContext();
   const restrictedAreas = useRestrictedAreas(restrictedInfo);
   const brokerName = useConfig("brokerName");
   const container = useRef<HTMLDivElement>(null);
   const [mutiLine, setMutiLine] = useState(false);
+
+  useEffect(() => {
+    setDisabledConnect(restrictedAreas.restrictedAreasOpen);
+  }, [restrictedAreas.restrictedAreasOpen]);
 
   useEffect(() => {
     const element = container.current;

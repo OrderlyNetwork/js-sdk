@@ -28,7 +28,7 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
   const { state } = useAccount();
   const { routerAdapter } = useScaffoldContext();
   const { connectedChain } = useWalletConnector();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const [current, setCurrent] = useState(() => {
     if (typeof props.initialMenu === "undefined") return [];
 
@@ -207,6 +207,7 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
     wrongNetwork,
     ...converted,
     status: state.status,
+    disabledConnect,
   };
 };
 

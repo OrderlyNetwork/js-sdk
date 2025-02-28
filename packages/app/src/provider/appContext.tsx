@@ -1,4 +1,10 @@
-import { FC, createContext, PropsWithChildren, useContext } from "react";
+import {
+  FC,
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useAppState } from "../hooks/useAppState";
 import { useWalletEvent } from "../hooks/useWalletEvent";
@@ -14,6 +20,8 @@ type AppContextState = {
    * Whether the current network is not supported
    */
   wrongNetwork: boolean;
+  disabledConnect: boolean;
+  setDisabledConnect: (disabledConnect: boolean) => void;
   currentChainId: number | undefined;
   setCurrentChainId: (chainId: number | undefined) => void;
   onChainChanged?: (
@@ -37,6 +45,7 @@ export type AppStateProviderProps = {
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
+  const [disabledConnect, setDisabledConnect] = useState(false);
   const [currentChainId, setCurrentChainId] = useCurrentChainId(
     props.defaultChain
   );
@@ -62,6 +71,8 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
         setCurrentChainId,
         onChainChanged: props.onChainChanged,
         restrictedInfo: props.restrictedInfo,
+        disabledConnect,
+        setDisabledConnect,
       }}
     >
       {props.children}

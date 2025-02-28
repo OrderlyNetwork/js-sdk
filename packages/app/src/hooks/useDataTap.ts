@@ -10,14 +10,14 @@ export const useDataTap = <T = any>(
     accountStatus?: AccountStatusEnum;
   }
 ): T | null => {
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
   /**
    * ignore
    */
   if (options?.skip) return data;
 
-  if (wrongNetwork) {
+  if (wrongNetwork || disabledConnect) {
     return typeof options?.fallbackData !== "undefined"
       ? options.fallbackData
       : null;

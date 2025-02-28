@@ -28,12 +28,16 @@ export const useApiManagerScript = (props?: {
   const [generateKey, setGenerateKey] = useState<GenerateKeyInfo | undefined>();
   const { configStore } = useContext(OrderlyContext);
   const brokerId = configStore.get("brokerId");
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const { state, account } = useAccount();
+
   const canCreateApiKey =
-    state.status === AccountStatusEnum.EnableTrading ||
-    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
+    (state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
+    !wrongNetwork &&
+    !disabledConnect;
+
   const { data } = useQuery<
     | undefined
     | {

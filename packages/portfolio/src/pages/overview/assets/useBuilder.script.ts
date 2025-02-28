@@ -17,17 +17,19 @@ export const useAssetScript = () => {
   const { connect } = useWalletConnector();
   const { state } = useAccount();
   const { totalValue, freeCollateral } = useCollateral();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const [data] = usePositionStream();
   const [currentLeverage] = useLeverage();
   const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
 
-  const connected = useMemo(() => {
+  const canTrade = useMemo(() => {
     return (
-      state.status === AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+      (state.status === AccountStatusEnum.EnableTrading ||
+        state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
+      !wrongNetwork &&
+      !disabledConnect
     );
-  }, [state]);
+  }, [state.status, wrongNetwork, disabledConnect]);
 
   const onLeverageEdit = () => {
     modal.show(LeverageWidgetId);
@@ -42,7 +44,7 @@ export const useAssetScript = () => {
   };
 
   return {
-    connected,
+    canTrade,
     connect,
     portfolioValue: totalValue,
     freeCollateral,

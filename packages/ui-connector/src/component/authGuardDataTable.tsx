@@ -32,6 +32,7 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
     ...rest
   } = props;
   const { state } = useAccount();
+  const { wrongNetwork } = useAppContext();
 
   const _status = useMemo(() => {
     if (status === undefined) {
@@ -45,7 +46,6 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
   const data = useDataTap(dataSource, {
     accountStatus: _status,
   });
-  const { wrongNetwork } = useAppContext();
 
   return (
     <DataTable
