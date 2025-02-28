@@ -30,11 +30,7 @@ export const useAccount = () => {
 
 
   const statusChangeHandler = (nextState: AccountState) => {
-    if (AccountStatusEnum.Connected === nextState.status) {
-      ee.emit(EnumTrackerKeys.WALLET_CONNECT, {
-        ...nextState
-      })
-    }
+  
     setState(() => nextState);
   };
 

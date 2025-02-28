@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSolanaWallet } from "../hooks/useSolanaWallet";
+import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { ChevronDownIcon, ChevronUpIcon, cn, Tooltip, } from "@orderly.network/ui";
 import { useWallet } from "../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../provider";

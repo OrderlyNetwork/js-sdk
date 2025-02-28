@@ -1,4 +1,4 @@
-import { FC, createContext, PropsWithChildren, useContext } from "react";
+import { FC, createContext, PropsWithChildren, useContext, useEffect } from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useAppState } from "../hooks/useAppState";
 import { useWalletEvent } from "../hooks/useWalletEvent";
@@ -8,9 +8,12 @@ import {
   useRestrictedAreas,
   RestrictedAreasReturns,
   IRestrictedAreasParams,
+  useTrack,
+  useEventEmitter,
 } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
+import { TrackerListenerKeyMap } from "@orderly.network/types";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];

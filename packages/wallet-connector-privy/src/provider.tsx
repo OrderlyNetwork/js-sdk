@@ -8,6 +8,10 @@ import { InitPrivy, InitWagmi, InitSolana, Network } from "./types";
 import { InitPrivyProvider } from "./providers/initPrivyProvider";
 import { InitSolanaProvider } from "./providers/initSolanaProvider";
 import { InitWagmiProvider } from "./providers/initWagmiProvider";
+import { PrivyWalletProvider } from "./providers/privyWalletProvider";
+import { WagmiWalletProvider } from "./providers/wagmiWalletProvider";
+import { SolanaWalletProvider } from "./providers/solanaWalletProvider";
+
 
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
@@ -136,7 +140,13 @@ export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
         <InitPrivyProvider privyConfig={props.privyConfig} initChains={initChains}>
           <InitWagmiProvider wagmiConfig={props.wagmiConfig} initChains={initChains}>
             <InitSolanaProvider solanaConfig={props.solanaConfig}>
-              <Main>{props.children}</Main>
+              <PrivyWalletProvider>
+                <WagmiWalletProvider>
+                  <SolanaWalletProvider>
+                    <Main>{props.children}</Main>
+                  </SolanaWalletProvider>
+                </WagmiWalletProvider>
+              </PrivyWalletProvider>
             </InitSolanaProvider>
           </InitWagmiProvider>
         </InitPrivyProvider>

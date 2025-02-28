@@ -1,14 +1,14 @@
 import { SimpleDialog, useScreen, } from "@orderly.network/ui";
 import React, { useMemo } from "react";
 import { useWallet } from "../hooks/useWallet";
-import { usePrivyWallet } from "../hooks/usePrivyWallet";
+import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
 import { ConnectProps, WalletType } from "../types";
 import { RenderPrivyTypeIcon } from "./common";
 import { useWalletConnectorPrivy } from "../provider";
-import { useWagmiWallet } from "../hooks/useWagmiWallet";
-import { useSolanaWallet } from "../hooks/useSolanaWallet";
+import { useWagmiWallet } from "../providers/wagmiWalletProvider";
+import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
 import { CloseIcon } from "./icons";

@@ -1,6 +1,6 @@
 import React from "react";
-import { useWagmiWallet } from "../hooks/useWagmiWallet";
-import { useSolanaWallet } from "../hooks/useSolanaWallet";
+import { useWagmiWallet } from "../providers/wagmiWalletProvider";
+import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { WalletCard } from "./walletCard";
 import { useWallet } from "../hooks/useWallet";
 import { ChainNamespace } from "@orderly.network/types";

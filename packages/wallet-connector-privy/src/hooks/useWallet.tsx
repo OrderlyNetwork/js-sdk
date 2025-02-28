@@ -1,13 +1,14 @@
-import { useWagmiWallet } from "./useWagmiWallet";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useSolanaWallet } from "./useSolanaWallet";
-import { usePrivyWallet } from "./usePrivyWallet";
-import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
-import { useLocalStorage, useStorageChain, WalletState } from "@orderly.network/hooks";
+import { useWagmiWallet } from "../providers/wagmiWalletProvider";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSolanaWallet } from "../providers/solanaWalletProvider";
+import { usePrivyWallet } from "../providers/privyWalletProvider";
+import { ChainNamespace, ConnectorKey, EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
+import { useLocalStorage, useStorageChain, useTrack, WalletState } from "@orderly.network/hooks";
 import { ConnectProps, SolanaChains, WalletType } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
 
 export function useWallet() {
+  const { track } = useTrack();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
   const {
     disconnect: disconnectEVM,
@@ -81,11 +82,24 @@ export function useWallet() {
 
       // TODO need check current namespace
       if (tempNamespace === ChainNamespace.evm) {
+  
         isManual.current = true;
         return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
+      
+          track(EnumTrackerKeys.SWITCH_NETWORK_SUCCESS, {
+            from_chain: storageChain?.chainId,
+            to_chain: chain.chainId,
+          });
           setStorageChain(parseInt(chain.chainId as string));
+         
+        
           return Promise.resolve(true)
 
+        }).catch(e => {
+          console.log('xxxx switch network failed', {
+            error: e,
+          });
+          return Promise.reject(e);
         })
       }
 
@@ -102,6 +116,10 @@ export function useWallet() {
         if (tempNamespace === ChainNamespace.evm) {
           await setChainEvm(parseInt(chain.chainId as string));
           setStorageChain(parseInt(chain.chainId as string));
+          track(EnumTrackerKeys.SWITCH_NETWORK_SUCCESS, {
+            from_chain: storageChain?.chain.id,
+            to_chain: chain.chainId,
+          });
           return Promise.resolve(true);
         }
         if (tempNamespace === ChainNamespace.solana) {
@@ -130,29 +148,39 @@ export function useWallet() {
 
   const switchWallet = (namespace: ChainNamespace) => {
     // TODO need get chain from wallet
+    const fromWallet = wallet?.accounts[0].address;
+    let toWallet: string | undefined;
     if (isPrivy) {
 
       if (namespace === ChainNamespace.evm) {
         if (privyWalletEVM) {
           setStorageChain(privyWalletEVM.chain.id);
+          toWallet = privyWalletEVM.accounts[0].address;
         }
 
       } else {
         if (privyWalletSOL) {
           setStorageChain(privyWalletSOL.chain.id);
+          toWallet = privyWalletSOL.accounts[0].address;
         }
       }
     } else {
       if (namespace === ChainNamespace.evm) {
         if (walletEVM) {
           setStorageChain(walletEVM.chain.id);
+          toWallet = walletEVM.accounts[0].address;
         }
       } else {
         if (walletSOL) {
           setStorageChain(walletSOL.chain.id);
+          toWallet = walletSOL.accounts[0].address;
         }
       }
     }
+    track(EnumTrackerKeys.CLICK_SWITCH_WALLET, {
+      fromWallet,
+      toWallet,
+    });
   }
 
   const disconnect = async (walletType: WalletType) => {

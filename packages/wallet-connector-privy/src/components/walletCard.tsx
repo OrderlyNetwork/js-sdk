@@ -16,7 +16,7 @@ import {
 } from "@orderly.network/ui";
 import { DisconnectIcon, MoreIcon } from "./icons";
 import { useWalletConnectorPrivy } from "../provider";
-import { usePrivyWallet } from "../hooks/usePrivyWallet";
+import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { useWallet } from "../hooks/useWallet";
 import { WalletType } from "../types";
 interface WalletCardProps {
@@ -143,14 +143,13 @@ function PrivyWalletHandleOption({ address, type }: { address: string, type: Wal
         <DropdownMenuContent
           size={"xl"}
           align={"end"}
-          onCloseAutoFocus={(e) => e.preventDefault()}
           side='top'
           style={{ width: "100px" }}
           className={"oui-p-1 oui-rounded oui-font-semibold oui-z-[65]"}
           sideOffset={0}
         >
-          <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer">
-            <div onClick={() => exportWallet(type)}>export</div>
+          <DropdownMenuItem className="oui-py-1 oui-px-2 oui-text-2xs oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"  onClick={() => {console.log('export wallet');exportWallet(type); }}>
+            <div>Export</div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenuPortal>

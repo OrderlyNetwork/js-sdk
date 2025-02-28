@@ -1,12 +1,12 @@
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { LinkedAccountWithMetadata, usePrivy, useSolanaWallets, useWallets, WalletWithMetadata } from "@privy-io/react-auth";
-import { useConnection } from "@solana/wallet-adapter-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ChainNamespace, SolanaChains } from "@orderly.network/types";
-import { int2hex } from "@orderly.network/utils/src";
 import { Connection } from "@solana/web3.js";
-import { WalletState } from "@orderly.network/hooks";
-import { useWalletConnectorPrivy } from "../provider";
+import { ChainNamespace, EnumTrackerKeys } from "@orderly.network/types";
+import { useTrack, WalletState } from "@orderly.network/hooks";
 import { SolanaChainsMap } from "../types";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { useWalletConnectorPrivy } from "../provider";
+
 
 interface WalletStatePrivy extends WalletState {
   chain: {
@@ -16,14 +16,7 @@ interface WalletStatePrivy extends WalletState {
 }
 
 
-const getPrivyEmbeddedWalletChainId = (chainId: string) => {
-  if (!chainId) {
-    return null;
-  }
-  return parseInt(chainId.split("eip155:")[1]);
-};
-
-interface PrivyWalletHook {
+interface PrivyWalletContextValue {
   connect: () => void;
   walletEVM: WalletStatePrivy | null;
   walletSOL: WalletStatePrivy | null;
@@ -34,10 +27,22 @@ interface PrivyWalletHook {
   disconnect: () => Promise<void>;
 }
 
-export function usePrivyWallet(): PrivyWalletHook {
+const getPrivyEmbeddedWalletChainId = (chainId: string) => {
+  if (!chainId) {
+    return null;
+  }
+  return parseInt(chainId.split("eip155:")[1]);
+};
+
+
+const PrivyWalletContext = createContext<PrivyWalletContextValue | null>(null);
+
+export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { network } = useWalletConnectorPrivy();
   const { login, logout, ready, authenticated, user, exportWallet: exportEvmWallet } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
+  const connectedRef = useRef(false);
+
 
   const {
     ready: solanaReady,
@@ -54,6 +59,7 @@ export function usePrivyWallet(): PrivyWalletHook {
   const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);
   const [walletSOL, setWalletSOL] = useState<WalletStatePrivy | null>(null);
 
+  const { track} = useTrack();
 
   const linkedAccount = useMemo(() => {
 
@@ -85,9 +91,18 @@ export function usePrivyWallet(): PrivyWalletHook {
   }
 
   const exportWallet = (namespace: ChainNamespace) => {
+    console.log('xxxx export wallet', {
+      namespace,
+    });
     if (namespace === ChainNamespace.evm) {
+      track(EnumTrackerKeys.CLICK_EXPORT_PRIVATE_KEY, {
+        type: "evm",
+      });
       return exportEvmWallet();
     } else if (namespace === ChainNamespace.solana) {
+      track(EnumTrackerKeys.CLICK_EXPORT_PRIVATE_KEY, {
+        type: "solana",
+      });
       return exportSolanaWallet();
     }
     return Promise.reject("no namespace");
@@ -169,14 +184,15 @@ export function usePrivyWallet(): PrivyWalletHook {
           return;
         }
       }
+    
       setWalletSOL({
         label: "privy",
         icon: "",
         provider: {
           signMessage: wallet.signMessage,
           signTransaction: wallet.signTransaction,
-          connection,
           sendTransaction: wallet.sendTransaction,
+          network: network === "mainnet" ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
         },
         accounts: [
           {
@@ -200,7 +216,42 @@ export function usePrivyWallet(): PrivyWalletHook {
   }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady, user, walletSOL, network]);
 
 
+  useEffect(() => {
+    if (isConnected && linkedAccount) {
+      if (connectedRef.current) {
+        return;
+      }
+      connectedRef.current = true;
+      track(EnumTrackerKeys.SOCIAL_LOGIN_SUCCESS, {
+        type: linkedAccount.type,
+        address: linkedAccount.address,
+      });
+    }
+  }, [isConnected, linkedAccount, connectedRef]);
 
+  
+  const value = useMemo(() => ({
+    connect,
+    walletEVM,
+    walletSOL,
+    isConnected,
+    disconnect,
+    switchChain,
+    linkedAccount,
+    exportWallet
+  }), [connect, walletEVM, walletSOL, isConnected, disconnect, switchChain, linkedAccount, exportWallet]);
 
-  return { connect, walletEVM, walletSOL, isConnected, disconnect, switchChain, linkedAccount, exportWallet };
+  return (
+    <PrivyWalletContext.Provider value={value}>
+      {children}
+    </PrivyWalletContext.Provider>
+  );
+};
+
+export function usePrivyWallet() {
+  const context = useContext(PrivyWalletContext);
+  if (!context) {
+    throw new Error("usePrivyWallet must be used within a PrivyWalletProvider");
+  }
+  return context;
 }
