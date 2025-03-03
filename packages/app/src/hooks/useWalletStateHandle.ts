@@ -169,11 +169,6 @@ export const useWalletStateHandle = (options: {
       track(EnumTrackerKeys.WALLET_CONNECT, {
         wallet: connectedWallet?.label ?? "",
         network: currentChain!.namespace.toUpperCase() as ChainNamespace,
-      }, {
-        identifyParams: {
-          address: currentWalletAddress!,
-          brokerId: brokerId,
-        }
       });
 
       // save wallet connector info to local storage
