@@ -38,7 +38,6 @@ export type {
   ExclusiveConfigProviderProps,
 } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
-export { OrderlyTrackerProvider } from "./trackerProvider";
 export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {
