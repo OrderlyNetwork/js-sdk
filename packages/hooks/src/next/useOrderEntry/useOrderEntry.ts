@@ -30,6 +30,7 @@ import {
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
+import { useTrack } from "../../useTrack";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -152,6 +153,7 @@ const useOrderEntry = (
   }
 
   const ee = useEventEmitter();
+  const {track} = useTrack();
 
   const [meta, setMeta] = useState<{
     dirty: { [K in keyof OrderlyOrder]?: boolean };
@@ -498,7 +500,7 @@ const useOrderEntry = (
     const result = await doCreateOrder(order);
 
     if (result.success) {
-      ee.emit(EnumTrackerKeys.PLACEORDER_SUCCESS, {
+      track(EnumTrackerKeys.PLACEORDER_SUCCESS, {
         side: order.side,
         order_type: order.order_type,
         tp_sl: hasTPSL(formattedOrder),

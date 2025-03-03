@@ -1,7 +1,13 @@
 import * as amplitude from "@amplitude/analytics-browser";
-import { ENVType } from "../trading-rewards/useGetEnv";
-import { TrackerListenerKeyMap } from "@orderly.network/types";
-
+import { EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
+import EventEmitter from "eventemitter3";
+import { SimpleDI } from "./di/simpleDI";
+export enum ENVType {
+  prod = 'prod',
+  staging = 'staging',
+  qa = 'qa',
+  dev = 'dev',
+}
 const apiKeyMap = {
   dev: "4d6b7db0fdd6e9de2b6a270414fd51e0",
   qa: "96476b00bc2701360f9b480629ae5263",
@@ -9,23 +15,17 @@ const apiKeyMap = {
   prod: "3ab9ae56ed16cc57bc2ac97ffc1098c2",
 };
 
-export interface IAmplitude {
-  init(env: ENVType): void;
-  setUserId(userId: string): void;
-  identify(identify: any): void;
-  track(eventName: string, properties?: any): void;
-}
 
-class AmplitudeTracker implements IAmplitude {
-  private initialized = false;
+
+export class AmplitudeTracker {
+  static instanceName = "amplitudeTracker";
   private _userId: string | undefined;
   private _sdkInfoTag: string | undefined;
-
-  init(env: ENVType) {
-    if (this.initialized) return;
-    
+  private _ee = SimpleDI.get<EventEmitter>("EE");
+  constructor(env: ENVType, sdkInfo: any) {
     amplitude.init(apiKeyMap[env], { serverZone: "EU" });
-    this.initialized = true;
+    this.setSdkInfo(sdkInfo);
+    this._bindEvents();
   }
 
   setUserId(userId: string) {
@@ -53,7 +53,17 @@ class AmplitudeTracker implements IAmplitude {
   track(eventName: keyof typeof TrackerListenerKeyMap, properties?: any) {
     amplitude.track(eventName, properties);
   }
-}
 
-// 创建单例
-export const amplitudeTracker = new AmplitudeTracker(); 
+  private _bindEvents() {
+    const listenKeys = Object.keys(TrackerListenerKeyMap);
+    listenKeys.forEach((key) => {
+      this._ee.addListener(key, (params = {}) => {
+        if (key === EnumTrackerKeys.TRACK_IDENTIFY_USER_ID) {
+          this.setUserId(params);
+        } else {
+          this.track(key as keyof typeof TrackerListenerKeyMap, params);
+        }
+      });
+    });
+  }
+}

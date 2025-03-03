@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useAccount, useChains, useEventEmitter } from "@orderly.network/hooks";
+import { useAccount, useChains, useEventEmitter, useTrack } from "@orderly.network/hooks";
 import { EnumTrackerKeys } from "@orderly.network/types";
 
 export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
@@ -14,6 +14,7 @@ export function useLinkDeviceScript() {
   const [secretKey, setSecretKey] = useState("");
   const [url, setUrl] = useState("");
   const ee = useEventEmitter();
+  const {track} = useTrack();
 
   const { state, account } = useAccount();
 
@@ -37,7 +38,7 @@ export function useLinkDeviceScript() {
       setSecretKey(res.secretKey);
       setLoading(false);
 
-      ee.emit(
+      track(
         EnumTrackerKeys.SIGN_LINK_DEVICE_MESSAGE_SUCCESS,
         createTrackParams()
       );
@@ -63,7 +64,7 @@ export function useLinkDeviceScript() {
   const showDialog = useCallback(() => {
     setOpen(true);
     getOrderlyKey();
-    ee.emit(EnumTrackerKeys.CLICK_LINK_DEVICE_BUTTON, createTrackParams());
+    track(EnumTrackerKeys.CLICK_LINK_DEVICE_BUTTON, createTrackParams());
   }, [account]);
 
   const hideDialog = useCallback(() => {
@@ -72,7 +73,7 @@ export function useLinkDeviceScript() {
 
   const onConfirm = useCallback(() => {
     setConfirm(true);
-    ee.emit(EnumTrackerKeys.LINK_DEVICE_MODAL_CLICK_CONFIRM, {});
+    track(EnumTrackerKeys.LINK_DEVICE_MODAL_CLICK_CONFIRM, {});
   }, []);
 
   const copyUrl = useCallback(() => {

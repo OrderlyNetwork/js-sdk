@@ -14,6 +14,7 @@ export enum EnumTrackerKeys {
   "CLICK_SWITCH_NETWORK" = "click_switch_network",
   "SWITCH_NETWORK_SUCCESS" = "switch_network_success",
   "CLICK_EXPORT_PRIVATE_KEY" = "click_export_private_key",
+  "TRACK_IDENTIFY_USER_ID" = "track_identify_user_id",
 }
 
 export const TrackerListenerKeyMap: { [key in EnumTrackerKeys]: string } = {
@@ -34,4 +35,5 @@ export const TrackerListenerKeyMap: { [key in EnumTrackerKeys]: string } = {
   [EnumTrackerKeys.SWITCH_NETWORK_SUCCESS]: "switch_network_success",
   [EnumTrackerKeys.CLICK_EXPORT_PRIVATE_KEY]: "click_export_private_key",
   [EnumTrackerKeys.CLICK_SWITCH_WALLET]: "click_switch_wallet",
+  [EnumTrackerKeys.TRACK_IDENTIFY_USER_ID]: "track_identify_user_id",
 };

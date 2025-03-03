@@ -77,7 +77,7 @@ export const useWalletStateHandle = (options: {
 
   useEffect(() => {
     if (accountState.status >= AccountStatusEnum.EnableTrading && account.accountId) {
-      setTrackUserId(account.accountId!);
+      setTrackUserId( account.accountId!);
     }
   }, [account, accountState]);
 

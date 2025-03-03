@@ -55,7 +55,6 @@
   },
   "dependencies": {
     "@akamfoad/qr": "^0.4.0",
-    "@amplitude/analytics-browser": "^2.11.10",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/default-evm-adapter": "workspace:*",
     "@orderly.network/default-solana-adapter": "workspace:*",

@@ -21,6 +21,7 @@ export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
 export { useNetworkInfo } from "./useNetworkInfo";
 export { useTrack } from "./useTrack";
+export { useTrackingInstance } from "./useTrackInstance";
 export { parseJSON } from "./utils/json";
 
 export { default as useConstant } from "use-constant";

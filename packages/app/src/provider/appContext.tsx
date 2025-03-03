@@ -10,6 +10,7 @@ import {
   IRestrictedAreasParams,
   useTrack,
   useEventEmitter,
+  useTrackingInstance,
 } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
@@ -49,6 +50,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
     props.defaultChain
   );
   useLinkDevice();
+  useTrackingInstance();
 
   const { connectWallet, wrongNetwork } = useWalletStateHandle({
     // onChainChanged: props.onChainChanged,
