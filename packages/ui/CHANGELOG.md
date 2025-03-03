@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.0.6-internal-20250306.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.0.6-internal-20250306.2
+
 ## 2.0.6-internal-20250306.1
 
 ### Patch Changes
