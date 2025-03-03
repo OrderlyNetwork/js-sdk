@@ -1,15 +1,7 @@
-import { useEffect, useState } from "react";
-import { useConfig } from "./";
+import { ReactNode, useEffect, useState } from "react";
+import { useConfig } from "./useConfig";
 
-export type RestrictedAreasReturns = {
-  ip?: string;
-  invalidRegions?: string[];
-  restrictedAreasOpen?: boolean;
-  contact?: {
-    url?: string;
-    text?: string;
-  };
-};
+export type RestrictedAreasReturns = ReturnType<typeof useRestrictedAreas>;
 
 interface ApiResponse<T> {
   success: boolean;
@@ -28,22 +20,22 @@ interface IpInfoData {
   checked: boolean;
 }
 
-export interface IRestrictedAreasParams {
+export interface RestrictedInfo {
   enableDefault?: boolean;
   customRestrictedIps?: string[];
   customRestrictedRegions?: string[];
-  contact?: { url?: string; text?: string };
+  content?:
+    | ReactNode
+    | ((data: { ip: string; brokerName: string }) => ReactNode);
 }
 
-export const useRestrictedAreas = (
-  params: IRestrictedAreasParams
-): RestrictedAreasReturns => {
+export const useRestrictedAreas = (options?: RestrictedInfo) => {
   const {
     enableDefault = false,
     customRestrictedIps = [],
     customRestrictedRegions = [],
-    contact = {},
-  } = params;
+    content,
+  } = options || {};
   const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
   const [invalidWebCity, setInvalidWebCity] = useState<string[]>([]);
   const [invalidWebCountry, setInvalidWebCountry] = useState<string[]>([]);
@@ -66,10 +58,12 @@ export const useRestrictedAreas = (
         const ipData: ApiResponse<IpInfoData> = await ipRes.json();
         if (areaResdata.success && ipData.success) {
           // invalid regions
-          const invalidCountries = areaResdata?.data?.invalid_web_country?.toLocaleLowerCase()
+          const invalidCountries = areaResdata?.data?.invalid_web_country
+            ?.toLocaleLowerCase()
             ?.replace(/\s+/g, "")
             .split(",");
-          const invalidCities = areaResdata?.data?.invalid_web_city?.toLocaleLowerCase()
+          const invalidCities = areaResdata?.data?.invalid_web_city
+            ?.toLocaleLowerCase()
             ?.replace(/\s+/g, "")
             .split(",");
           const combinedInvalidRegions = (
@@ -83,13 +77,12 @@ export const useRestrictedAreas = (
             enableDefault ? areaResdata?.data?.invalid_web_country : "",
             enableDefault ? areaResdata?.data?.invalid_web_city : "",
             customRestrictedRegions?.join(", "),
-          ].filter((item) => !!item)
-           
+          ].filter((item) => !!item);
 
           setInvalidWebCity(invalidCities);
           setInvalidWebCountry(invalidCountries);
           setInvalidRegions(combinedInvalidRegions);
-          setAllInvalidAreas(allInvalidAreas)
+          setAllInvalidAreas(allInvalidAreas);
 
           // user's current location
           const { city, region, ip } = ipData.data;
@@ -120,6 +113,6 @@ export const useRestrictedAreas = (
     ip,
     invalidRegions: allInvalidAreas,
     restrictedAreasOpen,
-    contact,
+    content,
   };
 };

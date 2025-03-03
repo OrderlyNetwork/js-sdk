@@ -60,14 +60,13 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 
   return (
     <WalletConnectorProvider
-      solanaInitial={{ 
-        wallets: wallets, 
+      solanaInitial={{
+        wallets: wallets,
         // network: "mainnet-beta" as WalletAdapterNetwork,
         network: WalletAdapterNetwork.Devnet,
-
-        mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_acfc3073385c4744b097aa86dc5b2f3c_1335ff06'
+        mainnetRpc:
+          "https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_acfc3073385c4744b097aa86dc5b2f3c_1335ff06",
       }}
-
       // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
     >
       <OrderlyAppProvider
@@ -76,12 +75,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         // networkId="testnet"
         configStore={configStore}
         appIcons={config.orderlyAppProvider.appIcons}
-        restrictedInfo={{
-          enableDefault: false,
-          customRestrictedIps: [],
-          customRestrictedRegions: [],
-          contact: { url: "x@orerly.network", text: "x@orerly.network" },
-        }}
+        restrictedInfo={config.orderlyAppProvider.restrictedInfo}
         // overrides={{
         //   tabs: {
         //     variant: "text",

@@ -1,18 +1,13 @@
+import { useEffect, useState } from "react";
 import {
-  APIKeyItem,
-  OrderlyContext,
-  ScopeType,
   useAccount,
   useAccountInfo,
-  useApiKeyManager,
   useDebouncedCallback,
   useMutation,
-  useQuery,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import { useContext, useEffect, useState } from "react";
 
 export type SettingScriptReturns = {
   maintenance_cancel_orders?: boolean;
@@ -23,7 +18,7 @@ export type SettingScriptReturns = {
 
 export const useSettingScript = (): SettingScriptReturns => {
   const { data, mutate: refresh } = useAccountInfo();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const [update, { isMutating }] = useMutation("/v1/client/maintenance_config");
   const [checked, setChecked] = useState(false);
 
@@ -50,13 +45,16 @@ export const useSettingScript = (): SettingScriptReturns => {
   };
   const { state } = useAccount();
 
+  const canTouch =
+    (state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
+    !wrongNetwork &&
+    !disabledConnect;
+
   return {
     maintenance_cancel_orders: checked, //data?.maintenance_cancel_orders,
     setMaintainConfig,
     isSetting: false,
-    canTouch:
-      (state.status === AccountStatusEnum.EnableTrading ||
-        state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
-      !wrongNetwork,
+    canTouch,
   };
 };

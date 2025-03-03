@@ -35,11 +35,17 @@ export type MainNavProps = {
     campaignButton?: string;
   };
   status?: AccountStatusEnum;
+  disabledConnect?: boolean;
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
   const { className, logo, products, classNames, campaigns, campaignPosition } =
     props;
+
+  const showLinkIcon =
+    !props.wrongNetwork &&
+    props.status! >= AccountStatusEnum.SignedIn &&
+    !props.disabledConnect;
 
   const children = useMemo(() => {
     if (typeof props.children === "undefined") return null;
@@ -80,7 +86,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           />
         ) : null}
         <AccountSummaryWidget />
-        {!props.wrongNetwork && props.status! >= AccountStatusEnum.SignedIn && (
+        {showLinkIcon && (
           <>
             <Divider direction="vertical" className="oui-h-8" intensity={8} />
             <LinkDeviceWidget />

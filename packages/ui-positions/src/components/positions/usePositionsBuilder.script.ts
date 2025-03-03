@@ -30,7 +30,10 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     setPage(1);
   }, [symbol]);
 
-  const dataSource = useDataTap(data?.rows) ?? undefined;
+  const dataSource =
+    useDataTap(data?.rows, {
+      fallbackData: [],
+    }) ?? undefined;
 
   return {
     dataSource,

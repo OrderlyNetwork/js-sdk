@@ -12,7 +12,7 @@ export const useAssetsLineChartScript = () => {
 
   const assetHistory = useOverviewContext();
 
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
 
   const filteredData = useDataTap(assetHistory.data, {
@@ -40,11 +40,13 @@ export const useAssetsLineChartScript = () => {
     );
   }, [filteredData]);
 
+  const invisible =
+    wrongNetwork || disabledConnect || !assetHistory.data.length;
+
   return {
     ...assetHistory,
-    wrongNetwork,
     data: _data,
-    invisible: wrongNetwork || !assetHistory.data.length,
+    invisible,
   } as const;
 };
 

@@ -1,14 +1,16 @@
-import { FC, createContext, PropsWithChildren, useContext } from "react";
+import {
+  FC,
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useAppState } from "../hooks/useAppState";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useSettleEvent } from "../hooks/useSettleEvent";
 import { useWalletConnectError } from "../hooks/useWalletConnectError";
-import {
-  useRestrictedAreas,
-  RestrictedAreasReturns,
-  IRestrictedAreasParams,
-} from "@orderly.network/hooks";
+import { RestrictedInfo } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
 
@@ -18,6 +20,8 @@ type AppContextState = {
    * Whether the current network is not supported
    */
   wrongNetwork: boolean;
+  disabledConnect: boolean;
+  setDisabledConnect: (disabledConnect: boolean) => void;
   currentChainId: number | undefined;
   setCurrentChainId: (chainId: number | undefined) => void;
   onChainChanged?: (
@@ -25,7 +29,7 @@ type AppContextState = {
     state: { isTestnet: boolean; isWalletConnected: boolean }
   ) => void;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
-  restrictedInfo?: RestrictedAreasReturns;
+  restrictedInfo?: RestrictedInfo;
 };
 
 const AppContext = createContext<AppContextState>({} as AppContextState);
@@ -35,13 +39,13 @@ export const useAppContext = () => {
 };
 
 export type AppStateProviderProps = {
-  restrictedInfo?: IRestrictedAreasParams;
   defaultChain?: DefaultChain;
-} & Pick<AppContextState, "onChainChanged">;
+} & Pick<AppContextState, "onChainChanged" | "restrictedInfo">;
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
+  const [disabledConnect, setDisabledConnect] = useState(false);
   const [currentChainId, setCurrentChainId] = useCurrentChainId(
     props.defaultChain
   );
@@ -55,7 +59,6 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   useWalletEvent();
   useSettleEvent();
   useWalletConnectError();
-  const restrictedInfo = useRestrictedAreas(props?.restrictedInfo ?? {});
 
   // const { networkStatus } = useAppState();
 
@@ -67,7 +70,9 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
         currentChainId,
         setCurrentChainId,
         onChainChanged: props.onChainChanged,
-        restrictedInfo,
+        restrictedInfo: props.restrictedInfo,
+        disabledConnect,
+        setDisabledConnect,
       }}
     >
       {props.children}

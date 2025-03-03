@@ -96,5 +96,5 @@ export * from "./next/useOrderEntry";
 export {
   useRestrictedAreas,
   type RestrictedAreasReturns,
-  type IRestrictedAreasParams,
+  type RestrictedInfo,
 } from "./useRestrictedAreas";

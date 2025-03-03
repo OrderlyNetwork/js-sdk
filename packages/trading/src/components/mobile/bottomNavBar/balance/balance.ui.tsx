@@ -54,13 +54,13 @@ export const Balance: FC<BalanceState> = (props) => {
           dp={2}
           visible={!props.hideAssets}
         >
-          {props.isEnableTrading ? props.total ?? "--" : "--"}
+          {props.canTrade ? props.total ?? "--" : "--"}
         </Text.numeral>
       </Flex>
-      {!props.wrongNetwork && props.isEnableTrading && (
+      {props.canTrade && (
         <Divider direction="vertical" className="oui-h-[26px]" />
       )}
-      {!props.wrongNetwork && props.isEnableTrading && (
+      {props.canTrade && (
         <Button
           variant={"outlined"}
           onClick={(e) => {

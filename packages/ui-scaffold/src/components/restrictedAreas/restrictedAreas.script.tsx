@@ -1,27 +1,47 @@
 import { useAppContext } from "@orderly.network/react-app";
-import { useConfig } from "@orderly.network/hooks";
-type AppContextReturnType = ReturnType<typeof useAppContext>;
+import { useConfig, useRestrictedAreas } from "@orderly.network/hooks";
+import { useEffect, useRef, useState } from "react";
 
-export type RestrictedInfo = AppContextReturnType["restrictedInfo"] & {
+export type UseRestrictedAreasScriptReturn = ReturnType<
+  typeof useRestrictedAreasScript
+> & {
   brokerName?: string;
 };
 
-export const useRestrictedAreasScript = (): RestrictedInfo => {
-  const {
-    restrictedInfo = {
-      ip: "",
-      invalidRegions: [],
-      restrictedAreasOpen: false,
-      contact: {
-        url: "",
-        text: "",
-      },
-    },
-  } = useAppContext();
-  const config = useConfig();
-  const brokerName = config.get("brokerName");
+export const useRestrictedAreasScript = () => {
+  const { restrictedInfo, setDisabledConnect } = useAppContext();
+  const restrictedAreas = useRestrictedAreas(restrictedInfo);
+  const brokerName = useConfig("brokerName");
+  const container = useRef<HTMLDivElement>(null);
+  const [mutiLine, setMutiLine] = useState(false);
+
+  useEffect(() => {
+    setDisabledConnect(restrictedAreas.restrictedAreasOpen);
+  }, [restrictedAreas.restrictedAreasOpen]);
+
+  useEffect(() => {
+    const element = container.current;
+
+    if (!element) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const height = entry.contentRect.height;
+        setMutiLine(height > 28);
+      }
+    });
+
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.unobserve(element);
+    };
+  }, []);
+
   return {
-    ...restrictedInfo,
+    ...restrictedAreas,
     brokerName,
+    container,
+    mutiLine,
   };
 };

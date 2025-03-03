@@ -13,7 +13,10 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
       return null;
     }
 
-    if (props.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+    if (
+      props.status === AccountStatusEnum.EnableTradingWithoutConnected &&
+      !props.disabledConnect
+    ) {
       return <LinkDevice onDisconnect={props.onDisconnect} />;
     }
 
