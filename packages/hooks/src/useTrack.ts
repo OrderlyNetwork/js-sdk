@@ -18,7 +18,7 @@ export const useTrack = () => {
   }, [debouncedTrackFn]);
 
   const setTrackUserId = useCallback((userId: string) => {
-    ee.emit(EnumTrackerKeys.TRACK_IDENTIFY_USER_ID, userId);
+    ee.emit(EnumTrackerKeys.trackIdentifyUserId, userId);
   }, []);
 
 

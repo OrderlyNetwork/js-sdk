@@ -1,7 +1,7 @@
 import * as amplitude from "@amplitude/analytics-browser";
 import { EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
-import EventEmitter from "eventemitter3";
-import { SimpleDI } from "./di/simpleDI";
+import { SimpleDI } from "@orderly.network/core";
+import { EventEmitter } from "@orderly.network/core";
 export enum ENVType {
   prod = 'prod',
   staging = 'staging',
@@ -58,7 +58,7 @@ export class AmplitudeTracker {
     const listenKeys = Object.keys(TrackerListenerKeyMap);
     listenKeys.forEach((key) => {
       this._ee.addListener(key, (params = {}) => {
-        if (key === EnumTrackerKeys.TRACK_IDENTIFY_USER_ID) {
+        if (key === EnumTrackerKeys.trackIdentifyUserId) {
           this.setUserId(params);
         } else {
           this.track(key as keyof typeof TrackerListenerKeyMap, params);

@@ -45,7 +45,7 @@ export const useAccount = () => {
 
   const createOrderlyKey = useCallback(
     async (remember: boolean) => {
-      track(EnumTrackerKeys.SIGNIN_SUCCESS,{
+      track(EnumTrackerKeys.signinSuccess,{
         network: account.chainId,
         wallet: state.connectWallet?.name
       });

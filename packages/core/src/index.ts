@@ -33,7 +33,6 @@ export { EVENT_NAMES } from "./constants";
 export { default as SimpleDI } from "./di/simpleDI";
 
 export { Account, type AccountState } from "./account";
-export { AmplitudeTracker, type ENVType } from "./amplitudeTracker";
 export * from "./configStore/configStore";
 
 export {

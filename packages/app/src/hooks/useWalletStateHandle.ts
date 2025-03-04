@@ -166,7 +166,7 @@ export const useWalletStateHandle = (options: {
           name: connectedWallet?.label ?? "",
         },
       });
-      track(EnumTrackerKeys.WALLET_CONNECT, {
+      track(EnumTrackerKeys.walletConnect, {
         wallet: connectedWallet?.label ?? "",
         network: currentChain!.namespace.toUpperCase() as ChainNamespace,
       });
@@ -256,14 +256,9 @@ export const useWalletStateHandle = (options: {
             },
             // label: ,
           });
-          ee.emit(EnumTrackerKeys.WALLET_CONNECT, {
+          track(EnumTrackerKeys.walletConnect, {
             wallet: wallet.label,
             network: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
-          }, {
-            identifyParams: {
-              address: wallet.accounts[0].address,
-              brokerId: brokerId,
-            },
           });
           console.log("-- xxxxxx status", status);
 

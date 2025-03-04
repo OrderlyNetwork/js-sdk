@@ -500,7 +500,7 @@ const useOrderEntry = (
     const result = await doCreateOrder(order);
 
     if (result.success) {
-      track(EnumTrackerKeys.PLACEORDER_SUCCESS, {
+      track(EnumTrackerKeys.placeorderSuccess, {
         side: order.side,
         order_type: order.order_type,
         tp_sl: hasTPSL(formattedOrder),

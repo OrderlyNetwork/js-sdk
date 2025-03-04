@@ -95,12 +95,12 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
       namespace,
     });
     if (namespace === ChainNamespace.evm) {
-      track(EnumTrackerKeys.CLICK_EXPORT_PRIVATE_KEY, {
+      track(EnumTrackerKeys.clickExportPrivateKey, {
         type: "evm",
       });
       return exportEvmWallet();
     } else if (namespace === ChainNamespace.solana) {
-      track(EnumTrackerKeys.CLICK_EXPORT_PRIVATE_KEY, {
+      track(EnumTrackerKeys.clickExportPrivateKey, {
         type: "solana",
       });
       return exportSolanaWallet();
@@ -222,7 +222,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
         return;
       }
       connectedRef.current = true;
-      track(EnumTrackerKeys.SOCIAL_LOGIN_SUCCESS, {
+      track(EnumTrackerKeys.socialLoginSuccess, {
         type: linkedAccount.type,
         address: linkedAccount.address,
       });

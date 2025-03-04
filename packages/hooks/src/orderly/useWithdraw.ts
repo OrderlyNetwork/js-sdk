@@ -123,7 +123,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     }): Promise<any> => {
       return account.assetsManager.withdraw(inputs).then((res: any) => {
         if (res.success) {
-        ee.emit(EnumTrackerKeys.WITHDRAW_SUCCESS, {
+        ee.emit(EnumTrackerKeys.withdrawSuccess, {
           wallet:state?.connectWallet?.name,
           network:targetChain?.network_infos.name,
           quantity:inputs.amount,
@@ -132,7 +132,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
         }
         return res;
       }).catch((err) => {
-         track(EnumTrackerKeys.WITHDRAW_FAILED, {
+         track(EnumTrackerKeys.withdrawFailed, {
           wallet:state?.connectWallet?.name,
           network:targetChain?.network_infos.name,
           msg: JSON.stringify(err),

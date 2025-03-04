@@ -39,7 +39,7 @@ export function useLinkDeviceScript() {
       setLoading(false);
 
       track(
-        EnumTrackerKeys.SIGN_LINK_DEVICE_MESSAGE_SUCCESS,
+        EnumTrackerKeys.signLinkDeviceMessageSuccess,
         createTrackParams()
       );
     } catch (e) {
@@ -64,7 +64,7 @@ export function useLinkDeviceScript() {
   const showDialog = useCallback(() => {
     setOpen(true);
     getOrderlyKey();
-    track(EnumTrackerKeys.CLICK_LINK_DEVICE_BUTTON, createTrackParams());
+    track(EnumTrackerKeys.clickLinkDeviceButton, createTrackParams());
   }, [account]);
 
   const hideDialog = useCallback(() => {
@@ -73,7 +73,7 @@ export function useLinkDeviceScript() {
 
   const onConfirm = useCallback(() => {
     setConfirm(true);
-    track(EnumTrackerKeys.LINK_DEVICE_MODAL_CLICK_CONFIRM, {});
+    track(EnumTrackerKeys.linkDeviceModalClickConfirm, {});
   }, []);
 
   const copyUrl = useCallback(() => {

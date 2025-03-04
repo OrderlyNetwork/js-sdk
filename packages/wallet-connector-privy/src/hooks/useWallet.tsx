@@ -86,7 +86,7 @@ export function useWallet() {
         isManual.current = true;
         return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
       
-          track(EnumTrackerKeys.SWITCH_NETWORK_SUCCESS, {
+          track(EnumTrackerKeys.switchNetworkSuccess, {
             from_chain: storageChain?.chainId,
             to_chain: chain.chainId,
           });
@@ -116,7 +116,7 @@ export function useWallet() {
         if (tempNamespace === ChainNamespace.evm) {
           await setChainEvm(parseInt(chain.chainId as string));
           setStorageChain(parseInt(chain.chainId as string));
-          track(EnumTrackerKeys.SWITCH_NETWORK_SUCCESS, {
+          track(EnumTrackerKeys.switchNetworkSuccess, {
             from_chain: storageChain?.chain.id,
             to_chain: chain.chainId,
           });
@@ -177,7 +177,7 @@ export function useWallet() {
         }
       }
     }
-    track(EnumTrackerKeys.CLICK_SWITCH_WALLET, {
+    track(EnumTrackerKeys.clickSwitchWallet, {
       fromWallet,
       toWallet,
     });

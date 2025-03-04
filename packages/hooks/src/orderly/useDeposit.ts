@@ -319,7 +319,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
-        track(EnumTrackerKeys.DEPOSIT_SUCCESS, {
+        track(EnumTrackerKeys.depositSuccess, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos.name,
           quantity,
@@ -330,7 +330,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       })
       .catch((e) => {
        
-        track(EnumTrackerKeys.DEPOSIT_FAILED, {
+        track(EnumTrackerKeys.depositFailed, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos?.name,
           msg: JSON.stringify(e),

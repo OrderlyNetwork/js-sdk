@@ -1,9 +1,8 @@
 import useConstant from "use-constant";
 import { useContext } from "react";
-import { AmplitudeTracker } from "@orderly.network/core";
 import { SimpleDI } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
-import { ENVType } from "@orderly.network/core";
+import { ENVType, AmplitudeTracker } from "./services/amplitudeTracker";
 export const useTrackingInstance = () => {
 
   const { configStore } = useContext(OrderlyContext);
