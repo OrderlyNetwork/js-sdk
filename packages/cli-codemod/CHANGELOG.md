@@ -1,5 +1,17 @@
 # @orderly.network/codemod
 
+## 1.0.5
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+
+## 1.0.5-alpha.0
+
+### Patch Changes
+
+- fix bugs
+
 ## 1.0.4
 
 ### Patch Changes

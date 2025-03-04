@@ -1,5 +1,25 @@
 # @orderly.network/referral
 
+## 2.0.6
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+- Updated dependencies [74c2c433e]
+  - @orderly.network/hooks@2.0.6
+  - @orderly.network/react@2.0.6
+  - @orderly.network/utils@2.0.6
+
+## 2.0.6-alpha.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/hooks@2.0.6-alpha.0
+  - @orderly.network/react@2.0.6-alpha.0
+  - @orderly.network/utils@2.0.6-alpha.0
+
 ## 2.0.5
 
 ### Patch Changes
