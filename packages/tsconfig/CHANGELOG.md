@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.21
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+
 ## 0.3.21-alpha.0
 
 ### Patch Changes

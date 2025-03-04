@@ -1,5 +1,20 @@
 # @orderly.network/ui-positions
 
+## 2.0.6
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+- Updated dependencies [74c2c433e]
+  - @orderly.network/hooks@2.0.6
+  - @orderly.network/react-app@2.0.6
+  - @orderly.network/types@2.0.6
+  - @orderly.network/ui@2.0.6
+  - @orderly.network/ui-connector@2.0.6
+  - @orderly.network/ui-share@2.0.6
+  - @orderly.network/ui-tpsl@2.0.6
+  - @orderly.network/utils@2.0.6
+
 ## 2.0.6-alpha.0
 
 ### Patch Changes
