@@ -34,10 +34,11 @@ internal_patch:
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
+      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_INTERNAL"
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
 
-      npm install -g pnpm
+      npm install -g pnpm@9
       pnpm install --frozen-lockfile
       pnpm release:patch
   tags:
@@ -65,10 +66,11 @@ npm_patch:
       export GIT_USERNAME="$GIT_USERNAME_NPM"
       export GIT_NAME="$GIT_NAME_NPM"
       export GIT_EMAIL="$GIT_EMAIL_NPM"
+      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_NPM"
       export NPM_REGISTRY="$NPM_REGISTRY_NPM"
       export NPM_TOKEN="$NPM_TOKEN_NPM"
 
-      npm install -g pnpm
+      npm install -g pnpm@9
       pnpm install --frozen-lockfile
       pnpm release:patch
   tags:
