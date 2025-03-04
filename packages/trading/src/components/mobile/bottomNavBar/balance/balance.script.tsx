@@ -12,7 +12,6 @@ import { AccountStatusEnum } from "@orderly.network/types";
 
 export const useBalanceScript = () => {
   const { bottomSheetLeading } = useTradingPageContext();
-
   const { hideAssets, setHideAssets } = useTradingLocalStorage();
   const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
@@ -21,10 +20,10 @@ export const useBalanceScript = () => {
   const { totalValue } = useCollateral();
 
   const canTrade =
-    (state.status >= AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
     !wrongNetwork &&
-    !disabledConnect;
+    !disabledConnect &&
+    (state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
 
   const onShowPortfolioSheet = () => {
     if (canTrade) {

@@ -46,10 +46,10 @@ export const useSettingScript = (): SettingScriptReturns => {
   const { state } = useAccount();
 
   const canTouch =
-    (state.status === AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
     !wrongNetwork &&
-    !disabledConnect;
+    !disabledConnect &&
+    (state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
 
   return {
     maintenance_cancel_orders: checked, //data?.maintenance_cancel_orders,

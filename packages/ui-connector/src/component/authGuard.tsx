@@ -107,7 +107,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
       });
     }
 
-    if (state.validating) {
+    if (state.validating && !disabledConnect) {
       return (
         <StatusInfo
           // variant={"gradient"}
@@ -134,7 +134,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
         networkId={props.networkId}
         labels={labels}
         descriptions={descriptions}
-        disabled={disabledConnect}
+        disabledConnect={disabledConnect}
       />
     );
   }, [state.status, state.validating, buttonProps, wrongNetwork]);
@@ -161,7 +161,7 @@ const DefaultFallback = (props: {
   labels: alertMessages;
   bridgeLessOnly?: boolean;
   descriptions?: alertMessages;
-  disabled?: boolean;
+  disabledConnect?: boolean;
 }) => {
   const { buttonProps, labels, descriptions } = props;
   const { connectWallet } = useAppContext();
@@ -224,7 +224,7 @@ const DefaultFallback = (props: {
       );
   };
 
-  if (props.wrongNetwork) {
+  if (props.wrongNetwork && !props.disabledConnect) {
     return (
       <StatusInfo
         color="warning"
@@ -245,7 +245,7 @@ const DefaultFallback = (props: {
     <Match
       value={props.status}
       case={(value: AccountStatusEnum) => {
-        if (value <= AccountStatusEnum.NotConnected || props.disabled) {
+        if (value <= AccountStatusEnum.NotConnected || props.disabledConnect) {
           return (
             <StatusInfo
               size="lg"
@@ -253,10 +253,10 @@ const DefaultFallback = (props: {
                 onConnectWallet();
               }}
               // fullWidth
-              variant={props.disabled ? undefined : "gradient"}
+              variant={props.disabledConnect ? undefined : "gradient"}
               angle={45}
               description={descriptions?.connectWallet}
-              disabled={props.disabled}
+              disabled={props.disabledConnect}
               {...buttonProps}
             >
               {labels.connectWallet}

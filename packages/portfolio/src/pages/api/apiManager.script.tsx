@@ -33,11 +33,11 @@ export const useApiManagerScript = (props?: {
   const { state, account } = useAccount();
 
   const canCreateApiKey =
-    (state.status === AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
     !wrongNetwork &&
-    !disabledConnect;
-
+    !disabledConnect &&
+    (state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
+  
   const { data } = useQuery<
     | undefined
     | {

@@ -42,10 +42,16 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
   const { className, logo, products, classNames, campaigns, campaignPosition } =
     props;
 
+  const showCampaignButton =
+    campaignPosition === CampaignPositionEnum.navTailing && campaigns;
+
   const showLinkIcon =
     !props.wrongNetwork &&
-    props.status! >= AccountStatusEnum.SignedIn &&
-    !props.disabledConnect;
+    !props.disabledConnect &&
+    props.status! >= AccountStatusEnum.SignedIn;
+
+  const hideWalletConnectButton =
+    !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
   const children = useMemo(() => {
     if (typeof props.children === "undefined") return null;
@@ -79,12 +85,12 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       {children}
 
       <Flex itemAlign={"center"} className="oui-gap-3 2xl:oui-gap-4">
-        {campaignPosition === CampaignPositionEnum.navTailing && campaigns ? (
+        {!!showCampaignButton && (
           <CampaignButton
             {...campaigns}
             className={classNames?.campaignButton}
           />
-        ) : null}
+        )}
         <AccountSummaryWidget />
         {showLinkIcon && (
           <>
@@ -93,9 +99,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           </>
         )}
         <ChainMenuWidget />
-        {props.wrongNetwork && props.isConnected ? null : (
-          <WalletConnectButtonExtension />
-        )}
+        {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>
     </Flex>
   );

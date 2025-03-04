@@ -14,8 +14,8 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
     }
 
     if (
-      props.status === AccountStatusEnum.EnableTradingWithoutConnected &&
-      !props.disabledConnect
+      !props.disabledConnect &&
+      props.status === AccountStatusEnum.EnableTradingWithoutConnected
     ) {
       return <LinkDevice onDisconnect={props.onDisconnect} />;
     }
@@ -24,10 +24,10 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
   };
 
   const showScanQRCode =
+    !props.disabledConnect &&
     props.status !== AccountStatusEnum.EnableTradingWithoutConnected &&
-    props.status < AccountStatusEnum.EnableTrading &&
-    !props.disabledConnect;
-
+    props.status < AccountStatusEnum.EnableTrading;
+  
   return (
     <div className="oui-bg-base-9 oui-border-t oui-border-line-4">
       <Flex

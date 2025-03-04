@@ -31,12 +31,12 @@ export const useRewardsHistoryScript = () => {
   const epochInfos = epochList?.[0];
   const { isNotStared } = epochList?.[1];
   const [history] = walletRewardsHistory;
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const { data: accountHistory } = useAccountRewardsHistory(account.address);
 
   const data = useMemo(() => {
-    if (isNotStared) return [];
+    if (isNotStared || disabledConnect) return [];
     const list = [...(epochInfos || [])];
 
     const combineData = list.map((e): ListType => {
@@ -114,6 +114,7 @@ export const useRewardsHistoryScript = () => {
     isNotStared,
     wrongNetwork,
     accountHistory,
+    disabledConnect,
   ]);
 
   const { pagination } = usePagination();

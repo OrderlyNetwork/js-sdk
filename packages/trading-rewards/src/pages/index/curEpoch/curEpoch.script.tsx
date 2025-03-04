@@ -1,14 +1,8 @@
-import {
-  CurrentEpochEstimate,
-  EpochInfoType,
-  useAccount,
-  useCurEpochEstimate,
-  useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTradingRewardsContext } from "../provider";
 import { useMemo } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { useAppContext } from "@orderly.network/react-app";
+import { useAccount, useWalletConnector } from "@orderly.network/hooks";
+import { useTradingRewardsContext } from "../provider";
 import { RewardsTooltipProps } from "./rewardsTooltip";
 
 export const useCurEpochScript = () => {
@@ -18,17 +12,21 @@ export const useCurEpochScript = () => {
     brokerId,
     brokerName,
   } = useTradingRewardsContext();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { connect } = useWalletConnector();
   const { state } = useAccount();
 
   const hideData = useMemo(() => {
-    return state.status <= AccountStatusEnum.SignedIn || wrongNetwork;
-  }, [state, wrongNetwork]);
+    return (
+      state.status <= AccountStatusEnum.SignedIn ||
+      wrongNetwork ||
+      disabledConnect
+    );
+  }, [state, wrongNetwork, disabledConnect]);
 
   const notConnected = useMemo(() => {
-    return state.status <= AccountStatusEnum.SignedIn;
-  }, [state]);
+    return state.status <= AccountStatusEnum.SignedIn || disabledConnect;
+  }, [state, disabledConnect]);
 
   const rewardsTooltip = useMemo((): RewardsTooltipProps | undefined => {
     if (typeof estimate === "undefined" || estimate === null) return undefined;

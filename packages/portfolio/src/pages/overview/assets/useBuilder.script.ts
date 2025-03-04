@@ -24,10 +24,10 @@ export const useAssetScript = () => {
 
   const canTrade = useMemo(() => {
     return (
-      (state.status === AccountStatusEnum.EnableTrading ||
-        state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
       !wrongNetwork &&
-      !disabledConnect
+      !disabledConnect &&
+      (state.status === AccountStatusEnum.EnableTrading ||
+        state.status === AccountStatusEnum.EnableTradingWithoutConnected)
     );
   }, [state.status, wrongNetwork, disabledConnect]);
 

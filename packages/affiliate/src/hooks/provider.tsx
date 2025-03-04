@@ -123,6 +123,7 @@ export type ReferralContextReturns = {
   tab: TabTypes;
   setTab: React.Dispatch<React.SetStateAction<TabTypes>>;
   wrongNetwork: boolean;
+  disabledConnect: boolean;
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>(
@@ -201,7 +202,7 @@ export const ReferralProvider: FC<
     const volume: any = {};
 
     if (dailyVolume && dailyVolume.length > 0) {
-      const now = format(new Date(), 'yyyy-MM-dd');
+      const now = format(new Date(), "yyyy-MM-dd");
       const index = dailyVolume.findIndex((item: any) => {
         const itemDate = item.date;
         return itemDate === now;
@@ -245,7 +246,7 @@ export const ReferralProvider: FC<
 
   const [tab, setTab] = useState<TabTypes>(TabTypes.affiliate);
 
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
   useEffect(() => {
@@ -294,6 +295,7 @@ export const ReferralProvider: FC<
           tab,
           setTab,
           wrongNetwork,
+          disabledConnect,
         }}
       >
         {props.children}
