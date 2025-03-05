@@ -12,7 +12,7 @@ import { DataListWidget } from "../../components/mobile/dataList";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
 import {
   MaintenanceTipsWidget,
-  RestrictedAreasWidget,
+  RestrictedInfoWidget,
 } from "@orderly.network/ui-scaffold";
 
 export const MobileLayout: FC<TradingState> = (props) => {
@@ -61,7 +61,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
       </div>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
-        <RestrictedAreasWidget className="oui-mx-1" />
+        <RestrictedInfoWidget className="oui-mx-1" />
         <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
         <OrderBookAndEntryWidget />
         <DataListWidget

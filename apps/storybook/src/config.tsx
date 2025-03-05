@@ -1,13 +1,13 @@
 import { TradingPageProps } from "@orderly.network/trading";
 import { FooterProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
-import { RestrictedInfo } from "@orderly.network/hooks";
+import { RestrictedInfoOptions } from "@orderly.network/hooks";
 import { AppLogos } from "@orderly.network/react-app";
 import { OrderlyActiveIcon, OrderlyIcon } from "./components/icons/orderly";
 
 export type OrderlyConfig = {
   orderlyAppProvider: {
     appIcons: AppLogos;
-    restrictedInfo?: RestrictedInfo;
+    restrictedInfo?: RestrictedInfoOptions;
   };
   scaffold: {
     mainNavProps: MainNavWidgetProps;

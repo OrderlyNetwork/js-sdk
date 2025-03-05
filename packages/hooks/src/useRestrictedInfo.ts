@@ -1,14 +1,14 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useConfig } from "./useConfig";
 
-export type RestrictedAreasReturns = ReturnType<typeof useRestrictedAreas>;
+export type RestrictedInfoReturns = ReturnType<typeof useRestrictedInfo>;
 
 interface ApiResponse<T> {
   success: boolean;
   data: T;
 }
 
-interface RestrictedAreasData {
+interface RestrictedInfoData {
   invalid_web_country: string;
   invalid_web_city: string;
 }
@@ -20,7 +20,7 @@ interface IpInfoData {
   checked: boolean;
 }
 
-export interface RestrictedInfo {
+export interface RestrictedInfoOptions {
   enableDefault?: boolean;
   customRestrictedIps?: string[];
   customRestrictedRegions?: string[];
@@ -29,7 +29,7 @@ export interface RestrictedInfo {
     | ((data: { ip: string; brokerName: string }) => ReactNode);
 }
 
-export const useRestrictedAreas = (options?: RestrictedInfo) => {
+export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
   const {
     enableDefault = false,
     customRestrictedIps = [],
@@ -44,14 +44,13 @@ export const useRestrictedAreas = (options?: RestrictedInfo) => {
   const [city, setCity] = useState<string>("");
   const [region, setRegion] = useState<string>("");
   const [ip, setIp] = useState<string>("");
-  const [restrictedAreasOpen, setRestrictedAreasOpen] =
-    useState<boolean>(false);
+  const [restrictedOpen, setRestrictedOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const areaRes = await fetch(`${apiBaseUrl}/v1/restricted_areas`);
-        const areaResdata: ApiResponse<RestrictedAreasData> =
+        const areaResdata: ApiResponse<RestrictedInfoData> =
           await areaRes.json();
 
         const ipRes = await fetch(`${apiBaseUrl}/v1/ip_info`);
@@ -98,7 +97,7 @@ export const useRestrictedAreas = (options?: RestrictedInfo) => {
             ) ||
             customRestrictedIps.includes(ipData?.data?.ip)
           ) {
-            setRestrictedAreasOpen(true);
+            setRestrictedOpen(true);
           }
         }
       } catch (error) {
@@ -112,7 +111,7 @@ export const useRestrictedAreas = (options?: RestrictedInfo) => {
   return {
     ip,
     invalidRegions: allInvalidAreas,
-    restrictedAreasOpen,
+    restrictedOpen,
     content,
   };
 };

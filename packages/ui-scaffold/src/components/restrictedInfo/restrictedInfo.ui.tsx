@@ -1,21 +1,23 @@
 import { FC } from "react";
 import { cn, Flex } from "@orderly.network/ui";
 import { InfoIcon } from "../icons";
-import { UseRestrictedAreasScriptReturn } from "./restrictedAreas.script";
+import { UseRestrictedInfoScriptReturn } from "./restrictedInfo.script";
 
-export type RestrictedAreasProps = UseRestrictedAreasScriptReturn & {
+export type RestrictedInfoProps = UseRestrictedInfoScriptReturn & {
   className?: string;
 };
 
-export const RestrictedAreas: FC<RestrictedAreasProps> = (props) => {
-  const { ip, content, brokerName, restrictedAreasOpen } = props;
-  if (!restrictedAreasOpen) {
+export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
+  const { brokerName } = props;
+  const { ip, content, restrictedOpen } = props.restrictedInfo;
+
+  if (!restrictedOpen) {
     return;
   }
 
   const renderContent = () => {
     if (typeof content === "function") {
-      return content({ ip, brokerName });
+      return content({ ip: ip!, brokerName });
     }
     return (
       content || (

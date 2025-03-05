@@ -1,23 +1,18 @@
 import { useAppContext } from "@orderly.network/react-app";
-import { useConfig, useRestrictedAreas } from "@orderly.network/hooks";
+import { useConfig } from "@orderly.network/hooks";
 import { useEffect, useRef, useState } from "react";
 
-export type UseRestrictedAreasScriptReturn = ReturnType<
-  typeof useRestrictedAreasScript
+export type UseRestrictedInfoScriptReturn = ReturnType<
+  typeof useRestrictedInfoScript
 > & {
   brokerName?: string;
 };
 
-export const useRestrictedAreasScript = () => {
-  const { restrictedInfo, setDisabledConnect } = useAppContext();
-  const restrictedAreas = useRestrictedAreas(restrictedInfo);
+export const useRestrictedInfoScript = () => {
+  const { restrictedInfo } = useAppContext();
   const brokerName = useConfig("brokerName");
   const container = useRef<HTMLDivElement>(null);
   const [mutiLine, setMutiLine] = useState(false);
-
-  useEffect(() => {
-    setDisabledConnect(restrictedAreas.restrictedAreasOpen);
-  }, [restrictedAreas.restrictedAreasOpen]);
 
   useEffect(() => {
     const element = container.current;
@@ -39,7 +34,7 @@ export const useRestrictedAreasScript = () => {
   }, []);
 
   return {
-    ...restrictedAreas,
+    restrictedInfo,
     brokerName,
     container,
     mutiLine,
