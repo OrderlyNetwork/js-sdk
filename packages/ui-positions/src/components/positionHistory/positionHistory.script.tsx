@@ -115,6 +115,7 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
       state.status === AccountStatusEnum.EnableTradingWithoutConnected
         ? AccountStatusEnum.EnableTradingWithoutConnected
         : AccountStatusEnum.EnableTrading,
+    fallbackData: [],
   });
 
   return {

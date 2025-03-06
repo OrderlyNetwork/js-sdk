@@ -13,7 +13,7 @@ import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 export const useAccountMenu = (): any => {
   const { disconnect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
-  const { connectWallet } = useAppContext();
+  const { connectWallet, disabledConnect } = useAppContext();
 
   const [_, { findByChainId }] = useChains();
 
@@ -120,6 +120,7 @@ export const useAccountMenu = (): any => {
     onCreateOrderlyKey,
     onOpenExplorer,
     onDisconnect,
+    disabledConnect,
   } as const;
 };
 

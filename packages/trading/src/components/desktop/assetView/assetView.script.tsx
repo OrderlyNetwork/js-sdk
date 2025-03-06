@@ -30,14 +30,17 @@ import { Decimal } from "@orderly.network/utils";
 
 export const useFirstTimeDeposit = () => {
   const { state } = useAccount();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { totalValue } = useCollateral({
     dp: 2,
   });
+
   const unavailable =
     wrongNetwork ||
+    disabledConnect ||
     (state.status < AccountStatusEnum.EnableTrading &&
       state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
+
   const getKeyMemo = useMemo(() => {
     const now = new Date();
     const ninetyDaysAgo = new Date();
@@ -143,11 +146,16 @@ export const useAssetViewScript = () => {
           );
           return Promise.reject(e);
         }
-        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
-          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        if (
+          e.message.indexOf(
+            "Signing off chain messages with Ledger is not yet supported"
+          ) !== -1
+        ) {
+          ee.emit("wallet:sign-message-with-ledger-error", {
+            message: e.message,
+            userAddress: account.address,
+          });
         }
-
-
       })
       .then((res) => {
         toast.success("Settlement requested");

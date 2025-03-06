@@ -311,25 +311,24 @@ export const OrderEntry = (
           side={props.side}
         />
         {/* Submit button */}
-        <AuthGuard buttonProps={{ fullWidth: true }}>
-          <ThrottledButton
-            fullWidth
-            id={"order-entry-submit-button"}
-            // color={side === OrderSide.BUY ? "buy" : "sell"}
-            data-type={OrderSide.BUY}
-            className={cn(
-              side === OrderSide.BUY
-                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
-            )}
-            onClick={() => {
-              onSubmit();
-            }}
-            loading={props.isMutating}
-          >
-            {buttonLabel}
-          </ThrottledButton>
-        </AuthGuard>
+        <ThrottledButton
+          fullWidth
+          id={"order-entry-submit-button"}
+          // color={side === OrderSide.BUY ? "buy" : "sell"}
+          data-type={OrderSide.BUY}
+          className={cn(
+            side === OrderSide.BUY
+              ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+              : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
+          )}
+          onClick={() => {
+            onSubmit();
+          }}
+          loading={props.isMutating}
+          disabled={!props.canTrade}
+        >
+          {buttonLabel}
+        </ThrottledButton>
         {/* Asset info */}
         <AssetInfo
           canTrade={props.canTrade}

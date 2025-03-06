@@ -18,16 +18,21 @@ export const useAsTraderScript = () => {
     setTab,
     mutate,
     wrongNetwork,
+    disabledConnect,
   } = useReferralContext();
 
   const { state } = useAccount();
+
   const isSignIn =
-    state.status === AccountStatusEnum.EnableTrading ||
-    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
+    !disabledConnect &&
+    (state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
+
   const onEnterTraderPage = () => {
     setTab(TabTypes.trader);
     setShowHome(false);
   };
+
   const [code, setCode] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -36,6 +41,7 @@ export const useAsTraderScript = () => {
     error: checkCodeError,
     isLoading,
   } = useCheckReferralCode(code);
+
   const hide = () => {
     setOpen(false);
   };

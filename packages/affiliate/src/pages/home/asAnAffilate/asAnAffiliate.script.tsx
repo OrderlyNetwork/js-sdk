@@ -24,12 +24,15 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     setShowHome,
     setTab,
     wrongNetwork,
+    disabledConnect,
   } = useReferralContext();
 
   const { state } = useAccount();
+
   const isSignIn =
-    state.status === AccountStatusEnum.EnableTrading ||
-    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
+    !disabledConnect &&
+    (state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
 
   const becomeAnAffiliate = () => {
     window.open(becomeAnAffiliateUrl, "_blank");

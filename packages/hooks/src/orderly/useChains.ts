@@ -104,12 +104,12 @@ export function useChains(
 
   // only prod env return mainnet chains info
   const { data: tokenChainsRes, error: tokenError } = useQuery<API.Chain[]>(
-    "https://api-evm.orderly.org/v1/public/token",
+    "https://api.orderly.org/v1/public/token",
     { ...commonSwrOpts }
   );
 
   const { data: testTokenChainsRes } = useQuery<API.Chain[]>(
-    "https://testnet-api-evm.orderly.org/v1/public/token",
+    "https://testnet-api.orderly.org/v1/public/token",
     { ...commonSwrOpts }
   );
 
@@ -120,7 +120,7 @@ export function useChains(
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
     needFetchFromAPI
-      ? `https://api-evm.orderly.org/v1/public/chain_info${
+      ? `https://api.orderly.org/v1/public/chain_info${
           brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
         }`
       : null,
@@ -130,7 +130,7 @@ export function useChains(
   // test chains info
   const { data: testChainInfos } = useQuery(
     needFetchFromAPI
-      ? `https://testnet-api-evm.orderly.org/v1/public/chain_info${
+      ? `https://testnet-api.orderly.org/v1/public/chain_info${
           brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
         }`
       : null,

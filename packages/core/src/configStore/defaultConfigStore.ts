@@ -12,7 +12,7 @@ export type URLS = {
 
 export const API_URLS: Record<NetworkId, URLS> = {
   mainnet: {
-    apiBaseUrl: "https://api-evm.orderly.org",
+    apiBaseUrl: "https://api.orderly.org",
     publicWsUrl: "wss://ws-evm.orderly.org",
     privateWsUrl: "wss://ws-private-evm.orderly.org",
     operatorUrl: {
@@ -21,7 +21,7 @@ export const API_URLS: Record<NetworkId, URLS> = {
     },
   },
   testnet: {
-    apiBaseUrl: "https://testnet-api-evm.orderly.org",
+    apiBaseUrl: "https://testnet-api.orderly.org",
     publicWsUrl: "wss://testnet-ws-evm.orderly.org",
     privateWsUrl: "wss://testnet-ws-private-evm.orderly.org",
     operatorUrl: {

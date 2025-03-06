@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Box } from "@orderly.network/ui";
-import { RestrictedAreasWidget } from "@orderly.network/ui-scaffold";
+import { RestrictedInfoWidget } from "@orderly.network/ui-scaffold";
 
-const meta: Meta<typeof RestrictedAreasWidget> = {
+const meta: Meta<typeof RestrictedInfoWidget> = {
   title: "Package/ui-scaffold/RestrictedAreas",
-  component: RestrictedAreasWidget,
+  component: RestrictedInfoWidget,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",

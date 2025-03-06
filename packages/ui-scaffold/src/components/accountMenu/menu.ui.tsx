@@ -23,14 +23,17 @@ export type AccountMenuProps = {
   onCrateAccount: () => Promise<void>;
   onCreateOrderlyKey: () => Promise<void>;
   onOpenExplorer: () => void;
+  disabledConnect?: boolean;
 };
 
 export const AccountMenu = (props: AccountMenuProps) => {
   const { accountState: state, onDisconnect, onOpenExplorer } = props;
+  const disabled = state.validating || props.disabledConnect;
 
   if (
-    state.status === AccountStatusEnum.EnableTrading ||
-    state.status === AccountStatusEnum.EnableTradingWithoutConnected
+    !disabled &&
+    (state.status === AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected)
   ) {
     return (
       <WalletMenu
@@ -41,16 +44,16 @@ export const AccountMenu = (props: AccountMenuProps) => {
     );
   }
 
-  if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
+  if (state.status <= AccountStatusEnum.NotConnected || disabled) {
     return (
       <Button
         data-testid="oui-testid-nav-bar-connectWallet-btn"
         size="md"
-        variant="gradient"
+        variant={disabled ? undefined : "gradient"}
         angle={45}
         className="wallet-connect-button"
         loading={state.validating}
-        disabled={state.validating}
+        disabled={disabled}
         onClick={() => {
           props
             .connect()

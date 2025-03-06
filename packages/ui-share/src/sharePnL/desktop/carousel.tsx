@@ -18,13 +18,21 @@ export const CarouselBackgroundImage: FC<{
 
   const onPrevButtonClick = useCallback(() => {
     if (!emblaApi) return;
-    emblaApi.scrollPrev();
-  }, [emblaApi]);
+    if (emblaApi?.canScrollPrev()) {
+      emblaApi.scrollPrev();
+    } else if (selectedSnap - 1 >= 0) {
+      setSelectedSnap(selectedSnap - 1);
+    }
+  }, [emblaApi, selectedSnap]);
 
   const onNextButtonClick = useCallback(() => {
     if (!emblaApi) return;
-    emblaApi.scrollNext();
-  }, [emblaApi]);
+    if (emblaApi?.canScrollNext()) {
+      emblaApi.scrollNext();
+    } else if (selectedSnap + 1 < backgroundImages.length) {
+      setSelectedSnap(selectedSnap + 1);
+    }
+  }, [emblaApi, selectedSnap]);
 
   const onSelect = useCallback((emblaApi: any) => {
     // setPrevBtnDisabled(!emblaApi.canScrollPrev());
@@ -42,7 +50,7 @@ export const CarouselBackgroundImage: FC<{
   }, [emblaApi, onSelect]);
 
   return (
-    <Flex mt={4} px={2} >
+    <Flex mt={4} px={2}>
       <PrevButton onClick={onPrevButtonClick} />
       <div
         ref={emblaRef}
@@ -53,8 +61,11 @@ export const CarouselBackgroundImage: FC<{
             <Box
               key={e}
               onClick={() => {
-
-                emblaApi?.scrollTo(index);
+                if (emblaApi?.canScrollPrev() || emblaApi?.canScrollNext()) {
+                  emblaApi?.scrollTo(index);
+                } else {
+                  setSelectedSnap(index);
+                }
               }}
               mx={2}
               my={1}

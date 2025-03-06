@@ -13,13 +13,21 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
       return null;
     }
 
-    if (props.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+    if (
+      !props.disabledConnect &&
+      props.status === AccountStatusEnum.EnableTradingWithoutConnected
+    ) {
       return <LinkDevice onDisconnect={props.onDisconnect} />;
     }
 
     return <ChainWidget />;
   };
 
+  const showScanQRCode =
+    !props.disabledConnect &&
+    props.status !== AccountStatusEnum.EnableTradingWithoutConnected &&
+    props.status < AccountStatusEnum.EnableTrading;
+  
   return (
     <div className="oui-bg-base-9 oui-border-t oui-border-line-4">
       <Flex
@@ -35,10 +43,7 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
         <BalanceWidget />
 
         <Flex gap={2}>
-          {props.status !== AccountStatusEnum.EnableTradingWithoutConnected &&
-            props.status < AccountStatusEnum.EnableTrading && (
-              <ScanQRCodeWidget />
-            )}
+          {showScanQRCode && <ScanQRCodeWidget />}
           {renderContent()}
           <AccountWidget />
         </Flex>
