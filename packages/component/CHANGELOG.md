@@ -1,5 +1,39 @@
 # @orderly.network/react
 
+## 2.0.6
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+- Updated dependencies [74c2c433e]
+  - @orderly.network/hooks@2.0.6
+  - @orderly.network/core@2.0.6
+  - @orderly.network/net@2.0.6
+  - @orderly.network/trading-view@2.0.6
+  - @orderly.network/types@2.0.6
+  - @orderly.network/ui@2.0.6
+  - @orderly.network/ui-connector@2.0.6
+  - @orderly.network/ui-leverage@2.0.6
+  - @orderly.network/ui-transfer@2.0.6
+  - @orderly.network/utils@2.0.6
+
+## 2.0.6-alpha.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/hooks@2.0.6-alpha.0
+  - @orderly.network/core@2.0.6-alpha.0
+  - @orderly.network/net@2.0.6-alpha.0
+  - @orderly.network/trading-view@2.0.6-alpha.0
+  - @orderly.network/types@2.0.6-alpha.0
+  - @orderly.network/ui@2.0.6-alpha.0
+  - @orderly.network/ui-connector@2.0.6-alpha.0
+  - @orderly.network/ui-leverage@2.0.6-alpha.0
+  - @orderly.network/ui-transfer@2.0.6-alpha.0
+  - @orderly.network/utils@2.0.6-alpha.0
+
 ## 2.0.5
 
 ### Patch Changes

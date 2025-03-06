@@ -1,5 +1,27 @@
 # @orderly/docs
 
+## 1.0.5
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+- Updated dependencies [74c2c433e]
+  - @orderly.network/hooks@2.0.6
+  - @orderly.network/react@2.0.6
+  - @orderly.network/web3-onboard@2.0.6
+  - @orderly.network/types@2.0.6
+
+## 1.0.5-alpha.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/hooks@2.0.6-alpha.0
+  - @orderly.network/react@2.0.6-alpha.0
+  - @orderly.network/web3-onboard@2.0.6-alpha.0
+  - @orderly.network/types@2.0.6-alpha.0
+
 ## 1.0.4
 
 ### Patch Changes
