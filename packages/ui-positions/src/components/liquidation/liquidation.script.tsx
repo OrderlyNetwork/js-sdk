@@ -37,7 +37,9 @@ export const useLiquidationScript = (props: LiquidationProps) => {
     end_t: dateRange.to != null ? dateRange.to.getTime() : undefined,
   });
 
-  const dataSource = useDataTap(data);
+  const dataSource = useDataTap(data, {
+    fallbackData: [],
+  });
 
   // useEffect(() => {
   //   setPage(1);
@@ -149,7 +151,6 @@ const useFilter = () => {
           },
         };
 
-        
         const dateRange = dateRangeMap[diffDays];
         if (
           dateRange &&

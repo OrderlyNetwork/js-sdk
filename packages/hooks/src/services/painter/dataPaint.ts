@@ -100,8 +100,8 @@ export class DataPaint extends BasePaint {
       prevElementBoundingBox = this._drawText(options.data.position.side, {
         color:
           options.data?.position.side.toUpperCase() === "LONG"
-            ? this.DEFAULT_PROFIT_COLOR
-            : this.DEFAULT_LOSS_COLOR,
+            ? options.profitColor || this.DEFAULT_PROFIT_COLOR
+            : options.lossColor || this.DEFAULT_LOSS_COLOR,
         left,
         top: this._ratio(top),
         fontSize: this._ratio(fontSize),

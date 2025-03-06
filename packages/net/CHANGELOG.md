@@ -1,5 +1,17 @@
 # @orderly.network/net
 
+## 2.0.6
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+
+## 2.0.6-alpha.0
+
+### Patch Changes
+
+- fix bugs
+
 ## 2.0.5
 
 ### Patch Changes

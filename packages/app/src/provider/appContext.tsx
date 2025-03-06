@@ -1,13 +1,12 @@
 import { FC, createContext, PropsWithChildren, useContext } from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
-import { useAppState } from "../hooks/useAppState";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useSettleEvent } from "../hooks/useSettleEvent";
 import { useWalletConnectError } from "../hooks/useWalletConnectError";
 import {
-  useRestrictedAreas,
-  RestrictedAreasReturns,
-  IRestrictedAreasParams,
+  RestrictedInfoOptions,
+  useRestrictedInfo,
+  RestrictedInfoReturns,
 } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
@@ -18,6 +17,7 @@ type AppContextState = {
    * Whether the current network is not supported
    */
   wrongNetwork: boolean;
+  disabledConnect: boolean;
   currentChainId: number | undefined;
   setCurrentChainId: (chainId: number | undefined) => void;
   onChainChanged?: (
@@ -25,7 +25,7 @@ type AppContextState = {
     state: { isTestnet: boolean; isWalletConnected: boolean }
   ) => void;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
-  restrictedInfo?: RestrictedAreasReturns;
+  restrictedInfo: RestrictedInfoReturns;
 };
 
 const AppContext = createContext<AppContextState>({} as AppContextState);
@@ -35,8 +35,8 @@ export const useAppContext = () => {
 };
 
 export type AppStateProviderProps = {
-  restrictedInfo?: IRestrictedAreasParams;
   defaultChain?: DefaultChain;
+  restrictedInfo?: RestrictedInfoOptions;
 } & Pick<AppContextState, "onChainChanged">;
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
@@ -55,9 +55,11 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   useWalletEvent();
   useSettleEvent();
   useWalletConnectError();
-  const restrictedInfo = useRestrictedAreas(props?.restrictedInfo ?? {});
 
   // const { networkStatus } = useAppState();
+  const restrictedInfo = useRestrictedInfo(props.restrictedInfo);
+
+  const disabledConnect = restrictedInfo.restrictedOpen;
 
   return (
     <AppContext.Provider
@@ -67,6 +69,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
         currentChainId,
         setCurrentChainId,
         onChainChanged: props.onChainChanged,
+        disabledConnect,
         restrictedInfo,
       }}
     >

@@ -1,23 +1,17 @@
 import { TradingPageProps } from "@orderly.network/trading";
 import { FooterProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
-import { IRestrictedAreasParams } from "@orderly.network/hooks";
+import { RestrictedInfoOptions } from "@orderly.network/hooks";
 import { AppLogos } from "@orderly.network/react-app";
 import { OrderlyActiveIcon, OrderlyIcon } from "./components/icons/orderly";
 
 export type OrderlyConfig = {
   orderlyAppProvider: {
     appIcons: AppLogos;
-    restrictedInfo?: {
-      enableDefault: boolean;
-      customRestrictedIps: string[];
-      customRestrictedRegions: string[];
-      contact: { url: string; text: string };
-    };
+    restrictedInfo?: RestrictedInfoOptions;
   };
   scaffold: {
     mainNavProps: MainNavWidgetProps;
     footerProps: FooterProps;
-    restrictedAreasProps: IRestrictedAreasParams;
   };
   tradingPage: {
     tradingViewConfig: TradingPageProps["tradingViewConfig"];
@@ -118,12 +112,6 @@ const config: OrderlyConfig = {
       discordUrl: "https://discord.com/invite/orderlynetwork",
       twitterUrl: "https://twitter.com/OrderlyNetwork",
     },
-    restrictedAreasProps: {
-      enableDefault: false,
-      customRestrictedIps: [],
-      customRestrictedRegions: [],
-      contact: { url: "x@orerly.network", text: "x@orerly.network" },
-    },
   },
   orderlyAppProvider: {
     appIcons: {
@@ -135,16 +123,35 @@ const config: OrderlyConfig = {
       },
     },
     restrictedInfo: {
-      enableDefault: false,
+      enableDefault: true,
       customRestrictedIps: [],
-      customRestrictedRegions: [
-        "Afghanistan",
-        "American Samoa",
-        "Bahamas",
-        "Canada",
-        "Cuba",
-      ],
-      contact: { url: "x@orerly.network", text: "x@orerly.network" },
+      customRestrictedRegions: [],
+      content: ({ ip, brokerName }) => {
+        return (
+          <span>
+            You are accessing {brokerName} from an IP address ({ip}) associated
+            with a restricted country. Please refer to our{" "}
+            <a
+              style={{
+                textDecorationLine: "underline",
+              }}
+              target="_blank"
+              href="https://learn.woo.org/legal/terms-of-use#id-2.-legal-compliance"
+            >
+              Terms of Use
+            </a>
+            . If you believe this is an error, contact{" "}
+            <a
+              style={{
+                textDecorationLine: "underline",
+              }}
+              href="mailto:x@orerly.network"
+            >
+              x@orerly.network.
+            </a>
+          </span>
+        );
+      },
     },
   },
   tradingPage: {

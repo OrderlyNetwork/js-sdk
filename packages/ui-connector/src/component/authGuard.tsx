@@ -78,7 +78,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     // ...rest
   } = props;
   const { state } = useAccount();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const _status = useMemo(() => {
     if (status === undefined) {
@@ -107,7 +107,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
       });
     }
 
-    if (state.validating) {
+    if (state.validating && !disabledConnect) {
       return (
         <StatusInfo
           // variant={"gradient"}
@@ -134,6 +134,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
         networkId={props.networkId}
         labels={labels}
         descriptions={descriptions}
+        disabledConnect={disabledConnect}
       />
     );
   }, [state.status, state.validating, buttonProps, wrongNetwork]);
@@ -143,7 +144,10 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
    */
 
   return (
-    <Either value={state.status >= _status && !wrongNetwork} left={Left}>
+    <Either
+      value={state.status >= _status && !wrongNetwork && !disabledConnect}
+      left={Left}
+    >
       {props.children}
     </Either>
   );
@@ -157,6 +161,7 @@ const DefaultFallback = (props: {
   labels: alertMessages;
   bridgeLessOnly?: boolean;
   descriptions?: alertMessages;
+  disabledConnect?: boolean;
 }) => {
   const { buttonProps, labels, descriptions } = props;
   const { connectWallet } = useAppContext();
@@ -219,7 +224,7 @@ const DefaultFallback = (props: {
       );
   };
 
-  if (props.wrongNetwork) {
+  if (props.wrongNetwork && !props.disabledConnect) {
     return (
       <StatusInfo
         color="warning"
@@ -240,7 +245,7 @@ const DefaultFallback = (props: {
     <Match
       value={props.status}
       case={(value: AccountStatusEnum) => {
-        if (value <= AccountStatusEnum.NotConnected) {
+        if (value <= AccountStatusEnum.NotConnected || props.disabledConnect) {
           return (
             <StatusInfo
               size="lg"
@@ -248,9 +253,10 @@ const DefaultFallback = (props: {
                 onConnectWallet();
               }}
               // fullWidth
-              variant={"gradient"}
+              variant={props.disabledConnect ? undefined : "gradient"}
               angle={45}
               description={descriptions?.connectWallet}
+              disabled={props.disabledConnect}
               {...buttonProps}
             >
               {labels.connectWallet}

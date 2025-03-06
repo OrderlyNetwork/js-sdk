@@ -17,7 +17,7 @@ export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
   const { state } = useAccount();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const { isFirstTimeDeposit } = useFirstTimeDeposit();
 
@@ -34,21 +34,22 @@ export const useTradingScript = () => {
     "right"
   );
 
-  const canTrading = useMemo(() => {
+  const canTrade = useMemo(() => {
     if (
       !wrongNetwork &&
+      !disabledConnect &&
       (state.status >= AccountStatusEnum.EnableTrading ||
         state.status === AccountStatusEnum.EnableTradingWithoutConnected)
     ) {
       return true;
     }
     return false;
-  }, [state.status, wrongNetwork]);
+  }, [state.status, wrongNetwork, disabledConnect]);
 
   const horizontalDraggable = useMemo(() => min3XL, [min3XL]);
 
   const positionsState = useOrderEntryPositions({
-    canTrading,
+    canTrade,
     isFirstTimeDeposit,
   });
 
@@ -64,7 +65,7 @@ export const useTradingScript = () => {
     max2XL,
     min3XL,
     max4XL,
-    canTrading,
+    canTrade,
     openMarketsSheet,
     onOpenMarketsSheetChange: setOpenMarketsSheet,
     horizontalDraggable,
@@ -106,10 +107,10 @@ function useMarketsCollapse(options: { collapsable: boolean }) {
 }
 
 function useOrderEntryPositions(options: {
-  canTrading: boolean;
+  canTrade: boolean;
   isFirstTimeDeposit: boolean;
 }) {
-  const { canTrading, isFirstTimeDeposit } = options;
+  const { canTrade, isFirstTimeDeposit } = options;
 
   const [positions, setPositions] = useLocalStorage(
     "orderly_assets_orderEntry_margin_positions",
@@ -139,8 +140,8 @@ function useOrderEntryPositions(options: {
   };
 
   const showPositionIcon = useMemo(
-    () => canTrading && !isFirstTimeDeposit,
-    [canTrading, isFirstTimeDeposit]
+    () => canTrade && !isFirstTimeDeposit,
+    [canTrade, isFirstTimeDeposit]
   );
 
   const pos = useMemo(() => {

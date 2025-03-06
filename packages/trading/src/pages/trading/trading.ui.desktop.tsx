@@ -42,7 +42,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     setAnimating,
     positions,
     updatePositions,
-    canTrading,
+    canTrade,
     showPositionIcon,
     horizontalDraggable,
   } = props;
@@ -69,7 +69,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const tradindviewMaxHeight = 600;
 
   const tradingViewMinWidth = 540;
-  const dataListMinHeight = canTrading ? 379 : 277;
+  const dataListMinHeight = canTrade ? 379 : 277;
 
   const minScreenHeight =
     topBarHeight +
