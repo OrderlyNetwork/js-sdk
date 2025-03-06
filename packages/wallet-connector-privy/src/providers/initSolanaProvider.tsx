@@ -17,19 +17,12 @@ interface IProps extends PropsWithChildren {
 }
 
 export function InitSolanaProvider(props: IProps) {
-  const network = props.solanaConfig.network ?? WalletAdapterNetwork.Devnet;
-
-  const endPoint = useMemo(() => {
-    return clusterApiUrl(network);
-  }, [network]);
 
   const [wallets] = useState(() => [new PhantomWalletAdapter()]);
   return (
 
-    <ConnectionProvider endpoint={endPoint}>
       <WalletProvider wallets={wallets} onError={props.solanaConfig.onError}>
         {props.children}
       </WalletProvider>
-    </ConnectionProvider>
   );
 }

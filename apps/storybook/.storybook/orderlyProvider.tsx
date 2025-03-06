@@ -132,7 +132,6 @@ export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
       ]
     }}
     solanaConfig={{
-      network: WalletAdapterNetwork.Devnet,
       endPoint: 'https://api.devnet.solana.com',
       mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5',
       devnetRpc: 'https://api.devnet.solana.com',

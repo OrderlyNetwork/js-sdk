@@ -1,6 +1,9 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ChainNamespace } from "@orderly.network/types";
+import { WalletName } from "@solana/wallet-adapter-base";
+import { useWalletConnectorPrivy } from "../provider";
+import { SolanaChainsMap } from "../types";
 
 const SOLChain = 901901901;
 
@@ -17,6 +20,7 @@ const SolanaWalletContext = createContext<SolanaWalletContextValue | null>(null)
 
 export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [wallet, setWallet] = useState<any>();
+  const { network } = useWalletConnectorPrivy();
   const {
     wallets,
     select,
@@ -39,19 +43,19 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }>({
     walletSelect: null,
     connect: null,
-    walletSelectResolve: () => {},
-    walletSelectReject: () => {},
-    connectReject: () => {},
-    connectResolve: () => {},
+    walletSelectResolve: () => { },
+    walletSelectReject: () => { },
+    connectReject: () => { },
+    connectResolve: () => { },
   });
 
   const isManual = useRef(false);
 
   const initPromiseRef = () => {
-    solanaPromiseRef.current.walletSelectResolve = () => {};
-    solanaPromiseRef.current.walletSelectReject = () => {};
-    solanaPromiseRef.current.connectReject = () => {};
-    solanaPromiseRef.current.connectReject = () => {};
+    solanaPromiseRef.current.walletSelectResolve = () => { };
+    solanaPromiseRef.current.walletSelectReject = () => { };
+    solanaPromiseRef.current.connectReject = () => { };
+    solanaPromiseRef.current.connectReject = () => { };
     solanaPromiseRef.current.connect = null;
     solanaPromiseRef.current.walletSelect = null;
     solanaPromiseRef.current.walletSelect = new Promise((resolve, reject) => {
@@ -77,7 +81,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
       return;
     }
     if (!walletSolana) {
-      select(walletName);
+      select(walletName as WalletName);
     } else {
       solanaPromiseRef.current.walletSelectResolve(walletSolana);
       if (!publicKey) {
@@ -115,7 +119,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
           ],
           chains: [
             {
-              id: SOLChain,
+              id: SolanaChainsMap.get(network)!,
               namespace: ChainNamespace.solana,
             },
           ],
@@ -138,7 +142,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
       return null;
     }
     return {
-      id: SOLChain,
+      id: SolanaChainsMap.get(network)!,
       namespace: ChainNamespace.solana,
     };
   }, [publicKey]);
@@ -182,12 +186,12 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
       ],
       chains: [
         {
-          id: SOLChain,
+          id: SolanaChainsMap.get(network)!,
           namespace: ChainNamespace.solana,
         },
       ],
       chain: {
-        id: SOLChain,
+        id: SolanaChainsMap.get(network)!,
         namespace: ChainNamespace.solana,
       },
     });

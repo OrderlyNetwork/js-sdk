@@ -44,7 +44,6 @@ export interface InitWagmi{
 }
 
 export interface InitSolana{
-  network: WalletAdapterNetwork;
   endPoint: string;
   mainnetRpc: string;
   devnetRpc: string;
