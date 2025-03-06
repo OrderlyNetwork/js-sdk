@@ -113,6 +113,7 @@ export default defineConfig({
         "../../packages/wallet-connector/src"
       ),
       "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
+      "@orderly.network/i18n": resolve(__dirname, "../../packages/i18n/src"),
     },
   },
 });
