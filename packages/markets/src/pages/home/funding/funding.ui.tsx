@@ -11,7 +11,7 @@ import { FundingComparisonWidget } from "../../../components/fundingComparison";
 import { UseFundingScript } from "./funding.script";
 import { SearchIcon } from "../../../icons";
 import { useMarketsContext } from "../../../components/marketsProvider";
-
+import { useTranslation } from "@orderly.network/i18n";
 export type FundingUIProps = UseFundingScript;
 
 export const FundingUI: FC<FundingUIProps> = ({
@@ -20,12 +20,13 @@ export const FundingUI: FC<FundingUIProps> = ({
 }) => {
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
+  const { t } = useTranslation();
 
   const search = (
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder="Search symbol"
+      placeholder={t("markets.funding.search.placeholder")}
       className="oui-w-[240px] oui-my-1"
       size="sm"
       data-testid="oui-testid-markets-searchMarket-input"
@@ -59,14 +60,14 @@ export const FundingUI: FC<FundingUIProps> = ({
         trailing={search}
       >
         <TabPanel
-          title="Overview"
+          title={t("markets.funding.tabs.overview")}
           value="overview"
           testid="oui-testid-funding-overview-tab"
         >
           <FundingOverviewWidget />
         </TabPanel>
         <TabPanel
-          title="Comparison"
+          title={t("markets.funding.tabs.comparison")}
           value="comparison"
           testid="oui-testid-funding-comparison-tab"
         >

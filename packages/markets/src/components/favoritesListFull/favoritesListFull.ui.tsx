@@ -5,6 +5,7 @@ import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { FavoritesTabWidget } from "../../components/favoritesTabs";
 import { useFavoritesListFullColumns } from "./column";
+import { Trans } from "@orderly.network/i18n";
 
 export type FavoritesListFullProps = UseFavoritesListFullReturn;
 
@@ -16,14 +17,13 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
   const columns = useFavoritesListFullColumns(favorite, true);
 
   const emptyView = (
-    <Flex>
-      <Text size="xs" intensity={36}>
+    <Flex className="oui-text-xs oui-text-base-contrast-36">
+      {/* @ts-ignore */}
+      <Trans i18nKey="markets.dataList.favorites.empty">
         Click on the
-      </Text>
-      <UnFavoritesIcon className="oui-text-base-contrast-36" />
-      <Text size="xs" intensity={36}>
+        <UnFavoritesIcon className="oui-text-base-contrast-36" />
         icon next to a market to add it to your list.
-      </Text>
+      </Trans>
     </Flex>
   );
 

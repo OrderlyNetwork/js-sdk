@@ -21,7 +21,7 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
-
+import { useTranslation } from "@orderly.network/i18n";
 export type FavoritesDropdownMenuProps =
   PropsWithChildren<UseFavoritesDropdownMenuScriptReturn>;
 
@@ -44,6 +44,8 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
     addTab,
     confirm,
   } = props;
+
+  const { t } = useTranslation();
 
   const overLen = value?.length > 15;
 
@@ -86,14 +88,14 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
               onClick={addTab}
               disabled={!value || overLen}
             >
-              Add
+              {t("markets.favorites.dropdown.add")}
             </Button>
           </Flex>
 
           {overLen && (
             <Flex itemAlign="center" gapX={1} mt={1}>
               <div className="oui-h-1 oui-w-1 oui-bg-danger oui-rounded-full"></div>
-              <Text color="danger">List name cannot exceed 15 characters</Text>
+              <Text color="danger">{t("markets.favorites.tabs.maxName")}</Text>
             </Flex>
           )}
         </Box>
@@ -108,7 +110,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         // @ts-ignore
         content={
           <Text size="2xs" intensity={80}>
-            Maximum 10 groups in the favorite list
+            {t("markets.favorites.tabs.maxList")}
           </Text>
         }
         className="oui-bg-base-6"
@@ -134,7 +136,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
               opacity={1}
             />
             <Text className="" intensity={20}>
-              Add a new watchlist
+              {t("markets.favorites.dropdown.addPlaceholder")}
             </Text>
           </Flex>
         </div>
@@ -145,7 +147,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
   const header = (
     <Flex justify="between" className="oui-mt-3 oui-mb-[10px]">
       <Flex gapX={1}>
-        Select lists for
+        {t("markets.favorites.dropdown.title")}
         <Text.formatted
           rule="symbol"
           formatString="base-type"
@@ -217,7 +219,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         className="oui-text-sm"
         size="md"
       >
-        Cancel
+        {t("markets.favorites.dropdown.cancel")}
       </Button>
 
       <Button
@@ -227,7 +229,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         className="oui-text-sm"
         size="md"
       >
-        Confirm
+        {t("markets.favorites.dropdown.confirm")}
       </Button>
     </Flex>
   );

@@ -15,11 +15,12 @@ import {
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { MarketsListFullWidget } from "../../../components/marketsListFull";
 import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
-
+import { useTranslation } from "@orderly.network/i18n";
 export type MarketsDataListProps = UseMarketsDataListScript;
 
 export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   const { activeTab, onTabChange } = props;
+  const { t } = useTranslation();
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
@@ -28,7 +29,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder="Search market"
+      placeholder={t("markets.dataList.search.placeholder")}
       className="oui-w-[240px] oui-my-1"
       size="sm"
       data-testid="oui-testid-markets-searchMarket-input"
@@ -62,7 +63,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         trailing={search}
       >
         <TabPanel
-          title="Favorites"
+          title={t("markets.dataList.tabs.favorites")}
           icon={<FavoritesIcon />}
           value="favorites"
           testid="oui-testid-markets-favorites-tab"
@@ -70,7 +71,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           <FavoritesListFullWidget />
         </TabPanel>
         <TabPanel
-          title="All markets"
+          title={t("markets.dataList.tabs.allMarkets")}
           icon={<AllMarketsIcon />}
           value="all"
           testid="oui-testid-markets-all-tab"
@@ -82,7 +83,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           />
         </TabPanel>
         <TabPanel
-          title="New listings"
+          title={t("markets.dataList.tabs.newListings")}
           icon={<NewListingsIcon />}
           value="new"
           testid="oui-testid-markets-newListings-tab"

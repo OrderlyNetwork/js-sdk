@@ -9,11 +9,14 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useMarketsListFullColumns = (
   favorite: FavoriteInstance,
   isFavoriteList = false
 ) => {
+  const { t } = useTranslation();
+
   const columns = useMemo(() => {
     return [
       {
@@ -61,7 +64,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: "Market",
+        title: t("markets.dataList.column.market"),
         dataIndex: "symbol",
         width: 90,
         render: (value) => {
@@ -79,7 +82,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: "Price",
+        title: t("markets.dataList.column.price"),
         dataIndex: "24h_close",
         width: 100,
         align: "right",
@@ -93,7 +96,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: "24h change",
+        title: t("markets.dataList.column.24hChange"),
         dataIndex: "change",
         width: 100,
         align: "right",
@@ -114,7 +117,7 @@ export const useMarketsListFullColumns = (
       {
         title: (
           <Flex gapX={1}>
-            <OrderlyIcon /> 24h volume
+            <OrderlyIcon /> {t("markets.dataList.column.24hVolume")}
           </Flex>
         ),
         dataIndex: "24h_amount",
@@ -132,7 +135,7 @@ export const useMarketsListFullColumns = (
       {
         title: (
           <Flex gapX={1}>
-            <OrderlyIcon /> Open interest
+            <OrderlyIcon /> {t("markets.dataList.column.openInterest")}
           </Flex>
         ),
         dataIndex: "openInterest",
@@ -148,7 +151,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: "8h funding",
+        title: t("markets.dataList.column.8hFunding"),
         dataIndex: "8h_funding",
         width: 100,
         align: "right",
@@ -178,7 +181,11 @@ export const useMarketsListFullColumns = (
           if (isFavoriteList) {
             return (
               <Flex justify="end" mr={4}>
-                <Tooltip content="Move to top" align="center" delayDuration={0}>
+                <Tooltip
+                  content={t("markets.dataList.column.moveTop")}
+                  align="center"
+                  delayDuration={0}
+                >
                   <Box
                     className="oui-hidden group-hover:oui-block oui-cursor-pointer"
                     onClick={(e) => {
@@ -197,7 +204,7 @@ export const useMarketsListFullColumns = (
         },
       },
     ] as Column[];
-  }, [favorite, isFavoriteList]);
+  }, [favorite, isFavoriteList, t]);
 
   return columns;
 };

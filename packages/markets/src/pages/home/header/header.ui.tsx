@@ -4,7 +4,7 @@ import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { OrderlyIcon } from "../../../icons";
-
+import { useTranslation } from "@orderly.network/i18n";
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
   const {
@@ -21,6 +21,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
     favorite,
   } = props;
   const { onSymbolChange } = useMarketsContext();
+  const { t } = useTranslation();
 
   const cls = cn(
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
@@ -47,19 +48,31 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
         />
         <CardItem
           data={news}
-          title={<Text.gradient color="brand">New listings</Text.gradient>}
+          title={
+            <Text.gradient color="brand">
+              {t("markets.header.newListings")}
+            </Text.gradient>
+          }
           className={cls}
           onSymbol={onSymbol}
         />
         <CardItem
           data={gainers}
-          title={<Text className="oui-text-success-light">Top gainers</Text>}
+          title={
+            <Text className="oui-text-success-light">
+              {t("markets.header.topGainers")}
+            </Text>
+          }
           className={cls}
           onSymbol={onSymbol}
         />
         <CardItem
           data={losers}
-          title={<Text className="oui-text-danger-light">Top losers</Text>}
+          title={
+            <Text className="oui-text-danger-light">
+              {t("markets.header.topLosers")}
+            </Text>
+          }
           className={cls}
           onSymbol={onSymbol}
         />
@@ -86,13 +99,14 @@ type BlockListProps = {
 /** -----------MarketsHeader start ------------ */
 const BlockList: React.FC<BlockListProps> = (props) => {
   const { total24Amount, totalOpenInterest, tvl } = props;
+  const { t } = useTranslation();
 
   const list = useMemo(() => {
     return [
       {
         label: (
           <Flex gapX={1}>
-            <OrderlyIcon /> 24h volume
+            <OrderlyIcon /> {t("markets.header.24hVolume")}
           </Flex>
         ),
         value: total24Amount,
@@ -100,7 +114,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       {
         label: (
           <Flex gapX={1}>
-            <OrderlyIcon /> Open interest
+            <OrderlyIcon /> {t("markets.header.openInterest")}
           </Flex>
         ),
         value: totalOpenInterest,
@@ -108,7 +122,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       {
         label: (
           <Flex gapX={1}>
-            <OrderlyIcon /> Assets (TVL)
+            <OrderlyIcon /> {t("markets.header.assets")}
           </Flex>
         ),
         value: tvl,

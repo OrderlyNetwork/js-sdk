@@ -14,7 +14,7 @@ import {
   UseFavoritesTabScriptReturn,
 } from "./favoritesTabs.script";
 import { AddIcon, ActiveAddIcon, EditIcon, TrashIcon } from "../../icons";
-
+import { useTranslation } from "@orderly.network/i18n";
 export type FavoritesTabProps = UseFavoritesTabScriptReturn &
   Pick<UseFavoritesTabScriptOptions, "size"> & {
     className?: string;
@@ -39,6 +39,8 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
     scrollable,
   } = props;
 
+  const { t } = useTranslation();
+
   const { selectedFavoriteTab, favoriteTabs, updateSelectedFavoriteTab } =
     props.favorite;
 
@@ -51,9 +53,13 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
 
   const onDel = (item: any) => {
     modal.confirm({
-      title: "Delete list",
+      title: t("markets.favorites.tabs.delete.title"),
       content: (
-        <Text size="sm">{`Are you sure you want to delete ${item.name}?`}</Text>
+        <Text size="sm">
+          {t("markets.favorites.tabs.delete.description", {
+            name: item.name,
+          })}
+        </Text>
       ),
       onOk() {
         delTab(item);
