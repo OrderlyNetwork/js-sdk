@@ -40,6 +40,9 @@
       ],
       "@orderly.network/ui-share": [
         "../ui-share/src"
+      ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
       ]
     }
   }

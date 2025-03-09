@@ -10,7 +10,7 @@ import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast, usePagination } from "@orderly.network/ui";
 import { useContext, useEffect, useMemo, useState } from "react";
-
+import { useTranslation } from "@orderly.network/i18n";
 export type GenerateKeyInfo = {
   key: string;
   screctKey: string;
@@ -29,15 +29,15 @@ export const useApiManagerScript = (props?: {
   const { configStore } = useContext(OrderlyContext);
   const brokerId = configStore.get("brokerId");
   const { wrongNetwork, disabledConnect } = useAppContext();
-
   const { state, account } = useAccount();
+  const { t } = useTranslation();
 
   const canCreateApiKey =
     !wrongNetwork &&
     !disabledConnect &&
     (state.status === AccountStatusEnum.EnableTrading ||
       state.status === AccountStatusEnum.EnableTradingWithoutConnected);
-  
+
   const { data } = useQuery<
     | undefined
     | {
@@ -116,7 +116,7 @@ export const useApiManagerScript = (props?: {
 
       const generateKeyRes = await generateOrderlyKey(scope);
 
-      toast.success("API key created");
+      toast.success(t("portfolio.apiKey.created"));
       console.log("xxx generateKeyRes", generateKeyRes);
 
       if ((ipRestriction?.length || 0) > 0) {
@@ -148,7 +148,7 @@ export const useApiManagerScript = (props?: {
 
   const onCopyApiKeyInfo = () => {
     navigator.clipboard.writeText(JSON.stringify(generateKey));
-    toast.success("API info copied");
+    toast.success(t("portfolio.apiKey.apiInfo.copy"));
   };
   const doConfirm = () => {
     hideCreatedDialog();
@@ -160,7 +160,7 @@ export const useApiManagerScript = (props?: {
         .then(
           async (data) => {
             if (data?.success) {
-              toast.success("API key deleted");
+              toast.success(t("portfolio.apiKey.deleted"));
               refresh();
               // delete current api key, wiil disconnect
               const curKey = await account.keyStore
@@ -189,7 +189,7 @@ export const useApiManagerScript = (props?: {
     const data = await future;
 
     if (data.success) {
-      toast.success("API key updated");
+      toast.success(t("portfolio.apiKey.updated"));
       refresh();
       return Promise.resolve();
     } else {
@@ -198,15 +198,18 @@ export const useApiManagerScript = (props?: {
     return Promise.reject();
   };
 
-  const onCopyAccountId = () => toast.success("Account id copied");
+  const onCopyAccountId = () =>
+    toast.success(t("portfolio.apiKey.accountId.copy"));
   const onCopyApiKey = (key?: string) => {
     if (typeof key !== "undefined") {
       navigator.clipboard.writeText(key.replace("ed25519:", ""));
     }
-    toast.success("API key copied");
+    toast.success(t("portfolio.apiKey.column.apiKey.copy"));
   };
-  const onCopyApiSecretKey = () => toast.success("Secret key copied");
-  const onCopyIP = () => toast.success("Restricted IP copied");
+  const onCopyApiSecretKey = () =>
+    toast.success(t("portfolio.apiKey.secretKey.copy"));
+  const onCopyIP = () =>
+    toast.success(t("portfolio.apiKey.column.restrictedIP.copy"));
 
   const keyList = useMemo(() => {
     return keys?.filter((e) => {

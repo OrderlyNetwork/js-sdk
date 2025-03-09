@@ -8,6 +8,7 @@ import {
   SideBarProps,
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type PortfolioLayoutProps = LayoutProps & {
   hideSideBar?: boolean;
@@ -54,10 +55,10 @@ type LeftSidebarProps = SideBarProps & {
 
 const LeftSidebar: FC<LeftSidebarProps> = (props) => {
   const { expanded, setExpand } = useScaffoldContext();
-
+  const { t } = useTranslation();
   return (
     <SideBar
-      title="Portfolio"
+      title={t("portfolio.title")}
       {...props}
       open={expanded}
       onOpenChange={(open) => setExpand(open)}

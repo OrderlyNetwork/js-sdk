@@ -2,11 +2,13 @@ import { Card } from "@orderly.network/ui";
 import { PeriodTitle } from "../shared/periodHeader";
 import { useAssetsLineChartScriptReturn } from "./assetsChart.script";
 import { AssetLineChart } from "@orderly.network/chart";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type AssetsLineChartProps = {} & useAssetsLineChartScriptReturn;
 
 export const AssetsChartUI = (props: AssetsLineChartProps) => {
   const { onPeriodChange, periodTypes, period, data } = props;
+  const { t } = useTranslation();
 
   return (
     <Card
@@ -15,7 +17,7 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
           onPeriodChange={onPeriodChange}
           periodTypes={periodTypes}
           period={period}
-          title="Assets"
+          title={t("portfolio.overview.assets.title")}
         />
       }
       id="portfolio-overview-assets-chart"

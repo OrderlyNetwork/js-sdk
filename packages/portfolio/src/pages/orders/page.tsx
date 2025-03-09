@@ -2,9 +2,11 @@ import { FC, SVGProps, useRef } from "react";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { Box, Button, Divider, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { OrderListInstance, OrdersWidget } from "@orderly.network/ui-orders";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const OrdersPage = (props: { sharePnLConfig?: SharePnLConfig }) => {
   const { sharePnLConfig } = props;
+  const { t } = useTranslation();
 
   const ordersRef = useRef<OrderListInstance>(null);
 
@@ -22,15 +24,15 @@ export const OrdersPage = (props: { sharePnLConfig?: SharePnLConfig }) => {
       height="100%"
     >
       <Flex width="100%" justify="between">
-        <Text size="lg">Orders</Text>
-        <Tooltip content="The downloaded data will reflect only the applied filters (e.g., status, time, side, and pagination) and may not include all records.">
+        <Text size="lg">{t("orders.page.title")}</Text>
+        <Tooltip content={t("orders.download.tooltip")}>
           <Button
             color="gray"
             size="sm"
             className="oui-bg-base-4"
             onClick={onDownload}
           >
-            Download
+            {t("orders.download")}
             <TooltipIcon className="oui-text-base-contrast-36 oui-ml-[5px]" />
           </Button>
         </Tooltip>

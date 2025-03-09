@@ -1,12 +1,12 @@
+import { FC } from "react";
 import {
   ArrowDownSquareFillIcon,
   ArrowUpSquareFillIcon,
   Button,
   CardTitle,
   Flex,
-  Text,
 } from "@orderly.network/ui";
-import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 
 type Props = {
   disabled: boolean;
@@ -15,9 +15,11 @@ type Props = {
 };
 
 export const AssetsHeader: FC<Props> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex justify={"between"}>
-      <CardTitle>Overview</CardTitle>
+      <CardTitle>{t("portfolio.overview.title")}</CardTitle>
       <Flex gap={3}>
         <Button
           disabled={props.disabled}
@@ -26,8 +28,8 @@ export const AssetsHeader: FC<Props> = (props) => {
           onClick={() => props.onWithdraw?.()}
           icon={<ArrowUpSquareFillIcon />}
           data-testid="oui-testid-portfolio-assets-withdraw-btn"
-          >
-          Withdraw
+        >
+          {t("common.withdraw")}
         </Button>
         <Button
           disabled={props.disabled}
@@ -36,7 +38,7 @@ export const AssetsHeader: FC<Props> = (props) => {
           icon={<ArrowDownSquareFillIcon />}
           data-testid="oui-testid-portfolio-assets-deposit-btn"
         >
-          Deposit
+          {t("common.deposit")}
         </Button>
       </Flex>
     </Flex>

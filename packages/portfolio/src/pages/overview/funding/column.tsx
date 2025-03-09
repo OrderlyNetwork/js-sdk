@@ -1,12 +1,15 @@
 import { useMemo } from "react";
 import { Flex, Text, type Column } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useFundingHistoryColumns = () => {
+  const { t } = useTranslation();
+
   const columns = useMemo(() => {
     return [
       {
-        title: "Symbol",
+        title: t("portfolio.overview.column.symbol"),
         dataIndex: "symbol",
         width: 80,
         rule: "symbol",
@@ -15,13 +18,13 @@ export const useFundingHistoryColumns = () => {
         },
       },
       {
-        title: "Time",
+        title: t("portfolio.overview.column.time"),
         dataIndex: "created_time",
         width: 120,
         rule: "date",
       },
       {
-        title: "Funding rate / Annual rate",
+        title: t("portfolio.overview.column.funding&AnnualRate"),
         dataIndex: "funding_rate",
         width: 80,
         render: (value: any, record) => {
@@ -41,22 +44,24 @@ export const useFundingHistoryColumns = () => {
         },
       },
       {
-        title: "Payment type",
+        title: t("portfolio.overview.column.paymentType"),
         dataIndex: "payment_type",
         width: 80,
         render: (value: any) => {
           switch (value) {
             case "Pay":
-              return "Paid";
+            case "Paid":
+              return t("portfolio.overview.column.paymentType.paid");
             case "Receive":
-              return "Received";
+            case "Received":
+              return t("portfolio.overview.column.paymentType.received");
             default:
               return value;
           }
         },
       },
       {
-        title: "Funding fee (USDC)",
+        title: t("portfolio.overview.column.fundingFee"),
         dataIndex: "funding_fee",
         width: 80,
         rule: "price",
@@ -70,7 +75,7 @@ export const useFundingHistoryColumns = () => {
         },
       },
     ] as Column<API.FundingFeeRow & { annual_rate: number }>[];
-  }, []);
+  }, [t]);
 
   return columns;
 };

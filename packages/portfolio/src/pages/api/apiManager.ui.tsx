@@ -24,11 +24,13 @@ import {
   AuthGuardTooltip,
 } from "@orderly.network/ui-connector";
 import { APIKeyItem } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
+  const { t } = useTranslation();
   return (
     <Card
-      title={"API keys"}
+      title={t("portfolio.apiKey.page.title")}
       id="portfolio-apikey-manager"
       className="oui-bg-base-9 oui-font-semibold"
     >
@@ -51,6 +53,7 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex
       width={"100%"}
@@ -69,7 +72,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         className="oui-w-1/2"
       >
         <Text size="xs" intensity={36}>
-          Account ID
+          {t("portfolio.apiKey.accountId")}
         </Text>
         <Text.formatted
           size="base"
@@ -95,7 +98,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         className="oui-w-1/2"
       >
         <Text size="xs" intensity={36}>
-          UID
+          {t("portfolio.apiKey.uid")}
         </Text>
         <Text size="base" inlist={80}>
           {props.uid}
@@ -106,6 +109,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex
       width={"100%"}
@@ -113,16 +117,13 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
       className="oui-text-sm oui-border-b-2 oui-border-line-6 oui-pb-4"
     >
       <Flex direction={"column"} itemAlign={"start"} width={"100%"} gap={1}>
-        <Text intensity={54}>
-          Create API keys to suit your trading needs. For your security, don't
-          share your API keys with anyone.{" "}
-        </Text>
+        <Text intensity={54}>{t("portfolio.apiKey.description")}</Text>
         <Flex
           itemAlign={"center"}
           className="oui-text-primary-light oui-fill-primary-light hover:oui-text-primary-darken oui-cursor-pointer oui-text-2xs md:oui-text-xs xl:oui-text-sm"
           onClick={props.onReadApiGuide}
         >
-          <Text>Read API guide</Text>
+          <Text>{t("portfolio.apiKey.readApiGuide")}</Text>
           <svg
             width="16"
             height="16"
@@ -137,11 +138,10 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
       <AuthGuardTooltip
         side="top"
         tooltip={{
-          connectWallet: "Please connect wallet before create API key",
-          signIn: "Please sign in before create API key",
-          enableTrading: "Please enable trading before create API key",
-          wrongNetwork:
-            "Please switch to a supported network to create API key",
+          connectWallet: t("portfolio.apiKey.create.connectWallet.tooltip"),
+          signIn: t("portfolio.apiKey.create.signIn.tooltip"),
+          enableTrading: t("portfolio.apiKey.create.enableTrading.tooltip"),
+          wrongNetwork: t("portfolio.apiKey.create.wrongNetwork.tooltip"),
         }}
       >
         <Button
@@ -154,7 +154,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
           // className="disabled:oui-cursor-default"
           data-testid="oui-testid-apiKey-createApiKey-btn"
         >
-          Create API key
+          {t("portfolio.apiKey.create.title")}
         </Button>
       </AuthGuardTooltip>
     </Flex>
@@ -162,9 +162,10 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
 };
 
 const KeyList: FC<ApiManagerScriptReturns> = (props) => {
+  const { t } = useTranslation();
   const columns: Column<APIKeyItem>[] = [
     {
-      title: "API key",
+      title: t("portfolio.apiKey.column.apiKey"),
       dataIndex: "orderly_key",
       render: (value) => {
         return (
@@ -182,7 +183,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       },
     },
     {
-      title: "Permission type",
+      title: t("portfolio.apiKey.column.permissionType"),
       dataIndex: "scope",
       render: (value) =>
         value
@@ -191,7 +192,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
           .join(", "),
     },
     {
-      title: "Restricted IP",
+      title: t("portfolio.apiKey.column.restrictedIP"),
       dataIndex: "ip_restriction_list",
       render: (value) => {
         let ip = value.join(",");
@@ -223,7 +224,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
       },
     },
     {
-      title: "Expiration date",
+      title: t("portfolio.apiKey.column.expirationDate"),
       dataIndex: "expiration",
       render: (value) => (
         <Text.formatted rule={"date"} formatString="yyyy-MM-dd">
@@ -271,6 +272,8 @@ const EditButton: FC<{
 }> = (props) => {
   const { item, onUpdate, verifyIP } = props;
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
   return (
     <>
       <Button
@@ -283,7 +286,7 @@ const EditButton: FC<{
         }}
         data-testid="oui-testid-apiKey-keyList-edit-btn"
       >
-        Edit
+        {t("portfolio.apiKey.column.edit")}
       </Button>
 
       {open && (
@@ -305,6 +308,7 @@ const DeleteButton: FC<{
 }> = (props) => {
   const { item, onDelete } = props;
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
   return (
     <>
       <Button
@@ -317,7 +321,7 @@ const DeleteButton: FC<{
         }}
         data-testid="oui-testid-apiKey-keyList-delete-btn"
       >
-        Delete
+        {t("portfolio.apiKey.column.delete")}
       </Button>
 
       {open && (
