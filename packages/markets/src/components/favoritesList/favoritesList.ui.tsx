@@ -1,9 +1,9 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { Box, cn, DataTable } from "@orderly.network/ui";
 import { UseFavoritesListReturn } from "./favoritesList.script";
 import { useMarketsContext } from "../marketsProvider";
 import { FavoritesTabWidget } from "../favoritesTabs";
-import { getSideMarketsColumns } from "../sideMarkets/column";
+import { useSideMarketsColumns } from "../sideMarkets/column";
 import type { FavoritesListWidgetProps } from "./widget";
 import { CollapseMarkets } from "../collapseMarkets";
 
@@ -16,11 +16,10 @@ export const FavoritesList: FC<FavoritesListProps> = (props) => {
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
-  const columns = useMemo(() => {
-    return typeof getColumns === "function"
-      ? getColumns(favorite, true)
-      : getSideMarketsColumns(favorite, true);
-  }, [favorite]);
+  const sideColumns = useSideMarketsColumns(favorite, true);
+
+  const columns =
+    typeof getColumns === "function" ? getColumns(favorite, true) : sideColumns;
 
   if (collapsed) {
     return <CollapseMarkets dataSource={dataSource} />;

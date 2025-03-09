@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, Flex, Text, DataTable } from "@orderly.network/ui";
+import { cn, Flex, DataTable } from "@orderly.network/ui";
 import { UnFavoritesIcon } from "../../icons";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 import { useMarketsContext } from "../../components/marketsProvider";
@@ -19,11 +19,10 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
   const emptyView = (
     <Flex className="oui-text-xs oui-text-base-contrast-36">
       {/* @ts-ignore */}
-      <Trans i18nKey="markets.dataList.favorites.empty">
-        Click on the
-        <UnFavoritesIcon className="oui-text-base-contrast-36" />
-        icon next to a market to add it to your list.
-      </Trans>
+      <Trans
+        i18nKey="markets.dataList.favorites.empty"
+        components={[<UnFavoritesIcon className="oui-text-base-contrast-36" />]}
+      />
     </Flex>
   );
 

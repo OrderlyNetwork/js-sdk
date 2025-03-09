@@ -30,7 +30,7 @@ export const useFundingOverviewColumns = (
   const { t } = useTranslation();
   return [
     {
-      title: t("markets.funding.column.market"),
+      title: t("markets.funding.column.symbol"),
       dataIndex: "symbol",
       width: 120,
       render: (value) => (

@@ -19,7 +19,7 @@ import { ReactNode } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
 import { useFundingRate } from "@orderly.network/hooks";
-
+import { Trans, useTranslation } from "@orderly.network/i18n";
 export type Layout = "left" | "right";
 
 export type SymbolInfoBarFullProps = Pick<
@@ -47,6 +47,8 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
     tailingVisible,
     onScoll,
   } = props;
+
+  const { t } = useTranslation();
 
   const favoriteIcon = (
     <FavoritesDropdownMenuWidget row={{ symbol }} favorite={favorite}>
@@ -145,10 +147,13 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
           >
             <Flex gapX={8} height="100%">
               <div ref={leadingElementRef}>
-                <DataItem label="24h Change" value={change} />
+                <DataItem
+                  label={t("markets.symbolInfoBar.24hChange")}
+                  value={change}
+                />
               </div>
               <DataItem
-                label="Mark"
+                label={t("markets.symbolInfoBar.Mark")}
                 value={
                   <Text.numeral
                     dp={quotoDp}
@@ -157,34 +162,34 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
                     {data?.["mark_price"]}
                   </Text.numeral>
                 }
-                hint="Price for the computation of unrealized PnL and liquidation."
+                hint={t("markets.symbolInfoBar.Mark.tooltip")}
               />
               <DataItem
-                label="Index"
+                label={t("markets.symbolInfoBar.Index")}
                 value={
                   <Text.numeral dp={quotoDp}>
                     {data?.["index_price"]}
                   </Text.numeral>
                 }
-                hint="Average of the last prices across other exchanges."
+                hint={t("markets.symbolInfoBar.Index.tooltip")}
               />
               <DataItem
-                label="24h volume"
+                label={t("markets.symbolInfoBar.24hVolume")}
                 value={
                   <Text.numeral rule="human" dp={2}>
                     {data?.["24h_amount"]}
                   </Text.numeral>
                 }
-                hint="24 hour total trading volume on the Orderly Network."
+                hint={t("markets.symbolInfoBar.24hVolume.tooltip")}
               />
               <DataItem
-                label="Pred. funding rate"
+                label={t("markets.symbolInfoBar.predFundingRate")}
                 value={<FundingRate symbol={symbol} />}
-                hint="Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions."
+                hint={t("markets.symbolInfoBar.predFundingRate.tooltip")}
               />
               <div ref={tailingElementRef}>
                 <DataItem
-                  label="Open interest"
+                  label={t("markets.symbolInfoBar.openInterest")}
                   value={
                     <>
                       <Text.numeral rule="human" dp={2}>
@@ -193,7 +198,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
                       <Text intensity={36}>{` USDC`}</Text>
                     </>
                   }
-                  hint="Total size of positions per side."
+                  hint={t("markets.symbolInfoBar.openInterest.tooltip")}
                 />
               </div>
             </Flex>
@@ -290,14 +295,16 @@ const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
   }
 
   return (
-    <div className="">
-      <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
-        {data.est_funding_rate!}
-      </Text.numeral>
-      <Text
-        intensity={36}
-        className="oui-tabular-nums"
-      >{` in ${data.countDown}`}</Text>
+    <div className="oui-text-base-contrast-36 oui-tabular-nums">
+      {/* @ts-ignore */}
+      <Trans
+        i18nKey="markets.symbolInfoBar.predFundingRate.value"
+        values={{ value: data.est_funding_rate!, countDown: data.countDown }}
+        components={[
+          // @ts-ignore
+          <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]" />,
+        ]}
+      />
     </div>
   );
 };

@@ -19,8 +19,8 @@ import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
 import { NewListingListWidget } from "../newListingList";
 import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
-import { getDropDownMarketsColumns } from "./column";
-
+import { useDropDownMarketsColumns } from "./column";
+import { useTranslation } from "@orderly.network/i18n";
 export type DropDownMarketsProps = UseDropDownMarketsScriptReturn & {
   contentClassName?: string;
 };
@@ -57,12 +57,16 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 
   const { searchValue, onSearchValueChange } = useMarketsContext();
 
+  const { t } = useTranslation();
+
+  const getColumns = useDropDownMarketsColumns();
+
   const search = (
     <Flex mx={3} gapX={3} pt={3} pb={2}>
       <Input
         value={searchValue}
         onValueChange={onSearchValueChange}
-        placeholder="Search"
+        placeholder={t("markets.sidebar.search.placeholder")}
         classNames={{
           root: "oui-border oui-mt-[1px] oui-border-line oui-flex-1",
         }}
@@ -104,10 +108,14 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         }}
         className={cls}
       >
-        <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
+        <TabPanel
+          title={t("markets.sidebar.tabs.favorites")}
+          icon={<FavoritesIcon />}
+          value="favorites"
+        >
           <div className={cls}>
             <FavoritesListWidget
-              getColumns={getDropDownMarketsColumns}
+              getColumns={getColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",
                 scroll: "oui-pb-5 oui-px-1",
@@ -116,10 +124,10 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             />
           </div>
         </TabPanel>
-        <TabPanel title="Recent" value="recent">
+        <TabPanel title={t("markets.sidebar.tabs.recent")} value="recent">
           <div className={cls}>
             <RecentListWidget
-              getColumns={getDropDownMarketsColumns}
+              getColumns={getColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",
                 scroll: "oui-pb-5 oui-px-1",
@@ -128,14 +136,14 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             />
           </div>
         </TabPanel>
-        <TabPanel title="All" value="all">
+        <TabPanel title={t("markets.sidebar.tabs.all")} value="all">
           <div className={cls}>
             <MarketsListWidget
               type="all"
               sortKey={tabSort?.sortKey}
               sortOrder={tabSort?.sortOrder}
               onSort={onTabSort}
-              getColumns={getDropDownMarketsColumns}
+              getColumns={getColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",
                 scroll: "oui-pb-5 oui-px-1",
@@ -144,10 +152,13 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             />
           </div>
         </TabPanel>
-        <TabPanel title="New listings" value="newListing">
+        <TabPanel
+          title={t("markets.sidebar.tabs.newListings")}
+          value="newListing"
+        >
           <div className={cls}>
             <NewListingListWidget
-              getColumns={getDropDownMarketsColumns}
+              getColumns={getColumns}
               tableClassNames={{
                 root: "!oui-bg-base-8",
                 scroll: "oui-pb-5 oui-px-1",

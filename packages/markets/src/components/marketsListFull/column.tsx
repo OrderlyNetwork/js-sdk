@@ -64,7 +64,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: t("markets.dataList.column.market"),
+        title: t("markets.dataList.column.symbol"),
         dataIndex: "symbol",
         width: 90,
         render: (value) => {

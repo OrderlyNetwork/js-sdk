@@ -14,9 +14,9 @@ export const markets = {
   "markets.dataList.tabs.newListings": "New Listings",
   "markets.dataList.search.placeholder": "Search market",
   "markets.dataList.favorites.empty":
-    "Click on the <1/> icon next to a market to add it to your list.",
+    "Click on the <0/> icon next to a market to add it to your list.",
 
-  "markets.dataList.column.market": "Market",
+  "markets.dataList.column.symbol": "Market",
   "markets.dataList.column.price": "Price",
   "markets.dataList.column.24hChange": "24h change",
   "markets.dataList.column.24hVolume": "24h volume",
@@ -39,7 +39,7 @@ export const markets = {
   "markets.funding.tabs.overview": "Overview",
   "markets.funding.tabs.comparison": "Comparison",
   "markets.funding.search.placeholder": "Search symbol",
-  "markets.funding.column.market": "Market",
+  "markets.funding.column.symbol": "Market",
   "markets.funding.column.estFunding": "Est. funding",
   "markets.funding.column.lastFunding": "Last funding",
   "markets.funding.column.1dAvg": "1d avg.",
@@ -55,6 +55,40 @@ export const markets = {
   "markets.funding.column.positiveRate.14d": "14d",
   "markets.funding.column.positiveRate.30d": "30d",
   "markets.funding.column.positiveRate.90d": "90d",
+
+  "markets.sidebar.tabs.favorites": "Favorites",
+  "markets.sidebar.tabs.recent": "Recent",
+  "markets.sidebar.tabs.all": "All",
+  "markets.sidebar.tabs.newListings": "New Listings",
+
+  "markets.sidebar.title": "Markets",
+  "markets.sidebar.search.placeholder": "Search",
+  "markets.sidebar.column.symbolVolume": "Market / Volume",
+  "markets.sidebar.column.priceChange": "Price / change",
+
+  "markets.dropdown.column.symbol": "Symbol",
+  "markets.dropdown.column.price": "Last",
+  "markets.dropdown.column.24hChange": "24h%",
+  "markets.dropdown.column.volume": "Volume",
+
+  "markets.symbolInfoBar.24hChange": "24h Change",
+  "markets.symbolInfoBar.Mark": "Mark",
+  "markets.symbolInfoBar.Mark.tooltip":
+    "Price for the computation of unrealized PnL and liquidation.",
+  "markets.symbolInfoBar.Index": "Index",
+  "markets.symbolInfoBar.Index.tooltip":
+    "Average of the last prices across other exchanges.",
+  "markets.symbolInfoBar.24hVolume": "24h volume",
+  "markets.symbolInfoBar.24hVolume.tooltip":
+    "24 hour total trading volume on the Orderly Network.",
+  "markets.symbolInfoBar.predFundingRate": "Pred. funding rate",
+  "markets.symbolInfoBar.predFundingRate.value":
+    "<0>{{value}}</0> in {{countDown}}",
+  "markets.symbolInfoBar.predFundingRate.tooltip":
+    "Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions.",
+  "markets.symbolInfoBar.openInterest": "Open interest",
+  "markets.symbolInfoBar.openInterest.tooltip":
+    "Total size of positions per side.",
 };
 
 export type Markets = typeof markets;

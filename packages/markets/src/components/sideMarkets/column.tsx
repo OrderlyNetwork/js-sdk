@@ -9,14 +9,17 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+import { useTranslation } from "@orderly.network/i18n";
 
-export const getSideMarketsColumns = (
+export const useSideMarketsColumns = (
   favorite: FavoriteInstance,
   isFavoriteList = false
 ) => {
+  const { t } = useTranslation();
+
   return [
     {
-      title: "Market / Volume",
+      title: t("markets.sidebar.column.symbolVolume"),
       dataIndex: "24h_amount",
       onSort: true,
       className: "oui-h-[36px]",
@@ -79,7 +82,7 @@ export const getSideMarketsColumns = (
       },
     },
     {
-      title: "Price / change",
+      title: t("markets.sidebar.column.priceChange"),
       dataIndex: "change",
       align: "right",
       onSort: true,

@@ -11,6 +11,7 @@ import { RecentListWidget } from "../recentList";
 import { MarketsListWidget } from "../marketsList";
 import { NewListingListWidget } from "../newListingList";
 import { useMarketsContext } from "../marketsProvider";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type SideMarketsProps = UseSideMarketsScriptReturn & {
   className?: string;
@@ -93,6 +94,8 @@ type SideMarketsHeaderProps = UseSideMarketsScriptOptions;
 export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
   const { collapsable, collapsed, onCollapse } = props;
 
+  const { t } = useTranslation();
+
   const cls = cn(
     "oui-text-base-contrast-36",
     collapsable
@@ -114,7 +117,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
   return (
     <Flex justify="between" px={3} width="100%">
       <Text size="base" intensity={80}>
-        Markets
+        {t("markets.sidebar.title")}
       </Text>
       <CollapseIcon
         className={cls}
