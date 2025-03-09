@@ -20,6 +20,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
