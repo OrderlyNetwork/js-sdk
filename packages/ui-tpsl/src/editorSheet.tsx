@@ -1,6 +1,6 @@
+import { useMemo } from "react";
 import { AlgoOrderRootType, API } from "@orderly.network/types";
 import {
-  cn,
   Flex,
   modal,
   useModal,
@@ -12,8 +12,8 @@ import {
 } from "@orderly.network/ui";
 import { TPSLWidget, TPSLWidgetProps } from "./tpsl.widget";
 import { PositionTPSLConfirm } from "./tpsl.ui";
-import { useEffect, useMemo, useState } from "react";
 import { useLocalStorage, useMarkPrice } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 type TPSLSheetProps = {
   position: API.Position;
@@ -30,6 +30,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
   const { resolve, hide, updateArgs } = useModal();
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
+  const { t } = useTranslation();
 
   const isPositionTPSL = isEditing
     ? order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
@@ -55,7 +56,9 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
         {...props}
         onTPSLTypeChange={(type) => {
           updateSheetTitle(
-            type === AlgoOrderRootType.TP_SL ? "TP/SL" : "Position TP/SL"
+            type === AlgoOrderRootType.TP_SL
+              ? t("tpsl.title")
+              : t("tpsl.positionTpsl")
           );
         }}
         onComplete={onCompleted}
@@ -74,7 +77,9 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
 
           return modal
             .confirm({
-              title: finalIsEditing ? "Edit Order" : "Confirm Order",
+              title: finalIsEditing
+                ? t("tpsl.editOrder.title")
+                : t("tpsl.confirmOrder.title"),
               bodyClassName: "oui-pb-0 lg:oui-pb-0",
               onOk: () => {
                 return options.submit();
@@ -120,10 +125,11 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
 
 export const TPSLSheetTitle = () => {
   const modal = useModal();
+  const { t } = useTranslation();
 
   const title = useMemo<string>(() => {
-    return (modal.args?.title || "TP/SL") as string;
-  }, [modal.args?.title]);
+    return (modal.args?.title || t("tpsl.title")) as string;
+  }, [modal.args?.title, t]);
 
   return <span>{title}</span>;
 };
@@ -135,9 +141,11 @@ export const PositionInfo = (props: {
   const { position, symbolInfo } = props;
   const { data: markPrice } = useMarkPrice(position.symbol);
   const modal = useModal();
+  const { t } = useTranslation();
+
   const isPositionTPSL = useMemo(() => {
-    return modal.args?.title === "Position TP/SL";
-  }, [modal.args?.title]);
+    return modal.args?.title === t("tpsl.positionTpsl");
+  }, [modal.args?.title, t]);
   return (
     <>
       <Flex justify={"between"} pb={3} itemAlign={"center"}>
@@ -147,19 +155,19 @@ export const PositionInfo = (props: {
         <Flex gapX={1}>
           {isPositionTPSL && (
             <Badge size="xs" color="primary">
-              Position
+              {t("tpsl.position")}
             </Badge>
           )}
           <Badge size="xs" color="neutral">
-            TP/SL
+            {t("tpsl.title")}
           </Badge>
           {position.position_qty < 0 ? (
             <Badge size="xs" color="buy">
-              Buy
+              {t("common.buy")}
             </Badge>
           ) : (
             <Badge size="xs" color="sell">
-              Sell
+              {t("common.sell")}
             </Badge>
           )}
         </Flex>
@@ -168,7 +176,7 @@ export const PositionInfo = (props: {
       <Box py={3} className="oui-space-y-1">
         <Flex justify={"between"}>
           <Text size="sm" intensity={54}>
-            Avg. open
+            {t("tpsl.avgOpen")}
           </Text>
           <Text.numeral
             className="oui-text-xs"
@@ -181,7 +189,7 @@ export const PositionInfo = (props: {
         </Flex>
         <Flex justify={"between"}>
           <Text size="sm" intensity={54}>
-            Mark price
+            {t("tpsl.markPrice")}
           </Text>
           <Text.numeral
             className="oui-text-xs"
