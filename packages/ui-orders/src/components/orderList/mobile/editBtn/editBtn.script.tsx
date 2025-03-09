@@ -6,17 +6,20 @@ import { useOrderListContext } from "../../orderListContext";
 import { TabType } from "../../../orders.widget";
 import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
 import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
-import { useSymbolContext } from "../../symbolProvider";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const { state } = props;
+  const { t } = useTranslation();
+
   const { editAlgoOrder, editOrder } = useOrderListContext();
   const { order, position } = useTPSLOrderRowContext();
+
   const onShowEditSheet = useCallback(() => {
     if (props.state.type === TabType.tp_sl) {
       modal
         .sheet({
-          title: "TP/SL",
+          title: t("tpsl.title"),
           content: (
             <PositionTPSLSheet
               isEditing
@@ -32,10 +35,10 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
     } else {
       modal
         .sheet({
-          title: "Edit order",
+          title: t("orders.editOrder"),
           // size: "xs",
           classNames: {
-            content: "oui-bg-base-8"
+            content: "oui-bg-base-8",
           },
           content: (
             <EditSheetWidget

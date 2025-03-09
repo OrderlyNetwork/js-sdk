@@ -1,8 +1,8 @@
-import { FC, useCallback, useContext, useMemo, useState } from "react";
-
+import { FC, useCallback, useState } from "react";
 import { useConfig, useMutation } from "@orderly.network/hooks";
 import { OrderEntity } from "@orderly.network/types";
 import { Button } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Renew: FC<{ record: any }> = (props) => {
   const { record } = props;
@@ -11,6 +11,8 @@ export const Renew: FC<{ record: any }> = (props) => {
     OrderEntity,
     any
   >("/v1/order");
+
+  const { t } = useTranslation();
 
   const brokerId = useConfig("brokerId");
   const onSubmit = useCallback(() => {
@@ -38,7 +40,6 @@ export const Renew: FC<{ record: any }> = (props) => {
     doCreateOrder(data);
   }, []);
 
-
   return (
     <Button
       size={"sm"}
@@ -53,7 +54,7 @@ export const Renew: FC<{ record: any }> = (props) => {
         onSubmit();
       }}
     >
-      Renew
+      {t("orders.history.renew")}
     </Button>
   );
 };

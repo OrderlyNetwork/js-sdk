@@ -1,25 +1,17 @@
-import {
-  Badge,
-  Button,
-  Checkbox,
-  cn,
-  Divider,
-  Flex,
-  Input,
-  inputFormatter,
-  Slider,
-  Text,
-} from "@orderly.network/ui";
-import { EditSheetState } from "./editSheet.script";
 import { FC } from "react";
-import { commify, Decimal } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
+import { Badge, Checkbox, Divider, Flex, Text } from "@orderly.network/ui";
+import { EditSheetState } from "./editSheet.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
   const { side } = props.item;
   const { price, quantity, triggerPrice, isAlgoOrder } = props;
   const isBuy = side === OrderSide.BUY;
+  const { t } = useTranslation();
+
   return (
     <div className="oui-pt-2">
       <Text
@@ -35,30 +27,28 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
           {props.item.symbol}
         </Text.formatted>
         <Flex direction={"row"} gap={1}>
-            {parseBadgesFor(props.item)?.map((e, index) => (
-              <Badge
-                key={index}
-                color={
-                  e.toLocaleLowerCase() === "position"
-                    ? "primary"
-                    : "neutral"
-                }
-                size="xs"
-              >
-                {e}
-              </Badge>
-            ))}
-            {isBuy && (
-              <Badge color="success" size="xs">
-                Buy
-              </Badge>
-            )}
-            {!isBuy && (
-              <Badge color="danger" size="xs">
-                Sell
-              </Badge>
-            )}
-          </Flex>
+          {parseBadgesFor(props.item)?.map((e, index) => (
+            <Badge
+              key={index}
+              color={
+                e.toLocaleLowerCase() === "position" ? "primary" : "neutral"
+              }
+              size="xs"
+            >
+              {e}
+            </Badge>
+          ))}
+          {isBuy && (
+            <Badge color="success" size="xs">
+              {t("common.buy")}
+            </Badge>
+          )}
+          {!isBuy && (
+            <Badge color="danger" size="xs">
+              {t("common.sell")}
+            </Badge>
+          )}
+        </Flex>
       </Flex>
       <Divider />
       <Flex
@@ -70,7 +60,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
       >
         {isAlgoOrder && (
           <Flex justify={"between"} width={"100%"} gap={1}>
-            <Text>Trigger price</Text>
+            <Text>{t("orders.column.triggerPrice")}</Text>
             <Text.numeral
               intensity={80}
               dp={props.quote_dp}
@@ -84,20 +74,20 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
         )}
 
         <Flex justify={"between"} width={"100%"} gap={1}>
-          <Text>Price</Text>
+          <Text>{t("orders.column.price")}</Text>
           <Text.numeral
             intensity={80}
             dp={props.quote_dp}
             padding={false}
             rm={Decimal.ROUND_DOWN}
             suffix={<Text intensity={54}>{" USDC"}</Text>}
-            placeholder={props.isStopMarket ? "Market" : "--"}
+            placeholder={props.isStopMarket ? t("orders.price.market") : "--"}
           >
-            {props.isStopMarket ? "Market" : price ?? "--"}
+            {props.isStopMarket ? t("orders.price.market") : price ?? "--"}
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} width={"100%"} gap={1}>
-          <Text>Qty.</Text>
+          <Text>{t("orders.column.qty")}</Text>
           <Text.numeral
             color={side === OrderSide.BUY ? "buy" : "sell"}
             dp={props.base_dp}
@@ -124,7 +114,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
           className="oui-text-2xs oui-text-base-contrast-54"
           htmlFor="oui-checkbox-disableOrderConfirmation"
         >
-          Disable order confirmation
+          {t("orders.disableOrderConfirm")}
         </label>
       </Flex>
     </div>

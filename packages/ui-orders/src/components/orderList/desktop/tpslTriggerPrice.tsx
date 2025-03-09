@@ -4,7 +4,7 @@ import { API, AlgoOrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { cn, Text, Tooltip } from "@orderly.network/ui";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const OrderTriggerPrice = () => {
   const { sl_trigger_price, tp_trigger_price, order, position } =
     useTPSLOrderRowContext();
@@ -33,6 +33,7 @@ export const TPSLTriggerPrice: FC<{
   const { direction = "row", order, position } = props;
   // const symbolInfo = useSymbolsInfo()[position?.symbol ?? ""]();
   const symbolInfo = useSymbolsInfo();
+  const { t } = useTranslation();
 
   const pnl = useMemo(() => {
     const msgs = [];
@@ -103,7 +104,7 @@ export const TPSLTriggerPrice: FC<{
           prefix={
             !props.stopLossPrice || direction === "column" ? (
               <span className={"oui-text-base-contrast-54"}>
-                TP&nbsp;-&nbsp;
+                {t("orders.tpsl.tp.prefix")}&nbsp;
               </span>
             ) : (
               ""
@@ -126,7 +127,7 @@ export const TPSLTriggerPrice: FC<{
           prefix={
             !props.takeProfitPrice || direction === "column" ? (
               <span className={"oui-text-base-contrast-54"}>
-                SL&nbsp;-&nbsp;
+                {t("orders.tpsl.sl.prefix")}&nbsp;
               </span>
             ) : (
               ""
@@ -143,7 +144,7 @@ export const TPSLTriggerPrice: FC<{
     }
 
     return children;
-  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol]);
+  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol, t]);
 
   const content = (
     <div
@@ -185,6 +186,8 @@ const TriggerPriceItem: FC<{
   symbolInfo: API.SymbolExt;
 }> = (props) => {
   const { qty, price, entryPrice, orderSide, orderType, symbolInfo } = props;
+  const { t } = useTranslation();
+
   const pnl = utils.priceToPnl(
     {
       qty,
@@ -199,12 +202,14 @@ const TriggerPriceItem: FC<{
   );
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
+  const label =
+    type === "TP" ? t("orders.tpsl.tpPnl.label") : t("orders.tpsl.slPnl.label");
 
   // console.log("trigger price item", "dp", symbolInfo.quote_dp);
 
   return (
     <div className="oui-flex oui-items-center">
-      <span className="oui-text-base-contrast-54 oui-mr-1">{`${type} PnL:`}</span>
+      <span className="oui-text-base-contrast-54 oui-mr-1">{label}</span>
       <Text.numeral
         rule="price"
         dp={symbolInfo.quote_dp}

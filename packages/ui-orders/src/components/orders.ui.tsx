@@ -1,11 +1,13 @@
 import { TabPanel, Tabs } from "@orderly.network/ui";
-import { OrderStatus, API } from "@orderly.network/types";
+import { OrderStatus } from "@orderly.network/types";
 import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";
 import { DesktopOrderListWidget } from "./orderList";
 import { DesktopOrderListWidgetProps } from "./orderList/orderList.widget";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Orders = (props: OrdersBuilderState) => {
+  const { t } = useTranslation();
   const commonProps: Partial<DesktopOrderListWidgetProps> = {
     pnlNotionalDecimalPrecision: props.pnlNotionalDecimalPrecision,
   };
@@ -19,7 +21,7 @@ export const Orders = (props: OrdersBuilderState) => {
         tabsContent: "oui-h-[calc(100%_-_28px)]",
       }}
     >
-      <TabPanel value={TabType.all} title="All">
+      <TabPanel value={TabType.all} title={t("orders.page.tabs.all")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.all}
@@ -28,7 +30,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.pending} title="Pending">
+      <TabPanel value={TabType.pending} title={t("orders.page.tabs.pending")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.pending}
@@ -36,7 +38,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.tp_sl} title="TP/SL">
+      <TabPanel value={TabType.tp_sl} title={t("orders.page.tabs.tpsl")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.tp_sl}
@@ -44,7 +46,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.filled} title="Filled">
+      <TabPanel value={TabType.filled} title={t("orders.page.tabs.filled")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.filled}
@@ -54,7 +56,10 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.cancelled} title="Cancelled">
+      <TabPanel
+        value={TabType.cancelled}
+        title={t("orders.page.tabs.cancelled")}
+      >
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.cancelled}
@@ -62,7 +67,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.rejected} title="Rejected">
+      <TabPanel value={TabType.rejected} title={t("orders.page.tabs.rejected")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.rejected}
@@ -70,7 +75,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      {/* <TabPanel value={TabType.orderHistory} title="Order history">
+      {/* <TabPanel value={TabType.orderHistory} title={t("orders.page.tabs.orderHistory")}>
         <DesktopOrderListWidget
           type={TabType.orderHistory}
           {...commonProps}

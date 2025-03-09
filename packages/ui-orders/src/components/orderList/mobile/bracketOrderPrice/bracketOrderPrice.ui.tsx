@@ -1,10 +1,13 @@
 import { FC } from "react";
-import { cn, Flex, SimpleDialog, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@orderly.network/ui";
 import { BracketOrderPriceState } from "./bracketOrderPrice.script";
 import { Decimal } from "@orderly.network/utils";
 import { MobileTooltip } from "../items";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
+  const { t } = useTranslation();
+
   if (!props.sl_trigger_price && !props.tp_trigger_price) return <></>;
 
   return (
@@ -19,7 +22,11 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
             {typeof props.pnl?.tpPnL !== "undefined" && (
               <Text.numeral
                 // @ts-ignore
-                prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
+                prefix={
+                  <Text intensity={80}>
+                    {t("orders.tpsl.tpPnl.label")} &nbsp;
+                  </Text>
+                }
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
                 dp={props.quote_dp}
                 color="buy"
@@ -31,7 +38,11 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
             {typeof props.pnl?.slPnL !== "undefined" && (
               <Text.numeral
                 // @ts-ignore
-                prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
+                prefix={
+                  <Text intensity={80}>
+                    {t("orders.tpsl.slPnl.label")} &nbsp;
+                  </Text>
+                }
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
                 dp={props.quote_dp}
                 color="sell"
@@ -75,7 +86,7 @@ const Price = (props: {
   quote_dp: number;
 }) => {
   const { type, value, quote_dp } = props;
-  
+
   return value ? (
     <Text.numeral
       size="2xs"

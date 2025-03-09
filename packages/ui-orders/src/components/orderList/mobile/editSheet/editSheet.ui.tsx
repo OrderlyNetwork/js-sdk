@@ -18,11 +18,12 @@ import { ConfirmDialogContent } from "./editDialogContent";
 import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
 import { utils } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
   const isBuy = item.side === OrderSide.BUY;
+  const { t } = useTranslation();
 
   // useEffect(() => {
   //   if (props.errors?.order_price?.message) {
@@ -67,9 +68,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               <Badge
                 key={index}
                 color={
-                  e.toLocaleLowerCase() === "position"
-                    ? "primary"
-                    : "neutral"
+                  e.toLocaleLowerCase() === "position" ? "primary" : "neutral"
                 }
                 size="xs"
               >
@@ -78,19 +77,19 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             ))}
             {isBuy && (
               <Badge color="success" size="xs">
-                Buy
+                {t("common.buy")}
               </Badge>
             )}
             {!isBuy && (
               <Badge color="danger" size="xs">
-                Sell
+                {t("common.sell")}
               </Badge>
             )}
           </Flex>
         </Flex>
         <Divider intensity={8} className="oui-w-full" />
         <Flex width={"100%"} justify={"between"}>
-          <Text>Last price</Text>
+          <Text>{t("orders.column.lastPrice")}</Text>
           <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp}>
             {props.curMarkPrice ?? "--"}
           </Text.numeral>
@@ -100,7 +99,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             <Input.tooltip
               prefix={
                 <Text intensity={54} className="oui-px-3">
-                  Trigger price
+                  {t("orders.column.triggerPrice")}
                 </Text>
               }
               suffix={
@@ -141,7 +140,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           <Input.tooltip
             prefix={
               <Text intensity={54} className="oui-px-3">
-                Price
+                {t("orders.column.price")}
               </Text>
             }
             suffix={
@@ -158,7 +157,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               inputFormatter.dpFormatter(props.quote_dp),
             ]}
             disabled={!props.priceEdit}
-            value={props.isStopMarket ? "Market" : props.price}
+            value={props.isStopMarket ? t("orders.price.market") : props.price}
             onValueChange={(e) => props.setPrice(e)}
             tooltip={props.errors?.order_price?.message}
             tooltipProps={{
@@ -180,7 +179,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           <Input.tooltip
             prefix={
               <Text intensity={54} className="oui-px-3">
-                {"Quantity"}
+                {t("orders.column.quantity")}
               </Text>
             }
             suffix={
@@ -235,14 +234,20 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               padding={false}
               rule="percentages"
             >{`${percentages ?? 0}`}</Text.numeral>
-            <Flex gap={1}>
-              <Text size="2xs" color="primary">
-                Max
-              </Text>
-              <Text.numeral intensity={54} size="2xs" dp={props.base_dp}>
-                {props.maxQty}
-              </Text.numeral>
-            </Flex>
+            <div>
+              {/* @ts-ignore */}
+              <Trans
+                i18nKey="positions.editOrder.max"
+                values={{
+                  quantity: props.maxQty,
+                }}
+                components={[
+                  <Text size="2xs" color="primary" />,
+                  // @ts-ignore
+                  <Text.numeral intensity={54} size="2xs" dp={props.base_dp} />,
+                ]}
+              />
+            </div>
           </Flex>
         </Flex>
         <Flex width={"100%"} gap={3} mt={2}>
@@ -253,7 +258,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               props.onClose();
             }}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
           <ThrottledButton
             fullWidth
@@ -265,7 +270,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             loading={props.submitting}
             disabled={!props.isChanged}
           >
-            Confirm
+            {t("common.confirm")}
           </ThrottledButton>
         </Flex>
       </Flex>
@@ -273,17 +278,17 @@ export const EditSheet: FC<EditSheetState> = (props) => {
       <SimpleDialog
         open={props.dialogOpen}
         onOpenChange={props.setDialogOpen}
-        title="Edit order"
+        title={t("orders.editOrder")}
         size="xs"
         actions={{
           primary: {
-            label: "Confirm",
+            label: t("common.confirm"),
             onClick: props.onDialogConfirm,
             loading: props.submitting,
             fullWidth: true,
           },
           secondary: {
-            label: "Cancel",
+            label: t("common.cancel"),
             onClick: props.onCloseDialog,
             fullWidth: true,
           },

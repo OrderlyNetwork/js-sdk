@@ -29,6 +29,7 @@ import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
 import { useMaxQty, useOrderEntry, utils } from "@orderly.network/hooks";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
@@ -37,12 +38,13 @@ export const OrderQuantity = (props: {
 }) => {
   const { order, otherOrderQuantity } = props;
   const { reduce_only } = order;
-
   const [quantity, originSetQuantity] = useState<string>(
     order.quantity.toString()
   );
 
   const [editing, setEditing] = useState(false);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     setQuantity(order.quantity.toString());
@@ -63,15 +65,19 @@ export const OrderQuantity = (props: {
 
     if (position && reduce_only && Number(qty) > positionQty) {
       setError(
-        `Quantity should be less than position quantity : ${positionQty}`
+        t("orders.quantity.lessThanPosition", {
+          quantity: positionQty,
+        })
       );
     } else {
       const quantity = Number(qty);
       if (maxQty && quantity > maxQty) {
         setError(
-          `Quantity should be less than ${commifyOptional(maxQty, {
-            fix: base_dp,
-          })}`
+          t("orders.quantity.lessThan", {
+            quantity: commifyOptional(maxQty, {
+              fix: base_dp,
+            }),
+          })
         );
       } else {
         setError(undefined);

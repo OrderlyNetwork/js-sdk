@@ -18,6 +18,7 @@ import { TabType } from "../orders.widget";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const DesktopOrderList: FC<
   OrdersBuilderState & {
@@ -124,6 +125,8 @@ export const MobileOrderList: FC<
     showFilter?: boolean;
   }
 > = (props) => {
+  const { t } = useTranslation();
+
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
@@ -160,9 +163,9 @@ export const MobileOrderList: FC<
                   className="oui-text-2xs oui-text-base-contrast-54 "
                   placeholder={
                     item.name === "side"
-                      ? "All sides"
+                      ? t("orders.side.all")
                       : item.name === "status"
-                      ? "All status"
+                      ? t("orders.status.all")
                       : ""
                   }
                   onValueChange={(value) => {
@@ -211,6 +214,8 @@ export const MobileOrderList: FC<
 };
 
 const CancelAll: FC<OrdersBuilderState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Button
       variant="outlined"
@@ -221,7 +226,7 @@ const CancelAll: FC<OrdersBuilderState> = (props) => {
       onClick={(e) => props.onCancelAll()}
       data-testid={`oui-testid-dataList-${props.type.toLowerCase()}-cancelAll-button`}
     >
-      Cancel all
+      {t("orders.cancelAll")}
     </Button>
   );
 };

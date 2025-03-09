@@ -9,12 +9,13 @@ import { useOrderListContext } from "../orderListContext";
 import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
 import { OrderType } from "@orderly.network/types";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const Price = (props: {
   order: API.OrderExt;
   disableEdit?: boolean;
 }) => {
   const { order } = props;
+  const { t } = useTranslation();
 
   const [price, setPrice] = useState<string>(() => {
     if (order.type === OrderType.MARKET && !order.price) {
@@ -57,13 +58,13 @@ export const Price = (props: {
     if (!editing) return "";
 
     if (Number(price) > rangeInfo.max) {
-      return `Price can not be greater than ${rangeInfo.max} USDC.`;
+      return t("orders.price.greaterThan", { max: rangeInfo.max });
     }
     if (Number(price) < rangeInfo.min) {
-      return `Price can not be less than ${rangeInfo.min} USDC.`;
+      return t("orders.price.lessThan", { min: rangeInfo.min });
     }
     return "";
-  }, [isStopMarket, editing, rangeInfo, price]);
+  }, [isStopMarket, editing, rangeInfo, price, t]);
 
   const onClick = (event: any) => {
     event?.stopPropagation();
@@ -196,7 +197,7 @@ export const Price = (props: {
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
   if (isAlgoMarketOrder || price === "Market") {
-    return <span>Market</span>;
+    return <span>{t("orders.price.market")}</span>;
   }
 
   const trigger = () => {
