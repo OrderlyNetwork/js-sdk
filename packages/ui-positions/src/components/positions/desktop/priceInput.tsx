@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   CaretDownIcon,
   cn,
@@ -10,14 +11,14 @@ import {
   inputFormatter,
 } from "@orderly.network/ui";
 import { usePositionsRowContext } from "./positionRowContext";
-import { useState } from "react";
 import { OrderType } from "@orderly.network/types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const PriceInput = () => {
   const { type, quoteDp, price, updatePriceChange, updateOrderType, position } =
     usePositionsRowContext();
-    const [hasFocus, setHasFocus] = useState(false);
-
+  const [hasFocus, setHasFocus] = useState(false);
+  const { t } = useTranslation();
   return (
     <DropdownMenuRoot>
       <Input
@@ -38,7 +39,6 @@ export const PriceInput = () => {
           setTimeout(() => {
             setHasFocus(false);
           }, 100);
-
         }}
         suffix={
           <DropdownMenuTrigger asChild>
@@ -48,7 +48,9 @@ export const PriceInput = () => {
           </DropdownMenuTrigger>
         }
         classNames={{
-          root: cn("oui-outline-line-12 focus-within:oui-outline-primary-light")
+          root: cn(
+            "oui-outline-line-12 focus-within:oui-outline-primary-light"
+          ),
         }}
       />
       <DropdownMenuContent
@@ -63,7 +65,7 @@ export const PriceInput = () => {
               updateOrderType(OrderType.MARKET);
             }}
           >
-            <span>Market</span>
+            <span>{t("positions.market")}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

@@ -1,16 +1,20 @@
 import { FC } from "react";
 import { Flex, Text } from "@orderly.network/ui";
-import React from "react";
 import { API } from "@orderly.network/types";
-import { useSymbolContext } from "../../../providers/symbolProvider";
 import { commifyOptional } from "@orderly.network/utils";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const Price: FC<API.LiquidationPositionByPerp> = (props) => {
   // const { quote_dp } = useSymbolContext();
+
   return (
     <Flex width={"100%"} justify={"between"}>
       <Text size="2xs" intensity={36}>
-        Price{<Text intensity={20}>{" (USDC)"}</Text>}
+        {/* @ts-ignore */}
+        <Trans
+          i18nKey="positions.Liquidation.column.price.quote"
+          components={[<Text intensity={20} />]}
+        />
       </Text>
       {/* <Text.numeral size="2xs" intensity={80} dp={quote_dp} padding={false}>
         {props.transfer_price}
@@ -23,10 +27,12 @@ export const Price: FC<API.LiquidationPositionByPerp> = (props) => {
 };
 export const Quantity: FC<API.LiquidationPositionByPerp> = (props) => {
   // const { quote_dp } = useSymbolContext();
+  const { t } = useTranslation();
+
   return (
     <Flex width={"100%"} justify={"between"}>
       <Text size="2xs" intensity={36}>
-        Quantity
+        {t("positions.Liquidation.column.quantity")}
       </Text>
       {/* <Text.numeral size="2xs" intensity={80} dp={quote_dp} padding={false}>
         {props.position_qty}
@@ -39,10 +45,11 @@ export const Quantity: FC<API.LiquidationPositionByPerp> = (props) => {
 };
 export const LiquidationFee: FC<API.LiquidationPositionByPerp> = (props) => {
   // const { quote_dp } = useSymbolContext();
+  const { t } = useTranslation();
   return (
     <Flex width={"100%"} justify={"between"}>
       <Text size="2xs" intensity={36}>
-        Liquidation fee
+        {t("positions.Liquidation.column.liquidationFee")}
       </Text>
       {/* <Text.numeral size="2xs" intensity={80} dp={quote_dp} padding={false}>
         {props.abs_liquidation_fee}

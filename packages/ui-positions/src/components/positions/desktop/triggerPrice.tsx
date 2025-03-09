@@ -4,6 +4,7 @@ import { AlgoOrderType, API, OrderSide } from "@orderly.network/types";
 import { useSymbolsInfo, utils } from "@orderly.network/hooks";
 import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { TPSLEditIcon } from "./components";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const TriggerPrice: FC<{
   stopLossPrice?: number;
@@ -83,7 +84,7 @@ export const TPSLTriggerPrice: FC<{
   const { direction = "row", order, position } = props;
   // const symbolInfo = useSymbolsInfo()[position?.symbol ?? ""]();
   const symbolInfo = useSymbolsInfo();
-
+  const { t } = useTranslation();
   const pnl = useMemo(() => {
     const msgs = [];
 
@@ -139,11 +140,20 @@ export const TPSLTriggerPrice: FC<{
     const children = [];
 
     if (!order?.symbol) return <span>-</span>;
+
+    const Label = ({ children }: { children?: string }) => {
+      return !props.stopLossPrice || direction === "column" ? (
+        <Text intensity={54}>{children}</Text>
+      ) : (
+        ""
+      );
+    };
+
     if (props.takeProfitPrice) {
       children.push(
         <Text.formatted
           className={cn(
-            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20"
+            "oui-text-trade-profit oui-gap-0 oui-decoration-white/20"
           )}
           key={"tp"}
           rule="price"
@@ -151,7 +161,7 @@ export const TPSLTriggerPrice: FC<{
           children={props.takeProfitPrice}
           prefix={
             !props.stopLossPrice || direction === "column" ? (
-              <Text intensity={54}>TP&nbsp;-&nbsp;</Text>
+              <Text intensity={54}>{t("positions.tp.prefix")}</Text>
             ) : (
               ""
             )
@@ -171,7 +181,7 @@ export const TPSLTriggerPrice: FC<{
           children={props.stopLossPrice}
           prefix={
             !props.takeProfitPrice || direction === "column" ? (
-              <Text intensity={54}>SL&nbsp;-&nbsp;</Text>
+              <Text intensity={54}>{t("positions.sl.prefix")}</Text>
             ) : (
               ""
             )
@@ -187,7 +197,7 @@ export const TPSLTriggerPrice: FC<{
     }
 
     return children;
-  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol]);
+  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol, t]);
 
   const content = (
     <div

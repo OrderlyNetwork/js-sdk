@@ -13,8 +13,10 @@ export const NumeralWithCtx: FC<
   const symbolInfo = useSymbolContext();
 
   if (!symbolInfo) {
+    // TODO i18n
     throw new Error("NumeralWithCtx must be used inside SymbolProvider");
   }
 
+  // @ts-ignore
   return <Text.numeral as="span" {...rest} dp={symbolInfo[tick]} />;
 };

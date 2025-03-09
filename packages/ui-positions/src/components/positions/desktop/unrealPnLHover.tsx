@@ -1,21 +1,25 @@
+import { FC } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { Divider, Flex, Text } from "@orderly.network/ui";
-import { FC, useCallback } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const UnrealizedPnLPopoverCard: FC<{}> = (props) => {
   const [unPnlPriceBasis, setUnPnlPriceBasic] = useLocalStorage(
     "unPnlPriceBasis",
     "markPrice"
   );
-
+  const { t } = useTranslation();
   return (
-    <Flex direction={"column"} gap={3} className="oui-text-base-contrast-54 oui-items-start">
-      <Text>
-        Current unrealized profit or loss on your open positions across all
-        widgets calculated using Mark Price.
-      </Text>
+    <Flex
+      direction={"column"}
+      gap={3}
+      className="oui-text-base-contrast-54 oui-items-start"
+    >
+      <Text>{t("positions.column.unrealPnl.tooltip")}</Text>
       <Divider className="oui-w-full" />
-      <div className="oui-mb-0">Unrealized PnL Price Basis</div>
+      <div className="oui-mb-0">
+        {t("positions.column.unrealPnl.priceBasis")}
+      </div>
       <UnPnlPriceBasisCheckBox
         value={unPnlPriceBasis}
         onValueChange={setUnPnlPriceBasic}
@@ -29,18 +33,20 @@ const UnPnlPriceBasisCheckBox = (props: {
   onValueChange: (value: string) => void;
 }) => {
   const { value, onValueChange } = props;
+  const { t } = useTranslation();
+
   // "markPrice" | "lastPrice"
   return (
     <Flex gap={2}>
       <RadioButton
         sel={value === "markPrice"}
-        label={"Mark price"}
+        label={t("positions.column.markPrice")}
         value={"markPrice"}
         onCheckChange={onValueChange}
       />
       <RadioButton
         sel={value === "lastPrice"}
-        label={"Last price"}
+        label={t("positions.column.lastPrice")}
         value={"lastPrice"}
         onCheckChange={onValueChange}
       />

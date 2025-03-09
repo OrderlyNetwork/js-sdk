@@ -1,26 +1,22 @@
 import {
   Button,
-  Popover,
   toast,
   Text,
   CloseIcon,
   Flex,
-  Box,
   Divider,
-  cn,
-  NumeralProps,
   Badge,
   SimpleDialog,
   ThrottledButton,
+  Box,
 } from "@orderly.network/ui";
 import { usePositionsRowContext } from "./positionRowContext";
-// import { useSymbolContext } from "../providers/symbolProvider";
 import { FC, useMemo, useState } from "react";
 import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
-import { TokenIcon } from "@orderly.network/ui";
 import { useSymbolContext } from "../../../providers/symbolProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
@@ -34,30 +30,33 @@ export const CloseButton = () => {
     quoteDp,
     errors,
   } = usePositionsRowContext();
-
   const { base, quote } = useSymbolContext();
 
-  const [orderConfirm ] = useLocalStorage("orderly_order_confirm", true);
-  
+  const [orderConfirm] = useLocalStorage("orderly_order_confirm", true);
+
+  const { t } = useTranslation();
+
   const onConfirm = () => {
-    return onSubmit().then(
-      (res) => {
-        setOpen(false);
-      },
-      (error: any) => {
+    return onSubmit()
+      .then(
+        (res) => {
+          setOpen(false);
+        },
+        (error: any) => {
+          if (typeof error === "string") {
+            toast.error(error);
+          } else {
+            toast.error(error.message);
+          }
+        }
+      )
+      .catch((error) => {
         if (typeof error === "string") {
           toast.error(error);
         } else {
           toast.error(error.message);
         }
-      }
-    ).catch((error) => {
-      if (typeof error === "string") {
-        toast.error(error);
-      } else {
-        toast.error(error.message);
-      }
-    });
+      });
   };
 
   const onClose = () => {
@@ -98,7 +97,7 @@ export const CloseButton = () => {
           setOpen(true);
         }}
       >
-        Close
+        {t("positions.column.close")}
       </Button>
       <SimpleDialog open={open} onOpenChange={setOpen} size="sm">
         {type === OrderType.MARKET ? (
@@ -157,6 +156,8 @@ export const ConfirmFooter: FC<{
   onCancel?: () => void;
   submitting?: boolean;
 }> = ({ onCancel, onConfirm, submitting }) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-positions-confirm-footer"
@@ -171,7 +172,7 @@ export const ConfirmFooter: FC<{
         onClick={onCancel}
         size="md"
       >
-        Cancel
+        {t("common.cancel")}
       </Button>
       <ThrottledButton
         id="oui-positions-confirm-footer-confirm-button"
@@ -180,7 +181,7 @@ export const ConfirmFooter: FC<{
         loading={submitting}
         size="md"
       >
-        Confirm
+        {t("common.confirm")}
       </ThrottledButton>
     </Flex>
   );
@@ -194,6 +195,7 @@ export const OrderDetail = (props: {
   className?: string;
 }) => {
   const { quantity, price, quoteDp, side } = props;
+  const { t } = useTranslation();
 
   const total = useMemo(() => {
     if (price && quantity) {
@@ -213,13 +215,13 @@ export const OrderDetail = (props: {
       py={5}
     >
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>Qty.</Text>
+        <Text>{t("positions.column.qty")}</Text>
         <Text color={side === OrderSide.BUY ? "success" : "danger"}>
           {quantity}
         </Text>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>Price</Text>
+        <Text>{t("positions.column.price")}</Text>
         <Text.formatted
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
@@ -228,7 +230,7 @@ export const OrderDetail = (props: {
         </Text.formatted>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>Notional</Text>
+        <Text>{t("positions.column.notional")}</Text>
         <Text.formatted
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
@@ -252,6 +254,8 @@ export const MarketCloseConfirm: FC<{
     root?: string;
   };
 }> = (props) => {
+  const { t } = useTranslation();
+
   const onCancel = () => {
     const func = props?.onClose ?? props.close;
     func?.();
@@ -260,13 +264,14 @@ export const MarketCloseConfirm: FC<{
     <Flex direction={"column"} className={props.classNames?.root}>
       <ConfirmHeader
         onClose={onCancel}
-        title="Market Close"
+        title={t("positions.marketClose")}
         hideCloseIcon={props.hideCloseIcon}
       />
       <Text intensity={54} size="sm" className="oui-my-5">
-        {`You agree closing ${commifyOptional(props.quantity)} ${
-          props.base
-        } position at market price.`}
+        {t("positions.marketClose.description", {
+          quantity: commifyOptional(props.quantity),
+          base: props.base,
+        })}
       </Text>
       <ConfirmFooter
         onCancel={onCancel}
@@ -292,23 +297,28 @@ export const LimitConfirmDialog: FC<{
   hideCloseIcon?: boolean;
 }> = (props) => {
   const { order, quoteDp, quantity, price, submitting } = props;
-
   const { side } = order;
+  const { t } = useTranslation();
+
   const onCancel = () => {
     props.onClose?.();
   };
+
   return (
     <>
       <ConfirmHeader
         onClose={onCancel}
-        title="Limit Close"
+        title={t("positions.limitClose")}
         hideCloseIcon={props.hideCloseIcon}
       />
-      <Text intensity={54} size="sm" className="oui-mt-5">
-        {`You agree closing ${commify(props.quantity)} ${
-          props.base
-        } position at limit price.`}
-      </Text>
+      <Box mt={5}>
+        <Text intensity={54} size="sm">
+          {t("positions.limitClose.description", {
+            quantity: commify(props.quantity),
+            base: props.base,
+          })}
+        </Text>
+      </Box>
 
       <Flex gap={2} mb={4} mt={5} justify={"between"}>
         <Text.formatted
@@ -321,13 +331,13 @@ export const LimitConfirmDialog: FC<{
         </Text.formatted>
         <Flex gap={1}>
           <Badge color="neutral" size="xs">
-            Limit
+            {t("positions.limit")}
           </Badge>
           <Badge
             color={side === OrderSide.BUY ? "success" : "danger"}
             size="xs"
           >
-            {side === OrderSide.BUY ? "Buy" : "Sell"}
+            {side === OrderSide.BUY ? t("common.buy") : t("common.sell")}
           </Badge>
         </Flex>
       </Flex>

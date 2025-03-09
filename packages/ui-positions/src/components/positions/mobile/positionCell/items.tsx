@@ -1,14 +1,16 @@
+import { FC } from "react";
+import { API } from "@orderly.network/types";
 import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { PositionCellState } from "./positionCell.script";
-import { FC } from "react";
-import { API } from "@orderly.network/types";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 
 export const SymbolToken: FC<PositionCellState> = (props) => {
   const { item } = props;
   const isBuy = item.position_qty > 0;
+  const { t } = useTranslation();
   return (
     <Text.formatted
       rule="symbol"
@@ -16,7 +18,7 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
       size="2xs"
       suffix={
         <Badge color={isBuy ? "success" : "danger"} size="xs">
-          {isBuy ? "Buy" : "Sell"}
+          {isBuy ? t("common.buy") : t("common.sell")}
         </Badge>
       }
       showIcon
@@ -36,8 +38,13 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
     <Flex gap={3}>
       <Flex direction={"column"} className="oui-text-2xs" itemAlign={"end"}>
         <Text intensity={36}>
-          Unreal. PnL{<Text intensity={20}>(USDC)</Text>}
+          {/* @ts-ignore */}
+          <Trans
+            i18nKey="positions.column.unrealPnl.quote"
+            components={[<Text intensity={20} />]}
+          />
         </Text>
+
         <Text.numeral
           size="xs"
           dp={props.pnlNotionalDecimalPrecision}
@@ -77,10 +84,11 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
 
 export const Qty: FC<PositionCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"Qty."}
+      label={t("positions.column.qty")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -98,7 +106,13 @@ export const Margin: FC<PositionCellState> = (props) => {
 
   return (
     <Statistic
-      label={<Text>Margin{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={
+        // @ts-ignore
+        <Trans
+          i18nKey="positions.column.margin.quote"
+          components={[<Text intensity={20} />]}
+        />
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -117,7 +131,13 @@ export const Notional: FC<PositionCellState> = (props) => {
   return (
     <Statistic
       align="end"
-      label={<Text>Notional{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={
+        // @ts-ignore
+        <Trans
+          i18nKey="positions.column.notional.quote"
+          components={[<Text intensity={20} />]}
+        />
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -132,10 +152,11 @@ export const Notional: FC<PositionCellState> = (props) => {
 
 export const AvgOpen: FC<PositionCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"Avg. open"}
+      label={t("positions.column.avgOpen")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -150,10 +171,10 @@ export const AvgOpen: FC<PositionCellState> = (props) => {
 
 export const MarkPrice: FC<PositionCellState> = (props) => {
   const { item } = props;
-
+  const { t } = useTranslation();
   return (
     <Statistic
-      label={"Mark price"}
+      label={t("positions.column.markPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -168,13 +189,13 @@ export const MarkPrice: FC<PositionCellState> = (props) => {
 
 export const LiqPrice: FC<PositionCellState> = (props) => {
   const { item } = props;
-
+  const { t } = useTranslation();
   const liqPrice =
     item.est_liq_price && item.est_liq_price > 0 ? item.est_liq_price : "-";
 
   return (
     <Statistic
-      label={"Liq. price"}
+      label={t("positions.column.liqPrice")}
       align="end"
       classNames={{
         root: "oui-text-xs",
@@ -190,13 +211,13 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
 
 export const TPSLPrice: FC<PositionCellState> = (props) => {
   const { item } = props;
-
+  const { t } = useTranslation();
   if (item.tp_trigger_price == null && item.sl_trigger_price == null)
     return <></>;
 
   return (
     <Flex className="oui-text-2xs oui-text-base-contrast-36">
-      <Text>TP/SL:&nbsp;</Text>
+      <Text>{t("positions.tpsl.prefix")}&nbsp;</Text>
       <Flex className="oui-gap-[2px]">
         {item.tp_trigger_price && (
           <Text.numeral color="buy">{item.tp_trigger_price}</Text.numeral>

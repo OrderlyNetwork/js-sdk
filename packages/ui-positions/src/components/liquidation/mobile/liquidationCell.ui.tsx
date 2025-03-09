@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { cn, Divider, Flex, Grid, Text } from "@orderly.network/ui";
+import { cn, Flex, Grid, Text } from "@orderly.network/ui";
 import { LiquidationCellState } from "./liquidationCell.script";
 import { LiquidationFee, Price, Quantity } from "./items";
 import { API } from "@orderly.network/types";
-import { SymbolProvider } from "../../../providers/symbolProvider";
 import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const LiquidationCell: FC<
   LiquidationCellState & {
@@ -29,6 +29,8 @@ export const LiquidationCell: FC<
 };
 
 export const Header: FC<LiquidationCellState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex gap={1} width={"100%"}>
       <Flex
@@ -47,7 +49,7 @@ export const Header: FC<LiquidationCellState> = (props) => {
         </Text.formatted>
         <Flex gap={1}>
           <Text size="2xs" intensity={36}>
-            Liquidation id:
+            {t("positions.Liquidation.column.liquidationId.label")}
           </Text>
           <Text
             size="2xs"
@@ -57,7 +59,7 @@ export const Header: FC<LiquidationCellState> = (props) => {
       </Flex>
       <Flex direction={"column"} itemAlign={"end"} className="oui-flex-1">
         <Text size="2xs" intensity={36}>
-          Ins. Fund Transfer:
+          {t("positions.Liquidation.column.insFundTransfer.label")}
         </Text>
         <Text intensity={80} size="xs">
           {commifyOptional(props.item.transfer_amount_to_insurance_fund)}

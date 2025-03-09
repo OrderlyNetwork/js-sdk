@@ -14,7 +14,7 @@ import {
 import { commifyOptional } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const PositionHistoryCell: FC<PositionHistoryCellState> = (props) => {
   return (
     <Flex
@@ -32,11 +32,13 @@ export const PositionHistoryCell: FC<PositionHistoryCellState> = (props) => {
 };
 
 export const Header: FC<PositionHistoryCellState> = (props) => {
+  const { t } = useTranslation();
+
   const showAlert = () => {
     const { item: record } = props;
 
     modal.alert({
-      title: "Net PnL",
+      title: t("positions.history.column.netPnl"),
       message: (
         <Flex
           direction={"column"}
@@ -45,13 +47,17 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
           className="oui-text-2xs oui-text-base-contrast-54"
         >
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>Realized PnL</Text>
+            <Text intensity={54}>
+              {t("positions.history.netPnl.realizedPnl")}
+            </Text>
             <Text color={record.realized_pnl >= 0 ? "profit" : "lose"}>
               {commifyOptional(record.realized_pnl)}
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>Funding fee</Text>
+            <Text intensity={54}>
+              {t("positions.history.netPnl.fundingFee")}
+            </Text>
             <Text
               color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
             >
@@ -59,7 +65,9 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>Trading fee</Text>
+            <Text intensity={54}>
+              {t("positions.history.netPnl.tradingFee")}
+            </Text>
             <Text color={record.trading_fee > 0 ? "lose" : "profit"}>
               {commifyOptional(-record.trading_fee)}
             </Text>
@@ -82,7 +90,7 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
       </Flex>
       <Flex direction={"column"} itemAlign={"end"} className="oui-flex-1">
         <Text size="2xs" intensity={36}>
-          Net PnL
+          {t("positions.history.column.netPnl")}
         </Text>
         <Flex gapX={1}>
           <button onClick={showAlert}>
