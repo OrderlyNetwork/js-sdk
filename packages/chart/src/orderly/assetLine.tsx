@@ -7,16 +7,14 @@ import {
   Line,
   CartesianGrid,
   Tooltip,
-  Label,
   ResponsiveContainer,
 } from "recharts";
-
 import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { XAxisLabel } from "./xAxisLabel";
 import { useRef } from "react";
-import { numberToHumanStyle } from "@orderly.network/utils";
 import { tickFormatter } from "../utils/yTickFormatter";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type AssetChartDataItem = {
   date: string;
@@ -34,13 +32,13 @@ export type PnlLineChartProps = {
 
 const CustomTooltip = (props: TooltipProps<any, any>) => {
   const { active, payload, label } = props;
-
   const todayStr = useRef(new Date().toISOString().split("T")[0]);
+  const { t } = useTranslation();
 
   if (active && payload && payload.length) {
     return (
       <OrderlyChartTooltip
-        label={label === todayStr.current ? "Now" : label}
+        label={label === todayStr.current ? t("chart.now") : label}
         value={payload[0].value}
       />
     );

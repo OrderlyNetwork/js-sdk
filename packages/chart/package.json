@@ -35,6 +35,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "d3-array": "^3.2.4",

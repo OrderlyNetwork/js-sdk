@@ -13,12 +13,10 @@ import {
 } from "recharts";
 import type { TooltipProps } from "recharts";
 import { OrderlyChartTooltip } from "./customTooltip";
-import { Box, cn } from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
-// import { XAxisLabel } from "./xAxisLabel";
+import { cn } from "@orderly.network/ui";
 import { useRef } from "react";
-import { numberToHumanStyle } from "@orderly.network/utils";
 import { tickFormatter } from "../utils/yTickFormatter";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type PnLChartDataItem = {
   date: string;
@@ -54,7 +52,7 @@ const RoundedRectangle = (props: any) => {
 
 export const XAxisLabel = (props: any) => {
   const { x, y, stroke, payload, index, width, containerWidth } = props;
-
+  const { t } = useTranslation();
   const _x =
     index === 0
       ? 48
@@ -73,7 +71,7 @@ export const XAxisLabel = (props: any) => {
         fontSize={10}
         fill={"rgba(255,255,255,0.54)"}
       >
-        {index === 0 ? payload.value : "Now"}
+        {index === 0 ? payload.value : t("chart.now")}
       </text>
     </g>
   );
@@ -99,13 +97,13 @@ const CustomizedCross = (props: any) => {
 
 const CustomTooltip = (props: TooltipProps<any, any>) => {
   const { active, payload, label } = props;
-
   const todayStr = useRef(new Date().toISOString().split("T")[0]);
+  const { t } = useTranslation();
 
   if (active && payload && payload.length) {
     return (
       <OrderlyChartTooltip
-        label={label === todayStr.current ? "Now" : label}
+        label={label === todayStr.current ? t("chart.now") : label}
         value={payload[0].value}
         coloring
       />
