@@ -1,13 +1,13 @@
-import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
+import { Connector, useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { ChainNamespace } from "@orderly.network/types";
 
 interface WagmiWalletContextValue {
-  connectors: any[];
+  connectors: Connector[];
   connect: (args: any) => void;
   wallet: any;
   connectedChain: { id: number; namespace: ChainNamespace } | null;
-  setChain: (chainId: number) => Promise<boolean>;
+  setChain: (chainId: number) => Promise<any>;
   disconnect: () => void;
   isConnected: boolean;
 }
@@ -16,7 +16,7 @@ const WagmiWalletContext = createContext<WagmiWalletContextValue | null>(null);
 
 export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [wallet, setWallet] = useState<undefined | any>(undefined);
-  const { connect, connectors } = useConnect();
+  const { connect, connectors: wagmiConnectors } = useConnect();
   const { disconnect } = useDisconnect();
   const { connector, isConnected, address, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
@@ -67,6 +67,15 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
     });
   }, [connector, chainId, isConnected, address, connectedChain]);
+
+  const connectors = useMemo(() => {
+    if (typeof window !== 'undefined' && !window.ethereum) {
+      // remove injected connector
+      return wagmiConnectors.filter((connector: any) => connector.type !== 'injected') as Connector[];
+      
+    }
+    return wagmiConnectors as Connector[];
+  }, [wagmiConnectors]);
 
   const value = useMemo(() => ({
     connectors,

@@ -16,16 +16,22 @@ const WALLET_ICONS: Record<string, string> = {
 };
 export const getWalletIcon = (connector: Connector): string | undefined => {
   // inject wallet icon
-  if (connector.type === 'injected') {
-    // 检查是否是MetaMask
-    if (typeof window !== 'undefined' && window.ethereum?.isMetaMask) {
-      return 'https://oss.orderly.network/static/sdk/evm_wallets/metamask.png';
-    }
-    // 检查是否是Coinbase Wallet
-    if (typeof window !== 'undefined' && window.ethereum?.isCoinbaseWallet) {
+  if (connector.type === 'injected' && typeof window !== 'undefined' && window.ethereum) {
+    // check if it is coinbase wallet
+    if (window.ethereum.isCoinbaseWallet) {
       return 'https://oss.orderly.network/static/sdk/evm_wallets/coinbase.png';
     }
-    // 其他注入钱包
+    // check if it is phantom
+    if (window.ethereum.isPhantom) {
+      return 'https://oss.orderly.network/static/sdk/evm_wallets/phantom.png';
+    }
+    // window.ethereum.isMetaMask and window.ethereum.isPantom will both return true, need put metamask last
+
+    // check if it is metamask
+    if (window.ethereum.isMetaMask) {
+      return 'https://oss.orderly.network/static/sdk/evm_wallets/metamask.png';
+    }
+    // other injected wallets
     return 'https://oss.orderly.network/static/sdk/evm_wallets/default.png';
   }
 
