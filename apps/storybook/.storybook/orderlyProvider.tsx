@@ -60,15 +60,15 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 
   return (
     <WalletConnectorProvider
-      solanaInitial={{ 
-        wallets: wallets, 
+      solanaInitial={{
+        wallets: wallets,
         // network: "mainnet-beta" as WalletAdapterNetwork,
         network: WalletAdapterNetwork.Devnet,
 
         mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_acfc3073385c4744b097aa86dc5b2f3c_1335ff06'
       }}
 
-      // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
+    // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
     >
       <OrderlyAppProvider
         // brokerId="orderly"
@@ -82,18 +82,18 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
           customRestrictedRegions: [],
           contact: { url: "x@orerly.network", text: "x@orerly.network" },
         }}
-        // overrides={{
-        //   tabs: {
-        //     variant: "text",
-        //   },
-        //   chainSelector: {
-        //     showTestnet: false,
-        //   },
-        // }}
-        // defaultChain={{
-        //   mainnet: { id: 900900900 },
-        //   testnet: { id: 901901901 },
-        // }}
+      // overrides={{
+      //   tabs: {
+      //     variant: "text",
+      //   },
+      //   chainSelector: {
+      //     showTestnet: false,
+      //   },
+      // }}
+      // defaultChain={{
+      //   mainnet: { id: 900900900 },
+      //   testnet: { id: 901901901 },
+      // }}
       >
         {props.children}
       </OrderlyAppProvider>
@@ -103,55 +103,56 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 
 export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
   return (
-    <WalletConnectorPrivyProvider 
-    network={Network.testnet}
-    privyConfig={{
-      appid: 'cm50h5kjc011111gdn7i8cd2k',
-      appearance: {
-        theme: 'dark',
-        accentColor: '#181C23',
-        logo: '/orderly-logo.svg',
-      }
-    }}
-    wagmiConfig={{
-      connectors: [
-        wagmiConnectors.injected(),
-        wagmiConnectors.walletConnect({
-          projectId: '93dba83e8d9915dc6a65ffd3ecfd19fd',
-          showQrModal: true,
-          storageOptions: {
-  
-          },
-          metadata: {
-            name: 'Orderly Network',
-            description: 'Orderly Network',
-            url: 'https://orderly.network',
-            icons: ['https://oss.orderly.network/static/sdk/chains.png']
-          }
-        }),
-      ]
-    }}
-    solanaConfig={{
-      endPoint: 'https://api.devnet.solana.com',
-      mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5',
-      devnetRpc: 'https://api.devnet.solana.com',
-      wallets: wallets,
-      onError: (error: WalletError, adapter?: Adapter) => {
-        console.log("-- error", error, adapter);
-      },
-    }}
+    <WalletConnectorPrivyProvider
+      network={Network.testnet}
+      privyConfig={{
+        appid: 'cm50h5kjc011111gdn7i8cd2k',
+        appearance: {
+          theme: 'dark',
+          accentColor: '#181C23',
+          logo: '/orderly-logo.svg',
+          loginMethods: ['email', 'google', 'twitter']
+        },
+      }}
+      wagmiConfig={{
+        connectors: [
+          wagmiConnectors.injected(),
+          wagmiConnectors.walletConnect({
+            projectId: '93dba83e8d9915dc6a65ffd3ecfd19fd',
+            showQrModal: true,
+            storageOptions: {
+
+            },
+            metadata: {
+              name: 'Orderly Network',
+              description: 'Orderly Network',
+              url: 'https://orderly.network',
+              icons: ['https://oss.orderly.network/static/sdk/chains.png']
+            }
+          }),
+        ]
+      }}
+      solanaConfig={{
+        endPoint: 'https://api.devnet.solana.com',
+        mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5',
+        devnetRpc: 'https://api.devnet.solana.com',
+        wallets: wallets,
+        onError: (error: WalletError, adapter?: Adapter) => {
+          console.log("-- error", error, adapter);
+        },
+      }}
     >
-           <OrderlyAppProvider
+      <OrderlyAppProvider
         // brokerId="orderly"
         // brokerName="Orderly"
         // networkId="testnet"
         configStore={configStore}
         appIcons={config.orderlyAppProvider.appIcons}
-        // overrides={{
-        //   tabs: {
-        //     variant: "text",
-        //   },
-        // }}
+      // overrides={{
+      //   tabs: {
+      //     variant: "text",
+      //   },
+      // }}
       >
         {props.children}
       </OrderlyAppProvider>

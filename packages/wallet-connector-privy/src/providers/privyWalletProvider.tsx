@@ -64,10 +64,18 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const linkedAccount = useMemo(() => {
 
     if (user && user.linkedAccounts) {
-      const account = user.linkedAccounts[0];
+      const account = user.linkedAccounts.filter(item => item.type !== 'wallet').sort((a, b) => (b.latestVerifiedAt?.getTime() ?? 0) - (a.latestVerifiedAt?.getTime() ?? 0))[0];
+      let address = null; 
+      if (account.type === 'email') {
+        address = account.address;
+      } else if (account.type === 'twitter_oauth') {
+        address = `@${account.username}`;
+      } else if (account.type === 'google_oauth') {
+        address = `@${account.name}`;
+      }
       return {
         type: account.type,
-        address: 'number' in account ? account.number : ('address' in account ? account.address : null),
+        address: address,
       }
     }
     return null;
