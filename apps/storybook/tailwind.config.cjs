@@ -26,6 +26,7 @@ module.exports = withTV({
     "../../packages/ui-order-entry/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-tpsl/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-chain-selector/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/trading-leaderboard/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),

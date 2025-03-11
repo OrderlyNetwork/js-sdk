@@ -113,6 +113,10 @@ export default defineConfig({
         "../../packages/wallet-connector/src"
       ),
       "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
+      "@orderly.network/trading-leaderboard": resolve(
+        __dirname,
+        "../../packages/trading-leaderboard/src"
+      ),
     },
   },
 });

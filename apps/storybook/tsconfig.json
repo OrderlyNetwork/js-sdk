@@ -96,6 +96,9 @@
       ],
       "@orderly.network/utils": [
         "../../packages/utils/src"
+      ],
+      "@orderly.network/trading-leaderboard": [
+        "../../packages/trading-leaderboard/src"
       ]
     }
   },
