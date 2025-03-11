@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { Network, WalletConnectorPrivyProvider, wagmiConnectors } from "@orderly.network/wallet-connector-privy";
+import { Network, WalletConnectorPrivyProvider, wagmiConnectors, wagmi } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
 import {
