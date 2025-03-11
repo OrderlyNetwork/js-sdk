@@ -66,7 +66,9 @@ export const LayoutPage: Story = {
     return (
       <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Positions}>
         <Container>
-          <PositionsModule.PositionsPage />
+          <PositionsModule.PositionsPage
+            sharePnLConfig={config.tradingPage.sharePnLConfig}
+          />
         </Container>
       </PortfolioLayout>
     );
