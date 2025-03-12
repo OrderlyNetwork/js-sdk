@@ -43,9 +43,8 @@ export interface InitWagmi{
 }
 
 export interface InitSolana{
-  endPoint: string;
-  mainnetRpc: string;
-  devnetRpc: string;
+  mainnetRpc?: string;
+  devnetRpc?: string;
   wallets: Adapter[];
   onError: (error: WalletError, adapter?: Adapter) => void;
 }

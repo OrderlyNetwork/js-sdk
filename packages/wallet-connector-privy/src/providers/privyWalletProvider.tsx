@@ -38,7 +38,7 @@ const getPrivyEmbeddedWalletChainId = (chainId: string) => {
 const PrivyWalletContext = createContext<PrivyWalletContextValue | null>(null);
 
 export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { network } = useWalletConnectorPrivy();
+  const { network, solanaInfo, setSolanaInfo } = useWalletConnectorPrivy();
   const { login, logout, ready, authenticated, user, exportWallet: exportEvmWallet } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
   const connectedRef = useRef(false);
@@ -50,11 +50,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
     createWallet: createSolanaWallet,
     exportWallet: exportSolanaWallet,
   } = useSolanaWallets();
-  const connection = useMemo(() => {
 
-    return new Connection('https://caryl-ukn4ci-fast-devnet.helius-rpc.com');
-
-  }, [])
 
   const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);
   const [walletSOL, setWalletSOL] = useState<WalletStatePrivy | null>(null);
@@ -200,7 +196,8 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
           signMessage: wallet.signMessage,
           signTransaction: wallet.signTransaction,
           sendTransaction: wallet.sendTransaction,
-          network: network === "mainnet" ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
+          network: solanaInfo?.network ?? WalletAdapterNetwork.Devnet,
+          rpcUrl: solanaInfo?.rpcUrl ?? undefined,
         },
         accounts: [
           {
@@ -221,7 +218,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
 
 
-  }, [walletsSOL, authenticated, createSolanaWallet, connection, solanaReady, user, walletSOL, network]);
+  }, [walletsSOL, authenticated, createSolanaWallet, solanaReady, user, walletSOL, network, solanaInfo]);
 
 
   useEffect(() => {
@@ -246,8 +243,8 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
     disconnect,
     switchChain,
     linkedAccount,
-    exportWallet
-  }), [connect, walletEVM, walletSOL, isConnected, disconnect, switchChain, linkedAccount, exportWallet]);
+    exportWallet,
+  }), [connect, walletEVM, walletSOL, isConnected, disconnect, switchChain, linkedAccount, exportWallet, solanaInfo, setSolanaInfo]);
 
   return (
     <PrivyWalletContext.Provider value={value}>

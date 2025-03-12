@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren, useEffect, useRef, useState, createContext, useContext, type RefObject } from "react";
+import React, { type PropsWithChildren, useEffect, useRef, useState, createContext, useContext, type RefObject, useMemo } from "react";
 import { Main } from "./main";
 import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
@@ -11,6 +11,7 @@ import { InitWagmiProvider } from "./providers/initWagmiProvider";
 import { PrivyWalletProvider } from "./providers/privyWalletProvider";
 import { WagmiWalletProvider } from "./providers/wagmiWalletProvider";
 import { SolanaWalletProvider } from "./providers/solanaWalletProvider";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 
 
 const fetchChainInfo = async (url: string) => {
@@ -55,6 +56,14 @@ interface WalletConnectorPrivyContextType {
   setTargetNamespace: (namespace: ChainNamespace | undefined) => void;
   network: Network;
   setNetwork: (network: Network) => void;
+  solanaInfo: {
+    rpcUrl: string | null;
+    network: WalletAdapterNetwork | null;
+  } | null;
+  setSolanaInfo: (solanaInfo: {
+    rpcUrl: string | null;
+    network: WalletAdapterNetwork | null;
+  } | null) => void;
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
@@ -68,6 +77,8 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   setTargetNamespace: () => { },
   network: Network.mainnet,
   setNetwork: () => { },
+  solanaInfo: null,
+  setSolanaInfo: () => { },
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -87,6 +98,10 @@ export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
   const [targetNamespace, setTargetNamespace] = useState<ChainNamespace | undefined>();
+  const [solanaInfo, setSolanaInfo] = useState<{
+    rpcUrl: string | null;
+    network: WalletAdapterNetwork | null;
+  } | null>(null);
 
   const fetchAllChains = async () => {
     try {
@@ -111,35 +126,40 @@ export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
     return network === 'mainnet' ? mainnetChains : testnetChains;
   };
 
+  const value = useMemo(() => ({  
+    initChains,
+    mainnetChains,
+    testnetChains,
+    getChainsByNetwork,
+    openConnectDrawer,
+    setOpenConnectDrawer,
+    targetNamespace,
+    setTargetNamespace,
+    network,
+    setNetwork,
+    solanaInfo,
+    setSolanaInfo,
+  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo]);
+
+
   useEffect(() => {
     fetchAllChains();
   }, []);
 
-  if (!initRef) {
+  if (!initRef.current) {
     return null;
   }
-  
+
 
   return (
     <walletConnectorPrivyContext.Provider
-      value={{
-        initChains,
-        mainnetChains,
-        testnetChains,
-        getChainsByNetwork,
-        openConnectDrawer,
-        setOpenConnectDrawer,
-        targetNamespace,
-        setTargetNamespace,
-        network,
-        setNetwork,
-      }}
+      value={value}
     >
       <TooltipProvider delayDuration={300}>
 
         <InitPrivyProvider privyConfig={props.privyConfig} initChains={initChains}>
           <InitWagmiProvider wagmiConfig={props.wagmiConfig} initChains={initChains}>
-            <InitSolanaProvider solanaConfig={props.solanaConfig}>
+            <InitSolanaProvider {...props.solanaConfig}>
               <PrivyWalletProvider>
                 <WagmiWalletProvider>
                   <SolanaWalletProvider>
