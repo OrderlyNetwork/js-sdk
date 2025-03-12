@@ -3,7 +3,7 @@ import { useAssetScript } from "./useBuilder.script";
 
 export const AssetWidget = () => {
   const {
-    connected,
+    canTrade,
     connect: connectWallet,
     portfolioValue,
     onLeverageEdit,
@@ -12,7 +12,7 @@ export const AssetWidget = () => {
   return (
     <AssetsUI
       onConnectWallet={connectWallet}
-      connected={connected}
+      canTrade={canTrade}
       portfolioValue={portfolioValue}
       onLeverageEdit={onLeverageEdit}
       {...rest}

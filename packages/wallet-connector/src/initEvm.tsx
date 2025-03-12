@@ -49,8 +49,8 @@ export function InitEvm(
     }
 
     Promise.all([
-      fetchChainInfo('https://testnet-api-evm.orderly.org/v1/public/chain_info'),
-      fetchChainInfo('https://api-evm.orderly.org/v1/public/chain_info'),
+      fetchChainInfo('https://testnet-api.orderly.org/v1/public/chain_info'),
+      fetchChainInfo('https://api.orderly.org/v1/public/chain_info'),
     ])
       .then(([testChainInfo, mainnetChainInfo]) => {
         const testChains = processChainInfo(testChainInfo);

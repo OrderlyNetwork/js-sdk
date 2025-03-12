@@ -188,7 +188,9 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   const formattedData = useFormatOrderHistory(data ?? []);
 
   const dataSource =
-    useDataTap(type !== TabType.tp_sl ? formattedData : data) ?? undefined;
+    useDataTap(type !== TabType.tp_sl ? formattedData : data, {
+      fallbackData: [],
+    }) ?? undefined;
 
   const _pagination = useMemo(() => {
     if (manualPagination) {

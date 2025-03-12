@@ -18,7 +18,7 @@ import { AssetsHeader } from "./assetsHeader";
 import { AuthGuard } from "@orderly.network/ui-connector";
 
 type Props = {
-  connected?: boolean;
+  canTrade?: boolean;
   onConnectWallet?: () => void;
   onWithdraw?: () => void;
   onDeposit?: () => void;
@@ -46,7 +46,7 @@ export const AssetsUI = (props: Props) => {
       // @ts-ignore
       title={
         <AssetsHeader
-          disabled={!props.connected || props.wrongNetwork}
+          disabled={!props.canTrade}
           onDeposit={props.onDeposit}
           onWithdraw={props.onWithdraw}
         />
@@ -72,10 +72,7 @@ export const AssetsUI = (props: Props) => {
             </Flex>
           }
         >
-          <Either
-            value={(props.connected ?? false) && !props.wrongNetwork}
-            left={<NoValue />}
-          >
+          <Either value={props.canTrade!} left={<NoValue />}>
             <Text.numeral
               visible={props.visible}
               unit="USDC"
@@ -87,7 +84,7 @@ export const AssetsUI = (props: Props) => {
                 color: "brand",
               })}
             >
-              {props.portfolioValue ?? '--'}
+              {props.portfolioValue ?? "--"}
             </Text.numeral>
           </Either>
         </Statistic>
@@ -148,9 +145,18 @@ export const AssetStatistic = (
       </Statistic>
       <Statistic label="Max account leverage">
         <Flex itemAlign={"center"}>
-          <span data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value" className="oui-text-lg">{props.currentLeverage}</span>
+          <span
+            data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value"
+            className="oui-text-lg"
+          >
+            {props.currentLeverage}
+          </span>
           <span>x</span>
-          <button className="oui-ml-1" onClick={() => props.onLeverageEdit?.()} data-testid="oui-testid-portfolio-assets-maxAccountLeverage-edit-btn">
+          <button
+            className="oui-ml-1"
+            onClick={() => props.onLeverageEdit?.()}
+            data-testid="oui-testid-portfolio-assets-maxAccountLeverage-edit-btn"
+          >
             <EditIcon color={"white"} size={18} />
           </button>
         </Flex>

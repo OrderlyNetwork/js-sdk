@@ -150,7 +150,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
           variant="contained"
           color="primary"
           onClick={props.onCreateApiKey}
-          disabled={!props.canCreateApiKey || props.wrongNetwork}
+          disabled={!props.canCreateApiKey}
           // className="disabled:oui-cursor-default"
           data-testid="oui-testid-apiKey-createApiKey-btn"
         >

@@ -32,6 +32,7 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
     ...rest
   } = props;
   const { state } = useAccount();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const _status = useMemo(() => {
     if (status === undefined) {
@@ -45,14 +46,17 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
   const data = useDataTap(dataSource, {
     accountStatus: _status,
   });
-  const { wrongNetwork } = useAppContext();
+
+  const ignoreLoadingCheck =
+    wrongNetwork ||
+    disabledConnect ||
+    state.status < _status ||
+    props.ignoreLoadingCheck;
 
   return (
     <DataTable
       dataSource={data}
-      ignoreLoadingCheck={
-        wrongNetwork || state.status < _status || props.ignoreLoadingCheck
-      }
+      ignoreLoadingCheck={ignoreLoadingCheck}
       emptyView={
         <GuardView
           status={_status}

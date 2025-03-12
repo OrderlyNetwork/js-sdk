@@ -63,42 +63,54 @@ interface AssetValueListProps {
 
 const useCurrentStatusText = (): StatusInfo => {
   const { state } = useAccount();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   return useMemo(() => {
-    if (wrongNetwork) {
-      return {
+    const statusText = {
+      wrongNetwork: {
         title: "Wrong Network",
         description: "Please switch to a supported network to continue.",
         titleColor: "warning",
-      };
+      },
+      connectWallet: {
+        title: "Connect wallet",
+        description: "Please connect your wallet before starting to trade.",
+        titleClsName:
+          "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
+      },
+      notSignedIn: {
+        title: "Sign in",
+        description: "Please sign in before starting to trade.",
+        titleColor: "primary",
+      },
+      disabledTrading: {
+        title: "Enable trading",
+        description: "Enable trading before starting to trade.",
+        titleColor: "primary",
+      },
+      default: {
+        title: "",
+        description: "",
+      },
+    };
+
+    if (disabledConnect) {
+      return statusText.connectWallet;
+    }
+
+    if (wrongNetwork) {
+      return statusText.wrongNetwork;
     }
 
     switch (state.status) {
       case AccountStatusEnum.NotConnected:
-        return {
-          title: "Connect wallet",
-          description: "Please connect your wallet before starting to trade.",
-          titleClsName:
-            "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
-        };
+        return statusText.connectWallet;
       case AccountStatusEnum.NotSignedIn:
-        return {
-          title: "Sign in",
-          description: "Please sign in before starting to trade.",
-          titleColor: "primary",
-        };
+        return statusText.notSignedIn;
       case AccountStatusEnum.DisabledTrading:
-        return {
-          title: "Enable trading",
-          description: "Enable trading before starting to trade.",
-          titleColor: "primary",
-        };
+        return statusText.disabledTrading;
       default:
-        return {
-          title: "",
-          description: "",
-        };
+        return statusText.default;
     }
   }, [state.status, wrongNetwork]);
 };

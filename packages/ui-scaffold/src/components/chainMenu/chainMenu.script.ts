@@ -16,7 +16,7 @@ export const useChainMenuScript = () => {
   const [loading, setLoading] = useState(false);
   const { state } = useAccount();
   const { connectedChain } = useWalletConnector();
-  const { wrongNetwork, currentChainId } = useAppContext();
+  const { currentChainId, wrongNetwork, disabledConnect } = useAppContext();
   const networkId = useConfig("networkId") as NetworkId;
 
   const hide = () => {
@@ -36,6 +36,7 @@ export const useChainMenuScript = () => {
     isConnected: !!connectedChain,
     currentChainId,
     wrongNetwork,
+    disabledConnect,
     accountStatus: state.status,
     networkId,
     open,

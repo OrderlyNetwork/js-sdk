@@ -7,7 +7,7 @@ const APIS: Record<ENV_NAME, URLS> = {
   prod: API_URLS.mainnet,
   staging: API_URLS.testnet,
   dev: {
-    apiBaseUrl: "https://dev-api-v2.orderly.org",
+    apiBaseUrl: "https://dev-api.orderly.org",
     publicWsUrl: "wss://dev-ws-v2.orderly.org",
     privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
     operatorUrl: {
@@ -16,7 +16,7 @@ const APIS: Record<ENV_NAME, URLS> = {
     },
   },
   qa: {
-    apiBaseUrl: "https://qa-api-evm.orderly.org",
+    apiBaseUrl: "https://qa-api.orderly.org",
     publicWsUrl: "wss://qa-ws-evm.orderly.org",
     privateWsUrl: "wss://qa-ws-private-evm.orderly.org",
     operatorUrl: {

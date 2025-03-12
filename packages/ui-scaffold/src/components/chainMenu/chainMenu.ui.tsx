@@ -20,7 +20,7 @@ import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
 
 export const ChainMenu = (props: UseChainMenuScriptReturn) => {
-  if (props.wrongNetwork && props.isConnected) {
+  if (props.wrongNetwork && props.isConnected && !props.disabledConnect) {
     return (
       <Tooltip
         open
