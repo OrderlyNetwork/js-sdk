@@ -9,6 +9,7 @@ import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../provider";
 import { WalletType } from "../types";
 import { getWalletIcon } from "../util";
+import { RenderWalletIcon } from "./common";
 export function AddEvmWallet() {
   const [visible, setVisible] = useState(false);
   const { connect } = useWallet();
@@ -16,6 +17,7 @@ export function AddEvmWallet() {
   const { connectors } = useWagmiWallet();
   const {targetNamespace} = useWalletConnectorPrivy();
   console.log('--connectors', connectors)
+
 
   useEffect(() => {
     let timer = 0;
@@ -89,16 +91,8 @@ export function AddEvmWallet() {
             className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer oui-text-2xs"
             onClick={() => connect({ walletType: WalletType.EVM, connector: item })}
           >
-            {
-              getWalletIcon(item) &&
-
-              <img
-                className="oui-w-[18px] oui-h-[18px]"
-                src={getWalletIcon(item)}
-                alt={item.name}
-              />
-            }
-            {item.name}
+            <RenderWalletIcon connector={item} />
+            <div className="oui-text-base-contrast">{item.name}</div>
           </div>
         )}
 

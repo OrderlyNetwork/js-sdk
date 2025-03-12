@@ -5,7 +5,7 @@ import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
 import { ConnectProps, WalletType } from "../types";
-import { RenderPrivyTypeIcon } from "./common";
+import { RenderPrivyTypeIcon, RenderWalletIcon } from "./common";
 import { useWalletConnectorPrivy } from "../provider";
 import { useWagmiWallet } from "../providers/wagmiWalletProvider";
 import { useSolanaWallet } from "../providers/solanaWalletProvider";
@@ -96,15 +96,7 @@ function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
             className=" oui-flex oui-items-center oui-justify-start oui-gap-1 oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1 oui-cursor-pointer"
             onClick={() => connect(item)}
           >
-            {
-              getWalletIcon(item) &&
-
-              <img
-                className="oui-w-[18px] oui-h-[18px]"
-                src={getWalletIcon(item)}
-                alt={item.name}
-              />
-            }
+            <RenderWalletIcon connector={item} />
             <div className="oui-text-base-contrast oui-text-2xs">{item.name}</div>
           </div>
         ))}
@@ -125,7 +117,7 @@ function SOLConnectArea({ connect }: { connect: (walletAdapter: WalletAdapter) =
             className=" oui-flex oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1 oui-cursor-pointer"
             onClick={() => connect(item.adapter)}
           >
-            {item.adapter.icon && <img src={item.adapter.icon} className="oui-w-[18px] oui-h-[18px]" />}
+            <RenderWalletIcon connector={item.adapter} />
             <div className="oui-text-base-contrast oui-text-2xs">{item.adapter.name}</div>
           </div>
         ))}

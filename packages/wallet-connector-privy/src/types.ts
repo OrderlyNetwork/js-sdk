@@ -40,7 +40,6 @@ export interface InitPrivy {
 export interface InitWagmi{
   connectors?: CreateConnectorFn[];
   storage?: Storage;
-
 }
 
 export interface InitSolana{

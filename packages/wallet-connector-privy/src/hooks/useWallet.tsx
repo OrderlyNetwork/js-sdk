@@ -117,7 +117,7 @@ export function useWallet() {
           await setChainEvm(parseInt(chain.chainId as string));
           setStorageChain(parseInt(chain.chainId as string));
           track(EnumTrackerKeys.switchNetworkSuccess, {
-            from_chain: storageChain?.chain.id,
+            from_chain: storageChain?.chainId,
             to_chain: chain.chainId,
           });
           return Promise.resolve(true);

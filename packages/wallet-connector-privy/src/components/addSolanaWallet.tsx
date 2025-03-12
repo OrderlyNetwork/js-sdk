@@ -5,6 +5,7 @@ import { useWallet } from "../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../provider";
 import { ChainNamespace } from "@orderly.network/types";
 import { WalletType } from "../types";
+import { RenderWalletIcon } from "./common";
 export function AddSolanaWallet() {
   const { wallets } = useSolanaWallet();
   const { connect } = useWallet();
@@ -81,7 +82,7 @@ export function AddSolanaWallet() {
             className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
             onClick={() => connect({ walletType: WalletType.SOL, walletAdapter: item.adapter })}
           >
-            {item.adapter.icon && <img src={item.adapter.icon} className="oui-w-[18px] oui-h-[18px]" />}
+            <RenderWalletIcon connector={item.adapter} />
             <div className="oui-text-base-contrast oui-text-2xs">{item.adapter.name}</div>
           </div>
         )}

@@ -69,12 +69,7 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [connector, chainId, isConnected, address, connectedChain]);
 
   const connectors = useMemo(() => {
-    if (typeof window !== 'undefined' && !window.ethereum) {
-      // remove injected connector
-      return wagmiConnectors.filter((connector: any) => connector.type !== 'injected') as Connector[];
-      
-    }
-    return wagmiConnectors as Connector[];
+    return wagmiConnectors.filter((connector: any) => connector.id!== 'injected') as Connector[];
   }, [wagmiConnectors]);
 
   const value = useMemo(() => ({
