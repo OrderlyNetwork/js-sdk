@@ -1022,6 +1022,25 @@ export class Account {
     return { res, address, keyPair };
   }
 
+  async importOrderlyKeyWithAccountId(options: {
+    secretKey: string;
+    address: string;
+    accountId: string;
+    chainNamespace: ChainNamespace;
+  }) {
+    const { address, secretKey, chainNamespace, accountId } = options;
+    if (!address || !secretKey || !chainNamespace || !accountId) return;
+
+    if (!accountId) return;
+
+    const orderlyKey = new BaseOrderlyKeyPair(secretKey);
+    const res = await this.checkOrderlyKey(address, orderlyKey, accountId);
+    if (res) {
+      this.configStore.set("chainNamespace", chainNamespace);
+    }
+    return res;
+  }
+
   async importOrderlyKey(options: {
     secretKey: string;
     address: string;
