@@ -69,7 +69,7 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
   }, [connector, chainId, isConnected, address, connectedChain]);
 
   const connectors = useMemo(() => {
-    return wagmiConnectors.filter((connector: any) => connector.id!== 'injected') as Connector[];
+    return wagmiConnectors.filter((connector: any) => connector.id!== 'injected').sort((a: any, b: any) => a.type === 'injected' ? -1 : 1) as Connector[];
   }, [wagmiConnectors]);
 
   const value = useMemo(() => ({

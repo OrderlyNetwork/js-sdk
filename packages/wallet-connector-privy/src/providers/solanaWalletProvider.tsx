@@ -103,12 +103,13 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
       solanaPromiseRef.current.walletSelect,
       solanaPromiseRef.current.connect,
     ])
-      .then(([connectedWallet, { userAddress, signMessage, sendTransaction }]) => {
+    .then(([connectedWallet, { userAddress, signMessage, signTransaction, sendTransaction }]) => {      
         const tempWallet = {
           label: connectedWallet.adapter.name,
           icon: "",
           provider: {
             signMessage: signMessage,
+            signTransaction: signTransaction,
             connection,
             sendTransaction,
           },
