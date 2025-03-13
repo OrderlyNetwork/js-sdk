@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.6
+
+### Patch Changes
+
+- 423ab1d38: update
+
 ## 1.0.6-alpha.0
 
 ### Patch Changes

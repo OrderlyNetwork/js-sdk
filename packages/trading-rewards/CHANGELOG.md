@@ -1,5 +1,19 @@
 # @orderly.network/trading-rewards
 
+## 2.0.7
+
+### Patch Changes
+
+- 423ab1d38: update
+- Updated dependencies [423ab1d38]
+  - @orderly.network/ui-connector@2.0.7
+  - @orderly.network/ui-scaffold@2.0.7
+  - @orderly.network/hooks@2.0.7
+  - @orderly.network/types@2.0.7
+  - @orderly.network/utils@2.0.7
+  - @orderly.network/react-app@2.0.7
+  - @orderly.network/ui@2.0.7
+
 ## 2.0.7-alpha.0
 
 ### Patch Changes
