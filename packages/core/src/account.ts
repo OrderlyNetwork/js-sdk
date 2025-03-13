@@ -340,19 +340,25 @@ export class Account {
     let nextState: AccountState;
     try {
       // check account exists
-      const accountInfo = await this._checkAccountExist(address);
-      //
 
-      if (accountInfo && accountInfo.account_id) {
-        this.keyStore.setAccountId(address, accountInfo.account_id);
+      let accountId = this.keyStore.getAccountId(address);
+
+      const accountInfo = await this._checkAccountExist(address);
+
+      if (accountInfo?.account_id) {
+        accountId = accountInfo?.account_id;
+      }
+
+      if (accountId) {
+        this.keyStore.setAccountId(address, accountId);
         // this.keyStore.setAddress(address);
 
         nextState = {
           ...this.stateValue,
           status: AccountStatusEnum.SignedIn,
-          accountId: accountInfo.account_id,
-          mainAccountId: accountInfo.account_id,
-          userId: accountInfo.user_id,
+          accountId: accountId,
+          mainAccountId: accountId,
+          userId: accountInfo?.user_id,
         };
         this._ee.emit(EVENT_NAMES.statusChanged, nextState);
         //
@@ -394,7 +400,7 @@ export class Account {
       const publicKey = await orderlyKey.getPublicKey();
 
       const orderlyKeyStatus = await this._checkOrderlyKeyState(
-        accountInfo.account_id,
+        accountId,
         publicKey,
       );
 
