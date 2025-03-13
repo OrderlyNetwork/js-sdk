@@ -13,8 +13,8 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
       ? {
           side: position.side,
           pnl: position.netPnL,
-          openPrice: position.avg_open_price,
-          closePrice: position.avg_close_price,
+          openPrice: Math.abs(position.avg_open_price),
+          closePrice: Math.abs(position.avg_close_price),
           openTime: position.open_timestamp,
           closeTime: position.close_timestamp,
           quantity: position.closed_position_qty,
@@ -26,7 +26,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
             2,
             Decimal.ROUND_DOWN
           ),
-          openPrice: position.average_open_price,
+          openPrice: Math.abs(position.average_open_price),
           markPrice: position.mark_price,
           openTime: position.timestamp,
           quantity: position.position_qty,
