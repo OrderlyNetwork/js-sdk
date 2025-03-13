@@ -4,7 +4,6 @@ import {
   useConfig,
   useAccount,
   useWalletConnector,
-  useStorageChain,
 } from "@orderly.network/hooks";
 import { API, Chain, NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";

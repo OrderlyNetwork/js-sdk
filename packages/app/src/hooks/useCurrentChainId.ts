@@ -3,6 +3,7 @@ import {
   Chains,
   useChains,
   useConfig,
+  useStorageChain,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { Chain, NetworkId } from "@orderly.network/types";
@@ -17,6 +18,7 @@ export type DefaultChain =
   | undefined;
 
 export function useCurrentChainId(defaultChain?: DefaultChain) {
+  const { storageChain, setStorageChain } = useStorageChain();
   const [currentChainId, setCurrentChainId] = useState<number | undefined>();
 
   const [chains] = useChains();
@@ -50,7 +52,13 @@ export function useCurrentChainId(defaultChain?: DefaultChain) {
       const chainId = fallbackChain?.id || firstChain?.network_infos?.chain_id;
       if (!chainId) return;
 
-      setCurrentChainId?.(chainId);
+      if (storageChain) {
+        setCurrentChainId?.(storageChain.chainId);
+      } else {
+        setStorageChain(chainId);
+        setCurrentChainId?.(chainId);
+      
+      }
     }
   }, [
     connectedChain,

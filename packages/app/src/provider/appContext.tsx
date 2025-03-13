@@ -61,7 +61,6 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   useSettleEvent();
   useWalletConnectError();
 
-  // const { networkStatus } = useAppState();
   const restrictedInfo = useRestrictedInfo(props.restrictedInfo);
 
   const disabledConnect = restrictedInfo.restrictedOpen;
