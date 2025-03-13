@@ -5,6 +5,7 @@ import {
 } from "@orderly.network/portfolio";
 import { Box } from "@orderly.network/ui";
 import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
+import config from "../../../config";
 
 const meta: Meta<typeof OrdersModule.OrdersPage> = {
   title: "Package/portfolio/Orders",
@@ -54,7 +55,9 @@ export const LayoutPage: Story = {
     return (
       <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Orders}>
         <Container>
-          <OrdersModule.OrdersPage />
+          <OrdersModule.OrdersPage
+            sharePnLConfig={config.tradingPage.sharePnLConfig}
+          />
         </Container>
       </PortfolioLayout>
     );
