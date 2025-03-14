@@ -1,5 +1,23 @@
 # @orderly.network/futures
 
+## 4.0.6
+
+### Patch Changes
+
+- 423ab1d38: update
+- Updated dependencies [423ab1d38]
+  - @orderly.network/types@2.0.7
+  - @orderly.network/utils@2.0.7
+
+## 4.0.6-alpha.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/types@2.0.7-alpha.0
+  - @orderly.network/utils@2.0.7-alpha.0
+
 ## 4.0.5
 
 ### Patch Changes
