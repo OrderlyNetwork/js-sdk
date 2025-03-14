@@ -2,7 +2,7 @@ import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 
 export const useBottomNavBarScript = () => {
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { account, state } = useAccount();
 
   /** link device, acally wallet not connect */
@@ -13,6 +13,7 @@ export const useBottomNavBarScript = () => {
 
   return {
     wrongNetwork,
+    disabledConnect,
     status: state.status,
     onDisconnect,
   };

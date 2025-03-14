@@ -19,7 +19,7 @@ import { ExpandableContext, RouterAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterProps, FooterWidget } from "./footer";
 import { MaintenanceTipsWidget } from "./maintenanceTips";
-import { RestrictedAreasWidget } from "./restrictedAreas";
+import { RestrictedInfoWidget } from "./restrictedInfo";
 
 export type LayoutProps = {
   /**
@@ -129,6 +129,16 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         >
           {!isMobile && <MaintenanceTipsWidget />}
         </div>
+
+        <RestrictedInfoWidget
+          className={cn(
+            "oui-mx-3 oui-mt-3",
+            "oui-hidden lg:oui-block",
+            // 1024px - 6px (scrollbar widt) - 12 * 2 = 994px
+            "oui-min-w-[994px]"
+          )}
+        />
+
         {/*--------- body start ------ */}
         {!hasLeftSidebar ? (
           // ----------No leftSidebar layout start ---------
@@ -183,7 +193,6 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
         >
           {props.footer || <FooterWidget {...footerProps} />}
         </Box>
-        <RestrictedAreasWidget />
       </ExpandableContext.Provider>
     </div>
   );

@@ -8,7 +8,7 @@ export const usePerformanceScript = () => {
   const ctx = useOverviewContext();
   const [visible] = useLocalStorage("orderly_assets_visible", true);
 
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
   const filteredData = useDataTap(ctx.data, {
     accountStatus:
@@ -45,13 +45,16 @@ export const usePerformanceScript = () => {
     );
   }, [filteredData]);
 
+  const invisible =
+    wrongNetwork ||
+    disabledConnect ||
+    (state.status < AccountStatusEnum.EnableTrading &&
+      state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
+
   return {
     ...ctx,
     data: _data,
-    invisible:
-      wrongNetwork ||
-      (state.status < AccountStatusEnum.EnableTrading &&
-        state.status !== AccountStatusEnum.EnableTradingWithoutConnected),
+    invisible,
     visible,
   };
 };

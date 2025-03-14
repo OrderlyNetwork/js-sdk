@@ -11,13 +11,13 @@ type URLS = {
 
 const API_URLS: Record<ENV_NAME, URLS> = {
   prod: {
-    apiBaseUrl: "https://api-evm.orderly.org",
+    apiBaseUrl: "https://api.orderly.org",
     publicWsUrl: "wss://ws-evm.orderly.org",
     privateWsUrl: "wss://ws-private-evm.orderly.org",
     operatorUrl: "https://operator-evm.orderly.org",
   },
   staging: {
-    apiBaseUrl: "https://testnet-api-evm.orderly.org",
+    apiBaseUrl: "https://testnet-api.orderly.org",
     publicWsUrl: "wss://testnet-ws-evm.orderly.org",
     privateWsUrl: "wss://testnet-ws-private-evm.orderly.org",
     operatorUrl: "https://testnet-operator-evm.orderly.org",

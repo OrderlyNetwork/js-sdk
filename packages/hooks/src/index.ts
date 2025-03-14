@@ -94,7 +94,7 @@ export * from "./apiKeys";
 export * from "./next/useOrderEntry";
 
 export {
-  useRestrictedAreas,
-  type RestrictedAreasReturns,
-  type IRestrictedAreasParams,
-} from "./useRestrictedAreas";
+  useRestrictedInfo,
+  type RestrictedInfoReturns,
+  type RestrictedInfoOptions,
+} from "./useRestrictedInfo";

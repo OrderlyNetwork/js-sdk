@@ -58,15 +58,16 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   );
 
   const { state: accountState } = useAccount();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
+
   const canTrade = useMemo(() => {
     return (
+      !wrongNetwork &&
+      !disabledConnect &&
       (accountState.status === AccountStatusEnum.EnableTrading ||
-        accountState.status ===
-          AccountStatusEnum.EnableTradingWithoutConnected) &&
-      !wrongNetwork
+        accountState.status === AccountStatusEnum.EnableTradingWithoutConnected)
     );
-  }, [accountState.status, wrongNetwork]);
+  }, [accountState.status, wrongNetwork, disabledConnect]);
 
   // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();

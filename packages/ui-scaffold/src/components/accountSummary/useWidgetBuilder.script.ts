@@ -38,7 +38,7 @@ export const useTotalValueBuilderScript = () => {
   const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
 
   const [{ aggregated, totalUnrealizedROI }] = usePositionStream();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const { currentLeverage } = useMarginRatio();
 
@@ -65,6 +65,7 @@ export const useTotalValueBuilderScript = () => {
 
   const unavailable =
     wrongNetwork ||
+    disabledConnect ||
     (state.status < AccountStatusEnum.EnableTrading &&
       state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
 
