@@ -7,6 +7,8 @@ import {
   SimpleDialog,
   useScreen,
 } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
+
 /**
  * default style is desktop effect
  */
@@ -28,12 +30,10 @@ const DesktopLayout: FC<{
   iconSize?: number;
 }> = (props) => {
   const { quote_dp, className, iconSize = 18 } = props;
-
+  const { t } = useTranslation();
   return (
     <Tooltip
-      content={
-        "Obtained from a third-party oracle, the mark price is calculated as the median of three prices: the last price, the fair price based on the funding rate basis, and the fair price based on the order books."
-      }
+      content={t("trading.orderBook.markPrice.tooltip")}
       className="oui-max-w-[270px]"
     >
       <Flex
@@ -61,7 +61,7 @@ const MobileLayout: FC<{
 }> = (props) => {
   const { quote_dp, className, iconSize = 18 } = props;
   const [open, setOpen] = useState(false);
-
+  const { t } = useTranslation();
   return (
     <>
       <Flex
@@ -92,11 +92,7 @@ const MobileLayout: FC<{
           },
         }}
       >
-        <Text>
-          Obtained from a third-party oracle, the mark price is calculated as
-          the median of three prices: the last price, the fair price based on
-          the funding rate basis, and the fair price based on the order books.
-        </Text>
+        <Text>{t("trading.orderBook.markPrice.tooltip")}</Text>
       </SimpleDialog>
     </>
   );

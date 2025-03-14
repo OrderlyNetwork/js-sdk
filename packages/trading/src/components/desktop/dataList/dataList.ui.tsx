@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Divider, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { Box, Divider, Flex, TabPanel, Tabs } from "@orderly.network/ui";
 import { DataListState, DataListTabType } from "./dataList.script";
 import {
   LiquidationWidget,
@@ -10,8 +10,11 @@ import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import { OrderStatus } from "@orderly.network/types";
 import { PositionHeaderWidget } from "../../base/positionHeader";
 import { SettingWidget } from "./setting";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const DataList: FC<DataListState> = (props) => {
+  const { t } = useTranslation();
+
   // return (
   //   <DesktopOrderListWidget
   //     type={TabType.orderHistory}
@@ -46,8 +49,10 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.positions}
         title={
           (props.positionCount ?? 0) > 0
-            ? `${DataListTabType.positions}(${props.positionCount})`
-            : DataListTabType.positions
+            ? t("trading.dataList.tabs.position.count", {
+                count: props.positionCount,
+              })
+            : t("trading.dataList.tabs.position")
         }
       >
         <PositionsView {...props} />
@@ -57,8 +62,10 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.pending}
         title={
           (props.pendingOrderCount ?? 0) > 0
-            ? `${DataListTabType.pending}(${props.pendingOrderCount})`
-            : DataListTabType.pending
+            ? t("trading.dataList.tabs.pending.count", {
+                count: props.pendingOrderCount,
+              })
+            : t("trading.dataList.tabs.pending")
         }
       >
         <DesktopOrderListWidget
@@ -76,8 +83,10 @@ export const DataList: FC<DataListState> = (props) => {
         value={DataListTabType.tp_sl}
         title={
           (props.tpSlOrderCount ?? 0) > 0
-            ? `${DataListTabType.tp_sl}(${props.tpSlOrderCount})`
-            : DataListTabType.tp_sl
+            ? t("trading.dataList.tabs.tpsl.count", {
+                count: props.tpSlOrderCount,
+              })
+            : t("trading.dataList.tabs.tpsl")
         }
       >
         <DesktopOrderListWidget
@@ -93,7 +102,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-filled-tab"
         value={DataListTabType.filled}
-        title={DataListTabType.filled}
+        title={t("trading.dataList.tabs.filled")}
       >
         <DesktopOrderListWidget
           type={TabType.filled}
@@ -105,13 +114,12 @@ export const DataList: FC<DataListState> = (props) => {
             tableBody: "oui-testid-dataList-filled-table-body",
           }}
           sharePnLConfig={props.sharePnLConfig}
-
         />
       </TabPanel>
       <TabPanel
         testid="oui-testid-dataList-positionHistory-tab"
         value={DataListTabType.positionHistory}
-        title={DataListTabType.positionHistory}
+        title={t("trading.dataList.tabs.positionHistory")}
       >
         <PositionHistoryWidget
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
@@ -123,7 +131,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-orderHistory-tab"
         value={DataListTabType.orderHistory}
-        title={DataListTabType.orderHistory}
+        title={t("trading.dataList.tabs.orderHistory")}
       >
         <DesktopOrderListWidget
           type={TabType.orderHistory}
@@ -134,13 +142,12 @@ export const DataList: FC<DataListState> = (props) => {
             tableBody: "oui-testid-dataList-orderHistory-table-body",
           }}
           sharePnLConfig={props.sharePnLConfig}
-
         />
       </TabPanel>
       <TabPanel
         testid="oui-testid-dataList-liquidation-tab"
         value={DataListTabType.liquidation}
-        title={DataListTabType.liquidation}
+        title={t("trading.dataList.tabs.liquidation")}
       >
         <LiquidationWidget
           symbol={!!props.showAllSymbol ? undefined : props.symbol}

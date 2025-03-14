@@ -21,12 +21,15 @@ import {
   MobilePositionsWidget,
 } from "@orderly.network/ui-positions";
 import { PositionHeaderWidget } from "../../base/positionHeader";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const DataList: FC<
   DataListState & {
     className?: string;
   }
 > = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Tabs
       value={props.tab}
@@ -41,8 +44,10 @@ export const DataList: FC<
       <TabPanel
         title={
           (props.positionCount ?? 0) > 0
-            ? `${DataListTabType.position}(${props.positionCount})`
-            : DataListTabType.position
+            ? t("trading.dataList.tabs.position.count", {
+                count: props.positionCount,
+              })
+            : t("trading.dataList.tabs.position")
         }
         value={DataListTabType.position}
       >
@@ -51,8 +56,10 @@ export const DataList: FC<
       <TabPanel
         title={
           (props.pendingOrderCount ?? 0) > 0
-            ? `${DataListTabType.pending}(${props.pendingOrderCount})`
-            : DataListTabType.pending
+            ? t("trading.dataList.tabs.pending.count", {
+                count: props.pendingOrderCount,
+              })
+            : t("trading.dataList.tabs.pending")
         }
         value={DataListTabType.pending}
       >
@@ -65,8 +72,10 @@ export const DataList: FC<
       <TabPanel
         title={
           (props.tpSlOrderCount ?? 0) > 0
-            ? `${DataListTabType.tp_sl}(${props.tpSlOrderCount})`
-            : DataListTabType.tp_sl
+            ? t("trading.dataList.tabs.tpsl.count", {
+                count: props.tpSlOrderCount,
+              })
+            : t("trading.dataList.tabs.tpsl")
         }
         value={DataListTabType.tp_sl}
       >
@@ -76,11 +85,14 @@ export const DataList: FC<
           {...props}
         />
       </TabPanel>
-      <TabPanel title={DataListTabType.history} value={DataListTabType.history}>
+      <TabPanel
+        title={t("trading.dataList.tabs.history")}
+        value={DataListTabType.history}
+      >
         <HistoryTab {...props} />
       </TabPanel>
       <TabPanel
-        title={DataListTabType.liquidation}
+        title={t("trading.dataList.tabs.liquidation")}
         value={DataListTabType.liquidation}
       >
         <MobileLiquidationWidget
@@ -152,6 +164,8 @@ const SymbolControlHeader: FC<
     ordersStatus?: OrderStatus;
   }
 > = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       px={2}
@@ -176,7 +190,7 @@ const SymbolControlHeader: FC<
             props.setShowAllSymbol(!props.showAllSymbol);
           }}
         >
-          Hide other symbols
+          {t("trading.hideOtherSymbols")}
         </Text>
       </Flex>
       <Button
@@ -187,13 +201,15 @@ const SymbolControlHeader: FC<
           props.onCloseAll(props.type);
         }}
       >
-        Close All
+        {t("trading.orders.closeAll")}
       </Button>
     </Flex>
   );
 };
 
 const HistoryTab: FC<DataListState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <div className="oui-min-h-[300px]">
       <Tabs
@@ -205,7 +221,7 @@ const HistoryTab: FC<DataListState> = (props) => {
         }}
       >
         <TabPanel
-          title={DataListTabSubType.positionHistory}
+          title={t("trading.dataList.tabs.positionHistory")}
           value={DataListTabSubType.positionHistory}
         >
           <MobilePositionHistoryWidget
@@ -216,7 +232,7 @@ const HistoryTab: FC<DataListState> = (props) => {
           />
         </TabPanel>
         <TabPanel
-          title={DataListTabSubType.orderHistory}
+          title={t("trading.dataList.tabs.orderHistory")}
           value={DataListTabSubType.orderHistory}
         >
           <OrdersView type={TabType.orderHistory} {...props} />

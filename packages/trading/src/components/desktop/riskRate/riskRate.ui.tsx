@@ -13,13 +13,13 @@ import { RiskRateState } from "./riskRate.script";
 import { LeverageWidgetId } from "@orderly.network/ui-leverage";
 import { TooltipContent } from "../assetView/assetView.ui";
 import { useAppContext } from "@orderly.network/react-app";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const RiskRate: FC<RiskRateState> = (props) => {
   const { riskRate, riskRateColor, isConnected, currentLeverage, maxLeverage } =
     props;
   const { isHigh, isMedium, isLow, isDefault } = riskRateColor;
   const { wrongNetwork } = useAppContext();
-
+  const { t } = useTranslation();
 
   const textColor = wrongNetwork
     ? ""
@@ -64,8 +64,8 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             content={
               (
                 <TooltipContent
-                  description="The Risk rate is used to assess the risk level of an account. When the Risk rate reaches 100%, the account will be liquidated"
-                  formula="Risk rate = Maintenance margin ratio / Margin ratio * 100%"
+                  description={t("trading.riskRate.tooltip")}
+                  formula={t("trading.riskRate.formula")}
                 />
               ) as any
             }
@@ -76,7 +76,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
               weight="semibold"
               className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-b-white/10"
             >
-              Risk rate
+              {t("trading.riskRate")}
             </Text>
           </Tooltip>
           <Text
@@ -90,16 +90,14 @@ export const RiskRate: FC<RiskRateState> = (props) => {
         </Flex>
 
         <Flex direction="column" itemAlign="end" className="oui-flex-1">
-          <Tooltip open={false} content={(<div>hint test</div>) as any}>
-            <Text
-              size="2xs"
-              color="neutral"
-              weight="semibold"
-              className="oui-cursor-pointer"
-            >
-              Max account leverage
-            </Text>
-          </Tooltip>
+          <Text
+            size="2xs"
+            color="neutral"
+            weight="semibold"
+            className="oui-cursor-pointer"
+          >
+            {t("trading.riskRate.maxAccountLeverage")}
+          </Text>
           <Flex className="oui-gap-1">
             <Text.numeral
               dp={2}

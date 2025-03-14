@@ -1,16 +1,9 @@
 import React, { FC, ReactNode } from "react";
-import {
-  Box,
-  cn,
-  Flex,
-  Grid,
-  ListView,
-  ScrollArea,
-  Text,
-} from "@orderly.network/ui";
+import { Box, cn, Grid, ListView, Text } from "@orderly.network/ui";
 import { LastTradesState } from "./lastTrades.script";
 import { OrderSide } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const LastTrades: FC<
   LastTradesState & {
@@ -99,11 +92,12 @@ const Row = (props: {
 };
 
 const Header = (props: { base: string; quote: string; className?: string }) => {
+  const { t } = useTranslation();
   return (
     <Row
-      left="Time"
-      mid={`Price(${props.quote})`}
-      right={`Qty(${props.base})`}
+      left={t("trading.orderBook.column.time")}
+      mid={t("trading.orderBook.column.price.quote", { quote: props.quote })}
+      right={t("trading.orderBook.column.qty.base", { base: props.base })}
       classNames={{
         root: cn(
           "oui-text-base-contrast-54 oui-h-[32px] oui-sticky",
