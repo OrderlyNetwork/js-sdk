@@ -12,6 +12,7 @@ import { PrivyWalletProvider } from "./providers/privyWalletProvider";
 import { WagmiWalletProvider } from "./providers/wagmiWalletProvider";
 import { SolanaWalletProvider } from "./providers/solanaWalletProvider";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { Chains } from "@orderly.network/hooks";
 
 
 const fetchChainInfo = async (url: string) => {
@@ -25,7 +26,7 @@ const fetchChainInfo = async (url: string) => {
 
 
 const processChainInfo = (chainInfo: any) =>
-  chainInfo?.data?.rows?.map((row: any) =>
+  chainInfo.map((row: any) =>
     defineChain({
       id: Number(row.chain_id),
       name: row.name,
@@ -89,8 +90,9 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   wagmiConfig: InitWagmi;
   solanaConfig: InitSolana;
   network: Network;
+  customChains?: Chains
 }
-export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
+export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
@@ -110,8 +112,8 @@ export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
         fetchChainInfo("https://api-evm.orderly.org/v1/public/chain_info"),
       ]);
 
-      const testChains = processChainInfo(testChainInfo);
-      const mainnetChains = processChainInfo(mainnetChainInfo);
+      const testChains = processChainInfo(testChainInfo.data.rows);
+      const mainnetChains = processChainInfo(mainnetChainInfo.data.rows);
 
       setTestnetChains(testChains);
       setMainnetChains(mainnetChains);
@@ -122,11 +124,22 @@ export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
     }
   };
 
+  const handleCustomerChains = () => {
+
+    const testChains = processChainInfo(props.customChains!.testnet?.map(item => item.network_infos));
+    const mainnetChains = processChainInfo(props.customChains!.mainnet?.map(item => item.network_infos));
+    setTestnetChains(testChains);
+    setMainnetChains(mainnetChains);
+    setInitChains([...testChains, ...mainnetChains] as [Chain, ...Chain[]]);
+    initRef.current = true;
+
+  }
+
   const getChainsByNetwork = (network: 'mainnet' | 'testnet'): Chain[] => {
     return network === 'mainnet' ? mainnetChains : testnetChains;
   };
 
-  const value = useMemo(() => ({  
+  const value = useMemo(() => ({
     initChains,
     mainnetChains,
     testnetChains,
@@ -143,8 +156,13 @@ export function WalletConnectorPrivyProvider(props:WalletConnectorPrivyProps) {
 
 
   useEffect(() => {
-    fetchAllChains();
-  }, []);
+    if (!props.customChains) {
+      fetchAllChains();
+      return;
+
+    }
+    handleCustomerChains();
+  }, [props.customChains]);
 
   if (!initRef.current) {
     return null;

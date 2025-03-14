@@ -64,8 +64,6 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         wallets: wallets,
         network: "mainnet-beta" as WalletAdapterNetwork,
         // network: WalletAdapterNetwork.Devnet,
-        mainnetRpc:
-          "https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_acfc3073385c4744b097aa86dc5b2f3c_1335ff06",
       }}
 
     // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
@@ -100,6 +98,7 @@ export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
   return (
     <WalletConnectorPrivyProvider
       network={Network.testnet}
+      // customChains={{mainnet: [], testnet: []}}
       privyConfig={{
         appid: 'cm50h5kjc011111gdn7i8cd2k',
         appearance: {

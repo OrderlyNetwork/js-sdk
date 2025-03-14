@@ -1,9 +1,7 @@
 import { PrivyClientConfig, PrivyProvider } from "@privy-io/react-auth";
 import React, { PropsWithChildren, useMemo, useState } from "react";
-import { toSolanaWalletConnectors } from '@privy-io/react-auth/solana';
 import { Chain } from "viem/chains";
 import { InitPrivy } from "../types";
-const solanaConnectors = toSolanaWalletConnectors();
 
 
 interface IProps extends PropsWithChildren {
@@ -24,11 +22,7 @@ export function InitPrivyProvider({ privyConfig, initChains, children}: IProps) 
         embeddedWallets: {
           createOnLogin: 'users-without-wallets'
         },
-        externalWallets: {
-          solana: {
-            connectors: solanaConnectors,
-          },
-        },
+
         defaultChain: chains[0],
         supportedChains: chains,
       }
@@ -40,6 +34,7 @@ export function InitPrivyProvider({ privyConfig, initChains, children}: IProps) 
   // console.log('-- privyconfig', privyConfig);
   // return children;
   if (!initChains.length) {
+    console.warn('initChains is empty');
     return;
   }
   return (
