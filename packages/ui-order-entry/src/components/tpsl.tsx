@@ -26,7 +26,7 @@ import {
   usePnlInputContext,
 } from "./pnlInput/pnlInputContext";
 import { ExclamationFillIcon } from "@orderly.network/ui";
-
+import { useTranslation } from "@orderly.network/i18n";
 type OrderValueKeys = keyof OrderlyOrder;
 
 type Est_Values = PNL_Values & {
@@ -49,6 +49,7 @@ export const OrderTPSL = (props: {
 }) => {
   // const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (
@@ -92,7 +93,7 @@ export const OrderTPSL = (props: {
           }}
         />
         <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
-          TP/SL
+          {t("orderEntry.tpsl")}
         </label>
         <ExclamationFillIcon
           color="white"
@@ -102,15 +103,9 @@ export const OrderTPSL = (props: {
           className="oui-text-white/[.36] hover:oui-text-white/80 oui-cursor-pointer"
           onClick={() => {
             modal.dialog({
-              title: "Tips",
+              title: t("common.tips"),
               size: "xs",
-              content: (
-                <Text intensity={54}>
-                  TP/SL triggers at the specified mark price and executes as a
-                  market order. By default, it applies to the entire position.
-                  Adjust settings in open positions for partial TP/SL.
-                </Text>
-              ),
+              content: <Text intensity={54}>{t("orderEntry.tpsl.tips")}</Text>,
             });
           }}
         />

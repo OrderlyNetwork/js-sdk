@@ -1,6 +1,7 @@
 import { Checkbox, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { useEffect } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type AdditionalInfoProps = {
   pinned: boolean;
@@ -16,6 +17,8 @@ export type AdditionalInfoProps = {
 
 export const AdditionalInfo = (props: AdditionalInfoProps) => {
   const { pinned, orderTypeExtra } = props;
+  const { t } = useTranslation();
+
   const onTypeToggle = (type: OrderType) => (checked: boolean) => {
     if (props.onValueChange) {
       props.onValueChange(
@@ -59,7 +62,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
               "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
             }
           >
-            Post only
+            {t("orderEntry.orderType.postOnly")}
           </label>
         </Flex>
         <Flex itemAlign={"center"}>
@@ -79,7 +82,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
               "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
             }
           >
-            IOC
+            {t("orderEntry.orderType.ioc")}
           </label>
         </Flex>
         <Flex itemAlign={"center"}>
@@ -99,7 +102,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
               "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
             }
           >
-            FOK
+            {t("orderEntry.orderType.fok")}
           </label>
         </Flex>
       </Flex>
@@ -119,7 +122,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             htmlFor={"toggle_order_confirm"}
             className={"oui-text-2xs oui-ml-1"}
           >
-            Order confirm
+            {t("orderEntry.orderConfirm")}
           </label>
         </Flex>
         <Flex>
@@ -136,7 +139,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             htmlFor={"toggle_order_hidden"}
             className={"oui-text-2xs oui-ml-1"}
           >
-            Hidden
+            {t("orderEntry.hidden")}
           </label>
         </Flex>
       </Flex>
@@ -155,7 +158,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
               htmlFor={"toggle_order_keep_visible"}
               className={"oui-text-2xs oui-ml-1"}
             >
-              Keep visible
+              {t("orderEntry.keepVisible")}
             </label>
           </Flex>
         </>

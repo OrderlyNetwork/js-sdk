@@ -10,11 +10,12 @@ import {
   Text,
   textVariants,
 } from "@orderly.network/ui";
-import { OrderSide, OrderType } from "@orderly.network/types";
+import { BBOOrderType, OrderSide, OrderType } from "@orderly.network/types";
 import { OrderlyOrder } from "@orderly.network/types";
 import { useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { BBOType2Label, getBBOType, isBBOOrder } from "../../utils";
+import { getBBOType, isBBOOrder } from "../../utils";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 
 type Props = {
   order: OrderlyOrder;
@@ -27,8 +28,8 @@ type Props = {
 
 export const OrderConfirmDialog = (props: Props) => {
   const { baseDP, quoteDP, order, onConfirm, onCancel } = props;
-
   const { side, order_type, order_type_ext, level } = order;
+  const { t } = useTranslation();
 
   const [_, setNeedConfirm] = useLocalStorage("orderly_order_confirm", true);
 
@@ -37,7 +38,7 @@ export const OrderConfirmDialog = (props: Props) => {
       order_type === OrderType.MARKET ||
       order_type === OrderType.STOP_MARKET
     ) {
-      return <Text intensity={80}>Market</Text>;
+      return <Text intensity={80}>{t("orderEntry.orderType.market")}</Text>;
     }
 
     if (isBBOOrder({ order_type, order_type_ext })) {
@@ -46,7 +47,14 @@ export const OrderConfirmDialog = (props: Props) => {
         side,
         level,
       });
-      return <Text intensity={80}>{BBOType2Label[bboType!]}</Text>;
+      const label = {
+        [BBOOrderType.COUNTERPARTY1]: t("orderEntry.bbo.counterparty1"),
+        [BBOOrderType.COUNTERPARTY5]: t("orderEntry.bbo.counterparty5"),
+        [BBOOrderType.QUEUE1]: t("orderEntry.bbo.queue1"),
+        [BBOOrderType.QUEUE5]: t("orderEntry.bbo.queue5"),
+      }[bboType!];
+
+      return <Text intensity={80}>{label}</Text>;
     }
 
     return (
@@ -73,11 +81,11 @@ export const OrderConfirmDialog = (props: Props) => {
           <OrderTypeTag type={order_type} />
           {side === OrderSide.BUY ? (
             <Badge color={"buy"} size={"sm"}>
-              Buy
+              {t("common.buy")}
             </Badge>
           ) : (
             <Badge color={"sell"} size={"sm"}>
-              Sell
+              {t("common.sell")}
             </Badge>
           )}
         </Flex>
@@ -91,7 +99,7 @@ export const OrderConfirmDialog = (props: Props) => {
         })}
       >
         <Flex justify={"between"}>
-          <Text>Qty.</Text>
+          <Text>{t("orderEntry.qty")}</Text>
           <Text.numeral
             rule={"price"}
             dp={baseDP}
@@ -103,7 +111,7 @@ export const OrderConfirmDialog = (props: Props) => {
         </Flex>
         {!order.trigger_price ? null : (
           <Flex justify={"between"}>
-            <Text>Trigger</Text>
+            <Text>{t("orderEntry.trigger")}</Text>
             <Text.numeral
               unit={"USDC"}
               rule={"price"}
@@ -117,11 +125,11 @@ export const OrderConfirmDialog = (props: Props) => {
           </Flex>
         )}
         <Flex justify={"between"}>
-          <Text>Price</Text>
+          <Text>{t("orderEntry.price")}</Text>
           {renderPrice()}
         </Flex>
         <Flex justify={"between"}>
-          <Text>Notional</Text>
+          <Text>{t("orderEntry.notional")}</Text>
           <Text.numeral
             unit={"USDC"}
             rule={"price"}
@@ -146,7 +154,7 @@ export const OrderConfirmDialog = (props: Props) => {
           >
             {order.tp_trigger_price && (
               <Flex justify={"between"}>
-                <Text>TP Price (Mark)</Text>
+                <Text>{t("orderEntry.tpMarkPrice")}</Text>
                 <Text.numeral
                   unit={"USDC"}
                   rule={"price"}
@@ -161,7 +169,7 @@ export const OrderConfirmDialog = (props: Props) => {
             )}
             {order.sl_trigger_price && (
               <Flex justify={"between"}>
-                <Text>SL Price (Mark)</Text>
+                <Text>{t("orderEntry.slMarkPrice")}</Text>
                 <Text.numeral
                   unit={"USDC"}
                   rule={"price"}
@@ -194,25 +202,24 @@ export const OrderConfirmDialog = (props: Props) => {
             intensity: 54,
           })}
         >
-          Disable order confirmation
+          {t("orderEntry.disableOrderConfirm")}
         </label>
       </Flex>
 
       {order.tp_trigger_price || order.sl_trigger_price ? (
         <Box py={3} px={3} className="oui-text-center">
           <Text color="warning" size="xs">
-            TP/SL triggers at the specified mark price and executes as a market
-            order.
+            {t("orderEntry.tpsl.trigger.description")}
           </Text>
         </Box>
       ) : null}
 
       <Grid cols={2} gapX={3}>
         <Button color={"secondary"} size={"md"} onClick={() => onCancel()}>
-          Cancel
+          {t("common.cancel")}
         </Button>
         <Button size={"md"} onClick={() => onConfirm()}>
-          Confirm
+          {t("common.confirm")}
         </Button>
       </Grid>
     </>
@@ -222,16 +229,17 @@ export const OrderConfirmDialog = (props: Props) => {
 OrderConfirmDialog.displayName = "OrderConfirmDialog";
 
 const OrderTypeTag = (props: { type: OrderType }) => {
+  const { t } = useTranslation();
   const typeStr = useMemo(() => {
     switch (props.type) {
       case OrderType.LIMIT:
-        return "Limit";
+        return t("orderEntry.orderType.limit");
       case OrderType.MARKET:
-        return "Market";
+        return t("orderEntry.orderType.market");
       case OrderType.STOP_LIMIT:
-        return "Stop Limit";
+        return t("orderEntry.orderType.stopLimit");
       case OrderType.STOP_MARKET:
-        return "Stop Market";
+        return t("orderEntry.orderType.stopMarket");
       default:
         return "";
     }
@@ -269,5 +277,5 @@ export const orderConfirmDialogId = "orderConfirm";
 
 registerSimpleDialog(orderConfirmDialogId, Dialog, {
   size: "sm",
-  title: "Order confirm",
+  title: i18n.t("orderEntry.orderConfirm"),
 });
