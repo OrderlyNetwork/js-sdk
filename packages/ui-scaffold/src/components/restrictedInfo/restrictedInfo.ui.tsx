@@ -2,7 +2,7 @@ import { FC } from "react";
 import { cn, Flex } from "@orderly.network/ui";
 import { InfoIcon } from "../icons";
 import { UseRestrictedInfoScriptReturn } from "./restrictedInfo.script";
-
+import { useTranslation } from "@orderly.network/i18n";
 export type RestrictedInfoProps = UseRestrictedInfoScriptReturn & {
   className?: string;
 };
@@ -10,6 +10,7 @@ export type RestrictedInfoProps = UseRestrictedInfoScriptReturn & {
 export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
   const { brokerName } = props;
   const { ip, content, restrictedOpen } = props.restrictedInfo;
+  const { t } = useTranslation();
 
   if (!restrictedOpen) {
     return;
@@ -22,8 +23,10 @@ export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
     return (
       content || (
         <span>
-          You are accessing {brokerName} from an IP address ({ip}) associated
-          with a restricted country.
+          {t("scaffold.restrictedInfo.content.default", {
+            brokerName,
+            ip,
+          })}
         </span>
       )
     );

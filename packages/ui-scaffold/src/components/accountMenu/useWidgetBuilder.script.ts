@@ -9,8 +9,10 @@ import { useCallback } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
 import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useAccountMenu = (): any => {
+  const { t } = useTranslation();
   const { disconnect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
   const { connectWallet, disabledConnect } = useAppContext();
@@ -38,7 +40,7 @@ export const useAccountMenu = (): any => {
           status,
         });
       } else {
-        toast.success("Wallet connected");
+        toast.success(t("connector.walletConnected"));
       }
     });
 
@@ -52,7 +54,7 @@ export const useAccountMenu = (): any => {
             if (state.status < AccountStatusEnum.EnableTrading) {
               statusChangeHandler(state);
             } else {
-              toast.success("Wallet connected");
+              toast.success(t("connector.walletConnected"));
             }
           }
         },

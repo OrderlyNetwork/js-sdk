@@ -7,6 +7,7 @@ import {
   Popover,
   Text,
 } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 type AccountSummaryUi = {
   totalValue: number | null;
@@ -37,6 +38,8 @@ const TotalValue: FC<{
     onToggleVisibility,
     visibleAvailable = true,
   } = props;
+  const { t } = useTranslation();
+
   return (
     <Flex
       direction={"column"}
@@ -46,7 +49,7 @@ const TotalValue: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          Total value
+          {t("scaffold.accountSummary.totalValue")}
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -93,6 +96,8 @@ const FreeCollateral: FC<{
     onToggleVisibility,
     visibleAvailable = true,
   } = props;
+  const { t } = useTranslation();
+
   return (
     <Flex
       direction={"column"}
@@ -102,7 +107,7 @@ const FreeCollateral: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          Free collateral
+          {t("scaffold.accountSummary.freeCollateral")}
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -144,6 +149,8 @@ const CurrentLeverage: FC<{
   currentLeverage: number | null;
 }> = (props) => {
   const { currentLeverage } = props;
+  const { t } = useTranslation();
+
   return (
     <Flex
       direction={"column"}
@@ -153,7 +160,7 @@ const CurrentLeverage: FC<{
     >
       <Box>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          Current leverage
+          {t("scaffold.accountSummary.currentLeverage")}
         </Text>
       </Box>
       <Text.numeral as={"div"} unit="x">
@@ -167,6 +174,8 @@ const CurrentLeverage: FC<{
 const MaxLeverage: FC<{
   maxLeverage: number | null;
 }> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       direction={"column"}
@@ -176,7 +185,7 @@ const MaxLeverage: FC<{
     >
       <Box>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          Max leverage
+          {t("scaffold.accountSummary.maxLeverage")}
         </Text>
       </Box>
       <Text color="primary" as={"div"}>{`${props.maxLeverage ?? "--"}x`}</Text>
@@ -193,6 +202,8 @@ const UnrealPnL: FC<{
   visibleAvailable?: boolean;
 }> = (props) => {
   const { visible, onToggleVisibility, visibleAvailable = true } = props;
+  const { t } = useTranslation();
+
   return (
     <Flex
       direction={"column"}
@@ -202,7 +213,7 @@ const UnrealPnL: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          Unreal. PnL
+          {t("scaffold.accountSummary.unrealPnL")}
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -261,6 +272,7 @@ const AccountInfoPopover = (props: {
   onKeyToTop: (key: string) => void;
 }) => {
   const { totalValue, keys, elementKeys } = props;
+  const { t } = useTranslation();
 
   const onSetToTop = (key: SummaryKey) => (event: React.MouseEvent) => {
     event.preventDefault();
@@ -278,7 +290,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("totalValue")}
                 onClick={() => props.onToggleItemByKey("totalValue")}
               />
-              <span>Total value</span>
+              <span>{t("scaffold.accountSummary.totalValue")}</span>
             </Flex>
             <Text.numeral
               visible={props.visible}
@@ -298,7 +310,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("freeCollateral")}
                 onClick={() => props.onToggleItemByKey("freeCollateral")}
               />
-              <span>Free collateral</span>
+              <span>{t("scaffold.accountSummary.freeCollateral")}</span>
             </Flex>
             <Text.numeral
               unit="USDC"
@@ -318,7 +330,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("unrealPnL")}
                 onClick={() => props.onToggleItemByKey("unrealPnL")}
               />
-              <span>Unreal. PnL</span>
+              <span>{t("scaffold.accountSummary.unrealPnL")}</span>
             </Flex>
             <Text.numeral
               coloring
@@ -349,7 +361,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("currentLeverage")}
                 onClick={() => props.onToggleItemByKey("currentLeverage")}
               />
-              <span>Current leverage</span>
+              <span>{t("scaffold.accountSummary.currentLeverage")}</span>
             </Flex>
             <Text.numeral
               className="group-hover:-oui-translate-x-5 oui-transition-transform"
@@ -367,7 +379,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("maxLeverage")}
                 onClick={() => props.onToggleItemByKey("maxLeverage")}
               />
-              <span>Max leverage</span>
+              <span>{t("scaffold.accountSummary.maxLeverage")}</span>
             </Flex>
             <Text
               className="group-hover:-oui-translate-x-5 oui-transition-transform"
