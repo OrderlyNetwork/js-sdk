@@ -1,3 +1,4 @@
+import React, { ReactNode, useMemo } from "react";
 import {
   Box,
   cn,
@@ -10,9 +11,8 @@ import {
 } from "@orderly.network/ui";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import React, { ReactNode, useMemo, useState } from "react";
 import { CaretIcon } from "../../icons";
-
+import { useTranslation, i18n } from "@orderly.network/i18n";
 interface IProps {
   changeInterval: (interval: string) => void;
   interval: string;
@@ -21,28 +21,28 @@ interface IProps {
 const mobileTimeIntervalDefaultMap = [
   {
     value: "1",
-    label: "1m",
+    label: i18n.t("tradingView.timeInterval.1m"),
   },
   {
     value: "15",
-    label: "15m",
+    label: i18n.t("tradingView.timeInterval.15m"),
   },
   {
     value: "60",
-    label: "1h",
+    label: i18n.t("tradingView.timeInterval.1h"),
   },
   {
     value: "240",
-    label: "4h",
+    label: i18n.t("tradingView.timeInterval.4h"),
   },
   {
     value: "1D",
-    label: "1D",
+    label: i18n.t("tradingView.timeInterval.1D"),
   },
 
   {
     value: "1W",
-    label: "1W",
+    label: i18n.t("tradingView.timeInterval.1W"),
   },
 ];
 
@@ -50,92 +50,91 @@ const mobileTimeIntervalMoreMap = [
   [
     {
       value: "3",
-      label: "3m",
+      label: i18n.t("tradingView.timeInterval.3m"),
     },
     {
       value: "5",
-      label: "5m",
+      label: i18n.t("tradingView.timeInterval.5m"),
     },
 
     {
       value: "30",
-      label: "30m",
+      label: i18n.t("tradingView.timeInterval.30m"),
     },
 
     {
       value: "120",
-      label: "2h",
+      label: i18n.t("tradingView.timeInterval.2h"),
     },
   ],
   [
     {
       value: "360",
-      label: "6h",
+      label: i18n.t("tradingView.timeInterval.6h"),
     },
     {
       value: "720",
-      label: "12h",
+      label: i18n.t("tradingView.timeInterval.12h"),
     },
     {
       value: "3d",
-      label: "3D",
+      label: i18n.t("tradingView.timeInterval.3d"),
     },
     {
       value: "1M",
-      label: "1M",
+      label: i18n.t("tradingView.timeInterval.1M"),
     },
   ],
 ];
 
-
 const timeIntervalMap = [
   {
     value: "1",
-    label: "1m",
+    label: i18n.t("tradingView.timeInterval.1m"),
   },
   {
     value: "3",
-    label: "3m",
+    label: i18n.t("tradingView.timeInterval.3m"),
   },
   {
     value: "5",
-    label: "5m",
+    label: i18n.t("tradingView.timeInterval.5m"),
   },
   {
     value: "15",
-    label: "15m",
+    label: i18n.t("tradingView.timeInterval.15m"),
   },
   {
     value: "30",
-    label: "30m",
+    label: i18n.t("tradingView.timeInterval.30m"),
   },
 
   {
     value: "60",
-    label: "1h",
+    label: i18n.t("tradingView.timeInterval.1h"),
   },
 
   {
     value: "240",
-    label: "4h",
+    label: i18n.t("tradingView.timeInterval.4h"),
   },
 
   {
     value: "720",
-    label: "12h",
+    label: i18n.t("tradingView.timeInterval.12h"),
   },
   {
     value: "1D",
-    label: "1D",
+    label: i18n.t("tradingView.timeInterval.1D"),
   },
 
   {
     value: "1W",
-    label: "1W",
+    label: i18n.t("tradingView.timeInterval.1W"),
   },
   {
     value: "1M",
-    label: "1M",
+    label: i18n.t("tradingView.timeInterval.1M"),
   },
 ];
 
@@ -170,18 +169,24 @@ function DesktopTimeInterval(props: IProps) {
 }
 
 export function MobileTimeInterval(props: IProps) {
+  const { t } = useTranslation();
   const currentIntervalIsInExpand = useMemo(() => {
     for (const row of mobileTimeIntervalMoreMap) {
       for (const item of row) {
-        if (item.value === props.interval){
+        if (item.value === props.interval) {
           return item.label;
         }
       }
     }
     return null;
-  }, [props.interval])
+  }, [props.interval]);
   return (
-    <Flex justify="start" itemAlign="center" gap={3} className='oui-text-2xs oui-text-base-contrast-36'>
+    <Flex
+      justify="start"
+      itemAlign="center"
+      gap={3}
+      className="oui-text-2xs oui-text-base-contrast-36"
+    >
       <div className=" oui-flex oui-gap-1 oui-items-center oui-mr-3 oui-font-semibold">
         {mobileTimeIntervalDefaultMap.map((item) => (
           <div
@@ -199,14 +204,13 @@ export function MobileTimeInterval(props: IProps) {
       </div>
 
       <DropDownTimeInterval {...props}>
-        {currentIntervalIsInExpand ?
-          <div className='oui-text-base-contrast-80'>
-
+        {currentIntervalIsInExpand ? (
+          <div className="oui-text-base-contrast-80">
             {currentIntervalIsInExpand}
-        </div> :
-          <Text>More</Text>
-        }
-
+          </div>
+        ) : (
+          <Text>{t("tradingView.timeInterval.more")}</Text>
+        )}
       </DropDownTimeInterval>
     </Flex>
   );
@@ -217,15 +221,14 @@ function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <div className='oui-flex oui-justify-start oui-items-center oui-gap-0.5'>
-
-        {props.children}
-        <CaretIcon
-          className={cn(
-            "oui-w-3 oui-h-3",
-            open && "oui-text-base-contrast-80 oui-rotate-180"
-          )}
-        />
+        <div className="oui-flex oui-justify-start oui-items-center oui-gap-0.5">
+          {props.children}
+          <CaretIcon
+            className={cn(
+              "oui-w-3 oui-h-3",
+              open && "oui-text-base-contrast-80 oui-rotate-180"
+            )}
+          />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
