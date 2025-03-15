@@ -8,7 +8,7 @@ import {
 import { DepositIcon, WithdrawIcon } from "../../icons";
 import { WithdrawFormWidget } from "../withdrawForm";
 import { DepositSlot } from "./plugin";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export const DepositAndWithdrawWithSheetId = "DepositAndWithdrawWithSheetId";
 
@@ -21,6 +21,7 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
   const [activeTab, setActiveTab] = useState<string>(
     props.activeTab || "deposit"
   );
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -33,10 +34,18 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         tabsContent: "oui-pt-5",
       }}
     >
-      <TabPanel title="Deposit" icon={<DepositIcon />} value="deposit">
+      <TabPanel
+        title={t("transfer.deposit")}
+        icon={<DepositIcon />}
+        value="deposit"
+      >
         <DepositSlot onClose={props.close} />
       </TabPanel>
-      <TabPanel title="Withdraw" icon={<WithdrawIcon />} value="withdraw">
+      <TabPanel
+        title={t("transfer.withdraw")}
+        icon={<WithdrawIcon />}
+        value="withdraw"
+      >
         <WithdrawFormWidget {...props} />
       </TabPanel>
     </Tabs>

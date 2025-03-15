@@ -12,8 +12,8 @@ import {
 } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 import { TokenOption } from "./tokenOption";
-import { Decimal } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type QuantityInputProps = {
   token?: API.TokenInfo;
@@ -45,6 +45,8 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       placeholder,
       ...rest
     } = props;
+
+    const { t } = useTranslation();
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [open, setOpen] = useState(false);
@@ -88,7 +90,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       <Box>
         <Box className="oui-absolute oui-top-0">
           <Text size="2xs" intensity={36}>
-            {label || "Quantity"}
+            {label || t("transfer.quantity")}
           </Text>
         </Box>
         {loading && (

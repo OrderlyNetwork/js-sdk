@@ -12,6 +12,7 @@ import { AvailableQuantity } from "../availableQuantity";
 import { WithdrawWarningMessage } from "../withdrawWarningMessage";
 import { UnsettlePnlInfo } from "../unsettlePnlInfo";
 import { WithdrawAction } from "../withdrawAction";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type WithdrawFormProps = ReturnType<typeof useWithdrawForm> & {
   onClose?: () => void;
@@ -46,6 +47,8 @@ export const WithdrawFormUI = ({
   networkId,
   checkIsBridgeless,
 }: UseWithdrawFormScriptReturn) => {
+  const { t } = useTranslation();
+
   return (
     <Box
       id="oui-withdraw-form"
@@ -101,7 +104,7 @@ export const WithdrawFormUI = ({
         </Box>
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
           <Text size="xs" intensity={36}>
-            {`Fee ≈ `}
+            {t("transfer.feeEqual")}{" "}
             <Text size="xs" intensity={80}>
               {`${fee} `}
             </Text>

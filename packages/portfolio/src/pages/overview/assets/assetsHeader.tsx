@@ -29,7 +29,7 @@ export const AssetsHeader: FC<Props> = (props) => {
           icon={<ArrowUpSquareFillIcon />}
           data-testid="oui-testid-portfolio-assets-withdraw-btn"
         >
-          {t("common.withdraw")}
+          {t("transfer.withdraw")}
         </Button>
         <Button
           disabled={props.disabled}
@@ -38,7 +38,7 @@ export const AssetsHeader: FC<Props> = (props) => {
           icon={<ArrowDownSquareFillIcon />}
           data-testid="oui-testid-portfolio-assets-deposit-btn"
         >
-          {t("common.deposit")}
+          {t("transfer.deposit")}
         </Button>
       </Flex>
     </Flex>

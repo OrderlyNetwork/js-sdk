@@ -26,7 +26,7 @@ export const usePortfolioSheetScript = () => {
       .settle()
       .catch((e) => {
         if (e.code == -1104) {
-          toast.error(t("trading.settlement.error"));
+          toast.error(t("settle.settlement.error"));
           return Promise.reject(e);
         }
         if (
@@ -47,7 +47,7 @@ export const usePortfolioSheetScript = () => {
         }
       })
       .then((res) => {
-        toast.success(t("trading.settlement.requested"));
+        toast.success(t("settle.settlement.requested"));
         return Promise.resolve(res);
       });
   }, [account, t]);

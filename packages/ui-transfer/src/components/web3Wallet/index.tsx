@@ -2,8 +2,10 @@ import { FC, useMemo } from "react";
 import { Flex, Text, WalletIcon } from "@orderly.network/ui";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { formatAddress } from "../../utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Web3Wallet: FC = () => {
+  const { t } = useTranslation();
   const { wallet } = useWalletConnector();
 
   const { walletName, address } = useMemo(
@@ -17,7 +19,7 @@ export const Web3Wallet: FC = () => {
   return (
     <Flex justify="between">
       <Text size="sm" intensity={98}>
-        Your Web3 Wallet
+        {t("transfer.web3Wallet")}
       </Text>
 
       <Flex gapX={1}>

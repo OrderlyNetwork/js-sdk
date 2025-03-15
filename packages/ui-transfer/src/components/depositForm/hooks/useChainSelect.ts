@@ -10,6 +10,7 @@ import {
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
   id: number;
@@ -17,6 +18,7 @@ export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
 };
 
 export function useChainSelect() {
+  const { t } = useTranslation();
   const networkId = useConfig("networkId") as NetworkId;
   const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
@@ -66,12 +68,16 @@ export function useChainSelect() {
       })
         .then((switched) => {
           switched
-            ? toast.success("Network switched")
-            : toast.error("Switch chain failed");
+            ? toast.success(t("connector.networkSwitched"))
+            : toast.error(t("connector.switchChainFailed"));
         })
         .catch((error) => {
           if (error && error.message) {
-            toast.error(`Switch chain failed: ${error.message}`);
+            toast.error(
+              t("connector.switchChainFailed.message", {
+                message: error.message,
+              })
+            );
           }
         });
     },

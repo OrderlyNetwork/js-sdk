@@ -41,11 +41,12 @@ const Asset: FC<PortfolioSheetState> = (props) => {
 
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
-      title: t("trading.settlePnl"),
+      title: t("settle.settlePnl"),
       // maxWidth: "xs",
       content: (
         <Text intensity={54} size="xs">
-          {t("trading.settlePnl.description")}
+          {/* @ts-ignore */}
+          <Trans i18nKey="settle.settlePnl.description" />
         </Text>
       ),
       onCancel: () => {
@@ -159,7 +160,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
                 className="oui-text-primary-light"
               />
               <Text size="2xs" color="primary">
-                {t("trading.settlePnl")}
+                {t("settle.settlePnl")}
               </Text>
             </button>
           </Flex>
@@ -314,7 +315,7 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         className="oui-bg-base-2 hover:oui-bg-base-2/50"
         onClick={props.onWithdraw}
       >
-        {t("common.withdraw")}
+        {t("transfer.withdraw")}
       </Button>
       <Button
         icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
@@ -322,7 +323,7 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         fullWidth
         onClick={props.onDeposit}
       >
-        {t("common.deposit")}
+        {t("transfer.deposit")}
       </Button>
     </Grid>
   );

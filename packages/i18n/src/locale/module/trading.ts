@@ -109,16 +109,6 @@ export const trading = {
   "trading.riskRate.formula":
     "Risk rate = Maintenance margin ratio / Margin ratio * 100%",
 
-  "trading.settlePnl": "Settle PnL",
-  "trading.settlePnl.description":
-    "Are you sure you want to settle your PnL? Settlement will take up to 1 minute before you can withdraw your available balance.",
-
-  "trading.settlement.requested": "Settlement requested",
-  "trading.settlement.completed": "Settlement completed",
-  "trading.settlement.failed": "Settlement failed",
-  "trading.settlement.error":
-    "Settlement is only allowed once every 10 minutes. Please try again later.",
-
   "trading.account": "Account",
   "trading.asset&Margin": "Asset & Margin",
 

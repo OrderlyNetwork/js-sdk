@@ -116,6 +116,6 @@ export const useAssetHistoryColumns = () => {
 
 export const SIDES = [
   { label: i18n.t("common.all"), value: "All" },
-  { label: i18n.t("common.deposit"), value: "DEPOSIT" },
-  { label: i18n.t("common.withdraw"), value: "WITHDRAW" },
+  { label: i18n.t("transfer.deposit"), value: "DEPOSIT" },
+  { label: i18n.t("transfer.withdraw"), value: "WITHDRAW" },
 ];

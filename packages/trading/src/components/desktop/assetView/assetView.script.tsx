@@ -142,7 +142,7 @@ export const useAssetViewScript = () => {
       .settle()
       .catch((e) => {
         if (e.code === -1104) {
-          toast.error(t("trading.settlement.error"));
+          toast.error(t("settle.settlement.error"));
           return Promise.reject(e);
         }
         if (
@@ -157,7 +157,7 @@ export const useAssetViewScript = () => {
         }
       })
       .then((res) => {
-        toast.success(t("trading.settlement.requested"));
+        toast.success(t("settle.settlement.requested"));
         return Promise.resolve(res);
       });
   }, [account, t]);
@@ -196,10 +196,10 @@ export const useAssetViewScript = () => {
 
       switch (status) {
         case "COMPLETED":
-          toast.success(t("trading.settlement.completed"));
+          toast.success(t("settle.settlement.completed"));
           break;
         case "FAILED":
-          toast.error(t("trading.settlement.failed"));
+          toast.error(t("settle.settlement.failed"));
           break;
         default:
           break;

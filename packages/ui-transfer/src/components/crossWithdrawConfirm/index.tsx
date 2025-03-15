@@ -1,6 +1,6 @@
 import { Box, ChainIcon, Flex, Text } from "@orderly.network/ui";
 import { useMemo } from "react";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface IProps {
   currentChain: any;
   amount: number;
@@ -12,12 +12,15 @@ export const CrossWithdrawConfirm = ({
   amount,
   currentChain,
 }: IProps) => {
+  const { t } = useTranslation();
+
   const networkName = useMemo(() => {
     if (currentChain && currentChain.info && currentChain.info.network_infos) {
       return currentChain.info.network_infos.name;
     }
     return undefined;
   }, [currentChain]);
+
   return (
     <Flex
       direction="column"
@@ -33,7 +36,7 @@ export const CrossWithdrawConfirm = ({
       >
         <Flex direction="column" justify="start" itemAlign="start">
           <Text size="2xs" intensity={36}>
-            Recipient address
+            {t("transfer.withdraw.crossChain.recipientAddress")}
           </Text>
           <Text size="sm" intensity={98} className="oui-break-all">
             {address}
@@ -41,7 +44,7 @@ export const CrossWithdrawConfirm = ({
         </Flex>
         <Flex direction="column" justify="start" itemAlign="start">
           <Text size="2xs" intensity={36}>
-            Recipient network
+            {t("transfer.withdraw.crossChain.recipientNetwork")}
           </Text>
           <Flex gap={1}>
             <ChainIcon
@@ -57,7 +60,7 @@ export const CrossWithdrawConfirm = ({
         </Flex>
         <Flex direction="column" justify="start" itemAlign="start">
           <Text size="2xs" intensity={36}>
-            Withdraw amount (USDC)
+            {t("transfer.withdraw.crossChain.withdrawAmount")}
           </Text>
           <Text.numeral size="sm" intensity={98} dp={2}>
             {amount}
@@ -69,8 +72,7 @@ export const CrossWithdrawConfirm = ({
         className="oui-text-warning-darken oui-text-2xs lg:oui-text-xs oui-text-center"
         mb={3}
       >
-        Withdrawals that require cross-chain rebalancing can't be cancelled or
-        followed up with more withdrawals until they've been processed.
+        {t("transfer.withdraw.crossChain.warning")}
       </Flex>
     </Flex>
   );

@@ -359,7 +359,7 @@ export const AssetView: FC<AssetViewState> = ({
               onClick={onDeposit}
             >
               <ArrowDownShortIcon color="white" opacity={1} />
-              <Text>{t("common.deposit")}</Text>
+              <Text>{t("transfer.deposit")}</Text>
             </Button>
 
             <Box className="oui-mt-3">
@@ -393,7 +393,7 @@ export const AssetView: FC<AssetViewState> = ({
                   opacity={1}
                   className="oui-rotate-180"
                 />
-                <Text>{t("common.withdraw")}</Text>
+                <Text>{t("transfer.withdraw")}</Text>
               </Button>
               <Button
                 data-testid="oui-testid-assetView-deposit-button"
@@ -402,7 +402,7 @@ export const AssetView: FC<AssetViewState> = ({
                 onClick={onDeposit}
               >
                 <ArrowDownShortIcon color="white" opacity={1} />
-                <Text>{t("common.deposit")}</Text>
+                <Text>{t("transfer.deposit")}</Text>
               </Button>
             </Flex>
             <FaucetWidget />
