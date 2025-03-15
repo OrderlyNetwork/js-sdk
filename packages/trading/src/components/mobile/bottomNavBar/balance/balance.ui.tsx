@@ -9,8 +9,11 @@ import {
 } from "@orderly.network/ui";
 import { BalanceState } from "./balance.script";
 import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Balance: FC<BalanceState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex gap={3}>
       <Flex
@@ -22,7 +25,7 @@ export const Balance: FC<BalanceState> = (props) => {
         }}
       >
         <Flex>
-          <Text intensity={54}>Total value</Text>
+          <Text intensity={54}>{t("trading.asset.totalValue")}</Text>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -68,7 +71,7 @@ export const Balance: FC<BalanceState> = (props) => {
           }}
           className="oui-h-[28px] oui-text-2xs oui-text-primary-light oui-border-primary-light"
         >
-          {commifyOptional(props.currentLeverage, { fix: 2 }) + "x"}
+          {commifyOptional(props.currentLeverage!, { fix: 2 }) + "x"}
         </Button>
       )}
     </Flex>

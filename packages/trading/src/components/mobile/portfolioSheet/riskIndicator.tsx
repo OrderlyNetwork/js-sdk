@@ -1,6 +1,5 @@
-
-import { cn } from "@orderly.network/ui";
 import { FC } from "react";
+import { cn } from "@orderly.network/ui";
 
 interface RiskIndicatorProps {
   size?: number;

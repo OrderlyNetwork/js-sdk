@@ -3,14 +3,18 @@ import { Flex, SimpleDialog, Text, Tooltip } from "@orderly.network/ui";
 import { MainLogo } from "@orderly.network/ui-scaffold";
 import { UseScanQRCodeScriptReturn } from "./scanQRCode.script";
 import { QRCodeScanner } from "./scanner";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 
 type ScanQRCodeProps = UseScanQRCodeScriptReturn;
+
 export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Tooltip
         open={props.showScanTooltip}
-        content="Link to Desktop via QR Code"
+        content={t("linkDevice.scanQRCode.tooltip")}
         className="oui-bg-base-6 oui-text-warning-darken oui-text-2xs oui-font-semibold"
         arrow={{ className: "!oui-fill-base-6" }}
       >
@@ -22,7 +26,11 @@ export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
         </Flex>
       </Tooltip>
       <SimpleDialog
-        title={<Text weight="semibold">Confirm</Text>}
+        title={
+          <Text weight="semibold">
+            {t("linkDevice.scanQRCode.dialog.title")}
+          </Text>
+        }
         open={props.open}
         onOpenChange={props.onOpenChange}
         size="sm"
@@ -34,26 +42,30 @@ export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
 };
 
 const ScanQRCodeContent: FC<ScanQRCodeProps> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex justify="center" direction="column" gapY={5}>
       <MainLogo />
       <QRCodeScanner onSuccess={props.onScanSuccess} />
       {/* </Box> */}
       <Text size="sm" intensity={98} weight="semibold">
-        Scan QR Code
+        {t("linkDevice.scanQRCode")}
       </Text>
       <span className="oui-px-3 oui-text-center">
-        <Text size="2xs" intensity={54}>
-          Click the
-        </Text>
-        <LinkDeviceIcon className="oui-inline-block oui-text-base-contrast-80 oui-mx-1" />
         <Text
           size="2xs"
           intensity={54}
           weight="regular"
           className="oui-break-words"
         >
-          icon in the top right corner on desktop to generate a QR code to scan.
+          {/* @ts-ignore */}
+          <Trans
+            i18nKey="linkDevice.scanQRCode.description"
+            components={[
+              <LinkDeviceIcon className="oui-inline-block oui-text-base-contrast-80 oui-mx-1" />,
+            ]}
+          />
         </Text>
       </span>
     </Flex>

@@ -9,8 +9,10 @@ import {
   useMarginRatio,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useBalanceScript = () => {
+  const { t } = useTranslation();
   const { bottomSheetLeading } = useTradingPageContext();
   const { hideAssets, setHideAssets } = useTradingLocalStorage();
   const { wrongNetwork, disabledConnect } = useAppContext();
@@ -28,7 +30,7 @@ export const useBalanceScript = () => {
   const onShowPortfolioSheet = () => {
     if (canTrade) {
       modal.sheet({
-        title: "Asset & Margin",
+        title: t("trading.asset&Margin"),
         leading: bottomSheetLeading,
         content: <PortfolioSheetWidget />,
       });

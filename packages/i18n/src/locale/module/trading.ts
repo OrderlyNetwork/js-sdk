@@ -28,9 +28,24 @@ export const trading = {
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",
   "trading.orderBook.column.time": "Time",
+  "trading.orderBook.column.price": "Price",
+  "trading.orderBook.column.qty": "Qty",
+  "trading.orderBook.column.value": "Value",
   "trading.orderBook.column.price.quote": "Price({{quote}})",
   "trading.orderBook.column.qty.base": "Qty({{base}})",
   "trading.orderBook.column.total.unit": "Total({{unit}})",
+
+  "trading.tabs.chart": "Chart",
+  "trading.tabs.trades": "Trades",
+  "trading.tabs.data": "Data",
+
+  "trading.tradeData.column.markPrice": "Mark price",
+  "trading.tradeData.column.indexPrice": "Index price",
+  "trading.tradeData.column.24Volume": "24h volume",
+  "trading.tradeData.column.24High": "24h high",
+  "trading.tradeData.column.24Low": "24h low",
+  "trading.tradeData.column.openInterest": "Open interest",
+
   "trading.orderBook.row.tooltip.avgPrice": "Avg. Price≈",
   "trading.orderBook.row.tooltip.sum": "Sum ({{unit}})",
   "trading.orderBook.markPrice.tooltip":
@@ -41,8 +56,8 @@ export const trading = {
   "trading.faucet.getTestUSDC.success":
     "{{quantity}} USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.",
 
-  "trading.asset.depositToStartTrade": "Deposit to start trade",
-  "trading.asset.depositToStartTrade.description":
+  "trading.asset.startTrading": "Start trading",
+  "trading.asset.startTrading.description":
     "You can deposit assets from various networks",
 
   "trading.asset.wrongNetwork": "Wrong Network",
@@ -75,6 +90,13 @@ export const trading = {
   "trading.asset.marginRatio.formula":
     "Account margin ratio = (Total collateral value / Total position notional) * 100%",
 
+  "trading.asset.totalValue": "Total value",
+  "trading.asset.totalValueQuote": "Total value (USDC)",
+  "trading.asset.unrealPnlQuote": "Unreal. PnL (USDC)",
+  "trading.asset.unsettledPnlQuote": "Unsettled PnL (USDC)",
+  "trading.asset.free&TotalCollateralQuote": "Free / Total Collateral (USDC)",
+  "trading.asset.availableBalance": "Available Balance",
+
   "trading.asset.maintenanceMarginRatio": "Maintenance margin ratio",
   "trading.asset.maintenanceMarginRatio.tooltip":
     "The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated.",
@@ -86,7 +108,21 @@ export const trading = {
     "The Risk rate is used to assess the risk level of an account. When the Risk rate reaches 100%, the account will be liquidated",
   "trading.riskRate.formula":
     "Risk rate = Maintenance margin ratio / Margin ratio * 100%",
-  "trading.riskRate.maxAccountLeverage": "Max account leverage",
+
+  "trading.settlePnl": "Settle PnL",
+  "trading.settlePnl.description":
+    "Are you sure you want to settle your PnL? Settlement will take up to 1 minute before you can withdraw your available balance.",
+
+  "trading.settlement.requested": "Settlement requested",
+  "trading.settlement.completed": "Settlement completed",
+  "trading.settlement.failed": "Settlement failed",
+  "trading.settlement.error":
+    "Settlement is only allowed once every 10 minutes. Please try again later.",
+
+  "trading.account": "Account",
+  "trading.asset&Margin": "Asset & Margin",
+
+  "trading.fundingRate.predFundingRate": "Pred. funding rate",
 } as const;
 
 export type Trading = typeof trading;

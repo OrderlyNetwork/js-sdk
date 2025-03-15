@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import {
   useAccountInstance,
   useEventEmitter,
@@ -20,13 +21,13 @@ import {
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { capitalizeString } from "@orderly.network/utils";
-import { useCallback, useMemo } from "react";
 import {
   DepositAndWithdrawWithSheetId,
   DepositAndWithdrawWithDialogId,
 } from "@orderly.network/ui-transfer";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useFirstTimeDeposit = () => {
   const { state } = useAccount();
@@ -76,9 +77,9 @@ export const useFirstTimeDeposit = () => {
 };
 
 export const useAssetViewScript = () => {
+  const { t } = useTranslation();
   const account = useAccountInstance();
   const matches = useMediaQuery(MEDIA_TABLET);
-
   const { isFirstTimeDeposit, totalValue } = useFirstTimeDeposit();
 
   const networkId = useConfig("networkId") as NetworkId;
@@ -141,9 +142,7 @@ export const useAssetViewScript = () => {
       .settle()
       .catch((e) => {
         if (e.code === -1104) {
-          toast.error(
-            "Settlement is only allowed once every 10 minutes. Please try again later."
-          );
+          toast.error(t("trading.settlement.error"));
           return Promise.reject(e);
         }
         if (
@@ -158,10 +157,10 @@ export const useAssetViewScript = () => {
         }
       })
       .then((res) => {
-        toast.success("Settlement requested");
+        toast.success(t("trading.settlement.requested"));
         return Promise.resolve(res);
       });
-  }, [account]);
+  }, [account, t]);
 
   const [visible, setVisible] = useLocalStorage<boolean>(
     "orderly_assets_visible",
@@ -197,10 +196,10 @@ export const useAssetViewScript = () => {
 
       switch (status) {
         case "COMPLETED":
-          toast.success("Settlement completed");
+          toast.success(t("trading.settlement.completed"));
           break;
         case "FAILED":
-          toast.error("Settlement failed");
+          toast.error(t("trading.settlement.failed"));
           break;
         default:
           break;

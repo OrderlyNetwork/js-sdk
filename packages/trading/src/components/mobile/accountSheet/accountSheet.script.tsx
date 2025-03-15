@@ -15,10 +15,12 @@ import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { isTestnet } from "@orderly.network/utils";
 import { ReferralProps, TradingRewardsProps } from "../../../types/types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useAccountSheetScript = (
   props: ReferralProps & TradingRewardsProps
 ) => {
+  const { t } = useTranslation();
   const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
   const { account, state } = useAccount();
   const accountId = account.accountId;
@@ -51,7 +53,7 @@ export const useAccountSheetScript = (
 
   const onCopyAddress = () => {
     navigator.clipboard.writeText(address ?? "");
-    toast.success("Copy success");
+    toast.success(t("common.copySuccess"));
   };
 
   const {
@@ -91,9 +93,9 @@ export const useAccountSheetScript = (
       return;
     }
 
-    const message = `${
-      namespace === ChainNamespace.solana ? "100" : "1,000"
-    } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
+    const message = t("trading.faucet.getTestUSDC.success", {
+      quantity: namespace === ChainNamespace.solana ? "100" : "1,000",
+    });
 
     return getTestUSDC({
       chain_id: chainId?.toString(),
@@ -103,7 +105,7 @@ export const useAccountSheetScript = (
       (res: any) => {
         if (res.success) {
           return modal.alert({
-            title: "Get test USDC",
+            title: t("trading.faucet.getTestUSDC"),
             message,
             onOk: () => {
               return Promise.resolve(true);

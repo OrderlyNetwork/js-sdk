@@ -96,7 +96,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             weight="semibold"
             className="oui-cursor-pointer"
           >
-            {t("trading.riskRate.maxAccountLeverage")}
+            {t("leverage.maxAccountLeverage")}
           </Text>
           <Flex className="oui-gap-1">
             <Text.numeral

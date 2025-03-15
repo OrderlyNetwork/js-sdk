@@ -345,10 +345,10 @@ export const AssetView: FC<AssetViewState> = ({
             <Box>
               <Flex direction="column" gap={1} className="oui-mb-[32px]">
                 <Text.gradient size="lg" weight="bold" color="brand">
-                  {t("trading.asset.depositToStartTrade")}
+                  {t("trading.asset.startTrading")}
                 </Text.gradient>
                 <Text size="2xs" color="neutral" weight="semibold">
-                  {t("trading.asset.depositToStartTrade.description")}
+                  {t("trading.asset.startTrading.description")}
                 </Text>
               </Flex>
             </Box>
