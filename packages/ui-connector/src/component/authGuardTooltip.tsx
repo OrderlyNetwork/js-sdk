@@ -1,8 +1,9 @@
+import { PropsWithChildren, useMemo, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Tooltip } from "@orderly.network/ui";
-import { PropsWithChildren, useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 
 type AuthGuardProps = {
   content?: string;
@@ -20,15 +21,18 @@ type AuthGuardProps = {
 };
 
 const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
+  const { t } = useTranslation();
+
   const {
     opactiy = 90,
     tooltip = {
-      connectWallet: "Please connect wallet before set up",
-      signIn: "Please sign in before set up",
-      enableTrading: "Please enable trading before set up",
-      wrongNetwork: "Please switch to a supported network to set up",
+      connectWallet: t("connector.setUp.connectWallet.tooltip"),
+      signIn: t("connector.setUp.signIn.tooltip"),
+      enableTrading: t("connector.setUp.enableTrading.tooltip"),
+      wrongNetwork: t("connector.wrongNetwork.tooltip"),
     },
   } = props;
+
   const [open, setOpen] = useState(false);
   const { state } = useAccount();
   const isSupport = true;
