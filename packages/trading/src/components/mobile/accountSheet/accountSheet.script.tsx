@@ -53,7 +53,7 @@ export const useAccountSheetScript = (
 
   const onCopyAddress = () => {
     navigator.clipboard.writeText(address ?? "");
-    toast.success(t("common.copySuccess"));
+    toast.success(t("common.copy.success"));
   };
 
   const {

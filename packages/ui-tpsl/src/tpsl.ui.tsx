@@ -633,7 +633,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               className: "oui-ml-1",
             })}
           >
-            {t("tpsl.disableOrderConfirm")}
+            {t("orders.disableOrderConfirm")}
           </label>
         </Flex>
       </Box>

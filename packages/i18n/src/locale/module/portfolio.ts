@@ -15,7 +15,6 @@ export const portfolio = {
   "portfolio.overview.assets.title": "Assets",
   "portfolio.overview.totalValue": "Total value",
   "portfolio.overview.unrealizedPnl": "Unrealized PnL",
-  "portfolio.overview.maxAccountLeverage": "Max account leverage",
   "portfolio.overview.availableToWithdraw": "Available to withdraw",
 
   "portfolio.overview.performance.title": "Performance",

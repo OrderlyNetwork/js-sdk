@@ -176,7 +176,7 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
           <Text size="2xs" intensity={54}>
             {/* @ts-ignore */}
             <Trans
-              i18nKey="tradingRewards.epoch"
+              i18nKey="tradingRewards.currentEpoch"
               values={{ epoch: props.curEpochId }}
               components={[<Text size="2xs" intensity={98} />]}
             />

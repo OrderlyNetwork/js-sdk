@@ -48,6 +48,7 @@ export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
         {t("leverage.maxAccountLeverage")}
       </Text>
       <Flex direction={"row"} gap={1}>
+        {/* @ts-ignore */}
         <Trans
           i18nKey="leverage.currentLeverage"
           values={{ leverage: props.currentLeverage ?? "--" }}

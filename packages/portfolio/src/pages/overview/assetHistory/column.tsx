@@ -60,7 +60,7 @@ export const useAssetHistoryColumns = () => {
                 onCopy={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  toast.success(t("common.copySuccess"));
+                  toast.success(t("common.copy.success"));
                 }}
               >
                 {value}

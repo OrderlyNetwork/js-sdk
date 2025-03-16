@@ -41,8 +41,8 @@ const meta: Meta<typeof Dashboard.DashboardPage> = {
             <div style={{ backgroundColor: "#FF0000" }}>df</div>
           )}
           overwrite={{
-            shortBrokerName: "Mark",
-            brokerName: "Mark Pan",
+            shortBrokerName: "Orderly",
+            brokerName: "Orderly Network",
             ref: {
               // top: (state) =>  (<div>ASD</div>),
               // card: (state) => (<div>GFHJK</div>)

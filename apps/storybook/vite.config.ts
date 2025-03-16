@@ -24,7 +24,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      // "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
+      "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
       "@orderly.network/portfolio": resolve(
         __dirname,
         "../../packages/portfolio/src"
@@ -76,10 +76,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-share/src"
       ),
-      // "@orderly.network/ui-tradingview": resolve(
-      //   __dirname,
-      //   "../../packages/ui-tradingview/src"
-      // ),
+      "@orderly.network/ui-tradingview": resolve(
+        __dirname,
+        "../../packages/ui-tradingview/src"
+      ),
       "@orderly.network/withdraw": resolve(
         __dirname,
         "../../packages/withdraw/src"

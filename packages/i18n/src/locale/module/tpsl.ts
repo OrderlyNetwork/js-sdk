@@ -28,7 +28,6 @@ export const tpsl = {
     "Are you sure you want to cancel this TP/SL order?",
   "tpsl.editOrder.title": "Edit Order",
   "tpsl.confirmOrder.title": "Confirm Order",
-  "tpsl.disableOrderConfirm": "Disable order confirmation",
 };
 
 export type TPSL = typeof tpsl;

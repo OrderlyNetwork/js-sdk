@@ -145,7 +145,7 @@ export const AssetStatistic = (
           </Text.numeral>
         </Flex>
       </Statistic>
-      <Statistic label={t("portfolio.overview.maxAccountLeverage")}>
+      <Statistic label={t("leverage.maxAccountLeverage")}>
         <Flex itemAlign={"center"}>
           <span
             data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value"

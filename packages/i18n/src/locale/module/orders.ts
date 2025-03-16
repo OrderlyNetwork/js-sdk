@@ -17,6 +17,12 @@ export const orders = {
   "orders.status.canceled": "Canceled",
   "orders.status.rejected": "Rejected",
 
+  "orders.status.new.title": "Order opened",
+  "orders.status.filled.title": "Order filled",
+  "orders.status.cancelled.title": "Order cancelled",
+  "orders.status.rejected.title": "Order rejected",
+  "orders.status.replaced.title": "Order edited",
+
   "orders.column.orderPrice": "Order price",
   "orders.column.orderPrice.quote": "Order price<0>(USDC)</0>",
   "orders.column.symbol": "Symbol",

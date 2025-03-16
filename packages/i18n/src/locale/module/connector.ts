@@ -32,6 +32,8 @@ export const connector = {
 
   "connector.walletConnected": "Wallet connected",
   "connector.networkSwitched": "Network switched",
+  "connector.switchChainFailed": "Switch chain failed",
+  "connector.switchChainFailed.message": "Switch chain failed: {{message}}",
 
   "connector.trade.connectWallet.tooltip":
     "Please connect wallet before starting to trade",
@@ -44,6 +46,10 @@ export const connector = {
   "connector.setUp.signIn.tooltip": "Please sign in before set up",
   "connector.setUp.enableTrading.tooltip":
     "Please enable trading before set up",
+
+  "connector.ledger.signMessageFailed": "Sign Message Failed",
+  "connector.ledger.signMessageFailed.description":
+    "Are you using Ledger Wallet?",
 };
 
 export type Connector = typeof connector;
