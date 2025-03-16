@@ -17,10 +17,13 @@ import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
 import { commifyOptional } from "@orderly.network/utils";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
   props
 ) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-affiliate-affiliate-commissionAndReferees"
@@ -32,10 +35,16 @@ export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
       className="oui-bg-base-9 oui-tabular-nums"
     >
       <Tabs defaultValue="account" className="oui-w-full" variant="contained">
-        <TabPanel value="account" title="Commission">
+        <TabPanel
+          value="account"
+          title={t("affiliate.dataList.tabs.commission")}
+        >
           <CommissionList {...props} />
         </TabPanel>
-        <TabPanel value="password" title="My referees">
+        <TabPanel
+          value="password"
+          title={t("affiliate.dataList.tabs.referees")}
+        >
           <RefereesList {...props} />
         </TabPanel>
       </Tabs>
@@ -76,11 +85,13 @@ const MobileCellItem: FC<{
 };
 
 const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
+  const { t } = useTranslation();
   const isLG = useMediaQuery("(max-width: 767px)");
+
   const columns = useMemo(() => {
     const cols: Column[] = [
       {
-        title: "Commission (USDC)",
+        title: t("affiliate.commission.quote"),
         dataIndex: "referral_rebate",
         render: (value) => (
           <Text>
@@ -95,7 +106,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         width: 216,
       },
       {
-        title: "Referral vol. (USDC)",
+        title: t("affiliate.referralVol.quote"),
         dataIndex: "volume",
         render: (value) => (
           <Text>
@@ -110,13 +121,13 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         width: 216,
       },
       {
-        title: "Referral active users",
+        title: t("affiliate.commission.column.activeUsers"),
         dataIndex: "daily_traded_referral",
         render: (value) => <Text>{value}</Text>,
         width: 216,
       },
       {
-        title: "Date",
+        title: t("common.column.date"),
         dataIndex: "date",
         render: (value) => formatYMDTime(value),
         width: 216,
@@ -124,7 +135,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
     ];
 
     return cols;
-  }, []);
+  }, [t]);
 
   const body = useMemo(() => {
     if (isLG) {
@@ -143,7 +154,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
               <div>
                 <Flex direction={"row"} width={"100%"}>
                   <MobileCellItem
-                    title="Commission"
+                    title={t("affiliate.commission")}
                     value={commifyOptional(e.referral_rebate, {
                       fix: 6,
                       fallback: "0",
@@ -152,7 +163,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
                     prefix="$"
                   />
                   <MobileCellItem
-                    title="Referral vol."
+                    title={t("affiliate.referralVol")}
                     value={commifyOptional(e.volume, {
                       fix: 2,
                       fallback: "0",
@@ -161,11 +172,11 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
                     prefix="$"
                   />
                   <MobileCellItem
-                    title="Referral active users"
+                    title={t("affiliate.commission.column.activeUsers")}
                     value={e.daily_traded_referral}
                   />
                   <MobileCellItem
-                    title="Date"
+                    title={t("common.column.date")}
                     value={e.date}
                     rule="date"
                     formatString="yyyy-MM-dd"
@@ -214,12 +225,14 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
 };
 
 const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
+  const { t } = useTranslation();
+
   const isLG = useMediaQuery("(max-width: 767px)");
 
   const columns = useMemo(() => {
     const cols: Column[] = [
       {
-        title: "Referee address ",
+        title: t("affiliate.referees.column.refereeAddress"),
         dataIndex: "user_address",
         render: (value) => (
           <Text.formatted rule={"address"}>{value}</Text.formatted>
@@ -227,13 +240,13 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         className: "oui-w-1/5",
       },
       {
-        title: "Referral code ",
+        title: t("affiliate.referralCode"),
         dataIndex: "referral_code",
         // render: (value) => value,
         className: "oui-w-1/5",
       },
       {
-        title: "Total commission (USDC) ",
+        title: t("affiliate.referees.column.totalCommission.quote"),
         dataIndex: "referral_rebate",
         render: (value) => (
           <Text>
@@ -243,7 +256,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         className: "oui-w-1/5",
       },
       {
-        title: "Total vol. (USDC) ",
+        title: t("affiliate.referees.column.totalVol.quote"),
         dataIndex: "volume",
         render: (value) => (
           <Text>
@@ -253,7 +266,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
         className: "oui-w-1/5",
       },
       {
-        title: "Invication time",
+        title: t("affiliate.referees.column.invitationTime"),
         dataIndex: "code_binding_time",
         render: (value) => (
           <Text.formatted
@@ -267,7 +280,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
     ];
 
     return cols;
-  }, []);
+  }, [t]);
 
   const body = useMemo(() => {
     if (isLG) {
@@ -287,11 +300,11 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
               >
                 <Flex direction={"row"} width={"100%"}>
                   <MobileCellItem
-                    title="Referral code "
+                    title={t("affiliate.referralCode")}
                     value={e.referral_code}
                   />
                   <MobileCellItem
-                    title="Total commission"
+                    title={t("affiliate.referees.column.totalCommission.quote")}
                     value={commifyOptional(e.referral_rebate, {
                       fix: 6,
                       prefix: "$",
@@ -300,7 +313,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
                     className="oui-min-w-[102px]"
                   />
                   <MobileCellItem
-                    title="Total vol."
+                    title={t("affiliate.referees.column.totalVol")}
                     value={commifyOptional(e.volume, {
                       fix: 2,
                       prefix: "$",
@@ -311,12 +324,12 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
                 </Flex>
                 <Flex direction={"row"} pt={3} gap={3} width={"100%"}>
                   <MobileCellItem
-                    title="Referee address "
+                    title={t("affiliate.referees.column.refereeAddress")}
                     value={e.user_address}
                     rule="address"
                   />
                   <MobileCellItem
-                    title="Invitation Time "
+                    title={t("affiliate.referees.column.invitationTime")}
                     value={e.code_binding_time}
                     align="end"
                     rule="date"

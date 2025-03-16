@@ -3,8 +3,11 @@ import { Button, Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { commifyOptional } from "@orderly.network/utils";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const Summary: FC<SummaryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-affiliate-trader-summary"
@@ -22,15 +25,20 @@ export const Summary: FC<SummaryReturns> = (props) => {
         <SummaryFilter {...props} />
         <CommissionData {...props} />
       </Flex>
-      <Row title="Trading vol. (USDC)" {...props} />
+      <Row title={t("affiliate.trader.tradingVol.quote")} {...props} />
     </Flex>
   );
 };
+
 const Title: FC<SummaryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"row"} width={"100%"} gap={3}>
       <Flex direction={"row"} gap={3} className="oui-flex-1">
-        <Text className="oui-text-lg">Your referrer</Text>
+        <Text className="oui-text-lg">
+          {t("affiliate.trader.yourReferrer")}
+        </Text>
         <Button
           color="secondary"
           size="sm"
@@ -54,22 +62,30 @@ const Rebate: FC<SummaryReturns & { className?: string }> = (props) => {
         intensity={54}
         className="oui-text-sm md:oui-text-base 2xl:oui-text-lg"
       >
-        Rebate:
+        {/* @ts-ignore */}
+        <Trans
+          i18nKey="affiliate.trader.rebate"
+          values={{
+            rebate: props.rebateText,
+          }}
+          components={[
+            <Text.gradient
+              color="brand"
+              className="oui-text-lg md:oui-text-xl 2xl:oui-text-2xl"
+            />,
+          ]}
+        />
       </Text>
-      <Text.gradient
-        color="brand"
-        className="oui-text-lg md:oui-text-xl 2xl:oui-text-2xl"
-      >
-        {props.rebateText}
-      </Text.gradient>
     </Flex>
   );
 };
 
 const SummaryFilter: FC<SummaryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"row"} width={"100%"} justify={"between"} gap={3}>
-      <Text className="oui-text-sm">Summary</Text>
+      <Text className="oui-text-sm">{t("affiliate.summary")}</Text>
       <div>
         <Select.options
           size={"xs"}
@@ -83,6 +99,8 @@ const SummaryFilter: FC<SummaryReturns> = (props) => {
 };
 
 const CommissionData: FC<SummaryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       gradient="success"
@@ -95,7 +113,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
       gap={3}
     >
       <Text intensity={54} className="oui-text-base 2xl:oui-text-lg">
-      Rebates (USDC)
+        {t("affiliate.trader.rebates.quote")}
       </Text>
       <Flex
         direction={"row"}
@@ -103,9 +121,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
         <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
-        <Text>
-          {commifyOptional(props.rebates, { fix: 2, fallback: "0" })}
-        </Text>
+        <Text>{commifyOptional(props.rebates, { fix: 2, fallback: "0" })}</Text>
       </Flex>
     </Flex>
   );

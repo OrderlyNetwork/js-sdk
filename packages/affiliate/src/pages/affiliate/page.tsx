@@ -1,10 +1,11 @@
-import { Flex, Box, cn } from "@orderly.network/ui";
+import { Flex, cn } from "@orderly.network/ui";
 import { SummaryWidget } from "./summary";
 import { ReferralLinkWidget } from "./referralLink";
 import { TitleStatisticWidget } from "./titleStatistic";
 import { ReferralCodesWidget } from "./referralCodes";
 import { CommissionAndRefereesWidget } from "./commissionAndReferees";
 import { useMediaQuery } from "@orderly.network/hooks";
+
 export const AffiliatePage = () => {
   return (
     <Flex
@@ -59,9 +60,9 @@ const Layout1280 = () => {
       <Flex direction={"column"} gap={4} className="oui-w-1/2">
         <ReferralLinkWidget />
         {/* <div className="oui-h-[360px]"> */}
-          <div className="oui-flex-1">
+        <div className="oui-flex-1">
           <ReferralCodesWidget />
-          </div>
+        </div>
         {/* </div> */}
       </Flex>
     </Flex>

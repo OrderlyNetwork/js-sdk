@@ -1,16 +1,16 @@
-import { useMediaQuery } from "@orderly.network/hooks";
-import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import React from "react";
 import { useMemo, useState } from "react";
+import type { SideBarProps } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useLayoutBuilder = (): SideBarProps => {
   const [current, setCurrent] = useState("/");
   // const [sideOpen, setSideOpen] = useState(true);
+  const { t } = useTranslation();
 
   const items = useMemo(() => {
     return [
       {
-        name: "Trading",
+        name: t("affiliate.trading"),
         href: "/",
         icon: (
           <svg
@@ -44,7 +44,7 @@ export const useLayoutBuilder = (): SideBarProps => {
         ),
       },
       {
-        name: "Affiliate",
+        name: t("affiliate.title"),
         href: "/affiliate",
         icon: (
           <svg
@@ -65,7 +65,7 @@ export const useLayoutBuilder = (): SideBarProps => {
         ),
       },
     ];
-  }, []);
+  }, [t]);
 
   return {
     items,
