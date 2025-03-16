@@ -1,3 +1,4 @@
+import { PropsWithChildren } from "react";
 import { Box } from "@orderly.network/ui";
 import {
   Scaffold,
@@ -5,8 +6,8 @@ import {
   SideBarProps,
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
-import { PropsWithChildren } from "react";
 import { LayoutProps } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type TradingRewardsLayoutProps = {
   hideSideBar?: boolean;
@@ -36,11 +37,12 @@ export const TradingRewardsLayout = (
 };
 
 const LeftSidebar = (props: SideBarProps & LayoutProps) => {
+  const { t } = useTranslation();
   const { expanded, setExpand } = useScaffoldContext();
 
   return (
     <SideBar
-      title={"Rewards"}
+      title={t("tradingRewards.sidebar.title")}
       {...props}
       open={expanded}
       onOpenChange={(open) => setExpand(open)}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import type { SideBarProps } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@orderly.network/i18n";
 
 export enum TradingRewardsLeftSidebarPath {
   Trading = "/rewards/trading",
@@ -12,6 +13,7 @@ export const useTradingRewardsLayoutScript = (props: {
 }): SideBarProps & {
   hideSideBar: boolean;
 } => {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(props.current || "/rewards/affiliate");
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export const useTradingRewardsLayoutScript = (props: {
   const items = useMemo(() => {
     return [
       {
-        name: "Trading",
+        name: t("tradingRewards.sidebar.trading"),
         href: TradingRewardsLeftSidebarPath.Trading,
         icon: (
           <svg
@@ -56,7 +58,7 @@ export const useTradingRewardsLayoutScript = (props: {
         ),
       },
       {
-        name: "Affiliate",
+        name: t("tradingRewards.sidebar.affiliate"),
         href: TradingRewardsLeftSidebarPath.Affiliate,
         icon: (
           <svg
@@ -76,7 +78,7 @@ export const useTradingRewardsLayoutScript = (props: {
         ),
       },
     ];
-  }, []);
+  }, [t]);
 
   const hideSideBar = useMediaQuery("(max-width: 768px)");
 

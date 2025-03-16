@@ -1,15 +1,17 @@
-import { Box, Button, Flex, Text, Tooltip, cn } from "@orderly.network/ui";
-
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, FC, ReactNode } from "react";
+import { Box, Flex, Text, cn } from "@orderly.network/ui";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { CurEpochReturns } from "./curEpoch.script";
-import { commify, commifyOptional } from "@orderly.network/utils";
+import { commifyOptional } from "@orderly.network/utils";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { RewardsTooltip } from "./rewardsTooltip";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const CurEpoch: FC<CurEpochReturns> = (props) => {
+  const { t } = useTranslation();
+
   const state = props;
   const curEpochInfo = state.epochList?.[1].curEpochInfo;
   const startTime = curEpochInfo?.start_time;
@@ -36,7 +38,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
       <Flex p={6} direction={"column"} gap={4} className="oui-h-full">
         <Flex direction={"row"} gap={3} width={"100%"} justify={"around"}>
           <Statics
-            title="Epoch"
+            title={t("tradingRewards.epoch")}
             highLight={curEpochId ? `${curEpochId}` : "--"}
             text={
               startTime && endTime
@@ -45,7 +47,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
             }
           />
           <Statics
-            title="Epoch rewards"
+            title={t("tradingRewards.epochRewards")}
             highLight={commifyOptional(max_reward_amount, { fix: 0 })}
             text={token}
           />
@@ -104,6 +106,8 @@ const EstRewards: FC<{
       }
     | undefined;
 }> = (props) => {
+  const { t } = useTranslation();
+  
   return (
     <Flex
       direction={props.direction}
@@ -120,7 +124,7 @@ const EstRewards: FC<{
       className="oui-flex-1 oui-h-full"
     >
       <Text className="oui-text-base xl:oui-text-lg oui-text-base-contrast-54">
-        My est. rewards
+        {t("tradingRewards.myEstRewards")}
       </Text>
       <Flex direction={"row"} gap={3}>
         {props.isOrder == true && (
@@ -189,6 +193,7 @@ const Statics: FC<{
 const Countdown: FC<{
   targetTimestamp?: number;
 }> = ({ targetTimestamp }) => {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -225,14 +230,6 @@ const Countdown: FC<{
     return () => clearInterval(intervalId as unknown as number);
   }, [targetTimestamp]);
 
-  const num = (value: string) => {
-    return (
-      <Text className="oui-text-base-contrast oui-text-sm md:oui-text-base lg:oui-text-lg ">
-        {value}
-      </Text>
-    );
-  };
-
   return (
     <Box
       className="oui-rounded-t-2xl oui-text-base-contrast-54 oui-font-semibold"
@@ -241,30 +238,45 @@ const Countdown: FC<{
       width={"full"}
     >
       <Flex justify={"center"} gap={1}>
-        <span>Countdown:</span>
+        <span>{t("tradingRewards.countdown.label")}</span>
         <Flex
           direction={"row"}
           itemAlign={"end"}
           gap={1}
           className="oui-text-2xs md:oui-text-xs lg:oui-text-sm oui-py-[13px]"
         >
-          {num(`${timeLeft.days}`.padStart(2, "0"))}
-          <span>D</span>
-          {num(`${timeLeft.hours}`.padStart(2, "0"))}
-          <span>H</span>
-          {num(`${timeLeft.minutes}`.padStart(2, "0"))}
-          <span>M</span>
-          {num(`${timeLeft.seconds}`.padStart(2, "0"))}
-          <span>S</span>
+          {/* @ts-ignore */}
+          <Trans
+            i18nKey="tradingRewards.countdown.value"
+            values={{
+              days: `${timeLeft.days}`.padStart(2, "0"),
+              hours: `${timeLeft.hours}`.padStart(2, "0"),
+              minutes: `${timeLeft.minutes}`.padStart(2, "0"),
+              seconds: `${timeLeft.seconds}`.padStart(2, "0"),
+            }}
+            components={[<CountDownNum />]}
+          />
         </Flex>
       </Flex>
     </Box>
   );
 };
 
-const getDate = (timestamp?: number): string => {
+const CountDownNum = (props: { children?: ReactNode }) => {
+  return (
+    <Text className="oui-text-base-contrast oui-text-sm md:oui-text-base lg:oui-text-lg ">
+      {props.children}
+    </Text>
+  );
+};
+
+const getDate = (timestamp?: number) => {
   if (!timestamp) return "";
+
   const date = new Date(timestamp);
+
+  // return format(timestamp, "MMM. d");
+
   const monthNames = [
     "Jan",
     "Feb",
