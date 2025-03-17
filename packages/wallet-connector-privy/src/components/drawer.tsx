@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { useScreen } from "@orderly.network/ui";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 interface DrawerProps {
@@ -8,38 +10,51 @@ interface DrawerProps {
 }
 
 export function Drawer({ children, isOpen, onClose }: DrawerProps) {
-  // 控制页面滚动
+  const [windowHeight, setWindowHeight] = useState(0);
+  const { isMobile } = useScreen();
+
   useEffect(() => {
+    setWindowHeight(window.innerHeight);
+
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
 
-    // 清理函数，组件卸载时恢复滚动
     return () => {
       document.body.style.overflow = 'auto';
+      window.removeEventListener('resize', handleResize);
     };
-  }, [isOpen]);
+  }, [isOpen, isMobile]);
 
   if (!isOpen) return null;
 
+  const drawerHeight = isMobile ? windowHeight : windowHeight - 72;
+
   return createPortal(
     <div className="oui-fixed oui-inset-0 oui-z-[60]">
-      {/* 遮罩层 */}
       <div 
         className="oui-absolute oui-inset-0 oui-bg-[rgba(0,0,0,0.48)] oui-transition-opacity"
         onClick={onClose}
       />
       
-      {/* 抽屉主体 */}
-      <div className={`
+      <div 
+        style={{ height: `${drawerHeight}px` }} 
+        className={`
         oui-overflow-hidden
-        oui-fixed oui-top-0 oui-top-1/2 oui-translate-y-[-50%] oui-right-0  
+        oui-fixed oui-top-0 oui-right-0  
         oui-bg-[#131519] oui-shadow-lg
         oui-border oui-border-line-12
-        oui-h-screen  oui-w-[276px]
-        md:oui-h-[calc(100vh-72px)] md:oui-w-[300px]
+        oui-w-[276px]
+        md:oui-w-[300px]
+        md:oui-top-1/2 md:oui-translate-y-[-50%]
         oui-rounded-2xl
         md:oui-rounded-0
         oui-p-4
