@@ -19,8 +19,14 @@ export function InitPrivyProvider({ privyConfig, initChains, children}: IProps) 
           ...privyConfig.appearance,
           walletChainType: 'ethereum-and-solana',
         },
+        
         embeddedWallets: {
-          createOnLogin: 'users-without-wallets'
+          ethereum: {
+            createOnLogin: 'all-users'
+          },
+          solana: {
+            createOnLogin: 'all-users'
+          }
         },
 
         defaultChain: chains[0],
