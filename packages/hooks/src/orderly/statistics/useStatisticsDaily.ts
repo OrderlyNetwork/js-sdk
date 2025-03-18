@@ -22,7 +22,7 @@ export const useStatisticsDaily = (
   const { ignoreAggregation = false } = options || {};
 
   if (!startDate || !endDate) {
-    throw new SDKError("startDate and endDate are required");
+    throw new SDKError("Start date and end date are required");
   }
 
   const getPeriod = (startDate: string, endDate: string) => {

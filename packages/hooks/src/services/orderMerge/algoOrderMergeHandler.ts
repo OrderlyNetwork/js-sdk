@@ -2,6 +2,7 @@ import {
   AlgoOrderRootType,
   AlgoOrderType,
   API,
+  SDKError,
   WSMessage,
 } from "@orderly.network/types";
 import { BaseMergeHandler } from "./baseMergeHandler";
@@ -64,7 +65,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
         order.algoOrderId === order.rootAlgoOrderId
     );
     if (rootOrderIndex === -1) {
-      throw new Error("Root order not found");
+      throw new SDKError("Root order not found");
     }
 
     const rootOrder_ = object2underscore(
@@ -77,7 +78,10 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
         return object2underscore(order) as unknown as API.AlgoOrder;
       });
 
-    if (rootOrder_.algo_type === "BRACKET" && rootOrder_.child_orders.length > 0) {
+    if (
+      rootOrder_.algo_type === "BRACKET" &&
+      rootOrder_.child_orders.length > 0
+    ) {
       // @ts-ignore
       const childOrders = this.groupBracketChildOrders([
         ...rootOrder_.child_orders,
@@ -96,7 +100,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
         order.algoType !== AlgoOrderType.TAKE_PROFIT
     );
     if (rootOrderIndex === -1) {
-      throw new Error("Root order not found");
+      throw new SDKError("Root order not found");
     }
 
     const rootOrder = innerOrders.splice(

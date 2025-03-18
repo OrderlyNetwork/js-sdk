@@ -148,7 +148,7 @@ const useOrderEntry = (
   options: Options = {}
 ): OrderEntryReturn => {
   if (!symbol) {
-    throw new SDKError("symbol is required and must be a string");
+    throw new SDKError("Symbol is required");
   }
 
   const ee = useEventEmitter();
@@ -490,7 +490,7 @@ const useOrderEntry = (
           draft.errors = errors;
         })
       );
-      throw new Error("Order validation failed");
+      throw new SDKError("Order validation failed");
     }
 
     const order = generateOrder(creator, prepareData());

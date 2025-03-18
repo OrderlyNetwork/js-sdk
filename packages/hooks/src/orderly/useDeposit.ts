@@ -12,6 +12,7 @@ import {
   MaxUint256,
   NetworkId,
   EnumTrackerKeys,
+  SDKError,
 } from "@orderly.network/types";
 import { Decimal, isTestnet } from "@orderly.network/utils";
 import { useChains } from "./useChains";
@@ -281,7 +282,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const approve = useCallback(
     async (amount?: string) => {
       if (!options?.address) {
-        throw new Error("address is required");
+        throw new SDKError("Address is required");
       }
       return account.assetsManager
         .approve({
@@ -298,7 +299,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const deposit = useCallback(async () => {
     if (!options?.address) {
-      throw new Error("address is required");
+      throw new SDKError("Address is required");
     }
     const _allowance = await account.assetsManager.getAllowance({
       address: options?.address,
@@ -307,7 +308,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     setAllowance(() => _allowance);
 
     if (new Decimal(quantity).greaterThan(_allowance)) {
-      throw new Error("Insufficient allowance");
+      throw new SDKError("Insufficient allowance");
     }
 
     // only support orderly deposit

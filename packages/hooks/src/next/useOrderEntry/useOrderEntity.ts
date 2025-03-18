@@ -19,7 +19,7 @@ export const useOrderEntity = (
   }
 ) => {
   if (!order.symbol) {
-    throw new SDKError("symbol is required");
+    throw new SDKError("Symbol is required");
   }
   const [errors, setErrors] =
     useState<
