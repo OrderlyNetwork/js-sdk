@@ -1,8 +1,8 @@
 import { OrderEntity, OrderlyOrder } from "@orderly.network/types";
 import { pick } from "ramda";
 import { BaseOrderCreator } from "./baseCreator";
-import { ValuesDepConfig, VerifyResult } from "./interface";
-import { checkNotional } from "../../utils/createOrder";
+import { ValuesDepConfig, OrderValidationResult } from "./interface";
+import { getMinNotional } from "../../utils/createOrder";
 
 export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
   create(values: OrderEntity) {
@@ -28,7 +28,7 @@ export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
   async validate(
     values: OrderlyOrder,
     configs: ValuesDepConfig
-  ): Promise<VerifyResult> {
+  ): Promise<OrderValidationResult> {
     return this.baseValidate(values, configs).then((errors) => {
       delete errors["total"];
 
@@ -39,7 +39,7 @@ export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
       const { min_notional, base_tick, quote_dp, quote_tick, base_dp } =
         symbol || {};
 
-      const notionalHintStr = checkNotional({
+      const minNotional = getMinNotional({
         base_tick,
         quote_tick,
         price: order_price,
@@ -49,10 +49,11 @@ export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
         base_dp,
       });
 
-      if (notionalHintStr !== undefined && !reduce_only) {
+      if (minNotional !== undefined && !reduce_only) {
         errors.total = {
           type: "min",
-          message: notionalHintStr,
+          message: `The order value should be greater or equal to ${minNotional} USDC`,
+          value: minNotional,
         };
       }
 

@@ -17,7 +17,7 @@ import {
 } from "@orderly.network/types";
 import { useDebouncedCallback } from "use-debounce";
 import { useEventEmitter } from "../../useEventEmitter";
-import { VerifyResult } from "../../services/orderCreator/interface";
+import { OrderValidationResult } from "../../services/orderCreator/interface";
 import { useMutation } from "../../useMutation";
 import {
   calcEstLeverage,
@@ -57,12 +57,12 @@ type OrderEntryReturn = {
     /**
      * @deprecated Use `validate` instead.
      */
-    validator: () => Promise<VerifyResult | null>;
+    validator: () => Promise<OrderValidationResult | null>;
     /**
      * Function to validate the order.
-     * @returns {Promise<VerifyResult | null>} The validation result.
+     * @returns {Promise<OrderValidationResult | null>} The validation result.
      */
-    validate: () => Promise<VerifyResult | null>;
+    validate: () => Promise<OrderValidationResult | null>;
   };
   freeCollateral: number;
   /**
@@ -87,7 +87,7 @@ type OrderEntryReturn = {
     dirty: { [K in keyof OrderlyOrder]?: boolean };
     submitted: boolean;
     validated: boolean;
-    errors: VerifyResult | null;
+    errors: OrderValidationResult | null;
   };
   /**
    * Indicates if a mutation (order creation) is in progress.
@@ -157,7 +157,7 @@ const useOrderEntry = (
     dirty: { [K in keyof OrderlyOrder]?: boolean };
     submitted: boolean;
     validated: boolean;
-    errors: VerifyResult | null;
+    errors: OrderValidationResult | null;
   }>({
     dirty: {},
     submitted: false,
@@ -169,8 +169,6 @@ const useOrderEntry = (
   const lastChangedField = useRef<keyof FullOrderState | undefined>();
   const lastOrderTypeExt = useRef<OrderType>();
   const lastLevel = useRef<OrderLevel>();
-
-  // const [errors, setErrors] = useState<VerifyResult | null>(null);
 
   const actions = useMarkPriceActions();
   const symbolConfig = useSymbolsInfo();
@@ -383,33 +381,35 @@ const useOrderEntry = (
   /**
    * Validate the order
    */
-  const validateOrder = (): Promise<VerifyResult | null> => {
-    return new Promise<VerifyResult | null>(async (resolve, reject) => {
-      const creator = getOrderCreator(formattedOrder);
+  const validateOrder = (): Promise<OrderValidationResult | null> => {
+    return new Promise<OrderValidationResult | null>(
+      async (resolve, reject) => {
+        const creator = getOrderCreator(formattedOrder);
 
-      const errors = await validate(formattedOrder, creator, prepareData());
-      const keys = Object.keys(errors);
-      if (keys.length > 0) {
-        // setErrors(errors);
-        setMeta(
-          produce((draft) => {
-            draft.errors = errors;
-          })
-        );
-        if (!meta.validated) {
-          // setMeta((prev) => ({ ...prev, validated: true }));
+        const errors = await validate(formattedOrder, creator, prepareData());
+        const keys = Object.keys(errors);
+        if (keys.length > 0) {
+          // setErrors(errors);
           setMeta(
             produce((draft) => {
-              draft.validated = true;
+              draft.errors = errors;
             })
           );
+          if (!meta.validated) {
+            // setMeta((prev) => ({ ...prev, validated: true }));
+            setMeta(
+              produce((draft) => {
+                draft.validated = true;
+              })
+            );
+          }
+          reject(errors);
         }
-        reject(errors);
+        // create order
+        const order = generateOrder(creator, prepareData());
+        resolve(order);
       }
-      // create order
-      const order = generateOrder(creator, prepareData());
-      resolve(order);
-    });
+    );
   };
 
   const { freeCollateral, totalCollateral } = useCollateral();

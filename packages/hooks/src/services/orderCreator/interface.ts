@@ -1,13 +1,19 @@
-import {
-  API,
-  OrderEntity,
-  OrderType,
-  OrderlyOrder,
-  AlgoOrderRootType,
-} from "@orderly.network/types";
+import { API, OrderType, OrderlyOrder } from "@orderly.network/types";
 
-export type VerifyResult = {
-  [P in keyof OrderlyOrder]?: { type: string; message: string };
+export type OrderValidationItem =
+  | {
+      type: "required";
+      message: string;
+      value?: never;
+    }
+  | {
+      type: "max" | "min";
+      message: string;
+      value: number | string;
+    };
+
+export type OrderValidationResult = {
+  [P in keyof OrderlyOrder]?: OrderValidationItem;
 };
 
 export type OrderFormEntity = Pick<
@@ -28,7 +34,7 @@ export interface OrderCreator<T> {
     values: T,
     configs: ValuesDepConfig
   ) => Promise<{
-    [P in keyof T]?: { type: string; message: string };
+    [P in keyof T]?: OrderValidationItem;
   }>;
 
   get type(): OrderType;
