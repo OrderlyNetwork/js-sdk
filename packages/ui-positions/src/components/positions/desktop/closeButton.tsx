@@ -17,6 +17,7 @@ import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { useSymbolContext } from "../../../providers/symbolProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
@@ -31,10 +32,10 @@ export const CloseButton = () => {
     errors,
   } = usePositionsRowContext();
   const { base, quote } = useSymbolContext();
-
   const [orderConfirm] = useLocalStorage("orderly_order_confirm", true);
 
   const { t } = useTranslation();
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   const onConfirm = () => {
     return onSubmit()
@@ -84,8 +85,8 @@ export const CloseButton = () => {
         loading={submitting}
         onClick={(e) => {
           e.stopPropagation();
-          const quantityMsg = errors?.order_quantity?.message;
-          const priceMsg = errors?.order_price?.message;
+          const quantityMsg = parseErrorMsg("order_quantity");
+          const priceMsg = parseErrorMsg("order_price");
           if (quantityMsg || priceMsg) {
             toast.error(quantityMsg ?? priceMsg);
             return;

@@ -27,6 +27,9 @@ import {
 } from "./pnlInput/pnlInputContext";
 import { ExclamationFillIcon } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { OrderValidationResult } from "@orderly.network/hooks";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+
 type OrderValueKeys = keyof OrderlyOrder;
 
 type Est_Values = PNL_Values & {
@@ -44,7 +47,7 @@ export const OrderTPSL = (props: {
   values: TPSL_Values;
   orderType: OrderType;
   isReduceOnly?: boolean;
-  errors: any;
+  errors: OrderValidationResult | null;
   quote_dp: number | undefined;
 }) => {
   // const [open, setOpen] = useState(false);
@@ -140,10 +143,12 @@ const TPSLInputForm = React.forwardRef<
   {
     onChange: (key: OrderValueKeys, value: any) => void;
     values: TPSL_Values;
-    errors: Record<string, { message: string }> | null;
+    errors: OrderValidationResult | null;
     quote_dp: number | undefined;
   }
 >((props, ref) => {
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+
   return (
     <div
       ref={ref}
@@ -154,7 +159,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
           type={"TP"}
-          error={props.errors ? props.errors["tp_trigger_price"]?.message : ""}
+          error={parseErrorMsg("tp_trigger_price")}
           onChange={props.onChange}
           values={props.values.tp}
           quote_dp={props.quote_dp}
@@ -168,7 +173,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.sl} type={"SL"}>
         <TPSLInputRow
           type={"SL"}
-          error={props.errors ? props.errors["sl_trigger_price"]?.message : ""}
+          error={parseErrorMsg("sl_trigger_price")}
           onChange={props.onChange}
           values={props.values.sl}
           quote_dp={props.quote_dp}

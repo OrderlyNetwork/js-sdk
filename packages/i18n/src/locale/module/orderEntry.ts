@@ -46,7 +46,34 @@ export const orderEntry = {
   "orderEntry.estPnL": "Est.PnL",
 
   "orderEntry.tpsl": "TP/SL",
-  "orderEntry.tpsl.tips": "TP/SL triggers at the specified mark price and executes as a market order. By default, it applies to the entire position. Adjust settings in open positions for partial TP/SL.",
-};
+  "orderEntry.tpsl.tips":
+    "TP/SL triggers at the specified mark price and executes as a market order. By default, it applies to the entire position. Adjust settings in open positions for partial TP/SL.",
+
+  "orderEntry.orderQuantity.error.required": "Quantity is required",
+  "orderEntry.orderQuantity.error.min":
+    "Quantity must be greater than {{value}}",
+  "orderEntry.orderQuantity.error.max": "Quantity must be less than {{value}}",
+
+  "orderEntry.orderPrice.error.required": "Price is required",
+  "orderEntry.orderPrice.error.min": "Price must be greater than {{value}}",
+  "orderEntry.orderPrice.error.max": "Price must be less than {{value}}",
+
+  "orderEntry.triggerPrice.error.required": "Trigger price is required",
+  "orderEntry.triggerPrice.error.min":
+    "Trigger price must be greater than {{value}}",
+  "orderEntry.triggerPrice.error.max":
+    "Trigger price must be less than {{value}}",
+
+  "orderEntry.tpTriggerPrice.error.min":
+    "TP Price must be greater than {{value}}",
+  "orderEntry.tpTriggerPrice.error.max": "TP Price must be less than {{value}}",
+
+  "orderEntry.slTriggerPrice.error.min":
+    "SL Price must be greater than {{value}}",
+  "orderEntry.slTriggerPrice.error.max": "SL Price must be less than {{value}}",
+
+  "orderEntry.total.error.min":
+    "The order value should be greater or equal to {{value}} USDC",
+} as const;
 
 export type OrderEntry = typeof orderEntry;

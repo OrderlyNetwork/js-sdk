@@ -27,7 +27,7 @@ import { useOrderListContext } from "../orderListContext";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { useSymbolContext } from "../symbolProvider";
 import { grayCell } from "../../../utils/util";
-import { useMaxQty, useOrderEntry, utils } from "@orderly.network/hooks";
+import { useMaxQty, utils } from "@orderly.network/hooks";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
 

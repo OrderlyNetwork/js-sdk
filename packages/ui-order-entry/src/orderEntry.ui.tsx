@@ -1,5 +1,4 @@
 import { type uesOrderEntryScriptReturn } from "./useOrderEntry.script";
-import { AuthGuard } from "@orderly.network/ui-connector";
 import {
   Box,
   Button,
@@ -35,7 +34,6 @@ import {
   useState,
 } from "react";
 import {
-  AccountStatusEnum,
   API,
   BBOOrderType,
   OrderLevel,
@@ -49,13 +47,14 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { OrderValidationResult, useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
 import { ApiError } from "@orderly.network/types";
 import { BBOStatus } from "./utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
@@ -478,7 +477,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
 const OrderQuantityInput = (props: {
   type: OrderType;
   symbolInfo: API.SymbolExt;
-  errors: any;
+  errors: OrderValidationResult | null;
   values: {
     quantity?: string;
     price?: string;
@@ -512,12 +511,7 @@ const OrderQuantityInput = (props: {
   const { type, symbolInfo, errors, values, onFocus, onBlur, bbo } = props;
   const { t } = useTranslation();
 
-  const parseErrorMsg = (key: string) => {
-    if (errors && errors[key]) {
-      return errors[key].message;
-    }
-    return "";
-  };
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   const readOnly = bbo.bboStatus === BBOStatus.ON;
 

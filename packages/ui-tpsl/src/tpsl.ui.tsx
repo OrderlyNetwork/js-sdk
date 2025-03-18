@@ -23,6 +23,8 @@ import { useLocalStorage, utils } from "@orderly.network/hooks";
 import { API, OrderSide } from "@orderly.network/types";
 import { transSymbolformString } from "@orderly.network/utils";
 import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { OrderValidationResult } from "@orderly.network/hooks";
 
 export type TPSLProps = {
   onCancel?: () => void;
@@ -42,6 +44,8 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
   } = props;
   const { t } = useTranslation();
 
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+
   return (
     <div id="orderly-tp_sl-order-edit-content">
       {(!props.isEditing || (props.isEditing && !props.isPosition)) && (
@@ -55,7 +59,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             quote={symbolInfo("base")}
             isEditing={props.isEditing}
             isPosition={isPosition}
-            errorMsg={props.errors?.quantity?.message}
+            errorMsg={parseErrorMsg("quantity")}
           />
           <Divider my={4} intensity={8} />
         </>
@@ -316,9 +320,11 @@ const TPSLPrice = (props: {
   sl_values: PNL_Values;
   tp_trigger_price?: number | string;
   sl_trigger_price?: number | string;
-  errors: Record<string, { message: string }> | null;
+  errors: OrderValidationResult | null;
 }) => {
   const { t } = useTranslation();
+
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
 
   const onPnLChange = (key: string, value: number | string) => {
     // console.log(key, value);
@@ -354,7 +360,7 @@ const TPSLPrice = (props: {
           <PriceInput
             type={"TP"}
             value={props.tp_trigger_price}
-            error={props.errors?.tp_trigger_price?.message}
+            error={parseErrorMsg("tp_trigger_price")}
             onValueChange={(value) => {
               props.onPriceChange("tp_trigger_price", value);
             }}
@@ -396,7 +402,7 @@ const TPSLPrice = (props: {
           <PriceInput
             type={"SL"}
             value={props.sl_trigger_price}
-            error={props.errors?.sl_trigger_price?.message}
+            error={parseErrorMsg("sl_trigger_price")}
             onValueChange={(value) => {
               props.onPriceChange("sl_trigger_price", value);
             }}

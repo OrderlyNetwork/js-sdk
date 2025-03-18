@@ -19,23 +19,18 @@ import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
 import { utils } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
   const isBuy = item.side === OrderSide.BUY;
   const { t } = useTranslation();
 
-  // useEffect(() => {
-  //   if (props.errors?.order_price?.message) {
-  //     toast.error(props.errors?.order_price?.message);
-  //   } else if (props.errors?.order_quantity?.message) {
-  //     toast.error(props.errors?.order_quantity?.message);
-  //   } else if (props.errors?.total?.message) {
-  //     toast.error(props.errors?.total?.message);
-  //   } else if (props.errors?.trigger_price?.message) {
-  //     toast.error(props.errors?.trigger_price?.message);
-  //   }
-  // }, [props.errors]);
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors!);
+
+  const orderQuantityErrorMsg = parseErrorMsg("order_quantity");
+  const orderPriceErrorMsg = parseErrorMsg("order_price");
+  const triggerPriceErrorMsg = parseErrorMsg("trigger_price");
 
   const percentages =
     props.quantity && props.maxQty
@@ -107,9 +102,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                   {props.quote}
                 </Text>
               }
-              color={
-                props.errors?.trigger_price?.message ? "danger" : undefined
-              }
+              color={triggerPriceErrorMsg ? "danger" : undefined}
               align="right"
               fullWidth
               autoComplete="off"
@@ -119,7 +112,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               ]}
               value={props.triggerPrice}
               onValueChange={(e) => props.setTriggerPrice(e)}
-              tooltip={props.errors?.trigger_price?.message}
+              tooltip={triggerPriceErrorMsg}
               tooltipProps={{
                 content: {
                   className: "oui-bg-base-6 oui-text-base-contrast-80",
@@ -132,7 +125,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 input: "oui-text-base-contrast-98 oui-w-full",
                 root: cn(
                   "oui-outline-line-12",
-                  props.errors?.trigger_price?.message && "oui-outline-danger"
+                  triggerPriceErrorMsg && "oui-outline-danger"
                 ),
               }}
             />
@@ -148,7 +141,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 {props.quote}
               </Text>
             }
-            color={props.errors?.order_price?.message ? "danger" : undefined}
+            color={orderPriceErrorMsg ? "danger" : undefined}
             align="right"
             fullWidth
             autoComplete="off"
@@ -159,7 +152,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             disabled={!props.priceEdit}
             value={props.isStopMarket ? t("orders.price.market") : props.price}
             onValueChange={(e) => props.setPrice(e)}
-            tooltip={props.errors?.order_price?.message}
+            tooltip={orderPriceErrorMsg}
             tooltipProps={{
               content: {
                 className: "oui-bg-base-5",
@@ -172,7 +165,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               input: "oui-text-base-contrast-98",
               root: cn(
                 "oui-outline-line-12",
-                props.errors?.order_price?.message && "oui-outline-danger"
+                orderPriceErrorMsg && "oui-outline-danger"
               ),
             }}
           />
@@ -187,7 +180,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 {props.base}
               </Text>
             }
-            color={props.errors?.order_quantity?.message ? "danger" : undefined}
+            color={orderQuantityErrorMsg ? "danger" : undefined}
             align="right"
             fullWidth
             autoComplete="off"
@@ -201,7 +194,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               props.setQuantity(e);
             }}
             onBlur={(event) => onBlur(event.target.value)}
-            tooltip={props.errors?.order_quantity?.message}
+            tooltip={orderQuantityErrorMsg}
             tooltipProps={{
               content: {
                 className: "oui-bg-base-6",
@@ -214,7 +207,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               input: "oui-text-base-contrast-98",
               root: cn(
                 "oui-outline-line-12",
-                props.errors?.order_quantity?.message && "oui-outline-danger"
+                orderQuantityErrorMsg && "oui-outline-danger"
               ),
             }}
           />
