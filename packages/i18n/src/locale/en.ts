@@ -14,6 +14,7 @@ import { tradingView } from "./module/tradingView";
 import { connector } from "./module/connector";
 import { transfer } from "./module/transfer";
 import { affiliate } from "./module/affiliate";
+import { ui } from "./module/ui";
 
 export const en = {
   "common.cancel": "Cancel",
@@ -35,7 +36,6 @@ export const en = {
   "common.select.90d": "90D",
 
   "common.column.date": "Date",
-  
 
   "common.column.price": "Price",
   "common.column.quantity": "Quantity",
@@ -96,6 +96,7 @@ export const en = {
   ...connector,
   ...transfer,
   ...affiliate,
+  ...ui,
 } as const;
 
 export type EN = typeof en;
