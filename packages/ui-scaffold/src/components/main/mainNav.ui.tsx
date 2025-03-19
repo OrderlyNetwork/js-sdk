@@ -12,6 +12,7 @@ import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { LinkDeviceWidget } from "./linkDevice";
+import { LanguageSwitcherWidget } from "../languageSwitcher";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
@@ -98,6 +99,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
             <LinkDeviceWidget />
           </>
         )}
+        <LanguageSwitcherWidget />
         <ChainMenuWidget />
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>

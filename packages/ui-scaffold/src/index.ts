@@ -26,3 +26,4 @@ export type { SideBarProps, SideMenuItem } from "./components/sidebar";
 export { Scaffold } from "./components/scaffold";
 
 export { MainLogo } from "./components/main/mainLogo";
+export * from "./components/languageSwitcher";
