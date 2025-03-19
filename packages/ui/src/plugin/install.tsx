@@ -45,8 +45,10 @@ type ExtensionRenderComponentType<Props> =
 export const installExtension = <Props,>(
   options: ExtensionOptions<Props>
 ): ((component: ExtensionRenderComponentType<Props>) => void) => {
+  
   return (component) => {
     const registry = OrderlyExtensionRegistry.getInstance();
+    console.log("[plugin] install:", options.name);
 
     registry.register<Props>({
       name: options.name,

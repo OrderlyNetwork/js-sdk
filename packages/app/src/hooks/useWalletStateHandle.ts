@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useConfig, WalletState } from "@orderly.network/hooks";
+import { useConfig, useEventEmitter, useTrack, WalletState } from "@orderly.network/hooks";
 import {
   useAccount,
   useChains,
@@ -16,6 +16,7 @@ import {
   SDKError,
   ChainNamespace,
   NetworkId,
+  EnumTrackerKeys,
 } from "@orderly.network/types";
 import { getLinkDeviceData } from "./useLinkDevice";
 
@@ -44,14 +45,17 @@ export const useWalletStateHandle = (options: {
     throw new SDKError("Please provide a wallet connector provider");
   }
 
+  const ee = useEventEmitter();
   const isManualConnect = useRef<boolean>(false);
-
+  const brokerId = useConfig("brokerId");
   const { account, state: accountState } = useAccount();
   const keyStore = useKeyStore();
   const networkId = useConfig("networkId") as NetworkId;
   const [chains, { checkChainSupport }] = useChains();
 
+
   const [unsupported, setUnsupported] = useState(false);
+  const { track, setTrackUserId } = useTrack();
 
   // current connected wallet address
   const currentWalletAddress = useMemo<string | undefined>(() => {
@@ -63,13 +67,19 @@ export const useWalletStateHandle = (options: {
     { id: number; namespace: string } | undefined
   >(() => {
     const id = connectedWallet?.chains?.[0]?.id;
-    const namespace = connectedWallet?.chains?.[0]?.namespace;
+    const namespace = connectedWallet?.chains?.[0]?.namespace as string;
     if (typeof id === "undefined") return undefined;
     return {
       id: parseChainIdToNumber(id),
       namespace,
     };
   }, [connectedWallet]);
+
+  useEffect(() => {
+    if (accountState.status >= AccountStatusEnum.EnableTrading && account.accountId) {
+      setTrackUserId( account.accountId!);
+    }
+  }, [account, accountState]);
 
   useEffect(() => {
     if (!connectedChain) {
@@ -153,8 +163,12 @@ export const useWalletStateHandle = (options: {
           namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
         },
         wallet: {
-          name: connectedWallet.label,
+          name: connectedWallet?.label ?? "",
         },
+      });
+      track(EnumTrackerKeys.walletConnect, {
+        wallet: connectedWallet?.label ?? "",
+        network: currentChain!.namespace.toUpperCase() as ChainNamespace,
       });
 
       // save wallet connector info to local storage
@@ -162,7 +176,7 @@ export const useWalletStateHandle = (options: {
         localStorage.setItem(
           WALLET_KEY,
           JSON.stringify({
-            label: connectedWallet.label,
+            label: connectedWallet?.label ?? "",
           })
         );
       });
@@ -229,6 +243,7 @@ export const useWalletStateHandle = (options: {
             localStorage.removeItem("orderly_link_device");
             await account.disconnect();
           }
+
           const status = await account.setAddress(wallet.accounts[0].address, {
             provider: wallet.provider,
             chain: {
@@ -240,6 +255,10 @@ export const useWalletStateHandle = (options: {
               name: wallet.label,
             },
             // label: ,
+          });
+          track(EnumTrackerKeys.walletConnect, {
+            wallet: wallet.label,
+            network: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
           });
           console.log("-- xxxxxx status", status);
 

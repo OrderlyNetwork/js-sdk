@@ -394,7 +394,9 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     baseInterval?: number,
     maxInterval?: number,
     maxRetries?: number
-  ): Promise<any> { }
+  ): Promise<any> {
+    return Promise.resolve({status: 1})
+   }
 }
 
 export { DefaultSolanaWalletAdapter };

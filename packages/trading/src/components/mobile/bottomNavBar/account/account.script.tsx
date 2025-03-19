@@ -2,6 +2,9 @@ import { modal } from "@orderly.network/ui";
 import { AccountSheetWidget } from "../../accountSheet";
 import { useTradingPageContext } from "../../../../provider/context";
 import { useAccount } from "@orderly.network/hooks";
+import { AccountState as AccountStateType } from "@orderly.network/core";
+
+
 
 export const useAccountScript = () => {
   const { referral, tradingRewards, bottomSheetLeading } =
@@ -19,7 +22,7 @@ export const useAccountScript = () => {
   return {
     onShowAccountSheet,
     address: account.address,
-    status: state.status,
+    state: state as AccountStateType,
   };
 };
 

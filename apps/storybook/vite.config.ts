@@ -117,6 +117,10 @@ export default defineConfig({
         "../../packages/wallet-connector/src"
       ),
       "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
+      "@orderly.network/wallet-connector-privy": resolve(
+        __dirname,
+        "../../packages/wallet-connector-privy/src"
+      ),
     },
   },
 });

@@ -1,4 +1,4 @@
-import { FC, createContext, PropsWithChildren, useContext } from "react";
+import { FC, createContext, PropsWithChildren, useContext, useEffect } from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useSettleEvent } from "../hooks/useSettleEvent";
@@ -7,9 +7,13 @@ import {
   RestrictedInfoOptions,
   useRestrictedInfo,
   RestrictedInfoReturns,
+  useTrack,
+  useEventEmitter,
+  useTrackingInstance,
 } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
+import { TrackerListenerKeyMap } from "@orderly.network/types";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -46,6 +50,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
     props.defaultChain
   );
   useLinkDevice();
+  useTrackingInstance();
 
   const { connectWallet, wrongNetwork } = useWalletStateHandle({
     // onChainChanged: props.onChainChanged,
@@ -56,7 +61,6 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   useSettleEvent();
   useWalletConnectError();
 
-  // const { networkStatus } = useAppState();
   const restrictedInfo = useRestrictedInfo(props.restrictedInfo);
 
   const disabledConnect = restrictedInfo.restrictedOpen;
