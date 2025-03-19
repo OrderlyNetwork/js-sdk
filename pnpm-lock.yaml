@@ -1346,6 +1346,9 @@ importers:
       i18next:
         specifier: ^24.2.2
         version: 24.2.2(typescript@5.7.3)
+      i18next-browser-languagedetector:
+        specifier: ^8.0.4
+        version: 8.0.4
       react-i18next:
         specifier: ^15.4.1
         version: 15.4.1(i18next@24.2.2(typescript@5.7.3))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -2501,6 +2504,9 @@ importers:
       '@orderly.network/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../types
@@ -12332,6 +12338,9 @@ packages:
 
   i18next-browser-languagedetector@7.2.2:
     resolution: {integrity: sha512-6b7r75uIJDWCcCflmbof+sJ94k9UQO4X0YR62oUfqGI/GjCLVzlCwu8TFdRZIqVLzWbzNcmkmhfqKEr4TLz4HQ==}
+
+  i18next-browser-languagedetector@8.0.4:
+    resolution: {integrity: sha512-f3frU3pIxD50/Tz20zx9TD9HobKYg47fmAETb117GKGPrhwcSSPJDoCposXlVycVebQ9GQohC3Efbpq7/nnJ5w==}
 
   i18next@22.5.1:
     resolution: {integrity: sha512-8TGPgM3pAD+VRsMtUMNknRz3kzqwp/gPALrWMsDnmC1mKqJwpWyooQRLMcbTwq8z8YwSmuj+ZYvc+xCuEpkssA==}
@@ -33711,6 +33720,10 @@ snapshots:
   husky@8.0.0: {}
 
   i18next-browser-languagedetector@7.2.2:
+    dependencies:
+      '@babel/runtime': 7.26.7
+
+  i18next-browser-languagedetector@8.0.4:
     dependencies:
       '@babel/runtime': 7.26.7
 

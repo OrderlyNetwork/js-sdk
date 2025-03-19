@@ -19,6 +19,8 @@ export const scaffold = {
 
   "scaffold.restrictedInfo.content.default":
     " You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country.",
+
+  "scaffold.languageSwitcher.title": "Language",
 };
 
 export type Scaffold = typeof scaffold;

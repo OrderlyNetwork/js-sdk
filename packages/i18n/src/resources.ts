@@ -1,10 +1,12 @@
 import { en } from "./locale/en";
 
 export const defaultNS = "translation";
+export const defaultLng = "en";
 
-// translation catalog
+export type LocaleMessages = typeof en;
+
 export const resources = {
-  en: { [defaultNS]: en },
+  [defaultLng]: { [defaultNS]: en },
 };
 
 export type Resources = typeof resources;

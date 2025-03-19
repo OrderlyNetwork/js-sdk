@@ -97,6 +97,4 @@ export const en = {
   ...transfer,
   ...affiliate,
   ...ui,
-} as const;
-
-export type EN = typeof en;
+};

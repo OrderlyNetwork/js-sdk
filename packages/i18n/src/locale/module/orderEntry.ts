@@ -74,6 +74,6 @@ export const orderEntry = {
 
   "orderEntry.total.error.min":
     "The order value should be greater or equal to {{value}} USDC",
-} as const;
+};
 
 export type OrderEntry = typeof orderEntry;

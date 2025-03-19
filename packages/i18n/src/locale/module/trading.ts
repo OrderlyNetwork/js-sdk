@@ -113,6 +113,6 @@ export const trading = {
   "trading.asset&Margin": "Asset & Margin",
 
   "trading.fundingRate.predFundingRate": "Pred. funding rate",
-} as const;
+};
 
 export type Trading = typeof trading;
