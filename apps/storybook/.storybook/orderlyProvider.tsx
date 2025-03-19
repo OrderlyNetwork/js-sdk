@@ -55,46 +55,8 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
-const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
-  console.log("-- provider", configStore, VITE_ENV);
 
-  return (
-    <WalletConnectorProvider
-      solanaInitial={{
-        wallets: wallets,
-        network: "mainnet-beta" as WalletAdapterNetwork,
-        // network: WalletAdapterNetwork.Devnet,
-      }}
-
-    // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
-    >
-      <OrderlyAppProvider
-        // brokerId="orderly"
-        // brokerName="Orderly"
-        // networkId="testnet"
-        configStore={configStore}
-        appIcons={config.orderlyAppProvider.appIcons}
-        restrictedInfo={config.orderlyAppProvider.restrictedInfo}
-        // overrides={{
-        //   tabs: {
-        //     variant: "text",
-        //   },
-        //   chainSelector: {
-        //     showTestnet: false,
-        //   },
-        // }}
-        // defaultChain={{
-        //   mainnet: { id: 900900900 },
-        //   testnet: { id: 901901901 },
-        // }}
-      >
-        {props.children}
-      </OrderlyAppProvider>
-    </WalletConnectorProvider>
-  );
-};
-
-export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
+export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   return (
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
@@ -137,16 +99,9 @@ export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
       }}
     >
       <OrderlyAppProvider
-        // brokerId="orderly"
-        // brokerName="Orderly"
-        // networkId="testnet"
-        configStore={configStore}
-        appIcons={config.orderlyAppProvider.appIcons}
-      // overrides={{
-      //   tabs: {
-      //     variant: "text",
-      //   },
-      // }}
+    configStore={configStore}
+    appIcons={config.orderlyAppProvider.appIcons}
+    restrictedInfo={config.orderlyAppProvider.restrictedInfo}
       >
         {props.children}
       </OrderlyAppProvider>
