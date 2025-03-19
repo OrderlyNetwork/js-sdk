@@ -208,8 +208,9 @@ const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
         weight="regular"
         className="oui-text-center oui-mt-3"
       >
-        Open pro.woofi.com on your mobile device and scan the QR code to link
-        this wallet. For security, the QR code will expire in 60 seconds. <br />
+        Open {window.location.hostname} on your mobile device and scan the QR
+        code to link this wallet. For security, the QR code will expire in 60
+        seconds. <br />
         The QR code allows mobile trading but does not enable withdrawals.
         Ensure you are not sharing your screen or any screenshots of the QR
         code.
