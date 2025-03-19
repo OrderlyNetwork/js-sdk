@@ -220,7 +220,7 @@ function formatShareTime(input: number | Date): string {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    hourCycle: "h24",
+    hourCycle: "h23",
   };
 
   const formatter = new Intl.DateTimeFormat("en-US", options);
@@ -255,6 +255,7 @@ function formatOpenTime(input: number | Date): string {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    hourCycle: "h23",
   };
 
   const formatter = new Intl.DateTimeFormat("en-US", options);

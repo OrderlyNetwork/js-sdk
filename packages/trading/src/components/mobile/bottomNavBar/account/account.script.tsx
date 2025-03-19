@@ -3,6 +3,7 @@ import { AccountSheetWidget } from "../../accountSheet";
 import { useTradingPageContext } from "../../../../provider/context";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { AccountState as AccountStateType } from "@orderly.network/core";
 
 export const useAccountScript = () => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ export const useAccountScript = () => {
   return {
     onShowAccountSheet,
     address: account.address,
-    status: state.status,
+    state: state as AccountStateType,
   };
 };
 

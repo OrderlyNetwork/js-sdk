@@ -1,5 +1,11 @@
 import React, { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import {
+  Network,
+  WalletConnectorPrivyProvider,
+  wagmiConnectors,
+  wagmi,
+} from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
 import {
@@ -103,6 +109,63 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         </OrderlyAppProvider>
       </WalletConnectorProvider>
     </LocaleProvider>
+  );
+};
+
+export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
+  return (
+    <WalletConnectorPrivyProvider
+      network={Network.testnet}
+      // customChains={{mainnet: [], testnet: []}}
+      privyConfig={{
+        appid: "cm50h5kjc011111gdn7i8cd2k",
+        appearance: {
+          theme: "dark",
+          accentColor: "#181C23",
+          logo: "/orderly-logo.svg",
+          loginMethods: ["email", "google", "twitter"],
+        },
+      }}
+      wagmiConfig={{
+        connectors: [
+          wagmiConnectors.injected(),
+          wagmiConnectors.walletConnect({
+            projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
+            showQrModal: true,
+            storageOptions: {},
+            metadata: {
+              name: "Orderly Network",
+              description: "Orderly Network",
+              url: "https://orderly.network",
+              icons: ["https://oss.orderly.network/static/sdk/chains.png"],
+            },
+          }),
+        ],
+      }}
+      solanaConfig={{
+        mainnetRpc: "",
+        devnetRpc: "https://api.devnet.solana.com",
+        wallets: wallets,
+        onError: (error: WalletError, adapter?: Adapter) => {
+          console.log("-- error", error, adapter);
+        },
+      }}
+    >
+      <OrderlyAppProvider
+        // brokerId="orderly"
+        // brokerName="Orderly"
+        // networkId="testnet"
+        configStore={configStore}
+        appIcons={config.orderlyAppProvider.appIcons}
+        // overrides={{
+        //   tabs: {
+        //     variant: "text",
+        //   },
+        // }}
+      >
+        {props.children}
+      </OrderlyAppProvider>
+    </WalletConnectorPrivyProvider>
   );
 };
 

@@ -18,6 +18,7 @@ import { Decimal, isTestnet } from "@orderly.network/utils";
 import { useChains } from "./useChains";
 import { useConfig } from "../useConfig";
 import { useDebouncedCallback } from "use-debounce";
+import { useTrack } from "../useTrack";
 
 export type useDepositOptions = {
   // from address
@@ -44,6 +45,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   const [allowance, setAllowance] = useState("0");
 
   const { account, state } = useAccount();
+  const { track } = useTrack();
 
   const prevAddress = useRef<string | undefined>();
   const getBalanceListener = useRef<ReturnType<typeof setTimeout>>();
@@ -318,7 +320,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
-        ee.emit(EnumTrackerKeys.DEPOSIT_SUCCESS, {
+        track(EnumTrackerKeys.depositSuccess, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos.name,
           quantity,
@@ -328,7 +330,8 @@ export const useDeposit = (options?: useDepositOptions) => {
         return res;
       })
       .catch((e) => {
-        ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
+       
+        track(EnumTrackerKeys.depositFailed, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos?.name,
           msg: JSON.stringify(e),

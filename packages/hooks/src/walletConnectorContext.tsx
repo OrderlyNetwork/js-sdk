@@ -30,7 +30,7 @@ export interface WalletConnectorContextState {
   setChain: (options: { chainId: string | number }) => Promise<any>;
   chains: any[];
   // switchChain: (options: { chainId: string }) => Promise<any>;
-  wallet: WalletState;
+  wallet: WalletState | null;
   connectedChain: ConnectedChain | null;
 
   settingChain: boolean;

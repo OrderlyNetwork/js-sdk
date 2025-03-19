@@ -142,7 +142,9 @@ export const PnLBarChart = (props: PnLChartProps) => {
         )}
 
         <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
+        {/* @ts-ignore */}
         <ReferenceLine y={0} stroke="rgba(0,0,0,0.04)" />
+        {/* @ts-ignore */}
 
         {!invisible && (
           // @ts-ignore

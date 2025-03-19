@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -39,6 +39,7 @@
     "@testing-library/react": "^14.2.1",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.5.3",
+    "@types/lodash": "^4.17.7",
     "@types/ramda": "^0.29.3",
     "@types/react": "^18.2.38",
     "@web3-onboard/common": "2.4.2",
@@ -54,7 +55,7 @@
   },
   "dependencies": {
     "@akamfoad/qr": "^0.4.0",
-    "@amplitude/analytics-browser": "^2.11.10",
+    "@amplitude/analytics-browser": "2.11.13",
     "@orderly.network/core": "workspace:*",
     "@orderly.network/default-evm-adapter": "workspace:*",
     "@orderly.network/default-solana-adapter": "workspace:*",
@@ -64,6 +65,7 @@
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/web3-provider-ethers": "workspace:*",
     "immer": "^10.1.1",
+    "lodash": "^4.17.21",
     "ramda": "^0.29.0",
     "swr": "2.2.4",
     "use-constant": "^1.1.1",

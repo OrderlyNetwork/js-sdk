@@ -7,6 +7,7 @@ import { BalanceWidget } from "./balance";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { ScanQRCodeWidget } from "./scanQRCode";
 import { useTranslation } from "@orderly.network/i18n";
+import { MobileAccountMenuExtension } from "./account/account.widget";
 
 export const BottomNavBar: FC<BottomNavBarState> = (props) => {
   const renderContent = () => {
@@ -46,7 +47,7 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
         <Flex gap={2}>
           {showScanQRCode && <ScanQRCodeWidget />}
           {renderContent()}
-          <AccountWidget />
+          <MobileAccountMenuExtension />
         </Flex>
       </Flex>
       <div className="oui-h-[env(safe-area-inset-bottom)]" />

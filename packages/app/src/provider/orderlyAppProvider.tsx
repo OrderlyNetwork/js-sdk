@@ -11,7 +11,7 @@ import { useBootstrap } from "../hooks/useBootstrap";
 import {
   ConfigProviderProps,
   OrderlyConfigProvider,
-  OrderlyTrackerProvider,
+  useTrack,
 } from "@orderly.network/hooks";
 import { AppStateProvider, AppStateProviderProps } from "./appContext";
 import { AppConfigProvider } from "./configContext";
@@ -33,6 +33,7 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
     ...configProps
   } = props;
 
+  useTrack();
   useBootstrap();
   useExecutionReport();
   const uiLocale = useUILocale();
@@ -50,13 +51,11 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
             defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
           >
-            <OrderlyTrackerProvider>
-              <UILocaleProvider locale={uiLocale}>
-                <TooltipProvider delayDuration={300}>
-                  <ModalProvider>{props.children}</ModalProvider>
-                </TooltipProvider>
-              </UILocaleProvider>
-            </OrderlyTrackerProvider>
+            <UILocaleProvider locale={uiLocale}>
+              <TooltipProvider delayDuration={300}>
+                <ModalProvider>{props.children}</ModalProvider>
+              </TooltipProvider>
+            </UILocaleProvider>
           </AppStateProvider>
           <Toaster />
         </OrderlyConfigProvider>
