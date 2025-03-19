@@ -2,6 +2,7 @@
   "extends": "tsconfig/base.json",
   "compilerOptions": {
     "target": "ES2022",
+    "skipLibCheck": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
 }

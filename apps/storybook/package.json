@@ -40,6 +40,7 @@
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/wallet-connector": "workspace:*",
+    "@orderly.network/wallet-connector-privy": "workspace:*",
     "@solana-mobile/wallet-adapter-mobile": "2.1.4",
     "@solana/wallet-adapter-base": "0.9.23",
     "@solana/wallet-adapter-wallets": "0.19.32",

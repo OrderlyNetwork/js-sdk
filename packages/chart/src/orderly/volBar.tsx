@@ -129,6 +129,7 @@ export const VolBarChart = (props: VolChartProps) => {
             strokeOpacity={0.08}
             repeatCount={6}
           />
+          {/* @ts-ignore */}
           <ReferenceLine y={0} stroke="#000" />
           {/* @ts-ignore */}
           <Bar dataKey="volume" shape={<RoundedRectangle />} minPointSize={1}>
