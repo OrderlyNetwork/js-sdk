@@ -18,8 +18,8 @@ import { isValidElement } from "react";
 import { ExpandableContext, RouterAdapter } from "./scaffoldContext";
 import { checkChainSupport } from "../utils/chain";
 import { FooterProps, FooterWidget } from "./footer";
-import { MaintenanceTipsWidget } from "./maintenanceTips";
 import { RestrictedInfoWidget } from "./restrictedInfo";
+import { AnnouncementTipsWidget } from "./announcement-tips";
 
 export type LayoutProps = {
   /**
@@ -127,7 +127,7 @@ export const Scaffold = (props: PropsWithChildren<LayoutProps>) => {
             "oui-min-w-[1018px]"
           )}
         >
-          {!isMobile && <MaintenanceTipsWidget />}
+          {!isMobile && <AnnouncementTipsWidget />}
         </div>
 
         <RestrictedInfoWidget

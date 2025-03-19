@@ -45,6 +45,11 @@ export declare namespace API {
     "24h_volume": number;
   }
 
+  export interface Announcement {
+    announcement_id: string;
+    message: string;
+    url?: string;
+  }
   /**
    * v1/public/info
    */
@@ -584,4 +589,11 @@ export declare namespace WSMessage {
     rootAlgoStatus: string;
     algoStatus: string;
   }
+
+  export interface Announcement {
+    announcement_id: string;
+    message: string;
+    url?: string;
+  }
+
 }
