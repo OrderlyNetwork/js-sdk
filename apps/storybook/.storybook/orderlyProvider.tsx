@@ -97,6 +97,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 export const OrderlyProviderPrivy: FC<{ children: ReactNode }> = (props) => {
   return (
     <WalletConnectorPrivyProvider
+      termsOfUse="https://learn.woo.org/legal/terms-of-use"
       network={Network.testnet}
       // customChains={{mainnet: [], testnet: []}}
       privyConfig={{

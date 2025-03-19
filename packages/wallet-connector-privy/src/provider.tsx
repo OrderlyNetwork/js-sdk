@@ -65,6 +65,7 @@ interface WalletConnectorPrivyContextType {
     rpcUrl: string | null;
     network: WalletAdapterNetwork | null;
   } | null) => void;
+  termsOfUse: string;
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
@@ -80,6 +81,7 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   setNetwork: () => { },
   solanaInfo: null,
   setSolanaInfo: () => { },
+  termsOfUse: "",
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -90,9 +92,11 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   wagmiConfig: InitWagmi;
   solanaConfig: InitSolana;
   network: Network;
-  customChains?: Chains
+  customChains?: Chains;
+  termsOfUse: string;
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
+  const [termsOfUse] = useState<string>(props.termsOfUse);
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
@@ -152,7 +156,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     setNetwork,
     solanaInfo,
     setSolanaInfo,
-  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo]);
+    termsOfUse,
+  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo, termsOfUse]);
 
 
   useEffect(() => {
