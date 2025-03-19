@@ -21,6 +21,10 @@ import {
 import config from "../src/config";
 import { Chains } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
+import { LocaleMessages, LocaleProvider, en } from "@orderly.network/i18n";
+import { Resources } from "@orderly.network/i18n/src/provider";
+import { zhHans } from "./locale/zh-Hans";
+import { zhTW } from "./locale/zh-TW";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -55,43 +59,50 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
+const resources: Resources = {
+  "zh-TW": zhTW,
+  "zh-Hans": zhHans,
+};
+
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   console.log("-- provider", configStore, VITE_ENV);
 
   return (
-    <WalletConnectorProvider
-      solanaInitial={{
-        wallets: wallets,
-        // network: "mainnet-beta" as WalletAdapterNetwork,
-        network: WalletAdapterNetwork.Devnet,
-        mainnetRpc:
-          "https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_acfc3073385c4744b097aa86dc5b2f3c_1335ff06",
-      }}
-      // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
-    >
-      <OrderlyAppProvider
-        // brokerId="orderly"
-        // brokerName="Orderly"
-        // networkId="testnet"
-        configStore={configStore}
-        appIcons={config.orderlyAppProvider.appIcons}
-        restrictedInfo={config.orderlyAppProvider.restrictedInfo}
-        // overrides={{
-        //   tabs: {
-        //     variant: "text",
-        //   },
-        //   chainSelector: {
-        //     showTestnet: false,
-        //   },
-        // }}
-        // defaultChain={{
-        //   mainnet: { id: 900900900 },
-        //   testnet: { id: 901901901 },
-        // }}
+    <LocaleProvider resources={resources}>
+      <WalletConnectorProvider
+        solanaInitial={{
+          wallets: wallets,
+          // network: "mainnet-beta" as WalletAdapterNetwork,
+          network: WalletAdapterNetwork.Devnet,
+          mainnetRpc:
+            "https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_acfc3073385c4744b097aa86dc5b2f3c_1335ff06",
+        }}
+        // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
       >
-        {props.children}
-      </OrderlyAppProvider>
-    </WalletConnectorProvider>
+        <OrderlyAppProvider
+          // brokerId="orderly"
+          // brokerName="Orderly"
+          // networkId="testnet"
+          configStore={configStore}
+          appIcons={config.orderlyAppProvider.appIcons}
+          restrictedInfo={config.orderlyAppProvider.restrictedInfo}
+          // overrides={{
+          //   tabs: {
+          //     variant: "text",
+          //   },
+          //   chainSelector: {
+          //     showTestnet: false,
+          //   },
+          // }}
+          // defaultChain={{
+          //   mainnet: { id: 900900900 },
+          //   testnet: { id: 901901901 },
+          // }}
+        >
+          {props.children}
+        </OrderlyAppProvider>
+      </WalletConnectorProvider>
+    </LocaleProvider>
   );
 };
 

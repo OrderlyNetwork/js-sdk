@@ -21,6 +21,7 @@ export type SwitchLayoutProps = {
 };
 
 export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
+  const { t } = useTranslation();
   return (
     <SwitchLayoutDropDown {...props}>
       <Flex
@@ -38,7 +39,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
       >
         <LayoutIcon />
         <Text size="2xs" weight="semibold">
-          Layout
+          {t("trading.layout")}
         </Text>
       </Flex>
     </SwitchLayoutDropDown>
