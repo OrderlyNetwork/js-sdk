@@ -86,7 +86,7 @@ const MobileTips = (props: { currentTip: AnnouncementTips, currentIndex: number,
       )}>
         <Box className="oui-font-semibold oui-leading-4 oui-ml-2 oui-text-base-contrast-80 oui-text-sm oui-line-clamp-2 oui-h-[36px] oui-overflow-hidden oui-text-ellipsis">{currentTip.content}</Box>
 
-        <div className="oui-flex oui-items-center oui-justify-between oui-gap-1">
+        <div className="oui-flex oui-items-center oui-justify-between oui-gap-1 oui-w-full">
 
           <RenderTipsType type={currentTip.type} />
           <SwitchTips currentIndex={currentIndex} tipsCount={tips.length} prevTips={prevTips} nextTips={nextTips} />
@@ -160,5 +160,5 @@ const RenderTipsType = ({ type }: { type?: AnnouncementType }) => {
 
     )}>Delisting</div>;
   }
-  return <></>;
+  return <div/>
 };
