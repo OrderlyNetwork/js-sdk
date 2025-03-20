@@ -135,7 +135,7 @@ const ClosePart = ({ closeTips }: { closeTips: () => void }) => {
 }
 
 
-const RenderTipsType = ({ type }: { type: AnnouncementType }) => {
+const RenderTipsType = ({ type }: { type?: AnnouncementType }) => {
   if (type === AnnouncementType.Listing) {
     return <div className={cn(
       "oui-flex oui-items-center oui-justify-center oui-px-2 oui-h-[18px] oui-rounded-sm ",

@@ -1,6 +1,6 @@
 import { UTCDateMini } from "@date-fns/utc";
-import { getTimestamp } from "@orderly.network/utils";
-import { useEffect, useMemo, useState } from "react";
+import { getTimestamp, windowGuard } from "@orderly.network/utils";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useMaintenanceStatus, useQuery, useWS } from "@orderly.network/hooks";
 import { API, WSMessage } from "@orderly.network/types";
@@ -24,7 +24,7 @@ export enum AnnouncementType {
 
 export interface AnnouncementTips {
   announcementId: string;
-  type: AnnouncementType;
+  type?: AnnouncementType;
   content: string;
   url?: string;
 }
@@ -40,13 +40,15 @@ export const useAnnouncementTipsScript = () => {
 
 
   // TODO: should upgrade to app context
-  const [showTips, setShowTips] = useState(true);
-  const [showDialog, setShowDialog] = useState(false);
+  const [showTips, setShowTips] = useState(() => window.sessionStorage.getItem('announcementTips') === 'hidden' ? false : true);
   const ws = useWS();
 
-  const closeTips = () => {
-    setShowTips(false);
-  };
+  const closeTips = useCallback(() => {
+    windowGuard(() => {
+      window.sessionStorage.setItem('announcementTips', 'hidden');
+      setShowTips(false);
+    });
+  }, []);
   const nextTips = () => {
     setCurrentIndex((currentIndex + 1) % tips.length);
   };
@@ -76,9 +78,8 @@ export const useAnnouncementTipsScript = () => {
       onMessage: (message: WSMessage.Announcement) => {
 
         if (message) {
-          setTips((prevTips) => [...prevTips, {
+          setTips((prevTips) => [...prevTips.filter(tip => tip.announcementId !== message.announcement_id), {
             announcementId: message.announcement_id,
-            type: AnnouncementType.Listing,
             content: message.message,
             url: message.url,
           }]);
@@ -102,14 +103,13 @@ export const useAnnouncementTipsScript = () => {
     setTips((prevTips) => {
       const tips = new Set(prevTips.map(tip => tip.announcementId));
       const maintentanceTip = prevTips.find(tip => tip.announcementId === '-1');
-      const newTips: AnnouncementTip[] = [];
+      const newTips: AnnouncementTips[] = [];
       announcements.forEach(announcement => {
         if (tips.has(announcement.announcement_id)) {
           return;
         }
         newTips.push({
           announcementId: announcement.announcement_id,
-          type: AnnouncementType.Listing,
           content: announcement.message,
           url: announcement.url,
         });
@@ -140,6 +140,9 @@ export const useAnnouncementTipsScript = () => {
         }, ...prevTips.filter(tip => tip.type !== AnnouncementType.Maintenance),
         ]);
       }
+    } else {
+      // remove maintenance tip
+      setTips((prevTips) => prevTips.filter(tip => tip.announcementId !== "-1"));
     }
   }, [startTime, status, endDate, brokerName]);
 
@@ -148,7 +151,6 @@ export const useAnnouncementTipsScript = () => {
     tips,
     currentIndex,
     showTips,
-    showDialog,
     closeTips,
     nextTips,
     prevTips,
