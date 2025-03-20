@@ -22,7 +22,7 @@ export enum AnnouncementType {
   Delisting = "delisting",
 }
 
-interface AnnouncementTip {
+export interface AnnouncementTips {
   announcementId: string;
   type: AnnouncementType;
   content: string;
@@ -34,7 +34,7 @@ export const useAnnouncementTipsScript = () => {
   const { data: announcements } = useQuery<API.Announcement[]>(`/v1/public/announcement`, {
     revalidateOnFocus: false,
   });
-  const [tips, setTips] = useState<AnnouncementTip[]>([]);
+  const [tips, setTips] = useState<AnnouncementTips[]>([]);
 
   const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<string | undefined>(undefined);
 
