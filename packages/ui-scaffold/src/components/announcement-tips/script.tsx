@@ -33,8 +33,7 @@ export const useAnnouncementTipsScript = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { data: announcements } = useQuery<API.Announcement[]>(`/v1/public/announcement`, {
     revalidateOnFocus: false,
-    // refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
-    refreshInterval: 1 * 30 * 1000, // refresh every 1 hour
+    refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
   });
   const [tips, setTips] = useState<AnnouncementTips[]>([]);
 
