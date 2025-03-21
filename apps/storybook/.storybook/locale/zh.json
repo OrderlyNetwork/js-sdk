@@ -1,4 +1,4 @@
-export const zhHans = {
+{
   "common.cancel": "取消",
   "common.confirm": "确认",
   "common.ok": "好的",
@@ -22,24 +22,19 @@ export const zhHans = {
   "linkDevice.createQRCode.dialog.title": "确认",
   "linkDevice.createQRCode.loading.description": "使用钱包批准二维码...",
   "linkDevice.createQRCode.confirm.title": "链接移动设备",
-  "linkDevice.createQRCode.confirm.description":
-    "在您的移动设备上打开 {{hostname}} 并扫描二维码以链接此钱包。为了安全起见，二维码将在60秒后过期。<br/>二维码允许移动交易，但不支持提现。确保您没有共享屏幕或二维码的任何截图。",
-  "linkDevice.createQRCode.success.description":
-    "扫描二维码或将URL粘贴到其他浏览器/<br/>设备以继续。",
+  "linkDevice.createQRCode.confirm.description": "在您的移动设备上打开 {{hostname}} 并扫描二维码以链接此钱包。为了安全起见，二维码将在60秒后过期。<br/>二维码允许移动交易，但不支持提现。确保您没有共享屏幕或二维码的任何截图。",
+  "linkDevice.createQRCode.success.description": "扫描二维码或将URL粘贴到其他浏览器/<br/>设备以继续。",
   "linkDevice.createQRCode.success.countdown": "倒计时: <0>{{seconds}}秒</0>",
   "linkDevice.createQRCode.success.copyUrl": "复制URL",
   "linkDevice.scanQRCode.dialog.title": "确认",
   "linkDevice.scanQRCode": "扫描二维码",
-  "linkDevice.scanQRCode.description":
-    "在桌面右上角点击<0/>图标以生成二维码进行扫描。",
+  "linkDevice.scanQRCode.description": "在桌面右上角点击<0/>图标以生成二维码进行扫描。",
   "linkDevice.scanQRCode.tooltip": "通过二维码链接到桌面",
-  "linkDevice.scanQRCode.connected.description":
-    "您已通过其他设备连接。此模式仅用于交易。要切换网络、存款或提现，请在此设备上断开并重新连接您的钱包。",
+  "linkDevice.scanQRCode.connected.description": "您已通过其他设备连接。此模式仅用于交易。要切换网络、存款或提现，请在此设备上断开并重新连接您的钱包。",
   "settle.title": "结算",
   "settle.settlePnl": "结算盈亏",
   "settle.settlePnl.warning": "请结算您的余额",
-  "settle.settlePnl.description":
-    "您确定要结算您的盈亏吗？<br/>结算将在1分钟内完成，然后您可以提取可用余额。",
+  "settle.settlePnl.description": "您确定要结算您的盈亏吗？<br/>结算将在1分钟内完成，然后您可以提取可用余额。",
   "settle.unsettled.label": "未结算：",
   "settle.unsettled.tooltip": "未结算余额无法提取。要提取，请先结算您的余额。",
   "settle.settle": "结算",
@@ -59,8 +54,7 @@ export const zhHans = {
   "markets.dataList.tabs.allMarkets": "所有市场",
   "markets.dataList.tabs.newListings": "新上市",
   "markets.dataList.search.placeholder": "搜索市场",
-  "markets.dataList.favorites.empty":
-    "点击市场旁边的<0/>图标将其添加到您的列表。",
+  "markets.dataList.favorites.empty": "点击市场旁边的<0/>图标将其添加到您的列表。",
   "markets.dataList.column.symbol": "市场",
   "markets.dataList.column.price": "价格",
   "markets.dataList.column.24hChange": "24小时变化",
@@ -114,13 +108,10 @@ export const zhHans = {
   "markets.symbolInfoBar.Index": "指数",
   "markets.symbolInfoBar.Index.tooltip": "其他交易所最后价格的平均值。",
   "markets.symbolInfoBar.24hVolume": "24小时成交量",
-  "markets.symbolInfoBar.24hVolume.tooltip":
-    "Orderly Network上的24小时总交易量。",
+  "markets.symbolInfoBar.24hVolume.tooltip": "Orderly Network上的24小时总交易量。",
   "markets.symbolInfoBar.predFundingRate": "预测资金利率",
-  "markets.symbolInfoBar.predFundingRate.value":
-    "<0>{{value}}</0> 在 {{countDown}}",
-  "markets.symbolInfoBar.predFundingRate.tooltip":
-    "资金利率是多头和空头交易者之间的支付。当为正时，多头支付空头资金。当为负时，空头支付多头资金。",
+  "markets.symbolInfoBar.predFundingRate.value": "<0>{{value}}</0> 在 {{countDown}}",
+  "markets.symbolInfoBar.predFundingRate.tooltip": "资金利率是多头和空头交易者之间的支付。当为正时，多头支付空头资金。当为负时，空头支付多头资金。",
   "markets.symbolInfoBar.openInterest": "未平仓合约",
   "markets.symbolInfoBar.openInterest.tooltip": "每边头寸的总大小。",
   "portfolio.title": "投资组合",
@@ -193,8 +184,7 @@ export const zhHans = {
   "portfolio.apiKey.permissions": "权限",
   "portfolio.apiKey.permissions.read": "读取",
   "portfolio.apiKey.permissions.trading": "交易",
-  "portfolio.apiKey.description":
-    "创建适合您交易需求的API密钥。为了您的安全，请不要与他人分享您的API密钥。",
+  "portfolio.apiKey.description": "创建适合您交易需求的API密钥。为了您的安全，请不要与他人分享您的API密钥。",
   "portfolio.apiKey.readApiGuide": "阅读API指南",
   "portfolio.apiKey.column.apiKey": "API密钥",
   "portfolio.apiKey.column.apiKey.copy": "API密钥已复制",
@@ -208,13 +198,10 @@ export const zhHans = {
   "portfolio.apiKey.create.connectWallet.tooltip": "请在创建API密钥前连接钱包",
   "portfolio.apiKey.create.signIn.tooltip": "请在创建API密钥前登录",
   "portfolio.apiKey.create.enableTrading.tooltip": "请在创建API密钥前启用交易",
-  "portfolio.apiKey.create.wrongNetwork.tooltip":
-    "请切换到支持的网络以创建API密钥",
+  "portfolio.apiKey.create.wrongNetwork.tooltip": "请切换到支持的网络以创建API密钥",
   "portfolio.apiKey.create.ipRestriction": "IP限制（可选）",
-  "portfolio.apiKey.create.ipRestriction.placeholder":
-    "添加IP地址，用逗号分隔。",
-  "portfolio.apiKey.created.warning":
-    "请复制API密钥。一旦关闭此弹出窗口，API密钥将被加密。",
+  "portfolio.apiKey.create.ipRestriction.placeholder": "添加IP地址，用逗号分隔。",
+  "portfolio.apiKey.created.warning": "请复制API密钥。一旦关闭此弹出窗口，API密钥将被加密。",
   "portfolio.apiKey.created.button.copyApiInfo": "复制API信息",
   "portfolio.apiKey.apiInfo.copy": "API信息已复制",
   "portfolio.apiKey.created": "API密钥已创建",
@@ -222,12 +209,10 @@ export const zhHans = {
   "portfolio.apiKey.updated": "API密钥已更新",
   "portfolio.apiKey.edit.title": "编辑API密钥",
   "portfolio.apiKey.delete.title": "删除API密钥",
-  "portfolio.apiKey.delete.description":
-    "删除您的API密钥<0 className='oui-px-1'>{{apiKey}}</0>？",
+  "portfolio.apiKey.delete.description": "删除您的API密钥<0 className='oui-px-1'>{{apiKey}}</0>？",
   "portfolio.setting.page.title": "系统升级",
   "portfolio.setting.cancelOpenOrders.title": "系统升级期间取消未完成订单",
-  "portfolio.setting.cancelOpenOrders.description":
-    "在升级期间，所有未完成的订单将被取消，以便在市场波动较大时管理您的风险。",
+  "portfolio.setting.cancelOpenOrders.description": "在升级期间，所有未完成的订单将被取消，以便在市场波动较大时管理您的风险。",
   "trading.layout": "布局",
   "trading.layout.right": "高级（右）",
   "trading.layout.left": "高级（左）",
@@ -245,10 +230,8 @@ export const zhHans = {
   "trading.dataList.tabs.positionHistory": "头寸历史",
   "trading.dataList.tabs.orderHistory": "订单历史",
   "trading.dataList.portfolioSettings": "投资组合设置",
-  "trading.dataList.portfolioSettings.decimalPrecision":
-    "盈亏和名义金额的小数精度",
-  "trading.dataList.portfolioSettings.unrealPnlPriceBasis":
-    "未实现盈亏价格基础",
+  "trading.dataList.portfolioSettings.decimalPrecision": "盈亏和名义金额的小数精度",
+  "trading.dataList.portfolioSettings.unrealPnlPriceBasis": "未实现盈亏价格基础",
   "trading.markPrice": "标记价格",
   "trading.lastPrice": "最新价格",
   "trading.orderBook": "订单簿",
@@ -271,12 +254,10 @@ export const zhHans = {
   "trading.tradeData.column.openInterest": "未平仓合约",
   "trading.orderBook.row.tooltip.avgPrice": "平均价格≈",
   "trading.orderBook.row.tooltip.sum": "总计 ({{unit}})",
-  "trading.orderBook.markPrice.tooltip":
-    "从第三方预言机获取，标记价格是三个价格的中位数：最新价格、基于资金利率基础的公平价格和基于订单簿的公平价格。",
+  "trading.orderBook.markPrice.tooltip": "从第三方预言机获取，标记价格是三个价格的中位数：最新价格、基于资金利率基础的公平价格和基于订单簿的公平价格。",
   "trading.orderBook.spreadRatio.tooltip": "卖一和买一的价差比率。",
   "trading.faucet.getTestUSDC": "获取测试USDC",
-  "trading.faucet.getTestUSDC.success":
-    "{{quantity}} USDC将被添加到您的余额中。请注意，这可能需要长达3分钟。请稍后再查看。",
+  "trading.faucet.getTestUSDC.success": "{{quantity}} USDC将被添加到您的余额中。请注意，这可能需要长达3分钟。请稍后再查看。",
   "trading.asset.startTrading": "开始交易",
   "trading.asset.startTrading.description": "您可以从各种网络存入资产",
   "trading.asset.wrongNetwork": "错误的网络",
@@ -290,13 +271,10 @@ export const zhHans = {
   "trading.asset.myAssets": "我的资产 (USDC)",
   "trading.asset.freeCollateral": "可用抵押品",
   "trading.asset.freeCollateral.tooltip": "用于下新订单的可用抵押品。",
-  "trading.asset.freeCollateral.formula":
-    "可用抵押品 = 总余额 + 总未结盈亏 - 总头寸初始保证金",
+  "trading.asset.freeCollateral.formula": "可用抵押品 = 总余额 + 总未结盈亏 - 总头寸初始保证金",
   "trading.asset.marginRatio": "保证金比率",
-  "trading.asset.marginRatio.tooltip":
-    "保证金比率表示抵押品相对于总头寸价值的比例。",
-  "trading.asset.marginRatio.formula":
-    "账户保证金比率 = (总抵押品价值 / 总头寸名义金额) * 100%",
+  "trading.asset.marginRatio.tooltip": "保证金比率表示抵押品相对于总头寸价值的比例。",
+  "trading.asset.marginRatio.formula": "账户保证金比率 = (总抵押品价值 / 总头寸名义金额) * 100%",
   "trading.asset.totalValue": "总价值",
   "trading.asset.totalValueQuote": "总价值 (USDC)",
   "trading.asset.unrealPnlQuote": "未实现盈亏 (USDC)",
@@ -304,13 +282,10 @@ export const zhHans = {
   "trading.asset.free&TotalCollateralQuote": "可用 / 总抵押品 (USDC)",
   "trading.asset.availableBalance": "可用余额",
   "trading.asset.maintenanceMarginRatio": "维持保证金比率",
-  "trading.asset.maintenanceMarginRatio.tooltip":
-    "保护您的头寸不被清算所需的最低保证金比率。如果保证金比率低于维持保证金比率，账户将被清算。",
-  "trading.asset.maintenanceMarginRatio.formula":
-    "账户维持保证金比率 = 总头寸名义金额 * 符号维持保证金比率 / 总头寸名义金额 * 100%",
+  "trading.asset.maintenanceMarginRatio.tooltip": "保护您的头寸不被清算所需的最低保证金比率。如果保证金比率低于维持保证金比率，账户将被清算。",
+  "trading.asset.maintenanceMarginRatio.formula": "账户维持保证金比率 = 总头寸名义金额 * 符号维持保证金比率 / 总头寸名义金额 * 100%",
   "trading.riskRate": "风险率",
-  "trading.riskRate.tooltip":
-    "风险率用于评估账户的风险水平。当风险率达到100%时，账户将被清算",
+  "trading.riskRate.tooltip": "风险率用于评估账户的风险水平。当风险率达到100%时，账户将被清算",
   "trading.riskRate.formula": "风险率 = 维持保证金比率 / 保证金比率 * 100%",
   "trading.account": "账户",
   "trading.asset&Margin": "资产与保证金",
@@ -327,12 +302,10 @@ export const zhHans = {
   "positions.column.avgOpen": "平均开仓",
   "positions.column.markPrice": "标记价格",
   "positions.column.liqPrice": "清算价格",
-  "positions.column.liqPrice.tooltip":
-    "估计的清算价格。价格是估计的，取决于所有头寸的多个因素。",
+  "positions.column.liqPrice.tooltip": "估计的清算价格。价格是估计的，取决于所有头寸的多个因素。",
   "positions.column.unrealPnl": "未实现盈亏",
   "positions.column.unrealPnl.quote": "未实现盈亏<0>(USDC)</0>",
-  "positions.column.unrealPnl.tooltip":
-    "使用标记价格计算的所有小部件上未实现的利润或损失。",
+  "positions.column.unrealPnl.tooltip": "使用标记价格计算的所有小部件上未实现的利润或损失。",
   "positions.column.unrealPnl.priceBasis": "未实现盈亏价格基础",
   "positions.column.lastPrice": "最新价格",
   "positions.column.tpSl": "止盈/止损",
@@ -346,12 +319,10 @@ export const zhHans = {
   "positions.column.price": "价格",
   "positions.column.close": "关闭",
   "positions.limitClose": "限价关闭",
-  "positions.limitClose.description":
-    "您同意以限价关闭{{quantity}} {{base}}头寸。",
+  "positions.limitClose.description": "您同意以限价关闭{{quantity}} {{base}}头寸。",
   "positions.limitClose.max": "<0>最大</0> <1>{{quantity}}</1>",
   "positions.marketClose": "市价关闭",
-  "positions.marketClose.description":
-    "您同意以市价关闭{{quantity}} {{base}}头寸。",
+  "positions.marketClose.description": "您同意以市价关闭{{quantity}} {{base}}头寸。",
   "positions.updateOrder.price.required": "价格是必需的",
   "positions.tp.prefix": "止盈 - ",
   "positions.sl.prefix": "止损 - ",
@@ -452,12 +423,9 @@ export const zhHans = {
   "orders.column.slPrice": "止损价格",
   "orders.editOrder": "编辑订单",
   "positions.editOrder.max": "<0>最大</0> <1>{{quantity}}</1>",
-  "order.edit.confirm.quantity":
-    "您同意将{{base}}-PERP订单的数量更改为<0>{{value}}</0>。",
-  "order.edit.confirm.price":
-    "您同意将{{base}}-PERP订单的价格更改为<0>{{value}}</0>。",
-  "order.edit.confirm.triggerPrice":
-    "您同意将{{base}}-PERP订单的触发价格更改为<0>{{value}}</0>。",
+  "order.edit.confirm.quantity": "您同意将{{base}}-PERP订单的数量更改为<0>{{value}}</0>。",
+  "order.edit.confirm.price": "您同意将{{base}}-PERP订单的价格更改为<0>{{value}}</0>。",
+  "order.edit.confirm.triggerPrice": "您同意将{{base}}-PERP订单的触发价格更改为<0>{{value}}</0>。",
   "orders.cancelOrder": "取消订单",
   "orders.cancelOrder.description": "您确定要取消您的待处理订单吗？",
   "orders.cancelAll": "全部取消",
@@ -481,8 +449,7 @@ export const zhHans = {
   "orders.history.renew": "更新",
   "orders.disableOrderConfirm": "禁用订单确认",
   "orders.download": "下载",
-  "orders.download.tooltip":
-    "下载的数据将仅反映应用的过滤器（例如，状态、时间、方向和分页），可能不包括所有记录。",
+  "orders.download.tooltip": "下载的数据将仅反映应用的过滤器（例如，状态、时间、方向和分页），可能不包括所有记录。",
   "tpsl.title": "止盈/止损",
   "tpsl.positionTpsl": "头寸止盈/止损",
   "tpsl.tp": "止盈",
@@ -531,15 +498,13 @@ export const zhHans = {
   "share.pnl.copy": "复制",
   "share.pnl.copySuccess": "图片已复制",
   "share.pnl.copyFailed": "复制失败",
-  "share.pnl.copyFailed.description":
-    "浏览器版本过旧，请更新以便将图片复制到剪贴板。",
+  "share.pnl.copyFailed.description": "浏览器版本过旧，请更新以便将图片复制到剪贴板。",
   "orderEntry.buyLong": "买入 / 多头",
   "orderEntry.sellShort": "卖出 / 空头",
   "orderEntry.reduceOnly": "仅减仓",
   "orderEntry.bbo": "BBO",
   "orderEntry.available": "可用",
-  "orderEntry.bbo.disabled.tips":
-    "选择止盈/止损、仅挂单、IOC或FOK时不支持BBO。",
+  "orderEntry.bbo.disabled.tips": "选择止盈/止损、仅挂单、IOC或FOK时不支持BBO。",
   "orderEntry.orderType.limit": "限价",
   "orderEntry.orderType.market": "市价",
   "orderEntry.orderType.limitOrder": "限价单",
@@ -568,13 +533,11 @@ export const zhHans = {
   "orderEntry.maxSell": "最大卖出",
   "orderEntry.tpMarkPrice": "止盈价格（标记）",
   "orderEntry.slMarkPrice": "止损价格（标记）",
-  "orderEntry.tpsl.trigger.description":
-    "止盈/止损在指定的标记价格触发，并作为市价单执行。",
+  "orderEntry.tpsl.trigger.description": "止盈/止损在指定的标记价格触发，并作为市价单执行。",
   "orderEntry.estRoi": "预计投资回报率",
   "orderEntry.estPnL": "预计盈亏",
   "orderEntry.tpsl": "止盈/止损",
-  "orderEntry.tpsl.tips":
-    "止盈/止损在指定的标记价格触发，并作为市价单执行。默认情况下，它适用于整个头寸。在开放头寸中调整设置以进行部分止盈/止损。",
+  "orderEntry.tpsl.tips": "止盈/止损在指定的标记价格触发，并作为市价单执行。默认情况下，它适用于整个头寸。在开放头寸中调整设置以进行部分止盈/止损。",
   "orderEntry.orderQuantity.error.required": "数量是必需的",
   "orderEntry.orderQuantity.error.min": "数量必须大于{{value}}",
   "orderEntry.orderQuantity.error.max": "数量必须小于{{value}}",
@@ -602,12 +565,9 @@ export const zhHans = {
   "scaffold.footer.joinCommunity": "加入我们的社区",
   "scaffold.footer.poweredBy": "技术支持",
   "scaffold.maintenance.dialog.title": "系统升级中",
-  "scaffold.maintenance.tips.content":
-    "{{brokerName}}将暂时不可用，进行计划中的升级，从{{startDate}}到{{endDate}}。",
-  "scaffold.maintenance.dialog.content":
-    "抱歉，由于计划中的升级，{{brokerName}}暂时不可用。预计服务将在{{endDate}}恢复。",
-  "scaffold.restrictedInfo.content.default":
-    "您正在从与受限国家相关的IP地址（{{ip}}）访问{{brokerName}}。",
+  "scaffold.maintenance.tips.content": "{{brokerName}}将暂时不可用，进行计划中的升级，从{{startDate}}到{{endDate}}。",
+  "scaffold.maintenance.dialog.content": "抱歉，由于计划中的升级，{{brokerName}}暂时不可用。预计服务将在{{endDate}}恢复。",
+  "scaffold.restrictedInfo.content.default": "您正在从与受限国家相关的IP地址（{{ip}}）访问{{brokerName}}。",
   "scaffold.languageSwitcher.title": "语言",
   "tradingRewards.sidebar.title": "奖励",
   "tradingRewards.sidebar.trading": "交易",
@@ -621,8 +581,7 @@ export const zhHans = {
   "tradingRewards.epoch.value": "纪元{{epoch}}",
   "tradingRewards.epochRewards": "纪元奖励",
   "tradingRewards.countdown.label": "倒计时：",
-  "tradingRewards.countdown.value":
-    "<0>{{days}}</0>天 <0>{{hours}}</0>小时 <0>{{minutes}}</0>分钟 <0>{{seconds}}</0>秒",
+  "tradingRewards.countdown.value": "<0>{{days}}</0>天 <0>{{hours}}</0>小时 <0>{{minutes}}</0>分钟 <0>{{seconds}}</0>秒",
   "tradingRewards.otherOrderlyDex": "其他Orderly DEX",
   "tradingRewards.claim": "领取",
   "tradingRewards.availableClaim": "可领取",
@@ -663,10 +622,8 @@ export const zhHans = {
   "tradingView.displayControl.tpsl": "止盈/止损",
   "tradingView.displayControl.positionTpsl": "头寸止盈/止损",
   "tradingView.noScriptSrc": "由于TradingView的政策，您需要申请自己的许可证。",
-  "tradingView.noScriptSrc.1":
-    "1. 请在<0>此处</0>申请您的TradingView高级图表许可证",
-  "tradingView.noScriptSrc.2":
-    "2. 按照<0>orderly.network</0>上的说明进行设置。",
+  "tradingView.noScriptSrc.1": "1. 请在<0>此处</0>申请您的TradingView高级图表许可证",
+  "tradingView.noScriptSrc.2": "2. 按照<0>orderly.network</0>上的说明进行设置。",
   "connector.testnet": "测试网",
   "connector.mainnet": "主网",
   "connector.disconnect": "断开连接",
@@ -674,18 +631,15 @@ export const zhHans = {
   "connector.signIn": "登录",
   "connector.signIn.description": "确认您是此钱包的所有者",
   "connector.enableTrading": "启用交易",
-  "connector.enableTrading.description":
-    "启用对我们API的安全访问，以实现快速交易",
+  "connector.enableTrading.description": "启用对我们API的安全访问，以实现快速交易",
   "connector.switchNetwork": "切换网络",
   "connector.wrongNetwork": "错误的网络",
   "connector.wrongNetwork.tooltip": "请切换到支持的网络以继续。",
-  "connector.expired":
-    "您的先前访问已过期，您将收到一个签名请求以启用交易。签名是免费的，不会发送交易。",
+  "connector.expired": "您的先前访问已过期，您将收到一个签名请求以启用交易。签名是免费的，不会发送交易。",
   "connector.rememberMe": "记住我",
   "connector.rememberMe.description": "切换此选项以在下次交易时跳过这些步骤。",
   "connector.referralCode.placeholder": "推荐码（可选）",
-  "connector.referralCode.invalid":
-    "推荐码必须为4到10个字符，只接受大写罗马字符和数字",
+  "connector.referralCode.invalid": "推荐码必须为4到10个字符，只接受大写罗马字符和数字",
   "connector.referralCode.notExist": "此推荐码不存在。",
   "connector.somethingWentWrong": "出了点问题",
   "connector.userRejected": "用户拒绝了请求。",
@@ -721,21 +675,16 @@ export const zhHans = {
   "transfer.fee": "费用",
   "transfer.feeEqual": "费用 ≈",
   "transfer.fee.destinationGasFee.label": "目的地燃气费：",
-  "transfer.fee.destinationGasFee.description":
-    "需要额外的燃气代币来支付目的地链上的操作。",
-  "transfer.withdraw.unsupported.chain":
-    "此链不支持取款。请切换到任何无桥接网络。",
-  "transfer.withdraw.unsupported.networkName":
-    "{{networkName}}不支持取款。请切换到任何无桥接网络。",
+  "transfer.fee.destinationGasFee.description": "需要额外的燃气代币来支付目的地链上的操作。",
+  "transfer.withdraw.unsupported.chain": "此链不支持取款。请切换到任何无桥接网络。",
+  "transfer.withdraw.unsupported.networkName": "{{networkName}}不支持取款。请切换到任何无桥接网络。",
   "transfer.withdraw.crossChain.confirm": "确认取款",
   "transfer.withdraw.crossChain.recipientAddress": "接收地址",
   "transfer.withdraw.crossChain.recipientNetwork": "接收网络",
   "transfer.withdraw.crossChain.withdrawAmount": "取款金额 (USDC)",
   "transfer.withdraw.crossChain.process": "您的跨链取款正在处理中...",
-  "transfer.withdraw.crossChain.warning":
-    "需要跨链重新平衡的取款无法取消或在处理完成前进行更多取款。",
-  "transfer.withdraw.crossChain.exceedWarning":
-    "取款超过{{networkName}}金库的余额（{{chainVaultBalance}} USDC）。将收取跨链重新平衡费用以取款到{{networkName}}。",
+  "transfer.withdraw.crossChain.warning": "需要跨链重新平衡的取款无法取消或在处理完成前进行更多取款。",
+  "transfer.withdraw.crossChain.exceedWarning": "取款超过{{networkName}}金库的余额（{{chainVaultBalance}} USDC）。将收取跨链重新平衡费用以取款到{{networkName}}。",
   "transfer.withdraw.minAmount.error": "数量必须大于{{minAmount}}",
   "transfer.insufficientBalance": "余额不足",
   "transfer.withdraw.rejectTransaction": "交易被拒绝",
@@ -772,20 +721,16 @@ export const zhHans = {
   "affiliate.becomeAffiliate.apply.title": "申请",
   "affiliate.becomeAffiliate.apply.description": "填写申请表",
   "affiliate.becomeAffiliate.share.title": "分享",
-  "affiliate.becomeAffiliate.share.description":
-    "解锁您的联盟链接并与您的社区分享",
+  "affiliate.becomeAffiliate.share.description": "解锁您的联盟链接并与您的社区分享",
   "affiliate.becomeAffiliate.earn.title": "赚取",
-  "affiliate.becomeAffiliate.earn.description":
-    "获得报酬并享受24/7、365天的特别待遇",
+  "affiliate.becomeAffiliate.earn.description": "获得报酬并享受24/7、365天的特别待遇",
   "affiliate.summary": "总结",
   "affiliate.summary.refereesTraded": "已交易的被推荐人",
   "affiliate.referralLink": "推荐链接",
   "affiliate.referralLink.earn": "赚取",
-  "affiliate.referralLink.earn.tooltip":
-    "<0>{{value}}</0> {{brokerName}}净费用，扣除Orderly费用。",
+  "affiliate.referralLink.earn.tooltip": "<0>{{value}}</0> {{brokerName}}净费用，扣除Orderly费用。",
   "affiliate.referralLink.share": "分享",
-  "affiliate.referralLink.share.tooltip":
-    "您的被推荐人获得<0>{{value}}</0>的{{brokerName}}净费用",
+  "affiliate.referralLink.share.tooltip": "您的被推荐人获得<0>{{value}}</0>的{{brokerName}}净费用",
   "affiliate.referralVol": "推荐量",
   "affiliate.referralVol.quote": "推荐量 (USDC)",
   "affiliate.referralCodes": "推荐码",
@@ -821,5 +766,5 @@ export const zhHans = {
   "ui.pagination.morePages": "更多页面",
   "ui.pagination.rowsPerPage": "每页行数",
   "ui.picker.selectDate": "选择日期",
-  "ui.empty.description": "未找到结果。",
-};
+  "ui.empty.description": "未找到结果。"
+}

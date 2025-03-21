@@ -28,9 +28,8 @@ import config from "../src/config";
 import { Chains } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
 import { LocaleMessages, LocaleProvider, en } from "@orderly.network/i18n";
-import { Resources } from "@orderly.network/i18n/src/provider";
-import { zhHans } from "./locale/zh-Hans";
-import { zhTW } from "./locale/zh-TW";
+import { Resources } from "@orderly.network/i18n";
+import zh from "./locale/zh.json";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -66,15 +65,17 @@ const configStore = new CustomConfigStore({
 });
 
 const resources: Resources = {
-  "zh-TW": zhTW,
-  "zh-Hans": zhHans,
+  zh,
 };
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   console.log("-- provider", configStore, VITE_ENV);
 
   return (
-    <LocaleProvider resources={resources}>
+    <LocaleProvider
+      resources={resources}
+      // supportedLanguages={["zh", "en", "ja", "es", "fr"]}
+    >
       <WalletConnectorProvider
         solanaInitial={{
           wallets: wallets,

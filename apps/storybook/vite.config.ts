@@ -5,6 +5,9 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  json: {
+    stringify: true,
+  },
   plugins: [
     react(),
     // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
