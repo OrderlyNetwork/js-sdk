@@ -9,7 +9,7 @@ export type RestrictedInfoProps = UseRestrictedInfoScriptReturn & {
 
 export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
   const { brokerName } = props;
-  const { ip, content, restrictedOpen } = props.restrictedInfo;
+  const { ip, content, restrictedOpen } = props.restrictedInfo || {};
   const { t } = useTranslation();
 
   if (!restrictedOpen) {
