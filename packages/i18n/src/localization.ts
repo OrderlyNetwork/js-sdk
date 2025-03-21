@@ -1,21 +1,24 @@
 export enum LocaleEnum {
   /** English */
   en = "en",
-  /** Traditional Chinese */
-  "zh-TW" = "zh-TW",
-  /** Simplified Chinese */
-  "zh-Hans" = "zh-Hans",
-  /** Turkish */
-  tr = "tr",
-  /** Russian */
-  ru = "ru",
-  /** Portuguese */
-  "pt-BR" = "pt-BR",
-  /** Ukrainian */
-  "uk-UA" = "uk-UA",
-  /** Vietnamese */
-  "vi-VN" = "vi-VN",
+  /** Chinese */
+  zh = "zh",
+  /** Japanese */
+  ja = "ja",
   /** Spanish */
-  "es-ES" = "es-ES",
+  es = "es",
+  /** Korean */
+  ko = "ko",
+  /** Vietnamese */
+  vi = "vi",
+  /** German */
+  de = "de",
+  /** French */
+  fr = "fr",
+  /** Dutch */
+  nl = "nl",
+  /** Indonesian */
+  id = "id",
 }
+
 export type LocaleCode = keyof typeof LocaleEnum | (string & {});

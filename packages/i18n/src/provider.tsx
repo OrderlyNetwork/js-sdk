@@ -1,8 +1,14 @@
-import { FC, ReactNode, useEffect } from "react";
+import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
 import i18n from "./i18n";
-import { defaultLng, defaultNS, type LocaleMessages } from "./resources";
+import { defaultNS, type LocaleMessages } from "./resources";
 import { LocaleCode } from "./localization";
+import {
+  defaultLanguages,
+  Language,
+  LocaleContext,
+  LocaleContextState,
+} from "./context";
 
 export type I18nProviderProps = Partial<I18nextProviderProps>;
 
@@ -23,11 +29,20 @@ export type LocaleProviderProps = {
   messages?: Record<string, string>;
   locale?: LocaleCode;
   resources?: Resources;
-};
 
+  /**
+   * custom languages
+   */
+  languages?: Language[];
+  /**
+   * supported languages, you can select supported languages from default languages
+   */
+  supportedLanguages?: LocaleCode[];
+};
 
 export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
   const { locale, messages, resources } = props;
+  const [languages, setLanguages] = useState<Language[]>(defaultLanguages);
 
   useEffect(() => {
     // init with resources
@@ -35,6 +50,7 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
       Object.entries(resources).forEach(([locale, messages]) => {
         i18n.addResourceBundle(locale, defaultNS, messages, true, true);
       });
+      console.log("i18n", i18n);
       return;
     }
 
@@ -53,10 +69,26 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
     }
   }, [locale]);
 
+  useEffect(() => {
+    if (Array.isArray(props.languages)) {
+      setLanguages(props.languages);
+    } else if (Array.isArray(props.supportedLanguages)) {
+      setLanguages(
+        props.supportedLanguages
+          .map((localCode) =>
+            defaultLanguages.find((l) => l.localCode === localCode)
+          )
+          .filter((item) => !!item)
+      );
+    }
+  }, [props.supportedLanguages, props.languages]);
+
   return (
-    // @ts-ignore
-    <I18nextProvider i18n={i18n} defaultNS={defaultNS}>
-      {props.children}
-    </I18nextProvider>
+    <LocaleContext.Provider value={{ languages }}>
+      {/* @ts-ignore */}
+      <I18nextProvider i18n={i18n} defaultNS={defaultNS}>
+        {props.children}
+      </I18nextProvider>
+    </LocaleContext.Provider>
   );
 };

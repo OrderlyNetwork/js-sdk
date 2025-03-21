@@ -11,16 +11,20 @@ import {
   Box,
 } from "@orderly.network/ui";
 import { FC, SVGProps } from "react";
-import {
-  LanguageSwitcherScriptReturn,
-  Language,
-} from "./languageSwitcher.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { LanguageSwitcherScriptReturn } from "./languageSwitcher.script";
+import { useTranslation, Language } from "@orderly.network/i18n";
 
 type LanguageSwitcherProps = LanguageSwitcherScriptReturn;
 
 export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
+  const { languages } = props;
   const { t } = useTranslation();
+
+  if (languages.length <= 1) {
+    return null;
+  }
+
+  const langLen = languages.length;
 
   const trigger = (
     <div>
@@ -47,21 +51,21 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
 
   const context = (
     <Box
-      r="2xl"
-      py={5}
+      my={5}
       className={cn(
-        "oui-grid oui-grid-cols-1 oui-gap-1",
-        "oui-grid-cols-2 lg:oui-grid-cols-4"
+        //40 * 8 + 4 * 7 = 348px, more than 8 will show scrollbars
+        "oui-max-h-[348px] oui-overflow-y-auto oui-custom-scrollbar",
+        "oui-grid oui-gap-1 oui-pr-[6px]"
       )}
     >
-      {props.languages.map((item) => {
-        const selected = props.selectedLang === item.lang;
+      {languages.map((item) => {
+        const selected = props.selectedLang === item.localCode;
         return (
           <LanguageItem
-            key={item.lang}
+            key={item.localCode}
             selected={selected}
             item={item}
-            onClick={() => props.onLangChange(item.lang)}
+            onClick={() => props.onLangChange(item.localCode)}
           />
         );
       })}
@@ -76,9 +80,10 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
           onCloseAutoFocus={(e) => e.preventDefault()}
           onClick={(e) => e.stopPropagation()}
           sideOffset={10}
+          align="start"
           collisionPadding={{ right: 16 }}
           className={cn(
-            "oui-w-[320px] lg:oui-w-[600px]",
+            "oui-w-[320px] lg:oui-w-[360px]",
             "oui-bg-base-8 oui-px-5 oui-py-0 oui-rounded-xl",
             "oui-border oui-border-line-6",
             "oui-font-semibold"
