@@ -33,9 +33,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
             <Text.numeral
               // @ts-ignore
               prefix={
-                <Text intensity={80}>
-                  {t("orders.tpsl.tpPnl.label")} &nbsp;
-                </Text>
+                <Text intensity={80}>{`${t("tpsl.tpPnl")}:`} &nbsp;</Text>
               }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
@@ -49,9 +47,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
             <Text.numeral
               // @ts-ignore
               prefix={
-                <Text intensity={80}>
-                  {t("orders.tpsl.slPnl.label")} &nbsp;
-                </Text>
+                <Text intensity={80}>{`${t("tpsl.slPnl")}:`} &nbsp;</Text>
               }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
@@ -97,9 +93,7 @@ const Price = (props: {
       // @ts-ignore
       prefix={
         <span className={"oui-text-base-contrast-54"}>
-          {type === "TP"
-            ? t("orders.tpsl.tp.prefix")
-            : t("orders.tpsl.sl.prefix")}
+          {type === "TP" ? `${t("tpsl.tp")} -` : `${t("tpsl.sl")} -`}
           &nbsp;
         </span>
       }

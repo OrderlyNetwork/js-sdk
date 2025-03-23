@@ -37,7 +37,7 @@ export const Header: FC<Props> = (props) => {
         itemAlign={"start"}
         id="oui-order-book-header-price"
       >
-        <Text>{t("trading.orderBook.column.price")}</Text>
+        <Text>{t("common.price")}</Text>
         <Text>{`(${props.quote})`}</Text>
       </Flex>
       <Flex

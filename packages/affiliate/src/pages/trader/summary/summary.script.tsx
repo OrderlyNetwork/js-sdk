@@ -22,7 +22,7 @@ export const useSummaryScript = (): SummaryReturns => {
     label: SummaryFilter;
     value: SummaryFilter;
   }[] = [
-    { label: t("common.select.all"), value: "All" },
+    { label: t("common.all"), value: "All" },
     { label: t("common.select.1d"), value: "1D" },
     { label: t("common.select.7d"), value: "7D" },
     { label: t("common.select.30d"), value: "30D" },

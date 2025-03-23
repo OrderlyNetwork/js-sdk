@@ -38,7 +38,7 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
     <Flex gap={3}>
       <Flex direction={"column"} className="oui-text-2xs" itemAlign={"end"}>
         <div>
-          <Text intensity={36}>{t("positions.column.unrealPnl")}</Text>
+          <Text intensity={36}>{t("common.unrealPnl")}</Text>
           <Text intensity={20}>(USDC)</Text>
         </div>
 
@@ -85,7 +85,7 @@ export const Qty: FC<PositionCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("positions.column.qty")}
+      label={t("common.qty")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -131,7 +131,7 @@ export const Notional: FC<PositionCellState> = (props) => {
       align="end"
       label={
         <span>
-          {t("positions.column.notional")}
+          {t("common.notional")}
           <Text intensity={20}>(USDC)</Text>
         </span>
       }
@@ -153,7 +153,7 @@ export const AvgOpen: FC<PositionCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("positions.column.avgOpen")}
+      label={t("common.avgOpen")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -171,7 +171,7 @@ export const MarkPrice: FC<PositionCellState> = (props) => {
   const { t } = useTranslation();
   return (
     <Statistic
-      label={t("positions.column.markPrice")}
+      label={t("common.markPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",

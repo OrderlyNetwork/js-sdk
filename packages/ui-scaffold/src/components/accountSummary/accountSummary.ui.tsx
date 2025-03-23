@@ -49,7 +49,7 @@ const TotalValue: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          {t("scaffold.accountSummary.totalValue")}
+          {t("common.totalValue")}
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -213,7 +213,7 @@ const UnrealPnL: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          {t("scaffold.accountSummary.unrealPnL")}
+          {t("common.unrealPnl")}
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -290,7 +290,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("totalValue")}
                 onClick={() => props.onToggleItemByKey("totalValue")}
               />
-              <span>{t("scaffold.accountSummary.totalValue")}</span>
+              <span>{t("common.totalValue")}</span>
             </Flex>
             <Text.numeral
               visible={props.visible}
@@ -330,7 +330,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("unrealPnL")}
                 onClick={() => props.onToggleItemByKey("unrealPnL")}
               />
-              <span>{t("scaffold.accountSummary.unrealPnL")}</span>
+              <span>{t("common.unrealPnl")}</span>
             </Flex>
             <Text.numeral
               coloring

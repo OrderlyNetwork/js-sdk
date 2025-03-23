@@ -18,7 +18,7 @@ export const useDropDownMarketsColumns = () => {
     (favorite: FavoriteInstance, isFavoriteList = false) => {
       return [
         {
-          title: t("markets.dropdown.column.symbol"),
+          title: t("common.symbol"),
           dataIndex: "symbol",
           width: 150,
           render: (value, record) => {
@@ -100,7 +100,7 @@ export const useDropDownMarketsColumns = () => {
           },
         },
         {
-          title: t("markets.dropdown.column.volume"),
+          title: t("common.volume"),
           dataIndex: "24h_amount",
           align: "right",
           onSort: true,

@@ -219,7 +219,7 @@ const useFilter = () => {
       name: "side",
       options: [
         {
-          label: t("positions.history.side.all"),
+          label: t("common.side.all"),
           value: "all",
         },
         {
@@ -247,7 +247,7 @@ const useFilter = () => {
       name: "status",
       options: [
         {
-          label: t("positions.history.status.all"),
+          label: t("common.status.all"),
           value: "all",
         },
         {

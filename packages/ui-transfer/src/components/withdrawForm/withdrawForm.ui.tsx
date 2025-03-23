@@ -104,7 +104,7 @@ export const WithdrawFormUI = ({
         </Box>
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
           <Text size="xs" intensity={36}>
-            {t("transfer.feeEqual")}{" "}
+            {`${t("common.fee")} ≈ `}
             <Text size="xs" intensity={80}>
               {`${fee} `}
             </Text>

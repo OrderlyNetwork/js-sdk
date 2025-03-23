@@ -78,7 +78,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
           return modal
             .confirm({
               title: finalIsEditing
-                ? t("tpsl.editOrder.title")
+                ? t("orders.editOrder")
                 : t("tpsl.confirmOrder.title"),
               bodyClassName: "oui-pb-0 lg:oui-pb-0",
               onOk: () => {
@@ -176,7 +176,7 @@ export const PositionInfo = (props: {
       <Box py={3} className="oui-space-y-1">
         <Flex justify={"between"}>
           <Text size="sm" intensity={54}>
-            {t("tpsl.avgOpen")}
+            {t("common.avgOpen")}
           </Text>
           <Text.numeral
             className="oui-text-xs"
@@ -189,7 +189,7 @@ export const PositionInfo = (props: {
         </Flex>
         <Flex justify={"between"}>
           <Text size="sm" intensity={54}>
-            {t("tpsl.markPrice")}
+            {t("common.markPrice")}
           </Text>
           <Text.numeral
             className="oui-text-xs"

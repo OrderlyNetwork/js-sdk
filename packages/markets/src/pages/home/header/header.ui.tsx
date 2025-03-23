@@ -50,7 +50,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           data={news}
           title={
             <Text.gradient color="brand">
-              {t("markets.header.newListings")}
+              {t("markets.newListings")}
             </Text.gradient>
           }
           className={cls}
@@ -114,7 +114,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       {
         label: (
           <Flex gapX={1}>
-            <OrderlyIcon /> {t("markets.header.openInterest")}
+            <OrderlyIcon /> {t("markets.openInterest")}
           </Flex>
         ),
         value: totalOpenInterest,

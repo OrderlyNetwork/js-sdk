@@ -146,7 +146,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
                   event.stopPropagation();
                   event.preventDefault();
                   modal.alert({
-                    title: "Tips",
+                    title: t("common.tips"),
                     message: (
                       <Text intensity={54}>
                         {props.wrongNetwork

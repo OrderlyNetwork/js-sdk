@@ -80,7 +80,6 @@ export const affiliate = {
   "affiliate.referees.column.invitationTime": "Invitation time",
 
   "affiliate.trader.statistics.select.rebate": "Rebate",
-  "affiliate.trader.statistics.select.volume": "Volume",
 
   "affiliate.trader.yourReferrer": "Your referrer",
   "affiliate.trader.rebate": "Rebate",

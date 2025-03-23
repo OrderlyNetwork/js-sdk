@@ -135,7 +135,7 @@ export const Qty: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.qty")}
+      label={t("common.qty")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -190,7 +190,7 @@ export const Notional: FC<OrderCellState> = (props) => {
       align="end"
       label={
         <Text>
-          {t("orders.column.notional")}
+          {t("common.notional")}
           <Text intensity={20}>(USDC)</Text>
         </Text>
       }
@@ -230,7 +230,7 @@ export const EstTotal: FC<OrderCellState> = (props) => {
       align="end"
       label={
         <Text>
-          {t("orders.column.notional")}
+          {t("common.notional")}
           <Text intensity={20}>(USDC)</Text>
         </Text>
       }
@@ -287,7 +287,7 @@ export const MarkPrice: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.markPrice")}
+      label={t("common.markPrice")}
       align="end"
       classNames={{
         root: "oui-text-xs",
@@ -356,11 +356,7 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
               size="2xs"
               showIdentifier
               // @ts-ignore
-              prefix={
-                <Text intensity={54}>
-                  {t("orders.tpsl.tpPnl.label")}&nbsp;&nbsp;
-                </Text>
-              }
+              prefix={<Text intensity={54}>{`${t("tpsl.tpPnl")}:`}&nbsp;</Text>}
               suffix={<Text intensity={20}>&nbsp;USDC</Text>}
               coloring
             >
@@ -410,9 +406,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
               size="2xs"
               // @ts-ignore
               prefix={
-                <Text intensity={54}>
-                  {t("orders.tpsl.slPnl.label")}&nbsp;&nbsp;
-                </Text>
+                <Text intensity={54}>{`${t("tpsl.slPnl")}:`}&nbsp;&nbsp;</Text>
               }
               suffix={<Text intensity={20}>&nbsp;USDC</Text>}
               coloring
@@ -503,7 +497,7 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.quantity")}
+      label={t("common.quantity")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -521,7 +515,7 @@ export const AvgPrice: FC<OrderCellState> = (props) => {
     <Statistic
       label={
         <Text>
-          {t("orders.column.avgPrice")}
+          {t("common.avgPrice")}
           <Text intensity={20}>(USDC)</Text>
         </Text>
       }
@@ -581,7 +575,7 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
     <Statistic
       label={
         <Text>
-          {t("orders.column.realPnl")}
+          {t("common.realPnl")}
           <Text intensity={20}>(USDC)</Text>
         </Text>
       }

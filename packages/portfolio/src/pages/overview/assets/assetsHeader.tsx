@@ -19,7 +19,7 @@ export const AssetsHeader: FC<Props> = (props) => {
 
   return (
     <Flex justify={"between"}>
-      <CardTitle>{t("portfolio.overview.title")}</CardTitle>
+      <CardTitle>{t("common.overview")}</CardTitle>
       <Flex gap={3}>
         <Button
           disabled={props.disabled}

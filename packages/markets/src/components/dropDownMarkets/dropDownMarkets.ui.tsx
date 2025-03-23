@@ -109,7 +109,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         className={cls}
       >
         <TabPanel
-          title={t("markets.sidebar.tabs.favorites")}
+          title={t("markets.favorites")}
           icon={<FavoritesIcon />}
           value="favorites"
         >
@@ -124,7 +124,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             />
           </div>
         </TabPanel>
-        <TabPanel title={t("markets.sidebar.tabs.recent")} value="recent">
+        <TabPanel title={t("markets.recent")} value="recent">
           <div className={cls}>
             <RecentListWidget
               getColumns={getColumns}
@@ -136,7 +136,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             />
           </div>
         </TabPanel>
-        <TabPanel title={t("markets.sidebar.tabs.all")} value="all">
+        <TabPanel title={t("common.all")} value="all">
           <div className={cls}>
             <MarketsListWidget
               type="all"
@@ -153,7 +153,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
           </div>
         </TabPanel>
         <TabPanel
-          title={t("markets.sidebar.tabs.newListings")}
+          title={t("markets.newListings")}
           value="newListing"
         >
           <div className={cls}>

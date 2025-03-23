@@ -112,7 +112,7 @@ export const PositionTPSLPopover = (props: {
             ) {
               return modal
                 .confirm({
-                  title: t("tpsl.cancelOrder.title"),
+                  title: t("orders.cancelOrder"),
                   content: t("tpsl.cancelOrder.description"),
                   onOk: () => {
                     return options.cancel();
@@ -140,7 +140,7 @@ export const PositionTPSLPopover = (props: {
             return modal
               .confirm({
                 title: finalIsEditing
-                  ? t("tpsl.editOrder.title")
+                  ? t("orders.editOrder")
                   : t("tpsl.confirmOrder.title"),
                 // bodyClassName: "lg:oui-py-0",
                 onOk: () => {

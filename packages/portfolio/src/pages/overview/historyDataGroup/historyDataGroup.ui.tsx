@@ -30,21 +30,21 @@ export const HistoryDataGroupUI = (props: {
         // }}
       >
         <TabPanel
-          title={t("portfolio.overview.dataList.tabs.assetHistory")}
+          title={t("portfolio.overview.deposits&Withdrawals")}
           icon={<ArrowLeftRightIcon />}
           value={"deposit"}
         >
           <AssetHistoryWidget />
         </TabPanel>
         <TabPanel
-          title={t("portfolio.overview.dataList.tabs.funding")}
+          title={t("common.funding")}
           icon={<FeeTierIcon />}
           value={"funding"}
         >
           <FundingHistoryWidget />
         </TabPanel>
         <TabPanel
-          title={t("portfolio.overview.dataList.tabs.distribution")}
+          title={t("portfolio.overview.distribution")}
           icon={<ServerFillIcon />}
           value={"distribution"}
         >

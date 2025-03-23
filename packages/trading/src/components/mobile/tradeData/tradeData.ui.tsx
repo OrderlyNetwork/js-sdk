@@ -9,12 +9,12 @@ export const TradeData: FC<TradeDataState> = (props) => {
   return (
     <Flex direction={"column"} gap={2}>
       <Row
-        title={t("trading.tradeData.column.markPrice")}
+        title={t("common.markPrice")}
         value={props.ticker?.mark_price}
         dp={props.symbolInfo.quote_dp}
       />
       <Row
-        title={t("trading.tradeData.column.indexPrice")}
+        title={t("common.indexPrice")}
         value={props.ticker?.index_price}
         dp={props.symbolInfo.quote_dp}
       />
@@ -36,7 +36,7 @@ export const TradeData: FC<TradeDataState> = (props) => {
         dp={props.symbolInfo.quote_dp}
       />
       <Row
-        title={t("trading.tradeData.column.openInterest")}
+        title={t("markets.openInterest")}
         value={props.openInterest}
         dp={props.symbolInfo.quote_dp}
         rule="human"

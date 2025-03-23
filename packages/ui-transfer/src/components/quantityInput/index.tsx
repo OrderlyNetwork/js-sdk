@@ -90,7 +90,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       <Box>
         <Box className="oui-absolute oui-top-0">
           <Text size="2xs" intensity={36}>
-            {label || t("transfer.quantity")}
+            {label || t("common.quantity")}
           </Text>
         </Box>
         {loading && (

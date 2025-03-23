@@ -569,7 +569,7 @@ const OrderQuantityInput = (props: {
       {type === OrderType.STOP_LIMIT || type === OrderType.STOP_MARKET ? (
         <div className={"oui-group"}>
           <CustomInput
-            label={t("orderEntry.trigger")}
+            label={t("common.trigger")}
             suffix={symbolInfo.quote}
             error={parseErrorMsg("trigger_price")}
             id={"trigger"}
@@ -591,7 +591,7 @@ const OrderQuantityInput = (props: {
           className="oui-relative oui-group oui-w-full"
         >
           <CustomInput
-            label={t("orderEntry.price")}
+            label={t("common.price")}
             suffix={priceSuffix}
             id={"price"}
             value={values.price}
@@ -626,7 +626,7 @@ const OrderQuantityInput = (props: {
 
       <Grid cols={2} className={"oui-space-x-1 oui-group"}>
         <CustomInput
-          label={t("orderEntry.qty")}
+          label={t("common.qty")}
           suffix={symbolInfo.base}
           id="order_quantity_input"
           name="order_quantity_input"
@@ -641,7 +641,7 @@ const OrderQuantityInput = (props: {
           onBlur={onBlur(InputType.QUANTITY)}
         />
         <CustomInput
-          label={t("orderEntry.total")}
+          label={`${t("common.total")}≈`}
           suffix={symbolInfo.quote}
           id={"total"}
           className={"!oui-rounded-bl !oui-rounded-tl"}

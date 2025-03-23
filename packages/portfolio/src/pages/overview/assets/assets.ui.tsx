@@ -56,7 +56,7 @@ export const AssetsUI = (props: Props) => {
         <Statistic
           label={
             <Flex gap={1}>
-              <Text intensity={54}>{t("portfolio.overview.totalValue")}</Text>
+              <Text intensity={54}>{t("common.totalValue")}</Text>
               <button
                 onClick={() => {
                   props.toggleVisible();
@@ -122,7 +122,7 @@ export const AssetStatistic = (
 
   return (
     <Grid cols={3} className="oui-h-12">
-      <Statistic label={t("portfolio.overview.unrealizedPnl")}>
+      <Statistic label={t("common.unrealizedPnl")}>
         <Flex>
           <Text.numeral
             coloring

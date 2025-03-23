@@ -109,10 +109,7 @@ const UnrealPnL: FC<
       : "oui-text-base-contrast-80";
 
   return (
-    <Statistic
-      label={t("positions.column.unrealPnl")}
-      classNames={props.classNames}
-    >
+    <Statistic label={t("common.unrealPnl")} classNames={props.classNames}>
       <Flex gap={1}>
         <Text.numeral
           dp={props.pnlNotionalDecimalPrecision}
@@ -154,10 +151,7 @@ const Notional: FC<
   const { t } = useTranslation();
 
   return (
-    <Statistic
-      label={t("positions.column.notional")}
-      classNames={props.classNames}
-    >
+    <Statistic label={t("common.notional")} classNames={props.classNames}>
       <Text.numeral
         dp={props.pnlNotionalDecimalPrecision}
         rm={Decimal.ROUND_DOWN}

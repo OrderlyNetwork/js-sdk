@@ -18,7 +18,7 @@ export const DesktopHeader: FC<Props> = (props) => {
       >
         <Box width={"100%"}>
           <Title id="oui-order-book-header-price">
-            {`${t("trading.orderBook.column.price")}(${props.quote})`}
+            {`${t("common.price")}(${props.quote})`}
           </Title>
         </Box>
         <Box width={"100%"}>
@@ -34,13 +34,13 @@ export const DesktopHeader: FC<Props> = (props) => {
       >
         <Box width={"100%"}>
           <Title id="oui-order-book-header-total-base" justifyEnd>
-            {`${t("trading.orderBook.column.total")}(${props.base})`}
+            {`${t("common.total")}(${props.base})`}
           </Title>
         </Box>
         {showTotal && (
           <Box width={"100%"}>
             <Title id="oui-order-book-header-total-quote" justifyEnd>
-              {`${t("trading.orderBook.column.total")}(${props.quote})`}
+              {`${t("common.total")}(${props.quote})`}
             </Title>
           </Box>
         )}

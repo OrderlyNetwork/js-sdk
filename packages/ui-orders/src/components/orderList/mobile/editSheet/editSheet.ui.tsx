@@ -84,7 +84,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         </Flex>
         <Divider intensity={8} className="oui-w-full" />
         <Flex width={"100%"} justify={"between"}>
-          <Text>{t("orders.column.lastPrice")}</Text>
+          <Text>{t("common.lastPrice")}</Text>
           <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp}>
             {props.curMarkPrice ?? "--"}
           </Text.numeral>
@@ -133,7 +133,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           <Input.tooltip
             prefix={
               <Text intensity={54} className="oui-px-3">
-                {t("orders.column.price")}
+                {t("common.price")}
               </Text>
             }
             suffix={
@@ -172,7 +172,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           <Input.tooltip
             prefix={
               <Text intensity={54} className="oui-px-3">
-                {t("orders.column.quantity")}
+                {t("common.quantity")}
               </Text>
             }
             suffix={

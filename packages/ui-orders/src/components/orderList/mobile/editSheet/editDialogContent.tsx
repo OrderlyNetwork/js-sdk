@@ -74,7 +74,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
         )}
 
         <Flex justify={"between"} width={"100%"} gap={1}>
-          <Text>{t("orders.column.price")}</Text>
+          <Text>{t("common.price")}</Text>
           <Text.numeral
             intensity={80}
             dp={props.quote_dp}
@@ -87,7 +87,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} width={"100%"} gap={1}>
-          <Text>{t("orders.column.qty")}</Text>
+          <Text>{t("common.qty")}</Text>
           <Text.numeral
             color={side === OrderSide.BUY ? "buy" : "sell"}
             dp={props.base_dp}

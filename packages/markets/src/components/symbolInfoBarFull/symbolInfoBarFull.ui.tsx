@@ -189,7 +189,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
               />
               <div ref={tailingElementRef}>
                 <DataItem
-                  label={t("markets.symbolInfoBar.openInterest")}
+                  label={t("markets.openInterest")}
                   value={
                     <>
                       <Text.numeral rule="human" dp={2}>
@@ -198,7 +198,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
                       <Text intensity={36}>{` USDC`}</Text>
                     </>
                   }
-                  hint={t("markets.symbolInfoBar.openInterest.tooltip")}
+                  hint={t("markets.openInterest.tooltip")}
                 />
               </div>
             </Flex>

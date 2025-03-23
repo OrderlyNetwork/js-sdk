@@ -60,7 +60,7 @@ export const FundingUI: FC<FundingUIProps> = ({
         trailing={search}
       >
         <TabPanel
-          title={t("markets.funding.tabs.overview")}
+          title={t("common.overview")}
           value="overview"
           testid="oui-testid-funding-overview-tab"
         >

@@ -149,7 +149,7 @@ export function getPnLPosterData(
         case "markPrice": {
           if (position.markPrice != null) {
             informations.push({
-              title: t("share.pnl.optionalInfo.markPrice"),
+              title: t("common.markPrice"),
               value: formatFixed(position.markPrice, quoteDp || 2),
             });
           }
@@ -158,7 +158,7 @@ export function getPnLPosterData(
         case "quantity": {
           if (position.quantity != null) {
             informations.push({
-              title: t("share.pnl.optionalInfo.quantity"),
+              title: t("common.quantity"),
               value: formatFixed(position.quantity, baseDp || 2),
             });
           }

@@ -18,14 +18,14 @@ export const BottomButtons: FC<{
         <span>
           <DownloadIcon />
         </span>
-        {t("share.pnl.download")}
+        {t("common.download")}
       </Button>
 
       <Button className="oui-flex-1 oui-flex oui-gap-1" onClick={onClickCopy}>
         <span>
           <CopyIcon />
         </span>
-        {t("share.pnl.copy")}
+        {t("common.copy")}
       </Button>
     </Flex>
   );

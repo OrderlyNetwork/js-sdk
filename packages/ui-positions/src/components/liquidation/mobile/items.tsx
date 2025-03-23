@@ -34,7 +34,7 @@ export const Quantity: FC<API.LiquidationPositionByPerp> = (props) => {
   return (
     <Flex width={"100%"} justify={"between"}>
       <Text size="2xs" intensity={36}>
-        {t("positions.Liquidation.column.quantity")}
+        {t("common.quantity")}
       </Text>
       {/* <Text.numeral size="2xs" intensity={80} dp={quote_dp} padding={false}>
         {props.position_qty}

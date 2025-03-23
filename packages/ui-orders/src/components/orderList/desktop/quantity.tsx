@@ -616,6 +616,7 @@ const EditState: FC<{
 };
 
 const Buttons = (props: { onClick: (value: number) => void }) => {
+  const { t } = useTranslation();
   const list = [
     {
       label: "0%",
@@ -634,7 +635,7 @@ const Buttons = (props: { onClick: (value: number) => void }) => {
       value: 0.75,
     },
     {
-      label: "Max",
+      label: t("common.max"),
       value: 1,
     },
   ];

@@ -206,7 +206,7 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
     <Statistic
       label={
         <Flex gap={1}>
-          {t("positions.history.column.avgOpen")}
+          {t("common.avgOpen")}
           <Text intensity={20}>(USDC)</Text>
         </Flex>
       }
@@ -231,7 +231,7 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
     <Statistic
       label={
         <Flex gap={1}>
-          {t("positions.history.column.avgClose")}
+          {t("common.avgClose")}
           <Text intensity={20}>(USDC)</Text>
         </Flex>
       }

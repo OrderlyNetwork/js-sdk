@@ -89,7 +89,7 @@ export const DesktopSharePnLContent: FC<{
         toast.error(() => {
           return (
             <div>
-              <div>{t("share.pnl.copyFailed")}</div>
+              <div>{t("common.copy.failed")}</div>
               <div className="oui-text-2xs oui-max-w-[396px] oui-mt-2 oui-text-base-contrast-54">
                 {t("share.pnl.copyFailed.description")}
               </div>

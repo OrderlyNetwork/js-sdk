@@ -25,7 +25,7 @@ export const Balance: FC<BalanceState> = (props) => {
         }}
       >
         <Flex>
-          <Text intensity={54}>{t("trading.asset.totalValue")}</Text>
+          <Text intensity={54}>{t("common.totalValue")}</Text>
           <button
             onClick={(e) => {
               e.stopPropagation();

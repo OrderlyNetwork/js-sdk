@@ -49,7 +49,7 @@ export const UnsettlePnlInfo = ({
               className="oui-text-warning-darken"
             />
             <Text className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer">
-              {t("settle.unsettled.label")}
+              {`${t("settle.unsettled")}:`}
             </Text>
           </Flex>
         </Tooltip>

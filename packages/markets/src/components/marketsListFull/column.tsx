@@ -82,7 +82,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: t("markets.dataList.column.price"),
+        title: t("common.price"),
         dataIndex: "24h_close",
         width: 100,
         align: "right",
@@ -135,7 +135,7 @@ export const useMarketsListFullColumns = (
       {
         title: (
           <Flex gapX={1}>
-            <OrderlyIcon /> {t("markets.dataList.column.openInterest")}
+            <OrderlyIcon /> {t("markets.openInterest")}
           </Flex>
         ),
         dataIndex: "openInterest",

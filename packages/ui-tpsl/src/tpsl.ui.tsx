@@ -174,7 +174,7 @@ const TPSLQuantity = (props: {
           <Input.tooltip
             data-testid="oui-testid-tpsl-popUp-quantity-input"
             ref={inputRef}
-            prefix={t("tpsl.quantity")}
+            prefix={t("common.quantity")}
             size={{
               initial: "lg",
               lg: "md",
@@ -438,7 +438,7 @@ const PriceInput = (props: {
     <Input.tooltip
       data-testid={`oui-testid-tpsl-popUp-${props.type.toLowerCase()}-input`}
       // prefix={`${props.type} price`}
-      prefix={t("tpsl.markPrice")}
+      prefix={t("common.markPrice")}
       size={{
         initial: "lg",
         lg: "md",
@@ -572,7 +572,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         className={cn(textClassName, "oui-pb-4 xl:oui-pb-5")}
       >
         <Flex>
-          <Box grow>{t("tpsl.qty")}</Box>
+          <Box grow>{t("common.qty")}</Box>
 
           <div>
             {isPositionTPSL ? (
@@ -619,7 +619,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         ) : null}
 
         <Flex>
-          <Box grow>{t("tpsl.price")}</Box>
+          <Box grow>{t("common.price")}</Box>
           <div className="oui-text-base-contrast">{t("tpsl.market")}</div>
         </Flex>
       </Flex>

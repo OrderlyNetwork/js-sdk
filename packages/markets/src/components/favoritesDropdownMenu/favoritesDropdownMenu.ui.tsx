@@ -88,7 +88,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
               onClick={addTab}
               disabled={!value || overLen}
             >
-              {t("markets.favorites.dropdown.add")}
+              {t("common.add")}
             </Button>
           </Flex>
 
@@ -219,7 +219,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         className="oui-text-sm"
         size="md"
       >
-        {t("markets.favorites.dropdown.cancel")}
+        {t("common.cancel")}
       </Button>
 
       <Button
@@ -229,7 +229,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         className="oui-text-sm"
         size="md"
       >
-        {t("markets.favorites.dropdown.confirm")}
+        {t("common.confirm")}
       </Button>
     </Flex>
   );

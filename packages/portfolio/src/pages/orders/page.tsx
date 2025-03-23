@@ -32,7 +32,7 @@ export const OrdersPage = (props: { sharePnLConfig?: SharePnLConfig }) => {
             className="oui-bg-base-4"
             onClick={onDownload}
           >
-            {t("orders.download")}
+            {t("common.download")}
             <TooltipIcon className="oui-text-base-contrast-36 oui-ml-[5px]" />
           </Button>
         </Tooltip>

@@ -84,10 +84,10 @@ const MobileLayout: FC<{
         size="xs"
         open={open}
         onOpenChange={setOpen}
-        title="Tips"
+        title={t("common.tips")}
         actions={{
           primary: {
-            label: "OK",
+            label: t("common.ok"),
             onClick: () => setOpen(false),
           },
         }}

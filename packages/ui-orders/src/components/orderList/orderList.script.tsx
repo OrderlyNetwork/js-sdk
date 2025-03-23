@@ -286,7 +286,7 @@ const useFilter = (
       name: "side",
       options: [
         {
-          label: t("orders.side.all"),
+          label: t("common.side.all"),
           value: "all",
         },
         {
@@ -312,7 +312,7 @@ const useFilter = (
       name: "status",
       options: [
         {
-          label: t("orders.status.all"),
+          label: t("common.status.all"),
           value: "all",
         },
         {

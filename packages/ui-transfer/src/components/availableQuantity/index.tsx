@@ -57,7 +57,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
           className="oui-cursor-pointer oui-select-none"
           onClick={props.onClick}
         >
-          {t("transfer.max")}
+          {t("common.max")}
         </Text>
       </Flex>
     </Flex>

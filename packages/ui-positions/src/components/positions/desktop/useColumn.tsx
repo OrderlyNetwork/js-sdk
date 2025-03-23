@@ -37,7 +37,7 @@ export const useColumn = (props: {
     () =>
       [
         {
-          title: t("positions.column.symbol"),
+          title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
           width: 140,
@@ -77,7 +77,7 @@ export const useColumn = (props: {
           ),
         },
         {
-          title: t("positions.column.quantity"),
+          title: t("common.quantity"),
           dataIndex: "position_qty",
           // onSort: true,
           onSort: (a, b) => {
@@ -102,7 +102,7 @@ export const useColumn = (props: {
           // ),
         },
         {
-          title: t("positions.column.avgOpen"),
+          title: t("common.avgOpen"),
           className: "oui-h-[48px]",
           width: 120,
           onSort: true,
@@ -115,7 +115,7 @@ export const useColumn = (props: {
           },
         },
         {
-          title: t("positions.column.markPrice"),
+          title: t("common.markPrice"),
           dataIndex: "mark_price",
           width: 120,
           onSort: true,
@@ -160,7 +160,7 @@ export const useColumn = (props: {
               align="center"
               className="oui-max-w-[280px] oui-text-2xs"
             >
-              <Text>{t("positions.column.unrealPnl")}</Text>
+              <Text>{t("common.unrealPnl")}</Text>
             </HoverCard>
           ),
           dataIndex: "unrealized_pnl",
@@ -218,7 +218,7 @@ export const useColumn = (props: {
         },
 
         {
-          title: t("positions.column.notional"),
+          title: t("common.notional"),
           dataIndex: "notional",
           className: "oui-h-[48px]",
           width: 100,
@@ -267,14 +267,14 @@ export const useColumn = (props: {
           // ),
         },
         {
-          title: t("positions.column.qty"),
+          title: t("common.qty"),
           dataIndex: "close_qty",
           width: 100,
           fixed: "right",
           render: renderQuantityInput,
         },
         {
-          title: t("positions.column.price"),
+          title: t("common.price"),
           dataIndex: "close_price",
           width: 100,
           fixed: "right",

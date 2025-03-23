@@ -1,10 +1,7 @@
 export const scaffold = {
-  "scaffold.accountSummary.totalValue": "Total value",
   "scaffold.accountSummary.freeCollateral": "Free collateral",
   "scaffold.accountSummary.currentLeverage": "Current leverage",
   "scaffold.accountSummary.maxLeverage": "Max leverage",
-  "scaffold.accountSummary.unrealPnL": "Unreal. PnL",
-  "scaffold.accountSummary.unrealizedPnL": "Unrealized PnL",
 
   "scaffold.footer.operational": "Operational",
   "scaffold.footer.joinCommunity": "Join our community",

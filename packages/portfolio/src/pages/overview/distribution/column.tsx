@@ -9,7 +9,7 @@ export const useColumns = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: t("portfolio.overview.column.token"),
+        title: t("common.token"),
         dataIndex: "token",
         width: 80,
         // rule: "symbol",
@@ -23,13 +23,13 @@ export const useColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.time"),
+        title: t("common.time"),
         dataIndex: "updated_time",
         width: 120,
         rule: "date",
       },
       {
-        title: t("portfolio.overview.column.status"),
+        title: t("common.status"),
         dataIndex: "status",
         width: 120,
         formatter(value, record, index) {
@@ -45,7 +45,7 @@ export const useColumns = () => {
       },
 
       {
-        title: t("portfolio.overview.column.type"),
+        title: t("common.type"),
         dataIndex: "type",
         width: 80,
         formatter: (value: any) => {
@@ -64,7 +64,7 @@ export const useColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.amount"),
+        title: t("common.amount"),
         dataIndex: "amount",
         width: 80,
         // rule: "price",

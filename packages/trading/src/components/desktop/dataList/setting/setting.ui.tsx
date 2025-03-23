@@ -102,13 +102,13 @@ const UnPnlPriceBasisCheckBox = (props: {
     <Flex gap={2}>
       <RadioButton
         sel={value === "markPrice"}
-        label={t("trading.markPrice")}
+        label={t("common.markPrice")}
         value={"markPrice"}
         onCheckChange={onValueChange}
       />
       <RadioButton
         sel={value === "lastPrice"}
-        label={t("trading.lastPrice")}
+        label={t("common.lastPrice")}
         value={"lastPrice"}
         onCheckChange={onValueChange}
       />

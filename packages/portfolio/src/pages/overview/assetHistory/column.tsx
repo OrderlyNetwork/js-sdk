@@ -17,7 +17,7 @@ export const useAssetHistoryColumns = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: t("portfolio.overview.column.token"),
+        title: t("common.token"),
         dataIndex: "token",
         width: 80,
         render: (value) => {
@@ -30,7 +30,7 @@ export const useAssetHistoryColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.time"),
+        title: t("common.time"),
         dataIndex: "created_time",
         width: 80,
         rule: "date",
@@ -71,7 +71,7 @@ export const useAssetHistoryColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.status"),
+        title: t("common.status"),
         dataIndex: "trans_status",
         width: 100,
         render: (value) => {
@@ -79,7 +79,7 @@ export const useAssetHistoryColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.type"),
+        title: t("common.type"),
         dataIndex: "side",
         width: 80,
         // formatter: (value) => capitalizeFirstLetter(value.toLowerCase()),
@@ -87,14 +87,14 @@ export const useAssetHistoryColumns = () => {
           return (
             <Text color={value === "DEPOSIT" ? "deposit" : "withdraw"}>
               {value === "DEPOSIT"
-                ? t("portfolio.overview.assetHistory.side.deposit")
-                : t("portfolio.overview.assetHistory.side.withdraw")}
+                ? t("transfer.deposit")
+                : t("transfer.withdraw")}
             </Text>
           );
         },
       },
       {
-        title: t("portfolio.overview.column.amount"),
+        title: t("common.amount"),
         dataIndex: "amount",
         width: 100,
         rule: "price",

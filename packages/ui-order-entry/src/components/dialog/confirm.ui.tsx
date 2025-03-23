@@ -99,7 +99,7 @@ export const OrderConfirmDialog = (props: Props) => {
         })}
       >
         <Flex justify={"between"}>
-          <Text>{t("orderEntry.qty")}</Text>
+          <Text>{t("common.qty")}</Text>
           <Text.numeral
             rule={"price"}
             dp={baseDP}
@@ -111,7 +111,7 @@ export const OrderConfirmDialog = (props: Props) => {
         </Flex>
         {!order.trigger_price ? null : (
           <Flex justify={"between"}>
-            <Text>{t("orderEntry.trigger")}</Text>
+            <Text>{t("common.trigger")}</Text>
             <Text.numeral
               unit={"USDC"}
               rule={"price"}
@@ -125,11 +125,11 @@ export const OrderConfirmDialog = (props: Props) => {
           </Flex>
         )}
         <Flex justify={"between"}>
-          <Text>{t("orderEntry.price")}</Text>
+          <Text>{t("common.price")}</Text>
           {renderPrice()}
         </Flex>
         <Flex justify={"between"}>
-          <Text>{t("orderEntry.notional")}</Text>
+          <Text>{t("common.notional")}</Text>
           <Text.numeral
             unit={"USDC"}
             rule={"price"}

@@ -163,9 +163,9 @@ export const MobileOrderList: FC<
                   className="oui-text-2xs oui-text-base-contrast-54 "
                   placeholder={
                     item.name === "side"
-                      ? t("orders.side.all")
+                      ? t("common.side.all")
                       : item.name === "status"
-                      ? t("orders.status.all")
+                      ? t("common.status.all")
                       : ""
                   }
                   onValueChange={(value) => {

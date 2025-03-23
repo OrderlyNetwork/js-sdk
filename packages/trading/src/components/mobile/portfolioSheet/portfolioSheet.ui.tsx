@@ -90,7 +90,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           }}
           className="oui-cursor-pointer"
         >
-          {`${t("trading.asset.totalValue")} (USDC)`}
+          {`${t("common.totalValue")} (USDC)`}
         </Text.formatted>
         <Text.numeral
           size="base"
@@ -104,7 +104,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
       </Flex>
       <Grid cols={2} rows={1} width={"100%"}>
         <Statistic
-          label={`${t("trading.asset.unrealPnl")} (USDC)`}
+          label={`${t("common.unrealPnl")} (USDC)`}
           classNames={{
             label: "oui-text-2xs oui-text-base-contrast-36",
           }}

@@ -38,7 +38,7 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
             <MarketsDataListWidget />
           </TabPanel>
           <TabPanel
-            title={t("markets.page.tabs.funding")}
+            title={t("common.funding")}
             value="funding"
             testid="oui-testid-funding-tab"
           >

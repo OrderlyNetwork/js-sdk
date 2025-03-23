@@ -9,12 +9,12 @@ export function useUILocale(localeCode = "en") {
     return {
       locale: localeCode,
       dialog: {
-        ok: t("ui.dialog.ok"),
-        cancel: t("ui.dialog.cancel"),
+        ok: t("common.ok"),
+        cancel: t("common.cancel"),
       },
       modal: {
-        confirm: t("ui.modal.confirm"),
-        cancel: t("ui.modal.cancel"),
+        confirm: t("common.confirm"),
+        cancel: t("common.cancel"),
       },
       pagination: {
         morePages: t("ui.pagination.morePages"),

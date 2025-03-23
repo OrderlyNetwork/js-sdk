@@ -249,7 +249,7 @@ function instrument(option?: {
   onSymbolChange?: (symbol: API.Symbol) => void;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.symbol"),
+    title: i18n.t("common.symbol"),
     dataIndex: "symbol",
     fixed: "left",
     // className: "oui-h-[48px]",
@@ -326,7 +326,7 @@ function side(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.side"),
+    title: i18n.t("common.side"),
     dataIndex: "side",
     width: option?.width,
     // className: "oui-h-[48px]",
@@ -361,7 +361,7 @@ function type(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.type"),
+    title: i18n.t("common.type"),
     dataIndex: "type",
     width: option?.width,
     className: option?.className,
@@ -454,7 +454,7 @@ function quantity(option?: {
   className?: string;
 }): Column<API.AlgoOrderExt> {
   return {
-    title: i18n.t("orders.column.quantity"),
+    title: i18n.t("common.quantity"),
     className: option?.className,
     dataIndex: "quantity",
     width: option?.width,
@@ -506,7 +506,7 @@ function price(option?: {
   disableEdit?: boolean;
 }): Column<API.Order> {
   return {
-    title: option?.title ?? i18n.t("orders.column.price"),
+    title: option?.title ?? i18n.t("common.price"),
     dataIndex: "price",
     className: option?.className,
     width: option?.width,
@@ -533,7 +533,7 @@ function tpslPrice(option?: {
   disableEdit?: boolean;
 }): Column<API.Order> {
   return {
-    title: option?.title ?? i18n.t("orders.column.price"),
+    title: option?.title ?? i18n.t("common.price"),
     dataIndex: "price",
     className: option?.className,
     width: option?.width,
@@ -559,7 +559,7 @@ function avgPrice(option?: {
   disableEdit?: boolean;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.avgPrice"),
+    title: i18n.t("common.avgPrice"),
     dataIndex: "average_executed_price",
     className: option?.className,
     width: option?.width,
@@ -575,7 +575,7 @@ function triggerPrice(option?: {
   disableEdit?: boolean;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.trigger"),
+    title: i18n.t("common.trigger"),
     className: option?.className,
     dataIndex: "trigger_price",
     width: option?.width,
@@ -602,7 +602,7 @@ function tpslTriggerPrice(option?: {
   symbolsInfo?: SymbolInfo;
 }): Column<API.Order> {
   return {
-    title: option?.title ?? i18n.t("orders.column.trigger"),
+    title: option?.title ?? i18n.t("common.trigger"),
     className: option?.className,
     dataIndex: "tpsl_trigger_price",
     width: option?.width,
@@ -618,17 +618,14 @@ function tpslTriggerPrice(option?: {
 
       const callback =
         (tp_trigger_price != null
-          ? `${i18n.t("orders.tpsl.tp.label")}: ${commifyOptional(
-              tp_trigger_price,
-              {
-                fix: quote_dp,
-                padEnd: true,
-              }
-            )}`
+          ? `${i18n.t("tpsl.tp")}: ${commifyOptional(tp_trigger_price, {
+              fix: quote_dp,
+              padEnd: true,
+            })}`
           : "") +
         (sl_trigger_price != null
           ? `${tp_trigger_price ? "\n" : ""}${i18n.t(
-              "orders.tpsl.sl.label"
+              "tpsl.sl"
             )}: ${commifyOptional(sl_trigger_price, {
               fix: quote_dp,
               padEnd: true,
@@ -666,12 +663,12 @@ function bracketOrderPrice(option?: {
 
       const callback =
         (tp_trigger_price != null
-          ? `${i18n.t("orders.tpsl.tp.label")} ${tp_trigger_price}`
+          ? `${i18n.t("tpsl.tp")}: ${tp_trigger_price}`
           : "") +
         (sl_trigger_price != null
           ? `${tp_trigger_price ? "\n" : ""}${i18n.t(
-              "orders.tpsl.sl.label"
-            )} ${sl_trigger_price}`
+              "tpsl.sl"
+            )}: ${sl_trigger_price}`
           : "");
       return callback.length > 0 ? callback : "--";
     },
@@ -688,7 +685,7 @@ function estTotal(option?: {
   isPending?: boolean;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.notional"),
+    title: i18n.t("common.notional"),
     dataIndex: "executed",
     width: option?.width,
     className: option?.className,
@@ -758,7 +755,7 @@ function realizedPnL(option?: {
   hideShare?: boolean;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.realPnl"),
+    title: i18n.t("common.realPnl"),
     dataIndex: "realized_pnl",
     width: option?.width,
     className: option?.className,
@@ -817,10 +814,10 @@ function reduceOnly(option?: {
     width: option?.width,
     className: option?.className,
     renderPlantText: (value: string, record: any) => {
-      return value ? "Yes" : "No";
+      return value ? i18n.t("common.yes") : i18n.t("common.no");
     },
     render: (value: boolean) => {
-      return <Text>{value ? "Yes" : "No"}</Text>;
+      return <Text>{value ? i18n.t("common.yes") : i18n.t("common.no")}</Text>;
     },
   };
 }
@@ -836,16 +833,14 @@ function hidden(option?: {
     width: option?.width,
     className: option?.className,
     renderPlantText: (value: number, record: any) => {
-      return value !== 0
-        ? i18n.t("orders.column.hidden.no")
-        : i18n.t("orders.column.hidden.yes");
+      return value !== 0 ? i18n.t("common.no") : i18n.t("common.yes");
     },
     render: (value: number, record) => {
       return (
         <Text>
           {record.visible_quantity !== 0
-            ? i18n.t("orders.column.hidden.no")
-            : i18n.t("orders.column.hidden.yes")}
+            ? i18n.t("common.no")
+            : i18n.t("common.yes")}
         </Text>
       );
     },
@@ -887,7 +882,7 @@ function fee(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.fee"),
+    title: i18n.t("common.fee"),
     dataIndex: "total_fee",
     width: option?.width,
     onSort: option?.enableSort,
@@ -901,7 +896,7 @@ function notional(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.notional"),
+    title: i18n.t("common.notional"),
     dataIndex: "notional",
     width: option?.width,
     onSort: option?.enableSort,
@@ -923,7 +918,7 @@ function tpslNotional(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.notional"),
+    title: i18n.t("common.notional"),
     dataIndex: "executed",
     width: option?.width,
     onSort: option?.enableSort,
@@ -966,7 +961,7 @@ function status(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.status"),
+    title: i18n.t("common.status"),
     dataIndex: "status",
     width: option?.width,
     onSort: option?.enableSort,
@@ -995,7 +990,7 @@ function avgOpen(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.avgOpen"),
+    title: i18n.t("common.avgOpen"),
     dataIndex: "average_executed_price",
     width: option?.width,
     onSort:

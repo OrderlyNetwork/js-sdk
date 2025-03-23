@@ -286,7 +286,7 @@ const EditButton: FC<{
         }}
         data-testid="oui-testid-apiKey-keyList-edit-btn"
       >
-        {t("portfolio.apiKey.column.edit")}
+        {t("common.edit")}
       </Button>
 
       {open && (
@@ -321,7 +321,7 @@ const DeleteButton: FC<{
         }}
         data-testid="oui-testid-apiKey-keyList-delete-btn"
       >
-        {t("portfolio.apiKey.column.delete")}
+        {t("common.delete")}
       </Button>
 
       {open && (

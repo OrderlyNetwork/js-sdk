@@ -23,9 +23,9 @@ export const ShareOption: FC<{
       case "closeTime":
         return t("share.pnl.optionalInfo.closeTime");
       case "markPrice":
-        return t("share.pnl.optionalInfo.markPrice");
+        return t("common.markPrice");
       case "quantity":
-        return t("share.pnl.optionalInfo.quantity");
+        return t("common.quantity");
       case "leverage":
         return t("share.pnl.optionalInfo.leverage");
     }

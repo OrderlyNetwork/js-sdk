@@ -1,20 +1,12 @@
 export const portfolio = {
   "portfolio.title": "Portfolio",
-  "portfolio.sidebar.overview": "Overview",
   "portfolio.sidebar.positions": "Positions",
   "portfolio.sidebar.orders": "Orders",
   "portfolio.sidebar.feeTier": "Fee Tier",
   "portfolio.sidebar.apiKey": "API Key",
   "portfolio.sidebar.setting": "Setting",
 
-  "portfolio.select.7d": "7D",
-  "portfolio.select.30d": "30D",
-  "portfolio.select.90d": "90D",
-
-  "portfolio.overview.title": "Overview",
   "portfolio.overview.assets.title": "Assets",
-  "portfolio.overview.totalValue": "Total value",
-  "portfolio.overview.unrealizedPnl": "Unrealized PnL",
   "portfolio.overview.availableToWithdraw": "Available to withdraw",
 
   "portfolio.overview.performance.title": "Performance",
@@ -24,12 +16,9 @@ export const portfolio = {
   "portfolio.overview.performance.dailyPnl": "Daily PnL",
   "portfolio.overview.performance.cumulativePnl": "Cumulative PnL",
 
-  "portfolio.overview.dataList.tabs.assetHistory": "Deposits & Withdrawals",
-  "portfolio.overview.dataList.tabs.funding": "Funding",
-  "portfolio.overview.dataList.tabs.distribution": "Distribution",
+  "portfolio.overview.deposits&Withdrawals": "Deposits & Withdrawals",
+  "portfolio.overview.distribution": "Distribution",
 
-  "portfolio.overview.assetHistory.side.deposit": "Deposit",
-  "portfolio.overview.assetHistory.side.withdraw": "Withdraw",
   "portfolio.overview.assetHistory.status.new": "NEW",
   "portfolio.overview.assetHistory.status.confirm": "CONFIRM",
   "portfolio.overview.assetHistory.status.processing": "PROCESSING",
@@ -38,15 +27,9 @@ export const portfolio = {
   "portfolio.overview.assetHistory.status.pendingRebalance":
     "PENDING_REBALANCE",
 
-  "portfolio.overview.column.token": "Token",
-  "portfolio.overview.column.time": "Time",
   "portfolio.overview.column.txId": "TxID",
-  "portfolio.overview.column.status": "Status",
   "portfolio.overview.column.status.processing": "Processing",
   "portfolio.overview.column.status.completed": "Completed",
-  "portfolio.overview.column.type": "Type",
-  "portfolio.overview.column.amount": "Amount",
-  "portfolio.overview.column.symbol": "Symbol",
   "portfolio.overview.column.funding&AnnualRate": "Funding rate / Annual rate",
   "portfolio.overview.column.paymentType": "Payment type",
   "portfolio.overview.column.paymentType.paid": "Paid",
@@ -92,8 +75,6 @@ export const portfolio = {
   "portfolio.apiKey.column.restrictedIP": "Restricted IP",
   "portfolio.apiKey.column.restrictedIP.copy": "Restricted IP copied",
   "portfolio.apiKey.column.expirationDate": "Expiration date",
-  "portfolio.apiKey.column.edit": "Edit",
-  "portfolio.apiKey.column.delete": "Delete",
 
   "portfolio.apiKey.create.title": "Create API key",
   "portfolio.apiKey.create.connectWallet.tooltip":

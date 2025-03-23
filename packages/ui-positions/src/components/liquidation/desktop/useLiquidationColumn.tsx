@@ -12,7 +12,7 @@ export const useLiquidationColumn = (props: {}) => {
       [
         // Time
         {
-          title: t("positions.Liquidation.column.time"),
+          title: t("common.time"),
           dataIndex: "timestamp",
           fixed: "left",
           width: 202,
@@ -40,7 +40,7 @@ export const useLiquidationColumn = (props: {}) => {
         },
         // Symbol
         {
-          title: t("positions.Liquidation.column.symbol"),
+          title: t("common.symbol"),
           dataIndex: "Symbol",
           width: 202,
           render: (_: any, record) => (
@@ -72,7 +72,7 @@ export const useLiquidationColumn = (props: {}) => {
         },
         // Quantity
         {
-          title: t("positions.Liquidation.column.quantity"),
+          title: t("common.quantity"),
           dataIndex: "Quantity",
           width: 202,
           render: (_: any, record) => {

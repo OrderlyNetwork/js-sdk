@@ -95,8 +95,8 @@ const Header = (props: { base: string; quote: string; className?: string }) => {
   const { t } = useTranslation();
   return (
     <Row
-      left={t("trading.orderBook.column.time")}
-      mid={`${t("trading.orderBook.column.price")}(${props.quote})`}
+      left={t("common.time")}
+      mid={`${t("common.price")}(${props.quote})`}
       right={`${t("trading.orderBook.column.qty")}(${props.base})`}
       classNames={{
         root: cn(

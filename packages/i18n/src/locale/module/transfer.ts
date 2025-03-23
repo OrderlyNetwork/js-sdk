@@ -7,9 +7,6 @@ export const transfer = {
   "transfer.web3Wallet": "Your Web3 Wallet",
   "transfer.brokerAccount": "Your {{brokerName}} account",
   "transfer.available.maxQty": "Available: <0>{{maxQty}}</0> {{symbol}}",
-  "transfer.max": "Max",
-
-  "transfer.quantity": "Quantity",
   "transfer.quantity.invalid": "Please input a valid number",
 
   "transfer.deposit.approve.symbol": "Approve {{symbol}}",
@@ -20,9 +17,7 @@ export const transfer = {
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
 
-  "transfer.fee": "Fee",
-  "transfer.feeEqual": "Fee ≈",
-  "transfer.fee.destinationGasFee.label": "Destination gas fee: ",
+  "transfer.fee.destinationGasFee": "Destination gas fee",
   "transfer.fee.destinationGasFee.description":
     "Additional gas tokens are required to cover operations on the destination chain.",
 

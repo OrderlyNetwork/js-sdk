@@ -103,7 +103,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
             </Flex>
             <Divider className="oui-w-full" />
             <Flex width={"100%"} justify={"between"}>
-              <Text intensity={54}>{t("positions.column.lastPrice")}</Text>
+              <Text intensity={54}>{t("common.lastPrice")}</Text>
               <Text.numeral
                 dp={(props.item as any)?.symbolInfo?.quote_dp}
                 suffix={<Text intensity={36}> USDC</Text>}
@@ -113,7 +113,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
             </Flex>
             <Flex width={"100%"} direction={"column"} gap={2}>
               <Input.tooltip
-                prefix={t("positions.column.price")}
+                prefix={t("common.price")}
                 suffix={props.quote}
                 align="right"
                 fullWidth
@@ -137,7 +137,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 }}
               />
               <Input
-                prefix={t("positions.column.quantity")}
+                prefix={t("common.quantity")}
                 suffix={props.base}
                 align="right"
                 fullWidth

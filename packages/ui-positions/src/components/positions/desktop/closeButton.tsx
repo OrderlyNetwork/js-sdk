@@ -216,13 +216,13 @@ export const OrderDetail = (props: {
       py={5}
     >
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>{t("positions.column.qty")}</Text>
+        <Text>{t("common.qty")}</Text>
         <Text color={side === OrderSide.BUY ? "success" : "danger"}>
           {quantity}
         </Text>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>{t("positions.column.price")}</Text>
+        <Text>{t("common.price")}</Text>
         <Text.formatted
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}
@@ -231,7 +231,7 @@ export const OrderDetail = (props: {
         </Text.formatted>
       </Flex>
       <Flex justify={"between"} width={"100%"} gap={1}>
-        <Text>{t("positions.column.notional")}</Text>
+        <Text>{t("common.notional")}</Text>
         <Text.formatted
           intensity={98}
           suffix={<Text intensity={54}>USDC</Text>}

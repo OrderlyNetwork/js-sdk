@@ -104,7 +104,7 @@ export const TPSLTriggerPrice: FC<{
           prefix={
             !props.stopLossPrice || direction === "column" ? (
               <span className={"oui-text-base-contrast-54"}>
-                {t("orders.tpsl.tp.prefix")}&nbsp;
+                {`${t("tpsl.tp")} -`}&nbsp;
               </span>
             ) : (
               ""
@@ -127,7 +127,7 @@ export const TPSLTriggerPrice: FC<{
           prefix={
             !props.takeProfitPrice || direction === "column" ? (
               <span className={"oui-text-base-contrast-54"}>
-                {t("orders.tpsl.sl.prefix")}&nbsp;
+                {`${t("tpsl.sl")} -`}&nbsp;
               </span>
             ) : (
               ""
@@ -202,8 +202,7 @@ const TriggerPriceItem: FC<{
   );
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
-  const label =
-    type === "TP" ? t("orders.tpsl.tpPnl.label") : t("orders.tpsl.slPnl.label");
+  const label = type === "TP" ? `${t("tpsl.tpPnl")}:` : `${t("tpsl.slPnl")}:`;
 
   // console.log("trigger price item", "dp", symbolInfo.quote_dp);
 

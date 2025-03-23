@@ -23,9 +23,7 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
               <Text.numeral
                 // @ts-ignore
                 prefix={
-                  <Text intensity={80}>
-                    {t("orders.tpsl.tpPnl.label")} &nbsp;
-                  </Text>
+                  <Text intensity={80}>{`${t("tpsl.tpPnl")}:`} &nbsp;</Text>
                 }
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
                 dp={props.quote_dp}
@@ -39,9 +37,7 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
               <Text.numeral
                 // @ts-ignore
                 prefix={
-                  <Text intensity={80}>
-                    {t("orders.tpsl.slPnl.label")} &nbsp;
-                  </Text>
+                  <Text intensity={80}>{`${t("tpsl.slPnl")}:`} &nbsp;</Text>
                 }
                 suffix={<Text intensity={20}>{" USDC"}</Text>}
                 dp={props.quote_dp}

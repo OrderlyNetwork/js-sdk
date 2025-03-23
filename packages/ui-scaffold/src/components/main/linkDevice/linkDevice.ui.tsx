@@ -25,11 +25,7 @@ export const LinkDevice: FC<LinkDeviceProps> = (props) => {
         onClick={props.showDialog}
       />
       <SimpleDialog
-        title={
-          <Text weight="semibold">
-            {t("linkDevice.createQRCode.dialog.title")}
-          </Text>
-        }
+        title={<Text weight="semibold">{t("common.confirm")}</Text>}
         open={props.open}
         onOpenChange={props.onOpenChange}
         size="sm"

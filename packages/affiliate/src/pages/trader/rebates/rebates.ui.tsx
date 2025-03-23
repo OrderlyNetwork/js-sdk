@@ -99,7 +99,7 @@ const List: FC<RebatesReturns> = (props) => {
       width: 127,
     },
     {
-      title: t("common.column.date"),
+      title: t("common.date"),
       dataIndex: "date",
       render: (value) => (
         <Text.formatted formatString="yyyy-MM-dd">{value}</Text.formatted>
@@ -171,7 +171,7 @@ const Cell = (props: { item: RebatesItem }) => {
           </Text>
         </Statistic>
         <Statistic
-          label={t("common.column.date")}
+          label={t("common.date")}
           className="oui-text-xs oui-text-base-contrast-54 oui-flex-1"
           align="end"
         >

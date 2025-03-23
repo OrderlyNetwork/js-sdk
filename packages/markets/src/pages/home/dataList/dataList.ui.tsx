@@ -63,7 +63,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         trailing={search}
       >
         <TabPanel
-          title={t("markets.dataList.tabs.favorites")}
+          title={t("markets.favorites")}
           icon={<FavoritesIcon />}
           value="favorites"
           testid="oui-testid-markets-favorites-tab"
@@ -71,7 +71,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           <FavoritesListFullWidget />
         </TabPanel>
         <TabPanel
-          title={t("markets.dataList.tabs.allMarkets")}
+          title={t("markets.allMarkets")}
           icon={<AllMarketsIcon />}
           value="all"
           testid="oui-testid-markets-all-tab"
@@ -83,7 +83,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           />
         </TabPanel>
         <TabPanel
-          title={t("markets.dataList.tabs.newListings")}
+          title={t("markets.newListings")}
           icon={<NewListingsIcon />}
           value="new"
           testid="oui-testid-markets-newListings-tab"

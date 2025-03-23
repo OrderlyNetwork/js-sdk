@@ -30,11 +30,6 @@ export const orderEntry = {
   "orderEntry.hidden": "Hidden",
   "orderEntry.keepVisible": "Keep visible",
 
-  "orderEntry.qty": "Qty.",
-  "orderEntry.trigger": "Trigger",
-  "orderEntry.price": "Price",
-  "orderEntry.notional": "Notional",
-  "orderEntry.total": "Total≈",
   "orderEntry.maxBuy": "Max buy",
   "orderEntry.maxSell": "Max sell",
 

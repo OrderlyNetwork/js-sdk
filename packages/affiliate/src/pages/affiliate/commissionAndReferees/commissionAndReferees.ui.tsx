@@ -127,7 +127,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
         width: 216,
       },
       {
-        title: t("common.column.date"),
+        title: t("common.date"),
         dataIndex: "date",
         render: (value) => formatYMDTime(value),
         width: 216,
@@ -176,7 +176,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
                     value={e.daily_traded_referral}
                   />
                   <MobileCellItem
-                    title={t("common.column.date")}
+                    title={t("common.date")}
                     value={e.date}
                     rule="date"
                     formatString="yyyy-MM-dd"

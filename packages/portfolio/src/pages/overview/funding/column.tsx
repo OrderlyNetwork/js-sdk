@@ -9,7 +9,7 @@ export const useFundingHistoryColumns = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: t("portfolio.overview.column.symbol"),
+        title: t("common.symbol"),
         dataIndex: "symbol",
         width: 80,
         rule: "symbol",
@@ -18,7 +18,7 @@ export const useFundingHistoryColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.time"),
+        title: t("common.time"),
         dataIndex: "created_time",
         width: 120,
         rule: "date",

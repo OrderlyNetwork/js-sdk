@@ -1,7 +1,6 @@
 export const orders = {
   "orders.page.title": "Orders",
 
-  "orders.page.tabs.all": "All",
   "orders.page.tabs.pending": "Pending",
   "orders.page.tabs.tpsl": "TP/SL",
   "orders.page.tabs.filled": "Filled",
@@ -9,8 +8,6 @@ export const orders = {
   "orders.page.tabs.rejected": "Rejected",
   "orders.page.tabs.orderHistory": "Order history",
 
-  "orders.side.all": "All sides",
-  "orders.status.all": "All status",
   "orders.status.pending": "Pending",
   "orders.status.filled": "Filled",
   "orders.status.partialFilled": "Partial filled",
@@ -24,30 +21,13 @@ export const orders = {
   "orders.status.replaced.title": "Order edited",
 
   "orders.column.orderPrice": "Order price",
-  "orders.column.symbol": "Symbol",
-  "orders.column.side": "Side",
-  "orders.column.type": "Type",
   "orders.column.fill&Quantity": "Filled / Quantity",
-  "orders.column.quantity": "Quantity",
-  "orders.column.qty": "Qty.",
-  "orders.column.price": "Price",
-  "orders.column.avgPrice": "Avg. price",
-  "orders.column.avgOpen": "Avg. open",
-  "orders.column.trigger": "Trigger",
   "orders.column.triggerPrice": "Trigger price",
-  "orders.column.lastPrice": "Last price",
   "orders.column.tpsl": "TP/SL",
-  "orders.column.notional": "Notional",
-  "orders.column.realPnl": "Real. PnL",
   "orders.column.orderTime": "Order time",
-  "orders.column.fee": "Fee",
-  "orders.column.status": "Status",
   "orders.column.reduceOnly": "Reduce only",
   "orders.column.hidden": "Hidden",
-  "orders.column.hidden.no": "No",
-  "orders.column.hidden.yes": "Yes",
   "orders.column.filled": "Filled",
-  "orders.column.markPrice": "Mark price",
   "orders.column.limitPrice": "Limit price",
   "orders.column.tpTrigger": "TP trigger",
   "orders.column.slTrigger": "SL trigger",
@@ -74,14 +54,6 @@ export const orders = {
   "orders.tpsl.cancelAll.description":
     "Are you sure you want to cancel all of your TP/SL orders?",
 
-  "orders.tpsl.tpPnl.label": "TP PnL:",
-  "orders.tpsl.slPnl.label": "SL PnL:",
-  "orders.tpsl.tp.label": "TP:",
-  "orders.tpsl.sl.label": "SL:",
-  "orders.tpsl.tp.prefix": "TP -",
-  "orders.tpsl.sl.prefix": "SL -",
-  "orders.tpsl.tpMarket": "TP - Market",
-  "orders.tpsl.slMarket": "SL - Market",
   "orders.price.market": "Market",
   "orders.price.greaterThan": "Price can not be greater than {{max}} USDC.",
   "orders.price.lessThan": "Price can not be less than {{min}} USDC.",
@@ -94,7 +66,6 @@ export const orders = {
 
   "orders.disableOrderConfirm": "Disable order confirmation",
 
-  "orders.download": "Download",
   "orders.download.tooltip":
     "The downloaded data will reflect only the applied filters (e.g., status, time, side, and pagination) and may not include all records.",
 };

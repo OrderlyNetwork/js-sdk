@@ -32,7 +32,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
   const items = useMemo(() => {
     return [
       {
-        name: t("portfolio.sidebar.overview"),
+        name: t("common.overview"),
         href: PortfolioLeftSidebarPath.Overview,
         icon: (
           <svg

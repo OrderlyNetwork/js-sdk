@@ -13,9 +13,9 @@ export const PeriodTitle = (props: {
 
   const periodLabel = useMemo(() => {
     return {
-      [PeriodType.WEEK]: t("portfolio.select.7d"),
-      [PeriodType.MONTH]: t("portfolio.select.30d"),
-      [PeriodType.QUARTER]: t("portfolio.select.90d"),
+      [PeriodType.WEEK]: t("common.select.7d"),
+      [PeriodType.MONTH]: t("common.select.30d"),
+      [PeriodType.QUARTER]: t("common.select.90d"),
     };
   }, [t]);
 

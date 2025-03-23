@@ -30,7 +30,7 @@ export const usePositionHistoryColumn = (props: {
       [
         // instrument
         {
-          title: t("positions.history.column.symbol"),
+          title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
           width: 200,
@@ -74,7 +74,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // avg open
         {
-          title: t("positions.history.column.avgOpen"),
+          title: t("common.avgOpen"),
           dataIndex: "avg_open",
           width: 140,
           render: (_: any, record) => {
@@ -92,7 +92,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // avg close
         {
-          title: t("positions.history.column.avgClose"),
+          title: t("common.avgClose"),
           dataIndex: "avg_close",
           width: 175,
           render: (_: any, record) => {

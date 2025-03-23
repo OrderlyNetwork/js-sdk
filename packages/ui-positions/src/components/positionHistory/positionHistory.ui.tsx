@@ -32,10 +32,10 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
   const { t } = useTranslation();
 
   const dayLabel: Record<number, string> = {
-    1: t("positions.filter.1d"),
-    7: t("positions.filter.7d"),
-    30: t("positions.filter.30d"),
-    90: t("positions.filter.90d"),
+    1: t("common.select.1d"),
+    7: t("common.select.7d"),
+    30: t("common.select.30d"),
+    90: t("common.select.90d"),
   };
 
   return (

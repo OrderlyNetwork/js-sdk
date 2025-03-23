@@ -84,7 +84,7 @@ export const OrderListProvider: FC<
           : false;
 
       const orderEntry = await modal.sheet({
-        title: "Edit Order",
+        title: t("orders.editOrder"),
         classNames: {
           content: "oui-edit-order-sheet-content",
         },
@@ -115,7 +115,7 @@ export const OrderListProvider: FC<
         ),
       });
     },
-    []
+    [t]
   );
 
   const checkMinNotional = useCallback(

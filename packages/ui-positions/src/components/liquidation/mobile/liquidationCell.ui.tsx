@@ -49,7 +49,7 @@ export const Header: FC<LiquidationCellState> = (props) => {
         </Text.formatted>
         <Flex gap={1}>
           <Text size="2xs" intensity={36}>
-            {t("positions.Liquidation.column.liquidationId.label")}
+            {`${t("positions.Liquidation.column.liquidationId")}:`}
           </Text>
           <Text
             size="2xs"
@@ -59,7 +59,7 @@ export const Header: FC<LiquidationCellState> = (props) => {
       </Flex>
       <Flex direction={"column"} itemAlign={"end"} className="oui-flex-1">
         <Text size="2xs" intensity={36}>
-          {t("positions.Liquidation.column.insFundTransfer.label")}
+          {`${t("positions.Liquidation.column.insFundTransfer")}:`}
         </Text>
         <Text intensity={80} size="xs">
           {commifyOptional(props.item.transfer_amount_to_insurance_fund)}

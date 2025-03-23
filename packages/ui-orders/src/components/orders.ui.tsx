@@ -21,7 +21,7 @@ export const Orders = (props: OrdersBuilderState) => {
         tabsContent: "oui-h-[calc(100%_-_28px)]",
       }}
     >
-      <TabPanel value={TabType.all} title={t("orders.page.tabs.all")}>
+      <TabPanel value={TabType.all} title={t("common.all")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.all}

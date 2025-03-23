@@ -15,7 +15,7 @@ export const Fee: FC<FeeProps> = (props) => {
       <div className="oui-text-2xs">
         <Flex gapX={1}>
           <Text intensity={54}>
-            {t("transfer.fee.destinationGasFee.label")}
+            {`${t("transfer.fee.destinationGasFee")}: `}
           </Text>
           <Text.numeral
             intensity={80}
@@ -36,7 +36,7 @@ export const Fee: FC<FeeProps> = (props) => {
     );
 
     modal.alert({
-      title: t("transfer.fee"),
+      title: t("common.fee"),
       message: content,
     });
   };
@@ -50,7 +50,7 @@ export const Fee: FC<FeeProps> = (props) => {
       className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer"
       onClick={onShowFee}
     >
-      {t("transfer.feeEqual")}{" "}
+      {`${t("common.fee")} ≈ `}
       <Text size="xs" intensity={80}>
         $
         <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>

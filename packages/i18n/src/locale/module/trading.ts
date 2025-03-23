@@ -19,27 +19,19 @@ export const trading = {
     "Decimal Precision for PnL & Notional",
   "trading.dataList.portfolioSettings.unrealPnlPriceBasis":
     "Unrealized PnL Price Basis",
-  "trading.markPrice": "Mark price",
-  "trading.lastPrice": "Last price",
 
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",
-  "trading.orderBook.column.time": "Time",
-  "trading.orderBook.column.price": "Price",
   "trading.orderBook.column.qty": "Qty",
   "trading.orderBook.column.value": "Value",
-  "trading.orderBook.column.total": "Total",
 
   "trading.tabs.chart": "Chart",
   "trading.tabs.trades": "Trades",
   "trading.tabs.data": "Data",
 
-  "trading.tradeData.column.markPrice": "Mark price",
-  "trading.tradeData.column.indexPrice": "Index price",
   "trading.tradeData.column.24Volume": "24h volume",
   "trading.tradeData.column.24High": "24h high",
   "trading.tradeData.column.24Low": "24h low",
-  "trading.tradeData.column.openInterest": "Open interest",
 
   "trading.orderBook.row.tooltip.avgPrice": "Avg. Price",
   "trading.orderBook.row.tooltip.sum": "Sum",
@@ -85,8 +77,6 @@ export const trading = {
   "trading.asset.marginRatio.formula":
     "Account margin ratio = (Total collateral value / Total position notional) * 100%",
 
-  "trading.asset.totalValue": "Total value",
-  "trading.asset.unrealPnl": "Unreal. PnL",
   "trading.asset.unsettledPnl": "Unsettled PnL",
   "trading.asset.free&TotalCollateral": "Free / Total Collateral",
   "trading.asset.availableBalance": "Available Balance",
