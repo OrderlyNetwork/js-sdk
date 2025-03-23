@@ -72,7 +72,7 @@ const List: FC<RebatesReturns> = (props) => {
 
   const columns: Column<RebatesItem>[] = [
     {
-      title: t("affiliate.trader.rebates.quote"),
+      title: `${t("affiliate.trader.rebates")} (USDC)`,
       dataIndex: "referee_rebate",
       render: (value) => (
         <Text>
@@ -87,7 +87,7 @@ const List: FC<RebatesReturns> = (props) => {
       width: 127,
     },
     {
-      title: t("affiliate.trader.tradingVol.quote"),
+      title: `${t("affiliate.trader.tradingVol")} (USDC)`,
       dataIndex: "vol",
       render: (value) =>
         commifyOptional(value, {
@@ -145,7 +145,7 @@ const Cell = (props: { item: RebatesItem }) => {
     <Flex direction={"column"} width={"100%"}>
       <Flex width={"100%"} gap={1}>
         <Statistic
-          label={t("affiliate.trader.rebates.quote")}
+          label={`${t("affiliate.trader.rebates")} (USDC)`}
           className="oui-text-xs oui-text-base-contrast-54 oui-flex-1 oui-min-w-[105px]"
         >
           <Text size="sm" intensity={80}>
@@ -158,7 +158,7 @@ const Cell = (props: { item: RebatesItem }) => {
           </Text>
         </Statistic>
         <Statistic
-          label={t("affiliate.trader.tradingVol.quote")}
+          label={`${t("affiliate.trader.tradingVol")} (USDC)`}
           className="oui-text-xs oui-text-base-contrast-54 oui-flex-shrink"
         >
           <Text size="sm" intensity={80}>

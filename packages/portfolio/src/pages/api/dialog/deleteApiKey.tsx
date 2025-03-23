@@ -49,7 +49,7 @@ export const DeleteAPIKeyDialog: FC<{
         <Trans
           i18nKey="portfolio.apiKey.delete.description"
           values={{ apiKey: formatKey(item?.orderly_key) }}
-          components={[<Text color="primary" />]}
+          components={[<Text color="primary" className="oui-px-1" />]}
         />
       </Flex>
     </SimpleDialog>

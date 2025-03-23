@@ -108,7 +108,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
           <Flex direction={"column"} itemAlign={"start"}>
             <Text size="xs">{t("affiliate.title")}</Text>
             <Text size="2xs" intensity={54}>
-              {t("affiliate.commission.30d")}
+              ({t("affiliate.commission.30d")})
             </Text>
           </Flex>
           <Flex className="oui-gap-[6px]">
@@ -136,7 +136,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
           <Flex direction={"column"} itemAlign={"start"}>
             <Text size="xs">{t("affiliate.trader")}</Text>
             <Text size="2xs" intensity={54}>
-              {t("affiliate.commission.30d")}
+              ({t("affiliate.commission.30d")})
             </Text>
           </Flex>
           <Flex className="oui-gap-[6px]">
@@ -173,14 +173,13 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
         className="oui-cursor-pointer oui-w-full"
       >
         <Flex justify={"between"} width={"100%"}>
-          <Text size="2xs" intensity={54}>
-            {/* @ts-ignore */}
-            <Trans
-              i18nKey="tradingRewards.currentEpoch"
-              values={{ epoch: props.curEpochId }}
-              components={[<Text size="2xs" intensity={98} />]}
-            />
-          </Text>
+          <Flex gap={1} className="oui-text-base-contrast oui-text-2xs">
+            <Text>{t("tradingRewards.title")}</Text>
+            <Text intensity={54}>
+              (<Text>{`${t("tradingRewards.epoch.lowerCase")} `}</Text>
+              <Text intensity={98}>{props.curEpochId}</Text> )
+            </Text>
+          </Flex>
           <ArrowRightShortIcon color="white" opacity={0.98} size={16} />
         </Flex>
       </button>

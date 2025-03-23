@@ -8,14 +8,11 @@ export const tradingRewards = {
   "tradingRewards.learnMore": "Learn more here",
 
   "tradingRewards.myEstRewards": "My est. rewards",
-  "tradingRewards.currentEpoch":
-    "<0>Trading rewards</0> (epoch <0>{{epoch}}</0> )",
-
   "tradingRewards.epoch": "Epoch",
-  "tradingRewards.epoch.value": "Epoch {{epoch}}",
+  "tradingRewards.epoch.lowerCase": "epoch",
   "tradingRewards.epochRewards": "Epoch rewards",
 
-  "tradingRewards.countdown.label": "Countdown:",
+  "tradingRewards.countdown": "Countdown",
   "tradingRewards.countdown.value":
     " <0>{{days}}</0>D <0>{{hours}}</0>H <0>{{minutes}}</0>M <0>{{seconds}}</0>S",
 

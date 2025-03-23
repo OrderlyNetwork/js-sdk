@@ -55,7 +55,7 @@ export const useLiquidationColumn = (props: {}) => {
         },
         // Price (USDC)
         {
-          title: t("positions.Liquidation.column.price"),
+          title: `${t("common.price")} (USDC)`,
           dataIndex: "Price_(USDC)",
           width: 202,
           render: (_: any, record) => {

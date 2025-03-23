@@ -82,8 +82,6 @@ export const markets = {
   "markets.symbolInfoBar.24hVolume.tooltip":
     "24 hour total trading volume on the Orderly Network.",
   "markets.symbolInfoBar.predFundingRate": "Pred. funding rate",
-  "markets.symbolInfoBar.predFundingRate.value":
-    "<0>{{value}}</0> in {{countDown}}",
   "markets.symbolInfoBar.predFundingRate.tooltip":
     "Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions.",
   "markets.symbolInfoBar.openInterest": "Open interest",

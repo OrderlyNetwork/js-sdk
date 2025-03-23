@@ -99,15 +99,21 @@ const Subtitle: FC<ReferralLinkReturns> = (props) => {
         props.earn || "-",
         true,
         "oui-flex-1",
-        // @ts-ignore
-        <Trans
-          i18nKey="affiliate.referralLink.earn.tooltip"
-          values={{
-            value: props.earn || "-",
+        <span>
+          <Text.gradient color="brand">{props.earn || "-"}</Text.gradient>{" "}
+          {t("affiliate.referralLink.earn.tooltip", {
             brokerName: props.brokerName,
-          }}
-          components={[<Text.gradient color="brand" />]}
-        />
+          })}
+        </span>
+        // @ts-ignore
+        // <Trans
+        //   i18nKey="affiliate.referralLink.earn.tooltip"
+        //   values={{
+        //     value: props.earn || "-",
+        //     brokerName: props.brokerName,
+        //   }}
+        //   components={[<Text.gradient color="brand" />]}
+        // />
       )}
       {item(
         t("affiliate.referralLink.share"),

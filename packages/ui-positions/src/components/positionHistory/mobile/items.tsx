@@ -201,17 +201,14 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
   const avgOpen =
     item.avg_open_price != null ? Math.abs(item.avg_open_price) : "--";
-
+  const { t } = useTranslation();
   return (
     <Statistic
       label={
-        <Text>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="positions.history.column.avgOpen.quote"
-            components={[<Text intensity={20} />]}
-          />
-        </Text>
+        <Flex gap={1}>
+          {t("positions.history.column.avgOpen")}
+          <Text intensity={20}>(USDC)</Text>
+        </Flex>
       }
       classNames={{
         root: "oui-text-xs",
@@ -229,17 +226,14 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
   const avgClose =
     item.avg_close_price != null ? Math.abs(item.avg_close_price) : "--";
-
+  const { t } = useTranslation();
   return (
     <Statistic
       label={
-        <Text>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="positions.history.column.avgClose.quote"
-            components={[<Text intensity={20} />]}
-          />
-        </Text>
+        <Flex gap={1}>
+          {t("positions.history.column.avgClose")}
+          <Text intensity={20}>(USDC)</Text>
+        </Flex>
       }
       classNames={{
         root: "oui-text-xs",

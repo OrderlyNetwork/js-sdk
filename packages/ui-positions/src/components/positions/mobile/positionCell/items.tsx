@@ -33,17 +33,14 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
 
 export const UnrealPnL: FC<PositionCellState> = (props) => {
   const { item } = props;
-
+  const { t } = useTranslation();
   return (
     <Flex gap={3}>
       <Flex direction={"column"} className="oui-text-2xs" itemAlign={"end"}>
-        <Text intensity={36}>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="positions.column.unrealPnl.quote"
-            components={[<Text intensity={20} />]}
-          />
-        </Text>
+        <div>
+          <Text intensity={36}>{t("positions.column.unrealPnl")}</Text>
+          <Text intensity={20}>(USDC)</Text>
+        </div>
 
         <Text.numeral
           size="xs"
@@ -103,15 +100,15 @@ export const Qty: FC<PositionCellState> = (props) => {
 
 export const Margin: FC<PositionCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
       label={
-        // @ts-ignore
-        <Trans
-          i18nKey="positions.column.margin.quote"
-          components={[<Text intensity={20} />]}
-        />
+        <span>
+          {t("positions.column.margin")}
+          <Text intensity={20}>(USDC)</Text>
+        </span>
       }
       classNames={{
         root: "oui-text-xs",
@@ -127,16 +124,16 @@ export const Margin: FC<PositionCellState> = (props) => {
 
 export const Notional: FC<PositionCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
       align="end"
       label={
-        // @ts-ignore
-        <Trans
-          i18nKey="positions.column.notional.quote"
-          components={[<Text intensity={20} />]}
-        />
+        <span>
+          {t("positions.column.notional")}
+          <Text intensity={20}>(USDC)</Text>
+        </span>
       }
       classNames={{
         root: "oui-text-xs",

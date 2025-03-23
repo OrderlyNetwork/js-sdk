@@ -96,8 +96,8 @@ const Header = (props: { base: string; quote: string; className?: string }) => {
   return (
     <Row
       left={t("trading.orderBook.column.time")}
-      mid={t("trading.orderBook.column.price.quote", { quote: props.quote })}
-      right={t("trading.orderBook.column.qty.base", { base: props.base })}
+      mid={`${t("trading.orderBook.column.price")}(${props.quote})`}
+      right={`${t("trading.orderBook.column.qty")}(${props.base})`}
       classNames={{
         root: cn(
           "oui-text-base-contrast-54 oui-h-[32px] oui-sticky",

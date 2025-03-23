@@ -10,7 +10,7 @@ import {
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useFeeTierScriptReturn } from "./feeTier.script";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type FeeTierProps = useFeeTierScriptReturn;
 
@@ -24,14 +24,12 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
         <Flex justify={"between"}>
           <Text size="lg">{t("portfolio.feeTier.title")}</Text>
           <Flex gap={1}>
-            {/* @ts-ignore */}
-            <Trans
-              i18nKey="portfolio.feeTier.updatedDailyBy"
-              components={[
-                <Text size="xs" intensity={54} />,
-                <Text size="xs" intensity={80} />,
-              ]}
-            />
+            <Text size="xs" intensity={54}>
+              {t("portfolio.feeTier.updatedDailyBy")}
+            </Text>
+            <Text size="xs" intensity={80}>
+              2:00 UTC
+            </Text>
           </Flex>
         </Flex>
       }
@@ -75,7 +73,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        label={t("portfolio.feeTier.header.30dVolume")}
+        label={`${t("portfolio.feeTier.header.30dVolume")} (USDC)`}
         value={
           <Text.numeral rule="price" dp={2} rm={Decimal.ROUND_DOWN}>
             {typeof props.vol !== undefined ? `${props.vol}` : "-"}

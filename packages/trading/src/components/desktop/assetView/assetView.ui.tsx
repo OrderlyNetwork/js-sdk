@@ -152,7 +152,7 @@ const TotalValue: FC<TotalValueProps> = ({
       </Text.numeral>
       <Flex gap={1} itemAlign="center">
         <Text size="2xs" color="neutral" weight="semibold">
-          {t("trading.asset.myAssets")}
+          {`${t("trading.asset.myAssets")} (USDC)`}
         </Text>
         <button onClick={onToggleVisibility}>
           {visible ? (

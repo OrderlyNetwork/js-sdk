@@ -6,16 +6,18 @@ import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const Price: FC<API.LiquidationPositionByPerp> = (props) => {
   // const { quote_dp } = useSymbolContext();
+  const { t } = useTranslation();
 
   return (
     <Flex width={"100%"} justify={"between"}>
-      <Text size="2xs" intensity={36}>
-        {/* @ts-ignore */}
-        <Trans
-          i18nKey="positions.Liquidation.column.price.quote"
-          components={[<Text intensity={20} />]}
-        />
-      </Text>
+      <Flex gap={1}>
+        <Text size="2xs" intensity={36}>
+          {t("common.price")}
+        </Text>
+        <Text size="2xs" intensity={20}>
+          (USDC)
+        </Text>
+      </Flex>
       {/* <Text.numeral size="2xs" intensity={80} dp={quote_dp} padding={false}>
         {props.transfer_price}
       </Text.numeral> */}

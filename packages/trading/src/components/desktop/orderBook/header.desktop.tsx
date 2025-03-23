@@ -18,12 +18,12 @@ export const DesktopHeader: FC<Props> = (props) => {
       >
         <Box width={"100%"}>
           <Title id="oui-order-book-header-price">
-            {t("trading.orderBook.column.price.quote", { quote: props.quote })}
+            {`${t("trading.orderBook.column.price")}(${props.quote})`}
           </Title>
         </Box>
         <Box width={"100%"}>
           <Title id="oui-order-book-header-qty" justifyEnd>
-            {t("trading.orderBook.column.qty.base", { base: props.base })}
+            {`${t("trading.orderBook.column.qty")}(${props.base})`}
           </Title>
         </Box>
       </Flex>
@@ -34,13 +34,13 @@ export const DesktopHeader: FC<Props> = (props) => {
       >
         <Box width={"100%"}>
           <Title id="oui-order-book-header-total-base" justifyEnd>
-            {t("trading.orderBook.column.total.unit", { unit: props.base })}
+            {`${t("trading.orderBook.column.total")}(${props.base})`}
           </Title>
         </Box>
         {showTotal && (
           <Box width={"100%"}>
             <Title id="oui-order-book-header-total-quote" justifyEnd>
-              {t("trading.orderBook.column.total.unit", { unit: props.quote })}
+              {`${t("trading.orderBook.column.total")}(${props.quote})`}
             </Title>
           </Box>
         )}

@@ -107,7 +107,7 @@ const EstRewards: FC<{
     | undefined;
 }> = (props) => {
   const { t } = useTranslation();
-  
+
   return (
     <Flex
       direction={props.direction}
@@ -230,6 +230,14 @@ const Countdown: FC<{
     return () => clearInterval(intervalId as unknown as number);
   }, [targetTimestamp]);
 
+  const num = (value: string) => {
+    return (
+      <Text className="oui-text-base-contrast oui-text-sm md:oui-text-base lg:oui-text-lg ">
+        {value}
+      </Text>
+    );
+  };
+
   return (
     <Box
       className="oui-rounded-t-2xl oui-text-base-contrast-54 oui-font-semibold"
@@ -238,24 +246,21 @@ const Countdown: FC<{
       width={"full"}
     >
       <Flex justify={"center"} gap={1}>
-        <span>{t("tradingRewards.countdown.label")}</span>
+        <span>{`${t("tradingRewards.countdown")}: `}</span>
         <Flex
           direction={"row"}
           itemAlign={"end"}
           gap={1}
           className="oui-text-2xs md:oui-text-xs lg:oui-text-sm oui-py-[13px]"
         >
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="tradingRewards.countdown.value"
-            values={{
-              days: `${timeLeft.days}`.padStart(2, "0"),
-              hours: `${timeLeft.hours}`.padStart(2, "0"),
-              minutes: `${timeLeft.minutes}`.padStart(2, "0"),
-              seconds: `${timeLeft.seconds}`.padStart(2, "0"),
-            }}
-            components={[<CountDownNum />]}
-          />
+          {num(`${timeLeft.days}`.padStart(2, "0"))}
+          <span>D</span>
+          {num(`${timeLeft.hours}`.padStart(2, "0"))}
+          <span>H</span>
+          {num(`${timeLeft.minutes}`.padStart(2, "0"))}
+          <span>M</span>
+          {num(`${timeLeft.seconds}`.padStart(2, "0"))}
+          <span>S</span>
         </Flex>
       </Flex>
     </Box>

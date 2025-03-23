@@ -192,15 +192,11 @@ export const useWithdrawForm = ({
             // clean input value
             cleanData();
           } else {
-            toast.error(t("connector.switchChainFailed"));
+            toast.error(t("connector.switchChain.failed"));
           }
         })
         .catch((error) => {
-          toast.error(
-            t("connector.switchChainFailed.message", {
-              message: error.message,
-            })
-          );
+          toast.error(`${t("connector.switchChain.failed")}: ${error.message}`);
         });
     },
     [currentChain, switchChain, findByChainId, t]

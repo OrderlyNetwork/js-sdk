@@ -32,8 +32,7 @@ export const connector = {
 
   "connector.walletConnected": "Wallet connected",
   "connector.networkSwitched": "Network switched",
-  "connector.switchChainFailed": "Switch chain failed",
-  "connector.switchChainFailed.message": "Switch chain failed: {{message}}",
+  "connector.switchChain.failed": "Switch chain failed",
 
   "connector.trade.connectWallet.tooltip":
     "Please connect wallet before starting to trade",

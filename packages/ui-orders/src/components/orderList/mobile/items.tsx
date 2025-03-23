@@ -183,17 +183,15 @@ export const Filled: FC<OrderCellState> = (props) => {
 
 export const Notional: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
       align="end"
       label={
         <Text>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="orders.column.notional.quote"
-            components={[<Text intensity={20} />]}
-          />
+          {t("orders.column.notional")}
+          <Text intensity={20}>(USDC)</Text>
         </Text>
       }
       classNames={{
@@ -216,6 +214,8 @@ export const Notional: FC<OrderCellState> = (props) => {
 
 export const EstTotal: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
+
   const value = useMemo(() => {
     if (item.price && item.quantity) {
       return new Decimal(item.price)
@@ -230,11 +230,8 @@ export const EstTotal: FC<OrderCellState> = (props) => {
       align="end"
       label={
         <Text>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="orders.column.notional.quote"
-            components={[<Text intensity={20} />]}
-          />
+          {t("orders.column.notional")}
+          <Text intensity={20}>(USDC)</Text>
         </Text>
       }
       classNames={{
@@ -519,15 +516,13 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
 };
 
 export const AvgPrice: FC<OrderCellState> = (props) => {
+  const { t } = useTranslation();
   return (
     <Statistic
       label={
         <Text>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="orders.column.avgPrice.quote"
-            components={[<Text intensity={20} />]}
-          />
+          {t("orders.column.avgPrice")}
+          <Text intensity={20}>(USDC)</Text>
         </Text>
       }
       classNames={{
@@ -549,15 +544,13 @@ export const AvgPrice: FC<OrderCellState> = (props) => {
 };
 
 export const OrderPrice: FC<OrderCellState> = (props) => {
+  const { t } = useTranslation();
   return (
     <Statistic
       label={
         <Text>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="orders.column.orderPrice.quote"
-            components={[<Text intensity={20} />]}
-          />
+          {t("orders.column.orderPrice")}
+          <Text intensity={20}>(USDC)</Text>
         </Text>
       }
       classNames={{
@@ -582,15 +575,14 @@ export const OrderPrice: FC<OrderCellState> = (props) => {
 export const RealizedPnL: FC<OrderCellState> = (props) => {
   // @ts-ignore
   const value = props?.item?.realized_pnl;
+  const { t } = useTranslation();
+
   return (
     <Statistic
       label={
         <Text>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="orders.column.realPnl.quote"
-            components={[<Text intensity={20} />]}
-          />
+          {t("orders.column.realPnl")}
+          <Text intensity={20}>(USDC)</Text>
         </Text>
       }
       classNames={{

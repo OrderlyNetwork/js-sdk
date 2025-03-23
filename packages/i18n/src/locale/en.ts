@@ -27,6 +27,7 @@ export const en = {
   "common.edit": "Edit",
   "common.save": "Save",
   "common.tips": "Tips",
+  "common.max": "Max",
   "common.copy.success": "Copy success",
 
   "common.select.all": "All",
@@ -37,9 +38,10 @@ export const en = {
 
   "common.column.date": "Date",
 
-  "common.column.price": "Price",
-  "common.column.quantity": "Quantity",
-  "common.column.status": "Status",
+  "common.price": "Price",
+
+  "common.quantity": "Quantity",
+  "common.status": "Status",
 
   /** linkDevice */
   "linkDevice.createQRCode.dialog.title": "Confirm",
@@ -51,10 +53,9 @@ export const en = {
 
   "linkDevice.createQRCode.success.description":
     "Scan the QR code or paste the URL into another browser/<br/>device to continue.",
-  "linkDevice.createQRCode.success.countdown": "Countdown: <0>{{seconds}}s</0>",
+  "linkDevice.createQRCode.success.countdown": "Countdown",
   "linkDevice.createQRCode.success.copyUrl": "Copy URL",
 
-  "linkDevice.scanQRCode.dialog.title": "Confirm",
   "linkDevice.scanQRCode": "Scan QR Code",
   "linkDevice.scanQRCode.description":
     "Click the <0/> icon in the top right corner on desktop to generate a QR code to scan.",

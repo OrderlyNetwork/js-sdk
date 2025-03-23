@@ -26,11 +26,7 @@ export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
         </Flex>
       </Tooltip>
       <SimpleDialog
-        title={
-          <Text weight="semibold">
-            {t("linkDevice.scanQRCode.dialog.title")}
-          </Text>
-        }
+        title={<Text weight="semibold">{t("common.confirm")}</Text>}
         open={props.open}
         onOpenChange={props.onOpenChange}
         size="sm"

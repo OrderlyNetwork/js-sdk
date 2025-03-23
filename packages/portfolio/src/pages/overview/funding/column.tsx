@@ -61,7 +61,7 @@ export const useFundingHistoryColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.fundingFee"),
+        title: `${t("portfolio.overview.column.fundingFee")} (USDC)`,
         dataIndex: "funding_fee",
         width: 80,
         rule: "price",

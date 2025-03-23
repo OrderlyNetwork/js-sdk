@@ -6,11 +6,8 @@ export const trading = {
   "trading.hideOtherSymbols": "Hide other symbols",
 
   "trading.dataList.tabs.position": "Position",
-  "trading.dataList.tabs.position.count": "Position({{count}})",
   "trading.dataList.tabs.pending": "Pending",
-  "trading.dataList.tabs.pending.count": "Pending({{count}})",
   "trading.dataList.tabs.tpsl": "TP/SL",
-  "trading.dataList.tabs.tpsl.count": "TP/SL({{count}})",
   "trading.dataList.tabs.filled": "Filled",
   "trading.dataList.tabs.history": "History",
   "trading.dataList.tabs.liquidation": "Liquidation",
@@ -31,9 +28,7 @@ export const trading = {
   "trading.orderBook.column.price": "Price",
   "trading.orderBook.column.qty": "Qty",
   "trading.orderBook.column.value": "Value",
-  "trading.orderBook.column.price.quote": "Price({{quote}})",
-  "trading.orderBook.column.qty.base": "Qty({{base}})",
-  "trading.orderBook.column.total.unit": "Total({{unit}})",
+  "trading.orderBook.column.total": "Total",
 
   "trading.tabs.chart": "Chart",
   "trading.tabs.trades": "Trades",
@@ -46,8 +41,8 @@ export const trading = {
   "trading.tradeData.column.24Low": "24h low",
   "trading.tradeData.column.openInterest": "Open interest",
 
-  "trading.orderBook.row.tooltip.avgPrice": "Avg. Price≈",
-  "trading.orderBook.row.tooltip.sum": "Sum ({{unit}})",
+  "trading.orderBook.row.tooltip.avgPrice": "Avg. Price",
+  "trading.orderBook.row.tooltip.sum": "Sum",
   "trading.orderBook.markPrice.tooltip":
     "Obtained from a third-party oracle, the mark price is calculated as the median of three prices: the last price, the fair price based on the funding rate basis, and the fair price based on the order books.",
   "trading.orderBook.spreadRatio.tooltip": "Spread Ratio of the ask1 and bid1.",
@@ -76,7 +71,7 @@ export const trading = {
   "trading.asset.enableTrading.description":
     "Enable trading before starting to trade.",
 
-  "trading.asset.myAssets": "My Assets (USDC)",
+  "trading.asset.myAssets": "My Assets",
 
   "trading.asset.freeCollateral": "Free collateral",
   "trading.asset.freeCollateral.tooltip":
@@ -91,10 +86,9 @@ export const trading = {
     "Account margin ratio = (Total collateral value / Total position notional) * 100%",
 
   "trading.asset.totalValue": "Total value",
-  "trading.asset.totalValueQuote": "Total value (USDC)",
-  "trading.asset.unrealPnlQuote": "Unreal. PnL (USDC)",
-  "trading.asset.unsettledPnlQuote": "Unsettled PnL (USDC)",
-  "trading.asset.free&TotalCollateralQuote": "Free / Total Collateral (USDC)",
+  "trading.asset.unrealPnl": "Unreal. PnL",
+  "trading.asset.unsettledPnl": "Unsettled PnL",
+  "trading.asset.free&TotalCollateral": "Free / Total Collateral",
   "trading.asset.availableBalance": "Available Balance",
 
   "trading.asset.maintenanceMarginRatio": "Maintenance margin ratio",

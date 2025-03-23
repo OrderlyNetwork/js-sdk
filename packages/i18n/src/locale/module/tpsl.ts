@@ -18,10 +18,10 @@ export const tpsl = {
   "tpsl.qty": "Qty.",
   "tpsl.entirePosition": "Entire position",
   "tpsl.position": "Position",
-  "tpsl.maxQty": "<0>Max</0> <1>{{maxQty}}</1>",
   "tpsl.estPnl": "Est. PNL:",
-  "tpsl.takeProfit": "Take profit <0>(market order)</0>",
-  "tpsl.stopLoss": "Stop loss <0>(market order)</0>",
+  "tpsl.takeProfit": "Take profit",
+  "tpsl.stopLoss": "Stop loss",
+  "tpsl.marketOrder": "market order",
 
   "tpsl.cancelOrder.title": "Cancel Order",
   "tpsl.cancelOrder.description":

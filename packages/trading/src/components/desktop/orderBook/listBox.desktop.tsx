@@ -191,17 +191,17 @@ const Tip: FC<{
         onPointerEnter={(e) => e.preventDefault()}
       >
         <Row
-          title={t("trading.orderBook.row.tooltip.avgPrice")}
+          title={`${t("trading.orderBook.row.tooltip.avgPrice")}≈`}
           content={hintInfo.avgPrice}
           contentDp={priceDp}
         />
         <Row
-          title={t("trading.orderBook.row.tooltip.sum", { unit: base })}
+          title={`${t("trading.orderBook.row.tooltip.sum")} (${base})`}
           content={hintInfo.sumQty}
           contentDp={baseDp}
         />
         <Row
-          title={t("trading.orderBook.row.tooltip.sum", { unit: quote })}
+          title={`${t("trading.orderBook.row.tooltip.sum")} (${quote})`}
           content={hintInfo.sumQtyAmount}
           contentDp={quoteDp}
         />

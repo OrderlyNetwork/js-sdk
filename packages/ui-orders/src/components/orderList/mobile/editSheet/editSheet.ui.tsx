@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import {
   Badge,
   Button,
@@ -18,7 +18,7 @@ import { ConfirmDialogContent } from "./editDialogContent";
 import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
 import { utils } from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
@@ -227,20 +227,14 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               padding={false}
               rule="percentages"
             >{`${percentages ?? 0}`}</Text.numeral>
-            <div>
-              {/* @ts-ignore */}
-              <Trans
-                i18nKey="positions.editOrder.max"
-                values={{
-                  quantity: props.maxQty,
-                }}
-                components={[
-                  <Text size="2xs" color="primary" />,
-                  // @ts-ignore
-                  <Text.numeral intensity={54} size="2xs" dp={props.base_dp} />,
-                ]}
-              />
-            </div>
+            <Flex gap={1}>
+              <Text size="2xs" color="primary">
+                {t("common.max")}
+              </Text>
+              <Text.numeral intensity={54} size="2xs" dp={props.base_dp}>
+                {props.maxQty}
+              </Text.numeral>
+            </Flex>
           </Flex>
         </Flex>
         <Flex width={"100%"} gap={3} mt={2}>

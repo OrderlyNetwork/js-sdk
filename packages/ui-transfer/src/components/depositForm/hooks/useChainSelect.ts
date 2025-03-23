@@ -69,14 +69,12 @@ export function useChainSelect() {
         .then((switched) => {
           switched
             ? toast.success(t("connector.networkSwitched"))
-            : toast.error(t("connector.switchChainFailed"));
+            : toast.error(t("connector.switchChain.failed"));
         })
         .catch((error) => {
           if (error && error.message) {
             toast.error(
-              t("connector.switchChainFailed.message", {
-                message: error.message,
-              })
+              `${t("connector.switchChain.failed")}: ${error.message}`
             );
           }
         });

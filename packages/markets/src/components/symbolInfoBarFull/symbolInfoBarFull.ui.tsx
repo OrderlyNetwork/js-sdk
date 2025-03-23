@@ -295,16 +295,14 @@ const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
   }
 
   return (
-    <div className="oui-text-base-contrast-36 oui-tabular-nums">
-      {/* @ts-ignore */}
-      <Trans
-        i18nKey="markets.symbolInfoBar.predFundingRate.value"
-        values={{ value: data.est_funding_rate!, countDown: data.countDown }}
-        components={[
-          // @ts-ignore
-          <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]" />,
-        ]}
-      />
+    <div>
+      <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
+        {data.est_funding_rate!}
+      </Text.numeral>
+      <Text intensity={36} className="oui-tabular-nums">
+        {/* not need to translate  */}
+        {` in ${data.countDown}`}
+      </Text>
     </div>
   );
 };

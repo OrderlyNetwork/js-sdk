@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import {
   Badge,
   Button,
@@ -18,7 +18,7 @@ import { LimitCloseBtnState } from "./limitCloseBtn.script";
 import { Decimal } from "@orderly.network/utils";
 import { LimitConfirmDialog } from "../../desktop/closeButton";
 import { utils } from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
@@ -192,20 +192,14 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   color="primary"
                   size="2xs"
                 >{`${props.sliderValue}%`}</Text>
-                <div>
-                  {/* @ts-ignore */}
-                  <Trans
-                    i18nKey="positions.limitClose.max"
-                    values={{
-                      quantity: Math.abs(props.item.position_qty),
-                    }}
-                    components={[
-                      <Text size="2xs" color="primary" />,
-                      // @ts-ignore
-                      <Text.numeral intensity={54} size="2xs" />,
-                    ]}
-                  />
-                </div>
+                <Flex gap={1}>
+                  <Text size="2xs" color="primary">
+                    {t("common.max")}
+                  </Text>
+                  <Text.numeral intensity={54} size="2xs">
+                    {Math.abs(props.item.position_qty)}
+                  </Text.numeral>
+                </Flex>
               </Flex>
             </Flex>
             <Flex width={"100%"} gap={3} mt={2}>

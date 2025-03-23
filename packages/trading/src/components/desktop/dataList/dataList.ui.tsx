@@ -47,26 +47,20 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-position-tab"
         value={DataListTabType.positions}
-        title={
-          (props.positionCount ?? 0) > 0
-            ? t("trading.dataList.tabs.position.count", {
-                count: props.positionCount,
-              })
-            : t("trading.dataList.tabs.position")
-        }
+        title={`${t("trading.dataList.tabs.position")}${
+          (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
+        }`}
       >
         <PositionsView {...props} />
       </TabPanel>
       <TabPanel
         testid="oui-testid-dataList-pending-tab"
         value={DataListTabType.pending}
-        title={
+        title={`${t("trading.dataList.tabs.pending")}${
           (props.pendingOrderCount ?? 0) > 0
-            ? t("trading.dataList.tabs.pending.count", {
-                count: props.pendingOrderCount,
-              })
-            : t("trading.dataList.tabs.pending")
-        }
+            ? `(${props.pendingOrderCount})`
+            : ""
+        }`}
       >
         <DesktopOrderListWidget
           type={TabType.pending}
@@ -81,13 +75,9 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-tpsl-tab"
         value={DataListTabType.tp_sl}
-        title={
-          (props.tpSlOrderCount ?? 0) > 0
-            ? t("trading.dataList.tabs.tpsl.count", {
-                count: props.tpSlOrderCount,
-              })
-            : t("trading.dataList.tabs.tpsl")
-        }
+        title={`${t("trading.dataList.tabs.tpsl")}${
+          (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
+        }`}
       >
         <DesktopOrderListWidget
           type={TabType.tp_sl}

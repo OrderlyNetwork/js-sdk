@@ -280,27 +280,26 @@ const TPSLQuantity = (props: {
           {currentQtyPercentage}
         </Text.numeral>
         <Flex itemAlign={"center"} gap={1}>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="tpsl.maxQty"
-            values={{
-              maxQty: props.maxQty,
+          <button
+            className={"oui-leading-none"}
+            style={{ lineHeight: 0 }}
+            onClick={() => {
+              props.onQuantityChange?.(props.maxQty);
             }}
-            components={[
-              <MaxQtyButton
-                onClick={() => {
-                  props.onQuantityChange?.(props.maxQty);
-                }}
-              />,
-              // @ts-ignore
-              <Text.numeral
-                rule={"price"}
-                size={"2xs"}
-                intensity={54}
-                tick={props.baseTick}
-              />,
-            ]}
-          />
+          >
+            <Text color={"primary"} size={"2xs"}>
+              {t("common.max")}
+            </Text>
+          </button>
+
+          <Text.numeral
+            rule={"price"}
+            size={"2xs"}
+            intensity={54}
+            tick={props.baseTick}
+          >
+            {props.maxQty}
+          </Text.numeral>
         </Flex>
       </Flex>
     </>
@@ -335,13 +334,14 @@ const TPSLPrice = (props: {
     <>
       <div>
         <Flex justify={"between"}>
-          <Text size={"2xs"} intensity={80}>
-            {/* @ts-ignore */}
-            <Trans
-              i18nKey="tpsl.takeProfit"
-              components={[<Text intensity={36} />]}
-            />
-          </Text>
+          <Flex gap={1}>
+            <Text size={"2xs"} intensity={80}>
+              {t("tpsl.takeProfit")}
+            </Text>
+            <Text size={"2xs"} intensity={36}>
+              ({t("tpsl.marketOrder")})
+            </Text>
+          </Flex>
           <Flex>
             <Text size={"2xs"} intensity={36}>
               {t("tpsl.estPnl")}
@@ -377,13 +377,15 @@ const TPSLPrice = (props: {
       </div>
       <div>
         <Flex justify={"between"}>
-          <Text size={"2xs"} intensity={80}>
-            {/* @ts-ignore */}
-            <Trans
-              i18nKey="tpsl.stopLoss"
-              components={[<Text intensity={36} />]}
-            />
-          </Text>
+          <Flex gap={1}>
+            <Text size={"2xs"} intensity={80}>
+              {t("tpsl.stopLoss")}
+            </Text>
+            <Text size={"2xs"} intensity={36}>
+              ({t("tpsl.marketOrder")})
+            </Text>
+          </Flex>
+
           <Flex>
             <Text size={"2xs"} intensity={36}>
               {t("tpsl.estPnl")}

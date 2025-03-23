@@ -47,14 +47,11 @@ export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
       <Text as="div" size={"sm"} intensity={54} className="oui-mt-2">
         {t("leverage.maxAccountLeverage")}
       </Text>
-      <Flex direction={"row"} gap={1}>
-        {/* @ts-ignore */}
-        <Trans
-          i18nKey="leverage.currentLeverage"
-          values={{ leverage: props.currentLeverage ?? "--" }}
-          // @ts-ignore
-          components={[<Text.numeral unit="x" size={"sm"} intensity={80} />]}
-        />
+      <Flex gap={1}>
+        {`${t("leverage.current")}:`}
+        <Text.numeral unit="x" size={"sm"} intensity={80}>
+          {props.currentLeverage ?? "--"}
+        </Text.numeral>
       </Flex>
     </Flex>
   );

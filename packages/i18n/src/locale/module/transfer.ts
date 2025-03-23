@@ -34,7 +34,7 @@ export const transfer = {
   "transfer.withdraw.crossChain.confirm": "Confirm to withdraw",
   "transfer.withdraw.crossChain.recipientAddress": "Recipient address",
   "transfer.withdraw.crossChain.recipientNetwork": "Recipient network",
-  "transfer.withdraw.crossChain.withdrawAmount": "Withdraw amount (USDC)",
+  "transfer.withdraw.crossChain.withdrawAmount": "Withdraw amount",
 
   "transfer.withdraw.crossChain.process":
     "Your cross-chain withdrawal is being processed...",

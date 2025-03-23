@@ -15,16 +15,13 @@ export const positions = {
   "positions.column.liqPrice.tooltip":
     "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
   "positions.column.unrealPnl": "Unreal. PnL",
-  "positions.column.unrealPnl.quote": "Unreal. PnL<0>(USDC)</0>",
   "positions.column.unrealPnl.tooltip":
     "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
   "positions.column.unrealPnl.priceBasis": "Unrealized PnL Price Basis",
   "positions.column.lastPrice": "Last price",
   "positions.column.tpSl": "TP/SL",
   "positions.column.notional": "Notional",
-  "positions.column.notional.quote": "Notional<0>(USDC)</0>",
   "positions.column.margin": "Margin",
-  "positions.column.margin.quote": "Margin<0>(USDC)</0>",
   "positions.column.margin.tooltip":
     "The minimum equity to keep your position.",
   "positions.column.margin.formula":
@@ -36,8 +33,6 @@ export const positions = {
   "positions.limitClose": "Limit close",
   "positions.limitClose.description":
     "You agree closing {{quantity}} {{base}} position at limit price.",
-  "positions.limitClose.max": "<0>Max</0> <1>{{quantity}}</1>",
-
   "positions.marketClose": "Market close",
   "positions.marketClose.description":
     "You agree closing {{quantity}} {{base}} position at market price.",
@@ -70,9 +65,7 @@ export const positions = {
   "positions.history.column.closed&maxClosed": "Closed / Max closed",
   "positions.history.column.netPnl": "Net PnL",
   "positions.history.column.avgOpen": "Avg. open",
-  "positions.history.column.avgOpen.quote": "Avg. open <0>(USDC)</0>",
   "positions.history.column.avgClose": "Avg. close",
-  "positions.history.column.avgClose.quote": "Avg. close <0>(USDC)</0>",
   "positions.history.column.timeOpened": "Time opened",
   "positions.history.column.timeClosed": "Time closed",
   "positions.history.column.updatedTime": "Updated time",
@@ -88,8 +81,6 @@ export const positions = {
   "positions.Liquidation.column.insFundTransfer": "Ins. fund transfer",
   "positions.Liquidation.column.insFundTransfer.label": "Ins. Fund Transfer:",
   "positions.Liquidation.column.symbol": "Symbol",
-  "positions.Liquidation.column.price": "Price (USDC)",
-  "positions.Liquidation.column.price.quote": "Price <0>(USDC)</0>",
   "positions.Liquidation.column.quantity": "Quantity",
   "positions.Liquidation.column.liquidationFee": "Liquidation fee",
 };

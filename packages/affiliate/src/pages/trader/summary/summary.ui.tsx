@@ -25,7 +25,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
         <SummaryFilter {...props} />
         <CommissionData {...props} />
       </Flex>
-      <Row title={t("affiliate.trader.tradingVol.quote")} {...props} />
+      <Row title={`${t("affiliate.trader.tradingVol")} (USDC)`} {...props} />
     </Flex>
   );
 };
@@ -56,26 +56,22 @@ const Title: FC<SummaryReturns> = (props) => {
 };
 
 const Rebate: FC<SummaryReturns & { className?: string }> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"row"} width={"100%"} gap={2} className={props.className}>
       <Text
         intensity={54}
         className="oui-text-sm md:oui-text-base 2xl:oui-text-lg"
       >
-        {/* @ts-ignore */}
-        <Trans
-          i18nKey="affiliate.trader.rebate"
-          values={{
-            rebate: props.rebateText,
-          }}
-          components={[
-            <Text.gradient
-              color="brand"
-              className="oui-text-lg md:oui-text-xl 2xl:oui-text-2xl"
-            />,
-          ]}
-        />
+        {`${t("affiliate.trader.rebate")}:`}
       </Text>
+      <Text.gradient
+        color="brand"
+        className="oui-text-lg md:oui-text-xl 2xl:oui-text-2xl"
+      >
+        {props.rebateText}
+      </Text.gradient>
     </Flex>
   );
 };
@@ -113,7 +109,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
       gap={3}
     >
       <Text intensity={54} className="oui-text-base 2xl:oui-text-lg">
-        {t("affiliate.trader.rebates.quote")}
+        {`${t("affiliate.trader.rebates")} (USDC)`}
       </Text>
       <Flex
         direction={"row"}

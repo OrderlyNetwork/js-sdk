@@ -24,7 +24,6 @@ export const orders = {
   "orders.status.replaced.title": "Order edited",
 
   "orders.column.orderPrice": "Order price",
-  "orders.column.orderPrice.quote": "Order price<0>(USDC)</0>",
   "orders.column.symbol": "Symbol",
   "orders.column.side": "Side",
   "orders.column.type": "Type",
@@ -33,16 +32,13 @@ export const orders = {
   "orders.column.qty": "Qty.",
   "orders.column.price": "Price",
   "orders.column.avgPrice": "Avg. price",
-  "orders.column.avgPrice.quote": "Avg. price<0>(USDC)</0>",
   "orders.column.avgOpen": "Avg. open",
   "orders.column.trigger": "Trigger",
   "orders.column.triggerPrice": "Trigger price",
   "orders.column.lastPrice": "Last price",
   "orders.column.tpsl": "TP/SL",
   "orders.column.notional": "Notional",
-  "orders.column.notional.quote": "Notional<0>(USDC)</0>",
   "orders.column.realPnl": "Real. PnL",
-  "orders.column.realPnl.quote": "Real. PnL<0>(USDC)</0>",
   "orders.column.orderTime": "Order time",
   "orders.column.fee": "Fee",
   "orders.column.status": "Status",
@@ -59,8 +55,6 @@ export const orders = {
   "orders.column.slPrice": "SL price",
 
   "orders.editOrder": "Edit order",
-  "positions.editOrder.max": "<0>Max</0> <1>{{quantity}}</1>",
-
   "order.edit.confirm.quantity":
     "You agree changing the quantity of {{base}}-PERP order to <0>{{value}}</0>.",
   "order.edit.confirm.price":

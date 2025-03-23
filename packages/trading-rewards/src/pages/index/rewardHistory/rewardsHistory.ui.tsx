@@ -186,7 +186,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
       dataIndex: "epoch_id",
       className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value) => {
-        return <Text>{t("tradingRewards.epoch.value", { epoch: value })}</Text>;
+        return <Text>{`${t("tradingRewards.epoch")} ${value}`}</Text>;
       },
     },
     {

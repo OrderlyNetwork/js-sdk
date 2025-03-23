@@ -46,14 +46,10 @@ const Title: FC<ReferralCodesReturns> = (props) => {
       <Text className="oui-text-lg">{t("affiliate.referralCodes")}</Text>
       <div className="oui-text-2xs md:oui-text-xs xl:oui-text-sm">
         <Text className="oui-text-base-contrast-54">
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="affiliate.referralCodes.remaining"
-            values={{
-              count: props.codes?.length || "--",
-            }}
-            components={[<Text className="oui-text-primary-light" />]}
-          />
+          {`${t("affiliate.referralCodes.remaining")}: `}
+        </Text>
+        <Text className="oui-text-primary-light">
+          {props.codes?.length || "--"}
         </Text>
       </div>
     </Flex>

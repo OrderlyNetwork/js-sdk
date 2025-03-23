@@ -52,17 +52,15 @@ export const affiliate = {
   "affiliate.referralLink": "Referral link",
   "affiliate.referralLink.earn": "Earn",
   "affiliate.referralLink.earn.tooltip":
-    "<0>{{value}}</0> {{brokerName}}net fee that deduct Orderly fee.",
+    "{{brokerName}} net fee that deduct Orderly fee.",
   "affiliate.referralLink.share": "Share",
   "affiliate.referralLink.share.tooltip":
     "Your referees get <0>{{value}}</0> of their {{brokerName}} net fee",
 
   "affiliate.referralVol": "Referral vol.",
-  "affiliate.referralVol.quote": "Referral vol. (USDC)",
 
   "affiliate.referralCodes": "Referral codes",
-  "affiliate.referralCodes.remaining":
-    "Remaining referral codes: <0>{{count}}</0>",
+  "affiliate.referralCodes.remaining": "Remaining referral codes",
   "affiliate.referralCodes.column.you&Referee": "You / Referee",
   "affiliate.referralCodes.column.traders": "Traders",
   "affiliate.referralCodes.column.referees&Traders": "Referees / Traders",
@@ -72,26 +70,23 @@ export const affiliate = {
   "affiliate.dataList.tabs.referees": "My referees",
 
   "affiliate.commission": "Commission",
-  "affiliate.commission.30d": "(30d commission)",
-  "affiliate.commission.quote": "Commission (USDC)",
+  "affiliate.commission.30d": "30d commission",
   "affiliate.commission.column.activeUsers": "Referral active users",
 
   "affiliate.referees": "Referees",
   "affiliate.referees.column.refereeAddress": "Referee address",
   "affiliate.referees.column.totalCommission": "Total commission",
-  "affiliate.referees.column.totalCommission.quote": "Total commission (USDC)",
   "affiliate.referees.column.totalVol": "Total vol.",
-  "affiliate.referees.column.totalVol.quote": "Total vol. (USDC)",
   "affiliate.referees.column.invitationTime": "Invitation time",
 
   "affiliate.trader.statistics.select.rebate": "Rebate",
   "affiliate.trader.statistics.select.volume": "Volume",
 
   "affiliate.trader.yourReferrer": "Your referrer",
-  "affiliate.trader.rebate": "Rebate: <0>{{rebate}}</0>",
+  "affiliate.trader.rebate": "Rebate",
   "affiliate.trader.rebates.title": "My rebates",
-  "affiliate.trader.rebates.quote": "Rebates (USDC)",
-  "affiliate.trader.tradingVol.quote": "Trading vol. (USDC)",
+  "affiliate.trader.rebates": "Rebates",
+  "affiliate.trader.tradingVol": "Trading vol.",
 };
 
 export type Affiliate = typeof affiliate;

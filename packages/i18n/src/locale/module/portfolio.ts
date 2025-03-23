@@ -51,7 +51,7 @@ export const portfolio = {
   "portfolio.overview.column.paymentType": "Payment type",
   "portfolio.overview.column.paymentType.paid": "Paid",
   "portfolio.overview.column.paymentType.received": "Received",
-  "portfolio.overview.column.fundingFee": "Funding fee (USDC)",
+  "portfolio.overview.column.fundingFee": "Funding fee",
 
   "portfolio.overview.distribution.type.referralCommission":
     "Referral commission",
@@ -59,13 +59,13 @@ export const portfolio = {
   "portfolio.overview.distribution.type.brokerFee": "Broker fee",
 
   "portfolio.feeTier.title": "Fee Tier",
-  "portfolio.feeTier.updatedDailyBy": "<0>Updated daily by</0> <1>2:00 UTC</1>",
+  "portfolio.feeTier.updatedDailyBy": "Updated daily by",
   "portfolio.feeTier.header.yourTier": "Your tier",
-  "portfolio.feeTier.header.30dVolume": "30D trading volume (USDC)",
+  "portfolio.feeTier.header.30dVolume": "30D trading volume",
   "portfolio.feeTier.header.takerFeeRate": "Taker fee rate",
   "portfolio.feeTier.header.makerFeeRate": "Maker fee rate",
   "portfolio.feeTier.column.tier": "Tier",
-  "portfolio.feeTier.column.30dVolume": "30 day volume (USDC)",
+  "portfolio.feeTier.column.30dVolume": "30 day volume",
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
@@ -121,7 +121,7 @@ export const portfolio = {
   "portfolio.apiKey.edit.title": "Edit API key",
   "portfolio.apiKey.delete.title": "Delete API key",
   "portfolio.apiKey.delete.description":
-    "Delete your API key <0 className='oui-px-1'>{{apiKey}}</0>?",
+    "Delete your API key <0>{{apiKey}}</0>?",
 
   "portfolio.setting.page.title": "System upgrade",
   "portfolio.setting.cancelOpenOrders.title":

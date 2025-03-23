@@ -90,7 +90,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           }}
           className="oui-cursor-pointer"
         >
-          {t("trading.asset.totalValueQuote")}
+          {`${t("trading.asset.totalValue")} (USDC)`}
         </Text.formatted>
         <Text.numeral
           size="base"
@@ -104,7 +104,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
       </Flex>
       <Grid cols={2} rows={1} width={"100%"}>
         <Statistic
-          label={t("trading.asset.unrealPnlQuote")}
+          label={`${t("trading.asset.unrealPnl")} (USDC)`}
           classNames={{
             label: "oui-text-2xs oui-text-base-contrast-36",
           }}
@@ -135,7 +135,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           </Flex>
         </Statistic>
         <Statistic
-          label={t("trading.asset.unsettledPnlQuote")}
+          label={`${t("trading.asset.unsettledPnl")} (USDC)`}
           classNames={{
             label: "oui-text-2xs oui-text-base-contrast-36",
           }}
@@ -212,7 +212,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
         </Flex>
       </Statistic>
       <Statistic
-        label={t("trading.asset.free&TotalCollateralQuote")}
+        label={`${t("trading.asset.free&TotalCollateral")} (USDC)`}
         classNames={{
           label: "oui-text-2xs oui-text-base-contrast-36",
         }}
@@ -250,15 +250,14 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           {t("leverage.maxAccountLeverage")}
         </Text>
 
-        <Text size="2xs" intensity={54}>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="leverage.currentLeverage"
-            values={{ leverage: props.currentLeverage ?? "--" }}
-            // @ts-ignore
-            components={[<Text.numeral size="2xs" unit="x" intensity={98} />]}
-          />
-        </Text>
+        <Flex gap={1}>
+          <Text size="2xs" intensity={54}>
+            {`${t("leverage.current")}:`}
+          </Text>
+          <Text.numeral size="2xs" unit="x" intensity={98}>
+            {props.currentLeverage ?? "--"}
+          </Text.numeral>
+        </Flex>
       </Flex>
       <LeverageSlider
         value={props.value}

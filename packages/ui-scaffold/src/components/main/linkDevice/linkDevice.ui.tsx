@@ -97,16 +97,10 @@ const QRCode: FC<QRCodeProps> = (props) => {
       </Text>
 
       <Text size="sm" intensity={54}>
-        {/* @ts-ignore */}
-        <Trans
-          i18nKey="linkDevice.createQRCode.success.countdown"
-          values={{
-            seconds: props.seconds,
-          }}
-          components={[
-            <Text.gradient color="brand" className="oui-tabular-nums" />,
-          ]}
-        />
+        {`${t("linkDevice.createQRCode.success.countdown")}: `}
+        <Text.gradient color="brand" className="oui-tabular-nums">
+          {props.seconds}s
+        </Text.gradient>
       </Text>
 
       <Flex

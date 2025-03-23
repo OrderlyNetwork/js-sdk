@@ -14,7 +14,7 @@ export const useFeeTierColumns = () => {
         width: 100,
       },
       {
-        title: t("portfolio.feeTier.column.30dVolume"),
+        title: `${t("portfolio.feeTier.column.30dVolume")} (USDC)`,
         dataIndex: "volume",
         align: "center",
         width: 170,
