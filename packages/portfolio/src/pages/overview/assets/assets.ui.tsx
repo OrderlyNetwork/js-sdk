@@ -1,7 +1,5 @@
 import { FC } from "react";
 import {
-  Box,
-  Button,
   Card,
   Divider,
   Flex,
@@ -16,6 +14,7 @@ import {
 } from "@orderly.network/ui";
 import { AssetsHeader } from "./assetsHeader";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
 
 type Props = {
   canTrade?: boolean;
@@ -37,6 +36,7 @@ type StatisticProps = {
 };
 
 export const AssetsUI = (props: Props) => {
+  const { t } = useTranslation();
   return (
     <Card
       classNames={{
@@ -56,7 +56,7 @@ export const AssetsUI = (props: Props) => {
         <Statistic
           label={
             <Flex gap={1}>
-              <Text intensity={54}>Total value</Text>
+              <Text intensity={54}>{t("common.totalValue")}</Text>
               <button
                 onClick={() => {
                   props.toggleVisible();
@@ -118,9 +118,11 @@ const NoValue: FC = () => {
 export const AssetStatistic = (
   props: StatisticProps & { onLeverageEdit?: () => void; visible: boolean }
 ) => {
+  const { t } = useTranslation();
+
   return (
     <Grid cols={3} className="oui-h-12">
-      <Statistic label="Unrealized PnL">
+      <Statistic label={t("common.unrealizedPnl")}>
         <Flex>
           <Text.numeral
             coloring
@@ -143,7 +145,7 @@ export const AssetStatistic = (
           </Text.numeral>
         </Flex>
       </Statistic>
-      <Statistic label="Max account leverage">
+      <Statistic label={t("leverage.maxAccountLeverage")}>
         <Flex itemAlign={"center"}>
           <span
             data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value"
@@ -162,7 +164,7 @@ export const AssetStatistic = (
         </Flex>
       </Statistic>
       <Statistic
-        label="Available to withdraw"
+        label={t("portfolio.overview.availableToWithdraw")}
         // @ts-ignore
         align="right"
         // @ts-ignore

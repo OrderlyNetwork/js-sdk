@@ -2,8 +2,12 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { AccountState } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
-import { useEventEmitter } from './useEventEmitter'
-import { EnumTrackerKeys, AccountStatusEnum } from "@orderly.network/types";
+import { useEventEmitter } from "./useEventEmitter";
+import {
+  EnumTrackerKeys,
+  AccountStatusEnum,
+  SDKError,
+} from "@orderly.network/types";
 import { useTrack } from "./useTrack";
 
 export const useAccount = () => {
@@ -16,10 +20,12 @@ export const useAccount = () => {
   } = useContext(OrderlyContext);
 
   if (!configStore)
-    throw new Error("configStore is not defined, please use OrderlyProvider");
+    throw new SDKError(
+      "configStore is not defined, please use OrderlyProvider"
+    );
 
   if (!keyStore) {
-    throw new Error(
+    throw new SDKError(
       "keyStore is not defined, please use OrderlyProvider and provide keyStore"
     );
   }
@@ -27,11 +33,9 @@ export const useAccount = () => {
   const account = useAccountInstance();
 
   const [state, setState] = useState<AccountState>(account.stateValue);
-  const {track} = useTrack();
-
+  const { track } = useTrack();
 
   const statusChangeHandler = (nextState: AccountState) => {
-  
     setState(() => nextState);
   };
 
@@ -45,13 +49,13 @@ export const useAccount = () => {
 
   const createOrderlyKey = useCallback(
     async (remember: boolean) => {
-      track(EnumTrackerKeys.signinSuccess,{
+      track(EnumTrackerKeys.signinSuccess, {
         network: account.chainId,
-        wallet: state.connectWallet?.name
+        wallet: state.connectWallet?.name,
       });
       return account.createOrderlyKey(remember ? 365 : 30);
     },
-    [account,state]
+    [account, state]
   );
 
   const createAccount = useCallback(async () => {

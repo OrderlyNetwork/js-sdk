@@ -14,6 +14,7 @@ import {
   RestrictedInfoWidget,
 AnnouncementTipsWidget,
 } from "@orderly.network/ui-scaffold";
+import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
 
 export const MobileLayout: FC<TradingState> = (props) => {
   const onSymbol = () => {
@@ -24,7 +25,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
     <Box intensity={900} px={3} height={54}>
       <SymbolInfoBarWidget
         symbol={props.symbol}
-        trailing={<SecondaryLogo />}
+        trailing={<LanguageSwitcherWidget />}
         onSymbol={onSymbol}
       />
       <SimpleSheet

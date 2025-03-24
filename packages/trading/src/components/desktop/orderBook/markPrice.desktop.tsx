@@ -5,7 +5,7 @@ import { BasicSymbolInfo } from "../../../types/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { MiddlePriceView } from "../../base/orderBook/midPriceView";
 import { MarkPriceView } from "../../base/orderBook/markPrice";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface DesktopMarkPriceProps {
   markPrice: number;
   lastPrice: number[];
@@ -32,10 +32,7 @@ export const DesktopMarkPrice: FC<DesktopMarkPriceProps> = (props) => {
           quote_dp={symbolInfo.quote_dp}
           className="oui-text-base"
         />
-        <MarkPriceView
-          markPrice={markPrice}
-          quote_dp={symbolInfo.quote_dp}
-        />
+        <MarkPriceView markPrice={markPrice} quote_dp={symbolInfo.quote_dp} />
       </div>
       <div
         className={cn(
@@ -55,6 +52,8 @@ const Spread: FC<{
   bids: number[][];
 }> = (props) => {
   const { asks, bids } = props;
+
+  const { t } = useTranslation();
 
   const spread = useMemo(() => {
     if (bids.length === 0 && asks.length === 0) {
@@ -79,7 +78,7 @@ const Spread: FC<{
   return (
     <div>
       <Tooltip
-        content={"Spread Ratio of the ask1 and bid1."}
+        content={t("trading.orderBook.spreadRatio.tooltip")}
         className="oui-max-w-[240px]"
       >
         <Text

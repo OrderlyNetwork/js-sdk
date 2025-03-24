@@ -15,6 +15,7 @@ import { PinBtn } from "../../../components/pinButton";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { EditIcon } from "../../../components/editIcon";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
   const isTablet = useMediaQuery("(max-width: 767px)");
@@ -38,12 +39,14 @@ export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
 };
 
 const Title: FC<ReferralCodesReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">Referral codes</Text>
+      <Text className="oui-text-lg">{t("affiliate.referralCodes")}</Text>
       <div className="oui-text-2xs md:oui-text-xs xl:oui-text-sm">
         <Text className="oui-text-base-contrast-54">
-          Remaining referral codes:&nbsp;
+          {`${t("affiliate.referralCodes.remaining")}: `}
         </Text>
         <Text className="oui-text-primary-light">
           {props.codes?.length || "--"}
@@ -128,6 +131,7 @@ const MobileCell: FC<{
   editRate: (code: ReferralCodeType) => void;
 }> = (props) => {
   const { data, setPinCode, copyLink, copyCode, editRate } = props;
+  const { t } = useTranslation();
 
   return (
     <Flex key={data.code} gap={3} direction={"column"} className="oui-w-full">
@@ -138,7 +142,7 @@ const MobileCell: FC<{
         width={"100%"}
       >
         <MobileCellItem
-          title="Referral code"
+          title={t("affiliate.referralCode")}
           value={data.code}
           copyable
           onCopy={() => {
@@ -146,7 +150,7 @@ const MobileCell: FC<{
           }}
         />
         <MobileCellItem
-          title="You / Referee"
+          title={t("affiliate.referralCodes.column.you&Referee")}
           value={getRate(data)}
           align="end"
           editRate={() => {
@@ -154,7 +158,7 @@ const MobileCell: FC<{
           }}
         />
         <MobileCellItem
-          title="Referees / Traders"
+          title={t("affiliate.referralCodes.column.referees&Traders")}
           value={getCount(data)}
           align="end"
           className={"oui-hidden md:oui-flex"}
@@ -168,12 +172,12 @@ const MobileCell: FC<{
         className="md:oui-hidden"
       >
         <MobileCellItem
-          title="Referees"
+          title={t("affiliate.referees")}
           value={getCount(data).split("/")?.[0]}
           align="start"
         />
         <MobileCellItem
-          title="Traders"
+          title={t("affiliate.referralCodes.column.traders")}
           value={getCount(data).split("/")?.[1]}
           align="end"
         />
@@ -198,7 +202,7 @@ const MobileCell: FC<{
             copyLink(data.code);
           }}
         >
-          Copy link
+          {t("affiliate.referralCodes.copyLink")}
         </Button>
       </Flex>
     </Flex>
@@ -206,12 +210,14 @@ const MobileCell: FC<{
 };
 
 const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
+  const { t } = useTranslation();
+
   const moreColumn = useMediaQuery("(min-width: 1024px)");
 
   const columns = useMemo(() => {
     const cols: Column[] = [
       {
-        title: "Referral Codes",
+        title: t("affiliate.referralCode"),
         dataIndex: "code",
         width: moreColumn ? 115 : 120,
         className: "!oui-px-0",
@@ -239,7 +245,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
         },
       },
       {
-        title: "You / Referee",
+        title: t("affiliate.referralCodes.column.you&Referee"),
         dataIndex: "dffd",
         width: moreColumn ? 120 : 120,
         className: "oui-pr-0",
@@ -261,14 +267,14 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
 
     if (moreColumn) {
       cols.push({
-        title: "Referees",
+        title: t("affiliate.referees"),
         dataIndex: "referee_rebate_rate",
         width: 65,
         className: "oui-pr-0",
         render: (value, data) => getCount(data).split("/")[0],
       });
       cols.push({
-        title: "Traders",
+        title: t("affiliate.referralCodes.column.traders"),
         dataIndex: "referrer_rebate_rate",
         width: 65,
         className: "oui-pr-0",
@@ -276,7 +282,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
       });
     } else {
       cols.push({
-        title: "Referees / Traders ",
+        title: t("affiliate.referralCodes.column.referees&Traders"),
         dataIndex: "total_invites/total_traded",
         width: 120,
         fixed: "left",
@@ -298,13 +304,13 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
             props?.copyLink?.(data.code);
           }}
         >
-          Copy link
+          {t("affiliate.referralCodes.copyLink")}
         </Button>
       ),
     });
 
     return cols;
-  }, [moreColumn]);
+  }, [moreColumn, t]);
 
   return (
     <DataTable

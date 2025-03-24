@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@orderly.network/hooks";
+import { ReactNode, useState } from "react";
 import {
   Button,
   cn,
@@ -7,11 +7,12 @@ import {
   PopoverRoot,
   PopoverTrigger,
 } from "@orderly.network/ui";
-import { ReactNode, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { TPSLWidget } from "./tpsl.widget";
 import { PositionTPSLConfirm } from "./tpsl.ui";
 import { AlgoOrderRootType, API } from "@orderly.network/types";
 import { ButtonProps } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const PositionTPSLPopover = (props: {
   position: API.Position;
@@ -31,6 +32,8 @@ export const PositionTPSLPopover = (props: {
   const [visible, setVisible] = useState(true);
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
+
+  const { t } = useTranslation();
 
   const isPositionTPSL = isEditing
     ? order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
@@ -109,8 +112,8 @@ export const PositionTPSLPopover = (props: {
             ) {
               return modal
                 .confirm({
-                  title: "Cancel Order",
-                  content: "Are you sure you want to cancel this TP/SL order?",
+                  title: t("orders.cancelOrder"),
+                  content: t("tpsl.cancelOrder.description"),
                   onOk: () => {
                     return options.cancel();
                   },
@@ -136,7 +139,9 @@ export const PositionTPSLPopover = (props: {
 
             return modal
               .confirm({
-                title: finalIsEditing ? "Edit Order" : "Confirm Order",
+                title: finalIsEditing
+                  ? t("orders.editOrder")
+                  : t("tpsl.confirmOrder.title"),
                 // bodyClassName: "lg:oui-py-0",
                 onOk: () => {
                   return options.submit();

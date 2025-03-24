@@ -18,11 +18,13 @@ import {
 } from "@orderly.network/ui";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { TPSLBuilderState } from "./useTPSL.script";
-
 import type { PNL_Values } from "./pnlInput/useBuilder.script";
 import { useLocalStorage, utils } from "@orderly.network/hooks";
 import { API, OrderSide } from "@orderly.network/types";
 import { transSymbolformString } from "@orderly.network/utils";
+import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { OrderValidationResult } from "@orderly.network/hooks";
 
 export type TPSLProps = {
   onCancel?: () => void;
@@ -40,6 +42,9 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     errors,
     isPosition,
   } = props;
+  const { t } = useTranslation();
+
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
@@ -54,7 +59,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             quote={symbolInfo("base")}
             isEditing={props.isEditing}
             isPosition={isPosition}
-            errorMsg={props.errors?.quantity?.message}
+            errorMsg={parseErrorMsg("quantity")}
           />
           <Divider my={4} intensity={8} />
         </>
@@ -90,7 +95,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             onCancel?.();
           }}
         >
-          Cancel
+          {t("common.cancel")}
         </Button>
         <ThrottledButton
           size={"md"}
@@ -108,7 +113,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             );
           }}
         >
-          Confirm
+          {t("common.confirm")}
         </ThrottledButton>
       </Grid>
     </div>
@@ -135,6 +140,7 @@ const TPSLQuantity = (props: {
   const inputRef = useRef<HTMLInputElement>(null);
   const currentQtyPercentage =
     convertValueToPercentage(props.quantity, 0, props.maxQty) / 100;
+  const { t } = useTranslation();
 
   const setTPSL = () => {
     props.onQuantityChange?.(0);
@@ -168,7 +174,7 @@ const TPSLQuantity = (props: {
           <Input.tooltip
             data-testid="oui-testid-tpsl-popUp-quantity-input"
             ref={inputRef}
-            prefix={"Quantity"}
+            prefix={t("common.quantity")}
             size={{
               initial: "lg",
               lg: "md",
@@ -217,7 +223,7 @@ const TPSLQuantity = (props: {
                     setTPSL();
                   }}
                 >
-                  Entire position
+                  {t("tpsl.entirePosition")}
                 </button>
               ) : (
                 <span className="oui-text-2xs oui-text-base-contrast-54 oui-px-3">
@@ -248,7 +254,7 @@ const TPSLQuantity = (props: {
                 : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
             )}
           >
-            Position
+            {t("positions.position")}
           </Button>
         )}
       </Flex>
@@ -282,9 +288,10 @@ const TPSLQuantity = (props: {
             }}
           >
             <Text color={"primary"} size={"2xs"}>
-              Max
+              {t("common.max")}
             </Text>
           </button>
+
           <Text.numeral
             rule={"price"}
             size={"2xs"}
@@ -312,22 +319,34 @@ const TPSLPrice = (props: {
   sl_values: PNL_Values;
   tp_trigger_price?: number | string;
   sl_trigger_price?: number | string;
-  errors: Record<string, { message: string }> | null;
+  errors: OrderValidationResult | null;
 }) => {
+  const { t } = useTranslation();
+
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+
   const onPnLChange = (key: string, value: number | string) => {
     // console.log(key, value);
     props.onPnLChange(key, value);
   };
+
   return (
     <>
       <div>
         <Flex justify={"between"}>
-          <Text size={"2xs"} intensity={80}>
-            Take profit <Text intensity={36}>(market order)</Text>
-          </Text>
+          <Flex gap={1}>
+            <Text size={"2xs"} intensity={80}>
+              {t("tpsl.takeProfit")}
+            </Text>
+            <Text size={"2xs"} intensity={36}>
+              {`(${(
+                t("orderEntry.orderType.marketOrder") as string
+              )?.toLowerCase()})`}
+            </Text>
+          </Flex>
           <Flex>
             <Text size={"2xs"} intensity={36}>
-              Est. PNL:
+              {`${t("tpsl.estPnl")}:`}
             </Text>
             <Text.numeral
               size={"2xs"}
@@ -343,7 +362,7 @@ const TPSLPrice = (props: {
           <PriceInput
             type={"TP"}
             value={props.tp_trigger_price}
-            error={props.errors?.tp_trigger_price?.message}
+            error={parseErrorMsg("tp_trigger_price")}
             onValueChange={(value) => {
               props.onPriceChange("tp_trigger_price", value);
             }}
@@ -360,12 +379,20 @@ const TPSLPrice = (props: {
       </div>
       <div>
         <Flex justify={"between"}>
-          <Text size={"2xs"} intensity={80}>
-            Stop loss <Text intensity={36}>(market order)</Text>
-          </Text>
+          <Flex gap={1}>
+            <Text size={"2xs"} intensity={80}>
+              {t("tpsl.stopLoss")}
+            </Text>
+            <Text size={"2xs"} intensity={36}>
+              {`(${(
+                t("orderEntry.orderType.marketOrder") as string
+              )?.toLowerCase()})`}
+            </Text>
+          </Flex>
+
           <Flex>
             <Text size={"2xs"} intensity={36}>
-              Est. PNL:
+              {`${t("tpsl.estPnl")}:`}
             </Text>
             <Text.numeral
               size={"2xs"}
@@ -381,7 +408,7 @@ const TPSLPrice = (props: {
           <PriceInput
             type={"SL"}
             value={props.sl_trigger_price}
-            error={props.errors?.sl_trigger_price?.message}
+            error={parseErrorMsg("sl_trigger_price")}
             onValueChange={(value) => {
               props.onPriceChange("sl_trigger_price", value);
             }}
@@ -409,11 +436,13 @@ const PriceInput = (props: {
   quote_dp: number;
 }) => {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
+  const { t } = useTranslation();
+
   return (
     <Input.tooltip
       data-testid={`oui-testid-tpsl-popUp-${props.type.toLowerCase()}-input`}
       // prefix={`${props.type} price`}
-      prefix="Mark price"
+      prefix={t("common.markPrice")}
       size={{
         initial: "lg",
         lg: "md",
@@ -474,6 +503,8 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     isEditing,
     isPositionTPSL: _isPositionTPSL,
   } = props;
+  const { t } = useTranslation();
+
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_order_confirm",
     true
@@ -516,7 +547,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         <Flex gap={1}>
           {isPositionTPSL && (
             <Badge size="xs" color={"primary"}>
-              Position
+              {t("positions.position")}
             </Badge>
           )}
 
@@ -526,11 +557,11 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           <TPSLOrderType tpPrice={tpPrice} slPrice={slPrice} />
           {side === OrderSide.SELL ? (
             <Badge size="xs" color="success">
-              Buy
+              {t("common.buy")}
             </Badge>
           ) : (
             <Badge size="xs" color="danger">
-              Sell
+              {t("common.sell")}
             </Badge>
           )}
         </Flex>
@@ -545,11 +576,13 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         className={cn(textClassName, "oui-pb-4 xl:oui-pb-5")}
       >
         <Flex>
-          <Box grow>Qty.</Box>
+          <Box grow>{t("common.qty")}</Box>
 
           <div>
             {isPositionTPSL ? (
-              <span className="oui-text-base-contrast">Entire position</span>
+              <span className="oui-text-base-contrast">
+                {t("tpsl.entirePosition")}
+              </span>
             ) : (
               <Text.numeral intensity={98} dp={baseDP} padding={false}>
                 {qty}
@@ -559,7 +592,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         </Flex>
         {typeof tpPrice === "number" && tpPrice > 0 ? (
           <Flex>
-            <Box grow>TP Price</Box>
+            <Box grow>{t("tpsl.tpPrice")}</Box>
             <Text.numeral
               as={"div"}
               coloring
@@ -574,7 +607,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         ) : null}
         {typeof slPrice === "number" && slPrice > 0 ? (
           <Flex>
-            <Box grow>SL Price</Box>
+            <Box grow>{t("tpsl.slPrice")}</Box>
             <Text.numeral
               as={"div"}
               coloring
@@ -590,8 +623,10 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         ) : null}
 
         <Flex>
-          <Box grow>Price</Box>
-          <div className="oui-text-base-contrast">Market</div>
+          <Box grow>{t("common.price")}</Box>
+          <div className="oui-text-base-contrast">
+            {t("common.marketPrice")}
+          </div>
         </Flex>
       </Flex>
       <Box pt={2}>
@@ -612,7 +647,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               className: "oui-ml-1",
             })}
           >
-            Disable order confirmation
+            {t("orderEntry.disableOrderConfirm")}
           </label>
         </Flex>
       </Box>
@@ -624,10 +659,12 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
 const TPSLOrderType = (props: { tpPrice?: number; slPrice?: number }) => {
   const { tpPrice, slPrice } = props;
+  const { t } = useTranslation();
+
   if (!!tpPrice && !!slPrice) {
     return (
       <Badge size="xs" color="neutral">
-        TP/SL
+        {t("tpsl.title")}
       </Badge>
     );
   }
@@ -635,7 +672,7 @@ const TPSLOrderType = (props: { tpPrice?: number; slPrice?: number }) => {
   if (!!tpPrice) {
     return (
       <Badge size="xs" color="neutral">
-        TP
+        {t("tpsl.tp")}
       </Badge>
     );
   }
@@ -643,10 +680,27 @@ const TPSLOrderType = (props: { tpPrice?: number; slPrice?: number }) => {
   if (!!slPrice) {
     return (
       <Badge size="xs" color="neutral">
-        SL
+        {t("tpsl.sl")}
       </Badge>
     );
   }
 
   return null;
+};
+
+const MaxQtyButton = (props: {
+  onClick: () => void;
+  children?: React.ReactNode;
+}) => {
+  return (
+    <button
+      className={"oui-leading-none"}
+      style={{ lineHeight: 0 }}
+      onClick={props.onClick}
+    >
+      <Text color={"primary"} size={"2xs"}>
+        {props.children}
+      </Text>
+    </button>
+  );
 };

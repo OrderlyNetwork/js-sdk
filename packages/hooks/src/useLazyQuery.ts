@@ -5,6 +5,7 @@ import useSWRMutation, {
   SWRMutationResponse,
 } from "swr/mutation";
 import { useConfig } from "./useConfig";
+import { SDKError } from "@orderly.network/types";
 
 /**
  * useQuery
@@ -23,11 +24,11 @@ export const useLazyQuery = <T, R = any>(
   const { formatter, init, ...swrOptions } = options || {};
   // check the query is public api
   // if (typeof query === "string" && !query.startsWith("/v1/public")) {
-  //   throw new Error("useQuery is only for public api");
+  //   throw new SDKError("useQuery is only for public api");
   // }
 
   if (typeof apiBaseUrl === "undefined") {
-    throw new Error("please add OrderlyConfigProvider to your app");
+    throw new SDKError("please add OrderlyConfigProvider to your app");
   }
 
   // @ts-ignore

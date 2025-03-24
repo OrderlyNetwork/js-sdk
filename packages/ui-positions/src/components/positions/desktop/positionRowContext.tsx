@@ -1,4 +1,3 @@
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import {
   FC,
   PropsWithChildren,
@@ -8,13 +7,13 @@ import {
   useMemo,
   useState,
 } from "react";
-
+import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import {
   useOrderEntry_deprecated,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
-
+import { useTranslation } from "@orderly.network/i18n";
 export interface PositionsRowContextState {
   quantity: string;
   price: string;
@@ -51,6 +50,7 @@ export const PositionsRowProvider: FC<
   const [quantity, setQuantity] = useState<string>(
     Math.abs(props.position.position_qty).toString()
   );
+  const { t } = useTranslation();
 
   useEffect(() => {
     setQuantity(Math.abs(props.position.position_qty).toString());
@@ -84,7 +84,7 @@ export const PositionsRowProvider: FC<
     setType(type);
     if (type === OrderType.LIMIT) {
       if (!price) {
-        throw new Error("price is required");
+        throw new Error(t("positions.updateOrder.price.required"));
       }
       setPrice(price);
     } else {

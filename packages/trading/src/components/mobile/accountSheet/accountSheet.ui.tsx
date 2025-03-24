@@ -3,8 +3,11 @@ import { ArrowRightShortIcon, Button, Flex, Text } from "@orderly.network/ui";
 import { AccountSheetState } from "./accountSheet.script";
 import { CopyIcon, HeadIcon, OrderlyIcon, USDCIcon } from "./icons";
 import { Decimal } from "@orderly.network/utils";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const AccountSheet: FC<AccountSheetState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"column"} gap={4}>
       <AccountInfo {...props} />
@@ -21,7 +24,7 @@ export const AccountSheet: FC<AccountSheetState> = (props) => {
             loading={props.gettingTestUSDC}
             className="oui-border-primary-light oui-text-primary-light"
           >
-            Get test USDC
+            {t("trading.faucet.getTestUSDC")}
           </Button>
         )}
         <Button
@@ -31,7 +34,7 @@ export const AccountSheet: FC<AccountSheetState> = (props) => {
           onClick={props.onDisconnect}
           className={props.showGetTestUSDC ? "oui-w-full" : "oui-w-[50%]"}
         >
-          Disconnect
+          {t("connector.disconnect")}
         </Button>
       </Flex>
     </Flex>
@@ -74,6 +77,7 @@ export const AccountInfo: FC<AccountSheetState> = (props) => {
 };
 
 export const ReferralInfo: FC<AccountSheetState> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex
       direction={"column"}
@@ -88,7 +92,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
         className="oui-cursor-pointer oui-w-full"
       >
         <Flex justify={"between"} width={"100%"}>
-          <Text size="2xs">Referral</Text>
+          <Text size="2xs">{t("affiliate.referral")}</Text>
           <ArrowRightShortIcon color="white" opacity={0.98} size={16} />
         </Flex>
       </button>
@@ -102,9 +106,9 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
           justify={"between"}
         >
           <Flex direction={"column"} itemAlign={"start"}>
-            <Text size="xs">Affiliate</Text>
+            <Text size="xs">{t("affiliate.title")}</Text>
             <Text size="2xs" intensity={54}>
-              (30d commission)
+              ({t("affiliate.commission.30d")})
             </Text>
           </Flex>
           <Flex className="oui-gap-[6px]">
@@ -130,9 +134,9 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
           justify={"between"}
         >
           <Flex direction={"column"} itemAlign={"start"}>
-            <Text size="xs">Trader</Text>
+            <Text size="xs">{t("affiliate.trader")}</Text>
             <Text size="2xs" intensity={54}>
-              (30d commission)
+              ({t("affiliate.commission.30d")})
             </Text>
           </Flex>
           <Flex className="oui-gap-[6px]">
@@ -153,6 +157,8 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
 };
 
 export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       direction={"column"}
@@ -167,13 +173,17 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
         className="oui-cursor-pointer oui-w-full"
       >
         <Flex justify={"between"} width={"100%"}>
-          <span className="oui-text-2xs">
-          Trading rewards
-          <Text intensity={54}>{" (epoch "}</Text>
-          {props.curEpochId}
-          <Text  intensity={54}>{" )"}</Text>
-          </span>
-          <ArrowRightShortIcon color="white" opacity={0.98}  size={16}/>
+          <Flex gap={1} className="oui-text-base-contrast oui-text-2xs">
+            <Text>{t("tradingRewards.title")}</Text>
+            <Text intensity={54}>
+              (
+              <Text>{`${(
+                t("tradingRewards.epoch") as string
+              )?.toLowerCase()} `}</Text>
+              <Text intensity={98}>{props.curEpochId}</Text> )
+            </Text>
+          </Flex>
+          <ArrowRightShortIcon color="white" opacity={0.98} size={16} />
         </Flex>
       </button>
       <Flex
@@ -185,7 +195,7 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
         className="oui-bg-gradient-to-t oui-from-[#2d0061] oui-to-[#bd6bed]"
       >
         <Text size="2xs" intensity={80}>
-          My est. rewards
+          {t("tradingRewards.myEstRewards")}
         </Text>
 
         <Flex className="oui-gap-[6px]">

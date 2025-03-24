@@ -6,6 +6,7 @@ import type {
   InputFormatter,
   InputFormatterOptions,
 } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export enum PnLMode {
   PnL = "PnL",
@@ -34,8 +35,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     "TP/SL_Mode",
     PnLMode.PERCENTAGE
   );
-
   const [focus, setFocus] = useState(true);
+
+  const { t } = useTranslation();
+
   const key = useMemo(() => {
     switch (mode) {
       case PnLMode.OFFSET:
@@ -53,19 +56,19 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
 
   const modes = useMemo<MenuItem[]>(() => {
     return [
-      { label: "PnL", value: PnLMode.PnL, testId: `${PnLMode.PnL}_menu_item` },
+      { label: t("tpsl.pnl"), value: PnLMode.PnL, testId: `${PnLMode.PnL}_menu_item` },
       {
-        label: "Offset",
+        label: t("tpsl.offset"),
         value: PnLMode.OFFSET,
         testId: `${PnLMode.OFFSET}_mneu_item`,
       },
       {
-        label: "Offset%",
+        label: t("tpsl.offsetPercentage"),
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
       },
     ];
-  }, []);
+  }, [t]);
 
   const percentageSuffix = useRef<string>("");
 

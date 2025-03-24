@@ -1,3 +1,4 @@
+import { i18n } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { format, toDate } from "date-fns";
 // import { toZonedTime } from "date-fns-tz";
@@ -21,9 +22,9 @@ export function addQueryParam(
 export async function copyText(content: string) {
   try {
     await navigator.clipboard.writeText(content);
-    toast.success("Copy success");
+    toast.success(i18n.t("common.copy.success"));
   } catch (error) {
-    toast.success("Copy failed");
+    toast.success(i18n.t("common.copy.failed"));
   }
 }
 

@@ -10,8 +10,11 @@ import {
 import { FooterReturns } from "./footer.script";
 import { WsNetworkStatus } from "@orderly.network/hooks";
 import { FooterProps } from "./footer.widget";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Footer: FC<FooterReturns & FooterProps> = (props) => {
+  const { t } = useTranslation();
+
   const signalClsName = useMemo(() => {
     switch (props.wsStatus) {
       case WsNetworkStatus.Connected:
@@ -47,7 +50,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
             fillOpacity={1}
             fill="currentColor"
           />
-          <Text size="2xs">Operational</Text>
+          <Text size="2xs">{t("scaffold.footer.operational")}</Text>
         </Flex>
         <Divider
           direction="vertical"
@@ -55,7 +58,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
         />
         <Flex gap={2}>
           <Text intensity={54} size="2xs">
-            Join our community
+            {t("scaffold.footer.joinCommunity")}
           </Text>
           <Flex direction={"row"} gap={1}>
             {typeof props.telegramUrl !== "undefined" && (
@@ -96,7 +99,7 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
       </Flex>
       <Flex direction={"row"} gap={1}>
         <Text intensity={54} size="2xs">
-          Powered by
+          {t("scaffold.footer.poweredBy")}
         </Text>
         <OrderlyTextIcon />
       </Flex>

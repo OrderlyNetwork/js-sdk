@@ -1,9 +1,6 @@
-import React, { ReactNode, useRef, useState } from "react";
+import { useState } from "react";
 import { DisplayControlSettingInterface } from "../../type";
 import {
-  Box,
-  Checkbox,
-  Divider,
   DropdownMenuContent,
   DropdownMenuPortal,
   DropdownMenuRoot,
@@ -19,33 +16,34 @@ import {
   SelectedIcon,
   UnSelectIcon,
 } from "../../icons";
+import { i18n } from "@orderly.network/i18n";
 
 const DisplayControlMap: {
   label: string;
   id: keyof DisplayControlSettingInterface;
 }[] = [
   {
-    label: "Position",
+    label: i18n.t("positions.position"),
     id: "position",
   },
   {
-    label: "Buy/Sell",
+    label: i18n.t("tradingView.displayControl.buySell"),
     id: "buySell",
   },
   {
-    label: "Limit orders",
+    label: i18n.t("tradingView.displayControl.limitOrders"),
     id: "limitOrders",
   },
   {
-    label: "Stop orders",
+    label: i18n.t("tradingView.displayControl.stopOrders"),
     id: "stopOrders",
   },
   {
-    label: "TP/SL",
+    label: i18n.t("tpsl.title"),
     id: "tpsl",
   },
   {
-    label: "Position TP/SL",
+    label: i18n.t("tpsl.positionTpsl"),
     id: "positionTpsl",
   },
 ];
@@ -56,32 +54,32 @@ const MobileDisplayControlMap: {
 }[][] = [
   [
     {
-      label: "Position",
+      label: i18n.t("positions.position"),
       id: "position",
     },
 
     {
-      label: "Limit orders",
+      label: i18n.t("tradingView.displayControl.limitOrders"),
       id: "limitOrders",
     },
   ],
   [
     {
-      label: "Stop orders",
+      label: i18n.t("tradingView.displayControl.stopOrders"),
       id: "stopOrders",
     },
     {
-      label: "TP/SL",
+      label: i18n.t("tpsl.title"),
       id: "tpsl",
     },
   ],
   [
     {
-      label: "Position TP/SL",
+      label: i18n.t("tpsl.positionTpsl"),
       id: "positionTpsl",
     },
     {
-      label: "Buy/Sell",
+      label: i18n.t("tradingView.displayControl.buySell"),
       id: "buySell",
     },
   ],
@@ -178,10 +176,12 @@ export function MobileDisplayControl(props: IProps) {
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <div className={cn(
-          'oui-flex oui-gap-0.5 oui-justify-center oui-text-base-contrast-36 oui-items-center',
-          open && "oui-text-base-contrast-8"
-          )}>
+        <div
+          className={cn(
+            "oui-flex oui-gap-0.5 oui-justify-center oui-text-base-contrast-36 oui-items-center",
+            open && "oui-text-base-contrast-8"
+          )}
+        >
           <DisplaySettingIcon
             className={cn(
               "oui-w-[18px] oui-h-[18px] ",
@@ -227,9 +227,9 @@ export function MobileDisplayControl(props: IProps) {
                 >
                   <div>{item.label}</div>
                   {props.displayControlState[item.id] ? (
-                    <SelectedIcon className='oui-h-3 oui-w-3' />
+                    <SelectedIcon className="oui-h-3 oui-w-3" />
                   ) : (
-                    <UnSelectIcon className='oui-h-3 oui-w-3' />
+                    <UnSelectIcon className="oui-h-3 oui-w-3" />
                   )}
                 </div>
               ))}

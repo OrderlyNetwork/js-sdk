@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useReferralContext } from "../../../hooks";
 import { SummaryFilter } from "../../../utils/types";
 import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type SummaryReturns = {
   period: string;
@@ -14,15 +15,17 @@ export type SummaryReturns = {
 };
 
 export const useSummaryScript = (): SummaryReturns => {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState<SummaryFilter>("All");
+
   const periodTypes: {
     label: SummaryFilter;
     value: SummaryFilter;
   }[] = [
-    { label: "All", value: "All" },
-    { label: "1D", value: "1D" },
-    { label: "7D", value: "7D" },
-    { label: "30D", value: "30D" },
+    { label: t("common.all"), value: "All" },
+    { label: t("common.select.1d"), value: "1D" },
+    { label: t("common.select.7d"), value: "7D" },
+    { label: t("common.select.30d"), value: "30D" },
   ];
 
   const { referralInfo, userVolume } = useReferralContext();
@@ -58,7 +61,6 @@ export const useSummaryScript = (): SummaryReturns => {
 
   const code = referralInfo?.referee_info.referer_code;
   const rebate = referralInfo?.referee_info.referee_rebate_rate;
-
 
   const rebateText = useMemo(() => {
     if (!!rebate) {

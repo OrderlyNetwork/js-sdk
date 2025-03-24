@@ -1,6 +1,7 @@
 import { TokenIcon, Flex, Text, cn, Tooltip, Badge } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../marketsProvider";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type CollapseMarketsProps = {
   dataSource: any[];
@@ -8,7 +9,7 @@ export type CollapseMarketsProps = {
 
 export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
   const { symbol, onSymbolChange } = useMarketsContext();
-
+  const { t } = useTranslation();
   return (
     <div className="oui-overflow-y-auto oui-custom-scrollbar oui-h-full">
       <Flex direction="column" px={2} gapY={1}>
@@ -31,10 +32,10 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
                   </Text.formatted>
                 </Flex>
                 <Text size="2xs" intensity={36}>
-                  Price
+                  {t("markets.column.last")}
                 </Text>
                 <Text size="2xs" intensity={36}>
-                  24h change
+                  {t("markets.column.24hPercentage")}
                 </Text>
               </Flex>
 

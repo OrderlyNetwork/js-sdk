@@ -6,12 +6,13 @@ import { TradeDataWidget } from "../tradeData";
 import { TradingviewWidget } from "../tradingview/tradingview.widget";
 import { useTradingPageContext } from "../../../provider/context";
 import { KlineDragIcon } from "../../base/icons";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const TopTab: FC<
   TopTabState & {
     className?: string;
   }
 > = (props) => {
+  const { t } = useTranslation();
   const { tradingViewConfig } = useTradingPageContext();
 
   return (
@@ -29,8 +30,7 @@ export const TopTab: FC<
         tabsContent: "oui-min-h-[176px] oui-max-h-[396px]",
       }}
       style={{
-        marginBottom: props.tab === TopTabType.chart ? '8px' : 0,
-
+        marginBottom: props.tab === TopTabType.chart ? "8px" : 0,
       }}
       trailing={
         <button className="oui-px-5" onClick={props.toggleContentVisible}>
@@ -40,14 +40,16 @@ export const TopTab: FC<
         </button>
       }
     >
-      <TabPanel title="Chart" value={TopTabType.chart}>
-        <TradingviewWidget symbol={props.symbol} tradingViewConfig={tradingViewConfig}/>
-
+      <TabPanel title={t("trading.tabs.chart")} value={TopTabType.chart}>
+        <TradingviewWidget
+          symbol={props.symbol}
+          tradingViewConfig={tradingViewConfig}
+        />
       </TabPanel>
-      <TabPanel title="Trades" value={TopTabType.trades}>
+      <TabPanel title={t("trading.tabs.trades")} value={TopTabType.trades}>
         <MWebLastTrades symbol={props.symbol} />
       </TabPanel>
-      <TabPanel title="Data" value={TopTabType.data}>
+      <TabPanel title={t("trading.tabs.data")} value={TopTabType.data}>
         <Box px={3}>
           <TradeDataWidget symbol={props.symbol} />
         </Box>

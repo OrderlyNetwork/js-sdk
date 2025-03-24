@@ -7,14 +7,7 @@ import {
   SharePnLOptions,
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
-import {
-  CloseIcon,
-  Divider,
-  Flex,
-  toast,
-  Text,
-  Box,
-} from "@orderly.network/ui";
+import { Divider, Flex, toast, Text, Box } from "@orderly.network/ui";
 import { Poster } from "../poster";
 import { CarouselBackgroundImage } from "./carousel";
 import { PnlFormatView } from "./pnlFormat";
@@ -22,6 +15,7 @@ import { ShareOption } from "./options";
 import { Message } from "./message";
 import { BottomButtons } from "./bottomBtns";
 import { PosterRef } from "../poster/poster";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const DesktopSharePnLContent: FC<{
   entity: ShareEntity;
@@ -33,8 +27,9 @@ export const DesktopSharePnLContent: FC<{
   shareOptions: SharePnLOptions;
 }> = (props) => {
   const { shareOptions } = props;
-  const localPnlConfig = getPnlInfo();
+  const { t } = useTranslation();
 
+  const localPnlConfig = getPnlInfo();
   const hasRoiAndPnl = props.entity.roi != null && props.entity.pnl != null;
   const formats: PnLDisplayFormat[] = hasRoiAndPnl
     ? ["roi_pnl", "roi", "pnl"]
@@ -88,16 +83,15 @@ export const DesktopSharePnLContent: FC<{
       ?.copy()
       .then(() => {
         props.hide?.();
-        toast.success("Image copied");
+        toast.success(t("share.pnl.copySuccess"));
       })
       .catch((e: any) => {
         toast.error(() => {
           return (
             <div>
-              <div>Copy failed</div>
+              <div>{t("common.copy.failed")}</div>
               <div className="oui-text-2xs oui-max-w-[396px] oui-mt-2 oui-text-base-contrast-54">
-                Browser version outdated, please update in order to copy image
-                to clipboard.
+                {t("share.pnl.copyFailed.description")}
               </div>
             </div>
           );
@@ -156,7 +150,7 @@ export const DesktopSharePnLContent: FC<{
           width={"100%"}
         >
           <Text size="sm" intensity={80}>
-            PnL display format
+            {t("share.pnl.displayFormat")}
           </Text>
           <Flex pt={3} gap={3} itemAlign={"center"}>
             {formats.map((e, index) => (
@@ -178,7 +172,7 @@ export const DesktopSharePnLContent: FC<{
             itemAlign={"start"}
           >
             <Text size="sm" intensity={80}>
-              Optional information to share
+              {t("share.pnl.optionalInfo")}
             </Text>
             <Flex mt={3} gap={4} className="oui-flex-wrap">
               {options.map((item, index) => (

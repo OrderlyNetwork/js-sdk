@@ -1,10 +1,10 @@
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
-import { DialogBody, SimpleDialog, SimpleDialogProps } from "../../dialog";
+import {  SimpleDialog, SimpleDialogProps } from "../../dialog";
 import { modalActions } from "../modalContext";
 import { Text } from "../../typography";
-import { useMemo } from "react";
 import { useScreen } from "../../hooks";
+import { useLocale } from "../../locale";
 
 export type ConfirmProps = {
   content?: React.ReactNode;
@@ -23,6 +23,7 @@ export type ConfirmProps = {
 export const ConfirmDialog = create<ConfirmProps>((props) => {
   const { size } = props;
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
+  const [locale] = useLocale("modal");
 
   const { isMobile } = useScreen();
 
@@ -55,7 +56,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
       }}
       actions={{
         primary: {
-          label: props.okLabel ?? "Confirm",
+          label: props.okLabel ?? locale.confirm,
           className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
           "data-testid": "oui-testid-confirm-dialog-confirm-btn",
           onClick: () => {
@@ -79,7 +80,7 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
           },
         },
         secondary: {
-          label: props.cancelLabel ?? "Cancel",
+          label: props.cancelLabel ?? locale.cancel,
           className: "oui-text-sm oui-font-semibold oui-w-[100%] oui-h-8",
           "data-testid": "oui-testid-confirm-dialog-cancel-btn",
           onClick: () => {

@@ -8,14 +8,16 @@ import {
   type Column,
 } from "@orderly.network/ui";
 import { useQuery } from "@orderly.network/hooks";
+import { useTranslation, i18n } from "@orderly.network/i18n";
 
 export const useAssetHistoryColumns = () => {
   const { data: chains } = useQuery("/v1/public/chain_info");
+  const { t } = useTranslation();
 
   const columns = useMemo(() => {
     return [
       {
-        title: "Token",
+        title: t("common.token"),
         dataIndex: "token",
         width: 80,
         render: (value) => {
@@ -28,13 +30,13 @@ export const useAssetHistoryColumns = () => {
         },
       },
       {
-        title: "Time",
+        title: t("common.time"),
         dataIndex: "created_time",
         width: 80,
         rule: "date",
       },
       {
-        title: "TxID",
+        title: t("portfolio.overview.column.txId"),
         dataIndex: "tx_id",
         width: 120,
 
@@ -58,7 +60,7 @@ export const useAssetHistoryColumns = () => {
                 onCopy={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  toast.success("Copy success");
+                  toast.success(t("common.copy.success"));
                 }}
               >
                 {value}
@@ -69,22 +71,30 @@ export const useAssetHistoryColumns = () => {
         },
       },
       {
-        title: "Status",
+        title: t("common.status"),
         dataIndex: "trans_status",
         width: 100,
-        formatter: (value) => capitalizeFirstLetter(value.toLowerCase()),
-      },
-      {
-        title: "Type",
-        dataIndex: "side",
-        width: 80,
-        formatter: (value) => capitalizeFirstLetter(value.toLowerCase()),
         render: (value) => {
-          return <Text color={value.toLowerCase()}>{value}</Text>;
+          return capitalizeFirstLetter(value.toLowerCase());
         },
       },
       {
-        title: "Amount",
+        title: t("common.type"),
+        dataIndex: "side",
+        width: 80,
+        // formatter: (value) => capitalizeFirstLetter(value.toLowerCase()),
+        render: (value) => {
+          return (
+            <Text color={value === "DEPOSIT" ? "deposit" : "withdraw"}>
+              {value === "DEPOSIT"
+                ? t("transfer.deposit")
+                : t("transfer.withdraw")}
+            </Text>
+          );
+        },
+      },
+      {
+        title: t("common.amount"),
         dataIndex: "amount",
         width: 100,
         rule: "price",
@@ -99,13 +109,13 @@ export const useAssetHistoryColumns = () => {
         // formatter: "date",
       },
     ] as Column[];
-  }, [chains]);
+  }, [chains, t]);
 
   return columns;
 };
 
 export const SIDES = [
-  { label: "All", value: "All" },
-  { label: "Deposit", value: "DEPOSIT" },
-  { label: "Withdrawal", value: "WITHDRAW" },
+  { label: i18n.t("common.all"), value: "All" },
+  { label: i18n.t("transfer.deposit"), value: "DEPOSIT" },
+  { label: i18n.t("transfer.withdraw"), value: "WITHDRAW" },
 ];

@@ -1,23 +1,16 @@
-import React, { FC, useEffect, useState } from "react";
-import {
-  Box,
-  cn,
-  CopyIcon,
-  // Checkbox,
-  Flex,
-  SimpleDialog,
-  Statistic,
-  Text,
-  TextField,
-} from "@orderly.network/ui";
+import { FC, useEffect, useState } from "react";
+import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
 import { ScopeType } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   const [ipText, setIpText] = useState("");
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
   const [hint, setHint] = useState("");
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (!props.showCreateDialog) {
       setIpText("");
@@ -38,10 +31,10 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       onOpenChange={(open) => {
         props.hideCreateDialog?.();
       }}
-      title="Create API key"
+      title={t("portfolio.apiKey.create.title")}
       actions={{
         primary: {
-          label: "Confirm",
+          label: t("common.confirm"),
           className: "oui-w-[120px] lg:oui-w-[154px]",
           "data-testid": "oui-testid-apiKey-createApiKey-dialog-comfirm-btn",
           onClick: async () => {
@@ -79,11 +72,11 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
         }}/> */}
         <Flex direction={"column"} gap={1} width={"100%"} itemAlign={"start"}>
           <Text intensity={54} size="2xs">
-            IP restriction (optional)
+            {t("portfolio.apiKey.create.ipRestriction")}
           </Text>
           <textarea
             data-testid="oui-testid-apiKey-createApiKey-dialog-textarea"
-            placeholder="Add IP addresses, separated by commas."
+            placeholder={t("portfolio.apiKey.create.ipRestriction.placeholder")}
             className={cn(
               "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",
               "oui-border-0 focus:oui-border-2 focus:oui-border-primary-darken oui-outline-none",
@@ -116,7 +109,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
         <Statistic
           label={
             <Text size="xs" intensity={54}>
-              Permissions
+              {t("portfolio.apiKey.permissions")}
             </Text>
           }
           className="oui-w-full"
@@ -131,14 +124,14 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
               size={18}
               checked={read}
               onCheckedChange={(e) => setRead(e as boolean)}
-              label="Read"
+              label={t("portfolio.apiKey.permissions.read")}
               testid="oui-testid-apiKey-createApiKey-dialog-read-checkbox"
             />
             <Checkbox
               size={18}
               checked={trade}
               onCheckedChange={(e) => setTrade(e as boolean)}
-              label="Trading"
+              label={t("portfolio.apiKey.permissions.trading")}
               testid="oui-testid-apiKey-createApiKey-dialog-trading-checkbox"
             />
           </Flex>

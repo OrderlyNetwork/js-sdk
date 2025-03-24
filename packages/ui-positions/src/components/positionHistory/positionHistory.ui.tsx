@@ -16,7 +16,7 @@ import { usePositionHistoryColumn } from "./desktop/usePositionHistoryColumn";
 import { SymbolProvider } from "../../providers/symbolProvider";
 import { PositionHistoryCellWidget } from "./mobile";
 import { SharePnLConfig } from "@orderly.network/ui-share";
-
+import { useTranslation } from "@orderly.network/i18n";
 type PositionHistoryProps = PositionHistoryState & {
   sharePnLConfig?: SharePnLConfig;
 };
@@ -28,6 +28,15 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
     pnlNotionalDecimalPrecision,
     sharePnLConfig: props.sharePnLConfig,
   });
+
+  const { t } = useTranslation();
+
+  const dayLabel: Record<number, string> = {
+    1: t("common.select.1d"),
+    7: t("common.select.7d"),
+    30: t("common.select.30d"),
+    90: t("common.select.90d"),
+  };
 
   return (
     <Flex direction="column" width="100%" height="100%" itemAlign="start">
@@ -47,13 +56,14 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
               <div className="oui-z-10">
                 <Text.gradient
                   color={props.filterDays === value ? "brand" : undefined}
-                  className={
+                  className={cn(
+                    "oui-break-normal oui-whitespace-nowrap",
                     props.filterDays !== value
                       ? "oui-text-base-contrast-54"
                       : ""
-                  }
+                  )}
                 >
-                  {`${value}D`}
+                  {dayLabel[value] || `${value}D`}
                 </Text.gradient>
               </div>
               <div

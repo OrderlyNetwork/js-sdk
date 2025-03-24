@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { cn } from "@orderly.network/ui";
 import { DataTable } from "@orderly.network/ui";
-import { getFundingColumns } from "./columns";
+import { useFundingColumns } from "./columns";
 
 interface FundingComparisonProps {
   data: Array<{
@@ -17,7 +17,7 @@ export const FundingComparison: FC<FundingComparisonProps> = ({
   isLoading,
   pagination,
 }) => {
-  const columns = getFundingColumns();
+  const columns = useFundingColumns();
 
   return (
     <DataTable

@@ -1,13 +1,16 @@
+import { FC, ReactNode } from "react";
 import { Flex, Text } from "@orderly.network/ui";
 import { JumpIcon } from "../components/jumpIcon";
-import { FC, ReactNode, useMemo } from "react";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { RocketIcon } from "../components/rocket";
 import { StakeBoosterReturns } from "./stakeBooster.script";
-import { Decimal, commify, commifyOptional } from "@orderly.network/utils";
+import { commify, commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-tradingRewards-home-stakeBooster"
@@ -19,20 +22,20 @@ export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
       className=" oui-font-semibold oui-bg-base-9 "
     >
       <Flex direction={"row"} justify={"between"} width={"100%"}>
-        <Text className="oui-text-lg">Stake booster</Text>
+        <Text className="oui-text-lg">{t("tradingRewards.stakeBooster")}</Text>
         <Flex
           direction={"row"}
           gap={1}
           onClick={props.stakeNow}
           className="oui-cursor-pointer oui-text-primary-light"
         >
-          <Text size="sm">Stake</Text>
+          <Text size="sm">{t("tradingRewards.stake")}</Text>
           <JumpIcon />
         </Flex>
       </Flex>
       <Flex direction={"row"} gap={3} width={"100%"}>
         <Statics
-          title="Avg. staked amount"
+          title={t("tradingRewards.avgStakedAmount")}
           value={props.curEpochEstimate?.est_avg_stake}
           icon={
             <div className="oui-flex oui-w-[32px] oui-h-[20px] oui-relative">
@@ -46,7 +49,7 @@ export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
           }
         />
         <Statics
-          title="Booster"
+          title={t("tradingRewards.booster")}
           value={props.booster}
           icon={<RocketIcon />}
           gradient

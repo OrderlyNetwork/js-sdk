@@ -7,6 +7,7 @@ import {
   MarketsProvider,
   MarketsProviderProps,
 } from "../../components/marketsProvider";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type MarketsHomePageProps = MarketsProviderProps & {
   className?: string;
@@ -14,7 +15,7 @@ export type MarketsHomePageProps = MarketsProviderProps & {
 
 export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
   const [activeTab, setActiveTab] = useState("markets");
-
+  const { t } = useTranslation();
   return (
     <MarketsProvider onSymbolChange={props.onSymbolChange}>
       <Box
@@ -29,7 +30,7 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
           onValueChange={setActiveTab}
         >
           <TabPanel
-            title="Markets"
+            title={t("markets.title")}
             value="markets"
             testid="oui-testid-markets-tab"
           >
@@ -37,7 +38,7 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
             <MarketsDataListWidget />
           </TabPanel>
           <TabPanel
-            title="Funding"
+            title={t("common.funding")}
             value="funding"
             testid="oui-testid-funding-tab"
           >

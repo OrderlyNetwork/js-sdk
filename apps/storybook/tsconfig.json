@@ -99,6 +99,9 @@
       ],
       "@orderly.network/utils": [
         "../../packages/utils/src"
+      ],
+      "@orderly.network/i18n": [
+        "../../packages/i18n/src"
       ]
     }
   },

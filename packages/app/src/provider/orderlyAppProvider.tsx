@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 import { OrderlyAppConfig } from "../types";
 import {
+  LocaleProvider as UILocaleProvider,
   ModalProvider,
   OrderlyThemeProvider,
   Toaster,
@@ -15,6 +16,7 @@ import {
 import { AppStateProvider, AppStateProviderProps } from "./appContext";
 import { AppConfigProvider } from "./configContext";
 import { useExecutionReport } from "../hooks/useExecutionReport";
+import { useUILocale } from "../hooks/useUILocale";
 import { OrderlyThemeProviderProps } from "@orderly.network/ui";
 
 export type OrderlyAppProviderProps = PropsWithChildren<
@@ -34,6 +36,7 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
   useTrack();
   useBootstrap();
   useExecutionReport();
+  const uiLocale = useUILocale();
 
   return (
     <AppConfigProvider appIcons={appIcons} brokerName={props.brokerName!}>
@@ -48,9 +51,11 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
             defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
           >
-            <TooltipProvider delayDuration={300}>
-              <ModalProvider>{props.children}</ModalProvider>
-            </TooltipProvider>
+            <UILocaleProvider locale={uiLocale}>
+              <TooltipProvider delayDuration={300}>
+                <ModalProvider>{props.children}</ModalProvider>
+              </TooltipProvider>
+            </UILocaleProvider>
           </AppStateProvider>
           <Toaster />
         </OrderlyConfigProvider>

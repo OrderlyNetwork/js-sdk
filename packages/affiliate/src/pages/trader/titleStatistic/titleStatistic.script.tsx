@@ -5,6 +5,7 @@ import { useReferralContext } from "../../../hooks";
 import { BarDayFilter } from "../../../utils/types";
 import { VolChartDataItem } from "@orderly.network/chart";
 import { fillData } from "../../../utils/chartUtils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type TitleStatisticReturns = {
   period: string;
@@ -17,11 +18,13 @@ export type TitleStatisticReturns = {
 };
 
 export const useTitleStatisticScript = (): TitleStatisticReturns => {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState<BarDayFilter>("7");
+
   const periodTypes = [
-    { label: "7D", value: "7" },
-    { label: "30D", value: "30" },
-    { label: "90D", value: "90" },
+    { label: t("common.select.7d"), value: "7" },
+    { label: t("common.select.30d"), value: "30" },
+    { label: t("common.select.90d"), value: "90" },
   ];
 
   const onPeriodChange = (item: string) => {
@@ -30,8 +33,8 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
 
   const [volType, setVolType] = useState("rebate");
   const volTypes = [
-    { label: "Rebate", value: "rebate" },
-    { label: "Volume", value: "volume" },
+    { label: t("affiliate.trader.rebate"), value: "rebate" },
+    { label: t("common.volume"), value: "volume" },
   ];
 
   const onVolTypeChange = (item: string) => {
@@ -102,6 +105,6 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
     volType,
     volTypes,
     onVolTypeChange,
-    dataSource: fillData(Number(period),dataSource),
+    dataSource: fillData(Number(period), dataSource),
   };
 };

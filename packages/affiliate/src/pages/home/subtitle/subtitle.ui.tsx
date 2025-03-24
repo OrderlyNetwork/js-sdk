@@ -1,9 +1,11 @@
 import { FC } from "react";
 import { SubtitleReturns } from "./subtitle.script";
 import { Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Subtitle: FC<SubtitleReturns> = (props) => {
-  
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-affiliate-home-subtitle"
@@ -11,7 +13,7 @@ export const Subtitle: FC<SubtitleReturns> = (props) => {
       className="oui-text-sm md:oui-text-base xl:oui-text-lg oui-text-base-contrast-80 oui-text-center"
       gap={3}
     >
-      <Text>Grow your brand | Get 40% commission | Unlock exclusive perks</Text>
+      <Text>{t("affiliate.page.home.subTitle")}</Text>
       <Flex
         direction={"row"}
         gap={1}
@@ -20,11 +22,11 @@ export const Subtitle: FC<SubtitleReturns> = (props) => {
           if (props.onLearnAffiliate) {
             props.onLearnAffiliate?.();
           } else if (props.learnAffiliateUrl) {
-            window.open(props.learnAffiliateUrl, '_blank');
+            window.open(props.learnAffiliateUrl, "_blank");
           }
         }}
       >
-        <Text children="Learn how it works" />
+        <Text children={t("affiliate.page.home.learn")} />
         <svg
           width="16"
           height="16"

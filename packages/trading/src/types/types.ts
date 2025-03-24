@@ -1,6 +1,7 @@
 import { API } from "@orderly.network/types";
 import { ReactNode } from "react";
 import { SharePnLConfig } from "@orderly.network/ui-share";
+import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
 
 export type layoutInfo = {
   width?: number;
@@ -109,6 +110,7 @@ export interface TradingViewConfigInterface {
   studiesOverrides?: Record<string, string>;
   customCssUrl?: string;
   colorConfig?: ColorConfigInterface;
+  locale?: TradingviewWidgetPropsInterface["locale"];
 }
 
 export interface ColorConfigInterface {

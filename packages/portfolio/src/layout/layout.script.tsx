@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { SideMenuItem, useScaffoldContext } from "@orderly.network/ui-scaffold";
 import { useMediaQuery } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export enum PortfolioLeftSidebarPath {
   Overview = "/portfolio",
@@ -20,6 +21,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
   const [current, setCurrent] = useState(
     props.current ?? routerAdapter?.currentPath ?? "/portfolio"
   );
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (current || routerAdapter?.currentPath) {
@@ -30,7 +32,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
   const items = useMemo(() => {
     return [
       {
-        name: "Overview",
+        name: t("common.overview"),
         href: PortfolioLeftSidebarPath.Overview,
         icon: (
           <svg
@@ -48,7 +50,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: "Positions",
+        name: t("positions.title"),
         href: PortfolioLeftSidebarPath.Positions,
         icon: (
           <svg
@@ -66,7 +68,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: "Orders",
+        name: t("orders.title"),
         href: PortfolioLeftSidebarPath.Orders,
         icon: (
           <svg
@@ -84,7 +86,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: "Fee tier",
+        name: t("portfolio.feeTier"),
         href: PortfolioLeftSidebarPath.FeeTier,
         icon: (
           <svg
@@ -102,7 +104,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: "API key",
+        name: t("portfolio.apiKeys"),
         href: PortfolioLeftSidebarPath.ApiKey,
         icon: (
           <svg
@@ -120,7 +122,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: "Settings",
+        name: t("portfolio.setting"),
         href: PortfolioLeftSidebarPath.Setting,
         icon: (
           <svg
@@ -138,7 +140,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
     ];
-  }, []);
+  }, [t]);
 
   const hideSideBar = useMediaQuery("(max-width: 768px)");
 

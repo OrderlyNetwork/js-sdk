@@ -1,19 +1,18 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import {
   Box,
-  Checkbox,
   CopyIcon,
   Flex,
   SimpleDialog,
   Statistic,
   Text,
-  TextField,
 } from "@orderly.network/ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   const ip = props.generateKey?.ip ?? "--";
-
+  const { t } = useTranslation();
   return (
     <SimpleDialog
       size="sm"
@@ -21,10 +20,10 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       onOpenChange={(open) => {
         props.hideCreatedDialog?.();
       }}
-      title="API key created"
+      title={t("portfolio.apiKey.created")}
       actions={{
         primary: {
-          label: "OK",
+          label: t("common.ok"),
           "data-testid": "oui-testid-apiKey-createdApiKey-dialog-ok-btn",
           className:
             "oui-w-[120px] lg:oui-w-[154px] oui-bg-base-2 hover:oui-bg-base-3",
@@ -34,7 +33,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
           },
         },
         secondary: {
-          label: "Copy API info",
+          label: t("portfolio.apiKey.created.button.copyApiInfo"),
           "data-testid": "oui-testid-apiKey-createdApiKey-dialog-copy-btn",
           className:
             "oui-w-[120px] lg:oui-w-[154px] oui-bg-primary-darken hover:oui-opacity-80",
@@ -52,7 +51,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       }}
     >
       <Flex direction={"column"} gap={4} itemAlign={"start"}>
-        <Statistic label="Account ID">
+        <Statistic label={t("portfolio.apiKey.accountId")}>
           <Text.formatted
             size="sm"
             intensity={80}
@@ -65,7 +64,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             {props.address}
           </Text.formatted>
         </Statistic>
-        <Statistic label="API key">
+        <Statistic label={t("portfolio.apiKey.column.apiKey")}>
           <Text.formatted
             size="sm"
             intensity={80}
@@ -78,7 +77,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             {props.generateKey?.key}
           </Text.formatted>
         </Statistic>
-        <Statistic label="Secret key">
+        <Statistic label={t("portfolio.apiKey.secretKey")}>
           <Text.formatted
             size="sm"
             intensity={80}
@@ -90,7 +89,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             {props.generateKey?.screctKey}
           </Text.formatted>{" "}
         </Statistic>
-        <Statistic label="IP">
+        <Statistic label={t("portfolio.apiKey.ip")}>
           <Flex
             width={320}
             gap={1}
@@ -120,7 +119,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             )}
           </Flex>
         </Statistic>
-        <Statistic label="Permissions">
+        <Statistic label={t("portfolio.apiKey.permissions")}>
           <Text
             size="sm"
             intensity={80}
@@ -131,8 +130,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
         </Statistic>
         <div></div>
         <Text color="warning" size="xs" className="oui-text-center">
-          Please copy the API secret. Once you close this pop-up, the API secret
-          will be encrypted.
+          {t("portfolio.apiKey.created.warning")}
         </Text>
       </Flex>
     </SimpleDialog>

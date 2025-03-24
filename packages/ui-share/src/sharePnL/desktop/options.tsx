@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import { ShareOptions } from "../../types/types";
 import { Flex, Text, cn } from "@orderly.network/ui";
 import { Checkbox } from "./checkbox";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const ShareOption: FC<{
   type: ShareOptions;
@@ -9,25 +10,26 @@ export const ShareOption: FC<{
   setShareOption: any;
 }> = (props) => {
   const { type, curType, setShareOption } = props;
+  const { t } = useTranslation();
 
   const text = useMemo(() => {
     switch (type) {
       case "openPrice":
-        return "Open price";
+        return t("share.pnl.optionalInfo.openPrice");
       case "closePrice":
-        return "Close price";
+        return t("share.pnl.optionalInfo.closePrice");
       case "openTime":
-        return "Opened at";
+        return t("share.pnl.optionalInfo.openTime");
       case "closeTime":
-        return "Closed at";
+        return t("share.pnl.optionalInfo.closeTime");
       case "markPrice":
-        return "Mark price";
+        return t("common.markPrice");
       case "quantity":
-        return "Quantity";
+        return t("common.quantity");
       case "leverage":
-        return "Leverage";
+        return t("leverage.title");
     }
-  }, [type]);
+  }, [type, t]);
 
   const isSelected = curType.has(type);
 

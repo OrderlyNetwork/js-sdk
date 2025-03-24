@@ -3,6 +3,7 @@ import {
   SharePnLDialogWidget,
   SharePnLBottomSheetWidget,
 } from "./sharePnL/sharePnL.widget";
+import { i18n } from "@orderly.network/i18n";
 
 const SharePnLDialogId = "sharePnLDialog";
 const SharePnLBottomSheetId = "sharePnLBottomSheet";
@@ -14,7 +15,7 @@ registerSimpleDialog(SharePnLDialogId, SharePnLDialogWidget, {
 });
 
 registerSimpleSheet(SharePnLBottomSheetId, SharePnLBottomSheetWidget, {
-  title: "Share PnL",
+  title: i18n.t("share.pnl.sharePnl"),
   classNames: {
     body: "oui-pb-4 oui-pt-0",
   },

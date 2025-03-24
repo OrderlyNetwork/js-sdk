@@ -11,6 +11,7 @@ import { SearchIcon } from "../../icons";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
 import { getMarketsSheetColumns } from "./column";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type MarketsSheetProps = UseMarketsSheetScriptReturn & {
   className?: string;
@@ -18,15 +19,16 @@ export type MarketsSheetProps = UseMarketsSheetScriptReturn & {
 
 export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
   const { className, tabSort, onTabSort } = props;
-
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
+
+  const { t } = useTranslation();
 
   const search = (
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder="Search"
+      placeholder={t("markets.search.placeholder")}
       classNames={{ root: "oui-border oui-border-line oui-mt-4" }}
       size="sm"
       prefix={
@@ -58,7 +60,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
     >
       <Box px={3} mt={3}>
         <Text size="base" intensity={80}>
-          Markets
+          {t("markets.title")}
         </Text>
         {search}
       </Box>

@@ -24,6 +24,7 @@ import { modal, usePagination, Text, Table } from "@orderly.network/ui";
 import { differenceInDays, setHours, subDays, format } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 import { SharePnLConfig } from "@orderly.network/ui-share";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type OrderListInstance = {
   download?: () => void;
@@ -57,7 +58,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
   } = props;
-
+  const { t } = useTranslation();
   const symbolsInfo = useSymbolsInfo();
 
   const manualPagination = useMemo(() => {
@@ -147,14 +148,15 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   const onCancelAll = useCallback(() => {
     const title =
       props.type === TabType.pending
-        ? "Cancel all pending orders"
+        ? t("orders.pending.cancelAll")
         : props.type === TabType.tp_sl
-        ? "Cancel all TP/SL orders"
+        ? t("orders.tpsl.cancelAll")
         : "";
+
     const content = TabType.pending
-      ? "Are you sure you want to cancel all of your pending orders?"
+      ? t("orders.pending.cancelAll.description")
       : props.type === TabType.tp_sl
-      ? "Are you sure you want to cancel all of your TP/SL orders?"
+      ? t("orders.tpsl.cancelAll.description")
       : "";
 
     modal.confirm({
@@ -183,7 +185,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
         }
       },
     });
-  }, [type]);
+  }, [type, t]);
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
@@ -239,6 +241,7 @@ const useFilter = (
     };
   }
 ) => {
+  const { t } = useTranslation();
   const [orderStatus, setOrderStatus] = useState<OrderStatus | "all">(
     option.ordersStatus ?? "all"
   );
@@ -283,15 +286,15 @@ const useFilter = (
       name: "side",
       options: [
         {
-          label: "All sides",
+          label: t("common.side.all"),
           value: "all",
         },
         {
-          label: "Buy",
+          label: t("common.buy"),
           value: "BUY",
         },
         {
-          label: "Sell",
+          label: t("common.sell"),
           value: "SELL",
         },
       ],
@@ -309,27 +312,27 @@ const useFilter = (
       name: "status",
       options: [
         {
-          label: "All status",
+          label: t("common.status.all"),
           value: "all",
         },
         {
-          label: "Pending",
+          label: t("orders.status.pending"),
           value: OrderStatus.INCOMPLETE,
         },
         {
-          label: "Filled",
+          label: t("orders.status.filled"),
           value: OrderStatus.FILLED,
         },
         {
-          label: "Partial filled",
+          label: t("orders.status.partialFilled"),
           value: OrderStatus.PARTIAL_FILLED,
         },
         {
-          label: "Canceled",
+          label: t("orders.status.canceled"),
           value: OrderStatus.CANCELLED,
         },
         {
-          label: "Rejected",
+          label: t("orders.status.rejected"),
           value: OrderStatus.REJECTED,
         },
       ],
@@ -351,7 +354,7 @@ const useFilter = (
       case TabType.orderHistory:
         return [sideFilter, statusFilter, dateRangeFilter];
     }
-  }, [type, ordersSide, orderStatus, dateRange]);
+  }, [type, ordersSide, orderStatus, dateRange, t]);
 
   return {
     filterItems,

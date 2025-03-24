@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 import {
   useSymbolsInfo,
-  useWS,
   useEventEmitter,
   useDebouncedCallback,
 } from "@orderly.network/hooks";

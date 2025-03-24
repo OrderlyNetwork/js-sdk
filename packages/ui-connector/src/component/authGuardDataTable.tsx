@@ -6,11 +6,11 @@ import {
   DataTableProps,
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { alertMessages, DESCRIPTIONS } from "../constants/message";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Flex } from "@orderly.network/ui";
-import { AuthGuard } from "./authGuard";
+import { alertMessages, AuthGuard } from "./authGuard";
 import { useAccount } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const AuthGuardDataTable = <RecordType extends unknown>(
   props: PropsWithChildren<
@@ -81,6 +81,15 @@ type GuardViewProps = {
 };
 
 const GuardView = (props: GuardViewProps) => {
+  const { t } = useTranslation();
+
+  const DESCRIPTIONS: alertMessages = {
+    connectWallet: t("connector.connectWallet"),
+    switchChain: t("connector.wrongNetwork"),
+    enableTrading: t("connector.enableTrading"),
+    signin: t("connector.signIn"),
+  };
+
   const descriptions = { ...DESCRIPTIONS, ...props.description };
   if (!props.visible) return null;
   return (

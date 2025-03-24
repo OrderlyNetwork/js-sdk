@@ -14,6 +14,7 @@ import { usePositionsRowContext } from "./positionRowContext";
 import { Decimal } from "@orderly.network/utils";
 import { OrderType } from "@orderly.network/types";
 import { utils } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const QuantityInput = (props: { value: number }) => {
   // const [quantity, setQuantity] = useState(`${props.value}`);
@@ -65,7 +66,7 @@ export const QuantityInput = (props: { value: number }) => {
             setOpen(true);
           }}
           classNames={{
-            root: "oui-outline-line-12 "
+            root: "oui-outline-line-12 ",
           }}
           formatters={[
             inputFormatter.numberFormatter,
@@ -78,7 +79,7 @@ export const QuantityInput = (props: { value: number }) => {
           onValueChange={(e) => {
             setQuantity(e);
             // if (type === OrderType.LIMIT) {
-            if (e == '0' || e == "") {
+            if (e == "0" || e == "") {
               setSliderValue(0);
               return;
             }
@@ -130,6 +131,7 @@ export const QuantityInput = (props: { value: number }) => {
 };
 
 const Buttons = (props: { onClick: (value: number) => void }) => {
+  const { t } = useTranslation();
   const list = [
     {
       label: "0%",
@@ -148,7 +150,7 @@ const Buttons = (props: { onClick: (value: number) => void }) => {
       value: 0.75,
     },
     {
-      label: "Max",
+      label: t("common.max"),
       value: 1,
     },
   ];

@@ -23,6 +23,7 @@ import { TriggerPrice } from "./triggerPrice";
 import { TPSLButton } from "./components";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
 import { NumeralWithCtx } from "./numeralWithCtx";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useColumn = (props: {
   pnlNotionalDecimalPrecision?: number;
@@ -30,11 +31,13 @@ export const useColumn = (props: {
   onSymbolChange?: (symbol: API.Symbol) => void;
 }) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
+  const { t } = useTranslation();
+
   const column = useMemo(
     () =>
       [
         {
-          title: "Symbol",
+          title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
           width: 140,
@@ -74,7 +77,7 @@ export const useColumn = (props: {
           ),
         },
         {
-          title: "Quantity",
+          title: t("common.quantity"),
           dataIndex: "position_qty",
           // onSort: true,
           onSort: (a, b) => {
@@ -99,7 +102,7 @@ export const useColumn = (props: {
           // ),
         },
         {
-          title: "Avg. open",
+          title: t("common.avgOpen"),
           className: "oui-h-[48px]",
           width: 120,
           onSort: true,
@@ -112,7 +115,7 @@ export const useColumn = (props: {
           },
         },
         {
-          title: "Mark price",
+          title: t("common.markPrice"),
           dataIndex: "mark_price",
           width: 120,
           onSort: true,
@@ -128,16 +131,13 @@ export const useColumn = (props: {
           title: (
             <Tooltip
               className="oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-54 oui-p-3 oui-bg-base-8"
-              content={
-                "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions."
-              }
+              content={t("positions.column.liqPrice.tooltip")}
             >
-              <Text>Liq. price</Text>
+              <Text>{t("positions.column.liqPrice")}</Text>
             </Tooltip>
           ),
           width: 100,
           onSort: true,
-          // hint: "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
           dataIndex: "est_liq_price",
           render: (value: string, record: any) => {
             return Number(value) === 0 ? (
@@ -160,7 +160,7 @@ export const useColumn = (props: {
               align="center"
               className="oui-max-w-[280px] oui-text-2xs"
             >
-              <Text>Unreal. PnL</Text>
+              <Text>{t("common.unrealizedPnl")}</Text>
             </HoverCard>
           ),
           dataIndex: "unrealized_pnl",
@@ -206,7 +206,7 @@ export const useColumn = (props: {
           },
         },
         {
-          title: "TP/SL",
+          title: t("tpsl.title"),
           dataIndex: "__",
           width: 150,
           render: (_: string, record) => (
@@ -218,7 +218,7 @@ export const useColumn = (props: {
         },
 
         {
-          title: "Notional",
+          title: t("common.notional"),
           dataIndex: "notional",
           className: "oui-h-[48px]",
           width: 100,
@@ -233,19 +233,20 @@ export const useColumn = (props: {
           title: (
             <Tooltip
               className="oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-54 oui-p-3 oui-bg-base-8"
+              // @ts-ignore
               content={
                 <Flex
                   direction={"column"}
                   gap={3}
                   className="oui-text-base-contrast-54 oui-bg-base-8 oui-rounded-sm"
                 >
-                  <span>The minimum equity to keep your position. </span>
+                  <span>{t("positions.column.margin.tooltip")}</span>
                   <Divider className="oui-w-full" />
-                  <span>Margin = Position size * Mark price * MMR</span>
+                  <span>{t("positions.column.margin.formula")}</span>
                 </Flex>
               }
             >
-              <Text>Margin</Text>
+              <Text>{t("positions.column.margin")}</Text>
             </Tooltip>
           ),
           dataIndex: "mm",
@@ -266,14 +267,14 @@ export const useColumn = (props: {
           // ),
         },
         {
-          title: "Qty.",
+          title: t("common.qty"),
           dataIndex: "close_qty",
           width: 100,
           fixed: "right",
           render: renderQuantityInput,
         },
         {
-          title: "Price",
+          title: t("common.price"),
           dataIndex: "close_price",
           width: 100,
           fixed: "right",
@@ -296,7 +297,7 @@ export const useColumn = (props: {
           },
         },
       ] as Column<API.PositionTPSLExt>[],
-    [pnlNotionalDecimalPrecision, sharePnLConfig]
+    [pnlNotionalDecimalPrecision, sharePnLConfig, t]
   );
 
   return column;

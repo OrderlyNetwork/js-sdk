@@ -28,6 +28,7 @@
 import { Decimal } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareEntity, ShareOptions } from "../../types/types";
 // import { PnLDisplayFormat, ShareOptions } from "./type";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type ReferralType = {
   code?: string;
@@ -46,6 +47,7 @@ export function getPnLPosterData(
   quoteDp?: number,
   referral?: ReferralType
 ) {
+  const { t } = useTranslation();
   const { symbol, currency } = processSymbol(position.symbol);
   const positionData: any = {
     symbol,
@@ -111,7 +113,7 @@ export function getPnLPosterData(
         case "openPrice": {
           if (position.openPrice != null) {
             informations.push({
-              title: "Open price",
+              title: t("share.pnl.optionalInfo.openPrice"),
               value: formatFixed(position.openPrice, quoteDp || 2),
             });
           }
@@ -120,7 +122,7 @@ export function getPnLPosterData(
         case "closePrice": {
           if (position.closePrice != null) {
             informations.push({
-              title: "Close price",
+              title: t("share.pnl.optionalInfo.closePrice"),
               value: formatFixed(position.closePrice, quoteDp || 2),
             });
           }
@@ -129,7 +131,7 @@ export function getPnLPosterData(
         case "openTime": {
           if (position.openTime != null) {
             informations.push({
-              title: "Opened at",
+              title: t("share.pnl.optionalInfo.openTime"),
               value: formatOpenTime(position.openTime),
             });
           }
@@ -138,7 +140,7 @@ export function getPnLPosterData(
         case "closeTime": {
           if (position.closeTime != null) {
             informations.push({
-              title: "Closed at",
+              title: t("share.pnl.optionalInfo.closeTime"),
               value: formatOpenTime(position.closeTime),
             });
           }
@@ -147,7 +149,7 @@ export function getPnLPosterData(
         case "markPrice": {
           if (position.markPrice != null) {
             informations.push({
-              title: "Mark price",
+              title: t("common.markPrice"),
               value: formatFixed(position.markPrice, quoteDp || 2),
             });
           }
@@ -156,7 +158,7 @@ export function getPnLPosterData(
         case "quantity": {
           if (position.quantity != null) {
             informations.push({
-              title: "Quantity",
+              title: t("common.quantity"),
               value: formatFixed(position.quantity, baseDp || 2),
             });
           }

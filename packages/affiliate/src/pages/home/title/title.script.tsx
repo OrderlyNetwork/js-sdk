@@ -1,13 +1,13 @@
 import { useReferralContext } from "../../../hooks";
 
 export type TitleReturns = {
-  gradientTitle: string;
+  shortBrokerName: string;
 };
 
 export const useTitleScript = (): TitleReturns => {
   const { overwrite } = useReferralContext();
 
   return {
-    gradientTitle: overwrite?.shortBrokerName || "Orderly",
+    shortBrokerName: overwrite?.shortBrokerName || "Orderly",
   };
 };

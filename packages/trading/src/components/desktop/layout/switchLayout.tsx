@@ -11,6 +11,7 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type LayoutPosition = "left" | "right";
 
@@ -20,6 +21,7 @@ export type SwitchLayoutProps = {
 };
 
 export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
+  const { t } = useTranslation();
   return (
     <SwitchLayoutDropDown {...props}>
       <Flex
@@ -37,7 +39,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
       >
         <LayoutIcon />
         <Text size="2xs" weight="semibold">
-          Layout
+          {t("trading.layout")}
         </Text>
       </Flex>
     </SwitchLayoutDropDown>
@@ -48,7 +50,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
   props
 ) => {
   const [open, setOpen] = useState(false);
-
+  const { t } = useTranslation();
   const renderItem = (position: LayoutPosition) => {
     return (
       <Flex
@@ -81,7 +83,9 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
             props.layout === position && "oui-text-base-contrast-80"
           )}
         >
-          Advanced ({position})
+          {position === "right"
+            ? t("trading.layout.right")
+            : t("trading.layout.left")}
         </Text>
       </Flex>
     );
@@ -96,7 +100,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         className="oui-mb-[10px]"
       >
         <Text size="base" intensity={98}>
-          layout
+          {t("trading.layout")}
         </Text>
         <CloseIcon
           size={16}

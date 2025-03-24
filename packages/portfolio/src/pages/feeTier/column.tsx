@@ -1,18 +1,20 @@
 import { useMemo } from "react";
 import { type Column, Text } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useFeeTierColumns = () => {
+  const { t } = useTranslation();
   const columns = useMemo(() => {
     return [
       {
-        title: "Tier",
+        title: t("portfolio.feeTier.column.tier"),
         dataIndex: "tier",
         align: "left",
         width: 100,
       },
       {
-        title: "30 day volume (USDC)",
+        title: `${t("portfolio.feeTier.column.30dVolume")} (USDC)`,
         dataIndex: "volume",
         align: "center",
         width: 170,
@@ -27,8 +29,12 @@ export const useFeeTierColumns = () => {
           if (volume_min && !volume_max) {
             return (
               <div>
-                {"Above "}
-                {numberToHumanStyle(volume_min, volume_min === 2500000 ? 1 : 0)}
+                {t("portfolio.feeTier.column.30dVolume.above", {
+                  volume: numberToHumanStyle(
+                    volume_min,
+                    volume_min === 2500000 ? 1 : 0
+                  ),
+                })}
               </div>
             );
           }
@@ -44,7 +50,7 @@ export const useFeeTierColumns = () => {
         },
       },
       {
-        title: "Maker",
+        title: t("portfolio.feeTier.column.maker"),
         dataIndex: "maker_fee",
         align: "right",
         width: 100,
@@ -53,7 +59,7 @@ export const useFeeTierColumns = () => {
         },
       },
       {
-        title: "Taker",
+        title: t("portfolio.feeTier.column.taker"),
         dataIndex: "taker_fee",
         align: "right",
         width: 100,
@@ -62,7 +68,7 @@ export const useFeeTierColumns = () => {
         },
       },
     ] as Column[];
-  }, []);
+  }, [t]);
 
   return columns;
 };

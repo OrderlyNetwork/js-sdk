@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes } from "react";
+import { FC } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 import {
   ComponentPropsWithout,
@@ -66,6 +66,7 @@ const Spinner: FC<SpinnerProps> = (props) => {
           fill="currentFill"
         />
       </svg>
+      {/* hide, not show when render */}
       <span className="oui-sr-only">Loading...</span>
     </span>
   );

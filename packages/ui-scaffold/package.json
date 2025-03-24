@@ -21,6 +21,7 @@
   "dependencies": {
     "@akamfoad/qr": "^0.4.0",
     "@date-fns/utc": "1.2.0",
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   useAccount,
   useConfig,
@@ -8,8 +8,10 @@ import {
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
 import { modal, toast } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export function useFaucetScript() {
+  const { t } = useTranslation();
   const { connectedChain, namespace } = useWalletConnector();
   const { state, account } = useAccount();
   const config = useConfig();
@@ -36,9 +38,9 @@ export function useFaucetScript() {
       return;
     }
     setLoading(true);
-    const message = `${
-      namespace === ChainNamespace.solana ? "100" : "1,000"
-    } USDC will be added to your balance. Please note this may take up to 3 minutes. Please check back later.`;
+    const message = t("trading.faucet.getTestUSDC.success", {
+      quantity: namespace === ChainNamespace.solana ? "100" : "1,000",
+    });
 
     return getTestUSDC({
       chain_id: account.walletAdapter?.chainId.toString(),
@@ -49,7 +51,7 @@ export function useFaucetScript() {
         setLoading(false);
         if (res.success) {
           return modal.alert({
-            title: "Get test USDC",
+            title: t("trading.faucet.getTestUSDC"),
             message,
             onOk: () => {
               return new Promise((resolve) => resolve(true));

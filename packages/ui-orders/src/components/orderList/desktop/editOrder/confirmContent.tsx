@@ -1,6 +1,7 @@
+import { FC } from "react";
 import { Button, CloseIcon, ThrottledButton } from "@orderly.network/ui";
 import { commify } from "@orderly.network/utils";
-import { FC, useMemo } from "react";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 
 export enum EditType {
   quantity,
@@ -17,23 +18,37 @@ export const ConfirmContent: FC<{
   onConfirm: (e: any) => void;
 }> = (props) => {
   const { type, base, value, cancelPopover, isSubmitting, onConfirm } = props;
+  const { t } = useTranslation();
 
-  const label = useMemo(() => {
+  const renderLabel = () => {
+    const common = {
+      values: { base, value: commify(value) },
+      components: [<span className="oui-text-warning-darken" />],
+    };
+
     switch (type) {
       case EditType.quantity:
-        return `You agree changing the quantity of ${base}-PERP order to${" "}`;
+        return (
+          // @ts-ignore
+          <Trans i18nKey="order.edit.confirm.quantity" {...common} />
+        );
       case EditType.price:
-        return `You agree changing the price of ${base}-PERP order to${" "}`;
+        return (
+          // @ts-ignore
+          <Trans i18nKey="order.edit.confirm.price" {...common} />
+        );
       case EditType.triggerPrice:
-        return `You agree changing the trigger price of ${base}-PERP order to${" "}`;
+        return (
+          // @ts-ignore
+          <Trans i18nKey="order.edit.confirm.triggerPrice" {...common} />
+        );
     }
-  }, [type]);
+  };
 
   return (
     <div className="oui-pt-5 oui-relative">
       <div className="oui-text-base-contrast-54 oui-text-2xs desktop:oui-text-sm">
-        {label}
-        <span className="oui-text-warning-darken">{commify(value)}</span>.
+        {renderLabel()}
       </div>
       <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-mt-5">
         <Button
@@ -42,10 +57,10 @@ export const ConfirmContent: FC<{
           onClick={cancelPopover}
           disabled={isSubmitting}
         >
-          Cancel
+          {t("common.cancel")}
         </Button>
         <ThrottledButton size={"md"} loading={isSubmitting} onClick={onConfirm}>
-          Confirm
+          {t("common.confirm")}
         </ThrottledButton>
       </div>
       <button

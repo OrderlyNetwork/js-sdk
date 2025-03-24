@@ -25,7 +25,6 @@ import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
 import { usePositions } from "../orderly/usePositionStream/usePosition.store";
-// import { VerifyResult } from "../utils/createOrder";
 
 export type UseOrderEntryOptions = {
   commify?: boolean;
@@ -121,7 +120,7 @@ export function useOrderEntry(
     isNewVersion = true;
 
     if (!symbolOrOrder.symbol) {
-      throw new SDKError("symbol is required");
+      throw new SDKError("Symbol is required");
     }
 
     if (!symbolOrOrder.side) {
@@ -129,7 +128,7 @@ export function useOrderEntry(
     }
 
     if (!symbolOrOrder.order_type) {
-      throw new SDKError("order_type is required");
+      throw new SDKError("Order type is required");
     }
   }
 
@@ -369,15 +368,15 @@ export function useOrderEntry(
 
   const createOrder = (values: Partial<OrderEntity>): Promise<OrderEntity> => {
     if (!values.symbol) {
-      throw new SDKError("symbol is error");
+      throw new SDKError("Symbol is error");
     }
 
     if (!values.side) {
-      throw new SDKError("side is error");
+      throw new SDKError("Order side is error");
     }
 
     if (!values || typeof values.order_type === "undefined") {
-      throw new SDKError("order_type is error");
+      throw new SDKError("Order type is error");
     }
 
     const orderCreator = OrderFactory.create(
@@ -386,7 +385,7 @@ export function useOrderEntry(
     );
 
     if (!orderCreator) {
-      return Promise.reject(new SDKError("orderCreator is null"));
+      return Promise.reject(new SDKError("Order creator is null"));
     }
 
     return new Promise((resolve, reject) => {

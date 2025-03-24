@@ -16,20 +16,21 @@ import { useSymbolContext } from "../../../providers/symbolProvider";
 import { commifyOptional } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const usePositionHistoryColumn = (props: {
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
 }) => {
   const { onSymbolChange, pnlNotionalDecimalPrecision } = props;
+  const { t } = useTranslation();
 
   const column = useMemo(
     () =>
       [
         // instrument
         {
-          title: "Symbol",
+          title: t("common.symbol"),
           dataIndex: "symbol",
           fixed: "left",
           width: 200,
@@ -42,14 +43,14 @@ export const usePositionHistoryColumn = (props: {
         },
         // quantity
         {
-          title: "Closed / Max closed",
+          title: t("positions.history.column.closed&maxClosed"),
           dataIndex: "close_maxClose",
           width: 200,
           render: (value: string, record) => <Quantity record={record} />,
         },
         // net pnl
         {
-          title: "Net PnL",
+          title: t("positions.history.column.netPnl"),
           dataIndex: "netPnL",
           width: 140,
           onSort: (a, b) => {
@@ -73,7 +74,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // avg open
         {
-          title: "Avg. open",
+          title: t("common.avgOpen"),
           dataIndex: "avg_open",
           width: 140,
           render: (_: any, record) => {
@@ -91,7 +92,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // avg close
         {
-          title: "Avg. close",
+          title: t("common.avgClose"),
           dataIndex: "avg_close",
           width: 175,
           render: (_: any, record) => {
@@ -109,7 +110,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // time opened
         {
-          title: "Time opened",
+          title: t("positions.history.column.timeOpened"),
           dataIndex: "open_timestamp",
           width: 175,
           onSort: true,
@@ -121,7 +122,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // time close
         {
-          title: "Time closed",
+          title: t("positions.history.column.timeClosed"),
           dataIndex: "close_timestamp",
           width: 175,
           onSort: true,
@@ -141,7 +142,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // updated time
         {
-          title: "Updated time",
+          title: t("positions.history.column.updatedTime"),
           dataIndex: "last_update_time",
           width: 175,
           onSort: true,
@@ -152,7 +153,7 @@ export const usePositionHistoryColumn = (props: {
           ),
         },
       ] as Column<PositionHistoryExt>[],
-    [pnlNotionalDecimalPrecision]
+    [pnlNotionalDecimalPrecision, t]
   );
 
   return column;
@@ -163,27 +164,38 @@ export const SymbolInfo = (props: {
   onSymbolChange?: (symbol: API.Symbol) => void;
 }) => {
   const { record, onSymbolChange } = props;
+  const { t } = useTranslation();
 
   const tags = useMemo(() => {
     const list: ReactNode[] = [];
 
+    const status = record.position_status;
+
+    const renderStatus = () => {
+      if (status === "closed") {
+        return t("positions.history.status.closed");
+      } else if (status === "partial_closed") {
+        return t("positions.history.status.partialClosed");
+      } else {
+        return capitalizeFirstLetter(status.replace("_", " "));
+      }
+    };
+
     list.push(
       <Badge
-        color={record.position_status !== "closed" ? "primaryLight" : "neutral"}
+        color={status !== "closed" ? "primaryLight" : "neutral"}
         size="xs"
+        className="oui-break-normal oui-whitespace-nowrap"
       >
-        {capitalizeFirstLetter(
-          record.position_status === "partial_closed"
-            ? "Partially closed"
-            : record.position_status.replace("_", " ")
-        )}
+        {renderStatus()}
       </Badge>
     );
 
     if (record.type === "adl") {
       list.push(
         <Badge color={"danger"} size="xs">
-          {capitalizeFirstLetter(record.type)}
+          {/* {capitalizeFirstLetter(record.type)} */}
+          {t("positions.history.type.adl")}
         </Badge>
       );
     } else if (record.type === "liquidated") {
@@ -202,19 +214,25 @@ export const SymbolInfo = (props: {
             >
               {record.liquidation_id != null && (
                 <Flex justify={"between"} width={"100%"} gap={2}>
-                  <Text intensity={54}>Liquidation id</Text>
+                  <Text intensity={54}>
+                    {t("positions.history.liquidated.liquidationId")}
+                  </Text>
                   <Text intensity={98}>{record.liquidation_id}</Text>
                 </Flex>
               )}
               <Flex justify={"between"} width={"100%"} gap={2}>
-                <Text intensity={54}>Liquidator fee</Text>
+                <Text intensity={54}>
+                  {t("positions.history.liquidated.liquidatorFee")}
+                </Text>
                 <Text color="lose">
                   {record.liquidator_fee > 0 && "-"}
                   {commifyOptional(record.liquidator_fee)}
                 </Text>
               </Flex>
               <Flex justify={"between"} width={"100%"} gap={2}>
-                <Text intensity={54}>Ins. Fund fee</Text>
+                <Text intensity={54}>
+                  {t("positions.history.liquidated.insFundFee")}
+                </Text>
                 <Text color="lose">
                   {record.insurance_fund_fee > 0 && "-"}
                   {commifyOptional(record.insurance_fund_fee)}
@@ -226,7 +244,7 @@ export const SymbolInfo = (props: {
           <div>
             <Badge size="xs" color="danger" className="oui-cursor-pointer">
               <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
-                {capitalizeFirstLetter(record.type)}
+                {t("positions.history.type.liquidated")}
               </span>
             </Badge>
           </div>
@@ -235,7 +253,7 @@ export const SymbolInfo = (props: {
     }
 
     return list;
-  }, [record]);
+  }, [record, t]);
 
   return (
     <Flex gap={2} height={48}>
@@ -295,7 +313,7 @@ export const NetPnL = (props: {
   pnlNotionalDecimalPrecision?: number;
 }) => {
   const { record, pnlNotionalDecimalPrecision } = props;
-
+  const { t } = useTranslation();
   const netPnl = record.netPnL != null ? record.netPnL : undefined;
 
   const text = () => (
@@ -327,9 +345,11 @@ export const NetPnL = (props: {
       // @ts-ignore
       content={
         <Flex direction={"column"} itemAlign={"start"} className="oui-text-2xs">
-          <Text intensity={80}>Net PnL</Text>
+          <Text intensity={80}>{t("positions.history.column.netPnl")}</Text>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>Realized PnL</Text>
+            <Text intensity={54}>
+              {t("positions.history.netPnl.realizedPnl")}
+            </Text>
             <Text
               color={record.realized_pnl >= 0 ? "profit" : "lose"}
               className="oui-cursor-pointer"
@@ -338,7 +358,9 @@ export const NetPnL = (props: {
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>Funding fee</Text>
+            <Text intensity={54}>
+              {t("positions.history.netPnl.fundingFee")}
+            </Text>
             <Text
               color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
               className="oui-cursor-pointer"
@@ -347,7 +369,9 @@ export const NetPnL = (props: {
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>Trading fee</Text>
+            <Text intensity={54}>
+              {t("positions.history.netPnl.tradingFee")}
+            </Text>
             <Text
               color={record.trading_fee > 0 ? "lose" : "profit"}
               className="oui-cursor-pointer"

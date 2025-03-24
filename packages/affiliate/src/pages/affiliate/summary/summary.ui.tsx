@@ -2,9 +2,12 @@ import { FC } from "react";
 import { Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Summary: FC<SummaryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-affiliate-affiliate-summary"
@@ -20,14 +23,19 @@ export const Summary: FC<SummaryReturns> = (props) => {
       <CommissionData {...props} />
       <Flex direction={"column"} width={"100%"} gap={2}>
         <Row
-          title="Referral vol. (USDC)"
+          title={`${t("affiliate.referralVol")} (USDC)`}
           value={props.referralVol}
           dp={2}
           {...props}
         />
-        <Row title="Referees" value={props.referees} dp={0} {...props} />
         <Row
-          title="Referees that traded"
+          title={t("affiliate.referees")}
+          value={props.referees}
+          dp={0}
+          {...props}
+        />
+        <Row
+          title={t("affiliate.summary.refereesTraded")}
           value={props.refereesTades}
           dp={0}
           {...props}
@@ -38,9 +46,11 @@ export const Summary: FC<SummaryReturns> = (props) => {
 };
 
 const Title: FC<SummaryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">Summary</Text>
+      <Text className="oui-text-lg">{t("affiliate.summary")}</Text>
       <div className={"oui-min-w-14"}>
         <Select.options
           size={"xs"}
@@ -54,6 +64,8 @@ const Title: FC<SummaryReturns> = (props) => {
 };
 
 const CommissionData: FC<SummaryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       gradient="primary"
@@ -68,7 +80,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
       className="oui-max-h-[104px]"
     >
       <Text intensity={54} className="oui-text-base 2xl:oui-text-lg">
-        Commission (USDC)
+        {`${t("affiliate.commission")} (USDC)`}
       </Text>
       <Flex
         direction={"row"}
@@ -76,7 +88,9 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
         <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
-        <Text>{commifyOptional(props.commission, { fix : 2, fallback: '0'})}</Text>
+        <Text>
+          {commifyOptional(props.commission, { fix: 2, fallback: "0" })}
+        </Text>
       </Flex>
     </Flex>
   );
@@ -97,10 +111,8 @@ const Row: FC<
       >
         {props.title}
       </Text>
-      <Text
-        className="oui-text-xs md:oui-text-sm xl:oui-text-base"
-      >
-        {commifyOptional(props.value, { fix: props.dp, fallback: "0"})}
+      <Text className="oui-text-xs md:oui-text-sm xl:oui-text-base">
+        {commifyOptional(props.value, { fix: props.dp, fallback: "0" })}
       </Text>
     </Flex>
   );

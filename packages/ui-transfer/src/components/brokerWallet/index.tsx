@@ -2,8 +2,10 @@ import { FC, useMemo } from "react";
 import { Flex, Text } from "@orderly.network/ui";
 import { useAppConfig } from "@orderly.network/react-app";
 import { useConfig } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const BrokerWallet: FC = () => {
+  const { t } = useTranslation();
   const { appIcons } = useAppConfig();
   const brokerName = useConfig("brokerName");
 
@@ -23,7 +25,9 @@ export const BrokerWallet: FC = () => {
 
   return (
     <Flex justify="between">
-      <Text size="sm" intensity={98}>{`Your ${brokerName} account`}</Text>
+      <Text size="sm" intensity={98}>
+        {t("transfer.brokerAccount", { brokerName })}
+      </Text>
       {icon}
     </Flex>
   );
