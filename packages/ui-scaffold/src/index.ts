@@ -18,6 +18,7 @@ export {
 
 export * from "./components/footer";
 export * from "./components/maintenanceTips";
+export * from "./components/announcement-tips";
 export * from "./components/restrictedInfo";
 
 export type { SideBarProps, SideMenuItem } from "./components/sidebar";

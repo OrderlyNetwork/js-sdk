@@ -51,6 +51,7 @@ export type { SizeType } from "./helpers/sizeType";
 
 export {
   OrderlyThemeProvider,
+  type OrderlyThemeProviderProps,
   useOrderlyTheme,
 } from "./provider/orderlyThemeProvider";
 export * from "./plugin";

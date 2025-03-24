@@ -11,8 +11,8 @@ import { SecondaryLogo } from "../../components/base/secondaryLogo";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
 import {
-  MaintenanceTipsWidget,
   RestrictedInfoWidget,
+AnnouncementTipsWidget,
 } from "@orderly.network/ui-scaffold";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
 
@@ -58,7 +58,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
       <header>{topBar}</header>
 
       <div>
-        <MaintenanceTipsWidget />
+        <AnnouncementTipsWidget />
       </div>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">

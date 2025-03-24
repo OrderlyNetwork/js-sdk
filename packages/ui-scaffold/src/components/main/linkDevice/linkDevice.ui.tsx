@@ -29,6 +29,14 @@ export const LinkDevice: FC<LinkDeviceProps> = (props) => {
         open={props.open}
         onOpenChange={props.onOpenChange}
         size="sm"
+        contentProps={{
+          onInteractOutside: (e) => {
+            const el = document.querySelector("#privy-dialog");
+            if (el) {
+              e.preventDefault();
+            }
+          },
+        }}
       >
         <LinkDeviceContent {...props} />
       </SimpleDialog>

@@ -51,7 +51,7 @@ export class AmplitudeTracker {
   }
 
   track(eventName: keyof typeof TrackerListenerKeyMap, properties?: any) {
-    amplitude.track(eventName, properties);
+    amplitude.track(TrackerListenerKeyMap[eventName], properties);
   }
 
   private _bindEvents() {
