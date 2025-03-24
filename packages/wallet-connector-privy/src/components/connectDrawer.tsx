@@ -110,7 +110,7 @@ function SOLConnectArea({ connect }: { connect: (walletAdapter: WalletAdapter) =
 
   return (
     <div>
-      <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">SOL</div>
+      <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">Solana</div>
       <div className="oui-grid oui-grid-cols-2 oui-gap-[6px]">
         {wallets.map((item, key) => (
           <div key={key}
@@ -170,8 +170,8 @@ function RenderPrivyWallet() {
 
       </div>
       <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
-        <WalletCard type={WalletType.EVM} address={walletEVM?.accounts[0].address} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={true} isBoth={true} />
-        <WalletCard type={WalletType.SOL} address={walletSOL?.accounts[0].address} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={true} isBoth={true} />
+        <WalletCard type={WalletType.EVM} address={walletEVM?.accounts[0].address ?? ''} isActive={namespace === ChainNamespace.evm} onActiveChange={() => { switchWallet(ChainNamespace.evm) }} isPrivy={true} isBoth={true} />
+        <WalletCard type={WalletType.SOL} address={walletSOL?.accounts[0].address ?? ''} isActive={namespace === ChainNamespace.solana} onActiveChange={() => { switchWallet(ChainNamespace.solana) }} isPrivy={true} isBoth={true} />
       </div>
     </div>
   )
@@ -200,6 +200,7 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
     usePrivyWallet();
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
+  const { termsOfUse } = useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
 
 
@@ -239,7 +240,7 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
             'oui-font-semibold oui-text-base-contrast-80 ',
             'oui-text-[20px] oui-py-2',
             'md:oui-text-base md:oui-py-0',
-          )}>{isConnected ? 'My Wallet' : 'Connect Wallet'}</div>
+          )}>{isConnected ? 'My wallet' : 'Connect wallet'}</div>
           <CloseIcon className="oui-cursor-pointer oui-text-base-contrast-20 oui-w-5 oui-h-5 hover:oui-text-base-contrast-80" onClick={() => props.onChangeOpen(false)} />
         </div>
         {isConnected ? (
@@ -252,7 +253,7 @@ export function ConnectDrawer(props: { open: boolean, onChangeOpen: (open: boole
       {
         !isConnected &&
         <div className="oui-z-10 oui-text-base-contrast-80 oui-text-center oui-text-2xs oui-relative  oui-font-semibold">
-          By connecting your wallet, you acknowledge and agree to the <span className="oui-cursor-pointer oui-underline oui-text-primary">terms of use</span>.
+          By connecting your wallet, you acknowledge and agree to the <a href={termsOfUse} className="oui-cursor-pointer oui-underline oui-text-primary" target="_blank">terms of use</a>.
         </div>
       }
     </Drawer>

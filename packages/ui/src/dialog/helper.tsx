@@ -32,6 +32,14 @@ export function createDialogComponent<P extends Partial<SimpleDialogProps>>(
           body: bodyClassName,
           ...classNames,
         }}
+        contentProps={{
+          onInteractOutside: (e) => {
+            const el = document.querySelector('#privy-dialog')
+            if (el) {
+              e.preventDefault();
+            }
+          },
+        }}
       >
         <Comp {...rest} close={hide} resolve={resolve} reject={reject} />
       </SimpleDialog>

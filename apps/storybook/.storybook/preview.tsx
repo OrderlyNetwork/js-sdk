@@ -2,7 +2,7 @@ import React from "react";
 import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { customViewports } from "./screenSizes";
-import OrderlyProvider, { OrderlyProviderPrivy } from "./orderlyProvider";
+import {OrderlyProvider} from "./orderlyProvider";
 import { withThemeBuilder } from "../src/addons/theme_tool/preview";
 
 import "../src/tailwind.css";
@@ -10,14 +10,6 @@ import "../src/tailwind.css";
 const preview: Preview = {
   decorators: [
     (Story: any, context: any) => {
-      const { walletConnectorType } = context.parameters ?? {};
-      if (walletConnectorType === "privy") {
-        return (
-          <OrderlyProviderPrivy>
-            <Story />
-          </OrderlyProviderPrivy>
-        );
-      }
       return (
         <OrderlyProvider>
           <Story />
