@@ -47,7 +47,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-position-tab"
         value={DataListTabType.positions}
-        title={`${t("trading.dataList.tabs.position")}${
+        title={`${t("positions.title")}${
           (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
         }`}
       >
@@ -56,7 +56,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-pending-tab"
         value={DataListTabType.pending}
-        title={`${t("trading.dataList.tabs.pending")}${
+        title={`${t("orders.status.pending")}${
           (props.pendingOrderCount ?? 0) > 0
             ? `(${props.pendingOrderCount})`
             : ""
@@ -75,7 +75,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-tpsl-tab"
         value={DataListTabType.tp_sl}
-        title={`${t("trading.dataList.tabs.tpsl")}${
+        title={`${t("tpsl.title")}${
           (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
         }`}
       >
@@ -92,7 +92,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-filled-tab"
         value={DataListTabType.filled}
-        title={t("trading.dataList.tabs.filled")}
+        title={t("orders.status.filled")}
       >
         <DesktopOrderListWidget
           type={TabType.filled}
@@ -109,7 +109,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-positionHistory-tab"
         value={DataListTabType.positionHistory}
-        title={t("trading.dataList.tabs.positionHistory")}
+        title={t("positions.positionHistory")}
       >
         <PositionHistoryWidget
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
@@ -121,7 +121,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-orderHistory-tab"
         value={DataListTabType.orderHistory}
-        title={t("trading.dataList.tabs.orderHistory")}
+        title={t("orders.orderHistory")}
       >
         <DesktopOrderListWidget
           type={TabType.orderHistory}
@@ -137,7 +137,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-liquidation-tab"
         value={DataListTabType.liquidation}
-        title={t("trading.dataList.tabs.liquidation")}
+        title={t("positions.liquidation")}
       >
         <LiquidationWidget
           symbol={!!props.showAllSymbol ? undefined : props.symbol}

@@ -155,7 +155,7 @@ export const PositionInfo = (props: {
         <Flex gapX={1}>
           {isPositionTPSL && (
             <Badge size="xs" color="primary">
-              {t("tpsl.position")}
+              {t("positions.position")}
             </Badge>
           )}
           <Badge size="xs" color="neutral">

@@ -42,7 +42,7 @@ const LeftSidebar = (props: SideBarProps & LayoutProps) => {
 
   return (
     <SideBar
-      title={t("tradingRewards.sidebar.title")}
+      title={t("tradingRewards.rewards")}
       {...props}
       open={expanded}
       onOpenChange={(open) => setExpand(open)}

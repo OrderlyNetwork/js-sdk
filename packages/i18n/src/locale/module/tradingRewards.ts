@@ -1,15 +1,13 @@
 export const tradingRewards = {
-  "tradingRewards.sidebar.title": "Rewards",
-  "tradingRewards.sidebar.trading": "Trading",
-  "tradingRewards.sidebar.affiliate": "Affiliate",
-
   "tradingRewards.title": "Trading rewards",
+  "tradingRewards.rewards": "Rewards",
+  "tradingRewards.trading": "Trading",
+
   "tradingRewards.subtitle": "Trade with {{brokerName}} to earn esORDER.",
   "tradingRewards.learnMore": "Learn more here",
 
   "tradingRewards.myEstRewards": "My est. rewards",
   "tradingRewards.epoch": "Epoch",
-  "tradingRewards.epoch.lowerCase": "epoch",
   "tradingRewards.epochRewards": "Epoch rewards",
 
   "tradingRewards.countdown": "Countdown",

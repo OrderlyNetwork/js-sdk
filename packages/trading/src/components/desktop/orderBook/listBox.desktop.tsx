@@ -191,7 +191,7 @@ const Tip: FC<{
         onPointerEnter={(e) => e.preventDefault()}
       >
         <Row
-          title={`${t("trading.orderBook.row.tooltip.avgPrice")}≈`}
+          title={`${t("common.avgPrice")}≈`}
           content={hintInfo.avgPrice}
           contentDp={priceDp}
         />

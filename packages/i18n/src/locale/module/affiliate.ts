@@ -2,7 +2,6 @@ export const affiliate = {
   "affiliate.title": "Affiliate",
   "affiliate.referral": "Referral",
   "affiliate.trader": "Trader",
-  "affiliate.trading": "Trading",
 
   "affiliate.enter": "Enter",
   "affiliate.statistics": "Statistics",
@@ -22,7 +21,6 @@ export const affiliate = {
 
   "affiliate.asTrader.title": "As a trader",
   "affiliate.asTrader.description": "Onboard traders to earn passive income",
-  "affiliate.asTrader.rebate": "Rebate",
   "affiliate.asTrader.rebate.range": "0%~20%",
   "affiliate.asTrader.button": "Enter code",
 
@@ -31,7 +29,6 @@ export const affiliate = {
   "affiliate.referralCode.dialog.description":
     "Bind a referral code to earn trading fee rebates.",
   "affiliate.referralCode.label": "Enter referral code",
-  "affiliate.referralCode.placeholder": "Referral code",
   "affiliate.referralCode.bound": "Referral code bound",
   "affiliate.referralCode.notExist": "This referral code does not exist.",
 
@@ -66,25 +63,21 @@ export const affiliate = {
   "affiliate.referralCodes.column.referees&Traders": "Referees / Traders",
   "affiliate.referralCodes.copyLink": "Copy link",
 
-  "affiliate.dataList.tabs.commission": "Commission",
-  "affiliate.dataList.tabs.referees": "My referees",
-
   "affiliate.commission": "Commission",
   "affiliate.commission.30d": "30d commission",
   "affiliate.commission.column.activeUsers": "Referral active users",
 
+  "affiliate.myReferees": "My referees",
   "affiliate.referees": "Referees",
   "affiliate.referees.column.refereeAddress": "Referee address",
   "affiliate.referees.column.totalCommission": "Total commission",
   "affiliate.referees.column.totalVol": "Total vol.",
   "affiliate.referees.column.invitationTime": "Invitation time",
 
-  "affiliate.trader.statistics.select.rebate": "Rebate",
-
   "affiliate.trader.yourReferrer": "Your referrer",
   "affiliate.trader.rebate": "Rebate",
-  "affiliate.trader.rebates.title": "My rebates",
   "affiliate.trader.rebates": "Rebates",
+  "affiliate.trader.myRebates": "My rebates",
   "affiliate.trader.tradingVol": "Trading vol.",
 };
 

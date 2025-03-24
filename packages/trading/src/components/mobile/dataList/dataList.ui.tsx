@@ -42,7 +42,7 @@ export const DataList: FC<
       }}
     >
       <TabPanel
-        title={`${t("trading.dataList.tabs.position")}${
+        title={`${t("positions.title")}${
           (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
         }`}
         value={DataListTabType.position}
@@ -50,7 +50,7 @@ export const DataList: FC<
         <PositionsView {...props} />
       </TabPanel>
       <TabPanel
-        title={`${t("trading.dataList.tabs.pending")}${
+        title={`${t("orders.status.pending")}${
           (props.pendingOrderCount ?? 0) > 0
             ? `(${props.pendingOrderCount})`
             : ""
@@ -64,7 +64,7 @@ export const DataList: FC<
         />
       </TabPanel>
       <TabPanel
-        title={`${t("trading.dataList.tabs.tpsl")}${
+        title={`${t("tpsl.title")}${
           (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
         }`}
         value={DataListTabType.tp_sl}
@@ -75,14 +75,11 @@ export const DataList: FC<
           {...props}
         />
       </TabPanel>
-      <TabPanel
-        title={t("trading.dataList.tabs.history")}
-        value={DataListTabType.history}
-      >
+      <TabPanel title={t("trading.history")} value={DataListTabType.history}>
         <HistoryTab {...props} />
       </TabPanel>
       <TabPanel
-        title={t("trading.dataList.tabs.liquidation")}
+        title={t("positions.liquidation")}
         value={DataListTabType.liquidation}
       >
         <MobileLiquidationWidget
@@ -211,7 +208,7 @@ const HistoryTab: FC<DataListState> = (props) => {
         }}
       >
         <TabPanel
-          title={t("trading.dataList.tabs.positionHistory")}
+          title={t("positions.positionHistory")}
           value={DataListTabSubType.positionHistory}
         >
           <MobilePositionHistoryWidget
@@ -222,7 +219,7 @@ const HistoryTab: FC<DataListState> = (props) => {
           />
         </TabPanel>
         <TabPanel
-          title={t("trading.dataList.tabs.orderHistory")}
+          title={t("orders.orderHistory")}
           value={DataListTabSubType.orderHistory}
         >
           <OrdersView type={TabType.orderHistory} {...props} />

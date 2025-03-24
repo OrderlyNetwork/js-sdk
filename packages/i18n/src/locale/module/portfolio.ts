@@ -1,12 +1,9 @@
 export const portfolio = {
   "portfolio.title": "Portfolio",
-  "portfolio.sidebar.positions": "Positions",
-  "portfolio.sidebar.orders": "Orders",
-  "portfolio.sidebar.feeTier": "Fee Tier",
-  "portfolio.sidebar.apiKey": "API Key",
-  "portfolio.sidebar.setting": "Setting",
+  "portfolio.feeTier": "Fee tier",
+  "portfolio.apiKeys": "API Keys",
+  "portfolio.setting": "Setting",
 
-  "portfolio.overview.assets.title": "Assets",
   "portfolio.overview.availableToWithdraw": "Available to withdraw",
 
   "portfolio.overview.performance.title": "Performance",
@@ -41,7 +38,6 @@ export const portfolio = {
   "portfolio.overview.distribution.type.refereeRebate": "Referee rebate",
   "portfolio.overview.distribution.type.brokerFee": "Broker fee",
 
-  "portfolio.feeTier.title": "Fee Tier",
   "portfolio.feeTier.updatedDailyBy": "Updated daily by",
   "portfolio.feeTier.header.yourTier": "Your tier",
   "portfolio.feeTier.header.30dVolume": "30D trading volume",
@@ -53,7 +49,6 @@ export const portfolio = {
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
 
-  "portfolio.apiKey.page.title": "API keys",
   "portfolio.apiKey.accountId": "Account ID",
   "portfolio.apiKey.accountId.copy": "Account id copied",
   "portfolio.apiKey.uid": "UID",

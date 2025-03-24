@@ -30,7 +30,7 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
           onValueChange={setActiveTab}
         >
           <TabPanel
-            title={t("markets.page.tabs.markets")}
+            title={t("markets.title")}
             value="markets"
             testid="oui-testid-markets-tab"
           >

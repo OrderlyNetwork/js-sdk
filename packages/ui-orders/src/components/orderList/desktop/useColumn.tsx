@@ -517,7 +517,9 @@ function price(option?: {
           }
         : undefined,
     renderPlantText: (value: string, record: any) => {
-      return commifyOptional(record.price?.toString(), { fallback: "Market" });
+      return commifyOptional(record.price?.toString(), {
+        fallback: i18n.t("common.marketPrice"),
+      });
     },
     render: (value: string, record: any) => {
       return <Price order={record} disableEdit={option?.disableEdit} />;
@@ -643,7 +645,7 @@ function bracketOrderPrice(option?: {
   className?: string;
 }) {
   return {
-    title: i18n.t("orders.column.tpsl"),
+    title: i18n.t("tpsl.title"),
     className: option?.className,
     dataIndex: "bracketOrderPrice",
     width: option?.width,
@@ -809,7 +811,7 @@ function reduceOnly(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("orders.column.reduceOnly"),
+    title: i18n.t("orderEntry.reduceOnly"),
     dataIndex: "reduce_only",
     width: option?.width,
     className: option?.className,

@@ -81,9 +81,9 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
             padding={false}
             rm={Decimal.ROUND_DOWN}
             suffix={<Text intensity={54}>{" USDC"}</Text>}
-            placeholder={props.isStopMarket ? t("orders.price.market") : "--"}
+            placeholder={props.isStopMarket ? t("common.marketPrice") : "--"}
           >
-            {props.isStopMarket ? t("orders.price.market") : price ?? "--"}
+            {props.isStopMarket ? t("common.marketPrice") : price ?? "--"}
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} width={"100%"} gap={1}>
@@ -114,7 +114,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
           className="oui-text-2xs oui-text-base-contrast-54"
           htmlFor="oui-checkbox-disableOrderConfirmation"
         >
-          {t("orders.disableOrderConfirm")}
+          {t("orderEntry.disableOrderConfirm")}
         </label>
       </Flex>
     </div>

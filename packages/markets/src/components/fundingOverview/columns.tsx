@@ -30,7 +30,7 @@ export const useFundingOverviewColumns = (
   const { t } = useTranslation();
   return [
     {
-      title: t("markets.funding.column.symbol"),
+      title: t("markets.column.market"),
       dataIndex: "symbol",
       width: 120,
       render: (value) => (
@@ -125,27 +125,27 @@ export const useFundingOverviewColumns = (
           >
             {[
               {
-                label: t("markets.funding.column.positiveRate.1d"),
+                label: t("common.select.1d"),
                 value: "1dPositive",
               },
               {
-                label: t("markets.funding.column.positiveRate.3d"),
+                label: t("common.select.3d"),
                 value: "3dPositive",
               },
               {
-                label: t("markets.funding.column.positiveRate.7d"),
+                label: t("common.select.7d"),
                 value: "7dPositive",
               },
               {
-                label: t("markets.funding.column.positiveRate.14d"),
+                label: t("common.select.14d"),
                 value: "14dPositive",
               },
               {
-                label: t("markets.funding.column.positiveRate.30d"),
+                label: t("common.select.30d"),
                 value: "30dPositive",
               },
               {
-                label: t("markets.funding.column.positiveRate.90d"),
+                label: t("common.select.90d"),
                 value: "90dPositive",
               },
             ].map((option) => (

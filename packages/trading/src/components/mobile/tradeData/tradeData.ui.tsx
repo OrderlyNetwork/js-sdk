@@ -19,19 +19,19 @@ export const TradeData: FC<TradeDataState> = (props) => {
         dp={props.symbolInfo.quote_dp}
       />
       <Row
-        title={t("trading.tradeData.column.24Volume")}
+        title={t("markets.column.24hVolume")}
         value={props.vol_24h}
         dp={props.symbolInfo.quote_dp}
         rule="human"
         showUSDC
       />
       <Row
-        title={t("trading.tradeData.column.24High")}
+        title={t("trading.column.24High")}
         value={props.ticker?.["24h_high"]}
         dp={props.symbolInfo.quote_dp}
       />
       <Row
-        title={t("trading.tradeData.column.24Low")}
+        title={t("trading.column.24Low")}
         value={props.ticker?.["24h_low"]}
         dp={props.symbolInfo.quote_dp}
       />

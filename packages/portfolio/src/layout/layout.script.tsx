@@ -50,7 +50,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("portfolio.sidebar.positions"),
+        name: t("positions.title"),
         href: PortfolioLeftSidebarPath.Positions,
         icon: (
           <svg
@@ -68,7 +68,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("portfolio.sidebar.orders"),
+        name: t("orders.title"),
         href: PortfolioLeftSidebarPath.Orders,
         icon: (
           <svg
@@ -86,7 +86,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("portfolio.sidebar.feeTier"),
+        name: t("portfolio.feeTier"),
         href: PortfolioLeftSidebarPath.FeeTier,
         icon: (
           <svg
@@ -104,7 +104,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("portfolio.sidebar.apiKey"),
+        name: t("portfolio.apiKeys"),
         href: PortfolioLeftSidebarPath.ApiKey,
         icon: (
           <svg
@@ -122,7 +122,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("portfolio.sidebar.setting"),
+        name: t("portfolio.setting"),
         href: PortfolioLeftSidebarPath.Setting,
         icon: (
           <svg

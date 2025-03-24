@@ -28,7 +28,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder={t("markets.sidebar.search.placeholder")}
+      placeholder={t("markets.search.placeholder")}
       classNames={{ root: "oui-border oui-border-line oui-mt-4" }}
       size="sm"
       prefix={
@@ -60,7 +60,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
     >
       <Box px={3} mt={3}>
         <Text size="base" intensity={80}>
-          {t("markets.sidebar.title")}
+          {t("markets.title")}
         </Text>
         {search}
       </Box>

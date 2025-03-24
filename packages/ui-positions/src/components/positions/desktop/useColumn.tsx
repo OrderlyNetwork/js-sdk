@@ -160,7 +160,7 @@ export const useColumn = (props: {
               align="center"
               className="oui-max-w-[280px] oui-text-2xs"
             >
-              <Text>{t("common.unrealPnl")}</Text>
+              <Text>{t("common.unrealizedPnl")}</Text>
             </HoverCard>
           ),
           dataIndex: "unrealized_pnl",
@@ -206,7 +206,7 @@ export const useColumn = (props: {
           },
         },
         {
-          title: t("positions.column.tpSl"),
+          title: t("tpsl.title"),
           dataIndex: "__",
           width: 150,
           render: (_: string, record) => (

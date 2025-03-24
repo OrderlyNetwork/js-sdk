@@ -65,7 +65,7 @@ export const PriceInput = () => {
               updateOrderType(OrderType.MARKET);
             }}
           >
-            <span>{t("positions.market")}</span>
+            <span>{t("common.marketPrice")}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

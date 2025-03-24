@@ -64,7 +64,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: t("markets.dataList.column.symbol"),
+        title: t("markets.column.market"),
         dataIndex: "symbol",
         width: 90,
         render: (value) => {
@@ -96,7 +96,7 @@ export const useMarketsListFullColumns = (
         },
       },
       {
-        title: t("markets.dataList.column.24hChange"),
+        title: t("markets.column.24hChange"),
         dataIndex: "change",
         width: 100,
         align: "right",
@@ -117,7 +117,7 @@ export const useMarketsListFullColumns = (
       {
         title: (
           <Flex gapX={1}>
-            <OrderlyIcon /> {t("markets.dataList.column.24hVolume")}
+            <OrderlyIcon /> {t("markets.column.24hVolume")}
           </Flex>
         ),
         dataIndex: "24h_amount",

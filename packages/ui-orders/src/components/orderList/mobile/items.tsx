@@ -160,7 +160,7 @@ export const Filled: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={<Text>{t("orders.column.filled")}</Text>}
+      label={<Text>{t("orders.status.filled")}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -315,14 +315,14 @@ export const LimitPrice: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.limitPrice")}
+      label={t("common.limitPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
     >
       {isStopMarket ? (
-        <Text>{t("orders.price.market")}</Text>
+        <Text>{t("common.marketPrice")}</Text>
       ) : (
         <Text.numeral
           dp={props.quote_dp}
@@ -343,7 +343,7 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.tpTrigger")}
+      label={t("tpsl.tpTrigger")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -393,7 +393,7 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.slTrigger")}
+      label={t("tpsl.slTrigger")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -444,13 +444,13 @@ export const TPPrice: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.tpPrice")}
+      label={t("tpsl.tpPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
     >
-      <Text intensity={80}>{t("orders.price.market")}</Text>
+      <Text intensity={80}>{t("common.marketPrice")}</Text>
     </Statistic>
   );
 };
@@ -459,13 +459,13 @@ export const SLPrice: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={t("orders.column.slPrice")}
+      label={t("tpsl.slPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
     >
-      <Text intensity={80}>{t("orders.price.market")}</Text>
+      <Text intensity={80}>{t("common.marketPrice")}</Text>
     </Statistic>
   );
 };
@@ -557,7 +557,7 @@ export const OrderPrice: FC<OrderCellState> = (props) => {
         rm={Decimal.ROUND_DOWN}
         intensity={80}
         padding={false}
-        placeholder="Market"
+        placeholder={t("common.marketPrice")}
       >
         {/* @ts-ignore */}
         {props.item?.price ?? "--"}

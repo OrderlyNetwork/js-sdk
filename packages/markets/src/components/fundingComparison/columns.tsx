@@ -8,7 +8,7 @@ export const useFundingColumns = (): Column[] => {
   const { t } = useTranslation();
   return [
     {
-      title: t("markets.funding.column.symbol"),
+      title: t("markets.column.market"),
       dataIndex: "symbol",
       width: 150,
       onSort: true,

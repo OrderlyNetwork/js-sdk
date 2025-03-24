@@ -10,11 +10,11 @@ export class OrderValidation {
       case "order_price":
         return "Price";
       case "trigger_price":
-        return "Trigger Price";
+        return "Trigger price";
       case "tp_trigger_price":
-        return "TP Price";
+        return "TP price";
       case "sl_trigger_price":
-        return "SL Price";
+        return "SL price";
       default:
         return key;
     }

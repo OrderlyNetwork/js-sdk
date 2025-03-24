@@ -197,7 +197,7 @@ export const Price = (props: {
   const isAlgoMarketOrder = order.algo_order_id && order.type == "MARKET";
 
   if (isAlgoMarketOrder || price === "Market") {
-    return <span>{t("orders.price.market")}</span>;
+    return <span>{t("common.marketPrice")}</span>;
   }
 
   const trigger = () => {

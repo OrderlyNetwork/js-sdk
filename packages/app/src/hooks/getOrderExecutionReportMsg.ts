@@ -52,7 +52,7 @@ export function getOrderExecutionReportMsg(
       msg = `${displaySide} ${displaySymbol} ${displayTotalExecutedQuantity} / ${displayQuantity}`;
       break;
     case "CANCELLED":
-      title = i18n.t("orders.status.cancelled.title");
+      title = i18n.t("orders.status.canceled.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case "REJECTED":

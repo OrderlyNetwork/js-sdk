@@ -33,7 +33,7 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
 
   const [volType, setVolType] = useState("rebate");
   const volTypes = [
-    { label: t("affiliate.trader.statistics.select.rebate"), value: "rebate" },
+    { label: t("affiliate.trader.rebate"), value: "rebate" },
     { label: t("common.volume"), value: "volume" },
   ];
 

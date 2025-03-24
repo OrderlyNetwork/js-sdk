@@ -158,7 +158,7 @@ const Bottom: FC<AsTraderReturns> = (props) => {
             {t("affiliate.asTrader.rebate.range")}
           </Text>
           <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
-            {t("affiliate.asTrader.rebate")}
+            {t("affiliate.trader.rebate")}
           </Text>
         </Flex>
       </>
@@ -241,7 +241,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
 
           <TextField
             className="oui-w-full oui-mt-4"
-            placeholder={t("affiliate.referralCode.placeholder")}
+            placeholder={t("affiliate.referralCode")}
             value={props.code}
             onChange={(e) => {
               props.setCode(e.target.value);

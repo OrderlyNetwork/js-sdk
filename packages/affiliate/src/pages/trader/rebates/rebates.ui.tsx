@@ -57,7 +57,7 @@ const Title: FC<RebatesReturns> = (props) => {
 
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">{t("affiliate.trader.rebates.title")}</Text>
+      <Text className="oui-text-lg">{t("affiliate.trader.myRebates")}</Text>
       <Text intensity={36} className="oui-text-2xs">
         {props.displayDate}
       </Text>

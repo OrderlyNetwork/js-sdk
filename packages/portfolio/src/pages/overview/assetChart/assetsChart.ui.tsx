@@ -17,7 +17,7 @@ export const AssetsChartUI = (props: AssetsLineChartProps) => {
           onPeriodChange={onPeriodChange}
           periodTypes={periodTypes}
           period={period}
-          title={t("portfolio.overview.assets.title")}
+          title={t("common.assets")}
         />
       }
       id="portfolio-overview-assets-chart"

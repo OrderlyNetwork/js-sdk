@@ -2,10 +2,7 @@ export const orderEntry = {
   "orderEntry.buyLong": "Buy / Long",
   "orderEntry.sellShort": "Sell / Short",
   "orderEntry.reduceOnly": "Reduce only",
-  "orderEntry.bbo": "BBO",
   "orderEntry.available": "Available",
-  "orderEntry.bbo.disabled.tips":
-    "BBO is not supported when TP/SL, Post-Only, IOC, or FOK is selected.",
 
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Market",
@@ -17,12 +14,15 @@ export const orderEntry = {
   "orderEntry.orderType.ioc": "IOC",
   "orderEntry.orderType.fok": "FOK",
 
+  "orderEntry.bbo": "BBO",
   "orderEntry.bbo.counterparty1": "Counterparty 1",
   "orderEntry.bbo.counterparty5": "Counterparty 5",
   "orderEntry.bbo.queue1": "Queue 1",
   "orderEntry.bbo.queue5": "Queue 5",
+  "orderEntry.bbo.disabled.tips":
+    "BBO is not supported when TP/SL, Post-Only, IOC, or FOK is selected.",
 
-  "orderEntry.estLiqPrice": "Est. Liq. price",
+  "orderEntry.estLiqPrice": "Est. liq. price",
   "orderEntry.accountLeverage": "Account leverage",
 
   "orderEntry.disableOrderConfirm": "Disable order confirmation",
@@ -40,7 +40,6 @@ export const orderEntry = {
   "orderEntry.estRoi": "Est.ROI",
   "orderEntry.estPnL": "Est.PnL",
 
-  "orderEntry.tpsl": "TP/SL",
   "orderEntry.tpsl.tips":
     "TP/SL triggers at the specified mark price and executes as a market order. By default, it applies to the entire position. Adjust settings in open positions for partial TP/SL.",
 

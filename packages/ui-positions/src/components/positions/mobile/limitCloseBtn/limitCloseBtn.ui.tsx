@@ -87,7 +87,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               </Text.formatted>
               <Flex gap={1}>
                 <Badge color="neutral" size="xs">
-                  {t("positions.limit")}
+                  {t("orderEntry.orderType.limit")}
                 </Badge>
                 {isBuy && (
                   <Badge color="success" size="xs">

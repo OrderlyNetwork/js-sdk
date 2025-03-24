@@ -35,16 +35,10 @@ export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
       className="oui-bg-base-9 oui-tabular-nums"
     >
       <Tabs defaultValue="account" className="oui-w-full" variant="contained">
-        <TabPanel
-          value="account"
-          title={t("affiliate.dataList.tabs.commission")}
-        >
+        <TabPanel value="account" title={t("affiliate.commission")}>
           <CommissionList {...props} />
         </TabPanel>
-        <TabPanel
-          value="password"
-          title={t("affiliate.dataList.tabs.referees")}
-        >
+        <TabPanel value="password" title={t("affiliate.myReferees")}>
           <RefereesList {...props} />
         </TabPanel>
       </Tabs>

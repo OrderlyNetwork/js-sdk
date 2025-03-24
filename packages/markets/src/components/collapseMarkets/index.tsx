@@ -32,10 +32,10 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
                   </Text.formatted>
                 </Flex>
                 <Text size="2xs" intensity={36}>
-                  {t("markets.dropdown.column.price")}
+                  {t("markets.column.last")}
                 </Text>
                 <Text size="2xs" intensity={36}>
-                  {t("markets.dropdown.column.24hChange")}
+                  {t("markets.column.24hPercentage")}
                 </Text>
               </Flex>
 

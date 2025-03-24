@@ -59,11 +59,11 @@ export const Setting: FC<SettingState> = (props) => {
         >
           <div className="oui-flex oui-flex-col oui-text-sm">
             <Text className="oui-text-base oui-pb-3">
-              {t("trading.dataList.portfolioSettings")}
+              {t("trading.portfolioSettings")}
             </Text>
             <Divider />
             <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-              {t("trading.dataList.portfolioSettings.decimalPrecision")}
+              {t("trading.portfolioSettings.decimalPrecision")}
             </Text>
             <DecimalPrecisionCheckbox
               value={props.pnlNotionalDecimalPrecision}
@@ -74,7 +74,7 @@ export const Setting: FC<SettingState> = (props) => {
             />
             <Divider className="oui-my-3" />
             <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-              {t("trading.dataList.portfolioSettings.unrealPnlPriceBasis")}
+              {t("trading.portfolioSettings.unrealPnlPriceBasis")}
             </Text>
             <UnPnlPriceBasisCheckBox
               value={props.unPnlPriceBasis}

@@ -254,7 +254,7 @@ const TPSLQuantity = (props: {
                 : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
             )}
           >
-            {t("tpsl.position")}
+            {t("positions.position")}
           </Button>
         )}
       </Flex>
@@ -339,12 +339,14 @@ const TPSLPrice = (props: {
               {t("tpsl.takeProfit")}
             </Text>
             <Text size={"2xs"} intensity={36}>
-              ({t("tpsl.marketOrder")})
+              {`(${(
+                t("orderEntry.orderType.marketOrder") as string
+              )?.toLowerCase()})`}
             </Text>
           </Flex>
           <Flex>
             <Text size={"2xs"} intensity={36}>
-              {t("tpsl.estPnl")}
+              {`${t("tpsl.estPnl")}:`}
             </Text>
             <Text.numeral
               size={"2xs"}
@@ -382,13 +384,15 @@ const TPSLPrice = (props: {
               {t("tpsl.stopLoss")}
             </Text>
             <Text size={"2xs"} intensity={36}>
-              ({t("tpsl.marketOrder")})
+              {`(${(
+                t("orderEntry.orderType.marketOrder") as string
+              )?.toLowerCase()})`}
             </Text>
           </Flex>
 
           <Flex>
             <Text size={"2xs"} intensity={36}>
-              {t("tpsl.estPnl")}
+              {`${t("tpsl.estPnl")}:`}
             </Text>
             <Text.numeral
               size={"2xs"}
@@ -543,7 +547,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         <Flex gap={1}>
           {isPositionTPSL && (
             <Badge size="xs" color={"primary"}>
-              {t("tpsl.position")}
+              {t("positions.position")}
             </Badge>
           )}
 
@@ -620,7 +624,9 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
         <Flex>
           <Box grow>{t("common.price")}</Box>
-          <div className="oui-text-base-contrast">{t("tpsl.market")}</div>
+          <div className="oui-text-base-contrast">
+            {t("common.marketPrice")}
+          </div>
         </Flex>
       </Flex>
       <Box pt={2}>
@@ -641,7 +647,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               className: "oui-ml-1",
             })}
           >
-            {t("orders.disableOrderConfirm")}
+            {t("orderEntry.disableOrderConfirm")}
           </label>
         </Flex>
       </Box>

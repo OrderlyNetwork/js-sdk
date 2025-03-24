@@ -104,7 +104,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
       </Flex>
       <Grid cols={2} rows={1} width={"100%"}>
         <Statistic
-          label={`${t("common.unrealPnl")} (USDC)`}
+          label={`${t("common.unrealizedPnl")} (USDC)`}
           classNames={{
             label: "oui-text-2xs oui-text-base-contrast-36",
           }}

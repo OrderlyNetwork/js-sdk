@@ -1,11 +1,8 @@
 export const positions = {
-  "positions.page.title": "Positions",
-  "positions.page.tabs.positions": "Positions",
-  "positions.page.tabs.positionHistory": "Position history",
-  "positions.page.tabs.liquidation": "Liquidation",
-
-  "positions.market": "Market",
-  "positions.limit": "Limit",
+  "positions.title": "Positions",
+  "positions.position": "Position",
+  "positions.positionHistory": "Position history",
+  "positions.liquidation": "Liquidation",
 
   "positions.column.liqPrice": "Liq. price",
   "positions.column.liqPrice.tooltip":
@@ -13,7 +10,6 @@ export const positions = {
   "positions.column.unrealPnl.tooltip":
     "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
   "positions.column.unrealPnl.priceBasis": "Unrealized PnL Price Basis",
-  "positions.column.tpSl": "TP/SL",
   "positions.column.margin": "Margin",
   "positions.column.margin.tooltip":
     "The minimum equity to keep your position.",
@@ -30,14 +26,9 @@ export const positions = {
 
   "positions.updateOrder.price.required": "Price is required",
 
-  "positions.tp.prefix": "TP - ",
-  "positions.sl.prefix": "SL - ",
-  "positions.tpsl.prefix": "TP/SL: ",
-
   "positions.history.status.closed": "Closed",
   "positions.history.status.partialClosed": "Partially closed",
   "positions.history.type.adl": "Adl",
-  "positions.history.Liquidation": "Liquidation",
   "positions.history.type.liquidated": "Liquidated",
   "positions.history.liquidated.liquidationId": "Liquidation id",
   "positions.history.liquidated.liquidatorFee": "Liquidator fee",
@@ -55,7 +46,6 @@ export const positions = {
   "positions.history.netPnl.fundingFee": "Funding fee",
   "positions.history.netPnl.tradingFee": "Trading fee",
 
-  "positions.Liquidation": "Liquidation",
   "positions.Liquidation.column.liquidationId": "Liquidation id",
   "positions.Liquidation.column.insFundTransfer": "Ins. fund transfer",
   "positions.Liquidation.column.liquidationFee": "Liquidation fee",

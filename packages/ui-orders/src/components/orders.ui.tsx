@@ -30,7 +30,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.pending} title={t("orders.page.tabs.pending")}>
+      <TabPanel value={TabType.pending} title={t("orders.status.pending")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.pending}
@@ -38,7 +38,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.tp_sl} title={t("orders.page.tabs.tpsl")}>
+      <TabPanel value={TabType.tp_sl} title={t("tpsl.title")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.tp_sl}
@@ -46,7 +46,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.filled} title={t("orders.page.tabs.filled")}>
+      <TabPanel value={TabType.filled} title={t("orders.status.filled")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.filled}
@@ -56,10 +56,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel
-        value={TabType.cancelled}
-        title={t("orders.page.tabs.cancelled")}
-      >
+      <TabPanel value={TabType.cancelled} title={t("orders.status.canceled")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.cancelled}
@@ -67,7 +64,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.rejected} title={t("orders.page.tabs.rejected")}>
+      <TabPanel value={TabType.rejected} title={t("orders.status.rejected")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.rejected}
@@ -75,7 +72,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      {/* <TabPanel value={TabType.orderHistory} title={t("orders.page.tabs.orderHistory")}>
+      {/* <TabPanel value={TabType.orderHistory} title={t("orders.orderHistory")}>
         <DesktopOrderListWidget
           type={TabType.orderHistory}
           {...commonProps}

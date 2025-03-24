@@ -29,7 +29,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder={t("markets.dataList.search.placeholder")}
+      placeholder={t("markets.search.placeholder")}
       className="oui-w-[240px] oui-my-1"
       size="sm"
       data-testid="oui-testid-markets-searchMarket-input"

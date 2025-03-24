@@ -109,7 +109,7 @@ const UnrealPnL: FC<
       : "oui-text-base-contrast-80";
 
   return (
-    <Statistic label={t("common.unrealPnl")} classNames={props.classNames}>
+    <Statistic label={t("common.unrealizedPnl")} classNames={props.classNames}>
       <Flex gap={1}>
         <Text.numeral
           dp={props.pnlNotionalDecimalPrecision}

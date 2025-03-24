@@ -67,24 +67,24 @@ const useCurrentStatusText = (): StatusInfo => {
   return useMemo(() => {
     const statusText = {
       wrongNetwork: {
-        title: t("trading.asset.wrongNetwork"),
-        description: t("trading.asset.wrongNetwork.description"),
+        title: t("connector.wrongNetwork"),
+        description: t("connector.wrongNetwork.tooltip"),
         titleColor: "warning",
       },
       connectWallet: {
-        title: t("trading.asset.connectWallet"),
-        description: t("trading.asset.connectWallet.description"),
+        title: t("connector.connectWallet"),
+        description: t("connector.trade.connectWallet.tooltip"),
         titleClsName:
           "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
       },
       notSignedIn: {
-        title: t("trading.asset.signIn"),
-        description: t("trading.asset.signIn.description"),
+        title: t("connector.signIn"),
+        description: t("connector.trade.signIn.tooltip"),
         titleColor: "primary",
       },
       disabledTrading: {
-        title: "Enable trading",
-        description: "Enable trading before starting to trade.",
+        title: t("connector.enableTrading"),
+        description: t("connector.trade.enableTrading.tooltip"),
         titleColor: "primary",
       },
       default: {

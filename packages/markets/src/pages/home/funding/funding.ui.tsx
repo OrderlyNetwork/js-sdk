@@ -26,7 +26,7 @@ export const FundingUI: FC<FundingUIProps> = ({
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder={t("markets.funding.search.placeholder")}
+      placeholder={t("markets.search.placeholder")}
       className="oui-w-[240px] oui-my-1"
       size="sm"
       data-testid="oui-testid-markets-searchMarket-input"
@@ -67,7 +67,7 @@ export const FundingUI: FC<FundingUIProps> = ({
           <FundingOverviewWidget />
         </TabPanel>
         <TabPanel
-          title={t("markets.funding.tabs.comparison")}
+          title={t("markets.funding.comparison")}
           value="comparison"
           testid="oui-testid-funding-comparison-tab"
         >

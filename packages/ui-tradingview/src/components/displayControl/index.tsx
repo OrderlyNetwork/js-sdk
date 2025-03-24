@@ -23,7 +23,7 @@ const DisplayControlMap: {
   id: keyof DisplayControlSettingInterface;
 }[] = [
   {
-    label: i18n.t("tradingView.displayControl.position"),
+    label: i18n.t("positions.position"),
     id: "position",
   },
   {
@@ -39,11 +39,11 @@ const DisplayControlMap: {
     id: "stopOrders",
   },
   {
-    label: i18n.t("tradingView.displayControl.tpsl"),
+    label: i18n.t("tpsl.title"),
     id: "tpsl",
   },
   {
-    label: i18n.t("tradingView.displayControl.positionTpsl"),
+    label: i18n.t("tpsl.positionTpsl"),
     id: "positionTpsl",
   },
 ];
@@ -54,7 +54,7 @@ const MobileDisplayControlMap: {
 }[][] = [
   [
     {
-      label: i18n.t("tradingView.displayControl.position"),
+      label: i18n.t("positions.position"),
       id: "position",
     },
 
@@ -69,13 +69,13 @@ const MobileDisplayControlMap: {
       id: "stopOrders",
     },
     {
-      label: i18n.t("tradingView.displayControl.tpsl"),
+      label: i18n.t("tpsl.title"),
       id: "tpsl",
     },
   ],
   [
     {
-      label: i18n.t("tradingView.displayControl.positionTpsl"),
+      label: i18n.t("tpsl.positionTpsl"),
       id: "positionTpsl",
     },
     {

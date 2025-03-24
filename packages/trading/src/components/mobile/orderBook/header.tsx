@@ -23,7 +23,7 @@ export const Header: FC<Props> = (props) => {
   const qtyLabel = useMemo(() => {
     return mode === "amount"
       ? t("trading.orderBook.column.value")
-      : t("trading.orderBook.column.qty");
+      : t("common.qty");
   }, [mode, t]);
 
   return (

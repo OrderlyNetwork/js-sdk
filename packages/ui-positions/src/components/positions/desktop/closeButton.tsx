@@ -332,7 +332,7 @@ export const LimitConfirmDialog: FC<{
         </Text.formatted>
         <Flex gap={1}>
           <Badge color="neutral" size="xs">
-            {t("positions.limit")}
+            {t("orderEntry.orderType.limit")}
           </Badge>
           <Badge
             color={side === OrderSide.BUY ? "success" : "danger"}

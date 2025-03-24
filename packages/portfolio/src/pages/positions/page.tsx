@@ -28,7 +28,7 @@ export const PositionsPage = (props: PositionsProps) => {
       height="100%"
     >
       <Flex>
-        <Text size="lg">{t("positions.page.title")}</Text>
+        <Text size="lg">{t("positions.title")}</Text>
       </Flex>
       <Divider className="oui-w-full" />
       {/* 26(title height) + 1(divider) + 32 (padding) */}
@@ -42,21 +42,18 @@ export const PositionsPage = (props: PositionsProps) => {
           }}
           className="oui-h-full"
         >
-          <TabPanel
-            value={TabsType.positions}
-            title={t("positions.page.tabs.positions")}
-          >
+          <TabPanel value={TabsType.positions} title={t("positions.title")}>
             <PositionsWidget {...props} />
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}
-            title={t("positions.page.tabs.positionHistory")}
+            title={t("positions.positionHistory")}
           >
             <PositionHistoryWidget {...props} />
           </TabPanel>
           <TabPanel
             value={TabsType.liquidation}
-            title={t("positions.page.tabs.liquidation")}
+            title={t("positions.liquidation")}
           >
             <LiquidationWidget />
           </TabPanel>

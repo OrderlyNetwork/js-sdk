@@ -1,25 +1,20 @@
 export const markets = {
   "markets.title": "Markets",
-  "markets.page.tabs.markets": "Markets",
   "markets.favorites": "Favorites",
   "markets.recent": "Recent",
   "markets.newListings": "New Listings",
   "markets.allMarkets": "All Markets",
+
   "markets.openInterest": "Open interest",
   "markets.openInterest.tooltip": "Total size of positions per side.",
 
-  "markets.header.24hVolume": "24h volume",
-  "markets.header.assets": "Assets (TVL)",
-  "markets.header.topGainers": "Top gainers",
-  "markets.header.topLosers": "Top losers",
+  "markets.topGainers": "Top gainers",
+  "markets.topLosers": "Top losers",
 
-  "markets.dataList.search.placeholder": "Search market",
+  "markets.search.placeholder": "Search market",
   "markets.dataList.favorites.empty":
     "Click on the <0/> icon next to a market to add it to your list.",
 
-  "markets.dataList.column.symbol": "Market",
-  "markets.dataList.column.24hChange": "24h change",
-  "markets.dataList.column.24hVolume": "24h volume",
   "markets.dataList.column.8hFunding": "8h funding",
   "markets.dataList.column.moveTop": "Move to top",
 
@@ -31,34 +26,25 @@ export const markets = {
   "markets.favorites.tabs.delete.description":
     "Are you sure you want to delete {{name}}?",
 
-  "markets.funding.tabs.comparison": "Comparison",
-  "markets.funding.search.placeholder": "Search symbol",
-  "markets.funding.column.symbol": "Market",
+  "markets.column.market": "Market",
+  "markets.column.24hChange": "24h change",
+  "markets.column.24hVolume": "24h volume",
+  "markets.column.symbol&Volume": "Market / Volume",
+  "markets.column.price&Change": "Price / change",
+  "markets.column.last": "Last",
+  "markets.column.24hPercentage": "24h%",
+
+  "markets.funding.comparison": "Comparison",
   "markets.funding.column.estFunding": "Est. funding",
   "markets.funding.column.lastFunding": "Last funding",
-  "markets.funding.column.1dAvg": "1d avg.",
-  "markets.funding.column.3dAvg": "3d avg.",
-  "markets.funding.column.7dAvg": "7d avg.",
-  "markets.funding.column.14dAvg": "14d avg.",
-  "markets.funding.column.30dAvg": "30d avg.",
-  "markets.funding.column.90dAvg": "90d avg.",
+  "markets.funding.column.1dAvg": "1D avg.",
+  "markets.funding.column.3dAvg": "3D avg.",
+  "markets.funding.column.7dAvg": "7D avg.",
+  "markets.funding.column.14dAvg": "14D avg.",
+  "markets.funding.column.30dAvg": "30D avg.",
+  "markets.funding.column.90dAvg": "90D avg.",
   "markets.funding.column.positiveRate": "Positive rate",
-  "markets.funding.column.positiveRate.1d": "1d",
-  "markets.funding.column.positiveRate.3d": "3d",
-  "markets.funding.column.positiveRate.7d": "7d",
-  "markets.funding.column.positiveRate.14d": "14d",
-  "markets.funding.column.positiveRate.30d": "30d",
-  "markets.funding.column.positiveRate.90d": "90d",
 
-  "markets.sidebar.title": "Markets",
-  "markets.sidebar.search.placeholder": "Search",
-  "markets.sidebar.column.symbolVolume": "Market / Volume",
-  "markets.sidebar.column.priceChange": "Price / change",
-
-  "markets.dropdown.column.price": "Last",
-  "markets.dropdown.column.24hChange": "24h%",
-
-  "markets.symbolInfoBar.24hChange": "24h Change",
   "markets.symbolInfoBar.Mark": "Mark",
   "markets.symbolInfoBar.Mark.tooltip":
     "Price for the computation of unrealized PnL and liquidation.",

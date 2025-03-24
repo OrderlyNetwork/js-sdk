@@ -25,12 +25,9 @@ export const tradingView = {
   "tradingView.lineType.area": "Area",
   "tradingView.lineType.baseline": "Baseline",
 
-  "tradingView.displayControl.position": "Position",
   "tradingView.displayControl.buySell": "Buy/Sell",
   "tradingView.displayControl.limitOrders": "Limit orders",
   "tradingView.displayControl.stopOrders": "Stop orders",
-  "tradingView.displayControl.tpsl": "TP/SL",
-  "tradingView.displayControl.positionTpsl": "Position TP/SL",
 
   "tradingView.noScriptSrc":
     "Due to TradingView's policy, you will need to apply for your own license.",

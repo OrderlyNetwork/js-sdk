@@ -6,7 +6,7 @@ export const AssetsChartHeader = () => {
 
   return (
     <Flex justify={"between"}>
-      <CardTitle>{t("portfolio.overview.assets.title")}</CardTitle>
+      <CardTitle>{t("common.assets")}</CardTitle>
     </Flex>
   );
 };

@@ -161,7 +161,7 @@ export const TPSLTriggerPrice: FC<{
           children={props.takeProfitPrice}
           prefix={
             !props.stopLossPrice || direction === "column" ? (
-              <Text intensity={54}>{t("positions.tp.prefix")}</Text>
+              <Text intensity={54}>{`${t("tpsl.tp")} - `}</Text>
             ) : (
               ""
             )
@@ -181,7 +181,7 @@ export const TPSLTriggerPrice: FC<{
           children={props.stopLossPrice}
           prefix={
             !props.takeProfitPrice || direction === "column" ? (
-              <Text intensity={54}>{t("positions.sl.prefix")}</Text>
+              <Text intensity={54}>{`${t("tpsl.sl")} - `}</Text>
             ) : (
               ""
             )

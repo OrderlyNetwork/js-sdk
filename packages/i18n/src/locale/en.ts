@@ -35,16 +35,19 @@ export const en = {
   "common.copy": "Copy",
   "common.copy.success": "Copy success",
   "common.copy.failed": "Copy failed",
+  "common.copy.copied": "Copied",
   "common.share": "Share",
 
   "common.select.1d": "1D",
+  "common.select.3d": "3D",
   "common.select.7d": "7D",
+  "common.select.14d": "14D",
   "common.select.30d": "30D",
   "common.select.90d": "90D",
 
   "common.price": "Price",
   "common.quantity": "Quantity",
-  "common.qty": "Qty.",
+  "common.qty": "Qty",
   "common.status": "Status",
   "common.status.all": "All status",
 
@@ -70,16 +73,15 @@ export const en = {
   "common.indexPrice": "Index price",
   "common.markPrice": "Mark price",
   "common.limitPrice": "Limit price",
+  "common.marketPrice": "Market",
 
   "common.unrealizedPnl": "Unrealized PnL",
-  "common.unrealPnl": "Unreal. PnL",
-  "common.realPnl": "Real. PnL",
+  "common.realPnl": "Realized PnL",
   "common.totalValue": "Total value",
 
   "common.overview": "Overview",
-  "common.market": "Market",
-  "common.tpsl": "TP/SL",
   "common.funding": "Funding",
+  "common.assets": "Assets",
 
   /** linkDevice */
   "linkDevice.createQRCode.loading.description":

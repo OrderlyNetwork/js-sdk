@@ -38,7 +38,7 @@ export const OrderConfirmDialog = (props: Props) => {
       order_type === OrderType.MARKET ||
       order_type === OrderType.STOP_MARKET
     ) {
-      return <Text intensity={80}>{t("orderEntry.orderType.market")}</Text>;
+      return <Text intensity={80}>{t("common.marketPrice")}</Text>;
     }
 
     if (isBBOOrder({ order_type, order_type_ext })) {
@@ -235,7 +235,7 @@ const OrderTypeTag = (props: { type: OrderType }) => {
       case OrderType.LIMIT:
         return t("orderEntry.orderType.limit");
       case OrderType.MARKET:
-        return t("orderEntry.orderType.market");
+        return t("common.marketPrice");
       case OrderType.STOP_LIMIT:
         return t("orderEntry.orderType.stopLimit");
       case OrderType.STOP_MARKET:

@@ -148,7 +148,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
             <Flex gapX={8} height="100%">
               <div ref={leadingElementRef}>
                 <DataItem
-                  label={t("markets.symbolInfoBar.24hChange")}
+                  label={t("markets.column.24hChange")}
                   value={change}
                 />
               </div>

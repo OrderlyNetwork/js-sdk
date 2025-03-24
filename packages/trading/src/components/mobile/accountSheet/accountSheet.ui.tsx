@@ -176,7 +176,10 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
           <Flex gap={1} className="oui-text-base-contrast oui-text-2xs">
             <Text>{t("tradingRewards.title")}</Text>
             <Text intensity={54}>
-              (<Text>{`${t("tradingRewards.epoch.lowerCase")} `}</Text>
+              (
+              <Text>{`${(
+                t("tradingRewards.epoch") as string
+              )?.toLowerCase()} `}</Text>
               <Text intensity={98}>{props.curEpochId}</Text> )
             </Text>
           </Flex>

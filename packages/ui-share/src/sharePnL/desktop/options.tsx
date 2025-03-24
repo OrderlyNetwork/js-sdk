@@ -27,7 +27,7 @@ export const ShareOption: FC<{
       case "quantity":
         return t("common.quantity");
       case "leverage":
-        return t("share.pnl.optionalInfo.leverage");
+        return t("leverage.title");
     }
   }, [type, t]);
 

@@ -38,7 +38,7 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
     <Flex gap={3}>
       <Flex direction={"column"} className="oui-text-2xs" itemAlign={"end"}>
         <div>
-          <Text intensity={36}>{t("common.unrealPnl")}</Text>
+          <Text intensity={36}>{t("common.unrealizedPnl")}</Text>
           <Text intensity={20}>(USDC)</Text>
         </div>
 
@@ -214,7 +214,7 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
 
   return (
     <Flex className="oui-text-2xs oui-text-base-contrast-36">
-      <Text>{t("positions.tpsl.prefix")}&nbsp;</Text>
+      <Text>{`${t("tpsl.title")}:`}&nbsp;</Text>
       <Flex className="oui-gap-[2px]">
         {item.tp_trigger_price && (
           <Text.numeral color="buy">{item.tp_trigger_price}</Text.numeral>

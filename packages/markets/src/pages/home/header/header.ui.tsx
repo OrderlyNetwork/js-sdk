@@ -60,7 +60,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           data={gainers}
           title={
             <Text className="oui-text-success-light">
-              {t("markets.header.topGainers")}
+              {t("markets.topGainers")}
             </Text>
           }
           className={cls}
@@ -70,7 +70,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           data={losers}
           title={
             <Text className="oui-text-danger-light">
-              {t("markets.header.topLosers")}
+              {t("markets.topLosers")}
             </Text>
           }
           className={cls}
@@ -106,7 +106,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       {
         label: (
           <Flex gapX={1}>
-            <OrderlyIcon /> {t("markets.header.24hVolume")}
+            <OrderlyIcon /> {t("markets.column.24hVolume")}
           </Flex>
         ),
         value: total24Amount,
@@ -122,7 +122,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       {
         label: (
           <Flex gapX={1}>
-            <OrderlyIcon /> {t("markets.header.assets")}
+            <OrderlyIcon /> {`${t("common.assets")} (TVL)`}
           </Flex>
         ),
         value: tvl,

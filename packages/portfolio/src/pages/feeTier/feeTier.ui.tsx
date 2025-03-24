@@ -22,7 +22,7 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
       // @ts-ignore
       title={
         <Flex justify={"between"}>
-          <Text size="lg">{t("portfolio.feeTier.title")}</Text>
+          <Text size="lg">{t("portfolio.feeTier")}</Text>
           <Flex gap={1}>
             <Text size="xs" intensity={54}>
               {t("portfolio.feeTier.updatedDailyBy")}

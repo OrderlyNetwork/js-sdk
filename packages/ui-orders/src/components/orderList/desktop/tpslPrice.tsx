@@ -12,7 +12,7 @@ export const TPSLOrderPrice = () => {
       {!!tp_trigger_price ? (
         <div className={"oui-text-base-contrast-80 oui-td-bg-transparent"}>
           <Text intensity={54}>{`${t("tpsl.tp")} -`}&nbsp;</Text>
-          <span>{t("orders.price.market")}</span>
+          <span>{t("common.marketPrice")}</span>
         </div>
       ) : null}
       {!!sl_trigger_price ? (
@@ -20,7 +20,7 @@ export const TPSLOrderPrice = () => {
           <span className={"oui-text-base-contrast-54"}>
             {`${t("tpsl.sl")} -`}&nbsp;
           </span>
-          <span>{t("orders.price.market")}</span>
+          <span>{t("common.marketPrice")}</span>
         </div>
       ) : null}
     </div>
@@ -35,10 +35,10 @@ export function useTPSLOrderPrice(order: any) {
       : utils.findTPSLFromOrder(order);
 
   const tpTriggerPrice = tp_trigger_price
-    ? `${i18n.t("tpsl.tp")} - ${i18n.t("tpsl.market")}`
+    ? `${i18n.t("tpsl.tp")} - ${i18n.t("common.marketPrice")}`
     : undefined;
   const slTriggerPrice = sl_trigger_price
-    ? `${i18n.t("tpsl.sl")} - ${i18n.t("tpsl.market")}`
+    ? `${i18n.t("tpsl.sl")} - ${i18n.t("common.marketPrice")}`
     : undefined;
 
   return { tpTriggerPrice, slTriggerPrice };

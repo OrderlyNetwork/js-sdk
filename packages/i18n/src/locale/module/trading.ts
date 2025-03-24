@@ -5,35 +5,24 @@ export const trading = {
   "trading.orders.closeAll": "Close All",
   "trading.hideOtherSymbols": "Hide other symbols",
 
-  "trading.dataList.tabs.position": "Position",
-  "trading.dataList.tabs.pending": "Pending",
-  "trading.dataList.tabs.tpsl": "TP/SL",
-  "trading.dataList.tabs.filled": "Filled",
-  "trading.dataList.tabs.history": "History",
-  "trading.dataList.tabs.liquidation": "Liquidation",
-  "trading.dataList.tabs.positionHistory": "Position history",
-  "trading.dataList.tabs.orderHistory": "Order history",
+  "trading.history": "History",
 
-  "trading.dataList.portfolioSettings": "Portfolio Settings",
-  "trading.dataList.portfolioSettings.decimalPrecision":
+  "trading.portfolioSettings": "Portfolio Settings",
+  "trading.portfolioSettings.decimalPrecision":
     "Decimal Precision for PnL & Notional",
-  "trading.dataList.portfolioSettings.unrealPnlPriceBasis":
-    "Unrealized PnL Price Basis",
+  "trading.portfolioSettings.unrealPnlPriceBasis": "Unrealized PnL Price Basis",
 
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",
-  "trading.orderBook.column.qty": "Qty",
   "trading.orderBook.column.value": "Value",
 
   "trading.tabs.chart": "Chart",
   "trading.tabs.trades": "Trades",
   "trading.tabs.data": "Data",
 
-  "trading.tradeData.column.24Volume": "24h volume",
-  "trading.tradeData.column.24High": "24h high",
-  "trading.tradeData.column.24Low": "24h low",
+  "trading.column.24High": "24h high",
+  "trading.column.24Low": "24h low",
 
-  "trading.orderBook.row.tooltip.avgPrice": "Avg. Price",
   "trading.orderBook.row.tooltip.sum": "Sum",
   "trading.orderBook.markPrice.tooltip":
     "Obtained from a third-party oracle, the mark price is calculated as the median of three prices: the last price, the fair price based on the funding rate basis, and the fair price based on the order books.",
@@ -46,22 +35,6 @@ export const trading = {
   "trading.asset.startTrading": "Start trading",
   "trading.asset.startTrading.description":
     "You can deposit assets from various networks",
-
-  "trading.asset.wrongNetwork": "Wrong Network",
-  "trading.asset.wrongNetwork.description":
-    "Please switch to a supported network to continue.",
-
-  "trading.asset.connectWallet": "Connect wallet",
-  "trading.asset.connectWallet.description":
-    "Please connect your wallet before starting to trade.",
-
-  "trading.asset.signIn": "Sign in",
-  "trading.asset.signIn.description":
-    "Please sign in before starting to trade.",
-
-  "trading.asset.enableTrading": "Enable trading",
-  "trading.asset.enableTrading.description":
-    "Enable trading before starting to trade.",
 
   "trading.asset.myAssets": "My Assets",
 

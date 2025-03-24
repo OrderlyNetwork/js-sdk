@@ -29,7 +29,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder={t("markets.sidebar.search.placeholder")}
+      placeholder={t("markets.search.placeholder")}
       classNames={{ root: "oui-border oui-mt-[1px] oui-border-line" }}
       size="sm"
       prefix={
@@ -107,10 +107,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
             />
           </div>
         </TabPanel>
-        <TabPanel
-          title={t("markets.newListings")}
-          value="newListing"
-        >
+        <TabPanel title={t("markets.newListings")} value="newListing">
           <div className={cls}>
             <NewListingListWidget
               tableClassNames={{

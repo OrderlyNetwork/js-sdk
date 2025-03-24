@@ -107,7 +107,7 @@ const FreeCollateral: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          {t("scaffold.accountSummary.freeCollateral")}
+          {t("trading.asset.freeCollateral")}
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -160,7 +160,7 @@ const CurrentLeverage: FC<{
     >
       <Box>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          {t("scaffold.accountSummary.currentLeverage")}
+          {t("leverage.currentLeverage")}
         </Text>
       </Box>
       <Text.numeral as={"div"} unit="x">
@@ -185,7 +185,7 @@ const MaxLeverage: FC<{
     >
       <Box>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          {t("scaffold.accountSummary.maxLeverage")}
+          {t("leverage.maxLeverage")}
         </Text>
       </Box>
       <Text color="primary" as={"div"}>{`${props.maxLeverage ?? "--"}x`}</Text>
@@ -213,7 +213,7 @@ const UnrealPnL: FC<{
     >
       <Flex gap={1} itemAlign={"center"}>
         <Text intensity={54} className="oui-whitespace-nowrap">
-          {t("common.unrealPnl")}
+          {t("common.unrealizedPnl")}
         </Text>
         {visibleAvailable && (
           <button onClick={() => onToggleVisibility?.()}>
@@ -233,11 +233,6 @@ const UnrealPnL: FC<{
           </button>
         )}
       </Flex>
-      {/* <Box>
-        <Text intensity={54} className="oui-whitespace-nowrap">
-          Unreal. PnL
-        </Text>
-      </Box> */}
       <Text.numeral
         as={"div"}
         coloring
@@ -310,7 +305,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("freeCollateral")}
                 onClick={() => props.onToggleItemByKey("freeCollateral")}
               />
-              <span>{t("scaffold.accountSummary.freeCollateral")}</span>
+              <span>{t("trading.asset.freeCollateral")}</span>
             </Flex>
             <Text.numeral
               unit="USDC"
@@ -330,7 +325,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("unrealPnL")}
                 onClick={() => props.onToggleItemByKey("unrealPnL")}
               />
-              <span>{t("common.unrealPnl")}</span>
+              <span>{t("common.unrealizedPnl")}</span>
             </Flex>
             <Text.numeral
               coloring
@@ -361,7 +356,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("currentLeverage")}
                 onClick={() => props.onToggleItemByKey("currentLeverage")}
               />
-              <span>{t("scaffold.accountSummary.currentLeverage")}</span>
+              <span>{t("leverage.currentLeverage")}</span>
             </Flex>
             <Text.numeral
               className="group-hover:-oui-translate-x-5 oui-transition-transform"
@@ -379,7 +374,7 @@ const AccountInfoPopover = (props: {
                 active={keys.includes("maxLeverage")}
                 onClick={() => props.onToggleItemByKey("maxLeverage")}
               />
-              <span>{t("scaffold.accountSummary.maxLeverage")}</span>
+              <span>{t("leverage.maxLeverage")}</span>
             </Flex>
             <Text
               className="group-hover:-oui-translate-x-5 oui-transition-transform"

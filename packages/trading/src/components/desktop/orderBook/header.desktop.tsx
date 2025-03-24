@@ -23,7 +23,7 @@ export const DesktopHeader: FC<Props> = (props) => {
         </Box>
         <Box width={"100%"}>
           <Title id="oui-order-book-header-qty" justifyEnd>
-            {`${t("trading.orderBook.column.qty")}(${props.base})`}
+            {`${t("common.qty")}(${props.base})`}
           </Title>
         </Box>
       </Flex>

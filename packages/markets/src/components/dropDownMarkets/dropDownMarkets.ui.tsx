@@ -66,7 +66,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       <Input
         value={searchValue}
         onValueChange={onSearchValueChange}
-        placeholder={t("markets.sidebar.search.placeholder")}
+        placeholder={t("markets.search.placeholder")}
         classNames={{
           root: "oui-border oui-mt-[1px] oui-border-line oui-flex-1",
         }}
@@ -152,10 +152,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             />
           </div>
         </TabPanel>
-        <TabPanel
-          title={t("markets.newListings")}
-          value="newListing"
-        >
+        <TabPanel title={t("markets.newListings")} value="newListing">
           <div className={cls}>
             <NewListingListWidget
               getColumns={getColumns}

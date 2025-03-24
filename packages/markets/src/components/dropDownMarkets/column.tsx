@@ -66,7 +66,7 @@ export const useDropDownMarketsColumns = () => {
           },
         },
         {
-          title: t("markets.dropdown.column.price"),
+          title: t("markets.column.last"),
           dataIndex: "24h_close",
           align: "right",
           onSort: true,
@@ -80,7 +80,7 @@ export const useDropDownMarketsColumns = () => {
           },
         },
         {
-          title: t("markets.dropdown.column.24hChange"),
+          title: t("markets.column.24hPercentage"),
           dataIndex: "change",
           align: "right",
           onSort: true,

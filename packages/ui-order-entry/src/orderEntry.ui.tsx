@@ -862,7 +862,7 @@ const OrderTypeSelect = (props: {
 
         const displayLabel = {
           [OrderType.LIMIT]: t("orderEntry.orderType.limit"),
-          [OrderType.MARKET]: t("orderEntry.orderType.market"),
+          [OrderType.MARKET]: t("common.marketPrice"),
           [OrderType.STOP_LIMIT]: t("orderEntry.orderType.stopLimit"),
           [OrderType.STOP_MARKET]: t("orderEntry.orderType.stopMarket"),
         }[value];

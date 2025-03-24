@@ -30,7 +30,7 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
   const { t } = useTranslation();
   return (
     <Card
-      title={t("portfolio.apiKey.page.title")}
+      title={t("portfolio.apiKeys")}
       id="portfolio-apikey-manager"
       className="oui-bg-base-9 oui-font-semibold"
     >

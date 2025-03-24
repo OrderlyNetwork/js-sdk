@@ -1,14 +1,9 @@
 export const scaffold = {
-  "scaffold.accountSummary.freeCollateral": "Free collateral",
-  "scaffold.accountSummary.currentLeverage": "Current leverage",
-  "scaffold.accountSummary.maxLeverage": "Max leverage",
-
   "scaffold.footer.operational": "Operational",
   "scaffold.footer.joinCommunity": "Join our community",
   "scaffold.footer.poweredBy": "Powered by",
 
   "scaffold.maintenance.dialog.title": "System upgrade in progress",
-
   "scaffold.maintenance.tips.content":
     "{{brokerName}} will be temporarily unavailable for a scheduled upgrade from {{startDate}} to {{endDate}}.",
   "scaffold.maintenance.dialog.content":
