@@ -1,3 +1,4 @@
+import React from "react";
 import { styled } from "@storybook/theming";
 import { ThemeMenu } from "./menu";
 import { ColorList, GradientColorList } from "./colorList";

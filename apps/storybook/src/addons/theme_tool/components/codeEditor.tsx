@@ -1,5 +1,5 @@
+import React, { useMemo } from "react";
 import { styled } from "@storybook/theming";
-import { useMemo } from "react";
 import { useTheme } from "./editorContext";
 import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
 import { css } from "@codemirror/lang-css";
