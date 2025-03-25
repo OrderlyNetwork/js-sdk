@@ -49,6 +49,18 @@ export const connector = {
   "connector.ledger.signMessageFailed": "Sign Message Failed",
   "connector.ledger.signMessageFailed.description":
     "Are you using Ledger Wallet?",
+
+  "connector.loginIn": "Login in",
+  "connector.logout": "Log out",
+  "connector.email": "Email",
+  "connector.google": "Google",
+  "connector.twitter": "X / Twitter",
+  "connector.addEvmWallet": "Add Evm wallet",
+  "connector.addSolanaWallet": "Add Solana wallet",
+  "connector.termsOfUse":
+    "By connecting your wallet, you acknowledge and agree to the <0>terms of use</0>.",
+  "connector.supportedEvmChain": "Supported Evm chain",
+  "connector.supportedSolanaChain": "Supported Solana chain",
 };
 
 export type Connector = typeof connector;

@@ -33,10 +33,10 @@ export const en = {
   "common.max": "Max",
   "common.download": "Download",
   "common.copy": "Copy",
-  "common.copy.success": "Copy success",
   "common.copy.failed": "Copy failed",
   "common.copy.copied": "Copied",
   "common.share": "Share",
+  "common.export": "Export",
 
   "common.select.1d": "1D",
   "common.select.3d": "3D",
