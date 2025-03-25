@@ -6,20 +6,39 @@ export type Campaign = {
   image: string;
   startTime: Date | string;
   endTime: Date | string;
-  href: string;
+  href:
+    | string
+    | {
+        /** learn more url */
+        learnMore: string;
+        /** trading url, if provided, will override default trading now button url */
+        trading: string;
+      };
 };
 
+/**
+ * Trading leaderboard provider state
+ */
 export type TradingLeaderboardState = {
-  campaigns: Campaign[];
+  /** campaigns config, if not provided, will not show campaigns section */
+  campaigns?: Campaign[];
+  /** background src, it can be a image resource */
+  backgroundSrc?: string;
+  href?: {
+    /** default trading now button url */
+    trading: string;
+  };
 };
 
+/**
+ * Trading leaderboard context
+ */
 export const TradingLeaderboardContext = createContext<TradingLeaderboardState>(
   {} as TradingLeaderboardState
 );
 
-export type TradingLeaderboardProviderProps = PropsWithChildren<
-  Pick<TradingLeaderboardState, "campaigns">
->;
+export type TradingLeaderboardProviderProps =
+  PropsWithChildren<TradingLeaderboardState>;
 
 export const TradingLeaderboardProvider = (
   props: TradingLeaderboardProviderProps
@@ -28,6 +47,8 @@ export const TradingLeaderboardProvider = (
     <TradingLeaderboardContext.Provider
       value={{
         campaigns: props.campaigns,
+        href: props.href,
+        backgroundSrc: props.backgroundSrc,
       }}
     >
       {props.children}

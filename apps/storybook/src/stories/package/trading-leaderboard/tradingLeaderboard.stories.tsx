@@ -52,6 +52,9 @@ const meta: Meta<typeof LeaderboardWidget> = {
         href: "https://orderly.network/",
       },
     ],
+    href: {
+      trading: "https://app.orderly.network/",
+    },
   },
   parameters: {
     layout: "fullscreen",
@@ -68,13 +71,13 @@ const Container = (props: {
   return (
     <Box
       width="100%"
-      my={5}
+      // my={5}
       style={{
         minHeight: 379,
         maxHeight: 2560,
         overflow: "hidden",
         // Make the table scroll instead of the page scroll
-        height: "calc(100vh - 48px - 29px - 40px)",
+        height: "calc(100vh - 48px - 29px )",
         ...props.style,
       }}
     >
@@ -86,8 +89,8 @@ const Container = (props: {
 export const Page: Story = {
   render: (args) => {
     return (
-      <Container style={{ height: "calc(100vh - 40px)" }}>
-        <LeaderboardWidget {...args} />
+      <Container style={{ height: "calc(100vh)" }}>
+        <LeaderboardWidget {...args} className="oui-py-5" />
       </Container>
     );
   },
@@ -98,7 +101,7 @@ export const LayoutPage: Story = {
     return (
       <OrderlyLayout initialMenu="/leaderboard">
         <Container>
-          <LeaderboardWidget {...args} />
+          <LeaderboardWidget {...args} className="oui-py-5" />
         </Container>
       </OrderlyLayout>
     );
@@ -108,7 +111,7 @@ export const LayoutPage: Story = {
 export const Campaigns: Story = {
   render: (args) => {
     return (
-      <TradingLeaderboardProvider campaigns={args.campaigns}>
+      <TradingLeaderboardProvider {...args}>
         <CampaignsWidget />
       </TradingLeaderboardProvider>
     );

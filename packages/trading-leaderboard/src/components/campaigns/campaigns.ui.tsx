@@ -27,9 +27,36 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
         r="xl"
         className={cn("oui-overflow-y-auto", "oui-custom-scrollbar")}
       >
-        <Flex gapY={5} pr={2} height={192} direction="column" r="xl">
+        <Flex
+          gapY={5}
+          height={192}
+          direction="column"
+          r="xl"
+          className="oui-pr-1.5"
+        >
           {props.currentCampaigns.map((campaign) => {
-            return <CampaignItem key={campaign.title} campaign={campaign} />;
+            let learnMoreUrl: string;
+            let tradingUrl = props.tradingUrl;
+
+            if (typeof campaign.href === "object") {
+              learnMoreUrl = campaign.href.learnMore;
+              tradingUrl = campaign.href.trading;
+            } else {
+              learnMoreUrl = campaign.href;
+            }
+
+            return (
+              <CampaignItem
+                key={campaign.title}
+                campaign={{
+                  ...campaign,
+                  href: {
+                    learnMore: learnMoreUrl,
+                    trading: tradingUrl!,
+                  },
+                }}
+              />
+            );
           })}
         </Flex>
       </Box>
@@ -39,7 +66,7 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
 
 const Header: FC<CampaignsScriptReturn> = (props) => {
   return (
-    <Flex justify="between" itemAlign="center">
+    <Flex justify="between" itemAlign="center" pr={3}>
       <Text size="xl">Campaigns</Text>
       <Select.options
         size={"xs"}
@@ -61,6 +88,9 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
   const time = `${formatCampaignDate(startTime)} - ${formatCampaignDate(
     endTime
   )}`;
+
+  const learnMoreUrl = typeof href === "string" ? href : href.learnMore;
+  const tradingUrl = typeof href === "string" ? href : href.trading;
 
   return (
     <Flex intensity={800} r="xl">
@@ -94,7 +124,7 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
               color="secondary"
               size="md"
               onClick={() => {
-                window.open(href, "_blank");
+                window.open(learnMoreUrl, "_blank");
               }}
             >
               Learn more
@@ -102,7 +132,7 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
             <Button
               size="md"
               onClick={() => {
-                window.open(href, "_blank");
+                window.open(tradingUrl, "_blank");
               }}
             >
               Trade now

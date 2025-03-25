@@ -6,13 +6,15 @@ import {
   TradingLeaderboardProviderProps,
 } from "../../components/provider";
 
-export type LeaderboardWidgetProps = TradingLeaderboardProviderProps;
+export type LeaderboardWidgetProps = TradingLeaderboardProviderProps & {
+  className?: string;
+};
 
 export const LeaderboardWidget: FC<LeaderboardWidgetProps> = (props) => {
-  const state = useLeaderboardScript();
+  const state = useLeaderboardScript(props.backgroundSrc);
   return (
-    <TradingLeaderboardProvider campaigns={props.campaigns}>
-      <Leaderboard {...state} />
+    <TradingLeaderboardProvider campaigns={props.campaigns} href={props.href}>
+      <Leaderboard {...state} className={props.className} />
     </TradingLeaderboardProvider>
   );
 };

@@ -39,6 +39,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
         width="100%"
         justify="between"
         itemAlign="center"
+        mt={2}
         className={cn(
           "oui-trading-leaderboard-trading-filter",
           "oui-border-b oui-border-line"
@@ -51,7 +52,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
               onFilter={(value: any) => {
                 props.onFilter(value);
               }}
-              className="oui-border-none"
+              className="oui-h-[53px] oui-border-none"
             />
           )}
           {FilterDays.map((value) => {
@@ -124,7 +125,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
           body: "oui-testid-dataList-positionHistory-tab-body",
         }}
         classNames={{
-          root: "!oui-h-[calc(100%_-_49px)]",
+          root: "!oui-h-[calc(100%_-_53px_-_8px)]",
         }}
         onRow={(record, index) => {
           return {

@@ -13,7 +13,7 @@ type CategorizedCampaigns = {
 type CategoryKey = keyof CategorizedCampaigns;
 
 export function useCampaignsScript() {
-  const { campaigns } = useTradingLeaderboardContext();
+  const { campaigns = [], href } = useTradingLeaderboardContext();
   const [category, setCategory] = useState<CategoryKey>("ongoing");
 
   const filterCampaigns = useMemo(() => {
@@ -75,5 +75,6 @@ export function useCampaignsScript() {
     currentCampaigns,
     category,
     onCategoryChange,
+    tradingUrl: href?.trading,
   };
 }
