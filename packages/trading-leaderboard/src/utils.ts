@@ -37,5 +37,7 @@ export function formatCampaignDate(date: Date | string): string {
   const year = date.getFullYear();
   const month = monthNames[date.getUTCMonth()];
   const day = date.getUTCDate();
-  return `${month} ${day}, ${year}`;
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${month} ${day}, ${year} ${hours}:${minutes}`;
 }

@@ -116,7 +116,7 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
         </Flex>
         <Flex justify="between" width="100%">
           <Text size="xs" intensity={54}>
-            {time}
+            {time} UTC
           </Text>
           <Flex gap={3}>
             <Button
