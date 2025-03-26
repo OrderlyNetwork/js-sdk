@@ -86,10 +86,16 @@ export function useTradingListScript() {
     if (sort?.sortKey === "perp_volume") {
     }
     return list?.map((item, index) => {
-      let rank = index + 1;
+      let rank: string | number = index + 1;
 
-      if (sort?.sortKey === "perp_volume" && sort?.sort === "asc") {
-        rank = total - (page - 1) * pageSize - index;
+      if (searchValue) {
+        rank = "-";
+      } else {
+        if (sort?.sortKey === "perp_volume" && sort?.sort === "asc") {
+          rank = total - (page - 1) * pageSize - index;
+        } else if (sort?.sortKey === "perp_volume" && sort?.sort === "desc") {
+          rank = (page - 1) * pageSize + index + 1;
+        }
       }
 
       return {
@@ -97,7 +103,7 @@ export function useTradingListScript() {
         rank,
       };
     });
-  }, [data, sort, page, pageSize]);
+  }, [data, sort, page, pageSize, searchValue]);
 
   const pagination = useMemo(
     () => parsePagination(data?.meta),
