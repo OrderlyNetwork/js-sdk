@@ -54,14 +54,15 @@ async function json2csv(inputFilePaths, outFilePath) {
   const headers = [
     "",
     "en",
-    "zh-TW",
-    "zh-Hans",
-    "tr",
-    "ru",
-    "pt-BR",
-    "uk-UA",
-    "vi-VN",
-    "es-ES",
+    "zh",
+    "ja",
+    "es",
+    "ko",
+    "vi",
+    "de",
+    "fr",
+    "nl",
+    "id",
   ];
   for (const filePath of inputFiles) {
     const json = await fs.readJSON(path.resolve(filePath), {
