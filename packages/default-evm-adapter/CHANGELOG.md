@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.0.8-i18n.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-i18n.1
+  - @orderly.network/types@2.0.8-i18n.1
+
 ## 2.0.8-i18n.0
 
 ### Patch Changes

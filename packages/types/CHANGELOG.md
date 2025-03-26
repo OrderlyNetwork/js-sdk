@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.0.8-i18n.1
+
+### Patch Changes
+
+- publish
+
 ## 2.0.8-i18n.0
 
 ### Patch Changes

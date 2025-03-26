@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.0.7-i18n.1
+
+### Patch Changes
+
+- publish
+
 ## 1.0.7-i18n.0
 
 ### Patch Changes
