@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.0.8-i18n.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-i18n.0
+  - @orderly.network/types@2.0.8-i18n.0
+
 ## 2.0.7
 
 ### Patch Changes
