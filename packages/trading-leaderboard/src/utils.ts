@@ -17,5 +17,25 @@ export const formatDateRange = (date: Date): string => {
 };
 
 export function formatCampaignDate(date: Date | string): string {
-  return format(date, "MMM dd, yyyy");
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  if (typeof date === "string") {
+    date = new Date(date);
+  }
+  const year = date.getFullYear();
+  const month = monthNames[date.getUTCMonth()];
+  const day = date.getUTCDate();
+  return `${month} ${day}, ${year}`;
 }

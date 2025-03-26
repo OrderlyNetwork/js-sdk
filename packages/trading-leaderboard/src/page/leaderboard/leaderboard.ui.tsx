@@ -5,6 +5,7 @@ import { CampaignsWidget } from "../../components/campaigns";
 import { LeaderboardScriptReturn } from "./leaderboard.script";
 
 export type LeaderboardProps = {
+  style?: React.CSSProperties;
   className?: string;
 } & LeaderboardScriptReturn;
 
@@ -45,7 +46,10 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
   };
 
   return (
-    <div className={cn("oui-relative oui-h-full", props.className)}>
+    <div
+      style={props.style}
+      className={cn("oui-relative oui-h-full", props.className)}
+    >
       {renderBackground()}
       <Flex
         direction="column"

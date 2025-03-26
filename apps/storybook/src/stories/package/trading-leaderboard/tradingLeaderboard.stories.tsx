@@ -20,8 +20,10 @@ const meta: Meta<typeof LeaderboardWidget> = {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
         image: "/pnl/poster_bg_1.png",
-        startTime: subDays(new Date(), 1),
-        endTime: addDays(new Date(), 1),
+        // startTime: subDays(new Date(), 1),
+        // endTime: addDays(new Date(), 1),
+        startTime: new Date("2025-03-25T18:00:00Z"),
+        endTime: new Date("2025-04-02T00:00:00Z"),
         href: "https://orderly.network/",
       },
       {
