@@ -1,6 +1,4 @@
 export const positions = {
-  "positions.title": "Positions",
-  "positions.position": "Position",
   "positions.positionHistory": "Position history",
   "positions.liquidation": "Liquidation",
 
@@ -24,8 +22,6 @@ export const positions = {
   "positions.marketClose.description":
     "You agree closing {{quantity}} {{base}} position at market price.",
 
-  "positions.updateOrder.price.required": "Price is required",
-
   "positions.history.status.closed": "Closed",
   "positions.history.status.partialClosed": "Partially closed",
   "positions.history.type.adl": "Adl",
@@ -42,7 +38,6 @@ export const positions = {
   "positions.history.column.timeClosed": "Time closed",
   "positions.history.column.updatedTime": "Updated time",
 
-  "positions.history.netPnl.realizedPnl": "Realized PnL",
   "positions.history.netPnl.fundingFee": "Funding fee",
   "positions.history.netPnl.tradingFee": "Trading fee",
 

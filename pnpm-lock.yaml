@@ -2861,6 +2861,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@orderly.network/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../types
@@ -24358,7 +24361,7 @@ snapshots:
 
   '@radix-ui/react-collection@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
-      '@babel/runtime': 7.26.10
+      '@babel/runtime': 7.24.8
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.2)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.3.2)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)

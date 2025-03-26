@@ -23,7 +23,7 @@ const DisplayControlMap: {
   id: keyof DisplayControlSettingInterface;
 }[] = [
   {
-    label: i18n.t("positions.position"),
+    label: i18n.t("common.position"),
     id: "position",
   },
   {
@@ -39,7 +39,7 @@ const DisplayControlMap: {
     id: "stopOrders",
   },
   {
-    label: i18n.t("tpsl.title"),
+    label: i18n.t("common.tpsl"),
     id: "tpsl",
   },
   {
@@ -54,7 +54,7 @@ const MobileDisplayControlMap: {
 }[][] = [
   [
     {
-      label: i18n.t("positions.position"),
+      label: i18n.t("common.position"),
       id: "position",
     },
 
@@ -69,7 +69,7 @@ const MobileDisplayControlMap: {
       id: "stopOrders",
     },
     {
-      label: i18n.t("tpsl.title"),
+      label: i18n.t("common.tpsl"),
       id: "tpsl",
     },
   ],

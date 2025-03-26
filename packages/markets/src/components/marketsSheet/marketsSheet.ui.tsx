@@ -60,7 +60,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
     >
       <Box px={3} mt={3}>
         <Text size="base" intensity={80}>
-          {t("markets.title")}
+          {t("common.markets")}
         </Text>
         {search}
       </Box>

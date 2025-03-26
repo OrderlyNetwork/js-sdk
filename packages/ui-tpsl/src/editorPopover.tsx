@@ -141,7 +141,7 @@ export const PositionTPSLPopover = (props: {
               .confirm({
                 title: finalIsEditing
                   ? t("orders.editOrder")
-                  : t("tpsl.confirmOrder.title"),
+                  : t("tpsl.confirmOrder"),
                 // bodyClassName: "lg:oui-py-0",
                 onOk: () => {
                   return options.submit();

@@ -13,7 +13,7 @@ export const Subtitle: FC<SubtitleReturns> = (props) => {
       className="oui-text-sm md:oui-text-base xl:oui-text-lg oui-text-base-contrast-80 oui-text-center"
       gap={3}
     >
-      <Text>{t("affiliate.page.home.subTitle")}</Text>
+      <Text>{t("affiliate.page.subTitle")}</Text>
       <Flex
         direction={"row"}
         gap={1}
@@ -26,7 +26,7 @@ export const Subtitle: FC<SubtitleReturns> = (props) => {
           }
         }}
       >
-        <Text children={t("affiliate.page.home.learn")} />
+        <Text children={t("affiliate.page.learnMore")} />
         <svg
           width="16"
           height="16"

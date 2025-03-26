@@ -24,7 +24,7 @@ export const OrdersPage = (props: { sharePnLConfig?: SharePnLConfig }) => {
       height="100%"
     >
       <Flex width="100%" justify="between">
-        <Text size="lg">{t("orders.title")}</Text>
+        <Text size="lg">{t("common.orders")}</Text>
         <Tooltip content={t("orders.download.tooltip")}>
           <Button
             color="gray"

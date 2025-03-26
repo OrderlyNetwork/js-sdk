@@ -126,7 +126,7 @@ export const Tab: FC<
                     : "oui-fill-white/[.36]"
                 }
               />
-              <Text>{t("affiliate.title")}</Text>
+              <Text>{t("common.affiliate")}</Text>
             </Flex>
           </TabsTrigger>
         )}

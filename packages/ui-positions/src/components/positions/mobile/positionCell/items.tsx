@@ -214,7 +214,7 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
 
   return (
     <Flex className="oui-text-2xs oui-text-base-contrast-36">
-      <Text>{`${t("tpsl.title")}:`}&nbsp;</Text>
+      <Text>{`${t("common.tpsl")}:`}&nbsp;</Text>
       <Flex className="oui-gap-[2px]">
         {item.tp_trigger_price && (
           <Text.numeral color="buy">{item.tp_trigger_price}</Text.numeral>

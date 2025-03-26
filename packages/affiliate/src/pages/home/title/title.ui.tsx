@@ -10,7 +10,7 @@ export const Title: FC<TitleReturns> = (props) => {
     >
       {/* @ts-ignore */}
       <Trans
-        i18nKey="affiliate.page.home.title"
+        i18nKey="affiliate.page.title"
         values={{
           shortBrokerName: props.shortBrokerName,
         }}

@@ -72,7 +72,7 @@ export const WithdrawWarningMessage = ({
       return t("transfer.withdraw.crossChain.process");
     }
     if (showVaultWarning) {
-      return t("transfer.withdraw.crossChain.exceedWarning", {
+      return t("transfer.withdraw.crossChain.vaultWarning", {
         networkName,
         chainVaultBalance,
       });

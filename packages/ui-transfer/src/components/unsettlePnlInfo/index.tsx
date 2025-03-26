@@ -73,7 +73,7 @@ export const UnsettlePnlInfo = ({
           className=" oui-select-none"
           onClick={settlePnlDialog}
         >
-          {t("settle.title")}
+          {t("common.settle")}
         </Text>
       </Flex>
     </Flex>

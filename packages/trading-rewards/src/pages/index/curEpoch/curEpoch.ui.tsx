@@ -246,7 +246,7 @@ const Countdown: FC<{
       width={"full"}
     >
       <Flex justify={"center"} gap={1}>
-        <span>{`${t("tradingRewards.countdown")}: `}</span>
+        <span>{`${t("common.countdown")}: `}</span>
         <Flex
           direction={"row"}
           itemAlign={"end"}

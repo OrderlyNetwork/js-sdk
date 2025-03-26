@@ -17,7 +17,7 @@ export const DeleteAPIKeyDialog: FC<{
       size="sm"
       open={open}
       onOpenChange={setOpen}
-      title={t("portfolio.apiKey.delete.title")}
+      title={t("portfolio.apiKey.delete.dialog.title")}
       actions={{
         primary: {
           label: t("common.confirm"),
@@ -47,7 +47,7 @@ export const DeleteAPIKeyDialog: FC<{
       <Flex className="oui-text-xs">
         {/* @ts-ignore */}
         <Trans
-          i18nKey="portfolio.apiKey.delete.description"
+          i18nKey="portfolio.apiKey.delete.dialog.description"
           values={{ apiKey: formatKey(item?.orderly_key) }}
           components={[<Text color="primary" className="oui-px-1" />]}
         />

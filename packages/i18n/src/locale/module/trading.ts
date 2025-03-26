@@ -4,7 +4,6 @@ export const trading = {
   "trading.layout.left": "Advanced (left)",
   "trading.orders.closeAll": "Close All",
   "trading.hideOtherSymbols": "Hide other symbols",
-
   "trading.history": "History",
 
   "trading.portfolioSettings": "Portfolio Settings",
@@ -23,7 +22,7 @@ export const trading = {
   "trading.column.24High": "24h high",
   "trading.column.24Low": "24h low",
 
-  "trading.orderBook.row.tooltip.sum": "Sum",
+  "trading.orderBook.sum": "Sum",
   "trading.orderBook.markPrice.tooltip":
     "Obtained from a third-party oracle, the mark price is calculated as the median of three prices: the last price, the fair price based on the funding rate basis, and the fair price based on the order books.",
   "trading.orderBook.spreadRatio.tooltip": "Spread Ratio of the ask1 and bid1.",
@@ -66,7 +65,6 @@ export const trading = {
   "trading.riskRate.formula":
     "Risk rate = Maintenance margin ratio / Margin ratio * 100%",
 
-  "trading.account": "Account",
   "trading.asset&Margin": "Asset & Margin",
 
   "trading.fundingRate.predFundingRate": "Pred. funding rate",

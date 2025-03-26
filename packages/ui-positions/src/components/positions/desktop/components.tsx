@@ -11,7 +11,7 @@ export const TPSLButton = () => {
     <PositionTPSLPopover
       position={position}
       order={tpslOrder}
-      label={t("tpsl.title")}
+      label={t("common.tpsl")}
       baseDP={baseDp}
       quoteDP={quoteDp}
       isEditing={false}

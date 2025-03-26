@@ -21,28 +21,28 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       className="oui-bg-base-9"
       width={"100%"}
     >
-      <Text>{t("affiliate.becomeAffiliate.title")}</Text>
+      <Text>{t("affiliate.process.title")}</Text>
       <Flex className="oui-flex oui-flex-col lg:oui-flex-row oui-gap-3 lg:oui-items-stretch lg:oui-w-full">
         <Item
           icon={<ApplyIcon />}
-          title={t("affiliate.becomeAffiliate.apply.title")}
-          content={t("affiliate.becomeAffiliate.apply.description")}
+          title={t("affiliate.process.step1.title.title")}
+          content={t("affiliate.process.step1.description")}
         />
         <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
           icon={<ShareIcon />}
-          title={t("affiliate.becomeAffiliate.share.title")}
-          content={t("affiliate.becomeAffiliate.share.description")}
+          title={t("affiliate.process.step2.title")}
+          content={t("affiliate.process.step2.description")}
         />
         <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
           icon={<EarnIcon />}
-          title={t("affiliate.becomeAffiliate.earn.title")}
-          content={t("affiliate.becomeAffiliate.earn.description")}
+          title={t("affiliate.process.step3.title")}
+          content={t("affiliate.process.step3.description")}
         />
       </Flex>
     </Flex>

@@ -33,10 +33,10 @@ export const en = {
   "common.max": "Max",
   "common.download": "Download",
   "common.copy": "Copy",
-  "common.copy.success": "Copy success",
   "common.copy.failed": "Copy failed",
   "common.copy.copied": "Copied",
   "common.share": "Share",
+  "common.export": "Export",
 
   "common.select.1d": "1D",
   "common.select.3d": "3D",
@@ -76,23 +76,39 @@ export const en = {
   "common.marketPrice": "Market",
 
   "common.unrealizedPnl": "Unrealized PnL",
-  "common.realPnl": "Realized PnL",
+  "common.realizedPnl": "Realized PnL",
   "common.totalValue": "Total value",
+  "common.available": "Available",
 
   "common.overview": "Overview",
   "common.funding": "Funding",
   "common.assets": "Assets",
+  "common.countdown": "Countdown",
+  "common.current": "Current",
+  "common.account": "Account",
+
+  "common.deposit": "Deposit",
+  "common.withdraw": "Withdraw",
+  "common.settle": "Settle",
+  "common.markets": "Markets",
+  "common.portfolio": "Portfolio",
+  "common.positions": "Positions",
+  "common.position": "Position",
+  "common.orders": "Orders",
+  "common.tpsl": "TP/SL",
+  "common.leverage": "Leverage",
+  "common.affiliate": "Affiliate",
+  "common.tradingRewards": "Trading rewards",
 
   /** linkDevice */
   "linkDevice.createQRCode.loading.description":
     "Approve QR code with wallet...",
-  "linkDevice.createQRCode.confirm.title": "Link Mobile Device",
-  "linkDevice.createQRCode.confirm.description":
+  "linkDevice.createQRCode.linkMobileDevice": "Link Mobile Device",
+  "linkDevice.createQRCode.linkMobileDevice.description":
     "Open {{hostname}} on your mobile device and scan the QR code to link this wallet. For security, the QR code will expire in 60 seconds. <br/> The QR code allows mobile trading but does not enable withdrawals. Ensure you are not sharing your screen or any screenshots of the QR code.",
 
   "linkDevice.createQRCode.success.description":
     "Scan the QR code or paste the URL into another browser/<br/>device to continue.",
-  "linkDevice.createQRCode.success.countdown": "Countdown",
   "linkDevice.createQRCode.success.copyUrl": "Copy URL",
 
   "linkDevice.scanQRCode": "Scan QR Code",
@@ -103,7 +119,6 @@ export const en = {
     "You are connected via another device. This mode is for trading only. To switch networks, deposit or withdraw assets, please disconnect and reconnect your wallet on this device.",
 
   /** settle */
-  "settle.title": "Settle",
   "settle.settlePnl": "Settle PnL",
   "settle.settlePnl.warning": "Please settle your balance",
   "settle.settlePnl.description":
@@ -112,7 +127,6 @@ export const en = {
   "settle.unsettled": "Unsettled",
   "settle.unsettled.tooltip":
     "Unsettled balance can not be withdrawn. In order to withdraw, please settle your balance first.",
-  "settle.settle": "Settle",
 
   "settle.settlement.requested": "Settlement requested",
   "settle.settlement.completed": "Settlement completed",

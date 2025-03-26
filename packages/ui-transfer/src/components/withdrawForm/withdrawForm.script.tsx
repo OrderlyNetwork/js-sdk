@@ -226,7 +226,7 @@ export const useWithdrawForm = ({
         }
 
         if (e.message.indexOf("user rejected") !== -1) {
-          toast.error(t("transfer.withdraw.rejectTransaction"));
+          toast.error(t("transfer.rejectTransaction"));
         }
         return Promise.reject(e);
       })
@@ -293,7 +293,7 @@ export const useWithdrawForm = ({
       })
       .catch((e) => {
         if (e.message.indexOf("user rejected") !== -1) {
-          toast.error(t("transfer.withdraw.rejectTransaction"));
+          toast.error(t("transfer.rejectTransaction"));
           return;
         }
         if (

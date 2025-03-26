@@ -60,7 +60,7 @@ export const useAssetHistoryColumns = () => {
                 onCopy={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  toast.success(t("common.copy.success"));
+                  toast.success(t("common.copy.copied"));
                 }}
               >
                 {value}
@@ -86,9 +86,7 @@ export const useAssetHistoryColumns = () => {
         render: (value) => {
           return (
             <Text color={value === "DEPOSIT" ? "deposit" : "withdraw"}>
-              {value === "DEPOSIT"
-                ? t("transfer.deposit")
-                : t("transfer.withdraw")}
+              {value === "DEPOSIT" ? t("common.deposit") : t("common.withdraw")}
             </Text>
           );
         },
@@ -116,6 +114,6 @@ export const useAssetHistoryColumns = () => {
 
 export const SIDES = [
   { label: i18n.t("common.all"), value: "All" },
-  { label: i18n.t("transfer.deposit"), value: "DEPOSIT" },
-  { label: i18n.t("transfer.withdraw"), value: "WITHDRAW" },
+  { label: i18n.t("common.deposit"), value: "DEPOSIT" },
+  { label: i18n.t("common.withdraw"), value: "WITHDRAW" },
 ];

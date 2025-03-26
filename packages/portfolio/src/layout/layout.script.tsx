@@ -50,7 +50,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("positions.title"),
+        name: t("common.positions"),
         href: PortfolioLeftSidebarPath.Positions,
         icon: (
           <svg
@@ -68,7 +68,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("orders.title"),
+        name: t("common.orders"),
         href: PortfolioLeftSidebarPath.Orders,
         icon: (
           <svg

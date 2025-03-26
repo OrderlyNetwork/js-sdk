@@ -347,9 +347,7 @@ export const NetPnL = (props: {
         <Flex direction={"column"} itemAlign={"start"} className="oui-text-2xs">
           <Text intensity={80}>{t("positions.history.column.netPnl")}</Text>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>
-              {t("positions.history.netPnl.realizedPnl")}
-            </Text>
+            <Text intensity={54}>{t("common.realizedPnl")}</Text>
             <Text
               color={record.realized_pnl >= 0 ? "profit" : "lose"}
               className="oui-cursor-pointer"

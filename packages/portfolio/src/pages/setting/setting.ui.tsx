@@ -9,7 +9,7 @@ export const Setting: FC<SettingScriptReturns> = (props) => {
 
   return (
     <Card
-      title={t("portfolio.setting.page.title")}
+      title={t("portfolio.setting.systemUpgrade")}
       id="portfolio-apikey-manager"
       className="oui-bg-base-9 oui-font-semibold"
     >
@@ -23,7 +23,7 @@ export const Setting: FC<SettingScriptReturns> = (props) => {
       >
         <Flex direction={"column"} itemAlign={"start"} className="oui-flex-1">
           <Text intensity={80} size="base">
-            {t("portfolio.setting.cancelOpenOrders.title")}
+            {t("portfolio.setting.cancelOpenOrders")}
           </Text>
           <Text intensity={54} size="sm">
             {t("portfolio.setting.cancelOpenOrders.description")}

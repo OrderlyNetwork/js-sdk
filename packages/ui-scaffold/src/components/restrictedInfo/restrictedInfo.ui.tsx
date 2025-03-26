@@ -23,7 +23,7 @@ export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
     return (
       content || (
         <span>
-          {t("scaffold.restrictedInfo.content.default", {
+          {t("scaffold.restrictedInfo.description.default", {
             brokerName,
             ip,
           })}

@@ -39,7 +39,7 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
 
   const header = (
     <Flex justify="between" className="oui-h-[46px]">
-      <Text>{t("scaffold.languageSwitcher.title")}</Text>
+      <Text>{t("scaffold.languageSwitcher.language")}</Text>
       <CloseIcon
         size={16}
         opacity={1}

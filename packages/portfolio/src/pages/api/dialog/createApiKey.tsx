@@ -31,7 +31,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       onOpenChange={(open) => {
         props.hideCreateDialog?.();
       }}
-      title={t("portfolio.apiKey.create.title")}
+      title={t("portfolio.apiKey.create.dialog.title")}
       actions={{
         primary: {
           label: t("common.confirm"),

@@ -66,13 +66,13 @@ export const useMaintenanceScript = (): MaintenanceTipInterface => {
     }
   }, [startTime, status]);
 
-  const tipsContent = t("scaffold.maintenance.tips.content", {
+  const tipsContent = t("scaffold.maintenance.tips.description", {
     brokerName,
     startDate,
     endDate,
   });
 
-  const dialogContent = t("scaffold.maintenance.dialog.content", {
+  const dialogContent = t("scaffold.maintenance.dialog.description", {
     brokerName,
     endDate,
   });

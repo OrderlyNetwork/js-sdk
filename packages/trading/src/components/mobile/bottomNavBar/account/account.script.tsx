@@ -13,7 +13,7 @@ export const useAccountScript = () => {
 
   const onShowAccountSheet = () => {
     modal.sheet({
-      title: t("trading.account"),
+      title: t("common.account"),
       leading: bottomSheetLeading,
       content: <AccountSheetWidget {...referral} {...tradingRewards} />,
     });

@@ -96,7 +96,7 @@ export const OrderTPSL = (props: {
           }}
         />
         <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
-          {t("tpsl.title")}
+          {t("common.tpsl")}
         </label>
         <ExclamationFillIcon
           color="white"

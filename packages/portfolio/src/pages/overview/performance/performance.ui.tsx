@@ -39,7 +39,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           onPeriodChange={onPeriodChange}
           periodTypes={periodTypes}
           period={period}
-          title={t("portfolio.overview.performance.title")}
+          title={t("portfolio.overview.performance")}
         />
       }
       id="portfolio-overview-performance"

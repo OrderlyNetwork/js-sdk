@@ -39,7 +39,7 @@ export function getOrderExecutionReportMsg(
   let msg = "";
   switch (status) {
     case "NEW":
-      title = i18n.t("orders.status.new.title");
+      title = i18n.t("orders.status.opened.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case "FILLED":
@@ -48,19 +48,19 @@ export function getOrderExecutionReportMsg(
         base_dp === undefined
           ? total_executed_quantity
           : parseNumber(total_executed_quantity, { dp: base_dp });
-      title = i18n.t("orders.status.filled.title");
+      title = i18n.t("orders.status.filled.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayTotalExecutedQuantity} / ${displayQuantity}`;
       break;
     case "CANCELLED":
-      title = i18n.t("orders.status.canceled.title");
+      title = i18n.t("orders.status.canceled.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case "REJECTED":
-      title = i18n.t("orders.status.rejected.title");
+      title = i18n.t("orders.status.rejected.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case "REPLACED":
-      title = i18n.t("orders.status.replaced.title");
+      title = i18n.t("orders.status.replaced.toast.title");
       msg = `${side} ${displaySymbol} ${total_executed_quantity} / ${displayQuantity}`;
       break;
     default:

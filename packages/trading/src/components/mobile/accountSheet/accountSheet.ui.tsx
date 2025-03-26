@@ -106,7 +106,7 @@ export const ReferralInfo: FC<AccountSheetState> = (props) => {
           justify={"between"}
         >
           <Flex direction={"column"} itemAlign={"start"}>
-            <Text size="xs">{t("affiliate.title")}</Text>
+            <Text size="xs">{t("common.affiliate")}</Text>
             <Text size="2xs" intensity={54}>
               ({t("affiliate.commission.30d")})
             </Text>
@@ -174,7 +174,7 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
       >
         <Flex justify={"between"} width={"100%"}>
           <Flex gap={1} className="oui-text-base-contrast oui-text-2xs">
-            <Text>{t("tradingRewards.title")}</Text>
+            <Text>{t("common.tradingRewards")}</Text>
             <Text intensity={54}>
               (
               <Text>{`${(

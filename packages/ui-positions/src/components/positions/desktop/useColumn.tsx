@@ -206,7 +206,7 @@ export const useColumn = (props: {
           },
         },
         {
-          title: t("tpsl.title"),
+          title: t("common.tpsl"),
           dataIndex: "__",
           width: 150,
           render: (_: string, record) => (

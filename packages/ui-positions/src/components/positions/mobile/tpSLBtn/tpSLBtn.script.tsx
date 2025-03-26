@@ -13,7 +13,7 @@ export const useTpSLBtnScript = (props: { state: PositionCellState }) => {
 
   const openTP_SL = () => {
     modal.sheet({
-      title: t("tpsl.title"),
+      title: t("common.tpsl"),
       content: (
         <PositionTPSLSheet
           position={props.state.item}

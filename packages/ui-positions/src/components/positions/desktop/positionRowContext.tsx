@@ -84,7 +84,7 @@ export const PositionsRowProvider: FC<
     setType(type);
     if (type === OrderType.LIMIT) {
       if (!price) {
-        throw new Error(t("positions.updateOrder.price.required"));
+        throw new Error(t("orderEntry.orderPrice.error.required"));
       }
       setPrice(price);
     } else {

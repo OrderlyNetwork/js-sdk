@@ -48,7 +48,7 @@ export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
         {t("leverage.maxAccountLeverage")}
       </Text>
       <Flex gap={1}>
-        {`${t("leverage.current")}:`}
+        {`${t("common.current")}:`}
         <Text.numeral unit="x" size={"sm"} intensity={80}>
           {props.currentLeverage ?? "--"}
         </Text.numeral>

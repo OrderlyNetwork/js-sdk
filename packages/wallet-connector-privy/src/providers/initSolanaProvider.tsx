@@ -12,10 +12,10 @@ import { ConnectionProvider } from "@solana/wallet-adapter-react";
 import { InitSolana } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
 
-interface IProps extends PropsWithChildren<InitSolana> {}
+interface IProps extends PropsWithChildren<InitSolana> { }
 
-export function InitSolanaProvider({mainnetRpc, devnetRpc, wallets: walletsProp, onError, children}: IProps) {
-  const {network, setSolanaInfo} = useWalletConnectorPrivy();
+export function InitSolanaProvider({ mainnetRpc, devnetRpc, wallets: walletsProp, onError, children }: IProps) {
+  const { network, setSolanaInfo } = useWalletConnectorPrivy();
 
   const wallets = useMemo(() => {
     return walletsProp ?? [new PhantomWalletAdapter()];
@@ -37,8 +37,8 @@ export function InitSolanaProvider({mainnetRpc, devnetRpc, wallets: walletsProp,
   }, [network, mainnetRpc, devnetRpc, setSolanaInfo]);
   return (
 
-      <WalletProvider wallets={wallets} onError={onError}>
-        {children}
-      </WalletProvider>
+    <WalletProvider wallets={wallets} onError={onError}>
+      {children}
+    </WalletProvider>
   );
 }

@@ -1,27 +1,24 @@
 export const affiliate = {
-  "affiliate.title": "Affiliate",
   "affiliate.referral": "Referral",
   "affiliate.trader": "Trader",
 
   "affiliate.enter": "Enter",
   "affiliate.statistics": "Statistics",
 
-  "affiliate.connectWallet": "Please connect your wallet to use this function",
+  "affiliate.connectWallet.tooltip":
+    "Please connect your wallet to use this function",
 
-  "affiliate.page.home.title":
-    "Earn more as a <0>{{shortBrokerName}}</0> affiliate",
-  "affiliate.page.home.subTitle":
+  "affiliate.page.title": "Earn more as a <0>{{shortBrokerName}}</0> affiliate",
+  "affiliate.page.subTitle":
     "Grow your brand | Get 40% commission | Unlock exclusive perks",
-  "affiliate.page.home.learn": "Learn how it works",
+  "affiliate.page.learnMore": "Learn how it works",
 
   "affiliate.asAffiliate.title": "As an affiliate",
   "affiliate.asAffiliate.description": "Onboard traders to earn passive income",
   "affiliate.asAffiliate.button": "Become an affiliate",
-  "affiliate.asAffiliate.commission.range": "40%~60%",
 
   "affiliate.asTrader.title": "As a trader",
   "affiliate.asTrader.description": "Onboard traders to earn passive income",
-  "affiliate.asTrader.rebate.range": "0%~20%",
   "affiliate.asTrader.button": "Enter code",
 
   "affiliate.referralCode": "Referral code",
@@ -32,15 +29,14 @@ export const affiliate = {
   "affiliate.referralCode.bound": "Referral code bound",
   "affiliate.referralCode.notExist": "This referral code does not exist.",
 
-  "affiliate.becomeAffiliate.title": "Becoming an affiliate is easy",
-  "affiliate.becomeAffiliate.apply.title": "Apply",
-  "affiliate.becomeAffiliate.apply.description":
-    "Fill out the application form",
-  "affiliate.becomeAffiliate.share.title": "Share",
-  "affiliate.becomeAffiliate.share.description":
+  "affiliate.process.title": "Becoming an affiliate is easy",
+  "affiliate.process.step1.title.title": "Apply",
+  "affiliate.process.step1.description": "Fill out the application form",
+  "affiliate.process.step2.title": "Share",
+  "affiliate.process.step2.description":
     "Unlock your affiliate link and share it with your community",
-  "affiliate.becomeAffiliate.earn.title": "Earn",
-  "affiliate.becomeAffiliate.earn.description":
+  "affiliate.process.step3.title": "Earn",
+  "affiliate.process.step3.description":
     "Get paid and receive special treatment 24/7, 365",
 
   "affiliate.summary": "Summary",

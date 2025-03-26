@@ -2,7 +2,6 @@ export const orderEntry = {
   "orderEntry.buyLong": "Buy / Long",
   "orderEntry.sellShort": "Sell / Short",
   "orderEntry.reduceOnly": "Reduce only",
-  "orderEntry.available": "Available",
 
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Market",
@@ -23,7 +22,6 @@ export const orderEntry = {
     "BBO is not supported when TP/SL, Post-Only, IOC, or FOK is selected.",
 
   "orderEntry.estLiqPrice": "Est. liq. price",
-  "orderEntry.accountLeverage": "Account leverage",
 
   "orderEntry.disableOrderConfirm": "Disable order confirmation",
   "orderEntry.orderConfirm": "Order confirm",
@@ -33,8 +31,8 @@ export const orderEntry = {
   "orderEntry.maxBuy": "Max buy",
   "orderEntry.maxSell": "Max sell",
 
-  "orderEntry.tpMarkPrice": "TP Price (Mark)",
-  "orderEntry.slMarkPrice": "SL Price (Mark)",
+  "orderEntry.tpMarkPrice": "TP price (Mark)",
+  "orderEntry.slMarkPrice": "SL price (Mark)",
   "orderEntry.tpsl.trigger.description":
     "TP/SL triggers at the specified mark price and executes as a market order.",
   "orderEntry.estRoi": "Est.ROI",

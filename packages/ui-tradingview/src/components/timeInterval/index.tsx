@@ -37,12 +37,12 @@ const mobileTimeIntervalDefaultMap = [
   },
   {
     value: "1D",
-    label: i18n.t("tradingView.timeInterval.1D"),
+    label: i18n.t("tradingView.timeInterval.1d"),
   },
 
   {
     value: "1W",
-    label: i18n.t("tradingView.timeInterval.1W"),
+    label: i18n.t("tradingView.timeInterval.1w"),
   },
 ];
 
@@ -125,12 +125,12 @@ const timeIntervalMap = [
   },
   {
     value: "1D",
-    label: i18n.t("tradingView.timeInterval.1D"),
+    label: i18n.t("tradingView.timeInterval.1d"),
   },
 
   {
     value: "1W",
-    label: i18n.t("tradingView.timeInterval.1W"),
+    label: i18n.t("tradingView.timeInterval.1w"),
   },
   {
     value: "1M",

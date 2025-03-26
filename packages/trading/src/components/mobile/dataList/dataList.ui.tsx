@@ -42,7 +42,7 @@ export const DataList: FC<
       }}
     >
       <TabPanel
-        title={`${t("positions.title")}${
+        title={`${t("common.positions")}${
           (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
         }`}
         value={DataListTabType.position}
@@ -64,7 +64,7 @@ export const DataList: FC<
         />
       </TabPanel>
       <TabPanel
-        title={`${t("tpsl.title")}${
+        title={`${t("common.tpsl")}${
           (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
         }`}
         value={DataListTabType.tp_sl}

@@ -20,6 +20,7 @@
     "@orderly.network/core": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
     "@types/lodash": "^4.17.7",
     "lodash": "^4.17.21",
     "@solana/wallet-adapter-base": "0.9.23",
