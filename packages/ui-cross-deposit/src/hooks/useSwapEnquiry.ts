@@ -5,6 +5,7 @@ import { Decimal } from "@orderly.network/utils";
 import { useWooCrossSwapQuery } from "../woo/useCrossSwapQuery";
 import { useWooSwapQuery } from "../woo/useSwapQuery";
 import { DST, MarkPrices } from "../types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type TransactionInfo = {
   price: number;
@@ -25,7 +26,7 @@ type useSwapEnquiryProps = {
 
 export function useSwapEnquiry(props: useSwapEnquiryProps) {
   const { quantity, dst, queryParams, needSwap, needCrossSwap } = props;
-
+  const { t } = useTranslation();
   const { query: wooSwapQuery } = useWooSwapQuery();
   const { query: wooCrossSwapQuery } = useWooCrossSwapQuery();
 
@@ -113,9 +114,7 @@ export function useSwapEnquiry(props: useSwapEnquiryProps) {
   const enquiryErrorHandle = (error: Error) => {
     if (error.message === "contract call failed") {
       // Not enough liquidity on the cross-chain bridge.
-      setWarningMessage(
-        "Not enough liquidity. Please try again later or use another chain to deposit."
-      );
+      setWarningMessage(t("transfer.crossDeposit.notEnoughLiquidity"));
       // clean previous data
       cleanTransactionInfo();
     } else {

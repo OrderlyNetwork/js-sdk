@@ -2,11 +2,13 @@ import { FC } from "react";
 import { Box, Divider, Flex, modal, Text } from "@orderly.network/ui";
 import { UseSwapFee } from "../../hooks/useSwapFee";
 import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 type SwapFeeProps = UseSwapFee;
 
 export const SwapFee: FC<SwapFeeProps> = (props) => {
   const { feeQtys, feeAmount, feeDetails, nativeSymbol } = props;
+  const { t } = useTranslation();
 
   const onShowFee = () => {
     const content = (
@@ -84,7 +86,7 @@ export const SwapFee: FC<SwapFeeProps> = (props) => {
       className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer"
       onClick={onShowFee}
     >
-      {`Fee ≈ `}
+      {`${t("common.fee")} ≈ `}
       <Text size="xs" intensity={80}>
         $
         <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>

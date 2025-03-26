@@ -6,9 +6,11 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { Swap, SwapProps } from "./swap";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const SwapDialog = modal.create<SwapProps>((props) => {
   const { isMobile } = useScreen();
+  const { t } = useTranslation();
 
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
@@ -23,7 +25,7 @@ export const SwapDialog = modal.create<SwapProps>((props) => {
   };
 
   const commonProps = {
-    title: "Review swap details",
+    title: t("transfer.crossDeposit.swapDialog.title"),
     open: visible,
     onOpenChange,
     classNames: {

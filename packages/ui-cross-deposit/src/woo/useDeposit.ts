@@ -17,6 +17,7 @@ import {
 } from "@orderly.network/types";
 import { Decimal, isTestnet } from "@orderly.network/utils";
 import { isNativeTokenChecker } from "../woo/constants";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type useDepositOptions = {
   // from address
@@ -32,6 +33,7 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
+  const { t } = useTranslation();
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
@@ -340,7 +342,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     // console.log("enquireAllowance", _allowance);
 
     if (new Decimal(quantity).greaterThan(_allowance)) {
-      throw new Error("Insufficient allowance");
+      throw new Error(t("transfer.insufficientAllowance"));
     }
 
     return _allowance;
@@ -355,6 +357,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     // options?.srcToken,
     // options?.crossChainRouteAddress,
     // options?.depositorAddress,
+    t,
   ]);
 
   const approve = useCallback(

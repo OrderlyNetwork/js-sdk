@@ -3,6 +3,7 @@ import { Box, Text } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 import { NetworkId } from "@orderly.network/types";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 
 type NoticeProps = {
   message?: string;
@@ -14,6 +15,7 @@ type NoticeProps = {
 
 export const Notice: FC<NoticeProps> = (props) => {
   const { message, needSwap, needCrossSwap, wrongNetwork, networkId } = props;
+  const { t } = useTranslation();
 
   const showChainSelect = () => {
     modal.show(ChainSelectorDialogId, { networkId });
@@ -21,7 +23,7 @@ export const Notice: FC<NoticeProps> = (props) => {
 
   const content = useMemo(() => {
     if (wrongNetwork) {
-      return "Please connect to a supported network.";
+      return t("connector.wrongNetwork.tooltip");
     }
 
     if (message) {
@@ -30,27 +32,26 @@ export const Notice: FC<NoticeProps> = (props) => {
 
     if (needCrossSwap) {
       return (
-        <Text className="">
-          <span>
-            Cross-chain transaction fees will be charged. To avoid these, use
-            our supported
-          </span>
-          <Text
-            className="oui-cursor-pointer"
-            color="primaryLight"
-            onClick={showChainSelect}
-          >
-            {" "}
-            Bridgeless networks
-          </Text>
+        <Text>
+          {/* @ts-ignore */}
+          <Trans
+            i18nKey="transfer.crossDeposit.crossSwap.notice"
+            components={[
+              <Text
+                className="oui-cursor-pointer"
+                color="primaryLight"
+                onClick={showChainSelect}
+              />,
+            ]}
+          />
         </Text>
       );
     }
 
     if (needSwap) {
-      return "Please note that swap fees will be charged.";
+      return t("transfer.crossDeposit.swap.notice");
     }
-  }, [message, needSwap, needCrossSwap, wrongNetwork]);
+  }, [message, needSwap, needCrossSwap, wrongNetwork, t]);
 
   if (content) {
     return (

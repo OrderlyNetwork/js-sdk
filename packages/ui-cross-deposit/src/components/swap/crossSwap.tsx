@@ -8,6 +8,7 @@ import { SwapMode, SwapProcessStatus } from "../../types";
 import { ViewFAQs } from "./viewFAQs";
 import { ProcessStatus } from "./processStatus";
 import { useEventEmitter } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CrossSwap: FC<SwapProps> = (props) => {
   const {
@@ -20,6 +21,8 @@ export const CrossSwap: FC<SwapProps> = (props) => {
     nativeToken,
     depositFee,
   } = props;
+
+  const { t } = useTranslation();
 
   const [status, setStatus] = useState<SwapProcessStatus>(
     SwapProcessStatus.NONE
@@ -95,7 +98,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
     })
       .then((res: any) => {
         setTx(res);
-        toast.success("Deposit requested");
+        toast.success(t("transfer.deposit.requested"));
         ee.emit("deposit:requested");
       })
       .catch((error: any) => {

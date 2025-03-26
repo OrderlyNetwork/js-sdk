@@ -2,12 +2,33 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": ["../ui/src"],
-      "@orderly.network/core": ["../core/src"],
-      "@orderly.network/hooks": ["../hooks/src"],
-      "@orderly.network/utils": ["../utils/src"],
-      "@orderly.network/ui-transfer": ["../ui-transfer/src"],
-      "@orderly.network/ui-chain-selector": ["../ui-chain-selector/src"],
+      "@orderly.network/ui": [
+        "../ui/src"
+      ],
+      "@orderly.network/core": [
+        "../core/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ],
+      "@orderly.network/ui-transfer": [
+        "../ui-transfer/src"
+      ],
+      "@orderly.network/ui-chain-selector": [
+        "../ui-chain-selector/src"
+      ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/react-app": [
+        "../app/src"
+      ]
     }
   }
 }

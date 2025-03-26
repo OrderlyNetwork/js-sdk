@@ -30,6 +30,7 @@ import { NetworkId } from "@orderly.network/types";
 import { LocaleMessages, LocaleProvider, en } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import zh from "./locale/zh.json";
+import { customChains } from "./customChains";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -77,7 +78,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
-        // customChains={{mainnet: [], testnet: []}}
+        customChains={customChains}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",
           appearance: {
@@ -113,6 +114,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         }}
       >
         <OrderlyAppProvider
+          customChains={customChains}
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
