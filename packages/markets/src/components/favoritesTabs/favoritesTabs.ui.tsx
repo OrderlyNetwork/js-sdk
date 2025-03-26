@@ -53,10 +53,10 @@ export const FavoritesTab: React.FC<FavoritesTabProps> = (props) => {
 
   const onDel = (item: any) => {
     modal.confirm({
-      title: t("markets.favorites.tabs.delete.title"),
+      title: t("markets.favorites.tabs.delete.dialog.title"),
       content: (
         <Text size="sm">
-          {t("markets.favorites.tabs.delete.description", {
+          {t("markets.favorites.tabs.delete.dialog.description", {
             name: item.name,
           })}
         </Text>

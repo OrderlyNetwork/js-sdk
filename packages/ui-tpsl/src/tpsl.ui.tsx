@@ -254,7 +254,7 @@ const TPSLQuantity = (props: {
                 : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
             )}
           >
-            {t("positions.position")}
+            {t("common.position")}
           </Button>
         )}
       </Flex>
@@ -547,7 +547,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         <Flex gap={1}>
           {isPositionTPSL && (
             <Badge size="xs" color={"primary"}>
-              {t("positions.position")}
+              {t("common.position")}
             </Badge>
           )}
 
@@ -664,7 +664,7 @@ const TPSLOrderType = (props: { tpPrice?: number; slPrice?: number }) => {
   if (!!tpPrice && !!slPrice) {
     return (
       <Badge size="xs" color="neutral">
-        {t("tpsl.title")}
+        {t("common.tpsl")}
       </Badge>
     );
   }

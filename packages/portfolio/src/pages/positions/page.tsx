@@ -28,7 +28,7 @@ export const PositionsPage = (props: PositionsProps) => {
       height="100%"
     >
       <Flex>
-        <Text size="lg">{t("positions.title")}</Text>
+        <Text size="lg">{t("common.positions")}</Text>
       </Flex>
       <Divider className="oui-w-full" />
       {/* 26(title height) + 1(divider) + 32 (padding) */}
@@ -42,7 +42,7 @@ export const PositionsPage = (props: PositionsProps) => {
           }}
           className="oui-h-full"
         >
-          <TabPanel value={TabsType.positions} title={t("positions.title")}>
+          <TabPanel value={TabsType.positions} title={t("common.positions")}>
             <PositionsWidget {...props} />
           </TabPanel>
           <TabPanel

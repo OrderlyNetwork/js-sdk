@@ -254,7 +254,7 @@ export const OrderEntry = (
         </Flex>
         {/* Available */}
         <Flex justify={"between"}>
-          <Text size={"2xs"}>{t("orderEntry.available")}</Text>
+          <Text size={"2xs"}>{t("common.available")}</Text>
           <Text.numeral
             unit={symbolInfo.quote}
             size={"2xs"}
@@ -913,7 +913,7 @@ function AssetInfo(props: {
         </Text.numeral>
       </Flex>
       <Flex justify={"between"}>
-        <Text size={"2xs"}>{t("orderEntry.accountLeverage")}</Text>
+        <Text size={"2xs"}>{t("leverage.accountLeverage")}</Text>
         <Flex
           gapX={1}
           className={textVariants({

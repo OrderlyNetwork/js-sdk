@@ -4,7 +4,7 @@ export const share = {
   "share.pnl.share.short": "SHORT",
 
   "share.pnl.displayFormat": "PnL display format",
-  "share.pnl.displayFormat.roiPnl": "ROI & PnL",
+  "share.pnl.displayFormat.roi&Pnl": "ROI & PnL",
   "share.pnl.displayFormat.roi": "ROI",
   "share.pnl.displayFormat.pnl": "PnL",
 
@@ -18,8 +18,8 @@ export const share = {
   "share.pnl.optionalInfo.message.maxLength":
     "Maximum support of 25 characters",
 
-  "share.pnl.copySuccess": "Image copied",
-  "share.pnl.copyFailed.description":
+  "share.pnl.image.copied": "Image copied",
+  "share.pnl.copy.failed.description":
     "Browser version outdated, please update in order to copy image to clipboard.",
 };
 

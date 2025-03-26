@@ -61,7 +61,7 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
 
   const showAlert = () => {
     modal.alert({
-      title: t("positions.Liquidation"),
+      title: t("positions.liquidation"),
       message: (
         <Flex
           direction={"column"}

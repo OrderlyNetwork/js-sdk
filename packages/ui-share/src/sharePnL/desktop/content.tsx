@@ -83,7 +83,7 @@ export const DesktopSharePnLContent: FC<{
       ?.copy()
       .then(() => {
         props.hide?.();
-        toast.success(t("share.pnl.copySuccess"));
+        toast.success(t("share.pnl.image.copied"));
       })
       .catch((e: any) => {
         toast.error(() => {
@@ -91,7 +91,7 @@ export const DesktopSharePnLContent: FC<{
             <div>
               <div>{t("common.copy.failed")}</div>
               <div className="oui-text-2xs oui-max-w-[396px] oui-mt-2 oui-text-base-contrast-54">
-                {t("share.pnl.copyFailed.description")}
+                {t("share.pnl.copy.failed.description")}
               </div>
             </div>
           );

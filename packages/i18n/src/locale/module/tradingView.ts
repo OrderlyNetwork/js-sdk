@@ -11,9 +11,9 @@ export const tradingView = {
   "tradingView.timeInterval.6h": "6h",
   "tradingView.timeInterval.12h": "12h",
 
-  "tradingView.timeInterval.1D": "1D",
+  "tradingView.timeInterval.1d": "1D",
   "tradingView.timeInterval.3d": "3D",
-  "tradingView.timeInterval.1W": "1W",
+  "tradingView.timeInterval.1w": "1W",
   "tradingView.timeInterval.1M": "1M",
 
   "tradingView.timeInterval.more": "More",

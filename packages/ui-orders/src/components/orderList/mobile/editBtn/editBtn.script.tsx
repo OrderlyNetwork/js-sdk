@@ -19,7 +19,7 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
     if (props.state.type === TabType.tp_sl) {
       modal
         .sheet({
-          title: t("tpsl.title"),
+          title: t("common.tpsl"),
           content: (
             <PositionTPSLSheet
               isEditing

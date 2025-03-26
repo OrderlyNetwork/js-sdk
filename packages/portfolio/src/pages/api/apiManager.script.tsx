@@ -148,7 +148,7 @@ export const useApiManagerScript = (props?: {
 
   const onCopyApiKeyInfo = () => {
     navigator.clipboard.writeText(JSON.stringify(generateKey));
-    toast.success(t("portfolio.apiKey.apiInfo.copy"));
+    toast.success(t("portfolio.apiKey.apiInfo.copied"));
   };
   const doConfirm = () => {
     hideCreatedDialog();
@@ -199,7 +199,7 @@ export const useApiManagerScript = (props?: {
   };
 
   const onCopyAccountId = () =>
-    toast.success(t("portfolio.apiKey.accountId.copy"));
+    toast.success(t("portfolio.apiKey.accountId.copied"));
   const onCopyApiKey = (key?: string) => {
     if (typeof key !== "undefined") {
       navigator.clipboard.writeText(key.replace("ed25519:", ""));
@@ -207,7 +207,7 @@ export const useApiManagerScript = (props?: {
     toast.success(t("portfolio.apiKey.column.apiKey.copy"));
   };
   const onCopyApiSecretKey = () =>
-    toast.success(t("portfolio.apiKey.secretKey.copy"));
+    toast.success(t("portfolio.apiKey.secretKey.copied"));
   const onCopyIP = () =>
     toast.success(t("portfolio.apiKey.column.restrictedIP.copy"));
 

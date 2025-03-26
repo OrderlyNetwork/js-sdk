@@ -44,7 +44,7 @@ export const useLayoutBuilder = (): SideBarProps => {
         ),
       },
       {
-        name: t("affiliate.title"),
+        name: t("common.affiliate"),
         href: "/affiliate",
         icon: (
           <svg

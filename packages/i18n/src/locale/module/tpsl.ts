@@ -1,5 +1,4 @@
 export const tpsl = {
-  "tpsl.title": "TP/SL",
   "tpsl.tp": "TP",
   "tpsl.sl": "SL",
   "tpsl.tpPrice": "TP Price",
@@ -21,7 +20,7 @@ export const tpsl = {
 
   "tpsl.cancelOrder.description":
     "Are you sure you want to cancel this TP/SL order?",
-  "tpsl.confirmOrder.title": "Confirm Order",
+  "tpsl.confirmOrder": "Confirm Order",
 };
 
 export type TPSL = typeof tpsl;

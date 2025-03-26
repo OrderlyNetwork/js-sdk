@@ -30,25 +30,17 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
 
       <Flex gapX={2}>
         <Text size="2xs" intensity={36}>
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="transfer.available.maxQty"
-            values={{
-              maxQty: maxQuantity,
-              symbol: name,
-            }}
-            components={[
-              // @ts-ignore
-              <Text.numeral
-                rm={Decimal.ROUND_DOWN}
-                dp={dp}
-                padding={false}
-                data-testid="oui-testid-withdraw_deposit-dialog-available-value"
-              />,
-            ]}
-          />
+          {`${t("common.available")}: `}
+          <Text.numeral
+            rm={Decimal.ROUND_DOWN}
+            dp={dp}
+            padding={false}
+            data-testid="oui-testid-withdraw_deposit-dialog-available-value"
+          >
+            {maxQuantity!}
+          </Text.numeral>
+          {` ${name}`}
         </Text>
-
         {loading && <Spinner size="sm" />}
 
         <Text

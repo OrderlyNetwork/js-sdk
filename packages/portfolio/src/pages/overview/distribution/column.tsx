@@ -36,10 +36,10 @@ export const useColumns = () => {
           switch (value) {
             case "CREATED":
             case "SPLIT":
-              return t("portfolio.overview.column.status.processing");
+              return t("portfolio.assetHistory.status.processing");
             case "COMPLETED":
             default:
-              return t("portfolio.overview.column.status.completed");
+              return t("portfolio.assetHistory.status.completed");
           }
         },
       },

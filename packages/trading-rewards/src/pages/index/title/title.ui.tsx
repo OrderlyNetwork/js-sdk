@@ -18,7 +18,7 @@ export const Title: FC<TitleConfig> = (props) => {
       r={"2xl"}
       width={"100%"}
     >
-      {title || <Text size="lg">{t("tradingRewards.title")}</Text>}
+      {title || <Text size="lg">{t("common.tradingRewards")}</Text>}
       <Divider intensity={8} className="oui-w-full" />
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
         {subtitle || (

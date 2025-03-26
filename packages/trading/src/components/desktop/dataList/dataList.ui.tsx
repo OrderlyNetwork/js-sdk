@@ -47,7 +47,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-position-tab"
         value={DataListTabType.positions}
-        title={`${t("positions.title")}${
+        title={`${t("common.positions")}${
           (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
         }`}
       >
@@ -75,7 +75,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-tpsl-tab"
         value={DataListTabType.tp_sl}
-        title={`${t("tpsl.title")}${
+        title={`${t("common.tpsl")}${
           (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
         }`}
       >

@@ -36,7 +36,7 @@ export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
         >
           <Text className="oui-text-lg md:oui-text-xl lg:oui-text-2xl xl:oui-text-3xl">
             {props.isAffiliate
-              ? t("affiliate.title")
+              ? t("common.affiliate")
               : t("affiliate.asAffiliate.title")}
           </Text>
           <Text
@@ -134,7 +134,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
           content={
             props.wrongNetwork
               ? t("connector.wrongNetwork.tooltip")
-              : t("affiliate.connectWallet")
+              : t("affiliate.connectWallet.tooltip")
           }
         >
           {props.isMobile ? (
@@ -151,7 +151,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
                       <Text intensity={54}>
                         {props.wrongNetwork
                           ? t("connector.wrongNetwork.tooltip")
-                          : t("affiliate.connectWallet")}
+                          : t("affiliate.connectWallet.tooltip")}
                       </Text>
                     ),
                   });
@@ -185,7 +185,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
           itemAlign={"end"}
         >
           <Text className="oui-text-base md:oui-text-lg lg:oui-text-xl 2xl:oui-text-2xl">
-            {t("affiliate.asAffiliate.commission.range")}
+            40%~60%
           </Text>
           <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
             {t("affiliate.commission")}

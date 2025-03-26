@@ -38,7 +38,7 @@ export const Orders = (props: OrdersBuilderState) => {
           {...commonProps}
         />
       </TabPanel>
-      <TabPanel value={TabType.tp_sl} title={t("tpsl.title")}>
+      <TabPanel value={TabType.tp_sl} title={t("common.tpsl")}>
         <DesktopOrderListWidget
           ref={props.orderListRef}
           type={TabType.tp_sl}

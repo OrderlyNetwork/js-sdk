@@ -19,7 +19,7 @@ export const useReferralLinkScript = (): ReferralLinkReturns => {
   const { t } = useTranslation();
 
   const onCopy = (value: string) => {
-    toast.success(t("common.copy.success"));
+    toast.success(t("common.copy.copied"));
   };
 
   const { referralInfo, referralLinkUrl, overwrite } = useReferralContext();

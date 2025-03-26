@@ -47,9 +47,7 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
           className="oui-text-2xs oui-text-base-contrast-54"
         >
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>
-              {t("positions.history.netPnl.realizedPnl")}
-            </Text>
+            <Text intensity={54}>{t("common.realizedPnl")}</Text>
             <Text color={record.realized_pnl >= 0 ? "profit" : "lose"}>
               {commifyOptional(record.realized_pnl)}
             </Text>

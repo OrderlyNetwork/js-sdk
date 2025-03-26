@@ -196,12 +196,12 @@ const Tip: FC<{
           contentDp={priceDp}
         />
         <Row
-          title={`${t("trading.orderBook.row.tooltip.sum")} (${base})`}
+          title={`${t("trading.orderBook.sum")} (${base})`}
           content={hintInfo.sumQty}
           contentDp={baseDp}
         />
         <Row
-          title={`${t("trading.orderBook.row.tooltip.sum")} (${quote})`}
+          title={`${t("trading.orderBook.sum")} (${quote})`}
           content={hintInfo.sumQtyAmount}
           contentDp={quoteDp}
         />

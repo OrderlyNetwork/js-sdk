@@ -575,7 +575,7 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
     <Statistic
       label={
         <Text>
-          {t("common.realPnl")}
+          {t("common.realizedPnl")}
           <Text intensity={20}>(USDC)</Text>
         </Text>
       }

@@ -42,7 +42,7 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
         "data-testid": "oui-testid-deposit-dialog-increase-btn",
       },
       [DepositAction.Deposit]: {
-        children: t("transfer.deposit"),
+        children: t("common.deposit"),
         onClick: onDeposit,
         "data-testid": "oui-testid-deposit-dialog-deposit-btn",
       },

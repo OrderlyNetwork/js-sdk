@@ -101,7 +101,7 @@ const QRCode: FC<QRCodeProps> = (props) => {
       </Text>
 
       <Text size="sm" intensity={54}>
-        {`${t("linkDevice.createQRCode.success.countdown")}: `}
+        {`${t("common.countdown")}: `}
         <Text.gradient color="brand" className="oui-tabular-nums">
           {props.seconds}s
         </Text.gradient>
@@ -212,7 +212,7 @@ const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
     <Flex direction="column">
       <MainLogo />
       <Text size="base" intensity={98} className="oui-mt-5">
-        {t("linkDevice.createQRCode.confirm.title")}
+        {t("linkDevice.createQRCode.linkMobileDevice")}
       </Text>
       <Text
         size="2xs"
@@ -222,7 +222,7 @@ const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
       >
         {/* @ts-ignore */}
         <Trans
-          i18nKey="linkDevice.createQRCode.confirm.description"
+          i18nKey="linkDevice.createQRCode.linkMobileDevice.description"
           values={{
             hostname: window.location.hostname,
           }}

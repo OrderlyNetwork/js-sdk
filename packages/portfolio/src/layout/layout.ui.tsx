@@ -58,7 +58,7 @@ const LeftSidebar: FC<LeftSidebarProps> = (props) => {
   const { t } = useTranslation();
   return (
     <SideBar
-      title={t("portfolio.title")}
+      title={t("common.portfolio")}
       {...props}
       open={expanded}
       onOpenChange={(open) => setExpand(open)}

@@ -32,7 +32,7 @@ export const EditAPIKeyDialog: FC<{
       size="sm"
       open={open}
       onOpenChange={setOpen}
-      title={t("portfolio.apiKey.edit.title")}
+      title={t("portfolio.apiKey.edit.dialog.title")}
       actions={{
         primary: {
           label: t("common.confirm"),

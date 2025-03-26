@@ -645,7 +645,7 @@ function bracketOrderPrice(option?: {
   className?: string;
 }) {
   return {
-    title: i18n.t("tpsl.title"),
+    title: i18n.t("common.tpsl"),
     className: option?.className,
     dataIndex: "bracketOrderPrice",
     width: option?.width,
@@ -757,7 +757,7 @@ function realizedPnL(option?: {
   hideShare?: boolean;
 }): Column<API.Order> {
   return {
-    title: i18n.t("common.realPnl"),
+    title: i18n.t("common.realizedPnl"),
     dataIndex: "realized_pnl",
     width: option?.width,
     className: option?.className,

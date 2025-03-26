@@ -317,7 +317,7 @@ const PnlFormatView: FC<{
   const text = useMemo(() => {
     switch (type) {
       case "roi_pnl":
-        return t("share.pnl.displayFormat.roiPnl");
+        return t("share.pnl.displayFormat.roi&Pnl");
       case "roi":
         return t("share.pnl.displayFormat.roi");
       case "pnl":
@@ -368,7 +368,7 @@ const ShareOption: FC<{
       case "quantity":
         return t("common.quantity");
       case "leverage":
-        return t("leverage.title");
+        return t("common.leverage");
     }
   }, [type, t]);
 

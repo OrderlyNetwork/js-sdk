@@ -57,7 +57,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
         onTPSLTypeChange={(type) => {
           updateSheetTitle(
             type === AlgoOrderRootType.TP_SL
-              ? t("tpsl.title")
+              ? t("common.tpsl")
               : t("tpsl.positionTpsl")
           );
         }}
@@ -79,7 +79,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
             .confirm({
               title: finalIsEditing
                 ? t("orders.editOrder")
-                : t("tpsl.confirmOrder.title"),
+                : t("tpsl.confirmOrder"),
               bodyClassName: "oui-pb-0 lg:oui-pb-0",
               onOk: () => {
                 return options.submit();
@@ -128,7 +128,7 @@ export const TPSLSheetTitle = () => {
   const { t } = useTranslation();
 
   const title = useMemo<string>(() => {
-    return (modal.args?.title || t("tpsl.title")) as string;
+    return (modal.args?.title || t("common.tpsl")) as string;
   }, [modal.args?.title, t]);
 
   return <span>{title}</span>;
@@ -155,11 +155,11 @@ export const PositionInfo = (props: {
         <Flex gapX={1}>
           {isPositionTPSL && (
             <Badge size="xs" color="primary">
-              {t("positions.position")}
+              {t("common.position")}
             </Badge>
           )}
           <Badge size="xs" color="neutral">
-            {t("tpsl.title")}
+            {t("common.tpsl")}
           </Badge>
           {position.position_qty < 0 ? (
             <Badge size="xs" color="buy">

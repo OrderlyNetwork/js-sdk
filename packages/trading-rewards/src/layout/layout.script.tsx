@@ -58,7 +58,7 @@ export const useTradingRewardsLayoutScript = (props: {
         ),
       },
       {
-        name: t("affiliate.title"),
+        name: t("common.affiliate"),
         href: TradingRewardsLeftSidebarPath.Affiliate,
         icon: (
           <svg

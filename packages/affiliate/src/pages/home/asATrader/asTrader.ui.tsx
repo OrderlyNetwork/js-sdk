@@ -155,7 +155,7 @@ const Bottom: FC<AsTraderReturns> = (props) => {
           itemAlign={"end"}
         >
           <Text className="oui-text-base md:oui-text-lg lg:oui-text-xl 2xl:oui-text-2xl">
-            {t("affiliate.asTrader.rebate.range")}
+            0%~20%
           </Text>
           <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
             {t("affiliate.trader.rebate")}
@@ -187,7 +187,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
           content={
             props.wrongNetwork
               ? t("connector.wrongNetwork.tooltip")
-              : t("affiliate.connectWallet")
+              : t("affiliate.connectWallet.tooltip")
           }
         >
           {props.isMobile ? (
@@ -204,7 +204,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
                       <Text intensity={54}>
                         {props.wrongNetwork
                           ? t("connector.wrongNetwork.tooltip")
-                          : t("affiliate.connectWallet")}
+                          : t("affiliate.connectWallet.tooltip")}
                       </Text>
                     ),
                   });

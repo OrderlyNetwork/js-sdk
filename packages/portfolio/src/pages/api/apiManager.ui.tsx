@@ -154,7 +154,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
           // className="disabled:oui-cursor-default"
           data-testid="oui-testid-apiKey-createApiKey-btn"
         >
-          {t("portfolio.apiKey.create.title")}
+          {t("portfolio.apiKey.create.dialog.title")}
         </Button>
       </AuthGuardTooltip>
     </Flex>

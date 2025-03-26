@@ -252,7 +252,7 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
 
         <Flex gap={1}>
           <Text size="2xs" intensity={54}>
-            {`${t("leverage.current")}:`}
+            {`${t("common.current")}:`}
           </Text>
           <Text.numeral size="2xs" unit="x" intensity={98}>
             {props.currentLeverage ?? "--"}
@@ -314,7 +314,7 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         className="oui-bg-base-2 hover:oui-bg-base-2/50"
         onClick={props.onWithdraw}
       >
-        {t("transfer.withdraw")}
+        {t("common.withdraw")}
       </Button>
       <Button
         icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
@@ -322,7 +322,7 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         fullWidth
         onClick={props.onDeposit}
       >
-        {t("transfer.deposit")}
+        {t("common.deposit")}
       </Button>
     </Grid>
   );

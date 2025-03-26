@@ -164,7 +164,7 @@ export const AssetStatistic = (
         </Flex>
       </Statistic>
       <Statistic
-        label={t("portfolio.overview.availableToWithdraw")}
+        label={t("portfolio.overview.availableWithdraw")}
         // @ts-ignore
         align="right"
         // @ts-ignore

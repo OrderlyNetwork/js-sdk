@@ -35,14 +35,14 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
       }}
     >
       <TabPanel
-        title={t("transfer.deposit")}
+        title={t("common.deposit")}
         icon={<DepositIcon />}
         value="deposit"
       >
         <DepositSlot onClose={props.close} />
       </TabPanel>
       <TabPanel
-        title={t("transfer.withdraw")}
+        title={t("common.withdraw")}
         icon={<WithdrawIcon />}
         value="withdraw"
       >

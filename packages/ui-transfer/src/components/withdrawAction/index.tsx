@@ -44,7 +44,7 @@ export const WithdrawAction = (props: IProps) => {
   const preWithdraw = () => {
     if (crossChainWithdraw) {
       modal.confirm({
-        title: t("transfer.withdraw.crossChain.confirm"),
+        title: t("transfer.withdraw.crossChain.confirmWithdraw"),
         content: (
           <CrossWithdrawConfirm
             address={address!}
@@ -86,7 +86,7 @@ export const WithdrawAction = (props: IProps) => {
             onClick={preWithdraw}
             size={buttonSize}
           >
-            {t("transfer.withdraw")}
+            {t("common.withdraw")}
           </Button>
         ) : (
           <SwitchChainButton networkId={networkId} size={buttonSize} />

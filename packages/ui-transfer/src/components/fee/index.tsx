@@ -15,7 +15,7 @@ export const Fee: FC<FeeProps> = (props) => {
       <div className="oui-text-2xs">
         <Flex gapX={1}>
           <Text intensity={54}>
-            {`${t("transfer.fee.destinationGasFee")}: `}
+            {`${t("transfer.deposit.destinationGasFee")}: `}
           </Text>
           <Text.numeral
             intensity={80}
@@ -29,7 +29,7 @@ export const Fee: FC<FeeProps> = (props) => {
         </Flex>
         <Box mt={2}>
           <Text intensity={36}>
-            {t("transfer.fee.destinationGasFee.description")}
+            {t("transfer.deposit.destinationGasFee.description")}
           </Text>
         </Box>
       </div>

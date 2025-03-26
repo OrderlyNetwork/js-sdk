@@ -1,9 +1,8 @@
 export const markets = {
-  "markets.title": "Markets",
   "markets.favorites": "Favorites",
   "markets.recent": "Recent",
-  "markets.newListings": "New Listings",
-  "markets.allMarkets": "All Markets",
+  "markets.newListings": "New listings",
+  "markets.allMarkets": "All markets",
 
   "markets.openInterest": "Open interest",
   "markets.openInterest.tooltip": "Total size of positions per side.",
@@ -22,8 +21,8 @@ export const markets = {
   "markets.favorites.dropdown.addPlaceholder": "Add a new watchlist",
   "markets.favorites.tabs.maxList": "Maximum 10 groups in the favorite list",
   "markets.favorites.tabs.maxName": "List name cannot exceed 15 characters",
-  "markets.favorites.tabs.delete.title": "Delete list",
-  "markets.favorites.tabs.delete.description":
+  "markets.favorites.tabs.delete.dialog.title": "Delete list",
+  "markets.favorites.tabs.delete.dialog.description":
     "Are you sure you want to delete {{name}}?",
 
   "markets.column.market": "Market",

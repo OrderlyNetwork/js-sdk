@@ -1,6 +1,4 @@
 export const orders = {
-  "orders.title": "Orders",
-
   "orders.orderHistory": "Order history",
 
   "orders.status.pending": "Pending",
@@ -9,11 +7,11 @@ export const orders = {
   "orders.status.canceled": "Canceled",
   "orders.status.rejected": "Rejected",
 
-  "orders.status.new.title": "Order opened",
-  "orders.status.filled.title": "Order filled",
-  "orders.status.canceled.title": "Order canceled",
-  "orders.status.rejected.title": "Order rejected",
-  "orders.status.replaced.title": "Order edited",
+  "orders.status.opened.toast.title": "Order opened",
+  "orders.status.filled.toast.title": "Order filled",
+  "orders.status.canceled.toast.title": "Order canceled",
+  "orders.status.rejected.toast.title": "Order rejected",
+  "orders.status.replaced.toast.title": "Order edited",
 
   "orders.column.orderPrice": "Order price",
   "orders.column.fill&Quantity": "Filled / Quantity",
