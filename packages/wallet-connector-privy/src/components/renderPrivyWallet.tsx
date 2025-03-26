@@ -208,7 +208,7 @@ export function RenderPrivyWallet() {
         </div>
       )}
       {renderWalletType === PrivyWalletRenderType.onlyEVM && (
-        <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
+        <div className="oui-flex oui-flex-col oui-gap-0 oui-mt-5">
           <WalletCard
             type={WalletType.EVM}
             address={walletEVM?.accounts[0].address ?? ""}
@@ -221,12 +221,12 @@ export function RenderPrivyWallet() {
           />
           <div className="oui-h-[1px] oui-bg-line oui-my-5 oui-w-full" />
           <div className="oui-flex oui-flex-col oui-gap-2 oui-w-full">
-            <CreateEVMWallet />
+            <CreateSOLWallet />
           </div>
         </div>
       )}
       {renderWalletType === PrivyWalletRenderType.onlySOL && (
-        <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
+        <div className="oui-flex oui-flex-col oui-gap-0 oui-mt-5">
           <WalletCard
             type={WalletType.SOL}
             address={walletSOL?.accounts[0].address ?? ""}
@@ -239,7 +239,7 @@ export function RenderPrivyWallet() {
           />
           <div className="oui-h-[1px] oui-bg-line oui-my-5 oui-w-full" />
           <div className="oui-flex oui-flex-col oui-gap-2 oui-w-full">
-            <CreateSOLWallet />
+            <CreateEVMWallet />
           </div>
         </div>
       )}
