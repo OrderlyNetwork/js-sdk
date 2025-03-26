@@ -1,14 +1,9 @@
-import { FC, ReactNode, useEffect, useMemo, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
 import i18n from "./i18n";
 import { defaultNS, type LocaleMessages } from "./resources";
 import { LocaleCode } from "./localization";
-import {
-  defaultLanguages,
-  Language,
-  LocaleContext,
-  LocaleContextState,
-} from "./context";
+import { defaultLanguages, Language, LocaleContext } from "./context";
 
 export type I18nProviderProps = Partial<I18nextProviderProps>;
 
@@ -38,6 +33,7 @@ export type LocaleProviderProps = {
    * supported languages, you can select supported languages from default languages
    */
   supportedLanguages?: LocaleCode[];
+  onLocaleChange?: (locale: LocaleCode) => void;
 };
 
 export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
@@ -82,6 +78,18 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
       );
     }
   }, [props.supportedLanguages, props.languages]);
+
+  useEffect(() => {
+    const handleLanguageChange = (lng: LocaleCode) => {
+      props?.onLocaleChange?.(lng);
+    };
+
+    i18n.on("languageChanged", handleLanguageChange);
+
+    return () => {
+      i18n.off("languageChanged", handleLanguageChange);
+    };
+  }, [i18n]);
 
   return (
     <LocaleContext.Provider value={{ languages }}>
