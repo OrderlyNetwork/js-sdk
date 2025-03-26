@@ -2195,6 +2195,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@orderly.network/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
