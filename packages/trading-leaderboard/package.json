@@ -1,0 +1,45 @@
+{
+  "name": "@orderly.network/trading-leaderboard",
+  "version": "2.0.7",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup && pnpm run build:css",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
+  },
+  "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
+    "date-fns": "^3.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.4",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  }
+}
