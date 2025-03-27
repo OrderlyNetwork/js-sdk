@@ -92,8 +92,14 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
           "oui-max-w-[1040px] oui-mx-auto"
         )}
       >
-        <CampaignsWidget />
-        <TradingListWidget className="oui-h-[calc(100%_-_280px_-_20px)]" />
+        {props.showCampaigns && <CampaignsWidget />}
+        <TradingListWidget
+          className={cn(
+            props.showCampaigns
+              ? "oui-h-[calc(100%_-_280px_-_20px)]"
+              : "oui-h-full"
+          )}
+        />
       </Flex>
     </div>
   );
