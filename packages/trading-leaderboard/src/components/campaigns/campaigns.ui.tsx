@@ -132,7 +132,7 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
             <Button
               size="md"
               onClick={() => {
-                window.open(tradingUrl, "_blank");
+                window.open(tradingUrl, "_self");
               }}
             >
               Trade now

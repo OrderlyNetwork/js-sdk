@@ -11,6 +11,9 @@ export type LeaderboardProps = {
 
 export const Leaderboard: FC<LeaderboardProps> = (props) => {
   const renderBackground = () => {
+    const linearGradient =
+      "linear-gradient(180deg, rgba(var(--oui-color-base-10) / 0.3) 0%, rgba(var(--oui-color-base-10) / 0) 70%, rgba(var(--oui-color-base-10) / 1) 100%)";
+
     if (props.isVideo) {
       return (
         <div
@@ -21,7 +24,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
         >
           <div
             style={{
-              backgroundImage: `linear-gradient(180deg, rgba(7, 8, 10, 0.3) 0%, rgba(7, 8, 10, 0) 70%, #07080A 100%)`,
+              backgroundImage: linearGradient,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
             }}
@@ -57,12 +60,12 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
       return (
         <div
           style={{
-            backgroundImage: `linear-gradient(180deg, rgba(7, 8, 10, 0.3) 0%, rgba(7, 8, 10, 0) 70%, #07080A 100%), url(${props.backgroundSrc}) `,
+            backgroundImage: `${linearGradient}, url(${props.backgroundSrc}) `,
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
           }}
           className={cn(
-            "oui-absolute oui-top-[-30%] oui-left-0",
+            "oui-absolute oui-top-0 oui-left-0",
             "oui-w-full oui-h-full",
             "oui-opacity-50"
           )}
