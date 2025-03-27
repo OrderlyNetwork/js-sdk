@@ -34,10 +34,10 @@ export function formatCampaignDate(date: Date | string): string {
   if (typeof date === "string") {
     date = new Date(date);
   }
-  const year = date.getFullYear();
+  const year = date.getUTCFullYear();
   const month = monthNames[date.getUTCMonth()];
   const day = date.getUTCDate();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
   return `${month} ${day}, ${year} ${hours}:${minutes}`;
 }
