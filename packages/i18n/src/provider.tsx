@@ -2,8 +2,9 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
 import i18n from "./i18n";
 import { defaultNS, type LocaleMessages } from "./resources";
-import { LocaleCode } from "./localization";
-import { defaultLanguages, Language, LocaleContext } from "./context";
+import { Language, LocaleContext } from "./context";
+import { defaultLanguages } from "./constant";
+import { LocaleCode } from "./types";
 
 export type I18nProviderProps = Partial<I18nextProviderProps>;
 
