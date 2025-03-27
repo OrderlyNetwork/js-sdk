@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.0.8-i18n.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.8-i18n.2
+  - @orderly.network/types@2.0.8-i18n.2
+
 ## 2.0.8-i18n.1
 
 ### Patch Changes
