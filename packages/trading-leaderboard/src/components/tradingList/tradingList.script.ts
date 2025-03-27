@@ -26,7 +26,7 @@ export type TradingResponse = {
 export type TradingListScriptReturn = ReturnType<typeof useTradingListScript>;
 
 export const FilterDays = [7, 14, 30, 90] as const;
-export type TFilterDays = typeof FilterDays[number];
+export type TFilterDays = (typeof FilterDays)[number];
 export type DateRange = {
   from?: Date;
   to?: Date;
@@ -189,6 +189,7 @@ const useFilter = () => {
       type: "range",
       name: "dateRange",
       value: dateRange,
+      max: 90,
     };
 
     return [dateRangeFilter] as any;
