@@ -3,6 +3,7 @@ import { cn, Box, Text, Flex, Button, Select } from "@orderly.network/ui";
 import { CampaignsScriptReturn } from "./campaigns.script";
 import { Campaign } from "../provider";
 import { formatCampaignDate } from "../../utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type CampaignsProps = {
   className?: string;
@@ -69,9 +70,10 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
 };
 
 const Header: FC<CampaignsScriptReturn> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex justify="between" itemAlign="center" pr={3}>
-      <Text size="xl">Campaigns</Text>
+      <Text size="xl">{t("tradingLeaderboard.campaigns")}</Text>
       <Select.options
         size={"xs"}
         value={props.category}
@@ -87,6 +89,7 @@ const Header: FC<CampaignsScriptReturn> = (props) => {
 };
 
 const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
+  const { t } = useTranslation();
   const { title, description, image, href, startTime, endTime } = campaign;
 
   const time = `${formatCampaignDate(startTime)} - ${formatCampaignDate(
@@ -131,7 +134,7 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
                 window.open(learnMoreUrl, "_blank");
               }}
             >
-              Learn more
+              {t("tradingLeaderboard.learnMore")}
             </Button>
             <Button
               size="md"
@@ -139,7 +142,7 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
                 window.open(tradingUrl, "_self");
               }}
             >
-              Trade now
+              {t("tradingLeaderboard.tradeNow")}
             </Button>
           </Flex>
         </Flex>
