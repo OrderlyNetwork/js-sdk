@@ -57,7 +57,10 @@ export const TradingList: FC<TradingListProps> = (props) => {
           )}
           {FilterDays.map((value) => {
             return (
-              <button className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm">
+              <button
+                className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm"
+                key={value}
+              >
                 <div className="oui-z-10">
                   <Text.gradient
                     color={props.filterDay === value ? "brand" : undefined}
