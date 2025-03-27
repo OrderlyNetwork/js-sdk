@@ -13,7 +13,7 @@ export const LeaderboardWidget: FC<LeaderboardWidgetProps> = (props) => {
   const state = useLeaderboardScript(props.backgroundSrc);
   return (
     <TradingLeaderboardProvider campaigns={props.campaigns} href={props.href}>
-      <Leaderboard {...state} className={props.className} />
+      <Leaderboard {...state} className={props.className} style={props.style} />
     </TradingLeaderboardProvider>
   );
 };

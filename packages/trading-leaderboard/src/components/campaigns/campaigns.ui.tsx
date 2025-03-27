@@ -9,6 +9,10 @@ export type CampaignsProps = {
 } & CampaignsScriptReturn;
 
 export const Campaigns: FC<CampaignsProps> = (props) => {
+  if (props.currentCampaigns.length === 0) {
+    return null;
+  }
+
   return (
     <Box
       width="100%"
