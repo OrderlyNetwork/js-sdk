@@ -1,31 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { Button, formatAddress, Text } from "@orderly.network/ui";
+import { Button, formatAddress, Text, useScreen } from "@orderly.network/ui";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
+import { AuthGuard } from "@orderly.network/ui-connector";
 
 export function UserCenter(props: any) {
- 
-  const { accountState: state, } = props;
-  return (
-    <RenderUserCenter state={state} />
-  )
+  const { accountState: state } = props;
+  return <RenderUserCenter state={state} />;
 }
 
 export const MwebUserCenter = (props: any) => {
-  const { state, } = props;
+  const { state } = props;
 
-  return (
-    <RenderUserCenter state={state} />
-  )
-}
-
+  return <RenderUserCenter state={state} />;
+};
 
 const RenderUserCenter = (props: any) => {
-  const { state, } = props;
+  const { state } = props;
+  const { isMobile } = useScreen();
   const { connect, wallet } = useWalletConnector();
   const { linkedAccount } = usePrivyWallet();
+  // if (accountStatus.status <= ) {}
+  if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+    return (
+      <Button
+        size="md"
+        variant="gradient"
+        angle={45}
+        data-testid="oui-testid-nav-bar-address-btn"
+        className="oui-flex oui-items-center oui-justify-center oui-gap-2"
+      >
+        <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
+          {formatAddress(state.address!, [4, 4])}
+        </Text.formatted>
+      </Button>
+    );
+  }
   if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
     return (
       <Button
@@ -37,7 +49,7 @@ const RenderUserCenter = (props: any) => {
         loading={state.validating}
         disabled={state.validating}
         onClick={() => {
-            connect()
+          connect()
             .then((r: any) => {
               console.log("*****", r);
             })
@@ -48,28 +60,60 @@ const RenderUserCenter = (props: any) => {
       </Button>
     );
   }
-  // if (accountStatus.status <= ) {}
+
   if (!wallet) {
-    return
+    return;
   }
-  return (
-    <div onClick={() => connect()} >
+  if (isMobile) {
+    return (
+      <AuthGuard
+        buttonProps={{
+          size: "sm",
+      }}
+    >
+      <div onClick={() => connect()}>
         <Button
-          size="md"
+          size="sm"
           variant="gradient"
           angle={45}
           data-testid="oui-testid-nav-bar-address-btn"
           className="oui-flex oui-items-center oui-justify-center oui-gap-2"
         >
-          {linkedAccount &&
-            <RenderPrivyTypeIcon type={linkedAccount.type} size={18} black={true} />
-          }
+          {linkedAccount && (
+            <RenderPrivyTypeIcon
+              type={linkedAccount.type}
+              size={18}
+              black={true}
+            />
+          )}
           <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
             {formatAddress(wallet.accounts[0].address)}
           </Text.formatted>
         </Button>
-      </div>
-
-
-  )
-}
+        </div>
+      </AuthGuard>
+    );
+  }
+  return (
+    <div onClick={() => connect()}>
+      <Button
+        size="md"
+        variant="gradient"
+        angle={45}
+        data-testid="oui-testid-nav-bar-address-btn"
+        className="oui-flex oui-items-center oui-justify-center oui-gap-2"
+      >
+        {linkedAccount && (
+          <RenderPrivyTypeIcon
+            type={linkedAccount.type}
+            size={18}
+            black={true}
+          />
+        )}
+        <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
+          {formatAddress(wallet.accounts[0].address)}
+        </Text.formatted>
+      </Button>
+    </div>
+  );
+};

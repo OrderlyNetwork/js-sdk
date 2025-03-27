@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useMemo } from "react";
 import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
 import { ProductsMenu, ProductsProps } from "./products";
-import { Box, cn, Divider, Flex } from "@orderly.network/ui";
+import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
@@ -52,6 +52,8 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
 
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
+
+  const { isDesktop} = useScreen();
 
   const children = useMemo(() => {
     if (typeof props.children === "undefined") return null;
@@ -106,7 +108,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
             <LinkDeviceWidget />
           </>
         )}
-        <ChainMenuWidget />
+        {isDesktop && <ChainMenuWidget />}
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>
     </Flex>

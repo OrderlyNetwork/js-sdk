@@ -105,8 +105,14 @@ export function useWallet() {
 
       if (tempNamespace === ChainNamespace.solana) {
         isManual.current = true;
-        setStorageChain(parseInt(chain.chainId as string));
-        return Promise.resolve(true);
+        if (privyWalletSOL) {
+          setStorageChain(parseInt(chain.chainId as string));
+          return Promise.resolve(true);
+        } else {
+          setOpenConnectDrawer(true);
+          setTargetNamespace(ChainNamespace.solana);
+          return Promise.reject(new Error('No solana wallet found'));
+        }
 
       }
 
