@@ -1,15 +1,23 @@
 import { useMemo } from "react";
-import { useTradingLeaderboardContext } from "../../components/provider";
+import {
+  Campaign,
+  useTradingLeaderboardContext,
+} from "../../components/provider";
 
 export type LeaderboardScriptReturn = ReturnType<typeof useLeaderboardScript>;
+
+export type LeaderboardScriptOptions = {
+  backgroundSrc?: string;
+  campaigns?: Campaign[];
+};
 
 function isVideoSrc(src?: string) {
   const extension = src?.split(".").pop();
   return ["mp4", "webm", "avi", "ogg"].includes(extension ?? "");
 }
 
-export function useLeaderboardScript(backgroundSrc?: string) {
-  const { campaigns = [] } = useTradingLeaderboardContext();
+export function useLeaderboardScript(options: LeaderboardScriptOptions) {
+  const { backgroundSrc, campaigns = [] } = options;
 
   const showCampaigns = useMemo(() => campaigns?.length > 0, [campaigns]);
 
