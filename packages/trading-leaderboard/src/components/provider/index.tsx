@@ -22,7 +22,7 @@ export type Campaign = {
 export type TradingLeaderboardState = {
   /** campaigns config, if not provided, will not show campaigns section */
   campaigns?: Campaign[];
-  /** background src, it can be a image resource */
+  /** background src, it can be a image resource or video resource */
   backgroundSrc?: string;
   href?: {
     /** default trading now button url */

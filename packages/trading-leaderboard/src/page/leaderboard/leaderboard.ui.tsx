@@ -11,21 +11,47 @@ export type LeaderboardProps = {
 
 export const Leaderboard: FC<LeaderboardProps> = (props) => {
   const renderBackground = () => {
-    // if (props.isVideo) {
-    //   return (
-    //     <video
-    //       autoPlay
-    //       loop
-    //       muted
-    //       className={cn(
-    //         "oui-absolute oui-top-0 oui-left-0 oui-w-full oui-h-full oui-object-cover oui-z-[-1]"
-    //       )}
-    //     >
-    //       <source src={props.backgroundSrc} type="video/mp4" />
-    //       Your browser does not support the video tag.
-    //     </video>
-    //   );
-    // }
+    if (props.isVideo) {
+      return (
+        <div
+          className={cn(
+            "oui-absolute oui-top-0 oui-left-0",
+            "oui-w-full oui-h-full"
+          )}
+        >
+          <div
+            style={{
+              backgroundImage: `linear-gradient(180deg, rgba(7, 8, 10, 0.3) 0%, rgba(7, 8, 10, 0) 70%, #07080A 100%)`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+            }}
+            className={cn(
+              "oui-absolute oui-top-0 oui-left-0",
+              "oui-w-full oui-h-full"
+            )}
+          />
+          <video
+            autoPlay
+            loop
+            muted
+            className={cn(
+              // rest style
+              "oui-border-none oui-outline-none oui-bg-transparent",
+              "oui-w-full oui-h-full",
+              // "oui-absolute oui-top-0 oui-left-0",
+              "oui-object-cover",
+              "oui-opacity-50"
+            )}
+          >
+            <source src={props.backgroundSrc} type="video/mp4" />
+            <source src={props.backgroundSrc} type="video/webm" />
+            <source src={props.backgroundSrc} type="video/ogg" />
+            <source src={props.backgroundSrc} type="video/avi" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
+    }
 
     if (props.backgroundSrc) {
       return (
@@ -36,8 +62,8 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
             backgroundRepeat: "no-repeat",
           }}
           className={cn(
-            "oui-w-full oui-h-full",
             "oui-absolute oui-top-[-30%] oui-left-0",
+            "oui-w-full oui-h-full",
             "oui-opacity-50"
           )}
         />
@@ -48,7 +74,10 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
   return (
     <div
       style={props.style}
-      className={cn("oui-relative oui-h-full", props.className)}
+      className={cn(
+        "oui-relative oui-h-full oui-mix-blend-screen",
+        props.className
+      )}
     >
       {renderBackground()}
       <Flex
