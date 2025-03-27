@@ -35,6 +35,7 @@ module.exports = withTV({
     "../ui-chain-selector/src/**/*.{ts,js,tsx,jsx}",
     "../wallet-connector/src/**/*.{ts,js,tsx,jsx}",
     "../wallet-connector-privy/src/**/*.{ts,js,tsx,jsx}",
+    "../trading-leaderboard/src/**/*.{ts,js,tsx,jsx}",
   ],
   prefix: "oui-",
   theme: {

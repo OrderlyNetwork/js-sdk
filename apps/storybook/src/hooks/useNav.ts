@@ -28,6 +28,7 @@ export function useNav() {
       "/rewards": "Package/trading-rewards",
       "/rewards/trading": "Package/trading-rewards",
       "/rewards/affiliate": "Package/affiliate/Dashboard",
+      "/leaderboard": "Package/trading-leaderboard",
     } as Record<string, { storyId: string; name?: string } | string>;
 
     const params = routeMap[option.href];
