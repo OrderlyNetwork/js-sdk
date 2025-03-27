@@ -38,6 +38,7 @@ export const AnnouncementTipsUI = (props: ReturnType<typeof useAnnouncementTipsS
         "oui-leading-4",
         "oui-rounded-xl md:oui-rounded-none",
         "oui-min-h-[48px]",
+        "md:oui-h-[34px] md:oui-min-h-[34px]",
         "oui-justify-start oui-items-start",
         "xl:oui-justify-center xl:oui-items-center xl:oui-px-4"
       )}
