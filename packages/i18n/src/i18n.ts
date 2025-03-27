@@ -3,6 +3,11 @@
 import { createInstance } from "i18next";
 import { resources, defaultLng } from "./resources";
 import LanguageDetector from "i18next-browser-languagedetector";
+import { i18nLocalStorageKey } from "./constant";
+
+const languageDetector = new LanguageDetector(null, {
+  lookupLocalStorage: i18nLocalStorageKey,
+});
 
 // i18n
 //   // passes i18n down to react-i18next
@@ -30,7 +35,7 @@ const i18n = createInstance({
     escapeValue: false,
   },
   resources,
-}).use(LanguageDetector);
+}).use(languageDetector);
 
 i18n.init();
 
