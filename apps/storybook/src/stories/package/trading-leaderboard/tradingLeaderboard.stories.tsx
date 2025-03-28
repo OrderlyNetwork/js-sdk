@@ -6,7 +6,7 @@ import {
   TradingLeaderboardProvider,
 } from "@orderly.network/trading-leaderboard";
 import { OrderlyLayout } from "../../../components/layout";
-import { Box } from "@orderly.network/ui";
+import { Box, useScreen } from "@orderly.network/ui";
 import { subDays, addDays } from "date-fns";
 
 const meta: Meta<typeof LeaderboardWidget> = {
@@ -79,7 +79,7 @@ const Container = (props: {
         maxHeight: 2560,
         overflow: "hidden",
         // Make the table scroll instead of the page scroll
-        height: "calc(100vh - 48px - 29px )",
+        height: "calc(100vh - 48px - 29px)",
         ...props.style,
       }}
     >
@@ -100,10 +100,19 @@ export const Page: Story = {
 
 export const LayoutPage: Story = {
   render: (args) => {
+    const { isMobile } = useScreen();
     return (
       <OrderlyLayout initialMenu="/leaderboard">
-        <Container>
-          <LeaderboardWidget {...args} className="oui-py-5" />
+        <Container
+          style={{
+            height: isMobile ? "100%" : "calc(100vh - 48px - 29px)",
+          }}
+        >
+          <LeaderboardWidget
+            {...args}
+            className="oui-py-5"
+            // style={{ marginTop: -50 }}
+          />
         </Container>
       </OrderlyLayout>
     );

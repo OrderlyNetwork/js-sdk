@@ -24,6 +24,8 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/trading": "workspace:*",
+    "embla-carousel-react": "8.1.5",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
