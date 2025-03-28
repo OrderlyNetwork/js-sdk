@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useTradingLeaderboardContext, Campaign } from "../provider";
 import { useScreen } from "@orderly.network/ui";
+import useEmblaCarousel from "embla-carousel-react";
+import { useTradingLeaderboardContext, Campaign } from "../provider";
 import { formatCampaignDate } from "../../utils";
 
 export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;
@@ -16,6 +17,10 @@ export type CurrentCampaigns = Campaign & {
   displayTime: string;
   learnMoreUrl: string;
   tradingUrl: string;
+};
+
+export type TEmblaApi = {
+  scrollTo?: (index: number) => void;
 };
 
 type CategoryKey = keyof CategorizedCampaigns;
@@ -101,6 +106,18 @@ export function useCampaignsScript() {
   const onCategoryChange = (value: string) => {
     setCategory(value as CategoryKey);
   };
+  const [scrollIndex, setScrollIndex] = useState(0);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    slidesToScroll: "auto",
+  });
+
+  useEffect(() => {
+    emblaApi?.on("select", () => {
+      setScrollIndex(emblaApi?.selectedScrollSnap());
+    });
+  }, [emblaApi]);
 
   return {
     options,
@@ -109,5 +126,9 @@ export function useCampaignsScript() {
     onCategoryChange,
     tradingUrl: href?.trading,
     isMobile,
+    emblaRef,
+    emblaApi: emblaApi as TEmblaApi,
+    scrollIndex,
+    enableScroll: currentCampaigns?.length > 1,
   };
 }

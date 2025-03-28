@@ -7,6 +7,9 @@ export type CampaignsProps = {
   style?: React.CSSProperties;
 } & CampaignsScriptReturn;
 
+const scrollIndicatorWidth = 25;
+const scrollIndicatorHeight = 6;
+
 export const MobileCampaigns: FC<CampaignsProps> = (props) => {
   if (props.currentCampaigns.length === 0) {
     return null;
@@ -24,13 +27,31 @@ export const MobileCampaigns: FC<CampaignsProps> = (props) => {
       style={props.style}
     >
       <Header {...props} />
-      <Box r="xl" mt={3}>
-        <Flex direction="column" r="xl">
+      <Box
+        r="xl"
+        mt={3}
+        ref={props.enableScroll ? props.emblaRef : undefined}
+        className={cn(
+          "oui-w-full oui-min-w-0 oui-overflow-hidden",
+          "oui-select-none oui-cursor-pointer"
+        )}
+      >
+        <Flex>
           {props.currentCampaigns.map((campaign) => {
             return <CampaignItem key={campaign.title} campaign={campaign} />;
           })}
         </Flex>
       </Box>
+      {props.enableScroll && (
+        <ScrollIndicator
+          style={{
+            width: scrollIndicatorWidth * props.currentCampaigns.length,
+          }}
+          list={props.currentCampaigns}
+          scrollIndex={props.scrollIndex}
+          scrollTo={props.emblaApi?.scrollTo}
+        />
+      )}
     </Box>
   );
 };
@@ -60,7 +81,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
     campaign;
 
   return (
-    <Box intensity={800} r="xl">
+    <Box intensity={800} r="xl" className="oui-flex-[0_0_100%]">
       <img
         className="oui-w-full oui-h-[120px] oui-rounded-t-xl oui-object-cover"
         src={image}
@@ -109,5 +130,54 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
         </Flex>
       </Flex>
     </Box>
+  );
+};
+
+interface ScrollIndicatorProps {
+  style?: React.CSSProperties;
+  list: CurrentCampaigns[];
+  scrollIndex: number;
+  scrollTo?: (index: number) => void;
+}
+
+const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
+  const { style, scrollIndex, list } = props;
+
+  return (
+    <Flex
+      mt={3}
+      r="full"
+      height={scrollIndicatorHeight}
+      className={cn("oui-bg-line oui-mx-auto oui-relative")}
+      style={props.style}
+    >
+      {list.map((item, index) => {
+        return (
+          <Box
+            key={index}
+            width={scrollIndicatorWidth}
+            height={scrollIndicatorHeight}
+            onClick={() => {
+              props.scrollTo?.(index);
+            }}
+            r="full"
+            className="oui-cursor-pointer"
+          />
+        );
+      })}
+      <Box
+        width={scrollIndicatorWidth}
+        height={scrollIndicatorHeight}
+        r="full"
+        className={cn(
+          "oui-absolute oui-left-0 oui-top-0",
+          "oui-transition-all oui-duration-300",
+          "oui-bg-primary"
+        )}
+        style={{
+          transform: `translateX(${scrollIndex * scrollIndicatorWidth}px)`,
+        }}
+      />
+    </Flex>
   );
 };
