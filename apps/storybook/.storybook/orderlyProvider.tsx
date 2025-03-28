@@ -60,9 +60,7 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
-
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
-  
   return (
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"

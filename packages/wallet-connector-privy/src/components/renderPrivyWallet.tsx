@@ -10,7 +10,7 @@ import { MoreIcon } from "./icons";
 import { useWalletConnectorPrivy } from "../provider";
 
 function NoWallet() {
-  const {walletChainType} = useWalletConnectorPrivy();
+  const { walletChainType } = useWalletConnectorPrivy();
   return (
     <div className="oui-flex oui-flex-col oui-justify-center oui-items-center oui-w-full oui-mt-5">
       <div className="oui-flex oui-flex-col oui-justify-center oui-items-center oui-w-full oui-gap-3">
@@ -43,12 +43,8 @@ function NoWallet() {
             <CreateSOLWallet />
           </>
         )}
-        {walletChainType === WalletChainTypeEnum.onlyEVM && (
-          <CreateEVMWallet />
-        )}
-        {walletChainType === WalletChainTypeEnum.onlySOL && (
-          <CreateSOLWallet />
-        )}
+        {walletChainType === WalletChainTypeEnum.onlyEVM && <CreateEVMWallet />}
+        {walletChainType === WalletChainTypeEnum.onlySOL && <CreateSOLWallet />}
       </div>
     </div>
   );

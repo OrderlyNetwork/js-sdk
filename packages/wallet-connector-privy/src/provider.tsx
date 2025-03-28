@@ -4,7 +4,7 @@ import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import { ChainNamespace } from "@orderly.network/types";
-import { InitPrivy, InitWagmi, InitSolana, Network, ConnectorType, WalletChainType } from "./types";
+import { InitPrivy, InitWagmi, InitSolana, Network, ConnectorType, WalletChainType, WalletChainTypeEnum } from "./types";
 import { InitPrivyProvider } from "./providers/initPrivyProvider";
 import { InitSolanaProvider } from "./providers/initSolanaProvider";
 import { InitWagmiProvider } from "./providers/initWagmiProvider";
@@ -83,7 +83,7 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   solanaInfo: null,
   setSolanaInfo: () => { },
   termsOfUse: "",
-  walletChainType: 'EVM_SOL'
+  walletChainType: WalletChainTypeEnum.EVM_SOL
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -101,7 +101,7 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   walletChainType?: WalletChainType;
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
-  const [walletChainType] = useState<WalletChainType>(props.walletChainType ?? 'EVM_SOL')
+  const [walletChainType] = useState<WalletChainType>(props.walletChainType ?? WalletChainTypeEnum.EVM_SOL)
   const [termsOfUse] = useState<string>(props.termsOfUse);
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);

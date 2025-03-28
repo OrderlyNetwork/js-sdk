@@ -27,7 +27,7 @@ export enum WalletType {
 export interface ConnectProps {
   walletType: WalletType;
   extraType?: string;
-  connector?:Connector;
+  connector?: Connector;
   walletAdapter?: WalletAdapter;
 }
 
@@ -37,12 +37,12 @@ export interface InitPrivy {
   config?: PrivyClientConfig;
 }
 
-export interface InitWagmi{
+export interface InitWagmi {
   connectors?: CreateConnectorFn[];
   storage?: Storage;
 }
 
-export interface InitSolana{
+export interface InitSolana {
   mainnetRpc?: string;
   devnetRpc?: string;
   wallets: Adapter[];
@@ -52,7 +52,7 @@ export interface InitSolana{
 export const SolanaChains = new Map([[WalletAdapterNetwork.Devnet, 901901901], [WalletAdapterNetwork.Mainnet, 900900900]]);
 
 export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
-  [WalletAdapterNetwork.Devnet,  901901901], 
+  [WalletAdapterNetwork.Devnet, 901901901],
   [Network.testnet, 901901901],
   [Network.mainnet, 900900900],
   [WalletAdapterNetwork.Mainnet, 900900900],

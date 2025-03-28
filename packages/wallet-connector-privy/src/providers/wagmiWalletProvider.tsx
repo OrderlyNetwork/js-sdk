@@ -1,5 +1,18 @@
-import { Connector, useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  Connector,
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useSwitchChain,
+} from "wagmi";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { ChainNamespace } from "@orderly.network/types";
 
 interface WagmiWalletContextValue {
@@ -14,7 +27,9 @@ interface WagmiWalletContextValue {
 
 const WagmiWalletContext = createContext<WagmiWalletContextValue | null>(null);
 
-export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [wallet, setWallet] = useState<undefined | any>(undefined);
   const { connect, connectors: wagmiConnectors } = useConnect();
   const { disconnect } = useDisconnect();
@@ -26,27 +41,33 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return {
         id: chainId,
         namespace: ChainNamespace.evm,
-      }
+      };
     }
     return null;
   }, [chainId]);
 
-  const setChain = useCallback((chainId: number) => {
-    return new Promise((resolve, reject) => {
-      switchChain({ chainId }, {
-        onSuccess: () => resolve(true),
-        onError: (e) => {
-          console.log('-- switch chain error', e);
-          return reject(e);
-        }
-      })
-    })
-  }, [switchChain]);
+  const setChain = useCallback(
+    (chainId: number) => {
+      return new Promise((resolve, reject) => {
+        switchChain(
+          { chainId },
+          {
+            onSuccess: () => resolve(true),
+            onError: (e) => {
+              console.log("-- switch chain error", e);
+              return reject(e);
+            },
+          }
+        );
+      });
+    },
+    [switchChain]
+  );
 
   useEffect(() => {
     if (!connector || !isConnected) {
-      console.log('-- xxx wagmi wallet setundefine', isConnected);
-      setWallet(undefined)
+      console.log("-- xxx wagmi wallet setundefine", isConnected);
+      setWallet(undefined);
       return;
     }
     connector.getProvider().then((provider) => {
@@ -59,28 +80,45 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
             address: address,
           },
         ],
-        chains: [{
-          id: chainId,
-          namespace: ChainNamespace.evm,
-        }],
-        chain: connectedChain
+        chains: [
+          {
+            id: chainId,
+            namespace: ChainNamespace.evm,
+          },
+        ],
+        chain: connectedChain,
       });
     });
   }, [connector, chainId, isConnected, address, connectedChain]);
 
   const connectors = useMemo(() => {
-    return wagmiConnectors.filter((connector: any) => connector.id!== 'injected').sort((a: any, b: any) => a.type === 'injected' ? -1 : 1) as Connector[];
+    return wagmiConnectors
+      .filter((connector: any) => connector.id !== "injected")
+      .sort((a: any, b: any) =>
+        a.type === "injected" ? -1 : 1
+      ) as Connector[];
   }, [wagmiConnectors]);
 
-  const value = useMemo(() => ({
-    connectors,
-    connect,
-    wallet,
-    connectedChain,
-    setChain,
-    disconnect,
-    isConnected
-  }), [connectors, connect, wallet, connectedChain, setChain, disconnect, isConnected]);
+  const value = useMemo(
+    () => ({
+      connectors,
+      connect,
+      wallet,
+      connectedChain,
+      setChain,
+      disconnect,
+      isConnected,
+    }),
+    [
+      connectors,
+      connect,
+      wallet,
+      connectedChain,
+      setChain,
+      disconnect,
+      isConnected,
+    ]
+  );
 
   return (
     <WagmiWalletContext.Provider value={value}>
@@ -95,4 +133,4 @@ export function useWagmiWallet() {
     throw new Error("useWagmiWallet must be used within a WagmiWalletProvider");
   }
   return context;
-} 
+}

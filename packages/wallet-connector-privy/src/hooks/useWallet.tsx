@@ -2,15 +2,30 @@ import { useWagmiWallet } from "../providers/wagmiWalletProvider";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
-import { ChainNamespace, ConnectorKey, EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
-import { useLocalStorage, useStorageChain, useTrack, WalletState } from "@orderly.network/hooks";
-import { ConnectProps, SolanaChains, WalletChainTypeEnum, WalletType } from "../types";
+import {
+  ChainNamespace,
+  ConnectorKey,
+  EnumTrackerKeys,
+  TrackerListenerKeyMap,
+} from "@orderly.network/types";
+import {
+  useLocalStorage,
+  useStorageChain,
+  useTrack,
+  WalletState,
+} from "@orderly.network/hooks";
+import {
+  ConnectProps,
+  SolanaChains,
+  WalletChainTypeEnum,
+  WalletType,
+} from "../types";
 import { useWalletConnectorPrivy } from "../provider";
 
 export function useWallet() {
   const { track } = useTrack();
   const { walletChainType } = useWalletConnectorPrivy();
-  const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
+  const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");
   const {
     disconnect: disconnectEVM,
     connect: connectEVM,
@@ -37,13 +52,12 @@ export function useWallet() {
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
   const { storageChain, setStorageChain } = useStorageChain();
-  const { setOpenConnectDrawer, setTargetNamespace } = useWalletConnectorPrivy();
+  const { setOpenConnectDrawer, setTargetNamespace } =
+    useWalletConnectorPrivy();
 
   const isManual = useRef<boolean>(false);
 
-
   const connect = (params: ConnectProps) => {
-
     setTargetNamespace(undefined);
     try {
       if (params.walletType === WalletType.EVM) {
@@ -57,7 +71,6 @@ export function useWallet() {
       if (params.walletType === WalletType.PRIVY) {
         setConnectorKey(WalletType.PRIVY);
         connectPrivy();
-
       }
     } catch (e) {
       console.log("-- e", e);
@@ -69,46 +82,49 @@ export function useWallet() {
       return true;
     }
     return false;
-
   }, [connectorKey]);
 
-  const [connectedChain, setConnectedChain] = useState<any>()
+  const [connectedChain, setConnectedChain] = useState<any>();
 
-  const setChain = async (chain: { chainId: number | string }): Promise<boolean | undefined> => {
+  const setChain = async (chain: {
+    chainId: number | string;
+  }): Promise<boolean | undefined> => {
     let tempNamespace: ChainNamespace = ChainNamespace.evm;
-    if (Array.from(SolanaChains.values()).includes(parseInt(chain.chainId as string))) {
+    if (
+      Array.from(SolanaChains.values()).includes(
+        parseInt(chain.chainId as string)
+      )
+    ) {
       tempNamespace = ChainNamespace.solana;
     }
     if (isPrivy) {
-
       if (tempNamespace === ChainNamespace.evm) {
         if (walletChainType === WalletChainTypeEnum.onlySOL) {
-          return Promise.reject(new Error('No evm wallet found'));
+          return Promise.reject(new Error("No evm wallet found"));
         }
         isManual.current = true;
-        return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
-      
-          track(EnumTrackerKeys.switchNetworkSuccess, {
-            from_chain: storageChain?.chainId,
-            to_chain: chain.chainId,
-          });
-          setStorageChain(parseInt(chain.chainId as string));
-         
-        
-          return Promise.resolve(true)
+        return setChainPrivy(parseInt(chain.chainId as string))
+          .then((res) => {
+            track(EnumTrackerKeys.switchNetworkSuccess, {
+              from_chain: storageChain?.chainId,
+              to_chain: chain.chainId,
+            });
+            setStorageChain(parseInt(chain.chainId as string));
 
-        }).catch(e => {
-          console.log('xxxx switch network failed', {
-            error: e,
+            return Promise.resolve(true);
+          })
+          .catch((e) => {
+            console.log("xxxx switch network failed", {
+              error: e,
+            });
+            return Promise.reject(e);
           });
-          return Promise.reject(e);
-        })
       }
 
       if (tempNamespace === ChainNamespace.solana) {
         isManual.current = true;
         if (walletChainType === WalletChainTypeEnum.onlyEVM) {
-          return Promise.reject(new Error('No solana wallet found'));
+          return Promise.reject(new Error("only evm wallet"));
         }
         if (privyWalletSOL) {
           setStorageChain(parseInt(chain.chainId as string));
@@ -116,11 +132,9 @@ export function useWallet() {
         } else {
           setOpenConnectDrawer(true);
           setTargetNamespace(ChainNamespace.solana);
-          return Promise.reject(new Error('No solana wallet found'));
+          return Promise.reject(new Error("No solana wallet found"));
         }
-
       }
-
     } else {
       if (storageChain.namespace === ChainNamespace.evm) {
         // if current namespace is evm, switch chain
@@ -142,7 +156,6 @@ export function useWallet() {
             return Promise.resolve(true);
           }
         }
-
       }
       if (storageChain.namespace === ChainNamespace.solana) {
         if (tempNamespace === ChainNamespace.evm) {
@@ -155,20 +168,18 @@ export function useWallet() {
         }
       }
     }
-  }
+  };
 
   const switchWallet = (namespace: ChainNamespace) => {
     // TODO need get chain from wallet
     const fromWallet = wallet?.accounts[0].address;
     let toWallet: string | undefined;
     if (isPrivy) {
-
       if (namespace === ChainNamespace.evm) {
         if (privyWalletEVM) {
           setStorageChain(privyWalletEVM.chain.id);
           toWallet = privyWalletEVM.accounts[0].address;
         }
-
       } else {
         if (privyWalletSOL) {
           setStorageChain(privyWalletSOL.chain.id);
@@ -192,7 +203,7 @@ export function useWallet() {
       fromWallet,
       toWallet,
     });
-  }
+  };
 
   const disconnect = async (walletType: WalletType) => {
     if (walletType === WalletType.PRIVY) {
@@ -204,15 +215,13 @@ export function useWallet() {
     if (walletType === WalletType.SOL) {
       return disconnectSOL();
     }
-  }
+  };
 
   const setNullWalletStatus = () => {
     setWallet(null);
     setConnectedChain(null);
     setNamespace(null);
-  }
-
-
+  };
 
   useEffect(() => {
     // check current connector and chain form localstorage
@@ -229,38 +238,33 @@ export function useWallet() {
     if (storageChain?.namespace === ChainNamespace.evm) {
       if (privyWalletEVM) {
         setWallet(privyWalletEVM);
-        setConnectedChain(privyWalletEVM.chain)
+        setConnectedChain(privyWalletEVM.chain);
         setNamespace(ChainNamespace.evm);
       } else {
         setNullWalletStatus();
-
       }
     }
     if (storageChain?.namespace === ChainNamespace.solana) {
       if (privyWalletSOL) {
         setWallet(privyWalletSOL);
-        setConnectedChain(privyWalletSOL.chain)
+        setConnectedChain(privyWalletSOL.chain);
         setNamespace(ChainNamespace.solana);
       } else {
         setNullWalletStatus();
       }
     }
-
-
-
-
-  }, [connectorKey, privyWalletEVM, privyWalletSOL, storageChain])
+  }, [connectorKey, privyWalletEVM, privyWalletSOL, storageChain]);
 
   useEffect(() => {
     if (connectorKey === WalletType.PRIVY) {
       return;
     }
     // handle non-privy wallet connect
-    console.log('xxxx non-privy', {
+    console.log("xxxx non-privy", {
       connectorKey,
       storageChain,
       walletEVM,
-      walletSOL
+      walletSOL,
     });
 
     if (storageChain?.namespace === ChainNamespace.evm) {
@@ -271,7 +275,6 @@ export function useWallet() {
       } else {
         setNullWalletStatus();
       }
-
     }
     if (storageChain?.namespace === ChainNamespace.solana) {
       if (isConnectedSOL && walletSOL) {
@@ -282,9 +285,22 @@ export function useWallet() {
         setNullWalletStatus();
       }
     }
+  }, [
+    connectorKey,
+    storageChain,
+    walletEVM,
+    walletSOL,
+    isConnectedEVM,
+    isConnectedSOL,
+  ]);
 
-  }, [connectorKey, storageChain, walletEVM, walletSOL, isConnectedEVM, isConnectedSOL])
-
-
-  return { connect, wallet, connectedChain, setChain, namespace, switchWallet, disconnect, };
+  return {
+    connect,
+    wallet,
+    connectedChain,
+    setChain,
+    namespace,
+    switchWallet,
+    disconnect,
+  };
 }

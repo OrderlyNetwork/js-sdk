@@ -20,17 +20,17 @@ export function Drawer({ children, isOpen, onClose }: DrawerProps) {
       setWindowHeight(window.innerHeight);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
-      window.removeEventListener('resize', handleResize);
+      document.body.style.overflow = "auto";
+      window.removeEventListener("resize", handleResize);
     };
   }, [isOpen, isMobile]);
 
@@ -40,13 +40,13 @@ export function Drawer({ children, isOpen, onClose }: DrawerProps) {
 
   return createPortal(
     <div className="oui-fixed oui-inset-0 oui-z-[60]">
-      <div 
+      <div
         className="oui-absolute oui-inset-0 oui-bg-[rgba(0,0,0,0.48)] oui-transition-opacity"
         onClick={onClose}
       />
-      
-      <div 
-        style={{ height: `${drawerHeight}px` }} 
+
+      <div
+        style={{ height: `${drawerHeight}px` }}
         className={`
         oui-overflow-hidden
         oui-fixed oui-top-0 oui-right-0  
@@ -60,12 +60,12 @@ export function Drawer({ children, isOpen, onClose }: DrawerProps) {
         oui-p-4
         oui-transform oui-transition-transform oui-duration-300 oui-ease-in-out
         oui-flex oui-flex-col oui-justify-between
-        ${isOpen ? 'oui-translate-x-0' : 'oui--translate-x-full'}
-      `}>
+        ${isOpen ? "oui-translate-x-0" : "oui--translate-x-full"}
+      `}
+      >
         {children}
       </div>
     </div>,
     document.body
   );
 }
-
