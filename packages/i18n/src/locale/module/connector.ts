@@ -57,10 +57,15 @@ export const connector = {
   "connector.twitter": "X / Twitter",
   "connector.addEvmWallet": "Add Evm wallet",
   "connector.addSolanaWallet": "Add Solana wallet",
+  "connector.createEvmWallet": "Create Evm wallet",
+  "connector.createSolanaWallet": "Create Solana wallet",
   "connector.termsOfUse":
     "By connecting your wallet, you acknowledge and agree to the <0>terms of use</0>.",
   "connector.supportedEvmChain": "Supported Evm chain",
   "connector.supportedSolanaChain": "Supported Solana chain",
+  "connector.noWallet": "No wallet",
+  "connector.noWallet.description":
+    "Please create a wallet to proceed. Only you can access the private key. You can export the private key and import your wallet into another wallet client, such as MetaMask or Phantom, at any time.",
 };
 
 export type Connector = typeof connector;

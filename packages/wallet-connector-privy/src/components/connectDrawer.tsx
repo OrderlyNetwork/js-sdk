@@ -1,4 +1,8 @@
-import { SimpleDialog, useScreen } from "@orderly.network/ui";
+import {
+  ExclamationFillIcon,
+  SimpleDialog,
+  useScreen,
+} from "@orderly.network/ui";
 import React, { useMemo } from "react";
 import { useWallet } from "../hooks/useWallet";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
@@ -11,12 +15,13 @@ import { useWagmiWallet } from "../providers/wagmiWalletProvider";
 import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
-import { CloseIcon } from "./icons";
+import { CloseIcon, InfoIcon } from "./icons";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
 import { cn } from "@orderly.network/ui";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { getWalletIcon } from "../util";
 import { Drawer } from "./drawer";
+import { RenderPrivyWallet } from "./renderPrivyWallet";
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
   const { t } = useTranslation();
@@ -187,55 +192,6 @@ function ConnectWallet() {
           })
         }
       />
-    </div>
-  );
-}
-
-function RenderPrivyWallet() {
-  const { walletEVM, walletSOL, linkedAccount } = usePrivyWallet();
-  const { namespace, switchWallet, disconnect } = useWallet();
-  const { t } = useTranslation();
-
-  return (
-    <div>
-      <div className="oui-flex oui-justify-between oui-items-center">
-        {linkedAccount && (
-          <div className="oui-flex oui-items-center oui-justify-start oui-gap-2 oui-text-base-contrast">
-            <div>
-              <RenderPrivyTypeIcon type={linkedAccount.type} size={24} />
-            </div>
-            <div className="oui-text-xs">{linkedAccount.address}</div>
-          </div>
-        )}
-        <div
-          className="oui-cursor-pointer oui-text-primary oui-text-2xs oui-font-semibold"
-          onClick={() => disconnect(WalletType.PRIVY)}
-        >
-          {t("connector.logout")}
-        </div>
-      </div>
-      <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
-        <WalletCard
-          type={WalletType.EVM}
-          address={walletEVM?.accounts[0].address ?? ""}
-          isActive={namespace === ChainNamespace.evm}
-          onActiveChange={() => {
-            switchWallet(ChainNamespace.evm);
-          }}
-          isPrivy={true}
-          isBoth={true}
-        />
-        <WalletCard
-          type={WalletType.SOL}
-          address={walletSOL?.accounts[0].address ?? ""}
-          isActive={namespace === ChainNamespace.solana}
-          onActiveChange={() => {
-            switchWallet(ChainNamespace.solana);
-          }}
-          isPrivy={true}
-          isBoth={true}
-        />
-      </div>
     </div>
   );
 }

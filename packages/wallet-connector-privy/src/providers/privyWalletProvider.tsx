@@ -1,20 +1,29 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { LinkedAccountWithMetadata, usePrivy, useSolanaWallets, useWallets, WalletWithMetadata } from "@privy-io/react-auth";
-import { Connection } from "@solana/web3.js";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
+  usePrivy,
+  useSolanaWallets,
+  useWallets,
+  WalletWithMetadata,
+} from "@privy-io/react-auth";
 import { ChainNamespace, EnumTrackerKeys } from "@orderly.network/types";
 import { useTrack, WalletState } from "@orderly.network/hooks";
 import { SolanaChainsMap } from "../types";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { useWalletConnectorPrivy } from "../provider";
 
-
 interface WalletStatePrivy extends WalletState {
   chain: {
     id: number;
     namespace: ChainNamespace;
-  }
+  };
 }
-
 
 interface PrivyWalletContextValue {
   connect: () => void;
@@ -24,6 +33,8 @@ interface PrivyWalletContextValue {
   switchChain: (chainId: number) => Promise<any>;
   linkedAccount: { type: string; address: string | null } | null;
   exportWallet: any;
+  createEvmWallet: any;
+  createSolanaWallet: any;
   disconnect: () => Promise<void>;
 }
 
@@ -34,15 +45,23 @@ const getPrivyEmbeddedWalletChainId = (chainId: string) => {
   return parseInt(chainId.split("eip155:")[1]);
 };
 
-
 const PrivyWalletContext = createContext<PrivyWalletContextValue | null>(null);
 
-export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { network, solanaInfo, setSolanaInfo } = useWalletConnectorPrivy();
-  const { login, logout, ready, authenticated, user, exportWallet: exportEvmWallet } = usePrivy();
+  const {
+    login,
+    logout,
+    ready,
+    authenticated,
+    user,
+    exportWallet: exportEvmWallet,
+    createWallet: createEvmWallet,
+  } = usePrivy();
   const { wallets: walletsEVM } = useWallets();
   const connectedRef = useRef(false);
-
 
   const {
     ready: solanaReady,
@@ -51,37 +70,40 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
     exportWallet: exportSolanaWallet,
   } = useSolanaWallets();
 
-
   const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);
   const [walletSOL, setWalletSOL] = useState<WalletStatePrivy | null>(null);
 
-  const { track} = useTrack();
+  const { track } = useTrack();
 
   const linkedAccount = useMemo(() => {
-
     if (user && user.linkedAccounts) {
-      const account = user.linkedAccounts.filter(item => item.type !== 'wallet').sort((a, b) => (b.latestVerifiedAt?.getTime() ?? 0) - (a.latestVerifiedAt?.getTime() ?? 0))[0];
-      let address = null; 
-      if (account.type === 'email') {
+      const account = user.linkedAccounts
+        .filter((item) => item.type !== "wallet")
+        .sort(
+          (a, b) =>
+            (b.latestVerifiedAt?.getTime() ?? 0) -
+            (a.latestVerifiedAt?.getTime() ?? 0)
+        )[0];
+      let address = null;
+      if (account.type === "email") {
         address = account.address;
-      } else if (account.type === 'twitter_oauth') {
+      } else if (account.type === "twitter_oauth") {
         address = `@${account.username}`;
-      } else if (account.type === 'google_oauth') {
+      } else if (account.type === "google_oauth") {
         address = `@${account.name}`;
       }
       return {
         type: account.type,
         address: address,
-      }
+      };
     }
     return null;
   }, [user]);
 
-
   const switchChain = (chainId: number) => {
     const wallet = walletsEVM[0];
     if (wallet) {
-      return wallet.switchChain(chainId)
+      return wallet.switchChain(chainId);
     }
     return Promise.reject("no wallet");
   };
@@ -92,10 +114,10 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const disconnect = () => {
     return logout();
-  }
+  };
 
   const exportWallet = (namespace: ChainNamespace) => {
-    console.log('xxxx export wallet', {
+    console.log("xxxx export wallet", {
       namespace,
     });
     if (namespace === ChainNamespace.evm) {
@@ -110,7 +132,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return exportSolanaWallet();
     }
     return Promise.reject("no namespace");
-  }
+  };
 
   const isConnected = useMemo(() => {
     if (ready && authenticated) {
@@ -118,7 +140,6 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
     return false;
   }, [ready, authenticated]);
-
 
   useEffect(() => {
     if (!authenticated || !walletsEVM || !walletsEVM[0]) {
@@ -146,7 +167,6 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
           id: getPrivyEmbeddedWalletChainId(wallet.chainId) ?? 1,
           namespace: ChainNamespace.evm,
         },
-
       });
     });
   }, [walletsEVM, authenticated]);
@@ -168,8 +188,11 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
     if (!user) {
       return;
     }
-    const embededSolanaWallet = (user?.linkedAccounts as WalletWithMetadata[]).find(
-      (item: WalletWithMetadata) => item.chainType === 'solana' && item.connectorType === 'embedded'
+    const embededSolanaWallet = (
+      user?.linkedAccounts as WalletWithMetadata[]
+    ).find(
+      (item: WalletWithMetadata) =>
+        item.chainType === "solana" && item.connectorType === "embedded"
     );
 
     if (!embededSolanaWallet) {
@@ -181,14 +204,14 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return;
     }
 
-    const wallet = walletsSOL.find((w: any) => w.connectorType === 'embedded');
+    const wallet = walletsSOL.find((w: any) => w.connectorType === "embedded");
     if (wallet) {
       if (walletSOL && wallet.address === walletSOL.accounts[0].address) {
         if (walletSOL.chain.id === SolanaChainsMap.get(network)!) {
           return;
         }
       }
-    
+
       setWalletSOL({
         label: "privy",
         icon: "",
@@ -216,10 +239,16 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
         },
       });
     }
-
-
-  }, [walletsSOL, authenticated, createSolanaWallet, solanaReady, user, walletSOL, network, solanaInfo]);
-
+  }, [
+    walletsSOL,
+    authenticated,
+    createSolanaWallet,
+    solanaReady,
+    user,
+    walletSOL,
+    network,
+    solanaInfo,
+  ]);
 
   useEffect(() => {
     if (isConnected && linkedAccount) {
@@ -234,17 +263,32 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [isConnected, linkedAccount, connectedRef]);
 
-  
-  const value = useMemo(() => ({
-    connect,
-    walletEVM,
-    walletSOL,
-    isConnected,
-    disconnect,
-    switchChain,
-    linkedAccount,
-    exportWallet,
-  }), [connect, walletEVM, walletSOL, isConnected, disconnect, switchChain, linkedAccount, exportWallet, solanaInfo, setSolanaInfo]);
+  const value = useMemo(
+    () => ({
+      connect,
+      walletEVM,
+      walletSOL,
+      isConnected,
+      disconnect,
+      switchChain,
+      linkedAccount,
+      exportWallet,
+      createEvmWallet,
+      createSolanaWallet,
+    }),
+    [
+      connect,
+      walletEVM,
+      walletSOL,
+      isConnected,
+      disconnect,
+      switchChain,
+      linkedAccount,
+      exportWallet,
+      createEvmWallet,
+      createSolanaWallet,
+    ]
+  );
 
   return (
     <PrivyWalletContext.Provider value={value}>

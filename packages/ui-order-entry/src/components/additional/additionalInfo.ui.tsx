@@ -1,4 +1,4 @@
-import { Checkbox, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
+import { Checkbox, cn, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
@@ -44,6 +44,8 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
         mb={3}
         width={pinned ? "unset" : "100%"}
         className="oui-gap-x-2 md:oui-gap-x-3"
+        wrap="wrap"
+        gapY={1}
       >
         <Flex itemAlign={"center"}>
           <Checkbox
@@ -58,9 +60,10 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           />
           <label
             htmlFor={"toggle_order_post_only"}
-            className={
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
-            }
+            className={cn(
+              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-break-normal oui-whitespace-nowrap"
+            )}
           >
             {t("orderEntry.orderType.postOnly")}
           </label>
@@ -78,9 +81,10 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           />
           <label
             htmlFor={"toggle_order_iov"}
-            className={
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
-            }
+            className={cn(
+              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-break-normal oui-whitespace-nowrap"
+            )}
           >
             {t("orderEntry.orderType.ioc")}
           </label>
@@ -98,9 +102,10 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           />
           <label
             htmlFor={"toggle_order_fok"}
-            className={
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20"
-            }
+            className={cn(
+              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-break-normal oui-whitespace-nowrap"
+            )}
           >
             {t("orderEntry.orderType.fok")}
           </label>

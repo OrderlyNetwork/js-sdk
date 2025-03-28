@@ -17,6 +17,6 @@ export {
 export const LeverageWidgetId = "leverageEditor";
 
 registerSimpleDialog(LeverageWidgetId, LeverageEditor, {
-  title: i18n.t("leverage.maxAccountLeverage"),
+  title: () => i18n.t("leverage.maxAccountLeverage"),
   size: "md",
 });

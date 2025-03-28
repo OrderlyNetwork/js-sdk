@@ -17,40 +17,7 @@ import {
   HollowCandlesIcon,
   LineIcon,
 } from "../../icons";
-import { i18n } from "@orderly.network/i18n";
-
-const lineTypeList = [
-  {
-    icon: <BarIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: i18n.t("tradingView.lineType.bars"),
-    value: "0",
-  },
-  {
-    icon: <CandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: i18n.t("tradingView.lineType.candles"),
-    value: "1",
-  },
-  {
-    icon: <HollowCandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: i18n.t("tradingView.lineType.hollowCandles"),
-    value: "9",
-  },
-  {
-    icon: <LineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: i18n.t("tradingView.lineType.line"),
-    value: "2",
-  },
-  {
-    icon: <AreaIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: i18n.t("tradingView.lineType.area"),
-    value: "3",
-  },
-  {
-    icon: <BaseLineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: i18n.t("tradingView.lineType.baseline"),
-    value: "10",
-  },
-];
+import { useTranslation } from "@orderly.network/i18n";
 
 interface IProps {
   lineType: string;
@@ -58,6 +25,43 @@ interface IProps {
 }
 export default function LineType(props: IProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  const lineTypeList = useMemo(() => {
+    return [
+      {
+        icon: <BarIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.bars"),
+        value: "0",
+      },
+      {
+        icon: <CandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.candles"),
+        value: "1",
+      },
+      {
+        icon: (
+          <HollowCandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />
+        ),
+        label: t("tradingView.lineType.hollowCandles"),
+        value: "9",
+      },
+      {
+        icon: <LineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.line"),
+        value: "2",
+      },
+      {
+        icon: <AreaIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.area"),
+        value: "3",
+      },
+      {
+        icon: <BaseLineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.baseline"),
+        value: "10",
+      },
+    ];
+  }, [t]);
 
   const currentLineTypeIcon = useMemo(() => {
     const data = lineTypeList.find((item) => item.value === props.lineType);

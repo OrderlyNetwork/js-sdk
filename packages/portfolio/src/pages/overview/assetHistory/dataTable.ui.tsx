@@ -1,8 +1,9 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { DataFilter } from "@orderly.network/ui";
-import { SIDES, useAssetHistoryColumns } from "./column";
+import { useAssetHistoryColumns } from "./column";
 import { type UseAssetHistoryReturn } from "./useDataSource.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
 
 type AssetHistoryProps = {
   // dataSource?: any[];
@@ -15,6 +16,15 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading } = props;
   const { side, dateRange } = queryParameter;
   const columns = useAssetHistoryColumns();
+  const { t } = useTranslation();
+
+  const SIDES = useMemo(() => {
+    return [
+      { label: t("common.all"), value: "All" },
+      { label: t("common.deposit"), value: "DEPOSIT" },
+      { label: t("common.withdraw"), value: "WITHDRAW" },
+    ];
+  }, [t]);
 
   return (
     <>
