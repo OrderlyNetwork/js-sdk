@@ -49,6 +49,7 @@
     "@orderly.network/trading-leaderboard": "2.0.7"
   },
   "changesets": [
+    "chilled-dots-arrive",
     "grumpy-camels-crash",
     "heavy-coats-serve",
     "purple-apples-drum",
