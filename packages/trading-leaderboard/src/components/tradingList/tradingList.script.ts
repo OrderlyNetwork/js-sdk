@@ -154,6 +154,12 @@ export function useTradingListScript() {
     }
   }, [searchValue]);
 
+  useEffect(() => {
+    if (dateRange.to && dateRange.from) {
+      setPage(1);
+    }
+  }, [dateRange]);
+
   const _data = useDataTap(dataSource);
 
   return {
