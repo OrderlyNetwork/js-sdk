@@ -45,11 +45,13 @@
     "@orderly.network/wallet-connector": "2.0.7",
     "@orderly.network/wallet-connector-privy": "2.0.7",
     "@orderly.network/web3-modal": "2.0.7",
-    "@orderly.network/web3-provider-ethers": "2.0.7"
+    "@orderly.network/web3-provider-ethers": "2.0.7",
+    "@orderly.network/trading-leaderboard": "2.0.7"
   },
   "changesets": [
     "heavy-coats-serve",
     "purple-apples-drum",
-    "quick-pumpkins-live"
+    "quick-pumpkins-live",
+    "silent-bees-attack"
   ]
 }

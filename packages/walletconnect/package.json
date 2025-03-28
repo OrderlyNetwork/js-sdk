@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-modal",
-  "version": "2.0.8-i18n.2",
+  "version": "2.0.8-i18n.3",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",
