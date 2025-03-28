@@ -60,7 +60,11 @@ export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
 
 
 
-export type ConnectorType = 'onlyPrivy' | 'onlyWagmi' | 'onlyPhantom';
+export interface ConnectorWalletType {
+  disableWagmi?: boolean;
+  disablePrivy?: boolean;
+  disableSolana?: boolean;
+}
 export enum WalletChainTypeEnum {
   onlyEVM = 'onlyEVM',
   onlySOL = 'onlySOL',

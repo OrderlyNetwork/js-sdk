@@ -65,16 +65,16 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
       network={Network.testnet}
-      walletChainType={WalletChainTypeEnum.onlySOL}
-      privyConfig={{
-        appid: "cm50h5kjc011111gdn7i8cd2k",
-        appearance: {
-          theme: "dark",
-          accentColor: "#181C23",
-          logo: "/orderly-logo.svg",
-          loginMethods: ["email", "google", "twitter"],
-        },
-      }}
+      walletChainType={WalletChainTypeEnum.EVM_SOL}
+      // privyConfig={{
+      //   appid: "cm50h5kjc011111gdn7i8cd2k",
+      //   appearance: {
+      //     theme: "dark",
+      //     accentColor: "#181C23",
+      //     logo: "/orderly-logo.svg",
+      //     loginMethods: ["email", "google", "twitter"],
+      //   },
+      // }}
       wagmiConfig={{
         connectors: [
           wagmiConnectors.injected(),

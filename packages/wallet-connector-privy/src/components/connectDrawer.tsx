@@ -156,7 +156,7 @@ function SOLConnectArea({
 
 function ConnectWallet() {
   const { connect } = useWallet();
-  const { setOpenConnectDrawer, walletChainType } = useWalletConnectorPrivy();
+  const { setOpenConnectDrawer, walletChainType, connectorWalletType } = useWalletConnectorPrivy();
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
@@ -167,29 +167,35 @@ function ConnectWallet() {
 
   return (
     <div className={cn("oui-flex oui-flex-col oui-gap-4", "md:oui-gap-5")}>
-      <PrivyConnectArea
-        connect={(type) =>
-          handleConnect({ walletType: WalletType.PRIVY, extraType: type })
-        }
-      />
+      {!connectorWalletType.disablePrivy && (
+        <PrivyConnectArea
+          connect={(type) =>
+            handleConnect({ walletType: WalletType.PRIVY, extraType: type })
+          }
+        />
+      )}
       {walletChainType === WalletChainTypeEnum.EVM_SOL && (
         <>
-          <EVMConnectArea
-            connect={(connector) =>
-              handleConnect({
+          {!connectorWalletType.disableWagmi && (
+            <EVMConnectArea
+              connect={(connector) =>
+                handleConnect({
                 walletType: WalletType.EVM,
                 connector: connector,
               })
             }
           />
-          <SOLConnectArea
-            connect={(walletAdapter) =>
-              handleConnect({
+          )}
+          {!connectorWalletType.disableSolana && (
+            <SOLConnectArea
+              connect={(walletAdapter) =>
+                handleConnect({
                 walletType: WalletType.SOL,
                 walletAdapter: walletAdapter,
               })
-            }
-          />
+              }
+            />
+          )}
         </>
       )}
       {walletChainType === WalletChainTypeEnum.onlyEVM && (
@@ -232,7 +238,7 @@ export function ConnectDrawer(props: {
   const { isConnected: isConnectedPrivy } = usePrivyWallet();
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
-  const { termsOfUse } = useWalletConnectorPrivy();
+  const { termsOfUse, connectorWalletType } = useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");
 
   const isConnected = useMemo(() => {

@@ -4,7 +4,7 @@ import { Chain } from "viem/chains";
 import { InitPrivy } from "../types";
 
 interface IProps extends PropsWithChildren {
-  privyConfig: InitPrivy;
+  privyConfig?: InitPrivy;
   initChains: Chain[];
 }
 
@@ -13,6 +13,9 @@ export function InitPrivyProvider({
   initChains,
   children,
 }: IProps) {
+  if (!privyConfig) {
+    return children;
+  }
   const config = useMemo((): PrivyClientConfig => {
     // const chains = initChains.filter((chain) => !SolanaChains.has(chain.id) )
     const chains = initChains;

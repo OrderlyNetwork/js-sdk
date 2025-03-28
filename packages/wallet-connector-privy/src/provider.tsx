@@ -4,7 +4,7 @@ import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import { ChainNamespace } from "@orderly.network/types";
-import { InitPrivy, InitWagmi, InitSolana, Network, ConnectorType, WalletChainType, WalletChainTypeEnum } from "./types";
+import { InitPrivy, InitWagmi, InitSolana, Network, ConnectorType, WalletChainType, WalletChainTypeEnum, ConnectorWalletType } from "./types";
 import { InitPrivyProvider } from "./providers/initPrivyProvider";
 import { InitSolanaProvider } from "./providers/initSolanaProvider";
 import { InitWagmiProvider } from "./providers/initWagmiProvider";
@@ -67,6 +67,7 @@ interface WalletConnectorPrivyContextType {
   } | null) => void;
   termsOfUse: string;
   walletChainType: WalletChainType;
+  connectorWalletType: ConnectorWalletType;
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
@@ -83,7 +84,12 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   solanaInfo: null,
   setSolanaInfo: () => { },
   termsOfUse: "",
-  walletChainType: WalletChainTypeEnum.EVM_SOL
+  walletChainType: WalletChainTypeEnum.EVM_SOL,
+  connectorWalletType: {
+    disableWagmi: false,
+    disablePrivy: false,
+    disableSolana: false,
+  }
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
@@ -91,13 +97,12 @@ export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyCont
 
 
 interface WalletConnectorPrivyProps extends PropsWithChildren {
-  privyConfig: InitPrivy;
-  wagmiConfig: InitWagmi;
-  solanaConfig: InitSolana;
+  privyConfig?: InitPrivy;
+  wagmiConfig?: InitWagmi;
+  solanaConfig?: InitSolana;
   network: Network;
   customChains?: Chains;
   termsOfUse: string;
-  connectorType?: ConnectorType;
   walletChainType?: WalletChainType;
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
@@ -114,6 +119,24 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     rpcUrl: string | null;
     network: WalletAdapterNetwork | null;
   } | null>(null);
+
+  const connectorWalletType = useMemo(() => {
+    let type: ConnectorWalletType = {
+      disableWagmi: false,
+      disablePrivy: false,
+      disableSolana: false,
+    }
+    if (!props.privyConfig) {
+      type.disablePrivy = true;
+    }
+    if (!props.wagmiConfig) {
+      type.disableWagmi = true;
+    }
+    if (!props.solanaConfig) {
+      type.disableSolana = true;
+    }
+    return type;
+  }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
 
   const fetchAllChains = async () => {
     try {
@@ -164,7 +187,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     setSolanaInfo,
     termsOfUse,
     walletChainType,
-  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo, termsOfUse, walletChainType]);
+    connectorWalletType,
+  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo, termsOfUse, walletChainType, connectorWalletType]);
 
 
   useEffect(() => {
@@ -188,8 +212,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       <TooltipProvider delayDuration={300}>
 
         <InitPrivyProvider privyConfig={props.privyConfig} initChains={initChains}>
-          <InitWagmiProvider wagmiConfig={props.wagmiConfig} initChains={initChains}>
-            <InitSolanaProvider {...props.solanaConfig}>
+          <InitWagmiProvider wagmiConfig={props.wagmiConfig ?? {}} initChains={initChains}>
+            <InitSolanaProvider {...props.solanaConfig ?? { wallets: [], onError: () => { } }}>
               <PrivyWalletProvider>
                 <WagmiWalletProvider>
                   <SolanaWalletProvider>
