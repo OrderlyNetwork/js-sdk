@@ -1,8 +1,6 @@
 import { useMemo } from "react";
-import {
-  Campaign,
-  useTradingLeaderboardContext,
-} from "../../components/provider";
+import { Campaign } from "../../components/provider";
+import { useScreen } from "@orderly.network/ui";
 
 export type LeaderboardScriptReturn = ReturnType<typeof useLeaderboardScript>;
 
@@ -18,6 +16,7 @@ function isVideoSrc(src?: string) {
 
 export function useLeaderboardScript(options: LeaderboardScriptOptions) {
   const { backgroundSrc, campaigns = [] } = options;
+  const { isMobile } = useScreen();
 
   const showCampaigns = useMemo(() => campaigns?.length > 0, [campaigns]);
 
@@ -29,5 +28,6 @@ export function useLeaderboardScript(options: LeaderboardScriptOptions) {
     backgroundSrc,
     isVideo,
     showCampaigns,
+    isMobile,
   };
 }

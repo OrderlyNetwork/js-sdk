@@ -7,7 +7,7 @@ export type CampaignsProps = {
   style?: React.CSSProperties;
 } & CampaignsScriptReturn;
 
-export const Campaigns: FC<CampaignsProps> = (props) => {
+export const MobileCampaigns: FC<CampaignsProps> = (props) => {
   if (props.currentCampaigns.length === 0) {
     return null;
   }
@@ -16,28 +16,16 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
     <Box
       width="100%"
       intensity={900}
-      p={5}
-      pr={2}
+      p={3}
       className={cn(
-        "oui-trading-leaderboard-campaigns oui-rounded-[20px]",
-        "oui-h-[280px]",
+        "oui-mobile-trading-leaderboard-campaigns oui-rounded-[20px]",
         props.className
       )}
       style={props.style}
     >
       <Header {...props} />
-      <Box
-        mt={5}
-        r="xl"
-        className={cn("oui-overflow-y-auto", "oui-custom-scrollbar")}
-      >
-        <Flex
-          gapY={5}
-          height={192}
-          direction="column"
-          r="xl"
-          className="oui-pr-1.5"
-        >
+      <Box r="xl" mt={3}>
+        <Flex direction="column" r="xl">
           {props.currentCampaigns.map((campaign) => {
             return <CampaignItem key={campaign.title} campaign={campaign} />;
           })}
@@ -49,8 +37,10 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
 
 const Header: FC<CampaignsScriptReturn> = (props) => {
   return (
-    <Flex justify="between" itemAlign="center" pr={3}>
-      <Text size="xl">Campaigns</Text>
+    <Flex justify="between" itemAlign="center">
+      <Text size="base" intensity={80}>
+        Campaigns
+      </Text>
       <Select.options
         size={"xs"}
         value={props.category}
@@ -70,9 +60,9 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
     campaign;
 
   return (
-    <Flex intensity={800} r="xl">
+    <Box intensity={800} r="xl">
       <img
-        className="oui-w-[400px] oui-h-[192px] oui-rounded-xl"
+        className="oui-w-full oui-h-[120px] oui-rounded-t-xl oui-object-cover"
         src={image}
         alt={title}
       />
@@ -82,41 +72,42 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
         justify="between"
         direction="column"
         height="100%"
-        p={5}
+        p={4}
+        gapY={3}
         className="oui-font-semibold"
       >
-        <Flex gap={1} direction="column" itemAlign="start">
-          <Text size="xl">{title}</Text>
-          <Text size="sm" intensity={36}>
+        <Flex direction="column" itemAlign="start" gapY={1}>
+          <Text size="sm">{title}</Text>
+          <Text size="2xs" intensity={54}>
+            {displayTime}
+          </Text>
+          <Text size="2xs" intensity={36}>
             {description}
           </Text>
         </Flex>
-        <Flex justify="between" width="100%">
-          <Text size="xs" intensity={54}>
-            {displayTime}
-          </Text>
-          <Flex gap={3}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="md"
-              onClick={() => {
-                window.open(learnMoreUrl, "_blank");
-              }}
-            >
-              Learn more
-            </Button>
-            <Button
-              size="md"
-              onClick={() => {
-                window.open(tradingUrl, "_self");
-              }}
-            >
-              Trade now
-            </Button>
-          </Flex>
+        <Flex justify="between" width="100%" gapX={3}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            size="md"
+            onClick={() => {
+              window.open(learnMoreUrl, "_blank");
+            }}
+          >
+            Learn more
+          </Button>
+          <Button
+            size="md"
+            fullWidth
+            onClick={() => {
+              window.open(tradingUrl, "_self");
+            }}
+          >
+            Trade now
+          </Button>
         </Flex>
       </Flex>
-    </Flex>
+    </Box>
   );
 };
