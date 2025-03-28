@@ -57,3 +57,13 @@ export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
   [Network.mainnet, 900900900],
   [WalletAdapterNetwork.Mainnet, 900900900],
 ]);
+
+
+
+export type ConnectorType = 'onlyPrivy' | 'onlyWagmi' | 'onlyPhantom';
+export enum WalletChainTypeEnum {
+  onlyEVM = 'onlyEVM',
+  onlySOL = 'onlySOL',
+  EVM_SOL = 'EVM_SOL',
+}
+export type WalletChainType = WalletChainTypeEnum;

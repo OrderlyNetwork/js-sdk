@@ -1,17 +1,21 @@
-import { ExclamationFillIcon, SimpleDialog, useScreen } from "@orderly.network/ui";
+import {
+  ExclamationFillIcon,
+  SimpleDialog,
+  useScreen,
+} from "@orderly.network/ui";
 import React, { useMemo } from "react";
 import { useWallet } from "../hooks/useWallet";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
-import { ConnectProps, WalletType } from "../types";
+import { ConnectProps, WalletChainTypeEnum, WalletType } from "../types";
 import { RenderPrivyTypeIcon, RenderWalletIcon } from "./common";
 import { useWalletConnectorPrivy } from "../provider";
 import { useWagmiWallet } from "../providers/wagmiWalletProvider";
 import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
-import { CloseIcon, InfoIcon } from "./icons";
+import { CloseIcon } from "./icons";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
 import { cn } from "@orderly.network/ui";
 
@@ -152,7 +156,7 @@ function SOLConnectArea({
 
 function ConnectWallet() {
   const { connect } = useWallet();
-  const { setOpenConnectDrawer } = useWalletConnectorPrivy();
+  const { setOpenConnectDrawer, walletChainType } = useWalletConnectorPrivy();
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
@@ -168,24 +172,46 @@ function ConnectWallet() {
           handleConnect({ walletType: WalletType.PRIVY, extraType: type })
         }
       />
-      <EVMConnectArea
-        connect={(connector) =>
-          handleConnect({ walletType: WalletType.EVM, connector: connector })
-        }
-      />
-      <SOLConnectArea
-        connect={(walletAdapter) =>
-          handleConnect({
-            walletType: WalletType.SOL,
-            walletAdapter: walletAdapter,
-          })
-        }
-      />
+      {walletChainType === WalletChainTypeEnum.EVM_SOL && (
+        <>
+          <EVMConnectArea
+            connect={(connector) =>
+              handleConnect({
+                walletType: WalletType.EVM,
+                connector: connector,
+              })
+            }
+          />
+          <SOLConnectArea
+            connect={(walletAdapter) =>
+              handleConnect({
+                walletType: WalletType.SOL,
+                walletAdapter: walletAdapter,
+              })
+            }
+          />
+        </>
+      )}
+      {walletChainType === WalletChainTypeEnum.onlyEVM && (
+        <EVMConnectArea
+          connect={(connector) =>
+            handleConnect({ walletType: WalletType.EVM, connector: connector })
+          }
+        />
+      )}
+      {walletChainType === WalletChainTypeEnum.onlySOL && (
+        <SOLConnectArea
+          connect={(walletAdapter) =>
+            handleConnect({
+              walletType: WalletType.SOL,
+              walletAdapter: walletAdapter,
+            })
+          }
+        />
+      )}
     </div>
   );
 }
-
-
 
 function MyWallet() {
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");

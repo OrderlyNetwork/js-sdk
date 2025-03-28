@@ -4,11 +4,12 @@ import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { ChainNamespace, ConnectorKey, EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
 import { useLocalStorage, useStorageChain, useTrack, WalletState } from "@orderly.network/hooks";
-import { ConnectProps, SolanaChains, WalletType } from "../types";
+import { ConnectProps, SolanaChains, WalletChainTypeEnum, WalletType } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
 
 export function useWallet() {
   const { track } = useTrack();
+  const { walletChainType } = useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, '')
   const {
     disconnect: disconnectEVM,
@@ -80,9 +81,10 @@ export function useWallet() {
     }
     if (isPrivy) {
 
-      // TODO need check current namespace
       if (tempNamespace === ChainNamespace.evm) {
-  
+        if (walletChainType === WalletChainTypeEnum.onlySOL) {
+          return Promise.reject(new Error('No evm wallet found'));
+        }
         isManual.current = true;
         return setChainPrivy(parseInt(chain.chainId as string)).then(res => {
       
@@ -105,6 +107,9 @@ export function useWallet() {
 
       if (tempNamespace === ChainNamespace.solana) {
         isManual.current = true;
+        if (walletChainType === WalletChainTypeEnum.onlyEVM) {
+          return Promise.reject(new Error('No solana wallet found'));
+        }
         if (privyWalletSOL) {
           setStorageChain(parseInt(chain.chainId as string));
           return Promise.resolve(true);

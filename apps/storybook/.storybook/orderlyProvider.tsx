@@ -5,6 +5,7 @@ import {
   WalletConnectorPrivyProvider,
   wagmiConnectors,
   wagmi,
+  WalletChainTypeEnum,
 } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
@@ -59,12 +60,14 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
+
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
+  
   return (
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
       network={Network.testnet}
-      // customChains={{mainnet: [], testnet: []}}
+      walletChainType={WalletChainTypeEnum.onlySOL}
       privyConfig={{
         appid: "cm50h5kjc011111gdn7i8cd2k",
         appearance: {

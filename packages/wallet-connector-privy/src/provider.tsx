@@ -4,7 +4,7 @@ import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import { ChainNamespace } from "@orderly.network/types";
-import { InitPrivy, InitWagmi, InitSolana, Network } from "./types";
+import { InitPrivy, InitWagmi, InitSolana, Network, ConnectorType, WalletChainType } from "./types";
 import { InitPrivyProvider } from "./providers/initPrivyProvider";
 import { InitSolanaProvider } from "./providers/initSolanaProvider";
 import { InitWagmiProvider } from "./providers/initWagmiProvider";
@@ -66,6 +66,7 @@ interface WalletConnectorPrivyContextType {
     network: WalletAdapterNetwork | null;
   } | null) => void;
   termsOfUse: string;
+  walletChainType: WalletChainType;
 }
 
 const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
@@ -82,9 +83,11 @@ const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextTyp
   solanaInfo: null,
   setSolanaInfo: () => { },
   termsOfUse: "",
+  walletChainType: 'EVM_SOL'
 });
 
 export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
+
 
 
 interface WalletConnectorPrivyProps extends PropsWithChildren {
@@ -94,8 +97,11 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   network: Network;
   customChains?: Chains;
   termsOfUse: string;
+  connectorType?: ConnectorType;
+  walletChainType?: WalletChainType;
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
+  const [walletChainType] = useState<WalletChainType>(props.walletChainType ?? 'EVM_SOL')
   const [termsOfUse] = useState<string>(props.termsOfUse);
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
@@ -157,7 +163,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     solanaInfo,
     setSolanaInfo,
     termsOfUse,
-  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo, termsOfUse]);
+    walletChainType,
+  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo, termsOfUse, walletChainType]);
 
 
   useEffect(() => {
