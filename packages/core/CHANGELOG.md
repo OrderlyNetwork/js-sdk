@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 2.0.8-i18n.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.8-i18n.4
+
 ## 2.0.8-i18n.3
 
 ### Patch Changes

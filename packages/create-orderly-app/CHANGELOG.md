@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.24-i18n.4
+
+### Patch Changes
+
+- publish
+
 ## 1.5.24-i18n.3
 
 ### Patch Changes

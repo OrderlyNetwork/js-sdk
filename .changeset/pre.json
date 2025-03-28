@@ -49,6 +49,7 @@
     "@orderly.network/trading-leaderboard": "2.0.7"
   },
   "changesets": [
+    "grumpy-camels-crash",
     "heavy-coats-serve",
     "purple-apples-drum",
     "quick-pumpkins-live",
