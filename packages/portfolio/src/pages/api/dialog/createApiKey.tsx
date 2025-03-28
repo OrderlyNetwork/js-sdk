@@ -191,7 +191,12 @@ export const Checkbox: FC<{
           />
         </svg>
       )}
-      <Text intensity={54} size="sm">
+
+      <Text
+        intensity={54}
+        size="sm"
+        className="oui-break-normal oui-whitespace-nowrap"
+      >
         {props.label}
       </Text>
     </button>
