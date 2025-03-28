@@ -124,9 +124,6 @@ export const TradingList: FC<TradingListProps> = (props) => {
         manualPagination
         manualSorting
         pagination={props.pagination}
-        testIds={{
-          body: "oui-testid-dataList-positionHistory-tab-body",
-        }}
         classNames={{
           root: "!oui-h-[calc(100%_-_53px_-_8px)]",
         }}

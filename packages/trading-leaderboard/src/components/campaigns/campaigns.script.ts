@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { useScreen } from "@orderly.network/ui";
+import useEmblaCarousel from "embla-carousel-react";
 import { useTradingLeaderboardContext, Campaign } from "../provider";
 import { useTranslation } from "@orderly.network/i18n";
+import { formatCampaignDate } from "../../utils";
 
 export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;
 
@@ -11,12 +14,24 @@ type CategorizedCampaigns = {
   future: Campaign[];
 };
 
+export type CurrentCampaigns = Campaign & {
+  displayTime: string;
+  learnMoreUrl: string;
+  tradingUrl: string;
+};
+
+export type TEmblaApi = {
+  scrollTo?: (index: number) => void;
+};
+
 type CategoryKey = keyof CategorizedCampaigns;
 
 export function useCampaignsScript() {
   const { t } = useTranslation();
   const { campaigns = [], href } = useTradingLeaderboardContext();
   const [category, setCategory] = useState<CategoryKey>("ongoing");
+
+  const { isMobile } = useScreen();
 
   const filterCampaigns = useMemo(() => {
     const now = new Date();
@@ -52,8 +67,30 @@ export function useCampaignsScript() {
   }, [filterCampaigns, t]);
 
   const currentCampaigns = useMemo(() => {
-    return filterCampaigns[category];
-  }, [filterCampaigns, category]);
+    const list = filterCampaigns[category];
+    return list.map((campaign) => {
+      const { startTime, endTime } = campaign;
+
+      let learnMoreUrl: string;
+      let tradingUrl = href?.trading!;
+
+      if (typeof campaign.href === "object") {
+        learnMoreUrl = campaign.href.learnMore;
+        tradingUrl = campaign.href.trading;
+      } else {
+        learnMoreUrl = campaign.href;
+      }
+
+      return {
+        ...campaign,
+        displayTime: `${formatCampaignDate(startTime)} - ${formatCampaignDate(
+          endTime
+        )} UTC`,
+        learnMoreUrl,
+        tradingUrl,
+      };
+    });
+  }, [filterCampaigns, category, href]);
 
   useEffect(() => {
     // Find the first non-empty category
@@ -71,6 +108,18 @@ export function useCampaignsScript() {
   const onCategoryChange = (value: string) => {
     setCategory(value as CategoryKey);
   };
+  const [scrollIndex, setScrollIndex] = useState(0);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    slidesToScroll: "auto",
+  });
+
+  useEffect(() => {
+    emblaApi?.on("select", () => {
+      setScrollIndex(emblaApi?.selectedScrollSnap());
+    });
+  }, [emblaApi]);
 
   return {
     options,
@@ -78,5 +127,10 @@ export function useCampaignsScript() {
     category,
     onCategoryChange,
     tradingUrl: href?.trading,
+    isMobile,
+    emblaRef,
+    emblaApi: emblaApi as TEmblaApi,
+    scrollIndex,
+    enableScroll: currentCampaigns?.length > 1,
   };
 }

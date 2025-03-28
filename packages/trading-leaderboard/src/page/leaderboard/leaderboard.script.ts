@@ -1,8 +1,9 @@
 import { useMemo } from "react";
-import {
-  Campaign,
-  useTradingLeaderboardContext,
-} from "../../components/provider";
+import { Campaign } from "../../components/provider";
+import { useScreen } from "@orderly.network/ui";
+import { useAccount } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { useAppContext } from "@orderly.network/react-app";
 
 export type LeaderboardScriptReturn = ReturnType<typeof useLeaderboardScript>;
 
@@ -18,8 +19,17 @@ function isVideoSrc(src?: string) {
 
 export function useLeaderboardScript(options: LeaderboardScriptOptions) {
   const { backgroundSrc, campaigns = [] } = options;
+  const { isMobile } = useScreen();
+  const { state } = useAccount();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const showCampaigns = useMemo(() => campaigns?.length > 0, [campaigns]);
+
+  const canTrading =
+    !wrongNetwork &&
+    !disabledConnect &&
+    (state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
 
   const isVideo = useMemo(() => {
     return isVideoSrc(backgroundSrc);
@@ -29,5 +39,7 @@ export function useLeaderboardScript(options: LeaderboardScriptOptions) {
     backgroundSrc,
     isVideo,
     showCampaigns,
+    isMobile,
+    canTrading,
   };
 }

@@ -1836,6 +1836,9 @@ importers:
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
+      '@orderly.network/trading':
+        specifier: workspace:*
+        version: link:../trading
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../types
@@ -1851,6 +1854,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      embla-carousel-react:
+        specifier: 8.1.5
+        version: 8.1.5(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.22.9

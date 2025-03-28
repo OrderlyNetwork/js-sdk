@@ -35,7 +35,7 @@ export const useTradingListColumns = () => {
           </Text.numeral>
         );
       },
-      width: 100,
+      width: 120,
     },
   ] as Column[];
 };
