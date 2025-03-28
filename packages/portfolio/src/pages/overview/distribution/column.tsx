@@ -74,19 +74,3 @@ export const useColumns = () => {
 
   return columns;
 };
-
-export const TYPES = [
-  { label: i18n.t("common.all"), value: "All" },
-  {
-    label: i18n.t("portfolio.overview.distribution.type.referralCommission"),
-    value: "REFERRER_REBATE",
-  },
-  {
-    label: i18n.t("portfolio.overview.distribution.type.refereeRebate"),
-    value: "REFEREE_REBATE",
-  },
-  {
-    label: i18n.t("portfolio.overview.distribution.type.brokerFee"),
-    value: "BROKER_FEE",
-  },
-];

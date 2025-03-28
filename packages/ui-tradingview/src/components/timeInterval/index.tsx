@@ -18,125 +18,54 @@ interface IProps {
   interval: string;
 }
 
-const mobileTimeIntervalDefaultMap = [
-  {
-    value: "1",
-    label: i18n.t("tradingView.timeInterval.1m"),
-  },
-  {
-    value: "15",
-    label: i18n.t("tradingView.timeInterval.15m"),
-  },
-  {
-    value: "60",
-    label: i18n.t("tradingView.timeInterval.1h"),
-  },
-  {
-    value: "240",
-    label: i18n.t("tradingView.timeInterval.4h"),
-  },
-  {
-    value: "1D",
-    label: i18n.t("tradingView.timeInterval.1d"),
-  },
+const useMobileTimeIntervalMoreMap = () => {
+  const { t } = useTranslation();
 
-  {
-    value: "1W",
-    label: i18n.t("tradingView.timeInterval.1w"),
-  },
-];
+  const mobileTimeIntervalMoreMap = useMemo(() => {
+    return [
+      [
+        {
+          value: "3",
+          label: t("tradingView.timeInterval.3m"),
+        },
+        {
+          value: "5",
+          label: t("tradingView.timeInterval.5m"),
+        },
 
-const mobileTimeIntervalMoreMap = [
-  [
-    {
-      value: "3",
-      label: i18n.t("tradingView.timeInterval.3m"),
-    },
-    {
-      value: "5",
-      label: i18n.t("tradingView.timeInterval.5m"),
-    },
+        {
+          value: "30",
+          label: t("tradingView.timeInterval.30m"),
+        },
 
-    {
-      value: "30",
-      label: i18n.t("tradingView.timeInterval.30m"),
-    },
+        {
+          value: "120",
+          label: t("tradingView.timeInterval.2h"),
+        },
+      ],
+      [
+        {
+          value: "360",
+          label: t("tradingView.timeInterval.6h"),
+        },
+        {
+          value: "720",
+          label: t("tradingView.timeInterval.12h"),
+        },
+        {
+          value: "3d",
+          label: t("tradingView.timeInterval.3d"),
+        },
+        {
+          value: "1M",
+          label: t("tradingView.timeInterval.1M"),
+        },
+      ],
+    ];
+  }, [t]);
 
-    {
-      value: "120",
-      label: i18n.t("tradingView.timeInterval.2h"),
-    },
-  ],
-  [
-    {
-      value: "360",
-      label: i18n.t("tradingView.timeInterval.6h"),
-    },
-    {
-      value: "720",
-      label: i18n.t("tradingView.timeInterval.12h"),
-    },
-    {
-      value: "3d",
-      label: i18n.t("tradingView.timeInterval.3d"),
-    },
-    {
-      value: "1M",
-      label: i18n.t("tradingView.timeInterval.1M"),
-    },
-  ],
-];
-
-const timeIntervalMap = [
-  {
-    value: "1",
-    label: i18n.t("tradingView.timeInterval.1m"),
-  },
-  {
-    value: "3",
-    label: i18n.t("tradingView.timeInterval.3m"),
-  },
-  {
-    value: "5",
-    label: i18n.t("tradingView.timeInterval.5m"),
-  },
-  {
-    value: "15",
-    label: i18n.t("tradingView.timeInterval.15m"),
-  },
-  {
-    value: "30",
-    label: i18n.t("tradingView.timeInterval.30m"),
-  },
-
-  {
-    value: "60",
-    label: i18n.t("tradingView.timeInterval.1h"),
-  },
-
-  {
-    value: "240",
-    label: i18n.t("tradingView.timeInterval.4h"),
-  },
-
-  {
-    value: "720",
-    label: i18n.t("tradingView.timeInterval.12h"),
-  },
-  {
-    value: "1D",
-    label: i18n.t("tradingView.timeInterval.1d"),
-  },
-
-  {
-    value: "1W",
-    label: i18n.t("tradingView.timeInterval.1w"),
-  },
-  {
-    value: "1M",
-    label: i18n.t("tradingView.timeInterval.1M"),
-  },
-];
+  return { mobileTimeIntervalMoreMap };
+};
 
 export function TimeInterval(props: IProps) {
   const isMobile = useMediaQuery(MEDIA_TABLET);
@@ -147,14 +76,74 @@ export function TimeInterval(props: IProps) {
 }
 
 function DesktopTimeInterval(props: IProps) {
+  const { t } = useTranslation();
+  const timeIntervalMap = useMemo(() => {
+    return [
+      {
+        value: "1",
+        label: t("tradingView.timeInterval.1m"),
+      },
+      {
+        value: "3",
+        label: t("tradingView.timeInterval.3m"),
+      },
+      {
+        value: "5",
+        label: t("tradingView.timeInterval.5m"),
+      },
+      {
+        value: "15",
+        label: t("tradingView.timeInterval.15m"),
+      },
+      {
+        value: "30",
+        label: t("tradingView.timeInterval.30m"),
+      },
+
+      {
+        value: "60",
+        label: t("tradingView.timeInterval.1h"),
+      },
+
+      {
+        value: "240",
+        label: t("tradingView.timeInterval.4h"),
+      },
+
+      {
+        value: "720",
+        label: t("tradingView.timeInterval.12h"),
+      },
+      {
+        value: "1D",
+        label: t("tradingView.timeInterval.1d"),
+      },
+
+      {
+        value: "1W",
+        label: t("tradingView.timeInterval.1w"),
+      },
+      {
+        value: "1M",
+        label: t("tradingView.timeInterval.1M"),
+      },
+    ];
+  }, [t]);
+
   return (
-    <div className="oui-text-2xs oui-text-base-contrast-36 oui-flex oui-gap-[2px] oui-items-center oui-mr-3 oui-font-semibold">
+    <div
+      className={cn(
+        "oui-text-2xs oui-text-base-contrast-36 oui-flex oui-gap-[2px] oui-items-center oui-mr-3 oui-font-semibold",
+        "oui-overflow-hidden"
+      )}
+    >
       {timeIntervalMap.map((item) => (
         <div
           key={item.value}
           className={cn(
             "oui-cursor-pointer oui-px-2",
             "hover:oui-text-base-contrast-80",
+            "oui-break-normal oui-whitespace-nowrap",
             props.interval === item.value &&
               "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded"
           )}
@@ -170,6 +159,39 @@ function DesktopTimeInterval(props: IProps) {
 
 export function MobileTimeInterval(props: IProps) {
   const { t } = useTranslation();
+
+  const mobileTimeIntervalDefaultMap = useMemo(() => {
+    return [
+      {
+        value: "1",
+        label: t("tradingView.timeInterval.1m"),
+      },
+      {
+        value: "15",
+        label: t("tradingView.timeInterval.15m"),
+      },
+      {
+        value: "60",
+        label: t("tradingView.timeInterval.1h"),
+      },
+      {
+        value: "240",
+        label: t("tradingView.timeInterval.4h"),
+      },
+      {
+        value: "1D",
+        label: t("tradingView.timeInterval.1d"),
+      },
+
+      {
+        value: "1W",
+        label: t("tradingView.timeInterval.1w"),
+      },
+    ];
+  }, [t]);
+
+  const { mobileTimeIntervalMoreMap } = useMobileTimeIntervalMoreMap();
+
   const currentIntervalIsInExpand = useMemo(() => {
     for (const row of mobileTimeIntervalMoreMap) {
       for (const item of row) {
@@ -179,19 +201,24 @@ export function MobileTimeInterval(props: IProps) {
       }
     }
     return null;
-  }, [props.interval]);
+  }, [props.interval, mobileTimeIntervalMoreMap]);
+
   return (
     <Flex
       justify="start"
       itemAlign="center"
       gap={3}
-      className="oui-text-2xs oui-text-base-contrast-36"
+      className={cn(
+        "oui-text-2xs oui-text-base-contrast-36",
+        "oui-overflow-hidden"
+      )}
     >
       <div className=" oui-flex oui-gap-1 oui-items-center oui-mr-3 oui-font-semibold">
         {mobileTimeIntervalDefaultMap.map((item) => (
           <div
             className={cn(
               "oui-px-2",
+              "oui-break-normal oui-whitespace-nowrap",
               props.interval === item.value &&
                 "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded"
             )}
@@ -209,7 +236,9 @@ export function MobileTimeInterval(props: IProps) {
             {currentIntervalIsInExpand}
           </div>
         ) : (
-          <Text>{t("tradingView.timeInterval.more")}</Text>
+          <Text className="oui-break-normal oui-whitespace-nowrap">
+            {t("tradingView.timeInterval.more")}
+          </Text>
         )}
       </DropDownTimeInterval>
     </Flex>
@@ -218,6 +247,8 @@ export function MobileTimeInterval(props: IProps) {
 
 function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
   const [open, setOpen] = React.useState(false);
+  const { mobileTimeIntervalMoreMap } = useMobileTimeIntervalMoreMap();
+
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>

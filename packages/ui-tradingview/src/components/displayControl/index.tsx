@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DisplayControlSettingInterface } from "../../type";
 import {
   DropdownMenuContent,
@@ -16,74 +16,12 @@ import {
   SelectedIcon,
   UnSelectIcon,
 } from "../../icons";
-import { i18n } from "@orderly.network/i18n";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 
-const DisplayControlMap: {
+type DisplayControl = {
   label: string;
   id: keyof DisplayControlSettingInterface;
-}[] = [
-  {
-    label: i18n.t("common.position"),
-    id: "position",
-  },
-  {
-    label: i18n.t("tradingView.displayControl.buySell"),
-    id: "buySell",
-  },
-  {
-    label: i18n.t("tradingView.displayControl.limitOrders"),
-    id: "limitOrders",
-  },
-  {
-    label: i18n.t("tradingView.displayControl.stopOrders"),
-    id: "stopOrders",
-  },
-  {
-    label: i18n.t("common.tpsl"),
-    id: "tpsl",
-  },
-  {
-    label: i18n.t("tpsl.positionTpsl"),
-    id: "positionTpsl",
-  },
-];
-
-const MobileDisplayControlMap: {
-  label: string;
-  id: keyof DisplayControlSettingInterface;
-}[][] = [
-  [
-    {
-      label: i18n.t("common.position"),
-      id: "position",
-    },
-
-    {
-      label: i18n.t("tradingView.displayControl.limitOrders"),
-      id: "limitOrders",
-    },
-  ],
-  [
-    {
-      label: i18n.t("tradingView.displayControl.stopOrders"),
-      id: "stopOrders",
-    },
-    {
-      label: i18n.t("common.tpsl"),
-      id: "tpsl",
-    },
-  ],
-  [
-    {
-      label: i18n.t("tpsl.positionTpsl"),
-      id: "positionTpsl",
-    },
-    {
-      label: i18n.t("tradingView.displayControl.buySell"),
-      id: "buySell",
-    },
-  ],
-];
+};
 
 interface IProps {
   displayControlState: DisplayControlSettingInterface;
@@ -95,6 +33,37 @@ export function DesktopDisplayControl({
   changeDisplayControlState,
 }: IProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const DisplayControlMap = useMemo<DisplayControl[]>(() => {
+    return [
+      {
+        label: t("common.position"),
+        id: "position",
+      },
+      {
+        label: t("tradingView.displayControl.buySell"),
+        id: "buySell",
+      },
+      {
+        label: t("tradingView.displayControl.limitOrders"),
+        id: "limitOrders",
+      },
+      {
+        label: t("tradingView.displayControl.stopOrders"),
+        id: "stopOrders",
+      },
+      {
+        label: t("common.tpsl"),
+        id: "tpsl",
+      },
+      {
+        label: t("tpsl.positionTpsl"),
+        id: "positionTpsl",
+      },
+    ];
+  }, [t]);
+
   return (
     <>
       <DropdownMenuRoot open={open} onOpenChange={setOpen}>
@@ -172,6 +141,43 @@ export function DesktopDisplayControl({
 
 export function MobileDisplayControl(props: IProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const MobileDisplayControlMap = useMemo<DisplayControl[][]>(() => {
+    return [
+      [
+        {
+          label: t("common.position"),
+          id: "position",
+        },
+
+        {
+          label: t("tradingView.displayControl.limitOrders"),
+          id: "limitOrders",
+        },
+      ],
+      [
+        {
+          label: t("tradingView.displayControl.stopOrders"),
+          id: "stopOrders",
+        },
+        {
+          label: t("common.tpsl"),
+          id: "tpsl",
+        },
+      ],
+      [
+        {
+          label: t("tpsl.positionTpsl"),
+          id: "positionTpsl",
+        },
+        {
+          label: t("tradingView.displayControl.buySell"),
+          id: "buySell",
+        },
+      ],
+    ];
+  }, [t]);
 
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>

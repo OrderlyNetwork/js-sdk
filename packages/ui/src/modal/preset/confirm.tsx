@@ -28,13 +28,15 @@ export const ConfirmDialog = create<ConfirmProps>((props) => {
   const { isMobile } = useScreen();
 
   const defaultSize = isMobile ? "xs" : "sm";
+  
+  const title = typeof props.title === "function" ? props.title() : props.title;
 
   return (
     <SimpleDialog
       open={visible}
       title={
         <Text size="base" weight="semibold">
-          {props.title}
+          {title}
         </Text>
       }
       size={size || defaultSize}
