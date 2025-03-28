@@ -15,6 +15,7 @@ import { connector } from "./module/connector";
 import { transfer } from "./module/transfer";
 import { affiliate } from "./module/affiliate";
 import { ui } from "./module/ui";
+import { tradingLeaderboard } from "./module/tradingLeaderboard";
 
 export const en = {
   "common.cancel": "Cancel",
@@ -78,6 +79,7 @@ export const en = {
   "common.unrealizedPnl": "Unrealized PnL",
   "common.realizedPnl": "Realized PnL",
   "common.totalValue": "Total value",
+  "common.address": "Address",
   "common.available": "Available",
 
   "common.overview": "Overview",
@@ -99,6 +101,7 @@ export const en = {
   "common.leverage": "Leverage",
   "common.affiliate": "Affiliate",
   "common.tradingRewards": "Trading rewards",
+  "common.tradingLeaderboard": "Trading Leaderboard",
 
   /** linkDevice */
   "linkDevice.createQRCode.loading.description":
@@ -151,4 +154,5 @@ export const en = {
   ...transfer,
   ...affiliate,
   ...ui,
+  ...tradingLeaderboard,
 };

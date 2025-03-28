@@ -521,7 +521,7 @@ const OrderQuantityInput = (props: {
         {symbolInfo.quote}
         <Flex
           height={20}
-          width={48}
+          px={3}
           justify="center"
           itemAlign="center"
           r="base"

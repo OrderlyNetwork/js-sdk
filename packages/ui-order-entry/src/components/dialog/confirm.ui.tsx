@@ -277,5 +277,5 @@ export const orderConfirmDialogId = "orderConfirm";
 
 registerSimpleDialog(orderConfirmDialogId, Dialog, {
   size: "sm",
-  title: i18n.t("orderEntry.orderConfirm"),
+  title: () => i18n.t("orderEntry.orderConfirm"),
 });

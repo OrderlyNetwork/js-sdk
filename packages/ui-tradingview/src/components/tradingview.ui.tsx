@@ -50,7 +50,10 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
         <div className="oui-z-[1] oui-absolute oui-top-0 oui-bottom-0 oui-right-0 oui-left-0 oui-h-full oui-w-full oui-flex oui-flex-col">
           <TopBar>
             {isMobile ? (
-              <>
+              <Flex
+                gapX={2}
+                className="oui-overflow-x-scroll oui-hide-scrollbar"
+              >
                 <TimeInterval
                   interval={interval ?? "1"}
                   changeInterval={changeInterval}
@@ -60,7 +63,7 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
                   displayControlState={displayControlState}
                   changeDisplayControlState={changeDisplaySetting}
                 />
-              </>
+              </Flex>
             ) : (
               <>
                 <TimeInterval

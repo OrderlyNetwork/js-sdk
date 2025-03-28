@@ -28,6 +28,7 @@ const config: OrderlyConfig = {
         { name: "Portfolio", href: "/portfolio" },
         { name: "Markets", href: "/markets" },
         { name: "Rewards", href: "/rewards" },
+        { name: "Leaderboard", href: "/leaderboard" },
       ],
       products: [
         { name: "Swap", href: "/swap" },

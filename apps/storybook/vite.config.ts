@@ -125,6 +125,10 @@ export default defineConfig({
         __dirname,
         "../../packages/wallet-connector-privy/src"
       ),
+      "@orderly.network/trading-leaderboard": resolve(
+        __dirname,
+        "../../packages/trading-leaderboard/src"
+      ),
     },
   },
 });

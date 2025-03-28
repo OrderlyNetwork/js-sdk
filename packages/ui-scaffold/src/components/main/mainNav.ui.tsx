@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useMemo } from "react";
 import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
 import { ProductsMenu, ProductsProps } from "./products";
-import { cn, Divider, Flex } from "@orderly.network/ui";
+import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
@@ -54,6 +54,8 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
+  const { isDesktop } = useScreen();
+
   const children = useMemo(() => {
     if (typeof props.children === "undefined") return null;
 
@@ -68,13 +70,21 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       height={"48px"}
       justify={"between"}
       px={3}
+      gapX={3}
       className={cn(
         "oui-main-nav oui-font-semibold",
         className,
         classNames?.root
       )}
     >
-      <Flex itemAlign={"center"} className="oui-gap-3 2xl:oui-gap-4">
+      <Flex
+        itemAlign={"center"}
+        className={cn(
+          "oui-gap-3 2xl:oui-gap-4",
+          // let the left and right views show spacing when overlapping
+          "oui-overflow-hidden"
+        )}
+      >
         <MainLogo {...logo} />
         <ProductsMenu {...products} className={classNames?.products} />
         {/* <MainNavItems {...props.mainMenus} classNames={classNames?.mainNav} /> */}
@@ -100,7 +110,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           </>
         )}
         <LanguageSwitcherWidget />
-        <ChainMenuWidget />
+        {isDesktop && <ChainMenuWidget />}
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>
     </Flex>

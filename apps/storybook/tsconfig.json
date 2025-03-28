@@ -102,6 +102,9 @@
       ],
       "@orderly.network/i18n": [
         "../../packages/i18n/src"
+      ],
+      "@orderly.network/trading-leaderboard": [
+        "../../packages/trading-leaderboard/src"
       ]
     }
   },
