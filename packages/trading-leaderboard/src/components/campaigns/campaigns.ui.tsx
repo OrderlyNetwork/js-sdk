@@ -1,11 +1,10 @@
 import { FC } from "react";
 import { cn, Box, Text, Flex, Button, Select } from "@orderly.network/ui";
-import { CampaignsScriptReturn } from "./campaigns.script";
-import { Campaign } from "../provider";
-import { formatCampaignDate } from "../../utils";
+import { CampaignsScriptReturn, CurrentCampaigns } from "./campaigns.script";
 
 export type CampaignsProps = {
   className?: string;
+  style?: React.CSSProperties;
 } & CampaignsScriptReturn;
 
 export const Campaigns: FC<CampaignsProps> = (props) => {
@@ -24,6 +23,7 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
         "oui-h-[280px]",
         props.className
       )}
+      style={props.style}
     >
       <Header {...props} />
       <Box
@@ -39,28 +39,7 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
           className="oui-pr-1.5"
         >
           {props.currentCampaigns.map((campaign) => {
-            let learnMoreUrl: string;
-            let tradingUrl = props.tradingUrl;
-
-            if (typeof campaign.href === "object") {
-              learnMoreUrl = campaign.href.learnMore;
-              tradingUrl = campaign.href.trading;
-            } else {
-              learnMoreUrl = campaign.href;
-            }
-
-            return (
-              <CampaignItem
-                key={campaign.title}
-                campaign={{
-                  ...campaign,
-                  href: {
-                    learnMore: learnMoreUrl,
-                    trading: tradingUrl!,
-                  },
-                }}
-              />
-            );
+            return <CampaignItem key={campaign.title} campaign={campaign} />;
           })}
         </Flex>
       </Box>
@@ -86,15 +65,9 @@ const Header: FC<CampaignsScriptReturn> = (props) => {
   );
 };
 
-const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
-  const { title, description, image, href, startTime, endTime } = campaign;
-
-  const time = `${formatCampaignDate(startTime)} - ${formatCampaignDate(
-    endTime
-  )}`;
-
-  const learnMoreUrl = typeof href === "string" ? href : href.learnMore;
-  const tradingUrl = typeof href === "string" ? href : href.trading;
+const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
+  const { title, description, image, displayTime, learnMoreUrl, tradingUrl } =
+    campaign;
 
   return (
     <Flex intensity={800} r="xl">
@@ -120,7 +93,7 @@ const CampaignItem: FC<{ campaign: Campaign }> = ({ campaign }) => {
         </Flex>
         <Flex justify="between" width="100%">
           <Text size="xs" intensity={54}>
-            {time} UTC
+            {displayTime}
           </Text>
           <Flex gap={3}>
             <Button

@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePrivateQuery } from "@orderly.network/hooks";
-import { TableSort, usePagination } from "@orderly.network/ui";
+import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { differenceInDays } from "date-fns";
 import { getDateRange, formatDateRange } from "../../utils";
 import { useDataTap } from "@orderly.network/react-app";
 import { API } from "@orderly.network/types";
+import { useEndReached } from "../../hooks/useEndReached";
 
 export type TradingListScriptOptioins = {};
 
@@ -39,6 +40,9 @@ export function useTradingListScript() {
     sort: "desc",
   });
   const [sort, setSort] = useState<TableSort | undefined>(initialSort);
+  const [dataList, setDataList] = useState<TradingData[]>([]);
+
+  const { isMobile } = useScreen();
 
   const { dateRange, filterDay, updateFilterDay, filterItems, onFilter } =
     useFilter();
@@ -105,10 +109,29 @@ export function useTradingListScript() {
     });
   }, [data, sort, page, pageSize, searchValue]);
 
+  useEffect(() => {
+    if (!isMobile) {
+      return;
+    }
+    if (page === 1) {
+      setDataList(dataSource);
+    } else {
+      setDataList((prev) => [...prev, ...dataSource]);
+    }
+  }, [dataSource, isMobile, page]);
+
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
   const pagination = useMemo(
     () => parsePagination(data?.meta),
     [parsePagination, data]
   );
+
+  useEndReached(sentinelRef, () => {
+    if (!isLoading && isMobile && page < (pagination?.pageTotal || 0)) {
+      setPage(page + 1);
+    }
+  });
 
   const onSearchValueChange = (value: string) => {
     setSearchValue(value);
@@ -131,6 +154,12 @@ export function useTradingListScript() {
     }
   }, [searchValue]);
 
+  useEffect(() => {
+    if (dateRange.to && dateRange.from) {
+      setPage(1);
+    }
+  }, [dateRange]);
+
   const _data = useDataTap(dataSource);
 
   return {
@@ -147,6 +176,9 @@ export function useTradingListScript() {
     searchValue,
     onSearchValueChange,
     clearSearchValue,
+    isMobile,
+    sentinelRef,
+    dataList,
   };
 }
 

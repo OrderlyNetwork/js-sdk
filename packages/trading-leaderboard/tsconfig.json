@@ -19,6 +19,9 @@
       ],
       "@orderly.network/react-app": [
         "../app/src"
+      ],
+      "@orderly.network/trading": [
+        "../trading/src"
       ]
     }
   }

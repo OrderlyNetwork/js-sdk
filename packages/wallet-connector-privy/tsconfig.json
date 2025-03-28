@@ -22,6 +22,9 @@
       ],
       "react-dom": [
         "./node_modules/react-dom"
+      ],
+      "@orderly.network/ui-connector": [
+        "../ui-connector/src"
       ]
     }
   }
