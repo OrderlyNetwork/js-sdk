@@ -24,13 +24,13 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import config from "../src/config";
 import { Chains } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
-import { LocaleMessages, LocaleProvider, en } from "@orderly.network/i18n";
+import { LocaleProvider, en, zh } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
-import zh from "./locale/zh.json";
-
+import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import { ExtendLocaleMessages, extendZh } from "./locale/extendLocale";
+import { extendEn } from "./locale/extendLocale";
 const network = WalletAdapterNetwork.Devnet;
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
@@ -64,11 +64,16 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
-const resources: Resources = {
-  zh,
+const resources: Resources<ExtendLocaleMessages> = {
+  en: extendEn,
+  zh: {
+    ...zh,
+    ...extendZh,
+  },
 };
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
+  const config = useOrderlyConfig();
   return (
     <LocaleProvider
       resources={resources}

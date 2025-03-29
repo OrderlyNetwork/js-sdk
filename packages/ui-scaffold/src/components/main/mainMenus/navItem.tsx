@@ -68,7 +68,11 @@ export const NavItem: FC<
     >
       <span className={"oui-flex oui-items-center"}>
         <ItemIcon isActive={isActive} item={props.item} />
-        <Text.gradient color={isActive ? "brand" : "inherit"} angle={45}>
+        <Text.gradient
+          color={isActive ? "brand" : "inherit"}
+          angle={45}
+          className="oui-break-normal oui-whitespace-nowrap"
+        >
           {props.item.name}
         </Text.gradient>
         {Array.isArray(props.item.children) && (

@@ -10,7 +10,7 @@ export const useLayoutBuilder = (): SideBarProps => {
   const items = useMemo(() => {
     return [
       {
-        name: t("tradingRewards.trading"),
+        name: t("common.trading"),
         href: "/",
         icon: (
           <svg
