@@ -1,9 +1,13 @@
 // import i18n from "i18next";
 // import { initReactI18next } from "react-i18next";
 import { createInstance } from "i18next";
-import { resources, defaultLng } from "./resources";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { i18nLocalStorageKey } from "./constant";
+import { defaultLng, defaultNS, i18nLocalStorageKey } from "./constant";
+import { en } from "./locale/en";
+
+export const resources = {
+  [defaultLng]: { [defaultNS]: en },
+};
 
 const languageDetector = new LanguageDetector(null, {
   lookupLocalStorage: i18nLocalStorageKey,

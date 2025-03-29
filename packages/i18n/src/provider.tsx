@@ -1,10 +1,9 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
 import i18n from "./i18n";
-import { defaultNS, type LocaleMessages } from "./resources";
 import { Language, LocaleContext } from "./context";
-import { defaultLanguages } from "./constant";
-import { LocaleCode } from "./types";
+import { defaultLanguages, defaultNS } from "./constant";
+import { LocaleCode, Resources } from "./types";
 
 export type I18nProviderProps = Partial<I18nextProviderProps>;
 
@@ -16,14 +15,10 @@ export const I18nProvider: FC<I18nProviderProps> = (props) => {
   );
 };
 
-export type Resources = {
-  [key in LocaleCode]?: Partial<LocaleMessages>;
-};
-
 export type LocaleProviderProps = {
   children: ReactNode;
-  messages?: Record<string, string>;
   locale?: LocaleCode;
+  resource?: Record<string, string>;
   resources?: Resources;
 
   /**
@@ -38,7 +33,7 @@ export type LocaleProviderProps = {
 };
 
 export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
-  const { locale, messages, resources } = props;
+  const { locale, resource, resources } = props;
   const [languages, setLanguages] = useState<Language[]>(defaultLanguages);
 
   useEffect(() => {
@@ -47,16 +42,15 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
       Object.entries(resources).forEach(([locale, messages]) => {
         i18n.addResourceBundle(locale, defaultNS, messages, true, true);
       });
-      console.log("i18n", i18n);
       return;
     }
 
-    // init with locale and messages
-    if (messages) {
+    // init with locale and resource
+    if (resource) {
       const lng = locale || i18n.language;
-      i18n.addResourceBundle(lng, defaultNS, messages, true, true);
+      i18n.addResourceBundle(lng, defaultNS, resource, true, true);
     }
-  }, [locale, messages, resources]);
+  }, [locale, resource, resources]);
 
   useEffect(() => {
     if (locale !== i18n.language) {
