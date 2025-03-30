@@ -1,42 +1,4 @@
-const fs = require("fs");
-const path = require("path");
-const diff = require("diff");
-
 const separator = ".";
-
-// main();
-
-function main() {
-  const [, , inFileName, outFileName, diffFileName, masterFileName] =
-    process.argv;
-  const inFileNameResolved = path.resolve(inFileName);
-  const outFileNameResolved = path.resolve(outFileName);
-  const inFile = fs.readFileSync(inFileNameResolved, { encoding: "utf8" });
-  if (diffFileName) {
-    const diffFileNameResolved = path.resolve(diffFileName);
-    const outFile = fs.readFileSync(outFileNameResolved, { encoding: "utf8" });
-    let masterFile;
-    if (masterFileName) {
-      const masterFileNameResolved = path.resolve(masterFileName);
-      masterFile = fs.readFileSync(masterFileNameResolved, {
-        encoding: "utf8",
-      });
-    }
-    diffFile = diffCsv(inFile, outFile, masterFile);
-    fs.writeFileSync(diffFileNameResolved, diffFile, { encoding: "utf8" });
-  } else if (inFileNameResolved.endsWith(".json")) {
-    const json = JSON.parse(inFile);
-    const csv = json2Csv(json);
-    console.log("csv", csv);
-    fs.writeFileSync(outFileNameResolved, csv, { encoding: "utf8" });
-  } else if (inFileNameResolved.endsWith(".csv")) {
-    const csv = inFile;
-    const json = csv2Json(csv);
-    fs.writeFileSync(outFileNameResolved, JSON.stringify(json, undefined, 4), {
-      encoding: "utf8",
-    });
-  }
-}
 
 function multiJson2Csv(jsonList, header) {
   if (!Array.isArray(jsonList) || jsonList.length === 0) {
@@ -50,7 +12,7 @@ function multiJson2Csv(jsonList, header) {
   for (const key of baseKeys) {
     const values = [];
     for (const json of jsonList) {
-      values.push(json[key]);
+      values.push(json[key] || "");
     }
     result.push(stringsToCsvLine([key, ...values]));
   }

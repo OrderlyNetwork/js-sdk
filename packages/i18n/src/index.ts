@@ -13,5 +13,4 @@ export { useLocaleCode } from "./useLocaleCode";
 export { useLocaleContext, type Language } from "./context";
 export * from "./types";
 export * from "./constant";
-export { en } from "./locale/en";
-export { default as zh } from "./locale/zh.json";
+export * from "./locale";
