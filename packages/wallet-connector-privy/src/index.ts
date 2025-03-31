@@ -1,5 +1,5 @@
 export { WalletConnectorPrivyProvider } from "./provider";
-export {UserCenter, MwebUserCenter} from './components/userCenter'
+export { UserCenter, MwebUserCenter } from './components/userCenter'
 export * from "./types";
 import * as viemExport from 'viem'
 export const viem = viemExport;

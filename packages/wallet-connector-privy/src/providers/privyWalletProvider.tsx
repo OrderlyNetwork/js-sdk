@@ -50,7 +50,7 @@ const PrivyWalletContext = createContext<PrivyWalletContextValue | null>(null);
 export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { network, solanaInfo, setSolanaInfo } = useWalletConnectorPrivy();
+  const { network, solanaInfo, setSolanaInfo, connectorWalletType } = useWalletConnectorPrivy();
   const {
     login,
     logout,
@@ -60,7 +60,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     exportWallet: exportEvmWallet,
     createWallet: createEvmWallet,
   } = usePrivy();
-  const { wallets: walletsEVM } = useWallets();
+  const { wallets: walletsEVM } = connectorWalletType.disablePrivy ? { wallets: [] } : useWallets();
   const connectedRef = useRef(false);
 
   const {
@@ -68,7 +68,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     wallets: walletsSOL,
     createWallet: createSolanaWallet,
     exportWallet: exportSolanaWallet,
-  } = useSolanaWallets();
+  } = connectorWalletType.disablePrivy ? { ready: false, wallets: [], createWallet: () => Promise.resolve(), exportWallet: () => Promise.resolve() } : useSolanaWallets();
 
   const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);
   const [walletSOL, setWalletSOL] = useState<WalletStatePrivy | null>(null);

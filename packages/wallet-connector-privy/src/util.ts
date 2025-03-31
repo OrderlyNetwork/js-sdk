@@ -12,7 +12,7 @@ const WALLET_ICONS: Record<string, string> = {
   'exodus': 'https://oss.orderly.network/static/sdk/evm_wallets/exodus.png',
   'frame': 'https://oss.orderly.network/static/sdk/evm_wallets/frame.png',
   'rabby': 'https://oss.orderly.network/static/sdk/evm_wallets/rabby.png',
-  
+
 };
 export const getWalletIcon = (type: string): string | undefined => {
 
