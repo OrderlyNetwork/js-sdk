@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.23-i18n.6
+
+### Patch Changes
+
+- publish
+
 ## 0.3.23-i18n.5
 
 ### Patch Changes

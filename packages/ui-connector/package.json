@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-connector",
-  "version": "2.0.8-i18n.5",
+  "version": "2.0.8-i18n.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
