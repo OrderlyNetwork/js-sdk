@@ -20,31 +20,35 @@ export function RenderNoPrivyWallet() {
     isConnectedEvm,
     isConnectedSolana,
   });
-  const { walletChainType } = useWalletConnectorPrivy();
+  const { walletChainType, connectorWalletType } = useWalletConnectorPrivy();
   if (walletChainType === WalletChainTypeEnum.EVM_SOL) {
     if (isConnectedEvm && isConnectedSolana) {
       return (
         <div className="oui-flex oui-flex-col oui-gap-5">
-          <WalletCard
-            type={WalletType.EVM}
-            address={walletInWagmi?.accounts[0].address}
-            isActive={namespace === ChainNamespace.evm}
-            onActiveChange={() => {
-              switchWallet(ChainNamespace.evm);
-            }}
-            isPrivy={false}
-            isBoth={true}
-          />
-          <WalletCard
-            type={WalletType.SOL}
-            address={walletInSolana?.accounts[0].address}
-            isActive={namespace === ChainNamespace.solana}
-            onActiveChange={() => {
-              switchWallet(ChainNamespace.solana);
-            }}
-            isPrivy={false}
-            isBoth={true}
-          />
+          {!connectorWalletType.disableWagmi && (
+            <WalletCard
+              type={WalletType.EVM}
+              address={walletInWagmi?.accounts[0].address}
+              isActive={namespace === ChainNamespace.evm}
+              onActiveChange={() => {
+                switchWallet(ChainNamespace.evm);
+              }}
+              isPrivy={false}
+              isBoth={true}
+            />
+          )}
+          {!connectorWalletType.disableSolana && (
+            <WalletCard
+              type={WalletType.SOL}
+              address={walletInSolana?.accounts[0].address}
+              isActive={namespace === ChainNamespace.solana}
+              onActiveChange={() => {
+                switchWallet(ChainNamespace.solana);
+              }}
+              isPrivy={false}
+              isBoth={true}
+            />
+          )}
         </div>
       );
     }
@@ -62,8 +66,12 @@ export function RenderNoPrivyWallet() {
             isPrivy={false}
             isBoth={false}
           />
-          <div className="oui-h-[1px] oui-bg-line oui-my-5" />
-          <AddSolanaWallet />
+          {!connectorWalletType.disableSolana && (
+            <>
+              <div className="oui-h-[1px] oui-bg-line oui-my-5" />
+              <AddSolanaWallet />
+            </>
+          )}
         </div>
       );
     }
@@ -80,8 +88,12 @@ export function RenderNoPrivyWallet() {
             isPrivy={false}
             isBoth={false}
           />
-          <div className="oui-h-[1px] oui-bg-line oui-my-5" />
-          <AddEvmWallet />
+          {!connectorWalletType.disableWagmi && (
+            <>
+              <div className="oui-h-[1px] oui-bg-line oui-my-5" />
+              <AddEvmWallet />
+            </>
+          )}
         </div>
       );
     }

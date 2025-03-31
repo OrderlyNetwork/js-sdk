@@ -33,8 +33,10 @@ export interface ConnectProps {
 
 export interface InitPrivy {
   appid: string;
-  appearance: Omit<PrivyClientConfig['appearance'], 'walletChainType' | 'walletList'>;
-  config?: PrivyClientConfig;
+  config?: {
+    appearance: Omit<PrivyClientConfig['appearance'], 'walletChainType' | 'walletList'>;
+    loginMethods?: PrivyClientConfig['loginMethods'];
+  };
 }
 
 export interface InitWagmi {

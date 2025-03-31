@@ -21,7 +21,10 @@ export function InitSolanaProvider({
   onError,
   children,
 }: IProps) {
-  const { network, setSolanaInfo } = useWalletConnectorPrivy();
+  const { network, setSolanaInfo, connectorWalletType } = useWalletConnectorPrivy();
+  if (connectorWalletType.disableSolana) {
+    return children;
+  }
 
   const wallets = useMemo(() => {
     return walletsProp ?? [new PhantomWalletAdapter()];

@@ -25,6 +25,7 @@ import { RenderPrivyWallet } from "./renderPrivyWallet";
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
   const { isMobile, isDesktop } = useScreen();
+  const { connectorWalletType } = useWalletConnectorPrivy();
   return (
     <div className="">
       <div
@@ -91,7 +92,9 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           />
         </div>
       )}
-      <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-4 md:oui-mt-5"></div>
+      {(!connectorWalletType.disableWagmi || !connectorWalletType.disableSolana) && (
+        <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-4 md:oui-mt-5"></div>
+      )}
     </div>
   );
 }

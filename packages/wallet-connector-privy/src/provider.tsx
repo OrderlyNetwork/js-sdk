@@ -3,8 +3,8 @@ import { Main } from "./main";
 import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
-import { ChainNamespace } from "@orderly.network/types";
-import { InitPrivy, InitWagmi, InitSolana, Network, ConnectorType, WalletChainType, WalletChainTypeEnum, ConnectorWalletType } from "./types";
+import { ChainNamespace, SolanaChains } from "@orderly.network/types";
+import { InitPrivy, InitWagmi, InitSolana, Network, WalletChainType, WalletChainTypeEnum, ConnectorWalletType, SolanaChainsMap } from "./types";
 import { InitPrivyProvider } from "./providers/initPrivyProvider";
 import { InitSolanaProvider } from "./providers/initSolanaProvider";
 import { InitWagmiProvider } from "./providers/initWagmiProvider";
@@ -103,10 +103,9 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   network: Network;
   customChains?: Chains;
   termsOfUse: string;
-  walletChainType?: WalletChainType;
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
-  const [walletChainType] = useState<WalletChainType>(props.walletChainType ?? WalletChainTypeEnum.EVM_SOL)
+  const [walletChainType, setWalletChainType] = useState<WalletChainType>(WalletChainTypeEnum.EVM_SOL)
   const [termsOfUse] = useState<string>(props.termsOfUse);
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
@@ -164,8 +163,31 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     setTestnetChains(testChains);
     setMainnetChains(mainnetChains);
     setInitChains([...testChains, ...mainnetChains] as [Chain, ...Chain[]]);
+    const chainTypeObj: {
+      hasEvm: boolean;
+      hasSol: boolean;
+    } = {
+      hasEvm: false,
+      hasSol: false,
+    };
+    [...testChains, ...mainnetChains].forEach(chain => {
+      if (SolanaChains.has(chain.id)) {
+        chainTypeObj.hasSol = true;
+      } else {
+        chainTypeObj.hasEvm = true;
+      }
+    });
     initRef.current = true;
-
+    if (chainTypeObj.hasEvm && chainTypeObj.hasSol) {
+      setWalletChainType(WalletChainTypeEnum.EVM_SOL);
+    } else if (chainTypeObj.hasEvm) {
+      setWalletChainType(WalletChainTypeEnum.onlyEVM);
+    } else if (chainTypeObj.hasSol) {
+      setWalletChainType(WalletChainTypeEnum.onlySOL);
+    }
+  }
+  if (connectorWalletType.disablePrivy && connectorWalletType.disableWagmi && connectorWalletType.disableSolana) {
+    throw new Error("Privy, Wagmi, and Solana are disabled. Please enable at least one of them.");
   }
 
   const getChainsByNetwork = (network: 'mainnet' | 'testnet'): Chain[] => {

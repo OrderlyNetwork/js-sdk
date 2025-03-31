@@ -20,8 +20,9 @@ export function InitPrivyProvider({
     // const chains = initChains.filter((chain) => !SolanaChains.has(chain.id) )
     const chains = initChains;
     return {
+      loginMethods: privyConfig.config?.loginMethods || ["email", "google", "twitter"],
       appearance: {
-        ...privyConfig.appearance,
+        ...privyConfig.config?.appearance,
         walletChainType: "ethereum-and-solana",
       },
 

@@ -26,6 +26,11 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import config from "../src/config";
+import {
+  customChainsEvm,
+  customChainsSolana,
+  customChainsSolanaAndEvm,
+} from "./customChains";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -50,6 +55,10 @@ const wallets = [
   }),
 ];
 
+// const customChains =customChainsEvm;
+// const customChains = customChainsSolana;
+// const customChains = customChainsSolanaAndEvm;
+
 const { VITE_NETWORK_ID, VITE_BROKER_ID, VITE_BROKER_NAME, VITE_ENV } =
   import.meta.env || {};
 
@@ -65,16 +74,17 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
       network={Network.testnet}
-      walletChainType={WalletChainTypeEnum.EVM_SOL}
-      // privyConfig={{
-      //   appid: "cm50h5kjc011111gdn7i8cd2k",
-      //   appearance: {
-      //     theme: "dark",
-      //     accentColor: "#181C23",
-      //     logo: "/orderly-logo.svg",
-      //     loginMethods: ["email", "google", "twitter"],
-      //   },
-      // }}
+      // customChains={customChains}
+      privyConfig={{
+        appid: "cm50h5kjc011111gdn7i8cd2k",
+        config: {
+          appearance: {
+            theme: "dark",
+            accentColor: "#181C23",
+            logo: "/orderly-logo.svg",
+          },
+        },
+      }}
       wagmiConfig={{
         connectors: [
           wagmiConnectors.injected(),
@@ -104,6 +114,8 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         configStore={configStore}
         appIcons={config.orderlyAppProvider.appIcons}
         restrictedInfo={config.orderlyAppProvider.restrictedInfo}
+        // customChains={customChains}
+        // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
       >
         {props.children}
       </OrderlyAppProvider>

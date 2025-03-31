@@ -14,6 +14,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { arbitrum, Chain, mainnet, okc, sepolia } from "viem/chains";
 import { InitWagmi } from "../types";
+import { useWalletConnectorPrivy } from "../provider";
 interface InitWagmiProps extends PropsWithChildren {
   initialState?: any;
   initChains: Chain[];
@@ -26,6 +27,10 @@ export function InitWagmiProvider({
   initChains,
   wagmiConfig,
 }: InitWagmiProps) {
+  const { connectorWalletType } = useWalletConnectorPrivy();
+  if (connectorWalletType.disableWagmi) {
+    return children;
+  }
   const [queryClient] = useState(() => new QueryClient());
 
   const [config, setConfig] = useState(() =>

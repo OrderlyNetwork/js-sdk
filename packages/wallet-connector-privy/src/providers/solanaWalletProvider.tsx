@@ -31,7 +31,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { setLedgerAddress } = useStorageLedgerAddress();
   const [wallet, setWallet] = useState<any>();
-  const { network, solanaInfo } = useWalletConnectorPrivy();
+  const { network, solanaInfo, connectorWalletType } = useWalletConnectorPrivy();
   const {
     wallets,
     select,
@@ -42,7 +42,17 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     signTransaction,
     sendTransaction,
     disconnect: disconnectSolana,
-  } = useWallet();
+  } = connectorWalletType.disableSolana ? {
+    wallets: [],
+    select: () => Promise.resolve(),
+    connect: () => Promise.resolve(),
+    wallet: null,
+    publicKey: null,
+    signMessage: () => Promise.resolve(),
+    signTransaction: () => Promise.resolve(),
+    sendTransaction: () => Promise.resolve(),
+    disconnect: () => Promise.resolve(),
+  } : useWallet();
 
   const solanaPromiseRef = useRef<{
     walletSelect: Promise<any> | null;

@@ -14,6 +14,7 @@ import React, {
   useState,
 } from "react";
 import { ChainNamespace } from "@orderly.network/types";
+import { useWalletConnectorPrivy } from "../provider";
 
 interface WagmiWalletContextValue {
   connectors: Connector[];
@@ -30,11 +31,22 @@ const WagmiWalletContext = createContext<WagmiWalletContextValue | null>(null);
 export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { connectorWalletType } = useWalletConnectorPrivy();
   const [wallet, setWallet] = useState<undefined | any>(undefined);
-  const { connect, connectors: wagmiConnectors } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { connector, isConnected, address, chainId } = useAccount();
-  const { switchChain } = useSwitchChain();
+  const { connect, connectors: wagmiConnectors } =
+    connectorWalletType.disableWagmi
+      ? { connect: () => Promise.resolve(), connectors: [] }
+      : useConnect();
+  const { disconnect } = connectorWalletType.disableWagmi
+    ? { disconnect: () => Promise.resolve() }
+    : useDisconnect();
+  const { connector, isConnected, address, chainId } =
+    connectorWalletType.disableWagmi
+      ? { connector: null, isConnected: false, address: null, chainId: null }
+      : useAccount();
+  const { switchChain } = connectorWalletType.disableWagmi
+    ? { switchChain: () => Promise.resolve() }
+    : useSwitchChain();
 
   const connectedChain = useMemo(() => {
     if (chainId) {
