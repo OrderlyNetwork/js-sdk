@@ -23,7 +23,7 @@ export const useTradingRewardsLayoutScript = (props: {
   const items = useMemo(() => {
     return [
       {
-        name: t("tradingRewards.trading"),
+        name: t("common.trading"),
         href: TradingRewardsLeftSidebarPath.Trading,
         icon: (
           <svg

@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/portfolio";
 import { Box } from "@orderly.network/ui";
 import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
-import config from "../../../config";
+import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 
 const meta: Meta<typeof OrdersModule.OrdersPage> = {
   title: "Package/portfolio/Orders",
@@ -52,6 +52,7 @@ export const LayoutPage: Story = {
     layout: "fullscreen",
   },
   render: () => {
+    const config = useOrderlyConfig();
     return (
       <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Orders}>
         <Container>

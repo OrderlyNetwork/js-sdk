@@ -24,14 +24,14 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import config from "../src/config";
 import { Chains } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
-import { LocaleMessages, LocaleProvider, en } from "@orderly.network/i18n";
+import { LocaleProvider, en, zh } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
-import zh from "./locale/zh.json";
 import { customChains } from "./customChains";
-
+import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import { ExtendLocaleMessages, extendZh } from "./locale/extendLocale";
+import { extendEn } from "./locale/extendLocale";
 const network = WalletAdapterNetwork.Devnet;
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
@@ -65,11 +65,16 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
-const resources: Resources = {
-  zh,
+const resources: Resources<ExtendLocaleMessages> = {
+  en: extendEn,
+  zh: {
+    ...zh,
+    ...extendZh,
+  },
 };
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
+  const config = useOrderlyConfig();
   return (
     <LocaleProvider
       resources={resources}
@@ -78,7 +83,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
-        customChains={customChains}
+        customChains={customChains as any}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",
           appearance: {
@@ -114,7 +119,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         }}
       >
         <OrderlyAppProvider
-          customChains={customChains}
+          customChains={customChains as any}
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}

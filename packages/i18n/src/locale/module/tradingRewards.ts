@@ -1,6 +1,5 @@
 export const tradingRewards = {
   "tradingRewards.rewards": "Rewards",
-  "tradingRewards.trading": "Trading",
 
   "tradingRewards.subtitle": "Trade with {{brokerName}} to earn esORDER.",
   "tradingRewards.learnMore": "Learn more here",
