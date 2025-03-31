@@ -6,6 +6,7 @@ const { generateCsv } = require("../script/generateCsv");
 const { json2csv } = require("../script/json2csv");
 const { csv2json } = require("../script/csv2json");
 const { diffCsv } = require("../script/diffCsv");
+const { fillJson } = require("../script/fillJson");
 main();
 
 async function main() {
@@ -16,14 +17,25 @@ async function main() {
   const command = _[0];
   console.log("argv", argv);
 
-  if (command === "generateCsv") {
-    await generateCsv(output);
-  } else if (command === "json2csv") {
-    await json2csv(input, output);
-  } else if (command === "csv2json") {
-    await csv2json(input, outputDir);
-  } else if (command === "diffcsv") {
-    await diffCsv(oldFile, newFile);
+  switch (command) {
+    case "generateCsv":
+      await generateCsv(output);
+      break;
+    case "json2csv":
+      await json2csv(input, output);
+      break;
+    case "csv2json":
+      await csv2json(input, outputDir);
+      break;
+    case "diffcsv":
+      await diffCsv(oldFile, newFile);
+      break;
+    case "fillJson":
+      await fillJson(input, output);
+      break;
+    default:
+      console.log("Invalid command");
+      break;
   }
 }
 
@@ -59,7 +71,7 @@ function getArgv() {
       (yargs) => {
         return yargs
           .positional("input", {
-            describe: "Path to the CSV file",
+            describe: "Input path for the CSV file",
             type: "string",
             demandOption: true,
           })
@@ -123,6 +135,30 @@ function getArgv() {
       },
       (argv) => {
         console.log(`Comparing CSV files: ${argv.oldFile} and ${argv.newFile}`);
+      }
+    )
+
+    // fillJson command
+    .command(
+      "fillJson <input> <output>",
+      "Fill values from the input json file and generate a new JSON file",
+      (yargs) => {
+        return yargs
+          .positional("input", {
+            describe: "Input path for the JSON file",
+            type: "string",
+            demandOption: true,
+          })
+          .positional("output", {
+            describe: "Output path for the JSON file",
+            type: "string",
+            demandOption: true,
+          });
+      },
+      (argv) => {
+        console.log(
+          `Filling values from the input JSON file: ${argv.input} and generating a new JSON file: ${argv.output}`
+        );
       }
     ).argv;
 

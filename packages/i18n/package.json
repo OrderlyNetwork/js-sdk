@@ -14,7 +14,8 @@
     "generateCsv": "pnpm i18n-converter generateCsv ./dist/locale.csv",
     "csv2json": "pnpm i18n-converter csv2json ./dist/locale.csv ./dist/locale",
     "json2csv": "pnpm i18n-converter json2csv ./dist/locale/en.json,./dist/locale/zh.json ./dist/locale.csv",
-    "diffcsv": "pnpm i18n-converter diffcsv ./dist/locale1.csv ./dist/locale2.csv"
+    "diffcsv": "pnpm i18n-converter diffcsv ./dist/locale1.csv ./dist/locale2.csv",
+    "fillJson": "pnpm i18n-converter fillJson ./src/locale/zh.json ./dist/locale/zh.json"
   },
   "keywords": [],
   "files": [
