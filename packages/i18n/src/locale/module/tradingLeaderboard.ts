@@ -1,4 +1,5 @@
 export const tradingLeaderboard = {
+  "tradingLeaderboard.leaderboard": "Leaderboard",
   "tradingLeaderboard.campaigns": "Campaigns",
   "tradingLeaderboard.ongoing": "Ongoing",
   "tradingLeaderboard.past": "Past",

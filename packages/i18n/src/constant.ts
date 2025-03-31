@@ -23,6 +23,10 @@ export enum LocaleEnum {
   id = "id",
 }
 
+export const defaultLng = LocaleEnum.en;
+export const defaultNS = "translation";
+
+
 export const defaultLanguages: Language[] = [
   { localCode: LocaleEnum.en, displayName: "English" },
   { localCode: LocaleEnum.zh, displayName: "中文" },

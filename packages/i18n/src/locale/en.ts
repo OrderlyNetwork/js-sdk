@@ -101,7 +101,7 @@ export const en = {
   "common.leverage": "Leverage",
   "common.affiliate": "Affiliate",
   "common.tradingRewards": "Trading rewards",
-  "common.tradingLeaderboard": "Trading Leaderboard",
+  "common.trading": "Trading",
 
   /** linkDevice */
   "linkDevice.createQRCode.loading.description":

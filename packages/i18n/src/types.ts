@@ -1,6 +1,14 @@
 import "i18next";
-import { Resources } from "./resources";
-import { LocaleEnum } from "./constant";
+import { defaultNS, LocaleEnum } from "./constant";
+import { en } from "./locale/en";
+
+export type LocaleCode = keyof typeof LocaleEnum | (string & {});
+
+export type LocaleMessages = typeof en;
+
+export type Resources<T extends {} = {}> = {
+  [key in LocaleCode]?: Partial<LocaleMessages & T>;
+};
 
 // https://www.i18next.com/overview/typescript#create-a-declaration-file
 // Enhance the input parameter intelliSense for the t function.
@@ -10,8 +18,8 @@ declare module "i18next" {
     // defaultNS: "translation";
 
     // custom resources type
-    resources: Resources["en"];
+    resources: {
+      [defaultNS]: typeof en;
+    };
   }
 }
-
-export type LocaleCode = keyof typeof LocaleEnum | (string & {});

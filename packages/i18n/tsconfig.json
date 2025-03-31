@@ -23,6 +23,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types", "./src/@types"],
   }
 }
