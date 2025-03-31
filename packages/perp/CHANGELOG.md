@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.7-i18n.7
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.8-i18n.7
+  - @orderly.network/utils@2.0.8-i18n.7
+
 ## 4.0.7-i18n.6
 
 ### Patch Changes
