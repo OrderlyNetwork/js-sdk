@@ -1,6 +1,9 @@
 const fs = require("fs-extra");
+const path = require("path");
 const { csv2multiJson } = require("./json-csv-converter");
+const packageJson = require("../package.json");
 
+/** Compare two locale CSV files */
 async function diffCsv(oldFile, newFile) {
   const oldCsv = await fs.readFile(oldFile, { encoding: "utf8" });
   const newCsv = await fs.readFile(newFile, { encoding: "utf8" });
@@ -10,13 +13,26 @@ async function diffCsv(oldFile, newFile) {
   const diffResult = compareJsonFiles(oldJson, newJson);
   console.log("CSV diff result:", JSON.stringify(diffResult, null, 2));
 
-  // generate .md file
-  const markdownContent = generateMarkdown(diffResult);
-  await fs.writeFile("locale_changelog.md", markdownContent, {
-    encoding: "utf8",
-  });
+  const filepath = path.resolve("LOCALE_CHANGELOG.md");
 
-  console.log("✅ locale_changelog.md updated");
+  // generate .md file
+  let markdownContent = generateMarkdown(diffResult);
+
+  if (!(await fs.exists(filepath))) {
+    const title = `# Locale Changelog`;
+    markdownContent = `${title}\n\n${markdownContent}`;
+
+    await fs.writeFile(filepath, markdownContent, {
+      encoding: "utf8",
+    });
+    console.log("LOCALE_CHANGELOG.md created");
+  } else {
+    markdownContent = `\n\n${markdownContent}`;
+    await fs.appendFile(filepath, markdownContent, {
+      encoding: "utf8",
+    });
+    console.log("LOCALE_CHANGELOG.md updated");
+  }
 }
 
 // Compare function
@@ -65,41 +81,69 @@ function compareJsonFiles(oldJson, newJson) {
 
 // generate Markdown conent
 function generateMarkdown(diff) {
-  let mdContent = `# 📝 Locale Changelog\n\n`;
+  let mdContent = `## ${packageJson.version}\n\n`;
+
+  const addedKeysEmpty = Object.keys(diff.added).every((lang) => {
+    return Object.keys(diff.added[lang]).length === 0;
+  });
+  const removedKeysEmpty = Object.keys(diff.removed).every((lang) => {
+    return Object.keys(diff.removed[lang]).length === 0;
+  });
+  const updatedKeysEmpty = Object.keys(diff.updated).every((lang) => {
+    return Object.keys(diff.updated[lang]).length === 0;
+  });
+
+  if (addedKeysEmpty && removedKeysEmpty && updatedKeysEmpty) {
+    return `${mdContent}### No locale changes`;
+  }
 
   // handle added content
-  mdContent += `## 🔹 Added Keys\n`;
-  Object.keys(diff.added).forEach((lang) => {
-    mdContent += `\n### 🌍 Language: **${lang}**\n`;
-    mdContent += `| Key | Value |\n| --- | --- |\n`;
-    Object.entries(diff.added[lang]).forEach(([key, value]) => {
-      mdContent += `| ${key} | ${value} |\n`;
+  if (!addedKeysEmpty) {
+    mdContent += `### Added Keys\n`;
+    Object.keys(diff.added).forEach((lang) => {
+      if (Object.keys(diff.added[lang]).length === 0) {
+        mdContent += `\n#### Language: **${lang}**\n> No added keys.\n`;
+      } else {
+        mdContent += `\n#### Language: **${lang}**\n`;
+        mdContent += `| Key | Value |\n| --- | --- |\n`;
+        Object.entries(diff.added[lang]).forEach(([key, value]) => {
+          mdContent += `| ${key} | ${value} |\n`;
+        });
+      }
     });
-  });
+  }
 
   // handle removed content
-  mdContent += `\n## ❌ Removed Keys\n`;
-  Object.keys(diff.removed).forEach((lang) => {
-    mdContent += `\n### 🌍 Language: **${lang}**\n`;
-    mdContent += `| Key | Value |\n| --- | --- |\n`;
-    Object.entries(diff.removed[lang]).forEach(([key, value]) => {
-      mdContent += `| ${key} | ${value} |\n`;
+  if (!removedKeysEmpty) {
+    mdContent += `\n### Removed Keys\n`;
+    Object.keys(diff.removed).forEach((lang) => {
+      if (Object.keys(diff.removed[lang]).length === 0) {
+        mdContent += `\n#### Language: **${lang}**\n> No removed keys.\n`;
+      } else {
+        mdContent += `\n#### Language: **${lang}**\n`;
+        mdContent += `| Key | Value |\n| --- | --- |\n`;
+        Object.entries(diff.removed[lang]).forEach(([key, value]) => {
+          mdContent += `| ${key} | ${value} |\n`;
+        });
+      }
     });
-  });
+  }
 
   // handle updated content
-  mdContent += `\n## 🔄 Updated Keys\n`;
-  Object.keys(diff.updated).forEach((lang) => {
-    if (Object.keys(diff.updated[lang]).length === 0) {
-      mdContent += `\n### 🌍 Language: **${lang}**\n> No updates found.\n`;
-    } else {
-      mdContent += `\n### 🌍 Language: **${lang}**\n`;
-      mdContent += `| Key | Old Value | New Value |\n| --- | --- | --- |\n`;
-      Object.entries(diff.updated[lang]).forEach(([key, values]) => {
-        mdContent += `| ${key} | ${values.old} | ${values.new} |\n`;
-      });
-    }
-  });
+  if (!updatedKeysEmpty) {
+    mdContent += `\n### Updated Keys\n`;
+    Object.keys(diff.updated).forEach((lang) => {
+      if (Object.keys(diff.updated[lang]).length === 0) {
+        mdContent += `\n#### Language: **${lang}**\n> No updates found.\n`;
+      } else {
+        mdContent += `\n#### Language: **${lang}**\n`;
+        mdContent += `| Key | Old Value | New Value |\n| --- | --- | --- |\n`;
+        Object.entries(diff.updated[lang]).forEach(([key, values]) => {
+          mdContent += `| ${key} | ${values.old} | ${values.new} |\n`;
+        });
+      }
+    });
+  }
 
   return mdContent;
 }

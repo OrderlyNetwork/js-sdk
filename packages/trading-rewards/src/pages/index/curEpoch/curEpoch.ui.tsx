@@ -7,7 +7,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { RewardsTooltip } from "./rewardsTooltip";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CurEpoch: FC<CurEpochReturns> = (props) => {
   const { t } = useTranslation();

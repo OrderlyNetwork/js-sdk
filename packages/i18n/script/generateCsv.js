@@ -4,11 +4,8 @@ const { checkFileExists } = require("./utils");
 const { multiJson2Csv } = require("./json-csv-converter");
 const { allResources } = require("../dist");
 
+/** Generate a locale CSV file */
 async function generateCsv(outputPath) {
-  if (!outputPath) {
-    throw new Error("Output file path is required");
-  }
-
   const headers = [""];
   const jsonList = [];
 

@@ -137,12 +137,13 @@ export const useOrderlyConfig = () => {
           customRestrictedIps: [],
           customRestrictedRegions: [],
           content: ({ ip, brokerName }) => {
+            const email = "x@orerly.network";
             return (
               // @ts-ignore
               <Trans
                 // @ts-ignore
                 i18nKey="extend.restrictedInfo.description"
-                values={{ ip, brokerName }}
+                values={{ ip, brokerName, email }}
                 components={[
                   <a
                     style={{
@@ -155,7 +156,7 @@ export const useOrderlyConfig = () => {
                     style={{
                       textDecorationLine: "underline",
                     }}
-                    href="mailto:x@orerly.network"
+                    href={`mailto:${email}`}
                   />,
                 ]}
               />

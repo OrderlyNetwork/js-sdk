@@ -6,16 +6,16 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "bin": {
-    "i18n-converter": "bin/cli.js"
+    "converter": "bin/cli.js"
   },
   "scripts": {
     "build": "tsup && pnpm generateCsv",
-    "i18n-converter": "node ./bin/cli.js",
-    "generateCsv": "pnpm i18n-converter generateCsv ./dist/locale.csv",
-    "csv2json": "pnpm i18n-converter csv2json ./dist/locale.csv ./dist/locale",
-    "json2csv": "pnpm i18n-converter json2csv ./dist/locale/en.json,./dist/locale/zh.json ./dist/locale.csv",
-    "diffcsv": "pnpm i18n-converter diffcsv ./dist/locale1.csv ./dist/locale2.csv",
-    "fillJson": "pnpm i18n-converter fillJson ./src/locale/zh.json ./dist/locale/zh.json"
+    "converter": "node ./bin/cli.js",
+    "generateCsv": "pnpm converter generateCsv ./dist/locale.csv",
+    "csv2json": "pnpm converter csv2json ./dist/locale.csv ./dist/locale",
+    "json2csv": "pnpm converter json2csv ./dist/locale/en.json,./dist/locale/zh.json ./dist/locale.csv",
+    "diffcsv": "pnpm converter diffcsv ./dist/locale1.csv ./dist/locale2.csv",
+    "fillJson": "pnpm converter fillJson ./src/locale/zh.json ./dist/locale/zh.json"
   },
   "keywords": [],
   "files": [

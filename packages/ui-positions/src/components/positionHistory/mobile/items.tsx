@@ -11,7 +11,7 @@ import {
 } from "@orderly.network/ui";
 import { PositionHistoryCellState } from "./positionHistoryCell.script";
 import { commifyOptional } from "@orderly.network/utils";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const SymbolToken: FC<PositionHistoryCellState> = (props) => {
   const { side, symbol } = props.item;

@@ -15,6 +15,7 @@ import {
 } from "./tradingList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTradingListColumns } from "./column";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type TradingListProps = {
   style?: React.CSSProperties;
@@ -23,6 +24,7 @@ export type TradingListProps = {
 
 export const TradingList: FC<TradingListProps> = (props) => {
   const column = useTradingListColumns();
+  const { t } = useTranslation();
 
   return (
     <Flex
@@ -86,7 +88,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
         <Input
           value={props.searchValue}
           onValueChange={props.onSearchValueChange}
-          placeholder="Search address"
+          placeholder={t("common.address.search.placeholder")}
           className={cn(
             "oui-trading-leaderboard-trading-search-input",
             "oui-w-[240px]"

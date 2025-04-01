@@ -22,7 +22,7 @@ import type { PNL_Values } from "./pnlInput/useBuilder.script";
 import { useLocalStorage, utils } from "@orderly.network/hooks";
 import { API, OrderSide } from "@orderly.network/types";
 import { transSymbolformString } from "@orderly.network/utils";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderValidationResult } from "@orderly.network/hooks";
 

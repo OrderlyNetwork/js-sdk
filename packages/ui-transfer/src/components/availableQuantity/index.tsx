@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Flex, Spinner, Text } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type AvailableQuantityProps = {
   token?: API.TokenInfo;

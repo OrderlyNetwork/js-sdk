@@ -150,7 +150,11 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               inputFormatter.dpFormatter(props.quote_dp),
             ]}
             disabled={!props.priceEdit}
-            value={props.isStopMarket ? "Market" : props.price}
+            value={
+              props.isStopMarket
+                ? t("orderEntry.orderType.market")
+                : props.price
+            }
             onValueChange={(e) => props.setPrice(e)}
             tooltip={orderPriceErrorMsg}
             tooltipProps={{

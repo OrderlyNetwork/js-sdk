@@ -3,6 +3,7 @@ const path = require("path");
 const { checkFileExists } = require("./utils");
 const { en } = require("../dist");
 
+/** Fill values from the input locale JSON file and generate a new locale JSON file */
 async function fillJson(inputPath, outputPath) {
   const inputJson = await fs.readJSON(inputPath, { encoding: "utf8" });
 

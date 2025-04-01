@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { useMaintenanceStatus, useQuery, useWS } from "@orderly.network/hooks";
 import { API, WSMessage } from "@orderly.network/types";
+import { i18n } from "@orderly.network/i18n";
 
 function getTimeString(timestamp: number) {
   const date = format(new UTCDateMini(timestamp), "MMM dd");
@@ -13,8 +14,22 @@ function getTimeString(timestamp: number) {
 
 const oneDay = 1000 * 60 * 60 * 24;
 
-const getMaintentTipsContent = (brokerName: string, startDate: string, endDate: string) => `${brokerName} will be temporarily unavailable for a scheduled upgrade from ${startDate} to ${endDate}.`;
-const getMaintentDialogContent = (brokerName: string, endDate: string) => `Sorry, ${brokerName} is temporarily unavailable due to a scheduled upgrade. The service is expected to be back by ${endDate}.`;
+const getMaintentTipsContent = (
+  brokerName: string,
+  startDate: string,
+  endDate: string
+) =>
+  i18n.t("scaffold.maintenance.tips.description", {
+    brokerName,
+    startDate,
+    endDate,
+  });
+
+const getMaintentDialogContent = (brokerName: string, endDate: string) =>
+  i18n.t("scaffold.maintenance.dialog.description", {
+    brokerName,
+    endDate,
+  });
 
 export enum AnnouncementType {
   Listing = "listing",
@@ -31,22 +46,30 @@ export interface AnnouncementTips {
 
 export const useAnnouncementTipsScript = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { data: announcements } = useQuery<API.Announcement[]>(`/v1/public/announcement`, {
-    revalidateOnFocus: false,
-    refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
-  });
+  const { data: announcements } = useQuery<API.Announcement[]>(
+    `/v1/public/announcement`,
+    {
+      revalidateOnFocus: false,
+      refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
+    }
+  );
   const [tips, setTips] = useState<AnnouncementTips[]>([]);
 
-  const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<string | undefined>(undefined);
-
+  const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<
+    string | undefined
+  >(undefined);
 
   // TODO: should upgrade to app context
-  const [showTips, setShowTips] = useState(() => window.sessionStorage.getItem('announcementTips') === 'hidden' ? false : true);
+  const [showTips, setShowTips] = useState(() =>
+    window.sessionStorage.getItem("announcementTips") === "hidden"
+      ? false
+      : true
+  );
   const ws = useWS();
 
   const closeTips = useCallback(() => {
     windowGuard(() => {
-      window.sessionStorage.setItem('announcementTips', 'hidden');
+      window.sessionStorage.setItem("announcementTips", "hidden");
       setShowTips(false);
     });
   }, []);
@@ -73,17 +96,20 @@ export const useAnnouncementTipsScript = () => {
     return getTimeString(endTime);
   }, [endTime]);
 
-
   useEffect(() => {
     const unsubscribe = ws.subscribe(`announcement`, {
       onMessage: (message: WSMessage.Announcement) => {
-
         if (message) {
-          setTips((prevTips) => [...prevTips.filter(tip => tip.announcementId !== message.announcement_id), {
-            announcementId: message.announcement_id,
-            content: message.message,
-            url: message.url,
-          }]);
+          setTips((prevTips) => [
+            ...prevTips.filter(
+              (tip) => tip.announcementId !== message.announcement_id
+            ),
+            {
+              announcementId: message.announcement_id,
+              content: message.message,
+              url: message.url,
+            },
+          ]);
         }
       },
     });
@@ -98,14 +124,18 @@ export const useAnnouncementTipsScript = () => {
       return;
     }
     if (!announcements.length) {
-      setTips((prevTips) => prevTips.filter(tip => tip.announcementId !== '-1'));
+      setTips((prevTips) =>
+        prevTips.filter((tip) => tip.announcementId !== "-1")
+      );
       return;
     }
     setTips((prevTips) => {
-      const tips = new Set(prevTips.map(tip => tip.announcementId));
-      const maintentanceTip = prevTips.find(tip => tip.announcementId === '-1');
+      const tips = new Set(prevTips.map((tip) => tip.announcementId));
+      const maintentanceTip = prevTips.find(
+        (tip) => tip.announcementId === "-1"
+      );
       const newTips: AnnouncementTips[] = [];
-      announcements.forEach(announcement => {
+      announcements.forEach((announcement) => {
         if (tips.has(announcement.announcement_id)) {
           return;
         }
@@ -123,7 +153,7 @@ export const useAnnouncementTipsScript = () => {
   }, [announcements]);
 
   useEffect(() => {
-    console.log('-- start time', {
+    console.log("-- start time", {
       startTime,
       status,
     });
@@ -134,16 +164,22 @@ export const useAnnouncementTipsScript = () => {
     setMaintenanceDialogInfo(undefined);
     if (startTime) {
       if (startTime < getTimestamp() + oneDay) {
-        setTips((prevTips) => [{
-          announcementId: "-1",
-          type: AnnouncementType.Maintenance,
-          content: getMaintentTipsContent(brokerName, startDate, endDate),
-        }, ...prevTips.filter(tip => tip.type !== AnnouncementType.Maintenance),
+        setTips((prevTips) => [
+          {
+            announcementId: "-1",
+            type: AnnouncementType.Maintenance,
+            content: getMaintentTipsContent(brokerName, startDate, endDate),
+          },
+          ...prevTips.filter(
+            (tip) => tip.type !== AnnouncementType.Maintenance
+          ),
         ]);
       }
     } else {
       // remove maintenance tip
-      setTips((prevTips) => prevTips.filter(tip => tip.announcementId !== "-1"));
+      setTips((prevTips) =>
+        prevTips.filter((tip) => tip.announcementId !== "-1")
+      );
     }
   }, [startTime, status, endDate, brokerName]);
 

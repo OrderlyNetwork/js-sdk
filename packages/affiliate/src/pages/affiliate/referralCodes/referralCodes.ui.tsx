@@ -15,7 +15,7 @@ import { PinBtn } from "../../../components/pinButton";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { EditIcon } from "../../../components/editIcon";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
   const isTablet = useMediaQuery("(max-width: 767px)");

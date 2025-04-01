@@ -3,6 +3,7 @@ const path = require("path");
 const { csv2multiJson } = require("./json-csv-converter");
 const { checkFileExists } = require("./utils");
 
+/** Convert locale CSV to multiple locale JSON files */
 async function csv2json(inputPath, outputDir) {
   const csv = fs.readFileSync(inputPath, { encoding: "utf8" });
 
