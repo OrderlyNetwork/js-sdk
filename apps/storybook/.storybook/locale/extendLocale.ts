@@ -7,7 +7,7 @@ export const extendEn = {
   "extend.staking": "Staking",
   "extend.staking.description": "Stake ORDER/esORDER to acquire VALOR",
   "extend.restrictedInfo.description":
-    "You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country. Please refer to our <0>Terms of Use</0>. If you believe this is an error, contact <1>x@orerly.network</1>.",
+    "You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country. Please refer to our <0>Terms of Use</0>. If you believe this is an error, contact <1>{{email}}</1>.",
 };
 
 export const extendZh = {
@@ -19,7 +19,7 @@ export const extendZh = {
   "extend.staking": "质押",
   "extend.staking.description": "质押 ORDER/esORDER 以获取 VALOR",
   "extend.restrictedInfo.description":
-    "您正在从 IP 地址 ({{ip}}) 访问 {{brokerName}}，该 IP 地址与受限国家/地区相关联。请参考我们的 <0>服务条款</0>。如果您认为这是错误，请联系 <1>x@orerly.network</1>。",
+    "您正在从 IP 地址 ({{ip}}) 访问 {{brokerName}}，该 IP 地址与受限国家/地区相关联。请参考我们的 <0>服务条款</0>。如果您认为这是错误，请联系 <1>{{email}}</1>。",
 };
 
 export type ExtendLocaleMessages = typeof extendEn;
