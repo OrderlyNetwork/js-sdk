@@ -69,27 +69,30 @@ const RenderUserCenter = (props: any) => {
       <AuthGuard
         buttonProps={{
           size: "sm",
-      }}
-    >
-      <div onClick={() => connect()}>
-        <Button
-          size="sm"
-          variant="gradient"
-          angle={45}
-          data-testid="oui-testid-nav-bar-address-btn"
-          className="oui-flex oui-items-center oui-justify-center oui-gap-2"
-        >
-          {linkedAccount && (
-            <RenderPrivyTypeIcon
-              type={linkedAccount.type}
-              size={18}
-              black={true}
-            />
-          )}
-          <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
-            {formatAddress(wallet.accounts[0].address)}
-          </Text.formatted>
-        </Button>
+        }}
+      >
+        <div onClick={() => connect()}>
+          <Button
+            size="sm"
+            variant="gradient"
+            angle={45}
+            data-testid="oui-testid-nav-bar-address-btn"
+            className="oui-flex oui-items-center oui-justify-center oui-gap-2"
+          >
+            {linkedAccount && (
+              <RenderPrivyTypeIcon
+                type={linkedAccount.type}
+                size={18}
+                black={true}
+              />
+            )}
+            <Text.formatted
+              rule="address"
+              className="oui-text-[rgba(0,0,0,.88)]"
+            >
+              {formatAddress(wallet.accounts[0].address)}
+            </Text.formatted>
+          </Button>
         </div>
       </AuthGuard>
     );
