@@ -49,12 +49,13 @@ export const connector = {
   "connector.ledger.signMessageFailed": "Sign Message Failed",
   "connector.ledger.signMessageFailed.description":
     "Are you using Ledger Wallet?",
-
+  
   "connector.loginIn": "Login in",
   "connector.logout": "Log out",
   "connector.email": "Email",
   "connector.google": "Google",
   "connector.twitter": "X / Twitter",
+  "connector.myWallet": "My wallet",
   "connector.addEvmWallet": "Add Evm wallet",
   "connector.addSolanaWallet": "Add Solana wallet",
   "connector.createEvmWallet": "Create Evm wallet",

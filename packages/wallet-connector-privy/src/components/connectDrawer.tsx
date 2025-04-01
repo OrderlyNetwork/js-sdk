@@ -99,7 +99,8 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           />
         </div>
       )}
-      {(!connectorWalletType.disableWagmi || !connectorWalletType.disableSolana) && (
+      {(!connectorWalletType.disableWagmi ||
+        !connectorWalletType.disableSolana) && (
         <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-4 md:oui-mt-5"></div>
       )}
     </div>
@@ -166,7 +167,8 @@ function SOLConnectArea({
 
 function ConnectWallet() {
   const { connect } = useWallet();
-  const { setOpenConnectDrawer, walletChainType, connectorWalletType } = useWalletConnectorPrivy();
+  const { setOpenConnectDrawer, walletChainType, connectorWalletType } =
+    useWalletConnectorPrivy();
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
@@ -190,19 +192,19 @@ function ConnectWallet() {
             <EVMConnectArea
               connect={(connector) =>
                 handleConnect({
-                walletType: WalletType.EVM,
-                connector: connector,
-              })
-            }
-          />
+                  walletType: WalletType.EVM,
+                  connector: connector,
+                })
+              }
+            />
           )}
           {!connectorWalletType.disableSolana && (
             <SOLConnectArea
               connect={(walletAdapter) =>
                 handleConnect({
-                walletType: WalletType.SOL,
-                walletAdapter: walletAdapter,
-              })
+                  walletType: WalletType.SOL,
+                  walletAdapter: walletAdapter,
+                })
               }
             />
           )}
@@ -245,6 +247,7 @@ export function ConnectDrawer(props: {
   open: boolean;
   onChangeOpen: (open: boolean) => void;
 }) {
+  const { t } = useTranslation();
   const { isConnected: isConnectedPrivy } = usePrivyWallet();
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
@@ -289,7 +292,9 @@ export function ConnectDrawer(props: {
               "md:oui-text-base md:oui-py-0"
             )}
           >
-            {isConnected ? "My wallet" : "Connect wallet"}
+            {isConnected
+              ? t("connector.myWallet")
+              : t("connector.connectWallet")}
           </div>
           <CloseIcon
             className="oui-cursor-pointer oui-text-base-contrast-20 oui-w-5 oui-h-5 hover:oui-text-base-contrast-80"

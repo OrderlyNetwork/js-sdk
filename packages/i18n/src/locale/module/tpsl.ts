@@ -10,7 +10,6 @@ export const tpsl = {
 
   "tpsl.pnl": "PnL",
   "tpsl.offset": "Offset",
-  "tpsl.offsetPercentage": "Offset%",
 
   "tpsl.positionTpsl": "Position TP/SL",
   "tpsl.entirePosition": "Entire position",

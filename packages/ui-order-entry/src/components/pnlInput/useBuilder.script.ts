@@ -78,7 +78,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         testId: `${PnLMode.OFFSET}_mneu_item`,
       },
       {
-        label: t("tpsl.offsetPercentage"),
+        label: `${t("tpsl.offset")}%`,
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
       },

@@ -3,7 +3,7 @@ import { ArrowRightShortIcon, Button, Flex, Text } from "@orderly.network/ui";
 import { AccountSheetState } from "./accountSheet.script";
 import { CopyIcon, HeadIcon, OrderlyIcon, USDCIcon } from "./icons";
 import { Decimal } from "@orderly.network/utils";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const AccountSheet: FC<AccountSheetState> = (props) => {
   const { t } = useTranslation();

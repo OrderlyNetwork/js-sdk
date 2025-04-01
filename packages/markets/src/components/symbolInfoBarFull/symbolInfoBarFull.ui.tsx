@@ -19,7 +19,7 @@ import { ReactNode } from "react";
 import { DropDownMarketsWidget } from "../dropDownMarkets";
 import { MarketsProviderProps } from "../marketsProvider";
 import { useFundingRate } from "@orderly.network/hooks";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 export type Layout = "left" | "right";
 
 export type SymbolInfoBarFullProps = Pick<

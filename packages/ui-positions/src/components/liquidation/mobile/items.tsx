@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Flex, Text } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
 import { commifyOptional } from "@orderly.network/utils";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Price: FC<API.LiquidationPositionByPerp> = (props) => {
   // const { quote_dp } = useSymbolContext();

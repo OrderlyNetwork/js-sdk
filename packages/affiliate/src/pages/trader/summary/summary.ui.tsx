@@ -3,7 +3,7 @@ import { Button, Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { commifyOptional } from "@orderly.network/utils";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Summary: FC<SummaryReturns> = (props) => {
   const { t } = useTranslation();

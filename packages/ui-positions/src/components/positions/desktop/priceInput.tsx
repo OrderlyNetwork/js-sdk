@@ -23,7 +23,9 @@ export const PriceInput = () => {
     <DropdownMenuRoot>
       <Input
         size="sm"
-        value={type === OrderType.LIMIT ? price : "Market"}
+        value={
+          type === OrderType.LIMIT ? price : t("orderEntry.orderType.market")
+        }
         onValueChange={(e) => updatePriceChange(e)}
         formatters={[
           inputFormatter.numberFormatter,
