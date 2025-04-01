@@ -11,7 +11,7 @@ import {
 import { qrcode as qr } from "@akamfoad/qr";
 import { MainLogo } from "../mainLogo";
 import { UseLinkDeviceScriptReturn } from "./linkDevice.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export type LinkDeviceProps = UseLinkDeviceScriptReturn;
 
