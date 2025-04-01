@@ -5,7 +5,7 @@ import { Decimal } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { PositionCellState } from "./positionCell.script";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const SymbolToken: FC<PositionCellState> = (props) => {
   const { item } = props;

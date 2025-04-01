@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Box, Button, Flex, Slider, Text, cn } from "@orderly.network/ui";
 import { LeverageScriptReturns } from "./leverage.script";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type LeverageProps = LeverageScriptReturns;
 

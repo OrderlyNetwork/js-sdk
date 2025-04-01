@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import { cn, useScreen } from "@orderly.network/ui";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -20,52 +20,53 @@ export function Drawer({ children, isOpen, onClose }: DrawerProps) {
       setWindowHeight(window.innerHeight);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
-      window.removeEventListener('resize', handleResize);
+      document.body.style.overflow = "auto";
+      window.removeEventListener("resize", handleResize);
     };
   }, [isOpen, isMobile]);
 
   if (!isOpen) return null;
 
-  const drawerHeight = isMobile ? windowHeight : windowHeight - 72;
+  const drawerHeight = isMobile ? windowHeight : windowHeight - 72 - 24;
 
   return createPortal(
     <div className="oui-fixed oui-inset-0 oui-z-[60]">
-      <div 
+      <div
         className="oui-absolute oui-inset-0 oui-bg-[rgba(0,0,0,0.48)] oui-transition-opacity"
         onClick={onClose}
       />
-      
-      <div 
-        style={{ height: `${drawerHeight}px` }} 
-        className={`
-        oui-overflow-hidden
-        oui-fixed oui-top-0 oui-right-0  
-        oui-bg-[#131519] oui-shadow-lg
-        oui-border oui-border-line-12
-        oui-w-[276px]
-        md:oui-w-[300px]
-        md:oui-top-1/2 md:oui-translate-y-[-50%]
-        oui-rounded-2xl
-        md:oui-rounded-0
-        oui-p-4
-        oui-transform oui-transition-transform oui-duration-300 oui-ease-in-out
-        oui-flex oui-flex-col oui-justify-between
-        ${isOpen ? 'oui-translate-x-0' : 'oui--translate-x-full'}
-      `}>
+
+      <div
+        style={{ height: `${drawerHeight}px` }}
+        className={cn(
+          "oui-overflow-hidden",
+          "oui-fixed oui-top-0 oui-right-0",
+          "oui-bg-[#131519] oui-shadow-lg",
+          "oui-border oui-border-line-12",
+          "oui-w-[276px]",
+          "md:oui-w-[300px]",
+          "md:oui-top-1/2 md:oui-translate-y-[-50%]",
+          "oui-rounded-0 md:oui-rounded-2xl",
+          "md:oui-rounded-0",
+          "oui-p-4",
+          "oui-transform oui-transition-transform oui-duration-300 oui-ease-in-out",
+          "oui-flex oui-flex-col oui-justify-between",
+          "oui-m-0 md:oui-m-3",
+          isOpen ? "oui-translate-x-0" : "oui--translate-x-full"
+        )}
+      >
         {children}
       </div>
     </div>,
     document.body
   );
 }
-

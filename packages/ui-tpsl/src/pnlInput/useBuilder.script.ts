@@ -52,18 +52,22 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
 
   const value = useMemo(() => {
     return values[mode as keyof PNL_Values];
-  }, [values]);
+  }, [values, mode]);
 
   const modes = useMemo<MenuItem[]>(() => {
     return [
-      { label: t("tpsl.pnl"), value: PnLMode.PnL, testId: `${PnLMode.PnL}_menu_item` },
+      {
+        label: t("tpsl.pnl"),
+        value: PnLMode.PnL,
+        testId: `${PnLMode.PnL}_menu_item`,
+      },
       {
         label: t("tpsl.offset"),
         value: PnLMode.OFFSET,
         testId: `${PnLMode.OFFSET}_mneu_item`,
       },
       {
-        label: t("tpsl.offsetPercentage"),
+        label: `${t("tpsl.offset")}%`,
         value: PnLMode.PERCENTAGE,
         testId: `${PnLMode.PERCENTAGE}_menu_item`,
       },

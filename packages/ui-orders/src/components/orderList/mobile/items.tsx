@@ -20,7 +20,7 @@ import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderSide } from "@orderly.network/types";
 import { ShareButtonWidget } from "../../shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const SymbolToken: FC<OrderCellState> = (props) => {
   const { item } = props;

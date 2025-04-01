@@ -12,10 +12,20 @@ import { ConnectionProvider } from "@solana/wallet-adapter-react";
 import { InitSolana } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
 
-interface IProps extends PropsWithChildren<InitSolana> { }
+interface IProps extends PropsWithChildren<InitSolana> {}
 
-export function InitSolanaProvider({ mainnetRpc, devnetRpc, wallets: walletsProp, onError, children }: IProps) {
-  const { network, setSolanaInfo } = useWalletConnectorPrivy();
+export function InitSolanaProvider({
+  mainnetRpc,
+  devnetRpc,
+  wallets: walletsProp,
+  onError,
+  children,
+}: IProps) {
+  const { network, setSolanaInfo, connectorWalletType } =
+    useWalletConnectorPrivy();
+  if (connectorWalletType.disableSolana) {
+    return children;
+  }
 
   const wallets = useMemo(() => {
     return walletsProp ?? [new PhantomWalletAdapter()];
@@ -23,7 +33,7 @@ export function InitSolanaProvider({ mainnetRpc, devnetRpc, wallets: walletsProp
 
   useEffect(() => {
     let rpcUrl = null;
-    if (network === 'mainnet') {
+    if (network === "mainnet") {
       rpcUrl = mainnetRpc ?? null;
     } else {
       rpcUrl = devnetRpc ?? null;
@@ -31,12 +41,14 @@ export function InitSolanaProvider({ mainnetRpc, devnetRpc, wallets: walletsProp
     if (rpcUrl) {
       setSolanaInfo({
         rpcUrl: rpcUrl,
-        network: network === 'mainnet' ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
+        network:
+          network === "mainnet"
+            ? WalletAdapterNetwork.Mainnet
+            : WalletAdapterNetwork.Devnet,
       });
     }
   }, [network, mainnetRpc, devnetRpc, setSolanaInfo]);
   return (
-
     <WalletProvider wallets={wallets} onError={onError}>
       {children}
     </WalletProvider>

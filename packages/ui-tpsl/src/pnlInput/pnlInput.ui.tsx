@@ -8,6 +8,7 @@ import {
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 import { inputFormatter, Text } from "@orderly.network/ui";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type PNLInputProps = PNLInputState & { testId?: string; quote: string };
 
@@ -22,6 +23,7 @@ export const PNLInput = (props: PNLInputProps) => {
     value,
     pnl,
   } = props;
+  const { t } = useTranslation();
 
   const [prefix, setPrefix] = useState<string>(mode);
   const [placeholder, setPlaceholder] = useState<string>(
@@ -38,15 +40,14 @@ export const PNLInput = (props: PNLInputProps) => {
   }, [pnl]);
 
   useEffect(() => {
-    setPrefix(mode);
+    const label = modes.find((item) => item.value === mode)?.label;
+    setPrefix(label!);
     setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
-  }, [mode]);
-
-  
+  }, [mode, modes]);
 
   return (
     <Input
-      prefix={mode}
+      prefix={prefix}
       size={{
         initial: "lg",
         lg: "md",
@@ -67,7 +68,7 @@ export const PNLInput = (props: PNLInputProps) => {
       classNames={{
         input: color,
         prefix: "oui-text-base-contrast-54",
-        root:  "oui-outline-line-12 focus-within:oui-outline-primary-light",
+        root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
       }}
       onFocus={() => {
         setPlaceholder("");
@@ -80,8 +81,12 @@ export const PNLInput = (props: PNLInputProps) => {
       // value={props.value}
       suffix={
         <>
-          {mode === PnLMode.PERCENTAGE && !!value &&  (
-            <Text size={"2xs"} color="inherit" className={cn("oui-ml-[2px]", color)}>
+          {mode === PnLMode.PERCENTAGE && !!value && (
+            <Text
+              size={"2xs"}
+              color="inherit"
+              className={cn("oui-ml-[2px]", color)}
+            >
               %
             </Text>
           )}

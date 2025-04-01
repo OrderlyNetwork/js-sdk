@@ -80,6 +80,7 @@ export const en = {
   "common.realizedPnl": "Realized PnL",
   "common.totalValue": "Total value",
   "common.address": "Address",
+  "common.address.search.placeholder": "Search address",
   "common.available": "Available",
 
   "common.overview": "Overview",
