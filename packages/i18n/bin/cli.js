@@ -15,7 +15,7 @@ async function main() {
   const { _, input, output, oldFile, newFile, outputDir } = argv;
 
   const command = _[0];
-  console.log("argv", argv);
+  // console.log("argv", argv);
 
   switch (command) {
     case "generateCsv":
@@ -41,49 +41,53 @@ async function main() {
 
 function getArgv() {
   const argv = yargs(hideBin(process.argv))
-    .scriptName("i18n-converter")
-    .usage("$0 <command> [options]") // Usage prompt
-    .strict() // Only allow defined commands
-    .demandCommand(1, "Please provide a valid subcommand") // Error if no subcommand is provided
+    .scriptName("converter")
+    .usage("i18n locale tools")
+    .usage("$0 <command> [options]")
+    .strict()
+    // Error if no subcommand is provided
+    .demandCommand(1, "Please provide a valid subcommand")
     .help()
-    .alias("h", "help") // Add `-h` as an alias for `--help`
+    // Add `-h` as an alias for `--help`
+    .alias("h", "help")
 
     // generateCsv command
     .command(
       "generateCsv <output>",
-      "Generate a CSV file",
+      "Generate a locale CSV file",
       (yargs) => {
         return yargs.positional("output", {
-          describe: "Output path for the CSV file",
+          describe: "Output path for the locale CSV file",
           type: "string",
-          demandOption: true, // Required
+          // Required
+          demandOption: true,
         });
       },
       (argv) => {
-        console.log(`Generating CSV file at: ${argv.output}`);
+        console.log(`Generating locale CSV file at: ${argv.output}`);
       }
     )
 
     // csv2json command
     .command(
       "csv2json <input> <outputDir>",
-      "Convert CSV to multiple JSON files",
+      "Convert locale CSV to multiple locale JSON files",
       (yargs) => {
         return yargs
           .positional("input", {
-            describe: "Input path for the CSV file",
+            describe: "Input path for the locale CSV file",
             type: "string",
             demandOption: true,
           })
           .positional("outputDir", {
-            describe: "Output directory for JSON files",
+            describe: "Output directory for locale JSON files",
             type: "string",
             demandOption: true,
           });
       },
       (argv) => {
         console.log(
-          `Converting ${argv.input} to JSON, output directory: ${argv.outputDir}`
+          `Converting ${argv.input} to locale JSON files, output directory: ${argv.outputDir}`
         );
       }
     )
@@ -91,17 +95,17 @@ function getArgv() {
     // json2csv command
     .command(
       "json2csv <input> <output>",
-      "Convert multiple JSON files to a CSV file",
+      "Convert locale JSON files to a locale CSV file",
       (yargs) => {
         return yargs
           .positional("input", {
             describe:
-              "Path to JSON file(s) (supports multiple files, separated by commas)",
+              "Path to locale JSON file(s) (supports multiple files, separated by commas)",
             type: "string",
             demandOption: true,
           })
           .positional("output", {
-            describe: "Output path for the CSV file",
+            describe: "Output path for the locale CSV file",
             type: "string",
             demandOption: true,
           });
@@ -109,9 +113,9 @@ function getArgv() {
       (argv) => {
         const inputFiles = argv.input.split(","); // Parse multiple input files
         console.log(
-          `Converting JSON files: ${inputFiles.join(", ")} to CSV: ${
-            argv.output
-          }`
+          `Converting locale JSON files: ${inputFiles.join(
+            ", "
+          )} to locale CSV: ${argv.output}`
         );
       }
     )
@@ -119,11 +123,11 @@ function getArgv() {
     // diffcsv command
     .command(
       "diffcsv <oldFile> <newFile>",
-      "Compare two CSV files",
+      "Compare two locale CSV files",
       (yargs) => {
         return yargs
           .positional("oldFile", {
-            describe: "Path to the first CSV file",
+            describe: "Path to the first locale CSV file",
             type: "string",
             demandOption: true,
           })
@@ -134,30 +138,32 @@ function getArgv() {
           });
       },
       (argv) => {
-        console.log(`Comparing CSV files: ${argv.oldFile} and ${argv.newFile}`);
+        console.log(
+          `Comparing locale CSV files: ${argv.oldFile} and ${argv.newFile}`
+        );
       }
     )
 
     // fillJson command
     .command(
       "fillJson <input> <output>",
-      "Fill values from the input json file and generate a new JSON file",
+      "Fill values from the input locale JSON file and generate a new locale JSON file",
       (yargs) => {
         return yargs
           .positional("input", {
-            describe: "Input path for the JSON file",
+            describe: "Input path for the locale JSON file",
             type: "string",
             demandOption: true,
           })
           .positional("output", {
-            describe: "Output path for the JSON file",
+            describe: "Output path for the locale JSON file",
             type: "string",
             demandOption: true,
           });
       },
       (argv) => {
         console.log(
-          `Filling values from the input JSON file: ${argv.input} and generating a new JSON file: ${argv.output}`
+          `Filling values from the input locale JSON file: ${argv.input} and generating a new locale JSON file: ${argv.output}`
         );
       }
     ).argv;

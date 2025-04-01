@@ -3,6 +3,7 @@ const path = require("path");
 const { multiJson2Csv } = require("./json-csv-converter");
 const { checkFileExists } = require("./utils");
 
+/** Convert multiple locale JSON files to a locale CSV file */
 async function json2csv(inputPaths, outputPath) {
   const inputFiles = inputPaths.split(",");
 

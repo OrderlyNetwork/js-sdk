@@ -133,38 +133,10 @@ function parseCsvString(line, i) {
   return [result, i];
 }
 
-function diffCsv(oldCsv, newCsv, originalCsv) {
-  const originalValueByKey = {};
-  if (originalCsv) {
-    parseCsvLines(originalCsv).forEach((line) => {
-      const [key, value] = line;
-      originalValueByKey[key] = value;
-    });
-  }
-  let result = [];
-  const d = diff.diffArrays(csvToLines(oldCsv), csvToLines(newCsv));
-  d.forEach((part) => {
-    part.value.forEach((line) => {
-      if (line) {
-        if (!part.removed) {
-          const [key] = parseCsvLine(line);
-          result.push(
-            `${line},"${part.added ? "CHANGED" : ""}"${
-              originalCsv ? `,"${originalValueByKey[key] || ""}"` : ""
-            }`
-          );
-        }
-      }
-    });
-  });
-  return result.join("\n");
-}
-
 module.exports = {
   separator,
   json2Csv,
   csv2Json,
-  diffCsv,
   multiJson2Csv,
   csv2multiJson,
 };
