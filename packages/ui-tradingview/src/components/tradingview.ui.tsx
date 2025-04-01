@@ -52,6 +52,8 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
             {isMobile ? (
               <Flex
                 gapX={2}
+                width="100%"
+                justify="between"
                 className="oui-overflow-x-scroll oui-hide-scrollbar"
               >
                 <TimeInterval
