@@ -5,6 +5,7 @@ import {
   WalletConnectorPrivyProvider,
   wagmiConnectors,
   wagmi,
+  WalletChainTypeEnum,
 } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
@@ -31,6 +32,12 @@ import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
 import { ExtendLocaleMessages, extendZh } from "./locale/extendLocale";
 import { extendEn } from "./locale/extendLocale";
+import {
+  customChainsEvm,
+  customChainsSolana,
+  customChainsSolanaAndEvm,
+} from "./customChains";
+
 const network = WalletAdapterNetwork.Devnet;
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
@@ -53,6 +60,10 @@ const wallets = [
     onWalletNotFound: mobileWalletNotFoundHanlder,
   }),
 ];
+
+// const customChains =customChainsEvm;
+// const customChains = customChainsSolana;
+// const customChains = customChainsSolanaAndEvm;
 
 const { VITE_NETWORK_ID, VITE_BROKER_ID, VITE_BROKER_NAME, VITE_ENV } =
   import.meta.env || {};
@@ -82,14 +93,15 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
-        // customChains={{mainnet: [], testnet: []}}
+        // customChains={customChains}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",
-          appearance: {
-            theme: "dark",
-            accentColor: "#181C23",
-            logo: "/orderly-logo.svg",
-            loginMethods: ["email", "google", "twitter"],
+          config: {
+            appearance: {
+              theme: "dark",
+              accentColor: "#181C23",
+              logo: "/orderly-logo.svg",
+            },
           },
         }}
         wagmiConfig={{
@@ -121,6 +133,8 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
+          // customChains={customChains}
+          // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
         >
           {props.children}
         </OrderlyAppProvider>

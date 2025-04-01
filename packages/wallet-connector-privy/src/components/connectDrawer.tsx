@@ -8,14 +8,14 @@ import { useWallet } from "../hooks/useWallet";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
 import { WalletCard } from "./walletCard";
-import { ConnectProps, WalletType } from "../types";
+import { ConnectProps, WalletChainTypeEnum, WalletType } from "../types";
 import { RenderPrivyTypeIcon, RenderWalletIcon } from "./common";
 import { useWalletConnectorPrivy } from "../provider";
 import { useWagmiWallet } from "../providers/wagmiWalletProvider";
 import { useSolanaWallet } from "../providers/solanaWalletProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
-import { CloseIcon, InfoIcon } from "./icons";
+import { CloseIcon } from "./icons";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
 import { cn } from "@orderly.network/ui";
 import { useTranslation, Trans } from "@orderly.network/i18n";
@@ -26,6 +26,7 @@ import { RenderPrivyWallet } from "./renderPrivyWallet";
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
   const { t } = useTranslation();
   const { isMobile, isDesktop } = useScreen();
+  const { connectorWalletType } = useWalletConnectorPrivy();
   return (
     <div className="">
       <div
@@ -98,7 +99,9 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           />
         </div>
       )}
-      <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-4 md:oui-mt-5"></div>
+      {(!connectorWalletType.disableWagmi || !connectorWalletType.disableSolana) && (
+        <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-4 md:oui-mt-5"></div>
+      )}
     </div>
   );
 }
@@ -163,7 +166,7 @@ function SOLConnectArea({
 
 function ConnectWallet() {
   const { connect } = useWallet();
-  const { setOpenConnectDrawer } = useWalletConnectorPrivy();
+  const { setOpenConnectDrawer, walletChainType, connectorWalletType } = useWalletConnectorPrivy();
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
@@ -174,24 +177,54 @@ function ConnectWallet() {
 
   return (
     <div className={cn("oui-flex oui-flex-col oui-gap-4", "md:oui-gap-5")}>
-      <PrivyConnectArea
-        connect={(type) =>
-          handleConnect({ walletType: WalletType.PRIVY, extraType: type })
-        }
-      />
-      <EVMConnectArea
-        connect={(connector) =>
-          handleConnect({ walletType: WalletType.EVM, connector: connector })
-        }
-      />
-      <SOLConnectArea
-        connect={(walletAdapter) =>
-          handleConnect({
-            walletType: WalletType.SOL,
-            walletAdapter: walletAdapter,
-          })
-        }
-      />
+      {!connectorWalletType.disablePrivy && (
+        <PrivyConnectArea
+          connect={(type) =>
+            handleConnect({ walletType: WalletType.PRIVY, extraType: type })
+          }
+        />
+      )}
+      {walletChainType === WalletChainTypeEnum.EVM_SOL && (
+        <>
+          {!connectorWalletType.disableWagmi && (
+            <EVMConnectArea
+              connect={(connector) =>
+                handleConnect({
+                walletType: WalletType.EVM,
+                connector: connector,
+              })
+            }
+          />
+          )}
+          {!connectorWalletType.disableSolana && (
+            <SOLConnectArea
+              connect={(walletAdapter) =>
+                handleConnect({
+                walletType: WalletType.SOL,
+                walletAdapter: walletAdapter,
+              })
+              }
+            />
+          )}
+        </>
+      )}
+      {walletChainType === WalletChainTypeEnum.onlyEVM && (
+        <EVMConnectArea
+          connect={(connector) =>
+            handleConnect({ walletType: WalletType.EVM, connector: connector })
+          }
+        />
+      )}
+      {walletChainType === WalletChainTypeEnum.onlySOL && (
+        <SOLConnectArea
+          connect={(walletAdapter) =>
+            handleConnect({
+              walletType: WalletType.SOL,
+              walletAdapter: walletAdapter,
+            })
+          }
+        />
+      )}
     </div>
   );
 }
@@ -215,7 +248,7 @@ export function ConnectDrawer(props: {
   const { isConnected: isConnectedPrivy } = usePrivyWallet();
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
-  const { termsOfUse } = useWalletConnectorPrivy();
+  const { termsOfUse, connectorWalletType } = useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");
 
   const isConnected = useMemo(() => {
