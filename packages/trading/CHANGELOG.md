@@ -1,5 +1,29 @@
 # @orderly.network/trading
 
+## 2.0.8-i18n.9
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.8-i18n.9
+  - @orderly.network/hooks@2.0.8-i18n.9
+  - @orderly.network/i18n@2.0.8-i18n.9
+  - @orderly.network/markets@2.0.8-i18n.9
+  - @orderly.network/types@2.0.8-i18n.9
+  - @orderly.network/ui@2.0.8-i18n.9
+  - @orderly.network/ui-chain-selector@2.0.8-i18n.9
+  - @orderly.network/ui-connector@2.0.8-i18n.9
+  - @orderly.network/ui-leverage@2.0.8-i18n.9
+  - @orderly.network/ui-order-entry@2.0.8-i18n.9
+  - @orderly.network/ui-orders@2.0.8-i18n.9
+  - @orderly.network/ui-positions@2.0.8-i18n.9
+  - @orderly.network/ui-scaffold@2.0.8-i18n.9
+  - @orderly.network/ui-share@2.0.8-i18n.9
+  - @orderly.network/ui-tradingview@2.0.8-i18n.9
+  - @orderly.network/ui-transfer@2.0.8-i18n.9
+  - @orderly.network/utils@2.0.8-i18n.9
+
 ## 2.0.8-i18n.8
 
 ### Patch Changes
