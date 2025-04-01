@@ -49,6 +49,7 @@
     "@orderly.network/trading-leaderboard": "2.0.7"
   },
   "changesets": [
+    "bright-zoos-fail",
     "chilled-dots-arrive",
     "fast-shoes-wait",
     "grumpy-camels-crash",
