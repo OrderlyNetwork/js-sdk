@@ -1,10 +1,25 @@
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import { Decimal, commify } from "@orderly.network/utils";
-import { SideType, AlgoType, OrderCombinationType, OrderType, OrderInterface, ChartPosition, ChartMode } from "../type";
+import {
+  SideType,
+  AlgoType,
+  OrderCombinationType,
+  OrderType,
+  OrderInterface,
+  ChartPosition,
+  ChartMode,
+} from "../type";
 import { TpslCalService } from "./tpslCal.service";
-import {getTpslTag, isActivatedPositionTpsl, isActivatedQuantityTpsl, isPositionTpsl, isTpslOrder } from "./tpsl.util";
-import {CHART_QTY_DECIMAL, getOrderId } from "./order.util";
+import {
+  getTpslTag,
+  isActivatedPositionTpsl,
+  isActivatedQuantityTpsl,
+  isPositionTpsl,
+  isTpslOrder,
+} from "./tpsl.util";
+import { CHART_QTY_DECIMAL, getOrderId } from "./order.util";
+import { i18n } from "@orderly.network/i18n";
 
 export class OrderLineService {
   private instance: IChartingLibraryWidget;
@@ -15,7 +30,7 @@ export class OrderLineService {
 
   constructor(
     instance: IChartingLibraryWidget,
-    broker: ReturnType<typeof useBroker>,
+    broker: ReturnType<typeof useBroker>
   ) {
     this.instance = instance;
     this.pendingOrderLineMap = new Map();
@@ -35,11 +50,15 @@ export class OrderLineService {
   }
 
   updatePositions(positions: ChartPosition[] | null) {
-    const changed = this.tpslCalService.recalculatePnl(positions, this.pendingOrders);
+    const changed = this.tpslCalService.recalculatePnl(
+      positions,
+      this.pendingOrders
+    );
 
-    this.pendingOrders.filter((order) => changed.includes(getOrderId(order)!)).forEach((order) => this.renderPendingOrder(order));
+    this.pendingOrders
+      .filter((order) => changed.includes(getOrderId(order)!))
+      .forEach((order) => this.renderPendingOrder(order));
   }
-
 
   renderPendingOrder(order: any) {
     const orderId = OrderLineService.getOrderId(order);
@@ -84,12 +103,11 @@ export class OrderLineService {
       .setCancelTooltip("Cancel Order")
       .setQuantityTextColor(colorConfig.qtyTextColor!)
       .setQuantityBackgroundColor(colorConfig.chartBG!)
-        .setBodyBackgroundColor(colorConfig.chartBG!)
+      .setBodyBackgroundColor(colorConfig.chartBG!)
       .setCancelButtonBackgroundColor(colorConfig.chartBG!)
       .setLineStyle(1)
       .setBodyFont(colorConfig.font!)
-      .setQuantityFont(colorConfig.font!)
-        ;
+      .setQuantityFont(colorConfig.font!);
   }
 
   static getCombinationType(order: any): OrderCombinationType {
@@ -132,11 +150,13 @@ export class OrderLineService {
       orderCombinationType === OrderCombinationType.STOP_BRACKET_MARKET
     ) {
       if (pendingOrder.type === OrderType.LIMIT) {
-        return `Stop Limit ${commify(pendingOrder.price)}`
+        return `${i18n.t("orderEntry.orderType.stopLimit")} ${commify(
+          pendingOrder.price
+        )}`;
       }
-      return "Stop Market";
+      return i18n.t("orderEntry.orderType.stopMarket");
     }
-    return "Limit";
+    return i18n.t("orderEntry.orderType.limit");
   }
 
   static getOrderPrice(pendingOrder: any) {
@@ -166,7 +186,10 @@ export class OrderLineService {
   }
 
   getTPSLText(pendingOrder: any) {
-    const tpslTypeText = getTpslTag(pendingOrder, this.tpslCalService.getQuantityTpslNoMap());
+    const tpslTypeText = getTpslTag(
+      pendingOrder,
+      this.tpslCalService.getQuantityTpslNoMap()
+    );
 
     if (tpslTypeText) {
       return this.getTPSLTextWithTpsl(tpslTypeText, pendingOrder);
@@ -175,24 +198,34 @@ export class OrderLineService {
     return null;
   }
 
-  getOrderQuantity(pendingOrder: OrderInterface){
+  getOrderQuantity(pendingOrder: OrderInterface) {
     if (pendingOrder.algo_order_id) {
-      if (isActivatedPositionTpsl(pendingOrder) || isPositionTpsl(pendingOrder)) {
-        return '100%';
+      if (
+        isActivatedPositionTpsl(pendingOrder) ||
+        isPositionTpsl(pendingOrder)
+      ) {
+        return "100%";
       }
       if (isActivatedQuantityTpsl(pendingOrder)) {
-        const qty = new Decimal(pendingOrder.quantity).minus(pendingOrder.executed ?? 0);
-        const per = qty.div(new Decimal(pendingOrder.position_qty!)).mul(100).todp(2).toNumber();
+        const qty = new Decimal(pendingOrder.quantity).minus(
+          pendingOrder.executed ?? 0
+        );
+        const per = qty
+          .div(new Decimal(pendingOrder.position_qty!))
+          .mul(100)
+          .todp(2)
+          .toNumber();
         return `${Math.min(Math.abs(per), 100).toString()}%`;
       }
     }
-    return commify(new Decimal(pendingOrder.quantity)
-        .toString());
+    return commify(new Decimal(pendingOrder.quantity).toString());
   }
 
   drawOrderLine(orderId: number, pendingOrder: any) {
     // const text = OrderLineService.getText(pendingOrder);
-    const text = isTpslOrder(pendingOrder) ? this.getTPSLText(pendingOrder) : OrderLineService.getText(pendingOrder);
+    const text = isTpslOrder(pendingOrder)
+      ? this.getTPSLText(pendingOrder)
+      : OrderLineService.getText(pendingOrder);
     if (text === null) {
       return null;
     }
@@ -220,21 +253,19 @@ export class OrderLineService {
       .setBodyTextColor(textColor!)
       .setBodyBorderColor(color!)
       .setQuantityBorderColor(color!)
-        .setQuantityTextColor(color!)
+      .setQuantityTextColor(color!)
       // .setBodyBackgroundColor(color)
       .setLineColor(color!)
       .setLineLength(lineLength)
-      .setQuantity(quantity ?? '')
+      .setQuantity(quantity ?? "")
       .setPrice(price);
 
     if (this.broker.mode !== ChartMode.MOBILE) {
-
       orderLine.onCancel(null, () => this.broker.cancelOrder(pendingOrder));
       this.applyEditOnMove(orderLine, pendingOrder);
     } else {
       orderLine.setEditable(false).setCancellable(false);
     }
-
 
     return orderLine;
   }
@@ -242,7 +273,11 @@ export class OrderLineService {
   static getOrderEditKey(pendingOrder: any) {
     const orderCombinationType = this.getCombinationType(pendingOrder);
 
-    if ([OrderCombinationType.LIMIT, OrderCombinationType.BRACKET_LIMIT].includes(orderCombinationType) ) {
+    if (
+      [OrderCombinationType.LIMIT, OrderCombinationType.BRACKET_LIMIT].includes(
+        orderCombinationType
+      )
+    ) {
       return "price";
     }
 
@@ -274,7 +309,6 @@ export class OrderLineService {
         .catch(() => this.renderPendingOrder(pendingOrder));
     });
   }
-
 
   removeAll() {
     this.pendingOrderLineMap.forEach((orderLine) => orderLine.remove());
