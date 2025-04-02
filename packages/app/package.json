@@ -25,7 +25,8 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/types": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "date-fns": "^3.6.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

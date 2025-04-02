@@ -1,3 +1,5 @@
+import { enUS } from "date-fns/locale";
+
 export const localeValues = {
   locale: "en" as string,
   dialog: {
@@ -14,6 +16,7 @@ export const localeValues = {
   },
   picker: {
     selectDate: "Select Date",
+    dayPicker: enUS,
   },
   empty: {
     description: "No results found.",
