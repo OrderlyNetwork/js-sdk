@@ -49,6 +49,7 @@
     "@orderly.network/trading-leaderboard": "2.0.7"
   },
   "changesets": [
+    "afraid-experts-sort",
     "bright-zoos-fail",
     "chilled-dots-arrive",
     "eight-zoos-yell",

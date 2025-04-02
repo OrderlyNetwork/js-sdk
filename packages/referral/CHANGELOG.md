@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.0.8-i18n.15
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.0.8-i18n.15
+  - @orderly.network/hooks@2.0.8-i18n.15
+  - @orderly.network/utils@2.0.8-i18n.15
+
 ## 2.0.8-i18n.14
 
 ### Patch Changes
