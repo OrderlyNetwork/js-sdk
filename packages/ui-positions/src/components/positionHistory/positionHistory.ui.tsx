@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import {
   cn,
   DataFilter,
@@ -31,12 +31,14 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
 
   const { t } = useTranslation();
 
-  const dayLabel: Record<number, string> = {
-    1: t("common.select.1d"),
-    7: t("common.select.7d"),
-    30: t("common.select.30d"),
-    90: t("common.select.90d"),
-  };
+  const dayLabel: Record<number, string> = useMemo(() => {
+    return {
+      1: t("common.select.1d"),
+      7: t("common.select.7d"),
+      30: t("common.select.30d"),
+      90: t("common.select.90d"),
+    };
+  }, [t]);
 
   return (
     <Flex direction="column" width="100%" height="100%" itemAlign="start">
