@@ -101,26 +101,22 @@ export const OrderState: FC<OrderCellState> = (props) => {
   // @ts-ignore
   const status = item.status || item.algo_status;
 
-  const renderLabel = () => {
-    switch (status) {
-      case "NEW":
-        return t("orders.status.pending");
-      case "FILLED":
-        return t("orders.status.filled");
-      case "PARTIAL_FILLED":
-        return t("orders.status.partialFilled");
-      case "CANCELED":
-        return t("orders.status.canceled");
-      case "REJECTED":
-        return t("orders.status.rejected");
-      default:
-        return upperCaseFirstLetter(status);
-    }
-  };
+  const statusMap = useMemo(() => {
+    return {
+      [OrderStatus.NEW]: t("orders.status.pending"),
+      [OrderStatus.FILLED]: t("orders.status.filled"),
+      [OrderStatus.PARTIAL_FILLED]: t("orders.status.partialFilled"),
+      [OrderStatus.CANCELLED]: t("orders.status.canceled"),
+      [OrderStatus.REJECTED]: t("orders.status.rejected"),
+      [OrderStatus.INCOMPLETE]: t("orders.status.incomplete"),
+      [OrderStatus.COMPLETED]: t("orders.status.completed"),
+    };
+  }, [t]);
 
   return (
     <Text.formatted intensity={80} size="2xs">
-      {renderLabel()}
+      {statusMap[status as keyof typeof statusMap] ||
+        upperCaseFirstLetter(status)}
     </Text.formatted>
   );
 };

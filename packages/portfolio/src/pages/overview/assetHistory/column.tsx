@@ -9,6 +9,7 @@ import {
 } from "@orderly.network/ui";
 import { useQuery } from "@orderly.network/hooks";
 import { useTranslation, i18n } from "@orderly.network/i18n";
+import { AssetHistoryStatusEnum } from "@orderly.network/types";
 
 export const useAssetHistoryColumns = () => {
   const { data: chains } = useQuery("/v1/public/chain_info");
@@ -75,7 +76,21 @@ export const useAssetHistoryColumns = () => {
         dataIndex: "trans_status",
         width: 100,
         render: (value) => {
-          return capitalizeFirstLetter(value.toLowerCase());
+          const statusMap = {
+            [AssetHistoryStatusEnum.NEW]: t("assetHistory.status.pending"),
+            [AssetHistoryStatusEnum.CONFIRM]: t("assetHistory.status.confirm"),
+            [AssetHistoryStatusEnum.PROCESSING]: t(
+              "assetHistory.status.processing"
+            ),
+            [AssetHistoryStatusEnum.COMPLETED]: t(
+              "assetHistory.status.completed"
+            ),
+            [AssetHistoryStatusEnum.FAILED]: t("assetHistory.status.failed"),
+          };
+          return (
+            statusMap[value as keyof typeof statusMap] ||
+            capitalizeFirstLetter(value.toLowerCase())
+          );
         },
       },
       {

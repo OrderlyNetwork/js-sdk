@@ -6,13 +6,16 @@ import { useEventEmitter } from "../../useEventEmitter";
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
+/**
+ * @deprecated use @orderly.network/types AssetHistoryStatusEnum
+ */
 export enum AssetHistoryStatusEnum {
-  NEW = "new",
-  CONFIRM = "confirm",
-  PROCESSING = "processing",
-  COMPLETED = "completed",
-  PENDDING = "pendding",
-  PENDING_REBALANCE = "pending_rebalance",
+  NEW = "NEW",
+  CONFIRM = "CONFIRM",
+  PROCESSING = "PROCESSING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+  PENDING_REBALANCE = "PENDING_REBALANCE",
 }
 
 const useAssetsHistory = (options: {

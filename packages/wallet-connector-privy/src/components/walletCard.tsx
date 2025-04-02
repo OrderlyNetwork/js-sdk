@@ -71,7 +71,7 @@ export function WalletCard(props: WalletCardProps) {
             {formatAddress(props.address)}
           </div>
           <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-            <Tooltip content="Copy" className="oui-z-[65]">
+            <Tooltip content={t("common.copy")} className="oui-z-[65]">
               <CopyIcon
                 size={16}
                 opacity={1}
