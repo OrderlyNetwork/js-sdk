@@ -179,11 +179,19 @@ export const useAssetViewScript = () => {
       const { side, transStatus } = data;
 
       if (transStatus === "COMPLETED") {
+        const message = {
+          DEPOSIT: t("transfer.deposit.completed"),
+          WITHDRAW: t("transfer.withdraw.completed"),
+        };
         let msg = `${capitalizeString(side)} completed`;
-        toast.success(msg);
+        toast.success(message[side as keyof typeof message] || msg);
       } else if (transStatus === "FAILED") {
+        const message = {
+          DEPOSIT: t("transfer.deposit.failed"),
+          WITHDRAW: t("transfer.withdraw.failed"),
+        };
         let msg = `${capitalizeString(side)} failed`;
-        toast.error(msg);
+        toast.error(message[side as keyof typeof message] || msg);
       }
 
       ee.emit("wallet:changed", data);

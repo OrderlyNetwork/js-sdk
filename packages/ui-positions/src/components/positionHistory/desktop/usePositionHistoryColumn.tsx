@@ -17,6 +17,7 @@ import { commifyOptional } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 import { useTranslation } from "@orderly.network/i18n";
+
 export const usePositionHistoryColumn = (props: {
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
