@@ -19,7 +19,7 @@ import {
   isTpslOrder,
 } from "./tpsl.util";
 import { CHART_QTY_DECIMAL, getOrderId } from "./order.util";
-import { i18n } from "@orderly.network/i18n";
+import { i18n, i18n } from "@orderly.network/i18n";
 
 export class OrderLineService {
   private instance: IChartingLibraryWidget;
@@ -100,7 +100,7 @@ export class OrderLineService {
     return this.instance
       .activeChart()
       .createOrderLine()
-      .setCancelTooltip("Cancel Order")
+      .setCancelTooltip(i18n.t("orders.cancelOrder"))
       .setQuantityTextColor(colorConfig.qtyTextColor!)
       .setQuantityBackgroundColor(colorConfig.chartBG!)
       .setBodyBackgroundColor(colorConfig.chartBG!)
