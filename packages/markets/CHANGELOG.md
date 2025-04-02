@@ -1,5 +1,17 @@
 # @orderly.network/markets
 
+## 2.0.8-i18n.13
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.8-i18n.13
+  - @orderly.network/i18n@2.0.8-i18n.13
+  - @orderly.network/types@2.0.8-i18n.13
+  - @orderly.network/ui@2.0.8-i18n.13
+  - @orderly.network/utils@2.0.8-i18n.13
+
 ## 2.0.8-i18n.12
 
 ### Patch Changes
