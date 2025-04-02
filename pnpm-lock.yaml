@@ -1374,39 +1374,18 @@ importers:
         specifier: ^15.4.1
         version: 15.4.1(i18next@24.2.3(typescript@5.6.3))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
     devDependencies:
-      '@babel/preset-env':
-        specifier: ^7.22.9
-        version: 7.22.9(@babel/core@7.26.8)
-      '@babel/preset-react':
-        specifier: ^7.22.5
-        version: 7.22.5(@babel/core@7.26.8)
-      '@babel/preset-typescript':
-        specifier: ^7.22.5
-        version: 7.26.0(@babel/core@7.26.8)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
-      '@types/jest':
-        specifier: ^29.5.3
-        version: 29.5.3
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.2
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      babel-jest:
-        specifier: ^29.6.1
-        version: 29.7.0(@babel/core@7.26.8)
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
-      jest:
-        specifier: ^29.6.1
-        version: 29.7.0(@types/node@22.12.0)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.15))(@types/node@22.12.0)(typescript@5.7.3))
-      jest-environment-jsdom:
-        specifier: ^29.7.0
-        version: 29.7.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1555,7 +1534,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@22.13.1)(typescript@5.6.3))(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.49)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@22.13.1)(typescript@5.6.3))(typescript@5.6.3)
 
   packages/perp:
     dependencies:
@@ -1920,7 +1899,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@22.13.1)(typescript@5.6.3))(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.49)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@22.13.1)(typescript@5.6.3))(typescript@5.6.3)
       typescript:
         specifier: ^5.1.6
         version: 5.6.3
@@ -2960,7 +2939,7 @@ importers:
         version: link:../tsconfig
       tsup:
         specifier: ^7.1.0
-        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.39)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@22.13.1)(typescript@5.6.3))(typescript@5.6.3)
+        version: 7.3.0(@swc/core@1.4.12(@swc/helpers@0.5.12))(postcss@8.4.49)(ts-node@10.9.2(@swc/core@1.4.12(@swc/helpers@0.5.12))(@types/node@22.13.1)(typescript@5.6.3))(typescript@5.6.3)
 
   packages/wallet-connector-privy:
     dependencies:
