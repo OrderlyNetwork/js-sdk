@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 1.0.7-i18n.14
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.0.8-i18n.14
+  - @orderly.network/hooks@2.0.8-i18n.14
+  - @orderly.network/web3-onboard@2.0.8-i18n.14
+  - @orderly.network/types@2.0.8-i18n.14
+
 ## 1.0.7-i18n.13
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @orderly.network/ui-tpsl
 
+## 2.0.8-i18n.14
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.8-i18n.14
+  - @orderly.network/hooks@2.0.8-i18n.14
+  - @orderly.network/i18n@2.0.8-i18n.14
+  - @orderly.network/types@2.0.8-i18n.14
+  - @orderly.network/ui@2.0.8-i18n.14
+  - @orderly.network/utils@2.0.8-i18n.14
+
 ## 2.0.8-i18n.13
 
 ### Patch Changes
