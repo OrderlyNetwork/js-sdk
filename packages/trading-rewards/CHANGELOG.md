@@ -1,5 +1,20 @@
 # @orderly.network/trading-rewards
 
+## 2.0.8-i18n.15
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.0.8-i18n.15
+  - @orderly.network/hooks@2.0.8-i18n.15
+  - @orderly.network/i18n@2.0.8-i18n.15
+  - @orderly.network/types@2.0.8-i18n.15
+  - @orderly.network/ui@2.0.8-i18n.15
+  - @orderly.network/ui-connector@2.0.8-i18n.15
+  - @orderly.network/ui-scaffold@2.0.8-i18n.15
+  - @orderly.network/utils@2.0.8-i18n.15
+
 ## 2.0.8-i18n.14
 
 ### Patch Changes
