@@ -7,6 +7,7 @@ import {
   OrderStatus,
   OrderType,
 } from "@orderly.network/types";
+import { i18n } from "@orderly.network/i18n";
 
 export const upperCaseFirstLetter = (str: string) => {
   if (str === undefined) return str;
@@ -15,61 +16,76 @@ export const upperCaseFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 };
 
+/**
+ * order_type: LIMIT、MARKET、CLOSE_POSITION
+ * algo_type: STOP、TPSL、positional_TPSL、BRACKET
+ */
 export function parseBadgesFor(record: any): undefined | string[] {
-  if (typeof record.type !== "undefined") {
-    const list = new Array<string>();
+  const orderType = record.type;
+  const algoType = record.algo_type;
+  if (typeof orderType !== "undefined") {
+    const list: string[] = [];
 
     if (!!record.parent_algo_type) {
-      if (record.algo_type === AlgoOrderType.STOP_LOSS) {
+      if (algoType === AlgoOrderType.STOP_LOSS) {
         const types =
-          record.type === OrderType.CLOSE_POSITION
-            ? ["Position", "SL"]
-            : ["SL"];
+          orderType === OrderType.CLOSE_POSITION
+            ? [i18n.t("common.position"), i18n.t("tpsl.sl")]
+            : [i18n.t("tpsl.sl")];
         list.push(...types);
       }
 
-      if (record.algo_type === AlgoOrderType.TAKE_PROFIT) {
+      if (algoType === AlgoOrderType.TAKE_PROFIT) {
         const types =
-          record.type === OrderType.CLOSE_POSITION
-            ? ["Position", "TP"]
-            : ["TP"];
+          orderType === OrderType.CLOSE_POSITION
+            ? [i18n.t("common.position"), i18n.t("tpsl.tp")]
+            : [i18n.t("tpsl.tp")];
         list.push(...types);
       }
 
       return list;
     }
 
-    const types = (
-      typeof record.type === "string"
-        ? [record.type.replace("_ORDER", "").toLowerCase() as string]
-        : [record.type as string]
-    ).map((e) => upperCaseFirstLetter(e));
-
     const type =
-      typeof record.type === "string"
-        ? record.type.replace("_ORDER", "").toLowerCase()
-        : upperCaseFirstLetter(record.type);
+      typeof orderType === "string" ? orderType.replace("_ORDER", "") : "";
 
     // bbo(ask, bid) order as a limit type
-    if ([OrderType.ASK, OrderType.BID].includes(record.type)) {
-      return [upperCaseFirstLetter(OrderType.LIMIT)];
+    if ([OrderType.ASK, OrderType.BID].includes(orderType)) {
+      return [i18n.t("orderEntry.orderType.limit")];
     }
 
     if (
       record.algo_order_id === undefined ||
-      (record.algo_order_id && record.algo_type === "BRACKET")
+      (record.algo_order_id && algoType === "BRACKET")
     ) {
-      return [upperCaseFirstLetter(type)];
+      const typeMap = {
+        [OrderType.LIMIT]: i18n.t("orderEntry.orderType.limit"),
+        [OrderType.MARKET]: i18n.t("orderEntry.orderType.market"),
+        [OrderType.POST_ONLY]: i18n.t("orderEntry.orderType.postOnly"),
+        [OrderType.IOC]: i18n.t("orderEntry.orderType.ioc"),
+        [OrderType.FOK]: i18n.t("orderEntry.orderType.fok"),
+      };
+
+      return [
+        typeMap[type as keyof typeof typeMap] || upperCaseFirstLetter(type),
+      ];
     }
 
-    return [`Stop ${type}`];
+    // stop limit, stop market
+    if (type) {
+      const typeMap = {
+        [OrderType.LIMIT]: i18n.t("orderEntry.orderType.stopLimit"),
+        [OrderType.MARKET]: i18n.t("orderEntry.orderType.stopMarket"),
+      };
+      return [typeMap[type as keyof typeof typeMap] || type];
+    }
   }
 
-  if (typeof record.algo_type !== "undefined") {
-    const list = new Array<string>();
+  if (typeof algoType !== "undefined") {
+    const list: string[] = [];
 
-    if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
-      list.push("Position");
+    if (algoType === AlgoOrderRootType.POSITIONAL_TP_SL) {
+      list.push(i18n.t("common.position"));
     }
 
     const tpOrder = record?.child_orders?.find(
@@ -83,7 +99,13 @@ export function parseBadgesFor(record: any): undefined | string[] {
     );
 
     if (tpOrder || slOrder) {
-      list.push(tpOrder && slOrder ? "TP/SL" : tpOrder ? "TP" : "SL");
+      list.push(
+        tpOrder && slOrder
+          ? i18n.t("common.tpsl")
+          : tpOrder
+          ? i18n.t("tpsl.tp")
+          : i18n.t("tpsl.sl")
+      );
     }
 
     return list;

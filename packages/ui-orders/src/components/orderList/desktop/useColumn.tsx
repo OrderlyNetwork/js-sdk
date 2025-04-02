@@ -265,7 +265,8 @@ function instrument(option?: {
       : undefined,
     renderPlantText: (value: string, record) => {
       const badges = parseBadgesFor(record)?.join(",");
-      return `${value.split("_")[1]}-PERP (${badges})`;
+      const displayBadges = badges?.length ? ` (${badges})` : "";
+      return `${value.split("_")[1]}-PERP${displayBadges}`;
     },
     render: (value: string, record) => {
       const showGray = grayCell(record);
@@ -307,6 +308,7 @@ function instrument(option?: {
                         : "neutral"
                     }
                     size="xs"
+                    className="oui-break-normal oui-whitespace-nowrap"
                   >
                     {e}
                   </Badge>
