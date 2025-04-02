@@ -962,6 +962,15 @@ function status(option?: {
   width?: number;
   className?: string;
 }): Column<API.Order> {
+  const statusMap = {
+    [OrderStatus.NEW]: i18n.t("orders.status.pending"),
+    [OrderStatus.FILLED]: i18n.t("orders.status.filled"),
+    [OrderStatus.PARTIAL_FILLED]: i18n.t("orders.status.partialFilled"),
+    [OrderStatus.CANCELLED]: i18n.t("orders.status.canceled"),
+    [OrderStatus.REJECTED]: i18n.t("orders.status.rejected"),
+    [OrderStatus.INCOMPLETE]: i18n.t("orders.status.incomplete"),
+    [OrderStatus.COMPLETED]: i18n.t("orders.status.completed"),
+  };
   return {
     title: i18n.t("common.status"),
     dataIndex: "status",
@@ -970,18 +979,17 @@ function status(option?: {
     className: option?.className,
     renderPlantText: (value: string, record: any) => {
       const status = value || record.algo_status;
-      if (status === "NEW") {
-        return upperCaseFirstLetter("pending");
-      }
-      return upperCaseFirstLetter(status);
+      return (
+        statusMap[status as keyof typeof statusMap] ||
+        upperCaseFirstLetter(status)
+      );
     },
     render: (value: string, record: any) => {
       const status = value || record.algo_status;
-
-      if (status === "NEW") {
-        return upperCaseFirstLetter("pending");
-      }
-      return upperCaseFirstLetter(status);
+      return (
+        statusMap[status as keyof typeof statusMap] ||
+        upperCaseFirstLetter(status)
+      );
     },
   };
 }

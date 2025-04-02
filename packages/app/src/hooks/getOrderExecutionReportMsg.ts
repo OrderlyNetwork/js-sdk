@@ -2,7 +2,7 @@ import {
   capitalizeString,
   transSymbolformString,
 } from "@orderly.network/utils";
-import { API } from "@orderly.network/types";
+import { API, OrderStatus } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { parseNumber } from "@orderly.network/ui";
 import { i18n } from "@orderly.network/i18n";
@@ -38,12 +38,12 @@ export function getOrderExecutionReportMsg(
   let title = "";
   let msg = "";
   switch (status) {
-    case "NEW":
+    case OrderStatus.NEW:
       title = i18n.t("orders.status.opened.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
-    case "FILLED":
-    case "PARTIAL_FILLED":
+    case OrderStatus.FILLED:
+    case OrderStatus.PARTIAL_FILLED:
       const displayTotalExecutedQuantity =
         base_dp === undefined
           ? total_executed_quantity
@@ -51,15 +51,15 @@ export function getOrderExecutionReportMsg(
       title = i18n.t("orders.status.filled.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayTotalExecutedQuantity} / ${displayQuantity}`;
       break;
-    case "CANCELLED":
+    case OrderStatus.CANCELLED:
       title = i18n.t("orders.status.canceled.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
-    case "REJECTED":
+    case OrderStatus.REJECTED:
       title = i18n.t("orders.status.rejected.toast.title");
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
-    case "REPLACED":
+    case OrderStatus.REPLACED:
       title = i18n.t("orders.status.replaced.toast.title");
       msg = `${side} ${displaySymbol} ${total_executed_quantity} / ${displayQuantity}`;
       break;

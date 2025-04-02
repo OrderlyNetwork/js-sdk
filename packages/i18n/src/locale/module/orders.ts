@@ -6,6 +6,8 @@ export const orders = {
   "orders.status.partialFilled": "Partial filled",
   "orders.status.canceled": "Canceled",
   "orders.status.rejected": "Rejected",
+  "orders.status.incomplete": "Incomplete",
+  "orders.status.completed": "Completed",
 
   "orders.status.opened.toast.title": "Order opened",
   "orders.status.filled.toast.title": "Order filled",
