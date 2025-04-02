@@ -49,7 +49,7 @@ export class PositionLineService {
     return this.instance
       .activeChart()
       .createPositionLine()
-      .setTooltip("Close Position")
+      .setTooltip(i18n.t("positions.closePosition"))
       .setQuantityBackgroundColor(this.broker.colorConfig.chartBG!)
       .setCloseButtonBackgroundColor(this.broker.colorConfig.chartBG!)
       .setBodyTextColor(this.broker.colorConfig.textColor!)
