@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.0.8-i18n.16
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.8-i18n.16
+
 ## 2.0.8-i18n.15
 
 ### Patch Changes

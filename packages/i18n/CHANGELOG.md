@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.0.8-i18n.16
+
+### Patch Changes
+
+- publish
+
 ## 2.0.8-i18n.15
 
 ### Patch Changes

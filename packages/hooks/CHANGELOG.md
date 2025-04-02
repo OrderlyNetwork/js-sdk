@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.0.8-i18n.16
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-i18n.16
+  - @orderly.network/default-evm-adapter@2.0.8-i18n.16
+  - @orderly.network/default-solana-adapter@2.0.8-i18n.16
+  - @orderly.network/net@2.0.8-i18n.16
+  - @orderly.network/perp@4.0.7-i18n.16
+  - @orderly.network/types@2.0.8-i18n.16
+  - @orderly.network/utils@2.0.8-i18n.16
+  - @orderly.network/web3-provider-ethers@2.0.8-i18n.16
+
 ## 2.0.8-i18n.15
 
 ### Patch Changes

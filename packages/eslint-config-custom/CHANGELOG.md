@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.0.7-i18n.16
+
+### Patch Changes
+
+- publish
+
 ## 1.0.7-i18n.15
 
 ### Patch Changes
