@@ -3,6 +3,7 @@ import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { DeleteIcon, TopIcon } from "../../icons";
 import { FavoriteInstance } from "../../type";
+import { i18n } from "@orderly.network/i18n";
 
 export const getMarketsSheetColumns = (
   favorite: FavoriteInstance,
@@ -10,7 +11,7 @@ export const getMarketsSheetColumns = (
 ) => {
   return [
     {
-      title: "Market / Volume",
+      title: i18n.t("markets.column.market&Volume"),
       dataIndex: "24h_amount",
       onSort: true,
       className: "oui-h-[36px]",
@@ -48,7 +49,7 @@ export const getMarketsSheetColumns = (
       },
     },
     {
-      title: "Price / change",
+      title: i18n.t("markets.column.price&Change"),
       dataIndex: "change",
       align: "right",
       onSort: true,

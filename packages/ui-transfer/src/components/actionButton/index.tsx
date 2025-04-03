@@ -3,6 +3,7 @@ import { Box, Button, ButtonProps } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { DepositAction } from "../../types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type ActionButtonProps = {
   disabled?: boolean;
@@ -24,30 +25,31 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     onApprove,
     networkId,
   } = props;
+  const { t } = useTranslation();
 
   const buttonParams = useMemo(() => {
     const params: Record<DepositAction, ButtonProps> = {
       [DepositAction.Approve]: {
-        children: `Approve ${symbol}`,
+        children: t("transfer.deposit.approve.symbol", { symbol }),
         onClick: onApprove,
         // approve not disabled button
         disabled: false,
         "data-testid": "oui-testid-deposit-dialog-approve-btn",
       },
       [DepositAction.Increase]: {
-        children: `increase ${symbol} authorized amount`,
+        children: t("transfer.deposit.increase.symbol", { symbol }),
         onClick: onApprove,
         "data-testid": "oui-testid-deposit-dialog-increase-btn",
       },
       [DepositAction.Deposit]: {
-        children: "Deposit",
+        children: t("common.deposit"),
         onClick: onDeposit,
         "data-testid": "oui-testid-deposit-dialog-deposit-btn",
       },
     };
 
     return params[actionType];
-  }, [onApprove, onDeposit, actionType, symbol]);
+  }, [onApprove, onDeposit, actionType, symbol, t]);
 
   const buttonSize = { initial: "md", lg: "lg" } as const;
 

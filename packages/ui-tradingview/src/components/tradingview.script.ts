@@ -34,12 +34,17 @@ import { modal, toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import brokerHostHandler from "../tradingviewAdapter/renderer/brokerHostHandler";
 import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
+import { LocaleCode, useLocaleCode } from "@orderly.network/i18n";
 
 const CHART_KEY = "SDK_Tradingview";
 const MOBILE_CHART_KEY = "SDK_Moblie_Tradingview";
 
 const getChartKey = (isMobile?: boolean) => {
   return isMobile ? MOBILE_CHART_KEY : CHART_KEY;
+};
+
+const defaultLocale = (localeCode: LocaleCode) => {
+  return localeCode === "id" ? "id_ID" : localeCode;
 };
 
 export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
@@ -55,7 +60,11 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     loadingScreen: customerLoadingScreen,
     mode,
     colorConfig: customerColorConfig,
+    locale = defaultLocale,
   } = props;
+
+  const localeCode = useLocaleCode();
+
   const chart = useRef<any>();
   const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
   const { state: accountState } = useAccount();
@@ -265,11 +274,13 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         )
       : defaultOverrides.studiesOverrides;
     if (chartRef.current) {
+      // options example: https://www.tradingview.com/widget-docs/widgets/charts/advanced-chart/
+      // ChartingLibraryWidgetOptions
       const options: any = {
         fullscreen: fullscreen ?? false,
         autosize: true,
         symbol: withExchangePrefix(symbol!),
-        // locale: getLocale(),
+        locale: typeof locale === "function" ? locale(localeCode) : locale,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         container: chartRef.current,
         libraryPath: libraryPath,
@@ -317,6 +328,8 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     chartingLibrarySciprtReady,
     tradingViewScriptSrc,
     colorConfig,
+    locale,
+    localeCode,
   ]);
 
   useEffect(() => {

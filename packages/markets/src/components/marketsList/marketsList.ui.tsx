@@ -1,9 +1,9 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { cn, DataTable, DataTableClassNames } from "@orderly.network/ui";
 import { type UseMarketsListReturn } from "./marketsList.script";
 import { GetColumns, TInitialSort } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
-import { getSideMarketsColumns } from "../sideMarkets/column";
+import { useSideMarketsColumns } from "../sideMarkets/column";
 import { CollapseMarkets } from "../collapseMarkets";
 
 export type MarketsListProps = UseMarketsListReturn & {
@@ -27,11 +27,12 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
-  const columns = useMemo(() => {
-    return typeof getColumns === "function"
+  const sideColumns = useSideMarketsColumns(favorite, false);
+
+  const columns =
+    typeof getColumns === "function"
       ? getColumns(favorite, false)
-      : getSideMarketsColumns(favorite, false);
-  }, [favorite]);
+      : sideColumns;
 
   if (collapsed) {
     return <CollapseMarkets dataSource={dataSource} />;

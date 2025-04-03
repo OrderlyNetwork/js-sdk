@@ -13,7 +13,7 @@ import { feeDecimalsOffset } from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
 import { SwapMode, SymbolInfo } from "../../types";
 import { ArrowRightIcon, GasFeeIcon, WoofiIcon } from "../../icons";
-
+import { useTranslation, Trans } from "@orderly.network/i18n";
 export interface SwapInfo {
   // gasFee: string;
   // tradingFee: string;
@@ -51,6 +51,8 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
     viewMode,
   } = props;
 
+  const { t } = useTranslation();
+
   const header = (
     <Flex justify="between">
       <SwapSymbol
@@ -80,7 +82,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
 
   const listData = [
     {
-      label: "Destination gas fee",
+      label: t("transfer.fee.destinationGasFee"),
       value: (
         <Flex gapX={1}>
           <GasFeeIcon className="oui-text-primary-light" />
@@ -111,7 +113,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
       ),
     },
     {
-      label: "Swap fee",
+      label: t("transfer.crossDeposit.swapFee"),
       value: (
         <>
           <Text.numeral
@@ -134,7 +136,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
       ),
     },
     {
-      label: "Bridge fee",
+      label: t("transfer.crossDeposit.bridgeFee"),
       value: mode === SwapMode.Cross && (
         <>
           <Text.numeral
@@ -157,7 +159,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
       ),
     },
     {
-      label: "Minimum received",
+      label: t("transfer.crossDeposit.minimumReceived"),
       value: (
         <>
           <Text.numeral
@@ -172,7 +174,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
       ),
     },
     {
-      label: "Price",
+      label: t("common.price"),
       value: (
         <>
           {`1 ${src?.token} = `}
@@ -184,7 +186,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
       ),
     },
     {
-      label: "Slippage tolerance",
+      label: t("transfer.crossDeposit.slippage.slippageTolerance"),
       value: `${info.slippage}%`,
     },
   ];
@@ -202,7 +204,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
   const swapButton = (
     <Flex justify="center" mt={8}>
       <Button className="oui-w-full lg:oui-w-[184px]" onClick={props.onConfirm}>
-        Confirm to swap
+        {t("transfer.crossDeposit.confirmSwap")}
       </Button>
     </Flex>
   );
@@ -289,11 +291,12 @@ const SwapTime: FC<{ time: number }> = (props) => {
         width={210}
       >
         <Text size="sm" intensity={54}>
-          Average swap time
-        </Text>
-
-        <Text size="sm" color="primaryLight">
-          ~ {props.time} mins
+          {/* @ts-ignore */}
+          <Trans
+            i18nKey="transfer.crossDeposit.averageSwapTime"
+            values={{ time: props.time }}
+            components={[<Text color="primaryLight" />]}
+          />
         </Text>
       </Flex>
     </Flex>

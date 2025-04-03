@@ -13,6 +13,9 @@
       ],
       "@orderly.network/utils": [
         "../utils/src"
+      ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
       ]
     }
   }

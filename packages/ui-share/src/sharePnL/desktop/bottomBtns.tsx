@@ -1,14 +1,15 @@
 import { FC } from "react";
 import { Button, Flex } from "@orderly.network/ui";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const BottomButtons: FC<{
   onClickDownload: any;
   onClickCopy: any;
 }> = (props) => {
   const { onClickDownload, onClickCopy } = props;
+  const { t } = useTranslation();
 
   return (
-    <Flex px={8} gap={3} mt={3} itemAlign={"center"} >
+    <Flex px={8} gap={3} mt={3} itemAlign={"center"}>
       <Button
         color={"secondary"}
         className="oui-flex-1 oui-flex oui-gap-1"
@@ -17,17 +18,14 @@ export const BottomButtons: FC<{
         <span>
           <DownloadIcon />
         </span>
-        Download
+        {t("common.download")}
       </Button>
 
-      <Button
-        className="oui-flex-1 oui-flex oui-gap-1"
-        onClick={onClickCopy}
-      >
+      <Button className="oui-flex-1 oui-flex oui-gap-1" onClick={onClickCopy}>
         <span>
           <CopyIcon />
         </span>
-        Copy
+        {t("common.copy")}
       </Button>
     </Flex>
   );

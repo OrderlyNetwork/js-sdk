@@ -1,10 +1,12 @@
 import { FC } from "react";
-import { Button, Flex, SimpleDialog, Text } from "@orderly.network/ui";
+import { Button, SimpleDialog } from "@orderly.network/ui";
 import { MarketCloseBtnState } from "./marketCloseBtn.script";
 import { MarketCloseConfirm } from "../../desktop/closeButton";
 import { OrderType } from "@orderly.network/types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const MarketCloseBtn: FC<MarketCloseBtnState> = (props) => {
+  const { t } = useTranslation();
   return (
     <>
       <Button
@@ -27,9 +29,13 @@ export const MarketCloseBtn: FC<MarketCloseBtnState> = (props) => {
           props.setDialogOpen(true);
         }}
       >
-        Market Close
+        {t("positions.marketClose")}
       </Button>
-      <SimpleDialog open={props.dialogOpen} onOpenChange={props.setDialogOpen} size="xs">
+      <SimpleDialog
+        open={props.dialogOpen}
+        onOpenChange={props.setDialogOpen}
+        size="xs"
+      >
         <MarketCloseConfirm
           base={props.base}
           quantity={props.quantity}

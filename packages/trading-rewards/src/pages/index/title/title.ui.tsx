@@ -1,9 +1,12 @@
 import { Divider, Flex, Text } from "@orderly.network/ui";
 import { FC } from "react";
 import { TitleConfig } from "./title.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Title: FC<TitleConfig> = (props) => {
   const { title, subtitle, content, docOpenOptions } = props;
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-tradingRewards-home-title"
@@ -15,11 +18,15 @@ export const Title: FC<TitleConfig> = (props) => {
       r={"2xl"}
       width={"100%"}
     >
-      {title || <Text size="lg">Trading rewards</Text>}
+      {title || <Text size="lg">{t("common.tradingRewards")}</Text>}
       <Divider intensity={8} className="oui-w-full" />
       <Flex direction={"column"} itemAlign={"start"} gap={1}>
         {subtitle || (
-          <Text size="base">{`Trade with ${props.brokerName} to earn esORDER.`}</Text>
+          <Text size="base">
+            {t("tradingRewards.subtitle", {
+              brokerName: props.brokerName,
+            })}
+          </Text>
         )}
 
         {content || <MultiLineText docOpenOptions={docOpenOptions} />}
@@ -35,33 +42,37 @@ const MultiLineText: FC<{
     features?: string;
   };
 }> = (props) => {
-  const clickableParts = [
-    {
-      content: "Learn more here",
-      isLink: true,
-    },
-    // {
-    //   content: "about Orderly Trading rewards Program.",
-    //   isLink: false,
-    // },
-    // {
-    //   content: "Trading rewards Docs",
-    //   isLink: true,
-    // },
-  ];
-  const renderText = () => {
-    return clickableParts.map((item, index) => {
-      return (
-        <span
-          key={index}
-          className={`${
-            item.isLink ? "oui-text-primary-light hover:oui-text-primary-darken oui-cursor-pointer" : ""
-          }`}
-          dangerouslySetInnerHTML={{ __html: item.content }}
-        />
-      );
-    });
-  };
+  const { t } = useTranslation();
+
+  // const clickableParts = [
+  //   {
+  //     content: "Learn more here",
+  //     isLink: true,
+  //   },
+  //   // {
+  //   //   content: "about Orderly Trading rewards Program.",
+  //   //   isLink: false,
+  //   // },
+  //   // {
+  //   //   content: "Trading rewards Docs",
+  //   //   isLink: true,
+  //   // },
+  // ];
+  // const renderText = () => {
+  //   return clickableParts.map((item, index) => {
+  //     return (
+  //       <span
+  //         key={index}
+  //         className={`${
+  //           item.isLink
+  //             ? "oui-text-primary-light hover:oui-text-primary-darken oui-cursor-pointer"
+  //             : ""
+  //         }`}
+  //         dangerouslySetInnerHTML={{ __html: item.content }}
+  //       />
+  //     );
+  //   });
+  // };
 
   return (
     <div
@@ -74,7 +85,9 @@ const MultiLineText: FC<{
         ),
       ]}
     >
-      {renderText()}
+      <span className="oui-text-primary-light hover:oui-text-primary-darken oui-cursor-pointer">
+        {t("tradingRewards.learnMore")}
+      </span>
       <svg
         width="16"
         height="16"

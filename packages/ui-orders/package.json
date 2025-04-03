@@ -21,7 +21,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
+  "dependencies": {    
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",

@@ -1,16 +1,17 @@
 import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
 import { usePositionsRowContext } from "./positionRowContext";
 import { EditIcon } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 // ------------ TP/SL Price input end------------
 export const TPSLButton = () => {
   const { position, baseDp, quoteDp, tpslOrder } = usePositionsRowContext();
-
+  const { t } = useTranslation();
   return (
     <PositionTPSLPopover
       position={position}
       order={tpslOrder}
-      label="TP/SL"
+      label={t("common.tpsl")}
       baseDP={baseDp}
       quoteDP={quoteDp}
       isEditing={false}

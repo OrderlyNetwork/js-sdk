@@ -9,6 +9,7 @@ import {
 } from "@orderly.network/ui";
 import { PositionHeaderState } from "./positionHeader.script";
 import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const PositionHeader: FC<PositionHeaderState> = (props) => {
   const { isMobile } = useScreen();
@@ -17,6 +18,8 @@ export const PositionHeader: FC<PositionHeaderState> = (props) => {
 };
 
 const MobileLayout: FC<PositionHeaderState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       direction={"column"}
@@ -57,7 +60,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
           className="oui-text-2xs oui-text-base-contrast-54 oui-cursor-pointer"
           htmlFor="oui-checkbox-hideOtherSymbols"
         >
-          Hide other symbols
+          {t("trading.hideOtherSymbols")}
         </label>
       </Flex>
     </Flex>
@@ -89,6 +92,8 @@ const UnrealPnL: FC<
       | undefined;
   }
 > = (props) => {
+  const { t } = useTranslation();
+
   const unrealPnLClsName =
     typeof props.unrealPnL === "number"
       ? props.unrealPnL >= 0
@@ -104,7 +109,7 @@ const UnrealPnL: FC<
       : "oui-text-base-contrast-80";
 
   return (
-    <Statistic label="Unreal. PnL" classNames={props.classNames}>
+    <Statistic label={t("common.unrealizedPnl")} classNames={props.classNames}>
       <Flex gap={1}>
         <Text.numeral
           dp={props.pnlNotionalDecimalPrecision}
@@ -143,8 +148,10 @@ const Notional: FC<
       | undefined;
   }
 > = (props) => {
+  const { t } = useTranslation();
+
   return (
-    <Statistic label="Notional" classNames={props.classNames}>
+    <Statistic label={t("common.notional")} classNames={props.classNames}>
       <Text.numeral
         dp={props.pnlNotionalDecimalPrecision}
         rm={Decimal.ROUND_DOWN}

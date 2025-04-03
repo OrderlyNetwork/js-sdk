@@ -1,13 +1,10 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { Button, cn } from "@orderly.network/ui";
-
-
-
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -19,7 +16,7 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
-  initIndex?: number,
+  initIndex?: number;
 };
 
 type CarouselContextProps = {
@@ -70,7 +67,9 @@ const Carousel = React.forwardRef<
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
-    const [selectedIndex, setSelectedIndex] = React.useState(props.initIndex ||0);
+    const [selectedIndex, setSelectedIndex] = React.useState(
+      props.initIndex || 0
+    );
     const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
 
     const onSelect = React.useCallback(
@@ -177,17 +176,13 @@ const CarouselContent = React.forwardRef<
 >(({ className, ...props }, ref) => {
   const { carouselRef, orientation } = useCarousel();
 
-  
-
   return (
     <div ref={carouselRef} className="oui-overflow-hidden">
       <div
         ref={ref}
         className={cn(
           "oui-flex",
-          orientation === "horizontal"
-            ? "oui--ml-4"
-            : "oui--mt-4 oui-flex-col",
+          orientation === "horizontal" ? "oui--ml-4" : "oui--mt-4 oui-flex-col",
           className
         )}
         {...props}
@@ -320,7 +315,7 @@ export const Dot: React.FC<{
 }> = ({ index, active, onClick, className, activeClassName }) => {
   const activedClassName = activeClassName || "oui-bg-primary-darken";
   console.log("activedClassName is", activedClassName);
-  
+
   return (
     <button
       onClick={() => onClick?.(index)}

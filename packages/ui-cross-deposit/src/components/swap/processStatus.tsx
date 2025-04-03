@@ -12,6 +12,7 @@ import {
 } from "@orderly.network/ui";
 import { TopRightArrowIcon } from "../../icons";
 import { SwapMode, SwapProcessStatus } from "../../types";
+import { useTranslation } from "@orderly.network/i18n";
 
 type ProcessStatusProps = {
   status?: SwapProcessStatus;
@@ -35,19 +36,28 @@ type TProcessItem = {
 
 export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
   const { status, mode, statusUrl, brokerName } = props;
+  const { t } = useTranslation();
 
   const processList = useMemo(() => {
     const bridgeStatus = getBridgeStatus(status!);
     const depositStatus = getDepositStatus(status!);
     const list: TProcessItem[] = [
       {
-        title: bridgeStatus === SwapState.Pending ? "Bridging" : "Bridge",
-        description: "Bridge to Arbirtum via Stargate",
+        title:
+          bridgeStatus === SwapState.Pending
+            ? t("transfer.crossDeposit.bridging")
+            : t("transfer.crossDeposit.bridge"),
+        description: t("transfer.crossDeposit.bridge.description"),
         state: bridgeStatus,
       },
       {
-        title: depositStatus === SwapState.Pending ? "Depositing" : "Deposit",
-        description: `Deposit to ${brokerName}`,
+        title:
+          depositStatus === SwapState.Pending
+            ? t("transfer.crossDeposit.depositing")
+            : t("transfer.crossDeposit.deposit"),
+        description: t("transfer.crossDeposit.deposit.description", {
+          brokerName,
+        }),
         state: depositStatus,
       },
     ];
@@ -57,7 +67,7 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
     }
 
     return list;
-  }, [mode, brokerName, status]);
+  }, [mode, brokerName, status, t]);
 
   const onOk = () => {
     props.onComplete?.(status === SwapProcessStatus.Done);
@@ -112,7 +122,7 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
             statusUrl && window.open(statusUrl);
           }}
         >
-          <Text size="2xs">View status</Text>
+          <Text size="2xs">{t("transfer.crossDeposit.viewStatus")}</Text>
           <TopRightArrowIcon />
         </Flex>
       </Box>
@@ -126,7 +136,7 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
       >
         {isFailed && (
           <Text size="xs" className="oui-text-danger-light">
-            Deposit failed, please try again later.
+            {t("transfer.crossDeposit.depositFailed")}
           </Text>
         )}
 
@@ -135,7 +145,7 @@ export const ProcessStatus: FC<ProcessStatusProps> = (props) => {
           disabled={disabled}
           onClick={onOk}
         >
-          OK
+          {t("common.ok")}
         </Button>
       </Flex>
     </div>

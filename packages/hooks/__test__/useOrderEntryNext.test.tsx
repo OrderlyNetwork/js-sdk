@@ -1,12 +1,12 @@
 // import { renderHook } from "@testing-library/react-hooks";
 import {
   useOrderEntryNextInternal,
-  useOrderStore
+  useOrderStore,
 } from "../src/next/useOrderEntry/useOrderEntry.internal";
 import {
   AlgoOrderRootType,
   OrderSide,
-  OrderType
+  OrderType,
 } from "@orderly.network/types";
 import { act, renderHook } from "@testing-library/react-hooks";
 import { OrderlyConfigProvider } from "../lib";
@@ -35,9 +35,7 @@ describe("order state initial", () => {
     // const { result } = renderHook(() => useOrderEntryNext());
 
     // @ts-ignore
-    expect(() => useOrderEntryNextInternal()).toThrow(
-      "symbol is required and must be a string"
-    );
+    expect(() => useOrderEntryNextInternal()).toThrow("Symbol is required");
   });
 
   test("pass symbol", () => {
@@ -46,7 +44,7 @@ describe("order state initial", () => {
     );
 
     expect(result.current.formattedOrder).toEqual({
-      symbol: "PERP_ETH_USDC"
+      symbol: "PERP_ETH_USDC",
     });
   });
 
@@ -55,14 +53,14 @@ describe("order state initial", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         initialOrder: {
           side: OrderSide.BUY,
-          order_type: OrderType.LIMIT
-        }
+          order_type: OrderType.LIMIT,
+        },
       })
     );
     expect(result.current.formattedOrder).toEqual({
       symbol: "PERP_ETH_USDC",
       side: OrderSide.BUY,
-      order_type: OrderType.LIMIT
+      order_type: OrderType.LIMIT,
     });
   });
 
@@ -70,15 +68,15 @@ describe("order state initial", () => {
     const { result, rerender } = renderHook(
       ({ symbol }) => useOrderEntryNextInternal(symbol),
       {
-        initialProps: { symbol: "PERP_ETH_USDC" }
+        initialProps: { symbol: "PERP_ETH_USDC" },
       }
     );
     expect(result.current.formattedOrder).toEqual({
-      symbol: "PERP_ETH_USDC"
+      symbol: "PERP_ETH_USDC",
     });
     rerender({ symbol: "PERP_BTC_USDC" });
     expect(result.current.formattedOrder).toEqual({
-      symbol: "PERP_BTC_USDC"
+      symbol: "PERP_BTC_USDC",
     });
   });
   test("can't update initial state", () => {
@@ -90,10 +88,10 @@ describe("order state initial", () => {
           options: {
             initialOrder: {
               side: OrderSide.BUY,
-              order_type: OrderType.LIMIT
-            }
-          }
-        }
+              order_type: OrderType.LIMIT,
+            },
+          },
+        },
       }
     );
 
@@ -102,14 +100,14 @@ describe("order state initial", () => {
       options: {
         initialOrder: {
           side: OrderSide.SELL,
-          order_type: OrderType.MARKET
-        }
-      }
+          order_type: OrderType.MARKET,
+        },
+      },
     });
     expect(result.current.formattedOrder).toEqual({
       symbol: "PERP_BTC_USDC",
       side: OrderSide.BUY,
-      order_type: OrderType.LIMIT
+      order_type: OrderType.LIMIT,
     });
   });
 });
@@ -129,7 +127,7 @@ describe("order state update, LIMIT Order", () => {
     expect(result.current.formattedOrder).toEqual({
       symbol: "PERP_ETH_USDC",
       side: OrderSide.BUY,
-      type: OrderType.LIMIT // the default value
+      type: OrderType.LIMIT, // the default value
     });
   });
 
@@ -147,7 +145,7 @@ describe("order state update, LIMIT Order", () => {
       symbol: "PERP_ETH_USDC",
       side: OrderSide.BUY,
       algo_type: AlgoOrderRootType.BRACKET,
-      type: OrderType.LIMIT // the default value
+      type: OrderType.LIMIT, // the default value
     });
   });
 
@@ -156,12 +154,12 @@ describe("order state update, LIMIT Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         initialOrder: {
           side: OrderSide.BUY,
-          type: OrderType.LIMIT
+          type: OrderType.LIMIT,
         },
         symbolInfo: {
           base_dp: 3,
-          quote_dp: 3
-        }
+          quote_dp: 3,
+        },
       })
     );
 
@@ -175,7 +173,7 @@ describe("order state update, LIMIT Order", () => {
       quantity: "1",
       side: OrderSide.BUY,
       type: OrderType.LIMIT,
-      total: ""
+      total: "",
     });
   });
 
@@ -184,8 +182,8 @@ describe("order state update, LIMIT Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         symbolInfo: {
           base_dp: 3,
-          quote_dp: 3
-        }
+          quote_dp: 3,
+        },
       })
     );
 
@@ -199,7 +197,7 @@ describe("order state update, LIMIT Order", () => {
       side: OrderSide.BUY,
       type: OrderType.LIMIT,
       total: "1000",
-      price: "1000"
+      price: "1000",
     });
   });
   test("input qty: 0.8", () => {
@@ -207,8 +205,8 @@ describe("order state update, LIMIT Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         symbolInfo: {
           base_dp: 3,
-          quote_dp: 3
-        }
+          quote_dp: 3,
+        },
       })
     );
 
@@ -222,7 +220,7 @@ describe("order state update, LIMIT Order", () => {
       side: OrderSide.BUY,
       type: OrderType.LIMIT,
       total: "800",
-      price: "1000"
+      price: "1000",
     });
   });
   test("input total: 700", () => {
@@ -230,8 +228,8 @@ describe("order state update, LIMIT Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         symbolInfo: {
           base_dp: 3,
-          quote_dp: 3
-        }
+          quote_dp: 3,
+        },
       })
     );
 
@@ -245,7 +243,7 @@ describe("order state update, LIMIT Order", () => {
       side: OrderSide.BUY,
       type: OrderType.LIMIT,
       total: "700",
-      price: "1000"
+      price: "1000",
     });
   });
 });
@@ -257,8 +255,8 @@ describe("order state update,STOP LIMIT Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         symbolInfo: {
           base_dp: 3,
-          quote_dp: 3
-        }
+          quote_dp: 3,
+        },
       })
     );
     act(() => {
@@ -267,7 +265,7 @@ describe("order state update,STOP LIMIT Order", () => {
     expect(result.current.formattedOrder).toEqual({
       symbol: "PERP_ETH_USDC",
       side: OrderSide.BUY,
-      type: OrderType.STOP_LIMIT
+      type: OrderType.STOP_LIMIT,
       // algo_type: AlgoOrderRootType.STOP,
     });
   });
@@ -277,12 +275,12 @@ describe("order state update,STOP LIMIT Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         initialOrder: {
           side: OrderSide.BUY,
-          type: OrderType.STOP_LIMIT
+          type: OrderType.STOP_LIMIT,
         },
         symbolInfo: {
           base_dp: 3,
-          quote_dp: 3
-        }
+          quote_dp: 3,
+        },
       })
     );
     act(() => {
@@ -293,7 +291,7 @@ describe("order state update,STOP LIMIT Order", () => {
       side: OrderSide.BUY,
       type: OrderType.STOP_LIMIT,
       // algo_type: AlgoOrderRootType.STOP,
-      trigger_price: "1000"
+      trigger_price: "1000",
     });
   });
   test("update order price", () => {
@@ -301,12 +299,12 @@ describe("order state update,STOP LIMIT Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         initialOrder: {
           side: OrderSide.BUY,
-          type: OrderType.STOP_LIMIT
+          type: OrderType.STOP_LIMIT,
         },
         symbolInfo: {
           base_dp: 3,
-          quote_dp: 3
-        }
+          quote_dp: 3,
+        },
       })
     );
     act(() => {
@@ -316,7 +314,7 @@ describe("order state update,STOP LIMIT Order", () => {
       symbol: "PERP_ETH_USDC",
       side: OrderSide.BUY,
       type: OrderType.STOP_LIMIT,
-      price: "1000"
+      price: "1000",
       // algo_type: AlgoOrderRootType.STOP,
       // trigger_price: "1000",
     });
@@ -329,18 +327,18 @@ describe("MARKET Order", () => {
       useOrderEntryNextInternal("PERP_ETH_USDC", {
         initialOrder: {
           side: OrderSide.BUY,
-          type: OrderType.STOP_MARKET
+          type: OrderType.STOP_MARKET,
         },
         symbolInfo: {
           base_dp: 4,
-          quote_dp: 2
-        }
+          quote_dp: 2,
+        },
       })
     );
 
     act(() => {
       result.current.setValue("quantity", 0.25, {
-        markPrice: 2404.38
+        markPrice: 2404.38,
       });
     });
 
@@ -350,7 +348,7 @@ describe("MARKET Order", () => {
       type: OrderType.STOP_MARKET,
       price: "",
       quantity: "0.25",
-      total: "601.09"
+      total: "601.09",
       // algo_type: AlgoOrderRootType.STOP,
       // trigger_price: "1000",
     });

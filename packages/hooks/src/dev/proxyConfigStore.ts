@@ -1,4 +1,5 @@
 import { ConfigKey, ConfigStore } from "@orderly.network/core";
+import { SDKError } from "@orderly.network/types";
 import { windowGuard } from "@orderly.network/utils";
 
 export class ProxyConfigStore implements ConfigStore {
@@ -31,7 +32,7 @@ export class ProxyConfigStore implements ConfigStore {
   }
 
   clear(): void {
-    throw new Error("Method not implemented.");
+    throw new SDKError("Method not implemented.");
   }
 
   getFromOrigin<T>(key: ConfigKey): T {

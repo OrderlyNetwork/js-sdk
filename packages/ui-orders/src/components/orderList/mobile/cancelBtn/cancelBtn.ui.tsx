@@ -1,8 +1,11 @@
 import { FC } from "react";
-import { Button, Flex, SimpleDialog, Text } from "@orderly.network/ui";
+import { Button, SimpleDialog, Text } from "@orderly.network/ui";
 import { CancelBtnState } from "./cancelBtn.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CancelBtn: FC<CancelBtnState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Button
@@ -13,17 +16,17 @@ export const CancelBtn: FC<CancelBtnState> = (props) => {
         className="oui-border-base-contrast-36"
         onClick={(e) => props.setOpen(true)}
       >
-        Cancel
+        {t("common.cancel")}
       </Button>
       {props.open && (
         <SimpleDialog
           size="xs"
           open={props.open}
           onOpenChange={props.setOpen}
-          title="Cancel order"
+          title={t("orders.cancelOrder")}
           actions={{
             primary: {
-              label: "Confirm",
+              label: t("common.confirm"),
               loading: props.isLoading,
               fullWidth: true,
               size: "md",
@@ -32,7 +35,7 @@ export const CancelBtn: FC<CancelBtnState> = (props) => {
               },
             },
             secondary: {
-              label: "Cancel",
+              label: t("common.cancel"),
               fullWidth: true,
               size: "md",
               onClick: () => {
@@ -42,7 +45,7 @@ export const CancelBtn: FC<CancelBtnState> = (props) => {
           }}
         >
           <Text size="2xs" intensity={54}>
-            Are you sure you want to cancel your pending order.
+            {t("orders.cancelOrder.description")}
           </Text>
         </SimpleDialog>
       )}

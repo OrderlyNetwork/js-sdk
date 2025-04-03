@@ -3,6 +3,7 @@ import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { OrderBookAndTradesState } from "./orderBookAndTrades.script";
 import { OrderBookWidget } from "../../base/orderBook";
 import { LastTradesWidget } from "../../base/lastTrades";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
   return (
@@ -17,6 +18,8 @@ export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
 };
 
 const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Grid
       cols={2}
@@ -36,7 +39,10 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
         r="2xl"
         className="oui-bg-base-9"
       >
-        <Title title="Order book" className="oui-pl-3 oui-text-sm" />
+        <Title
+          title={t("trading.orderBook")}
+          className="oui-pl-3 oui-text-sm"
+        />
         <OrderBookWidget
           symbol={props.symbol}
           height={
@@ -53,7 +59,10 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
         r="2xl"
         className="oui-bg-base-9 oui-h-full"
       >
-        <Title title="Last trades" className="oui-text-sm oui-px-3" />
+        <Title
+          title={t("trading.lastTrades")}
+          className="oui-text-sm oui-px-3"
+        />
         <LastTradesWidget
           symbol={props.symbol}
           style={{
@@ -69,6 +78,8 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
   );
 };
 const TabLayout: FC<OrderBookAndTradesState & {}> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Box
       // pl={3}
@@ -93,7 +104,7 @@ const TabLayout: FC<OrderBookAndTradesState & {}> = (props) => {
         }}
         size="lg"
       >
-        <TabPanel value="orderBook" title={"Order book"}>
+        <TabPanel value="orderBook" title={t("trading.orderBook")}>
           <OrderBookWidget
             symbol={props.symbol}
             height={
@@ -103,7 +114,7 @@ const TabLayout: FC<OrderBookAndTradesState & {}> = (props) => {
             }
           />
         </TabPanel>
-        <TabPanel value="lastTrades" title={"Last trades"}>
+        <TabPanel value="lastTrades" title={t("trading.lastTrades")}>
           <LastTradesWidget
             symbol={props.symbol}
             style={{

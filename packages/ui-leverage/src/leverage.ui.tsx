@@ -1,11 +1,14 @@
 import { FC } from "react";
 import { Box, Button, Flex, Slider, Text, cn } from "@orderly.network/ui";
 import { LeverageScriptReturns } from "./leverage.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type LeverageProps = LeverageScriptReturns;
 
 export const Leverage: FC<LeverageProps> = (props) => {
   const { currentLeverage = 0 } = props;
+  const { t } = useTranslation();
+
   return (
     <Flex itemAlign={"start"} direction={"column"} mb={0}>
       <LeverageHeader currentLeverage={currentLeverage} />
@@ -19,7 +22,7 @@ export const Leverage: FC<LeverageProps> = (props) => {
           onClick={props.onCancel}
           data-testid="oui-testid-leverage-cancel-btn"
         >
-          Cancel
+          {t("common.cancel")}
         </Button>
         <Button
           fullWidth
@@ -27,7 +30,7 @@ export const Leverage: FC<LeverageProps> = (props) => {
           onClick={props.onSave}
           data-testid="oui-testid-leverage-save-btn"
         >
-          Save
+          {t("common.save")}
         </Button>
       </Flex>
     </Flex>
@@ -37,15 +40,15 @@ export const Leverage: FC<LeverageProps> = (props) => {
 export type LeverageHeaderProps = Pick<LeverageProps, "currentLeverage">;
 
 export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex justify={"between"} width={"100%"}>
       <Text as="div" size={"sm"} intensity={54} className="oui-mt-2">
-        Max account leverage
+        {t("leverage.maxAccountLeverage")}
       </Text>
-      <Flex direction={"row"} gap={1}>
-        <Text size={"sm"} intensity={54}>
-          Current:
-        </Text>
+      <Flex gap={1}>
+        {`${t("common.current")}:`}
         <Text.numeral unit="x" size={"sm"} intensity={80}>
           {props.currentLeverage ?? "--"}
         </Text.numeral>

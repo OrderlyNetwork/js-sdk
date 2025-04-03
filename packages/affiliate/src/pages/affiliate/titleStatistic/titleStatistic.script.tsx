@@ -1,7 +1,8 @@
-import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
-import { format, subDays } from "date-fns";
 import { useMemo, useState } from "react";
 import { fillData } from "../../../utils/chartUtils";
+import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
+import { format, subDays } from "date-fns";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type TitleStatisticReturns = {
   period: string;
@@ -17,11 +18,14 @@ export type TitleStatisticReturns = {
 };
 
 export const useTitleStatisticScript = (): TitleStatisticReturns => {
+  const { t } = useTranslation();
+
   const [period, setPeriod] = useState("7");
+
   const periodTypes = [
-    { label: "7D", value: "7" },
-    { label: "30D", value: "30" },
-    { label: "90D", value: "90" },
+    { label: t("common.select.7d"), value: "7" },
+    { label: t("common.select.30d"), value: "30" },
+    { label: t("common.select.90d"), value: "90" },
   ];
 
   const onPeriodChange = (item: string) => {
@@ -30,8 +34,8 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
 
   const [volType, setVolType] = useState("Commission");
   const volTypes = [
-    { label: "Commission", value: "Commission" },
-    { label: "Referral vol.", value: "ref" },
+    { label: t("affiliate.commission"), value: "Commission" },
+    { label: t("affiliate.referralVol"), value: "ref" },
   ];
 
   const onVolTypeChange = (item: string) => {
@@ -72,14 +76,15 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
   });
 
   const dataSource = useMemo(() => {
-    return ((rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
-      (e) => ({
-        date: e.date,
-        volume: volType === "Commission" ? e.referral_rebate : e.volume,
-      })
-    ) || []).reverse();
-  }, [rebateSummary, volType  ]);
-   
+    return (
+      (rebateSummary as RefferalAPI.ReferralRebateSummary[] | null)?.map(
+        (e) => ({
+          date: e.date,
+          volume: volType === "Commission" ? e.referral_rebate : e.volume,
+        })
+      ) || []
+    ).reverse();
+  }, [rebateSummary, volType]);
 
   return {
     period,

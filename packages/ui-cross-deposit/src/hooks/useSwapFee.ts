@@ -4,6 +4,7 @@ import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { TransactionInfo } from "./useSwapEnquiry";
 import { feeDecimalsOffset } from "@orderly.network/ui-transfer";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type UseSwapFee = ReturnType<typeof useSwapFee>;
 
@@ -46,6 +47,8 @@ export function useSwapFee(options: {
   const { from_token: markPrice, native_token: nativeMarkPrice } = markPrices;
 
   const { data: symbolPrice } = useIndexPrice(`SPOT_${nativeSymbol}_USDC`);
+
+  const { t } = useTranslation();
 
   const feeInfo = useMemo(() => {
     let feeAmount = "";
@@ -114,23 +117,22 @@ export function useSwapFee(options: {
 
     const feeDetails = [
       {
-        title: "Destination gas fee",
-        description:
-          "Additional gas tokens are required to cover operations on the destination chain.",
+        title: t("transfer.fee.destinationGasFee"),
+        description: t("transfer.fee.destinationGasFee.description"),
         value: dstGasFee,
         dp: nativeDp,
         symbol: nativeSymbol,
       },
       {
-        title: "Swap fee",
-        description: "WOOFi charges a 0.025% on each swap.",
+        title: t("transfer.crossDeposit.swapFee"),
+        description: t("transfer.crossDeposit.swapFee.description"),
         value: swapFee,
         dp: srcDp,
         symbol: srcSymbol,
       },
       {
-        title: "Bridge fee",
-        description: "Stargate charges a fee to bridge your assets.",
+        title: t("transfer.crossDeposit.bridgeFee"),
+        description: t("transfer.crossDeposit.bridgeFee.description"),
         value: bridgeFee,
         dp: srcDp,
         symbol: srcSymbol,

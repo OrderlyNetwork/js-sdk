@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useScreen } from "@orderly.network/ui";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTradingLeaderboardContext, Campaign } from "../provider";
+import { useTranslation } from "@orderly.network/i18n";
 import { formatCampaignDate } from "../../utils";
 
 export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;
@@ -26,6 +27,7 @@ export type TEmblaApi = {
 type CategoryKey = keyof CategorizedCampaigns;
 
 export function useCampaignsScript() {
+  const { t } = useTranslation();
   const { campaigns = [], href } = useTradingLeaderboardContext();
   const [category, setCategory] = useState<CategoryKey>("ongoing");
 
@@ -55,14 +57,14 @@ export function useCampaignsScript() {
 
   const options = useMemo(() => {
     const opts: { label: string; value: CategoryKey }[] = [
-      { label: "Ongoing", value: "ongoing" },
-      { label: "Past", value: "past" },
-      { label: "Future", value: "future" },
+      { label: t("tradingLeaderboard.ongoing"), value: "ongoing" },
+      { label: t("tradingLeaderboard.past"), value: "past" },
+      { label: t("tradingLeaderboard.future"), value: "future" },
     ];
 
     // Filter out categories with no campaigns and map to the required format
     return opts.filter((item) => filterCampaigns[item.value].length > 0);
-  }, [filterCampaigns]);
+  }, [filterCampaigns, t]);
 
   const currentCampaigns = useMemo(() => {
     const list = filterCampaigns[category];

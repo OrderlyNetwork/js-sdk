@@ -13,6 +13,7 @@ import { FavoritesListWidget } from "../favoritesList";
 import { MarketsListWidget } from "../marketsList";
 import { RecentListWidget } from "../recentList";
 import { NewListingListWidget } from "../newListingList";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type ExpandMarketsProps = UseExpandMarketsScriptReturn;
 
@@ -22,11 +23,13 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
 
+  const { t } = useTranslation();
+
   const search = (
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
-      placeholder="Search"
+      placeholder={t("markets.search.placeholder")}
       classNames={{ root: "oui-border oui-mt-[1px] oui-border-line" }}
       size="sm"
       prefix={
@@ -69,7 +72,11 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         className={cls}
         showScrollIndicator
       >
-        <TabPanel title="Favorites" icon={<FavoritesIcon />} value="favorites">
+        <TabPanel
+          title={t("markets.favorites")}
+          icon={<FavoritesIcon />}
+          value="favorites"
+        >
           <div className={cls}>
             <FavoritesListWidget
               tableClassNames={{
@@ -78,7 +85,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
             />
           </div>
         </TabPanel>
-        <TabPanel title="Recent" value="recent">
+        <TabPanel title={t("markets.recent")} value="recent">
           <div className={cls}>
             <RecentListWidget
               tableClassNames={{
@@ -87,7 +94,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
             />
           </div>
         </TabPanel>
-        <TabPanel title="All" value="all">
+        <TabPanel title={t("common.all")} value="all">
           <div className={cls}>
             <MarketsListWidget
               type="all"
@@ -100,7 +107,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
             />
           </div>
         </TabPanel>
-        <TabPanel title="New listings" value="newListing">
+        <TabPanel title={t("markets.newListings")} value="newListing">
           <div className={cls}>
             <NewListingListWidget
               tableClassNames={{

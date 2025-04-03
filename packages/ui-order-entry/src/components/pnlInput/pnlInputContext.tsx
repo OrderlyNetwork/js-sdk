@@ -8,6 +8,7 @@ import {
 import { PNL_Values, PnLMode } from "./useBuilder.script";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { cn, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 type TipType = "ROI" | "PnL" | "Error";
 
@@ -38,13 +39,17 @@ export const PnlInputProvider = (
     "TP/SL_Mode",
     PnLMode.PERCENTAGE
   );
+  const { t } = useTranslation();
 
   const tipsEle = useMemo(() => {
     if (!values.PnL || !props.values.trigger_price) return null;
+    
     return (
       <Flex>
         <span className={"oui-text-xs oui-text-base-contrast-54"}>
-          {`Est.${mode === PnLMode.PnL ? "ROI" : "PNL"}:`}
+          {mode === PnLMode.PnL
+            ? t("orderEntry.estRoi")
+            : t("orderEntry.estPnL")}
         </span>
         {mode === PnLMode.PnL ? (
           <Text.numeral

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Decimal } from "@orderly.network/utils";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAccount } from "@orderly.network/hooks";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface IProps {
   quantity: string;
   chainVaultBalance: number;
@@ -22,6 +22,7 @@ export const WithdrawWarningMessage = ({
   maxAmount,
   crossChainTrans,
 }: IProps) => {
+  const { t } = useTranslation();
   const { wrongNetwork } = useAppContext();
   const { state } = useAccount();
 
@@ -59,16 +60,22 @@ export const WithdrawWarningMessage = ({
     if (wrongNetwork || !checkIsBridgeless) {
       return (
         <Box>
-          Withdrawals are not supported on {networkName ?? "this chain"}. Please
-          switch to any of the bridgeless networks.
+          {networkName
+            ? t("transfer.withdraw.unsupported.networkName", {
+                networkName,
+              })
+            : t("transfer.withdraw.unsupported.chain")}
         </Box>
       );
     }
     if (crossChainTrans) {
-      return `Your cross-chain withdrawal is being processed...`;
+      return t("transfer.withdraw.crossChain.process");
     }
     if (showVaultWarning) {
-      return `Withdrawal exceeds the balance of the ${networkName} vault ( ${chainVaultBalance} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to ${networkName}.`;
+      return t("transfer.withdraw.crossChain.vaultWarning", {
+        networkName,
+        chainVaultBalance,
+      });
     }
   };
 

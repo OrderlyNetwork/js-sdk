@@ -4,7 +4,7 @@ import {
   ProcessedFundingData,
   UseFundingOverviewReturn,
 } from "./fundingOverview.script";
-import { getFundingOverviewColumns } from "./columns";
+import { useFundingOverviewColumns } from "./columns";
 
 export type FundingOverviewProps = UseFundingOverviewReturn;
 
@@ -12,7 +12,7 @@ export const FundingOverview: FC<FundingOverviewProps> = (props) => {
   const { dataSource, isLoading, pagination, onSort } = props;
   const [selectedPeriod, setSelectedPeriod] = useState("1dPositive");
 
-  const columns = getFundingOverviewColumns(selectedPeriod, setSelectedPeriod);
+  const columns = useFundingOverviewColumns(selectedPeriod, setSelectedPeriod);
 
   return (
     <div className="w-full">

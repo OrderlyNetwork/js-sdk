@@ -11,13 +11,6 @@ export enum BBOStatus {
   DISABLED = "disabled",
 }
 
-export const BBOType2Label: Record<BBOOrderType, string> = {
-  [BBOOrderType.COUNTERPARTY1]: "Counterparty 1",
-  [BBOOrderType.COUNTERPARTY5]: "Counterparty 5",
-  [BBOOrderType.QUEUE1]: "Queue 1",
-  [BBOOrderType.QUEUE5]: "Queue 5",
-};
-
 /**
  * if provide order_type, check order_type and order_type_ext, otherswise only check order_type_ext
  */

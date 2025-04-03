@@ -77,7 +77,7 @@ export type {
 export * from "./orderly/orderlyHooks";
 
 export { cleanStringStyle } from "./utils/orderEntryHelper";
-export { checkNotional } from "./utils/createOrder";
+export { checkNotional, getMinNotional } from "./utils/createOrder";
 
 export * as utils from "./utils";
 

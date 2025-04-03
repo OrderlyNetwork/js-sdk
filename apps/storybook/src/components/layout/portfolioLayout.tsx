@@ -4,7 +4,7 @@ import {
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
 import { useNav } from "../../hooks/useNav";
-import config from "../../config";
+import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 
 type PortfolioLayoutProps = {
   children: ReactNode;
@@ -13,6 +13,8 @@ type PortfolioLayoutProps = {
 
 export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
   const { onRouteChange } = useNav();
+  const config = useOrderlyConfig();
+
   return (
     <PortfolioLayoutWidget
       footerProps={config.scaffold.footerProps}

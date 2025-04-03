@@ -2,8 +2,11 @@ import { FC } from "react";
 import { Box, ChainIcon, modal, toast } from "@orderly.network/ui";
 import { ChainState } from "./chain.script";
 import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Chain: FC<ChainState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <button
       onClick={(e) => {
@@ -20,7 +23,7 @@ export const Chain: FC<ChainState> = (props) => {
               if (r?.chainId) {
                 props.setCurrentChainId(r?.chainId);
               }
-              toast.success("Network switched");
+              toast.success(t("connector.networkSwitched"));
             },
             (error) => console.log("[switchChain error]", error)
           );

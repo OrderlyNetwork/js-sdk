@@ -1,10 +1,7 @@
-import {
-  CloseCircleFillIcon,
-  Input,
-  toast,
-} from "@orderly.network/ui";
 import { FC, useRef, useState } from "react";
+import { CloseCircleFillIcon, Input, toast } from "@orderly.network/ui";
 import { Checkbox } from "./checkbox";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Message: FC<{
   message: string;
@@ -15,10 +12,12 @@ export const Message: FC<{
   const { message, setMessage, check, setCheck } = props;
   const [focus, setFocus] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { t } = useTranslation();
+
   return (
     <div className="oui-mt-3 oui-mb-6 oui-flex oui-items-center">
       <Checkbox
-      className="oui-mt-[2px]"
+        className="oui-mt-[2px]"
         checked={check}
         onCheckedChange={(e: boolean) => {
           setCheck(e);
@@ -30,14 +29,14 @@ export const Message: FC<{
           setCheck(!props.check);
         }}
       >
-        Your message
+        {t("share.pnl.optionalInfo.message")}
       </div>
       <div className="oui-bg-base-900 oui-mx-2 oui-rounded-sm">
         <Input
           ref={inputRef}
-          placeholder="Max 25 characters"
+          placeholder={t("share.pnl.optionalInfo.message.placeholder")}
           classNames={{
-            root: "oui-w-[320px]"
+            root: "oui-w-[320px]",
           }}
           size="sm"
           value={message}
@@ -64,7 +63,7 @@ export const Message: FC<{
           onBlur={() => setFocus(false)}
           onChange={(e) => {
             if (e.target.value.length > 25) {
-              toast.error("Maximum support of 25 characters");
+              toast.error(t("share.pnl.optionalInfo.message.maxLength"));
               return;
             }
             setCheck(e.target.value.length > 0);

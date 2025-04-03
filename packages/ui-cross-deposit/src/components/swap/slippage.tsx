@@ -10,7 +10,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface SlippageProps {
   value?: number;
   onValueChange?: (value: number) => void;
@@ -22,6 +22,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
   const [value, setValue] = useState<number>();
   const [customValue, setCustomValue] = useState("");
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (props.value && !options.includes(props.value!)) {
@@ -114,8 +115,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
 
       <Box mt={5}>
         <Text intensity={54}>
-          Your transaction will revert if the price changes unfavorably by more
-          than this percentage.
+          {t("transfer.crossDeposit.slippage.slippageTolerance.description")}
         </Text>
       </Box>
     </div>
@@ -126,8 +126,8 @@ export const Slippage: FC<SlippageProps> = (props) => {
       <AlertDialog
         open={open}
         onOpenChange={setOpen}
-        title="Slippage tolerance"
-        okLabel="Confirm"
+        title={t("transfer.crossDeposit.slippage.slippageTolerance")}
+        okLabel={t("common.confirm")}
         message={content}
         onOk={onConfirm}
         actions={{ primary: { disabled } }}
@@ -138,7 +138,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
         onClick={showSlippage}
       >
         <Text intensity={36} size="2xs">
-          Slippage:
+          {`${t("transfer.crossDeposit.slippage")}:`}
         </Text>
         <Text size="2xs" color="primaryLight">
           {props.value}%

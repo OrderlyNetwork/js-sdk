@@ -1,14 +1,18 @@
 import React, { useMemo, useState } from "react";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
-import { WalletType } from "../types";
+import { WalletChainTypeEnum, WalletType } from "../types";
 import { useWallet } from "../hooks/useWallet";
 import { RenderPrivyTypeIcon } from "./common";
 import { cn, ExclamationFillIcon } from "@orderly.network/ui";
 import { EVMChainPopover, WalletCard } from "./walletCard";
 import { ChainNamespace } from "@orderly.network/types";
 import { MoreIcon } from "./icons";
+import { useWalletConnectorPrivy } from "../provider";
+import { useTranslation } from "@orderly.network/i18n";
 
 function NoWallet() {
+  const { walletChainType } = useWalletConnectorPrivy();
+  const { t } = useTranslation();
   return (
     <div className="oui-flex oui-flex-col oui-justify-center oui-items-center oui-w-full oui-mt-5">
       <div className="oui-flex oui-flex-col oui-justify-center oui-items-center oui-w-full oui-gap-3">
@@ -18,7 +22,7 @@ function NoWallet() {
             className="oui-w-[64px] oui-h-[64px]"
           />
           <div className="oui-text-base-contrast-36 oui-text-2xs oui-font-semibold">
-            NO wallet
+            {t("connector.noWallet")}
           </div>
         </div>
         <div className="oui-flex oui-items-start oui-gap-1 oui-px-2 oui-py-[6px] oui-bg-[rgba(232,136,0,0.15)] oui-rounded-[4px] ">
@@ -27,22 +31,27 @@ function NoWallet() {
             className="oui-mt-1 oui-w-[10px] oui-h-[10px] oui-text-warning-darken oui-flex-shrink-0"
           />
           <div className="oui-text-2xs oui-text-warning-darken">
-            Please create a wallet to proceed. Only you can access the private
-            key. You can export the private key and import your wallet into
-            another wallet client, such as MetaMask or Phantom, at any time.
+            {t("connector.noWallet.description")}
           </div>
         </div>
       </div>
       <div className="oui-h-[1px] oui-bg-line oui-my-5 oui-w-full" />
       <div className="oui-flex oui-flex-col oui-gap-2 oui-w-full">
-        <CreateEVMWallet />
-        <CreateSOLWallet />
+        {walletChainType === WalletChainTypeEnum.EVM_SOL && (
+          <>
+            <CreateEVMWallet />
+            <CreateSOLWallet />
+          </>
+        )}
+        {walletChainType === WalletChainTypeEnum.onlyEVM && <CreateEVMWallet />}
+        {walletChainType === WalletChainTypeEnum.onlySOL && <CreateSOLWallet />}
       </div>
     </div>
   );
 }
 
 function CreateEVMWallet() {
+  const { t } = useTranslation();
   const { createEvmWallet } = usePrivyWallet();
   const [loading, setLoading] = useState(false);
   const doCreate = () => {
@@ -85,7 +94,7 @@ function CreateEVMWallet() {
           )}
           onClick={doCreate}
         >
-          Create Evm wallet
+          {t("connector.createEvmWallet")}
         </div>
       </div>
     </div>
@@ -93,6 +102,7 @@ function CreateEVMWallet() {
 }
 
 function CreateSOLWallet() {
+  const { t } = useTranslation();
   const { createSolanaWallet } = usePrivyWallet();
   const [loading, setLoading] = useState(false);
   const doCreate = () => {
@@ -123,7 +133,7 @@ function CreateSOLWallet() {
           )}
           onClick={doCreate}
         >
-          Create Solana wallet
+          {t("connector.createSolanaWallet")}
         </div>
       </div>
     </div>
@@ -138,9 +148,23 @@ enum PrivyWalletRenderType {
 }
 
 export function RenderPrivyWallet() {
+  const { t } = useTranslation();
+  const { walletChainType } = useWalletConnectorPrivy();
   const { walletEVM, walletSOL, linkedAccount } = usePrivyWallet();
   const { namespace, switchWallet, disconnect } = useWallet();
   const renderWalletType = useMemo(() => {
+    if (walletChainType === WalletChainTypeEnum.onlyEVM) {
+      if (walletEVM && walletEVM.accounts.length) {
+        return PrivyWalletRenderType.onlyEVM;
+      }
+      return PrivyWalletRenderType.noWallet;
+    }
+    if (walletChainType === WalletChainTypeEnum.onlySOL) {
+      if (walletSOL && walletSOL.accounts.length) {
+        return PrivyWalletRenderType.onlySOL;
+      }
+      return PrivyWalletRenderType.noWallet;
+    }
     if (
       (!walletEVM || !walletEVM.accounts.length) &&
       (!walletSOL || !walletSOL.accounts.length)
@@ -162,7 +186,7 @@ export function RenderPrivyWallet() {
       return PrivyWalletRenderType.onlySOL;
     }
     return PrivyWalletRenderType.both;
-  }, [walletEVM, walletSOL]);
+  }, [walletEVM, walletSOL, walletChainType]);
   return (
     <div>
       <div className="oui-flex oui-justify-between oui-items-center">
@@ -178,33 +202,61 @@ export function RenderPrivyWallet() {
           className="oui-cursor-pointer oui-text-primary oui-text-2xs oui-font-semibold"
           onClick={() => disconnect(WalletType.PRIVY)}
         >
-          Log out
+          {t("connector.logout")}
         </div>
       </div>
       {renderWalletType === PrivyWalletRenderType.noWallet && <NoWallet />}
 
       {renderWalletType === PrivyWalletRenderType.both && (
         <div className="oui-flex oui-flex-col oui-gap-5 oui-mt-5">
-          <WalletCard
-            type={WalletType.EVM}
-            address={walletEVM?.accounts[0].address ?? ""}
-            isActive={namespace === ChainNamespace.evm}
-            onActiveChange={() => {
-              switchWallet(ChainNamespace.evm);
-            }}
-            isPrivy={true}
-            isBoth={true}
-          />
-          <WalletCard
-            type={WalletType.SOL}
-            address={walletSOL?.accounts[0].address ?? ""}
-            isActive={namespace === ChainNamespace.solana}
-            onActiveChange={() => {
-              switchWallet(ChainNamespace.solana);
-            }}
-            isPrivy={true}
-            isBoth={true}
-          />
+          {walletChainType === WalletChainTypeEnum.EVM_SOL && (
+            <>
+              <WalletCard
+                type={WalletType.EVM}
+                address={walletEVM?.accounts[0].address ?? ""}
+                isActive={namespace === ChainNamespace.evm}
+                onActiveChange={() => {
+                  switchWallet(ChainNamespace.evm);
+                }}
+                isPrivy={true}
+                isBoth={true}
+              />
+              <WalletCard
+                type={WalletType.SOL}
+                address={walletSOL?.accounts[0].address ?? ""}
+                isActive={namespace === ChainNamespace.solana}
+                onActiveChange={() => {
+                  switchWallet(ChainNamespace.solana);
+                }}
+                isPrivy={true}
+                isBoth={true}
+              />
+            </>
+          )}
+          {walletChainType === WalletChainTypeEnum.onlyEVM && (
+            <WalletCard
+              type={WalletType.EVM}
+              address={walletEVM?.accounts[0].address ?? ""}
+              isActive={namespace === ChainNamespace.evm}
+              onActiveChange={() => {
+                switchWallet(ChainNamespace.evm);
+              }}
+              isPrivy={true}
+              isBoth={false}
+            />
+          )}
+          {walletChainType === WalletChainTypeEnum.onlySOL && (
+            <WalletCard
+              type={WalletType.SOL}
+              address={walletSOL?.accounts[0].address ?? ""}
+              isActive={namespace === ChainNamespace.solana}
+              onActiveChange={() => {
+                switchWallet(ChainNamespace.solana);
+              }}
+              isPrivy={true}
+              isBoth={false}
+            />
+          )}
         </div>
       )}
       {renderWalletType === PrivyWalletRenderType.onlyEVM && (
@@ -219,10 +271,14 @@ export function RenderPrivyWallet() {
             isPrivy={true}
             isBoth={false}
           />
-          <div className="oui-h-[1px] oui-bg-line oui-my-5 oui-w-full" />
-          <div className="oui-flex oui-flex-col oui-gap-2 oui-w-full">
-            <CreateSOLWallet />
-          </div>
+          {walletChainType === WalletChainTypeEnum.EVM_SOL && (
+            <>
+              <div className="oui-h-[1px] oui-bg-line oui-my-5 oui-w-full" />
+              <div className="oui-flex oui-flex-col oui-gap-2 oui-w-full">
+                <CreateSOLWallet />
+              </div>
+            </>
+          )}
         </div>
       )}
       {renderWalletType === PrivyWalletRenderType.onlySOL && (
@@ -237,10 +293,14 @@ export function RenderPrivyWallet() {
             isPrivy={true}
             isBoth={false}
           />
-          <div className="oui-h-[1px] oui-bg-line oui-my-5 oui-w-full" />
-          <div className="oui-flex oui-flex-col oui-gap-2 oui-w-full">
-            <CreateEVMWallet />
-          </div>
+          {walletChainType === WalletChainTypeEnum.EVM_SOL && (
+            <>
+              <div className="oui-h-[1px] oui-bg-line oui-my-5 oui-w-full" />
+              <div className="oui-flex oui-flex-col oui-gap-2 oui-w-full">
+                <CreateEVMWallet />
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

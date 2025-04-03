@@ -20,10 +20,13 @@ import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderSide } from "@orderly.network/types";
 import { ShareButtonWidget } from "../../shareButton";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const SymbolToken: FC<OrderCellState> = (props) => {
   const { item } = props;
   const isBuy = item.side === OrderSide.BUY;
+  const { t } = useTranslation();
+
   return (
     <Text.formatted
       intensity={80}
@@ -33,7 +36,7 @@ export const SymbolToken: FC<OrderCellState> = (props) => {
       // @ts-ignore
       prefix={
         <Badge color={isBuy ? "success" : "danger"} size="xs">
-          {isBuy ? "Buy" : "Sell"}
+          {isBuy ? t("common.buy") : t("common.sell")}
         </Badge>
       }
       onClick={() => {
@@ -48,6 +51,7 @@ export const SymbolToken: FC<OrderCellState> = (props) => {
 
 export const OrderTypeView: FC<OrderCellState> = (props) => {
   const { item } = props;
+
   const orderType = useCallback(() => {
     const type =
       typeof item.type === "string"
@@ -60,6 +64,7 @@ export const OrderTypeView: FC<OrderCellState> = (props) => {
     }
     return upperCaseFirstLetter(item.type);
   }, [item]);
+
   return (
     <Flex direction={"row"} gap={1}>
       {parseBadgesFor(props.item)?.map((e, index) => (
@@ -92,27 +97,33 @@ export const OrderTime: FC<OrderCellState> = (props) => {
 
 export const OrderState: FC<OrderCellState> = (props) => {
   const { item } = props;
-
+  const { t } = useTranslation();
   // @ts-ignore
   const status = item.status || item.algo_status;
 
-  const label = () => {
-    if (status === "NEW") {
-      return upperCaseFirstLetter("pending");
-    }
-    return upperCaseFirstLetter(status);
-  };
+  const statusMap = useMemo(() => {
+    return {
+      [OrderStatus.NEW]: t("orders.status.pending"),
+      [OrderStatus.FILLED]: t("orders.status.filled"),
+      [OrderStatus.PARTIAL_FILLED]: t("orders.status.partialFilled"),
+      [OrderStatus.CANCELLED]: t("orders.status.canceled"),
+      [OrderStatus.REJECTED]: t("orders.status.rejected"),
+      [OrderStatus.INCOMPLETE]: t("orders.status.incomplete"),
+      [OrderStatus.COMPLETED]: t("orders.status.completed"),
+    };
+  }, [t]);
 
   return (
     <Text.formatted intensity={80} size="2xs">
-      {label()}
+      {statusMap[status as keyof typeof statusMap] ||
+        upperCaseFirstLetter(status)}
     </Text.formatted>
   );
 };
 
 export const Qty: FC<OrderCellState> = (props) => {
   const { item } = props;
-
+  const { t } = useTranslation();
   const isEntirePosition =
     item.type === OrderType.CLOSE_POSITION &&
     // @ts-ignore
@@ -120,7 +131,7 @@ export const Qty: FC<OrderCellState> = (props) => {
 
   return (
     <Statistic
-      label={"Qty."}
+      label={t("common.qty")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -130,10 +141,10 @@ export const Qty: FC<OrderCellState> = (props) => {
         dp={props.base_dp}
         padding={false}
         coloring
-        placeholder="Entire position"
+        placeholder={t("tpsl.entirePosition")}
         intensity={80}
       >
-        {isEntirePosition ? "--" : item.quantity}
+        {isEntirePosition ? t("tpsl.entirePosition") : item.quantity}
       </Text.numeral>
     </Statistic>
   );
@@ -141,10 +152,11 @@ export const Qty: FC<OrderCellState> = (props) => {
 
 export const Filled: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={<Text>Filled</Text>}
+      label={<Text>{t("orders.status.filled")}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -167,11 +179,17 @@ export const Filled: FC<OrderCellState> = (props) => {
 
 export const Notional: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
       align="end"
-      label={<Text>Notional{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={
+        <Text>
+          {t("common.notional")}
+          <Text intensity={20}>(USDC)</Text>
+        </Text>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -192,6 +210,8 @@ export const Notional: FC<OrderCellState> = (props) => {
 
 export const EstTotal: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
+
   const value = useMemo(() => {
     if (item.price && item.quantity) {
       return new Decimal(item.price)
@@ -204,7 +224,12 @@ export const EstTotal: FC<OrderCellState> = (props) => {
   return (
     <Statistic
       align="end"
-      label={<Text>Notional{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={
+        <Text>
+          {t("common.notional")}
+          <Text intensity={20}>(USDC)</Text>
+        </Text>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -229,10 +254,11 @@ export const TriggerPrice: FC<
   }
 > = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"Trigger price"}
+      label={t("orders.column.triggerPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -253,10 +279,11 @@ export const TriggerPrice: FC<
 
 export const MarkPrice: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"Mark price"}
+      label={t("common.markPrice")}
       align="end"
       classNames={{
         root: "oui-text-xs",
@@ -277,18 +304,21 @@ export const MarkPrice: FC<OrderCellState> = (props) => {
 
 export const LimitPrice: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
+
   const isAlgoOrder = item?.algo_order_id !== undefined;
   const isStopMarket = item?.type === "MARKET" && isAlgoOrder;
+
   return (
     <Statistic
-      label={"Limit price"}
+      label={t("common.limitPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
     >
       {isStopMarket ? (
-        <Text>Market</Text>
+        <Text>{t("common.marketPrice")}</Text>
       ) : (
         <Text.numeral
           dp={props.quote_dp}
@@ -305,10 +335,11 @@ export const LimitPrice: FC<OrderCellState> = (props) => {
 
 export const TPTrigger: FC<OrderCellState> = (props) => {
   const { tp_trigger_price, tpPnL } = useTPSLOrderRowContext();
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"TP trigger"}
+      label={t("tpsl.tpTrigger")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -321,7 +352,7 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
               size="2xs"
               showIdentifier
               // @ts-ignore
-              prefix={<Text intensity={54}>TP PnL:&nbsp;&nbsp;</Text>}
+              prefix={<Text intensity={54}>{`${t("tpsl.tpPnl")}:`}&nbsp;</Text>}
               suffix={<Text intensity={20}>&nbsp;USDC</Text>}
               coloring
             >
@@ -354,10 +385,11 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
 
 export const SLTrigger: FC<OrderCellState> = (props) => {
   const { sl_trigger_price, slPnL } = useTPSLOrderRowContext();
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"SL trigger"}
+      label={t("tpsl.slTrigger")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -369,7 +401,9 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
             <Text.numeral
               size="2xs"
               // @ts-ignore
-              prefix={<Text intensity={54}>SL PnL:&nbsp;&nbsp;</Text>}
+              prefix={
+                <Text intensity={54}>{`${t("tpsl.slPnl")}:`}&nbsp;&nbsp;</Text>
+              }
               suffix={<Text intensity={20}>&nbsp;USDC</Text>}
               coloring
             >
@@ -402,39 +436,47 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
 
 export const TPPrice: FC<OrderCellState> = (props) => {
   // const { tp_trigger_price } = useTPSLOrderRowContext();
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"TP price"}
+      label={t("tpsl.tpPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
     >
-      <Text intensity={80}>Market</Text>
+      <Text intensity={80}>{t("common.marketPrice")}</Text>
     </Statistic>
   );
 };
 export const SLPrice: FC<OrderCellState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Statistic
-      label={"SL price"}
+      label={t("tpsl.slPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
     >
-      <Text intensity={80}>Market</Text>
+      <Text intensity={80}>{t("common.marketPrice")}</Text>
     </Statistic>
   );
 };
 
 export const TPSLQuantity: FC<OrderCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   const quantity = useMemo(() => {
     if (item.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
-      return <span className="oui-text-base-contrast-80">Entire position</span>;
+      return (
+        <span className="oui-text-base-contrast-80">
+          {t("tpsl.entirePosition")}
+        </span>
+      );
     }
 
     return (
@@ -447,11 +489,11 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
         {item.quantity}
       </Text.numeral>
     );
-  }, [item]);
+  }, [item, t]);
 
   return (
     <Statistic
-      label={"Quantity"}
+      label={t("common.quantity")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -464,9 +506,15 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
 };
 
 export const AvgPrice: FC<OrderCellState> = (props) => {
+  const { t } = useTranslation();
   return (
     <Statistic
-      label={<Text>Avg price{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={
+        <Text>
+          {t("common.avgPrice")}
+          <Text intensity={20}>(USDC)</Text>
+        </Text>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -486,9 +534,15 @@ export const AvgPrice: FC<OrderCellState> = (props) => {
 };
 
 export const OrderPrice: FC<OrderCellState> = (props) => {
+  const { t } = useTranslation();
   return (
     <Statistic
-      label={<Text>Order price{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={
+        <Text>
+          {t("orders.column.orderPrice")}
+          <Text intensity={20}>(USDC)</Text>
+        </Text>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -499,7 +553,7 @@ export const OrderPrice: FC<OrderCellState> = (props) => {
         rm={Decimal.ROUND_DOWN}
         intensity={80}
         padding={false}
-        placeholder="Market"
+        placeholder={t("common.marketPrice")}
       >
         {/* @ts-ignore */}
         {props.item?.price ?? "--"}
@@ -511,9 +565,16 @@ export const OrderPrice: FC<OrderCellState> = (props) => {
 export const RealizedPnL: FC<OrderCellState> = (props) => {
   // @ts-ignore
   const value = props?.item?.realized_pnl;
+  const { t } = useTranslation();
+
   return (
     <Statistic
-      label={<Text>Real. PnL{<Text intensity={20}>(USDC)</Text>}</Text>}
+      label={
+        <Text>
+          {t("common.realizedPnl")}
+          <Text intensity={20}>(USDC)</Text>
+        </Text>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",

@@ -1,13 +1,15 @@
 import { useMemo } from "react";
-
-import { Flex, type Column, Text, TokenIcon } from "@orderly.network/ui";
+import { Flex, type Column, TokenIcon } from "@orderly.network/ui";
 import { API } from "@orderly.network/types";
+import { useTranslation, i18n } from "@orderly.network/i18n";
 
 export const useColumns = () => {
+  const { t } = useTranslation();
+
   const columns = useMemo(() => {
     return [
       {
-        title: "Token",
+        title: t("common.token"),
         dataIndex: "token",
         width: 80,
         // rule: "symbol",
@@ -21,59 +23,54 @@ export const useColumns = () => {
         },
       },
       {
-        title: "Time",
+        title: t("common.time"),
         dataIndex: "updated_time",
         width: 120,
         rule: "date",
       },
       {
-        title: "Status",
+        title: t("common.status"),
         dataIndex: "status",
         width: 120,
         formatter(value, record, index) {
           switch (value) {
             case "CREATED":
             case "SPLIT":
-              return "Processing";
+              return t("portfolio.assetHistory.status.processing");
             case "COMPLETED":
             default:
-              return "Completed";
+              return t("portfolio.assetHistory.status.completed");
           }
         },
       },
 
       {
-        title: "Type",
+        title: t("common.type"),
         dataIndex: "type",
         width: 80,
         formatter: (value: any) => {
           switch (value) {
             case "REFERRER_REBATE":
-              return "Referral commission";
+              return t(
+                "portfolio.overview.distribution.type.referralCommission"
+              );
             case "REFEREE_REBATE":
-              return "Referee rebate";
+              return t("portfolio.overview.distribution.type.refereeRebate");
             case "BROKER_FEE":
-              return "Broker fee";
+              return t("portfolio.overview.distribution.type.brokerFee");
             default:
               return "-";
           }
         },
       },
       {
-        title: "Amount",
+        title: t("common.amount"),
         dataIndex: "amount",
         width: 80,
         // rule: "price",
       },
     ] as Column<API.FundingFeeRow & { annual_rate: number }>[];
-  }, []);
+  }, [t]);
 
   return columns;
 };
-
-export const TYPES = [
-  { label: "All", value: "All" },
-  { label: "Referral commission", value: "REFERRER_REBATE" },
-  { label: "Referee rebate", value: "REFEREE_REBATE" },
-  { label: "Broker fee", value: "BROKER_FEE" },
-];

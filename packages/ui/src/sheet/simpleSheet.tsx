@@ -1,10 +1,10 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, ReactNode } from "react";
 import { Sheet, SheetContent, SheetHeader } from ".";
 import { SheetBody, SheetContentProps, SheetTitle } from "./sheet";
 import { Divider } from "../divider";
 
 export interface SimpleSheetProps {
-  title?: string | React.ReactNode;
+  title?: ReactNode | (() => ReactNode);
   leading?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -25,6 +25,9 @@ export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
     contentProps,
     closable = true,
   } = props;
+
+  const title = typeof props.title === "function" ? props.title() : props.title;
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -33,10 +36,10 @@ export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
         closeable={closable}
         {...contentProps}
       >
-        {props.title && (
+        {title && (
           <>
             <SheetHeader leading={props.leading}>
-              <SheetTitle>{props.title}</SheetTitle>
+              <SheetTitle>{title}</SheetTitle>
             </SheetHeader>
             <Divider />
           </>

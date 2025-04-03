@@ -194,11 +194,11 @@ export const useOrderStream = (
 
   const cancelAlgoOrdersByTypes = (types: AlgoOrderRootType[]) => {
     if (!types) {
-      throw new SDKError("types is required");
+      throw new SDKError("Types is required");
     }
 
     if (!Array.isArray(types)) {
-      throw new SDKError("types should be an array");
+      throw new SDKError("Types should be an array");
     }
 
     // TODO: order type check
@@ -342,7 +342,7 @@ export const useOrderStream = (
       childOrders: API.AlgoOrder["child_orders"]
     ) => {
       if (!Array.isArray(childOrders)) {
-        throw new SDKError("children orders is required");
+        throw new SDKError("Children orders is required");
       }
       return doUpdateAlgoOrder({
         order_id: orderId,

@@ -25,6 +25,9 @@
       ],
       "@orderly.network/types": [
         "../types/src"
+      ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
       ]
     }
   }

@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API, SDKError } from "@orderly.network/types";
 import { useWS } from "../useWS";
 import { useEffect, useState } from "react";
 import { getTimestamp } from "@orderly.network/utils";
@@ -12,7 +12,7 @@ export const useMarketTradeStream = (
   options: MarketTradeStreamOptions = {}
 ) => {
   if (!symbol) {
-    throw new Error("useTradeStream: symbol is required");
+    throw new SDKError("Symbol is required");
   }
 
   const [trades, setTrades] = useState<API.Trade[]>([]);

@@ -5,8 +5,8 @@ import {
 } from "@orderly.network/portfolio";
 import { useTradingLocalStorage } from "@orderly.network/trading";
 import { Box } from "@orderly.network/ui";
-import config from "../../../config";
 import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
+import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 
 const meta: Meta<typeof PositionsModule.PositionsPage> = {
   title: "Package/portfolio/Positions",
@@ -41,6 +41,7 @@ const Container = ({ children }: { children: React.ReactNode }) => {
 
 export const Page: Story = {
   render: () => {
+    const config = useOrderlyConfig();
     const local = useTradingLocalStorage();
 
     return (
@@ -63,6 +64,7 @@ export const LayoutPage: Story = {
     layout: "fullscreen",
   },
   render: () => {
+    const config = useOrderlyConfig();
     return (
       <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Positions}>
         <Container>
