@@ -1,5 +1,19 @@
 # @orderly.network/wallet-connector-privy
 
+## 2.0.8-i18n.17
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-i18n.17
+  - @orderly.network/hooks@2.0.8-i18n.17
+  - @orderly.network/i18n@2.0.8-i18n.17
+  - @orderly.network/types@2.0.8-i18n.17
+  - @orderly.network/ui@2.0.8-i18n.17
+  - @orderly.network/ui-connector@2.0.8-i18n.17
+  - @orderly.network/utils@2.0.8-i18n.17
+
 ## 2.0.8-i18n.16
 
 ### Patch Changes
