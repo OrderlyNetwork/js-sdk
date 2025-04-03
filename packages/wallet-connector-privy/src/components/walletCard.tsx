@@ -19,6 +19,7 @@ import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { useWallet } from "../hooks/useWallet";
 import { WalletType } from "../types";
+import { useTranslation } from "@orderly.network/i18n";
 interface WalletCardProps {
   type: WalletType;
   address: string;
@@ -28,9 +29,10 @@ interface WalletCardProps {
   onActiveChange: (active: boolean) => void;
 }
 export function WalletCard(props: WalletCardProps) {
+  const { t } = useTranslation();
   const copyAddress = async (address: string) => {
     await navigator.clipboard.writeText(address);
-    toast.success("Copied!");
+    toast.success(t("common.copy.copied"));
   };
 
   return (
@@ -69,7 +71,7 @@ export function WalletCard(props: WalletCardProps) {
             {formatAddress(props.address)}
           </div>
           <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-            <Tooltip content="Copy" className="oui-z-[65]">
+            <Tooltip content={t("common.copy")} className="oui-z-[65]">
               <CopyIcon
                 size={16}
                 opacity={1}
@@ -159,6 +161,7 @@ function PrivyWalletHandleOption({
   address: string;
   type: WalletType;
 }) {
+  const { t } = useTranslation();
   const { exportWallet } = usePrivyWallet();
   return (
     <DropdownMenuRoot>
@@ -183,7 +186,7 @@ function PrivyWalletHandleOption({
               exportWallet(type);
             }}
           >
-            <div>Export</div>
+            <div>{t("common.export")}</div>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenuPortal>
@@ -196,13 +199,14 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
   const [chains] = useState(getChainsByNetwork("mainnet"));
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
+  const { t } = useTranslation();
 
   return (
     <Popover
       content={
         <div>
           <div className="oui-text-2xs oui-text-base-contrast oui-font-semibold">
-            Supported Evm chain
+            {t("connector.supportedEvmChain")}
           </div>
           <div className="oui-grid oui-grid-cols-3 oui-gap-y-3 oui-gap-x-2 oui-mt-3 oui-text-2xs oui-text-base-contrast-54">
             {chains.map((item, key) => (

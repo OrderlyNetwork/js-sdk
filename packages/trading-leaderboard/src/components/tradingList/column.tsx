@@ -1,9 +1,11 @@
 import { Text, Column, Box } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useTradingListColumns = () => {
+  const { t } = useTranslation();
   return [
     {
-      title: "Rank",
+      title: t("tradingLeaderboard.rank"),
       dataIndex: "rank",
       width: 50,
       render: (value: number) => {
@@ -15,7 +17,7 @@ export const useTradingListColumns = () => {
       },
     },
     {
-      title: "Address",
+      title: t("common.address"),
       dataIndex: "address",
       render: (value: string) => {
         return <Text.formatted rule="address">{value}</Text.formatted>;
@@ -23,7 +25,7 @@ export const useTradingListColumns = () => {
       width: 100,
     },
     {
-      title: "Trading volume",
+      title: t("tradingLeaderboard.tradingVolume"),
       dataIndex: "perp_volume",
       onSort: true,
       render: (value: number) => {

@@ -21,6 +21,7 @@
     "@orderly.network/default-evm-adapter": "workspace:*",
     "@orderly.network/default-solana-adapter": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/markets": "workspace:*",
     "@orderly.network/portfolio": "workspace:*",
     "@orderly.network/react-app": "workspace:*",

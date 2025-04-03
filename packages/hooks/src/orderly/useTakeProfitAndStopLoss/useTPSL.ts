@@ -15,6 +15,7 @@ import { findTPSLFromOrder } from "../usePositionStream/utils";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 import { useMarkPrice } from "../useMarkPrice";
 import { omit } from "ramda";
+import { OrderValidationItem } from "../../services/orderCreator/interface";
 
 export type TPSLComputedData = {
   /**
@@ -37,10 +38,7 @@ export type ComputedAlgoOrder = Partial<
 >;
 
 export type ValidateError = {
-  [P in keyof ComputedAlgoOrder]?: {
-    type: string;
-    message: string;
-  };
+  [P in keyof ComputedAlgoOrder]?: OrderValidationItem;
 };
 
 /**

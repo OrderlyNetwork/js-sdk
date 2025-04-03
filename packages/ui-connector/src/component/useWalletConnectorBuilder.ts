@@ -1,18 +1,18 @@
+import { useEffect, useState } from "react";
 import {
   useAccount,
-  useCheckReferralCode,
   useGetReferralCode,
   useLazyQuery,
   useMutation,
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
-import { useEffect, useMemo, useState } from "react";
-
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useWalletConnectorBuilder = () => {
   const { account, state, createOrderlyKey, createAccount } = useAccount();
   const [refCode, setRefCode] = useState("");
   const [helpText, setHelpText] = useState("");
+  const { t } = useTranslation();
 
   const { trigger: verifyRefCode } = useLazyQuery(
     `/v1/public/referral/verify_ref_code?referral_code=${refCode}`
@@ -37,7 +37,7 @@ export const useWalletConnectorBuilder = () => {
   }, [refCode]);
 
   const enableTradingComplted = () => {
-    toast.success("Wallet connected");
+    toast.success(t("connector.walletConnected"));
     // validate ref code and bind referral code
     if (refCode.length >= 4 && refCode.length <= 10)
       bindRefCode({ referral_code: refCode }).finally(() => {
@@ -49,24 +49,19 @@ export const useWalletConnectorBuilder = () => {
     if (refCode.length === 0) return Promise.resolve(undefined);
 
     if (refCode.length > 0 && (refCode.length < 4 || refCode.length > 10)) {
-      return Promise.resolve(
-        "The referral_code must be 4 to 10 characters long, only accept upper case roman characters and numbers"
-      );
+      return Promise.resolve(t("connector.referralCode.invalid"));
     }
 
     const { exist } = await verifyRefCode();
-    
 
     if (exist === false) {
-      return Promise.resolve("This referral code does not exist.");
+      return Promise.resolve(t("connector.referralCode.notExist"));
     }
 
     return Promise.resolve(undefined);
   };
 
-
   const showRefCodeInput = (referral_code?.length || 0) === 0 && !isLoading;
-
 
   const signIn = async () => {
     if (showRefCodeInput) {

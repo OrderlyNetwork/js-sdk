@@ -7,7 +7,7 @@ import { CaretDownIcon } from "../icon/caretDown";
 import type { SizeType } from "../helpers/sizeType";
 import { format } from "date-fns";
 import { DateRange, DayPickerRangeProps } from "react-day-picker";
-
+import { useLocale } from "../locale";
 export type DateRangePickerProps = {
   onChange?: (date: DateRange) => void;
   // selected: Date;
@@ -34,6 +34,7 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
     formatString = DEFAULT_DATE_FORMAT,
     ...calendarProps
   } = props;
+  const [locale] = useLocale("picker");
   const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | null>(
     value || initialValue || null
@@ -76,14 +77,14 @@ const DateRangePicker: FC<DateRangePickerProps> = (props) => {
   const formattedValue = useMemo(() => {
     // console.log("dateRange", dateRange);
     if (!dateRange || !dateRange.from || !dateRange.to) {
-      return placeholder ?? "Select Date";
+      return placeholder ?? locale.selectDate;
     }
     const arr = [];
     if (dateRange.from) arr.push(format(dateRange.from, formatString));
     if (dateRange.to) arr.push(format(dateRange.to, formatString));
 
     return `${arr.join(" - ")}`;
-  }, [dateRange, placeholder]);
+  }, [dateRange, placeholder, locale]);
 
   const onOpenChange = (nextOpen: boolean) => {
     // console.log(dateRange);

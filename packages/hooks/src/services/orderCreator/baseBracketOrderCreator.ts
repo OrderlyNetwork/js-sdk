@@ -3,16 +3,17 @@ import {
   AlgoOrderRootType,
   OrderSide,
 } from "@orderly.network/types";
-import { ValuesDepConfig, VerifyResult } from "./interface";
+import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { Decimal } from "@orderly.network/utils";
 import { OrderType } from "@orderly.network/types";
+import { OrderValidation } from "./orderValidation";
 
 export async function bracketOrderValidator<
   T extends AlgoOrderEntity<
     AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
   >
->(values: Partial<T>, config: ValuesDepConfig): Promise<VerifyResult> {
-  const result = Object.create(null);
+>(values: Partial<T>, config: ValuesDepConfig): Promise<OrderValidationResult> {
+  const result: OrderValidationResult = Object.create(null);
   await Promise.resolve();
   const { tp_trigger_price, sl_trigger_price, side } = values;
   const qty = Number(values.quantity);
@@ -28,19 +29,13 @@ export async function bracketOrderValidator<
       : undefined;
 
   if (!isNaN(qty) && qty > maxQty) {
-    result.quantity = {
-      message: `Quantity must be less than ${config.maxQty}`,
-    };
+    result.quantity = OrderValidation.max("quantity", config.maxQty);
   }
   if (Number(tp_trigger_price) < 0) {
-    result.tp_trigger_price = {
-      message: `TP Price must be greater than 0`,
-    };
+    result.tp_trigger_price = OrderValidation.min("tp_trigger_price", 0);
   }
   if (Number(sl_trigger_price) < 0) {
-    result.sl_trigger_price = {
-      message: `SL Price must be greater than 0`,
-    };
+    result.sl_trigger_price = OrderValidation.min("sl_trigger_price", 0);
   }
   // there need use position side to validate
   // so if order's side is buy, then position's side is sell
@@ -49,27 +44,31 @@ export async function bracketOrderValidator<
       .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
       .toNumber();
     if (!!sl_trigger_price && Number(sl_trigger_price) < slTriggerPriceScope) {
-      result.sl_trigger_price = {
-        message: `SL price must be greater than ${slTriggerPriceScope}`,
-      };
+      result.sl_trigger_price = OrderValidation.min(
+        "sl_trigger_price",
+        slTriggerPriceScope
+      );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) <= mark_price) {
-      result.tp_trigger_price = {
-        message: `TP price must be greater than ${mark_price}`,
-      };
+      result.tp_trigger_price = OrderValidation.min(
+        "tp_trigger_price",
+        mark_price
+      );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
-      result.tp_trigger_price = {
-        message: `TP price must be less than ${quote_max}`,
-      };
+      result.tp_trigger_price = OrderValidation.max(
+        "tp_trigger_price",
+        quote_max
+      );
     }
 
     if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
-      result.sl_trigger_price = {
-        message: `TP price must be greater than ${quote_min}`,
-      };
+      result.sl_trigger_price = OrderValidation.min(
+        "sl_trigger_price",
+        quote_min
+      );
     }
   }
   if (side === OrderSide.SELL && mark_price) {
@@ -77,28 +76,32 @@ export async function bracketOrderValidator<
       .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
       .toNumber();
     if (!!sl_trigger_price && Number(sl_trigger_price) > slTriggerPriceScope) {
-      result.sl_trigger_price = {
-        message: `SL price must be less than ${slTriggerPriceScope}`,
-      };
+      result.sl_trigger_price = OrderValidation.max(
+        "sl_trigger_price",
+        slTriggerPriceScope
+      );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) >= mark_price) {
-      result.tp_trigger_price = {
-        message: `TP price must be less than ${mark_price}`,
-      };
+      result.tp_trigger_price = OrderValidation.max(
+        "tp_trigger_price",
+        mark_price
+      );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
-      result.tp_trigger_price = {
-        message: `TP price must be less than ${quote_max}`,
-      };
+      result.tp_trigger_price = OrderValidation.max(
+        "tp_trigger_price",
+        quote_max
+      );
     }
 
     if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
-      result.sl_trigger_price = {
-        message: `TP price must be greater than ${quote_min}`,
-      };
+      result.sl_trigger_price = OrderValidation.min(
+        "sl_trigger_price",
+        quote_min
+      );
     }
   }
-  return Object.keys(result).length > 0 ? result : null;
+  return Object.keys(result).length > 0 ? result : null!;
 }

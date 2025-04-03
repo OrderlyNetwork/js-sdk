@@ -2,15 +2,18 @@ import useConstant from "use-constant";
 import { Account, SimpleDI } from "@orderly.network/core";
 import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
+import { SDKError } from "@orderly.network/types";
 
 export const useAccountInstance = (): Account => {
   const { configStore, keyStore, walletAdapters } = useContext(OrderlyContext);
 
   if (!configStore)
-    throw new Error("configStore is not defined, please use OrderlyProvider");
+    throw new SDKError(
+      "configStore is not defined, please use OrderlyProvider"
+    );
 
   if (!keyStore) {
-    throw new Error(
+    throw new SDKError(
       "keyStore is not defined, please use OrderlyProvider and provide keyStore"
     );
   }

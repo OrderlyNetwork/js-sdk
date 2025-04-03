@@ -1,8 +1,5 @@
 import { FC, ReactNode, useMemo } from "react";
-import {
-  PositionHistoryExt,
-  PositionHistorySide,
-} from "../positionHistory.script";
+import { PositionHistorySide } from "../positionHistory.script";
 import { API } from "@orderly.network/types";
 import {
   Badge,
@@ -13,12 +10,14 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { PositionHistoryCellState } from "./positionHistoryCell.script";
-import { PositionsRowContextState } from "../../positions/desktop/positionRowContext";
 import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const SymbolToken: FC<PositionHistoryCellState> = (props) => {
   const { side, symbol } = props.item;
+  const { t } = useTranslation();
   const isBuy = side === PositionHistorySide.buy;
+
   return (
     <Text.formatted
       intensity={80}
@@ -28,7 +27,7 @@ export const SymbolToken: FC<PositionHistoryCellState> = (props) => {
       // @ts-ignore
       prefix={
         <Badge color={isBuy ? "success" : "danger"} size="xs">
-          {isBuy ? "Buy" : "Sell"}
+          {isBuy ? t("common.buy") : t("common.sell")}
         </Badge>
       }
       onClick={() => {
@@ -58,10 +57,11 @@ export const Time: FC<PositionHistoryCellState> = (props) => {
 
 export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
   const { item: record } = props;
+  const { t } = useTranslation();
 
   const showAlert = () => {
     modal.alert({
-      title: "Liquidation",
+      title: t("positions.liquidation"),
       message: (
         <Flex
           direction={"column"}
@@ -71,19 +71,19 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
         >
           {record.liquidation_id != null && (
             <Flex justify={"between"} width={"100%"}>
-              <Text>Liquidation id</Text>
+              <Text>{t("positions.history.liquidated.liquidationId")}</Text>
               <Text intensity={98}>{record.liquidation_id}</Text>
             </Flex>
           )}
           <Flex justify={"between"} width={"100%"}>
-            <Text>Liquidator fee</Text>
+            <Text>{t("positions.history.liquidated.liquidatorFee")}</Text>
             <Text color="lose">
               {record.liquidator_fee > 0 && "-"}
               {commifyOptional(record.liquidator_fee)}
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"}>
-            <Text>Ins. Fund fee</Text>
+            <Text>{t("positions.history.liquidated.insFundFee")}</Text>
             <Text color="lose">
               {record.insurance_fund_fee > 0 && "-"}
               {commifyOptional(record.insurance_fund_fee)}
@@ -97,23 +97,29 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
   const tags = useMemo(() => {
     const list: ReactNode[] = [];
 
+    const status = record.position_status;
+
+    const renderStatus = () => {
+      if (status === "closed") {
+        return t("positions.history.status.closed");
+      } else if (status === "partial_closed") {
+        return t("positions.history.status.partialClosed");
+      } else {
+        return capitalizeFirstLetter(status.replace("_", " "));
+      }
+    };
+
     list.push(
-      <Badge
-        color={record.position_status !== "closed" ? "primaryLight" : "neutral"}
-        size="xs"
-      >
-        {capitalizeFirstLetter(
-          record.position_status === "partial_closed"
-            ? "Partially closed"
-            : record.position_status.replace("_", " ")
-        )}
+      <Badge color={status !== "closed" ? "primaryLight" : "neutral"} size="xs">
+        {renderStatus()}
       </Badge>
     );
 
     if (record.type === "adl") {
       list.push(
         <Badge color={"danger"} size="xs">
-          {capitalizeFirstLetter(record.type)}
+          {/* {capitalizeFirstLetter(record.type)} */}
+          {t("positions.history.type.adl")}
         </Badge>
       );
     } else if (record.type === "liquidated") {
@@ -125,7 +131,8 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
           onClick={showAlert}
         >
           <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
-            {capitalizeFirstLetter(record.type)}
+            {/* {capitalizeFirstLetter(record.type)} */}
+            {t("positions.history.type.liquidated")}
           </span>
         </Badge>
       );
@@ -139,6 +146,8 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
 
 export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
+
   const closedQty =
     item.closed_position_qty != null
       ? Math.abs(item.closed_position_qty)
@@ -149,7 +158,7 @@ export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
       // label={
       //   <Text>Closed{<Text intensity={20}>{` (${props.base})`}</Text>}</Text>
       // }
-      label={<Text>Closed</Text>}
+      label={<Text>{t("positions.history.column.closed")}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -164,6 +173,8 @@ export const ClosedQty: FC<PositionHistoryCellState> = (props) => {
 
 export const MaxClosedQty: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
+
   const maxClosedQty =
     item.max_position_qty != null ? Math.abs(item.max_position_qty) : "--";
   return (
@@ -173,7 +184,7 @@ export const MaxClosedQty: FC<PositionHistoryCellState> = (props) => {
       //     Max closed{<Text intensity={20}>{` (${props.base})`}</Text>}
       //   </Text>
       // }
-      label={<Text>Max closed</Text>}
+      label={<Text>{t("positions.history.column.maxClosed")}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -190,10 +201,15 @@ export const AvgOpen: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
   const avgOpen =
     item.avg_open_price != null ? Math.abs(item.avg_open_price) : "--";
-
+  const { t } = useTranslation();
   return (
     <Statistic
-      label={<Text>Avg. open{<Text intensity={20}>{" (USDC)"}</Text>}</Text>}
+      label={
+        <Flex gap={1}>
+          {t("common.avgOpen")}
+          <Text intensity={20}>(USDC)</Text>
+        </Flex>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -210,10 +226,15 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
   const avgClose =
     item.avg_close_price != null ? Math.abs(item.avg_close_price) : "--";
-
+  const { t } = useTranslation();
   return (
     <Statistic
-      label={<Text>Avg. close{<Text intensity={20}>{" (USDC)"}</Text>}</Text>}
+      label={
+        <Flex gap={1}>
+          {t("common.avgClose")}
+          <Text intensity={20}>(USDC)</Text>
+        </Flex>
+      }
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -228,10 +249,11 @@ export const AvgClosed: FC<PositionHistoryCellState> = (props) => {
 
 export const OpenTime: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   return (
     <Statistic
-      label={"Time opened"}
+      label={<Text>{t("positions.history.column.timeOpened")}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
@@ -250,6 +272,7 @@ export const OpenTime: FC<PositionHistoryCellState> = (props) => {
 };
 export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
   const { item } = props;
+  const { t } = useTranslation();
 
   const child =
     item.position_status == "closed" && item.close_timestamp ? (
@@ -266,7 +289,7 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
 
   return (
     <Statistic
-      label={"Time closed"}
+      label={<Text>{t("positions.history.column.timeClosed")}</Text>}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",

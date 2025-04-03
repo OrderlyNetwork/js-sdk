@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import {
   Badge,
   Button,
@@ -18,23 +18,19 @@ import { ConfirmDialogContent } from "./editDialogContent";
 import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
 import { utils } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
   const isBuy = item.side === OrderSide.BUY;
+  const { t } = useTranslation();
 
-  // useEffect(() => {
-  //   if (props.errors?.order_price?.message) {
-  //     toast.error(props.errors?.order_price?.message);
-  //   } else if (props.errors?.order_quantity?.message) {
-  //     toast.error(props.errors?.order_quantity?.message);
-  //   } else if (props.errors?.total?.message) {
-  //     toast.error(props.errors?.total?.message);
-  //   } else if (props.errors?.trigger_price?.message) {
-  //     toast.error(props.errors?.trigger_price?.message);
-  //   }
-  // }, [props.errors]);
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors!);
+
+  const orderQuantityErrorMsg = parseErrorMsg("order_quantity");
+  const orderPriceErrorMsg = parseErrorMsg("order_price");
+  const triggerPriceErrorMsg = parseErrorMsg("trigger_price");
 
   const percentages =
     props.quantity && props.maxQty
@@ -67,9 +63,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               <Badge
                 key={index}
                 color={
-                  e.toLocaleLowerCase() === "position"
-                    ? "primary"
-                    : "neutral"
+                  e.toLocaleLowerCase() === "position" ? "primary" : "neutral"
                 }
                 size="xs"
               >
@@ -78,19 +72,19 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             ))}
             {isBuy && (
               <Badge color="success" size="xs">
-                Buy
+                {t("common.buy")}
               </Badge>
             )}
             {!isBuy && (
               <Badge color="danger" size="xs">
-                Sell
+                {t("common.sell")}
               </Badge>
             )}
           </Flex>
         </Flex>
         <Divider intensity={8} className="oui-w-full" />
         <Flex width={"100%"} justify={"between"}>
-          <Text>Last price</Text>
+          <Text>{t("common.lastPrice")}</Text>
           <Text.numeral dp={(props.item as any)?.symbolInfo?.duote_dp}>
             {props.curMarkPrice ?? "--"}
           </Text.numeral>
@@ -100,7 +94,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             <Input.tooltip
               prefix={
                 <Text intensity={54} className="oui-px-3">
-                  Trigger price
+                  {t("orders.column.triggerPrice")}
                 </Text>
               }
               suffix={
@@ -108,9 +102,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                   {props.quote}
                 </Text>
               }
-              color={
-                props.errors?.trigger_price?.message ? "danger" : undefined
-              }
+              color={triggerPriceErrorMsg ? "danger" : undefined}
               align="right"
               fullWidth
               autoComplete="off"
@@ -120,7 +112,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               ]}
               value={props.triggerPrice}
               onValueChange={(e) => props.setTriggerPrice(e)}
-              tooltip={props.errors?.trigger_price?.message}
+              tooltip={triggerPriceErrorMsg}
               tooltipProps={{
                 content: {
                   className: "oui-bg-base-6 oui-text-base-contrast-80",
@@ -133,7 +125,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 input: "oui-text-base-contrast-98 oui-w-full",
                 root: cn(
                   "oui-outline-line-12",
-                  props.errors?.trigger_price?.message && "oui-outline-danger"
+                  triggerPriceErrorMsg && "oui-outline-danger"
                 ),
               }}
             />
@@ -141,7 +133,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
           <Input.tooltip
             prefix={
               <Text intensity={54} className="oui-px-3">
-                Price
+                {t("common.price")}
               </Text>
             }
             suffix={
@@ -149,7 +141,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 {props.quote}
               </Text>
             }
-            color={props.errors?.order_price?.message ? "danger" : undefined}
+            color={orderPriceErrorMsg ? "danger" : undefined}
             align="right"
             fullWidth
             autoComplete="off"
@@ -158,9 +150,13 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               inputFormatter.dpFormatter(props.quote_dp),
             ]}
             disabled={!props.priceEdit}
-            value={props.isStopMarket ? "Market" : props.price}
+            value={
+              props.isStopMarket
+                ? t("orderEntry.orderType.market")
+                : props.price
+            }
             onValueChange={(e) => props.setPrice(e)}
-            tooltip={props.errors?.order_price?.message}
+            tooltip={orderPriceErrorMsg}
             tooltipProps={{
               content: {
                 className: "oui-bg-base-5",
@@ -173,14 +169,14 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               input: "oui-text-base-contrast-98",
               root: cn(
                 "oui-outline-line-12",
-                props.errors?.order_price?.message && "oui-outline-danger"
+                orderPriceErrorMsg && "oui-outline-danger"
               ),
             }}
           />
           <Input.tooltip
             prefix={
               <Text intensity={54} className="oui-px-3">
-                {"Quantity"}
+                {t("common.quantity")}
               </Text>
             }
             suffix={
@@ -188,7 +184,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 {props.base}
               </Text>
             }
-            color={props.errors?.order_quantity?.message ? "danger" : undefined}
+            color={orderQuantityErrorMsg ? "danger" : undefined}
             align="right"
             fullWidth
             autoComplete="off"
@@ -202,7 +198,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               props.setQuantity(e);
             }}
             onBlur={(event) => onBlur(event.target.value)}
-            tooltip={props.errors?.order_quantity?.message}
+            tooltip={orderQuantityErrorMsg}
             tooltipProps={{
               content: {
                 className: "oui-bg-base-6",
@@ -215,7 +211,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               input: "oui-text-base-contrast-98",
               root: cn(
                 "oui-outline-line-12",
-                props.errors?.order_quantity?.message && "oui-outline-danger"
+                orderQuantityErrorMsg && "oui-outline-danger"
               ),
             }}
           />
@@ -237,7 +233,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             >{`${percentages ?? 0}`}</Text.numeral>
             <Flex gap={1}>
               <Text size="2xs" color="primary">
-                Max
+                {t("common.max")}
               </Text>
               <Text.numeral intensity={54} size="2xs" dp={props.base_dp}>
                 {props.maxQty}
@@ -253,7 +249,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               props.onClose();
             }}
           >
-            Cancel
+            {t("common.cancel")}
           </Button>
           <ThrottledButton
             fullWidth
@@ -265,7 +261,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
             loading={props.submitting}
             disabled={!props.isChanged}
           >
-            Confirm
+            {t("common.confirm")}
           </ThrottledButton>
         </Flex>
       </Flex>
@@ -273,17 +269,17 @@ export const EditSheet: FC<EditSheetState> = (props) => {
       <SimpleDialog
         open={props.dialogOpen}
         onOpenChange={props.setDialogOpen}
-        title="Edit order"
+        title={t("orders.editOrder")}
         size="xs"
         actions={{
           primary: {
-            label: "Confirm",
+            label: t("common.confirm"),
             onClick: props.onDialogConfirm,
             loading: props.submitting,
             fullWidth: true,
           },
           secondary: {
-            label: "Cancel",
+            label: t("common.cancel"),
             onClick: props.onCloseDialog,
             fullWidth: true,
           },

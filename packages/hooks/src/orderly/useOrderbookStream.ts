@@ -250,7 +250,7 @@ export const useOrderbookStream = (
   options?: OrderbookOptions
 ) => {
   if (!symbol) {
-    throw new SDKError("useOrderbookStream requires a symbol");
+    throw new SDKError("Symbol is required");
   }
 
   const level = options?.level ?? 10;

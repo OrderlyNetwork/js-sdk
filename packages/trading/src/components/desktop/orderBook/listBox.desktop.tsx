@@ -1,12 +1,9 @@
 import { FC, useCallback, useMemo, useState } from "react";
 import { DesktopOrderBookCell } from "./cell.desktop";
-
 import {
-  Tooltip,
   TooltipContent,
   TooltipTrigger,
   Text,
-  Flex,
   TooltipRoot,
   TooltipArrow,
   cn,
@@ -14,7 +11,7 @@ import {
 import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookCellType } from "../../base/orderBook/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface DesktopListBoxProps {
   type: OrderBookCellType;
   data: number[][];
@@ -60,9 +57,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
   const [hoverIndex, setHoverIndex] = useState<number>(-1);
 
   return (
-    <div
-      className="oui-order-book-list oui-flex oui-flex-col oui-gap-[1px]"
-    >
+    <div className="oui-order-book-list oui-flex oui-flex-col oui-gap-[1px]">
       {data.map((item, index) => {
         return (
           <Tip
@@ -113,6 +108,7 @@ const Tip: FC<{
   } = props;
 
   const { base, quote, base_dp: baseDp, quote_dp: quoteDp } = symbolInfo;
+  const { t } = useTranslation();
 
   const isHover =
     hoverIndex !== -1
@@ -185,29 +181,27 @@ const Tip: FC<{
       </TooltipTrigger>
       <TooltipContent
         className={cn(
-          "oui-max-w-[400px] oui-w-full oui-text-2xs oui-shadow-md oui-rounded-base oui-p-3 oui-bg-base-6 oui-flex oui-flex-col oui-gap-2",
+          "oui-max-w-[400px] oui-w-full oui-text-2xs oui-shadow-md oui-rounded-base oui-p-3 oui-bg-base-6 oui-flex oui-flex-col oui-gap-2"
           // type === OrderBookCellType.ASK ? `oui-mb-${30}` : "oui-mt-0"
         )}
-        align={
-          type === OrderBookCellType.ASK ? "end" : "start"
-        }
+        align={type === OrderBookCellType.ASK ? "end" : "start"}
         alignOffset={-25.4}
         side="left"
         sideOffset={2}
         onPointerEnter={(e) => e.preventDefault()}
       >
         <Row
-          title="Avg. Price≈"
+          title={`${t("common.avgPrice")}≈`}
           content={hintInfo.avgPrice}
           contentDp={priceDp}
         />
         <Row
-          title={`Sum (${base})`}
+          title={`${t("trading.orderBook.sum")} (${base})`}
           content={hintInfo.sumQty}
           contentDp={baseDp}
         />
         <Row
-          title={`Sum (${quote})`}
+          title={`${t("trading.orderBook.sum")} (${quote})`}
           content={hintInfo.sumQtyAmount}
           contentDp={quoteDp}
         />

@@ -4,15 +4,14 @@ import { FC } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
 export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading } = props;
   const columns = useFundingHistoryColumns();
   const symbols = useSymbolsInfo();
-
   const { symbol, dateRange } = queryParameter;
+
 
   return (
     <>

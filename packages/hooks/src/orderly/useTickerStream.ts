@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "../useQuery";
-import { API } from "@orderly.network/types";
+import { API, SDKError } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { useWS } from "../useWS";
 import { useMarkPrice } from "./useMarkPrice";
@@ -10,7 +10,7 @@ import { useFutures } from "./useFutures";
 
 export const useTickerStream = (symbol: string) => {
   if (!symbol) {
-    throw new Error("useFuturesForSymbol requires a symbol");
+    throw new SDKError("Symbol is required");
   }
   const { data: info } = useQuery<API.MarketInfo>(
     `/v1/public/futures/${symbol}`,

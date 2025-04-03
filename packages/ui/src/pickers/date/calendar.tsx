@@ -2,6 +2,7 @@ import { DayPicker } from "react-day-picker";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "../../icon";
 import { cnBase } from "tailwind-variants";
+import { useLocale } from "../../locale";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -11,8 +12,10 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const [locale] = useLocale("picker");
   return (
     <DayPicker
+      locale={locale.dayPicker}
       showOutsideDays={showOutsideDays}
       className={cnBase("oui-p-3 oui-bg-base-7 oui-rounded", className)}
       classNames={{

@@ -1,9 +1,14 @@
+import {
+  FC,
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+} from "react";
 import { modal } from "@orderly.network/ui";
 import { API, OrderEntity } from "@orderly.network/types";
-import { FC, PropsWithChildren, createContext, useCallback, useContext } from "react";
-
-import { checkNotional, useSymbolsInfo } from "@orderly.network/hooks";
-
+import { getMinNotional, useSymbolsInfo } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 export interface OrderListContextState {
   onCancelOrder: (order: API.Order | API.AlgoOrder) => Promise<any>;
   onEditOrder: (
@@ -25,7 +30,7 @@ export const OrderListContext = createContext<OrderListContextState>(
 
 export const useOrderListContext = () => {
   return useContext(OrderListContext);
-}
+};
 
 export interface OrderListProviderProps {
   cancelOrder: (orderId: number, symbol: string) => Promise<any>;
@@ -44,6 +49,7 @@ export const OrderListProvider: FC<
     editAlgoOrder,
     // cancelTPSLOrder,
   } = props;
+  const { t } = useTranslation();
   const symbolInfo = useSymbolsInfo();
   const onCancelOrder = useCallback(
     async (order: API.Order | API.AlgoOrder) => {
@@ -78,7 +84,7 @@ export const OrderListProvider: FC<
           : false;
 
       const orderEntry = await modal.sheet({
-        title: "Edit Order",
+        title: t("orders.editOrder"),
         classNames: {
           content: "oui-edit-order-sheet-content",
         },
@@ -109,15 +115,18 @@ export const OrderListProvider: FC<
         ),
       });
     },
-    []
+    [t]
   );
 
   const checkMinNotional = useCallback(
     (symbol: string, price?: string | number, qty?: string | number) => {
       const { min_notional } = symbolInfo[symbol]();
-      return checkNotional(price, qty, min_notional);
+      const minNotional = getMinNotional({ price, qty, min_notional });
+      if (minNotional !== undefined) {
+        return t("orderEntry.total.error.min", { value: minNotional });
+      }
     },
-    [symbolInfo]
+    [symbolInfo, t]
   );
 
   return (

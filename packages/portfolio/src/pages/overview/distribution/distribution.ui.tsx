@@ -1,8 +1,9 @@
+import { FC, useMemo } from "react";
 import { DataFilter } from "@orderly.network/ui";
-import { TYPES, useColumns } from "./column";
-import { FC } from "react";
+import { useColumns } from "./column";
 import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
 
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
@@ -11,6 +12,25 @@ export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
     props;
   const columns = useColumns();
   const { type, dateRange } = queryParameter;
+  const { t } = useTranslation();
+
+  const TYPES = useMemo(() => {
+    return [
+      { label: t("common.all"), value: "All" },
+      {
+        label: t("portfolio.overview.distribution.type.referralCommission"),
+        value: "REFERRER_REBATE",
+      },
+      {
+        label: t("portfolio.overview.distribution.type.refereeRebate"),
+        value: "REFEREE_REBATE",
+      },
+      {
+        label: t("portfolio.overview.distribution.type.brokerFee"),
+        value: "BROKER_FEE",
+      },
+    ];
+  }, [t]);
 
   return (
     <>

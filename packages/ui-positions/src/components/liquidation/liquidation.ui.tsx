@@ -11,7 +11,6 @@ import { LiquidationState } from "./liquidation.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { API } from "@orderly.network/types";
 import { useLiquidationColumn } from "./desktop/useLiquidationColumn";
-import { SymbolProvider } from "../../providers/symbolProvider";
 import { LiquidationCellWidget } from "./mobile";
 
 export const Liquidation: FC<LiquidationState> = (props) => {

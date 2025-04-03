@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo } from "react";
 import { TabTypes, useReferralContext } from "../../../hooks";
 
 export type TabReturns = {
@@ -10,11 +10,9 @@ export type TabReturns = {
   anAnAffiliate: () => void;
   anATrader: () => void;
   splashPage?: () => ReactNode | undefined;
-  showHome: boolean,
+  showHome: boolean;
   setShowHome: (value: boolean) => void;
 };
-
-
 
 export const useTabScript = (): TabReturns => {
   const {
@@ -31,7 +29,6 @@ export const useTabScript = (): TabReturns => {
     setTab,
   } = useReferralContext();
 
-
   const tableValue = useMemo((): TabTypes => {
     if (isAffiliate && isTrader) {
       return tab;
@@ -45,7 +42,6 @@ export const useTabScript = (): TabReturns => {
   }, [tab, isAffiliate, isTrader]);
 
   console.log(" tab", tab, tableValue);
-  
 
   const anAnAffiliate = () => {
     // if (becomeAnAffiliateUrl !== undefined) {

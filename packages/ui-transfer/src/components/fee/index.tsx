@@ -2,17 +2,21 @@ import { FC } from "react";
 import { Box, Flex, modal, Text } from "@orderly.network/ui";
 import { UseFeeReturn } from "../depositForm/depositForm.script";
 import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 type FeeProps = UseFeeReturn;
 
 export const Fee: FC<FeeProps> = (props) => {
   const { dstGasFee, feeQty, feeAmount, dp, nativeSymbol } = props;
+  const { t } = useTranslation();
 
   const onShowFee = () => {
     const content = (
       <div className="oui-text-2xs">
         <Flex gapX={1}>
-          <Text intensity={54}>Destination gas fee:</Text>
+          <Text intensity={54}>
+            {`${t("transfer.deposit.destinationGasFee")}: `}
+          </Text>
           <Text.numeral
             intensity={80}
             dp={dp}
@@ -25,15 +29,14 @@ export const Fee: FC<FeeProps> = (props) => {
         </Flex>
         <Box mt={2}>
           <Text intensity={36}>
-            Additional gas tokens are required to cover operations on the
-            destination chain.
+            {t("transfer.deposit.destinationGasFee.description")}
           </Text>
         </Box>
       </div>
     );
 
     modal.alert({
-      title: "Fee",
+      title: t("common.fee"),
       message: content,
     });
   };
@@ -47,16 +50,13 @@ export const Fee: FC<FeeProps> = (props) => {
       className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer"
       onClick={onShowFee}
     >
-      {`Fee ≈ `}
-
+      {`${t("common.fee")} ≈ `}
       <Text size="xs" intensity={80}>
         $
         <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>
           {feeAmount}
-        </Text.numeral>
-        {` `}
+        </Text.numeral>{" "}
       </Text>
-
       {showFeeQty && (
         <span>
           (

@@ -1,12 +1,15 @@
 import { FC, ReactNode } from "react";
 import { Flex, Text, cn } from "@orderly.network/ui";
 import { BecomeAffiliateReturns } from "./becomeAffiliate.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
+  const { t } = useTranslation();
 
   if (typeof props.overwrite === "function") {
     return props.overwrite?.(props.state);
   }
+
   return (
     <Flex
       id="oui-affiliate-home-becomeAffiliate"
@@ -18,28 +21,28 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       className="oui-bg-base-9"
       width={"100%"}
     >
-      <Text>Becoming an affiliate is easy</Text>
+      <Text>{t("affiliate.process.title")}</Text>
       <Flex className="oui-flex oui-flex-col lg:oui-flex-row oui-gap-3 lg:oui-items-stretch lg:oui-w-full">
         <Item
           icon={<ApplyIcon />}
-          title="Apply"
-          content="Fill out the application form"
+          title={t("affiliate.process.step1.title.title")}
+          content={t("affiliate.process.step1.description")}
         />
         <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
           icon={<ShareIcon />}
-          title="Share"
-          content="Unlock your affiliate link and share it with your community"
+          title={t("affiliate.process.step2.title")}
+          content={t("affiliate.process.step2.description")}
         />
         <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
           icon={<EarnIcon />}
-          title="Earn"
-          content="Get paid and receive special treatment 24/7, 365"
+          title={t("affiliate.process.step3.title")}
+          content={t("affiliate.process.step3.description")}
         />
       </Flex>
     </Flex>

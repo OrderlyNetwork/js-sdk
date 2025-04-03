@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API, SDKError } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -9,7 +9,7 @@ import {
 
 export const useFundingRate = (symbol: string) => {
   if (!symbol) {
-    throw new Error("useFuturesForSymbol requires a symbol");
+    throw new SDKError("Symbol is required");
   }
 
   const [countDown, setCountDown] = useState("00:00:00");

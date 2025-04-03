@@ -1,8 +1,8 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { cn, DataTable } from "@orderly.network/ui";
 import { UseRecentListReturn } from "./recentList.script";
 import { useMarketsContext } from "../marketsProvider";
-import { getSideMarketsColumns } from "../sideMarkets/column";
+import { useSideMarketsColumns } from "../sideMarkets/column";
 import { RecentListWidgetProps } from "./widget";
 import { CollapseMarkets } from "../collapseMarkets";
 
@@ -14,11 +14,12 @@ export const RecentList: FC<RecentListProps> = (props) => {
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
-  const columns = useMemo(() => {
-    return typeof getColumns === "function"
+  const sideColumns = useSideMarketsColumns(favorite, false);
+
+  const columns =
+    typeof getColumns === "function"
       ? getColumns(favorite, false)
-      : getSideMarketsColumns(favorite, false);
-  }, [favorite]);
+      : sideColumns;
 
   if (collapsed) {
     return <CollapseMarkets dataSource={dataSource} />;

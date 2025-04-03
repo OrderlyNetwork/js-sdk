@@ -6,7 +6,6 @@ import {
   SharePnLBottomSheetWidget,
 } from "@orderly.network/ui-share";
 import { Button, Flex, modal } from "@orderly.network/ui";
-import config from "../../../config";
 
 const meta: Meta<typeof SharePnLDialogWidget> = {
   title: "Package/ui-share/SharePnL",
@@ -32,7 +31,6 @@ const meta: Meta<typeof SharePnLDialogWidget> = {
         quantity: 0.0794,
       },
       leverage: 10,
-      ...config.tradingPage.sharePnLConfig,
     },
   },
 };

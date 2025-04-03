@@ -6,25 +6,30 @@ import {
   MarketsSheetWidget,
   SymbolInfoBarWidget,
 } from "@orderly.network/markets";
-import { Box, SimpleSheet } from "@orderly.network/ui";
+import { Flex, Box, SimpleSheet } from "@orderly.network/ui";
 import { SecondaryLogo } from "../../components/base/secondaryLogo";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
 import {
   RestrictedInfoWidget,
-AnnouncementTipsWidget,
+  AnnouncementTipsWidget,
 } from "@orderly.network/ui-scaffold";
+import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
 
 export const MobileLayout: FC<TradingState> = (props) => {
   const onSymbol = () => {
     props.onOpenMarketsSheetChange(true);
   };
-
   const topBar = (
     <Box intensity={900} px={3} height={54}>
       <SymbolInfoBarWidget
         symbol={props.symbol}
-        trailing={<SecondaryLogo />}
+        trailing={
+          <Flex gapX={3}>
+            <LanguageSwitcherWidget />
+            <SecondaryLogo />
+          </Flex>
+        }
         onSymbol={onSymbol}
       />
       <SimpleSheet

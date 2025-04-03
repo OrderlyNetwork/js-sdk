@@ -21,6 +21,7 @@
     "@orderly.network/chart": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",

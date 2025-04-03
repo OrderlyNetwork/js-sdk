@@ -12,8 +12,6 @@ import {
   Divider,
   gradientTextVariants,
   cn,
-  Collapsible,
-  CollapsibleContent,
 } from "@orderly.network/ui";
 import { AssetViewState } from "./assetView.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
@@ -21,7 +19,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { FaucetWidget } from "./faucet/faucet.widget";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface StatusInfo {
   title: string;
   description: string;
@@ -64,28 +62,29 @@ interface AssetValueListProps {
 const useCurrentStatusText = (): StatusInfo => {
   const { state } = useAccount();
   const { wrongNetwork, disabledConnect } = useAppContext();
+  const { t } = useTranslation();
 
   return useMemo(() => {
     const statusText = {
       wrongNetwork: {
-        title: "Wrong Network",
-        description: "Please switch to a supported network to continue.",
+        title: t("connector.wrongNetwork"),
+        description: t("connector.wrongNetwork.tooltip"),
         titleColor: "warning",
       },
       connectWallet: {
-        title: "Connect wallet",
-        description: "Please connect your wallet before starting to trade.",
+        title: t("connector.connectWallet"),
+        description: t("connector.trade.connectWallet.tooltip"),
         titleClsName:
           "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
       },
       notSignedIn: {
-        title: "Sign in",
-        description: "Please sign in before starting to trade.",
+        title: t("connector.signIn"),
+        description: t("connector.trade.signIn.tooltip"),
         titleColor: "primary",
       },
       disabledTrading: {
-        title: "Enable trading",
-        description: "Enable trading before starting to trade.",
+        title: t("connector.enableTrading"),
+        description: t("connector.trade.enableTrading.tooltip"),
         titleColor: "primary",
       },
       default: {
@@ -130,33 +129,42 @@ const TotalValue: FC<TotalValueProps> = ({
   totalValue,
   visible = true,
   onToggleVisibility,
-}) => (
-  <Flex direction="column" gap={1} className="oui-text-2xs" itemAlign="center">
-    <Text.numeral
-      visible={visible}
-      weight="bold"
-      size="2xl"
-      className={gradientTextVariants({ color: "brand" })}
-      as="div"
-      padding={false}
-      dp={2}
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Flex
+      direction="column"
+      gap={1}
+      className="oui-text-2xs"
+      itemAlign="center"
     >
-      {totalValue ?? "--"}
-    </Text.numeral>
-    <Flex gap={1} itemAlign="center">
-      <Text size="2xs" color="neutral" weight="semibold">
-        My Assets (USDC)
-      </Text>
-      <button onClick={onToggleVisibility}>
-        {visible ? (
-          <EyeIcon size={18} className="oui-text-base-contrast-54" />
-        ) : (
-          <EyeCloseIcon size={18} className="oui-text-base-contrast-54" />
-        )}
-      </button>
+      <Text.numeral
+        visible={visible}
+        weight="bold"
+        size="2xl"
+        className={gradientTextVariants({ color: "brand" })}
+        as="div"
+        padding={false}
+        dp={2}
+      >
+        {totalValue ?? "--"}
+      </Text.numeral>
+      <Flex gap={1} itemAlign="center">
+        <Text size="2xs" color="neutral" weight="semibold">
+          {`${t("trading.asset.myAssets")} (USDC)`}
+        </Text>
+        <button onClick={onToggleVisibility}>
+          {visible ? (
+            <EyeIcon size={18} className="oui-text-base-contrast-54" />
+          ) : (
+            <EyeCloseIcon size={18} className="oui-text-base-contrast-54" />
+          )}
+        </button>
+      </Flex>
     </Flex>
-  </Flex>
-);
+  );
+};
 
 const AssetDetail: FC<AssetDetailProps> = ({
   label,
@@ -215,6 +223,8 @@ const AssetValueList: FC<AssetValueListProps> = ({
   );
   const [open, setOpen] = useState<boolean>(optionsOpen);
 
+  const { t } = useTranslation();
+
   const toggleOpen = useCallback(() => {
     setOpen((prevOpen) => !prevOpen);
     setTimeout(() => {
@@ -252,18 +262,18 @@ const AssetValueList: FC<AssetValueListProps> = ({
         )}
       >
         <AssetDetail
-          label="Free collateral"
-          description="Free collateral for placing new orders."
-          formula="Free collateral = Total balance + Total unsettlement PnL - Total position initial margin"
+          label={t("trading.asset.freeCollateral")}
+          description={t("trading.asset.freeCollateral.tooltip")}
+          formula={t("trading.asset.freeCollateral.formula")}
           visible={visible}
           // TODO: change AssetDetail value
           value={freeCollateral! === 0 ? ("0" as any) : freeCollateral}
           unit="USDC"
         />
         <AssetDetail
-          label="Margin ratio"
-          description="The margin ratio represents the proportion of collateral relative to the total position value."
-          formula="Account margin ratio = (Total collateral value / Total position notional) * 100%"
+          label={t("trading.asset.marginRatio")}
+          description={t("trading.asset.marginRatio.tooltip")}
+          formula={t("trading.asset.marginRatio.formula")}
           visible={visible}
           value={marginRatioVal}
           isConnected={isConnected}
@@ -272,9 +282,9 @@ const AssetValueList: FC<AssetValueListProps> = ({
           placeholder="--%"
         />
         <AssetDetail
-          label="Maintenance margin ratio"
-          description="The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated."
-          formula="Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%"
+          label={t("trading.asset.maintenanceMarginRatio")}
+          description={t("trading.asset.maintenanceMarginRatio.tooltip")}
+          formula={t("trading.asset.maintenanceMarginRatio.formula")}
           visible={visible}
           value={renderMMR}
           rule="percentages"
@@ -301,6 +311,8 @@ export const AssetView: FC<AssetViewState> = ({
 }) => {
   const { title, description, titleColor, titleClsName } =
     useCurrentStatusText();
+
+  const { t } = useTranslation();
 
   return (
     <Box className="oui-relative">
@@ -333,10 +345,10 @@ export const AssetView: FC<AssetViewState> = ({
             <Box>
               <Flex direction="column" gap={1} className="oui-mb-[32px]">
                 <Text.gradient size="lg" weight="bold" color="brand">
-                  Deposit to start trade
+                  {t("trading.asset.startTrading")}
                 </Text.gradient>
                 <Text size="2xs" color="neutral" weight="semibold">
-                  You can deposit assets from various networks
+                  {t("trading.asset.startTrading.description")}
                 </Text>
               </Flex>
             </Box>
@@ -347,7 +359,7 @@ export const AssetView: FC<AssetViewState> = ({
               onClick={onDeposit}
             >
               <ArrowDownShortIcon color="white" opacity={1} />
-              <Text>Deposit</Text>
+              <Text>{t("common.deposit")}</Text>
             </Button>
 
             <Box className="oui-mt-3">
@@ -381,7 +393,7 @@ export const AssetView: FC<AssetViewState> = ({
                   opacity={1}
                   className="oui-rotate-180"
                 />
-                <Text>Withdraw</Text>
+                <Text>{t("common.withdraw")}</Text>
               </Button>
               <Button
                 data-testid="oui-testid-assetView-deposit-button"
@@ -390,7 +402,7 @@ export const AssetView: FC<AssetViewState> = ({
                 onClick={onDeposit}
               >
                 <ArrowDownShortIcon color="white" opacity={1} />
-                <Text>Deposit</Text>
+                <Text>{t("common.deposit")}</Text>
               </Button>
             </Flex>
             <FaucetWidget />

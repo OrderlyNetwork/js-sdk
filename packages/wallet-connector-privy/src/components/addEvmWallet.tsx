@@ -10,7 +10,10 @@ import { useWalletConnectorPrivy } from "../provider";
 import { WalletType } from "../types";
 import { getWalletIcon } from "../util";
 import { RenderWalletIcon } from "./common";
+import { useTranslation } from "@orderly.network/i18n";
+
 export function AddEvmWallet() {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const { connect } = useWallet();
   const [open, setOpen] = useState(false);
@@ -70,7 +73,7 @@ export function AddEvmWallet() {
             </div>
           </div>
           <div className="oui-text-base-contrast-80 oui-text-2xs oui-font-semibold">
-            Add Evm wallet
+            {t("connector.addEvmWallet")}
           </div>
 
           <button onClick={() => setVisible(!visible)}>

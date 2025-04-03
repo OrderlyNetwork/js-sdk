@@ -6,7 +6,7 @@ import { CalendarIcon } from "../icon/calendar";
 import { CaretDownIcon } from "../icon/caretDown";
 import type { SizeType } from "../helpers/sizeType";
 import { ActiveModifiers } from "react-day-picker";
-
+import { useLocale } from "../locale";
 export type DatePickerProps = {
   onChange?: (date: Date) => void;
   // selected: Date;
@@ -28,15 +28,17 @@ const DatePicker: FC<DatePickerProps> = (props) => {
     ...calendarProps
   } = props;
 
+  const [locale] = useLocale("picker");
+
   const { trigger } = selectVariants({ size, className });
 
   const [open, setOpen] = useState(false);
 
   const formattedValue = useMemo(() => {
     if (typeof value === "undefined") {
-      return placeholder ?? "Select Date";
+      return placeholder ?? locale.selectDate;
     }
-  }, [value, placeholder]);
+  }, [value, placeholder, locale]);
 
   const onSelect = (
     day: Date | undefined,

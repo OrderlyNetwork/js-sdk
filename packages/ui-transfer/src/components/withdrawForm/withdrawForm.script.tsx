@@ -19,6 +19,7 @@ import { toast } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
 import { InputStatus } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>;
 
@@ -29,6 +30,7 @@ export const useWithdrawForm = ({
 }: {
   onClose: (() => void) | undefined;
 }) => {
+  const { t } = useTranslation();
   const [positionData] = usePositionStream();
   const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
@@ -186,18 +188,18 @@ export const useWithdrawForm = ({
       })
         .then((switched) => {
           if (switched) {
-            toast.success("Network switched");
+            toast.success(t("connector.networkSwitched"));
             // clean input value
             cleanData();
           } else {
-            toast.error("Switch chain failed");
+            toast.error(t("connector.switchChain.failed"));
           }
         })
         .catch((error) => {
-          toast.error(`Switch chain failed: ${error.message}`);
+          toast.error(`${t("connector.switchChain.failed")}: ${error.message}`);
         });
     },
-    [currentChain, switchChain, findByChainId]
+    [currentChain, switchChain, findByChainId, t]
   );
 
   const hasPositions = useMemo(
@@ -210,21 +212,26 @@ export const useWithdrawForm = ({
       .settle()
       .catch((e) => {
         if (e.code == -1104) {
-          toast.error(
-            "Settlement is only allowed once every 10 minutes. Please try again later."
-          );
+          toast.error(t("settle.settlement.error"));
         }
-        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
-          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        if (
+          e.message.indexOf(
+            "Signing off chain messages with Ledger is not yet supported"
+          ) !== -1
+        ) {
+          ee.emit("wallet:sign-message-with-ledger-error", {
+            message: e.message,
+            userAddress: account.address,
+          });
         }
 
         if (e.message.indexOf("user rejected") !== -1) {
-          toast.error("REJECTED_TRANSACTION");
+          toast.error(t("transfer.rejectTransaction"));
         }
         return Promise.reject(e);
       })
       .then((res) => {
-        toast.success("Settlement requested");
+        toast.success(t("settle.settlement.requested"));
         return Promise.resolve(res);
       });
   };
@@ -261,7 +268,11 @@ export const useWithdrawForm = ({
       return;
     }
     if (new Decimal(quantity).lt(minAmount)) {
-      toast.error(`quantity must large than ${minAmount}`);
+      toast.error(
+        t("transfer.withdraw.minAmount.error", {
+          minAmount,
+        })
+      );
       return;
     }
     setLoading(true);
@@ -273,7 +284,7 @@ export const useWithdrawForm = ({
       allowCrossChainWithdraw: crossChainWithdraw,
     })
       .then((res) => {
-        toast.success("Withdraw requested");
+        toast.success(t("transfer.withdraw.requested"));
         ee.emit("withdraw:requested");
         if (onClose) {
           onClose();
@@ -282,11 +293,18 @@ export const useWithdrawForm = ({
       })
       .catch((e) => {
         if (e.message.indexOf("user rejected") !== -1) {
-          toast.error("REJECTED_TRANSACTION");
+          toast.error(t("transfer.rejectTransaction"));
           return;
         }
-        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
-          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        if (
+          e.message.indexOf(
+            "Signing off chain messages with Ledger is not yet supported"
+          ) !== -1
+        ) {
+          ee.emit("wallet:sign-message-with-ledger-error", {
+            message: e.message,
+            userAddress: account.address,
+          });
           return;
         }
 
@@ -346,7 +364,7 @@ export const useWithdrawForm = ({
     if (unsettledPnL < 0) {
       if (qty.gt(maxAmount)) {
         setInputStatus("error");
-        setHintMessage("Insufficient balance");
+        setHintMessage(t("transfer.insufficientBalance"));
         setDisabled(true);
       } else {
         setInputStatus("default");
@@ -356,14 +374,14 @@ export const useWithdrawForm = ({
     } else {
       if (qty.gt(maxAmount)) {
         setInputStatus("error");
-        setHintMessage("Insufficient balance");
+        setHintMessage(t("transfer.insufficientBalance"));
         setDisabled(true);
       } else if (
         qty.gt(new Decimal(maxAmount).minus(unsettledPnL)) &&
         qty.lessThanOrEqualTo(maxAmount)
       ) {
         setInputStatus("warning");
-        setHintMessage("Please settle your balance");
+        setHintMessage(t("settle.settlePnl.warning"));
         setDisabled(true);
       } else {
         setInputStatus("default");

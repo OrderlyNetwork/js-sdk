@@ -5,10 +5,15 @@ import {
   OrderlyOrder,
 } from "@orderly.network/types";
 import { BaseOrderCreator } from "./baseCreator";
-import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
+import {
+  OrderFormEntity,
+  ValuesDepConfig,
+  OrderValidationResult,
+} from "./interface";
 import { Decimal } from "@orderly.network/utils";
 import { order as orderUntil } from "@orderly.network/perp";
 import { pick } from "ramda";
+import { OrderValidation } from "./orderValidation";
 
 const { maxPrice, minPrice, scopePrice } = orderUntil;
 
@@ -44,17 +49,14 @@ export class LimitOrderCreator<
   validate(
     values: OrderlyOrder,
     config: ValuesDepConfig
-  ): Promise<VerifyResult> {
+  ): Promise<OrderValidationResult> {
     return this.baseValidate(values, config).then((errors) => {
       // const errors = this.baseValidate(values, config);
       // @ts-ignore
       const { order_price, side } = values;
 
       if (!order_price) {
-        errors.order_price = {
-          type: "required",
-          message: "Price is required",
-        };
+        errors.order_price = OrderValidation.required("order_price");
       } else {
         const price = new Decimal(order_price);
         const { symbol } = config;
@@ -81,34 +83,24 @@ export class LimitOrderCreator<
         /// if side is 'buy', only check max price,
         /// if side is 'sell', only check min price,
         if (price.gt(quote_max)) {
-          errors.order_price = {
-            type: "max",
-            message: `Price must be less than ${quote_max}`,
-          };
+          errors.order_price = OrderValidation.max("order_price", quote_max);
         } else {
           if (price.gt(priceRange?.max)) {
-            errors.order_price = {
-              type: "max",
-              message: `Price must be less than ${new Decimal(
-                priceRange.max
-              ).todp(symbol.quote_dp)}`,
-            };
+            errors.order_price = OrderValidation.max(
+              "order_price",
+              new Decimal(priceRange.max).todp(symbol.quote_dp).toString()
+            );
           }
         }
 
         if (price.lt(quote_min)) {
-          errors.order_price = {
-            type: "min",
-            message: `Price must be greater than ${quote_min}`,
-          };
+          errors.order_price = OrderValidation.min("order_price", quote_min);
         } else {
           if (price.lt(priceRange?.min)) {
-            errors.order_price = {
-              type: "min",
-              message: `Price must be greater than ${new Decimal(
-                priceRange.min
-              ).todp(symbol.quote_dp)}`,
-            };
+            errors.order_price = OrderValidation.min(
+              "order_price",
+              new Decimal(priceRange.min).todp(symbol.quote_dp).toString()
+            );
           }
         }
       }

@@ -1,15 +1,8 @@
-import React, { FC, useEffect, useState } from "react";
-import {
-  Checkbox,
-  Flex,
-  SimpleDialog,
-  Statistic,
-  Text,
-  TextField,
-} from "@orderly.network/ui";
-import { ApiManagerScriptReturns } from "../apiManager.script";
+import { FC } from "react";
+import { Flex, SimpleDialog, Text } from "@orderly.network/ui";
 import { APIKeyItem } from "@orderly.network/hooks";
 import { formatKey } from "../apiManager.ui";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 
 export const DeleteAPIKeyDialog: FC<{
   item: APIKeyItem;
@@ -18,16 +11,16 @@ export const DeleteAPIKeyDialog: FC<{
   onDelete?: (item: APIKeyItem) => Promise<void>;
 }> = (props) => {
   const { item, open, setOpen, onDelete } = props;
-
+  const { t } = useTranslation();
   return (
     <SimpleDialog
       size="sm"
       open={open}
       onOpenChange={setOpen}
-      title="Delete API key"
+      title={t("portfolio.apiKey.delete.dialog.title")}
       actions={{
         primary: {
-          label: "Confirm",
+          label: t("common.confirm"),
           "data-testid": "oui-testid-apiKey-deleteApiKey-dialog-confirm-btn",
           className: "oui-w-[120px] lg:oui-w-[154px]",
           size: "md",
@@ -37,7 +30,7 @@ export const DeleteAPIKeyDialog: FC<{
           },
         },
         secondary: {
-          label: "Cancel",
+          label: t("common.cancel"),
           className: "oui-w-[120px] lg:oui-w-[154px]",
           size: "md",
           onClick: async () => {
@@ -52,8 +45,12 @@ export const DeleteAPIKeyDialog: FC<{
       }}
     >
       <Flex className="oui-text-xs">
-        Delete your API key &nbsp;
-        <Text color="primary">{formatKey(item?.orderly_key)}</Text>&nbsp;?
+        {/* @ts-ignore */}
+        <Trans
+          i18nKey="portfolio.apiKey.delete.dialog.description"
+          values={{ apiKey: formatKey(item?.orderly_key) }}
+          components={[<Text color="primary" className="oui-px-1" />]}
+        />
       </Flex>
     </SimpleDialog>
   );

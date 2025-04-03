@@ -5,6 +5,9 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  json: {
+    stringify: true,
+  },
   plugins: [
     react(),
     // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
@@ -24,7 +27,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      // "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
+      "@orderly.network/chart": resolve(__dirname, "../../packages/chart/src"),
       "@orderly.network/portfolio": resolve(
         __dirname,
         "../../packages/portfolio/src"
@@ -76,10 +79,10 @@ export default defineConfig({
         __dirname,
         "../../packages/ui-share/src"
       ),
-      // "@orderly.network/ui-tradingview": resolve(
-      //   __dirname,
-      //   "../../packages/ui-tradingview/src"
-      // ),
+      "@orderly.network/ui-tradingview": resolve(
+        __dirname,
+        "../../packages/ui-tradingview/src"
+      ),
       "@orderly.network/withdraw": resolve(
         __dirname,
         "../../packages/withdraw/src"
@@ -113,6 +116,7 @@ export default defineConfig({
         "../../packages/wallet-connector/src"
       ),
       "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
+      "@orderly.network/i18n": resolve(__dirname, "../../packages/i18n/src"),
       "@orderly.network/wallet-connector-privy": resolve(
         __dirname,
         "../../packages/wallet-connector-privy/src"

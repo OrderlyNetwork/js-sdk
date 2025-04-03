@@ -1,6 +1,7 @@
 import useSWR, { SWRResponse } from "swr";
 import { fetcher, useQueryOptions } from "./utils/fetcher";
 import { useConfig } from "./useConfig";
+import { SDKError } from "@orderly.network/types";
 
 /**
  * useQuery
@@ -16,7 +17,7 @@ export const useQuery = <T>(
   const { formatter, ...swrOptions } = options || {};
 
   if (typeof apiBaseUrl === "undefined") {
-    throw new Error("please add OrderlyConfigProvider to your app");
+    throw new SDKError("please add OrderlyConfigProvider to your app");
   }
 
   // @ts-ignore

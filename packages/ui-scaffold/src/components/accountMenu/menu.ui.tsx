@@ -10,10 +10,9 @@ import {
   DropdownMenuTrigger,
   EVMAvatar,
   Flex,
-  Match,
   Text,
-  Tooltip,
 } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type AccountMenuProps = {
   accountState: AccountState;
@@ -27,6 +26,7 @@ export type AccountMenuProps = {
 };
 
 export const AccountMenu = (props: AccountMenuProps) => {
+  const { t } = useTranslation();
   const { accountState: state, onDisconnect, onOpenExplorer } = props;
   const disabled = state.validating || props.disabledConnect;
 
@@ -63,7 +63,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
             .catch((e) => console.error(e));
         }}
       >
-        Connect wallet
+        {t("connector.connectWallet")}
       </Button>
     );
     // return (
@@ -82,7 +82,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
   if (state.status <= AccountStatusEnum.NotSignedIn) {
     return (
       <Button size="md" onClick={() => props.onCrateAccount()}>
-        Sign in
+        {t("connector.signIn")}
       </Button>
     );
     // return (
@@ -109,7 +109,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
             .catch((e) => console.error(e));
         }}
       >
-        Enable trading
+        {t("connector.enableTrading")}
       </Button>
     );
     // return (
@@ -152,6 +152,7 @@ const WalletMenu = (props: {
   onOpenExplorer: () => void;
 }) => {
   const { address, onDisconnect } = props;
+  const { t } = useTranslation();
 
   return (
     <DropdownMenuRoot>
@@ -288,7 +289,7 @@ const WalletMenu = (props: {
                     fill="currentcolor"
                   />
                 </svg>
-                <span>Disconnect</span>
+                <span>{t("connector.disconnect")}</span>
               </Flex>
             </DropdownMenuItem>
           </DropdownMenuGroup>
