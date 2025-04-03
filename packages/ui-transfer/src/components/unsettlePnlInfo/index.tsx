@@ -6,7 +6,7 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { RefreshIcon } from "../../icons";
-
+import { Trans, useTranslation } from "@orderly.network/i18n";
 interface IProps {
   hasPositions: boolean;
   unsettledPnl: number;
@@ -18,19 +18,16 @@ export const UnsettlePnlInfo = ({
   unsettledPnl,
   onSettlle,
 }: IProps) => {
+  const { t } = useTranslation();
+
   if (unsettledPnl === 0 && !hasPositions) {
     return <></>;
   }
   const settlePnlDialog = () => {
     modal.confirm({
-      title: "Settle PnL",
-      content: (
-        <div>
-          Are you sure you want to settle your PnL?
-          <br /> Settlement will take up to 1 minute before you can withdraw
-          your available balance.
-        </div>
-      ),
+      title: t("settle.settlePnl"),
+      // @ts-ignore
+      content: <Trans i18nKey="settle.settlePnl.description" />,
       onOk: () => {
         return onSettlle();
       },
@@ -44,9 +41,7 @@ export const UnsettlePnlInfo = ({
       <Flex itemAlign="center" justify="start" gap={1}>
         <Tooltip
           className="oui-max-w-[274px]"
-          content={
-            "Unsettled balance can not be withdrawn. In order to withdraw, please settle your balance first."
-          }
+          content={t("settle.unsettled.tooltip")}
         >
           <Flex itemAlign="center" justify="start" gap={1}>
             <ExclamationFillIcon
@@ -54,7 +49,7 @@ export const UnsettlePnlInfo = ({
               className="oui-text-warning-darken"
             />
             <Text className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer">
-              Unsettled:
+              {`${t("settle.unsettled")}:`}
             </Text>
           </Flex>
         </Tooltip>
@@ -78,7 +73,7 @@ export const UnsettlePnlInfo = ({
           className=" oui-select-none"
           onClick={settlePnlDialog}
         >
-          Settle
+          {t("common.settle")}
         </Text>
       </Flex>
     </Flex>

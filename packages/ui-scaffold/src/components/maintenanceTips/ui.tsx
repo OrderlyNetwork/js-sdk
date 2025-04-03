@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   Divider,
@@ -12,11 +11,12 @@ import {
 } from "@orderly.network/ui";
 import { CloseIcon, InfoIcon } from "../icons";
 import { MaintenanceTipInterface } from "./script";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
   const { showTips, showDialog, tipsContent, closeTips, dialogContent } = props;
+  const { t } = useTranslation();
+
   if (showDialog) {
     return (
       <Dialog open={true}>
@@ -26,10 +26,12 @@ export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
           className="oui-w-[320px] md:oui-w-auto"
         >
           <DialogHeader>
-            <DialogTitle>System upgrade in progress</DialogTitle>
+            <DialogTitle>{t("scaffold.maintenance.dialog.title")}</DialogTitle>
           </DialogHeader>
           <Divider />
-          <DialogBody className='oui-text-2xs md:oui-text-xs'>{dialogContent}</DialogBody>
+          <DialogBody className="oui-text-2xs md:oui-text-xs">
+            {dialogContent}
+          </DialogBody>
         </DialogContent>
       </Dialog>
     );
@@ -49,8 +51,11 @@ export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
         "xl:oui-justify-center xl:oui-items-center xl:oui-px-4"
       )}
     >
-      <div className='oui-flex oui-items-start oui-justify-start oui-gap-1 '>
-        <InfoIcon size={20} className="oui-flex-shrink-0 oui-w-4 md:oui-w-5 oui-h-4 md:oui-h-5 " />
+      <div className="oui-flex oui-items-start oui-justify-start oui-gap-1 ">
+        <InfoIcon
+          size={20}
+          className="oui-flex-shrink-0 oui-w-4 md:oui-w-5 oui-h-4 md:oui-h-5 "
+        />
         <Box className="oui-font-semibold oui-leading-4">{tipsContent}</Box>
       </div>
       <CloseIcon

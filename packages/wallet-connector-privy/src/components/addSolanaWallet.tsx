@@ -11,7 +11,10 @@ import { useWalletConnectorPrivy } from "../provider";
 import { ChainNamespace } from "@orderly.network/types";
 import { WalletType } from "../types";
 import { RenderWalletIcon } from "./common";
+import { useTranslation } from "@orderly.network/i18n";
+
 export function AddSolanaWallet() {
+  const { t } = useTranslation();
   const { wallets } = useSolanaWallet();
   const { connect } = useWallet();
   const [visible, setVisible] = useState(false);
@@ -63,7 +66,7 @@ export function AddSolanaWallet() {
             className="oui-w-[15px] oui-h-[15px]"
           />
           <div className="oui-text-base-contrast-80 oui-text-2xs oui-font-semibold">
-            Add Solana wallet
+            {t("connector.addSolanaWallet")}
           </div>
 
           <button onClick={onToggleVisibility}>

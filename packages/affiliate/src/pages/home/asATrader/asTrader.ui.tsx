@@ -1,17 +1,15 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import {
   Button,
   cn,
   Dialog,
   DialogBody,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
   Divider,
   Flex,
-  Input,
   inputFormatter,
   modal,
   Text,
@@ -21,11 +19,11 @@ import {
 import { AsTraderReturns } from "./asTrader.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { useCheckReferralCode, useMutation } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const AsTrader: FC<AsTraderReturns> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex
       id="oui-affiliate-home-asTrader"
@@ -53,7 +51,9 @@ export const AsTrader: FC<AsTraderReturns> = (props) => {
           className="oui-h-full"
         >
           <Text className="oui-text-lg md:oui-text-xl lg:oui-text-2xl xl:oui-text-3xl">
-            {props.isTrader ? "Trader" : "As a Trader"}
+            {props.isTrader
+              ? t("affiliate.trader")
+              : t("affiliate.asTrader.title")}
           </Text>
           <Text
             className={cn(
@@ -61,7 +61,7 @@ export const AsTrader: FC<AsTraderReturns> = (props) => {
               props.isTrader && "oui-hidden"
             )}
           >
-            Onboard traders to earn passive income
+            {t("affiliate.asTrader.description")}
           </Text>
         </Flex>
         <div className="oui-flex-shrink-0">
@@ -102,6 +102,8 @@ const Icon = () => {
 };
 
 const Bottom: FC<AsTraderReturns> = (props) => {
+  const { t } = useTranslation();
+
   const content = () => {
     if (props.isTrader && !props.wrongNetwork) {
       const totalReferrerRebate =
@@ -111,7 +113,7 @@ const Bottom: FC<AsTraderReturns> = (props) => {
         <>
           <Flex direction={"column"} itemAlign={"start"} gap={2}>
             <Text className="oui-text-2xs md:oui-text-xs xl:oui-text-sm">
-              Commission {<Text intensity={36}>(USDC)</Text>}
+              {t("affiliate.commission")} {<Text intensity={36}>(USDC)</Text>}
             </Text>
             <Flex direction={"row"} gap={1}>
               <USDCIcon />
@@ -135,7 +137,7 @@ const Bottom: FC<AsTraderReturns> = (props) => {
             }}
           >
             <Text className="oui-text-sm md:oui-text-base xl:oui-text-lg">
-              Enter
+              {t("affiliate.enter")}
             </Text>
             <ArrowRightIcon className="md:oui-w-[18px] md:oui-h-[18px] lg:oui-w-[20px] lg:oui-h-[20px] xl:oui-w-[24px] xl:oui-h-[24px]" />
           </Flex>
@@ -156,7 +158,7 @@ const Bottom: FC<AsTraderReturns> = (props) => {
             0%~20%
           </Text>
           <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
-            Rebate
+            {t("affiliate.trader.rebate")}
           </Text>
         </Flex>
       </>
@@ -176,14 +178,16 @@ const Bottom: FC<AsTraderReturns> = (props) => {
 };
 
 const EntryCode: FC<AsTraderReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
       <DialogTrigger>
         <Tooltip
           content={
             props.wrongNetwork
-              ? "Please switch to a supported network to continue."
-              : "Please connect your wallet to use this function"
+              ? t("connector.wrongNetwork.tooltip")
+              : t("affiliate.connectWallet.tooltip")
           }
         >
           {props.isMobile ? (
@@ -195,12 +199,12 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
                   event.stopPropagation();
                   event.preventDefault();
                   modal.alert({
-                    title: "Tips",
+                    title: t("common.tips"),
                     message: (
                       <Text intensity={54}>
                         {props.wrongNetwork
-                          ? "Please switch to a supported network to continue."
-                          : "Please connect your wallet to use this function"}
+                          ? t("connector.wrongNetwork.tooltip")
+                          : t("affiliate.connectWallet.tooltip")}
                       </Text>
                     ),
                   });
@@ -212,7 +216,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
                   : undefined
               }
             >
-              Enter code
+              {t("affiliate.asTrader.button")}
             </Button>
           ) : (
             <Button
@@ -220,24 +224,24 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
               color="light"
               disabled={!props.isSignIn || props.wrongNetwork}
             >
-              Enter code
+              {t("affiliate.asTrader.button")}
             </Button>
           )}
         </Tooltip>
       </DialogTrigger>
       <DialogContent className="oui-w-[320px] oui-font-semibold">
         <DialogHeader>
-          <DialogTitle>Bind a referral code</DialogTitle>
+          <DialogTitle>{t("affiliate.referralCode.dialog.title")}</DialogTitle>
         </DialogHeader>
         <Divider />
         <DialogBody>
           <Text size="sm" intensity={54}>
-            Bind a referral code to earn trading fee rebates.
+            {t("affiliate.referralCode.dialog.description")}
           </Text>
 
           <TextField
             className="oui-w-full oui-mt-4"
-            placeholder="Referral code"
+            placeholder={t("affiliate.referralCode")}
             value={props.code}
             onChange={(e) => {
               props.setCode(e.target.value);
@@ -248,13 +252,13 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
             onClean={() => {
               props.setCode("");
             }}
-            label={"Enter referral code"}
+            label={t("affiliate.referralCode.label")}
             classNames={{
               label: "oui-text-2xs oui-text-base-contrast-54",
             }}
             helpText={
               !props.isExist && !props.isLoading && props.code.length > 0
-                ? "This referral code does not exist."
+                ? t("affiliate.referralCode.notExist")
                 : undefined
             }
             color={
@@ -282,7 +286,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
                 props.onClickConfirm();
               }}
             >
-              Confirm
+              {t("common.confirm")}
             </Button>
           </Flex>
         </DialogBody>

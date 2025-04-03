@@ -3,6 +3,7 @@ import { Flex, Select, Text } from "@orderly.network/ui";
 import { VolBarChart } from "@orderly.network/chart";
 import { TitleStatisticReturns } from "./titleStatistic.script";
 import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
   return (
@@ -23,7 +24,7 @@ export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
           className="oui-w-full oui-flex-1"
           tooltip={{
             rm: Decimal.ROUND_DOWN,
-            dp: props.volType === 'Commission' ? 6 : 2
+            dp: props.volType === "Commission" ? 6 : 2,
           }}
         />
       </Flex>
@@ -32,9 +33,11 @@ export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
 };
 
 const Title: FC<TitleStatisticReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">Statistics</Text>
+      <Text className="oui-text-lg">{t("affiliate.statistics")}</Text>
       <Flex direction={"row"} gap={2} className={"oui-min-w-14"}>
         <Select.options
           size={"xs"}

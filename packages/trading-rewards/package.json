@@ -18,6 +18,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/hooks": "workspace:*",

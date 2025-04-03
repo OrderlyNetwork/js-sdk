@@ -22,10 +22,12 @@
     "access": "public"
   },
   "dependencies": {
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/react-app": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

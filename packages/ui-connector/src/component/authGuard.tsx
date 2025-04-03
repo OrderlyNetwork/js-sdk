@@ -24,13 +24,20 @@ import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
 } from "@orderly.network/ui-chain-selector";
-import { alertMessages, DESCRIPTIONS, LABELS } from "../constants/message";
 import { Flex } from "@orderly.network/ui";
 import { Box } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 
 type ChainProps = {
   networkId?: NetworkId;
   bridgeLessOnly?: boolean;
+};
+
+export type alertMessages = {
+  connectWallet?: string;
+  switchChain?: string;
+  enableTrading?: string;
+  signin?: string;
 };
 
 export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -77,6 +84,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     bridgeLessOnly,
     // ...rest
   } = props;
+  const { t } = useTranslation();
   const { state } = useAccount();
   const { wrongNetwork, disabledConnect } = useAppContext();
 
@@ -89,7 +97,13 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     return status;
   }, [status, state.status]);
 
-  const labels = { ...LABELS, ...props.labels };
+  const labels = {
+    connectWallet: t("connector.connectWallet"),
+    switchChain: t("connector.wrongNetwork"),
+    enableTrading: t("connector.enableTrading"),
+    signin: t("connector.signIn"),
+    ...props.labels,
+  };
 
   // return Match(state.status)
   //   .with(AccountStatusEnum.EnableTrading, () => props.children)
@@ -164,10 +178,12 @@ const DefaultFallback = (props: {
   disabledConnect?: boolean;
 }) => {
   const { buttonProps, labels, descriptions } = props;
+  const { t } = useTranslation();
   const { connectWallet } = useAppContext();
   const { account } = useAccount();
   const { isMobile } = useScreen();
   const matches = useMediaQuery(MEDIA_TABLET);
+
   const onConnectOrderly = () => {
     modal.show(matches ? WalletConnectorSheetId : WalletConnectorModalId).then(
       (r) => console.log(r),
@@ -197,7 +213,7 @@ const DefaultFallback = (props: {
       if (status < AccountStatusEnum.EnableTrading) {
         onConnectOrderly();
       } else {
-        toast.success("Wallet connected");
+        toast.success(t("connector.walletConnected"));
       }
     });
 
@@ -215,7 +231,7 @@ const DefaultFallback = (props: {
               if (props.status < AccountStatusEnum.EnableTrading) {
                 onConnectOrderly();
               } else {
-                toast.success("Wallet connected");
+                toast.success(t("connector.walletConnected"));
               }
             }
           }

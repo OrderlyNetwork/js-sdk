@@ -3,10 +3,8 @@ import {
   Box,
   Button,
   capitalizeFirstLetter,
-  cn,
   Divider,
   Flex,
-  Input,
   inputFormatter,
   Match,
   modal,
@@ -18,7 +16,12 @@ import {
 } from "@orderly.network/ui";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./step";
-import { useAccount, useEventEmitter, useLocalStorage } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useEventEmitter,
+  useLocalStorage,
+} from "@orderly.network/hooks";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 
 export type WalletConnectContentProps = {
   initAccountState: AccountStatusEnum;
@@ -37,7 +40,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const { initAccountState = AccountStatusEnum.NotConnected } = props;
   const [remember, setRemember] = useState(true);
   const ee = useEventEmitter();
-
+  const { t } = useTranslation();
 
   const { state: accountState, account } = useAccount();
   const [state, setState] = useState(initAccountState);
@@ -62,22 +65,21 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
     if (initAccountState < AccountStatusEnum.SignedIn) {
       steps.push({
         key: "signIn",
-        title: "Sign In",
-        description: "Confirm you are the owner of this wallet",
+        title: t("connector.signIn"),
+        description: t("connector.signIn.description"),
       });
     }
 
     if (initAccountState < AccountStatusEnum.EnableTrading) {
       steps.push({
         key: "enableTrading",
-        title: "Enable Trading",
-        description:
-          "Enable secure access to our API for lightning fast trading",
+        title: t("connector.enableTrading"),
+        description: t("connector.enableTrading.description"),
       });
     }
 
     return steps;
-  }, [initAccountState]);
+  }, [initAccountState, t]);
 
   const onEnableTrading = () => {
     setLoading(true);
@@ -102,8 +104,15 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           setLoading(false);
           if (reject === -1) return;
 
-          if (reject.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
-            ee.emit("wallet:sign-message-with-ledger-error", {message: reject.message,userAddress: account.address});
+          if (
+            reject.message.indexOf(
+              "Signing off chain messages with Ledger is not yet supported"
+            ) !== -1
+          ) {
+            ee.emit("wallet:sign-message-with-ledger-error", {
+              message: reject.message,
+              userAddress: account.address,
+            });
             return;
           }
           toast.error(paseErrorMsg(reject));
@@ -128,8 +137,15 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           setLoading(false);
 
           if (reject === -1) return;
-          if (reject.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
-            ee.emit("wallet:sign-message-with-ledger-error", {message: reject.message,userAddress: account.address});
+          if (
+            reject.message.indexOf(
+              "Signing off chain messages with Ledger is not yet supported"
+            ) !== -1
+          ) {
+            ee.emit("wallet:sign-message-with-ledger-error", {
+              message: reject.message,
+              userAddress: account.address,
+            });
             return;
           }
 
@@ -141,13 +157,10 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       });
   };
 
-  console.log("state", state);
-
   return (
     <Box id="oui-wallet-connect-dialog-content" className="oui-font-semibold">
       <Text intensity={54} size="xs">
-        Your previous access has expired, you will receive a signature request
-        to enable trading. Signing is free and will not send a transaction.
+        {t("connector.expired")}
       </Text>
       <Box
         p={4}
@@ -223,6 +236,8 @@ const ActionButton: FC<{
   loading: boolean;
   disabled?: boolean;
 }> = ({ state, signIn, enableTrading, loading, disabled }) => {
+  const { t } = useTranslation();
+
   return (
     <Match
       value={() => {
@@ -239,7 +254,7 @@ const ActionButton: FC<{
             loading={loading}
             disabled={disabled}
           >
-            Sign In
+            {t("connector.signIn")}
           </Button>
         ),
         enableTrading: (
@@ -249,7 +264,7 @@ const ActionButton: FC<{
             loading={loading}
             disabled={disabled}
           >
-            Enable Trading
+            {t("connector.enableTrading")}
           </Button>
         ),
       }}
@@ -258,11 +273,12 @@ const ActionButton: FC<{
 };
 
 const ReferralCode: FC<WalletConnectContentProps> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <TextField
-      placeholder="Referral code (Optional)"
+      placeholder={t("connector.referralCode.placeholder")}
       fullWidth
-      // label={"Referral code (optional)"}
       label=""
       value={props.refCode}
       onChange={(e) => {
@@ -285,22 +301,22 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
 };
 
 const RememberMe = () => {
+  const { t } = useTranslation();
+
   const showRememberHint = () => {
     if (window.innerWidth > 768) return;
     modal.alert({
-      title: "Remember me",
+      title: t("connector.rememberMe"),
       message: (
         <span className="oui-text-2xs oui-text-base-contrast/60">
-          Toggle this option to skip these steps next time you want to trade.
+          {t("connector.rememberMe.description")}
         </span>
       ),
     });
   };
   return (
     <Tooltip
-      content={
-        "Toggle this option to skip these steps next time you want to trade."
-      }
+      content={t("connector.rememberMe.description")}
       className="oui-max-w-[300px]"
     >
       <button onClick={showRememberHint}>
@@ -311,7 +327,7 @@ const RememberMe = () => {
             "oui-underline oui-underline-offset-4 oui-decoration-dashed oui-decoration-base-contrast-36"
           }
         >
-          Remember me
+          {t("connector.rememberMe")}
         </Text>
       </button>
     </Tooltip>
@@ -324,7 +340,7 @@ function paseErrorMsg(reject: any): string {
   Object.keys(reject).forEach((key) => {
     console.log("key", key, "-", reject[key]);
   });
-  let msg = "Something went wrong";
+  let msg = i18n.t("connector.somethingWentWrong");
 
   // if (typeof reject?.info?.error === "object" && "message" in reject?.info?.error) {
   //   msg = reject?.info?.error?.message;
@@ -335,10 +351,8 @@ function paseErrorMsg(reject: any): string {
   // }
 
   if (reject.toString().includes("rejected")) {
-    msg = "User rejected the request.";
+    msg = i18n.t("connector.userRejected");
   }
-
 
   return capitalizeFirstLetter(msg) ?? msg;
 }
-

@@ -11,11 +11,14 @@ export function useMaintenanceStatus() {
   const [startTime, setStartTime] = useState<number>();
   const [endTime, setEndTime] = useState<number>();
   const [brokerName, setBrokerName] = useState<string>("Orderly network");
-  const { data: systemInfo, mutate } = useQuery<any>(`/v1/public/system_info?source=maintenance`, {
-    revalidateOnFocus: false,
-    errorRetryCount: 2,
-    errorRetryInterval: 200,
-  });
+  const { data: systemInfo, mutate } = useQuery<any>(
+    `/v1/public/system_info?source=maintenance`,
+    {
+      revalidateOnFocus: false,
+      errorRetryCount: 2,
+      errorRetryInterval: 200,
+    }
+  );
   const ws = useWS();
 
   const config = useConfig();
@@ -24,7 +27,6 @@ export function useMaintenanceStatus() {
     if (!systemInfo) {
       return;
     }
-
 
     const brokerName = config.get("brokerName");
     if (brokerName) {

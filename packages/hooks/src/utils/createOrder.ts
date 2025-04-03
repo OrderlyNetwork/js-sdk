@@ -1,5 +1,52 @@
 import { Decimal } from "@orderly.network/utils";
 
+/**
+ * get the min notional for the order
+ */
+export function getMinNotional(props: {
+  base_tick?: number;
+  price?: string | number;
+  qty?: string | number;
+  min_notional?: number;
+  quote_dp?: number;
+  base_dp?: number;
+  quote_tick?: number;
+}) {
+  const { price, base_tick, qty, min_notional, base_dp, quote_dp, quote_tick } =
+    props;
+  if (price !== undefined && qty !== undefined && min_notional !== undefined) {
+    try {
+      const calcNotional = new Decimal(price).mul(new Decimal(qty)).toNumber();
+      const notional = Number.parseFloat(`${min_notional}`);
+
+      if (calcNotional < notional) {
+        let minQty = new Decimal(notional)
+          .div(price)
+          .toDecimalPlaces(base_dp, Decimal.ROUND_DOWN)
+          .add(base_tick ?? 0);
+
+        if (base_tick && base_tick > 0) {
+          minQty = new Decimal(
+            getRoundedDownDivision(minQty.toNumber(), base_tick)
+          );
+        }
+
+        const newMinNotional = minQty
+          .mul(price)
+          .add(quote_tick ?? 0)
+          .toFixed(quote_dp);
+
+        return newMinNotional;
+      }
+    } catch (e) {
+      console.log("getMinNotional error", e);
+    }
+  }
+}
+
+/**
+ * @deprecated please use getMinNotional instead
+ */
 export function checkNotional(props: {
   base_tick: number;
   price?: string | number;

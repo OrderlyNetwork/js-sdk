@@ -41,8 +41,8 @@ const meta: Meta<typeof Dashboard.HomePage> = {
             <div style={{ backgroundColor: "#FF0000" }}>df</div>
           )}
           overwrite={{
-            shortBrokerName: "Mark",
-            brokerName: "Mark Pan",
+            shortBrokerName: "Orderly",
+            brokerName: "Orderly Network",
             ref: {
               // gradientTitle: "Mark",
               // top: (state) =>  (<div>ASD</div>),

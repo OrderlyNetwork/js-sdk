@@ -21,7 +21,8 @@ export function InitSolanaProvider({
   onError,
   children,
 }: IProps) {
-  const { network, setSolanaInfo, connectorWalletType } = useWalletConnectorPrivy();
+  const { network, setSolanaInfo, connectorWalletType } =
+    useWalletConnectorPrivy();
   if (connectorWalletType.disableSolana) {
     return children;
   }

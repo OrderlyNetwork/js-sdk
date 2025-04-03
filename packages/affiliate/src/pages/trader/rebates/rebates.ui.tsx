@@ -12,6 +12,7 @@ import { RebatesItem, RebatesReturns } from "./rebates.script";
 import { commifyOptional } from "@orderly.network/utils";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (
@@ -52,9 +53,11 @@ export const Rebates: FC<RebatesReturns> = (props) => {
 };
 
 const Title: FC<RebatesReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">My rebates</Text>
+      <Text className="oui-text-lg">{t("affiliate.trader.myRebates")}</Text>
       <Text intensity={36} className="oui-text-2xs">
         {props.displayDate}
       </Text>
@@ -63,11 +66,13 @@ const Title: FC<RebatesReturns> = (props) => {
 };
 
 const List: FC<RebatesReturns> = (props) => {
+  const { t } = useTranslation();
+
   const layout767 = useMediaQuery("(max-width: 767px)");
 
   const columns: Column<RebatesItem>[] = [
     {
-      title: "Rebates (USDC)",
+      title: `${t("affiliate.trader.rebates")} (USDC)`,
       dataIndex: "referee_rebate",
       render: (value) => (
         <Text>
@@ -82,7 +87,7 @@ const List: FC<RebatesReturns> = (props) => {
       width: 127,
     },
     {
-      title: "Trading vol. (USDC)",
+      title: `${t("affiliate.trader.tradingVol")} (USDC)`,
       dataIndex: "vol",
       render: (value) =>
         commifyOptional(value, {
@@ -94,7 +99,7 @@ const List: FC<RebatesReturns> = (props) => {
       width: 127,
     },
     {
-      title: "Date",
+      title: t("common.date"),
       dataIndex: "date",
       render: (value) => (
         <Text.formatted formatString="yyyy-MM-dd">{value}</Text.formatted>
@@ -134,11 +139,13 @@ const List: FC<RebatesReturns> = (props) => {
 };
 
 const Cell = (props: { item: RebatesItem }) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"column"} width={"100%"}>
       <Flex width={"100%"} gap={1}>
         <Statistic
-          label="Rebates (USDC)"
+          label={`${t("affiliate.trader.rebates")} (USDC)`}
           className="oui-text-xs oui-text-base-contrast-54 oui-flex-1 oui-min-w-[105px]"
         >
           <Text size="sm" intensity={80}>
@@ -151,7 +158,7 @@ const Cell = (props: { item: RebatesItem }) => {
           </Text>
         </Statistic>
         <Statistic
-          label="Trading vol. (USDC)  "
+          label={`${t("affiliate.trader.tradingVol")} (USDC)`}
           className="oui-text-xs oui-text-base-contrast-54 oui-flex-shrink"
         >
           <Text size="sm" intensity={80}>
@@ -164,7 +171,7 @@ const Cell = (props: { item: RebatesItem }) => {
           </Text>
         </Statistic>
         <Statistic
-          label="Date"
+          label={t("common.date")}
           className="oui-text-xs oui-text-base-contrast-54 oui-flex-1"
           align="end"
         >

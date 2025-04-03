@@ -12,6 +12,7 @@ import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { LinkDeviceWidget } from "./linkDevice";
+import { LanguageSwitcherWidget } from "../languageSwitcher";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
@@ -53,7 +54,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
-  const { isDesktop} = useScreen();
+  const { isDesktop } = useScreen();
 
   const children = useMemo(() => {
     if (typeof props.children === "undefined") return null;
@@ -108,6 +109,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
             <LinkDeviceWidget />
           </>
         )}
+        <LanguageSwitcherWidget />
         {isDesktop && <ChainMenuWidget />}
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>

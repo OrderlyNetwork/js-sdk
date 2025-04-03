@@ -5,11 +5,15 @@ import {
   OrderType,
   TriggerPriceType,
 } from "@orderly.network/types";
-import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
+import {
+  OrderFormEntity,
+  ValuesDepConfig,
+  OrderValidationResult,
+} from "./interface";
 
 import { pick } from "ramda";
 import { BaseOrderCreator } from "./baseCreator";
-
+import { OrderValidation } from "./orderValidation";
 export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
   create(
     values: AlgoOrderEntity & {
@@ -49,7 +53,7 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
   validate(
     values: OrderFormEntity,
     config: ValuesDepConfig
-  ): Promise<VerifyResult> {
+  ): Promise<OrderValidationResult> {
     return this.baseValidate(values, config).then((errors) => {
       // const errors = this.baseValidate(values, config);
       // @ts-ignore
@@ -58,23 +62,14 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       const { quote_max, quote_min } = symbol;
 
       if (!trigger_price) {
-        errors.trigger_price = {
-          type: "required",
-          message: "Trigger price is required",
-        };
+        errors.trigger_price = OrderValidation.required("trigger_price");
       }
 
       // validate trigger price
       if (trigger_price > quote_max) {
-        errors.trigger_price = {
-          type: "max",
-          message: `Trigger price must be less than ${quote_max}`,
-        };
+        errors.trigger_price = OrderValidation.max("trigger_price", quote_max);
       } else if (trigger_price < quote_min) {
-        errors.trigger_price = {
-          type: "min",
-          message: `Trigger price must be greater than ${quote_min}`,
-        };
+        errors.trigger_price = OrderValidation.min("trigger_price", quote_min);
       }
 
       return errors;

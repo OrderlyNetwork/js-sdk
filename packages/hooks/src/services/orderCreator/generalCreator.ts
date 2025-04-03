@@ -1,6 +1,10 @@
 import { OrderEntity } from "@orderly.network/types";
 import { BaseOrderCreator } from "./baseCreator";
-import { OrderFormEntity, ValuesDepConfig, VerifyResult } from "./interface";
+import {
+  OrderFormEntity,
+  ValuesDepConfig,
+  OrderValidationResult,
+} from "./interface";
 
 export class GeneralOrderCreator extends BaseOrderCreator<OrderEntity> {
   create(data: OrderEntity): OrderEntity {
@@ -13,7 +17,7 @@ export class GeneralOrderCreator extends BaseOrderCreator<OrderEntity> {
   validate(
     values: OrderFormEntity,
     configs: ValuesDepConfig
-  ): Promise<VerifyResult> {
+  ): Promise<OrderValidationResult> {
     return super.baseValidate(values, configs);
   }
 }

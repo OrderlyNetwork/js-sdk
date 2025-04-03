@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { cn, Box, Text, Flex, Button, Select } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 import { CampaignsScriptReturn, CurrentCampaigns } from "./campaigns.script";
 
 export type CampaignsProps = {
@@ -48,9 +49,10 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
 };
 
 const Header: FC<CampaignsScriptReturn> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex justify="between" itemAlign="center" pr={3}>
-      <Text size="xl">Campaigns</Text>
+      <Text size="xl">{t("tradingLeaderboard.campaigns")}</Text>
       <Select.options
         size={"xs"}
         value={props.category}
@@ -68,6 +70,7 @@ const Header: FC<CampaignsScriptReturn> = (props) => {
 const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
   const { title, description, image, displayTime, learnMoreUrl, tradingUrl } =
     campaign;
+  const { t } = useTranslation();
 
   return (
     <Flex intensity={800} r="xl">
@@ -104,7 +107,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
                 window.open(learnMoreUrl, "_blank");
               }}
             >
-              Learn more
+              {t("tradingLeaderboard.learnMore")}
             </Button>
             <Button
               size="md"
@@ -112,7 +115,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
                 window.open(tradingUrl, "_self");
               }}
             >
-              Trade now
+              {t("tradingLeaderboard.tradeNow")}
             </Button>
           </Flex>
         </Flex>

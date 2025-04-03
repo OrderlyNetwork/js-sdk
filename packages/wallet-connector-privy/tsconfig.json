@@ -23,6 +23,9 @@
       "react-dom": [
         "./node_modules/react-dom"
       ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
+      ],
       "@orderly.network/ui-connector": [
         "../ui-connector/src"
       ]

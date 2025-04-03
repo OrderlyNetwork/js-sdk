@@ -8,6 +8,7 @@ import {
 import { createStore, StateCreator, useStore } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware/devtools";
+import { SDKError } from "@orderly.network/types";
 // import {
 //   PositionSlice,
 //   positionSlice,
@@ -55,7 +56,7 @@ function useOrderlyStoreContext<T>(
 ): T {
   const store = useContext(OrderlyStoreContext);
   if (!store)
-    throw new Error("Missing OrderlyStoreProvider.Provider in the tree");
+    throw new SDKError("Missing OrderlyStoreProvider.Provider in the tree");
   return useStore(store, selector);
   // return useStoreWithEqualityFn(store, selector, equalityFn)
 }

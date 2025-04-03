@@ -4,6 +4,7 @@ import { Button, formatAddress, Text, useScreen } from "@orderly.network/ui";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
+import { useTranslation } from "@orderly.network/i18n";
 import { AuthGuard } from "@orderly.network/ui-connector";
 
 export function UserCenter(props: any) {
@@ -19,6 +20,7 @@ export const MwebUserCenter = (props: any) => {
 
 const RenderUserCenter = (props: any) => {
   const { state } = props;
+  const { t } = useTranslation();
   const { isMobile } = useScreen();
   const { connect, wallet } = useWalletConnector();
   const { linkedAccount } = usePrivyWallet();
@@ -56,7 +58,7 @@ const RenderUserCenter = (props: any) => {
             .catch((e: any) => console.error(e));
         }}
       >
-        Connect wallet
+        {t("connector.connectWallet")}
       </Button>
     );
   }

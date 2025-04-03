@@ -4,8 +4,10 @@ import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex
       id="oui-affiliate-home-asAnAffiliate"
@@ -33,7 +35,9 @@ export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
           className="oui-h-full"
         >
           <Text className="oui-text-lg md:oui-text-xl lg:oui-text-2xl xl:oui-text-3xl">
-            {props.isAffiliate ? "Affiliate" : "As an affiliate"}
+            {props.isAffiliate
+              ? t("common.affiliate")
+              : t("affiliate.asAffiliate.title")}
           </Text>
           <Text
             className={cn(
@@ -41,7 +45,7 @@ export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
               props.isAffiliate && "oui-hidden"
             )}
           >
-            Onboard traders to earn passive income
+            {t("affiliate.asAffiliate.description")}
           </Text>
         </Flex>
         <div className="oui-flex-shrink-0">
@@ -61,7 +65,7 @@ const Icon = () => {
       viewBox="0 0 72 72"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="xl:oui-w-[90px] xl:oui-h-[90px] "
+      className="xl:oui-w-[90px] xl:oui-h-[90px]"
     >
       <path
         d="M35.997 5.86c-16.569 0-29.944 13.43-30 30-.056 16.545 13.445 30.06 30 30.093s30.03-13.665 30-30.093c-.03-16.57-13.432-30-30-30m0 6c13.255 0 24 10.746 24 24 0 6.75-2.812 12.834-7.297 17.196-2.209-4.78-6.955-8.196-12.39-8.196h-8.626c-5.432 0-10.164 3.375-12.375 8.157-4.485-4.362-7.312-10.407-7.312-17.157 0-13.254 10.745-24 24-24m0 6c-6.628 0-12 5.373-12 12s5.372 12 12 12c6.627 0 12-5.373 12-12s-5.373-12-12-12"
@@ -82,6 +86,8 @@ const Icon = () => {
 };
 
 const Bottom: FC<AsAnAffiliateReturns> = (props) => {
+  const { t } = useTranslation();
+
   const content = () => {
     if (props.isAffiliate && !props.wrongNetwork) {
       const totalReferrerRebate =
@@ -90,7 +96,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
         <>
           <Flex direction={"column"} itemAlign={"start"} gap={2}>
             <Text className="oui-text-2xs md:oui-text-xs xl:oui-text-sm">
-              Commission {<Text intensity={36}>(USDC)</Text>}
+              {t("affiliate.commission")} {<Text intensity={36}>(USDC)</Text>}
             </Text>
             <Flex direction={"row"} gap={1}>
               <USDCIcon />
@@ -114,7 +120,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
             }}
           >
             <Text className="oui-text-sm md:oui-text-base xl:oui-text-lg">
-              Enter
+              {t("affiliate.enter")}
             </Text>
             <ArrowRightIcon className="md:oui-w-[18px] md:oui-h-[18px] lg:oui-w-[20px] lg:oui-h-[20px] xl:oui-w-[24px] xl:oui-h-[24px]" />
           </Flex>
@@ -127,8 +133,8 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
         <Tooltip
           content={
             props.wrongNetwork
-              ? "Please switch to a supported network to continue."
-              : "Please connect your wallet to use this function"
+              ? t("connector.wrongNetwork.tooltip")
+              : t("affiliate.connectWallet.tooltip")
           }
         >
           {props.isMobile ? (
@@ -140,12 +146,12 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
                   event.stopPropagation();
                   event.preventDefault();
                   modal.alert({
-                    title: "Tips",
+                    title: t("common.tips"),
                     message: (
                       <Text intensity={54}>
                         {props.wrongNetwork
-                          ? "Please switch to a supported network to continue."
-                          : "Please connect your wallet to use this function"}
+                          ? t("connector.wrongNetwork.tooltip")
+                          : t("affiliate.connectWallet.tooltip")}
                       </Text>
                     ),
                   });
@@ -159,7 +165,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
                   : undefined
               }
             >
-              Become an affiliate
+              {t("affiliate.asAffiliate.button")}
             </Button>
           ) : (
             <Button
@@ -168,7 +174,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
               onClick={props.becomeAnAffiliate}
               disabled={!props.isSignIn || props.wrongNetwork}
             >
-              Become an affiliate
+              {t("affiliate.asAffiliate.button")}
             </Button>
           )}
         </Tooltip>
@@ -182,7 +188,7 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
             40%~60%
           </Text>
           <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
-            Commission
+            {t("affiliate.commission")}
           </Text>
         </Flex>
       </>

@@ -1,9 +1,10 @@
+import { useMemo } from "react";
 import { Card, Grid, Box, Statistic, Text, Flex } from "@orderly.network/ui";
-
-import { UsePerformanceScriptReturn } from "./performance.script";
 import { PnLBarChart, PnlLineChart } from "@orderly.network/chart";
 import { PeriodTitle } from "../shared/periodHeader";
-import { useMemo } from "react";
+import { UsePerformanceScriptReturn } from "./performance.script";
+import { useTranslation } from "@orderly.network/i18n";
+import { PeriodType } from "../shared/useAssetHistory";
 
 export type PerformanceUIProps = {
   // periodTypes: string[];
@@ -21,7 +22,15 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
     visible,
     volumeUpdateDate,
   } = props;
+  const { t } = useTranslation();
 
+  const periodLabel = useMemo(() => {
+    return {
+      [PeriodType.WEEK]: t("common.select.7d"),
+      [PeriodType.MONTH]: t("common.select.30d"),
+      [PeriodType.QUARTER]: t("common.select.90d"),
+    };
+  }, [t]);
   return (
     <Card
       // @ts-ignore
@@ -30,7 +39,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           onPeriodChange={onPeriodChange}
           periodTypes={periodTypes}
           period={period}
-          title="Performance"
+          title={t("portfolio.overview.performance")}
         />
       }
       id="portfolio-overview-performance"
@@ -46,7 +55,9 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           borderColor={6}
         >
           <Statistic
-            label={`${period} ROI`}
+            label={t("portfolio.overview.performance.roi", {
+              period: periodLabel[period as PeriodType],
+            })}
             // @ts-ignore
             valueProps={{
               rule: "percentages",
@@ -67,7 +78,9 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           borderColor={6}
         >
           <Statistic
-            label={`${period} PnL`}
+            label={t("portfolio.overview.performance.pnl", {
+              period: periodLabel[period as PeriodType],
+            })}
             // @ts-ignore
             valueProps={{
               coloring: true,
@@ -93,7 +106,11 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             }}
             label={
               <Flex justify={"between"}>
-                <span>{`${period} Volume (USDC)`}</span>
+                <span>
+                  {t("portfolio.overview.performance.volume", {
+                    period: periodLabel[period as PeriodType],
+                  })}
+                </span>
                 <span>{volumeUpdateDate}</span>
               </Flex>
             }
@@ -119,11 +136,11 @@ export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
   //   if (!Array.isArray(props.data) || !props.data.length) return;
   //   return [props.data[0].date, props.data[props.data?.length - 1].date];
   // }, [props.data]);
-
+  const { t } = useTranslation();
   return (
     <Box mt={4} height={"188px"}>
       <Text as="div" size="sm" className="oui-mb-3">
-        Daily PnL
+        {t("portfolio.overview.performance.dailyPnl")}
       </Text>
       <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
         <PnLBarChart
@@ -139,10 +156,12 @@ export const CumulativePnlChart = (props: {
   data: any[];
   invisible: boolean;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Box mt={4}>
       <Text as="div" size="sm" className="oui-mb-3">
-        Cumulative PnL
+        {t("portfolio.overview.performance.cumulativePnl")}
       </Text>
       <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
         <PnlLineChart

@@ -18,12 +18,13 @@ import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
 import { CloseIcon } from "./icons";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
 import { cn } from "@orderly.network/ui";
-
+import { useTranslation, Trans } from "@orderly.network/i18n";
 import { getWalletIcon } from "../util";
 import { Drawer } from "./drawer";
 import { RenderPrivyWallet } from "./renderPrivyWallet";
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
+  const { t } = useTranslation();
   const { isMobile, isDesktop } = useScreen();
   const { connectorWalletType } = useWalletConnectorPrivy();
   return (
@@ -35,7 +36,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           "md:oui-mb-2"
         )}
       >
-        Login in
+        {t("connector.loginIn")}
         {isMobile && (
           <div className="oui-h-3 oui-flex oui-justify-center">
             <img
@@ -59,7 +60,9 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
             src="https://oss.orderly.network/static/sdk/privy/email.svg"
             className="oui-w-[18px] oui-h-[18px]"
           />
-          <div className="oui-text-base-contrast oui-text-2xs">Email</div>
+          <div className="oui-text-base-contrast oui-text-2xs">
+            {t("connector.email")}
+          </div>
         </div>
 
         <div
@@ -70,7 +73,9 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
             src="https://oss.orderly.network/static/sdk/privy/google.svg"
             className="oui-w-[18px] oui-h-[18px]"
           />
-          <div className="oui-text-base-contrast oui-text-2xs">Google</div>
+          <div className="oui-text-base-contrast oui-text-2xs">
+            {t("connector.google")}
+          </div>
         </div>
 
         <div
@@ -81,7 +86,9 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
             src="https://oss.orderly.network/static/sdk/privy/twitter.svg"
             className="oui-w-[18px] oui-h-[18px]"
           />
-          <div className="oui-text-base-contrast oui-text-2xs">X / Twitter</div>
+          <div className="oui-text-base-contrast oui-text-2xs">
+            {t("connector.twitter")}
+          </div>
         </div>
       </div>
       {isDesktop && (
@@ -92,7 +99,8 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           />
         </div>
       )}
-      {(!connectorWalletType.disableWagmi || !connectorWalletType.disableSolana) && (
+      {(!connectorWalletType.disableWagmi ||
+        !connectorWalletType.disableSolana) && (
         <div className="oui-h-[1px] oui-bg-line oui-w-full oui-mt-4 md:oui-mt-5"></div>
       )}
     </div>
@@ -159,7 +167,8 @@ function SOLConnectArea({
 
 function ConnectWallet() {
   const { connect } = useWallet();
-  const { setOpenConnectDrawer, walletChainType, connectorWalletType } = useWalletConnectorPrivy();
+  const { setOpenConnectDrawer, walletChainType, connectorWalletType } =
+    useWalletConnectorPrivy();
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
@@ -183,19 +192,19 @@ function ConnectWallet() {
             <EVMConnectArea
               connect={(connector) =>
                 handleConnect({
-                walletType: WalletType.EVM,
-                connector: connector,
-              })
-            }
-          />
+                  walletType: WalletType.EVM,
+                  connector: connector,
+                })
+              }
+            />
           )}
           {!connectorWalletType.disableSolana && (
             <SOLConnectArea
               connect={(walletAdapter) =>
                 handleConnect({
-                walletType: WalletType.SOL,
-                walletAdapter: walletAdapter,
-              })
+                  walletType: WalletType.SOL,
+                  walletAdapter: walletAdapter,
+                })
               }
             />
           )}
@@ -238,6 +247,7 @@ export function ConnectDrawer(props: {
   open: boolean;
   onChangeOpen: (open: boolean) => void;
 }) {
+  const { t } = useTranslation();
   const { isConnected: isConnectedPrivy } = usePrivyWallet();
   const { isConnected: isConnectedEvm } = useWagmiWallet();
   const { isConnected: isConnectedSolana } = useSolanaWallet();
@@ -282,7 +292,9 @@ export function ConnectDrawer(props: {
               "md:oui-text-base md:oui-py-0"
             )}
           >
-            {isConnected ? "My wallet" : "Connect wallet"}
+            {isConnected
+              ? t("connector.myWallet")
+              : t("connector.connectWallet")}
           </div>
           <CloseIcon
             className="oui-cursor-pointer oui-text-base-contrast-20 oui-w-5 oui-h-5 hover:oui-text-base-contrast-80"
@@ -294,15 +306,17 @@ export function ConnectDrawer(props: {
 
       {!isConnected && (
         <div className="oui-z-10 oui-text-base-contrast-80 oui-text-center oui-text-2xs oui-relative  oui-font-semibold">
-          By connecting your wallet, you acknowledge and agree to the{" "}
-          <a
-            href={termsOfUse}
-            className="oui-cursor-pointer oui-underline oui-text-primary"
-            target="_blank"
-          >
-            terms of use
-          </a>
-          .
+          {/* @ts-ignore */}
+          <Trans
+            i18nKey="connector.termsOfUse"
+            components={[
+              <a
+                href={termsOfUse}
+                className="oui-cursor-pointer oui-underline oui-text-primary"
+                target="_blank"
+              />,
+            ]}
+          />
         </div>
       )}
     </Drawer>

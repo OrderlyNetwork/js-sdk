@@ -1,9 +1,6 @@
-import React, { ReactNode, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { DisplayControlSettingInterface } from "../../type";
 import {
-  Box,
-  Checkbox,
-  Divider,
   DropdownMenuContent,
   DropdownMenuPortal,
   DropdownMenuRoot,
@@ -19,73 +16,12 @@ import {
   SelectedIcon,
   UnSelectIcon,
 } from "../../icons";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 
-const DisplayControlMap: {
+type DisplayControl = {
   label: string;
   id: keyof DisplayControlSettingInterface;
-}[] = [
-  {
-    label: "Position",
-    id: "position",
-  },
-  {
-    label: "Buy/Sell",
-    id: "buySell",
-  },
-  {
-    label: "Limit orders",
-    id: "limitOrders",
-  },
-  {
-    label: "Stop orders",
-    id: "stopOrders",
-  },
-  {
-    label: "TP/SL",
-    id: "tpsl",
-  },
-  {
-    label: "Position TP/SL",
-    id: "positionTpsl",
-  },
-];
-
-const MobileDisplayControlMap: {
-  label: string;
-  id: keyof DisplayControlSettingInterface;
-}[][] = [
-  [
-    {
-      label: "Position",
-      id: "position",
-    },
-
-    {
-      label: "Limit orders",
-      id: "limitOrders",
-    },
-  ],
-  [
-    {
-      label: "Stop orders",
-      id: "stopOrders",
-    },
-    {
-      label: "TP/SL",
-      id: "tpsl",
-    },
-  ],
-  [
-    {
-      label: "Position TP/SL",
-      id: "positionTpsl",
-    },
-    {
-      label: "Buy/Sell",
-      id: "buySell",
-    },
-  ],
-];
+};
 
 interface IProps {
   displayControlState: DisplayControlSettingInterface;
@@ -97,6 +33,37 @@ export function DesktopDisplayControl({
   changeDisplayControlState,
 }: IProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const DisplayControlMap = useMemo<DisplayControl[]>(() => {
+    return [
+      {
+        label: t("common.position"),
+        id: "position",
+      },
+      {
+        label: t("tradingView.displayControl.buySell"),
+        id: "buySell",
+      },
+      {
+        label: t("tradingView.displayControl.limitOrders"),
+        id: "limitOrders",
+      },
+      {
+        label: t("tradingView.displayControl.stopOrders"),
+        id: "stopOrders",
+      },
+      {
+        label: t("common.tpsl"),
+        id: "tpsl",
+      },
+      {
+        label: t("tpsl.positionTpsl"),
+        id: "positionTpsl",
+      },
+    ];
+  }, [t]);
+
   return (
     <>
       <DropdownMenuRoot open={open} onOpenChange={setOpen}>
@@ -174,14 +141,53 @@ export function DesktopDisplayControl({
 
 export function MobileDisplayControl(props: IProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const MobileDisplayControlMap = useMemo<DisplayControl[][]>(() => {
+    return [
+      [
+        {
+          label: t("common.position"),
+          id: "position",
+        },
+
+        {
+          label: t("tradingView.displayControl.limitOrders"),
+          id: "limitOrders",
+        },
+      ],
+      [
+        {
+          label: t("tradingView.displayControl.stopOrders"),
+          id: "stopOrders",
+        },
+        {
+          label: t("common.tpsl"),
+          id: "tpsl",
+        },
+      ],
+      [
+        {
+          label: t("tpsl.positionTpsl"),
+          id: "positionTpsl",
+        },
+        {
+          label: t("tradingView.displayControl.buySell"),
+          id: "buySell",
+        },
+      ],
+    ];
+  }, [t]);
 
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <div className={cn(
-          'oui-flex oui-gap-0.5 oui-justify-center oui-text-base-contrast-36 oui-items-center',
-          open && "oui-text-base-contrast-8"
-          )}>
+        <div
+          className={cn(
+            "oui-flex oui-gap-0.5 oui-justify-center oui-text-base-contrast-36 oui-items-center",
+            open && "oui-text-base-contrast-8"
+          )}
+        >
           <DisplaySettingIcon
             className={cn(
               "oui-w-[18px] oui-h-[18px] ",
@@ -227,9 +233,9 @@ export function MobileDisplayControl(props: IProps) {
                 >
                   <div>{item.label}</div>
                   {props.displayControlState[item.id] ? (
-                    <SelectedIcon className='oui-h-3 oui-w-3' />
+                    <SelectedIcon className="oui-h-3 oui-w-3" />
                   ) : (
-                    <UnSelectIcon className='oui-h-3 oui-w-3' />
+                    <UnSelectIcon className="oui-h-3 oui-w-3" />
                   )}
                 </div>
               ))}

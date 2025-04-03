@@ -6,8 +6,10 @@ import {
   useSessionStorage,
   useWalletSubscription,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export function useWalletEvent() {
+  const { t } = useTranslation();
   const ee = useEventEmitter();
 
   const recordRef = useRef<Record<number, boolean>>({});
@@ -41,9 +43,22 @@ export function useWalletEvent() {
 
       if (transStatus === "COMPLETED" && showToast) {
         let msg = `${capitalizeString(side)} completed`;
+
+        if (side === "DEPOSIT") {
+          msg = t("transfer.deposit.completed");
+        } else if (side === "WITHDRAW") {
+          msg = t("transfer.withdraw.completed");
+        }
+
         toast.success(msg);
       } else if (transStatus === "FAILED" && showToast) {
         let msg = `${capitalizeString(side)} failed`;
+
+        if (side === "DEPOSIT") {
+          msg = t("transfer.deposit.failed");
+        } else if (side === "WITHDRAW") {
+          msg = t("transfer.withdraw.failed");
+        }
         toast.error(msg);
       }
 

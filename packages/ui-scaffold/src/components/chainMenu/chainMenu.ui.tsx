@@ -18,8 +18,11 @@ import {
 } from "@orderly.network/ui-chain-selector";
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const ChainMenu = (props: UseChainMenuScriptReturn) => {
+  const { t } = useTranslation();
+
   if (props.wrongNetwork && props.isConnected && !props.disabledConnect) {
     return (
       <Tooltip
@@ -53,7 +56,7 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
               );
           }}
         >
-          Wrong network
+          {t("connector.wrongNetwork")}
         </Button>
       </Tooltip>
     );

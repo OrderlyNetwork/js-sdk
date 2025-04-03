@@ -7,7 +7,6 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Flex,
-  Switch,
   Text,
 } from "@orderly.network/ui";
 import {
@@ -16,64 +15,70 @@ import {
   BaseLineIcon,
   CandlesIcon,
   HollowCandlesIcon,
-  IndicatorsIcon,
-  LineIcon, LineTypeIcon
+  LineIcon,
 } from "../../icons";
-
-const lineTypeList = [
-  {
-    icon: <BarIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: "Bars",
-    value: "0",
-  },
-  {
-    icon: <CandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: "Candles",
-    value: "1",
-  },
-  {
-    icon: <HollowCandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: "Hollow candles",
-    value: "9",
-  },
-  {
-    icon: <LineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: "Line",
-    value: "2",
-  },
-  {
-    icon: <AreaIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: "Area",
-    value: "3",
-  },
-  {
-    icon: <BaseLineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
-    label: "Baseline",
-    value: "10",
-  },
-];
+import { useTranslation } from "@orderly.network/i18n";
 
 interface IProps {
   lineType: string;
   changeLineType: (type: string) => void;
 }
-export default function LineType(props:IProps) {
+export default function LineType(props: IProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  const lineTypeList = useMemo(() => {
+    return [
+      {
+        icon: <BarIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.bars"),
+        value: "0",
+      },
+      {
+        icon: <CandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.candles"),
+        value: "1",
+      },
+      {
+        icon: (
+          <HollowCandlesIcon fill="currentColor" className="oui-w-5 oui-h-5" />
+        ),
+        label: t("tradingView.lineType.hollowCandles"),
+        value: "9",
+      },
+      {
+        icon: <LineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.line"),
+        value: "2",
+      },
+      {
+        icon: <AreaIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.area"),
+        value: "3",
+      },
+      {
+        icon: <BaseLineIcon fill="currentColor" className="oui-w-5 oui-h-5" />,
+        label: t("tradingView.lineType.baseline"),
+        value: "10",
+      },
+    ];
+  }, [t]);
 
   const currentLineTypeIcon = useMemo(() => {
-   const data = lineTypeList.find(item => item.value === props.lineType);
-   if (data) {
-
-     return data.icon;
-   }
-   return lineTypeList[1].icon;
-  }, [props.lineType])
+    const data = lineTypeList.find((item) => item.value === props.lineType);
+    if (data) {
+      return data.icon;
+    }
+    return lineTypeList[1].icon;
+  }, [props.lineType]);
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Box className={cn('oui-w-[18px] oui-h-[18px] oui-cursor-pointer oui-text-base-contrast-36 hover:oui-text-base-contrast-80',
-          open && 'oui-text-base-contrast-80'
-          )} >
+        <Box
+          className={cn(
+            "oui-w-[18px] oui-h-[18px] oui-cursor-pointer oui-text-base-contrast-36 hover:oui-text-base-contrast-80",
+            open && "oui-text-base-contrast-80"
+          )}
+        >
           {currentLineTypeIcon}
         </Box>
       </DropdownMenuTrigger>
@@ -100,15 +105,14 @@ export default function LineType(props:IProps) {
                 justify={"start"}
                 itemAlign={"center"}
                 gap={2}
-                className={cn("oui-text-base-contrast-36 oui-cursor-pointer oui-w-full hover:oui-text-base-contrast",
+                className={cn(
+                  "oui-text-base-contrast-36 oui-cursor-pointer oui-w-full hover:oui-text-base-contrast",
                   props.lineType === item.value && "oui-text-base-contrast"
                 )}
-                onClick={()=> props.changeLineType(item.value)}
+                onClick={() => props.changeLineType(item.value)}
               >
                 {item.icon}
-                <Text className='oui-text-sm'>
-                  {item.label}
-                </Text>
+                <Text className="oui-text-sm">{item.label}</Text>
               </Flex>
             ))}
           </Flex>

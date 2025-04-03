@@ -1,7 +1,7 @@
 import React, { ReactNode, useRef } from "react";
 import { TradingviewUIPropsInterface } from "../type";
 import TopBar from "./topBar";
-import {TimeInterval}from "./timeInterval";
+import { TimeInterval } from "./timeInterval";
 import { MobileDisplayControl, DesktopDisplayControl } from "./displayControl";
 import { NoTradingview } from "./noTradingview";
 import { Box, Button, Divider, Flex } from "@orderly.network/ui";
@@ -39,7 +39,6 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
     changeLineType,
     openChartSetting,
     openChartIndicators,
-
   } = props;
   const isMobile = useMediaQuery(MEDIA_TABLET);
 
@@ -50,8 +49,13 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
       ) : (
         <div className="oui-z-[1] oui-absolute oui-top-0 oui-bottom-0 oui-right-0 oui-left-0 oui-h-full oui-w-full oui-flex oui-flex-col">
           <TopBar>
-            {isMobile ?
-              <>
+            {isMobile ? (
+              <Flex
+                gapX={2}
+                width="100%"
+                justify="between"
+                className="oui-overflow-x-scroll oui-hide-scrollbar"
+              >
                 <TimeInterval
                   interval={interval ?? "1"}
                   changeInterval={changeInterval}
@@ -61,8 +65,8 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
                   displayControlState={displayControlState}
                   changeDisplayControlState={changeDisplaySetting}
                 />
-              </>
-              :
+              </Flex>
+            ) : (
               <>
                 <TimeInterval
                   interval={interval ?? "1"}
@@ -82,18 +86,18 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
                   <OperateButton onClick={openChartIndicators}>
                     <IndicatorsIcon />
                   </OperateButton>
-                  <LineType lineType={lineType} changeLineType={changeLineType} />
+                  <LineType
+                    lineType={lineType}
+                    changeLineType={changeLineType}
+                  />
                   <OperateButton onClick={openChartSetting}>
                     <SettingIcon />
                   </OperateButton>
                 </Flex>
-
               </>
-            }
-
+            )}
           </TopBar>
           <div className="oui-h-full oui-w-full" ref={chartRef}></div>
-
         </div>
       )}
     </div>

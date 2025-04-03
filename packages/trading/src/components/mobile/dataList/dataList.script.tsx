@@ -7,6 +7,7 @@ import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
 import { modal, Text } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TabType } from "@orderly.network/ui-orders";
+import { useTranslation } from "@orderly.network/i18n";
 
 export enum DataListTabType {
   position = "Position",
@@ -31,6 +32,8 @@ export const useDataListScript = (props: {
   const [subTab, setSubTab] = useState<DataListTabSubType>(
     DataListTabSubType.positionHistory
   );
+  const { t } = useTranslation();
+
   const { onSymbolChange } = useTradingPageContext();
   const localStorage = useTradingLocalStorage();
 
@@ -41,15 +44,15 @@ export const useDataListScript = (props: {
   const onCloseAll = (type: TabType) => {
     const title =
       type === TabType.pending
-        ? "Cancel all pending orders"
+        ? t("orders.pending.cancelAll")
         : type === TabType.tp_sl
-        ? "Cancel all TP/SL orders"
+        ? t("orders.tpsl.cancelAll")
         : "";
     const content =
       type === TabType.pending
-        ? "Are you sure you want to cancel all of your pending orders?"
+        ? t("orders.pending.cancelAll.description")
         : type === TabType.tp_sl
-        ? "Are you sure you want to cancel all of your TP/SL orders?"
+        ? t("orders.tpsl.cancelAll.description")
         : "";
     modal.confirm({
       title: title,

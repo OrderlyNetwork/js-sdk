@@ -2,11 +2,14 @@ import { FC } from "react";
 import { Card, Flex, Switch, Text } from "@orderly.network/ui";
 import { SettingScriptReturns } from "./setting.script";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Setting: FC<SettingScriptReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Card
-      title={"System upgrade"}
+      title={t("portfolio.setting.systemUpgrade")}
       id="portfolio-apikey-manager"
       className="oui-bg-base-9 oui-font-semibold"
     >
@@ -20,11 +23,10 @@ export const Setting: FC<SettingScriptReturns> = (props) => {
       >
         <Flex direction={"column"} itemAlign={"start"} className="oui-flex-1">
           <Text intensity={80} size="base">
-            Cancel open orders during system upgrade
+            {t("portfolio.setting.cancelOpenOrders")}
           </Text>
           <Text intensity={54} size="sm">
-            During the upgrade period, all open orders will be cancelled to
-            manage your risk in case of high market volatility.
+            {t("portfolio.setting.cancelOpenOrders.description")}
           </Text>
         </Flex>
 
@@ -36,7 +38,7 @@ export const Setting: FC<SettingScriptReturns> = (props) => {
             }}
             disabled={props.isSetting || !props.canTouch}
             data-testid="oui-testid-setting-switch-btn"
-          />{" "}
+          />
         </AuthGuardTooltip>
       </Flex>
     </Card>

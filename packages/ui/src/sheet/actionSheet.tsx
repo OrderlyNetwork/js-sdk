@@ -7,6 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import { cn, Divider, Sheet, SheetContent, SheetTrigger } from "..";
+import { useLocale } from "../locale";
 
 type SheetItemType = "division" | "data" | "cancel";
 
@@ -76,7 +77,9 @@ export const ActionSheetContent: FC<ActionSheetContentProps> = (props) => {
         }
         return (
           <Fragment key={action.value || index}>
-            {action.value === 'cancel' && <div className="oui-h-2 oui-bg-base-10"/>}
+            {action.value === "cancel" && (
+              <div className="oui-h-2 oui-bg-base-10" />
+            )}
             <ActionItem
               onClick={(value) => {
                 if (value.value === "cancel") {
@@ -121,6 +124,7 @@ export interface ActionSheetProps
 }
 
 export const ActionSheet: FC<PropsWithChildren<ActionSheetProps>> = (props) => {
+  const [locale] = useLocale("modal");
   // create actionSheet items
   const items = useMemo<BaseActionSheetItem[]>(() => {
     const items: BaseActionSheetItem[] = [];
@@ -130,7 +134,7 @@ export const ActionSheet: FC<PropsWithChildren<ActionSheetProps>> = (props) => {
         if (typeof action === "string") {
           if (action === "Cancel") {
             items.push({
-              label: "Cancel",
+              label: locale.cancel,
               value: "cancel",
               onClick: () => {
                 props.onClose?.();
@@ -138,7 +142,7 @@ export const ActionSheet: FC<PropsWithChildren<ActionSheetProps>> = (props) => {
             });
           } else if (action === "Confirm") {
             items.push({
-              label: "Confirm",
+              label: locale.confirm,
               value: "confirm",
             });
           } else if (action.startsWith("---")) {

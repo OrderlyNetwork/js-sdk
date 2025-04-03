@@ -15,6 +15,7 @@ import {
 import { ExchangeIcon } from "../../icons";
 import { API } from "@orderly.network/types";
 import { CurrentChain } from "../depositForm/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 type ChainSelectProps = {
   chains: API.NetworkInfos[];
@@ -27,6 +28,7 @@ type ChainSelectProps = {
 export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
   const { chains, value, wrongNetwork, loading } = props;
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const selectable = wrongNetwork || chains?.length > 1;
 
@@ -72,7 +74,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
       <div>
         <Flex>
           <Text size="2xs" intensity={54}>
-            Network
+            {t("transfer.network")}
           </Text>
         </Flex>
         <Flex gapX={1}>
@@ -123,7 +125,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
               itemAlign="center"
             >
               <Text size="2xs" className="oui-text-success-light">
-                lowest fee
+                {t("transfer.lowestFee")}
               </Text>
             </Flex>
           )}

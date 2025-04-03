@@ -1,10 +1,7 @@
 import { useCallback, useState } from "react";
 import { toast } from "@orderly.network/ui";
-import {
-  useEventEmitter,
-} from "@orderly.network/hooks";
-import { EnumTrackerKeys } from "@orderly.network/types";
-
+import { useEventEmitter } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 type Options = {
   quantity: string;
@@ -28,6 +25,7 @@ export function useDepositAction(options: Options) {
   } = options;
   const [submitting, setSubmitting] = useState(false);
   const ee = useEventEmitter();
+  const { t } = useTranslation();
 
   const onApprove = useCallback(async () => {
     if (submitting) return;
@@ -35,35 +33,39 @@ export function useDepositAction(options: Options) {
 
     return approve(quantity)
       .then((res: any) => {
-        toast.success("Approve success");
+        toast.success(t("transfer.deposit.approve.success"));
       })
       .catch((err) => {
         console.error("approve error", err);
-        toast.error(err.message || err.errorCode || "Approve failed");
+        toast.error(
+          err.message || err.errorCode || t("transfer.deposit.approve.failed")
+        );
       })
       .finally(() => {
         setSubmitting(false);
       });
-  }, [approve, submitting, quantity, allowance]);
+  }, [approve, submitting, quantity, allowance, t]);
 
   const doDeposit = useCallback(async () => {
     return deposit()
       .then((res: any) => {
-        toast.success("Deposit requested");
+        toast.success(t("transfer.deposit.requested"));
         ee.emit("deposit:requested");
         onSuccess?.();
       })
       .catch((err) => {
         console.error("deposit error", err);
-        toast.error(err.message || err.errorCode || "Deposit failed");
+        toast.error(
+          err.message || err.errorCode || t("transfer.deposit.failed")
+        );
       });
-  }, [deposit, onSuccess]);
+  }, [deposit, onSuccess, t]);
 
   const onDeposit = useCallback(() => {
     const num = Number(quantity);
 
     if (isNaN(num) || num <= 0) {
-      toast.error("Please input a valid number");
+      toast.error(t("transfer.quantity.invalid"));
       return;
     }
 
@@ -85,7 +87,7 @@ export function useDepositAction(options: Options) {
     execDeposit?.()?.finally(() => {
       setSubmitting(false);
     });
-  }, [quantity, submitting, doDeposit, enableCustomDeposit, customDeposit]);
+  }, [quantity, submitting, doDeposit, enableCustomDeposit, customDeposit, t]);
 
   return { submitting, onApprove, onDeposit };
 }

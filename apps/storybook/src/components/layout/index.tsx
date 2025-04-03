@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import config from "../../config";
 import { useNav } from "../../hooks/useNav";
+import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 
 type OrderlyLayoutProps = {
   children: React.ReactNode;
@@ -10,6 +10,8 @@ type OrderlyLayoutProps = {
 
 export const OrderlyLayout: FC<OrderlyLayoutProps> = (props) => {
   const { onRouteChange } = useNav();
+  const config = useOrderlyConfig();
+
   return (
     <Scaffold
       mainNavProps={{

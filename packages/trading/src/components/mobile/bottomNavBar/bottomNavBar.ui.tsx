@@ -6,6 +6,7 @@ import { AccountWidget } from "./account";
 import { BalanceWidget } from "./balance";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { ScanQRCodeWidget } from "./scanQRCode";
+import { useTranslation } from "@orderly.network/i18n";
 import { MobileAccountMenuExtension } from "./account/account.widget";
 
 export const BottomNavBar: FC<BottomNavBarState> = (props) => {
@@ -28,7 +29,7 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
     !props.disabledConnect &&
     props.status !== AccountStatusEnum.EnableTradingWithoutConnected &&
     props.status < AccountStatusEnum.EnableTrading;
-  
+
   return (
     <div className="oui-bg-base-9 oui-border-t oui-border-line-4">
       <Flex
@@ -60,6 +61,7 @@ type LinkDeviceProps = {
 
 const LinkDevice: FC<LinkDeviceProps> = (props) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const showDialog = () => {
     setOpen(true);
@@ -74,17 +76,17 @@ const LinkDevice: FC<LinkDeviceProps> = (props) => {
       <SimpleDialog
         open={open}
         onOpenChange={setOpen}
-        title="Tips"
+        title={t("common.tips")}
         size="xs"
         actions={{
           secondary: {
-            label: "Cancel",
+            label: t("common.cancel"),
             onClick: hideDialog,
             size: "md",
             fullWidth: true,
           },
           primary: {
-            label: "Disconnect",
+            label: t("connector.disconnect"),
             onClick: async () => {
               await props.onDisconnect();
               hideDialog();
@@ -96,9 +98,7 @@ const LinkDevice: FC<LinkDeviceProps> = (props) => {
         }}
       >
         <Text intensity={54} size="sm">
-          You are connected via another device. This mode is for trading only.
-          To switch networks, deposit or withdraw assets, please disconnect and
-          reconnect your wallet on this device.
+          {t("linkDevice.scanQRCode.connected.description")}
         </Text>
       </SimpleDialog>
       <Flex

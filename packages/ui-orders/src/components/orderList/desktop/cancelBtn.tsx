@@ -1,12 +1,14 @@
+import { FC, useState } from "react";
 import { API } from "@orderly.network/types";
-import { Button, ThrottledButton, toast } from "@orderly.network/ui";
-import { FC, useContext, useState } from "react";
+import { ThrottledButton, toast } from "@orderly.network/ui";
 import { useOrderListContext } from "../orderListContext";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const CancelButton: FC<{
   order: API.Order;
 }> = (props) => {
   const { order } = props;
+  const { t } = useTranslation();
 
   const { onCancelOrder } = useOrderListContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -32,9 +34,9 @@ export const CancelButton: FC<{
             setIsLoading(false);
           });
       }}
-      loading = {isLoading}
+      loading={isLoading}
     >
-      Cancel
+      {t("common.cancel")}
     </ThrottledButton>
   );
 };

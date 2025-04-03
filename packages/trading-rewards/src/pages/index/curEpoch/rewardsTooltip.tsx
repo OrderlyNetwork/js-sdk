@@ -1,6 +1,7 @@
+import React, { FC, useState } from "react";
 import { Flex, Text, Tooltip } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
-import React, { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type RewardsTooltipProps = {
   brokerName: string | undefined;
@@ -15,7 +16,9 @@ export const RewardsTooltip: FC<{
   arrowClassName?: string;
   align?: "start" | "center" | "end";
 }> = (props) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
   const content = (): any => {
     return (
       <Flex
@@ -30,7 +33,9 @@ export const RewardsTooltip: FC<{
           </Text>
         </Flex>
         <Flex gap={1} width={"100%"}>
-          <Text className="oui-flex-1">Other Orderly DEX</Text>
+          <Text className="oui-flex-1">
+            {t("tradingRewards.otherOrderlyDex")}
+          </Text>
           <Text>
             {commifyOptional(props.rewardsTooltip?.otherRewards, { fix: 2 })}
           </Text>

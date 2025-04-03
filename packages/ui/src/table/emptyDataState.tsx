@@ -4,10 +4,13 @@ import { Flex } from "../flex";
 import { Text } from "../typography";
 import EmptyStateIcon from "../icon/emptyData";
 import { ExtensionPositionEnum, installExtension } from "../plugin";
+import { useLocale } from "../locale";
 
 export const EmptyDataState: FC<{ title?: string; className?: string }> = (
   props
 ) => {
+  const [locale] = useLocale("empty");
+
   return (
     <Flex
       itemAlign="center"
@@ -19,7 +22,7 @@ export const EmptyDataState: FC<{ title?: string; className?: string }> = (
         <EmptyStateIcon />
       </Box>
       <Text as="div" intensity={36} size="2xs">
-        {props.title ?? "No results found."}
+        {props.title ?? locale.description}
       </Text>
     </Flex>
   );
