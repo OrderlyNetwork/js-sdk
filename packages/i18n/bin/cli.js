@@ -10,12 +10,13 @@ const { fillJson } = require("../script/fillJson");
 main();
 
 async function main() {
+  console.log("process.argv", process.argv);
   const argv = getArgv();
 
   const { _, input, output, oldFile, newFile, outputDir } = argv;
 
   const command = _[0];
-  // console.log("argv", argv);
+  console.log("argv", argv);
 
   switch (command) {
     case "generateCsv":
@@ -41,7 +42,7 @@ async function main() {
 
 function getArgv() {
   const argv = yargs(hideBin(process.argv))
-    .scriptName("converter")
+    .scriptName("")
     .usage("i18n locale tools")
     .usage("$0 <command> [options]")
     .strict()

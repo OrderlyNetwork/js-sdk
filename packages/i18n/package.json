@@ -6,17 +6,11 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "bin": {
-    "converter": "bin/cli.js"
+    "i18n": "bin/cli.js"
   },
   "scripts": {
     "test": "jest",
-    "build": "tsup && pnpm generateCsv",
-    "converter": "node ./bin/cli.js",
-    "generateCsv": "pnpm converter generateCsv ./dist/locale.csv",
-    "csv2json": "pnpm converter csv2json ./dist/locale.csv ./dist/locale",
-    "json2csv": "pnpm converter json2csv ./dist/locale/en.json,./dist/locale/zh.json ./dist/locale.csv",
-    "diffcsv": "pnpm converter diffcsv ./dist/locale1.csv ./dist/locale2.csv",
-    "fillJson": "pnpm converter fillJson ./src/locale/zh.json ./dist/locale/zh.json"
+    "build": "tsup"
   },
   "keywords": [],
   "files": [
