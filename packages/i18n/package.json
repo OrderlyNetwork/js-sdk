@@ -1,16 +1,17 @@
 {
   "name": "@orderly.network/i18n",
-  "version": "2.0.8-i18n-cli.18",
+  "version": "2.0.7",
   "description": "Internationalization for orderly sdk",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "bin": {
-    "i18n": "bin/cli.js"
+    "converter": "bin/cli.js"
   },
   "scripts": {
     "test": "jest",
-    "build": "tsup"
+    "build": "tsup",
+    "converter": "node ./bin/cli.js"
   },
   "keywords": [],
   "files": [
