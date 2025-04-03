@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "1.0.7-i18n.17",
+  "version": "1.0.7-i18n-cli.18",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",

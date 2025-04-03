@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 2.0.8-i18n-cli.18
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.0.8-i18n-cli.18
+  - @orderly.network/ui@2.0.8-i18n-cli.18
+  - @orderly.network/utils@2.0.8-i18n-cli.18
+
 ## 2.0.8-i18n.17
 
 ### Patch Changes
