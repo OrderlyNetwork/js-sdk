@@ -1,3 +1,5 @@
+const { validateI18nValue } = require("./utils");
+
 const separator = ".";
 
 function multiJson2Csv(jsonList, header) {
@@ -7,14 +9,25 @@ function multiJson2Csv(jsonList, header) {
 
   const baseJson = jsonList[0];
   const baseKeys = Object.keys(baseJson);
-
+  const errors = {};
   let result = header.length ? [header] : [];
   for (const key of baseKeys) {
     const values = [];
     for (const json of jsonList) {
-      values.push(json[key] || "");
+      const val = json[key] || "";
+      values.push(val);
+      const bool = validateI18nValue(val);
+      if (!bool.valid) {
+        errors[key] = val;
+      }
     }
     result.push(stringsToCsvLine([key, ...values]));
+  }
+  if (Object.keys(errors).length > 0) {
+    throw new Error(
+      "valid i18n value failed, please check the value of the following values: " +
+        JSON.stringify(errors, null, 4)
+    );
   }
   return result.join("\n");
 }
@@ -26,11 +39,23 @@ function csv2multiJson(csv) {
   const lines = csvToLines(csv);
   const csvLines = lines.filter(Boolean).map(parseCsvLine);
   const headers = csvLines.shift()[0].split(",");
+  const errors = {};
   for (const [index, header] of headers.entries()) {
     json[header] = {};
     for (const line of csvLines) {
       const [key, ...values] = line;
-      json[header][key] = values[index];
+      const val = values[index];
+      json[header][key] = val;
+      const bool = validateI18nValue(val);
+      if (!bool.valid) {
+        errors[key] = val;
+      }
+    }
+    if (Object.keys(errors).length > 0) {
+      throw new Error(
+        "valid i18n value failed, please check the value of the following values: " +
+          JSON.stringify(errors, null, 4)
+      );
     }
     if (Object.values(json[header]).every((value) => !value)) {
       delete json[header];
