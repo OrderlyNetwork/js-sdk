@@ -24,6 +24,7 @@ export const PNLInput = (props: PNLInputProps) => {
   const {
     mode,
     modes,
+    modeLabelMap,
     onModeChange,
     onValueChange,
     quote,
@@ -36,13 +37,15 @@ export const PNLInput = (props: PNLInputProps) => {
   } = props;
 
   const [prefix, setPrefix] = useState<string>(mode);
+
+  const [placeholder, setPlaceholder] = useState<string>(
+    mode === PnLMode.PERCENTAGE ? "%" : quote
+  );
+
   useEffect(() => {
     setPrefix(mode);
     setPlaceholder(mode === PnLMode.PERCENTAGE ? "%" : quote);
   }, [mode]);
-  const [placeholder, setPlaceholder] = useState<string>(
-    mode === PnLMode.PERCENTAGE ? "%" : quote
-  );
 
   useEffect(() => {
     setPrefix(!!value ? "" : mode);
@@ -52,7 +55,7 @@ export const PNLInput = (props: PNLInputProps) => {
 
   return (
     <Input.tooltip
-      prefix={prefix}
+      prefix={modeLabelMap[prefix as keyof typeof modeLabelMap] || prefix}
       size={"md"}
       placeholder={placeholder}
       id={id}
