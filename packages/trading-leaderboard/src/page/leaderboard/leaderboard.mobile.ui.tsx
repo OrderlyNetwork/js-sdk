@@ -35,12 +35,14 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
             )}
           />
           <video
+            playsInline
+            webkit-playsinline
             autoPlay
             loop
             muted
             className={cn(
               // rest style
-              "oui-border-none oui-outline-none oui-bg-transparent",
+              "oui-border-none oui-outline-none oui-bg-transparent oui-pointer-events-none",
               "oui-w-full oui-h-full",
               // "oui-absolute oui-top-0 oui-left-0",
               "oui-object-cover",
@@ -94,7 +96,7 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
         pt={3}
         pb={3}
         className={cn(
-          "oui-trading-leaderboard-mobile oui-overflow-y-auto oui-h-[calc(100vh_-_64px)]",
+          "oui-trading-leaderboard-mobile oui-overflow-y-auto oui-custom-scrollbar oui-h-[calc(100vh_-_64px)]",
           "oui-relative"
         )}
       >

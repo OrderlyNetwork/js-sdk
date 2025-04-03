@@ -1,7 +1,12 @@
-import { IChartingLibraryWidget, IOrderLineAdapter, IPositionLineAdapter } from "../charting_library";
+import {
+  IChartingLibraryWidget,
+  IOrderLineAdapter,
+  IPositionLineAdapter,
+} from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import { ChartMode, ChartPosition } from "../type";
 import { Decimal, commify } from "@orderly.network/utils";
+import { i18n } from "@orderly.network/i18n";
 
 export class PositionLineService {
   private instance: IChartingLibraryWidget;
@@ -44,7 +49,7 @@ export class PositionLineService {
     return this.instance
       .activeChart()
       .createPositionLine()
-      .setTooltip("Close Position")
+      .setTooltip(i18n.t("positions.closePosition"))
       .setQuantityBackgroundColor(this.broker.colorConfig.chartBG!)
       .setCloseButtonBackgroundColor(this.broker.colorConfig.chartBG!)
       .setBodyTextColor(this.broker.colorConfig.textColor!)
@@ -60,7 +65,7 @@ export class PositionLineService {
   }
 
   static getPositionPnL(unrealPnl: number, decimal: number) {
-    let text = "PnL";
+    let text = i18n.t("tpsl.pnl");
     const pnl = new Decimal(unrealPnl).toFixed(decimal, Decimal.ROUND_DOWN);
     if (new Decimal(unrealPnl).eq(0)) {
       return `${text} 0`;

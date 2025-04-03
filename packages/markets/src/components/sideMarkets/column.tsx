@@ -19,7 +19,7 @@ export const useSideMarketsColumns = (
 
   return [
     {
-      title: t("markets.column.symbol&Volume"),
+      title: t("markets.column.market&Volume"),
       dataIndex: "24h_amount",
       onSort: true,
       className: "oui-h-[36px]",

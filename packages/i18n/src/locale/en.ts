@@ -104,6 +104,13 @@ export const en = {
   "common.tradingRewards": "Trading rewards",
   "common.trading": "Trading",
 
+  "assetHistory.status.pending": "Pending",
+  "assetHistory.status.confirm": "Confirm",
+  "assetHistory.status.processing": "Processing",
+  "assetHistory.status.completed": "Completed",
+  "assetHistory.status.failed": "Failed",
+  "assetHistory.status.pendingRebalance": "Pending rebalance",
+
   /** linkDevice */
   "linkDevice.createQRCode.loading.description":
     "Approve QR code with wallet...",

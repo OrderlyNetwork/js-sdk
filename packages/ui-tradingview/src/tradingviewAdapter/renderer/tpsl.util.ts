@@ -1,5 +1,6 @@
 import { Decimal } from "@orderly.network/utils";
 import { AlgoType, OrderInterface, OrderType, SideType } from "../type";
+import { i18n } from "@orderly.network/i18n";
 
 export const EST_TPSL_PNL_DECIMAL = 2;
 
@@ -46,8 +47,8 @@ export const getTpslTag = (
   const algoType = order.algo_type;
   // @ts-ignore
   const suffix = {
-    [AlgoType.TAKE_PROFIT]: "Take profit",
-    [AlgoType.STOP_LOSS]: "Stop loss",
+    [AlgoType.TAKE_PROFIT]: i18n.t("tpsl.takeProfit"),
+    [AlgoType.STOP_LOSS]: i18n.t("tpsl.stopLoss"),
   }[algoType];
 
   if (!suffix) {

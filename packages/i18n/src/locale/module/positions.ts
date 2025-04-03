@@ -1,6 +1,7 @@
 export const positions = {
   "positions.positionHistory": "Position history",
   "positions.liquidation": "Liquidation",
+  "positions.closePosition": "Close Position",
 
   "positions.column.liqPrice": "Liq. price",
   "positions.column.liqPrice.tooltip":

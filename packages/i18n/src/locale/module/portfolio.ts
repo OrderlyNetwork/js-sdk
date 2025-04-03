@@ -15,13 +15,6 @@ export const portfolio = {
   "portfolio.overview.deposits&Withdrawals": "Deposits & Withdrawals",
   "portfolio.overview.distribution": "Distribution",
 
-  "portfolio.assetHistory.status.pending": "Pending",
-  "portfolio.assetHistory.status.confirm": "Confirm",
-  "portfolio.assetHistory.status.processing": "Processing",
-  "portfolio.assetHistory.status.completed": "Completed",
-  "portfolio.assetHistory.status.failed": "Failed",
-  "portfolio.assetHistory.status.pendingRebalance": "Pending rebalance",
-
   "portfolio.overview.column.txId": "TxID",
   "portfolio.overview.column.funding&AnnualRate": "Funding rate / Annual rate",
   "portfolio.overview.column.paymentType": "Payment type",
