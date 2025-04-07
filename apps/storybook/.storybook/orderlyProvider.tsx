@@ -29,6 +29,7 @@ import { Chains } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
 import { LocaleProvider, en, zh } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
+import { customChains } from "./customChains";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
 import { ExtendLocaleMessages, extendZh } from "./locale/extendLocale";
 import { extendEn } from "./locale/extendLocale";
@@ -130,6 +131,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         }}
       >
         <OrderlyAppProvider
+          customChains={customChains as any}
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
