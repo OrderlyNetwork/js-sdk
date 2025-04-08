@@ -8,6 +8,7 @@ import {
 import { OrderlyLayout } from "../../../components/layout";
 import { Box, useScreen } from "@orderly.network/ui";
 import { subDays, addDays } from "date-fns";
+import { useScaffoldContext } from "@orderly.network/ui-scaffold";
 
 const meta: Meta<typeof LeaderboardWidget> = {
   title: "Package/trading-leaderboard",
@@ -20,10 +21,8 @@ const meta: Meta<typeof LeaderboardWidget> = {
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
         image: "/pnl/poster_bg_1.png",
-        // startTime: subDays(new Date(), 1),
-        // endTime: addDays(new Date(), 1),
-        startTime: new Date("2025-03-25T18:00:00Z"),
-        endTime: new Date("2025-04-02T00:00:00Z"),
+        startTime: new Date("2025-03-26T14:30:00Z"),
+        endTime: new Date("2025-04-02T23:59:00Z"),
         href: "https://orderly.network/",
       },
       {
@@ -57,6 +56,8 @@ const meta: Meta<typeof LeaderboardWidget> = {
     href: {
       trading: "https://app.orderly.network/",
     },
+    backgroundSrc: "/leaderboard/background.jpg",
+    // backgroundSrc: "/leaderboard/background.webm",
   },
   parameters: {
     layout: "fullscreen",
@@ -70,6 +71,9 @@ const Container = (props: {
   children: React.ReactNode;
   style?: React.CSSProperties;
 }) => {
+  const { topNavbarHeight, footerHeight, announcementHeight } =
+    useScaffoldContext();
+  const { isMobile } = useScreen();
   return (
     <Box
       width="100%"
@@ -79,7 +83,11 @@ const Container = (props: {
         maxHeight: 2560,
         overflow: "hidden",
         // Make the table scroll instead of the page scroll
-        height: "calc(100vh - 48px - 29px)",
+        height: isMobile
+          ? "100%"
+          : `calc(100vh - ${topNavbarHeight}px - ${footerHeight}px - ${
+              announcementHeight ? announcementHeight + 12 : 0
+            }px)`,
         ...props.style,
       }}
     >
@@ -100,19 +108,16 @@ export const Page: Story = {
 
 export const LayoutPage: Story = {
   render: (args) => {
-    const { isMobile } = useScreen();
+    const { isDesktop } = useScreen();
     return (
-      <OrderlyLayout initialMenu="/leaderboard">
-        <Container
-          style={{
-            height: isMobile ? "100%" : "calc(100vh - 48px - 29px)",
-          }}
-        >
-          <LeaderboardWidget
-            {...args}
-            className="oui-py-5"
-            // style={{ marginTop: -50 }}
-          />
+      <OrderlyLayout
+        initialMenu="/leaderboard"
+        classNames={{
+          root: isDesktop ? "oui-overflow-hidden" : undefined,
+        }}
+      >
+        <Container>
+          <LeaderboardWidget {...args} className="oui-py-5" />
         </Container>
       </OrderlyLayout>
     );

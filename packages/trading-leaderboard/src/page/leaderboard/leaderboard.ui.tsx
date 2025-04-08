@@ -77,10 +77,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
   return (
     <div
       style={props.style}
-      className={cn(
-        "oui-relative oui-h-full oui-mix-blend-screen",
-        props.className
-      )}
+      className={cn("oui-h-full oui-mix-blend-screen", props.className)}
     >
       {renderBackground()}
       <Flex
@@ -89,7 +86,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
         height="100%"
         className={cn(
           "oui-trading-leaderboard oui-relative",
-          "oui-max-w-[1040px] oui-mx-auto"
+          "oui-max-w-[1040px] oui-px-3 oui-mx-auto "
         )}
       >
         {props.showCampaigns && <CampaignsWidget />}
