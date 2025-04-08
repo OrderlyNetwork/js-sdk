@@ -1,6 +1,7 @@
 import { getPackages } from "@manypkg/get-packages";
 import { shouldSkipPackage } from "@changesets/should-skip-package";
 import writeChangeset from "@changesets/write";
+import { readPreState, enterPre, exitPre } from "@changesets/pre";
 import { read } from "@changesets/config";
 import { Release, VersionType } from "@changesets/types";
 import SimpleGit from "simple-git";
@@ -14,6 +15,7 @@ $.verbose = true;
 
 // ci env
 const ciBranch = process.env.CI_COMMIT_BRANCH;
+const isCI = ciBranch;
 
 const npm = {
   registry: process.env.NPM_REGISTRY,
@@ -34,7 +36,12 @@ const telegram = {
   chatId: process.env.TELEGRAM_CHAT_ID,
 };
 
+// custom release version type
 const releaseVersionType = process.env.RELEASE_VERSION_TYPE as VersionType;
+// custom pre tag
+const customPreTag = process.env.CUSTOM_PRE_TAG;
+// exit pre tag, if true, will exit pre mode
+const isExitPreTag = process.env.EXIT_PRE_TAG === "true";
 
 // set publish npm registry
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
@@ -43,7 +50,11 @@ const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
 async function main() {
   try {
     await checkGitStatus();
-    await ceheckBranch();
+    // Verify that the tag is correct only in the ci environment
+    if (isCI) {
+      await ceheckBranch();
+    }
+    await checkTag();
     await release();
     const successfulPackages = await getSuccessfulPackages();
     await notifyTelegram(successfulPackages);
@@ -56,7 +67,54 @@ async function main() {
   }
 }
 
+async function checkTag() {
+  const cwd = process.cwd();
+  const preState = await readPreState(cwd);
+  const existPreTag = preState?.mode === "pre" ? preState?.tag : "";
+  console.log("current pre tag: ", existPreTag);
+  console.log("customPreTag: ", customPreTag);
+  console.log("exitPreTag: ", isExitPreTag);
+
+  // when pre tag exists and exitPreTag is true, exit pre tag
+  if (existPreTag && isExitPreTag) {
+    await exitPre(cwd);
+    console.log(`exit ${existPreTag} pre tag success`);
+    return;
+  }
+
+  // when pre tag and customPreTag exists and pre tag is not equal to customPreTag, switch pre tag to customPreTag
+  if (existPreTag && customPreTag && existPreTag !== customPreTag) {
+    await exitPre(cwd);
+    await enterPre(cwd, customPreTag);
+    console.log(`switch ${existPreTag} to ${customPreTag} pre tag success`);
+    return;
+  }
+
+  // when pre tag exists, exit pre tag
+  if (existPreTag) {
+    return;
+  }
+
+  // when pre tag not exists, enter custom pre tag or get pre tag from current branch
+  const preTag = customPreTag || (await getPreTagFromCurrentBranch());
+  if (preTag) {
+    await enterPre(cwd, preTag);
+    console.log(`enter ${preTag} pre tag success`);
+  }
+}
+
+async function getPreTagFromCurrentBranch() {
+  const branch = await getCurrentBranch();
+  if (branch) {
+    const parts = branch.split("/");
+    return parts.length > 1 ? parts[1] : branch;
+  }
+}
+
 async function release() {
+  // update dependencies in local environment
+  !isCI && (await $`pnpm install --frozen-lockfile`);
+
   await generateChangeset(releaseVersionType);
 
   await $`pnpm changeset version`;
@@ -102,14 +160,19 @@ async function checkGitStatus() {
 }
 
 async function ceheckBranch() {
-  const status = await simpleGit.status();
-  const currentBranch = ciBranch || status.current;
-  console.log("currentBranch: ", currentBranch);
+  const currentBranch = await getCurrentBranch();
   if (!/^((internal|npm)\/)/.test(currentBranch!)) {
     throw new Error(
       'Release versions can only operate on branches prefixed with "internal/" or npm/'
     );
   }
+}
+
+async function getCurrentBranch() {
+  const status = await simpleGit.status();
+  const currentBranch = ciBranch || status.current;
+  console.log("currentBranch: ", currentBranch);
+  return currentBranch;
 }
 
 /**
