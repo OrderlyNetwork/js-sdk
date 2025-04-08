@@ -14,7 +14,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "prepublishOnly": "pnpm build",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "turbo run test",
     "release:patch": "ts-node ./scripts/release.ts",
     "update:tsconfigPaths": "ts-node ./scripts/tsconfigPaths.ts"
