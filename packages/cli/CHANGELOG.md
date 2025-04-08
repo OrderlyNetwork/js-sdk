@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.3.24-auto-enter-tag.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-auto-enter-tag.1
+
 ## 0.3.24-auto-enter-tag.0
 
 ### Patch Changes

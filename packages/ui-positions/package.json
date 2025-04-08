@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-positions",
-  "version": "2.0.8-auto-enter-tag.0",
+  "version": "2.0.8-auto-enter-tag.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

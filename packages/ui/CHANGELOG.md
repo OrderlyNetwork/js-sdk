@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.0.8-auto-enter-tag.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.0.8-auto-enter-tag.1
+
 ## 2.0.8-auto-enter-tag.0
 
 ### Patch Changes

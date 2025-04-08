@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.5.24-auto-enter-tag.1
+
+### Patch Changes
+
+- publish
+
 ## 1.5.24-auto-enter-tag.0
 
 ### Patch Changes

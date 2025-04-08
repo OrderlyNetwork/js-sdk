@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.0.7-auto-enter-tag.0",
+  "version": "1.0.7-auto-enter-tag.1",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 1.0.7-auto-enter-tag.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.0.8-auto-enter-tag.1
+  - @orderly.network/hooks@2.0.8-auto-enter-tag.1
+  - @orderly.network/web3-onboard@2.0.8-auto-enter-tag.1
+  - @orderly.network/types@2.0.8-auto-enter-tag.1
+
 ## 1.0.7-auto-enter-tag.0
 
 ### Patch Changes
