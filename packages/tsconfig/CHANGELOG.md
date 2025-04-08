@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.23-internal-20250410.4
+
+### Patch Changes
+
+- publish
+
 ## 0.3.23-internal-20250410.3
 
 ### Patch Changes
