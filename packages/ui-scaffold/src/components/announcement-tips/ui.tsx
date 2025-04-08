@@ -30,13 +30,13 @@ export type AnnouncementTipsUIProps = ReturnType<
 
 export const AnnouncementTipsUI = (props: AnnouncementTipsUIProps) => {
   const {
-    showTips,
     closeTips,
     tips,
     currentIndex,
     nextTips,
     prevTips,
     maintenanceDialogInfo,
+    showAnnouncement,
   } = props;
   const { isMobile } = useScreen();
   const { t } = useTranslation();
@@ -61,7 +61,7 @@ export const AnnouncementTipsUI = (props: AnnouncementTipsUIProps) => {
     );
   }
 
-  if (props.hideTips || !showTips || !tips.length) {
+  if (!showAnnouncement) {
     return null;
   }
 

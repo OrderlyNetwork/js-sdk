@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useMaintenanceStatus, useQuery, useWS } from "@orderly.network/hooks";
 import { API, WSMessage } from "@orderly.network/types";
 import { i18n } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 
 function getTimeString(timestamp: number) {
   const date = format(new UTCDateMini(timestamp), "MMM dd");
@@ -44,8 +45,15 @@ export interface AnnouncementTips {
   url?: string;
 }
 
-export const useAnnouncementTipsScript = () => {
+export type AnnouncementTipsScriptOptions = {
+  hideTips?: boolean;
+};
+
+export const useAnnouncementTipsScript = (
+  options?: AnnouncementTipsScriptOptions
+) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { setShowAnnouncement } = useAppContext();
   const { data: announcements } = useQuery<API.Announcement[]>(
     `/v1/public/announcement`,
     {
@@ -59,7 +67,6 @@ export const useAnnouncementTipsScript = () => {
     string | undefined
   >(undefined);
 
-  // TODO: should upgrade to app context
   const [showTips, setShowTips] = useState(() =>
     window.sessionStorage.getItem("announcementTips") === "hidden"
       ? false
@@ -164,7 +171,7 @@ export const useAnnouncementTipsScript = () => {
       return;
     }
     setMaintenanceDialogInfo(undefined);
-    
+
     if (startTime) {
       if (startTime < getTimestamp() + oneDay) {
         setTips((prevTips) => [
@@ -186,6 +193,14 @@ export const useAnnouncementTipsScript = () => {
     }
   }, [startTime, status, endDate, brokerName]);
 
+  const showAnnouncement = useMemo(() => {
+    return !!tips.length && showTips && !options?.hideTips;
+  }, [tips, showTips, options?.hideTips]);
+
+  useEffect(() => {
+    setShowAnnouncement(showAnnouncement);
+  }, [showAnnouncement]);
+
   return {
     maintenanceDialogInfo,
     tips,
@@ -194,5 +209,6 @@ export const useAnnouncementTipsScript = () => {
     closeTips,
     nextTips,
     prevTips,
+    showAnnouncement,
   };
 };

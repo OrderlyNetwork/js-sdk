@@ -4,16 +4,19 @@ import { useAppContext } from "@orderly.network/react-app";
 import { useObserverElement, useScreen } from "@orderly.network/ui";
 
 export const useScaffoldScript = () => {
+  const { restrictedInfo, showAnnouncement } = useAppContext();
+
   const [topNavbarRef, topNavbarHeight] = useRefAndHeight(48);
   const [footerRef, footerHeight] = useRefAndHeight(29);
-  const [announcementRef, announcementHeight] = useRefAndHeight(0);
+  const [announcementRef, announcementHeight] = useRefAndHeight(0, [
+    showAnnouncement,
+  ]);
 
   const [expand, setExpand] = useLocalStorage(
     "orderly_scaffold_expanded",
     true
   );
 
-  const { restrictedInfo } = useAppContext();
   const { isMobile } = useScreen();
 
   return {
@@ -30,7 +33,7 @@ export const useScaffoldScript = () => {
   };
 };
 
-const useRefAndHeight = (defaultHeight: number) => {
+const useRefAndHeight = (defaultHeight: number, deps: any[] = []) => {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(defaultHeight);
 
@@ -45,7 +48,7 @@ const useRefAndHeight = (defaultHeight: number) => {
 
     const height = ref.current?.getBoundingClientRect().height;
     setHeight(height!);
-  }, [ref]);
+  }, [ref, ...deps]);
 
   return [ref, height] as const;
 };
