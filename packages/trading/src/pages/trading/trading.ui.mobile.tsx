@@ -59,15 +59,19 @@ export const MobileLayout: FC<TradingState> = (props) => {
       }}
       className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-screen oui-gap-1 oui-relative oui-bg-base-10"
     >
-      <header>{topBar}</header>
+      <div className="oui-fixed oui-left-0 oui-right-0 oui-top-0 oui-z-50">
+        <RestrictedInfoWidget className="oui-bg-base-6 oui-mx-1" />
 
-      <div>
-        <AnnouncementTipsWidget />
+        <AnnouncementTipsWidget
+          className="oui-bg-base-6 oui-mx-1"
+          hideTips={props.restrictedInfo?.restrictedOpen}
+        />
       </div>
 
+      <header>{topBar}</header>
+
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
-        <RestrictedInfoWidget className="oui-mx-1" />
-        <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
+        <TopTabWidget className="oui-bg-base-9 oui-mx-1 oui-rounded-xl" />
         <OrderBookAndEntryWidget />
         <DataListWidget
           symbol={props.symbol}
