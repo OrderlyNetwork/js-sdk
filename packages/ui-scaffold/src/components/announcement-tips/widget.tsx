@@ -1,7 +1,12 @@
 import { useAnnouncementTipsScript } from "./script";
-import { AnnouncementTipsUI } from "./ui";
+import { AnnouncementTipsUI, AnnouncementTipsUIProps } from "./ui";
 
-export const AnnouncementTipsWidget = () => {
-  const props = useAnnouncementTipsScript();
-  return <AnnouncementTipsUI {...props} />;
+export type AnnouncementTipsWidgetProps = Pick<
+  AnnouncementTipsUIProps,
+  "style" | "className" | "hideTips"
+>;
+
+export const AnnouncementTipsWidget = (props: AnnouncementTipsWidgetProps) => {
+  const state = useAnnouncementTipsScript();
+  return <AnnouncementTipsUI {...state} {...props} />;
 };

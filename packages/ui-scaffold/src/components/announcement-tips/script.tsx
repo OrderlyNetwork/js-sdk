@@ -73,9 +73,11 @@ export const useAnnouncementTipsScript = () => {
       setShowTips(false);
     });
   }, []);
+
   const nextTips = () => {
     setCurrentIndex((currentIndex + 1) % tips.length);
   };
+
   const prevTips = () => {
     setCurrentIndex((currentIndex - 1 + tips.length) % tips.length);
   };
@@ -162,6 +164,7 @@ export const useAnnouncementTipsScript = () => {
       return;
     }
     setMaintenanceDialogInfo(undefined);
+    
     if (startTime) {
       if (startTime < getTimestamp() + oneDay) {
         setTips((prevTips) => [

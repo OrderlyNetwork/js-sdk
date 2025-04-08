@@ -8,10 +8,10 @@ export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
 export { ProductsMenu } from "./components/main/products";
 export { CampaignPositionEnum } from "./components/main/useWidgetBuilder.script";
-export type { LayoutProps } from "./components/scaffold";
+export type { ScaffoldProps } from "./components/scaffold";
 export {
   useScaffoldContext,
-  ExpandableContext,
+  ScaffoldContext,
   type RouteOption,
   type RouterAdapter,
 } from "./components/scaffoldContext";
