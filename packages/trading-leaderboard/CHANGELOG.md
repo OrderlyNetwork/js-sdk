@@ -1,4 +1,4 @@
-# @orderly.network/wallet-connector-privy
+# @orderly.network/trading-leaderboard
 
 ## 2.0.8-auto-enter-tag.0
 
@@ -6,9 +6,10 @@
 
 - publish
 - Updated dependencies
-  - @orderly.network/core@2.0.8-auto-enter-tag.0
+  - @orderly.network/react-app@2.0.8-auto-enter-tag.0
   - @orderly.network/hooks@2.0.8-auto-enter-tag.0
   - @orderly.network/i18n@2.0.8-auto-enter-tag.0
+  - @orderly.network/trading@2.0.8-auto-enter-tag.0
   - @orderly.network/types@2.0.8-auto-enter-tag.0
   - @orderly.network/ui@2.0.8-auto-enter-tag.0
   - @orderly.network/ui-connector@2.0.8-auto-enter-tag.0

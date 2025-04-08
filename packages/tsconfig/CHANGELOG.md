@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.3.23-auto-enter-tag.0
+
+### Patch Changes
+
+- publish
+
 ## 0.3.22
 
 ### Patch Changes

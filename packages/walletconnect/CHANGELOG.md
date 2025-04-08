@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.0.8-auto-enter-tag.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.0.8-auto-enter-tag.0
+
 ## 2.0.7
 
 ### Patch Changes

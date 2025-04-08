@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/wallet-connector",
-  "version": "2.0.7",
+  "version": "2.0.8-auto-enter-tag.0",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",

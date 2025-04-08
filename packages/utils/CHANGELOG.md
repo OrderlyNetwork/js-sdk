@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.0.8-auto-enter-tag.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.8-auto-enter-tag.0
+
 ## 2.0.7
 
 ### Patch Changes
