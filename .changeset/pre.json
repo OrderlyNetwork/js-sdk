@@ -49,6 +49,7 @@
     "@orderly.network/web3-provider-ethers": "2.0.7"
   },
   "changesets": [
-    "dry-adults-divide"
+    "dry-adults-divide",
+    "wet-mice-flash"
   ]
 }
