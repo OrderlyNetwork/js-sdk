@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/default-solana-adapter",
-  "version": "2.0.8-internal-20250410.2",
+  "version": "2.0.8-internal-20250410.3",
   "description": "",
   "scripts": {
     "build": "tsup",
