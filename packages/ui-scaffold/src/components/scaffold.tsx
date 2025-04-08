@@ -58,7 +58,19 @@ export const Scaffold = (props: PropsWithChildren<ScaffoldProps>) => {
 
   const renderContent = () => {
     if (isMobile) {
-      return props.children;
+      return (
+        <>
+          <div className="oui-fixed oui-left-0 oui-right-0 oui-top-0 oui-z-50">
+            <RestrictedInfoWidget className="oui-bg-base-6 oui-mx-1" />
+
+            <AnnouncementTipsWidget
+              className="oui-bg-base-6 oui-mx-1"
+              hideTips={restrictedInfo?.restrictedOpen}
+            />
+          </div>
+          {props.children}
+        </>
+      );
     }
     return (
       <div
