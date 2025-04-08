@@ -5,9 +5,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuRoot,
   DropdownMenuTrigger,
-  CloseIcon,
   Text,
-  Divider,
   Box,
 } from "@orderly.network/ui";
 import { FC, SVGProps } from "react";
@@ -24,8 +22,6 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
     return null;
   }
 
-  const langLen = languages.length;
-
   const trigger = (
     <div>
       <LanguageIcon
@@ -38,20 +34,14 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
   );
 
   const header = (
-    <Flex justify="between" className="oui-h-[46px]">
-      <Text>{t("scaffold.languageSwitcher.language")}</Text>
-      <CloseIcon
-        size={16}
-        opacity={1}
-        className="oui-text-base-contrast oui-cursor-pointer"
-        onClick={props.hide}
-      />
-    </Flex>
+    <Box height={24}>
+      <Text>{t("common.language")}</Text>
+    </Box>
   );
 
   const context = (
     <Box
-      my={5}
+      mt={4}
       className={cn(
         //40 * 8 + 4 * 7 = 348px, more than 8 will show scrollbars
         "oui-max-h-[348px] oui-overflow-y-auto oui-custom-scrollbar",
@@ -84,13 +74,12 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
           collisionPadding={{ right: 16 }}
           className={cn(
             "oui-w-[320px] lg:oui-w-[360px]",
-            "oui-bg-base-8 oui-px-5 oui-py-0 oui-rounded-xl",
+            "oui-bg-base-8 oui-p-5 oui-rounded-xl",
             "oui-border oui-border-line-6",
             "oui-font-semibold"
           )}
         >
           {header}
-          <Divider />
           {context}
         </DropdownMenuContent>
       </DropdownMenuPortal>
@@ -137,7 +126,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const LanguageIcon: FC<IconProps> = (props) => {
-  const { size = 20, viewBox, ...rest } = props;
+  const { size = 20, ...rest } = props;
 
   return (
     <svg

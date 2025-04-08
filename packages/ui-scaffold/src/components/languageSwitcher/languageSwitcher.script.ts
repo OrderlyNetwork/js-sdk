@@ -11,10 +11,6 @@ export const useLanguageSwitcherScript = () => {
 
   const { languages } = useLocaleContext();
 
-  const hide = () => {
-    setOpen(false);
-  };
-
   const onLangChange = (lang: string) => {
     setSelectedLang(lang);
     i18n.changeLanguage(lang);
@@ -24,7 +20,6 @@ export const useLanguageSwitcherScript = () => {
   return {
     open,
     onOpenChange: setOpen,
-    hide,
     languages,
     selectedLang,
     onLangChange,
