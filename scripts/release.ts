@@ -52,7 +52,7 @@ async function main() {
     await checkGitStatus();
     // Verify that the tag is correct only in the ci environment
     if (isCI) {
-      await ceheckBranch();
+      await checkBranch();
     }
     await checkTag();
     await release();
@@ -159,7 +159,7 @@ async function checkGitStatus() {
   );
 }
 
-async function ceheckBranch() {
+async function checkBranch() {
   const currentBranch = await getCurrentBranch();
   if (!/^((internal|npm)\/)/.test(currentBranch!)) {
     throw new Error(
