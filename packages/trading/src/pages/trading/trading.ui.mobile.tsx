@@ -10,10 +10,6 @@ import { Flex, Box, SimpleSheet } from "@orderly.network/ui";
 import { SecondaryLogo } from "../../components/base/secondaryLogo";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
-import {
-  RestrictedInfoWidget,
-  AnnouncementTipsWidget,
-} from "@orderly.network/ui-scaffold";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
 
 export const MobileLayout: FC<TradingState> = (props) => {
@@ -59,15 +55,6 @@ export const MobileLayout: FC<TradingState> = (props) => {
       }}
       className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-screen oui-gap-1 oui-relative oui-bg-base-10"
     >
-      <div className="oui-fixed oui-left-0 oui-right-0 oui-top-0 oui-z-50">
-        <RestrictedInfoWidget className="oui-bg-base-6 oui-mx-1" />
-
-        <AnnouncementTipsWidget
-          className="oui-bg-base-6 oui-mx-1"
-          hideTips={props.restrictedInfo?.restrictedOpen}
-        />
-      </div>
-
       <header>{topBar}</header>
 
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
