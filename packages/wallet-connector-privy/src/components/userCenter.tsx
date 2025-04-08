@@ -6,16 +6,21 @@ import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
 import { useTranslation } from "@orderly.network/i18n";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { useAppContext } from "@orderly.network/react-app";
 
 export function UserCenter(props: any) {
   const { accountState: state } = props;
-  return <RenderUserCenter state={state} />;
+  return (
+    <RenderUserCenter state={state} disabledConnect={props.disabledConnect} />
+  );
 }
 
 export const MwebUserCenter = (props: any) => {
   const { state } = props;
 
-  return <RenderUserCenter state={state} />;
+  return (
+    <RenderUserCenter state={state} disabledConnect={props.disabledConnect} />
+  );
 };
 
 const RenderUserCenter = (props: any) => {
@@ -24,6 +29,9 @@ const RenderUserCenter = (props: any) => {
   const { isMobile } = useScreen();
   const { connect, wallet } = useWalletConnector();
   const { linkedAccount } = usePrivyWallet();
+
+  const disabled = state.validating || props.disabledConnect;
+
   // if (accountStatus.status <= ) {}
   if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
     return (
@@ -40,16 +48,16 @@ const RenderUserCenter = (props: any) => {
       </Button>
     );
   }
-  if (state.status <= AccountStatusEnum.NotConnected || state.validating) {
+  if (state.status <= AccountStatusEnum.NotConnected || disabled) {
     return (
       <Button
         data-testid="oui-testid-nav-bar-connectWallet-btn"
         size="md"
-        variant="gradient"
+        variant={disabled ? undefined : "gradient"}
         angle={45}
         className="wallet-connect-button"
         loading={state.validating}
-        disabled={state.validating}
+        disabled={disabled}
         onClick={() => {
           connect()
             .then((r: any) => {
