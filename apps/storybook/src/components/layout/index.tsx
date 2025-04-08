@@ -1,12 +1,12 @@
 import { FC } from "react";
-import { Scaffold } from "@orderly.network/ui-scaffold";
+import { Scaffold, ScaffoldProps } from "@orderly.network/ui-scaffold";
 import { useNav } from "../../hooks/useNav";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 
 type OrderlyLayoutProps = {
   children: React.ReactNode;
   initialMenu?: string;
-};
+} & ScaffoldProps;
 
 export const OrderlyLayout: FC<OrderlyLayoutProps> = (props) => {
   const { onRouteChange } = useNav();
@@ -22,6 +22,7 @@ export const OrderlyLayout: FC<OrderlyLayoutProps> = (props) => {
       routerAdapter={{
         onRouteChange,
       }}
+      classNames={props.classNames}
     >
       {props.children}
     </Scaffold>
