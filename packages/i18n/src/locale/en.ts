@@ -103,6 +103,7 @@ export const en = {
   "common.affiliate": "Affiliate",
   "common.tradingRewards": "Trading rewards",
   "common.trading": "Trading",
+  "common.language": "Language",
 
   "assetHistory.status.pending": "Pending",
   "assetHistory.status.confirm": "Confirm",
