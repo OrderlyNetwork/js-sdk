@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { useObserverElement, useScreen } from "@orderly.network/ui";
@@ -7,7 +7,6 @@ export const useScaffoldScript = () => {
   const [topNavbarRef, topNavbarHeight] = useRefAndHeight(48);
   const [footerRef, footerHeight] = useRefAndHeight(29);
   const [announcementRef, announcementHeight] = useRefAndHeight(0);
-  console.log("announcementHeight", announcementHeight);
 
   const [expand, setExpand] = useLocalStorage(
     "orderly_scaffold_expanded",
@@ -38,6 +37,15 @@ const useRefAndHeight = (defaultHeight: number) => {
   useObserverElement(ref.current, (entry) => {
     setHeight(entry.contentRect.height);
   });
+
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    const height = ref.current?.getBoundingClientRect().height;
+    setHeight(height!);
+  }, [ref]);
 
   return [ref, height] as const;
 };
