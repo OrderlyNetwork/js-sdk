@@ -94,7 +94,7 @@ export function useCampaignsScript() {
 
   useEffect(() => {
     // Find the first non-empty category
-    const categoryKeys: CategoryKey[] = ["ongoing", "past", "future"];
+    const categoryKeys: CategoryKey[] = ["ongoing", "future", "past"];
 
     const firstAvailableCategory = categoryKeys.find(
       (item) => filterCampaigns[item].length > 0
