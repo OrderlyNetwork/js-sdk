@@ -6,7 +6,6 @@ import { usePrivyWallet } from "../providers/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
 import { useTranslation } from "@orderly.network/i18n";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { useAppContext } from "@orderly.network/react-app";
 
 export function UserCenter(props: any) {
   const { accountState: state } = props;
