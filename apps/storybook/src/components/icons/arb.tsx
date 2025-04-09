@@ -1,11 +1,11 @@
-import React, { FC, SVGProps } from "react";
+import { FC, SVGProps } from "react";
 
-export interface IconProps extends SVGProps<SVGSVGElement> {
+interface IconProps extends SVGProps<SVGSVGElement> {
   size: number;
 }
 
 export const ARBIcon: FC<IconProps> = (props) => {
-  const { size = 14, viewBox, ...rest } = props;
+  const { size = 14, ...rest } = props;
   return (
     <svg
       width={`${size}px`}
@@ -56,7 +56,7 @@ export const ARBIcon: FC<IconProps> = (props) => {
 };
 
 export const ARBActiveIcon: FC<IconProps> = (props) => {
-  const { size = 14, viewBox, ...rest } = props;
+  const { size = 14, ...rest } = props;
   return (
     <svg
       width={`${size}px`}
