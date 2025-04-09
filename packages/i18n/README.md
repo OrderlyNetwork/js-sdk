@@ -1,6 +1,140 @@
 # @orderly.network/i18n
 
-Internationalization and tools for Orderly SDK. Based on i18next ecosystem.
+Internationalization and cli tools for Orderly SDK. Based on i18next ecosystem.
+
+## Integration
+
+### 1. Wrap LocaleProvider
+
+The LocaleProvider is the core component that provides locale resources to your app. You must wrap you app with LocaleProvider.
+
+### 2. Provide Resources
+
+- By default, English (en) is included.
+- If you want to support other languages besides English, you need to explicitly import it from the i18n package and pass it to the resources prop of LocaleProvider.
+- Currently, we provider English (en) and Chinese (zh) locale files.
+- You can also extend the built-in messages by merging them with your own locale files.
+- With each release we will generate csv files (dist/locale.csv) for easy translation and we provide a cli to convert between csv and json files.
+- It can translate not only the ui in the SDK, but also other components you write outside of the SDK.
+
+### Example
+
+Here’s a complete example of how to set up the i18n integration:
+
+```typescript
+import { FC, ReactNode } from "react";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
+import {
+  LocaleProvider,
+  Resources,
+  LocaleCode,
+  zh,
+} from "@orderly.network/i18n";
+
+// extend or overrides English translations
+const extendEn = {
+  "extend.trading": "Trading",
+};
+
+// extend or overrides chinese translations
+const extendZh = {
+  "extend.trading": "交易",
+};
+
+type ExtendLocaleMessages = typeof extendEn;
+
+// define language resources
+const resources: Resources<ExtendLocaleMessages> = {
+  en: extendEn,
+  zh: {
+    ...zh,
+    ...extendZh,
+  },
+};
+
+const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
+  const onLocaleChange = (locale: LocaleCode) => {};
+
+  return (
+    <LocaleProvider resources={resources} onLocaleChange={onLocaleChange}>
+      <WalletConnectorProvider>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
+          {props.children}
+        </OrderlyAppProvider>
+      </WalletConnectorProvider>
+    </LocaleProvider>
+  );
+};
+```
+
+### Add more languages
+
+We also support adding more custom languages
+
+```typescript
+import { FC, ReactNode } from "react";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
+import {
+  LocaleProvider,
+  Resources,
+  zh,
+  LocaleEnum,
+  LocaleCode,
+  Language,
+} from "@orderly.network/i18n";
+
+// japanese locale
+const ja = {
+  "extend.ja": "日本語",
+};
+
+// korean locale
+const ko = {
+  "extend.ko": "한국어",
+};
+
+// define language resources
+const resources: Resources = {
+  en,
+  ja,
+  ko,
+};
+
+// custom languages
+const languages: Language[] = [
+  { localCode: LocaleEnum.en, displayName: "English" },
+  { localCode: LocaleEnum.ja, displayName: "日本語" },
+  { localCode: LocaleEnum.ko, displayName: "한국어" },
+];
+
+const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
+  const onLocaleChange = (locale: LocaleCode) => {};
+
+  return (
+    <LocaleProvider
+      resources={resources}
+      languages={languages}
+      onLocaleChange={onLocaleChange}
+    >
+      <WalletConnectorProvider>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
+          {props.children}
+        </OrderlyAppProvider>
+      </WalletConnectorProvider>
+    </LocaleProvider>
+  );
+};
+```
 
 ## CLI
 
