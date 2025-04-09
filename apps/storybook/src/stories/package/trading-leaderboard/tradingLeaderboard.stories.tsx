@@ -5,7 +5,7 @@ import {
   CampaignsWidget,
   TradingLeaderboardProvider,
 } from "@orderly.network/trading-leaderboard";
-import { OrderlyLayout } from "../../../components/layout";
+import { BaseLayout } from "../../../components/layout";
 import { Box, useScreen } from "@orderly.network/ui";
 import { subDays, addDays } from "date-fns";
 import { useScaffoldContext } from "@orderly.network/ui-scaffold";
@@ -110,7 +110,7 @@ export const LayoutPage: Story = {
   render: (args) => {
     const { isDesktop } = useScreen();
     return (
-      <OrderlyLayout
+      <BaseLayout
         initialMenu="/leaderboard"
         classNames={{
           root: isDesktop ? "oui-overflow-hidden" : undefined,
@@ -119,7 +119,7 @@ export const LayoutPage: Story = {
         <Container>
           <LeaderboardWidget {...args} className="oui-py-5" />
         </Container>
-      </OrderlyLayout>
+      </BaseLayout>
     );
   },
 };
