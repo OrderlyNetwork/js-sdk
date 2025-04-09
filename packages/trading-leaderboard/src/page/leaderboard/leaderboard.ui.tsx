@@ -93,7 +93,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
         <TradingListWidget
           className={cn(
             props.showCampaigns
-              ? "oui-h-[calc(100%_-_280px_-_20px)]"
+              ? "oui-h-[calc(100%_-_288px_-_20px)]"
               : "oui-h-full"
           )}
         />

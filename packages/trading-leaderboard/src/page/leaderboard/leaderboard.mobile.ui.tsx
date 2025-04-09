@@ -96,21 +96,12 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
         pt={3}
         pb={3}
         className={cn(
-          "oui-trading-leaderboard-mobile oui-overflow-y-auto oui-custom-scrollbar oui-h-[calc(100vh_-_64px)]",
-          "oui-relative"
+          "oui-trading-leaderboard-mobile oui-overflow-y-auto oui-custom-scrollbar",
+          "oui-relative oui-h-[calc(100vh_-_64px)]"
         )}
       >
         {props.showCampaigns && <CampaignsWidget />}
-        <TradingListWidget
-          className={cn(
-            !props.canTrading &&
-              cn(
-                props.showCampaigns
-                  ? "oui-h-[calc(100%_-_280px_-_12px)]"
-                  : "oui-h-full"
-              )
-          )}
-        />
+        <TradingListWidget className={cn(!props.canTrading && "oui-h-full")} />
         <div className="oui-fixed oui-left-0 oui-right-0 oui-bottom-0">
           <BottomNavBarWidget />
         </div>
