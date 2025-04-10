@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 2.0.8-internal-20250410.7
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-internal-20250410.7
+  - @orderly.network/hooks@2.0.8-internal-20250410.7
+  - @orderly.network/net@2.0.8-internal-20250410.7
+  - @orderly.network/types@2.0.8-internal-20250410.7
+  - @orderly.network/utils@2.0.8-internal-20250410.7
+
 ## 2.0.8-internal-20250410.6
 
 ### Patch Changes
