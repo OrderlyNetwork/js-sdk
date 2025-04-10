@@ -1,5 +1,17 @@
 # @orderly.network/default-evm-adapter
 
+## 2.1.0-i18n-cli.20
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.1.0-i18n-cli.20
+  - @orderly.network/types@2.1.0-i18n-cli.20
+
 ## 2.1.0-i18n-cli.19
 
 ### Minor Changes

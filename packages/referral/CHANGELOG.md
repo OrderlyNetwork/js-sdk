@@ -1,5 +1,18 @@
 # @orderly.network/referral
 
+## 2.1.0-i18n-cli.20
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@2.1.0-i18n-cli.20
+  - @orderly.network/hooks@2.1.0-i18n-cli.20
+  - @orderly.network/utils@2.1.0-i18n-cli.20
+
 ## 2.1.0-i18n-cli.19
 
 ### Minor Changes

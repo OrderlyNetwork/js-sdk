@@ -1,5 +1,18 @@
 # @orderly.network/chart
 
+## 2.1.0-i18n-cli.20
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/i18n@2.1.0-i18n-cli.1
+  - @orderly.network/ui@2.1.0-i18n-cli.20
+  - @orderly.network/utils@2.1.0-i18n-cli.20
+
 ## 2.1.0-i18n-cli.19
 
 ### Minor Changes

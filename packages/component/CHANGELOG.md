@@ -1,5 +1,25 @@
 # @orderly.network/react
 
+## 2.1.0-i18n-cli.20
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.1.0-i18n-cli.20
+  - @orderly.network/hooks@2.1.0-i18n-cli.20
+  - @orderly.network/net@2.1.0-i18n-cli.20
+  - @orderly.network/trading-view@2.1.0-i18n-cli.20
+  - @orderly.network/types@2.1.0-i18n-cli.20
+  - @orderly.network/ui@2.1.0-i18n-cli.20
+  - @orderly.network/ui-connector@2.1.0-i18n-cli.20
+  - @orderly.network/ui-leverage@2.1.0-i18n-cli.20
+  - @orderly.network/ui-transfer@2.1.0-i18n-cli.20
+  - @orderly.network/utils@2.1.0-i18n-cli.20
+
 ## 2.1.0-i18n-cli.19
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.1.0-i18n-cli.20
+
+### Minor Changes
+
+- publish
+
 ## 2.1.0-i18n-cli.19
 
 ### Minor Changes

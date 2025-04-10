@@ -1,5 +1,32 @@
 # @orderly.network/trading
 
+## 2.1.0-i18n-cli.20
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.1.0-i18n-cli.20
+  - @orderly.network/hooks@2.1.0-i18n-cli.20
+  - @orderly.network/i18n@2.1.0-i18n-cli.1
+  - @orderly.network/markets@2.1.0-i18n-cli.20
+  - @orderly.network/types@2.1.0-i18n-cli.20
+  - @orderly.network/ui@2.1.0-i18n-cli.20
+  - @orderly.network/ui-chain-selector@2.1.0-i18n-cli.20
+  - @orderly.network/ui-connector@2.1.0-i18n-cli.20
+  - @orderly.network/ui-leverage@2.1.0-i18n-cli.20
+  - @orderly.network/ui-order-entry@2.1.0-i18n-cli.20
+  - @orderly.network/ui-orders@2.1.0-i18n-cli.20
+  - @orderly.network/ui-positions@2.1.0-i18n-cli.20
+  - @orderly.network/ui-scaffold@2.1.0-i18n-cli.20
+  - @orderly.network/ui-share@2.1.0-i18n-cli.20
+  - @orderly.network/ui-tradingview@2.1.0-i18n-cli.20
+  - @orderly.network/ui-transfer@2.1.0-i18n-cli.20
+  - @orderly.network/utils@2.1.0-i18n-cli.20
+
 ## 2.1.0-i18n-cli.19
 
 ### Minor Changes

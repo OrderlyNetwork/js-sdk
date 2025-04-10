@@ -1,5 +1,17 @@
 # @orderly.network/futures
 
+## 4.1.0-i18n-cli.20
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.1.0-i18n-cli.20
+  - @orderly.network/utils@2.1.0-i18n-cli.20
+
 ## 4.1.0-i18n-cli.19
 
 ### Minor Changes
