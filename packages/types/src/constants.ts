@@ -61,3 +61,49 @@ export const nativeTokenAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
 export const isNativeTokenChecker = (address: string) =>
   address === nativeTokenAddress;
+
+export const ArbitrumSepoliaChainInfo = {
+  name: "Arbitrum Sepolia",
+  public_rpc_url: "https://arbitrum-sepolia.gateway.tenderly.co",
+  chain_id: "421614",
+  currency_symbol: "ETH",
+  currency_decimal: 18,
+  explorer_base_url: "https://sepolia.arbiscan.io",
+  vault_address: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
+}
+export const SolanaDevnetChainInfo = {
+  chain_id: "901901901",
+  currency_decimal: 9,
+  currency_symbol: "SOL",
+  explorer_base_url: "https://explorer.solana.com/?cluster=devnet",
+  name: "Solana-Devnet",
+  public_rpc_url: "https://api.devnet.solana.com",
+  vault_address: "9shwxWDUNhtwkHocsUAmrNAQfBH2DHh4njdAEdHZZkF2",
+}
+
+export const SolanaDevnetTokenInfo = {
+  chain_id: "901901901",
+  contract_address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+  decimals: 6,
+  withdrawal_fee: 1,
+  cross_chain_withdrawal_fee: 5,
+  display_name: "USDC"
+}
+export const ArbitrumSepoliaTokenInfo = {
+  chain_id: "421614",
+  contract_address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+  decimals: 6,
+  withdrawal_fee: 1,
+  cross_chain_withdrawal_fee: 2,
+  display_name: "USDC"
+}
+
+export const TesntTokenFallback = (testnetTokens: any) => [
+  {
+    token: "USDC",
+    token_hash: "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+    decimals: 6,
+    minimum_withdraw_amount: 0.000001,
+    chain_details: testnetTokens
+  }
+]

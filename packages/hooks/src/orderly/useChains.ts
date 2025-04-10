@@ -3,6 +3,11 @@ import {
   type API,
   Chain as FlatChain,
   MONAD_TESTNET_CHAINID,
+  ArbitrumSepoliaChainInfo,
+  SolanaDevnetChainInfo,
+  ArbitrumSepoliaTokenInfo,
+  SolanaDevnetTokenInfo,
+  TesntTokenFallback,
 } from "@orderly.network/types";
 import { useCallback, useContext, useMemo, useRef } from "react";
 import { SWRConfiguration } from "swr";
@@ -11,6 +16,7 @@ import { prop } from "ramda";
 import { isTestnet } from "@orderly.network/utils";
 import { nativeTokenAddress } from "@orderly.network/types";
 import { OrderlyContext } from "../orderlyContext";
+import { ArbitrumSepolia } from "@orderly.network/types";
 
 // testnet only show arb sepolia and solana devnet
 const TestNetWhiteList = [421614, 901901901, MONAD_TESTNET_CHAINID];
@@ -25,17 +31,17 @@ export type Chains<
   K extends keyof API.Chain | undefined = undefined
 > = T extends NetworkId
   ? K extends keyof API.Chain
-    ? API.Chain[K][]
-    : API.Chain[]
+  ? API.Chain[K][]
+  : API.Chain[]
   : K extends keyof API.Chain
   ? {
-      testnet: API.Chain[K][];
-      mainnet: API.Chain[K][];
-    }
+    testnet: API.Chain[K][];
+    mainnet: API.Chain[K][];
+  }
   : {
-      testnet: API.Chain[];
-      mainnet: API.Chain[];
-    };
+    testnet: API.Chain[];
+    mainnet: API.Chain[];
+  };
 
 export type UseChainsOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -64,16 +70,16 @@ export function useChains<
   networkId?: T,
   options?: K
 ): [
-  Chains<
-    T,
-    K extends UseChainsOptions
+    Chains<
+      T,
+      K extends UseChainsOptions
       ? K["pick"] extends keyof API.Chain
-        ? K["pick"]
-        : undefined
+      ? K["pick"]
       : undefined
-  >,
-  UseChainsReturnObject
-];
+      : undefined
+    >,
+    UseChainsReturnObject
+  ];
 
 export function useChains(
   networkId?: NetworkId,
@@ -110,8 +116,15 @@ export function useChains(
 
   const { data: testTokenChainsRes } = useQuery<API.Chain[]>(
     "https://testnet-api.orderly.org/v1/public/token",
-    { ...commonSwrOpts }
+    {
+      ...commonSwrOpts,
+      fallbackData: TesntTokenFallback([
+        ArbitrumSepoliaTokenInfo,
+        SolanaDevnetTokenInfo
+      ])
+    }
   );
+
 
   const brokerId = configStore.get("brokerId");
 
@@ -120,22 +133,28 @@ export function useChains(
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
     needFetchFromAPI
-      ? `https://api.orderly.org/v1/public/chain_info${
-          brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
-        }`
+      ? `https://api.orderly.org/v1/public/chain_info${brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+      }`
       : null,
     { ...commonSwrOpts }
   );
 
   // test chains info
-  const { data: testChainInfos } = useQuery(
+  const { data: testChainInfos, error: testChainInfoError } = useQuery(
     needFetchFromAPI
-      ? `https://testnet-api.orderly.org/v1/public/chain_info${
-          brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
-        }`
+      ? `https://testnet-api.orderly.org/v2/public/chain_info${brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+      }`
       : null,
-    { ...commonSwrOpts }
+    {
+      ...commonSwrOpts,
+      fallbackData: [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo],
+      onError: (error) => {
+        console.error("Failed to fetch testnet chain info:", error);
+      }
+    }
   );
+
+
 
   const chains = useMemo(() => {
     const tokenChains = fillChainsInfo(
@@ -181,7 +200,7 @@ export function useChains(
     testnetArr = filterByAllowedChains(
       testnetArr,
       allowedChains?.testnet ??
-        (TestNetWhiteList.map((id) => ({ id })) as FlatChain[])
+      (TestNetWhiteList.map((id) => ({ id })) as FlatChain[])
     );
 
     if (!!pickField) {
