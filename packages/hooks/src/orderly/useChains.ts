@@ -142,7 +142,7 @@ export function useChains(
   // test chains info
   const { data: testChainInfos, error: testChainInfoError } = useQuery(
     needFetchFromAPI
-      ? `https://testnet-api.orderly.org/v2/public/chain_info${brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+      ? `https://testnet-api.orderly.org/v1/public/chain_info${brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
       }`
       : null,
     {
