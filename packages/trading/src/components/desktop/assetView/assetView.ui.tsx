@@ -111,7 +111,7 @@ const useCurrentStatusText = (): StatusInfo => {
       default:
         return statusText.default;
     }
-  }, [state.status, wrongNetwork]);
+  }, [state.status, wrongNetwork, t]);
 };
 
 export const TooltipContent: FC<TooltipContentProps> = ({
