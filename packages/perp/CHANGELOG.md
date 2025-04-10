@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.0.7-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.0.8-alpha.0
+  - @orderly.network/utils@2.0.8-alpha.0
+
 ## 4.0.6
 
 ### Patch Changes
