@@ -163,7 +163,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     let mainnetChainsList = [];
     try {
       const testChainInfoRes = await fetchChainInfo(
-        "https://testnet-api-evm.orderly.org/v2/public/chain_info"
+        "https://testnet-api-evm.orderly.org/v1/public/chain_info"
       );
       testChainsList = testChainInfoRes.data.rows;
     } catch (error) {
