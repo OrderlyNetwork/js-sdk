@@ -19,9 +19,9 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
       intensity={900}
       p={5}
       pr={2}
+      height={288}
       className={cn(
         "oui-trading-leaderboard-campaigns oui-rounded-[20px]",
-        "oui-h-[280px]",
         props.className
       )}
       style={props.style}
@@ -34,7 +34,7 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
       >
         <Flex
           gapY={5}
-          height={192}
+          height={200}
           direction="column"
           r="xl"
           className="oui-pr-1.5"
@@ -75,7 +75,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
   return (
     <Flex intensity={800} r="xl">
       <img
-        className="oui-w-[400px] oui-h-[192px] oui-rounded-xl"
+        className="oui-w-[400px] oui-h-[200px] oui-rounded-l-xl oui-object-fill"
         src={image}
         alt={title}
       />
@@ -86,7 +86,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
         direction="column"
         height="100%"
         p={5}
-        className="oui-font-semibold"
+        className="oui-font-semibold oui-flex-1"
       >
         <Flex gap={1} direction="column" itemAlign="start">
           <Text size="xl">{title}</Text>

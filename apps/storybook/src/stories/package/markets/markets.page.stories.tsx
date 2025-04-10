@@ -9,7 +9,7 @@ import {
   MarketsProvider,
   FundingComparisonWidget,
 } from "@orderly.network/markets";
-import { OrderlyLayout } from "../../../components/layout";
+import { BaseLayout } from "../../../components/layout";
 
 const meta: Meta<typeof MarketsHomePage> = {
   title: "Package/markets/HomePage",
@@ -31,9 +31,9 @@ export const LayoutPage: Story = {
   },
   render: (args) => {
     return (
-      <OrderlyLayout initialMenu="/markets">
+      <BaseLayout initialMenu="/markets">
         <MarketsHomePage />
-      </OrderlyLayout>
+      </BaseLayout>
     );
   },
 };

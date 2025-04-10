@@ -13,7 +13,7 @@ import {
 import { Box, Flex } from "@orderly.network/ui";
 import { OrderlyIcon } from "./icons";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
-import { OrderlyLayout } from "../../../components/layout";
+import { BaseLayout } from "../../../components/layout";
 import { getSymbol, updateSymbol } from "../../../utils/storage";
 
 const meta: Meta<typeof TradingPage> = {
@@ -22,9 +22,9 @@ const meta: Meta<typeof TradingPage> = {
   decorators: [
     (Story) => {
       return (
-        <OrderlyLayout>
+        <BaseLayout>
           <Story />
-        </OrderlyLayout>
+        </BaseLayout>
       );
     },
   ],

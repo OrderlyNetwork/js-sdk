@@ -18,7 +18,7 @@ export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
 
   const renderContent = () => {
     if (typeof content === "function") {
-      return content({ ip: ip!, brokerName });
+      return <span>{content({ ip: ip!, brokerName })}</span>;
     }
     return (
       content || (
@@ -35,15 +35,16 @@ export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
   return (
     <Flex
       ref={props.container}
+      justify="center"
       className={cn(
-        "oui-p-2 oui-rounded-xl",
-        "oui-bg-warning-darken/10 oui-text-warning-darken",
+        "oui-rounded-xl oui-p-[7px]",
+        "oui-text-warning-darken",
         props.className
       )}
     >
       <Flex
         className={cn(
-          "oui-min-h-7 oui-gap-1",
+          "oui-min-h-[20px] oui-gap-1",
           "oui-text-2xs md:oui-text-sm oui-leading-4",
           "oui-items-start lg:oui-justify-center",
           props.mutiLine ? "lg:oui-items-start" : "lg:oui-items-center"
