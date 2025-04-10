@@ -1,5 +1,39 @@
 # @orderly.network/default-evm-adapter
 
+## 2.1.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- 27d05e246: publish
+- a2f53a2f2: publish
+- 517621bbd: publish
+- a3627c99f: publish
+- a8a39676c: publish
+- 3a0ec1547: publish
+- fc0f37222: publish
+- 1bdde298b: publish
+- 91abc0215: publish
+- 6881c0eba: publish
+- f49c1b017: publish
+- Updated dependencies
+- Updated dependencies [27d05e246]
+- Updated dependencies [a2f53a2f2]
+- Updated dependencies [517621bbd]
+- Updated dependencies [a3627c99f]
+- Updated dependencies [a8a39676c]
+- Updated dependencies [3a0ec1547]
+- Updated dependencies [fc0f37222]
+- Updated dependencies [1bdde298b]
+- Updated dependencies [91abc0215]
+- Updated dependencies [6881c0eba]
+- Updated dependencies [f49c1b017]
+  - @orderly.network/core@2.1.0
+  - @orderly.network/types@2.1.0
+
 ## 2.0.8-internal-20250410.10
 
 ### Patch Changes
