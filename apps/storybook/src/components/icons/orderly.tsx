@@ -1,6 +1,6 @@
 import { FC, SVGProps } from "react";
 
-export interface IconProps extends SVGProps<SVGSVGElement> {
+interface IconProps extends SVGProps<SVGSVGElement> {
   size: number;
 }
 
