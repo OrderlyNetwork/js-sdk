@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.4.0-i18n-cli.19
+
+### Minor Changes
+
+- publish
+
 ## 0.3.23-i18n-cli.18
 
 ### Patch Changes

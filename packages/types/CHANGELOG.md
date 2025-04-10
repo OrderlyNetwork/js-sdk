@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.1.0-i18n-cli.19
+
+### Minor Changes
+
+- publish
+
 ## 2.0.8-i18n-cli.18
 
 ### Patch Changes

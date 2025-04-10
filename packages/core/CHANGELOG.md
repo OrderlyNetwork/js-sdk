@@ -1,5 +1,16 @@
 # @orderly.network/core
 
+## 2.1.0-i18n-cli.19
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.1.0-i18n-cli.19
+
 ## 2.0.8-i18n-cli.18
 
 ### Patch Changes

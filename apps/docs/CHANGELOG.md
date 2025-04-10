@@ -1,5 +1,19 @@
 # @orderly/docs
 
+## 1.1.0-i18n-cli.19
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@2.1.0-i18n-cli.19
+  - @orderly.network/hooks@2.1.0-i18n-cli.19
+  - @orderly.network/web3-onboard@2.1.0-i18n-cli.19
+  - @orderly.network/types@2.1.0-i18n-cli.19
+
 ## 1.0.7-i18n-cli.18
 
 ### Patch Changes

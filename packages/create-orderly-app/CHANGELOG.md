@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.6.0-i18n-cli.19
+
+### Minor Changes
+
+- publish
+
 ## 1.5.24-i18n-cli.18
 
 ### Patch Changes

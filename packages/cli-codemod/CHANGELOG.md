@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.1.0-i18n-cli.19
+
+### Minor Changes
+
+- publish
+
 ## 1.0.7-i18n-cli.18
 
 ### Patch Changes

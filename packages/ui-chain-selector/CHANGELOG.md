@@ -1,5 +1,20 @@
 # @orderly.network/ui-chain-selector
 
+## 2.1.0-i18n-cli.19
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.1.0-i18n-cli.19
+  - @orderly.network/hooks@2.1.0-i18n-cli.19
+  - @orderly.network/i18n@2.1.0-i18n-cli.0
+  - @orderly.network/types@2.1.0-i18n-cli.19
+  - @orderly.network/ui@2.1.0-i18n-cli.19
+
 ## 2.0.8-i18n-cli.18
 
 ### Patch Changes

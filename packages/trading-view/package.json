@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-view",
-  "version": "2.0.8-i18n-cli.18",
+  "version": "2.1.0-i18n-cli.19",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "private": true,
