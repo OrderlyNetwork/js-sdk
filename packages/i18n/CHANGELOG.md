@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.0.8-internal-20250410.6
+
+### Patch Changes
+
+- publish
+
 ## 2.0.8-internal-20250410.5
 
 ### Patch Changes
