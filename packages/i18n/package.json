@@ -1,0 +1,56 @@
+{
+  "name": "@orderly.network/i18n",
+  "version": "2.1.0",
+  "description": "Internationalization for orderly sdk",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "i18n": "bin/cli.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "tsup && pnpm generateCsv",
+    "cli": "node ./bin/cli.js",
+    "csv2json": "pnpm cli csv2json ./dist/locale.csv ./dist/locale",
+    "json2csv": "pnpm cli json2csv ./dist/locale/en.json,./dist/locale/zh.json ./dist/locale.csv",
+    "diffcsv": "pnpm cli diffcsv ./dist/locale1.csv ./dist/locale2.csv",
+    "generateCsv": "pnpm cli generateCsv ./dist/locale.csv",
+    "fillJson": "pnpm cli fillJson ./src/locale/zh.json ./dist/locale/zh.json"
+  },
+  "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "i18next": "^24.2.2",
+    "i18next-browser-languagedetector": "^8.0.4",
+    "react-i18next": "^15.4.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/jest": "^29.5.3",
+    "fs-extra": "^11.2.0",
+    "babel-jest": "^29.6.1",
+    "jest": "^29.6.1",
+    "jest-environment-jsdom": "^29.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6",
+    "yargs": "^17.7.2"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  }
+}

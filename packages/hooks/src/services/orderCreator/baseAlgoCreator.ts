@@ -6,15 +6,11 @@ import {
 } from "@orderly.network/types";
 import {
   OrderCreator,
-  OrderFormEntity,
   ValuesDepConfig,
-  VerifyResult,
+  OrderValidationItem,
 } from "./interface";
-// import { values } from "ramda";
-// import { config } from "@swc/core/spack";
-// import { maxQty } from "@orderly.network/perp";
 import { Decimal } from "@orderly.network/utils";
-import { checkNotional } from "../../utils/createOrder";
+import { OrderValidation } from "./orderValidation";
 
 export type AlgoOrderUpdateEntity = {
   trigger_price?: number;
@@ -38,40 +34,40 @@ export abstract class BaseAlgoOrderCreator<
     values: Partial<T>,
     config: ValuesDepConfig
   ): Promise<{
-    [P in keyof T]?: {
-      type: string;
-      message: string;
-    };
+    [P in keyof T]?: OrderValidationItem;
   }> {
-    const result = Object.create(null);
+    const result: {
+      [P in keyof T]?: OrderValidationItem;
+    } = Object.create(null);
+
     return Promise.resolve().then(() => {
       const { tp_trigger_price, sl_trigger_price, side } = values;
 
       const qty = Number(values.quantity);
       const maxQty = config.maxQty;
       const orderType = values.order_type;
-      const { quote_max, quote_min, price_scope, quote_dp, base_min, min_notional } =
-        config.symbol ?? {};
-        
+      const {
+        quote_max,
+        quote_min,
+        price_scope,
+        quote_dp,
+        base_min,
+        min_notional,
+      } = config.symbol ?? {};
+
       if (!isNaN(qty) && qty > maxQty) {
-        result.quantity = {
-          message: `Quantity must be less than ${config.maxQty}`,
-        };
+        result.quantity = OrderValidation.max("quantity", config.maxQty);
       }
       if (!isNaN(qty) && qty < base_min) {
-        result.quantity = {
-          message: `Quantity must be greater than ${base_min}`,
-        };
+        result.quantity = OrderValidation.min("quantity", base_min);
       }
-
-      
 
       // if (!tp_trigger_price) {
       //   result.tp_trigger_price = {
       //     message: `TP price is required`,
       //   };
       // }
-      
+
       // if (!sl_trigger_price) {
       //   result.tp_trigger_price = {
       //     message: `SL price is required`,
@@ -79,15 +75,11 @@ export abstract class BaseAlgoOrderCreator<
       // }
 
       if (Number(tp_trigger_price) < 0) {
-        result.tp_trigger_price = {
-          message: `TP Price must be greater than 0`,
-        };
+        result.tp_trigger_price = OrderValidation.min("tp_trigger_price", 0);
       }
 
       if (Number(sl_trigger_price) < 0) {
-        result.sl_trigger_price = {
-          message: `SL Price must be greater than 0`,
-        };
+        result.sl_trigger_price = OrderValidation.min("sl_trigger_price", 0);
       }
 
       const mark_price =
@@ -100,7 +92,6 @@ export abstract class BaseAlgoOrderCreator<
       // const notionalHintStr = checkNotional(mark_price, qty, min_notional);
 
       // console.log("check min notional", notionalHintStr);
-      
 
       // if (!!notionalHintStr) {
       //   result.total = {
@@ -119,36 +110,41 @@ export abstract class BaseAlgoOrderCreator<
           !!sl_trigger_price &&
           Number(sl_trigger_price) < slTriggerPriceScope
         ) {
-          result.sl_trigger_price = {
-            message: `SL price must be greater than ${slTriggerPriceScope}`,
-          };
+          result.sl_trigger_price = OrderValidation.min(
+            "sl_trigger_price",
+            slTriggerPriceScope
+          );
         }
 
         if (!!sl_trigger_price && Number(sl_trigger_price) > config.markPrice) {
-          result.sl_trigger_price = {
-            message: `SL price must be less than ${config.markPrice}`,
-          };
+          result.sl_trigger_price = OrderValidation.max(
+            "sl_trigger_price",
+            config.markPrice
+          );
         }
 
         if (
           !!tp_trigger_price &&
           Number(tp_trigger_price) <= config.markPrice
         ) {
-          result.tp_trigger_price = {
-            message: `TP price must be greater than ${config.markPrice}`,
-          };
+          result.tp_trigger_price = OrderValidation.min(
+            "tp_trigger_price",
+            config.markPrice
+          );
         }
 
         if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
-          result.tp_trigger_price = {
-            message: `TP price must be less than ${quote_max}`,
-          };
+          result.tp_trigger_price = OrderValidation.max(
+            "tp_trigger_price",
+            quote_max
+          );
         }
 
         if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
-          result.sl_trigger_price = {
-            message: `TP price must be greater than ${quote_min}`,
-          };
+          result.sl_trigger_price = OrderValidation.min(
+            "sl_trigger_price",
+            quote_min
+          );
         }
       }
 
@@ -160,40 +156,45 @@ export abstract class BaseAlgoOrderCreator<
           !!sl_trigger_price &&
           Number(sl_trigger_price) > slTriggerPriceScope
         ) {
-          result.sl_trigger_price = {
-            message: `SL price must be less than ${slTriggerPriceScope}`,
-          };
+          result.sl_trigger_price = OrderValidation.max(
+            "sl_trigger_price",
+            slTriggerPriceScope
+          );
         }
 
         if (!!sl_trigger_price && Number(sl_trigger_price) < config.markPrice) {
-          result.sl_trigger_price = {
-            message: `SL price must be greater than ${config.markPrice}`,
-          };
+          result.sl_trigger_price = OrderValidation.min(
+            "sl_trigger_price",
+            config.markPrice
+          );
         }
 
         if (
           !!tp_trigger_price &&
           Number(tp_trigger_price) >= config.markPrice
         ) {
-          result.tp_trigger_price = {
-            message: `TP price must be less than ${config.markPrice}`,
-          };
+          result.tp_trigger_price = OrderValidation.max(
+            "tp_trigger_price",
+            config.markPrice
+          );
         }
 
         if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
-          result.tp_trigger_price = {
-            message: `TP price must be less than ${quote_max}`,
-          };
+          result.tp_trigger_price = OrderValidation.max(
+            "tp_trigger_price",
+            quote_max
+          );
         }
 
         if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
-          result.sl_trigger_price = {
-            message: `TP price must be greater than ${quote_min}`,
-          };
+          result.sl_trigger_price = OrderValidation.min(
+            "sl_trigger_price",
+            quote_min
+          );
         }
       }
 
-      return Object.keys(result).length > 0 ? result : null;
+      return Object.keys(result).length > 0 ? result : null!;
     });
   }
 

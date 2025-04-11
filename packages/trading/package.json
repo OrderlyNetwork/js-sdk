@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -27,6 +27,7 @@
     "@orderly.network/markets": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
@@ -49,6 +50,7 @@
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.4",
     "tsconfig": "workspace:*",
+    "@orderly.network/core": "workspace:*",
     "tsup": "^7.1.0",
     "typescript": "^5.1.6"
   },

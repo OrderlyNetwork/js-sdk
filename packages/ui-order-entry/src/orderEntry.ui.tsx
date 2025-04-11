@@ -1,5 +1,4 @@
 import { type uesOrderEntryScriptReturn } from "./useOrderEntry.script";
-import { AuthGuard } from "@orderly.network/ui-connector";
 import {
   Box,
   Button,
@@ -35,7 +34,6 @@ import {
   useState,
 } from "react";
 import {
-  AccountStatusEnum,
   API,
   BBOOrderType,
   OrderLevel,
@@ -49,12 +47,14 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { OrderValidationResult, useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
 import { SDKError } from "@orderly.network/types";
 import { ApiError } from "@orderly.network/types";
-import { BBOStatus, BBOType2Label } from "./utils";
+import { BBOStatus } from "./utils";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 type Refs = uesOrderEntryScriptReturn["refs"];
 
@@ -79,6 +79,7 @@ export const OrderEntry = (
     onBBOChange,
     toggleBBO,
   } = props;
+  const { t } = useTranslation();
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
@@ -93,8 +94,10 @@ export const OrderEntry = (
   const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
   const buttonLabel = useMemo(() => {
-    return side === OrderSide.BUY ? "Buy / Long" : "Sell / Short";
-  }, [side]);
+    return side === OrderSide.BUY
+      ? t("orderEntry.buyLong")
+      : t("orderEntry.sellShort");
+  }, [side, t]);
 
   useEffect(() => {
     if (validated) {
@@ -218,7 +221,7 @@ export const OrderEntry = (
               )}
               data-testid="oui-testid-orderEntry-side-buy-button"
             >
-              Buy
+              {t("common.buy")}
             </Button>
             <Button
               onClick={() => {
@@ -235,7 +238,7 @@ export const OrderEntry = (
               )}
               data-testid="oui-testid-orderEntry-side-sell-button"
             >
-              Sell
+              {t("common.sell")}
             </Button>
           </div>
           <div className={"oui-w-full lg:oui-flex-1"}>
@@ -251,7 +254,7 @@ export const OrderEntry = (
         </Flex>
         {/* Available */}
         <Flex justify={"between"}>
-          <Text size={"2xs"}>Available</Text>
+          <Text size={"2xs"}>{t("common.available")}</Text>
           <Text.numeral
             unit={symbolInfo.quote}
             size={"2xs"}
@@ -311,25 +314,24 @@ export const OrderEntry = (
           side={props.side}
         />
         {/* Submit button */}
-        <AuthGuard buttonProps={{ fullWidth: true }}>
-          <ThrottledButton
-            fullWidth
-            id={"order-entry-submit-button"}
-            // color={side === OrderSide.BUY ? "buy" : "sell"}
-            data-type={OrderSide.BUY}
-            className={cn(
-              side === OrderSide.BUY
-                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
-            )}
-            onClick={() => {
-              onSubmit();
-            }}
-            loading={props.isMutating}
-          >
-            {buttonLabel}
-          </ThrottledButton>
-        </AuthGuard>
+        <ThrottledButton
+          fullWidth
+          id={"order-entry-submit-button"}
+          // color={side === OrderSide.BUY ? "buy" : "sell"}
+          data-type={OrderSide.BUY}
+          className={cn(
+            side === OrderSide.BUY
+              ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+              : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
+          )}
+          onClick={() => {
+            onSubmit();
+          }}
+          loading={props.isMutating}
+          disabled={!props.canTrade}
+        >
+          {buttonLabel}
+        </ThrottledButton>
         {/* Asset info */}
         <AssetInfo
           canTrade={props.canTrade}
@@ -389,7 +391,7 @@ export const OrderEntry = (
               }}
             />
             <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
-              Reduce only
+              {t("orderEntry.reduceOnly")}
             </label>
           </Flex>
           {/* Additional info （fok，ioc、post only， order confirm hidden） */}
@@ -475,7 +477,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
 const OrderQuantityInput = (props: {
   type: OrderType;
   symbolInfo: API.SymbolExt;
-  errors: any;
+  errors: OrderValidationResult | null;
   values: {
     quantity?: string;
     price?: string;
@@ -507,13 +509,9 @@ const OrderQuantityInput = (props: {
   priceInputContainerWidth?: number;
 }) => {
   const { type, symbolInfo, errors, values, onFocus, onBlur, bbo } = props;
+  const { t } = useTranslation();
 
-  const parseErrorMsg = (key: string) => {
-    if (errors && errors[key]) {
-      return errors[key].message;
-    }
-    return "";
-  };
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   const readOnly = bbo.bboStatus === BBOStatus.ON;
 
@@ -523,7 +521,7 @@ const OrderQuantityInput = (props: {
         {symbolInfo.quote}
         <Flex
           height={20}
-          width={48}
+          px={3}
           justify="center"
           itemAlign="center"
           r="base"
@@ -537,12 +535,11 @@ const OrderQuantityInput = (props: {
           onClick={() => {
             if (bbo.bboStatus === BBOStatus.DISABLED) {
               modal.dialog({
-                title: "Tips",
+                title: t("common.tips"),
                 size: "xs",
                 content: (
                   <Text intensity={54}>
-                    BBO is not supported when TP/SL, Post-Only, IOC, or FOK is
-                    selected.
+                    {t("orderEntry.bbo.disabled.tips")}
                   </Text>
                 ),
               });
@@ -559,7 +556,7 @@ const OrderQuantityInput = (props: {
                 "oui-text-base-contrast-20"
             )}
           >
-            BBO
+            {t("orderEntry.bbo")}
           </Text>
         </Flex>
       </Flex>
@@ -572,7 +569,7 @@ const OrderQuantityInput = (props: {
       {type === OrderType.STOP_LIMIT || type === OrderType.STOP_MARKET ? (
         <div className={"oui-group"}>
           <CustomInput
-            label={"Trigger"}
+            label={t("common.trigger")}
             suffix={symbolInfo.quote}
             error={parseErrorMsg("trigger_price")}
             id={"trigger"}
@@ -594,7 +591,7 @@ const OrderQuantityInput = (props: {
           className="oui-relative oui-group oui-w-full"
         >
           <CustomInput
-            label={"Price"}
+            label={t("common.price")}
             suffix={priceSuffix}
             id={"price"}
             value={values.price}
@@ -629,7 +626,7 @@ const OrderQuantityInput = (props: {
 
       <Grid cols={2} className={"oui-space-x-1 oui-group"}>
         <CustomInput
-          label={"Qty"}
+          label={t("common.qty")}
           suffix={symbolInfo.base}
           id="order_quantity_input"
           name="order_quantity_input"
@@ -644,7 +641,7 @@ const OrderQuantityInput = (props: {
           onBlur={onBlur(InputType.QUANTITY)}
         />
         <CustomInput
-          label={"Total≈"}
+          label={`${t("common.total")}≈`}
           suffix={symbolInfo.quote}
           id={"total"}
           className={"!oui-rounded-bl !oui-rounded-tl"}
@@ -766,6 +763,8 @@ const QuantitySlider = (props: {
   onValueChange: (value: number) => void;
 }) => {
   const { canTrade } = props;
+  const { t } = useTranslation();
+
   const color = useMemo(
     () =>
       canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined,
@@ -773,8 +772,10 @@ const QuantitySlider = (props: {
   );
 
   const maxLabel = useMemo(() => {
-    return props.side === OrderSide.BUY ? "Max buy" : "Max sell";
-  }, [props.side]);
+    return props.side === OrderSide.BUY
+      ? t("orderEntry.maxBuy")
+      : t("orderEntry.maxSell");
+  }, [props.side, t]);
 
   return (
     <div>
@@ -832,11 +833,16 @@ const OrderTypeSelect = (props: {
   side: OrderSide;
   canTrade: boolean;
 }) => {
+  const { t } = useTranslation();
+
   const options = [
-    { label: "Limit order", value: OrderType.LIMIT },
-    { label: "Market order", value: OrderType.MARKET },
-    { label: "Stop limit", value: OrderType.STOP_LIMIT },
-    { label: "Stop market", value: OrderType.STOP_MARKET },
+    { label: t("orderEntry.orderType.limitOrder"), value: OrderType.LIMIT },
+    { label: t("orderEntry.orderType.marketOrder"), value: OrderType.MARKET },
+    { label: t("orderEntry.orderType.stopLimit"), value: OrderType.STOP_LIMIT },
+    {
+      label: t("orderEntry.orderType.stopMarket"),
+      value: OrderType.STOP_MARKET,
+    },
   ];
   return (
     <Select.options
@@ -853,6 +859,14 @@ const OrderTypeSelect = (props: {
         if (!item) {
           return <Text size={"xs"}>{option.placeholder}</Text>;
         }
+
+        const displayLabel = {
+          [OrderType.LIMIT]: t("orderEntry.orderType.limit"),
+          [OrderType.MARKET]: t("common.marketPrice"),
+          [OrderType.STOP_LIMIT]: t("orderEntry.orderType.stopLimit"),
+          [OrderType.STOP_MARKET]: t("orderEntry.orderType.stopMarket"),
+        }[value];
+
         return (
           <Text
             size={"xs"}
@@ -864,7 +878,7 @@ const OrderTypeSelect = (props: {
                 : undefined
             }
           >
-            {item?.label.replace(" order", "")}
+            {displayLabel}
           </Text>
         );
       }}
@@ -883,10 +897,12 @@ function AssetInfo(props: {
   currentLeverage: number | null;
 }) {
   const { canTrade } = props;
+  const { t } = useTranslation();
+
   return (
     <div className={"oui-space-y-[2px] xl:oui-space-y-1"}>
       <Flex justify={"between"}>
-        <Text size={"2xs"}>Est. Liq. price</Text>
+        <Text size={"2xs"}>{t("orderEntry.estLiqPrice")}</Text>
         <Text.numeral
           unit={props.quote}
           size={"2xs"}
@@ -897,7 +913,7 @@ function AssetInfo(props: {
         </Text.numeral>
       </Flex>
       <Flex justify={"between"}>
-        <Text size={"2xs"}>Account leverage</Text>
+        <Text size={"2xs"}>{t("leverage.accountLeverage")}</Text>
         <Flex
           gapX={1}
           className={textVariants({
@@ -947,7 +963,6 @@ function AdditionalConfigButton(props: {
   hidden: boolean;
   setHidden: (hidden: boolean) => void;
 }) {
-  // const []
   const [open, setOpen] = useState(false);
 
   return (
@@ -989,21 +1004,23 @@ const BBOOrderTypeSelect = (props: {
   onChange: (value: BBOOrderType) => void;
   contentStyle?: CSSProperties;
 }) => {
+  const { t } = useTranslation();
+
   const options = [
     {
-      label: BBOType2Label[BBOOrderType.COUNTERPARTY1],
+      label: t("orderEntry.bbo.counterparty1"),
       value: BBOOrderType.COUNTERPARTY1,
     },
     {
-      label: BBOType2Label[BBOOrderType.COUNTERPARTY5],
+      label: t("orderEntry.bbo.counterparty5"),
       value: BBOOrderType.COUNTERPARTY5,
     },
     {
-      label: BBOType2Label[BBOOrderType.QUEUE1],
+      label: t("orderEntry.bbo.queue1"),
       value: BBOOrderType.QUEUE1,
     },
     {
-      label: BBOType2Label[BBOOrderType.QUEUE5],
+      label: t("orderEntry.bbo.queue5"),
       value: BBOOrderType.QUEUE5,
     },
   ];

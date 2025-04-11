@@ -9,10 +9,6 @@ import {
   useRef,
   useState,
 } from "react";
-// import { XAxis, YAxis, BarStyle } from "../components";
-import { formatYMDTime } from "../utils/utils";
-import { IntlProvider, MessageFormatElement } from "react-intl";
-import { en } from "../locale/en-US";
 import {
   RefferalAPI as API,
   usePrivateQuery,
@@ -123,6 +119,7 @@ export type ReferralContextReturns = {
   tab: TabTypes;
   setTab: React.Dispatch<React.SetStateAction<TabTypes>>;
   wrongNetwork: boolean;
+  disabledConnect: boolean;
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>(
@@ -131,19 +128,9 @@ export const ReferralContext = createContext<ReferralContextReturns>(
 
 export type BuildNode = (state: ReferralContextReturns) => ReactNode;
 
-export const ReferralProvider: FC<
-  PropsWithChildren<
-    ReferralContextProps & {
-      intl?: {
-        messages?:
-          | Record<string, string>
-          | Record<string, MessageFormatElement[]>;
-        locale: string;
-        defaultLocale?: string;
-      };
-    }
-  >
-> = (props) => {
+export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
+  props
+) => {
   const {
     onBecomeAnAffiliate: becomeAnAffiliate,
     becomeAnAffiliateUrl = "https://orderly.network/",
@@ -155,11 +142,6 @@ export const ReferralProvider: FC<
     // onEnterTraderPage: enterTraderPage,
     // onEnterAffiliatePage: enterAffiliatePage,
     chartConfig,
-    intl = {
-      messages: en,
-      locale: "en",
-      defaultLocale: "en",
-    },
     overwrite,
     splashPage,
   } = props;
@@ -201,7 +183,7 @@ export const ReferralProvider: FC<
     const volume: any = {};
 
     if (dailyVolume && dailyVolume.length > 0) {
-      const now = format(new Date(), 'yyyy-MM-dd');
+      const now = format(new Date(), "yyyy-MM-dd");
       const index = dailyVolume.findIndex((item: any) => {
         const itemDate = item.date;
         return itemDate === now;
@@ -241,11 +223,9 @@ export const ReferralProvider: FC<
     }
   }, []);
 
-  const { messages, locale, defaultLocale } = intl;
-
   const [tab, setTab] = useState<TabTypes>(TabTypes.affiliate);
 
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
   const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
   useEffect(() => {
@@ -263,42 +243,37 @@ export const ReferralProvider: FC<
   }, [state.status]);
 
   return (
-    <IntlProvider
-      messages={messages}
-      locale={locale}
-      defaultLocale={defaultLocale}
+    <ReferralContext.Provider
+      value={{
+        showHome,
+        setShowHome,
+        referralInfo: data,
+        isAffiliate: isAffiliate,
+        isTrader: isTrader,
+        // isAffiliate: true,
+        // isTrader: false,
+        mutate,
+        onBecomeAnAffiliate: becomeAnAffiliate,
+        becomeAnAffiliateUrl,
+        bindReferralCodeState,
+        onLearnAffiliate: learnAffiliate,
+        learnAffiliateUrl,
+        referralLinkUrl,
+        userVolume,
+        dailyVolume,
+        showReferralPage,
+        chartConfig,
+        overwrite,
+        splashPage,
+        isLoading,
+        tab,
+        setTab,
+        wrongNetwork,
+        disabledConnect,
+      }}
     >
-      <ReferralContext.Provider
-        value={{
-          showHome,
-          setShowHome,
-          referralInfo: data,
-          isAffiliate: isAffiliate,
-          isTrader: isTrader,
-          // isAffiliate: true,
-          // isTrader: false,
-          mutate,
-          onBecomeAnAffiliate: becomeAnAffiliate,
-          becomeAnAffiliateUrl,
-          bindReferralCodeState,
-          onLearnAffiliate: learnAffiliate,
-          learnAffiliateUrl,
-          referralLinkUrl,
-          userVolume,
-          dailyVolume,
-          showReferralPage,
-          chartConfig,
-          overwrite,
-          splashPage,
-          isLoading,
-          tab,
-          setTab,
-          wrongNetwork,
-        }}
-      >
-        {props.children}
-      </ReferralContext.Provider>
-    </IntlProvider>
+      {props.children}
+    </ReferralContext.Provider>
   );
 };
 

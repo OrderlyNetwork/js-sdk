@@ -6,7 +6,7 @@ export const usePreLoadData = () => {
   const [timestampOffsetInitialized, setTimestampOffsetInitialized] =
     useState(false);
   const { error: tokenError, data: tokenData } = useQuery(
-    "https://api-evm.orderly.org/v1/public/token",
+    "https://api.orderly.org/v1/public/token",
     {
       revalidateOnFocus: false,
     }

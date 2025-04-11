@@ -10,7 +10,6 @@ import {
 } from "../../types/types";
 import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
 import {
-  Box,
   Button,
   CloseCircleFillIcon,
   cn,
@@ -25,6 +24,7 @@ import {
   Dot,
   useCarousel,
 } from "../carousel/carousel";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const MobileSharePnLContent: FC<{
   entity: ShareEntity;
@@ -36,6 +36,7 @@ export const MobileSharePnLContent: FC<{
   shareOptions: SharePnLOptions;
 }> = (props) => {
   const { shareOptions } = props;
+  const { t } = useTranslation();
   const localPnlConfig = getPnlInfo();
 
   const hasRoiAndPnl = props.entity.roi != null && props.entity.pnl != null;
@@ -174,7 +175,7 @@ export const MobileSharePnLContent: FC<{
       <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto oui-custom-scrollbar">
         <div className="oui-mt-4">
           <div className="oui-text-3xs oui-text-base-contrast-54">
-            PnL display format
+            {t("share.pnl.displayFormat")}
           </div>
           <div className="oui-pt-3 oui-px-1 oui-justify-between oui-gap-3 oui-grid oui-grid-cols-3 oui-row-span-1">
             {formats.map((item) => (
@@ -189,7 +190,7 @@ export const MobileSharePnLContent: FC<{
 
         <div className="oui-mt-3">
           <div className="oui-text-3xs oui-text-base-contrast-54 oui-h-[18px]">
-            Optional information to share
+            {t("share.pnl.optionalInfo")}
           </div>
           <div className="oui-flex oui-flex-wrap oui-gap-3 oui-mt-3">
             {props.entity.openPrice && (
@@ -246,17 +247,17 @@ export const MobileSharePnLContent: FC<{
 
         <div className="oui-mt-3 oui-mb-8">
           <div className="oui-text-3xs oui-text-base-contrast-54 oui-h-[18px]">
-            Your message
+            {t("share.pnl.optionalInfo.message")}
           </div>
           <div className="oui-mt-3 oui-h-[48px] oui-bg-base-600 oui-mx-1">
             <Input
-              placeholder="Max 25 characters"
+              placeholder={t("share.pnl.optionalInfo.message.placeholder")}
               containerClassName="oui-bg-transparent oui-h-[48px]"
               value={message}
               autoFocus={false}
               onChange={(e) => {
                 if (e.target.value.length > 25) {
-                  toast.error("Maximum support of 25 characters");
+                  toast.error(t("share.pnl.optionalInfo.message.maxLength"));
                   return;
                 }
                 setMessage(e.target.value);
@@ -298,7 +299,7 @@ export const MobileSharePnLContent: FC<{
             }
           }}
         >
-          Share
+          {t("common.share")}
         </Button>
       </div>
     </div>
@@ -311,15 +312,16 @@ const PnlFormatView: FC<{
   setPnlFormat: any;
 }> = (props) => {
   const { type, curType, setPnlFormat } = props;
+  const { t } = useTranslation();
 
   const text = useMemo(() => {
     switch (type) {
       case "roi_pnl":
-        return "ROI & PnL";
+        return t("share.pnl.displayFormat.roi&Pnl");
       case "roi":
-        return "ROI";
+        return t("share.pnl.displayFormat.roi");
       case "pnl":
-        return "PnL";
+        return t("share.pnl.displayFormat.pnl");
     }
   }, [type]);
 
@@ -349,25 +351,26 @@ const ShareOption: FC<{
   setShareOption: any;
 }> = (props) => {
   const { type, curType, setShareOption } = props;
+  const { t } = useTranslation();
 
   const text = useMemo(() => {
     switch (type) {
       case "openPrice":
-        return "Open price";
+        return t("share.pnl.optionalInfo.openPrice");
       case "closePrice":
-        return "Close price";
+        return t("share.pnl.optionalInfo.closePrice");
       case "openTime":
-        return "Opened at";
+        return t("share.pnl.optionalInfo.openTime");
       case "closeTime":
-        return "Closed at";
+        return t("share.pnl.optionalInfo.closeTime");
       case "markPrice":
-        return "Mark price";
+        return t("common.markPrice");
       case "quantity":
-        return "Quantity";
+        return t("common.quantity");
       case "leverage":
-        return "Leverage";
+        return t("common.leverage");
     }
-  }, [type]);
+  }, [type, t]);
 
   const isSelected = curType.has(type);
 

@@ -95,7 +95,6 @@ export const usePoster = (
   const ref = (ref: HTMLCanvasElement | null) => {
     if (!ref) return;
     if (ref.tagName.toUpperCase() !== "CANVAS") {
-      // throw new Error("The ref must be a canvas element");
       setError(new SDKError("The ref must be a canvas element"));
       return;
     }

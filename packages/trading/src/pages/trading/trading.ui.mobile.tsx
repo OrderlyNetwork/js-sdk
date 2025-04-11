@@ -6,22 +6,26 @@ import {
   MarketsSheetWidget,
   SymbolInfoBarWidget,
 } from "@orderly.network/markets";
-import { Box, SimpleSheet } from "@orderly.network/ui";
+import { Flex, Box, SimpleSheet } from "@orderly.network/ui";
 import { SecondaryLogo } from "../../components/base/secondaryLogo";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
-import { MaintenanceTipsWidget } from "@orderly.network/ui-scaffold";
+import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
 
 export const MobileLayout: FC<TradingState> = (props) => {
   const onSymbol = () => {
     props.onOpenMarketsSheetChange(true);
   };
-
   const topBar = (
     <Box intensity={900} px={3} height={54}>
       <SymbolInfoBarWidget
         symbol={props.symbol}
-        trailing={<SecondaryLogo />}
+        trailing={
+          <Flex gapX={3}>
+            <LanguageSwitcherWidget />
+            <SecondaryLogo />
+          </Flex>
+        }
         onSymbol={onSymbol}
       />
       <SimpleSheet
@@ -53,12 +57,8 @@ export const MobileLayout: FC<TradingState> = (props) => {
     >
       <header>{topBar}</header>
 
-      <div>
-        <MaintenanceTipsWidget />
-      </div>
-
       <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
-        <TopTabWidget className="oui-mx-1 oui-bg-base-9 oui-rounded-xl" />
+        <TopTabWidget className="oui-bg-base-9 oui-mx-1 oui-rounded-xl" />
         <OrderBookAndEntryWidget />
         <DataListWidget
           symbol={props.symbol}

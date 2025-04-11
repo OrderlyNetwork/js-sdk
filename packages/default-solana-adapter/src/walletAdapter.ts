@@ -145,6 +145,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
 
   async signMessage(message: Uint8Array): Promise<string> {
     const isLedger = checkIsLedgerWallet(this._address);
+    // test ledger wallet
     // if (!isLedger) {
     //   console.log("-- test error");
     //   throw new Error(
@@ -393,7 +394,9 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     baseInterval?: number,
     maxInterval?: number,
     maxRetries?: number
-  ): Promise<any> { }
+  ): Promise<any> {
+    return Promise.resolve({status: 1})
+   }
 }
 
 export { DefaultSolanaWalletAdapter };

@@ -16,6 +16,7 @@ import {
   offsetEndOfDay,
   offsetStartOfDay,
 } from "../../utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type PositionHistoryExt = API.PositionHistory & {
   netPnL?: number;
@@ -115,6 +116,7 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
       state.status === AccountStatusEnum.EnableTradingWithoutConnected
         ? AccountStatusEnum.EnableTradingWithoutConnected
         : AccountStatusEnum.EnableTrading,
+    fallbackData: [],
   });
 
   return {
@@ -132,13 +134,14 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
 };
 
 const useFilter = () => {
+  const { t } = useTranslation();
+
   const [status, setStatus] = useState<PositionHistoryStatus>(
     PositionHistoryStatus.all
   );
   const [side, setSide] = useState<PositionHistorySide>(
     PositionHistorySide.all
   );
-
   const defaultRange = formatDatePickerRange({
     to: offsetEndOfDay(new Date()),
     from: offsetStartOfDay(subDays(new Date(), 89)),
@@ -216,15 +219,15 @@ const useFilter = () => {
       name: "side",
       options: [
         {
-          label: "All sides",
+          label: t("common.side.all"),
           value: "all",
         },
         {
-          label: "Buy",
+          label: t("common.buy"),
           value: PositionHistorySide.buy,
         },
         {
-          label: "Sell",
+          label: t("common.sell"),
           value: PositionHistorySide.sell,
         },
       ],
@@ -244,15 +247,15 @@ const useFilter = () => {
       name: "status",
       options: [
         {
-          label: "All status",
+          label: t("common.status.all"),
           value: "all",
         },
         {
-          label: "Closed",
+          label: t("positions.history.status.closed"),
           value: PositionHistoryStatus.closed,
         },
         {
-          label: "Partially Closed",
+          label: t("positions.history.status.partialClosed"),
           value: PositionHistoryStatus.partial_closed,
         },
       ],

@@ -1,15 +1,16 @@
 import { FC, PropsWithChildren } from "react";
 import { Box } from "@orderly.network/ui";
 import {
-  LayoutProps,
+  ScaffoldProps,
   RouterAdapter,
   Scaffold,
   SideBar,
   SideBarProps,
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@orderly.network/i18n";
 
-export type PortfolioLayoutProps = LayoutProps & {
+export type PortfolioLayoutProps = ScaffoldProps & {
   hideSideBar?: boolean;
   /** @deprecated use leftSideProps.items instead */
   items?: SideBarProps["items"];
@@ -54,10 +55,10 @@ type LeftSidebarProps = SideBarProps & {
 
 const LeftSidebar: FC<LeftSidebarProps> = (props) => {
   const { expanded, setExpand } = useScaffoldContext();
-
+  const { t } = useTranslation();
   return (
     <SideBar
-      title="Portfolio"
+      title={t("common.portfolio")}
       {...props}
       open={expanded}
       onOpenChange={(open) => setExpand(open)}

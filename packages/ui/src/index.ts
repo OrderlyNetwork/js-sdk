@@ -51,6 +51,7 @@ export type { SizeType } from "./helpers/sizeType";
 
 export {
   OrderlyThemeProvider,
+  type OrderlyThemeProviderProps,
   useOrderlyTheme,
 } from "./provider/orderlyThemeProvider";
 export * from "./plugin";
@@ -71,3 +72,5 @@ export { default as toast } from "react-hot-toast";
 //===== tailwind
 export * as OUITailwind from "./tailwind";
 export * from "./hooks";
+
+export * from "./locale";

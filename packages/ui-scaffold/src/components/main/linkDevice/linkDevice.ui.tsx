@@ -9,13 +9,15 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { qrcode as qr } from "@akamfoad/qr";
-
 import { MainLogo } from "../mainLogo";
 import { UseLinkDeviceScriptReturn } from "./linkDevice.script";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export type LinkDeviceProps = UseLinkDeviceScriptReturn;
 
 export const LinkDevice: FC<LinkDeviceProps> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <LinkDeviceIcon
@@ -23,10 +25,18 @@ export const LinkDevice: FC<LinkDeviceProps> = (props) => {
         onClick={props.showDialog}
       />
       <SimpleDialog
-        title={<Text weight="semibold">Confirm</Text>}
+        title={<Text weight="semibold">{t("common.confirm")}</Text>}
         open={props.open}
         onOpenChange={props.onOpenChange}
         size="sm"
+        contentProps={{
+          onInteractOutside: (e) => {
+            const el = document.querySelector("#privy-dialog");
+            if (el) {
+              e.preventDefault();
+            }
+          },
+        }}
       >
         <LinkDeviceContent {...props} />
       </SimpleDialog>
@@ -66,9 +76,10 @@ type QRCodeProps = Pick<
 };
 
 const QRCode: FC<QRCodeProps> = (props) => {
+  const { t } = useTranslation();
   const actions: SimpleDialogFooterProps["actions"] = {
     primary: {
-      label: "Ok",
+      label: t("common.ok"),
       onClick: props.hideDialog,
       size: "md",
     },
@@ -77,7 +88,7 @@ const QRCode: FC<QRCodeProps> = (props) => {
   return (
     <Flex direction="column" gapY={3}>
       <Text size="base" intensity={98}>
-        Scan QR Code
+        {t("linkDevice.scanQRCode")}
       </Text>
       <Text
         size="2xs"
@@ -85,13 +96,12 @@ const QRCode: FC<QRCodeProps> = (props) => {
         weight="regular"
         className="oui-text-center"
       >
-        {/* need to break the line by "/" */}
-        Scan the QR code or paste the URL into another browser/{"\n"}device to
-        continue.
+        {/* @ts-ignore */}
+        <Trans i18nKey="linkDevice.createQRCode.success.description" />
       </Text>
 
       <Text size="sm" intensity={54}>
-        Countdown:{" "}
+        {`${t("common.countdown")}: `}
         <Text.gradient color="brand" className="oui-tabular-nums">
           {props.seconds}s
         </Text.gradient>
@@ -129,7 +139,7 @@ const QRCode: FC<QRCodeProps> = (props) => {
           className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast"
         />
         <Text size="2xs" weight="regular">
-          Copy URL
+          {t("linkDevice.createQRCode.success.copyUrl")}
         </Text>
       </Flex>
 
@@ -181,15 +191,17 @@ const QRCodeCanvas: FC<QRCodeCanvasProps> = (props) => {
 type LinkDeviceConfirmProps = Pick<LinkDeviceProps, "hideDialog" | "onConfirm">;
 
 const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
+  const { t } = useTranslation();
+
   const actions: SimpleDialogFooterProps["actions"] = {
     secondary: {
-      label: "Cancel",
+      label: t("common.cancel"),
       onClick: props.hideDialog,
       className: "oui-flex-1",
       size: "md",
     },
     primary: {
-      label: "Confirm",
+      label: t("common.confirm"),
       onClick: props.onConfirm,
       className: "oui-flex-1",
       size: "md",
@@ -200,7 +212,7 @@ const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
     <Flex direction="column">
       <MainLogo />
       <Text size="base" intensity={98} className="oui-mt-5">
-        Link Mobile Device
+        {t("linkDevice.createQRCode.linkMobileDevice")}
       </Text>
       <Text
         size="2xs"
@@ -208,11 +220,13 @@ const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
         weight="regular"
         className="oui-text-center oui-mt-3"
       >
-        Open pro.woofi.com on your mobile device and scan the QR code to link
-        this wallet. For security, the QR code will expire in 60 seconds. <br />
-        The QR code allows mobile trading but does not enable withdrawals.
-        Ensure you are not sharing your screen or any screenshots of the QR
-        code.
+        {/* @ts-ignore */}
+        <Trans
+          i18nKey="linkDevice.createQRCode.linkMobileDevice.description"
+          values={{
+            hostname: window.location.hostname,
+          }}
+        />
       </Text>
       <SimpleDialogFooter
         actions={actions}
@@ -223,11 +237,13 @@ const LinkDeviceConfirm: FC<LinkDeviceConfirmProps> = (props) => {
 };
 
 const Loading = () => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction="column" gap={5}>
       <Spinner />
       <Text size="sm" intensity={98}>
-        Approve QR code with wallet...
+        {t("linkDevice.createQRCode.loading.description")}
       </Text>
     </Flex>
   );
@@ -250,7 +266,7 @@ const Spinner = () => {
       <path
         d="M73 40C73 58.2254 58.2254 73 40 73C21.7746 73 7 58.2254 7 40C7 21.7746 21.7746 7 40 7C58.2254 7 73 21.7746 73 40ZM13.6 40C13.6 54.5803 25.4197 66.4 40 66.4C54.5803 66.4 66.4 54.5803 66.4 40C66.4 25.4197 54.5803 13.6 40 13.6C25.4197 13.6 13.6 25.4197 13.6 40Z"
         fill="white"
-        fill-opacity="0.06"
+        fillOpacity="0.06"
       />
       <defs>
         <linearGradient

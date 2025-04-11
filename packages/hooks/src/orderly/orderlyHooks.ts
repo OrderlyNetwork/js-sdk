@@ -38,6 +38,7 @@ export { useMaxQty } from "./useMaxQty";
 export { useMarginRatio } from "./useMarginRatio";
 
 export { useChains } from "./useChains";
+export { useStorageChain } from "./useStorageChain";
 export type {
   UseChainsOptions,
   Chain,
@@ -79,3 +80,4 @@ export {
   useMarkPriceBySymbol,
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
+export {useStorageLedgerAddress} from './useStorageLedgerAddress';

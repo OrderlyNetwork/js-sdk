@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   Box,
   Divider,
@@ -10,14 +11,16 @@ import {
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
-import { FC } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { commifyOptional } from "@orderly.network/utils";
 import { AuthGuardEmpty } from "@orderly.network/ui-connector";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { RewardsTooltip } from "../curEpoch/rewardsTooltip";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-tradingRewards-home-rewardHistory"
@@ -29,7 +32,9 @@ export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
       r="2xl"
       className="oui-bg-base-9 oui-w-full oui-font-semibold oui-tabular-nums"
     >
-      <Text className="oui-text-lg oui-px-3">Reward history</Text>
+      <Text className="oui-text-lg oui-px-3">
+        {t("tradingRewards.rewardHistory")}
+      </Text>
       <div className="oui-border-t-2 oui-border-line-4 oui-w-full">
         <List {...props} />
       </div>
@@ -59,10 +64,13 @@ const MobileCell: FC<{
   data: ListType;
 }> = (props) => {
   const { data } = props;
+  const { t } = useTranslation();
+
   console.log(data.rewardsTooltip);
   const isOrder =
     `${data?.info?.epoch_token || data.epoch_token}`.toLowerCase() === "order";
   const r_warret = commifyOptional(data.info?.r_wallet, { fix: 2 });
+
   return (
     <Flex
       key={data.epoch_id}
@@ -78,7 +86,9 @@ const MobileCell: FC<{
           className="oui-gap-[6px] oui-flex-1"
           itemAlign={"start"}
         >
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">Epoch</Text>
+          <Text className="oui-text-base-contrast-36 oui-text-2xs">
+            {t("tradingRewards.epoch")}
+          </Text>
           <Text className="oui-text-sm">{`Epoch ${data.epoch_id}`}</Text>
         </Flex>
         <Flex
@@ -87,7 +97,7 @@ const MobileCell: FC<{
           itemAlign={"start"}
         >
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
-            Epoch rewards{" "}
+            {t("tradingRewards.epochRewards")}{" "}
           </Text>
           <Flex gap={1}>
             {isOrder ? <OrderlyIcon /> : <EsOrderlyIcon />}
@@ -102,7 +112,7 @@ const MobileCell: FC<{
           itemAlign={"end"}
         >
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
-            Rewards earned{" "}
+            {t("tradingRewards.rewardsEarned")}{" "}
           </Text>
           <Flex gap={1}>
             {r_warret !== "--" &&
@@ -131,7 +141,9 @@ const MobileCell: FC<{
           className="oui-gap-[6px] oui-flex-1"
           itemAlign={"start"}
         >
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">Start</Text>
+          <Text className="oui-text-base-contrast-36 oui-text-2xs">
+            {t("tradingRewards.rewardHistory.column.startDate")}
+          </Text>
           <Flex direction={"row"}>
             <Text className="oui-text-sm">
               {formatTimestamp(data.start_time).firstPart}&nbsp;
@@ -147,7 +159,7 @@ const MobileCell: FC<{
           itemAlign={"end"}
         >
           <Text className="oui-text-base-contrast-36 oui-text-2xs">
-            End date
+            {t("tradingRewards.rewardHistory.column.endDate")}
           </Text>
           <Flex direction={"row"}>
             <Text className="oui-text-sm">
@@ -166,17 +178,19 @@ const MobileCell: FC<{
 
 const DesktopList: FC<RewardsHistoryReturns> = (props) => {
   const { data } = props;
+  const { t } = useTranslation();
+
   const columns: Column<ListType>[] = [
     {
-      title: "Epoch",
+      title: t("tradingRewards.epoch"),
       dataIndex: "epoch_id",
       className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value) => {
-        return <Text>{`Epoch ${value}`}</Text>;
+        return <Text>{`${t("tradingRewards.epoch")} ${value}`}</Text>;
       },
     },
     {
-      title: "Start / End date",
+      title: t("tradingRewards.rewardHistory.column.start&EndDate"),
       dataIndex: "time",
       className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value, record) => {
@@ -204,7 +218,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
       },
     },
     {
-      title: "Epoch rewards",
+      title: t("tradingRewards.epochRewards"),
       dataIndex: "max_reward_amount",
       className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value, record) => {
@@ -220,7 +234,7 @@ const DesktopList: FC<RewardsHistoryReturns> = (props) => {
       },
     },
     {
-      title: "Rewards earned",
+      title: t("tradingRewards.rewardsEarned"),
       dataIndex: "earned",
       className: "oui-w-1/4 oui-pl-0 oui-pr-0",
       render: (value, record) => {

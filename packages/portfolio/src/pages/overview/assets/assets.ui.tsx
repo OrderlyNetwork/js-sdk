@@ -1,7 +1,5 @@
 import { FC } from "react";
 import {
-  Box,
-  Button,
   Card,
   Divider,
   Flex,
@@ -16,9 +14,10 @@ import {
 } from "@orderly.network/ui";
 import { AssetsHeader } from "./assetsHeader";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
 
 type Props = {
-  connected?: boolean;
+  canTrade?: boolean;
   onConnectWallet?: () => void;
   onWithdraw?: () => void;
   onDeposit?: () => void;
@@ -37,6 +36,7 @@ type StatisticProps = {
 };
 
 export const AssetsUI = (props: Props) => {
+  const { t } = useTranslation();
   return (
     <Card
       classNames={{
@@ -46,7 +46,7 @@ export const AssetsUI = (props: Props) => {
       // @ts-ignore
       title={
         <AssetsHeader
-          disabled={!props.connected || props.wrongNetwork}
+          disabled={!props.canTrade}
           onDeposit={props.onDeposit}
           onWithdraw={props.onWithdraw}
         />
@@ -56,7 +56,7 @@ export const AssetsUI = (props: Props) => {
         <Statistic
           label={
             <Flex gap={1}>
-              <Text intensity={54}>Total value</Text>
+              <Text intensity={54}>{t("common.totalValue")}</Text>
               <button
                 onClick={() => {
                   props.toggleVisible();
@@ -72,10 +72,7 @@ export const AssetsUI = (props: Props) => {
             </Flex>
           }
         >
-          <Either
-            value={(props.connected ?? false) && !props.wrongNetwork}
-            left={<NoValue />}
-          >
+          <Either value={props.canTrade!} left={<NoValue />}>
             <Text.numeral
               visible={props.visible}
               unit="USDC"
@@ -87,7 +84,7 @@ export const AssetsUI = (props: Props) => {
                 color: "brand",
               })}
             >
-              {props.portfolioValue ?? '--'}
+              {props.portfolioValue ?? "--"}
             </Text.numeral>
           </Either>
         </Statistic>
@@ -121,9 +118,11 @@ const NoValue: FC = () => {
 export const AssetStatistic = (
   props: StatisticProps & { onLeverageEdit?: () => void; visible: boolean }
 ) => {
+  const { t } = useTranslation();
+
   return (
     <Grid cols={3} className="oui-h-12">
-      <Statistic label="Unrealized PnL">
+      <Statistic label={t("common.unrealizedPnl")}>
         <Flex>
           <Text.numeral
             coloring
@@ -146,17 +145,26 @@ export const AssetStatistic = (
           </Text.numeral>
         </Flex>
       </Statistic>
-      <Statistic label="Max account leverage">
+      <Statistic label={t("leverage.maxAccountLeverage")}>
         <Flex itemAlign={"center"}>
-          <span data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value" className="oui-text-lg">{props.currentLeverage}</span>
+          <span
+            data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value"
+            className="oui-text-lg"
+          >
+            {props.currentLeverage}
+          </span>
           <span>x</span>
-          <button className="oui-ml-1" onClick={() => props.onLeverageEdit?.()} data-testid="oui-testid-portfolio-assets-maxAccountLeverage-edit-btn">
+          <button
+            className="oui-ml-1"
+            onClick={() => props.onLeverageEdit?.()}
+            data-testid="oui-testid-portfolio-assets-maxAccountLeverage-edit-btn"
+          >
             <EditIcon color={"white"} size={18} />
           </button>
         </Flex>
       </Statistic>
       <Statistic
-        label="Available to withdraw"
+        label={t("portfolio.overview.availableWithdraw")}
         // @ts-ignore
         align="right"
         // @ts-ignore

@@ -1,13 +1,11 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import { Text } from "../typography/text";
-
 import { ChevronLeftIcon, ChevronRightIcon } from "../icon";
-
 import { ButtonProps, buttonVariants } from "../button";
 import { cnBase } from "tailwind-variants";
 import { Select } from "../select";
 import { Flex } from "../flex";
-import { useMemo } from "react";
+import { useLocale } from "../locale";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -104,19 +102,22 @@ PaginationNext.displayName = "PaginationNext";
 const PaginationEllipsis = ({
   className,
   ...props
-}: React.ComponentProps<"span">) => (
-  <span
-    aria-hidden
-    className={cnBase(
-      "oui-flex oui-h-9 oui-w-9 oui-items-center oui-justify-center",
-      className
-    )}
-    {...props}
-  >
-    {/* <DotsHorizontalIcon className="h-4 w-4" /> */}
-    <span className="sr-only">More pages</span>
-  </span>
-);
+}: React.ComponentProps<"span">) => {
+  const [locale] = useLocale("pagination");
+  return (
+    <span
+      aria-hidden
+      className={cnBase(
+        "oui-flex oui-h-9 oui-w-9 oui-items-center oui-justify-center",
+        className
+      )}
+      {...props}
+    >
+      {/* <DotsHorizontalIcon className="h-4 w-4" /> */}
+      <span className="sr-only">{locale.morePages}</span>
+    </span>
+  );
+};
 PaginationEllipsis.displayName = "PaginationEllipsis";
 
 export type PaginationProps = {
@@ -146,6 +147,8 @@ const Paginations = (props: PaginationProps) => {
     page: currentPage,
   } = props;
 
+  const [locale] = useLocale("pagination");
+
   return (
     <Pagination className={cnBase(classNames?.pagination, className)}>
       <Flex mr={4}>
@@ -155,7 +158,7 @@ const Paginations = (props: PaginationProps) => {
           intensity={54}
           className="oui-text-nowrap oui-mr-2"
         >
-          Rows per page
+          {locale.rowsPerPage}
         </Text>
         <div className={"oui-w-14"}>
           <Select.options

@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/portfolio",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -21,6 +21,7 @@
     "@orderly.network/chart": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",

@@ -1,5 +1,11 @@
 import { ChartMode, ColorConfigInterface } from "./tradingviewAdapter/type";
-import { LoadingScreenOptions } from "./tradingviewAdapter/charting_library";
+import {
+  LanguageCode,
+  LoadingScreenOptions,
+} from "./tradingviewAdapter/charting_library";
+import { LocaleCode } from "@orderly.network/i18n";
+
+export type TradingviewLocaleCode = LanguageCode;
 
 export interface TradingviewWidgetPropsInterface {
   symbol?: string;
@@ -14,6 +20,14 @@ export interface TradingviewWidgetPropsInterface {
   fullscreen?: boolean;
   theme?: string;
   loadingScreen?: LoadingScreenOptions;
+  /**
+   * The locale of the tradingview.
+   * If locale does not match in TradingviewLocaleCode, it will default to "en".
+   * If locale is a function, you can use the current locale to return the TradingviewLocaleCode.
+   */
+  locale?:
+    | TradingviewLocaleCode
+    | ((localeCode: LocaleCode) => TradingviewLocaleCode);
 }
 
 export interface TradingviewUIPropsInterface {

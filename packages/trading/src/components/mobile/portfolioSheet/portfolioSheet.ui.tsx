@@ -3,7 +3,6 @@ import {
   ArrowDownShortIcon,
   ArrowUpShortIcon,
   Button,
-  cn,
   Divider,
   EyeCloseIcon,
   EyeIcon,
@@ -11,7 +10,6 @@ import {
   Grid,
   modal,
   RefreshIcon,
-  Slider,
   Statistic,
   Text,
 } from "@orderly.network/ui";
@@ -22,6 +20,7 @@ import {
 import { USDCIcon } from "../accountSheet/icons";
 import { RiskIndicator } from "./riskIndicator";
 import { LeverageSlider } from "@orderly.network/ui-leverage";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
   return (
@@ -38,14 +37,16 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
 };
 
 const Asset: FC<PortfolioSheetState> = (props) => {
+  const { t } = useTranslation();
+
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
-      title: "Settle PnL",
+      title: t("settle.settlePnl"),
       // maxWidth: "xs",
       content: (
         <Text intensity={54} size="xs">
-          Are you sure you want to settle your PnL? Settlement will take up to 1
-          minute before you can withdraw your available balance.
+          {/* @ts-ignore */}
+          <Trans i18nKey="settle.settlePnl.description" />
         </Text>
       ),
       onCancel: () => {
@@ -56,7 +57,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
         return props.onSettlePnL().catch((e) => {});
       },
     });
-  }, []);
+  }, [t]);
 
   const clsName =
     props.totalUnrealizedROI > 0
@@ -89,7 +90,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           }}
           className="oui-cursor-pointer"
         >
-          Total value (USDC)
+          {`${t("common.totalValue")} (USDC)`}
         </Text.formatted>
         <Text.numeral
           size="base"
@@ -103,7 +104,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
       </Flex>
       <Grid cols={2} rows={1} width={"100%"}>
         <Statistic
-          label="Unreal. PnL (USDC)"
+          label={`${t("common.unrealizedPnl")} (USDC)`}
           classNames={{
             label: "oui-text-2xs oui-text-base-contrast-36",
           }}
@@ -134,7 +135,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           </Flex>
         </Statistic>
         <Statistic
-          label="Unsettled PnL (USDC)"
+          label={`${t("trading.asset.unsettledPnl")} (USDC)`}
           classNames={{
             label: "oui-text-2xs oui-text-base-contrast-36",
           }}
@@ -159,7 +160,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
                 className="oui-text-primary-light"
               />
               <Text size="2xs" color="primary">
-                Settle PnL
+                {t("settle.settlePnl")}
               </Text>
             </button>
           </Flex>
@@ -169,6 +170,8 @@ const Asset: FC<PortfolioSheetState> = (props) => {
   );
 };
 const MarginRatio: FC<PortfolioSheetState> = (props) => {
+  const { t } = useTranslation();
+
   const { high, mid, low } = getMarginRatioColor(
     props.marginRatioVal,
     props.mmr
@@ -177,7 +180,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
   return (
     <Grid cols={2} rows={1} width={"100%"}>
       <Statistic
-        label="Margin Ratio"
+        label={t("trading.asset.marginRatio")}
         classNames={{
           label: "oui-text-2xs oui-text-base-contrast-36",
         }}
@@ -209,7 +212,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
         </Flex>
       </Statistic>
       <Statistic
-        label="Free / Total Collateral (USDC)"
+        label={`${t("trading.asset.free&TotalCollateral")} (USDC)`}
         classNames={{
           label: "oui-text-2xs oui-text-base-contrast-36",
         }}
@@ -238,24 +241,23 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
   );
 };
 const Leverage: FC<PortfolioSheetState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex direction={"column"} gap={2} width={"100%"}>
       <Flex width={"100%"} justify={"between"}>
         <Text size="2xs" intensity={54}>
-          Max account leverage
+          {t("leverage.maxAccountLeverage")}
         </Text>
-        <Text.numeral
-          size="2xs"
-          // @ts-ignore
-          prefix={
-            <Text size="2xs" intensity={54}>
-              {"Current: "}
-            </Text>
-          }
-          suffix="x"
-        >
-          {props.currentLeverage ?? "--"}
-        </Text.numeral>
+
+        <Flex gap={1}>
+          <Text size="2xs" intensity={54}>
+            {`${t("common.current")}:`}
+          </Text>
+          <Text.numeral size="2xs" unit="x" intensity={98}>
+            {props.currentLeverage ?? "--"}
+          </Text.numeral>
+        </Flex>
       </Flex>
       <LeverageSlider
         value={props.value}
@@ -268,29 +270,33 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
     </Flex>
   );
 };
-const AvailableBalance: FC<PortfolioSheetState> = (props) => {
-  return (
-    <Flex
-      width={"100%"}
-      justify={"between"}
-      r="lg"
-      px={3}
-      py={4}
-      className="oui-bg-base-6"
-    >
-      <Text size="2xs" intensity={80}>
-        Available Balance
-      </Text>
-      <Flex className="oui-gap-[6px]">
-        <USDCIcon size={24} />
-        <Text.numeral dp={2} size="base" visible={!props.hideAssets}>
-          {props.availableBalance}
-        </Text.numeral>
-      </Flex>
-    </Flex>
-  );
-};
+
+// const AvailableBalance: FC<PortfolioSheetState> = (props) => {
+//   return (
+//     <Flex
+//       width={"100%"}
+//       justify={"between"}
+//       r="lg"
+//       px={3}
+//       py={4}
+//       className="oui-bg-base-6"
+//     >
+//       <Text size="2xs" intensity={80}>
+//         Available Balance
+//       </Text>
+//       <Flex className="oui-gap-[6px]">
+//         <USDCIcon size={24} />
+//         <Text.numeral dp={2} size="base" visible={!props.hideAssets}>
+//           {props.availableBalance}
+//         </Text.numeral>
+//       </Flex>
+//     </Flex>
+//   );
+// };
+
 const Buttons: FC<PortfolioSheetState> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Grid
       cols={2}
@@ -308,7 +314,7 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         className="oui-bg-base-2 hover:oui-bg-base-2/50"
         onClick={props.onWithdraw}
       >
-        Withdraw
+        {t("common.withdraw")}
       </Button>
       <Button
         icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
@@ -316,7 +322,7 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         fullWidth
         onClick={props.onDeposit}
       >
-        Deposit
+        {t("common.deposit")}
       </Button>
     </Grid>
   );

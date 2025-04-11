@@ -1,5 +1,58 @@
 # @orderly.network/cli
 
+## 0.4.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- ba163f4ce: publish
+- Updated dependencies [ba163f4ce]
+- Updated dependencies
+  - @orderly.network/core@2.1.0
+
+## 0.3.24-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-alpha.0
+
+## 0.3.23
+
+### Patch Changes
+
+- 423ab1d38: update
+- Updated dependencies [423ab1d38]
+  - @orderly.network/core@2.0.7
+
+## 0.3.23-alpha.0
+
+### Patch Changes
+
+- update
+- Updated dependencies
+  - @orderly.network/core@2.0.7-alpha.0
+
+## 0.3.22
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+- Updated dependencies [74c2c433e]
+  - @orderly.network/core@2.0.6
+
+## 0.3.22-alpha.0
+
+### Patch Changes
+
+- fix bugs
+- Updated dependencies
+  - @orderly.network/core@2.0.6-alpha.0
+
 ## 0.3.21
 
 ### Patch Changes

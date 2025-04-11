@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/chart",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -35,6 +35,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "d3-array": "^3.2.4",

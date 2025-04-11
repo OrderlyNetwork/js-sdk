@@ -19,7 +19,7 @@ type SimpleDialogProps = {
   onOpenChange?: (open: boolean) => void;
   size?: "xs" | "sm" | "md" | "lg";
   closable?: boolean;
-  title?: ReactNode;
+  title?: ReactNode | (() => ReactNode);
   description?: ReactNode;
   classNames?: {
     content?: string;
@@ -35,6 +35,8 @@ type SimpleDialogProps = {
  * Simplified dialog component.
  */
 const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
+  const title = typeof props.title === "function" ? props.title() : props.title;
+
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent
@@ -47,10 +49,10 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
         className={props.classNames?.content}
         {...props.contentProps}
       >
-        {props.title && (
+        {title && (
           <>
             <DialogHeader>
-              <DialogTitle>{props.title}</DialogTitle>
+              <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
             <Divider />
           </>

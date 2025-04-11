@@ -2,18 +2,20 @@ import React from "react";
 import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { customViewports } from "./screenSizes";
-import OrderlyProvider from "./orderlyProvider";
+import {OrderlyProvider} from "./orderlyProvider";
 import { withThemeBuilder } from "../src/addons/theme_tool/preview";
 
 import "../src/tailwind.css";
 
 const preview: Preview = {
   decorators: [
-    (Story: any) => (
-      <OrderlyProvider>
-        <Story />
-      </OrderlyProvider>
-    ),
+    (Story: any, context: any) => {
+      return (
+        <OrderlyProvider>
+          <Story />
+        </OrderlyProvider>
+      );
+    },
     withThemeBuilder,
     withThemeByDataAttribute({
       themes: {

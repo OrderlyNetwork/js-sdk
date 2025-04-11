@@ -8,7 +8,7 @@ declare global {
 }
 if(typeof window !== 'undefined') {
     window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-    window.__ORDERLY_VERSION__["@orderly.network/wallet-connector"] = "2.0.5";
+    window.__ORDERLY_VERSION__["@orderly.network/wallet-connector"] = "2.1.0";
 };
 
-export default "2.0.5";
+export default "2.1.0";

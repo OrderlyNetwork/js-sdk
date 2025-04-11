@@ -1,5 +1,45 @@
 # tsconfig
 
+## 0.4.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- ba163f4ce: publish
+
+## 0.3.23-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.3.22
+
+### Patch Changes
+
+- 423ab1d38: update
+
+## 0.3.22-alpha.0
+
+### Patch Changes
+
+- update
+
+## 0.3.21
+
+### Patch Changes
+
+- 74c2c433e: fix bugs
+
+## 0.3.21-alpha.0
+
+### Patch Changes
+
+- fix bugs
+
 ## 0.3.20
 
 ### Patch Changes

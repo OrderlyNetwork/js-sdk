@@ -26,6 +26,9 @@ import {
   usePnlInputContext,
 } from "./pnlInput/pnlInputContext";
 import { ExclamationFillIcon } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
+import { OrderValidationResult } from "@orderly.network/hooks";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 type OrderValueKeys = keyof OrderlyOrder;
 
@@ -44,11 +47,12 @@ export const OrderTPSL = (props: {
   values: TPSL_Values;
   orderType: OrderType;
   isReduceOnly?: boolean;
-  errors: any;
+  errors: OrderValidationResult | null;
   quote_dp: number | undefined;
 }) => {
   // const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (
@@ -92,7 +96,7 @@ export const OrderTPSL = (props: {
           }}
         />
         <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
-          TP/SL
+          {t("common.tpsl")}
         </label>
         <ExclamationFillIcon
           color="white"
@@ -102,15 +106,9 @@ export const OrderTPSL = (props: {
           className="oui-text-white/[.36] hover:oui-text-white/80 oui-cursor-pointer"
           onClick={() => {
             modal.dialog({
-              title: "Tips",
+              title: t("common.tips"),
               size: "xs",
-              content: (
-                <Text intensity={54}>
-                  TP/SL triggers at the specified mark price and executes as a
-                  market order. By default, it applies to the entire position.
-                  Adjust settings in open positions for partial TP/SL.
-                </Text>
-              ),
+              content: <Text intensity={54}>{t("orderEntry.tpsl.tips")}</Text>,
             });
           }}
         />
@@ -145,10 +143,12 @@ const TPSLInputForm = React.forwardRef<
   {
     onChange: (key: OrderValueKeys, value: any) => void;
     values: TPSL_Values;
-    errors: Record<string, { message: string }> | null;
+    errors: OrderValidationResult | null;
     quote_dp: number | undefined;
   }
 >((props, ref) => {
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+
   return (
     <div
       ref={ref}
@@ -159,7 +159,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
           type={"TP"}
-          error={props.errors ? props.errors["tp_trigger_price"]?.message : ""}
+          error={parseErrorMsg("tp_trigger_price")}
           onChange={props.onChange}
           values={props.values.tp}
           quote_dp={props.quote_dp}
@@ -173,7 +173,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.sl} type={"SL"}>
         <TPSLInputRow
           type={"SL"}
-          error={props.errors ? props.errors["sl_trigger_price"]?.message : ""}
+          error={parseErrorMsg("sl_trigger_price")}
           onChange={props.onChange}
           values={props.values.sl}
           quote_dp={props.quote_dp}
@@ -199,6 +199,7 @@ const TPSLTriggerPriceInput = (props: {
   quote_dp: number | undefined;
   testId?: string;
 }) => {
+  const { t } = useTranslation();
   const { errorMsgVisible } = useContext(OrderEntryContext);
   const { tipsEle } = usePnlInputContext();
   const [prefix, setPrefix] = useState<string>(`${props.type} Price`);
@@ -213,14 +214,18 @@ const TPSLTriggerPriceInput = (props: {
     return null;
   }, [props.error, errorMsgVisible, tipVisible, tipsEle]);
 
-  const priceKey =
-    props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
+  const getPrefixLabel = (trigger_price?: string) => {
+    let _prefix = props.type === "TP" ? t("tpsl.tpPrice") : t("tpsl.slPrice");
+
+    if (trigger_price) {
+      _prefix = props.type === "TP" ? t("tpsl.tp") : t("tpsl.sl");
+    }
+    return _prefix;
+  };
 
   useEffect(() => {
-    setPrefix(
-      !!props.values.trigger_price ? props.type : `${props.type} Price`
-    );
-  }, [props.values.trigger_price]);
+    setPrefix(getPrefixLabel(props.values.trigger_price));
+  }, [props.type, props.values.trigger_price]);
 
   return (
     <Input.tooltip
@@ -230,14 +235,13 @@ const TPSLTriggerPriceInput = (props: {
       placeholder={placeholder}
       align="right"
       onFocus={() => {
-        setPrefix(props.type);
+        setPrefix(props.type === "TP" ? t("tpsl.tp") : t("tpsl.sl"));
         setPlaceholder("");
         setTipVisible(true);
       }}
       onBlur={() => {
-        setPrefix(
-          !!props.values.trigger_price ? props.type : `${props.type} Price`
-        );
+        console.log("props.values.trigger_price", props.values.trigger_price);
+        setPrefix(getPrefixLabel(props.values.trigger_price));
         setPlaceholder("USDC");
         setTipVisible(false);
       }}

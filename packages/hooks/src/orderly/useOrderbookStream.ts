@@ -250,11 +250,14 @@ export const useOrderbookStream = (
   options?: OrderbookOptions
 ) => {
   if (!symbol) {
-    throw new SDKError("useOrderbookStream requires a symbol");
+    throw new SDKError("Symbol is required");
   }
 
   const level = options?.level ?? 10;
   const padding = options?.padding ?? true;
+  const symbolRef = useRef(symbol);
+
+  symbolRef.current = symbol;
 
   const [requestData, setRequestData] = useState<OrderbookData | null>(null);
   const [data, setData] = useState<OrderbookData>(initial);
@@ -301,6 +304,7 @@ export const useOrderbookStream = (
     setIsLoading(true);
     let orderBookUpdateSub: any;
     let fullOrderBookUpdateSub: any;
+
     orderBookUpdateSub = ws.subscribe(
       {
         event: "subscribe",
@@ -310,7 +314,12 @@ export const useOrderbookStream = (
         formatter: (message) => message,
         onMessage: (message: any) => {
           const { data: wsData, ts } = message;
-          const { asks, bids, prevTs } = wsData;
+          const { symbol, asks, bids, prevTs } = wsData;
+          // when current symbol is not the same as the ws symbol, skip update data and auto unsubscribe old symbol ws
+          if (symbolRef.current !== symbol) {
+            orderBookUpdateSub?.();
+            return;
+          }
           orderbooksService.updateOrderbook(
             symbol,
             { asks, bids, ts, prevTs },
@@ -338,7 +347,11 @@ export const useOrderbookStream = (
         {
           formatter: (message) => message,
           onMessage: (message: any) => {
+            // when current symbol is not the same as the ws symbol, skip update data
             const { symbol, asks, bids, ts } = message.data;
+            if (symbolRef.current !== symbol) {
+              return;
+            }
             orderbooksService.setFullOrderbook(symbol, { asks, bids, ts });
             const data = orderbooksService.getRawOrderbook(symbol);
             setData({ bids: data.bids, asks: data.asks });

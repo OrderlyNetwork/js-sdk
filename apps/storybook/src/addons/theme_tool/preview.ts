@@ -1,3 +1,4 @@
+import React from "react";
 import { useChannel, useEffect } from "@storybook/preview-api";
 import { EVENTS, VARIABLE_KEYS } from "./constants";
 import { hexToRgb, isColorValue, rgbToHex } from "./utils";

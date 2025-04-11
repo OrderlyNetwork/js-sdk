@@ -8,17 +8,18 @@ export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
 export { ProductsMenu } from "./components/main/products";
 export { CampaignPositionEnum } from "./components/main/useWidgetBuilder.script";
-export type { LayoutProps } from "./components/scaffold";
+export type { ScaffoldProps } from "./components/scaffold";
 export {
   useScaffoldContext,
-  ExpandableContext,
+  ScaffoldContext,
   type RouteOption,
   type RouterAdapter,
 } from "./components/scaffoldContext";
 
 export * from "./components/footer";
 export * from "./components/maintenanceTips";
-export * from "./components/restrictedAreas";
+export * from "./components/announcement-tips";
+export * from "./components/restrictedInfo";
 
 export type { SideBarProps, SideMenuItem } from "./components/sidebar";
 
@@ -26,3 +27,4 @@ export type { SideBarProps, SideMenuItem } from "./components/sidebar";
 export { Scaffold } from "./components/scaffold";
 
 export { MainLogo } from "./components/main/mainLogo";
+export * from "./components/languageSwitcher";

@@ -1,10 +1,8 @@
 import { FC } from "react";
 import {
-  Box,
   Button,
   cn,
   Flex,
-  Spinner,
   TabsBase,
   TabsContent,
   TabsList,
@@ -18,6 +16,7 @@ import { AffiliatePage } from "../../affiliate";
 import { TraderPage } from "../../trader";
 import { HomePage } from "../../home";
 import { TabTypes } from "../../../hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Tab: FC<
   TabReturns & {
@@ -28,6 +27,7 @@ export const Tab: FC<
     };
   }
 > = (props) => {
+  const { t } = useTranslation();
   const extendNode = () => {
     if (props.isAffiliate && !props.isTrader) {
       return (
@@ -47,7 +47,7 @@ export const Tab: FC<
           }}
         >
           <TraderIcon />
-          <Text>As a trader</Text>
+          <Text>{t("affiliate.asTrader.title")}</Text>
         </Button>
       );
     }
@@ -69,7 +69,7 @@ export const Tab: FC<
           }}
         >
           <AffiliateIcon />
-          <Text>As an affiliate</Text>
+          <Text>{t("affiliate.asAffiliate.title")}</Text>
         </Button>
       );
     }
@@ -84,7 +84,6 @@ export const Tab: FC<
       </div>
     );
   }
-  
 
   if ((!props.isAffiliate && !props.isTrader) || props.showHome) {
     return (
@@ -127,7 +126,7 @@ export const Tab: FC<
                     : "oui-fill-white/[.36]"
                 }
               />
-              <Text>Affiliate</Text>
+              <Text>{t("common.affiliate")}</Text>
             </Flex>
           </TabsTrigger>
         )}
@@ -146,7 +145,7 @@ export const Tab: FC<
                     : "oui-fill-white/[.36]"
                 }
               />
-              <Text>Trader</Text>
+              <Text>{t("affiliate.trader")}</Text>
             </Flex>
           </TabsTrigger>
         )}

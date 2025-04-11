@@ -1,13 +1,15 @@
 import { Button, ButtonProps, Flex, modal, toast } from "@orderly.network/ui";
 import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 import { NetworkId } from "@orderly.network/types";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface IProps {
   networkId?: NetworkId;
   size: ButtonProps["size"];
 }
 
 export default function SwitchChainButton(props: IProps) {
+  const { t } = useTranslation();
+
   const switchChain = () => {
     modal
       .show<{
@@ -18,7 +20,7 @@ export default function SwitchChainButton(props: IProps) {
       })
       .then(
         (r) => {
-          toast.success("Network switched");
+          toast.success(t("connector.networkSwitched"));
         },
         (error) => console.log("[switchChain error]", error)
       );
@@ -34,7 +36,7 @@ export default function SwitchChainButton(props: IProps) {
           switchChain();
         }}
       >
-        Switch Network
+        {t("connector.switchNetwork")}
       </Button>
     </Flex>
   );

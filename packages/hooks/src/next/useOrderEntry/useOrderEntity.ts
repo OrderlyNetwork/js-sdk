@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { VerifyResult } from "../../services/orderCreator/interface";
+import {
+  OrderValidationItem,
+  OrderValidationResult,
+} from "../../services/orderCreator/interface";
 import { getOrderCreator } from "./helper";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { OrderSide, SDKError } from "@orderly.network/types";
@@ -19,12 +22,10 @@ export const useOrderEntity = (
   }
 ) => {
   if (!order.symbol) {
-    throw new SDKError("symbol is required");
+    throw new SDKError("Symbol is required");
   }
   const [errors, setErrors] =
-    useState<
-      Partial<Record<keyof typeof order, { type: string; message: string }>>
-    >();
+    useState<Partial<Record<keyof typeof order, OrderValidationItem>>>();
 
   const maxQty = useMaxQty(order.symbol, order.side, order.reduce_only);
   const finalMaxQty = options?.maxQty ?? maxQty;
@@ -41,30 +42,32 @@ export const useOrderEntity = (
   const symbolInfo = useSymbolsInfo();
 
   const validate = () => {
-    return new Promise<VerifyResult | null>(async (resolve, reject) => {
-      const creator = getOrderCreator(order);
-      const _symbol = symbolInfo[order.symbol]();
+    return new Promise<OrderValidationResult | null>(
+      async (resolve, reject) => {
+        const creator = getOrderCreator(order);
+        const _symbol = symbolInfo[order.symbol]();
 
-      const errors = await creator?.validate(order, {
-        symbol: _symbol,
-        maxQty: finalMaxQty,
-        markPrice,
-      });
-      const keys = Object.keys(errors);
-      if (keys.length > 0) {
-        setErrors(errors);
+        const errors = await creator?.validate(order, {
+          symbol: _symbol,
+          maxQty: finalMaxQty,
+          markPrice,
+        });
+        const keys = Object.keys(errors);
+        if (keys.length > 0) {
+          setErrors(errors);
 
-        reject(errors);
-      } else {
-        setErrors({});
+          reject(errors);
+        } else {
+          setErrors({});
+        }
+        // create order
+        const orderEntity = creator.create(order, {
+          ...prepareData(),
+          symbol: _symbol,
+        });
+        resolve(orderEntity);
       }
-      // create order
-      const orderEntity = creator.create(order, {
-        ...prepareData(),
-        symbol: _symbol,
-      });
-      resolve(orderEntity);
-    });
+    );
   };
 
   const autoCheck = useThrottledCallback(

@@ -1,24 +1,25 @@
 import { FC, useMemo } from "react";
 import { PnLDisplayFormat } from "../../types/types";
 import { Text, cn } from "@orderly.network/ui";
-
+import { useTranslation } from "@orderly.network/i18n";
 export const PnlFormatView: FC<{
   type: PnLDisplayFormat;
   curType?: PnLDisplayFormat;
   setPnlFormat: any;
 }> = (props) => {
   const { type, curType, setPnlFormat } = props;
+  const { t } = useTranslation();
 
   const text = useMemo(() => {
     switch (type) {
       case "roi_pnl":
-        return "ROI & PnL";
+        return t("share.pnl.displayFormat.roi&Pnl");
       case "roi":
-        return "ROI";
+        return t("share.pnl.displayFormat.roi");
       case "pnl":
-        return "PnL";
+        return t("share.pnl.displayFormat.pnl");
     }
-  }, [type]);
+  }, [type, t]);
 
   const isSelected = type === curType;
 
@@ -41,7 +42,7 @@ export const PnlFormatView: FC<{
         size="xs"
         intensity={54}
         className={cn(
-          "oui-ml-2 ",
+          "oui-ml-2 "
           // isSelected && "oui-text-base-contrast"
         )}
       >

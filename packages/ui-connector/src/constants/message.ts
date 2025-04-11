@@ -13,8 +13,8 @@ export const LABELS = {
 };
 
 export const DESCRIPTIONS: alertMessages = {
-  connectWallet: "Please Connect wallet before starting to trade",
+  connectWallet: "Please connect wallet before starting to trade",
   switchChain: "Please switch to a supported network to continue",
-  enableTrading: "Please Enable trading before starting to trade",
+  enableTrading: "Please enable trading before starting to trade",
   signin: "Please sign in before starting to trade",
 };

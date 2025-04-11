@@ -9,29 +9,34 @@ import {
   useMarginRatio,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useBalanceScript = () => {
+  const { t } = useTranslation();
   const { bottomSheetLeading } = useTradingPageContext();
-
   const { hideAssets, setHideAssets } = useTradingLocalStorage();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
 
   const { currentLeverage } = useMarginRatio();
   const { totalValue } = useCollateral();
-  const isEnableTrading =
-    state.status >= AccountStatusEnum.EnableTrading ||
-    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
+
+  const canTrade =
+    !wrongNetwork &&
+    !disabledConnect &&
+    (state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
 
   const onShowPortfolioSheet = () => {
-    if (isEnableTrading) {
+    if (canTrade) {
       modal.sheet({
-        title: "Asset & Margin",
+        title: t("trading.asset&Margin"),
         leading: bottomSheetLeading,
         content: <PortfolioSheetWidget />,
       });
     }
   };
+
   const total = useDataTap(totalValue);
 
   return {
@@ -41,7 +46,7 @@ export const useBalanceScript = () => {
     setHideAssets,
     onShowPortfolioSheet,
     wrongNetwork,
-    isEnableTrading,
+    canTrade,
   };
 };
 

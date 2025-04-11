@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { Box, Button, modal, useScreen } from "@orderly.network/ui";
+import { Box, Button, modal } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { CrossWithdrawConfirm } from "../crossWithdrawConfirm";
 import { Decimal } from "@orderly.network/utils";
 import SwitchChainButton from "./SwitchChainButton";
-
+import { useTranslation } from "@orderly.network/i18n";
 interface IProps {
   disabled?: boolean;
   loading?: boolean;
@@ -32,6 +32,7 @@ export const WithdrawAction = (props: IProps) => {
     fee,
     checkIsBridgeless,
   } = props;
+  const { t } = useTranslation();
 
   const amount = useMemo(() => {
     if (!quantity) {
@@ -43,7 +44,7 @@ export const WithdrawAction = (props: IProps) => {
   const preWithdraw = () => {
     if (crossChainWithdraw) {
       modal.confirm({
-        title: "Confirm to withdraw",
+        title: t("transfer.withdraw.crossChain.confirmWithdraw"),
         content: (
           <CrossWithdrawConfirm
             address={address!}
@@ -85,7 +86,7 @@ export const WithdrawAction = (props: IProps) => {
             onClick={preWithdraw}
             size={buttonSize}
           >
-            Withdraw
+            {t("common.withdraw")}
           </Button>
         ) : (
           <SwitchChainButton networkId={networkId} size={buttonSize} />

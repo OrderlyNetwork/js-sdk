@@ -2,24 +2,39 @@ import { useContext } from "react";
 import { OrderlyContext } from "../orderlyContext";
 
 export enum ENVType {
-  prod = 'prod',
-  staging = 'staging',
-  qa = 'qa',
-  dev = 'dev',
+  prod = "prod",
+  staging = "staging",
+  qa = "qa",
+  dev = "dev",
 }
 
+/**
+ * env is determined by networkId and env
+ * | networkId | env     | retrurn  |
+ * |-----------|---------|----------|
+ * | mainnet   | noset   | prod     |
+ * | mainnet   | prod    | prod     |
+ * | mainnet   | staging | prod     |
+ * | mainnet   | qa      | prod     |
+ * | mainnet   | dev     | prod     |
+ * | testnet   | noset   | staging  |
+ * | testnet   | prod    | staging  |
+ * | testnet   | staging | staging  |
+ * | testnet   | qa      | qa       |
+ * | testnet   | dev     | dev      |
+ * if env is not set, return staging
+ * 
+ * @returns {ENVType} 
+ */
 export const useGetEnv = (): ENVType => {
   const { configStore } = useContext(OrderlyContext);
-  const baseUrl =
-    configStore.get("apiBaseUrl") || "https://api-evm.orderly.org";
-  switch (baseUrl) {
-    case "https://testnet-api-evm.orderly.org":
-      return ENVType.staging;
-    case "https://dev-api-iap-v2.orderly.org":
-      return ENVType.dev;
-    case "https://qa-api-evm.orderly.org":
-      return ENVType.qa;
-    default:
-      return ENVType.prod;
+  const env = configStore.get("env") as ENVType;
+  const networkId = configStore.get("networkId");
+  if (networkId === "mainnet") {
+    return ENVType.prod;
   }
+  if (networkId === "testnet" && env === "prod") {
+    return ENVType.staging;
+  }
+  return env ?? ENVType.staging;
 };

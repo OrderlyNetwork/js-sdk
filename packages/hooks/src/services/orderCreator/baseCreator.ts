@@ -10,17 +10,21 @@ import {
 } from "@orderly.network/types";
 import {
   OrderCreator,
-  OrderFormEntity,
   ValuesDepConfig,
-  VerifyResult,
+  OrderValidationItem,
+  OrderValidationResult,
 } from "./interface";
 import { Decimal } from "@orderly.network/utils";
-import { checkNotional } from "../../utils/createOrder";
+import { getMinNotional } from "../../utils/createOrder";
+import { OrderValidation } from "./orderValidation";
 
 export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
   abstract create(values: T, config?: ValuesDepConfig): T;
 
-  abstract validate(values: T, config: ValuesDepConfig): Promise<VerifyResult>;
+  abstract validate(
+    values: T,
+    config: ValuesDepConfig
+  ): Promise<OrderValidationResult>;
 
   abstract orderType: OrderType;
 
@@ -69,9 +73,9 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
   baseValidate(
     values: OrderlyOrder,
     configs: ValuesDepConfig
-  ): Promise<VerifyResult> {
+  ): Promise<OrderValidationResult> {
     const errors: {
-      [P in keyof OrderEntity]?: { type: string; message: string };
+      [P in keyof OrderEntity]?: OrderValidationItem;
     } = {};
 
     const { maxQty, symbol, markPrice } = configs;
@@ -80,7 +84,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     let { order_quantity, total, order_price, reduce_only, order_type } =
       values;
 
-    const { min_notional, base_tick, quote_dp, quote_tick, base_dp } = symbol || {};
+    const { min_notional, base_tick, quote_dp, quote_tick, base_dp } =
+      symbol || {};
 
     if (!order_quantity) {
       // calculate order_quantity from total
@@ -93,29 +98,21 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     }
 
     if (!order_quantity) {
-      errors.order_quantity = {
-        type: "required",
-        message: "Quantity is required",
-      };
+      errors.order_quantity = OrderValidation.required("order_quantity");
     } else {
       // need to use MaxQty+base_max, base_min to compare
       const { base_min, quote_dp, base_dp } = configs.symbol;
       const qty = new Decimal(order_quantity);
       if (qty.lt(base_min)) {
-        errors.order_quantity = {
-          type: "min",
-          message: `Quantity must be greater than ${new Decimal(base_min).todp(
-            base_dp
-          )}`,
-        };
-        // errors.order_quantity = `quantity must be greater than ${base_min}`;
+        errors.order_quantity = OrderValidation.min(
+          "order_quantity",
+          new Decimal(base_min).todp(base_dp).toString()
+        );
       } else if (qty.gt(maxQty)) {
-        errors.order_quantity = {
-          type: "max",
-          message: `Quantity must be less than ${new Decimal(maxQty).todp(
-            base_dp
-          )}`,
-        };
+        errors.order_quantity = OrderValidation.max(
+          "order_quantity",
+          new Decimal(maxQty).todp(base_dp).toString()
+        );
       }
     }
 
@@ -141,7 +138,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     // }
 
     const price = `${order_type}`.includes("MARKET") ? markPrice : order_price;
-    const notionalHintStr = checkNotional({
+    const minNotional = getMinNotional({
       base_tick,
       quote_tick,
       price,
@@ -151,10 +148,11 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       base_dp,
     });
 
-    if (notionalHintStr !== undefined && !reduce_only) {
+    if (minNotional !== undefined && !reduce_only) {
       errors.total = {
         type: "min",
-        message: notionalHintStr,
+        message: `The order value should be greater or equal to ${minNotional} USDC`,
+        value: minNotional,
       };
     }
 
@@ -232,7 +230,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     values: OrderlyOrder,
     config: ValuesDepConfig,
     errors: {
-      [P in keyof OrderlyOrder]?: { type: string; message: string };
+      [P in keyof OrderlyOrder]?: OrderValidationItem;
     }
   ) {
     const { tp_trigger_price, sl_trigger_price, side, order_price } = values;
@@ -249,33 +247,33 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     if (hasTPPrice) {
       const tpPrice = new Decimal(tp_trigger_price);
       if (tpPrice.gt(quote_max)) {
-        errors.tp_trigger_price = {
-          type: "max",
-          message: `TP price must be less than ${quote_max}`,
-        };
+        errors.tp_trigger_price = OrderValidation.max(
+          "tp_trigger_price",
+          quote_max
+        );
       }
       if (tpPrice.lt(quote_min)) {
-        errors.tp_trigger_price = {
-          type: "min",
-          message: `TP price must be greater than ${quote_min}`,
-        };
+        errors.tp_trigger_price = OrderValidation.min(
+          "tp_trigger_price",
+          quote_min
+        );
       }
 
       if (side === OrderSide.BUY) {
         if (tpPrice.lte(_orderPrice)) {
-          errors.tp_trigger_price = {
-            type: "tpPrice < order_price",
-            message: `TP must be greater than ${_orderPrice}`,
-          };
+          errors.tp_trigger_price = OrderValidation.min(
+            "tp_trigger_price",
+            _orderPrice
+          );
         }
       }
 
       if (side === OrderSide.SELL) {
         if (tpPrice.gte(_orderPrice)) {
-          errors.tp_trigger_price = {
-            type: "tpPrice > order_price",
-            message: `TP price must be less than ${_orderPrice}`,
-          };
+          errors.tp_trigger_price = OrderValidation.max(
+            "tp_trigger_price",
+            _orderPrice
+          );
         }
       }
     }
@@ -283,34 +281,34 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     if (hasSLPrice) {
       const slPrice = new Decimal(sl_trigger_price);
       if (slPrice.gt(quote_max)) {
-        errors.sl_trigger_price = {
-          type: "max",
-          message: `SL price must be less than ${quote_max}`,
-        };
+        errors.sl_trigger_price = OrderValidation.max(
+          "sl_trigger_price",
+          quote_max
+        );
       }
       if (slPrice.lt(quote_min)) {
-        errors.sl_trigger_price = {
-          type: "min",
-          message: `SL price must be greater than ${quote_min}`,
-        };
+        errors.sl_trigger_price = OrderValidation.min(
+          "sl_trigger_price",
+          quote_min
+        );
       }
 
       if (side === OrderSide.BUY) {
         if (slPrice.gte(_orderPrice)) {
-          errors.sl_trigger_price = {
-            type: "slPrice > order_price",
-            message: `SL price must be less than ${_orderPrice}`,
-          };
+          errors.sl_trigger_price = OrderValidation.max(
+            "sl_trigger_price",
+            _orderPrice
+          );
         }
         //SL price < mark_price * price_scope
       }
 
       if (side === OrderSide.SELL) {
         if (slPrice.lte(_orderPrice)) {
-          errors.sl_trigger_price = {
-            type: "slPrice < order_price",
-            message: `SL price must be greater than ${_orderPrice}`,
-          };
+          errors.sl_trigger_price = OrderValidation.min(
+            "sl_trigger_price",
+            _orderPrice
+          );
         }
       }
     }
@@ -320,16 +318,16 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     //   const tpPrice = new Decimal(tp_trigger_price);
 
     //   if (tpPrice.lte(_orderPrice)) {
-    //     errors.tp_trigger_price = {
-    //       type: "min",
-    //       message: `TP price must be greater than ${_orderPrice}`,
-    //     };
+    //     errors.tp_trigger_price = OrderValidation.min(
+    //       "tp_trigger_price",
+    //       _orderPrice
+    //     );
     //   }
     //   if (slPrice.gte(_orderPrice)) {
-    //     errors.sl_trigger_price = {
-    //       type: "max",
-    //       message: `SL price must be less than ${_orderPrice}`,
-    //     };
+    //     errors.sl_trigger_price = OrderValidation.max(
+    //       "sl_trigger_price",
+    //       _orderPrice
+    //     );
     //   }
 
     //   const slPriceScope = slPrice
@@ -338,20 +336,20 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     //     .toNumber();
 
     //   if (slPrice.lt(slPriceScope)) {
-    //     errors.sl_trigger_price = {
-    //       type: "max",
-    //       message: `SL price must be less than ${_orderPrice}`,
-    //     };
+    //     errors.sl_trigger_price = OrderValidation.max(
+    //       "sl_trigger_price",
+    //       slPriceScope
+    //     );
     //   }
     // } else if (side === OrderSide.SELL && hasTPPrice && hasSLPrice) {
     //   const slPrice = new Decimal(sl_trigger_price);
     //   const tpPrice = new Decimal(tp_trigger_price);
 
     //   if (tpPrice.gte(_orderPrice)) {
-    //     errors.tp_trigger_price = {
-    //       type: "max",
-    //       message: `TP price must be less than ${_orderPrice}`,
-    //     };
+    //     errors.tp_trigger_price = OrderValidation.max(
+    //       "tp_trigger_price",
+    //       _orderPrice
+    //     );
     //   }
 
     //   if (slPrice.lte(_orderPrice)) {

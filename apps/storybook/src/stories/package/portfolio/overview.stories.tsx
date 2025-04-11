@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/portfolio";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
 import { DataViewer } from "../../../components/dataViewer";
-import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
+import { PortfolioLayout } from "../../../components/layout";
 
 const { usePerformanceScript } = OverviewModule;
 

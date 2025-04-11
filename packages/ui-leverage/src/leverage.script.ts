@@ -1,6 +1,7 @@
-import { useLeverage, useMarginRatio } from "@orderly.network/hooks";
-import { SliderMarks, toast } from "@orderly.network/ui";
 import { useMemo, useState } from "react";
+import { useLeverage, useMarginRatio } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { SliderMarks, toast } from "@orderly.network/ui";
 
 type UseLeverageScriptOptions = {
   close?: () => void;
@@ -11,7 +12,7 @@ export type LeverageScriptReturns = ReturnType<typeof useLeverageScript>;
 export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
   const { currentLeverage } = useMarginRatio();
   const [showSliderTip, setShowSliderTip] = useState(false);
-
+  const { t } = useTranslation();
   const [curLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
 
@@ -50,7 +51,7 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
       update({ leverage }).then(
         (res: any) => {
           options?.close?.();
-          toast.success("Leverage updated");
+          toast.success(t("leverage.updated"));
         },
         (err: Error) => {
           toast.error(err.message);

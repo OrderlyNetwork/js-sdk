@@ -5,7 +5,7 @@ import {
   MarketsListWidget,
   RecentListWidget,
   DropDownMarketsWidget,
-  getDropDownMarketsColumns,
+  useDropDownMarketsColumns,
 } from "@orderly.network/markets";
 import { Box, Button } from "@orderly.network/ui";
 
@@ -50,7 +50,7 @@ export const Favorites: Story = {
     return (
       <Box pt={2}>
         <FavoritesListWidget
-          getColumns={getDropDownMarketsColumns}
+          getColumns={useDropDownMarketsColumns()}
           tableClassNames={{
             root: "!oui-bg-base-8",
             scroll: "oui-pb-5 oui-px-1",
@@ -67,7 +67,7 @@ export const Recent: Story = {
   render: (args) => {
     return (
       <RecentListWidget
-        getColumns={getDropDownMarketsColumns}
+        getColumns={useDropDownMarketsColumns()}
         tableClassNames={{
           root: "!oui-bg-base-8",
           scroll: "oui-pb-5 oui-px-1",
@@ -86,7 +86,7 @@ export const All: Story = {
         type="all"
         sortKey="24h_amount"
         sortOrder="desc"
-        getColumns={getDropDownMarketsColumns}
+        getColumns={useDropDownMarketsColumns()}
         tableClassNames={{
           root: "!oui-bg-base-8",
           scroll: "oui-pb-5 oui-px-1",

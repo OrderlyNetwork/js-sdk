@@ -1,5 +1,12 @@
 import React, { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import {
+  Network,
+  WalletConnectorPrivyProvider,
+  wagmiConnectors,
+  wagmi,
+  WalletChainTypeEnum,
+} from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
 import {
@@ -18,9 +25,18 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import config from "../src/config";
 import { Chains } from "@orderly.network/hooks";
 import { NetworkId } from "@orderly.network/types";
+import { LocaleProvider, en, zh } from "@orderly.network/i18n";
+import { Resources } from "@orderly.network/i18n";
+import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import { ExtendLocaleMessages, extendZh } from "./locale/extendLocale";
+import { extendEn } from "./locale/extendLocale";
+import {
+  customChainsEvm,
+  customChainsSolana,
+  customChainsSolanaAndEvm,
+} from "./customChains";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -45,6 +61,10 @@ const wallets = [
   }),
 ];
 
+// const customChains =customChainsEvm;
+// const customChains = customChainsSolana;
+// const customChains = customChainsSolanaAndEvm;
+
 const { VITE_NETWORK_ID, VITE_BROKER_ID, VITE_BROKER_NAME, VITE_ENV } =
   import.meta.env || {};
 
@@ -55,49 +75,71 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
-const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
-  console.log("-- provider", configStore, VITE_ENV);
+const resources: Resources<ExtendLocaleMessages> = {
+  en: extendEn,
+  zh: {
+    ...zh,
+    ...extendZh,
+  },
+};
 
+export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
+  const config = useOrderlyConfig();
   return (
-    <WalletConnectorProvider
-      solanaInitial={{ 
-        wallets: wallets, 
-        // network: "mainnet-beta" as WalletAdapterNetwork,
-        network: WalletAdapterNetwork.Devnet,
-
-        mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_acfc3073385c4744b097aa86dc5b2f3c_1335ff06'
-      }}
-
-      // solanaInitial={{ wallets: wallets, onError: handleSolanaError, network: 'mainnet-beta', mainnetRpc: 'https://svc.blockdaemon.com/solana/mainnet/native?apiKey=zpka_dbb6d1ce22654830860472b76acf15db_62182ef5' }}
+    <LocaleProvider
+      resources={resources}
+      // supportedLanguages={["zh", "en", "ja", "es", "fr"]}
     >
-      <OrderlyAppProvider
-        // brokerId="orderly"
-        // brokerName="Orderly"
-        // networkId="testnet"
-        configStore={configStore}
-        appIcons={config.orderlyAppProvider.appIcons}
-        restrictedInfo={{
-          enableDefault: false,
-          customRestrictedIps: [],
-          customRestrictedRegions: [],
-          contact: { url: "x@orerly.network", text: "x@orerly.network" },
+      <WalletConnectorPrivyProvider
+        termsOfUse="https://learn.woo.org/legal/terms-of-use"
+        network={Network.testnet}
+        // customChains={customChains}
+        privyConfig={{
+          appid: "cm50h5kjc011111gdn7i8cd2k",
+          config: {
+            appearance: {
+              theme: "dark",
+              accentColor: "#181C23",
+              logo: "/orderly-logo.svg",
+            },
+          },
         }}
-        // overrides={{
-        //   tabs: {
-        //     variant: "text",
-        //   },
-        //   chainSelector: {
-        //     showTestnet: false,
-        //   },
-        // }}
-        // defaultChain={{
-        //   mainnet: { id: 900900900 },
-        //   testnet: { id: 901901901 },
-        // }}
+        wagmiConfig={{
+          connectors: [
+            wagmiConnectors.injected(),
+            wagmiConnectors.walletConnect({
+              projectId: "93dba83e8d9915dc6a65ffd3ecfd19fd",
+              showQrModal: true,
+              storageOptions: {},
+              metadata: {
+                name: "Orderly Network",
+                description: "Orderly Network",
+                url: "https://orderly.network",
+                icons: ["https://oss.orderly.network/static/sdk/chains.png"],
+              },
+            }),
+          ],
+        }}
+        solanaConfig={{
+          mainnetRpc: "",
+          devnetRpc: "https://api.devnet.solana.com",
+          wallets: wallets,
+          onError: (error: WalletError, adapter?: Adapter) => {
+            console.log("-- error", error, adapter);
+          },
+        }}
       >
-        {props.children}
-      </OrderlyAppProvider>
-    </WalletConnectorProvider>
+        <OrderlyAppProvider
+          configStore={configStore}
+          appIcons={config.orderlyAppProvider.appIcons}
+          restrictedInfo={config.orderlyAppProvider.restrictedInfo}
+          // customChains={customChains}
+          // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
+        >
+          {props.children}
+        </OrderlyAppProvider>
+      </WalletConnectorPrivyProvider>
+    </LocaleProvider>
   );
 };
 

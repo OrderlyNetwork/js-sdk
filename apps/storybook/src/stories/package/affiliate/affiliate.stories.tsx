@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
 import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
-import { TradingRewardsLayout } from "../../../components/layout/tradingRewardsLayout";
+import { TradingRewardsLayout } from "../../../components/layout";
 
 const meta: Meta<typeof Dashboard.AffiliatePage> = {
   title: "Package/affiliate/Affiliate",
@@ -41,8 +41,8 @@ const meta: Meta<typeof Dashboard.AffiliatePage> = {
             <div style={{ backgroundColor: "#FF0000" }}>df</div>
           )}
           overwrite={{
-            shortBrokerName: "Mark",
-            brokerName: "Mark Pan",
+            shortBrokerName: "Orderly",
+            brokerName: "Orderly Network",
             ref: {
               // top: (state) =>  (<div>ASD</div>),
               // card: (state) => (<div>GFHJK</div>)

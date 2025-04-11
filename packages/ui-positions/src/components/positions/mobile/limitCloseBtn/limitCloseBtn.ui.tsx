@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import {
   Badge,
   Button,
@@ -18,6 +18,8 @@ import { LimitCloseBtnState } from "./limitCloseBtn.script";
 import { Decimal } from "@orderly.network/utils";
 import { LimitConfirmDialog } from "../../desktop/closeButton";
 import { utils } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
   const {
@@ -38,6 +40,11 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
     onCloseDialog,
   } = props;
   const isBuy = item.position_qty > 0;
+  const { t } = useTranslation();
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+
+  const orderQuantityErrorMsg = parseErrorMsg("order_quantity");
+  const orderPriceErrorMsg = parseErrorMsg("order_price");
 
   const onBlur = (value: string) => {
     if (props.baseTick && props.baseTick > 0) {
@@ -58,12 +65,12 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
           setSheetOpen(true);
         }}
       >
-        Limit Close
+        {t("positions.limitClose")}
       </Button>
 
       {sheetOpen && (
         <SimpleSheet
-          title={"Limit close"}
+          title={t("positions.limitClose")}
           open={sheetOpen}
           onOpenChange={setSheetOpen}
         >
@@ -80,33 +87,33 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
               </Text.formatted>
               <Flex gap={1}>
                 <Badge color="neutral" size="xs">
-                  Limit
+                  {t("orderEntry.orderType.limit")}
                 </Badge>
                 {isBuy && (
                   <Badge color="success" size="xs">
-                    Buy
+                    {t("common.buy")}
                   </Badge>
                 )}
                 {!isBuy && (
                   <Badge color="danger" size="xs">
-                    Sell
+                    {t("common.sell")}
                   </Badge>
                 )}
               </Flex>
             </Flex>
             <Divider className="oui-w-full" />
             <Flex width={"100%"} justify={"between"}>
-              <Text intensity={54}>Last price</Text>
+              <Text intensity={54}>{t("common.lastPrice")}</Text>
               <Text.numeral
                 dp={(props.item as any)?.symbolInfo?.quote_dp}
-                suffix={<Text intensity={36}>USDC</Text>}
+                suffix={<Text intensity={36}> USDC</Text>}
               >
                 {props.curMarkPrice}
               </Text.numeral>
             </Flex>
             <Flex width={"100%"} direction={"column"} gap={2}>
               <Input.tooltip
-                prefix="Price"
+                prefix={t("common.price")}
                 suffix={props.quote}
                 align="right"
                 fullWidth
@@ -116,10 +123,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   inputFormatter.dpFormatter(props.quote_dp),
                 ]}
                 triggerClassName="oui-w-full"
-                tooltip={props.errors?.order_price?.message}
-                color={
-                  props.errors?.order_price?.message ? "danger" : undefined
-                }
+                tooltip={orderPriceErrorMsg}
+                color={orderPriceErrorMsg ? "danger" : undefined}
                 value={props.price}
                 onValueChange={(e) => props.updatePriceChange(e)}
                 classNames={{
@@ -127,14 +132,12 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   suffix: "oui-text-base-contrast-54",
                   root: cn(
                     "oui-outline-line-12 oui-w-full",
-                    props.errors?.order_price?.message
-                      ? "oui-outline-danger"
-                      : undefined
+                    orderPriceErrorMsg ? "oui-outline-danger" : undefined
                   ),
                 }}
               />
               <Input
-                prefix="Quantity"
+                prefix={t("common.quantity")}
                 suffix={props.base}
                 align="right"
                 fullWidth
@@ -144,9 +147,9 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   inputFormatter.dpFormatter(props.base_dp),
                 ]}
                 // triggerClassName="oui-w-full"
-                // tooltip={props.errors?.order_quantity?.message}
+                // tooltip={orderQuantityErrorMsg}
                 // color={
-                //   props.errors?.order_quantity?.message ? "danger" : undefined
+                //   orderQuantityErrorMsg ? "danger" : undefined
                 // }
                 value={props.quantity}
                 onBlur={(event) => onBlur(event.target.value)}
@@ -163,8 +166,8 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
                   root: cn(
-                    "oui-outline-line-12 oui-w-full",
-                    // props.errors?.order_quantity?.message
+                    "oui-outline-line-12 oui-w-full"
+                    // orderQuantityErrorMsg
                     //   ? "oui-outline-danger"
                     //   : undefined
                   ),
@@ -191,7 +194,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 >{`${props.sliderValue}%`}</Text>
                 <Flex gap={1}>
                   <Text size="2xs" color="primary">
-                    Max
+                    {t("common.max")}
                   </Text>
                   <Text.numeral intensity={54} size="2xs">
                     {Math.abs(props.item.position_qty)}
@@ -207,7 +210,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   onClose();
                 }}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               <ThrottledButton
                 fullWidth
@@ -216,12 +219,9 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-                  const errors = props.errors;
 
-                  const quantityMsg = errors?.order_quantity?.message;
-                  const priceMsg = errors?.order_price?.message;
-                  if (quantityMsg || priceMsg) {
-                    toast.error(quantityMsg ?? priceMsg);
+                  if (orderQuantityErrorMsg || orderPriceErrorMsg) {
+                    toast.error(orderQuantityErrorMsg ?? orderPriceErrorMsg);
                     return;
                   }
                   if (!props.orderConfirm) {
@@ -232,7 +232,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 }}
                 // disabled={Object.keys(props.errors ?? {}).length > 0}
               >
-                Confirm
+                {t("common.confirm")}
               </ThrottledButton>
             </Flex>
           </Flex>

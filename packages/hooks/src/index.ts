@@ -20,7 +20,8 @@ export { useEventEmitter } from "./useEventEmitter";
 export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
 export { useNetworkInfo } from "./useNetworkInfo";
-
+export { useTrack } from "./useTrack";
+export { useTrackingInstance } from "./useTrackInstance";
 export { parseJSON } from "./utils/json";
 
 export { default as useConstant } from "use-constant";
@@ -37,7 +38,6 @@ export type {
   ExclusiveConfigProviderProps,
 } from "./configProvider";
 export { OrderlyConfigProvider } from "./configProvider";
-export { OrderlyTrackerProvider } from "./trackerProvider";
 export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {
@@ -77,7 +77,7 @@ export type {
 export * from "./orderly/orderlyHooks";
 
 export { cleanStringStyle } from "./utils/orderEntryHelper";
-export { checkNotional } from "./utils/createOrder";
+export { checkNotional, getMinNotional } from "./utils/createOrder";
 
 export * as utils from "./utils";
 
@@ -94,7 +94,7 @@ export * from "./apiKeys";
 export * from "./next/useOrderEntry";
 
 export {
-  useRestrictedAreas,
-  type RestrictedAreasReturns,
-  type IRestrictedAreasParams,
-} from "./useRestrictedAreas";
+  useRestrictedInfo,
+  type RestrictedInfoReturns,
+  type RestrictedInfoOptions,
+} from "./useRestrictedInfo";

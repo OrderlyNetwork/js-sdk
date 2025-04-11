@@ -3,6 +3,7 @@ import { SimpleDialog, SimpleDialogProps } from "./simpleDialog";
 import { DialogAction } from "./simpleDialogFooter";
 import { useScreen } from "../hooks";
 import { cnBase } from "tailwind-variants";
+import { useLocale } from "../locale";
 
 export type AlertDialogProps = {
   message?: ReactNode;
@@ -23,6 +24,7 @@ export type AlertDialogProps = {
  * Generic alert dialog, often used for confirmation/alert/information dialogs.
  */
 export const AlertDialog: FC<AlertDialogProps> = (props) => {
+  const [locale] = useLocale("dialog");
   const {
     title,
     message,
@@ -30,8 +32,8 @@ export const AlertDialog: FC<AlertDialogProps> = (props) => {
     onOpenChange,
     onOk,
     onCancel,
-    okLabel = "OK",
-    cancelLabel = "Cancel",
+    okLabel = locale.ok,
+    cancelLabel = locale.cancel,
     size,
     classNames,
   } = props;

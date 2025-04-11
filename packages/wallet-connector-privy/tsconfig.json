@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "paths": {
+      "@orderly.network/core": [
+        "../core/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ],
+      "@orderly.network/ui": [
+        "../ui/src"
+      ],
+      "react": [
+        "./node_modules/react"
+      ],
+      "react-dom": [
+        "./node_modules/react-dom"
+      ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
+      ],
+      "@orderly.network/ui-connector": [
+        "../ui-connector/src"
+      ]
+    }
+  }
+}

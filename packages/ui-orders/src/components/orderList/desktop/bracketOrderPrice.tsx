@@ -1,13 +1,15 @@
-import { useMarkPricesStream, utils } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
 import { useMemo } from "react";
+import { API } from "@orderly.network/types";
 import { Flex, Tooltip, Text, cn } from "@orderly.network/ui";
 import { useSymbolContext } from "../symbolProvider";
 import { calcBracketRoiAndPnL } from "../../../utils/util";
+import { utils } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
   const { order } = props;
   const { quote_dp, base_dp } = useSymbolContext();
+  const { t } = useTranslation();
 
   const { sl_trigger_price, tp_trigger_price } = useMemo(() => {
     if (!("algo_type" in order) || !Array.isArray(order.child_orders)) {
@@ -30,7 +32,9 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
           {typeof pnl.tpPnL !== "undefined" && (
             <Text.numeral
               // @ts-ignore
-              prefix={<Text intensity={80}>TP PnL: &nbsp;</Text>}
+              prefix={
+                <Text intensity={80}>{`${t("tpsl.tpPnl")}:`} &nbsp;</Text>
+              }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
               color="buy"
@@ -42,7 +46,9 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
           {typeof pnl.slPnL !== "undefined" && (
             <Text.numeral
               // @ts-ignore
-              prefix={<Text intensity={80}>SL PnL: &nbsp;</Text>}
+              prefix={
+                <Text intensity={80}>{`${t("tpsl.slPnl")}:`} &nbsp;</Text>
+              }
               suffix={<Text intensity={20}>{" USDC"}</Text>}
               dp={quote_dp}
               color="sell"
@@ -73,6 +79,8 @@ const Price = (props: {
   quote_dp: number;
 }) => {
   const { type, value, quote_dp } = props;
+  const { t } = useTranslation();
+
   return value ? (
     <Text.numeral
       className={cn(
@@ -85,7 +93,8 @@ const Price = (props: {
       // @ts-ignore
       prefix={
         <span className={"oui-text-base-contrast-54"}>
-          {`${type}`}&nbsp;-&nbsp;
+          {type === "TP" ? `${t("tpsl.tp")} -` : `${t("tpsl.sl")} -`}
+          &nbsp;
         </span>
       }
     >

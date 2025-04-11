@@ -4,9 +4,12 @@ import { FC } from "react";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { AvailableReturns } from "./availableToClaim.script";
-import { commify, commifyOptional } from "@orderly.network/utils";
+import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const AvailableToClaim: FC<AvailableReturns> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <Flex
       id="oui-tradingRewards-home-availableToClaim"
@@ -18,16 +21,16 @@ export const AvailableToClaim: FC<AvailableReturns> = (props) => {
       className=" oui-font-semibold oui-bg-base-9 "
     >
       <Flex direction={"row"} justify={"between"} width={"100%"}>
-        <Text className="oui-text-lg">Available to claim</Text>
+        <Text className="oui-text-lg">
+          {t("tradingRewards.availableClaim")}
+        </Text>
         <Flex
           direction={"row"}
           gap={1}
           onClick={props.goToClaim}
           className="oui-cursor-pointer oui-text-primary-light"
         >
-          <Text size="sm">
-            Claim
-          </Text>
+          <Text size="sm">{t("tradingRewards.claim")}</Text>
           <JumpIcon />
         </Flex>
       </Flex>
@@ -39,7 +42,6 @@ export const AvailableToClaim: FC<AvailableReturns> = (props) => {
   );
 };
 // background: linear-gradient(28.29deg, #1B1D22 21.6%, #26292E 83.23%);
-
 
 const Statics: FC<{
   title: string;

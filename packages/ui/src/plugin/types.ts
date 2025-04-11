@@ -32,6 +32,7 @@ export enum ExtensionPositionEnum {
    * Wallet button
    */
   AccountMenu = "accountMenu",
+  MobileAccountMenu = "mobileAccountMenu",
   // Logo = "logo",
   // Toast = "toast",
   /// Layout components

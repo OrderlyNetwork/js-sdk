@@ -11,9 +11,12 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { SettingState } from "./setting.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const Setting: FC<SettingState> = (props) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+
   return (
     <Flex gap={0}>
       <Flex gap={1}>
@@ -29,7 +32,7 @@ export const Setting: FC<SettingState> = (props) => {
           className="oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer"
           htmlFor="oui-checkbox-hideOtherSymbols"
         >
-          Hide other symbols
+          {t("trading.hideOtherSymbols")}
         </label>
       </Flex>
 
@@ -55,10 +58,12 @@ export const Setting: FC<SettingState> = (props) => {
           align="end"
         >
           <div className="oui-flex oui-flex-col oui-text-sm">
-            <Text className="oui-text-base oui-pb-3">Portfolio Settings</Text>
+            <Text className="oui-text-base oui-pb-3">
+              {t("trading.portfolioSettings")}
+            </Text>
             <Divider />
             <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-              Decimal Precision for PnL & Notional
+              {t("trading.portfolioSettings.decimalPrecision")}
             </Text>
             <DecimalPrecisionCheckbox
               value={props.pnlNotionalDecimalPrecision}
@@ -69,7 +74,7 @@ export const Setting: FC<SettingState> = (props) => {
             />
             <Divider className="oui-my-3" />
             <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-              Unrealized PnL Price Basis
+              {t("trading.portfolioSettings.unrealPnlPriceBasis")}
             </Text>
             <UnPnlPriceBasisCheckBox
               value={props.unPnlPriceBasis}
@@ -90,18 +95,20 @@ const UnPnlPriceBasisCheckBox = (props: {
   onValueChange: (value: string) => void;
 }) => {
   const { value, onValueChange } = props;
+  const { t } = useTranslation();
+
   // "markPrice" | "lastPrice"
   return (
     <Flex gap={2}>
       <RadioButton
         sel={value === "markPrice"}
-        label={"Mark price"}
+        label={t("common.markPrice")}
         value={"markPrice"}
         onCheckChange={onValueChange}
       />
       <RadioButton
         sel={value === "lastPrice"}
-        label={"Last price"}
+        label={t("common.lastPrice")}
         value={"lastPrice"}
         onCheckChange={onValueChange}
       />

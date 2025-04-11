@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/ui";
 import { ChainType, TChainItem } from "./type";
 import { UseChainSelectorScriptReturn } from "./chainSelector.script";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type ChainSelectorProps = {
   isWrongNetwork?: boolean;
@@ -83,7 +84,7 @@ const chainSelectorVariants = tv({
 //------------------ ChainSelector start ------------------
 export const ChainSelector = (props: ChainSelectorProps) => {
   const { isWrongNetwork, variant = "wide" } = props;
-
+  const { t } = useTranslation();
   const { list, recentList, mainnetList, testnetList, icon, item, tip } =
     chainSelectorVariants({ variant });
 
@@ -95,7 +96,7 @@ export const ChainSelector = (props: ChainSelectorProps) => {
         size={variant === "wide" ? "md" : "lg"}
         onValueChange={(e) => props.onTabChange(e as ChainType)}
       >
-        <TabPanel value={ChainType.Mainnet} title={ChainType.Mainnet}>
+        <TabPanel value={ChainType.Mainnet} title={t("connector.mainnet")}>
           {!!props.recentChains?.length && (
             <Flex gap={2} className={recentList()}>
               {props.recentChains?.map((item) => {
@@ -128,7 +129,7 @@ export const ChainSelector = (props: ChainSelectorProps) => {
         </TabPanel>
 
         {props.showTestnet && (
-          <TabPanel value={ChainType.Testnet} title={ChainType.Testnet}>
+          <TabPanel value={ChainType.Testnet} title={t("connector.testnet")}>
             <Box r="2xl" className={cn(list(), testnetList())}>
               {props.chains.testnet?.map((chain) => {
                 const selected = props.selectChainId === chain.id;
@@ -150,7 +151,7 @@ export const ChainSelector = (props: ChainSelectorProps) => {
       {isWrongNetwork && (
         <Box className={tip()}>
           <Text color="warning" size="xs">
-            Please switch to a supported network to continue.
+            {t("connector.wrongNetwork.tooltip")}
           </Text>
         </Box>
       )}

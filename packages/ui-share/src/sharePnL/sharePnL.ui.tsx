@@ -1,5 +1,4 @@
-import { FC, PropsWithChildren, useEffect, useState } from "react";
-import { Box } from "@orderly.network/ui";
+import { FC, useEffect, useState } from "react";
 import { SharePnLState } from "./sharePnL.script";
 import { DesktopSharePnLContent } from "./desktop/content";
 import { MobileSharePnLContent } from "./mobile/content";

@@ -1,7 +1,7 @@
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
-
 import { useWalletConnectorBuilder } from "./useWalletConnectorBuilder";
 import { WalletConnectContent } from "./walletConnectorContent";
+import { i18n } from "@orderly.network/i18n";
 
 export const WalletConnectorModalId = "walletConnector" as const;
 export const WalletConnectorSheetId = "walletConnectorSheet" as const;
@@ -13,9 +13,9 @@ export const WalletConnectorWidget = (props: any) => {
 
 registerSimpleDialog(WalletConnectorModalId, WalletConnectorWidget, {
   size: "sm",
-  title: "Connect wallet",
+  title: () => i18n.t("connector.connectWallet"),
 });
 
 registerSimpleSheet(WalletConnectorSheetId, WalletConnectorWidget, {
-  title: "Connect wallet",
+  title: () => i18n.t("connector.connectWallet"),
 });

@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import {
   useAccountInstance,
   useEventEmitter,
@@ -20,24 +21,27 @@ import {
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { capitalizeString } from "@orderly.network/utils";
-import { useCallback, useMemo } from "react";
 import {
   DepositAndWithdrawWithSheetId,
   DepositAndWithdrawWithDialogId,
 } from "@orderly.network/ui-transfer";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@orderly.network/i18n";
 
 export const useFirstTimeDeposit = () => {
   const { state } = useAccount();
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const { totalValue } = useCollateral({
     dp: 2,
   });
+
   const unavailable =
     wrongNetwork ||
+    disabledConnect ||
     (state.status < AccountStatusEnum.EnableTrading &&
       state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
+
   const getKeyMemo = useMemo(() => {
     const now = new Date();
     const ninetyDaysAgo = new Date();
@@ -73,9 +77,9 @@ export const useFirstTimeDeposit = () => {
 };
 
 export const useAssetViewScript = () => {
+  const { t } = useTranslation();
   const account = useAccountInstance();
   const matches = useMediaQuery(MEDIA_TABLET);
-
   const { isFirstTimeDeposit, totalValue } = useFirstTimeDeposit();
 
   const networkId = useConfig("networkId") as NetworkId;
@@ -138,22 +142,25 @@ export const useAssetViewScript = () => {
       .settle()
       .catch((e) => {
         if (e.code === -1104) {
-          toast.error(
-            "Settlement is only allowed once every 10 minutes. Please try again later."
-          );
+          toast.error(t("settle.settlement.error"));
           return Promise.reject(e);
         }
-        if (e.message.indexOf('Signing off chain messages with Ledger is not yet supported') !== -1) {
-          ee.emit("wallet:sign-message-with-ledger-error", { message: e.message, userAddress: account.address });
+        if (
+          e.message.indexOf(
+            "Signing off chain messages with Ledger is not yet supported"
+          ) !== -1
+        ) {
+          ee.emit("wallet:sign-message-with-ledger-error", {
+            message: e.message,
+            userAddress: account.address,
+          });
         }
-
-
       })
       .then((res) => {
-        toast.success("Settlement requested");
+        toast.success(t("settle.settlement.requested"));
         return Promise.resolve(res);
       });
-  }, [account]);
+  }, [account, t]);
 
   const [visible, setVisible] = useLocalStorage<boolean>(
     "orderly_assets_visible",
@@ -172,11 +179,19 @@ export const useAssetViewScript = () => {
       const { side, transStatus } = data;
 
       if (transStatus === "COMPLETED") {
+        const message = {
+          DEPOSIT: t("transfer.deposit.completed"),
+          WITHDRAW: t("transfer.withdraw.completed"),
+        };
         let msg = `${capitalizeString(side)} completed`;
-        toast.success(msg);
+        toast.success(message[side as keyof typeof message] || msg);
       } else if (transStatus === "FAILED") {
+        const message = {
+          DEPOSIT: t("transfer.deposit.failed"),
+          WITHDRAW: t("transfer.withdraw.failed"),
+        };
         let msg = `${capitalizeString(side)} failed`;
-        toast.error(msg);
+        toast.error(message[side as keyof typeof message] || msg);
       }
 
       ee.emit("wallet:changed", data);
@@ -189,10 +204,10 @@ export const useAssetViewScript = () => {
 
       switch (status) {
         case "COMPLETED":
-          toast.success("Settlement completed");
+          toast.success(t("settle.settlement.completed"));
           break;
         case "FAILED":
-          toast.error("Settlement failed");
+          toast.error(t("settle.settlement.failed"));
           break;
         default:
           break;

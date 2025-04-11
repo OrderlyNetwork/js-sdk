@@ -9,14 +9,16 @@ import {
   ChainMenuWidget,
   ChainMenu,
   CampaignPositionEnum,
+  LanguageSwitcherWidget,
 } from "@orderly.network/ui-scaffold";
 import { useChains } from "@orderly.network/hooks";
 import { fn } from "@storybook/test";
 import {
+  ARBActiveIcon,
+  ARBIcon,
   OrderlyActiveIcon,
   OrderlyIcon,
-} from "../../../components/icons/orderly";
-import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
+} from "../../../components/icons";
 
 const meta = {
   title: "Package/ui-scaffold/MainNav",
@@ -379,5 +381,11 @@ export const CampaignsNav: Story = {
 export const CustomChildren: Story = {
   args: {
     children: <div className={"oui-bg-primary oui-px-2"}>Custom Element</div>,
+  },
+};
+
+export const LanguageSwitcher: Story = {
+  render: () => {
+    return <LanguageSwitcherWidget />;
   },
 };
