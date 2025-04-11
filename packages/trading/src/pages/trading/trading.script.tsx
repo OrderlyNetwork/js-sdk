@@ -17,7 +17,7 @@ export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
   const { state } = useAccount();
-  const { wrongNetwork, disabledConnect } = useAppContext();
+  const { wrongNetwork, disabledConnect, restrictedInfo } = useAppContext();
 
   const { isFirstTimeDeposit } = useFirstTimeDeposit();
 
@@ -73,6 +73,7 @@ export const useTradingScript = () => {
     ...positionsState,
     ...splitSizeState,
     ...observerState,
+    restrictedInfo,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;

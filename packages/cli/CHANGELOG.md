@@ -1,5 +1,26 @@
 # @orderly.network/cli
 
+## 0.4.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- ba163f4ce: publish
+- Updated dependencies [ba163f4ce]
+- Updated dependencies
+  - @orderly.network/core@2.1.0
+
+## 0.3.24-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-alpha.0
+
 ## 0.3.23
 
 ### Patch Changes

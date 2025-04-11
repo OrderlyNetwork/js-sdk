@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren } from "react";
 import { Box } from "@orderly.network/ui";
 import {
-  LayoutProps,
+  ScaffoldProps,
   RouterAdapter,
   Scaffold,
   SideBar,
@@ -10,7 +10,7 @@ import {
 } from "@orderly.network/ui-scaffold";
 import { useTranslation } from "@orderly.network/i18n";
 
-export type PortfolioLayoutProps = LayoutProps & {
+export type PortfolioLayoutProps = ScaffoldProps & {
   hideSideBar?: boolean;
   /** @deprecated use leftSideProps.items instead */
   items?: SideBarProps["items"];

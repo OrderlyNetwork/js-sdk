@@ -12,17 +12,20 @@ export type RouterAdapter = {
   currentPath?: string;
 };
 
-export type ExpandableState = {
+export type ScaffoldState = {
   routerAdapter?: RouterAdapter;
   expanded?: boolean;
   setExpand: (expand: boolean) => void;
   checkChainSupport: (chainId: number | string) => boolean;
+  topNavbarHeight: number;
+  footerHeight: number;
+  announcementHeight: number;
 };
 
-export const ExpandableContext = createContext<ExpandableState>(
-  {} as ExpandableState
+export const ScaffoldContext = createContext<ScaffoldState>(
+  {} as ScaffoldState
 );
 
 export const useScaffoldContext = () => {
-  return useContext(ExpandableContext);
+  return useContext(ScaffoldContext);
 };

@@ -85,6 +85,14 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     ];
   }, [t]);
 
+  const modeLabelMap = useMemo(() => {
+    return {
+      [PnLMode.PnL]: t("tpsl.pnl"),
+      [PnLMode.OFFSET]: t("tpsl.offset"),
+      [PnLMode.PERCENTAGE]: `${t("tpsl.offset")}%`,
+    };
+  }, [t]);
+
   const percentageSuffix = useRef<string>("");
 
   const onValueChange = (value: string) => {
@@ -190,6 +198,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   return {
     mode,
     modes,
+    modeLabelMap,
     formatter,
     onModeChange: (mode: PnLMode) => {
       setMode(mode);

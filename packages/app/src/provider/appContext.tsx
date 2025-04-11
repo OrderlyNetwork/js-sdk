@@ -1,4 +1,10 @@
-import { FC, createContext, PropsWithChildren, useContext, useEffect } from "react";
+import {
+  FC,
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useSettleEvent } from "../hooks/useSettleEvent";
@@ -7,13 +13,10 @@ import {
   RestrictedInfoOptions,
   useRestrictedInfo,
   RestrictedInfoReturns,
-  useTrack,
-  useEventEmitter,
   useTrackingInstance,
 } from "@orderly.network/hooks";
 import { useLinkDevice } from "../hooks/useLinkDevice";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
-import { TrackerListenerKeyMap } from "@orderly.network/types";
 
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
@@ -30,6 +33,8 @@ type AppContextState = {
   ) => void;
   // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
   restrictedInfo: RestrictedInfoReturns;
+  showAnnouncement: boolean;
+  setShowAnnouncement: (show: boolean) => void;
 };
 
 const AppContext = createContext<AppContextState>({} as AppContextState);
@@ -46,6 +51,7 @@ export type AppStateProviderProps = {
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props
 ) => {
+  const [showAnnouncement, setShowAnnouncement] = useState(false);
   const [currentChainId, setCurrentChainId] = useCurrentChainId(
     props.defaultChain
   );
@@ -75,6 +81,8 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
         onChainChanged: props.onChainChanged,
         disabledConnect,
         restrictedInfo,
+        showAnnouncement,
+        setShowAnnouncement,
       }}
     >
       {props.children}

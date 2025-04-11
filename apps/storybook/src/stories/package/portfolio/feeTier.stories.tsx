@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/portfolio";
 import { Column } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
-import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
+import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {
   title: "Package/portfolio/FeeTier",

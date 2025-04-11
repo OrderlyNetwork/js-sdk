@@ -3,6 +3,16 @@ import { RouteOption } from "@orderly.network/ui-scaffold";
 // https://github.com/storybookjs/storybook/tree/next/code/addons/links
 // linkTo is not working, so use navigate instead
 import { navigate } from "@storybook/addon-links";
+import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
+import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
+
+export enum RoutePath {
+  Root = "/",
+  Portfolio = "/portfolio",
+  Markets = "/markets",
+  TradingRewards = "/rewards",
+  TradingLeaderboard = "/leaderboard",
+}
 
 export function useNav() {
   const onRouteChange = useCallback((option: RouteOption) => {
@@ -14,21 +24,24 @@ export function useNav() {
     const name = "Layout Page";
 
     const routeMap = {
-      "/": {
+      [RoutePath.Root]: {
         storyId: "Package/trading/TradingPage",
         name: "Page",
       },
-      "/portfolio": "Package/portfolio/Overview",
-      "/portfolio/feeTier": "Package/portfolio/FeeTier",
-      "/portfolio/apiKey": "Package/portfolio/ApiKey",
-      "/portfolio/positions": "Package/portfolio/Positions",
-      "/portfolio/orders": "Package/portfolio/Orders",
-      "/portfolio/setting": "Package/portfolio/Setting",
-      "/markets": "Package/markets/HomePage",
-      "/rewards": "Package/trading-rewards",
-      "/rewards/trading": "Package/trading-rewards",
-      "/rewards/affiliate": "Package/affiliate/Dashboard",
-      "/leaderboard": "Package/trading-leaderboard",
+
+      [PortfolioLeftSidebarPath.Overview]: "Package/portfolio/Overview",
+      [PortfolioLeftSidebarPath.FeeTier]: "Package/portfolio/FeeTier",
+      [PortfolioLeftSidebarPath.ApiKey]: "Package/portfolio/ApiKey",
+      [PortfolioLeftSidebarPath.Positions]: "Package/portfolio/Positions",
+      [PortfolioLeftSidebarPath.Orders]: "Package/portfolio/Orders",
+      [PortfolioLeftSidebarPath.Setting]: "Package/portfolio/Setting",
+
+      [RoutePath.TradingRewards]: "Package/trading-rewards",
+      [TradingRewardsLeftSidebarPath.Trading]: "Package/trading-rewards",
+      [TradingRewardsLeftSidebarPath.Affiliate]: "Package/affiliate/Dashboard",
+
+      [RoutePath.Markets]: "Package/markets/HomePage",
+      [RoutePath.TradingLeaderboard]: "Package/trading-leaderboard",
     } as Record<string, { storyId: string; name?: string } | string>;
 
     const params = routeMap[option.href];

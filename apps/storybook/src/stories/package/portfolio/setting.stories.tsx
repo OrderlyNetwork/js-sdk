@@ -3,7 +3,7 @@ import {
   PortfolioLeftSidebarPath,
   SettingModule,
 } from "@orderly.network/portfolio";
-import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
+import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof SettingModule.SettingPage> = {
   title: "Package/portfolio/Setting",
