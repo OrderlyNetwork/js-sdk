@@ -88,14 +88,14 @@ export function AddSolanaWallet() {
       </Tooltip>
       <div
         className={cn(
-          "oui-grid oui-grid-cols-2 oui-gap-[6px] oui-transition-height oui-duration-150 oui-overflow-hidden",
+          "oui-grid oui-grid-cols-2 oui-gap-2 oui-transition-height oui-duration-150 oui-overflow-hidden",
           visible ? "oui-max-h-0 oui-mt-0" : "oui-max-h-[400px] oui-mt-3"
         )}
       >
         {wallets.map((item, index) => (
           <div
             key={index}
-            className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
+            className="oui-flex oui-items-center oui-justify-start oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
             onClick={() =>
               connect({
                 walletType: WalletType.SOL,

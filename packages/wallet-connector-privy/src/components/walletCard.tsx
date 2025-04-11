@@ -70,7 +70,7 @@ export function WalletCard(props: WalletCardProps) {
           <div className="oui-text-base-contrast oui-text-sm oui-font-semibold">
             {formatAddress(props.address)}
           </div>
-          <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
+          <div className="oui-flex oui-items-center oui-justify-center oui-gap-2">
             <Tooltip content={t("common.copy")} className="oui-z-[65]">
               <CopyIcon
                 size={16}
