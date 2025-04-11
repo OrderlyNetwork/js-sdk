@@ -4,7 +4,7 @@ import {
   PortfolioLeftSidebarPath,
 } from "@orderly.network/portfolio";
 import { Box } from "@orderly.network/ui";
-import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
+import { PortfolioLayout } from "../../../components/layout";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 
 const meta: Meta<typeof OrdersModule.OrdersPage> = {

@@ -14,10 +14,11 @@ import {
 import { useChains } from "@orderly.network/hooks";
 import { fn } from "@storybook/test";
 import {
+  ARBActiveIcon,
+  ARBIcon,
   OrderlyActiveIcon,
   OrderlyIcon,
-} from "../../../components/icons/orderly";
-import { ARBActiveIcon, ARBIcon } from "../../../components/icons/arb";
+} from "../../../components/icons";
 
 const meta = {
   title: "Package/ui-scaffold/MainNav",

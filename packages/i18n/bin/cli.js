@@ -18,9 +18,6 @@ async function main() {
   // console.log("argv", argv);
 
   switch (command) {
-    case "generateCsv":
-      await generateCsv(output);
-      break;
     case "json2csv":
       await json2csv(input, output);
       break;
@@ -29,6 +26,9 @@ async function main() {
       break;
     case "diffcsv":
       await diffCsv(oldFile, newFile);
+      break;
+    case "generateCsv":
+      await generateCsv(output);
       break;
     case "fillJson":
       await fillJson(input, output);
@@ -41,7 +41,7 @@ async function main() {
 
 function getArgv() {
   const argv = yargs(hideBin(process.argv))
-    .scriptName("converter")
+    .scriptName("")
     .usage("i18n locale tools")
     .usage("$0 <command> [options]")
     .strict()
@@ -50,23 +50,6 @@ function getArgv() {
     .help()
     // Add `-h` as an alias for `--help`
     .alias("h", "help")
-
-    // generateCsv command
-    .command(
-      "generateCsv <output>",
-      "Generate a locale CSV file",
-      (yargs) => {
-        return yargs.positional("output", {
-          describe: "Output path for the locale CSV file",
-          type: "string",
-          // Required
-          demandOption: true,
-        });
-      },
-      (argv) => {
-        console.log(`Generating locale CSV file at: ${argv.output}`);
-      }
-    )
 
     // csv2json command
     .command(
@@ -141,6 +124,23 @@ function getArgv() {
         console.log(
           `Comparing locale CSV files: ${argv.oldFile} and ${argv.newFile}`
         );
+      }
+    )
+
+    // generateCsv command
+    .command(
+      "generateCsv <output>",
+      "Generate a locale CSV file",
+      (yargs) => {
+        return yargs.positional("output", {
+          describe: "Output path for the locale CSV file",
+          type: "string",
+          // Required
+          demandOption: true,
+        });
+      },
+      (argv) => {
+        console.log(`Generating locale CSV file at: ${argv.output}`);
       }
     )
 

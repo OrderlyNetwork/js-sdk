@@ -1,5 +1,28 @@
 # @orderly.network/default-solana-adapter
 
+## 2.1.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- ba163f4ce: publish
+- Updated dependencies [ba163f4ce]
+- Updated dependencies
+  - @orderly.network/core@2.1.0
+  - @orderly.network/types@2.1.0
+
+## 2.0.8-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.0.8-alpha.0
+  - @orderly.network/types@2.0.8-alpha.0
+
 ## 2.0.7
 
 ### Patch Changes

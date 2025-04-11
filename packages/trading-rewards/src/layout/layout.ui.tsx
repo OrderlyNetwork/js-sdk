@@ -6,13 +6,13 @@ import {
   SideBarProps,
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
-import { LayoutProps } from "@orderly.network/ui-scaffold";
+import { ScaffoldProps } from "@orderly.network/ui-scaffold";
 import { useTranslation } from "@orderly.network/i18n";
 
 export type TradingRewardsLayoutProps = {
   hideSideBar?: boolean;
 } & SideBarProps &
-  LayoutProps;
+  ScaffoldProps;
 
 export const TradingRewardsLayout = (
   props: PropsWithChildren<TradingRewardsLayoutProps>
@@ -36,7 +36,7 @@ export const TradingRewardsLayout = (
   );
 };
 
-const LeftSidebar = (props: SideBarProps & LayoutProps) => {
+const LeftSidebar = (props: SideBarProps & ScaffoldProps) => {
   const { t } = useTranslation();
   const { expanded, setExpand } = useScaffoldContext();
 

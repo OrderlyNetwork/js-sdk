@@ -3,7 +3,7 @@ import {
   TradingRewards,
   TradingRewardsLeftSidebarPath,
 } from "@orderly.network/trading-rewards";
-import { TradingRewardsLayout } from "../../../components/layout/tradingRewardsLayout";
+import { TradingRewardsLayout } from "../../../components/layout";
 
 const meta: Meta<typeof TradingRewards.HomePage> = {
   title: "Package/trading-rewards",

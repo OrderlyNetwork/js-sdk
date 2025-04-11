@@ -1,10 +1,28 @@
-import React, { type PropsWithChildren, useEffect, useRef, useState, createContext, useContext, type RefObject, useMemo } from "react";
+import React, {
+  type PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+  createContext,
+  useContext,
+  type RefObject,
+  useMemo,
+} from "react";
 import { Main } from "./main";
 import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
-import { ChainNamespace, SolanaChains } from "@orderly.network/types";
-import { InitPrivy, InitWagmi, InitSolana, Network, WalletChainType, WalletChainTypeEnum, ConnectorWalletType, SolanaChainsMap } from "./types";
+import { ArbitrumSepoliaChainInfo, ChainNamespace, SolanaChains, SolanaDevnetChainInfo } from "@orderly.network/types";
+import {
+  InitPrivy,
+  InitWagmi,
+  InitSolana,
+  Network,
+  WalletChainType,
+  WalletChainTypeEnum,
+  ConnectorWalletType,
+  SolanaChainsMap,
+} from "./types";
 import { InitPrivyProvider } from "./providers/initPrivyProvider";
 import { InitSolanaProvider } from "./providers/initSolanaProvider";
 import { InitWagmiProvider } from "./providers/initWagmiProvider";
@@ -14,16 +32,13 @@ import { SolanaWalletProvider } from "./providers/solanaWalletProvider";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { Chains } from "@orderly.network/hooks";
 
-
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to fetch data from ${url}`);
   }
   return response.json();
-
 };
-
 
 const processChainInfo = (chainInfo: any) =>
   chainInfo.map((row: any) =>
@@ -50,7 +65,7 @@ interface WalletConnectorPrivyContextType {
   initChains: Chain[];
   mainnetChains: Chain[];
   testnetChains: Chain[];
-  getChainsByNetwork: (network: 'mainnet' | 'testnet') => Chain[];
+  getChainsByNetwork: (network: "mainnet" | "testnet") => Chain[];
   openConnectDrawer: boolean;
   setOpenConnectDrawer: (open: boolean) => void;
   targetNamespace: ChainNamespace | undefined;
@@ -61,40 +76,42 @@ interface WalletConnectorPrivyContextType {
     rpcUrl: string | null;
     network: WalletAdapterNetwork | null;
   } | null;
-  setSolanaInfo: (solanaInfo: {
-    rpcUrl: string | null;
-    network: WalletAdapterNetwork | null;
-  } | null) => void;
+  setSolanaInfo: (
+    solanaInfo: {
+      rpcUrl: string | null;
+      network: WalletAdapterNetwork | null;
+    } | null
+  ) => void;
   termsOfUse: string;
   walletChainType: WalletChainType;
   connectorWalletType: ConnectorWalletType;
 }
 
-const walletConnectorPrivyContext = createContext<WalletConnectorPrivyContextType>({
-  initChains: [mainnet],
-  mainnetChains: [],
-  testnetChains: [],
-  getChainsByNetwork: () => [],
-  openConnectDrawer: false,
-  setOpenConnectDrawer: () => { },
-  targetNamespace: undefined,
-  setTargetNamespace: () => { },
-  network: Network.mainnet,
-  setNetwork: () => { },
-  solanaInfo: null,
-  setSolanaInfo: () => { },
-  termsOfUse: "",
-  walletChainType: WalletChainTypeEnum.EVM_SOL,
-  connectorWalletType: {
-    disableWagmi: false,
-    disablePrivy: false,
-    disableSolana: false,
-  }
-});
+const walletConnectorPrivyContext =
+  createContext<WalletConnectorPrivyContextType>({
+    initChains: [mainnet],
+    mainnetChains: [],
+    testnetChains: [],
+    getChainsByNetwork: () => [],
+    openConnectDrawer: false,
+    setOpenConnectDrawer: () => {},
+    targetNamespace: undefined,
+    setTargetNamespace: () => {},
+    network: Network.mainnet,
+    setNetwork: () => {},
+    solanaInfo: null,
+    setSolanaInfo: () => {},
+    termsOfUse: "",
+    walletChainType: WalletChainTypeEnum.EVM_SOL,
+    connectorWalletType: {
+      disableWagmi: false,
+      disablePrivy: false,
+      disableSolana: false,
+    },
+  });
 
-export const useWalletConnectorPrivy = () => useContext(walletConnectorPrivyContext);
-
-
+export const useWalletConnectorPrivy = () =>
+  useContext(walletConnectorPrivyContext);
 
 interface WalletConnectorPrivyProps extends PropsWithChildren {
   privyConfig?: InitPrivy;
@@ -105,7 +122,9 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   termsOfUse: string;
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
-  const [walletChainType, setWalletChainType] = useState<WalletChainType>(WalletChainTypeEnum.EVM_SOL)
+  const [walletChainType, setWalletChainType] = useState<WalletChainType>(
+    WalletChainTypeEnum.EVM_SOL
+  );
   const [termsOfUse] = useState<string>(props.termsOfUse);
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
@@ -113,7 +132,9 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
-  const [targetNamespace, setTargetNamespace] = useState<ChainNamespace | undefined>();
+  const [targetNamespace, setTargetNamespace] = useState<
+    ChainNamespace | undefined
+  >();
   const [solanaInfo, setSolanaInfo] = useState<{
     rpcUrl: string | null;
     network: WalletAdapterNetwork | null;
@@ -124,7 +145,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       disableWagmi: false,
       disablePrivy: false,
       disableSolana: false,
-    }
+    };
     if (!props.privyConfig) {
       type.disablePrivy = true;
     }
@@ -138,28 +159,45 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
 
   const fetchAllChains = async () => {
+    let testChainsList = []; 
+    let mainnetChainsList = [];
     try {
-      const [testChainInfo, mainnetChainInfo] = await Promise.all([
-        fetchChainInfo("https://testnet-api-evm.orderly.org/v1/public/chain_info"),
-        fetchChainInfo("https://api-evm.orderly.org/v1/public/chain_info"),
-      ]);
-
-      const testChains = processChainInfo(testChainInfo.data.rows);
-      const mainnetChains = processChainInfo(mainnetChainInfo.data.rows);
-
-      setTestnetChains(testChains);
-      setMainnetChains(mainnetChains);
-      setInitChains([...testChains, ...mainnetChains] as [Chain, ...Chain[]]);
-      initRef.current = true;
+      const testChainInfoRes = await fetchChainInfo(
+        "https://testnet-api-evm.orderly.org/v1/public/chain_info"
+      );
+      testChainsList = testChainInfoRes.data.rows;
     } catch (error) {
       console.error("Error fetching data:", error);
+      testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
     }
+
+
+    try {
+      const mainnetChainInfoRes = await fetchChainInfo(
+        "https://api-evm.orderly.org/v1/public/chain_info"
+      );
+      mainnetChainsList = mainnetChainInfoRes.data.rows;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      mainnetChainsList = [];
+    }
+
+    const testChains = processChainInfo(testChainsList);
+    const mainnetChains = processChainInfo(mainnetChainsList);
+
+    setTestnetChains(testChains);
+    setMainnetChains(mainnetChains);
+    setInitChains([...testChains, ...mainnetChains] as [Chain, ...Chain[]]);
+    initRef.current = true;
   };
 
   const handleCustomerChains = () => {
-
-    const testChains = processChainInfo(props.customChains!.testnet?.map(item => item.network_infos));
-    const mainnetChains = processChainInfo(props.customChains!.mainnet?.map(item => item.network_infos));
+    const testChains = processChainInfo(
+      props.customChains!.testnet?.map((item) => item.network_infos)
+    );
+    const mainnetChains = processChainInfo(
+      props.customChains!.mainnet?.map((item) => item.network_infos)
+    );
     setTestnetChains(testChains);
     setMainnetChains(mainnetChains);
     setInitChains([...testChains, ...mainnetChains] as [Chain, ...Chain[]]);
@@ -170,7 +208,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       hasEvm: false,
       hasSol: false,
     };
-    [...testChains, ...mainnetChains].forEach(chain => {
+    [...testChains, ...mainnetChains].forEach((chain) => {
       if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
       } else {
@@ -185,39 +223,62 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     } else if (chainTypeObj.hasSol) {
       setWalletChainType(WalletChainTypeEnum.onlySOL);
     }
-  }
-  if (connectorWalletType.disablePrivy && connectorWalletType.disableWagmi && connectorWalletType.disableSolana) {
-    throw new Error("Privy, Wagmi, and Solana are disabled. Please enable at least one of them.");
+  };
+  if (
+    connectorWalletType.disablePrivy &&
+    connectorWalletType.disableWagmi &&
+    connectorWalletType.disableSolana
+  ) {
+    throw new Error(
+      "Privy, Wagmi, and Solana are disabled. Please enable at least one of them."
+    );
   }
 
-  const getChainsByNetwork = (network: 'mainnet' | 'testnet'): Chain[] => {
-    return network === 'mainnet' ? mainnetChains : testnetChains;
+  const getChainsByNetwork = (network: "mainnet" | "testnet"): Chain[] => {
+    return network === "mainnet" ? mainnetChains : testnetChains;
   };
 
-  const value = useMemo(() => ({
-    initChains,
-    mainnetChains,
-    testnetChains,
-    getChainsByNetwork,
-    openConnectDrawer,
-    setOpenConnectDrawer,
-    targetNamespace,
-    setTargetNamespace,
-    network,
-    setNetwork,
-    solanaInfo,
-    setSolanaInfo,
-    termsOfUse,
-    walletChainType,
-    connectorWalletType,
-  }), [initChains, mainnetChains, testnetChains, getChainsByNetwork, openConnectDrawer, setOpenConnectDrawer, targetNamespace, setTargetNamespace, network, setNetwork, solanaInfo, setSolanaInfo, termsOfUse, walletChainType, connectorWalletType]);
-
+  const value = useMemo(
+    () => ({
+      initChains,
+      mainnetChains,
+      testnetChains,
+      getChainsByNetwork,
+      openConnectDrawer,
+      setOpenConnectDrawer,
+      targetNamespace,
+      setTargetNamespace,
+      network,
+      setNetwork,
+      solanaInfo,
+      setSolanaInfo,
+      termsOfUse,
+      walletChainType,
+      connectorWalletType,
+    }),
+    [
+      initChains,
+      mainnetChains,
+      testnetChains,
+      getChainsByNetwork,
+      openConnectDrawer,
+      setOpenConnectDrawer,
+      targetNamespace,
+      setTargetNamespace,
+      network,
+      setNetwork,
+      solanaInfo,
+      setSolanaInfo,
+      termsOfUse,
+      walletChainType,
+      connectorWalletType,
+    ]
+  );
 
   useEffect(() => {
     if (!props.customChains) {
       fetchAllChains();
       return;
-
     }
     handleCustomerChains();
   }, [props.customChains]);
@@ -226,16 +287,20 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     return null;
   }
 
-
   return (
-    <walletConnectorPrivyContext.Provider
-      value={value}
-    >
+    <walletConnectorPrivyContext.Provider value={value}>
       <TooltipProvider delayDuration={300}>
-
-        <InitPrivyProvider privyConfig={props.privyConfig} initChains={initChains}>
-          <InitWagmiProvider wagmiConfig={props.wagmiConfig ?? {}} initChains={initChains}>
-            <InitSolanaProvider {...props.solanaConfig ?? { wallets: [], onError: () => { } }}>
+        <InitPrivyProvider
+          privyConfig={props.privyConfig}
+          initChains={initChains}
+        >
+          <InitWagmiProvider
+            wagmiConfig={props.wagmiConfig ?? {}}
+            initChains={initChains}
+          >
+            <InitSolanaProvider
+              {...(props.solanaConfig ?? { wallets: [], onError: () => {} })}
+            >
               <PrivyWalletProvider>
                 <WagmiWalletProvider>
                   <SolanaWalletProvider>

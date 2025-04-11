@@ -199,6 +199,7 @@ const TPSLTriggerPriceInput = (props: {
   quote_dp: number | undefined;
   testId?: string;
 }) => {
+  const { t } = useTranslation();
   const { errorMsgVisible } = useContext(OrderEntryContext);
   const { tipsEle } = usePnlInputContext();
   const [prefix, setPrefix] = useState<string>(`${props.type} Price`);
@@ -213,14 +214,18 @@ const TPSLTriggerPriceInput = (props: {
     return null;
   }, [props.error, errorMsgVisible, tipVisible, tipsEle]);
 
-  const priceKey =
-    props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
+  const getPrefixLabel = (trigger_price?: string) => {
+    let _prefix = props.type === "TP" ? t("tpsl.tpPrice") : t("tpsl.slPrice");
+
+    if (trigger_price) {
+      _prefix = props.type === "TP" ? t("tpsl.tp") : t("tpsl.sl");
+    }
+    return _prefix;
+  };
 
   useEffect(() => {
-    setPrefix(
-      !!props.values.trigger_price ? props.type : `${props.type} Price`
-    );
-  }, [props.values.trigger_price]);
+    setPrefix(getPrefixLabel(props.values.trigger_price));
+  }, [props.type, props.values.trigger_price]);
 
   return (
     <Input.tooltip
@@ -230,14 +235,13 @@ const TPSLTriggerPriceInput = (props: {
       placeholder={placeholder}
       align="right"
       onFocus={() => {
-        setPrefix(props.type);
+        setPrefix(props.type === "TP" ? t("tpsl.tp") : t("tpsl.sl"));
         setPlaceholder("");
         setTipVisible(true);
       }}
       onBlur={() => {
-        setPrefix(
-          !!props.values.trigger_price ? props.type : `${props.type} Price`
-        );
+        console.log("props.values.trigger_price", props.values.trigger_price);
+        setPrefix(getPrefixLabel(props.values.trigger_price));
         setPlaceholder("USDC");
         setTipVisible(false);
       }}

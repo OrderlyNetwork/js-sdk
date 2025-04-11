@@ -87,7 +87,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
   return (
     <Box intensity={800} r="xl" className="oui-flex-[0_0_100%]">
       <img
-        className="oui-w-full oui-h-[120px] oui-rounded-t-xl oui-object-cover"
+        className="oui-w-full oui-h-[calc((100vw-48px)/2)] oui-rounded-t-xl oui-object-fill"
         src={image}
         alt={title}
       />

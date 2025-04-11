@@ -3,7 +3,7 @@ import {
   APIManagerModule,
   PortfolioLeftSidebarPath,
 } from "@orderly.network/portfolio";
-import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
+import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof APIManagerModule.APIManagerPage> = {
   title: "Package/portfolio/APIKey",
