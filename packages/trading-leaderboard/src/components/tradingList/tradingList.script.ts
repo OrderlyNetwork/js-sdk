@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { usePrivateQuery } from "@orderly.network/hooks";
+import { useAccount, usePrivateQuery } from "@orderly.network/hooks";
 import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { differenceInDays } from "date-fns";
 import { getDateRange, formatDateRange } from "../../utils";
@@ -18,6 +18,8 @@ export type TradingData = {
   perp_taker_volume: number;
   perp_volume: number;
   total_fee: number;
+  // custom field
+  key?: string;
 };
 
 export type TradingResponse = {
@@ -27,7 +29,7 @@ export type TradingResponse = {
 export type TradingListScriptReturn = ReturnType<typeof useTradingListScript>;
 
 export const FilterDays = [7, 14, 30, 90] as const;
-export type TFilterDays = (typeof FilterDays)[number];
+export type TFilterDays = typeof FilterDays[number];
 export type DateRange = {
   from?: Date;
   to?: Date;
@@ -42,13 +44,15 @@ export function useTradingListScript() {
   const [sort, setSort] = useState<TableSort | undefined>(initialSort);
   const [dataList, setDataList] = useState<TradingData[]>([]);
 
+  const { state } = useAccount();
+
   const { isMobile } = useScreen();
 
   const { dateRange, filterDay, updateFilterDay, filterItems, onFilter } =
     useFilter();
 
   const { page, pageSize, setPage, parsePagination } = usePagination({
-    pageSize: 50,
+    pageSize: 100,
   });
 
   const getKey = () => {
@@ -84,12 +88,71 @@ export function useTradingListScript() {
     revalidateOnFocus: false,
   });
 
+  const getTop100Key = () => {
+    if (!state.address) {
+      return "";
+    }
+    const dateRange = getDateRange(90);
+    const searchParams = new URLSearchParams({
+      page: "1",
+      size: "100",
+      aggregateBy: "ACCOUNT",
+      sort: "descending_perp_volume",
+      start_date: formatDateRange(dateRange.from!),
+      end_date: formatDateRange(dateRange.to!),
+    });
+    return `/v1/volume/broker/daily?${searchParams.toString()}`;
+  };
+
+  // it will use first page data cache
+  const { data: top100Data } = usePrivateQuery<TradingResponse>(
+    getTop100Key(),
+    {
+      formatter: (res) => res,
+      revalidateOnFocus: false,
+    }
+  );
+
+  const getUserKey = () => {
+    if (!state.address) {
+      return "";
+    }
+    const dateRange = getDateRange(90);
+    const searchParams = new URLSearchParams({
+      page: "1",
+      size: "1",
+      aggregateBy: "ACCOUNT",
+      start_date: formatDateRange(dateRange.from!),
+      end_date: formatDateRange(dateRange.to!),
+      address: state.address,
+    });
+    return `/v1/volume/broker/daily?${searchParams.toString()}`;
+  };
+
+  const { data: searchData = [] } = usePrivateQuery<TradingData[]>(
+    getUserKey(),
+    {
+      revalidateOnFocus: false,
+    }
+  );
+
+  const userData = useMemo(() => {
+    const index = top100Data?.rows.findIndex(
+      (item) => item.address === state.address
+    );
+    return searchData.map((item) => ({
+      ...item,
+      rank:
+        item.address === state.address && index !== -1 ? index! + 1 : "100+",
+      key: `user-${item.address.toLowerCase()}`,
+    }));
+  }, [state.address, top100Data, searchData]);
+
   const dataSource = useMemo(() => {
     const list = data?.rows || [];
     const total = data?.meta.total || 0;
-    if (sort?.sortKey === "perp_volume") {
-    }
-    return list?.map((item, index) => {
+    // add rank
+    const _list = list?.map((item, index) => {
       let rank: string | number = index + 1;
 
       if (searchValue) {
@@ -107,7 +170,8 @@ export function useTradingListScript() {
         rank,
       };
     });
-  }, [data, sort, page, pageSize, searchValue]);
+    return [...userData, ..._list];
+  }, [data, sort, page, pageSize, searchValue, userData]);
 
   useEffect(() => {
     if (!isMobile) {
@@ -179,6 +243,7 @@ export function useTradingListScript() {
     isMobile,
     sentinelRef,
     dataList,
+    address: state.address,
   };
 }
 
