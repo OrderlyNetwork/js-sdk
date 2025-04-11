@@ -2,13 +2,26 @@ import { useCallback, useEffect } from "react";
 import { EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
 import { debounce } from "lodash";
 import { useEventEmitter } from "./useEventEmitter";
+import { windowGuard } from "@orderly.network/utils";
 
 export const useTrack = () => {
   const ee = useEventEmitter();
 
   const debouncedTrackFn = useCallback(
     debounce((eventName: keyof typeof TrackerListenerKeyMap, params: any,) => {
-      ee.emit(eventName, params);
+      windowGuard(() => {
+        const location = window.location;
+        const origin = location.origin;
+        const url = location.pathname;
+        const title = document.title;
+
+        Object.assign(params, {
+          page_title: title,
+          page_url: url,
+          page_domain: origin,
+        });
+        ee.emit(eventName, params);
+      });
     }, 500),
     []
   );
