@@ -1,11 +1,17 @@
 import { UTCDateMini } from "@date-fns/utc";
 import { getTimestamp, windowGuard } from "@orderly.network/utils";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
-import { useMaintenanceStatus, useQuery, useWS } from "@orderly.network/hooks";
+import {
+  MaintenanceStatus,
+  useMaintenanceStatus,
+  useQuery,
+  useWS,
+} from "@orderly.network/hooks";
 import { API, WSMessage } from "@orderly.network/types";
 import { i18n } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
+import { useObserverElement } from "@orderly.network/ui";
 
 function getTimeString(timestamp: number) {
   const date = format(new UTCDateMini(timestamp), "MMM dd");
@@ -38,21 +44,22 @@ export enum AnnouncementType {
   Delisting = "delisting",
 }
 
-export interface AnnouncementTips {
+export interface AnnouncementData {
   announcementId: string;
   type?: AnnouncementType;
   content: string;
   url?: string;
 }
 
-export type AnnouncementTipsScriptOptions = {
+export type AnnouncementScriptOptions = {
   hideTips?: boolean;
 };
 
-export const useAnnouncementTipsScript = (
-  options?: AnnouncementTipsScriptOptions
-) => {
+export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
+
+export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const { setShowAnnouncement } = useAppContext();
   const { data: announcements } = useQuery<API.Announcement[]>(
     `/v1/public/announcement`,
@@ -61,7 +68,7 @@ export const useAnnouncementTipsScript = (
       refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
     }
   );
-  const [tips, setTips] = useState<AnnouncementTips[]>([]);
+  const [tips, setTips] = useState<AnnouncementData[]>([]);
 
   const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<
     string | undefined
@@ -143,7 +150,7 @@ export const useAnnouncementTipsScript = (
       const maintentanceTip = prevTips.find(
         (tip) => tip.announcementId === "-1"
       );
-      const newTips: AnnouncementTips[] = [];
+      const newTips: AnnouncementData[] = [];
       announcements.forEach((announcement) => {
         if (tips.has(announcement.announcement_id)) {
           return;
@@ -166,7 +173,7 @@ export const useAnnouncementTipsScript = (
       startTime,
       status,
     });
-    if (status === 2) {
+    if (status === MaintenanceStatus.Maintenance) {
       setMaintenanceDialogInfo(getMaintentDialogContent(brokerName, endDate));
       return;
     }
@@ -201,6 +208,13 @@ export const useAnnouncementTipsScript = (
     setShowAnnouncement(showAnnouncement);
   }, [showAnnouncement]);
 
+  const [mutiLine, setMutiLine] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useObserverElement(contentRef.current, (entry) => {
+    setMutiLine(entry.contentRect.height > 20);
+  });
+
   return {
     maintenanceDialogInfo,
     tips,
@@ -210,5 +224,7 @@ export const useAnnouncementTipsScript = (
     nextTips,
     prevTips,
     showAnnouncement,
+    contentRef,
+    mutiLine,
   };
 };

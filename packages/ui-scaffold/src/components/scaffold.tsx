@@ -7,7 +7,7 @@ import { isValidElement } from "react";
 import { RouterAdapter } from "./scaffoldContext";
 import { FooterProps, FooterWidget } from "./footer";
 import { RestrictedInfoWidget } from "./restrictedInfo";
-import { AnnouncementTipsWidget } from "./announcement-tips";
+import { AnnouncementWidget } from "./announcement";
 import { ScaffoldProvider } from "./scaffoldProvider";
 import { useScaffoldScript } from "./scaffold.script";
 
@@ -63,7 +63,7 @@ export const Scaffold = (props: PropsWithChildren<ScaffoldProps>) => {
           <div className="oui-fixed oui-left-0 oui-right-0 oui-top-0 oui-z-50">
             <RestrictedInfoWidget className="oui-bg-base-6 oui-mx-1" />
 
-            <AnnouncementTipsWidget
+            <AnnouncementWidget
               className="oui-bg-base-6 oui-mx-1"
               hideTips={restrictedInfo?.restrictedOpen}
             />
@@ -116,7 +116,7 @@ export const Scaffold = (props: PropsWithChildren<ScaffoldProps>) => {
                 "oui-min-w-[994px]"
               )}
             />
-            <AnnouncementTipsWidget
+            <AnnouncementWidget
               className={cn(
                 "oui-scaffold-maintenance-tips",
                 "oui-mt-3",

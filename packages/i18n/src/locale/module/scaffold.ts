@@ -3,6 +3,10 @@ export const scaffold = {
   "scaffold.footer.joinCommunity": "Join our community",
   "scaffold.footer.poweredBy": "Powered by",
 
+  "scaffold.announcement.type.listing": "Listing",
+  "scaffold.announcement.type.maintenance": "Maintenance",
+  "scaffold.announcement.type.delisting": "Delisting",
+
   "scaffold.maintenance.dialog.title": "System upgrade in progress",
   "scaffold.maintenance.dialog.description":
     "Sorry, {{brokerName}} is temporarily unavailable due to a scheduled upgrade. The service is expected to be back by {{endDate}}.",
