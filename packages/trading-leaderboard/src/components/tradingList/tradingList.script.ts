@@ -140,13 +140,24 @@ export function useTradingListScript() {
     const index = top100Data?.rows.findIndex(
       (item) => item.address === state.address
     );
+
+    if (!searchData.length && !isLoading) {
+      return [
+        {
+          address: state.address,
+          rank: "-",
+          key: `user-${state.address?.toLowerCase()}`,
+        } as unknown as TradingData,
+      ];
+    }
+
     return searchData.map((item) => ({
       ...item,
       rank:
         item.address === state.address && index !== -1 ? index! + 1 : "100+",
       key: `user-${item.address.toLowerCase()}`,
     }));
-  }, [state.address, top100Data, searchData]);
+  }, [state.address, top100Data, searchData, isLoading]);
 
   const dataSource = useMemo(() => {
     const list = data?.rows || [];
