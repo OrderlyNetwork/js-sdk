@@ -59,10 +59,22 @@ export type UseChainsReturnObject = {
   error: any;
 };
 
+const testnetTokenFallback = TesntTokenFallback([
+  ArbitrumSepoliaTokenInfo,
+  SolanaDevnetTokenInfo
+]);
+
+const testnetChainFallback = [
+  ArbitrumSepoliaChainInfo,
+  SolanaDevnetChainInfo
+];
+
+
 export function useChains(
   networkId?: undefined,
   options?: undefined
 ): [Chains<undefined, undefined>, UseChainsReturnObject];
+
 export function useChains<
   T extends NetworkId | undefined,
   K extends UseChainsOptions | undefined
@@ -80,17 +92,6 @@ export function useChains<
     >,
     UseChainsReturnObject
   ];
-
-const testnetTokenFallback = TesntTokenFallback([
-  ArbitrumSepoliaTokenInfo,
-  SolanaDevnetTokenInfo
-])
-
-const testnetChainFallback = [
-  ArbitrumSepoliaChainInfo,
-  SolanaDevnetChainInfo
-]
-
 
 
 export function useChains(
