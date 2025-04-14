@@ -8,6 +8,8 @@ import { AddSolanaWallet } from "./addSolanaWallet";
 import { AddEvmWallet } from "./addEvmWallet";
 import { WalletChainTypeEnum, WalletType } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
+import { SwitchNetworkTips } from "./switchNetworkTips";
+import { useStorageChain } from "@orderly.network/hooks";
 export function RenderNoPrivyWallet() {
   const { wallet: walletInWagmi, isConnected: isConnectedEvm } =
     useWagmiWallet();
@@ -21,6 +23,7 @@ export function RenderNoPrivyWallet() {
     isConnectedSolana,
   });
   const { walletChainType, connectorWalletType } = useWalletConnectorPrivy();
+  const { storageChain } = useStorageChain();
   if (walletChainType === WalletChainTypeEnum.EVM_SOL) {
     if (isConnectedEvm && isConnectedSolana) {
       return (
@@ -56,6 +59,9 @@ export function RenderNoPrivyWallet() {
     if (isConnectedEvm && !isConnectedSolana) {
       return (
         <div className="">
+          {storageChain?.namespace === ChainNamespace.solana && (
+            <SwitchNetworkTips chainNamespace={ChainNamespace.evm} />
+          )}
           <WalletCard
             type={WalletType.EVM}
             address={walletInWagmi?.accounts[0].address}
@@ -78,8 +84,11 @@ export function RenderNoPrivyWallet() {
     if (!isConnectedEvm && isConnectedSolana) {
       return (
         <div className="">
+          {storageChain?.namespace === ChainNamespace.evm && (
+            <SwitchNetworkTips chainNamespace={ChainNamespace.solana} />
+          )}
           <WalletCard
-            type={WalletType.SOL}
+            type={WalletType.EVM}
             address={walletInSolana?.accounts[0].address}
             isActive={namespace === ChainNamespace.solana}
             onActiveChange={() => {
