@@ -81,6 +81,18 @@ export function useChains<
     UseChainsReturnObject
   ];
 
+const testnetTokenFallback = TesntTokenFallback([
+  ArbitrumSepoliaTokenInfo,
+  SolanaDevnetTokenInfo
+])
+
+const testnetChainFallback = [
+  ArbitrumSepoliaChainInfo,
+  SolanaDevnetChainInfo
+]
+
+
+
 export function useChains(
   networkId?: NetworkId,
   options: UseChainsOptions = {}
@@ -118,10 +130,7 @@ export function useChains(
     "https://testnet-api.orderly.org/v1/public/token",
     {
       ...commonSwrOpts,
-      fallbackData: TesntTokenFallback([
-        ArbitrumSepoliaTokenInfo,
-        SolanaDevnetTokenInfo
-      ])
+      fallbackData: testnetTokenFallback,
     }
   );
 
@@ -147,7 +156,7 @@ export function useChains(
       : null,
     {
       ...commonSwrOpts,
-      fallbackData: [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo],
+      fallbackData: testnetChainFallback,
       onError: (error) => {
         console.error("Failed to fetch testnet chain info:", error);
       }

@@ -9,6 +9,7 @@ import {
 } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
+// import customerChains from './customerChain.json';
 import {
   Adapter,
   WalletAdapterNetwork,
@@ -93,7 +94,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
-        // customChains={customChains}
+        // customChains={customerChains}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",
           config: {
@@ -133,7 +134,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
-          // customChains={customChains}
+          // customChains={customerChains}
           // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
         >
           {props.children}
