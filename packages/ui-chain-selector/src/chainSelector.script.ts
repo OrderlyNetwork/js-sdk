@@ -155,11 +155,6 @@ export const useChainSelectorScript = (
     showTestnet
   );
 
-  console.log('xxxselectedTab', {
-    showTestnet,
-    selectedTab,
-    chains,
-  });
   return {
     recentChains,
     chains,
@@ -188,17 +183,11 @@ function useChainTab(
       setSelectedTab(ChainType.Mainnet);
       return;
     }
-    console.log('xxxuseEffect', {
-      currentChainId,
-      chains,
-      showTestnet,
-    });
 
     if (currentChainId) {
       const isMainnet = chains.mainnet?.some(
         (chain) => chain.id === currentChainId
       );
-      console.log('xxxisMainnet', isMainnet);
       if (isMainnet) {
         setSelectedTab(wrongNetwork ? ChainType.Testnet : ChainType.Mainnet);
         return;
@@ -207,7 +196,6 @@ function useChainTab(
       const isTestnet = chains.testnet?.some(
         (chain) => chain.id === currentChainId
       );
-      console.log('xxxisTestnet', isTestnet);
       if (isTestnet) {
         setSelectedTab(wrongNetwork ? ChainType.Mainnet : ChainType.Testnet);
         return;
