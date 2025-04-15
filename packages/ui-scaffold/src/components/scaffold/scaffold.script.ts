@@ -2,8 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { useObserverElement, useScreen } from "@orderly.network/ui";
+import { type ScaffoldProps } from "./scaffold.widget";
 
-export const useScaffoldScript = () => {
+export type ScaffoldScriptReturn = ReturnType<typeof useScaffoldScript>;
+
+type ScaffoldScriptOptions = ScaffoldProps;
+
+export const useScaffoldScript = (options: ScaffoldScriptOptions) => {
   const { restrictedInfo, showAnnouncement } = useAppContext();
 
   const [topNavbarRef, topNavbarHeight] = useRefAndHeight(48);
@@ -19,6 +24,10 @@ export const useScaffoldScript = () => {
 
   const { isMobile } = useScreen();
 
+  const sideBarExpandWidth = options.leftSideProps?.maxWidth || 185;
+  const sideBarCollaspedWidth = options.leftSideProps?.minWidth || 98;
+  const hasLeftSidebar = !!options.leftSidebar;
+
   return {
     topNavbarRef,
     footerRef,
@@ -30,6 +39,9 @@ export const useScaffoldScript = () => {
     expand,
     setExpand,
     isMobile,
+    sideBarExpandWidth,
+    sideBarCollaspedWidth,
+    hasLeftSidebar,
   };
 };
 
