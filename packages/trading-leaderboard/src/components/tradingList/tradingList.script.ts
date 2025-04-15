@@ -92,7 +92,6 @@ export function useTradingListScript() {
     if (!state.address) {
       return "";
     }
-    const dateRange = getDateRange(90);
     const searchParams = new URLSearchParams({
       page: "1",
       size: "100",
@@ -117,7 +116,6 @@ export function useTradingListScript() {
     if (!state.address) {
       return "";
     }
-    const dateRange = getDateRange(90);
     const searchParams = new URLSearchParams({
       page: "1",
       size: "1",
