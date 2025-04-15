@@ -196,7 +196,6 @@ function useChainTab(
       const isTestnet = chains.testnet?.some(
         (chain) => chain.id === currentChainId
       );
-
       if (isTestnet) {
         setSelectedTab(wrongNetwork ? ChainType.Mainnet : ChainType.Testnet);
         return;
