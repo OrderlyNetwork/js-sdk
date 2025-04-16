@@ -49,7 +49,7 @@ export const Announcement = (props: AnnouncementProps) => {
           className="oui-w-[320px] lg:oui-w-auto"
         >
           <DialogHeader>
-            <DialogTitle>{t("scaffold.maintenance.dialog.title")}</DialogTitle>
+            <DialogTitle>{t("maintenance.dialog.title")}</DialogTitle>
           </DialogHeader>
           <Divider />
           <DialogBody className="oui-text-2xs lg:oui-text-xs">
@@ -242,15 +242,15 @@ const RenderTipsType = ({ type }: { type?: AnnouncementType }) => {
     const map: Record<AnnouncementType, { label: string; className: string }> =
       {
         [AnnouncementType.Listing]: {
-          label: t("scaffold.announcement.type.listing"),
+          label: t("announcement.type.listing"),
           className: "oui-bg-primary/15 oui-text-primary",
         },
         [AnnouncementType.Maintenance]: {
-          label: t("scaffold.announcement.type.maintenance"),
+          label: t("announcement.type.maintenance"),
           className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
         },
         [AnnouncementType.Delisting]: {
-          label: t("scaffold.announcement.type.delisting"),
+          label: t("announcement.type.delisting"),
           className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
         },
       };

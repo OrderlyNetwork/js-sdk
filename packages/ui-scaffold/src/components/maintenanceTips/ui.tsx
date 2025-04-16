@@ -26,7 +26,7 @@ export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
           className="oui-w-[320px] md:oui-w-auto"
         >
           <DialogHeader>
-            <DialogTitle>{t("scaffold.maintenance.dialog.title")}</DialogTitle>
+            <DialogTitle>{t("maintenance.dialog.title")}</DialogTitle>
           </DialogHeader>
           <Divider />
           <DialogBody className="oui-text-2xs md:oui-text-xs">

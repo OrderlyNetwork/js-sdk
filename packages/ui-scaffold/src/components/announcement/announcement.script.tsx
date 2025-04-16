@@ -26,14 +26,14 @@ const getMaintentTipsContent = (
   startDate: string,
   endDate: string
 ) =>
-  i18n.t("scaffold.maintenance.tips.description", {
+  i18n.t("maintenance.tips.description", {
     brokerName,
     startDate,
     endDate,
   });
 
 const getMaintentDialogContent = (brokerName: string, endDate: string) =>
-  i18n.t("scaffold.maintenance.dialog.description", {
+  i18n.t("maintenance.dialog.description", {
     brokerName,
     endDate,
   });
