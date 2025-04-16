@@ -2,16 +2,21 @@ const fs = require("fs-extra");
 const path = require("path");
 const { checkFileExists } = require("./utils");
 const { multiJson2Csv } = require("./json-csv-converter");
-const { allResources } = require("../dist");
+const { defaultLanguages } = require("../dist");
 
 /** Generate a locale CSV file */
 async function generateCsv(outputPath) {
   const headers = [""];
   const jsonList = [];
 
-  for (const key of Object.keys(allResources)) {
-    const json = allResources[key];
-    headers.push(key);
+  for (const item of defaultLanguages) {
+    headers.push(item.localCode);
+    const json = await fs.readJSON(
+      path.resolve(__dirname, `../locales/${item.localCode}.json`),
+      {
+        encoding: "utf8",
+      }
+    );
     jsonList.push(json);
   }
 
