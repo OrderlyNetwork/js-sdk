@@ -48,8 +48,8 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
       </div>
       <div
         className={cn(
-          "oui-grid oui-grid-cols-2 oui-gap-[6px]",
-          "md:oui-flex md:oui-flex-col md:oui-gap-[6px]"
+          "oui-grid oui-grid-cols-2 oui-gap-2",
+          "md:oui-flex md:oui-flex-col md:oui-gap-2"
         )}
       >
         <div
@@ -117,7 +117,7 @@ function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
       <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">
         EVM
       </div>
-      <div className="oui-grid oui-grid-cols-2 oui-gap-[6px]">
+      <div className="oui-grid oui-grid-cols-2 oui-gap-2">
         {connectors.map((item, key) => (
           <div
             key={key}
@@ -147,11 +147,11 @@ function SOLConnectArea({
       <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">
         Solana
       </div>
-      <div className="oui-grid oui-grid-cols-2 oui-gap-[6px]">
+      <div className="oui-grid oui-grid-cols-2 oui-gap-2">
         {wallets.map((item, key) => (
           <div
             key={key}
-            className=" oui-flex oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1 oui-cursor-pointer"
+            className=" oui-flex oui-items-center oui-justify-start oui-gap-1 oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1 oui-cursor-pointer"
             onClick={() => connect(item.adapter)}
           >
             <RenderWalletIcon connector={item.adapter} />

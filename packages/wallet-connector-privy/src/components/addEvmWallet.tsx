@@ -95,7 +95,7 @@ export function AddEvmWallet() {
       </Tooltip>
       <div
         className={cn(
-          "oui-grid oui-grid-cols-2 oui-gap-[6px] oui-transition-height oui-duration-150 oui-overflow-hidden",
+          "oui-grid oui-grid-cols-2 oui-gap-2 oui-transition-height oui-duration-150 oui-overflow-hidden",
           visible ? "oui-max-h-0 oui-mt-0" : "oui-max-h-[400px] oui-mt-3"
         )}
       >
