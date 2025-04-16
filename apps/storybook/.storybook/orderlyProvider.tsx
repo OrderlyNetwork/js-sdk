@@ -1,15 +1,11 @@
 import React, { FC, ReactNode } from "react";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   Network,
   WalletConnectorPrivyProvider,
   wagmiConnectors,
-  wagmi,
-  WalletChainTypeEnum,
 } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
-// import customerChains from './customerChain.json';
 import {
   Adapter,
   WalletAdapterNetwork,
@@ -26,18 +22,10 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { Chains } from "@orderly.network/hooks";
-import { NetworkId } from "@orderly.network/types";
-import { LocaleProvider, en, zh } from "@orderly.network/i18n";
+import { LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
-import { ExtendLocaleMessages, extendZh } from "./locale/extendLocale";
-import { extendEn } from "./locale/extendLocale";
-import {
-  customChainsEvm,
-  customChainsSolana,
-  customChainsSolanaAndEvm,
-} from "./customChains";
+import extendEn from "./locales/en.json";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -62,7 +50,7 @@ const wallets = [
   }),
 ];
 
-const customChains =customChainsEvm;
+// const customChains = customChainsEvm;
 // const customChains = customChainsSolana;
 // const customChains = customChainsSolanaAndEvm;
 
@@ -76,12 +64,10 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
+type ExtendLocaleMessages = typeof extendEn;
+
 const resources: Resources<ExtendLocaleMessages> = {
   en: extendEn,
-  zh: {
-    ...zh,
-    ...extendZh,
-  },
 };
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
@@ -89,7 +75,9 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   return (
     <LocaleProvider
       resources={resources}
-      // supportedLanguages={["zh", "en", "ja", "es", "fr"]}
+      backend={{
+        loadPath: (lang) => `/locales/${lang}.json`,
+      }}
     >
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
