@@ -135,6 +135,15 @@ export const useOrderlyConfig = () => {
           scriptSRC: "/tradingview/charting_library/charting_library.js",
           library_path: "/tradingview/charting_library/",
           customCssUrl: "/tradingview/chart.css",
+          // broker config tradingview bg
+          // colorConfig: {
+          //   downColor: '#BE1630',
+          //   upColor: '#373d36',
+          //   pnlDownColor: '#BE1630',
+          //   pnlUpColor: '#53B049',
+          //   // chartBG: '#BE1630',
+          //   chartBG: '#6a64ed',
+          // },
         },
         sharePnLConfig: {
           backgroundImages: [
