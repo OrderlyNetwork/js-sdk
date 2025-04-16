@@ -2,7 +2,7 @@ import i18n from "./i18n";
 import { LocaleCode } from "./types";
 
 export type BackendOptions = {
-  loadPath: (lang: LocaleCode, ns?: string) => string;
+  loadPath: (lang: LocaleCode, ns?: string) => string | string[];
 };
 
 export class Backend {
@@ -14,30 +14,49 @@ export class Backend {
     this.cache = new Set();
   }
 
+  async fetchData(url: string) {
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error(`Failed to fetch data from ${url}:`, error);
+      return {};
+    }
+  }
+
   async loadLanguage(lang: LocaleCode, ns: string) {
     if (typeof this.options?.loadPath !== "function") {
       return;
     }
 
-    const loadPath = this.options.loadPath(lang, ns);
+    let paths = this.options.loadPath(lang, ns);
 
-    if (!loadPath) {
+    if (typeof paths === "string") {
+      paths = [paths];
+    }
+
+    if (!paths.length) {
       return;
     }
 
-    const hasResourceBundle = i18n.hasResourceBundle(lang, ns);
+    // filter out the paths that have already been loaded
+    const urls = paths.filter((path) => {
+      const hasResourceBundle = i18n.hasResourceBundle(lang, ns);
 
-    if (hasResourceBundle && this.cache.has(loadPath)) {
-      return;
-    }
+      if (hasResourceBundle && this.cache.has(path)) {
+        return false;
+      }
 
-    try {
-      const res = await fetch(loadPath);
-      const data = await res.json();
+      return true;
+    });
+
+    const promises = urls.map(async (url) => {
+      const data = await this.fetchData(url);
       i18n.addResourceBundle(lang, ns, data, true, true);
-      this.cache.add(loadPath);
-    } catch (error) {
-      console.error("loadLanguage failed: ", error);
-    }
+      this.cache.add(url);
+    });
+
+    await Promise.all(promises);
   }
 }
