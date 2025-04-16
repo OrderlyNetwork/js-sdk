@@ -6,14 +6,14 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
-    "./locales/*": "./dist/locales/*"
+    "./locales/*": "./locales/*"
   },
   "bin": {
     "i18n": "bin/cli.js"
   },
   "scripts": {
     "test": "jest",
-    "build": "tsup && pnpm _generateEnJson && pnpm copyLocales && pnpm generateCsv",
+    "build": "tsup && pnpm _generateEnJson && pnpm generateCsv",
     "cli": "node ./bin/cli.js",
     "csv2json": "pnpm cli csv2json ./dist/locale.csv ./dist/locales",
     "json2csv": "pnpm cli json2csv ./locales ./dist/locale.csv",
@@ -28,7 +28,8 @@
   },
   "keywords": [],
   "files": [
-    "dist"
+    "dist",
+    "locales"
   ],
   "publishConfig": {
     "access": "public"

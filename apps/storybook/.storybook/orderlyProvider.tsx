@@ -25,7 +25,7 @@ import {
 import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
-import extendEn from "./locales/en.json";
+import zh from "@orderly.network/i18n/locales/zh.json";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -64,10 +64,10 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
-type ExtendLocaleMessages = typeof extendEn;
+type ExtendLocaleMessages = typeof zh;
 
 const resources: Resources<ExtendLocaleMessages> = {
-  en: extendEn,
+  zh,
 };
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
