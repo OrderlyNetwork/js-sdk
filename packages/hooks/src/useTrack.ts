@@ -14,11 +14,13 @@ export const useTrack = () => {
         const origin = location.origin;
         const url = location.pathname;
         const title = document.title;
+        const userAgent = window.navigator.userAgent;
 
         Object.assign(params, {
           page_title: title,
           page_url: url,
           page_domain: origin,
+          user_agent: userAgent,
         });
         ee.emit(eventName, params);
       });
@@ -33,8 +35,6 @@ export const useTrack = () => {
   const setTrackUserId = useCallback((userId: string) => {
     ee.emit(EnumTrackerKeys.trackIdentifyUserId, userId);
   }, []);
-
-
 
   return { track, setTrackUserId };
 };
