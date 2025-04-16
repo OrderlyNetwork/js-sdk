@@ -1,6 +1,7 @@
 import React from "react";
 import { ChainNamespace } from "@orderly.network/types";
 import { ExclamationFillIcon } from "@orderly.network/ui";
+import { useStorageChain } from "@orderly.network/hooks";
 
 export function SwitchNetworkTips({
   chainNamespace,
@@ -24,4 +25,14 @@ export function SwitchNetworkTips({
       </div>
     </div>
   );
+}
+export const StorageChainNotCurrentWalletType = ({currentWalletChainType}:{currentWalletChainType:ChainNamespace}) => {
+  const { storageChain } = useStorageChain();
+  if (currentWalletChainType === storageChain?.namespace) {
+    return null;
+  }
+  if (storageChain?.namespace === ChainNamespace.evm) {
+    return <SwitchNetworkTips chainNamespace={ChainNamespace.solana} />;
+  }
+  return <SwitchNetworkTips chainNamespace={ChainNamespace.evm} />;
 }

@@ -8,8 +8,9 @@ import { AddSolanaWallet } from "./addSolanaWallet";
 import { AddEvmWallet } from "./addEvmWallet";
 import { WalletChainTypeEnum, WalletType } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
-import { SwitchNetworkTips } from "./switchNetworkTips";
 import { useStorageChain } from "@orderly.network/hooks";
+import { StorageChainNotCurrentWalletType } from "./switchNetworkTips";
+
 export function RenderNoPrivyWallet() {
   const { wallet: walletInWagmi, isConnected: isConnectedEvm } =
     useWagmiWallet();
@@ -23,35 +24,30 @@ export function RenderNoPrivyWallet() {
     isConnectedSolana,
   });
   const { walletChainType, connectorWalletType } = useWalletConnectorPrivy();
-  const { storageChain } = useStorageChain();
   if (walletChainType === WalletChainTypeEnum.EVM_SOL) {
     if (isConnectedEvm && isConnectedSolana) {
       return (
         <div className="oui-flex oui-flex-col oui-gap-5">
-          {!connectorWalletType.disableWagmi && (
-            <WalletCard
-              type={WalletType.EVM}
-              address={walletInWagmi?.accounts[0].address}
-              isActive={namespace === ChainNamespace.evm}
-              onActiveChange={() => {
-                switchWallet(ChainNamespace.evm);
-              }}
-              isPrivy={false}
-              isBoth={true}
-            />
-          )}
-          {!connectorWalletType.disableSolana && (
-            <WalletCard
-              type={WalletType.SOL}
-              address={walletInSolana?.accounts[0].address}
-              isActive={namespace === ChainNamespace.solana}
-              onActiveChange={() => {
-                switchWallet(ChainNamespace.solana);
-              }}
-              isPrivy={false}
-              isBoth={true}
-            />
-          )}
+          <WalletCard
+            type={WalletType.EVM}
+            address={walletInWagmi?.accounts[0].address}
+            isActive={namespace === ChainNamespace.evm}
+            onActiveChange={() => {
+              switchWallet(ChainNamespace.evm);
+            }}
+            isPrivy={false}
+            isBoth={true}
+          />
+          <WalletCard
+            type={WalletType.SOL}
+            address={walletInSolana?.accounts[0].address}
+            isActive={namespace === ChainNamespace.solana}
+            onActiveChange={() => {
+              switchWallet(ChainNamespace.solana);
+            }}
+            isPrivy={false}
+            isBoth={true}
+          />
         </div>
       );
     }
@@ -59,9 +55,9 @@ export function RenderNoPrivyWallet() {
     if (isConnectedEvm && !isConnectedSolana) {
       return (
         <div className="">
-          {storageChain?.namespace === ChainNamespace.solana && (
-            <SwitchNetworkTips chainNamespace={ChainNamespace.evm} />
-          )}
+          <StorageChainNotCurrentWalletType
+            currentWalletChainType={ChainNamespace.evm}
+          />
           <WalletCard
             type={WalletType.EVM}
             address={walletInWagmi?.accounts[0].address}
@@ -84,11 +80,11 @@ export function RenderNoPrivyWallet() {
     if (!isConnectedEvm && isConnectedSolana) {
       return (
         <div className="">
-          {storageChain?.namespace === ChainNamespace.evm && (
-            <SwitchNetworkTips chainNamespace={ChainNamespace.solana} />
-          )}
+          <StorageChainNotCurrentWalletType
+            currentWalletChainType={ChainNamespace.solana}
+          />
           <WalletCard
-            type={WalletType.EVM}
+            type={WalletType.SOL}
             address={walletInSolana?.accounts[0].address}
             isActive={namespace === ChainNamespace.solana}
             onActiveChange={() => {

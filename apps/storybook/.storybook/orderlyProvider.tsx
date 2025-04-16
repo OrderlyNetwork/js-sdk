@@ -61,7 +61,7 @@ const wallets = [
   }),
 ];
 
-// const customChains =customChainsEvm;
+const customChains =customChainsEvm;
 // const customChains = customChainsSolana;
 // const customChains = customChainsSolanaAndEvm;
 
