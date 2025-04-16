@@ -135,8 +135,8 @@ export function useTradingListScript() {
   );
 
   const userData = useMemo(() => {
-    const index = top100Data?.rows.findIndex(
-      (item) => item.address === state.address
+    const index = top100Data?.rows.findIndex((item) =>
+      isSameAddress(item.address, state.address!)
     );
 
     if (!searchData.length && !isLoading) {
@@ -152,7 +152,9 @@ export function useTradingListScript() {
     return searchData.map((item) => ({
       ...item,
       rank:
-        item.address === state.address && index !== -1 ? index! + 1 : "100+",
+        isSameAddress(item.address, state.address!) && index !== -1
+          ? index! + 1
+          : "100+",
       key: `user-${item.address.toLowerCase()}`,
     }));
   }, [state.address, top100Data, searchData, isLoading]);
@@ -309,3 +311,7 @@ const useFilter = () => {
     updateFilterDay,
   };
 };
+
+function isSameAddress(address1: string, address2: string) {
+  return address1.toLowerCase() === address2.toLowerCase();
+}
