@@ -56,7 +56,7 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
             key={item.localCode}
             selected={selected}
             item={item}
-            onClick={() => props.onLangChange(item.localCode)}
+            onClick={() => props.onLangChange(item.localCode, item.displayName)}
             loading={props.loading}
           />
         );

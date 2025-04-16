@@ -16,7 +16,7 @@ export const useLanguageSwitcherScript = () => {
 
   const { track } = useTrack();
 
-  const onLangChange = async (lang: string) => {
+  const onLangChange = async (lang: string, displayName: string) => {
     setLoading(true);
     setSelectedLang(lang);
     await onLanguageBeforeChanged(lang);
@@ -25,7 +25,8 @@ export const useLanguageSwitcherScript = () => {
     setOpen(false);
     setLoading(false);
     track(EnumTrackerKeys.switchLanguage, {
-      language: lang,
+      language: displayName,
+      language_code: lang,
     });
   };
 
