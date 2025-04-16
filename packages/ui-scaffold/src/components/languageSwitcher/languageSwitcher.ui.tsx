@@ -36,7 +36,7 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
 
   const header = (
     <Box height={24}>
-      <Text>{t("common.language")}</Text>
+      <Text>{t("languageSwitcher.language")}</Text>
     </Box>
   );
 
@@ -61,6 +61,19 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
           />
         );
       })}
+    </Box>
+  );
+
+  const footer = (
+    <Box mt={3}>
+      <Text
+        size="2xs"
+        intensity={54}
+        weight="regular"
+        className="oui-text-warning-darken"
+      >
+        {t("languageSwitcher.tips")}
+      </Text>
     </Box>
   );
 

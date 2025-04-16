@@ -14,3 +14,4 @@ export { useLocaleContext, type Language } from "./context";
 export * from "./types";
 export * from "./constant";
 export * from "./locale";
+export { parseI18nLang } from "./utils";

@@ -146,6 +146,10 @@ export const en = {
   "settle.settlement.error":
     "Settlement is only allowed once every 10 minutes. Please try again later.",
 
+  "languageSwitcher.language": "Language",
+  "languageSwitcher.tips":
+    "AI-generated translations may not be fully accurate.",
+
   ...markets,
   ...portfolio,
   ...trading,
