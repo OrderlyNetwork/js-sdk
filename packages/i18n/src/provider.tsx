@@ -1,9 +1,10 @@
-import { FC, ReactNode, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useRef, useState } from "react";
 import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
 import i18n from "./i18n";
-import { Language, LocaleContext } from "./context";
+import { Language, LocaleContext, LocaleContextState } from "./context";
 import { defaultLanguages, defaultNS } from "./constant";
 import { LocaleCode, Resources } from "./types";
+import { Backend, BackendOptions } from "./backend";
 
 export type I18nProviderProps = Partial<I18nextProviderProps>;
 
@@ -11,7 +12,7 @@ export const I18nProvider: FC<I18nProviderProps> = (props) => {
   const { children, ...rest } = props;
   return (
     // @ts-ignore
-    <I18nextProvider {...rest}>{props.children}</I18nextProvider>
+    <I18nextProvider {...rest}>{children}</I18nextProvider>
   );
 };
 
@@ -20,21 +21,21 @@ export type LocaleProviderProps = {
   locale?: LocaleCode;
   resource?: Record<string, string>;
   resources?: Resources;
-
-  /**
-   * custom languages
-   */
-  languages?: Language[];
   /**
    * supported languages, you can select supported languages from default languages
    */
   supportedLanguages?: LocaleCode[];
+  /**
+   * @deprecated use onLanguageChanged instead, will be removed in next patch version
+   */
   onLocaleChange?: (locale: LocaleCode) => void;
-};
+  backend?: BackendOptions;
+} & Partial<LocaleContextState>;
 
 export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
   const { locale, resource, resources } = props;
   const [languages, setLanguages] = useState<Language[]>(defaultLanguages);
+  const backend = useRef(new Backend(props.backend!));
 
   useEffect(() => {
     // init with resources
@@ -53,10 +54,9 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
   }, [locale, resource, resources]);
 
   useEffect(() => {
-    if (locale !== i18n.language) {
-      i18n.changeLanguage(locale, () => {
-        console.log(`i18n.changeLanguage => ${i18n.language}`);
-      });
+    // change language when locale changed
+    if (locale && locale !== i18n.language) {
+      i18n.changeLanguage(locale);
     }
   }, [locale]);
 
@@ -75,19 +75,25 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
   }, [props.supportedLanguages, props.languages]);
 
   useEffect(() => {
-    const handleLanguageChange = (lng: LocaleCode) => {
-      props?.onLocaleChange?.(lng);
-    };
+    // load language when refresh page
+    backend.current.loadLanguage(i18n.language, defaultNS);
+  }, [i18n.language]);
 
-    i18n.on("languageChanged", handleLanguageChange);
+  const onLanguageBeforeChanged = async (lang: LocaleCode) => {
+    await props.onLanguageBeforeChanged?.(lang);
+    // load language when language before changed
+    await backend.current.loadLanguage(lang, defaultNS);
+  };
 
-    return () => {
-      i18n.off("languageChanged", handleLanguageChange);
-    };
-  }, [i18n]);
+  const onLanguageChanged = async (lang: LocaleCode) => {
+    props.onLanguageChanged?.(lang);
+    props.onLocaleChange?.(lang);
+  };
 
   return (
-    <LocaleContext.Provider value={{ languages }}>
+    <LocaleContext.Provider
+      value={{ languages, onLanguageBeforeChanged, onLanguageChanged }}
+    >
       {/* @ts-ignore */}
       <I18nextProvider i18n={i18n} defaultNS={defaultNS}>
         {props.children}

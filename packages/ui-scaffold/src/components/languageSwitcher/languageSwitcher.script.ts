@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { i18n, useLocaleContext } from "@orderly.network/i18n";
+import { EnumTrackerKeys } from "@orderly.network/types";
 
 export type LanguageSwitcherScriptReturn = ReturnType<
   typeof useLanguageSwitcherScript
@@ -7,14 +8,20 @@ export type LanguageSwitcherScriptReturn = ReturnType<
 
 export const useLanguageSwitcherScript = () => {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedLang, setSelectedLang] = useState(i18n.language);
+  const { languages, onLanguageBeforeChanged, onLanguageChanged } =
+    useLocaleContext();
 
-  const { languages } = useLocaleContext();
 
-  const onLangChange = (lang: string) => {
+  const onLangChange = async (lang: string) => {
+    setLoading(true);
     setSelectedLang(lang);
-    i18n.changeLanguage(lang);
+    await onLanguageBeforeChanged(lang);
+    await i18n.changeLanguage(lang);
+    await onLanguageChanged(lang);
     setOpen(false);
+    setLoading(false);
   };
 
   return {
@@ -23,5 +30,6 @@ export const useLanguageSwitcherScript = () => {
     languages,
     selectedLang,
     onLangChange,
+    loading,
   };
 };
