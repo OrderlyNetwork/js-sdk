@@ -26,6 +26,12 @@ import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
 import zh from "@orderly.network/i18n/locales/zh.json";
+import ja from "@orderly.network/i18n/locales/ja.json";
+import es from "@orderly.network/i18n/locales/es.json";
+import ko from "@orderly.network/i18n/locales/ko.json";
+import vi from "@orderly.network/i18n/locales/vi.json";
+import de from "@orderly.network/i18n/locales/de.json";
+import fr from "@orderly.network/i18n/locales/fr.json";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -68,20 +74,27 @@ type ExtendLocaleMessages = typeof zh;
 
 const resources: Resources<ExtendLocaleMessages> = {
   zh,
+  ja,
+  es,
+  ko,
+  vi,
+  de,
+  fr,
 };
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   const config = useOrderlyConfig();
   return (
     <LocaleProvider
-      // resources={resources}
+      resources={resources}
       backend={{
         loadPath: (lang) => {
-          if (lang === LocaleEnum.en) {
-            // because en is built-in, we need to load the en extend only
-            return `/locales/extend/${lang}.json`;
-          }
-          return [`/locales/${lang}.json`, `/locales/extend/${lang}.json`];
+          return `/locales/extend/${lang}.json`;
+          // if (lang === LocaleEnum.en) {
+          //   // because en is built-in, we need to load the en extend only
+          //   return `/locales/extend/${lang}.json`;
+          // }
+          // return [`/locales/${lang}.json`, `/locales/extend/${lang}.json`];
         },
       }}
     >
