@@ -1,11 +1,8 @@
 import React, { FC, ReactNode } from "react";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import {
   Network,
   WalletConnectorPrivyProvider,
   wagmiConnectors,
-  wagmi,
-  WalletChainTypeEnum,
 } from "@orderly.network/wallet-connector-privy";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { CustomConfigStore } from "./customConfigStore";
@@ -25,18 +22,16 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { Chains } from "@orderly.network/hooks";
-import { NetworkId } from "@orderly.network/types";
-import { LocaleProvider, en, zh } from "@orderly.network/i18n";
+import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
-import { ExtendLocaleMessages, extendZh } from "./locale/extendLocale";
-import { extendEn } from "./locale/extendLocale";
-import {
-  customChainsEvm,
-  customChainsSolana,
-  customChainsSolanaAndEvm,
-} from "./customChains";
+import zh from "@orderly.network/i18n/locales/zh.json";
+import ja from "@orderly.network/i18n/locales/ja.json";
+import es from "@orderly.network/i18n/locales/es.json";
+import ko from "@orderly.network/i18n/locales/ko.json";
+import vi from "@orderly.network/i18n/locales/vi.json";
+import de from "@orderly.network/i18n/locales/de.json";
+import fr from "@orderly.network/i18n/locales/fr.json";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -61,7 +56,7 @@ const wallets = [
   }),
 ];
 
-// const customChains =customChainsEvm;
+// const customChains = customChainsEvm;
 // const customChains = customChainsSolana;
 // const customChains = customChainsSolanaAndEvm;
 
@@ -75,12 +70,16 @@ const configStore = new CustomConfigStore({
   env: VITE_ENV || "staging",
 });
 
+type ExtendLocaleMessages = typeof zh;
+
 const resources: Resources<ExtendLocaleMessages> = {
-  en: extendEn,
-  zh: {
-    ...zh,
-    ...extendZh,
-  },
+  zh,
+  ja,
+  es,
+  ko,
+  vi,
+  de,
+  fr,
 };
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
@@ -88,12 +87,21 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   return (
     <LocaleProvider
       resources={resources}
-      // supportedLanguages={["zh", "en", "ja", "es", "fr"]}
+      backend={{
+        loadPath: (lang) => {
+          return `/locales/extend/${lang}.json`;
+          // if (lang === LocaleEnum.en) {
+          //   // because en is built-in, we need to load the en extend only
+          //   return `/locales/extend/${lang}.json`;
+          // }
+          // return [`/locales/${lang}.json`, `/locales/extend/${lang}.json`];
+        },
+      }}
     >
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
-        // customChains={customChains}
+        // customChains={customerChains}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",
           config: {
@@ -133,7 +141,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
-          // customChains={customChains}
+          // customChains={customerChains}
           // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
         >
           {props.children}

@@ -71,6 +71,7 @@ export function useLinkDevice() {
 
     const url = new URL(window.location.href);
     url.searchParams.delete("link");
+    url.searchParams.append("utm_medium", "qrcode");
     const decodedUrl = decodeURIComponent(url.toString());
     history.replaceState(null, "", decodedUrl);
   };

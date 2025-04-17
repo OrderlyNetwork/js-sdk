@@ -11,6 +11,7 @@ import {
   RowSelectionState,
   TableFeature,
   Table,
+  Column as TanstackColumn,
 } from "@tanstack/react-table";
 import { Column, PaginationMeta, TableSort, DataTableClassNames } from "./type";
 import { cnBase } from "tailwind-variants";
@@ -60,6 +61,11 @@ export type DataTableProps<RecordType> = {
   ) => ReactNode;
   generatedRowKey?: CoreOptions<any>["getRowId"];
   onRow?: (record: RecordType, index: number) => any;
+  onCell?: (
+    column: TanstackColumn<any>,
+    record: RecordType,
+    index: number
+  ) => any;
   columnFilters?: ColumnFilter | ColumnFilter[];
   rowSelection?: RowSelectionState;
 
@@ -235,6 +241,7 @@ export function DataTable<RecordType extends any>(
             renderRowContainer={props.renderRowContainer}
             expandRowRender={props.expandRowRender}
             onRow={props.onRow}
+            onCell={props.onCell}
             showLeftShadow={showLeftShadow}
             showRightShadow={showRightShadow}
             testId={props.testIds?.body}

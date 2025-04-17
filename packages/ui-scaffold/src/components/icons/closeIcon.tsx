@@ -6,7 +6,7 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const CloseIcon: FC<IconProps> = (props) => {
-  const { size = 16, viewBox, ...rest } = props;
+  const { size = 16, ...rest } = props;
   return (
     <svg
       width={`${size}px`}

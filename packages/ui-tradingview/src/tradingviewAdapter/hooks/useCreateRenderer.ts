@@ -85,8 +85,9 @@ export default function useCreateRenderer(
       renderer?.renderFilledOrders([], 6);
       return;
     }
-    renderer?.renderFilledOrders(fillOrders ?? [], base_dp ?? 6);
-  }, [renderer, fillOrders, base_dp, displayControlSetting]);
+    const currentSymbolFillOrders = fillOrders?.filter((item) => item.symbol === symbol);
+    renderer?.renderFilledOrders(currentSymbolFillOrders ?? [], base_dp ?? 6);
+  }, [renderer, fillOrders, symbol, base_dp, displayControlSetting]);
 
   useEffect(() => {
     let tpslOrder: any = [];

@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { SideBarProps } from "./sidebar.ui";
-import { useScaffoldContext } from "../scaffoldContext";
+import { useScaffoldContext } from "../scaffold";
 
 export const useSideNavBuilder = (
   props?: Partial<SideBarProps>

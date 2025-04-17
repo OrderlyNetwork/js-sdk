@@ -6,6 +6,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 // https://vitejs.dev/config/
 export default defineConfig({
   json: {
+    namedExports: true,
     stringify: true,
   },
   plugins: [
@@ -116,6 +117,10 @@ export default defineConfig({
         "../../packages/wallet-connector/src"
       ),
       "@orderly.network/types": resolve(__dirname, "../../packages/types/src"),
+      "@orderly.network/i18n/locales": resolve(
+        __dirname,
+        "../../packages/i18n/locales"
+      ),
       "@orderly.network/i18n": resolve(__dirname, "../../packages/i18n/src"),
       "@orderly.network/wallet-connector-privy": resolve(
         __dirname,

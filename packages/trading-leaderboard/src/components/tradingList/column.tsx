@@ -28,7 +28,10 @@ export const useTradingListColumns = () => {
       title: t("tradingLeaderboard.tradingVolume"),
       dataIndex: "perp_volume",
       onSort: true,
-      render: (value: number) => {
+      render: (value: string) => {
+        if (!value) {
+          return "-";
+        }
         return (
           <Text.numeral prefix="$" rule="price" dp={2}>
             {value}

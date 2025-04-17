@@ -1,7 +1,7 @@
 import { OrderlyContext, useChains } from "@orderly.network/hooks";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
 import { FC, ReactNode, useContext } from "react";
-import { checkChainSupport } from "../utils/chain";
+import { checkChainSupport } from "../../utils/chain";
 
 export type ScaffoldProviderProps = {
   children: ReactNode;
