@@ -82,7 +82,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
 
   const listData = [
     {
-      label: t("transfer.fee.destinationGasFee"),
+      label: t("transfer.deposit.destinationGasFee"),
       value: (
         <Flex gapX={1}>
           <GasFeeIcon className="oui-text-primary-light" />

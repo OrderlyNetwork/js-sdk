@@ -117,8 +117,8 @@ export function useSwapFee(options: {
 
     const feeDetails = [
       {
-        title: t("transfer.fee.destinationGasFee"),
-        description: t("transfer.fee.destinationGasFee.description"),
+        title: t("transfer.deposit.destinationGasFee"),
+        description: t("transfer.deposit.destinationGasFee.description"),
         value: dstGasFee,
         dp: nativeDp,
         symbol: nativeSymbol,
