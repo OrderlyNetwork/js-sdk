@@ -6,14 +6,20 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
-    "./locales/*": "./locales/*"
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./locales/*": "./dist/locales/*"
   },
   "bin": {
     "i18n": "bin/cli.js"
   },
   "scripts": {
     "test": "jest",
-    "build": "tsup && pnpm _generateEnJson && pnpm generateCsv",
+    "build": "tsup && pnpm locales",
+    "locales": "pnpm _generateEnJson && pnpm generateCsv && pnpm mergeJson",
     "cli": "node ./bin/cli.js",
     "csv2json": "pnpm cli csv2json ./dist/locale.csv ./dist/locales",
     "json2csv": "pnpm cli json2csv ./locales ./dist/locale.csv",
@@ -21,15 +27,14 @@
     "generateCsv": "pnpm cli generateCsv ./dist/locale.csv",
     "fillJson": "pnpm cli fillJson ./src/locale/zh.json ./dist/locale/zh.json",
     "separateJson": "pnpm cli separateJson ./locales ./dist/locales extend",
-    "mergeJson": "pnpm cli mergeJson ./dist/locales1 ./dist/locales2",
+    "mergeJson": "pnpm cli mergeJson ./locales ./dist/locales",
     "_generateEnJson": "node ./script/generateEnJson.js",
     "generateEnJson": "pnpm tsup && node ./script/generateEnJson.js",
     "copyLocales": "node ./script/copyLocales.js"
   },
   "keywords": [],
   "files": [
-    "dist",
-    "locales"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
