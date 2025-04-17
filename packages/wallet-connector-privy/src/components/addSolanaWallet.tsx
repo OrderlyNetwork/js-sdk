@@ -58,7 +58,7 @@ export function AddSolanaWallet() {
       <Tooltip
         className="oui-text-warning-darken oui-max-w-[200px] oui-z-[65]"
         open={open}
-        content="Connect an EVM-compatible wallet to continue using the EVM network."
+        content="Connect an Solana-compatible wallet to continue using the Solana network."
       >
         <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 ">
           <img
