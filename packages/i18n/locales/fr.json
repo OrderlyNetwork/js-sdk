@@ -509,6 +509,8 @@
   "connector.privy.noWallet": "Aucun portefeuille",
   "connector.privy.noWallet.description": "Veuillez créer un portefeuille pour continuer. Seul vous pouvez accéder à la clé privée. Vous pouvez exporter la clé privée et importer votre portefeuille dans un autre client de portefeuille, tel que MetaMask ou Phantom, à tout moment.",
   "connector.privy.switchNetwork.tips": "Passer à {{chainName}} pour continuer.",
+  "connector.privy.addEvmWallet.tips": "Connectez un portefeuille compatible EVM pour continuer à utiliser le réseau EVM.",
+  "connector.privy.addSolanaWallet.tips": "Connectez un portefeuille compatible avec Solana pour continuer à utiliser le réseau Solana.",
   "transfer.network": "Réseau",
   "transfer.lowestFee": "frais minimum",
   "transfer.web3Wallet": "Votre portefeuille Web3",

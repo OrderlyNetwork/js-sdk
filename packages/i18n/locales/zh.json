@@ -606,5 +606,7 @@
   "tradingLeaderboard.learnMore": "了解更多",
   "tradingLeaderboard.tradeNow": "立即交易",
   "tradingLeaderboard.tradingVolume": "交易量",
-  "tradingLeaderboard.rank": "排名"
+  "tradingLeaderboard.rank": "排名",
+  "connector.privy.addEvmWallet.tips": "连接一个EVM兼容的钱包以继续使用EVM网络。",
+  "connector.privy.addSolanaWallet.tips": "连接一个Solana兼容的钱包以继续使用Solana网络。"
 }

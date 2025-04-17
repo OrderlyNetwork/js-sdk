@@ -606,5 +606,7 @@
   "tradingLeaderboard.learnMore": "Tìm hiểu thêm",
   "tradingLeaderboard.tradeNow": "Giao dịch ngay",
   "tradingLeaderboard.tradingVolume": "Khối lượng giao dịch",
-  "tradingLeaderboard.rank": "Xếp hạng"
+  "tradingLeaderboard.rank": "Xếp hạng",
+  "connector.privy.addEvmWallet.tips": "Kết nối ví tương thích EVM để tiếp tục sử dụng mạng EVM.",
+  "connector.privy.addSolanaWallet.tips": "Kết nối ví tương thích với Solana để tiếp tục sử dụng mạng Solana."
 }

@@ -606,5 +606,7 @@
   "tradingLeaderboard.learnMore": "詳細を学ぶ",
   "tradingLeaderboard.tradeNow": "今すぐ取引",
   "tradingLeaderboard.tradingVolume": "取引量",
-  "tradingLeaderboard.rank": "ランク"
+  "tradingLeaderboard.rank": "ランク",
+  "connector.privy.addEvmWallet.tips": "EVMネットワークを引き続き使用するには、EVM互換のウォレットを接続してください。",
+  "connector.privy.addSolanaWallet.tips": "Solana互換ウォレットを接続して、Solanaネットワークの使用を継続してください。"
 }

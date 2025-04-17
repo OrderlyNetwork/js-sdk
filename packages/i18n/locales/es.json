@@ -509,6 +509,8 @@
   "connector.privy.noWallet": "Sin billetera",
   "connector.privy.noWallet.description": "Por favor crea una billetera para continuar. Solo tú puedes acceder a la clave privada. Puedes exportar la clave privada e importar tu billetera en otro cliente de billetera, como MetaMask o Phantom, en cualquier momento.",
   "connector.privy.switchNetwork.tips": "Cambia a {{chainName}} para continuar.",
+  "connector.privy.addEvmWallet.tips": "Conecta una billetera compatible con EVM para continuar usando la red EVM.",
+  "connector.privy.addSolanaWallet.tips": "Conecta una billetera compatible con Solana para seguir usando la red Solana.",
   "transfer.network": "Red",
   "transfer.lowestFee": "Tarifa más baja",
   "transfer.web3Wallet": "Tu billetera Web3",

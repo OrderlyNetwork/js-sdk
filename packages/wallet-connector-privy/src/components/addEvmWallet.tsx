@@ -53,7 +53,7 @@ export function AddEvmWallet() {
       <Tooltip
         className="oui-text-warning-darken oui-max-w-[200px] oui-z-[65]"
         open={open}
-        content="Connect an EVM-compatible wallet to continue using the EVM network."
+        content={t("connector.privy.addEvmWallet.tips")}
       >
         <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 ">
           <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">

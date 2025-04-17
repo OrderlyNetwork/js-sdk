@@ -509,6 +509,8 @@
   "connector.privy.noWallet": "Keine Wallet",
   "connector.privy.noWallet.description": "Bitte erstellen Sie eine Wallet, um fortzufahren. Nur Sie können auf den privaten Schlüssel zugreifen. Sie können den privaten Schlüssel exportieren und Ihre Wallet jederzeit in einen anderen Wallet-Client wie MetaMask oder Phantom importieren.",
   "connector.privy.switchNetwork.tips": "Wechseln Sie zu {{chainName}}, um fortzufahren.",
+  "connector.privy.addEvmWallet.tips": "Verbinden Sie eine EVM-kompatible Wallet, um das EVM-Netzwerk weiterhin zu nutzen.",
+  "connector.privy.addSolanaWallet.tips": "Verbinden Sie eine Solana-kompatible Wallet, um das Solana-Netzwerk weiter zu nutzen.",
   "transfer.network": "Netzwerk",
   "transfer.lowestFee": "Niedrigste Gebühr",
   "transfer.web3Wallet": "Ihre Web3-Wallet",
