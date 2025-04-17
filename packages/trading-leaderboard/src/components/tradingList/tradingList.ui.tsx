@@ -104,7 +104,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
               <Box mr={2}>
                 <CloseCircleFillIcon
                   size={14}
-                  className="oui-text-base-contrast-36 oui-cursor-pointer"
+                  className="oui-text-base-contrast-36 oui-cursor-pointer ="
                   onClick={props.clearSearchValue}
                 />
               </Box>
@@ -122,7 +122,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
         onSort={props.onSort}
         bordered
         dataSource={props.dataSource}
-        generatedRowKey={(record: TradingData) => record.address}
+        generatedRowKey={(record: TradingData) => record.key || record.address}
         manualPagination
         manualSorting
         pagination={props.pagination}
@@ -133,6 +133,24 @@ export const TradingList: FC<TradingListProps> = (props) => {
           return {
             className: cn("oui-h-[48px]"),
           };
+        }}
+        onCell={(column, record, index) => {
+          if (record.key === `user-${props.address?.toLowerCase()}`) {
+            const isFirst = column.getIsFirstColumn();
+            const isLast = column.getIsLastColumn();
+
+            return {
+              className: cn(
+                "after:oui-absolute after:oui-w-full after:oui-h-[48px]",
+                "after:oui-border-[rgb(var(--oui-gradient-brand-start))]",
+                " after:oui-top-0 after:oui-left-0 after:oui-z-[-1]",
+                "after:oui-border-b after:oui-border-t",
+                isFirst && "after:oui-border-l after:oui-rounded-l-lg",
+                isLast && "after:oui-border-r  after:oui-rounded-r-lg"
+              ),
+            };
+          }
+          return {};
         }}
       />
     </Flex>

@@ -160,7 +160,7 @@ const Paginations = (props: PaginationProps) => {
         >
           {locale.rowsPerPage}
         </Text>
-        <div className={"oui-w-14"}>
+        <div className={"oui-w-15"}>
           <Select.options
             options={[
               { value: "10", label: "10" },

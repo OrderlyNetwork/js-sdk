@@ -19,7 +19,7 @@ The LocaleProvider is the core component that provides locale resources to your 
 
 ### Example
 
-Here’s a complete example of how to set up the i18n integration:
+Here's a complete example of how to set up the i18n integration:
 
 ```typescript
 import { FC, ReactNode } from "react";
@@ -159,7 +159,7 @@ npx @orderly.network/i18n csv2json <input> <outputDir>
 Example:
 
 ```bash
-npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locale
+npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locales
 ```
 
 ### json2csv
@@ -167,13 +167,13 @@ npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locale
 Convert multiple locale JSON files to a single locale CSV file.
 
 ```bash
-npx @orderly.network/i18n json2csv <input> <output>
+npx @orderly.network/i18n json2csv <inputDir> <output>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n json2csv ./dist/locale/en.json,./dist/locale/zh.json ./dist/locale.csv
+npx @orderly.network/i18n json2csv ./locales ./dist/locale.csv
 ```
 
 ### diffcsv
@@ -216,4 +216,32 @@ Example:
 
 ```bash
 npx @orderly.network/i18n fillJson ./src/locale/zh.json ./dist/locale/zh.json
+```
+
+### separateJson
+
+Separate JSON files into default and extend key values based on a specified key.
+
+```bash
+npx @orderly.network/i18n separateJson <inputDir> <outputDir> <separateKey>
+```
+
+Example:
+
+```bash
+npx @orderly.network/i18n separateJson ./locales ./dist/locales extend
+```
+
+### mergeJson
+
+Merge default and extend JSON files back into one file.
+
+```bash
+npx @orderly.network/i18n mergeJson <inputDir> <outputDir>
+```
+
+Example:
+
+```bash
+npx @orderly.network/i18n mergeJson ./dist/locales1 ./dist/locales2
 ```

@@ -22,7 +22,7 @@ function NoWallet() {
             className="oui-w-[64px] oui-h-[64px]"
           />
           <div className="oui-text-base-contrast-36 oui-text-2xs oui-font-semibold">
-            {t("connector.noWallet")}
+            {t("connector.privy.noWallet")}
           </div>
         </div>
         <div className="oui-flex oui-items-start oui-gap-1 oui-px-2 oui-py-[6px] oui-bg-[rgba(232,136,0,0.15)] oui-rounded-[4px] ">
@@ -31,7 +31,7 @@ function NoWallet() {
             className="oui-mt-1 oui-w-[10px] oui-h-[10px] oui-text-warning-darken oui-flex-shrink-0"
           />
           <div className="oui-text-2xs oui-text-warning-darken">
-            {t("connector.noWallet.description")}
+            {t("connector.privy.noWallet.description")}
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@ function CreateEVMWallet() {
           )}
           onClick={doCreate}
         >
-          {t("connector.createEvmWallet")}
+          {t("connector.privy.createEvmWallet")}
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@ function CreateSOLWallet() {
           )}
           onClick={doCreate}
         >
-          {t("connector.createSolanaWallet")}
+          {t("connector.privy.createSolanaWallet")}
         </div>
       </div>
     </div>
@@ -202,7 +202,7 @@ export function RenderPrivyWallet() {
           className="oui-cursor-pointer oui-text-primary oui-text-2xs oui-font-semibold"
           onClick={() => disconnect(WalletType.PRIVY)}
         >
-          {t("connector.logout")}
+          {t("connector.privy.logout")}
         </div>
       </div>
       {renderWalletType === PrivyWalletRenderType.noWallet && <NoWallet />}

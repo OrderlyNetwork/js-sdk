@@ -1,0 +1,10 @@
+{
+  "extend.products.swap": "スワップ",
+  "extend.products.trade": "取引",
+  "extend.tradingRewards.description": "Orderlyで取引してORDERを獲得",
+  "extend.affiliate.tag": "40%リベート",
+  "extend.affiliate.description": "Orderlyアフィリエイトでより多くを獲得",
+  "extend.staking": "ステーキング",
+  "extend.staking.description": "ORDER/esORDERをステーキングしてVALORを獲得",
+  "extend.restrictedInfo.description": "制限された国に関連付けられたIPアドレス（{{ip}}）から{{brokerName}}にアクセスしています。<0>利用規約</0>をご参照ください。誤りと思われる場合は、<1>{{email}}</1>までご連絡ください。"
+}

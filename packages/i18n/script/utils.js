@@ -75,8 +75,14 @@ function validateI18nValue(value) {
   return { valid: true, error: null };
 }
 
+async function findJsonFiles(dir) {
+  const files = await fs.readdir(dir);
+  return files.filter((file) => file.endsWith(".json"));
+}
+
 module.exports = {
   checkFileExists,
   validateI18nValue,
   i18nValidErrors,
+  findJsonFiles,
 };

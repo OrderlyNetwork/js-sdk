@@ -15,7 +15,7 @@ type TableBodyProps<RecordType> = {
   testId?: string;
 } & Pick<
   DataTableProps<any>,
-  "bordered" | "onRow" | "renderRowContainer" | "expandRowRender"
+  "bordered" | "onRow" | "onCell" | "renderRowContainer" | "expandRowRender"
 >;
 
 export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
@@ -59,10 +59,18 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                 const { align, className: rowClassName } =
                   column.columnDef.meta || ({} as any);
 
+                const {
+                  style: cellStyle,
+                  className: cellClassName,
+                  ...rest
+                } = typeof props.onCell === "function"
+                  ? props.onCell(cell.column, row.original, row.index)
+                  : {};
+
                 return (
                   <td
                     key={cell.id}
-                    style={pinStyle}
+                    style={{ ...pinStyle, ...cellStyle }}
                     className={cnBase(
                       "oui-table-tbody-td oui-relative",
                       "oui-px-3",
@@ -70,8 +78,10 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                       rowClassName,
                       pinClassNames.content,
                       props.showLeftShadow && pinClassNames.leftShadow,
-                      props.showRightShadow && pinClassNames.rightShadow
+                      props.showRightShadow && pinClassNames.rightShadow,
+                      cellClassName
                     )}
+                    {...rest}
                   >
                     <TableCell cell={cell} />
                     <CellHover

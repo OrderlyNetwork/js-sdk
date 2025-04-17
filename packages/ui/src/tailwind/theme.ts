@@ -4,7 +4,8 @@ export const themePlugin = () =>
   plugin(function ({ addBase }) {
     addBase({
       ":root": {
-        "--oui-font-family": '"Manrope", sans-serif',
+        "--oui-font-family":
+          '"Manrope","PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
         /* colors */
         "--oui-color-primary": "176 132 233",

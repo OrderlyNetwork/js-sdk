@@ -58,8 +58,8 @@ export const RiskRate: FC<RiskRateState> = (props) => {
         />
       </Flex>
 
-      <Flex className="oui-gap-2">
-        <Flex direction="column" itemAlign="start" className="oui-flex-1">
+      <Flex className="oui-gap-2" justify="between">
+        <Flex direction="column">
           <Tooltip
             content={
               (
@@ -83,13 +83,13 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             size="xs"
             color="neutral"
             weight="semibold"
-            className={cn(textColor)}
+            className={cn(textColor, "oui-leading-6")}
           >
             {riskRate ?? "--"}
           </Text>
         </Flex>
 
-        <Flex direction="column" itemAlign="end" className="oui-flex-1">
+        <Flex direction="column">
           <Text
             size="2xs"
             color="neutral"

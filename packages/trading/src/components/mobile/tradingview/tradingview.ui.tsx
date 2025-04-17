@@ -17,6 +17,9 @@ export function TradingviewUi(props: TradingviewState) {
           mode={3}
           scriptSRC={props.tradingViewConfig?.scriptSRC}
           customCssUrl={props.tradingViewConfig?.customCssUrl}
+          {...props.tradingViewConfig}
+
+
         />
       </div>
       <div className="oui-relative oui-w-full">

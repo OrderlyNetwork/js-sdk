@@ -1,9 +1,11 @@
+import { FC, useMemo } from "react";
 import { DataFilter } from "@orderly.network/ui";
 import { useFundingHistoryColumns } from "./column";
-import { FC } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@orderly.network/i18n";
+
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
 export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
@@ -11,7 +13,23 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
   const columns = useFundingHistoryColumns();
   const symbols = useSymbolsInfo();
   const { symbol, dateRange } = queryParameter;
+  const { t } = useTranslation();
 
+  const options = useMemo(() => {
+    return [
+      {
+        label: t("common.all"),
+        value: "All",
+      },
+      ...Object.keys(symbols).map((symbol) => {
+        const s = symbol.split("_")[1];
+        return {
+          label: s,
+          value: symbol,
+        };
+      }),
+    ];
+  }, [t, symbols]);
 
   return (
     <>
@@ -21,25 +39,11 @@ export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
             type: "select",
             name: "symbol",
             isCombine: true,
-            options: [
-              {
-                label: "All",
-                value: "All",
-              },
-              ...Object.keys(symbols).map((symbol) => {
-                const s = symbol.split("_")[1];
-                return {
-                  label: s,
-                  value: symbol,
-                };
-              }),
-            ],
+            options,
             value: symbol,
             valueFormatter: (value) => {
-              if (value === "All") {
-                return "All";
-              }
-              return value.split("_")[1];
+              const option = options.find((item) => item.value === value);
+              return option?.label || value;
             },
           },
           {

@@ -25,9 +25,10 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
   return (
     <SwitchLayoutDropDown {...props}>
       <Flex
+        px={3}
         className={cn(
           "oui-rounded-md",
-          "oui-w-[69px] oui-h-[28px]",
+          "oui-h-[28px]",
           "oui-cursor-pointer oui-transition-all",
           "oui-bg-base-6 hover:oui-bg-base-4",
           "oui-text-base-contrast-54 hover:oui-text-base-contrast-80"

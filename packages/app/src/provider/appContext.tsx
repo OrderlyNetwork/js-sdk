@@ -37,7 +37,11 @@ type AppContextState = {
   setShowAnnouncement: (show: boolean) => void;
 };
 
-const AppContext = createContext<AppContextState>({} as AppContextState);
+const AppContext = createContext<AppContextState>({
+  setCurrentChainId: (chainId: number | undefined) => {},
+  restrictedInfo: {},
+  setShowAnnouncement: (show: boolean) => {},
+} as AppContextState);
 
 export const useAppContext = () => {
   return useContext(AppContext);
