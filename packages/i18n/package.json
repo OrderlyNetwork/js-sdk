@@ -19,12 +19,12 @@
   "scripts": {
     "test": "jest",
     "build": "tsup && pnpm locales",
-    "locales": "pnpm _generateEnJson && pnpm generateCsv && pnpm mergeJson",
+    "locales": "pnpm _generateEnJson && pnpm mergeJson && pnpm json2csv",
     "cli": "node ./bin/cli.js",
     "csv2json": "pnpm cli csv2json ./dist/locale.csv ./dist/locales",
-    "json2csv": "pnpm cli json2csv ./locales ./dist/locale.csv",
-    "diffcsv": "pnpm cli diffcsv ./dist/locale1.csv ./dist/locale2.csv",
+    "json2csv": "pnpm cli json2csv ./dist/locales ./dist/locale.csv",
     "generateCsv": "pnpm cli generateCsv ./dist/locale.csv",
+    "diffcsv": "pnpm cli diffcsv ./dist/locale1.csv ./dist/locale2.csv",
     "fillJson": "pnpm cli fillJson ./src/locale/zh.json ./dist/locale/zh.json",
     "separateJson": "pnpm cli separateJson ./locales ./dist/locales extend",
     "mergeJson": "pnpm cli mergeJson ./locales ./dist/locales",
@@ -34,7 +34,8 @@
   },
   "keywords": [],
   "files": [
-    "dist"
+    "dist",
+    "script"
   ],
   "publishConfig": {
     "access": "public"
