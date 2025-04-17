@@ -24,6 +24,7 @@ import {
 } from "@solana/wallet-adapter-wallets";
 import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
+import { customChains } from "./customChains";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
 import zh from "@orderly.network/i18n/locales/zh.json";
 import ja from "@orderly.network/i18n/locales/ja.json";
@@ -138,6 +139,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         }}
       >
         <OrderlyAppProvider
+          customChains={customChains as any}
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}

@@ -17,7 +17,6 @@ export type LinkDeviceProps = UseLinkDeviceScriptReturn;
 
 export const LinkDevice: FC<LinkDeviceProps> = (props) => {
   const { t } = useTranslation();
-
   return (
     <>
       <LinkDeviceIcon
