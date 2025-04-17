@@ -103,8 +103,6 @@ export const en = {
   "common.affiliate": "Affiliate",
   "common.tradingRewards": "Trading rewards",
   "common.trading": "Trading",
-  "common.language": "Language",
-
   "assetHistory.status.pending": "Pending",
   "assetHistory.status.confirm": "Confirm",
   "assetHistory.status.processing": "Processing",
@@ -145,6 +143,23 @@ export const en = {
   "settle.settlement.failed": "Settlement failed",
   "settle.settlement.error":
     "Settlement is only allowed once every 10 minutes. Please try again later.",
+
+  "languageSwitcher.language": "Language",
+  "languageSwitcher.tips":
+    "AI-generated translations may not be fully accurate.",
+
+  "announcement.type.listing": "Listing",
+  "announcement.type.maintenance": "Maintenance",
+  "announcement.type.delisting": "Delisting",
+
+  "maintenance.dialog.title": "System upgrade in progress",
+  "maintenance.dialog.description":
+    "Sorry, {{brokerName}} is temporarily unavailable due to a scheduled upgrade. The service is expected to be back by {{endDate}}.",
+  "maintenance.tips.description":
+    "{{brokerName}} will be temporarily unavailable for a scheduled upgrade from {{startDate}} to {{endDate}}.",
+
+  "restrictedInfo.description.default":
+    " You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country.",
 
   ...markets,
   ...portfolio,

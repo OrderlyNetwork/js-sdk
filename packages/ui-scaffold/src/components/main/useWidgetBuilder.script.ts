@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useScaffoldContext } from "../scaffoldContext";
+import { useScaffoldContext } from "../scaffold";
 import {
   useAccount,
   useEventEmitter,

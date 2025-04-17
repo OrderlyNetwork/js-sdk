@@ -1,0 +1,10 @@
+{
+  "extend.products.swap": "스왑",
+  "extend.products.trade": "거래",
+  "extend.tradingRewards.description": "Orderly에서 거래하여 ORDER 획득",
+  "extend.affiliate.tag": "40% 리베이트",
+  "extend.affiliate.description": "Orderly 제휴 프로그램으로 더 많은 수익 창출",
+  "extend.staking": "스테이킹",
+  "extend.staking.description": "ORDER/esORDER 스테이킹으로 VALOR 획득",
+  "extend.restrictedInfo.description": "제한된 국가와 관련된 IP 주소({{ip}})에서 {{brokerName}}에 접속하고 있습니다. <0>이용약관</0>을 참조하세요. 오류라고 생각되시면 <1>{{email}}</1>로 문의해 주세요."
+}

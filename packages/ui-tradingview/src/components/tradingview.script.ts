@@ -159,7 +159,13 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       base: symbolInfo("base"),
       quantity: data.balance,
       onConfirm: async () => {
-        return onSubmit(order);
+        return onSubmit(order).catch((error) => {
+          if (typeof error === "string") {
+            toast.error(error);
+          } else {
+            toast.error(error.message);
+          }
+        });
       },
       submitting,
     });
@@ -268,10 +274,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     // console.log('-- overrides', overrides);
     const studiesOverrides = customerStudiesOverrides
       ? Object.assign(
-          {},
-          defaultOverrides.studiesOverrides,
-          customerStudiesOverrides
-        )
+        {},
+        defaultOverrides.studiesOverrides,
+        customerStudiesOverrides
+      )
       : defaultOverrides.studiesOverrides;
     if (chartRef.current) {
       // options example: https://www.tradingview.com/widget-docs/widgets/charts/advanced-chart/
@@ -310,7 +316,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         options,
         chartKey: getChartKey(isMobile),
         mode,
-        onClick: () => {},
+        onClick: () => { },
       };
 
       chart.current = new Widget(chartProps);
