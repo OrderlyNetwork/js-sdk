@@ -46,7 +46,7 @@ export const SwapFee: FC<SwapFeeProps> = (props) => {
     );
 
     modal.alert({
-      title: "Fee",
+      title: t("common.fee"),
       message: content,
     });
   };
