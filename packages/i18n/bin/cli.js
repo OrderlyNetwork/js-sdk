@@ -2,7 +2,7 @@
 
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
-const { generateCsv } = require("../script/generateCsv");
+// const { generateCsv } = require("../script/generateCsv");
 const { json2csv } = require("../script/json2csv");
 const { csv2json } = require("../script/csv2json");
 const { diffCsv } = require("../script/diffCsv");
@@ -38,9 +38,9 @@ async function main() {
     case "diffcsv":
       await diffCsv(oldFile, newFile);
       break;
-    case "generateCsv":
-      await generateCsv(output);
-      break;
+    // case "generateCsv":
+    //   await generateCsv(output);
+    //   break;
     case "fillJson":
       await fillJson(input, output);
       break;
@@ -142,21 +142,21 @@ function getArgv() {
     )
 
     // generateCsv command
-    .command(
-      "generateCsv <output>",
-      "Generate a locale CSV file",
-      (yargs) => {
-        return yargs.positional("output", {
-          describe: "Output path for the locale CSV file",
-          type: "string",
-          // Required
-          demandOption: true,
-        });
-      },
-      (argv) => {
-        console.log(`Generating locale CSV file at: ${argv.output}`);
-      }
-    )
+    // .command(
+    //   "generateCsv <output>",
+    //   "Generate a locale CSV file",
+    //   (yargs) => {
+    //     return yargs.positional("output", {
+    //       describe: "Output path for the locale CSV file",
+    //       type: "string",
+    //       // Required
+    //       demandOption: true,
+    //     });
+    //   },
+    //   (argv) => {
+    //     console.log(`Generating locale CSV file at: ${argv.output}`);
+    //   }
+    // )
 
     // fillJson command
     .command(

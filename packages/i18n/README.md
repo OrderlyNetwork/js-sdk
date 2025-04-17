@@ -190,20 +190,6 @@ Example:
 npx @orderly.network/i18n diffcsv ./dist/locale1.csv ./dist/locale2.csv
 ```
 
-### generateCsv
-
-Generate a locale CSV file from your source files.
-
-```bash
-npx @orderly.network/i18n generateCsv <output>
-```
-
-Example:
-
-```bash
-npx @orderly.network/i18n generateCsv ./dist/locale.csv
-```
-
 ### fillJson
 
 Fill values from an input locale JSON file and generate a new locale JSON file.
