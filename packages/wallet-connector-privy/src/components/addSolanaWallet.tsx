@@ -66,7 +66,7 @@ export function AddSolanaWallet() {
             className="oui-w-[15px] oui-h-[15px]"
           />
           <div className="oui-text-base-contrast-80 oui-text-2xs oui-font-semibold">
-            {t("connector.addSolanaWallet")}
+            {t("connector.privy.addSolanaWallet")}
           </div>
 
           <button onClick={onToggleVisibility}>

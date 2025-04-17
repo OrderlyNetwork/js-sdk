@@ -73,7 +73,7 @@ export function AddEvmWallet() {
             </div>
           </div>
           <div className="oui-text-base-contrast-80 oui-text-2xs oui-font-semibold">
-            {t("connector.addEvmWallet")}
+            {t("connector.privy.addEvmWallet")}
           </div>
 
           <button onClick={() => setVisible(!visible)}>

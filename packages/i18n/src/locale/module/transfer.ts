@@ -6,6 +6,7 @@ export const transfer = {
   "transfer.quantity.invalid": "Please input a valid number",
 
   "transfer.insufficientBalance": "Insufficient balance",
+  "transfer.insufficientAllowance": "Insufficient allowance",
   "transfer.rejectTransaction": "Rejected transaction",
 
   "transfer.deposit.approve.symbol": "Approve {{symbol}}",

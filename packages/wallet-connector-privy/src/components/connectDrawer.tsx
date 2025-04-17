@@ -36,7 +36,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
           "md:oui-mb-2"
         )}
       >
-        {t("connector.loginIn")}
+        {t("connector.privy.loginIn")}
         {isMobile && (
           <div className="oui-h-3 oui-flex oui-justify-center">
             <img
@@ -61,7 +61,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
             className="oui-w-[18px] oui-h-[18px]"
           />
           <div className="oui-text-base-contrast oui-text-2xs">
-            {t("connector.email")}
+            {t("connector.privy.email")}
           </div>
         </div>
 
@@ -74,7 +74,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
             className="oui-w-[18px] oui-h-[18px]"
           />
           <div className="oui-text-base-contrast oui-text-2xs">
-            {t("connector.google")}
+            {t("connector.privy.google")}
           </div>
         </div>
 
@@ -87,7 +87,7 @@ function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
             className="oui-w-[18px] oui-h-[18px]"
           />
           <div className="oui-text-base-contrast oui-text-2xs">
-            {t("connector.twitter")}
+            {t("connector.privy.twitter")}
           </div>
         </div>
       </div>
@@ -293,7 +293,7 @@ export function ConnectDrawer(props: {
             )}
           >
             {isConnected
-              ? t("connector.myWallet")
+              ? t("connector.privy.myWallet")
               : t("connector.connectWallet")}
           </div>
           <CloseIcon
@@ -308,7 +308,7 @@ export function ConnectDrawer(props: {
         <div className="oui-z-10 oui-text-base-contrast-80 oui-text-center oui-text-2xs oui-relative  oui-font-semibold">
           {/* @ts-ignore */}
           <Trans
-            i18nKey="connector.termsOfUse"
+            i18nKey="connector.privy.termsOfUse"
             components={[
               <a
                 href={termsOfUse}

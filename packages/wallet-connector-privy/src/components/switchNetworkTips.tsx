@@ -2,12 +2,14 @@ import React from "react";
 import { ChainNamespace } from "@orderly.network/types";
 import { ExclamationFillIcon } from "@orderly.network/ui";
 import { useStorageChain } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 
 export function SwitchNetworkTips({
   chainNamespace,
 }: {
   chainNamespace: ChainNamespace;
 }) {
+  const { t } = useTranslation();
   const getChainName = () => {
     if (chainNamespace === ChainNamespace.evm) {
       return "EVM";
@@ -21,12 +23,18 @@ export function SwitchNetworkTips({
         className=" oui-text-warning-darken oui-flex-shrink-0"
       />
       <div className="oui-text-2xs oui-text-warning-darken">
-        Switch to {getChainName()} to continue.
+        {t("connector.privy.switchNetwork.tips", {
+          chainName: getChainName(),
+        })}
       </div>
     </div>
   );
 }
-export const StorageChainNotCurrentWalletType = ({currentWalletChainType}:{currentWalletChainType:ChainNamespace}) => {
+export const StorageChainNotCurrentWalletType = ({
+  currentWalletChainType,
+}: {
+  currentWalletChainType: ChainNamespace;
+}) => {
   const { storageChain } = useStorageChain();
   if (currentWalletChainType === storageChain?.namespace) {
     return null;
@@ -35,4 +43,4 @@ export const StorageChainNotCurrentWalletType = ({currentWalletChainType}:{curre
     return <SwitchNetworkTips chainNamespace={ChainNamespace.solana} />;
   }
   return <SwitchNetworkTips chainNamespace={ChainNamespace.evm} />;
-}
+};

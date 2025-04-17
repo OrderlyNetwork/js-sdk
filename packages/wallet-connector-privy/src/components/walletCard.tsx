@@ -206,7 +206,7 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
       content={
         <div>
           <div className="oui-text-2xs oui-text-base-contrast oui-font-semibold">
-            {t("connector.supportedEvmChain")}
+            {t("connector.privy.supportedEvmChain")}
           </div>
           <div className="oui-grid oui-grid-cols-3 oui-gap-y-3 oui-gap-x-2 oui-mt-3 oui-text-2xs oui-text-base-contrast-54">
             {chains.map((item, key) => (
