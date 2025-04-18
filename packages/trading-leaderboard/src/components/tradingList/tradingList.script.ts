@@ -155,37 +155,44 @@ export function useTradingListScript() {
     return `/v1/volume/broker/daily?${searchParams.toString()}`;
   };
 
-  const { data: searchData = [] } = usePrivateQuery<TradingData[]>(
+  const { data: userDataRes = [] } = usePrivateQuery<TradingData[]>(
     getUserKey(),
     {
       revalidateOnFocus: false,
     }
   );
 
-  const userData = useMemo(() => {
-    const index = top100Data?.rows.findIndex((item) =>
-      isSameAddress(item.address, state.address!)
-    );
+  const getAddressRank = useCallback(
+    (address: string) => {
+      const index = top100Data?.rows.findIndex((item) =>
+        isSameAddress(item.address, address!)
+      );
+      return index !== -1 ? index! + 1 : "100+";
+    },
+    [top100Data]
+  );
 
-    if (!searchData.length && !isLoading) {
+  const userDataList = useMemo(() => {
+    if (!state.address || isLoading) {
+      return [];
+    }
+
+    if (!userDataRes.length) {
       return [
         {
+          key: getRowKey(state.address!),
           address: state.address,
           rank: "-",
-          key: `user-${state.address?.toLowerCase()}`,
         } as unknown as TradingData,
       ];
     }
 
-    return searchData.map((item) => ({
+    return userDataRes?.map((item) => ({
       ...item,
-      rank:
-        isSameAddress(item.address, state.address!) && index !== -1
-          ? index! + 1
-          : "100+",
-      key: `user-${item.address.toLowerCase()}`,
+      rank: getAddressRank(item.address!),
+      key: getRowKey(item.address!),
     }));
-  }, [state.address, top100Data, searchData, isLoading]);
+  }, [state.address, userDataRes, isLoading, getAddressRank]);
 
   const addRankForList = useCallback(
     (list: TradingData[], total: number) => {
@@ -193,7 +200,7 @@ export function useTradingListScript() {
         let rank: string | number = index + 1;
 
         if (searchValue) {
-          rank = "-";
+          rank = getAddressRank(item.address);
         } else {
           if (sort?.sortKey === "perp_volume" && sort?.sort === "asc") {
             rank = total - (page - 1) * pageSize - index;
@@ -208,7 +215,7 @@ export function useTradingListScript() {
         };
       });
     },
-    [page, pageSize, sort, searchValue]
+    [page, pageSize, sort, searchValue, getAddressRank]
   );
 
   const dataSource = useMemo(() => {
@@ -216,10 +223,10 @@ export function useTradingListScript() {
     const total = data?.meta.total || 0;
     const rankList = addRankForList(list, total);
     if (page === 1 && !searchValue) {
-      return [...userData, ...rankList];
+      return [...userDataList, ...rankList];
     }
     return rankList;
-  }, [data, page, userData, searchValue, addRankForList]);
+  }, [data, page, userDataList, searchValue, addRankForList]);
 
   const dataList = useMemo(() => {
     if (!infiniteData?.length) {
@@ -231,11 +238,11 @@ export function useTradingListScript() {
     const rankList = addRankForList(flatList, total);
 
     if (!searchValue) {
-      return [...userData, ...rankList];
+      return [...userDataList, ...rankList];
     }
 
     return rankList;
-  }, [infiniteData, userData, searchValue, addRankForList]);
+  }, [infiniteData, userDataList, searchValue, addRankForList]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -358,4 +365,8 @@ const useFilter = () => {
 
 function isSameAddress(address1: string, address2: string) {
   return address1.toLowerCase() === address2.toLowerCase();
+}
+
+export function getRowKey(address: string) {
+  return `current-address-${address?.toLowerCase()}`;
 }

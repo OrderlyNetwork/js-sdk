@@ -10,6 +10,8 @@ import { useSplitPersistent } from "../../components/desktop/layout/useSplitPers
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
+import { useObserverElement } from "@orderly.network/ui";
+import Split from "@uiw/react-split";
 
 export type TradingState = ReturnType<typeof useTradingScript>;
 
@@ -59,6 +61,41 @@ export const useTradingScript = () => {
 
   const observerState = useObserverOrderEntry({ max2XL });
 
+  const tradingviewAndOrderbookContainerRef = useRef<Split>(null);
+
+  const [extraHeight, setExtraHeight] = useState(0);
+
+  const onTradingviewAndOrderbookContainerDragging = (
+    preSize: number,
+    nextSize: number,
+    paneNumber: number
+  ) => {
+    console.log("onDragging", preSize, nextSize, paneNumber);
+    // const rect =
+    //   props.tradingviewAndOrderbookContainerRef?.current?.getBoundingClientRect();
+    const boxHeight = tradingviewAndOrderbookContainerRef?.current?.boxHeight;
+    if (!boxHeight) return;
+
+    const tradingviewHeight = (boxHeight * preSize) / 100;
+    const orderbookHeight = (boxHeight * nextSize) / 100;
+
+    if (tradingviewHeight > 500) {
+      setExtraHeight(500);
+    } else {
+      setExtraHeight(0);
+    }
+    console.log(
+      "boxHeight",
+      boxHeight,
+      tradingviewHeight,
+      orderbookHeight,
+      tradingviewHeight + orderbookHeight
+    );
+
+    const orderEntryHeight =
+      observerState.orderEntryViewRef.current?.clientHeight;
+  };
+
   const map = {
     layout,
     onLayout: setLayout,
@@ -74,6 +111,9 @@ export const useTradingScript = () => {
     ...splitSizeState,
     ...observerState,
     restrictedInfo,
+    tradingviewAndOrderbookContainerRef,
+    onTradingviewAndOrderbookContainerDragging,
+    extraHeight,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
@@ -198,6 +238,13 @@ function useObserverOrderEntry(options: { max2XL: boolean }) {
   const { max2XL } = options;
   const [orderEntryHeight, setOrderEntryHeight] = useState(0);
   const orderEntryViewRef = useRef<HTMLDivElement>(null);
+
+  // useObserverElement(orderEntryViewRef.current, (entry) => {
+  //   const height = entry.contentRect.height;
+  //   if (height) {
+  //     setOrderEntryHeight(height);
+  //   }
+  // });
 
   useEffect(() => {
     const element = orderEntryViewRef.current;

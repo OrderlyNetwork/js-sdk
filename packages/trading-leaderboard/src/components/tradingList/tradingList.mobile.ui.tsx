@@ -11,6 +11,7 @@ import {
 } from "@orderly.network/ui";
 import {
   FilterDays,
+  getRowKey,
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
@@ -77,7 +78,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
           };
         }}
         onCell={(column, record, index) => {
-          if (record.key === `user-${props.address?.toLowerCase()}`) {
+          if (record.key === getRowKey(props.address!)) {
             const isFirst = column.getIsFirstColumn();
             const isLast = column.getIsLastColumn();
 
