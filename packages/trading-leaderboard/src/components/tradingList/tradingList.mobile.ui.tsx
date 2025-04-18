@@ -68,7 +68,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
         initialSort={props.initialSort}
         onSort={props.onSort}
         dataSource={props.dataList}
-        generatedRowKey={(record: TradingData) => record.address}
+        generatedRowKey={(record: TradingData) => record.key || record.address}
         manualPagination
         manualSorting
         onRow={(record, index) => {
