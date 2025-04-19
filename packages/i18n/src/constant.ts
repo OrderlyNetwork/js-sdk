@@ -18,9 +18,9 @@ export enum LocaleEnum {
   /** French */
   fr = "fr",
   /** Dutch */
-  nl = "nl",
+  // nl = "nl",
   /** Indonesian */
-  id = "id",
+  // id = "id",
 }
 
 export const defaultLng = LocaleEnum.en;

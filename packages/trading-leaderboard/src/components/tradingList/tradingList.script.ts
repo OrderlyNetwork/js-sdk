@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useAccount, usePrivateQuery } from "@orderly.network/hooks";
+import {
+  useAccount,
+  usePrivateInfiniteQuery,
+  usePrivateQuery,
+} from "@orderly.network/hooks";
 import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { differenceInDays } from "date-fns";
 import { getDateRange, formatDateRange } from "../../utils";
-import { useDataTap } from "@orderly.network/react-app";
 import { API } from "@orderly.network/types";
 import { useEndReached } from "../../hooks/useEndReached";
 
@@ -42,7 +45,6 @@ export function useTradingListScript() {
     sort: "desc",
   });
   const [sort, setSort] = useState<TableSort | undefined>(initialSort);
-  const [dataList, setDataList] = useState<TradingData[]>([]);
 
   const { state } = useAccount();
 
@@ -55,10 +57,10 @@ export function useTradingListScript() {
     pageSize: 100,
   });
 
-  const getKey = () => {
+  const getKey = (args: { page: number }) => {
     const searchParams = new URLSearchParams();
 
-    searchParams.set("page", page.toString());
+    searchParams.set("page", args.page.toString());
     searchParams.set("size", pageSize.toString());
 
     searchParams.set("aggregateBy", "ACCOUNT");
@@ -83,10 +85,36 @@ export function useTradingListScript() {
     return `/v1/volume/broker/daily?${searchParams.toString()}`;
   };
 
-  const { data, isLoading } = usePrivateQuery<TradingResponse>(getKey(), {
-    formatter: (res) => res,
-    revalidateOnFocus: false,
-  });
+  const { data, isLoading } = usePrivateQuery<TradingResponse>(
+    getKey({ page }),
+    {
+      formatter: (res) => res,
+      revalidateOnFocus: false,
+    }
+  );
+
+  const {
+    data: infiniteData,
+    size,
+    setSize,
+    isValidating,
+  } = usePrivateInfiniteQuery<TradingResponse>(
+    (pageIndex: number, previousPageData: any): string | null => {
+      // reached the end
+      if (previousPageData && !previousPageData.rows?.length) return null;
+
+      if (!isMobile) {
+        return null;
+      }
+
+      return getKey({ page: pageIndex + 1 });
+    },
+    {
+      initialSize: 1,
+      formatter: (data) => data,
+      revalidateOnFocus: false,
+    }
+  );
 
   const getTop100Key = () => {
     if (!state.address) {
@@ -127,73 +155,94 @@ export function useTradingListScript() {
     return `/v1/volume/broker/daily?${searchParams.toString()}`;
   };
 
-  const { data: searchData = [] } = usePrivateQuery<TradingData[]>(
+  const { data: userDataRes = [] } = usePrivateQuery<TradingData[]>(
     getUserKey(),
     {
       revalidateOnFocus: false,
     }
   );
 
-  const userData = useMemo(() => {
-    const index = top100Data?.rows.findIndex((item) =>
-      isSameAddress(item.address, state.address!)
-    );
+  const getAddressRank = useCallback(
+    (address: string) => {
+      const index = top100Data?.rows.findIndex((item) =>
+        isSameAddress(item.address, address!)
+      );
+      return index !== -1 ? index! + 1 : "100+";
+    },
+    [top100Data]
+  );
 
-    if (!searchData.length && !isLoading) {
+  const userDataList = useMemo(() => {
+    if (!state.address || isLoading) {
+      return [];
+    }
+
+    if (!userDataRes.length) {
       return [
         {
+          key: getRowKey(state.address!),
           address: state.address,
           rank: "-",
-          key: `user-${state.address?.toLowerCase()}`,
         } as unknown as TradingData,
       ];
     }
 
-    return searchData.map((item) => ({
+    return userDataRes?.map((item) => ({
       ...item,
-      rank:
-        isSameAddress(item.address, state.address!) && index !== -1
-          ? index! + 1
-          : "100+",
-      key: `user-${item.address.toLowerCase()}`,
+      rank: getAddressRank(item.address!),
+      key: getRowKey(item.address!),
     }));
-  }, [state.address, top100Data, searchData, isLoading]);
+  }, [state.address, userDataRes, isLoading, getAddressRank]);
+
+  const addRankForList = useCallback(
+    (list: TradingData[], total: number) => {
+      return list?.map((item, index) => {
+        let rank: string | number = index + 1;
+
+        if (searchValue) {
+          rank = getAddressRank(item.address);
+        } else {
+          if (sort?.sortKey === "perp_volume" && sort?.sort === "asc") {
+            rank = total - (page - 1) * pageSize - index;
+          } else if (sort?.sortKey === "perp_volume" && sort?.sort === "desc") {
+            rank = (page - 1) * pageSize + index + 1;
+          }
+        }
+
+        return {
+          ...item,
+          rank,
+        };
+      });
+    },
+    [page, pageSize, sort, searchValue, getAddressRank]
+  );
 
   const dataSource = useMemo(() => {
     const list = data?.rows || [];
     const total = data?.meta.total || 0;
-    // add rank
-    const _list = list?.map((item, index) => {
-      let rank: string | number = index + 1;
-
-      if (searchValue) {
-        rank = "-";
-      } else {
-        if (sort?.sortKey === "perp_volume" && sort?.sort === "asc") {
-          rank = total - (page - 1) * pageSize - index;
-        } else if (sort?.sortKey === "perp_volume" && sort?.sort === "desc") {
-          rank = (page - 1) * pageSize + index + 1;
-        }
-      }
-
-      return {
-        ...item,
-        rank,
-      };
-    });
-    return [...userData, ..._list];
-  }, [data, sort, page, pageSize, searchValue, userData]);
-
-  useEffect(() => {
-    if (!isMobile) {
-      return;
+    const rankList = addRankForList(list, total);
+    if (page === 1 && !searchValue) {
+      return [...userDataList, ...rankList];
     }
-    if (page === 1) {
-      setDataList(dataSource);
-    } else {
-      setDataList((prev) => [...prev, ...dataSource]);
+    return rankList;
+  }, [data, page, userDataList, searchValue, addRankForList]);
+
+  const dataList = useMemo(() => {
+    if (!infiniteData?.length) {
+      return [];
     }
-  }, [dataSource, isMobile, page]);
+
+    const total = infiniteData[0]?.meta.total || 0;
+    const flatList = infiniteData?.map((item) => item.rows)?.flat();
+    const rankList = addRankForList(flatList, total);
+
+    if (!searchValue) {
+      return [...userDataList, ...rankList];
+    }
+
+    return rankList;
+  }, [infiniteData, userDataList, searchValue, addRankForList]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -203,8 +252,8 @@ export function useTradingListScript() {
   );
 
   useEndReached(sentinelRef, () => {
-    if (!isLoading && isMobile && page < (pagination?.pageTotal || 0)) {
-      setPage(page + 1);
+    if (!isValidating && isMobile) {
+      setSize(size + 1);
     }
   });
 
@@ -230,12 +279,14 @@ export function useTradingListScript() {
   }, [searchValue]);
 
   useEffect(() => {
+    setPage(1);
+  }, [state.address]);
+
+  useEffect(() => {
     if (dateRange.to && dateRange.from) {
       setPage(1);
     }
   }, [dateRange]);
-
-  const _data = useDataTap(dataSource);
 
   return {
     pagination,
@@ -246,8 +297,8 @@ export function useTradingListScript() {
     onFilter,
     initialSort,
     onSort,
-    dataSource: _data,
-    isLoading,
+    dataSource,
+    isLoading: isLoading || isValidating,
     searchValue,
     onSearchValueChange,
     clearSearchValue,
@@ -314,4 +365,8 @@ const useFilter = () => {
 
 function isSameAddress(address1: string, address2: string) {
   return address1.toLowerCase() === address2.toLowerCase();
+}
+
+export function getRowKey(address: string) {
+  return `current-address-${address?.toLowerCase()}`;
 }

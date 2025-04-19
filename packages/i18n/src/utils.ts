@@ -35,3 +35,29 @@ export function parseI18nLang(
 
   return defaultLang;
 }
+
+/**
+ * remove lang prefix from pathname
+ * @example
+ * removeLangPrefix('/en/perp/PERP_ETH_USDC') => '/perp/PERP_ETH_USDC'
+ * removeLangPrefix('/en/markets') => '/markets'
+ */
+export function removeLangPrefix(pathname: string) {
+  return pathname.replace(/^\/[^/]+/, "");
+}
+
+/**
+ * get locale from pathname
+ * @example
+ * getLocalePathFromPathname('/en/perp/PERP_ETH_USDC') => 'en'
+ * getLocalePathFromPathname('/en/markets') => 'en'
+ * @param pathname
+ */
+export function getLocalePathFromPathname(
+  pathname: string,
+  localeCodes?: string[]
+) {
+  const locale = pathname.split("/")[1];
+  localeCodes = localeCodes || Object.values(LocaleEnum);
+  return localeCodes.includes(locale as LocaleEnum) ? locale : null;
+}
