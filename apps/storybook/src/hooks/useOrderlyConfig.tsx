@@ -46,12 +46,7 @@ export const useOrderlyConfig = () => {
               href: "/leaderboard",
             },
           ],
-          products: [
-            { name: t("extend.products.swap"), href: "/swap" },
-            { name: t("extend.products.trade"), href: "/trade" },
-          ],
           initialMenu: "/",
-          initialProduct: "/trade",
           campaigns: {
             name: t("tradingRewards.rewards"),
             href: "/rewards",
