@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -13,13 +14,11 @@ import {
   Text,
 } from "@orderly.network/ui";
 import {
-  AnnouncementData,
   AnnouncementScriptReturn,
   AnnouncementType,
 } from "./announcement.script";
 import { useTranslation } from "@orderly.network/i18n";
 import { CloseIcon } from "../icons";
-import { useMemo } from "react";
 
 export type AnnouncementProps = AnnouncementScriptReturn & {
   style?: React.CSSProperties;
@@ -28,17 +27,9 @@ export type AnnouncementProps = AnnouncementScriptReturn & {
 };
 
 export const Announcement = (props: AnnouncementProps) => {
-  const {
-    closeTips,
-    tips,
-    currentIndex,
-    nextTips,
-    prevTips,
-    maintenanceDialogInfo,
-    showAnnouncement,
-  } = props;
-  const { isMobile } = useScreen();
+  const { maintenanceDialogInfo, showAnnouncement } = props;
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
 
   if (maintenanceDialogInfo) {
     return (
@@ -64,48 +55,28 @@ export const Announcement = (props: AnnouncementProps) => {
     return null;
   }
 
-  const currentTip = tips[currentIndex];
+  const renderContent = () => {
+    if (!props.currentTip) {
+      return null;
+    }
+    if (isMobile) {
+      return <MobileTips {...props} />;
+    }
+    return <DeskTopTips {...props} />;
+  };
 
   return (
     <Flex
       style={props.style}
       className={cn("oui-font-semibold oui-rounded-xl", props.className)}
+      key={props.currentTip?.announcement_id}
     >
-      {isMobile ? (
-        <MobileTips
-          currentTip={currentTip}
-          currentIndex={currentIndex}
-          tips={tips}
-          prevTips={prevTips}
-          nextTips={nextTips}
-          closeTips={closeTips}
-        />
-      ) : (
-        <DeskTopTips
-          currentTip={currentTip}
-          currentIndex={currentIndex}
-          tips={tips}
-          prevTips={prevTips}
-          nextTips={nextTips}
-          closeTips={closeTips}
-          mutiLine={props.mutiLine}
-          contentRef={props.contentRef}
-        />
-      )}
+      {renderContent()}
     </Flex>
   );
 };
 
-const DeskTopTips = (props: {
-  currentTip: AnnouncementData;
-  currentIndex: number;
-  tips: AnnouncementData[];
-  prevTips: () => void;
-  nextTips: () => void;
-  closeTips: () => void;
-  mutiLine: boolean;
-  contentRef: React.RefObject<HTMLDivElement>;
-}) => {
+const DeskTopTips = (props: AnnouncementScriptReturn) => {
   const {
     currentTip,
     currentIndex,
@@ -116,6 +87,7 @@ const DeskTopTips = (props: {
     mutiLine,
     contentRef,
   } = props;
+
   return (
     <>
       <Flex
@@ -137,7 +109,7 @@ const DeskTopTips = (props: {
           ref={contentRef}
           className="oui-leading-[18px]"
         >
-          {currentTip.content}
+          {currentTip.message}
         </Text>
       </Flex>
       <Flex
@@ -163,16 +135,10 @@ const DeskTopTips = (props: {
   );
 };
 
-const MobileTips = (props: {
-  currentTip: AnnouncementData;
-  currentIndex: number;
-  tips: AnnouncementData[];
-  prevTips: () => void;
-  nextTips: () => void;
-  closeTips: () => void;
-}) => {
+const MobileTips = (props: AnnouncementScriptReturn) => {
   const { currentTip, currentIndex, tips, prevTips, nextTips, closeTips } =
     props;
+
   return (
     <Flex p={3} gapX={2} itemAlign="start" width="100%">
       <Flex
@@ -184,7 +150,7 @@ const MobileTips = (props: {
         )}
       >
         <Text size="xs" className="oui-leading-5" intensity={80}>
-          {currentTip.content}
+          {currentTip.message}
         </Text>
 
         <Flex width="100%" justify="between">
@@ -203,17 +169,12 @@ const MobileTips = (props: {
   );
 };
 
-const SwitchTips = ({
-  currentIndex,
-  tipsCount,
-  prevTips,
-  nextTips,
-}: {
-  currentIndex: number;
+type SwitchTipsProps = {
   tipsCount: number;
-  prevTips: () => void;
-  nextTips: () => void;
-}) => {
+} & Pick<AnnouncementScriptReturn, "currentIndex" | "prevTips" | "nextTips">;
+
+const SwitchTips = (props: SwitchTipsProps) => {
+  const { currentIndex, tipsCount, prevTips, nextTips } = props;
   return (
     <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-text-base-contrast-54">
       <ChevronLeftIcon
