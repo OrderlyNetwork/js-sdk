@@ -24,7 +24,7 @@ export enum WalletType {
   SOL = 'SOL',
   PRIVY = 'privy',
   // abstract wallet
-  ABS = 'ABS',
+  ABSTRACT = 'Abstract',
 }
 
 export interface ConnectProps {

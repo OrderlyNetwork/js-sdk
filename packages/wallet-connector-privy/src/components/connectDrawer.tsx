@@ -14,9 +14,9 @@ import { useTranslation, Trans } from "@orderly.network/i18n";
 import { Drawer } from "./drawer";
 import { RenderPrivyWallet } from "./renderPrivyWallet";
 import { ConnectorKey } from "@orderly.network/types";
-import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
 import { RenderConnector } from "./renderConnector";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
+import { RenderNonPrivyWallet } from "./renderNonPrivyWallet";
 
 
 
@@ -27,7 +27,7 @@ function MyWallet() {
     <div>
       {connectorKey === "privy" && <RenderPrivyWallet />}
 
-      {connectorKey !== "privy" && <RenderNoPrivyWallet />}
+      {connectorKey !== "privy" && <RenderNonPrivyWallet />}
     </div>
   );
 }

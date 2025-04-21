@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
+import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   cn,
   Tooltip,
 } from "@orderly.network/ui";
-import { useWallet } from "../hooks/useWallet";
-import { useWalletConnectorPrivy } from "../provider";
+import { useWallet } from "../../hooks/useWallet";
+import { useWalletConnectorPrivy } from "../../provider";
 import { ChainNamespace } from "@orderly.network/types";
-import { WalletType } from "../types";
-import { RenderWalletIcon } from "./common";
+import { WalletType } from "../../types";
+import { RenderWalletIcon } from "../common";
 import { useTranslation } from "@orderly.network/i18n";
 
 export function AddSolanaWallet() {
