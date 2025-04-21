@@ -4,7 +4,7 @@ import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { ConnectedChain, WalletState } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
-import {ethers} from 'ethers';
+import { useAccount } from "wagmi";
 interface AbstractWalletContextValue {
   connect: () => void;
   isConnected: boolean;
@@ -22,6 +22,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   const {login, logout} = useLoginWithAbstract();
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const {data: client} = useAbstractClient();
+  const {connector} = useAccount();
 
   const connect = () =>{
     return login();
@@ -56,19 +57,17 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
 
 
   useEffect(() => {
+    console.log('xxx client', client)
     if (!client) {
       setWallet(null);
       return;
     }
-    const tempWallet = {
-      label: "Abstract",
-      icon: "",
-      // @ts-ignore TODO
-      provider: {
-        signMessage: client.signMessage as any,
-        sendTransaction: client.sendTransaction as any,
-        
-      },
+    connector?.getProvider().then((provider: any) => {
+      console.log('xxx abstract wallet in wagmi provider',provider)
+      const tempWallet = {
+        label: "Abstract",
+        icon: "",
+      provider: provider,
       accounts: [{
         address: client.account.address,
       }],
@@ -79,8 +78,9 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       chain: connectedChain,
     }
     console.log("-- abstract wallet tempWallet", tempWallet)
-    setWallet(tempWallet as unknown as WalletState)
-  }, [client, connectedChain])
+      setWallet(tempWallet as unknown as WalletState)
+    })
+  }, [client, connectedChain, connector])
   return (
     <AbstractWalletContext.Provider value={value}>
       {props.children}
