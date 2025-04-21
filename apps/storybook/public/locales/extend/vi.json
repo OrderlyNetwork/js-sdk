@@ -3,6 +3,5 @@
   "extend.affiliate.tag": "Hoàn trả 40%",
   "extend.affiliate.description": "Kiếm thêm với tư cách là đối tác của Orderly",
   "extend.staking": "Staking",
-  "extend.staking.description": "Staking ORDER/esORDER để nhận VALOR",
-  "extend.restrictedInfo.description": "Bạn đang truy cập {{brokerName}} từ địa chỉ IP ({{ip}}) liên quan đến quốc gia bị hạn chế. Vui lòng tham khảo <0>Điều khoản sử dụng</0> của chúng tôi. Nếu bạn cho rằng đây là lỗi, vui lòng liên hệ <1>{{email}}</1>."
+  "extend.staking.description": "Staking ORDER/esORDER để nhận VALOR"
 }
