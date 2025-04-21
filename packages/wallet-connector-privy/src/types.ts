@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import { Adapter, WalletAdapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
 import { Connector, CreateConnectorFn, Storage } from "wagmi";
 import { PrivyClientConfig } from "@privy-io/react-auth";
+import { QueryClient } from "@tanstack/react-query";
 export type SolanaInitialProps = PropsWithChildren<{
   network?: WalletAdapterNetwork;
   endPoint?: string;
@@ -53,6 +54,10 @@ export interface InitSolana {
   onError: (error: WalletError, adapter?: Adapter) => void;
 }
 
+export interface InitAbstract {
+  queryClient?: QueryClient;
+}
+
 export const SolanaChains = new Map([[WalletAdapterNetwork.Devnet, 901901901], [WalletAdapterNetwork.Mainnet, 900900900]]);
 
 export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
@@ -68,6 +73,12 @@ export interface ConnectorWalletType {
   disableWagmi?: boolean;
   disablePrivy?: boolean;
   disableSolana?: boolean;
+  disableAGW?: boolean;
+}
+export interface WalletChainTypeConfig{
+  hasEvm: boolean;
+  hasSol: boolean; 
+  hasAbstract: boolean;
 }
 export enum WalletChainTypeEnum {
   onlyEVM = 'onlyEVM',

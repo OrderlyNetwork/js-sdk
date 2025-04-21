@@ -13,6 +13,8 @@ import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
 import {
+  AbstractChains,
+  AbstractTestnetChainInfo,
   ArbitrumSepoliaChainInfo,
   ChainNamespace,
   SolanaChains,
@@ -26,6 +28,8 @@ import {
   WalletChainType,
   WalletChainTypeEnum,
   ConnectorWalletType,
+  InitAbstract,
+  WalletChainTypeConfig,
 } from "./types";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { Chains } from "@orderly.network/hooks";
@@ -85,7 +89,10 @@ interface WalletConnectorPrivyContextType {
     } | null
   ) => void;
   termsOfUse: string;
+  // TODO deprecated
   walletChainType: WalletChainType;
+  // TODO new chaintype config
+  walletChainTypeConfig: WalletChainTypeConfig;
   connectorWalletType: ConnectorWalletType;
 }
 
@@ -105,10 +112,16 @@ const WalletConnectorPrivyContext =
     setSolanaInfo: () => {},
     termsOfUse: "",
     walletChainType: WalletChainTypeEnum.EVM_SOL,
+    walletChainTypeConfig: {
+      hasEvm: true,
+      hasSol: true,
+      hasAbstract: false,
+    },
     connectorWalletType: {
       disableWagmi: false,
       disablePrivy: false,
       disableSolana: false,
+      disableAGW: false,
     },
   });
 
@@ -119,6 +132,7 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   privyConfig?: InitPrivy;
   wagmiConfig?: InitWagmi;
   solanaConfig?: InitSolana;
+  abstractConfig?: InitAbstract;
   network: Network;
   customChains?: Chains;
   termsOfUse: string;
@@ -132,6 +146,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
+
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
   const [targetNamespace, setTargetNamespace] = useState<
@@ -147,6 +162,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       disableWagmi: false,
       disablePrivy: false,
       disableSolana: false,
+      disableAGW: false,
     };
     if (!props.privyConfig) {
       type.disablePrivy = true;
@@ -157,8 +173,29 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     if (!props.solanaConfig) {
       type.disableSolana = true;
     }
+    if (!props.abstractConfig) {
+      type.disableAGW = true;
+    }
     return type;
   }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
+
+  const walletChainTypeConfig = useMemo(() => {
+    const chainTypeObj:WalletChainTypeConfig = {
+      hasEvm: false,
+      hasSol: false,
+      hasAbstract: false,
+    };
+    initChains.forEach((chain) => {
+      if (SolanaChains.has(chain.id)) { 
+        chainTypeObj.hasSol = true;
+      } else if (AbstractChains.has(chain.id)) {
+        chainTypeObj.hasAbstract = true;
+      } else {
+        chainTypeObj.hasEvm = true;
+      }
+    }); 
+    return chainTypeObj;
+  }, [initChains]);
 
   const fetchAllChains = async () => {
     let testChainsList = [];
@@ -168,6 +205,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
         "https://testnet-api-evm.orderly.org/v1/public/chain_info"
       );
       testChainsList = testChainInfoRes.data.rows;
+      // TODO only for test, need remove this code
+      testChainsList.push(AbstractTestnetChainInfo);
     } catch (error) {
       console.error("Error fetching data:", error);
       testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
@@ -205,13 +244,17 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     const chainTypeObj: {
       hasEvm: boolean;
       hasSol: boolean;
+      hasAbstract: boolean;
     } = {
       hasEvm: false,
       hasSol: false,
+      hasAbstract: false,
     };
     [...testChains, ...mainnetChains].forEach((chain) => {
       if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
+      } else if (AbstractChains.has(chain.id)) {
+        chainTypeObj.hasAbstract = true;
       } else {
         chainTypeObj.hasEvm = true;
       }
@@ -228,12 +271,14 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   if (
     connectorWalletType.disablePrivy &&
     connectorWalletType.disableWagmi &&
-    connectorWalletType.disableSolana
+    connectorWalletType.disableSolana &&
+    connectorWalletType.disableAGW
   ) {
     throw new Error(
-      "Privy, Wagmi, and Solana are disabled. Please enable at least one of them."
+      "Privy, Wagmi, Solana, Abstract are all disabled. Please enable at least one of them."
     );
   }
+
 
   const getChainsByNetwork = (network: "mainnet" | "testnet"): Chain[] => {
     return network === "mainnet" ? mainnetChains : testnetChains;
@@ -256,6 +301,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       termsOfUse,
       walletChainType,
       connectorWalletType,
+      walletChainTypeConfig,
     }),
     [
       initChains,
@@ -273,6 +319,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       termsOfUse,
       walletChainType,
       connectorWalletType,
+      walletChainTypeConfig,
     ]
   );
 

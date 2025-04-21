@@ -71,6 +71,15 @@ export const ArbitrumSepoliaChainInfo = {
   explorer_base_url: "https://sepolia.arbiscan.io",
   vault_address: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
 }
+export const AbstractTestnetChainInfo = {
+  name: "Abstract Testnet",
+  public_rpc_url: "https://rpc.abstract.network",
+  chain_id: "11124",
+  currency_symbol: "ETH",
+  currency_decimal: 18,
+  explorer_base_url: "https://sepolia.arbiscan.io",
+  vault_address: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
+}
 export const SolanaDevnetChainInfo = {
   chain_id: "901901901",
   currency_decimal: 9,

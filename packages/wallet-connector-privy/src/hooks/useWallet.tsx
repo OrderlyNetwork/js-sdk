@@ -42,7 +42,6 @@ export function useWallet() {
     isConnected: isConnectedSOL,
     connectedChain: connectedChainSOL,
   } = useSolanaWallet();
-  const {connect: connectABS, disconnect: disconnectABS} = useAbstractWallet();
   const {
     disconnect: disconnectPrivy,
     connect: connectPrivy,
@@ -51,6 +50,14 @@ export function useWallet() {
     isConnected: isConnectedPrivy,
     switchChain: setChainPrivy,
   } = usePrivyWallet();
+
+  const {
+    connect: connectABS,
+    wallet: walletABS,
+    connectedChain: connectedChainABS,
+    isConnected: isConnectedABS,
+    disconnect: disconnectABS,
+  } = useAbstractWallet();
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
   const { storageChain, setStorageChain } = useStorageChain();
@@ -75,7 +82,7 @@ export function useWallet() {
         connectPrivy();
       }
       if (params.walletType === WalletType.ABS) {
-        setConnectorKey(WalletType.ABS)
+        setConnectorKey(WalletType.ABS);
         connectABS();
       }
     } catch (e) {
@@ -271,6 +278,9 @@ export function useWallet() {
       storageChain,
       walletEVM,
       walletSOL,
+      walletABS,
+      connectedChainABS,
+      isConnectedABS,
     });
 
     if (storageChain?.namespace === ChainNamespace.evm) {

@@ -715,4 +715,5 @@ export enum ChainNamespace {
   solana = "SOL",
 }
 
+export const AbstractChains = new Set([2741, 11124]);
 export const SolanaChains = new Set([901901901, 900900900]);

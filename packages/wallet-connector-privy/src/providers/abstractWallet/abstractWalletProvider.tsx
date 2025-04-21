@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAbstractClient, useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
-
+import { ConnectedChain, WalletState } from "@orderly.network/hooks";
+import { ChainNamespace } from "@orderly.network/types";
+import { useWalletConnectorPrivy } from "../../provider";
 interface AbstractWalletContextValue {
   connect: () => void;
   isConnected: boolean;
   disconnect: () => void;
+  wallet: WalletState | null;
+  connectedChain: ConnectedChain | null;
 }
 
 const AbstractWalletContext = createContext<AbstractWalletContextValue | null>(
@@ -13,16 +17,11 @@ const AbstractWalletContext = createContext<AbstractWalletContextValue | null>(
 );
 
 export const AbstractWalletProvider = (props: PropsWithChildren) => {
+  const {network} = useWalletConnectorPrivy();
   const {login, logout} = useLoginWithAbstract();
+  const [wallet, setWallet] = useState<WalletState | null>(null);
   const {data: client} = useAbstractClient();
-  const isConnected = useMemo(() => {
-    if (!client) {
-      return false;
-    }
-    
-    return true;
 
-  }, [client])
   const connect = () =>{
     return login();
   }
@@ -31,14 +30,55 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
     return logout();
   }
 
+  const isConnected = useMemo(() => {
+    return !!client;
+  }, [client])
+
+  const connectedChain = useMemo(() => {
+    if (!client) {
+      return null;
+    }
+    return {
+      id: client.chain.id,
+      namespace: ChainNamespace.evm,
+    }
+  }, [client])
+
   const value = useMemo(() => ({
 
     isConnected,
     connect,
     disconnect,
-    
+    wallet,
+    connectedChain,
+  }), [connect, disconnect, isConnected, wallet, connectedChain])
 
-  }), [connect, disconnect, isConnected])
+  useEffect(() => {
+    if (!client) {
+      setWallet(null);
+      return;
+    }
+    const tempWallet = {
+      label: "Abstract",
+      icon: "",
+      // @ts-ignore TODO
+      provider: {
+        signMessage: client.signMessage as any,
+        sendTransaction: client.sendTransaction as any,
+        
+      },
+      accounts: [{
+        address: client.account.address,
+      }],
+      chains: [{
+        id: client.chain.id,
+        namespace: ChainNamespace.evm,
+      }],
+      chain: connectedChain,
+    }
+    console.log("-- abstract wallet tempWallet", tempWallet)
+    setWallet(tempWallet as unknown as WalletState)
+  }, [client, connectedChain])
   return (
     <AbstractWalletContext.Provider value={value}>
       {props.children}
