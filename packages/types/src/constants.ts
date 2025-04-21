@@ -80,6 +80,14 @@ export const AbstractTestnetChainInfo = {
   explorer_base_url: "https://sepolia.arbiscan.io",
   vault_address: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
 }
+export const AbstractTestnetTokenInfo = {
+  chain_id: "11124",
+  contract_address: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
+  decimals: 18,
+  withdrawal_fee: 1,
+  cross_chain_withdrawal_fee: 2,
+  display_name: "ETH"
+}
 export const SolanaDevnetChainInfo = {
   chain_id: "901901901",
   currency_decimal: 9,

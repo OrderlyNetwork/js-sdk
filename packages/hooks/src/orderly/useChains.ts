@@ -8,6 +8,8 @@ import {
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
   TesntTokenFallback,
+  AbstractTestnetTokenInfo,
+  AbstractTestnetChainInfo,
 } from "@orderly.network/types";
 import { useCallback, useContext, useMemo, useRef } from "react";
 import { SWRConfiguration } from "swr";
@@ -19,7 +21,7 @@ import { OrderlyContext } from "../orderlyContext";
 import { ArbitrumSepolia } from "@orderly.network/types";
 
 // testnet only show arb sepolia and solana devnet
-const TestNetWhiteList = [421614, 901901901, MONAD_TESTNET_CHAINID];
+const TestNetWhiteList = [421614, 901901901, MONAD_TESTNET_CHAINID, 11124];
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;
@@ -167,19 +169,27 @@ export function useChains(
 
 
   const chains = useMemo(() => {
+    // TODO need remove this code,just for test abstract chain
+    // @ts-ignore
+    let tempTestChainInfos = [...testChainInfos, AbstractTestnetChainInfo];
+    console.log('testnettokenchainsres', testTokenChainsRes)
+    let tempTestTokenChainsRes= testTokenChainsRes?.map((item)=>({
+      ...item,
+      chain_details: [...item.chain_details, AbstractTestnetTokenInfo]
+    }))
     const tokenChains = fillChainsInfo(
       tokenChainsRes,
       filterFun.current,
       chainInfos
     );
     const testTokenChains = fillChainsInfo(
-      testTokenChainsRes,
+      tempTestTokenChainsRes,
       undefined,
-      testChainInfos
+      tempTestChainInfos
     );
 
     let testnetArr = needFetchFromAPI
-      ? filterAndUpdateChains(testTokenChains, testChainInfos, undefined, true)
+      ? filterAndUpdateChains(testTokenChains, tempTestChainInfos, undefined, true)
       : customChains?.testnet;
 
     tokenChains?.forEach((item) => {
