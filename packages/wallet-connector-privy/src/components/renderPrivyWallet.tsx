@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { usePrivyWallet } from "../providers/privyWalletProvider";
+import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { WalletChainTypeEnum, WalletType } from "../types";
 import { useWallet } from "../hooks/useWallet";
 import { RenderPrivyTypeIcon } from "./common";

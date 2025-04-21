@@ -16,7 +16,7 @@ import {
 } from "@orderly.network/ui";
 import { DisconnectIcon, MoreIcon } from "./icons";
 import { useWalletConnectorPrivy } from "../provider";
-import { usePrivyWallet } from "../providers/privyWalletProvider";
+import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { useWallet } from "../hooks/useWallet";
 import { WalletType } from "../types";
 import { useTranslation } from "@orderly.network/i18n";

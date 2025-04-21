@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSolanaWallet } from "../providers/solanaWalletProvider";
+import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
 import {
   ChevronDownIcon,
   ChevronUpIcon,

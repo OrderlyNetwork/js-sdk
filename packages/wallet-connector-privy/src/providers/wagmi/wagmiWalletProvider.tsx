@@ -14,7 +14,7 @@ import React, {
   useState,
 } from "react";
 import { ChainNamespace } from "@orderly.network/types";
-import { useWalletConnectorPrivy } from "../provider";
+import { useWalletConnectorPrivy } from "../../provider";
 
 interface WagmiWalletContextValue {
   connectors: Connector[];

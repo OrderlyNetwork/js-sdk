@@ -1,7 +1,5 @@
 import React, {
   PropsWithChildren,
-  ReactNode,
-  useEffect,
   useState,
 } from "react";
 import {
@@ -12,9 +10,9 @@ import {
   WagmiProvider,
 } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { arbitrum, Chain, mainnet, okc, sepolia } from "viem/chains";
-import { InitWagmi } from "../types";
-import { useWalletConnectorPrivy } from "../provider";
+import { abstractTestnet, arbitrum, Chain, mainnet, okc, sepolia } from "viem/chains";
+import { InitWagmi } from "../../types";
+import { useWalletConnectorPrivy } from "../../provider";
 interface InitWagmiProps extends PropsWithChildren {
   initialState?: any;
   initChains: Chain[];
@@ -52,6 +50,7 @@ export function InitWagmiProvider({
       transports: Object.fromEntries(
         initChains.map((chain) => [chain.id, http()])
       ),
+  
     })
   );
 

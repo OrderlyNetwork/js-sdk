@@ -1,7 +1,7 @@
 import { PrivyClientConfig, PrivyProvider } from "@privy-io/react-auth";
 import React, { PropsWithChildren, useMemo, useState } from "react";
 import { Chain } from "viem/chains";
-import { InitPrivy } from "../types";
+import { InitPrivy } from "../../types";
 
 interface IProps extends PropsWithChildren {
   privyConfig?: InitPrivy;

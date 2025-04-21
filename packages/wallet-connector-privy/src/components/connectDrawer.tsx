@@ -5,14 +5,12 @@ import {
 } from "@orderly.network/ui";
 import React, { useMemo } from "react";
 import { useWallet } from "../hooks/useWallet";
-import { usePrivyWallet } from "../providers/privyWalletProvider";
-import { ChainNamespace, ConnectorKey } from "@orderly.network/types";
-import { WalletCard } from "./walletCard";
+import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { ConnectProps, WalletChainTypeEnum, WalletType } from "../types";
-import { RenderPrivyTypeIcon, RenderWalletIcon } from "./common";
+import { RenderWalletIcon } from "./common";
 import { useWalletConnectorPrivy } from "../provider";
-import { useWagmiWallet } from "../providers/wagmiWalletProvider";
-import { useSolanaWallet } from "../providers/solanaWalletProvider";
+import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
+import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { RenderNoPrivyWallet } from "./renderNoPrivyWallet";
 import { CloseIcon } from "./icons";
@@ -22,6 +20,7 @@ import { useTranslation, Trans } from "@orderly.network/i18n";
 import { getWalletIcon } from "../util";
 import { Drawer } from "./drawer";
 import { RenderPrivyWallet } from "./renderPrivyWallet";
+import { ConnectorKey } from "@orderly.network/types";
 
 function PrivyConnectArea({ connect }: { connect: (type: any) => void }) {
   const { t } = useTranslation();
@@ -165,6 +164,35 @@ function SOLConnectArea({
   );
 }
 
+function AbstractConnectArea({
+  connect,
+}: {
+  connect: () => void;
+}) {
+  return (
+    <div>
+      <div className="oui-text-base-contrast-80 oui-text-sm oui-font-semibold oui-mb-2">
+        Abstract
+      </div>
+      <div className="oui-grid oui-grid-cols-2 oui-gap-2">
+        <div
+          className=" oui-flex oui-items-center oui-justify-start oui-gap-1 oui-rounded-[6px] oui-px-2 oui-bg-[#07080A] oui-py-[11px] oui-flex-1 oui-cursor-pointer"
+          onClick={() => connect()}
+        >
+          <div className="oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center">
+            <img
+              className={cn("oui-w-[18px] oui-h-[18px]")}
+              src={""}
+              alt="abstract wallet"
+            />
+          </div>
+          <div className="oui-text-base-contrast oui-text-2xs">Abstract</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ConnectWallet() {
   const { connect } = useWallet();
   const { setOpenConnectDrawer, walletChainType, connectorWalletType } =
@@ -208,6 +236,13 @@ function ConnectWallet() {
               }
             />
           )}
+          <AbstractConnectArea
+            connect={() => {
+              handleConnect({
+                walletType: WalletType.ABS,
+              });
+            }}
+          />
         </>
       )}
       {walletChainType === WalletChainTypeEnum.onlyEVM && (

@@ -14,9 +14,9 @@ import {
 } from "@privy-io/react-auth";
 import { ChainNamespace, EnumTrackerKeys } from "@orderly.network/types";
 import { useTrack, WalletState } from "@orderly.network/hooks";
-import { SolanaChainsMap } from "../types";
+import { SolanaChainsMap } from "../../types";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { useWalletConnectorPrivy } from "../provider";
+import { useWalletConnectorPrivy } from "../../provider";
 
 interface WalletStatePrivy extends WalletState {
   chain: {

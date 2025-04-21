@@ -12,7 +12,12 @@ import { Main } from "./main";
 import { type Chain, defineChain } from "viem";
 import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
-import { ArbitrumSepoliaChainInfo, ChainNamespace, SolanaChains, SolanaDevnetChainInfo } from "@orderly.network/types";
+import {
+  ArbitrumSepoliaChainInfo,
+  ChainNamespace,
+  SolanaChains,
+  SolanaDevnetChainInfo,
+} from "@orderly.network/types";
 import {
   InitPrivy,
   InitWagmi,
@@ -21,16 +26,13 @@ import {
   WalletChainType,
   WalletChainTypeEnum,
   ConnectorWalletType,
-  SolanaChainsMap,
 } from "./types";
-import { InitPrivyProvider } from "./providers/initPrivyProvider";
-import { InitSolanaProvider } from "./providers/initSolanaProvider";
-import { InitWagmiProvider } from "./providers/initWagmiProvider";
-import { PrivyWalletProvider } from "./providers/privyWalletProvider";
-import { WagmiWalletProvider } from "./providers/wagmiWalletProvider";
-import { SolanaWalletProvider } from "./providers/solanaWalletProvider";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { Chains } from "@orderly.network/hooks";
+import { AbstractWallet } from "./providers/abstractWallet";
+import { SolanaWallet } from "./providers/solana";
+import { WagmiWallet } from "./providers/wagmi";
+import { PrivyWallet } from "./providers/privy";
 
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
@@ -87,7 +89,7 @@ interface WalletConnectorPrivyContextType {
   connectorWalletType: ConnectorWalletType;
 }
 
-const walletConnectorPrivyContext =
+const WalletConnectorPrivyContext =
   createContext<WalletConnectorPrivyContextType>({
     initChains: [mainnet],
     mainnetChains: [],
@@ -111,7 +113,7 @@ const walletConnectorPrivyContext =
   });
 
 export const useWalletConnectorPrivy = () =>
-  useContext(walletConnectorPrivyContext);
+  useContext(WalletConnectorPrivyContext);
 
 interface WalletConnectorPrivyProps extends PropsWithChildren {
   privyConfig?: InitPrivy;
@@ -159,7 +161,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
 
   const fetchAllChains = async () => {
-    let testChainsList = []; 
+    let testChainsList = [];
     let mainnetChainsList = [];
     try {
       const testChainInfoRes = await fetchChainInfo(
@@ -170,7 +172,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       console.error("Error fetching data:", error);
       testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
     }
-
 
     try {
       const mainnetChainInfoRes = await fetchChainInfo(
@@ -288,30 +289,24 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   }
 
   return (
-    <walletConnectorPrivyContext.Provider value={value}>
+    <WalletConnectorPrivyContext.Provider value={value}>
       <TooltipProvider delayDuration={300}>
-        <InitPrivyProvider
+        <PrivyWallet
           privyConfig={props.privyConfig}
           initChains={initChains}
         >
-          <InitWagmiProvider
-            wagmiConfig={props.wagmiConfig ?? {}}
+          <WagmiWallet
+            wagmiConfig={props.wagmiConfig}
             initChains={initChains}
           >
-            <InitSolanaProvider
-              {...(props.solanaConfig ?? { wallets: [], onError: () => {} })}
-            >
-              <PrivyWalletProvider>
-                <WagmiWalletProvider>
-                  <SolanaWalletProvider>
-                    <Main>{props.children}</Main>
-                  </SolanaWalletProvider>
-                </WagmiWalletProvider>
-              </PrivyWalletProvider>
-            </InitSolanaProvider>
-          </InitWagmiProvider>
-        </InitPrivyProvider>
+            <SolanaWallet solanaConfig={props.solanaConfig}>
+              <AbstractWallet>
+                <Main>{props.children}</Main>
+              </AbstractWallet>
+            </SolanaWallet>
+          </WagmiWallet>
+        </PrivyWallet>
       </TooltipProvider>
-    </walletConnectorPrivyContext.Provider>
+    </WalletConnectorPrivyContext.Provider>
   );
 }

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Button, formatAddress, Text, useScreen } from "@orderly.network/ui";
 import { useWalletConnector } from "@orderly.network/hooks";
-import { usePrivyWallet } from "../providers/privyWalletProvider";
+import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
 import { useTranslation } from "@orderly.network/i18n";
 import { AuthGuard } from "@orderly.network/ui-connector";

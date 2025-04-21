@@ -9,8 +9,8 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import { WalletProvider } from "@solana/wallet-adapter-react";
 import { ConnectionProvider } from "@solana/wallet-adapter-react";
-import { InitSolana } from "../types";
-import { useWalletConnectorPrivy } from "../provider";
+import { InitSolana } from "../../types";
+import { useWalletConnectorPrivy } from "../../provider";
 
 interface IProps extends PropsWithChildren<InitSolana> {}
 

@@ -9,8 +9,8 @@ import React, {
 } from "react";
 import { ChainNamespace } from "@orderly.network/types";
 import { WalletAdapterNetwork, WalletName } from "@solana/wallet-adapter-base";
-import { useWalletConnectorPrivy } from "../provider";
-import { SolanaChainsMap } from "../types";
+import { useWalletConnectorPrivy } from "../../provider";
+import { SolanaChainsMap } from "../../types";
 import { useStorageLedgerAddress } from "@orderly.network/hooks";
 
 interface SolanaWalletContextValue {

@@ -1,7 +1,7 @@
-import { useWagmiWallet } from "../providers/wagmiWalletProvider";
+import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSolanaWallet } from "../providers/solanaWalletProvider";
-import { usePrivyWallet } from "../providers/privyWalletProvider";
+import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
+import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import {
   ChainNamespace,
   ConnectorKey,
@@ -21,6 +21,7 @@ import {
   WalletType,
 } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
+import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
 
 export function useWallet() {
   const { track } = useTrack();
@@ -41,6 +42,7 @@ export function useWallet() {
     isConnected: isConnectedSOL,
     connectedChain: connectedChainSOL,
   } = useSolanaWallet();
+  const {connect: connectABS, disconnect: disconnectABS} = useAbstractWallet();
   const {
     disconnect: disconnectPrivy,
     connect: connectPrivy,
@@ -71,6 +73,10 @@ export function useWallet() {
       if (params.walletType === WalletType.PRIVY) {
         setConnectorKey(WalletType.PRIVY);
         connectPrivy();
+      }
+      if (params.walletType === WalletType.ABS) {
+        setConnectorKey(WalletType.ABS)
+        connectABS();
       }
     } catch (e) {
       console.log("-- e", e);

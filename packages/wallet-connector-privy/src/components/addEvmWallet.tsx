@@ -1,7 +1,7 @@
 import { cn } from "@orderly.network/ui";
 import { Tooltip, ChevronDownIcon, ChevronUpIcon } from "@orderly.network/ui";
 import React, { useEffect, useState } from "react";
-import { useWagmiWallet } from "../providers/wagmiWalletProvider";
+import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
 import { useWallet } from "../hooks/useWallet";
 import { EVMChainPopover } from "./walletCard";
 import { MoreIcon } from "./icons";

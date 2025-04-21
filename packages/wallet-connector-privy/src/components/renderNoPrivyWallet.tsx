@@ -1,6 +1,6 @@
 import React from "react";
-import { useWagmiWallet } from "../providers/wagmiWalletProvider";
-import { useSolanaWallet } from "../providers/solanaWalletProvider";
+import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
+import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
 import { WalletCard } from "./walletCard";
 import { useWallet } from "../hooks/useWallet";
 import { ChainNamespace } from "@orderly.network/types";
@@ -8,7 +8,6 @@ import { AddSolanaWallet } from "./addSolanaWallet";
 import { AddEvmWallet } from "./addEvmWallet";
 import { WalletChainTypeEnum, WalletType } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
-import { useStorageChain } from "@orderly.network/hooks";
 import { StorageChainNotCurrentWalletType } from "./switchNetworkTips";
 
 export function RenderNoPrivyWallet() {
