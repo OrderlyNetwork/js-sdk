@@ -7,7 +7,7 @@ export const useTradingListColumns = () => {
     {
       title: t("tradingLeaderboard.rank"),
       dataIndex: "rank",
-      width: 50,
+      width: 40,
       render: (value: number) => {
         return (
           <Box width={20} className="oui-text-center">
@@ -22,7 +22,7 @@ export const useTradingListColumns = () => {
       render: (value: string) => {
         return <Text.formatted rule="address">{value}</Text.formatted>;
       },
-      width: 100,
+      width: 90,
     },
     {
       title: t("tradingLeaderboard.tradingVolume"),
@@ -38,7 +38,24 @@ export const useTradingListColumns = () => {
           </Text.numeral>
         );
       },
-      width: 120,
+      width: 90,
+    },
+    {
+      title: t("tpsl.pnl"),
+      dataIndex: "realized_pnl",
+      onSort: true,
+      align: "right",
+      render: (value: string) => {
+        if (!value) {
+          return "-";
+        }
+        return (
+          <Text.numeral prefix="$" rule="price" dp={2} coloring>
+            {value}
+          </Text.numeral>
+        );
+      },
+      width: 90,
     },
   ] as Column[];
 };
