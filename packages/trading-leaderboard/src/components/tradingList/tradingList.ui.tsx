@@ -4,6 +4,7 @@ import {
   CloseCircleFillIcon,
   cn,
   DataFilter,
+  DataTable,
   Flex,
   Input,
   Text,
@@ -14,7 +15,6 @@ import {
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTradingListColumns } from "./column";
 import { useTranslation } from "@orderly.network/i18n";
 
@@ -86,36 +86,38 @@ export const TradingList: FC<TradingListProps> = (props) => {
             );
           })}
         </Flex>
-        <Input
-          value={props.searchValue}
-          onValueChange={props.onSearchValueChange}
-          placeholder={t("common.address.search.placeholder")}
-          className={cn(
-            "oui-trading-leaderboard-trading-search-input",
-            "oui-w-[240px]"
-          )}
-          size="sm"
-          prefix={
-            <Box pl={3} pr={1}>
-              <SearchIcon className="oui-text-base-contrast-36" />
-            </Box>
-          }
-          suffix={
-            props.searchValue && (
-              <Box mr={2}>
-                <CloseCircleFillIcon
-                  size={14}
-                  className="oui-text-base-contrast-36 oui-cursor-pointer ="
-                  onClick={props.clearSearchValue}
-                />
+        {props.address && (
+          <Input
+            value={props.searchValue}
+            onValueChange={props.onSearchValueChange}
+            placeholder={t("common.address.search.placeholder")}
+            className={cn(
+              "oui-trading-leaderboard-trading-search-input",
+              "oui-w-[240px]"
+            )}
+            size="sm"
+            prefix={
+              <Box pl={3} pr={1}>
+                <SearchIcon className="oui-text-base-contrast-36" />
               </Box>
-            )
-          }
-          autoComplete="off"
-        />
+            }
+            suffix={
+              props.searchValue && (
+                <Box mr={2}>
+                  <CloseCircleFillIcon
+                    size={14}
+                    className="oui-text-base-contrast-36 oui-cursor-pointer ="
+                    onClick={props.clearSearchValue}
+                  />
+                </Box>
+              )
+            }
+            autoComplete="off"
+          />
+        )}
       </Flex>
 
-      <AuthGuardDataTable
+      <DataTable
         loading={props.isLoading}
         id="oui-trading-leaderboard-trading-table"
         columns={column}

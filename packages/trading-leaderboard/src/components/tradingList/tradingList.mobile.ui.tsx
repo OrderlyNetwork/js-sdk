@@ -4,6 +4,7 @@ import {
   CloseCircleFillIcon,
   cn,
   DataFilter,
+  DataTable,
   Flex,
   Input,
   Spinner,
@@ -15,7 +16,6 @@ import {
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTradingListColumns } from "./column";
 
 export type TradingListProps = {
@@ -57,7 +57,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
         )}
       </Flex>
 
-      <AuthGuardDataTable
+      <DataTable
         classNames={{
           root: "oui-pb-4",
           body: "oui-text-2xs",

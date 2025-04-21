@@ -41,16 +41,24 @@ export function parseI18nLang(
  * @example
  * removeLangPrefix('/en/perp/PERP_ETH_USDC') => '/perp/PERP_ETH_USDC'
  * removeLangPrefix('/en/markets') => '/markets'
+ * removeLangPrefix('/perp/PERP_ETH_USDC') => '/perp/PERP_ETH_USDC'
+ * removeLangPrefix('/markets') => '/markets'
  */
-export function removeLangPrefix(pathname: string) {
-  return pathname.replace(/^\/[^/]+/, "");
+export function removeLangPrefix(pathname: string, localeCodes?: string[]) {
+  const localePath = getLocalePathFromPathname(pathname, localeCodes);
+
+  return localePath
+    ? pathname.replace(new RegExp(`^/${localePath}(?=/)`), "")
+    : pathname;
 }
 
 /**
- * get locale from pathname
+ * get locale path from pathname
  * @example
  * getLocalePathFromPathname('/en/perp/PERP_ETH_USDC') => 'en'
+ * getLocalePathFromPathname('/perp/PERP_ETH_USDC') => null
  * getLocalePathFromPathname('/en/markets') => 'en'
+ * getLocalePathFromPathname('/markets') => null
  * @param pathname
  */
 export function getLocalePathFromPathname(

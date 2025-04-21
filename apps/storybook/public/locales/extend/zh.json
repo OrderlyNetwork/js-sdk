@@ -1,10 +1,7 @@
 {
-  "extend.products.swap": "兑换",
-  "extend.products.trade": "交易",
   "extend.tradingRewards.description": "在 Orderly 交易即可赚取 ORDER",
   "extend.affiliate.tag": "40% 返佣",
   "extend.affiliate.description": "成为 Orderly 合作伙伴，赚取更多收益",
   "extend.staking": "质押",
-  "extend.staking.description": "质押 ORDER/esORDER 以获取 VALOR",
-  "extend.restrictedInfo.description": "您正在从 IP 地址 ({{ip}}) 访问 {{brokerName}}，该 IP 地址与受限国家/地区相关联。请参考我们的 <0>服务条款</0>。如果您认为这是错误，请联系 <1>{{email}}</1>。"
+  "extend.staking.description": "质押 ORDER/esORDER 以获取 VALOR"
 }
