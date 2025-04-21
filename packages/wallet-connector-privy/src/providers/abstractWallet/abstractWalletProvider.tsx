@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAbstractClient, useLoginWithAbstract } from "@abstract-foundation/agw-react";
 import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { ConnectedChain, WalletState } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
+import {ethers} from 'ethers';
 interface AbstractWalletContextValue {
   connect: () => void;
   isConnected: boolean;
@@ -52,6 +53,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
     wallet,
     connectedChain,
   }), [connect, disconnect, isConnected, wallet, connectedChain])
+
 
   useEffect(() => {
     if (!client) {

@@ -14,9 +14,9 @@ import { useTranslation, Trans } from "@orderly.network/i18n";
 import { Drawer } from "./drawer";
 import { RenderPrivyWallet } from "./renderPrivyWallet";
 import { ConnectorKey } from "@orderly.network/types";
-import { RenderConnector } from "./renderConnector";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
 import { RenderNonPrivyWallet } from "./renderNonPrivyWallet";
+import { RenderConnector } from "./renderConnector";
 
 
 
