@@ -39,7 +39,7 @@ export const useTradingListColumns = () => {
           </Text.numeral>
         );
       },
-      width: 90,
+      width: 105,
     },
     {
       title: t("tpsl.pnl"),

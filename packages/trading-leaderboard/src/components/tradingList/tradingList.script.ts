@@ -175,7 +175,7 @@ export function useTradingListScript() {
   );
 
   const userDataList = useMemo(() => {
-    if (!state.address || isLoading) {
+    if (!canTrade || isLoading) {
       return [];
     }
 
@@ -194,7 +194,7 @@ export function useTradingListScript() {
       rank: getAddressRank(item.address!),
       key: getRowKey(item.address!),
     }));
-  }, [state.address, userDataRes, isLoading, getAddressRank]);
+  }, [canTrade, state.address, userDataRes, isLoading, getAddressRank]);
 
   const addRankForList = useCallback(
     (list: TradingData[], total: number) => {
@@ -308,6 +308,7 @@ export function useTradingListScript() {
     sentinelRef,
     dataList,
     address: state.address,
+    canTrade,
   };
 }
 
