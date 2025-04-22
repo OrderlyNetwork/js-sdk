@@ -49,8 +49,8 @@ export declare namespace API {
     announcement_id: string;
     message: string;
     url?: string;
-    type: string;
-    updated_time: number;
+    type?: string;
+    updated_time?: number;
   }
   /**
    * v1/public/info

@@ -62,13 +62,17 @@ export const Announcement = (props: AnnouncementProps) => {
     if (isMobile) {
       return <MobileTips {...props} />;
     }
+
     return <DeskTopTips {...props} />;
   };
 
   return (
     <Flex
       style={props.style}
-      className={cn("oui-font-semibold oui-rounded-xl", props.className)}
+      className={cn(
+        "oui-font-semibold oui-rounded-xl oui-overflow-hidden",
+        props.className
+      )}
       key={props.currentTip?.announcement_id}
     >
       {renderContent()}
@@ -86,6 +90,7 @@ const DeskTopTips = (props: AnnouncementScriptReturn) => {
     closeTips,
     mutiLine,
     contentRef,
+    isAnimating,
   } = props;
 
   return (
@@ -98,11 +103,13 @@ const DeskTopTips = (props: AnnouncementScriptReturn) => {
         gapX={2}
         itemAlign={mutiLine ? "start" : "center"}
         className={cn(
-          "oui-mr-[125px]",
-          currentTip.url ? "oui-cursor-pointer" : ""
+          "oui-mr-[125px] oui-relative oui-overflow-hidden",
+          currentTip.url && "oui-cursor-pointer",
+          "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+          isAnimating && "oui-translate-y-1/2 oui-opacity-0"
         )}
       >
-        <RenderTipsType type={currentTip.type} />
+        <RenderTipsType type={currentTip.type as AnnouncementType} />
         <Text
           size="xs"
           intensity={80}
@@ -136,11 +143,24 @@ const DeskTopTips = (props: AnnouncementScriptReturn) => {
 };
 
 const MobileTips = (props: AnnouncementScriptReturn) => {
-  const { currentTip, currentIndex, tips, prevTips, nextTips, closeTips } =
-    props;
+  const {
+    currentTip,
+    currentIndex,
+    tips,
+    prevTips,
+    nextTips,
+    closeTips,
+    isAnimating,
+  } = props;
 
   return (
-    <Flex p={3} gapX={2} itemAlign="start" width="100%">
+    <Flex
+      p={3}
+      gapX={2}
+      itemAlign="start"
+      width="100%"
+      className="oui-relative oui-overflow-hidden"
+    >
       <Flex
         gapY={2}
         direction="column"
@@ -149,12 +169,26 @@ const MobileTips = (props: AnnouncementScriptReturn) => {
           currentTip.url && "oui-cursor-pointer"
         )}
       >
-        <Text size="xs" className="oui-leading-5" intensity={80}>
-          {currentTip.message}
-        </Text>
+        <div
+        // className={cn(
+        //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+        //   isAnimating && "oui-translate-y-full oui-opacity-0"
+        // )}
+        >
+          <Text size="xs" className="oui-leading-5" intensity={80}>
+            {currentTip.message}
+          </Text>
+        </div>
 
         <Flex width="100%" justify="between">
-          <RenderTipsType type={currentTip.type} />
+          <div
+          // className={cn(
+          //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+          //   isAnimating && "oui-translate-y-full oui-opacity-0"
+          // )}
+          >
+            <RenderTipsType type={currentTip.type as AnnouncementType} />
+          </div>
           <SwitchTips
             currentIndex={currentIndex}
             tipsCount={tips.length}

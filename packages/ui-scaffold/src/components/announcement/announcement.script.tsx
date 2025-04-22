@@ -23,13 +23,6 @@ export enum AnnouncementType {
   Delisting = "delisting",
 }
 
-export interface AnnouncementData {
-  announcement_id: string;
-  type?: AnnouncementType;
-  message: string;
-  url?: string;
-}
-
 export type AnnouncementScriptOptions = {
   hideTips?: boolean;
 };
@@ -43,6 +36,7 @@ export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
 
 export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const { showAnnouncement, setShowAnnouncement } = useAppContext();
 
@@ -61,22 +55,30 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   };
 
   const nextTips = () => {
-    nextTips;
+    if (isAnimating) return;
+    setIsAnimating(true);
     setCurrentIndex((prevIndex) => (prevIndex + 1) % tips.length);
+    setTimeout(() => setIsAnimating(false), 200);
   };
 
   const prevTips = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
     setCurrentIndex((prevIndex) => (prevIndex - 1 + tips.length) % tips.length);
+    setTimeout(() => setIsAnimating(false), 200);
   };
 
   useEffect(() => {
+    if (!showAnnouncement) {
+      return;
+    }
     // rolling announcement, every 3 seconds
     const interval = setInterval(() => {
       nextTips();
-    }, 1000);
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [tips]);
+  }, [tips, showAnnouncement]);
 
   useEffect(() => {
     const show =
@@ -85,7 +87,6 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   }, [tips, announcementStore, options?.hideTips]);
 
   const multiLineState = useMultiLine();
-
   return {
     maintenanceDialogInfo,
     tips,
@@ -95,13 +96,14 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
     nextTips,
     prevTips,
     showAnnouncement,
+    isAnimating,
     ...multiLineState,
   };
 };
 
-export function useAnnouncementData() {
+function useAnnouncementData() {
   const ws = useWS();
-  const [tips, setTips] = useState<AnnouncementData[]>([]);
+  const [tips, setTips] = useState<API.Announcement[]>([]);
 
   const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<
     string | undefined
@@ -155,7 +157,7 @@ export function useAnnouncementData() {
       const maintentanceTip = prevTips.find(
         (tip) => tip.announcement_id === maintentanceId
       );
-      const newTips: AnnouncementData[] = [];
+      const newTips: API.Announcement[] = [];
       announcements.forEach((announcement) => {
         if (tips.has(announcement.announcement_id)) {
           return;
