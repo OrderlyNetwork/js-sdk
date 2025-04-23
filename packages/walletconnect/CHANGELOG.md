@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.1.1-internal-20250424.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.1.1-internal-20250424.3
+
 ## 2.1.1-internal-20250424.2
 
 ### Patch Changes
