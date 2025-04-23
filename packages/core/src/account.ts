@@ -19,6 +19,8 @@ import { BaseOrderlyKeyPair, OrderlyKeyPair } from "./keyPair";
 import { PublicKey } from "@solana/web3.js";
 import { AbiCoder, keccak256 } from "ethers";
 import { SubAccount } from "./subAccount";
+import { AdditionalInfoRepository } from "./additionalInfoRepository";
+import { LocalStorageRepository } from "./repository";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -77,6 +79,7 @@ export interface AccountState {
  */
 export class Account {
   static instanceName = "account";
+  static additionalInfoRepositoryName = "walletAdditionalInfo";
   // private walletClient?: WalletClient;
   private _singer?: Signer;
   // private _state$ = new BehaviorSubject<AccountState>({
@@ -91,6 +94,8 @@ export class Account {
   private walletAdapterManager: WalletAdapterManager;
 
   assetsManager: Assets;
+
+  private additionalInfoRepository: AdditionalInfoRepository;
 
   private _state: AccountState = {
     status: AccountStatusEnum.NotConnected,
@@ -126,6 +131,10 @@ export class Account {
 
     this.assetsManager = new Assets(configStore, this.contractManger, this);
     this.walletAdapterManager = new WalletAdapterManager(walletAdapters);
+
+    this.additionalInfoRepository = new AdditionalInfoRepository(
+      new LocalStorageRepository(Account.additionalInfoRepositoryName)
+    );
 
     this._bindEvents();
   }
@@ -164,6 +173,8 @@ export class Account {
     wallet.chain.id = this.parseChainId(wallet?.chain?.id);
 
     this.keyStore.setAddress(address);
+
+    this.saveAdditionalInfo(address, wallet);
 
     const nextState: AccountState = {
       ...this.stateValue,
@@ -212,6 +223,21 @@ export class Account {
     this._ee.emit(EVENT_NAMES.validateEnd, finallyState);
 
     return finallyState;
+  }
+  private saveAdditionalInfo(
+    address: string,
+    wallet: {
+      [key: string]: any;
+      additionalInfo?: Record<string, any>;
+    }
+  ) {
+    if (typeof wallet.additionalInfo !== "undefined") {
+      if (typeof wallet.additionalInfo !== "object") {
+        console.warn("`wallet.additionalInfo` is not an object");
+      } else {
+        this.additionalInfoRepository.save(address, wallet.additionalInfo);
+      }
+    }
   }
 
   get stateValue(): AccountState {
@@ -755,6 +781,7 @@ export class Account {
 
     if (orderly_key && key_status === "ACTIVE" && expiration > now) {
       this.keyStore.setAddress(address);
+
       this.keyStore.setKey(address, orderlyKey);
       this.keyStore.setAccountId(address, accountId);
 
@@ -855,6 +882,8 @@ export class Account {
     if (!!this.stateValue.address) {
       // this.keyStore.cleanAllKey(this.stateValue.address);
       this.keyStore.removeAddress();
+
+      this.additionalInfoRepository.clear(this.stateValue.address);
     }
 
     const nextState = {
@@ -1007,6 +1036,13 @@ export class Account {
   //       : "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
   //   };
   // }
+
+  getAdditionalInfo(): Record<string, any> | null {
+    if (!this.stateValue.address) {
+      return null;
+    }
+    return this.additionalInfoRepository.getAll(this.stateValue.address);
+  }
 
   get on() {
     return this._ee.on.bind(this._ee);
