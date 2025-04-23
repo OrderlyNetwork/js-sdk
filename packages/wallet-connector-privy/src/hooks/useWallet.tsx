@@ -153,6 +153,18 @@ export function useWallet() {
       if (storageChain.namespace === ChainNamespace.evm) {
         // if current namespace is evm, switch chain
         if (tempNamespace === ChainNamespace.evm) {
+          if (AbstractChains.has(parseInt(chain.chainId as string))) {
+            if (isConnectedAbstract && walletAbstract) {
+              setStorageChain(parseInt(chain.chainId as string));
+              return Promise.resolve(true);
+            } else {
+              setOpenConnectDrawer(true);
+              // TODO need send abstract type
+              setTargetNamespace(ChainNamespace.evm);
+              return Promise.reject(new Error("No abstract wallet found"));
+            }
+          }
+
           await setChainEvm(parseInt(chain.chainId as string));
           setStorageChain(parseInt(chain.chainId as string));
           track(EnumTrackerKeys.switchNetworkSuccess, {
