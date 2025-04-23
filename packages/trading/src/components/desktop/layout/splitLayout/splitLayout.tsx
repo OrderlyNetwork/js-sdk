@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, forwardRef } from "react";
 import Split, { SplitProps } from "@uiw/react-split";
 import { SplitLineBar } from "./splitLineBar";
 
@@ -6,12 +6,13 @@ type SplitLayoutProps = PropsWithChildren<SplitProps> & {
   onSizeChange?: (size: string) => void;
 };
 
-export const SplitLayout: React.FC<SplitLayoutProps> = (props) => {
+export const SplitLayout = forwardRef<Split, SplitLayoutProps>((props, ref) => {
   const { onSizeChange, ...rest } = props;
 
   return (
     /* @ts-ignore */
     <Split
+      ref={ref}
       {...rest}
       lineBar
       renderBar={(barProps: any) => (
@@ -23,4 +24,4 @@ export const SplitLayout: React.FC<SplitLayoutProps> = (props) => {
       }}
     />
   );
-};
+});

@@ -2,10 +2,7 @@ import { FC, useMemo } from "react";
 import { Box, cn, Flex } from "@orderly.network/ui";
 import { getOffsetSizeNum, TradingState } from "./trading.script";
 import { DataListWidget } from "../../components/desktop/dataList";
-import {
-  TradingviewWidget,
-  TradingviewLocaleCode,
-} from "@orderly.network/ui-tradingview";
+import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { AssetViewWidget } from "../../components/desktop/assetView";
 import { RiskRateWidget } from "../../components/desktop/riskRate";
 import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
@@ -17,7 +14,22 @@ import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
 import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
-import { i18n } from "@orderly.network/i18n";
+import {
+  scrollBarWidth,
+  topBarHeight,
+  bottomBarHeight,
+  space,
+  symbolInfoBarHeight,
+  orderEntryMinWidth,
+  orderEntryMaxWidth,
+  orderbookMinWidth,
+  orderbookMaxWidth,
+  orderbookMinHeight,
+  orderbookMaxHeight,
+  tradindviewMinHeight,
+  tradingViewMinWidth,
+  dataListMaxHeight,
+} from "./trading.script";
 
 export type DesktopLayoutProps = TradingState & {
   className?: string;
@@ -46,39 +58,17 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     setAnimating,
     positions,
     updatePositions,
-    canTrade,
     showPositionIcon,
     horizontalDraggable,
+    marketsWidth,
+    tradindviewMaxHeight,
+    dataListMinHeight,
   } = props;
-
-  const scrollBarWidth = 6;
-
-  const topBarHeight = 48;
-  const bottomBarHeight = 29;
-  const space = 12;
-
-  const tokenInfoBarHeight = 54;
-
-  const marketsWidth = collapsed ? 70 : 280;
-  const orderEntryMinWidth = 280;
-  const orderEntryMaxWidth = 360;
-
-  const orderbookMinWidth = 280;
-  const orderbookMaxWidth = 732;
-
-  const orderbookMinHeight = 464;
-  const orderbookMaxHeight = 728;
-
-  const tradindviewMinHeight = 320;
-  const tradindviewMaxHeight = 600;
-
-  const tradingViewMinWidth = 540;
-  const dataListMinHeight = canTrade ? 379 : 277;
 
   const minScreenHeight =
     topBarHeight +
     bottomBarHeight +
-    tokenInfoBarHeight +
+    symbolInfoBarHeight +
     orderbookMinHeight +
     dataListMinHeight +
     space * 4;
@@ -86,7 +76,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const minScreenHeightSM =
     topBarHeight +
     bottomBarHeight +
-    tokenInfoBarHeight +
+    symbolInfoBarHeight +
     tradindviewMinHeight +
     orderbookMinHeight +
     dataListMinHeight +
@@ -130,8 +120,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       px={3}
       width="100%"
       style={{
-        minHeight: tokenInfoBarHeight,
-        height: tokenInfoBarHeight,
+        minHeight: symbolInfoBarHeight,
+        height: symbolInfoBarHeight,
       }}
     >
       <SymbolInfoBarFullWidget
@@ -339,17 +329,20 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   if (max2XL) {
     return (
       <SplitLayout
+        ref={props.max2XLSplitRef}
         style={{
           minHeight: minScreenHeightSM,
           minWidth: 1024 - scrollBarWidth,
+          // height: props.extraHeight ? props.extraHeight : undefined,
         }}
         className={cn(
-          "oui-flex oui-flex-1 oui-overflow-hidden",
+          "oui-flex oui-flex-1 ",
           "oui-min-w-[1018px] oui-h-full oui-w-full",
           "oui-p-3",
           props.className
         )}
         onSizeChange={setDataListSplitHeightSM}
+        onDragging={props.onDataListSplitHeightDragging}
         mode="vertical"
       >
         <Flex
@@ -361,14 +354,14 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           )}
           style={{
             minHeight: Math.max(
-              tokenInfoBarHeight +
+              symbolInfoBarHeight +
                 tradindviewMinHeight +
                 orderbookMinHeight +
                 space * 2,
               props.orderEntryHeight
             ),
             maxHeight:
-              tokenInfoBarHeight +
+              symbolInfoBarHeight +
               tradindviewMaxHeight +
               orderbookMaxHeight +
               space * 2,
@@ -408,12 +401,14 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
                 {marketsWidget}
               </Box>
               <SplitLayout
+                ref={props.tradingviewAndOrderbookSplitRef}
                 mode="vertical"
                 style={{
                   width: `calc(100% - ${marketsWidth}px)`,
                 }}
                 className="oui-flex-1"
                 onSizeChange={setOrderbookSplitHeightSM}
+                onDragging={props.onTradingviewAndOrderbookDragging}
               >
                 <Box
                   width="100%"
@@ -422,6 +417,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
                   style={{
                     minHeight: tradindviewMinHeight,
                     maxHeight: tradindviewMaxHeight,
+                    height: 1200,
                   }}
                 >
                   {tradingviewWidget}
@@ -451,9 +447,14 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
               width: orderEntryMinWidth,
               // force order entry render actual content height
               height: "max-content",
+              // height:
+              //   props.extraHeight && props.extraHeight > 100
+              //     ? undefined
+              // : "max-content",
             }}
           >
             {orderEntryWidget}
+            <Box height={props.extraHeight} />
           </Flex>
         </Flex>
 
@@ -463,7 +464,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           p={3}
           style={{
             height: dataListSplitHeightSM,
-            minHeight: dataListMinHeight,
+            minHeight: Math.max(dataListMinHeight, props.dataListHeight),
+            maxHeight: dataListMaxHeight,
           }}
           className="oui-overflow-hidden"
         >
