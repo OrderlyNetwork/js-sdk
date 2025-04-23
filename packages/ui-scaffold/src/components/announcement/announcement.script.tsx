@@ -69,7 +69,7 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   };
 
   useEffect(() => {
-    if (!showAnnouncement) {
+    if (!showAnnouncement || tips.length <= 1) {
       return;
     }
     // rolling announcement, every 3 seconds
