@@ -25,7 +25,7 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     );
   }, [leverageLevers]);
 
-  const [leverage, setLeverage] = useState(curLeverage ?? 0);
+  const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
 
   const maxLeverage = leverageLevers?.reduce(
     (a: number, item: any) => Math.max(a, Number(item), 0),
@@ -44,6 +44,14 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     // maxLeverage / 100 * leverage;
     setLeverage(leverage);
     // updateLeverage(leverage);
+  };
+
+  const onLeverageIncrease: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => prev + 1);
+  };
+
+  const onLeverageReduce: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => prev - 1);
   };
 
   const onSave = async () => {
@@ -65,6 +73,10 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     value: leverage,
     marks,
     onLeverageChange,
+    onLeverageIncrease,
+    onLeverageReduce,
+    isReduceDisabled: leverage <= 1,
+    isIncreaseDisabled: leverage >= 50,
     step,
     onCancel: options?.close,
     onSave,
