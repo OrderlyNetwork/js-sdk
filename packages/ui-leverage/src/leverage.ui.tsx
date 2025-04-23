@@ -1,4 +1,4 @@
-import React, { FC, useId } from "react";
+import React, { FC, useId, useCallback } from "react";
 import {
   Box,
   Button,
@@ -69,7 +69,8 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
       />
       <Flex itemAlign="center" justify="center">
         <Input
-          {...props}
+          // {...props}
+          value={props.value}
           id={id}
           autoComplete="off"
           classNames={{
@@ -86,9 +87,7 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
             ),
           }}
           formatters={formatters}
-          onChange={(e) => {
-            props.onLeverageChange?.(Number(e.target.value));
-          }}
+          onChange={props.onInputChange}
         />
         <div className="oui-select-none">x</div>
       </Flex>
@@ -206,13 +205,11 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
         markCount={5}
         value={[props.value]}
         onValueChange={(e) => {
-          console.log("onValueChange");
           props.onLeverageChange(e[0]);
           props.setShowSliderTip(true);
         }}
         color="primary"
         onValueCommit={(e) => {
-          console.log("onValueCommit");
           props.onValueCommit?.(e);
           props.setShowSliderTip(false);
         }}
