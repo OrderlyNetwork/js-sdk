@@ -58,8 +58,8 @@ export function useCampaignsScript() {
   const options = useMemo(() => {
     const opts: { label: string; value: CategoryKey }[] = [
       { label: t("tradingLeaderboard.ongoing"), value: "ongoing" },
-      { label: t("tradingLeaderboard.past"), value: "past" },
       { label: t("tradingLeaderboard.future"), value: "future" },
+      { label: t("tradingLeaderboard.past"), value: "past" },
     ];
 
     // Filter out categories with no campaigns and map to the required format

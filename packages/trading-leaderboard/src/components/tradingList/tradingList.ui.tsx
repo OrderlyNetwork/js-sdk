@@ -86,7 +86,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
             );
           })}
         </Flex>
-        {props.address && (
+        {props.canTrade && (
           <Input
             value={props.searchValue}
             onValueChange={props.onSearchValueChange}

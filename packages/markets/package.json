@@ -22,7 +22,7 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "embla-carousel-react": "8.1.5"
+    "embla-carousel-react": "^8.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",

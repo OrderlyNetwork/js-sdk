@@ -1,8 +1,9 @@
-import { Text, Column, Box } from "@orderly.network/ui";
+import { Text, Column, Box, useScreen } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
 
 export const useTradingListColumns = () => {
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
   return [
     {
       title: t("tradingLeaderboard.rank"),
@@ -38,13 +39,13 @@ export const useTradingListColumns = () => {
           </Text.numeral>
         );
       },
-      width: 90,
+      width: 105,
     },
     {
       title: t("tpsl.pnl"),
       dataIndex: "realized_pnl",
       onSort: true,
-      align: "right",
+      align: isMobile ? "right" : "left",
       render: (value: string) => {
         if (!value) {
           return "-";
