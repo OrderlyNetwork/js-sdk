@@ -59,7 +59,7 @@ const Row = (props: {
   mid: ReactNode | string;
   right: ReactNode | string;
 }) => {
-  const { key, left, mid, right, classNames } = props;
+  const { left, mid, right, classNames } = props;
   return (
     // <Flex
     //   key={key}
@@ -78,7 +78,6 @@ const Row = (props: {
     <Grid
       cols={3}
       gapX={2}
-      key={key}
       width="100%"
       className={cn("oui-text-xs oui-tabular-nums", classNames?.root)}
     >
