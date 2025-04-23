@@ -3,6 +3,9 @@ import { LocaleCode } from "./types";
 
 /**
  * transform browser language to you given i18n locale code
+ * @param lang - browser language
+ * @param localeCodes - locale codes to check
+ * @param defaultLang - default locale code
  * @example
  * parseI18nLang('en-US') => 'en'
  * parseI18nLang('zh-CN') => 'zh'
@@ -38,6 +41,8 @@ export function parseI18nLang(
 
 /**
  * remove lang prefix from pathname
+ * @param pathname - pathname to remove lang prefix
+ * @param localeCodes - locale codes to check
  * @example
  * removeLangPrefix('/en/perp/PERP_ETH_USDC') => '/perp/PERP_ETH_USDC'
  * removeLangPrefix('/en/markets') => '/markets'
@@ -54,12 +59,13 @@ export function removeLangPrefix(pathname: string, localeCodes?: string[]) {
 
 /**
  * get locale path from pathname
+ * @param pathname - pathname to get locale path
+ * @param localeCodes - locale codes to check
  * @example
  * getLocalePathFromPathname('/en/perp/PERP_ETH_USDC') => 'en'
  * getLocalePathFromPathname('/perp/PERP_ETH_USDC') => null
  * getLocalePathFromPathname('/en/markets') => 'en'
  * getLocalePathFromPathname('/markets') => null
- * @param pathname
  */
 export function getLocalePathFromPathname(
   pathname: string,
@@ -68,4 +74,31 @@ export function getLocalePathFromPathname(
   const locale = pathname.split("/")[1];
   localeCodes = localeCodes || Object.values(LocaleEnum);
   return localeCodes.includes(locale as LocaleEnum) ? locale : null;
+}
+
+/**
+ * Generate path with locale
+ * @param lang - language
+ * @param path - path to generate
+ * @param localeCodes - locale codes to check
+ * @returns path with locale
+ */
+export function generateLocalePath(
+  lang: string,
+  path: string,
+  localeCodes?: string[]
+) {
+  localeCodes = localeCodes || Object.values(LocaleEnum);
+
+  let localePath = getLocalePathFromPathname(path, localeCodes);
+
+  // if path already has locale, return it
+  if (localePath) {
+    return path;
+  }
+
+  localePath = parseI18nLang(lang, localeCodes);
+
+  // if path doesn't have locale, add it
+  return `/${localePath}${path}`;
 }
