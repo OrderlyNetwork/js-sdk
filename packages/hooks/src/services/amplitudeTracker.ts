@@ -3,10 +3,10 @@ import { EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
 import { SimpleDI } from "@orderly.network/core";
 import { EventEmitter } from "@orderly.network/core";
 export enum ENVType {
-  prod = 'prod',
-  staging = 'staging',
-  qa = 'qa',
-  dev = 'dev',
+  prod = "prod",
+  staging = "staging",
+  qa = "qa",
+  dev = "dev",
 }
 const apiKeyMap = {
   dev: "4d6b7db0fdd6e9de2b6a270414fd51e0",
@@ -14,8 +14,6 @@ const apiKeyMap = {
   staging: "dffc00e003479b86d410c448e00f2304",
   prod: "3ab9ae56ed16cc57bc2ac97ffc1098c2",
 };
-
-
 
 export class AmplitudeTracker {
   static instanceName = "amplitudeTracker";
@@ -38,16 +36,16 @@ export class AmplitudeTracker {
 
   setSdkInfo(sdkInfo: any) {
     if (this._sdkInfoTag && sdkInfo.address === this._sdkInfoTag) return;
-    const identify = new amplitude.Identify();
-    Object.entries(sdkInfo).forEach(([key, value]) => {
-      identify.set(key, value as string);
-    });
-    amplitude.identify(identify);
+    this.identify(sdkInfo);
     this._sdkInfoTag = sdkInfo.address;
   }
 
-  identify(identifyEvent: any) {
-    amplitude.identify(identifyEvent);
+  identify(properties: any) {
+    const identify = new amplitude.Identify();
+    Object.entries(properties).forEach(([key, value]) => {
+      identify.set(key, value as string);
+    });
+    amplitude.identify(identify);
   }
 
   track(eventName: keyof typeof TrackerListenerKeyMap, properties?: any) {
