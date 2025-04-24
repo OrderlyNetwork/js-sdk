@@ -42,7 +42,7 @@ export const useTradingListColumns = () => {
       width: 105,
     },
     {
-      title: t("tpsl.pnl"),
+      title: t("common.realizedPnl"),
       dataIndex: "realized_pnl",
       onSort: true,
       align: isMobile ? "right" : "left",
