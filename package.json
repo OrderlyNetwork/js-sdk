@@ -17,6 +17,9 @@
     "prepare": "husky",
     "test": "turbo run test",
     "release": "ts-node ./scripts/release.ts",
+    "release:patch": "RELEASE_VERSION_TYPE=patch ts-node ./scripts/release.ts",
+    "release:minor": "RELEASE_VERSION_TYPE=minor ts-node ./scripts/release.ts",
+    "release:major": "RELEASE_VERSION_TYPE=major ts-node ./scripts/release.ts",
     "update:tsconfigPaths": "ts-node ./scripts/tsconfigPaths.ts"
   },
   "devDependencies": {
