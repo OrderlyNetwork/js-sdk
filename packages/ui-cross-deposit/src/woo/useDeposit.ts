@@ -5,6 +5,7 @@ import {
   useConfig,
   useDebouncedCallback,
   useEventEmitter,
+  useTrack,
 } from "@orderly.network/hooks";
 import {
   API,
@@ -33,6 +34,7 @@ export type useDepositOptions = {
 };
 
 export const useDeposit = (options?: useDepositOptions) => {
+  const { track } = useTrack();
   const { t } = useTranslation();
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
@@ -396,7 +398,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       .then((result: any) => {
         updateAllowanceWhenTxSuccess(result.hash);
         setBalance((value) => new Decimal(value).sub(quantity).toString());
-        ee.emit(EnumTrackerKeys.DEPOSIT_SUCCESS, {
+        track(EnumTrackerKeys.depositSuccess, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos.name,
           quantity,
@@ -404,7 +406,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         return result;
       })
       .catch((e) => {
-        ee.emit(EnumTrackerKeys.DEPOSIT_FAILED, {
+        track(EnumTrackerKeys.depositFailed, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos?.name,
           msg: JSON.stringify(e),
