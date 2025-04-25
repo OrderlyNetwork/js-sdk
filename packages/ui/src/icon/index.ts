@@ -19,6 +19,7 @@ export { CheckedCircleFillIcon } from "./checkCircleFill";
 export { CheckedSquareFillIcon } from "./checkSquareFill";
 export { CheckSquareEmptyIcon } from "./checkSquareEmpty";
 export { PlusIcon } from "./plus";
+export { ReduceIcon } from "./reduce";
 export { CircleOutlinedIcon } from "./circleOutlined";
 export { SquareOutlinedIcon } from "./squareOutlined";
 export { ExclamationFillIcon } from "./exclamationFill";
