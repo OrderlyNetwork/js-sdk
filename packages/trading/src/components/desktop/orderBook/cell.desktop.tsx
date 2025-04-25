@@ -44,13 +44,10 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
 
   const isPendingOrder = useMemo(() => {
     const priceStr = parseNumber(props.price, { dp: dp, padding: true });
-
-    const index = pendingOrders.findIndex(
+    return pendingOrders.some(
       (item) => priceStr === parseNumber(item, { dp: dp, padding: true })
     );
-
-    return index !== -1;
-  }, [pendingOrders, props.price, depth]);
+  }, [pendingOrders, props.price, dp]);
 
   return (
     <div

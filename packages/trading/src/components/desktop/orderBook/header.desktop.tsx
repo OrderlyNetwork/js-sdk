@@ -1,7 +1,15 @@
-import { FC, ReactNode } from "react";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import { FC, ReactNode, useState } from "react";
+import {
+  Box,
+  cn,
+  Flex,
+  Popover,
+  Select,
+  SelectItem,
+} from "@orderly.network/ui";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { useTranslation } from "@orderly.network/i18n";
+
 interface Props {
   quote: string;
   base: string;
@@ -10,6 +18,7 @@ interface Props {
 export const DesktopHeader: FC<Props> = (props) => {
   const { showTotal } = useOrderBookContext();
   const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
   return (
     <Flex pl={3} justify={"between"} className="oui-py-[6px]">
       <Flex
@@ -33,9 +42,18 @@ export const DesktopHeader: FC<Props> = (props) => {
         className={cn("oui-basis-5/12", showTotal && "oui-basis-1/2")}
       >
         <Box width={"100%"}>
+          {/* <Popover open={open} onOpenChange={setOpen} content={<div>5678</div>}>
+            <Flex> */}
           <Title id="oui-order-book-header-total-base" justifyEnd>
             {`${t("common.total")}(${props.base})`}
           </Title>
+          {/* </Flex>
+          </Popover> */}
+          {/* <Select valueFormatter={() => <div>123</div>} size="xs">
+            <SelectItem value="1">1</SelectItem>
+            <SelectItem value="2">2</SelectItem>
+            <SelectItem value="3">3</SelectItem>
+          </Select> */}
         </Box>
         {showTotal && (
           <Box width={"100%"}>

@@ -149,10 +149,11 @@ const Tip: FC<{
           : totalInfo.sumQtyAmount / totalInfo.sumQty,
     };
   };
-  let hintInfo = calcHintInfo(item);
-  if (hintInfo.avgPrice === 0) {
-    hintInfo = calcHintInfo(props.findMaxItem());
-  }
+
+  const hintInfo = useMemo(() => {
+    const info = calcHintInfo(item);
+    return info.avgPrice === 0 ? calcHintInfo(props.findMaxItem()) : info;
+  }, [item, props]);
 
   return (
     <TooltipRoot open={open} onOpenChange={setOpen}>
