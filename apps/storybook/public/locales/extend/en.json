@@ -1,10 +1,7 @@
 {
-  "extend.products.swap": "Swap",
-  "extend.products.trade": "Trade",
   "extend.tradingRewards.description": "Trade with Orderly to earn ORDER",
   "extend.affiliate.tag": "40% Rebate",
   "extend.affiliate.description": "Earn more as a Orderly affiliate",
   "extend.staking": "Staking",
-  "extend.staking.description": "Stake ORDER/esORDER to acquire VALOR",
-  "extend.restrictedInfo.description": "You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country. Please refer to our <0>Terms of Use</0>. If you believe this is an error, contact <1>{{email}}</1>."
+  "extend.staking.description": "Stake ORDER/esORDER to acquire VALOR"
 }

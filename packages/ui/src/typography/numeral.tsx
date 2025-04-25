@@ -238,8 +238,9 @@ export const Numeral: FC<NumeralProps> = (props) => {
     <Text
       {...rest}
       color={colorName}
-      children={childWithUnit}
       className={cnBase("oui-tabular-nums", className)}
-    />
+    >
+      {childWithUnit}
+    </Text>
   );
 };

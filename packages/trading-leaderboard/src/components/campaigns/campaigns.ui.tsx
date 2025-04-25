@@ -73,7 +73,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
   const { t } = useTranslation();
 
   return (
-    <Flex intensity={800} r="xl">
+    <Flex intensity={800} r="xl" width="100%">
       <img
         className="oui-w-[400px] oui-h-[200px] oui-rounded-l-xl oui-object-fill"
         src={image}

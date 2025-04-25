@@ -4,7 +4,9 @@ import { en } from "./locale/en";
 
 export type LocaleCode = keyof typeof LocaleEnum | (string & {});
 
-export type LocaleMessages = typeof en;
+type ExtendLocaleMessages = Record<`extend.${string}`, string>;
+
+export type LocaleMessages = typeof en & ExtendLocaleMessages;
 
 export type Resources<T extends {} = {}> = {
   [key in LocaleCode]?: Partial<LocaleMessages & T>;
@@ -19,7 +21,7 @@ declare module "i18next" {
 
     // custom resources type
     resources: {
-      [defaultNS]: typeof en;
+      [defaultNS]: LocaleMessages;
     };
   }
 }

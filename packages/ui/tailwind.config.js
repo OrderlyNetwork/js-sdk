@@ -183,6 +183,7 @@ module.exports = withTV({
         "accordion-up": "accordion-up 0.2s ease-out",
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
+        "scan-qr-code": "scan-qr-code 6s infinite linear",
       },
       keyframes: {
         rotate: {
@@ -205,6 +206,17 @@ module.exports = withTV({
         "collapsible-up": {
           from: { height: "var(--radix-collapsible-content-height)" },
           to: { height: 0 },
+        },
+        "scan-qr-code": {
+          "0%": {
+            transform: "translateY(0)",
+          },
+          "50%": {
+            transform: "translateY(320px)",
+          },
+          "100%": {
+            transform: "translateY(0)",
+          },
         },
       },
     },

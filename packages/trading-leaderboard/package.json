@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-leaderboard",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -25,7 +25,7 @@
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/trading": "workspace:*",
-    "embla-carousel-react": "8.1.5",
+    "embla-carousel-react": "^8.2.0",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
