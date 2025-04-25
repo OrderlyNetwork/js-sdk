@@ -8,6 +8,7 @@ export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";
 export { usePrivateQuery } from "./usePrivateQuery";
 export { usePrivateInfiniteQuery } from "./usePrivateInfiniteQuery";
+export { useInfiniteQuery } from "./useInfiniteQuery";
 export { useBoolean } from "./useBoolean";
 
 export { useAccount } from "./useAccount";

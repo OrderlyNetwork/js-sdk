@@ -25,6 +25,7 @@ import { differenceInDays, setHours, subDays, format } from "date-fns";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { useTranslation } from "@orderly.network/i18n";
+import { areDatesEqual } from "../../utils/util";
 
 export type OrderListInstance = {
   download?: () => void;
@@ -77,7 +78,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     setPage(1);
   }, [props.symbol]);
 
-  const { orderStatus, ordersSide, dateRange, filterItems, onFilter } =
+  const { orderStatus, ordersSide, dateRange, filterItems, onFilter, filterDays, updateFilterDays } =
     useFilter(type, {
       ordersStatus,
       setPage,
@@ -224,6 +225,8 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     sharePnLConfig,
     tableInstance,
     symbolsInfo,
+    filterDays,
+    updateFilterDays,
   };
 };
 
@@ -249,12 +252,15 @@ const useFilter = (
     option.filterConfig?.side ?? "all"
   );
 
+  /// default is 90d
+  const [filterDays, setFilterDays] = useState<1 | 7 | 30 | 90 | null>(90);
+
   const defaultRange =
     option.filterConfig?.range ??
     (type === TabType.all || type === TabType.orderHistory
       ? formatDatePickerRange({
           to: new Date(),
-          from: offsetEndOfDay(subDays(new Date(), 7)),
+          from: offsetEndOfDay(subDays(new Date(), 89)),
         })
       : {});
 
@@ -262,6 +268,15 @@ const useFilter = (
     from?: Date;
     to?: Date;
   }>(defaultRange);
+
+  const updateFilterDays = (days: 1 | 7 | 30 | 90) => {
+    setFilterDays(days);
+    setDateRange({
+      from: offsetStartOfDay(subDays(new Date(), days - 1)),
+      to: offsetEndOfDay(new Date()),
+    });
+    option.setPage(1);
+  };
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "side") {
@@ -277,6 +292,41 @@ const useFilter = (
     if (filter.name === "dateRange") {
       setDateRange(formatDatePickerRange(filter.value));
       option.setPage(1);
+      
+      const newDateRange = formatDatePickerRange(filter.value);
+      if (newDateRange.from && newDateRange.to) {
+        const diffDays =
+          Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;
+        const dateRangeMap: { [key: number]: { from: Date; to: Date } } = {
+          1: {
+            from: offsetStartOfDay(new Date())!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          7: {
+            from: offsetStartOfDay(subDays(new Date(), 6))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          30: {
+            from: offsetStartOfDay(subDays(new Date(), 29))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+          90: {
+            from: offsetStartOfDay(subDays(new Date(), 89))!,
+            to: offsetEndOfDay(new Date())!,
+          },
+        };
+
+        const dateRange = dateRangeMap[diffDays];
+        if (
+          dateRange &&
+          areDatesEqual(dateRange.from, newDateRange.from) &&
+          areDatesEqual(dateRange.to, newDateRange.to)
+        ) {
+          setFilterDays(diffDays as any);
+        } else {
+          setFilterDays(null);
+        }
+      }
     }
   };
 
@@ -362,6 +412,8 @@ const useFilter = (
     ordersSide: ordersSide === "all" ? undefined : ordersSide,
     dateRange,
     orderStatus: orderStatus === "all" ? undefined : orderStatus,
+    filterDays,
+    updateFilterDays,
   };
 };
 

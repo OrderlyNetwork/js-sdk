@@ -4,60 +4,51 @@ import {
   TradingListWidget,
   CampaignsWidget,
   TradingLeaderboardProvider,
+  Campaign,
 } from "@orderly.network/trading-leaderboard";
 import { BaseLayout } from "../../../components/layout";
 import { Box, useScreen } from "@orderly.network/ui";
-import { subDays, addDays } from "date-fns";
 import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+
+function getCampaigns() {
+  const addDays = (date: Date, days: number) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  };
+
+  const dateRange = [
+    // ongoing
+    { startTime: addDays(new Date(), -1), endTime: addDays(new Date(), 30) },
+    // future
+    { startTime: addDays(new Date(), 1), endTime: addDays(new Date(), 30) },
+    // past
+    { startTime: addDays(new Date(), -30), endTime: addDays(new Date(), -1) },
+  ];
+
+  return dateRange.map(
+    (date) =>
+      ({
+        title: "RISE ABOVE. OUTTRADE THE REST",
+        description:
+          "A new era of traders is rising. Are you the one leading the charge? Compete for your share of $10K by climbing the ranks. Only the bold will make it to the top.",
+        image: "/leaderboard/campaign.jpg",
+        href: "https://orderly.network/",
+        ...date,
+      } as Campaign)
+  );
+}
 
 const meta: Meta<typeof LeaderboardWidget> = {
   title: "Package/trading-leaderboard",
   component: LeaderboardWidget,
   argTypes: {},
   args: {
-    campaigns: [
-      {
-        title: "Campaign title",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-        image: "/pnl/poster_bg_1.png",
-        startTime: new Date("2025-03-26T14:30:00Z"),
-        endTime: new Date("2025-04-02T23:59:00Z"),
-        href: "https://orderly.network/",
-      },
-      {
-        title: "Campaign title11",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-        image: "/pnl/poster_bg_1.png",
-        startTime: subDays(new Date(), 2),
-        endTime: addDays(new Date(), 1),
-        href: "https://orderly.network/",
-      },
-      {
-        title: "Campaign title1",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-        image: "/pnl/poster_bg_2.png",
-        startTime: subDays(new Date(), 7),
-        endTime: subDays(new Date(), 1),
-        href: "https://orderly.network/",
-      },
-      {
-        title: "Campaign title2",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-        image: "/pnl/poster_bg_3.png",
-        startTime: addDays(new Date(), 1),
-        endTime: addDays(new Date(), 7),
-        href: "https://orderly.network/",
-      },
-    ],
+    campaigns: getCampaigns(),
     href: {
-      trading: "https://app.orderly.network/",
+      trading: "https://orderly.network/",
     },
     backgroundSrc: "/leaderboard/background.jpg",
-    // backgroundSrc: "/leaderboard/background.webm",
   },
   parameters: {
     layout: "fullscreen",

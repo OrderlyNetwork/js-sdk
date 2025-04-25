@@ -1020,9 +1020,9 @@ function avgOpen(option?: {
         return "--";
       }
       return (
-        <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+        <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
           {value}
-        </Text.numeral>
+        </Text>
       );
     },
     renderPlantText: (value: string, record: any) => {

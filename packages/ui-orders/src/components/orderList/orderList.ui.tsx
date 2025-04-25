@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import {
   Flex,
   ListView,
@@ -8,6 +8,7 @@ import {
   DataFilter,
   cn,
   TableFeatures,
+  Text,
 } from "@orderly.network/ui";
 import { OrdersBuilderState } from "./orderList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
@@ -35,30 +36,68 @@ export const DesktopOrderList: FC<
     sharePnLConfig,
     symbolsInfo: props.symbolsInfo,
   });
+  const { t } = useTranslation();
+
+  const dayLabel: Record<number, string> = useMemo(() => {
+    return {
+      1: t("common.select.1d"),
+      7: t("common.select.7d"),
+      30: t("common.select.30d"),
+      90: t("common.select.90d"),
+    };
+  }, [t]);
+
   return (
     <OrderListProvider
       cancelOrder={props.cancelOrder}
       editOrder={props.updateOrder}
       cancelAlgoOrder={props.cancelAlgoOrder}
       editAlgoOrder={props.updateAlgoOrder}
-      // cancelTPSLOrder={props.cancelTPSLOrder}
+    // cancelTPSLOrder={props.cancelTPSLOrder}
     >
       <Flex direction="column" width="100%" height="100%" itemAlign="start">
         {/* <Divider className="oui-w-full" /> */}
-        {props.filterItems.length > 0 && (
-          <DataFilter
-            items={props.filterItems}
-            onFilter={(value: any) => {
-              props.onFilter(value);
-            }}
-            // className="oui-px-3"
-            trailing={
-              [TabType.pending, TabType.tp_sl].includes(props.type) && (
-                <CancelAll {...props} />
-              )
-            }
-          />
-        )}
+        <Flex gap={3}>
+          {props.filterItems.length > 0 && (
+            <DataFilter
+              items={props.filterItems}
+              onFilter={(value: any) => {
+                props.onFilter(value);
+              }}
+              // className="oui-px-3"
+              trailing={
+                [TabType.pending, TabType.tp_sl].includes(props.type) && (
+                  <CancelAll {...props} />
+                )
+              }
+            />
+          )}
+          {[1, 7, 30, 90].map((value) => {
+            return (
+              <button className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm">
+                <div className="oui-z-10">
+                  <Text.gradient
+                    color={props.filterDays === value ? "brand" : undefined}
+                    className={cn(
+                      "oui-break-normal oui-whitespace-nowrap",
+                      props.filterDays !== value
+                        ? "oui-text-base-contrast-54"
+                        : ""
+                    )}
+                  >
+                    {dayLabel[value] || `${value}D`}
+                  </Text.gradient>
+                </div>
+                <div
+                  className="oui-gradient-primary oui-opacity-[.12] oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0 oui-rounded"
+                  onClick={() => {
+                    props.updateFilterDays(value as any);
+                  }}
+                ></div>
+              </button>
+            );
+          })}
+        </Flex>
         <AuthGuardDataTable
           columns={columns}
           loading={props.isLoading}
@@ -83,8 +122,7 @@ export const DesktopOrderList: FC<
             };
           }}
           generatedRowKey={(record, index) =>
-            `${props.type}${index}${
-              record.order_id || record.algo_order_id
+            `${props.type}${index}${record.order_id || record.algo_order_id
             }_index${index}`
           }
           renderRowContainer={(record: any, index, children) => {
@@ -133,7 +171,7 @@ export const MobileOrderList: FC<
       editOrder={props.updateOrder}
       cancelAlgoOrder={props.cancelAlgoOrder}
       editAlgoOrder={props.updateAlgoOrder}
-      // cancelTPSLOrder={props.cancelTPSLOrder}
+    // cancelTPSLOrder={props.cancelTPSLOrder}
     >
       <Grid
         cols={1}
@@ -165,8 +203,8 @@ export const MobileOrderList: FC<
                     item.name === "side"
                       ? t("common.side.all")
                       : item.name === "status"
-                      ? t("common.status.all")
-                      : ""
+                        ? t("common.status.all")
+                        : ""
                   }
                   onValueChange={(value) => {
                     //

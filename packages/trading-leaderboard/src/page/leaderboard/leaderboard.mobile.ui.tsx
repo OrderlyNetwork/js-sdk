@@ -102,7 +102,7 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
       >
         {props.showCampaigns && <CampaignsWidget />}
         <TradingListWidget className={cn(!props.canTrading && "oui-h-full")} />
-        <div className="oui-fixed oui-left-0 oui-right-0 oui-bottom-0">
+        <div className="oui-fixed oui-left-0 oui-right-0 oui-bottom-0 oui-z-10">
           <BottomNavBarWidget />
         </div>
       </Flex>
