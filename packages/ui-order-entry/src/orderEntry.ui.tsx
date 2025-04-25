@@ -167,7 +167,7 @@ export const OrderEntry = (
         }
       )
       .then(() => {
-        return submit().then((result: any) => {
+        return submit({ resetOnSuccess: false }).then((result: any) => {
           console.log(result);
           if (result.success) {
             // setOrderValue("order_quantity", "");

@@ -153,7 +153,7 @@ const useOrderEntry = (
   }
 
   const ee = useEventEmitter();
-  const {track} = useTrack();
+  const { track } = useTrack();
 
   const [meta, setMeta] = useState<{
     dirty: { [K in keyof OrderlyOrder]?: boolean };
@@ -472,7 +472,13 @@ const useOrderEntry = (
     );
   };
 
-  const submitOrder = async (options?: { resetOnSuccess?: boolean }) => {
+  const submitOrder = async (options?: {
+    /**
+     * reset the order state after order create success
+     * default is true
+     */
+    resetOnSuccess?: boolean;
+  }) => {
     /**
      * validate order
      */
