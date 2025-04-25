@@ -11,7 +11,7 @@ import {
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 
 export type OrderlyConfig = {
   orderlyAppProvider: {
@@ -46,12 +46,7 @@ export const useOrderlyConfig = () => {
               href: "/leaderboard",
             },
           ],
-          products: [
-            { name: t("extend.products.swap"), href: "/swap" },
-            { name: t("extend.products.trade"), href: "/trade" },
-          ],
           initialMenu: "/",
-          initialProduct: "/trade",
           campaigns: {
             name: t("tradingRewards.rewards"),
             href: "/rewards",
@@ -102,32 +97,8 @@ export const useOrderlyConfig = () => {
           enableDefault: true,
           customRestrictedIps: [],
           customRestrictedRegions: [],
-          content: ({ ip, brokerName }) => {
-            const email = "x@orerly.network";
-            return (
-              // @ts-ignore
-              <Trans
-                // @ts-ignore
-                i18nKey="extend.restrictedInfo.description"
-                values={{ ip, brokerName, email }}
-                components={[
-                  <a
-                    style={{
-                      textDecorationLine: "underline",
-                    }}
-                    target="_blank"
-                    href="https://learn.woo.org/legal/terms-of-use#id-2.-legal-compliance"
-                  />,
-                  <a
-                    style={{
-                      textDecorationLine: "underline",
-                    }}
-                    href={`mailto:${email}`}
-                  />,
-                ]}
-              />
-            );
-          },
+          // content: ({ ip, brokerName }) =>
+          //   `You are accessing ${brokerName} from an IP address (${ip}) associated with a restricted country. Please refer to our Terms of Use</0>. If you believe this is an error, contact x@orerly.network.`,
         },
       },
       tradingPage: {
@@ -135,6 +106,15 @@ export const useOrderlyConfig = () => {
           scriptSRC: "/tradingview/charting_library/charting_library.js",
           library_path: "/tradingview/charting_library/",
           customCssUrl: "/tradingview/chart.css",
+          // broker config tradingview bg
+          // colorConfig: {
+          //   downColor: '#BE1630',
+          //   upColor: '#373d36',
+          //   pnlDownColor: '#BE1630',
+          //   pnlUpColor: '#53B049',
+          //   // chartBG: '#BE1630',
+          //   chartBG: '#6a64ed',
+          // },
         },
         sharePnLConfig: {
           backgroundImages: [

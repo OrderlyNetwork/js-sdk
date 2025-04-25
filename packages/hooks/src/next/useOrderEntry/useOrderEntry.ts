@@ -504,7 +504,7 @@ const useOrderEntry = (
         side: order.side,
         order_type: order.order_type,
         tp_sl: hasTPSL(formattedOrder),
-        reduce_only: !!order.reduce_only,
+        symbol: order.symbol,
       });
     }
 

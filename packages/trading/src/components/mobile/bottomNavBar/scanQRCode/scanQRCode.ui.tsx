@@ -1,8 +1,15 @@
 import { FC, SVGProps } from "react";
-import { Flex, SimpleDialog, Text, Tooltip } from "@orderly.network/ui";
+import {
+  Box,
+  cn,
+  Flex,
+  SimpleDialog,
+  Text,
+  Tooltip,
+} from "@orderly.network/ui";
 import { MainLogo } from "@orderly.network/ui-scaffold";
 import { UseScanQRCodeScriptReturn } from "./scanQRCode.script";
-import { QRCodeScanner } from "./scanner";
+import { QRCodeScanner, QRCODE_WIDTH, QRCODE_HEIGHT } from "./scanner";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 
 type ScanQRCodeProps = UseScanQRCodeScriptReturn;
@@ -26,7 +33,7 @@ export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
         </Flex>
       </Tooltip>
       <SimpleDialog
-        title={<Text weight="semibold">{t("common.confirm")}</Text>}
+        title={<MainLogo />}
         open={props.open}
         onOpenChange={props.onOpenChange}
         size="sm"
@@ -42,8 +49,17 @@ const ScanQRCodeContent: FC<ScanQRCodeProps> = (props) => {
 
   return (
     <Flex justify="center" direction="column" gapY={5}>
-      <MainLogo />
-      <QRCodeScanner onSuccess={props.onScanSuccess} />
+      <Box width={QRCODE_WIDTH} height={QRCODE_HEIGHT} className="oui-relative">
+        <QRCodeScanner onSuccess={props.onScanSuccess} />
+        <>
+          <LineGradient />
+          <RadiusGradient className="oui-absolute oui-top-[-1.5px] oui-left-[-1.5px]" />
+          <RadiusGradient className="oui-absolute oui-top-[-1.5px] oui-right-[-1.5px] oui-rotate-90" />
+          <RadiusGradient className="oui-absolute oui-bottom-[-1.5px] oui-left-[-1.5px] oui-rotate-[-90deg]" />
+          <RadiusGradient className="oui-absolute oui-bottom-[-1.5px] oui-right-[-1.5px] oui-rotate-[-180deg]" />
+        </>
+      </Box>
+
       {/* </Box> */}
       <Text size="sm" intensity={98} weight="semibold">
         {t("linkDevice.scanQRCode")}
@@ -86,7 +102,7 @@ export interface LinkDeviceIconProps extends SVGProps<SVGSVGElement> {
 }
 
 export const LinkDeviceIcon: FC<LinkDeviceIconProps> = (props) => {
-  const { size = 20, viewBox, ...rest } = props;
+  const { size = 20, ...rest } = props;
   return (
     <svg
       width={size}
@@ -102,6 +118,53 @@ export const LinkDeviceIcon: FC<LinkDeviceIconProps> = (props) => {
         clipRule="evenodd"
         d="M1.666 5a2.5 2.5 0 0 1 2.5-2.5h10a2.5 2.5 0 0 1 2.5 2.5.08.08 0 0 1-.078.078h-1.51a.08.08 0 0 1-.08-.078.834.834 0 0 0-.833-.833h-10A.834.834 0 0 0 3.333 5v5.633c0 .11.09.2.2.2h7.1c.11 0 .2.09.2.2V12.3a.2.2 0 0 1-.2.2H2.7a.2.2 0 0 0-.2.2v.633c0 .511.308.834.834.834h7.3c.11 0 .2.09.2.2v1.266a.2.2 0 0 1-.2.2h-7.3c-1.465 0-2.5-1.086-2.5-2.5v-1.666c0-.392.27-.72.635-.81.107-.026.198-.113.198-.224z"
       />
+    </svg>
+  );
+};
+
+const LineGradient: FC<SVGProps<SVGSVGElement>> = () => {
+  return (
+    <div
+      className={cn(
+        "oui-absolute oui-top-0 oui-left-[30px]",
+        "oui-w-[calc(100%-60px)] oui-h-[2px] oui-rounded-full",
+        "oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end))_0%,rgb(var(--oui-gradient-brand-start))_100%)]",
+        "oui-shadow-[0_0_8px_4px_rgba(var(--oui-gradient-brand-start)/0.12)]",
+        "oui-animate-scan-qr-code"
+      )}
+    />
+  );
+};
+
+const RadiusGradient: FC<SVGProps<SVGSVGElement>> = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="64"
+      height="64"
+      viewBox="0 0 64 64"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M62 2H18C9.16344 2 2 9.16344 2 18V62"
+        stroke="url(#paint0_linear_136_6227)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <defs>
+        <linearGradient
+          id="paint0_linear_136_6227"
+          x1="2"
+          y1="32"
+          x2="62"
+          y2="32"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
+        </linearGradient>
+      </defs>
     </svg>
   );
 };

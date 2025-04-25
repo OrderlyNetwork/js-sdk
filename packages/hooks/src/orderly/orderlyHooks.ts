@@ -72,7 +72,10 @@ export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
 
-export { useMaintenanceStatus } from "./useMaintenanceStatus";
+export {
+  useMaintenanceStatus,
+  MaintenanceStatus,
+} from "./useMaintenanceStatus";
 
 ///------ store ------
 export {
@@ -80,4 +83,4 @@ export {
   useMarkPriceBySymbol,
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
-export {useStorageLedgerAddress} from './useStorageLedgerAddress';
+export { useStorageLedgerAddress } from "./useStorageLedgerAddress";

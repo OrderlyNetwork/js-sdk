@@ -1,13 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "../useQuery";
 import { useConfig } from "../useConfig";
 import { useWS } from "../useWS";
 
 const oneDay = 1000 * 60 * 60 * 24;
 
+/** 0 for nothing,  2 for maintenance */
+export enum MaintenanceStatus {
+  None = 0,
+  Maintenance = 2,
+}
+
 export function useMaintenanceStatus() {
-  // 0 for nothing,  2 for maintenance
-  const [status, setStatus] = useState<number>(0);
+  const [status, setStatus] = useState<number>(MaintenanceStatus.None);
   const [startTime, setStartTime] = useState<number>();
   const [endTime, setEndTime] = useState<number>();
   const [brokerName, setBrokerName] = useState<string>("Orderly network");
@@ -42,8 +47,8 @@ export function useMaintenanceStatus() {
       setStartTime(systemInfo.scheduled_maintenance.start_time);
       setEndTime(systemInfo.scheduled_maintenance.end_time);
     }
-    if (systemInfo.status === 2) {
-      setStatus(2);
+    if (systemInfo.status === MaintenanceStatus.Maintenance) {
+      setStatus(MaintenanceStatus.Maintenance);
     }
   }, [systemInfo, config]);
 

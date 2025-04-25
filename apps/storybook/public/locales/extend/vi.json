@@ -1,0 +1,7 @@
+{
+  "extend.tradingRewards.description": "Giao dịch với Orderly để kiếm ORDER",
+  "extend.affiliate.tag": "Hoàn trả 40%",
+  "extend.affiliate.description": "Kiếm thêm với tư cách là đối tác của Orderly",
+  "extend.staking": "Staking",
+  "extend.staking.description": "Staking ORDER/esORDER để nhận VALOR"
+}

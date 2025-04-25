@@ -2,62 +2,93 @@
 
 Internationalization and cli tools for Orderly SDK. Based on i18next ecosystem.
 
-## Integration
+## Integration Guide
 
-### 1. Wrap LocaleProvider
+Follow these steps to integrate localization support in your app using Orderly SDK:
 
-The LocaleProvider is the core component that provides locale resources to your app. You must wrap you app with LocaleProvider.
+### 1. Wrap Your App with LocaleProvider
 
-### 2. Provide Resources
+The LocaleProvider is the core component that supplies localized resources to your application. Make sure to wrap your app’s root component with LocaleProvider.
 
-- By default, English (en) is included.
-- If you want to support other languages besides English, you need to explicitly import it from the i18n package and pass it to the resources prop of LocaleProvider.
-- Currently, we provider English (en) and Chinese (zh) locale files.
-- You can also extend the built-in messages by merging them with your own locale files.
-- With each release we will generate csv files (dist/locale.csv) for easy translation and we provide a cli to convert between csv and json files.
-- It can translate not only the ui in the SDK, but also other components you write outside of the SDK.
+```tsx
+import { LocaleProvider } from "@orderly.network/i18n";
 
-### Example
+<LocaleProvider>
+  <YourApp />
+</LocaleProvider>;
+```
 
-Here’s a complete example of how to set up the i18n integration:
+### 2. Provide Locale Data
+
+#### Default Language
+
+- English (`en`) is included by default.
+
+#### Supported Locales
+
+We currently support **8 locales**, located in the `dist/locales` directory:
+
+| Locale Code | Language   |
+| ----------- | ---------- |
+| `en.json`   | English    |
+| `zh.json`   | Chinese    |
+| `ja.json`   | Japanese   |
+| `es.json`   | Spanish    |
+| `ko.json`   | Korean     |
+| `vi.json`   | Vietnamese |
+| `de.json`   | German     |
+| `fr.json`   | French     |
+
+> We plan to add more languages in future updates.
+
+#### CSV for Easy Translation
+
+- Each release generates a `dist/locale.csv` file to simplify translation workflows.
+- We provide a CLI tool to convert between CSV and JSON formats.
+
+### 3. Extending Locale Files
+
+You can localize both the SDK UI and your own custom components.
+
+- When adding custom keys, prefix them with `extend.` to avoid conflicts with default keys.
+
+```json
+{
+  "extend.custom.button.label": "My Custom Button"
+}
+```
+
+## Example
+
+Here's a complete example of how to set up the i18n integration:
+
+### Async load locale files
 
 ```typescript
 import { FC, ReactNode } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
-import {
-  LocaleProvider,
-  Resources,
-  LocaleCode,
-  zh,
-} from "@orderly.network/i18n";
-
-// extend or overrides English translations
-const extendEn = {
-  "extend.trading": "Trading",
-};
-
-// extend or overrides chinese translations
-const extendZh = {
-  "extend.trading": "交易",
-};
-
-type ExtendLocaleMessages = typeof extendEn;
-
-// define language resources
-const resources: Resources<ExtendLocaleMessages> = {
-  en: extendEn,
-  zh: {
-    ...zh,
-    ...extendZh,
-  },
-};
+import { LocaleProvider, LocaleEnum, LocaleCode } from "@orderly.network/i18n";
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
-  const onLocaleChange = (locale: LocaleCode) => {};
+  const onLanguageChanged = async (lang: LocaleCode) => {};
+
+  // please copy build-in locale files to you public/locales
+  // and copy you extend locale files to public/locales/extend
+  const loadPath = (lang: LocaleCode) => {
+    const _lang = parseI18nLang(lang);
+    if (_lang === LocaleEnum.en) {
+      // because en is built-in, we need to load the en extend only
+      return `/locales/extend/${_lang}.json`;
+    }
+    return [`/locales/${_lang}.json`, `/locales/extend/${_lang}.json`];
+  };
 
   return (
-    <LocaleProvider resources={resources} onLocaleChange={onLocaleChange}>
+    <LocaleProvider
+      onLanguageChanged={onLanguageChanged}
+      backend={{ loadPath }}
+    >
       <WalletConnectorProvider>
         <OrderlyAppProvider
           brokerId="orderly"
@@ -72,7 +103,54 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 };
 ```
 
-### Add more languages
+### Sync Load locale data
+
+```typescript
+import { FC, ReactNode } from "react";
+import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
+import { LocaleProvider, LocaleCode, Resources } from "@orderly.network/i18n";
+import zh from "@orderly.network/i18n/locales/zh.json";
+
+// extend or overrides English translations
+const extendEn = {
+  "extend.trading": "Trading",
+};
+
+// extend or overrides chinese translations
+const extendZh = {
+  "extend.trading": "交易",
+};
+
+// define language resources
+const resources: Resources = {
+  en: extendEn,
+  zh: {
+    ...zh,
+    ...extendZh,
+  },
+};
+
+const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
+  const onLanguageChanged = (locale: LocaleCode) => {};
+
+  return (
+    <LocaleProvider resources={resources} onLanguageChanged={onLocaleChange}>
+      <WalletConnectorProvider>
+        <OrderlyAppProvider
+          brokerId="orderly"
+          brokerName="Orderly"
+          networkId="testnet"
+        >
+          {props.children}
+        </OrderlyAppProvider>
+      </WalletConnectorProvider>
+    </LocaleProvider>
+  );
+};
+```
+
+### Add custom languages
 
 We also support adding more custom languages
 
@@ -83,7 +161,6 @@ import { OrderlyAppProvider } from "@orderly.network/react-app";
 import {
   LocaleProvider,
   Resources,
-  zh,
   LocaleEnum,
   LocaleCode,
   Language,
@@ -101,7 +178,6 @@ const ko = {
 
 // define language resources
 const resources: Resources = {
-  en,
   ja,
   ko,
 };
@@ -114,13 +190,13 @@ const languages: Language[] = [
 ];
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
-  const onLocaleChange = (locale: LocaleCode) => {};
+  const onLanguageChanged = (locale: LocaleCode) => {};
 
   return (
     <LocaleProvider
       resources={resources}
       languages={languages}
-      onLocaleChange={onLocaleChange}
+      onLanguageChanged={onLanguageChanged}
     >
       <WalletConnectorProvider>
         <OrderlyAppProvider
@@ -159,7 +235,7 @@ npx @orderly.network/i18n csv2json <input> <outputDir>
 Example:
 
 ```bash
-npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locale
+npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locales
 ```
 
 ### json2csv
@@ -167,13 +243,13 @@ npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locale
 Convert multiple locale JSON files to a single locale CSV file.
 
 ```bash
-npx @orderly.network/i18n json2csv <input> <output>
+npx @orderly.network/i18n json2csv <inputDir> <output>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n json2csv ./dist/locale/en.json,./dist/locale/zh.json ./dist/locale.csv
+npx @orderly.network/i18n json2csv ./locales ./dist/locale.csv
 ```
 
 ### diffcsv
@@ -190,20 +266,6 @@ Example:
 npx @orderly.network/i18n diffcsv ./dist/locale1.csv ./dist/locale2.csv
 ```
 
-### generateCsv
-
-Generate a locale CSV file from your source files.
-
-```bash
-npx @orderly.network/i18n generateCsv <output>
-```
-
-Example:
-
-```bash
-npx @orderly.network/i18n generateCsv ./dist/locale.csv
-```
-
 ### fillJson
 
 Fill values from an input locale JSON file and generate a new locale JSON file.
@@ -216,4 +278,32 @@ Example:
 
 ```bash
 npx @orderly.network/i18n fillJson ./src/locale/zh.json ./dist/locale/zh.json
+```
+
+### separateJson
+
+Separate JSON files into default and extend key values based on a specified key.
+
+```bash
+npx @orderly.network/i18n separateJson <inputDir> <outputDir> <separateKey>
+```
+
+Example:
+
+```bash
+npx @orderly.network/i18n separateJson ./locales ./dist/locales extend
+```
+
+### mergeJson
+
+Merge default and extend JSON files back into one file.
+
+```bash
+npx @orderly.network/i18n mergeJson <inputDir> <outputDir>
+```
+
+Example:
+
+```bash
+npx @orderly.network/i18n mergeJson ./dist/locales1 ./dist/locales2
 ```

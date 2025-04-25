@@ -2,24 +2,35 @@
 
 const yargs = require("yargs/yargs");
 const { hideBin } = require("yargs/helpers");
-const { generateCsv } = require("../script/generateCsv");
+// const { generateCsv } = require("../script/generateCsv");
 const { json2csv } = require("../script/json2csv");
 const { csv2json } = require("../script/csv2json");
 const { diffCsv } = require("../script/diffCsv");
 const { fillJson } = require("../script/fillJson");
+const { separateJson } = require("../script/separateJson");
+const { mergeJson } = require("../script/mergeJson");
 main();
 
 async function main() {
   const argv = getArgv();
 
-  const { _, input, output, oldFile, newFile, outputDir } = argv;
+  const {
+    _,
+    input,
+    output,
+    oldFile,
+    newFile,
+    inputDir,
+    outputDir,
+    separateKey,
+  } = argv;
 
   const command = _[0];
   // console.log("argv", argv);
 
   switch (command) {
     case "json2csv":
-      await json2csv(input, output);
+      await json2csv(inputDir, output);
       break;
     case "csv2json":
       await csv2json(input, outputDir);
@@ -27,11 +38,17 @@ async function main() {
     case "diffcsv":
       await diffCsv(oldFile, newFile);
       break;
-    case "generateCsv":
-      await generateCsv(output);
-      break;
+    // case "generateCsv":
+    //   await generateCsv(output);
+    //   break;
     case "fillJson":
       await fillJson(input, output);
+      break;
+    case "separateJson":
+      await separateJson(inputDir, outputDir, separateKey);
+      break;
+    case "mergeJson":
+      await mergeJson(inputDir, outputDir);
       break;
     default:
       console.log("Invalid command");
@@ -77,13 +94,13 @@ function getArgv() {
 
     // json2csv command
     .command(
-      "json2csv <input> <output>",
+      "json2csv <inputDir> <output>",
       "Convert locale JSON files to a locale CSV file",
       (yargs) => {
         return yargs
-          .positional("input", {
+          .positional("inputDir", {
             describe:
-              "Path to locale JSON file(s) (supports multiple files, separated by commas)",
+              "Input directory for locale JSON files (all JSON files in the directory will be converted)",
             type: "string",
             demandOption: true,
           })
@@ -94,11 +111,8 @@ function getArgv() {
           });
       },
       (argv) => {
-        const inputFiles = argv.input.split(","); // Parse multiple input files
         console.log(
-          `Converting locale JSON files: ${inputFiles.join(
-            ", "
-          )} to locale CSV: ${argv.output}`
+          `Converting locale JSON files: ${argv.inputDir} to locale CSV: ${argv.output}`
         );
       }
     )
@@ -128,21 +142,21 @@ function getArgv() {
     )
 
     // generateCsv command
-    .command(
-      "generateCsv <output>",
-      "Generate a locale CSV file",
-      (yargs) => {
-        return yargs.positional("output", {
-          describe: "Output path for the locale CSV file",
-          type: "string",
-          // Required
-          demandOption: true,
-        });
-      },
-      (argv) => {
-        console.log(`Generating locale CSV file at: ${argv.output}`);
-      }
-    )
+    // .command(
+    //   "generateCsv <output>",
+    //   "Generate a locale CSV file",
+    //   (yargs) => {
+    //     return yargs.positional("output", {
+    //       describe: "Output path for the locale CSV file",
+    //       type: "string",
+    //       // Required
+    //       demandOption: true,
+    //     });
+    //   },
+    //   (argv) => {
+    //     console.log(`Generating locale CSV file at: ${argv.output}`);
+    //   }
+    // )
 
     // fillJson command
     .command(
@@ -166,7 +180,61 @@ function getArgv() {
           `Filling values from the input locale JSON file: ${argv.input} and generating a new locale JSON file: ${argv.output}`
         );
       }
-    ).argv;
+    )
 
-  return argv;
+    // separateJson command
+    .command(
+      "separateJson <inputDir> <outputDir> <separateKey>",
+      "Separate json file default and extend key values based on the key",
+      (yargs) => {
+        return yargs
+          .positional("inputDir", {
+            describe: "Input directory for locale JSON files",
+            type: "string",
+            demandOption: true,
+          })
+          .positional("outputDir", {
+            describe: "Output directory for locale JSON files",
+            type: "string",
+            demandOption: true,
+          })
+          .positional("separateKey", {
+            describe: "Key to separate the json files",
+            type: "string",
+            demandOption: true,
+          });
+      },
+      (argv) => {
+        console.log(
+          `Separating json files into multiple files: ${argv.inputDir} to ${argv.outputDir} with key: ${argv.key}`
+        );
+      }
+    )
+
+    // mergeJson command
+    .command(
+      "mergeJson <inputDir> <outputDir>",
+      "Merge default and extend JSON files back into one file",
+      (yargs) => {
+        return yargs
+          .positional("inputDir", {
+            describe:
+              "Input directory containing both default and extend JSON files",
+            type: "string",
+            demandOption: true,
+          })
+          .positional("outputDir", {
+            describe: "Output directory for merged JSON files",
+            type: "string",
+            demandOption: true,
+          });
+      },
+      (argv) => {
+        console.log(
+          `Merging JSON files from ${argv.inputDir} to ${argv.outputDir}`
+        );
+      }
+    );
+
+  return argv.argv;
 }

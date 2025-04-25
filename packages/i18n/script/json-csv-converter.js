@@ -13,12 +13,16 @@ function multiJson2Csv(jsonList, header) {
   let result = header.length ? [header] : [];
   for (const key of baseKeys) {
     const values = [];
-    for (const json of jsonList) {
+    for (const [index, json] of jsonList.entries()) {
       const val = json[key] || "";
       values.push(val);
       const bool = validateI18nValue(val);
       if (!bool.valid) {
-        errors[key] = val;
+        const locale = header[index + 1];
+        if (!errors[locale]) {
+          errors[locale] = {};
+        }
+        errors[locale][key] = baseJson[key];
       }
     }
     result.push(stringsToCsvLine([key, ...values]));
@@ -48,18 +52,23 @@ function csv2multiJson(csv) {
       json[header][key] = val;
       const bool = validateI18nValue(val);
       if (!bool.valid) {
-        errors[key] = val;
+        if (!errors[header]) {
+          errors[header] = {};
+        }
+        errors[header][key] = values[0];
       }
     }
-    if (Object.keys(errors).length > 0) {
-      throw new Error(
-        "valid i18n value failed, please check the value of the following values: " +
-          JSON.stringify(errors, null, 4)
-      );
-    }
+
     if (Object.values(json[header]).every((value) => !value)) {
       delete json[header];
     }
+  }
+
+  if (Object.keys(errors).length > 0) {
+    throw new Error(
+      "valid i18n value failed, please check the value of the following values: " +
+        JSON.stringify(errors, null, 4)
+    );
   }
 
   return json;

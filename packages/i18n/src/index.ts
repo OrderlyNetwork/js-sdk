@@ -13,4 +13,5 @@ export { useLocaleCode } from "./useLocaleCode";
 export { useLocaleContext, type Language } from "./context";
 export * from "./types";
 export * from "./constant";
-export * from "./locale";
+export * from "./locale/en";
+export * from "./utils";

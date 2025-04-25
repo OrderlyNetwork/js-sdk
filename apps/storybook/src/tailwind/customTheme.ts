@@ -4,7 +4,8 @@ export const customThemePlugin = () =>
   plugin(function ({ addBase }) {
     addBase({
       '[data-oui-theme="custom"]': {
-        "--oui-font-family": '"DIN2014", sans-serif',
+        "--oui-font-family":
+          '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
         /* colors */
         "--oui-color-primary": "96 140 255",

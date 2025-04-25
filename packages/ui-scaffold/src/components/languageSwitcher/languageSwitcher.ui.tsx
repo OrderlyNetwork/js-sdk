@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
   Text,
   Box,
+  Spinner,
 } from "@orderly.network/ui";
 import { FC, SVGProps } from "react";
 import { LanguageSwitcherScriptReturn } from "./languageSwitcher.script";
@@ -35,7 +36,7 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
 
   const header = (
     <Box height={24}>
-      <Text>{t("common.language")}</Text>
+      <Text>{t("languageSwitcher.language")}</Text>
     </Box>
   );
 
@@ -55,10 +56,24 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
             key={item.localCode}
             selected={selected}
             item={item}
-            onClick={() => props.onLangChange(item.localCode)}
+            onClick={() => props.onLangChange(item.localCode, item.displayName)}
+            loading={props.loading}
           />
         );
       })}
+    </Box>
+  );
+
+  const footer = (
+    <Box mt={3}>
+      <Text
+        size="2xs"
+        intensity={54}
+        weight="regular"
+        className="oui-text-warning-darken"
+      >
+        {t("languageSwitcher.tips")}
+      </Text>
     </Box>
   );
 
@@ -81,18 +96,33 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
         >
           {header}
           {context}
+          {footer}
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   );
 };
 
-export const LanguageItem = (props: {
+type LanguageItemProps = {
   selected: boolean;
   item: Language;
   onClick?: () => void;
-}) => {
+  loading?: boolean;
+};
+
+export const LanguageItem: FC<LanguageItemProps> = (props) => {
   const { item } = props;
+
+  const renderTrailing = () => {
+    if (props.loading && props.selected) {
+      return <Spinner size="sm" />;
+    }
+    if (props.selected) {
+      return <Box gradient="brand" r="full" width={4} height={4} />;
+    }
+    return null;
+  };
+
   return (
     <button
       className={cn(
@@ -113,9 +143,7 @@ export const LanguageItem = (props: {
             {item.displayName}
           </Text>
         </Flex>
-        {props.selected && (
-          <Box gradient="brand" r="full" width={4} height={4} />
-        )}
+        {renderTrailing()}
       </Flex>
     </button>
   );

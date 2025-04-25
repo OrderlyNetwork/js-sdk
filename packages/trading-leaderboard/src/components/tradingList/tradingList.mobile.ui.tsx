@@ -4,6 +4,7 @@ import {
   CloseCircleFillIcon,
   cn,
   DataFilter,
+  DataTable,
   Flex,
   Input,
   Spinner,
@@ -11,10 +12,10 @@ import {
 } from "@orderly.network/ui";
 import {
   FilterDays,
+  getRowKey,
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTradingListColumns } from "./column";
 
 export type TradingListProps = {
@@ -56,7 +57,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
         )}
       </Flex>
 
-      <AuthGuardDataTable
+      <DataTable
         classNames={{
           root: "oui-pb-4",
           body: "oui-text-2xs",
@@ -68,13 +69,31 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
         initialSort={props.initialSort}
         onSort={props.onSort}
         dataSource={props.dataList}
-        generatedRowKey={(record: TradingData) => record.address}
+        generatedRowKey={(record: TradingData) => record.key || record.address}
         manualPagination
         manualSorting
         onRow={(record, index) => {
           return {
             className: cn("oui-h-[30px]"),
           };
+        }}
+        onCell={(column, record, index) => {
+          if (record.key === getRowKey(props.address!)) {
+            const isFirst = column.getIsFirstColumn();
+            const isLast = column.getIsLastColumn();
+
+            return {
+              className: cn(
+                "after:oui-absolute after:oui-w-full after:oui-h-[30px]",
+                "after:oui-border-[rgb(var(--oui-gradient-brand-start))]",
+                " after:oui-top-0 after:oui-left-0 after:oui-z-[-1]",
+                "after:oui-border-b after:oui-border-t",
+                isFirst && "after:oui-border-l after:oui-rounded-l-lg",
+                isLast && "after:oui-border-r  after:oui-rounded-r-lg"
+              ),
+            };
+          }
+          return {};
         }}
       />
       <div

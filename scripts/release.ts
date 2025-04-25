@@ -103,11 +103,16 @@ async function checkTag() {
   }
 }
 
+/**
+ * get pre tag from current branch
+ * alpha => alpha
+ * release/alpha => release-alpha
+ * internal-20250410 => internal-20250410
+ */
 async function getPreTagFromCurrentBranch() {
   const branch = await getCurrentBranch();
   if (branch) {
-    const parts = branch.split("/");
-    return parts.length > 1 ? parts[1] : branch;
+    return branch.replaceAll("/", "-");
   }
 }
 
