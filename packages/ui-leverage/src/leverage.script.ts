@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useLeverage, useMarginRatio } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { SliderMarks, toast } from "@orderly.network/ui";
@@ -25,7 +25,7 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     );
   }, [leverageLevers]);
 
-  const [leverage, setLeverage] = useState(curLeverage ?? 0);
+  const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
 
   const maxLeverage = leverageLevers?.reduce(
     (a: number, item: any) => Math.max(a, Number(item), 0),
@@ -46,6 +46,23 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     // updateLeverage(leverage);
   };
 
+  const onLeverageIncrease: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => prev + 1);
+  };
+
+  const onLeverageReduce: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => prev - 1);
+  };
+
+  const onInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (e) => {
+      const parsed = Number.parseInt(e.target.value, 10);
+      const raw = Number.isNaN(parsed) ? 0 : parsed;
+      setLeverage(Math.min(Math.max(raw, 1), maxLeverage));
+    },
+    [maxLeverage]
+  );
+
   const onSave = async () => {
     try {
       update({ leverage }).then(
@@ -65,6 +82,11 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     value: leverage,
     marks,
     onLeverageChange,
+    onLeverageIncrease,
+    onLeverageReduce,
+    onInputChange,
+    isReduceDisabled: leverage <= 1,
+    isIncreaseDisabled: leverage >= maxLeverage,
     step,
     onCancel: options?.close,
     onSave,
