@@ -11,7 +11,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
  * @param options
  */
 export const usePrivateQuery = <T>(
-  query: string,
+  query: Parameters<typeof useSWR>["0"],
   options?: useQueryOptions<T>
 ): SWRResponse<T> => {
   const { formatter, ...swrOptions } = options || {};

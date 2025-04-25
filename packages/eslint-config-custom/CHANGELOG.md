@@ -1,5 +1,18 @@
 # eslint-config-custom
 
+## 1.1.1
+
+### Patch Changes
+
+- publish
+- 0b52044b6: publish
+
+## 1.1.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 1.1.0
 
 ### Minor Changes

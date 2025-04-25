@@ -9,5 +9,6 @@ export type AnnouncementWidgetProps = Pick<
 export const AnnouncementWidget = (props: AnnouncementWidgetProps) => {
   const { hideTips, ...rest } = props;
   const state = useAnnouncementScript({ hideTips });
+
   return <Announcement {...state} {...rest} />;
 };

@@ -1,10 +1,7 @@
 {
-  "extend.products.swap": "Swap",
-  "extend.products.trade": "Handel",
   "extend.tradingRewards.description": "Handeln Sie mit Orderly, um ORDER zu verdienen",
   "extend.affiliate.tag": "40% Rückerstattung",
   "extend.affiliate.description": "Verdienen Sie mehr als Orderly-Partner",
   "extend.staking": "Staking",
-  "extend.staking.description": "Staken Sie ORDER/esORDER, um VALOR zu erhalten",
-  "extend.restrictedInfo.description": "Sie greifen auf {{brokerName}} von einer IP-Adresse ({{ip}}) zu, die mit einem eingeschränkten Land verbunden ist. Bitte lesen Sie unsere <0>Nutzungsbedingungen</0>. Wenn Sie glauben, dass dies ein Fehler ist, kontaktieren Sie <1>{{email}}</1>."
+  "extend.staking.description": "Staken Sie ORDER/esORDER, um VALOR zu erhalten"
 }

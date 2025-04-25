@@ -5,8 +5,8 @@ type ScannerProps = {
   onSuccess?: (data: string) => void;
 };
 
-const WIDTH = 320;
-const HEIGHT = 320;
+export const QRCODE_WIDTH = 320;
+export const QRCODE_HEIGHT = 320;
 const RATIO = 2;
 
 /**
@@ -82,8 +82,8 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
       .getUserMedia({
         video: {
           facingMode: "environment",
-          width: { ideal: WIDTH * RATIO },
-          height: { ideal: HEIGHT * RATIO },
+          width: { ideal: QRCODE_WIDTH * RATIO },
+          height: { ideal: QRCODE_HEIGHT * RATIO },
         },
       })
       .then((stream) => {
@@ -120,15 +120,15 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
     <>
       <video
         ref={videoRef}
-        width={WIDTH}
-        height={HEIGHT}
+        width={QRCODE_WIDTH}
+        height={QRCODE_HEIGHT}
         className="oui-bg-base-10 oui-rounded-2xl oui-hidden"
       />
       <canvas
         ref={canvasRef}
-        width={WIDTH * RATIO}
-        height={HEIGHT * RATIO}
-        style={{ width: WIDTH, height: HEIGHT }}
+        width={QRCODE_WIDTH * RATIO}
+        height={QRCODE_HEIGHT * RATIO}
+        style={{ width: QRCODE_WIDTH, height: QRCODE_HEIGHT }}
         className="oui-bg-base-10 oui-rounded-2xl"
       />
     </>
