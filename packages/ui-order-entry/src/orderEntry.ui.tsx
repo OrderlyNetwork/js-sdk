@@ -1,4 +1,4 @@
-import { type uesOrderEntryScriptReturn } from "./useOrderEntry.script";
+import { type uesOrderEntryScriptReturn } from "./orderEntry.script";
 import {
   Box,
   Button,
