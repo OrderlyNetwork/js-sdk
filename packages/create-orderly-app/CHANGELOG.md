@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.6.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 1.6.0
 
 ### Minor Changes
