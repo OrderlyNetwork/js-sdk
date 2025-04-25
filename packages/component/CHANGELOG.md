@@ -1,5 +1,24 @@
 # @orderly.network/react
 
+## 2.1.1
+
+### Patch Changes
+
+- publish
+- 0b52044b6: publish
+- Updated dependencies
+- Updated dependencies [0b52044b6]
+  - @orderly.network/core@2.1.1
+  - @orderly.network/hooks@2.1.1
+  - @orderly.network/net@2.1.1
+  - @orderly.network/trading-view@2.1.1
+  - @orderly.network/types@2.1.1
+  - @orderly.network/ui@2.1.1
+  - @orderly.network/ui-connector@2.1.1
+  - @orderly.network/ui-leverage@2.1.1
+  - @orderly.network/ui-transfer@2.1.1
+  - @orderly.network/utils@2.1.1
+
 ## 2.1.1-alpha.0
 
 ### Patch Changes

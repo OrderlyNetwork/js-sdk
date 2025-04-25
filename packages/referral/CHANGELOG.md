@@ -1,5 +1,17 @@
 # @orderly.network/referral
 
+## 2.1.1
+
+### Patch Changes
+
+- publish
+- 0b52044b6: publish
+- Updated dependencies
+- Updated dependencies [0b52044b6]
+  - @orderly.network/react@2.1.1
+  - @orderly.network/hooks@2.1.1
+  - @orderly.network/utils@2.1.1
+
 ## 2.1.1-alpha.0
 
 ### Patch Changes
