@@ -22,7 +22,12 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
+import {
+  LocaleEnum,
+  LocaleProvider,
+  parseI18nLang,
+  removeLangPrefix,
+} from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
 import zh from "@orderly.network/i18n/locales/zh.json";
@@ -84,12 +89,13 @@ const resources: Resources<ExtendLocaleMessages> = {
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   const config = useOrderlyConfig();
+
   return (
     <LocaleProvider
       resources={resources}
       backend={{
         loadPath: (lang) => {
-          return `/locales/extend/${lang}.json`;
+          return `/locales/extend/${parseI18nLang(lang)}.json`;
           // if (lang === LocaleEnum.en) {
           //   // because en is built-in, we need to load the en extend only
           //   return `/locales/extend/${lang}.json`;

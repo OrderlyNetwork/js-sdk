@@ -84,10 +84,10 @@ const GuardView = (props: GuardViewProps) => {
   const { t } = useTranslation();
 
   const DESCRIPTIONS: alertMessages = {
-    connectWallet: t("connector.connectWallet"),
-    switchChain: t("connector.wrongNetwork"),
-    enableTrading: t("connector.enableTrading"),
-    signin: t("connector.signIn"),
+    connectWallet: t("connector.trade.connectWallet.tooltip"),
+    switchChain: t("connector.wrongNetwork.tooltip"),
+    enableTrading: t("connector.trade.enableTrading.tooltip"),
+    signin: t("connector.trade.signIn.tooltip"),
   };
 
   const descriptions = { ...DESCRIPTIONS, ...props.description };

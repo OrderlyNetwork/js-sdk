@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useLocalStorage,
@@ -10,8 +10,30 @@ import { useSplitPersistent } from "../../components/desktop/layout/useSplitPers
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
+import Split from "@uiw/react-split";
 
 export type TradingState = ReturnType<typeof useTradingScript>;
+
+export const scrollBarWidth = 6;
+export const topBarHeight = 48;
+export const bottomBarHeight = 29;
+export const space = 12;
+export const symbolInfoBarHeight = 54;
+
+export const orderEntryMinWidth = 280;
+export const orderEntryMaxWidth = 360;
+
+export const orderbookMinWidth = 280;
+export const orderbookMaxWidth = 732;
+
+export const orderbookMinHeight = 464;
+export const orderbookMaxHeight = 728;
+
+export const tradindviewMinHeight = 320;
+
+export const tradingViewMinWidth = 540;
+
+export const dataListMaxHeight = 800;
 
 export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
@@ -59,6 +81,16 @@ export const useTradingScript = () => {
 
   const observerState = useObserverOrderEntry({ max2XL });
 
+  const marketsWidth = marketsCollapseState.collapsed ? 70 : 280;
+  const tradindviewMaxHeight = max2XL ? 1200 : 600;
+  const dataListMinHeight = canTrade ? 379 : 277;
+
+  const tradingViewHeightState = useExtraHeight({
+    orderEntryViewRef: observerState.orderEntryViewRef,
+    tradindviewMaxHeight,
+    dataListMinHeight,
+  });
+
   const map = {
     layout,
     onLayout: setLayout,
@@ -74,6 +106,10 @@ export const useTradingScript = () => {
     ...splitSizeState,
     ...observerState,
     restrictedInfo,
+    ...tradingViewHeightState,
+    marketsWidth,
+    tradindviewMaxHeight,
+    dataListMinHeight,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
@@ -231,4 +267,97 @@ export function getOffsetSizeNum(size: string | null) {
     return `${100 - Math.min(Number(size), 100)}`;
   }
   return "";
+}
+
+function useExtraHeight(options: {
+  orderEntryViewRef: RefObject<HTMLDivElement>;
+  tradindviewMaxHeight: number;
+  dataListMinHeight: number;
+}) {
+  const { tradindviewMaxHeight, dataListMinHeight } = options;
+  const tradingviewAndOrderbookSplitRef = useRef<Split>(null);
+  const max2XLSplitRef = useRef<Split>(null);
+
+  const [extraHeight, setExtraHeight] = useLocalStorage(
+    "orderly_order_entry_extra_height",
+    0
+  );
+
+  const space = 10 + 12;
+
+  const [dataListHeight, setDataListHeight] = useLocalStorage(
+    "orderly_trading_data_list_height",
+    dataListMinHeight
+  );
+
+  const onTradingviewAndOrderbookDragging = (
+    preSize: number,
+    nextSize: number
+  ) => {
+    const boxHeight = tradingviewAndOrderbookSplitRef?.current?.boxHeight;
+    if (!boxHeight) return;
+
+    const splitTradingviewHeight = (boxHeight * preSize) / 100;
+    const splitOrderbookHeight = (boxHeight * nextSize) / 100;
+
+    const tradingviewHeight = Math.min(
+      Math.max(splitTradingviewHeight, tradindviewMinHeight),
+      tradindviewMaxHeight
+    );
+
+    const orderbookHeight = Math.min(
+      Math.max(splitOrderbookHeight, orderbookMinHeight),
+      orderbookMaxHeight
+    );
+
+    const orderEntryHeight =
+      options.orderEntryViewRef.current?.clientHeight || 0;
+
+    // console.log("tradingviewHeight", splitTradingviewHeight, tradingviewHeight);
+    // console.log("orderbookHeight", splitOrderbookHeight, orderbookHeight);
+
+    if (splitOrderbookHeight >= orderbookHeight) {
+      const offset = splitOrderbookHeight - orderbookHeight;
+      // console.log("offset ---", offset);
+      setExtraHeight(Math.max(0, extraHeight - offset));
+    } else if (
+      tradingviewHeight + orderbookHeight <
+      tradindviewMaxHeight + orderbookMaxHeight
+    ) {
+      const height =
+        tradingviewHeight + orderbookHeight + space + symbolInfoBarHeight;
+
+      const offset = Math.max(0, height - orderEntryHeight);
+      // console.log("offset ++++", height, offset);
+      setExtraHeight(extraHeight + offset);
+    }
+  };
+
+  const onDataListSplitHeightDragging = (preSize: number, nextSize: number) => {
+    const boxHeight = max2XLSplitRef?.current?.boxHeight;
+    if (!boxHeight) return;
+
+    // const splitTradingAndOrderbookHeight = (boxHeight * preSize) / 100;
+    const splitDataListHeight = (boxHeight * nextSize) / 100;
+
+    if (
+      splitDataListHeight >= dataListMinHeight &&
+      splitDataListHeight <= dataListMaxHeight
+    ) {
+      setDataListHeight(splitDataListHeight);
+      const offset = splitDataListHeight - dataListHeight;
+      if (offset > 0) {
+        setExtraHeight(Math.max(0, extraHeight - offset));
+      }
+    }
+  };
+
+  return {
+    max2XLSplitRef,
+    tradingviewAndOrderbookSplitRef,
+    onTradingviewAndOrderbookDragging,
+    onDataListSplitHeightDragging,
+    extraHeight,
+    dataListHeight,
+  };
 }
