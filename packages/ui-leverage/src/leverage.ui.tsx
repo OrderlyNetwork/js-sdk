@@ -166,7 +166,9 @@ export const LeverageSelector: React.FC<LeverageSelectorProps> = (props) => {
           justify="center"
           className={cn(
             `oui-transition-all oui-cursor-pointer oui-box-border oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-rounded-md oui-border oui-border-solid`,
-            value === option ? "oui-border-primary" : "oui-border-line-12"
+            value === option
+              ? "oui-border-primary oui-bg-base-6"
+              : "oui-border-line-12"
           )}
           onClick={() => onLeverageChange?.(option)}
         >
@@ -195,7 +197,7 @@ export type LeverageSliderProps = {
 
 export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
   return (
-    <Box pt={3} width={"100%"} className={props.className}>
+    <Box pt={4} width={"100%"} className={props.className}>
       <Slider
         // step={1.04}
         max={props.maxLeverage}
