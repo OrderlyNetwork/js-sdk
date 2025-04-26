@@ -16,7 +16,7 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
   const [curLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
 
-  const marks = useMemo((): SliderMarks => {
+  const marks = useMemo<SliderMarks>(() => {
     return (
       leverageLevers?.map((e: number) => ({
         label: `${e}x`,
@@ -58,7 +58,8 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     (e) => {
       const parsed = Number.parseInt(e.target.value, 10);
       const raw = Number.isNaN(parsed) ? 0 : parsed;
-      setLeverage(Math.min(Math.max(raw, 1), maxLeverage));
+      const clamped = Math.min(Math.max(raw, 1), maxLeverage);
+      setLeverage(clamped);
     },
     [maxLeverage]
   );
@@ -66,7 +67,7 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
   const onSave = async () => {
     try {
       update({ leverage }).then(
-        (res: any) => {
+        () => {
           options?.close?.();
           toast.success(t("leverage.updated"));
         },
@@ -74,7 +75,9 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
           toast.error(err.message);
         }
       );
-    } catch (e) {}
+    } catch {
+      //
+    }
   };
 
   return {
