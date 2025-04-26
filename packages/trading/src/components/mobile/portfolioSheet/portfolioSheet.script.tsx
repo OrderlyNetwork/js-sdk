@@ -144,18 +144,10 @@ const useMarginRatioAndLeverage = () => {
     // updateLeverage(leverage);
   };
 
-  const onLeverageIncrease: React.MouseEventHandler<SVGSVGElement> = () => {
-    setLeverage((prev) => prev + 1);
-  };
-
-  const onLeverageReduce: React.MouseEventHandler<SVGSVGElement> = () => {
-    setLeverage((prev) => prev - 1);
-  };
-
   const onSave = async (leverage: number) => {
     try {
       update({ leverage }).then(
-        (res: any) => {
+        () => {
           toast.success(t("leverage.updated"));
         },
         (err: Error) => {
@@ -183,6 +175,20 @@ const useMarginRatioAndLeverage = () => {
     },
     [debouncedCommit, maxLeverage]
   );
+
+  const onLeverageIncrease: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => {
+      onSave(prev + 1);
+      return prev + 1;
+    });
+  };
+
+  const onLeverageReduce: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => {
+      onSave(prev - 1);
+      return prev - 1;
+    });
+  };
 
   return {
     aggregated,

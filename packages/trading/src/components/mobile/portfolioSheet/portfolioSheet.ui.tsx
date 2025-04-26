@@ -344,7 +344,9 @@ export const LeverageSelector: React.FC<PortfolioSheetState> = (props) => {
           justify="center"
           className={cn(
             `oui-transition-all oui-cursor-pointer oui-box-border oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-rounded-md oui-border oui-border-solid`,
-            value === option ? "oui-border-primary" : "oui-border-line-12"
+            value === option
+              ? "oui-border-primary oui-bg-base-6"
+              : "oui-border-line-12"
           )}
           onClick={() => {
             onLeverageChange(option);
@@ -366,14 +368,6 @@ export const LeverageSelector: React.FC<PortfolioSheetState> = (props) => {
 
 const Leverage: FC<PortfolioSheetState> = (props) => {
   const { t } = useTranslation();
-  const formatters = React.useMemo<InputFormatter[]>(
-    () => [
-      inputFormatter.numberFormatter,
-      inputFormatter.currencyFormatter,
-      inputFormatter.decimalPointFormatter,
-    ],
-    []
-  );
   return (
     <Flex direction={"column"} gap={2} width={"100%"}>
       <Flex width={"100%"} justify={"between"}>
