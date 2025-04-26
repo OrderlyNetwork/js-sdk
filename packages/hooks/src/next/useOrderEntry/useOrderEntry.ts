@@ -26,6 +26,7 @@ import {
   getOrderCreator,
   tpslFields,
   hasTPSL,
+  isBBOOrder,
 } from "./helper";
 import { produce } from "immer";
 import { useAccountInfo } from "../../orderly/appStore";
@@ -205,36 +206,36 @@ const useOrderEntry = (
   );
 
   const updateOrderPrice = () => {
+    const order_type = formattedOrder.order_type;
     const order_type_ext =
       formattedOrder.order_type_ext ?? lastOrderTypeExt.current;
     const level = formattedOrder.level ?? lastLevel.current;
 
-    if (
-      ![OrderType.ASK, OrderType.BID].includes(order_type_ext!) ||
-      level === undefined
-    ) {
+    const isBBO = isBBOOrder({ order_type, order_type_ext });
+
+    if (!isBBO || level === undefined) {
       return;
     }
+
     lastOrderTypeExt.current = order_type_ext;
     lastLevel.current = level;
 
     const index = order_type_ext === OrderType.ASK ? 0 : 1;
     const price = askAndBid.current?.[level!]?.[index];
-    if (price && !isNaN(price)) {
+    if (price) {
       setValue("order_price", price, {
         shouldUpdateLastChangedField: false,
       });
     }
-    // console.log("updateOrderPrice", askAndBid.current, price);
   };
 
+  // update the order price by order book
   const updateOrderPriceByOrderBook = () => {
-    const { order_type, order_type_ext, order_quantity } = formattedOrder;
-    // const hasQty = order_quantity && Number(order_quantity) !== 0;
-    const isBBO =
-      order_type === OrderType.LIMIT &&
-      [OrderType.ASK, OrderType.BID].includes(order_type_ext!);
+    const { order_type, order_type_ext } = formattedOrder;
 
+    const isBBO = isBBOOrder({ order_type, order_type_ext });
+
+    // only update the order price when last changed field is not total and the order type is bbo
     if (lastChangedField.current !== "total" && isBBO) {
       updateOrderPrice();
     }
