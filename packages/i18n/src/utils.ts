@@ -2,7 +2,7 @@ import { LocaleEnum } from "./constant";
 import { LocaleCode } from "./types";
 
 /**
- * transform browser language to you given i18n locale code
+ * transform browser language to you given i18n locale codes
  * @param lang - browser language
  * @param localeCodes - locale codes to check
  * @param defaultLang - default locale code
@@ -17,7 +17,6 @@ export function parseI18nLang(
   localeCodes?: LocaleCode[],
   defaultLang?: LocaleCode
 ) {
-  console.log("Browser language", lang);
   localeCodes = localeCodes || Object.values(LocaleEnum);
   defaultLang = defaultLang || LocaleEnum.en;
 
