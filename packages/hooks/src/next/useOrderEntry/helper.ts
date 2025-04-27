@@ -209,3 +209,15 @@ export const calcEstLeverage = (
     },
   });
 };
+
+export function isBBOOrder(options: {
+  order_type?: OrderType;
+  order_type_ext?: OrderType;
+}) {
+  const { order_type, order_type_ext } = options;
+
+  return (
+    order_type === OrderType.LIMIT &&
+    [OrderType.ASK, OrderType.BID].includes(order_type_ext!)
+  );
+}
