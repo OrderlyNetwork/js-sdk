@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   FC,
   PropsWithChildren,
@@ -41,21 +41,31 @@ export const OrderBookProvider: FC<
 > = (props) => {
   const [mode, setMode] = useState<QtyMode>("quantity");
   const [totalMode, setTotalMode] = useState<QtyMode>("quantity");
+  const memoizedValue = React.useMemo<OrderBookContextValue>(() => {
+    return {
+      cellHeight: props.cellHeight,
+      onItemClick: props.onItemClick,
+      mode,
+      totalMode: totalMode || "quantity",
+      depth: props.depth,
+      onModeChange: setMode,
+      onTotalModeChange: setTotalMode,
+      showTotal: props.showTotal || false,
+      pendingOrders: props.pendingOrders,
+      symbolInfo: props.symbolInfo,
+    };
+  }, [
+    mode,
+    props.cellHeight,
+    props.depth,
+    props.onItemClick,
+    props.pendingOrders,
+    props.showTotal,
+    props.symbolInfo,
+    totalMode,
+  ]);
   return (
-    <OrderBookContext.Provider
-      value={{
-        cellHeight: props.cellHeight,
-        onItemClick: props.onItemClick,
-        mode,
-        totalMode: totalMode || "quantity",
-        depth: props.depth,
-        onModeChange: setMode,
-        onTotalModeChange: setTotalMode,
-        showTotal: props.showTotal || false,
-        pendingOrders: props.pendingOrders,
-        symbolInfo: props.symbolInfo,
-      }}
-    >
+    <OrderBookContext.Provider value={memoizedValue}>
       {props.children}
     </OrderBookContext.Provider>
   );

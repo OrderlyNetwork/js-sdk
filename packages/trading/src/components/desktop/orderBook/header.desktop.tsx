@@ -9,16 +9,61 @@ import {
 } from "@orderly.network/ui";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { useTranslation } from "@orderly.network/i18n";
+import { useLocalStorage } from "@orderly.network/hooks";
 
-interface Props {
+interface DesktopHeaderProps {
   quote: string;
   base: string;
 }
 
-export const DesktopHeader: FC<Props> = (props) => {
+const Option: React.FC<{
+  item: string;
+  onClick?: React.MouseEventHandler<HTMLElement>;
+}> = (props) => {
+  const { item, onClick } = props;
+  const { t } = useTranslation();
+  const [tokenType, setTokenType] = useLocalStorage<string>(
+    "orderbook-token-type",
+    "ETH"
+  );
+  return (
+    <Flex
+      justify="between"
+      itemAlign="center"
+      className={cn(
+        "oui-w-full oui-px-2 oui-py-[3px]",
+        "oui-cursor-pointer",
+        "oui-text-xs",
+        "oui-text-base-contrast-54",
+        "hover:oui-bg-base-6",
+        "oui-rounded-[3px]",
+        "oui-transition-all",
+        tokenType === item ? "oui-bg-base-5" : undefined
+      )}
+      onClick={(e) => {
+        setTokenType(item);
+        onClick?.(e);
+      }}
+    >
+      {t("common.total")}({item})
+      <div
+        className="oui-transition-all oui-w-1 oui-h-1 oui-rounded-full"
+        style={{
+          backgroundImage:
+            tokenType === item
+              ? `linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)`
+              : "none",
+        }}
+      />
+    </Flex>
+  );
+};
+
+export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
   const { showTotal } = useOrderBookContext();
   const { t } = useTranslation();
   const [popoverOpen, setOpen] = React.useState<boolean>(false);
+  const [tokenType] = useLocalStorage<string>("orderbook-token-type", "ETH");
   return (
     <Flex pl={3} justify={"between"} className="oui-py-[6px]">
       <Flex
@@ -52,19 +97,32 @@ export const DesktopHeader: FC<Props> = (props) => {
           <Popover
             open={popoverOpen}
             onOpenChange={setOpen}
-            content={<div>123456</div>}
+            contentProps={{ className: cn("oui-p-1 oui-w-28") }}
+            content={
+              <Flex
+                direction="column"
+                itemAlign="start"
+                className={cn("oui-w-full oui-gap-0.5")}
+              >
+                {[props.base, props.quote].map((item) => {
+                  return (
+                    <Option
+                      key={`type-${item}`}
+                      item={item}
+                      onClick={() => setOpen(false)}
+                    />
+                  );
+                })}
+              </Flex>
+            }
           >
             <Flex
               justify="end"
               itemAlign="center"
               className="oui-transition-all oui-cursor-pointer oui-select-none oui-text-base-contrast-36 hover:oui-text-base-contrast"
             >
-              <Title
-                justifyEnd
-                id="oui-order-book-header-total-base"
-                className=""
-              >
-                {`${t("common.total")}(${props.base})`}
+              <Title justifyEnd id="oui-order-book-header-total-base">
+                {`${t("common.total")}(${tokenType})`}
               </Title>
               {popoverOpen ? (
                 <CaretUpIcon

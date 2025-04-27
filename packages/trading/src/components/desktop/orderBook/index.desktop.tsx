@@ -7,6 +7,7 @@ import { DesktopDepthSelect } from "./depthSelect.desktop";
 import { cn, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookProvider } from "../../base/orderBook/orderContext";
+import { useLocalStorage } from "@orderly.network/hooks";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -32,18 +33,26 @@ export interface DesktopOrderBookProps {
   symbolInfo: BasicSymbolInfo;
 }
 
+const rangeInfo = [
+  { left: 370, right: 600 },
+  { left: 740, right: 800 },
+];
+
 export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
   const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
-  // const onModeChange = useCallback((mode: QtyMode) => {}, []);
 
-  //
-  const divRef = useRef(null);
+  const divRef = useRef<HTMLDivElement>(null);
+
+  const [, setTokenType] = useLocalStorage("orderbook-token-type", "ETH");
+
+  useEffect(() => {
+    if (base) {
+      setTokenType(base);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [showTotal, setShowTotal] = useState(false);
-
-  const rangeInfo = [
-    { left: 370, right: 600 },
-    { left: 740, right: 800 },
-  ];
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
