@@ -275,6 +275,17 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   // }, [priceInputContainerRef, formattedOrder.order_type_ext]);
 
   useEffect(() => {
+    const updateOrderPrice = (price: string) => {
+      setValue("order_price", price);
+    };
+    ee.on("update:orderPrice", updateOrderPrice);
+
+    return () => {
+      ee.off("update:orderPrice", updateOrderPrice);
+    };
+  }, []);
+
+  useEffect(() => {
     const focusInputElement = (target: HTMLInputElement | null) => {
       setTimeout(() => {
         target?.focus();
@@ -304,9 +315,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         setValues({
           order_type_ext: undefined,
           level: undefined,
-          order_price: price,
         });
-        // setValue("order_price", price);
+
+        setTimeout(() => {
+          // Since BBO will update the price when unselected, we should set order price in setTimeout
+          // We can't call setValue directly here because it's inside a setTimeout, and the formattedOrder accessed inside setValue would be the old value
+          // setValue("order_price", price);
+          ee.emit("update:orderPrice", price);
+        }, 0);
 
         focusInputElement(priceInputRef.current);
         return;
