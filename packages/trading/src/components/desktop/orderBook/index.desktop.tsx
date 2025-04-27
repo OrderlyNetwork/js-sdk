@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useRef, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { DesktopBids } from "./bids.desktop";
 import { DesktopAsks } from "./asks.desktop";
 import { DesktopMarkPrice } from "./markPrice.desktop";
@@ -6,8 +8,10 @@ import { DesktopHeader } from "./header.desktop";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
 import { cn, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
-import { OrderBookProvider } from "../../base/orderBook/orderContext";
-import { useLocalStorage } from "@orderly.network/hooks";
+import {
+  ORDERBOOK_COIN_TYPE_KEY,
+  OrderBookProvider,
+} from "../../base/orderBook/orderContext";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -43,13 +47,15 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
 
   const divRef = useRef<HTMLDivElement>(null);
 
-  const [, setTokenType] = useLocalStorage("orderbook-token-type", "ETH");
+  const [coinType, setCoinType] = useLocalStorage(
+    ORDERBOOK_COIN_TYPE_KEY,
+    "ETH"
+  );
 
   useEffect(() => {
-    if (base) {
-      setTokenType(base);
+    if (!coinType && base) {
+      setCoinType(base);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [showTotal, setShowTotal] = useState(false);

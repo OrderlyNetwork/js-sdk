@@ -3,7 +3,10 @@ import { getPrecisionByNumber } from "@orderly.network/utils";
 import { cn, Divider, parseNumber, Text } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookCellType } from "../../base/orderBook/types";
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
+import {
+  ORDERBOOK_COIN_TYPE_KEY,
+  useOrderBookContext,
+} from "../../base/orderBook/orderContext";
 import { CellBar, CellBarDirection } from "../../base/orderBook/cellBar";
 import { useLocalStorage } from "@orderly.network/hooks";
 
@@ -43,7 +46,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
 
   const { base_dp, quote_dp } = symbolInfo;
 
-  const [tokenType] = useLocalStorage<string>("orderbook-token-type", "ETH");
+  const [coinType] = useLocalStorage<string>(ORDERBOOK_COIN_TYPE_KEY, "ETH");
 
   const width = Number.isNaN(price) ? 0 : (accumulated / count) * 100;
 
@@ -107,13 +110,16 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
             showTotal && "oui-pr-3"
           )}
         >
-          <Text.numeral dp={base_dp} className="oui-z-10">
-            {tokenType === base
-              ? accumulated
-              : tokenType === quote
-              ? totalAmount
-              : "--"}
-          </Text.numeral>
+          {coinType === base && (
+            <Text.numeral dp={base_dp} className="oui-z-10">
+              {accumulated}
+            </Text.numeral>
+          )}
+          {coinType === quote && (
+            <Text.numeral dp={dp} className="oui-z-10">
+              {totalAmount}
+            </Text.numeral>
+          )}
         </div>
         {/* {showTotal && (
           <div className="oui-flex-1 oui-text-right oui-pr-3">

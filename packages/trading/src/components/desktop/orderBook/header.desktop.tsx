@@ -7,7 +7,10 @@ import {
   Flex,
   Popover,
 } from "@orderly.network/ui";
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
+import {
+  ORDERBOOK_COIN_TYPE_KEY,
+  useOrderBookContext,
+} from "../../base/orderBook/orderContext";
 import { useTranslation } from "@orderly.network/i18n";
 import { useLocalStorage } from "@orderly.network/hooks";
 
@@ -22,8 +25,8 @@ const Option: React.FC<{
 }> = (props) => {
   const { item, onClick } = props;
   const { t } = useTranslation();
-  const [tokenType, setTokenType] = useLocalStorage<string>(
-    "orderbook-token-type",
+  const [coinType, setCoinType] = useLocalStorage(
+    ORDERBOOK_COIN_TYPE_KEY,
     "ETH"
   );
   return (
@@ -38,10 +41,10 @@ const Option: React.FC<{
         "hover:oui-bg-base-6",
         "oui-rounded-[3px]",
         "oui-transition-all",
-        tokenType === item ? "oui-bg-base-5" : undefined
+        coinType === item ? "oui-bg-base-5" : undefined
       )}
       onClick={(e) => {
-        setTokenType(item);
+        setCoinType(item);
         onClick?.(e);
       }}
     >
@@ -50,7 +53,7 @@ const Option: React.FC<{
         className="oui-transition-all oui-w-1 oui-h-1 oui-rounded-full"
         style={{
           backgroundImage:
-            tokenType === item
+            coinType === item
               ? `linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)`
               : "none",
         }}
@@ -63,7 +66,8 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
   const { showTotal } = useOrderBookContext();
   const { t } = useTranslation();
   const [popoverOpen, setOpen] = React.useState<boolean>(false);
-  const [tokenType] = useLocalStorage<string>("orderbook-token-type", "ETH");
+  const [coinType] = useLocalStorage<string>(ORDERBOOK_COIN_TYPE_KEY, "ETH");
+  const TriggerIcon = popoverOpen ? CaretUpIcon : CaretDownIcon;
   return (
     <Flex pl={3} justify={"between"} className="oui-py-[6px]">
       <Flex
@@ -122,19 +126,12 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
               className="oui-transition-all oui-cursor-pointer oui-select-none oui-text-base-contrast-36 hover:oui-text-base-contrast"
             >
               <Title justifyEnd id="oui-order-book-header-total-base">
-                {`${t("common.total")}(${tokenType})`}
+                {`${t("common.total")}(${coinType})`}
               </Title>
-              {popoverOpen ? (
-                <CaretUpIcon
-                  color="inherit"
-                  className="oui-text-3xs oui-w-4 oui-h-4"
-                />
-              ) : (
-                <CaretDownIcon
-                  color="inherit"
-                  className="oui-text-3xs oui-w-4 oui-h-4"
-                />
-              )}
+              <TriggerIcon
+                color="inherit"
+                className="oui-text-3xs oui-w-4 oui-h-4"
+              />
             </Flex>
           </Popover>
         </Box>
