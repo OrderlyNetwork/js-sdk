@@ -12,7 +12,7 @@ import {
   TradingRewardsIcon,
 } from "../components/icons";
 import { useTranslation } from "@orderly.network/i18n";
-
+import { CustomProductNav } from "../components/customProductNav/indx";
 export type OrderlyConfig = {
   orderlyAppProvider: {
     appIcons: AppLogos;
@@ -36,6 +36,9 @@ export const useOrderlyConfig = () => {
     return {
       scaffold: {
         mainNavProps: {
+          // leading: <CustomProductNav />,
+          leading: null,
+          trailing: null,
           mainMenus: [
             { name: t("common.trading"), href: "/" },
             { name: t("common.portfolio"), href: "/portfolio" },

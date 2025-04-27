@@ -1,6 +1,5 @@
-import { FC, PropsWithChildren, useMemo } from "react";
+import { FC, PropsWithChildren, ReactNode, useMemo } from "react";
 import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
-import { ProductsMenu, ProductsProps } from "./products";
 import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
 import { AccountSummaryWidget } from "../accountSummary";
@@ -19,8 +18,9 @@ import { LanguageSwitcherWidget } from "../languageSwitcher";
 export type MainNavProps = {
   className?: string;
   logo: LogoProps;
-  products: ProductsProps;
   mainMenus: MainNavItemsProps;
+  leading?: ReactNode;
+  trailing?: ReactNode;
   wrongNetwork: boolean;
   isConnected: boolean;
   campaigns?: CampaignProps;
@@ -40,7 +40,7 @@ export type MainNavProps = {
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
-  const { className, logo, products, classNames, campaigns, campaignPosition } =
+  const { className, logo, classNames, campaigns, campaignPosition } =
     props;
 
   const showCampaignButton =
@@ -86,12 +86,12 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
         )}
       >
         <MainLogo {...logo} />
-        <ProductsMenu {...products} className={classNames?.products} />
-        {/* <MainNavItems {...props.mainMenus} classNames={classNames?.mainNav} /> */}
+        {props.leading}
         <MainNavMenusExtension
           {...props.mainMenus}
           classNames={classNames?.mainNav}
         />
+        {props.trailing}
       </Flex>
       {children}
 
