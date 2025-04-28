@@ -241,6 +241,9 @@ export function useWallet() {
     if (walletType === WalletType.SOL) {
       return disconnectSOL();
     }
+    if (walletType === WalletType.ABSTRACT) {
+      return disconnectAbstract();
+    }
   };
 
   const setNullWalletStatus = () => {

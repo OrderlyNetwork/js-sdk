@@ -41,18 +41,18 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   };
 
   const isConnected = useMemo(() => {
-    return !!client;
-  }, [client]);
+    return !!(client && connector);
+  }, [client, connector]);
 
   const connectedChain = useMemo(() => {
-    if (!client) {
+    if (!client || !connector) {
       return null;
     }
     return {
       id: client.chain.id,
       namespace: ChainNamespace.evm,
     };
-  }, [client]);
+  }, [client, connector]);
 
   const value = useMemo(
     () => ({
@@ -67,7 +67,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
 
   useEffect(() => {
     console.log("xxx client", client);
-    if (!client) {
+    if (!client || !connector) {
       setWallet(null);
       return;
     }
