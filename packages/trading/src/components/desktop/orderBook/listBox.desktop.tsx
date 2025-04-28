@@ -12,6 +12,7 @@ import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookCellType } from "../../base/orderBook/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { useTranslation } from "@orderly.network/i18n";
+
 interface DesktopListBoxProps {
   type: OrderBookCellType;
   data: number[][];
@@ -19,7 +20,7 @@ interface DesktopListBoxProps {
 }
 
 export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
-  const { data, type } = props;
+  const { data, type, countQty } = props;
   const { symbolInfo, depth } = useOrderBookContext();
 
   const findMaxItem = useCallback(() => {
@@ -54,6 +55,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
   const maxQty = useMemo(() => {
     return data.reduce((a, b) => Math.max(a, b[1]), 0);
   }, [data]);
+
   const [hoverIndex, setHoverIndex] = useState<number>(-1);
 
   return (
@@ -64,7 +66,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
             key={index}
             index={index}
             item={item}
-            countQty={props.countQty}
+            countQty={countQty}
             setHoverIndex={setHoverIndex}
             hoverIndex={hoverIndex}
             type={type}
@@ -103,7 +105,7 @@ const Tip: FC<{
     maxQty,
     hoverIndex,
     priceDp,
-
+    countQty,
     symbolInfo,
   } = props;
 
@@ -149,10 +151,11 @@ const Tip: FC<{
           : totalInfo.sumQtyAmount / totalInfo.sumQty,
     };
   };
-  let hintInfo = calcHintInfo(item);
-  if (hintInfo.avgPrice === 0) {
-    hintInfo = calcHintInfo(props.findMaxItem());
-  }
+
+  const hintInfo = useMemo(() => {
+    const info = calcHintInfo(item);
+    return info.avgPrice === 0 ? calcHintInfo(props.findMaxItem()) : info;
+  }, [item, props]);
 
   return (
     <TooltipRoot open={open} onOpenChange={setOpen}>
@@ -162,13 +165,15 @@ const Tip: FC<{
           price={item[0]}
           quantity={item[1]}
           accumulated={item[2]}
-          count={props.countQty}
-          type={props.type}
+          count={countQty}
+          type={type}
           accumulatedAmount={item[3]}
           maxQty={maxQty}
           isHover={isHover}
           currentHover={hoverIndex === index}
           symbolInfo={symbolInfo}
+          base={base}
+          quote={quote}
           onMouseEnter={() => {
             setHoverIndex(index);
             setOpen(true);
@@ -224,7 +229,6 @@ const Row: FC<{ title: string; content: number; contentDp: number }> = (
   props
 ) => {
   const { title, content, contentDp } = props;
-
   return (
     <div className="oui-flex oui-flex-row oui-justify-between oui-gap-4">
       <div className="oui-text-base-contrast-36">{title}</div>
