@@ -180,20 +180,20 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
 
   const walletChainTypeConfig = useMemo(() => {
-    const chainTypeObj:WalletChainTypeConfig = {
+    const chainTypeObj: WalletChainTypeConfig = {
       hasEvm: false,
       hasSol: false,
       hasAbstract: false,
     };
     initChains.forEach((chain) => {
-      if (SolanaChains.has(chain.id)) { 
+      if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
       } else if (AbstractChains.has(chain.id)) {
         chainTypeObj.hasAbstract = true;
       } else {
         chainTypeObj.hasEvm = true;
       }
-    }); 
+    });
     return chainTypeObj;
   }, [initChains]);
 
@@ -279,7 +279,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     );
   }
 
-
   const getChainsByNetwork = (network: "mainnet" | "testnet"): Chain[] => {
     return network === "mainnet" ? mainnetChains : testnetChains;
   };
@@ -338,20 +337,17 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   return (
     <WalletConnectorPrivyContext.Provider value={value}>
       <TooltipProvider delayDuration={300}>
-        <PrivyWallet
-          privyConfig={props.privyConfig}
-          initChains={initChains}
-        >
-          <WagmiWallet
-            wagmiConfig={props.wagmiConfig}
-            initChains={initChains}
-          >
-            <SolanaWallet solanaConfig={props.solanaConfig}>
-              <AbstractWallet>
+        <PrivyWallet privyConfig={props.privyConfig} initChains={initChains}>
+          <AbstractWallet>
+            <WagmiWallet
+              wagmiConfig={props.wagmiConfig}
+              initChains={initChains}
+            >
+              <SolanaWallet solanaConfig={props.solanaConfig}>
                 <Main>{props.children}</Main>
-              </AbstractWallet>
-            </SolanaWallet>
-          </WagmiWallet>
+              </SolanaWallet>
+            </WagmiWallet>
+          </AbstractWallet>
         </PrivyWallet>
       </TooltipProvider>
     </WalletConnectorPrivyContext.Provider>

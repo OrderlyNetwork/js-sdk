@@ -10,6 +10,7 @@ import { ConnectedChain, WalletState } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useAccount } from "wagmi";
+import { windowGuard } from "@orderly.network/utils";
 interface AbstractWalletContextValue {
   connect: () => void;
   isConnected: boolean;
@@ -29,6 +30,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   const { data: client } = useAbstractClient();
   const { connector } = useAccount();
   const { address, status } = useGlobalWalletSignerAccount();
+
 
   const connect = () => {
     return login();
@@ -92,6 +94,17 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       setWallet(tempWallet as unknown as WalletState);
     });
   }, [client, connectedChain, connector, address]);
+
+  useEffect(() => {
+    windowGuard(() => {
+      const connection = localStorage.getItem(
+        "privy-caw:cm04asygd041fmry9zmcyn5o5:connection"
+      );
+      if (connection) {
+        login();
+      }
+    });
+  }, []);
   return (
     <AbstractWalletContext.Provider value={value}>
       {props.children}

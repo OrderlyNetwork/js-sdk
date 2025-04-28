@@ -172,7 +172,6 @@ export function useChains(
     // TODO need remove this code,just for test abstract chain
     // @ts-ignore
     let tempTestChainInfos = [...testChainInfos, AbstractTestnetChainInfo];
-    console.log('testnettokenchainsres', testTokenChainsRes)
     let tempTestTokenChainsRes= testTokenChainsRes?.map((item)=>({
       ...item,
       chain_details: [...item.chain_details, AbstractTestnetTokenInfo]
