@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useRef, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { DesktopBids } from "./bids.desktop";
 import { DesktopAsks } from "./asks.desktop";
 import { DesktopMarkPrice } from "./markPrice.desktop";
@@ -6,7 +8,10 @@ import { DesktopHeader } from "./header.desktop";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
 import { cn, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
-import { OrderBookProvider } from "../../base/orderBook/orderContext";
+import {
+  ORDERBOOK_COIN_TYPE_KEY,
+  OrderBookProvider,
+} from "../../base/orderBook/orderContext";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -32,22 +37,32 @@ export interface DesktopOrderBookProps {
   symbolInfo: BasicSymbolInfo;
 }
 
+const rangeInfo = [
+  { left: 370, right: 600 },
+  { left: 740, right: 800 },
+];
+
 export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
   const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
-  // const onModeChange = useCallback((mode: QtyMode) => {}, []);
 
-  //
-  const divRef = useRef(null);
+  const divRef = useRef<HTMLDivElement>(null);
+
   const [showTotal, setShowTotal] = useState(false);
 
-  const rangeInfo = [
-    { left: 370, right: 600 },
-    { left: 740, right: 800 },
-  ];
+  const [coinType, setCoinType] = useLocalStorage(
+    ORDERBOOK_COIN_TYPE_KEY,
+    base
+  );
+
+  useEffect(() => {
+    if (coinType !== quote && base) {
+      setCoinType(base);
+    }
+  }, [base, quote]);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         const { inlineSize: width } = entry.borderBoxSize[0];
         const count = rangeInfo.reduce(
           (a, b) => a + (width >= b.left && width < b.right ? 1 : 0),
@@ -69,8 +84,6 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       }
     };
   }, []);
-
-  ///
 
   return (
     <OrderBookProvider
