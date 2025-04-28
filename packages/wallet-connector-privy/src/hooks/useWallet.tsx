@@ -24,6 +24,7 @@ import {
 } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
+import { getChainType } from "../util";
 
 export function useWallet() {
   const { track } = useTrack();
@@ -63,13 +64,13 @@ export function useWallet() {
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
   const { storageChain, setStorageChain } = useStorageChain();
-  const { setOpenConnectDrawer, setTargetNamespace } =
+  const { setOpenConnectDrawer, targetWalletType, setTargetWalletType } =
     useWalletConnectorPrivy();
 
   const isManual = useRef<boolean>(false);
 
   const connect = (params: ConnectProps) => {
-    setTargetNamespace(undefined);
+    setTargetWalletType(undefined);
     try {
       if (params.walletType === WalletConnectType.EVM) {
         setConnectorKey(WalletConnectType.EVM);
@@ -104,16 +105,10 @@ export function useWallet() {
   const setChain = async (chain: {
     chainId: number | string;
   }): Promise<boolean | undefined> => {
-    let tempNamespace: ChainNamespace = ChainNamespace.evm;
-    if (
-      Array.from(SolanaChains.values()).includes(
-        parseInt(chain.chainId as string)
-      )
-    ) {
-      tempNamespace = ChainNamespace.solana;
-    }
+    const chainType = getChainType(parseInt(chain.chainId as string));
+
     if (isPrivy) {
-      if (tempNamespace === ChainNamespace.evm) {
+      if (chainType === WalletType.EVM) {
         if (walletChainType === WalletChainTypeEnum.onlySOL) {
           return Promise.reject(new Error("No evm wallet found"));
         }
@@ -136,7 +131,7 @@ export function useWallet() {
           });
       }
 
-      if (tempNamespace === ChainNamespace.solana) {
+      if (chainType === WalletType.SOL) {
         isManual.current = true;
         if (walletChainType === WalletChainTypeEnum.onlyEVM) {
           return Promise.reject(new Error("only evm wallet"));
@@ -146,52 +141,46 @@ export function useWallet() {
           return Promise.resolve(true);
         } else {
           setOpenConnectDrawer(true);
-          setTargetNamespace(ChainNamespace.solana);
+          setTargetWalletType(WalletType.SOL);
           return Promise.reject(new Error("No solana wallet found"));
         }
       }
     } else {
-      if (storageChain.namespace === ChainNamespace.evm) {
-        // if current namespace is evm, switch chain
-        if (tempNamespace === ChainNamespace.evm) {
-          if (AbstractChains.has(parseInt(chain.chainId as string))) {
-            if (isConnectedAbstract && walletAbstract) {
-              setStorageChain(parseInt(chain.chainId as string));
-              return Promise.resolve(true);
-            } else {
-              setOpenConnectDrawer(true);
-              // TODO need send abstract type
-              setTargetNamespace(ChainNamespace.evm);
-              return Promise.reject(new Error("No abstract wallet found"));
-            }
-          }
-
+      // if current namespace is evm, switch chain
+      if (chainType === WalletType.EVM) {
+        if (isConnectedEVM && walletEVM) {
           await setChainEvm(parseInt(chain.chainId as string));
           setStorageChain(parseInt(chain.chainId as string));
           track(EnumTrackerKeys.switchNetworkSuccess, {
             from_chain: storageChain?.chainId,
             to_chain: chain.chainId,
           });
+        } else {
+          setOpenConnectDrawer(true);
+          setTargetWalletType(WalletType.EVM);
           return Promise.resolve(true);
         }
-        if (tempNamespace === ChainNamespace.solana) {
-          if (isConnectedSOL && walletSOL) {
-            setStorageChain(parseInt(chain.chainId as string));
-          } else {
-            setOpenConnectDrawer(true);
-            setTargetNamespace(ChainNamespace.solana);
-            return Promise.resolve(true);
-          }
+
+        return Promise.resolve(true);
+      }
+      if (chainType === WalletType.SOL) {
+        if (isConnectedSOL && walletSOL) {
+          setStorageChain(parseInt(chain.chainId as string));
+        } else {
+          setOpenConnectDrawer(true);
+          setTargetWalletType(WalletType.SOL);
+          return Promise.resolve(true);
         }
       }
-      if (storageChain.namespace === ChainNamespace.solana) {
-        if (tempNamespace === ChainNamespace.evm) {
-          if (isConnectedEVM && walletEVM) {
-            setStorageChain(parseInt(chain.chainId as string));
-          } else {
-            setOpenConnectDrawer(true);
-            setTargetNamespace(ChainNamespace.evm);
-          }
+      if (chainType === WalletType.ABSTRACT) {
+        if (isConnectedAbstract && walletAbstract) {
+          setStorageChain(parseInt(chain.chainId as string));
+          return Promise.resolve(true);
+        } else {
+          setOpenConnectDrawer(true);
+          // TODO need send abstract type
+          setTargetWalletType(WalletType.ABSTRACT);
+          return Promise.reject(new Error("No abstract wallet found"));
         }
       }
     }
@@ -248,17 +237,15 @@ export function useWallet() {
   };
 
   const disconnect = async (walletType: WalletConnectType) => {
-    if (walletType === WalletConnectType.PRIVY) {
-      return await disconnectPrivy();
-    }
-    if (walletType === WalletConnectType.EVM) {
-      return disconnectEVM();
-    }
-    if (walletType === WalletConnectType.SOL) {
-      return disconnectSOL();
-    }
-    if (walletType === WalletConnectType.ABSTRACT) {
-      return disconnectAbstract();
+    switch (walletType) {
+      case WalletConnectType.PRIVY:
+        return await disconnectPrivy();
+      case WalletConnectType.EVM:
+        return disconnectEVM();
+      case WalletConnectType.SOL:
+        return disconnectSOL();
+      case WalletConnectType.ABSTRACT:
+        return disconnectAbstract();
     }
   };
 

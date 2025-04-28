@@ -21,14 +21,13 @@ export function AddSolanaWallet() {
   const onToggleVisibility = () => {
     setVisible(!visible);
   };
-  const { targetNamespace } = useWalletConnectorPrivy();
-  // TODO: need get value from useWalletConnectorPrivy
+  const { targetWalletType } = useWalletConnectorPrivy();
   const [open, setOpen] = useState(false);
-  console.log("-- open and targetNamespace", open, targetNamespace);
+  console.log("-- open and targetNamespace", open, targetWalletType);
 
   useEffect(() => {
     let timer = 0;
-    if (targetNamespace === ChainNamespace.solana) {
+    if (targetWalletType === WalletType.SOL) {
       timer = window.setTimeout(() => {
         setOpen(true);
       }, 200);
@@ -38,7 +37,7 @@ export function AddSolanaWallet() {
         window.clearTimeout(timer);
       }
     };
-  }, [targetNamespace]);
+  }, [targetWalletType]);
   useEffect(() => {
     if (open === false) {
       return;

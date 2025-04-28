@@ -12,7 +12,7 @@ import { useWallet } from "./hooks/useWallet";
 
 export function Main(props: PropsWithChildren) {
   const { wallet, connectedChain, setChain, namespace } = useWallet();
-  const { openConnectDrawer, setOpenConnectDrawer, setTargetNamespace } =
+  const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
     useWalletConnectorPrivy();
 
   const connect = (props: any): Promise<WalletState[]> => {
@@ -22,7 +22,7 @@ export function Main(props: PropsWithChildren) {
       return Promise.resolve([]);
     }
 
-    setTargetNamespace(undefined);
+    setTargetWalletType(undefined);
     return new Promise((resolve, reject) => {
       setOpenConnectDrawer(true);
       resolve([]);

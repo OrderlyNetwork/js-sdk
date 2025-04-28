@@ -30,6 +30,7 @@ import {
   ConnectorWalletType,
   InitAbstract,
   WalletChainTypeConfig,
+  WalletType,
 } from "./types";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { Chains } from "@orderly.network/hooks";
@@ -74,8 +75,8 @@ interface WalletConnectorPrivyContextType {
   getChainsByNetwork: (network: "mainnet" | "testnet") => Chain[];
   openConnectDrawer: boolean;
   setOpenConnectDrawer: (open: boolean) => void;
-  targetNamespace: ChainNamespace | undefined;
-  setTargetNamespace: (namespace: ChainNamespace | undefined) => void;
+  targetWalletType: WalletType | undefined;
+  setTargetWalletType: (walletType: WalletType | undefined) => void;
   network: Network;
   setNetwork: (network: Network) => void;
   solanaInfo: {
@@ -104,8 +105,8 @@ const WalletConnectorPrivyContext =
     getChainsByNetwork: () => [],
     openConnectDrawer: false,
     setOpenConnectDrawer: () => {},
-    targetNamespace: undefined,
-    setTargetNamespace: () => {},
+    targetWalletType: undefined,
+    setTargetWalletType: () => {},
     network: Network.mainnet,
     setNetwork: () => {},
     solanaInfo: null,
@@ -149,8 +150,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
 
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
-  const [targetNamespace, setTargetNamespace] = useState<
-    ChainNamespace | undefined
+  const [targetWalletType, setTargetWalletType] = useState<
+    WalletType | undefined
   >();
   const [solanaInfo, setSolanaInfo] = useState<{
     rpcUrl: string | null;
@@ -291,8 +292,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       getChainsByNetwork,
       openConnectDrawer,
       setOpenConnectDrawer,
-      targetNamespace,
-      setTargetNamespace,
+      targetWalletType,
+      setTargetWalletType,
       network,
       setNetwork,
       solanaInfo,
@@ -309,8 +310,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       getChainsByNetwork,
       openConnectDrawer,
       setOpenConnectDrawer,
-      targetNamespace,
-      setTargetNamespace,
+      targetWalletType,
+      setTargetWalletType,
       network,
       setNetwork,
       solanaInfo,

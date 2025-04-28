@@ -18,7 +18,7 @@ import { DisconnectIcon, MoreIcon } from "./icons";
 import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { useWallet } from "../hooks/useWallet";
-import { WalletType } from "../types";
+import { WalletConnectType, WalletType } from "../types";
 import { useTranslation } from "@orderly.network/i18n";
 import { PrivyConnectorImagePath } from "../util";
 interface WalletCardProps {
@@ -125,8 +125,23 @@ function NonPrivyWalletHandleOption({
   walletType: WalletType;
 }) {
   const { disconnect } = useWallet();
+  const disconnectWallet = () => {
+    let walletConnectType: WalletConnectType = WalletConnectType.EVM;
+    switch (walletType) {
+      case WalletType.EVM:
+        walletConnectType = WalletConnectType.EVM;
+        break;
+      case WalletType.SOL:
+        walletConnectType = WalletConnectType.SOL;
+        break;
+      case WalletType.ABSTRACT:
+        walletConnectType = WalletConnectType.ABSTRACT;
+        break;
+    }
+    disconnect(walletConnectType);
+  }
   return (
-    <div onClick={() => disconnect(walletType)}>
+    <div onClick={() => disconnectWallet()}>
       <DisconnectIcon className="oui-text-base-contrast-80 oui-cursor-pointer hover:oui-text-base-contrast oui-w-4 oui-h-4" />
     </div>
   );

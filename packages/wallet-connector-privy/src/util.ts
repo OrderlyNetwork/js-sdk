@@ -1,3 +1,6 @@
+import { AbstractChains, SolanaChains } from "@orderly.network/types";
+import { WalletType } from "./types";
+
 export const OrderlyOSS = 'https://oss.orderly.network';
 export const PrivyConnectorImagePath =`${OrderlyOSS}/static/sdk/privy`; 
 export const EVMWalletImage = `${OrderlyOSS}/static/sdk/evm_wallet`
@@ -20,4 +23,14 @@ export const getWalletIcon = (type: string): string | undefined => {
 
 
   return WALLET_ICONS[type.toLowerCase()]
+};
+
+export const getChainType = (chainId: number): WalletType => {
+  if (AbstractChains.has(chainId)) {
+    return WalletType.ABSTRACT;
+  }
+  if (SolanaChains.has(chainId)) {
+    return WalletType.SOL;
+  }
+  return WalletType.EVM;
 };

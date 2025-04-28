@@ -5,7 +5,6 @@ import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
 import { useWallet } from "../../hooks/useWallet";
 import { EVMChainPopover } from "../walletCard";
 import { MoreIcon } from "../icons";
-import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
 import { WalletConnectType, WalletType } from "../../types";
 import { RenderWalletIcon } from "../common";
@@ -17,12 +16,11 @@ export function AddEvmWallet() {
   const { connect } = useWallet();
   const [open, setOpen] = useState(false);
   const { connectors } = useWagmiWallet();
-  const { targetNamespace } = useWalletConnectorPrivy();
-  console.log("--connectors", connectors);
+  const { targetWalletType } = useWalletConnectorPrivy();
 
   useEffect(() => {
     let timer = 0;
-    if (targetNamespace === ChainNamespace.evm) {
+    if (targetWalletType === WalletType.EVM) {
       timer = window.setTimeout(() => {
         setOpen(true);
       }, 200);
@@ -32,7 +30,7 @@ export function AddEvmWallet() {
         window.clearTimeout(timer);
       }
     };
-  }, [targetNamespace]);
+  }, [targetWalletType]);
   useEffect(() => {
     if (open === false) {
       return;
