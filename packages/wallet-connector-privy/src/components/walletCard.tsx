@@ -20,14 +20,36 @@ import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { useWallet } from "../hooks/useWallet";
 import { WalletType } from "../types";
 import { useTranslation } from "@orderly.network/i18n";
+import { PrivyConnectorImagePath } from "../util";
 interface WalletCardProps {
   type: WalletType;
   address: string;
   isActive: boolean;
   isPrivy?: boolean;
-  isBoth?: boolean;
+  isMulti?: boolean;
   onActiveChange: (active: boolean) => void;
 }
+
+const getCardBgClassName = (type: WalletType = WalletType.EVM) => {
+  const cardBgColorMap: { [key in WalletType]: string } = {
+    [WalletType.EVM]: "oui-bg-[#283BEE]",
+    [WalletType.ABSTRACT]: "oui-bg-[#00A858]",
+    [WalletType.SOL]: "oui-bg-[#630EAD]",
+    [WalletType.PRIVY]: "oui-bg-transparent",
+  };
+  return cardBgColorMap[type];
+};
+
+const getCardActiveClassName = (isActive: boolean, isMulti: boolean, type: WalletType = WalletType.EVM) => {
+  const cardActiveColorMap: { [key in WalletType]: string } = {
+    [WalletType.EVM]: "oui-border-[2px] oui-border-[#B9D1FF]",
+    [WalletType.ABSTRACT]: "oui-border-[2px] oui-border-[#B9D1FF]",
+    [WalletType.SOL]: "oui-border-[2px] oui-border-[#faedff]",
+    [WalletType.PRIVY]: "oui-border-0",
+  };
+  return isActive && isMulti && cardActiveColorMap[type]
+};
+
 export function WalletCard(props: WalletCardProps) {
   const { t } = useTranslation();
   const copyAddress = async (address: string) => {
@@ -39,15 +61,8 @@ export function WalletCard(props: WalletCardProps) {
     <div
       className={cn(
         "oui-rounded-2xl oui-relative oui-p-4 oui-h-[110px]  oui-overflow-hidden",
-        props.type === WalletType.EVM ? "oui-bg-[#283BEE]" : "oui-bg-[#630EAD]",
-        props.isActive &&
-          props.type === WalletType.SOL &&
-          props.isBoth &&
-          "oui-border-[2px] oui-border-[#faedff]",
-        props.isActive &&
-          props.type === WalletType.EVM &&
-          props.isBoth &&
-          "oui-border-[2px] oui-border-[#B9D1FF]"
+        getCardBgClassName(props.type),
+        getCardActiveClassName(props.isActive, props.isMulti || false, props.type),
       )}
     >
       <div
@@ -91,44 +106,9 @@ export function WalletCard(props: WalletCardProps) {
         </div>
 
         <div className="oui-flex oui-items-center oui-justify-between">
-          {props.type === WalletType.EVM ? (
-            <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-              <div className="oui-flex oui-items-center oui-justify-center oui-relative">
-                <div className="oui-flex oui-items-center oui-justify-center oui-h-[18px] ">
-                  <img
-                    src="https://oss.orderly.network/static/sdk/chains.png"
-                    className="oui-h-[18px] oui-w-[49px] oui-relative oui-z-0"
-                  />
-                </div>
-                <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-relative oui-left-[-9px]">
-                  <div className="oui-rounded-full oui-bg-[#282e3a] oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center">
-                    <EVMChainPopover>
-                      <MoreIcon
-                        className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-h-3 oui-w-3 oui-relative oui-z-10"
-                        style={{ zIndex: 1 }}
-                      />
-                    </EVMChainPopover>
-                  </div>
-                  <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">
-                    EVM
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="oui-flex oui-items-center oui-justify-start oui-gap-1">
-              <div className="">
-                <img
-                  src="https://oss.orderly.network/static/sdk/solana-logo.png"
-                  className="oui-w-4"
-                />
-              </div>
-              <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">
-                Solana
-              </div>
-            </div>
-          )}
-          {props.isBoth && (
+          <RenderWalletType walletType={props.type} />
+
+          {props.isMulti && (
             <div>
               <Checkbox
                 checked={props.isActive}
@@ -232,3 +212,62 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
     </Popover>
   );
 }
+
+const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
+  if (walletType === WalletType.SOL) {
+    return (
+      <div className="oui-flex oui-items-center oui-justify-start oui-gap-1">
+        <div className="">
+          <img
+            src="https://oss.orderly.network/static/sdk/solana-logo.png"
+            className="oui-w-4"
+          />
+        </div>
+        <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">
+          Solana
+        </div>
+      </div>
+    );
+  }
+  if (walletType === WalletType.ABSTRACT) {
+    return (
+      <div className="oui-flex oui-items-center oui-justify-start oui-gap-[6px]">
+        <img
+          src={`${PrivyConnectorImagePath}/abstract-transparent.png`}
+          className="oui-w-4"
+        />
+        <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">
+          Abstract
+        </div>
+      </div>
+    );
+  }
+  if (walletType === WalletType.EVM) {
+    return (
+      <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
+        <div className="oui-flex oui-items-center oui-justify-center oui-relative">
+          <div className="oui-flex oui-items-center oui-justify-center oui-h-[18px] ">
+            <img
+              src="https://oss.orderly.network/static/sdk/chains.png"
+              className="oui-h-[18px] oui-w-[49px] oui-relative oui-z-0"
+            />
+          </div>
+          <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-relative oui-left-[-9px]">
+            <div className="oui-rounded-full oui-bg-[#282e3a] oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center">
+              <EVMChainPopover>
+                <MoreIcon
+                  className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-h-3 oui-w-3 oui-relative oui-z-10"
+                  style={{ zIndex: 1 }}
+                />
+              </EVMChainPopover>
+            </div>
+            <div className="oui-text-base-contrast oui-text-2xs oui-font-semibold">
+              EVM
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return <></>;
+};

@@ -219,7 +219,7 @@ export function RenderPrivyWallet() {
                   switchWallet(ChainNamespace.evm);
                 }}
                 isPrivy={true}
-                isBoth={true}
+                isMulti={true}
               />
               <WalletCard
                 type={WalletType.SOL}
@@ -229,7 +229,7 @@ export function RenderPrivyWallet() {
                   switchWallet(ChainNamespace.solana);
                 }}
                 isPrivy={true}
-                isBoth={true}
+                isMulti={true}
               />
             </>
           )}
@@ -242,7 +242,7 @@ export function RenderPrivyWallet() {
                 switchWallet(ChainNamespace.evm);
               }}
               isPrivy={true}
-              isBoth={false}
+              isMulti={false}
             />
           )}
           {walletChainType === WalletChainTypeEnum.onlySOL && (
@@ -254,7 +254,7 @@ export function RenderPrivyWallet() {
                 switchWallet(ChainNamespace.solana);
               }}
               isPrivy={true}
-              isBoth={false}
+              isMulti={false}
             />
           )}
         </div>
@@ -269,7 +269,7 @@ export function RenderPrivyWallet() {
               switchWallet(ChainNamespace.evm);
             }}
             isPrivy={true}
-            isBoth={false}
+            isMulti={false}
           />
           {walletChainType === WalletChainTypeEnum.EVM_SOL && (
             <>
@@ -291,7 +291,7 @@ export function RenderPrivyWallet() {
               switchWallet(ChainNamespace.solana);
             }}
             isPrivy={true}
-            isBoth={false}
+            isMulti={false}
           />
           {walletChainType === WalletChainTypeEnum.EVM_SOL && (
             <>

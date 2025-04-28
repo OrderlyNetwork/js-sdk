@@ -103,7 +103,7 @@ export function RenderNonPrivyWallet() {
               switchWallet(wallet.type);
             }}
             isPrivy={false}
-            isBoth={walletList.length > 1}
+            isMulti={walletList.length > 1}
           />
         ))}
       </div>

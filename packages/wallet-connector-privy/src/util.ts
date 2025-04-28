@@ -1,4 +1,6 @@
-import { Connector } from "wagmi";
+export const OrderlyOSS = 'https://oss.orderly.network';
+export const PrivyConnectorImagePath =`${OrderlyOSS}/static/sdk/privy`; 
+export const EVMWalletImage = `${OrderlyOSS}/static/sdk/evm_wallet`
 
 // evm wallets icon map
 const WALLET_ICONS: Record<string, string> = {
