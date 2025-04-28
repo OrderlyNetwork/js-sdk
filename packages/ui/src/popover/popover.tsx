@@ -69,7 +69,6 @@ const Popover: React.FC<React.PropsWithChildren<PopoverProps>> = (props) => {
       <PopoverTrigger asChild>{props.children}</PopoverTrigger>
       <PopoverContent {...contentProps}>
         {content}
-
         {arrow && (
           <PopoverPrimitive.Arrow
             className={"oui-fill-base-8"}
