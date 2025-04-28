@@ -21,13 +21,14 @@ interface DesktopHeaderProps {
 
 const Option: React.FC<{
   item: string;
-  onClick?: React.MouseEventHandler<HTMLElement>;
+  base: string;
+  onClick: React.MouseEventHandler<HTMLElement>;
 }> = (props) => {
-  const { item, onClick } = props;
+  const { item, base, onClick } = props;
   const { t } = useTranslation();
   const [coinType, setCoinType] = useLocalStorage(
     ORDERBOOK_COIN_TYPE_KEY,
-    "ETH"
+    base
   );
   return (
     <Flex
@@ -41,32 +42,35 @@ const Option: React.FC<{
         "hover:oui-bg-base-6",
         "oui-rounded-[3px]",
         "oui-transition-all",
-        coinType === item ? "oui-bg-base-5" : undefined
+        coinType === item && "oui-bg-base-5"
       )}
       onClick={(e) => {
         setCoinType(item);
-        onClick?.(e);
+        onClick(e);
       }}
     >
       {t("common.total")}({item})
       <div
-        className="oui-transition-all oui-w-1 oui-h-1 oui-rounded-full"
-        style={{
-          backgroundImage:
-            coinType === item
-              ? `linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)`
-              : "none",
-        }}
+        className={cn(
+          "oui-transition-all",
+          "oui-w-1",
+          "oui-h-1",
+          "oui-rounded-full",
+          "oui-bg-gradient-to-r",
+          coinType === item &&
+            "oui-from-[rgb(var(--oui-gradient-brand-start))] oui-to-[rgb(var(--oui-gradient-brand-end))]"
+        )}
       />
     </Flex>
   );
 };
 
 export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
+  const { base, quote } = props;
   const { showTotal } = useOrderBookContext();
   const { t } = useTranslation();
   const [popoverOpen, setOpen] = React.useState<boolean>(false);
-  const [coinType] = useLocalStorage<string>(ORDERBOOK_COIN_TYPE_KEY, "ETH");
+  const [coinType] = useLocalStorage(ORDERBOOK_COIN_TYPE_KEY, base);
   const TriggerIcon = popoverOpen ? CaretUpIcon : CaretDownIcon;
   return (
     <Flex pl={3} justify={"between"} className="oui-py-[6px]">
@@ -79,7 +83,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
             id="oui-order-book-header-price"
             className="oui-text-base-contrast-36"
           >
-            {`${t("common.price")}(${props.quote})`}
+            {`${t("common.price")}(${quote})`}
           </Title>
         </Box>
         <Box width={"100%"}>
@@ -88,7 +92,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
             id="oui-order-book-header-qty"
             className="oui-text-base-contrast-36"
           >
-            {`${t("common.qty")}(${props.base})`}
+            {`${t("common.qty")}(${base})`}
           </Title>
         </Box>
       </Flex>
@@ -108,11 +112,12 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
                 itemAlign="start"
                 className={cn("oui-w-full oui-gap-0.5")}
               >
-                {[props.base, props.quote].map((item) => {
+                {[base, quote].map((item) => {
                   return (
                     <Option
                       key={`type-${item}`}
                       item={item}
+                      base={base}
                       onClick={() => setOpen(false)}
                     />
                   );
@@ -138,7 +143,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
         {showTotal && (
           <Box className="oui-text-base-contrast-36" width={"100%"}>
             <Title id="oui-order-book-header-total-quote" justifyEnd>
-              {`${t("common.total")}(${props.quote})`}
+              {`${t("common.total")}(${quote})`}
             </Title>
           </Box>
         )}

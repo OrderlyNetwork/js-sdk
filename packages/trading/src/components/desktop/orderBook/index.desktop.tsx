@@ -47,22 +47,22 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
 
   const divRef = useRef<HTMLDivElement>(null);
 
+  const [showTotal, setShowTotal] = useState(false);
+
   const [coinType, setCoinType] = useLocalStorage(
     ORDERBOOK_COIN_TYPE_KEY,
-    "ETH"
+    base
   );
 
   useEffect(() => {
-    if (!coinType && base) {
+    if (coinType !== quote && base) {
       setCoinType(base);
     }
-  }, []);
-
-  const [showTotal, setShowTotal] = useState(false);
+  }, [base, quote]);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         const { inlineSize: width } = entry.borderBoxSize[0];
         const count = rangeInfo.reduce(
           (a, b) => a + (width >= b.left && width < b.right ? 1 : 0),
@@ -84,8 +84,6 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       }
     };
   }, []);
-
-  ///
 
   return (
     <OrderBookProvider

@@ -46,7 +46,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
 
   const { base_dp, quote_dp } = symbolInfo;
 
-  const [coinType] = useLocalStorage<string>(ORDERBOOK_COIN_TYPE_KEY, "ETH");
+  const [coinType] = useLocalStorage<string>(ORDERBOOK_COIN_TYPE_KEY, base);
 
   const width = Number.isNaN(price) ? 0 : (accumulated / count) * 100;
 
