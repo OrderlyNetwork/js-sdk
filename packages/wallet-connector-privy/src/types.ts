@@ -3,6 +3,8 @@ import { Adapter, WalletAdapter, WalletAdapterNetwork, WalletError } from "@sola
 import { Connector, CreateConnectorFn, Storage } from "wagmi";
 import { PrivyClientConfig } from "@privy-io/react-auth";
 import { QueryClient } from "@tanstack/react-query";
+import { WalletState } from "@orderly.network/hooks";
+import { ChainNamespace } from "@orderly.network/types";
 export type SolanaInitialProps = PropsWithChildren<{
   network?: WalletAdapterNetwork;
   endPoint?: string;
@@ -22,13 +24,19 @@ export enum Network {
 export enum WalletType {
   EVM = 'EVM',
   SOL = 'SOL',
+  ABSTRACT = 'Abstract',
+}
+
+
+export enum WalletConnectType {
+  EVM = 'EVM',
+  SOL = 'SOL',
   PRIVY = 'privy',
-  // abstract wallet
   ABSTRACT = 'Abstract',
 }
 
 export interface ConnectProps {
-  walletType: WalletType;
+  walletType: WalletConnectType;
   extraType?: string;
   connector?: Connector;
   walletAdapter?: WalletAdapter;
@@ -86,3 +94,10 @@ export enum WalletChainTypeEnum {
   EVM_SOL = 'EVM_SOL',
 }
 export type WalletChainType = WalletChainTypeEnum;
+
+export type IWalletState = WalletState & {
+  chain?: {
+    namespace: ChainNamespace;
+    id: number;
+  };
+}

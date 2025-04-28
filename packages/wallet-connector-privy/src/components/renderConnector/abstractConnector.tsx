@@ -15,7 +15,7 @@ export function AbstractConnectArea({ connect }: { connect: () => void }) {
         >
           <div className="oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center">
             <img
-              className={cn("oui-w-[18px] oui-h-[18px]")}
+              className={cn("oui-w-[12px] oui-h-[12px]")}
               src={`${PrivyConnectorImagePath}/abstract.png`}
               alt="abstract wallet"
             />

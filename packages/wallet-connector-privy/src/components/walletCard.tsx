@@ -35,7 +35,6 @@ const getCardBgClassName = (type: WalletType = WalletType.EVM) => {
     [WalletType.EVM]: "oui-bg-[#283BEE]",
     [WalletType.ABSTRACT]: "oui-bg-[#00A858]",
     [WalletType.SOL]: "oui-bg-[#630EAD]",
-    [WalletType.PRIVY]: "oui-bg-transparent",
   };
   return cardBgColorMap[type];
 };
@@ -45,7 +44,6 @@ const getCardActiveClassName = (isActive: boolean, isMulti: boolean, type: Walle
     [WalletType.EVM]: "oui-border-[2px] oui-border-[#B9D1FF]",
     [WalletType.ABSTRACT]: "oui-border-[2px] oui-border-[#B9D1FF]",
     [WalletType.SOL]: "oui-border-[2px] oui-border-[#faedff]",
-    [WalletType.PRIVY]: "oui-border-0",
   };
   return isActive && isMulti && cardActiveColorMap[type]
 };

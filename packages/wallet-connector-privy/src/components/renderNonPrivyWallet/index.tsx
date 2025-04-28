@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
-import { AbstractChains, ChainNamespace } from "@orderly.network/types";
+import { AbstractChains, ChainNamespace, SolanaChains } from "@orderly.network/types";
 import { WalletType } from "../../types";
 import { WalletCard } from "../walletCard";
 import { useWallet } from "../../hooks/useWallet";
@@ -12,9 +12,14 @@ import { AddEvmWallet } from "./addEvmWallet";
 import { AddSolanaWallet } from "./addSolanaWallet";
 import { AddAbstractWallet } from "./addAbstractWallet";
 
+interface ConnectWallet {
+  type: WalletType;
+  address: string;
+}
+
 export function RenderNonPrivyWallet() {
-  const [walletList, setWalletList] = useState<any[]>([]);
-  const [addWalletList, setAddWalletList] = useState<any[]>([]);
+  const [walletList, setWalletList] = useState<ConnectWallet[]>([]);
+  const [addWalletList, setAddWalletList] = useState<WalletType[]>([]);
   const { storageChain } = useStorageChain();
   const { connectorWalletType, walletChainTypeConfig } =
     useWalletConnectorPrivy();
@@ -26,16 +31,14 @@ export function RenderNonPrivyWallet() {
     useAbstractWallet();
   const { namespace, switchWallet } = useWallet();
 
+  console.log("xxx namespace", namespace, storageChain);
   const isActive = (walletType: WalletType) => {
     if (namespace === ChainNamespace.evm) {
-      if (
-        walletType === WalletType.ABSTRACT &&
-        AbstractChains.has(storageChain.id)
-      ) {
-        return true;
+      if (walletType === WalletType.ABSTRACT) {
+        return AbstractChains.has(storageChain?.chainId);
       }
       if (walletType === WalletType.EVM) {
-        return true;
+        return !AbstractChains.has(storageChain?.chainId);
       }
       return false;
     }

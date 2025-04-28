@@ -1,5 +1,5 @@
 import React from "react";
-import { WalletType } from "../../types";
+import { WalletConnectType, WalletType } from "../../types";
 import { cn } from "@orderly.network/ui";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useWallet } from "../../hooks/useWallet";
@@ -15,7 +15,7 @@ export function RenderConnector() {
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
-    if (params.walletType === WalletType.PRIVY) {
+    if (params.walletType === WalletConnectType.PRIVY) {
       setOpenConnectDrawer(false);
     }
   };
@@ -26,7 +26,7 @@ export function RenderConnector() {
     return (
       <PrivyConnectArea
         connect={(type) =>
-          handleConnect({ walletType: WalletType.PRIVY, extraType: type })
+          handleConnect({ walletType: WalletConnectType.PRIVY, extraType: type })
         }
       />
     );
@@ -41,7 +41,7 @@ export function RenderConnector() {
     return (
       <EVMConnectArea
         connect={(connector) =>
-          handleConnect({ walletType: WalletType.EVM, connector: connector })
+          handleConnect({ walletType: WalletConnectType.EVM, connector: connector })
         }
       />
     );
@@ -58,7 +58,7 @@ export function RenderConnector() {
       <SOLConnectArea
         connect={(walletAdapter) =>
           handleConnect({
-            walletType: WalletType.SOL,
+            walletType: WalletConnectType.SOL,
             walletAdapter: walletAdapter,
           })
         }
@@ -74,7 +74,7 @@ export function RenderConnector() {
     }
     return (
       <AbstractConnectArea
-        connect={() => handleConnect({ walletType: WalletType.ABSTRACT })}
+        connect={() => handleConnect({ walletType: WalletConnectType.ABSTRACT })}
       />
     );
   };

@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/ui";
 import React, { useMemo } from "react";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
-import {  WalletType } from "../types";
+import {  WalletConnectType, WalletType } from "../types";
 import { useWalletConnectorPrivy } from "../provider";
 import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
 import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
@@ -45,10 +45,10 @@ export function ConnectDrawer(props: {
   const [connectorKey] = useLocalStorage(ConnectorKey, "");
 
   const isConnected = useMemo(() => {
-    if (connectorKey === WalletType.PRIVY && isConnectedPrivy) {
+    if (connectorKey === WalletConnectType.PRIVY && isConnectedPrivy) {
       return true;
     }
-    if (connectorKey !== WalletType.PRIVY) {
+    if (connectorKey !== WalletConnectType.PRIVY) {
       if (isConnectedEvm) {
         return true;
       }

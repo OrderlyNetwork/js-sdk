@@ -9,7 +9,7 @@ import {
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { ChainNamespace } from "@orderly.network/types";
-import { WalletType } from "../../types";
+import { WalletConnectType, WalletType } from "../../types";
 import { RenderWalletIcon } from "../common";
 import { useTranslation } from "@orderly.network/i18n";
 
@@ -98,7 +98,7 @@ export function AddSolanaWallet() {
             className="oui-flex oui-items-center oui-justify-start oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
             onClick={() =>
               connect({
-                walletType: WalletType.SOL,
+                walletType: WalletConnectType.SOL,
                 walletAdapter: item.adapter,
               })
             }

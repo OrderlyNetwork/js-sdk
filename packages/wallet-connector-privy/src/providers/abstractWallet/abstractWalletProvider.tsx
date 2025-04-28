@@ -11,12 +11,13 @@ import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useAccount } from "wagmi";
 import { windowGuard } from "@orderly.network/utils";
+import { IWalletState } from "../../types";
 interface AbstractWalletContextValue {
   connect: () => void;
   isConnected: boolean;
   disconnect: () => void;
-  wallet: WalletState | null;
-  connectedChain: ConnectedChain | null;
+  wallet: IWalletState | null;
+  connectedChain: ConnectedChain | undefined;
 }
 
 const AbstractWalletContext = createContext<AbstractWalletContextValue | null>(
@@ -26,7 +27,7 @@ const AbstractWalletContext = createContext<AbstractWalletContextValue | null>(
 export const AbstractWalletProvider = (props: PropsWithChildren) => {
   const { network } = useWalletConnectorPrivy();
   const { login, logout } = useLoginWithAbstract();
-  const [wallet, setWallet] = useState<WalletState | null>(null);
+  const [wallet, setWallet] = useState<IWalletState | null>(null);
   const { data: client } = useAbstractClient();
   const { connector } = useAccount();
   const { address, status } = useGlobalWalletSignerAccount();
@@ -46,7 +47,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
 
   const connectedChain = useMemo(() => {
     if (!client || !connector) {
-      return null;
+      return;
     }
     return {
       id: client.chain.id,
@@ -67,13 +68,13 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
 
   useEffect(() => {
     console.log("xxx client", client);
-    if (!client || !connector) {
+    if (!client || !connector || !address) {
       setWallet(null);
       return;
     }
     connector?.getProvider().then((provider: any) => {
       console.log("xxx abstract wallet in wagmi provider", provider);
-      const tempWallet = {
+      const tempWallet: IWalletState = {
         label: "AGW",
         icon: "",
         provider: provider,
@@ -91,7 +92,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
         chain: connectedChain,
       };
       console.log("-- abstract wallet tempWallet", tempWallet);
-      setWallet(tempWallet as unknown as WalletState);
+      setWallet(tempWallet);
     });
   }, [client, connectedChain, connector, address]);
 

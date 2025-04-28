@@ -7,7 +7,7 @@ import { EVMChainPopover } from "../walletCard";
 import { MoreIcon } from "../icons";
 import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
-import { WalletType } from "../../types";
+import { WalletConnectType, WalletType } from "../../types";
 import { RenderWalletIcon } from "../common";
 import { useTranslation } from "@orderly.network/i18n";
 
@@ -103,7 +103,7 @@ export function AddEvmWallet() {
             key={index}
             className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer oui-text-2xs"
             onClick={() =>
-              connect({ walletType: WalletType.EVM, connector: item })
+              connect({ walletType: WalletConnectType.EVM, connector: item })
             }
           >
             <RenderWalletIcon connector={item} />

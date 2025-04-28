@@ -509,6 +509,8 @@
   "connector.privy.noWallet": "没有钱包",
   "connector.privy.noWallet.description": "请创建钱包以继续。只有您可以访问私钥。您可以随时导出私钥，并将钱包导入到其他钱包客户端，如 MetaMask 或 Phantom。",
   "connector.privy.switchNetwork.tips": "切换到{{chainName}}以继续。",
+  "connector.privy.addAbstractWallet": "添加Abstract钱包",
+  "connector.privy.addAbstractWallet.tips": "连接一个Abstract兼容的钱包以继续使用Abstract网络。",
   "transfer.network": "网络",
   "transfer.lowestFee": "最低费用",
   "transfer.web3Wallet": "您的Web3钱包",
