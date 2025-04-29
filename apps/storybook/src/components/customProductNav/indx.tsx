@@ -17,9 +17,9 @@ export function CustomProductNav() {
   const onItemClick = (item: ProductItem) => {
     if (item.href === "/swap") {
       // swap url
-      track(EnumTrackerKeys.trackBrokerEvent, { eventName: 'portfolio_fee_tier_click_stake_woo'})
+      track(EnumTrackerKeys.trackCustomEvent, { eventName: 'portfolio_fee_tier_click_stake_woo'})
 
-      // track(EnumTrackerKeys.trackBrokerEvent, { eventName: 'sign_message_success'})
+      // track(EnumTrackerKeys.trackCustomEvent, { eventName: 'sign_message_success'})
       // track(EnumTrackerKeys.clickLinkDeviceButton, {'test': 'test', eventName: 'portfolio_fee_tier_click_stake_woo'})
       // window.open("https://app.orderly.network", "_blank");
       return;

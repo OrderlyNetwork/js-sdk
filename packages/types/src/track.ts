@@ -16,7 +16,7 @@ export enum EnumTrackerKeys {
   "clickExportPrivateKey" = "click_export_private_key",
   "trackIdentifyUserId" = "track_identify_user_id",
   "switchLanguage" = "switch_language",
-  "trackBrokerEvent" = "track_broker_event",
+  "trackCustomEvent" = "track_custom_event",
 }
 
 export const TrackerListenerKeyMap: { [key in EnumTrackerKeys]: string } = {
@@ -39,5 +39,5 @@ export const TrackerListenerKeyMap: { [key in EnumTrackerKeys]: string } = {
   [EnumTrackerKeys.clickSwitchWallet]: "click_switch_wallet",
   [EnumTrackerKeys.trackIdentifyUserId]: "track_identify_user_id",
   [EnumTrackerKeys.switchLanguage]: "switch_language",
-  [EnumTrackerKeys.trackBrokerEvent]: "track_broker_event",
+  [EnumTrackerKeys.trackCustomEvent]: "track_broker_event",
 };

@@ -58,7 +58,7 @@ export class AmplitudeTracker {
       this._ee.addListener(key, (params = {}) => {
         if (key === EnumTrackerKeys.trackIdentifyUserId) {
           this.setUserId(params);
-        } else if (key === EnumTrackerKeys.trackBrokerEvent) {
+        } else if (key === EnumTrackerKeys.trackCustomEvent) {
 
           const eventName = params.eventName
           if (!eventName) {
