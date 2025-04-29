@@ -37,7 +37,6 @@ export const useOrderlyConfig = () => {
       scaffold: {
         mainNavProps: {
           // leading: <CustomProductNav />,
-          leading: null,
           trailing: null,
           mainMenus: [
             { name: t("common.trading"), href: "/" },
