@@ -25,7 +25,7 @@ import {
 import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
-import en from "@orderly.network/i18n/locales/zh.json";
+import en from "@orderly.network/i18n/locales/en.json";
 import zh from "@orderly.network/i18n/locales/zh.json";
 import ja from "@orderly.network/i18n/locales/ja.json";
 import es from "@orderly.network/i18n/locales/es.json";

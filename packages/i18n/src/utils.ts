@@ -21,7 +21,7 @@ export function parseI18nLang(
   defaultLang = defaultLang || LocaleEnum.en;
 
   const regex = /^([a-z]{2})/i;
-  const match = lang.match(regex);
+  const match = lang?.match(regex);
 
   if (!match) return defaultLang;
 
