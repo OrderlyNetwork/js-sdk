@@ -10,7 +10,7 @@ import {
   useWS,
 } from "@orderly.network/hooks";
 import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
-import { i18n } from "@orderly.network/i18n";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { useObserverElement } from "@orderly.network/ui";
 import { produce } from "immer";
@@ -142,6 +142,8 @@ function useAnnouncementData() {
 
   const { startTime, endTime, status, brokerName } = useMaintenanceStatus();
 
+  const { t } = useTranslation();
+
   const { data: announcements } = useQuery<API.Announcement>(
     `/v2/public/announcement`,
     {
@@ -150,6 +152,23 @@ function useAnnouncementData() {
       formatter: (data) => data,
     }
   );
+
+  const getMaintentTipsContent = (
+    brokerName: string,
+    startDate: string,
+    endDate: string
+  ) =>
+    t("maintenance.tips.description", {
+      brokerName,
+      startDate,
+      endDate,
+    });
+
+  const getMaintentDialogContent = (brokerName: string, endDate: string) =>
+    t("maintenance.dialog.description", {
+      brokerName,
+      endDate,
+    });
 
   useEffect(() => {
     const unsubscribe = ws.subscribe("announcement", {
@@ -285,7 +304,7 @@ function useAnnouncementData() {
         });
       });
     }
-  }, [startTime, endTime, status, brokerName]);
+  }, [startTime, endTime, status, brokerName, t]);
 
   return {
     tips: sortDataByUpdatedTime(tips),
@@ -306,23 +325,6 @@ function useMultiLine() {
     contentRef,
   };
 }
-
-const getMaintentTipsContent = (
-  brokerName: string,
-  startDate: string,
-  endDate: string
-) =>
-  i18n.t("maintenance.tips.description", {
-    brokerName,
-    startDate,
-    endDate,
-  });
-
-const getMaintentDialogContent = (brokerName: string, endDate: string) =>
-  i18n.t("maintenance.dialog.description", {
-    brokerName,
-    endDate,
-  });
 
 function getTimeString(timestamp: number) {
   const date = format(new UTCDateMini(timestamp), "MMM dd");
