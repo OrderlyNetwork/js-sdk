@@ -2539,6 +2539,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
     devDependencies:
       '@swc/cli':
         specifier: ^0.3.12
