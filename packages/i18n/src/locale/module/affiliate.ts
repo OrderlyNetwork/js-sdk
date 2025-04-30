@@ -30,7 +30,7 @@ export const affiliate = {
   "affiliate.referralCode.notExist": "This referral code does not exist.",
 
   "affiliate.process.title": "Becoming an affiliate is easy",
-  "affiliate.process.step1.title.title": "Apply",
+  "affiliate.process.step1.title": "Apply",
   "affiliate.process.step1.description": "Fill out the application form",
   "affiliate.process.step2.title": "Share",
   "affiliate.process.step2.description":

@@ -41,7 +41,8 @@ export const useOrderBookAndTradesScript = (symbol: string) => {
     symbol,
     containerSize,
     containerRef: containerRef as any,
-    tab,setTab,
+    tab,
+    setTab,
   };
 };
 

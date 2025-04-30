@@ -2,7 +2,7 @@ import { OrderEntry } from "./orderEntry.ui";
 import {
   OrderEntryScriptInputs,
   useOrderEntryScript,
-} from "./useOrderEntry.script";
+} from "./orderEntry.script";
 
 export const OrderEntryWidget = (
   props: OrderEntryScriptInputs & {

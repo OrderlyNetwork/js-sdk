@@ -215,7 +215,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         </Flex>
       )}
       <Flex justify={"center"} mt={8}>
-        <Box width={"45%"}>
+        <Box className="oui-min-w-[144px]">
           <ActionButton
             state={state}
             signIn={onSignIn}

@@ -4,6 +4,7 @@ import {
   PropsWithChildren,
   useContext,
   useState,
+  useMemo,
 } from "react";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 import { useWalletEvent } from "../hooks/useWalletEvent";
@@ -75,20 +76,32 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
 
   const disabledConnect = restrictedInfo.restrictedOpen;
 
+  const memoizedValue = useMemo<AppContextState>(
+    () => ({
+      connectWallet,
+      wrongNetwork,
+      currentChainId,
+      setCurrentChainId,
+      onChainChanged: props.onChainChanged,
+      disabledConnect,
+      restrictedInfo,
+      showAnnouncement,
+      setShowAnnouncement,
+    }),
+    [
+      connectWallet,
+      currentChainId,
+      disabledConnect,
+      props.onChainChanged,
+      restrictedInfo,
+      setCurrentChainId,
+      showAnnouncement,
+      wrongNetwork,
+    ]
+  );
+
   return (
-    <AppContext.Provider
-      value={{
-        connectWallet,
-        wrongNetwork,
-        currentChainId,
-        setCurrentChainId,
-        onChainChanged: props.onChainChanged,
-        disabledConnect,
-        restrictedInfo,
-        showAnnouncement,
-        setShowAnnouncement,
-      }}
-    >
+    <AppContext.Provider value={memoizedValue}>
       {props.children}
     </AppContext.Provider>
   );

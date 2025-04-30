@@ -49,7 +49,7 @@ export class AmplitudeTracker {
   }
 
   track(eventName: keyof typeof TrackerListenerKeyMap, properties?: any) {
-    amplitude.track(TrackerListenerKeyMap[eventName], properties);
+    amplitude.track(TrackerListenerKeyMap[eventName] || eventName, properties);
   }
 
   private _bindEvents() {
@@ -58,6 +58,17 @@ export class AmplitudeTracker {
       this._ee.addListener(key, (params = {}) => {
         if (key === EnumTrackerKeys.trackIdentifyUserId) {
           this.setUserId(params);
+        } else if (key === EnumTrackerKeys.trackCustomEvent) {
+
+          const eventName = params.eventName
+          if (!eventName) {
+            return;
+          }
+
+          delete params.eventName;
+          const enventParams = params;
+     
+          this.track(eventName, enventParams);
         } else {
           this.track(key as keyof typeof TrackerListenerKeyMap, params);
         }
