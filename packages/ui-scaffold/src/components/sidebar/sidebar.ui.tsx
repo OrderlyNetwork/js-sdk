@@ -93,7 +93,7 @@ const MenuItem: FC<
             color={props.active ? "brand" : "inherit"}
             angle={45}
             size="base"
-            className="oui-animate-in oui-fade-in "
+            className="oui-animate-in oui-fade-in oui-break-all"
           >
             {item.name}
           </Text.gradient>
