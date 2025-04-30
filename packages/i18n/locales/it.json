@@ -104,7 +104,7 @@
   "languageSwitcher.tips": "Le traduzioni generate dall'IA potrebbero non essere completamente accurate.",
   "announcement.type.listing": "Quotazione",
   "announcement.type.maintenance": "Manutenzione",
-  "announcement.type.delisting": "Delisting",
+  "announcement.type.delisting": "Rimozione dalla quotazione",
   "maintenance.dialog.title": "Aggiornamento del sistema in corso",
   "maintenance.dialog.description": "Ci dispiace, {{brokerName}} è temporaneamente non disponibile a causa di un aggiornamento programmato. Il servizio dovrebbe tornare disponibile entro {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} sarà temporaneamente non disponibile per un aggiornamento programmato da {{startDate}} a {{endDate}}.",

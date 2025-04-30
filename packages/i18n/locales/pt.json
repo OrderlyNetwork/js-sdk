@@ -104,7 +104,7 @@
   "languageSwitcher.tips": "Traduções geradas por IA podem não ser totalmente precisas.",
   "announcement.type.listing": "Listagem",
   "announcement.type.maintenance": "Manutenção",
-  "announcement.type.delisting": "Deslistagem",
+  "announcement.type.delisting": "Remoção da listagem",
   "maintenance.dialog.title": "Atualização do sistema em andamento",
   "maintenance.dialog.description": "Desculpe, {{brokerName}} está temporariamente indisponível devido a uma atualização programada. O serviço deve voltar até {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} estará temporariamente indisponível para uma atualização programada de {{startDate}} até {{endDate}}.",

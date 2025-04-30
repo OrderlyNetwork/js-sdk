@@ -103,7 +103,7 @@
   "languageSwitcher.language": "Sprache",
   "languageSwitcher.tips": "AI-generierte Übersetzungen können nicht vollständig genau sein.",
   "announcement.type.listing": "Listing",
-  "announcement.type.maintenance": "Maintenance",
+  "announcement.type.maintenance": "Wartung",
   "announcement.type.delisting": "Delisting",
   "maintenance.dialog.title": "Systemaktualisierung läuft",
   "maintenance.dialog.description": "Entschuldigung, {{brokerName}} ist aufgrund einer geplanten Aktualisierung vorübergehend nicht verfügbar. Der Service soll bis {{endDate}} wieder verfügbar sein.",
