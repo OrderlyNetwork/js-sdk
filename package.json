@@ -7,11 +7,9 @@
     "storybook": "pnpm --filter @orderly.network/storybook storybook",
     "storybook:tradingPage": "pnpm --filter @orderly.network/storybook storybook:tradingPage",
     "dev": "turbo run dev --concurrency=21",
-    "lint": "turbo run lint",
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",
     "version:g": "node ./scripts/version.js",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "prepublishOnly": "pnpm build",
     "prepare": "husky",
@@ -20,7 +18,12 @@
     "release:patch": "RELEASE_VERSION_TYPE=patch ts-node ./scripts/release.ts",
     "release:minor": "RELEASE_VERSION_TYPE=minor ts-node ./scripts/release.ts",
     "release:major": "RELEASE_VERSION_TYPE=major ts-node ./scripts/release.ts",
-    "update:tsconfigPaths": "ts-node ./scripts/tsconfigPaths.ts"
+    "update:tsconfigPaths": "ts-node ./scripts/tsconfigPaths.ts",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
+    "eslint:fix": "eslint --fix",
+    "eslint:error": "eslint --quiet",
+    "eslint:inspect": "npx @eslint/config-inspector"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
@@ -31,17 +34,19 @@
     "@changesets/write": "^0.3.2",
     "@manypkg/get-packages": "^2.2.2",
     "@npmcli/package-json": "^5.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@turbo/gen": "^2.0.11",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.12.0",
     "cross-env": "^7.0.3",
-    "diff": "^5.1.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.25.1",
     "eslint-config-custom": "workspace:*",
     "fs-extra": "^11.2.0",
     "husky": "^9.1.7",
     "jsonc-parser": "^3.3.1",
-    "prettier": "^2.5.1",
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "simple-git": "^3.27.0",
     "ts-node": "^10.9.2",
     "tsconfig": "workspace:*",
@@ -54,5 +59,11 @@
   "packageManager": "pnpm@9.0.6",
   "resolutions": {
     "@storybook/node-logger": "7.6.16"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,html,css,md,json}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
