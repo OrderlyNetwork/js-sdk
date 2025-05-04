@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren, ReactNode } from "react";
+import { Divider } from "../divider";
 import {
   Dialog,
   DialogBody,
@@ -8,7 +9,6 @@ import {
   DialogDescription,
   DialogContentProps,
 } from "./dialog";
-import { Divider } from "../divider";
 import {
   SimpleDialogFooter,
   SimpleDialogFooterProps,
@@ -17,7 +17,7 @@ import {
 type SimpleDialogProps = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   closable?: boolean;
   title?: ReactNode | (() => ReactNode);
   description?: ReactNode;
