@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { i18n, useLocaleContext } from "@orderly.network/i18n";
 import { useTrack, useTrackingInstance } from "@orderly.network/hooks";
+import { i18n, useLocaleContext } from "@orderly.network/i18n";
 import { EnumTrackerKeys } from "@orderly.network/types";
 
 export type LanguageSwitcherScriptReturn = ReturnType<
