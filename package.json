@@ -21,9 +21,9 @@
     "update:tsconfigPaths": "ts-node ./scripts/tsconfigPaths.ts",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "eslint:fix": "eslint --fix",
-    "eslint:error": "eslint --quiet",
-    "eslint:inspect": "npx @eslint/config-inspector"
+    "lint:fix": "eslint --fix",
+    "lint:error": "eslint --quiet",
+    "lint:inspect": "npx @eslint/config-inspector"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
