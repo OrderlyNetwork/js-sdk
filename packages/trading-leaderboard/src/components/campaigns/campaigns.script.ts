@@ -123,17 +123,17 @@ export function useCampaignsScript() {
   }, [emblaApi]);
 
   const onLearnMore = (campaign: CurrentCampaigns) => {
-    window.open(campaign.learnMoreUrl, "_blank");
     track(TrackerEventName.leaderboardCampaignClickLearnMore, {
       campaign_title: campaign.title,
     });
+    window.open(campaign.learnMoreUrl, "_blank");
   };
 
   const onTradeNow = (campaign: CurrentCampaigns) => {
-    window.open(campaign.tradingUrl, "_self");
     track(TrackerEventName.leaderboardCampaignClickTradeNow, {
       campaign_title: campaign.title,
     });
+    window.open(campaign.tradingUrl, "_self");
   };
 
   return {
