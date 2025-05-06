@@ -1,10 +1,10 @@
 import React, { FC, Fragment } from "react";
-import { cnBase } from "tailwind-variants";
 import { Row } from "@tanstack/react-table";
-import { getColumnPinningProps } from "./utils/getColumnPinningProps";
+import { cnBase } from "tailwind-variants";
 import { alignVariants } from "./className";
 import { DataTableProps } from "./dataTable";
 import { TableCell } from "./tableCell";
+import { getColumnPinningProps } from "./utils/getColumnPinningProps";
 
 type TableBodyProps<RecordType> = {
   className?: string;
@@ -24,15 +24,26 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
       className={cnBase(
         "oui-table-tbody oui-relative",
         "oui-text-base-contrast-80",
-        props.className
+        props.className,
       )}
       data-testid={props.testId}
     >
       {props.rows.map((row) => {
         const { className, onClick, ...rest } =
           typeof props.onRow === "function"
-            ? props.onRow(row.original, row.index)
+            ? props.onRow(row.original, row.index) || {}
             : {};
+
+        const expandView = row.getIsExpanded() && (
+          <tr className="oui-table-expand-tr oui-z-0">
+            <td
+              className="oui-table-expand-td"
+              colSpan={row.getVisibleCells().length}
+            >
+              {props.expandRowRender?.(row, row.index)}
+            </td>
+          </tr>
+        );
 
         const rowView = (
           <Fragment key={row.id}>
@@ -42,9 +53,9 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                 "oui-table-tbody-tr oui-group oui-h-10",
                 typeof onClick === "function" && "oui-cursor-pointer",
                 props.bordered && "oui-border-b oui-border-b-line-4",
-                className
+                className,
               )}
-              onClick={(event) => {
+              onClick={() => {
                 if (row.getCanExpand()) {
                   row.getToggleExpandedHandler();
                 }
@@ -62,10 +73,25 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                 const {
                   style: cellStyle,
                   className: cellClassName,
+                  children,
                   ...rest
                 } = typeof props.onCell === "function"
-                  ? props.onCell(cell.column, row.original, row.index)
+                  ? props.onCell(cell.column, row.original, row.index) || {}
                   : {};
+
+                const cellView =
+                  children !== undefined ? (
+                    children
+                  ) : (
+                    <>
+                      <TableCell cell={cell} />
+                      <CellHover
+                        selected={row.getIsSelected()}
+                        isFirst={column.getIsFirstColumn()}
+                        isLast={column.getIsLastColumn()}
+                      />
+                    </>
+                  );
 
                 return (
                   <td
@@ -79,28 +105,17 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                       pinClassNames.content,
                       props.showLeftShadow && pinClassNames.leftShadow,
                       props.showRightShadow && pinClassNames.rightShadow,
-                      cellClassName
+                      cellClassName,
                     )}
                     {...rest}
                   >
-                    <TableCell cell={cell} />
-                    <CellHover
-                      selected={row.getIsSelected()}
-                      isFirst={column.getIsFirstColumn()}
-                      isLast={column.getIsLastColumn()}
-                    />
+                    {cellView}
                   </td>
                 );
               })}
             </tr>
 
-            {row.getIsExpanded() && (
-              <tr className="oui-z-0">
-                <td colSpan={row.getVisibleCells().length}>
-                  {props.expandRowRender?.(row, row.index)}
-                </td>
-              </tr>
-            )}
+            {expandView}
           </Fragment>
         );
 
@@ -128,12 +143,12 @@ const CellHover: FC<CellHoverProps> = ({ selected, isFirst, isLast }) => {
   return (
     <div
       className={cnBase(
-        "oui-absolute oui-top-0 oui-left-0 oui-z-[-1]",
-        "oui-w-full oui-h-full",
+        "oui-absolute oui-left-0 oui-top-0 oui-z-[-1]",
+        "oui-size-full",
         "group-hover:oui-bg-line-4",
         selected && "oui-bg-line-6 group-hover:oui-bg-line-6",
         isFirst && "oui-rounded-l",
-        isLast && "oui-rounded-r"
+        isLast && "oui-rounded-r",
       )}
     />
   );
