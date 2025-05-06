@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTrack, useTrackingInstance } from "@orderly.network/hooks";
 import { i18n, useLocaleContext } from "@orderly.network/i18n";
-import { EnumTrackerKeys } from "@orderly.network/types";
+import { TrackerEventName } from "@orderly.network/types";
 
 export type LanguageSwitcherScriptReturn = ReturnType<
   typeof useLanguageSwitcherScript
@@ -25,7 +25,7 @@ export const useLanguageSwitcherScript = () => {
     await onLanguageChanged(lang);
     setOpen(false);
     setLoading(false);
-    track(EnumTrackerKeys.switchLanguage, {
+    track(TrackerEventName.switchLanguage, {
       language: displayName,
       language_code: lang,
     });
