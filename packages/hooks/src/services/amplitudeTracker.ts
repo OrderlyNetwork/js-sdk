@@ -60,18 +60,17 @@ export class AmplitudeTracker {
       this._ee.addListener(key, (params = {}) => {
         if (key === TrackerEventName.trackIdentifyUserId) {
           this.setUserId(params);
+        } else if (key === TrackerEventName.trackIdentify) {
+          this.identify(params);
         } else if (key === TrackerEventName.trackCustomEvent) {
-          const eventName = params.eventName;
+          const { eventName, ...rest } = params;
           if (!eventName) {
             return;
           }
 
-          delete params.eventName;
-          const enventParams = params;
-
-          this.track(eventName, enventParams);
+          this.track(eventName, rest);
         } else {
-          this.track(key as TrackerEventName, params);
+          this.track(key, params);
         }
       });
     });

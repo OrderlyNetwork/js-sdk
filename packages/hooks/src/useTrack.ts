@@ -46,5 +46,9 @@ export const useTrack = () => {
     ee.emit(TrackerEventName.trackIdentifyUserId, userId);
   }, []);
 
-  return { track, setTrackUserId };
+  const setIdentify = useCallback((params: any) => {
+    ee.emit(TrackerEventName.trackIdentify, params);
+  }, []);
+
+  return { track, setTrackUserId, setIdentify };
 };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTrack, useTrackingInstance } from "@orderly.network/hooks";
+import { useTrack } from "@orderly.network/hooks";
 import { i18n, useLocaleContext } from "@orderly.network/i18n";
 import { TrackerEventName } from "@orderly.network/types";
 
@@ -14,8 +14,7 @@ export const useLanguageSwitcherScript = () => {
   const { languages, onLanguageBeforeChanged, onLanguageChanged } =
     useLocaleContext();
 
-  const { track } = useTrack();
-  const trackInstace = useTrackingInstance();
+  const { track, setIdentify } = useTrack();
 
   const onLangChange = async (lang: string, displayName: string) => {
     setLoading(true);
@@ -30,7 +29,7 @@ export const useLanguageSwitcherScript = () => {
       language_code: lang,
     });
 
-    trackInstace.identify({
+    setIdentify({
       language_code: lang,
     });
   };

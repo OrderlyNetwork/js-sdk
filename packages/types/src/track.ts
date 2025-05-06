@@ -1,4 +1,10 @@
 export enum TrackerEventName {
+  /** virtual event (not send this event name to tracker) */
+  trackIdentifyUserId = "track_identify_user_id",
+  trackIdentify = "track_identify",
+  trackCustomEvent = "track_custom_event",
+
+  /** real event name (send this event name to tracker) */
   withdrawSuccess = "withdraw_request_success",
   withdrawFailed = "withdraw_request_failure",
   depositSuccess = "deposit_request_success",
@@ -14,9 +20,7 @@ export enum TrackerEventName {
   clickSwitchWallet = "click_switch_wallet",
   switchNetworkSuccess = "switch_network_success",
   clickExportPrivateKey = "click_export_private_key",
-  trackIdentifyUserId = "track_identify_user_id",
   switchLanguage = "switch_language",
-  trackCustomEvent = "track_broker_event",
   leaderboardCampaignClickTradeNow = "leaderboard_campaign_click_trade_now",
   leaderboardCampaignClickLearnMore = "leaderboard_campaign_click_learn_more",
 }
