@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useScreen } from "@orderly.network/ui";
 import useEmblaCarousel from "embla-carousel-react";
-import { useTradingLeaderboardContext, Campaign } from "../provider";
+import { useTrack } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { TrackerEventName } from "@orderly.network/types";
 import { formatCampaignDate } from "../../utils";
+import { useTradingLeaderboardContext, Campaign } from "../provider";
 
 export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;
 
@@ -31,7 +32,7 @@ export function useCampaignsScript() {
   const { campaigns = [], href } = useTradingLeaderboardContext();
   const [category, setCategory] = useState<CategoryKey>("ongoing");
 
-  const { isMobile } = useScreen();
+  const { track } = useTrack();
 
   const filterCampaigns = useMemo(() => {
     const now = new Date();
@@ -51,7 +52,7 @@ export function useCampaignsScript() {
 
         return acc;
       },
-      { ongoing: [], past: [], future: [] }
+      { ongoing: [], past: [], future: [] },
     );
   }, [campaigns]);
 
@@ -84,7 +85,7 @@ export function useCampaignsScript() {
       return {
         ...campaign,
         displayTime: `${formatCampaignDate(startTime)} - ${formatCampaignDate(
-          endTime
+          endTime,
         )} UTC`,
         learnMoreUrl,
         tradingUrl,
@@ -97,7 +98,7 @@ export function useCampaignsScript() {
     const categoryKeys: CategoryKey[] = ["ongoing", "future", "past"];
 
     const firstAvailableCategory = categoryKeys.find(
-      (item) => filterCampaigns[item].length > 0
+      (item) => filterCampaigns[item].length > 0,
     );
 
     if (firstAvailableCategory) {
@@ -121,16 +122,31 @@ export function useCampaignsScript() {
     });
   }, [emblaApi]);
 
+  const onLearnMore = (campaign: CurrentCampaigns) => {
+    window.open(campaign.learnMoreUrl, "_blank");
+    track(TrackerEventName.leaderboardCampaignClickLearnMore, {
+      campaign_title: campaign.title,
+    });
+  };
+
+  const onTradeNow = (campaign: CurrentCampaigns) => {
+    window.open(campaign.tradingUrl, "_self");
+    track(TrackerEventName.leaderboardCampaignClickTradeNow, {
+      campaign_title: campaign.title,
+    });
+  };
+
   return {
     options,
     currentCampaigns,
     category,
     onCategoryChange,
     tradingUrl: href?.trading,
-    isMobile,
     emblaRef,
     emblaApi: emblaApi as TEmblaApi,
     scrollIndex,
     enableScroll: currentCampaigns?.length > 1,
+    onLearnMore,
+    onTradeNow,
   };
 }
