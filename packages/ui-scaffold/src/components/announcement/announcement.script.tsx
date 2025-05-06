@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UTCDateMini } from "@date-fns/utc";
 import { getTimestamp } from "@orderly.network/utils";
 import { format } from "date-fns";
@@ -9,89 +9,116 @@ import {
   useQuery,
   useWS,
 } from "@orderly.network/hooks";
-import { API, WSMessage } from "@orderly.network/types";
-import { i18n } from "@orderly.network/i18n";
+import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
+import { i18n, useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { useObserverElement } from "@orderly.network/ui";
+import { produce } from "immer";
 
 const oneDay = 1000 * 60 * 60 * 24;
-const maintentanceId = "-1";
 
-export enum AnnouncementType {
-  Listing = "listing",
-  Maintenance = "maintenance",
-  Delisting = "delisting",
-}
+const maintentanceId = "-1";
 
 export type AnnouncementScriptOptions = {
   hideTips?: boolean;
 };
 
-type AnnouncementStore = {
-  hidden: boolean;
-  updateTime?: number | null;
+interface AnnouncementStore {
+  show?: boolean;
+  lastUpdateTime?: number | null;
+}
+
+const ORDERLY_ANNOUNCEMENT_KEY = "orderly_announcement";
+
+const sortDataByUpdatedTime = (ori: API.Announcement) => {
+  return produce<API.Announcement>(ori, (draft) => {
+    if (Array.isArray(draft.rows)) {
+      draft.rows.sort((a, b) => {
+        if (a.updated_time && b.updated_time) {
+          return b.updated_time - a.updated_time;
+        }
+        return 0;
+      });
+    }
+  });
 };
 
 export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
 
 export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const { showAnnouncement, setShowAnnouncement } = useAppContext();
 
   const { tips, maintenanceDialogInfo } = useAnnouncementData();
 
-  const [announcementStore, setAnnouncementStore] = useLocalStorage(
-    "orderly_announcement",
-    {} as AnnouncementStore
+  const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
+    ORDERLY_ANNOUNCEMENT_KEY,
+    {}
   );
 
   const closeTips = () => {
-    setAnnouncementStore({
-      hidden: true,
-      updateTime: null,
-    });
+    // @ts-ignore
+    setStore((prev) => ({ ...prev, show: false }));
   };
 
-  const nextTips = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % tips.length);
-    setTimeout(() => setIsAnimating(false), 200);
-  };
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const prevTips = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + tips.length) % tips.length);
-    setTimeout(() => setIsAnimating(false), 200);
-  };
-
-  useEffect(() => {
-    if (!showAnnouncement || tips.length <= 1) {
+  const prevTips = React.useCallback(() => {
+    if (isAnimating) {
       return;
     }
-    // rolling announcement, every 3 seconds
-    const interval = setInterval(() => {
-      nextTips();
-    }, 3000);
+    const len = (tips.rows ?? []).length;
+    setIsAnimating(true);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + len) % len);
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 200);
+  }, [isAnimating, tips.rows]);
 
-    return () => clearInterval(interval);
-  }, [tips, showAnnouncement]);
+  const nextTips = React.useCallback(() => {
+    if (isAnimating) {
+      return;
+    }
+    const len = (tips.rows ?? []).length;
+    setIsAnimating(true);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % len);
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 200);
+  }, [isAnimating, tips.rows]);
 
   useEffect(() => {
-    const show =
-      !!tips.length && !announcementStore.hidden && !options?.hideTips;
-    setShowAnnouncement(show);
-  }, [tips, announcementStore, options?.hideTips]);
+    const len = (tips.rows ?? []).length;
+    if (!showAnnouncement || len <= 1) {
+      return;
+    }
+
+    // rolling announcement, every 3 seconds
+    intervalRef.current = setInterval(nextTips, 3000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+      }
+    };
+  }, [tips, showAnnouncement, nextTips]);
+
+  useEffect(() => {
+    const len = (tips.rows ?? []).length;
+    setShowAnnouncement(
+      Boolean(len) && announcementStore.show && !options?.hideTips
+    );
+  }, [tips, announcementStore, options?.hideTips, setShowAnnouncement]);
 
   const multiLineState = useMultiLine();
+
   return {
     maintenanceDialogInfo,
     tips,
     currentIndex,
-    currentTip: tips[currentIndex],
+    currentTip: tips.rows?.[currentIndex],
     closeTips,
     nextTips,
     prevTips,
@@ -103,82 +130,140 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
 
 function useAnnouncementData() {
   const ws = useWS();
-  const [tips, setTips] = useState<API.Announcement[]>([]);
 
-  const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<
-    string | undefined
-  >(undefined);
+  const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
+    ORDERLY_ANNOUNCEMENT_KEY,
+    {}
+  );
+
+  const [tips, setTips] = useState<API.Announcement>({});
+
+  const [maintenanceDialogInfo, setMaintenanceDialogInfo] = useState<string>();
 
   const { startTime, endTime, status, brokerName } = useMaintenanceStatus();
 
-  const { data: announcements } = useQuery<API.Announcement[]>(
-    `/v1/public/announcement`,
+  const { t } = useTranslation();
+
+  const { data: announcements } = useQuery<API.Announcement>(
+    `/v2/public/announcement`,
     {
       revalidateOnFocus: false,
       refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
+      formatter: (data) => data,
     }
   );
 
+  const getMaintentTipsContent = (
+    brokerName: string,
+    startDate: string,
+    endDate: string
+  ) =>
+    t("maintenance.tips.description", {
+      brokerName,
+      startDate,
+      endDate,
+    });
+
+  const getMaintentDialogContent = (brokerName: string, endDate: string) =>
+    t("maintenance.dialog.description", {
+      brokerName,
+      endDate,
+    });
+
   useEffect(() => {
-    const unsubscribe = ws.subscribe(`announcement`, {
-      onMessage: (message: WSMessage.Announcement) => {
+    const unsubscribe = ws.subscribe("announcement", {
+      onMessage(message: WSMessage.Announcement) {
         if (message) {
-          setTips((prevTips) => [
-            ...prevTips.filter(
-              (tip) => tip.announcement_id !== message.announcement_id
-            ),
-            {
-              announcement_id: message.announcement_id,
-              message: message.message,
-              url: message.url,
-            },
-          ]);
+          setTips((prev) => {
+            return produce(prev, (draft) => {
+              // Make sure draft.rows is an array
+              if (!Array.isArray(draft.rows)) {
+                draft.rows = [];
+              }
+              const idx = draft.rows.findIndex(
+                (tip) => tip.announcement_id === message.announcement_id
+              );
+              // Filter out old tips with the same id
+              if (idx !== -1) {
+                draft.rows.splice(idx, 1);
+              }
+              // Add the latest tip
+              draft.rows.push({
+                announcement_id: message.announcement_id,
+                message: message.message,
+                url: message.url,
+                i18n: message.i18n,
+                type: message.type,
+                updated_time: message.updated_time,
+              });
+            });
+          });
+          // @ts-ignore
+          setStore((prev) => ({ ...prev, show: true }));
+        }
+      },
+      onError(err) {
+        if (err instanceof Error) {
+          console.error("Error receiving announcement:", err.message);
         }
       },
     });
-
     return () => {
       unsubscribe?.();
     };
-  }, []);
+  }, [ws]);
 
   useEffect(() => {
-    if (!announcements) {
+    if (!announcements?.rows) {
       return;
     }
-    if (!announcements.length) {
-      setTips((prevTips) =>
-        prevTips.filter((tip) => tip.announcement_id !== maintentanceId)
-      );
-      return;
-    }
-    setTips((prevTips) => {
-      const tips = new Set(prevTips.map((tip) => tip.announcement_id));
-      const maintentanceTip = prevTips.find(
-        (tip) => tip.announcement_id === maintentanceId
-      );
-      const newTips: API.Announcement[] = [];
-      announcements.forEach((announcement) => {
-        if (tips.has(announcement.announcement_id)) {
-          return;
-        }
-        newTips.push({
-          announcement_id: announcement.announcement_id,
-          message: announcement.message,
-          url: announcement.url,
+    const apiTime = announcements.last_updated_time ?? 0;
+    const cachedTime = announcementStore.lastUpdateTime ?? 0;
+    if (cachedTime < apiTime) {
+      setTips((prev) => ({ ...prev, rows: announcements?.rows }));
+      setStore({ show: true, lastUpdateTime: apiTime });
+    } else {
+      setTips((prev) => {
+        return produce<API.Announcement>(prev, (draft) => {
+          if (announcements?.rows?.length) {
+            // If there are announcement rows available, create a Set to store IDs of existing tips
+            const existingIds = new Set<string | number>(
+              prev.rows?.map((tip) => tip.announcement_id)
+            );
+            // Find the maintenance tip in previous tips (if any)
+            const maintenanceTip = prev.rows?.find(
+              (tip) => tip.announcement_id === maintentanceId
+            );
+            // Clear the draft’s rows array to refill it
+            draft.rows = [];
+            announcements.rows.forEach((item) => {
+              if (!existingIds.has(item.announcement_id)) {
+                // If the item’s ID is not in existingIds, push it into the draft
+                draft.rows?.push(item);
+              }
+            });
+            if (maintenanceTip) {
+              // If a maintenance tip existed before, unshift it to the front
+              draft.rows.unshift(maintenanceTip);
+            }
+          } else {
+            // Find the index of the maintenance tip in draft rows
+            const idx = draft.rows?.findIndex(
+              (tip) => tip.announcement_id === maintentanceId
+            );
+            if (idx !== undefined && idx !== -1) {
+              // Remove the maintenance tip from draft rows
+              draft.rows?.splice(idx, 1);
+            }
+          }
         });
       });
-      if (maintentanceTip) {
-        newTips.unshift(maintentanceTip);
-      }
-      return newTips;
-    });
+    }
   }, [announcements]);
 
   useEffect(() => {
     const startDate = startTime ? getTimeString(startTime) : "-";
     const endDate = endTime ? getTimeString(endTime) : "-";
-
     if (status === MaintenanceStatus.Maintenance) {
       setMaintenanceDialogInfo(getMaintentDialogContent(brokerName, endDate));
       return;
@@ -187,27 +272,42 @@ function useAnnouncementData() {
 
     if (startTime) {
       if (startTime < getTimestamp() + oneDay) {
-        setTips((prevTips) => [
-          {
-            announcement_id: maintentanceId,
-            type: AnnouncementType.Maintenance,
-            message: getMaintentTipsContent(brokerName, startDate, endDate),
-          },
-          ...prevTips.filter(
-            (tip) => tip.type !== AnnouncementType.Maintenance
-          ),
-        ]);
+        setTips((prev) =>
+          produce<API.Announcement>(prev, (draft) => {
+            // Make sure draft.rows is an array
+            if (!Array.isArray(draft.rows)) {
+              draft.rows = [];
+            }
+            // Rebuild rows: insert the latest maintenance tip first, then put the old non-maintenance ones at the end
+            draft.rows = [
+              {
+                announcement_id: maintentanceId,
+                type: AnnouncementType.Maintenance,
+                message: getMaintentTipsContent(brokerName, startDate, endDate),
+              },
+              ...draft.rows.filter(
+                (tip) => tip.type !== AnnouncementType.Maintenance
+              ),
+            ];
+          })
+        );
       }
     } else {
-      // remove maintenance tip
-      setTips((prevTips) =>
-        prevTips.filter((tip) => tip.announcement_id !== maintentanceId)
-      );
+      setTips((prev) => {
+        return produce<API.Announcement>(prev, (draft) => {
+          const index = draft.rows?.findIndex(
+            (tip) => tip.announcement_id === maintentanceId
+          );
+          if (index !== undefined && index !== -1) {
+            draft.rows?.splice(index, 1);
+          }
+        });
+      });
     }
-  }, [startTime, endTime, status, brokerName]);
+  }, [startTime, endTime, status, brokerName, t]);
 
   return {
-    tips,
+    tips: sortDataByUpdatedTime(tips),
     maintenanceDialogInfo,
   };
 }
@@ -225,23 +325,6 @@ function useMultiLine() {
     contentRef,
   };
 }
-
-const getMaintentTipsContent = (
-  brokerName: string,
-  startDate: string,
-  endDate: string
-) =>
-  i18n.t("maintenance.tips.description", {
-    brokerName,
-    startDate,
-    endDate,
-  });
-
-const getMaintentDialogContent = (brokerName: string, endDate: string) =>
-  i18n.t("maintenance.dialog.description", {
-    brokerName,
-    endDate,
-  });
 
 function getTimeString(timestamp: number) {
   const date = format(new UTCDateMini(timestamp), "MMM dd");

@@ -12,11 +12,11 @@ import {
   useWallets,
   WalletWithMetadata,
 } from "@privy-io/react-auth";
-import { ChainNamespace, EnumTrackerKeys } from "@orderly.network/types";
-import { useTrack, WalletState } from "@orderly.network/hooks";
-import { SolanaChainsMap } from "../types";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { useTrack, WalletState } from "@orderly.network/hooks";
+import { ChainNamespace, TrackerEventName } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../provider";
+import { SolanaChainsMap } from "../types";
 
 interface WalletStatePrivy extends WalletState {
   chain: {
@@ -50,7 +50,8 @@ const PrivyWalletContext = createContext<PrivyWalletContextValue | null>(null);
 export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { network, solanaInfo, setSolanaInfo, connectorWalletType } = useWalletConnectorPrivy();
+  const { network, solanaInfo, setSolanaInfo, connectorWalletType } =
+    useWalletConnectorPrivy();
   const {
     login,
     logout,
@@ -60,7 +61,9 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     exportWallet: exportEvmWallet,
     createWallet: createEvmWallet,
   } = usePrivy();
-  const { wallets: walletsEVM } = connectorWalletType.disablePrivy ? { wallets: [] } : useWallets();
+  const { wallets: walletsEVM } = connectorWalletType.disablePrivy
+    ? { wallets: [] }
+    : useWallets();
   const connectedRef = useRef(false);
 
   const {
@@ -68,7 +71,14 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     wallets: walletsSOL,
     createWallet: createSolanaWallet,
     exportWallet: exportSolanaWallet,
-  } = connectorWalletType.disablePrivy ? { ready: false, wallets: [], createWallet: () => Promise.resolve(), exportWallet: () => Promise.resolve() } : useSolanaWallets();
+  } = connectorWalletType.disablePrivy
+    ? {
+        ready: false,
+        wallets: [],
+        createWallet: () => Promise.resolve(),
+        exportWallet: () => Promise.resolve(),
+      }
+    : useSolanaWallets();
 
   const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);
   const [walletSOL, setWalletSOL] = useState<WalletStatePrivy | null>(null);
@@ -82,7 +92,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
         .sort(
           (a, b) =>
             (b.latestVerifiedAt?.getTime() ?? 0) -
-            (a.latestVerifiedAt?.getTime() ?? 0)
+            (a.latestVerifiedAt?.getTime() ?? 0),
         )[0];
       let address = null;
       if (account.type === "email") {
@@ -121,12 +131,12 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       namespace,
     });
     if (namespace === ChainNamespace.evm) {
-      track(EnumTrackerKeys.clickExportPrivateKey, {
+      track(TrackerEventName.clickExportPrivateKey, {
         type: "evm",
       });
       return exportEvmWallet();
     } else if (namespace === ChainNamespace.solana) {
-      track(EnumTrackerKeys.clickExportPrivateKey, {
+      track(TrackerEventName.clickExportPrivateKey, {
         type: "solana",
       });
       return exportSolanaWallet();
@@ -192,7 +202,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       user?.linkedAccounts as WalletWithMetadata[]
     ).find(
       (item: WalletWithMetadata) =>
-        item.chainType === "solana" && item.connectorType === "embedded"
+        item.chainType === "solana" && item.connectorType === "embedded",
     );
 
     if (!embededSolanaWallet) {
@@ -256,7 +266,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
       connectedRef.current = true;
-      track(EnumTrackerKeys.socialLoginSuccess, {
+      track(TrackerEventName.socialLoginSuccess, {
         type: linkedAccount.type,
         address: linkedAccount.address,
       });
@@ -287,7 +297,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       exportWallet,
       createEvmWallet,
       createSolanaWallet,
-    ]
+    ],
   );
 
   return (

@@ -1,7 +1,10 @@
+import { LocaleContextState } from "@orderly.network/i18n";
 import { useLanguageSwitcherScript } from "./languageSwitcher.script";
 import { LanguageSwitcher } from "./languageSwitcher.ui";
 
-export const LanguageSwitcherWidget = () => {
+export type LanguageSwitcherWidgetProps = Pick<LocaleContextState, "popup">;
+
+export const LanguageSwitcherWidget = (props: LanguageSwitcherWidgetProps) => {
   const state = useLanguageSwitcherScript();
-  return <LanguageSwitcher {...state} />;
+  return <LanguageSwitcher {...state} {...props} />;
 };

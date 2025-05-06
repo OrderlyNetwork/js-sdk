@@ -1,24 +1,26 @@
-import {
-  useCollateral,
-  useMaxQty,
-  useSymbolsInfo,
-} from "../../orderly/orderlyHooks";
-import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
-import type { FullOrderState } from "./orderEntry.store";
+import { produce } from "immer";
+import { useDebouncedCallback } from "use-debounce";
 import {
   SDKError,
   API,
   OrderlyOrder,
   OrderType,
   OrderLevel,
-  EnumTrackerKeys,
+  TrackerEventName,
 } from "@orderly.network/types";
-import { useDebouncedCallback } from "use-debounce";
-import { useEventEmitter } from "../../useEventEmitter";
+import { useAccountInfo } from "../../orderly/appStore";
+import {
+  useCollateral,
+  useMaxQty,
+  useSymbolsInfo,
+} from "../../orderly/orderlyHooks";
+import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
+import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
 import { OrderValidationResult } from "../../services/orderCreator/interface";
+import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
+import { useTrack } from "../../useTrack";
 import {
   calcEstLeverage,
   calcEstLiqPrice,
@@ -28,10 +30,8 @@ import {
   hasTPSL,
   isBBOOrder,
 } from "./helper";
-import { produce } from "immer";
-import { useAccountInfo } from "../../orderly/appStore";
-import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
-import { useTrack } from "../../useTrack";
+import type { FullOrderState } from "./orderEntry.store";
+import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
@@ -78,7 +78,7 @@ type OrderEntryReturn = {
     value: any,
     options?: {
       shouldUpdateLastChangedField?: boolean;
-    }
+    },
   ) => void;
   setValues: (values: Partial<FullOrderState>) => void;
   symbolInfo: API.SymbolExt;
@@ -147,7 +147,7 @@ type OrderEntryReturn = {
  */
 const useOrderEntry = (
   symbol: string,
-  options: Options = {}
+  options: Options = {},
 ): OrderEntryReturn => {
   if (!symbol) {
     throw new SDKError("Symbol is required");
@@ -196,13 +196,13 @@ const useOrderEntry = (
   });
 
   const [doCreateOrder, { isMutating }] = useMutation<OrderlyOrder, any>(
-    getCreateOrderUrl(formattedOrder)
+    getCreateOrderUrl(formattedOrder),
   );
 
   const maxQty = useMaxQty(
     symbol,
     formattedOrder.side,
-    formattedOrder.reduce_only
+    formattedOrder.reduce_only,
   );
 
   const updateOrderPrice = () => {
@@ -272,7 +272,7 @@ const useOrderEntry = (
     ) {
       orderEntryActions.onMarkPriceChange(
         markPrice,
-        lastChangedField.current as any
+        lastChangedField.current as any,
       );
     }
   }, [markPrice, formattedOrder.order_type]);
@@ -291,13 +291,13 @@ const useOrderEntry = (
         setMeta(
           produce((draft) => {
             draft.errors = errors;
-          })
+          }),
         );
       } else {
         setMeta(
           produce((draft) => {
             draft.errors = null;
-          })
+          }),
         );
       }
     });
@@ -306,7 +306,7 @@ const useOrderEntry = (
   const canSetTPSLPrice = (
     key: keyof OrderlyOrder,
     value: any,
-    orderType: OrderType
+    orderType: OrderType,
   ) => {
     if (
       tpslFields.includes(key) &&
@@ -329,7 +329,7 @@ const useOrderEntry = (
     options?: {
       shouldUpdateLastChangedField?: boolean;
       shouldUpdateDirty?: boolean;
-    }
+    },
   ) => {
     const { shouldUpdateLastChangedField = true, shouldUpdateDirty = true } =
       options || {};
@@ -341,7 +341,7 @@ const useOrderEntry = (
       setMeta(
         produce((draft) => {
           draft.dirty[key] = true;
-        })
+        }),
       );
     }
 
@@ -362,8 +362,8 @@ const useOrderEntry = (
         canSetTPSLPrice(
           key as keyof FullOrderState,
           values[key as keyof FullOrderState],
-          formattedOrder.order_type
-        )
+          formattedOrder.order_type,
+        ),
       )
     ) {
       return;
@@ -396,14 +396,14 @@ const useOrderEntry = (
           setMeta(
             produce((draft) => {
               draft.errors = errors;
-            })
+            }),
           );
           if (!meta.validated) {
             // setMeta((prev) => ({ ...prev, validated: true }));
             setMeta(
               produce((draft) => {
                 draft.validated = true;
-              })
+              }),
             );
           }
           reject(errors);
@@ -411,7 +411,7 @@ const useOrderEntry = (
         // create order
         const order = generateOrder(creator, prepareData());
         resolve(order);
-      }
+      },
     );
   };
 
@@ -458,7 +458,7 @@ const useOrderEntry = (
     setMeta(
       produce((draft) => {
         draft.errors = null;
-      })
+      }),
     );
   };
 
@@ -469,7 +469,7 @@ const useOrderEntry = (
         draft.submitted = false;
         draft.validated = false;
         draft.dirty = {};
-      })
+      }),
     );
   };
 
@@ -491,13 +491,13 @@ const useOrderEntry = (
       produce((draft) => {
         draft.submitted = true;
         draft.validated = true;
-      })
+      }),
     );
     if (Object.keys(errors).length > 0) {
       setMeta(
         produce((draft) => {
           draft.errors = errors;
-        })
+        }),
       );
       throw new SDKError("Order validation failed");
     }
@@ -507,7 +507,7 @@ const useOrderEntry = (
     const result = await doCreateOrder(order);
 
     if (result.success) {
-      track(EnumTrackerKeys.placeorderSuccess, {
+      track(TrackerEventName.placeOrderSuccess, {
         side: order.side,
         order_type: order.order_type,
         tp_sl: hasTPSL(formattedOrder),
