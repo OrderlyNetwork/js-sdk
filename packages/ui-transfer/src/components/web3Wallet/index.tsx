@@ -1,20 +1,28 @@
 import { FC, useMemo } from "react";
 import { Flex, Text, WalletIcon } from "@orderly.network/ui";
-import { useWalletConnector } from "@orderly.network/hooks";
+import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { formatAddress } from "../../utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { ABSTRACT_CHAIN_ID_MAP } from "@orderly.network/types";
 
 export const Web3Wallet: FC = () => {
   const { t } = useTranslation();
-  const { wallet } = useWalletConnector();
+  const { wallet, connectedChain } = useWalletConnector();
+  const { state: accountState, account } = useAccount();
 
-  const { walletName, address } = useMemo(
-    () => ({
+  const { walletName, address } = useMemo(() => {
+    let address = accountState.address;
+    if (
+      connectedChain?.id &&
+      ABSTRACT_CHAIN_ID_MAP.has(parseInt(connectedChain?.id as string))
+    ) {
+      address = account.getAdditionalInfo()?.AGWAddress;
+    }
+    return {
       walletName: wallet?.label,
-      address: formatAddress(wallet?.accounts?.[0].address),
-    }),
-    [wallet]
-  );
+      address: formatAddress(address),
+    };
+  }, [wallet, accountState, account, connectedChain]);
 
   return (
     <Flex justify="between">

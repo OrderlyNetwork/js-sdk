@@ -1,12 +1,11 @@
-import React from "react";
-import { AccountStatusEnum } from "@orderly.network/types";
+import React, { useMemo } from "react";
+import { ABSTRACT_CHAIN_ID_MAP, ABSTRACT_TESTNET_CHAINID, AccountStatusEnum } from "@orderly.network/types";
 import { Button, formatAddress, Text, useScreen } from "@orderly.network/ui";
-import { useWalletConnector } from "@orderly.network/hooks";
+import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
 import { useTranslation } from "@orderly.network/i18n";
 import { AuthGuard } from "@orderly.network/ui-connector";
-
 export function UserCenter(props: any) {
   const { accountState: state } = props;
   return (
@@ -28,8 +27,18 @@ const RenderUserCenter = (props: any) => {
   const { isMobile } = useScreen();
   const { connect, wallet } = useWalletConnector();
   const { linkedAccount } = usePrivyWallet();
+  const { state: accountState, account } = useAccount();
+  const { connectedChain } = useWalletConnector();
+
 
   const disabled = state.validating || props.disabledConnect;
+
+  const userAddress = useMemo(() => {
+    if (connectedChain?.id && ABSTRACT_CHAIN_ID_MAP.has(parseInt(connectedChain?.id as string))) {
+      return account.getAdditionalInfo()?.AGWAddress;
+    }
+    return account.address;
+  }, [account, connectedChain, accountState]);
 
   // if (accountStatus.status <= ) {}
   if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
@@ -42,7 +51,7 @@ const RenderUserCenter = (props: any) => {
         className="oui-flex oui-items-center oui-justify-center oui-gap-2"
       >
         <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
-          {formatAddress(state.address!, [4, 4])}
+          {formatAddress(userAddress!)}
         </Text.formatted>
       </Button>
     );
@@ -99,7 +108,7 @@ const RenderUserCenter = (props: any) => {
               rule="address"
               className="oui-text-[rgba(0,0,0,.88)]"
             >
-              {formatAddress(wallet.accounts[0].address)}
+              {formatAddress(userAddress!)}
             </Text.formatted>
           </Button>
         </div>
@@ -123,7 +132,7 @@ const RenderUserCenter = (props: any) => {
           />
         )}
         <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
-          {formatAddress(wallet.accounts[0].address)}
+          {formatAddress(userAddress!)}
         </Text.formatted>
       </Button>
     </div>

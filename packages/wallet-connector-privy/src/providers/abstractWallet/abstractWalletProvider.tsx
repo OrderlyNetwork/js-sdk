@@ -90,6 +90,9 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
           },
         ],
         chain: connectedChain,
+        additionalInfo: {
+          AGWAddress: client.account.address,
+        }
       };
       console.log("-- abstract wallet tempWallet", tempWallet);
       setWallet(tempWallet);

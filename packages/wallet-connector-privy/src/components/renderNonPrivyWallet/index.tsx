@@ -75,7 +75,7 @@ export function RenderNonPrivyWallet() {
       if (isConnectedAbstract) {
         tempWalletList.push({
           type: WalletType.ABSTRACT,
-          address: walletInAbstract?.accounts[0].address,
+          address: walletInAbstract?.additionalInfo?.AGWAddress,
         });
       } else {
         tempAddWallet.push(WalletType.ABSTRACT);

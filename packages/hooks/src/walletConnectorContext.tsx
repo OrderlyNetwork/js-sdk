@@ -21,6 +21,7 @@ export interface WalletState {
   accounts: WalletAccount[];
   chains: ConnectedChain[];
   instance?: unknown;
+  additionalInfo?: Record<string, any>;
 }
 
 export interface WalletConnectorContextState {
