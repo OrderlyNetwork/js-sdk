@@ -9,8 +9,9 @@ export const useTrack = () => {
   const ee = useEventEmitter();
   const { wallet } = useWalletConnector();
 
-  const debouncedTrackFn = useCallback(
-    debounce((eventName: TrackerEventName, params: any) => {
+  /** immediately track event */
+  const tracking = useCallback(
+    (eventName: TrackerEventName, params: any) => {
       windowGuard(() => {
         const location = window.location;
         const origin = location.origin;
@@ -31,16 +32,12 @@ export const useTrack = () => {
         }
         ee.emit(eventName, params);
       });
-    }, 500),
-    [],
+    },
+    [wallet],
   );
 
-  const track = useCallback(
-    (eventName: TrackerEventName, params: any) => {
-      debouncedTrackFn(eventName, params);
-    },
-    [debouncedTrackFn],
-  );
+  /** debounce track event */
+  const track = useCallback(debounce(tracking, 500), [tracking]);
 
   const setTrackUserId = useCallback((userId: string) => {
     ee.emit(TrackerEventName.trackIdentifyUserId, userId);
@@ -50,5 +47,10 @@ export const useTrack = () => {
     ee.emit(TrackerEventName.trackIdentify, params);
   }, []);
 
-  return { track, setTrackUserId, setIdentify };
+  return {
+    track,
+    tracking,
+    setTrackUserId,
+    setIdentify,
+  };
 };
