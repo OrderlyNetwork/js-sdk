@@ -167,10 +167,35 @@ function parseCsvString(line, i) {
   return [result, i];
 }
 
+function getMissingKeys(jsonList, header) {
+  if (!Array.isArray(jsonList) || jsonList.length === 0) {
+    throw "Object array please.";
+  }
+
+  const baseJson = jsonList[0];
+  const baseKeys = Object.keys(baseJson);
+  const errors = {};
+  for (const key of baseKeys) {
+    for (const [index, json] of jsonList.entries()) {
+      const val = json[key] || "";
+      const bool = validateI18nValue(val);
+      if (!bool.valid) {
+        const locale = header[index + 1];
+        if (!errors[locale]) {
+          errors[locale] = {};
+        }
+        errors[locale][key] = baseJson[key];
+      }
+    }
+  }
+  return errors;
+}
+
 module.exports = {
   separator,
   json2Csv,
   csv2Json,
   multiJson2Csv,
   csv2multiJson,
+  getMissingKeys,
 };

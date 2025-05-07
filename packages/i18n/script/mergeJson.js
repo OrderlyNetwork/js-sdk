@@ -1,6 +1,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 const { checkFileExists, findJsonFiles } = require("./utils");
+const { LocaleEnum } = require("../dist");
 
 /**
  * Merge default and extend JSON files back into one file
@@ -10,7 +11,11 @@ const { checkFileExists, findJsonFiles } = require("./utils");
 async function mergeJson(inputDir, outputDir) {
   const jsonFiles = await findJsonFiles(inputDir);
 
-  for (const file of jsonFiles) {
+  // Sort input files by locale
+  jsonFiles.sort((a, b) => (b.startsWith(LocaleEnum.en) ? 1 : -1));
+  let baseJson = {};
+
+  for (const [index, file] of jsonFiles.entries()) {
     const defaultJsonPath = path.resolve(inputDir, file);
     const extendJsonPath = path.resolve(inputDir, "extend", file);
 
@@ -28,15 +33,23 @@ async function mergeJson(inputDir, outputDir) {
     }
 
     // Merge the JSON objects
-    const mergedJson = {
-      ...defaultJson,
-      ...extendJson,
-    };
+    const mergedJson = { ...defaultJson, ...extendJson };
+
+    let sortedJson = {};
+
+    // base json
+    if (index === 0) {
+      baseJson = mergedJson;
+      sortedJson = mergedJson;
+    } else {
+      for (const key of Object.keys(baseJson)) {
+        sortedJson[key] = mergedJson[key];
+      }
+    }
 
     const outputPath = path.resolve(outputDir, file);
-    await checkFileExists(outputPath);
 
-    await fs.outputFile(outputPath, JSON.stringify(mergedJson, null, 2), {
+    await fs.outputFile(outputPath, JSON.stringify(sortedJson, null, 2), {
       encoding: "utf8",
     });
 

@@ -25,6 +25,7 @@ import {
 import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import en from "@orderly.network/i18n/locales/en.json";
 import zh from "@orderly.network/i18n/locales/zh.json";
 import ja from "@orderly.network/i18n/locales/ja.json";
 import es from "@orderly.network/i18n/locales/es.json";
@@ -32,6 +33,14 @@ import ko from "@orderly.network/i18n/locales/ko.json";
 import vi from "@orderly.network/i18n/locales/vi.json";
 import de from "@orderly.network/i18n/locales/de.json";
 import fr from "@orderly.network/i18n/locales/fr.json";
+import ru from "@orderly.network/i18n/locales/ru.json";
+import id from "@orderly.network/i18n/locales/id.json";
+import tr from "@orderly.network/i18n/locales/tr.json";
+import it from "@orderly.network/i18n/locales/it.json";
+import pt from "@orderly.network/i18n/locales/pt.json";
+import uk from "@orderly.network/i18n/locales/uk.json";
+import pl from "@orderly.network/i18n/locales/pl.json";
+import nl from "@orderly.network/i18n/locales/nl.json";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -80,10 +89,19 @@ const resources: Resources<ExtendLocaleMessages> = {
   vi,
   de,
   fr,
+  ru,
+  id,
+  tr,
+  it,
+  pt,
+  uk,
+  pl,
+  nl,
 };
 
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   const config = useOrderlyConfig();
+
   return (
     <LocaleProvider
       resources={resources}

@@ -1450,8 +1450,8 @@ importers:
         specifier: workspace:*
         version: link:../utils
       embla-carousel-react:
-        specifier: 8.1.5
-        version: 8.1.5(react@18.2.0)
+        specifier: ^8.2.0
+        version: 8.2.0(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.22.9
@@ -1691,8 +1691,8 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1
       embla-carousel-react:
-        specifier: ^8.0.0
-        version: 8.1.5(react@18.2.0)
+        specifier: ^8.2.0
+        version: 8.2.0(react@18.2.0)
       ethereum-blockies-base64:
         specifier: ^1.0.2
         version: 1.0.2
@@ -1894,8 +1894,8 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       embla-carousel-react:
-        specifier: 8.1.5
-        version: 8.1.5(react@18.2.0)
+        specifier: ^8.2.0
+        version: 8.2.0(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.22.9
@@ -2539,6 +2539,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
     devDependencies:
       '@swc/cli':
         specifier: ^0.3.12

@@ -4,6 +4,7 @@ import {
   CloseCircleFillIcon,
   cn,
   DataFilter,
+  DataTable,
   Flex,
   Input,
   Spinner,
@@ -11,10 +12,10 @@ import {
 } from "@orderly.network/ui";
 import {
   FilterDays,
+  getRowKey,
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTradingListColumns } from "./column";
 
 export type TradingListProps = {
@@ -56,7 +57,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
         )}
       </Flex>
 
-      <AuthGuardDataTable
+      <DataTable
         classNames={{
           root: "oui-pb-4",
           body: "oui-text-2xs",
@@ -68,7 +69,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
         initialSort={props.initialSort}
         onSort={props.onSort}
         dataSource={props.dataList}
-        generatedRowKey={(record: TradingData) => record.address}
+        generatedRowKey={(record: TradingData) => record.key || record.address}
         manualPagination
         manualSorting
         onRow={(record, index) => {
@@ -77,7 +78,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
           };
         }}
         onCell={(column, record, index) => {
-          if (record.key === `user-${props.address?.toLowerCase()}`) {
+          if (record.key === getRowKey(props.address!)) {
             const isFirst = column.getIsFirstColumn();
             const isLast = column.getIsLastColumn();
 

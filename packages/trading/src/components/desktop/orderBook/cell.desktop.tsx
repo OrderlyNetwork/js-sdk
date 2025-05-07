@@ -3,8 +3,12 @@ import { getPrecisionByNumber } from "@orderly.network/utils";
 import { cn, Divider, parseNumber, Text } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { OrderBookCellType } from "../../base/orderBook/types";
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
+import {
+  ORDERBOOK_COIN_TYPE_KEY,
+  useOrderBookContext,
+} from "../../base/orderBook/orderContext";
 import { CellBar, CellBarDirection } from "../../base/orderBook/cellBar";
+import { useLocalStorage } from "@orderly.network/hooks";
 
 export interface DesktopOrderBookCellProps {
   background: string;
@@ -17,7 +21,8 @@ export interface DesktopOrderBookCellProps {
   accumulatedAmount: number;
   type: OrderBookCellType;
   symbolInfo: BasicSymbolInfo;
-
+  base: string;
+  quote: string;
   isHover: boolean;
   currentHover: boolean;
   onMouseEnter: () => void;
@@ -27,38 +32,48 @@ export interface DesktopOrderBookCellProps {
 export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
   const { cellHeight, showTotal, onItemClick, depth, pendingOrders } =
     useOrderBookContext();
-  const { symbolInfo, currentHover } = props;
+  const {
+    symbolInfo,
+    currentHover,
+    accumulated,
+    accumulatedAmount,
+    count,
+    price,
+    quantity,
+    base,
+    quote,
+  } = props;
+
   const { base_dp, quote_dp } = symbolInfo;
 
-  const width = Number.isNaN(props.price)
-    ? 0
-    : (props.accumulated / props.count) * 100;
+  const [coinType] = useLocalStorage<string>(ORDERBOOK_COIN_TYPE_KEY, base);
+
+  const width = Number.isNaN(price) ? 0 : (accumulated / count) * 100;
 
   const dp = useMemo(() => {
     return getPrecisionByNumber(depth || `${quote_dp}`);
   }, [depth, quote_dp]);
 
-  const totalAmount = Number.isNaN(props.accumulated)
+  const totalAmount = Number.isNaN(accumulated)
     ? "-"
-    : props.accumulatedAmount?.toString();
+    : accumulatedAmount?.toString();
 
   const isPendingOrder = useMemo(() => {
-    const priceStr = parseNumber(props.price, { dp: dp, padding: true });
-
-    const index = pendingOrders.findIndex(
+    const priceStr = parseNumber(price, { dp: dp, padding: true });
+    return pendingOrders.some(
       (item) => priceStr === parseNumber(item, { dp: dp, padding: true })
     );
-
-    return index !== -1;
-  }, [pendingOrders, props.price, depth]);
+  }, [pendingOrders, price, dp]);
 
   return (
     <div
       className="oui-flex oui-flex-row oui-pl-3 oui-tabular-nums oui-justify-between oui-text-base-contrast-80 oui-text-xs oui-relative oui-cursor-pointer"
       style={{ height: `${cellHeight}px` }}
       onClick={() => {
-        if (Number.isNaN(props.price) || Number.isNaN(props.quantity)) return;
-        onItemClick?.([props.price, props.quantity]);
+        if (Number.isNaN(price) || Number.isNaN(quantity)) {
+          return;
+        }
+        onItemClick?.([price, quantity]);
       }}
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
@@ -77,10 +92,10 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
               : "oui-text-trade-profit"
           )}
         >
-          <Text.numeral dp={dp}>{props.price}</Text.numeral>
+          <Text.numeral dp={dp}>{price}</Text.numeral>
         </div>
         <div className="oui-flex-1 oui-text-right oui-text-base-contrast-80">
-          <Text.numeral dp={base_dp}>{props.quantity}</Text.numeral>
+          <Text.numeral dp={base_dp}>{quantity}</Text.numeral>
         </div>
       </div>
       <div
@@ -95,17 +110,24 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
             showTotal && "oui-pr-3"
           )}
         >
-          <Text.numeral dp={base_dp} className="oui-z-10">
-            {props.accumulated}
-          </Text.numeral>
+          {coinType === base && (
+            <Text.numeral dp={base_dp} className="oui-z-10">
+              {accumulated}
+            </Text.numeral>
+          )}
+          {coinType === quote && (
+            <Text.numeral dp={dp} className="oui-z-10">
+              {totalAmount}
+            </Text.numeral>
+          )}
         </div>
-        {showTotal && (
+        {/* {showTotal && (
           <div className="oui-flex-1 oui-text-right oui-pr-3">
             <Text.numeral dp={2} className="oui-z-10">
               {totalAmount}
             </Text.numeral>
           </div>
-        )}
+        )} */}
         <CellBar
           width={width}
           direction={CellBarDirection.LEFT_TO_RIGHT}

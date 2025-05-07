@@ -25,7 +25,7 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       <Flex className="oui-flex oui-flex-col lg:oui-flex-row oui-gap-3 lg:oui-items-stretch lg:oui-w-full">
         <Item
           icon={<ApplyIcon />}
-          title={t("affiliate.process.step1.title.title")}
+          title={t("affiliate.process.step1.title")}
           content={t("affiliate.process.step1.description")}
         />
         <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">

@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -12,14 +13,10 @@ import {
   useScreen,
   Text,
 } from "@orderly.network/ui";
-import {
-  AnnouncementData,
-  AnnouncementScriptReturn,
-  AnnouncementType,
-} from "./announcement.script";
+import { AnnouncementType } from "@orderly.network/types";
+import { AnnouncementScriptReturn } from "./announcement.script";
 import { useTranslation } from "@orderly.network/i18n";
 import { CloseIcon } from "../icons";
-import { useMemo } from "react";
 
 export type AnnouncementProps = AnnouncementScriptReturn & {
   style?: React.CSSProperties;
@@ -27,18 +24,20 @@ export type AnnouncementProps = AnnouncementScriptReturn & {
   hideTips?: boolean;
 };
 
-export const Announcement = (props: AnnouncementProps) => {
-  const {
-    closeTips,
-    tips,
-    currentIndex,
-    nextTips,
-    prevTips,
-    maintenanceDialogInfo,
-    showAnnouncement,
-  } = props;
-  const { isMobile } = useScreen();
+export const Announcement: React.FC<Readonly<AnnouncementProps>> = (props) => {
+  const { maintenanceDialogInfo, showAnnouncement, currentTip } = props;
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
+
+  const contentNode = React.useMemo<React.ReactNode>(() => {
+    if (!currentTip) {
+      return null;
+    }
+    if (isMobile) {
+      return <MobileTips {...props} />;
+    }
+    return <DeskTopTips {...props} />;
+  }, [currentTip, isMobile, props]);
 
   if (maintenanceDialogInfo) {
     return (
@@ -64,48 +63,21 @@ export const Announcement = (props: AnnouncementProps) => {
     return null;
   }
 
-  const currentTip = tips[currentIndex];
-
   return (
     <Flex
+      key={currentTip?.announcement_id}
       style={props.style}
-      className={cn("oui-font-semibold oui-rounded-xl", props.className)}
-    >
-      {isMobile ? (
-        <MobileTips
-          currentTip={currentTip}
-          currentIndex={currentIndex}
-          tips={tips}
-          prevTips={prevTips}
-          nextTips={nextTips}
-          closeTips={closeTips}
-        />
-      ) : (
-        <DeskTopTips
-          currentTip={currentTip}
-          currentIndex={currentIndex}
-          tips={tips}
-          prevTips={prevTips}
-          nextTips={nextTips}
-          closeTips={closeTips}
-          mutiLine={props.mutiLine}
-          contentRef={props.contentRef}
-        />
+      className={cn(
+        "oui-font-semibold oui-rounded-xl oui-overflow-hidden",
+        props.className
       )}
+    >
+      {contentNode}
     </Flex>
   );
 };
 
-const DeskTopTips = (props: {
-  currentTip: AnnouncementData;
-  currentIndex: number;
-  tips: AnnouncementData[];
-  prevTips: () => void;
-  nextTips: () => void;
-  closeTips: () => void;
-  mutiLine: boolean;
-  contentRef: React.RefObject<HTMLDivElement>;
-}) => {
+const DeskTopTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
   const {
     currentTip,
     currentIndex,
@@ -115,7 +87,13 @@ const DeskTopTips = (props: {
     closeTips,
     mutiLine,
     contentRef,
+    isAnimating,
   } = props;
+
+  const len = (tips.rows ?? []).length;
+
+  const { i18n } = useTranslation();
+
   return (
     <>
       <Flex
@@ -126,18 +104,20 @@ const DeskTopTips = (props: {
         gapX={2}
         itemAlign={mutiLine ? "start" : "center"}
         className={cn(
-          "oui-mr-[125px]",
-          currentTip.url ? "oui-cursor-pointer" : ""
+          "oui-mr-[125px] oui-relative oui-overflow-hidden",
+          currentTip?.url && "oui-cursor-pointer",
+          "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+          isAnimating && "oui-translate-y-1/2 oui-opacity-0"
         )}
       >
-        <RenderTipsType type={currentTip.type} />
+        <RenderTipsType type={currentTip?.type} />
         <Text
           size="xs"
           intensity={80}
           ref={contentRef}
           className="oui-leading-[18px]"
         >
-          {currentTip.content}
+          {currentTip?.i18n?.[i18n.language] || currentTip?.message}
         </Text>
       </Flex>
       <Flex
@@ -149,7 +129,7 @@ const DeskTopTips = (props: {
       >
         <SwitchTips
           currentIndex={currentIndex}
-          tipsCount={tips.length}
+          tipsCount={len}
           prevTips={prevTips}
           nextTips={nextTips}
         />
@@ -163,57 +143,76 @@ const DeskTopTips = (props: {
   );
 };
 
-const MobileTips = (props: {
-  currentTip: AnnouncementData;
-  currentIndex: number;
-  tips: AnnouncementData[];
-  prevTips: () => void;
-  nextTips: () => void;
-  closeTips: () => void;
-}) => {
-  const { currentTip, currentIndex, tips, prevTips, nextTips, closeTips } =
-    props;
+const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
+  const {
+    currentTip,
+    currentIndex,
+    tips,
+    prevTips,
+    nextTips,
+    closeTips,
+    isAnimating,
+  } = props;
+
+  const len = (tips.rows ?? []).length;
+
+  const { i18n } = useTranslation();
+
   return (
-    <Flex p={3} gapX={2} itemAlign="start" width="100%">
+    <Flex
+      p={3}
+      gapX={2}
+      itemAlign="start"
+      width="100%"
+      className="oui-relative oui-overflow-hidden"
+    >
       <Flex
         gapY={2}
         direction="column"
         className={cn(
           "oui-items-start oui-justify-start oui-w-full",
-          currentTip.url && "oui-cursor-pointer"
+          currentTip?.url && "oui-cursor-pointer"
         )}
       >
-        <Text size="xs" className="oui-leading-5" intensity={80}>
-          {currentTip.content}
-        </Text>
+        <div
+        // className={cn(
+        //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+        //   isAnimating && "oui-translate-y-full oui-opacity-0"
+        // )}
+        >
+          <Text size="xs" className="oui-leading-5" intensity={80}>
+            {currentTip?.i18n?.[i18n.language] || currentTip?.message}
+          </Text>
+        </div>
 
         <Flex width="100%" justify="between">
-          <RenderTipsType type={currentTip.type} />
+          <div
+          // className={cn(
+          //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+          //   isAnimating && "oui-translate-y-full oui-opacity-0"
+          // )}
+          >
+            <RenderTipsType type={currentTip?.type} />
+          </div>
           <SwitchTips
             currentIndex={currentIndex}
-            tipsCount={tips.length}
+            tipsCount={len}
             prevTips={prevTips}
             nextTips={nextTips}
           />
         </Flex>
       </Flex>
-
       <CloseIcon onClick={closeTips} size={18} className="oui-mt-[2px]" />
     </Flex>
   );
 };
 
-const SwitchTips = ({
-  currentIndex,
-  tipsCount,
-  prevTips,
-  nextTips,
-}: {
-  currentIndex: number;
+type SwitchTipsProps = {
   tipsCount: number;
-  prevTips: () => void;
-  nextTips: () => void;
-}) => {
+} & Pick<AnnouncementScriptReturn, "currentIndex" | "prevTips" | "nextTips">;
+
+const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
+  const { currentIndex, tipsCount, prevTips, nextTips } = props;
   return (
     <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-text-base-contrast-54">
       <ChevronLeftIcon
@@ -235,7 +234,9 @@ const SwitchTips = ({
   );
 };
 
-const RenderTipsType = ({ type }: { type?: AnnouncementType }) => {
+const RenderTipsType: React.FC<{ type?: AnnouncementType | null }> = ({
+  type,
+}) => {
   const { t } = useTranslation();
 
   const { label, className } = useMemo(() => {
@@ -257,22 +258,22 @@ const RenderTipsType = ({ type }: { type?: AnnouncementType }) => {
     return map[type!] || {};
   }, [type, t]);
 
-  if (label) {
-    return (
-      <Flex
-        justify="center"
-        px={2}
-        r="base"
-        className={cn(
-          "oui-text-2xs oui-leading-[18px] oui-font-medium",
-          "oui-break-normal oui-whitespace-nowrap",
-          className
-        )}
-      >
-        {label}
-      </Flex>
-    );
+  if (!label) {
+    return null;
   }
 
-  return <div />;
+  return (
+    <Flex
+      justify="center"
+      px={2}
+      r="base"
+      className={cn(
+        "oui-text-2xs oui-leading-[18px] oui-font-medium",
+        "oui-break-normal oui-whitespace-nowrap",
+        className
+      )}
+    >
+      {label}
+    </Flex>
+  );
 };

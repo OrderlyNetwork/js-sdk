@@ -4,16 +4,17 @@ import {
   CloseCircleFillIcon,
   cn,
   DataFilter,
+  DataTable,
   Flex,
   Input,
   Text,
 } from "@orderly.network/ui";
 import {
   FilterDays,
+  getRowKey,
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTradingListColumns } from "./column";
 import { useTranslation } from "@orderly.network/i18n";
 
@@ -85,36 +86,38 @@ export const TradingList: FC<TradingListProps> = (props) => {
             );
           })}
         </Flex>
-        <Input
-          value={props.searchValue}
-          onValueChange={props.onSearchValueChange}
-          placeholder={t("common.address.search.placeholder")}
-          className={cn(
-            "oui-trading-leaderboard-trading-search-input",
-            "oui-w-[240px]"
-          )}
-          size="sm"
-          prefix={
-            <Box pl={3} pr={1}>
-              <SearchIcon className="oui-text-base-contrast-36" />
-            </Box>
-          }
-          suffix={
-            props.searchValue && (
-              <Box mr={2}>
-                <CloseCircleFillIcon
-                  size={14}
-                  className="oui-text-base-contrast-36 oui-cursor-pointer ="
-                  onClick={props.clearSearchValue}
-                />
+        {props.canTrade && (
+          <Input
+            value={props.searchValue}
+            onValueChange={props.onSearchValueChange}
+            placeholder={t("common.address.search.placeholder")}
+            className={cn(
+              "oui-trading-leaderboard-trading-search-input",
+              "oui-w-[240px]"
+            )}
+            size="sm"
+            prefix={
+              <Box pl={3} pr={1}>
+                <SearchIcon className="oui-text-base-contrast-36" />
               </Box>
-            )
-          }
-          autoComplete="off"
-        />
+            }
+            suffix={
+              props.searchValue && (
+                <Box mr={2}>
+                  <CloseCircleFillIcon
+                    size={14}
+                    className="oui-text-base-contrast-36 oui-cursor-pointer ="
+                    onClick={props.clearSearchValue}
+                  />
+                </Box>
+              )
+            }
+            autoComplete="off"
+          />
+        )}
       </Flex>
 
-      <AuthGuardDataTable
+      <DataTable
         loading={props.isLoading}
         id="oui-trading-leaderboard-trading-table"
         columns={column}
@@ -135,7 +138,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
           };
         }}
         onCell={(column, record, index) => {
-          if (record.key === `user-${props.address?.toLowerCase()}`) {
+          if (record.key === getRowKey(props.address!)) {
             const isFirst = column.getIsFirstColumn();
             const isLast = column.getIsLastColumn();
 
@@ -143,10 +146,10 @@ export const TradingList: FC<TradingListProps> = (props) => {
               className: cn(
                 "after:oui-absolute after:oui-w-full after:oui-h-[48px]",
                 "after:oui-border-[rgb(var(--oui-gradient-brand-start))]",
-                " after:oui-top-0 after:oui-left-0 after:oui-z-[-1]",
+                "after:oui-top-0 after:oui-left-0 after:oui-z-[-1]",
                 "after:oui-border-b after:oui-border-t",
                 isFirst && "after:oui-border-l after:oui-rounded-l-lg",
-                isLast && "after:oui-border-r  after:oui-rounded-r-lg"
+                isLast && "after:oui-border-r after:oui-rounded-r-lg"
               ),
             };
           }

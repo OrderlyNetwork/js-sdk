@@ -20,8 +20,9 @@ type SideMenuItem = {
 const menuItemVariants = tv({
   slots: {
     button: [
-      "oui-h-10",
+      "oui-min-h-10",
       "oui-px-3",
+      "oui-py-2",
       "oui-rounded-md",
       "oui-w-full",
       "oui-text-left",
@@ -86,13 +87,13 @@ const MenuItem: FC<
       }}
     >
       <Flex itemAlign={"center"} gap={2} as="span">
-        {item.icon}
+        <div>{item.icon}</div>
         {props.open && (
           <Text.gradient
             color={props.active ? "brand" : "inherit"}
             angle={45}
             size="base"
-            className="oui-animate-in oui-fade-in"
+            className="oui-animate-in oui-fade-in oui-break-all"
           >
             {item.name}
           </Text.gradient>

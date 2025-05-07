@@ -1,13 +1,14 @@
-import { Text, Column, Box } from "@orderly.network/ui";
+import { Text, Column, Box, useScreen } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
 
 export const useTradingListColumns = () => {
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
   return [
     {
       title: t("tradingLeaderboard.rank"),
       dataIndex: "rank",
-      width: 50,
+      width: 40,
       render: (value: number) => {
         return (
           <Box width={20} className="oui-text-center">
@@ -22,7 +23,7 @@ export const useTradingListColumns = () => {
       render: (value: string) => {
         return <Text.formatted rule="address">{value}</Text.formatted>;
       },
-      width: 100,
+      width: 90,
     },
     {
       title: t("tradingLeaderboard.tradingVolume"),
@@ -38,7 +39,24 @@ export const useTradingListColumns = () => {
           </Text.numeral>
         );
       },
-      width: 120,
+      width: 105,
+    },
+    {
+      title: t("common.realizedPnl"),
+      dataIndex: "realized_pnl",
+      onSort: true,
+      align: isMobile ? "right" : "left",
+      render: (value: string) => {
+        if (!value) {
+          return "-";
+        }
+        return (
+          <Text.numeral prefix="$" rule="price" dp={2} coloring>
+            {value}
+          </Text.numeral>
+        );
+      },
+      width: 90,
     },
   ] as Column[];
 };
