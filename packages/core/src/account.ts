@@ -18,6 +18,7 @@ import { WalletAdapter } from "./wallet/walletAdapter";
 import { BaseOrderlyKeyPair, OrderlyKeyPair } from "./keyPair";
 import { PublicKey } from "@solana/web3.js";
 import { AbiCoder, keccak256 } from "ethers";
+import { SubAccount } from "./subAccount";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -33,7 +34,22 @@ export interface AccountState {
    */
   // revalidating?: boolean;
 
+  /**
+   * The current active account ID
+   * Can be either a root account ID or sub-account ID
+   * @since 2.2.0
+   */
   accountId?: string;
+  /**
+   * root account id
+   * @since 2.2.0
+   */
+  mainAccountId?: string;
+  /**
+   * sub account id
+   * @since 2.2.0
+   */
+  subAccountId?: string;
   userId?: string;
   address?: string;
   chainNamespace?: ChainNamespace;
@@ -44,6 +60,8 @@ export interface AccountState {
     name: string;
     chainId: number;
   };
+
+  subAccounts?: SubAccount[];
 
   // balance: string;
   // leverage: number;
@@ -172,8 +190,6 @@ export class Account {
     //   } as WalletAdapterOptions);
     // }
 
-    // console.log("------+++++++------- setAddress", this.walletAdapter, wallet);
-
     this.walletAdapterManager.switchWallet(
       wallet.chain.namespace,
       address,
@@ -206,6 +222,16 @@ export class Account {
   get accountId(): string | undefined {
     const state = this.stateValue;
     return state.accountId;
+  }
+
+  get mainAccountId(): string | undefined {
+    const state = this.stateValue;
+    return state.mainAccountId;
+  }
+
+  get subAccountId(): string | undefined {
+    const state = this.stateValue;
+    return state.subAccountId;
   }
 
   get accountIdHashStr(): string | undefined {
@@ -269,7 +295,8 @@ export class Account {
         nextState = {
           ...this.stateValue,
           status: AccountStatusEnum.SignedIn,
-          accountId: accountInfo.account_id,
+          // accountId: accountInfo.account_id,
+          mainAccountId: accountInfo.account_id,
           userId: accountInfo.user_id,
         };
         this._ee.emit(EVENT_NAMES.statusChanged, nextState);
@@ -332,14 +359,26 @@ export class Account {
           return AccountStatusEnum.DisabledTrading;
         }
 
+        /**
+         * Fetch sub-accounts list when trading is enabled for this account
+         */
+        const subAccounts = await this.getSubAccounts();
+
+        if (subAccounts.length) {
+          // TODO: restore sub-account
+          // load active sub-account from local storage
+        }
+
         this._ee.emit(EVENT_NAMES.statusChanged, {
           ...this.stateValue,
           validating: false,
           status: AccountStatusEnum.EnableTrading,
+          subAccounts,
         });
 
         return AccountStatusEnum.EnableTrading;
       }
+
       this._ee.emit(EVENT_NAMES.statusChanged, {
         ...this.stateValue,
         validating: false,
@@ -435,6 +474,116 @@ export class Account {
       this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
+  async createSubAccount(description: string = ""): Promise<any> {
+    if (!this.stateValue.mainAccountId) {
+      throw new Error("mainAccountId is undefined");
+    }
+
+    const url = "/v1/client/add_sub_account";
+
+    const data = {
+      description,
+    };
+
+    const signature = await this.signData(url, data);
+
+    const res = await this._simpleFetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "X-Account-Id": this.stateValue.mainAccountId,
+        "Content-Type": "application/json",
+        ...signature,
+      },
+    });
+
+    console.log("createSubAccount", res);
+
+    if (res.success) {
+      const subAccount = {
+        id: res.data.sub_account_id,
+        description,
+      };
+
+      let nextState = { ...this._state };
+
+      if (!Array.isArray(nextState.subAccounts)) {
+        nextState.subAccounts = [];
+      }
+      nextState.subAccounts.push(subAccount);
+
+      this._ee.emit(EVENT_NAMES.subAccountCreated, subAccount);
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
+
+      return res.data;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
+  async updateSubAccount(subAccountId: string, description: string) {
+    if (!this.stateValue.mainAccountId) {
+      throw new Error("mainAccountId is undefined");
+    }
+
+    const url = "/v1/client/update_sub_account";
+
+    const data = {
+      sub_account_id: subAccountId,
+      description,
+    };
+
+    const signature = await this.signData(url, data);
+
+    const res = await this._simpleFetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "X-Account-Id": this.stateValue.mainAccountId,
+        "Content-Type": "application/json",
+        ...signature,
+      },
+    });
+
+    if (res.success) {
+      let nextState = { ...this._state };
+      nextState.subAccounts = nextState.subAccounts?.map((subAccount) => {
+        if (subAccount.id === subAccountId) {
+          return { ...subAccount, description };
+        }
+        return subAccount;
+      });
+
+      this._ee.emit(EVENT_NAMES.subAccountUpdated, data);
+
+      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
+      return res.data;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
+  switchSubAccount(subAccountId: string) {
+    const nextState = {
+      ...this._state,
+      subAccountId,
+    };
+    // TODO: store to local storage
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
+  }
+
+  async getSubAccounts() {
+    const url = "/v1/client/get_sub_accounts";
+
+    const res = await this._simpleFetch(url);
+
+    if (res.success) {
+      return res.data.rows ?? [];
     } else {
       throw new Error(res.message);
     }
@@ -549,7 +698,7 @@ export class Account {
         tag: options?.tag,
       });
 
-    console.log("generateAPiKey", publicKey, address);
+    // console.log("generateAPiKey", publicKey, address);
 
     const res = await this._simpleFetch("/v1/orderly_key", {
       method: "POST",
@@ -654,15 +803,7 @@ export class Account {
       verifyingContract: domain.verifyingContract,
     };
 
-    const payload: MessageFactor = {
-      method: "POST",
-      url,
-      data,
-    };
-
-    //
-
-    const signature = await this.signer.sign(payload, getTimestamp());
+    const signature = await this.signData(url, data);
 
     const res = await this._simpleFetch(url, {
       method: "POST",
@@ -684,10 +825,23 @@ export class Account {
     }
   }
 
+  private async signData(url: string, data: any) {
+    const payload: MessageFactor = {
+      method: "POST",
+      url,
+      data,
+    };
+
+    //
+    const signature = await this.signer.sign(payload, getTimestamp());
+    return signature;
+  }
+
   async destroyOrderlyKey(): Promise<void> {
     if (!!this.stateValue.address) {
       // const key = await this.keyStore.getOrderlyKey()?.getPublicKey();
       this.keyStore.cleanKey(this.stateValue.address, "orderlyKey");
+      // TODO: remove sub-account
     }
 
     const nextState = {

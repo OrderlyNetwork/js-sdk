@@ -1,23 +1,12 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import { AccountState } from "@orderly.network/core";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { AccountState, type SubAccount } from "@orderly.network/core";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
-import { useEventEmitter } from "./useEventEmitter";
-import {
-  EnumTrackerKeys,
-  AccountStatusEnum,
-  SDKError,
-} from "@orderly.network/types";
+import { EnumTrackerKeys, SDKError } from "@orderly.network/types";
 import { useTrack } from "./useTrack";
 
 export const useAccount = () => {
-  const {
-    configStore,
-    keyStore,
-    // onWalletConnect,
-    // onWalletDisconnect,
-    // onSetChain,
-  } = useContext(OrderlyContext);
+  const { configStore, keyStore } = useContext(OrderlyContext);
 
   if (!configStore)
     throw new SDKError(
@@ -32,6 +21,8 @@ export const useAccount = () => {
 
   const account = useAccountInstance();
 
+  // const [subAccounts, setSubAccounts] = useState<SubAccount[]>([]);
+
   const [state, setState] = useState<AccountState>(account.stateValue);
   const { track } = useTrack();
 
@@ -45,7 +36,7 @@ export const useAccount = () => {
     return () => {
       account.off("change:status", statusChangeHandler);
     };
-  }, []);
+  }, [account]);
 
   const createOrderlyKey = useCallback(
     async (remember: boolean) => {
@@ -58,17 +49,37 @@ export const useAccount = () => {
     [account, state]
   );
 
+  const subAccounts = useMemo(() => {
+    return state.subAccounts ?? [];
+  }, [state]);
+
+  const switchAccount = useCallback(async () => {
+    // return account.switchAccount();
+  }, [account]);
+
   const createAccount = useCallback(async () => {
     return account.createAccount();
+  }, [account]);
+
+  const createSubAccount = useCallback(async () => {
+    return account.createSubAccount();
+  }, [account]);
+
+  const isSubAccount = useMemo(() => {
+    return account.stateValue.accountId !== account.stateValue.mainAccountId;
   }, [account]);
 
   return {
     account,
     state,
+    isSubAccount,
+    isMainAccount: !isSubAccount,
+    subAccounts,
     // info: {},
     // login,
     createOrderlyKey,
     createAccount,
+    createSubAccount,
     // disconnect,
     // connect,
     // setChain,
