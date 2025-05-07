@@ -108,7 +108,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
             <LinkDeviceWidget />
           </>
         )}
-        <LanguageSwitcherWidget popup={{ mode: "modal" }} />
+        <LanguageSwitcherWidget />
         {isDesktop && <ChainMenuWidget />}
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>

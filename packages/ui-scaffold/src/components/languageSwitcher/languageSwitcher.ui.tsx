@@ -1,9 +1,5 @@
 import { FC, SVGProps, forwardRef } from "react";
-import {
-  useTranslation,
-  Language,
-  LocaleContextState,
-} from "@orderly.network/i18n";
+import { useTranslation, Language } from "@orderly.network/i18n";
 import {
   cn,
   Flex,
@@ -20,8 +16,7 @@ import {
 } from "@orderly.network/ui";
 import { LanguageSwitcherScriptReturn } from "./languageSwitcher.script";
 
-export type LanguageSwitcherProps = LanguageSwitcherScriptReturn &
-  Pick<LocaleContextState, "popup">;
+export type LanguageSwitcherProps = LanguageSwitcherScriptReturn;
 
 export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
   const { languages, popup } = props;
@@ -51,7 +46,7 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
     return (
       <LanguageItem
         className={cn(
-          ["modal", "sheet"].includes(popup?.mode ?? "") &&
+          ["modal", "sheet"].includes(popup.mode ?? "") &&
             "oui-w-[calc((100%_-_4px)/2)] lg:oui-w-[calc((100%_-_8px)/3)]",
         )}
         key={item.localCode}
