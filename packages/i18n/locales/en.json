@@ -511,8 +511,6 @@
   "connector.privy.switchNetwork.tips": "Switch to {{chainName}} to continue.",
   "connector.privy.addEvmWallet.tips": "Connect an EVM-compatible wallet to continue using the EVM network.",
   "connector.privy.addSolanaWallet.tips": "Connect an Solana-compatible wallet to continue using the Solana network.",
-  "connector.privy.addAbstractWallet": "Add Abstract wallet",
-  "connector.privy.addAbstractWallet.tips": "Connect an Abstract-compatible wallet to continue using the Abstract network.",
   "transfer.network": "Network",
   "transfer.lowestFee": "lowest fee",
   "transfer.web3Wallet": "Your Web3 Wallet",
