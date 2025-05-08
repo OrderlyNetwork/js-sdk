@@ -1,7 +1,7 @@
-import { Flex, Text } from "@orderly.network/ui";
-import { FooterMobileNavItem } from "./footer.widget";
 import { useMemo } from "react";
-import { RouterAdapter } from "../scaffoldContext";
+import { Flex, Text } from "@orderly.network/ui";
+import { RouterAdapter } from "../scaffold";
+import { FooterMobileNavItem } from "./footer.widget";
 
 type FooterMobileProps = {
   mainMenus?: FooterMobileNavItem[];
@@ -14,7 +14,9 @@ export const FooterMobile = (props: FooterMobileProps) => {
 
   const menus = useMemo(() => {
     return mainMenus?.map((menu) => {
-      const isActive = current === menu.href || (current && menu.href.length > 1 && current?.startsWith(menu.href));
+      const isActive =
+        current === menu.href ||
+        (current && menu.href.length > 1 && current?.startsWith(menu.href));
       return (
         <Flex
           key={menu.name}
@@ -34,7 +36,7 @@ export const FooterMobile = (props: FooterMobileProps) => {
   }, [mainMenus, current, onRouteChange]);
 
   return (
-    <Flex 
+    <Flex
       width={"100%"}
       height={64}
       px={3}

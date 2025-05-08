@@ -1,13 +1,13 @@
 import { FC, useMemo } from "react";
-import { DataFilter, Flex, Text, TokenIcon } from "@orderly.network/ui";
-import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
 import { useTranslation } from "@orderly.network/i18n";
+import { DataFilter, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import { ListView } from "@orderly.network/ui";
+import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
+
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
 export const DistributionHistoryMobile: FC<FundingHistoryProps> = (props) => {
-  const { dataSource, queryParameter, onFilter, isLoading, pagination } =
-    props;
+  const { dataSource, queryParameter, onFilter, isLoading, pagination } = props;
   const { type, dateRange } = queryParameter;
   const { t } = useTranslation();
 
@@ -33,60 +33,85 @@ export const DistributionHistoryMobile: FC<FundingHistoryProps> = (props) => {
     switch (status) {
       case "CREATED":
       case "SPLIT":
-        return t("portfolio.assetHistory.status.processing") as string;
+        return t("assetHistory.status.processing") as string;
       case "COMPLETED":
       default:
-        return t("portfolio.assetHistory.status.completed") as string;
+        return t("assetHistory.status.completed") as string;
     }
   };
 
   const getTypeText = (type: string) => {
     switch (type) {
-        case "REFERRER_REBATE":
-          return t(
-            "portfolio.overview.distribution.type.referralCommission"
-          );
-        case "REFEREE_REBATE":
-          return t("portfolio.overview.distribution.type.refereeRebate");
-        case "BROKER_FEE":
-          return t("portfolio.overview.distribution.type.brokerFee");
-        default:
-          return "-";
-      }
+      case "REFERRER_REBATE":
+        return t("portfolio.overview.distribution.type.referralCommission");
+      case "REFEREE_REBATE":
+        return t("portfolio.overview.distribution.type.refereeRebate");
+      case "BROKER_FEE":
+        return t("portfolio.overview.distribution.type.brokerFee");
+      default:
+        return "-";
+    }
   };
 
   const renderItem = (item: any) => {
-    return <Flex p={2} direction="column" gapY={2} className="oui-rounded-xl oui-bg-base-9 oui-font-semibold">
-      <Flex direction="row" justify="between" width="100%" height="20px">
-        <Text.formatted rule="date" className="oui-text-base-contrast-36 oui-text-2xs">{item.created_time}</Text.formatted>
-        <Text className="oui-text-base-contrast-80 oui-text-sm">{getStatusText(item.status)}</Text>
-      </Flex>
-      <div className="oui-w-full oui-h-[1px] oui-bg-base-6" />
-      <Flex direction="row" justify="between" width="100%">
-        <Flex direction="column">
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">{t("common.token")}</Text>
-          <Flex gapX={2}>
-            <TokenIcon name={item.token} size="xs" />
-            <span className="oui-text-base-contrast-80 oui-text-xs">{item.token}</span>
+    return (
+      <Flex
+        p={2}
+        direction="column"
+        gapY={2}
+        className="oui-rounded-xl oui-bg-base-9 oui-font-semibold"
+      >
+        <Flex direction="row" justify="between" width="100%" height="20px">
+          <Text.formatted
+            rule="date"
+            className="oui-text-2xs oui-text-base-contrast-36"
+          >
+            {item.created_time}
+          </Text.formatted>
+          <Text className="oui-text-sm oui-text-base-contrast-80">
+            {getStatusText(item.status)}
+          </Text>
+        </Flex>
+        <div className="oui-h-px oui-w-full oui-bg-base-6" />
+        <Flex direction="row" justify="between" width="100%">
+          <Flex direction="column">
+            <Text className="oui-text-2xs oui-text-base-contrast-36">
+              {t("common.token")}
+            </Text>
+            <Flex gapX={2}>
+              <TokenIcon name={item.token} size="xs" />
+              <span className="oui-text-xs oui-text-base-contrast-80">
+                {item.token}
+              </span>
+            </Flex>
+          </Flex>
+          <Flex direction="column">
+            <Text className="oui-text-2xs oui-text-base-contrast-36">
+              {t("common.type")}
+            </Text>
+            <Text className="oui-text-xs oui-text-base-contrast-80">
+              {getTypeText(item.type)}
+            </Text>
+          </Flex>
+          <Flex direction="column">
+            <Text className="oui-text-2xs oui-text-base-contrast-36">
+              {t("common.amount")}
+            </Text>
+            <Text className="oui-text-xs oui-text-base-contrast-80">
+              {item.amount}
+            </Text>
           </Flex>
         </Flex>
-        <Flex direction="column">
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">{t("common.type")}</Text>
-          <Text className="oui-text-base-contrast-80 oui-text-xs">{getTypeText(item.type)}</Text>
-        </Flex>
-        <Flex direction="column">
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">{t("common.amount")}</Text>
-          <Text className="oui-text-base-contrast-80 oui-text-xs">{item.amount}</Text>
-        </Flex>
       </Flex>
-    </Flex>;
+    );
   };
 
   const loadMore = () => {
     if (dataSource.length < (pagination?.count || 0)) {
-      pagination?.onPageSizeChange && pagination.onPageSizeChange(pagination?.pageSize + 50)
+      pagination?.onPageSizeChange &&
+        pagination.onPageSizeChange(pagination?.pageSize + 50);
     }
-  }
+  };
 
   return (
     <>
