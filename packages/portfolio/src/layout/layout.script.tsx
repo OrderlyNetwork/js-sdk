@@ -10,6 +10,7 @@ export enum PortfolioLeftSidebarPath {
   FeeTier = "/portfolio/feeTier",
   ApiKey = "/portfolio/apiKey",
   Setting = "/portfolio/setting",
+  History = "/portfolio/history",
 }
 
 export type UseLayoutBuilderOptions = {

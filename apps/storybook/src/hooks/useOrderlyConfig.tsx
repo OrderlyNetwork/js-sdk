@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import { TradingPageProps } from "@orderly.network/trading";
-import { FooterProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
+import { FooterProps, MainNavWidgetProps, FooterMobileProps } from "@orderly.network/ui-scaffold";
 import { RestrictedInfoOptions } from "@orderly.network/hooks";
 import { AppLogos } from "@orderly.network/react-app";
+import { TradingActiveIcon, TradingInactiveIcon, PortfolioActiveIcon, PortfolioInactiveIcon } from "@orderly.network/ui";
 import {
   AffiliatesActiveIcon,
   AffiliatesIcon,
@@ -82,6 +83,10 @@ export const useOrderlyConfig = () => {
           telegramUrl: "https://orderly.network",
           discordUrl: "https://discord.com/invite/orderlynetwork",
           twitterUrl: "https://twitter.com/OrderlyNetwork",
+          mobileMainMenus: [
+            { name: t("common.trading"), href: "/", activeIcon: <TradingActiveIcon />, inactiveIcon: <TradingInactiveIcon /> },
+            { name: t("common.portfolio"), href: "/portfolio", activeIcon: <PortfolioActiveIcon />, inactiveIcon: <PortfolioInactiveIcon /> },
+          ],
         },
       },
       orderlyAppProvider: {

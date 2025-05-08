@@ -11,6 +11,7 @@ export { CaretLeftIcon } from "./caretLeft";
 export { CaretRightIcon } from "./caretRight";
 export { ChevronLeftIcon } from "./chevronLeft";
 export { ChevronRightIcon } from "./chevronRight";
+export { CalendarMinusIcon } from "./calendarMinus";
 export { SettingIcon } from "./setting";
 export { SettingFillIcon } from "./settingFill";
 export { CloseSquareFillIcon } from "./closeSquareFill";
@@ -51,6 +52,13 @@ export {
 } from "./arrowShort";
 
 export { SortingIcon } from "./sortingIcon";
+export { TraderMobileIcon } from "./traderMobileIcon";
+export { AffiliateIcon } from "./affiliateIcon";
+export { TradingRewardsIcon } from "./tradingRewardsIcon";
+export { PortfolioActiveIcon } from "./portfolioActiveIcon";
+export { PortfolioInactiveIcon } from "./portfolioInactiveIcon";
+export { TradingActiveIcon } from "./tradingActiveIcon";
+export { TradingInactiveIcon } from "./tradingInactiveIcon";
 
 import { CombineIcon } from "./combine";
 

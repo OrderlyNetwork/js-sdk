@@ -1,7 +1,8 @@
 import { FC, PropsWithChildren } from "react";
 import { PortfolioLayout, PortfolioLayoutProps } from "./layout.ui";
 import { usePortfolioLayoutScript } from "./layout.script";
-
+import { useScreen } from "@orderly.network/ui";
+import { PortfolioLayoutMobile } from "./layout.ui.mobile";
 export type PortfolioLayoutWidgetProps = PortfolioLayoutProps;
 
 export const PortfolioLayoutWidget: FC<
@@ -10,9 +11,15 @@ export const PortfolioLayoutWidget: FC<
   const state = usePortfolioLayoutScript({
     current: props.leftSideProps?.current,
   });
+  const { isMobile } = useScreen();
+
   return (
-    <PortfolioLayout {...state} {...props}>
-      {props.children}
-    </PortfolioLayout>
+    <>
+      {isMobile ? (
+        <PortfolioLayoutMobile {...state} {...props} />
+      ) : (
+        <PortfolioLayout {...state} {...props} />
+      )}
+    </>
   );
 };

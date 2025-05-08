@@ -16,6 +16,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
   const onSymbol = () => {
     props.onOpenMarketsSheetChange(true);
   };
+  console.log("props", props);
   const topBar = (
     <Box intensity={900} px={3} height={54}>
       <SymbolInfoBarWidget

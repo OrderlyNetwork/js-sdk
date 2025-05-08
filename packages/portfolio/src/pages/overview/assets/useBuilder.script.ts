@@ -14,7 +14,7 @@ import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
 import { useAppContext } from "@orderly.network/react-app";
 
 export const useAssetScript = () => {
-  const { connect } = useWalletConnector();
+  const { connect, namespace } = useWalletConnector();
   const { state } = useAccount();
   const { totalValue, freeCollateral } = useCollateral();
   const { wrongNetwork, disabledConnect } = useAppContext();
@@ -57,6 +57,7 @@ export const useAssetScript = () => {
     toggleVisible: () => setVisible(!visible),
     onDeposit,
     onWithdraw,
+    namespace,
   } as const;
 };
 

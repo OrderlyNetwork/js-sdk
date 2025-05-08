@@ -11,7 +11,7 @@ import { TabName } from "./useState.script";
 import { FundingHistoryWidget } from "../funding";
 import { DistributionHistoryWidget } from "../distribution";
 import { useTranslation } from "@orderly.network/i18n";
-export const HistoryDataGroupUI = (props: {
+export const HistoryDataGroupDesktop = (props: {
   active?: TabName;
   onTabChange: (tab: string) => void;
 }) => {
