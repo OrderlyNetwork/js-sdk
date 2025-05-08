@@ -1,16 +1,16 @@
 import { FC } from "react";
-import { TradingState } from "./trading.script";
-import { TopTabWidget } from "../../components/mobile/topTab";
-import { OrderBookAndEntryWidget } from "../../components/mobile/orderBookAndEntry";
 import {
   MarketsSheetWidget,
   SymbolInfoBarWidget,
 } from "@orderly.network/markets";
 import { Flex, Box, SimpleSheet } from "@orderly.network/ui";
-import { SecondaryLogo } from "../../components/base/secondaryLogo";
-import { DataListWidget } from "../../components/mobile/dataList";
-import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+import { SecondaryLogo } from "../../components/base/secondaryLogo";
+import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
+import { DataListWidget } from "../../components/mobile/dataList";
+import { OrderBookAndEntryWidget } from "../../components/mobile/orderBookAndEntry";
+import { TopTabWidget } from "../../components/mobile/topTab";
+import { TradingState } from "./trading.script";
 
 export const MobileLayout: FC<TradingState> = (props) => {
   const onSymbol = () => {
@@ -53,12 +53,12 @@ export const MobileLayout: FC<TradingState> = (props) => {
       style={{
         paddingBottom: "calc(64px + env(safe-area-inset-bottom))",
       }}
-      className="oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-screen oui-gap-1 oui-relative oui-bg-base-10"
+      className="oui-relative oui-grid oui-h-screen oui-grid-rows-[auto,1fr,auto] oui-gap-1 oui-bg-base-10"
     >
       <header>{topBar}</header>
 
-      <main className="oui-overflow-y-auto oui-hide-scrollbar oui-space-y-1">
-        <TopTabWidget className="oui-bg-base-9 oui-mx-1 oui-rounded-xl" />
+      <main className="oui-hide-scrollbar oui-space-y-1 oui-overflow-y-auto">
+        <TopTabWidget className="oui-mx-1 oui-rounded-xl oui-bg-base-9" />
         <OrderBookAndEntryWidget />
         <DataListWidget
           symbol={props.symbol}
@@ -67,7 +67,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
         />
       </main>
 
-      <div className="oui-fixed oui-left-0 oui-right-0 oui-bottom-0">
+      <div className="oui-fixed oui-inset-x-0 oui-bottom-0">
         <BottomNavBarWidget />
       </div>
     </div>

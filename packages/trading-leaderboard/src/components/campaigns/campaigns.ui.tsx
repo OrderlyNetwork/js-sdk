@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { cn, Box, Text, Flex, Button, Select } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn, Box, Text, Flex, Button, Select } from "@orderly.network/ui";
 import { CampaignsScriptReturn, CurrentCampaigns } from "./campaigns.script";
 
 export type CampaignsProps = {
@@ -22,7 +22,7 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
       height={288}
       className={cn(
         "oui-trading-leaderboard-campaigns oui-rounded-[20px]",
-        props.className
+        props.className,
       )}
       style={props.style}
     >
@@ -40,7 +40,14 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
           className="oui-pr-1.5"
         >
           {props.currentCampaigns.map((campaign) => {
-            return <CampaignItem key={campaign.title} campaign={campaign} />;
+            return (
+              <CampaignItem
+                key={campaign.title}
+                campaign={campaign}
+                onLearnMore={props.onLearnMore}
+                onTradeNow={props.onTradeNow}
+              />
+            );
           })}
         </Flex>
       </Box>
@@ -67,15 +74,24 @@ const Header: FC<CampaignsScriptReturn> = (props) => {
   );
 };
 
-const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
-  const { title, description, image, displayTime, learnMoreUrl, tradingUrl } =
-    campaign;
+type CampaignItemProps = {
+  campaign: CurrentCampaigns;
+  onLearnMore: (campaign: CurrentCampaigns) => void;
+  onTradeNow: (campaign: CurrentCampaigns) => void;
+};
+
+const CampaignItem: FC<CampaignItemProps> = ({
+  campaign,
+  onLearnMore,
+  onTradeNow,
+}) => {
+  const { title, description, image, displayTime } = campaign;
   const { t } = useTranslation();
 
   return (
     <Flex intensity={800} r="xl" width="100%">
       <img
-        className="oui-w-[400px] oui-h-[200px] oui-rounded-l-xl oui-object-fill"
+        className="oui-h-[200px] oui-w-[400px] oui-rounded-l-xl oui-object-fill"
         src={image}
         alt={title}
       />
@@ -86,7 +102,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
         direction="column"
         height="100%"
         p={5}
-        className="oui-font-semibold oui-flex-1"
+        className="oui-flex-1 oui-font-semibold"
       >
         <Flex gap={1} direction="column" itemAlign="start">
           <Text size="xl">{title}</Text>
@@ -104,7 +120,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
               color="secondary"
               size="md"
               onClick={() => {
-                window.open(learnMoreUrl, "_blank");
+                onLearnMore(campaign);
               }}
             >
               {t("tradingLeaderboard.learnMore")}
@@ -112,7 +128,7 @@ const CampaignItem: FC<{ campaign: CurrentCampaigns }> = ({ campaign }) => {
             <Button
               size="md"
               onClick={() => {
-                window.open(tradingUrl, "_self");
+                onTradeNow(campaign);
               }}
             >
               {t("tradingLeaderboard.tradeNow")}

@@ -1,13 +1,4 @@
-import { useWagmiWallet } from "../providers/wagmiWalletProvider";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSolanaWallet } from "../providers/solanaWalletProvider";
-import { usePrivyWallet } from "../providers/privyWalletProvider";
-import {
-  ChainNamespace,
-  ConnectorKey,
-  EnumTrackerKeys,
-  TrackerListenerKeyMap,
-} from "@orderly.network/types";
 import {
   useLocalStorage,
   useStorageChain,
@@ -15,12 +6,20 @@ import {
   WalletState,
 } from "@orderly.network/hooks";
 import {
+  ChainNamespace,
+  ConnectorKey,
+  TrackerEventName,
+} from "@orderly.network/types";
+import { useWalletConnectorPrivy } from "../provider";
+import { usePrivyWallet } from "../providers/privyWalletProvider";
+import { useSolanaWallet } from "../providers/solanaWalletProvider";
+import { useWagmiWallet } from "../providers/wagmiWalletProvider";
+import {
   ConnectProps,
   SolanaChains,
   WalletChainTypeEnum,
   WalletType,
 } from "../types";
-import { useWalletConnectorPrivy } from "../provider";
 
 export function useWallet() {
   const { track } = useTrack();
@@ -92,7 +91,7 @@ export function useWallet() {
     let tempNamespace: ChainNamespace = ChainNamespace.evm;
     if (
       Array.from(SolanaChains.values()).includes(
-        parseInt(chain.chainId as string)
+        parseInt(chain.chainId as string),
       )
     ) {
       tempNamespace = ChainNamespace.solana;
@@ -105,7 +104,7 @@ export function useWallet() {
         isManual.current = true;
         return setChainPrivy(parseInt(chain.chainId as string))
           .then((res) => {
-            track(EnumTrackerKeys.switchNetworkSuccess, {
+            track(TrackerEventName.switchNetworkSuccess, {
               from_chain: storageChain?.chainId,
               to_chain: chain.chainId,
             });
@@ -141,7 +140,7 @@ export function useWallet() {
         if (tempNamespace === ChainNamespace.evm) {
           await setChainEvm(parseInt(chain.chainId as string));
           setStorageChain(parseInt(chain.chainId as string));
-          track(EnumTrackerKeys.switchNetworkSuccess, {
+          track(TrackerEventName.switchNetworkSuccess, {
             from_chain: storageChain?.chainId,
             to_chain: chain.chainId,
           });
@@ -199,7 +198,7 @@ export function useWallet() {
         }
       }
     }
-    track(EnumTrackerKeys.clickSwitchWallet, {
+    track(TrackerEventName.clickSwitchWallet, {
       fromWallet,
       toWallet,
     });

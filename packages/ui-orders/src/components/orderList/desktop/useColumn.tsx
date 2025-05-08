@@ -1002,7 +1002,7 @@ function avgOpen(option?: {
   className?: string;
 }): Column<API.Order> {
   return {
-    title: i18n.t("common.avgOpen"),
+    title: i18n.t("common.avgPrice"),
     dataIndex: "average_executed_price",
     width: option?.width,
     onSort:

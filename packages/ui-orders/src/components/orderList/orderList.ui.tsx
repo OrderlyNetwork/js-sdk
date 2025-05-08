@@ -36,16 +36,17 @@ export const DesktopOrderList: FC<
     sharePnLConfig,
     symbolsInfo: props.symbolsInfo,
   });
-  const { t } = useTranslation();
+  
+  // const { t } = useTranslation();
 
-  const dayLabel: Record<number, string> = useMemo(() => {
-    return {
-      1: t("common.select.1d"),
-      7: t("common.select.7d"),
-      30: t("common.select.30d"),
-      90: t("common.select.90d"),
-    };
-  }, [t]);
+  // const dayLabel: Record<number, string> = useMemo(() => {
+  //   return {
+  //     1: t("common.select.1d"),
+  //     7: t("common.select.7d"),
+  //     30: t("common.select.30d"),
+  //     90: t("common.select.90d"),
+  //   };
+  // }, [t]);
 
   return (
     <OrderListProvider
@@ -72,7 +73,7 @@ export const DesktopOrderList: FC<
               }
             />
           )}
-          {[1, 7, 30, 90].map((value) => {
+          {/* {[1, 7, 30, 90].map((value) => {
             return (
               <button className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm">
                 <div className="oui-z-10">
@@ -96,7 +97,7 @@ export const DesktopOrderList: FC<
                 ></div>
               </button>
             );
-          })}
+          })} */}
         </Flex>
         <AuthGuardDataTable
           columns={columns}

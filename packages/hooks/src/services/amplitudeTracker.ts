@@ -1,7 +1,8 @@
 import * as amplitude from "@amplitude/analytics-browser";
-import { EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
 import { SimpleDI } from "@orderly.network/core";
 import { EventEmitter } from "@orderly.network/core";
+import { TrackerEventName } from "@orderly.network/types";
+
 export enum ENVType {
   prod = "prod",
   staging = "staging",
@@ -20,6 +21,7 @@ export class AmplitudeTracker {
   private _userId: string | undefined;
   private _sdkInfoTag: string | undefined;
   private _ee = SimpleDI.get<EventEmitter>("EE");
+
   constructor(env: ENVType, sdkInfo: any) {
     amplitude.init(apiKeyMap[env], { serverZone: "EU" });
     this.setSdkInfo(sdkInfo);
@@ -48,29 +50,27 @@ export class AmplitudeTracker {
     amplitude.identify(identify);
   }
 
-  track(eventName: keyof typeof TrackerListenerKeyMap, properties?: any) {
-    amplitude.track(TrackerListenerKeyMap[eventName] || eventName, properties);
+  track(eventName: TrackerEventName, properties?: any) {
+    amplitude.track(eventName, properties);
   }
 
   private _bindEvents() {
-    const listenKeys = Object.keys(TrackerListenerKeyMap);
+    const listenKeys = Object.values(TrackerEventName);
     listenKeys.forEach((key) => {
       this._ee.addListener(key, (params = {}) => {
-        if (key === EnumTrackerKeys.trackIdentifyUserId) {
+        if (key === TrackerEventName.trackIdentifyUserId) {
           this.setUserId(params);
-        } else if (key === EnumTrackerKeys.trackCustomEvent) {
-
-          const eventName = params.eventName
+        } else if (key === TrackerEventName.trackIdentify) {
+          this.identify(params);
+        } else if (key === TrackerEventName.trackCustomEvent) {
+          const { eventName, ...rest } = params;
           if (!eventName) {
             return;
           }
 
-          delete params.eventName;
-          const enventParams = params;
-     
-          this.track(eventName, enventParams);
+          this.track(eventName, rest);
         } else {
-          this.track(key as keyof typeof TrackerListenerKeyMap, params);
+          this.track(key, params);
         }
       });
     });

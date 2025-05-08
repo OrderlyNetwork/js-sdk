@@ -75,7 +75,7 @@ export const usePositionHistoryColumn = (props: {
         },
         // avg open
         {
-          title: t("common.avgOpen"),
+          title: t("common.avgPrice"),
           dataIndex: "avg_open",
           width: 140,
           render: (_: any, record) => {
@@ -389,3 +389,5 @@ export const NetPnL = (props: {
     </Tooltip>
   );
 };
+
+
