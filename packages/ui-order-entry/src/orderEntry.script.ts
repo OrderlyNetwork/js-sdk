@@ -1,9 +1,4 @@
-import {
-  BBOOrderType,
-  OrderLevel,
-  OrderSide,
-  OrderType,
-} from "@orderly.network/types";
+import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import {
   useAccount,
   useEventEmitter,
@@ -12,12 +7,17 @@ import {
   useOrderEntry,
   utils,
 } from "@orderly.network/hooks";
-import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
+import { useAppContext } from "@orderly.network/react-app";
+import {
+  BBOOrderType,
+  OrderLevel,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { convertValueToPercentage } from "@orderly.network/ui";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { InputType } from "./types";
-import { convertValueToPercentage } from "@orderly.network/ui";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { useAppContext } from "@orderly.network/react-app";
 import {
   BBOStatus,
   getOrderLevelByBBO,
@@ -34,11 +34,11 @@ export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [localOrderType, setLocalOrderType] = useLocalStorage(
     "orderly-order-entry-order-type",
-    OrderType.LIMIT
+    OrderType.LIMIT,
   );
   const [localOrderSide, setLocalOrderSide] = useLocalStorage(
     "orderly-order-entry-order-side",
-    OrderSide.BUY
+    OrderSide.BUY,
   );
   const [localBBOType, setLocalBBOType] = useLocalStorage<
     BBOOrderType | undefined
@@ -56,7 +56,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     });
   const [tpslSwitch, setTpslSwitch] = useLocalStorage(
     "orderly-order-entry-tp_sl-switch",
-    false
+    false,
   );
 
   const { state: accountState } = useAccount();
@@ -87,7 +87,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       convertValueToPercentage(
         Number(formattedOrder.order_quantity ?? 0),
         0,
-        state.maxQty
+        state.maxQty,
       ) / 100
     );
   }, [formattedOrder.order_quantity, state.maxQty]);
@@ -96,7 +96,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     if (symbolInfo.base_tick < 1) return;
     const quantity = utils.formatNumber(
       formattedOrder?.order_quantity,
-      new Decimal(symbolInfo?.base_tick || "0").toNumber()
+      new Decimal(symbolInfo?.base_tick || "0").toNumber(),
     );
     setValue("order_quantity", quantity, {
       shouldUpdateLastChangedField: false,
@@ -142,7 +142,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     value: any,
     options?: {
       shouldUpdateLastChangedField?: boolean;
-    }
+    },
   ) => {
     if (key === "order_type") {
       setLocalOrderType(value);
@@ -201,7 +201,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     if (
       tpslSwitch ||
       [OrderType.POST_ONLY, OrderType.IOC, OrderType.FOK].includes(
-        formattedOrder.order_type_ext!
+        formattedOrder.order_type_ext!,
       )
     ) {
       return BBOStatus.DISABLED;
@@ -379,7 +379,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     if (!element) return;
 
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         const width = entry.contentRect.width;
         if (width) {
           // update BBO order select dropdown width when priceInputContainerRef width changed
@@ -394,6 +394,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       resizeObserver.unobserve(element);
     };
   }, [priceInputContainerRef, formattedOrder.order_type_ext]);
+
+  useEffect(() => {
+    // after switching symbol, all the input number should be cleared (price, qty, TP/SL, etc)
+    state.reset();
+    state.resetMetaState();
+  }, [inputs.symbol]);
 
   return {
     ...state,
