@@ -58,6 +58,7 @@ export const connector = {
   "connector.privy.myWallet": "My wallet",
   "connector.privy.addEvmWallet": "Add Evm wallet",
   "connector.privy.addSolanaWallet": "Add Solana wallet",
+  "connector.privy.addAbstractWallet": "Add Abstract wallet",
   "connector.privy.createEvmWallet": "Create Evm wallet",
   "connector.privy.createSolanaWallet": "Create Solana wallet",
   "connector.privy.termsOfUse":
@@ -69,7 +70,8 @@ export const connector = {
     "Please create a wallet to proceed. Only you can access the private key. You can export the private key and import your wallet into another wallet client, such as MetaMask or Phantom, at any time.",
   "connector.privy.switchNetwork.tips": "Switch to {{chainName}} to continue.",
   "connector.privy.addEvmWallet.tips": "Connect an EVM-compatible wallet to continue using the EVM network.",
-  "connector.privy.addSolanaWallet.tips": "Connect an Solana-compatible wallet to continue using the Solana network."
+  "connector.privy.addSolanaWallet.tips": "Connect an Solana-compatible wallet to continue using the Solana network.",
+  "connector.privy.addAbstractWallet.tips": "Connect an Abstract-compatible wallet to continue using the Abstract network."
 };
 
 export type Connector = typeof connector;
