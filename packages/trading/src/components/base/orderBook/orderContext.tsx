@@ -27,7 +27,7 @@ export const OrderBookContext = createContext({
 
 export const useOrderBookContext = () => useContext(OrderBookContext);
 
-export const ORDERBOOK_COIN_TYPE_KEY = "orderbook-coin-type";
+export const ORDERBOOK_COIN_TYPE_KEY = "orderbook_coin_type";
 
 interface OrderBookProviderProps {
   cellHeight: number;

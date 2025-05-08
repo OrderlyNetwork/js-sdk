@@ -6,25 +6,45 @@ export type Language = {
   displayName: string;
 };
 
+export type PopupMode = "modal" | "dropdown" | "sheet";
+export type PopupProps = {
+  /**
+   * popup mode
+   * - modal: show in a dialog
+   * - dropdown: show in a dropdown menu
+   * - sheet: show in a sheet (only for mobile)
+   * @default modal
+   */
+  mode?: PopupMode;
+  /** popup class name */
+  className?: string;
+  /** popup style */
+  style?: React.CSSProperties;
+};
+
 export type LocaleContextState = {
   /**
    * custom languages
    */
   languages: Language[];
   /**
+   * called before language changed
+   */
+  onLanguageBeforeChanged: (lang: LocaleCode) => Promise<void>;
+  /**
    * called when language changed
    */
   onLanguageChanged: (lang: LocaleCode) => Promise<void>;
   /**
-   * called before language changed
+   * popup options for language switcher
    */
-  onLanguageBeforeChanged: (lang: LocaleCode) => Promise<void>;
+  popup?: PopupProps;
 };
 
 export const LocaleContext = createContext<LocaleContextState>({
   languages: [],
-  onLanguageChanged: () => Promise.resolve(),
   onLanguageBeforeChanged: () => Promise.resolve(),
+  onLanguageChanged: () => Promise.resolve(),
 });
 
 export const useLocaleContext = () => {

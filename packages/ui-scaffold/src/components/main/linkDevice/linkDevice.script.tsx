@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { useAccount, useChains, useEventEmitter, useTrack } from "@orderly.network/hooks";
-import { EnumTrackerKeys } from "@orderly.network/types";
+import {
+  useAccount,
+  useChains,
+  useEventEmitter,
+  useTrack,
+} from "@orderly.network/hooks";
+import { TrackerEventName } from "@orderly.network/types";
 
 export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
 
@@ -14,7 +19,7 @@ export function useLinkDeviceScript() {
   const [secretKey, setSecretKey] = useState("");
   const [url, setUrl] = useState("");
   const ee = useEventEmitter();
-  const {track} = useTrack();
+  const { track } = useTrack();
 
   const { state, account } = useAccount();
 
@@ -38,17 +43,14 @@ export function useLinkDeviceScript() {
       setSecretKey(res.secretKey);
       setLoading(false);
 
-      track(
-        EnumTrackerKeys.signLinkDeviceMessageSuccess,
-        createTrackParams()
-      );
+      track(TrackerEventName.signLinkDeviceMessageSuccess, createTrackParams());
     } catch (e) {
       console.error("getOrderlyKey", e);
 
       if (e instanceof Error) {
         if (
           e.message.indexOf(
-            "Signing off chain messages with Ledger is not yet supported"
+            "Signing off chain messages with Ledger is not yet supported",
           ) !== -1
         ) {
           ee.emit("wallet:sign-message-with-ledger-error", {
@@ -64,7 +66,7 @@ export function useLinkDeviceScript() {
   const showDialog = useCallback(() => {
     setOpen(true);
     getOrderlyKey();
-    track(EnumTrackerKeys.clickLinkDeviceButton, createTrackParams());
+    track(TrackerEventName.clickLinkDeviceButton, createTrackParams());
   }, [account]);
 
   const hideDialog = useCallback(() => {
@@ -73,7 +75,7 @@ export function useLinkDeviceScript() {
 
   const onConfirm = useCallback(() => {
     setConfirm(true);
-    track(EnumTrackerKeys.linkDeviceModalClickConfirm, {});
+    track(TrackerEventName.linkDeviceModalClickConfirm, {});
   }, []);
 
   const copyUrl = useCallback(() => {

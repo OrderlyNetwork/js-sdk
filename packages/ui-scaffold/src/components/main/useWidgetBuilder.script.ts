@@ -5,7 +5,6 @@ import {
   useEventEmitter,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { ProductItem } from "./productItem";
 import { useAppContext } from "@orderly.network/react-app";
 import type { MainNavItem } from "./mainMenus/navItem";
 import { type MainNavWidgetProps } from "./mainNav.widget";
@@ -36,9 +35,6 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
       ? [props.initialMenu]
       : props.initialMenu;
   });
-  const [currentProduct, setCurrentProduct] = useState(
-    () => props?.initialProduct ?? props?.products?.[0].href ?? ""
-  );
 
   const onItemClickHandler = (scope: string) => (item: MainNavItem[]) => {
     const lastItem = item[item.length - 1];
@@ -70,6 +66,8 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
 
   const mainNavConfig = useMemo(() => {
     const config = {
+      leading: null,
+      trailing: null,
       logo: {},
       mainMenus: [
         // { name: "Trading", href: "/trading" },
@@ -84,6 +82,13 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
       ...props,
       campaignPosition,
     };
+    if (props.leading) {
+      config.leading = props.leading;
+    }
+
+    if (props.trailing) {
+      config.trailing = props.trailing;
+    }
 
     if (props.campaigns) {
       if (campaignPosition === CampaignPositionEnum.menuTailing) {
@@ -99,28 +104,6 @@ export const useMainNavBuilder = (props: UseMainNavBuilderProps) => {
   }, [props]);
 
   const converted: any = {};
-
-  if (mainNavConfig.products && mainNavConfig.products.length) {
-    converted.products = {
-      items: mainNavConfig.products,
-      current: currentProduct,
-      onItemClick: (product: ProductItem) => {
-        // No need to modify the intenal state
-        const args = {
-          href: product.href,
-          name: product.name,
-          scope: "product",
-        };
-
-        if (typeof onItemClick === "function") {
-          onItemClick(args);
-          return;
-        }
-
-        routerAdapter?.onRouteChange(args);
-      },
-    };
-  }
 
   if (mainNavConfig.mainMenus && mainNavConfig.mainMenus.length) {
     converted.mainMenus = {

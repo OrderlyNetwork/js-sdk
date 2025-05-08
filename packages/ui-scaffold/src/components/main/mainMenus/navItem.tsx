@@ -265,6 +265,7 @@ const SubMenuTitle = (props: { item: MainNavItem; isActive?: boolean }) => {
           as={"div"}
           intensity={80}
           weight={"semibold"}
+          className="oui-break-normal oui-whitespace-nowrap"
         >
           {name}
         </Text.gradient>
@@ -282,7 +283,11 @@ const Tag = (props: { item: MainNavItem }) => {
         "oui-px-2 oui-py-1 oui-ml-1 oui-rounded oui-inline-flex oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)]"
       }
     >
-      <Text.gradient color={"brand"} size={"3xs"}>
+      <Text.gradient
+        color={"brand"}
+        size={"3xs"}
+        className="oui-break-normal oui-whitespace-nowrap"
+      >
         {props.item.tag}
       </Text.gradient>
     </div>

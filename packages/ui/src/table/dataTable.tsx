@@ -12,20 +12,22 @@ import {
   TableFeature,
   Table,
   Column as TanstackColumn,
+  ExpandedState,
+  OnChangeFn,
 } from "@tanstack/react-table";
-import { Column, PaginationMeta, TableSort, DataTableClassNames } from "./type";
 import { cnBase } from "tailwind-variants";
-import { Transform } from "./transform";
-import { useWrap } from "./hooks/useWrap";
-import { TablePagination } from "./tablePagination";
-import { TableHeader } from "./tableHeader";
-import { TableBody } from "./tableBody";
 import { useInit } from "./hooks/useInit";
-import { TablePlaceholder } from "./tablePlaceholder";
-import { useSort } from "./hooks/useSort";
+import { useScroll } from "./hooks/useScroll";
 import { useShowHeader } from "./hooks/useShowHeader";
 import { useShowPagination } from "./hooks/useShowPagination";
-import { useScroll } from "./hooks/useScroll";
+import { useSort } from "./hooks/useSort";
+import { useWrap } from "./hooks/useWrap";
+import { TableBody } from "./tableBody";
+import { TableHeader } from "./tableHeader";
+import { TablePagination } from "./tablePagination";
+import { TablePlaceholder } from "./tablePlaceholder";
+import { Transform } from "./transform";
+import { Column, PaginationMeta, TableSort, DataTableClassNames } from "./type";
 
 export type DataTableProps<RecordType> = {
   columns: Column<RecordType>[];
@@ -50,6 +52,9 @@ export type DataTableProps<RecordType> = {
   // initialMinHeight?: number;
   getRowCanExpand?: (row: Row<any>) => boolean;
   expandRowRender?: (row: Row<any>, index: number) => ReactNode;
+  expanded?: ExpandedState;
+  onExpandedChange?: OnChangeFn<ExpandedState>;
+  getSubRows?: (record: any, index: number) => undefined | any[];
   manualSorting?: boolean;
   manualPagination?: boolean;
   manualFiltering?: boolean;
@@ -57,14 +62,14 @@ export type DataTableProps<RecordType> = {
   renderRowContainer?: (
     record: RecordType,
     index: number,
-    children: ReactNode
+    children: ReactNode,
   ) => ReactNode;
   generatedRowKey?: CoreOptions<any>["getRowId"];
   onRow?: (record: RecordType, index: number) => any;
   onCell?: (
     column: TanstackColumn<any>,
     record: RecordType,
-    index: number
+    index: number,
   ) => any;
   columnFilters?: ColumnFilter | ColumnFilter[];
   rowSelection?: RowSelectionState;
@@ -78,7 +83,7 @@ export type DataTableProps<RecordType> = {
 };
 
 export function DataTable<RecordType extends any>(
-  props: PropsWithChildren<DataTableProps<RecordType>>
+  props: PropsWithChildren<DataTableProps<RecordType>>,
 ) {
   const {
     columns,
@@ -93,6 +98,8 @@ export function DataTable<RecordType extends any>(
     initialSort,
     manualSorting,
     onSort,
+    expanded,
+    onExpandedChange,
   } = props;
 
   const dataSource = useMemo(() => {
@@ -107,17 +114,17 @@ export function DataTable<RecordType extends any>(
 
   const columnPinning = useMemo(
     () => Transform.columnPinning(columns),
-    [columns]
+    [columns],
   );
 
   const rowSelection = useMemo(
     () => props.rowSelection || {},
-    [props.rowSelection]
+    [props.rowSelection],
   );
 
   const { state: paginationState, config: paginationConfig } = useMemo(
     () => Transform.pagination(pagination),
-    [pagination]
+    [pagination],
   );
 
   const [sorting, setSorting] = useSort({
@@ -136,8 +143,8 @@ export function DataTable<RecordType extends any>(
     return Array.isArray(props.columnFilters)
       ? (props.columnFilters as ColumnFilter[])
       : props.columnFilters
-      ? [props.columnFilters]
-      : [];
+        ? [props.columnFilters]
+        : [];
   }, [props.columnFilters]);
 
   const table = useReactTable({
@@ -149,6 +156,7 @@ export function DataTable<RecordType extends any>(
       columnFilters,
       rowSelection,
       sorting,
+      expanded,
       ...paginationState,
       // ...sortState,
     },
@@ -158,6 +166,8 @@ export function DataTable<RecordType extends any>(
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand,
+    onExpandedChange,
+    getSubRows: props.getSubRows,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     // use pre-sorted row model instead of sorted row model
@@ -166,6 +176,7 @@ export function DataTable<RecordType extends any>(
     manualPagination,
     // only allow a single row to be selected at once
     enableMultiRowSelection: false,
+    enableExpanding: true,
     ...paginationConfig,
     // ...sortConfig,
   });
@@ -201,27 +212,27 @@ export function DataTable<RecordType extends any>(
       ref={wrapRef}
       id={props.id}
       className={cnBase(
-        "oui-table-root oui-w-full oui-h-full",
+        "oui-table-root oui-size-full",
         "oui-bg-base-9",
         className,
-        classNames?.root
+        classNames?.root,
       )}
     >
       <div
         ref={scrollRef}
         className={cnBase(
           "oui-table-scroll oui-relative",
-          "oui-w-full oui-min-h-[162px]",
+          "oui-min-h-[162px] oui-w-full",
           "oui-text-xs oui-font-semibold",
-          "oui-overflow-auto oui-custom-scrollbar",
+          "oui-custom-scrollbar oui-overflow-auto",
           showPagination ? "oui-h-[calc(100%_-_40px)]" : "oui-h-full",
-          classNames?.scroll
+          classNames?.scroll,
         )}
       >
         <table
           className={cnBase(
             "oui-w-full",
-            "oui-table-fixed oui-border-collapse"
+            "oui-table-fixed oui-border-collapse",
           )}
         >
           {showHeader && (
@@ -258,8 +269,8 @@ export function DataTable<RecordType extends any>(
       {showPagination && (
         <TablePagination
           className={classNames?.pagination}
-          count={pagination?.count! || rows?.length}
-          pageTotal={pagination?.pageTotal! || table.getPageCount()}
+          count={pagination?.count || rows?.length}
+          pageTotal={pagination?.pageTotal || table.getPageCount()}
           page={pagination?.page!}
           pageSize={pagination?.pageSize}
           onPageChange={pagination?.onPageChange}

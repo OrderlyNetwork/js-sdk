@@ -1,5 +1,11 @@
 import { AlgoOrderRootType, OrderSide, OrderType } from "../order";
 
+export enum AnnouncementType {
+  Listing = "LISTING",
+  Maintenance = "MAINTENANCE",
+  Delisting = "DELISTING",
+}
+
 export declare namespace API {
   //v1/public/token
   export interface Token {
@@ -46,12 +52,17 @@ export declare namespace API {
   }
 
   export interface Announcement {
-    announcement_id: string;
-    message: string;
-    url?: string;
-    type?: string;
-    updated_time?: number;
+    last_updated_time?: number | null;
+    rows?: Array<{
+      announcement_id: number | string;
+      message: string;
+      i18n?: Record<PropertyKey, string | null>;
+      url?: string | null;
+      type?: AnnouncementType | null;
+      updated_time?: number | null;
+    }>;
   }
+
   /**
    * v1/public/info
    */
@@ -595,8 +606,9 @@ export declare namespace WSMessage {
   export interface Announcement {
     announcement_id: string;
     message: string;
-    url?: string;
-    type: string;
+    i18n: Record<PropertyKey, string | null>;
+    url?: string | null;
+    type: AnnouncementType | null;
     updated_time: number;
   }
 }

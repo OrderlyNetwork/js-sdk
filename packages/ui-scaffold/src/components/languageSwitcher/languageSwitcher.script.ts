@@ -1,21 +1,30 @@
-import { useState } from "react";
-import { i18n, useLocaleContext } from "@orderly.network/i18n";
-import { useTrack, useTrackingInstance } from "@orderly.network/hooks";
-import { EnumTrackerKeys } from "@orderly.network/types";
+import { useMemo, useState } from "react";
+import { useTrack } from "@orderly.network/hooks";
+import {
+  i18n,
+  LocaleContextState,
+  useLocaleContext,
+} from "@orderly.network/i18n";
+import { TrackerEventName } from "@orderly.network/types";
+import { useScreen } from "@orderly.network/ui";
 
 export type LanguageSwitcherScriptReturn = ReturnType<
   typeof useLanguageSwitcherScript
 >;
+export type LanguageSwitcherScriptOptions = Pick<LocaleContextState, "popup">;
 
-export const useLanguageSwitcherScript = () => {
+export const useLanguageSwitcherScript = (
+  options?: LanguageSwitcherScriptOptions,
+) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedLang, setSelectedLang] = useState(i18n.language);
-  const { languages, onLanguageBeforeChanged, onLanguageChanged } =
+  const { languages, onLanguageBeforeChanged, onLanguageChanged, popup } =
     useLocaleContext();
 
-  const { track } = useTrack();
-  const trackInstace = useTrackingInstance();
+  const { track, setIdentify } = useTrack();
+
+  const { isMobile } = useScreen();
 
   const onLangChange = async (lang: string, displayName: string) => {
     setLoading(true);
@@ -25,15 +34,25 @@ export const useLanguageSwitcherScript = () => {
     await onLanguageChanged(lang);
     setOpen(false);
     setLoading(false);
-    track(EnumTrackerKeys.switchLanguage, {
+    track(TrackerEventName.switchLanguage, {
       language: displayName,
       language_code: lang,
     });
 
-    trackInstace.identify({
+    setIdentify({
       language_code: lang,
     });
   };
+
+  const _popup = useMemo(
+    () => ({
+      ...popup,
+      ...options?.popup,
+      mode:
+        options?.popup?.mode || popup?.mode || (isMobile ? "sheet" : "modal"),
+    }),
+    [popup, options?.popup, isMobile],
+  );
 
   return {
     open,
@@ -42,5 +61,6 @@ export const useLanguageSwitcherScript = () => {
     selectedLang,
     onLangChange,
     loading,
+    popup: _popup,
   };
 };

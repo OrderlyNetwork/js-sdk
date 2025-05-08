@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useConfig, useEventEmitter, useTrack, WalletState } from "@orderly.network/hooks";
+import {
+  useConfig,
+  useEventEmitter,
+  useTrack,
+  WalletState,
+} from "@orderly.network/hooks";
 import {
   useAccount,
   useChains,
@@ -7,17 +12,17 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import {
-  parseChainIdToNumber,
-  praseChainIdToNumber,
-  windowGuard,
-} from "@orderly.network/utils";
-import {
   AccountStatusEnum,
   SDKError,
   ChainNamespace,
   NetworkId,
-  EnumTrackerKeys,
+  TrackerEventName,
 } from "@orderly.network/types";
+import {
+  parseChainIdToNumber,
+  praseChainIdToNumber,
+  windowGuard,
+} from "@orderly.network/utils";
 import { getLinkDeviceData } from "./useLinkDevice";
 
 const WALLET_KEY = "orderly:wallet-info";
@@ -53,7 +58,6 @@ export const useWalletStateHandle = (options: {
   const networkId = useConfig("networkId") as NetworkId;
   const [chains, { checkChainSupport }] = useChains();
 
-
   const [unsupported, setUnsupported] = useState(false);
   const { track, setTrackUserId } = useTrack();
 
@@ -76,8 +80,11 @@ export const useWalletStateHandle = (options: {
   }, [connectedWallet]);
 
   useEffect(() => {
-    if (accountState.status >= AccountStatusEnum.EnableTrading && account.accountId) {
-      setTrackUserId( account.accountId!);
+    if (
+      accountState.status >= AccountStatusEnum.EnableTrading &&
+      account.accountId
+    ) {
+      setTrackUserId(account.accountId!);
     }
   }, [account, accountState]);
 
@@ -87,9 +94,9 @@ export const useWalletStateHandle = (options: {
       return;
     }
 
-    let isSupported = checkChainSupport(
+    const isSupported = checkChainSupport(
       connectedChain.id,
-      networkId
+      networkId,
       // networkId === "testnet" ? chains.testnet : chains.mainnet
     );
 
@@ -123,7 +130,7 @@ export const useWalletStateHandle = (options: {
           (res) => {
             console.log("silent connect wallet successes", res);
           },
-          (error) => console.log("connect error", error)
+          (error) => console.log("connect error", error),
         );
       }
     });
@@ -166,7 +173,7 @@ export const useWalletStateHandle = (options: {
           name: connectedWallet?.label ?? "",
         },
       });
-      track(EnumTrackerKeys.walletConnect, {
+      track(TrackerEventName.walletConnect, {
         wallet: connectedWallet?.label ?? "",
         network: currentChain!.namespace.toUpperCase() as ChainNamespace,
       });
@@ -177,7 +184,7 @@ export const useWalletStateHandle = (options: {
           WALLET_KEY,
           JSON.stringify({
             label: connectedWallet?.label ?? "",
-          })
+          }),
         );
       });
     }
@@ -256,7 +263,7 @@ export const useWalletStateHandle = (options: {
             },
             // label: ,
           });
-          track(EnumTrackerKeys.walletConnect, {
+          track(TrackerEventName.walletConnect, {
             wallet: wallet.label,
             network: wallet.chains[0].namespace.toUpperCase() as ChainNamespace,
           });

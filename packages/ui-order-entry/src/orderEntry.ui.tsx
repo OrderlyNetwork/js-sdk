@@ -1,4 +1,4 @@
-import { type uesOrderEntryScriptReturn } from "./useOrderEntry.script";
+import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import {
   Box,
   Button,
@@ -50,19 +50,17 @@ import {
 import { OrderValidationResult, useLocalStorage } from "@orderly.network/hooks";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { InputType } from "./types";
-import { SDKError } from "@orderly.network/types";
-import { ApiError } from "@orderly.network/types";
 import { BBOStatus } from "./utils";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
-type Refs = uesOrderEntryScriptReturn["refs"];
+type Refs = OrderEntryScriptReturn["refs"];
 
-export const OrderEntry = (
-  props: uesOrderEntryScriptReturn & {
-    containerRef: any;
-  }
-) => {
+type OrderEntryProps = OrderEntryScriptReturn & {
+  containerRef: any;
+};
+
+export const OrderEntry = (props: OrderEntryProps) => {
   const {
     side,
     formattedOrder,
@@ -167,7 +165,7 @@ export const OrderEntry = (
         }
       )
       .then(() => {
-        return submit().then((result: any) => {
+        return submit({ resetOnSuccess: false }).then((result: any) => {
           console.log(result);
           if (result.success) {
             // setOrderValue("order_quantity", "");
@@ -503,7 +501,7 @@ const OrderQuantityInput = (props: {
   onFocus: (type: InputType) => FocusEventHandler;
   onBlur: (type: InputType) => FocusEventHandler;
   bbo: Pick<
-    uesOrderEntryScriptReturn,
+    OrderEntryScriptReturn,
     "bboStatus" | "bboType" | "onBBOChange" | "toggleBBO"
   >;
   priceInputContainerWidth?: number;

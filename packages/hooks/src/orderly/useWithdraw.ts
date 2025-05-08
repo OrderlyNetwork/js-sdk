@@ -1,18 +1,19 @@
 import { useCallback, useMemo, useState } from "react";
-import { useHoldingStream } from "./useHoldingStream";
-import { useCollateral } from "./useCollateral";
-import { useAccount } from "../useAccount";
-import { useEventEmitter } from '../useEventEmitter'
-import { useChains } from "./useChains";
 import {
   API,
   ARBITRUM_MAINNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
-  EnumTrackerKeys
+  TrackerEventName,
 } from "@orderly.network/types";
-import { useConfig } from "../useConfig";
 import { isTestnet } from "@orderly.network/utils";
+import { useAccount } from "../useAccount";
+import { useConfig } from "../useConfig";
+import { useEventEmitter } from "../useEventEmitter";
 import { useTrack } from "../useTrack";
+import { useChains } from "./useChains";
+import { useCollateral } from "./useCollateral";
+import { useHoldingStream } from "./useHoldingStream";
+
 export type UseWithdrawOptions = { srcChainId?: number };
 
 export const useWithdraw = (options?: UseWithdrawOptions) => {
@@ -26,8 +27,8 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
 
   const [_, { findByChainId }] = useChains(undefined);
 
-  const ee = useEventEmitter()
-  const {track} = useTrack()
+  const ee = useEventEmitter();
+  const { track } = useTrack();
 
   // const withdrawQueue = useRef<number[]>([]);
 
@@ -85,7 +86,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
       chain = findByChainId(
         isTestnet(options?.srcChainId!)
           ? options?.srcChainId!
-          : ARBITRUM_TESTNET_CHAINID
+          : ARBITRUM_TESTNET_CHAINID,
       ) as API.Chain;
     } else {
       chain = findByChainId(options?.srcChainId!) as API.Chain;
@@ -101,7 +102,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
   // Mantle chain: USDC → USDC.e
   const dst = useMemo(() => {
     const USDC = targetChain?.token_infos.find(
-      (token: API.TokenInfo) => token.symbol === "USDC"
+      (token: API.TokenInfo) => token.symbol === "USDC",
     );
 
     return {
@@ -113,7 +114,6 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     };
   }, [targetChain]);
 
-
   const withdraw = useCallback(
     (inputs: {
       chainId: number;
@@ -121,28 +121,30 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
       amount: string;
       allowCrossChainWithdraw: boolean;
     }): Promise<any> => {
-      return account.assetsManager.withdraw(inputs).then((res: any) => {
-        if (res.success) {
-        track(EnumTrackerKeys.withdrawSuccess, {
-          wallet:state?.connectWallet?.name,
-          network:targetChain?.network_infos.name,
-          quantity:inputs.amount,
+      return account.assetsManager
+        .withdraw(inputs)
+        .then((res: any) => {
+          if (res.success) {
+            track(TrackerEventName.withdrawSuccess, {
+              wallet: state?.connectWallet?.name,
+              network: targetChain?.network_infos.name,
+              quantity: inputs.amount,
+            });
+            //   withdrawQueue.current.push(res.data.withdraw_id);
+          }
+          return res;
+        })
+        .catch((err) => {
+          track(TrackerEventName.withdrawFailed, {
+            wallet: state?.connectWallet?.name,
+            network: targetChain?.network_infos.name,
+            msg: JSON.stringify(err),
+          });
+          throw err;
         });
-        //   withdrawQueue.current.push(res.data.withdraw_id);
-        }
-        return res;
-      }).catch((err) => {
-         track(EnumTrackerKeys.withdrawFailed, {
-          wallet:state?.connectWallet?.name,
-          network:targetChain?.network_infos.name,
-          msg: JSON.stringify(err),
-        });
-        throw err
-      });
     },
-    [state, targetChain, state]
+    [state, targetChain, state],
   );
-
 
   return {
     dst,

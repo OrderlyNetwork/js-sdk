@@ -29,6 +29,8 @@ export type OrderEntryScriptInputs = {
   symbol: string;
 };
 
+export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
+
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [localOrderType, setLocalOrderType] = useLocalStorage(
     "orderly-order-entry-order-type",
@@ -115,57 +117,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       formatQty();
     }
   };
-
-  useEffect(() => {
-    // handle orderbook item click event
-    const orderBookItemClickHandler = (item: number[]) => {
-      if (currentFocusInput.current === InputType.TRIGGER_PRICE) {
-        if (
-          formattedOrder.order_type === OrderType.STOP_LIMIT ||
-          formattedOrder.order_type === OrderType.STOP_MARKET
-        ) {
-          setValue("trigger_price", removeTrailingZeros(item[0]));
-          focusInputElement(triggerPriceInputRef.current);
-        }
-      } else {
-        if (
-          formattedOrder.order_type === OrderType.STOP_LIMIT ||
-          formattedOrder.order_type === OrderType.LIMIT
-        ) {
-          setValue("order_price", removeTrailingZeros(item[0]));
-          focusInputElement(priceInputRef.current);
-        } else {
-          let newType;
-
-          if (formattedOrder.order_type === OrderType.STOP_MARKET) {
-            setValue("trigger_price", removeTrailingZeros(item[0]));
-            focusInputElement(triggerPriceInputRef.current);
-            newType = OrderType.STOP_LIMIT;
-          } else if (formattedOrder.order_type === OrderType.MARKET) {
-            newType = OrderType.LIMIT;
-          }
-
-          if (typeof newType !== "undefined") {
-            setValue("order_type", newType);
-          }
-          setValue("order_price", removeTrailingZeros(item[0]));
-          focusInputElement(priceInputRef.current);
-        }
-      }
-
-      function focusInputElement(target: HTMLInputElement | null) {
-        setTimeout(() => {
-          target?.focus();
-        }, 0);
-      }
-    };
-
-    ee.on("orderbook:item:click", orderBookItemClickHandler);
-
-    return () => {
-      ee.off("orderbook:item:click", orderBookItemClickHandler);
-    };
-  }, [formattedOrder, symbolInfo]);
 
   // cancel TP/SL
   const cancelTP_SL = () => {
@@ -268,6 +219,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const toggleBBO = () => {
     if (localBBOType) {
+      // unselect bbo
       setLocalBBOType(undefined);
       // update formattedOrder values immediately instead of via useEffect
       setValues({
@@ -308,14 +260,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   }, [localBBOType, bboStatus, formattedOrder.side!]);
 
-  // console.log(
-  //   "===",
-  //   localBBOType,
-  //   formattedOrder.order_type,
-  //   formattedOrder.order_type_ext,
-  //   formattedOrder.level
-  // );
-
   // useEffect(() => {
   //   if (
   //     priceInputContainerRef.current &&
@@ -329,6 +273,105 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   //     }
   //   }
   // }, [priceInputContainerRef, formattedOrder.order_type_ext]);
+
+  useEffect(() => {
+    const updateOrderPrice = (price: string) => {
+      setValue("order_price", price);
+    };
+    ee.on("update:orderPrice", updateOrderPrice);
+
+    return () => {
+      ee.off("update:orderPrice", updateOrderPrice);
+    };
+  }, []);
+
+  useEffect(() => {
+    const focusInputElement = (target: HTMLInputElement | null) => {
+      setTimeout(() => {
+        target?.focus();
+      }, 0);
+    };
+
+    // handle orderbook item click event
+    const orderBookItemClickHandler = (item: number[]) => {
+      const price = removeTrailingZeros(item[0]);
+      const { order_type, order_type_ext } = formattedOrder;
+
+      // handle trigger price input, focus on trigger price input
+      if (
+        currentFocusInput.current === InputType.TRIGGER_PRICE &&
+        (order_type === OrderType.STOP_LIMIT ||
+          order_type === OrderType.STOP_MARKET)
+      ) {
+        setValue("trigger_price", price);
+        focusInputElement(triggerPriceInputRef.current);
+        return;
+      }
+
+      // handle bbo order, unselect bbo and set order price, focus on order price input
+      if (isBBOOrder({ order_type, order_type_ext })) {
+        setLocalBBOType(undefined);
+
+        setValues({
+          order_type_ext: undefined,
+          level: undefined,
+        });
+
+        setTimeout(() => {
+          // Since BBO will update the price when unselected, we should set order price in setTimeout
+          // We can't call setValue directly here because it's inside a setTimeout, and the formattedOrder accessed inside setValue would be the old value
+          // setValue("order_price", price);
+          ee.emit("update:orderPrice", price);
+        }, 0);
+
+        focusInputElement(priceInputRef.current);
+        return;
+      }
+
+      // handle limit order and stop limit order, set order price and focus on order price input
+      if (
+        order_type === OrderType.STOP_LIMIT ||
+        order_type === OrderType.LIMIT
+      ) {
+        setValue("order_price", price);
+        focusInputElement(priceInputRef.current);
+        return;
+      }
+
+      // handle stop market order, set trigger price and focus on trigger price input
+      if (order_type === OrderType.STOP_MARKET) {
+        setValue("trigger_price", price);
+        focusInputElement(triggerPriceInputRef.current);
+        return;
+      }
+
+      // handle market order, set order type to limit
+      if (order_type === OrderType.MARKET) {
+        // unselect bbo
+        setLocalBBOType(undefined);
+
+        // You can't call setValue twice here , the second value will override the first, so you need to combine them into a single setValues call
+        setValues({
+          order_type: OrderType.LIMIT,
+          order_price: price,
+        });
+
+        focusInputElement(priceInputRef.current);
+        return;
+      }
+
+      // default, set order price and focus on order price input
+      setValue("order_price", price);
+      focusInputElement(priceInputRef.current);
+    };
+
+    ee.on("orderbook:item:click", orderBookItemClickHandler);
+
+    return () => {
+      ee.off("orderbook:item:click", orderBookItemClickHandler);
+    };
+    // Please do not modify this deps lightly, because `setValue` also relies on these state internally
+  }, [formattedOrder, symbolInfo]);
 
   useEffect(() => {
     const element = priceInputContainerRef.current;
@@ -387,5 +430,3 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     priceInputContainerWidth,
   };
 };
-
-export type uesOrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;

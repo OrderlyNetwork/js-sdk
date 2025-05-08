@@ -1,3 +1,12 @@
-export { LanguageSwitcherWidget } from "./widget";
-export { useLanguageSwitcherScript } from "./languageSwitcher.script";
-export { LanguageSwitcher } from "./languageSwitcher.ui";
+export {
+  LanguageSwitcherWidget,
+  type LanguageSwitcherWidgetProps,
+} from "./widget";
+export {
+  useLanguageSwitcherScript,
+  type LanguageSwitcherScriptReturn,
+} from "./languageSwitcher.script";
+export {
+  LanguageSwitcher,
+  type LanguageSwitcherProps,
+} from "./languageSwitcher.ui";
