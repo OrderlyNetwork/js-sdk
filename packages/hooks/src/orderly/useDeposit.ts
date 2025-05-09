@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useAccount } from "../useAccount";
-import { useEventEmitter } from "../useEventEmitter";
+import { useDebouncedCallback } from "use-debounce";
 import {
   AccountStatusEnum,
   API,
@@ -11,14 +10,15 @@ import {
   isNativeTokenChecker,
   MaxUint256,
   NetworkId,
-  EnumTrackerKeys,
+  TrackerEventName,
   SDKError,
 } from "@orderly.network/types";
 import { Decimal, isTestnet } from "@orderly.network/utils";
-import { useChains } from "./useChains";
+import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
-import { useDebouncedCallback } from "use-debounce";
+import { useEventEmitter } from "../useEventEmitter";
 import { useTrack } from "../useTrack";
+import { useChains } from "./useChains";
 
 export type useDepositOptions = {
   // from address
@@ -58,7 +58,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       chain = findByChainId(
         isTestnet(options?.srcChainId!)
           ? options?.srcChainId!
-          : ARBITRUM_TESTNET_CHAINID
+          : ARBITRUM_TESTNET_CHAINID,
       ) as API.Chain;
       console.log("--  chain", chain, options);
     } else {
@@ -74,7 +74,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const dst = useMemo(() => {
     const USDC = targetChain?.token_infos.find(
-      (token: API.TokenInfo) => token.symbol === "USDC"
+      (token: API.TokenInfo) => token.symbol === "USDC",
     );
 
     return {
@@ -88,7 +88,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const isNativeToken = useMemo(
     () => isNativeTokenChecker(options?.address || ""),
-    [options?.address]
+    [options?.address],
   );
 
   const fetchBalanceHandler = useCallback(
@@ -105,7 +105,7 @@ export const useDeposit = (options?: useDepositOptions) => {
 
       return balance;
     },
-    []
+    [],
   );
 
   const fetchBalance = useCallback(
@@ -113,7 +113,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       // token contract address
       address?: string,
       // format decimals
-      decimals?: number
+      decimals?: number,
     ) => {
       if (!address) return;
 
@@ -128,7 +128,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         setBalance(() => "0");
       }
     },
-    [state]
+    [state],
   );
 
   const fetchBalances = useCallback(async (tokens: API.TokenInfo[]) => {
@@ -142,7 +142,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       tasks.push(
         account.assetsManager.getBalanceByAddress(token.address, {
           decimals: token?.decimals,
-        })
+        }),
       );
     }
 
@@ -205,7 +205,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         setBalanceRevalidating(false);
       });
     },
-    100
+    100,
   );
 
   const queryAllowance = useDebouncedCallback(
@@ -216,7 +216,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     }) => {
       getAllowance(inputs);
     },
-    100
+    100,
   );
 
   useEffect(() => {
@@ -242,7 +242,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       dst.chainId,
       options?.srcChainId,
       dst,
-      options
+      options,
     );
     if (dst.chainId !== options?.srcChainId) {
       queryAllowance(params);
@@ -278,7 +278,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           }
         });
     },
-    [account, options?.address]
+    [account, options?.address],
   );
 
   const approve = useCallback(
@@ -296,7 +296,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         })
         .catch((e) => {});
     },
-    [account, getAllowance, options?.address, dst]
+    [account, getAllowance, options?.address, dst],
   );
 
   const deposit = useCallback(async () => {
@@ -320,7 +320,7 @@ export const useDeposit = (options?: useDepositOptions) => {
     return account.assetsManager
       .deposit(quantity, depositFee)
       .then((res: any) => {
-        track(EnumTrackerKeys.depositSuccess, {
+        track(TrackerEventName.depositSuccess, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos.name,
           quantity,
@@ -330,8 +330,7 @@ export const useDeposit = (options?: useDepositOptions) => {
         return res;
       })
       .catch((e) => {
-       
-        track(EnumTrackerKeys.depositFailed, {
+        track(TrackerEventName.depositFailed, {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos?.name,
           msg: JSON.stringify(e),
@@ -350,7 +349,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       try {
         const balance = await fetchBalanceHandler(
           options?.address!,
-          options?.decimals
+          options?.decimals,
         );
 
         setBalance(balance);
@@ -365,10 +364,10 @@ export const useDeposit = (options?: useDepositOptions) => {
     async (quantity: string) => {
       return account.assetsManager.getDepositFee(
         quantity,
-        targetChain?.network_infos!
+        targetChain?.network_infos!,
       );
     },
-    [account, targetChain]
+    [account, targetChain],
   );
 
   const enquiryDepositFee = useCallback(() => {
@@ -386,7 +385,7 @@ export const useDeposit = (options?: useDepositOptions) => {
           new Decimal(res.toString())
             .mul(DEPOSIT_FEE_RATE)
             .toFixed(0, Decimal.ROUND_UP)
-            .toString()
+            .toString(),
         );
 
         setDepositFee(fee);

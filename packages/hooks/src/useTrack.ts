@@ -1,16 +1,17 @@
-import { useCallback, useEffect } from "react";
-import { EnumTrackerKeys, TrackerListenerKeyMap } from "@orderly.network/types";
+import { useCallback } from "react";
 import { debounce } from "lodash";
-import { useEventEmitter } from "./useEventEmitter";
+import { TrackerEventName } from "@orderly.network/types";
 import { windowGuard } from "@orderly.network/utils";
+import { useEventEmitter } from "./useEventEmitter";
 import { useWalletConnector } from "./walletConnectorContext";
 
 export const useTrack = () => {
   const ee = useEventEmitter();
   const { wallet } = useWalletConnector();
 
-  const debouncedTrackFn = useCallback(
-    debounce((eventName: keyof typeof TrackerListenerKeyMap, params: any,) => {
+  /** immediately track event */
+  const tracking = useCallback(
+    (eventName: TrackerEventName, params: any) => {
       windowGuard(() => {
         const location = window.location;
         const origin = location.origin;
@@ -24,24 +25,32 @@ export const useTrack = () => {
           page_domain: origin,
           user_agent: userAgent,
         });
-        if (eventName === EnumTrackerKeys.placeorderSuccess) {
+        if (eventName === TrackerEventName.placeOrderSuccess) {
           Object.assign(params, {
-            wallet: wallet?.label || 'QR code',
+            wallet: wallet?.label || "QR code",
           });
         }
         ee.emit(eventName, params);
       });
-    }, 500),
-    []
+    },
+    [wallet],
   );
 
-  const track = useCallback((eventName: keyof typeof TrackerListenerKeyMap, params: any) => {
-    debouncedTrackFn(eventName, params);
-  }, [debouncedTrackFn]);
+  /** debounce track event */
+  const track = useCallback(debounce(tracking, 500), [tracking]);
 
   const setTrackUserId = useCallback((userId: string) => {
-    ee.emit(EnumTrackerKeys.trackIdentifyUserId, userId);
+    ee.emit(TrackerEventName.trackIdentifyUserId, userId);
   }, []);
 
-  return { track, setTrackUserId };
+  const setIdentify = useCallback((params: any) => {
+    ee.emit(TrackerEventName.trackIdentify, params);
+  }, []);
+
+  return {
+    track,
+    tracking,
+    setTrackUserId,
+    setIdentify,
+  };
 };

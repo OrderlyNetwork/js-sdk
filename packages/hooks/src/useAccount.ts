@@ -1,8 +1,13 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { AccountState, type SubAccount } from "@orderly.network/core";
+import { AccountState } from "@orderly.network/core";
+import {
+  AccountStatusEnum,
+  SDKError,
+  TrackerEventName,
+} from "@orderly.network/types";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
-import { EnumTrackerKeys, SDKError } from "@orderly.network/types";
+import { useEventEmitter } from "./useEventEmitter";
 import { useTrack } from "./useTrack";
 
 export const useAccount = () => {
@@ -40,7 +45,7 @@ export const useAccount = () => {
 
   const createOrderlyKey = useCallback(
     async (remember: boolean) => {
-      track(EnumTrackerKeys.signinSuccess, {
+      track(TrackerEventName.signinSuccess, {
         network: account.chainId,
         wallet: state.connectWallet?.name,
       });

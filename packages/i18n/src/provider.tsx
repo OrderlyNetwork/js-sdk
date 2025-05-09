@@ -1,10 +1,10 @@
 import { FC, ReactNode, useEffect, useRef, useState } from "react";
 import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
-import i18n from "./i18n";
-import { Language, LocaleContext, LocaleContextState } from "./context";
-import { defaultLanguages, defaultNS } from "./constant";
-import { LocaleCode, Resources } from "./types";
 import { Backend, BackendOptions } from "./backend";
+import { defaultLanguages, defaultNS } from "./constant";
+import { Language, LocaleContext, LocaleContextState } from "./context";
+import i18n from "./i18n";
+import { LocaleCode, Resources } from "./types";
 import { parseI18nLang } from "./utils";
 
 export type I18nProviderProps = Partial<I18nextProviderProps>;
@@ -69,9 +69,9 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
       setLanguages(
         props.supportedLanguages
           .map((localCode) =>
-            defaultLanguages.find((l) => l.localCode === localCode)
+            defaultLanguages.find((l) => l.localCode === localCode),
           )
-          .filter((item) => !!item)
+          .filter((item) => !!item),
       );
     }
   }, [props.supportedLanguages, props.languages]);
@@ -106,7 +106,12 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
 
   return (
     <LocaleContext.Provider
-      value={{ languages, onLanguageBeforeChanged, onLanguageChanged }}
+      value={{
+        languages,
+        onLanguageBeforeChanged,
+        onLanguageChanged,
+        popup: props.popup,
+      }}
     >
       {/* @ts-ignore */}
       <I18nextProvider i18n={i18n} defaultNS={defaultNS}>

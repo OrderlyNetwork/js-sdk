@@ -1,14 +1,16 @@
-import { DesktopListBox } from "./listBox.desktop";
 import { FC, useMemo } from "react";
 import { OrderBookCellType } from "../../base/orderBook/types";
+import { DesktopListBox } from "./listBox.desktop";
+
 export interface Props {
   data: number[][];
 }
+
 export const DesktopAsks: FC<Props> = (props) => {
   const { data } = props;
   const countQty = useMemo(() => {
     let max = Number.NaN;
-    let len = data.length;
+    const len = data.length;
     let index = 0;
 
     while (Number.isNaN(max) && index < len) {
@@ -18,8 +20,12 @@ export const DesktopAsks: FC<Props> = (props) => {
 
     return max;
   }, [data]);
-  
+
   return (
-    <DesktopListBox type={OrderBookCellType.ASK} data={data} countQty={countQty} />
+    <DesktopListBox
+      type={OrderBookCellType.ASK}
+      data={data}
+      countQty={countQty}
+    />
   );
 };

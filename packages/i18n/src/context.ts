@@ -6,6 +6,22 @@ export type Language = {
   displayName: string;
 };
 
+export type PopupMode = "modal" | "dropdown" | "sheet";
+export type PopupProps = {
+  /**
+   * popup mode
+   * - modal: show in a dialog
+   * - dropdown: show in a dropdown menu
+   * - sheet: show in a sheet (only for mobile)
+   * @default modal
+   */
+  mode?: PopupMode;
+  /** popup class name */
+  className?: string;
+  /** popup style */
+  style?: React.CSSProperties;
+};
+
 export type LocaleContextState = {
   /**
    * custom languages
@@ -19,6 +35,10 @@ export type LocaleContextState = {
    * called when language changed
    */
   onLanguageChanged: (lang: LocaleCode) => Promise<void>;
+  /**
+   * popup options for language switcher
+   */
+  popup?: PopupProps;
 };
 
 export const LocaleContext = createContext<LocaleContextState>({

@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useScreen } from "@orderly.network/ui";
 import { MobileCampaigns } from "./campaigns.mobile.ui";
 import { useCampaignsScript } from "./campaigns.script";
 import { Campaigns } from "./campaigns.ui";
@@ -10,8 +11,18 @@ export type CampaignsWidgetProps = {
 
 export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
   const state = useCampaignsScript();
-  if (state.isMobile) {
-    return <MobileCampaigns {...state} className={props.className} style={props.style} />;
+  const { isMobile } = useScreen();
+
+  if (isMobile) {
+    return (
+      <MobileCampaigns
+        {...state}
+        className={props.className}
+        style={props.style}
+      />
+    );
   }
-  return <Campaigns {...state} className={props.className} style={props.style} />;
+  return (
+    <Campaigns {...state} className={props.className} style={props.style} />
+  );
 };
