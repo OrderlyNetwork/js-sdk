@@ -35,15 +35,14 @@ export const BottomNavBar: FC<BottomNavBarState> = (props) => {
       <Flex
         height={64}
         gap={1}
-        justify={"between"}
+        justify={"end"}
         itemAlign={"center"}
-        className=" oui-px-[14px] oui-pt-[7px]"
+        className="oui-px-[14px]"
         // style={{
         //   height: "calc(64px + env(safe-area-inset-bottom))"
         // }}
       >
         <BalanceWidget />
-
         <Flex gap={2}>
           {showScanQRCode && <ScanQRCodeWidget />}
           {renderContent()}
