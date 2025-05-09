@@ -1,5 +1,5 @@
 import { FC, useCallback, useMemo, useState } from "react";
-import { DesktopOrderBookCell } from "./cell.desktop";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   TooltipContent,
   TooltipTrigger,
@@ -9,9 +9,9 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
-import { OrderBookCellType } from "../../base/orderBook/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
-import { useTranslation } from "@orderly.network/i18n";
+import { OrderBookCellType } from "../../base/orderBook/types";
+import { DesktopOrderBookCell } from "./cell.desktop";
 
 interface DesktopListBoxProps {
   type: OrderBookCellType;
@@ -59,7 +59,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
   const [hoverIndex, setHoverIndex] = useState<number>(-1);
 
   return (
-    <div className="oui-order-book-list oui-flex oui-flex-col oui-gap-[1px]">
+    <div className="oui-order-book-list oui-flex oui-flex-col oui-gap-px">
       {data.map((item, index) => {
         return (
           <Tip
@@ -122,7 +122,7 @@ const Tip: FC<{
   const [open, setOpen] = useState(false);
 
   const calcHintInfo = (
-    item: any
+    item: any,
   ): {
     avgPrice: number;
     sumQty: number;
@@ -186,7 +186,7 @@ const Tip: FC<{
       </TooltipTrigger>
       <TooltipContent
         className={cn(
-          "oui-max-w-[400px] oui-w-full oui-text-2xs oui-shadow-md oui-rounded-base oui-p-3 oui-bg-base-6 oui-flex oui-flex-col oui-gap-2"
+          "oui-rounded-base oui-flex oui-w-full oui-max-w-[400px] oui-flex-col oui-gap-2 oui-bg-base-6 oui-p-3 oui-text-2xs oui-shadow-md",
           // type === OrderBookCellType.ASK ? `oui-mb-${30}` : "oui-mt-0"
         )}
         align={type === OrderBookCellType.ASK ? "end" : "start"}
@@ -226,7 +226,7 @@ const Tip: FC<{
 };
 
 const Row: FC<{ title: string; content: number; contentDp: number }> = (
-  props
+  props,
 ) => {
   const { title, content, contentDp } = props;
   return (

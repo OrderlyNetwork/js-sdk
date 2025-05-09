@@ -1,4 +1,6 @@
 import React, { FC, ReactNode } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CaretDownIcon,
@@ -11,8 +13,6 @@ import {
   ORDERBOOK_COIN_TYPE_KEY,
   useOrderBookContext,
 } from "../../base/orderBook/orderContext";
-import { useTranslation } from "@orderly.network/i18n";
-import { useLocalStorage } from "@orderly.network/hooks";
 
 interface DesktopHeaderProps {
   quote: string;
@@ -28,7 +28,7 @@ const Option: React.FC<{
   const { t } = useTranslation();
   const [coinType, setCoinType] = useLocalStorage(
     ORDERBOOK_COIN_TYPE_KEY,
-    base
+    base,
   );
   return (
     <Flex
@@ -42,7 +42,7 @@ const Option: React.FC<{
         "hover:oui-bg-base-6",
         "oui-rounded-[3px]",
         "oui-transition-all",
-        coinType === item && "oui-bg-base-5"
+        coinType === item && "oui-bg-base-5",
       )}
       onClick={(e) => {
         setCoinType(item);
@@ -58,7 +58,7 @@ const Option: React.FC<{
           "oui-rounded-full",
           "oui-bg-gradient-to-r",
           coinType === item &&
-            "oui-from-[rgb(var(--oui-gradient-brand-start))] oui-to-[rgb(var(--oui-gradient-brand-end))]"
+            "oui-from-[rgb(var(--oui-gradient-brand-start))] oui-to-[rgb(var(--oui-gradient-brand-end))]",
         )}
       />
     </Flex>
@@ -101,50 +101,58 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
         pr={3}
         className={cn("oui-basis-5/12", showTotal && "oui-basis-1/2")}
       >
-        <Box width={"100%"}>
-          <Popover
-            open={popoverOpen}
-            onOpenChange={setOpen}
-            contentProps={{ className: cn("oui-p-1 oui-w-28") }}
-            content={
-              <Flex
-                direction="column"
-                itemAlign="start"
-                className={cn("oui-w-full oui-gap-0.5")}
-              >
-                {[base, quote].map((item) => {
-                  return (
-                    <Option
-                      key={`type-${item}`}
-                      item={item}
-                      base={base}
-                      onClick={() => setOpen(false)}
-                    />
-                  );
-                })}
-              </Flex>
-            }
-          >
-            <Flex
-              justify="end"
-              itemAlign="center"
-              className="oui-transition-all oui-cursor-pointer oui-select-none oui-text-base-contrast-36 hover:oui-text-base-contrast"
-            >
-              <Title justifyEnd id="oui-order-book-header-total-base">
-                {`${t("common.total")}(${coinType})`}
+        {showTotal ? (
+          <>
+            <Box className="oui-text-base-contrast-36" width={"100%"}>
+              <Title id="oui-order-book-header-total-quote" justifyEnd>
+                {`${t("common.total")}(${base})`}
               </Title>
-              <TriggerIcon
-                color="inherit"
-                className="oui-text-3xs oui-w-4 oui-h-4"
-              />
-            </Flex>
-          </Popover>
-        </Box>
-        {showTotal && (
-          <Box className="oui-text-base-contrast-36" width={"100%"}>
-            <Title id="oui-order-book-header-total-quote" justifyEnd>
-              {`${t("common.total")}(${quote})`}
-            </Title>
+            </Box>
+            <Box className="oui-text-base-contrast-36" width={"100%"}>
+              <Title justifyEnd id="oui-order-book-header-total-base">
+                {`${t("common.total")}(${quote})`}
+              </Title>
+            </Box>
+          </>
+        ) : (
+          <Box width={"100%"}>
+            <Popover
+              open={popoverOpen}
+              onOpenChange={setOpen}
+              contentProps={{ className: cn("oui-w-28 oui-p-1") }}
+              content={
+                <Flex
+                  direction="column"
+                  itemAlign="start"
+                  className={cn("oui-w-full oui-gap-0.5")}
+                >
+                  {[base, quote].map((item) => {
+                    return (
+                      <Option
+                        key={`type-${item}`}
+                        item={item}
+                        base={base}
+                        onClick={() => setOpen(false)}
+                      />
+                    );
+                  })}
+                </Flex>
+              }
+            >
+              <Flex
+                justify="end"
+                itemAlign="center"
+                className="oui-cursor-pointer oui-select-none oui-text-base-contrast-36 oui-transition-all hover:oui-text-base-contrast"
+              >
+                <Title justifyEnd id="oui-order-book-header-total-base">
+                  {`${t("common.total")}(${coinType})`}
+                </Title>
+                <TriggerIcon
+                  color="inherit"
+                  className="oui-size-4 oui-text-3xs"
+                />
+              </Flex>
+            </Popover>
           </Box>
         )}
       </Flex>
@@ -164,8 +172,8 @@ const Title: FC<{
       id={props.id}
       className={cn(
         className,
-        "oui-text-xs oui-items-end",
-        justifyEnd && "oui-justify-end"
+        "oui-items-end oui-text-xs",
+        justifyEnd && "oui-justify-end",
       )}
     >
       {children}
