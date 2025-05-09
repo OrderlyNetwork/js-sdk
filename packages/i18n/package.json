@@ -32,7 +32,7 @@
     "_generateEnJson": "node ./script/generateEnJson.js",
     "generateEnJson": "pnpm tsup && node ./script/generateEnJson.js",
     "copyLocales": "node ./script/copyLocales.js",
-    "generateMissingKeys": "pnpm _generateEnJson && node ./script/generateMissingKeys.js"
+    "generateMissingKeys": "pnpm tsup && pnpm _generateEnJson && node ./script/generateMissingKeys.js"
   },
   "keywords": [],
   "files": [
