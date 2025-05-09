@@ -1,17 +1,16 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { DesktopBids } from "./bids.desktop";
-import { DesktopAsks } from "./asks.desktop";
-import { DesktopMarkPrice } from "./markPrice.desktop";
-import { DesktopHeader } from "./header.desktop";
-import { DesktopDepthSelect } from "./depthSelect.desktop";
 import { cn, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import {
   ORDERBOOK_COIN_TYPE_KEY,
   OrderBookProvider,
 } from "../../base/orderBook/orderContext";
+import { DesktopAsks } from "./asks.desktop";
+import { DesktopBids } from "./bids.desktop";
+import { DesktopDepthSelect } from "./depthSelect.desktop";
+import { DesktopHeader } from "./header.desktop";
+import { DesktopMarkPrice } from "./markPrice.desktop";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -51,7 +50,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
 
   const [coinType, setCoinType] = useLocalStorage(
     ORDERBOOK_COIN_TYPE_KEY,
-    base
+    base,
   );
 
   useEffect(() => {
@@ -64,10 +63,6 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { inlineSize: width } = entry.borderBoxSize[0];
-        const count = rangeInfo.reduce(
-          (a, b) => a + (width >= b.left && width < b.right ? 1 : 0),
-          0
-        );
         setShowTotal(width >= 360);
       }
     });
@@ -99,7 +94,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
         rows={5}
         id="oui-orderbook-desktop"
         ref={divRef}
-        className="oui-grid-rows-[auto,auto,1fr,auto,1fr] oui-relative oui-h-full oui-w-full"
+        className="oui-relative oui-size-full oui-grid-rows-[auto,auto,1fr,auto,1fr]"
       >
         <DesktopDepthSelect
           depths={props.depths}
@@ -117,7 +112,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
         />
         <DesktopBids data={[...props.bids]} />
         {isLoading && (
-          <div className="oui-absolute oui-left-0 oui-top-0 oui-right-0 oui-bottom-0 oui-z-10 oui-flex oui-items-center oui-justify-center oui-bg-bg-8/70">
+          <div className="oui-bg-bg-8/70 oui-absolute oui-inset-0 oui-z-10 oui-flex oui-items-center oui-justify-center">
             <Spinner />
           </div>
         )}
