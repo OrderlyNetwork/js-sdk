@@ -18,4 +18,8 @@ export class AdditionalInfoRepository {
   clear(address: string) {
     this.repository.clear(address);
   }
+
+  remove(address: string, key: string) {
+    this.repository.remove(address, key);
+  }
 }

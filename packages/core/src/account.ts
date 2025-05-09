@@ -6,6 +6,7 @@ import {
   AccountStatusEnum,
   SDKError,
   ChainNamespace,
+  API,
 } from "@orderly.network/types";
 import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
 
@@ -51,7 +52,7 @@ export interface AccountState {
    * sub account id
    * @since 2.2.0
    */
-  subAccountId?: string;
+  subAccountId?: string | undefined;
   userId?: string;
   address?: string;
   chainNamespace?: ChainNamespace;
@@ -63,6 +64,10 @@ export interface AccountState {
     chainId: number;
   };
 
+  /**
+   * sub accounts
+   * @since 2.2.0
+   */
   subAccounts?: SubAccount[];
 
   // balance: string;
@@ -80,14 +85,9 @@ export interface AccountState {
 export class Account {
   static instanceName = "account";
   static additionalInfoRepositoryName = "walletAdditionalInfo";
+  static ACTIVE_SUB_ACCOUNT_ID_KEY = "ACTIVE_SUB_ACCOUNT_ID";
   // private walletClient?: WalletClient;
   private _singer?: Signer;
-  // private _state$ = new BehaviorSubject<AccountState>({
-  //   status: AccountStatusEnum.NotConnected,
-
-  //   balance: "",
-  //   leverage: Number.NaN,
-  // });
 
   private _ee = new EventEmitter();
 
@@ -247,7 +247,7 @@ export class Account {
 
   get accountId(): string | undefined {
     const state = this.stateValue;
-    return state.accountId;
+    return state.subAccountId || state.mainAccountId;
   }
 
   get mainAccountId(): string | undefined {
@@ -321,7 +321,7 @@ export class Account {
         nextState = {
           ...this.stateValue,
           status: AccountStatusEnum.SignedIn,
-          // accountId: accountInfo.account_id,
+          accountId: accountInfo.account_id,
           mainAccountId: accountInfo.account_id,
           userId: accountInfo.user_id,
         };
@@ -351,12 +351,13 @@ export class Account {
       // };
 
       if (!orderlyKey) {
-        this._ee.emit(EVENT_NAMES.statusChanged, {
+        nextState = {
           ...this.stateValue,
           isNew: false,
           validating: false,
           status: AccountStatusEnum.DisabledTrading,
-        });
+        };
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
         return AccountStatusEnum.DisabledTrading;
       }
@@ -377,10 +378,14 @@ export class Account {
         const expiration = orderlyKeyStatus.expiration;
         if (now > expiration) {
           // orderlyKey is expired, remove orderlyKey
-          this._ee.emit(EVENT_NAMES.statusChanged, {
-            ...this.stateValue,
+          const { accountId, mainAccountId, ...filteredState } =
+            this.stateValue;
+
+          nextState = {
+            ...filteredState,
             validating: false,
-          });
+          };
+          this._ee.emit(EVENT_NAMES.statusChanged, nextState);
           this.keyStore.cleanKey(address, "orderlyKey");
           return AccountStatusEnum.DisabledTrading;
         }
@@ -390,17 +395,45 @@ export class Account {
          */
         const subAccounts = await this.getSubAccounts();
 
-        if (subAccounts.length) {
-          // TODO: restore sub-account
-          // load active sub-account from local storage
-        }
-
-        this._ee.emit(EVENT_NAMES.statusChanged, {
+        nextState = {
           ...this.stateValue,
           validating: false,
           status: AccountStatusEnum.EnableTrading,
-          subAccounts,
-        });
+        };
+
+        if (subAccounts.length) {
+          // load active sub-account from local storage
+          const activeSubAccount = this.additionalInfoRepository.get(
+            address,
+            Account.ACTIVE_SUB_ACCOUNT_ID_KEY
+          );
+
+          nextState.subAccounts = subAccounts.map(
+            (subAccount: {
+              sub_account_id: string;
+              description: string;
+              holding: API.Holding[];
+            }) => ({
+              id: subAccount.sub_account_id,
+              description: subAccount.description,
+              holding: subAccount.holding,
+            })
+          );
+
+          if (activeSubAccount) {
+            // check if the activeSubAccount is included in the subAccounts
+            if (
+              nextState.subAccounts?.find(
+                (subAccount) => subAccount.id === activeSubAccount
+              )
+            ) {
+              nextState.subAccountId = activeSubAccount;
+              nextState.accountId = activeSubAccount;
+            }
+          }
+        }
+
+        this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
         return AccountStatusEnum.EnableTrading;
       }
@@ -493,6 +526,7 @@ export class Account {
         ...this.stateValue,
         status: AccountStatusEnum.DisabledTrading,
         accountId: res.data.account_id,
+        mainAccountId: res.data.account_id,
         userId: res.data.user_id,
         isNew: true,
       };
@@ -522,26 +556,26 @@ export class Account {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "X-Account-Id": this.stateValue.mainAccountId,
+        // "X-Account-Id": this.stateValue.mainAccountId,
+        "orderly-account-id": this.stateValue.mainAccountId,
         "Content-Type": "application/json",
         ...signature,
       },
     });
 
-    console.log("createSubAccount", res);
-
     if (res.success) {
       const subAccount = {
         id: res.data.sub_account_id,
         description,
+        holding: [],
       };
 
       let nextState = { ...this._state };
 
-      if (!Array.isArray(nextState.subAccounts)) {
-        nextState.subAccounts = [];
-      }
-      nextState.subAccounts.push(subAccount);
+      // if (!Array.isArray(nextState.subAccounts)) {
+      //   nextState.subAccounts = [];
+      // }
+      nextState.subAccounts = [...(nextState.subAccounts ?? []), subAccount];
 
       this._ee.emit(EVENT_NAMES.subAccountCreated, subAccount);
       this._ee.emit(EVENT_NAMES.statusChanged, nextState);
@@ -552,9 +586,36 @@ export class Account {
     }
   }
 
-  async updateSubAccount(subAccountId: string, description: string) {
+  async updateSubAccount({
+    subAccountId,
+    description = "",
+  }: {
+    subAccountId: string;
+    description?: string;
+  }) {
     if (!this.stateValue.mainAccountId) {
       throw new Error("mainAccountId is undefined");
+    }
+
+    if (description?.trim() !== "") {
+      // Validate description format: up to 50 characters, only allows English characters,
+      // numbers, @, comma, space, underscore and dash
+      const descriptionRegex = /^[a-zA-Z0-9@,\s_\-]{0,50}$/;
+      if (description && !descriptionRegex.test(description)) {
+        throw new Error(
+          "Description must be up to 50 characters and can only contain English characters, numbers, @, comma, space, underscore and dash."
+        );
+      }
+    }
+
+    // check the subAccountId is included in the subAccounts
+    const subAccount = this.stateValue.subAccounts?.find(
+      (subAccount) => subAccount.id === subAccountId
+    );
+    if (!subAccount) {
+      throw new Error(
+        `Sub-account with ID ${subAccountId} not found. Please verify the sub-account ID and try again.`
+      );
     }
 
     const url = "/v1/client/update_sub_account";
@@ -570,7 +631,7 @@ export class Account {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "X-Account-Id": this.stateValue.mainAccountId,
+        "orderly-account-id": this.stateValue.mainAccountId,
         "Content-Type": "application/json",
         ...signature,
       },
@@ -580,7 +641,7 @@ export class Account {
       let nextState = { ...this._state };
       nextState.subAccounts = nextState.subAccounts?.map((subAccount) => {
         if (subAccount.id === subAccountId) {
-          return { ...subAccount, description };
+          return { ...subAccount, description: description ?? "" };
         }
         return subAccount;
       });
@@ -594,25 +655,116 @@ export class Account {
     }
   }
 
-  switchSubAccount(subAccountId: string) {
-    const nextState = {
+  switchAccount(accountId: string) {
+    let nextState = {
       ...this._state,
-      subAccountId,
+      accountId,
     };
-    // TODO: store to local storage
+
+    // if the accountId is the main account, set the subAccountId to undefined
+    if (accountId === nextState.mainAccountId) {
+      nextState.subAccountId = undefined;
+
+      this.additionalInfoRepository.remove(
+        this.stateValue.address!,
+        Account.ACTIVE_SUB_ACCOUNT_ID_KEY
+      );
+    } else {
+      nextState.subAccountId = accountId;
+
+      this.additionalInfoRepository.save(this.stateValue.address!, {
+        [Account.ACTIVE_SUB_ACCOUNT_ID_KEY]: accountId,
+      });
+    }
+
     this._ee.emit(EVENT_NAMES.statusChanged, nextState);
   }
 
-  async getSubAccounts() {
-    const url = "/v1/client/get_sub_accounts";
+  async getSubAccounts(): Promise<
+    ({
+      sub_account_id: string;
+      description: string;
+    } & { holding: API.Holding[] })[]
+  > {
+    const url = "/v1/client/sub_account";
 
-    const res = await this._simpleFetch(url);
+    //
+    const signature = await this.signGetMessageFactor(url);
+
+    const res = await this._simpleFetch(url, {
+      headers: {
+        "orderly-account-id": this.stateValue.mainAccountId!,
+        ...signature,
+      },
+    });
 
     if (res.success) {
+      // if the subAccounts is not empty, fetch the subAccount balance
+      if (res.data.rows?.length > 0) {
+        const subAccountBalances = await this.getSubAccountBalances();
+        return res.data.rows.map((account: { sub_account_id: string }) => {
+          const holding = subAccountBalances[account.sub_account_id] ?? [];
+          return {
+            ...account,
+            holding,
+          };
+        });
+      }
       return res.data.rows ?? [];
     } else {
       throw new Error(res.message);
     }
+  }
+
+  async getSubAccountBalances(): Promise<Record<string, API.Holding[]>> {
+    const url = "/v1/client/aggregate/holding";
+
+    const signature = await this.signGetMessageFactor(url);
+
+    const res = await this._simpleFetch(url, {
+      headers: {
+        "orderly-account-id": this.stateValue.mainAccountId!,
+        ...signature,
+      },
+    });
+
+    if (res.success) {
+      // Group the data by account_id and transform it into {account_id: array} format
+      const groupedData: Record<string, API.Holding[]> = {};
+      if (res.data.rows && Array.isArray(res.data.rows)) {
+        res.data.rows.forEach((item: API.Holding & { account_id: string }) => {
+          if (!groupedData[item.account_id]) {
+            groupedData[item.account_id] = [];
+          }
+          groupedData[item.account_id].push(item);
+        });
+
+        // For debugging purposes
+        // console.log("Grouped data by account_id:", groupedData);
+      }
+      // return res.data.rows ?? [];
+      return groupedData;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
+  /**
+   * refresh sub account balances
+   * @since 2.2.0
+   */
+  async refreshSubAccountBalances(): Promise<AccountState> {
+    const subAccountBalances = await this.getSubAccountBalances();
+    const nextState = {
+      ...this.stateValue,
+      subAccounts: this.stateValue.subAccounts?.map((subAccount) => {
+        const holding = subAccountBalances[subAccount.id] ?? [];
+        return { ...subAccount, holding };
+      }),
+    };
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
+
+    return nextState;
   }
 
   async createApiKey(
@@ -664,6 +816,8 @@ export class Account {
         // userId: res.data.user_id,
       };
 
+      // TODO: restore sub account
+
       this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
       return res;
@@ -679,7 +833,7 @@ export class Account {
       scope?: string;
     }
   ) {
-    if (this.stateValue.accountId === undefined) {
+    if (this.stateValue.mainAccountId === undefined) {
       throw new Error("account id is undefined");
     }
 
@@ -734,7 +888,7 @@ export class Account {
         userAddress: address,
       }),
       headers: {
-        "X-Account-Id": this.stateValue.accountId,
+        "X-Account-Id": this.stateValue.mainAccountId,
         "Content-Type": "application/json",
       },
     });
@@ -859,8 +1013,8 @@ export class Account {
       data,
     };
 
-    //
     const signature = await this.signer.sign(payload, getTimestamp());
+    // const signature = await this.signMessageFactor(payload);
     return signature;
   }
 
@@ -1054,5 +1208,18 @@ export class Account {
 
   get off() {
     return this._ee.off.bind(this._ee);
+  }
+
+  /**
+   * Signs a GET MessageFactor payload with the current timestamp.
+   * @param url The URL for the GET request
+   * @returns The signature
+   */
+  private async signGetMessageFactor(url: string) {
+    const payload: MessageFactor = {
+      method: "GET",
+      url,
+    };
+    return this.signer.sign(payload, getTimestamp());
   }
 }

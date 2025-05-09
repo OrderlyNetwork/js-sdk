@@ -49,13 +49,16 @@ export const useAccount = () => {
     [account, state]
   );
 
-  const subAccounts = useMemo(() => {
-    return state.subAccounts ?? [];
-  }, [state]);
+  // const subAccounts = useMemo(() => {
+  //   return state.subAccounts ?? [];
+  // }, [state]);
 
-  const switchAccount = useCallback(async () => {
-    // return account.switchAccount();
-  }, [account]);
+  const switchAccount = useCallback(
+    async (accountId: string) => {
+      return account.switchAccount(accountId);
+    },
+    [account]
+  );
 
   const createAccount = useCallback(async () => {
     return account.createAccount();
@@ -65,24 +68,33 @@ export const useAccount = () => {
     return account.createSubAccount();
   }, [account]);
 
-  const isSubAccount = useMemo(() => {
-    return account.stateValue.accountId !== account.stateValue.mainAccountId;
+  const updateSubAccount = useCallback(
+    async (value: { subAccountId: string; description?: string }) => {
+      return account.updateSubAccount(value);
+    },
+    [account]
+  );
+
+  const refreshSubAccountBalances = useCallback(() => {
+    return account.refreshSubAccountBalances();
   }, [account]);
+
+  const isSubAccount = useMemo(() => {
+    return state.accountId !== state.mainAccountId;
+  }, [state]);
 
   return {
     account,
     state,
     isSubAccount,
     isMainAccount: !isSubAccount,
-    subAccounts,
-    // info: {},
-    // login,
+    subAccount: {
+      refresh: refreshSubAccountBalances,
+      create: createSubAccount,
+      update: updateSubAccount,
+    },
+    switchAccount,
     createOrderlyKey,
     createAccount,
-    createSubAccount,
-    // disconnect,
-    // connect,
-    // setChain,
-    // settlement,
   };
 };
