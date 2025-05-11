@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren } from "react";
-import { TradingRewardsLayout } from "./layout.ui";
-import { useTradingRewardsLayoutScript } from "./layout.script";
 import { ScaffoldProps } from "@orderly.network/ui-scaffold";
+import { useTradingRewardsLayoutScript } from "./layout.script";
+import { TradingRewardsLayout } from "./layout.ui";
 
 export const TradingRewardsLayoutWidget: FC<
   PropsWithChildren<ScaffoldProps>
@@ -10,6 +10,8 @@ export const TradingRewardsLayoutWidget: FC<
     current: props.leftSideProps?.current,
   });
   return (
-    <TradingRewardsLayout {...state} {...props} children={props.children} />
+    <TradingRewardsLayout {...state} {...props}>
+      {props.children}
+    </TradingRewardsLayout>
   );
 };
