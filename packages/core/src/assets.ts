@@ -10,6 +10,7 @@ import {
   parseTokenHash,
 } from "./utils";
 import {
+  ABSTRACT_TESTNET_CHAINID,
   API,
   ApiError,
   ChainNamespace,
@@ -164,10 +165,16 @@ export class Assets {
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
+    let usdcAddress = contractAddress.usdcAddress;
+    let userAddress = this.account.stateValue.address;
+    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
+      usdcAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
+      userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    }
     const result = await this.account.walletAdapter?.call(
-      address ?? contractAddress.usdcAddress,
+      usdcAddress,
       "balanceOf",
-      [this.account.stateValue.address],
+      [userAddress],
       {
         abi: contractAddress.usdcAbi,
       }
@@ -223,6 +230,7 @@ export class Assets {
     if (!this.account.walletAdapter) {
       return "0";
     }
+    let userAddress = this.account.stateValue.address;
     const contractAddress = this.contractManger.getContractInfoByEnv();
     let tempVaultAddress = vaultAddress ?? contractAddress.vaultAddress;
     let tempUSDCAddress = address;
@@ -233,11 +241,17 @@ export class Assets {
       tempVaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
       tempUSDCAddress = contractAddress.monadTestnetUSDCAddress;
     }
+    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
+      tempUSDCAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
+      userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    }
+    console.log('get allowance', tempUSDCAddress, tempVaultAddress)
     const result = await this.account.walletAdapter?.call(
       tempUSDCAddress ?? '',
       "allowance",
       [
-        this.account.stateValue.address,
+        userAddress,
         tempVaultAddress,
       ],
       {
@@ -293,6 +307,10 @@ export class Assets {
     if (this.account.walletAdapter.chainId === MONAD_TESTNET_CHAINID) {
       tempVaultAddress = contractAddress.monadTestnetVaultAddress ?? '';
       tempUSDCAddress = contractAddress.monadTestnetUSDCAddress ?? '';
+    }
+    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.abstractTestnetVaultAddress ?? '';
+      tempUSDCAddress = contractAddress.abstractTestnetUSDCAddress ?? '';
     }
 
     const result = await this.account.walletAdapter?.call(
@@ -354,6 +372,7 @@ export class Assets {
       tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
     const contractAddress = this.contractManger.getContractInfoByEnv();
+    let userAddress = this.account.stateValue.address;
     let vaultAddress = contractAddress.vaultAddress;
     if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
       vaultAddress = contractAddress.solanaVaultAddress;
@@ -367,13 +386,22 @@ export class Assets {
       vaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
       // depositData["USDCAddress"] = contractAddress.monadTestnetUSDCAddress ?? "";
     }
+    if (chain.chain_id === ABSTRACT_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
+      // tips:  deposit fee not use global address, juset sign address
+      // userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    }
 
 
+    console.log('xxx get deposit fee', {
+      userAddress, vaultAddress,
+      depositData
+    })
     return await this.account.walletAdapter.callOnChain(
       chain,
       vaultAddress,
       "getDepositFee",
-      [this.account.stateValue.address, depositData],
+      [userAddress, depositData],
       {
         abi: contractAddress.vaultAbi,
       }
@@ -403,6 +431,7 @@ export class Assets {
       tokenAmount: this.account.walletAdapter?.parseUnits(amount),
     };
     let vaultAddress = contractAddress.vaultAddress;
+    let userAddress = this.account.stateValue.address;
     if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
       vaultAddress = contractAddress.solanaVaultAddress;
       // @ts-ignore
@@ -414,15 +443,23 @@ export class Assets {
     if (this.account.walletAdapter.chainId === MONAD_TESTNET_CHAINID) {
       vaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
     }
-
+    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
+      // userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    }
+    console.log('xxx deposit', {
+      userAddress, vaultAddress,
+      depositData
+    })
     const result = await this.account.walletAdapter?.sendTransaction(
       vaultAddress,
       "deposit",
       {
-        from: this.account.stateValue.address!,
+        from: userAddress!,
         to: vaultAddress,
         data: [depositData],
         value: fee,
+        // value: BigInt(114557727841647),
       },
       {
         abi: contractAddress.vaultAbi,

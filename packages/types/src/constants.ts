@@ -80,20 +80,20 @@ export const ArbitrumSepoliaChainInfo = {
 }
 export const AbstractTestnetChainInfo = {
   name: "Abstract Testnet",
-  public_rpc_url: "https://rpc.abstract.network",
+  public_rpc_url: "https://api.testnet.abs.xyz",
   chain_id: "11124",
   currency_symbol: "ETH",
   currency_decimal: 18,
-  explorer_base_url: "https://sepolia.arbiscan.io",
-  vault_address: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
+  explorer_base_url: "https://sepolia.abscan.org",
+  vault_address: "0xf14Ff11F3bb1011ff42665Ec869c7827c43745Fd",
 }
 export const AbstractTestnetTokenInfo = {
   chain_id: "11124",
-  contract_address: "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f",
-  decimals: 18,
+  contract_address: "0xa0BB43E2eA7fcE91F07e628d72fD6333e80F47D2",
+  decimals: 6,
   withdrawal_fee: 1,
   cross_chain_withdrawal_fee: 2,
-  display_name: "ETH"
+  display_name: "USDC"
 }
 export const SolanaDevnetChainInfo = {
   chain_id: "901901901",

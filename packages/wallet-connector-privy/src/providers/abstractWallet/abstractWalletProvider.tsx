@@ -9,7 +9,7 @@ import { createContext, PropsWithChildren, useContext, useMemo } from "react";
 import { ConnectedChain, WalletState } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../../provider";
-import { useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import { windowGuard } from "@orderly.network/utils";
 import { IWalletState } from "../../types";
 interface AbstractWalletContextValue {
