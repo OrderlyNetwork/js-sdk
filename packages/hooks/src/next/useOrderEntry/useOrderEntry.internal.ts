@@ -1,23 +1,22 @@
+import { useCallback, useEffect } from "react";
+import { compose, head } from "ramda";
 import {
   type API,
   OrderlyOrder,
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-
-import { useCallback, useEffect } from "react";
+import { calcTPSL_ROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
+import { OrderCreator } from "../../services/orderCreator/interface";
 import {
   baseInputHandle,
   getCalculateHandler,
 } from "../../utils/orderEntryHelper";
-import { compose, head } from "ramda";
+import { hasTPSL } from "./helper";
 import {
   type FullOrderState,
   // useOrderStore,
 } from "./orderEntry.store";
-import { OrderCreator } from "../../services/orderCreator/interface";
-import { hasTPSL } from "./helper";
-import { calcTPSL_ROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { useOrderStore } from "./useOrderStore";
 
 const useOrderEntryNextInternal = (
@@ -29,7 +28,7 @@ const useOrderEntryNextInternal = (
      */
     initialOrder?: Omit<Partial<FullOrderState>, "symbol">;
     symbolInfo?: API.SymbolExt;
-  } = {}
+  } = {},
 ) => {
   // const orderEntity = useOrderEntryFromStore();
 
@@ -84,23 +83,23 @@ const useOrderEntryNextInternal = (
         | "type",
       value: any,
       markPrice: number,
-      config: API.SymbolExt
+      config: API.SymbolExt,
     ): Partial<FullOrderState> => {
       // console.log("calculate", values, fieldName, value, options);
       const fieldHandler = getCalculateHandler(fieldName);
 
-      let newValues = compose<any, any, any, Partial<FullOrderState>>(
+      const newValues = compose<any, any, any, Partial<FullOrderState>>(
         head,
         // orderEntityFormatHandle(baseDP, quoteDP),
         fieldHandler,
-        baseInputHandle
+        baseInputHandle,
       )([values, fieldName, value, markPrice, config]);
 
       // if fieldName is quantity/price,recalculate the tp/sl
 
       return newValues as Partial<FullOrderState>;
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -113,7 +112,7 @@ const useOrderEntryNextInternal = (
     value: any,
     additional?: {
       markPrice: number;
-    }
+    },
   ) => {
     if (!symbolInfo) {
       orderEntryActions.updateOrderByKey(key, value);
@@ -129,7 +128,7 @@ const useOrderEntryNextInternal = (
       key,
       value,
       markPrice,
-      symbolInfo
+      symbolInfo,
     );
 
     /// if the order type is market or stop market, recalculate the total use mark price
@@ -140,7 +139,7 @@ const useOrderEntryNextInternal = (
           "order_price",
           markPrice,
           markPrice,
-          symbolInfo
+          symbolInfo,
         );
       }
     }
@@ -184,7 +183,7 @@ const useOrderEntryNextInternal = (
     key: string,
     newValues: Partial<FullOrderState>,
     markPrice: number,
-    symbolInfo: API.SymbolExt
+    symbolInfo: API.SymbolExt,
   ) => {
     if (key === "order_price") {
       if (typeof newValues.tp_pnl !== "undefined") {
@@ -193,7 +192,7 @@ const useOrderEntryNextInternal = (
           "tp_pnl",
           newValues.tp_pnl,
           markPrice,
-          symbolInfo
+          symbolInfo,
         );
       }
       if (typeof newValues.sl_pnl !== "undefined") {
@@ -202,7 +201,7 @@ const useOrderEntryNextInternal = (
           "sl_pnl",
           newValues.sl_pnl,
           markPrice,
-          symbolInfo
+          symbolInfo,
         );
       }
     } else {
@@ -212,7 +211,7 @@ const useOrderEntryNextInternal = (
           "tp_trigger_price",
           newValues.tp_trigger_price,
           markPrice,
-          symbolInfo
+          symbolInfo,
         );
       }
 
@@ -222,7 +221,7 @@ const useOrderEntryNextInternal = (
           "sl_trigger_price",
           newValues.sl_trigger_price,
           markPrice,
-          symbolInfo
+          symbolInfo,
         );
       }
     }
@@ -252,7 +251,7 @@ const useOrderEntryNextInternal = (
     values: Partial<FullOrderState>,
     additional?: {
       markPrice: number;
-    }
+    },
   ) => {
     if (!symbolInfo) {
       orderEntryActions.updateOrder(values);
@@ -269,7 +268,7 @@ const useOrderEntryNextInternal = (
         key as keyof FullOrderState,
         values[key as keyof FullOrderState],
         additional?.markPrice ?? 0,
-        symbolInfo!
+        symbolInfo!,
       );
 
       // orderEntryActions.updateOrder(newValues);
@@ -281,34 +280,45 @@ const useOrderEntryNextInternal = (
   };
 
   const onMarkPriceUpdated = useCallback(
-    (markPrice: number, baseOn?: "total" | "order_quantity") => {
+    (markPrice: number, baseOn: string[] = []) => {
       // console.log("******", baseOn);
       if (!options.symbolInfo) return;
       // const values = useOrderStore.getState().entry;
-      let newValues;
+      let newValues: Partial<FullOrderState> = { ...orderEntity };
 
-      if (typeof baseOn === "undefined") {
+      if (baseOn.length === 0) {
         newValues = calculate(
           { ...orderEntity },
           "order_price",
           markPrice,
           markPrice,
-          options.symbolInfo
+          options.symbolInfo!,
         );
       } else {
-        newValues = calculate(
-          { ...orderEntity },
-          baseOn,
-          orderEntity[baseOn],
-          markPrice,
-          options.symbolInfo
-        );
+        baseOn.forEach((key) => {
+          newValues = calculate(
+            { ...newValues },
+            key as keyof FullOrderState,
+            orderEntity[key as keyof FullOrderState],
+            markPrice,
+            options.symbolInfo!,
+          );
+        });
       }
 
-      // if (hasTPSL(newValues)) {
-      //   newValues = calculateTPSL(
+      // if (typeof baseOn === "undefined") {
+      //   newValues = calculate(
+      //     { ...orderEntity },
       //     "order_price",
-      //     newValues,
+      //     markPrice,
+      //     markPrice,
+      //     options.symbolInfo
+      //   );
+      // } else {
+      //   newValues = calculate(
+      //     { ...orderEntity },
+      //     baseOn,
+      //     orderEntity[baseOn],
       //     markPrice,
       //     options.symbolInfo
       //   );
@@ -335,13 +345,13 @@ const useOrderEntryNextInternal = (
 
       orderEntryActions.updateOrder(newValues);
     },
-    [calculate, options.symbolInfo, orderEntity, orderEntryActions]
+    [calculate, options.symbolInfo, orderEntity, orderEntryActions],
   );
 
   const validate = (
     order: Partial<OrderlyOrder>,
     creator: OrderCreator<any>,
-    options: { maxQty: number; markPrice: number }
+    options: { maxQty: number; markPrice: number },
   ) => {
     const { markPrice, maxQty } = options;
 
@@ -354,7 +364,7 @@ const useOrderEntryNextInternal = (
 
   const generateOrder = (
     creator: OrderCreator<any>,
-    options: { maxQty: number; markPrice: number }
+    options: { maxQty: number; markPrice: number },
   ) => {
     const order = creator.create(orderEntity, {
       ...options,

@@ -1,12 +1,12 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { MenuItem } from "@orderly.network/ui";
-import { Decimal, todpIfNeed } from "@orderly.network/utils";
 import type {
   InputFormatter,
   InputFormatterOptions,
 } from "@orderly.network/ui";
+import { Decimal, todpIfNeed } from "@orderly.network/utils";
 import { usePnlInputContext } from "./pnlInputContext";
-import { useTranslation } from "@orderly.network/i18n";
 
 export enum PnLMode {
   PnL = "PnL",
@@ -48,6 +48,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const { mode, setMode, tipsEle } = usePnlInputContext();
 
   const [tipVisible, setTipVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const key = useMemo<PNL_Keys>(() => {
     switch (mode) {
@@ -60,10 +61,25 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     }
   }, [mode]);
 
-  const value = useMemo(() => {
-    // console.log("mode", mode, values);
-    return values[mode as keyof PNL_Values];
-  }, [values, mode]);
+  const [innerValue, setInnerValue] = useState<string>(
+    values[mode as keyof PNL_Values],
+  );
+
+  // const value = useMemo(() => {
+  //   // console.log("mode", mode, values);
+  //   const value = values[mode as keyof PNL_Values];
+  //   // if (isFocused) {
+  //   //   return value;
+  //   // }
+  //   return value;
+  // }, [values, mode, isFocused]);
+
+  useEffect(() => {
+    if (isFocused) {
+      return;
+    }
+    setInnerValue(values[mode as keyof PNL_Values]);
+  }, [values, mode, isFocused]);
 
   const modes = useMemo<MenuItem[]>(() => {
     return [
@@ -97,12 +113,19 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
 
   const onValueChange = (value: string) => {
     // console.log("onValueChange", value);
+    // if (!isFocused) {
+    //   props.onChange(key, value);
+    // } else {
+    //   setInnerValue(value);
+    // }
+    setInnerValue(value);
     props.onChange(key, value);
   };
 
   const onFocus = () => {
     // updateTips();
     setTipVisible(true);
+    setIsFocused(true);
   };
 
   /**
@@ -111,6 +134,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const onBlur = () => {
     // setTips(undefined);
     setTipVisible(false);
+    setIsFocused(false);
+    props.onChange(key, innerValue);
   };
 
   const formatter = (options: {
@@ -122,7 +147,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     return {
       onRenderBefore: (
         value: string | number,
-        options: InputFormatterOptions
+        options: InputFormatterOptions,
       ) => {
         value = `${value}`; // convert to string
 
@@ -149,8 +174,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           return `${new Decimal(
             value.replace(
               new RegExp(percentageSuffix.current.replace(".", "\\.") + "$"),
-              ""
-            )
+              "",
+            ),
           )
             .mul(100)
             .todp(2, 4)
@@ -205,7 +230,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     },
     onFocus,
     onBlur,
-    value,
+    value: innerValue,
     onValueChange,
     quote_dp,
     tips: tipVisible ? tipsEle : undefined,
