@@ -49,7 +49,12 @@ export const useAccount = () => {
         network: account.chainId,
         wallet: state.connectWallet?.name,
       });
-      return account.createOrderlyKey(remember ? 365 : 30);
+      return account.createOrderlyKey(remember ? 365 : 30).then((res) => {
+        return account.restoreSubAccount().then((_) => {
+          // setState(nextState);
+          return res;
+        });
+      });
     },
     [account, state]
   );

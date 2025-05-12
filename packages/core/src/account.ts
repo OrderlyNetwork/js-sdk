@@ -393,45 +393,47 @@ export class Account {
         /**
          * Fetch sub-accounts list when trading is enabled for this account
          */
-        const subAccounts = await this.getSubAccounts();
+        // const subAccounts = await this.getSubAccounts();
 
-        nextState = {
-          ...this.stateValue,
-          validating: false,
-          status: AccountStatusEnum.EnableTrading,
-        };
+        // nextState = {
+        //   ...this.stateValue,
+        //   validating: false,
+        //   status: AccountStatusEnum.EnableTrading,
+        // };
 
-        if (subAccounts.length) {
-          // load active sub-account from local storage
-          const activeSubAccount = this.additionalInfoRepository.get(
-            address,
-            Account.ACTIVE_SUB_ACCOUNT_ID_KEY
-          );
+        // if (subAccounts.length) {
+        //   // load active sub-account from local storage
+        //   const activeSubAccount = this.additionalInfoRepository.get(
+        //     address,
+        //     Account.ACTIVE_SUB_ACCOUNT_ID_KEY
+        //   );
 
-          nextState.subAccounts = subAccounts.map(
-            (subAccount: {
-              sub_account_id: string;
-              description: string;
-              holding: API.Holding[];
-            }) => ({
-              id: subAccount.sub_account_id,
-              description: subAccount.description,
-              holding: subAccount.holding,
-            })
-          );
+        //   nextState.subAccounts = subAccounts.map(
+        //     (subAccount: {
+        //       sub_account_id: string;
+        //       description: string;
+        //       holding: API.Holding[];
+        //     }) => ({
+        //       id: subAccount.sub_account_id,
+        //       description: subAccount.description,
+        //       holding: subAccount.holding,
+        //     })
+        //   );
 
-          if (activeSubAccount) {
-            // check if the activeSubAccount is included in the subAccounts
-            if (
-              nextState.subAccounts?.find(
-                (subAccount) => subAccount.id === activeSubAccount
-              )
-            ) {
-              nextState.subAccountId = activeSubAccount;
-              nextState.accountId = activeSubAccount;
-            }
-          }
-        }
+        //   if (activeSubAccount) {
+        //     // check if the activeSubAccount is included in the subAccounts
+        //     if (
+        //       nextState.subAccounts?.find(
+        //         (subAccount) => subAccount.id === activeSubAccount
+        //       )
+        //     ) {
+        //       nextState.subAccountId = activeSubAccount;
+        //       nextState.accountId = activeSubAccount;
+        //     }
+        //   }
+        // }
+
+        nextState = await this._restoreSubAccount();
 
         this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
@@ -472,6 +474,56 @@ export class Account {
       // throw new Error(res.message);
       return null;
     }
+  }
+
+  private async _restoreSubAccount(): Promise<AccountState> {
+    const subAccounts = await this.getSubAccounts();
+
+   let nextState = {
+      ...this.stateValue,
+      validating: false,
+      status: AccountStatusEnum.EnableTrading,
+    };
+
+    if (subAccounts.length) {
+      // load active sub-account from local storage
+      const activeSubAccount = this.additionalInfoRepository.get(
+        this.stateValue.address!,
+        Account.ACTIVE_SUB_ACCOUNT_ID_KEY
+      );
+
+      nextState.subAccounts = subAccounts.map(
+        (subAccount: {
+          sub_account_id: string;
+          description: string;
+          holding: API.Holding[];
+        }) => ({
+          id: subAccount.sub_account_id,
+          description: subAccount.description,
+          holding: subAccount.holding,
+        })
+      );
+
+      if (activeSubAccount) {
+        // check if the activeSubAccount is included in the subAccounts
+        if (
+          nextState.subAccounts?.find(
+            (subAccount) => subAccount.id === activeSubAccount
+          )
+        ) {
+          nextState.subAccountId = activeSubAccount;
+          nextState.accountId = activeSubAccount;
+        }
+      }
+    }
+
+    return nextState;
+  }
+
+  restoreSubAccount(): Promise<AccountState> {
+    const nextState = this._restoreSubAccount();
+    this._ee.emit(EVENT_NAMES.statusChanged, nextState);
+    return nextState;
   }
 
   async createAccount(): Promise<any> {
