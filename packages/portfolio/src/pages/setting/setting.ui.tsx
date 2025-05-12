@@ -1,13 +1,17 @@
 import { FC } from "react";
-import { SettingScriptReturns } from "./setting.script";
 import { useScreen } from "@orderly.network/ui";
-import { SettingMobile } from "./setting.ui.mobile";
+import { SettingScriptReturns } from "./setting.script";
 import { SettingDesktop } from "./setting.ui.desktop";
+import { SettingMobile } from "./setting.ui.mobile";
 
 export const Setting: FC<SettingScriptReturns> = (props) => {
   const { isMobile } = useScreen();
   if (isMobile) {
-    return <SettingMobile {...props} />;
+    return (
+      <div className="oui-px-3">
+        <SettingMobile {...props} />
+      </div>
+    );
   }
   return <SettingDesktop {...props} />;
 };

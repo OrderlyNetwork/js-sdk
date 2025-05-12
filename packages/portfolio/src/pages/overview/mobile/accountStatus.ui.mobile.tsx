@@ -1,6 +1,6 @@
+import { FC, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { FC, useMemo } from "react";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { cn, ArrowRightShortIcon } from "@orderly.network/ui";
@@ -69,16 +69,24 @@ const useCurrentStatusText = (): StatusInfo => {
 };
 
 export const AccountStatusMobile: FC = () => {
-  const { title, description, titleColor, titleClsName } = useCurrentStatusText();
-  console.log(title, description, titleColor, titleClsName);
+  const { title, description, titleColor, titleClsName } =
+    useCurrentStatusText();
 
-  return <AuthGuard  >
-    <div className={cn([
-    "oui-h-[44px] oui-px-3 oui-py-[10px] oui-w-full oui-rounded-[10px] oui-flex oui-items-center oui-justify-center",
-  ])}>
-      {description}
-    <ArrowRightShortIcon size={18} className={cn(description ? "oui-text-base-contrast-80 oui-ml-1" : "oui-hidden")}/>
-  </div>
-  </AuthGuard>;
+  return (
+    <AuthGuard>
+      <div
+        className={cn([
+          "oui-flex oui-h-[44px] oui-w-full oui-items-center oui-justify-center oui-rounded-[10px] oui-px-3 oui-py-[10px]",
+        ])}
+      >
+        {description}
+        <ArrowRightShortIcon
+          size={18}
+          className={cn(
+            description ? "oui-ml-1 oui-text-base-contrast-80" : "oui-hidden",
+          )}
+        />
+      </div>
+    </AuthGuard>
+  );
 };
-

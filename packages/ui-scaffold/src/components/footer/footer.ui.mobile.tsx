@@ -12,6 +12,10 @@ type FooterMobileProps = {
 export const FooterMobile = (props: FooterMobileProps) => {
   const { mainMenus, current, onRouteChange } = props;
 
+  const isSubmenu = useMemo(() => {
+    return mainMenus?.every((menu) => menu.href !== current);
+  }, [mainMenus, current]);
+
   const menus = useMemo(() => {
     return mainMenus?.map((menu) => {
       const isActive =
@@ -34,6 +38,10 @@ export const FooterMobile = (props: FooterMobileProps) => {
       );
     });
   }, [mainMenus, current, onRouteChange]);
+
+  if (isSubmenu) {
+    return null;
+  }
 
   return (
     <Flex

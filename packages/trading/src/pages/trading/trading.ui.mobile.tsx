@@ -12,6 +12,7 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
+import { FooterMobile, MobileTopNav } from "@orderly.network/ui-scaffold";
 import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { OrderBookAndEntryWidget } from "../../components/mobile/orderBookAndEntry";
@@ -111,10 +112,10 @@ export const MobileLayout: FC<TradingState> = (props) => {
   return (
     <div
       style={{ paddingBottom: "calc(64px + env(safe-area-inset-bottom))" }}
-      className="oui-relative oui-grid oui-h-screen oui-grid-rows-[auto,1fr,auto] oui-gap-1 oui-bg-base-10"
+      className="oui-relative oui-grid oui-h-[calc(100vh-44px)] oui-gap-1 oui-bg-base-10"
     >
-      <header>{topBar}</header>
       <main className="oui-hide-scrollbar oui-space-y-1 oui-overflow-y-auto">
+        {topBar}
         <TopTabWidget className="oui-mx-1 oui-rounded-xl oui-bg-base-9" />
         <OrderBookAndEntryWidget />
         <DataListWidget
@@ -123,9 +124,6 @@ export const MobileLayout: FC<TradingState> = (props) => {
           sharePnLConfig={props.sharePnLConfig}
         />
       </main>
-      <div className="oui-fixed oui-inset-x-0 oui-bottom-0">
-        <BottomNavBarWidget />
-      </div>
     </div>
   );
 };

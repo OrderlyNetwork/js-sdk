@@ -1,8 +1,9 @@
 import { FC, PropsWithChildren } from "react";
-import { PortfolioLayout, PortfolioLayoutProps } from "./layout.ui";
-import { usePortfolioLayoutScript } from "./layout.script";
 import { useScreen } from "@orderly.network/ui";
+import { usePortfolioLayoutScript } from "./layout.script";
+import { PortfolioLayout, PortfolioLayoutProps } from "./layout.ui";
 import { PortfolioLayoutMobile } from "./layout.ui.mobile";
+
 export type PortfolioLayoutWidgetProps = PortfolioLayoutProps;
 
 export const PortfolioLayoutWidget: FC<
@@ -16,6 +17,7 @@ export const PortfolioLayoutWidget: FC<
   return (
     <>
       {isMobile ? (
+        // @ts-ignore
         <PortfolioLayoutMobile {...state} {...props} />
       ) : (
         <PortfolioLayout {...state} {...props} />

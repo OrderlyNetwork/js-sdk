@@ -19,7 +19,7 @@ export const useScaffoldScript = (options: ScaffoldScriptOptions) => {
 
   const [expand, setExpand] = useLocalStorage(
     "orderly_scaffold_expanded",
-    true
+    true,
   );
 
   const { isMobile } = useScreen();
@@ -42,6 +42,9 @@ export const useScaffoldScript = (options: ScaffoldScriptOptions) => {
     sideBarExpandWidth,
     sideBarCollaspedWidth,
     hasLeftSidebar,
+    footerProps: options.footerProps,
+    routerAdapter: options.routerAdapter,
+    mainNavProps: options.mainNavProps,
   };
 };
 

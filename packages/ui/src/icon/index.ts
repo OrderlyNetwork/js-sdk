@@ -1,4 +1,5 @@
 import { BaseIcon } from "./baseIcon";
+import { CombineIcon } from "./combine";
 
 export type { BaseIconProps } from "./baseIcon";
 export { CloseIcon } from "./close";
@@ -35,6 +36,8 @@ export { EyeIcon } from "./eye";
 export { ShareIcon } from "./share";
 export { EyeCloseIcon } from "./eyeClose";
 export { RefreshIcon } from "./refresh";
+export { OrderlyIcon } from "./orderly";
+export { EsOrderlyIcon } from "./esOrderly";
 
 export { TokenIcon } from "./tokenIcon";
 export { ChainIcon } from "./chainIcon";
@@ -59,8 +62,8 @@ export { PortfolioActiveIcon } from "./portfolioActiveIcon";
 export { PortfolioInactiveIcon } from "./portfolioInactiveIcon";
 export { TradingActiveIcon } from "./tradingActiveIcon";
 export { TradingInactiveIcon } from "./tradingInactiveIcon";
-
-import { CombineIcon } from "./combine";
+export { LeaderboardActiveIcon } from "./leaderboardActive";
+export { LeaderboardInactiveIcon } from "./leaderboardInactive";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

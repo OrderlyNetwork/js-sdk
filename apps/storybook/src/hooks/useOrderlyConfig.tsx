@@ -1,9 +1,22 @@
 import { useMemo } from "react";
-import { TradingPageProps } from "@orderly.network/trading";
-import { FooterProps, MainNavWidgetProps, FooterMobileProps } from "@orderly.network/ui-scaffold";
 import { RestrictedInfoOptions } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { AppLogos } from "@orderly.network/react-app";
-import { TradingActiveIcon, TradingInactiveIcon, PortfolioActiveIcon, PortfolioInactiveIcon } from "@orderly.network/ui";
+import { TradingPageProps } from "@orderly.network/trading";
+import {
+  TradingActiveIcon,
+  TradingInactiveIcon,
+  PortfolioActiveIcon,
+  PortfolioInactiveIcon,
+  LeaderboardActiveIcon,
+  LeaderboardInactiveIcon,
+} from "@orderly.network/ui";
+import {
+  FooterProps,
+  MainNavWidgetProps,
+  FooterMobileProps,
+} from "@orderly.network/ui-scaffold";
+import { CustomProductNav } from "../components/customProductNav/indx";
 import {
   AffiliatesActiveIcon,
   AffiliatesIcon,
@@ -12,8 +25,7 @@ import {
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
-import { useTranslation } from "@orderly.network/i18n";
-import { CustomProductNav } from "../components/customProductNav/indx";
+
 export type OrderlyConfig = {
   orderlyAppProvider: {
     appIcons: AppLogos;
@@ -86,8 +98,24 @@ export const useOrderlyConfig = () => {
           discordUrl: "https://discord.com/invite/orderlynetwork",
           twitterUrl: "https://twitter.com/OrderlyNetwork",
           mobileMainMenus: [
-            { name: t("common.trading"), href: "/", activeIcon: <TradingActiveIcon />, inactiveIcon: <TradingInactiveIcon /> },
-            { name: t("common.portfolio"), href: "/portfolio", activeIcon: <PortfolioActiveIcon />, inactiveIcon: <PortfolioInactiveIcon /> },
+            {
+              name: t("common.trading"),
+              href: "/",
+              activeIcon: <TradingActiveIcon />,
+              inactiveIcon: <TradingInactiveIcon />,
+            },
+            {
+              name: t("tradingLeaderboard.leaderboard"),
+              href: "/leaderboard",
+              activeIcon: <LeaderboardActiveIcon />,
+              inactiveIcon: <LeaderboardInactiveIcon />,
+            },
+            {
+              name: t("common.portfolio"),
+              href: "/portfolio",
+              activeIcon: <PortfolioActiveIcon />,
+              inactiveIcon: <PortfolioInactiveIcon />,
+            },
           ],
         },
       },
