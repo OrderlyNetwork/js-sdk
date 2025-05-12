@@ -38,15 +38,13 @@ export function InitSolanaProvider({
     } else {
       rpcUrl = devnetRpc ?? null;
     }
-    if (rpcUrl) {
-      setSolanaInfo({
-        rpcUrl: rpcUrl,
-        network:
-          network === "mainnet"
-            ? WalletAdapterNetwork.Mainnet
-            : WalletAdapterNetwork.Devnet,
-      });
-    }
+    setSolanaInfo({
+      rpcUrl: rpcUrl,
+      network:
+        network === "mainnet"
+          ? WalletAdapterNetwork.Mainnet
+          : WalletAdapterNetwork.Devnet,
+    });
   }, [network, mainnetRpc, devnetRpc, setSolanaInfo]);
   return (
     <WalletProvider wallets={wallets} onError={onError}>
