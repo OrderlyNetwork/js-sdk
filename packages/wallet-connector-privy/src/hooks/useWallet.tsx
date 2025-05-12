@@ -28,7 +28,7 @@ import { getChainType } from "../util";
 
 export function useWallet() {
   const { track } = useTrack();
-  const { walletChainType } = useWalletConnectorPrivy();
+  const { walletChainTypeConfig } = useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");
   const {
     disconnect: disconnectEVM,
@@ -109,7 +109,7 @@ export function useWallet() {
 
     if (isPrivy) {
       if (chainType === WalletType.EVM) {
-        if (walletChainType === WalletChainTypeEnum.onlySOL) {
+        if (!walletChainTypeConfig.hasEvm) {
           return Promise.reject(new Error("No evm wallet found"));
         }
         isManual.current = true;
@@ -130,11 +130,16 @@ export function useWallet() {
             return Promise.reject(e);
           });
       }
+      // current privy not support abstract chain
+      if (chainType === WalletType.ABSTRACT) {
+        setOpenConnectDrawer(true);
+        setTargetWalletType(WalletType.ABSTRACT); 
+      }
 
       if (chainType === WalletType.SOL) {
         isManual.current = true;
-        if (walletChainType === WalletChainTypeEnum.onlyEVM) {
-          return Promise.reject(new Error("only evm wallet"));
+        if (!walletChainTypeConfig.hasSol) {
+          return Promise.reject(new Error("No solana wallet found"));
         }
         if (privyWalletSOL) {
           setStorageChain(parseInt(chain.chainId as string));
@@ -268,6 +273,9 @@ export function useWallet() {
     // });
 
     if (storageChain?.namespace === ChainNamespace.evm) {
+      if (AbstractChains.has(storageChain.chainId)) {
+        return setNullWalletStatus();
+      }
       if (privyWalletEVM) {
         setWallet(privyWalletEVM);
         setConnectedChain(privyWalletEVM.chain);

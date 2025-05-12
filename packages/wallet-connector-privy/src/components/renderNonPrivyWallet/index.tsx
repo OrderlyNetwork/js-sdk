@@ -31,7 +31,6 @@ export function RenderNonPrivyWallet() {
     useAbstractWallet();
   const { namespace, switchWallet } = useWallet();
 
-  console.log("xxx namespace", namespace, storageChain);
   const isActive = (walletType: WalletType) => {
     if (namespace === ChainNamespace.evm) {
       if (walletType === WalletType.ABSTRACT) {
