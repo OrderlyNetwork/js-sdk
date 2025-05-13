@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { ConnectorKey } from "@orderly.network/types";
@@ -29,6 +29,9 @@ function MyWallet() {
 export function ConnectDrawer(props: {
   open: boolean;
   onChangeOpen: (open: boolean) => void;
+  headerProps?: {
+    mobile: React.ReactNode;
+  };
 }) {
   const { t } = useTranslation();
   const { isConnected: isConnectedPrivy } = usePrivyWallet();
@@ -64,6 +67,24 @@ export function ConnectDrawer(props: {
 
   const { isMobile } = useScreen();
 
+  const renderHeader = useCallback(() => {
+    if (isMobile && props.headerProps?.mobile) {
+      return props.headerProps?.mobile;
+    }
+    return (
+      <div
+        className={cn(
+          "oui-font-semibold oui-text-base-contrast-80 ",
+          "oui-py-2 oui-text-[20px]",
+          "md:oui-py-0 md:oui-text-base",
+        )}
+      >
+        {isConnected
+          ? t("connector.privy.myWallet")
+          : t("connector.connectWallet")}
+      </div>
+    );
+  }, [isMobile, props.headerProps?.mobile]);
   return (
     <Drawer isOpen={props.open} onClose={() => props.onChangeOpen(false)}>
       {!isMobile && (
@@ -78,17 +99,7 @@ export function ConnectDrawer(props: {
       )}
       <div className="oui-relative oui-z-10">
         <div className="oui-mb-4 oui-flex oui-items-center oui-justify-between md:oui-mb-5">
-          <div
-            className={cn(
-              "oui-font-semibold oui-text-base-contrast-80 ",
-              "oui-py-2 oui-text-[20px]",
-              "md:oui-py-0 md:oui-text-base",
-            )}
-          >
-            {isConnected
-              ? t("connector.privy.myWallet")
-              : t("connector.connectWallet")}
-          </div>
+          {renderHeader()}
           <CloseIcon
             className="oui-size-5 oui-cursor-pointer oui-text-base-contrast-20 hover:oui-text-base-contrast-80"
             onClick={() => props.onChangeOpen(false)}

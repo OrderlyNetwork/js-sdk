@@ -39,6 +39,7 @@ import {
   WalletConnectorPrivyProvider,
   wagmiConnectors,
 } from "@orderly.network/wallet-connector-privy";
+import { CustomProductNav } from "../src/components/customProductNav/indx";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
 import { CustomConfigStore } from "./customConfigStore";
 
@@ -119,6 +120,9 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
+        headerProps={{
+          mobile: <CustomProductNav />,
+        }}
         // customChains={customerChains}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",

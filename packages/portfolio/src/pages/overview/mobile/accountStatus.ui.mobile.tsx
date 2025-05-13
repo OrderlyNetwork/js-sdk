@@ -73,20 +73,24 @@ export const AccountStatusMobile: FC = () => {
     useCurrentStatusText();
 
   return (
-    <AuthGuard>
-      <div
-        className={cn([
-          "oui-flex oui-h-[44px] oui-w-full oui-items-center oui-justify-center oui-rounded-[10px] oui-px-3 oui-py-[10px]",
-        ])}
-      >
-        {description}
-        <ArrowRightShortIcon
-          size={18}
-          className={cn(
-            description ? "oui-ml-1 oui-text-base-contrast-80" : "oui-hidden",
-          )}
-        />
-      </div>
-    </AuthGuard>
+    <div
+      className={cn([
+        "oui-flex oui-h-[44px] oui-w-full oui-items-center oui-justify-center oui-rounded-[10px] oui-px-3 oui-py-[10px]",
+        "oui-bg-[linear-gradient(15deg,#FF7B00_-11%,transparent_30%)]",
+        // "oui-bg-linear-65",
+        // "oui-from-[-20%]",
+        // "oui-to-[40%]",
+        // " oui-from-[#FF7B00]",
+        // " oui-to-[#FFEA00]",
+      ])}
+    >
+      {description}
+      <ArrowRightShortIcon
+        size={18}
+        className={cn(
+          description ? "oui-ml-1 oui-text-base-contrast-80" : "oui-hidden",
+        )}
+      />
+    </div>
   );
 };

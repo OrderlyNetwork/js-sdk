@@ -137,6 +137,9 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   network: Network;
   customChains?: Chains;
   termsOfUse: string;
+  headerProps?: {
+    mobile: React.ReactNode;
+  };
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [walletChainType, setWalletChainType] = useState<WalletChainType>(
@@ -345,7 +348,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
               initChains={initChains}
             >
               <SolanaWallet solanaConfig={props.solanaConfig}>
-                <Main>{props.children}</Main>
+                <Main headerProps={props.headerProps}>{props.children}</Main>
               </SolanaWallet>
             </WagmiWallet>
           </AbstractWallet>

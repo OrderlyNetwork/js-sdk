@@ -10,7 +10,14 @@ import { useWallet } from "./hooks/useWallet";
 import "./injectUsercenter";
 import { useWalletConnectorPrivy } from "./provider";
 
-export function Main(props: PropsWithChildren) {
+interface MainProps {
+  children: React.ReactNode;
+  headerProps?: {
+    mobile: React.ReactNode;
+  };
+}
+
+export function Main(props: MainProps) {
   const { wallet, connectedChain, setChain, namespace } = useWallet();
   const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
     useWalletConnectorPrivy();
@@ -54,6 +61,7 @@ export function Main(props: PropsWithChildren) {
       <ConnectDrawer
         open={openConnectDrawer}
         onChangeOpen={setOpenConnectDrawer}
+        headerProps={props.headerProps}
       />
       {props.children}
     </WalletConnectorContext.Provider>
