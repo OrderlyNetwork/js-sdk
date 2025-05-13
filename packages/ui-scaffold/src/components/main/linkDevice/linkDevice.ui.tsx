@@ -1,4 +1,6 @@
 import { FC, SVGProps, useEffect, useRef } from "react";
+import { qrcode as qr } from "@akamfoad/qr";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   cn,
   CopyIcon,
@@ -8,16 +10,13 @@ import {
   SimpleDialogFooterProps,
   Text,
 } from "@orderly.network/ui";
-import { qrcode as qr } from "@akamfoad/qr";
 import { MainLogo } from "../mainLogo";
 import { UseLinkDeviceScriptReturn } from "./linkDevice.script";
-import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export type LinkDeviceProps = UseLinkDeviceScriptReturn;
 
 export const LinkDevice: FC<LinkDeviceProps> = (props) => {
   const { t } = useTranslation();
-
   return (
     <>
       <LinkDeviceIcon
@@ -110,7 +109,7 @@ const QRCode: FC<QRCodeProps> = (props) => {
       <Flex
         className={cn(
           "oui-w-[240px] oui-h-[240px] ",
-          "oui-border oui-border-base-contrast-20 oui-rounded-2xl"
+          "oui-border oui-border-base-contrast-20 oui-rounded-2xl",
         )}
         justify="center"
         itemAlign="center"
@@ -129,7 +128,7 @@ const QRCode: FC<QRCodeProps> = (props) => {
         gap={1}
         className={cn(
           "oui-cursor-pointer",
-          "oui-group oui-text-base-contrast-54 hover:oui-text-base-contrast"
+          "oui-group oui-text-base-contrast-54 hover:oui-text-base-contrast",
         )}
         onClick={props.copyUrl}
       >
