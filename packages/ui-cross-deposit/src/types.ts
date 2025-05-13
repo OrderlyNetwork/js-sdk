@@ -40,7 +40,7 @@ export type NetworkInfos = API.NetworkInfos & {
 };
 
 export type TokenInfo = API.TokenInfo & {
-  swap_enable: Boolean;
+  swap_enable: boolean;
   woofi_dex_precision: string;
 };
 

@@ -1,9 +1,9 @@
 import { FC, useMemo } from "react";
+import { useTranslation, Trans } from "@orderly.network/i18n";
+import { NetworkId } from "@orderly.network/types";
 import { Box, Text } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
-import { NetworkId } from "@orderly.network/types";
-import { useTranslation, Trans } from "@orderly.network/i18n";
 
 type NoticeProps = {
   message?: string;
@@ -38,6 +38,7 @@ export const Notice: FC<NoticeProps> = (props) => {
             i18nKey="transfer.crossDeposit.crossSwap.notice"
             components={[
               <Text
+                key="0"
                 className="oui-cursor-pointer"
                 color="primaryLight"
                 onClick={showChainSelect}

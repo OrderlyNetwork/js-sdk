@@ -1,4 +1,6 @@
 import { FC, ReactNode } from "react";
+import { useTranslation, Trans } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
 import {
   Box,
   Flex,
@@ -8,12 +10,11 @@ import {
   Divider,
   Button,
 } from "@orderly.network/ui";
-import { API } from "@orderly.network/types";
 import { feeDecimalsOffset } from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
-import { SwapMode, SymbolInfo } from "../../types";
 import { ArrowRightIcon, GasFeeIcon, WoofiIcon } from "../../icons";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { SwapMode, SymbolInfo } from "../../types";
+
 export interface SwapInfo {
   // gasFee: string;
   // tradingFee: string;
@@ -65,7 +66,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
       <ArrowRightIcon className="oui-text-primary-light" />
       <SwapSymbol
         primary={dst?.token}
-        component={<WoofiIcon className="oui-w-4 oui-h-4" />}
+        component={<WoofiIcon className="oui-size-4" />}
         amount={dst?.amount}
         dp={dst?.displayDecimals}
         symbol={dst?.token}
@@ -295,7 +296,7 @@ const SwapTime: FC<{ time: number }> = (props) => {
           <Trans
             i18nKey="transfer.crossDeposit.averageSwapTime"
             values={{ time: props.time }}
-            components={[<Text color="primaryLight" />]}
+            components={[<Text color="primaryLight" key="0" />]}
           />
         </Text>
       </Flex>

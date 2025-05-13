@@ -1,7 +1,7 @@
 import React from "react";
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
 import { Trans } from "@orderly.network/i18n";
+import { Flex, Text } from "@orderly.network/ui";
 
 export const ViewFAQs: FC = () => {
   return (
@@ -16,6 +16,7 @@ export const ViewFAQs: FC = () => {
               window.open("https://learn.woo.org/woofi/faqs/woofi-pro");
             }}
             className="oui-cursor-pointer"
+            key="0"
           />,
         ]}
       />
