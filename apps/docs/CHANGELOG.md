@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 1.1.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/hooks@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/web3-onboard@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/types@2.1.2-internal-portfolio-mweb.0
+
 ## 1.1.1
 
 ### Patch Changes

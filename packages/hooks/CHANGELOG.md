@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.1.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/default-evm-adapter@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/default-solana-adapter@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/net@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/perp@4.1.2-internal-portfolio-mweb.0
+  - @orderly.network/types@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/utils@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/web3-provider-ethers@2.1.2-internal-portfolio-mweb.0
+
 ## 2.1.1
 
 ### Patch Changes

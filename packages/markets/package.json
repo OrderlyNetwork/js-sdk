@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/markets",
-  "version": "2.1.1",
+  "version": "2.1.2-internal-portfolio-mweb.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

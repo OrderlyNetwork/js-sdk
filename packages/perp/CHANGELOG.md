@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.1.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/utils@2.1.2-internal-portfolio-mweb.0
+
 ## 4.1.1
 
 ### Patch Changes

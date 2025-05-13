@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.1.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/types@2.1.2-internal-portfolio-mweb.0
+
 ## 2.1.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.4.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+
 ## 0.4.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.1.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/hooks@2.1.2-internal-portfolio-mweb.0
+  - @orderly.network/utils@2.1.2-internal-portfolio-mweb.0
+
 ## 2.1.1
 
 ### Patch Changes

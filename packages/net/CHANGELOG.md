@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.1.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+
 ## 2.1.1
 
 ### Patch Changes

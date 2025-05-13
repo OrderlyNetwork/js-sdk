@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.4.2-internal-portfolio-mweb.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.1.2-internal-portfolio-mweb.0
+
 ## 0.4.1
 
 ### Patch Changes
