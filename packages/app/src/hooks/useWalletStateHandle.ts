@@ -172,6 +172,7 @@ export const useWalletStateHandle = (options: {
         wallet: {
           name: connectedWallet?.label ?? "",
         },
+        additionalInfo: connectedWallet?.additionalInfo ?? {},
       });
       track(TrackerEventName.walletConnect, {
         wallet: connectedWallet?.label ?? "",

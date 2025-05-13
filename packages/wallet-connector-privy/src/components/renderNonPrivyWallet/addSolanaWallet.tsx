@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSolanaWallet } from "../providers/solanaWalletProvider";
+import { useTranslation } from "@orderly.network/i18n";
+import { ChainNamespace } from "@orderly.network/types";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   cn,
   Tooltip,
 } from "@orderly.network/ui";
-import { useWallet } from "../hooks/useWallet";
-import { useWalletConnectorPrivy } from "../provider";
-import { ChainNamespace } from "@orderly.network/types";
-import { WalletType } from "../types";
-import { RenderWalletIcon } from "./common";
-import { useTranslation } from "@orderly.network/i18n";
+import { useWallet } from "../../hooks/useWallet";
+import { useWalletConnectorPrivy } from "../../provider";
+import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";
+import { WalletConnectType, WalletType } from "../../types";
+import { RenderWalletIcon } from "../common";
 
 export function AddSolanaWallet() {
   const { t } = useTranslation();
@@ -21,14 +21,13 @@ export function AddSolanaWallet() {
   const onToggleVisibility = () => {
     setVisible(!visible);
   };
-  const { targetNamespace } = useWalletConnectorPrivy();
-  // TODO: need get value from useWalletConnectorPrivy
+  const { targetWalletType } = useWalletConnectorPrivy();
   const [open, setOpen] = useState(false);
-  console.log("-- open and targetNamespace", open, targetNamespace);
+  console.log("-- open and targetNamespace", open, targetWalletType);
 
   useEffect(() => {
     let timer = 0;
-    if (targetNamespace === ChainNamespace.solana) {
+    if (targetWalletType === WalletType.SOL) {
       timer = window.setTimeout(() => {
         setOpen(true);
       }, 200);
@@ -38,7 +37,7 @@ export function AddSolanaWallet() {
         window.clearTimeout(timer);
       }
     };
-  }, [targetNamespace]);
+  }, [targetWalletType]);
   useEffect(() => {
     if (open === false) {
       return;
@@ -54,18 +53,18 @@ export function AddSolanaWallet() {
   }, [open]);
 
   return (
-    <div className="oui-bg-[#07080A] oui-rounded-[8px] oui-px-2 oui-py-[11px]">
+    <div className="oui-rounded-[8px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]">
       <Tooltip
-        className="oui-text-warning-darken oui-max-w-[200px] oui-z-[65]"
+        className="oui-z-[65] oui-max-w-[200px] oui-text-warning-darken"
         open={open}
         content={t("connector.privy.addSolanaWallet.tips")}
       >
         <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 ">
           <img
             src="https://oss.orderly.network/static/sdk/solana-logo.png"
-            className="oui-w-[15px] oui-h-[15px]"
+            className="oui-size-[15px]"
           />
-          <div className="oui-text-base-contrast-80 oui-text-2xs oui-font-semibold">
+          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-80">
             {t("connector.privy.addSolanaWallet")}
           </div>
 
@@ -88,23 +87,23 @@ export function AddSolanaWallet() {
       </Tooltip>
       <div
         className={cn(
-          "oui-grid oui-grid-cols-2 oui-gap-2 oui-transition-height oui-duration-150 oui-overflow-hidden",
-          visible ? "oui-max-h-0 oui-mt-0" : "oui-max-h-[400px] oui-mt-3"
+          "oui-transition-height oui-grid oui-grid-cols-2 oui-gap-2 oui-overflow-hidden oui-duration-150",
+          visible ? "oui-mt-0 oui-max-h-0" : "oui-mt-3 oui-max-h-[400px]",
         )}
       >
         {wallets.map((item, index) => (
           <div
             key={index}
-            className="oui-flex oui-items-center oui-justify-start oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer"
+            className="oui-flex oui-cursor-pointer oui-items-center oui-justify-start  oui-gap-1 oui-bg-[#131519] oui-px-2 oui-py-[11px]"
             onClick={() =>
               connect({
-                walletType: WalletType.SOL,
+                walletType: WalletConnectType.SOL,
                 walletAdapter: item.adapter,
               })
             }
           >
             <RenderWalletIcon connector={item.adapter} />
-            <div className="oui-text-base-contrast oui-text-2xs">
+            <div className="oui-text-2xs oui-text-base-contrast">
               {item.adapter.name}
             </div>
           </div>

@@ -1,3 +1,6 @@
+import { useCallback, useContext, useMemo, useRef } from "react";
+import { prop } from "ramda";
+import { SWRConfiguration } from "swr";
 import {
   NetworkId,
   type API,
@@ -8,18 +11,17 @@ import {
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
   TesntTokenFallback,
+  AbstractTestnetTokenInfo,
+  AbstractTestnetChainInfo,
 } from "@orderly.network/types";
-import { useCallback, useContext, useMemo, useRef } from "react";
-import { SWRConfiguration } from "swr";
-import { useQuery } from "../useQuery";
-import { prop } from "ramda";
-import { isTestnet } from "@orderly.network/utils";
 import { nativeTokenAddress } from "@orderly.network/types";
-import { OrderlyContext } from "../orderlyContext";
 import { ArbitrumSepolia } from "@orderly.network/types";
+import { isTestnet } from "@orderly.network/utils";
+import { OrderlyContext } from "../orderlyContext";
+import { useQuery } from "../useQuery";
 
 // testnet only show arb sepolia and solana devnet
-const TestNetWhiteList = [421614, 901901901, MONAD_TESTNET_CHAINID];
+const TestNetWhiteList = [421614, 901901901, MONAD_TESTNET_CHAINID, 11124];
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;
@@ -28,20 +30,20 @@ export type Chain = API.Chain & {
 
 export type Chains<
   T extends NetworkId | undefined = undefined,
-  K extends keyof API.Chain | undefined = undefined
+  K extends keyof API.Chain | undefined = undefined,
 > = T extends NetworkId
   ? K extends keyof API.Chain
-  ? API.Chain[K][]
-  : API.Chain[]
+    ? API.Chain[K][]
+    : API.Chain[]
   : K extends keyof API.Chain
-  ? {
-    testnet: API.Chain[K][];
-    mainnet: API.Chain[K][];
-  }
-  : {
-    testnet: API.Chain[];
-    mainnet: API.Chain[];
-  };
+    ? {
+        testnet: API.Chain[K][];
+        mainnet: API.Chain[K][];
+      }
+    : {
+        testnet: API.Chain[];
+        mainnet: API.Chain[];
+      };
 
 export type UseChainsOptions = {
   filter?: (item: API.Chain) => boolean;
@@ -54,49 +56,44 @@ export type UseChainsReturnObject = {
   findByChainId: (chainId: number, field?: string) => Chain | undefined;
   checkChainSupport: (
     chainId: number | string,
-    networkId: NetworkId
+    networkId: NetworkId,
   ) => boolean;
   error: any;
 };
 
 const testnetTokenFallback = TesntTokenFallback([
   ArbitrumSepoliaTokenInfo,
-  SolanaDevnetTokenInfo
+  SolanaDevnetTokenInfo,
 ]);
 
-const testnetChainFallback = [
-  ArbitrumSepoliaChainInfo,
-  SolanaDevnetChainInfo
-];
-
+const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
 export function useChains(
   networkId?: undefined,
-  options?: undefined
+  options?: undefined,
 ): [Chains<undefined, undefined>, UseChainsReturnObject];
 
 export function useChains<
   T extends NetworkId | undefined,
-  K extends UseChainsOptions | undefined
+  K extends UseChainsOptions | undefined,
 >(
   networkId?: T,
-  options?: K
+  options?: K,
 ): [
-    Chains<
-      T,
-      K extends UseChainsOptions
+  Chains<
+    T,
+    K extends UseChainsOptions
       ? K["pick"] extends keyof API.Chain
-      ? K["pick"]
+        ? K["pick"]
+        : undefined
       : undefined
-      : undefined
-    >,
-    UseChainsReturnObject
-  ];
-
+  >,
+  UseChainsReturnObject,
+];
 
 export function useChains(
   networkId?: NetworkId,
-  options: UseChainsOptions = {}
+  options: UseChainsOptions = {},
 ): [any, any] {
   const { pick: pickField, ...swrOptions } = options;
   const {
@@ -124,7 +121,7 @@ export function useChains(
   // only prod env return mainnet chains info
   const { data: tokenChainsRes, error: tokenError } = useQuery<API.Chain[]>(
     "https://api.orderly.org/v1/public/token",
-    { ...commonSwrOpts }
+    { ...commonSwrOpts },
   );
 
   const { data: testTokenChainsRes } = useQuery<API.Chain[]>(
@@ -132,9 +129,8 @@ export function useChains(
     {
       ...commonSwrOpts,
       fallbackData: testnetTokenFallback,
-    }
+    },
   );
-
 
   const brokerId = configStore.get("brokerId");
 
@@ -143,39 +139,63 @@ export function useChains(
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
     needFetchFromAPI
-      ? `https://api.orderly.org/v1/public/chain_info${brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
-      }`
+      ? `https://api.orderly.org/v1/public/chain_info${
+          brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+        }`
       : null,
-    { ...commonSwrOpts }
+    { ...commonSwrOpts },
   );
 
   // test chains info
   const { data: testChainInfos, error: testChainInfoError } = useQuery(
     needFetchFromAPI
-      ? `https://testnet-api.orderly.org/v1/public/chain_info${brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
-      }`
+      ? `https://testnet-api.orderly.org/v1/public/chain_info${
+          brokerId !== "orderly" ? `?broker_id=${brokerId}` : ""
+        }`
       : null,
     {
       ...commonSwrOpts,
       fallbackData: testnetChainFallback,
       onError: (error) => {
         console.error("Failed to fetch testnet chain info:", error);
-      }
-    }
+      },
+    },
   );
 
-
-
   const chains = useMemo(() => {
+    /* TODO need remove this code,just for test abstract chain
+    // @ts-ignore
+    // let tempTestChainInfos = [...testChainInfos, AbstractTestnetChainInfo];
+    // let tempTestTokenChainsRes= testTokenChainsRes?.map((item)=>({
+    //   ...item,
+    //   chain_details: [...item.chain_details, AbstractTestnetTokenInfo]
+    // }))
+    // const tokenChains = fillChainsInfo(
+    //   tokenChainsRes,
+    //   filterFun.current,
+    //   chainInfos
+    // );
+    // const testTokenChains = fillChainsInfo(
+    //   tempTestTokenChainsRes,
+    //   undefined,
+    //   tempTestChainInfos
+    // );
+
+    // let testnetArr = needFetchFromAPI
+    //   ? filterAndUpdateChains(testTokenChains, tempTestChainInfos, undefined, true)
+    //   : customChains?.testnet;
+
+    // test abstract wallet end
+     */
     const tokenChains = fillChainsInfo(
       tokenChainsRes,
       filterFun.current,
-      chainInfos
+      chainInfos,
     );
     const testTokenChains = fillChainsInfo(
       testTokenChainsRes,
       undefined,
-      testChainInfos
+      testChainInfos,
     );
 
     let testnetArr = needFetchFromAPI
@@ -196,7 +216,7 @@ export function useChains(
     mainnetArr = filterAndUpdateChains(
       tokenChains,
       chainInfos,
-      filterFun.current
+      filterFun.current,
     );
 
     mainnetArr = needFetchFromAPI ? mainnetArr : customChains?.mainnet;
@@ -210,7 +230,7 @@ export function useChains(
     testnetArr = filterByAllowedChains(
       testnetArr,
       allowedChains?.testnet ??
-      (TestNetWhiteList.map((id) => ({ id })) as FlatChain[])
+        (TestNetWhiteList.map((id) => ({ id })) as FlatChain[]),
     );
 
     if (!!pickField) {
@@ -250,7 +270,7 @@ export function useChains(
       if (chain) {
         chain.nativeToken =
           chain.token_infos?.find(
-            (item) => item.address === nativeTokenAddress
+            (item) => item.address === nativeTokenAddress,
           ) ||
           ({
             symbol: chain.network_infos?.currency_symbol,
@@ -263,7 +283,7 @@ export function useChains(
 
       return chain;
     },
-    [chains, chainsMap]
+    [chains, chainsMap],
   );
 
   const checkChainSupport = useCallback(
@@ -271,7 +291,7 @@ export function useChains(
       const _chains = Array.isArray(chains) ? chains : chains[networkId];
       return _checkChainSupport(chainId, _chains);
     },
-    [chains]
+    [chains],
   );
 
   return [
@@ -297,15 +317,15 @@ function _checkChainSupport(chainId: number | string, chains: API.Chain[]) {
 export function fillChainsInfo(
   chains?: API.Chain[],
   filter?: (chain: any) => boolean,
-  chainInfos?: any
+  chainInfos?: any,
 ) {
-  let _chains: API.Chain[] = [];
+  const _chains: API.Chain[] = [];
 
   chains?.forEach((item) => {
     item.chain_details.forEach((chain: any) => {
       const chainId = Number(chain.chain_id);
       const chainInfo = chainInfos?.find(
-        (item: any) => item.chain_id == chainId
+        (item: any) => item.chain_id == chainId,
       );
 
       const _chain: any = {
@@ -342,15 +362,15 @@ export function filterAndUpdateChains(
   chains: API.Chain[],
   chainInfos: any,
   filter?: (chain: any) => boolean,
-  isTestNet?: boolean
+  isTestNet?: boolean,
 ) {
   const filterChains: API.Chain[] = [];
 
   chains.forEach((chain) => {
-    let _chain = { ...chain };
+    const _chain = { ...chain };
 
     const networkInfo = chainInfos?.find(
-      (item: any) => item.chain_id == chain.network_infos.chain_id
+      (item: any) => item.chain_id == chain.network_infos.chain_id,
     );
 
     if (networkInfo) {
@@ -385,11 +405,11 @@ export function filterAndUpdateChains(
 export function updateTestnetInfo(
   testnetArr: API.Chain[],
   chainId: number,
-  chain: API.Chain
+  chain: API.Chain,
 ) {
   if (isTestnet(chainId)) {
     const index = testnetArr?.findIndex(
-      (item) => item.network_infos.chain_id === chainId
+      (item) => item.network_infos.chain_id === chainId,
     );
     if (index > -1) {
       testnetArr[index] = chain;
@@ -399,7 +419,7 @@ export function updateTestnetInfo(
 
 export function filterByAllowedChains(
   chains: API.Chain[],
-  allowedChains?: FlatChain[]
+  allowedChains?: FlatChain[],
 ) {
   if (!allowedChains) {
     return chains;
@@ -408,7 +428,7 @@ export function filterByAllowedChains(
   return chains.filter((chain) =>
     allowedChains.some(
       (allowedChain) =>
-        allowedChain.id === parseInt(chain?.network_infos?.chain_id as any)
-    )
+        allowedChain.id === parseInt(chain?.network_infos?.chain_id as any),
+    ),
   );
 }

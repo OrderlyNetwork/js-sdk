@@ -15,8 +15,8 @@ import {
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { useTrack, WalletState } from "@orderly.network/hooks";
 import { ChainNamespace, TrackerEventName } from "@orderly.network/types";
-import { useWalletConnectorPrivy } from "../provider";
-import { SolanaChainsMap } from "../types";
+import { useWalletConnectorPrivy } from "../../provider";
+import { SolanaChainsMap } from "../../types";
 
 interface WalletStatePrivy extends WalletState {
   chain: {

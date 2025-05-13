@@ -1,16 +1,14 @@
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn } from "@orderly.network/ui";
 import { Tooltip, ChevronDownIcon, ChevronUpIcon } from "@orderly.network/ui";
-import React, { useEffect, useState } from "react";
-import { useWagmiWallet } from "../providers/wagmiWalletProvider";
-import { useWallet } from "../hooks/useWallet";
-import { EVMChainPopover } from "./walletCard";
-import { MoreIcon } from "./icons";
-import { ChainNamespace } from "@orderly.network/types";
-import { useWalletConnectorPrivy } from "../provider";
-import { WalletType } from "../types";
-import { getWalletIcon } from "../util";
-import { RenderWalletIcon } from "./common";
-import { useTranslation } from "@orderly.network/i18n";
+import { useWallet } from "../../hooks/useWallet";
+import { useWalletConnectorPrivy } from "../../provider";
+import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
+import { WalletConnectType, WalletType } from "../../types";
+import { RenderWalletIcon } from "../common";
+import { MoreIcon } from "../icons";
+import { EVMChainPopover } from "../walletCard";
 
 export function AddEvmWallet() {
   const { t } = useTranslation();
@@ -18,12 +16,11 @@ export function AddEvmWallet() {
   const { connect } = useWallet();
   const [open, setOpen] = useState(false);
   const { connectors } = useWagmiWallet();
-  const { targetNamespace } = useWalletConnectorPrivy();
-  console.log("--connectors", connectors);
+  const { targetWalletType } = useWalletConnectorPrivy();
 
   useEffect(() => {
     let timer = 0;
-    if (targetNamespace === ChainNamespace.evm) {
+    if (targetWalletType === WalletType.EVM) {
       timer = window.setTimeout(() => {
         setOpen(true);
       }, 200);
@@ -33,7 +30,7 @@ export function AddEvmWallet() {
         window.clearTimeout(timer);
       }
     };
-  }, [targetNamespace]);
+  }, [targetWalletType]);
   useEffect(() => {
     if (open === false) {
       return;
@@ -49,30 +46,30 @@ export function AddEvmWallet() {
   }, [open]);
 
   return (
-    <div className="oui-bg-[#07080A] oui-rounded-[8px] oui-px-2 oui-py-[11px]">
+    <div className="oui-rounded-[8px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]">
       <Tooltip
-        className="oui-text-warning-darken oui-max-w-[200px] oui-z-[65]"
+        className="oui-z-[65] oui-max-w-[200px] oui-text-warning-darken"
         open={open}
         content={t("connector.privy.addEvmWallet.tips")}
       >
         <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 ">
           <div className="oui-flex oui-items-center oui-justify-center oui-gap-1">
-            <div className="oui-flex oui-items-center oui-justify-start oui-relative oui-w-[55px]">
+            <div className="oui-relative oui-flex oui-w-[55px] oui-items-center oui-justify-start">
               <img
                 src="https://oss.orderly.network/static/sdk/chains.png"
-                className="oui-h-[18px] oui-relative oui-z-0"
+                className="oui-relative oui-z-0 oui-h-[18px]"
               />
-              <div className="oui-rounded-full oui-bg-[#282e3a] oui-w-[18px] oui-h-[18px] oui-flex oui-items-center oui-justify-center oui-absolute oui-right-0">
+              <div className="oui-absolute oui-right-0 oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-[#282e3a]">
                 <EVMChainPopover>
                   <MoreIcon
-                    className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-h-3 oui-w-3 oui-relative oui-z-10"
+                    className="oui-relative oui-z-10 oui-size-3 oui-text-base-contrast-54 hover:oui-text-base-contrast"
                     style={{ zIndex: 1 }}
                   />
                 </EVMChainPopover>
               </div>
             </div>
           </div>
-          <div className="oui-text-base-contrast-80 oui-text-2xs oui-font-semibold">
+          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-80">
             {t("connector.privy.addEvmWallet")}
           </div>
 
@@ -95,16 +92,16 @@ export function AddEvmWallet() {
       </Tooltip>
       <div
         className={cn(
-          "oui-grid oui-grid-cols-2 oui-gap-2 oui-transition-height oui-duration-150 oui-overflow-hidden",
-          visible ? "oui-max-h-0 oui-mt-0" : "oui-max-h-[400px] oui-mt-3"
+          "oui-transition-height oui-grid oui-grid-cols-2 oui-gap-2 oui-overflow-hidden oui-duration-150",
+          visible ? "oui-mt-0 oui-max-h-0" : "oui-mt-3 oui-max-h-[400px]",
         )}
       >
         {connectors.map((item, index) => (
           <div
             key={index}
-            className="oui-flex oui-items-center oui-justify-center oui-gap-1  oui-px-2 oui-py-[11px] oui-bg-[#131519] oui-cursor-pointer oui-text-2xs"
+            className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center  oui-gap-1 oui-bg-[#131519] oui-px-2 oui-py-[11px] oui-text-2xs"
             onClick={() =>
-              connect({ walletType: WalletType.EVM, connector: item })
+              connect({ walletType: WalletConnectType.EVM, connector: item })
             }
           >
             <RenderWalletIcon connector={item} />

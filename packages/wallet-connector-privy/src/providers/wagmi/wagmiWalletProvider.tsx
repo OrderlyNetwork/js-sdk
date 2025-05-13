@@ -1,10 +1,3 @@
-import {
-  Connector,
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useSwitchChain,
-} from "wagmi";
 import React, {
   createContext,
   useCallback,
@@ -13,8 +6,15 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import {
+  Connector,
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useSwitchChain,
+} from "wagmi";
 import { ChainNamespace } from "@orderly.network/types";
-import { useWalletConnectorPrivy } from "../provider";
+import { useWalletConnectorPrivy } from "../../provider";
 
 interface WagmiWalletContextValue {
   connectors: Connector[];
@@ -69,11 +69,11 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
               console.log("-- switch chain error", e);
               return reject(e);
             },
-          }
+          },
         );
       });
     },
-    [switchChain]
+    [switchChain],
   );
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     return wagmiConnectors
       .filter((connector: any) => connector.id !== "injected")
       .sort((a: any, b: any) =>
-        a.type === "injected" ? -1 : 1
+        a.type === "injected" ? -1 : 1,
       ) as Connector[];
   }, [wagmiConnectors]);
 
@@ -129,7 +129,7 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       setChain,
       disconnect,
       isConnected,
-    ]
+    ],
   );
 
   return (
