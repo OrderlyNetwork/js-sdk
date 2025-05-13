@@ -169,26 +169,43 @@ export function useChains(
 
 
   const chains = useMemo(() => {
-    // TODO need remove this code,just for test abstract chain
+    /* TODO need remove this code,just for test abstract chain
     // @ts-ignore
-    let tempTestChainInfos = [...testChainInfos, AbstractTestnetChainInfo];
-    let tempTestTokenChainsRes= testTokenChainsRes?.map((item)=>({
-      ...item,
-      chain_details: [...item.chain_details, AbstractTestnetTokenInfo]
-    }))
+    // let tempTestChainInfos = [...testChainInfos, AbstractTestnetChainInfo];
+    // let tempTestTokenChainsRes= testTokenChainsRes?.map((item)=>({
+    //   ...item,
+    //   chain_details: [...item.chain_details, AbstractTestnetTokenInfo]
+    // }))
+    // const tokenChains = fillChainsInfo(
+    //   tokenChainsRes,
+    //   filterFun.current,
+    //   chainInfos
+    // );
+    // const testTokenChains = fillChainsInfo(
+    //   tempTestTokenChainsRes,
+    //   undefined,
+    //   tempTestChainInfos
+    // );
+
+    // let testnetArr = needFetchFromAPI
+    //   ? filterAndUpdateChains(testTokenChains, tempTestChainInfos, undefined, true)
+    //   : customChains?.testnet;
+
+    // test abstract wallet end
+     */
     const tokenChains = fillChainsInfo(
       tokenChainsRes,
       filterFun.current,
       chainInfos
     );
     const testTokenChains = fillChainsInfo(
-      tempTestTokenChainsRes,
+      testTokenChainsRes,
       undefined,
-      tempTestChainInfos
+      testChainInfos
     );
 
     let testnetArr = needFetchFromAPI
-      ? filterAndUpdateChains(testTokenChains, tempTestChainInfos, undefined, true)
+      ? filterAndUpdateChains(testTokenChains, testChainInfos, undefined, true)
       : customChains?.testnet;
 
     tokenChains?.forEach((item) => {
