@@ -21,7 +21,7 @@ export const MobileTopNav: FC<Props> = (props) => {
   const { t } = useTranslation();
 
   const title = useMemo(() => {
-    if (props?.initialMenu === "/") {
+    if (props?.initialMenu === "/" || props?.initialMenu === "/trade") {
       return <MainLogo {...props?.logo} />;
     }
     const menu = props?.mainMenus?.find(
@@ -34,14 +34,21 @@ export const MobileTopNav: FC<Props> = (props) => {
     );
   }, [props, t]);
 
+  const isRewards = useMemo(() => {
+    return (
+      Array.isArray(props?.initialMenu) ||
+      props?.initialMenu?.includes("/rewards")
+    );
+  }, [props?.initialMenu]);
+
   const isSub = useMemo(() => {
-    if (props?.initialMenu === "/rewards") return true;
+    if (isRewards) return true;
     if (props?.current && props.current !== props.initialMenu) return true;
     return false;
-  }, [props?.initialMenu, props?.current]);
+  }, [props?.initialMenu, props?.current, isRewards]);
 
   const subTitle = useMemo(() => {
-    if (props?.initialMenu === "/rewards") return t("tradingRewards.rewards");
+    if (isRewards) return t("tradingRewards.rewards");
     if (props?.subItems?.some((item) => item.href === props?.current)) {
       return props?.subItems?.find((item) => item.href === props?.current)
         ?.name;
@@ -53,7 +60,7 @@ export const MobileTopNav: FC<Props> = (props) => {
     let target = props.mainMenus?.find(
       (item) => item.href === props.initialMenu,
     );
-    if (props?.initialMenu === "/rewards") {
+    if (isRewards) {
       target = {
         name: t("common.portfolio"),
         href: "/portfolio",

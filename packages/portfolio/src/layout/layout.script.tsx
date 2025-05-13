@@ -140,6 +140,11 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
           </svg>
         ),
       },
+      {
+        name: t("trading.history"),
+        href: PortfolioLeftSidebarPath.History,
+        hide: true,
+      },
     ];
   }, [t]);
 

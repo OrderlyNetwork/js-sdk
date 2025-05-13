@@ -10,7 +10,7 @@ type MobileScaffoldProps = PropsWithChildren<ScaffoldScriptReturn>;
 export const MobileScaffold = (props: MobileScaffoldProps) => {
   return (
     <>
-      <header className="oui-bg-base-10">
+      <header className="oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10">
         <MobileTopNav
           {...props.mainNavProps}
           routerAdapter={props.routerAdapter}

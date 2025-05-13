@@ -18,9 +18,7 @@ export const FooterMobile = (props: FooterMobileProps) => {
 
   const menus = useMemo(() => {
     return mainMenus?.map((menu) => {
-      const isActive =
-        current === menu.href ||
-        (current && menu.href.length > 1 && current?.startsWith(menu.href));
+      const isActive = current === menu.href;
       return (
         <Flex
           key={menu.name}
