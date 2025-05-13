@@ -22,7 +22,7 @@ export const MobileLayout: FC<TradingState> = (props) => {
         symbol={props.symbol}
         trailing={
           <Flex gapX={3}>
-            <LanguageSwitcherWidget popup={{ mode: "sheet" }} />
+            <LanguageSwitcherWidget />
             <SecondaryLogo />
           </Flex>
         }

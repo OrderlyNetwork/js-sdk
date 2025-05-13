@@ -5,12 +5,12 @@ import {
   WalletError,
   WalletNotReadyError,
 } from "@solana/wallet-adapter-base";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { clusterApiUrl } from "@solana/web3.js";
 import { WalletProvider } from "@solana/wallet-adapter-react";
 import { ConnectionProvider } from "@solana/wallet-adapter-react";
-import { InitSolana } from "../types";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { clusterApiUrl } from "@solana/web3.js";
 import { useWalletConnectorPrivy } from "../provider";
+import { InitSolana } from "../types";
 
 interface IProps extends PropsWithChildren<InitSolana> {}
 
@@ -38,15 +38,13 @@ export function InitSolanaProvider({
     } else {
       rpcUrl = devnetRpc ?? null;
     }
-    if (rpcUrl) {
-      setSolanaInfo({
-        rpcUrl: rpcUrl,
-        network:
-          network === "mainnet"
-            ? WalletAdapterNetwork.Mainnet
-            : WalletAdapterNetwork.Devnet,
-      });
-    }
+    setSolanaInfo({
+      rpcUrl: rpcUrl,
+      network:
+        network === "mainnet"
+          ? WalletAdapterNetwork.Mainnet
+          : WalletAdapterNetwork.Devnet,
+    });
   }, [network, mainnetRpc, devnetRpc, setSolanaInfo]);
   return (
     <WalletProvider wallets={wallets} onError={onError}>
