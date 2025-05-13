@@ -22,6 +22,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "lint:fix": "eslint --fix",
+    "lint:fix-error": "eslint --fix --fix-type problem",
     "lint:error": "eslint --quiet",
     "lint:inspect": "npx @eslint/config-inspector"
   },
@@ -62,7 +63,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,html,css,md,json}": [
-      "eslint --fix",
+      "eslint --fix --config eslint.config.fix.mjs",
       "prettier --write"
     ]
   }
