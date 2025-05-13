@@ -40,6 +40,7 @@ import {
   wagmiConnectors,
 } from "@orderly.network/wallet-connector-privy";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import { customChains } from "./customChains";
 import { CustomConfigStore } from "./customConfigStore";
 
 const network = WalletAdapterNetwork.Devnet;
