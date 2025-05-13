@@ -45,7 +45,7 @@ import {
   toast,
 } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
-import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
+// import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import {
@@ -83,7 +83,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const { t } = useTranslation();
 
-  const { onShowPortfolioSheet } = useBalanceScript();
+  // const { onShowPortfolioSheet } = useBalanceScript();
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
@@ -255,7 +255,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                     className="oui-text-base-contrast-36"
                   />
                 }
-                onClick={onShowPortfolioSheet}
+                // onClick={onShowPortfolioSheet}
                 className={cn(
                   "oui-bg-base-7 oui-text-primary-light hover:oui-bg-base-6 active:oui-bg-base-6",
                 )}
