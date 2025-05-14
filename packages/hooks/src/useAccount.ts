@@ -15,12 +15,12 @@ export const useAccount = () => {
 
   if (!configStore)
     throw new SDKError(
-      "configStore is not defined, please use OrderlyProvider"
+      "configStore is not defined, please use OrderlyProvider",
     );
 
   if (!keyStore) {
     throw new SDKError(
-      "keyStore is not defined, please use OrderlyProvider and provide keyStore"
+      "keyStore is not defined, please use OrderlyProvider and provide keyStore",
     );
   }
 
@@ -51,12 +51,11 @@ export const useAccount = () => {
       });
       return account.createOrderlyKey(remember ? 365 : 30).then((res) => {
         return account.restoreSubAccount().then((_) => {
-          // setState(nextState);
           return res;
         });
       });
     },
-    [account, state]
+    [account, state],
   );
 
   // const subAccounts = useMemo(() => {
@@ -67,7 +66,7 @@ export const useAccount = () => {
     async (accountId: string) => {
       return account.switchAccount(accountId);
     },
-    [account]
+    [account],
   );
 
   const createAccount = useCallback(async () => {
@@ -82,7 +81,7 @@ export const useAccount = () => {
     async (value: { subAccountId: string; description?: string }) => {
       return account.updateSubAccount(value);
     },
-    [account]
+    [account],
   );
 
   const refreshSubAccountBalances = useCallback(() => {

@@ -1,27 +1,25 @@
-import { BaseSigner, MessageFactor, Signer } from "./signer";
-
-import { ConfigStore } from "./configStore/configStore";
-import { OrderlyKeyStore } from "./keyStore";
+import { PublicKey } from "@solana/web3.js";
+import { AbiCoder, keccak256 } from "ethers";
+import EventEmitter from "eventemitter3";
 import {
   AccountStatusEnum,
   SDKError,
   ChainNamespace,
   API,
 } from "@orderly.network/types";
-import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
-
-import EventEmitter from "eventemitter3";
-import { BaseContract, IContract } from "./contract";
-import { Assets } from "./assets";
-import { EVENT_NAMES } from "./constants";
-import { WalletAdapterManager } from "./walletAdapterManager";
-import { WalletAdapter } from "./wallet/walletAdapter";
-import { BaseOrderlyKeyPair, OrderlyKeyPair } from "./keyPair";
-import { PublicKey } from "@solana/web3.js";
-import { AbiCoder, keccak256 } from "ethers";
-import { SubAccount } from "./subAccount";
 import { AdditionalInfoRepository } from "./additionalInfoRepository";
+import { Assets } from "./assets";
+import { ConfigStore } from "./configStore/configStore";
+import { EVENT_NAMES } from "./constants";
+import { BaseContract, IContract } from "./contract";
+import { BaseOrderlyKeyPair, OrderlyKeyPair } from "./keyPair";
+import { OrderlyKeyStore } from "./keyStore";
 import { LocalStorageRepository } from "./repository";
+import { BaseSigner, MessageFactor, Signer } from "./signer";
+import { SubAccount } from "./subAccount";
+import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
+import { WalletAdapter } from "./wallet/walletAdapter";
+import { WalletAdapterManager } from "./walletAdapterManager";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -119,7 +117,7 @@ export class Account {
        * provide contract address and abi
        */
       contracts: IContract;
-    }>
+    }>,
   ) {
     // this._initState();
 
@@ -133,7 +131,7 @@ export class Account {
     this.walletAdapterManager = new WalletAdapterManager(walletAdapters);
 
     this.additionalInfoRepository = new AdditionalInfoRepository(
-      new LocalStorageRepository(Account.additionalInfoRepositoryName)
+      new LocalStorageRepository(Account.additionalInfoRepositoryName),
     );
 
     this._bindEvents();
@@ -152,7 +150,7 @@ export class Account {
         name: string;
       };
       [key: string]: any;
-    }
+    },
   ): Promise<AccountStatusEnum> {
     if (!address) throw new SDKError("Address is required");
     if (!wallet) throw new SDKError("Wallet is required");
@@ -160,7 +158,7 @@ export class Account {
 
     if (this.stateValue.address === address) {
       console.warn(
-        "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method."
+        "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method.",
       );
       return this.stateValue.status;
     } else {
@@ -208,7 +206,7 @@ export class Account {
       {
         provider: wallet.provider,
         contractManager: this.contractManger,
-      }
+      },
     );
 
     /**
@@ -229,7 +227,7 @@ export class Account {
     wallet: {
       [key: string]: any;
       additionalInfo?: Record<string, any>;
-    }
+    },
   ) {
     if (typeof wallet.additionalInfo !== "undefined") {
       if (typeof wallet.additionalInfo !== "object") {
@@ -276,8 +274,8 @@ export class Account {
       return keccak256(
         abicoder.encode(
           ["bytes32", "bytes32"],
-          [decodedUserAccount, parseBrokerHash(brokerId)]
-        )
+          [decodedUserAccount, parseBrokerHash(brokerId)],
+        ),
       );
     }
     return parseAccountId(this.address, brokerId);
@@ -366,7 +364,7 @@ export class Account {
 
       const orderlyKeyStatus = await this._checkOrderlyKeyState(
         accountInfo.account_id,
-        publicKey
+        publicKey,
       );
 
       if (
@@ -463,7 +461,7 @@ export class Account {
 
   private async _checkAccountExist(
     address: string,
-    chainNamespace?: string
+    chainNamespace?: string,
   ): Promise<{ account_id: string; user_id: string } | null> {
     // const brokerId = this.configStore.get("brokerId");
     const res = await this._getAccountInfo(address, chainNamespace);
@@ -479,7 +477,7 @@ export class Account {
   private async _restoreSubAccount(): Promise<AccountState> {
     const subAccounts = await this.getSubAccounts();
 
-   let nextState = {
+    const nextState = {
       ...this.stateValue,
       validating: false,
       status: AccountStatusEnum.EnableTrading,
@@ -489,26 +487,20 @@ export class Account {
       // load active sub-account from local storage
       const activeSubAccount = this.additionalInfoRepository.get(
         this.stateValue.address!,
-        Account.ACTIVE_SUB_ACCOUNT_ID_KEY
+        Account.ACTIVE_SUB_ACCOUNT_ID_KEY,
       );
 
-      nextState.subAccounts = subAccounts.map(
-        (subAccount: {
-          sub_account_id: string;
-          description: string;
-          holding: API.Holding[];
-        }) => ({
-          id: subAccount.sub_account_id,
-          description: subAccount.description,
-          holding: subAccount.holding,
-        })
-      );
+      nextState.subAccounts = subAccounts.map((subAccount) => ({
+        id: subAccount.sub_account_id,
+        description: subAccount.description,
+        holding: subAccount.holding,
+      }));
 
       if (activeSubAccount) {
         // check if the activeSubAccount is included in the subAccounts
         if (
           nextState.subAccounts?.find(
-            (subAccount) => subAccount.id === activeSubAccount
+            (subAccount) => subAccount.id === activeSubAccount,
           )
         ) {
           nextState.subAccountId = activeSubAccount;
@@ -520,8 +512,8 @@ export class Account {
     return nextState;
   }
 
-  restoreSubAccount(): Promise<AccountState> {
-    const nextState = this._restoreSubAccount();
+  async restoreSubAccount(): Promise<AccountState> {
+    const nextState = await this._restoreSubAccount();
     this._ee.emit(EVENT_NAMES.statusChanged, nextState);
     return nextState;
   }
@@ -622,7 +614,7 @@ export class Account {
         holding: [],
       };
 
-      let nextState = { ...this._state };
+      const nextState = { ...this._state };
 
       // if (!Array.isArray(nextState.subAccounts)) {
       //   nextState.subAccounts = [];
@@ -655,18 +647,18 @@ export class Account {
       const descriptionRegex = /^[a-zA-Z0-9@,\s_\-]{0,50}$/;
       if (description && !descriptionRegex.test(description)) {
         throw new Error(
-          "Description must be up to 50 characters and can only contain English characters, numbers, @, comma, space, underscore and dash."
+          "Description must be up to 50 characters and can only contain English characters, numbers, @, comma, space, underscore and dash.",
         );
       }
     }
 
     // check the subAccountId is included in the subAccounts
     const subAccount = this.stateValue.subAccounts?.find(
-      (subAccount) => subAccount.id === subAccountId
+      (subAccount) => subAccount.id === subAccountId,
     );
     if (!subAccount) {
       throw new Error(
-        `Sub-account with ID ${subAccountId} not found. Please verify the sub-account ID and try again.`
+        `Sub-account with ID ${subAccountId} not found. Please verify the sub-account ID and try again.`,
       );
     }
 
@@ -690,7 +682,7 @@ export class Account {
     });
 
     if (res.success) {
-      let nextState = { ...this._state };
+      const nextState = { ...this._state };
       nextState.subAccounts = nextState.subAccounts?.map((subAccount) => {
         if (subAccount.id === subAccountId) {
           return { ...subAccount, description: description ?? "" };
@@ -708,7 +700,7 @@ export class Account {
   }
 
   switchAccount(accountId: string) {
-    let nextState = {
+    const nextState = {
       ...this._state,
       accountId,
     };
@@ -719,7 +711,7 @@ export class Account {
 
       this.additionalInfoRepository.remove(
         this.stateValue.address!,
-        Account.ACTIVE_SUB_ACCOUNT_ID_KEY
+        Account.ACTIVE_SUB_ACCOUNT_ID_KEY,
       );
     } else {
       nextState.subAccountId = accountId;
@@ -824,7 +816,7 @@ export class Account {
     options?: {
       tag?: string;
       scope?: string;
-    }
+    },
   ) {
     try {
       const { res, keyPair } = await this.generateApiKey(expiration, options);
@@ -852,11 +844,11 @@ export class Account {
     options?: {
       tag?: string;
       scope?: string;
-    }
+    },
   ): Promise<any> {
     const { res, address, keyPair } = await this.generateApiKey(
       expiration,
-      options
+      options,
     );
 
     if (res.success) {
@@ -867,8 +859,6 @@ export class Account {
         // accountId: res.data.account_id,
         // userId: res.data.user_id,
       };
-
-      // TODO: restore sub account
 
       this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
@@ -883,7 +873,7 @@ export class Account {
     options?: {
       tag?: string;
       scope?: string;
-    }
+    },
   ) {
     if (this.stateValue.mainAccountId === undefined) {
       throw new Error("account id is undefined");
@@ -972,14 +962,14 @@ export class Account {
   async checkOrderlyKey(
     address: string,
     orderlyKey: OrderlyKeyPair,
-    accountId: string
+    accountId: string,
   ) {
     if (!address || !orderlyKey || !accountId) return;
     const publicKey = await orderlyKey.getPublicKey();
 
     const orderlyKeyStatus = await this._checkOrderlyKeyState(
       accountId,
-      publicKey
+      publicKey,
     );
 
     const { orderly_key, key_status, expiration } = orderlyKeyStatus || {};
@@ -1134,7 +1124,7 @@ export class Account {
 
   private async _checkOrderlyKeyState(accountId: string, orderlyKey: string) {
     const res = await this._simpleFetch(
-      `/v1/get_orderly_key?account_id=${accountId}&orderly_key=${orderlyKey}`
+      `/v1/get_orderly_key?account_id=${accountId}&orderly_key=${orderlyKey}`,
     );
 
     if (res.success) {
@@ -1191,7 +1181,7 @@ export class Account {
     const chainType = chainNamespace || this.stateValue.chainNamespace;
 
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${addr}&broker_id=${brokerId}&chain_type=${chainType}`
+      `/v1/get_account?address=${addr}&broker_id=${brokerId}&chain_type=${chainType}`,
     );
     return res;
   }
