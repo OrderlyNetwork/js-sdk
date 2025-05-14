@@ -1,16 +1,17 @@
 import stylistic from "@stylistic/eslint-plugin";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
+// import importPlugin from "eslint-plugin-import";
+import monorepoCop from "eslint-plugin-monorepo-cop";
 import reactPlugin from "eslint-plugin-react";
 import tailwind from "eslint-plugin-tailwindcss";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
-import { dirname } from "path";
 import path from "path";
 import ts from "typescript-eslint";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig([
   globalIgnores([
@@ -60,12 +61,44 @@ export default defineConfig([
   reactPlugin.configs.flat.recommended,
   // Add this if you are using React 17+
   reactPlugin.configs.flat["jsx-runtime"],
+
+  // https://github.com/import-js/eslint-plugin-import
+  // importPlugin.flatConfigs.recommended,
+  // use custom config instead of importPlugin.flatConfigs.recommended, because it's too strict for our project
+  // {
+  //   plugins: {
+  //     import: importPlugin,
+  //   },
+  //   rules: {
+  //     "import/no-relative-packages": "error",
+  //     // analysis/correctness
+  //     "import/no-unresolved": "warn",
+  //     "import/named": "warn",
+  //     "import/namespace": "warn",
+  //     "import/default": "warn",
+  //     "import/export": "warn",
+
+  //     // red flags (thus, warnings)
+  //     "import/no-named-as-default": "warn",
+  //     "import/no-named-as-default-member": "warn",
+  //     "import/no-duplicates": "warn",
+  //   },
+  //   languageOptions: {
+  //     // need all these for parsing dependencies (even if _your_ code doesn't need
+  //     // all of them)
+  //     parserOptions: {
+  //       sourceType: "module",
+  //       ecmaVersion: 2018,
+  //     },
+  //   },
+  // },
   {
     files: ["**/*.{ts,tsx}"],
     // ignores: ["dist/**", "build/**", "node_modules/**"],
     plugins: {
       // https://eslint.style/packages/default
       "@stylistic": stylistic,
+      "monorepo-cop": monorepoCop,
     },
     rules: {
       // "@stylistic/semi": ["error", "never"],
@@ -85,6 +118,11 @@ export default defineConfig([
       "react/display-name": "off",
       "react/no-children-prop": "warn",
       "tailwindcss/no-custom-classname": "off",
+
+      // https://github.com/sterlingwes/eslint-plugin-monorepo-cop
+      // prevent relative imports outside of monorepo package
+      "monorepo-cop/no-relative-import-outside-package": "error",
+      "monorepo-cop/no-disable-monorepo-no-relative-rule": "error",
     },
   },
 
