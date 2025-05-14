@@ -164,7 +164,7 @@ export class Assets {
     }
     const contractAddress = this.contractManger.getContractInfoByEnv();
 
-    let usdcAddress = contractAddress.usdcAddress;
+    let usdcAddress = address ?? contractAddress.usdcAddress;
     let userAddress = this.account.stateValue.address;
     if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
       usdcAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
