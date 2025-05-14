@@ -154,7 +154,7 @@
   "markets.symbolInfoBar.predFundingRate.tooltip": "Funding rates are payments between traders who are long and short. When positive, long positions pay short positions funding. When negative, short positions pay long positions.",
   "portfolio.feeTier": "Fee tier",
   "portfolio.apiKeys": "API Keys",
-  "portfolio.setting": "Setting",
+  "portfolio.setting": "Settings",
   "portfolio.overview.availableWithdraw": "Available to withdraw",
   "portfolio.overview.performance": "Performance",
   "portfolio.overview.performance.roi": "{{period}} ROI",

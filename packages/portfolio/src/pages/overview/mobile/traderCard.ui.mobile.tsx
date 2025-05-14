@@ -39,10 +39,10 @@ export const TraderCardMobile: FC<TraderCardMobileProps> = (props) => {
       "
     >
       <Text className="oui-text-base-contrast-98 oui-text-base oui-font-semibold">
-        Trader
+        {t("affiliate.trader")}
       </Text>
       <Text className="oui-text-sm oui-font-normal oui-text-base-contrast-54">
-        30d commission
+        {t("affiliate.commission.30d")}
       </Text>
       <Flex
         className={cn(
