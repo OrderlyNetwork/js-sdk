@@ -1,9 +1,9 @@
 import { FC, ReactNode } from "react";
-import { useNav } from "../../hooks/useNav";
 import {
   TradingRewardsLayoutWidget,
   TradingRewardsLeftSidebarPath,
 } from "@orderly.network/trading-rewards";
+import { useNav } from "../../hooks/useNav";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 
 type TradingRewardsLayoutProps = {
@@ -20,7 +20,7 @@ export const TradingRewardsLayout: FC<TradingRewardsLayoutProps> = (props) => {
       footerProps={config.scaffold.footerProps}
       mainNavProps={{
         ...config.scaffold.mainNavProps,
-        initialMenu: "/rewards",
+        initialMenu: ["/rewards"],
       }}
       routerAdapter={{
         onRouteChange,

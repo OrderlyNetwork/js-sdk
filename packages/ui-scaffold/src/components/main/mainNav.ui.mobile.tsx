@@ -18,15 +18,11 @@ type Props = {
 } & MainNavWidgetProps;
 
 export const MainNavMobile: FC<Props> = (props) => {
-  const { t } = useTranslation();
   console.log("MainNavMobile", props);
+
   const currentMenu = useMemo(() => {
     if (Array.isArray(props?.initialMenu)) {
-      return props?.mainMenus?.find(
-        (menu) =>
-          // @ts-ignore
-          menu.href === props?.initialMenu[0],
-      );
+      return props?.campaigns;
     }
     return props?.mainMenus?.find((menu) => {
       if (!props.current) {
@@ -71,8 +67,6 @@ export const MainNavMobile: FC<Props> = (props) => {
     }
     props?.routerAdapter?.onRouteChange(target as any);
   };
-
-  console.log("all", isSub, currentMenu, title, subTitle);
 
   if (isSub) {
     return (

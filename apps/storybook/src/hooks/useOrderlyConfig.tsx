@@ -56,15 +56,6 @@ export const useOrderlyConfig = () => {
             { name: t("common.portfolio"), href: "/portfolio" },
             { name: t("common.markets"), href: "/markets" },
             {
-              name: t("tradingRewards.rewards"),
-              href: "/rewards",
-              isSubMenuInMobile: true,
-              subMenuBackNav: {
-                name: t("common.portfolio"),
-                href: "/portfolio",
-              },
-            },
-            {
               name: t("tradingLeaderboard.leaderboard"),
               href: "/leaderboard",
             },
@@ -75,6 +66,10 @@ export const useOrderlyConfig = () => {
             href: "/rewards",
             icon: "box-ani.gif",
             isSubMenuInMobile: true,
+            subMenuBackNav: {
+              name: t("common.portfolio"),
+              href: "/portfolio",
+            },
             children: [
               {
                 name: t("common.affiliate"),

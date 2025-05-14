@@ -136,7 +136,7 @@ export const DistributionHistoryMobile: FC<FundingHistoryProps> = (props) => {
         onFilter={(value) => {
           onFilter(value);
         }}
-        className="oui-px-3 oui-py-2"
+        className="oui-px-3 oui-py-2 oui-sticky oui-top-[44px] oui-z-10 oui-bg-base-10"
       />
       <ListView
         dataSource={dataSource}

@@ -1,8 +1,8 @@
-import { DataFilter, Flex, ListView, Text, Badge } from "@orderly.network/ui";
 import { FC } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import { type UseFundingHistoryReturn } from "./useDataSource.script";
 import { useTranslation } from "@orderly.network/i18n";
+import { DataFilter, Flex, ListView, Text, Badge } from "@orderly.network/ui";
+import { type UseFundingHistoryReturn } from "./useDataSource.script";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
@@ -23,45 +23,87 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
       default:
         return paymentType;
     }
-  }
-
-  console.log(props);
+  };
 
   const loadMore = () => {
     if (dataSource && dataSource.length < (pagination?.count || 0)) {
-      pagination?.onPageSizeChange && pagination.onPageSizeChange(pagination?.pageSize + 50)
+      pagination?.onPageSizeChange &&
+        pagination.onPageSizeChange(pagination?.pageSize + 50);
     }
-  }
+  };
 
   const renderHistoryItem = (item: any) => {
-    const fundingAndAnnualText: string = t("portfolio.overview.column.funding&AnnualRate") || "";
+    const fundingAndAnnualText: string =
+      t("portfolio.overview.column.funding&AnnualRate") || "";
     const [fundingText, annualText] = fundingAndAnnualText.split("/");
 
-    return <Flex p={2} direction="column" gapY={2} className="oui-rounded-xl oui-bg-base-9 oui-font-semibold">
-      <Flex direction="row" justify="between" width="100%" height="20px">
-        <Text.formatted rule="symbol" className="oui-text-base-contrast-98 oui-mr-1 oui-text-sm">{item.symbol}</Text.formatted>
-        <Badge color="neutral" size="xs">{switchPaymentType(item.payment_type)}</Badge>
-        <Text.formatted rule="date" className="oui-text-base-contrast-36 oui-text-2xs oui-ml-auto">{item.created_time}</Text.formatted>
+    return (
+      <Flex
+        p={2}
+        direction="column"
+        gapY={2}
+        className="oui-rounded-xl oui-bg-base-9 oui-font-semibold"
+      >
+        <Flex direction="row" justify="between" width="100%" height="20px">
+          <Text.formatted
+            rule="symbol"
+            className="oui-text-base-contrast-98 oui-mr-1 oui-text-sm"
+          >
+            {item.symbol}
+          </Text.formatted>
+          <Badge color="neutral" size="xs">
+            {switchPaymentType(item.payment_type)}
+          </Badge>
+          <Text.formatted
+            rule="date"
+            className="oui-text-base-contrast-36 oui-text-2xs oui-ml-auto"
+          >
+            {item.created_time}
+          </Text.formatted>
+        </Flex>
+        <div className="oui-w-full oui-h-[1px] oui-bg-base-6" />
+        <Flex direction="row" justify="between" width="100%">
+          <Flex direction="column">
+            <Text className="oui-text-base-contrast-36 oui-text-2xs">
+              {fundingText}
+            </Text>
+            <Text.numeral
+              rule={"percentages"}
+              dp={6}
+              className="oui-text-base-contrast-80 oui-text-xs"
+            >
+              {item.funding_rate}
+            </Text.numeral>
+          </Flex>
+          <Flex direction="column">
+            <Text className="oui-text-base-contrast-36 oui-text-2xs">
+              {annualText}
+            </Text>
+            <Text.numeral
+              rule={"percentages"}
+              dp={6}
+              className="oui-text-base-contrast-80 oui-text-xs"
+            >
+              {item.annual_rate}
+            </Text.numeral>
+          </Flex>
+          <Flex direction="column">
+            <Text className="oui-text-base-contrast-36 oui-text-2xs">
+              {t("portfolio.overview.column.fundingFee")}{" "}
+              <Text className="oui-text-base-contrast-20">(USDC)</Text>
+            </Text>
+            <Text.numeral
+              color="danger"
+              dp={6}
+              className="oui-text-xs oui-self-end"
+            >
+              {item.funding_fee}
+            </Text.numeral>
+          </Flex>
+        </Flex>
       </Flex>
-      <div className="oui-w-full oui-h-[1px] oui-bg-base-6" />
-      <Flex direction="row" justify="between" width="100%">
-        <Flex direction='column'>
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">{fundingText}</Text>
-          <Text.numeral rule={"percentages"} dp={6} className="oui-text-base-contrast-80 oui-text-xs">{item.funding_rate}</Text.numeral>
-        </Flex>
-        <Flex direction='column'>
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">{annualText}</Text>
-          <Text.numeral rule={"percentages"} dp={6} className="oui-text-base-contrast-80 oui-text-xs">{item.annual_rate}</Text.numeral>
-        </Flex>
-        <Flex direction='column'>
-          <Text className="oui-text-base-contrast-36 oui-text-2xs">{t("portfolio.overview.column.fundingFee")} <Text className="oui-text-base-contrast-20">(USDC)</Text></Text>
-          <Text.numeral color="danger" dp={6} className="oui-text-xs oui-self-end">{item.funding_fee}</Text.numeral>
-        </Flex>
-      </Flex>
-    </Flex>;
-  }
-
-
+    );
+  };
 
   return (
     <>
@@ -104,7 +146,7 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
         onFilter={(value) => {
           onFilter(value);
         }}
-        className="oui-px-3 oui-py-2"
+        className="oui-px-3 oui-py-2 oui-sticky oui-top-[44px] oui-z-10 oui-bg-base-10"
       />
       <ListView
         dataSource={dataSource}
