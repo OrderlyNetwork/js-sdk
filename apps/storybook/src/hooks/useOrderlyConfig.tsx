@@ -14,9 +14,8 @@ import {
 import {
   FooterProps,
   MainNavWidgetProps,
-  FooterMobileProps,
+  BottomNavProps,
 } from "@orderly.network/ui-scaffold";
-import { CustomProductNav } from "../components/customProductNav/indx";
 import {
   AffiliatesActiveIcon,
   AffiliatesIcon,
@@ -33,6 +32,7 @@ export type OrderlyConfig = {
   };
   scaffold: {
     mainNavProps: MainNavWidgetProps;
+    bottomNavProps: BottomNavProps;
     footerProps: FooterProps;
   };
   tradingPage: {
@@ -52,10 +52,18 @@ export const useOrderlyConfig = () => {
           // leading: <CustomProductNav />,
           trailing: null,
           mainMenus: [
-            { name: t("common.trading"), href: "/" },
+            { name: t("common.trading"), href: "/", isHomePageInMobile: true },
             { name: t("common.portfolio"), href: "/portfolio" },
             { name: t("common.markets"), href: "/markets" },
-            { name: t("tradingRewards.rewards"), href: "/rewards" },
+            {
+              name: t("tradingRewards.rewards"),
+              href: "/rewards",
+              isSubMenuInMobile: true,
+              subMenuBackNav: {
+                name: t("common.portfolio"),
+                href: "/portfolio",
+              },
+            },
             {
               name: t("tradingLeaderboard.leaderboard"),
               href: "/leaderboard",
@@ -66,6 +74,7 @@ export const useOrderlyConfig = () => {
             name: t("tradingRewards.rewards"),
             href: "/rewards",
             icon: "box-ani.gif",
+            isSubMenuInMobile: true,
             children: [
               {
                 name: t("common.affiliate"),
@@ -93,11 +102,8 @@ export const useOrderlyConfig = () => {
             ],
           },
         },
-        footerProps: {
-          telegramUrl: "https://orderly.network",
-          discordUrl: "https://discord.com/invite/orderlynetwork",
-          twitterUrl: "https://twitter.com/OrderlyNetwork",
-          mobileMainMenus: [
+        bottomNavProps: {
+          mainMenus: [
             {
               name: t("common.trading"),
               href: "/",
@@ -117,6 +123,11 @@ export const useOrderlyConfig = () => {
               inactiveIcon: <PortfolioInactiveIcon />,
             },
           ],
+        },
+        footerProps: {
+          telegramUrl: "https://orderly.network",
+          discordUrl: "https://discord.com/invite/orderlynetwork",
+          twitterUrl: "https://twitter.com/OrderlyNetwork",
         },
       },
       orderlyAppProvider: {

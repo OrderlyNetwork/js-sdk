@@ -1,16 +1,18 @@
 import { useMemo } from "react";
 import { Flex, Text } from "@orderly.network/ui";
 import { RouterAdapter } from "../scaffold";
-import { FooterMobileNavItem } from "./footer.widget";
+import { BottomNavItem } from "./bottomNav.widget";
 
-type FooterMobileProps = {
-  mainMenus?: FooterMobileNavItem[];
-  current?: string;
+export type BottomNavProps = {
+  mainMenus?: BottomNavItem[];
+  current?: string | string[];
   onRouteChange?: RouterAdapter["onRouteChange"];
 };
 
-export const FooterMobile = (props: FooterMobileProps) => {
+export const BottomNav = (props: BottomNavProps) => {
   const { mainMenus, current, onRouteChange } = props;
+
+  // console.log("BottomNav", props);
 
   const isSubmenu = useMemo(() => {
     return mainMenus?.every((menu) => menu.href !== current);
@@ -27,6 +29,7 @@ export const FooterMobile = (props: FooterMobileProps) => {
           justify={"center"}
           className="oui-flex-1"
           onClick={() => {
+            console.log("menu", menu, onRouteChange);
             onRouteChange?.({ href: menu.href, name: menu.name });
           }}
         >
@@ -37,7 +40,7 @@ export const FooterMobile = (props: FooterMobileProps) => {
     });
   }, [mainMenus, current, onRouteChange]);
 
-  if (isSubmenu) {
+  if (isSubmenu || !mainMenus) {
     return null;
   }
 

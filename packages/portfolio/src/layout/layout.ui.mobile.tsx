@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren } from "react";
 import { Flex, Box } from "@orderly.network/ui";
 import {
-  MobileTopNav,
-  FooterMobile,
+  MainNavMobile,
+  BottomNav,
   type ScaffoldProps,
 } from "@orderly.network/ui-scaffold";
 import { LayoutProvider } from "./context";
@@ -13,7 +13,7 @@ export const PortfolioLayoutMobile: FC<
     ScaffoldProps & usePortfolioLayoutScriptType & { current?: string }
   >
 > = (props) => {
-  // console.log("PortfolioLayoutMobile", props);
+  // console.log("PortfolioLayoutMobile", props, props.routerAdapter);
   return (
     <LayoutProvider {...props}>
       <Flex
@@ -23,7 +23,7 @@ export const PortfolioLayoutMobile: FC<
         className="oui-h-full-screen oui-bg-base-10"
       >
         <header className="oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10">
-          <MobileTopNav
+          <MainNavMobile
             {...props.mainNavProps}
             current={props?.current}
             subItems={props?.items}
@@ -34,8 +34,8 @@ export const PortfolioLayoutMobile: FC<
           {props.children}
         </Box>
         <footer className="oui-sticky oui-bottom-0 oui-z-10 oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]">
-          <FooterMobile
-            mainMenus={props.footerProps?.mobileMainMenus}
+          <BottomNav
+            mainMenus={props.bottomNavProps?.mainMenus}
             current={props?.current}
             onRouteChange={props.routerAdapter?.onRouteChange}
           />

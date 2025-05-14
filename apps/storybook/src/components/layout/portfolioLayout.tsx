@@ -22,6 +22,9 @@ export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
         ...config.scaffold.mainNavProps,
         initialMenu: "/portfolio",
       }}
+      bottomNavProps={{
+        ...config.scaffold.bottomNavProps,
+      }}
       routerAdapter={{
         onRouteChange,
       }}

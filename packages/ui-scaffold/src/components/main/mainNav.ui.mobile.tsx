@@ -17,57 +17,62 @@ type Props = {
   routerAdapter?: RouterAdapter;
 } & MainNavWidgetProps;
 
-export const MobileTopNav: FC<Props> = (props) => {
+export const MainNavMobile: FC<Props> = (props) => {
   const { t } = useTranslation();
+  console.log("MainNavMobile", props);
+  const currentMenu = useMemo(() => {
+    if (Array.isArray(props?.initialMenu)) {
+      return props?.mainMenus?.find(
+        (menu) =>
+          // @ts-ignore
+          menu.href === props?.initialMenu[0],
+      );
+    }
+    return props?.mainMenus?.find((menu) => {
+      if (!props.current) {
+        return menu.href === props?.initialMenu;
+      } else {
+        return menu.href === props.current;
+      }
+    });
+  }, [props?.mainMenus, props?.initialMenu]);
 
   const title = useMemo(() => {
-    if (props?.initialMenu === "/" || props?.initialMenu === "/trade") {
+    if (currentMenu?.isHomePageInMobile) {
       return <MainLogo {...props?.logo} />;
     }
-    const menu = props?.mainMenus?.find(
-      (menu) => menu.href === props?.initialMenu,
-    );
     return (
       <Text className="oui-text-base-contrast-98 oui-text-2xl oui-font-bold">
-        {menu?.name}
+        {currentMenu?.name}
       </Text>
     );
-  }, [props, t]);
-
-  const isRewards = useMemo(() => {
-    return (
-      Array.isArray(props?.initialMenu) ||
-      props?.initialMenu?.includes("/rewards")
-    );
-  }, [props?.initialMenu]);
+  }, [currentMenu, props?.logo]);
 
   const isSub = useMemo(() => {
-    if (isRewards) return true;
-    if (props?.current && props.current !== props.initialMenu) return true;
+    if (!currentMenu || currentMenu.isSubMenuInMobile) return true;
     return false;
-  }, [props?.initialMenu, props?.current, isRewards]);
+  }, [currentMenu]);
 
   const subTitle = useMemo(() => {
-    if (isRewards) return t("tradingRewards.rewards");
+    if (currentMenu?.isSubMenuInMobile) return currentMenu?.name;
     if (props?.subItems?.some((item) => item.href === props?.current)) {
       return props?.subItems?.find((item) => item.href === props?.current)
         ?.name;
     }
     return null;
-  }, [props?.subItems, props?.current]);
+  }, [props?.subItems, props?.current, currentMenu]);
 
   const onBack = () => {
     let target = props.mainMenus?.find(
       (item) => item.href === props.initialMenu,
     );
-    if (isRewards) {
-      target = {
-        name: t("common.portfolio"),
-        href: "/portfolio",
-      };
+    if (currentMenu?.isSubMenuInMobile) {
+      target = currentMenu?.subMenuBackNav;
     }
     props?.routerAdapter?.onRouteChange(target as any);
   };
+
+  console.log("all", isSub, currentMenu, title, subTitle);
 
   if (isSub) {
     return (

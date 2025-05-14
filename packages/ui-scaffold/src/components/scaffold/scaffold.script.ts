@@ -45,6 +45,7 @@ export const useScaffoldScript = (options: ScaffoldScriptOptions) => {
     footerProps: options.footerProps,
     routerAdapter: options.routerAdapter,
     mainNavProps: options.mainNavProps,
+    bottomNavProps: options.bottomNavProps,
   };
 };
 

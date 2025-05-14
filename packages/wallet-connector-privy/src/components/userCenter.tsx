@@ -93,12 +93,12 @@ const RenderUserCenter = (props: any) => {
     return (
       <AuthGuard
         buttonProps={{
-          size: "sm",
+          size: "md",
         }}
       >
         <div onClick={() => connect()}>
           <Button
-            size="sm"
+            size="md"
             variant="gradient"
             angle={45}
             data-testid="oui-testid-nav-bar-address-btn"

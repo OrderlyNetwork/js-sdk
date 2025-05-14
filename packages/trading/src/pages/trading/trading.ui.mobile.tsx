@@ -12,8 +12,6 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
-import { FooterMobile, MobileTopNav } from "@orderly.network/ui-scaffold";
-import { BottomNavBarWidget } from "../../components/mobile/bottomNavBar";
 import { DataListWidget } from "../../components/mobile/dataList";
 import { OrderBookAndEntryWidget } from "../../components/mobile/orderBookAndEntry";
 import { TopTabWidget } from "../../components/mobile/topTab";

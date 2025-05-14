@@ -3,7 +3,12 @@ export {
   MainNavWidget,
   type MainNavWidgetProps,
 } from "./components/main/mainNav.widget";
-export { MobileTopNav } from "./components/main/mobileTopNav.ui";
+export { MainNavMobile } from "./components/main/mainNav.ui.mobile";
+export {
+  BottomNavWidget,
+  BottomNav,
+  type BottomNavProps,
+} from "./components/bottomNav";
 export { AccountSummaryWidget } from "./components/accountSummary";
 export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
