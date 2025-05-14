@@ -1,4 +1,6 @@
 import { FC, useCallback, useId } from "react";
+import React from "react";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   ArrowDownShortIcon,
   ArrowUpShortIcon,
@@ -19,15 +21,13 @@ import {
   Statistic,
   Text,
 } from "@orderly.network/ui";
+import { LeverageProps, LeverageSlider } from "@orderly.network/ui-leverage";
+import { USDCIcon } from "../accountSheet/icons";
 import {
   getMarginRatioColor,
   PortfolioSheetState,
 } from "./portfolioSheet.script";
-import { USDCIcon } from "../accountSheet/icons";
 import { RiskIndicator } from "./riskIndicator";
-import { LeverageProps, LeverageSlider } from "@orderly.network/ui-leverage";
-import { Trans, useTranslation } from "@orderly.network/i18n";
-import React from "react";
 
 export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
   return (
@@ -35,7 +35,7 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
       <Asset {...props} />
       <Divider className="oui-w-full" />
       <MarginRatio {...props} />
-      <Leverage {...props} />
+      {/* <Leverage {...props} /> */}
       {/* <Divider className="oui-w-full" /> */}
       {/* <AvailableBalance {...props} /> */}
       <Buttons {...props} />
@@ -181,7 +181,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
 
   const { high, mid, low } = getMarginRatioColor(
     props.marginRatioVal,
-    props.mmr
+    props.mmr,
   );
 
   return (
@@ -209,10 +209,10 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
                 low
                   ? "oui-rotate-0"
                   : mid
-                  ? "oui-rotate-90"
-                  : high
-                  ? "oui-rotate-180"
-                  : ""
+                    ? "oui-rotate-90"
+                    : high
+                      ? "oui-rotate-180"
+                      : ""
               }
             />
           )}
@@ -261,7 +261,7 @@ const IconButton: React.FC<{
         "oui-text-white oui-m-2 oui-transition-all",
         disabled
           ? "oui-cursor-not-allowed oui-opacity-20"
-          : "oui-cursor-pointer oui-opacity-100"
+          : "oui-cursor-pointer oui-opacity-100",
       )}
     />
   );
@@ -274,7 +274,7 @@ const LeverageInput: React.FC<PortfolioSheetState> = (props) => {
       inputFormatter.currencyFormatter,
       inputFormatter.decimalPointFormatter,
     ],
-    []
+    [],
   );
   const id = useId();
   return (
@@ -292,7 +292,7 @@ const LeverageInput: React.FC<PortfolioSheetState> = (props) => {
         "oui-outline-1",
         "oui-outline-transparent",
         "focus-within:oui-outline-primary-light",
-        "oui-input-root"
+        "oui-input-root",
       )}
     >
       <IconButton
@@ -316,7 +316,7 @@ const LeverageInput: React.FC<PortfolioSheetState> = (props) => {
               "oui-outline-offset-0",
               "oui-outline-1",
               "oui-outline-transparent",
-              "focus-within:oui-outline-primary-none"
+              "focus-within:oui-outline-primary-none",
             ),
           }}
           formatters={formatters}
@@ -346,7 +346,7 @@ export const LeverageSelector: React.FC<PortfolioSheetState> = (props) => {
             `oui-transition-all oui-cursor-pointer oui-box-border oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-rounded-md oui-border oui-border-solid`,
             value === option
               ? "oui-border-primary oui-bg-base-6"
-              : "oui-border-line-12"
+              : "oui-border-line-12",
           )}
           onClick={() => {
             onLeverageChange(option);
