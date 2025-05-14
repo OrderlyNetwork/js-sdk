@@ -7,11 +7,11 @@ import {
   usePositionStream,
   useWalletConnector,
 } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
-import { LeverageWidgetId } from "@orderly.network/ui-leverage";
+import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
 import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
-import { useAppContext } from "@orderly.network/react-app";
 
 export const useAssetScript = () => {
   const { connect, namespace } = useWalletConnector();
@@ -32,7 +32,7 @@ export const useAssetScript = () => {
   }, [state.status, wrongNetwork, disabledConnect]);
 
   const onLeverageEdit = () => {
-    modal.show(LeverageWidgetId);
+    modal.show(LeverageWidgetWithDialogId);
   };
 
   const onDeposit = () => {

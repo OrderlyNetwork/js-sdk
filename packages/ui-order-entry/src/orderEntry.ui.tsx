@@ -43,7 +43,9 @@ import {
   textVariants,
   ThrottledButton,
   toast,
+  useScreen,
 } from "@orderly.network/ui";
+import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
 import { commifyOptional } from "@orderly.network/utils";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
@@ -68,7 +70,6 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     side,
     formattedOrder,
     setOrderValue,
-    setOrderValues,
     symbolInfo,
     maxQty,
     freeCollateral,
@@ -83,7 +84,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const { t } = useTranslation();
 
-  // const { onShowPortfolioSheet } = useBalanceScript();
+  const { isMobile } = useScreen();
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
@@ -141,7 +142,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     helper
       .validate()
       .then(
-        (order: any) => {
+        () => {
           if (needConfirm) {
             return modal.show(orderConfirmDialogId, {
               order: formattedOrder,
@@ -193,12 +194,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       });
   };
 
+  const mergedShowSheet = isMobile && props.canTrade;
+
   return (
-    <OrderEntryProvider
-      value={{
-        errorMsgVisible,
-      }}
-    >
+    <OrderEntryProvider value={{ errorMsgVisible }}>
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
         ref={props.containerRef}
@@ -208,7 +207,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           <div
             className={cn(
               "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
-              props.canTrade ? "oui-grid-cols-3" : "oui-grid-cols-2",
+              mergedShowSheet ? "oui-grid-cols-3" : "oui-grid-cols-2",
             )}
           >
             <Button
@@ -245,7 +244,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             >
               {t("common.sell")}
             </Button>
-            {props.canTrade && (
+            {mergedShowSheet && (
               <Button
                 size={"md"}
                 fullWidth
@@ -255,7 +254,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                     className="oui-text-base-contrast-36"
                   />
                 }
-                // onClick={onShowPortfolioSheet}
+                onClick={() => {
+                  modal.show(LeverageWidgetWithSheetId, { currentLeverage: 5 });
+                }}
                 className={cn(
                   "oui-bg-base-7 oui-text-primary-light hover:oui-bg-base-6 active:oui-bg-base-6",
                 )}
@@ -738,7 +739,7 @@ const CustomInput = forwardRef<
       ]}
       classNames={{
         root: cn(
-          "orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 oui-pt-8 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+          "orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
           props.className,
           props.classNames?.root,
         ),

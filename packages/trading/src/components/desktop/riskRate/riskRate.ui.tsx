@@ -1,4 +1,6 @@
 import React, { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import {
   Flex,
   Text,
@@ -9,11 +11,10 @@ import {
   cn,
   EditIcon,
 } from "@orderly.network/ui";
-import { RiskRateState } from "./riskRate.script";
-import { LeverageWidgetId } from "@orderly.network/ui-leverage";
+import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
 import { TooltipContent } from "../assetView/assetView.ui";
-import { useAppContext } from "@orderly.network/react-app";
-import { useTranslation } from "@orderly.network/i18n";
+import { RiskRateState } from "./riskRate.script";
+
 export const RiskRate: FC<RiskRateState> = (props) => {
   const { riskRate, riskRateColor, isConnected, currentLeverage, maxLeverage } =
     props;
@@ -24,22 +25,22 @@ export const RiskRate: FC<RiskRateState> = (props) => {
   const textColor = wrongNetwork
     ? ""
     : isHigh
-    ? "oui-text-danger"
-    : isMedium
-    ? "oui-text-warning-darken"
-    : isLow
-    ? gradientTextVariants({ color: "brand" })
-    : "";
+      ? "oui-text-danger"
+      : isMedium
+        ? "oui-text-warning-darken"
+        : isLow
+          ? gradientTextVariants({ color: "brand" })
+          : "";
 
   const boxClsName = wrongNetwork
     ? "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full"
     : isHigh
-    ? "oui-bg-gradient-to-tr oui-from-[#791438] oui-to-[#ff447c] oui-h-1.5 oui-rounded-full"
-    : isMedium
-    ? "oui-bg-gradient-to-tr oui-from-[#792e00] oui-to-[#ffb65d] oui-h-1.5 oui-rounded-full"
-    : isLow
-    ? "oui-bg-gradient-to-tr oui-from-[#59b0fe] oui-to-[#26fefe] oui-h-1.5 oui-rounded-full"
-    : "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full";
+      ? "oui-bg-gradient-to-tr oui-from-[#791438] oui-to-[#ff447c] oui-h-1.5 oui-rounded-full"
+      : isMedium
+        ? "oui-bg-gradient-to-tr oui-from-[#792e00] oui-to-[#ffb65d] oui-h-1.5 oui-rounded-full"
+        : isLow
+          ? "oui-bg-gradient-to-tr oui-from-[#59b0fe] oui-to-[#26fefe] oui-h-1.5 oui-rounded-full"
+          : "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full";
 
   return (
     <Box data-risk={""} className="oui-space-y-2">
@@ -76,7 +77,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
               weight="semibold"
               className={cn(
                 "oui-cursor-pointer",
-                "oui-border-b oui-border-dashed oui-border-b-white/10"
+                "oui-border-b oui-border-dashed oui-border-b-white/10",
               )}
             >
               {t("trading.riskRate")}
@@ -100,7 +101,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             className={cn(
               "oui-cursor-pointer",
               // add extra bottom border to make height same as risk rate text
-              "oui-border-b oui-border-b-transparent"
+              "oui-border-b oui-border-b-transparent",
             )}
           >
             {t("leverage.maxAccountLeverage")}
@@ -119,7 +120,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             <button
               className="oui-flex oui-items-center oui-gap-1"
               onClick={() => {
-                modal.show(LeverageWidgetId, { currentLeverage: 5 });
+                modal.show(LeverageWidgetWithDialogId, { currentLeverage: 5 });
               }}
               data-testid="oui-testid-riskRate-leverage-button"
             >
