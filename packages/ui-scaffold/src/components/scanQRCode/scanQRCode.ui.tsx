@@ -26,7 +26,7 @@ export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
         arrow={{ className: "!oui-fill-base-6" }}
       >
         <Flex
-          className="oui-h-7 oui-cursor-pointer oui-rounded-md oui-bg-base-5 oui-px-[6px]"
+          className="oui-h-8 oui-cursor-pointer oui-rounded-md oui-bg-base-5 oui-px-[6px]"
           onClick={props.showDialog}
         >
           <ScanIcon className="oui-text-base-contrast-80" />

@@ -5,6 +5,7 @@ import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
 import { RouterAdapter } from "../scaffold";
+import { ScanQRCodeWidget } from "../scanQRCode";
 import { MainLogo } from "./mainLogo";
 import { MainNavWidgetProps } from "./mainNav.widget";
 
@@ -101,6 +102,7 @@ export const MainNavMobile: FC<Props> = (props) => {
       <Flex>{title}</Flex>
       <Flex gapX={2}>
         <LanguageSwitcherWidget />
+        <ScanQRCodeWidget />
         <ChainMenuWidget />
         <WalletConnectButtonExtension />
       </Flex>
