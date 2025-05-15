@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import {
-  useFundingRateHistory,
-  useMarkets,
   MarketsType,
+  useFundingRateHistory,
+  useFundingRates,
+  useMarkets,
 } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { useSort, searchBySymbol } from "../../utils";
 import { useMarketsContext } from "../../components/marketsProvider";
+import { useSort, searchBySymbol } from "../../utils";
 
 export type PeriodKey = "1d" | "3d" | "7d" | "14d" | "30d" | "90d";
 
@@ -14,6 +15,7 @@ export type ProcessedFundingData = {
   symbol: string;
   estFunding: number;
   lastFunding: number;
+  fundingInterval: number;
   funding1d: number | string;
   funding3d: number | string;
   funding7d: number | string;
@@ -39,13 +41,16 @@ export type UseFundingOverviewReturn = {
 };
 
 export const useFundingOverviewScript = () => {
-  const { pageSize, pagination } = usePagination({ pageSize: 10 });
+  const { pagination } = usePagination({ pageSize: 10 });
   const [marketData] = useMarkets(MarketsType.ALL);
+
   const {
-    data: historyData,
+    data: fundingHistory,
     isLoading: isHistoryLoading,
     getPositiveRates,
   } = useFundingRateHistory();
+  const fundingRates = useFundingRates();
+
   const { onSort, getSortedList } = useSort();
   const { searchValue } = useMarketsContext();
 
@@ -53,33 +58,47 @@ export const useFundingOverviewScript = () => {
     if (!marketData?.length) return [];
 
     const periods: PeriodKey[] = ["1d", "3d", "7d", "14d", "30d", "90d"];
-    const posRates = periods.reduce((acc, period) => {
-      acc[period] = getPositiveRates(historyData, period);
-      return acc;
-    }, {} as Record<string, Record<string, number>>);
+    const posRates = periods.reduce(
+      (acc, period) => {
+        acc[period] = getPositiveRates(fundingHistory, period);
+        return acc;
+      },
+      {} as Record<string, Record<string, number>>,
+    );
 
-    return marketData.map((market) => {
-      const history = historyData?.find((h) => h.symbol === market.symbol);
+    // because fundingHistory list is unstable sort, so use marketData instead
+    // TODO: feedback to backend to fix this if possible
+    return marketData.map((item) => {
+      const symbol = item.symbol;
+      const history = fundingHistory?.find((h) => h.symbol === symbol);
+
+      const fundingRate = fundingRates[symbol];
+
+      const fundingInterval = getFundingInterval(
+        fundingRate("next_funding_time"),
+        fundingRate("last_funding_rate_timestamp"),
+      );
 
       return {
-        symbol: market.symbol,
-        estFunding: market.est_funding_rate,
-        lastFunding: market.last_funding_rate,
+        symbol,
+        estFunding: fundingRate("est_funding_rate"),
+        lastFunding: fundingRate("last_funding_rate"),
+        fundingInterval,
         funding1d: history?.funding?.["1d"]?.rate ?? 0,
         funding3d: history?.funding?.["3d"]?.rate ?? 0,
         funding7d: history?.funding?.["7d"]?.rate ?? 0,
         funding14d: history?.funding?.["14d"]?.rate ?? 0,
         funding30d: history?.funding?.["30d"]?.rate ?? 0,
         funding90d: history?.funding?.["90d"]?.rate ?? 0,
-        "1dPositive": posRates["1d"][market.symbol] ?? "-",
-        "3dPositive": posRates["3d"][market.symbol] ?? "-",
-        "7dPositive": posRates["7d"][market.symbol] ?? "-",
-        "14dPositive": posRates["14d"][market.symbol] ?? "-",
-        "30dPositive": posRates["30d"][market.symbol] ?? "-",
-        "90dPositive": posRates["90d"][market.symbol] ?? "-",
+        "1dPositive": posRates["1d"][symbol] ?? "-",
+        "3dPositive": posRates["3d"][symbol] ?? "-",
+        "7dPositive": posRates["7d"][symbol] ?? "-",
+        "14dPositive": posRates["14d"][symbol] ?? "-",
+        "30dPositive": posRates["30d"][symbol] ?? "-",
+        "90dPositive": posRates["90d"][symbol] ?? "-",
       };
     });
-  }, [marketData, historyData, getPositiveRates]);
+  }, [marketData, fundingHistory, fundingRates, getPositiveRates]);
 
   const filteredData = useMemo(() => {
     return searchBySymbol(processedData, searchValue, "base-type");
@@ -87,8 +106,19 @@ export const useFundingOverviewScript = () => {
 
   const dataSource = useMemo(
     () => getSortedList(filteredData),
-    [filteredData, getSortedList]
+    [filteredData, getSortedList],
   );
 
   return { dataSource, isLoading: isHistoryLoading, pagination, onSort };
 };
+
+function getFundingInterval(
+  next_funding_time: number,
+  last_funding_rate_timestamp: number,
+) {
+  // default interval is 8 hours
+  if (!next_funding_time || !last_funding_rate_timestamp) return 8;
+  const diff = next_funding_time - last_funding_rate_timestamp;
+
+  return Math.round(diff / 3600000);
+}
