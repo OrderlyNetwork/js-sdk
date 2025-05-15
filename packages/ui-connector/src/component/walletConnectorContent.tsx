@@ -1,5 +1,12 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import {
+  useAccount,
+  useEventEmitter,
+  useLocalStorage,
+} from "@orderly.network/hooks";
+import { i18n, useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum } from "@orderly.network/types";
+import {
   Box,
   Button,
   capitalizeFirstLetter,
@@ -14,14 +21,7 @@ import {
   toast,
   Tooltip,
 } from "@orderly.network/ui";
-import { AccountStatusEnum } from "@orderly.network/types";
 import { StepItem } from "./step";
-import {
-  useAccount,
-  useEventEmitter,
-  useLocalStorage,
-} from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
 
 export type WalletConnectContentProps = {
   initAccountState: AccountStatusEnum;
@@ -48,7 +48,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const [loading, setLoading] = useState(false);
   const [firstShowDialog] = useLocalStorage(
     "orderly-first-show-wallet-connector-dialog",
-    undefined
+    undefined,
   );
   useEffect(() => {
     return () => {
@@ -106,7 +106,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
 
           if (
             reject.message.indexOf(
-              "Signing off chain messages with Ledger is not yet supported"
+              "Signing off chain messages with Ledger is not yet supported",
             ) !== -1
           ) {
             ee.emit("wallet:sign-message-with-ledger-error", {
@@ -116,7 +116,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
             return;
           }
           toast.error(paseErrorMsg(reject));
-        }
+        },
       )
       .catch((e) => {
         console.log("enable trading catch error", e);
@@ -139,7 +139,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           if (reject === -1) return;
           if (
             reject.message.indexOf(
-              "Signing off chain messages with Ledger is not yet supported"
+              "Signing off chain messages with Ledger is not yet supported",
             ) !== -1
           ) {
             ee.emit("wallet:sign-message-with-ledger-error", {
@@ -150,7 +150,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           }
 
           toast.error(paseErrorMsg(reject));
-        }
+        },
       )
       .catch((e) => {
         setLoading(false);
@@ -288,7 +288,12 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
         label: "oui-text-base-contrast-54 oui-text-xs",
         input: "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
       }}
-      formatters={[inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g)]}
+      formatters={[
+        inputFormatter.createRegexInputFormatter((value: string) => {
+          return value.replace(/[a-z]/g, (char: string) => char.toUpperCase());
+        }),
+        inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
+      ]}
       onClear={() => {
         props.setRefCode("");
       }}
