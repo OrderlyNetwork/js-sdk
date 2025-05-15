@@ -1,6 +1,6 @@
 import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
 
-type RegExpFunction = (value: string | number) => string;
+type RegExpFunction = (value: string | number) => string | number;
 
 type RegexInputFormatter = (regex: RegExp | RegExpFunction) => InputFormatter;
 
