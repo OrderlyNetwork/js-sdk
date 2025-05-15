@@ -56,7 +56,7 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
         0,
         0,
         canvas.width,
-        canvas.height
+        canvas.height,
       );
 
       // ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -122,14 +122,14 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
         ref={videoRef}
         width={QRCODE_WIDTH}
         height={QRCODE_HEIGHT}
-        className="oui-bg-base-10 oui-rounded-2xl oui-hidden"
+        className="oui-hidden oui-rounded-2xl oui-bg-base-10"
       />
       <canvas
         ref={canvasRef}
         width={QRCODE_WIDTH * RATIO}
         height={QRCODE_HEIGHT * RATIO}
         style={{ width: QRCODE_WIDTH, height: QRCODE_HEIGHT }}
-        className="oui-bg-base-10 oui-rounded-2xl"
+        className="oui-rounded-2xl oui-bg-base-10"
       />
     </>
   );

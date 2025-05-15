@@ -30,7 +30,8 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "date-fns": "^3.6.0",
-    "immer": "^10.1.1"
+    "immer": "^10.1.1",
+    "jsqr": "^1.4.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",

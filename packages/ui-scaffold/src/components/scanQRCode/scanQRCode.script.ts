@@ -7,7 +7,7 @@ export function useScanQRCodeScript() {
   const [open, setOpen] = useState(false);
   const [showScanTooltip, setShowScanTooltip] = useLocalStorage(
     "orderly_qr_code_scan_tooltip_open",
-    true
+    true,
   );
 
   const showDialog = () => {

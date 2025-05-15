@@ -33,3 +33,4 @@ export {
 
 export { MainLogo } from "./components/main/mainLogo";
 export * from "./components/languageSwitcher";
+export * from "./components/scanQRCode";

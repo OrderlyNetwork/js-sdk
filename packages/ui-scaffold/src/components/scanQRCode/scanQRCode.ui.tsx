@@ -1,4 +1,5 @@
 import { FC, SVGProps } from "react";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 import {
   Box,
   cn,
@@ -7,10 +8,9 @@ import {
   Text,
   Tooltip,
 } from "@orderly.network/ui";
-import { MainLogo } from "@orderly.network/ui-scaffold";
+import { MainLogo } from "../main/mainLogo";
 import { UseScanQRCodeScriptReturn } from "./scanQRCode.script";
 import { QRCodeScanner, QRCODE_WIDTH, QRCODE_HEIGHT } from "./scanner";
-import { useTranslation, Trans } from "@orderly.network/i18n";
 
 type ScanQRCodeProps = UseScanQRCodeScriptReturn;
 
@@ -22,11 +22,11 @@ export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
       <Tooltip
         open={props.showScanTooltip}
         content={t("linkDevice.scanQRCode.tooltip")}
-        className="oui-bg-base-6 oui-text-warning-darken oui-text-2xs oui-font-semibold"
+        className="oui-bg-base-6 oui-text-2xs oui-font-semibold oui-text-warning-darken"
         arrow={{ className: "!oui-fill-base-6" }}
       >
         <Flex
-          className="oui-rounded-md oui-bg-base-5 oui-px-[6px] oui-h-7 oui-cursor-pointer"
+          className="oui-h-7 oui-cursor-pointer oui-rounded-md oui-bg-base-5 oui-px-[6px]"
           onClick={props.showDialog}
         >
           <ScanIcon className="oui-text-base-contrast-80" />
@@ -53,10 +53,10 @@ const ScanQRCodeContent: FC<ScanQRCodeProps> = (props) => {
         <QRCodeScanner onSuccess={props.onScanSuccess} />
         <>
           <LineGradient />
-          <RadiusGradient className="oui-absolute oui-top-[-1.5px] oui-left-[-1.5px]" />
-          <RadiusGradient className="oui-absolute oui-top-[-1.5px] oui-right-[-1.5px] oui-rotate-90" />
-          <RadiusGradient className="oui-absolute oui-bottom-[-1.5px] oui-left-[-1.5px] oui-rotate-[-90deg]" />
-          <RadiusGradient className="oui-absolute oui-bottom-[-1.5px] oui-right-[-1.5px] oui-rotate-[-180deg]" />
+          <RadiusGradient className="oui-absolute oui-left-[-1.5px] oui-top-[-1.5px]" />
+          <RadiusGradient className="oui-absolute oui-right-[-1.5px] oui-top-[-1.5px] oui-rotate-90" />
+          <RadiusGradient className="oui-absolute oui-bottom-[-1.5px] oui-left-[-1.5px] -oui-rotate-90" />
+          <RadiusGradient className="oui-absolute oui-bottom-[-1.5px] oui-right-[-1.5px] -oui-rotate-180" />
         </>
       </Box>
 
@@ -75,7 +75,10 @@ const ScanQRCodeContent: FC<ScanQRCodeProps> = (props) => {
           <Trans
             i18nKey="linkDevice.scanQRCode.description"
             components={[
-              <LinkDeviceIcon className="oui-inline-block oui-text-base-contrast-80 oui-mx-1" />,
+              <LinkDeviceIcon
+                key="0"
+                className="oui-mx-1 oui-inline-block oui-text-base-contrast-80"
+              />,
             ]}
           />
         </Text>
@@ -126,11 +129,11 @@ const LineGradient: FC<SVGProps<SVGSVGElement>> = () => {
   return (
     <div
       className={cn(
-        "oui-absolute oui-top-0 oui-left-[30px]",
-        "oui-w-[calc(100%-60px)] oui-h-[2px] oui-rounded-full",
+        "oui-absolute oui-left-[30px] oui-top-0",
+        "oui-h-[2px] oui-w-[calc(100%-60px)] oui-rounded-full",
         "oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end))_0%,rgb(var(--oui-gradient-brand-start))_100%)]",
         "oui-shadow-[0_0_8px_4px_rgba(var(--oui-gradient-brand-start)/0.12)]",
-        "oui-animate-scan-qr-code"
+        "oui-animate-scan-qr-code",
       )}
     />
   );
