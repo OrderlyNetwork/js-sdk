@@ -1,6 +1,6 @@
 import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
 
-type RegExpFunction = (value: string | number) => string | number;
+type RegExpFunction = (value: string | number) => string;
 
 type RegexInputFormatter = (regex: RegExp | RegExpFunction) => InputFormatter;
 
@@ -13,7 +13,7 @@ export const createRegexInputFormatter: RegexInputFormatter = (
     options: InputFormatterOptions,
   ): string => {
     if (typeof regex === "function") {
-      return regex(value);
+      return regex(String(value));
     }
     const formattedValue = `${value}`.replace(regex, "");
     return formattedValue;
