@@ -290,7 +290,9 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
       }}
       formatters={[
         inputFormatter.createRegexInputFormatter((value: string | number) => {
-          return value.replace(/[a-z]/g, (char: string) => char.toUpperCase());
+          return String(value).replace(/[a-z]/g, (char: string) =>
+            char.toUpperCase(),
+          );
         }),
         inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
       ]}

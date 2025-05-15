@@ -249,7 +249,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
             formatters={[
               inputFormatter.createRegexInputFormatter(
                 (value: string | number) => {
-                  return value.replace(/[a-z]/g, (char: string) =>
+                  return String(value).replace(/[a-z]/g, (char: string) =>
                     char.toUpperCase(),
                   );
                 },
