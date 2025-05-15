@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
   cn,
@@ -16,11 +17,10 @@ import {
   TextField,
   Tooltip,
 } from "@orderly.network/ui";
-import { AsTraderReturns } from "./asTrader.script";
-import { USDCIcon } from "../../../components/usdcIcon";
-import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { ArrowRightIcon } from "../../../components/arrowRightIcon";
+import { USDCIcon } from "../../../components/usdcIcon";
+import { AsTraderReturns } from "./asTrader.script";
 
 export const AsTrader: FC<AsTraderReturns> = (props) => {
   const { t } = useTranslation();
@@ -58,7 +58,7 @@ export const AsTrader: FC<AsTraderReturns> = (props) => {
           <Text
             className={cn(
               "oui-text-xs md:oui-text-sm 2xl:oui-text-base oui-text-base-contrast-54",
-              props.isTrader && "oui-hidden"
+              props.isTrader && "oui-hidden",
             )}
           >
             {t("affiliate.asTrader.description")}
@@ -247,6 +247,13 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
               props.setCode(e.target.value);
             }}
             formatters={[
+              inputFormatter.createRegexInputFormatter(
+                (value: string | number) => {
+                  return String(value).replace(/[a-z]/g, (char: string) =>
+                    char.toUpperCase(),
+                  );
+                },
+              ),
               inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
             ]}
             onClean={() => {

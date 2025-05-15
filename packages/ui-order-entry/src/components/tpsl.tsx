@@ -6,6 +6,11 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { OrderValidationResult } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { OrderlyOrder } from "@orderly.network/types";
+import { OrderType } from "@orderly.network/types";
 import {
   cn,
   Flex,
@@ -16,19 +21,14 @@ import {
   Switch,
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
-import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
-import { OrderlyOrder } from "@orderly.network/types";
-import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
-import { OrderType } from "@orderly.network/types";
+import { ExclamationFillIcon } from "@orderly.network/ui";
 import { OrderEntryContext } from "./orderEntryContext";
+import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import {
   PnlInputProvider,
   usePnlInputContext,
 } from "./pnlInput/pnlInputContext";
-import { ExclamationFillIcon } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
 
 type OrderValueKeys = keyof OrderlyOrder;
 
@@ -103,7 +103,7 @@ export const OrderTPSL = (props: {
           // opacity={0.36}
           size={14}
           opacity={1}
-          className="oui-text-white/[.36] hover:oui-text-white/80 oui-cursor-pointer"
+          className="oui-cursor-pointer oui-text-white/[.36] hover:oui-text-white/80"
           onClick={() => {
             modal.dialog({
               title: t("common.tips"),
@@ -116,13 +116,13 @@ export const OrderTPSL = (props: {
       <div
         className={cn(
           "oui-max-h-0 oui-overflow-hidden oui-transition-all",
-          props.switchState && "oui-max-h-[100px]"
+          props.switchState && "oui-max-h-[100px]",
         )}
         onTransitionEnd={() => {
           console.log("transition end");
           tpslFormRef.current?.style.setProperty(
             "opacity",
-            props.switchState ? "1" : "0"
+            props.switchState ? "1" : "0",
           );
         }}
       >
@@ -152,9 +152,7 @@ const TPSLInputForm = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={
-        "oui-transition-all oui-pt-2 oui-pb-2 oui-px-[1px] oui-space-y-1"
-      }
+      className={"oui-space-y-1 oui-px-px oui-py-2 oui-transition-all"}
     >
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
@@ -206,6 +204,18 @@ const TPSLTriggerPriceInput = (props: {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
 
   const [tipVisible, setTipVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const [innerValue, setInnerValue] = useState<string>(
+    props.values.trigger_price ?? "",
+  );
+
+  useEffect(() => {
+    if (isFocused) {
+      return;
+    }
+    setInnerValue(props.values.trigger_price ?? "");
+  }, [props.values.trigger_price, isFocused]);
 
   const triggerPriceToolTipEle = useMemo(() => {
     if (props.error && errorMsgVisible) return props.error;
@@ -223,9 +233,35 @@ const TPSLTriggerPriceInput = (props: {
     return _prefix;
   };
 
+  const onValueChange = (value: string) => {
+    setInnerValue(value);
+    props.onChange(value);
+  };
+
+  // console.log("props.values.trigger_price", props.values.trigger_price);
+
   useEffect(() => {
     setPrefix(getPrefixLabel(props.values.trigger_price));
+
+    if (!isFocused) {
+      setInnerValue(props.values.trigger_price ?? "");
+    }
   }, [props.type, props.values.trigger_price]);
+
+  const onFocus = () => {
+    setPrefix(props.type === "TP" ? t("tpsl.tp") : t("tpsl.sl"));
+    setPlaceholder("");
+    setTipVisible(true);
+    setIsFocused(true);
+  };
+
+  const onBlur = () => {
+    setPrefix(getPrefixLabel(props.values.trigger_price));
+    setPlaceholder("USDC");
+    setTipVisible(false);
+    setIsFocused(false);
+    props.onChange(innerValue);
+  };
 
   return (
     <Input.tooltip
@@ -234,17 +270,8 @@ const TPSLTriggerPriceInput = (props: {
       size={"md"}
       placeholder={placeholder}
       align="right"
-      onFocus={() => {
-        setPrefix(props.type === "TP" ? t("tpsl.tp") : t("tpsl.sl"));
-        setPlaceholder("");
-        setTipVisible(true);
-      }}
-      onBlur={() => {
-        console.log("props.values.trigger_price", props.values.trigger_price);
-        setPrefix(getPrefixLabel(props.values.trigger_price));
-        setPlaceholder("USDC");
-        setTipVisible(false);
-      }}
+      onFocus={onFocus}
+      onBlur={onBlur}
       tooltip={triggerPriceToolTipEle}
       tooltipProps={{
         content: {
@@ -253,14 +280,14 @@ const TPSLTriggerPriceInput = (props: {
       }}
       color={props.error ? "danger" : undefined}
       autoComplete={"off"}
-      value={props.values.trigger_price}
+      value={innerValue}
       classNames={{
         additional: "oui-text-base-contrast-54",
         root: "oui-pr-2 md:oui-pr-3",
         prefix: "oui-pr-1 md:oui-pr-2",
       }}
       // onChange={props.onChange}
-      onValueChange={props.onChange}
+      onValueChange={onValueChange}
       formatters={[
         inputFormatter.numberFormatter,
         inputFormatter.dpFormatter(props.quote_dp ?? 2),

@@ -1,42 +1,61 @@
 import { PropsWithChildren } from "react";
-import { Box } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
+import { cn } from "@orderly.network/ui";
 import {
+  RouterAdapter,
   Scaffold,
   SideBar,
   SideBarProps,
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
 import { ScaffoldProps } from "@orderly.network/ui-scaffold";
-import { useTranslation } from "@orderly.network/i18n";
 
-export type TradingRewardsLayoutProps = {
+export type TradingRewardsLayoutProps = ScaffoldProps & {
   hideSideBar?: boolean;
-} & SideBarProps &
-  ScaffoldProps;
+  items?: SideBarProps["items"];
+};
 
 export const TradingRewardsLayout = (
-  props: PropsWithChildren<TradingRewardsLayoutProps>
+  props: PropsWithChildren<TradingRewardsLayoutProps>,
 ) => {
-  const { children, ...rest } = props;
+  const { children, leftSideProps, classNames, ...rest } = props;
 
   return (
     <Scaffold
-      classNames={{
-        content: "lg:oui-mb-0",
-        topNavbar: "oui-bg-base-9",
-        leftSidebar:
-          "oui-m-3 oui-p-4 oui-border oui-border-[1px] oui-border-line oui-rounded-xl oui-bg-base-9",
-      }}
-      leftSidebar={props.hideSideBar ? null : <LeftSidebar {...rest} />}
+      leftSidebar={
+        props.hideSideBar ? null : (
+          <LeftSidebar
+            current={props.routerAdapter?.currentPath}
+            routerAdapter={props.routerAdapter}
+            items={props.items}
+            {...leftSideProps}
+          />
+        )
+      }
       routerAdapter={props.routerAdapter}
-      {...props}
+      classNames={{
+        ...classNames,
+        content: classNames?.content,
+        topNavbar: cn("oui-bg-base-9", classNames?.topNavbar),
+        leftSidebar: cn(
+          "oui-rounded-xl oui-bg-base-9",
+          "oui-m-3 oui-p-4",
+          "oui-border oui-border-line",
+          classNames?.leftSidebar,
+        ),
+      }}
+      {...rest}
     >
-      <Box className="oui-flex oui-justify-center">{props.children}</Box>
+      {children}
     </Scaffold>
   );
 };
 
-const LeftSidebar = (props: SideBarProps & ScaffoldProps) => {
+type LeftSidebarProps = SideBarProps & {
+  routerAdapter?: RouterAdapter;
+};
+
+const LeftSidebar = (props: LeftSidebarProps) => {
   const { t } = useTranslation();
   const { expanded, setExpand } = useScaffoldContext();
 
