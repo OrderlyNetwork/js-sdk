@@ -32,6 +32,7 @@
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/ui-chain-selector": "workspace:*",
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
