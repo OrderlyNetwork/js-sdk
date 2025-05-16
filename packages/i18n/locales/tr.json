@@ -608,5 +608,7 @@
   "tradingLeaderboard.learnMore": "Daha fazla bilgi edinin",
   "tradingLeaderboard.tradeNow": "Şimdi işlem yapın",
   "tradingLeaderboard.tradingVolume": "İşlem hacmi",
-  "tradingLeaderboard.rank": "Sıralama"
+  "tradingLeaderboard.rank": "Sıralama",
+  "common.long": "Satın Al",
+  "common.short": "Sat"
 }

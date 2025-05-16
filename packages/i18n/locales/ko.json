@@ -7,6 +7,8 @@
   "common.all": "전체",
   "common.buy": "매수",
   "common.sell": "매도",
+  "common.long": "매수",
+  "common.short": "매도",
   "common.edit": "편집",
   "common.save": "저장",
   "common.add": "추가",
