@@ -68,7 +68,6 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
           {props.unrealROI ?? "--"}
         </Text.numeral>
       </Flex>
-      <div className="oui-absolute -oui-right-[30px] -oui-top-5 oui-size-[151px] oui-bg-[url('https://oss.orderly.network/static/sdk/wallet-card-bg.png')] oui-bg-contain oui-bg-center oui-bg-no-repeat" />
     </Flex>
   );
 };

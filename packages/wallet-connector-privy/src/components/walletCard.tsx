@@ -284,7 +284,7 @@ const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
               </EVMChainPopover>
             </div>
             <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast">
-              EVM
+              Evm
             </div>
           </div>
         </div>
