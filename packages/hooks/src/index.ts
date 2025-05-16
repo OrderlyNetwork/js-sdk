@@ -12,6 +12,7 @@ export { useInfiniteQuery } from "./useInfiniteQuery";
 export { useBoolean } from "./useBoolean";
 
 export { useAccount } from "./useAccount";
+export { type SubAccount } from "@orderly.network/core";
 export { useAccountInstance } from "./useAccountInstance";
 
 export { usePreLoadData } from "./usePreloadData";

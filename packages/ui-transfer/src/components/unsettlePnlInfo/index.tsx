@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   ExclamationFillIcon,
   Flex,
@@ -6,49 +8,52 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { RefreshIcon } from "../../icons";
-import { Trans, useTranslation } from "@orderly.network/i18n";
-interface IProps {
+
+type UnsettlePnlInfoProps = {
   hasPositions: boolean;
   unsettledPnl: number;
-  onSettlle: () => Promise<any>;
-}
+  onSettlePnl: () => Promise<any>;
+  tooltipContent?: ReactNode;
+  dialogContent?: ReactNode;
+};
 
-export const UnsettlePnlInfo = ({
-  hasPositions,
-  unsettledPnl,
-  onSettlle,
-}: IProps) => {
+export const UnsettlePnlInfo = (props: UnsettlePnlInfoProps) => {
+  const {
+    hasPositions,
+    unsettledPnl,
+    onSettlePnl,
+    tooltipContent,
+    dialogContent,
+  } = props;
   const { t } = useTranslation();
 
   if (unsettledPnl === 0 && !hasPositions) {
     return <></>;
   }
+
   const settlePnlDialog = () => {
     modal.confirm({
       title: t("settle.settlePnl"),
-      // @ts-ignore
-      content: <Trans i18nKey="settle.settlePnl.description" />,
+      content: dialogContent,
       onOk: () => {
-        return onSettlle();
+        return onSettlePnl();
       },
     });
   };
+
   return (
-    <Flex
-      justify="between"
-      className="oui-text-2xs oui-text-base-contrast-36 oui-mt-1 oui-mx-2"
-    >
+    <Flex justify="between" className="oui-text-2xs oui-text-base-contrast-36">
       <Flex itemAlign="center" justify="start" gap={1}>
         <Tooltip
-          className="oui-max-w-[274px]"
-          content={t("settle.unsettled.tooltip")}
+          className="oui-max-w-[274px] oui-font-semibold"
+          content={tooltipContent as any}
         >
           <Flex itemAlign="center" justify="start" gap={1}>
             <ExclamationFillIcon
               size={14}
               className="oui-text-warning-darken"
             />
-            <Text className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer">
+            <Text className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12">
               {`${t("settle.unsettled")}:`}
             </Text>
           </Flex>

@@ -1,4 +1,8 @@
-import React, { FC, useMemo, useState, useCallback, ReactNode } from "react";
+import { FC, useMemo, useState, useCallback, ReactNode } from "react";
+import { useAccount, useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Flex,
   Text,
@@ -13,13 +17,10 @@ import {
   gradientTextVariants,
   cn,
 } from "@orderly.network/ui";
-import { AssetViewState } from "./assetView.script";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+import { AssetViewState } from "./assetView.script";
 import { FaucetWidget } from "./faucet/faucet.widget";
-import { useTranslation } from "@orderly.network/i18n";
+
 interface StatusInfo {
   title: string;
   description: string;
@@ -118,7 +119,7 @@ export const TooltipContent: FC<TooltipContentProps> = ({
   description,
   formula,
 }) => (
-  <div className="oui-leading-[1.5] oui-text-2xs oui-text-base-contrast-80 oui-min-w-[204px] oui-max-w-[240px]">
+  <div className="oui-min-w-[204px] oui-max-w-[240px] oui-text-2xs oui-leading-normal oui-text-base-contrast-80">
     <span>{description}</span>
     <Divider className="oui-border-white/10" my={2} />
     <span>{formula}</span>
@@ -219,7 +220,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
 }) => {
   const [optionsOpen, setOptionsOpen] = useLocalStorage(
     "orderly_entry_asset_list_open",
-    false
+    false,
   );
   const [open, setOpen] = useState<boolean>(optionsOpen);
 
@@ -255,10 +256,10 @@ const AssetValueList: FC<AssetValueListProps> = ({
           transform: "translateZ(0)",
         }}
         className={cn(
-          "oui-space-y-1.5 oui-select-none oui-overflow-hidden",
+          "oui-select-none oui-space-y-1.5 oui-overflow-hidden",
           "oui-transition-[max-height] oui-duration-150",
           "group-hover:oui-will-change-[max-height]",
-          open ? "oui-max-h-[69px]" : "oui-max-h-0"
+          open ? "oui-max-h-[69px]" : "oui-max-h-0",
         )}
       >
         <AssetDetail
@@ -302,17 +303,62 @@ export const AssetView: FC<AssetViewState> = ({
   totalValue,
   onDeposit,
   onWithdraw,
+  onTransfer,
   toggleVisible,
   visible,
   freeCollateral,
   marginRatioVal,
   renderMMR,
   isConnected,
+  isMainAccount,
+  hasSubAccount,
 }) => {
   const { title, description, titleColor, titleClsName } =
     useCurrentStatusText();
 
   const { t } = useTranslation();
+
+  const transferButton = hasSubAccount && (
+    <Button
+      fullWidth
+      color="secondary"
+      size="md"
+      onClick={onTransfer}
+      data-testid="oui-testid-assetView-transfer-button"
+    >
+      <Text>{t("common.transfer")}</Text>
+    </Button>
+  );
+
+  const depositAndWithdrawButton = isMainAccount && (
+    <>
+      <Button
+        fullWidth
+        color="secondary"
+        size="md"
+        onClick={onWithdraw}
+        data-testid="oui-testid-assetView-withdraw-button"
+      >
+        {!hasSubAccount && (
+          <ArrowDownShortIcon
+            color="white"
+            opacity={1}
+            className="oui-rotate-180"
+          />
+        )}
+        <Text>{t("common.withdraw")}</Text>
+      </Button>
+      <Button
+        data-testid="oui-testid-assetView-deposit-button"
+        fullWidth
+        size="md"
+        onClick={onDeposit}
+      >
+        {!hasSubAccount && <ArrowDownShortIcon color="white" opacity={1} />}
+        <Text>{t("common.deposit")}</Text>
+      </Button>
+    </>
+  );
 
   return (
     <Box className="oui-relative">
@@ -380,37 +426,28 @@ export const AssetView: FC<AssetViewState> = ({
               renderMMR={renderMMR}
               isConnected={isConnected}
             />
-            <Flex gap={3} itemAlign="center">
-              <Button
-                fullWidth
-                color="secondary"
-                size="md"
-                onClick={onWithdraw}
-                data-testid="oui-testid-assetView-withdraw-button"
-              >
-                <ArrowDownShortIcon
-                  color="white"
-                  opacity={1}
-                  className="oui-rotate-180"
-                />
-                <Text>{t("common.withdraw")}</Text>
-              </Button>
-              <Button
-                data-testid="oui-testid-assetView-deposit-button"
-                fullWidth
-                size="md"
-                onClick={onDeposit}
-              >
-                <ArrowDownShortIcon color="white" opacity={1} />
-                <Text>{t("common.deposit")}</Text>
-              </Button>
+            <Flex
+              gap={isMainAccount ? (hasSubAccount ? 2 : 3) : 0}
+              itemAlign="center"
+            >
+              {isMainAccount ? (
+                <>
+                  {transferButton}
+                  {depositAndWithdrawButton}
+                </>
+              ) : (
+                transferButton
+              )}
             </Flex>
             <FaucetWidget />
           </Box>
         )}
       </AuthGuard>
       <div
-        className="oui-pointer-events-none oui-rotate-180 oui-rounded-2xl oui-blur-[200px] oui-top-0 oui-bottom-0 oui-left-0 oui-right-0 oui-absolute"
+        className={cn(
+          "oui-absolute oui-inset-0 oui-rotate-180",
+          "oui-pointer-events-none oui-rounded-2xl oui-blur-[200px]",
+        )}
         style={{
           background:
             "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(159, 115, 241, 0) -48.92deg, rgba(242, 98, 181, 0) 125.18deg, #5FC5FF 193.41deg, #FFAC89 216.02deg, #8155FF 236.07deg, #789DFF 259.95deg, rgba(159, 115, 241, 0) 311.08deg, rgba(242, 98, 181, 0) 485.18deg)",

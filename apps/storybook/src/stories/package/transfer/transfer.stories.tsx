@@ -1,11 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Box, Flex, Button, modal } from "@orderly.network/ui";
 import {
   DepositFormWidget,
   WithdrawFormWidget,
   DepositAndWithdrawWithDialogId,
   DepositAndWithdrawWithSheetId,
+  TransferFormWidget,
+  TransferDialogId,
+  TransferSheetId,
 } from "@orderly.network/ui-transfer";
-import { Box, Flex, Button, modal } from "@orderly.network/ui";
 
 const meta: Meta<typeof DepositFormWidget> = {
   title: "Package/ui-transfer",
@@ -34,6 +37,18 @@ export const WithdrawForm: Story = {
       <Flex justify="center" mt={10}>
         <Box width={420} intensity={800} p={5} r="lg">
           <WithdrawFormWidget />
+        </Box>
+      </Flex>
+    );
+  },
+};
+
+export const TransferForm: Story = {
+  render: () => {
+    return (
+      <Flex justify="center" mt={10}>
+        <Box width={420} intensity={800} p={5} r="lg">
+          <TransferFormWidget />
         </Box>
       </Flex>
     );
@@ -104,6 +119,38 @@ export const WithdrawSheet: Story = {
           }}
         >
           Show Withdraw Sheet
+        </Button>
+      </Flex>
+    ),
+  ],
+};
+
+export const TransferDialog: Story = {
+  decorators: [
+    (Story) => (
+      <Flex justify="center" itemAlign="center" height="100vh">
+        <Button
+          onClick={() => {
+            modal.show(TransferDialogId);
+          }}
+        >
+          Show Transfer Dialog
+        </Button>
+      </Flex>
+    ),
+  ],
+};
+
+export const TransferSheet: Story = {
+  decorators: [
+    (Story) => (
+      <Flex justify="center" itemAlign="center" height="100vh">
+        <Button
+          onClick={() => {
+            modal.show(TransferSheetId);
+          }}
+        >
+          Show Transfer Sheet
         </Button>
       </Flex>
     ),

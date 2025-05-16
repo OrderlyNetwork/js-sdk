@@ -1,9 +1,9 @@
-import { Decimal } from "@orderly.network/utils";
 import { useEffect, useState } from "react";
-import { InputStatus } from "../../../types";
 import { useTranslation } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
+import { InputStatus } from "../../../types";
 
-type Options = { quantity: string; maxQuantity: string };
+type Options = { quantity: string; maxQuantity: string | number };
 
 export function useInputStatus(options: Options) {
   const { quantity, maxQuantity } = options;

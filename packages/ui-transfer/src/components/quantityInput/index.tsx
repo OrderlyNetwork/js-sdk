@@ -1,4 +1,6 @@
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
 import {
   Input,
   Select,
@@ -10,13 +12,11 @@ import {
   inputFormatter,
   Spinner,
 } from "@orderly.network/ui";
-import { API } from "@orderly.network/types";
-import { TokenOption } from "./tokenOption";
 import { InputStatus } from "../../types";
-import { useTranslation } from "@orderly.network/i18n";
+import { TokenOption } from "./tokenOption";
 
 export type QuantityInputProps = {
-  token?: API.TokenInfo;
+  token?: Partial<API.TokenInfo>;
   tokens?: API.TokenInfo[];
   label?: string;
   status?: InputStatus;
@@ -142,14 +142,14 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           r="full"
           className={cn(
             status === "error" && "oui-bg-danger-light",
-            status === "warning" && "oui-bg-warning-light"
+            status === "warning" && "oui-bg-warning-light",
           )}
         ></Box>
         <Text
           size="2xs"
           className={cn(
             status === "error" && "oui-text-danger-light",
-            status === "warning" && "oui-text-warning-light"
+            status === "warning" && "oui-text-warning-light",
           )}
         >
           {hintMessage}
@@ -190,7 +190,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
               props.readOnly
                 ? "oui-bg-base-6 focus-within:oui-outline-0 oui-border-none"
                 : "oui-bg-base-5",
-              classNames?.root
+              classNames?.root,
             ),
             input: cn("oui-absolute oui-bottom-0", classNames?.input),
           }}
@@ -198,5 +198,5 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
         {hintMessage && message}
       </>
     );
-  }
+  },
 );

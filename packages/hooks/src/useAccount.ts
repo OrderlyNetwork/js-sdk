@@ -73,9 +73,12 @@ export const useAccount = () => {
     return account.createAccount();
   }, [account]);
 
-  const createSubAccount = useCallback(async () => {
-    return account.createSubAccount();
-  }, [account]);
+  const createSubAccount = useCallback(
+    async (description?: string) => {
+      return account.createSubAccount(description);
+    },
+    [account],
+  );
 
   const updateSubAccount = useCallback(
     async (value: { subAccountId: string; description?: string }) => {
