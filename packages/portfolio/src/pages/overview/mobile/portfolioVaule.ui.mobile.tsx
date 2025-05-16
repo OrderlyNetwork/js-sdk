@@ -1,5 +1,7 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
+import { parseJSON, useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { Flex, Text, cn } from "@orderly.network/ui";
 import { EyeIcon } from "@orderly.network/ui";
 
@@ -15,6 +17,17 @@ type Props = {
 
 export const PortfolioValueMobile: FC<Props> = (props) => {
   const { t } = useTranslation();
+  const { state } = useAccount();
+
+  const currentNamespace = useMemo(() => {
+    if (props.namespace) {
+      return props.namespace;
+    }
+    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return getLinkDeviceStorage()?.chainNamespace;
+    }
+    return null;
+  }, [props.namespace, state.status]);
   return (
     <Flex
       direction={"column"}
@@ -22,8 +35,8 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
       height={"100%"}
       className={cn([
         "oui-relative oui-items-start oui-gap-1 oui-overflow-hidden oui-rounded-2xl oui-bg-base-9",
-        props.namespace === "EVM" && "oui-bg-[#283BEE]",
-        props.namespace === "SOL" && "oui-bg-[#630EAD]",
+        currentNamespace === ChainNamespace.evm && "oui-bg-[#283BEE]",
+        currentNamespace === ChainNamespace.solana && "oui-bg-[#630EAD]",
       ])}
       p={4}
     >
@@ -71,3 +84,15 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
     </Flex>
   );
 };
+
+type LinkDeviceStorage = { chainId: number; chainNamespace: ChainNamespace };
+
+function getLinkDeviceStorage() {
+  try {
+    const linkDeviceStorage = localStorage.getItem("orderly_link_device");
+    const json = linkDeviceStorage ? parseJSON(linkDeviceStorage) : null;
+    return json as LinkDeviceStorage;
+  } catch (err) {
+    console.error("getLinkDeviceStorage", err);
+  }
+}

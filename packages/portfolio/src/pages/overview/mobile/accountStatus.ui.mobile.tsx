@@ -1,12 +1,18 @@
 import { FC, SVGProps, useCallback, useMemo } from "react";
 import {
+  parseJSON,
   useAccount,
   useChains,
+  useLocalStorage,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  ChainNamespace,
+  LinkDeviceKey,
+} from "@orderly.network/types";
 import {
   cn,
   ArrowRightShortIcon,
@@ -172,6 +178,16 @@ const ShowAccount: FC = () => {
     toast.success(t("common.copy.copied"));
   };
 
+  const currentNamespace = useMemo(() => {
+    if (namespace) {
+      return namespace;
+    }
+    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return getLinkDeviceStorage()?.chainNamespace;
+    }
+    return null;
+  }, [namespace, state.status]);
+
   const leftNode = useMemo(() => {
     if (!state.address) {
       return;
@@ -195,7 +211,7 @@ const ShowAccount: FC = () => {
     );
   }, [state.address]);
   const rightNode = useMemo(() => {
-    if (namespace === ChainNamespace.evm) {
+    if (currentNamespace === ChainNamespace.evm) {
       return <EVMChains />;
     }
 
@@ -208,19 +224,19 @@ const ShowAccount: FC = () => {
         Solana
       </Flex>
     );
-  }, [namespace]);
+  }, [currentNamespace]);
 
   const bgClass = useMemo(() => {
     let bg = "";
-    if (namespace == ChainNamespace.evm) {
+    if (currentNamespace == ChainNamespace.evm) {
       bg =
         "oui-bg-[linear-gradient(15deg,#283BEE_-11%,transparent_30%,transparent_77%,#A53411_100%)]";
-    } else if (namespace == ChainNamespace.solana) {
+    } else if (currentNamespace == ChainNamespace.solana) {
       bg =
         "oui-bg-[linear-gradient(15deg,#7400D0_-11%,transparent_30%,transparent_77%,#009A7E_100%)]";
     }
     return bg;
-  }, [namespace]);
+  }, [currentNamespace]);
   return (
     <div
       className={cn([
@@ -240,13 +256,13 @@ export const AccountStatusMobile: FC = () => {
   const { description, rootClass } = useCurrentStatus();
 
   const alreadyShowAccount = useMemo(() => {
+    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return true;
+    }
     if (wrongNetwork) {
       return false;
     }
-    return (
-      state.status >= AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected
-    );
+    return state.status >= AccountStatusEnum.EnableTrading;
   }, [state.status, wrongNetwork]);
 
   if (alreadyShowAccount) {
@@ -276,3 +292,14 @@ export const AccountStatusMobile: FC = () => {
     </div>
   );
 };
+type LinkDeviceStorage = { chainId: number; chainNamespace: ChainNamespace };
+
+function getLinkDeviceStorage() {
+  try {
+    const linkDeviceStorage = localStorage.getItem("orderly_link_device");
+    const json = linkDeviceStorage ? parseJSON(linkDeviceStorage) : null;
+    return json as LinkDeviceStorage;
+  } catch (err) {
+    console.error("getLinkDeviceStorage", err);
+  }
+}

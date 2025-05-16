@@ -1,11 +1,14 @@
 import { FC, useMemo } from "react";
+import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
 import { RouterAdapter } from "../scaffold";
 import { ScanQRCodeWidget } from "../scanQRCode";
+import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
 import { MainNavWidgetProps } from "./mainNav.widget";
 
@@ -20,6 +23,7 @@ type Props = {
 
 export const MainNavMobile: FC<Props> = (props) => {
   const { wrongNetwork, disabledConnect } = useAppContext();
+  const { state } = useAccount();
   const currentMenu = useMemo(() => {
     if (Array.isArray(props?.initialMenu)) {
       return props?.campaigns;
@@ -69,6 +73,9 @@ export const MainNavMobile: FC<Props> = (props) => {
   };
 
   const renderContent = () => {
+    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return <LinkDeviceWidget />;
+    }
     if (wrongNetwork) {
       return null;
     }
@@ -78,6 +85,16 @@ export const MainNavMobile: FC<Props> = (props) => {
       </>
     );
   };
+
+  const showQrcode = useMemo(() => {
+    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return false;
+    }
+    if (disabledConnect) {
+      return false;
+    }
+    return true;
+  }, [state.status, disabledConnect]);
 
   if (isSub) {
     return (
@@ -112,7 +129,7 @@ export const MainNavMobile: FC<Props> = (props) => {
       <Flex>{title}</Flex>
       <Flex gapX={2}>
         <LanguageSwitcherWidget />
-        <ScanQRCodeWidget />
+        {showQrcode && <ScanQRCodeWidget />}
         {renderContent()}
         <WalletConnectButtonExtension />
       </Flex>
