@@ -173,6 +173,11 @@ const useOrderEntry = (
   const lastOrderTypeExt = useRef<OrderType>();
   const lastLevel = useRef<OrderLevel>();
 
+  const calculateTPSL_baseOn = useRef<{ tp: string; sl: string }>({
+    tp: "",
+    sl: "",
+  });
+
   const actions = useMarkPriceActions();
   const symbolConfig = useSymbolsInfo();
   const accountInfo = useAccountInfo();
@@ -270,10 +275,17 @@ const useOrderEntry = (
         formattedOrder.order_type === OrderType.STOP_MARKET) &&
       markPrice
     ) {
-      orderEntryActions.onMarkPriceChange(
-        markPrice,
-        lastChangedField.current as any,
-      );
+      const baseOn = new Set<string>();
+      if (lastChangedField.current) {
+        baseOn.add(lastChangedField.current);
+      }
+      if (calculateTPSL_baseOn.current.tp) {
+        baseOn.add(calculateTPSL_baseOn.current.tp);
+      }
+      if (calculateTPSL_baseOn.current.sl) {
+        baseOn.add(calculateTPSL_baseOn.current.sl);
+      }
+      orderEntryActions.onMarkPriceChange(markPrice, Array.from(baseOn));
     }
   }, [markPrice, formattedOrder.order_type]);
 
@@ -352,6 +364,12 @@ const useOrderEntry = (
     }
 
     if (shouldUpdateLastChangedField) {
+      if (key.startsWith("tp_")) {
+        calculateTPSL_baseOn.current.tp = key;
+      } else if (key.startsWith("sl_")) {
+        calculateTPSL_baseOn.current.sl = key;
+      }
+
       lastChangedField.current = key;
     }
   };

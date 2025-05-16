@@ -1,9 +1,9 @@
 import { FC, ReactNode } from "react";
-import { useNav } from "../../hooks/useNav";
 import {
   TradingRewardsLayoutWidget,
   TradingRewardsLeftSidebarPath,
 } from "@orderly.network/trading-rewards";
+import { useNav } from "../../hooks/useNav";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 
 type TradingRewardsLayoutProps = {

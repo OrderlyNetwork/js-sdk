@@ -1,16 +1,16 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { OrderStatus } from "@orderly.network/types";
 import { Box, Divider, Flex, TabPanel, Tabs } from "@orderly.network/ui";
-import { DataListState, DataListTabType } from "./dataList.script";
+import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
-import { OrderStatus } from "@orderly.network/types";
 import { PositionHeaderWidget } from "../../base/positionHeader";
+import { DataListState, DataListTabType } from "./dataList.script";
 import { SettingWidget } from "./setting";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const DataList: FC<DataListState> = (props) => {
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-position-tab"
         value={DataListTabType.positions}
-        title={`${t("common.positions")}${
+        title={`${t("common.positions")} ${
           (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
         }`}
       >
@@ -56,7 +56,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-pending-tab"
         value={DataListTabType.pending}
-        title={`${t("orders.status.pending")}${
+        title={`${t("orders.status.pending")} ${
           (props.pendingOrderCount ?? 0) > 0
             ? `(${props.pendingOrderCount})`
             : ""
@@ -75,7 +75,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-tpsl-tab"
         value={DataListTabType.tp_sl}
-        title={`${t("common.tpsl")}${
+        title={`${t("common.tpsl")} ${
           (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
         }`}
       >
