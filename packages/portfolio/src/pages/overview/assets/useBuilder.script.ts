@@ -11,7 +11,10 @@ import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
-import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
+import {
+  DepositAndWithdrawWithDialogId,
+  DepositAndWithdrawWithSheetId,
+} from "@orderly.network/ui-transfer";
 
 export const useAssetScript = () => {
   const { connect, namespace } = useWalletConnector();
@@ -36,11 +39,11 @@ export const useAssetScript = () => {
   };
 
   const onDeposit = () => {
-    modal.show(DepositAndWithdrawWithDialogId, { activeTab: "deposit" });
+    modal.show(DepositAndWithdrawWithSheetId, { activeTab: "deposit" });
   };
 
   const onWithdraw = () => {
-    modal.show(DepositAndWithdrawWithDialogId, { activeTab: "withdraw" });
+    modal.show(DepositAndWithdrawWithSheetId, { activeTab: "withdraw" });
   };
 
   return {
