@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Renderer } from "../renderer/renderer";
 import {
   useAccount,
   useLocalStorage,
@@ -8,12 +7,13 @@ import {
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
-import { AlgoType } from "../type";
 import { DisplayControlSettingInterface } from "../../type";
+import { Renderer } from "../renderer/renderer";
+import { AlgoType } from "../type";
 
 export default function useCreateRenderer(
   symbol: string,
-  displayControlSetting?: DisplayControlSettingInterface
+  displayControlSetting?: DisplayControlSettingInterface,
 ) {
   const [renderer, setRenderer] = useState<Renderer>();
   const rendererRef = useRef<Renderer>();
@@ -29,7 +29,7 @@ export default function useCreateRenderer(
 
   const config = useSymbolsInfo();
   const symbolInfo = config?.[symbol];
-  const base_dp = symbolInfo("base_dp");
+  const quote_dp = symbolInfo("quote_dp");
 
   const [fillOrders] = useOrderStream({
     symbol: symbol,
@@ -85,9 +85,11 @@ export default function useCreateRenderer(
       renderer?.renderFilledOrders([], 6);
       return;
     }
-    const currentSymbolFillOrders = fillOrders?.filter((item) => item.symbol === symbol);
-    renderer?.renderFilledOrders(currentSymbolFillOrders ?? [], base_dp ?? 6);
-  }, [renderer, fillOrders, symbol, base_dp, displayControlSetting]);
+    const currentSymbolFillOrders = fillOrders?.filter(
+      (item) => item.symbol === symbol,
+    );
+    renderer?.renderFilledOrders(currentSymbolFillOrders ?? [], quote_dp ?? 6);
+  }, [renderer, fillOrders, symbol, quote_dp, displayControlSetting]);
 
   useEffect(() => {
     let tpslOrder: any = [];
@@ -105,7 +107,7 @@ export default function useCreateRenderer(
     }
 
     const symbolPosition = (positions ?? []).find(
-      (item) => item.symbol === symbol
+      (item) => item.symbol === symbol,
     );
     pendingOrders?.forEach((order) => {
       if (symbol !== order.symbol) {
@@ -168,7 +170,7 @@ export default function useCreateRenderer(
         .concat(positionTpsl)
         .concat(limitOrder)
         .concat(stopOrder)
-        .concat(bracketOrder)
+        .concat(bracketOrder),
     );
   }, [
     renderer,

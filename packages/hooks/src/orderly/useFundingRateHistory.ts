@@ -1,11 +1,12 @@
-import { useQuery } from "../useQuery";
+import { useCallback } from "react";
 import { API } from "@orderly.network/types";
+import { useQuery } from "../useQuery";
 
 export type PeriodKey = "1d" | "3d" | "7d" | "14d" | "30d" | "90d";
 
 export const calculatePositiveRate = (
   periodData?: API.FundingPeriodData,
-  period?: PeriodKey
+  period?: PeriodKey,
 ): number => {
   if (!periodData || !period) return 0;
 
@@ -23,24 +24,30 @@ export const calculatePositiveRate = (
 };
 
 export const useFundingRateHistory = () => {
-  const {
-    data: historyData,
-    isLoading,
-    ...rest
-  } = useQuery<API.FundingHistory[]>("/v1/public/market_info/funding_history");
+  const { data: historyData, isLoading } = useQuery<API.FundingHistory[]>(
+    "/v1/public/market_info/funding_history",
+  );
+
+  const getPositiveRates = useCallback(
+    (data: API.FundingHistory[], period: PeriodKey): Record<string, number> => {
+      if (!data?.length) return {};
+      return data.reduce(
+        (acc, item) => {
+          acc[item.symbol] = calculatePositiveRate(
+            item.funding[period],
+            period,
+          );
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+    },
+    [],
+  );
 
   return {
     data: historyData ?? [],
     isLoading,
-    getPositiveRates: (
-      data: API.FundingHistory[],
-      period: PeriodKey
-    ): Record<string, number> => {
-      if (!data?.length) return {};
-      return data.reduce((acc, item) => {
-        acc[item.symbol] = calculatePositiveRate(item.funding[period], period);
-        return acc;
-      }, {} as Record<string, number>);
-    },
+    getPositiveRates,
   };
 };

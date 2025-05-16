@@ -1,4 +1,5 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Flex,
   ListView,
@@ -8,18 +9,16 @@ import {
   DataFilter,
   cn,
   TableFeatures,
-  Text,
 } from "@orderly.network/ui";
-import { OrdersBuilderState } from "./orderList.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { grayCell } from "../../utils/util";
-import { SymbolProvider } from "./symbolProvider";
-import { OrderListProvider } from "./orderListContext";
 import { TabType } from "../orders.widget";
-import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
-import { useTranslation } from "@orderly.network/i18n";
+import { OrdersBuilderState } from "./orderList.script";
+import { OrderListProvider } from "./orderListContext";
+import { SymbolProvider } from "./symbolProvider";
+import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 
 export const DesktopOrderList: FC<
   OrdersBuilderState & {
@@ -36,17 +35,6 @@ export const DesktopOrderList: FC<
     sharePnLConfig,
     symbolsInfo: props.symbolsInfo,
   });
-  
-  // const { t } = useTranslation();
-
-  // const dayLabel: Record<number, string> = useMemo(() => {
-  //   return {
-  //     1: t("common.select.1d"),
-  //     7: t("common.select.7d"),
-  //     30: t("common.select.30d"),
-  //     90: t("common.select.90d"),
-  //   };
-  // }, [t]);
 
   return (
     <OrderListProvider
@@ -54,51 +42,22 @@ export const DesktopOrderList: FC<
       editOrder={props.updateOrder}
       cancelAlgoOrder={props.cancelAlgoOrder}
       editAlgoOrder={props.updateAlgoOrder}
-    // cancelTPSLOrder={props.cancelTPSLOrder}
+      // cancelTPSLOrder={props.cancelTPSLOrder}
     >
       <Flex direction="column" width="100%" height="100%" itemAlign="start">
-        {/* <Divider className="oui-w-full" /> */}
-        <Flex gap={3}>
-          {props.filterItems.length > 0 && (
-            <DataFilter
-              items={props.filterItems}
-              onFilter={(value: any) => {
-                props.onFilter(value);
-              }}
-              // className="oui-px-3"
-              trailing={
-                [TabType.pending, TabType.tp_sl].includes(props.type) && (
-                  <CancelAll {...props} />
-                )
-              }
-            />
-          )}
-          {/* {[1, 7, 30, 90].map((value) => {
-            return (
-              <button className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm">
-                <div className="oui-z-10">
-                  <Text.gradient
-                    color={props.filterDays === value ? "brand" : undefined}
-                    className={cn(
-                      "oui-break-normal oui-whitespace-nowrap",
-                      props.filterDays !== value
-                        ? "oui-text-base-contrast-54"
-                        : ""
-                    )}
-                  >
-                    {dayLabel[value] || `${value}D`}
-                  </Text.gradient>
-                </div>
-                <div
-                  className="oui-gradient-primary oui-opacity-[.12] oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0 oui-rounded"
-                  onClick={() => {
-                    props.updateFilterDays(value as any);
-                  }}
-                ></div>
-              </button>
-            );
-          })} */}
-        </Flex>
+        {props.filterItems.length > 0 && (
+          <DataFilter
+            items={props.filterItems}
+            onFilter={(value: any) => {
+              props.onFilter(value);
+            }}
+            trailing={
+              [TabType.pending, TabType.tp_sl].includes(props.type) && (
+                <CancelAll {...props} />
+              )
+            }
+          />
+        )}
         <AuthGuardDataTable
           columns={columns}
           loading={props.isLoading}
@@ -118,12 +77,13 @@ export const DesktopOrderList: FC<
                 "oui-h-[48px]",
                 grayCell(record)
                   ? "oui-text-base-contrast-20"
-                  : "oui-text-base-contrast-80"
+                  : "oui-text-base-contrast-80",
               ),
             };
           }}
           generatedRowKey={(record, index) =>
-            `${props.type}${index}${record.order_id || record.algo_order_id
+            `${props.type}${index}${
+              record.order_id || record.algo_order_id
             }_index${index}`
           }
           renderRowContainer={(record: any, index, children) => {
@@ -172,12 +132,12 @@ export const MobileOrderList: FC<
       editOrder={props.updateOrder}
       cancelAlgoOrder={props.cancelAlgoOrder}
       editAlgoOrder={props.updateAlgoOrder}
-    // cancelTPSLOrder={props.cancelTPSLOrder}
+      // cancelTPSLOrder={props.cancelTPSLOrder}
     >
       <Grid
         cols={1}
         rows={2}
-        className="oui-grid-rows-[auto,1fr] oui-w-full"
+        className="oui-w-full oui-grid-rows-[auto,1fr]"
         gap={2}
       >
         {/* <Filter
@@ -190,12 +150,13 @@ export const MobileOrderList: FC<
         /> */}
 
         {props.showFilter ? (
-          <Flex gap={2} p={2} className="oui-bg-base-9 oui-rounded-b-xl">
+          <Flex gap={2} p={2} className="oui-rounded-b-xl oui-bg-base-9">
             {props.filterItems.map((item) => {
               // not support range type
               if (item.type !== "select") return <></>;
               return (
                 <Picker
+                  key={item.name}
                   options={item.options}
                   size={"sm"}
                   value={item.value}

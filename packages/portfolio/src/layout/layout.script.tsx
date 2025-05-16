@@ -155,7 +155,6 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
     current,
     hideSideBar,
     onItemSelect: (item: SideMenuItem) => {
-      // console.log("item", item);
       if (typeof item.href === "undefined") {
         console.warn("Item href is not defined");
         return;

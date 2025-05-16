@@ -1,15 +1,20 @@
 import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
 
-type RegexInputFormatter = (regex: RegExp) => InputFormatter;
+type RegExpFunction = (value: string | number) => string;
+
+type RegexInputFormatter = (regex: RegExp | RegExpFunction) => InputFormatter;
 
 export const createRegexInputFormatter: RegexInputFormatter = (
-  regex: RegExp,
-  onSendBefore?: (value: string, options: InputFormatterOptions) => string
+  regex: RegExp | RegExpFunction,
+  onSendBefore?: (value: string, options: InputFormatterOptions) => string,
 ) => ({
   onRenderBefore: (
     value: string | number,
-    options: InputFormatterOptions
+    options: InputFormatterOptions,
   ): string => {
+    if (typeof regex === "function") {
+      return regex(String(value));
+    }
     const formattedValue = `${value}`.replace(regex, "");
     return formattedValue;
   },
