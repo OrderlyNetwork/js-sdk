@@ -1,4 +1,6 @@
 import React, { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { AnnouncementType } from "@orderly.network/types";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -13,10 +15,8 @@ import {
   useScreen,
   Text,
 } from "@orderly.network/ui";
-import { AnnouncementType } from "@orderly.network/types";
-import { AnnouncementScriptReturn } from "./announcement.script";
-import { useTranslation } from "@orderly.network/i18n";
 import { CloseIcon } from "../icons";
+import { AnnouncementScriptReturn } from "./announcement.script";
 
 export type AnnouncementProps = AnnouncementScriptReturn & {
   style?: React.CSSProperties;
@@ -69,7 +69,7 @@ export const Announcement: React.FC<Readonly<AnnouncementProps>> = (props) => {
       style={props.style}
       className={cn(
         "oui-font-semibold oui-rounded-xl oui-overflow-hidden",
-        props.className
+        props.className,
       )}
     >
       {contentNode}
@@ -107,8 +107,13 @@ const DeskTopTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
           "oui-mr-[125px] oui-relative oui-overflow-hidden",
           currentTip?.url && "oui-cursor-pointer",
           "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
-          isAnimating && "oui-translate-y-1/2 oui-opacity-0"
+          isAnimating && "oui-translate-y-1/2 oui-opacity-0",
         )}
+        onClick={() => {
+          if (currentTip?.url) {
+            window.open(currentTip?.url, "_blank");
+          }
+        }}
       >
         <RenderTipsType type={currentTip?.type} />
         <Text
@@ -124,7 +129,7 @@ const DeskTopTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
         gapX={4}
         justify="center"
         className={cn(
-          "oui-absolute oui-right-4 oui-top-2/4 -oui-translate-y-2/4"
+          "oui-absolute oui-right-4 oui-top-2/4 -oui-translate-y-2/4",
         )}
       >
         <SwitchTips
@@ -169,16 +174,19 @@ const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
       <Flex
         gapY={2}
         direction="column"
-        className={cn(
-          "oui-items-start oui-justify-start oui-w-full",
-          currentTip?.url && "oui-cursor-pointer"
-        )}
+        className={cn("oui-items-start oui-justify-start oui-w-full")}
       >
         <div
-        // className={cn(
-        //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
-        //   isAnimating && "oui-translate-y-full oui-opacity-0"
-        // )}
+          // className={cn(
+          //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+          //   isAnimating && "oui-translate-y-full oui-opacity-0"
+          // )}
+          className={cn("oui-w-full", currentTip?.url && "oui-cursor-pointer")}
+          onClick={() => {
+            if (currentTip?.url) {
+              window.open(currentTip?.url, "_blank");
+            }
+          }}
         >
           <Text size="xs" className="oui-leading-5" intensity={80}>
             {currentTip?.i18n?.[i18n.language] || currentTip?.message}
@@ -270,7 +278,7 @@ const RenderTipsType: React.FC<{ type?: AnnouncementType | null }> = ({
       className={cn(
         "oui-text-2xs oui-leading-[18px] oui-font-medium",
         "oui-break-normal oui-whitespace-nowrap",
-        className
+        className,
       )}
     >
       {label}
