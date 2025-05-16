@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
@@ -19,8 +19,7 @@ type Props = {
 } & MainNavWidgetProps;
 
 export const MainNavMobile: FC<Props> = (props) => {
-  console.log("MainNavMobile", props);
-
+  const { wrongNetwork, disabledConnect } = useAppContext();
   const currentMenu = useMemo(() => {
     if (Array.isArray(props?.initialMenu)) {
       return props?.campaigns;
@@ -69,6 +68,17 @@ export const MainNavMobile: FC<Props> = (props) => {
     props?.routerAdapter?.onRouteChange(target as any);
   };
 
+  const renderContent = () => {
+    if (wrongNetwork) {
+      return null;
+    }
+    return (
+      <>
+        <ChainMenuWidget />
+      </>
+    );
+  };
+
   if (isSub) {
     return (
       <Flex
@@ -103,7 +113,7 @@ export const MainNavMobile: FC<Props> = (props) => {
       <Flex gapX={2}>
         <LanguageSwitcherWidget />
         <ScanQRCodeWidget />
-        <ChainMenuWidget />
+        {renderContent()}
         <WalletConnectButtonExtension />
       </Flex>
     </Flex>
