@@ -8,9 +8,9 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "tailwind": "tailwindcss -i ./src/tailwind.css -o ./dist/tailwind.css",
-    "storybook": "storybook dev -p 6006 && pnpm copyLocales",
-    "storybook:tradingPage": "storybook dev -p 6006 --initial-path=/story/package-trading-tradingpage--page && pnpm copyLocales",
-    "build-storybook": "storybook build && pnpm copyLocales",
+    "storybook": "storybook dev -p 6006",
+    "storybook:tradingPage": "storybook dev -p 6006 --initial-path=/story/package-trading-tradingpage--page",
+    "build-storybook": "storybook build",
     "chromatic": "npx chromatic --project-token=chpt_0917a801a16d9f2",
     "copyLocales": "node ./script/copyLocales.js"
   },
