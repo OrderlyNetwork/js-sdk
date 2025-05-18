@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { Box, cn, DataTable } from "@orderly.network/ui";
+import { CollapseMarkets } from "../../components/collapseMarkets";
+import { FavoritesTabWidget } from "../../components/favoritesTabs";
+import { useMarketsContext } from "../../components/marketsProvider";
+import { useSideMarketsColumns } from "../../components/sideMarkets/column";
 import { UseFavoritesListReturn } from "./favoritesList.script";
-import { useMarketsContext } from "../marketsProvider";
-import { FavoritesTabWidget } from "../favoritesTabs";
-import { useSideMarketsColumns } from "../sideMarkets/column";
 import type { FavoritesListWidgetProps } from "./widget";
-import { CollapseMarkets } from "../collapseMarkets";
 
 export type FavoritesListProps = UseFavoritesListReturn &
   FavoritesListWidgetProps;

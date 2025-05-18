@@ -1,13 +1,13 @@
 import React from "react";
+import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 import { useMarketsSheetScript } from "./marketsSheet.script";
 import { MarketsSheet, MarketsSheetProps } from "./marketsSheet.ui";
-import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 
 export type MarketsSheetWidgetProps = MarketsProviderProps &
   Partial<Pick<MarketsSheetProps, "className">>;
 
 export const MarketsSheetWidget: React.FC<MarketsSheetWidgetProps> = (
-  props
+  props,
 ) => {
   const state = useMarketsSheetScript();
 

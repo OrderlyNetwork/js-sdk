@@ -1,4 +1,5 @@
 import { MouseEventHandler, ReactNode, useCallback } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
@@ -9,7 +10,6 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const useDropDownMarketsColumns = () => {
   const { t } = useTranslation();
@@ -31,12 +31,12 @@ export const useDropDownMarketsColumns = () => {
                     height={12}
                     justify="center"
                     itemAlign="center"
-                    className="oui-cursor-pointer oui-mr-1"
+                    className="oui-mr-1 oui-cursor-pointer"
                   >
                     {record.isFavorite ? (
-                      <FavoritesIcon2 className="oui-w-3 oui-h-3 oui-text-[rgba(255,154,46,1)]" />
+                      <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
                     ) : (
-                      <UnFavoritesIcon2 className="oui-w-3 oui-h-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+                      <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
                     )}
                   </Flex>
                 </FavoritesDropdownMenuWidget>
@@ -46,10 +46,7 @@ export const useDropDownMarketsColumns = () => {
             return (
               <Flex gapX={1}>
                 {favoritesIcon}
-                <TokenIcon
-                  symbol={value}
-                  className="oui-w-[18px] oui-h-[18px]"
-                />
+                <TokenIcon symbol={value} className="oui-size-[18px]" />
                 <Text.formatted
                   rule="symbol"
                   formatString="base"
@@ -111,7 +108,7 @@ export const useDropDownMarketsColumns = () => {
               favorite.updateSymbolFavoriteState(
                 record,
                 favorite.selectedFavoriteTab,
-                true
+                true,
               );
               e.stopPropagation();
             };
@@ -124,7 +121,7 @@ export const useDropDownMarketsColumns = () => {
                 <Flex
                   className={cn(
                     "oui-bg-primary-darken oui-py-[6px]",
-                    "oui-hidden group-hover:oui-inline-flex"
+                    "oui-hidden group-hover:oui-inline-flex",
                   )}
                   r="base"
                   width={52}
@@ -160,6 +157,6 @@ export const useDropDownMarketsColumns = () => {
         },
       ] as Column[];
     },
-    [t]
+    [t],
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
+import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 import { useSideMarketsScript } from "./sideMarkets.script";
 import { SideMarkets, SideMarketsProps } from "./sideMarkets.ui";
-import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 
 export type SideMarketsWidgetProps = MarketsProviderProps &
   Partial<

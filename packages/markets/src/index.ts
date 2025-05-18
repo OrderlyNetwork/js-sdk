@@ -7,10 +7,8 @@ export * from "./components/favoritesListFull";
 export * from "./components/favoritesDropdownMenu";
 export * from "./components/favoritesTabs";
 export * from "./components/expandMarkets";
-export * from "./components/favoritesList";
-export * from "./components/recentList";
+
 export * from "./components/marketsList";
-export * from "./components/newListingList";
 export * from "./components/fundingOverview";
 export * from "./components/fundingComparison";
 
@@ -20,6 +18,10 @@ export * from "./components/dropDownMarkets";
 export * from "./components/marketsSheet";
 export * from "./components/symbolInfoBar";
 export * from "./components/symbolInfoBarFull";
+
+export * from "./deprecated/newListingList";
+export * from "./deprecated/favoritesList";
+export * from "./deprecated/recentList";
 
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";

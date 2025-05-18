@@ -1,7 +1,7 @@
-import { RecentList } from "./recentList.ui";
-import { useRecentListScript } from "./recentList.script";
-import { GetColumns } from "../../type";
 import { DataTableClassNames } from "@orderly.network/ui";
+import { GetColumns } from "../../type";
+import { useRecentListScript } from "./recentList.script";
+import { RecentList } from "./recentList.ui";
 
 export type RecentListWidgetProps = {
   getColumns?: GetColumns;

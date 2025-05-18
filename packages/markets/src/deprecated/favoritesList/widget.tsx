@@ -1,7 +1,7 @@
-import { FavoritesList } from "./favoritesList.ui";
-import { useFavoritesListScript } from "./favoritesList.script";
-import { GetColumns } from "../../type";
 import { DataTableClassNames } from "@orderly.network/ui";
+import { GetColumns } from "../../type";
+import { useFavoritesListScript } from "./favoritesList.script";
+import { FavoritesList } from "./favoritesList.ui";
 
 export type FavoritesListWidgetProps = {
   getColumns?: GetColumns;
@@ -11,7 +11,7 @@ export type FavoritesListWidgetProps = {
 };
 
 export const FavoritesListWidget: React.FC<FavoritesListWidgetProps> = (
-  props
+  props,
 ) => {
   const state = useFavoritesListScript();
   return <FavoritesList {...state} {...props} />;

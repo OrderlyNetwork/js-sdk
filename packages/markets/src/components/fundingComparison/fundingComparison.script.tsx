@@ -1,8 +1,8 @@
-import { useFundingRates, useQuery } from "@orderly.network/hooks";
 import { useMemo } from "react";
+import { useFundingRates, useQuery } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { useSort, searchBySymbol } from "../../utils";
 import { useMarketsContext } from "../../components/marketsProvider";
+import { useSort, searchBySymbol } from "../../utils";
 
 export const exchanges = [
   "WOOFi Pro",
@@ -15,7 +15,7 @@ export const exchanges = [
 ];
 
 export const useFundingComparisonScript = () => {
-  const { pageSize, setPage, pagination } = usePagination({
+  const { pagination } = usePagination({
     pageSize: 10,
   });
   const { onSort, getSortedList } = useSort();
@@ -50,7 +50,7 @@ export const useFundingComparisonScript = () => {
         }
 
         const exchange = row.exchanges.find(
-          (e: any) => e.name.toLowerCase() === normalizedName
+          (e: any) => e.name.toLowerCase() === normalizedName,
         );
         exchangeData[`exchange_${index}`] = exchange?.last ?? null;
       });
@@ -65,7 +65,7 @@ export const useFundingComparisonScript = () => {
 
   const dataSource = useMemo(
     () => getSortedList(filteredData),
-    [filteredData, getSortedList]
+    [filteredData, getSortedList],
   );
 
   return {
