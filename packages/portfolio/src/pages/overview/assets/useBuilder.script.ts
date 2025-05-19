@@ -9,7 +9,7 @@ import {
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
+import { modal, useScreen } from "@orderly.network/ui";
 import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
 import {
   DepositAndWithdrawWithDialogId,
@@ -24,6 +24,10 @@ export const useAssetScript = () => {
   const [data] = usePositionStream();
   const [currentLeverage] = useLeverage();
   const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
+  const { isMobile } = useScreen();
+  const handleDomId = isMobile
+    ? DepositAndWithdrawWithSheetId
+    : DepositAndWithdrawWithDialogId;
 
   const canTrade = useMemo(() => {
     return (
@@ -39,11 +43,11 @@ export const useAssetScript = () => {
   };
 
   const onDeposit = () => {
-    modal.show(DepositAndWithdrawWithSheetId, { activeTab: "deposit" });
+    modal.show(handleDomId, { activeTab: "deposit" });
   };
 
   const onWithdraw = () => {
-    modal.show(DepositAndWithdrawWithSheetId, { activeTab: "withdraw" });
+    modal.show(handleDomId, { activeTab: "withdraw" });
   };
 
   return {

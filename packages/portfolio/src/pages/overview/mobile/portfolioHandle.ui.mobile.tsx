@@ -42,7 +42,7 @@ export const PortfolioHandleMobile: FC<Props> = (props) => {
         onClick={props?.onWithdraw}
       >
         <div className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9">
-          <ArrowDownSquareFillIcon size={28} color="white" opacity={1} />
+          <ArrowUpSquareFillIcon size={28} color="white" opacity={1} />
         </div>
         <Text className="oui-text-base-80 oui-text-2xs">
           {t("common.withdraw")}
@@ -56,7 +56,7 @@ export const PortfolioHandleMobile: FC<Props> = (props) => {
         onClick={props?.onDeposit}
       >
         <div className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9">
-          <ArrowUpSquareFillIcon size={28} color="white" opacity={1} />
+          <ArrowDownSquareFillIcon size={28} color="white" opacity={1} />
         </div>
         <Text className="oui-text-base-80 oui-text-2xs">
           {t("common.deposit")}

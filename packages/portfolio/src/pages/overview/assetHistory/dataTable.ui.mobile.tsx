@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { useQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetHistoryStatusEnum } from "@orderly.network/types";
@@ -10,11 +10,24 @@ import {
   Text,
   capitalizeFirstLetter,
   toast,
+  ArrowRightShortIcon,
+  EmptyDataState,
 } from "@orderly.network/ui";
 import { type UseAssetHistoryReturn } from "./useDataSource.script";
 
-export const AssetHistoryMobile: FC<UseAssetHistoryReturn> = (props) => {
-  const { dataSource, queryParameter, onFilter, isLoading, pagination } = props;
+interface AssetHistoryMobileProps extends UseAssetHistoryReturn {
+  onDeposit: () => void;
+}
+
+export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
+  const {
+    dataSource,
+    queryParameter,
+    onFilter,
+    isLoading,
+    pagination,
+    onDeposit,
+  } = props;
   const { side, dateRange } = queryParameter;
   const { t } = useTranslation();
   const { data: chains } = useQuery("/v1/public/chain_info");
@@ -173,6 +186,36 @@ export const AssetHistoryMobile: FC<UseAssetHistoryReturn> = (props) => {
         loadMore={loadMore}
         isLoading={isLoading}
         className="oui-px-1"
+        emptyView={
+          <Flex
+            direction={"column"}
+            height={"100%"}
+            itemAlign={"center"}
+            justify={"center"}
+            mt={3}
+          >
+            <EmptyDataState />
+            {dataSource?.length == 0 && (
+              <Flex
+                direction="row"
+                itemAlign="center"
+                justify="center"
+                onClick={onDeposit}
+                className="oui-w-full oui-text-secondary oui-mt-2 oui-h-4"
+              >
+                <Text color="primary" size="2xs">
+                  {t("common.deposit")}
+                </Text>
+                <ArrowRightShortIcon
+                  className="oui-ml-0.5 oui-opacity-100 oui-w-4 oui-h-4 oui-text-primary"
+                  color="primary"
+                  size={16}
+                  opacity={100}
+                />
+              </Flex>
+            )}
+          </Flex>
+        }
       />
     </>
   );
