@@ -1,7 +1,7 @@
+import { useTranslation } from "@orderly.network/i18n";
 import { Column, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { ProcessedFundingData } from "./fundingOverview.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 const createFundingRenderer =
   (dp: number = 5) =>
@@ -25,7 +25,7 @@ const createFundingRenderer =
 
 export const useFundingOverviewColumns = (
   selectedPeriod: string,
-  setSelectedPeriod: (value: string) => void
+  setSelectedPeriod: (value: string) => void,
 ): Column<ProcessedFundingData>[] => {
   const { t } = useTranslation();
   return [
@@ -50,7 +50,7 @@ export const useFundingOverviewColumns = (
       dataIndex: "estFunding",
       width: 120,
       onSort: true,
-      render: (value) => (
+      render: (value, record) => (
         <div>
           <Text.numeral
             rule="percentages"
@@ -61,7 +61,9 @@ export const useFundingOverviewColumns = (
           >
             {value}
           </Text.numeral>
-          <span className="oui-text-base-contrast-54"> / 4h </span>
+          <span className="oui-text-base-contrast-54">
+            {`/ ${record.fundingInterval}h`}
+          </span>
         </div>
       ),
     },
