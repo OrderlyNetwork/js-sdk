@@ -7,9 +7,9 @@ export type CollateralOutputs = {
   totalValue: number | null;
   availableBalance: number;
   unsettledPnL: number;
-
   // positions: API.Position[];
   accountInfo?: API.AccountInfo;
+  holding?: API.Holding[];
 };
 
 // const positionsPath = pathOr([], [0, "rows"]);
@@ -19,7 +19,7 @@ export const useCollateral = (
   options: {
     /** decimal precision */
     dp: number;
-  } = { dp: 6 }
+  } = { dp: 6 },
 ): CollateralOutputs => {
   const { dp } = options;
   const {
@@ -28,6 +28,7 @@ export const useCollateral = (
     freeCollateral,
     availableBalance,
     unsettledPnL,
+    holding,
   } = useAppStore((state) => state.portfolio);
   const accountInfo = useAppStore((state) => state.accountInfo);
 
@@ -109,6 +110,7 @@ export const useCollateral = (
     unsettledPnL,
 
     accountInfo,
+    holding,
 
     // @hidden
     // positions: positionsPath(positions),

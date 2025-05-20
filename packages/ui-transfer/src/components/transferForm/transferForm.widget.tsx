@@ -3,19 +3,23 @@ import { useTranslation } from "@orderly.network/i18n";
 import { registerSimpleDialog, TabPanel, Tabs } from "@orderly.network/ui";
 import { registerSimpleSheet } from "@orderly.network/ui";
 import { TransferHorizontalIcon } from "../../icons";
-import { useTransferFormScript } from "./transferForm.script";
-import { TransferForm, TransferFormProps } from "./transferForm.ui";
+import {
+  TransferFormScriptOptions,
+  useTransferFormScript,
+} from "./transferForm.script";
+import { TransferForm } from "./transferForm.ui";
 
 export const TransferDialogId = "TransferDialogId";
 export const TransferSheetId = "TransferSheetId";
 
-export type TransferFormWidgetProps = Pick<TransferFormProps, "close"> & {
-  toAccountId?: string;
-};
+export type TransferFormWidgetProps = TransferFormScriptOptions;
 
 export const TransferFormWidget = (props: TransferFormWidgetProps) => {
-  const state = useTransferFormScript({ toAccountId: props.toAccountId });
-  return <TransferForm {...state} close={props.close} />;
+  const state = useTransferFormScript({
+    toAccountId: props.toAccountId,
+    close: props.close,
+  });
+  return <TransferForm {...state} />;
 };
 
 export const TransferWidget: FC<TransferFormWidgetProps> = (props) => {

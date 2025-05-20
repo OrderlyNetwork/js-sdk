@@ -797,7 +797,7 @@ export class Account {
    * refresh sub account balances
    * @since 2.2.0
    */
-  async refreshSubAccountBalances(): Promise<AccountState> {
+  async refreshSubAccountBalances() {
     const subAccountBalances = await this.getSubAccountBalances();
     const nextState = {
       ...this.stateValue,
@@ -808,7 +808,7 @@ export class Account {
     };
     this._ee.emit(EVENT_NAMES.statusChanged, nextState);
 
-    return nextState;
+    return subAccountBalances;
   }
 
   async createApiKey(

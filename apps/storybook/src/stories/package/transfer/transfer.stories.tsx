@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Box, Flex, Button, modal } from "@orderly.network/ui";
+import { useAccount } from "@orderly.network/hooks";
+import { Box, Flex, Button, modal, toast } from "@orderly.network/ui";
 import {
   DepositFormWidget,
   WithdrawFormWidget,
@@ -127,17 +128,53 @@ export const WithdrawSheet: Story = {
 
 export const TransferDialog: Story = {
   decorators: [
-    (Story) => (
-      <Flex justify="center" itemAlign="center" height="100vh">
-        <Button
-          onClick={() => {
-            modal.show(TransferDialogId);
-          }}
+    (Story) => {
+      const { state, switchAccount } = useAccount();
+
+      const onSwitchAccount = (id?: string) => {
+        console.log("onSwitchAccount", id);
+        switchAccount(id!).then(() => {
+          toast.success(`Switch Account Success: ${id}`);
+        });
+      };
+
+      return (
+        <Flex
+          justify="center"
+          itemAlign="center"
+          height="100vh"
+          gapY={2}
+          direction="column"
         >
-          Show Transfer Dialog
-        </Button>
-      </Flex>
-    ),
+          <Button
+            onClick={() => {
+              modal.show(TransferDialogId);
+            }}
+          >
+            Show Transfer Dialog
+          </Button>
+
+          <Button
+            onClick={() => {
+              onSwitchAccount(state.mainAccountId);
+            }}
+          >
+            Switch to Main Account
+          </Button>
+
+          {state.subAccounts?.map((item) => (
+            <Button
+              key={item.id}
+              onClick={() => {
+                onSwitchAccount(item.id);
+              }}
+            >
+              Switch to {item.id}
+            </Button>
+          ))}
+        </Flex>
+      );
+    },
   ],
 };
 

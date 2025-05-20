@@ -26,6 +26,7 @@ export const UnsettlePnlInfo = (props: UnsettlePnlInfoProps) => {
     dialogContent,
   } = props;
   const { t } = useTranslation();
+  console.log("unsettledPnl", unsettledPnl, hasPositions);
 
   if (unsettledPnl === 0 && !hasPositions) {
     return <></>;

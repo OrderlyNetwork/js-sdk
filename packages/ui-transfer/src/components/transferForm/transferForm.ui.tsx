@@ -10,9 +10,7 @@ import { QuantityInput } from "../quantityInput";
 import { UnsettlePnlInfo } from "../unsettlePnlInfo";
 import { TransferFormScriptReturn } from "./transferForm.script";
 
-export type TransferFormProps = {
-  close?: () => void;
-} & TransferFormScriptReturn;
+export type TransferFormProps = TransferFormScriptReturn;
 
 export const TransferForm: FC<TransferFormProps> = (props) => {
   const {
@@ -22,22 +20,24 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
     quantity,
     onQuantityChange,
     amount,
-    dst,
+    tokens,
+    token,
+    onTokenChange,
     maxQuantity,
     submitting,
-    isMainAccount,
-    mainAccountId,
-    accountId,
-    subAccounts,
     hintMessage,
     inputStatus,
     hasPositions,
     onSettlePnl,
     unsettledPnL,
-    currentAssetValue,
-    toAccountId,
-    setToAccountId,
+    toAccountAsset,
+    setToAccount,
+    fromAccounts,
+    fromValue,
+    toAccounts,
+    toValue,
   } = props;
+
   const { t } = useTranslation();
 
   const buttonSize = { initial: "md", lg: "lg" } as const;
@@ -49,25 +49,22 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
           {t("transfer.internalTransfer.from")}
         </Text>
         <Box mt={1} mb={1}>
-          <AccountSelect
-            isMainAccount={isMainAccount}
-            subAccounts={isMainAccount ? [] : subAccounts}
-            value={isMainAccount ? accountId : toAccountId}
-            onValueChange={setToAccountId}
-          />
+          <AccountSelect subAccounts={fromAccounts} value={fromValue} />
           <QuantityInput
             classNames={{
               root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
             }}
             value={quantity}
             onValueChange={onQuantityChange}
-            token={dst}
+            tokens={tokens}
+            token={token}
+            onTokenChange={onTokenChange}
             hintMessage={hintMessage}
             status={inputStatus}
           />
         </Box>
         <AvailableQuantity
-          token={dst}
+          token={token}
           amount={amount}
           maxQuantity={maxQuantity}
           onClick={() => {
@@ -90,14 +87,15 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
         <ExchangeDivider
           icon={<TransferVerticalIcon className="oui-text-primary" />}
         />
+
         <Text size="sm" intensity={98}>
           {t("transfer.internalTransfer.to")}
         </Text>
         <Box mt={1}>
           <AccountSelect
-            subAccounts={isMainAccount ? subAccounts : []}
-            value={isMainAccount ? toAccountId : mainAccountId}
-            onValueChange={setToAccountId}
+            subAccounts={toAccounts}
+            value={toValue}
+            onValueChange={setToAccount}
           />
           <Flex
             className={cn(
@@ -113,13 +111,14 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
               {t("transfer.internalTransfer.currentAssetValue")}
             </Text>
             <Text.numeral size="2xs" intensity={54} unit=" USDC">
-              {currentAssetValue}
+              {toAccountAsset}
             </Text.numeral>
           </Flex>
         </Box>
       </Box>
+
       <Flex justify="center">
-        <Box className="oui-min-w-[184px]">
+        <Box className="oui-w-full lg:oui-w-auto lg:oui-min-w-[184px]">
           <AuthGuard
             networkId={networkId}
             buttonProps={{

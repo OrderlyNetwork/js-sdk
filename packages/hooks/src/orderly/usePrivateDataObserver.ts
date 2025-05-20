@@ -1,23 +1,23 @@
-import { useEffect } from "react";
-import { useWS } from "../useWS";
+import { useEffect, useRef } from "react";
 import { mutate } from "swr";
-import { API, WSMessage } from "@orderly.network/types";
-import { useAccount } from "../useAccount";
 import { unstable_serialize } from "swr/infinite";
-import { useEventEmitter } from "../useEventEmitter";
+import { AccountState, EVENT_NAMES } from "@orderly.network/core";
+import { API, WSMessage } from "@orderly.network/types";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { getKeyFunction } from "../dataProvider";
-import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
+import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
-import { object2underscore } from "../utils/ws";
+import { CalculatorScope } from "../types";
+import { useAccount } from "../useAccount";
+import { useCalculatorService } from "../useCalculatorService";
+import { useEventEmitter } from "../useEventEmitter";
 import { useLocalStorage } from "../useLocalStorage";
 import { usePrivateQuery } from "../usePrivateQuery";
+import { useWS } from "../useWS";
+import { updateOrdersHandler, updateAlgoOrdersHandler } from "../utils/swr";
+import { object2underscore } from "../utils/ws";
 import { useAppStore } from "./appStore";
-import { useCalculatorService } from "../useCalculatorService";
-import { CalculatorScope } from "../types";
-import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
-import { AccountStatusEnum } from "@orderly.network/types";
 import { usePositionActions } from "./orderlyHooks";
-import { AccountState, EVENT_NAMES } from "@orderly.network/core";
 
 export const usePrivateDataObserver = (options: {
   // onUpdateOrders: (data: any) => void;
@@ -28,7 +28,7 @@ export const usePrivateDataObserver = (options: {
   const ee = useEventEmitter();
   const { state, account } = useAccount();
   const { setAccountInfo, restoreHolding, cleanAll } = useAppStore(
-    (state) => state.actions
+    (state) => state.actions,
   );
   const statusActions = useApiStatusActions();
   const calculatorService = useCalculatorService();
@@ -99,10 +99,12 @@ export const usePrivateDataObserver = (options: {
     {
       formatter: (data) => data.holding,
       // revalidateOnFocus: false,
-    }
+    },
   );
 
   useEffect(() => {
+    if (!account.accountId) return;
+
     const unsubscribe = ws.privateSubscribe(
       {
         id: "balance",
@@ -118,29 +120,53 @@ export const usePrivateDataObserver = (options: {
             console.log("---->>>>>>!!!! holding", holding);
 
             // updateHolding(holding);
+            // ws message format
+            // {
+            //   USDC: {
+            //     holding: 5555815.47398272,
+            //     frozen: 0,
+            //   },
+            // };
             calculatorService.calc(CalculatorScope.PORTFOLIO, { holding });
           }
         },
-      }
+      },
     );
 
-    return () => unsubscribe();
-  }, []);
+    return () => unsubscribe?.();
+  }, [account.accountId]);
+
+  const isHoldingInit = useRef(false);
 
   useEffect(() => {
-    if (holding) {
+    if (!holding) {
+      return;
+    }
+    // [
+    //   {
+    //     updated_time: 1747701141241,
+    //     token: "USDC",
+    //     holding: 12000.963747,
+    //     frozen: 37855.270927,
+    //     pending_short: 0.0,
+    //   },
+    // ];
+    if (isHoldingInit.current) {
+      calculatorService.calc(CalculatorScope.PORTFOLIO, { holding });
+    } else {
       restoreHolding(holding);
     }
+    isHoldingInit.current = true;
   }, [holding]);
 
   const [subOrder, setSubOrder] = useLocalStorage(
     "orderly_subscribe_order",
-    true
+    true,
   );
 
   const updateOrders = (
     data: WSMessage.AlgoOrder[] | WSMessage.Order,
-    isAlgoOrder: boolean
+    isAlgoOrder: boolean,
   ) => {
     const keysMap = options.getKeysMap("orders");
 
@@ -156,7 +182,7 @@ export const usePrivateDataObserver = (options: {
               const result = updateAlgoOrdersHandler(
                 key,
                 data as WSMessage.AlgoOrder[],
-                prevData!
+                prevData!,
               );
 
               return result;
@@ -168,7 +194,7 @@ export const usePrivateDataObserver = (options: {
         },
         {
           revalidate: false,
-        }
+        },
       );
     });
 
@@ -235,7 +261,7 @@ export const usePrivateDataObserver = (options: {
                 ...prevPositions,
                 rows: prevPositions.rows.map((row: any) => {
                   const itemIndex = nextPositions.findIndex(
-                    (item) => item.symbol === row.symbol
+                    (item) => item.symbol === row.symbol,
                   );
 
                   // const item = nextPositions.find(
@@ -274,7 +300,7 @@ export const usePrivateDataObserver = (options: {
           },
           {
             revalidate: false,
-          }
+          },
         );
       },
     });

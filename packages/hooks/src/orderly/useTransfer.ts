@@ -10,7 +10,8 @@ type Receiver = {
 };
 
 export const useTransfer = () => {
-  const { unsettledPnL, availableBalance, freeCollateral } = useCollateral();
+  const { unsettledPnL, availableBalance, freeCollateral, holding } =
+    useCollateral();
 
   const [doTransfer, { isMutating: submitting }] = useMutation(
     "/v1/internal_transfer",
@@ -48,20 +49,13 @@ export const useTransfer = () => {
     }
   }, [freeCollateral, unsettledPnL]);
 
-  const dst = useMemo(() => {
-    return {
-      symbol: "USDC",
-      decimals: 6,
-    };
-  }, []);
-
   return {
     submitting,
     transfer,
     maxAmount,
-    dst,
     unsettledPnL,
     availableBalance,
     availableTransfer,
+    holding,
   };
 };

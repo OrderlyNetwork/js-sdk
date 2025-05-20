@@ -16,7 +16,7 @@ import { InputStatus } from "../../types";
 import { TokenOption } from "./tokenOption";
 
 export type QuantityInputProps = {
-  token?: Partial<API.TokenInfo>;
+  token?: API.TokenInfo;
   tokens?: API.TokenInfo[];
   label?: string;
   status?: InputStatus;
@@ -39,8 +39,8 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       hintMessage,
       value,
       onValueChange,
-      onTokenChange,
       fetchBalance,
+      onTokenChange,
       loading,
       placeholder,
       ...rest
@@ -55,7 +55,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     const tokenOptions = useMemo(() => {
       return tokens!.map((token) => ({
         ...token,
-        name: token.display_name || token.symbol,
+        name: token.display_name || token.symbol!,
       }));
     }, [tokens]);
 
@@ -170,7 +170,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           suffix={suffix}
           value={value}
           onValueChange={(value) => {
-            props.onValueChange?.(value);
+            onValueChange?.(value);
           }}
           formatters={[
             inputFormatter.numberFormatter,
@@ -181,14 +181,14 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           classNames={{
             ...classNames,
             root: cn(
-              "oui-h-[54px] oui-relative oui-px-3",
-              "oui-border oui-border-line oui-rounded-lg",
+              "oui-relative oui-h-[54px] oui-px-3",
+              "oui-rounded-lg oui-border oui-border-line",
               status === "error" &&
-                "focus-within:oui-outline-danger-light oui-outline-danger-light",
+                "oui-outline-danger-light focus-within:oui-outline-danger-light",
               status === "warning" &&
-                "focus-within:oui-outline-warning-light oui-outline-warning-light",
+                "oui-outline-warning-light focus-within:oui-outline-warning-light",
               props.readOnly
-                ? "oui-bg-base-6 focus-within:oui-outline-0 oui-border-none"
+                ? "oui-border-none oui-bg-base-6 focus-within:oui-outline-0"
                 : "oui-bg-base-5",
               classNames?.root,
             ),

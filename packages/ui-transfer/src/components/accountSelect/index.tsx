@@ -14,21 +14,16 @@ import {
 import { ExchangeIcon } from "../../icons";
 
 type AccountSelectProps = {
-  isMainAccount?: boolean;
   subAccounts?: SubAccount[];
-  value?: string;
-  onValueChange: (id: string) => void;
+  value?: SubAccount;
+  onValueChange?: (subAccount: SubAccount) => void;
 };
 
 export const AccountSelect: React.FC<AccountSelectProps> = (props) => {
-  const { isMainAccount, subAccounts = [], value } = props;
+  const { subAccounts = [], value } = props;
   const [open, setOpen] = useState(false);
 
-  const currentAccount = useMemo(() => {
-    return subAccounts.find((subAccount) => subAccount.id === value);
-  }, [subAccounts, value]);
-
-  const selectable = !!subAccounts.length;
+  const selectable = subAccounts.length > 1;
 
   const trigger = (
     <Flex
@@ -43,18 +38,16 @@ export const AccountSelect: React.FC<AccountSelectProps> = (props) => {
       itemAlign="center"
     >
       <Flex direction="column" itemAlign="start">
-        {isMainAccount ? (
-          <Text.formatted size="xs" intensity={80}>
-            Main Account
-          </Text.formatted>
-        ) : (
-          <Text.formatted size="xs" intensity={80} rule="address">
-            {currentAccount?.description || currentAccount?.id}
-          </Text.formatted>
-        )}
+        <Text.formatted
+          size="xs"
+          intensity={80}
+          rule={value?.description ? undefined : "address"}
+        >
+          {value?.description || value?.id}
+        </Text.formatted>
         <Text intensity={36} size="2xs">
           {`ID: `}
-          <Text.formatted rule="address">{currentAccount?.id}</Text.formatted>
+          <Text.formatted rule="address">{value?.id}</Text.formatted>
         </Text>
       </Flex>
       {selectable && <ExchangeIcon className="oui-text-base-contrast-54" />}
@@ -62,11 +55,12 @@ export const AccountSelect: React.FC<AccountSelectProps> = (props) => {
   );
 
   const content = subAccounts.map((subAccount, index) => {
-    const isActive = subAccount.id === value;
+    const isActive = subAccount.id === value?.id;
 
-    const balance = subAccount.holding.find(
-      (holding) => holding.token === "USDC",
+    const asset = subAccount?.holding?.find(
+      (item) => item.token === "USDC",
     )?.holding;
+
     return (
       <Flex
         key={subAccount.id}
@@ -81,13 +75,16 @@ export const AccountSelect: React.FC<AccountSelectProps> = (props) => {
         )}
         onClick={async () => {
           setOpen(false);
-          await props.onValueChange(subAccount.id);
+          props.onValueChange?.(subAccount);
         }}
       >
         <Flex gapX={1} itemAlign="center">
           <Flex direction="column" itemAlign="start" className="oui-text-2xs">
-            <Text.formatted rule="address" intensity={80}>
-              {subAccount?.description || subAccount?.id?.slice(0)}
+            <Text.formatted
+              rule={subAccount?.description ? undefined : "address"}
+              intensity={80}
+            >
+              {subAccount?.description || subAccount?.id}
             </Text.formatted>
             <Text intensity={36} size="2xs">
               {`ID: `}
@@ -97,7 +94,7 @@ export const AccountSelect: React.FC<AccountSelectProps> = (props) => {
         </Flex>
         <Flex gapX={3}>
           <Text.numeral size="2xs" intensity={54} unit=" USDC">
-            {balance || 0}
+            {asset || 0}
           </Text.numeral>
           {isActive && (
             <Box
