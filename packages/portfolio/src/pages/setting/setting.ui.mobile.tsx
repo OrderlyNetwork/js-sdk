@@ -21,7 +21,7 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
   return (
     <>
       <Flex
-        className="oui-flex-row oui-items-center oui-mb-2 oui-p-4 oui-bg-base-9 oui-rounded-xl"
+        className="oui-flex-row oui-items-center oui-mt-1 oui-mb-2 oui-p-4 oui-bg-base-9 oui-rounded-xl"
         onClick={onLanguageChange}
       >
         <LanguageSwitcherWidget open={open} setOpen={setOpen} />
