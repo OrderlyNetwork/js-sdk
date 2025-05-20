@@ -47,7 +47,7 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
         <Flex direction="row" justify="between" width="100%" height="20px">
           <Text.formatted
             rule="symbol"
-            className="oui-text-base-contrast-98 oui-mr-1 oui-text-sm"
+            className="oui-text-base-contrast oui-mr-1 oui-text-sm"
           >
             {item.symbol}
           </Text.formatted>

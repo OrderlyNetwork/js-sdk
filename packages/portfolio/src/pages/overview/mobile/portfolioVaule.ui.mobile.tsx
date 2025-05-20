@@ -55,7 +55,7 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
       <Flex direction="row" gapX={1} itemAlign={"center"}>
         <Text.numeral
           visible={props.visible}
-          className="oui-text-base-contrast-98 oui-text-xl  oui-font-bold"
+          className="oui-text-base-contrast oui-text-xl  oui-font-bold"
         >
           {props.portfolioValue ?? "--"}
         </Text.numeral>
@@ -67,7 +67,7 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
         direction="row"
         gapX={1}
         itemAlign={"center"}
-        className="oui-text-base-contrast-98 oui-text-sm"
+        className="oui-text-base-contrast oui-text-sm"
       >
         <Text.numeral visible={props.visible}>
           {props.unrealPnL ?? "--"}

@@ -42,7 +42,7 @@ export const MainNavMobile: FC<Props> = (props) => {
       return <MainLogo {...props?.logo} />;
     }
     return (
-      <Text className="oui-text-base-contrast-98 oui-text-2xl oui-font-bold">
+      <Text className="oui-text-base-contrast oui-text-2xl oui-font-bold">
         {currentMenu?.name}
       </Text>
     );
@@ -111,7 +111,7 @@ export const MainNavMobile: FC<Props> = (props) => {
           className="oui-absolute oui-left-6 oui-text-base-contrast-54"
           onClick={onBack}
         />
-        <Text className="oui-text-base-contrast-98 oui-text-base oui-font-bold">
+        <Text className="oui-text-base-contrast oui-text-base oui-font-bold">
           {subTitle}
         </Text>
       </Flex>

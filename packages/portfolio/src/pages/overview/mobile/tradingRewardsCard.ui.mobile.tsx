@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import { isNumber } from "lodash";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Flex,
@@ -15,6 +16,7 @@ import { UseRewardsDataReturn } from "./useRewardsData.script";
 type TradingRewardsCardMobileProps = UseRewardsDataReturn & {
   isSignIn: boolean;
   wrongNetwork: boolean;
+  goToClaim: () => void;
 };
 
 export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
@@ -46,6 +48,8 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
           </Text>
         ),
       });
+    } else {
+      props.goToClaim();
     }
   };
 
@@ -62,19 +66,24 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
         oui-rounded-xl 
         oui-border 
         oui-border-solid 
-        oui-border-[rgba(var(--oui-gradient-secondary-end)/0.54)] 
+        oui-border-[rgba(var(--oui-gradient-secondary-end)/0.36)] 
         oui-bg-gradient-to-r
         oui-from-[rgba(var(--oui-gradient-secondary-end)/0.12)]
         oui-to-[rgba(var(--oui-gradient-secondary-start)/0.12)]
         oui-p-3
       "
     >
-      <Text className="oui-text-base-contrast-98 oui-text-base oui-font-semibold">
-        {t("common.tradingRewards")}
-      </Text>
-      <Text className="oui-text-sm oui-font-normal oui-text-base-contrast-54">
-        {t("tradingRewards.myEstRewards")}
-      </Text>
+      <Flex className="oui-w-full oui-flex-row oui-justify-between oui-items-center">
+        <Flex className="oui-flex-col oui-items-start">
+          <Text className="oui-text-base-contrast oui-text-base oui-font-semibold">
+            {t("common.tradingRewards")}
+          </Text>
+          <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
+            {t("tradingRewards.myEstRewards")}
+          </Text>
+        </Flex>
+        <TradingRewardsIcon />
+      </Flex>
       <Flex
         direction="row"
         itemAlign={"center"}
@@ -83,7 +92,7 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
         <Text className="oui-text-sm oui-font-normal oui-text-base-contrast-80">
           {t("tradingRewards.epoch")}
         </Text>
-        <Text className="oui-text-base-contrast-98 oui-text-sm oui-font-bold">
+        <Text className="oui-text-base-contrast oui-text-sm oui-font-bold">
           {curEpochId}
         </Text>
       </Flex>
@@ -94,13 +103,21 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
         ) : (
           <EsOrderlyIcon className="oui-size-5" />
         )}
-        <Text className="oui-text-base-contrast-98 oui-text-xs oui-font-semibold">
+        <Text
+          className={cn(
+            "oui-text-xs oui-font-semibold",
+            isNumber(props?.curEpochEstimate?.est_r_wallet)
+              ? "oui-text-base-contrast"
+              : "oui-text-base-contrast-36",
+          )}
+        >
           {props?.curEpochEstimate?.est_r_wallet ?? "--"}
         </Text>
         <Flex className="oui-ml-auto">
           <Text
+            onClick={props.goToClaim}
             className={cn(
-              props?.curEpochEstimate?.est_r_wallet
+              isNumber(props?.curEpochEstimate?.est_r_wallet)
                 ? "oui-text-2xs oui-font-semibold oui-text-[#BD6BED]"
                 : "oui-hidden",
             )}
@@ -114,9 +131,6 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
             onClick={onClaim}
           />
         </Flex>
-      </Flex>
-      <Flex className="oui-absolute oui-right-3 oui-top-3">
-        <TradingRewardsIcon />
       </Flex>
     </Flex>
   );
@@ -165,8 +179,7 @@ const Countdown: FC<{
     <Flex
       direction="row"
       itemAlign={"center"}
-      gap={3}
-      className="oui-w-full oui-justify-center"
+      className="oui-w-full oui-justify-around"
     >
       <CountDownItem type="D" value={timeLeft.days} />
       <CountDownItem type="H" value={timeLeft.hours} />
@@ -181,9 +194,9 @@ const CountDownItem = ({ type, value }: { type: string; value: number }) => {
     <Flex
       direction="column"
       itemAlign={"center"}
-      className="oui-h-11 oui-w-8 oui-rounded-[6px] oui-bg-base-8"
+      className="oui-h-11 oui-w-8 oui-rounded-[6px] oui-bg-white/[0.08]"
     >
-      <Text className="oui-text-base-contrast-98 oui-text-base oui-font-bold">
+      <Text className="oui-text-base-contrast oui-text-base oui-font-bold">
         {value}
       </Text>
       <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-36">

@@ -1,4 +1,8 @@
 import { FC } from "react";
+import { utils } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { OrderSide } from "@orderly.network/types";
 import {
   Badge,
   Button,
@@ -13,13 +17,9 @@ import {
   ThrottledButton,
   toast,
 } from "@orderly.network/ui";
-import { EditSheetState } from "./editSheet.script";
-import { ConfirmDialogContent } from "./editDialogContent";
-import { OrderSide } from "@orderly.network/types";
 import { parseBadgesFor } from "../../../../utils/util";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { ConfirmDialogContent } from "./editDialogContent";
+import { EditSheetState } from "./editSheet.script";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
   const { item } = props;
@@ -122,10 +122,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
                 },
               }}
               classNames={{
-                input: "oui-text-base-contrast-98 oui-w-full",
+                input: "oui-text-base-contrast oui-w-full",
                 root: cn(
                   "oui-outline-line-12",
-                  triggerPriceErrorMsg && "oui-outline-danger"
+                  triggerPriceErrorMsg && "oui-outline-danger",
                 ),
               }}
             />
@@ -166,10 +166,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               },
             }}
             classNames={{
-              input: "oui-text-base-contrast-98",
+              input: "oui-text-base-contrast",
               root: cn(
                 "oui-outline-line-12",
-                orderPriceErrorMsg && "oui-outline-danger"
+                orderPriceErrorMsg && "oui-outline-danger",
               ),
             }}
           />
@@ -208,10 +208,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               },
             }}
             classNames={{
-              input: "oui-text-base-contrast-98",
+              input: "oui-text-base-contrast",
               root: cn(
                 "oui-outline-line-12",
-                orderQuantityErrorMsg && "oui-outline-danger"
+                orderQuantityErrorMsg && "oui-outline-danger",
               ),
             }}
           />

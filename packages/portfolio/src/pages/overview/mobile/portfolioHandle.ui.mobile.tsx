@@ -72,7 +72,13 @@ export const PortfolioHandleMobile: FC<Props> = (props) => {
           className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9"
           onClick={onGotoHistory}
         >
-          <CalendarMinusIcon size={28} color="white" opacity={1} />
+          <CalendarMinusIcon
+            size={28}
+            color="white"
+            opacity={1}
+            viewBox="0 0 28 28"
+            className="oui-w-[28px] oui-h-[28px]"
+          />
         </div>
         <Text className="oui-text-base-80 oui-text-2xs">
           {t("trading.history")}

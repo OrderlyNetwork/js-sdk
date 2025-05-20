@@ -598,6 +598,7 @@
   "affiliate.trader.rebates": "リベート",
   "affiliate.trader.myRebates": "私のリベート",
   "affiliate.trader.tradingVol": "取引ボリューム",
+  "affiliate.trader.rebate.30d": "30日間のリベート",
   "ui.pagination.morePages": "その他のページ",
   "ui.pagination.rowsPerPage": "1ページあたりの行数",
   "ui.picker.selectDate": "日付を選択",

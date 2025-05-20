@@ -34,6 +34,7 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
         "oui-cursor-pointer oui-text-base-contrast-80",
         isMobile && "oui-h-[18px] oui-w-[18px]",
       )}
+      id="language-switcher-icon"
       onClick={() => props.onOpenChange(true)}
     />
   );

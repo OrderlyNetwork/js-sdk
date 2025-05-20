@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { ENVType, useGetEnv } from "@orderly.network/hooks";
 import { Flex } from "@orderly.network/ui";
 import { useLayoutContext } from "../../../layout/context";
 import { useAssetScript } from "../assets";
@@ -25,6 +26,13 @@ export const MobileOverview: FC = (props) => {
   } = useAssetScript();
   const rewardsData = useRewardsDataScript();
   const layoutContext = useLayoutContext();
+  const env = useGetEnv();
+  const goToClaim = () => {
+    const url = `https://${
+      env !== ENVType.prod ? `${env}-` : ""
+    }app.orderly.network/tradingRewards`;
+    window.open(url, "_blank");
+  };
 
   // console.log('rewards data', rewardsData, layoutContext, props);
 
@@ -71,7 +79,7 @@ export const MobileOverview: FC = (props) => {
             />
           </Flex>
           <Flex direction="column" className="oui-flex-1">
-            <TradingRewardsCardMobile {...rewardsData} />
+            <TradingRewardsCardMobile {...rewardsData} goToClaim={goToClaim} />
           </Flex>
         </Flex>
         <SettingRouterMobile routerAdapter={layoutContext?.routerAdapter} />
