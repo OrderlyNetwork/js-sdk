@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/i18n",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Internationalization for orderly sdk",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -28,9 +28,11 @@
     "fillJson": "pnpm cli fillJson ./src/locale/zh.json ./dist/locale/zh.json",
     "separateJson": "pnpm cli separateJson ./locales ./dist/locales extend",
     "mergeJson": "pnpm cli mergeJson ./locales ./dist/locales",
+    "mergeExtendJson": "pnpm cli mergeJson ./locales ./locales",
     "_generateEnJson": "node ./script/generateEnJson.js",
     "generateEnJson": "pnpm tsup && node ./script/generateEnJson.js",
-    "copyLocales": "node ./script/copyLocales.js"
+    "copyLocales": "node ./script/copyLocales.js",
+    "generateMissingKeys": "pnpm tsup && pnpm _generateEnJson && node ./script/generateMissingKeys.js"
   },
   "keywords": [],
   "files": [

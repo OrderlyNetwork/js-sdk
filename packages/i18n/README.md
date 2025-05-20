@@ -76,12 +76,11 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   // please copy build-in locale files to you public/locales
   // and copy you extend locale files to public/locales/extend
   const loadPath = (lang: LocaleCode) => {
-    const _lang = parseI18nLang(lang);
-    if (_lang === LocaleEnum.en) {
+    if (lang === LocaleEnum.en) {
       // because en is built-in, we need to load the en extend only
-      return `/locales/extend/${_lang}.json`;
+      return `/locales/extend/${lang}.json`;
     }
-    return [`/locales/${_lang}.json`, `/locales/extend/${_lang}.json`];
+    return [`/locales/${lang}.json`, `/locales/extend/${lang}.json`];
   };
 
   return (

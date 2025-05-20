@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTickerStream } from "./useTickerStream";
-import { useMarkPrice } from "./useMarkPrice";
-import { useWS } from "../useWS";
-import { useEventEmitter } from "../useEventEmitter";
-import { useSymbolsInfo } from "./useSymbolsInfo";
-import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { max, min } from "ramda";
 import { SDKError } from "@orderly.network/types";
+import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+import { useEventEmitter } from "../useEventEmitter";
+import { useWS } from "../useWS";
 import orderbooksService from "./orderbook.service";
+import { useMarkPrice } from "./useMarkPrice";
+import { useSymbolsInfo } from "./useSymbolsInfo";
+import { useTickerStream } from "./useTickerStream";
 
 export type OrderBookItem = number[];
 
@@ -34,7 +34,7 @@ const reduceItems = (
   depth: number | undefined,
   level: number,
   data: OrderBookItem[],
-  asks = false
+  asks = false,
 ) => {
   if (!Array.isArray(data) || data.length === 0) {
     return [];
@@ -66,7 +66,7 @@ const reduceItems = (
           .slice(2).length;
         const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
         priceKey = new Decimal(
-          priceStr.slice(0, index) + "." + decimalStr
+          priceStr.slice(0, index) + "." + decimalStr,
         ).toNumber();
       }
 
@@ -120,7 +120,7 @@ export const reduceOrderbook = (
   depth: number | undefined,
   level: number,
   padding: boolean,
-  data: OrderbookData
+  data: OrderbookData,
 ): OrderbookData => {
   let asks = reduceItems(depth, level, data.asks, true);
 
@@ -128,11 +128,13 @@ export const reduceOrderbook = (
 
   /// not empty and asks.price <= bids.price
   if (asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
+    //  TODO: add asks[0][0] === bids[0][0] condition?
     if (asks.length === 1) {
       const [price, qty, newQuantity, newAmount] = asks[0];
       asks.shift();
+
       asks.push([
-        price + (depth === undefined ? 0 : depth),
+        price + (depth === undefined ? 0 : Number(depth)),
         qty,
         newQuantity,
         newAmount,
@@ -145,7 +147,7 @@ export const reduceOrderbook = (
         if (askPrice <= bidPrice) {
           // console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
           asks.shift();
-          let logStr = "";
+          // let logStr = "";
           for (let index = 0; index < asks.length; index++) {
             if (index === 0) {
               const quantity = asks[index][1] + askQty;
@@ -160,7 +162,7 @@ export const reduceOrderbook = (
               asks[index][3] =
                 asks[index][0] * asks[index][1] + asks[index - 1][3];
             }
-            logStr += `index: ${index} ${asks[index]}\n`;
+            // logStr += `index: ${index} ${asks[index]}\n`;
           }
           // console.log("xxxxxxxxxxx reset ask list end", logStr);
         } else {
@@ -247,7 +249,7 @@ const INIT_DATA = { asks: [], bids: [] };
 export const useOrderbookStream = (
   symbol: string,
   initial: OrderbookData = INIT_DATA,
-  options?: OrderbookOptions
+  options?: OrderbookOptions,
 ) => {
   if (!symbol) {
     throw new SDKError("Symbol is required");
@@ -323,13 +325,13 @@ export const useOrderbookStream = (
           orderbooksService.updateOrderbook(
             symbol,
             { asks, bids, ts, prevTs },
-            () => (needRequestFullOrderbook = true)
+            () => (needRequestFullOrderbook = true),
           );
 
           const data = orderbooksService.getRawOrderbook(symbol);
           setData({ bids: data.bids, asks: data.asks });
         },
-      }
+      },
     );
 
     if (needRequestFullOrderbook) {
@@ -358,7 +360,7 @@ export const useOrderbookStream = (
 
             setIsLoading(false);
           },
-        }
+        },
       );
       needRequestFullOrderbook = false;
     }

@@ -1,12 +1,12 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { DesktopBids } from "./bids.desktop";
-import { DesktopAsks } from "./asks.desktop";
-import { DesktopMarkPrice } from "./markPrice.desktop";
 import { OrderBookProvider } from "@/block/orderbook/orderContext";
 import { Spinner } from "@/spinner";
 import { cn } from "@/utils/css";
-import { DesktopHeader } from "./header.desktop";
+import { DesktopAsks } from "./asks.desktop";
+import { DesktopBids } from "./bids.desktop";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
+import { DesktopHeader } from "./header.desktop";
+import { DesktopMarkPrice } from "./markPrice.desktop";
 
 export interface DesktopOrderBookProps {
   asks: any[];
@@ -41,14 +41,17 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
 
   const rangeInfo = [
     { left: 370, right: 600 },
-    { left: 740, right: 800 }
+    { left: 740, right: 800 },
   ];
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const { inlineSize: width } = entry.borderBoxSize[0];
-        const count = rangeInfo.reduce((a, b) => a + ((width >= b.left && width < b.right) ? 1 : 0), 0);
+        const count = rangeInfo.reduce(
+          (a, b) => a + (width >= b.left && width < b.right ? 1 : 0),
+          0,
+        );
         setShowTotal(() => count > 0);
       }
     });
@@ -66,10 +69,6 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
     };
   }, []);
 
-
-  /// 
-
-
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 20}
@@ -78,7 +77,11 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       showTotal={showTotal}
       pendingOrders={props.pendingOrders || []}
     >
-      <div id="orderly-orderbook-desktop" className={cn("orderly-h-full orderly-relative", props.className)} ref={divRef}>
+      <div
+        id="orderly-orderbook-desktop"
+        className={cn("orderly-h-full orderly-relative", props.className)}
+        ref={divRef}
+      >
         <DesktopDepthSelect
           depth={props.depth}
           value={props.activeDepth}

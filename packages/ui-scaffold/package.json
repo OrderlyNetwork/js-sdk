@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-scaffold",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -21,15 +21,16 @@
   "dependencies": {
     "@akamfoad/qr": "^0.4.0",
     "@date-fns/utc": "1.2.0",
-    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
-    "date-fns": "^3.6.0"
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "date-fns": "^3.6.0",
+    "immer": "^10.1.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",

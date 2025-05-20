@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { MainNav, MainNavProps } from "./mainNav.ui";
 import { MainNavItem } from "./mainMenus/navItem";
 import {
@@ -7,13 +7,13 @@ import {
 } from "./useWidgetBuilder.script";
 
 export type MainNavWidgetProps = PropsWithChildren<{
+  leading?: ReactNode;
+  trailing?: ReactNode;
   logo?: {
     src: string;
     alt: string;
   };
   mainMenus?: MainNavItem[];
-
-  products?: MainNavItem[];
 
   campaigns?: MainNavItem;
   campaignPosition?: CampaignPositionEnum;

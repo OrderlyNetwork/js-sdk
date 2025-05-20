@@ -74,7 +74,10 @@ export const RiskRate: FC<RiskRateState> = (props) => {
               size="2xs"
               color="neutral"
               weight="semibold"
-              className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-b-white/10"
+              className={cn(
+                "oui-cursor-pointer",
+                "oui-border-b oui-border-dashed oui-border-b-white/10"
+              )}
             >
               {t("trading.riskRate")}
             </Text>
@@ -83,7 +86,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             size="xs"
             color="neutral"
             weight="semibold"
-            className={cn(textColor, "oui-leading-6")}
+            className={cn(textColor)}
           >
             {riskRate ?? "--"}
           </Text>
@@ -94,7 +97,11 @@ export const RiskRate: FC<RiskRateState> = (props) => {
             size="2xs"
             color="neutral"
             weight="semibold"
-            className="oui-cursor-pointer"
+            className={cn(
+              "oui-cursor-pointer",
+              // add extra bottom border to make height same as risk rate text
+              "oui-border-b oui-border-b-transparent"
+            )}
           >
             {t("leverage.maxAccountLeverage")}
           </Text>

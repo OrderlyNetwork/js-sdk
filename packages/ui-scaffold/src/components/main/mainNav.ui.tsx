@@ -1,26 +1,26 @@
-import { FC, PropsWithChildren, useMemo } from "react";
-import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
-import { ProductsMenu, ProductsProps } from "./products";
+import { FC, PropsWithChildren, ReactNode, useMemo } from "react";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
 import type { LogoProps } from "@orderly.network/ui";
+import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
-import { CampaignPositionEnum } from "./useWidgetBuilder.script";
+import { LanguageSwitcherWidget } from "../languageSwitcher";
 import { CampaignButton, CampaignProps } from "./campaignButton";
+import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
 import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
-import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { LinkDeviceWidget } from "./linkDevice";
-import { LanguageSwitcherWidget } from "../languageSwitcher";
+import { MainNavClassNames, MainNavItemsProps } from "./mainNavItems";
+import { CampaignPositionEnum } from "./useWidgetBuilder.script";
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 
 export type MainNavProps = {
   className?: string;
   logo: LogoProps;
-  products: ProductsProps;
   mainMenus: MainNavItemsProps;
+  leading?: ReactNode;
+  trailing?: ReactNode;
   wrongNetwork: boolean;
   isConnected: boolean;
   campaigns?: CampaignProps;
@@ -40,8 +40,7 @@ export type MainNavProps = {
 };
 
 export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
-  const { className, logo, products, classNames, campaigns, campaignPosition } =
-    props;
+  const { className, logo, classNames, campaigns, campaignPosition } = props;
 
   const showCampaignButton =
     campaignPosition === CampaignPositionEnum.navTailing && campaigns;
@@ -74,7 +73,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       className={cn(
         "oui-main-nav oui-font-semibold",
         className,
-        classNames?.root
+        classNames?.root,
       )}
     >
       <Flex
@@ -82,16 +81,16 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
         className={cn(
           "oui-gap-3 2xl:oui-gap-4",
           // let the left and right views show spacing when overlapping
-          "oui-overflow-hidden"
+          "oui-overflow-hidden",
         )}
       >
         <MainLogo {...logo} />
-        <ProductsMenu {...products} className={classNames?.products} />
-        {/* <MainNavItems {...props.mainMenus} classNames={classNames?.mainNav} /> */}
+        {props.leading}
         <MainNavMenusExtension
           {...props.mainMenus}
           classNames={classNames?.mainNav}
         />
+        {props.trailing}
       </Flex>
       {children}
 

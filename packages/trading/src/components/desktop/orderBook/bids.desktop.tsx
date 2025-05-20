@@ -1,10 +1,11 @@
+import { FC, useMemo } from "react";
 import { OrderBookCellType } from "../../base/orderBook/types";
 import { DesktopListBox } from "./listBox.desktop";
-import { FC, useMemo } from "react";
 
 export interface Props {
   data: any[];
 }
+
 export const DesktopBids: FC<Props> = (props) => {
   const { data } = props;
   const countQty = useMemo(() => {
@@ -21,6 +22,10 @@ export const DesktopBids: FC<Props> = (props) => {
     // return data.length > 0 ? data[data.length - 1][2] : 0;
   }, [data]);
   return (
-    <DesktopListBox type={OrderBookCellType.BID} data={data} countQty={countQty} />
+    <DesktopListBox
+      type={OrderBookCellType.BID}
+      data={data}
+      countQty={countQty}
+    />
   );
 };
