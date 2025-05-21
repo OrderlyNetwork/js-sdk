@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
   useAccount,
   useCollateral,
@@ -42,9 +42,9 @@ export const useAssetScript = () => {
     modal.show(LeverageWidgetWithDialogId);
   };
 
-  const onDeposit = () => {
+  const onDeposit = useCallback(() => {
     modal.show(handleDomId, { activeTab: "deposit" });
-  };
+  }, [handleDomId]);
 
   const onWithdraw = () => {
     modal.show(handleDomId, { activeTab: "withdraw" });

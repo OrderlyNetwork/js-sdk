@@ -17,6 +17,7 @@ import { type UseAssetHistoryReturn } from "./useDataSource.script";
 
 interface AssetHistoryMobileProps extends UseAssetHistoryReturn {
   onDeposit: () => void;
+  chains: any[];
 }
 
 export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
@@ -27,10 +28,10 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
     isLoading,
     pagination,
     onDeposit,
+    chains,
   } = props;
   const { side, dateRange } = queryParameter;
   const { t } = useTranslation();
-  const { data: chains } = useQuery("/v1/public/chain_info");
 
   const SIDES = useMemo(() => {
     return [
@@ -88,7 +89,6 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
       return undefined;
     };
 
-    const txLink = getTxLink();
     const itemColor = item.side === "DEPOSIT" ? "buy" : "sell";
 
     return (
@@ -127,7 +127,7 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
           </Text.formatted>
           {item.tx_id ? (
             <a
-              href={txLink}
+              href={getTxLink()}
               target="_blank"
               className="oui-text-base-contrast-36 oui-text-xs"
               rel="noreferrer"
