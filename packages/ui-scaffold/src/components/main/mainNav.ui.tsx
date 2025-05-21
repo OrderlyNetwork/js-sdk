@@ -6,6 +6,7 @@ import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
+import { SubAccountWidget } from "../subAccount";
 import { CampaignButton, CampaignProps } from "./campaignButton";
 import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
@@ -109,6 +110,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           </>
         )}
         <LanguageSwitcherWidget />
+        <SubAccountWidget />
         {isDesktop && <ChainMenuWidget />}
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>
