@@ -80,7 +80,7 @@ export const TraderCardMobile: FC<TraderCardMobileProps> = (props) => {
           className="oui-ml-auto"
           onClick={() =>
             props?.routerAdapter?.onRouteChange({
-              href: "/rewards/affiliate",
+              href: "/rewards/affiliate?tab=trader",
               name: t("tradingRewards.rewards"),
             })
           }
