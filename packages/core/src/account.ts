@@ -1002,7 +1002,10 @@ export class Account {
 
     // const domain = this.getDomain(true);
 
-    const url = "/v1/settle_pnl";
+    const isSubAccount =
+      this.stateValue.mainAccountId !== this.stateValue.accountId;
+
+    const url = isSubAccount ? "/v1/sub_account_settle_pnl" : "/v1/settle_pnl";
 
     const timestamp = getTimestamp();
 

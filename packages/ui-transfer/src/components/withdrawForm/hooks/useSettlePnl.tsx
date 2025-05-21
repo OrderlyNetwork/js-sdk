@@ -14,18 +14,21 @@ export const useSettlePnl = () => {
   const [positionData] = usePositionStream();
 
   const hasPositions = useMemo(
-    () => !positionData?.rows?.length,
+    () => !!positionData?.rows?.length,
     [positionData],
   );
 
   const onSettlePnl = async () => {
     return account
       .settle()
+      .then((res) => {
+        toast.success(t("settle.settlement.requested"));
+        return Promise.resolve(res);
+      })
       .catch((e) => {
         if (e.code == -1104) {
           toast.error(t("settle.settlement.error"));
-        }
-        if (
+        } else if (
           e.message.indexOf(
             "Signing off chain messages with Ledger is not yet supported",
           ) !== -1
@@ -34,16 +37,12 @@ export const useSettlePnl = () => {
             message: e.message,
             userAddress: account.address,
           });
-        }
-
-        if (e.message.indexOf("user rejected") !== -1) {
+        } else if (e.message.indexOf("user rejected") !== -1) {
           toast.error(t("transfer.rejectTransaction"));
+        } else {
+          toast.error(e.message);
+          return Promise.reject(e);
         }
-        return Promise.reject(e);
-      })
-      .then((res) => {
-        toast.success(t("settle.settlement.requested"));
-        return Promise.resolve(res);
       });
   };
 
