@@ -1,27 +1,33 @@
-import { useLocalStorage } from "@orderly.network/hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
+import { TabName } from "../../type";
+import { useTabSort } from "../shared/hooks/useTabSort";
 
-export type UseSideMarketsScriptOptions = {
+export type SideMarketsScriptOptions = {
   collapsable?: boolean;
   collapsed?: boolean;
   onCollapse?: (collapsed: boolean) => void;
 };
 
-export type UseSideMarketsScriptReturn = ReturnType<
-  typeof useSideMarketsScript
->;
+export type SideMarketsScriptReturn = ReturnType<typeof useSideMarketsScript>;
 
-export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
+const SIDE_MARKETS_SEL_TAB_KEY = "orderly_side_markets_sel_tab_key";
+
+export function useSideMarketsScript(options?: SideMarketsScriptOptions) {
   const [collapsed, setCollapsed] = useState(options?.collapsed);
-  // const [activeTab, setActiveTab] = useState<TabName>("all");
   const [activeTab, setActiveTab] = useLocalStorage(
-    "orderly_side_markets_sel_tab_key",
-    "all"
+    SIDE_MARKETS_SEL_TAB_KEY,
+    TabName.All,
   );
+
+  const { tabSort } = useTabSort({
+    storageKey: SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
+  });
 
   const collapsable = useMemo(
     () => options?.collapsable ?? true,
-    [options?.collapsable]
+    [options?.collapsable],
   );
 
   const onCollapse = useCallback(
@@ -32,7 +38,7 @@ export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
         setCollapsed(collapsed);
       }
     },
-    [options?.onCollapse]
+    [options?.onCollapse],
   );
 
   useEffect(() => {
@@ -43,7 +49,8 @@ export function useSideMarketsScript(options?: UseSideMarketsScriptOptions) {
     collapsable,
     collapsed,
     onCollapse,
-    activeTab,
+    activeTab: activeTab as TabName,
     onTabChange: setActiveTab,
+    tabSort,
   };
 }

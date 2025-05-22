@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Button,
@@ -13,20 +14,18 @@ import {
   DropdownMenuTrigger,
   Flex,
   Input,
-  ScrollArea,
   Text,
   cn,
   CloseCircleFillIcon,
-  Badge,
   Tooltip,
 } from "@orderly.network/ui";
 import { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
-import { useTranslation } from "@orderly.network/i18n";
+
 export type FavoritesDropdownMenuProps =
   PropsWithChildren<UseFavoritesDropdownMenuScriptReturn>;
 
 export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
-  props
+  props,
 ) => {
   const {
     symbol,
@@ -60,9 +59,9 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
               onValueChange={onValueChange}
               classNames={{
                 root: cn(
-                  "oui-bg-base-6 oui-h-7 oui-w-full oui-ml-[1px] oui-rounded-sm",
+                  "oui-ml-px oui-h-7 oui-w-full oui-rounded-sm oui-bg-base-6",
                   overLen &&
-                    "focus-visible:oui-outline-danger focus-within:oui-outline-danger"
+                    "focus-within:oui-outline-danger focus-visible:oui-outline-danger",
                 ),
               }}
               autoComplete="off"
@@ -72,7 +71,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
                     <CloseCircleFillIcon
                       opacity={1}
                       size={14}
-                      className="oui-text-base-contrast-20 oui-cursor-pointer"
+                      className="oui-cursor-pointer oui-text-base-contrast-20"
                       onClick={() => {
                         onValueChange("");
                       }}
@@ -94,7 +93,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
 
           {overLen && (
             <Flex itemAlign="center" gapX={1} mt={1}>
-              <div className="oui-h-1 oui-w-1 oui-bg-danger oui-rounded-full"></div>
+              <div className="oui-size-1 oui-rounded-full oui-bg-danger"></div>
               <Text color="danger">{t("markets.favorites.tabs.maxName")}</Text>
             </Flex>
           )}
@@ -120,7 +119,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
         <div>
           <Flex
             className={cn(
-              overTabs ? "oui-cursor-not-allowed" : "oui-cursor-pointer"
+              overTabs ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
             )}
             itemAlign="center"
             gapX={2}
@@ -145,7 +144,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
   };
 
   const header = (
-    <Flex justify="between" className="oui-mt-3 oui-mb-[10px]">
+    <Flex justify="between" className="oui-mb-[10px] oui-mt-3">
       <Flex gapX={1}>
         {t("markets.favorites.dropdown.title")}
         <Text.formatted
@@ -159,7 +158,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
       </Flex>
       <CloseIcon
         size={16}
-        className="oui-text-base-contrast oui-cursor-pointer"
+        className="oui-cursor-pointer oui-text-base-contrast"
         onClick={hide}
       />
     </Flex>
@@ -170,7 +169,7 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
     <Box>
       <Box
         my={2}
-        className="oui-max-h-[288px] oui-overflow-y-auto oui-custom-scrollbar"
+        className="oui-custom-scrollbar oui-max-h-[288px] oui-overflow-y-auto"
       >
         {favoriteTabs?.slice(0, 10)?.map((item) => {
           const checked = !!selectedTabs.find((tab) => tab.id === item.id);

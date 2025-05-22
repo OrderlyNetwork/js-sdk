@@ -611,5 +611,7 @@
   "tradingLeaderboard.learnMore": "En savoir plus",
   "tradingLeaderboard.tradeNow": "Trader maintenant",
   "tradingLeaderboard.tradingVolume": "Volume de trading",
-  "tradingLeaderboard.rank": "Rang"
+  "tradingLeaderboard.rank": "Rang",
+  "common.long": "Acheter",
+  "common.short": "Vendre"
 }

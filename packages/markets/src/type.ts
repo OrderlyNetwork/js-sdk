@@ -3,12 +3,19 @@ import { SortOrder, Column } from "@orderly.network/ui";
 
 export type FavoriteInstance = ReturnType<typeof useMarkets>[1];
 
-export type TInitialSort = {
+export type SortType = {
   sortKey: string;
-  sort: SortOrder;
+  sortOrder: SortOrder;
 };
 
 export type GetColumns = (
   favorite: FavoriteInstance,
-  isFavoriteList: boolean
+  isFavoriteList: boolean,
 ) => Column[];
+
+export enum TabName {
+  Favorites = "favorites",
+  Recent = "recent",
+  All = "all",
+  NewListing = "newListing",
+}

@@ -1,4 +1,6 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { OrderStatus } from "@orderly.network/types";
 import {
   Button,
   Checkbox,
@@ -8,20 +10,18 @@ import {
   Tabs,
   Text,
 } from "@orderly.network/ui";
-import {
-  DataListState,
-  DataListTabSubType,
-  DataListTabType,
-} from "./dataList.script";
 import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
-import { OrderStatus } from "@orderly.network/types";
 import {
   MobileLiquidationWidget,
   MobilePositionHistoryWidget,
   MobilePositionsWidget,
 } from "@orderly.network/ui-positions";
 import { PositionHeaderWidget } from "../../base/positionHeader";
-import { useTranslation } from "@orderly.network/i18n";
+import {
+  DataListState,
+  DataListTabSubType,
+  DataListTabType,
+} from "./dataList.script";
 
 export const DataList: FC<
   DataListState & {
@@ -42,7 +42,7 @@ export const DataList: FC<
       }}
     >
       <TabPanel
-        title={`${t("common.positions")}${
+        title={`${t("common.positions")} ${
           (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
         }`}
         value={DataListTabType.position}
@@ -50,7 +50,7 @@ export const DataList: FC<
         <PositionsView {...props} />
       </TabPanel>
       <TabPanel
-        title={`${t("orders.status.pending")}${
+        title={`${t("orders.status.pending")} ${
           (props.pendingOrderCount ?? 0) > 0
             ? `(${props.pendingOrderCount})`
             : ""
@@ -64,7 +64,7 @@ export const DataList: FC<
         />
       </TabPanel>
       <TabPanel
-        title={`${t("common.tpsl")}${
+        title={`${t("common.tpsl")} ${
           (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
         }`}
         value={DataListTabType.tp_sl}

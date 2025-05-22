@@ -611,5 +611,7 @@
   "tradingLeaderboard.learnMore": "Pelajari lebih lanjut",
   "tradingLeaderboard.tradeNow": "Trading sekarang",
   "tradingLeaderboard.tradingVolume": "Volume trading",
-  "tradingLeaderboard.rank": "Peringkat"
+  "tradingLeaderboard.rank": "Peringkat",
+  "common.long": "Beli",
+  "common.short": "Jual"
 }

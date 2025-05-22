@@ -1,11 +1,11 @@
 import { useContext, useEffect, useId, useState } from "react";
-import { useMarketsStream } from "./useMarketsStream";
-import { OrderlyContext } from "../orderlyContext";
 import { API, WSMessage } from "@orderly.network/types";
-import { SymbolInfo, useSymbolsInfo } from "./useSymbolsInfo";
 import { Decimal } from "@orderly.network/utils";
+import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
 import { MarketStoreKey } from "./useMarket";
+import { useMarketsStream } from "./useMarketsStream";
+import { SymbolInfo, useSymbolsInfo } from "./useSymbolsInfo";
 
 export enum MarketsType {
   FAVORITES,
@@ -110,7 +110,7 @@ export const useMarketsStore = () => {
 
   const getStoreByKey = <Key extends MarketsKey>(
     key: Key,
-    defaultValue: MarketsData[Key]
+    defaultValue: MarketsData[Key],
   ) => {
     const store = getStore();
     return (store[key] || defaultValue)!;
@@ -151,7 +151,7 @@ export const useMarketsStore = () => {
 
   const [favoriteTabs, setFavoriteTabs] = useState(getFavoriteTabs);
   const [selectedFavoriteTab, setSelectedFavoriteTab] = useState(
-    getSelectedFavoriteTab
+    getSelectedFavoriteTab,
   );
   const [favorites, setFavorites] = useState(getFavorites);
   const [recent, setRecent] = useState(getRecent);
@@ -165,7 +165,7 @@ export const useMarketsStore = () => {
       add?: boolean;
       update?: boolean;
       delete?: boolean;
-    }
+    },
   ) => {
     const tabs = updateTabs(favoriteTabs, tab, operator);
     setFavoriteTabs(tabs);
@@ -176,14 +176,14 @@ export const useMarketsStore = () => {
     setSelectedFavoriteTab(tab);
     ee.emit(
       "markets:changed",
-      createEventData(id, "lastSelectedFavoriteTab", tab)
+      createEventData(id, "lastSelectedFavoriteTab", tab),
     );
   };
 
   const updateSymbolFavoriteState = (
     symbol: API.MarketInfoExt,
     tab: FavoriteTab | FavoriteTab[],
-    remove: boolean = false
+    remove: boolean = false,
   ) => {
     const list = updateSymbolFavorite({ favorites, symbol, tab, remove });
     setFavorites(list);
@@ -208,7 +208,7 @@ export const useMarketsStore = () => {
   const updateTabsSortState = (
     tabId: string,
     sortKey: string,
-    sortOrder: "desc" | "asc"
+    sortOrder: "desc" | "asc",
   ) => {
     const map = getStoreByKey("tabSort", {});
 
@@ -308,7 +308,7 @@ export const useMarkets = (type: MarketsType = MarketsType.ALL) => {
 
 const addFieldToMarkets = (
   futures: WSMessage.Ticker[] | null,
-  symbolsInfo: SymbolInfo
+  symbolsInfo: SymbolInfo,
 ) => {
   return (futures || [])?.map((item: any) => {
     const info = symbolsInfo[item.symbol];
@@ -350,8 +350,8 @@ const filterMarkets = (params: {
       type === MarketsType.FAVORITES
         ? favorites
         : type === MarketsType.RECENT
-        ? recent
-        : newListing;
+          ? recent
+          : newListing;
 
     const keys = storageData.map((item) => item.name);
     curData = markets?.filter((item) => keys.includes(item.symbol));
@@ -437,7 +437,7 @@ function filterInvalidTabs(favorites: Favorite[], tabs: FavoriteTab[]) {
       return {
         ...favorite,
         tabs: favorite.tabs.filter(
-          (tab) => !!tabs.find((item) => item.id === tab.id)
+          (tab) => !!tabs.find((item) => item.id === tab.id),
         ),
       };
     })
@@ -451,7 +451,7 @@ export function updateTabs(
     add?: boolean;
     update?: boolean;
     delete?: boolean;
-  }
+  },
 ) {
   if (Array.isArray(tab)) {
     return tab;
