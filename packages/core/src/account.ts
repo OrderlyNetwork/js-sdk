@@ -258,6 +258,11 @@ export class Account {
     return state.subAccountId;
   }
 
+  get isSubAccount(): boolean {
+    const state = this.stateValue;
+    return state.mainAccountId !== state.accountId;
+  }
+
   get accountIdHashStr(): string | undefined {
     if (!this.address) {
       throw new Error("address is error");
@@ -918,6 +923,7 @@ export class Account {
         // domain: any;
         scope: options?.scope,
         tag: options?.tag,
+        subAccountId: this.stateValue.subAccountId,
       });
 
     // console.log("generateAPiKey", publicKey, address);
@@ -930,6 +936,7 @@ export class Account {
         userAddress: address,
       }),
       headers: {
+        // TODO: remove this header
         "X-Account-Id": this.stateValue.mainAccountId,
         "Content-Type": "application/json",
       },
@@ -1002,10 +1009,9 @@ export class Account {
 
     // const domain = this.getDomain(true);
 
-    const isSubAccount =
-      this.stateValue.mainAccountId !== this.stateValue.accountId;
-
-    const url = isSubAccount ? "/v1/sub_account_settle_pnl" : "/v1/settle_pnl";
+    const url = this.isSubAccount
+      ? "/v1/sub_account_settle_pnl"
+      : "/v1/settle_pnl";
 
     const timestamp = getTimestamp();
 

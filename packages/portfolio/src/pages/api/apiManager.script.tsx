@@ -1,16 +1,15 @@
+import { useEffect, useMemo, useState } from "react";
 import {
   APIKeyItem,
-  OrderlyContext,
   ScopeType,
   useAccount,
   useApiKeyManager,
-  useQuery,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast, usePagination } from "@orderly.network/ui";
-import { useContext, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+
 export type GenerateKeyInfo = {
   key: string;
   screctKey: string;
@@ -26,8 +25,6 @@ export const useApiManagerScript = (props?: {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showCreatedDialog, setShowCreatedDialog] = useState(false);
   const [generateKey, setGenerateKey] = useState<GenerateKeyInfo | undefined>();
-  const { configStore } = useContext(OrderlyContext);
-  const brokerId = configStore.get("brokerId");
   const { wrongNetwork, disabledConnect } = useAppContext();
   const { state, account } = useAccount();
   const { t } = useTranslation();
@@ -37,16 +34,6 @@ export const useApiManagerScript = (props?: {
     !disabledConnect &&
     (state.status === AccountStatusEnum.EnableTrading ||
       state.status === AccountStatusEnum.EnableTradingWithoutConnected);
-
-  const { data } = useQuery<
-    | undefined
-    | {
-        user_id: number;
-        account_id: string;
-      }
-  >(
-    `/v1/get_account?address=${account.address}&broker_id=${brokerId}&chain_type=${account.walletAdapter?.chainNamespace}`
-  );
 
   const [
     keys,
@@ -80,7 +67,7 @@ export const useApiManagerScript = (props?: {
   const onReadApiGuide = () => {
     window.open(
       "https://orderly.network/docs/build-on-evm/evm-api/api-authentication",
-      "_blank"
+      "_blank",
     );
   };
 
@@ -90,7 +77,7 @@ export const useApiManagerScript = (props?: {
 
   const doCreate = async (
     ipRestriction?: string,
-    scope?: ScopeType
+    scope?: ScopeType,
   ): Promise<number> => {
     try {
       const createdSuccess = (
@@ -98,7 +85,7 @@ export const useApiManagerScript = (props?: {
           key: string;
           secretKey: string;
         },
-        ip?: string
+        ip?: string,
       ) => {
         const { key, secretKey } = res;
         hideCreateDialog();
@@ -128,7 +115,7 @@ export const useApiManagerScript = (props?: {
         if (res.success) {
           createdSuccess(
             generateKeyRes,
-            res.data.ip_restriction_list?.join(",")
+            res.data.ip_restriction_list?.join(","),
           );
         }
       } else {
@@ -172,7 +159,7 @@ export const useApiManagerScript = (props?: {
             }
             resolve(1);
           },
-          (reject) => {}
+          (reject) => {},
         )
         .catch((err) => {});
     });
@@ -234,18 +221,19 @@ export const useApiManagerScript = (props?: {
       ? AccountStatusEnum.EnableTradingWithoutConnected
       : AccountStatusEnum.EnableTrading;
 
-  const address = useDataTap(data?.account_id, {
+  const accountId = useDataTap(state.accountId, {
     accountStatus,
   });
-  const uid = useDataTap(data?.user_id, {
+
+  const userId = useDataTap(state.userId, {
     accountStatus,
   });
 
   const { pagination } = usePagination();
 
   return {
-    address: address ?? "--",
-    uid: `${uid ?? "--"}`,
+    accountId: accountId ?? "--",
+    userId: userId ?? "--",
     onCreateApiKey,
     onReadApiGuide,
     showCreateDialog,
