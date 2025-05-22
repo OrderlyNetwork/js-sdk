@@ -1,22 +1,22 @@
-import { ListView } from "@orderly.network/ui";
+import React from "react";
 import { API } from "@orderly.network/types";
-import { PositionsBuilderState } from "./usePositionsBuilder.script";
+import { ListView } from "@orderly.network/ui";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { SymbolProvider } from "../../providers/symbolProvider";
 import { PositionsProps } from "../../types/types";
-import { useColumn } from "./desktop/useColumn";
 import { PositionsRowProvider } from "./desktop/positionRowContext";
+import { useColumn } from "./desktop/useColumn";
 import { PositionCellWidget } from "./mobile/positionCell";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { PositionsBuilderState } from "./usePositionsBuilder.script";
 
-export const Positions = (props: PositionsBuilderState) => {
+export const Positions: React.FC<Readonly<PositionsBuilderState>> = (props) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig, pagination } = props;
+
   const column = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     onSymbolChange: props.onSymbolChange,
   });
-
-  // console.log("xxxx positions", props);
 
   return (
     <AuthGuardDataTable<API.PositionTPSLExt>
@@ -38,19 +38,19 @@ export const Positions = (props: PositionsBuilderState) => {
       manualPagination={false}
       pagination={pagination}
       testIds={{
-        body: "oui-testid-dataList-position-tab-body"
+        body: "oui-testid-dataList-position-tab-body",
       }}
     />
   );
 };
 
-export const MobilePositions = (
-  props: PositionsBuilderState & PositionsProps
-) => {
+export const MobilePositions: React.FC<
+  Readonly<PositionsBuilderState & PositionsProps>
+> = (props) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
   return (
     <ListView
-      className="oui-w-full oui-hide-scrollbar oui-overflow-y-hidden oui-space-y-0"
+      className="oui-hide-scrollbar oui-w-full oui-space-y-0 oui-overflow-y-hidden"
       contentClassName="!oui-space-y-1"
       dataSource={props.dataSource}
       renderItem={(item, index) => (

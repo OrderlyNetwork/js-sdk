@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { RouteOption } from "@orderly.network/ui-scaffold";
 // https://github.com/storybookjs/storybook/tree/next/code/addons/links
 // linkTo is not working, so use navigate instead
 import { navigate } from "@storybook/addon-links";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
+import { RouteOption } from "@orderly.network/ui-scaffold";
 
 export enum RoutePath {
   Root = "/",
@@ -34,6 +34,7 @@ export function useNav() {
       [PortfolioLeftSidebarPath.ApiKey]: "Package/portfolio/ApiKey",
       [PortfolioLeftSidebarPath.Positions]: "Package/portfolio/Positions",
       [PortfolioLeftSidebarPath.Orders]: "Package/portfolio/Orders",
+      [PortfolioLeftSidebarPath.Assets]: "Package/portfolio/Assets",
       [PortfolioLeftSidebarPath.Setting]: "Package/portfolio/Setting",
 
       [RoutePath.TradingRewards]: "Package/trading-rewards",

@@ -1,4 +1,6 @@
+import { FC, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import type { SubAccount } from "@orderly.network/core";
 import { useAccount, useBoolean } from "@orderly.network/hooks";
 import {
   Box,
@@ -7,11 +9,10 @@ import {
   Flex,
   TriggerDialog,
   Input,
-  useModal,
   toast,
+  Column,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { FC, useState } from "react";
 
 const UpdateSubAccountDialog: FC<{
   subAccountId: string;
@@ -63,7 +64,6 @@ const UpdateSubAccountDialog: FC<{
   );
 };
 
-// eslint-disable-next-line storybook/story-exports
 const SubAccountExample = () => {
   const { state, subAccount, switchAccount, isMainAccount } = useAccount();
 
@@ -81,7 +81,7 @@ const SubAccountExample = () => {
     return subAccount.update(value);
   };
 
-  const columns = [
+  const columns: Column<SubAccount>[] = [
     {
       dataIndex: "id",
       title: "ID",
@@ -148,6 +148,7 @@ const meta: Meta = {
 };
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};

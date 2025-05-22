@@ -1,6 +1,7 @@
 import React, { FC, PropsWithChildren, ReactElement } from "react";
-
 import * as SelectPrimitive from "@radix-ui/react-select";
+import { cnBase, VariantProps } from "tailwind-variants";
+import { ScrollArea } from "../scrollarea";
 import {
   SelectContent,
   SelectRoot,
@@ -8,9 +9,6 @@ import {
   SelectValue,
   selectVariants,
 } from "./selectPrimitive";
-
-import { cnBase, VariantProps } from "tailwind-variants";
-import { ScrollArea } from "../scrollarea";
 
 export type SelectVariantProps = VariantProps<typeof selectVariants>;
 
@@ -20,7 +18,7 @@ export type SelectProps<T> = SelectPrimitive.SelectProps & {
     value: T,
     options: {
       placeholder?: string;
-    }
+    },
   ) => React.ReactNode;
   contentProps?: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>;
   showCaret?: boolean;
@@ -55,9 +53,9 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
         variant={variant}
         showCaret={showCaret}
         className={cnBase(
-          "oui-font-semibold focus:oui-ring-transparent oui-cursor-pointer",
+          "oui-cursor-pointer oui-font-semibold focus:oui-ring-transparent",
           // !showCaret && "oui-cursor-auto",
-          classNames?.trigger
+          classNames?.trigger,
         )}
         data-testid={testid}
       >
@@ -71,7 +69,7 @@ export const Select = <T,>(props: PropsWithChildren<SelectProps<T>>) => {
       </SelectTrigger>
       <SelectContent {...contentProps}>
         <ScrollArea>
-          <div style={{ maxHeight }}> {children}</div>
+          <div style={{ maxHeight }}>{children}</div>
         </ScrollArea>
       </SelectContent>
     </SelectRoot>

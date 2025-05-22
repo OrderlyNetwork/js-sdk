@@ -1,4 +1,5 @@
 import { BaseIcon } from "./baseIcon";
+import { CombineIcon } from "./combine";
 
 export type { BaseIconProps } from "./baseIcon";
 export { CloseIcon } from "./close";
@@ -27,6 +28,7 @@ export { ArrowLeftRightIcon } from "./arrowLeftRight";
 export { ArrowDownUpIcon } from "./arrowDownUp";
 export { ArrowUpSquareFillIcon } from "./arrowUpSquareFill";
 export { ArrowDownSquareFillIcon } from "./arrowDownSquareFill";
+export { ArrowLeftRightSquareFill } from "./arrowLeftRightSquareFill";
 export { FeeTierIcon } from "./feeTier";
 export { EditIcon } from "./edit";
 export { EyeIcon } from "./eye";
@@ -50,8 +52,6 @@ export {
 } from "./arrowShort";
 
 export { SortingIcon } from "./sortingIcon";
-
-import { CombineIcon } from "./combine";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

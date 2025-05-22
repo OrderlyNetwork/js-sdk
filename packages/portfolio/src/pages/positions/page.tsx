@@ -1,12 +1,34 @@
 import { useState } from "react";
+import React from "react";
+import { useAccount } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import {
+  Flex,
+  Text,
+  Divider,
+  Box,
+  Tabs,
+  TabPanel,
+  DataFilter,
+  formatAddress,
+} from "@orderly.network/ui";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsProps,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import { Flex, Text, Divider, Box, Tabs, TabPanel } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+
+const ALL_ACCOUNTS: SelectOption = {
+  label: "All accounts",
+  value: "All accounts",
+};
+
+const MAIN_ACCOUNT: SelectOption = {
+  label: "Main accounts",
+  value: "Main accounts",
+};
 
 enum TabsType {
   positions = "Positions",
@@ -17,7 +39,28 @@ enum TabsType {
 export const PositionsPage = (props: PositionsProps) => {
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
-
+  const [selectedAccount, setSelectedAccount] = React.useState("All accounts");
+  const { state } = useAccount();
+  const onAccountFilter = React.useCallback(
+    (filter: { name: string; value: string }) => {
+      const { name, value } = filter;
+      if (name === "account") {
+        setSelectedAccount(value);
+      }
+    },
+    [],
+  );
+  const memoizedOptions = React.useMemo(() => {
+    const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
+    return [
+      ALL_ACCOUNTS,
+      MAIN_ACCOUNT,
+      ...subs.map<SelectOption>((value) => ({
+        value: value.id,
+        label: value?.description || formatAddress(value?.id),
+      })),
+    ];
+  }, [state.subAccounts]);
   return (
     <Flex
       // p={6}
@@ -43,6 +86,17 @@ export const PositionsPage = (props: PositionsProps) => {
           className="oui-h-full"
         >
           <TabPanel value={TabsType.positions} title={t("common.positions")}>
+            <DataFilter
+              onFilter={onAccountFilter}
+              items={[
+                {
+                  type: "select",
+                  name: "account",
+                  value: selectedAccount,
+                  options: memoizedOptions,
+                },
+              ]}
+            />
             <PositionsWidget {...props} />
           </TabPanel>
           <TabPanel
