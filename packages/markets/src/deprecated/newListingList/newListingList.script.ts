@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
+import { useMarketsContext } from "../../components/marketsProvider";
 import { searchBySymbol, useSort } from "../../utils";
-import { useMarketsContext } from "../marketsProvider";
 
-export type UseRecentListReturn = ReturnType<typeof useRecentListScript>;
+export type UseNewListingListReturn = ReturnType<
+  typeof useNewListingListScript
+>;
 
-export const useRecentListScript = () => {
-  const [data, favorite] = useMarkets(MarketsType.RECENT);
+export const useNewListingListScript = () => {
+  const [data, favorite] = useMarkets(MarketsType.NEW_LISTING);
   const [loading, setLoading] = useState(true);
 
   const { searchValue } = useMarketsContext();

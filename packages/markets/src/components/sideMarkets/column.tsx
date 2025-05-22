@@ -1,4 +1,5 @@
 import { MouseEventHandler, ReactNode } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
@@ -9,11 +10,10 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const useSideMarketsColumns = (
   favorite: FavoriteInstance,
-  isFavoriteList = false
+  isFavoriteList = false,
 ) => {
   const { t } = useTranslation();
 
@@ -33,12 +33,12 @@ export const useSideMarketsColumns = (
                 height={12}
                 justify="center"
                 itemAlign="center"
-                className="oui-cursor-pointer oui-mr-1"
+                className="oui-mr-1 oui-cursor-pointer"
               >
                 {record.isFavorite ? (
-                  <FavoritesIcon2 className="oui-w-3 oui-h-3 oui-text-[rgba(255,154,46,1)]" />
+                  <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
                 ) : (
-                  <UnFavoritesIcon2 className="oui-w-3 oui-h-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+                  <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
                 )}
               </Flex>
             </FavoritesDropdownMenuWidget>
@@ -50,10 +50,7 @@ export const useSideMarketsColumns = (
             {favoritesIcon}
             <Flex direction="column" itemAlign="start" gapY={1}>
               <Flex gapX={1}>
-                <TokenIcon
-                  symbol={record.symbol}
-                  className="oui-w-[18px] oui-h-[18px]"
-                />
+                <TokenIcon symbol={record.symbol} className="oui-size-[18px]" />
                 <Text.formatted
                   rule="symbol"
                   formatString="base"
@@ -92,7 +89,7 @@ export const useSideMarketsColumns = (
           favorite.updateSymbolFavoriteState(
             record,
             favorite.selectedFavoriteTab,
-            true
+            true,
           );
           e.stopPropagation();
         };
@@ -104,13 +101,13 @@ export const useSideMarketsColumns = (
           <div
             className={cn(
               "oui-absolute oui-right-0 oui-top-[6.5px]",
-              "oui-hidden group-hover:oui-block"
+              "oui-hidden group-hover:oui-block",
             )}
           >
             <Flex
               className={cn(
                 "oui-inline-flex",
-                "oui-bg-primary-darken oui-py-[6px]"
+                "oui-bg-primary-darken oui-py-[6px]",
               )}
               r="base"
               width={52}

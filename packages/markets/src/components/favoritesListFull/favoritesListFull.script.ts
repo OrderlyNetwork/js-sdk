@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
-import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../../components/marketsProvider";
+import { searchBySymbol, useSort } from "../../utils";
 
 export type UseFavoritesListFullReturn = ReturnType<
   typeof useFavoritesListFullScript
@@ -26,7 +26,7 @@ export const useFavoritesListFullScript = () => {
       ?.filter(
         (item) =>
           item.tabs?.findIndex((tab) => tab.id === selectedFavoriteTab.id) !==
-          -1
+          -1,
       )
       ?.map((fav) => {
         const index = data?.findIndex((item) => item.symbol === fav.name);
@@ -42,7 +42,7 @@ export const useFavoritesListFullScript = () => {
 
   const dataSource = useMemo(
     () => getSortedList(filterData),
-    [filterData, getSortedList]
+    [filterData, getSortedList],
   );
 
   useEffect(() => {

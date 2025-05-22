@@ -1,18 +1,21 @@
 import { FC } from "react";
-import { cn, DataTable, DataTableClassNames } from "@orderly.network/ui";
-import { type UseMarketsListReturn } from "./marketsList.script";
-import { GetColumns, TInitialSort } from "../../type";
+import { cn, DataTable } from "@orderly.network/ui";
+import { CollapseMarkets } from "../collapseMarkets";
 import { useMarketsContext } from "../marketsProvider";
 import { useSideMarketsColumns } from "../sideMarkets/column";
-import { CollapseMarkets } from "../collapseMarkets";
+import { type MarketsListScriiptReturn } from "./marketsList.script";
+import { type MarketsListWidgetProps } from "./widget";
 
-export type MarketsListProps = UseMarketsListReturn & {
-  initialSort: TInitialSort;
-  getColumns?: GetColumns;
-  collapsed?: boolean;
-  tableClassNames?: DataTableClassNames;
-  rowClassName?: string;
-};
+export type MarketsListProps = MarketsListScriiptReturn &
+  Pick<
+    MarketsListWidgetProps,
+    | "getColumns"
+    | "collapsed"
+    | "tableClassNames"
+    | "rowClassName"
+    | "initialSort"
+    | "renderHeader"
+  >;
 
 export const MarketsList: FC<MarketsListProps> = (props) => {
   const {
@@ -23,15 +26,17 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
     initialSort,
     getColumns,
     collapsed,
+    isFavoritesList,
+    renderHeader,
   } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
-  const sideColumns = useSideMarketsColumns(favorite, false);
+  const sideColumns = useSideMarketsColumns(favorite, isFavoritesList);
 
   const columns =
     typeof getColumns === "function"
-      ? getColumns(favorite, false)
+      ? getColumns(favorite, isFavoritesList)
       : sideColumns;
 
   if (collapsed) {
@@ -39,30 +44,40 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
   }
 
   return (
-    <DataTable
-      classNames={{
-        root: props.tableClassNames?.root,
-        body: props.tableClassNames?.body,
-        header: cn("oui-h-9", props.tableClassNames?.header),
-        scroll: props.tableClassNames?.scroll,
-      }}
-      columns={columns}
-      loading={loading}
-      dataSource={dataSource}
-      onRow={(record, index) => {
-        return {
-          className: cn("oui-h-[53px]", props.rowClassName),
-          onClick: () => {
-            onSymbolChange?.(record);
-            favorite.addToHistory(record);
-          },
-        };
-      }}
-      generatedRowKey={(record) => record.symbol}
-      rowSelection={{ [symbol!]: true }}
-      onSort={onSort}
-      initialSort={initialSort}
-      manualSorting
-    />
+    <>
+      {renderHeader?.(favorite)}
+      <DataTable
+        classNames={{
+          root: props.tableClassNames?.root,
+          body: props.tableClassNames?.body,
+          header: cn("oui-h-9", props.tableClassNames?.header),
+          scroll: props.tableClassNames?.scroll,
+        }}
+        columns={columns}
+        loading={loading}
+        dataSource={dataSource}
+        onRow={(record, index) => {
+          return {
+            className: cn("oui-h-[53px]", props.rowClassName),
+            onClick: () => {
+              onSymbolChange?.(record);
+              favorite.addToHistory(record);
+            },
+          };
+        }}
+        generatedRowKey={(record) => record.symbol}
+        rowSelection={{ [symbol!]: true }}
+        onSort={onSort}
+        initialSort={
+          initialSort
+            ? {
+                sortKey: initialSort.sortKey,
+                sort: initialSort.sortOrder,
+              }
+            : undefined
+        }
+        manualSorting
+      />
+    </>
   );
 };

@@ -1,7 +1,7 @@
+import { useTranslation } from "@orderly.network/i18n";
 import { TokenIcon, Flex, Text, cn, Tooltip, Badge } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../marketsProvider";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type CollapseMarketsProps = {
   dataSource: any[];
@@ -11,17 +11,14 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
   const { symbol, onSymbolChange } = useMarketsContext();
   const { t } = useTranslation();
   return (
-    <div className="oui-overflow-y-auto oui-custom-scrollbar oui-h-full">
+    <div className="oui-custom-scrollbar oui-h-full oui-overflow-y-auto">
       <Flex direction="column" px={2} gapY={1}>
         {props.dataSource?.map((item) => {
           const content = (
             <Flex intensity={800} p={2} className="oui-gap-x-7" r="base">
               <Flex direction="column" itemAlign="start" gapY={1}>
                 <Flex gapX={1}>
-                  <TokenIcon
-                    symbol={item.symbol}
-                    className="oui-w-[18px] oui-h-[18px]"
-                  />
+                  <TokenIcon symbol={item.symbol} className="oui-size-[18px]" />
                   <Text.formatted
                     rule="symbol"
                     formatString="base"
@@ -84,16 +81,13 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
                 className={cn(
                   "oui-cursor-pointer",
                   "hover:oui-bg-base-7",
-                  symbol === item.symbol && "oui-bg-base-6 hover:oui-bg-base-6"
+                  symbol === item.symbol && "oui-bg-base-6 hover:oui-bg-base-6",
                 )}
                 onClick={() => {
                   onSymbolChange?.(item);
                 }}
               >
-                <TokenIcon
-                  symbol={item.symbol}
-                  className="oui-w-[18px] oui-h-[18px]"
-                />
+                <TokenIcon symbol={item.symbol} className="oui-size-[18px]" />
                 <Text.numeral
                   rule="percentages"
                   coloring

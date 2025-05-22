@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { cn, DataTable } from "@orderly.network/ui";
+import { CollapseMarkets } from "../../components/collapseMarkets";
+import { useMarketsContext } from "../../components/marketsProvider";
+import { useSideMarketsColumns } from "../../components/sideMarkets/column";
 import { UseNewListingListReturn } from "./newListingList.script";
-import { useMarketsContext } from "../marketsProvider";
-import { useSideMarketsColumns } from "../sideMarkets/column";
 import { NewListingListWidgetProps } from "./widget";
-import { CollapseMarkets } from "../collapseMarkets";
 
 export type NewListingListProps = UseNewListingListReturn &
   NewListingListWidgetProps;
