@@ -87,8 +87,9 @@ export const CloseButton = () => {
           e.stopPropagation();
           const quantityMsg = parseErrorMsg("order_quantity");
           const priceMsg = parseErrorMsg("order_price");
-          if (quantityMsg || priceMsg) {
-            toast.error(quantityMsg || priceMsg);
+          const msg = quantityMsg || priceMsg;
+          if (msg) {
+            toast.error(msg);
             return;
           }
           if (!orderConfirm) {
