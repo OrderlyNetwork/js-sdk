@@ -1,3 +1,8 @@
+import { FC, useMemo, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import {
   Button,
   toast,
@@ -10,14 +15,9 @@ import {
   ThrottledButton,
   Box,
 } from "@orderly.network/ui";
-import { usePositionsRowContext } from "./positionRowContext";
-import { FC, useMemo, useState } from "react";
-import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { useSymbolContext } from "../../../providers/symbolProvider";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { usePositionsRowContext } from "./positionRowContext";
 
 export const CloseButton = () => {
   const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ export const CloseButton = () => {
           } else {
             toast.error(error.message);
           }
-        }
+        },
       )
       .catch((error) => {
         if (typeof error === "string") {
@@ -88,7 +88,7 @@ export const CloseButton = () => {
           const quantityMsg = parseErrorMsg("order_quantity");
           const priceMsg = parseErrorMsg("order_price");
           if (quantityMsg || priceMsg) {
-            toast.error(quantityMsg ?? priceMsg);
+            toast.error(quantityMsg || priceMsg);
             return;
           }
           if (!orderConfirm) {
