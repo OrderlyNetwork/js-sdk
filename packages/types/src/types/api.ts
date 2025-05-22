@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { AlgoOrderRootType, OrderSide, OrderType } from "../order";
 
 export enum AnnouncementType {
@@ -433,6 +434,22 @@ export declare namespace API {
     payment_type: string;
     status: string;
     created_time: number;
+    updated_time: number;
+  }
+
+  export interface TransferHistory {
+    meta: RecordsMeta;
+    rows: TransferHistoryRow[];
+  }
+
+  export interface TransferHistoryRow {
+    amount: number;
+    created_time: number;
+    from_account_id: string;
+    id: string;
+    status: "CREATED" | "PENDING" | "COMPLETED" | "FAILED";
+    to_account_id: string;
+    token: string;
     updated_time: number;
   }
 

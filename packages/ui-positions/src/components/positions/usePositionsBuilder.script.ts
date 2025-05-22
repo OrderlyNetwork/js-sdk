@@ -1,8 +1,10 @@
-import { usePositionStream } from "@orderly.network/hooks";
-import { PositionsProps } from "../../types/types";
+import { useEffect } from "react";
+import React from "react";
+import { useAccount, usePositionStream } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { useDataTap } from "@orderly.network/react-app";
 import { usePagination } from "@orderly.network/ui";
-import { useEffect } from "react";
+import { PositionsProps } from "../../types/types";
 
 export const usePositionsBuilder = (props: PositionsProps) => {
   const {
@@ -21,7 +23,7 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     pageSize: 50,
   });
 
-  const [data, info, { isLoading }] = usePositionStream(symbol, {
+  const [data, , { isLoading }] = usePositionStream(symbol, {
     calcMode,
     includedPendingOrder,
   });
@@ -30,10 +32,7 @@ export const usePositionsBuilder = (props: PositionsProps) => {
     setPage(1);
   }, [symbol]);
 
-  const dataSource =
-    useDataTap(data?.rows, {
-      fallbackData: [],
-    }) ?? undefined;
+  const dataSource = useDataTap(data?.rows, { fallbackData: [] }) ?? undefined;
 
   return {
     dataSource,

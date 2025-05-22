@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { Box } from "../box";
-import { Spinner } from "../spinner/spinner";
 import { ExtensionPositionEnum, ExtensionSlot } from "../plugin";
+import { Spinner } from "../spinner/spinner";
 
 type TablePlaceholderProps = {
   visible?: boolean;
@@ -11,9 +11,9 @@ type TablePlaceholderProps = {
 
 export const TablePlaceholder: FC<TablePlaceholderProps> = (props) => {
   const { visible, loading, emptyView } = props;
-
-  if (!visible) return null;
-
+  if (!visible) {
+    return null;
+  }
   return (
     <Box
       position="absolute"

@@ -72,6 +72,7 @@ export {
 export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
+export { useTransferHistory } from "./statistics/useTransferHistory";
 
 export {
   useMaintenanceStatus,

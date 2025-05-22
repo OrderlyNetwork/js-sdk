@@ -153,10 +153,12 @@ export const MobileOrderList: FC<
           <Flex gap={2} p={2} className="oui-rounded-b-xl oui-bg-base-9">
             {props.filterItems.map((item) => {
               // not support range type
-              if (item.type !== "select") return <></>;
+              if (item.type !== "select") {
+                return null;
+              }
               return (
                 <Picker
-                  key={item.name}
+                  key={`item-${item.name}`}
                   options={item.options}
                   size={"sm"}
                   value={item.value}

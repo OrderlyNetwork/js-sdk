@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { API } from "@orderly.network/types";
 import {
   cn,
   DataFilter,
@@ -7,10 +8,9 @@ import {
   ListView,
   Text,
 } from "@orderly.network/ui";
-import { LiquidationState } from "./liquidation.script";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { API } from "@orderly.network/types";
 import { useLiquidationColumn } from "./desktop/useLiquidationColumn";
+import { LiquidationState } from "./liquidation.script";
 import { LiquidationCellWidget } from "./mobile";
 
 export const Liquidation: FC<LiquidationState> = (props) => {
@@ -30,7 +30,10 @@ export const Liquidation: FC<LiquidationState> = (props) => {
         )}
         {[1, 7, 30, 90].map((value) => {
           return (
-            <button className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm">
+            <button
+              key={`item-${value}`}
+              className="oui-relative oui-px-2 oui-py-[2px] oui-text-sm"
+            >
               <div className="oui-z-10">
                 <Text.gradient
                   color={props.filterDays === value ? "brand" : undefined}
@@ -44,7 +47,7 @@ export const Liquidation: FC<LiquidationState> = (props) => {
                 </Text.gradient>
               </div>
               <div
-                className="oui-gradient-primary oui-opacity-[.12] oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0 oui-rounded"
+                className="oui-absolute oui-inset-0 oui-rounded oui-opacity-[.12] oui-gradient-primary"
                 onClick={() => {
                   props.updateFilterDays(value as any);
                 }}
@@ -89,12 +92,12 @@ export const MobileLiquidation: FC<
     <Grid
       cols={1}
       rows={2}
-      className="oui-grid-rows-[auto,1fr] oui-w-full"
+      className="oui-w-full oui-grid-rows-[auto,1fr]"
       gap={1}
     >
-      <Flex gap={2} p={2} className="oui-bg-base-9 oui-rounded-b-xl">
+      <Flex gap={2} p={2} className="oui-rounded-b-xl oui-bg-base-9">
         <DataFilter
-          className="oui-pt-0 oui-pb-0 oui-border-none"
+          className="oui-border-none oui-py-0"
           items={props.filterItems}
           onFilter={(value: any) => {
             props.onFilter(value);
@@ -103,8 +106,8 @@ export const MobileLiquidation: FC<
       </Flex>
       <ListView
         className={cn(
-          "oui-w-full oui-hide-scrollbar oui-overflow-y-hidden oui-space-y-0",
-          props.classNames?.root
+          "oui-hide-scrollbar oui-w-full oui-space-y-0 oui-overflow-y-hidden",
+          props.classNames?.root,
         )}
         contentClassName={cn("!oui-space-y-1", props.classNames?.content)}
         dataSource={props.dataSource}

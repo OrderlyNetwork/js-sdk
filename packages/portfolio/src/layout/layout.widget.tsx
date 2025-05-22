@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from "react";
-import { PortfolioLayout, PortfolioLayoutProps } from "./layout.ui";
 import { usePortfolioLayoutScript } from "./layout.script";
+import { PortfolioLayout, PortfolioLayoutProps } from "./layout.ui";
 
 export type PortfolioLayoutWidgetProps = PortfolioLayoutProps;
 

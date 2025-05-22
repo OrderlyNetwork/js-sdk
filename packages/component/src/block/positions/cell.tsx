@@ -1,10 +1,10 @@
+import { FC, useContext } from "react";
+import { API } from "@orderly.network/types";
 import Button from "@/button";
 import { Coin, NetworkImage, PositionShareIcon } from "@/icon";
-import { Statistic } from "@/statistic";
-import { FC, useContext } from "react";
-import { Numeral, Text } from "@/text";
 import { SymbolContext } from "@/provider";
-import { API } from "@orderly.network/types";
+import { Statistic } from "@/statistic";
+import { Numeral, Text } from "@/text";
 import { cn } from "@/utils/css";
 import { SharePnLIcon } from "../shared/sharePnLIcon";
 import { TPSLTriggerPrice } from "./tpslTriggerPrice";
@@ -53,8 +53,8 @@ export const PositionCell: FC<PositionCellProps> = (props) => {
                 item["unrealized_pnl"] > 0
                   ? "orderly-text-trade-profit"
                   : item["unrealized_pnl"] < 0
-                  ? "orderly-text-trade-loss"
-                  : "orderly-text-base-contrast/50"
+                    ? "orderly-text-trade-loss"
+                    : "orderly-text-base-contrast/50",
               )}
             >
               <Numeral>{item["unrealized_pnl"]}</Numeral>

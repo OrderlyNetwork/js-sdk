@@ -1,9 +1,9 @@
+import React from "react";
+import { type VariantProps, tv } from "tailwind-variants";
 import {
   ComponentPropsWithout,
   RemovedProps,
 } from "../helpers/component-props";
-import React from "react";
-import { type VariantProps, tv } from "tailwind-variants";
 
 const iconVariants = tv({
   variants: {
@@ -36,7 +36,7 @@ export interface BaseIconProps
 
 export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
-    const { size = 24, color, className, ...rest } = props;
+    const { size = 24, color, className, children, ...rest } = props;
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,9 @@ export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         ref={ref}
         className={iconVariants({ className, color })}
         {...rest}
-      />
+      >
+        {children}
+      </svg>
     );
-  }
+  },
 );
