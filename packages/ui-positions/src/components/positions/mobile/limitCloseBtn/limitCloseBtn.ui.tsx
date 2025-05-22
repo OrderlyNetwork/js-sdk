@@ -1,4 +1,7 @@
 import { FC } from "react";
+import { utils } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
   Badge,
   Button,
@@ -14,12 +17,9 @@ import {
   ThrottledButton,
   toast,
 } from "@orderly.network/ui";
-import { LimitCloseBtnState } from "./limitCloseBtn.script";
 import { Decimal } from "@orderly.network/utils";
 import { LimitConfirmDialog } from "../../desktop/closeButton";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { LimitCloseBtnState } from "./limitCloseBtn.script";
 
 export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
   const {
@@ -132,7 +132,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   suffix: "oui-text-base-contrast-54",
                   root: cn(
                     "oui-outline-line-12 oui-w-full",
-                    orderPriceErrorMsg ? "oui-outline-danger" : undefined
+                    orderPriceErrorMsg ? "oui-outline-danger" : undefined,
                   ),
                 }}
               />
@@ -166,7 +166,7 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                   prefix: "oui-text-base-contrast-54",
                   suffix: "oui-text-base-contrast-54",
                   root: cn(
-                    "oui-outline-line-12 oui-w-full"
+                    "oui-outline-line-12 oui-w-full",
                     // orderQuantityErrorMsg
                     //   ? "oui-outline-danger"
                     //   : undefined
@@ -219,9 +219,9 @@ export const LimitCloseBtn: FC<LimitCloseBtnState> = (props) => {
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-
-                  if (orderQuantityErrorMsg || orderPriceErrorMsg) {
-                    toast.error(orderQuantityErrorMsg ?? orderPriceErrorMsg);
+                  const msg = orderQuantityErrorMsg || orderPriceErrorMsg;
+                  if (msg) {
+                    toast.error(msg);
                     return;
                   }
                   if (!props.orderConfirm) {
