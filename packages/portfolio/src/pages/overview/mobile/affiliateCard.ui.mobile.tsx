@@ -32,7 +32,7 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
         oui-rounded-xl 
         oui-border 
         oui-border-solid 
-        oui-border-[rgba(var(--oui-gradient-primary-end)/0.36)] 
+        oui-border-[rgba(var(--oui-gradient-primary-start)/0.36)] 
         oui-bg-gradient-to-r
         oui-from-[rgba(var(--oui-gradient-primary-end)/0.12)]
         oui-to-[rgba(var(--oui-gradient-primary-start)/0.12)]
@@ -48,6 +48,7 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
             {t("affiliate.commission.30d")}
           </Text>
         </Flex>
+        {/* <TraderMobileIcon /> */}
         <AffiliateIcon />
       </Flex>
       <Flex className="oui-mt-auto oui-w-full oui-flex-row oui-items-center oui-gap-1">

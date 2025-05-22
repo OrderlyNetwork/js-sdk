@@ -66,7 +66,7 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
         oui-rounded-xl 
         oui-border 
         oui-border-solid 
-        oui-border-[rgba(var(--oui-gradient-secondary-end)/0.36)] 
+        oui-border-[rgba(var(--oui-gradient-secondary-start)/0.36)] 
         oui-bg-gradient-to-r
         oui-from-[rgba(var(--oui-gradient-secondary-end)/0.12)]
         oui-to-[rgba(var(--oui-gradient-secondary-start)/0.12)]
@@ -75,7 +75,7 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
     >
       <Flex className="oui-w-full oui-flex-row oui-justify-between oui-items-center">
         <Flex className="oui-flex-col oui-items-start">
-          <Text className="oui-text-base-contrast oui-text-base oui-font-semibold">
+          <Text className="oui-text-base-contrast oui-text-base oui-font-semibold oui-whitespace-pre max-[400px]:oui-text-[15px]">
             {t("common.tradingRewards")}
           </Text>
           <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">

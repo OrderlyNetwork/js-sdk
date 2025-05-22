@@ -19,7 +19,7 @@ export const SettingRouterMobile: FC<Props> = (props) => {
     <Flex
       direction={"row"}
       width={"100%"}
-      className="oui-cursor-pointer oui-items-center oui-gap-2 oui-rounded-xl oui-bg-base-9 oui-p-4"
+      className="oui-cursor-pointer oui-items-center oui-gap-2 oui-rounded-xl oui-bg-base-9 oui-p-4 oui-mb-3"
       onClick={() =>
         props?.routerAdapter?.onRouteChange({
           href: PortfolioLeftSidebarPath.Setting,

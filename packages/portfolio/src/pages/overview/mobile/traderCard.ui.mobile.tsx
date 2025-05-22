@@ -32,7 +32,7 @@ export const TraderCardMobile: FC<TraderCardMobileProps> = (props) => {
         oui-rounded-xl 
         oui-border
         oui-border-solid 
-        oui-border-[rgba(var(--oui-gradient-success-end)/0.36)]
+        oui-border-[rgba(var(--oui-gradient-success-start)/0.36)]
         oui-bg-gradient-to-r
         oui-from-[rgba(var(--oui-gradient-success-end)/0.12)]
         oui-to-[rgba(var(--oui-gradient-success-start)/0.12)]

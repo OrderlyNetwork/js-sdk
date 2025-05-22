@@ -34,7 +34,7 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
       width={"100%"}
       height={"100%"}
       className={cn([
-        "oui-relative oui-items-start oui-gap-1 oui-overflow-hidden oui-rounded-2xl oui-bg-base-9",
+        "oui-relative oui-items-start oui-overflow-hidden oui-rounded-2xl oui-bg-base-9",
         currentNamespace === ChainNamespace.evm && "oui-bg-[#283BEE]",
         currentNamespace === ChainNamespace.solana && "oui-bg-[#630EAD]",
       ])}
@@ -52,14 +52,19 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
           onClick={props.toggleVisible}
         />
       </Flex>
-      <Flex direction="row" gapX={1} itemAlign={"center"}>
+      <Flex
+        direction="row"
+        gapX={1}
+        itemAlign={"baseline"}
+        className="oui-mt-1"
+      >
         <Text.numeral
           visible={props.visible}
-          className="oui-text-base-contrast oui-text-xl  oui-font-bold"
+          className="oui-text-base-contrast oui-text-3xl oui-font-bold"
         >
           {props.portfolioValue ?? "--"}
         </Text.numeral>
-        <Text className="oui-text-base oui-font-bold  oui-text-base-contrast-80">
+        <Text className="oui-text-base oui-font-bold oui-text-base-contrast-80">
           USDC
         </Text>
       </Flex>
