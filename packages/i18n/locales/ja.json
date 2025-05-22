@@ -608,5 +608,7 @@
   "tradingLeaderboard.learnMore": "詳細を学ぶ",
   "tradingLeaderboard.tradeNow": "今すぐ取引",
   "tradingLeaderboard.tradingVolume": "取引量",
-  "tradingLeaderboard.rank": "ランク"
+  "tradingLeaderboard.rank": "ランク",
+  "common.long": "購入",
+  "common.short": "販売"
 }

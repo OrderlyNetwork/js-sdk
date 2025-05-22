@@ -1,4 +1,5 @@
 import { MouseEventHandler, useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text, Box, Tooltip, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
@@ -9,11 +10,10 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const useMarketsListFullColumns = (
   favorite: FavoriteInstance,
-  isFavoriteList = false
+  isFavoriteList = false,
 ) => {
   const { t } = useTranslation();
 
@@ -29,7 +29,7 @@ export const useMarketsListFullColumns = (
             favorite.updateSymbolFavoriteState(
               record,
               favorite.selectedFavoriteTab,
-              true
+              true,
             );
             e.stopPropagation();
           };
@@ -187,7 +187,7 @@ export const useMarketsListFullColumns = (
                   delayDuration={0}
                 >
                   <Box
-                    className="oui-hidden group-hover:oui-block oui-cursor-pointer"
+                    className="oui-hidden oui-cursor-pointer group-hover:oui-block"
                     onClick={(e) => {
                       e.stopPropagation();
                       favorite.pinToTop(record);

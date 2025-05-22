@@ -1,12 +1,10 @@
 import { FC } from "react";
 import { cn, DataTable } from "@orderly.network/ui";
-import { type UseMarketsListFullReturn } from "./marketsListFull.script";
-import { TInitialSort } from "../../type";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useMarketsListFullColumns } from "./column";
+import { type UseMarketsListFullReturn } from "./marketsListFull.script";
 
 export type MarketsListFullProps = UseMarketsListFullReturn & {
-  initialSort: TInitialSort;
   type?: "all" | "new";
 };
 

@@ -1,3 +1,4 @@
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseCircleFillIcon,
@@ -5,17 +6,17 @@ import {
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
-import { UseMarketsDataListScript } from "./dataList.script";
+import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
+import { MarketsListFullWidget } from "../../../components/marketsListFull";
+import { useMarketsContext } from "../../../components/marketsProvider";
 import {
   AllMarketsIcon,
   FavoritesIcon,
   NewListingsIcon,
   SearchIcon,
 } from "../../../icons";
-import { useMarketsContext } from "../../../components/marketsProvider";
-import { MarketsListFullWidget } from "../../../components/marketsListFull";
-import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
-import { useTranslation } from "@orderly.network/i18n";
+import { UseMarketsDataListScript } from "./dataList.script";
+
 export type MarketsDataListProps = UseMarketsDataListScript;
 
 export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
@@ -30,7 +31,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
       value={searchValue}
       onValueChange={onSearchValueChange}
       placeholder={t("markets.search.placeholder")}
-      className="oui-w-[240px] oui-my-1"
+      className="oui-my-1 oui-w-[240px]"
       size="sm"
       data-testid="oui-testid-markets-searchMarket-input"
       prefix={
@@ -43,7 +44,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           <Box mr={2}>
             <CloseCircleFillIcon
               size={14}
-              className="oui-text-base-contrast-36 oui-cursor-pointer"
+              className="oui-cursor-pointer oui-text-base-contrast-36"
               onClick={clearSearchValue}
             />
           </Box>
@@ -78,8 +79,10 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         >
           <MarketsListFullWidget
             type="all"
-            sortKey="24h_amount"
-            sortOrder="desc"
+            initialSort={{
+              sortKey: "24h_amount",
+              sortOrder: "desc",
+            }}
           />
         </TabPanel>
         <TabPanel
@@ -90,8 +93,10 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         >
           <MarketsListFullWidget
             type="new"
-            sortKey="created_time"
-            sortOrder="desc"
+            initialSort={{
+              sortKey: "created_time",
+              sortOrder: "desc",
+            }}
           />
         </TabPanel>
       </Tabs>

@@ -1,15 +1,15 @@
-import { FavoritesTab } from "./favoritesTabs.ui";
 import {
   useFavoritesTabScript,
   UseFavoritesTabScriptOptions,
 } from "./favoritesTabs.script";
+import { FavoritesTab } from "./favoritesTabs.ui";
 
 export type FavoritesTabWidgetProps = UseFavoritesTabScriptOptions & {
   className?: string;
 };
 
 export const FavoritesTabWidget: React.FC<FavoritesTabWidgetProps> = (
-  props
+  props,
 ) => {
   const { className, ...rest } = props;
   const state = useFavoritesTabScript(rest);

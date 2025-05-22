@@ -7,6 +7,8 @@
   "common.all": "Alle",
   "common.buy": "Kopen",
   "common.sell": "Verkopen",
+  "common.long": "Kopen",
+  "common.short": "Verkopen",
   "common.edit": "Bewerken",
   "common.save": "Opslaan",
   "common.add": "Toevoegen",

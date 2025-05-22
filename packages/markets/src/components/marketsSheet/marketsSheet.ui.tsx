@@ -1,3 +1,4 @@
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseCircleFillIcon,
@@ -6,14 +7,14 @@ import {
   Input,
   Text,
 } from "@orderly.network/ui";
-import { UseMarketsSheetScriptReturn } from "./marketsSheet.script";
 import { SearchIcon } from "../../icons";
+import { TabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
 import { getMarketsSheetColumns } from "./column";
-import { useTranslation } from "@orderly.network/i18n";
+import { MarketsSheetScriptReturn } from "./marketsSheet.script";
 
-export type MarketsSheetProps = UseMarketsSheetScriptReturn & {
+export type MarketsSheetProps = MarketsSheetScriptReturn & {
   className?: string;
 };
 
@@ -41,7 +42,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           <Box mr={2}>
             <CloseCircleFillIcon
               size={14}
-              className="oui-text-base-contrast-36 oui-cursor-pointer"
+              className="oui-cursor-pointer oui-text-base-contrast-36"
               onClick={clearSearchValue}
             />
           </Box>
@@ -54,7 +55,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
   return (
     <Grid
       cols={1}
-      className={cn("oui-font-semibold oui-grid-rows-[auto,1fr]", className)}
+      className={cn("oui-grid-rows-[auto,1fr] oui-font-semibold", className)}
       height="100%"
       width="100%"
     >
@@ -69,13 +70,12 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
         <Box
           width="100%"
           mt={2}
-          className="oui-absolute oui-left-0 oui-right-9 oui-top-0 oui-bottom-0"
+          className="oui-absolute oui-inset-y-0 oui-left-0 oui-right-9"
         >
           <MarketsListWidget
-            type="all"
-            sortKey={tabSort?.sortKey}
-            sortOrder={tabSort?.sortOrder}
-            onSort={onTabSort}
+            type={TabName.All}
+            initialSort={tabSort[TabName.All]}
+            onSort={onTabSort(TabName.All)}
             getColumns={getMarketsSheetColumns}
             tableClassNames={{
               root: "!oui-bg-base-8",
