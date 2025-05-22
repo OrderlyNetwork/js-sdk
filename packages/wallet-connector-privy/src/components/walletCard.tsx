@@ -20,6 +20,7 @@ import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { WalletConnectType, WalletType } from "../types";
 import { PrivyConnectorImagePath } from "../util";
+import { EVMChainPopover } from "./common";
 import { DisconnectIcon, MoreIcon } from "./icons";
 
 interface WalletCardProps {
@@ -193,45 +194,6 @@ function PrivyWalletHandleOption({
         </DropdownMenuContent>
       </DropdownMenuPortal>
     </DropdownMenuRoot>
-  );
-}
-
-export function EVMChainPopover({ children }: { children: React.ReactNode }) {
-  const { getChainsByNetwork } = useWalletConnectorPrivy();
-  const [chains] = useState(getChainsByNetwork("mainnet"));
-  const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(true);
-  const { t } = useTranslation();
-
-  return (
-    <Popover
-      content={
-        <div>
-          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast">
-            {t("connector.privy.supportedEvmChain")}
-          </div>
-          <div className="oui-mt-3 oui-grid oui-grid-cols-3 oui-gap-x-2 oui-gap-y-3 oui-text-2xs oui-text-base-contrast-54">
-            {chains.map((item, key) => (
-              <div
-                key={key}
-                className="oui-flex oui-items-center oui-justify-start oui-gap-1"
-              >
-                <ChainIcon chainId={item.id} size="2xs" />
-                <div>{item.name}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      }
-      arrow={true}
-      contentProps={{
-        side: "bottom",
-        align: "center",
-        className: "oui-p-2 oui-z-[65]",
-      }}
-    >
-      <button>{children}</button>
-    </Popover>
   );
 }
 

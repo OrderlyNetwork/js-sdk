@@ -8,27 +8,16 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import {
-  AccountStatusEnum,
-  ChainNamespace,
-  LinkDeviceKey,
-} from "@orderly.network/types";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import {
   cn,
-  ArrowRightShortIcon,
   modal,
   toast,
   formatAddress,
   Flex,
   CopyIcon,
   ChainIcon,
-  Popover,
 } from "@orderly.network/ui";
-import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
-import {
-  AuthGuard,
-  WalletConnectorSheetId,
-} from "@orderly.network/ui-connector";
 
 interface StatusInfo {
   title: string;
@@ -45,19 +34,19 @@ const useCurrentStatus = () => {
   const statusText = {
     wrongNetwork: {
       description: t("connector.wrongNetwork.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#D25F00_-11%,transparent_30%)]",
+      rootClass: "oui-bg-[linear-gradient(15deg,#D25F00_0%,transparent_30%)]",
     },
     connectWallet: {
       description: t("connector.trade.connectWallet.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#27FDFE_-11%,transparent_30%)]",
+      rootClass: "oui-bg-[linear-gradient(15deg,#27FDFE_0%,transparent_30%)]",
     },
     notSignedIn: {
       description: t("connector.trade.signIn.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#335FFC_-11%,transparent_30%)]",
+      rootClass: "oui-bg-[linear-gradient(15deg,#335FFC_0%,transparent_30%)]",
     },
     disabledTrading: {
       description: t("connector.trade.enableTrading.tooltip"),
-      rootClass: "oui-bg-[linear-gradient(15deg,#335FFC_-11%,transparent_30%)]",
+      rootClass: "oui-bg-[linear-gradient(15deg,#335FFC_0%,transparent_30%)]",
     },
     default: {
       description: "",
@@ -96,14 +85,13 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
   });
   const { t } = useTranslation();
 
-  return (
-    <Popover
-      content={
+  const showDialog = () => {
+    modal.dialog({
+      title: t("connector.privy.supportedEvmChain"),
+      size: "xs",
+      content: (
         <div>
-          <div className="oui-px-3 oui-py-1 oui-text-base oui-font-semibold oui-text-base-contrast">
-            {t("connector.privy.supportedEvmChain")}
-          </div>
-          <div className="oui-p-3 oui-grid oui-grid-cols-2 oui-gap-x-2 oui-gap-y-3 oui-text-2xs oui-text-base-contrast-54">
+          <div className="oui-p-1 oui-grid oui-grid-cols-2 oui-gap-x-2 oui-gap-y-3 oui-text-2xs oui-text-base-contrast-54">
             {chains.map((item, key) => (
               <div
                 key={key}
@@ -115,17 +103,11 @@ export function EVMChainPopover({ children }: { children: React.ReactNode }) {
             ))}
           </div>
         </div>
-      }
-      arrow={true}
-      contentProps={{
-        side: "bottom",
-        align: "center",
-        className: "oui-p-2 oui-z-[65]",
-      }}
-    >
-      <button>{children}</button>
-    </Popover>
-  );
+      ),
+    });
+  };
+
+  return <button onClick={showDialog}>{children}</button>;
 }
 
 export const MoreIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
@@ -148,7 +130,7 @@ const EVMChains = () => {
     <div className="oui-relative oui-flex oui-items-center oui-justify-center">
       <div className="oui-flex oui-h-[18px] oui-items-center oui-justify-center ">
         <img
-          src="https://oss.orderly.network/static/sdk/chains.png"
+          src="https://oss.orderly.network/static/sdk/portfolio/chains.png"
           className="oui-relative oui-z-0 oui-h-[18px] oui-w-[49px]"
         />
       </div>

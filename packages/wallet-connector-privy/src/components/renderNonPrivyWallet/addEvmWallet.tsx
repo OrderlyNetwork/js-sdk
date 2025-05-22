@@ -7,8 +7,8 @@ import { useWalletConnectorPrivy } from "../../provider";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
 import { WalletConnectType, WalletType } from "../../types";
 import { RenderWalletIcon } from "../common";
+import { EVMChainPopover } from "../common";
 import { MoreIcon } from "../icons";
-import { EVMChainPopover } from "../walletCard";
 
 export function AddEvmWallet() {
   const { t } = useTranslation();

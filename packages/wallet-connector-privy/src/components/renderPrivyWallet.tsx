@@ -8,9 +8,9 @@ import { useWallet } from "../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { WalletChainTypeEnum, WalletConnectType, WalletType } from "../types";
-import { RenderPrivyTypeIcon } from "./common";
+import { RenderPrivyTypeIcon, EVMChainPopover } from "./common";
 import { MoreIcon } from "./icons";
-import { EVMChainPopover, WalletCard } from "./walletCard";
+import { WalletCard } from "./walletCard";
 
 function NoWallet() {
   const { walletChainType } = useWalletConnectorPrivy();

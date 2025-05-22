@@ -11,6 +11,7 @@ import { useAbstractWallet } from "../../providers/abstractWallet/abstractWallet
 import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
 import { WalletType } from "../../types";
+import { StorageChainNotCurrentWalletType } from "../switchNetworkTips";
 import { WalletCard } from "../walletCard";
 import { AddAbstractWallet } from "./addAbstractWallet";
 import { AddEvmWallet } from "./addEvmWallet";
@@ -98,6 +99,9 @@ export function RenderNonPrivyWallet() {
   ]);
   return (
     <>
+      {walletList.length && (
+        <StorageChainNotCurrentWalletType currentWalletChainType={namespace} />
+      )}
       <div className="oui-flex oui-flex-col oui-gap-5">
         {walletList.map((wallet) => (
           <WalletCard
