@@ -5,7 +5,6 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
-import { LanguageSwitcherWidget } from "../languageSwitcher";
 import { RouterAdapter } from "../scaffold";
 import { ScanQRCodeWidget } from "../scanQRCode";
 import { LinkDeviceWidget } from "./linkDevice";
@@ -128,7 +127,6 @@ export const MainNavMobile: FC<Props> = (props) => {
     >
       <Flex>{title}</Flex>
       <Flex gapX={2}>
-        <LanguageSwitcherWidget />
         {showQrcode && <ScanQRCodeWidget />}
         {renderContent()}
         <WalletConnectButtonExtension />
