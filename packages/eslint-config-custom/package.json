@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-custom",
-  "version": "3.0.0-npm-publish.0",
+  "version": "3.0.0-npm-publish.1",
   "main": "index.mjs",
   "license": "MIT",
   "private": true,

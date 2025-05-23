@@ -1,5 +1,11 @@
 # tsconfig
 
+## 2.0.0-npm-publish.1
+
+### Patch Changes
+
+- publish
+
 ## 2.0.0-npm-publish.0
 
 ### Major Changes

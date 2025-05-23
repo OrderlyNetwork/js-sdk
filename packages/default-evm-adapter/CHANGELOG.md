@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 4.0.0-npm-publish.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@4.0.0-npm-publish.1
+  - @orderly.network/types@4.0.0-npm-publish.1
+
 ## 4.0.0-npm-publish.0
 
 ### Major Changes

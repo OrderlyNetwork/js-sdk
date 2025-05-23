@@ -1,5 +1,20 @@
 # @orderly.network/trading-rewards
 
+## 4.0.0-npm-publish.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@4.0.0-npm-publish.1
+  - @orderly.network/hooks@4.0.0-npm-publish.1
+  - @orderly.network/i18n@4.0.0-npm-publish.1
+  - @orderly.network/types@4.0.0-npm-publish.1
+  - @orderly.network/ui@4.0.0-npm-publish.1
+  - @orderly.network/ui-connector@4.0.0-npm-publish.1
+  - @orderly.network/ui-scaffold@4.0.0-npm-publish.1
+  - @orderly.network/utils@4.0.0-npm-publish.1
+
 ## 4.0.0-npm-publish.0
 
 ### Major Changes
