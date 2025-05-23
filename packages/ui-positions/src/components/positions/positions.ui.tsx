@@ -1,30 +1,38 @@
 import React from "react";
-import { API } from "@orderly.network/types";
-import { ListView } from "@orderly.network/ui";
+import type { API } from "@orderly.network/types";
+import { Badge, formatAddress, ListView } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { SymbolProvider } from "../../providers/symbolProvider";
-import { PositionsProps } from "../../types/types";
+import type { PositionsProps } from "../../types/types";
+import type { CombinePositionsState } from "./combinePositions.script";
 import { PositionsRowProvider } from "./desktop/positionRowContext";
 import { useColumn } from "./desktop/useColumn";
 import { PositionCellWidget } from "./mobile/positionCell";
-import { PositionsBuilderState } from "./usePositionsBuilder.script";
+import type { PositionsState } from "./positions.script";
 
-export const Positions: React.FC<Readonly<PositionsBuilderState>> = (props) => {
-  const { pnlNotionalDecimalPrecision, sharePnLConfig, pagination } = props;
+export const Positions: React.FC<Readonly<PositionsState>> = (props) => {
+  const {
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    pagination,
+    isLoading,
+    dataSource,
+    onSymbolChange,
+  } = props;
 
   const column = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
-    onSymbolChange: props.onSymbolChange,
+    onSymbolChange: onSymbolChange,
   });
 
   return (
     <AuthGuardDataTable<API.PositionTPSLExt>
-      loading={props.isLoading}
+      loading={isLoading}
       id="oui-desktop-positions-content"
       columns={column}
       bordered
-      dataSource={props.dataSource}
+      dataSource={dataSource}
       generatedRowKey={(record: any) => record.symbol}
       renderRowContainer={(record: any, index: number, children: any) => {
         return (
@@ -45,14 +53,19 @@ export const Positions: React.FC<Readonly<PositionsBuilderState>> = (props) => {
 };
 
 export const MobilePositions: React.FC<
-  Readonly<PositionsBuilderState & PositionsProps>
+  Readonly<PositionsState & PositionsProps>
 > = (props) => {
-  const { pnlNotionalDecimalPrecision, sharePnLConfig } = props;
+  const {
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    dataSource,
+    onSymbolChange,
+  } = props;
   return (
     <ListView
       className="oui-hide-scrollbar oui-w-full oui-space-y-0 oui-overflow-y-hidden"
       contentClassName="!oui-space-y-1"
-      dataSource={props.dataSource}
+      dataSource={dataSource}
       renderItem={(item, index) => (
         <SymbolProvider symbol={item.symbol}>
           <PositionsRowProvider position={item}>
@@ -61,11 +74,80 @@ export const MobilePositions: React.FC<
               index={index}
               pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
               sharePnLConfig={sharePnLConfig}
-              onSymbolChange={props.onSymbolChange}
+              onSymbolChange={onSymbolChange}
             />
           </PositionsRowProvider>
         </SymbolProvider>
       )}
+    />
+  );
+};
+
+export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
+  props,
+) => {
+  const {
+    isLoading,
+    dataSource,
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    pagination,
+    onSymbolChange,
+  } = props;
+
+  const columns = useColumn({
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    onSymbolChange: onSymbolChange,
+  });
+
+  return (
+    <AuthGuardDataTable<any>
+      bordered
+      loading={isLoading}
+      id="oui-desktop-positions-content"
+      columns={columns}
+      dataSource={dataSource}
+      expanded={{
+        main_account: true,
+        sub_account: true,
+      }}
+      getSubRows={(row) => row.children}
+      generatedRowKey={(record) => `${record.symbol}`}
+      onCell={(column, record) => {
+        const isGroup = (record.children ?? []).length > 0;
+        if (isGroup) {
+          return {
+            children:
+              column.id === "symbol" ? (
+                <Badge color="neutral" size="xs">
+                  {record?.description || formatAddress(record?.id!)}
+                </Badge>
+              ) : null,
+          };
+        }
+      }}
+      renderRowContainer={(record: any, index: number, children: any) => {
+        if (
+          !props.symbol ||
+          props.symbol === "main_account" ||
+          props.symbol === "sub_account"
+        ) {
+          return children;
+        }
+        return (
+          <SymbolProvider symbol={record.symbol}>
+            <PositionsRowProvider position={record}>
+              {children}
+            </PositionsRowProvider>
+          </SymbolProvider>
+        );
+      }}
+      manualPagination={false}
+      pagination={pagination}
+      testIds={{
+        body: "oui-testid-dataList-position-tab-body",
+      }}
     />
   );
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { produce } from "immer";
 import {
@@ -57,7 +58,7 @@ export const useAssetsScript = () => {
 
   const [selectedAccount, setSelectedAccount] = React.useState("All accounts");
 
-  const memoizedTotalValue = React.useMemo(() => {
+  const memoizedTotalValue = React.useMemo<number>(() => {
     const mainTotalValue = calculateTotalHolding(holding);
     const subTotalValue = calculateTotalHolding(subAccounts);
     return new Decimal(mainTotalValue).plus(subTotalValue).toNumber();

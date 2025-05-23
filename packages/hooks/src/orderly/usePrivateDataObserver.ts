@@ -20,7 +20,6 @@ import { useAppStore } from "./appStore";
 import { usePositionActions } from "./orderlyHooks";
 
 export const usePrivateDataObserver = (options: {
-  // onUpdateOrders: (data: any) => void;
   getKeysMap: (type: string) => Map<string, getKeyFunction>;
 }) => {
   const ws = useWS();
@@ -159,10 +158,7 @@ export const usePrivateDataObserver = (options: {
     isHoldingInit.current = true;
   }, [holding]);
 
-  const [subOrder, setSubOrder] = useLocalStorage(
-    "orderly_subscribe_order",
-    true,
-  );
+  const [subOrder] = useLocalStorage("orderly_subscribe_order", true);
 
   const updateOrders = (
     data: WSMessage.AlgoOrder[] | WSMessage.Order,
@@ -218,8 +214,12 @@ export const usePrivateDataObserver = (options: {
 
   // orders
   useEffect(() => {
-    if (!state.accountId) return;
-    if (subOrder !== true) return;
+    if (!state.accountId) {
+      return;
+    }
+    if (subOrder !== true) {
+      return;
+    }
     const unsubscribe = ws.privateSubscribe("executionreport", {
       onMessage: (data: any) => {
         updateOrders(data, false);
@@ -244,7 +244,9 @@ export const usePrivateDataObserver = (options: {
 
   // positions
   useEffect(() => {
-    if (!state.accountId) return;
+    if (!state.accountId) {
+      return;
+    }
     const key = ["/v1/positions", state.accountId];
     const unsubscribe = ws.privateSubscribe("position", {
       onMessage: (data: { positions: WSMessage.Position[] }) => {
@@ -289,9 +291,7 @@ export const usePrivateDataObserver = (options: {
               if (nextPositions.length > 0) {
                 newPositions.rows = [
                   ...newPositions.rows,
-                  ...nextPositions.map((item) => {
-                    return object2underscore(item);
-                  }),
+                  ...nextPositions.map(object2underscore),
                 ];
               }
 
