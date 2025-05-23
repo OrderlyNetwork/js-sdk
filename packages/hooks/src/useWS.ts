@@ -1,10 +1,10 @@
 import { useContext, useRef } from "react";
+import useConstant from "use-constant";
 import { Account, AccountState, SimpleDI } from "@orderly.network/core";
 import { WS } from "@orderly.network/net";
-import useConstant from "use-constant";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { OrderlyContext } from "./orderlyContext";
 import { getGlobalObject, getTimestamp } from "@orderly.network/utils";
+import { OrderlyContext } from "./orderlyContext";
 
 const WS_NAME = "nativeWebsocketClient";
 

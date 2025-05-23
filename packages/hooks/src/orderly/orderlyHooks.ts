@@ -19,13 +19,14 @@ export {
 } from "./useMarkets";
 export type { FavoriteTab, Favorite, Recent, NewListing } from "./useMarkets";
 export { useMarkPricesStream } from "./useMarkPricesStream";
+export { useIndexPricesStream } from "./useIndexPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
 
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
-export { useFundingRates } from "./useFundingRates";
+export { useFundingRates, type FundingRates } from "./useFundingRates";
 export { useFundingRateHistory } from "./useFundingRateHistory";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
 export type { PriceMode } from "./usePositionStream/usePositionStream";
@@ -86,3 +87,6 @@ export {
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
 export { useStorageLedgerAddress } from "./useStorageLedgerAddress";
+
+export { useSymbolsInfoStore } from "./useSymbolsInfo";
+export { useFundingRatesStore } from "./useFundingRates";

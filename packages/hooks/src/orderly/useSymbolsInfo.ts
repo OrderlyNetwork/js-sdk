@@ -1,10 +1,7 @@
 import { useMemo } from "react";
-import { useQuery } from "../useQuery";
 import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
-import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useAppStore } from "./appStore";
-import { original } from "immer";
 
 export type SymbolInfo = ReturnType<typeof useSymbolsInfo>;
 
@@ -42,9 +39,10 @@ export const useSymbolsInfo = () => {
 
   return useMemo(
     () => createGetter<API.SymbolExt, string>({ ...symbolsInfo }),
-    [symbolsInfo]
+    [symbolsInfo],
   );
-  // console.log(">>>>>symbolsInfo<<<<<<<", symbolsInfo);
+};
 
-  // return createGetter<API.SymbolExt, string>({ ...symbolsInfo });
+export const useSymbolsInfoStore = () => {
+  return useAppStore((state) => state.symbolsInfo);
 };

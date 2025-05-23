@@ -82,7 +82,7 @@ export interface AccountState {
  */
 export class Account {
   static instanceName = "account";
-  static additionalInfoRepositoryName = "walletAdditionalInfo";
+  static additionalInfoRepositoryName = "orderly_walletAdditionalInfo";
   static ACTIVE_SUB_ACCOUNT_ID_KEY = "ACTIVE_SUB_ACCOUNT_ID";
   // private walletClient?: WalletClient;
   private _singer?: Signer;

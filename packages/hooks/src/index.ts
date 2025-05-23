@@ -2,7 +2,7 @@
 import type { Immer } from "immer";
 
 export { default as version } from "./version";
-
+export { fetcher } from "./utils/fetcher";
 export { useQuery } from "./useQuery";
 export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";
@@ -28,6 +28,7 @@ export { parseJSON } from "./utils/json";
 
 export { default as useConstant } from "use-constant";
 export { useWS } from "./useWS";
+export { useWSInstance } from "./useWSInstance";
 export { useConfig } from "./useConfig";
 export { useKeyStore } from "./useKeyStore";
 export { useSimpleDI } from "./useSimpleDI";
@@ -62,8 +63,13 @@ export {
   // SWRConfig,
   useSWRConfig,
   type SWRConfiguration,
+  type SWRHook,
+  type SWRResponse,
+  type Middleware,
   unstable_serialize,
 } from "swr";
+
+export * as swr from "swr";
 
 export * from "use-debounce";
 
