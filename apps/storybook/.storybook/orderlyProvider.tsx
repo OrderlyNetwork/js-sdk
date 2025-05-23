@@ -1,11 +1,9 @@
 import React, { FC, ReactNode } from "react";
 import {
-  Network,
-  WalletConnectorPrivyProvider,
-  wagmiConnectors,
-} from "@orderly.network/wallet-connector-privy";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { CustomConfigStore } from "./customConfigStore";
+  createDefaultAddressSelector,
+  createDefaultAuthorizationResultCache,
+  SolanaMobileWalletAdapter,
+} from "@solana-mobile/wallet-adapter-mobile";
 import {
   Adapter,
   WalletAdapterNetwork,
@@ -13,35 +11,37 @@ import {
   WalletNotReadyError,
 } from "@solana/wallet-adapter-base";
 import {
-  createDefaultAddressSelector,
-  createDefaultAuthorizationResultCache,
-  SolanaMobileWalletAdapter,
-} from "@solana-mobile/wallet-adapter-mobile";
-import {
   LedgerWalletAdapter,
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { LocaleEnum, LocaleProvider } from "@orderly.network/i18n";
 import { Resources } from "@orderly.network/i18n";
-import { customChains } from "./customChains";
-import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
-import en from "@orderly.network/i18n/locales/en.json";
-import zh from "@orderly.network/i18n/locales/zh.json";
-import ja from "@orderly.network/i18n/locales/ja.json";
-import es from "@orderly.network/i18n/locales/es.json";
-import ko from "@orderly.network/i18n/locales/ko.json";
-import vi from "@orderly.network/i18n/locales/vi.json";
 import de from "@orderly.network/i18n/locales/de.json";
+import en from "@orderly.network/i18n/locales/en.json";
+import es from "@orderly.network/i18n/locales/es.json";
 import fr from "@orderly.network/i18n/locales/fr.json";
-import ru from "@orderly.network/i18n/locales/ru.json";
 import id from "@orderly.network/i18n/locales/id.json";
-import tr from "@orderly.network/i18n/locales/tr.json";
 import it from "@orderly.network/i18n/locales/it.json";
-import pt from "@orderly.network/i18n/locales/pt.json";
-import uk from "@orderly.network/i18n/locales/uk.json";
-import pl from "@orderly.network/i18n/locales/pl.json";
+import ja from "@orderly.network/i18n/locales/ja.json";
+import ko from "@orderly.network/i18n/locales/ko.json";
 import nl from "@orderly.network/i18n/locales/nl.json";
+import pl from "@orderly.network/i18n/locales/pl.json";
+import pt from "@orderly.network/i18n/locales/pt.json";
+import ru from "@orderly.network/i18n/locales/ru.json";
+import tr from "@orderly.network/i18n/locales/tr.json";
+import uk from "@orderly.network/i18n/locales/uk.json";
+import vi from "@orderly.network/i18n/locales/vi.json";
+import zh from "@orderly.network/i18n/locales/zh.json";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
+import {
+  Network,
+  WalletConnectorPrivyProvider,
+  wagmiConnectors,
+} from "@orderly.network/wallet-connector-privy";
+import { CustomProductNav } from "../src/components/customProductNav/indx";
+import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import { CustomConfigStore } from "./customConfigStore";
 
 const network = WalletAdapterNetwork.Devnet;
 
@@ -120,6 +120,9 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
       <WalletConnectorPrivyProvider
         termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
+        headerProps={{
+          mobile: <CustomProductNav />,
+        }}
         // customChains={customerChains}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",
@@ -155,6 +158,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             console.log("-- error", error, adapter);
           },
         }}
+        // abstractConfig={{}}
       >
         <OrderlyAppProvider
           customChains={customChains as any}

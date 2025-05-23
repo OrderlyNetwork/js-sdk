@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
-import { MarketsListFullWidgetProps } from "./widget";
-import { searchBySymbol, useSort } from "../../utils";
+import { TableSort, usePagination } from "@orderly.network/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
+import { searchBySymbol, useSort } from "../../utils";
+import { MarketsListFullWidgetProps } from "./widget";
 
 export type UseMarketsListFullScriptOptions = MarketsListFullWidgetProps;
 
@@ -12,10 +12,10 @@ export type UseMarketsListFullReturn = ReturnType<
 >;
 
 export const useMarketsListFullScript = (
-  options: UseMarketsListFullScriptOptions
+  options: UseMarketsListFullScriptOptions,
 ) => {
   const [loading, setLoading] = useState(true);
-  const { pageSize, setPage, pagination } = usePagination({
+  const { setPage, pagination } = usePagination({
     pageSize: 10,
   });
 
@@ -23,10 +23,7 @@ export const useMarketsListFullScript = (
 
   const { searchValue } = useMarketsContext();
 
-  const { onSort, getSortedList, sortKey, sortOrder } = useSort(
-    options?.sortKey,
-    options?.sortOrder
-  );
+  const { onSort, getSortedList, sort } = useSort(options.initialSort);
 
   const dataSource = useMemo(() => {
     const list = getSortedList(data);
@@ -44,9 +41,19 @@ export const useMarketsListFullScript = (
   useEffect(() => {
     // Only all markets store sort
     if (options.type === "all") {
-      favorite.updateTabsSortState("all", sortKey!, sortOrder!);
+      favorite.updateTabsSortState("all", sort?.sortKey!, sort?.sortOrder!);
     }
-  }, [sortKey, sortOrder, options.type]);
+  }, [sort, options.type]);
+
+  const initialSort = useMemo(() => {
+    const sortStore =
+      options.type === "all" ? favorite.tabSort?.all : undefined;
+
+    return {
+      sortKey: sortStore?.sortKey || options?.initialSort?.sortKey,
+      sort: sortStore?.sortOrder || options?.initialSort?.sortOrder,
+    } as TableSort;
+  }, [favorite.tabSort, options.initialSort, options.type]);
 
   return {
     loading,
@@ -54,5 +61,6 @@ export const useMarketsListFullScript = (
     favorite,
     onSort,
     pagination,
+    initialSort,
   };
 };

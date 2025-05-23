@@ -1,14 +1,14 @@
 import { FC, useMemo } from "react";
-import { DataFilter } from "@orderly.network/ui";
-import { useFundingHistoryColumns } from "./column";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import { type UseFundingHistoryReturn } from "./useDataSource.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTranslation } from "@orderly.network/i18n";
+import { DataFilter } from "@orderly.network/ui";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useFundingHistoryColumns } from "./column";
+import { type UseFundingHistoryReturn } from "./useDataSource.script";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
-export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
+export const FundingHistoryDesktop: FC<FundingHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading } = props;
   const columns = useFundingHistoryColumns();
   const symbols = useSymbolsInfo();

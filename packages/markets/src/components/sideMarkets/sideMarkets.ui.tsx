@@ -1,19 +1,18 @@
 import { FC } from "react";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
-import {
-  UseSideMarketsScriptOptions,
-  UseSideMarketsScriptReturn,
-} from "./sideMarkets.script";
-import { CollapseIcon, ExpandIcon } from "../../icons";
-import { ExpandMarketsWidget } from "../expandMarkets";
-import { FavoritesListWidget } from "../favoritesList";
-import { RecentListWidget } from "../recentList";
-import { MarketsListWidget } from "../marketsList";
-import { NewListingListWidget } from "../newListingList";
-import { useMarketsContext } from "../marketsProvider";
 import { useTranslation } from "@orderly.network/i18n";
+import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { CollapseIcon, ExpandIcon } from "../../icons";
+import { TabName } from "../../type";
+import { ExpandMarketsWidget } from "../expandMarkets";
+import { MarketsListWidget } from "../marketsList";
+import { useMarketsContext } from "../marketsProvider";
+import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import {
+  SideMarketsScriptOptions,
+  SideMarketsScriptReturn,
+} from "./sideMarkets.script";
 
-export type SideMarketsProps = UseSideMarketsScriptReturn & {
+export type SideMarketsProps = SideMarketsScriptReturn & {
   className?: string;
 };
 
@@ -25,9 +24,12 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
     activeTab,
     onTabChange,
     className,
+    tabSort,
   } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
+
+  const { renderHeader, dataFilter } = useFavoritesProps();
 
   const renderContent = () => {
     if (!collapsed) {
@@ -41,24 +43,17 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       );
     }
 
-    if (activeTab === "favorites") {
-      return <FavoritesListWidget collapsed={collapsed} />;
-    }
-
-    if (activeTab === "recent") {
-      return <RecentListWidget collapsed={collapsed} />;
-    }
-
-    if (activeTab === "newListing") {
-      return <NewListingListWidget collapsed={collapsed} />;
-    }
+    const extraProps =
+      activeTab === TabName.Favorites ? { renderHeader, dataFilter } : {};
 
     return (
       <MarketsListWidget
-        type="all"
-        sortKey="24h_amount"
-        sortOrder="desc"
+        type={activeTab}
+        initialSort={tabSort[activeTab]}
+        // collapsed list is not custom sort, so we don't need to pass onSort
+        // onSort={onTabSort(activeTab)}
         collapsed={collapsed}
+        {...extraProps}
       />
     );
   };
@@ -80,7 +75,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       <Box
         width="100%"
         className={cn(
-          collapsed ? "oui-h-[calc(100%_-_52px)]" : "oui-h-[calc(100%_-_56px)]"
+          collapsed ? "oui-h-[calc(100%_-_52px)]" : "oui-h-[calc(100%_-_56px)]",
         )}
       >
         {renderContent()}
@@ -89,7 +84,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
   );
 };
 
-type SideMarketsHeaderProps = UseSideMarketsScriptOptions;
+type SideMarketsHeaderProps = SideMarketsScriptOptions;
 
 export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
   const { collapsable, collapsed, onCollapse } = props;
@@ -100,7 +95,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
     "oui-text-base-contrast-36",
     collapsable
       ? "oui-cursor-pointer hover:oui-text-base-contrast-80"
-      : "oui-cursor-not-allowed"
+      : "oui-cursor-not-allowed",
   );
 
   if (collapsed) {
@@ -108,7 +103,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
       <ExpandIcon
         className={cls}
         onClick={() => {
-          collapsable && onCollapse?.(false);
+          onCollapse?.(false);
         }}
       />
     );
@@ -122,7 +117,7 @@ export const SideMarketsHeader: FC<SideMarketsHeaderProps> = (props) => {
       <CollapseIcon
         className={cls}
         onClick={() => {
-          collapsable && onCollapse?.(true);
+          onCollapse?.(true);
         }}
       />
     </Flex>

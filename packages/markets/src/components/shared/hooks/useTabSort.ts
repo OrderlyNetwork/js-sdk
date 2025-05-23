@@ -1,47 +1,25 @@
 import { useCallback } from "react";
 import { useSessionStorage } from "@orderly.network/hooks";
-import { SortOrder } from "@orderly.network/ui";
+import { SortType, TabName } from "../../../type";
 
-type Sort = {
-  sortKey: string;
-  sortOrder: SortOrder;
-};
-
-export type TabSort = Record<string, Sort>;
-
-const defaultSortKey = "24h_amount";
-const defaultSortOrder = "desc";
-
-export function useTabSort(options: {
-  storageKey: string;
-  type?: string;
-  initialSort?: Sort;
-}) {
-  const { storageKey, type = "all", initialSort } = options;
-
-  const [tabSort, setTabSort] = useSessionStorage(storageKey, {
-    [type]: {
-      sortKey: initialSort?.sortKey || defaultSortKey,
-      sortOrder: initialSort?.sortOrder || defaultSortOrder,
+export function useTabSort(options: { storageKey: string }) {
+  const [tabSort, setTabSort] = useSessionStorage(options.storageKey, {
+    [TabName.All]: {
+      sortKey: "24h_amount",
+      sortOrder: "desc",
     },
-  } as TabSort);
+  } as Record<TabName, SortType>);
 
-  // default all tab can storage sort
   const onTabSort = useCallback(
-    (sortKey = defaultSortKey, sortOrder = defaultSortOrder) => {
-      setTabSort({
-        ...tabSort,
-        all: {
-          sortKey,
-          sortOrder,
-        },
-      });
+    (type: TabName) => (sort?: SortType) => {
+      console.log("onTabSort", type, sort);
+      setTabSort({ ...tabSort, [type]: sort });
     },
-    []
+    [tabSort],
   );
 
   return {
-    tabSort: tabSort[type],
+    tabSort,
     onTabSort,
   };
 }

@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from "react";
+import { cnBase } from "tailwind-variants";
 import { Text, TextProps } from "./text";
 import { RoundingMode, parseNumber } from "./utils";
-import { cnBase } from "tailwind-variants";
 
 export type NumeralRule = "percentages" | "price" | "human";
 
@@ -238,8 +238,9 @@ export const Numeral: FC<NumeralProps> = (props) => {
     <Text
       {...rest}
       color={colorName}
-      children={childWithUnit}
       className={cnBase("oui-tabular-nums", className)}
-    />
+    >
+      {childWithUnit}
+    </Text>
   );
 };

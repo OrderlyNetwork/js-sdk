@@ -1,6 +1,6 @@
-import { registerSimpleDialog } from "@orderly.network/ui";
-import { LeverageEditor } from "./leverage.widget";
 import { i18n } from "@orderly.network/i18n";
+import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { LeverageEditor } from "./leverage.widget";
 
 export { LeverageEditor, type LeverageEditorProps } from "./leverage.widget";
 export { Leverage, LeverageSlider, LeverageHeader } from "./leverage.ui";
@@ -14,9 +14,14 @@ export {
   type LeverageScriptReturns,
 } from "./leverage.script";
 
-export const LeverageWidgetId = "leverageEditor";
+export const LeverageWidgetWithDialogId = "LeverageWidgetWithDialog";
+export const LeverageWidgetWithSheetId = "LeverageWidgetWithSheet";
 
-registerSimpleDialog(LeverageWidgetId, LeverageEditor, {
+registerSimpleDialog(LeverageWidgetWithDialogId, LeverageEditor, {
   title: () => i18n.t("leverage.maxAccountLeverage"),
   size: "md",
+});
+
+registerSimpleSheet(LeverageWidgetWithSheetId, LeverageEditor, {
+  title: () => i18n.t("leverage.maxAccountLeverage"),
 });

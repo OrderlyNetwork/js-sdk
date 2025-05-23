@@ -501,6 +501,7 @@
   "connector.privy.myWallet": "マイウォレット",
   "connector.privy.addEvmWallet": "EVMウォレットを追加",
   "connector.privy.addSolanaWallet": "Solanaウォレットを追加",
+  "connector.privy.addAbstractWallet": "Abstract ウォレットを追加",
   "connector.privy.createEvmWallet": "EVMウォレットを作成",
   "connector.privy.createSolanaWallet": "Solanaウォレットを作成",
   "connector.privy.termsOfUse": "ウォレットを接続することで、<0>利用規約</0>に同意したものとみなされます。",
@@ -511,6 +512,7 @@
   "connector.privy.switchNetwork.tips": "続行するには {{chainName}} に切り替えてください。",
   "connector.privy.addEvmWallet.tips": "EVMネットワークを引き続き使用するには、EVM互換のウォレットを接続してください。",
   "connector.privy.addSolanaWallet.tips": "Solana互換ウォレットを接続して、Solanaネットワークの使用を継続してください。",
+  "connector.privy.addAbstractWallet.tips": "Abstract ネットワークを引き続き使用するには、Abstract 互換のウォレットを接続してください。",
   "transfer.network": "ネットワーク",
   "transfer.lowestFee": "最低手数料",
   "transfer.web3Wallet": "あなたのWeb3ウォレット",
@@ -596,6 +598,7 @@
   "affiliate.trader.rebates": "リベート",
   "affiliate.trader.myRebates": "私のリベート",
   "affiliate.trader.tradingVol": "取引ボリューム",
+  "affiliate.trader.rebate.30d": "30日間のリベート",
   "ui.pagination.morePages": "その他のページ",
   "ui.pagination.rowsPerPage": "1ページあたりの行数",
   "ui.picker.selectDate": "日付を選択",
@@ -608,5 +611,7 @@
   "tradingLeaderboard.learnMore": "詳細を学ぶ",
   "tradingLeaderboard.tradeNow": "今すぐ取引",
   "tradingLeaderboard.tradingVolume": "取引量",
-  "tradingLeaderboard.rank": "ランク"
+  "tradingLeaderboard.rank": "ランク",
+  "common.long": "購入",
+  "common.short": "販売"
 }

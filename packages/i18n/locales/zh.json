@@ -501,6 +501,7 @@
   "connector.privy.myWallet": "我的钱包",
   "connector.privy.addEvmWallet": "添加Evm钱包",
   "connector.privy.addSolanaWallet": "添加Solana钱包",
+  "connector.privy.addAbstractWallet": "添加 Abstract 钱包",
   "connector.privy.createEvmWallet": "创建EVM钱包",
   "connector.privy.createSolanaWallet": "创建Solana钱包",
   "connector.privy.termsOfUse": "通过连接您的钱包，您确认并同意<0>使用条款</0>。",
@@ -511,6 +512,7 @@
   "connector.privy.switchNetwork.tips": "切换到{{chainName}}以继续。",
   "connector.privy.addEvmWallet.tips": "连接一个EVM兼容的钱包以继续使用EVM网络。",
   "connector.privy.addSolanaWallet.tips": "连接一个Solana兼容的钱包以继续使用Solana网络。",
+  "connector.privy.addAbstractWallet.tips": "连接兼容 Abstract 的钱包以继续使用 Abstract 网络。",
   "transfer.network": "网络",
   "transfer.lowestFee": "最低费用",
   "transfer.web3Wallet": "您的Web3钱包",
@@ -619,6 +621,8 @@
   "affiliate.trader.rebates": "返利",
   "affiliate.trader.myRebates": "我的返利",
   "affiliate.trader.tradingVol": "交易量",
+  "affiliate.trader.rebate.30d": "30天返利",
+  "affiliate.trader.rebate.30d.description": "30天交易返利",
   "ui.pagination.morePages": "更多页面",
   "ui.pagination.rowsPerPage": "每页行数",
   "ui.picker.selectDate": "选择日期",
@@ -631,5 +635,7 @@
   "tradingLeaderboard.learnMore": "了解更多",
   "tradingLeaderboard.tradeNow": "立即交易",
   "tradingLeaderboard.tradingVolume": "交易量",
-  "tradingLeaderboard.rank": "排名"
+  "tradingLeaderboard.rank": "排名",
+  "common.long": "购买",
+  "common.short": "出售"
 }

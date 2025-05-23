@@ -1,21 +1,21 @@
-import { markets } from "./module/markets";
-import { portfolio } from "./module/portfolio";
-import { trading } from "./module/trading";
+import { affiliate } from "./module/affiliate";
 import { chart } from "./module/chart";
-import { positions } from "./module/positions";
-import { orders } from "./module/orders";
-import { tpsl } from "./module/tpsl";
-import { share } from "./module/share";
-import { orderEntry } from "./module/orderEntry";
+import { connector } from "./module/connector";
 import { leverage } from "./module/leverage";
+import { markets } from "./module/markets";
+import { orderEntry } from "./module/orderEntry";
+import { orders } from "./module/orders";
+import { portfolio } from "./module/portfolio";
+import { positions } from "./module/positions";
 import { scaffold } from "./module/scaffold";
+import { share } from "./module/share";
+import { tpsl } from "./module/tpsl";
+import { trading } from "./module/trading";
+import { tradingLeaderboard } from "./module/tradingLeaderboard";
 import { tradingRewards } from "./module/tradingRewards";
 import { tradingView } from "./module/tradingView";
-import { connector } from "./module/connector";
 import { transfer } from "./module/transfer";
-import { affiliate } from "./module/affiliate";
 import { ui } from "./module/ui";
-import { tradingLeaderboard } from "./module/tradingLeaderboard";
 
 export const en = {
   "common.cancel": "Cancel",
@@ -26,6 +26,8 @@ export const en = {
   "common.all": "All",
   "common.buy": "Buy",
   "common.sell": "Sell",
+  "common.long": "Long",
+  "common.short": "Short",
   "common.edit": "Edit",
   "common.save": "Save",
   "common.add": "Add",

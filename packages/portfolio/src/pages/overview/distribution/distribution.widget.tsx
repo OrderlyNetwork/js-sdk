@@ -1,7 +1,13 @@
-import { DistributionHistoryUI } from "./distribution.ui";
+import { useScreen } from "@orderly.network/ui";
+import { DistributionHistoryDesktop } from "./distribution.ui";
+import { DistributionHistoryMobile } from "./distribution.ui.mobile";
 import { useDistributionHistoryHook } from "./useDataSource.script";
 
 export const DistributionHistoryWidget = () => {
   const state = useDistributionHistoryHook();
-  return <DistributionHistoryUI {...state} />;
+  const { isMobile } = useScreen();
+  if (isMobile) {
+    return <DistributionHistoryMobile {...state} />;
+  }
+  return <DistributionHistoryDesktop {...state} />;
 };

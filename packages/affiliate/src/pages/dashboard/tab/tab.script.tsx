@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import { TabTypes, useReferralContext } from "../../../hooks";
 
 export type TabReturns = {
@@ -41,7 +41,15 @@ export const useTabScript = (): TabReturns => {
     }
   }, [tab, isAffiliate, isTrader]);
 
-  console.log(" tab", tab, tableValue);
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const tab = searchParams.get("tab");
+    if (tab) {
+      setTab(tab as TabTypes);
+    }
+  }, [window.location.search]);
+
+  console.log(" tab", tab, tableValue, window.location);
 
   const anAnAffiliate = () => {
     // if (becomeAnAffiliateUrl !== undefined) {

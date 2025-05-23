@@ -1,9 +1,8 @@
 import { FC } from "react";
 import { cn, Flex } from "@orderly.network/ui";
-import { TradingListWidget } from "../../components/tradingList/widget";
 import { CampaignsWidget } from "../../components/campaigns";
+import { TradingListWidget } from "../../components/tradingList/widget";
 import { LeaderboardScriptReturn } from "./leaderboard.script";
-import { BottomNavBarWidget } from "@orderly.network/trading";
 
 export type LeaderboardProps = {
   style?: React.CSSProperties;
@@ -18,10 +17,7 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
     if (props.isVideo) {
       return (
         <div
-          className={cn(
-            "oui-absolute oui-top-0 oui-left-0",
-            "oui-w-full oui-h-full"
-          )}
+          className={cn("oui-absolute oui-left-0 oui-top-0", "oui-size-full")}
         >
           <div
             style={{
@@ -29,24 +25,21 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
             }}
-            className={cn(
-              "oui-absolute oui-top-0 oui-left-0",
-              "oui-w-full oui-h-full"
-            )}
+            className={cn("oui-absolute oui-left-0 oui-top-0", "oui-size-full")}
           />
           <video
             playsInline
-            webkit-playsinline
+            // webkit-playsinline
             autoPlay
             loop
             muted
             className={cn(
               // rest style
-              "oui-border-none oui-outline-none oui-bg-transparent oui-pointer-events-none",
-              "oui-w-full oui-h-full",
+              "oui-pointer-events-none oui-border-none oui-bg-transparent oui-outline-none",
+              "oui-size-full",
               // "oui-absolute oui-top-0 oui-left-0",
               "oui-object-cover",
-              "oui-opacity-50"
+              "oui-opacity-50",
             )}
           >
             <source src={props.backgroundSrc} type="video/mp4" />
@@ -68,9 +61,9 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
             backgroundRepeat: "no-repeat",
           }}
           className={cn(
-            "oui-absolute oui-top-0 oui-left-0",
-            "oui-w-full oui-h-full",
-            "oui-opacity-50"
+            "oui-absolute oui-left-0 oui-top-0",
+            "oui-size-full",
+            "oui-opacity-50",
           )}
         />
       );
@@ -82,9 +75,9 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
         paddingBottom: "calc(64px + env(safe-area-inset-bottom))",
       }}
       className={cn(
-        "oui-grid oui-grid-rows-[auto,1fr,auto] oui-h-screen oui-gap-1 oui-relative oui-bg-base-10",
-        "oui-relative oui-h-full oui-mix-blend-screen",
-        props.className
+        "oui-relative oui-grid oui-h-[calc(100vh-44px)] oui-gap-1 oui-bg-base-10",
+        "oui-mix-blend-screen",
+        props.className,
       )}
     >
       {renderBackground()}
@@ -96,15 +89,12 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
         pt={3}
         pb={3}
         className={cn(
-          "oui-trading-leaderboard-mobile oui-overflow-y-auto oui-custom-scrollbar",
-          "oui-relative oui-h-[calc(100vh_-_64px)]"
+          "oui-trading-leaderboard-mobile oui-custom-scrollbar oui-overflow-y-auto",
+          "oui-relative oui-h-[calc(100vh_-_64px)]",
         )}
       >
         {props.showCampaigns && <CampaignsWidget />}
         <TradingListWidget className={cn(!props.canTrading && "oui-h-full")} />
-        <div className="oui-fixed oui-left-0 oui-right-0 oui-bottom-0 oui-z-10">
-          <BottomNavBarWidget />
-        </div>
       </Flex>
     </div>
   );

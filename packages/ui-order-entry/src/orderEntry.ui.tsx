@@ -1,7 +1,30 @@
-import { type OrderEntryScriptReturn } from "./orderEntry.script";
+import React, {
+  CSSProperties,
+  FocusEventHandler,
+  forwardRef,
+  HTMLAttributes,
+  PropsWithChildren,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { OrderValidationResult, useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import {
+  API,
+  BBOOrderType,
+  OrderLevel,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import {
   Box,
   Button,
+  CaretRightIcon,
   cn,
   Divider,
   Flex,
@@ -20,39 +43,21 @@ import {
   textVariants,
   ThrottledButton,
   toast,
+  useScreen,
 } from "@orderly.network/ui";
-import {
-  CSSProperties,
-  FocusEventHandler,
-  forwardRef,
-  HTMLAttributes,
-  PropsWithChildren,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  API,
-  BBOOrderType,
-  OrderLevel,
-  OrderlyOrder,
-  OrderSide,
-  OrderType,
-} from "@orderly.network/types";
-import { OrderTPSL } from "./components/tpsl";
+import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
+import { commifyOptional } from "@orderly.network/utils";
+// import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
+import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { OrderValidationResult, useLocalStorage } from "@orderly.network/hooks";
-import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
+import { OrderTPSL } from "./components/tpsl";
+import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
 import { BBOStatus } from "./utils";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 
 type Refs = OrderEntryScriptReturn["refs"];
 
@@ -60,12 +65,11 @@ type OrderEntryProps = OrderEntryScriptReturn & {
   containerRef: any;
 };
 
-export const OrderEntry = (props: OrderEntryProps) => {
+export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const {
     side,
     formattedOrder,
     setOrderValue,
-    setOrderValues,
     symbolInfo,
     maxQty,
     freeCollateral,
@@ -77,17 +81,20 @@ export const OrderEntry = (props: OrderEntryProps) => {
     onBBOChange,
     toggleBBO,
   } = props;
+
   const { t } = useTranslation();
+
+  const { isMobile } = useScreen();
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_order_confirm",
-    true
+    true,
   );
   const [pinned, setPinned] = useLocalStorage(
     "orderly-order-additional-pinned",
-    true
+    true,
   );
   const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
@@ -135,7 +142,7 @@ export const OrderEntry = (props: OrderEntryProps) => {
     helper
       .validate()
       .then(
-        (order: any) => {
+        () => {
           if (needConfirm) {
             return modal.show(orderConfirmDialogId, {
               order: formattedOrder,
@@ -162,7 +169,7 @@ export const OrderEntry = (props: OrderEntryProps) => {
             )
               return Promise.reject();
           }
-        }
+        },
       )
       .then(() => {
         return submit({ resetOnSuccess: false }).then((result: any) => {
@@ -187,22 +194,21 @@ export const OrderEntry = (props: OrderEntryProps) => {
       });
   };
 
+  const mergedShowSheet = isMobile && props.canTrade;
+
   return (
-    <OrderEntryProvider
-      value={{
-        errorMsgVisible,
-      }}
-    >
+    <OrderEntryProvider value={{ errorMsgVisible }}>
       <div
-        className={"oui-space-y-2 xl:oui-space-y-3 oui-text-base-contrast-54"}
+        className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
         ref={props.containerRef}
       >
         {/* Buy Sell button */}
-        <Flex gapX={2} className="oui-flex-col lg:oui-flex-row oui-gap-y-3">
+        <Flex gapX={2} className="oui-flex-col oui-gap-y-3 lg:oui-flex-row">
           <div
-            className={
-              "oui-grid oui-grid-cols-2 oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]"
-            }
+            className={cn(
+              "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
+              mergedShowSheet ? "oui-grid-cols-3" : "oui-grid-cols-2",
+            )}
           >
             <Button
               onClick={() => {
@@ -215,7 +221,7 @@ export const OrderEntry = (props: OrderEntryProps) => {
               className={cn(
                 side === OrderSide.BUY && props.canTrade
                   ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
+                  : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
               )}
               data-testid="oui-testid-orderEntry-side-buy-button"
             >
@@ -232,12 +238,32 @@ export const OrderEntry = (props: OrderEntryProps) => {
               className={cn(
                 side === OrderSide.SELL && props.canTrade
                   ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
-                  : "oui-bg-base-7 hover:oui-bg-base-6 active:oui-bg-base-6 oui-text-base-contrast-36"
+                  : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
               )}
               data-testid="oui-testid-orderEntry-side-sell-button"
             >
               {t("common.sell")}
             </Button>
+            {mergedShowSheet && (
+              <Button
+                size={"md"}
+                fullWidth
+                trailing={
+                  <CaretRightIcon
+                    size={12}
+                    className="oui-text-base-contrast-36"
+                  />
+                }
+                onClick={() => {
+                  modal.show(LeverageWidgetWithSheetId, { currentLeverage: 5 });
+                }}
+                className={cn(
+                  "oui-bg-base-7 oui-text-primary-light hover:oui-bg-base-6 active:oui-bg-base-6",
+                )}
+              >
+                {commifyOptional(props.currentLeverage!, { fix: 2 }) + "x"}
+              </Button>
+            )}
           </div>
           <div className={"oui-w-full lg:oui-flex-1"}>
             <OrderTypeSelect
@@ -320,7 +346,7 @@ export const OrderEntry = (props: OrderEntryProps) => {
           className={cn(
             side === OrderSide.BUY
               ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-              : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
+              : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
           )}
           onClick={() => {
             onSubmit();
@@ -373,7 +399,7 @@ export const OrderEntry = (props: OrderEntryProps) => {
         <Flex
           justify={"between"}
           itemAlign={"center"}
-          className="!oui-mt-[0px] xl:!oui-mt-3"
+          className="!oui-mt-0 xl:!oui-mt-3"
         >
           <Flex itemAlign={"center"} gapX={1}>
             <Switch
@@ -431,7 +457,7 @@ export const OrderEntry = (props: OrderEntryProps) => {
               onClick={() => {
                 setPinned(false);
               }}
-              className={"oui-absolute oui-top-2 oui-right-2 oui-group"}
+              className={"oui-group oui-absolute oui-right-2 oui-top-2"}
               data-testid="oui-testid-orderEntry-pinned-button"
             ></PinButton>
           </Box>
@@ -457,7 +483,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         xmlns="http://www.w3.org/2000/svg"
         onMouseEnter={() => {
           setPath(
-            'M10.008 1.302a.74.74 0 0 0-.486.214c-1.033.989-1.349 1.815-.972 2.948-.88.675-1.437.84-2.536.84-1.503 0-2.484.182-3.152.85v.02a1.583 1.583 0 0 0 0 2.248l1.867 1.882-3.181 3.18c-.26.26-.28.696-.02.956.261.26.699.26.959 0l3.193-3.194 1.87 1.861a1.585 1.585 0 0 0 2.25 0h.02c.668-.667.854-1.523.854-3.144 0-1.03.212-1.758.853-2.523 1.232.361 1.95.015 2.96-.995a.68.68 0 0 0 .188-.48c0-.234-.06-.593-.209-1.04a5.34 5.34 0 0 0-1.312-2.103A5.35 5.35 0 0 0 11.05 1.51c-.448-.15-.808-.208-1.042-.208m.258 1.37c.708.131 1.421.6 1.93 1.107.507.508.94 1.13 1.119 1.945-.636.61-1.026.658-1.662.323a.67.67 0 0 0-.779.117c-1.214 1.213-1.533 2.314-1.533 3.8 0 1.292-.076 1.773-.48 2.206-.113.123-.27.104-.374 0L3.799 7.486a.24.24 0 0 1-.017-.34c.239-.29.769-.515 2.226-.514 1.742.001 2.668-.448 3.812-1.52a.67.67 0 0 0 .125-.77c-.343-.686-.29-1.047.321-1.67"'
+            'M10.008 1.302a.74.74 0 0 0-.486.214c-1.033.989-1.349 1.815-.972 2.948-.88.675-1.437.84-2.536.84-1.503 0-2.484.182-3.152.85v.02a1.583 1.583 0 0 0 0 2.248l1.867 1.882-3.181 3.18c-.26.26-.28.696-.02.956.261.26.699.26.959 0l3.193-3.194 1.87 1.861a1.585 1.585 0 0 0 2.25 0h.02c.668-.667.854-1.523.854-3.144 0-1.03.212-1.758.853-2.523 1.232.361 1.95.015 2.96-.995a.68.68 0 0 0 .188-.48c0-.234-.06-.593-.209-1.04a5.34 5.34 0 0 0-1.312-2.103A5.35 5.35 0 0 0 11.05 1.51c-.448-.15-.808-.208-1.042-.208m.258 1.37c.708.131 1.421.6 1.93 1.107.507.508.94 1.13 1.119 1.945-.636.61-1.026.658-1.662.323a.67.67 0 0 0-.779.117c-1.214 1.213-1.533 2.314-1.533 3.8 0 1.292-.076 1.773-.48 2.206-.113.123-.27.104-.374 0L3.799 7.486a.24.24 0 0 1-.017-.34c.239-.29.769-.515 2.226-.514 1.742.001 2.668-.448 3.812-1.52a.67.67 0 0 0 .125-.77c-.343-.686-.29-1.047.321-1.67"',
           );
         }}
         onMouseLeave={() => {
@@ -494,7 +520,7 @@ const OrderQuantityInput = (props: {
       | "order_type"
       | "order_type_ext"
       | "level",
-    value: any
+    value: any,
   ) => void;
   onValuesChange: (value: any) => void;
   refs: Refs;
@@ -524,11 +550,11 @@ const OrderQuantityInput = (props: {
           itemAlign="center"
           r="base"
           className={cn(
-            "oui-border oui-cursor-pointer oui-mt-[2px] oui-select-none",
+            "oui-mt-[2px] oui-cursor-pointer oui-select-none oui-border",
             bbo.bboStatus === BBOStatus.ON
               ? "oui-border-primary"
               : "oui-border-line-12",
-            bbo.bboStatus === BBOStatus.DISABLED && "oui-cursor-not-allowed"
+            bbo.bboStatus === BBOStatus.DISABLED && "oui-cursor-not-allowed",
           )}
           onClick={() => {
             if (bbo.bboStatus === BBOStatus.DISABLED) {
@@ -551,7 +577,7 @@ const OrderQuantityInput = (props: {
               bbo.bboStatus === BBOStatus.ON && "oui-text-primary",
               bbo.bboStatus === BBOStatus.OFF && "oui-text-base-contrast-54",
               bbo.bboStatus === BBOStatus.DISABLED &&
-                "oui-text-base-contrast-20"
+                "oui-text-base-contrast-20",
             )}
           >
             {t("orderEntry.bbo")}
@@ -586,7 +612,7 @@ const OrderQuantityInput = (props: {
       {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
         <div
           ref={props.refs.priceInputContainerRef}
-          className="oui-relative oui-group oui-w-full"
+          className="oui-group oui-relative oui-w-full"
         >
           <CustomInput
             label={t("common.price")}
@@ -609,7 +635,7 @@ const OrderQuantityInput = (props: {
             }}
           />
           {bbo.bboStatus === BBOStatus.ON && (
-            <div className={cn("oui-absolute oui-left-0 oui-bottom-1")}>
+            <div className={cn("oui-absolute oui-bottom-1 oui-left-0")}>
               <BBOOrderTypeSelect
                 value={bbo.bboType}
                 onChange={bbo.onBBOChange}
@@ -622,13 +648,13 @@ const OrderQuantityInput = (props: {
         </div>
       ) : null}
 
-      <Grid cols={2} className={"oui-space-x-1 oui-group"}>
+      <Grid cols={2} className={"oui-group oui-space-x-1"}>
         <CustomInput
           label={t("common.qty")}
           suffix={symbolInfo.base}
           id="order_quantity_input"
           name="order_quantity_input"
-          className={"!oui-rounded-br !oui-rounded-tr"}
+          className={"!oui-rounded-r"}
           value={values.quantity}
           error={parseErrorMsg("order_quantity")}
           onChange={(e) => {
@@ -642,7 +668,7 @@ const OrderQuantityInput = (props: {
           label={`${t("common.total")}≈`}
           suffix={symbolInfo.quote}
           id={"total"}
-          className={"!oui-rounded-bl !oui-rounded-tl"}
+          className={"!oui-rounded-l"}
           value={values.total}
           error={parseErrorMsg("total")}
           onChange={(e) => {
@@ -713,18 +739,18 @@ const CustomInput = forwardRef<
       ]}
       classNames={{
         root: cn(
-          "orderly-order-entry oui-relative oui-pt-8 oui-h-[54px] oui-px-2 oui-py-1 oui-pr-2 oui-border oui-border-solid oui-border-line oui-rounded group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+          "orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
           props.className,
-          props.classNames?.root
+          props.classNames?.root,
         ),
-        input: cn("oui-mt-5 oui-mb-1 oui-h-5", props?.classNames?.input),
+        input: cn("oui-mb-1 oui-mt-5 oui-h-5", props?.classNames?.input),
         prefix: cn(
           "oui-absolute oui-left-2 oui-top-[7px] oui-text-base-contrast-36",
-          props.classNames?.prefix
+          props.classNames?.prefix,
         ),
         suffix: cn(
-          "oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-36 oui-text-2xs oui-justify-start oui-py-2",
-          props.classNames?.suffix
+          "oui-absolute oui-right-0 oui-top-0 oui-justify-start oui-py-2 oui-text-2xs oui-text-base-contrast-36",
+          props.classNames?.suffix,
         ),
       }}
       readOnly={props.readonly}
@@ -739,7 +765,7 @@ const InputLabel = (props: PropsWithChildren<{ id: string }>) => {
     <label
       htmlFor={props.id}
       className={
-        "oui-absolute oui-left-2 oui-top-[7px] oui-text-base-contrast-36 oui-text-2xs"
+        "oui-absolute oui-left-2 oui-top-[7px] oui-text-2xs oui-text-base-contrast-36"
       }
     >
       {props.children}
@@ -766,7 +792,7 @@ const QuantitySlider = (props: {
   const color = useMemo(
     () =>
       canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined,
-    [props.side, canTrade]
+    [props.side, canTrade],
   );
 
   const maxLabel = useMemo(() => {
@@ -907,7 +933,7 @@ function AssetInfo(props: {
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
-          {canTrade ? props.estLiqPrice ?? "--" : "--"}
+          {canTrade ? (props.estLiqPrice ?? "--") : "--"}
         </Text.numeral>
       </Flex>
       <Flex justify={"between"}>
@@ -920,7 +946,7 @@ function AssetInfo(props: {
           })}
         >
           <Text.numeral unit={canTrade ? "x" : undefined}>
-            {canTrade ? props.currentLeverage ?? "--" : "--"}
+            {canTrade ? (props.currentLeverage ?? "--") : "--"}
           </Text.numeral>
           {props.estLeverage && (
             <>

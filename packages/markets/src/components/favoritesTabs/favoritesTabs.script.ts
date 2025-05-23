@@ -67,7 +67,7 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
         ...selectedFavoriteTab,
         name: overLen ? selectedFavoriteTab.name : value,
       },
-      { update: true }
+      { update: true },
     );
     setEditing(false);
     setOpen(false);

@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseIcon,
@@ -13,15 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@orderly.network/ui";
 import { FavoritesIcon, SearchIcon } from "../../icons";
-import { useMarketsContext } from "../marketsProvider";
-import { FavoritesListWidget } from "../favoritesList";
+import { TabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
-import { RecentListWidget } from "../recentList";
-import { NewListingListWidget } from "../newListingList";
-import { UseDropDownMarketsScriptReturn } from "./dropDownMarkets.script";
+import { useMarketsContext } from "../marketsProvider";
+import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { useDropDownMarketsColumns } from "./column";
-import { useTranslation } from "@orderly.network/i18n";
-export type DropDownMarketsProps = UseDropDownMarketsScriptReturn & {
+import { DropDownMarketsScriptReturn } from "./dropDownMarkets.script";
+
+export type DropDownMarketsProps = DropDownMarketsScriptReturn & {
   contentClassName?: string;
 };
 
@@ -40,7 +40,7 @@ export const DropDownMarkets: React.FC<
           sideOffset={20}
           className={cn(
             "oui-markets-dropdown-menu-content oui-bg-base-8 oui-p-0",
-            props.contentClassName
+            props.contentClassName,
           )}
         >
           <DropDownMarketsConetnt {...props} hide={props.hide} />
@@ -51,7 +51,7 @@ export const DropDownMarkets: React.FC<
 };
 
 export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
-  props
+  props,
 ) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
@@ -80,7 +80,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
       />
       <CloseIcon
         size={12}
-        className="oui-text-base-contrast-80 oui-cursor-pointer"
+        className="oui-cursor-pointer oui-text-base-contrast-80"
         onClick={props.hide}
         opacity={1}
       />
@@ -89,9 +89,33 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 
   const cls = "oui-h-[calc(100%_-_36px)]";
 
+  const { renderHeader, dataFilter } = useFavoritesProps();
+
+  const renderTab = (type: TabName) => {
+    const extraProps =
+      type === TabName.Favorites ? { renderHeader, dataFilter } : {};
+
+    return (
+      <div className={cls}>
+        <MarketsListWidget
+          type={type}
+          initialSort={tabSort[type]}
+          onSort={onTabSort(type)}
+          getColumns={getColumns}
+          tableClassNames={{
+            root: "!oui-bg-base-8",
+            scroll: "oui-pb-5 oui-px-1",
+          }}
+          rowClassName="!oui-h-[34px]"
+          {...extraProps}
+        />
+      </div>
+    );
+  };
+
   return (
     <Box
-      className={cn("oui-font-semibold oui-overflow-hidden")}
+      className={cn("oui-overflow-hidden oui-font-semibold")}
       height="100%"
       intensity={800}
     >
@@ -111,58 +135,18 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         <TabPanel
           title={t("markets.favorites")}
           icon={<FavoritesIcon />}
-          value="favorites"
+          value={TabName.Favorites}
         >
-          <div className={cls}>
-            <FavoritesListWidget
-              getColumns={getColumns}
-              tableClassNames={{
-                root: "!oui-bg-base-8",
-                scroll: "oui-pb-5 oui-px-1",
-              }}
-              rowClassName="!oui-h-[34px]"
-            />
-          </div>
+          {renderTab(TabName.Favorites)}
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value="recent">
-          <div className={cls}>
-            <RecentListWidget
-              getColumns={getColumns}
-              tableClassNames={{
-                root: "!oui-bg-base-8",
-                scroll: "oui-pb-5 oui-px-1",
-              }}
-              rowClassName="!oui-h-[34px]"
-            />
-          </div>
+        <TabPanel title={t("markets.recent")} value={TabName.Recent}>
+          {renderTab(TabName.Recent)}
         </TabPanel>
-        <TabPanel title={t("common.all")} value="all">
-          <div className={cls}>
-            <MarketsListWidget
-              type="all"
-              sortKey={tabSort?.sortKey}
-              sortOrder={tabSort?.sortOrder}
-              onSort={onTabSort}
-              getColumns={getColumns}
-              tableClassNames={{
-                root: "!oui-bg-base-8",
-                scroll: "oui-pb-5 oui-px-1",
-              }}
-              rowClassName="!oui-h-[34px]"
-            />
-          </div>
+        <TabPanel title={t("common.all")} value={TabName.All}>
+          {renderTab(TabName.All)}
         </TabPanel>
-        <TabPanel title={t("markets.newListings")} value="newListing">
-          <div className={cls}>
-            <NewListingListWidget
-              getColumns={getColumns}
-              tableClassNames={{
-                root: "!oui-bg-base-8",
-                scroll: "oui-pb-5 oui-px-1",
-              }}
-              rowClassName="!oui-h-[34px]"
-            />
-          </div>
+        <TabPanel title={t("markets.newListings")} value={TabName.NewListing}>
+          {renderTab(TabName.NewListing)}
         </TabPanel>
       </Tabs>
     </Box>

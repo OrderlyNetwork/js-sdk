@@ -1,13 +1,13 @@
 import { FC, useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { DataFilter } from "@orderly.network/ui";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useColumns } from "./column";
 import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { useTranslation } from "@orderly.network/i18n";
 
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
-export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
+export const DistributionHistoryDesktop: FC<FundingHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading, isValidating } =
     props;
   const columns = useColumns();

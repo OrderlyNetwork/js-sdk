@@ -1,17 +1,23 @@
-import { MarketsList } from "./marketsList.ui";
+import { ReactNode } from "react";
+import { Favorite, FavoriteTab } from "@orderly.network/hooks";
+import { DataTableClassNames } from "@orderly.network/ui";
+import { FavoriteInstance, GetColumns, SortType, TabName } from "../../type";
 import { useMarketsListScript } from "./marketsList.script";
-import { SortOrder, DataTableClassNames } from "@orderly.network/ui";
-import { GetColumns } from "../../type";
+import { MarketsList } from "./marketsList.ui";
 
 export type MarketsListWidgetProps = {
-  type?: "all" | "new";
-  sortKey: string;
-  sortOrder: SortOrder;
+  type: TabName;
   getColumns?: GetColumns;
   collapsed?: boolean;
   tableClassNames?: DataTableClassNames;
   rowClassName?: string;
-  onSort?: (sortKey?: string, sortOrder?: SortOrder) => void;
+  initialSort?: SortType;
+  onSort?: (sort?: SortType) => void;
+  renderHeader?: (favorite: FavoriteInstance) => ReactNode;
+  dataFilter?: (
+    data: any[],
+    options: { favorites: Favorite[]; selectedFavoriteTab: FavoriteTab },
+  ) => any[];
 };
 
 export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
@@ -20,14 +26,12 @@ export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
   return (
     <MarketsList
       {...state}
-      initialSort={{
-        sortKey: props.sortKey,
-        sort: props.sortOrder,
-      }}
+      initialSort={props.initialSort}
       getColumns={props.getColumns}
       collapsed={props.collapsed}
       tableClassNames={props.tableClassNames}
       rowClassName={props.rowClassName}
+      renderHeader={props.renderHeader}
     />
   );
 };

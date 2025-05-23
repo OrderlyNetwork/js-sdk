@@ -62,7 +62,7 @@
     "@storybook/node-logger": "7.6.16"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,html,css,md,json}": [
+    "*.{js,jsx,ts,tsx,html,css,md}": [
       "eslint --fix --config eslint.config.fix.mjs",
       "prettier --write"
     ]

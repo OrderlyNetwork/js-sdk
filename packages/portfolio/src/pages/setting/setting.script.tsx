@@ -32,7 +32,7 @@ export const useSettingScript = (): SettingScriptReturns => {
       maintenance_cancel_order_flag: value,
     }).then((data) => {
       if (data.success) {
-        // toast.success(value ? "Opened" : "Closed");
+        toast.success(value ? "Opened" : "Closed");
       } else {
         setChecked(!value);
       }

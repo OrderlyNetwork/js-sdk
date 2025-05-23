@@ -23,7 +23,7 @@ export type MarketsProviderProps = {
 };
 
 export const MarketsProvider: FC<PropsWithChildren<MarketsProviderProps>> = (
-  props
+  props,
 ) => {
   const [searchValue, setSearchValue] = useState("");
 
