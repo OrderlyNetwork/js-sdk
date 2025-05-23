@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react",
-  "version": "3.0.0-npm-publish.5",
+  "version": "3.0.0",
   "description": "",
   "private": true,
   "main": "dist/index.js",

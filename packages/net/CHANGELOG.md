@@ -1,5 +1,23 @@
 # @orderly.network/net
 
+## 3.0.0
+
+### Major Changes
+
+- 942207f: publish
+
+### Minor Changes
+
+- publish
+- 1e0e30c: publish
+
+### Patch Changes
+
+- 46c9bdd: publish
+- 2b841ce: publish
+- 5bea5a5: publish
+- 9e6551d: publish
+
 ## 3.0.0-npm-publish.5
 
 ### Patch Changes

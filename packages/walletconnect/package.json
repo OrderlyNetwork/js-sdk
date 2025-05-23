@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-modal",
-  "version": "3.0.0-npm-publish.5",
+  "version": "3.0.0",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",

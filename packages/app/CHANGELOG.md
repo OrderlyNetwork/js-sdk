@@ -1,5 +1,35 @@
 # @orderly.network/react-app
 
+## 3.0.0
+
+### Major Changes
+
+- 942207f: publish
+
+### Minor Changes
+
+- publish
+- 1e0e30c: publish
+
+### Patch Changes
+
+- 46c9bdd: publish
+- 2b841ce: publish
+- 5bea5a5: publish
+- 9e6551d: publish
+- Updated dependencies
+- Updated dependencies [46c9bdd]
+- Updated dependencies [2b841ce]
+- Updated dependencies [942207f]
+- Updated dependencies [1e0e30c]
+- Updated dependencies [5bea5a5]
+- Updated dependencies [9e6551d]
+  - @orderly.network/hooks@3.0.0
+  - @orderly.network/i18n@3.0.0
+  - @orderly.network/types@3.0.0
+  - @orderly.network/ui@3.0.0
+  - @orderly.network/utils@3.0.0
+
 ## 3.0.0-npm-publish.5
 
 ### Patch Changes
