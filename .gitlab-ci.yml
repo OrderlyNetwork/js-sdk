@@ -19,7 +19,7 @@ stages:
   - deploy
   - release # add release stage
 
-internal_patch:
+.internal_publish_template: &internal_publish_template
   stage: release
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
@@ -34,127 +34,38 @@ internal_patch:
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
-      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_INTERNAL"
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+      export MANUAL_TRIGGER="true"
 
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
-      pnpm release:patch
+      pnpm release:${RELEASE_TYPE}
   tags:
     - dev
     - build
-  rules:    
-    # Run this job if:
-    # 1. Branch name starts with "internal/" AND
-    # 2. Commit message does not contain "publish"
-    - if: '$CI_COMMIT_BRANCH =~ /^internal\// && $CI_COMMIT_MESSAGE !~ /publish/'
-      when: always
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
+      when: manual
     - when: never
-      
+
 internal_patch_publish:
-  stage: release
-  image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
-  script:
-    - git checkout "$CI_COMMIT_BRANCH"
-    - 'echo "Latest commit message: $CI_COMMIT_MESSAGE"'
-    - | 
-      git config --global --add safe.directory "$CI_PROJECT_DIR"
+  <<: *internal_publish_template
+  variables:
+    RELEASE_TYPE: patch
+    GIT_COMMIT_MESSAGE: "publish internal patch"
 
-      export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
-      export GIT_TOKEN="$GIT_TOKEN_INTERNAL"
-      export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
-      export GIT_NAME="$GIT_NAME_INTERNAL"
-      export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
-      export GIT_COMMIT_MESSAGE="publish internal patch"
-      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
-      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
-      export MANUAL_TRIGGER="true"
-
-      npm install -g pnpm@9
-      pnpm install --frozen-lockfile
-      pnpm release:patch
-  tags:
-    - dev
-    - build
-  rules:
-    # Run this job if:
-    # 1. Branch name is "pre-release" AND
-    # 2. Job is manually triggered
-    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
-      when: manual
-    - when: never    
-      
 internal_minor_publish:
-  stage: release
-  image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
-  script:
-    - git checkout "$CI_COMMIT_BRANCH"
-    - 'echo "Latest commit message: $CI_COMMIT_MESSAGE"'
-    - | 
-      git config --global --add safe.directory "$CI_PROJECT_DIR"
+  <<: *internal_publish_template
+  variables:
+    RELEASE_TYPE: minor
+    GIT_COMMIT_MESSAGE: "publish internal minor"
 
-      export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
-      export GIT_TOKEN="$GIT_TOKEN_INTERNAL"
-      export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
-      export GIT_NAME="$GIT_NAME_INTERNAL"
-      export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
-      export GIT_COMMIT_MESSAGE="publish internal minor"
-      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
-      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
-      export MANUAL_TRIGGER="true"
-
-
-      npm install -g pnpm@9
-      pnpm install --frozen-lockfile
-      pnpm release:minor
-  tags:
-    - dev
-    - build
-  rules:
-    # Run this job if:
-    # 1. Branch name is "pre-release" AND
-    # 2. Job is manually triggered
-    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
-      when: manual
-    - when: never  
-      
 internal_major_publish:
-  stage: release
-  image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
-  script:
-    - git checkout "$CI_COMMIT_BRANCH"
-    - 'echo "Latest commit message: $CI_COMMIT_MESSAGE"'
-    - | 
-      git config --global --add safe.directory "$CI_PROJECT_DIR"
-
-      export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
-      export GIT_TOKEN="$GIT_TOKEN_INTERNAL"
-      export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
-      export GIT_NAME="$GIT_NAME_INTERNAL"
-      export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
-      export GIT_COMMIT_MESSAGE="publish internal major"
-      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
-      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
-      export MANUAL_TRIGGER="true"
-
-
-      npm install -g pnpm@9
-      pnpm install --frozen-lockfile
-      pnpm release:major
-  tags:
-    - dev
-    - build
-  rules:
-    # Run this job if:
-    # 1. Branch name is "pre-release" AND
-    # 2. Job is manually triggered
-    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
-      when: manual
-    - when: never   
+  <<: *internal_publish_template
+  variables:
+    RELEASE_TYPE: major
+    GIT_COMMIT_MESSAGE: "publish internal major"
 
 npm_patch_alpha:
   stage: release
