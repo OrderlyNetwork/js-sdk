@@ -54,6 +54,10 @@ export const transfer = {
   "transfer.internalTransfer.success": "Funds transferred successfully.",
   "transfer.internalTransfer.failed":
     "Unable to complete transfer. Please try again later.",
+  "transfer.internalTransfer.failed.transferInProgress":
+    "An internal transfer is currently in progress.",
+  "transfer.internalTransfer.failed.withdrawalInProgress":
+    "There is a withdrawal in progress.",
   "transfer.internalTransfer.unsettled.tooltip":
     "Unsettled balance can not be transferred. In order to transfer, please settle your balance first.",
   "transfer.internalTransfer.settlePnl.description":

@@ -116,7 +116,16 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
         options.close?.();
       })
       .catch((err) => {
-        toast.error(err.message || t("transfer.internalTransfer.failed"));
+        console.log("transfer error: ", err);
+        if (err.code === 34) {
+          toast.error(t("transfer.internalTransfer.failed.transferInProgress"));
+        } else if (err.code === 17) {
+          toast.error(
+            t("transfer.internalTransfer.failed.withdrawalInProgress"),
+          );
+        } else {
+          toast.error(t("transfer.internalTransfer.failed"));
+        }
       });
   }, [t, token, quantity, submitting, transfer, toAccount]);
 
@@ -157,7 +166,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
     const _mainAccount = {
       id: mainAccountId!,
-      description: "Main Account",
+      description: t("account.mainAccount"),
       holding: [],
     };
 
@@ -169,7 +178,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
         holding: res[mainAccountId],
       });
     });
-  }, [mainAccountId]);
+  }, [t, mainAccountId]);
 
   // init from account
   useEffect(() => {

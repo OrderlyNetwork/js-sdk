@@ -28,7 +28,7 @@ export const useTransfer = () => {
           if (res.success) {
             return res;
           }
-          throw new Error(res.message);
+          throw res;
         })
         .catch((err) => {
           throw err;
