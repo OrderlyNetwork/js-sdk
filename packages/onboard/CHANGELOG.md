@@ -1,5 +1,17 @@
 # @orderly.network/onboard
 
+## 3.0.0-npm-publish.4
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@3.0.0-npm-publish.4
+  - @orderly.network/types@3.0.0-npm-publish.4
+
 ## 3.0.0-npm-publish.3
 
 ### Patch Changes

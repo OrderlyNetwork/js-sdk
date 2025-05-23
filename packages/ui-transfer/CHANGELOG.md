@@ -1,5 +1,23 @@
 # @orderly.network/ui-transfer
 
+## 3.0.0-npm-publish.4
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@3.0.0-npm-publish.4
+  - @orderly.network/hooks@3.0.0-npm-publish.4
+  - @orderly.network/i18n@3.0.0-npm-publish.4
+  - @orderly.network/types@3.0.0-npm-publish.4
+  - @orderly.network/ui@3.0.0-npm-publish.4
+  - @orderly.network/ui-chain-selector@3.0.0-npm-publish.4
+  - @orderly.network/ui-connector@3.0.0-npm-publish.4
+  - @orderly.network/utils@3.0.0-npm-publish.4
+
 ## 3.0.0-npm-publish.3
 
 ### Patch Changes

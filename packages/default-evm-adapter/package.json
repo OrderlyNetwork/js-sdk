@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/default-evm-adapter",
-  "version": "3.0.0-npm-publish.3",
+  "version": "3.0.0-npm-publish.4",
   "description": "",
   "scripts": {
     "build": "tsup",

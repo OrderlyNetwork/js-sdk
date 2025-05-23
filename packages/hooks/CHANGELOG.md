@@ -1,5 +1,23 @@
 # @orderly.network/hooks
 
+## 3.0.0-npm-publish.4
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@3.0.0-npm-publish.4
+  - @orderly.network/default-evm-adapter@3.0.0-npm-publish.4
+  - @orderly.network/default-solana-adapter@3.0.0-npm-publish.4
+  - @orderly.network/net@3.0.0-npm-publish.4
+  - @orderly.network/perp@5.0.0-npm-publish.4
+  - @orderly.network/types@3.0.0-npm-publish.4
+  - @orderly.network/utils@3.0.0-npm-publish.4
+  - @orderly.network/web3-provider-ethers@3.0.0-npm-publish.4
+
 ## 3.0.0-npm-publish.3
 
 ### Patch Changes
