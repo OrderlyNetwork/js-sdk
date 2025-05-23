@@ -67,7 +67,7 @@ internal_patch_publish:
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
-      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_INTERNAL"
+      export GIT_COMMIT_MESSAGE="publish internal patch"
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
       export MANUAL_TRIGGER="true"
@@ -101,7 +101,7 @@ internal_major_publish:
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
-      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_INTERNAL"
+      export GIT_COMMIT_MESSAGE="publish internal major"
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
       export MANUAL_TRIGGER="true"
@@ -121,7 +121,7 @@ internal_major_publish:
       when: manual
     - when: never   
 
-npm_patch:
+npm_patch_alpha:
   stage: release
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
@@ -135,7 +135,7 @@ npm_patch:
       export GIT_USERNAME="$GIT_USERNAME_NPM"
       export GIT_NAME="$GIT_NAME_NPM"
       export GIT_EMAIL="$GIT_EMAIL_NPM"
-      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_NPM"
+      export GIT_COMMIT_MESSAGE="publish alpha"
       export NPM_REGISTRY="$NPM_REGISTRY_NPM"
       export NPM_TOKEN="$NPM_TOKEN_NPM"
 
