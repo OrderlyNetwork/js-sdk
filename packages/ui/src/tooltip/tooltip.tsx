@@ -77,14 +77,15 @@ const TooltipArrow = (props: {
   );
 };
 
-export type TooltipProps = React.ComponentPropsWithoutRef<
-  typeof TooltipPrimitive.Root
-> &
-  React.ComponentPropsWithoutRef<typeof TooltipContent> & {
-    className?: string;
-    content?: React.ReactNode;
-    arrow?: TooltipPrimitive.TooltipArrowProps;
-  };
+export type TooltipProps = Omit<
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root> &
+    React.ComponentPropsWithoutRef<typeof TooltipContent>,
+  "content"
+> & {
+  className?: string;
+  content?: React.ReactNode;
+  arrow?: TooltipPrimitive.TooltipArrowProps;
+};
 
 const Tooltip = React.forwardRef<
   React.ElementRef<typeof TooltipContent>,

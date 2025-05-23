@@ -51,6 +51,8 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
     !props.disabledConnect &&
     props.status! >= AccountStatusEnum.SignedIn;
 
+  const showSubAccount = props.status! >= AccountStatusEnum.EnableTrading;
+
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
@@ -110,7 +112,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           </>
         )}
         <LanguageSwitcherWidget />
-        <SubAccountWidget />
+        {showSubAccount && <SubAccountWidget />}
         {isDesktop && <ChainMenuWidget />}
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>

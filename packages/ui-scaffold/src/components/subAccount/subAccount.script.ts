@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import { SubAccount, useAccount } from "@orderly.network/hooks";
+import { toast, useScreen } from "@orderly.network/ui";
 
 export type SubAccountScriptReturn = ReturnType<typeof SubAccountScript>;
 
@@ -9,6 +9,8 @@ export const SubAccountScript = () => {
   const { isMobile } = useScreen();
   const { state, account, subAccount, switchAccount, isSubAccount } =
     useAccount();
+
+  const [subAccounts, setSubAccounts] = useState<SubAccount[]>([]);
 
   const _popup = useMemo(
     () => ({
@@ -41,14 +43,43 @@ export const SubAccountScript = () => {
 
   const onSwitch = useCallback(
     (accountId: string) => {
-      return switchAccount(accountId);
+      return switchAccount(accountId)
+        .catch((error) => {
+          console.error(error);
+        })
+        .then((res) => {
+          toast.success("Switch account successfully");
+        });
     },
     [state],
   );
 
   useEffect(() => {
-    console.log("state subaccount", state, state.subAccounts);
-  }, [state]);
+    // current sub account should be the first item
+    if (!state.subAccounts || !state.subAccounts.length) {
+      return;
+    }
+    const currentSubAccount = state.subAccounts.find(
+      (subAccount) => subAccount.id === currentAccountId,
+    );
+    let arr = [];
+    if (currentSubAccount) {
+      arr = [
+        currentSubAccount,
+        ...state.subAccounts.filter(
+          (subAccount) => subAccount.id !== currentAccountId,
+        ),
+      ];
+    } else {
+      arr = [...state.subAccounts];
+    }
+    setSubAccounts(arr);
+  }, [state.subAccounts, currentAccountId]);
+  useEffect(() => {
+    subAccount.refresh().then((res) => {
+      console.log("sub account refresh res", res);
+    });
+  }, []);
   return {
     userAddress,
     mainAccountId,
@@ -57,7 +88,7 @@ export const SubAccountScript = () => {
     onOpenChange: setOpen,
     popup: _popup,
     createSubAccount: doCreatSubAccount,
-    subAccountList,
+    subAccounts,
     onSwitch,
   };
 };
