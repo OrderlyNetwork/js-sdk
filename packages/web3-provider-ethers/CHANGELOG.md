@@ -1,5 +1,14 @@
 # @orderly.network/web3-provider-ethers
 
+## 3.0.0-npm-publish.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@3.0.0-npm-publish.3
+  - @orderly.network/types@3.0.0-npm-publish.3
+
 ## 3.0.0-npm-publish.2
 
 ### Patch Changes

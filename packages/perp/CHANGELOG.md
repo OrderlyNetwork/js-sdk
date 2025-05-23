@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 5.0.0-npm-publish.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@3.0.0-npm-publish.3
+  - @orderly.network/utils@3.0.0-npm-publish.3
+
 ## 5.0.0-npm-publish.2
 
 ### Patch Changes

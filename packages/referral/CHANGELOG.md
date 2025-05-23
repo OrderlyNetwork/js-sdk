@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 3.0.0-npm-publish.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@3.0.0-npm-publish.3
+  - @orderly.network/hooks@3.0.0-npm-publish.3
+  - @orderly.network/utils@3.0.0-npm-publish.3
+
 ## 3.0.0-npm-publish.2
 
 ### Patch Changes

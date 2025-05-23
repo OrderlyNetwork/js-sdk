@@ -1,5 +1,40 @@
 # storybook2
 
+## 2.0.0-npm-publish.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/affiliate@3.0.0-npm-publish.3
+  - @orderly.network/react-app@3.0.0-npm-publish.3
+  - @orderly.network/chart@3.0.0-npm-publish.3
+  - @orderly.network/core@3.0.0-npm-publish.3
+  - @orderly.network/default-evm-adapter@3.0.0-npm-publish.3
+  - @orderly.network/default-solana-adapter@3.0.0-npm-publish.3
+  - @orderly.network/hooks@3.0.0-npm-publish.3
+  - @orderly.network/i18n@3.0.0-npm-publish.3
+  - @orderly.network/markets@3.0.0-npm-publish.3
+  - @orderly.network/portfolio@3.0.0-npm-publish.3
+  - @orderly.network/trading@3.0.0-npm-publish.3
+  - @orderly.network/trading-leaderboard@3.0.0-npm-publish.3
+  - @orderly.network/trading-rewards@3.0.0-npm-publish.3
+  - @orderly.network/types@3.0.0-npm-publish.3
+  - @orderly.network/ui@3.0.0-npm-publish.3
+  - @orderly.network/ui-chain-selector@3.0.0-npm-publish.3
+  - @orderly.network/ui-connector@3.0.0-npm-publish.3
+  - @orderly.network/ui-leverage@3.0.0-npm-publish.3
+  - @orderly.network/ui-order-entry@3.0.0-npm-publish.3
+  - @orderly.network/ui-orders@3.0.0-npm-publish.3
+  - @orderly.network/ui-positions@3.0.0-npm-publish.3
+  - @orderly.network/ui-scaffold@3.0.0-npm-publish.3
+  - @orderly.network/ui-share@3.0.0-npm-publish.3
+  - @orderly.network/ui-tpsl@3.0.0-npm-publish.3
+  - @orderly.network/ui-tradingview@3.0.0-npm-publish.3
+  - @orderly.network/utils@3.0.0-npm-publish.3
+  - @orderly.network/wallet-connector@3.0.0-npm-publish.3
+  - @orderly.network/wallet-connector-privy@3.0.0-npm-publish.3
+
 ## 2.0.0-npm-publish.2
 
 ### Patch Changes
