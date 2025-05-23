@@ -9,11 +9,12 @@ import {
   type SelectWithOptionsProps,
 } from "../select/withOptions";
 import { DatePicker, DatePickerProps } from "../pickers/datepicker";
+import { Picker, PickerProps } from "../pickers/picker";
 import { CombineSelect } from "../select/combine";
 import { DateRange } from "react-day-picker";
 import { cnBase } from "tailwind-variants";
 
-type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol";
+type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol" | "picker";
 
 type DataFilterGeneral = {
   // initialValue?: any;
@@ -43,8 +44,12 @@ type SymbolFilter = {
   type: "symbol";
 };
 
+type PickerFilter = {
+  type: "picker";
+} & PickerProps;  
+
 export type DataFilterItems = (DataFilterGeneral &
-  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter))[];
+  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter | PickerFilter))[];
 
 export type DataFilterProps = {
   items: DataFilterItems;
@@ -125,6 +130,8 @@ export const DataFilterRenderer: FC<{
       );
     case "symbol":
       return <div></div>;
+    case "picker":
+      return <Picker {...(rest as PickerProps)} onValueChange={onChange} />;
     case "input":
     default:
       return <div>No Component</div>;

@@ -15,3 +15,5 @@ export const PlusIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
     );
   }
 );
+
+PlusIcon.displayName = "PlusIcon";

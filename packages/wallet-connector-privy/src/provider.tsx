@@ -8,11 +8,24 @@ import React, {
   type RefObject,
   useMemo,
 } from "react";
-import { Main } from "./main";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { type Chain, defineChain } from "viem";
-import { TooltipProvider } from "@orderly.network/ui";
 import { mainnet } from "viem/chains";
-import { ArbitrumSepoliaChainInfo, ChainNamespace, SolanaChains, SolanaDevnetChainInfo } from "@orderly.network/types";
+import { Chains } from "@orderly.network/hooks";
+import {
+  AbstractChains,
+  AbstractTestnetChainInfo,
+  ArbitrumSepoliaChainInfo,
+  ChainNamespace,
+  SolanaChains,
+  SolanaDevnetChainInfo,
+} from "@orderly.network/types";
+import { TooltipProvider } from "@orderly.network/ui";
+import { Main } from "./main";
+import { AbstractWallet } from "./providers/abstractWallet";
+import { PrivyWallet } from "./providers/privy";
+import { SolanaWallet } from "./providers/solana";
+import { WagmiWallet } from "./providers/wagmi";
 import {
   InitPrivy,
   InitWagmi,
@@ -21,16 +34,10 @@ import {
   WalletChainType,
   WalletChainTypeEnum,
   ConnectorWalletType,
-  SolanaChainsMap,
+  InitAbstract,
+  WalletChainTypeConfig,
+  WalletType,
 } from "./types";
-import { InitPrivyProvider } from "./providers/initPrivyProvider";
-import { InitSolanaProvider } from "./providers/initSolanaProvider";
-import { InitWagmiProvider } from "./providers/initWagmiProvider";
-import { PrivyWalletProvider } from "./providers/privyWalletProvider";
-import { WagmiWalletProvider } from "./providers/wagmiWalletProvider";
-import { SolanaWalletProvider } from "./providers/solanaWalletProvider";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { Chains } from "@orderly.network/hooks";
 
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
@@ -58,7 +65,7 @@ const processChainInfo = (chainInfo: any) =>
       blockExplorers: {
         default: { name: "Explorer", url: row.explorer_base_url },
       },
-    })
+    }),
   ) || [];
 
 interface WalletConnectorPrivyContextType {
@@ -68,8 +75,8 @@ interface WalletConnectorPrivyContextType {
   getChainsByNetwork: (network: "mainnet" | "testnet") => Chain[];
   openConnectDrawer: boolean;
   setOpenConnectDrawer: (open: boolean) => void;
-  targetNamespace: ChainNamespace | undefined;
-  setTargetNamespace: (namespace: ChainNamespace | undefined) => void;
+  targetWalletType: WalletType | undefined;
+  setTargetWalletType: (walletType: WalletType | undefined) => void;
   network: Network;
   setNetwork: (network: Network) => void;
   solanaInfo: {
@@ -80,14 +87,17 @@ interface WalletConnectorPrivyContextType {
     solanaInfo: {
       rpcUrl: string | null;
       network: WalletAdapterNetwork | null;
-    } | null
+    } | null,
   ) => void;
   termsOfUse: string;
+  // TODO deprecated
   walletChainType: WalletChainType;
+  // TODO new chaintype config
+  walletChainTypeConfig: WalletChainTypeConfig;
   connectorWalletType: ConnectorWalletType;
 }
 
-const walletConnectorPrivyContext =
+const WalletConnectorPrivyContext =
   createContext<WalletConnectorPrivyContextType>({
     initChains: [mainnet],
     mainnetChains: [],
@@ -95,45 +105,56 @@ const walletConnectorPrivyContext =
     getChainsByNetwork: () => [],
     openConnectDrawer: false,
     setOpenConnectDrawer: () => {},
-    targetNamespace: undefined,
-    setTargetNamespace: () => {},
+    targetWalletType: undefined,
+    setTargetWalletType: () => {},
     network: Network.mainnet,
     setNetwork: () => {},
     solanaInfo: null,
     setSolanaInfo: () => {},
     termsOfUse: "",
     walletChainType: WalletChainTypeEnum.EVM_SOL,
+    walletChainTypeConfig: {
+      hasEvm: true,
+      hasSol: true,
+      hasAbstract: false,
+    },
     connectorWalletType: {
       disableWagmi: false,
       disablePrivy: false,
       disableSolana: false,
+      disableAGW: false,
     },
   });
 
 export const useWalletConnectorPrivy = () =>
-  useContext(walletConnectorPrivyContext);
+  useContext(WalletConnectorPrivyContext);
 
 interface WalletConnectorPrivyProps extends PropsWithChildren {
   privyConfig?: InitPrivy;
   wagmiConfig?: InitWagmi;
   solanaConfig?: InitSolana;
+  abstractConfig?: InitAbstract;
   network: Network;
   customChains?: Chains;
   termsOfUse: string;
+  headerProps?: {
+    mobile: React.ReactNode;
+  };
 }
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [walletChainType, setWalletChainType] = useState<WalletChainType>(
-    WalletChainTypeEnum.EVM_SOL
+    WalletChainTypeEnum.EVM_SOL,
   );
   const [termsOfUse] = useState<string>(props.termsOfUse);
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
+
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
-  const [targetNamespace, setTargetNamespace] = useState<
-    ChainNamespace | undefined
+  const [targetWalletType, setTargetWalletType] = useState<
+    WalletType | undefined
   >();
   const [solanaInfo, setSolanaInfo] = useState<{
     rpcUrl: string | null;
@@ -141,10 +162,11 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   } | null>(null);
 
   const connectorWalletType = useMemo(() => {
-    let type: ConnectorWalletType = {
+    const type: ConnectorWalletType = {
       disableWagmi: false,
       disablePrivy: false,
       disableSolana: false,
+      disableAGW: false,
     };
     if (!props.privyConfig) {
       type.disablePrivy = true;
@@ -155,26 +177,48 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     if (!props.solanaConfig) {
       type.disableSolana = true;
     }
+    if (!props.abstractConfig) {
+      type.disableAGW = true;
+    }
     return type;
   }, [props.privyConfig, props.wagmiConfig, props.solanaConfig]);
 
+  const walletChainTypeConfig = useMemo(() => {
+    const chainTypeObj: WalletChainTypeConfig = {
+      hasEvm: false,
+      hasSol: false,
+      hasAbstract: false,
+    };
+    initChains.forEach((chain) => {
+      if (SolanaChains.has(chain.id)) {
+        chainTypeObj.hasSol = true;
+      } else if (AbstractChains.has(chain.id)) {
+        chainTypeObj.hasAbstract = true;
+      } else {
+        chainTypeObj.hasEvm = true;
+      }
+    });
+    return chainTypeObj;
+  }, [initChains]);
+
   const fetchAllChains = async () => {
-    let testChainsList = []; 
+    let testChainsList = [];
     let mainnetChainsList = [];
     try {
       const testChainInfoRes = await fetchChainInfo(
-        "https://testnet-api-evm.orderly.org/v1/public/chain_info"
+        "https://testnet-api-evm.orderly.org/v1/public/chain_info",
       );
       testChainsList = testChainInfoRes.data.rows;
+      // TODO only for test, need remove this code
+      testChainsList.push(AbstractTestnetChainInfo);
     } catch (error) {
       console.error("Error fetching data:", error);
       testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
     }
 
-
     try {
       const mainnetChainInfoRes = await fetchChainInfo(
-        "https://api-evm.orderly.org/v1/public/chain_info"
+        "https://api-evm.orderly.org/v1/public/chain_info",
       );
       mainnetChainsList = mainnetChainInfoRes.data.rows;
     } catch (error) {
@@ -193,10 +237,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
 
   const handleCustomerChains = () => {
     const testChains = processChainInfo(
-      props.customChains!.testnet?.map((item) => item.network_infos)
+      props.customChains!.testnet?.map((item) => item.network_infos),
     );
     const mainnetChains = processChainInfo(
-      props.customChains!.mainnet?.map((item) => item.network_infos)
+      props.customChains!.mainnet?.map((item) => item.network_infos),
     );
     setTestnetChains(testChains);
     setMainnetChains(mainnetChains);
@@ -204,13 +248,17 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     const chainTypeObj: {
       hasEvm: boolean;
       hasSol: boolean;
+      hasAbstract: boolean;
     } = {
       hasEvm: false,
       hasSol: false,
+      hasAbstract: false,
     };
     [...testChains, ...mainnetChains].forEach((chain) => {
       if (SolanaChains.has(chain.id)) {
         chainTypeObj.hasSol = true;
+      } else if (AbstractChains.has(chain.id)) {
+        chainTypeObj.hasAbstract = true;
       } else {
         chainTypeObj.hasEvm = true;
       }
@@ -227,10 +275,11 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   if (
     connectorWalletType.disablePrivy &&
     connectorWalletType.disableWagmi &&
-    connectorWalletType.disableSolana
+    connectorWalletType.disableSolana &&
+    connectorWalletType.disableAGW
   ) {
     throw new Error(
-      "Privy, Wagmi, and Solana are disabled. Please enable at least one of them."
+      "Privy, Wagmi, Solana, Abstract are all disabled. Please enable at least one of them.",
     );
   }
 
@@ -246,8 +295,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       getChainsByNetwork,
       openConnectDrawer,
       setOpenConnectDrawer,
-      targetNamespace,
-      setTargetNamespace,
+      targetWalletType,
+      setTargetWalletType,
       network,
       setNetwork,
       solanaInfo,
@@ -255,6 +304,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       termsOfUse,
       walletChainType,
       connectorWalletType,
+      walletChainTypeConfig,
     }),
     [
       initChains,
@@ -263,8 +313,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       getChainsByNetwork,
       openConnectDrawer,
       setOpenConnectDrawer,
-      targetNamespace,
-      setTargetNamespace,
+      targetWalletType,
+      setTargetWalletType,
       network,
       setNetwork,
       solanaInfo,
@@ -272,7 +322,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       termsOfUse,
       walletChainType,
       connectorWalletType,
-    ]
+      walletChainTypeConfig,
+    ],
   );
 
   useEffect(() => {
@@ -288,30 +339,21 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   }
 
   return (
-    <walletConnectorPrivyContext.Provider value={value}>
+    <WalletConnectorPrivyContext.Provider value={value}>
       <TooltipProvider delayDuration={300}>
-        <InitPrivyProvider
-          privyConfig={props.privyConfig}
-          initChains={initChains}
-        >
-          <InitWagmiProvider
-            wagmiConfig={props.wagmiConfig ?? {}}
-            initChains={initChains}
-          >
-            <InitSolanaProvider
-              {...(props.solanaConfig ?? { wallets: [], onError: () => {} })}
+        <PrivyWallet privyConfig={props.privyConfig} initChains={initChains}>
+          <AbstractWallet>
+            <WagmiWallet
+              wagmiConfig={props.wagmiConfig}
+              initChains={initChains}
             >
-              <PrivyWalletProvider>
-                <WagmiWalletProvider>
-                  <SolanaWalletProvider>
-                    <Main>{props.children}</Main>
-                  </SolanaWalletProvider>
-                </WagmiWalletProvider>
-              </PrivyWalletProvider>
-            </InitSolanaProvider>
-          </InitWagmiProvider>
-        </InitPrivyProvider>
+              <SolanaWallet solanaConfig={props.solanaConfig}>
+                <Main headerProps={props.headerProps}>{props.children}</Main>
+              </SolanaWallet>
+            </WagmiWallet>
+          </AbstractWallet>
+        </PrivyWallet>
       </TooltipProvider>
-    </walletConnectorPrivyContext.Provider>
+    </WalletConnectorPrivyContext.Provider>
   );
 }

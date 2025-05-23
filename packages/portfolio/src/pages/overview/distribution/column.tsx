@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { Flex, type Column, TokenIcon } from "@orderly.network/ui";
-import { API } from "@orderly.network/types";
 import { useTranslation, i18n } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
+import { Flex, type Column, TokenIcon } from "@orderly.network/ui";
 
 export const useColumns = () => {
   const { t } = useTranslation();
@@ -36,10 +36,10 @@ export const useColumns = () => {
           switch (value) {
             case "CREATED":
             case "SPLIT":
-              return t("portfolio.assetHistory.status.processing");
+              return t("assetHistory.status.processing");
             case "COMPLETED":
             default:
-              return t("portfolio.assetHistory.status.completed");
+              return t("assetHistory.status.completed");
           }
         },
       },
@@ -52,7 +52,7 @@ export const useColumns = () => {
           switch (value) {
             case "REFERRER_REBATE":
               return t(
-                "portfolio.overview.distribution.type.referralCommission"
+                "portfolio.overview.distribution.type.referralCommission",
               );
             case "REFEREE_REBATE":
               return t("portfolio.overview.distribution.type.refereeRebate");

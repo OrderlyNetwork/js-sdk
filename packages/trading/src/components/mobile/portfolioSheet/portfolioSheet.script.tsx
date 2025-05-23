@@ -1,6 +1,7 @@
 import {
   useAccount,
   useCollateral,
+  useDebouncedCallback,
   useEventEmitter,
   useLeverage,
   useMarginRatio,
@@ -113,7 +114,7 @@ const useMarginRatioAndLeverage = () => {
   const [curLeverage, { update, config: leverageLevers, isMutating }] =
     useLeverage();
 
-  const marks = useMemo((): SliderMarks => {
+  const marks = useMemo<SliderMarks>(() => {
     return (
       leverageLevers?.map((e: number) => ({
         label: `${e}x`,
@@ -122,7 +123,7 @@ const useMarginRatioAndLeverage = () => {
     );
   }, [leverageLevers]);
 
-  const [leverage, setLeverage] = useState(curLeverage ?? 0);
+  const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
 
   const maxLeverage = leverageLevers?.reduce(
     (a: number, item: any) => Math.max(a, Number(item), 0),
@@ -146,19 +147,48 @@ const useMarginRatioAndLeverage = () => {
   const onSave = async (leverage: number) => {
     try {
       update({ leverage }).then(
-        (res: any) => {
+        () => {
           toast.success(t("leverage.updated"));
         },
         (err: Error) => {
           toast.error(err.message);
         }
       );
-    } catch (e) {}
+    } catch {
+      //
+    }
   };
 
-  const onValueCommit = useCallback((value: number[]) => {
-    onSave(value[0]);
+  const onValueCommit = useCallback((value: number | number[]) => {
+    onSave(Array.isArray(value) ? value[0] : value);
   }, []);
+
+  const debouncedCommit = useDebouncedCallback(onValueCommit, 500);
+
+  const onInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (e) => {
+      const parsed = Number.parseInt(e.target.value, 10);
+      const raw = Number.isNaN(parsed) ? 0 : parsed;
+      const clamped = Math.min(Math.max(raw, 1), maxLeverage);
+      setLeverage(clamped);
+      debouncedCommit(clamped);
+    },
+    [debouncedCommit, maxLeverage]
+  );
+
+  const onLeverageIncrease: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => {
+      onSave(prev + 1);
+      return prev + 1;
+    });
+  };
+
+  const onLeverageReduce: React.MouseEventHandler<SVGSVGElement> = () => {
+    setLeverage((prev) => {
+      onSave(prev - 1);
+      return prev - 1;
+    });
+  };
 
   return {
     aggregated,
@@ -167,11 +197,15 @@ const useMarginRatioAndLeverage = () => {
     marginRatio,
     marginRatioVal,
     mmr,
-
     currentLeverage,
     step,
     marks,
     onLeverageChange,
+    onLeverageIncrease,
+    onLeverageReduce,
+    onInputChange,
+    isReduceDisabled: leverage <= 1,
+    isIncreaseDisabled: leverage >= maxLeverage,
     onValueCommit,
     value: leverage,
     maxLeverage,

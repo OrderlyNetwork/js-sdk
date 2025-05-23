@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Button, formatAddress, Text, useScreen } from "@orderly.network/ui";
-import { useWalletConnector } from "@orderly.network/hooks";
-import { usePrivyWallet } from "../providers/privyWalletProvider";
-import { RenderPrivyTypeIcon } from "./common";
+import React, { useMemo } from "react";
+import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import {
+  ABSTRACT_CHAIN_ID_MAP,
+  ABSTRACT_TESTNET_CHAINID,
+  AccountStatusEnum,
+} from "@orderly.network/types";
+import {
+  Button,
+  cn,
+  formatAddress,
+  Text,
+  useScreen,
+} from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
+import { RenderPrivyTypeIcon } from "./common";
 
 export function UserCenter(props: any) {
   const { accountState: state } = props;
@@ -28,8 +38,20 @@ const RenderUserCenter = (props: any) => {
   const { isMobile } = useScreen();
   const { connect, wallet } = useWalletConnector();
   const { linkedAccount } = usePrivyWallet();
+  const { state: accountState, account } = useAccount();
+  const { connectedChain } = useWalletConnector();
 
   const disabled = state.validating || props.disabledConnect;
+
+  const userAddress = useMemo(() => {
+    if (
+      connectedChain?.id &&
+      ABSTRACT_CHAIN_ID_MAP.has(parseInt(connectedChain?.id as string))
+    ) {
+      return account.getAdditionalInfo()?.AGWAddress;
+    }
+    return account.address;
+  }, [account, connectedChain, accountState]);
 
   // if (accountStatus.status <= ) {}
   if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
@@ -42,7 +64,7 @@ const RenderUserCenter = (props: any) => {
         className="oui-flex oui-items-center oui-justify-center oui-gap-2"
       >
         <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
-          {formatAddress(state.address!, [4, 4])}
+          {formatAddress(userAddress!)}
         </Text.formatted>
       </Button>
     );
@@ -54,7 +76,10 @@ const RenderUserCenter = (props: any) => {
         size="md"
         variant={disabled ? undefined : "gradient"}
         angle={45}
-        className="wallet-connect-button"
+        className={cn(
+          "wallet-connect-button",
+          isMobile && "oui-font-semibold oui-px-2",
+        )}
         loading={state.validating}
         disabled={disabled}
         onClick={() => {
@@ -77,29 +102,29 @@ const RenderUserCenter = (props: any) => {
     return (
       <AuthGuard
         buttonProps={{
-          size: "sm",
+          size: "md",
         }}
       >
         <div onClick={() => connect()}>
           <Button
-            size="sm"
+            size="md"
             variant="gradient"
             angle={45}
             data-testid="oui-testid-nav-bar-address-btn"
-            className="oui-flex oui-items-center oui-justify-center oui-gap-2"
+            className="oui-px-2 oui-flex oui-items-center oui-justify-center oui-gap-1"
           >
             {linkedAccount && (
               <RenderPrivyTypeIcon
                 type={linkedAccount.type}
-                size={18}
+                size={14}
                 black={true}
               />
             )}
             <Text.formatted
               rule="address"
-              className="oui-text-[rgba(0,0,0,.88)]"
+              className="oui-text-[rgba(0,0,0,.88)] oui-font-semibold"
             >
-              {formatAddress(wallet.accounts[0].address)}
+              {formatAddress(userAddress!)}
             </Text.formatted>
           </Button>
         </div>
@@ -123,7 +148,7 @@ const RenderUserCenter = (props: any) => {
           />
         )}
         <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
-          {formatAddress(wallet.accounts[0].address)}
+          {formatAddress(userAddress!)}
         </Text.formatted>
       </Button>
     </div>

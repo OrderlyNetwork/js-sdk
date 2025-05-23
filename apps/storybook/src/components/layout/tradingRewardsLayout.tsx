@@ -20,7 +20,7 @@ export const TradingRewardsLayout: FC<TradingRewardsLayoutProps> = (props) => {
       footerProps={config.scaffold.footerProps}
       mainNavProps={{
         ...config.scaffold.mainNavProps,
-        initialMenu: "/rewards",
+        initialMenu: ["/rewards"],
       }}
       routerAdapter={{
         onRouteChange,

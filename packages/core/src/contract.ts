@@ -4,22 +4,26 @@ import {
   mainnetVaultAddress,
   mainnetVerifyAddress,
   nativeUSDCAddress,
-  solanaDevVaultAddress, solanaMainnetUSDCAddress,
+  solanaDevVaultAddress,
+  solanaMainnetUSDCAddress,
   solanaMainnetVaultAddress,
   solanaQaVaultAddress,
   solanaStagingVualtAddress,
-  solanaUSDCAddress, stagingStoryTestnetVaultAddress,
+  solanaUSDCAddress,
+  stagingStoryTestnetVaultAddress,
   stagingUSDCAddressOnArbitrumTestnet,
   stagingVaultAddressOnArbitrumTestnet,
   stagingVerifyAddressOnArbitrumTestnet,
   stagingMonadTestnetVaultAddress,
   MonadTestnetUSDCAddress,
-  qaMonadTestnetVaultAddress
+  qaMonadTestnetVaultAddress,
+  stagingAbstractTestnetVaultAddress,
+  AbstractTestnetUSDCAddress,
+  qaAbstractTestnetVaultAddress,
+  devAbstractTestnetVaultAddress,
 } from "./constants";
-
 import mainnetUSDCAbi from "./wallet/abis/mainnetUSDCAbi.json";
 import mainnetVaultAbi from "./wallet/abis/mainnetVaultAbi.json";
-
 import stagingUSDCAbiOnArbitrumTestnet from "./wallet/abis/stagingUSDCAbi.json";
 import stagingVaultAbiOnArbitrumTestnet from "./wallet/abis/stagingVaultAbi.json";
 
@@ -39,6 +43,8 @@ export type OrderlyContracts = {
   storyTestnetVaultAddress?: string;
   monadTestnetVaultAddress?: string;
   monadTestnetUSDCAddress?: string;
+  abstractTestnetVaultAddress?: string;
+  abstractTestnetUSDCAddress?: string;
 };
 
 export interface IContract {
@@ -67,15 +73,20 @@ export class BaseContract implements IContract {
       };
     }
 
-    let solanaVaultAddress =solanaStagingVualtAddress;
+    let solanaVaultAddress = solanaStagingVualtAddress;
     let storyTestnetVaultAddress = stagingStoryTestnetVaultAddress;
     let monadTestnetVaultAddress = stagingMonadTestnetVaultAddress;
-    let monadTestnetUSDCAddress = MonadTestnetUSDCAddress;
-    if (env === 'qa') {
+    const monadTestnetUSDCAddress = MonadTestnetUSDCAddress;
+    let abstractTestnetVaultAddress = stagingAbstractTestnetVaultAddress;
+    const abstractTestnetUSDCAddress = AbstractTestnetUSDCAddress;
+    if (env === "qa") {
       solanaVaultAddress = solanaQaVaultAddress;
-      verifyContractAddress = '0x50F59504D3623Ad99302835da367676d1f7E3D44';
-      storyTestnetVaultAddress ='0xFeA61647309cA4624EfF3c86EEEeb76a6F3eaFf7';
+      verifyContractAddress = "0x50F59504D3623Ad99302835da367676d1f7E3D44";
+      storyTestnetVaultAddress = "0xFeA61647309cA4624EfF3c86EEEeb76a6F3eaFf7";
       monadTestnetVaultAddress = qaMonadTestnetVaultAddress;
+      abstractTestnetVaultAddress = qaAbstractTestnetVaultAddress;
+    } else if (env === "dev") {
+      abstractTestnetVaultAddress = devAbstractTestnetVaultAddress;
     }
 
     return {
@@ -85,11 +96,13 @@ export class BaseContract implements IContract {
       solanaVaultAddress: solanaVaultAddress,
       solanaUSDCAddress: solanaUSDCAddress,
       vaultAbi: stagingVaultAbiOnArbitrumTestnet,
-      verifyContractAddress:verifyContractAddress,
+      verifyContractAddress: verifyContractAddress,
       erc20Abi: stagingUSDCAbiOnArbitrumTestnet,
-      storyTestnetVaultAddress:storyTestnetVaultAddress,
+      storyTestnetVaultAddress: storyTestnetVaultAddress,
       monadTestnetVaultAddress: monadTestnetVaultAddress,
       monadTestnetUSDCAddress: monadTestnetUSDCAddress,
+      abstractTestnetVaultAddress: abstractTestnetVaultAddress,
+      abstractTestnetUSDCAddress: abstractTestnetUSDCAddress,
     };
   }
 }

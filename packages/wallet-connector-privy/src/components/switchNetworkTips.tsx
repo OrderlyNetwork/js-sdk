@@ -1,8 +1,8 @@
 import React from "react";
-import { ChainNamespace } from "@orderly.network/types";
-import { ExclamationFillIcon } from "@orderly.network/ui";
 import { useStorageChain } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { ChainNamespace } from "@orderly.network/types";
+import { ExclamationFillIcon } from "@orderly.network/ui";
 
 export function SwitchNetworkTips({
   chainNamespace,
@@ -12,9 +12,9 @@ export function SwitchNetworkTips({
   const { t } = useTranslation();
   const getChainName = () => {
     if (chainNamespace === ChainNamespace.evm) {
-      return "EVM";
+      return "Evm";
     }
-    return "SOLANA";
+    return "Solana";
   };
   return (
     <div className="oui-flex oui-mb-3 oui-items-center oui-gap-1  oui-px-2 oui-py-[6px] oui-bg-[rgba(255,125,0,0.1)] oui-rounded-[8px] ">
@@ -33,7 +33,7 @@ export function SwitchNetworkTips({
 export const StorageChainNotCurrentWalletType = ({
   currentWalletChainType,
 }: {
-  currentWalletChainType: ChainNamespace;
+  currentWalletChainType: ChainNamespace | null;
 }) => {
   const { storageChain } = useStorageChain();
   if (currentWalletChainType === storageChain?.namespace) {

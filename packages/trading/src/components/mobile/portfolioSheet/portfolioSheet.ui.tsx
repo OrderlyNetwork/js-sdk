@@ -1,26 +1,33 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useId } from "react";
+import React from "react";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   ArrowDownShortIcon,
   ArrowUpShortIcon,
   Button,
+  cn,
   Divider,
   EyeCloseIcon,
   EyeIcon,
   Flex,
   Grid,
+  Input,
+  inputFormatter,
+  InputFormatter,
   modal,
+  PlusIcon,
+  ReduceIcon,
   RefreshIcon,
   Statistic,
   Text,
 } from "@orderly.network/ui";
+import { LeverageProps, LeverageSlider } from "@orderly.network/ui-leverage";
+import { USDCIcon } from "../accountSheet/icons";
 import {
   getMarginRatioColor,
   PortfolioSheetState,
 } from "./portfolioSheet.script";
-import { USDCIcon } from "../accountSheet/icons";
 import { RiskIndicator } from "./riskIndicator";
-import { LeverageSlider } from "@orderly.network/ui-leverage";
-import { Trans, useTranslation } from "@orderly.network/i18n";
 
 export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
   return (
@@ -28,7 +35,7 @@ export const PortfolioSheet: FC<PortfolioSheetState> = (props) => {
       <Asset {...props} />
       <Divider className="oui-w-full" />
       <MarginRatio {...props} />
-      <Leverage {...props} />
+      {/* <Leverage {...props} /> */}
       {/* <Divider className="oui-w-full" /> */}
       {/* <AvailableBalance {...props} /> */}
       <Buttons {...props} />
@@ -174,7 +181,7 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
 
   const { high, mid, low } = getMarginRatioColor(
     props.marginRatioVal,
-    props.mmr
+    props.mmr,
   );
 
   return (
@@ -202,10 +209,10 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
                 low
                   ? "oui-rotate-0"
                   : mid
-                  ? "oui-rotate-90"
-                  : high
-                  ? "oui-rotate-180"
-                  : ""
+                    ? "oui-rotate-90"
+                    : high
+                      ? "oui-rotate-180"
+                      : ""
               }
             />
           )}
@@ -240,16 +247,133 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
     </Grid>
   );
 };
+
+const IconButton: React.FC<{
+  Icon: React.ComponentType<any>;
+  onClick: React.MouseEventHandler<SVGSVGElement>;
+  disabled: boolean;
+}> = (props) => {
+  const { Icon, onClick, disabled } = props;
+  return (
+    <Icon
+      onClick={disabled ? undefined : onClick}
+      className={cn(
+        "oui-text-white oui-m-2 oui-transition-all",
+        disabled
+          ? "oui-cursor-not-allowed oui-opacity-20"
+          : "oui-cursor-pointer oui-opacity-100",
+      )}
+    />
+  );
+};
+
+const LeverageInput: React.FC<PortfolioSheetState> = (props) => {
+  const formatters = React.useMemo<InputFormatter[]>(
+    () => [
+      inputFormatter.numberFormatter,
+      inputFormatter.currencyFormatter,
+      inputFormatter.decimalPointFormatter,
+    ],
+    [],
+  );
+  const id = useId();
+  return (
+    <label
+      htmlFor={id}
+      className={cn(
+        "oui-w-full",
+        "oui-rounded",
+        "oui-bg-base-6",
+        "oui-flex",
+        "oui-items-center",
+        "oui-justify-between",
+        "oui-outline",
+        "oui-outline-offset-0",
+        "oui-outline-1",
+        "oui-outline-transparent",
+        "focus-within:oui-outline-primary-light",
+        "oui-input-root",
+      )}
+    >
+      <IconButton
+        Icon={ReduceIcon}
+        onClick={props.onLeverageReduce}
+        disabled={props.isReduceDisabled}
+      />
+      <Flex itemAlign="center" justify="center">
+        <Input
+          // {...props}
+          value={props.value}
+          id={id}
+          autoComplete="off"
+          classNames={{
+            input: cn("oui-text-center"),
+            root: cn(
+              "oui-text-center",
+              "oui-w-6",
+              "oui-px-0",
+              "oui-outline",
+              "oui-outline-offset-0",
+              "oui-outline-1",
+              "oui-outline-transparent",
+              "focus-within:oui-outline-primary-none",
+            ),
+          }}
+          formatters={formatters}
+          onChange={props.onInputChange}
+        />
+        <div className="oui-select-none">x</div>
+      </Flex>
+      <IconButton
+        Icon={PlusIcon}
+        onClick={props.onLeverageIncrease}
+        disabled={props.isIncreaseDisabled}
+      />
+    </label>
+  );
+};
+
+export const LeverageSelector: React.FC<PortfolioSheetState> = (props) => {
+  const { value, onLeverageChange, onValueCommit } = props;
+  return (
+    <Flex itemAlign="center" justify="between" width={"100%"} mt={2}>
+      {[1, 5, 10, 20, 50].map((option) => (
+        <Flex
+          key={option}
+          itemAlign="center"
+          justify="center"
+          className={cn(
+            `oui-transition-all oui-cursor-pointer oui-box-border oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-rounded-md oui-border oui-border-solid`,
+            value === option
+              ? "oui-border-primary oui-bg-base-6"
+              : "oui-border-line-12",
+          )}
+          onClick={() => {
+            onLeverageChange(option);
+            onValueCommit(option);
+          }}
+        >
+          <Flex
+            itemAlign="center"
+            justify="center"
+            className={cn(`oui-w-9 oui-h-3 oui-select-none`)}
+          >
+            {option}x
+          </Flex>
+        </Flex>
+      ))}
+    </Flex>
+  );
+};
+
 const Leverage: FC<PortfolioSheetState> = (props) => {
   const { t } = useTranslation();
-
   return (
     <Flex direction={"column"} gap={2} width={"100%"}>
       <Flex width={"100%"} justify={"between"}>
         <Text size="2xs" intensity={54}>
           {t("leverage.maxAccountLeverage")}
         </Text>
-
         <Flex gap={1}>
           <Text size="2xs" intensity={54}>
             {`${t("common.current")}:`}
@@ -259,6 +383,8 @@ const Leverage: FC<PortfolioSheetState> = (props) => {
           </Text.numeral>
         </Flex>
       </Flex>
+      <LeverageInput {...props} />
+      <LeverageSelector {...props} />
       <LeverageSlider
         value={props.value}
         maxLeverage={props.maxLeverage}

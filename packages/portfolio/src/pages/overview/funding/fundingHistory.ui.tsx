@@ -8,7 +8,7 @@ import { useTranslation } from "@orderly.network/i18n";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;
 
-export const FundingHistoryUI: FC<FundingHistoryProps> = (props) => {
+export const FundingHistoryDesktop: FC<FundingHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading } = props;
   const columns = useFundingHistoryColumns();
   const symbols = useSymbolsInfo();
