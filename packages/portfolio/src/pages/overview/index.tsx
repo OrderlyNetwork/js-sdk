@@ -23,7 +23,8 @@ export {
 
 export {
   DistributionHistoryWidget,
-  DistributionHistoryUI,
+  DistributionHistoryMobile,
+  DistributionHistoryDesktop,
 } from "./distribution";
 
 export { OverviewPage } from "./main";

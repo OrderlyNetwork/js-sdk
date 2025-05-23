@@ -11,7 +11,10 @@ import { useScreen } from "@orderly.network/ui";
 export type LanguageSwitcherScriptReturn = ReturnType<
   typeof useLanguageSwitcherScript
 >;
-export type LanguageSwitcherScriptOptions = Pick<LocaleContextState, "popup">;
+export type LanguageSwitcherScriptOptions = Pick<
+  LocaleContextState,
+  "popup"
+> & { open?: boolean; setOpen?: (open: boolean) => void };
 
 export const useLanguageSwitcherScript = (
   options?: LanguageSwitcherScriptOptions,
@@ -33,6 +36,7 @@ export const useLanguageSwitcherScript = (
     await i18n.changeLanguage(lang);
     await onLanguageChanged(lang);
     setOpen(false);
+    options?.setOpen?.(false);
     setLoading(false);
     track(TrackerEventName.switchLanguage, {
       language: displayName,
@@ -55,8 +59,8 @@ export const useLanguageSwitcherScript = (
   );
 
   return {
-    open,
-    onOpenChange: setOpen,
+    open: options?.open || open,
+    onOpenChange: options?.setOpen || setOpen,
     languages,
     selectedLang,
     onLangChange,

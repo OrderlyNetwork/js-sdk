@@ -1,12 +1,13 @@
 import React, { PropsWithChildren } from "react";
+import { BottomNavProps } from "../bottomNav/bottomNav.widget";
+import { FooterProps } from "../footer";
 import { MainNavWidgetProps } from "../main/mainNav.widget";
 import { SideBarProps } from "../sidebar";
-import { RouterAdapter } from "./scaffoldContext";
-import { FooterProps } from "../footer";
-import { ScaffoldProvider } from "./scaffoldProvider";
-import { useScaffoldScript } from "./scaffold.script";
 import { MobileScaffold } from "./scaffold.mobile.ui";
+import { useScaffoldScript } from "./scaffold.script";
 import { DesktopScaffold } from "./scaffold.ui";
+import { RouterAdapter } from "./scaffoldContext";
+import { ScaffoldProvider } from "./scaffoldProvider";
 
 export type ScaffoldProps = {
   /**
@@ -17,6 +18,7 @@ export type ScaffoldProps = {
   leftSideProps?: SideBarProps;
   topBar?: React.ReactNode;
   mainNavProps?: MainNavWidgetProps;
+  bottomNavProps?: BottomNavProps;
   footer?: React.ReactNode;
   footerProps?: FooterProps;
   routerAdapter?: RouterAdapter;

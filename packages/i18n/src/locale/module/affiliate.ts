@@ -73,6 +73,7 @@ export const affiliate = {
   "affiliate.trader.yourReferrer": "Your referrer",
   "affiliate.trader.rebate": "Rebate",
   "affiliate.trader.rebates": "Rebates",
+  "affiliate.trader.rebate.30d": "30d rebates",
   "affiliate.trader.myRebates": "My rebates",
   "affiliate.trader.tradingVol": "Trading vol.",
 };

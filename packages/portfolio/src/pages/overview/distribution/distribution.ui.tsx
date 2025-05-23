@@ -7,7 +7,7 @@ import { useTranslation } from "@orderly.network/i18n";
 
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;
 
-export const DistributionHistoryUI: FC<FundingHistoryProps> = (props) => {
+export const DistributionHistoryDesktop: FC<FundingHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading, isValidating } =
     props;
   const columns = useColumns();

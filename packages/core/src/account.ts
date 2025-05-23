@@ -1,23 +1,23 @@
-import { BaseSigner, MessageFactor, Signer } from "./signer";
-
-import { ConfigStore } from "./configStore/configStore";
-import { OrderlyKeyStore } from "./keyStore";
+import { PublicKey } from "@solana/web3.js";
+import { AbiCoder, keccak256 } from "ethers";
+import EventEmitter from "eventemitter3";
 import {
   AccountStatusEnum,
   SDKError,
   ChainNamespace,
 } from "@orderly.network/types";
-import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
-
-import EventEmitter from "eventemitter3";
-import { BaseContract, IContract } from "./contract";
+import { AdditionalInfoRepository } from "./additionalInfoRepository";
 import { Assets } from "./assets";
+import { ConfigStore } from "./configStore/configStore";
 import { EVENT_NAMES } from "./constants";
-import { WalletAdapterManager } from "./walletAdapterManager";
-import { WalletAdapter } from "./wallet/walletAdapter";
+import { BaseContract, IContract } from "./contract";
 import { BaseOrderlyKeyPair, OrderlyKeyPair } from "./keyPair";
-import { PublicKey } from "@solana/web3.js";
-import { AbiCoder, keccak256 } from "ethers";
+import { OrderlyKeyStore } from "./keyStore";
+import { LocalStorageRepository } from "./repository";
+import { BaseSigner, MessageFactor, Signer } from "./signer";
+import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
+import { WalletAdapter } from "./wallet/walletAdapter";
+import { WalletAdapterManager } from "./walletAdapterManager";
 
 export interface AccountState {
   status: AccountStatusEnum;
@@ -59,6 +59,7 @@ export interface AccountState {
  */
 export class Account {
   static instanceName = "account";
+  static additionalInfoRepositoryName = "walletAdditionalInfo";
   // private walletClient?: WalletClient;
   private _singer?: Signer;
   // private _state$ = new BehaviorSubject<AccountState>({
@@ -73,6 +74,8 @@ export class Account {
   private walletAdapterManager: WalletAdapterManager;
 
   assetsManager: Assets;
+
+  private additionalInfoRepository: AdditionalInfoRepository;
 
   private _state: AccountState = {
     status: AccountStatusEnum.NotConnected,
@@ -96,7 +99,7 @@ export class Account {
        * provide contract address and abi
        */
       contracts: IContract;
-    }>
+    }>,
   ) {
     // this._initState();
 
@@ -108,6 +111,10 @@ export class Account {
 
     this.assetsManager = new Assets(configStore, this.contractManger, this);
     this.walletAdapterManager = new WalletAdapterManager(walletAdapters);
+
+    this.additionalInfoRepository = new AdditionalInfoRepository(
+      new LocalStorageRepository(Account.additionalInfoRepositoryName),
+    );
 
     this._bindEvents();
   }
@@ -125,7 +132,7 @@ export class Account {
         name: string;
       };
       [key: string]: any;
-    }
+    },
   ): Promise<AccountStatusEnum> {
     if (!address) throw new SDKError("Address is required");
     if (!wallet) throw new SDKError("Wallet is required");
@@ -133,7 +140,7 @@ export class Account {
 
     if (this.stateValue.address === address) {
       console.warn(
-        "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method."
+        "address parameter is the same as the current address, if you want to change chain, please use `switchChain` method.",
       );
       return this.stateValue.status;
     } else {
@@ -146,6 +153,8 @@ export class Account {
     wallet.chain.id = this.parseChainId(wallet?.chain?.id);
 
     this.keyStore.setAddress(address);
+
+    this.saveAdditionalInfo(address, wallet);
 
     const nextState: AccountState = {
       ...this.stateValue,
@@ -181,7 +190,7 @@ export class Account {
       {
         provider: wallet.provider,
         contractManager: this.contractManger,
-      }
+      },
     );
 
     /**
@@ -196,6 +205,21 @@ export class Account {
     this._ee.emit(EVENT_NAMES.validateEnd, finallyState);
 
     return finallyState;
+  }
+  private saveAdditionalInfo(
+    address: string,
+    wallet: {
+      [key: string]: any;
+      additionalInfo?: Record<string, any>;
+    },
+  ) {
+    if (typeof wallet.additionalInfo !== "undefined") {
+      if (typeof wallet.additionalInfo !== "object") {
+        console.warn("`wallet.additionalInfo` is not an object");
+      } else {
+        this.additionalInfoRepository.save(address, wallet.additionalInfo);
+      }
+    }
   }
 
   get stateValue(): AccountState {
@@ -224,8 +248,8 @@ export class Account {
       return keccak256(
         abicoder.encode(
           ["bytes32", "bytes32"],
-          [decodedUserAccount, parseBrokerHash(brokerId)]
-        )
+          [decodedUserAccount, parseBrokerHash(brokerId)],
+        ),
       );
     }
     return parseAccountId(this.address, brokerId);
@@ -312,7 +336,7 @@ export class Account {
 
       const orderlyKeyStatus = await this._checkOrderlyKeyState(
         accountInfo.account_id,
-        publicKey
+        publicKey,
       );
 
       if (
@@ -363,7 +387,7 @@ export class Account {
 
   private async _checkAccountExist(
     address: string,
-    chainNamespace?: string
+    chainNamespace?: string,
   ): Promise<{ account_id: string; user_id: string } | null> {
     // const brokerId = this.configStore.get("brokerId");
     const res = await this._getAccountInfo(address, chainNamespace);
@@ -445,7 +469,7 @@ export class Account {
     options?: {
       tag?: string;
       scope?: string;
-    }
+    },
   ) {
     try {
       const { res, keyPair } = await this.generateApiKey(expiration, options);
@@ -473,11 +497,11 @@ export class Account {
     options?: {
       tag?: string;
       scope?: string;
-    }
+    },
   ): Promise<any> {
     const { res, address, keyPair } = await this.generateApiKey(
       expiration,
-      options
+      options,
     );
 
     if (res.success) {
@@ -502,7 +526,7 @@ export class Account {
     options?: {
       tag?: string;
       scope?: string;
-    }
+    },
   ) {
     if (this.stateValue.accountId === undefined) {
       throw new Error("account id is undefined");
@@ -591,14 +615,14 @@ export class Account {
   async checkOrderlyKey(
     address: string,
     orderlyKey: OrderlyKeyPair,
-    accountId: string
+    accountId: string,
   ) {
     if (!address || !orderlyKey || !accountId) return;
     const publicKey = await orderlyKey.getPublicKey();
 
     const orderlyKeyStatus = await this._checkOrderlyKeyState(
       accountId,
-      publicKey
+      publicKey,
     );
 
     const { orderly_key, key_status, expiration } = orderlyKeyStatus || {};
@@ -606,6 +630,7 @@ export class Account {
 
     if (orderly_key && key_status === "ACTIVE" && expiration > now) {
       this.keyStore.setAddress(address);
+
       this.keyStore.setKey(address, orderlyKey);
       this.keyStore.setAccountId(address, accountId);
 
@@ -701,6 +726,8 @@ export class Account {
     if (!!this.stateValue.address) {
       // this.keyStore.cleanAllKey(this.stateValue.address);
       this.keyStore.removeAddress();
+
+      this.additionalInfoRepository.clear(this.stateValue.address);
     }
 
     const nextState = {
@@ -745,7 +772,7 @@ export class Account {
 
   private async _checkOrderlyKeyState(accountId: string, orderlyKey: string) {
     const res = await this._simpleFetch(
-      `/v1/get_orderly_key?account_id=${accountId}&orderly_key=${orderlyKey}`
+      `/v1/get_orderly_key?account_id=${accountId}&orderly_key=${orderlyKey}`,
     );
 
     if (res.success) {
@@ -802,7 +829,7 @@ export class Account {
     const chainType = chainNamespace || this.stateValue.chainNamespace;
 
     const res = await this._simpleFetch(
-      `/v1/get_account?address=${addr}&broker_id=${brokerId}&chain_type=${chainType}`
+      `/v1/get_account?address=${addr}&broker_id=${brokerId}&chain_type=${chainType}`,
     );
     return res;
   }
@@ -853,6 +880,13 @@ export class Account {
   //       : "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
   //   };
   // }
+
+  getAdditionalInfo(): Record<string, any> | null {
+    if (!this.stateValue.address) {
+      return null;
+    }
+    return this.additionalInfoRepository.getAll(this.stateValue.address);
+  }
 
   get on() {
     return this._ee.on.bind(this._ee);

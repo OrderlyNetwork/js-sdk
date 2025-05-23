@@ -19,6 +19,9 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
         ...config.scaffold.mainNavProps,
         initialMenu: props.initialMenu || "/",
       }}
+      bottomNavProps={{
+        ...config.scaffold.bottomNavProps,
+      }}
       footerProps={config.scaffold.footerProps}
       routerAdapter={{
         onRouteChange,

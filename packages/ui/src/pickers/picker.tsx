@@ -17,6 +17,7 @@ const pickerVariants = tv({
   variants: {
     size: {
       sm: "oui-px-2 oui-h-[22px] oui-text-2xs",
+      md: "oui-px-2 oui-h-[24px] oui-text-2xs",
       base: "oui-px-3 oui-h-[40px]",
       lg: "oui-px-6 oui-py-3",
     },
