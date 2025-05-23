@@ -17,7 +17,12 @@ import { SubAccountScriptReturn } from "./subAccount.script";
 export function SubAccountUI(props: SubAccountScriptReturn) {
   const { isMobile } = useScreen();
   const header = <Text weight="semibold">Switch account</Text>;
-  const trigger = <SubAccountIcon onClick={() => props.onOpenChange(true)} />;
+  const trigger = (
+    <SubAccountIcon
+      className="oui-cursor-pointer"
+      onClick={() => props.onOpenChange(true)}
+    />
+  );
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editAccountItem, setEditAccountItem] = useState<
     | {
@@ -92,13 +97,14 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
               Main account
             </Text>
             <AccountItem
-              accountId={props.mainAccountId ?? ""}
+              accountId={props.mainAccount?.id ?? ""}
               isMainAccount={true}
-              userAddress={props.userAddress}
-              isCurrent={props.currentAccountId === props.mainAccountId}
+              userAddress={props.mainAccount?.userAddress ?? ""}
+              isCurrent={props.currentAccountId === props.mainAccount?.id}
               onSwitch={(accountId) => {
                 props.onSwitch?.(accountId);
               }}
+              holdings={props.mainAccount?.holding ?? []}
             />
           </Flex>
 

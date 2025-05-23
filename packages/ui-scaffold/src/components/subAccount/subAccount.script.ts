@@ -1,14 +1,24 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { SubAccount, useAccount } from "@orderly.network/hooks";
+import { SubAccount, useAccount, useCollateral } from "@orderly.network/hooks";
+import { API } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
 
 export type SubAccountScriptReturn = ReturnType<typeof SubAccountScript>;
+
+type MainAccount = {
+  id: string;
+  userAddress: string;
+  holding: API.Holding[];
+};
 
 export const SubAccountScript = () => {
   const [open, setOpen] = useState(false);
   const { isMobile } = useScreen();
   const { state, account, subAccount, switchAccount, isSubAccount } =
     useAccount();
+  const [mainAccount, setMainAccount] = useState<MainAccount | undefined>(
+    undefined,
+  );
 
   const [subAccounts, setSubAccounts] = useState<SubAccount[]>([]);
 
@@ -18,17 +28,7 @@ export const SubAccountScript = () => {
     }),
     [isMobile],
   );
-  const mainAccountId = useMemo(() => {
-    return state.mainAccountId;
-  }, [state]);
-
-  const userAddress = useMemo(() => {
-    return state.address;
-  }, [state]);
-
-  const subAccountList = useMemo(() => {
-    return state.subAccounts;
-  }, [state]);
+  const mainAccountId = state.mainAccountId;
 
   const currentAccountId = useMemo(() => {
     return state.accountId;
@@ -76,13 +76,28 @@ export const SubAccountScript = () => {
     setSubAccounts(arr);
   }, [state.subAccounts, currentAccountId]);
   useEffect(() => {
+    if (!mainAccountId || !state.address) return;
+
+    const _mainAccount = {
+      id: mainAccountId!,
+      userAddress: state.address,
+      holding: mainAccount ? mainAccount.holding : [],
+    };
+    setMainAccount(_mainAccount);
     subAccount.refresh().then((res) => {
-      console.log("sub account refresh res", res);
+      // if current account is main account, update main account holding from ws hooks
+      if (currentAccountId === mainAccountId) {
+        setMainAccount({
+          ..._mainAccount,
+          holding: res[mainAccountId],
+        });
+        return;
+      }
     });
-  }, []);
+  }, [mainAccountId, state.address]);
+
   return {
-    userAddress,
-    mainAccountId,
+    mainAccount,
     currentAccountId,
     open,
     onOpenChange: setOpen,
