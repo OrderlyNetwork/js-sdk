@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 3.1.0
+
+### Minor Changes
+
+- publish
+
 ## 3.0.0
 
 ### Major Changes

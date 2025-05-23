@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 4.1.0
+
+### Minor Changes
+
+- publish
+
 ## 4.0.0
 
 ### Major Changes

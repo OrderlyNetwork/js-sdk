@@ -1,5 +1,16 @@
 # @orderly.network/cli
 
+## 2.1.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@4.1.0
+
 ## 2.0.0
 
 ### Major Changes

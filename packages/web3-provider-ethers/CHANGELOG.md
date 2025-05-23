@@ -1,5 +1,17 @@
 # @orderly.network/web3-provider-ethers
 
+## 4.1.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@4.1.0
+  - @orderly.network/types@4.1.0
+
 ## 4.0.0
 
 ### Major Changes

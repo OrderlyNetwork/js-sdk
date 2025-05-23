@@ -1,5 +1,23 @@
 # @orderly.network/trading-rewards
 
+## 4.1.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@4.1.0
+  - @orderly.network/hooks@4.1.0
+  - @orderly.network/i18n@4.1.0
+  - @orderly.network/types@4.1.0
+  - @orderly.network/ui@4.1.0
+  - @orderly.network/ui-connector@4.1.0
+  - @orderly.network/ui-scaffold@4.1.0
+  - @orderly.network/utils@4.1.0
+
 ## 4.0.0
 
 ### Major Changes

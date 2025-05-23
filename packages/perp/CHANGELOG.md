@@ -1,5 +1,17 @@
 # @orderly.network/futures
 
+## 6.1.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@4.1.0
+  - @orderly.network/utils@4.1.0
+
 ## 6.0.0
 
 ### Major Changes
