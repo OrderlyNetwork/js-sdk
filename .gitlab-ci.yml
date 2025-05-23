@@ -51,20 +51,21 @@ stages:
       when: manual
     - when: never
 
-internal_patch_publish:
+internal_major_publish:
   <<: *internal_publish_template
   variables:
-    RELEASE_TYPE: patch
+    RELEASE_TYPE: major
 
 internal_minor_publish:
   <<: *internal_publish_template
   variables:
     RELEASE_TYPE: minor
 
-internal_major_publish:
+internal_patch_publish:
   <<: *internal_publish_template
   variables:
-    RELEASE_TYPE: major
+    RELEASE_TYPE: patch
+
 
 npm_patch_alpha:
   stage: release
