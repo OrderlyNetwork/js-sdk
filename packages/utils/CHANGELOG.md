@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.1.3-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.1.3-npm-publish.0
+
 ## 2.1.2
 
 ### Patch Changes

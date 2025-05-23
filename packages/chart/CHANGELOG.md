@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 2.1.3-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.1.3-npm-publish.0
+  - @orderly.network/ui@2.1.3-npm-publish.0
+  - @orderly.network/utils@2.1.3-npm-publish.0
+
 ## 2.1.2
 
 ### Patch Changes

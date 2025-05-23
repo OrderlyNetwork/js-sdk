@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/perp",
-  "version": "4.1.2",
+  "version": "4.1.3-npm-publish.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

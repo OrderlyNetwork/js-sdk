@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.4.3-npm-publish.0
+
+### Patch Changes
+
+- publish
+
 ## 0.4.2
 
 ### Patch Changes

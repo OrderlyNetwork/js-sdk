@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/cli",
-  "version": "0.4.2",
+  "version": "0.4.3-npm-publish.0",
   "description": "",
   "bin": {
     "orderly": "./bin/cli.js"
