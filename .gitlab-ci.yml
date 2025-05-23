@@ -23,6 +23,8 @@ stages:
   stage: release
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+  before_script:
+    - export GIT_COMMIT_MESSAGE="publish internal ${RELEASE_TYPE}"
   script:
     - git checkout "$CI_COMMIT_BRANCH"
     - 'echo "Latest commit message: $CI_COMMIT_MESSAGE"'
@@ -53,19 +55,16 @@ internal_patch_publish:
   <<: *internal_publish_template
   variables:
     RELEASE_TYPE: patch
-    GIT_COMMIT_MESSAGE: "publish internal patch"
 
 internal_minor_publish:
   <<: *internal_publish_template
   variables:
     RELEASE_TYPE: minor
-    GIT_COMMIT_MESSAGE: "publish internal minor"
 
 internal_major_publish:
   <<: *internal_publish_template
   variables:
     RELEASE_TYPE: major
-    GIT_COMMIT_MESSAGE: "publish internal major"
 
 npm_patch_alpha:
   stage: release
