@@ -32,10 +32,11 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
     unsettledPnL,
     toAccountAsset,
     setToAccount,
+    setFromAccount,
     fromAccounts,
-    fromValue,
     toAccounts,
-    toValue,
+    fromAccount,
+    toAccount,
   } = props;
 
   const { t } = useTranslation();
@@ -49,7 +50,11 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
           {t("transfer.internalTransfer.from")}
         </Text>
         <Box mt={1} mb={1}>
-          <AccountSelect subAccounts={fromAccounts} value={fromValue} />
+          <AccountSelect
+            subAccounts={fromAccounts}
+            value={fromAccount}
+            onValueChange={setFromAccount}
+          />
           <QuantityInput
             classNames={{
               root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
@@ -94,7 +99,7 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
         <Box mt={1}>
           <AccountSelect
             subAccounts={toAccounts}
-            value={toValue}
+            value={toAccount}
             onValueChange={setToAccount}
           />
           <Flex

@@ -11,7 +11,7 @@ import { RefreshIcon } from "../../icons";
 
 type UnsettlePnlInfoProps = {
   hasPositions: boolean;
-  unsettledPnl: number;
+  unsettledPnl?: number;
   onSettlePnl: () => Promise<any>;
   tooltipContent?: ReactNode;
   dialogContent?: ReactNode;
@@ -26,7 +26,6 @@ export const UnsettlePnlInfo = (props: UnsettlePnlInfoProps) => {
     dialogContent,
   } = props;
   const { t } = useTranslation();
-  console.log("unsettledPnl", unsettledPnl, hasPositions);
 
   if (unsettledPnl === 0 && !hasPositions) {
     return <></>;

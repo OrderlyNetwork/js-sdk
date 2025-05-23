@@ -10,7 +10,8 @@ import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useInputStatus } from "../depositForm/hooks";
-import { useSettlePnl } from "../withdrawForm/hooks/useSettlePnl";
+import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
+import { useSubAccountDataObserver } from "./hooks/useSubAccountDataObserver";
 
 export type TransferFormScriptReturn = ReturnType<typeof useTransferFormScript>;
 
@@ -27,6 +28,7 @@ const DEFAULT_TOKEN = {
 export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const { t } = useTranslation();
   const [quantity, setQuantity] = useState<string>("");
+  const [fromAccount, setFromAccount] = useState<SubAccount>();
   const [toAccount, setToAccount] = useState<SubAccount>();
   const [mainAccount, setMainAccount] = useState<SubAccount>();
   const [tokens, setTokens] = useState<API.TokenInfo[]>([DEFAULT_TOKEN]);
@@ -35,19 +37,59 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const networkId = useConfig("networkId") as NetworkId;
 
   const { state, isMainAccount, subAccount } = useAccount();
-  const { hasPositions, onSettlePnl } = useSettlePnl();
+  const { hasPositions: currentHasPositions, onSettlePnl } = useSettlePnl();
 
   const {
     transfer,
     submitting,
-    maxAmount: maxQuantity,
-    unsettledPnL,
-    holding,
+    maxAmount: currentMaxAmount,
+    unsettledPnL: currentUnsettledPnL,
+    holding: currentHolding,
   } = useTransfer();
 
   const subAccounts = state.subAccounts;
   const mainAccountId = state.mainAccountId;
   const accountId = state.accountId;
+
+  const observerSubAccountId =
+    isMainAccount && fromAccount?.id && fromAccount?.id !== mainAccountId
+      ? fromAccount?.id
+      : undefined;
+
+  // when select sub account, open the private websocket
+  const { portfolio, positions } =
+    useSubAccountDataObserver(observerSubAccountId);
+
+  const formHasPositions = useMemo(
+    () => !!positions?.rows?.length,
+    [positions],
+  );
+
+  const hasPositions = useMemo(() => {
+    return observerSubAccountId ? formHasPositions : currentHasPositions;
+  }, [observerSubAccountId, formHasPositions, currentHasPositions]);
+
+  const { unsettledPnL, holding, maxQuantity } = useMemo(() => {
+    if (observerSubAccountId) {
+      return {
+        unsettledPnL: portfolio?.unsettledPnL,
+        holding: portfolio?.holding,
+        maxQuantity:
+          portfolio?.freeCollateral.toDecimalPlaces(6).toNumber() || 0,
+      };
+    }
+    return {
+      holding: currentHolding,
+      unsettledPnL: currentUnsettledPnL,
+      maxQuantity: currentMaxAmount,
+    };
+  }, [
+    observerSubAccountId,
+    portfolio,
+    currentHolding,
+    currentUnsettledPnL,
+    currentMaxAmount,
+  ]);
 
   const { inputStatus, hintMessage } = useInputStatus({
     quantity,
@@ -93,27 +135,21 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     return asset?.holding || 0;
   }, [toAccount, token]);
 
-  const { fromAccounts, fromValue, toAccounts, toValue } = useMemo(() => {
+  const { fromAccounts, toAccounts } = useMemo(() => {
     if (isMainAccount) {
+      const _subAccounts =
+        subAccounts?.filter((item) => item.id !== toAccount?.id) || [];
       return {
-        fromAccounts: [],
-        fromValue: mainAccount,
-        toAccounts: subAccounts,
-        toValue: toAccount,
+        fromAccounts: mainAccount ? [mainAccount, ..._subAccounts] : [],
+        toAccounts: subAccounts?.filter((item) => item.id !== fromAccount?.id),
       };
     }
 
-    const currentSubAccount = subAccounts?.find(
-      (item) => item.id === accountId,
-    );
-
     return {
       fromAccounts: [],
-      fromValue: currentSubAccount,
       toAccounts: [],
-      toValue: mainAccount,
     };
-  }, [isMainAccount, subAccounts, toAccount, accountId, mainAccount]);
+  }, [isMainAccount, subAccounts, mainAccount, fromAccount, toAccount]);
 
   // init and update main account holding
   useEffect(() => {
@@ -135,7 +171,16 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     });
   }, [mainAccountId]);
 
-  // init sub account selected
+  // init from account
+  useEffect(() => {
+    setFromAccount(
+      isMainAccount
+        ? mainAccount
+        : subAccounts?.find((item) => item.id === accountId),
+    );
+  }, [isMainAccount, mainAccount, subAccounts, accountId]);
+
+  // init to account
   useEffect(() => {
     if (isMainAccount) {
       const selectAccount = options.toAccountId
@@ -179,11 +224,11 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     onSettlePnl,
     unsettledPnL,
     toAccountAsset,
+    fromAccount,
     toAccount,
     setToAccount,
     fromAccounts,
-    fromValue,
     toAccounts,
-    toValue,
+    setFromAccount,
   };
 };

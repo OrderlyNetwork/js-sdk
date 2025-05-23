@@ -19,7 +19,7 @@ import { toast } from "@orderly.network/ui";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
-import { useSettlePnl } from "./hooks/useSettlePnl";
+import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
