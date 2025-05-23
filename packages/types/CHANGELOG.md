@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 3.0.0-npm-publish.2
+
+### Patch Changes
+
+- publish
+
 ## 3.0.0-npm-publish.1
 
 ### Major Changes

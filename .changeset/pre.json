@@ -48,6 +48,7 @@
     "@orderly.network/web3-provider-ethers": "2.1.2"
   },
   "changesets": [
+    "four-gifts-rhyme",
     "plenty-llamas-sort",
     "slimy-pumpkins-joke"
   ]

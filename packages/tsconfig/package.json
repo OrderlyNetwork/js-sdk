@@ -1,6 +1,6 @@
 {
   "name": "tsconfig",
-  "version": "1.0.0-npm-publish.1",
+  "version": "1.0.0-npm-publish.2",
   "private": true,
   "license": "MIT",
   "publishConfig": {

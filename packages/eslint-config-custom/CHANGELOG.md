@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 2.0.0-npm-publish.2
+
+### Patch Changes
+
+- publish
+
 ## 2.0.0-npm-publish.1
 
 ### Major Changes

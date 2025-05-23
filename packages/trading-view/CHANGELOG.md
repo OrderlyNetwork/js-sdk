@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 3.0.0-npm-publish.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@3.0.0-npm-publish.2
+  - @orderly.network/hooks@3.0.0-npm-publish.2
+  - @orderly.network/net@3.0.0-npm-publish.2
+  - @orderly.network/types@3.0.0-npm-publish.2
+  - @orderly.network/utils@3.0.0-npm-publish.2
+
 ## 3.0.0-npm-publish.1
 
 ### Major Changes
