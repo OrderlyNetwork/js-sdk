@@ -26,6 +26,8 @@ export const en = {
   "common.all": "All",
   "common.buy": "Buy",
   "common.sell": "Sell",
+  "common.long": "Long",
+  "common.short": "Short",
   "common.edit": "Edit",
   "common.save": "Save",
   "common.add": "Add",

@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from "react";
+import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
 import { MainNavWidgetProps } from "../main/mainNav.widget";
 import { SideBarProps } from "../sidebar";
@@ -17,6 +18,7 @@ export type ScaffoldProps = {
   leftSideProps?: SideBarProps;
   topBar?: React.ReactNode;
   mainNavProps?: MainNavWidgetProps;
+  bottomNavProps?: BottomNavProps;
   footer?: React.ReactNode;
   footerProps?: FooterProps;
   routerAdapter?: RouterAdapter;

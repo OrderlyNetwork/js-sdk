@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { Decimal } from "@orderly.network/utils";
 import { useMarkets, useQuery, MarketsType } from "@orderly.network/hooks";
+import { Decimal } from "@orderly.network/utils";
 import { sortList, useSize } from "../../../utils";
 
 // export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;
@@ -47,18 +47,24 @@ export function useDataSource() {
   const { data: balance } = useQuery("/v1/public/balance/stats");
 
   const news = useMemo(
-    () => sortList(markets, "created_time", "desc").slice(0, 5),
-    [markets]
+    () =>
+      sortList(markets, { sortKey: "created_time", sortOrder: "desc" }).slice(
+        0,
+        5,
+      ),
+    [markets],
   );
 
   const gainers = useMemo(
-    () => sortList(markets, "change", "desc").slice(0, 5),
-    [markets]
+    () =>
+      sortList(markets, { sortKey: "change", sortOrder: "desc" }).slice(0, 5),
+    [markets],
   );
 
   const losers = useMemo(
-    () => sortList(markets, "change", "asc").slice(0, 5),
-    [markets]
+    () =>
+      sortList(markets, { sortKey: "change", sortOrder: "asc" }).slice(0, 5),
+    [markets],
   );
 
   const total24Amount = useMemo(
@@ -66,7 +72,7 @@ export function useDataSource() {
       markets?.reduce((prevValue: Decimal, curValue: any) => {
         return prevValue.add(curValue["24h_amount"] || 0);
       }, new Decimal(0)) || new Decimal(0),
-    [markets]
+    [markets],
   );
 
   const totalOpenInterest = useMemo(
@@ -74,12 +80,12 @@ export function useDataSource() {
       markets?.reduce((prevValue: Decimal, curValue: any) => {
         return prevValue.add(curValue["openInterest"] || 0);
       }, new Decimal(0)) || new Decimal(0),
-    [markets]
+    [markets],
   );
 
   const tvl = useMemo(() => {
     if (!balance) return 0;
-    
+
     const { total_holding = 0 } = balance as any;
     return new Decimal(total_holding).toNumber();
   }, [balance]);

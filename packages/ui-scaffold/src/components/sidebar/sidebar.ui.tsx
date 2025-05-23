@@ -15,6 +15,7 @@ type SideMenuItem = {
   href?: string;
   disabled?: boolean;
   onClick?: () => void;
+  hide?: boolean;
 };
 
 const menuItemVariants = tv({
@@ -93,7 +94,7 @@ const MenuItem: FC<
             color={props.active ? "brand" : "inherit"}
             angle={45}
             size="base"
-            className="oui-animate-in oui-fade-in oui-break-all"
+            className="oui-break-all oui-animate-in oui-fade-in"
           >
             {item.name}
           </Text.gradient>
@@ -131,7 +132,7 @@ const SideMenus: FC<{
         viewBox="0 0 18 18"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="oui-absolute oui-invisible oui-pointer-events-none"
+        className="oui-pointer-events-none oui-invisible oui-absolute"
       >
         <defs>
           <linearGradient
@@ -149,6 +150,7 @@ const SideMenus: FC<{
       </svg>
       <ul className="oui-space-y-4">
         {props.menus?.map((item, index) => {
+          if (item?.hide) return null;
           return (
             <MenuItem
               key={index}

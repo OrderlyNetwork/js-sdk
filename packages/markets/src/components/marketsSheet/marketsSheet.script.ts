@@ -1,14 +1,11 @@
+import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
 import { useTabSort } from "../shared/hooks/useTabSort";
 
-export type UseMarketsSheetScriptOptions = {};
+export type MarketsSheetScriptReturn = ReturnType<typeof useMarketsSheetScript>;
 
-export type UseMarketsSheetScriptReturn = ReturnType<
-  typeof useMarketsSheetScript
->;
-
-export function useMarketsSheetScript(options?: UseMarketsSheetScriptOptions) {
+export function useMarketsSheetScript() {
   const { tabSort, onTabSort } = useTabSort({
-    storageKey: "orderly_side_markets_tab_sort",
+    storageKey: SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
   });
   return { tabSort, onTabSort };
 }

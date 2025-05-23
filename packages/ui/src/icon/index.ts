@@ -12,6 +12,7 @@ export { CaretLeftIcon } from "./caretLeft";
 export { CaretRightIcon } from "./caretRight";
 export { ChevronLeftIcon } from "./chevronLeft";
 export { ChevronRightIcon } from "./chevronRight";
+export { CalendarMinusIcon } from "./calendarMinus";
 export { SettingIcon } from "./setting";
 export { SettingFillIcon } from "./settingFill";
 export { CloseSquareFillIcon } from "./closeSquareFill";
@@ -20,6 +21,7 @@ export { CheckedCircleFillIcon } from "./checkCircleFill";
 export { CheckedSquareFillIcon } from "./checkSquareFill";
 export { CheckSquareEmptyIcon } from "./checkSquareEmpty";
 export { PlusIcon } from "./plus";
+export { ReduceIcon } from "./reduce";
 export { CircleOutlinedIcon } from "./circleOutlined";
 export { SquareOutlinedIcon } from "./squareOutlined";
 export { ExclamationFillIcon } from "./exclamationFill";
@@ -35,6 +37,8 @@ export { EyeIcon } from "./eye";
 export { ShareIcon } from "./share";
 export { EyeCloseIcon } from "./eyeClose";
 export { RefreshIcon } from "./refresh";
+export { OrderlyIcon } from "./orderly";
+export { EsOrderlyIcon } from "./esOrderly";
 
 export { TokenIcon } from "./tokenIcon";
 export { ChainIcon } from "./chainIcon";
@@ -52,6 +56,15 @@ export {
 } from "./arrowShort";
 
 export { SortingIcon } from "./sortingIcon";
+export { TraderMobileIcon } from "./traderMobileIcon";
+export { AffiliateIcon } from "./affiliateIcon";
+export { TradingRewardsIcon } from "./tradingRewardsIcon";
+export { PortfolioActiveIcon } from "./portfolioActiveIcon";
+export { PortfolioInactiveIcon } from "./portfolioInactiveIcon";
+export { TradingActiveIcon } from "./tradingActiveIcon";
+export { TradingInactiveIcon } from "./tradingInactiveIcon";
+export { LeaderboardActiveIcon } from "./leaderboardActive";
+export { LeaderboardInactiveIcon } from "./leaderboardInactive";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

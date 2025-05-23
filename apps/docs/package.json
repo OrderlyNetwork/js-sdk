@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
@@ -45,7 +45,7 @@
     "prisma": "^5.0.0",
     "ramda": "^0.29.0",
     "raw-loader": "^4.0.2",
-    "react": "18.2.0",
+    "react": "^18.2.0",
     "react-color-palette": "^6.2.0",
     "react-dom": "^18.2.0",
     "react-live": "^4.1.5",
@@ -59,9 +59,9 @@
     "@orderly.network/typedoc-json-parser": "^9.0.1",
     "@types/chroma-js": "^2.4.2",
     "@types/ramda": "^0.29.3",
-    "@types/react": "18.2.16",
+    "@types/react": "^18.2.16",
     "@types/react-color": "^3.0.6",
-    "@types/react-dom": "18.2.7",
+    "@types/react-dom": "^18.2.7",
     "typedoc": "^0.26.5",
     "typedoc-nextra": "^0.1.6"
   }

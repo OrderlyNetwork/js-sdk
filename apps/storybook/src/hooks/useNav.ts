@@ -36,6 +36,7 @@ export function useNav() {
       [PortfolioLeftSidebarPath.Orders]: "Package/portfolio/Orders",
       [PortfolioLeftSidebarPath.Assets]: "Package/portfolio/Assets",
       [PortfolioLeftSidebarPath.Setting]: "Package/portfolio/Setting",
+      [PortfolioLeftSidebarPath.History]: "Package/portfolio/History",
 
       [RoutePath.TradingRewards]: "Package/trading-rewards",
       [TradingRewardsLeftSidebarPath.Trading]: "Package/trading-rewards",

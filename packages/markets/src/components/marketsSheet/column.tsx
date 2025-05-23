@@ -1,13 +1,13 @@
 import { MouseEventHandler } from "react";
+import { i18n } from "@orderly.network/i18n";
 import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { DeleteIcon, TopIcon } from "../../icons";
 import { FavoriteInstance } from "../../type";
-import { i18n } from "@orderly.network/i18n";
 
 export const getMarketsSheetColumns = (
   favorite: FavoriteInstance,
-  isFavoriteList = false
+  isFavoriteList = false,
 ) => {
   return [
     {
@@ -19,10 +19,7 @@ export const getMarketsSheetColumns = (
         return (
           <Flex direction="column" itemAlign="start" gapY={1}>
             <Flex gapX={1}>
-              <TokenIcon
-                symbol={record.symbol}
-                className="oui-w-[18px] oui-h-[18px]"
-              />
+              <TokenIcon symbol={record.symbol} className="oui-size-[18px]" />
               <Text.formatted
                 rule="symbol"
                 formatString="base"
@@ -59,7 +56,7 @@ export const getMarketsSheetColumns = (
           favorite.updateSymbolFavoriteState(
             record,
             favorite.selectedFavoriteTab,
-            true
+            true,
           );
           e.stopPropagation();
         };
@@ -71,13 +68,13 @@ export const getMarketsSheetColumns = (
           <div
             className={cn(
               "oui-absolute oui-right-0 oui-top-[6.5px]",
-              "oui-hidden group-hover:oui-block"
+              "oui-hidden group-hover:oui-block",
             )}
           >
             <Flex
               className={cn(
                 "oui-inline-flex",
-                "oui-bg-primary-darken oui-py-[6px]"
+                "oui-bg-primary-darken oui-py-[6px]",
               )}
               r="base"
               width={52}

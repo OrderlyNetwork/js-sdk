@@ -11,6 +11,7 @@ export enum PortfolioLeftSidebarPath {
   FeeTier = "/portfolio/feeTier",
   ApiKey = "/portfolio/apiKey",
   Setting = "/portfolio/setting",
+  History = "/portfolio/history",
 }
 
 export type UseLayoutBuilderOptions = {
@@ -158,6 +159,11 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
           </svg>
         ),
       },
+      {
+        name: t("trading.history"),
+        href: PortfolioLeftSidebarPath.History,
+        hide: true,
+      },
     ];
   }, [t]);
 
@@ -191,3 +197,7 @@ export const useCustomSidebarHook = () => {
     },
   };
 };
+
+export type usePortfolioLayoutScriptType = ReturnType<
+  typeof usePortfolioLayoutScript
+>;

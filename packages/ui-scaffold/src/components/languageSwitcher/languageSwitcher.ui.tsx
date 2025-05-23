@@ -32,7 +32,9 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
       className={cn(
         "oui-size-6 lg:oui-size-5",
         "oui-cursor-pointer oui-text-base-contrast-80",
+        isMobile && "oui-h-[18px] oui-w-[18px]",
       )}
+      id="language-switcher-icon"
       onClick={() => props.onOpenChange(true)}
     />
   );

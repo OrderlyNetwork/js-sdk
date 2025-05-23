@@ -1,6 +1,6 @@
-import { SortOrder } from "@orderly.network/ui";
 import { useCallback, useEffect, useState } from "react";
-import { TInitialSort } from "./type";
+import { TableSort } from "@orderly.network/ui";
+import { SortType } from "./type";
 
 /** get page data */
 export function getPagedData(list: any[], pageSize: number, pageIndex: number) {
@@ -16,7 +16,8 @@ export function getPagedData(list: any[], pageSize: number, pageIndex: number) {
   return pageData[pageIndex - 1] || [];
 }
 
-export function sortList(list: any[], sortKey?: string, sortOrder?: SortOrder) {
+export function sortList(list: any[], sort?: SortType) {
+  const { sortKey, sortOrder } = sort || {};
   const sortedList = [...(list || [])];
 
   const isEmpty = (value: any) => value === undefined || value === null;
@@ -41,41 +42,40 @@ export function sortList(list: any[], sortKey?: string, sortOrder?: SortOrder) {
 }
 
 export function useSort(
-  defaultSortKey?: string,
-  defaultSortOrder?: SortOrder,
-  onSortChange?: (sortKey?: string, sortOrder?: SortOrder) => void
+  initialSort?: SortType,
+  onSortChange?: (sort?: SortType) => void,
 ) {
-  const [key, setKey] = useState<string>();
-  const [order, setOrder] = useState<SortOrder>();
+  const [sort, setSort] = useState<SortType | undefined>(initialSort);
 
-  const onSort = useCallback(
-    (options?: TInitialSort) => {
-      setKey(options?.sortKey);
-      setOrder(options?.sort);
-      onSortChange?.(options?.sortKey, options?.sort);
-    },
-    [onSortChange]
-  );
+  const onSort = useCallback((options?: TableSort) => {
+    const nextSort = options
+      ? {
+          sortKey: options.sortKey,
+          sortOrder: options.sort,
+        }
+      : undefined;
 
-  const sortKey = key || defaultSortKey;
-  const sortOrder = order || defaultSortOrder;
+    setSort(nextSort || initialSort);
+    onSortChange?.(nextSort);
+    // initialSort, onSortChange is not needed to be in the dependency array, otherwise it will cause infinite loop
+  }, []);
 
   const getSortedList = useCallback(
-    (list: any[]) => sortList(list, sortKey, sortOrder),
-    [sortKey, sortOrder]
+    (list: any[]) => sortList(list, sort),
+    [sort],
   );
 
-  return { onSort, getSortedList, sortKey, sortOrder };
+  return { sort, onSort, getSortedList };
 }
 
 export function searchBySymbol(
   list: any[],
   searchValue = "",
-  formatString?: string
+  formatString?: string,
 ) {
   const reg = new RegExp(searchValue, "i");
   return list?.filter((item) =>
-    reg.test(formatSymbol(item.symbol, formatString))
+    reg.test(formatSymbol(item.symbol, formatString)),
   );
 }
 

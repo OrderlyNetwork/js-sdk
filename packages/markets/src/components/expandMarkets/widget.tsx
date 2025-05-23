@@ -1,15 +1,15 @@
 import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 import {
   useExpandMarketsScript,
-  UseExpandMarketsScriptOptions,
+  ExpandMarketsScriptOptions,
 } from "./expandMarkets.script";
 import { ExpandMarkets } from "./expandMarkets.ui";
 
 export type ExpandMarketsWidgetProps = MarketsProviderProps &
-  UseExpandMarketsScriptOptions;
+  ExpandMarketsScriptOptions;
 
 export const ExpandMarketsWidget: React.FC<ExpandMarketsWidgetProps> = (
-  props
+  props,
 ) => {
   const state = useExpandMarketsScript({
     activeTab: props.activeTab,

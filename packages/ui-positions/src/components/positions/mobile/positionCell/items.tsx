@@ -1,11 +1,11 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
+import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { ShareButtonWidget } from "../../desktop/shareButton";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { PositionCellState } from "./positionCell.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const SymbolToken: FC<PositionCellState> = (props) => {
   const { item } = props;
@@ -18,7 +18,7 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
       size="2xs"
       suffix={
         <Badge color={isBuy ? "success" : "danger"} size="xs">
-          {isBuy ? t("common.buy") : t("common.sell")}
+          {isBuy ? t("common.long") : t("common.short")}
         </Badge>
       }
       showIcon
@@ -59,7 +59,7 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
                 "oui-ml-1",
                 item.unrealized_pnl_ROI > 0
                   ? "oui-text-success-darken"
-                  : "oui-text-danger-darken"
+                  : "oui-text-danger-darken",
               )}
             >
               {item.unrealized_pnl_ROI}

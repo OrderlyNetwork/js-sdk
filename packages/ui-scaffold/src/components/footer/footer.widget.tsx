@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { useFooterScript } from "./footer.script";
 import { Footer } from "./footer.ui";
 
@@ -5,7 +6,7 @@ export type FooterProps = {
   telegramUrl?: string;
   twitterUrl?: string;
   discordUrl?: string;
-  trailing?: React.ReactNode;
+  trailing?: ReactNode;
 };
 
 export const FooterWidget = (props: FooterProps) => {

@@ -64,6 +64,8 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
     return <Flex grow>{props.children}</Flex>;
   }, [props.children]);
 
+  console.log("isDesktop", isDesktop, props);
+
   return (
     <Flex
       width="100%"

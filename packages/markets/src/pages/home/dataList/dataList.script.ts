@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { useMarketsContext } from "../../../components/marketsProvider";
-
-export type TabName = "favorites" | "all" | "new";
+import { TabName } from "../../../type";
 
 export type UseMarketsDataListScript = ReturnType<
   typeof useMarketsDataListScript
 >;
 
 export function useMarketsDataListScript() {
-  const [activeTab, setActiveTab] = useState<TabName>("all");
+  const [activeTab, setActiveTab] = useState<TabName>(TabName.All);
   const { clearSearchValue } = useMarketsContext();
 
   useEffect(() => {

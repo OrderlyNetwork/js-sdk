@@ -1,26 +1,23 @@
 import { useCallback, useEffect, useState } from "react";
+import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
+import { TabName } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
-import { SortOrder } from "@orderly.network/ui";
 import { useTabSort } from "../shared/hooks/useTabSort";
 
-export type TabName = "favorites" | "recent" | "all";
-
-export type UseExpandMarketsScriptOptions = {
+export type ExpandMarketsScriptOptions = {
   activeTab?: TabName;
   onTabChange?: (tab: TabName) => void;
 };
 
-export type UseExpandMarketsScriptReturn = ReturnType<
+export type ExpandMarketsScriptReturn = ReturnType<
   typeof useExpandMarketsScript
 >;
 
-export function useExpandMarketsScript(
-  options?: UseExpandMarketsScriptOptions
-) {
-  const [activeTab, setActiveTab] = useState<TabName>(options?.activeTab!);
+export function useExpandMarketsScript(options: ExpandMarketsScriptOptions) {
+  const [activeTab, setActiveTab] = useState<TabName>(options.activeTab!);
 
   const { tabSort, onTabSort } = useTabSort({
-    storageKey: "orderly_side_markets_tab_sort",
+    storageKey: SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
   });
 
   const { clearSearchValue } = useMarketsContext();
@@ -33,10 +30,10 @@ export function useExpandMarketsScript(
         setActiveTab(value as TabName);
       }
     },
-    [options?.onTabChange]
+    [options?.onTabChange],
   );
   useEffect(() => {
-    setActiveTab(options?.activeTab || "favorites");
+    setActiveTab(options?.activeTab || TabName.Favorites);
   }, [options?.activeTab]);
 
   useEffect(() => {

@@ -6,13 +6,20 @@ import React, {
 } from "react";
 import { WalletConnectorContext, WalletState } from "@orderly.network/hooks";
 import { ConnectDrawer } from "./components/connectDrawer";
-import { useWalletConnectorPrivy } from "./provider";
-import "./injectUsercenter";
 import { useWallet } from "./hooks/useWallet";
+import "./injectUsercenter";
+import { useWalletConnectorPrivy } from "./provider";
 
-export function Main(props: PropsWithChildren) {
+interface MainProps {
+  children: React.ReactNode;
+  headerProps?: {
+    mobile: React.ReactNode;
+  };
+}
+
+export function Main(props: MainProps) {
   const { wallet, connectedChain, setChain, namespace } = useWallet();
-  const { openConnectDrawer, setOpenConnectDrawer, setTargetNamespace } =
+  const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
     useWalletConnectorPrivy();
 
   const connect = (props: any): Promise<WalletState[]> => {
@@ -22,7 +29,7 @@ export function Main(props: PropsWithChildren) {
       return Promise.resolve([]);
     }
 
-    setTargetNamespace(undefined);
+    setTargetWalletType(undefined);
     return new Promise((resolve, reject) => {
       setOpenConnectDrawer(true);
       resolve([]);
@@ -46,7 +53,7 @@ export function Main(props: PropsWithChildren) {
       chains: [],
       settingChain: false,
     }),
-    [connect, setChain, connectedChain, wallet, namespace]
+    [connect, setChain, connectedChain, wallet, namespace],
   );
 
   return (
@@ -54,6 +61,7 @@ export function Main(props: PropsWithChildren) {
       <ConnectDrawer
         open={openConnectDrawer}
         onChangeOpen={setOpenConnectDrawer}
+        headerProps={props.headerProps}
       />
       {props.children}
     </WalletConnectorContext.Provider>

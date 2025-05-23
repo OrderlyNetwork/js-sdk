@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -40,8 +40,7 @@
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@uiw/react-split": "^5.9.3",
-    "jsqr": "^1.4.0"
+    "@uiw/react-split": "^5.9.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

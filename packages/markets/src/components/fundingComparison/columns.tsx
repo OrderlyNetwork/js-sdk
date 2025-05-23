@@ -1,8 +1,8 @@
+import { useTranslation } from "@orderly.network/i18n";
 import { Column } from "@orderly.network/ui";
 import { Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { exchanges } from "./fundingComparison.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const useFundingColumns = (): Column[] => {
   const { t } = useTranslation();
@@ -42,6 +42,7 @@ export const useFundingColumns = (): Column[] => {
         </div>
       ),
       dataIndex: `exchange_${index}`,
+      onSort: true,
       width: 100,
       render: (value: number | null) =>
         value === null ? (

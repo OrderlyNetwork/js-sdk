@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Box, Button, modal } from "@orderly.network/ui";
 import {
-  LeverageWidgetId,
+  LeverageWidgetWithDialogId,
   LeverageEditor,
   LeverageHeader,
   LeverageSlider,
   useLeverageScript,
 } from "@orderly.network/ui-leverage";
-import { Box, Button, modal } from "@orderly.network/ui";
 
 const meta: Meta<typeof LeverageEditor> = {
   title: "Package/ui-leverage/LeverageEditor",
@@ -26,7 +26,7 @@ export const CommandStyle: Story = {
     return (
       <Button
         onClick={() => {
-          modal.show(LeverageWidgetId, { currentLeverage: 5 });
+          modal.show(LeverageWidgetWithDialogId, { currentLeverage: 5 });
         }}
       >
         Adjust leverage

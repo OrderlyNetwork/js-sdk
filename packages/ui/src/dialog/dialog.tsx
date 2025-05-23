@@ -181,6 +181,7 @@ export type DialogContentProps = React.ComponentPropsWithoutRef<
   VariantProps<typeof dialogVariants> & {
     closable?: boolean;
     onClose?: () => void;
+    overlyClassName?: string;
   };
 
 const DialogContent = React.forwardRef<
@@ -188,13 +189,21 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(
   (
-    { className, children, size, closable = true, intensity, ...props },
-    ref
+    {
+      overlyClassName,
+      className,
+      children,
+      size,
+      closable = true,
+      intensity,
+      ...props
+    },
+    ref,
   ) => {
     const { content, close } = dialogVariants({ className, size, intensity });
     return (
       <DialogPortal>
-        <DialogOverlay />
+        <DialogOverlay className={overlyClassName} />
         <DialogPrimitive.Content
           ref={ref}
           className={content({ className })}
@@ -213,7 +222,7 @@ const DialogContent = React.forwardRef<
         </DialogPrimitive.Content>
       </DialogPortal>
     );
-  }
+  },
 );
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
