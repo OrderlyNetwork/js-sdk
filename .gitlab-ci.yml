@@ -70,6 +70,7 @@ internal_patch_publish:
       export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_INTERNAL"
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+      export MANUAL_TRIGGER="true"
 
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
@@ -103,6 +104,8 @@ internal_major_publish:
       export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_INTERNAL"
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+      export MANUAL_TRIGGER="true"
+
 
       npm install -g pnpm@9
       pnpm install --frozen-lockfile

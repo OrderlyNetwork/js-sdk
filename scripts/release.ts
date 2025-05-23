@@ -1,11 +1,11 @@
-import { getPackages } from "@manypkg/get-packages";
-import { shouldSkipPackage } from "@changesets/should-skip-package";
-import writeChangeset from "@changesets/write";
-import { readPreState, enterPre, exitPre } from "@changesets/pre";
 import { read } from "@changesets/config";
+import { readPreState, enterPre, exitPre } from "@changesets/pre";
+import { shouldSkipPackage } from "@changesets/should-skip-package";
 import { Release, VersionType } from "@changesets/types";
-import SimpleGit from "simple-git";
+import writeChangeset from "@changesets/write";
+import { getPackages } from "@manypkg/get-packages";
 import https from "https";
+import SimpleGit from "simple-git";
 import { $ } from "zx";
 
 const simpleGit = SimpleGit();
@@ -16,6 +16,7 @@ $.verbose = true;
 // ci env
 const ciBranch = process.env.CI_COMMIT_BRANCH;
 const isCI = ciBranch;
+const manualTrigger = process.env.MANUAL_TRIGGER === "true";
 
 const npm = {
   registry: process.env.NPM_REGISTRY,
@@ -51,7 +52,8 @@ async function main() {
   try {
     await checkGitStatus();
     // Verify that the tag is correct only in the ci environment
-    if (isCI) {
+    // when manual trigger, skip check branch
+    if (isCI && !manualTrigger) {
       await checkBranch();
     }
     await checkTag();
@@ -160,7 +162,7 @@ async function checkGitStatus() {
     return true;
   }
   throw new Error(
-    "There are uncommitted changes, please commit the code first"
+    "There are uncommitted changes, please commit the code first",
   );
 }
 
@@ -168,7 +170,7 @@ async function checkBranch() {
   const currentBranch = await getCurrentBranch();
   if (!/^((internal|npm)\/)/.test(currentBranch!)) {
     throw new Error(
-      'Release versions can only operate on branches prefixed with "internal/" or npm/'
+      'Release versions can only operate on branches prefixed with "internal/" or npm/',
     );
   }
 }
@@ -246,11 +248,11 @@ async function generateChangeset(versionType?: VersionType) {
       !shouldSkipPackage(pkg, {
         ignore: config.ignore,
         allowPrivatePackages: config.privatePackages.version,
-      })
+      }),
   );
 
   const changedPackagesNames = versionablePackages.map(
-    (pkg) => pkg.packageJson.name
+    (pkg) => pkg.packageJson.name,
   );
 
   const type = ["major", "minor", "patch"].includes(versionType!)
@@ -269,7 +271,7 @@ async function generateChangeset(versionType?: VersionType) {
       releases,
       summary: "publish",
     },
-    cwd
+    cwd,
   );
   console.log("\n=== Summary of changesets ===");
   console.log("patch:", changedPackagesNames.join(", "));
