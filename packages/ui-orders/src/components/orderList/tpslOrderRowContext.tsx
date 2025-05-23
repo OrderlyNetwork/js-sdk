@@ -7,7 +7,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { API } from "@orderly.network/types";
 import {
   unstable_serialize,
   useAccount,
@@ -15,6 +14,7 @@ import {
   useSWRConfig,
   utils,
 } from "@orderly.network/hooks";
+import { API } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { useSymbolContext } from "./symbolProvider";
@@ -35,7 +35,7 @@ export type TPSLOrderRowContextState = {
 };
 
 export const TPSLOrderRowContext = createContext(
-  {} as TPSLOrderRowContextState
+  {} as TPSLOrderRowContextState,
 );
 
 export const useTPSLOrderRowContext = () => {
@@ -79,12 +79,12 @@ export const TPSLOrderRowProvider: FC<
   };
 
   const getRelatedPosition = (
-    symbol: string
+    symbol: string,
   ): API.PositionTPSLExt | undefined => {
     const positions = config.cache.get(positionKey);
 
     return positions?.data.rows.find(
-      (p: API.PositionTPSLExt) => p.symbol === symbol
+      (p: API.PositionTPSLExt) => p.symbol === symbol,
     );
   };
 
@@ -105,7 +105,10 @@ export const TPSLOrderRowProvider: FC<
   });
 
   useEffect(() => {
-    if ("algo_type" in props.order || ((props.order as any)?.reduce_only ?? false)) {
+    if (
+      "algo_type" in props.order ||
+      ((props.order as any)?.reduce_only ?? false)
+    ) {
       const position = getRelatedPosition(props.order.symbol);
       if (position) {
         setPosition(position);
@@ -173,7 +176,7 @@ function calcTPSLPnL(props: {
             orderSide: order.side as OrderSide,
             orderType: AlgoOrderType.TAKE_PROFIT,
           },
-          { symbol: { quote_dp } }
+          { symbol: { quote_dp } },
         )
       : undefined;
 
@@ -189,7 +192,7 @@ function calcTPSLPnL(props: {
             orderSide: order.side as OrderSide,
             orderType: AlgoOrderType.STOP_LOSS,
           },
-          { symbol: { quote_dp } }
+          { symbol: { quote_dp } },
         )
       : undefined;
 

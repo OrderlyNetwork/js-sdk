@@ -1,5 +1,6 @@
-import { API } from "@orderly.network/types";
+/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import { isNil } from "ramda";
+import { API } from "@orderly.network/types";
 
 type objectDepth = 1 | 2;
 type propertyType<D, K, F> = D extends 1 ? K : F;
@@ -16,10 +17,10 @@ export type ValueOf<T> = T[keyof T];
 export function createGetter<
   T extends any,
   K extends string = string,
-  Key = keyof T
+  Key = keyof T,
 >(
   data: Record<string, T> | null | undefined,
-  depth: objectDepth = 2
+  depth: objectDepth = 2,
 ): (typeof depth extends 1
   ? { [P in K]: (defaultValue?: any) => any }
   : { [P in K]: (key?: Key, defaultValue?: ValueOf<T>) => any }) & {
@@ -37,7 +38,7 @@ export function createGetter<
     get(
       target: any,
       property: propertyType<typeof depth, keyof T, any>,
-      receiver
+      receiver,
     ): any {
       if (property === "isNil") {
         return isNil(data);

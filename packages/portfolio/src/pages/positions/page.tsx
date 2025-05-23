@@ -16,6 +16,7 @@ import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsProps,
+  CombinePositionsWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
@@ -40,7 +41,7 @@ export const PositionsPage = (props: PositionsProps) => {
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
   const [selectedAccount, setSelectedAccount] = React.useState("All accounts");
-  const { state } = useAccount();
+  const { state, isMainAccount } = useAccount();
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
       const { name, value } = filter;
@@ -97,7 +98,11 @@ export const PositionsPage = (props: PositionsProps) => {
                 },
               ]}
             />
-            <PositionsWidget {...props} />
+            {isMainAccount ? (
+              <CombinePositionsWidget {...props} />
+            ) : (
+              <PositionsWidget {...props} />
+            )}
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}

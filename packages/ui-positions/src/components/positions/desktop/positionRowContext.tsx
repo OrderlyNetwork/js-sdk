@@ -7,13 +7,14 @@ import {
   useMemo,
   useState,
 } from "react";
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import {
   useOrderEntry_deprecated,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { toast } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
+
 export interface PositionsRowContextState {
   quantity: string;
   price: string;
@@ -37,7 +38,7 @@ export interface PositionsRowContextState {
 }
 
 export const PositionsRowContext = createContext(
-  {} as PositionsRowContextState
+  {} as PositionsRowContextState,
 );
 
 export const usePositionsRowContext = () => {
@@ -48,7 +49,7 @@ export const PositionsRowProvider: FC<
   PropsWithChildren<{ position: API.PositionExt | API.PositionTPSLExt }>
 > = (props) => {
   const [quantity, setQuantity] = useState<string>(
-    Math.abs(props.position.position_qty).toString()
+    Math.abs(props.position.position_qty).toString(),
   );
   const { t } = useTranslation();
 
@@ -77,7 +78,7 @@ export const PositionsRowProvider: FC<
   const { helper, onSubmit, submitting } = useOrderEntry_deprecated(
     props.position?.symbol!,
     side,
-    true
+    true,
   );
 
   const updateOrderType = (type: OrderType, price?: string) => {
@@ -117,7 +118,7 @@ export const PositionsRowProvider: FC<
     const newValues = helper.calculate(
       {},
       "order_quantity",
-      value
+      value,
     ) as OrderEntity;
     setQuantity(newValues["order_quantity"] as string);
   };
@@ -128,7 +129,7 @@ export const PositionsRowProvider: FC<
   };
 
   useEffect(() => {
-    let order = closeOrderData;
+    const order = closeOrderData;
     helper.validator(order).then((value: any) => {
       setErrors(value);
     });

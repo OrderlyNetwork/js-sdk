@@ -134,7 +134,7 @@ export const AssetsTable: React.FC<
               children:
                 column.id === "token" ? (
                   <Badge color="neutral" size="xs">
-                    {record?.description || formatAddress(record?.id!)}
+                    {record?.description || formatAddress(record?.id)}
                   </Badge>
                 ) : null,
             };
