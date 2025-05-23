@@ -1,5 +1,32 @@
 # @orderly.network/portfolio
 
+## 4.2.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- f3795f6: publish
+- Updated dependencies
+- Updated dependencies [f3795f6]
+  - @orderly.network/react-app@4.2.0
+  - @orderly.network/chart@4.2.0
+  - @orderly.network/hooks@4.2.0
+  - @orderly.network/i18n@4.2.0
+  - @orderly.network/types@4.2.0
+  - @orderly.network/ui@4.2.0
+  - @orderly.network/ui-chain-selector@4.2.0
+  - @orderly.network/ui-connector@4.2.0
+  - @orderly.network/ui-leverage@4.2.0
+  - @orderly.network/ui-orders@4.2.0
+  - @orderly.network/ui-positions@4.2.0
+  - @orderly.network/ui-scaffold@4.2.0
+  - @orderly.network/ui-share@4.2.0
+  - @orderly.network/ui-transfer@4.2.0
+  - @orderly.network/utils@4.2.0
+
 ## 4.1.1-npm-publish.0
 
 ### Patch Changes

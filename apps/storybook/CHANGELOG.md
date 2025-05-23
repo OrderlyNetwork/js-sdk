@@ -1,5 +1,45 @@
 # storybook2
 
+## 3.2.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- f3795f6: publish
+- Updated dependencies
+- Updated dependencies [f3795f6]
+  - @orderly.network/affiliate@4.2.0
+  - @orderly.network/react-app@4.2.0
+  - @orderly.network/chart@4.2.0
+  - @orderly.network/core@4.2.0
+  - @orderly.network/default-evm-adapter@4.2.0
+  - @orderly.network/default-solana-adapter@4.2.0
+  - @orderly.network/hooks@4.2.0
+  - @orderly.network/i18n@4.2.0
+  - @orderly.network/markets@4.2.0
+  - @orderly.network/portfolio@4.2.0
+  - @orderly.network/trading@4.2.0
+  - @orderly.network/trading-leaderboard@4.2.0
+  - @orderly.network/trading-rewards@4.2.0
+  - @orderly.network/types@4.2.0
+  - @orderly.network/ui@4.2.0
+  - @orderly.network/ui-chain-selector@4.2.0
+  - @orderly.network/ui-connector@4.2.0
+  - @orderly.network/ui-leverage@4.2.0
+  - @orderly.network/ui-order-entry@4.2.0
+  - @orderly.network/ui-orders@4.2.0
+  - @orderly.network/ui-positions@4.2.0
+  - @orderly.network/ui-scaffold@4.2.0
+  - @orderly.network/ui-share@4.2.0
+  - @orderly.network/ui-tpsl@4.2.0
+  - @orderly.network/ui-tradingview@4.2.0
+  - @orderly.network/utils@4.2.0
+  - @orderly.network/wallet-connector@4.2.0
+  - @orderly.network/wallet-connector-privy@4.2.0
+
 ## 3.1.1-npm-publish.0
 
 ### Patch Changes

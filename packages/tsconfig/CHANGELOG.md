@@ -1,5 +1,15 @@
 # tsconfig
 
+## 2.2.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- f3795f6: publish
+
 ## 2.1.1-npm-publish.0
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @orderly.network/cli
 
+## 2.2.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- f3795f6: publish
+- Updated dependencies
+- Updated dependencies [f3795f6]
+  - @orderly.network/core@4.2.0
+
 ## 2.1.1-npm-publish.0
 
 ### Patch Changes
