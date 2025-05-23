@@ -1,5 +1,17 @@
 # @orderly.network/default-solana-adapter
 
+## 3.0.0-npm-publish.1
+
+### Major Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@3.0.0-npm-publish.1
+  - @orderly.network/types@3.0.0-npm-publish.1
+
 ## 2.1.3-npm-publish.0
 
 ### Patch Changes

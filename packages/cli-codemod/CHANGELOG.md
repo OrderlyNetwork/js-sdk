@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 2.0.0-npm-publish.1
+
+### Major Changes
+
+- publish
+
 ## 1.1.3-npm-publish.0
 
 ### Patch Changes

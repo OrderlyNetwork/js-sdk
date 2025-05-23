@@ -1,5 +1,30 @@
 # @orderly.network/portfolio
 
+## 3.0.0-npm-publish.1
+
+### Major Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@3.0.0-npm-publish.1
+  - @orderly.network/chart@3.0.0-npm-publish.1
+  - @orderly.network/hooks@3.0.0-npm-publish.1
+  - @orderly.network/i18n@3.0.0-npm-publish.1
+  - @orderly.network/types@3.0.0-npm-publish.1
+  - @orderly.network/ui@3.0.0-npm-publish.1
+  - @orderly.network/ui-chain-selector@3.0.0-npm-publish.1
+  - @orderly.network/ui-connector@3.0.0-npm-publish.1
+  - @orderly.network/ui-leverage@3.0.0-npm-publish.1
+  - @orderly.network/ui-orders@3.0.0-npm-publish.1
+  - @orderly.network/ui-positions@3.0.0-npm-publish.1
+  - @orderly.network/ui-scaffold@3.0.0-npm-publish.1
+  - @orderly.network/ui-share@3.0.0-npm-publish.1
+  - @orderly.network/ui-transfer@3.0.0-npm-publish.1
+  - @orderly.network/utils@3.0.0-npm-publish.1
+
 ## 2.1.3-npm-publish.0
 
 ### Patch Changes
