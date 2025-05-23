@@ -1,5 +1,23 @@
 # @orderly.network/ui
 
+## 4.0.0
+
+### Major Changes
+
+- 55bf45e: publish
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- d55f33f: publish
+- Updated dependencies [55bf45e]
+- Updated dependencies
+- Updated dependencies [d55f33f]
+  - @orderly.network/utils@4.0.0
+
 ## 4.0.0-npm-publish.1
 
 ### Patch Changes

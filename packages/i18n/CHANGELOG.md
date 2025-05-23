@@ -1,5 +1,19 @@
 # @orderly.network/i18n
 
+## 4.0.0
+
+### Major Changes
+
+- 55bf45e: publish
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- d55f33f: publish
+
 ## 4.0.0-npm-publish.1
 
 ### Patch Changes
