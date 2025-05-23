@@ -38,24 +38,7 @@ export const SwapIcon = forwardRef<SVGSVGElement, IconProps>((props, ref) => {
       ref={ref}
       {...rest}
     >
-      <mask
-        id="mask0_5885_4052"
-        style={{ maskType: "alpha" }}
-        maskUnits="userSpaceOnUse"
-        x="0"
-        y="0"
-        width="20"
-        height="20"
-      >
-        <rect width="20" height="20" fill="#D9D9D9" />
-      </mask>
-      <g mask="url(#mask0_5885_4052)">
-        <path
-          d="M6 16.5L2 12.5L6 8.5L7.0625 9.5625L4.875 11.75H11V13.25H4.875L7.0625 15.4375L6 16.5ZM14 11.5L12.9375 10.4375L15.125 8.25H9V6.75H15.125L12.9375 4.5625L14 3.5L18 7.5L14 11.5Z"
-          fill="white"
-          fillOpacity="0.54"
-        />
-      </g>
+      <path d="M6 16L2 12L6 8L7.0625 9.0625L4.875 11.25H11V12.75H4.875L7.0625 14.9375L6 16ZM14 11L12.9375 9.9375L15.125 7.75H9V6.25H15.125L12.9375 4.0625L14 3L18 7L14 11Z" />
     </svg>
   );
 });

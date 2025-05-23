@@ -6,6 +6,7 @@ import {
   Text,
   Flex,
   ScrollArea,
+  modal,
 } from "@orderly.network/ui";
 import { AccountItem } from "./components/accountItem";
 import { CreateSubAccount } from "./components/createSubAccountModal";
@@ -14,6 +15,7 @@ import { SubAccountIcon, SwapIcon } from "./icons";
 import { SubAccountScriptReturn } from "./subAccount.script";
 
 export function SubAccountUI(props: SubAccountScriptReturn) {
+  const { isMobile } = useScreen();
   const header = <Text weight="semibold">Switch account</Text>;
   const trigger = <SubAccountIcon onClick={() => props.onOpenChange(true)} />;
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -108,8 +110,14 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
               <Flex justify="end" gap={2}>
                 {props.subAccounts.length > 0 && (
                   <SwapIcon
+                    className="oui-cursor-pointer oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
                     onClick={() => {
                       // todo need show transfer modal
+                      let dialogId = "TransferDialogId";
+                      if (isMobile) {
+                        dialogId = "TransferSheetId";
+                      }
+                      modal.show(dialogId);
                     }}
                   />
                 )}
