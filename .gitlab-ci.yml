@@ -24,6 +24,7 @@ stages:
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
   before_script:
+     # custom commit message
     - export GIT_COMMIT_MESSAGE="publish internal ${RELEASE_TYPE}"
     - |
       if [ "$RELEASE_TYPE" = "patch" ]; then
@@ -73,6 +74,8 @@ internal_major_publish:
   variables:
     RELEASE_TYPE: major
 
+
+
 .npm_publish_template: &npm_publish_template
   stage: release
   image:
@@ -82,7 +85,6 @@ internal_major_publish:
     - |
       git config --global --add safe.directory "$CI_PROJECT_DIR"
 
-
       export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
       export GIT_TOKEN="$GIT_TOKEN_NPM"
       export GIT_USERNAME="$GIT_USERNAME_NPM"
@@ -90,8 +92,18 @@ internal_major_publish:
       export GIT_EMAIL="$GIT_EMAIL_NPM"
       export NPM_REGISTRY="$NPM_REGISTRY_NPM"
       export NPM_TOKEN="$NPM_TOKEN_NPM"
+
+      # set manual trigger to true to skip check branch
+      export MANUAL_TRIGGER=true
+
       # custom commit message
       export GIT_COMMIT_MESSAGE="${GIT_COMMIT_MESSAGE}"
+
+      # custom pre tag
+      export CUSTOM_PRE_TAG="${CUSTOM_PRE_TAG}"
+
+      # exit pre tag
+      export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
 
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
@@ -104,15 +116,17 @@ internal_major_publish:
       when: always
     - when: never
 
-npm_patch_alpha:
+npm_alpha_publish:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: patch
     GIT_COMMIT_MESSAGE: "publish alpha"
+    CUSTOM_PRE_TAG: alpha
+    EXIT_PRE_TAG: false
 
-
-npm_patch:
+npm_patch_publish:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: patch
     GIT_COMMIT_MESSAGE: "publish release"
+    EXIT_PRE_TAG: true

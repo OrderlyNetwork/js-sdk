@@ -42,7 +42,7 @@ const releaseVersionType = process.env.RELEASE_VERSION_TYPE as VersionType;
 // custom pre tag
 const customPreTag = process.env.CUSTOM_PRE_TAG;
 // exit pre tag, if true, will exit pre mode
-const isExitPreTag = process.env.EXIT_PRE_TAG === "true";
+const exitPreTag = process.env.EXIT_PRE_TAG === "true";
 
 // set publish npm registry
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
@@ -72,28 +72,33 @@ async function main() {
 async function checkTag() {
   const cwd = process.cwd();
   const preState = await readPreState(cwd);
-  const existPreTag = preState?.mode === "pre" ? preState?.tag : "";
-  console.log("current pre tag: ", existPreTag);
+  const currentPreTag = preState?.mode === "pre" ? preState?.tag : "";
+  console.log("current pre tag: ", currentPreTag);
   console.log("customPreTag: ", customPreTag);
-  console.log("exitPreTag: ", isExitPreTag);
+  console.log("exitPreTag: ", exitPreTag);
 
   // when pre tag exists and exitPreTag is true, exit pre tag
-  if (existPreTag && isExitPreTag) {
+  if (currentPreTag && exitPreTag) {
     await exitPre(cwd);
-    console.log(`exit ${existPreTag} pre tag success`);
+    console.log(`exit ${currentPreTag} pre tag success`);
+    return;
+  }
+
+  // when exitPreTag is true, no need to enter pre tag
+  if (exitPreTag) {
     return;
   }
 
   // when pre tag and customPreTag exists and pre tag is not equal to customPreTag, switch pre tag to customPreTag
-  if (existPreTag && customPreTag && existPreTag !== customPreTag) {
+  if (currentPreTag && customPreTag && currentPreTag !== customPreTag) {
     await exitPre(cwd);
     await enterPre(cwd, customPreTag);
-    console.log(`switch ${existPreTag} to ${customPreTag} pre tag success`);
+    console.log(`switch ${currentPreTag} to ${customPreTag} pre tag success`);
     return;
   }
 
   // when pre tag exists, exit pre tag
-  if (existPreTag) {
+  if (currentPreTag) {
     return;
   }
 
