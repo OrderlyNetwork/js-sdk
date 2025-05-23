@@ -1,5 +1,17 @@
 # @orderly.network/futures
 
+## 6.0.0-npm-publish.0
+
+### Major Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@4.0.0-npm-publish.0
+  - @orderly.network/utils@4.0.0-npm-publish.0
+
 ## 5.0.0
 
 ### Major Changes

@@ -1,6 +1,6 @@
 {
   "name": "create-orderly-app",
-  "version": "2.0.0",
+  "version": "3.0.0-npm-publish.0",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
@@ -52,8 +52,8 @@
   },
   "orderly": {
     "version": {
-      "@orderly.network/react": "3.0.0",
-      "@orderly.network/web3-onboard": "3.0.0"
+      "@orderly.network/react": "4.0.0-npm-publish.0",
+      "@orderly.network/web3-onboard": "4.0.0-npm-publish.0"
     }
   }
 }

@@ -1,5 +1,32 @@
 # @orderly.network/trading
 
+## 4.0.0-npm-publish.0
+
+### Major Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@4.0.0-npm-publish.0
+  - @orderly.network/hooks@4.0.0-npm-publish.0
+  - @orderly.network/i18n@4.0.0-npm-publish.0
+  - @orderly.network/markets@4.0.0-npm-publish.0
+  - @orderly.network/types@4.0.0-npm-publish.0
+  - @orderly.network/ui@4.0.0-npm-publish.0
+  - @orderly.network/ui-chain-selector@4.0.0-npm-publish.0
+  - @orderly.network/ui-connector@4.0.0-npm-publish.0
+  - @orderly.network/ui-leverage@4.0.0-npm-publish.0
+  - @orderly.network/ui-order-entry@4.0.0-npm-publish.0
+  - @orderly.network/ui-orders@4.0.0-npm-publish.0
+  - @orderly.network/ui-positions@4.0.0-npm-publish.0
+  - @orderly.network/ui-scaffold@4.0.0-npm-publish.0
+  - @orderly.network/ui-share@4.0.0-npm-publish.0
+  - @orderly.network/ui-tradingview@4.0.0-npm-publish.0
+  - @orderly.network/ui-transfer@4.0.0-npm-publish.0
+  - @orderly.network/utils@4.0.0-npm-publish.0
+
 ## 3.0.0
 
 ### Major Changes
