@@ -1,5 +1,22 @@
 # @orderly.network/react
 
+## 3.0.0-npm-publish.5
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@3.0.0-npm-publish.5
+  - @orderly.network/hooks@3.0.0-npm-publish.5
+  - @orderly.network/net@3.0.0-npm-publish.5
+  - @orderly.network/trading-view@3.0.0-npm-publish.5
+  - @orderly.network/types@3.0.0-npm-publish.5
+  - @orderly.network/ui@3.0.0-npm-publish.5
+  - @orderly.network/ui-connector@3.0.0-npm-publish.5
+  - @orderly.network/ui-leverage@3.0.0-npm-publish.5
+  - @orderly.network/ui-transfer@3.0.0-npm-publish.5
+  - @orderly.network/utils@3.0.0-npm-publish.5
+
 ## 3.0.0-npm-publish.4
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 3.0.0-npm-publish.5
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@3.0.0-npm-publish.5
+
 ## 3.0.0-npm-publish.4
 
 ### Minor Changes

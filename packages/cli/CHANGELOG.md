@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 1.0.0-npm-publish.5
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@3.0.0-npm-publish.5
+
 ## 1.0.0-npm-publish.4
 
 ### Minor Changes

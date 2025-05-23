@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 2.0.0-npm-publish.5
+
+### Patch Changes
+
+- publish
+
 ## 2.0.0-npm-publish.4
 
 ### Minor Changes
