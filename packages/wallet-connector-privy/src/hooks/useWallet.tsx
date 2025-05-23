@@ -293,15 +293,15 @@ export function useWallet() {
       return;
     }
     // handle non-privy wallet connect
-    console.log("xxxx non-privy", {
-      connectorKey,
-      storageChain,
-      walletEVM,
-      walletSOL,
-      walletAbstract,
-      connectedChainAbstract,
-      isConnectedAbstract,
-    });
+    // console.log("xxxx non-privy", {
+    //   connectorKey,
+    //   storageChain,
+    //   walletEVM,
+    //   walletSOL,
+    //   walletAbstract,
+    //   connectedChainAbstract,
+    //   isConnectedAbstract,
+    // });
 
     if (storageChain?.namespace === ChainNamespace.evm) {
       if (AbstractChains.has(storageChain.chainId)) {

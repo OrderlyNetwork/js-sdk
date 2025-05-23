@@ -12,7 +12,6 @@ export function useTabSort(options: { storageKey: string }) {
 
   const onTabSort = useCallback(
     (type: TabName) => (sort?: SortType) => {
-      console.log("onTabSort", type, sort);
       setTabSort({ ...tabSort, [type]: sort });
     },
     [tabSort],
