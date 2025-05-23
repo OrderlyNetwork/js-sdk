@@ -7,13 +7,13 @@ export const NickNameDescriptionText =
 export const NickNameTextField = (props: {
   nickName: string | undefined;
   setNickName: (nickName: string | undefined) => void;
-  subAccountCount: number;
+  subAccountCount?: number;
 }) => {
   return (
     <TextField
-      placeholder={`Sub-account ${props.subAccountCount + 1}`}
+      placeholder={`Sub-account ${props.subAccountCount ? props.subAccountCount + 1 : ""}`}
       fullWidth
-      label=""
+      label="Sub-account nickname"
       value={props.nickName}
       onChange={(e) => {
         props.setNickName(e.target.value);

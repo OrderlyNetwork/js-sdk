@@ -13,13 +13,18 @@ export const EditNickNameDialog = (props: {
   const { subAccount } = useAccount();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
-  const [newNickName, setNewNickName] = useState(props.nickName);
-
+  const [newNickName, setNewNickName] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    setNewNickName(props.nickName);
+  }, [props.nickName]);
   return (
     <SimpleDialog
       title={<Text>Edit nickname</Text>}
       open={props.open}
       onOpenChange={props.onOpenChange}
+      classNames={{
+        content: "oui-w-[360px]",
+      }}
       actions={{
         primary: {
           label: t("common.confirm"),
@@ -51,13 +56,11 @@ export const EditNickNameDialog = (props: {
         },
       }}
     >
-      <Text>Sub-account nickname</Text>
       <NickNameTextField
         nickName={newNickName}
         setNickName={(nickName) => {
           setNewNickName(nickName ?? "");
         }}
-        subAccountCount={1}
       />
     </SimpleDialog>
   );

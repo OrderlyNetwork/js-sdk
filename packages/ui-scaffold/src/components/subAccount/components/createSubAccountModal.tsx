@@ -88,8 +88,10 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
             onClick: () => doCreatSubAccount(nickName),
           },
         }}
+        classNames={{
+          content: "oui-w-[360px]",
+        }}
       >
-        <Text>Sub-account nickname</Text>
         <NickNameTextField
           nickName={nickName}
           setNickName={setNickName}
