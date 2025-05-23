@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 4.1.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@4.1.1-npm-publish.0
+  - @orderly.network/ui@4.1.1-npm-publish.0
+  - @orderly.network/utils@4.1.1-npm-publish.0
+
 ## 4.1.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # @orderly.network/ui-chain-selector
 
+## 4.1.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@4.1.1-npm-publish.0
+  - @orderly.network/hooks@4.1.1-npm-publish.0
+  - @orderly.network/i18n@4.1.1-npm-publish.0
+  - @orderly.network/types@4.1.1-npm-publish.0
+  - @orderly.network/ui@4.1.1-npm-publish.0
+
 ## 4.1.0
 
 ### Minor Changes

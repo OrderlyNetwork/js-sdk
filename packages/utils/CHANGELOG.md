@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 4.1.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@4.1.1-npm-publish.0
+
 ## 4.1.0
 
 ### Minor Changes

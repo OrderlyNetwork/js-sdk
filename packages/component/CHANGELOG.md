@@ -1,5 +1,22 @@
 # @orderly.network/react
 
+## 4.1.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@4.1.1-npm-publish.0
+  - @orderly.network/hooks@4.1.1-npm-publish.0
+  - @orderly.network/net@4.1.1-npm-publish.0
+  - @orderly.network/trading-view@4.1.1-npm-publish.0
+  - @orderly.network/types@4.1.1-npm-publish.0
+  - @orderly.network/ui@4.1.1-npm-publish.0
+  - @orderly.network/ui-connector@4.1.1-npm-publish.0
+  - @orderly.network/ui-leverage@4.1.1-npm-publish.0
+  - @orderly.network/ui-transfer@4.1.1-npm-publish.0
+  - @orderly.network/utils@4.1.1-npm-publish.0
+
 ## 4.1.0
 
 ### Minor Changes

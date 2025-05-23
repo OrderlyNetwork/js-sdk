@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 3.1.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@4.1.1-npm-publish.0
+  - @orderly.network/hooks@4.1.1-npm-publish.0
+  - @orderly.network/web3-onboard@4.1.1-npm-publish.0
+  - @orderly.network/types@4.1.1-npm-publish.0
+
 ## 3.1.0
 
 ### Minor Changes

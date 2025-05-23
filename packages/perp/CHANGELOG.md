@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 6.1.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@4.1.1-npm-publish.0
+  - @orderly.network/utils@4.1.1-npm-publish.0
+
 ## 6.1.0
 
 ### Minor Changes
