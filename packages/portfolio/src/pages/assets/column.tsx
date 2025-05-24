@@ -70,7 +70,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         dataIndex: "account_id",
         align: "center",
         width: 100,
-        render: (id: string) => {
+        render(id: string) {
           return (
             <Button
               size={"sm"}

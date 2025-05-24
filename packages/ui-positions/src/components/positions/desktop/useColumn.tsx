@@ -107,7 +107,7 @@ export const useColumn = (config: ColumnConfig) => {
         width: 120,
         onSort: true,
         dataIndex: "average_open_price",
-        render: (value: string, record: any) => {
+        render: (value: string) => {
           // const ctx = usePositionsRowContext();
           return (
             <NumeralWithCtx rm={Decimal.ROUND_DOWN}>{value}</NumeralWithCtx>
@@ -120,7 +120,7 @@ export const useColumn = (config: ColumnConfig) => {
         width: 120,
         onSort: true,
         className: "oui-h-[48px]",
-        render: (value: string, record: any) => {
+        render: (value: string) => {
           return (
             <NumeralWithCtx rm={Decimal.ROUND_DOWN}>{value}</NumeralWithCtx>
           );
@@ -129,7 +129,7 @@ export const useColumn = (config: ColumnConfig) => {
       {
         title: (
           <Tooltip
-            className="oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-54 oui-p-3 oui-bg-base-8"
+            className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast-54"
             content={t("positions.column.liqPrice.tooltip")}
           >
             <Text>{t("positions.column.liqPrice")}</Text>
@@ -138,7 +138,7 @@ export const useColumn = (config: ColumnConfig) => {
         width: 100,
         onSort: true,
         dataIndex: "est_liq_price",
-        render: (value: string, record: any) => {
+        render: (value: string) => {
           return Number(value) === 0 ? (
             "--"
           ) : (
@@ -171,7 +171,7 @@ export const useColumn = (config: ColumnConfig) => {
           // tick: "base_dp",
         },
         // hint: <UnrealizedPnLPopoverCard />,
-        render: (value: string, record: any) => {
+        render: (value: string, record) => {
           return (
             <Flex gap={2}>
               <Flex>
@@ -229,13 +229,12 @@ export const useColumn = (config: ColumnConfig) => {
       {
         title: (
           <Tooltip
-            className="oui-max-w-[280px] oui-text-2xs oui-text-base-contrast-54 oui-p-3 oui-bg-base-8"
-            // @ts-ignore
+            className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast-54"
             content={
               <Flex
                 direction={"column"}
                 gap={3}
-                className="oui-text-base-contrast-54 oui-bg-base-8 oui-rounded-sm"
+                className="oui-rounded-sm oui-bg-base-8 oui-text-base-contrast-54"
               >
                 <span>{t("positions.column.margin.tooltip")}</span>
                 <Divider className="oui-w-full" />
@@ -251,17 +250,6 @@ export const useColumn = (config: ColumnConfig) => {
         width: 100,
         rule: "price",
         render: (value: string) => <Text.numeral>{value}</Text.numeral>,
-        // hint: (
-        //   <Flex
-        //     direction={"column"}
-        //     gap={3}
-        //     className="oui-text-base-contrast-54 oui-bg-base-8 oui-rounded-sm"
-        //   >
-        //     <span>The minimum equity to keep your position. </span>
-        //     <Divider className="oui-w-full" />
-        //     <span>Margin = Position size * Mark price * MMR</span>
-        //   </Flex>
-        // ),
       },
       {
         title: t("common.qty"),
@@ -279,7 +267,7 @@ export const useColumn = (config: ColumnConfig) => {
         // render: (value: string) => <PriceInput />,
       },
       {
-        title: "",
+        title: null,
         dataIndex: "close_position",
         align: "right",
         width: 160,
