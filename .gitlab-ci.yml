@@ -122,11 +122,15 @@ internal_major_publish:
   tags:
     - dev
     - build
+  # rules:
+  #   - if: '$CI_COMMIT_BRANCH == "npm-release" && $CI_COMMIT_MESSAGE !~ /publish/'
+  #     when: always
+  #   - when: never
   rules:
-    - if: '$CI_COMMIT_BRANCH == "npm-release" && $CI_COMMIT_MESSAGE !~ /publish/'
-      when: always
+    - if: '$CI_COMMIT_BRANCH == "npm-release"'
+      when: manual
     - when: never
-
+        
 npm_alpha_publish:
   <<: *npm_publish_template
   variables:
