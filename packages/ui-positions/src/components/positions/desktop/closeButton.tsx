@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
@@ -19,7 +19,7 @@ import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
 import { useSymbolContext } from "../../../providers/symbolProvider";
 import { usePositionsRowContext } from "./positionRowContext";
 
-export const CloseButton = () => {
+export const CloseButton: React.FC = () => {
   const [open, setOpen] = useState(false);
   const {
     onSubmit,
@@ -31,7 +31,7 @@ export const CloseButton = () => {
     quoteDp,
     errors,
   } = usePositionsRowContext();
-  const { base, quote } = useSymbolContext();
+  const { base } = useSymbolContext();
   const [orderConfirm] = useLocalStorage("orderly_order_confirm", true);
 
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ export const CloseButton = () => {
   const onConfirm = () => {
     return onSubmit()
       .then(
-        (res) => {
+        () => {
           setOpen(false);
         },
         (error: any) => {

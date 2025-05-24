@@ -20,7 +20,7 @@ export const Positions: React.FC<Readonly<PositionsState>> = (props) => {
     onSymbolChange,
   } = props;
 
-  const column = useColumn({
+  const columns = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     onSymbolChange: onSymbolChange,
@@ -30,7 +30,7 @@ export const Positions: React.FC<Readonly<PositionsState>> = (props) => {
     <AuthGuardDataTable<API.PositionTPSLExt>
       loading={isLoading}
       id="oui-desktop-positions-content"
-      columns={column}
+      columns={columns}
       bordered
       dataSource={dataSource}
       generatedRowKey={(record: any) => record.symbol}
@@ -87,11 +87,11 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
   props,
 ) => {
   const {
-    isLoading,
-    dataSource,
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     pagination,
+    isLoading,
+    tableData,
     onSymbolChange,
   } = props;
 
@@ -101,6 +101,8 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
     onSymbolChange: onSymbolChange,
   });
 
+  const { dataSource = [] } = tableData;
+
   return (
     <AuthGuardDataTable<any>
       bordered
@@ -108,12 +110,9 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
       id="oui-desktop-positions-content"
       columns={columns}
       dataSource={dataSource}
-      expanded={{
-        main_account: true,
-        sub_account: true,
-      }}
+      expanded
       getSubRows={(row) => row.children}
-      generatedRowKey={(record) => `${record.symbol}`}
+      generatedRowKey={(record) => record.id}
       onCell={(column, record) => {
         const isGroup = (record.children ?? []).length > 0;
         if (isGroup) {

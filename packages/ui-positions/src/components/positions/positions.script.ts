@@ -2,7 +2,7 @@ import React from "react";
 import { usePositionStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { usePagination } from "@orderly.network/ui";
-import { PositionsProps } from "../../types/types";
+import type { PositionsProps } from "../../types/types";
 
 export const usePositionsScript = (props: PositionsProps) => {
   const {

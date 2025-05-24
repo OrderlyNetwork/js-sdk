@@ -37,7 +37,7 @@ enum TabsType {
   liquidation = "Liquidation",
 }
 
-export const PositionsPage = (props: PositionsProps) => {
+export const PositionsPage: React.FC<PositionsProps> = (props) => {
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
   const [selectedAccount, setSelectedAccount] = React.useState("All accounts");

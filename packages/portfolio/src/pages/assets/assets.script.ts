@@ -38,6 +38,7 @@ const ORDERLY_ASSETS_VISIBLE_KEY = "orderly_assets_visible";
 const EMPTY_HOLDING: Partial<API.Holding> = {
   token: "USDC",
   holding: 0,
+  frozen: 0,
 };
 
 export const useAssetsScript = () => {
@@ -67,7 +68,7 @@ export const useAssetsScript = () => {
   const allAccounts = React.useMemo(() => {
     return produce<any[]>(subAccounts, (draft) => {
       for (const sub of draft) {
-        sub.symbol = "sub_account";
+        sub.symbol = sub.id;
         if (Array.isArray(sub.holding) && sub.holding.length) {
           sub.children = sub.holding;
         } else {
@@ -78,14 +79,12 @@ export const useAssetsScript = () => {
       draft.unshift({
         id: accountInfo?.account_id,
         description: "Main account",
-        symbol: "main_account",
+        symbol: accountInfo?.account_id,
         children:
           Array.isArray(holding) && holding.length ? holding : [EMPTY_HOLDING],
       });
     });
   }, [holding, subAccounts, accountInfo]);
-
-  console.log("allAccounts", allAccounts);
 
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {

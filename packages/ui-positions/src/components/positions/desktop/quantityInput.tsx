@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import { utils } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { OrderType } from "@orderly.network/types";
 import {
   PopoverRoot,
   PopoverContent,
@@ -9,12 +13,8 @@ import {
   inputFormatter,
 } from "@orderly.network/ui";
 import { Input } from "@orderly.network/ui";
-import { useEffect, useState } from "react";
-import { usePositionsRowContext } from "./positionRowContext";
 import { Decimal } from "@orderly.network/utils";
-import { OrderType } from "@orderly.network/types";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { usePositionsRowContext } from "./positionRowContext";
 
 export const QuantityInput = (props: { value: number }) => {
   // const [quantity, setQuantity] = useState(`${props.value}`);

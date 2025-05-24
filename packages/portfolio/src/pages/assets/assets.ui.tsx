@@ -121,12 +121,9 @@ export const AssetsTable: React.FC<
         classNames={{ root: "oui-bg-transparent" }}
         columns={columns}
         dataSource={dataSource}
-        expanded={{
-          main_account: true,
-          sub_account: true,
-        }}
+        expanded
         getSubRows={(row) => row.children}
-        generatedRowKey={(record) => `${record.symbol}`}
+        generatedRowKey={(record) => record.symbol}
         onCell={(column, record) => {
           const isGroup = (record.children ?? []).length > 0;
           if (isGroup) {
