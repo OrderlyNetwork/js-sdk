@@ -125,8 +125,10 @@ internal_patch_publish:
     - dev
     - build
   rules:
-    # only allow to trigger by user with access Maintainer (level 40) or higher
-    - if: '$CI_COMMIT_BRANCH == "npm-release" && $GITLAB_USER_ACCESS_LEVEL >= 40'
+    # Run this job if:
+    # 1. Branch name is "npm-release"
+    # 2. User has access Maintainer (level 40) or higher
+    - if: '$CI_COMMIT_BRANCH == "npm-release" && $CI_USER_ACCESS_LEVEL >= 40'
       when: manual
     - when: never
         
