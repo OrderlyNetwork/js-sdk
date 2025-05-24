@@ -105,7 +105,7 @@ export const useSubAccountDataObserver = (accountId?: string) => {
   }, [holdingRes]);
 
   useEffect(() => {
-    if (!ws || !accountId) return;
+    if (!accountId) return;
 
     const unsubscribe = ws.privateSubscribe(
       {
@@ -131,12 +131,12 @@ export const useSubAccountDataObserver = (accountId?: string) => {
     );
 
     return () => unsubscribe?.();
-  }, [ws, accountId]);
+  }, [accountId]);
 
   useEffect(() => {
     if (!accountId) return;
     const key = ["/v1/positions", accountId];
-    const unsubscribe = ws?.privateSubscribe("position", {
+    const unsubscribe = ws.privateSubscribe("position", {
       onMessage: (data: { positions: WSMessage.Position[] }) => {
         const { positions: nextPositions } = data;
 
@@ -186,10 +186,8 @@ export const useSubAccountDataObserver = (accountId?: string) => {
         );
       },
     });
-    return () => {
-      unsubscribe?.();
-    };
-  }, [ws, accountId]);
+    return () => unsubscribe?.();
+  }, [accountId]);
 
   return { portfolio, positions };
 };
