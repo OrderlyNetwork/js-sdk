@@ -97,7 +97,7 @@ async function checkTag() {
     return;
   }
 
-  // when pre tag exists, exit pre tag
+  // when pre tag exists
   if (currentPreTag) {
     return;
   }

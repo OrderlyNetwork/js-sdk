@@ -54,6 +54,13 @@ stages:
   tags:
     - dev
     - build
+  # rules:    
+  #   # Run this job if:
+  #   # 1. Branch name starts with "internal/" AND
+  #   # 2. Commit message does not contain "publish"
+  #   - if: '$CI_COMMIT_BRANCH =~ /^internal\// && $CI_COMMIT_MESSAGE !~ /publish/'
+  #     when: always
+  #   - when: never
   rules:
     - if: '$CI_COMMIT_BRANCH == "npm-publish"'
       when: manual
@@ -90,8 +97,12 @@ internal_major_publish:
       export GIT_USERNAME="$GIT_USERNAME_NPM"
       export GIT_NAME="$GIT_NAME_NPM"
       export GIT_EMAIL="$GIT_EMAIL_NPM"
-      export NPM_REGISTRY="$NPM_REGISTRY_NPM"
-      export NPM_TOKEN="$NPM_TOKEN_NPM"
+      
+      # export NPM_REGISTRY="$NPM_REGISTRY_NPM"
+      # export NPM_TOKEN="$NPM_TOKEN_NPM"
+
+      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
+      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
 
       # set manual trigger to true to skip check branch
       export MANUAL_TRIGGER=true
