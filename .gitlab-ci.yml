@@ -54,33 +54,33 @@ stages:
   tags:
     - dev
     - build
-  # rules:    
-  #   # Run this job if:
-  #   # 1. Branch name starts with "internal/" AND
-  #   # 2. Commit message does not contain "publish"
-  #   - if: '$CI_COMMIT_BRANCH =~ /^internal\// && $CI_COMMIT_MESSAGE !~ /publish/'
-  #     when: always
-  #   - when: never
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
-      when: manual
+  rules:    
+    # Run this job if:
+    # 1. Branch name starts with "internal/" AND
+    # 2. Commit message does not contain "publish"
+    - if: '$CI_COMMIT_BRANCH =~ /^internal\// && $CI_COMMIT_MESSAGE !~ /publish/'
+      when: always
     - when: never
+  # rules:
+  #   - if: '$CI_COMMIT_BRANCH == "npm-publish"'
+  #     when: manual
+  #   - when: never
 
+# in internal npm, only the patch version needs to be released
 internal_patch_publish:
   <<: *internal_publish_template
   variables:
     RELEASE_TYPE: patch
 
-internal_minor_publish:
-  <<: *internal_publish_template
-  variables:
-    RELEASE_TYPE: minor
+# internal_minor_publish:
+#   <<: *internal_publish_template
+#   variables:
+#     RELEASE_TYPE: minor
 
-internal_major_publish:
-  <<: *internal_publish_template
-  variables:
-    RELEASE_TYPE: major
-
+# internal_major_publish:
+#   <<: *internal_publish_template
+#   variables:
+#     RELEASE_TYPE: major
 
 
 .npm_publish_template: &npm_publish_template
@@ -98,9 +98,11 @@ internal_major_publish:
       export GIT_NAME="$GIT_NAME_NPM"
       export GIT_EMAIL="$GIT_EMAIL_NPM"
       
+      # set public npm registry and token
       # export NPM_REGISTRY="$NPM_REGISTRY_NPM"
       # export NPM_TOKEN="$NPM_TOKEN_NPM"
 
+      # set internal npm registry and token
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
 
@@ -122,12 +124,9 @@ internal_major_publish:
   tags:
     - dev
     - build
-  # rules:
-  #   - if: '$CI_COMMIT_BRANCH == "npm-release" && $CI_COMMIT_MESSAGE !~ /publish/'
-  #     when: always
-  #   - when: never
   rules:
-    - if: '$CI_COMMIT_BRANCH == "npm-release"'
+    # only allow to trigger by user with access Maintainer (level 40) or higher
+    - if: '$CI_COMMIT_BRANCH == "npm-release" && $GITLAB_USER_ACCESS_LEVEL >= 40'
       when: manual
     - when: never
         
