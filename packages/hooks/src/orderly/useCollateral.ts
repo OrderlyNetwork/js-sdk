@@ -1,23 +1,77 @@
 import { type API } from "@orderly.network/types";
 import { useAppStore } from "./appStore";
 
+/**
+ * The return type of useCollateral hook, containing account collateral information
+ */
 export type CollateralOutputs = {
+  /**
+   * Total collateral value in the account
+   *
+   * This includes all assets that can be used as margin
+   */
   totalCollateral: number;
+  /**
+   * Available collateral that can be used for new positions
+   *
+   * Calculated as: totalCollateral - margin requirements
+   */
   freeCollateral: number;
+  /**
+   * Total portfolio value including all positions and collateral
+   *
+   * Can be null if data is not available
+   */
   totalValue: number | null;
+  /**
+   * Current available balance that can be withdrawn
+   *
+   * Excludes locked collateral and pending settlements
+   */
   availableBalance: number;
+  /**
+   * Unrealized profit and loss across all open positions
+   *
+   * Positive value indicates profit, negative indicates loss
+   */
   unsettledPnL: number;
-  // positions: API.Position[];
-  accountInfo?: API.AccountInfo;
+  /**
+   * List of holdings in the account
+   *
+   * Each holding represents a specific token and its quantity
+   */
   holding?: API.Holding[];
+  /**
+   * Detailed account information and settings
+   *
+   * Contains account configuration, limits and risk parameters
+   */
+  accountInfo?: API.AccountInfo;
+  // positions: API.Position[];
 };
 
 // const positionsPath = pathOr([], [0, "rows"]);
 // const totalCollateralPath = pathOr(0, [0, "totalCollateral"]);
 
+/**
+ *  Hook to get and calculate collateral-related data for an account
+ * @example
+ * ```typescript
+ * const {
+ *  totalCollateral,
+ *  freeCollateral,
+ *  totalValue,
+ *  availableBalance,
+ *  unsettledPnL,
+ *  accountInfo,
+ * } = useCollateral({ dp: 4 });
+ * ```
+ */
 export const useCollateral = (
   options: {
-    /** decimal precision */
+    /**
+     * Decimal precision for numerical values (default: 6)
+     * */
     dp: number;
   } = { dp: 6 },
 ): CollateralOutputs => {
@@ -37,7 +91,6 @@ export const useCollateral = (
     totalValue: totalValue?.toDecimalPlaces(dp).toNumber() ?? null,
     availableBalance,
     unsettledPnL,
-
     accountInfo,
     holding,
 

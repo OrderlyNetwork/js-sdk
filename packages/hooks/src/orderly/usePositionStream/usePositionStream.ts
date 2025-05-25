@@ -178,10 +178,10 @@ export const usePositionStream = (
     }
   }
 
-  const positionInfoGetter = createGetter<
-    Omit<API.PositionInfo, "rows">,
-    keyof Omit<API.PositionInfo, "rows">
-  >(aggregated, 1);
+  const positionInfoGetter = createGetter(
+    aggregated as Omit<API.PositionInfo, "rows">,
+    1,
+  );
 
   return [
     {

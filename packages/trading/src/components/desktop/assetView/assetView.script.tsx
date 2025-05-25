@@ -90,8 +90,7 @@ export const useAssetViewScript = () => {
     return Math.min(
       10,
       aggregated.notional === 0
-        ? // @ts-ignore
-          positionsInfo["margin_ratio"](10)
+        ? positionsInfo["margin_ratio"](10)!
         : marginRatio,
     );
   }, [marginRatio, aggregated]);
