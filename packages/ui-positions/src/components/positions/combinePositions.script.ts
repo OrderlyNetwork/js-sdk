@@ -78,6 +78,14 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
 
   const symbolsInfo = useSymbolsInfo();
 
+  // need to get sub account info to calculate portfolio and positions
+  // const { data: accountInfo } = useSubAccountQuery<API.AccountInfo>(
+  //   "/v1/client/info",
+  //   {
+  //     accountId: "",
+  //   },
+  // );
+
   const processPositions = produce<API.PositionExt[]>(newPositions, (draft) => {
     for (const item of draft) {
       const info = symbolsInfo[item.symbol];

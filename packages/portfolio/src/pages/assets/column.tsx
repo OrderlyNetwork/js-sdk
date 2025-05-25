@@ -57,17 +57,17 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         dataIndex: "asset_contribution",
         align: "left",
         width: 100,
-        render(val: number, record) {
+        render(_, record) {
           return (
             <Text>
-              {val * INDEX_PRICE} {record.token}
+              {record.holding * INDEX_PRICE} {record.token}
             </Text>
           );
         },
       },
       {
         title: null,
-        dataIndex: "_",
+        dataIndex: "account_id",
         align: "center",
         width: 100,
         render(id: string) {
