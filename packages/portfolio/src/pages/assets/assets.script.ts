@@ -48,7 +48,7 @@ export const useAssetsScript = () => {
   );
 
   const { state } = useAccount();
-  const { holding = [], accountInfo } = useCollateral();
+  const { holding = [] } = useCollateral();
 
   const subAccounts = state.subAccounts ?? [];
 
@@ -68,23 +68,35 @@ export const useAssetsScript = () => {
   const allAccounts = React.useMemo(() => {
     return produce<any[]>(subAccounts, (draft) => {
       for (const sub of draft) {
-        sub.symbol = sub.id;
+        sub.account_id = sub.id;
         if (Array.isArray(sub.holding) && sub.holding.length) {
-          sub.children = sub.holding;
+          sub.children = sub.holding.map((item: API.Holding) => ({
+            ...item,
+            account_id: sub.id,
+          }));
         } else {
-          sub.children = [EMPTY_HOLDING];
+          sub.children = [{ ...EMPTY_HOLDING, account_id: sub.id }];
         }
         Reflect.deleteProperty(sub, "holding");
       }
       draft.unshift({
-        id: accountInfo?.account_id,
+        account_id: state.mainAccountId,
         description: "Main account",
-        symbol: accountInfo?.account_id,
         children:
-          Array.isArray(holding) && holding.length ? holding : [EMPTY_HOLDING],
+          Array.isArray(holding) && holding.length
+            ? holding.map((item: API.Holding) => ({
+                ...item,
+                account_id: state.mainAccountId,
+              }))
+            : [
+                {
+                  ...EMPTY_HOLDING,
+                  account_id: state.mainAccountId,
+                },
+              ],
       });
     });
-  }, [holding, subAccounts, accountInfo]);
+  }, [holding, subAccounts, state.mainAccountId]);
 
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {

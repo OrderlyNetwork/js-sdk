@@ -123,7 +123,9 @@ export const AssetsTable: React.FC<
         dataSource={dataSource}
         expanded
         getSubRows={(row) => row.children}
-        generatedRowKey={(record) => record.symbol}
+        generatedRowKey={(record) => {
+          return `${record.account_id}${record.token ? `_${record.token}` : ""}`;
+        }}
         onCell={(column, record) => {
           const isGroup = (record.children ?? []).length > 0;
           if (isGroup) {

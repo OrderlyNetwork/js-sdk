@@ -54,7 +54,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
       },
       {
         title: "Asset contribution",
-        dataIndex: "holding",
+        dataIndex: "asset_contribution",
         align: "left",
         width: 100,
         render(val: number, record) {
@@ -67,7 +67,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
       },
       {
         title: null,
-        dataIndex: "account_id",
+        dataIndex: "_",
         align: "center",
         width: 100,
         render(id: string) {
