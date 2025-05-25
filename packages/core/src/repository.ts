@@ -17,11 +17,8 @@ export class LocalStorageRepository implements Repository {
     this.run(() => {
       let all = this.getAll(address);
 
-      if (all) {
-        all = { ...all, ...data };
-      } else {
-        all = { [address]: data };
-      }
+      all = { [address]: { ...all, ...data } };
+
       localStorage.setItem(this.name, JSON.stringify(all));
     });
   }
