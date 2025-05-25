@@ -17,7 +17,14 @@ export {
   MarketsStorageKey,
   MarketsType,
 } from "./useMarkets";
-export type { FavoriteTab, Favorite, Recent, NewListing } from "./useMarkets";
+export type {
+  FavoriteTab,
+  Favorite,
+  Recent,
+  NewListing,
+  MarketsStore,
+  MarketsItem,
+} from "./useMarkets";
 export { useMarkPricesStream } from "./useMarkPricesStream";
 export { useIndexPricesStream } from "./useIndexPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
@@ -36,7 +43,7 @@ export { useMarketTradeStream } from "./useMarketTradeStream";
 export { useCollateral } from "./useCollateral";
 export type { CollateralOutputs } from "./useCollateral";
 export { useMaxQty } from "./useMaxQty";
-export { useMarginRatio } from "./useMarginRatio";
+export { useMarginRatio, type MarginRatioReturn } from "./useMarginRatio";
 
 export { useChains } from "./useChains";
 export { useStorageChain } from "./useStorageChain";

@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Card,
   Divider,
@@ -12,9 +13,8 @@ import {
   EditIcon,
   EyeCloseIcon,
 } from "@orderly.network/ui";
-import { AssetsHeader } from "./assetsHeader";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { useTranslation } from "@orderly.network/i18n";
+import { AssetsHeader } from "./assetsHeader";
 
 type Props = {
   canTrade?: boolean;
@@ -29,7 +29,7 @@ type Props = {
 } & StatisticProps;
 
 type StatisticProps = {
-  currentLeverage: number;
+  currentLeverage?: number;
   unrealPnL: number;
   unrealROI: number;
   freeCollateral: number;
@@ -116,7 +116,7 @@ const NoValue: FC = () => {
 };
 
 export const AssetStatistic = (
-  props: StatisticProps & { onLeverageEdit?: () => void; visible: boolean }
+  props: StatisticProps & { onLeverageEdit?: () => void; visible: boolean },
 ) => {
   const { t } = useTranslation();
 

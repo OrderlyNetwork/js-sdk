@@ -1,29 +1,42 @@
-import { useEffect, useMemo } from "react";
-import { type API, OrderSide, OrderStatus } from "@orderly.network/types";
-
-import { useSymbolsInfo } from "./useSymbolsInfo";
-
-import { useMarkPricesStream } from "./useMarkPricesStream";
+import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
+import { type API, OrderSide, OrderStatus } from "@orderly.network/types";
+import { useAccountInfo } from "./appStore";
 import { useCollateral } from "./useCollateral";
-
-import { pathOr } from "ramda";
+import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useOrderStream } from "./useOrderStream/useOrderStream";
 import { usePositions } from "./usePositionStream/usePosition.store";
-import { useAccountInfo } from "./appStore";
+import { useSymbolsInfo } from "./useSymbolsInfo";
 
 // const positionsPath = pathOr([], [0, "rows"]);
 
 /**
- * @param symbol
- * @param side
- * @param reduceOnly
- * @returns the maximum quantity available for trading in USD
+ * A hook that calculates the maximum tradeable quantity for a given symbol and side
+ * @returns Maximum tradeable quantity
+ * @example
+ * ```tsx
+ * // Get max buy quantity for BTC
+ * const maxBuyQty = useMaxQty("PERP_BTC_USDC", OrderSide.BUY);
+ *
+ * // Get max sell quantity with reduce only
+ * const maxSellQty = useMaxQty("PERP_BTC_USDC", OrderSide.SELL, true);
+ * ```
  */
 export const useMaxQty = (
+  /**
+   * Trading pair symbol (e.g. "PERP_BTC_USDC")
+   * */
   symbol: string,
+  /**
+   * Order side ("BUY" or "SELL")
+   * */
   side: OrderSide,
-  reduceOnly: boolean = false
+  /**
+   * Executes buy or sell orders which only reduce a current position.
+   *
+   * If true, only allows orders that reduce current position
+   * */
+  reduceOnly: boolean = false,
 ) => {
   // const positionsData = usePositionStream();
 
@@ -51,7 +64,7 @@ export const useMaxQty = (
 
     const positionQty = account.getQtyFromPositions(
       positions === null ? [] : positions,
-      symbol
+      symbol,
     );
     /**
      * Reduce-only mode handling:
@@ -87,20 +100,21 @@ export const useMaxQty = (
     const getSymbolInfo = symbolInfo[symbol];
 
     const filterAlgoOrders = orders.filter(
-      (item) => item.algo_order_id === undefined || item.algo_type === "BRACKET"
+      (item) =>
+        item.algo_order_id === undefined || item.algo_type === "BRACKET",
     );
 
     // current symbol buy order quantity
     const buyOrdersQty = account.getQtyFromOrdersBySide(
       filterAlgoOrders,
       symbol,
-      OrderSide.BUY
+      OrderSide.BUY,
     );
     // current symbol sell order quantity
     const sellOrdersQty = account.getQtyFromOrdersBySide(
       filterAlgoOrders,
       symbol,
-      OrderSide.SELL
+      OrderSide.SELL,
     );
 
     const otherPositions = !Array.isArray(positions)
@@ -108,7 +122,7 @@ export const useMaxQty = (
       : positions.filter((item: API.Position) => item.symbol !== symbol);
 
     const otherOrders = filterAlgoOrders.filter(
-      (item: API.Order) => item.symbol !== symbol
+      (item: API.Order) => item.symbol !== symbol,
     );
 
     const otherIMs = account.otherIMs({
