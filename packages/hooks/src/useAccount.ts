@@ -9,6 +9,7 @@ import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
 import { useEventEmitter } from "./useEventEmitter";
 import { useTrack } from "./useTrack";
+import { useWS } from "./useWS";
 
 export const useAccount = () => {
   const { configStore, keyStore } = useContext(OrderlyContext);
@@ -62,8 +63,12 @@ export const useAccount = () => {
   //   return state.subAccounts ?? [];
   // }, [state]);
 
+  const ws = useWS();
+
   const switchAccount = useCallback(
     async (accountId: string) => {
+      // close existing private connection when switch account
+      ws.closePrivate(1000, "switch account");
       return account.switchAccount(accountId);
     },
     [account],
