@@ -1,7 +1,6 @@
 import React from "react";
 import { produce } from "immer";
 import {
-  useAccount,
   usePositionStream,
   usePrivateQuery,
   useSymbolsInfo,
@@ -9,45 +8,10 @@ import {
 import { positions } from "@orderly.network/perp";
 import { useDataTap } from "@orderly.network/react-app";
 import type { API } from "@orderly.network/types";
-import { formatAddress, usePagination } from "@orderly.network/ui";
+import { usePagination } from "@orderly.network/ui";
 import type { PositionsProps } from "../../types/types";
-
-interface Group {
-  id: string;
-  description: string;
-  symbol: string;
-  children: API.PositionExt[];
-}
-
-const useDataSourceGroupByAccount = (data: API.PositionExt[]) => {
-  const {
-    state: { mainAccountId = "", subAccounts = [] },
-    isMainAccount,
-  } = useAccount();
-  const map = new Map<PropertyKey, Group>();
-  for (const item of data) {
-    const accountId = item.account_id || mainAccountId; // 如果没有 account_id，则视为主账号
-    const findSubAccount = subAccounts.find((acc) => acc.id === accountId);
-    if (map.has(accountId)) {
-      map.get(accountId)?.children?.push(item);
-    } else {
-      map.set(accountId, {
-        id: accountId,
-        description: isMainAccount
-          ? "Main Account"
-          : findSubAccount?.description ||
-            formatAddress(findSubAccount?.id!) ||
-            "Sub Account",
-        symbol: accountId,
-        children: [item],
-      });
-    }
-  }
-  return {
-    expanded: Array.from(map.keys()),
-    dataSource: Array.from(map.values()),
-  };
-};
+import { useDataSourceGroupByAccount } from "./hooks/useDataSourceGroupByAccount";
+import { useSubAccountQuery } from "./hooks/useSubAccountQuery";
 
 export const useCombinePositionsScript = (props: PositionsProps) => {
   const {
@@ -65,35 +29,37 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     setPage(1);
   }, [symbol]);
 
+  const symbolsInfo = useSymbolsInfo();
+
   const [oldPositions, , { isLoading }] = usePositionStream(symbol, {
     calcMode,
     includedPendingOrder,
   });
 
+  // need to get sub account Positions info to calculate portfolio and positions
   const { data: newPositions = [], isLoading: isPositionLoading } =
     usePrivateQuery<API.PositionExt[]>("/v1/client/aggregate/positions", {
       // formatter: (data) => data,
       errorRetryCount: 3,
     });
 
-  const symbolsInfo = useSymbolsInfo();
-
   // need to get sub account info to calculate portfolio and positions
-  // const { data: accountInfo } = useSubAccountQuery<API.AccountInfo>(
-  //   "/v1/client/info",
-  //   {
-  //     accountId: "",
-  //   },
-  // );
+  const { data: accountInfo = [], isLoading: isAccountInfoLoading } =
+    useSubAccountQuery<API.AccountInfo[]>("/v1/client/info", {
+      accountId: newPositions.map((item) => item.account_id!),
+    });
 
   const processPositions = produce<API.PositionExt[]>(newPositions, (draft) => {
     for (const item of draft) {
       const info = symbolsInfo[item.symbol];
       const notional = positions.notional(item.position_qty, item.mark_price);
+      const account = accountInfo.find(
+        (acc) => acc.account_id === item.account_id,
+      );
       const MMR = positions.MMR({
         baseMMR: info?.("base_mmr"),
         baseIMR: info?.("base_imr"),
-        IMRFactor: 1, // TODO: IMRFactor needs to be replaced with the real value
+        IMRFactor: account?.imr_factor[item.symbol] ?? 0,
         positionNotional: notional,
         IMR_factor_power: 4 / 5,
       });
@@ -108,15 +74,21 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     }
   });
 
-  const dataSource = useDataTap([...oldPositions?.rows, ...processPositions]);
-
-  const groupDataSource = useDataSourceGroupByAccount(
-    (dataSource ?? []).filter((acc) => acc.position_qty !== 0),
+  const dataSource = useDataTap(
+    [...oldPositions?.rows, ...processPositions].filter(
+      (acc) => acc.position_qty !== 0,
+    ),
   );
+
+  const groupDataSource = useDataSourceGroupByAccount(dataSource ?? []);
+
+  const mergedLoading = React.useMemo<boolean>(() => {
+    return isLoading || isPositionLoading || isAccountInfoLoading;
+  }, [isLoading, isPositionLoading, isAccountInfoLoading]);
 
   return {
     tableData: groupDataSource,
-    isLoading: isLoading || isPositionLoading,
+    isLoading: mergedLoading,
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     symbol,
