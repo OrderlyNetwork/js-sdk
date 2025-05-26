@@ -1,17 +1,18 @@
-import React from "react";
+import { useEffect, useMemo } from "react";
 import { produce } from "immer";
 import {
+  SubAccount,
   useAccount,
   usePositionStream,
   usePrivateQuery,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
+import { i18n } from "@orderly.network/i18n";
 import { positions, account as _account } from "@orderly.network/perp";
 import { useDataTap } from "@orderly.network/react-app";
 import type { API } from "@orderly.network/types";
-import { usePagination } from "@orderly.network/ui";
+import { formatAddress, usePagination } from "@orderly.network/ui";
 import type { PositionsProps } from "../../types/types";
-import { useDataSourceGroupByAccount } from "./hooks/useDataSourceGroupByAccount";
 import { useSubAccountQuery } from "./hooks/useSubAccountQuery";
 
 export const useCombinePositionsScript = (props: PositionsProps) => {
@@ -27,7 +28,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
 
   const { pagination, setPage } = usePagination({ pageSize: 50 });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setPage(1);
   }, [symbol]);
 
@@ -118,7 +119,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
         item.unrealized_pnl_ROI_index = unrealPnlROI_index;
       }
 
-      // 删除主账号的 Position
+      // delete main account position
       const idx = draft.findIndex(
         (acc) => acc.account_id === state.mainAccountId,
       );
@@ -135,16 +136,21 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
       ),
     ) ?? [];
 
-  const filtered = React.useMemo(() => {
+  const filtered = useMemo(() => {
     if (!selectedAccount || selectedAccount === "All accounts") {
       return dataSource;
     }
     return dataSource.filter((item) => item.account_id === selectedAccount);
   }, [dataSource, selectedAccount]);
 
-  const groupDataSource = useDataSourceGroupByAccount(filtered);
+  const groupDataSource = useMemo(() => {
+    return groupDataByAccount(filtered, {
+      mainAccountId: state.mainAccountId,
+      subAccounts: state.subAccounts,
+    });
+  }, [filtered, state.mainAccountId, state.subAccounts]);
 
-  const mergedLoading = React.useMemo<boolean>(() => {
+  const mergedLoading = useMemo<boolean>(() => {
     return isLoading || isPositionLoading || isAccountInfoLoading;
   }, [isLoading, isPositionLoading, isAccountInfoLoading]);
 
@@ -162,3 +168,45 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
 export type CombinePositionsState = ReturnType<
   typeof useCombinePositionsScript
 >;
+
+export const groupDataByAccount = (
+  data: API.PositionExt[],
+  options: {
+    mainAccountId?: string;
+    subAccounts?: SubAccount[];
+  },
+) => {
+  const { mainAccountId = "", subAccounts = [] } = options;
+
+  const map = new Map<
+    PropertyKey,
+    {
+      id: string;
+      description: string;
+      children: API.PositionExt[];
+    }
+  >();
+
+  for (const item of data) {
+    // if account_id is not set, as a main account
+    const accountId = item.account_id || mainAccountId;
+    const findSubAccount = subAccounts.find((acc) => acc.id === accountId);
+    if (map.has(accountId)) {
+      map.get(accountId)?.children?.push(item);
+    } else {
+      map.set(accountId, {
+        id: accountId,
+        description:
+          accountId === mainAccountId
+            ? i18n.t("common.mainAccount")
+            : findSubAccount?.description ||
+              formatAddress(findSubAccount?.id || ""),
+        children: [item],
+      });
+    }
+  }
+  return {
+    expanded: Array.from(map.keys()),
+    dataSource: Array.from(map.values()),
+  };
+};

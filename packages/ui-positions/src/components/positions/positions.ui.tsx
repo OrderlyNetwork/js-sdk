@@ -120,27 +120,23 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
             children:
               column.id === "symbol" ? (
                 <Badge color="neutral" size="xs">
-                  {record?.description || formatAddress(record?.id!)}
+                  {record?.description || formatAddress(record?.id)}
                 </Badge>
               ) : null,
           };
         }
       }}
       renderRowContainer={(record: any, index: number, children: any) => {
-        if (
-          !props.symbol ||
-          props.symbol === "main_account" ||
-          props.symbol === "sub_account"
-        ) {
-          return children;
+        if (record.symbol) {
+          return (
+            <SymbolProvider symbol={record.symbol}>
+              <PositionsRowProvider position={record}>
+                {children}
+              </PositionsRowProvider>
+            </SymbolProvider>
+          );
         }
-        return (
-          <SymbolProvider symbol={record.symbol}>
-            <PositionsRowProvider position={record}>
-              {children}
-            </PositionsRowProvider>
-          </SymbolProvider>
-        );
+        return children;
       }}
       manualPagination={false}
       pagination={pagination}
