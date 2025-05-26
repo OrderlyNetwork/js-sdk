@@ -69,12 +69,12 @@ export const AssetsTable: React.FC<
   const { t } = useTranslation();
 
   const ALL_ACCOUNTS: SelectOption = {
-    label: t("portfolio.asstes.allAccount"),
+    label: t("common.allAccount"),
     value: "All accounts",
   };
 
   const MAIN_ACCOUNT: SelectOption = {
-    label: t("portfolio.asstes.mainAccount"),
+    label: t("common.mainAccount"),
     value: "Main accounts",
   };
 
@@ -100,7 +100,7 @@ export const AssetsTable: React.FC<
           itemAlign={"start"}
           justify={"between"}
         >
-          <Text size="lg">{t("portfolio.asstes.asstes")}</Text>
+          <Text size="lg">{t("common.assets")}</Text>
           <TotalValue
             {...pick(["totalValue", "visible", "onToggleVisibility"], props)}
           />

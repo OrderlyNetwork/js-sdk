@@ -88,7 +88,7 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
         ),
       },
       {
-        name: t("portfolio.asstes.asstes"),
+        name: t("common.assets"),
         href: PortfolioLeftSidebarPath.Assets,
         icon: (
           <svg

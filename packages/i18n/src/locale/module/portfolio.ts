@@ -104,10 +104,6 @@ export const portfolio = {
     "Cancel open orders during system upgrade",
   "portfolio.setting.cancelOpenOrders.description":
     "During the upgrade period, all open orders will be cancelled to manage your risk in case of high market volatility.",
-
-  "portfolio.asstes.asstes": "Assets",
-  "portfolio.asstes.allAccount": "All accounts",
-  "portfolio.asstes.mainAccount": "Main account",
 };
 
 export type Portfolio = typeof portfolio;

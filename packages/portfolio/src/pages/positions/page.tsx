@@ -44,12 +44,12 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
   );
 
   const ALL_ACCOUNTS: SelectOption = {
-    label: t("portfolio.asstes.allAccount"),
+    label: t("common.allAccount"),
     value: "All accounts",
   };
 
   const MAIN_ACCOUNT: SelectOption = {
-    label: t("portfolio.asstes.mainAccount"),
+    label: t("common.mainAccount"),
     value: "Main accounts",
   };
 

@@ -178,7 +178,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
     const _mainAccount = {
       id: mainAccountId!,
-      description: t("account.mainAccount"),
+      description: t("common.mainAccount"),
       holding: [],
     };
 
