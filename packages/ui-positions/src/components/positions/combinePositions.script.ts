@@ -1,6 +1,7 @@
 import React from "react";
 import { produce } from "immer";
 import {
+  useAccount,
   usePositionStream,
   usePrivateQuery,
   useSymbolsInfo,
@@ -31,6 +32,8 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
   }, [symbol]);
 
   const symbolsInfo = useSymbolsInfo();
+
+  const { state } = useAccount();
 
   const [oldPositions, , { isLoading }] = usePositionStream(symbol, {
     calcMode,
@@ -113,6 +116,14 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
         item.unrealized_pnl = unrealPnl;
         item.unrealized_pnl_ROI = unrealPnlROI;
         item.unrealized_pnl_ROI_index = unrealPnlROI_index;
+      }
+
+      // 删除主账号的 Position
+      const idx = draft.findIndex(
+        (acc) => acc.account_id === state.mainAccountId,
+      );
+      if (idx !== -1) {
+        draft.splice(idx, 1);
       }
     },
   );
