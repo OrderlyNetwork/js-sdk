@@ -602,6 +602,7 @@
   "affiliate.trader.tradingVol": "交易量",
   "affiliate.trader.rebate.30d": "30天返利",
   "affiliate.trader.rebate.30d.description": "30天交易返利",
+  "affiliate.trader.tradingRebates": "交易返利",
   "ui.pagination.morePages": "更多页面",
   "ui.pagination.rowsPerPage": "每页行数",
   "ui.picker.selectDate": "选择日期",
