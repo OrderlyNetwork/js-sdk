@@ -9,7 +9,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { useInputStatus } from "../depositForm/hooks";
+import { InputStatus } from "../../types";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useSubAccountDataObserver } from "./hooks/useSubAccountDataObserver";
 
@@ -94,6 +94,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const { inputStatus, hintMessage } = useInputStatus({
     quantity,
     maxQuantity,
+    unsettledPnL,
   });
 
   const onTransfer = useCallback(() => {
@@ -241,3 +242,55 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     setFromAccount,
   };
 };
+
+type Options = {
+  quantity: string;
+  maxQuantity: string | number;
+  unsettledPnL?: number;
+};
+
+export function useInputStatus(options: Options) {
+  const { quantity, maxQuantity, unsettledPnL = 0 } = options;
+  const { t } = useTranslation();
+
+  const [inputStatus, setInputStatus] = useState<InputStatus>("default");
+  const [hintMessage, setHintMessage] = useState<string>();
+
+  useEffect(() => {
+    if (!quantity) {
+      // reset input status when value is empty
+      setInputStatus("default");
+      setHintMessage("");
+      return;
+    }
+
+    const qty = new Decimal(quantity);
+
+    if (unsettledPnL < 0) {
+      if (qty.gt(maxQuantity)) {
+        setInputStatus("error");
+        setHintMessage(t("transfer.insufficientBalance"));
+      } else {
+        setInputStatus("default");
+        setHintMessage("");
+      }
+    } else {
+      if (qty.gt(maxQuantity)) {
+        setInputStatus("error");
+        setHintMessage(t("transfer.insufficientBalance"));
+      } else if (
+        qty.gt(new Decimal(maxQuantity).minus(unsettledPnL)) &&
+        qty.lessThanOrEqualTo(maxQuantity)
+      ) {
+        setInputStatus("warning");
+        setHintMessage(t("settle.settlePnl.warning"));
+      } else {
+        // reset input status
+        setInputStatus("default");
+        setHintMessage("");
+      }
+    }
+  }, [quantity, maxQuantity]);
+
+  return { inputStatus, hintMessage };
+}

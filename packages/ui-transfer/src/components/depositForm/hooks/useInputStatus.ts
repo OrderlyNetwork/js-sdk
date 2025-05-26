@@ -20,9 +20,9 @@ export function useInputStatus(options: Options) {
       return;
     }
 
-    const d = new Decimal(quantity);
+    const qty = new Decimal(quantity);
 
-    if (d.gt(maxQuantity)) {
+    if (qty.gt(maxQuantity)) {
       setInputStatus("error");
       setHintMessage(t("transfer.insufficientBalance"));
     } else {
