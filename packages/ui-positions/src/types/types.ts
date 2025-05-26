@@ -8,5 +8,6 @@ export type PositionsProps = {
   symbol?: string;
   calcMode?: PriceMode;
   includedPendingOrder?: boolean;
+  selectedAccount?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
 };

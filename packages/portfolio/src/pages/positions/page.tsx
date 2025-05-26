@@ -55,7 +55,7 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
     const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
     return [
       ALL_ACCOUNTS,
-      MAIN_ACCOUNT,
+      // MAIN_ACCOUNT,
       ...subs.map<SelectOption>((value) => ({
         value: value.id,
         label: value?.description || formatAddress(value?.id),
@@ -99,7 +99,10 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
               ]}
             />
             {isMainAccount ? (
-              <CombinePositionsWidget {...props} />
+              <CombinePositionsWidget
+                selectedAccount={selectedAccount}
+                {...props}
+              />
             ) : (
               <PositionsWidget {...props} />
             )}

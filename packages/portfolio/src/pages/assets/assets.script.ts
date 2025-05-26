@@ -98,6 +98,13 @@ export const useAssetsScript = () => {
     });
   }, [holding, subAccounts, state.mainAccountId]);
 
+  const filtered = React.useMemo(() => {
+    if (!selectedAccount || selectedAccount === "All accounts") {
+      return allAccounts;
+    }
+    return allAccounts.filter((item) => item.account_id === selectedAccount);
+  }, [allAccounts, selectedAccount]);
+
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
       const { name, value } = filter;
@@ -122,7 +129,7 @@ export const useAssetsScript = () => {
   return React.useMemo(() => {
     return {
       columns: assetsColumns,
-      dataSource: allAccounts,
+      dataSource: filtered,
       totalValue: memoizedTotalValue,
       visible: visible as boolean,
       onToggleVisibility: toggleVisible,

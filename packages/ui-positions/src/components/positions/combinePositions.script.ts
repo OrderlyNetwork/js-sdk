@@ -21,6 +21,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     onSymbolChange,
+    selectedAccount,
   } = props;
 
   const { pagination, setPage } = usePagination({ pageSize: 50 });
@@ -74,13 +75,21 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     }
   });
 
-  const dataSource = useDataTap(
-    [...oldPositions?.rows, ...processPositions].filter(
-      (acc) => acc.position_qty !== 0,
-    ),
-  );
+  const dataSource =
+    useDataTap(
+      [...oldPositions?.rows, ...processPositions].filter(
+        (acc) => acc.position_qty !== 0,
+      ),
+    ) ?? [];
 
-  const groupDataSource = useDataSourceGroupByAccount(dataSource ?? []);
+  const filtered = React.useMemo(() => {
+    if (!selectedAccount || selectedAccount === "All accounts") {
+      return dataSource;
+    }
+    return dataSource.filter((item) => item.account_id === selectedAccount);
+  }, [dataSource, selectedAccount]);
+
+  const groupDataSource = useDataSourceGroupByAccount(filtered);
 
   const mergedLoading = React.useMemo<boolean>(() => {
     return isLoading || isPositionLoading || isAccountInfoLoading;
