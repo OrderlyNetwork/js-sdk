@@ -51,6 +51,8 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const mainAccountId = state.mainAccountId;
   const accountId = state.accountId;
 
+  // when current account is main account, and fromAccount is not main account, set observerSubAccountId to fromAccountId
+  // when current account is sub account, set observerSubAccountId to undefined
   const observerSubAccountId =
     isMainAccount && fromAccount?.id && fromAccount?.id !== mainAccountId
       ? fromAccount?.id
@@ -147,15 +149,11 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
   const { fromAccounts, toAccounts } = useMemo(() => {
     if (isMainAccount) {
-      const _subAccounts =
-        subAccounts?.filter((item) => item.id !== toAccount?.id) || [];
       return {
-        fromAccounts: mainAccount ? [mainAccount, ..._subAccounts] : [],
+        fromAccounts: mainAccount ? [mainAccount, ...(subAccounts || [])] : [],
         toAccounts:
           // only from account is main account, can transfer to other sub accounts
-          fromAccount?.id === mainAccountId
-            ? subAccounts?.filter((item) => item.id !== fromAccount?.id)
-            : [],
+          fromAccount?.id === mainAccountId ? subAccounts : [],
       };
     }
 
@@ -163,14 +161,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       fromAccounts: [],
       toAccounts: [],
     };
-  }, [
-    isMainAccount,
-    subAccounts,
-    mainAccount,
-    fromAccount,
-    toAccount,
-    mainAccountId,
-  ]);
+  }, [isMainAccount, mainAccountId, mainAccount, subAccounts, fromAccount]);
 
   // init and update main account holding
   useEffect(() => {
@@ -192,8 +183,10 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     });
   }, [t, mainAccountId]);
 
-  // init from account
+  // init fromAccount
   useEffect(() => {
+    // if current account is main account, set fromAccount to main account
+    // if current account is sub account, set fromAccount to current sub account
     setFromAccount(
       isMainAccount
         ? mainAccount
@@ -201,28 +194,46 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     );
   }, [isMainAccount, mainAccount, subAccounts, accountId]);
 
-  // init to account
+  // init toAccount
   useEffect(() => {
+    // if current account is main account
     if (isMainAccount) {
+      const firstAccount = subAccounts?.[0];
+
+      // if fromAccount is main account, set toAccount to first sub account
+      if (fromAccount?.id === mainAccountId) {
+        setToAccount(firstAccount);
+        return;
+      }
+
+      // if fromAccount is not main account, set toAccount to main account
+      // sub account only can transfer to main account
+      if (fromAccount?.id && fromAccount?.id !== mainAccountId) {
+        setToAccount(mainAccount);
+        return;
+      }
+
+      // if toAccount is not set, set toAccount to first sub account
       const selectAccount = options.toAccountId
         ? subAccounts?.find((item) => item.id === options.toAccountId) ||
-          subAccounts?.[0]
-        : subAccounts?.[0];
+          firstAccount
+        : firstAccount;
 
       if (selectAccount) {
         setToAccount(selectAccount);
       }
     } else {
+      // if current account is sub account, set toAccount to main account
       setToAccount(mainAccount);
     }
-  }, [options?.toAccountId, isMainAccount, subAccounts, mainAccount]);
-
-  useEffect(() => {
-    if (observerSubAccountId) {
-      // sub account only can transfer to main account
-      setToAccount(mainAccount);
-    }
-  }, [observerSubAccountId, mainAccount]);
+  }, [
+    options?.toAccountId,
+    isMainAccount,
+    mainAccountId,
+    mainAccount,
+    subAccounts,
+    fromAccount,
+  ]);
 
   // update tokens by current holding
   useEffect(() => {
