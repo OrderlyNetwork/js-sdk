@@ -556,6 +556,7 @@
   "affiliate.asAffiliate.title": "Como afiliado",
   "affiliate.asAffiliate.description": "Traga traders para ganhar renda passiva",
   "affiliate.asAffiliate.button": "Torne-se um afiliado",
+  "affiliate.asAffiliate.affilates": "Afiliados",
   "affiliate.asTrader.title": "Como trader",
   "affiliate.asTrader.description": "Traga traders para ganhar renda passiva",
   "affiliate.asTrader.button": "Digite o código",
@@ -613,5 +614,6 @@
   "tradingLeaderboard.learnMore": "Saiba mais",
   "tradingLeaderboard.tradeNow": "Negociar agora",
   "tradingLeaderboard.tradingVolume": "Volume de negociação",
-  "tradingLeaderboard.rank": "Posição"
+  "tradingLeaderboard.rank": "Posição",
+  "tradingRewards.subtitle.mm": "Negocie para ganhar $ORDER"
 }

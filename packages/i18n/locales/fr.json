@@ -554,6 +554,7 @@
   "affiliate.asAffiliate.title": "En tant qu'affilié",
   "affiliate.asAffiliate.description": "Onboardez des traders pour gagner un revenu passif",
   "affiliate.asAffiliate.button": "Devenir affilié",
+  "affiliate.asAffiliate.affilates": "Affiliés",
   "affiliate.asTrader.title": "En tant que trader",
   "affiliate.asTrader.description": "Onboardez des traders pour gagner un revenu passif",
   "affiliate.asTrader.button": "Entrer le code",
@@ -613,5 +614,6 @@
   "tradingLeaderboard.tradingVolume": "Volume de trading",
   "tradingLeaderboard.rank": "Rang",
   "common.long": "Acheter",
-  "common.short": "Vendre"
+  "common.short": "Vendre",
+  "tradingRewards.subtitle.mm": "Tradez pour gagner $ORDER"
 }

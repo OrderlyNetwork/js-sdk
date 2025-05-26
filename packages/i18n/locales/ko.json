@@ -613,5 +613,7 @@
   "tradingLeaderboard.learnMore": "더 알아보기",
   "tradingLeaderboard.tradeNow": "지금 거래하기",
   "tradingLeaderboard.tradingVolume": "거래량",
-  "tradingLeaderboard.rank": "순위"
+  "tradingLeaderboard.rank": "순위",
+  "tradingRewards.subtitle.mm": "$ORDER를 얻기 위해 거래하세요",
+  "affiliate.asAffiliate.affilates": "제휴사"
 }

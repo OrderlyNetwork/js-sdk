@@ -554,6 +554,7 @@
   "affiliate.asAffiliate.title": "Ortak olarak",
   "affiliate.asAffiliate.description": "Pasif gelir elde etmek için işlemcileri ağınıza dahil edin",
   "affiliate.asAffiliate.button": "Ortak olun",
+  "affiliate.asAffiliate.affilates": "Ortaklar",
   "affiliate.asTrader.title": "İşlemci olarak",
   "affiliate.asTrader.description": "Pasif gelir elde etmek için işlemcileri ağınıza dahil edin",
   "affiliate.asTrader.button": "Kodu girin",
@@ -612,6 +613,7 @@
   "tradingLeaderboard.tradeNow": "Şimdi işlem yapın",
   "tradingLeaderboard.tradingVolume": "İşlem hacmi",
   "tradingLeaderboard.rank": "Sıralama",
-  "common.long": "Satın Al",
-  "common.short": "Sat"
+  "common.long": "Al",
+  "common.short": "Sat",
+  "tradingRewards.subtitle.mm": "$ORDER kazanmak için işlem yapın"
 }

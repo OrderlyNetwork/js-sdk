@@ -613,5 +613,7 @@
   "tradingLeaderboard.learnMore": "Дізнатися більше",
   "tradingLeaderboard.tradeNow": "Торгувати зараз",
   "tradingLeaderboard.tradingVolume": "Торговий об'єм",
-  "tradingLeaderboard.rank": "Рейтинг"
+  "tradingLeaderboard.rank": "Рейтинг",
+  "tradingRewards.subtitle.mm": "Торгуйте, щоб заробити $ORDER",
+  "affiliate.asAffiliate.affilates": "Партнери"
 }

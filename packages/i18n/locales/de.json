@@ -556,6 +556,7 @@
   "affiliate.asAffiliate.title": "Als Partner",
   "affiliate.asAffiliate.description": "Händler anwerben, um passives Einkommen zu verdienen",
   "affiliate.asAffiliate.button": "Partner werden",
+  "affiliate.asAffiliate.affilates": "Partner",
   "affiliate.asTrader.title": "Als Händler",
   "affiliate.asTrader.description": "Händler anwerben, um passives Einkommen zu verdienen",
   "affiliate.asTrader.button": "Code eingeben",
@@ -613,5 +614,6 @@
   "tradingLeaderboard.learnMore": "Mehr erfahren",
   "tradingLeaderboard.tradeNow": "Jetzt handeln",
   "tradingLeaderboard.tradingVolume": "Handelsvolumen",
-  "tradingLeaderboard.rank": "Rang"
+  "tradingLeaderboard.rank": "Rang",
+  "tradingRewards.subtitle.mm": "Handeln Sie, um $ORDER zu verdienen"
 }

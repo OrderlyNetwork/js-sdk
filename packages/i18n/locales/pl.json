@@ -556,6 +556,7 @@
   "affiliate.asAffiliate.title": "Jako polecający",
   "affiliate.asAffiliate.description": "Zapraszaj traderów, aby zarabiać pasywny dochód",
   "affiliate.asAffiliate.button": "Zostań polecającym",
+  "affiliate.asAffiliate.affilates": "Polecający",
   "affiliate.asTrader.title": "Jako trader",
   "affiliate.asTrader.description": "Zapraszaj traderów, aby zarabiać pasywny dochód",
   "affiliate.asTrader.button": "Wprowadź kod",
@@ -613,5 +614,6 @@
   "tradingLeaderboard.learnMore": "Dowiedz się więcej",
   "tradingLeaderboard.tradeNow": "Handluj teraz",
   "tradingLeaderboard.tradingVolume": "Wolumen handlu",
-  "tradingLeaderboard.rank": "Ranking"
+  "tradingLeaderboard.rank": "Ranking",
+  "tradingRewards.subtitle.mm": "Handluj, aby zarobić $ORDER"
 }

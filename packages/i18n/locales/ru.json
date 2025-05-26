@@ -7,8 +7,8 @@
   "common.all": "Все",
   "common.buy": "Купить",
   "common.sell": "Продать",
-  "common.long": "Купить",
-  "common.short": "Продать",
+  "common.long": "Покупка",
+  "common.short": "Продажа",
   "common.edit": "Редактировать",
   "common.save": "Сохранить",
   "common.add": "Добавить",
@@ -613,5 +613,7 @@
   "tradingLeaderboard.learnMore": "Узнать больше",
   "tradingLeaderboard.tradeNow": "Торговать сейчас",
   "tradingLeaderboard.tradingVolume": "Торговый объем",
-  "tradingLeaderboard.rank": "Ранг"
+  "tradingLeaderboard.rank": "Ранг",
+  "tradingRewards.subtitle.mm": "Торгуйте, чтобы заработать $ORDER",
+  "affiliate.asAffiliate.affilates": "Партнеры"
 }

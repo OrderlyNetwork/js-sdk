@@ -556,6 +556,7 @@
   "affiliate.asAffiliate.title": "Como afiliado",
   "affiliate.asAffiliate.description": "Onboardea traders para ganar ingresos pasivos",
   "affiliate.asAffiliate.button": "Conviértete en afiliado",
+  "affiliate.asAffiliate.affilates": "Afiliados",
   "affiliate.asTrader.title": "Como trader",
   "affiliate.asTrader.description": "Onboardea traders para ganar ingresos pasivos",
   "affiliate.asTrader.button": "Ingresar código",
@@ -613,5 +614,6 @@
   "tradingLeaderboard.learnMore": "Aprende más",
   "tradingLeaderboard.tradeNow": "Opera ahora",
   "tradingLeaderboard.tradingVolume": "Volumen de trading",
-  "tradingLeaderboard.rank": "Rango"
+  "tradingLeaderboard.rank": "Rango",
+  "tradingRewards.subtitle.mm": "Opera para ganar $ORDER"
 }

@@ -554,6 +554,7 @@
   "affiliate.asAffiliate.title": "アフィリエイトとして",
   "affiliate.asAffiliate.description": "トレーダーを紹介して受動的収入を獲得",
   "affiliate.asAffiliate.button": "アフィリエイトになる",
+  "affiliate.asAffiliate.affilates": "アフィリエイト",
   "affiliate.asTrader.title": "トレーダーとして",
   "affiliate.asTrader.description": "トレーダーを紹介して受動的収入を獲得",
   "affiliate.asTrader.button": "コードを入力",
@@ -613,5 +614,6 @@
   "tradingLeaderboard.tradingVolume": "取引量",
   "tradingLeaderboard.rank": "ランク",
   "common.long": "購入",
-  "common.short": "販売"
+  "common.short": "販売",
+  "tradingRewards.subtitle.mm": "$ORDERを獲得するために取引"
 }
