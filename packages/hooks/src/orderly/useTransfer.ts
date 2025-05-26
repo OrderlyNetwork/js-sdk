@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { useMutationWithAccountId } from "../subAccount/useMutationWithAccountId";
 import { useMutation } from "../useMutation";
 import { useCollateral } from "./useCollateral";
 
@@ -9,13 +10,22 @@ type Receiver = {
   amount: number;
 };
 
-export const useTransfer = () => {
+type TransferOptions = {
+  fromAccountId?: string;
+};
+
+export const useTransfer = (options?: TransferOptions) => {
+  const { fromAccountId } = options || {};
+
   const { unsettledPnL, availableBalance, freeCollateral, holding } =
     useCollateral();
 
-  const [doTransfer, { isMutating: submitting }] = useMutation(
+  const [doTransfer, { isMutating: submitting }] = useMutationWithAccountId(
     "/v1/internal_transfer",
     "POST",
+    {
+      accountId: fromAccountId,
+    },
   );
 
   const transfer = useCallback(

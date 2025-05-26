@@ -45,7 +45,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     maxAmount: currentMaxAmount,
     unsettledPnL: currentUnsettledPnL,
     holding: currentHolding,
-  } = useTransfer();
+  } = useTransfer({ fromAccountId: fromAccount?.id });
 
   const subAccounts = state.subAccounts;
   const mainAccountId = state.mainAccountId;
@@ -151,7 +151,11 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
         subAccounts?.filter((item) => item.id !== toAccount?.id) || [];
       return {
         fromAccounts: mainAccount ? [mainAccount, ..._subAccounts] : [],
-        toAccounts: subAccounts?.filter((item) => item.id !== fromAccount?.id),
+        toAccounts:
+          // only from account is main account, can transfer to other sub accounts
+          fromAccount?.id === mainAccountId
+            ? subAccounts?.filter((item) => item.id !== fromAccount?.id)
+            : [],
       };
     }
 
@@ -159,7 +163,14 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       fromAccounts: [],
       toAccounts: [],
     };
-  }, [isMainAccount, subAccounts, mainAccount, fromAccount, toAccount]);
+  }, [
+    isMainAccount,
+    subAccounts,
+    mainAccount,
+    fromAccount,
+    toAccount,
+    mainAccountId,
+  ]);
 
   // init and update main account holding
   useEffect(() => {
@@ -194,7 +205,8 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   useEffect(() => {
     if (isMainAccount) {
       const selectAccount = options.toAccountId
-        ? subAccounts?.find((item) => item.id === options.toAccountId)
+        ? subAccounts?.find((item) => item.id === options.toAccountId) ||
+          subAccounts?.[0]
         : subAccounts?.[0];
 
       if (selectAccount) {
@@ -204,6 +216,13 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       setToAccount(mainAccount);
     }
   }, [options?.toAccountId, isMainAccount, subAccounts, mainAccount]);
+
+  useEffect(() => {
+    if (observerSubAccountId) {
+      // sub account only can transfer to main account
+      setToAccount(mainAccount);
+    }
+  }, [observerSubAccountId, mainAccount]);
 
   // update tokens by current holding
   useEffect(() => {
