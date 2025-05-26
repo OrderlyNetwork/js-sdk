@@ -42,7 +42,7 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
       <Flex className="oui-w-full oui-flex-row oui-justify-between oui-items-center">
         <Flex className="oui-flex-col oui-items-start">
           <Text className="oui-text-base-contrast oui-text-base oui-font-semibold">
-            {t("common.affiliate")}
+            {t("affiliate.asAffiliate.affilates")}
           </Text>
           <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
             {t("affiliate.commission.30d")}
