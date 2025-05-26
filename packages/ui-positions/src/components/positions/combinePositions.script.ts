@@ -5,7 +5,7 @@ import {
   usePrivateQuery,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { positions } from "@orderly.network/perp";
+import { positions, account as _account } from "@orderly.network/perp";
 import { useDataTap } from "@orderly.network/react-app";
 import type { API } from "@orderly.network/types";
 import { usePagination } from "@orderly.network/ui";
@@ -50,30 +50,72 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
       accountId: newPositions.map((item) => item.account_id!),
     });
 
-  const processPositions = produce<API.PositionExt[]>(newPositions, (draft) => {
-    for (const item of draft) {
-      const info = symbolsInfo[item.symbol];
-      const notional = positions.notional(item.position_qty, item.mark_price);
-      const account = accountInfo.find(
-        (acc) => acc.account_id === item.account_id,
-      );
-      const MMR = positions.MMR({
-        baseMMR: info?.("base_mmr"),
-        baseIMR: info?.("base_imr"),
-        IMRFactor: account?.imr_factor[item.symbol] ?? 0,
-        positionNotional: notional,
-        IMR_factor_power: 4 / 5,
-      });
-      const mm = positions.maintenanceMargin({
-        positionQty: item.position_qty,
-        markPrice: item.mark_price,
-        MMR: MMR,
-      });
-      item.mmr = MMR;
-      item.mm = mm;
-      item.notional = notional;
-    }
-  });
+  const processPositions = produce<API.PositionTPSLExt[]>(
+    newPositions,
+    (draft) => {
+      for (const item of draft) {
+        const info = symbolsInfo[item.symbol];
+        const notional = positions.notional(item.position_qty, item.mark_price);
+        const account = accountInfo.find(
+          (acc) => acc.account_id === item.account_id,
+        );
+        const MMR = positions.MMR({
+          baseMMR: info?.("base_mmr"),
+          baseIMR: info?.("base_imr"),
+          IMRFactor: account?.imr_factor[item.symbol] ?? 0,
+          positionNotional: notional,
+          IMR_factor_power: 4 / 5,
+        });
+        const mm = positions.maintenanceMargin({
+          positionQty: item.position_qty,
+          markPrice: item.mark_price,
+          MMR: MMR,
+        });
+        const unrealPnl = positions.unrealizedPnL({
+          qty: item.position_qty,
+          openPrice: item?.average_open_price,
+          // markPrice: unRealizedPrice,
+          markPrice: item.mark_price,
+        });
+        const imr = _account.IMR({
+          maxLeverage: account?.max_leverage ?? 1,
+          baseIMR: info?.("base_imr"),
+          IMR_Factor: account?.imr_factor[item.symbol] ?? 0,
+          positionNotional: notional,
+          ordersNotional: 0,
+          IMR_factor_power: 4 / 5,
+        });
+        const unrealPnlROI = positions.unrealizedPnLROI({
+          positionQty: item.position_qty,
+          openPrice: item.average_open_price,
+          IMR: imr,
+          unrealizedPnL: unrealPnl,
+        });
+        let unrealPnl_index = 0;
+        let unrealPnlROI_index = 0;
+        if (item.index_price) {
+          unrealPnl_index = positions.unrealizedPnL({
+            qty: item.position_qty,
+            openPrice: item?.average_open_price,
+            // markPrice: unRealizedPrice,
+            markPrice: item.index_price,
+          });
+          unrealPnlROI_index = positions.unrealizedPnLROI({
+            positionQty: item.position_qty,
+            openPrice: item.average_open_price,
+            IMR: imr,
+            unrealizedPnL: unrealPnl_index,
+          });
+        }
+        item.mmr = MMR;
+        item.mm = mm;
+        item.notional = notional;
+        item.unrealized_pnl = unrealPnl;
+        item.unrealized_pnl_ROI = unrealPnlROI;
+        item.unrealized_pnl_ROI_index = unrealPnlROI_index;
+      }
+    },
+  );
 
   const dataSource =
     useDataTap(

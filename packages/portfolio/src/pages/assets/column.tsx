@@ -19,7 +19,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
-        title: "token",
+        title: t("portfolio.overview.column.token"),
         dataIndex: "token",
         align: "left",
         width: 150,
@@ -33,27 +33,27 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
       {
-        title: "Qty.",
+        title: t("portfolio.overview.column.qty"),
         dataIndex: "holding",
         align: "left",
         width: 170,
       },
       {
-        title: "index price",
+        title: t("portfolio.overview.column.indexPrice"),
         dataIndex: "price",
         align: "left",
         width: 100,
         render: () => INDEX_PRICE,
       },
       {
-        title: "Collateral ratio",
+        title: t("portfolio.overview.column.collateralRatio"),
         dataIndex: "ratio",
         align: "left",
         width: 100,
         render: () => `${COLLATERAL_RATIO}%`,
       },
       {
-        title: "Asset contribution",
+        title: t("portfolio.overview.column.assetContribution"),
         dataIndex: "asset_contribution",
         align: "left",
         width: 100,
@@ -78,7 +78,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
               color={"secondary"}
               onClick={() => onClick?.(id)}
             >
-              Transfer
+              {t("common.transfer")}
             </Button>
           );
         },

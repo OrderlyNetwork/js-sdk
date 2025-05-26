@@ -55,7 +55,7 @@ export const HistoryDataGroupDesktop = (props: {
           <DistributionHistoryWidget />
         </TabPanel>
         <TabPanel
-          title={"Transfer History"}
+          title={t("portfolio.overview.transferHistory")}
           icon={<ArrowLeftRightSquareFill />}
           value={"transfer"}
         >

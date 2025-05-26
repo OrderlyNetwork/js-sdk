@@ -96,7 +96,9 @@ export const PositionsRowProvider: FC<
   const closeOrderData = useMemo(() => {
     const { position } = props;
 
-    if (!position) return null;
+    if (!position) {
+      return null;
+    }
 
     const data: any = {
       //   order_price: undefined,

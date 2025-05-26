@@ -21,16 +21,6 @@ import {
 } from "@orderly.network/ui-positions";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 
-const ALL_ACCOUNTS: SelectOption = {
-  label: "All accounts",
-  value: "All accounts",
-};
-
-const MAIN_ACCOUNT: SelectOption = {
-  label: "Main accounts",
-  value: "Main accounts",
-};
-
 enum TabsType {
   positions = "Positions",
   positionHistory = "Position history",
@@ -42,6 +32,7 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
   const { t } = useTranslation();
   const [selectedAccount, setSelectedAccount] = React.useState("All accounts");
   const { state, isMainAccount } = useAccount();
+
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
       const { name, value } = filter;
@@ -51,6 +42,17 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
     },
     [],
   );
+
+  const ALL_ACCOUNTS: SelectOption = {
+    label: t("portfolio.asstes.allAccount"),
+    value: "All accounts",
+  };
+
+  const MAIN_ACCOUNT: SelectOption = {
+    label: t("portfolio.asstes.mainAccount"),
+    value: "Main accounts",
+  };
+
   const memoizedOptions = React.useMemo(() => {
     const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
     return [

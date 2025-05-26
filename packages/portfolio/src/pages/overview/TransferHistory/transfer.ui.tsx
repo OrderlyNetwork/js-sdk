@@ -10,26 +10,29 @@ import type { useTransferHistoryHookReturn } from "./useDataSource.script";
 
 type HistoryProps = useTransferHistoryHookReturn;
 
-const ALL_ACCOUNTS: SelectOption = {
-  label: "All accounts",
-  value: "All accounts",
-};
-
-const MAIN_ACCOUNT: SelectOption = {
-  label: "Main accounts",
-  value: "Main accounts",
-};
-
 export const TransferHistoryUI: React.FC<
   Readonly<HistoryProps & ReturnType<typeof useAccount>>
 > = (props) => {
   const { dataSource, queryParameter, state, isLoading, onFilter } = props;
   const { fromValue, targetValue, side, dateRange } = queryParameter;
+
+  const { t } = useTranslation();
+
+  const ALL_ACCOUNTS: SelectOption = {
+    label: t("portfolio.asstes.allAccount"),
+    value: "All accounts",
+  };
+
+  const MAIN_ACCOUNT: SelectOption = {
+    label: t("portfolio.asstes.mainAccount"),
+    value: "Main accounts",
+  };
+
   const memoizedOptions = React.useMemo(() => {
     const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
     return [
       ALL_ACCOUNTS,
-      MAIN_ACCOUNT,
+      // MAIN_ACCOUNT,
       ...subs.map<SelectOption>((value) => ({
         value: value.id,
         label: value?.description || formatAddress(value?.id),
