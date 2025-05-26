@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import React from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -20,6 +20,7 @@ import {
   PositionsWidget,
 } from "@orderly.network/ui-positions";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+import { AccountType } from "../assets/assets.ui";
 
 enum TabsType {
   positions = "Positions",
@@ -30,14 +31,15 @@ enum TabsType {
 export const PositionsPage: React.FC<PositionsProps> = (props) => {
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
-  const [selectedAccount, setSelectedAccount] = React.useState("All accounts");
   const { state, isMainAccount } = useAccount();
+
+  const [selectedAccount, setAccount] = useState<string>(AccountType.ALL);
 
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
       const { name, value } = filter;
       if (name === "account") {
-        setSelectedAccount(value);
+        setAccount(value);
       }
     },
     [],
@@ -45,19 +47,19 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
 
   const ALL_ACCOUNTS: SelectOption = {
     label: t("common.allAccount"),
-    value: "All accounts",
+    value: AccountType.ALL,
   };
 
   const MAIN_ACCOUNT: SelectOption = {
     label: t("common.mainAccount"),
-    value: "Main accounts",
+    value: AccountType.MAIN,
   };
 
-  const memoizedOptions = React.useMemo(() => {
+  const memoizedOptions = useMemo(() => {
     const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
     return [
       ALL_ACCOUNTS,
-      // MAIN_ACCOUNT,
+      MAIN_ACCOUNT,
       ...subs.map<SelectOption>((value) => ({
         value: value.id,
         label: value?.description || formatAddress(value?.id),

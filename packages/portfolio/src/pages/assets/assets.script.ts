@@ -7,10 +7,12 @@ import {
   useCollateral,
   useLocalStorage,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import type { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { TransferDialogId } from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
+import { AccountType } from "./assets.ui";
 import { useAssetsColumns } from "./column";
 
 const isNumber = (val: unknown): val is number => {
@@ -47,6 +49,8 @@ export const useAssetsScript = () => {
     true,
   );
 
+  const { t } = useTranslation();
+
   const { state } = useAccount();
   const { holding = [] } = useCollateral();
 
@@ -57,7 +61,7 @@ export const useAssetsScript = () => {
     setVisible((visible: boolean) => !visible);
   };
 
-  const [selectedAccount, setSelectedAccount] = React.useState("All accounts");
+  const [selectedAccount, setAccount] = React.useState<string>(AccountType.ALL);
 
   const memoizedTotalValue = React.useMemo<number>(() => {
     const mainTotalValue = calculateTotalHolding(holding);
@@ -81,7 +85,7 @@ export const useAssetsScript = () => {
       }
       draft.unshift({
         account_id: state.mainAccountId,
-        description: "Main account",
+        description: t("common.mainAccount"),
         children:
           Array.isArray(holding) && holding.length
             ? holding.map((item: API.Holding) => ({
@@ -99,17 +103,23 @@ export const useAssetsScript = () => {
   }, [holding, subAccounts, state.mainAccountId]);
 
   const filtered = React.useMemo(() => {
-    if (!selectedAccount || selectedAccount === "All accounts") {
+    if (!selectedAccount || selectedAccount === AccountType.ALL) {
       return allAccounts;
     }
-    return allAccounts.filter((item) => item.account_id === selectedAccount);
+    return allAccounts.filter((item) => {
+      if (selectedAccount === AccountType.MAIN) {
+        return item.account_id === state.mainAccountId;
+      } else {
+        return item.account_id === selectedAccount;
+      }
+    });
   }, [allAccounts, selectedAccount]);
 
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
       const { name, value } = filter;
       if (name === "account") {
-        setSelectedAccount(value);
+        setAccount(value);
       }
     },
     [],
@@ -126,17 +136,15 @@ export const useAssetsScript = () => {
 
   const assetsColumns = useAssetsColumns({ onClick: handleTransfer });
 
-  return React.useMemo(() => {
-    return {
-      columns: assetsColumns,
-      dataSource: filtered,
-      totalValue: memoizedTotalValue,
-      visible: visible as boolean,
-      onToggleVisibility: toggleVisible,
-      selectedAccount,
-      onFilter: onAccountFilter,
-    };
-  }, [assetsColumns, visible, toggleVisible]);
+  return {
+    columns: assetsColumns,
+    dataSource: filtered,
+    totalValue: memoizedTotalValue,
+    visible: visible as boolean,
+    onToggleVisibility: toggleVisible,
+    selectedAccount,
+    onFilter: onAccountFilter,
+  };
 };
 
 export type useAssetsScriptReturn = ReturnType<typeof useAssetsScript>;

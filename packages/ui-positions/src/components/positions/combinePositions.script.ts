@@ -15,6 +15,11 @@ import { formatAddress, usePagination } from "@orderly.network/ui";
 import type { PositionsProps } from "../../types/types";
 import { useSubAccountQuery } from "./hooks/useSubAccountQuery";
 
+export enum AccountType {
+  ALL = "All accounts",
+  MAIN = "Main accounts",
+}
+
 export const useCombinePositionsScript = (props: PositionsProps) => {
   const {
     symbol,
@@ -137,10 +142,16 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     ) ?? [];
 
   const filtered = useMemo(() => {
-    if (!selectedAccount || selectedAccount === "All accounts") {
+    if (!selectedAccount || selectedAccount === AccountType.ALL) {
       return dataSource;
     }
-    return dataSource.filter((item) => item.account_id === selectedAccount);
+    return dataSource.filter((item) => {
+      if (selectedAccount === AccountType.MAIN) {
+        return item.account_id === state.mainAccountId;
+      } else {
+        return item.account_id === selectedAccount;
+      }
+    });
   }, [dataSource, selectedAccount]);
 
   const groupDataSource = useMemo(() => {

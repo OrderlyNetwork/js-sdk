@@ -5,6 +5,7 @@ import { usePagination } from "@orderly.network/ui";
 import type { PaginationMeta } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { parseDateRangeForFilter } from "../helper/date";
+import { AccountType } from "./transfer.ui";
 
 export const useTransferHistoryHook = () => {
   // const today = useRef(setMinutes(setHours(new Date(), 23), 59));
@@ -21,8 +22,8 @@ export const useTransferHistoryHook = () => {
 
   const { page, pageSize, setPage, parsePagination } = usePagination();
 
-  const [fromValue, setFromValue] = React.useState<string>("All accounts");
-  const [targetValue, setTargetValue] = React.useState<string>("All accounts");
+  const [fromValue, setFromValue] = React.useState<string>(AccountType.ALL);
+  const [targetValue, setTargetValue] = React.useState<string>(AccountType.ALL);
 
   const [side, setSide] = React.useState<"IN" | "OUT">("OUT");
 

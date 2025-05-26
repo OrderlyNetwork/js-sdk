@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { API } from "@orderly.network/types";
@@ -10,35 +10,40 @@ import type { useTransferHistoryHookReturn } from "./useDataSource.script";
 
 type HistoryProps = useTransferHistoryHookReturn;
 
+export enum AccountType {
+  ALL = "All accounts",
+  MAIN = "Main accounts",
+}
+
 export const TransferHistoryUI: React.FC<
   Readonly<HistoryProps & ReturnType<typeof useAccount>>
 > = (props) => {
   const { dataSource, queryParameter, state, isLoading, onFilter } = props;
   const { fromValue, targetValue, side, dateRange } = queryParameter;
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
-  const ALL_ACCOUNTS: SelectOption = {
-    label: t("common.allAccount"),
-    value: "All accounts",
-  };
+  // const ALL_ACCOUNTS: SelectOption = {
+  //   label: t("common.allAccount"),
+  //   value: AccountType.ALL,
+  // };
 
-  const MAIN_ACCOUNT: SelectOption = {
-    label: t("common.mainAccount"),
-    value: "Main accounts",
-  };
+  // const MAIN_ACCOUNT: SelectOption = {
+  //   label: t("common.mainAccount"),
+  //   value: AccountType.MAIN,
+  // };
 
-  const memoizedOptions = React.useMemo(() => {
-    const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
-    return [
-      ALL_ACCOUNTS,
-      // MAIN_ACCOUNT,
-      ...subs.map<SelectOption>((value) => ({
-        value: value.id,
-        label: value?.description || formatAddress(value?.id),
-      })),
-    ];
-  }, [state.subAccounts]);
+  // const memoizedOptions = useMemo(() => {
+  //   const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
+  //   return [
+  //     ALL_ACCOUNTS,
+  //     MAIN_ACCOUNT,
+  //     ...subs.map<SelectOption>((value) => ({
+  //       value: value.id,
+  //       label: value?.description || formatAddress(value?.id),
+  //     })),
+  //   ];
+  // }, [state.subAccounts]);
 
   const columns = useColumns();
 
@@ -47,20 +52,20 @@ export const TransferHistoryUI: React.FC<
       <DataFilter
         onFilter={onFilter}
         items={[
-          {
-            type: "select",
-            name: "fromValue",
-            value: fromValue,
-            options: memoizedOptions,
-            prefix: "From",
-          },
-          {
-            type: "select",
-            name: "targetValue",
-            value: targetValue,
-            options: memoizedOptions,
-            prefix: "To",
-          },
+          // {
+          //   type: "select",
+          //   name: "fromValue",
+          //   value: fromValue,
+          //   options: memoizedOptions,
+          //   prefix: "From",
+          // },
+          // {
+          //   type: "select",
+          //   name: "targetValue",
+          //   value: targetValue,
+          //   options: memoizedOptions,
+          //   prefix: "To",
+          // },
           {
             type: "select",
             name: "side",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import pick from "ramda/es/pick";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -22,6 +22,11 @@ import type { useAssetsScriptReturn } from "./assets.script";
 import type { AssetsWidgetProps } from "./assets.widget";
 
 export type AssetsProps = useAssetsScriptReturn;
+
+export enum AccountType {
+  ALL = "All accounts",
+  MAIN = "Main accounts",
+}
 
 const TotalValue: React.FC<
   Readonly<
@@ -70,19 +75,19 @@ export const AssetsTable: React.FC<
 
   const ALL_ACCOUNTS: SelectOption = {
     label: t("common.allAccount"),
-    value: "All accounts",
+    value: AccountType.ALL,
   };
 
   const MAIN_ACCOUNT: SelectOption = {
     label: t("common.mainAccount"),
-    value: "Main accounts",
+    value: AccountType.MAIN,
   };
 
-  const memoizedOptions = React.useMemo(() => {
+  const memoizedOptions = useMemo(() => {
     const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
     return [
       ALL_ACCOUNTS,
-      // MAIN_ACCOUNT,
+      MAIN_ACCOUNT,
       ...subs.map<SelectOption>((value) => ({
         value: value.id,
         label: value?.description || formatAddress(value?.id),

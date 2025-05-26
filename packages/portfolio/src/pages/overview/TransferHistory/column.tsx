@@ -34,7 +34,7 @@ export const useColumns = () => {
         rule: "date",
       },
       {
-        title: "From (Account ID)",
+        title: `${t("transfer.internalTransfer.from")} (Account ID)`,
         dataIndex: "from_account_id",
         render(val: string) {
           const findSub = sub.find((item) => item.id === val);
@@ -53,7 +53,7 @@ export const useColumns = () => {
         },
       },
       {
-        title: "To (Account ID)",
+        title: `${t("transfer.internalTransfer.to")} (Account ID)`,
         dataIndex: "to_account_id",
         render(val: string) {
           const findSub = sub.find((item) => item.id === val);
