@@ -7,7 +7,12 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 
-export const useSettlePnl = () => {
+export type SettlePnlOptions = {
+  subAccountId?: string;
+};
+
+export const useSettlePnl = (options?: SettlePnlOptions) => {
+  const { subAccountId } = options || {};
   const { t } = useTranslation();
   const ee = useEventEmitter();
   const { account } = useAccount();
@@ -19,8 +24,10 @@ export const useSettlePnl = () => {
   );
 
   const onSettlePnl = async () => {
-    return account
-      .settle()
+    const settleFn = subAccountId
+      ? account.settleSubAccount({ subAccountId })
+      : account.settle();
+    return settleFn
       .then((res) => {
         toast.success(t("settle.settlement.requested"));
         return Promise.resolve(res);

@@ -1000,18 +1000,59 @@ export class Account {
     }
   }
 
+  /**
+   * @since 2.2.0
+   * settle sub account pnl
+   */
+  async settleSubAccount(options?: {
+    /**
+     * if you are main account and want to settle the sub account, you need to pass the subAccountId
+     * if you are sub account, not need to pass the subAccountId
+     * */
+    subAccountId?: string;
+  }): Promise<any> {
+    const subAccountId = options?.subAccountId || this.stateValue.accountId;
+    const nonce = await this._getSettleNonce(subAccountId);
+    const url = "/v1/sub_account_settle_pnl";
+
+    const data = {
+      settle_nonce: nonce,
+    };
+
+    const signature = await this.signData(url, data);
+
+    const res = await this._simpleFetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        "orderly-account-id": subAccountId!,
+        ...signature,
+      },
+    });
+
+    if (res.success) {
+      return res;
+    } else {
+      throw res;
+    }
+  }
+
   async settle(): Promise<any> {
+    if (this.isSubAccount) {
+      return this.settleSubAccount();
+    }
+
     if (!this.walletAdapter) {
       return Promise.reject("walletAdapter is undefined");
     }
+
     const nonce = await this._getSettleNonce();
     const address = this.stateValue.address;
 
     // const domain = this.getDomain(true);
 
-    const url = this.isSubAccount
-      ? "/v1/sub_account_settle_pnl"
-      : "/v1/settle_pnl";
+    const url = "/v1/settle_pnl";
 
     const timestamp = getTimestamp();
 
@@ -1025,8 +1066,6 @@ export class Account {
         verifyContract:
           this.contractManger.getContractInfoByEnv().verifyContractAddress,
       });
-
-    // const EIP_712signatured = await this.signTypedData(toSignatureMessage);
 
     const data = {
       signature: signatured,
@@ -1043,17 +1082,14 @@ export class Account {
       headers: {
         "Content-Type": "application/json",
         "orderly-account-id": this.stateValue.accountId!,
-
         ...signature,
       },
     });
 
-    //
-
     if (res.success) {
-      return Promise.resolve(res);
+      return res;
     } else {
-      return Promise.reject(res);
+      throw res;
     }
   }
 
@@ -1195,7 +1231,7 @@ export class Account {
     return res;
   }
 
-  private async _getSettleNonce() {
+  private async _getSettleNonce(accountId?: string) {
     const timestamp = getTimestamp().toString();
     const url = "/v1/settle_nonce";
     const message = [timestamp, "GET", url].join("");
@@ -1206,7 +1242,7 @@ export class Account {
 
     const res = await this._simpleFetch("/v1/settle_nonce", {
       headers: {
-        "orderly-account-id": this.stateValue.accountId!,
+        "orderly-account-id": accountId || this.stateValue.accountId!,
         "orderly-key": publicKey,
         "orderly-timestamp": timestamp,
         "orderly-signature": signature,

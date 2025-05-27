@@ -37,7 +37,6 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const networkId = useConfig("networkId") as NetworkId;
 
   const { state, isMainAccount, subAccount } = useAccount();
-  const { hasPositions: currentHasPositions, onSettlePnl } = useSettlePnl();
 
   const {
     transfer,
@@ -57,6 +56,10 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     isMainAccount && fromAccount?.id && fromAccount?.id !== mainAccountId
       ? fromAccount?.id
       : undefined;
+
+  const { hasPositions: currentHasPositions, onSettlePnl } = useSettlePnl({
+    subAccountId: observerSubAccountId,
+  });
 
   // when select sub account, open the private websocket
   const { portfolio, positions } =
