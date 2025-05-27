@@ -70,8 +70,8 @@ export const TransferHistoryUI: React.FC<
             name: "side",
             value: side,
             options: [
-              { value: "OUT", label: "Out" },
-              { value: "IN", label: "In" },
+              { value: "OUT", label: "Outflow" },
+              { value: "IN", label: "Inflow" },
             ],
           },
           {
