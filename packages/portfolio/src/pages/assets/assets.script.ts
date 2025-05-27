@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useMemo } from "react";
 import { produce } from "immer";
 import {
   SubAccount,
@@ -51,7 +51,8 @@ export const useAssetsScript = () => {
 
   const { t } = useTranslation();
 
-  const { state } = useAccount();
+  const { state, isMainAccount } = useAccount();
+
   const { holding = [] } = useCollateral();
 
   const subAccounts = state.subAccounts ?? [];
@@ -67,13 +68,16 @@ export const useAssetsScript = () => {
       : AccountType.MAIN,
   );
 
-  const memoizedTotalValue = React.useMemo<number>(() => {
-    const mainTotalValue = calculateTotalHolding(holding);
-    const subTotalValue = calculateTotalHolding(subAccounts);
-    return new Decimal(mainTotalValue).plus(subTotalValue).toNumber();
-  }, [holding, subAccounts]);
+  const mainTotalValue = useMemo(
+    () => calculateTotalHolding(holding),
+    [holding],
+  );
+  const subTotalValue = useMemo(
+    () => calculateTotalHolding(subAccounts),
+    [subAccounts],
+  );
 
-  const allAccounts = React.useMemo(() => {
+  const allAccounts = useMemo(() => {
     return produce<any[]>(subAccounts, (draft) => {
       for (const sub of draft) {
         sub.account_id = sub.id;
@@ -87,37 +91,43 @@ export const useAssetsScript = () => {
         }
         Reflect.deleteProperty(sub, "holding");
       }
-      draft.unshift({
-        account_id: state.mainAccountId,
-        description: t("common.mainAccount"),
-        children:
-          Array.isArray(holding) && holding.length
-            ? holding.map((item: API.Holding) => ({
-                ...item,
-                account_id: state.mainAccountId,
-              }))
-            : [
-                {
-                  ...EMPTY_HOLDING,
+      if (isMainAccount) {
+        draft.unshift({
+          account_id: state.mainAccountId,
+          description: t("common.mainAccount"),
+          children:
+            Array.isArray(holding) && holding.length
+              ? holding.map((item: API.Holding) => ({
+                  ...item,
                   account_id: state.mainAccountId,
-                },
-              ],
-      });
-    });
-  }, [holding, subAccounts, state.mainAccountId]);
-
-  const filtered = React.useMemo(() => {
-    if (!selectedAccount || selectedAccount === AccountType.ALL) {
-      return allAccounts;
-    }
-    return allAccounts.filter((item) => {
-      if (selectedAccount === AccountType.MAIN) {
-        return item.account_id === state.mainAccountId;
-      } else {
-        return item.account_id === selectedAccount;
+                }))
+              : [
+                  {
+                    ...EMPTY_HOLDING,
+                    account_id: state.mainAccountId,
+                  },
+                ],
+        });
       }
     });
-  }, [allAccounts, selectedAccount]);
+  }, [holding, subAccounts, isMainAccount, state.mainAccountId]);
+
+  const filtered = React.useMemo(() => {
+    return allAccounts.filter((item) => {
+      if (isMainAccount) {
+        if (!selectedAccount || selectedAccount === AccountType.ALL) {
+          return true;
+        }
+        if (selectedAccount === AccountType.MAIN) {
+          return item.account_id === state.mainAccountId;
+        } else {
+          return item.account_id === selectedAccount;
+        }
+      } else {
+        return item.account_id === state.accountId;
+      }
+    });
+  }, [allAccounts, selectedAccount, isMainAccount, state]);
 
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
@@ -143,11 +153,13 @@ export const useAssetsScript = () => {
   return {
     columns: assetsColumns,
     dataSource: filtered,
-    totalValue: memoizedTotalValue,
     visible: visible as boolean,
     onToggleVisibility: toggleVisible,
     selectedAccount,
     onFilter: onAccountFilter,
+    totalValue: isMainAccount
+      ? new Decimal(mainTotalValue).plus(subTotalValue).toNumber()
+      : subTotalValue.toNumber(),
   };
 };
 
