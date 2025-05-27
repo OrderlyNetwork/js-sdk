@@ -1,5 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { TextField } from "@orderly.network/ui";
+import { inputFormatter, TextField } from "@orderly.network/ui";
 
 export const NickNameDescriptionText =
   "5-20 characters. Special characters not allowed.";
@@ -8,6 +8,7 @@ export const NickNameTextField = (props: {
   nickName: string | undefined;
   setNickName: (nickName: string | undefined) => void;
   subAccountCount?: number;
+  invalid?: boolean;
 }) => {
   return (
     <TextField
@@ -18,6 +19,9 @@ export const NickNameTextField = (props: {
       onChange={(e) => {
         props.setNickName(e.target.value);
       }}
+      formatters={[
+        inputFormatter.createRegexInputFormatter(/[^a-zA-Z0-9@,\s_-]/g),
+      ]}
       classNames={{
         label: "oui-text-base-contrast-54 oui-text-xs",
         input: "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
@@ -27,6 +31,7 @@ export const NickNameTextField = (props: {
       autoComplete="off"
       helpText={NickNameDescriptionText}
       className="oui-mb-4"
+      color={props.invalid ? "danger" : undefined}
     />
   );
 };

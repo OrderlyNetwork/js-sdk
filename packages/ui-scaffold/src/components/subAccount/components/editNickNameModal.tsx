@@ -14,6 +14,15 @@ export const EditNickNameDialog = (props: {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
   const [newNickName, setNewNickName] = useState<string | undefined>(undefined);
+  const [invalid, setInvalid] = useState(false);
+
+  const validateNickName = (nickName: string | undefined) => {
+    if (!nickName || (nickName.length >= 1 && nickName.length < 5)) {
+      setInvalid(true);
+      return true;
+    }
+    setInvalid(false);
+  };
   useEffect(() => {
     setNewNickName(props.nickName);
   }, [props.nickName]);
@@ -32,6 +41,9 @@ export const EditNickNameDialog = (props: {
           loading: loading,
           onClick: () => {
             setLoading(true);
+            if (validateNickName(newNickName)) {
+              return;
+            }
             subAccount
               ?.update({
                 subAccountId: props.accountId,
@@ -59,8 +71,10 @@ export const EditNickNameDialog = (props: {
       <NickNameTextField
         nickName={newNickName}
         setNickName={(nickName) => {
+          validateNickName(nickName);
           setNewNickName(nickName ?? "");
         }}
+        invalid={invalid}
       />
     </SimpleDialog>
   );

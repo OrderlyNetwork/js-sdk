@@ -8,6 +8,8 @@ import {
   Text,
   TextField,
   useScreen,
+  cn,
+  Tooltip,
 } from "@orderly.network/ui";
 import { AddIcon } from "../icons";
 import { NickNameDescriptionText, NickNameTextField } from "./common";
@@ -23,15 +25,32 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
   const [open, setOpen] = useState(false);
   const [nickName, setNickName] = useState<string | undefined>(undefined);
   const { state } = useAccount();
+  const [invalid, setInvalid] = useState(false);
   const subAccountCount = useMemo(() => {
     return state.subAccounts?.length ?? 0;
   }, [state]);
-  const trigger = (
-    <AddIcon
-      className="oui-cursor-pointer oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
-      onClick={() => setOpen(true)}
-    />
-  );
+  const trigger = useMemo(() => {
+    return subAccountCount >= MAX_SUB_ACCOUNT_COUNT ? (
+      <Tooltip
+        className="oui-max-w-[188px]"
+        content={"You have reached the maximum limit of 10 sub-accounts."}
+      >
+        <AddIcon
+          className={cn("oui-fill-base-contrast-20 oui-cursor-not-allowed")}
+        />
+      </Tooltip>
+    ) : (
+      <AddIcon
+        className={cn(
+          "oui-cursor-pointer oui-fill-base-contrast-54 hover:oui-fill-base-contrast",
+        )}
+        onClick={() => {
+          setOpen(true);
+        }}
+      />
+    );
+  }, [subAccountCount]);
+
   const header = (
     <Flex
       py={3}
@@ -50,6 +69,15 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
 
   const reset = () => {
     setNickName("");
+  };
+
+  const validateNickName = (nickName: string | undefined) => {
+    if (nickName && nickName.length >= 1 && nickName.length < 5) {
+      setInvalid(true);
+      return true;
+    }
+    setInvalid(false);
+    return false;
   };
 
   const doCreatSubAccount = (nickName: string | undefined) => {
@@ -85,7 +113,13 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
         actions={{
           primary: {
             label: t("common.confirm"),
-            onClick: () => doCreatSubAccount(nickName),
+            onClick: () => {
+              const invalid = validateNickName(nickName);
+              if (invalid) {
+                return;
+              }
+              doCreatSubAccount(nickName);
+            },
           },
         }}
         classNames={{
@@ -94,8 +128,12 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
       >
         <NickNameTextField
           nickName={nickName}
-          setNickName={setNickName}
+          setNickName={(nickName) => {
+            validateNickName(nickName);
+            setNickName(nickName);
+          }}
           subAccountCount={subAccountCount}
+          invalid={invalid}
         />
       </SimpleDialog>
     </>
