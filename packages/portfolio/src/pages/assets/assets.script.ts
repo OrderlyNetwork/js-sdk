@@ -68,15 +68,6 @@ export const useAssetsScript = () => {
       : AccountType.MAIN,
   );
 
-  const mainTotalValue = useMemo(
-    () => calculateTotalHolding(holding),
-    [holding],
-  );
-  const subTotalValue = useMemo(
-    () => calculateTotalHolding(subAccounts),
-    [subAccounts],
-  );
-
   const allAccounts = useMemo(() => {
     return produce<any[]>(subAccounts, (draft) => {
       for (const sub of draft) {
@@ -129,6 +120,34 @@ export const useAssetsScript = () => {
     });
   }, [allAccounts, selectedAccount, isMainAccount, state]);
 
+  const mainTotalValue = useMemo<Decimal>(
+    () => calculateTotalHolding(holding),
+    [holding],
+  );
+
+  const subTotalValue = useMemo<Decimal>(
+    () => calculateTotalHolding(subAccounts),
+    [subAccounts],
+  );
+
+  const memoizedTotalValue = useMemo<number>(() => {
+    if (isMainAccount) {
+      return mainTotalValue.plus(subTotalValue).toNumber();
+    } else {
+      const find = allAccounts.find((item) => item.id === state.accountId);
+      if (Array.isArray(find?.children)) {
+        return calculateTotalHolding(find.children).toNumber();
+      }
+      return 0;
+    }
+  }, [
+    isMainAccount,
+    mainTotalValue,
+    subTotalValue,
+    allAccounts,
+    state.accountId,
+  ]);
+
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
       const { name, value } = filter;
@@ -157,9 +176,7 @@ export const useAssetsScript = () => {
     onToggleVisibility: toggleVisible,
     selectedAccount,
     onFilter: onAccountFilter,
-    totalValue: isMainAccount
-      ? new Decimal(mainTotalValue).plus(subTotalValue).toNumber()
-      : subTotalValue.toNumber(),
+    totalValue: memoizedTotalValue,
   };
 };
 

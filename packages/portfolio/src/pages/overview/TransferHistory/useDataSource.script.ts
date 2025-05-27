@@ -50,14 +50,20 @@ export const useTransferHistoryHook = () => {
   });
 
   const filteredData = React.useMemo(() => {
-    if (!selectedAccount || selectedAccount === AccountType.ALL) {
-      return data;
-    }
     return data.filter((item) => {
+      if (!selectedAccount || selectedAccount === AccountType.ALL) {
+        return true;
+      }
       if (selectedAccount === AccountType.MAIN) {
-        return item.from_account_id === state.mainAccountId;
+        return (
+          item.from_account_id === state.mainAccountId ||
+          item.to_account_id === state.mainAccountId
+        );
       } else {
-        return item.from_account_id === selectedAccount;
+        return (
+          item.from_account_id === selectedAccount ||
+          item.to_account_id === selectedAccount
+        );
       }
     });
   }, [data, selectedAccount]);

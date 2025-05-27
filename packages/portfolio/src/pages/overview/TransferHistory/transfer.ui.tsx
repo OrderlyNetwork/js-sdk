@@ -1,8 +1,9 @@
 import React, { useMemo } from "react";
+import { produce } from "immer";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { API } from "@orderly.network/types";
-import { DataFilter, formatAddress, Text } from "@orderly.network/ui";
+import { DataFilter, formatAddress } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { useColumns } from "./column";
@@ -22,6 +23,7 @@ export const TransferHistoryUI: React.FC<
     dataSource,
     queryParameter,
     state,
+    isMainAccount,
     isLoading,
     selectedAccount,
     onFilter,
@@ -62,31 +64,37 @@ export const TransferHistoryUI: React.FC<
     <>
       <DataFilter
         onFilter={onFilter}
-        items={[
-          {
-            type: "select",
-            name: "account",
-            value: selectedAccount,
-            options: memoizedOptions,
-          },
-          {
-            type: "select",
-            name: "side",
-            value: side,
-            options: [
-              { value: "OUT", label: "Outflow" },
-              { value: "IN", label: "Inflow" },
-            ],
-          },
-          {
-            type: "range",
-            name: "dateRange",
-            value: {
-              from: dateRange[0],
-              to: dateRange[1],
+        items={produce(
+          [
+            {
+              type: "select",
+              name: "side",
+              value: side,
+              options: [
+                { value: "OUT", label: "Outflow" },
+                { value: "IN", label: "Inflow" },
+              ],
             },
+            {
+              type: "range",
+              name: "dateRange",
+              value: {
+                from: dateRange[0],
+                to: dateRange[1],
+              },
+            },
+          ],
+          (draft) => {
+            if (isMainAccount) {
+              draft.unshift({
+                type: "select",
+                name: "account",
+                value: selectedAccount as any,
+                options: memoizedOptions,
+              });
+            }
           },
-        ]}
+        )}
       />
       <AuthGuardDataTable<API.TransferHistoryRow>
         bordered

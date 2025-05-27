@@ -163,11 +163,10 @@ export const DataFilter: React.FC<DataFilterProps> = (props) => {
         props.className,
       )}
     >
-      {props.items.map((item, index: number) => {
+      {props.items.filter(Boolean).map((item, index: number) => {
         if (item.type === "date") {
           (item as DatePickerProps).mode = "range";
         }
-
         return (
           <DataFilterRenderer
             key={index}
