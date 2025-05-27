@@ -175,7 +175,13 @@ export class Assets {
     let userAddress = this.account.stateValue.address;
     if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
       usdcAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
-      userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    }
+    const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    if (
+      ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId) &&
+      agwGobalAddress
+    ) {
+      userAddress = agwGobalAddress;
     }
     const result = await this.account.walletAdapter?.call(
       usdcAddress,

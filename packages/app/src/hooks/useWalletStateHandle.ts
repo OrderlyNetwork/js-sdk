@@ -94,6 +94,11 @@ export const useWalletStateHandle = (options: {
       return;
     }
 
+    console.log("xxx chains", {
+      chains,
+      connectedChain,
+      networkId,
+    });
     const isSupported = checkChainSupport(
       connectedChain.id,
       networkId,

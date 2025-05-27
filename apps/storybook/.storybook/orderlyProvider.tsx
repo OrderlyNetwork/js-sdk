@@ -41,6 +41,7 @@ import {
 } from "@orderly.network/wallet-connector-privy";
 import { CustomProductNav } from "../src/components/customProductNav/indx";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import { customChainsAbstarct } from "./customChains";
 import { CustomConfigStore } from "./customConfigStore";
 
 const network = WalletAdapterNetwork.Devnet;
@@ -123,7 +124,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         headerProps={{
           mobile: <CustomProductNav />,
         }}
-        // customChains={customerChains}
+        // customChains={customChainsAbstarct}
         privyConfig={{
           appid: "cm50h5kjc011111gdn7i8cd2k",
           config: {
@@ -164,7 +165,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
-          // customChains={customerChains}
+          // customChains={customChainsAbstarct}
           // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
         >
           {props.children}

@@ -8,10 +8,10 @@ import {
 } from "@abstract-foundation/agw-react";
 import { useAccount, useWalletClient } from "wagmi";
 import { ConnectedChain, WalletState } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
+import { ABSTRACT_CHAIN_ID_MAP, ChainNamespace } from "@orderly.network/types";
 import { windowGuard } from "@orderly.network/utils";
 import { useWalletConnectorPrivy } from "../../provider";
-import { IWalletState } from "../../types";
+import { AbstractChainsMap, IWalletState } from "../../types";
 
 interface AbstractWalletContextValue {
   connect: () => void;
@@ -91,7 +91,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
         ],
         chains: [
           {
-            id: client.chain.id,
+            id: AbstractChainsMap.get(network)!,
             namespace: ChainNamespace.evm,
           },
         ],
