@@ -87,6 +87,7 @@ export class BaseContract implements IContract {
       abstractTestnetVaultAddress = qaAbstractTestnetVaultAddress;
     } else if (env === "dev") {
       abstractTestnetVaultAddress = devAbstractTestnetVaultAddress;
+      verifyContractAddress = "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e";
     }
 
     return {

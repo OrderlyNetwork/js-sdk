@@ -1,4 +1,5 @@
 import {
+  ABSTRACT_CHAIN_ID_MAP,
   ABSTRACT_TESTNET_CHAINID,
   API,
   ApiError,
@@ -59,20 +60,26 @@ export class Assets {
     // const EIP_712signatured = await this.account.signTypedData(
     //   toSignatureMessage
     // );
+    const messageData = {
+      receiver: this.account.stateValue.address,
+      token,
+      brokerId: this.configStore.get("brokerId"),
+      amount: this.account.walletAdapter.parseUnits(amount),
+      nonce,
+      timestamp,
+      // domain,
+      verifyContract:
+        this.contractManger.getContractInfoByEnv().verifyContractAddress,
+    };
+
+    const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+
+    if (ABSTRACT_CHAIN_ID_MAP.has(chainId) && agwGobalAddress) {
+      messageData.receiver = agwGobalAddress;
+    }
 
     const { message, signatured, domain } =
-      await this.account.walletAdapter.generateWithdrawMessage({
-        // chainId,
-        receiver: this.account.stateValue.address!,
-        token,
-        brokerId: this.configStore.get("brokerId"),
-        amount: this.account.walletAdapter.parseUnits(amount),
-        nonce,
-        timestamp,
-        // domain,
-        verifyContract:
-          this.contractManger.getContractInfoByEnv().verifyContractAddress,
-      });
+      await this.account.walletAdapter.generateWithdrawMessage(messageData);
 
     const data = {
       signature: signatured,
@@ -243,8 +250,15 @@ export class Assets {
     if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
       tempVaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
       tempUSDCAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
-      userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
     }
+    const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    if (
+      ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId) &&
+      agwGobalAddress
+    ) {
+      userAddress = agwGobalAddress;
+    }
+
     console.log("get allowance", tempUSDCAddress, tempVaultAddress);
     const result = await this.account.walletAdapter?.call(
       tempUSDCAddress ?? "",
@@ -443,20 +457,37 @@ export class Assets {
       vaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
       // userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
     }
+    const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+
+    let contractMethod = "deposit";
+    let fromAddress = userAddress;
+    let contractData: any = [depositData];
+    console.log(
+      "agw address",
+      agwGobalAddress,
+      this.account.walletAdapter.chainId,
+    );
+    if (
+      ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId) &&
+      agwGobalAddress
+    ) {
+      contractMethod = "depositTo";
+      fromAddress = agwGobalAddress;
+      contractData = [userAddress, depositData];
+    }
     console.log("xxx deposit", {
-      userAddress,
-      vaultAddress,
-      depositData,
+      fromAddress,
+      contractMethod,
+      contractData,
     });
     const result = await this.account.walletAdapter?.sendTransaction(
       vaultAddress,
-      "deposit",
+      contractMethod,
       {
-        from: userAddress!,
+        from: fromAddress!,
         to: vaultAddress,
-        data: [depositData],
+        data: contractData,
         value: fee,
-        // value: BigInt(114557727841647),
       },
       {
         abi: contractAddress.vaultAbi,

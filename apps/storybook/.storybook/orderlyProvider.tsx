@@ -158,7 +158,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
             console.log("-- error", error, adapter);
           },
         }}
-        // abstractConfig={{}}
+        abstractConfig={{}}
       >
         <OrderlyAppProvider
           configStore={configStore}

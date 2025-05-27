@@ -77,7 +77,13 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       const tempWallet: IWalletState = {
         label: "AGW",
         icon: "",
-        provider: provider,
+        provider: {
+          ...provider,
+          sendTransaction: async (params: any) => {
+            console.log("--- agw wallet sendTransaction", params);
+            return client.sendTransaction(params);
+          },
+        },
         accounts: [
           {
             address: address,
