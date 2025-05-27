@@ -1,17 +1,12 @@
 import { memo } from "react";
-import {
-  useMarginRatio,
-  useAccountInfo,
-  useLeverage,
-} from "@orderly.network/hooks";
-import { Numeral } from "@/text";
 import { Pencil } from "lucide-react";
+import { useMarginRatio, useLeverage } from "@orderly.network/hooks";
+import { Numeral } from "@/text";
 import { LeverageDialog } from "./leverageDialog";
 
 const LeverageAndMarginRatio = () => {
   const { marginRatio, currentLeverage } = useMarginRatio();
-  const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
-
+  const { maxLeverage } = useLeverage();
   return (
     <div className={"orderly-flex orderly-justify-between orderly-text-xs"}>
       <div className={"orderly-flex orderly-flex-col"}>
@@ -20,11 +15,13 @@ const LeverageAndMarginRatio = () => {
             "orderly-flex orderly-items-center orderly-gap-1 orderly-text-2xs"
           }
         >
-          <Numeral surfix={"x"}>{currentLeverage}</Numeral>
-
+          <Numeral surfix={"x"}>{currentLeverage!}</Numeral>
           <span className={"orderly-text-base-contrast-54"}>/</span>
           <LeverageDialog>
-            <button id="orderly-leverage-button" className="orderly-flex orderly-items-center orderly-gap-1">
+            <button
+              id="orderly-leverage-button"
+              className="orderly-flex orderly-items-center orderly-gap-1"
+            >
               <span>{`${maxLeverage ?? "-"}x`}</span>
               {typeof maxLeverage !== "undefined" && (
                 // @ts-ignore

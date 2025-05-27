@@ -1,7 +1,7 @@
+import { FC, useMemo, useState } from "react";
+import { useLeverage } from "@orderly.network/hooks";
 import { Slider } from "@/slider";
 import { toast } from "@/toast";
-import { useLeverage } from "@orderly.network/hooks";
-import { FC, useMemo, useState } from "react";
 
 interface LeverageEditorProps {
   // onChange:(value:number)=>void
@@ -12,7 +12,6 @@ interface LeverageEditorProps {
 }
 
 export const LeverageEditor: FC<LeverageEditorProps> = (props) => {
-  // const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
   const { maxLeverage, leverageLevers, onSave } = props;
 
   const [leverage, setLeverage] = useState(() => maxLeverage ?? 0);
