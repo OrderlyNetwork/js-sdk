@@ -27,7 +27,7 @@ const AccountIdForCopy = (props: { accountId: string }) => {
   }, [props.accountId]);
   const copy = useCallback(() => {
     navigator.clipboard.writeText(props.accountId);
-    toast.success(t("common.copy"));
+    toast.success(t("common.copy.copied"));
   }, [props.accountId]);
   return (
     <Flex
