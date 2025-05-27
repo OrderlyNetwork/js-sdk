@@ -21,6 +21,7 @@ export const SubAccountScript = () => {
   );
 
   const [subAccounts, setSubAccounts] = useState<SubAccount[]>([]);
+  const currentAccountId = state.accountId;
 
   const _popup = useMemo(
     () => ({
@@ -29,10 +30,6 @@ export const SubAccountScript = () => {
     [isMobile],
   );
   const mainAccountId = state.mainAccountId;
-
-  const currentAccountId = useMemo(() => {
-    return state.accountId;
-  }, [state]);
 
   const doCreatSubAccount = useCallback(
     (nickName: string) => {
@@ -51,7 +48,7 @@ export const SubAccountScript = () => {
           toast.success("Switch account successfully");
         });
     },
-    [state],
+    [switchAccount],
   );
 
   useEffect(() => {
@@ -86,15 +83,12 @@ export const SubAccountScript = () => {
     setMainAccount(_mainAccount);
     subAccount.refresh().then((res) => {
       // if current account is main account, update main account holding from ws hooks
-      if (currentAccountId === mainAccountId) {
-        setMainAccount({
-          ..._mainAccount,
-          holding: res[mainAccountId],
-        });
-        return;
-      }
+      setMainAccount({
+        ..._mainAccount,
+        holding: res[mainAccountId],
+      });
     });
-  }, [mainAccountId, state.address]);
+  }, [mainAccountId, state.address, currentAccountId]);
 
   return {
     mainAccount,
