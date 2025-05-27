@@ -10,7 +10,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { OrderValidationResult, useLocalStorage } from "@orderly.network/hooks";
+import {
+  OrderValidationResult,
+  useLeverage,
+  useLocalStorage,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
@@ -81,6 +85,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     onBBOChange,
     toggleBBO,
   } = props;
+
+  const { curLeverage } = useLeverage();
 
   const { t } = useTranslation();
 
@@ -166,14 +172,14 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               errors.order_quantity != null ||
               errors.order_price != null ||
               errors.trigger_price != null
-            )
+            ) {
               return Promise.reject();
+            }
           }
         },
       )
       .then(() => {
         return submit({ resetOnSuccess: false }).then((result: any) => {
-          console.log(result);
           if (result.success) {
             // setOrderValue("order_quantity", "");
           } else {
@@ -182,8 +188,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         });
       })
       .catch((error) => {
-        console.log("catch:", error);
-        if (error === "cancel") return;
+        if (error === "cancel") {
+          return;
+        }
         if (typeof error === "object" && error.message)
           toast.error(error.message);
         // toast.error(`Error:${error.message}`);
@@ -255,13 +262,15 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                   />
                 }
                 onClick={() => {
-                  modal.show(LeverageWidgetWithSheetId, { currentLeverage: 5 });
+                  modal.show(LeverageWidgetWithSheetId, {
+                    currentLeverage: curLeverage,
+                  });
                 }}
                 className={cn(
                   "oui-bg-base-7 oui-text-primary-light hover:oui-bg-base-6 active:oui-bg-base-6",
                 )}
               >
-                {commifyOptional(props.currentLeverage!, { fix: 2 }) + "x"}
+                {commifyOptional(curLeverage, { fix: 2 }) + "x"}
               </Button>
             )}
           </div>
