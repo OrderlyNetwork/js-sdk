@@ -147,7 +147,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     }
     return dataSource.filter((item) => {
       if (selectedAccount === AccountType.MAIN) {
-        return item.account_id === state.mainAccountId;
+        return item.account_id === state.mainAccountId || !item.account_id;
       } else {
         return item.account_id === selectedAccount;
       }

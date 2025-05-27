@@ -7,8 +7,8 @@ interface TransferHistorySearchParams {
   dataRange?: number[];
   page: number;
   size: number;
-  fromId: string;
-  toId: string;
+  fromId?: string;
+  toId?: string;
   side: "IN" | "OUT";
   mainSubOnly?: boolean;
 }

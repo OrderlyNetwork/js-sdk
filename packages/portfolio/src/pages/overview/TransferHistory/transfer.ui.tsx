@@ -18,32 +18,39 @@ export enum AccountType {
 export const TransferHistoryUI: React.FC<
   Readonly<HistoryProps & ReturnType<typeof useAccount>>
 > = (props) => {
-  const { dataSource, queryParameter, state, isLoading, onFilter } = props;
-  const { fromValue, targetValue, side, dateRange } = queryParameter;
+  const {
+    dataSource,
+    queryParameter,
+    state,
+    isLoading,
+    accountValue,
+    onFilter,
+  } = props;
+  const { side, dateRange } = queryParameter;
 
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
-  // const ALL_ACCOUNTS: SelectOption = {
-  //   label: t("common.allAccount"),
-  //   value: AccountType.ALL,
-  // };
+  const ALL_ACCOUNTS: SelectOption = {
+    label: t("common.allAccount"),
+    value: AccountType.ALL,
+  };
 
-  // const MAIN_ACCOUNT: SelectOption = {
-  //   label: t("common.mainAccount"),
-  //   value: AccountType.MAIN,
-  // };
+  const MAIN_ACCOUNT: SelectOption = {
+    label: t("common.mainAccount"),
+    value: AccountType.MAIN,
+  };
 
-  // const memoizedOptions = useMemo(() => {
-  //   const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
-  //   return [
-  //     ALL_ACCOUNTS,
-  //     MAIN_ACCOUNT,
-  //     ...subs.map<SelectOption>((value) => ({
-  //       value: value.id,
-  //       label: value?.description || formatAddress(value?.id),
-  //     })),
-  //   ];
-  // }, [state.subAccounts]);
+  const memoizedOptions = useMemo(() => {
+    const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
+    return [
+      ALL_ACCOUNTS,
+      MAIN_ACCOUNT,
+      ...subs.map<SelectOption>((value) => ({
+        value: value.id,
+        label: value?.description || formatAddress(value?.id),
+      })),
+    ];
+  }, [state.subAccounts]);
 
   const columns = useColumns();
 
@@ -52,20 +59,12 @@ export const TransferHistoryUI: React.FC<
       <DataFilter
         onFilter={onFilter}
         items={[
-          // {
-          //   type: "select",
-          //   name: "fromValue",
-          //   value: fromValue,
-          //   options: memoizedOptions,
-          //   prefix: "From",
-          // },
-          // {
-          //   type: "select",
-          //   name: "targetValue",
-          //   value: targetValue,
-          //   options: memoizedOptions,
-          //   prefix: "To",
-          // },
+          {
+            type: "select",
+            name: "account",
+            value: accountValue,
+            options: memoizedOptions,
+          },
           {
             type: "select",
             name: "side",

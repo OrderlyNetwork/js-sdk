@@ -1,6 +1,6 @@
 import React from "react";
 import { getDate, getMonth, getYear, set } from "date-fns";
-import { useTransferHistory } from "@orderly.network/hooks";
+import { useAccount, useTransferHistory } from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
 import type { PaginationMeta } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
@@ -22,8 +22,7 @@ export const useTransferHistoryHook = () => {
 
   const { page, pageSize, setPage, parsePagination } = usePagination();
 
-  const [fromValue, setFromValue] = React.useState<string>(AccountType.ALL);
-  const [targetValue, setTargetValue] = React.useState<string>(AccountType.ALL);
+  const [accountValue, setValue] = React.useState<string>(AccountType.ALL);
 
   const [side, setSide] = React.useState<"IN" | "OUT">("OUT");
 
@@ -40,17 +39,27 @@ export const useTransferHistoryHook = () => {
     side: side,
     size: pageSize,
     page: page,
-    fromId: fromValue,
-    toId: targetValue,
   });
+
+  const { state } = useAccount();
+
+  const filteredData = React.useMemo(() => {
+    if (!accountValue || accountValue === AccountType.ALL) {
+      return data;
+    }
+    return data.filter((item) => {
+      if (accountValue === AccountType.MAIN) {
+        return item.from_account_id === state.mainAccountId;
+      } else {
+        return item.from_account_id === accountValue;
+      }
+    });
+  }, [data, accountValue]);
 
   const onAccountFilter = React.useCallback(
     (filter: { value: string; name: string }) => {
-      if (filter.name === "fromValue") {
-        setFromValue(filter.value);
-      }
-      if (filter.name === "targetValue") {
-        setTargetValue(filter.value);
+      if (filter.name === "account") {
+        setValue(filter.value);
       }
       if (filter.name === "side") {
         setSide(filter.value as "IN" | "OUT");
@@ -69,15 +78,14 @@ export const useTransferHistoryHook = () => {
   );
 
   return {
-    dataSource: data,
+    dataSource: filteredData,
     isLoading,
     // onDateRangeChange,
     queryParameter: {
       side,
-      fromValue,
-      targetValue,
       dateRange,
     },
+    accountValue,
     onFilter: onAccountFilter,
     pagination,
   } as const;
