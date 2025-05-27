@@ -201,26 +201,13 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   useEffect(() => {
     // if current account is main account
     if (isMainAccount) {
-      const firstAccount = subAccounts?.[0];
-
-      // if fromAccount is main account, set toAccount to first sub account
-      if (fromAccount?.id === mainAccountId) {
-        setToAccount(firstAccount);
-        return;
-      }
-
-      // if fromAccount is not main account, set toAccount to main account
-      // sub account only can transfer to main account
-      if (fromAccount?.id && fromAccount?.id !== mainAccountId) {
-        setToAccount(mainAccount);
-        return;
-      }
+      const firstSubAccount = subAccounts?.[0];
 
       // if toAccount is not set, set toAccount to first sub account
       const selectAccount = options.toAccountId
         ? subAccounts?.find((item) => item.id === options.toAccountId) ||
-          firstAccount
-        : firstAccount;
+          firstSubAccount
+        : firstSubAccount;
 
       if (selectAccount) {
         setToAccount(selectAccount);
@@ -229,14 +216,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       // if current account is sub account, set toAccount to main account
       setToAccount(mainAccount);
     }
-  }, [
-    options?.toAccountId,
-    isMainAccount,
-    mainAccountId,
-    mainAccount,
-    subAccounts,
-    fromAccount,
-  ]);
+  }, [options?.toAccountId, isMainAccount, mainAccount, subAccounts]);
 
   // update tokens by current holding
   useEffect(() => {
@@ -248,6 +228,31 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       setToken(tokens?.[0] || DEFAULT_TOKEN);
     }
   }, [holding]);
+
+  const onFromAccountChange = useCallback(
+    (account: SubAccount) => {
+      setFromAccount(account);
+
+      const firstSubAccount = subAccounts?.[0];
+      // if fromAccount is main account, set toAccount to first sub account
+      if (account?.id === mainAccountId) {
+        setToAccount(firstSubAccount);
+        return;
+      }
+
+      // if fromAccount is not main account, set toAccount to main account
+      // sub account only can transfer to main account
+      if (account?.id && account?.id !== mainAccountId) {
+        setToAccount(mainAccount);
+        return;
+      }
+    },
+    [mainAccountId, mainAccount, subAccounts],
+  );
+
+  const onToAccountChange = useCallback((account: SubAccount) => {
+    setToAccount(account);
+  }, []);
 
   return {
     networkId,
@@ -269,10 +274,10 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     toAccountAsset,
     fromAccount,
     toAccount,
-    setToAccount,
     fromAccounts,
+    onFromAccountChange,
     toAccounts,
-    setFromAccount,
+    onToAccountChange,
   };
 };
 

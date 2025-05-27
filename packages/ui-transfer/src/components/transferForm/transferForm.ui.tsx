@@ -31,12 +31,12 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
     onSettlePnl,
     unsettledPnL,
     toAccountAsset,
-    setToAccount,
-    setFromAccount,
     fromAccounts,
     toAccounts,
     fromAccount,
+    onFromAccountChange,
     toAccount,
+    onToAccountChange,
   } = props;
 
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
           <AccountSelect
             subAccounts={fromAccounts}
             value={fromAccount}
-            onValueChange={setFromAccount}
+            onValueChange={onFromAccountChange}
           />
           <QuantityInput
             classNames={{
@@ -100,7 +100,7 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
           <AccountSelect
             subAccounts={toAccounts}
             value={toAccount}
-            onValueChange={setToAccount}
+            onValueChange={onToAccountChange}
           />
           <Flex
             className={cn(
