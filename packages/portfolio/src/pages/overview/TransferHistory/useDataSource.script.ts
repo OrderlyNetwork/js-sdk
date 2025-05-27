@@ -22,7 +22,15 @@ export const useTransferHistoryHook = () => {
 
   const { page, pageSize, setPage, parsePagination } = usePagination();
 
-  const [accountValue, setValue] = React.useState<string>(AccountType.ALL);
+  const { state } = useAccount();
+
+  const subAccounts = state.subAccounts ?? [];
+
+  const [selectedAccount, setAccount] = React.useState<string>(() =>
+    Array.isArray(subAccounts) && subAccounts.length
+      ? AccountType.ALL
+      : AccountType.MAIN,
+  );
 
   const [side, setSide] = React.useState<"IN" | "OUT">("OUT");
 
@@ -41,25 +49,23 @@ export const useTransferHistoryHook = () => {
     page: page,
   });
 
-  const { state } = useAccount();
-
   const filteredData = React.useMemo(() => {
-    if (!accountValue || accountValue === AccountType.ALL) {
+    if (!selectedAccount || selectedAccount === AccountType.ALL) {
       return data;
     }
     return data.filter((item) => {
-      if (accountValue === AccountType.MAIN) {
+      if (selectedAccount === AccountType.MAIN) {
         return item.from_account_id === state.mainAccountId;
       } else {
-        return item.from_account_id === accountValue;
+        return item.from_account_id === selectedAccount;
       }
     });
-  }, [data, accountValue]);
+  }, [data, selectedAccount]);
 
   const onAccountFilter = React.useCallback(
     (filter: { value: string; name: string }) => {
       if (filter.name === "account") {
-        setValue(filter.value);
+        setAccount(filter.value);
       }
       if (filter.name === "side") {
         setSide(filter.value as "IN" | "OUT");
@@ -85,7 +91,7 @@ export const useTransferHistoryHook = () => {
       side,
       dateRange,
     },
-    accountValue,
+    selectedAccount,
     onFilter: onAccountFilter,
     pagination,
   } as const;

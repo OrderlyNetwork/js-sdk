@@ -61,7 +61,11 @@ export const useAssetsScript = () => {
     setVisible((visible: boolean) => !visible);
   };
 
-  const [selectedAccount, setAccount] = React.useState<string>(AccountType.ALL);
+  const [selectedAccount, setAccount] = React.useState<string>(() =>
+    Array.isArray(subAccounts) && subAccounts.length
+      ? AccountType.ALL
+      : AccountType.MAIN,
+  );
 
   const memoizedTotalValue = React.useMemo<number>(() => {
     const mainTotalValue = calculateTotalHolding(holding);

@@ -23,7 +23,7 @@ export const TransferHistoryUI: React.FC<
     queryParameter,
     state,
     isLoading,
-    accountValue,
+    selectedAccount,
     onFilter,
   } = props;
   const { side, dateRange } = queryParameter;
@@ -40,17 +40,21 @@ export const TransferHistoryUI: React.FC<
     value: AccountType.MAIN,
   };
 
+  const subAccounts = state.subAccounts ?? [];
+
   const memoizedOptions = useMemo(() => {
-    const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
-    return [
-      ALL_ACCOUNTS,
-      MAIN_ACCOUNT,
-      ...subs.map<SelectOption>((value) => ({
-        value: value.id,
-        label: value?.description || formatAddress(value?.id),
-      })),
-    ];
-  }, [state.subAccounts]);
+    if (Array.isArray(subAccounts) && subAccounts.length) {
+      return [
+        ALL_ACCOUNTS,
+        MAIN_ACCOUNT,
+        ...subAccounts.map<SelectOption>((value) => ({
+          value: value.id,
+          label: value?.description || formatAddress(value?.id),
+        })),
+      ];
+    }
+    return [MAIN_ACCOUNT];
+  }, [subAccounts]);
 
   const columns = useColumns();
 
@@ -62,7 +66,7 @@ export const TransferHistoryUI: React.FC<
           {
             type: "select",
             name: "account",
-            value: accountValue,
+            value: selectedAccount,
             options: memoizedOptions,
           },
           {

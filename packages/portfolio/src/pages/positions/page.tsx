@@ -33,7 +33,13 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
   const { t } = useTranslation();
   const { state, isMainAccount } = useAccount();
 
-  const [selectedAccount, setAccount] = useState<string>(AccountType.ALL);
+  const subAccounts = state.subAccounts ?? [];
+
+  const [selectedAccount, setAccount] = React.useState<string>(() =>
+    Array.isArray(subAccounts) && subAccounts.length
+      ? AccountType.ALL
+      : AccountType.MAIN,
+  );
 
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
@@ -56,16 +62,19 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
   };
 
   const memoizedOptions = useMemo(() => {
-    const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
-    return [
-      ALL_ACCOUNTS,
-      MAIN_ACCOUNT,
-      ...subs.map<SelectOption>((value) => ({
-        value: value.id,
-        label: value?.description || formatAddress(value?.id),
-      })),
-    ];
-  }, [state.subAccounts]);
+    if (Array.isArray(subAccounts) && subAccounts.length) {
+      return [
+        ALL_ACCOUNTS,
+        MAIN_ACCOUNT,
+        ...subAccounts.map<SelectOption>((value) => ({
+          value: value.id,
+          label: value?.description || formatAddress(value?.id),
+        })),
+      ];
+    }
+    return [MAIN_ACCOUNT];
+  }, [subAccounts]);
+
   return (
     <Flex
       // p={6}
@@ -91,17 +100,19 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
           className="oui-h-full"
         >
           <TabPanel value={TabsType.positions} title={t("common.positions")}>
-            <DataFilter
-              onFilter={onAccountFilter}
-              items={[
-                {
-                  type: "select",
-                  name: "account",
-                  value: selectedAccount,
-                  options: memoizedOptions,
-                },
-              ]}
-            />
+            {isMainAccount && (
+              <DataFilter
+                onFilter={onAccountFilter}
+                items={[
+                  {
+                    type: "select",
+                    name: "account",
+                    value: selectedAccount,
+                    options: memoizedOptions,
+                  },
+                ]}
+              />
+            )}
             {isMainAccount ? (
               <CombinePositionsWidget
                 selectedAccount={selectedAccount}

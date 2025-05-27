@@ -69,7 +69,14 @@ const TotalValue: React.FC<
 export const AssetsTable: React.FC<
   Readonly<AssetsWidgetProps & ReturnType<typeof useAccount>>
 > = (props) => {
-  const { state, selectedAccount, columns, dataSource, onFilter } = props;
+  const {
+    state,
+    isMainAccount,
+    selectedAccount,
+    columns,
+    dataSource,
+    onFilter,
+  } = props;
 
   const { t } = useTranslation();
 
@@ -83,17 +90,21 @@ export const AssetsTable: React.FC<
     value: AccountType.MAIN,
   };
 
+  const subAccounts = state.subAccounts ?? [];
+
   const memoizedOptions = useMemo(() => {
-    const subs = Array.isArray(state.subAccounts) ? state.subAccounts : [];
-    return [
-      ALL_ACCOUNTS,
-      MAIN_ACCOUNT,
-      ...subs.map<SelectOption>((value) => ({
-        value: value.id,
-        label: value?.description || formatAddress(value?.id),
-      })),
-    ];
-  }, [state.subAccounts]);
+    if (Array.isArray(subAccounts) && subAccounts.length) {
+      return [
+        ALL_ACCOUNTS,
+        MAIN_ACCOUNT,
+        ...subAccounts.map<SelectOption>((value) => ({
+          value: value.id,
+          label: value?.description || formatAddress(value?.id),
+        })),
+      ];
+    }
+    return [MAIN_ACCOUNT];
+  }, [subAccounts]);
 
   return (
     <Card
@@ -113,17 +124,19 @@ export const AssetsTable: React.FC<
       }
     >
       <Divider />
-      <DataFilter
-        onFilter={onFilter}
-        items={[
-          {
-            type: "select",
-            name: "account",
-            value: selectedAccount,
-            options: memoizedOptions,
-          },
-        ]}
-      />
+      {isMainAccount && (
+        <DataFilter
+          onFilter={onFilter}
+          items={[
+            {
+              type: "select",
+              name: "account",
+              value: selectedAccount,
+              options: memoizedOptions,
+            },
+          ]}
+        />
+      )}
       <AuthGuardDataTable
         bordered
         className="oui-font-semibold"
