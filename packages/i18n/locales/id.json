@@ -554,6 +554,7 @@
   "affiliate.asAffiliate.title": "Sebagai afiliasi",
   "affiliate.asAffiliate.description": "Onboard trader untuk mendapatkan pendapatan pasif",
   "affiliate.asAffiliate.button": "Jadi afiliasi",
+  "affiliate.asAffiliate.affilates": "Afiliasi",
   "affiliate.asTrader.title": "Sebagai trader",
   "affiliate.asTrader.description": "Onboard trader untuk mendapatkan pendapatan pasif",
   "affiliate.asTrader.button": "Masukkan kode",
@@ -599,6 +600,7 @@
   "affiliate.trader.myRebates": "Rebate saya",
   "affiliate.trader.tradingVol": "Volume trading",
   "affiliate.trader.rebate.30d": "Rabat 30h",
+  "affiliate.trader.tradingRebates": "Rabat trading",
   "ui.pagination.morePages": "Halaman lainnya",
   "ui.pagination.rowsPerPage": "Baris per halaman",
   "ui.picker.selectDate": "Pilih Tanggal",
@@ -613,5 +615,6 @@
   "tradingLeaderboard.tradingVolume": "Volume trading",
   "tradingLeaderboard.rank": "Peringkat",
   "common.long": "Beli",
-  "common.short": "Jual"
+  "common.short": "Jual",
+  "tradingRewards.subtitle.mm": "Trading untuk mendapatkan $ORDER"
 }

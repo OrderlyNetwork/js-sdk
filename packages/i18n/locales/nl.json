@@ -556,6 +556,7 @@
   "affiliate.asAffiliate.title": "Als partner",
   "affiliate.asAffiliate.description": "Breng handelaren aan boord om passief inkomen te verdienen",
   "affiliate.asAffiliate.button": "Word partner",
+  "affiliate.asAffiliate.affilates": "Partners",
   "affiliate.asTrader.title": "Als handelaar",
   "affiliate.asTrader.description": "Breng handelaren aan boord om passief inkomen te verdienen",
   "affiliate.asTrader.button": "Code invoeren",
@@ -601,6 +602,8 @@
   "affiliate.trader.myRebates": "Mijn kortingen",
   "affiliate.trader.tradingVol": "Handelsvolume",
   "affiliate.trader.rebate.30d": "30d kortingen",
+  "affiliate.trader.myRebates": "Mijn kortingen",
+  "affiliate.trader.tradingRebates": "Handelskortingen",
   "ui.pagination.morePages": "Meer pagina's",
   "ui.pagination.rowsPerPage": "Rijen per pagina",
   "ui.picker.selectDate": "Selecteer datum",
@@ -613,5 +616,6 @@
   "tradingLeaderboard.learnMore": "Leer meer",
   "tradingLeaderboard.tradeNow": "Handel nu",
   "tradingLeaderboard.tradingVolume": "Handelsvolume",
-  "tradingLeaderboard.rank": "Rang"
+  "tradingLeaderboard.rank": "Rang",
+  "tradingRewards.subtitle.mm": "Handel om $ORDER te verdienen"
 }
