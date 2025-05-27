@@ -51,7 +51,8 @@ export const transfer = {
   "transfer.internalTransfer.from": "From",
   "transfer.internalTransfer.to": "To",
   "transfer.internalTransfer.currentAssetValue": "Current asset value",
-  "transfer.internalTransfer.success": "Funds transferred successfully.",
+  "transfer.internalTransfer.success":
+    "Success! Funds will be available in 15 seconds.",
   "transfer.internalTransfer.failed":
     "Unable to complete transfer. Please try again later.",
   "transfer.internalTransfer.failed.transferInProgress":
