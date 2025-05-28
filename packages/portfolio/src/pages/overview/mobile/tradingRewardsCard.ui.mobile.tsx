@@ -114,16 +114,6 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
           {props?.curEpochEstimate?.est_r_wallet ?? "--"}
         </Text>
         <Flex className="oui-ml-auto">
-          <Text
-            onClick={props.goToClaim}
-            className={cn(
-              isNumber(props?.curEpochEstimate?.est_r_wallet)
-                ? "oui-text-2xs oui-font-semibold oui-text-[#BD6BED]"
-                : "oui-hidden",
-            )}
-          >
-            {t("tradingRewards.claim")}
-          </Text>
           <ChevronRightIcon
             size={18}
             color="white"
