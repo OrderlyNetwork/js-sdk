@@ -4,6 +4,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Flex, TokenIcon, Text, toast, Badge } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
+import { capitalizeString } from "@orderly.network/utils";
 
 export const useColumns = () => {
   const { t } = useTranslation();
@@ -37,17 +38,18 @@ export const useColumns = () => {
         title: `${t("transfer.internalTransfer.from")} (Account ID)`,
         dataIndex: "from_account_id",
         render(val: string) {
-          const findSub = sub.find((item) => item.id === val);
+          const isMainAccount = val === state.mainAccountId;
+          const subAccount = sub.find((item) => item.id === val);
           return (
             <Flex itemAlign="start" py={2} gap={1} direction="column">
               <Text.formatted onCopy={onCopy} copyable rule="address">
                 {val}
               </Text.formatted>
-              {findSub?.description && (
-                <Badge color="neutral" size="xs">
-                  {findSub?.description}
-                </Badge>
-              )}
+              <Badge className="oui-select-none" color="neutral" size="xs">
+                {isMainAccount
+                  ? t("common.mainAccount")
+                  : subAccount?.description || t("common.subAccount")}
+              </Badge>
             </Flex>
           );
         },
@@ -56,17 +58,18 @@ export const useColumns = () => {
         title: `${t("transfer.internalTransfer.to")} (Account ID)`,
         dataIndex: "to_account_id",
         render(val: string) {
-          const findSub = sub.find((item) => item.id === val);
+          const isMainAccount = val === state.mainAccountId;
+          const subAccount = sub.find((item) => item.id === val);
           return (
             <Flex itemAlign="start" py={2} gap={1} direction="column">
               <Text.formatted onCopy={onCopy} copyable rule="address">
                 {val}
               </Text.formatted>
-              {findSub?.description && (
-                <Badge color="neutral" size="xs">
-                  {findSub?.description}
-                </Badge>
-              )}
+              <Badge className="oui-select-none" color="neutral" size="xs">
+                {isMainAccount
+                  ? t("common.mainAccount")
+                  : subAccount?.description || t("common.subAccount")}
+              </Badge>
             </Flex>
           );
         },
@@ -75,6 +78,9 @@ export const useColumns = () => {
         title: t("common.status"),
         dataIndex: "status",
         width: 120,
+        render(val: string) {
+          return capitalizeString(val);
+        },
       },
       {
         title: t("common.amount"),
@@ -82,6 +88,6 @@ export const useColumns = () => {
         width: 80,
       },
     ];
-  }, [t]);
+  }, [t, state.mainAccountId, sub]);
   return columns;
 };
