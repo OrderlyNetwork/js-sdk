@@ -42,12 +42,12 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
               "oui-object-cover",
               "oui-opacity-50",
             )}
-            ref={(video) => {
-              if (video) {
-                video.setAttribute("playsinline", "true");
-                video.setAttribute("webkit-playsinline", "true");
-              }
-            }}
+            // ref={(video) => {
+            //   if (video) {
+            //     video.setAttribute("playsinline", "true");
+            //     video.setAttribute("webkit-playsinline", "true");
+            //   }
+            // }}
           >
             <source src={props.backgroundSrc} type="video/mp4" />
             <source src={props.backgroundSrc} type="video/webm" />
@@ -87,7 +87,7 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
         props.className,
       )}
     >
-      {renderBackground()}
+      {/* {renderBackground()} */}
       <Flex
         direction="column"
         gapY={3}
