@@ -50,7 +50,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       return;
     }
     return {
-      id: client.chain.id,
+      id: AbstractChainsMap.get(network)!,
       namespace: ChainNamespace.evm,
     };
   }, [client, connector]);
