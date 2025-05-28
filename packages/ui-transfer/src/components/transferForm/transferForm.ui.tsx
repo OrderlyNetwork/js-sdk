@@ -37,6 +37,8 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
     onFromAccountChange,
     toAccount,
     onToAccountChange,
+    onExchange,
+    isMainAccount,
   } = props;
 
   const { t } = useTranslation();
@@ -90,7 +92,16 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
         </Box>
 
         <ExchangeDivider
-          icon={<TransferVerticalIcon className="oui-text-primary" />}
+          icon={
+            <TransferVerticalIcon
+              className={cn(
+                isMainAccount
+                  ? "oui-cursor-pointer oui-text-primary"
+                  : " oui-cursor-not-allowed oui-text-base-contrast-20",
+              )}
+              onClick={isMainAccount ? onExchange : undefined}
+            />
+          }
         />
 
         <Text size="sm" intensity={98}>
