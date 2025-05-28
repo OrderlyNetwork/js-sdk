@@ -254,6 +254,11 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     setToAccount(account);
   }, []);
 
+  const onExchange = useCallback(() => {
+    setFromAccount(toAccount);
+    setToAccount(fromAccount);
+  }, [fromAccount, toAccount]);
+
   return {
     networkId,
     onTransfer,
@@ -278,6 +283,8 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     onFromAccountChange,
     toAccounts,
     onToAccountChange,
+    onExchange,
+    isMainAccount,
   };
 };
 
