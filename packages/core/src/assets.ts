@@ -326,7 +326,6 @@ export class Assets {
     }
     if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
       tempVaultAddress = contractAddress.abstractVaultAddress ?? "";
-      tempUSDCAddress = contractAddress.abstractUSDCAddress ?? "";
     }
 
     const result = await this.account.walletAdapter?.call(
