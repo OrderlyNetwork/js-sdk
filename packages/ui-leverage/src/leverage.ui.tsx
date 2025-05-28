@@ -1,4 +1,5 @@
-import React, { FC, useId, useCallback } from "react";
+import React, { FC, useId } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Button,
@@ -13,7 +14,8 @@ import {
   InputFormatter,
 } from "@orderly.network/ui";
 import { LeverageScriptReturns } from "./leverage.script";
-import { useTranslation } from "@orderly.network/i18n";
+
+const toggles = [5, 10, 20, 50, 100];
 
 const IconButton: React.FC<{
   Icon: React.ComponentType<any>;
@@ -25,10 +27,10 @@ const IconButton: React.FC<{
     <Icon
       onClick={disabled ? undefined : onClick}
       className={cn(
-        "oui-text-white oui-m-2 oui-transition-all",
+        "oui-m-2 oui-text-white oui-transition-all",
         disabled
           ? "oui-cursor-not-allowed oui-opacity-20"
-          : "oui-cursor-pointer oui-opacity-100"
+          : "oui-cursor-pointer oui-opacity-100",
       )}
     />
   );
@@ -41,7 +43,7 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
       inputFormatter.currencyFormatter,
       inputFormatter.decimalPointFormatter,
     ],
-    []
+    [],
   );
   const id = useId();
   return (
@@ -59,7 +61,7 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
         "oui-outline-1",
         "oui-outline-transparent",
         "focus-within:oui-outline-primary-light",
-        "oui-input-root"
+        "oui-input-root",
       )}
     >
       <IconButton
@@ -69,7 +71,6 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
       />
       <Flex itemAlign="center" justify="center">
         <Input
-          // {...props}
           value={props.value}
           id={id}
           autoComplete="off"
@@ -77,13 +78,13 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
             input: cn("oui-text-center"),
             root: cn(
               "oui-text-center",
-              "oui-w-6",
+              "oui-w-7",
               "oui-px-0",
               "oui-outline",
               "oui-outline-offset-0",
               "oui-outline-1",
               "oui-outline-transparent",
-              "focus-within:oui-outline-primary-none"
+              "focus-within:oui-outline-primary-none",
             ),
           }}
           formatters={formatters}
@@ -103,7 +104,7 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
 export type LeverageProps = LeverageScriptReturns;
 
 export const Leverage: FC<LeverageProps> = (props) => {
-  const { currentLeverage = 0 } = props;
+  const { currentLeverage } = props;
   const { t } = useTranslation();
   return (
     <Flex itemAlign={"start"} direction={"column"} mb={0}>
@@ -138,12 +139,13 @@ export type LeverageHeaderProps = Pick<LeverageProps, "currentLeverage">;
 
 export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
   const { t } = useTranslation();
+  const { currentLeverage } = props;
   return (
     <Flex justify={"center"} width={"100%"} mb={2}>
       <Flex gap={1}>
         {`${t("common.current")}:`}
         <Text.numeral unit="x" size={"sm"} intensity={80}>
-          {props.currentLeverage ?? "--"}
+          {currentLeverage ?? "--"}
         </Text.numeral>
       </Flex>
     </Flex>
@@ -159,23 +161,23 @@ export const LeverageSelector: React.FC<LeverageSelectorProps> = (props) => {
   const { value, onLeverageChange } = props;
   return (
     <Flex itemAlign="center" justify="between" width={"100%"} mt={2}>
-      {[1, 5, 10, 20, 50].map((option) => (
+      {toggles.map((option) => (
         <Flex
           key={option}
           itemAlign="center"
           justify="center"
           className={cn(
-            `oui-transition-all oui-cursor-pointer oui-box-border oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-rounded-md oui-border oui-border-solid`,
+            `oui-box-border oui-cursor-pointer oui-rounded-md oui-border oui-border-solid oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-transition-all`,
             value === option
               ? "oui-border-primary oui-bg-base-6"
-              : "oui-border-line-12"
+              : "oui-border-line-12",
           )}
           onClick={() => onLeverageChange?.(option)}
         >
           <Flex
             itemAlign="center"
             justify="center"
-            className={cn(`oui-w-9 oui-h-3 oui-select-none`)}
+            className={cn(`oui-h-3 oui-w-9 oui-select-none`)}
           >
             {option}x
           </Flex>
@@ -193,19 +195,22 @@ export type LeverageSliderProps = {
   showSliderTip: boolean;
   className?: string;
   onValueCommit?: (value: number[]) => void;
+  leverageLevers: number[];
 };
 
 export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
+  const { leverageLevers, maxLeverage, className, value, showSliderTip } =
+    props;
   return (
-    <Box pt={4} width={"100%"} className={props.className}>
+    <Box pt={4} width={"100%"} className={className}>
       <Slider
         // step={1.04}
-        max={props.maxLeverage}
+        max={maxLeverage}
         min={1}
         // markLabelVisible={true}
         // marks={props.marks}
         markCount={5}
-        value={[props.value]}
+        value={[value]}
         onValueChange={(e) => {
           props.onLeverageChange(e[0]);
           props.setShowSliderTip(true);
@@ -215,28 +220,28 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
           props.onValueCommit?.(e);
           props.setShowSliderTip(false);
         }}
-        showTip={props.showSliderTip}
-        tipFormatter={(value, min, max, percent) => {
+        showTip={showSliderTip}
+        tipFormatter={(value) => {
           return `${value}x`;
         }}
       />
       <Flex justify={"between"} width={"100%"} pt={3}>
-        {[1, 10, 20, 30, 40, 50].map((item, index) => {
+        {leverageLevers?.map((item, index) => {
           return (
             <button
               key={item}
-              onClick={(e) => {
+              onClick={() => {
                 props.onLeverageChange(item);
                 props.onValueCommit?.([item]);
               }}
               className={cn(
-                " oui-text-2xs oui-pb-3",
+                "oui-pb-3 oui-text-2xs",
                 index === 0
                   ? "oui-pr-2"
                   : index === 5
-                  ? "oui-pl-0"
-                  : "oui-px-0 oui-ml-2",
-                props.value >= item && "oui-text-primary-light"
+                    ? "oui-pl-0"
+                    : "oui-ml-2 oui-px-0",
+                props.value >= item && "oui-text-primary-light",
               )}
               data-testid={`oui-testid-leverage-${item}-btn`}
             >
@@ -247,18 +252,4 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
       </Flex>
     </Box>
   );
-  // return (
-  //   <Box pt={3} width={"100%"}>
-  //     <Slider
-  //       step={props.step}
-  //       markLabelVisible={true}
-  //       marks={props.marks}
-  //       value={[props.value]}
-  //       onValueChange={(e) => {
-  //         const value = props.marks?.[e[0] / 10]?.value;
-  //         if (typeof value !== "undefined") props.onLeverageChange(value);
-  //       }}
-  //     />
-  //   </Box>
-  // );
 };
