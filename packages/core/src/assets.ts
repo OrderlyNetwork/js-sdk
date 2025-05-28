@@ -173,8 +173,8 @@ export class Assets {
 
     let usdcAddress = address ?? contractAddress.usdcAddress;
     let userAddress = this.account.stateValue.address;
-    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
-      usdcAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
+    if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
+      usdcAddress = contractAddress.abstractUSDCAddress ?? "";
     }
     const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
     if (
@@ -253,9 +253,9 @@ export class Assets {
       tempVaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
       tempUSDCAddress = contractAddress.monadTestnetUSDCAddress;
     }
-    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
-      tempVaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
-      tempUSDCAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
+    if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
+      tempVaultAddress = contractAddress.abstractVaultAddress ?? "";
+      tempUSDCAddress = contractAddress.abstractUSDCAddress ?? "";
     }
     const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
     if (
@@ -324,9 +324,9 @@ export class Assets {
       tempVaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
       tempUSDCAddress = contractAddress.monadTestnetUSDCAddress ?? "";
     }
-    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
-      tempVaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
-      tempUSDCAddress = contractAddress.abstractTestnetUSDCAddress ?? "";
+    if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
+      tempVaultAddress = contractAddress.abstractVaultAddress ?? "";
+      tempUSDCAddress = contractAddress.abstractUSDCAddress ?? "";
     }
 
     const result = await this.account.walletAdapter?.call(
@@ -402,10 +402,8 @@ export class Assets {
       vaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
       // depositData["USDCAddress"] = contractAddress.monadTestnetUSDCAddress ?? "";
     }
-    if (chain.chain_id === ABSTRACT_TESTNET_CHAINID) {
-      vaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
-      // tips:  deposit fee not use global address, juset sign address
-      // userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
+      vaultAddress = contractAddress.abstractVaultAddress ?? "";
     }
 
     console.log("xxx get deposit fee", {
@@ -459,9 +457,8 @@ export class Assets {
     if (this.account.walletAdapter.chainId === MONAD_TESTNET_CHAINID) {
       vaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
     }
-    if (this.account.walletAdapter.chainId === ABSTRACT_TESTNET_CHAINID) {
-      vaultAddress = contractAddress.abstractTestnetVaultAddress ?? "";
-      // userAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
+    if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
+      vaultAddress = contractAddress.abstractVaultAddress ?? "";
     }
     const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
 

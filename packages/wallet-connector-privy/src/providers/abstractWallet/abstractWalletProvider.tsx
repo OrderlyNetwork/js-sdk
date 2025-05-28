@@ -29,7 +29,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   const { network } = useWalletConnectorPrivy();
   const { login, logout } = useLoginWithAbstract();
   const [wallet, setWallet] = useState<IWalletState | null>(null);
-  const { data: client } = useAbstractClient();
+  const { data: client, isLoading: isClientLoading } = useAbstractClient();
   const { connector } = useAccount();
   const { address, status } = useGlobalWalletSignerAccount();
 
@@ -69,6 +69,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   useEffect(() => {
     console.log("xxx client", {
       client,
+      isClientLoading,
       connector,
       address,
     });
@@ -107,7 +108,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       console.log("-- abstract wallet tempWallet", tempWallet);
       setWallet(tempWallet);
     });
-  }, [client, connectedChain, connector, address]);
+  }, [client, connectedChain, connector, address, isClientLoading]);
 
   useEffect(() => {
     windowGuard(() => {

@@ -1,13 +1,11 @@
 import React, { PropsWithChildren, useMemo, useState } from "react";
 import { AbstractWalletProvider } from "@abstract-foundation/agw-react";
 // Use abstract for mainnet
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { abstractTestnet, abstract } from "viem/chains";
 import { useWalletConnectorPrivy } from "../../provider";
 import { Network } from "../../types";
 
 export const InitAbstractProvider = (props: PropsWithChildren) => {
-  const [queryClient] = useState(() => new QueryClient());
   const { network } = useWalletConnectorPrivy();
   const chain = useMemo(() => {
     if (network === Network.mainnet) {
@@ -16,7 +14,7 @@ export const InitAbstractProvider = (props: PropsWithChildren) => {
     return abstractTestnet;
   }, [network]);
   return (
-    <AbstractWalletProvider chain={chain} queryClient={queryClient}>
+    <AbstractWalletProvider chain={chain}>
       {props.children}
     </AbstractWalletProvider>
   );
