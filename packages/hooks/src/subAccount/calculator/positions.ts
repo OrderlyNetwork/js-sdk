@@ -1,39 +1,14 @@
 import { propOr } from "ramda";
-import { SymbolInfo } from "@orderly.network/hooks";
 import { account, positions } from "@orderly.network/perp";
 import { API } from "@orderly.network/types";
 import { zero } from "@orderly.network/utils";
-
-type EmptyPosition = Omit<API.PositionsTPSLExt, "rows"> & {
-  rows: API.PositionsTPSLExt["rows"] | null;
-};
-
-export const POSITION_EMPTY: EmptyPosition = {
-  rows: [],
-  margin_ratio: 0,
-  initial_margin_ratio: 0,
-  maintenance_margin_ratio: 0,
-  open_margin_ratio: 0,
-  current_margin_ratio_with_orders: 0,
-  initial_margin_ratio_with_orders: 0,
-  maintenance_margin_ratio_with_orders: 0,
-  total_collateral_value: 0,
-  free_collateral: 0,
-  total_pnl_24_h: 0,
-  unrealPnL: 0,
-  total_unreal_pnl: 0,
-  unsettledPnL: 0,
-  total_unsettled_pnl: 0,
-  notional: 0,
-  unrealPnlROI: 0,
-};
+import { SymbolInfo } from "../../orderly/useSymbolsInfo";
 
 export function formatPositions(
   data: API.PositionInfo | API.PositionsTPSLExt,
   accountInfo?: API.AccountInfo,
   symbolsInfo?: SymbolInfo,
   fundingRates?: Record<string, API.FundingRate>,
-  // portfolio?: Portfolio,
 ): API.PositionsTPSLExt {
   if (!accountInfo || !fundingRates || !symbolsInfo) {
     return data as API.PositionsTPSLExt;
@@ -135,39 +110,6 @@ export function formatPositions(
   const totalUnrealPnl_index = unrealPnL_total_index.toNumber();
   const unsettlementPnL = unsettlementPnL_total.toNumber();
 
-  // not used data
-  // let totalUnrealizedROI = 0,
-  //   totalUnrealizedROI_index = 0;
-
-  // if (portfolio) {
-  //   const { totalValue, totalCollateral } = portfolio;
-
-  //   rows = rows.map((item) => {
-  //     const est_liq_price = positions.liqPrice({
-  //       markPrice: item.mark_price,
-  //       totalCollateral: totalCollateral.toNumber(),
-  //       positionQty: item.position_qty,
-  //       positions: rows,
-  //       MMR: item.mmr,
-  //     });
-  //     return {
-  //       ...item,
-  //       est_liq_price,
-  //     };
-  //   });
-
-  //   if (totalValue !== null && !totalValue.eq(zero)) {
-  //     totalUnrealizedROI = account.totalUnrealizedROI({
-  //       totalUnrealizedPnL: totalUnrealPnl,
-  //       totalValue: totalValue.toNumber(),
-  //     });
-  //     totalUnrealizedROI_index = account.totalUnrealizedROI({
-  //       totalUnrealizedPnL: totalUnrealPnl_index,
-  //       totalValue: totalValue.toNumber(),
-  //     });
-  //   }
-  // }
-
   return {
     ...data,
 
@@ -178,8 +120,6 @@ export function formatPositions(
 
     unsettledPnL: unsettlementPnL,
     total_unsettled_pnl: unsettlementPnL,
-    // unrealPnlROI: totalUnrealizedROI,
-    // unrealPnlROI_index: totalUnrealizedROI_index,
     rows,
   };
 }
@@ -203,42 +143,3 @@ export function calcByPrice(
     })),
   };
 }
-
-// function calcByMarkPrice(
-//   positions: API.PositionsTPSLExt,
-//   markPrice: Record<string, number>,
-// ) {
-//   if (!positions || !Array.isArray(positions.rows) || !positions.rows.length) {
-//     return positions;
-//   }
-
-//   positions = {
-//     ...positions,
-//     rows: positions.rows.map((item: API.PositionTPSLExt) => ({
-//       ...item,
-//       mark_price: markPrice[item.symbol] || item.mark_price,
-//     })),
-//   };
-
-//   return positions;
-// }
-
-// function calcByIndexPrice(
-//   positions: API.PositionsTPSLExt,
-//   indexPrice: Record<string, number>,
-// ) {
-//   if (!positions || !Array.isArray(positions.rows) || !positions.rows.length) {
-//     return positions;
-//   }
-
-//   positions = {
-//     ...positions,
-//     rows: positions.rows.map((item: API.PositionTPSLExt) => ({
-//       ...item,
-//       index_price:
-//         indexPrice[item.symbol] || item.index_price || item.mark_price,
-//     })),
-//   };
-
-//   return positions;
-// }

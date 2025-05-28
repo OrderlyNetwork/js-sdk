@@ -2,14 +2,14 @@ import { useContext, useEffect, useRef } from "react";
 import { WS } from "@orderly.network/net";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { getTimestamp } from "@orderly.network/utils";
-import { OrderlyContext } from "./orderlyContext";
-import { useAccount } from "./useAccount";
+import { OrderlyContext } from "../orderlyContext";
+import { useAccount } from "../useAccount";
 
 type Options = {
   accountId?: string;
 };
 
-export const useWSInstance = (options: Options) => {
+export const useSubAccountWS = (options: Options) => {
   const { accountId } = options;
   const { configStore } = useContext(OrderlyContext);
   const { state, account } = useAccount();

@@ -3,6 +3,7 @@ import {
   SubAccount,
   useAccount,
   useConfig,
+  useSubAccountDataObserver,
   useTransfer,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -11,7 +12,6 @@ import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
-import { useSubAccountDataObserver } from "./hooks/useSubAccountDataObserver";
 
 export type TransferFormScriptReturn = ReturnType<typeof useTransferFormScript>;
 

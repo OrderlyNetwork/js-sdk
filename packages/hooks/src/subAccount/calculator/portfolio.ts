@@ -1,8 +1,9 @@
 import { pathOr } from "ramda";
-import { SymbolInfo } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
 import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { SymbolInfo } from "../../orderly/useSymbolsInfo";
+import { parseHolding } from "../../utils/parseHolding";
 
 export type Portfolio = {
   holding?: API.Holding[];
@@ -85,34 +86,3 @@ export function formatPortfolio(inputs: {
     holding,
   };
 }
-
-type NonUSDCHolding = {
-  holding: number;
-  markPrice: number;
-  // margin replacement rate, default 0
-  discount: number;
-};
-
-export const parseHolding = (
-  holding: API.Holding[],
-  markPrices: Record<string, number>,
-): [number, NonUSDCHolding[]] => {
-  const nonUSDC: NonUSDCHolding[] = [];
-
-  let USDC_holding = 0;
-
-  holding.forEach((item) => {
-    if (item.token === "USDC") {
-      USDC_holding = item.holding;
-    } else {
-      nonUSDC.push({
-        holding: item.holding,
-        markPrice: markPrices[item.token] ?? 0,
-        // markPrice: 0,
-        discount: 0,
-      });
-    }
-  });
-
-  return [USDC_holding, nonUSDC];
-};

@@ -1,18 +1,17 @@
-import {
-  type SWRConfiguration,
-  type SWRHook,
-  type SWRResponse,
-  type Middleware,
-  useAccount,
-  useSWR,
-  fetcher,
-  useConfig,
-  useAccountInstance,
-} from "@orderly.network/hooks";
+import useSWR, {
+  Middleware,
+  SWRConfiguration,
+  SWRHook,
+  SWRResponse,
+} from "swr";
+import { Account, MessageFactor } from "@orderly.network/core";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { getTimestamp } from "@orderly.network/utils";
+import { useAccount } from "../useAccount";
+import { useConfig } from "../useConfig";
+import { fetcher } from "../utils/fetcher";
 
-export type QueryOptions<T> = SWRConfiguration & {
+type QueryOptions<T> = SWRConfiguration & {
   formatter?: (data: any) => T;
   accountId?: string;
 };
@@ -43,10 +42,7 @@ export function useSubAccountQuery<T>(
   );
 }
 
-function signatureMiddleware(
-  account: ReturnType<typeof useAccountInstance>,
-  accountId?: string,
-): Middleware {
+function signatureMiddleware(account: Account, accountId?: string): Middleware {
   const apiBaseUrl = useConfig("apiBaseUrl");
 
   return (useSWRNext: SWRHook) => {
@@ -82,9 +78,3 @@ function signatureMiddleware(
     };
   };
 }
-
-export type MessageFactor = {
-  url: string;
-  method: "GET" | "POST" | "PUT" | "DELETE";
-  data?: any;
-};

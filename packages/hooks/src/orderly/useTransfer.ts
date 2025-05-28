@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useMutationWithAccountId } from "../subAccount/useMutationWithAccountId";
-import { useMutation } from "../useMutation";
+import { useSubAccountMutation } from "../subAccount/useSubAccountMutation";
 import { useCollateral } from "./useCollateral";
 
 export type TransferReturn = ReturnType<typeof useTransfer>;
@@ -20,7 +19,7 @@ export const useTransfer = (options?: TransferOptions) => {
   const { unsettledPnL, availableBalance, freeCollateral, holding } =
     useCollateral();
 
-  const [doTransfer, { isMutating: submitting }] = useMutationWithAccountId(
+  const [doTransfer, { isMutating: submitting }] = useSubAccountMutation(
     "/v1/internal_transfer",
     "POST",
     {

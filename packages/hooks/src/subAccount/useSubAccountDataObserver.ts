@@ -1,24 +1,19 @@
 import { useEffect, useState } from "react";
-import {
-  useWSInstance,
-  swr,
-  useMarkPricesStream,
-  useSymbolsInfo,
-  useIndexPricesStream,
-  useFundingRatesStore,
-} from "@orderly.network/hooks";
+import { mutate } from "swr";
 import { API, WSMessage } from "@orderly.network/types";
-import { camelCaseToUnderscoreCase } from "@orderly.network/utils";
-import { formatPortfolio, Portfolio } from "../calculator/portfolio";
-import {
-  calcByPrice,
-  formatPositions,
-  POSITION_EMPTY,
-} from "../calculator/positions";
+import { useFundingRatesStore } from "../orderly/useFundingRates";
+import { useIndexPricesStream } from "../orderly/useIndexPricesStream";
+import { useMarkPricesStream } from "../orderly/useMarkPricesStream";
+import { POSITION_EMPTY } from "../orderly/usePositionStream/usePosition.store";
+import { useSymbolsInfo } from "../orderly/useSymbolsInfo";
+import { object2underscore } from "../utils/ws";
+import { formatPortfolio, Portfolio } from "./calculator/portfolio";
+import { calcByPrice, formatPositions } from "./calculator/positions";
 import { useSubAccountQuery } from "./useSubAccountQuery";
+import { useSubAccountWS } from "./useSubAccountWS";
 
 export const useSubAccountDataObserver = (accountId?: string) => {
-  const ws = useWSInstance({ accountId });
+  const ws = useSubAccountWS({ accountId });
 
   const { data: markPrices } = useMarkPricesStream();
   const { data: indexPrices } = useIndexPricesStream();
@@ -34,7 +29,7 @@ export const useSubAccountDataObserver = (accountId?: string) => {
   // need to get sub account info to calculate portfolio and positions
   const { data: accountInfo } = useSubAccountQuery<API.AccountInfo>(
     "/v1/client/info",
-    { accountId },
+    { accountId, revalidateOnFocus: false },
   );
 
   const { data: positionsInfo } = useSubAccountQuery<API.PositionInfo>(
@@ -140,7 +135,7 @@ export const useSubAccountDataObserver = (accountId?: string) => {
       onMessage: (data: { positions: WSMessage.Position[] }) => {
         const { positions: nextPositions } = data;
 
-        swr.mutate(
+        mutate(
           key,
           (prevPositions: any) => {
             if (!!prevPositions) {
@@ -191,10 +186,3 @@ export const useSubAccountDataObserver = (accountId?: string) => {
 
   return { portfolio, positions };
 };
-
-export function object2underscore(obj: any) {
-  return Object.keys(obj).reduce((acc, key) => {
-    acc[camelCaseToUnderscoreCase(key)] = obj[key];
-    return acc;
-  }, {} as any);
-}

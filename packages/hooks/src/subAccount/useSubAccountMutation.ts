@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
 import {
   type MessageFactor,
@@ -43,10 +44,15 @@ const fetcher = (
   return mutate(url, init);
 };
 
+type SubAccountMutationOptions<T, E> = SWRMutationConfiguration<T, E> & {
+  /** sub account id */
+  accountId?: string;
+};
+
 /**
  * This hook is used to execute API requests for data mutation, such as POST, DELETE, PUT, etc.
  */
-export const useMutationWithAccountId = <T, E>(
+export const useSubAccountMutation = <T, E>(
   /**
    * The URL to send the request to. If the URL does not start with "http",
    * it will be prefixed with the API base URL.
@@ -62,10 +68,10 @@ export const useMutationWithAccountId = <T, E>(
    *
    * @link https://swr.vercel.app/docs/mutation#api
    */
-  options?: SWRMutationConfiguration<T, E> & { accountId?: string },
+  options?: SubAccountMutationOptions<T, E>,
 ) => {
-  const apiBaseUrl = useConfig("apiBaseUrl");
   const { accountId, ...restOptions } = options || ({} as any);
+  const apiBaseUrl = useConfig("apiBaseUrl");
 
   let fullUrl = url;
   if (!url.startsWith("http")) {
@@ -74,52 +80,56 @@ export const useMutationWithAccountId = <T, E>(
 
   const account = useAccountInstance();
 
-  const { trigger, data, error, reset, isMutating } = useSWRMutation(
+  const { trigger, reset, data, error, isMutating } = useSWRMutation(
     fullUrl,
     // method === "POST" ? fetcher : deleteFetcher,
     fetcher,
     restOptions,
   );
 
-  const mutation = async (
-    /**
-     * The data to send with the request.
-     */
-    data: Record<string, any> | null,
-    /**
-     * The query parameters to send with the request.
-     */
-    params?: Record<string, any>,
-    options?: SWRMutationConfiguration<T, E>,
-  ): Promise<any> => {
-    let newUrl = url;
-    if (typeof params === "object" && Object.keys(params).length) {
-      const search = new URLSearchParams(params);
-      newUrl = `${url}?${search.toString()}`;
-    }
+  const mutation = useCallback(
+    async (
+      /**
+       * The data to send with the request.
+       */
+      data: Record<string, any> | null,
+      /**
+       * The query parameters to send with the request.
+       */
+      params?: Record<string, any>,
+      options?: SubAccountMutationOptions<T, E>,
+    ): Promise<any> => {
+      const { accountId: _accountId, ...restOptions } = options || ({} as any);
+      let newUrl = url;
+      if (typeof params === "object" && Object.keys(params).length) {
+        const search = new URLSearchParams(params);
+        newUrl = `${url}?${search.toString()}`;
+      }
 
-    const payload: MessageFactor = {
-      method,
-      url: newUrl,
-      data,
-    };
-
-    const signer = account.signer;
-    const signature = await signer.sign(payload, getTimestamp());
-
-    return trigger(
-      {
-        data,
-        params,
+      const payload: MessageFactor = {
         method,
-        signature: {
-          ...signature,
-          "orderly-account-id": accountId || account.accountId,
+        url: newUrl,
+        data,
+      };
+
+      const signer = account.signer;
+      const signature = await signer.sign(payload, getTimestamp());
+
+      return trigger(
+        {
+          data,
+          params,
+          method,
+          signature: {
+            ...signature,
+            "orderly-account-id": accountId || _accountId || account.accountId,
+          },
         },
-      },
-      options,
-    );
-  };
+        restOptions,
+      );
+    },
+    [trigger, account, accountId],
+  );
 
   return [
     mutation,

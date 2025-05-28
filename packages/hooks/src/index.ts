@@ -28,7 +28,6 @@ export { parseJSON } from "./utils/json";
 
 export { default as useConstant } from "use-constant";
 export { useWS } from "./useWS";
-export { useWSInstance } from "./useWSInstance";
 export { useConfig } from "./useConfig";
 export { useKeyStore } from "./useKeyStore";
 export { useSimpleDI } from "./useSimpleDI";
@@ -106,3 +105,5 @@ export {
   type RestrictedInfoReturns,
   type RestrictedInfoOptions,
 } from "./useRestrictedInfo";
+
+export * from "./subAccount";
