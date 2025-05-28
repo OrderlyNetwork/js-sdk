@@ -342,16 +342,13 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     <WalletConnectorPrivyContext.Provider value={value}>
       <TooltipProvider delayDuration={300}>
         <PrivyWallet privyConfig={props.privyConfig} initChains={initChains}>
-          <AbstractWallet>
-            <WagmiWallet
-              wagmiConfig={props.wagmiConfig}
-              initChains={initChains}
-            >
-              <SolanaWallet solanaConfig={props.solanaConfig}>
+          <WagmiWallet wagmiConfig={props.wagmiConfig} initChains={initChains}>
+            <SolanaWallet solanaConfig={props.solanaConfig}>
+              <AbstractWallet>
                 <Main headerProps={props.headerProps}>{props.children}</Main>
-              </SolanaWallet>
-            </WagmiWallet>
-          </AbstractWallet>
+              </AbstractWallet>
+            </SolanaWallet>
+          </WagmiWallet>
         </PrivyWallet>
       </TooltipProvider>
     </WalletConnectorPrivyContext.Provider>
