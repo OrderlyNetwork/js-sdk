@@ -1,4 +1,7 @@
 import { FC, PropsWithChildren, useRef, useState } from "react";
+import { useLeverage } from "@orderly.network/hooks";
+import { useMarginRatio } from "@orderly.network/hooks";
+import Button from "@/button";
 import {
   Dialog,
   DialogBody,
@@ -8,21 +11,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/dialog";
-import { LeverageEditor } from "../sections/leverageEditor";
-import Button from "@/button";
-import { useLeverage } from "@orderly.network/hooks";
-import { toast } from "@/toast";
-import { useMarginRatio } from "@orderly.network/hooks";
 import { Numeral } from "@/text/numeral";
-
-interface Props {}
+import { toast } from "@/toast";
+import { LeverageEditor } from "../sections/leverageEditor";
 
 export const LeverageDialog: FC<PropsWithChildren> = (props) => {
   const [open, setOpen] = useState(false);
   const { currentLeverage } = useMarginRatio();
 
-  const [maxLeverage, { update, config: leverageLevers, isMutating }] =
-    useLeverage();
+  const { maxLeverage, isLoading, leverageLevers, update } = useLeverage();
+
   const nextLeverage = useRef(maxLeverage ?? 0);
 
   const onSave = (value: { leverage: number }) => {
@@ -33,16 +31,17 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
   };
 
   const onSubmit = () => {
-    if (nextLeverage.current === maxLeverage) return;
+    if (nextLeverage.current === maxLeverage) {
+      return;
+    }
     update({ leverage: nextLeverage.current }).then(
-      (res: any) => {
+      () => {
         setOpen(false);
         toast.success("Leverage updated");
       },
       (err: Error) => {
-        console.dir(err);
         toast.error(err.message);
-      }
+      },
     );
   };
 
@@ -59,7 +58,7 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
             <div className="orderly-flex orderly-gap-1">
               <span>Current:</span>
               <Numeral className="orderly-text-base-contrast" surfix={"x"}>
-                {currentLeverage}
+                {currentLeverage!}
               </Numeral>
             </div>
           </div>
@@ -86,7 +85,7 @@ export const LeverageDialog: FC<PropsWithChildren> = (props) => {
             id="orderly-leverage-dialog-save"
             fullWidth
             onClick={() => onSubmit()}
-            loading={isMutating}
+            loading={isLoading}
           >
             Save
           </Button>

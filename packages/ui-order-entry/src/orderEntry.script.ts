@@ -2,6 +2,7 @@ import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import {
   useAccount,
   useEventEmitter,
+  useLeverage,
   useLocalStorage,
   useMarginRatio,
   useOrderEntry,
@@ -71,7 +72,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     );
   }, [accountState.status, wrongNetwork, disabledConnect]);
 
-  // const [maxLeverage] = useLeverage();
   const { currentLeverage } = useMarginRatio();
   const ee = useEventEmitter();
 

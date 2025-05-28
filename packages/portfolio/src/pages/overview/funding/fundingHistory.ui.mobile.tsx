@@ -93,11 +93,13 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
               <Text className="oui-text-base-contrast-20">(USDC)</Text>
             </Text>
             <Text.numeral
-              color="danger"
               dp={6}
+              ignoreDP={true}
+              coloring={true}
+              showIdentifier={true}
               className="oui-text-xs oui-self-end"
             >
-              {item.funding_fee}
+              {Number(item.funding_fee) * -1}
             </Text.numeral>
           </Flex>
         </Flex>
