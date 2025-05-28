@@ -44,7 +44,9 @@ export const useLeverage = (): [
     config: number[];
   },
 ] => {
-  const { data, mutate } = usePrivateQuery("/v1/client/info");
+  const { data, mutate } = usePrivateQuery("/v1/client/info", {
+    revalidateOnFocus: false,
+  });
   const [update, { isMutating }] = useMutation("/v1/client/leverage");
 
   const { data: config } = useQuery("/v1/public/config", {

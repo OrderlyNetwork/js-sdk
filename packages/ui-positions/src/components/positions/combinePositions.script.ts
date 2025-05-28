@@ -57,6 +57,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
   const { data: accountInfo = [], isLoading: isAccountInfoLoading } =
     useSubAccountQuery<API.AccountInfo[]>("/v1/client/info", {
       accountId: newPositions.map((item) => item.account_id!),
+      revalidateOnFocus: false,
     });
 
   const processPositions = produce<API.PositionTPSLExt[]>(
@@ -152,7 +153,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
         return item.account_id === selectedAccount;
       }
     });
-  }, [dataSource, selectedAccount]);
+  }, [dataSource, selectedAccount, state.mainAccountId]);
 
   const groupDataSource = useMemo(() => {
     return groupDataByAccount(filtered, {
