@@ -67,7 +67,11 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   );
 
   useEffect(() => {
-    console.log("xxx client", client);
+    console.log("xxx client", {
+      client,
+      connector,
+      address,
+    });
     if (!client || !connector || !address) {
       setWallet(null);
       return;
