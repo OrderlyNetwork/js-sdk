@@ -136,7 +136,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     page: enableLoadMore || !manualPagination ? undefined : page,
     // pending and ts_sl list get all data
     size: manualPagination ? pageSize : 500,
-    sourceTypeAll: true,
+    sourceTypeAll: type === TabType.orderHistory,
     dateRange,
     includes,
     excludes,

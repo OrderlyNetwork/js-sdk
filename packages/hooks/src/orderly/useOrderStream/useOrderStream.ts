@@ -101,37 +101,8 @@ export const useOrderStream = (
     { error: updateAlgoOrderError, isMutating: updateAlgoMutating },
   ] = useMutation("/v1/algo/order", "PUT");
 
-  useEffect(() => {
-    const formatKey = (value?: string) => (value ? `:${value}` : "");
-    const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
-      side,
-    )}${formatKey(size.toString())}`;
-
-    registerKeyHandler?.(
-      key,
-      generateKeyFun("/v1/orders", {
-        status,
-        symbol,
-        side,
-        size,
-        page,
-        dateRange,
-        sourceTypeAll,
-      }),
-    );
-
-    return () => {
-      if (!options?.stopOnUnmount) return;
-
-      unregisterKeyHandler(key);
-    };
-  }, [status, symbol, side, size, page, dateRange, options?.keeplive]);
-
-  const normalOrdersResponse = usePrivateInfiniteQuery<{
-    rows: any[];
-    meta: any;
-  }>(
-    generateKeyFun("/v1/orders", {
+  const normalOrderKeyFn = useMemo(() => {
+    return generateKeyFun("/v1/orders", {
       status,
       symbol,
       side,
@@ -139,25 +110,11 @@ export const useOrderStream = (
       page,
       dateRange,
       sourceTypeAll,
-    }),
-    {
-      initialSize: 1,
-      // revalidateFirstPage: false,
-      // onError: (err) => {
-      //   console.error("fetch failed::::", err);
-      // },
-      formatter: (data) => data,
-      revalidateOnFocus: false,
-    },
-  );
+    });
+  }, [status, symbol, side, size, page, dateRange]);
 
-  // console.log("ordersResponse", ordersResponse);
-
-  const algoOrdersResponse = usePrivateInfiniteQuery<{
-    rows: any[];
-    meta: any;
-  }>(
-    sourceTypeAll
+  const algoOrderKeyFn = useMemo(() => {
+    return sourceTypeAll
       ? null
       : generateKeyFun("/v1/algo/orders", {
           status,
@@ -166,42 +123,52 @@ export const useOrderStream = (
           size: 100,
           page,
           dateRange,
-        }),
-    {
-      formatter: (data) => data,
-      revalidateOnFocus: false,
-    },
-  );
+        });
+  }, [status, symbol, side, dateRange, size]);
 
-  // console.log("algoOrdersResponse", algoOrdersResponse, ordersResponse);
+  useEffect(() => {
+    const formatKey = (value?: string) => (value ? `:${value}` : "");
+    const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
+      side,
+    )}${formatKey(size.toString())}`;
 
-  // const ordersResponse = useMemo(() => {
-  //   if (!normalOrdersResponse.data || !algoOrdersResponse.data) {
-  //     return {
-  //       data: null,
-  //       isLoading:
-  //         normalOrdersResponse.isLoading || algoOrdersResponse.isLoading,
-  //       isValidating:
-  //         normalOrdersResponse.isValidating || algoOrdersResponse.isValidating,
-  //     };
-  //   }
+    registerKeyHandler?.(key, normalOrderKeyFn);
 
-  //   console.log("normalOrdersResponse.data", normalOrdersResponse.data);
-  //   console.log("algoOrdersResponse.data", algoOrdersResponse.data);
+    if (algoOrderKeyFn) {
+      registerKeyHandler?.(key.replace("orders", "algoOrders"), algoOrderKeyFn);
+    }
 
-  //   return {
-  //     data: {
-  //       // rows: [
-  //       //   ...normalOrdersResponse.data.rows,
-  //       //   ...algoOrdersResponse.data.rows,
-  //       // ],
-  //       // meta: normalOrdersResponse.data?.meta,
-  //     },
-  //     isLoading: normalOrdersResponse.isLoading || algoOrdersResponse.isLoading,
-  //     isValidating:
-  //       normalOrdersResponse.isValidating || algoOrdersResponse.isValidating,
-  //   };
-  // }, [normalOrdersResponse.data, algoOrdersResponse.data]);
+    return () => {
+      if (!options?.stopOnUnmount) return;
+
+      unregisterKeyHandler(key);
+
+      if (algoOrderKeyFn) {
+        unregisterKeyHandler(key.replace("orders", "algoOrders"));
+      }
+    };
+  }, [normalOrderKeyFn, options?.keeplive]);
+
+  const normalOrdersResponse = usePrivateInfiniteQuery<{
+    rows: any[];
+    meta: any;
+  }>(normalOrderKeyFn, {
+    initialSize: 1,
+    formatter: (data) => data,
+    revalidateOnFocus: false,
+  });
+
+  // console.log("ordersResponse", ordersResponse);
+
+  const algoOrdersResponse = usePrivateInfiniteQuery<{
+    rows: any[];
+    meta: any;
+  }>(algoOrderKeyFn, {
+    formatter: (data) => data,
+    revalidateOnFocus: false,
+  });
+
+  // console.log("algoOrdersResponse", algoOrdersResponse, algoOrdersResponse);
 
   const flattenOrders = useMemo(() => {
     if (
@@ -282,6 +249,16 @@ export const useOrderStream = (
     return orders?.length || 0;
     // return ordersResponse.data?.[0]?.meta?.total || 0;
   }, [orders?.length]);
+
+  // console.log("---->>>>>>!!!! orders", total, orders, {
+  //   status,
+  //   symbol,
+  //   side,
+  //   size,
+  //   page,
+  //   dateRange,
+  //   sourceTypeAll,
+  // });
 
   const cancelAlgoOrdersByTypes = (types: AlgoOrderRootType[]) => {
     if (!types) {
