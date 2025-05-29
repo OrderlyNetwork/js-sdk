@@ -1,3 +1,4 @@
+import { useCallback, useMemo, useState } from "react";
 import {
   useAccount,
   useCollateral,
@@ -7,11 +8,10 @@ import {
   useMarginRatio,
   usePositionStream,
 } from "@orderly.network/hooks";
-import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
-import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { modal, SliderMarks, toast } from "@orderly.network/ui";
 import { DepositAndWithdrawWithSheetId } from "@orderly.network/ui-transfer";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
 
 export const usePortfolioSheetScript = () => {
   const { account } = useAccount();
@@ -32,7 +32,7 @@ export const usePortfolioSheetScript = () => {
         }
         if (
           e.message.indexOf(
-            "Signing off chain messages with Ledger is not yet supported"
+            "Signing off chain messages with Ledger is not yet supported",
           ) !== -1
         ) {
           ee.emit("wallet:sign-message-with-ledger-error", {
@@ -107,28 +107,20 @@ const useMarginRatioAndLeverage = () => {
       aggregated.notional === 0
         ? // @ts-ignore
           positionsInfo["margin_ratio"](10)
-        : marginRatio
+        : marginRatio,
     );
   }, [marginRatio, aggregated]);
 
-  const [curLeverage, { update, config: leverageLevers, isMutating }] =
-    useLeverage();
+  const { update, curLeverage, maxLeverage, leverageLevers } = useLeverage();
 
   const marks = useMemo<SliderMarks>(() => {
-    return (
-      leverageLevers?.map((e: number) => ({
-        label: `${e}x`,
-        value: e,
-      })) || []
-    );
+    return leverageLevers?.map((e) => ({
+      label: `${e}x`,
+      value: e,
+    }));
   }, [leverageLevers]);
 
   const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
-
-  const maxLeverage = leverageLevers?.reduce(
-    (a: number, item: any) => Math.max(a, Number(item), 0),
-    0
-  );
 
   const step = 100 / ((marks?.length || 0) - 1);
 
@@ -152,7 +144,7 @@ const useMarginRatioAndLeverage = () => {
         },
         (err: Error) => {
           toast.error(err.message);
-        }
+        },
       );
     } catch {
       //
@@ -173,7 +165,7 @@ const useMarginRatioAndLeverage = () => {
       setLeverage(clamped);
       debouncedCommit(clamped);
     },
-    [debouncedCommit, maxLeverage]
+    [debouncedCommit, maxLeverage],
   );
 
   const onLeverageIncrease: React.MouseEventHandler<SVGSVGElement> = () => {

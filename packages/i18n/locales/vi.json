@@ -601,6 +601,7 @@
   "affiliate.trader.myRebates": "Hoàn tiền của tôi",
   "affiliate.trader.tradingVol": "Khối lượng giao dịch",
   "affiliate.trader.rebate.30d": "Hoàn tiền 30n",
+  "affiliate.trader.tradingRebates": "Hoàn tiền giao dịch",
   "ui.pagination.morePages": "Thêm trang",
   "ui.pagination.rowsPerPage": "Số hàng mỗi trang",
   "ui.picker.selectDate": "Chọn ngày",
@@ -613,5 +614,7 @@
   "tradingLeaderboard.learnMore": "Tìm hiểu thêm",
   "tradingLeaderboard.tradeNow": "Giao dịch ngay",
   "tradingLeaderboard.tradingVolume": "Khối lượng giao dịch",
-  "tradingLeaderboard.rank": "Xếp hạng"
+  "tradingLeaderboard.rank": "Xếp hạng",
+  "tradingRewards.subtitle.mm": "Giao dịch để kiếm $ORDER",
+  "affiliate.asAffiliate.affilates": "Đối tác liên kết"
 }

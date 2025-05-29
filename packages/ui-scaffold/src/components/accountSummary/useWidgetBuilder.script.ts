@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   useLeverage,
   useLocalStorage,
@@ -7,7 +8,6 @@ import {
 import { useCollateral, useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useState } from "react";
 
 export type AccountSummaryType =
   | "totalValue"
@@ -29,9 +29,7 @@ export const useTotalValueBuilderScript = () => {
     "maxLeverage",
   ]);
 
-  const { freeCollateral, totalValue } = useCollateral({
-    dp: 2,
-  });
+  const { freeCollateral, totalValue } = useCollateral({ dp: 2 });
 
   const { state } = useAccount();
 
@@ -42,7 +40,7 @@ export const useTotalValueBuilderScript = () => {
 
   const { currentLeverage } = useMarginRatio();
 
-  const [maxLeverage] = useLeverage();
+  const { maxLeverage } = useLeverage();
 
   const onToggleItemByKey = (key: string) => {
     if (keys.includes(key)) {

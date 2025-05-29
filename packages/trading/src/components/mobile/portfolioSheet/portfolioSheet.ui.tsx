@@ -60,7 +60,9 @@ const Asset: FC<PortfolioSheetState> = (props) => {
         return Promise.reject();
       },
       onOk: () => {
-        if (typeof props.onSettlePnL !== "function") return Promise.resolve();
+        if (typeof props.onSettlePnL !== "function") {
+          return Promise.resolve();
+        }
         return props.onSettlePnL().catch((e) => {});
       },
     });
@@ -92,7 +94,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
               />
             )
           }
-          onClick={(e) => {
+          onClick={() => {
             props.toggleHideAssets();
           }}
           className="oui-cursor-pointer"
@@ -356,7 +358,7 @@ export const LeverageSelector: React.FC<PortfolioSheetState> = (props) => {
           <Flex
             itemAlign="center"
             justify="center"
-            className={cn(`oui-w-9 oui-h-3 oui-select-none`)}
+            className={cn(`oui-h-3 oui-w-9 oui-select-none`)}
           >
             {option}x
           </Flex>
@@ -365,60 +367,6 @@ export const LeverageSelector: React.FC<PortfolioSheetState> = (props) => {
     </Flex>
   );
 };
-
-const Leverage: FC<PortfolioSheetState> = (props) => {
-  const { t } = useTranslation();
-  return (
-    <Flex direction={"column"} gap={2} width={"100%"}>
-      <Flex width={"100%"} justify={"between"}>
-        <Text size="2xs" intensity={54}>
-          {t("leverage.maxAccountLeverage")}
-        </Text>
-        <Flex gap={1}>
-          <Text size="2xs" intensity={54}>
-            {`${t("common.current")}:`}
-          </Text>
-          <Text.numeral size="2xs" unit="x" intensity={98}>
-            {props.currentLeverage ?? "--"}
-          </Text.numeral>
-        </Flex>
-      </Flex>
-      <LeverageInput {...props} />
-      <LeverageSelector {...props} />
-      <LeverageSlider
-        value={props.value}
-        maxLeverage={props.maxLeverage}
-        onLeverageChange={props.onLeverageChange}
-        setShowSliderTip={props.setShowSliderTip}
-        showSliderTip={props.showSliderTip}
-        onValueCommit={props.onValueCommit}
-      />
-    </Flex>
-  );
-};
-
-// const AvailableBalance: FC<PortfolioSheetState> = (props) => {
-//   return (
-//     <Flex
-//       width={"100%"}
-//       justify={"between"}
-//       r="lg"
-//       px={3}
-//       py={4}
-//       className="oui-bg-base-6"
-//     >
-//       <Text size="2xs" intensity={80}>
-//         Available Balance
-//       </Text>
-//       <Flex className="oui-gap-[6px]">
-//         <USDCIcon size={24} />
-//         <Text.numeral dp={2} size="base" visible={!props.hideAssets}>
-//           {props.availableBalance}
-//         </Text.numeral>
-//       </Flex>
-//     </Flex>
-//   );
-// };
 
 const Buttons: FC<PortfolioSheetState> = (props) => {
   const { t } = useTranslation();

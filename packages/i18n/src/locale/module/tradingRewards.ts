@@ -2,6 +2,7 @@ export const tradingRewards = {
   "tradingRewards.rewards": "Rewards",
 
   "tradingRewards.subtitle": "Trade with {{brokerName}} to earn esORDER.",
+  "tradingRewards.subtitle.mm": "Trade to earn $ORDER",
   "tradingRewards.learnMore": "Learn more here",
 
   "tradingRewards.myEstRewards": "My est. rewards",

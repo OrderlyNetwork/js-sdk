@@ -1,13 +1,5 @@
 import React, { FC, useCallback, useContext, useMemo } from "react";
-import Button from "@/button";
-import { Divider } from "@/divider";
-import { NetworkImage } from "@/icon/networkImage";
-import { Paper } from "@/layout";
-import { RiskIndicator } from "@/riskIndicator";
-import { Slider } from "@/slider";
-import { Statistic } from "@/statistic";
-import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
-import { Numeral } from "@/text";
+import { cx } from "class-variance-authority";
 import { RotateCw } from "lucide-react";
 import {
   useCollateral,
@@ -15,16 +7,23 @@ import {
   useMarginRatio,
   useLeverage,
 } from "@orderly.network/hooks";
-
 // import Slider from "rc-slider";
 import { modal } from "@orderly.network/ui";
-import { toast } from "@/toast";
-import { AssetsContext } from "@/provider/assetsProvider";
+import Button from "@/button";
+import { Divider } from "@/divider";
 import { EyeIcon, EyeOffIcon } from "@/icon";
+import { NetworkImage } from "@/icon/networkImage";
+import { Paper } from "@/layout";
+import { AssetsContext } from "@/provider/assetsProvider";
+import { RiskIndicator } from "@/riskIndicator";
+import { Slider } from "@/slider";
+import { Statistic } from "@/statistic";
+import { StatisticStyleProvider } from "@/statistic/defaultStaticStyle";
+import { Numeral } from "@/text";
+import { toast } from "@/toast";
 import { cn } from "@/utils/css";
-import { cx } from "class-variance-authority";
-import { LeverageEditor } from "./leverageEditor";
 import { getMarginRatioColor } from "../utils";
+import { LeverageEditor } from "./leverageEditor";
 
 export interface AssetAndMarginProps {
   onDeposit?: () => Promise<void>;
@@ -44,21 +43,13 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     });
   const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
     usePositionStream();
+
   const { marginRatio, currentLeverage, mmr } = useMarginRatio();
+
   const { visible, toggleVisible, onDeposit, onWithdraw } =
     useContext(AssetsContext);
 
-  const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
-
-  // console.log("leverageLevers", leverageLevers);
-
-  // const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
-
-  // const leverageValue = useMemo(() => {
-  //   const index = leverageLevers.findIndex((item) => item === leverage);
-
-  //   return index;
-  // }, [leverage, leverageLevers]);
+  const { maxLeverage, leverageLevers, update } = useLeverage();
 
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({
@@ -86,7 +77,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
       aggregated.notional === 0
         ? // @ts-ignore
           positionsInfo["margin_ratio"](10)
-        : marginRatio
+        : marginRatio,
     );
   }, [marginRatio, aggregated]);
 
@@ -220,7 +211,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                     className="orderly-text-base-contrast orderly-ml-1"
                     surfix="x"
                   >
-                    {currentLeverage ?? '--'}
+                    {currentLeverage ?? "--"}
                   </Numeral>
                 </span>
               </div>
@@ -240,7 +231,7 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
                         toast.error(err.message);
                         // setLeverage(maxLeverage ?? 1);
                         throw err;
-                      }
+                      },
                     );
                   }}
                   maxLeverage={maxLeverage}

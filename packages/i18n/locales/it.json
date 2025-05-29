@@ -554,6 +554,7 @@
   "affiliate.asAffiliate.title": "Come affiliato",
   "affiliate.asAffiliate.description": "Porta trader per guadagnare reddito passivo",
   "affiliate.asAffiliate.button": "Diventa un affiliato",
+  "affiliate.asAffiliate.affilates": "Affiliati",
   "affiliate.asTrader.title": "Come trader",
   "affiliate.asTrader.description": "Porta trader per guadagnare reddito passivo",
   "affiliate.asTrader.button": "Inserisci codice",
@@ -599,6 +600,7 @@
   "affiliate.trader.myRebates": "I miei rimborsi",
   "affiliate.trader.tradingVol": "Volume trading",
   "affiliate.trader.rebate.30d": "Rimborsi 30g",
+  "affiliate.trader.tradingRebates": "Rimborsi di trading",
   "ui.pagination.morePages": "Più pagine",
   "ui.pagination.rowsPerPage": "Righe per pagina",
   "ui.picker.selectDate": "Seleziona data",
@@ -613,5 +615,6 @@
   "tradingLeaderboard.tradingVolume": "Volume trading",
   "tradingLeaderboard.rank": "Posizione",
   "common.long": "Compra",
-  "common.short": "Vendi"
+  "common.short": "Vendi",
+  "tradingRewards.subtitle.mm": "Fai trading per guadagnare $ORDER"
 }

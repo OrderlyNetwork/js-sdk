@@ -29,7 +29,8 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
           />
           <video
             playsInline
-            // webkit-playsinline
+            // eslint-disable-next-line react/no-unknown-property
+            webkit-playsinline // need to use this prop to ban full screen in iphone
             autoPlay
             loop
             muted
@@ -41,6 +42,12 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
               "oui-object-cover",
               "oui-opacity-50",
             )}
+            ref={(video) => {
+              if (video) {
+                video.setAttribute("playsinline", "true");
+                video.setAttribute("webkit-playsinline", "true");
+              }
+            }}
           >
             <source src={props.backgroundSrc} type="video/mp4" />
             <source src={props.backgroundSrc} type="video/webm" />
