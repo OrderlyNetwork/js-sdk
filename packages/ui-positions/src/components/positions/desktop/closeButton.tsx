@@ -38,26 +38,9 @@ export const CloseButton: React.FC = () => {
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   const onConfirm = () => {
-    return onSubmit()
-      .then(
-        () => {
-          setOpen(false);
-        },
-        (error: any) => {
-          if (typeof error === "string") {
-            toast.error(error);
-          } else {
-            toast.error(error.message);
-          }
-        },
-      )
-      .catch((error) => {
-        if (typeof error === "string") {
-          toast.error(error);
-        } else {
-          toast.error(error.message);
-        }
-      });
+    return onSubmit().then(() => {
+      setOpen(false);
+    });
   };
 
   const onClose = () => {

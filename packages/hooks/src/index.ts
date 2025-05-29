@@ -65,6 +65,7 @@ export {
   type SWRHook,
   type SWRResponse,
   type Middleware,
+  type KeyedMutator,
   unstable_serialize,
 } from "swr";
 
@@ -107,3 +108,5 @@ export {
 } from "./useRestrictedInfo";
 
 export * from "./subAccount";
+
+export { usePositionClose } from "./next/positions/usePositionClose";

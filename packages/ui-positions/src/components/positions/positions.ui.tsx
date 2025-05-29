@@ -93,6 +93,7 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
     isLoading,
     tableData,
     onSymbolChange,
+    mutatePositions,
   } = props;
 
   const columns = useColumn({
@@ -130,7 +131,10 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
         if (record.symbol) {
           return (
             <SymbolProvider symbol={record.symbol}>
-              <PositionsRowProvider position={record}>
+              <PositionsRowProvider
+                position={record}
+                mutatePositions={mutatePositions}
+              >
                 {children}
               </PositionsRowProvider>
             </SymbolProvider>

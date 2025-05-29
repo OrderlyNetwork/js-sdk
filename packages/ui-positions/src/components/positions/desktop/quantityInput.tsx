@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
 import {
   PopoverRoot,
   PopoverContent,
@@ -22,11 +21,8 @@ export const QuantityInput = (props: { value: number }) => {
   const [sliderValue, setSliderValue] = useState<number>(100);
   const {
     baseDp,
-    quoteDp,
     updateQuantity: setQuantity,
     quantity,
-    type,
-    errors,
     baseTick,
   } = usePositionsRowContext();
 

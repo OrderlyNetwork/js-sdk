@@ -1,10 +1,9 @@
-import { useLocalStorage, useMarkPricesStream } from "@orderly.network/hooks";
-import { PositionCellState } from "../positionCell/positionCell.script";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocalStorage, useMarkPricesStream } from "@orderly.network/hooks";
+import { OrderType } from "@orderly.network/types";
 import { useSymbolContext } from "../../../../providers/symbolProvider";
 import { usePositionsRowContext } from "../../desktop/positionRowContext";
-import { toast } from "@orderly.network/ui";
-import { OrderType } from "@orderly.network/types";
+import { PositionCellState } from "../positionCell/positionCell.script";
 
 export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
   const { state } = props;
@@ -16,7 +15,6 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
     quantity,
     closeOrderData,
     submitting,
-    type,
     updatePriceChange,
     updateOrderType,
     updateQuantity,
@@ -27,24 +25,13 @@ export const useLimitCloseBtnScript = (props: { state: PositionCellState }) => {
 
   const [sliderValue, setSliderValue] = useState(100);
 
-
-  const [orderConfirm ] = useLocalStorage("orderly_order_confirm", true);
-
+  const [orderConfirm] = useLocalStorage("orderly_order_confirm", true);
 
   const onConfirm = () => {
-    return onSubmit().then(
-      (res) => {
-        setSheetOpen(false);
-        setDialogOpen(false);
-      },
-      (error: any) => {
-        if (typeof error === "string") {
-          toast.error(error);
-        } else {
-          toast.error(error.message);
-        }
-      }
-    );
+    return onSubmit().then((res) => {
+      setSheetOpen(false);
+      setDialogOpen(false);
+    });
   };
 
   const onClose = () => {

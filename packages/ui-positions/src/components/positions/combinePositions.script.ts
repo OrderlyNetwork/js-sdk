@@ -47,11 +47,14 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
   });
 
   // need to get sub account Positions info to calculate portfolio and positions
-  const { data: newPositions = [], isLoading: isPositionLoading } =
-    usePrivateQuery<API.PositionExt[]>("/v1/client/aggregate/positions", {
-      // formatter: (data) => data,
-      errorRetryCount: 3,
-    });
+  const {
+    data: newPositions = [],
+    isLoading: isPositionLoading,
+    mutate: mutatePositions,
+  } = usePrivateQuery<API.PositionExt[]>("/v1/client/aggregate/positions", {
+    // formatter: (data) => data,
+    errorRetryCount: 3,
+  });
 
   // need to get sub account info to calculate portfolio and positions
   const { data: accountInfo = [], isLoading: isAccountInfoLoading } =
@@ -174,6 +177,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     symbol,
     onSymbolChange,
     pagination,
+    mutatePositions,
   };
 };
 
