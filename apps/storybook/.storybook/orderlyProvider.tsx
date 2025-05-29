@@ -119,7 +119,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
       }}
     >
       <WalletConnectorPrivyProvider
-        termsOfUse="https://learn.woo.org/legal/terms-of-use"
+        // termsOfUse="https://learn.woo.org/legal/terms-of-use"
         network={Network.testnet}
         headerProps={{
           mobile: <CustomProductNav />,
