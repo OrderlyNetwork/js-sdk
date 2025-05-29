@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.2.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 2.1.3
 
 ### Patch Changes
