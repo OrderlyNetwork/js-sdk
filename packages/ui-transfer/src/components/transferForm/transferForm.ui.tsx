@@ -38,7 +38,6 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
     toAccount,
     onToAccountChange,
     onExchange,
-    isMainAccount,
   } = props;
 
   const { t } = useTranslation();

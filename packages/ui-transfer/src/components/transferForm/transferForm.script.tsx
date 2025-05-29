@@ -50,20 +50,20 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const mainAccountId = state.mainAccountId;
   const accountId = state.accountId;
 
-  // when current account is main account, and fromAccount is not main account, set observerSubAccountId to fromAccountId
-  // when current account is sub account, set observerSubAccountId to undefined
-  const observerSubAccountId =
-    isMainAccount && fromAccount?.id && fromAccount?.id !== mainAccountId
+  // when current account is main account, and fromAccount is not main account, set observerAccountId to fromAccountId
+  // current sub account use main account orderly key to transfer, so fromAccount can be main account or current sub account
+  const observerAccountId = isMainAccount
+    ? fromAccount?.id !== mainAccountId
       ? fromAccount?.id
-      : undefined;
+      : undefined
+    : fromAccount?.id;
 
   const { hasPositions: currentHasPositions, onSettlePnl } = useSettlePnl({
-    subAccountId: observerSubAccountId,
+    subAccountId: observerAccountId,
   });
 
   // when select sub account, open the private websocket
-  const { portfolio, positions } =
-    useSubAccountDataObserver(observerSubAccountId);
+  const { portfolio, positions } = useSubAccountDataObserver(observerAccountId);
 
   const formHasPositions = useMemo(
     () => !!positions?.rows?.length,
@@ -71,11 +71,11 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   );
 
   const hasPositions = useMemo(() => {
-    return observerSubAccountId ? formHasPositions : currentHasPositions;
-  }, [observerSubAccountId, formHasPositions, currentHasPositions]);
+    return observerAccountId ? formHasPositions : currentHasPositions;
+  }, [observerAccountId, formHasPositions, currentHasPositions]);
 
   const { unsettledPnL, holding, maxQuantity } = useMemo(() => {
-    if (observerSubAccountId) {
+    if (observerAccountId) {
       return {
         unsettledPnL: portfolio?.unsettledPnL,
         holding: portfolio?.holding,
@@ -89,7 +89,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       maxQuantity: currentMaxAmount,
     };
   }, [
-    observerSubAccountId,
+    observerAccountId,
     portfolio,
     currentHolding,
     currentUnsettledPnL,
