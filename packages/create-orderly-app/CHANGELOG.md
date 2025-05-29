@@ -1,5 +1,12 @@
 # create-orderly-app
 
+## 1.7.0
+
+### Minor Changes
+
+- e1badae: publish
+- publish
+
 ## 1.7.0-alpha.0
 
 ### Minor Changes

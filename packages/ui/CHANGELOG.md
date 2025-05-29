@@ -1,5 +1,18 @@
 # @orderly.network/ui
 
+## 2.2.0
+
+### Minor Changes
+
+- e1badae: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [e1badae]
+- Updated dependencies
+  - @orderly.network/utils@2.2.0
+
 ## 2.2.0-alpha.0
 
 ### Minor Changes
