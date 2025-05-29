@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.7.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+
 ## 1.7.0
 
 ### Minor Changes

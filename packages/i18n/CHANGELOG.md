@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.2.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+
 ## 2.2.0
 
 ### Minor Changes

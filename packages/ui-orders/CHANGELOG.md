@@ -1,5 +1,21 @@
 # @orderly.network/ui-orders
 
+## 2.2.1-npm-publish.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.2.1-npm-publish.0
+  - @orderly.network/hooks@2.2.1-npm-publish.0
+  - @orderly.network/i18n@2.2.1-npm-publish.0
+  - @orderly.network/types@2.2.1-npm-publish.0
+  - @orderly.network/ui@2.2.1-npm-publish.0
+  - @orderly.network/ui-connector@2.2.1-npm-publish.0
+  - @orderly.network/ui-share@2.2.1-npm-publish.0
+  - @orderly.network/ui-tpsl@2.2.1-npm-publish.0
+  - @orderly.network/utils@2.2.1-npm-publish.0
+
 ## 2.2.0
 
 ### Minor Changes
