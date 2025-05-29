@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useRef } from "react";
 import {
   type ComputedAlgoOrder,
   useLocalStorage,
@@ -8,7 +9,6 @@ import {
 import { SDKError } from "@orderly.network/types";
 import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import { useEffect, useMemo, useRef } from "react";
 
 export type TPSLBuilderOptions = {
   position: API.Position;
@@ -23,9 +23,9 @@ export type TPSLBuilderOptions = {
     order: ComputedAlgoOrder,
     options: {
       position: API.Position;
-      submit: () => Promise<any>;
+      submit: (params?: { accountId?: string }) => Promise<any>;
       cancel: () => Promise<any>;
-    }
+    },
   ) => Promise<boolean>;
 };
 
@@ -60,7 +60,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     {
       defaultOrder: order,
       isEditing,
-    }
+    },
   );
 
   const setQuantity = (value: number | string) => {
@@ -69,7 +69,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
   const setOrderPrice = (
     name: "tp_trigger_price" | "sl_trigger_price",
-    value: number | string
+    value: number | string,
   ) => {
     setValue(name, value);
   };
@@ -80,7 +80,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
   const maxQty = useMemo(
     () => Math.abs(Number(position.position_qty)),
-    [position.position_qty]
+    [position.position_qty],
   );
 
   const dirty = useMemo(() => {
@@ -99,10 +99,10 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
     if (order && isEditing) {
       const tp = order.child_orders.find(
-        (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT
+        (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT,
       );
       const sl = order.child_orders.find(
-        (o) => o.algo_type === AlgoOrderType.STOP_LOSS
+        (o) => o.algo_type === AlgoOrderType.STOP_LOSS,
       );
 
       if (
@@ -202,28 +202,22 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   };
 
   const onSubmit = async () => {
-    return Promise.resolve()
-      .then(() => {
-        if (typeof options.onConfirm !== "function" || !needConfirm) {
-          return submit().then(
-            () => true,
-            (reject) => {
-              if (reject?.message) {
-                toast.error(reject.message);
-              }
-              return Promise.reject(false);
-            }
-          );
-        }
-        return options.onConfirm(tpslOrder, {
-          position,
-          submit,
-          cancel,
+    if (typeof options.onConfirm !== "function" || !needConfirm) {
+      return submit({ accountId: position.account_id })
+        .then(() => true)
+        .catch((err) => {
+          if (err?.message) {
+            toast.error(err.message);
+          }
+          throw false;
         });
-      })
-      .then((isSuccess) => {
-        console.log("result", isSuccess);
-      });
+    }
+
+    return options.onConfirm(tpslOrder, {
+      position,
+      submit,
+      cancel,
+    });
   };
 
   return {
