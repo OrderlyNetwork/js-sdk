@@ -94,12 +94,15 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
         <ExchangeDivider
           icon={
             <TransferVerticalIcon
-              className={cn(
-                isMainAccount
-                  ? "oui-cursor-pointer oui-text-primary"
-                  : " oui-cursor-not-allowed oui-text-base-contrast-20",
-              )}
-              onClick={isMainAccount ? onExchange : undefined}
+              // TODO: determines if the current orderly key is the main account
+              // className={cn(
+              //   isMainAccount
+              //     ? "oui-cursor-pointer oui-text-primary"
+              //     : " oui-cursor-not-allowed oui-text-base-contrast-20",
+              // )}
+              // onClick={isMainAccount ? onExchange : undefined}
+              className="oui-cursor-pointer oui-text-primary"
+              onClick={onExchange}
             />
           }
         />
