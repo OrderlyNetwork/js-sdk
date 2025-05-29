@@ -148,6 +148,7 @@ npm_patch_release:
     GIT_COMMIT_MESSAGE: "publish release"
     EXIT_PRE_TAG: true
 
+
 npm_minor_alpha:
   <<: *npm_publish_template
   variables:
@@ -160,6 +161,24 @@ npm_minor_release:
   <<: *npm_publish_template
   needs:
     - npm_minor_alpha
+  variables:
+    RELEASE_TYPE: minor
+    GIT_COMMIT_MESSAGE: "publish release"
+    EXIT_PRE_TAG: true
+
+
+npm_major_alpha:
+  <<: *npm_publish_template
+  variables:
+    RELEASE_TYPE: major
+    GIT_COMMIT_MESSAGE: "publish alpha"
+    CUSTOM_PRE_TAG: alpha
+    EXIT_PRE_TAG: false
+
+npm_major_release:
+  <<: *npm_publish_template
+  needs:
+    - npm_major_alpha
   variables:
     RELEASE_TYPE: minor
     GIT_COMMIT_MESSAGE: "publish release"
