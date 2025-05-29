@@ -118,6 +118,22 @@ internal_patch_publish:
       # exit pre tag
       export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
 
+      # set internal npm registry and token
+      # export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
+      # export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+
+      # set manual trigger to true to skip check branch
+      export MANUAL_TRIGGER=true
+
+      # custom commit message
+      export GIT_COMMIT_MESSAGE="${GIT_COMMIT_MESSAGE}"
+
+      # custom pre tag
+      export CUSTOM_PRE_TAG="${CUSTOM_PRE_TAG}"
+
+      # exit pre tag
+      export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
+
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
       pnpm release:${RELEASE_TYPE}
@@ -147,7 +163,6 @@ npm_patch_release:
     RELEASE_TYPE: patch
     GIT_COMMIT_MESSAGE: "publish release"
     EXIT_PRE_TAG: true
-
 
 npm_minor_alpha:
   <<: *npm_publish_template

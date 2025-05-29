@@ -10,65 +10,72 @@ export type LeaderboardProps = {
 } & LeaderboardScriptReturn;
 
 export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
-  const renderBackground = () => {
-    const linearGradient =
-      "linear-gradient(180deg, rgba(var(--oui-color-base-10) / 0.3) 0%, rgba(var(--oui-color-base-10) / 0) 70%, rgba(var(--oui-color-base-10) / 1) 100%)";
+  // const renderBackground = () => {
+  //   const linearGradient =
+  //     "linear-gradient(180deg, rgba(var(--oui-color-base-10) / 0.3) 0%, rgba(var(--oui-color-base-10) / 0) 70%, rgba(var(--oui-color-base-10) / 1) 100%)";
 
-    if (props.isVideo) {
-      return (
-        <div
-          className={cn("oui-absolute oui-left-0 oui-top-0", "oui-size-full")}
-        >
-          <div
-            style={{
-              backgroundImage: linearGradient,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-            }}
-            className={cn("oui-absolute oui-left-0 oui-top-0", "oui-size-full")}
-          />
-          <video
-            playsInline
-            // webkit-playsinline
-            autoPlay
-            loop
-            muted
-            className={cn(
-              // rest style
-              "oui-pointer-events-none oui-border-none oui-bg-transparent oui-outline-none",
-              "oui-size-full",
-              // "oui-absolute oui-top-0 oui-left-0",
-              "oui-object-cover",
-              "oui-opacity-50",
-            )}
-          >
-            <source src={props.backgroundSrc} type="video/mp4" />
-            <source src={props.backgroundSrc} type="video/webm" />
-            <source src={props.backgroundSrc} type="video/ogg" />
-            <source src={props.backgroundSrc} type="video/avi" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      );
-    }
+  //   if (props.isVideo) {
+  //     return (
+  //       <div
+  //         className={cn("oui-absolute oui-left-0 oui-top-0", "oui-size-full")}
+  //       >
+  //         <div
+  //           style={{
+  //             backgroundImage: linearGradient,
+  //             backgroundSize: "cover",
+  //             backgroundRepeat: "no-repeat",
+  //           }}
+  //           className={cn("oui-absolute oui-left-0 oui-top-0", "oui-size-full")}
+  //         />
+  //         <video
+  //           playsInline
+  //           // eslint-disable-next-line react/no-unknown-property
+  //           webkit-playsinline // need to use this prop to ban full screen in iphone
+  //           autoPlay
+  //           loop
+  //           muted
+  //           className={cn(
+  //             // rest style
+  //             "oui-pointer-events-none oui-border-none oui-bg-transparent oui-outline-none",
+  //             "oui-size-full",
+  //             // "oui-absolute oui-top-0 oui-left-0",
+  //             "oui-object-cover",
+  //             "oui-opacity-50",
+  //           )}
+  //           // ref={(video) => {
+  //           //   if (video) {
+  //           //     video.setAttribute("playsinline", "true");
+  //           //     video.setAttribute("webkit-playsinline", "true");
+  //           //   }
+  //           // }}
+  //         >
+  //           <source src={props.backgroundSrc} type="video/mp4" />
+  //           <source src={props.backgroundSrc} type="video/webm" />
+  //           <source src={props.backgroundSrc} type="video/ogg" />
+  //           <source src={props.backgroundSrc} type="video/avi" />
+  //           Your browser does not support the video tag.
+  //         </video>
+  //       </div>
+  //     );
+  //   }
 
-    if (props.backgroundSrc) {
-      return (
-        <div
-          style={{
-            backgroundImage: `${linearGradient}, url(${props.backgroundSrc}) `,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-          }}
-          className={cn(
-            "oui-absolute oui-left-0 oui-top-0",
-            "oui-size-full",
-            "oui-opacity-50",
-          )}
-        />
-      );
-    }
-  };
+  //   if (props.backgroundSrc) {
+  //     return (
+  //       <div
+  //         style={{
+  //           backgroundImage: `${linearGradient}, url(${props.backgroundSrc}) `,
+  //           backgroundSize: "cover",
+  //           backgroundRepeat: "no-repeat",
+  //         }}
+  //         className={cn(
+  //           "oui-absolute oui-left-0 oui-top-0",
+  //           "oui-size-full",
+  //           "oui-opacity-50",
+  //         )}
+  //       />
+  //     );
+  //   }
+  // };
   return (
     <div
       style={{
@@ -80,7 +87,7 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
         props.className,
       )}
     >
-      {renderBackground()}
+      {/* {renderBackground()} */}
       <Flex
         direction="column"
         gapY={3}
@@ -94,7 +101,7 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
         )}
       >
         {props.showCampaigns && <CampaignsWidget />}
-        <TradingListWidget className={cn(!props.canTrading && "oui-h-full")} />
+        <TradingListWidget />
       </Flex>
     </div>
   );

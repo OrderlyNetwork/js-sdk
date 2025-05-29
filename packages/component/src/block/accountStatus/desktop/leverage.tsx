@@ -21,7 +21,7 @@ interface LeverageAndMarginRatioProps {
 const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
   const { isConnected, ...rest } = props;
   const { marginRatio, currentLeverage, mmr } = useMarginRatio();
-  const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
+  const { maxLeverage } = useLeverage();
 
   const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
 
@@ -106,7 +106,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           }
         >
           {isConnected ? (
-            <Numeral surfix={"x"}>{currentLeverage}</Numeral>
+            <Numeral surfix={"x"}>{currentLeverage!}</Numeral>
           ) : (
             "-"
           )}

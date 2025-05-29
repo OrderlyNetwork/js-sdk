@@ -78,8 +78,8 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
           <Text className="oui-text-base-contrast oui-text-base oui-font-semibold oui-whitespace-pre max-[400px]:oui-text-[15px]">
             {t("common.tradingRewards")}
           </Text>
-          <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
-            {t("tradingRewards.myEstRewards")}
+          <Text className="oui-text-2xs oui-font-normal oui-whitespace-pre oui-text-base-contrast-54">
+            {t("tradingRewards.subtitle.mm")}
           </Text>
         </Flex>
         <TradingRewardsIcon />
@@ -114,16 +114,6 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
           {props?.curEpochEstimate?.est_r_wallet ?? "--"}
         </Text>
         <Flex className="oui-ml-auto">
-          <Text
-            onClick={props.goToClaim}
-            className={cn(
-              isNumber(props?.curEpochEstimate?.est_r_wallet)
-                ? "oui-text-2xs oui-font-semibold oui-text-[#BD6BED]"
-                : "oui-hidden",
-            )}
-          >
-            {t("tradingRewards.claim")}
-          </Text>
           <ChevronRightIcon
             size={18}
             color="white"

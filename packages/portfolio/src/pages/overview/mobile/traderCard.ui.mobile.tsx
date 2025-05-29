@@ -42,10 +42,10 @@ export const TraderCardMobile: FC<TraderCardMobileProps> = (props) => {
       <Flex className="oui-w-full oui-flex-row oui-justify-between oui-items-center">
         <Flex className="oui-flex-col oui-items-start">
           <Text className="oui-text-base-contrast oui-text-base oui-font-semibold">
-            {t("affiliate.trader")}
+            {t("affiliate.trader.rebates")}
           </Text>
           <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
-            {t("affiliate.trader.rebate.30d")}
+            {t("affiliate.trader.tradingRebates")}
           </Text>
         </Flex>
         <TraderMobileIcon />
@@ -64,7 +64,9 @@ export const TraderCardMobile: FC<TraderCardMobileProps> = (props) => {
         <Text
           className={cn(
             "oui-text-xs oui-font-semibold",
-            isNumber(props?.referralInfo?.referee_info?.["30d_referee_rebate"])
+            isNumber(
+              props?.referralInfo?.referee_info?.["30d_referee_rebate"],
+            ) && props?.referralInfo?.referee_info?.["30d_referee_rebate"] != 0
               ? "oui-text-base-contrast"
               : "oui-text-base-contrast-36",
           )}
@@ -73,6 +75,9 @@ export const TraderCardMobile: FC<TraderCardMobileProps> = (props) => {
             props?.referralInfo?.referee_info?.["30d_referee_rebate"],
             { fix: 2, fallback: "--" },
           )}
+        </Text>
+        <Text className="oui-text-xs oui-font-semibold oui-text-base-contrast-36">
+          (30D)
         </Text>
         <ChevronRightIcon
           size={18}

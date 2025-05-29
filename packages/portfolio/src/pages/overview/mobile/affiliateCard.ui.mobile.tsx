@@ -42,13 +42,12 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
       <Flex className="oui-w-full oui-flex-row oui-justify-between oui-items-center">
         <Flex className="oui-flex-col oui-items-start">
           <Text className="oui-text-base-contrast oui-text-base oui-font-semibold">
-            {t("common.affiliate")}
+            {t("affiliate.asAffiliate.affilates")}
           </Text>
           <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
-            {t("affiliate.commission.30d")}
+            {t("affiliate.commission")}
           </Text>
         </Flex>
-        {/* <TraderMobileIcon /> */}
         <AffiliateIcon />
       </Flex>
       <Flex className="oui-mt-auto oui-w-full oui-flex-row oui-items-center oui-gap-1">
@@ -60,7 +59,9 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
         <Text
           className={cn(
             "oui-text-xs oui-font-semibold",
-            isNumber(props?.referralInfo?.referrer_info["30d_referrer_rebate"])
+            isNumber(
+              props?.referralInfo?.referrer_info["30d_referrer_rebate"],
+            ) && props?.referralInfo?.referrer_info["30d_referrer_rebate"] != 0
               ? "oui-text-base-contrast"
               : "oui-text-base-contrast-36",
           )}
@@ -69,6 +70,9 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
             props?.referralInfo?.referrer_info["30d_referrer_rebate"],
             { fix: 2, fallback: "--" },
           )}
+        </Text>
+        <Text className="oui-text-xs oui-font-semibold oui-text-base-contrast-36">
+          (30D)
         </Text>
         <ChevronRightIcon
           size={18}

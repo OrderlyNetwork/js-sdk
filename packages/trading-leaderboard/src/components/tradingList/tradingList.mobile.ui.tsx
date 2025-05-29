@@ -1,22 +1,11 @@
 import { FC, SVGProps } from "react";
+import { cn, DataFilter, DataTable, Flex, Spinner } from "@orderly.network/ui";
+import { useTradingListColumns } from "./column";
 import {
-  Box,
-  CloseCircleFillIcon,
-  cn,
-  DataFilter,
-  DataTable,
-  Flex,
-  Input,
-  Spinner,
-  Text,
-} from "@orderly.network/ui";
-import {
-  FilterDays,
   getRowKey,
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
-import { useTradingListColumns } from "./column";
 
 export type TradingListProps = {
   style?: React.CSSProperties;
@@ -37,7 +26,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
       style={props.style}
       className={cn(
         "oui-mobile-trading-leaderboard-trading-list",
-        props.className
+        props.className,
       )}
     >
       <Flex
@@ -89,7 +78,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
                 " after:oui-top-0 after:oui-left-0 after:oui-z-[-1]",
                 "after:oui-border-b after:oui-border-t",
                 isFirst && "after:oui-border-l after:oui-rounded-l-lg",
-                isLast && "after:oui-border-r  after:oui-rounded-r-lg"
+                isLast && "after:oui-border-r  after:oui-rounded-r-lg",
               ),
             };
           }

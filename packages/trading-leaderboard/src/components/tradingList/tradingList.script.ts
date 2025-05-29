@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { differenceInDays } from "date-fns";
 import {
   useAccount,
   useConfig,
@@ -6,11 +7,10 @@ import {
   useQuery,
   usePrivateQuery,
 } from "@orderly.network/hooks";
-import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
-import { differenceInDays } from "date-fns";
-import { getDateRange, formatDateRange } from "../../utils";
 import { AccountStatusEnum, API } from "@orderly.network/types";
+import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { useEndReached } from "../../hooks/useEndReached";
+import { getDateRange, formatDateRange } from "../../utils";
 
 export type TradingListScriptOptioins = {};
 
@@ -34,7 +34,7 @@ export type TradingResponse = {
 export type TradingListScriptReturn = ReturnType<typeof useTradingListScript>;
 
 export const FilterDays = [7, 14, 30, 90] as const;
-export type TFilterDays = typeof FilterDays[number];
+export type TFilterDays = (typeof FilterDays)[number];
 export type DateRange = {
   from?: Date;
   to?: Date;
@@ -110,7 +110,7 @@ export function useTradingListScript() {
 
   const { data, isLoading } = useDataSource(
     getUrl({ page, pageSize, address: searchValue }),
-    searchValue
+    searchValue,
   );
 
   const {
@@ -137,7 +137,7 @@ export function useTradingListScript() {
       initialSize: 1,
       formatter: (res) => res,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   // it will use first page data cache
@@ -152,7 +152,7 @@ export function useTradingListScript() {
     {
       formatter: (res) => res,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const { data: userDataRes = [] } = usePrivateQuery<TradingData[]>(
@@ -161,17 +161,17 @@ export function useTradingListScript() {
       : null,
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const getAddressRank = useCallback(
     (address: string) => {
       const index = top100Data?.rows.findIndex((item) =>
-        isSameAddress(item.address, address!)
+        isSameAddress(item.address, address!),
       );
       return index !== -1 ? index! + 1 : "100+";
     },
-    [top100Data]
+    [top100Data],
   );
 
   const userDataList = useMemo(() => {
@@ -217,7 +217,7 @@ export function useTradingListScript() {
         };
       });
     },
-    [page, pageSize, sort, searchValue, getAddressRank]
+    [page, pageSize, sort, searchValue, getAddressRank],
   );
 
   const dataSource = useMemo(() => {
@@ -250,7 +250,7 @@ export function useTradingListScript() {
 
   const pagination = useMemo(
     () => parsePagination(data?.meta),
-    [parsePagination, data]
+    [parsePagination, data],
   );
 
   useEndReached(sentinelRef, () => {
@@ -271,7 +271,7 @@ export function useTradingListScript() {
     (sort?: TableSort) => {
       setSort(sort || initialSort);
     },
-    [initialSort]
+    [initialSort],
   );
 
   useEffect(() => {
@@ -318,7 +318,7 @@ export function useDataSource(url: string, searchValue: string) {
     {
       formatter: (res) => res,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   // TODO: use public api when api is ready

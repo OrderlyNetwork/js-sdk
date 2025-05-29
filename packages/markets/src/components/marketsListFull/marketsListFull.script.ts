@@ -24,10 +24,11 @@ export const useMarketsListFullScript = (
   const { searchValue } = useMarketsContext();
 
   const { onSort, getSortedList, sort } = useSort(options.initialSort);
+  console.log("sort", sort);
 
   const dataSource = useMemo(() => {
-    const list = getSortedList(data);
-    return searchBySymbol(list, searchValue, "base-type");
+    const searchList = searchBySymbol(data, searchValue, "base-type");
+    return getSortedList(searchList);
   }, [data, getSortedList, searchValue]);
 
   useEffect(() => {

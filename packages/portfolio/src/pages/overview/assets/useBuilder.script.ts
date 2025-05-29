@@ -22,7 +22,7 @@ export const useAssetScript = () => {
   const { totalValue, freeCollateral } = useCollateral();
   const { wrongNetwork, disabledConnect } = useAppContext();
   const [data] = usePositionStream();
-  const [currentLeverage] = useLeverage();
+  const { curLeverage } = useLeverage();
   const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
   const { isMobile } = useScreen();
   const handleDomId = isMobile
@@ -57,7 +57,7 @@ export const useAssetScript = () => {
     freeCollateral,
     unrealPnL: data.aggregated.total_unreal_pnl,
     unrealROI: data.totalUnrealizedROI,
-    currentLeverage,
+    currentLeverage: curLeverage,
     onLeverageEdit,
     visible,
     wrongNetwork,

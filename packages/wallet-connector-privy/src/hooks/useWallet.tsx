@@ -185,7 +185,6 @@ export function useWallet() {
   };
 
   const switchWallet = (walletType: WalletType) => {
-    // TODO need get chain from wallet
     const fromWallet = wallet?.accounts[0].address;
     let toWallet: string | undefined;
     if (isPrivy) {
