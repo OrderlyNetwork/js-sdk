@@ -13,6 +13,7 @@ export const affiliate = {
     "Grow your brand | Get 40% commission | Unlock exclusive perks",
   "affiliate.page.learnMore": "Learn how it works",
 
+  "affiliate.asAffiliate.affilates": "Affiliates",
   "affiliate.asAffiliate.title": "As an affiliate",
   "affiliate.asAffiliate.description": "Onboard traders to earn passive income",
   "affiliate.asAffiliate.button": "Become an affiliate",
@@ -73,6 +74,8 @@ export const affiliate = {
   "affiliate.trader.yourReferrer": "Your referrer",
   "affiliate.trader.rebate": "Rebate",
   "affiliate.trader.rebates": "Rebates",
+  "affiliate.trader.rebate.30d": "30d trading rebates",
+  "affiliate.trader.tradingRebates": "Trading rebates",
   "affiliate.trader.myRebates": "My rebates",
   "affiliate.trader.tradingVol": "Trading vol.",
 };

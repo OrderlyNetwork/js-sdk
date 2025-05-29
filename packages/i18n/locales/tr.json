@@ -501,6 +501,7 @@
   "connector.privy.myWallet": "Cüzdanım",
   "connector.privy.addEvmWallet": "EVM cüzdanı ekle",
   "connector.privy.addSolanaWallet": "Solana cüzdanı ekle",
+  "connector.privy.addAbstractWallet": "Abstract cüzdan ekle",
   "connector.privy.createEvmWallet": "EVM cüzdanı oluştur",
   "connector.privy.createSolanaWallet": "Solana cüzdanı oluştur",
   "connector.privy.termsOfUse": "Cüzdanınızı bağlayarak <0>kullanım koşullarını</0> kabul etmiş olursunuz.",
@@ -511,6 +512,7 @@
   "connector.privy.switchNetwork.tips": "Devam etmek için {{chainName}}'e geçin.",
   "connector.privy.addEvmWallet.tips": "EVM ağını kullanmaya devam etmek için EVM uyumlu bir cüzdan bağlayın.",
   "connector.privy.addSolanaWallet.tips": "Solana ağını kullanmaya devam etmek için Solana uyumlu bir cüzdan bağlayın.",
+  "connector.privy.addAbstractWallet.tips": "Abstract ağını kullanmaya devam etmek için Abstract uyumlu bir cüzdan bağlayın.",
   "transfer.network": "Ağ",
   "transfer.lowestFee": "en düşük ücret",
   "transfer.web3Wallet": "Web3 Cüzdanınız",
@@ -552,6 +554,7 @@
   "affiliate.asAffiliate.title": "Ortak olarak",
   "affiliate.asAffiliate.description": "Pasif gelir elde etmek için işlemcileri ağınıza dahil edin",
   "affiliate.asAffiliate.button": "Ortak olun",
+  "affiliate.asAffiliate.affilates": "Ortaklar",
   "affiliate.asTrader.title": "İşlemci olarak",
   "affiliate.asTrader.description": "Pasif gelir elde etmek için işlemcileri ağınıza dahil edin",
   "affiliate.asTrader.button": "Kodu girin",
@@ -596,6 +599,8 @@
   "affiliate.trader.rebates": "İadeler",
   "affiliate.trader.myRebates": "İadelerim",
   "affiliate.trader.tradingVol": "İşlem hacmi",
+  "affiliate.trader.rebate.30d": "30g iade",
+  "affiliate.trader.tradingRebates": "İşlem iadeleri",
   "ui.pagination.morePages": "Daha fazla sayfa",
   "ui.pagination.rowsPerPage": "Sayfa başına satır",
   "ui.picker.selectDate": "Tarih Seç",
@@ -609,6 +614,7 @@
   "tradingLeaderboard.tradeNow": "Şimdi işlem yapın",
   "tradingLeaderboard.tradingVolume": "İşlem hacmi",
   "tradingLeaderboard.rank": "Sıralama",
-  "common.long": "Satın Al",
-  "common.short": "Sat"
+  "common.long": "Al",
+  "common.short": "Sat",
+  "tradingRewards.subtitle.mm": "$ORDER kazanmak için işlem yapın"
 }

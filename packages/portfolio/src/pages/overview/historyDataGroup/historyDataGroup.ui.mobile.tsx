@@ -1,0 +1,47 @@
+import {
+  TabPanel,
+  Tabs,
+} from "@orderly.network/ui";
+import { AssetHistoryWidget } from "../assetHistory";
+import { TabName } from "./useState.script";
+import { FundingHistoryWidget } from "../funding";
+import { DistributionHistoryWidget } from "../distribution";
+import { useTranslation } from "@orderly.network/i18n";
+export const HistoryDataGroupMobile = (props: {
+  active?: TabName;
+  onTabChange: (tab: string) => void;
+}) => {
+  const { active = "deposit", onTabChange } = props;
+  const { t } = useTranslation();
+
+  return (
+    <Tabs
+      value={active}
+      onValueChange={onTabChange}
+      variant="contained"
+      size="lg"
+      classNames={{
+        tabsList: "oui-px-3 oui-py-2",
+      }}
+    >
+      <TabPanel
+        title={t("portfolio.overview.deposits&Withdrawals")}
+        value={"deposit"}
+      >
+        <AssetHistoryWidget />
+      </TabPanel>
+      <TabPanel
+        title={t("common.funding")}
+        value={"funding"}
+      >
+        <FundingHistoryWidget />
+      </TabPanel>
+      <TabPanel
+        title={t("portfolio.overview.distribution")}
+        value={"distribution"}
+      >
+        <DistributionHistoryWidget />
+      </TabPanel>
+    </Tabs>
+  );
+};

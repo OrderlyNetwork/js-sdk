@@ -501,6 +501,7 @@
   "connector.privy.myWallet": "Il mio portafoglio",
   "connector.privy.addEvmWallet": "Aggiungi portafoglio EVM",
   "connector.privy.addSolanaWallet": "Aggiungi portafoglio Solana",
+  "connector.privy.addAbstractWallet": "Aggiungi portafoglio Abstract",
   "connector.privy.createEvmWallet": "Crea portafoglio EVM",
   "connector.privy.createSolanaWallet": "Crea portafoglio Solana",
   "connector.privy.termsOfUse": "Connettendo il tuo portafoglio, riconosci e accetti i <0>termini d'uso</0>.",
@@ -511,6 +512,7 @@
   "connector.privy.switchNetwork.tips": "Passa a {{chainName}} per continuare.",
   "connector.privy.addEvmWallet.tips": "Connetti un portafoglio compatibile con EVM per continuare a utilizzare la rete EVM.",
   "connector.privy.addSolanaWallet.tips": "Connetti un portafoglio compatibile con Solana per continuare a utilizzare la rete Solana.",
+  "connector.privy.addAbstractWallet.tips": "Connetti un portafoglio compatibile con Abstract per continuare a utilizzare la rete Abstract.",
   "transfer.network": "Rete",
   "transfer.lowestFee": "commissione più bassa",
   "transfer.web3Wallet": "Il tuo portafoglio Web3",
@@ -552,6 +554,7 @@
   "affiliate.asAffiliate.title": "Come affiliato",
   "affiliate.asAffiliate.description": "Porta trader per guadagnare reddito passivo",
   "affiliate.asAffiliate.button": "Diventa un affiliato",
+  "affiliate.asAffiliate.affilates": "Affiliati",
   "affiliate.asTrader.title": "Come trader",
   "affiliate.asTrader.description": "Porta trader per guadagnare reddito passivo",
   "affiliate.asTrader.button": "Inserisci codice",
@@ -596,6 +599,8 @@
   "affiliate.trader.rebates": "Rimborsi",
   "affiliate.trader.myRebates": "I miei rimborsi",
   "affiliate.trader.tradingVol": "Volume trading",
+  "affiliate.trader.rebate.30d": "Rimborsi 30g",
+  "affiliate.trader.tradingRebates": "Rimborsi di trading",
   "ui.pagination.morePages": "Più pagine",
   "ui.pagination.rowsPerPage": "Righe per pagina",
   "ui.picker.selectDate": "Seleziona data",
@@ -610,5 +615,6 @@
   "tradingLeaderboard.tradingVolume": "Volume trading",
   "tradingLeaderboard.rank": "Posizione",
   "common.long": "Compra",
-  "common.short": "Vendi"
+  "common.short": "Vendi",
+  "tradingRewards.subtitle.mm": "Fai trading per guadagnare $ORDER"
 }

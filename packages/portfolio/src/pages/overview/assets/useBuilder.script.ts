@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
   useAccount,
   useCollateral,
@@ -7,20 +7,27 @@ import {
   usePositionStream,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { LeverageWidgetId } from "@orderly.network/ui-leverage";
-import { DepositAndWithdrawWithDialogId } from "@orderly.network/ui-transfer";
 import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { modal, useScreen } from "@orderly.network/ui";
+import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
+import {
+  DepositAndWithdrawWithDialogId,
+  DepositAndWithdrawWithSheetId,
+} from "@orderly.network/ui-transfer";
 
 export const useAssetScript = () => {
-  const { connect } = useWalletConnector();
+  const { connect, namespace } = useWalletConnector();
   const { state } = useAccount();
   const { totalValue, freeCollateral } = useCollateral();
   const { wrongNetwork, disabledConnect } = useAppContext();
   const [data] = usePositionStream();
-  const [currentLeverage] = useLeverage();
+  const { curLeverage } = useLeverage();
   const [visible, setVisible] = useLocalStorage("orderly_assets_visible", true);
+  const { isMobile } = useScreen();
+  const handleDomId = isMobile
+    ? DepositAndWithdrawWithSheetId
+    : DepositAndWithdrawWithDialogId;
 
   const canTrade = useMemo(() => {
     return (
@@ -32,15 +39,15 @@ export const useAssetScript = () => {
   }, [state.status, wrongNetwork, disabledConnect]);
 
   const onLeverageEdit = () => {
-    modal.show(LeverageWidgetId);
+    modal.show(LeverageWidgetWithDialogId);
   };
 
-  const onDeposit = () => {
-    modal.show(DepositAndWithdrawWithDialogId, { activeTab: "deposit" });
-  };
+  const onDeposit = useCallback(() => {
+    modal.show(handleDomId, { activeTab: "deposit" });
+  }, [handleDomId]);
 
   const onWithdraw = () => {
-    modal.show(DepositAndWithdrawWithDialogId, { activeTab: "withdraw" });
+    modal.show(handleDomId, { activeTab: "withdraw" });
   };
 
   return {
@@ -50,13 +57,14 @@ export const useAssetScript = () => {
     freeCollateral,
     unrealPnL: data.aggregated.total_unreal_pnl,
     unrealROI: data.totalUnrealizedROI,
-    currentLeverage,
+    currentLeverage: curLeverage,
     onLeverageEdit,
     visible,
     wrongNetwork,
     toggleVisible: () => setVisible(!visible),
     onDeposit,
     onWithdraw,
+    namespace,
   } as const;
 };
 

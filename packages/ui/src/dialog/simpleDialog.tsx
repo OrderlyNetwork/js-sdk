@@ -25,6 +25,7 @@ type SimpleDialogProps = {
     content?: string;
     body?: string;
     footer?: string;
+    overlay?: string;
   };
   /** if provider, it will overrides others content props */
   contentProps?: DialogContentProps;
@@ -47,6 +48,7 @@ const SimpleDialog: FC<PropsWithChildren<SimpleDialogProps>> = (props) => {
         /** prevent close dialog when click the mask  */
         // onPointerDownOutside={(event) => event.preventDefault()}
         className={props.classNames?.content}
+        overlyClassName={props.classNames?.overlay}
         {...props.contentProps}
       >
         {title && (

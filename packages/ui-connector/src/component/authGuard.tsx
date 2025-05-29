@@ -1,4 +1,7 @@
+import { PropsWithChildren, ReactElement, useMemo } from "react";
 import { useAccount, useMediaQuery } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import {
   AccountStatusEnum,
   MEDIA_TABLET,
@@ -14,19 +17,16 @@ import {
   useScreen,
   type ButtonProps,
 } from "@orderly.network/ui";
-import { useAppContext } from "@orderly.network/react-app";
-import { PropsWithChildren, ReactElement, useMemo } from "react";
-import {
-  WalletConnectorModalId,
-  WalletConnectorSheetId,
-} from "./walletConnector";
+import { Flex } from "@orderly.network/ui";
+import { Box } from "@orderly.network/ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
 } from "@orderly.network/ui-chain-selector";
-import { Flex } from "@orderly.network/ui";
-import { Box } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import {
+  WalletConnectorModalId,
+  WalletConnectorSheetId,
+} from "./walletConnector";
 
 type ChainProps = {
   networkId?: NetworkId;
@@ -187,7 +187,7 @@ const DefaultFallback = (props: {
   const onConnectOrderly = () => {
     modal.show(matches ? WalletConnectorSheetId : WalletConnectorModalId).then(
       (r) => console.log(r),
-      (error) => console.log(error)
+      (error) => console.log(error),
     );
   };
 
@@ -236,7 +236,7 @@ const DefaultFallback = (props: {
             }
           }
         },
-        (error) => console.log("[switchChain error]", error)
+        (error) => console.log("[switchChain error]", error),
       );
   };
 
@@ -316,7 +316,7 @@ AuthGuard.displayName = "AuthGuard";
 const StatusInfo = (
   props: ButtonProps & {
     description?: string;
-  }
+  },
 ) => {
   const { description, ...buttonProps } = props;
   return (

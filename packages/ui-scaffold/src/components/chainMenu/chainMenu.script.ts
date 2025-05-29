@@ -5,8 +5,8 @@ import {
   useAccount,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { API, Chain, NetworkId } from "@orderly.network/types";
 import { useAppContext } from "@orderly.network/react-app";
+import { API, Chain, NetworkId } from "@orderly.network/types";
 
 export type UseChainMenuScriptReturn = ReturnType<typeof useChainMenuScript>;
 
@@ -15,7 +15,8 @@ export const useChainMenuScript = () => {
   const [loading, setLoading] = useState(false);
   const { state } = useAccount();
   const { connectedChain } = useWalletConnector();
-  const { currentChainId, wrongNetwork, disabledConnect } = useAppContext();
+  const { currentChainId, wrongNetwork, disabledConnect, setCurrentChainId } =
+    useAppContext();
   const networkId = useConfig("networkId") as NetworkId;
 
   const hide = () => {
@@ -44,6 +45,7 @@ export const useChainMenuScript = () => {
     onChainChangeBefore,
     onChainChangeAfter,
     loading,
+    setCurrentChainId,
   };
 };
 

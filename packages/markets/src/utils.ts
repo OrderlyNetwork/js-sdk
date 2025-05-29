@@ -55,7 +55,7 @@ export function useSort(
         }
       : undefined;
 
-    setSort(nextSort || initialSort);
+    setSort(nextSort);
     onSortChange?.(nextSort);
     // initialSort, onSortChange is not needed to be in the dependency array, otherwise it will cause infinite loop
   }, []);
@@ -68,15 +68,49 @@ export function useSort(
   return { sort, onSort, getSortedList };
 }
 
-export function searchBySymbol(
-  list: any[],
+export function searchBySymbol<T extends { symbol: string }>(
+  list: T[],
   searchValue = "",
   formatString?: string,
 ) {
+  if (!searchValue) return list;
+
   const reg = new RegExp(searchValue, "i");
-  return list?.filter((item) =>
-    reg.test(formatSymbol(item.symbol, formatString)),
-  );
+  const searchValueLower = searchValue.toLowerCase();
+
+  // Split results into three groups: exact matches, starts with search and other matches
+  const exactMatches: T[] = [];
+  const startsWithMatches: T[] = [];
+  const otherMatches: T[] = [];
+
+  list?.forEach((item) => {
+    const formattedSymbol = formatSymbol(item.symbol, formatString);
+    const symbolLower = formattedSymbol.toLowerCase();
+    if (reg.test(formattedSymbol)) {
+      if (symbolLower === searchValueLower) {
+        exactMatches.push(item);
+      } else if (symbolLower.startsWith(searchValueLower)) {
+        startsWithMatches.push(item);
+      } else {
+        otherMatches.push(item);
+      }
+    }
+  });
+
+  const compareSymbols = (a: T, b: T) => {
+    const symbolA = formatSymbol(a.symbol, formatString);
+    const symbolB = formatSymbol(b.symbol, formatString);
+    if (symbolA < symbolB) return -1;
+    if (symbolA > symbolB) return 1;
+    return 0;
+  };
+
+  // Sort each group alphabetically
+  startsWithMatches.sort(compareSymbols);
+  otherMatches.sort(compareSymbols);
+
+  // Combine results with prioritized matches first
+  return [...exactMatches, ...startsWithMatches, ...otherMatches];
 }
 
 function formatSymbol(symbol: string, formatString: string = "base") {

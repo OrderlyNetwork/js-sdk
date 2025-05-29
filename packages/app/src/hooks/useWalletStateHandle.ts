@@ -17,6 +17,7 @@ import {
   ChainNamespace,
   NetworkId,
   TrackerEventName,
+  ABSTRACT_CHAIN_ID_MAP,
 } from "@orderly.network/types";
 import {
   parseChainIdToNumber,
@@ -94,14 +95,20 @@ export const useWalletStateHandle = (options: {
       return;
     }
 
-    const isSupported = checkChainSupport(
+    let isSupported = checkChainSupport(
       connectedChain.id,
       networkId,
       // networkId === "testnet" ? chains.testnet : chains.mainnet
     );
+    if (
+      ABSTRACT_CHAIN_ID_MAP.has(parseInt(connectedChain.id as string)) &&
+      connectedWallet?.label !== "AGW"
+    ) {
+      isSupported = false;
+    }
 
     setUnsupported(!isSupported);
-  }, [connectedChain, chains, checkChainSupport, networkId]);
+  }, [connectedChain, chains, checkChainSupport, networkId, connectedWallet]);
 
   useEffect(() => {
     // if (unsupported) return;
@@ -172,6 +179,7 @@ export const useWalletStateHandle = (options: {
         wallet: {
           name: connectedWallet?.label ?? "",
         },
+        additionalInfo: connectedWallet?.additionalInfo ?? {},
       });
       track(TrackerEventName.walletConnect, {
         wallet: connectedWallet?.label ?? "",
@@ -236,12 +244,10 @@ export const useWalletStateHandle = (options: {
               wrongNetwork: true,
             };
           }
-
           //
           if (!account) {
             throw new Error("account is not initialized");
           }
-          console.log("-- aaaaa wallet", wallet);
           // clear link device data when connect wallt
           if (
             accountState.status ===

@@ -90,7 +90,7 @@ export const leftSidebarMenus = [
     ),
   },
   {
-    name: "Setting",
+    name: "Settings",
     href: "/setting",
     icon: (
       <svg

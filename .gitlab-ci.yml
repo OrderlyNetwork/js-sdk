@@ -19,14 +19,23 @@ stages:
   - deploy
   - release # add release stage
 
-internal_patch:
+.internal_publish_template: &internal_publish_template
   stage: release
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+  before_script:
+     # custom commit message
+    - export GIT_COMMIT_MESSAGE="publish internal ${RELEASE_TYPE}"
+    - |
+      if [ "$RELEASE_TYPE" = "patch" ]; then
+        export EXIT_PRE_TAG=false
+      else
+        export EXIT_PRE_TAG=true
+      fi
   script:
     - git checkout "$CI_COMMIT_BRANCH"
     - 'echo "Latest commit message: $CI_COMMIT_MESSAGE"'
-    - | 
+    - |
       git config --global --add safe.directory "$CI_PROJECT_DIR"
 
       export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
@@ -34,13 +43,14 @@ internal_patch:
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
-      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_INTERNAL"
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+      # set manual trigger to true to skip check branch
+      export MANUAL_TRIGGER=true
 
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
-      pnpm release:patch
+      pnpm release:${RELEASE_TYPE}
   tags:
     - dev
     - build
@@ -51,14 +61,35 @@ internal_patch:
     - if: '$CI_COMMIT_BRANCH =~ /^internal\// && $CI_COMMIT_MESSAGE !~ /publish/'
       when: always
     - when: never
+  # rules:
+  #   - if: '$CI_COMMIT_BRANCH == "npm-publish"'
+  #     when: manual
+  #   - when: never
 
-npm_patch:
+# in internal npm, only the patch version needs to be released
+internal_patch_publish:
+  <<: *internal_publish_template
+  variables:
+    RELEASE_TYPE: patch
+
+# internal_minor_publish:
+#   <<: *internal_publish_template
+#   variables:
+#     RELEASE_TYPE: minor
+
+# internal_major_publish:
+#   <<: *internal_publish_template
+#   variables:
+#     RELEASE_TYPE: major
+
+
+.npm_publish_template: &npm_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20 
   script:
     - git checkout "$CI_COMMIT_BRANCH"
-    - | 
+    - |
       git config --global --add safe.directory "$CI_PROJECT_DIR"
 
       export CI_COMMIT_BRANCH="$CI_COMMIT_BRANCH"
@@ -66,20 +97,70 @@ npm_patch:
       export GIT_USERNAME="$GIT_USERNAME_NPM"
       export GIT_NAME="$GIT_NAME_NPM"
       export GIT_EMAIL="$GIT_EMAIL_NPM"
-      export GIT_COMMIT_MESSAGE="$GIT_COMMIT_MESSAGE_NPM"
+      
+      # set public npm registry and token
       export NPM_REGISTRY="$NPM_REGISTRY_NPM"
       export NPM_TOKEN="$NPM_TOKEN_NPM"
 
+      # set internal npm registry and token
+      # export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
+      # export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+
+      # set manual trigger to true to skip check branch
+      export MANUAL_TRIGGER=true
+
+      # custom commit message
+      export GIT_COMMIT_MESSAGE="${GIT_COMMIT_MESSAGE}"
+
+      # custom pre tag
+      export CUSTOM_PRE_TAG="${CUSTOM_PRE_TAG}"
+
+      # exit pre tag
+      export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
+
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
-      pnpm release:patch
+      pnpm release:${RELEASE_TYPE}
   tags:
     - dev
     - build
   rules:
     # Run this job if:
-    # 1. Branch name is "npm/patch" AND
-    # 2. Commit message does not contain "publish"
-    - if: '$CI_COMMIT_BRANCH == "npm/patch" && $CI_COMMIT_MESSAGE !~ /publish/'
-      when: always
+    # 1. Branch name is "pre-release"
+    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
+      when: manual
     - when: never
+        
+npm_patch_alpha:
+  <<: *npm_publish_template
+  variables:
+    RELEASE_TYPE: patch
+    GIT_COMMIT_MESSAGE: "publish alpha"
+    CUSTOM_PRE_TAG: alpha
+    EXIT_PRE_TAG: false
+
+npm_patch_release:
+  <<: *npm_publish_template
+  needs:
+    - npm_patch_alpha
+  variables:
+    RELEASE_TYPE: patch
+    GIT_COMMIT_MESSAGE: "publish release"
+    EXIT_PRE_TAG: true
+
+npm_minor_alpha:
+  <<: *npm_publish_template
+  variables:
+    RELEASE_TYPE: minor
+    GIT_COMMIT_MESSAGE: "publish alpha"
+    CUSTOM_PRE_TAG: alpha
+    EXIT_PRE_TAG: false
+
+npm_minor_release:
+  <<: *npm_publish_template
+  needs:
+    - npm_minor_alpha
+  variables:
+    RELEASE_TYPE: minor
+    GIT_COMMIT_MESSAGE: "publish release"
+    EXIT_PRE_TAG: true

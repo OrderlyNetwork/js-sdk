@@ -503,6 +503,7 @@
   "connector.privy.myWallet": "Minha carteira",
   "connector.privy.addEvmWallet": "Adicionar carteira EVM",
   "connector.privy.addSolanaWallet": "Adicionar carteira Solana",
+  "connector.privy.addAbstractWallet": "Adicionar carteira Abstract",
   "connector.privy.createEvmWallet": "Criar carteira EVM",
   "connector.privy.createSolanaWallet": "Criar carteira Solana",
   "connector.privy.termsOfUse": "Ao conectar sua carteira, você reconhece e concorda com os <0>termos de uso</0>.",
@@ -513,6 +514,7 @@
   "connector.privy.switchNetwork.tips": "Mude para {{chainName}} para continuar.",
   "connector.privy.addEvmWallet.tips": "Conecte uma carteira compatível com EVM para continuar usando a rede EVM.",
   "connector.privy.addSolanaWallet.tips": "Conecte uma carteira compatível com Solana para continuar usando a rede Solana.",
+  "connector.privy.addAbstractWallet.tips": "Conecte uma carteira compatível com Abstract para continuar usando a rede Abstract.",
   "transfer.network": "Rede",
   "transfer.lowestFee": "menor taxa",
   "transfer.web3Wallet": "Sua Carteira Web3",
@@ -554,6 +556,7 @@
   "affiliate.asAffiliate.title": "Como afiliado",
   "affiliate.asAffiliate.description": "Traga traders para ganhar renda passiva",
   "affiliate.asAffiliate.button": "Torne-se um afiliado",
+  "affiliate.asAffiliate.affilates": "Afiliados",
   "affiliate.asTrader.title": "Como trader",
   "affiliate.asTrader.description": "Traga traders para ganhar renda passiva",
   "affiliate.asTrader.button": "Digite o código",
@@ -598,6 +601,8 @@
   "affiliate.trader.rebates": "Reembolsos",
   "affiliate.trader.myRebates": "Meus reembolsos",
   "affiliate.trader.tradingVol": "Vol. de negociação",
+  "affiliate.trader.rebate.30d": "Reembolsos 30d",
+  "affiliate.trader.tradingRebates": "Reembolsos de negociação",
   "ui.pagination.morePages": "Mais páginas",
   "ui.pagination.rowsPerPage": "Linhas por página",
   "ui.picker.selectDate": "Selecionar Data",
@@ -610,5 +615,6 @@
   "tradingLeaderboard.learnMore": "Saiba mais",
   "tradingLeaderboard.tradeNow": "Negociar agora",
   "tradingLeaderboard.tradingVolume": "Volume de negociação",
-  "tradingLeaderboard.rank": "Posição"
+  "tradingLeaderboard.rank": "Posição",
+  "tradingRewards.subtitle.mm": "Negocie para ganhar $ORDER"
 }

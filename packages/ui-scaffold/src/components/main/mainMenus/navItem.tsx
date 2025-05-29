@@ -1,6 +1,3 @@
-import { ChevronDownIcon, PopoverContent } from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
-import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@orderly.network/ui";
 import React, {
   cloneElement,
   FC,
@@ -12,6 +9,9 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { ChevronDownIcon, PopoverContent } from "@orderly.network/ui";
+import { Flex } from "@orderly.network/ui";
+import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@orderly.network/ui";
 
 export type MainNavItem = {
   id?: string;
@@ -27,6 +27,21 @@ export type MainNavItem = {
   children?: MainNavItem[];
   className?: string;
   asChild?: boolean;
+  /**
+   * if true, the item will be shown as a submenu in mobile
+   */
+  isSubMenuInMobile?: boolean;
+  /**
+   * if provided, the item is a submenu in mobile, and this will be the a back nav
+   */
+  subMenuBackNav?: {
+    name: string;
+    href: string;
+  };
+  /**
+   * if true, the item will be shown as a home page in mobile
+   */
+  isHomePageInMobile?: boolean;
 };
 
 export const NavItem: FC<
@@ -45,7 +60,7 @@ export const NavItem: FC<
 
   const isActive = useMemo(
     () => props.currentPath?.[0] === props.item.href,
-    [currentPath]
+    [currentPath],
   );
 
   const onClickHandler = useCallback(() => {
@@ -61,8 +76,8 @@ export const NavItem: FC<
       disabled={props.item.disabled}
       data-actived={isActive}
       className={cn(
-        "oui-text-base-contrast-36 oui-text-sm oui-relative oui-group oui-rounded oui-px-3 oui-py-1 oui-h-[32px] hover:oui-bg-base-7",
-        classNames?.navItem
+        "oui-group oui-relative oui-h-[32px] oui-rounded oui-px-3 oui-py-1 oui-text-sm oui-text-base-contrast-36 hover:oui-bg-base-7",
+        classNames?.navItem,
       )}
       onClick={onClickHandler}
     >
@@ -71,7 +86,7 @@ export const NavItem: FC<
         <Text.gradient
           color={isActive ? "brand" : "inherit"}
           angle={45}
-          className="oui-break-normal oui-whitespace-nowrap"
+          className="oui-whitespace-nowrap oui-break-normal"
         >
           {props.item.name}
         </Text.gradient>
@@ -149,7 +164,7 @@ const SubMenus = (
     className?: string;
     current?: string;
     onItemClick: (item: MainNavItem) => void;
-  }>
+  }>,
 ) => {
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -192,8 +207,8 @@ const SubMenus = (
           timer.current ? clearTimeout(timer.current) : void 0;
         }}
         className={cn(
-          "oui-p-1 oui-w-[260px] oui-border oui-border-line-6 oui-space-y-[2px]",
-          props.className
+          "oui-w-[260px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
+          props.className,
         )}
       >
         {props.items.map((item, index) => {
@@ -224,7 +239,7 @@ const SubMenu = (props: {
       gapX={2}
       data-active={props.active ?? false}
       className={cn(
-        "hover:oui-bg-base-6 oui-cursor-pointer oui-text-base-contrast-80 oui-items-start oui-w-full oui-group data-[active=true]:oui-bg-base-5"
+        "oui-group oui-w-full oui-cursor-pointer oui-items-start oui-text-base-contrast-80 hover:oui-bg-base-6 data-[active=true]:oui-bg-base-5",
         // props.active && "oui-bg-base-5"
       )}
       r={"md"}
@@ -234,7 +249,7 @@ const SubMenu = (props: {
       data-testid={item.testid}
     >
       {!!props.item.icon && (
-        <div className="oui-translate-y-1 oui-relative oui-w-6 oui-h-6">
+        <div className="oui-relative oui-size-6 oui-translate-y-1">
           <ItemIcon isActive={props.active ?? false} item={props.item} />
         </div>
       )}
@@ -258,14 +273,14 @@ const SubMenuTitle = (props: { item: MainNavItem; isActive?: boolean }) => {
   } = props;
   return (
     <Flex itemAlign={"center"} width={"100%"} position="relative">
-      <div className="oui-flex-1 oui-flex">
+      <div className="oui-flex oui-flex-1">
         <Text.gradient
           color={isActive ? "brand" : "inherit"}
           size={"xs"}
           as={"div"}
           intensity={80}
           weight={"semibold"}
-          className="oui-break-normal oui-whitespace-nowrap"
+          className="oui-whitespace-nowrap oui-break-normal"
         >
           {name}
         </Text.gradient>
@@ -280,13 +295,13 @@ const Tag = (props: { item: MainNavItem }) => {
   return (
     <div
       className={
-        "oui-px-2 oui-py-1 oui-ml-1 oui-rounded oui-inline-flex oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)]"
+        "oui-ml-1 oui-inline-flex oui-rounded oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)] oui-px-2 oui-py-1"
       }
     >
       <Text.gradient
         color={"brand"}
         size={"3xs"}
-        className="oui-break-normal oui-whitespace-nowrap"
+        className="oui-whitespace-nowrap oui-break-normal"
       >
         {props.item.tag}
       </Text.gradient>
@@ -303,7 +318,7 @@ const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
   if (!props.item.icon) return null;
   if (typeof props.item.icon === "string") {
     return (
-      <span className={"oui-w-[20px] oui-h-[20px] oui-mr-1"}>
+      <span className={"oui-mr-1 oui-size-[20px]"}>
         {
           <img
             src={
@@ -311,7 +326,7 @@ const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
                 ? (props.item.activeIcon as string) || props.item.icon
                 : props.item.icon
             }
-            className={"oui-max-w-full oui-max-h-full"}
+            className={"oui-max-h-full oui-max-w-full"}
           />
         }
       </span>
@@ -323,7 +338,7 @@ const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
       <div
         className={cn(
           ICON_CLASSNAME,
-          "group-data-[active=true]:oui-invisible group-hover:oui-invisible"
+          "group-hover:oui-invisible group-data-[active=true]:oui-invisible",
         )}
       >
         {props.item.icon}
@@ -331,7 +346,7 @@ const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
       <div
         className={cn(
           ICON_CLASSNAME,
-          "oui-invisible group-data-[active=true]:oui-visible group-hover:oui-visible"
+          "oui-invisible group-hover:oui-visible group-data-[active=true]:oui-visible",
         )}
       >
         {props.item.activeIcon || props.item.icon}
@@ -364,7 +379,7 @@ const OutlinkIcon = () => {
         viewBox="0 0 20 20"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="oui-absolute oui-right-0 oui-top-0 oui-invisible group-hover:oui-visible"
+        className="oui-invisible oui-absolute oui-right-0 oui-top-0 group-hover:oui-visible"
       >
         <path
           d="M14.159 17.492a3.333 3.333 0 0 0 3.333-3.333V5.826a3.333 3.333 0 0 0-3.333-3.334H5.826a3.333 3.333 0 0 0-3.334 3.334v8.333a3.333 3.333 0 0 0 3.334 3.333zm-6.667-4.166a.85.85 0 0 1-.599-.235.86.86 0 0 1 0-1.198l3.333-3.333-1.9-1.901h5v5l-1.901-1.9L8.09 13.09a.84.84 0 0 1-.599.235"

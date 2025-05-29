@@ -503,6 +503,7 @@
   "connector.privy.myWallet": "Mi billetera",
   "connector.privy.addEvmWallet": "Agregar billetera EVM",
   "connector.privy.addSolanaWallet": "Agregar billetera Solana",
+  "connector.privy.addAbstractWallet": "Añadir billetera Abstract",
   "connector.privy.createEvmWallet": "Crear billetera EVM",
   "connector.privy.createSolanaWallet": "Crear billetera Solana",
   "connector.privy.termsOfUse": "Al conectar tu billetera, reconoces y aceptas los <0>términos de uso</0>.",
@@ -513,6 +514,7 @@
   "connector.privy.switchNetwork.tips": "Cambia a {{chainName}} para continuar.",
   "connector.privy.addEvmWallet.tips": "Conecta una billetera compatible con EVM para continuar usando la red EVM.",
   "connector.privy.addSolanaWallet.tips": "Conecta una billetera compatible con Solana para seguir usando la red Solana.",
+  "connector.privy.addAbstractWallet.tips": "Conecta una billetera compatible con Abstract para continuar usando la red Abstract.",
   "transfer.network": "Red",
   "transfer.lowestFee": "Tarifa más baja",
   "transfer.web3Wallet": "Tu billetera Web3",
@@ -554,6 +556,7 @@
   "affiliate.asAffiliate.title": "Como afiliado",
   "affiliate.asAffiliate.description": "Onboardea traders para ganar ingresos pasivos",
   "affiliate.asAffiliate.button": "Conviértete en afiliado",
+  "affiliate.asAffiliate.affilates": "Afiliados",
   "affiliate.asTrader.title": "Como trader",
   "affiliate.asTrader.description": "Onboardea traders para ganar ingresos pasivos",
   "affiliate.asTrader.button": "Ingresar código",
@@ -598,6 +601,8 @@
   "affiliate.trader.rebates": "Reembolsos",
   "affiliate.trader.myRebates": "Mis reembolsos",
   "affiliate.trader.tradingVol": "Vol. de trading",
+  "affiliate.trader.rebate.30d": "Reembolsos de 30d",
+  "affiliate.trader.tradingRebates": "Reembolsos de trading",
   "ui.pagination.morePages": "Más páginas",
   "ui.pagination.rowsPerPage": "Filas por página",
   "ui.picker.selectDate": "Seleccionar fecha",
@@ -610,5 +615,6 @@
   "tradingLeaderboard.learnMore": "Aprende más",
   "tradingLeaderboard.tradeNow": "Opera ahora",
   "tradingLeaderboard.tradingVolume": "Volumen de trading",
-  "tradingLeaderboard.rank": "Rango"
+  "tradingLeaderboard.rank": "Rango",
+  "tradingRewards.subtitle.mm": "Opera para ganar $ORDER"
 }

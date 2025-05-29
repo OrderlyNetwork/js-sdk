@@ -1,5 +1,31 @@
 # @orderly.network/futures
 
+## 4.2.0
+
+### Minor Changes
+
+- e1badae: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [e1badae]
+- Updated dependencies
+  - @orderly.network/types@2.2.0
+  - @orderly.network/utils@2.2.0
+
+## 4.2.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.2.0-alpha.0
+  - @orderly.network/utils@2.2.0-alpha.0
+
 ## 4.1.3
 
 ### Patch Changes

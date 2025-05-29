@@ -1,16 +1,20 @@
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
+  useCollateral,
   useLocalStorage,
   useMediaQuery,
 } from "@orderly.network/hooks";
+import { modal } from "@orderly.network/ui";
 import { useTradingPageContext } from "../../provider/context";
 import { TradingPageState } from "../../types/types";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
 import Split from "@uiw/react-split";
+import { useTranslation } from "@orderly.network/i18n";
+import { PortfolioSheetWidget, useTradingLocalStorage } from "../..";
 
 export type TradingState = ReturnType<typeof useTradingScript>;
 
@@ -39,9 +43,15 @@ export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
   const { state } = useAccount();
+  const { t } = useTranslation();
   const { wrongNetwork, disabledConnect, restrictedInfo } = useAppContext();
+  const { hideAssets, setHideAssets } = useTradingLocalStorage();
 
   const { isFirstTimeDeposit } = useFirstTimeDeposit();
+
+  const { totalValue } = useCollateral();
+
+  const total = useDataTap(totalValue);
 
   /** max-width: 1279px */
   const max2XL = useMediaQuery("(max-width: 1279px)");
@@ -53,20 +63,27 @@ export const useTradingScript = () => {
   // Order entry and side market list position, default Order entry in right
   const [layout, setLayout] = useLocalStorage(
     "orderly_order_entry_side_markets_layout",
-    "right"
+    "right",
   );
 
-  const canTrade = useMemo(() => {
-    if (
+  const canTrade = useMemo<boolean>(() => {
+    return (
       !wrongNetwork &&
       !disabledConnect &&
       (state.status >= AccountStatusEnum.EnableTrading ||
         state.status === AccountStatusEnum.EnableTradingWithoutConnected)
-    ) {
-      return true;
-    }
-    return false;
+    );
   }, [state.status, wrongNetwork, disabledConnect]);
+
+  const onShowPortfolioSheet = () => {
+    if (canTrade) {
+      modal.sheet({
+        title: t("trading.asset&Margin"),
+        leading: props.bottomSheetLeading,
+        content: <PortfolioSheetWidget />,
+      });
+    }
+  };
 
   const horizontalDraggable = useMemo(() => min3XL, [min3XL]);
 
@@ -110,6 +127,10 @@ export const useTradingScript = () => {
     marketsWidth,
     tradindviewMaxHeight,
     dataListMinHeight,
+    total,
+    hideAssets,
+    setHideAssets,
+    onShowPortfolioSheet,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
@@ -121,7 +142,7 @@ function useMarketsCollapse(options: { collapsable: boolean }) {
 
   const [collapsed, setCollapsed] = useLocalStorage<boolean | undefined>(
     "orderly_side_markets_collapsed",
-    undefined
+    undefined,
   );
 
   const onCollapse = (collapsed: boolean) => {
@@ -151,7 +172,7 @@ function useOrderEntryPositions(options: {
 
   const [positions, setPositions] = useLocalStorage(
     "orderly_assets_orderEntry_margin_positions",
-    [0, 1, 2]
+    [0, 1, 2],
   );
 
   const updatePositions = (currentIdx: number, targetIdx: number) => {
@@ -178,7 +199,7 @@ function useOrderEntryPositions(options: {
 
   const showPositionIcon = useMemo(
     () => canTrade && !isFirstTimeDeposit,
-    [canTrade, isFirstTimeDeposit]
+    [canTrade, isFirstTimeDeposit],
   );
 
   const pos = useMemo(() => {
@@ -196,21 +217,21 @@ function useSplitSize(dep: any) {
   const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
     "orderly_main_split_size",
     undefined,
-    dep
+    dep,
   );
   const [dataListSplitSize, setDataListSplitSize] = useSplitPersistent(
     "orderly_datalist_split_size",
-    "350px"
+    "350px",
   );
   const [orderBookSplitSize, setOrderbookSplitSize] = useSplitPersistent(
     "orderly_orderbook_split_size",
     "280px",
-    dep
+    dep,
   );
 
   const [dataListSplitHeightSM, setDataListSplitHeightSM] = useSplitPersistent(
     "orderly_datalist_split_height_sm",
-    "350px"
+    "350px",
   );
 
   const [orderBookSplitHeightSM, setOrderbookSplitHeightSM] =
@@ -280,19 +301,19 @@ function useExtraHeight(options: {
 
   const [extraHeight, setExtraHeight] = useLocalStorage(
     "orderly_order_entry_extra_height",
-    0
+    0,
   );
 
   const space = 10 + 12;
 
   const [dataListHeight, setDataListHeight] = useLocalStorage(
     "orderly_trading_data_list_height",
-    dataListMinHeight
+    dataListMinHeight,
   );
 
   const onTradingviewAndOrderbookDragging = (
     preSize: number,
-    nextSize: number
+    nextSize: number,
   ) => {
     const boxHeight = tradingviewAndOrderbookSplitRef?.current?.boxHeight;
     if (!boxHeight) return;
@@ -302,12 +323,12 @@ function useExtraHeight(options: {
 
     const tradingviewHeight = Math.min(
       Math.max(splitTradingviewHeight, tradindviewMinHeight),
-      tradindviewMaxHeight
+      tradindviewMaxHeight,
     );
 
     const orderbookHeight = Math.min(
       Math.max(splitOrderbookHeight, orderbookMinHeight),
-      orderbookMaxHeight
+      orderbookMaxHeight,
     );
 
     const orderEntryHeight =

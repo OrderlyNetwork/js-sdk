@@ -503,6 +503,7 @@
   "connector.privy.myWallet": "Мій гаманець",
   "connector.privy.addEvmWallet": "Додати EVM гаманець",
   "connector.privy.addSolanaWallet": "Додати Solana гаманець",
+  "connector.privy.addAbstractWallet": "Додати гаманець Abstract",
   "connector.privy.createEvmWallet": "Створити EVM гаманець",
   "connector.privy.createSolanaWallet": "Створити Solana гаманець",
   "connector.privy.termsOfUse": "Підключаючи свій гаманець, ви визнаєте та погоджуєтесь з <0>умовами використання</0>.",
@@ -513,6 +514,7 @@
   "connector.privy.switchNetwork.tips": "Переключіться на {{chainName}} для продовження.",
   "connector.privy.addEvmWallet.tips": "Підключіть EVM-сумісний гаманець для продовження використання EVM мережі.",
   "connector.privy.addSolanaWallet.tips": "Підключіть Solana-сумісний гаманець для продовження використання Solana мережі.",
+  "connector.privy.addAbstractWallet.tips": "Підключіть гаманець, сумісний з Abstract, щоб продовжити використання мережі Abstract.",
   "transfer.network": "Мережа",
   "transfer.lowestFee": "найнижча комісія",
   "transfer.web3Wallet": "Ваш Web3 гаманець",
@@ -598,6 +600,8 @@
   "affiliate.trader.rebates": "Кешбеки",
   "affiliate.trader.myRebates": "Мої кешбеки",
   "affiliate.trader.tradingVol": "Торговий об'єм",
+  "affiliate.trader.rebate.30d": "Кешбек за 30д",
+  "affiliate.trader.tradingRebates": "Кешбек за торгівлю",
   "ui.pagination.morePages": "Більше сторінок",
   "ui.pagination.rowsPerPage": "Рядків на сторінку",
   "ui.picker.selectDate": "Виберіть дату",
@@ -610,5 +614,7 @@
   "tradingLeaderboard.learnMore": "Дізнатися більше",
   "tradingLeaderboard.tradeNow": "Торгувати зараз",
   "tradingLeaderboard.tradingVolume": "Торговий об'єм",
-  "tradingLeaderboard.rank": "Рейтинг"
+  "tradingLeaderboard.rank": "Рейтинг",
+  "tradingRewards.subtitle.mm": "Торгуйте, щоб заробити $ORDER",
+  "affiliate.asAffiliate.affilates": "Партнери"
 }

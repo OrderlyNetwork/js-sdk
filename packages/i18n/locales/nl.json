@@ -503,6 +503,7 @@
   "connector.privy.myWallet": "Mijn wallet",
   "connector.privy.addEvmWallet": "EVM wallet toevoegen",
   "connector.privy.addSolanaWallet": "Solana wallet toevoegen",
+  "connector.privy.addAbstractWallet": "Abstract portemonnee toevoegen",
   "connector.privy.createEvmWallet": "EVM wallet aanmaken",
   "connector.privy.createSolanaWallet": "Solana wallet aanmaken",
   "connector.privy.termsOfUse": "Door uw wallet te verbinden, erkent en gaat u akkoord met de <0>gebruiksvoorwaarden</0>.",
@@ -513,6 +514,7 @@
   "connector.privy.switchNetwork.tips": "Schakel over naar {{chainName}} om door te gaan.",
   "connector.privy.addEvmWallet.tips": "Verbind een EVM-compatibele wallet om het EVM-netwerk te blijven gebruiken.",
   "connector.privy.addSolanaWallet.tips": "Verbind een Solana-compatibele wallet om het Solana-netwerk te blijven gebruiken.",
+  "connector.privy.addAbstractWallet.tips": "Verbind een Abstract-compatibele portemonnee om het Abstract netwerk te blijven gebruiken.",
   "transfer.network": "Netwerk",
   "transfer.lowestFee": "laagste kosten",
   "transfer.web3Wallet": "Uw Web3 Wallet",
@@ -554,6 +556,7 @@
   "affiliate.asAffiliate.title": "Als partner",
   "affiliate.asAffiliate.description": "Breng handelaren aan boord om passief inkomen te verdienen",
   "affiliate.asAffiliate.button": "Word partner",
+  "affiliate.asAffiliate.affilates": "Partners",
   "affiliate.asTrader.title": "Als handelaar",
   "affiliate.asTrader.description": "Breng handelaren aan boord om passief inkomen te verdienen",
   "affiliate.asTrader.button": "Code invoeren",
@@ -598,6 +601,9 @@
   "affiliate.trader.rebates": "Kortingen",
   "affiliate.trader.myRebates": "Mijn kortingen",
   "affiliate.trader.tradingVol": "Handelsvolume",
+  "affiliate.trader.rebate.30d": "30d kortingen",
+  "affiliate.trader.myRebates": "Mijn kortingen",
+  "affiliate.trader.tradingRebates": "Handelskortingen",
   "ui.pagination.morePages": "Meer pagina's",
   "ui.pagination.rowsPerPage": "Rijen per pagina",
   "ui.picker.selectDate": "Selecteer datum",
@@ -610,5 +616,6 @@
   "tradingLeaderboard.learnMore": "Leer meer",
   "tradingLeaderboard.tradeNow": "Handel nu",
   "tradingLeaderboard.tradingVolume": "Handelsvolume",
-  "tradingLeaderboard.rank": "Rang"
+  "tradingLeaderboard.rank": "Rang",
+  "tradingRewards.subtitle.mm": "Handel om $ORDER te verdienen"
 }

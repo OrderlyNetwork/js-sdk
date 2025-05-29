@@ -1,18 +1,18 @@
 import { memo } from "react";
+import { Pencil } from "lucide-react";
 import {
   useMarginRatio,
   useAccountInfo,
   useLeverage,
 } from "@orderly.network/hooks";
-import { Numeral } from "@/text";
-import { Pencil } from "lucide-react";
-import { LeverageDialog } from "./leverageDialog";
-import { Tooltip } from "@/tooltip";
+import { modal } from "@orderly.network/ui";
+import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
 import { Divider } from "@/divider";
+import { Numeral } from "@/text";
+import { Tooltip } from "@/tooltip";
 import { cn } from "@/utils";
 import { getMarginRatioColor } from "../utils";
-import { modal } from "@orderly.network/ui";
-import { LeverageWidgetId } from "@orderly.network/ui-leverage";
+import { LeverageDialog } from "./leverageDialog";
 
 interface LeverageAndMarginRatioProps {
   isConnected: boolean;
@@ -21,7 +21,7 @@ interface LeverageAndMarginRatioProps {
 const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
   const { isConnected, ...rest } = props;
   const { marginRatio, currentLeverage, mmr } = useMarginRatio();
-  const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
+  const { maxLeverage } = useLeverage();
 
   const marginRatioVal = marginRatio === 0 ? 10 : Math.min(marginRatio, 10);
 
@@ -72,7 +72,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
                 "orderly-text-[#FF67C2]": isRed,
                 "orderly-text-[#FFCF73]": isYellow,
                 "orderly-text-[#1EF6B4]": isGreen,
-              })
+              }),
           )}
           rule={"percentages"}
           coloring
@@ -106,7 +106,7 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
           }
         >
           {isConnected ? (
-            <Numeral surfix={"x"}>{currentLeverage}</Numeral>
+            <Numeral surfix={"x"}>{currentLeverage!}</Numeral>
           ) : (
             "-"
           )}
@@ -129,13 +129,15 @@ const LeverageAndMarginRatio = (props: LeverageAndMarginRatioProps) => {
             "-"
           )} */}
           {
-            // modal.show(LeverageWidgetId, { currentLeverage: 5 });
+            // modal.show(LeverageWidgetWithDialogId, { currentLeverage: 5 });
             isConnected ? (
               <button
                 id="orderly-desktop-leverage-button"
                 className="orderly-flex orderly-items-center orderly-gap-1"
                 onClick={() => {
-                  modal.show(LeverageWidgetId, { currentLeverage: 5 });
+                  modal.show(LeverageWidgetWithDialogId, {
+                    currentLeverage: 5,
+                  });
                 }}
               >
                 <span>{`${maxLeverage ?? "-"}x`}</span>

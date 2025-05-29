@@ -1,7 +1,11 @@
-import { useModal, modal } from "@orderly.network/ui";
-// import { create } from "@/modal/modalHelper";
-import { Sheet, SheetContent, SheetHeader } from "@/sheet/sheet";
-import { Dialog, DialogContent } from "@/dialog/dialog";
+import {
+  FC,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   useAccountInfo,
   useLeverage,
@@ -11,20 +15,16 @@ import {
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import {
-  FC,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useModal, modal } from "@orderly.network/ui";
+import { Dialog, DialogContent } from "@/dialog/dialog";
+import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
+import { OrderlyAppContext } from "@/provider";
+// import { create } from "@/modal/modalHelper";
+import { Sheet, SheetContent, SheetHeader } from "@/sheet/sheet";
 import { DesktopSharePnLContent } from "./desktopSharePnl";
 import { MobileSharePnLContent } from "./mobileSharePnl";
-import { OrderlyAppContext } from "@/provider";
-import { ReferralType } from "./sharePnLUtils";
 import { ShareConfigProps } from "./shareConfigProps";
-import { useTradingPageContext } from "@/page/trading/context/tradingPageContext";
+import { ReferralType } from "./sharePnLUtils";
 
 export const SharePoisitionView = modal.create<{
   position: any;
@@ -34,7 +34,7 @@ export const SharePoisitionView = modal.create<{
 }>((props) => {
   const isTablet = useMediaQuery(MEDIA_TABLET);
   const { position, shareOptions, referral } = props;
-  // const [leverage] = useLeverage();
+
   const symbolInfo = useSymbolsInfo();
   // const { data: info } = useAccountInfo();
 
@@ -60,7 +60,6 @@ export const SharePoisitionView = modal.create<{
   // }, [maxAccountLeverage, maxSymbolLeverage]);
 
   const { getFirstRefCode } = useReferralInfo();
-
 
   if (symbolInfo.isNil) return null;
 
@@ -157,7 +156,7 @@ const DesktopSharePnL: FC<
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
   const [viewportHeight, setViewportHeight] = useState(
-    window.innerHeight < 900 ? 660 : 807
+    window.innerHeight < 900 ? 660 : 807,
   );
 
   useEffect(() => {

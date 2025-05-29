@@ -1,8 +1,21 @@
 import { useMemo } from "react";
-import { TradingPageProps } from "@orderly.network/trading";
-import { FooterProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
 import { RestrictedInfoOptions } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { AppLogos } from "@orderly.network/react-app";
+import { TradingPageProps } from "@orderly.network/trading";
+import {
+  TradingActiveIcon,
+  TradingInactiveIcon,
+  PortfolioActiveIcon,
+  PortfolioInactiveIcon,
+  LeaderboardActiveIcon,
+  LeaderboardInactiveIcon,
+} from "@orderly.network/ui";
+import {
+  FooterProps,
+  MainNavWidgetProps,
+  BottomNavProps,
+} from "@orderly.network/ui-scaffold";
 import {
   AffiliatesActiveIcon,
   AffiliatesIcon,
@@ -11,8 +24,7 @@ import {
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
-import { useTranslation } from "@orderly.network/i18n";
-import { CustomProductNav } from "../components/customProductNav/indx";
+
 export type OrderlyConfig = {
   orderlyAppProvider: {
     appIcons: AppLogos;
@@ -20,6 +32,7 @@ export type OrderlyConfig = {
   };
   scaffold: {
     mainNavProps: MainNavWidgetProps;
+    bottomNavProps: BottomNavProps;
     footerProps: FooterProps;
   };
   tradingPage: {
@@ -39,10 +52,9 @@ export const useOrderlyConfig = () => {
           // leading: <CustomProductNav />,
           trailing: null,
           mainMenus: [
-            { name: t("common.trading"), href: "/" },
+            { name: t("common.trading"), href: "/", isHomePageInMobile: true },
             { name: t("common.portfolio"), href: "/portfolio" },
             { name: t("common.markets"), href: "/markets" },
-            { name: t("tradingRewards.rewards"), href: "/rewards" },
             {
               name: t("tradingLeaderboard.leaderboard"),
               href: "/leaderboard",
@@ -53,6 +65,11 @@ export const useOrderlyConfig = () => {
             name: t("tradingRewards.rewards"),
             href: "/rewards",
             icon: "box-ani.gif",
+            isSubMenuInMobile: true,
+            subMenuBackNav: {
+              name: t("common.portfolio"),
+              href: "/portfolio",
+            },
             children: [
               {
                 name: t("common.affiliate"),
@@ -79,6 +96,28 @@ export const useOrderlyConfig = () => {
               },
             ],
           },
+        },
+        bottomNavProps: {
+          mainMenus: [
+            {
+              name: t("common.trading"),
+              href: "/",
+              activeIcon: <TradingActiveIcon />,
+              inactiveIcon: <TradingInactiveIcon />,
+            },
+            {
+              name: t("tradingLeaderboard.leaderboard"),
+              href: "/leaderboard",
+              activeIcon: <LeaderboardActiveIcon />,
+              inactiveIcon: <LeaderboardInactiveIcon />,
+            },
+            {
+              name: t("common.portfolio"),
+              href: "/portfolio",
+              activeIcon: <PortfolioActiveIcon />,
+              inactiveIcon: <PortfolioInactiveIcon />,
+            },
+          ],
         },
         footerProps: {
           telegramUrl: "https://orderly.network",
