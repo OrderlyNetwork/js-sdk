@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/ui-share"] =
-    "2.2.1-npm-publish.0";
+    "2.2.1-npm-publish.1";
 }
 
-export default "2.2.1-npm-publish.0";
+export default "2.2.1-npm-publish.1";

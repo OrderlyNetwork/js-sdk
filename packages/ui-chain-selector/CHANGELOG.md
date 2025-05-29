@@ -1,5 +1,17 @@
 # @orderly.network/ui-chain-selector
 
+## 2.2.1-npm-publish.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.2.1-npm-publish.1
+  - @orderly.network/hooks@2.2.1-npm-publish.1
+  - @orderly.network/i18n@2.2.1-npm-publish.1
+  - @orderly.network/types@2.2.1-npm-publish.1
+  - @orderly.network/ui@2.2.1-npm-publish.1
+
 ## 2.2.1-npm-publish.0
 
 ### Patch Changes

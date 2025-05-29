@@ -48,6 +48,7 @@
     "@orderly.network/web3-provider-ethers": "2.2.0"
   },
   "changesets": [
-    "quick-schools-love"
+    "quick-schools-love",
+    "unlucky-swans-tell"
   ]
 }

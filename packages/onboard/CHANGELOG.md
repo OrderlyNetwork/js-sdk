@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.2.1-npm-publish.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.2.1-npm-publish.1
+  - @orderly.network/types@2.2.1-npm-publish.1
+
 ## 2.2.1-npm-publish.0
 
 ### Patch Changes
