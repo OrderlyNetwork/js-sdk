@@ -131,7 +131,7 @@ internal_patch_publish:
       when: manual
     - when: never
         
-npm_alpha_publish:
+npm_patch_alpha:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: patch
@@ -139,11 +139,28 @@ npm_alpha_publish:
     CUSTOM_PRE_TAG: alpha
     EXIT_PRE_TAG: false
 
-npm_patch_publish:
+npm_patch_release:
   <<: *npm_publish_template
   needs:
-    - npm_alpha_publish
+    - npm_patch_alpha
   variables:
     RELEASE_TYPE: patch
+    GIT_COMMIT_MESSAGE: "publish release"
+    EXIT_PRE_TAG: true
+
+npm_minor_alpha:
+  <<: *npm_publish_template
+  variables:
+    RELEASE_TYPE: minor
+    GIT_COMMIT_MESSAGE: "publish alpha"
+    CUSTOM_PRE_TAG: alpha
+    EXIT_PRE_TAG: false
+
+npm_minor_release:
+  <<: *npm_publish_template
+  needs:
+    - npm_minor_alpha
+  variables:
+    RELEASE_TYPE: minor
     GIT_COMMIT_MESSAGE: "publish release"
     EXIT_PRE_TAG: true
