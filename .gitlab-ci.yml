@@ -99,12 +99,12 @@ internal_patch_publish:
       export GIT_EMAIL="$GIT_EMAIL_NPM"
       
       # set public npm registry and token
-      # export NPM_REGISTRY="$NPM_REGISTRY_NPM"
-      # export NPM_TOKEN="$NPM_TOKEN_NPM"
+      export NPM_REGISTRY="$NPM_REGISTRY_NPM"
+      export NPM_TOKEN="$NPM_TOKEN_NPM"
 
       # set internal npm registry and token
-      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
-      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+      # export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
+      # export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
 
       # set manual trigger to true to skip check branch
       export MANUAL_TRIGGER=true
@@ -126,9 +126,8 @@ internal_patch_publish:
     - build
   rules:
     # Run this job if:
-    # 1. Branch name is "npm-release"
-    # 2. User has access Maintainer (level 40) or higher
-    - if: '$CI_COMMIT_BRANCH == "npm-release" && $CI_USER_ACCESS_LEVEL >= 40'
+    # 1. Branch name is "npm-publish"
+    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
       when: manual
     - when: never
         
@@ -142,6 +141,8 @@ npm_alpha_publish:
 
 npm_patch_publish:
   <<: *npm_publish_template
+  needs:
+    - npm_alpha_publish
   variables:
     RELEASE_TYPE: patch
     GIT_COMMIT_MESSAGE: "publish release"
