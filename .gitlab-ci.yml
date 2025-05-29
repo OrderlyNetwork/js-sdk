@@ -126,8 +126,8 @@ internal_patch_publish:
     - build
   rules:
     # Run this job if:
-    # 1. Branch name is "npm-publish"
-    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
+    # 1. Branch name is "pre-release"
+    - if: '$CI_COMMIT_BRANCH == "pre-release"'
       when: manual
     - when: never
         
