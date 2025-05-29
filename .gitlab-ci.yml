@@ -43,8 +43,11 @@ stages:
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
+
+      # set internal npm registry and token
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+
       # set manual trigger to true to skip check branch
       export MANUAL_TRIGGER=true
 
@@ -118,22 +121,6 @@ internal_patch_publish:
       # exit pre tag
       export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
 
-      # set internal npm registry and token
-      # export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
-      # export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
-
-      # set manual trigger to true to skip check branch
-      export MANUAL_TRIGGER=true
-
-      # custom commit message
-      export GIT_COMMIT_MESSAGE="${GIT_COMMIT_MESSAGE}"
-
-      # custom pre tag
-      export CUSTOM_PRE_TAG="${CUSTOM_PRE_TAG}"
-
-      # exit pre tag
-      export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
-
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
       pnpm release:${RELEASE_TYPE}
@@ -146,15 +133,16 @@ internal_patch_publish:
     - if: '$CI_COMMIT_BRANCH == "npm-publish"'
       when: manual
     - when: never
-        
+
+# patch alpha
 npm_patch_alpha:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: patch
     GIT_COMMIT_MESSAGE: "publish alpha"
     CUSTOM_PRE_TAG: alpha
-    EXIT_PRE_TAG: false
 
+# patch release
 npm_patch_release:
   <<: *npm_publish_template
   needs:
@@ -164,14 +152,15 @@ npm_patch_release:
     GIT_COMMIT_MESSAGE: "publish release"
     EXIT_PRE_TAG: true
 
+# minor alpha
 npm_minor_alpha:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: minor
     GIT_COMMIT_MESSAGE: "publish alpha"
     CUSTOM_PRE_TAG: alpha
-    EXIT_PRE_TAG: false
 
+# minor release
 npm_minor_release:
   <<: *npm_publish_template
   needs:
@@ -181,15 +170,15 @@ npm_minor_release:
     GIT_COMMIT_MESSAGE: "publish release"
     EXIT_PRE_TAG: true
 
-
+# major alpha
 npm_major_alpha:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: major
     GIT_COMMIT_MESSAGE: "publish alpha"
     CUSTOM_PRE_TAG: alpha
-    EXIT_PRE_TAG: false
 
+# major release
 npm_major_release:
   <<: *npm_publish_template
   needs:
