@@ -157,7 +157,7 @@ async function release() {
     const remoteUrl = await getRemoteUrl();
     // if not provide, use local origin and git token
     // use --no-verify to ignore push hook
-    await $`git push --no-verify ${remoteUrl}`;
+    await $`git push --no-verify ${remoteUrl || ""}`;
   }
 }
 
