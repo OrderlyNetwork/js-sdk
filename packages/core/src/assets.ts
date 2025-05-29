@@ -265,7 +265,6 @@ export class Assets {
       userAddress = agwGobalAddress;
     }
 
-    console.log("get allowance", tempUSDCAddress, tempVaultAddress);
     const result = await this.account.walletAdapter?.call(
       tempUSDCAddress ?? "",
       "allowance",
@@ -336,7 +335,6 @@ export class Assets {
         abi: contractAddress.usdcAbi,
       },
     );
-
     return result;
   }
 

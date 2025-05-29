@@ -84,7 +84,7 @@ export function ConnectDrawer(props: {
           : t("connector.connectWallet")}
       </div>
     );
-  }, [isMobile, props.headerProps?.mobile]);
+  }, [isMobile, props.headerProps?.mobile, isConnected]);
   return (
     <Drawer isOpen={props.open} onClose={() => props.onChangeOpen(false)}>
       {!isMobile && (

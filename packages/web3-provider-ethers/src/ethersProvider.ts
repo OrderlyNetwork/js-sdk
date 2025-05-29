@@ -47,6 +47,30 @@ class EthersProvider implements Web3Provider {
     params: any[],
     options: { abi: any },
   ): Promise<any> {
+    const writeMethod: string[] = ["approve"];
+    // @ts-ignore
+    if (this._originalProvider.agwWallet && writeMethod.includes(method)) {
+      try {
+        // @ts-ignore
+        const transactionHash = await this._originalProvider.writeContract({
+          abi: options.abi,
+          address: address,
+          functionName: method,
+          args: params,
+        });
+
+        return {
+          hash: transactionHash,
+        };
+      } catch (error) {
+        const parsedEthersError = getParsedEthersError(error as EthersError);
+        if ((error as any).message.includes("rejected")) {
+          // @ts-ignore
+          throw new Error({ content: "REJECTED_TRANSACTION" });
+        }
+        throw parsedEthersError;
+      }
+    }
     const singer = await this.browserProvider.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
 

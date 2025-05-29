@@ -84,9 +84,14 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
         icon: "",
         provider: {
           ...provider,
+          agwWallet: true,
           sendTransaction: async (params: any) => {
             console.log("--- agw wallet sendTransaction", params);
             return client.sendTransaction(params);
+          },
+          writeContract: async (params: any) => {
+            console.log("--- agw wallet writeContract", params);
+            return client.writeContract(params);
           },
         },
         accounts: [
