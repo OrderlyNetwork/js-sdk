@@ -121,7 +121,6 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
       });
     }
 
-    console.log("button props", buttonProps);
     if (state.validating && !disabledConnect) {
       return (
         <StatusInfo

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useStorageChain } from "@orderly.network/hooks";
 import {
   AbstractChains,
@@ -52,6 +52,14 @@ export function RenderNonPrivyWallet() {
     return false;
   };
 
+  const currentConnectWalletType: Set<WalletType> = useMemo(() => {
+    const temp = new Set<WalletType>();
+    walletList.forEach((wallet) => {
+      temp.add(wallet.type);
+    });
+    return temp;
+  }, [walletList]);
+
   useEffect(() => {
     const tempWalletList = [];
     const tempAddWallet = [];
@@ -100,7 +108,9 @@ export function RenderNonPrivyWallet() {
   return (
     <>
       {walletList.length && (
-        <StorageChainNotCurrentWalletType currentWalletChainType={namespace} />
+        <StorageChainNotCurrentWalletType
+          currentWalletType={currentConnectWalletType}
+        />
       )}
       <div className="oui-flex oui-flex-col oui-gap-5">
         {walletList.map((wallet) => (

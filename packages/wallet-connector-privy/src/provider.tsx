@@ -136,7 +136,7 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   abstractConfig?: InitAbstract;
   network: Network;
   customChains?: Chains;
-  termsOfUse: string;
+  termsOfUse?: string;
   headerProps?: {
     mobile: React.ReactNode;
   };
@@ -145,7 +145,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [walletChainType, setWalletChainType] = useState<WalletChainType>(
     WalletChainTypeEnum.EVM_SOL,
   );
-  const [termsOfUse] = useState<string>(props.termsOfUse);
+  const [termsOfUse] = useState<string>(props.termsOfUse || "");
   const [network, setNetwork] = useState<Network>(props.network);
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
@@ -342,16 +342,13 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     <WalletConnectorPrivyContext.Provider value={value}>
       <TooltipProvider delayDuration={300}>
         <PrivyWallet privyConfig={props.privyConfig} initChains={initChains}>
-          <AbstractWallet>
-            <WagmiWallet
-              wagmiConfig={props.wagmiConfig}
-              initChains={initChains}
-            >
-              <SolanaWallet solanaConfig={props.solanaConfig}>
+          <WagmiWallet wagmiConfig={props.wagmiConfig} initChains={initChains}>
+            <SolanaWallet solanaConfig={props.solanaConfig}>
+              <AbstractWallet>
                 <Main headerProps={props.headerProps}>{props.children}</Main>
-              </SolanaWallet>
-            </WagmiWallet>
-          </AbstractWallet>
+              </AbstractWallet>
+            </SolanaWallet>
+          </WagmiWallet>
         </PrivyWallet>
       </TooltipProvider>
     </WalletConnectorPrivyContext.Provider>

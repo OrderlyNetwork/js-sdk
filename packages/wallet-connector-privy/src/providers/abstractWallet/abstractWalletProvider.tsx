@@ -8,10 +8,10 @@ import {
 } from "@abstract-foundation/agw-react";
 import { useAccount, useWalletClient } from "wagmi";
 import { ConnectedChain, WalletState } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
+import { ABSTRACT_CHAIN_ID_MAP, ChainNamespace } from "@orderly.network/types";
 import { windowGuard } from "@orderly.network/utils";
 import { useWalletConnectorPrivy } from "../../provider";
-import { IWalletState } from "../../types";
+import { AbstractChainsMap, IWalletState } from "../../types";
 
 interface AbstractWalletContextValue {
   connect: () => void;
@@ -29,7 +29,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   const { network } = useWalletConnectorPrivy();
   const { login, logout } = useLoginWithAbstract();
   const [wallet, setWallet] = useState<IWalletState | null>(null);
-  const { data: client } = useAbstractClient();
+  const { data: client, isLoading: isClientLoading } = useAbstractClient();
   const { connector } = useAccount();
   const { address, status } = useGlobalWalletSignerAccount();
 
@@ -50,7 +50,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       return;
     }
     return {
-      id: client.chain.id,
+      id: AbstractChainsMap.get(network)!,
       namespace: ChainNamespace.evm,
     };
   }, [client, connector]);
@@ -67,7 +67,12 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
   );
 
   useEffect(() => {
-    console.log("xxx client", client);
+    console.log("xxx client", {
+      client,
+      isClientLoading,
+      connector,
+      address,
+    });
     if (!client || !connector || !address) {
       setWallet(null);
       return;
@@ -77,7 +82,18 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       const tempWallet: IWalletState = {
         label: "AGW",
         icon: "",
-        provider: provider,
+        provider: {
+          ...provider,
+          agwWallet: true,
+          sendTransaction: async (params: any) => {
+            console.log("--- agw wallet sendTransaction", params);
+            return client.sendTransaction(params);
+          },
+          writeContract: async (params: any) => {
+            console.log("--- agw wallet writeContract", params);
+            return client.writeContract(params);
+          },
+        },
         accounts: [
           {
             address: address,
@@ -85,7 +101,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
         ],
         chains: [
           {
-            id: client.chain.id,
+            id: AbstractChainsMap.get(network)!,
             namespace: ChainNamespace.evm,
           },
         ],
@@ -97,7 +113,7 @@ export const AbstractWalletProvider = (props: PropsWithChildren) => {
       console.log("-- abstract wallet tempWallet", tempWallet);
       setWallet(tempWallet);
     });
-  }, [client, connectedChain, connector, address]);
+  }, [client, connectedChain, connector, address, isClientLoading]);
 
   useEffect(() => {
     windowGuard(() => {

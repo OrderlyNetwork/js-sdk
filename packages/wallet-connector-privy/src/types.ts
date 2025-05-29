@@ -9,7 +9,13 @@ import {
 import { QueryClient } from "@tanstack/react-query";
 import { Connector, CreateConnectorFn, Storage } from "wagmi";
 import { WalletState } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
+import {
+  ABSTRACT_MAINNET_CHAINID,
+  ABSTRACT_TESTNET_CHAINID,
+  ChainNamespace,
+  SOLANA_MAINNET_CHAINID,
+  SOLANA_TESTNET_CHAINID,
+} from "@orderly.network/types";
 
 export type SolanaInitialProps = PropsWithChildren<{
   network?: WalletAdapterNetwork;
@@ -74,15 +80,20 @@ export interface InitAbstract {
 }
 
 export const SolanaChains = new Map([
-  [WalletAdapterNetwork.Devnet, 901901901],
-  [WalletAdapterNetwork.Mainnet, 900900900],
+  [WalletAdapterNetwork.Devnet, SOLANA_TESTNET_CHAINID],
+  [WalletAdapterNetwork.Mainnet, SOLANA_MAINNET_CHAINID],
 ]);
 
 export const SolanaChainsMap = new Map<Network | WalletAdapterNetwork, number>([
-  [WalletAdapterNetwork.Devnet, 901901901],
-  [Network.testnet, 901901901],
-  [Network.mainnet, 900900900],
-  [WalletAdapterNetwork.Mainnet, 900900900],
+  [WalletAdapterNetwork.Devnet, SOLANA_TESTNET_CHAINID],
+  [Network.testnet, SOLANA_TESTNET_CHAINID],
+  [Network.mainnet, SOLANA_MAINNET_CHAINID],
+  [WalletAdapterNetwork.Mainnet, SOLANA_MAINNET_CHAINID],
+]);
+
+export const AbstractChainsMap = new Map<Network, number>([
+  [Network.testnet, ABSTRACT_TESTNET_CHAINID],
+  [Network.mainnet, ABSTRACT_MAINNET_CHAINID],
 ]);
 
 export interface ConnectorWalletType {

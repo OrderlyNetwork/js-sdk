@@ -84,7 +84,7 @@ export function ConnectDrawer(props: {
           : t("connector.connectWallet")}
       </div>
     );
-  }, [isMobile, props.headerProps?.mobile]);
+  }, [isMobile, props.headerProps?.mobile, isConnected]);
   return (
     <Drawer isOpen={props.open} onClose={() => props.onChangeOpen(false)}>
       {!isMobile && (
@@ -108,7 +108,7 @@ export function ConnectDrawer(props: {
         {isConnected ? <MyWallet /> : <RenderConnector />}
       </div>
 
-      {!isConnected && (
+      {!isConnected && termsOfUse && (
         <div className="oui-relative oui-z-10 oui-text-center oui-text-2xs oui-font-semibold  oui-text-base-contrast-80">
           {/* @ts-ignore */}
           <Trans
