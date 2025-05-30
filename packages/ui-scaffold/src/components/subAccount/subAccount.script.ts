@@ -54,6 +54,7 @@ export const SubAccountScript = () => {
   useEffect(() => {
     // current sub account should be the first item
     if (!state.subAccounts || !state.subAccounts.length) {
+      setSubAccounts([]);
       return;
     }
     const currentSubAccount = state.subAccounts.find(

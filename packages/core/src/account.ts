@@ -486,6 +486,8 @@ export class Account {
       ...this.stateValue,
       validating: false,
       status: AccountStatusEnum.EnableTrading,
+      subAccounts: [] as SubAccount[],
+      subAccountId: undefined,
     };
 
     if (subAccounts.length) {
