@@ -34,8 +34,12 @@ export const usePrivateDataObserver = (options: {
   const positionsActions = usePositionActions();
   // fetch the data of current account
 
-  const { data: clientInfo } =
-    usePrivateQuery<API.AccountInfo>("/v1/client/info");
+  const { data: clientInfo } = usePrivateQuery<API.AccountInfo>(
+    "/v1/client/info",
+    {
+      revalidateOnFocus: false,
+    },
+  );
 
   useEffect(() => {
     if (clientInfo) {

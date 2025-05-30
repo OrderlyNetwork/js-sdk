@@ -46,6 +46,9 @@ const generateLeverageLevers = (max: number) => {
 export const useLeverage = () => {
   const { data, mutate } = usePrivateQuery<{ max_leverage: string | number }>(
     "/v1/client/info",
+    {
+      revalidateOnFocus: false,
+    },
   );
 
   const [update, { isMutating }] = useMutation("/v1/client/leverage");
