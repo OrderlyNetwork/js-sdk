@@ -58,6 +58,7 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
+import { SlippageUI } from "./components/slippage/slippage.ui";
 import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
@@ -104,6 +105,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   );
   const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
+  const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "");
+
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY
       ? t("orderEntry.buyLong")
@@ -115,6 +118,15 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       setErrorMsgVisible(true);
     }
   }, [validated]);
+
+  // set slippage
+  useEffect(() => {
+    if (slippage) {
+      setOrderValue("slippage", Number(slippage));
+    } else {
+      setOrderValue("slippage", undefined);
+    }
+  }, [slippage]);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -372,7 +384,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           estLiqPrice={props.estLiqPrice}
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
+          slippage={slippage}
+          setSlippage={setSlippage}
         />
+
         <Divider className="oui-w-full" />
         {/* TP SL switch and content */}
         <OrderTPSL
@@ -928,6 +943,8 @@ function AssetInfo(props: {
   estLiqPrice: number | null;
   estLeverage: number | null;
   currentLeverage: number | null;
+  slippage: string;
+  setSlippage: (slippage: string) => void;
 }) {
   const { canTrade } = props;
   const { t } = useTranslation();
@@ -981,6 +998,7 @@ function AssetInfo(props: {
           {props.estLeverage ?? "--"}
         </Text.numeral> */}
       </Flex>
+      <SlippageUI slippage={props.slippage} setSlippage={props.setSlippage} />
     </div>
   );
 }

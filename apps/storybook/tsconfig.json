@@ -85,18 +85,18 @@
       "@orderly.network/wallet-connector-privy": [
         "../../packages/wallet-connector-privy/src"
       ],
-      "@orderly.network/ui-chain-selector": [
-        "../../packages/ui-chain-selector/src"
-      ],
-      "@orderly.network/ui-tradingview": [
-        "../../packages/ui-tradingview/src"
-      ],
-      "@orderly.network/ui-tpsl": [
-        "../../packages/ui-tpsl/src"
-      ],
-      "@orderly.network/types": [
-        "../../packages/types/src"
-      ],
+      // "@orderly.network/ui-chain-selector": [
+      //   "../../packages/ui-chain-selector/src"
+      // ],
+      // "@orderly.network/ui-tradingview": [
+      //   "../../packages/ui-tradingview/src"
+      // ],
+      // "@orderly.network/ui-tpsl": [
+      //   "../../packages/ui-tpsl/src"
+      // ],
+      // "@orderly.network/types": [
+      //   "../../packages/types/src"
+      // ],
       "@orderly.network/utils": [
         "../../packages/utils/src"
       ],

@@ -166,6 +166,7 @@ export interface OrderEntity {
   reduce_only?: boolean;
   side: OrderSide;
   broker_id?: string;
+  slippage?: number;
 
   // internal fields
   total?: string;
@@ -210,18 +211,18 @@ export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
 }
 
 export type AlgoOrderEntity<
-  T extends AlgoOrderRootType = AlgoOrderRootType.STOP
+  T extends AlgoOrderRootType = AlgoOrderRootType.STOP,
 > = T extends AlgoOrderRootType.TP_SL
   ? Optional<
       BaseAlgoOrderEntity<T>,
       "side" | "type" | "trigger_price" | "order_type"
     >
   : T extends AlgoOrderRootType.POSITIONAL_TP_SL
-  ? Optional<
-      BaseAlgoOrderEntity<T>,
-      "side" | "type" | "trigger_price" | "order_type" | "quantity"
-    >
-  : Omit<BaseAlgoOrderEntity<T>, "child_orders" | "order_type">;
+    ? Optional<
+        BaseAlgoOrderEntity<T>,
+        "side" | "type" | "trigger_price" | "order_type" | "quantity"
+      >
+    : Omit<BaseAlgoOrderEntity<T>, "child_orders" | "order_type">;
 
 export type TPSLOrderEntry = Optional<
   AlgoOrderEntity<AlgoOrderRootType.TP_SL>,

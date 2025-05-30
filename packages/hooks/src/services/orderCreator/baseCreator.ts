@@ -8,14 +8,14 @@ import {
   AlgoOrderChildOrders,
   OrderSide,
 } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
+import { getMinNotional } from "../../utils/createOrder";
 import {
   OrderCreator,
   ValuesDepConfig,
   OrderValidationItem,
   OrderValidationResult,
 } from "./interface";
-import { Decimal } from "@orderly.network/utils";
-import { getMinNotional } from "../../utils/createOrder";
 import { OrderValidation } from "./orderValidation";
 
 export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
@@ -23,7 +23,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
   abstract validate(
     values: T,
-    config: ValuesDepConfig
+    config: ValuesDepConfig,
   ): Promise<OrderValidationResult>;
 
   abstract orderType: OrderType;
@@ -38,6 +38,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       | "order_quantity"
       | "total"
       | "visible_quantity"
+      | "slippage"
     > = {
       symbol: data.symbol!,
       order_type:
@@ -50,7 +51,12 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       reduce_only: data.reduce_only!,
       order_quantity: data.order_quantity!,
       total: data.total,
+      // slippage: data.slippage,
     };
+
+    if (data.order_type === OrderType.MARKET) {
+      order.slippage = data.slippage;
+    }
 
     if (data.visible_quantity === 0) {
       order.visible_quantity = data.visible_quantity;
@@ -72,7 +78,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
 
   baseValidate(
     values: OrderlyOrder,
-    configs: ValuesDepConfig
+    configs: ValuesDepConfig,
   ): Promise<OrderValidationResult> {
     const errors: {
       [P in keyof OrderEntity]?: OrderValidationItem;
@@ -106,12 +112,12 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       if (qty.lt(base_min)) {
         errors.order_quantity = OrderValidation.min(
           "order_quantity",
-          new Decimal(base_min).todp(base_dp).toString()
+          new Decimal(base_min).todp(base_dp).toString(),
         );
       } else if (qty.gt(maxQty)) {
         errors.order_quantity = OrderValidation.max(
           "order_quantity",
-          new Decimal(maxQty).todp(base_dp).toString()
+          new Decimal(maxQty).todp(base_dp).toString(),
         );
       }
     }
@@ -167,7 +173,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       total?: string | number;
       order_price?: string | number;
     },
-    config: ValuesDepConfig
+    config: ValuesDepConfig,
   ): OrderEntity {
     // if order_quantity is not set but total is set, calculate order_quantity from total
     if (!order.order_quantity && order.total && order.order_price) {
@@ -231,7 +237,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     config: ValuesDepConfig,
     errors: {
       [P in keyof OrderlyOrder]?: OrderValidationItem;
-    }
+    },
   ) {
     const { tp_trigger_price, sl_trigger_price, side, order_price } = values;
     const { markPrice } = config;
@@ -249,13 +255,13 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       if (tpPrice.gt(quote_max)) {
         errors.tp_trigger_price = OrderValidation.max(
           "tp_trigger_price",
-          quote_max
+          quote_max,
         );
       }
       if (tpPrice.lt(quote_min)) {
         errors.tp_trigger_price = OrderValidation.min(
           "tp_trigger_price",
-          quote_min
+          quote_min,
         );
       }
 
@@ -263,7 +269,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         if (tpPrice.lte(_orderPrice)) {
           errors.tp_trigger_price = OrderValidation.min(
             "tp_trigger_price",
-            _orderPrice
+            _orderPrice,
           );
         }
       }
@@ -272,7 +278,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         if (tpPrice.gte(_orderPrice)) {
           errors.tp_trigger_price = OrderValidation.max(
             "tp_trigger_price",
-            _orderPrice
+            _orderPrice,
           );
         }
       }
@@ -283,13 +289,13 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       if (slPrice.gt(quote_max)) {
         errors.sl_trigger_price = OrderValidation.max(
           "sl_trigger_price",
-          quote_max
+          quote_max,
         );
       }
       if (slPrice.lt(quote_min)) {
         errors.sl_trigger_price = OrderValidation.min(
           "sl_trigger_price",
-          quote_min
+          quote_min,
         );
       }
 
@@ -297,7 +303,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         if (slPrice.gte(_orderPrice)) {
           errors.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
-            _orderPrice
+            _orderPrice,
           );
         }
         //SL price < mark_price * price_scope
@@ -307,7 +313,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         if (slPrice.lte(_orderPrice)) {
           errors.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
-            _orderPrice
+            _orderPrice,
           );
         }
       }
