@@ -26,6 +26,7 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
   const [nickName, setNickName] = useState<string | undefined>(undefined);
   const { state } = useAccount();
   const [invalid, setInvalid] = useState(false);
+  const [loading, setLoading] = useState(false);
   const subAccountCount = useMemo(() => {
     return state.subAccounts?.length ?? 0;
   }, [state]);
@@ -69,6 +70,8 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
 
   const reset = () => {
     setNickName("");
+    setInvalid(false);
+    setLoading(false);
   };
 
   const validateNickName = (nickName: string | undefined) => {
@@ -86,6 +89,7 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
       _nickName = nickName.trim();
     }
 
+    setLoading(true);
     props
       .create(_nickName)
       .then((res) => {
@@ -97,6 +101,9 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
       })
       .catch((e: any) => {
         toast.error("Failed to create sub-account.");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
   return (
@@ -113,6 +120,8 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
         actions={{
           primary: {
             label: t("common.confirm"),
+            disabled: invalid || loading,
+            loading: loading,
             onClick: () => {
               const invalid = validateNickName(nickName);
               if (invalid) {

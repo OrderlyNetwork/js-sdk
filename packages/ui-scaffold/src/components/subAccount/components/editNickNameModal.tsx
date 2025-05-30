@@ -25,7 +25,9 @@ export const EditNickNameDialog = (props: {
   };
   useEffect(() => {
     setNewNickName(props.nickName);
-  }, [props.nickName]);
+    setInvalid(false);
+    setLoading(false);
+  }, [props.nickName, props.open]);
   return (
     <SimpleDialog
       title={<Text>Edit nickname</Text>}
@@ -37,13 +39,13 @@ export const EditNickNameDialog = (props: {
       actions={{
         primary: {
           label: t("common.confirm"),
-          disabled: loading,
+          disabled: loading || invalid,
           loading: loading,
           onClick: () => {
-            setLoading(true);
             if (validateNickName(newNickName)) {
               return;
             }
+            setLoading(true);
             subAccount
               ?.update({
                 subAccountId: props.accountId,
