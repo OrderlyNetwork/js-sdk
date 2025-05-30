@@ -6,13 +6,12 @@ import {
   SimpleDialog,
   toast,
   Text,
-  TextField,
   useScreen,
   cn,
   Tooltip,
 } from "@orderly.network/ui";
 import { AddIcon } from "../icons";
-import { NickNameDescriptionText, NickNameTextField } from "./common";
+import { NickNameTextField } from "./common";
 
 const MAX_SUB_ACCOUNT_COUNT = 10;
 type CreateSubAccountProps = {
@@ -34,10 +33,10 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
     return subAccountCount >= MAX_SUB_ACCOUNT_COUNT ? (
       <Tooltip
         className="oui-max-w-[188px]"
-        content={"You have reached the maximum limit of 10 sub-accounts."}
+        content={t("subAccount.modal.create.max.description")}
       >
         <AddIcon
-          className={cn("oui-fill-base-contrast-20 oui-cursor-not-allowed")}
+          className={cn("oui-cursor-not-allowed oui-fill-base-contrast-20")}
         />
       </Tooltip>
     ) : (
@@ -60,10 +59,12 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
       itemAlign="start"
       width="100%"
     >
-      <Text weight="semibold">Create sub-account</Text>
+      <Text weight="semibold">{t("subAccount.modal.create.title")}</Text>
       <Text className="oui-text-2xs oui-text-base-contrast-36">
-        You have {subAccountCount} sub-accounts.{" "}
-        {MAX_SUB_ACCOUNT_COUNT - subAccountCount} more can be created.
+        {t("subAccount.modal.create.description", {
+          subAccountCount,
+          remainingCount: MAX_SUB_ACCOUNT_COUNT - subAccountCount,
+        })}
       </Text>
     </Flex>
   );
@@ -95,12 +96,12 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
       .then((res) => {
         console.log("res", res);
         reset();
-        toast.success("Sub-account created successfully.");
+        toast.success(t("subAccount.modal.create.success.description"));
 
         setOpen(false);
       })
       .catch((e: any) => {
-        toast.error("Failed to create sub-account.");
+        toast.error(t("subAccount.modal.create.failed.description"));
       })
       .finally(() => {
         setLoading(false);

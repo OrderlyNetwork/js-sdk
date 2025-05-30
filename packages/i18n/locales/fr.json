@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Mise à niveau du système en cours",
   "maintenance.dialog.description": "Désolé, {{brokerName}} est temporairement indisponible en raison d'une mise à niveau planifiée. Le service devrait être rétabli d'ici {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} sera temporairement indisponible pour une mise à niveau planifiée du {{startDate}} au {{endDate}}.",
-  "restrictedInfo.description.default": "Vous accédez à {{brokerName}} depuis une adresse IP ({{ip}}) associée à un pays restreint."
+  "restrictedInfo.description.default": "Vous accédez à {{brokerName}} depuis une adresse IP ({{ip}}) associée à un pays restreint.",
+  "subAccount.modal.mainAccount.title": "Compte principal",
+  "subAccount.modal.subAccounts.title": "Sous-comptes",
+  "subAccount.modal.current": "Actuel",
+  "subAccount.modal.noAccount.description": "Créez un sous-compte maintenant pour explorer différentes stratégies de trading.",
+  "subAccount.modal.create.max.description": "Vous avez atteint la limite maximale de 10 sous-comptes.",
+  "subAccount.modal.create.title": "Créer un sous-compte",
+  "subAccount.modal.create.description": "Vous avez {{subAccountCount}} sous-comptes. {{remainingCount}} autres peuvent être créés.",
+  "subAccount.modal.create.invalid.description": "Nom de sous-compte invalide. Seuls les lettres, chiffres et @, _, - (espace) sont autorisés.",
+  "subAccount.modal.create.success.description": "Sous-compte créé avec succès.",
+  "subAccount.modal.create.failed.description": "Échec de la création du sous-compte.",
+  "subAccount.modal.edit.title": "Modifier le surnom",
+  "subAccount.modal.nickName.label": "Surnom du sous-compte",
+  "subAccount.modal.edit.success.description": "Surnom mis à jour avec succès.",
+  "subAccount.modal.edit.failed.description": "Échec de la mise à jour du surnom."
 }

@@ -56,4 +56,23 @@ export const widget = {
 
   "restrictedInfo.description.default":
     " You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country.",
+  "subAccount.modal.mainAccount.title": "Main account",
+  "subAccount.modal.subAccounts.title": "Sub-accounts",
+  "subAccount.modal.current": "Current",
+  "subAccount.modal.noAccount.description":
+    "Create a sub-account now to explore different trading strategies.",
+  "subAccount.modal.create.max.description":
+    "You have reached the maximum limit of 10 sub-accounts.",
+  "subAccount.modal.create.title": "Create sub-account",
+  "subAccount.modal.create.description":
+    "You have {{subAccountCount}} sub-accounts. {{remainingCount}} more can be created.",
+  "subAccount.modal.create.invalid.description":
+    "Invalid sub-account name. Only letters, numbers, and @ , _ - (space) allowed.",
+  "subAccount.modal.create.success.description":
+    "Sub-account created successfully.",
+  "subAccount.modal.create.failed.description": "Failed to create sub-account.",
+  "subAccount.modal.edit.title": "Edit nickname",
+  "subAccount.modal.nickName.label": "Sub-account nickname",
+  "subAccount.modal.edit.success.description": "Nickname updated successfully.",
+  "subAccount.modal.edit.failed.description": "Failed to update nickname.",
 };

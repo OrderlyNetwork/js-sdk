@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Peningkatan sistem sedang berlangsung",
   "maintenance.dialog.description": "Maaf, {{brokerName}} sementara tidak tersedia karena peningkatan terjadwal. Layanan diharapkan kembali pada {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} akan sementara tidak tersedia untuk peningkatan terjadwal dari {{startDate}} hingga {{endDate}}.",
-  "restrictedInfo.description.default": "Anda mengakses {{brokerName}} dari alamat IP ({{ip}}) yang terkait dengan negara terbatas."
+  "restrictedInfo.description.default": "Anda mengakses {{brokerName}} dari alamat IP ({{ip}}) yang terkait dengan negara terbatas.",
+  "subAccount.modal.mainAccount.title": "Akun utama",
+  "subAccount.modal.subAccounts.title": "Sub-akun",
+  "subAccount.modal.current": "Saat ini",
+  "subAccount.modal.noAccount.description": "Buat sub-akun sekarang untuk mengeksplorasi berbagai strategi trading.",
+  "subAccount.modal.create.max.description": "Anda telah mencapai batas maksimum 10 sub-akun.",
+  "subAccount.modal.create.title": "Buat sub-akun",
+  "subAccount.modal.create.description": "Anda memiliki {{subAccountCount}} sub-akun. {{remainingCount}} lagi dapat dibuat.",
+  "subAccount.modal.create.invalid.description": "Nama sub-akun tidak valid. Hanya huruf, angka, dan @, _, - (spasi) yang diizinkan.",
+  "subAccount.modal.create.success.description": "Sub-akun berhasil dibuat.",
+  "subAccount.modal.create.failed.description": "Gagal membuat sub-akun.",
+  "subAccount.modal.edit.title": "Edit nama panggilan",
+  "subAccount.modal.nickName.label": "Nama panggilan sub-akun",
+  "subAccount.modal.edit.success.description": "Nama panggilan berhasil diperbarui.",
+  "subAccount.modal.edit.failed.description": "Gagal memperbarui nama panggilan."
 }

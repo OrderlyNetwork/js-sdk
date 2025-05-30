@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Sistem güncellemesi devam ediyor",
   "maintenance.dialog.description": "Üzgünüz, {{brokerName}} planlı bir güncelleme nedeniyle geçici olarak kullanılamıyor. Hizmetin {{endDate}} tarihinde tekrar kullanılabilir olması bekleniyor.",
   "maintenance.tips.description": "{{brokerName}}, {{startDate}} ile {{endDate}} arasında planlı bir güncelleme nedeniyle geçici olarak kullanılamayacak.",
-  "restrictedInfo.description.default": " {{brokerName}}'e kısıtlı bir ülkeye ait IP adresinden ({{ip}}) erişiyorsunuz."
+  "restrictedInfo.description.default": " {{brokerName}}'e kısıtlı bir ülkeye ait IP adresinden ({{ip}}) erişiyorsunuz.",
+  "subAccount.modal.mainAccount.title": "Ana hesap",
+  "subAccount.modal.subAccounts.title": "Alt hesaplar",
+  "subAccount.modal.current": "Mevcut",
+  "subAccount.modal.noAccount.description": "Farklı ticaret stratejilerini keşfetmek için hemen bir alt hesap oluşturun.",
+  "subAccount.modal.create.max.description": "10 alt hesap maksimum limitine ulaştınız.",
+  "subAccount.modal.create.title": "Alt hesap oluştur",
+  "subAccount.modal.create.description": "{{subAccountCount}} alt hesabınız var. {{remainingCount}} tane daha oluşturulabilir.",
+  "subAccount.modal.create.invalid.description": "Geçersiz alt hesap adı. Sadece harfler, rakamlar ve @, _, - (boşluk) kullanılabilir.",
+  "subAccount.modal.create.success.description": "Alt hesap başarıyla oluşturuldu.",
+  "subAccount.modal.create.failed.description": "Alt hesap oluşturulamadı.",
+  "subAccount.modal.edit.title": "Takma adı düzenle",
+  "subAccount.modal.nickName.label": "Alt hesap takma adı",
+  "subAccount.modal.edit.success.description": "Takma ad başarıyla güncellendi.",
+  "subAccount.modal.edit.failed.description": "Takma ad güncellenemedi."
 }

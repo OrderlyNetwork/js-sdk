@@ -1,8 +1,7 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { inputFormatter, TextField } from "@orderly.network/ui";
 
-export const NickNameDescriptionText =
-  "5-20 characters. Only letters, numbers, and @ , _ - (space) allowed.";
+export const NickNameDescriptionText = "";
 
 export const NickNameTextField = (props: {
   nickName: string | undefined;
@@ -10,11 +9,12 @@ export const NickNameTextField = (props: {
   subAccountCount?: number;
   invalid?: boolean;
 }) => {
+  const { t } = useTranslation();
   return (
     <TextField
       placeholder={`Sub-account ${(props.subAccountCount ?? 0) + 1}`}
       fullWidth
-      label="Sub-account nickname"
+      label={t("subAccount.modal.nickName.label")}
       value={props.nickName}
       onChange={(e) => {
         props.setNickName(e.target.value);
@@ -29,7 +29,7 @@ export const NickNameTextField = (props: {
       maxLength={20}
       minLength={5}
       autoComplete="off"
-      helpText={NickNameDescriptionText}
+      helpText={t("subAccount.modal.create.invalid.description")}
       className="oui-mb-4"
       color={props.invalid ? "danger" : undefined}
     />

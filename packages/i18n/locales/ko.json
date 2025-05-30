@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "시스템 업그레이드 진행 중",
   "maintenance.dialog.description": "죄송합니다. {{brokerName}}은(는) 예정된 업그레이드로 인해 일시적으로 사용할 수 없습니다. 서비스는 {{endDate}}까지 복구될 예정입니다.",
   "maintenance.tips.description": "{{brokerName}}은(는) {{startDate}}부터 {{endDate}}까지 예정된 업그레이드로 인해 일시적으로 사용할 수 없습니다.",
-  "restrictedInfo.description.default": "제한된 국가와 관련된 IP 주소({{ip}})에서 {{brokerName}}에 접속하고 있습니다."
+  "restrictedInfo.description.default": "제한된 국가와 관련된 IP 주소({{ip}})에서 {{brokerName}}에 접속하고 있습니다.",
+  "subAccount.modal.mainAccount.title": "메인 계정",
+  "subAccount.modal.subAccounts.title": "서브 계정",
+  "subAccount.modal.current": "현재",
+  "subAccount.modal.noAccount.description": "다양한 거래 전략을 탐색하기 위해 지금 서브 계정을 생성하세요.",
+  "subAccount.modal.create.max.description": "서브 계정 최대 한도(10개)에 도달했습니다.",
+  "subAccount.modal.create.title": "서브 계정 생성",
+  "subAccount.modal.create.description": "현재 {{subAccountCount}}개의 서브 계정이 있습니다. {{remainingCount}}개 더 생성할 수 있습니다.",
+  "subAccount.modal.create.invalid.description": "유효하지 않은 서브 계정 이름입니다. 문자, 숫자, @, _, - (공백)만 사용 가능합니다.",
+  "subAccount.modal.create.success.description": "서브 계정이 성공적으로 생성되었습니다.",
+  "subAccount.modal.create.failed.description": "서브 계정 생성에 실패했습니다.",
+  "subAccount.modal.edit.title": "닉네임 수정",
+  "subAccount.modal.nickName.label": "서브 계정 닉네임",
+  "subAccount.modal.edit.success.description": "닉네임이 성공적으로 업데이트되었습니다.",
+  "subAccount.modal.edit.failed.description": "닉네임 업데이트에 실패했습니다."
 }

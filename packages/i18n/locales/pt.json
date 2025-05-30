@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Atualização do sistema em andamento",
   "maintenance.dialog.description": "Desculpe, {{brokerName}} está temporariamente indisponível devido a uma atualização programada. O serviço deve voltar até {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} estará temporariamente indisponível para uma atualização programada de {{startDate}} até {{endDate}}.",
-  "restrictedInfo.description.default": "Você está acessando {{brokerName}} de um endereço IP ({{ip}}) associado a um país restrito."
+  "restrictedInfo.description.default": "Você está acessando {{brokerName}} de um endereço IP ({{ip}}) associado a um país restrito.",
+  "subAccount.modal.mainAccount.title": "Conta principal",
+  "subAccount.modal.subAccounts.title": "Sub-contas",
+  "subAccount.modal.current": "Atual",
+  "subAccount.modal.noAccount.description": "Crie uma sub-conta agora para explorar diferentes estratégias de negociação.",
+  "subAccount.modal.create.max.description": "Você atingiu o limite máximo de 10 sub-contas.",
+  "subAccount.modal.create.title": "Criar sub-conta",
+  "subAccount.modal.create.description": "Você tem {{subAccountCount}} sub-contas. {{remainingCount}} mais podem ser criadas.",
+  "subAccount.modal.create.invalid.description": "Nome de sub-conta inválido. Apenas letras, números e @, _, - (espaço) são permitidos.",
+  "subAccount.modal.create.success.description": "Sub-conta criada com sucesso.",
+  "subAccount.modal.create.failed.description": "Falha ao criar sub-conta.",
+  "subAccount.modal.edit.title": "Editar apelido",
+  "subAccount.modal.nickName.label": "Apelido da sub-conta",
+  "subAccount.modal.edit.success.description": "Apelido atualizado com sucesso.",
+  "subAccount.modal.edit.failed.description": "Falha ao atualizar apelido."
 }

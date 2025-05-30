@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Aktualizacja systemu w toku",
   "maintenance.dialog.description": "Przepraszamy, {{brokerName}} jest tymczasowo niedostępny z powodu zaplanowanej aktualizacji. Usługa powinna zostać przywrócona do {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} będzie tymczasowo niedostępny z powodu zaplanowanej aktualizacji od {{startDate}} do {{endDate}}.",
-  "restrictedInfo.description.default": "Uzyskujesz dostęp do {{brokerName}} z adresu IP ({{ip}}) powiązanego z krajem objętym ograniczeniami."
+  "restrictedInfo.description.default": "Uzyskujesz dostęp do {{brokerName}} z adresu IP ({{ip}}) powiązanego z krajem objętym ograniczeniami.",
+  "subAccount.modal.mainAccount.title": "Konto główne",
+  "subAccount.modal.subAccounts.title": "Konta podrzędne",
+  "subAccount.modal.current": "Aktualne",
+  "subAccount.modal.noAccount.description": "Utwórz konto podrzędne teraz, aby eksplorować różne strategie handlowe.",
+  "subAccount.modal.create.max.description": "Osiągnięto maksymalny limit 10 kont podrzędnych.",
+  "subAccount.modal.create.title": "Utwórz konto podrzędne",
+  "subAccount.modal.create.description": "Masz {{subAccountCount}} kont podrzędnych. Można utworzyć jeszcze {{remainingCount}}.",
+  "subAccount.modal.create.invalid.description": "Nieprawidłowa nazwa konta podrzędnego. Dozwolone są tylko litery, cyfry i @, _, - (spacja).",
+  "subAccount.modal.create.success.description": "Konto podrzędne zostało pomyślnie utworzone.",
+  "subAccount.modal.create.failed.description": "Nie udało się utworzyć konta podrzędnego.",
+  "subAccount.modal.edit.title": "Edytuj pseudonim",
+  "subAccount.modal.nickName.label": "Pseudonim konta podrzędnego",
+  "subAccount.modal.edit.success.description": "Pseudonim został pomyślnie zaktualizowany.",
+  "subAccount.modal.edit.failed.description": "Nie udało się zaktualizować pseudonimu."
 }

@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Aggiornamento del sistema in corso",
   "maintenance.dialog.description": "Ci dispiace, {{brokerName}} è temporaneamente non disponibile a causa di un aggiornamento programmato. Il servizio dovrebbe tornare disponibile entro {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} sarà temporaneamente non disponibile per un aggiornamento programmato da {{startDate}} a {{endDate}}.",
-  "restrictedInfo.description.default": "Stai accedendo a {{brokerName}} da un indirizzo IP ({{ip}}) associato a un paese con restrizioni."
+  "restrictedInfo.description.default": "Stai accedendo a {{brokerName}} da un indirizzo IP ({{ip}}) associato a un paese con restrizioni.",
+  "subAccount.modal.mainAccount.title": "Account principale",
+  "subAccount.modal.subAccounts.title": "Sotto-account",
+  "subAccount.modal.current": "Attuale",
+  "subAccount.modal.noAccount.description": "Crea un sotto-account ora per esplorare diverse strategie di trading.",
+  "subAccount.modal.create.max.description": "Hai raggiunto il limite massimo di 10 sotto-account.",
+  "subAccount.modal.create.title": "Crea sotto-account",
+  "subAccount.modal.create.description": "Hai {{subAccountCount}} sotto-account. Possono essere creati altri {{remainingCount}}.",
+  "subAccount.modal.create.invalid.description": "Nome sotto-account non valido. Sono consentite solo lettere, numeri e @, _, - (spazio).",
+  "subAccount.modal.create.success.description": "Sotto-account creato con successo.",
+  "subAccount.modal.create.failed.description": "Impossibile creare il sotto-account.",
+  "subAccount.modal.edit.title": "Modifica soprannome",
+  "subAccount.modal.nickName.label": "Soprannome sotto-account",
+  "subAccount.modal.edit.success.description": "Soprannome aggiornato con successo.",
+  "subAccount.modal.edit.failed.description": "Impossibile aggiornare il soprannome."
 }

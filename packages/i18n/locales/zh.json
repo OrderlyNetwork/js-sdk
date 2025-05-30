@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "系统升级进行中",
   "maintenance.dialog.description": "抱歉，由于计划中的升级，{{brokerName}}暂时不可用。服务预计将在{{endDate}}恢复。",
   "maintenance.tips.description": "{{brokerName}}将因计划中的升级从{{startDate}}到{{endDate}}暂时不可用。",
-  "restrictedInfo.description.default": "您正在从与受限国家相关的IP地址（{{ip}}）访问{{brokerName}}。"
+  "restrictedInfo.description.default": "您正在从与受限国家相关的IP地址（{{ip}}）访问{{brokerName}}。",
+  "subAccount.modal.mainAccount.title": "主账户",
+  "subAccount.modal.subAccounts.title": "子账户",
+  "subAccount.modal.current": "当前",
+  "subAccount.modal.noAccount.description": "立即创建子账户以探索不同的交易策略。",
+  "subAccount.modal.create.max.description": "您已达到10个子账户的最大限制。",
+  "subAccount.modal.create.title": "创建子账户",
+  "subAccount.modal.create.description": "您有{{subAccountCount}}个子账户。还可以创建{{remainingCount}}个。",
+  "subAccount.modal.create.invalid.description": "无效的子账户名称。只允许字母、数字和@、_、-（空格）。",
+  "subAccount.modal.create.success.description": "子账户创建成功。",
+  "subAccount.modal.create.failed.description": "创建子账户失败。",
+  "subAccount.modal.edit.title": "编辑昵称",
+  "subAccount.modal.nickName.label": "子账户昵称",
+  "subAccount.modal.edit.success.description": "昵称更新成功。",
+  "subAccount.modal.edit.failed.description": "更新昵称失败。"
 }

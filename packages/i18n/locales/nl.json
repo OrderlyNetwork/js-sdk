@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Systeemupgrade bezig",
   "maintenance.dialog.description": "Sorry, {{brokerName}} is tijdelijk niet beschikbaar vanwege een geplande upgrade. De dienst zal naar verwachting weer beschikbaar zijn op {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} zal tijdelijk niet beschikbaar zijn voor een geplande upgrade van {{startDate}} tot {{endDate}}.",
-  "restrictedInfo.description.default": "U benadert {{brokerName}} vanaf een IP-adres ({{ip}}) dat geassocieerd is met een beperkt land."
+  "restrictedInfo.description.default": "U benadert {{brokerName}} vanaf een IP-adres ({{ip}}) dat geassocieerd is met een beperkt land.",
+  "subAccount.modal.mainAccount.title": "Hoofdaccount",
+  "subAccount.modal.subAccounts.title": "Sub-accounts",
+  "subAccount.modal.current": "Huidig",
+  "subAccount.modal.noAccount.description": "Maak nu een sub-account aan om verschillende handelsstrategieën te verkennen.",
+  "subAccount.modal.create.max.description": "U heeft de maximale limiet van 10 sub-accounts bereikt.",
+  "subAccount.modal.create.title": "Sub-account aanmaken",
+  "subAccount.modal.create.description": "U heeft {{subAccountCount}} sub-accounts. Er kunnen nog {{remainingCount}} worden aangemaakt.",
+  "subAccount.modal.create.invalid.description": "Ongeldige sub-accountnaam. Alleen letters, cijfers en @, _, - (spatie) zijn toegestaan.",
+  "subAccount.modal.create.success.description": "Sub-account succesvol aangemaakt.",
+  "subAccount.modal.create.failed.description": "Aanmaken van sub-account mislukt.",
+  "subAccount.modal.edit.title": "Bijnaam bewerken",
+  "subAccount.modal.nickName.label": "Sub-account bijnaam",
+  "subAccount.modal.edit.success.description": "Bijnaam succesvol bijgewerkt.",
+  "subAccount.modal.edit.failed.description": "Bijwerken van bijnaam mislukt."
 }

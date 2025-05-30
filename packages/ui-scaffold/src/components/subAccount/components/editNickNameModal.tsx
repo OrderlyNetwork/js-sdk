@@ -30,7 +30,7 @@ export const EditNickNameDialog = (props: {
   }, [props.nickName, props.open]);
   return (
     <SimpleDialog
-      title={<Text>Edit nickname</Text>}
+      title={<Text>{t("subAccount.modal.edit.title")}</Text>}
       open={props.open}
       onOpenChange={props.onOpenChange}
       classNames={{
@@ -53,10 +53,10 @@ export const EditNickNameDialog = (props: {
               })
               .catch((e) => {
                 console.log("e", e);
-                toast.error(e.message);
+                toast.error(t("subAccount.modal.edit.failed.description"));
               })
               .then((res) => {
-                toast.success("Nickname updated successfully.");
+                toast.success(t("subAccount.modal.edit.success.description"));
                 props.onOpenChange(false);
               })
               .finally(() => {

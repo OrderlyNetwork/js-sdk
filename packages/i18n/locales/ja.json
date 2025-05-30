@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "システムアップグレード中",
   "maintenance.dialog.description": "申し訳ありませんが、{{brokerName}}は予定されたアップグレードのため一時的に利用できません。サービスは{{endDate}}までに復旧する予定です。",
   "maintenance.tips.description": "{{brokerName}}は{{startDate}}から{{endDate}}までの予定されたアップグレードのため一時的に利用できません。",
-  "restrictedInfo.description.default": "制限された国に関連付けられたIPアドレス（{{ip}}）から{{brokerName}}にアクセスしています。"
+  "restrictedInfo.description.default": "制限された国に関連付けられたIPアドレス（{{ip}}）から{{brokerName}}にアクセスしています。",
+  "subAccount.modal.mainAccount.title": "メインアカウント",
+  "subAccount.modal.subAccounts.title": "サブアカウント",
+  "subAccount.modal.current": "現在",
+  "subAccount.modal.noAccount.description": "さまざまな取引戦略を試すために、今すぐサブアカウントを作成しましょう。",
+  "subAccount.modal.create.max.description": "サブアカウントの最大制限（10個）に達しました。",
+  "subAccount.modal.create.title": "サブアカウントを作成",
+  "subAccount.modal.create.description": "現在{{subAccountCount}}個のサブアカウントがあります。あと{{remainingCount}}個作成できます。",
+  "subAccount.modal.create.invalid.description": "無効なサブアカウント名です。文字、数字、@、_、-（スペース）のみ使用可能です。",
+  "subAccount.modal.create.success.description": "サブアカウントが正常に作成されました。",
+  "subAccount.modal.create.failed.description": "サブアカウントの作成に失敗しました。",
+  "subAccount.modal.edit.title": "ニックネームを編集",
+  "subAccount.modal.nickName.label": "サブアカウントのニックネーム",
+  "subAccount.modal.edit.success.description": "ニックネームが正常に更新されました。",
+  "subAccount.modal.edit.failed.description": "ニックネームの更新に失敗しました。"
 }

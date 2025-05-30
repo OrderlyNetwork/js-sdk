@@ -31,12 +31,12 @@ const AccountIdForCopy = (props: { accountId: string }) => {
   }, [props.accountId]);
   return (
     <Flex
-      className="oui-w-[180px] oui-min-h-[50px]"
+      className="oui-min-h-[50px] oui-w-[180px]"
       gap={2}
       justify="between"
       itemAlign="center"
     >
-      <Text className="oui-text-2xs oui-w-full oui-break-all oui-text-base-contrast-36">
+      <Text className="oui-w-full oui-break-all oui-text-2xs oui-text-base-contrast-36">
         <Text className="oui-text-base-contrast">{info.leading}</Text>
         <Text>{info.middle}</Text>
         <Text className="oui-text-base-contrast">{info.trailing}</Text>
@@ -56,6 +56,7 @@ export const AccountItem = (props: AccountItemProps) => {
     }
     return props.holdings;
   }, [props.holdings]);
+  const { t } = useTranslation();
   return (
     <>
       <Flex
@@ -63,14 +64,14 @@ export const AccountItem = (props: AccountItemProps) => {
         itemAlign="center"
         width="100%"
         className={cn(
-          "oui-bg-base-6 oui-px-3 oui-py-4 oui-relative oui-rounded-[6px] oui-cursor-pointer",
+          "oui-relative oui-cursor-pointer oui-rounded-[6px] oui-bg-base-6 oui-px-3 oui-py-4",
           "oui-border oui-border-base-6",
           props.isCurrent && " oui-border-[#38E2FE] ",
           !props.isCurrent && "hover:oui-border-base-contrast-16",
         )}
       >
         <div
-          className="oui-absolute oui-top-0 oui-right-0 oui-bottom-0 oui-left-0 oui-z-0 "
+          className="oui-absolute oui-inset-0 oui-z-0 "
           onClick={() => {
             if (props.isCurrent) {
               return;
@@ -81,12 +82,12 @@ export const AccountItem = (props: AccountItemProps) => {
         {props.isCurrent && (
           <div
             className={cn(
-              "oui-absolute -oui-top-[1px] -oui-right-[1px] oui-leading-3 oui-text-base-contrast-54",
+              "oui-absolute -oui-right-[1px] -oui-top-[1px] oui-leading-3 oui-text-base-contrast-54",
               "oui-text-[10px] oui-font-semibold oui-text-black",
-              "oui-pl-1 oui-pr-[5px] oui-py-0.5 oui-rounded-[6px] oui-rounded-tl-none oui-rounded-br-none  oui-bg-[#38E2FE]",
+              "oui-rounded-[6px] oui-rounded-br-none oui-rounded-tl-none oui-bg-[#38E2FE] oui-py-0.5 oui-pl-1  oui-pr-[5px]",
             )}
           >
-            Current
+            {t("subAccount.modal.current")}
           </div>
         )}
         <Flex
@@ -104,7 +105,7 @@ export const AccountItem = (props: AccountItemProps) => {
             <Flex
               justify="start"
               itemAlign="center"
-              className="oui-gap-[2px] oui-cursor-pointer oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
+              className="oui-cursor-pointer oui-gap-[2px] oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
               onClick={(event) => {
                 props.onEdit?.({
                   accountId: props.accountId,

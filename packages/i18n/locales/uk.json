@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Триває оновлення системи",
   "maintenance.dialog.description": "Вибачте, {{brokerName}} тимчасово недоступний через заплановане оновлення. Очікується, що сервіс буде відновлено до {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} буде тимчасово недоступний через заплановане оновлення з {{startDate}} до {{endDate}}.",
-  "restrictedInfo.description.default": "Ви отримуєте доступ до {{brokerName}} з IP-адреси ({{ip}}), пов'язаної з обмеженою країною."
+  "restrictedInfo.description.default": "Ви отримуєте доступ до {{brokerName}} з IP-адреси ({{ip}}), пов'язаної з обмеженою країною.",
+  "subAccount.modal.mainAccount.title": "Головний рахунок",
+  "subAccount.modal.subAccounts.title": "Підрахунки",
+  "subAccount.modal.current": "Поточний",
+  "subAccount.modal.noAccount.description": "Створіть підрахунок зараз, щоб досліджувати різні торгові стратегії.",
+  "subAccount.modal.create.max.description": "Ви досягли максимальної межі в 10 підрахунків.",
+  "subAccount.modal.create.title": "Створити підрахунок",
+  "subAccount.modal.create.description": "У вас {{subAccountCount}} підрахунків. Можна створити ще {{remainingCount}}.",
+  "subAccount.modal.create.invalid.description": "Недійсна назва підрахунку. Дозволені лише літери, цифри та @, _, - (пробіл).",
+  "subAccount.modal.create.success.description": "Підрахунок успішно створено.",
+  "subAccount.modal.create.failed.description": "Не вдалося створити підрахунок.",
+  "subAccount.modal.edit.title": "Редагувати псевдонім",
+  "subAccount.modal.nickName.label": "Псевдонім підрахунку",
+  "subAccount.modal.edit.success.description": "Псевдонім успішно оновлено.",
+  "subAccount.modal.edit.failed.description": "Не вдалося оновити псевдонім."
 }

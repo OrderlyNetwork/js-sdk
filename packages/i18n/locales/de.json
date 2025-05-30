@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Systemaktualisierung läuft",
   "maintenance.dialog.description": "Entschuldigung, {{brokerName}} ist aufgrund einer geplanten Aktualisierung vorübergehend nicht verfügbar. Der Service soll bis {{endDate}} wieder verfügbar sein.",
   "maintenance.tips.description": "{{brokerName}} wird für eine geplante Aktualisierung von {{startDate}} bis {{endDate}} vorübergehend nicht verfügbar sein.",
-  "restrictedInfo.description.default": "Sie greifen auf {{brokerName}} von einer IP-Adresse ({{ip}}) zu, die mit einem eingeschränkten Land verbunden ist."
+  "restrictedInfo.description.default": "Sie greifen auf {{brokerName}} von einer IP-Adresse ({{ip}}) zu, die mit einem eingeschränkten Land verbunden ist.",
+  "subAccount.modal.mainAccount.title": "Hauptkonto",
+  "subAccount.modal.subAccounts.title": "Unterkonten",
+  "subAccount.modal.current": "Aktuell",
+  "subAccount.modal.noAccount.description": "Erstellen Sie jetzt ein Unterkonto, um verschiedene Handelsstrategien zu erkunden.",
+  "subAccount.modal.create.max.description": "Sie haben das Maximum von 10 Unterkonten erreicht.",
+  "subAccount.modal.create.title": "Unterkonto erstellen",
+  "subAccount.modal.create.description": "Sie haben {{subAccountCount}} Unterkonten. {{remainingCount}} weitere können erstellt werden.",
+  "subAccount.modal.create.invalid.description": "Ungültiger Unterkontoname. Nur Buchstaben, Zahlen und @, _, - (Leerzeichen) sind erlaubt.",
+  "subAccount.modal.create.success.description": "Unterkonto erfolgreich erstellt.",
+  "subAccount.modal.create.failed.description": "Unterkonto konnte nicht erstellt werden.",
+  "subAccount.modal.edit.title": "Spitznamen bearbeiten",
+  "subAccount.modal.nickName.label": "Unterkonto-Spitzname",
+  "subAccount.modal.edit.success.description": "Spitzname erfolgreich aktualisiert.",
+  "subAccount.modal.edit.failed.description": "Spitzname konnte nicht aktualisiert werden."
 }

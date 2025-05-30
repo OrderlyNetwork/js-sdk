@@ -15,6 +15,7 @@ import { SubAccountIcon, SwapIcon } from "./icons";
 import { SubAccountScriptReturn } from "./subAccount.script";
 
 export function SubAccountUI(props: SubAccountScriptReturn) {
+  const { t } = useTranslation();
   const { isMobile } = useScreen();
   const header = <Text weight="semibold">Switch account</Text>;
   const trigger = (
@@ -42,7 +43,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
       className="oui-h-[120px]"
     >
       <Text className="oui-text-center oui-text-xs oui-font-semibold oui-text-base-contrast-36">
-        Create a sub-account now to explore different trading strategies.
+        {t("subAccount.modal.noAccount.description")}
       </Text>
     </Flex>
   );
@@ -94,7 +95,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
         <Flex direction="column" gap={5} itemAlign="start" width="100%">
           <Flex direction="column" gap={2} itemAlign="start" width="100%">
             <Text className="oui-text-xs oui-leading-3 oui-text-base-contrast-54">
-              Main account
+              {t("subAccount.modal.mainAccount.title")}
             </Text>
             <AccountItem
               accountId={props.mainAccount?.id ?? ""}
@@ -111,7 +112,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
           <Flex direction="column" gap={2} itemAlign="start" width="100%">
             <Flex justify="between" itemAlign="center" width="100%" gap={2}>
               <Text className="oui-text-xs oui-leading-3 oui-text-base-contrast-54">
-                Sub-accounts
+                {t("subAccount.modal.subAccounts.title")}
               </Text>
               <Flex justify="end" gap={2}>
                 {props.subAccounts.length > 0 && (

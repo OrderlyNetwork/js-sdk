@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Hệ thống đang nâng cấp",
   "maintenance.dialog.description": "Xin lỗi, {{brokerName}} tạm thời không khả dụng do nâng cấp theo lịch trình. Dịch vụ dự kiến sẽ hoạt động lại vào {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} sẽ tạm thời không khả dụng để nâng cấp theo lịch trình từ {{startDate}} đến {{endDate}}.",
-  "restrictedInfo.description.default": "Bạn đang truy cập {{brokerName}} từ địa chỉ IP ({{ip}}) liên quan đến một quốc gia bị hạn chế."
+  "restrictedInfo.description.default": "Bạn đang truy cập {{brokerName}} từ địa chỉ IP ({{ip}}) liên quan đến một quốc gia bị hạn chế.",
+  "subAccount.modal.mainAccount.title": "Tài khoản chính",
+  "subAccount.modal.subAccounts.title": "Tài khoản phụ",
+  "subAccount.modal.current": "Hiện tại",
+  "subAccount.modal.noAccount.description": "Tạo tài khoản phụ ngay bây giờ để khám phá các chiến lược giao dịch khác nhau.",
+  "subAccount.modal.create.max.description": "Bạn đã đạt đến giới hạn tối đa 10 tài khoản phụ.",
+  "subAccount.modal.create.title": "Tạo tài khoản phụ",
+  "subAccount.modal.create.description": "Bạn có {{subAccountCount}} tài khoản phụ. Có thể tạo thêm {{remainingCount}} tài khoản.",
+  "subAccount.modal.create.invalid.description": "Tên tài khoản phụ không hợp lệ. Chỉ cho phép chữ cái, số và @, _, - (khoảng trắng).",
+  "subAccount.modal.create.success.description": "Tạo tài khoản phụ thành công.",
+  "subAccount.modal.create.failed.description": "Tạo tài khoản phụ thất bại.",
+  "subAccount.modal.edit.title": "Chỉnh sửa biệt danh",
+  "subAccount.modal.nickName.label": "Biệt danh tài khoản phụ",
+  "subAccount.modal.edit.success.description": "Cập nhật biệt danh thành công.",
+  "subAccount.modal.edit.failed.description": "Cập nhật biệt danh thất bại."
 }

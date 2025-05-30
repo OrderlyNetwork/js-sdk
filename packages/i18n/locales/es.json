@@ -637,5 +637,19 @@
   "maintenance.dialog.title": "Actualización del sistema en progreso",
   "maintenance.dialog.description": "Lo sentimos, {{brokerName}} no está disponible temporalmente debido a una actualización programada. Se espera que el servicio vuelva para {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} no estará disponible temporalmente para una actualización programada desde {{startDate}} hasta {{endDate}}.",
-  "restrictedInfo.description.default": "Estás accediendo a {{brokerName}} desde una dirección IP ({{ip}}) asociada con un país restringido."
+  "restrictedInfo.description.default": "Estás accediendo a {{brokerName}} desde una dirección IP ({{ip}}) asociada con un país restringido.",
+  "subAccount.modal.mainAccount.title": "Cuenta principal",
+  "subAccount.modal.subAccounts.title": "Subcuentas",
+  "subAccount.modal.current": "Actual",
+  "subAccount.modal.noAccount.description": "Cree una subcuenta ahora para explorar diferentes estrategias comerciales.",
+  "subAccount.modal.create.max.description": "Ha alcanzado el límite máximo de 10 subcuentas.",
+  "subAccount.modal.create.title": "Crear subcuenta",
+  "subAccount.modal.create.description": "Tiene {{subAccountCount}} subcuentas. Se pueden crear {{remainingCount}} más.",
+  "subAccount.modal.create.invalid.description": "Nombre de subcuenta inválido. Solo se permiten letras, números y @, _, - (espacio).",
+  "subAccount.modal.create.success.description": "Subcuenta creada exitosamente.",
+  "subAccount.modal.create.failed.description": "Error al crear la subcuenta.",
+  "subAccount.modal.edit.title": "Editar apodo",
+  "subAccount.modal.nickName.label": "Apodo de la subcuenta",
+  "subAccount.modal.edit.success.description": "Apodo actualizado exitosamente.",
+  "subAccount.modal.edit.failed.description": "Error al actualizar el apodo."
 }
