@@ -111,7 +111,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
           <Flex direction="column" gap={2} itemAlign="start" width="100%">
             <Flex justify="between" itemAlign="center" width="100%" gap={2}>
               <Text className="oui-text-xs oui-leading-3 oui-text-base-contrast-54">
-                Sub-account
+                Sub-accounts
               </Text>
               <Flex justify="end" gap={2}>
                 {props.subAccounts.length > 0 && (

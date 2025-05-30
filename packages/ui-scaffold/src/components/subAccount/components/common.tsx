@@ -12,7 +12,7 @@ export const NickNameTextField = (props: {
 }) => {
   return (
     <TextField
-      placeholder={`Sub-account ${props.subAccountCount ? props.subAccountCount + 1 : ""}`}
+      placeholder={`Sub-account ${(props.subAccountCount ?? 0) + 1}`}
       fullWidth
       label="Sub-account nickname"
       value={props.nickName}
