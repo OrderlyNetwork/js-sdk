@@ -1,7 +1,7 @@
 export const portfolio = {
   "portfolio.feeTier": "Fee tier",
   "portfolio.apiKeys": "API Keys",
-  "portfolio.setting": "Setting",
+  "portfolio.setting": "Settings",
 
   "portfolio.overview.availableWithdraw": "Available to withdraw",
 

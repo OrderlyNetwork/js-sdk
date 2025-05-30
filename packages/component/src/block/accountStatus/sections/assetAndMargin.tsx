@@ -43,21 +43,13 @@ export const AssetAndMarginSheet: FC<AssetAndMarginProps> = (props) => {
     });
   const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
     usePositionStream();
+
   const { marginRatio, currentLeverage, mmr } = useMarginRatio();
+
   const { visible, toggleVisible, onDeposit, onWithdraw } =
     useContext(AssetsContext);
 
-  const [maxLeverage, { update, config: leverageLevers }] = useLeverage();
-
-  // console.log("leverageLevers", leverageLevers);
-
-  // const [leverage, setLeverage] = React.useState(() => maxLeverage ?? 0);
-
-  // const leverageValue = useMemo(() => {
-  //   const index = leverageLevers.findIndex((item) => item === leverage);
-
-  //   return index;
-  // }, [leverage, leverageLevers]);
+  const { maxLeverage, leverageLevers, update } = useLeverage();
 
   const onUnsettleClick = useCallback(() => {
     return modal.confirm({

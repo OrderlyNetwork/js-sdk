@@ -60,7 +60,6 @@ export const useDeposit = (options?: useDepositOptions) => {
           ? options?.srcChainId!
           : ARBITRUM_TESTNET_CHAINID,
       ) as API.Chain;
-      console.log("--  chain", chain, options);
     } else {
       chain = findByChainId(options?.srcChainId!);
       // if is orderly un-supported chain
@@ -159,7 +158,6 @@ export const useDeposit = (options?: useDepositOptions) => {
   }) => {
     const { address, vaultAddress, decimals } = inputs;
     const key = `${address}-${vaultAddress}`;
-    console.log("--- get allowance", vaultAddress);
 
     if (prevAddress.current === key) return;
 
@@ -175,7 +173,6 @@ export const useDeposit = (options?: useDepositOptions) => {
       vaultAddress,
       decimals,
     });
-
     setAllowance(() => allowance);
     // setAllowanceRevalidating(false);
     return allowance;
@@ -294,7 +291,9 @@ export const useDeposit = (options?: useDepositOptions) => {
         .then((res: any) => {
           return updateAllowanceWhenTxSuccess(res.hash);
         })
-        .catch((e) => {});
+        .catch((e) => {
+          throw e;
+        });
     },
     [account, getAllowance, options?.address, dst],
   );

@@ -20,7 +20,7 @@ export const commifyOptional = (
     /// default is '0'
     fillString?: string;
     prefix?: string;
-  }
+  },
 ): string => {
   // if num convert to num failed, return fallback
   if (typeof num === "string" && isNaN(Number(num))) {
@@ -28,7 +28,9 @@ export const commifyOptional = (
   }
 
   const prefix = options?.prefix || "";
-  if (typeof num === "undefined") return prefix + (options?.fallback || "--");
+  if (typeof num === "undefined") {
+    return prefix + (options?.fallback || "--");
+  }
   const value = commify(num, options?.fix);
 
   if (options && options.padEnd && options.fix) {
@@ -45,7 +47,7 @@ export const commifyOptional = (
 
 export const commify = (num: number | string, fix?: number): string => {
   const str = `${num}`;
-  var parts = str.split(".");
+  const parts = str.split(".");
   const numberPart = parts[0];
   const decimalPart = parts[1];
   const thousands = /\B(?=(\d{3})+(?!\d))/g;
@@ -56,8 +58,8 @@ export const commify = (num: number | string, fix?: number): string => {
     (decimalPart
       ? "." + decimalPart.substring(0, fix || decimalPart.length)
       : endsWithPoint
-      ? "."
-      : "");
+        ? "."
+        : "");
 
   if (fix === 0 && result.includes(".")) {
     return result.substring(0, result.indexOf("."));
@@ -74,9 +76,11 @@ export const getPrecisionByNumber = (num: number | string): number => {
 
 export function toNonExponential(num: number) {
   const m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
-  if (!Array.isArray(m)) return num;
+  if (!Array.isArray(m)) {
+    return num;
+  }
   return num.toFixed(
-    Math.max(0, (m[1] || "").length - (m[2] as unknown as number))
+    Math.max(0, (m[1] || "").length - (m[2] as unknown as number)),
   );
 }
 
@@ -91,7 +95,7 @@ export function numberToHumanStyle(
   decimalPlaces: number = 2,
   options?: {
     padding?: boolean;
-  }
+  },
 ): string {
   const { padding } = options || {};
   const abbreviations = ["", "K", "M", "B", "T"];
@@ -178,22 +182,24 @@ export function parseNumStr(str: string | number): Decimal | undefined {
 //** remove trailing zeros 0.00000100 => 0.000001, 1 => 1 */
 export function removeTrailingZeros(
   value: number,
-  fixedCount: number = 16
+  fixedCount: number = 16,
 ): string {
   const text = `${value}`;
-  let scientificNotationPattern = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
-  let isScientific = scientificNotationPattern.test(text);
+  const scientificNotationPattern = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
+  const isScientific = scientificNotationPattern.test(text);
   if (!value.toString().includes(".") && !isScientific) {
     return `${value}`;
   }
-  let formattedNumber = new Decimal(value)
+  const formattedNumber = new Decimal(value)
     .toFixed(fixedCount)
     .replace(/(\.[0-9]*[1-9])0+$/, "$1");
   return formattedNumber;
 }
 
 export const todpIfNeed = (value: string | number, dp: number) => {
-  if (value === undefined || value === "") return value;
+  if (value === undefined || value === "") {
+    return value;
+  }
 
   if (typeof value === "number") {
     value = value.toString();

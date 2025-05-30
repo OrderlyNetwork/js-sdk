@@ -11,17 +11,22 @@ import {
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
   TesntTokenFallback,
-  AbstractTestnetTokenInfo,
-  AbstractTestnetChainInfo,
+  SOLANA_TESTNET_CHAINID,
+  ARBITRUM_TESTNET_CHAINID,
+  ABSTRACT_TESTNET_CHAINID,
 } from "@orderly.network/types";
 import { nativeTokenAddress } from "@orderly.network/types";
-import { ArbitrumSepolia } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 
 // testnet only show arb sepolia and solana devnet
-const TestNetWhiteList = [421614, 901901901, MONAD_TESTNET_CHAINID, 11124];
+const TestNetWhiteList = [
+  ARBITRUM_TESTNET_CHAINID,
+  SOLANA_TESTNET_CHAINID,
+  MONAD_TESTNET_CHAINID,
+  ABSTRACT_TESTNET_CHAINID,
+];
 
 export type Chain = API.Chain & {
   nativeToken?: API.TokenInfo;

@@ -42,11 +42,15 @@ export const MonadTestnetUSDCAddress =
   "0x77F77926C6596c78f285D230Cd0dC8dC3540e3a6";
 export const qaMonadTestnetVaultAddress =
   "0xdd6E018D747D70C705BA84B67B6eAD7748a57cDa";
+export const AbstractMainnetUSDCAddress =
+  "0x84A71ccD554Cc1b02749b35d22F684CC8ec987e1";
 export const AbstractTestnetUSDCAddress =
   "0xa0BB43E2eA7fcE91F07e628d72fD6333e80F47D2";
-export const devAbstractTestnetVaultAddress =
+export const AbstractDevVaultAddress =
   "0x44Df3723136b7372a61c404Dc1Bd503460833310";
-export const qaAbstractTestnetVaultAddress =
+export const AbstractQaVaultAddress =
   "0xf14Ff11F3bb1011ff42665Ec869c7827c43745Fd";
 export const stagingAbstractTestnetVaultAddress =
   "0x2c65ea2eE7265df755d7258291202690c27C6d2d";
+export const abstractMainnetVaultAddress =
+  "0xE80F2396A266e898FBbD251b89CFE65B3e41fD18";

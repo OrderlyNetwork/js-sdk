@@ -1,5 +1,111 @@
 # @orderly.network/trading
 
+## 2.2.0
+
+### Minor Changes
+
+- e1badae: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [e1badae]
+- Updated dependencies
+  - @orderly.network/react-app@2.2.0
+  - @orderly.network/hooks@2.2.0
+  - @orderly.network/i18n@2.2.0
+  - @orderly.network/markets@2.2.0
+  - @orderly.network/types@2.2.0
+  - @orderly.network/ui@2.2.0
+  - @orderly.network/ui-chain-selector@2.2.0
+  - @orderly.network/ui-connector@2.2.0
+  - @orderly.network/ui-leverage@2.2.0
+  - @orderly.network/ui-order-entry@2.2.0
+  - @orderly.network/ui-orders@2.2.0
+  - @orderly.network/ui-positions@2.2.0
+  - @orderly.network/ui-scaffold@2.2.0
+  - @orderly.network/ui-share@2.2.0
+  - @orderly.network/ui-tradingview@2.2.0
+  - @orderly.network/ui-transfer@2.2.0
+  - @orderly.network/utils@2.2.0
+
+## 2.2.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.2.0-alpha.0
+  - @orderly.network/hooks@2.2.0-alpha.0
+  - @orderly.network/i18n@2.2.0-alpha.0
+  - @orderly.network/markets@2.2.0-alpha.0
+  - @orderly.network/types@2.2.0-alpha.0
+  - @orderly.network/ui@2.2.0-alpha.0
+  - @orderly.network/ui-chain-selector@2.2.0-alpha.0
+  - @orderly.network/ui-connector@2.2.0-alpha.0
+  - @orderly.network/ui-leverage@2.2.0-alpha.0
+  - @orderly.network/ui-order-entry@2.2.0-alpha.0
+  - @orderly.network/ui-orders@2.2.0-alpha.0
+  - @orderly.network/ui-positions@2.2.0-alpha.0
+  - @orderly.network/ui-scaffold@2.2.0-alpha.0
+  - @orderly.network/ui-share@2.2.0-alpha.0
+  - @orderly.network/ui-tradingview@2.2.0-alpha.0
+  - @orderly.network/ui-transfer@2.2.0-alpha.0
+  - @orderly.network/utils@2.2.0-alpha.0
+
+## 2.1.3
+
+### Patch Changes
+
+- publish
+- 5ba2a31a8: publish
+- Updated dependencies
+- Updated dependencies [5ba2a31a8]
+  - @orderly.network/react-app@2.1.3
+  - @orderly.network/hooks@2.1.3
+  - @orderly.network/i18n@2.1.3
+  - @orderly.network/markets@2.1.3
+  - @orderly.network/types@2.1.3
+  - @orderly.network/ui@2.1.3
+  - @orderly.network/ui-chain-selector@2.1.3
+  - @orderly.network/ui-connector@2.1.3
+  - @orderly.network/ui-leverage@2.1.3
+  - @orderly.network/ui-order-entry@2.1.3
+  - @orderly.network/ui-orders@2.1.3
+  - @orderly.network/ui-positions@2.1.3
+  - @orderly.network/ui-scaffold@2.1.3
+  - @orderly.network/ui-share@2.1.3
+  - @orderly.network/ui-tradingview@2.1.3
+  - @orderly.network/ui-transfer@2.1.3
+  - @orderly.network/utils@2.1.3
+
+## 2.1.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.1.3-alpha.0
+  - @orderly.network/hooks@2.1.3-alpha.0
+  - @orderly.network/i18n@2.1.3-alpha.0
+  - @orderly.network/markets@2.1.3-alpha.0
+  - @orderly.network/types@2.1.3-alpha.0
+  - @orderly.network/ui@2.1.3-alpha.0
+  - @orderly.network/ui-chain-selector@2.1.3-alpha.0
+  - @orderly.network/ui-connector@2.1.3-alpha.0
+  - @orderly.network/ui-leverage@2.1.3-alpha.0
+  - @orderly.network/ui-order-entry@2.1.3-alpha.0
+  - @orderly.network/ui-orders@2.1.3-alpha.0
+  - @orderly.network/ui-positions@2.1.3-alpha.0
+  - @orderly.network/ui-scaffold@2.1.3-alpha.0
+  - @orderly.network/ui-share@2.1.3-alpha.0
+  - @orderly.network/ui-tradingview@2.1.3-alpha.0
+  - @orderly.network/ui-transfer@2.1.3-alpha.0
+  - @orderly.network/utils@2.1.3-alpha.0
+
 ## 2.1.2
 
 ### Patch Changes

@@ -10,40 +10,25 @@ type UseLeverageScriptOptions = {
 export type LeverageScriptReturns = ReturnType<typeof useLeverageScript>;
 
 export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
-  const { currentLeverage } = useMarginRatio();
   const [showSliderTip, setShowSliderTip] = useState(false);
   const { t } = useTranslation();
-  const [curLeverage, { update, config: leverageLevers, isMutating }] =
+
+  const { curLeverage, maxLeverage, isLoading, leverageLevers, update } =
     useLeverage();
 
   const marks = useMemo<SliderMarks>(() => {
-    return (
-      leverageLevers?.map((e: number) => ({
-        label: `${e}x`,
-        value: e,
-      })) || []
-    );
+    return leverageLevers.map((e) => ({
+      label: `${e}x`,
+      value: e,
+    }));
   }, [leverageLevers]);
 
   const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
 
-  const maxLeverage = leverageLevers?.reduce(
-    (a: number, item: any) => Math.max(a, Number(item), 0),
-    0,
-  );
-
   const step = 100 / ((marks?.length || 0) - 1);
 
-  // const leverageValue = useMemo(() => {
-  //   const index = leverageLevers.findIndex((item: any) => item === leverage);
-
-  //   return index * step;
-  // }, [leverageLevers, leverage, step]);
-
   const onLeverageChange = (leverage: number) => {
-    // maxLeverage / 100 * leverage;
     setLeverage(leverage);
-    // updateLeverage(leverage);
   };
 
   const onLeverageIncrease: React.MouseEventHandler<SVGSVGElement> = () => {
@@ -81,7 +66,8 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
   };
 
   return {
-    currentLeverage,
+    leverageLevers,
+    currentLeverage: curLeverage,
     value: leverage,
     marks,
     onLeverageChange,
@@ -93,7 +79,7 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     step,
     onCancel: options?.close,
     onSave,
-    isLoading: isMutating,
+    isLoading: isLoading,
     showSliderTip,
     setShowSliderTip,
     maxLeverage,
