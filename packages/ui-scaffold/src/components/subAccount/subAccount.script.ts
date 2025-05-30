@@ -72,7 +72,7 @@ export const SubAccountScript = () => {
       arr = [...state.subAccounts];
     }
     setSubAccounts(arr);
-  }, [state.subAccounts, currentAccountId]);
+  }, [state.subAccounts, currentAccountId, open]);
   useEffect(() => {
     if (!mainAccountId || !state.address) return;
 
@@ -89,7 +89,7 @@ export const SubAccountScript = () => {
         holding: res[mainAccountId],
       });
     });
-  }, [mainAccountId, state.address, currentAccountId]);
+  }, [mainAccountId, state.address, currentAccountId, open]);
 
   return {
     mainAccount,

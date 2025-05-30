@@ -41,7 +41,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
       width="100%"
       className="oui-h-[120px]"
     >
-      <Text className="oui-text-base-contrast-36 oui-text-xs oui-font-semibold oui-text-center">
+      <Text className="oui-text-center oui-text-xs oui-font-semibold oui-text-base-contrast-36">
         Create a sub-account now to explore different trading strategies.
       </Text>
     </Flex>
@@ -52,7 +52,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
       return noSubAccount;
     }
     return (
-      <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto oui-custom-scrollbar oui-w-full">
+      <ScrollArea className="oui-custom-scrollbar oui-max-h-[200px] oui-w-full oui-overflow-y-auto">
         <Flex direction="column" gap={2} itemAlign="start" width="100%">
           {props.subAccounts.map((subAccount) => (
             <AccountItem
