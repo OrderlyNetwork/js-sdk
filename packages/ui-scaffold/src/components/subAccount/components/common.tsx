@@ -2,7 +2,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { inputFormatter, TextField } from "@orderly.network/ui";
 
 export const NickNameDescriptionText =
-  "5-20 characters. Special characters not allowed.";
+  "5-20 characters. Only letters, numbers, and @ , _ - (space) allowed.";
 
 export const NickNameTextField = (props: {
   nickName: string | undefined;
