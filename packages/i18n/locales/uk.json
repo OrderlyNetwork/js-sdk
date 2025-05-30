@@ -601,6 +601,7 @@
   "affiliate.trader.myRebates": "Мої кешбеки",
   "affiliate.trader.tradingVol": "Торговий об'єм",
   "affiliate.trader.rebate.30d": "Кешбек за 30д",
+  "affiliate.trader.tradingRebates": "Кешбек за торгівлю",
   "ui.pagination.morePages": "Більше сторінок",
   "ui.pagination.rowsPerPage": "Рядків на сторінку",
   "ui.picker.selectDate": "Виберіть дату",
@@ -613,5 +614,7 @@
   "tradingLeaderboard.learnMore": "Дізнатися більше",
   "tradingLeaderboard.tradeNow": "Торгувати зараз",
   "tradingLeaderboard.tradingVolume": "Торговий об'єм",
-  "tradingLeaderboard.rank": "Рейтинг"
+  "tradingLeaderboard.rank": "Рейтинг",
+  "tradingRewards.subtitle.mm": "Торгуйте, щоб заробити $ORDER",
+  "affiliate.asAffiliate.affilates": "Партнери"
 }

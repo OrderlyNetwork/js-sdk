@@ -35,7 +35,7 @@ export const useFavoritesListFullScript = () => {
         }
         return null;
       })
-      ?.filter((item) => item);
+      ?.filter((item) => !!item);
 
     return searchBySymbol(filterList, searchValue, "base-type");
   }, [data, selectedFavoriteTab, favorites, searchValue]);

@@ -1,14 +1,15 @@
-import { Web3Provider } from "@orderly.network/default-evm-adapter";
-import { API } from "@orderly.network/types";
-import { BrowserProvider, Eip1193Provider, ethers } from "ethers";
 import {
   EthersError,
   getParsedEthersError,
 } from "@enzoferey/ethers-error-parser";
+import { BrowserProvider, Eip1193Provider, ethers } from "ethers";
 import { TransactionReceipt } from "ethers/src.ts/providers/provider";
+import { Web3Provider } from "@orderly.network/default-evm-adapter";
+import { API } from "@orderly.network/types";
 
 class EthersProvider implements Web3Provider {
   private _provider!: BrowserProvider;
+  private _originalProvider!: Eip1193Provider;
 
   parseUnits(amount: string, decimals?: number): string {
     return ethers.parseUnits(amount, decimals).toString();
@@ -20,6 +21,7 @@ class EthersProvider implements Web3Provider {
 
   set provider(provider: Eip1193Provider) {
     this._provider = new BrowserProvider(provider, "any");
+    this._originalProvider = provider;
   }
 
   get browserProvider(): BrowserProvider {
@@ -31,7 +33,7 @@ class EthersProvider implements Web3Provider {
 
   async signTypedData(
     address: string,
-    toSignatureMessage: any
+    toSignatureMessage: any,
   ): Promise<string> {
     return await this.browserProvider?.send("eth_signTypedData_v4", [
       address,
@@ -43,8 +45,32 @@ class EthersProvider implements Web3Provider {
     address: string,
     method: string,
     params: any[],
-    options: { abi: any }
+    options: { abi: any },
   ): Promise<any> {
+    const writeMethod: string[] = ["approve"];
+    // @ts-ignore
+    if (this._originalProvider.agwWallet && writeMethod.includes(method)) {
+      try {
+        // @ts-ignore
+        const transactionHash = await this._originalProvider.writeContract({
+          abi: options.abi,
+          address: address,
+          functionName: method,
+          args: params,
+        });
+
+        return {
+          hash: transactionHash,
+        };
+      } catch (error) {
+        const parsedEthersError = getParsedEthersError(error as EthersError);
+        if ((error as any).message.includes("rejected")) {
+          // @ts-ignore
+          throw new Error({ content: "REJECTED_TRANSACTION" });
+        }
+        throw parsedEthersError;
+      }
+    }
     const singer = await this.browserProvider.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
 
@@ -63,7 +89,7 @@ class EthersProvider implements Web3Provider {
     contractAddress: string,
     method: string,
     payload: { from: string; to?: string; data: any[]; value?: bigint },
-    options: { abi: any }
+    options: { abi: any },
   ): Promise<any> {
     const singer = await this.browserProvider?.getSigner();
     if (!singer) {
@@ -73,13 +99,13 @@ class EthersProvider implements Web3Provider {
     const contract = new ethers.Contract(
       contractAddress,
       options.abi,
-      this.browserProvider
+      this.browserProvider,
     );
 
     // contract.interface.getAbiCoder().encode(tx.data);
     const encodeFunctionData = contract.interface.encodeFunctionData(
       method,
-      payload.data
+      payload.data,
     );
 
     const tx: ethers.TransactionRequest = {
@@ -89,14 +115,17 @@ class EthersProvider implements Web3Provider {
       value: payload.value,
     };
 
-    // const gas = await this.estimateGas(tx);
-
-    // tx.gasLimit = BigInt(Math.ceil(gas * 1.2));
-
     try {
-      const result = await singer.sendTransaction(tx);
-
-      return result;
+      // for agw wallet
+      if (method === "depositTo") {
+        // @ts-ignore
+        return await this._originalProvider.sendTransaction({
+          to: contractAddress,
+          data: encodeFunctionData,
+          value: payload.value,
+        });
+      }
+      return await singer.sendTransaction(tx);
     } catch (error) {
       const parsedEthersError = getParsedEthersError(error as EthersError);
 
@@ -108,16 +137,15 @@ class EthersProvider implements Web3Provider {
     txHash: string,
     baseInterval = 1000,
     maxInterval = 6000,
-    maxRetries = 30
+    maxRetries = 30,
   ) {
     let interval = baseInterval;
     let retries = 0;
 
     while (retries < maxRetries) {
       try {
-        const receipt = await this.browserProvider!.getTransactionReceipt(
-          txHash
-        );
+        const receipt =
+          await this.browserProvider!.getTransactionReceipt(txHash);
         if (receipt) {
           // completed, get receipt
           return receipt;
@@ -140,7 +168,7 @@ class EthersProvider implements Web3Provider {
     address: string,
     method: string,
     params: any[],
-    options: { abi: any }
+    options: { abi: any },
   ): Promise<any> {
     const provider = new ethers.JsonRpcProvider(chain.public_rpc_url);
 

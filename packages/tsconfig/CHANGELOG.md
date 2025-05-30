@@ -1,5 +1,18 @@
 # tsconfig
 
+## 0.5.0
+
+### Minor Changes
+
+- e1badae: publish
+- publish
+
+## 0.5.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 0.4.3
 
 ### Patch Changes

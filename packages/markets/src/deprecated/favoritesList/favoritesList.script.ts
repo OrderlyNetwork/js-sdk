@@ -29,7 +29,7 @@ export const useFavoritesListScript = () => {
         }
         return null;
       })
-      ?.filter((item) => item);
+      ?.filter((item) => !!item);
 
     const searchResults = searchBySymbol(filterList, searchValue, "base");
     return getSortedList(searchResults);

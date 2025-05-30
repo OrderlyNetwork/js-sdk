@@ -1,5 +1,29 @@
 # @orderly.network/cli
 
+## 0.5.0
+
+### Minor Changes
+
+- e1badae: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [e1badae]
+- Updated dependencies
+  - @orderly.network/core@2.2.0
+
+## 0.5.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.2.0-alpha.0
+
 ## 0.4.3
 
 ### Patch Changes

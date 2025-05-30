@@ -111,24 +111,16 @@ const useMarginRatioAndLeverage = () => {
     );
   }, [marginRatio, aggregated]);
 
-  const [curLeverage, { update, config: leverageLevers, isMutating }] =
-    useLeverage();
+  const { update, curLeverage, maxLeverage, leverageLevers } = useLeverage();
 
   const marks = useMemo<SliderMarks>(() => {
-    return (
-      leverageLevers?.map((e: number) => ({
-        label: `${e}x`,
-        value: e,
-      })) || []
-    );
+    return leverageLevers?.map((e) => ({
+      label: `${e}x`,
+      value: e,
+    }));
   }, [leverageLevers]);
 
   const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
-
-  const maxLeverage = leverageLevers?.reduce(
-    (a: number, item: any) => Math.max(a, Number(item), 0),
-    0,
-  );
 
   const step = 100 / ((marks?.length || 0) - 1);
 
