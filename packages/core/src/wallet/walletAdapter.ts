@@ -56,7 +56,7 @@ export type AddOrderlyKeyInputs = {
   scope?: string;
   // chainType: ChainType;
   tag?: string;
-  /** @since 2.2.0, when create orderly key for sub account, it's required */
+  /** @since 2.3.0, when create orderly key for sub account, it's required */
   subAccountId?: string;
 };
 

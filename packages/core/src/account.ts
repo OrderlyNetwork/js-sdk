@@ -38,17 +38,17 @@ export interface AccountState {
   /**
    * The current active account ID
    * Can be either a root account ID or sub-account ID
-   * @since 2.2.0
+   * @since 2.3.0
    */
   accountId?: string;
   /**
    * root account id
-   * @since 2.2.0
+   * @since 2.3.0
    */
   mainAccountId?: string;
   /**
    * sub account id
-   * @since 2.2.0
+   * @since 2.3.0
    */
   subAccountId?: string | undefined;
   userId?: string;
@@ -64,7 +64,7 @@ export interface AccountState {
 
   /**
    * sub accounts
-   * @since 2.2.0
+   * @since 2.3.0
    */
   subAccounts?: SubAccount[];
 
@@ -800,7 +800,7 @@ export class Account {
 
   /**
    * refresh sub account balances
-   * @since 2.2.0
+   * @since 2.3.0
    */
   async refreshSubAccountBalances() {
     const subAccountBalances = await this.getSubAccountBalances();
@@ -816,8 +816,47 @@ export class Account {
     return subAccountBalances;
   }
 
+  /**
+   * @since 2.3.0
+   * if you are using main account orderly key, you can create api key for sub account
+   */
+  async createSubAccountApiKey(
+    /**
+     * expiration days
+     */
+    expiration: number,
+    options: {
+      tag?: string;
+      scope?: string;
+      subAccountId: string;
+    },
+  ) {
+    try {
+      const { res, keyPair } = await this.generateApiKey(expiration, options);
+      if (res.success) {
+        const key = await keyPair.getPublicKey();
+        return {
+          key: key.replace("ed25519:", ""),
+          secretKey: keyPair.secretKey?.replace("ed25519:", ""),
+        };
+      }
+    } catch (e) {
+      console.log("createApiKey error", e);
+
+      if (`${e}`.includes("user rejected action")) {
+        throw new Error("User rejected the request.");
+      }
+
+      throw e;
+    }
+    throw new Error("create api key failed");
+  }
+
   async createApiKey(
-    expiration?: number,
+    /**
+     * expiration days
+     */
+    expiration: number,
     options?: {
       tag?: string;
       scope?: string;
@@ -878,6 +917,11 @@ export class Account {
     options?: {
       tag?: string;
       scope?: string;
+      /**
+       * @since 2.3.0
+       * if you are main account, you can pass the subAccountId to create the api key for the sub account
+       * */
+      subAccountId?: string;
     },
   ) {
     if (this.stateValue.mainAccountId === undefined) {
@@ -923,7 +967,7 @@ export class Account {
         // domain: any;
         scope: options?.scope,
         tag: options?.tag,
-        subAccountId: this.stateValue.subAccountId,
+        subAccountId: options?.subAccountId,
       });
 
     // console.log("generateAPiKey", publicKey, address);
@@ -1001,7 +1045,7 @@ export class Account {
   }
 
   /**
-   * @since 2.2.0
+   * @since 2.3.0
    * settle sub account pnl
    */
   async settleSubAccount(options?: {
