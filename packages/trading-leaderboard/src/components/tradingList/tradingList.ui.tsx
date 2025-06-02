@@ -1,4 +1,5 @@
 import { FC, SVGProps } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseCircleFillIcon,
@@ -9,14 +10,13 @@ import {
   Input,
   Text,
 } from "@orderly.network/ui";
+import { useTradingListColumns } from "./column";
 import {
   FilterDays,
   getRowKey,
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
-import { useTradingListColumns } from "./column";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type TradingListProps = {
   style?: React.CSSProperties;
@@ -24,7 +24,7 @@ export type TradingListProps = {
 } & TradingListScriptReturn;
 
 export const TradingList: FC<TradingListProps> = (props) => {
-  const column = useTradingListColumns();
+  const column = useTradingListColumns(props.address);
   const { t } = useTranslation();
 
   return (
@@ -45,7 +45,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
         mt={2}
         className={cn(
           "oui-trading-leaderboard-trading-filter",
-          "oui-border-b oui-border-line"
+          "oui-border-b oui-border-line",
         )}
       >
         <Flex gap={3}>
@@ -77,7 +77,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
                   </Text.gradient>
                 </div>
                 <div
-                  className="oui-gradient-primary oui-opacity-[.12] oui-absolute oui-left-0 oui-right-0 oui-top-0 oui-bottom-0 oui-rounded"
+                  className="oui-absolute oui-inset-0 oui-rounded oui-opacity-[.12] oui-gradient-primary"
                   onClick={() => {
                     props.updateFilterDay(value as any);
                   }}
@@ -86,35 +86,33 @@ export const TradingList: FC<TradingListProps> = (props) => {
             );
           })}
         </Flex>
-        {props.canTrade && (
-          <Input
-            value={props.searchValue}
-            onValueChange={props.onSearchValueChange}
-            placeholder={t("common.address.search.placeholder")}
-            className={cn(
-              "oui-trading-leaderboard-trading-search-input",
-              "oui-w-[240px]"
-            )}
-            size="sm"
-            prefix={
-              <Box pl={3} pr={1}>
-                <SearchIcon className="oui-text-base-contrast-36" />
+        <Input
+          value={props.searchValue}
+          onValueChange={props.onSearchValueChange}
+          placeholder={t("common.address.search.placeholder")}
+          className={cn(
+            "oui-trading-leaderboard-trading-search-input",
+            "oui-w-[240px]",
+          )}
+          size="sm"
+          prefix={
+            <Box pl={3} pr={1}>
+              <SearchIcon className="oui-text-base-contrast-36" />
+            </Box>
+          }
+          suffix={
+            props.searchValue && (
+              <Box mr={2}>
+                <CloseCircleFillIcon
+                  size={14}
+                  className="oui-cursor-pointer oui-text-base-contrast-36"
+                  onClick={props.clearSearchValue}
+                />
               </Box>
-            }
-            suffix={
-              props.searchValue && (
-                <Box mr={2}>
-                  <CloseCircleFillIcon
-                    size={14}
-                    className="oui-text-base-contrast-36 oui-cursor-pointer ="
-                    onClick={props.clearSearchValue}
-                  />
-                </Box>
-              )
-            }
-            autoComplete="off"
-          />
-        )}
+            )
+          }
+          autoComplete="off"
+        />
       </Flex>
 
       <DataTable
@@ -144,12 +142,12 @@ export const TradingList: FC<TradingListProps> = (props) => {
 
             return {
               className: cn(
-                "after:oui-absolute after:oui-w-full after:oui-h-[48px]",
+                "after:oui-absolute after:oui-h-[48px] after:oui-w-full",
                 "after:oui-border-[rgb(var(--oui-gradient-brand-start))]",
-                "after:oui-top-0 after:oui-left-0 after:oui-z-[-1]",
-                "after:oui-border-b after:oui-border-t",
-                isFirst && "after:oui-border-l after:oui-rounded-l-lg",
-                isLast && "after:oui-border-r after:oui-rounded-r-lg"
+                "after:oui-left-0 after:oui-top-0 after:oui-z-[-1]",
+                "after:oui-border-y",
+                isFirst && "after:oui-rounded-l-lg after:oui-border-l",
+                isLast && "after:oui-rounded-r-lg after:oui-border-r",
               ),
             };
           }

@@ -13,7 +13,7 @@ export type TradingListProps = {
 } & TradingListScriptReturn;
 
 export const MobileTradingList: FC<TradingListProps> = (props) => {
-  const column = useTradingListColumns();
+  const column = useTradingListColumns(props.address);
 
   return (
     <Flex
@@ -73,12 +73,12 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
 
             return {
               className: cn(
-                "after:oui-absolute after:oui-w-full after:oui-h-[30px]",
+                "after:oui-absolute after:oui-h-[30px] after:oui-w-full",
                 "after:oui-border-[rgb(var(--oui-gradient-brand-start))]",
-                " after:oui-top-0 after:oui-left-0 after:oui-z-[-1]",
-                "after:oui-border-b after:oui-border-t",
-                isFirst && "after:oui-border-l after:oui-rounded-l-lg",
-                isLast && "after:oui-border-r  after:oui-rounded-r-lg",
+                " after:oui-left-0 after:oui-top-0 after:oui-z-[-1]",
+                "after:oui-border-y",
+                isFirst && "after:oui-rounded-l-lg after:oui-border-l",
+                isLast && "after:oui-rounded-r-lg  after:oui-border-r",
               ),
             };
           }
@@ -87,7 +87,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
       />
       <div
         ref={props.sentinelRef}
-        className="oui-relative oui-invisible oui-h-[1px] oui-top-[-300px]"
+        className="oui-invisible oui-relative oui-top-[-300px] oui-h-px"
       />
       {props.isLoading && props.dataList.length > 0 && (
         <Flex itemAlign="center" justify="center" width="100%" height={40}>

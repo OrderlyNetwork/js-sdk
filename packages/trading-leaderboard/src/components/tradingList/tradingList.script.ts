@@ -7,7 +7,7 @@ import {
   useQuery,
   usePrivateQuery,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum, API } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
 import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { useEndReached } from "../../hooks/useEndReached";
 import { getDateRange, formatDateRange } from "../../utils";
@@ -53,11 +53,6 @@ export function useTradingListScript() {
 
   const { isMobile } = useScreen();
 
-  const canTrade =
-    state.address &&
-    (state.status >= AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
-
   const { dateRange, filterDay, updateFilterDay, filterItems, onFilter } =
     useFilter();
 
@@ -101,16 +96,15 @@ export function useTradingListScript() {
       searchParams.set("address", args.address);
     }
 
-    if (args.address) {
-      return `/v1/volume/broker/daily?${searchParams.toString()}`;
-    }
-
     return `/v1/broker/leaderboard/daily?${searchParams.toString()}`;
   };
 
-  const { data, isLoading } = useDataSource(
+  const { data, isLoading } = useQuery<TradingResponse>(
     getUrl({ page, pageSize, address: searchValue }),
-    searchValue,
+    {
+      formatter: (res) => res,
+      revalidateOnFocus: false,
+    },
   );
 
   const {
@@ -156,7 +150,7 @@ export function useTradingListScript() {
   );
 
   const { data: userDataRes = [] } = usePrivateQuery<TradingData[]>(
-    canTrade
+    state.address
       ? getUrl({ page: 1, pageSize: 1, address: state.address, sort: null })
       : null,
     {
@@ -175,7 +169,7 @@ export function useTradingListScript() {
   );
 
   const userDataList = useMemo(() => {
-    if (!canTrade || isLoading) {
+    if (!state.address || isLoading) {
       return [];
     }
 
@@ -194,7 +188,7 @@ export function useTradingListScript() {
       rank: getAddressRank(item.address!),
       key: getRowKey(item.address!),
     }));
-  }, [canTrade, state.address, userDataRes, isLoading, getAddressRank]);
+  }, [state.address, userDataRes, isLoading, getAddressRank]);
 
   const addRankForList = useCallback(
     (list: TradingData[], total: number) => {
@@ -308,34 +302,11 @@ export function useTradingListScript() {
     sentinelRef,
     dataList,
     address: state.address,
-    canTrade,
-  };
-}
-
-export function useDataSource(url: string, searchValue: string) {
-  const { data, isLoading } = useQuery<TradingResponse>(
-    !searchValue ? url : null,
-    {
-      formatter: (res) => res,
-      revalidateOnFocus: false,
-    },
-  );
-
-  // TODO: use public api when api is ready
-  const { data: _data, isLoading: _isLoading } =
-    usePrivateQuery<TradingResponse>(searchValue ? url : null, {
-      formatter: (res) => res,
-      revalidateOnFocus: false,
-    });
-
-  return {
-    data: _data || data,
-    isLoading: _isLoading || isLoading,
   };
 }
 
 const useFilter = () => {
-  /// default is 90d
+  // default is 90d
   const [filterDay, setFilterDay] = useState<TFilterDays | null>(90);
 
   const [dateRange, setDateRange] = useState<DateRange>(getDateRange(90));
@@ -388,7 +359,7 @@ const useFilter = () => {
   };
 };
 
-function isSameAddress(address1: string, address2: string) {
+export function isSameAddress(address1: string, address2: string) {
   return address1.toLowerCase() === address2.toLowerCase();
 }
 
