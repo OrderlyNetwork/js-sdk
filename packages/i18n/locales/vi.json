@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Xin lỗi, {{brokerName}} tạm thời không khả dụng do nâng cấp theo lịch trình. Dịch vụ dự kiến sẽ hoạt động lại vào {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} sẽ tạm thời không khả dụng để nâng cấp theo lịch trình từ {{startDate}} đến {{endDate}}.",
   "restrictedInfo.description.default": "Bạn đang truy cập {{brokerName}} từ địa chỉ IP ({{ip}}) liên quan đến một quốc gia bị hạn chế.",
+  "subAccount.modal.title": "Chuyển tài khoản",
   "subAccount.modal.mainAccount.title": "Tài khoản chính",
   "subAccount.modal.subAccounts.title": "Tài khoản phụ",
   "subAccount.modal.current": "Hiện tại",

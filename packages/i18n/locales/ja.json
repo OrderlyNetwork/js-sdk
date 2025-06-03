@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "申し訳ありませんが、{{brokerName}}は予定されたアップグレードのため一時的に利用できません。サービスは{{endDate}}までに復旧する予定です。",
   "maintenance.tips.description": "{{brokerName}}は{{startDate}}から{{endDate}}までの予定されたアップグレードのため一時的に利用できません。",
   "restrictedInfo.description.default": "制限された国に関連付けられたIPアドレス（{{ip}}）から{{brokerName}}にアクセスしています。",
+  "subAccount.modal.title": "アカウントを切り替える",
   "subAccount.modal.mainAccount.title": "メインアカウント",
   "subAccount.modal.subAccounts.title": "サブアカウント",
   "subAccount.modal.current": "現在",

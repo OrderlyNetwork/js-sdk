@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Извините, {{brokerName}} временно недоступен из-за запланированного обновления. Ожидается, что сервис будет восстановлен к {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} будет временно недоступен для запланированного обновления с {{startDate}} по {{endDate}}.",
   "restrictedInfo.description.default": "Вы получаете доступ к {{brokerName}} с IP-адреса ({{ip}}), связанного с ограниченной страной.",
+  "subAccount.modal.title": "Сменить аккаунт",
   "subAccount.modal.mainAccount.title": "Основной счет",
   "subAccount.modal.subAccounts.title": "Подсчета",
   "subAccount.modal.current": "Текущий",

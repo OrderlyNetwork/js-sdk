@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Üzgünüz, {{brokerName}} planlı bir güncelleme nedeniyle geçici olarak kullanılamıyor. Hizmetin {{endDate}} tarihinde tekrar kullanılabilir olması bekleniyor.",
   "maintenance.tips.description": "{{brokerName}}, {{startDate}} ile {{endDate}} arasında planlı bir güncelleme nedeniyle geçici olarak kullanılamayacak.",
   "restrictedInfo.description.default": " {{brokerName}}'e kısıtlı bir ülkeye ait IP adresinden ({{ip}}) erişiyorsunuz.",
+  "subAccount.modal.title": "Hesap değiştir",
   "subAccount.modal.mainAccount.title": "Ana hesap",
   "subAccount.modal.subAccounts.title": "Alt hesaplar",
   "subAccount.modal.current": "Mevcut",

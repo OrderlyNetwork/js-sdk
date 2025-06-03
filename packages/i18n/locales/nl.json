@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Sorry, {{brokerName}} is tijdelijk niet beschikbaar vanwege een geplande upgrade. De dienst zal naar verwachting weer beschikbaar zijn op {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} zal tijdelijk niet beschikbaar zijn voor een geplande upgrade van {{startDate}} tot {{endDate}}.",
   "restrictedInfo.description.default": "U benadert {{brokerName}} vanaf een IP-adres ({{ip}}) dat geassocieerd is met een beperkt land.",
+  "subAccount.modal.title": "Account wisselen",
   "subAccount.modal.mainAccount.title": "Hoofdaccount",
   "subAccount.modal.subAccounts.title": "Sub-accounts",
   "subAccount.modal.current": "Huidig",

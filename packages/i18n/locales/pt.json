@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Desculpe, {{brokerName}} está temporariamente indisponível devido a uma atualização programada. O serviço deve voltar até {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} estará temporariamente indisponível para uma atualização programada de {{startDate}} até {{endDate}}.",
   "restrictedInfo.description.default": "Você está acessando {{brokerName}} de um endereço IP ({{ip}}) associado a um país restrito.",
+  "subAccount.modal.title": "Trocar de conta",
   "subAccount.modal.mainAccount.title": "Conta principal",
   "subAccount.modal.subAccounts.title": "Sub-contas",
   "subAccount.modal.current": "Atual",

@@ -17,7 +17,7 @@ import { SubAccountScriptReturn } from "./subAccount.script";
 export function SubAccountUI(props: SubAccountScriptReturn) {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
-  const header = <Text weight="semibold">Switch account</Text>;
+  const header = <Text weight="semibold">{t("subAccount.modal.title")}</Text>;
   const trigger = (
     <SubAccountIcon
       className="oui-cursor-pointer"

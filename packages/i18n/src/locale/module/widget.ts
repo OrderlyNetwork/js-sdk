@@ -56,6 +56,7 @@ export const widget = {
 
   "restrictedInfo.description.default":
     " You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country.",
+  "subAccount.modal.title": "Switch account",
   "subAccount.modal.mainAccount.title": "Main account",
   "subAccount.modal.subAccounts.title": "Sub-accounts",
   "subAccount.modal.current": "Current",

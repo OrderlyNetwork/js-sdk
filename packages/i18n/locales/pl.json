@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Przepraszamy, {{brokerName}} jest tymczasowo niedostępny z powodu zaplanowanej aktualizacji. Usługa powinna zostać przywrócona do {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} będzie tymczasowo niedostępny z powodu zaplanowanej aktualizacji od {{startDate}} do {{endDate}}.",
   "restrictedInfo.description.default": "Uzyskujesz dostęp do {{brokerName}} z adresu IP ({{ip}}) powiązanego z krajem objętym ograniczeniami.",
+  "subAccount.modal.title": "Zmień konto",
   "subAccount.modal.mainAccount.title": "Konto główne",
   "subAccount.modal.subAccounts.title": "Konta podrzędne",
   "subAccount.modal.current": "Aktualne",

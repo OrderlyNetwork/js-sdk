@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Désolé, {{brokerName}} est temporairement indisponible en raison d'une mise à niveau planifiée. Le service devrait être rétabli d'ici {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} sera temporairement indisponible pour une mise à niveau planifiée du {{startDate}} au {{endDate}}.",
   "restrictedInfo.description.default": "Vous accédez à {{brokerName}} depuis une adresse IP ({{ip}}) associée à un pays restreint.",
+  "subAccount.modal.title": "Changer de compte",
   "subAccount.modal.mainAccount.title": "Compte principal",
   "subAccount.modal.subAccounts.title": "Sous-comptes",
   "subAccount.modal.current": "Actuel",

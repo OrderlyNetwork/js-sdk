@@ -638,6 +638,7 @@
   "maintenance.dialog.description": "Sorry, {{brokerName}} is temporarily unavailable due to a scheduled upgrade. The service is expected to be back by {{endDate}}.",
   "maintenance.tips.description": "{{brokerName}} will be temporarily unavailable for a scheduled upgrade from {{startDate}} to {{endDate}}.",
   "restrictedInfo.description.default": " You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country.",
+  "subAccount.modal.title": "Switch account",
   "subAccount.modal.mainAccount.title": "Main account",
   "subAccount.modal.subAccounts.title": "Sub-accounts",
   "subAccount.modal.current": "Current",
