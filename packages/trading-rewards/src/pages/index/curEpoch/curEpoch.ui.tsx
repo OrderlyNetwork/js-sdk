@@ -77,7 +77,7 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
               itemAlign={"center"}
             >
               <Text className="oui-text-base-contrast-54 oui-text-sm">
-                Trading rewards will resume in
+                {t("tradingRewards.epochPauseCountdown.title")}
               </Text>
               <Countdown targetTimestamp={pausedEpochTimeDown} isStandalone />
             </Flex>
@@ -88,8 +88,8 @@ export const CurEpoch: FC<CurEpochReturns> = (props) => {
               itemAlign={"center"}
             >
               {props.statusInfo?.epochStatus === EpochStatus.paused
-                ? "Trading rewards is paused until further notice. You may continue to claim your past rewards."
-                : "Trading rewards has ended.<br/> You may continue to claim your past rewards."}
+                ? t("tradingRewards.eopchStatus.pause")
+                : t("tradingRewards.eopchStatus.ended")}
             </Flex>
           )}
           {props.statusInfo?.epochStatus === EpochStatus.paused && (
@@ -419,17 +419,20 @@ export const ArrowRightIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     </g>
   </svg>
 );
-const TwitterLInk: FC = () => (
-  <Flex
-    gap={1}
-    itemAlign={"center"}
-    justify={"center"}
-    className="oui-group oui-cursor-pointer oui-fill-base-contrast-36 oui-text-sm  oui-text-base-contrast-36 group-hover:oui-text-base-contrast-80"
-    onClick={() => window.open("https://x.com/OrderlyNetwork")}
-  >
-    <div className="oui-cursor-pointer oui-fill-base-contrast-36 oui-text-sm oui-text-base-contrast-36  hover:oui-text-base-contrast-80">
-      Stay tuned for more updates.
-    </div>
-    <ArrowRightIcon className="oui-text-fill-base-contrast-36 group-hover:oui-fill-base-contrast-80  oui-fill-base-contrast-36" />
-  </Flex>
-);
+const TwitterLInk: FC = () => {
+  const { t } = useTranslation();
+  return (
+    <Flex
+      gap={1}
+      itemAlign={"center"}
+      justify={"center"}
+      className="oui-group oui-cursor-pointer oui-fill-base-contrast-36 oui-text-sm  oui-text-base-contrast-36 group-hover:oui-text-base-contrast-80"
+      onClick={() => window.open("https://x.com/OrderlyNetwork")}
+    >
+      <div className="oui-cursor-pointer oui-fill-base-contrast-36 oui-text-sm oui-text-base-contrast-36  hover:oui-text-base-contrast-80">
+        {t("tradingRewards.eopchStatus.linkDescription")}
+      </div>
+      <ArrowRightIcon className="oui-text-fill-base-contrast-36 group-hover:oui-fill-base-contrast-80  oui-fill-base-contrast-36" />
+    </Flex>
+  );
+};
