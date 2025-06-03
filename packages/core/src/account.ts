@@ -301,6 +301,10 @@ export class Account {
     return this.configStore.get("apiBaseUrl");
   }
 
+  private updateState(state: AccountState) {
+    this._state = state;
+  }
+
   private _bindEvents() {
     this._ee.addListener(EVENT_NAMES.statusChanged, (state: AccountState) => {
       this._state = state;
@@ -1009,6 +1013,7 @@ export class Account {
     if (res) {
       this.configStore.set("chainNamespace", chainNamespace);
     }
+
     return res;
   }
 
@@ -1038,10 +1043,19 @@ export class Account {
         ...this.stateValue,
         address,
         accountId,
+        mainAccountId: accountId,
         // userId: accountInfo.user_id,
         status: AccountStatusEnum.EnableTradingWithoutConnected,
       };
-      this._ee.emit(EVENT_NAMES.statusChanged, nextState);
+      // should update state first, because get sub accounts need to use the main account id
+      this.updateState(nextState);
+      const subAccountState = await this._restoreSubAccount();
+      this._ee.emit(EVENT_NAMES.statusChanged, {
+        ...nextState,
+        subAccounts: subAccountState.subAccounts,
+        subAccountId: undefined,
+      });
+
       return true;
     }
   }
