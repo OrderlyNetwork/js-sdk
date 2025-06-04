@@ -18,7 +18,6 @@ export const SlippageCell = (props: {
 
   const onConfirm = () => {
     const val = slippageRef.current?.getValue();
-    console.log("val", val);
 
     props.setSlippage(val?.toString() ?? "");
     setClose();
