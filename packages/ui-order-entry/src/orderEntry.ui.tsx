@@ -176,6 +176,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           return true;
         },
         (errors) => {
+          if (errors.slippage) {
+            toast.error(errors.slippage.message);
+            return Promise.reject("cancel");
+          }
+
           setErrorMsgVisible(true);
 
           if (typeof errors === "object") {
@@ -203,6 +208,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         if (error === "cancel") {
           return;
         }
+        // console.log("error--->>>>", error);
+
         if (typeof error === "object" && error.message)
           toast.error(error.message);
         // toast.error(`Error:${error.message}`);
@@ -386,6 +393,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           currentLeverage={props.currentLeverage}
           slippage={slippage}
           setSlippage={setSlippage}
+          estSlippage={props.estSlippage}
+          orderType={formattedOrder.order_type!}
         />
 
         <Divider className="oui-w-full" />
@@ -944,7 +953,9 @@ function AssetInfo(props: {
   estLeverage: number | null;
   currentLeverage: number | null;
   slippage: string;
+  estSlippage: number | null;
   setSlippage: (slippage: string) => void;
+  orderType: OrderType;
 }) {
   const { canTrade } = props;
   const { t } = useTranslation();
@@ -998,7 +1009,13 @@ function AssetInfo(props: {
           {props.estLeverage ?? "--"}
         </Text.numeral> */}
       </Flex>
-      <SlippageUI slippage={props.slippage} setSlippage={props.setSlippage} />
+      {props.orderType === OrderType.MARKET && (
+        <SlippageUI
+          slippage={props.slippage}
+          setSlippage={props.setSlippage}
+          estSlippage={props.estSlippage}
+        />
+      )}
     </div>
   );
 }

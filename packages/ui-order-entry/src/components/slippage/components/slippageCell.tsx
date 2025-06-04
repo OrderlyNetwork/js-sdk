@@ -7,6 +7,7 @@ import { SlippageEditor } from "./slippageEditor";
 export const SlippageCell = (props: {
   slippage: string;
   setSlippage: (slippage: string) => void;
+  estSlippage: number | null;
 }) => {
   // const { t } = useTranslation();
   const [open, { setTrue: setOpen, setFalse: setClose, toggle }] =
@@ -50,7 +51,14 @@ export const SlippageCell = (props: {
           fallback={() => <Text size="2xs">Est: 0.00% / Max: --%</Text>}
         >
           <Flex gap={1}>
-            <Text size="2xs">Est: 0.00% / Max:</Text>
+            <Text.numeral
+              size="2xs"
+              rule="percentages"
+              prefix={`Est:`}
+              suffix={` / Max: `}
+            >
+              {props.estSlippage ?? 0}
+            </Text.numeral>
             <Text size="2xs" className="oui-text-base-contrast-80">
               {`${props.slippage}%`}
             </Text>
