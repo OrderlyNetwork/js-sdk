@@ -24,6 +24,13 @@ export const tradingRewards = {
   "tradingRewards.rewardHistory.column.start&EndDate": "Start / End date",
   "tradingRewards.rewardHistory.column.startDate": "Start",
   "tradingRewards.rewardHistory.column.endDate": "End date",
+
+  "tradingRewards.epochPauseCountdown.title": "Trading rewards will resume in",
+  "tradingRewards.eopchStatus.pause":
+    "Trading rewards is paused until further notice. You may continue to claim your past rewards.",
+  "tradingRewards.eopchStatus.ended":
+    "Trading rewards has ended. You may continue to claim your past rewards.",
+  "tradingRewards.eopchStatus.linkDescription": "Stay tuned for more updates.",
 };
 
 export type TradingRewards = typeof tradingRewards;
