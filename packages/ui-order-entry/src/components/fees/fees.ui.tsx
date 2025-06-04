@@ -9,7 +9,7 @@ export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
   const { taker, maker } = props;
   return (
     <Flex justify={"between"}>
-      <Text size="2xs">Fees</Text>
+      <Text size="2xs">{t("common.fee")}</Text>
       <AuthGuard
         fallback={() => (
           <Text size="2xs">
