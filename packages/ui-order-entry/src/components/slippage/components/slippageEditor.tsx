@@ -88,7 +88,8 @@ export const SlippageEditor = forwardRef<
       content={
         "Your transaction will revert if the price changs unfavorably by more than this percentage."
       }
-      className="oui-w-[260px]"
+      className="oui-w-[260px] oui-bg-base-6"
+      arrow={{ className: "oui-fill-base-6" }}
     >
       <TooltipTrigger>
         <ExclamationFillIcon className="oui-text-base-contrast-54" size={16} />
