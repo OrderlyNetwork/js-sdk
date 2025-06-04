@@ -12,6 +12,7 @@ import {
   Flex,
   Input,
   inputFormatter,
+  modal,
   Text,
   Tooltip,
   TooltipTrigger,
@@ -20,6 +21,7 @@ import { Decimal } from "@orderly.network/utils";
 
 interface SlippageProps {
   initialValue?: number;
+  isMobile?: boolean;
 }
 
 const options = [0.01, 0.05, 0.1];
@@ -68,23 +70,37 @@ export const SlippageEditor = forwardRef<
     }
   };
 
+  const toolTipButton = props.isMobile ? (
+    <button
+      onClick={() => {
+        // setOpen(true)
+        modal.alert({
+          title: "Tips",
+          message:
+            "Your transaction will revert if the price changs unfavorably by more than this percentage.",
+        });
+      }}
+    >
+      <ExclamationFillIcon className="oui-text-base-contrast-54" size={16} />
+    </button>
+  ) : (
+    <Tooltip
+      content={
+        "Your transaction will revert if the price changs unfavorably by more than this percentage."
+      }
+      className="oui-w-[260px]"
+    >
+      <TooltipTrigger>
+        <ExclamationFillIcon className="oui-text-base-contrast-54" size={16} />
+      </TooltipTrigger>
+    </Tooltip>
+  );
+
   return (
     <div className="oui-text-2xs">
       <Flex mb={2} gapX={1}>
         <Text size="xs">Slippage</Text>
-        <Tooltip
-          content={
-            "Your transaction will revert if the price changs unfavorably by more than this percentage."
-          }
-          className="oui-w-[260px]"
-        >
-          <TooltipTrigger>
-            <ExclamationFillIcon
-              className="oui-text-base-contrast-54"
-              size={16}
-            />
-          </TooltipTrigger>
-        </Tooltip>
+        {toolTipButton}
       </Flex>
       <Flex gapX={2}>
         {options.map((item) => {

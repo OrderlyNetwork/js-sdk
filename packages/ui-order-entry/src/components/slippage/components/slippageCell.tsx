@@ -1,6 +1,12 @@
 import { useRef } from "react";
 import { useBoolean } from "@orderly.network/hooks";
-import { EditIcon, Flex, Text, SimpleDialog } from "@orderly.network/ui";
+import {
+  EditIcon,
+  Flex,
+  Text,
+  SimpleDialog,
+  useScreen,
+} from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { SlippageEditor } from "./slippageEditor";
 
@@ -12,6 +18,8 @@ export const SlippageCell = (props: {
   // const { t } = useTranslation();
   const [open, { setTrue: setOpen, setFalse: setClose, toggle }] =
     useBoolean(false);
+
+  const { isMobile } = useScreen();
 
   // const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "");
   const slippageRef = useRef<{ getValue: () => number | undefined }>(null);
@@ -30,7 +38,7 @@ export const SlippageCell = (props: {
         open={open}
         onOpenChange={toggle}
         title={"Settings"}
-        contentProps={{ size: "sm" }}
+        contentProps={{ size: isMobile ? "xs" : "sm" }}
         actions={{
           primary: { disabled: false, label: "Save", onClick: onConfirm },
           secondary: {
@@ -41,6 +49,7 @@ export const SlippageCell = (props: {
       >
         <SlippageEditor
           ref={slippageRef}
+          isMobile={isMobile}
           initialValue={props.slippage ? Number(props.slippage) : undefined}
         />
       </SimpleDialog>
