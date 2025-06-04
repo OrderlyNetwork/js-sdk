@@ -646,7 +646,7 @@
   "subAccount.modal.create.max.description": "Anda telah mencapai batas maksimum 10 sub-akun.",
   "subAccount.modal.create.title": "Buat sub-akun",
   "subAccount.modal.create.description": "Anda memiliki {{subAccountCount}} sub-akun. {{remainingCount}} lagi dapat dibuat.",
-  "subAccount.modal.create.invalid.description": "Nama sub-akun tidak valid. Hanya huruf, angka, dan @, _, - (spasi) yang diizinkan.",
+  "subAccount.modal.create.nickname.role": "5-20 karakter. Hanya huruf, angka, dan @, _, - (spasi) yang diperbolehkan.",
   "subAccount.modal.create.success.description": "Sub-akun berhasil dibuat.",
   "subAccount.modal.create.failed.description": "Gagal membuat sub-akun.",
   "subAccount.modal.edit.title": "Edit nama panggilan",

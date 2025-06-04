@@ -646,7 +646,7 @@
   "subAccount.modal.create.max.description": "10 alt hesap maksimum limitine ulaştınız.",
   "subAccount.modal.create.title": "Alt hesap oluştur",
   "subAccount.modal.create.description": "{{subAccountCount}} alt hesabınız var. {{remainingCount}} tane daha oluşturulabilir.",
-  "subAccount.modal.create.invalid.description": "Geçersiz alt hesap adı. Sadece harfler, rakamlar ve @, _, - (boşluk) kullanılabilir.",
+  "subAccount.modal.create.nickname.role": "5-20 karakter. Sadece harfler, rakamlar ve @, _, - (boşluk) kullanılabilir.",
   "subAccount.modal.create.success.description": "Alt hesap başarıyla oluşturuldu.",
   "subAccount.modal.create.failed.description": "Alt hesap oluşturulamadı.",
   "subAccount.modal.edit.title": "Takma adı düzenle",

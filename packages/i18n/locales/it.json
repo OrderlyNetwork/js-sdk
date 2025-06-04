@@ -646,7 +646,7 @@
   "subAccount.modal.create.max.description": "Hai raggiunto il limite massimo di 10 sotto-account.",
   "subAccount.modal.create.title": "Crea sotto-account",
   "subAccount.modal.create.description": "Hai {{subAccountCount}} sotto-account. Possono essere creati altri {{remainingCount}}.",
-  "subAccount.modal.create.invalid.description": "Nome sotto-account non valido. Sono consentite solo lettere, numeri e @, _, - (spazio).",
+  "subAccount.modal.create.nickname.role": "5-20 caratteri. Sono consentite solo lettere, numeri e @, _, - (spazio).",
   "subAccount.modal.create.success.description": "Sotto-account creato con successo.",
   "subAccount.modal.create.failed.description": "Impossibile creare il sotto-account.",
   "subAccount.modal.edit.title": "Modifica soprannome",

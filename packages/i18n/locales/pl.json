@@ -646,7 +646,7 @@
   "subAccount.modal.create.max.description": "Osiągnięto maksymalny limit 10 kont podrzędnych.",
   "subAccount.modal.create.title": "Utwórz konto podrzędne",
   "subAccount.modal.create.description": "Masz {{subAccountCount}} kont podrzędnych. Można utworzyć jeszcze {{remainingCount}}.",
-  "subAccount.modal.create.invalid.description": "Nieprawidłowa nazwa konta podrzędnego. Dozwolone są tylko litery, cyfry i @, _, - (spacja).",
+  "subAccount.modal.create.nickname.role": "5-20 znaków. Dozwolone są tylko litery, cyfry i @, _, - (spacja).",
   "subAccount.modal.create.success.description": "Konto podrzędne zostało pomyślnie utworzone.",
   "subAccount.modal.create.failed.description": "Nie udało się utworzyć konta podrzędnego.",
   "subAccount.modal.edit.title": "Edytuj pseudonim",

@@ -29,7 +29,7 @@ export const NickNameTextField = (props: {
       maxLength={20}
       minLength={5}
       autoComplete="off"
-      helpText={t("subAccount.modal.create.invalid.description")}
+      helpText={t("subAccount.modal.create.nickname.role")}
       className="oui-mb-4"
       color={props.invalid ? "danger" : undefined}
     />

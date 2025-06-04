@@ -646,7 +646,7 @@
   "subAccount.modal.create.max.description": "Ви досягли максимальної межі в 10 підрахунків.",
   "subAccount.modal.create.title": "Створити підрахунок",
   "subAccount.modal.create.description": "У вас {{subAccountCount}} підрахунків. Можна створити ще {{remainingCount}}.",
-  "subAccount.modal.create.invalid.description": "Недійсна назва підрахунку. Дозволені лише літери, цифри та @, _, - (пробіл).",
+  "subAccount.modal.create.nickname.role": "5-20 символів. Дозволені лише літери, цифри та @, _, - (пробіл).",
   "subAccount.modal.create.success.description": "Підрахунок успішно створено.",
   "subAccount.modal.create.failed.description": "Не вдалося створити підрахунок.",
   "subAccount.modal.edit.title": "Редагувати псевдонім",

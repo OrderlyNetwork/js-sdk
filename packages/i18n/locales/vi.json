@@ -646,7 +646,7 @@
   "subAccount.modal.create.max.description": "Bạn đã đạt đến giới hạn tối đa 10 tài khoản phụ.",
   "subAccount.modal.create.title": "Tạo tài khoản phụ",
   "subAccount.modal.create.description": "Bạn có {{subAccountCount}} tài khoản phụ. Có thể tạo thêm {{remainingCount}} tài khoản.",
-  "subAccount.modal.create.invalid.description": "Tên tài khoản phụ không hợp lệ. Chỉ cho phép chữ cái, số và @, _, - (khoảng trắng).",
+  "subAccount.modal.create.nickname.role": "5-20 ký tự. Chỉ cho phép chữ cái, số và @, _, - (khoảng trắng).",
   "subAccount.modal.create.success.description": "Tạo tài khoản phụ thành công.",
   "subAccount.modal.create.failed.description": "Tạo tài khoản phụ thất bại.",
   "subAccount.modal.edit.title": "Chỉnh sửa biệt danh",
