@@ -54,6 +54,7 @@ import { commifyOptional } from "@orderly.network/utils";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
+import { FeesWidget } from "./components/fees";
 import {
   OrderEntryContext,
   OrderEntryProvider,
@@ -1016,6 +1017,7 @@ function AssetInfo(props: {
           estSlippage={props.estSlippage}
         />
       )}
+      <FeesWidget />
     </div>
   );
 }
