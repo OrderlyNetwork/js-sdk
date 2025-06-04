@@ -178,7 +178,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         },
         (errors) => {
           if (errors.slippage) {
-            toast.error(errors.slippage.message);
+            // toast.error(errors.slippage.message);
+            toast.error(t("orderEntry.slippage.error.max"));
             return Promise.reject("cancel");
           }
 

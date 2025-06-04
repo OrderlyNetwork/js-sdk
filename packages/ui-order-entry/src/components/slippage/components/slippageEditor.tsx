@@ -5,6 +5,7 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   cn,
@@ -30,6 +31,7 @@ export const SlippageEditor = forwardRef<
   { getValue: () => number | undefined },
   SlippageProps
 >((props, ref) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState<number>();
   const [customValue, setCustomValue] = useState("");
   const [error, setError] = useState<string | undefined>(undefined);
@@ -63,7 +65,7 @@ export const SlippageEditor = forwardRef<
     setValue(undefined);
     if (d.gt(3)) {
       setCustomValue("3");
-      setError("The current input value cannot exceed 3%");
+      setError(t("orderEntry.slippage.error.exceed"));
     } else {
       setCustomValue(val);
       setError(undefined);
@@ -75,9 +77,8 @@ export const SlippageEditor = forwardRef<
       onClick={() => {
         // setOpen(true)
         modal.alert({
-          title: "Tips",
-          message:
-            "Your transaction will revert if the price changs unfavorably by more than this percentage.",
+          title: t("common.tips"),
+          message: <Text size="2xs">{t("orderEntry.slippage.tips")}</Text>,
         });
       }}
     >
@@ -85,8 +86,11 @@ export const SlippageEditor = forwardRef<
     </button>
   ) : (
     <Tooltip
+      // @ts-ignore
       content={
-        "Your transaction will revert if the price changs unfavorably by more than this percentage."
+        <Text intensity={80} size="2xs">
+          {t("orderEntry.slippage.tips")}
+        </Text>
       }
       className="oui-w-[260px] oui-bg-base-6"
       arrow={{ className: "oui-fill-base-6" }}
@@ -100,7 +104,7 @@ export const SlippageEditor = forwardRef<
   return (
     <div className="oui-text-2xs">
       <Flex mb={2} gapX={1}>
-        <Text size="xs">Slippage</Text>
+        <Text size="xs">{t("orderEntry.slippage")}</Text>
         {toolTipButton}
       </Flex>
       <Flex gapX={2}>
@@ -128,8 +132,8 @@ export const SlippageEditor = forwardRef<
           onValueChange={onValueChange}
           classNames={{
             root: cn(
-              "oui-bg-base-6 oui-rounded-md",
-              "oui-w-[74px] oui-h-[40px]",
+              "oui-rounded-md oui-bg-base-6",
+              "oui-h-[40px] oui-w-[74px]",
             ),
             input: "oui-text-base-contrast",
             additional: "oui-pl-1",

@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useBoolean } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   EditIcon,
   Flex,
@@ -15,7 +16,7 @@ export const SlippageCell = (props: {
   setSlippage: (slippage: string) => void;
   estSlippage: number | null;
 }) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const [open, { setTrue: setOpen, setFalse: setClose, toggle }] =
     useBoolean(false);
 
@@ -37,12 +38,16 @@ export const SlippageCell = (props: {
       <SimpleDialog
         open={open}
         onOpenChange={toggle}
-        title={"Settings"}
+        title={t("common.settings")}
         contentProps={{ size: isMobile ? "xs" : "sm" }}
         actions={{
-          primary: { disabled: false, label: "Save", onClick: onConfirm },
+          primary: {
+            disabled: false,
+            label: t("common.save"),
+            onClick: onConfirm,
+          },
           secondary: {
-            label: "Cancel",
+            label: t("common.cancel"),
             onClick: () => setClose(),
           },
         }}
@@ -54,14 +59,20 @@ export const SlippageCell = (props: {
         />
       </SimpleDialog>
       <Flex justify={"between"}>
-        <Text size="2xs">Slippage</Text>
-        <AuthGuard fallback={() => <Text size="2xs">Est: -% / Max: --%</Text>}>
+        <Text size="2xs">{t("orderEntry.slippage")}</Text>
+        <AuthGuard
+          fallback={() => (
+            <Text size="2xs">
+              {t("orderEntry.slippage.est")}: -% / {t("common.max")}: --%
+            </Text>
+          )}
+        >
           <Flex gap={1}>
             <Text.numeral
               size="2xs"
               rule="percentages"
-              prefix={`Est:`}
-              suffix={` / Max: `}
+              prefix={`${t("orderEntry.slippage.est")}:`}
+              suffix={` / ${t("common.max")}: `}
             >
               {props.estSlippage ?? 0}
             </Text.numeral>
