@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "De",
   "transfer.internalTransfer.to": "Vers",
   "transfer.internalTransfer.currentAssetValue": "Valeur actuelle de l'actif",
-  "transfer.internalTransfer.success": "Fonds transférés avec succès.",
+  "transfer.internalTransfer.success": "Succès ! Les fonds seront disponibles dans 15 secondes.",
   "transfer.internalTransfer.failed": "Impossible de compléter le transfert. Veuillez réessayer plus tard.",
   "transfer.internalTransfer.failed.transferInProgress": "Un transfert interne est en cours.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Un retrait est en cours.",

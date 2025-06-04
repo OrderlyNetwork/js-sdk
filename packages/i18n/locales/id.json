@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "Dari",
   "transfer.internalTransfer.to": "Ke",
   "transfer.internalTransfer.currentAssetValue": "Nilai aset saat ini",
-  "transfer.internalTransfer.success": "Dana berhasil ditransfer.",
+  "transfer.internalTransfer.success": "Berhasil! Dana akan tersedia dalam 15 detik.",
   "transfer.internalTransfer.failed": "Tidak dapat menyelesaikan transfer. Silakan coba lagi nanti.",
   "transfer.internalTransfer.failed.transferInProgress": "Transfer internal sedang dalam proses.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Penarikan sedang dalam proses.",

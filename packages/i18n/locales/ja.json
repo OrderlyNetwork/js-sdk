@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "送信元",
   "transfer.internalTransfer.to": "送信先",
   "transfer.internalTransfer.currentAssetValue": "現在の資産価値",
-  "transfer.internalTransfer.success": "送金が完了しました。",
+  "transfer.internalTransfer.success": "成功です！資金は15秒後に利用可能になります。",
   "transfer.internalTransfer.failed": "送金を完了できませんでした。後でもう一度お試しください。",
   "transfer.internalTransfer.failed.transferInProgress": "内部転送が進行中です。",
   "transfer.internalTransfer.failed.withdrawalInProgress": "出金が進行中です。",

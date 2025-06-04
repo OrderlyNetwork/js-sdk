@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "Kimden",
   "transfer.internalTransfer.to": "Kime",
   "transfer.internalTransfer.currentAssetValue": "Mevcut varlık değeri",
-  "transfer.internalTransfer.success": "Fonlar başarıyla transfer edildi.",
+  "transfer.internalTransfer.success": "Başarılı! Fonlar 15 saniye içinde kullanılabilir olacak.",
   "transfer.internalTransfer.failed": "Transfer tamamlanamadı. Lütfen daha sonra tekrar deneyin.",
   "transfer.internalTransfer.failed.transferInProgress": "Dahili bir transfer işlemi devam ediyor.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Bir para çekme işlemi devam ediyor.",

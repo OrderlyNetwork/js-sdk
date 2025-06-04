@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "Von",
   "transfer.internalTransfer.to": "Nach",
   "transfer.internalTransfer.currentAssetValue": "Aktueller Vermögenswert",
-  "transfer.internalTransfer.success": "Geld erfolgreich überwiesen.",
+  "transfer.internalTransfer.success": "Erfolg! Die Gelder sind in 15 Sekunden verfügbar.",
   "transfer.internalTransfer.failed": "Überweisung konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut.",
   "transfer.internalTransfer.failed.transferInProgress": "Eine interne Überweisung ist derzeit in Bearbeitung.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Eine Auszahlung ist derzeit in Bearbeitung.",

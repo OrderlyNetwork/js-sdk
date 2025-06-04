@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "От",
   "transfer.internalTransfer.to": "Кому",
   "transfer.internalTransfer.currentAssetValue": "Текущая стоимость актива",
-  "transfer.internalTransfer.success": "Средства успешно переведены.",
+  "transfer.internalTransfer.success": "Успешно! Средства будут доступны через 15 секунд.",
   "transfer.internalTransfer.failed": "Не удалось завершить перевод. Пожалуйста, попробуйте позже.",
   "transfer.internalTransfer.failed.transferInProgress": "Внутренний перевод в процессе выполнения.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Вывод средств в процессе выполнения.",

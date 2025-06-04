@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "从",
   "transfer.internalTransfer.to": "到",
   "transfer.internalTransfer.currentAssetValue": "当前资产价值",
-  "transfer.internalTransfer.success": "资金转账成功。",
+  "transfer.internalTransfer.success": "成功！资金将在15秒内到账。",
   "transfer.internalTransfer.failed": "无法完成转账。请稍后重试。",
   "transfer.internalTransfer.failed.transferInProgress": "当前正在进行内部转账。",
   "transfer.internalTransfer.failed.withdrawalInProgress": "当前正在进行提现。",

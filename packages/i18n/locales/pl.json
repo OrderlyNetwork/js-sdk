@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "Z",
   "transfer.internalTransfer.to": "Do",
   "transfer.internalTransfer.currentAssetValue": "Aktualna wartość aktywów",
-  "transfer.internalTransfer.success": "Środki zostały pomyślnie przelane.",
+  "transfer.internalTransfer.success": "Sukces! Środki będą dostępne za 15 sekund.",
   "transfer.internalTransfer.failed": "Nie można zakończyć przelewu. Proszę spróbować później.",
   "transfer.internalTransfer.failed.transferInProgress": "Trwa wewnętrzny przelew.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Trwa wypłata środków.",

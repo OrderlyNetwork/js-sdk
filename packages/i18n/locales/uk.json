@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "Від",
   "transfer.internalTransfer.to": "До",
   "transfer.internalTransfer.currentAssetValue": "Поточна вартість активу",
-  "transfer.internalTransfer.success": "Кошти успішно переведені.",
+  "transfer.internalTransfer.success": "Успішно! Кошти будуть доступні через 15 секунд.",
   "transfer.internalTransfer.failed": "Не вдалося завершити переказ. Будь ласка, спробуйте пізніше.",
   "transfer.internalTransfer.failed.transferInProgress": "Внутрішній переказ у процесі виконання.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Виведення коштів у процесі виконання.",

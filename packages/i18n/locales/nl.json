@@ -528,7 +528,7 @@
   "transfer.internalTransfer.from": "Van",
   "transfer.internalTransfer.to": "Naar",
   "transfer.internalTransfer.currentAssetValue": "Huidige waarde van activa",
-  "transfer.internalTransfer.success": "Geld succesvol overgemaakt.",
+  "transfer.internalTransfer.success": "Succes! Geld is binnen 15 seconden beschikbaar.",
   "transfer.internalTransfer.failed": "Kan de overboeking niet voltooien. Probeer het later opnieuw.",
   "transfer.internalTransfer.failed.transferInProgress": "Er is een interne overboeking in behandeling.",
   "transfer.internalTransfer.failed.withdrawalInProgress": "Er is een opname in behandeling.",
