@@ -67,6 +67,7 @@ export const en = {
   "common.type": "Type",
   "common.notional": "Notional",
   "common.fee": "Fee",
+  "common.fees": "Fees",
 
   "common.avgPrice": "Avg. price",
   "common.avgOpen": "Avg. open",
