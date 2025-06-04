@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-cross-deposit",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "description": "cross deposit",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
