@@ -7,7 +7,10 @@ export type { Brokers } from "./useAllBrokers";
 export { useCurEpochEstimate } from "./useCurEpochEstimate";
 export type { CurrentEpochEstimate } from "./useCurEpochEstimate";
 
-export type { AccountRewardsHistoryRow, AccountRewardsHistory } from "./useAccountRewardHistory";
+export type {
+  AccountRewardsHistoryRow,
+  AccountRewardsHistory,
+} from "./useAccountRewardHistory";
 export { useAccountRewardsHistory } from "./useAccountRewardHistory";
 
 export { useGetClaimed, DistributionId } from "./useGetClaimed";
@@ -18,8 +21,9 @@ export type {
   WalletRewardsItem,
   WalletRewardsHistoryReturns,
 } from "./useWalletRewardsHistory";
+export { useTradingRewardsStatus, EpochStatus } from "./useTradingRwardsStatus";
+export type { StatusInfo } from "./useTradingRwardsStatus";
 
-
-export { useGetEnv, ENVType }from "./useGetEnv";
+export { useGetEnv, ENVType } from "./useGetEnv";
 
 export { TWType } from "./types";

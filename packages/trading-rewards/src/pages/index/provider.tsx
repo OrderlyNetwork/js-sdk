@@ -12,6 +12,8 @@ import {
   WalletRewardsHistoryReturns,
   Brokers,
   useConfig,
+  useTradingRewardsStatus,
+  StatusInfo,
 } from "@orderly.network/hooks";
 import { TitleConfig } from "./title/title.script";
 
@@ -26,10 +28,12 @@ export type TradingRewardsState = {
   curEpochEstimate?: CurrentEpochEstimate;
   walletRewardsHistory: WalletRewardsHistoryReturns;
   titleConfig: TitleConfig;
+  statusInfo: StatusInfo | undefined;
+  showEpochPauseCountdown?: boolean;
 };
 
 export const TradingRewardsContext = createContext<TradingRewardsState>(
-  {} as TradingRewardsState
+  {} as TradingRewardsState,
 );
 
 export const TradingRewardsProvider = (
@@ -39,7 +43,8 @@ export const TradingRewardsProvider = (
     /** default is TWType.normal */
     type?: TWType;
     titleConfig?: TitleConfig;
-  }>
+    showEpochPauseCountdown?: boolean;
+  }>,
 ) => {
   // const { brokerId = "orderly" } = props;
 
@@ -53,12 +58,15 @@ export const TradingRewardsProvider = (
         target: "_blank",
       },
     },
+    showEpochPauseCountdown,
   } = props;
+
+  const { statusInfo } = useTradingRewardsStatus(type === TWType.mm);
   const totalOrderClaimedReward = useGetClaimed(
-    type === TWType.mm ? DistributionId.mmOrder : DistributionId.order
+    type === TWType.mm ? DistributionId.mmOrder : DistributionId.order,
   );
   const totalEsOrderClaimedReward = useGetClaimed(
-    type === TWType.mm ? DistributionId.mmEsOrder : DistributionId.esORder
+    type === TWType.mm ? DistributionId.mmEsOrder : DistributionId.esORder,
   );
 
   const [brokers] = useAllBrokers();
@@ -88,6 +96,8 @@ export const TradingRewardsProvider = (
         brokerId,
         brokerName,
         brokers,
+        statusInfo,
+        showEpochPauseCountdown: showEpochPauseCountdown ?? false,
       }}
     >
       {/* <PageLoading loading={epochList.data === undefined}> */}
