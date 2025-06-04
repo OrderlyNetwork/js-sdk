@@ -25,11 +25,11 @@ export class MarketOrderCreator extends BaseOrderCreator<OrderEntity> {
   ): Promise<OrderValidationResult> {
     // console.log("validate", values, configs);
     return this.baseValidate(values, configs).then((result) => {
-      // console.log("result--->>>>", result, values);
+      const slippage = Number(values.slippage);
       const estSlippage = Number.isNaN(configs.estSlippage)
         ? 0
         : Number(configs.estSlippage) * 100;
-      if (estSlippage > Number(values.slippage)) {
+      if (!isNaN(slippage) && estSlippage > slippage) {
         return {
           ...result,
           slippage: {

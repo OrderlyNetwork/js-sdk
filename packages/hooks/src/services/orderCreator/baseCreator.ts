@@ -54,8 +54,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       // slippage: data.slippage,
     };
 
-    if (data.order_type === OrderType.MARKET) {
-      order.slippage = data.slippage;
+    if (data.order_type === OrderType.MARKET && !!data.slippage) {
+      order.slippage = new Decimal(data.slippage).div(100).toNumber();
     }
 
     if (data.visible_quantity === 0) {

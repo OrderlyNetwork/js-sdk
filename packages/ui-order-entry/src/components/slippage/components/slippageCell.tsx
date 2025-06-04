@@ -47,9 +47,7 @@ export const SlippageCell = (props: {
       </SimpleDialog>
       <Flex justify={"between"}>
         <Text size="2xs">Slippage</Text>
-        <AuthGuard
-          fallback={() => <Text size="2xs">Est: 0.00% / Max: --%</Text>}
-        >
+        <AuthGuard fallback={() => <Text size="2xs">Est: -% / Max: --%</Text>}>
           <Flex gap={1}>
             <Text.numeral
               size="2xs"
@@ -60,7 +58,7 @@ export const SlippageCell = (props: {
               {props.estSlippage ?? 0}
             </Text.numeral>
             <Text size="2xs" className="oui-text-base-contrast-80">
-              {`${props.slippage}%`}
+              {`${props.slippage || "-"}%`}
             </Text>
             <button className="oui-text-2xs" onClick={() => setOpen()}>
               <EditIcon className="oui-text-base-contrast-54" size={12} />
