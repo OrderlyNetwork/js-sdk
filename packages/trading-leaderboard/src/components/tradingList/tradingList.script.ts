@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { differenceInDays } from "date-fns";
 import {
   useAccount,
   useConfig,
@@ -10,7 +9,8 @@ import {
 import { API } from "@orderly.network/types";
 import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { useEndReached } from "../../hooks/useEndReached";
-import { getDateRange, formatDateRange } from "../../utils";
+import { DateRange } from "../../type";
+import { formatDateRange, getDateRange } from "../../utils";
 
 export type TradingListScriptOptioins = {};
 
@@ -25,6 +25,7 @@ export type TradingData = {
   total_fee: number;
   // custom field
   key?: string;
+  rank?: number | string;
 };
 
 export type TradingResponse = {
@@ -33,15 +34,13 @@ export type TradingResponse = {
 };
 export type TradingListScriptReturn = ReturnType<typeof useTradingListScript>;
 
-export const FilterDays = [7, 14, 30, 90] as const;
-export type TFilterDays = (typeof FilterDays)[number];
-export type DateRange = {
-  from?: Date;
-  to?: Date;
+export type TradingListScriptOptions = {
+  dateRange?: DateRange;
+  address?: string;
 };
 
-export function useTradingListScript() {
-  const [searchValue, setSearchValue] = useState("");
+export function useTradingListScript(options?: TradingListScriptOptions) {
+  const { dateRange = getDateRange(90), address: searchValue } = options || {};
   const [initialSort] = useState<TableSort>({
     sortKey: "perp_volume",
     sort: "desc",
@@ -53,11 +52,8 @@ export function useTradingListScript() {
 
   const { isMobile } = useScreen();
 
-  const { dateRange, filterDay, updateFilterDay, filterItems, onFilter } =
-    useFilter();
-
   const { page, pageSize, setPage, parsePagination } = usePagination({
-    pageSize: 100,
+    pageSize: 20,
   });
 
   const getUrl = (args: {
@@ -84,11 +80,11 @@ export function useTradingListScript() {
       searchParams.set("sort", `${prefix}_${sort.sortKey}`);
     }
 
-    if (dateRange.from) {
+    if (dateRange?.from) {
       searchParams.set("start_date", formatDateRange(dateRange.from!));
     }
 
-    if (dateRange.to) {
+    if (dateRange?.to) {
       searchParams.set("end_date", formatDateRange(dateRange.to!));
     }
 
@@ -176,7 +172,7 @@ export function useTradingListScript() {
     if (!userDataRes.length) {
       return [
         {
-          key: getRowKey(state.address!),
+          key: getCurrentAddressRowKey(state.address!),
           address: state.address,
           rank: "-",
         } as unknown as TradingData,
@@ -186,7 +182,7 @@ export function useTradingListScript() {
     return userDataRes?.map((item) => ({
       ...item,
       rank: getAddressRank(item.address!),
-      key: getRowKey(item.address!),
+      key: getCurrentAddressRowKey(item.address!),
     }));
   }, [state.address, userDataRes, isLoading, getAddressRank]);
 
@@ -253,14 +249,6 @@ export function useTradingListScript() {
     }
   });
 
-  const onSearchValueChange = (value: string) => {
-    setSearchValue(value);
-  };
-
-  const clearSearchValue = useCallback(() => {
-    setSearchValue("");
-  }, []);
-
   const onSort = useCallback(
     (sort?: TableSort) => {
       setSort(sort || initialSort);
@@ -279,25 +267,17 @@ export function useTradingListScript() {
   }, [state.address]);
 
   useEffect(() => {
-    if (dateRange.to && dateRange.from) {
+    if (dateRange?.to && dateRange?.from) {
       setPage(1);
     }
   }, [dateRange]);
 
   return {
     pagination,
-    dateRange,
-    filterDay,
-    updateFilterDay,
-    filterItems,
-    onFilter,
     initialSort,
     onSort,
     dataSource,
     isLoading: isLoading || isValidating,
-    searchValue,
-    onSearchValueChange,
-    clearSearchValue,
     isMobile,
     sentinelRef,
     dataList,
@@ -305,64 +285,10 @@ export function useTradingListScript() {
   };
 }
 
-const useFilter = () => {
-  // default is 90d
-  const [filterDay, setFilterDay] = useState<TFilterDays | null>(90);
-
-  const [dateRange, setDateRange] = useState<DateRange>(getDateRange(90));
-
-  const updateFilterDay = (day: TFilterDays) => {
-    setFilterDay(day);
-    setDateRange(getDateRange(day));
-  };
-
-  const onFilter = (filter: { name: string; value: any }) => {
-    if (filter.name === "dateRange") {
-      const newDateRange = filter.value;
-      setDateRange(newDateRange);
-
-      if (newDateRange.from && newDateRange.to) {
-        const offsetDay =
-          Math.abs(differenceInDays(newDateRange.from, newDateRange.to)) + 1;
-
-        const dateRange = getDateRange(offsetDay);
-        if (
-          formatDateRange(dateRange.from) ===
-            formatDateRange(newDateRange.from) &&
-          formatDateRange(dateRange.to) === formatDateRange(newDateRange.to)
-        ) {
-          setFilterDay(offsetDay as any);
-        } else {
-          setFilterDay(null);
-        }
-      }
-    }
-  };
-
-  const filterItems = useMemo(() => {
-    const dateRangeFilter = {
-      type: "range",
-      name: "dateRange",
-      value: dateRange,
-      max: 90,
-    };
-
-    return [dateRangeFilter] as any;
-  }, [dateRange]);
-
-  return {
-    filterItems,
-    onFilter,
-    dateRange,
-    filterDay,
-    updateFilterDay,
-  };
-};
-
 export function isSameAddress(address1: string, address2: string) {
   return address1.toLowerCase() === address2.toLowerCase();
 }
 
-export function getRowKey(address: string) {
+export function getCurrentAddressRowKey(address: string) {
   return `current-address-${address?.toLowerCase()}`;
 }

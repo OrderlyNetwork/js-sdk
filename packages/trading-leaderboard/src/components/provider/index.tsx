@@ -34,14 +34,15 @@ export type TradingLeaderboardState = {
  * Trading leaderboard context
  */
 export const TradingLeaderboardContext = createContext<TradingLeaderboardState>(
-  {} as TradingLeaderboardState
+  {} as TradingLeaderboardState,
 );
 
-export type TradingLeaderboardProviderProps =
-  PropsWithChildren<TradingLeaderboardState>;
+export type TradingLeaderboardProviderProps = PropsWithChildren<
+  Pick<TradingLeaderboardState, "campaigns" | "href" | "backgroundSrc">
+>;
 
 export const TradingLeaderboardProvider = (
-  props: TradingLeaderboardProviderProps
+  props: TradingLeaderboardProviderProps,
 ) => {
   return (
     <TradingLeaderboardContext.Provider

@@ -1,20 +1,27 @@
 import { FC } from "react";
+import { DateRange } from "react-day-picker";
+import { cnBase } from "tailwind-variants";
+import { Flex } from "../flex";
 import {
   DateRangePicker,
   DateRangePickerProps,
 } from "../pickers/dateRangePicker";
-import { Flex } from "../flex";
+import { DatePicker, DatePickerProps } from "../pickers/datepicker";
+import { Picker, PickerProps } from "../pickers/picker";
+import { CombineSelect } from "../select/combine";
 import {
   SelectWithOptions,
   type SelectWithOptionsProps,
 } from "../select/withOptions";
-import { DatePicker, DatePickerProps } from "../pickers/datepicker";
-import { Picker, PickerProps } from "../pickers/picker";
-import { CombineSelect } from "../select/combine";
-import { DateRange } from "react-day-picker";
-import { cnBase } from "tailwind-variants";
 
-type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol" | "picker";
+type FilterType =
+  | "select"
+  | "input"
+  | "date"
+  | "range"
+  | "custom"
+  | "symbol"
+  | "picker";
 
 type DataFilterGeneral = {
   // initialValue?: any;
@@ -46,13 +53,13 @@ type SymbolFilter = {
 
 type PickerFilter = {
   type: "picker";
-} & PickerProps;  
+} & PickerProps;
 
-export type DataFilterItems = (DataFilterGeneral &
-  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter | PickerFilter))[];
+export type DataFilterItem = DataFilterGeneral &
+  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter | PickerFilter);
 
 export type DataFilterProps = {
-  items: DataFilterItems;
+  items: DataFilterItem[];
   onFilter: (filter: { name: string; value: any }) => void;
   className?: string;
   trailing?: React.ReactNode;
@@ -147,7 +154,7 @@ export const DataFilter = (props: DataFilterProps) => {
       width={"100%"}
       className={cnBase(
         "oui-data-filter-bar oui-border-b oui-border-line",
-        props.className
+        props.className,
       )}
     >
       {props.items.map((item, index: number) => {

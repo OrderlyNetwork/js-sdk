@@ -1,8 +1,9 @@
 import { FC, SVGProps } from "react";
-import { cn, DataFilter, DataTable, Flex, Spinner } from "@orderly.network/ui";
+import { cn, DataTable, Flex, Spinner } from "@orderly.network/ui";
+import { TradingFilter } from "../leaderboard/components/TradingFilter";
 import { useTradingListColumns } from "./column";
 import {
-  getRowKey,
+  getCurrentAddressRowKey,
   TradingData,
   TradingListScriptReturn,
 } from "./tradingList.script";
@@ -29,23 +30,6 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
         props.className,
       )}
     >
-      <Flex
-        width="100%"
-        justify="between"
-        itemAlign="center"
-        className={cn("oui-mobile-trading-leaderboard-trading-filter")}
-      >
-        {props.filterItems.length > 0 && (
-          <DataFilter
-            items={props.filterItems}
-            onFilter={(value: any) => {
-              props.onFilter(value);
-            }}
-            className="oui-h-[40px] oui-border-none"
-          />
-        )}
-      </Flex>
-
       <DataTable
         classNames={{
           root: "oui-pb-4",
@@ -67,7 +51,7 @@ export const MobileTradingList: FC<TradingListProps> = (props) => {
           };
         }}
         onCell={(column, record, index) => {
-          if (record.key === getRowKey(props.address!)) {
+          if (record.key === getCurrentAddressRowKey(props.address!)) {
             const isFirst = column.getIsFirstColumn();
             const isLast = column.getIsLastColumn();
 

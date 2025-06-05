@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  LeaderboardWidget,
-  TradingListWidget,
-  CampaignsWidget,
-  TradingLeaderboardProvider,
   Campaign,
+  TradingListWidget,
+  LeaderboardWidget,
+  LeaderboardPage,
+  TradingLeaderboardProvider,
 } from "@orderly.network/trading-leaderboard";
-import { BaseLayout } from "../../../components/layout";
 import { Box, useScreen } from "@orderly.network/ui";
 import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { BaseLayout } from "../../../components/layout";
 
 function getCampaigns() {
   const addDays = (date: Date, days: number) => {
@@ -35,13 +35,13 @@ function getCampaigns() {
         image: "/leaderboard/campaign.jpg",
         href: "https://orderly.network/",
         ...date,
-      } as Campaign)
+      }) as Campaign,
   );
 }
 
-const meta: Meta<typeof LeaderboardWidget> = {
+const meta: Meta<typeof LeaderboardPage> = {
   title: "Package/trading-leaderboard",
-  component: LeaderboardWidget,
+  component: LeaderboardPage,
   argTypes: {},
   args: {
     campaigns: getCampaigns(),
@@ -74,11 +74,7 @@ const Container = (props: {
         maxHeight: 2560,
         overflow: "hidden",
         // Make the table scroll instead of the page scroll
-        height: isMobile
-          ? "100%"
-          : `calc(100vh - ${topNavbarHeight}px - ${footerHeight}px - ${
-              announcementHeight ? announcementHeight + 12 : 0
-            }px)`,
+        height: isMobile ? "100%" : "100%",
         ...props.style,
       }}
     >
@@ -91,7 +87,7 @@ export const Page: Story = {
   render: (args) => {
     return (
       <Container style={{ height: "calc(100vh)" }}>
-        <LeaderboardWidget {...args} className="oui-py-5" />
+        <LeaderboardPage {...args} className="oui-py-5" />
       </Container>
     );
   },
@@ -115,18 +111,14 @@ export const LayoutPage: Story = {
   },
 };
 
-export const Campaigns: Story = {
-  render: (args) => {
-    return (
-      <TradingLeaderboardProvider {...args}>
-        <CampaignsWidget />
-      </TradingLeaderboardProvider>
-    );
-  },
-};
-
 export const TradingList: Story = {
   render: (args) => {
     return <TradingListWidget style={{ height: "calc(100vh - 0px)" }} />;
+  },
+};
+
+export const Leaderboard: Story = {
+  render: (args) => {
+    return <LeaderboardWidget style={{ height: "calc(100vh - 0px)" }} />;
   },
 };
