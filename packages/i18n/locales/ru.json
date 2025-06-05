@@ -639,6 +639,7 @@
   "maintenance.tips.description": "{{brokerName}} будет временно недоступен для запланированного обновления с {{startDate}} по {{endDate}}.",
   "restrictedInfo.description.default": "Вы получаете доступ к {{brokerName}} с IP-адреса ({{ip}}), связанного с ограниченной страной.",
   "subAccount.modal.title": "Сменить аккаунт",
+  "subAccount.modal.switch.success.description": "Успешное переключение аккаунта",
   "subAccount.modal.mainAccount.title": "Основной счет",
   "subAccount.modal.subAccounts.title": "Подсчета",
   "subAccount.modal.current": "Текущий",

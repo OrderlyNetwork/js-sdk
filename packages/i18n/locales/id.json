@@ -639,6 +639,7 @@
   "maintenance.tips.description": "{{brokerName}} akan sementara tidak tersedia untuk peningkatan terjadwal dari {{startDate}} hingga {{endDate}}.",
   "restrictedInfo.description.default": "Anda mengakses {{brokerName}} dari alamat IP ({{ip}}) yang terkait dengan negara terbatas.",
   "subAccount.modal.title": "Ganti akun",
+  "subAccount.modal.switch.success.description": "Berhasil beralih akun",
   "subAccount.modal.mainAccount.title": "Akun utama",
   "subAccount.modal.subAccounts.title": "Sub-akun",
   "subAccount.modal.current": "Saat ini",

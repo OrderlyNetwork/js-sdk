@@ -639,6 +639,7 @@
   "maintenance.tips.description": "{{brokerName}}将因计划中的升级从{{startDate}}到{{endDate}}暂时不可用。",
   "restrictedInfo.description.default": "您正在从与受限国家相关的IP地址（{{ip}}）访问{{brokerName}}。",
   "subAccount.modal.title": "切换账户",
+  "subAccount.modal.switch.success.description": "切换账户成功",
   "subAccount.modal.mainAccount.title": "主账户",
   "subAccount.modal.subAccounts.title": "子账户",
   "subAccount.modal.current": "当前",

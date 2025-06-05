@@ -639,6 +639,7 @@
   "maintenance.tips.description": "{{brokerName}} sarà temporaneamente non disponibile per un aggiornamento programmato da {{startDate}} a {{endDate}}.",
   "restrictedInfo.description.default": "Stai accedendo a {{brokerName}} da un indirizzo IP ({{ip}}) associato a un paese con restrizioni.",
   "subAccount.modal.title": "Cambia account",
+  "subAccount.modal.switch.success.description": "Cambio account completato con successo",
   "subAccount.modal.mainAccount.title": "Account principale",
   "subAccount.modal.subAccounts.title": "Sotto-account",
   "subAccount.modal.current": "Attuale",

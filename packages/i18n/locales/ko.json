@@ -639,6 +639,7 @@
   "maintenance.tips.description": "{{brokerName}}은(는) {{startDate}}부터 {{endDate}}까지 예정된 업그레이드로 인해 일시적으로 사용할 수 없습니다.",
   "restrictedInfo.description.default": "제한된 국가와 관련된 IP 주소({{ip}})에서 {{brokerName}}에 접속하고 있습니다.",
   "subAccount.modal.title": "계정 전환",
+  "subAccount.modal.switch.success.description": "계정 전환이 완료되었습니다",
   "subAccount.modal.mainAccount.title": "메인 계정",
   "subAccount.modal.subAccounts.title": "서브 계정",
   "subAccount.modal.current": "현재",

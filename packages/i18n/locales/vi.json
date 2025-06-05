@@ -639,6 +639,7 @@
   "maintenance.tips.description": "{{brokerName}} sẽ tạm thời không khả dụng để nâng cấp theo lịch trình từ {{startDate}} đến {{endDate}}.",
   "restrictedInfo.description.default": "Bạn đang truy cập {{brokerName}} từ địa chỉ IP ({{ip}}) liên quan đến một quốc gia bị hạn chế.",
   "subAccount.modal.title": "Chuyển tài khoản",
+  "subAccount.modal.switch.success.description": "Chuyển đổi tài khoản thành công",
   "subAccount.modal.mainAccount.title": "Tài khoản chính",
   "subAccount.modal.subAccounts.title": "Tài khoản phụ",
   "subAccount.modal.current": "Hiện tại",

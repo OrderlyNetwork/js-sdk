@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SubAccount, useAccount, useCollateral } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
 
@@ -14,8 +15,8 @@ type MainAccount = {
 export const SubAccountScript = () => {
   const [open, setOpen] = useState(false);
   const { isMobile } = useScreen();
-  const { state, account, subAccount, switchAccount, isSubAccount } =
-    useAccount();
+  const { state, subAccount, switchAccount } = useAccount();
+  const { t } = useTranslation();
   const [mainAccount, setMainAccount] = useState<MainAccount | undefined>(
     undefined,
   );
@@ -45,7 +46,7 @@ export const SubAccountScript = () => {
           console.error(error);
         })
         .then((res) => {
-          toast.success("Switch account successfully");
+          toast.success(t("subAccount.modal.switch.success.description"));
         });
     },
     [switchAccount],
