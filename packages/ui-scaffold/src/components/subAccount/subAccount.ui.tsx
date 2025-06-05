@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   SimpleDialog,
@@ -7,6 +7,7 @@ import {
   Flex,
   ScrollArea,
   modal,
+  cn,
 } from "@orderly.network/ui";
 import { AccountItem } from "./components/accountItem";
 import { CreateSubAccount } from "./components/createSubAccountModal";
@@ -18,12 +19,29 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
   const header = <Text weight="semibold">{t("subAccount.modal.title")}</Text>;
-  const trigger = (
-    <SubAccountIcon
-      className="oui-cursor-pointer"
-      onClick={() => props.onOpenChange(true)}
-    />
-  );
+  const trigger = useMemo(() => {
+    if (isMobile) {
+      return (
+        <Flex
+          className="oui-bg-base-6 oui-h-8 oui-w-8 oui-rounded-md"
+          itemAlign="center"
+          justify="center"
+        >
+          <SubAccountIcon
+            className={cn("oui-cursor-pointer")}
+            onClick={() => props.onOpenChange(true)}
+          />
+        </Flex>
+      );
+    }
+    return (
+      <SubAccountIcon
+        className={cn("oui-cursor-pointer")}
+        onClick={() => props.onOpenChange(true)}
+      />
+    );
+  }, [isMobile]);
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editAccountItem, setEditAccountItem] = useState<
     | {

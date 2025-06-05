@@ -7,6 +7,7 @@ import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { RouterAdapter } from "../scaffold";
 import { ScanQRCodeWidget } from "../scanQRCode";
+import { SubAccountWidget } from "../subAccount";
 import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
 import { MainNavWidgetProps } from "./mainNav.widget";
@@ -41,7 +42,7 @@ export const MainNavMobile: FC<Props> = (props) => {
       return <MainLogo {...props?.logo} />;
     }
     return (
-      <Text className="oui-text-base-contrast oui-text-2xl oui-font-bold">
+      <Text className="oui-text-2xl oui-font-bold oui-text-base-contrast">
         {currentMenu?.name}
       </Text>
     );
@@ -95,6 +96,11 @@ export const MainNavMobile: FC<Props> = (props) => {
     return true;
   }, [state.status, disabledConnect]);
 
+  const showSubAccount = useMemo(
+    () => state.status >= AccountStatusEnum.EnableTrading,
+    [state.status],
+  );
+
   if (isSub) {
     return (
       <Flex
@@ -110,7 +116,7 @@ export const MainNavMobile: FC<Props> = (props) => {
           className="oui-absolute oui-left-6 oui-text-base-contrast-54"
           onClick={onBack}
         />
-        <Text className="oui-text-base-contrast oui-text-base oui-font-bold">
+        <Text className="oui-text-base oui-font-bold oui-text-base-contrast">
           {subTitle}
         </Text>
       </Flex>
@@ -128,6 +134,7 @@ export const MainNavMobile: FC<Props> = (props) => {
       <Flex>{title}</Flex>
       <Flex gapX={2}>
         {showQrcode && <ScanQRCodeWidget />}
+        {showSubAccount && <SubAccountWidget />}
         {renderContent()}
         <WalletConnectButtonExtension />
       </Flex>
