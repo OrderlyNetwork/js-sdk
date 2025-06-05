@@ -33,6 +33,7 @@ export const LayoutPage: Story = {
           titleConfig={{
             brokerName: "Orderly",
           }}
+          showEpochPauseCountdown={true}
         />
       </TradingRewardsLayout>
     );
