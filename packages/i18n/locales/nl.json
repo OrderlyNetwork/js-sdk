@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "Start",
   "tradingRewards.rewardHistory.column.endDate": "Einddatum",
   "tradingRewards.epochPauseCountdown.title": "Handelsbeloningen worden hervat in",
-  "tradingRewards.eopchStatus.pause": "Handelsbeloningen zijn gepauzeerd tot nader order. U kunt uw eerdere beloningen blijven opeisen.",
+  "tradingRewards.eopchStatus.pause": "Handelsbeloningen zijn gepauzeerd terwijl we een beter programma bouwen. Eerdere beloningen blijven opvraagbaar.",
   "tradingRewards.eopchStatus.ended": "Handelsbeloningen zijn beëindigd. U kunt uw eerdere beloningen blijven opeisen.",
   "tradingRewards.eopchStatus.linkDescription": "Blijf op de hoogte voor meer updates.",
   "tradingView.timeInterval.1m": "1m",

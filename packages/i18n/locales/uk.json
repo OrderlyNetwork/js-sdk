@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "Початок",
   "tradingRewards.rewardHistory.column.endDate": "Кінець",
   "tradingRewards.epochPauseCountdown.title": "Торгові винагороди відновляться через",
-  "tradingRewards.eopchStatus.pause": "Торгові винагороди призупинені до подальшого повідомлення. Ви можете продовжувати отримувати свої минулі винагороди.",
+  "tradingRewards.eopchStatus.pause": "Торгові винагороди призупинені, поки ми створюємо кращу програму. Минулі винагороди залишаються доступними для отримання.",
   "tradingRewards.eopchStatus.ended": "Торгові винагороди завершені. Ви можете продовжувати отримувати свої минулі винагороди.",
   "tradingRewards.eopchStatus.linkDescription": "Слідкуйте за оновленнями.",
   "tradingView.timeInterval.1m": "1хв",

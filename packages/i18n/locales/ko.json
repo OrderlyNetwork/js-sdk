@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "시작",
   "tradingRewards.rewardHistory.column.endDate": "종료 날짜",
   "tradingRewards.epochPauseCountdown.title": "거래 보상이",
-  "tradingRewards.eopchStatus.pause": "거래 보상이 일시 중지되었습니다. 추가 공지가 있을 때까지 기다려주세요. 이전 보상은 계속 청구할 수 있습니다.",
+  "tradingRewards.eopchStatus.pause": "더 나은 프로그램을 구축하는 동안 거래 보상이 일시 중지되었습니다. 과거 보상은 계속 청구 가능합니다.",
   "tradingRewards.eopchStatus.ended": "거래 보상이 종료되었습니다. 이전 보상은 계속 청구할 수 있습니다.",
   "tradingRewards.eopchStatus.linkDescription": "더 많은 업데이트를 기다려주세요.",
   "tradingView.timeInterval.1m": "1분",

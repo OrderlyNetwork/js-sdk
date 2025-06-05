@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "Bắt đầu",
   "tradingRewards.rewardHistory.column.endDate": "Ngày kết thúc",
   "tradingRewards.epochPauseCountdown.title": "Phần thưởng giao dịch sẽ tiếp tục trong",
-  "tradingRewards.eopchStatus.pause": "Phần thưởng giao dịch đang tạm dừng cho đến khi có thông báo mới. Bạn vẫn có thể nhận phần thưởng trong quá khứ.",
+  "tradingRewards.eopchStatus.pause": "Phần thưởng giao dịch đang tạm dừng khi chúng tôi xây dựng chương trình tốt hơn. Các phần thưởng trong quá khứ vẫn có thể yêu cầu.",
   "tradingRewards.eopchStatus.ended": "Phần thưởng giao dịch đã kết thúc. Bạn vẫn có thể nhận phần thưởng trong quá khứ.",
   "tradingRewards.eopchStatus.linkDescription": "Hãy theo dõi để biết thêm cập nhật.",
   "tradingView.timeInterval.1m": "1p",

@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "Mulai",
   "tradingRewards.rewardHistory.column.endDate": "Tanggal akhir",
   "tradingRewards.epochPauseCountdown.title": "Hadiah trading akan dilanjutkan dalam",
-  "tradingRewards.eopchStatus.pause": "Hadiah trading dijeda sampai pemberitahuan lebih lanjut. Anda dapat terus mengklaim hadiah masa lalu Anda.",
+  "tradingRewards.eopchStatus.pause": "Hadiah trading sedang dijeda sementara kami membangun program yang lebih baik. Hadiah masa lalu tetap dapat diklaim.",
   "tradingRewards.eopchStatus.ended": "Hadiah trading telah berakhir. Anda dapat terus mengklaim hadiah masa lalu Anda.",
   "tradingRewards.eopchStatus.linkDescription": "Pantau terus untuk pembaruan lebih lanjut.",
   "tradingView.timeInterval.1m": "1m",

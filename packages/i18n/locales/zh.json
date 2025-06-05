@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "开始",
   "tradingRewards.rewardHistory.column.endDate": "结束日期",
   "tradingRewards.epochPauseCountdown.title": "交易奖励将在",
-  "tradingRewards.eopchStatus.pause": "交易奖励已暂停，恢复时间另行通知。您可以继续领取过去的奖励。",
+  "tradingRewards.eopchStatus.pause": "交易奖励计划暂停，我们正在构建更好的方案。过去的奖励仍然可以领取。",
   "tradingRewards.eopchStatus.ended": "交易奖励已结束。您可以继续领取过去的奖励。",
   "tradingRewards.eopchStatus.linkDescription": "请继续关注更多更新。",
   "tradingView.timeInterval.1m": "1分",

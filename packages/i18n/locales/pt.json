@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "Início",
   "tradingRewards.rewardHistory.column.endDate": "Data fim",
   "tradingRewards.epochPauseCountdown.title": "As recompensas de trading serão retomadas em",
-  "tradingRewards.eopchStatus.pause": "As recompensas de trading estão pausadas até novo aviso. Você pode continuar a reivindicar suas recompensas anteriores.",
+  "tradingRewards.eopchStatus.pause": "As recompensas de trading estão em pausa enquanto construímos um programa melhor. As recompensas passadas continuam resgatáveis.",
   "tradingRewards.eopchStatus.ended": "As recompensas de trading terminaram. Você pode continuar a reivindicar suas recompensas anteriores.",
   "tradingRewards.eopchStatus.linkDescription": "Fique atento para mais atualizações.",
   "tradingView.timeInterval.1m": "1m",

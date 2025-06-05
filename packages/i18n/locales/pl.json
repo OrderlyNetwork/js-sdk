@@ -447,7 +447,7 @@
   "tradingRewards.rewardHistory.column.startDate": "Rozpoczęcie",
   "tradingRewards.rewardHistory.column.endDate": "Data zakończenia",
   "tradingRewards.epochPauseCountdown.title": "Nagrody za handel zostaną wznowione za",
-  "tradingRewards.eopchStatus.pause": "Nagrody za handel są wstrzymane do odwołania. Możesz nadal odbierać swoje poprzednie nagrody.",
+  "tradingRewards.eopchStatus.pause": "Nagrody za handel są wstrzymane, podczas gdy budujemy lepszy program. Poprzednie nagrody pozostają do odebrania.",
   "tradingRewards.eopchStatus.ended": "Nagrody za handel zakończyły się. Możesz nadal odbierać swoje poprzednie nagrody.",
   "tradingRewards.eopchStatus.linkDescription": "Obserwuj nas, aby otrzymywać więcej aktualizacji.",
   "tradingView.timeInterval.1m": "1m",
