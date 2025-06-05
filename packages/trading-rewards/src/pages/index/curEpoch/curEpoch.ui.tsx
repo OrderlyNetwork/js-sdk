@@ -265,7 +265,7 @@ const Statics: FC<{
         </Text.gradient>
         <Text
           intensity={80}
-          className="oui-text-2xs md:oui-text-xs xl:oui-text-sm oui-mb-[3px]"
+          className="oui-mb-[3px] oui-text-2xs md:oui-text-xs xl:oui-text-sm"
         >
           {text}
         </Text>
@@ -318,7 +318,7 @@ const Countdown: FC<{
 
   const num = (value: string) => {
     return (
-      <Text className="oui-text-base-contrast oui-text-sm md:oui-text-base lg:oui-text-lg ">
+      <Text className="oui-text-sm oui-text-base-contrast md:oui-text-base lg:oui-text-lg ">
         {value}
       </Text>
     );
@@ -326,7 +326,7 @@ const Countdown: FC<{
 
   return (
     <Box
-      className="oui-rounded-t-2xl oui-text-base-contrast-54 oui-font-semibold"
+      className="oui-rounded-t-2xl oui-font-semibold oui-text-base-contrast-54"
       gradient={isStandalone ? undefined : "neutral"}
       angle={180}
       width={"full"}
@@ -358,7 +358,7 @@ const Countdown: FC<{
 
 const CountDownNum = (props: { children?: ReactNode }) => {
   return (
-    <Text className="oui-text-base-contrast oui-text-sm md:oui-text-base lg:oui-text-lg ">
+    <Text className="oui-text-sm oui-text-base-contrast md:oui-text-base lg:oui-text-lg ">
       {props.children}
     </Text>
   );
@@ -429,10 +429,10 @@ const TwitterLInk: FC = () => {
       className="oui-group oui-cursor-pointer oui-fill-base-contrast-36 oui-text-sm  oui-text-base-contrast-36 group-hover:oui-text-base-contrast-80"
       onClick={() => window.open("https://x.com/OrderlyNetwork")}
     >
-      <div className="oui-cursor-pointer oui-fill-base-contrast-36 oui-text-sm oui-text-base-contrast-36  hover:oui-text-base-contrast-80">
+      <div className="oui-cursor-pointer oui-fill-base-contrast-36 oui-text-sm oui-text-base-contrast-36  group-hover:oui-text-base-contrast-80">
         {t("tradingRewards.eopchStatus.linkDescription")}
       </div>
-      <ArrowRightIcon className="oui-text-fill-base-contrast-36 group-hover:oui-fill-base-contrast-80  oui-fill-base-contrast-36" />
+      <ArrowRightIcon className="oui-text-fill-base-contrast-36 oui-fill-base-contrast-36  group-hover:oui-fill-base-contrast-80" />
     </Flex>
   );
 };
