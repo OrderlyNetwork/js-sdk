@@ -1,15 +1,19 @@
 import { FC } from "react";
-import { useLeaderboardScript } from "./leaderboard.script";
-import { Leaderboard, LeaderboardProps } from "./leaderboard.ui";
 import {
   TradingLeaderboardProvider,
   TradingLeaderboardProviderProps,
 } from "../../components/provider";
 import { MobileLeaderboardWidget } from "./leaderboard.mobile.ui";
+import { useLeaderboardScript } from "./leaderboard.script";
+import { Leaderboard, LeaderboardProps } from "./leaderboard.ui";
 
 export type LeaderboardWidgetProps = TradingLeaderboardProviderProps &
   Pick<LeaderboardProps, "style" | "className">;
 
+/**
+ * @deprecated use LeaderboardPage instead
+ * it will be removed in next version
+ */
 export const LeaderboardWidget: FC<LeaderboardWidgetProps> = (props) => {
   const state = useLeaderboardScript({
     backgroundSrc: props.backgroundSrc,

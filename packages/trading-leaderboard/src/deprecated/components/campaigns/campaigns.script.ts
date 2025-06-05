@@ -3,7 +3,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { useTrack } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { TrackerEventName } from "@orderly.network/types";
-import { formatCampaignDate } from "../../utils";
+import { formatCampaignDate } from "../../../utils";
 import { useTradingLeaderboardContext, Campaign } from "../provider";
 
 export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { cn, Flex } from "@orderly.network/ui";
-import { TradingListWidget } from "../../components/tradingList/widget";
-import { CampaignsWidget } from "../../components/campaigns";
+import { DeprecatedCampaignsWidget } from "../../components/campaigns";
+import { DeprecatedTradingListWidget } from "../../components/tradingList";
 import { LeaderboardScriptReturn } from "./leaderboard.script";
 
 export type LeaderboardProps = {
@@ -19,7 +19,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
         <div
           className={cn(
             "oui-absolute oui-top-0 oui-left-0",
-            "oui-w-full oui-h-full"
+            "oui-w-full oui-h-full",
           )}
         >
           <div
@@ -30,7 +30,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
             }}
             className={cn(
               "oui-absolute oui-top-0 oui-left-0",
-              "oui-w-full oui-h-full"
+              "oui-w-full oui-h-full",
             )}
           />
           <video
@@ -43,7 +43,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
               "oui-w-full oui-h-full",
               // "oui-absolute oui-top-0 oui-left-0",
               "oui-object-cover",
-              "oui-opacity-50"
+              "oui-opacity-50",
             )}
           >
             <source src={props.backgroundSrc} type="video/mp4" />
@@ -67,7 +67,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
           className={cn(
             "oui-absolute oui-top-0 oui-left-0",
             "oui-w-full oui-h-full",
-            "oui-opacity-50"
+            "oui-opacity-50",
           )}
         />
       );
@@ -86,15 +86,15 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
         height="100%"
         className={cn(
           "oui-trading-leaderboard oui-relative",
-          "oui-max-w-[1040px] oui-px-3 oui-mx-auto "
+          "oui-max-w-[1040px] oui-px-3 oui-mx-auto ",
         )}
       >
-        {props.showCampaigns && <CampaignsWidget />}
-        <TradingListWidget
+        {props.showCampaigns && <DeprecatedCampaignsWidget />}
+        <DeprecatedTradingListWidget
           className={cn(
             props.showCampaigns
               ? "oui-h-[calc(100%_-_288px_-_20px)]"
-              : "oui-h-full"
+              : "oui-h-full",
           )}
         />
       </Flex>

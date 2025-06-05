@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { cn, Flex } from "@orderly.network/ui";
-import { CampaignsWidget } from "../../components/campaigns";
-import { TradingListWidget } from "../../components/tradingList/widget";
+import { DeprecatedCampaignsWidget } from "../../components/campaigns";
+import { DeprecatedTradingListWidget } from "../../components/tradingList";
 import { LeaderboardScriptReturn } from "./leaderboard.script";
 
 export type LeaderboardProps = {
@@ -100,8 +100,8 @@ export const MobileLeaderboardWidget: FC<LeaderboardProps> = (props) => {
           "oui-relative oui-h-[calc(100vh_-_64px)]",
         )}
       >
-        {props.showCampaigns && <CampaignsWidget />}
-        <TradingListWidget />
+        {props.showCampaigns && <DeprecatedCampaignsWidget />}
+        <DeprecatedTradingListWidget />
       </Flex>
     </div>
   );

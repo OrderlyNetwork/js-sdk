@@ -1,7 +1,7 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn, Box, Text, Flex, Button, Select } from "@orderly.network/ui";
 import { CampaignsScriptReturn, CurrentCampaigns } from "./campaigns.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type CampaignsProps = {
   className?: string;
@@ -23,7 +23,7 @@ export const MobileCampaigns: FC<CampaignsProps> = (props) => {
       p={3}
       className={cn(
         "oui-mobile-trading-leaderboard-campaigns oui-rounded-[20px]",
-        props.className
+        props.className,
       )}
       style={props.style}
     >
@@ -34,7 +34,7 @@ export const MobileCampaigns: FC<CampaignsProps> = (props) => {
         ref={props.enableScroll ? props.emblaRef : undefined}
         className={cn(
           "oui-w-full oui-min-w-0 oui-overflow-hidden",
-          "oui-select-none oui-cursor-pointer"
+          "oui-select-none oui-cursor-pointer",
         )}
       >
         <Flex>
@@ -176,7 +176,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
         className={cn(
           "oui-absolute oui-left-0 oui-top-0",
           "oui-transition-all oui-duration-300",
-          "oui-bg-primary"
+          "oui-bg-primary",
         )}
         style={{
           transform: `translateX(${scrollIndex * scrollIndicatorWidth}px)`,
