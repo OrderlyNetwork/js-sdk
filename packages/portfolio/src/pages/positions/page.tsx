@@ -35,11 +35,7 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
 
   const subAccounts = state.subAccounts ?? [];
 
-  const [selectedAccount, setAccount] = React.useState<string>(() =>
-    Array.isArray(subAccounts) && subAccounts.length
-      ? AccountType.ALL
-      : AccountType.MAIN,
-  );
+  const [selectedAccount, setAccount] = React.useState<string>(AccountType.ALL);
 
   const onAccountFilter = React.useCallback(
     (filter: { name: string; value: string }) => {
@@ -72,7 +68,7 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
         })),
       ];
     }
-    return [MAIN_ACCOUNT];
+    return [ALL_ACCOUNTS, MAIN_ACCOUNT];
   }, [subAccounts]);
 
   return (

@@ -55,7 +55,7 @@ export const TransferHistoryUI: React.FC<
         })),
       ];
     }
-    return [MAIN_ACCOUNT];
+    return [ALL_ACCOUNTS, MAIN_ACCOUNT];
   }, [subAccounts]);
 
   const columns = useColumns();

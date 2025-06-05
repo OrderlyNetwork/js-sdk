@@ -62,11 +62,7 @@ export const useAssetsScript = () => {
     setVisible((visible: boolean) => !visible);
   };
 
-  const [selectedAccount, setAccount] = React.useState<string>(() =>
-    Array.isArray(subAccounts) && subAccounts.length
-      ? AccountType.ALL
-      : AccountType.MAIN,
-  );
+  const [selectedAccount, setAccount] = React.useState<string>(AccountType.ALL);
 
   const allAccounts = useMemo(() => {
     return produce<any[]>(subAccounts, (draft) => {

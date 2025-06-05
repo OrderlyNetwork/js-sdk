@@ -24,13 +24,7 @@ export const useTransferHistoryHook = () => {
 
   const { state } = useAccount();
 
-  const subAccounts = state.subAccounts ?? [];
-
-  const [selectedAccount, setAccount] = React.useState<string>(() =>
-    Array.isArray(subAccounts) && subAccounts.length
-      ? AccountType.ALL
-      : AccountType.MAIN,
-  );
+  const [selectedAccount, setAccount] = React.useState<string>(AccountType.ALL);
 
   const [side, setSide] = React.useState<"IN" | "OUT">("OUT");
 

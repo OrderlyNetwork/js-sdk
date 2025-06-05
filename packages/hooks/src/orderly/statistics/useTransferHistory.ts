@@ -10,11 +10,10 @@ interface TransferHistorySearchParams {
   fromId?: string;
   toId?: string;
   side: "IN" | "OUT";
-  mainSubOnly?: boolean;
 }
 
 export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
-  const { dataRange, page, size, side, fromId, toId, mainSubOnly } = parmas;
+  const { dataRange, page, size, side, fromId, toId } = parmas;
 
   const infos = useSymbolsInfo();
 
@@ -23,11 +22,7 @@ export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
     search.set("page", page.toString());
     search.set("size", size.toString());
     search.set("side", side);
-    // search.set("from_account_id", fromId);
-    // search.set("to_account_id", toId);
-    if (typeof mainSubOnly === "boolean") {
-      search.set("main_sub_only", mainSubOnly.toString());
-    }
+    search.set("main_sub_only", `${true}`);
     if (dataRange) {
       search.set("start_t", dataRange[0].toString());
       search.set("end_t", dataRange[1].toString());

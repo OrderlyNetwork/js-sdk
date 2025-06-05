@@ -103,7 +103,7 @@ export const AssetsTable: React.FC<
         })),
       ];
     }
-    return [MAIN_ACCOUNT];
+    return [ALL_ACCOUNTS, MAIN_ACCOUNT];
   }, [subAccounts]);
 
   return (
