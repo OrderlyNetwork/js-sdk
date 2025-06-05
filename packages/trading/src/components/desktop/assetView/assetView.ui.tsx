@@ -386,7 +386,7 @@ export const AssetView: FC<AssetViewState> = ({
         networkId={networkId}
         buttonProps={{ size: "md", fullWidth: true }}
       >
-        {isFirstTimeDeposit ? (
+        {isFirstTimeDeposit && isMainAccount ? (
           <>
             <Box>
               <Flex direction="column" gap={1} className="oui-mb-[32px]">
