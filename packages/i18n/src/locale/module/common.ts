@@ -90,4 +90,5 @@ export const common = {
   "common.allAccount": "All accounts",
   "common.mainAccount": "Main account",
   "common.subAccount": "Sub account",
+  "common.settings": "Settings",
 };

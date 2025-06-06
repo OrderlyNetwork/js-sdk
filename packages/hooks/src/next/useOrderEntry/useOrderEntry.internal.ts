@@ -351,14 +351,15 @@ const useOrderEntryNextInternal = (
   const validate = (
     order: Partial<OrderlyOrder>,
     creator: OrderCreator<any>,
-    options: { maxQty: number; markPrice: number },
+    options: { maxQty: number; markPrice: number; estSlippage?: number | null },
   ) => {
-    const { markPrice, maxQty } = options;
+    const { markPrice, maxQty, estSlippage } = options;
 
     return creator?.validate(order, {
       symbol: symbolInfo!,
       maxQty,
       markPrice,
+      estSlippage,
     });
   };
 
