@@ -67,6 +67,7 @@ export const en = {
   "common.type": "Type",
   "common.notional": "Notional",
   "common.fee": "Fee",
+  "common.fees": "Fees",
 
   "common.avgPrice": "Avg. price",
   "common.avgOpen": "Avg. open",
@@ -105,6 +106,8 @@ export const en = {
   "common.affiliate": "Affiliate",
   "common.tradingRewards": "Trading rewards",
   "common.trading": "Trading",
+  "common.settings": "Settings",
+
   "assetHistory.status.pending": "Pending",
   "assetHistory.status.confirm": "Confirm",
   "assetHistory.status.processing": "Processing",
@@ -150,7 +153,7 @@ export const en = {
   "languageSwitcher.tips":
     "AI-generated translations may not be fully accurate.",
 
-  "announcement.type.listing": "Listing",
+  "announcement.type.listing": "New Listings",
   "announcement.type.maintenance": "Maintenance",
   "announcement.type.delisting": "Delisting",
 

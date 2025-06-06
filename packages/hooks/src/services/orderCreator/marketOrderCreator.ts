@@ -21,8 +21,26 @@ export class MarketOrderCreator extends BaseOrderCreator<OrderEntity> {
   }
   validate(
     values: OrderFormEntity,
-    configs: ValuesDepConfig
+    configs: ValuesDepConfig,
   ): Promise<OrderValidationResult> {
-    return this.baseValidate(values, configs);
+    // console.log("validate", values, configs);
+    return this.baseValidate(values, configs).then((result) => {
+      const slippage = Number(values.slippage);
+      const estSlippage = Number.isNaN(configs.estSlippage)
+        ? 0
+        : Number(configs.estSlippage) * 100;
+      if (!isNaN(slippage) && estSlippage > slippage) {
+        return {
+          ...result,
+          slippage: {
+            type: "max",
+            message:
+              "Estimated slippage exceeds your maximum allowed slippage.",
+            value: estSlippage,
+          },
+        };
+      }
+      return result;
+    });
   }
 }

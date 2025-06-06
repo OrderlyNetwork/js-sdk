@@ -97,8 +97,8 @@ export function ConnectDrawer(props: {
           }}
         />
       )}
-      <div className="oui-relative oui-z-10">
-        <div className="oui-mb-4 oui-flex oui-items-center oui-justify-between md:oui-mb-5">
+      <div className="oui-relative oui-z-10 oui-flex oui-h-full oui-flex-col oui-gap-4 md:oui-gap-5">
+        <div className="oui-flex oui-flex-none oui-items-center oui-justify-between">
           {renderHeader()}
           <CloseIcon
             className="oui-size-5 oui-cursor-pointer oui-text-base-contrast-20 hover:oui-text-base-contrast-80"
@@ -106,25 +106,25 @@ export function ConnectDrawer(props: {
           />
         </div>
         {isConnected ? <MyWallet /> : <RenderConnector />}
-      </div>
 
-      {!isConnected && termsOfUse && (
-        <div className="oui-relative oui-z-10 oui-text-center oui-text-2xs oui-font-semibold  oui-text-base-contrast-80">
-          {/* @ts-ignore */}
-          <Trans
-            i18nKey="connector.privy.termsOfUse"
-            components={[
-              <a
-                key="termsOfUse"
-                href={termsOfUse}
-                className="oui-cursor-pointer oui-text-primary oui-underline"
-                target="_blank"
-                rel="noreferrer"
-              />,
-            ]}
-          />
-        </div>
-      )}
+        {!isConnected && termsOfUse && (
+          <div className="oui-flex-none oui-text-center oui-text-2xs oui-font-semibold  oui-text-base-contrast-80">
+            {/* @ts-ignore */}
+            <Trans
+              i18nKey="connector.privy.termsOfUse"
+              components={[
+                <a
+                  key="termsOfUse"
+                  href={termsOfUse}
+                  className="oui-cursor-pointer oui-text-primary oui-underline"
+                  target="_blank"
+                  rel="noreferrer"
+                />,
+              ]}
+            />
+          </div>
+        )}
+      </div>
     </Drawer>
   );
 }
