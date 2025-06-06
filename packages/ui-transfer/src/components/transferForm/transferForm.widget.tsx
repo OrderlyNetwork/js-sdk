@@ -1,11 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import {
-  registerSimpleDialog,
-  TabPanel,
-  Tabs,
-  ArrowLeftRightSquareFill,
-} from "@orderly.network/ui";
+import { i18n } from "@orderly.network/i18n";
+import { registerSimpleDialog } from "@orderly.network/ui";
 import { registerSimpleSheet } from "@orderly.network/ui";
 import {
   TransferFormScriptOptions,
@@ -27,29 +22,8 @@ export const TransferFormWidget = (props: TransferFormWidgetProps) => {
 };
 
 export const TransferWidget: FC<TransferFormWidgetProps> = (props) => {
-  const { t } = useTranslation();
-
   return (
-    <Tabs
-      value="transfer"
-      variant="contained"
-      size="lg"
-      classNames={{
-        tabsList: "oui-px-0",
-        tabsContent: "oui-pt-5",
-      }}
-    >
-      <TabPanel
-        title={t("common.transfer")}
-        icon={<ArrowLeftRightSquareFill />}
-        value="transfer"
-      >
-        <TransferFormWidget
-          close={props.close}
-          toAccountId={props.toAccountId}
-        />
-      </TabPanel>
-    </Tabs>
+    <TransferFormWidget close={props.close} toAccountId={props.toAccountId} />
   );
 };
 
@@ -58,6 +32,9 @@ registerSimpleDialog(TransferDialogId, TransferWidget, {
   classNames: {
     content: "oui-border oui-border-line-6",
   },
+  title: () => i18n.t("common.transfer"),
 });
 
-registerSimpleSheet(TransferSheetId, TransferWidget);
+registerSimpleSheet(TransferSheetId, TransferWidget, {
+  title: () => i18n.t("common.transfer"),
+});
