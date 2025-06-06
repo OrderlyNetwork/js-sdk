@@ -6,7 +6,7 @@ import { useFeesScript } from "./fees.script";
 
 export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
   const { t } = useTranslation();
-  const { taker, maker } = props;
+  const { takerFeeRate, makerFeeRate } = props;
   return (
     <Flex justify={"between"}>
       <Text size="2xs">{t("common.fees")}</Text>
@@ -21,12 +21,12 @@ export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
         <Flex gap={1}>
           <Text size="2xs">{t("portfolio.feeTier.column.taker")}:</Text>
           <Text size="2xs" className="oui-text-base-contrast-80">
-            {taker}%
+            {takerFeeRate}
           </Text>
           <Text size="2xs">/</Text>
           <Text size="2xs">{t("portfolio.feeTier.column.maker")}:</Text>
           <Text size="2xs" className="oui-text-base-contrast-80">
-            {maker}%
+            {makerFeeRate}
           </Text>
         </Flex>
       </AuthGuard>
