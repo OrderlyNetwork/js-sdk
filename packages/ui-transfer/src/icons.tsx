@@ -78,23 +78,6 @@ export const RefreshIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const TransferHorizontalIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    width="14"
-    height="15"
-    viewBox="0 0 14 15"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M1.745 4.578a2.333 2.333 0 0 1 2.333-2.333h5.833a2.333 2.333 0 0 1 2.334 2.333v5.833a2.333 2.333 0 0 1-2.334 2.334H4.078a2.333 2.333 0 0 1-2.333-2.334zM6.5 6a.5.5 0 0 0 0 1H9v1.5l2-2-2-2V6zm1 2a.5.5 0 0 1 0 1H5v1.5l-2-2 2-2V8z"
-    />
-  </svg>
-);
-
 export const TransferVerticalIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="20"

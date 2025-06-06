@@ -6,6 +6,7 @@ import {
   ArrowDownSquareFillIcon,
   ArrowUpSquareFillIcon,
   CalendarMinusIcon,
+  ArrowLeftRightIcon,
 } from "@orderly.network/ui";
 import { RouterAdapter } from "@orderly.network/ui-scaffold";
 import { PortfolioLeftSidebarPath } from "../../../layout";
@@ -76,7 +77,7 @@ export const PortfolioHandleMobile: FC<Props> = (props) => {
           onClick={props?.onTransfer}
         >
           <div className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9">
-            <ArrowUpSquareFillIcon size={28} color="white" opacity={1} />
+            <ArrowLeftRightIcon size={28} color="white" opacity={1} />
           </div>
           <Text className="oui-text-base-80 oui-text-2xs">
             {t("common.transfer")}

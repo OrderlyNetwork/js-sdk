@@ -1,8 +1,12 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { registerSimpleDialog, TabPanel, Tabs } from "@orderly.network/ui";
+import {
+  registerSimpleDialog,
+  TabPanel,
+  Tabs,
+  ArrowLeftRightSquareFill,
+} from "@orderly.network/ui";
 import { registerSimpleSheet } from "@orderly.network/ui";
-import { TransferHorizontalIcon } from "../../icons";
 import {
   TransferFormScriptOptions,
   useTransferFormScript,
@@ -37,7 +41,7 @@ export const TransferWidget: FC<TransferFormWidgetProps> = (props) => {
     >
       <TabPanel
         title={t("common.transfer")}
-        icon={<TransferHorizontalIcon />}
+        icon={<ArrowLeftRightSquareFill />}
         value="transfer"
       >
         <TransferFormWidget
