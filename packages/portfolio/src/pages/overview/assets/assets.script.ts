@@ -14,11 +14,13 @@ import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
 import {
   DepositAndWithdrawWithDialogId,
   DepositAndWithdrawWithSheetId,
+  TransferDialogId,
+  TransferSheetId,
 } from "@orderly.network/ui-transfer";
 
 export const useAssetScript = () => {
   const { connect, namespace } = useWalletConnector();
-  const { state } = useAccount();
+  const { state, isMainAccount } = useAccount();
   const { totalValue, freeCollateral } = useCollateral();
   const { wrongNetwork, disabledConnect } = useAppContext();
   const [data] = usePositionStream();
@@ -46,9 +48,17 @@ export const useAssetScript = () => {
     modal.show(handleDomId, { activeTab: "deposit" });
   }, [handleDomId]);
 
-  const onWithdraw = () => {
+  const onWithdraw = useCallback(() => {
     modal.show(handleDomId, { activeTab: "withdraw" });
-  };
+  }, []);
+
+  const onTransfer = useCallback(() => {
+    if (isMobile) {
+      modal.show(TransferSheetId);
+    } else {
+      modal.show(TransferDialogId);
+    }
+  }, [isMobile]);
 
   return {
     canTrade,
@@ -64,8 +74,10 @@ export const useAssetScript = () => {
     toggleVisible: () => setVisible(!visible),
     onDeposit,
     onWithdraw,
+    onTransfer,
     namespace,
+    isMainAccount,
   } as const;
 };
 
-export type UseAssetScriptReturn = ReturnType<typeof useAssetScript>;
+export type AssetScriptReturn = ReturnType<typeof useAssetScript>;

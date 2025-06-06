@@ -439,7 +439,7 @@ export const AssetView: FC<AssetViewState> = ({
                 transferButton
               )}
             </Flex>
-            <FaucetWidget />
+            {isMainAccount && <FaucetWidget />}
           </Box>
         )}
       </AuthGuard>

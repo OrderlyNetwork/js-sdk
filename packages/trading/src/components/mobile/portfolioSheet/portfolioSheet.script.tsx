@@ -10,11 +10,14 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { modal, SliderMarks, toast } from "@orderly.network/ui";
-import { DepositAndWithdrawWithSheetId } from "@orderly.network/ui-transfer";
+import {
+  DepositAndWithdrawWithSheetId,
+  TransferSheetId,
+} from "@orderly.network/ui-transfer";
 import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
 
 export const usePortfolioSheetScript = () => {
-  const { account } = useAccount();
+  const { account, isMainAccount } = useAccount();
   const assets = useAssets();
   const marginRatio = useMarginRatioAndLeverage();
   const ee = useEventEmitter();
@@ -65,6 +68,10 @@ export const usePortfolioSheetScript = () => {
     });
   }, []);
 
+  const onTransfer = useCallback(() => {
+    modal.show(TransferSheetId);
+  }, []);
+
   return {
     ...assets,
     ...marginRatio,
@@ -73,6 +80,8 @@ export const usePortfolioSheetScript = () => {
     onWithdraw,
     showSliderTip,
     setShowSliderTip,
+    isMainAccount,
+    onTransfer,
   };
 };
 
