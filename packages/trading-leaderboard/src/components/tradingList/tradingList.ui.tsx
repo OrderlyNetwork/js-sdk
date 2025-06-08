@@ -1,5 +1,12 @@
 import { FC, useCallback } from "react";
-import { cn, DataTable, Flex, TanstackColumn } from "@orderly.network/ui";
+import {
+  cn,
+  DataTable,
+  Flex,
+  Spinner,
+  TanstackColumn,
+  useScreen,
+} from "@orderly.network/ui";
 import { useTradingListColumns } from "./column";
 import {
   getCurrentAddressRowKey,
@@ -14,18 +21,29 @@ export type TradingListProps = {
 
 export const TradingList: FC<TradingListProps> = (props) => {
   const column = useTradingListColumns(props.address);
+  const { isMobile } = useScreen();
 
   const onRow = useCallback(
     (record: TradingData, index: number) => {
+      const isYou = record.key === getCurrentAddressRowKey(props.address!);
+      const isFirst = record.rank === 1 && !isYou;
+      const isSecond = record.rank === 2;
+      const isThird = record.rank === 3;
+
+      const showBg = isFirst || isSecond || isThird;
+
       return {
         className: cn(
           "oui-h-[48px]",
-          record.rank === 1 &&
-            record.key !== getCurrentAddressRowKey(props.address!) &&
+          // use oui-relative to let the background image position based on row
+          "oui-relative",
+          (showBg || isYou) && "oui-border-b-2 oui-border-b-transparent",
+          isYou && "oui-h-[52px]",
+          isFirst &&
             "oui-bg-[linear-gradient(270deg,rgba(241,215,121,0.0225)_-2.05%,rgba(255,203,70,0.45)_100%)]",
-          record.rank === 2 &&
+          isSecond &&
             "oui-bg-[linear-gradient(270deg,rgba(255,255,255,0.0225)_-2.05%,rgba(199,199,199,0.45)_100%)]",
-          record.rank === 3 &&
+          isThird &&
             "oui-bg-[linear-gradient(270deg,rgba(255,233,157,0.0225)_-1.3%,rgba(160,101,46,0.45)_100%)]",
         ),
       };
@@ -39,63 +57,91 @@ export const TradingList: FC<TradingListProps> = (props) => {
       record: TradingData,
       index: number,
     ) => {
-      const isFirst = column.getIsFirstColumn();
-      const isLast = column.getIsLastColumn();
+      const isFirstColumn = column.getIsFirstColumn();
+      const isLastColumn = column.getIsLastColumn();
+      const isRank = [1, 2, 3].includes(record.rank as number);
       if (record.key === getCurrentAddressRowKey(props.address!)) {
         return {
           className: cn(
             "after:oui-absolute after:oui-h-[48px] after:oui-w-full",
             "after:oui-border-[rgb(var(--oui-gradient-brand-start))]",
-            "after:oui-left-0 after:oui-top-0 after:oui-z-[-1]",
+            "after:oui-left-0 after:oui-top-[2px] after:oui-z-[-1]",
             "after:oui-border-y",
-            isFirst && "after:oui-rounded-l-lg after:oui-border-l",
-            isLast && "after:oui-rounded-r-lg after:oui-border-r",
+            isFirstColumn && "after:oui-rounded-l-lg after:oui-border-l",
+            isLastColumn && "after:oui-rounded-r-lg after:oui-border-r",
           ),
         };
       }
       return {
         className: cn(
-          isFirst &&
-            [1, 2, 3].includes(record.rank as number) &&
-            "oui-rounded-l-lg oui-mix-blend-luminosity",
-          isLast &&
-            [1, 2, 3].includes(record.rank as number) &&
-            "oui-rounded-r-lg",
+          isFirstColumn && isRank && "oui-rounded-l-lg",
+          isLastColumn && isRank && "oui-rounded-r-lg",
         ),
+        style: isRank
+          ? {
+              position: "unset",
+            }
+          : undefined,
       };
     },
     [props.address],
   );
 
+  if (isMobile) {
+    return (
+      <>
+        <DataTable
+          classNames={{
+            body: "oui-text-2xs",
+            scroll: "oui-overflow-y-hidden oui-h-full",
+          }}
+          loading={props.isLoading}
+          columns={column}
+          bordered
+          initialSort={props.initialSort}
+          onSort={props.onSort}
+          dataSource={props.dataList}
+          generatedRowKey={(record: TradingData) =>
+            record.key || record.address
+          }
+          manualPagination
+          manualSorting
+          onRow={onRow}
+          onCell={onCell}
+        />
+        <div
+          ref={props.sentinelRef}
+          className="oui-invisible oui-relative oui-top-[-300px] oui-h-px"
+        />
+        {props.isLoading && props.dataList.length > 0 && (
+          <Flex itemAlign="center" justify="center" width="100%" height={40}>
+            <Spinner size="sm" />
+          </Flex>
+        )}
+      </>
+    );
+  }
+
   return (
-    <Flex
-      direction="column"
-      width="100%"
-      itemAlign="start"
-      intensity={900}
-      r="2xl"
-      px={4}
-      style={props.style}
-      className={cn("oui-trading-leaderboard-trading-list", props.className)}
-    >
-      <DataTable
-        loading={props.isLoading}
-        id="oui-trading-leaderboard-trading-table"
-        columns={column}
-        initialSort={props.initialSort}
-        onSort={props.onSort}
-        bordered
-        dataSource={props.dataSource}
-        generatedRowKey={(record: TradingData) => record.key || record.address}
-        manualPagination
-        manualSorting
-        pagination={props.pagination}
-        classNames={{
-          root: "!oui-h-[calc(100%_-_53px_-_8px)]",
-        }}
-        onRow={onRow}
-        onCell={onCell}
-      />
-    </Flex>
+    <DataTable
+      loading={props.isLoading}
+      columns={column}
+      initialSort={props.initialSort}
+      onSort={props.onSort}
+      bordered
+      dataSource={props.dataSource}
+      generatedRowKey={(record: TradingData) => record.key || record.address}
+      manualPagination
+      manualSorting
+      pagination={props.pagination}
+      classNames={{
+        root: cn(
+          "oui-trading-leaderboard-trading-table",
+          "!oui-h-[calc(100%_-_53px_-_8px)]",
+        ),
+      }}
+      onRow={onRow}
+      onCell={onCell}
+    />
   );
 };

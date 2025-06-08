@@ -10,6 +10,7 @@ import {
   Text,
   useScreen,
 } from "@orderly.network/ui";
+import { ScrollIndicator } from "@orderly.network/ui";
 import { FilterDays, LeaderboardScriptReturn } from "../leaderboard.script";
 
 export type TradingFilterProps = LeaderboardScriptReturn;
@@ -91,11 +92,16 @@ export const TradingFilter: FC<TradingFilterProps> = (props) => {
         justify="between"
         itemAlign="center"
         direction="column"
-        mt={2}
+        mt={3}
         className={cn("oui-mobile-trading-leaderboard-trading-filter")}
       >
         {input}
-        {dateRangeView}
+        <Flex gap={3} className="oui-w-full">
+          {dateRangeView}
+          <ScrollIndicator className="oui-w-full">
+            <Flex gap={3}>{filterDayView}</Flex>
+          </ScrollIndicator>
+        </Flex>
       </Flex>
     );
   }
@@ -105,11 +111,7 @@ export const TradingFilter: FC<TradingFilterProps> = (props) => {
       width="100%"
       justify="between"
       itemAlign="center"
-      mt={2}
-      className={cn(
-        "oui-trading-leaderboard-trading-filter",
-        "oui-border-b oui-border-line",
-      )}
+      className={cn("oui-trading-leaderboard-trading-filter")}
     >
       <Flex gap={3}>
         {dateRangeView}

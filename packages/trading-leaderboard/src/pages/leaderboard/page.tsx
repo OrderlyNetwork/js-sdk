@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { cn, useScreen } from "@orderly.network/ui";
+import { FC, ReactNode } from "react";
+import { cn, Flex, Text } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import {
   LeaderboardWidget,
@@ -13,7 +13,6 @@ export type LeaderboardPageProps = LeaderboardWidgetProps & {
 };
 
 export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
-  const { isMobile } = useScreen();
   return (
     <TradingLeaderboardProvider>
       <div
@@ -21,14 +20,23 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
           paddingBottom: "calc(64px + env(safe-area-inset-bottom))",
         }}
         className={cn(
-          "oui-relative oui-grid oui-h-[calc(100vh-44px)] oui-gap-1 oui-bg-base-10",
-          "oui-mix-blend-screen",
+          "oui-relative oui-bg-base-10",
+          "oui-font-semibold",
           props.className,
         )}
       >
         {/* <Background backgroundSrc={props.backgroundSrc} /> */}
+        <Title title="Leaderboard" />
         <LeaderboardWidget {...props} />
       </div>
     </TradingLeaderboardProvider>
+  );
+};
+
+const Title = (props: { title: ReactNode }) => {
+  return (
+    <Flex mb={6} justify="center">
+      <Text className="oui-text-[32px] oui-font-bold">{props.title}</Text>
+    </Flex>
   );
 };

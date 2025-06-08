@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { differenceInDays } from "date-fns";
 import { DateRange } from "../../type";
 import { formatDateRange, getDateRange } from "../../utils";
+import { TradingTab } from "./components/TradingTabs";
 
 export type LeaderboardScriptReturn = ReturnType<typeof useLeaderboardScript>;
 
@@ -11,12 +12,15 @@ export const FilterDays = [7, 14, 30, 90] as const;
 export type TFilterDays = (typeof FilterDays)[number];
 
 export function useLeaderboardScript(options?: LeaderboardScriptOptions) {
+  const [activeTab, setActiveTab] = useState<TradingTab>(TradingTab.Volume);
   const filterState = useFilter();
   const searchState = useSearch();
 
   return {
     ...filterState,
     ...searchState,
+    activeTab,
+    onTabChange: setActiveTab,
   };
 }
 

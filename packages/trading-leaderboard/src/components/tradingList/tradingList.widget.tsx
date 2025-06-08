@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { MobileTradingList } from "./tradingList.mobile.ui";
 import {
   TradingListScriptOptions,
   useTradingListScript,
@@ -18,10 +17,6 @@ export const TradingListWidget: FC<TradingListWidgetProps> = (props) => {
     dateRange,
     address,
   });
-
-  if (state.isMobile) {
-    return <MobileTradingList {...state} {...rest} />;
-  }
 
   return <TradingList {...state} {...rest} />;
 };

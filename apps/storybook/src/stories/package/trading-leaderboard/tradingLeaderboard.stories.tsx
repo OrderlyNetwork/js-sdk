@@ -68,7 +68,7 @@ const Container = (props: {
   return (
     <Box
       width="100%"
-      // my={5}
+      px={3}
       style={{
         minHeight: 379,
         maxHeight: 2560,
@@ -99,12 +99,12 @@ export const LayoutPage: Story = {
     return (
       <BaseLayout
         initialMenu="/leaderboard"
-        classNames={{
-          root: isDesktop ? "oui-overflow-hidden" : undefined,
-        }}
+        // classNames={{
+        //   root: isDesktop ? "oui-overflow-hidden" : undefined,
+        // }}
       >
         <Container>
-          <LeaderboardWidget {...args} className="oui-py-5" />
+          <LeaderboardPage {...args} className="oui-py-5" />
         </Container>
       </BaseLayout>
     );
@@ -119,6 +119,10 @@ export const TradingList: Story = {
 
 export const Leaderboard: Story = {
   render: (args) => {
-    return <LeaderboardWidget style={{ height: "calc(100vh - 0px)" }} />;
+    return (
+      <Box p={3}>
+        <LeaderboardWidget />
+      </Box>
+    );
   },
 };

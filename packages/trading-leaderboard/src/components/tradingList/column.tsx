@@ -34,14 +34,14 @@ export const useTradingListColumns = (address?: string) => {
           }
 
           return (
-            <div className="oui-relative">
+            <>
               {badgeImg && (
                 <img
                   src={badgeImg as string}
                   alt={`${value}th badge`}
                   className={cn(
                     "oui-z-0 oui-h-[47px] oui-opacity-30",
-                    "oui-absolute oui-left-[-12px] oui-top-[-12px]",
+                    "oui-absolute oui-left-0 oui-top-0",
                   )}
                 />
               )}
@@ -52,7 +52,7 @@ export const useTradingListColumns = (address?: string) => {
                   </Box>
                 )}
               </div>
-            </div>
+            </>
           );
         },
       },

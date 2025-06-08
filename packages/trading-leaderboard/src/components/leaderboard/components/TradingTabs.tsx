@@ -1,19 +1,39 @@
-import { TabPanel, Tabs } from "@orderly.network/ui";
+import { FC } from "react";
+import { Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
 
-export const TradingTabs = () => {
+export enum TradingTab {
+  Volume = "volume",
+  Pnl = "pnl",
+}
+
+type TradingTabsProps = {
+  activeTab: string;
+  onTabChange: (tab: TradingTab) => void;
+  isMobile?: boolean;
+};
+
+export const TradingTabs: FC<TradingTabsProps> = (props) => {
   return (
-    <Tabs
-      value={activeTab}
-      onValueChange={setActiveTab}
-      variant="contained"
-      size="lg"
-      classNames={{
-        tabsList: "oui-px-0",
-        tabsContent: "oui-pt-5",
-      }}
+    <Flex
+      width="100%"
+      pb={3}
+      justify="between"
+      className="oui-border-b oui-border-line"
     >
-      <TabPanel title={"Trading volume"} value="deposit"></TabPanel>
-      <TabPanel title={"Realized PnL"} value="withdraw"></TabPanel>
-    </Tabs>
+      <Tabs
+        value={props.activeTab}
+        onValueChange={props.onTabChange as (tab: string) => void}
+        variant="contained"
+        size="lg"
+      >
+        <TabPanel title="Trading volume" value="deposit"></TabPanel>
+        <TabPanel title="Realized PnL" value="withdraw"></TabPanel>
+      </Tabs>
+      <Text size="sm" intensity={36}>
+        {props.isMobile
+          ? "Updated hourly."
+          : "Last update: 2023-12-13 12:00 UTC"}
+      </Text>
+    </Flex>
   );
 };

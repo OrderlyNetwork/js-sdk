@@ -37,6 +37,7 @@ export type TradingListScriptReturn = ReturnType<typeof useTradingListScript>;
 export type TradingListScriptOptions = {
   dateRange?: DateRange;
   address?: string;
+  type?: "volume" | "pnl";
 };
 
 export function useTradingListScript(options?: TradingListScriptOptions) {
