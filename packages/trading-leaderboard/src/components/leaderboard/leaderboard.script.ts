@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { differenceInDays } from "date-fns";
 import { DateRange } from "../../type";
 import { formatDateRange, getDateRange } from "../../utils";
-import { TradingTab } from "./components/TradingTabs";
+import { TradingTab } from "./components/LeaderboardTabs";
 
 export type LeaderboardScriptReturn = ReturnType<typeof useLeaderboardScript>;
 

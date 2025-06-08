@@ -1,12 +1,12 @@
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Text, Column, Box, useScreen, cn } from "@orderly.network/ui";
-import firstBadge from "../../img/first_badge.png";
-import secondBadge from "../../img/second_badge.png";
-import thirdBadge from "../../img/third_badge.png";
-import { getCurrentAddressRowKey } from "./tradingList.script";
+import firstBadge from "../../../img/first_badge.png";
+import secondBadge from "../../../img/second_badge.png";
+import thirdBadge from "../../../img/third_badge.png";
+import { getCurrentAddressRowKey } from "./util";
 
-export const useTradingListColumns = (address?: string) => {
+export const useRankingColumns = (address?: string) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
@@ -92,7 +92,7 @@ export const useTradingListColumns = (address?: string) => {
       },
       {
         title: t("tradingLeaderboard.tradingVolume"),
-        dataIndex: "perp_volume",
+        dataIndex: "volume",
         onSort: true,
         render: (value: string) => {
           if (!value) {
@@ -108,7 +108,7 @@ export const useTradingListColumns = (address?: string) => {
       },
       {
         title: t("common.realizedPnl"),
-        dataIndex: "realized_pnl",
+        dataIndex: "pnl",
         onSort: true,
         align: isMobile ? "right" : "left",
         render: (value: string) => {

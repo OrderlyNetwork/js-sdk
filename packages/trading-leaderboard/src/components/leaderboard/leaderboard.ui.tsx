@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { cn, Box, useScreen } from "@orderly.network/ui";
-import { TradingListWidget } from "../tradingList";
-import { TradingFilter } from "./components/TradingFilter";
-import { TradingTabs } from "./components/TradingTabs";
+import { GeneralRankingWidget } from "../ranking/generalRanking";
+import { LeaderboardFilter } from "./components/LeaderboardFilter";
+import { LeaderboardTabs } from "./components/LeaderboardTabs";
 import { LeaderboardScriptReturn } from "./leaderboard.script";
 
 export type LeaderboardProps = {
@@ -23,14 +23,14 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
         width="100%"
         className={cn("oui-trading-leaderboard oui-relative")}
       >
-        <TradingFilter {...props} />
-        <TradingTabs
+        <LeaderboardFilter {...props} />
+        <LeaderboardTabs
           activeTab={props.activeTab}
           onTabChange={props.onTabChange}
           isMobile={isMobile}
         />
 
-        <TradingListWidget
+        <GeneralRankingWidget
           dateRange={props.dateRange}
           address={props.searchValue}
         />
@@ -49,14 +49,14 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
         "oui-mx-auto oui-max-w-[1040px] ",
       )}
     >
-      <TradingFilter {...props} />
-      <TradingTabs
+      <LeaderboardFilter {...props} />
+      <LeaderboardTabs
         activeTab={props.activeTab}
         onTabChange={props.onTabChange}
         isMobile={isMobile}
       />
 
-      <TradingListWidget
+      <GeneralRankingWidget
         dateRange={props.dateRange}
         address={props.searchValue}
       />

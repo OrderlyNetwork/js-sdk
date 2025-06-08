@@ -8,13 +8,12 @@ import {
 } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
-import { useEndReached } from "../../hooks/useEndReached";
-import { DateRange } from "../../type";
-import { formatDateRange, getDateRange } from "../../utils";
+import { useEndReached } from "../../../hooks/useEndReached";
+import { DateRange } from "../../../type";
+import { formatDateRange, getDateRange } from "../../../utils";
+import { getCurrentAddressRowKey, isSameAddress } from "../shared/util";
 
-export type TradingListScriptOptioins = {};
-
-export type TradingData = {
+export type GeneralRankingData = {
   account_id: string;
   address: string;
   broker_fee: number;
@@ -22,25 +21,30 @@ export type TradingData = {
   perp_maker_volume: number;
   perp_taker_volume: number;
   perp_volume: number;
+  realized_pnl: number;
   total_fee: number;
+
   // custom field
   key?: string;
   rank?: number | string;
+  volume?: number;
+  pnl?: number;
 };
 
-export type TradingResponse = {
+export type GeneralRankingResponse = {
   meta: API.RecordsMeta;
-  rows: TradingData[];
+  rows: GeneralRankingData[];
 };
-export type TradingListScriptReturn = ReturnType<typeof useTradingListScript>;
+export type GeneralRankingScriptReturn = ReturnType<
+  typeof useGeneralRankingScript
+>;
 
-export type TradingListScriptOptions = {
+export type GeneralRankingScriptOptions = {
   dateRange?: DateRange;
   address?: string;
-  type?: "volume" | "pnl";
 };
 
-export function useTradingListScript(options?: TradingListScriptOptions) {
+export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
   const { dateRange = getDateRange(90), address: searchValue } = options || {};
   const [initialSort] = useState<TableSort>({
     sortKey: "perp_volume",
@@ -96,7 +100,7 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
     return `/v1/broker/leaderboard/daily?${searchParams.toString()}`;
   };
 
-  const { data, isLoading } = useQuery<TradingResponse>(
+  const { data, isLoading } = useQuery<GeneralRankingResponse>(
     getUrl({ page, pageSize, address: searchValue }),
     {
       formatter: (res) => res,
@@ -109,7 +113,7 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
     size,
     setSize,
     isValidating,
-  } = useInfiniteQuery<TradingResponse>(
+  } = useInfiniteQuery<GeneralRankingResponse>(
     (pageIndex: number, previousPageData: any): string | null => {
       // reached the end
       if (previousPageData && !previousPageData.rows?.length) return null;
@@ -132,7 +136,7 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
   );
 
   // it will use first page data cache
-  const { data: top100Data } = useQuery<TradingResponse>(
+  const { data: top100Data } = useQuery<GeneralRankingResponse>(
     state.address
       ? getUrl({
           page: 1,
@@ -146,7 +150,7 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
     },
   );
 
-  const { data: userDataRes = [] } = usePrivateQuery<TradingData[]>(
+  const { data: userDataRes = [] } = usePrivateQuery<GeneralRankingData[]>(
     state.address
       ? getUrl({ page: 1, pageSize: 1, address: state.address, sort: null })
       : null,
@@ -176,7 +180,7 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
           key: getCurrentAddressRowKey(state.address!),
           address: state.address,
           rank: "-",
-        } as unknown as TradingData,
+        } as unknown as GeneralRankingData,
       ];
     }
 
@@ -188,7 +192,7 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
   }, [state.address, userDataRes, isLoading, getAddressRank]);
 
   const addRankForList = useCallback(
-    (list: TradingData[], total: number) => {
+    (list: GeneralRankingData[], total: number) => {
       return list?.map((item, index) => {
         let rank: string | number = index + 1;
 
@@ -215,10 +219,16 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
     const list = data?.rows || [];
     const total = data?.meta.total || 0;
     const rankList = addRankForList(list, total);
+    let _data = rankList;
     if (page === 1 && !searchValue) {
-      return [...userDataList, ...rankList];
+      // @ts-ignore
+      _data = [...userDataList, ...rankList];
     }
-    return rankList;
+    return _data.map((item) => ({
+      ...item,
+      volume: item.perp_volume,
+      pnl: item.realized_pnl,
+    }));
   }, [data, page, userDataList, searchValue, addRankForList]);
 
   const dataList = useMemo(() => {
@@ -230,11 +240,17 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
     const flatList = infiniteData?.map((item) => item.rows)?.flat();
     const rankList = addRankForList(flatList, total);
 
-    if (!searchValue) {
-      return [...userDataList, ...rankList];
-    }
+    let _data = rankList;
 
-    return rankList;
+    if (!searchValue) {
+      // @ts-ignore
+      _data = [...userDataList, ...rankList];
+    }
+    return _data.map((item) => ({
+      ...item,
+      volume: item.perp_volume,
+      pnl: item.realized_pnl,
+    }));
   }, [infiniteData, userDataList, searchValue, addRankForList]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -284,12 +300,4 @@ export function useTradingListScript(options?: TradingListScriptOptions) {
     dataList,
     address: state.address,
   };
-}
-
-export function isSameAddress(address1: string, address2: string) {
-  return address1.toLowerCase() === address2.toLowerCase();
-}
-
-export function getCurrentAddressRowKey(address: string) {
-  return `current-address-${address?.toLowerCase()}`;
 }

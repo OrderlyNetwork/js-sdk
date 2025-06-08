@@ -6,13 +6,13 @@ export enum TradingTab {
   Pnl = "pnl",
 }
 
-type TradingTabsProps = {
+type LeaderboardTabsProps = {
   activeTab: string;
   onTabChange: (tab: TradingTab) => void;
   isMobile?: boolean;
 };
 
-export const TradingTabs: FC<TradingTabsProps> = (props) => {
+export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
   return (
     <Flex
       width="100%"

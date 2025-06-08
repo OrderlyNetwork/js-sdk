@@ -13,9 +13,9 @@ import {
 import { ScrollIndicator } from "@orderly.network/ui";
 import { FilterDays, LeaderboardScriptReturn } from "../leaderboard.script";
 
-export type TradingFilterProps = LeaderboardScriptReturn;
+export type LeaderboardFilterProps = LeaderboardScriptReturn;
 
-export const TradingFilter: FC<TradingFilterProps> = (props) => {
+export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 

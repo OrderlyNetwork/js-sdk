@@ -7,24 +7,30 @@ import {
   TanstackColumn,
   useScreen,
 } from "@orderly.network/ui";
-import { useTradingListColumns } from "./column";
+import { type CampaignRankingData } from "../campaignRanking/campaignRanking.script";
 import {
-  getCurrentAddressRowKey,
-  TradingData,
-  TradingListScriptReturn,
-} from "./tradingList.script";
+  type GeneralRankingData,
+  GeneralRankingScriptReturn,
+} from "../generalRanking/generalRanking.script";
+import { useRankingColumns } from "./column";
+import { getCurrentAddressRowKey } from "./util";
 
-export type TradingListProps = {
+type RankingData = GeneralRankingData | CampaignRankingData;
+
+export type RankingProps = {
   style?: React.CSSProperties;
   className?: string;
-} & TradingListScriptReturn;
+} & Omit<GeneralRankingScriptReturn, "dataList" | "dataSource"> & {
+    dataList: RankingData[];
+    dataSource: RankingData[];
+  };
 
-export const TradingList: FC<TradingListProps> = (props) => {
-  const column = useTradingListColumns(props.address);
+export const Ranking: FC<RankingProps> = (props) => {
+  const column = useRankingColumns(props.address);
   const { isMobile } = useScreen();
 
   const onRow = useCallback(
-    (record: TradingData, index: number) => {
+    (record: RankingData, index: number) => {
       const isYou = record.key === getCurrentAddressRowKey(props.address!);
       const isFirst = record.rank === 1 && !isYou;
       const isSecond = record.rank === 2;
@@ -53,8 +59,8 @@ export const TradingList: FC<TradingListProps> = (props) => {
 
   const onCell = useCallback(
     (
-      column: TanstackColumn<TradingData>,
-      record: TradingData,
+      column: TanstackColumn<RankingData>,
+      record: RankingData,
       index: number,
     ) => {
       const isFirstColumn = column.getIsFirstColumn();
@@ -101,7 +107,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
           initialSort={props.initialSort}
           onSort={props.onSort}
           dataSource={props.dataList}
-          generatedRowKey={(record: TradingData) =>
+          generatedRowKey={(record: RankingData) =>
             record.key || record.address
           }
           manualPagination
@@ -130,7 +136,7 @@ export const TradingList: FC<TradingListProps> = (props) => {
       onSort={props.onSort}
       bordered
       dataSource={props.dataSource}
-      generatedRowKey={(record: TradingData) => record.key || record.address}
+      generatedRowKey={(record: RankingData) => record.key || record.address}
       manualPagination
       manualSorting
       pagination={props.pagination}

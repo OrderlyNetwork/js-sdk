@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   Campaign,
-  TradingListWidget,
+  GeneralRankingWidget,
+  CampaignRankingWidget,
   LeaderboardWidget,
   LeaderboardPage,
   TradingLeaderboardProvider,
@@ -111,9 +112,15 @@ export const LayoutPage: Story = {
   },
 };
 
-export const TradingList: Story = {
+export const GeneralRanking: Story = {
   render: (args) => {
-    return <TradingListWidget style={{ height: "calc(100vh - 0px)" }} />;
+    return <GeneralRankingWidget />;
+  },
+};
+
+export const CampaignRanking: Story = {
+  render: (args) => {
+    return <CampaignRankingWidget campaignId={14} />;
   },
 };
 
