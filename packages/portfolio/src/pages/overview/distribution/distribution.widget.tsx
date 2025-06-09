@@ -1,10 +1,9 @@
-import React from "react";
 import { useScreen } from "@orderly.network/ui";
 import { DistributionHistoryDesktop } from "./distribution.ui";
 import { DistributionHistoryMobile } from "./distribution.ui.mobile";
 import { useDistributionHistoryHook } from "./useDataSource.script";
 
-export const DistributionHistoryWidget: React.FC = () => {
+export const DistributionHistoryWidget = () => {
   const state = useDistributionHistoryHook();
   const { isMobile } = useScreen();
   if (isMobile) {

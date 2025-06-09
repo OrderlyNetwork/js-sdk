@@ -1,4 +1,3 @@
-import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   ArrowLeftRightSquareFill,

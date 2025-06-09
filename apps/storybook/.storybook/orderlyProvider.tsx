@@ -162,6 +162,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
         abstractConfig={{}}
       >
         <OrderlyAppProvider
+          // customChains={customChains as any}
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
