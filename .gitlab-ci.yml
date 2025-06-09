@@ -43,8 +43,11 @@ stages:
       export GIT_USERNAME="$GIT_USERNAME_INTERNAL"
       export GIT_NAME="$GIT_NAME_INTERNAL"
       export GIT_EMAIL="$GIT_EMAIL_INTERNAL"
+
+      # set internal npm registry and token
       export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
       export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+
       # set manual trigger to true to skip check branch
       export MANUAL_TRIGGER=true
 
@@ -99,18 +102,22 @@ internal_patch_publish:
       export GIT_EMAIL="$GIT_EMAIL_NPM"
       
       # set public npm registry and token
-      export NPM_REGISTRY="$NPM_REGISTRY_NPM"
-      export NPM_TOKEN="$NPM_TOKEN_NPM"
+      # export NPM_REGISTRY="$NPM_REGISTRY_NPM"
+      # export NPM_TOKEN="$NPM_TOKEN_NPM"
 
       # set internal npm registry and token
-      # export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
-      # export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
+      export NPM_REGISTRY="$NPM_REGISTRY_INTERNAL"
+      export NPM_TOKEN="$NPM_TOKEN_INTERNAL"
 
       # set manual trigger to true to skip check branch
       export MANUAL_TRIGGER=true
 
       # custom commit message
-      export GIT_COMMIT_MESSAGE="${GIT_COMMIT_MESSAGE}"
+      if [ -n "$CUSTOM_PRE_TAG" ]; then
+        export GIT_COMMIT_MESSAGE="publish ${CUSTOM_PRE_TAG}"
+      else
+        export GIT_COMMIT_MESSAGE="publish release"
+      fi
 
       # custom pre tag
       export CUSTOM_PRE_TAG="${CUSTOM_PRE_TAG}"
@@ -124,43 +131,93 @@ internal_patch_publish:
   tags:
     - dev
     - build
-  rules:
-    # Run this job if:
-    # 1. Branch name is "pre-release"
-    - if: '$CI_COMMIT_BRANCH == "npm-publish"'
-      when: manual
-    - when: never
-        
+
+# patch alpha version
 npm_patch_alpha:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: patch
-    GIT_COMMIT_MESSAGE: "publish alpha"
     CUSTOM_PRE_TAG: alpha
-    EXIT_PRE_TAG: false
+  environment:
+    name: npm_patch_alpha
+  rules:
+    # run this job if branch name is "pre-release"
+    - if: '$CI_COMMIT_BRANCH == "pre-release"'
+      when: manual
+    - when: never
 
-npm_patch_release:
+# patch stable version
+npm_patch_stable:
   <<: *npm_publish_template
   needs:
     - npm_patch_alpha
   variables:
     RELEASE_TYPE: patch
-    GIT_COMMIT_MESSAGE: "publish release"
     EXIT_PRE_TAG: true
+  environment:
+    name: npm_patch_stable
+  rules:
+    # run this job if branch name is "pre-release"
+    - if: '$CI_COMMIT_BRANCH == "pre-release"'
+      when: manual
+    - when: never
 
+# minor alpha version
 npm_minor_alpha:
   <<: *npm_publish_template
   variables:
     RELEASE_TYPE: minor
-    GIT_COMMIT_MESSAGE: "publish alpha"
     CUSTOM_PRE_TAG: alpha
-    EXIT_PRE_TAG: false
+  environment:
+    name: npm_minor_alpha
+  rules:
+    # run this job if branch name is "pre-release"
+    - if: '$CI_COMMIT_BRANCH == "pre-release"'
+      when: manual
+    - when: never
 
-npm_minor_release:
+# minor stable version
+npm_minor_stable:
   <<: *npm_publish_template
   needs:
     - npm_minor_alpha
   variables:
     RELEASE_TYPE: minor
-    GIT_COMMIT_MESSAGE: "publish release"
     EXIT_PRE_TAG: true
+  environment:
+    name: npm_minor_stable
+  rules:
+    # run this job if branch name is "pre-release"
+    - if: '$CI_COMMIT_BRANCH == "pre-release"'
+      when: manual
+    - when: never
+
+# major alpha version
+# npm_major_alpha:
+#   <<: *npm_publish_template
+#   variables:
+#     RELEASE_TYPE: major
+#     CUSTOM_PRE_TAG: alpha
+#   environment:
+#     name: npm_major_alpha
+#   rules:
+#     # run this job if branch name is "pre-release"
+#     - if: '$CI_COMMIT_BRANCH == "pre-release"'
+#       when: manual
+#     - when: never
+
+# major stable version
+# npm_major_stable:
+#   <<: *npm_publish_template
+#   needs:
+#     - npm_major_alpha
+#   variables:
+#     RELEASE_TYPE: major
+#     EXIT_PRE_TAG: true
+#   environment:
+#     name: npm_major_stable
+#   rules:
+#     # run this job if branch name is "pre-release"
+#     - if: '$CI_COMMIT_BRANCH == "pre-release"'
+#       when: manual
+#     - when: never
