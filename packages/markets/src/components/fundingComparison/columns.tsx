@@ -30,7 +30,7 @@ export const useFundingColumns = (): Column[] => {
     ...exchanges.map<Column>((item) => ({
       title: (
         <Flex justify="start" itemAlign="center" gap={1}>
-          {!item.startsWith("WOOFi Pro -") && (
+          {!item.includes(" - ") && (
             <img
               src={`${CDN_PREFIX}/${item.toLowerCase().replace(" ", "_")}.png`}
               className="oui-size-6 oui-rounded-full oui-object-cover"
@@ -41,7 +41,7 @@ export const useFundingColumns = (): Column[] => {
       ),
       dataIndex: item,
       onSort: true,
-      width: item.startsWith("WOOFi Pro -") ? 180 : 130,
+      width: item.includes(" - ") ? 180 : 130,
       render(value: number | null) {
         if (value === null) {
           return "-";

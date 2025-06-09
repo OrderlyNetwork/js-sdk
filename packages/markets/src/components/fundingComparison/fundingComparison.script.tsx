@@ -5,20 +5,22 @@ import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
 
+const baseEX = "WOOFi Pro";
+
 export const exchanges = [
-  "WOOFi Pro",
+  baseEX,
   "Binance",
-  "WOOFi Pro - Binance",
+  `${baseEX} - Binance`,
   "OKX",
-  "WOOFi Pro - OKX",
+  `${baseEX} - OKX`,
   "Bybit",
-  "WOOFi Pro - Bybit",
+  `${baseEX} - Bybit`,
   "dYdX",
-  "WOOFi Pro - dYdX",
+  `${baseEX} - dYdX`,
   "Bitget",
-  "WOOFi Pro - Bitget",
+  `${baseEX} - Bitget`,
   "Kucoin",
-  "WOOFi Pro - Kucoin",
+  `${baseEX} - Kucoin`,
 ];
 
 export const useFundingComparisonScript = () => {
@@ -43,15 +45,14 @@ export const useFundingComparisonScript = () => {
         symbol: row.symbol,
       };
       exchanges.forEach((item) => {
-        const isCompare = item.startsWith("WOOFi Pro -");
+        const isCompare = item.includes(` - `);
         if (!isCompare) {
-          const normalizedName = item.toLowerCase();
-          if (normalizedName === "woofi pro") {
+          if (item === baseEX) {
             const rate = fundingRates[row.symbol];
             result[item] = rate("last_funding_rate") ?? null;
           } else {
-            const exchange = row.exchanges.find(
-              (e) => e.name.toLowerCase() === normalizedName,
+            const exchange = row.exchanges?.find(
+              (e) => e.name.toLowerCase() === item.toLowerCase(),
             );
             result[item] = exchange?.last ?? null;
           }
@@ -59,7 +60,7 @@ export const useFundingComparisonScript = () => {
           const [, exchangeName] = item.replace(/ /g, "").split("-");
           const rate = fundingRates[row.symbol];
           const wooFiRate = rate("last_funding_rate") ?? null;
-          const exchange = row.exchanges.find(
+          const exchange = row.exchanges?.find(
             (e) => e.name.toLowerCase() === exchangeName.toLowerCase(),
           );
           const otherRate = exchange?.last ?? null;
