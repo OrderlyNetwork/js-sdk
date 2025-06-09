@@ -38,6 +38,7 @@ export { EyeCloseIcon } from "./eyeClose";
 export { RefreshIcon } from "./refresh";
 export { OrderlyIcon } from "./orderly";
 export { EsOrderlyIcon } from "./esOrderly";
+export { InfoCircleIcon } from "./infoCircle";
 
 export { TokenIcon } from "./tokenIcon";
 export { ChainIcon } from "./chainIcon";

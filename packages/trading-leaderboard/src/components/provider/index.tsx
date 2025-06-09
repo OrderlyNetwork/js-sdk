@@ -1,33 +1,20 @@
-import { createContext, PropsWithChildren, useContext } from "react";
-
-export type Campaign = {
-  title: string;
-  description: string;
-  image: string;
-  startTime: Date | string;
-  endTime: Date | string;
-  href:
-    | string
-    | {
-        /** learn more url */
-        learnMore: string;
-        /** trading url, if provided, will override default trading now button url */
-        trading: string;
-      };
-};
+import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { CampaignConfig } from "../campaigns/type";
 
 /**
  * Trading leaderboard provider state
  */
 export type TradingLeaderboardState = {
   /** campaigns config, if not provided, will not show campaigns section */
-  campaigns?: Campaign[];
+  campaigns?: CampaignConfig[];
   /** background src, it can be a image resource or video resource */
   backgroundSrc?: string;
   href?: {
     /** default trading now button url */
     trading: string;
   };
+  currentCampaignId: string;
+  onCampaignChange: (campaignId: string) => void;
 };
 
 /**
@@ -44,12 +31,16 @@ export type TradingLeaderboardProviderProps = PropsWithChildren<
 export const TradingLeaderboardProvider = (
   props: TradingLeaderboardProviderProps,
 ) => {
+  const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
+
   return (
     <TradingLeaderboardContext.Provider
       value={{
         campaigns: props.campaigns,
         href: props.href,
         backgroundSrc: props.backgroundSrc,
+        currentCampaignId,
+        onCampaignChange: setCurrentCampaignId,
       }}
     >
       {props.children}

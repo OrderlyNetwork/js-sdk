@@ -11,3 +11,5 @@ export * from "./components/ranking/shared/ranking.ui";
 export * from "./components/leaderboard/generalLeaderboard";
 export * from "./components/leaderboard/campaignLeaderboard";
 export * from "./pages/leaderboard/page";
+
+export * from "./components/campaigns/type";

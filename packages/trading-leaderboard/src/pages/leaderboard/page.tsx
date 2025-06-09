@@ -1,24 +1,26 @@
 import { FC, ReactNode } from "react";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Background } from "../../components/background";
-import {
-  CampaignLeaderboardWidget,
-  CampaignLeaderboardWidgetProps,
-} from "../../components/leaderboard/campaignLeaderboard";
+import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
 import {
   GeneralLeaderboardWidget,
   GeneralLeaderboardWidgetProps,
 } from "../../components/leaderboard/generalLeaderboard";
-import { TradingLeaderboardProvider } from "../../components/provider";
+import {
+  TradingLeaderboardProvider,
+  TradingLeaderboardProviderProps,
+} from "../../components/provider";
+import { RewardsWidget } from "../../components/rewards/rewards.widget";
 
-export type LeaderboardPageProps = GeneralLeaderboardWidgetProps & {
-  style?: React.CSSProperties;
-  className?: string;
-};
+export type LeaderboardPageProps = GeneralLeaderboardWidgetProps &
+  TradingLeaderboardProviderProps & {
+    style?: React.CSSProperties;
+    className?: string;
+  };
 
 export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
   return (
-    <TradingLeaderboardProvider>
+    <TradingLeaderboardProvider {...props}>
       <div
         style={{
           paddingBottom: "calc(64px + env(safe-area-inset-bottom))",
@@ -29,15 +31,17 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
           props.className,
         )}
       >
+        <CampaignsWidget />
+        <RewardsWidget />
         {/* <Background backgroundSrc={props.backgroundSrc} /> */}
-        <Title title="Leaderboard" />
+        <LeaderboardTitle title="Leaderboard" />
         <GeneralLeaderboardWidget {...props} />
       </div>
     </TradingLeaderboardProvider>
   );
 };
 
-const Title = (props: { title: ReactNode }) => {
+export const LeaderboardTitle = (props: { title: ReactNode }) => {
   return (
     <Flex mb={6} gapY={1} justify="center" direction="column">
       <Text className="oui-text-[32px] oui-font-bold">{props.title}</Text>
