@@ -3,7 +3,8 @@ import {
   Campaign,
   GeneralRankingWidget,
   CampaignRankingWidget,
-  LeaderboardWidget,
+  GeneralLeaderboardWidget,
+  CampaignLeaderboardWidget,
   LeaderboardPage,
   TradingLeaderboardProvider,
 } from "@orderly.network/trading-leaderboard";
@@ -124,11 +125,21 @@ export const CampaignRanking: Story = {
   },
 };
 
-export const Leaderboard: Story = {
+export const GeneralLeaderboard: Story = {
   render: (args) => {
     return (
       <Box p={3}>
-        <LeaderboardWidget />
+        <GeneralLeaderboardWidget />
+      </Box>
+    );
+  },
+};
+
+export const CampaignLeaderboard: Story = {
+  render: (args) => {
+    return (
+      <Box p={3}>
+        <CampaignLeaderboardWidget campaignId={14} />
       </Box>
     );
   },

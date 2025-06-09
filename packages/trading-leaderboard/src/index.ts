@@ -8,5 +8,6 @@ export * from "./components/ranking/generalRanking";
 export * from "./components/ranking/campaignRanking";
 export * from "./components/ranking/shared/ranking.ui";
 
-export * from "./components/leaderboard";
+export * from "./components/leaderboard/generalLeaderboard";
+export * from "./components/leaderboard/campaignLeaderboard";
 export * from "./pages/leaderboard/page";

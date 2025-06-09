@@ -66,12 +66,12 @@ export function useCampaignRankingScript(
   }) => {
     const searchParams = new URLSearchParams();
 
+    searchParams.set("page", args.page.toString());
+    searchParams.set("size", args.pageSize.toString());
+
     if (campaignId) {
       searchParams.set("campaign_id", campaignId.toString());
     }
-
-    searchParams.set("page", args.page.toString());
-    searchParams.set("size", args.pageSize.toString());
 
     if (brokerId) {
       searchParams.set("broker_id", brokerId);
@@ -126,7 +126,7 @@ export function useCampaignRankingScript(
       ? getUrl({
           page: 1,
           pageSize: 100,
-          sort: sort?.sortKey,
+          // sort: "desc",
         })
       : null,
     {
@@ -142,14 +142,11 @@ export function useCampaignRankingScript(
 
     const searchParams = new URLSearchParams();
 
-    if (campaignId) {
-      searchParams.set("campaign_id", campaignId.toString());
-    }
-
     if (brokerId) {
       searchParams.set("broker_id", brokerId);
     }
 
+    searchParams.set("campaign_id", campaignId.toString());
     searchParams.set("address", state.address!);
 
     return `/v1/public/campaign/user?${searchParams.toString()}`;
@@ -210,7 +207,7 @@ export function useCampaignRankingScript(
         };
       });
     },
-    [page, pageSize, sort, getAddressRank],
+    [page, pageSize, sort],
   );
 
   const dataSource = useMemo(() => {
@@ -248,6 +245,7 @@ export function useCampaignRankingScript(
     }
   });
 
+  // now we don't need to sort
   const onSort = useCallback(
     (sort?: TableSort) => {
       // setSort(sort || initialSort);

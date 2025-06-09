@@ -2,12 +2,16 @@ import { FC, ReactNode } from "react";
 import { cn, Flex, Text } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import {
-  LeaderboardWidget,
-  LeaderboardWidgetProps,
-} from "../../components/leaderboard";
+  CampaignLeaderboardWidget,
+  CampaignLeaderboardWidgetProps,
+} from "../../components/leaderboard/campaignLeaderboard";
+import {
+  GeneralLeaderboardWidget,
+  GeneralLeaderboardWidgetProps,
+} from "../../components/leaderboard/generalLeaderboard";
 import { TradingLeaderboardProvider } from "../../components/provider";
 
-export type LeaderboardPageProps = LeaderboardWidgetProps & {
+export type LeaderboardPageProps = GeneralLeaderboardWidgetProps & {
   style?: React.CSSProperties;
   className?: string;
 };
@@ -27,7 +31,7 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
       >
         {/* <Background backgroundSrc={props.backgroundSrc} /> */}
         <Title title="Leaderboard" />
-        <LeaderboardWidget {...props} />
+        <GeneralLeaderboardWidget {...props} />
       </div>
     </TradingLeaderboardProvider>
   );

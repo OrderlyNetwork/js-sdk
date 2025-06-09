@@ -1,16 +1,16 @@
 import { FC } from "react";
-import { cn, Box, useScreen } from "@orderly.network/ui";
-import { GeneralRankingWidget } from "../ranking/generalRanking";
-import { LeaderboardFilter } from "./components/LeaderboardFilter";
-import { LeaderboardTabs } from "./components/LeaderboardTabs";
-import { LeaderboardScriptReturn } from "./leaderboard.script";
+import { cn, Box, useScreen, Divider } from "@orderly.network/ui";
+import { GeneralRankingWidget } from "../../ranking/generalRanking";
+import { LeaderboardFilter } from "../shared/LeaderboardFilter";
+import { LeaderboardTabs } from "../shared/LeaderboardTabs";
+import { GeneralLeaderboardScriptReturn } from "./generalLeaderboard.script";
 
-export type LeaderboardProps = {
+export type GeneralLeaderboardProps = {
   style?: React.CSSProperties;
   className?: string;
-} & LeaderboardScriptReturn;
+} & GeneralLeaderboardScriptReturn;
 
-export const Leaderboard: FC<LeaderboardProps> = (props) => {
+export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
   const { isMobile } = useScreen();
 
   if (isMobile) {
@@ -50,11 +50,7 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
       )}
     >
       <LeaderboardFilter {...props} />
-      <LeaderboardTabs
-        activeTab={props.activeTab}
-        onTabChange={props.onTabChange}
-        isMobile={isMobile}
-      />
+      <Divider intensity={8} />
 
       <GeneralRankingWidget
         dateRange={props.dateRange}

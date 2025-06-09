@@ -11,9 +11,12 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { ScrollIndicator } from "@orderly.network/ui";
-import { FilterDays, LeaderboardScriptReturn } from "../leaderboard.script";
+import {
+  FilterDays,
+  GeneralLeaderboardScriptReturn,
+} from "../generalLeaderboard/generalLeaderboard.script";
 
-export type LeaderboardFilterProps = LeaderboardScriptReturn;
+export type LeaderboardFilterProps = GeneralLeaderboardScriptReturn;
 
 export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
   const { t } = useTranslation();
