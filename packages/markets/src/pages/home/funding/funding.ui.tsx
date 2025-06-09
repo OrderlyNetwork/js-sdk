@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseCircleFillIcon,
@@ -6,12 +7,12 @@ import {
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
-import { FundingOverviewWidget } from "../../../components/fundingOverview";
 import { FundingComparisonWidget } from "../../../components/fundingComparison";
-import { UseFundingScript } from "./funding.script";
-import { SearchIcon } from "../../../icons";
+import { FundingOverviewWidget } from "../../../components/fundingOverview";
 import { useMarketsContext } from "../../../components/marketsProvider";
-import { useTranslation } from "@orderly.network/i18n";
+import { SearchIcon } from "../../../icons";
+import { UseFundingScript } from "./funding.script";
+
 export type FundingUIProps = UseFundingScript;
 
 export const FundingUI: FC<FundingUIProps> = ({
