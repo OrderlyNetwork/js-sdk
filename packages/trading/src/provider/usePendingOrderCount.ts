@@ -1,9 +1,9 @@
-import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
-import { useTradingLocalStorage } from "./useTradingLocalStorage";
-import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 import { useEffect, useMemo } from "react";
-import { TabType } from "@orderly.network/ui-orders";
+import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
+import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
+import { TabType } from "@orderly.network/ui-orders";
+import { useTradingLocalStorage } from "./useTradingLocalStorage";
 
 export const usePendingOrderCount = (symbol?: string) => {
   const { showAllSymbol } = useTradingLocalStorage();
@@ -21,10 +21,11 @@ export const usePendingOrderCount = (symbol?: string) => {
       excludes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
       // size: pendingOrderPageSize,
       size: 500,
+      // sourceTypeAll: true,
     },
     {
       keeplive: true,
-    }
+    },
   );
 
   const [tpslOrders, { total: tpslCount }] = useOrderStream(
@@ -34,10 +35,11 @@ export const usePendingOrderCount = (symbol?: string) => {
       includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
       // size: tpslOrderPageSize,
       size: 500,
+      // sourceTypeAll: true,
     },
     {
       keeplive: true,
-    }
+    },
   );
 
   const pendingOrderCount = useDataTap(pendingCount) ?? 0;

@@ -7,25 +7,25 @@ import {
   ForwardedRef,
   useImperativeHandle,
 } from "react";
+import { differenceInDays, setHours, subDays, format } from "date-fns";
+import {
+  useLocalStorage,
+  useOrderStream,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useDataTap } from "@orderly.network/react-app";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
   API,
 } from "@orderly.network/types";
-import {
-  useLocalStorage,
-  useOrderStream,
-  useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { TabType } from "../orders.widget";
 import { modal, usePagination, Text, Table } from "@orderly.network/ui";
-import { differenceInDays, setHours, subDays, format } from "date-fns";
-import { useFormatOrderHistory } from "./useFormatOrderHistory";
 import { SharePnLConfig } from "@orderly.network/ui-share";
-import { useTranslation } from "@orderly.network/i18n";
 import { areDatesEqual } from "../../utils/util";
+import { TabType } from "../orders.widget";
+import { useFormatOrderHistory } from "./useFormatOrderHistory";
 
 export type OrderListInstance = {
   download?: () => void;
@@ -78,12 +78,19 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     setPage(1);
   }, [props.symbol]);
 
-  const { orderStatus, ordersSide, dateRange, filterItems, onFilter, filterDays, updateFilterDays } =
-    useFilter(type, {
-      ordersStatus,
-      setPage,
-      filterConfig,
-    });
+  const {
+    orderStatus,
+    ordersSide,
+    dateRange,
+    filterItems,
+    onFilter,
+    filterDays,
+    updateFilterDays,
+  } = useFilter(type, {
+    ordersStatus,
+    setPage,
+    filterConfig,
+  });
 
   const includes = useMemo(() => {
     if (type === TabType.tp_sl) {
@@ -129,6 +136,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     page: enableLoadMore || !manualPagination ? undefined : page,
     // pending and ts_sl list get all data
     size: manualPagination ? pageSize : 500,
+    sourceTypeAll: type === TabType.orderHistory,
     dateRange,
     includes,
     excludes,
@@ -137,7 +145,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   const localPageSizeKey = `orderly_${type}_pageSize`;
   const [typePageSize, setTypePageSize] = useLocalStorage(
     localPageSizeKey,
-    defaultPageSize
+    defaultPageSize,
   );
 
   useEffect(() => {
@@ -151,14 +159,14 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
       props.type === TabType.pending
         ? t("orders.pending.cancelAll")
         : props.type === TabType.tp_sl
-        ? t("orders.tpsl.cancelAll")
-        : "";
+          ? t("orders.tpsl.cancelAll")
+          : "";
 
     const content = TabType.pending
       ? t("orders.pending.cancelAll.description")
       : props.type === TabType.tp_sl
-      ? t("orders.tpsl.cancelAll.description")
-      : "";
+        ? t("orders.tpsl.cancelAll.description")
+        : "";
 
     modal.confirm({
       title: title,
@@ -242,14 +250,14 @@ const useFilter = (
         to?: Date;
       };
     };
-  }
+  },
 ) => {
   const { t } = useTranslation();
   const [orderStatus, setOrderStatus] = useState<OrderStatus | "all">(
-    option.ordersStatus ?? "all"
+    option.ordersStatus ?? "all",
   );
   const [ordersSide, setOrdersSide] = useState<OrderSide | "all">(
-    option.filterConfig?.side ?? "all"
+    option.filterConfig?.side ?? "all",
   );
 
   /// default is 90d
@@ -292,7 +300,7 @@ const useFilter = (
     if (filter.name === "dateRange") {
       setDateRange(formatDatePickerRange(filter.value));
       option.setPage(1);
-      
+
       const newDateRange = formatDatePickerRange(filter.value);
       if (newDateRange.from && newDateRange.to) {
         const diffDays =
