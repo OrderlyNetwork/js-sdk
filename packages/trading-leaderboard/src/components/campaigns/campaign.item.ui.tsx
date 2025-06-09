@@ -19,8 +19,8 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
   return (
     <div
       className={cn([
-        "oui-min-w-[322px]",
-        "oui-flex-1 oui-bg-white/[0.04] oui-h-[78px] oui-rounded-lg oui-overflow-hidden oui-relative oui-cursor-pointer",
+        "oui-w-full",
+        "oui-bg-white/[0.04] oui-h-[78px] oui-rounded-lg oui-overflow-hidden oui-relative oui-cursor-pointer",
         "oui-group oui-border oui-border-solid",
         active
           ? "oui-border-[rgba(var(--oui-gradient-brand-start))]"
