@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useMutation } from "../useMutation";
 import { useAccount } from "../useAccount";
+import { useMutation } from "../useMutation";
 import { usePrivateQuery } from "../usePrivateQuery";
 
 export type APIKeyItem = {
@@ -26,30 +26,30 @@ export const useApiKeyManager = (queryParams?: {
     key_status?: string;
   };
 }) => {
-  const { account } = useAccount();
+  const { account, state, isSubAccount } = useAccount();
   const { keyInfo } = queryParams || {};
 
   const keyInfoPrams = getQueryParamsFromObject(keyInfo);
 
   const { data, mutate, error, isLoading } = usePrivateQuery<APIKeyItem[]>(
-    `/v1/client/key_info${keyInfoPrams.length > 0 ? `?${keyInfoPrams}` : ''}`,
+    `/v1/client/key_info${keyInfoPrams.length > 0 ? `?${keyInfoPrams}` : ""}`,
     {
       formatter: (data) => data?.rows,
-    }
+    },
   );
 
   const [doIPRestriction] = useMutation(
     "/v1/client/set_orderly_key_ip_restriction",
-    "POST"
+    "POST",
   );
 
   const [doRemoveOrderKey] = useMutation(
     "/v1/client/remove_orderly_key",
-    "POST"
+    "POST",
   );
 
   const [doResetIPRestriction] = useMutation(
-    '/v1/client/reset_orderly_key_ip_restriction',
+    "/v1/client/reset_orderly_key_ip_restriction",
     "POST",
   );
 
@@ -61,7 +61,7 @@ export const useApiKeyManager = (queryParams?: {
         ip_restriction_list,
       });
     },
-    []
+    [],
   );
 
   const removeOrderlyKey = useCallback((orderly_key: string): Promise<any> => {
@@ -71,19 +71,29 @@ export const useApiKeyManager = (queryParams?: {
   }, []);
 
   const generateOrderlyKey = (
-    scope?: ScopeType
+    scope?: ScopeType,
   ): Promise<{
     key: string;
     secretKey: string;
   }> => {
+    if (isSubAccount) {
+      return account?.createSubAccountApiKey(365, {
+        tag: "manualCreated",
+        scope,
+        subAccountId: state.accountId!,
+      });
+    }
+
     return account?.createApiKey(365, {
       tag: "manualCreated",
       scope,
     });
   };
 
-
-  const resetOrderlyKeyIPRestriction = (orderlyKey: string, mode: "ALLOW_ALL_IPS" | "DISALLOW_ALL_IPS") => {
+  const resetOrderlyKeyIPRestriction = (
+    orderlyKey: string,
+    mode: "ALLOW_ALL_IPS" | "DISALLOW_ALL_IPS",
+  ) => {
     return doResetIPRestriction({
       orderly_key: orderlyKey,
       reset_mode: mode,
@@ -103,9 +113,8 @@ export const useApiKeyManager = (queryParams?: {
   ] as const;
 };
 
-
 function getQueryParamsFromObject(obj?: Record<string, any>): string {
-  if (typeof obj === 'undefined') return '';
+  if (typeof obj === "undefined") return "";
   const queryParams = new URLSearchParams();
 
   for (const [key, value] of Object.entries(obj)) {

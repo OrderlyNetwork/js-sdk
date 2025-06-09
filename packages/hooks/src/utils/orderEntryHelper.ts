@@ -1,3 +1,4 @@
+import { compose, head } from "ramda";
 import {
   API,
   OrderlyOrder,
@@ -5,6 +6,7 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { FullOrderState } from "../next/useOrderEntry/useOrderStore";
 import { tpslCalculateHelper } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 
 // index 3: markPrice
@@ -14,7 +16,7 @@ type orderEntryInputs = [
   keyof OrderlyOrder,
   any,
   number,
-  API.SymbolExt
+  API.SymbolExt,
 ];
 
 type orderEntryInputHandle = (inputs: orderEntryInputs) => orderEntryInputs;
@@ -288,7 +290,7 @@ function totalInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   if (config.base_tick >= 1) {
     order_quantity = formatNumber(
       order_quantity,
-      new Decimal(config?.base_tick || "0").toNumber()
+      new Decimal(config?.base_tick || "0").toNumber(),
     )!;
   }
 
@@ -333,7 +335,7 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     },
     {
       symbol: config,
-    }
+    },
   );
 
   return [{ ...values, ..._tpslValue }, input, value, markPrice, config];
@@ -349,7 +351,7 @@ function otherInputHandle(inputs: orderEntryInputs): orderEntryInputs {
 }
 
 export const getCalculateHandler = (
-  fieldName: keyof OrderlyOrder
+  fieldName: keyof OrderlyOrder,
 ): orderEntryInputHandle => {
   switch (fieldName) {
     case "order_type":
@@ -381,7 +383,7 @@ export const getCalculateHandler = (
 //** format number */
 export function formatNumber(
   qty?: string | number,
-  dp?: number | string
+  dp?: number | string,
 ): string | undefined {
   if (typeof qty === "undefined") return qty;
   if (typeof dp === "undefined") return `${qty}`;
@@ -421,4 +423,57 @@ export function formatNumber(
   } catch (e) {
     return undefined;
   }
+}
+
+export function calculate(
+  values: Partial<FullOrderState>,
+  fieldName:
+    | "symbol"
+    | "order_type"
+    | "order_type_ext"
+    | "order_price"
+    | "order_quantity"
+    | "order_amount"
+    | "visible_quantity"
+    | "side"
+    | "reduce_only"
+    | "slippage"
+    | "order_tag"
+    | "level"
+    | "post_only_adjust"
+    | "total"
+    | "algo_type"
+    | "trigger_price_type"
+    | "trigger_price"
+    | "child_orders"
+    | "tp_pnl"
+    | "tp_offset"
+    | "tp_offset_percentage"
+    | "tp_ROI"
+    | "tp_trigger_price"
+    | "sl_pnl"
+    | "sl_offset"
+    | "sl_offset_percentage"
+    | "sl_ROI"
+    | "sl_trigger_price"
+    | "quantity"
+    | "price"
+    | "type",
+  value: any,
+  markPrice: number,
+  config: API.SymbolExt,
+): Partial<FullOrderState> {
+  // console.log("calculate", values, fieldName, value, options);
+  const fieldHandler = getCalculateHandler(fieldName);
+
+  const newValues = compose<any, any, any, Partial<FullOrderState>>(
+    head,
+    // orderEntityFormatHandle(baseDP, quoteDP),
+    fieldHandler,
+    baseInputHandle,
+  )([values, fieldName, value, markPrice, config]);
+
+  // if fieldName is quantity/price,recalculate the tp/sl
+
+  return newValues as Partial<FullOrderState>;
 }

@@ -1,7 +1,7 @@
-import { useMediaQuery } from "@orderly.network/hooks";
-import { cn, useScreen } from "@orderly.network/ui";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { cn, useScreen } from "@orderly.network/ui";
 
 interface DrawerProps {
   children: React.ReactNode;
@@ -48,7 +48,6 @@ export function Drawer({ children, isOpen, onClose }: DrawerProps) {
       <div
         style={{ height: `${drawerHeight}px` }}
         className={cn(
-          "oui-overflow-hidden",
           "oui-fixed oui-top-0 oui-right-0",
           "oui-bg-[#131519] oui-shadow-lg",
           "oui-border oui-border-line-12",
@@ -61,12 +60,12 @@ export function Drawer({ children, isOpen, onClose }: DrawerProps) {
           "oui-transform oui-transition-transform oui-duration-300 oui-ease-in-out",
           "oui-flex oui-flex-col oui-justify-between",
           "oui-m-0 md:oui-m-3",
-          isOpen ? "oui-translate-x-0" : "oui--translate-x-full"
+          isOpen ? "oui-translate-x-0" : "oui--translate-x-full",
         )}
       >
         {children}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

@@ -30,6 +30,8 @@ export const EVENT_NAMES = {
   validateStart: "validate:start",
   validateEnd: "validate:end",
   switchAccount: "switch:account",
+  subAccountCreated: "account:sub:created",
+  subAccountUpdated: "account:sub:updated",
 };
 export const stagingStoryTestnetVaultAddress =
   "0x65B99E978d1eeE9CfEdfD463EC7A81317e5A5073";

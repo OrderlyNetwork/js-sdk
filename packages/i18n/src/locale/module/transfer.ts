@@ -59,28 +59,49 @@ export const transfer = {
   "transfer.crossDeposit.viewStatus": "View status",
   "transfer.crossDeposit.depositFailed":
     "Deposit failed, please try again later.",
-  
+
   "transfer.crossDeposit.slippage": "Slippage",
   "transfer.crossDeposit.slippage.slippageTolerance": "Slippage tolerance",
   "transfer.crossDeposit.slippage.slippageTolerance.description":
     "Your transaction will revert if the price changes unfavorably by more than this percentage.",
-  
+
   "transfer.crossDeposit.swapFee": "Swap fee",
   "transfer.crossDeposit.swapFee.description":
     "WOOFi charges a 0.025% on each swap.",
   "transfer.crossDeposit.bridgeFee": "Bridge fee",
   "transfer.crossDeposit.bridgeFee.description":
     "Stargate charges a fee to bridge your assets.",
-  
+
   "transfer.crossDeposit.minimumReceived": "Minimum received",
   "transfer.crossDeposit.confirmSwap": "Confirm to swap",
   "transfer.crossDeposit.averageSwapTime":
     "Average swap time <0>~ {{time}} mins</0>",
-  
+
   "transfer.crossDeposit.swapDialog.title": "Review swap details",
   "transfer.crossDeposit.viewFAQs": "Need help? <0>View FAQs</0>",
   "transfer.crossDeposit.notEnoughLiquidity":
     "Not enough liquidity. Please try again later or use another chain to deposit.",
+
+  // "transfer.withdraw.unsettled.tooltip":
+  //   "Unsettled balance can not be withdrawn. In order to withdraw, please settle your balance first.",
+  // "transfer.withdraw.settlePnl.description":
+  //   "Are you sure you want to settle your PnL? Settlement will take up to 1 minute before you can withdraw your available balance.",
+
+  "transfer.internalTransfer.from": "From",
+  "transfer.internalTransfer.to": "To",
+  "transfer.internalTransfer.currentAssetValue": "Current asset value",
+  "transfer.internalTransfer.success":
+    "Success! Funds will be available in 15 seconds.",
+  "transfer.internalTransfer.failed":
+    "Unable to complete transfer. Please try again later.",
+  "transfer.internalTransfer.failed.transferInProgress":
+    "An internal transfer is currently in progress.",
+  "transfer.internalTransfer.failed.withdrawalInProgress":
+    "There is a withdrawal in progress.",
+  "transfer.internalTransfer.unsettled.tooltip":
+    "Unsettled balance can not be transferred. In order to transfer, please settle your balance first.",
+  "transfer.internalTransfer.settlePnl.description":
+    "Are you sure you want to settle your PnL? <br/> Settlement will take up to 1 minute before you can transfer your available balance.",
 };
 
 export type Transfer = typeof transfer;

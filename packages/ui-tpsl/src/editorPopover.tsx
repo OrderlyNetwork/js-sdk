@@ -1,4 +1,7 @@
 import { ReactNode, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { AlgoOrderRootType, API } from "@orderly.network/types";
 import {
   Button,
   cn,
@@ -6,13 +9,11 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
+  toast,
 } from "@orderly.network/ui";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { TPSLWidget } from "./tpsl.widget";
-import { PositionTPSLConfirm } from "./tpsl.ui";
-import { AlgoOrderRootType, API } from "@orderly.network/types";
 import { ButtonProps } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { PositionTPSLConfirm } from "./tpsl.ui";
+import { TPSLWidget } from "./tpsl.widget";
 
 export const PositionTPSLPopover = (props: {
   position: API.Position;
@@ -72,7 +73,7 @@ export const PositionTPSLPopover = (props: {
       <PopoverContent
         className={cn(
           "oui-w-[360px]",
-          visible ? "oui-visible" : "oui-invisible"
+          visible ? "oui-visible" : "oui-invisible",
         )}
         align="end"
         side={"top"}
@@ -127,7 +128,7 @@ export const PositionTPSLPopover = (props: {
                   () => {
                     setVisible(true);
                     return Promise.reject(false);
-                  }
+                  },
                 );
             }
 
@@ -143,8 +144,27 @@ export const PositionTPSLPopover = (props: {
                   ? t("orders.editOrder")
                   : t("tpsl.confirmOrder"),
                 // bodyClassName: "lg:oui-py-0",
-                onOk: () => {
-                  return options.submit();
+                onOk: async () => {
+                  try {
+                    const res = await options.submit({
+                      accountId: position.account_id,
+                    });
+
+                    if (res.success) {
+                      return res;
+                    }
+
+                    if (res.message) {
+                      toast.error(res.message);
+                    }
+
+                    return false;
+                  } catch (err: any) {
+                    if (err?.message) {
+                      toast.error(err.message);
+                    }
+                    return false;
+                  }
                 },
                 classNames: {
                   body: "!oui-pb-0",
@@ -173,7 +193,7 @@ export const PositionTPSLPopover = (props: {
                 () => {
                   setVisible(true);
                   return Promise.reject(false);
-                }
+                },
               );
           }}
         />

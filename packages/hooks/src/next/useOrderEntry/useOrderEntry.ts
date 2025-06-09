@@ -8,7 +8,9 @@ import {
   OrderType,
   OrderLevel,
   TrackerEventName,
+  OrderSide,
 } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,
@@ -55,6 +57,7 @@ type OrderEntryReturn = {
    * The estimated leverage after order creation.
    */
   estLeverage: number | null;
+  estSlippage: number | null;
   helper: {
     /**
      * @deprecated Use `validate` instead.
@@ -200,6 +203,8 @@ const useOrderEntry = (
     symbolInfo,
   });
 
+  const [estSlippage, setEstSlippage] = useState<number | null>(null);
+
   const [doCreateOrder, { isMutating }] = useMutation<OrderlyOrder, any>(
     getCreateOrderUrl(formattedOrder),
   );
@@ -246,14 +251,63 @@ const useOrderEntry = (
     }
   };
 
+  const updateEstSlippage = (orderBook: any) => {
+    if (
+      formattedOrder.order_type !== OrderType.MARKET ||
+      !formattedOrder.order_quantity
+    ) {
+      setEstSlippage(null);
+      return;
+    }
+    const { order_quantity, side } = formattedOrder;
+
+    // const avgExecutionPrice = orderBook;
+    let avgExecutionPrice: number | undefined;
+    let book: any;
+
+    if (side === OrderSide.BUY) {
+      book = orderBook.asks.reverse();
+    } else {
+      book = orderBook.bids;
+    }
+
+    for (let i = 0; i < book.length; i++) {
+      // console.log(book[i]);
+      const price = book[i][0];
+      const quantity = book[i][2];
+      if (quantity >= order_quantity) {
+        avgExecutionPrice = price;
+        break;
+      }
+    }
+
+    if (avgExecutionPrice) {
+      const bestPrice = book[0][0];
+      const estSlippage = new Decimal(avgExecutionPrice)
+        .minus(bestPrice)
+        .abs()
+        .div(bestPrice)
+        .toNumber();
+      setEstSlippage(estSlippage);
+    }
+  };
+
   useEffect(() => {
     // when BBO type change, it will change order price
     updateOrderPrice();
   }, [formattedOrder.order_type_ext, formattedOrder.level]);
 
-  const onOrderBookUpdate = useDebouncedCallback((data: number[][]) => {
-    askAndBid.current = data;
+  const onOrderBookUpdate = useDebouncedCallback((data: any) => {
+    const parsedData = [
+      [data.asks?.[data.asks.length - 1]?.[0], data.bids?.[0]?.[0]],
+      [data.asks?.[data.asks.length - 2]?.[0], data.bids?.[1]?.[0]],
+      [data.asks?.[data.asks.length - 3]?.[0], data.bids?.[2]?.[0]],
+      [data.asks?.[data.asks.length - 4]?.[0], data.bids?.[3]?.[0]],
+      [data.asks?.[data.asks.length - 5]?.[0], data.bids?.[4]?.[0]],
+    ];
+    askAndBid.current = parsedData;
     updateOrderPriceByOrderBook();
+    updateEstSlippage(data);
   }, 200);
 
   /**
@@ -293,8 +347,9 @@ const useOrderEntry = (
     return {
       markPrice: actions.getMarkPriceBySymbol(symbol),
       maxQty,
+      estSlippage,
     };
-  }, [maxQty, symbol]);
+  }, [maxQty, symbol, estSlippage]);
 
   const interactiveValidate = (order: Partial<OrderlyOrder>) => {
     validateFunc(order).then((errors) => {
@@ -551,6 +606,7 @@ const useOrderEntry = (
     maxQty,
     estLiqPrice,
     estLeverage,
+    estSlippage,
     helper: {
       /**
        * @deprecated use validate instead

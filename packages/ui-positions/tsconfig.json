@@ -2,33 +2,16 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": [
-        "../ui/src"
-      ],
-      "@orderly.network/ui-share": [
-        "../ui-share/src"
-      ],
-      "@orderly.network/hooks": [
-        "../hooks/src"
-      ],
-      "@orderly.network/utils": [
-        "../utils/src"
-      ],
-      "@orderly.network/ui-tpsl": [
-        "../ui-tpsl/src"
-      ],
-      "@orderly.network/types": [
-        "../types/src"
-      ],
-      "@orderly.network/ui-connector": [
-        "../ui-connector/src"
-      ],
-      "@orderly.network/react-app": [
-        "../app/src"
-      ],
-      "@orderly.network/i18n": [
-        "../i18n/src"
-      ]
+      "@orderly.network/ui": ["../ui/src"],
+      "@orderly.network/ui-share": ["../ui-share/src"],
+      "@orderly.network/hooks": ["../hooks/src"],
+      "@orderly.network/utils": ["../utils/src"],
+      "@orderly.network/ui-tpsl": ["../ui-tpsl/src"],
+      "@orderly.network/types": ["../types/src"],
+      "@orderly.network/ui-connector": ["../ui-connector/src"],
+      "@orderly.network/react-app": ["../app/src"],
+      "@orderly.network/i18n": ["../i18n/src"],
+      "@orderly.network/perp": ["../perp/src"]
     }
   }
 }

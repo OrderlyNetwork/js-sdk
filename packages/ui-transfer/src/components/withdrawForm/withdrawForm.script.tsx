@@ -6,32 +6,31 @@ import {
   useConfig,
   useEventEmitter,
   useLocalStorage,
-  usePositionStream,
   usePrivateQuery,
   useQuery,
   useWalletConnector,
   useWalletSubscription,
   useWithdraw,
 } from "@orderly.network/hooks";
-import { API, NetworkId } from "@orderly.network/types";
-import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
-import { toast } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
+import { API, NetworkId } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
+import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 
-export type UseWithdrawFormScriptReturn = ReturnType<typeof useWithdrawForm>;
+export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
 const markPrice = 1;
 
-export const useWithdrawForm = ({
-  onClose,
-}: {
+type WithdrawFormScriptOptions = {
   onClose: (() => void) | undefined;
-}) => {
+};
+
+export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const { t } = useTranslation();
-  const [positionData] = usePositionStream();
   const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
@@ -65,13 +64,12 @@ export const useWithdrawForm = ({
     setChain: switchChain,
     settingChain,
   } = useWalletConnector();
-  const config = useConfig();
   const { walletName, address } = useMemo(
     () => ({
       walletName: wallet?.label,
       address: wallet?.accounts?.[0].address,
     }),
-    [wallet]
+    [wallet],
   );
 
   const onQuantityChange = (qty: string) => {
@@ -125,7 +123,7 @@ export const useWithdrawForm = ({
           return data.rows[0].chain_details;
         }
       },
-    }
+    },
   );
 
   const currentChain = useMemo(() => {
@@ -199,47 +197,14 @@ export const useWithdrawForm = ({
           toast.error(`${t("connector.switchChain.failed")}: ${error.message}`);
         });
     },
-    [currentChain, switchChain, findByChainId, t]
+    [currentChain, switchChain, findByChainId, t],
   );
 
-  const hasPositions = useMemo(
-    () => positionData?.rows?.length! > 0,
-    [positionData]
-  );
-
-  const onSettlePnl = async () => {
-    return account
-      .settle()
-      .catch((e) => {
-        if (e.code == -1104) {
-          toast.error(t("settle.settlement.error"));
-        }
-        if (
-          e.message.indexOf(
-            "Signing off chain messages with Ledger is not yet supported"
-          ) !== -1
-        ) {
-          ee.emit("wallet:sign-message-with-ledger-error", {
-            message: e.message,
-            userAddress: account.address,
-          });
-        }
-
-        if (e.message.indexOf("user rejected") !== -1) {
-          toast.error(t("transfer.rejectTransaction"));
-        }
-        return Promise.reject(e);
-      })
-      .then((res) => {
-        toast.success(t("settle.settlement.requested"));
-        return Promise.resolve(res);
-      });
-  };
   const chainVaultBalance = useMemo(() => {
     if (!balanceList || !currentChain) return null;
     // chain.id
     const vaultBalance = balanceList.find(
-      (item: any) => parseInt(item.chain_id) === currentChain?.id
+      (item: any) => parseInt(item.chain_id) === currentChain?.id,
     );
     if (vaultBalance) {
       return vaultBalance.balance;
@@ -271,7 +236,7 @@ export const useWithdrawForm = ({
       toast.error(
         t("transfer.withdraw.minAmount.error", {
           minAmount,
-        })
+        }),
       );
       return;
     }
@@ -286,9 +251,7 @@ export const useWithdrawForm = ({
       .then((res) => {
         toast.success(t("transfer.withdraw.requested"));
         ee.emit("withdraw:requested");
-        if (onClose) {
-          onClose();
-        }
+        options.onClose?.();
         setQuantity("");
       })
       .catch((e) => {
@@ -298,7 +261,7 @@ export const useWithdrawForm = ({
         }
         if (
           e.message.indexOf(
-            "Signing off chain messages with Ledger is not yet supported"
+            "Signing off chain messages with Ledger is not yet supported",
           ) !== -1
         ) {
           ee.emit("wallet:sign-message-with-ledger-error", {
@@ -319,7 +282,7 @@ export const useWithdrawForm = ({
     if (!currentChain) return 0;
 
     const item = tokenChainsRes?.find(
-      (c: any) => parseInt(c.chain_id) === currentChain!.id
+      (c: any) => parseInt(c.chain_id) === currentChain!.id,
     );
 
     if (!item) {
@@ -394,7 +357,7 @@ export const useWithdrawForm = ({
   useEffect(() => {
     // const item = assetHistory?.find((e: any) => e.trans_status === "COMPLETED");
     const item = assetHistory?.find(
-      (e: any) => e.trans_status === "pending_rebalance".toUpperCase()
+      (e: any) => e.trans_status === "pending_rebalance".toUpperCase(),
     );
     if (item) {
       setCrossChainTrans(true);
@@ -414,6 +377,8 @@ export const useWithdrawForm = ({
     },
   });
 
+  const { hasPositions, onSettlePnl } = useSettlePnl();
+
   return {
     walletName,
     address,
@@ -428,14 +393,12 @@ export const useWithdrawForm = ({
     maxQuantity: maxAmount,
     disabled,
     loading,
-    hasPositions,
     unsettledPnL,
     wrongNetwork,
     settingChain,
     chains,
     currentChain,
     onChainChange,
-    onSettlePnl,
     onWithdraw,
     chainVaultBalance,
     fee,
@@ -444,5 +407,7 @@ export const useWithdrawForm = ({
     showQty,
     networkId,
     checkIsBridgeless,
+    hasPositions,
+    onSettlePnl,
   };
 };

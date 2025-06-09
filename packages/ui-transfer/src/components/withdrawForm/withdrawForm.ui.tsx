@@ -1,24 +1,19 @@
+import { Trans, useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, Text, textVariants } from "@orderly.network/ui";
-import {
-  useWithdrawForm,
-  UseWithdrawFormScriptReturn,
-} from "./withdrawForm.script";
-import { Web3Wallet } from "../web3Wallet";
-import { ExchangeDivider } from "../exchangeDivider";
+import { AvailableQuantity } from "../availableQuantity";
 import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
+import { ExchangeDivider } from "../exchangeDivider";
 import { QuantityInput } from "../quantityInput";
-import { AvailableQuantity } from "../availableQuantity";
-import { WithdrawWarningMessage } from "../withdrawWarningMessage";
 import { UnsettlePnlInfo } from "../unsettlePnlInfo";
+import { Web3Wallet } from "../web3Wallet";
 import { WithdrawAction } from "../withdrawAction";
-import { useTranslation } from "@orderly.network/i18n";
+import { WithdrawWarningMessage } from "../withdrawWarningMessage";
+import { WithdrawFormScriptReturn } from "./withdrawForm.script";
 
-export type WithdrawFormProps = ReturnType<typeof useWithdrawForm> & {
-  onClose?: () => void;
-};
+export type WithdrawFormProps = WithdrawFormScriptReturn;
 
-export const WithdrawFormUI = ({
+export const WithdrawForm = ({
   address,
   loading,
   disabled,
@@ -46,7 +41,7 @@ export const WithdrawFormUI = ({
   showQty,
   networkId,
   checkIsBridgeless,
-}: UseWithdrawFormScriptReturn) => {
+}: WithdrawFormProps) => {
   const { t } = useTranslation();
 
   return (
@@ -77,11 +72,16 @@ export const WithdrawFormUI = ({
             onQuantityChange(maxQuantity.toString());
           }}
         />
-        <UnsettlePnlInfo
-          unsettledPnl={unsettledPnL}
-          hasPositions={hasPositions}
-          onSettlle={onSettlePnl}
-        />
+        <Box mx={2} mt={1}>
+          <UnsettlePnlInfo
+            unsettledPnl={unsettledPnL}
+            hasPositions={hasPositions}
+            onSettlePnl={onSettlePnl}
+            tooltipContent={t("settle.unsettled.tooltip")}
+            // @ts-ignore
+            dialogContent={<Trans i18nKey="settle.settlePnl.description" />}
+          />
+        </Box>
 
         <ExchangeDivider />
         <Web3Wallet />

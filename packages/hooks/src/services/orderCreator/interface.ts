@@ -18,7 +18,7 @@ export type OrderValidationResult = {
 
 export type OrderFormEntity = Pick<
   OrderlyOrder,
-  "order_price" | "order_quantity" | "total" | "reduce_only"
+  "order_price" | "order_quantity" | "total" | "reduce_only" | "slippage"
 >;
 
 export type ValuesDepConfig = {
@@ -26,13 +26,14 @@ export type ValuesDepConfig = {
   symbol: API.SymbolExt;
   maxQty: number;
   markPrice: number;
+  estSlippage?: number | null;
 };
 
 export interface OrderCreator<T> {
   create: (values: T, configs: ValuesDepConfig) => T;
   validate: (
     values: T,
-    configs: ValuesDepConfig
+    configs: ValuesDepConfig,
   ) => Promise<{
     [P in keyof T]?: OrderValidationItem;
   }>;

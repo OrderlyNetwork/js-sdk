@@ -1,5 +1,6 @@
 import { useTranslation } from "@orderly.network/i18n";
 import {
+  ArrowLeftRightSquareFill,
   Card,
   FeeTierIcon,
   ServerFillIcon,
@@ -7,6 +8,7 @@ import {
   Tabs,
 } from "@orderly.network/ui";
 import { ArrowLeftRightIcon } from "@orderly.network/ui";
+import { TransferHistoryWidget } from "../TransferHistory";
 import { AssetHistoryWidget } from "../assetHistory";
 import { DistributionHistoryWidget } from "../distribution";
 import { FundingHistoryWidget } from "../funding";
@@ -50,6 +52,13 @@ export const HistoryDataGroupDesktop = (props: {
           value={"distribution"}
         >
           <DistributionHistoryWidget />
+        </TabPanel>
+        <TabPanel
+          title={t("portfolio.overview.transferHistory")}
+          icon={<ArrowLeftRightSquareFill />}
+          value={"transfer"}
+        >
+          <TransferHistoryWidget />
         </TabPanel>
       </Tabs>
     </Card>

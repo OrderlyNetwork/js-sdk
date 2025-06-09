@@ -1,10 +1,10 @@
+import type { SWRConfiguration } from "swr";
 import { get } from "@orderly.network/net";
-import { type SWRConfiguration } from "swr";
 
 export const fetcher = (
   url: string,
   init: RequestInit = {},
-  queryOptions: useQueryOptions<any>
+  queryOptions: useQueryOptions<any>,
 ) => get(url, init, queryOptions?.formatter);
 
 export type useQueryOptions<T> = SWRConfiguration & {

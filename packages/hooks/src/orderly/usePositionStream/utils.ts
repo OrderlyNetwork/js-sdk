@@ -8,7 +8,7 @@ import {
 
 export const findTPSLFromOrders = (
   orders: API.AlgoOrder[],
-  symbol: string
+  symbol: string,
 ): Partial<AlgoOrderEntity> | undefined => {
   const order = findPositionTPSLFromOrders(orders, symbol);
 
@@ -19,7 +19,7 @@ export const findTPSLFromOrders = (
 };
 
 export const findTPSLFromOrder = (
-  order: API.AlgoOrder
+  order: API.AlgoOrder,
 ): {
   tp_trigger_price?: number;
   sl_trigger_price?: number;
@@ -29,10 +29,10 @@ export const findTPSLFromOrder = (
   let sl_trigger_price;
 
   const tpOrder = order?.child_orders?.find(
-    (order: any) => order.algo_type === AlgoOrderType.TAKE_PROFIT
+    (order: any) => order.algo_type === AlgoOrderType.TAKE_PROFIT,
   );
   const slOrder = order?.child_orders?.find(
-    (order: any) => order.algo_type === AlgoOrderType.STOP_LOSS
+    (order: any) => order.algo_type === AlgoOrderType.STOP_LOSS,
   );
 
   if (tpOrder) {
@@ -52,7 +52,7 @@ export const findTPSLFromOrder = (
 
 export const findPositionTPSLFromOrders = (
   orders: API.AlgoOrder[],
-  symbol: string
+  symbol: string,
 ): API.AlgoOrder | undefined => {
   return orders?.find((order) => {
     // console.log(order.symbol, symbol, order.algo_type);

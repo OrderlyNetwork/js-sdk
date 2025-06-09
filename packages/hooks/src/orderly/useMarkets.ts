@@ -95,6 +95,8 @@ export type MarketsItem = {
   leverage?: number;
 };
 
+export type MarketsStore = ReturnType<typeof useMarketsStore>;
+
 export const MarketsStorageKey = "orderly_markets";
 export const DefaultFavoriteTab = { name: "Popular", id: 1 };
 
@@ -281,7 +283,14 @@ export const useMarketsStore = () => {
   };
 };
 
-export const useMarkets = (type: MarketsType = MarketsType.ALL) => {
+/**
+ * Hook for accessing filtered market data based on type
+ * @param type - Type of markets to filter (defaults to ALL)
+ * @returns Tuple containing filtered markets array and markets store
+ */
+export const useMarkets = (
+  type: MarketsType = MarketsType.ALL,
+): [MarketsItem[], MarketsStore] => {
   const { data: futures } = useMarketsStream();
   const symbolsInfo = useSymbolsInfo();
 
@@ -303,9 +312,15 @@ export const useMarkets = (type: MarketsType = MarketsType.ALL) => {
     setMarkets(filterList);
   }, [futures, symbolsInfo, favorites, recent, newListing, type]);
 
-  return [markets, store] as const;
+  return [markets, store];
 };
 
+/**
+ * Adds additional fields to market data
+ * @param futures - Raw futures market data
+ * @param symbolsInfo - Symbol information lookup
+ * @returns Enhanced market data with additional fields
+ */
 const addFieldToMarkets = (
   futures: WSMessage.Ticker[] | null,
   symbolsInfo: SymbolInfo,
@@ -329,6 +344,11 @@ const addFieldToMarkets = (
   });
 };
 
+/**
+ * Filters markets based on type and updates favorite status
+ * @param params - Filter parameters including markets list and type
+ * @returns Filtered and processed markets list
+ */
 const filterMarkets = (params: {
   markets: MarketsItem[];
   favorites: Favorite[];

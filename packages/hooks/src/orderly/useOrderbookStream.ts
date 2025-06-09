@@ -392,43 +392,9 @@ export const useOrderbookStream = (
     bids: [...data.bids],
   });
 
-  // emit the asks0-4 and bids0-4
   useEffect(() => {
-    const updateData = [
-      [
-        reducedData.asks?.[reducedData.asks.length - 1]?.[0],
-        reducedData.bids?.[0]?.[0],
-      ],
-      [
-        reducedData.asks?.[reducedData.asks.length - 2]?.[0],
-        reducedData.bids?.[1]?.[0],
-      ],
-      [
-        reducedData.asks?.[reducedData.asks.length - 3]?.[0],
-        reducedData.bids?.[2]?.[0],
-      ],
-      [
-        reducedData.asks?.[reducedData.asks.length - 4]?.[0],
-        reducedData.bids?.[3]?.[0],
-      ],
-      [
-        reducedData.asks?.[reducedData.asks.length - 5]?.[0],
-        reducedData.bids?.[4]?.[0],
-      ],
-    ];
-    eventEmitter.emit("orderbook:update", updateData);
-  }, [
-    reducedData.asks?.[reducedData.asks.length - 1]?.[0],
-    reducedData.asks?.[reducedData.asks.length - 2]?.[0],
-    reducedData.asks?.[reducedData.asks.length - 3]?.[0],
-    reducedData.asks?.[reducedData.asks.length - 4]?.[0],
-    reducedData.asks?.[reducedData.asks.length - 5]?.[0],
-    reducedData.bids?.[0]?.[0],
-    reducedData.bids?.[1]?.[0],
-    reducedData.bids?.[2]?.[0],
-    reducedData.bids?.[3]?.[0],
-    reducedData.bids?.[4]?.[0],
-  ]);
+    eventEmitter.emit("orderbook:update", reducedData);
+  }, [reducedData]);
 
   const middlePrice = useMemo(() => {
     let asksFrist = 0,

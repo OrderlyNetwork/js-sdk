@@ -30,6 +30,7 @@ export { ArrowLeftRightIcon } from "./arrowLeftRight";
 export { ArrowDownUpIcon } from "./arrowDownUp";
 export { ArrowUpSquareFillIcon } from "./arrowUpSquareFill";
 export { ArrowDownSquareFillIcon } from "./arrowDownSquareFill";
+export { ArrowLeftRightSquareFill } from "./arrowLeftRightSquareFill";
 export { FeeTierIcon } from "./feeTier";
 export { EditIcon } from "./edit";
 export { EyeIcon } from "./eye";

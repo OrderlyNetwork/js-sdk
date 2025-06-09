@@ -18,7 +18,7 @@ const HoverCardContent = React.forwardRef<
     sideOffset={sideOffset}
     className={cn(
       "oui-z-[100] oui-w-64 oui-rounded-md oui-bg-base-8 oui-p-3 oui-text-base-contrast oui-shadow-md oui-outline-none data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=open]:oui-fade-in-0 data-[state=closed]:oui-zoom-out-95 data-[state=open]:oui-zoom-in-95 data-[side=bottom]:oui-slide-in-from-top-2 data-[side=left]:oui-slide-in-from-right-2 data-[side=right]:oui-slide-in-from-left-2 data-[side=top]:oui-slide-in-from-bottom-2",
-      className
+      className,
     )}
     {...props}
   />
@@ -33,7 +33,10 @@ export interface HoverCardProps
 
 const HoverCard: React.FC<
   HoverCardProps &
-    React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>
+    Omit<
+      React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>,
+      "content"
+    >
 > = (props) => {
   const { content, open, defaultOpen, onOpenChange, children, ...rest } = props;
   return (

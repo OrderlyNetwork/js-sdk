@@ -1,12 +1,13 @@
-import { utils } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { BasicSymbolInfo } from "../types/types";
+
+type ValueOf<T> = T[keyof T];
 
 export const getBasicSymbolInfo = (
   symbolInfo: (
     key?: keyof API.SymbolExt | undefined,
-    defaultValue?: utils.ValueOf<API.SymbolExt> | undefined
-  ) => any
+    defaultValue?: ValueOf<API.SymbolExt> | undefined,
+  ) => any,
 ): BasicSymbolInfo => {
   return {
     base_dp: symbolInfo("base_dp"),

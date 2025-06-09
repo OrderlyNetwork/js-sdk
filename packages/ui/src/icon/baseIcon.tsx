@@ -34,25 +34,22 @@ export interface BaseIconProps
   opacity?: number;
 }
 
-export const BaseIcon = React.forwardRef<
-  SVGSVGElement,
-  React.PropsWithChildren<BaseIconProps>
->((props, ref) => {
-  const { size = 24, color, className, children, ...rest } = props;
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      fill="none"
-      viewBox="0 0 24 24"
-      ref={ref}
-      className={iconVariants({ className, color })}
-      {...rest}
-    >
-      {children}
-    </svg>
-  );
-});
-
-BaseIcon.displayName = "BaseIcon";
+export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
+  (props, ref) => {
+    const { size = 24, color, className, children, ...rest } = props;
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        fill="none"
+        viewBox="0 0 24 24"
+        ref={ref}
+        className={iconVariants({ className, color })}
+        {...rest}
+      >
+        {children}
+      </svg>
+    );
+  },
+);

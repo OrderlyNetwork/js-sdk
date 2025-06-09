@@ -1,25 +1,79 @@
 import { type API } from "@orderly.network/types";
 import { useAppStore } from "./appStore";
 
+/**
+ * The return type of useCollateral hook, containing account collateral information
+ */
 export type CollateralOutputs = {
+  /**
+   * Total collateral value in the account
+   *
+   * This includes all assets that can be used as margin
+   */
   totalCollateral: number;
+  /**
+   * Available collateral that can be used for new positions
+   *
+   * Calculated as: totalCollateral - margin requirements
+   */
   freeCollateral: number;
+  /**
+   * Total portfolio value including all positions and collateral
+   *
+   * Can be null if data is not available
+   */
   totalValue: number | null;
+  /**
+   * Current available balance that can be withdrawn
+   *
+   * Excludes locked collateral and pending settlements
+   */
   availableBalance: number;
+  /**
+   * Unrealized profit and loss across all open positions
+   *
+   * Positive value indicates profit, negative indicates loss
+   */
   unsettledPnL: number;
-
-  // positions: API.Position[];
+  /**
+   * List of holdings in the account
+   *
+   * Each holding represents a specific token and its quantity
+   */
+  holding?: API.Holding[];
+  /**
+   * Detailed account information and settings
+   *
+   * Contains account configuration, limits and risk parameters
+   */
   accountInfo?: API.AccountInfo;
+  // positions: API.Position[];
 };
 
 // const positionsPath = pathOr([], [0, "rows"]);
 // const totalCollateralPath = pathOr(0, [0, "totalCollateral"]);
 
+/**
+ *  Hook to get and calculate collateral-related data for an account
+ * @example
+ * ```typescript
+ * const {
+ *  totalCollateral,
+ *  freeCollateral,
+ *  totalValue,
+ *  availableBalance,
+ *  unsettledPnL,
+ *  accountInfo,
+ * } = useCollateral({ dp: 4 });
+ * ```
+ */
 export const useCollateral = (
   options: {
-    /** decimal precision */
+    /**
+     * Decimal precision for numerical values (default: 6)
+     * */
     dp: number;
-  } = { dp: 6 }
+  } = { dp: 6 },
 ): CollateralOutputs => {
   const { dp } = options;
   const {
@@ -28,87 +82,17 @@ export const useCollateral = (
     freeCollateral,
     availableBalance,
     unsettledPnL,
+    holding,
   } = useAppStore((state) => state.portfolio);
   const accountInfo = useAppStore((state) => state.accountInfo);
-
-  // const positions = usePositionStream(undefined, {
-  //   includedPendingOrder: true,
-  // });
-
-  // console.log("positions", positions);
-
-  // const [orders] = useOrderStream({ status: OrderStatus.NEW });
-
-  // const { data: accountInfo } =
-  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
-
-  // const symbolInfo = useSymbolsInfo();
-
-  // const { data: markPrices } = useMarkPricesStream();
-
-  // const { usdc } = useHoldingStream();
-
-  // const filterAlgoOrders =
-  //   orders?.filter((item) => item.algo_order_id === undefined) ?? [];
-
-  // const { data: holding } = usePrivateQuery<API.Holding[]>(
-  //   "/v1/client/holding",
-  //   {
-  //     formatter: (data) => {
-  //       return data.holding;
-  //     },
-  //   }
-  // );
-
-  // const [totalCollateral, totalValue] = useMemo(() => {
-  //   return [
-  //     pathOr(zero, [0, "totalCollateral"], positions),
-  //     pathOr(zero, [0, "totalValue"], positions),
-  //   ];
-  // }, [positions, markPrices]);
-
-  // const totalInitialMarginWithOrders = useMemo(() => {
-  //   if (!accountInfo || !symbolInfo || !markPrices) {
-  //     return 0;
-  //   }
-  //
-  //   return account.totalInitialMarginWithQty({
-  //     positions: positionsPath(positions),
-  //     markPrices,
-  //     IMR_Factors: accountInfo.imr_factor,
-  //     maxLeverage: accountInfo.max_leverage,
-  //     symbolInfo,
-  //   });
-  // }, [
-  //   positions,
-  //   // filterAlgoOrders,
-  //   markPrices,
-  //   accountInfo,
-  //   symbolInfo,
-  // ]);
-  //
-  // const freeCollateral = useMemo(() => {
-  //   return account.freeCollateral({
-  //     totalCollateral,
-  //     totalInitialMarginWithOrders,
-  //   });
-  // }, [totalCollateral, totalInitialMarginWithOrders]);
-  //
-  // const availableBalance = useMemo(() => {
-  //   return account.availableBalance({
-  //     USDCHolding: usdc?.holding ?? 0,
-  //     unsettlementPnL: pathOr_unsettledPnLPathOr(positions),
-  //   });
-  // }, [usdc?.holding, pathOr_unsettledPnLPathOr(positions)]);
-
   return {
     totalCollateral: totalCollateral.toDecimalPlaces(dp).toNumber(),
     freeCollateral: freeCollateral.toDecimalPlaces(dp).toNumber(),
     totalValue: totalValue?.toDecimalPlaces(dp).toNumber() ?? null,
     availableBalance,
     unsettledPnL,
-
     accountInfo,
+    holding,
 
     // @hidden
     // positions: positionsPath(positions),

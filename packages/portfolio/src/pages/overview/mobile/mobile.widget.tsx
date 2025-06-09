@@ -23,6 +23,8 @@ export const MobileOverview: FC = (props) => {
     visible,
     namespace,
     toggleVisible,
+    onTransfer,
+    isMainAccount,
   } = useAssetScript();
   const rewardsData = useRewardsDataScript();
   const layoutContext = useLayoutContext();
@@ -60,6 +62,8 @@ export const MobileOverview: FC = (props) => {
           disabled={!canTrade}
           onWithdraw={onWithdraw}
           onDeposit={onDeposit}
+          onTransfer={onTransfer}
+          isMainAccount={isMainAccount}
           routerAdapter={layoutContext?.routerAdapter}
         />
         <Flex

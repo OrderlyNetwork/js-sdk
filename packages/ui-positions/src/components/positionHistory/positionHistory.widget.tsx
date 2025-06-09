@@ -22,7 +22,7 @@ export const MobilePositionHistoryWidget = (
       content?: string;
       cell?: string;
     };
-  }
+  },
 ) => {
   const { classNames, ...rest } = props;
   const state = usePositionHistoryScript(rest);
