@@ -26,8 +26,8 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
         variant="contained"
         size="lg"
       >
-        <TabPanel title="Trading volume" value="deposit"></TabPanel>
-        <TabPanel title="Realized PnL" value="withdraw"></TabPanel>
+        <TabPanel title="Trading volume" value={TradingTab.Volume}></TabPanel>
+        <TabPanel title="Realized PnL" value={TradingTab.Pnl}></TabPanel>
       </Tabs>
       <Text size="sm" intensity={36}>
         {props.isMobile

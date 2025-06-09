@@ -1,8 +1,9 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { cn, Box, useScreen, Divider } from "@orderly.network/ui";
 import { GeneralRankingWidget } from "../../ranking/generalRanking";
+import { RankingColumnFields } from "../../ranking/shared/column";
 import { LeaderboardFilter } from "../shared/LeaderboardFilter";
-import { LeaderboardTabs } from "../shared/LeaderboardTabs";
+import { LeaderboardTabs, TradingTab } from "../shared/LeaderboardTabs";
 import { GeneralLeaderboardScriptReturn } from "./generalLeaderboard.script";
 
 export type GeneralLeaderboardProps = {
@@ -12,6 +13,17 @@ export type GeneralLeaderboardProps = {
 
 export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
   const { isMobile } = useScreen();
+
+  const fields = useMemo<RankingColumnFields[]>(() => {
+    if (isMobile) {
+      return [
+        "rank",
+        "address",
+        props.activeTab === TradingTab.Volume ? "volume" : "pnl",
+      ];
+    }
+    return ["rank", "address", "volume", "pnl"];
+  }, [isMobile, props.activeTab]);
 
   if (isMobile) {
     return (
@@ -33,6 +45,7 @@ export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
         <GeneralRankingWidget
           dateRange={props.dateRange}
           address={props.searchValue}
+          fields={fields}
         />
       </Box>
     );
@@ -55,6 +68,7 @@ export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
       <GeneralRankingWidget
         dateRange={props.dateRange}
         address={props.searchValue}
+        fields={fields}
       />
     </Box>
   );

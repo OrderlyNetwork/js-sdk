@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import {
   CampaignLeaderboardWidget,
@@ -39,8 +39,14 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
 
 const Title = (props: { title: ReactNode }) => {
   return (
-    <Flex mb={6} justify="center">
+    <Flex mb={6} gapY={1} justify="center" direction="column">
       <Text className="oui-text-[32px] oui-font-bold">{props.title}</Text>
+      <Box
+        width={24}
+        height={6}
+        r="base"
+        className="oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-start))_0%,rgb(var(--oui-gradient-brand-end))_100%)]"
+      />
     </Flex>
   );
 };

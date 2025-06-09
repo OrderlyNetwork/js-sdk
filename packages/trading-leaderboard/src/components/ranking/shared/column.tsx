@@ -6,12 +6,23 @@ import secondBadge from "../../../img/second_badge.png";
 import thirdBadge from "../../../img/third_badge.png";
 import { getCurrentAddressRowKey } from "./util";
 
-export const useRankingColumns = (address?: string) => {
+export type RankingColumnFields =
+  | "rank"
+  | "address"
+  | "volume"
+  | "pnl"
+  | "rewards";
+
+export const useRankingColumns = (
+  fields?: RankingColumnFields[],
+  address?: string,
+  enableSort?: boolean,
+) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
   return useMemo(() => {
-    return [
+    const columns = [
       {
         title: t("tradingLeaderboard.rank"),
         dataIndex: "rank",
@@ -93,7 +104,8 @@ export const useRankingColumns = (address?: string) => {
       {
         title: t("tradingLeaderboard.tradingVolume"),
         dataIndex: "volume",
-        onSort: true,
+        onSort: enableSort,
+        align: isMobile ? "right" : "left",
         render: (value: string) => {
           if (!value) {
             return "-";
@@ -109,7 +121,7 @@ export const useRankingColumns = (address?: string) => {
       {
         title: t("common.realizedPnl"),
         dataIndex: "pnl",
-        onSort: true,
+        onSort: enableSort,
         align: isMobile ? "right" : "left",
         render: (value: string) => {
           if (!value) {
@@ -123,8 +135,28 @@ export const useRankingColumns = (address?: string) => {
         },
         width: 90,
       },
+      {
+        title: "Estimated rewards",
+        dataIndex: "rewards",
+        align: isMobile ? "right" : "left",
+        render: (value: string) => {
+          if (!value) {
+            return "-";
+          }
+          return (
+            <Text.numeral suffix=" USDC" rule="price" dp={0}>
+              {value}
+            </Text.numeral>
+          );
+        },
+        width: 90,
+      },
     ] as Column[];
-  }, [t, isMobile, address]);
+
+    return columns.filter((column) =>
+      fields?.includes(column.dataIndex as RankingColumnFields),
+    );
+  }, [t, isMobile, address, fields, enableSort]);
 };
 
 const FirstRankIcon = () => {

@@ -7,18 +7,18 @@ import {
 
 export type CampaignRankingWidgetProps = Pick<
   RankingProps,
-  "style" | "className"
+  "style" | "className" | "fields"
 > &
   CampaignRankingScriptOptions;
 
 export const CampaignRankingWidget: FC<CampaignRankingWidgetProps> = (
   props,
 ) => {
-  const { campaignId, ...rest } = props;
+  const { campaignId, fields, ...rest } = props;
   const state = useCampaignRankingScript({
     campaignId,
   });
 
   // @ts-ignore
-  return <Ranking {...state} {...rest} />;
+  return <Ranking {...state} {...rest} fields={fields} />;
 };

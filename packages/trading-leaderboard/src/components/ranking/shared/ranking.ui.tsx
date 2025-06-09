@@ -12,7 +12,7 @@ import {
   type GeneralRankingData,
   GeneralRankingScriptReturn,
 } from "../generalRanking/generalRanking.script";
-import { useRankingColumns } from "./column";
+import { type RankingColumnFields, useRankingColumns } from "./column";
 import { getCurrentAddressRowKey } from "./util";
 
 type RankingData = GeneralRankingData | CampaignRankingData;
@@ -20,13 +20,18 @@ type RankingData = GeneralRankingData | CampaignRankingData;
 export type RankingProps = {
   style?: React.CSSProperties;
   className?: string;
+  fields: RankingColumnFields[];
 } & Omit<GeneralRankingScriptReturn, "dataList" | "dataSource"> & {
     dataList: RankingData[];
     dataSource: RankingData[];
   };
 
 export const Ranking: FC<RankingProps> = (props) => {
-  const column = useRankingColumns(props.address);
+  const column = useRankingColumns(
+    props.fields,
+    props.address,
+    typeof props.onSort === "function",
+  );
   const { isMobile } = useScreen();
 
   const onRow = useCallback(

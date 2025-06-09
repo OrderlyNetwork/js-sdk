@@ -115,13 +115,20 @@ export const LayoutPage: Story = {
 
 export const GeneralRanking: Story = {
   render: (args) => {
-    return <GeneralRankingWidget />;
+    return (
+      <GeneralRankingWidget fields={["rank", "address", "volume", "pnl"]} />
+    );
   },
 };
 
 export const CampaignRanking: Story = {
   render: (args) => {
-    return <CampaignRankingWidget campaignId={14} />;
+    return (
+      <CampaignRankingWidget
+        campaignId={14}
+        fields={["rank", "address", "volume", "pnl", "rewards"]}
+      />
+    );
   },
 };
 

@@ -219,16 +219,11 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     const list = data?.rows || [];
     const total = data?.meta.total || 0;
     const rankList = addRankForList(list, total);
-    let _data = rankList;
+
     if (page === 1 && !searchValue) {
-      // @ts-ignore
-      _data = [...userDataList, ...rankList];
+      return formatData([...userDataList, ...rankList]);
     }
-    return _data.map((item) => ({
-      ...item,
-      volume: item.perp_volume,
-      pnl: item.realized_pnl,
-    }));
+    return formatData(rankList);
   }, [data, page, userDataList, searchValue, addRankForList]);
 
   const dataList = useMemo(() => {
@@ -240,17 +235,10 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     const flatList = infiniteData?.map((item) => item.rows)?.flat();
     const rankList = addRankForList(flatList, total);
 
-    let _data = rankList;
-
     if (!searchValue) {
-      // @ts-ignore
-      _data = [...userDataList, ...rankList];
+      return formatData([...userDataList, ...rankList]);
     }
-    return _data.map((item) => ({
-      ...item,
-      volume: item.perp_volume,
-      pnl: item.realized_pnl,
-    }));
+    return formatData(rankList);
   }, [infiniteData, userDataList, searchValue, addRankForList]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -300,4 +288,12 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     dataList,
     address: state.address,
   };
+}
+
+function formatData(data: any[]) {
+  return data.map((item) => ({
+    ...item,
+    volume: item.perp_volume,
+    pnl: item.realized_pnl,
+  }));
 }

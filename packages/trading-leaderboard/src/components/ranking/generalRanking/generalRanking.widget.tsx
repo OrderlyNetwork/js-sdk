@@ -7,16 +7,16 @@ import {
 
 export type GeneralRankingWidgetProps = Pick<
   RankingProps,
-  "style" | "className"
+  "style" | "className" | "fields"
 > &
   GeneralRankingScriptOptions;
 
 export const GeneralRankingWidget: FC<GeneralRankingWidgetProps> = (props) => {
-  const { dateRange, address, ...rest } = props;
+  const { dateRange, address, fields, ...rest } = props;
   const state = useGeneralRankingScript({
     dateRange,
     address,
   });
 
-  return <Ranking {...state} {...rest} />;
+  return <Ranking {...state} {...rest} fields={fields} />;
 };

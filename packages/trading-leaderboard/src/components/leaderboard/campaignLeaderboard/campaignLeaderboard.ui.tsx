@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { cn, Box, useScreen } from "@orderly.network/ui";
 import { CampaignRankingWidget } from "../../ranking/campaignRanking";
-import { LeaderboardTabs } from "../shared/LeaderboardTabs";
+import { RankingColumnFields } from "../../ranking/shared/column";
+import { LeaderboardTabs, TradingTab } from "../shared/LeaderboardTabs";
 import { CampaignLeaderboardScriptReturn } from "./campaignLeaderboard.script";
 
 export type CampaignLeaderboardProps = {
@@ -12,6 +13,15 @@ export type CampaignLeaderboardProps = {
 
 export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {
   const { isMobile } = useScreen();
+
+  const fields = useMemo<RankingColumnFields[]>(() => {
+    return [
+      "rank",
+      "address",
+      props.activeTab === TradingTab.Volume ? "volume" : "pnl",
+      "rewards",
+    ];
+  }, [isMobile, props.activeTab]);
 
   if (isMobile) {
     return (
@@ -29,7 +39,7 @@ export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {
           isMobile={isMobile}
         />
 
-        <CampaignRankingWidget campaignId={props.campaignId} />
+        <CampaignRankingWidget campaignId={props.campaignId} fields={fields} />
       </Box>
     );
   }
@@ -50,7 +60,7 @@ export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {
         onTabChange={props.onTabChange}
         isMobile={isMobile}
       />
-      <CampaignRankingWidget campaignId={props.campaignId} />
+      <CampaignRankingWidget campaignId={props.campaignId} fields={fields} />
     </Box>
   );
 };

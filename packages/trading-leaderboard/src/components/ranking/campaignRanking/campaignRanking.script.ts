@@ -215,9 +215,9 @@ export function useCampaignRankingScript(
     const total = data?.meta.total || 0;
     const rankList = addRankForList(list, total);
     if (page === 1) {
-      return userDataList ? [userDataList, ...rankList] : rankList;
+      return formatData(userDataList ? [userDataList, ...rankList] : rankList);
     }
-    return rankList;
+    return formatData(rankList);
   }, [data, page, userDataList, , addRankForList]);
 
   const dataList = useMemo(() => {
@@ -229,7 +229,7 @@ export function useCampaignRankingScript(
     const flatList = infiniteData?.map((item) => item.rows)?.flat();
     const rankList = addRankForList(flatList, total);
 
-    return userDataList ? [userDataList, ...rankList] : rankList;
+    return formatData(userDataList ? [userDataList, ...rankList] : rankList);
   }, [infiniteData, userDataList, addRankForList]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -245,14 +245,6 @@ export function useCampaignRankingScript(
     }
   });
 
-  // now we don't need to sort
-  const onSort = useCallback(
-    (sort?: TableSort) => {
-      // setSort(sort || initialSort);
-    },
-    [initialSort],
-  );
-
   useEffect(() => {
     setPage(1);
   }, [state.address]);
@@ -260,7 +252,6 @@ export function useCampaignRankingScript(
   return {
     pagination,
     initialSort,
-    onSort,
     dataSource,
     isLoading: isLoading || isValidating,
     isMobile,
@@ -268,4 +259,11 @@ export function useCampaignRankingScript(
     dataList,
     address: state.address,
   };
+}
+
+function formatData(data: any[]) {
+  return data.map((item) => ({
+    ...item,
+    rewards: item.volume / 1000,
+  }));
 }
