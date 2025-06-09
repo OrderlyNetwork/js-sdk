@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-
+import { omit } from "ramda";
 import {
   API,
   AlgoOrderEntity,
   OrderSide,
   SDKError,
 } from "@orderly.network/types";
-import { UpdateOrderKey, tpslCalculateHelper } from "./tp_slUtils";
-import { useMutation } from "../../useMutation";
-import { OrderFactory } from "../../services/orderCreator/factory";
 import { AlgoOrderRootType } from "@orderly.network/types";
+import { OrderFactory } from "../../services/orderCreator/factory";
+import { OrderValidationItem } from "../../services/orderCreator/interface";
 import { TPSLPositionOrderCreator } from "../../services/orderCreator/tpslPositionOrderCreator";
+import { useSubAccountMutation } from "../../subAccount";
+import { useMutation } from "../../useMutation";
+import { useMarkPrice } from "../useMarkPrice";
 import { findTPSLFromOrder } from "../usePositionStream/utils";
 import { useSymbolsInfo } from "../useSymbolsInfo";
-import { useMarkPrice } from "../useMarkPrice";
-import { omit } from "ramda";
-import { OrderValidationItem } from "../../services/orderCreator/interface";
+import { UpdateOrderKey, tpslCalculateHelper } from "./tp_slUtils";
 
 export type TPSLComputedData = {
   /**
@@ -55,7 +55,7 @@ export const useTaskProfitAndStopLossInternal = (
      * Conversely, even if defaultOrder is provided and isEditing is false, a new TPSL order is still created
      */
     isEditing?: boolean;
-  }
+  },
 ): [
   /**
    * return the computed & formatted order
@@ -71,7 +71,7 @@ export const useTaskProfitAndStopLossInternal = (
     /**
      * Submit the TP/SL order
      */
-    submit: () => Promise<any>;
+    submit: (params?: { accountId?: string }) => Promise<any>;
     deleteOrder: (orderId: number, symbol: string) => Promise<any>;
     // /**
     //  * Create the take profit and stop loss order, auto-detect the order type
@@ -89,7 +89,7 @@ export const useTaskProfitAndStopLossInternal = (
     >;
     isCreateMutating: boolean;
     isUpdateMutating: boolean;
-  }
+  },
 ] => {
   const isEditing =
     typeof options?.isEditing !== "undefined"
@@ -118,11 +118,9 @@ export const useTaskProfitAndStopLossInternal = (
   const { data: markPrice } = useMarkPrice(order.symbol!);
 
   const [doCreateOrder, { isMutating: isCreateMutating }] =
-    useMutation("/v1/algo/order");
-  const [doUpdateOrder, { isMutating: isUpdateMutating }] = useMutation(
-    "/v1/algo/order",
-    "PUT"
-  );
+    useSubAccountMutation("/v1/algo/order");
+  const [doUpdateOrder, { isMutating: isUpdateMutating }] =
+    useSubAccountMutation("/v1/algo/order", "PUT");
   const [doDeleteOrder] = useMutation("/v1/algo/order", "DELETE");
 
   const [errors, setErrors] = useState<ValidateError | null>(null);
@@ -147,7 +145,7 @@ export const useTaskProfitAndStopLossInternal = (
     value: number | string,
     options?: {
       ignoreValidate?: boolean;
-    }
+    },
   ) => {
     // console.log("[updateOrder:]", key, value);
 
@@ -172,7 +170,7 @@ export const useTaskProfitAndStopLossInternal = (
         },
         {
           symbol: symbolInfo,
-        }
+        },
       );
 
       return {
@@ -188,7 +186,7 @@ export const useTaskProfitAndStopLossInternal = (
     value: number | string,
     options?: {
       ignoreValidate?: boolean;
-    }
+    },
   ) => {
     // console.log("-------->>>>>", key, value);
     if (key === "quantity") {
@@ -242,7 +240,7 @@ export const useTaskProfitAndStopLossInternal = (
     keys.forEach((key) => {
       setOrderValue(
         key as UpdateOrderKey,
-        values[key as keyof ComputedAlgoOrder] as number | string
+        values[key as keyof ComputedAlgoOrder] as number | string,
       );
     });
   };
@@ -258,7 +256,7 @@ export const useTaskProfitAndStopLossInternal = (
       return orderCreator
         .validate(
           order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
-          valueConfig
+          valueConfig,
         )
         .then((errors) => {
           console.log("errors::", errors);
@@ -271,8 +269,8 @@ export const useTaskProfitAndStopLossInternal = (
           resolve(
             orderCreator.create(
               order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
-              valueConfig
-            )
+              valueConfig,
+            ),
           );
         });
     });
@@ -295,41 +293,46 @@ export const useTaskProfitAndStopLossInternal = (
       return OrderFactory.create(AlgoOrderRootType.TP_SL);
     }
     return OrderFactory.create(
-      compare() ? AlgoOrderRootType.POSITIONAL_TP_SL : AlgoOrderRootType.TP_SL
+      compare() ? AlgoOrderRootType.POSITIONAL_TP_SL : AlgoOrderRootType.TP_SL,
     );
   };
 
-  const submit = async () => {
+  const submit = async (params?: {
+    /**
+     * if you are main account to create tpsl order, you need to provide the accountId
+     */
+    accountId?: string;
+  }) => {
     const defaultOrder = options?.defaultOrder;
     const orderId = defaultOrder?.algo_order_id;
     const algoType = defaultOrder?.algo_type;
 
     // if algo_order_id is not existed, create new order
     if (!orderId) {
-      return createOrder();
+      return createOrder(params);
     }
 
     // if algo_order_id is existed and algoType = POSITION_TP_SL
     if (algoType === AlgoOrderRootType.POSITIONAL_TP_SL) {
       // if order.qty = position.qty, update order
       if (compare()) {
-        return updateOrder(orderId!);
+        return updateOrder(orderId!, params);
       }
       // if order.qty != position.qty, create new tp/sl order
-      return createOrder();
+      return createOrder(params);
     }
 
     // if algo_order_id is existed and algoType = TP_SL, delete order and create new order
 
-    return updateOrder(orderId!);
+    return updateOrder(orderId!, params);
   };
 
-  const createOrder = () => {
+  const createOrder = (params?: { accountId?: string }) => {
     const orderCreator = getOrderCreator();
 
     const orderBody = orderCreator.create(
       order as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
-      valueConfig
+      valueConfig,
     );
 
     if (orderBody.child_orders.length === 0) {
@@ -338,10 +341,10 @@ export const useTaskProfitAndStopLossInternal = (
 
     // filter the order that is not activated
     orderBody.child_orders = orderBody.child_orders.filter(
-      (order: API.AlgoOrderExt) => order.is_activated
+      (order: API.AlgoOrderExt) => order.is_activated,
     );
 
-    return doCreateOrder(orderBody);
+    return doCreateOrder(orderBody, {}, params);
   };
 
   const deleteOrder = (orderId: number, symbol: string): Promise<any> => {
@@ -351,7 +354,10 @@ export const useTaskProfitAndStopLossInternal = (
     });
   };
 
-  const updateOrder = (orderId: number): Promise<any> => {
+  const updateOrder = (
+    orderId: number,
+    params?: { accountId?: string },
+  ): Promise<any> => {
     const orderCreator =
       getOrderCreator() as unknown as TPSLPositionOrderCreator;
 
@@ -359,7 +365,7 @@ export const useTaskProfitAndStopLossInternal = (
       // @ts-ignore
       order,
       options?.defaultOrder,
-      valueConfig
+      valueConfig,
     );
 
     if (updatedOrderEntity.child_orders.length === 0) {
@@ -369,17 +375,21 @@ export const useTaskProfitAndStopLossInternal = (
     const needDelete =
       orderEntity.child_orders.filter(
         (order) =>
-          typeof order.is_activated === "boolean" && !order.is_activated
+          typeof order.is_activated === "boolean" && !order.is_activated,
       ).length === orderEntity.child_orders.length;
 
     if (needDelete) {
       return deleteOrder(orderId, order.symbol!);
     }
 
-    return doUpdateOrder({
-      order_id: orderId,
-      ...updatedOrderEntity,
-    });
+    return doUpdateOrder(
+      {
+        order_id: orderId,
+        ...updatedOrderEntity,
+      },
+      {},
+      params,
+    );
   };
 
   return [

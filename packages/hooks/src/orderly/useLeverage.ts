@@ -14,9 +14,41 @@ const generateLeverageLevers = (max: number) => {
   return result;
 };
 
+/**
+ * A hook for managing leverage in trading.
+ *
+ * @remarks
+ * This hook provides functionality to get and update the user's leverage settings.
+ *
+ * It fetches the current leverage from client info and available leverage options from config.
+ *
+ * @returns A tuple containing:
+ * - The current maximum leverage value
+ * - An object with:
+ *   - `update`: Function to update leverage
+ *   - `isMutating`: Boolean indicating if an update is in progress
+ *   - `config`: Array of available leverage options (e.g. [1, 2, 3, 4, 5, 10, 15, 20])
+ *
+ * @example
+ * ```typescript
+ * const [maxLeverage, { update, isMutating, config }] = useLeverage();
+ *
+ * // Get current max leverage
+ * console.log(maxLeverage);
+ *
+ * // Update leverage
+ * update({ leverage: 5 });
+ *
+ * // Available leverage options
+ * console.log(config); // e.g., [1, 2, 3, 4, 5, 10, 15, 20]
+ * ```
+ */
 export const useLeverage = () => {
   const { data, mutate } = usePrivateQuery<{ max_leverage: string | number }>(
     "/v1/client/info",
+    {
+      revalidateOnFocus: false,
+    },
   );
 
   const [update, { isMutating }] = useMutation("/v1/client/leverage");

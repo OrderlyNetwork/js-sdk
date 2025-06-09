@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { tv } from "../utils/tv";
-import { cn } from "tailwind-variants";
 import { TooltipContentProps } from "@radix-ui/react-tooltip";
+import { cn } from "tailwind-variants";
+import { tv } from "../utils/tv";
+
 // import { cn } from "..";
 
 const TooltipProvider = TooltipPrimitive.Provider;
@@ -68,7 +69,7 @@ const TooltipArrow = (props: {
       {...arrowProps}
       className={cn(
         "oui-fill-base-8",
-        className
+        className,
       )({
         twMerge: true,
       })}
@@ -76,54 +77,50 @@ const TooltipArrow = (props: {
   );
 };
 
-export type TooltipProps = React.ComponentPropsWithoutRef<
-  typeof TooltipPrimitive.Root
-> &
-  React.ComponentPropsWithoutRef<typeof TooltipContent> & {
-    className?: string;
-    content?: React.ReactNode;
-    arrow?: TooltipPrimitive.TooltipArrowProps;
-  };
+export type TooltipProps = Omit<
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root> &
+    React.ComponentPropsWithoutRef<typeof TooltipContent>,
+  "content"
+> & {
+  className?: string;
+  content?: React.ReactNode;
+  arrow?: TooltipPrimitive.TooltipArrowProps;
+};
 
 const Tooltip = React.forwardRef<
   React.ElementRef<typeof TooltipContent>,
   TooltipProps
->(
-  (
-    {
-      //   className,
-      children,
-      content,
-      defaultOpen,
-      open,
-      onOpenChange,
-      delayDuration,
-      disableHoverableContent,
-      arrow,
-      ...props
-    },
-    ref
-  ) => {
-    const { className, ...arrowProps } = arrow || {};
-    return (
-      <TooltipPrimitive.Root
-        defaultOpen={defaultOpen}
-        open={open}
-        onOpenChange={onOpenChange}
-        delayDuration={delayDuration}
-        disableHoverableContent={disableHoverableContent}
-      >
-        <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
-        <TooltipPortal>
-          <TooltipContent ref={ref} {...props}>
-            {content}
-            <TooltipArrow {...arrow} />
-          </TooltipContent>
-        </TooltipPortal>
-      </TooltipPrimitive.Root>
-    );
-  }
-);
+>((originalProps, ref) => {
+  const {
+    children,
+    content,
+    defaultOpen,
+    open,
+    onOpenChange,
+    delayDuration,
+    disableHoverableContent,
+    arrow,
+    ...props
+  } = originalProps;
+  const { className, ...arrowProps } = arrow || {};
+  return (
+    <TooltipPrimitive.Root
+      defaultOpen={defaultOpen}
+      open={open}
+      onOpenChange={onOpenChange}
+      delayDuration={delayDuration}
+      disableHoverableContent={disableHoverableContent}
+    >
+      <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
+      <TooltipPortal>
+        <TooltipContent ref={ref} {...props}>
+          {content}
+          <TooltipArrow {...arrow} />
+        </TooltipContent>
+      </TooltipPortal>
+    </TooltipPrimitive.Root>
+  );
+});
 
 Tooltip.displayName = "Tooltip";
 

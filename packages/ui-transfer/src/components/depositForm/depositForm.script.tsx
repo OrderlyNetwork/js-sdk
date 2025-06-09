@@ -1,10 +1,21 @@
-import {useCallback, useEffect, useMemo} from "react";
-import {useAccount, useConfig, useDeposit, useIndexPrice} from "@orderly.network/hooks";
-import {API, NetworkId, ChainNamespace} from "@orderly.network/types";
-import {Decimal} from "@orderly.network/utils";
-import {useAppContext} from "@orderly.network/react-app";
-import {feeDecimalsOffset} from "../../utils";
-import {useActionType, useChainSelect, useDepositAction, useInputStatus, useToken,} from "./hooks";
+import { useCallback, useEffect, useMemo } from "react";
+import {
+  useAccount,
+  useConfig,
+  useDeposit,
+  useIndexPrice,
+} from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
+import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
+import { feeDecimalsOffset } from "../../utils";
+import {
+  useActionType,
+  useChainSelect,
+  useDepositAction,
+  useInputStatus,
+  useToken,
+} from "./hooks";
 
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
@@ -49,7 +60,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       new Decimal(balance || 0)
         .todp(token?.precision ?? 2, Decimal.ROUND_DOWN)
         .toString(),
-    [balance, token]
+    [balance, token],
   );
 
   const { inputStatus, hintMessage } = useInputStatus({
@@ -139,7 +150,7 @@ export function useDepositFee(options: {
   depositFee?: bigint;
 }) {
   const { nativeToken, depositFee = 0 } = options;
-  const {account} = useAccount();
+  const { account } = useAccount();
 
   const nativeSymbol = nativeToken?.symbol;
 
@@ -147,8 +158,14 @@ export function useDepositFee(options: {
 
   const feeProps = useMemo(() => {
     const dstGasFee = new Decimal(depositFee.toString())
-        // todo solana is 9, evm is 18
-      .div(new Decimal(10).pow(account.walletAdapter?.chainNamespace === ChainNamespace.solana ? 9:18))
+      // todo solana is 9, evm is 18
+      .div(
+        new Decimal(10).pow(
+          account.walletAdapter?.chainNamespace === ChainNamespace.solana
+            ? 9
+            : 18,
+        ),
+      )
       .toString();
 
     const feeAmount = new Decimal(dstGasFee).mul(symbolPrice || 0).toString();

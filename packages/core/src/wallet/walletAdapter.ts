@@ -1,7 +1,6 @@
+import type { BigNumberish } from "ethers/src.ts/utils";
 import { API, ChainNamespace } from "@orderly.network/types";
 import { SignatureDomain } from "../utils";
-
-import type { BigNumberish } from "ethers/src.ts/utils";
 
 export type ChainType = "EVM" | "SOL";
 
@@ -57,6 +56,8 @@ export type AddOrderlyKeyInputs = {
   scope?: string;
   // chainType: ChainType;
   tag?: string;
+  /** @since 2.3.0, when create orderly key for sub account, it's required */
+  subAccountId?: string;
 };
 
 export interface WalletAdapter<Config = any> {
@@ -83,15 +84,15 @@ export interface WalletAdapter<Config = any> {
    * business methods
    */
   generateRegisterAccountMessage(
-    inputs: RegisterAccountInputs
+    inputs: RegisterAccountInputs,
   ): Promise<Message>;
 
   generateWithdrawMessage(
-    inputs: WithdrawInputs
+    inputs: WithdrawInputs,
   ): Promise<Message & { domain: SignatureDomain }>;
 
   generateSettleMessage(
-    inputs: SettleInputs
+    inputs: SettleInputs,
   ): Promise<Message & { domain: SignatureDomain }>;
 
   generateAddOrderlyKeyMessage(inputs: AddOrderlyKeyInputs): Promise<Message>;
@@ -111,7 +112,7 @@ export interface WalletAdapter<Config = any> {
     params: any[],
     options?: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   /**
@@ -128,7 +129,7 @@ export interface WalletAdapter<Config = any> {
     },
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   callOnChain(
@@ -138,7 +139,7 @@ export interface WalletAdapter<Config = any> {
     params: any[],
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   getBalance(): Promise<bigint>;
@@ -147,7 +148,7 @@ export interface WalletAdapter<Config = any> {
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
-    maxRetries?: number
+    maxRetries?: number,
   ): Promise<any>;
 
   parseUnits: (amount: string, decimals?: number) => string;

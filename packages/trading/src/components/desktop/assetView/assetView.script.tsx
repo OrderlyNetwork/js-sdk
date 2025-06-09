@@ -3,7 +3,6 @@ import {
   useAccountInstance,
   useEventEmitter,
   useLocalStorage,
-  useMediaQuery,
   useSettleSubscription,
   useWalletSubscription,
   useAccount,
@@ -13,21 +12,16 @@ import {
   useMarginRatio,
   usePositionStream,
 } from "@orderly.network/hooks";
-import {
-  MEDIA_TABLET,
-  AccountStatusEnum,
-  NetworkId,
-  API,
-} from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
-import {
-  DepositAndWithdrawWithSheetId,
-  DepositAndWithdrawWithDialogId,
-} from "@orderly.network/ui-transfer";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { Decimal } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { AccountStatusEnum, NetworkId, API } from "@orderly.network/types";
+import { modal, toast } from "@orderly.network/ui";
+import {
+  DepositAndWithdrawWithDialogId,
+  TransferDialogId,
+} from "@orderly.network/ui-transfer";
+import { capitalizeString } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 
 export const useFirstTimeDeposit = () => {
   const { state } = useAccount();
@@ -66,7 +60,7 @@ export const useFirstTimeDeposit = () => {
     getKeyMemo,
     {
       formatter: (data) => data,
-    }
+    },
   );
 
   return {
@@ -79,11 +73,12 @@ export const useFirstTimeDeposit = () => {
 export const useAssetViewScript = () => {
   const { t } = useTranslation();
   const account = useAccountInstance();
-  const matches = useMediaQuery(MEDIA_TABLET);
+  const ee = useEventEmitter();
+
   const { isFirstTimeDeposit, totalValue } = useFirstTimeDeposit();
 
   const networkId = useConfig("networkId") as NetworkId;
-  const { state } = useAccount();
+  const { state, isMainAccount } = useAccount();
   const { freeCollateral } = useCollateral({
     dp: 2,
   });
@@ -95,9 +90,8 @@ export const useAssetViewScript = () => {
     return Math.min(
       10,
       aggregated.notional === 0
-        ? // @ts-ignore
-          positionsInfo["margin_ratio"](10)
-        : marginRatio
+        ? positionsInfo["margin_ratio"](10)!
+        : marginRatio,
     );
   }, [marginRatio, aggregated]);
 
@@ -110,32 +104,26 @@ export const useAssetViewScript = () => {
   }, [mmr]);
 
   const openDepositAndWithdraw = useCallback(
-    async (viewName: "deposit" | "withdraw") => {
-      let result;
-      if (matches) {
-        result = await modal.show(DepositAndWithdrawWithSheetId, {
-          activeTab: viewName,
-        });
-      } else {
-        result = await modal.show(DepositAndWithdrawWithDialogId, {
-          activeTab: viewName,
-        });
-      }
-
-      return result;
+    (viewName: "deposit" | "withdraw") => {
+      // desktop always show dialog
+      return modal.show(DepositAndWithdrawWithDialogId, {
+        activeTab: viewName,
+      });
     },
-    [matches]
+    [],
   );
 
   const onDeposit = useCallback(async () => {
     return openDepositAndWithdraw("deposit");
-  }, [matches]);
-
-  const ee = useEventEmitter();
+  }, []);
 
   const onWithdraw = useCallback(async () => {
     return openDepositAndWithdraw("withdraw");
-  }, [matches]);
+  }, []);
+
+  const onTransfer = useCallback(async () => {
+    return modal.show(TransferDialogId);
+  }, []);
 
   const onSettle = useCallback(async () => {
     return account
@@ -147,7 +135,7 @@ export const useAssetViewScript = () => {
         }
         if (
           e.message.indexOf(
-            "Signing off chain messages with Ledger is not yet supported"
+            "Signing off chain messages with Ledger is not yet supported",
           ) !== -1
         ) {
           ee.emit("wallet:sign-message-with-ledger-error", {
@@ -164,7 +152,7 @@ export const useAssetViewScript = () => {
 
   const [visible, setVisible] = useLocalStorage<boolean>(
     "orderly_assets_visible",
-    true
+    true,
   );
 
   const toggleVisible = useCallback(() => {
@@ -183,14 +171,14 @@ export const useAssetViewScript = () => {
           DEPOSIT: t("transfer.deposit.completed"),
           WITHDRAW: t("transfer.withdraw.completed"),
         };
-        let msg = `${capitalizeString(side)} completed`;
+        const msg = `${capitalizeString(side)} completed`;
         toast.success(message[side as keyof typeof message] || msg);
       } else if (transStatus === "FAILED") {
         const message = {
           DEPOSIT: t("transfer.deposit.failed"),
           WITHDRAW: t("transfer.withdraw.failed"),
         };
-        let msg = `${capitalizeString(side)} failed`;
+        const msg = `${capitalizeString(side)} failed`;
         toast.error(message[side as keyof typeof message] || msg);
       }
 
@@ -223,6 +211,7 @@ export const useAssetViewScript = () => {
   return {
     onDeposit,
     onWithdraw,
+    onTransfer,
     onSettle,
     visible,
     toggleVisible,
@@ -234,6 +223,8 @@ export const useAssetViewScript = () => {
     marginRatioVal: _marginRatioVal,
     renderMMR: _mmr,
     isConnected,
+    isMainAccount,
+    hasSubAccount: !!state.subAccounts?.length,
   };
 };
 

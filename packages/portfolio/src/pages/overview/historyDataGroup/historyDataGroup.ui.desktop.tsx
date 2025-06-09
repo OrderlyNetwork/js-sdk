@@ -1,4 +1,7 @@
+import React from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
+  ArrowLeftRightSquareFill,
   Card,
   FeeTierIcon,
   ServerFillIcon,
@@ -6,11 +9,12 @@ import {
   Tabs,
 } from "@orderly.network/ui";
 import { ArrowLeftRightIcon } from "@orderly.network/ui";
+import { TransferHistoryWidget } from "../TransferHistory";
 import { AssetHistoryWidget } from "../assetHistory";
-import { TabName } from "./useState.script";
-import { FundingHistoryWidget } from "../funding";
 import { DistributionHistoryWidget } from "../distribution";
-import { useTranslation } from "@orderly.network/i18n";
+import { FundingHistoryWidget } from "../funding";
+import { TabName } from "./useState.script";
+
 export const HistoryDataGroupDesktop = (props: {
   active?: TabName;
   onTabChange: (tab: string) => void;
@@ -49,6 +53,13 @@ export const HistoryDataGroupDesktop = (props: {
           value={"distribution"}
         >
           <DistributionHistoryWidget />
+        </TabPanel>
+        <TabPanel
+          title={t("portfolio.overview.transferHistory")}
+          icon={<ArrowLeftRightSquareFill />}
+          value={"transfer"}
+        >
+          <TransferHistoryWidget />
         </TabPanel>
       </Tabs>
     </Card>

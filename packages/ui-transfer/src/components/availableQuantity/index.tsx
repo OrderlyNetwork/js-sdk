@@ -1,13 +1,13 @@
 import { FC } from "react";
-import { Flex, Spinner, Text } from "@orderly.network/ui";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
+import { Flex, Spinner, Text } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
 export type AvailableQuantityProps = {
-  token?: API.TokenInfo;
-  amount: number;
-  maxQuantity?: string;
+  token?: Partial<API.TokenInfo>;
+  amount: number | string;
+  maxQuantity?: number | string;
   onClick?: () => void;
   loading?: boolean;
 };

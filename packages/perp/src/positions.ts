@@ -109,9 +109,9 @@ export function liqPrice(inputs: LiqPriceInputs): number | null {
   }
 
   // totalNotional of all poisitions
-  const totalNotional: Decimal = positions.reduce((acc, cur) => {
+  const totalNotional = positions.reduce<Decimal>((acc, cur) => {
     return acc.add(
-      new Decimal(notional(cur.position_qty, cur.mark_price)).mul(cur.mmr)
+      new Decimal(notional(cur.position_qty, cur.mark_price)).mul(cur.mmr),
     );
   }, zero);
 
@@ -120,10 +120,10 @@ export function liqPrice(inputs: LiqPriceInputs): number | null {
       .add(
         new Decimal(totalCollateral)
           .sub(totalNotional)
-          .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty))
+          .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty)),
       )
       .toNumber(),
-    0
+    0,
   );
 }
 
@@ -188,9 +188,7 @@ export type TotalUnsettlementPnLInputs = {
  * @returns The total unrealized profit or loss of all positions.
  */
 export function totalUnsettlementPnL(
-  positions: (API.Position & {
-    sum_unitary_funding: number;
-  })[]
+  positions: (API.Position & { sum_unitary_funding: number })[],
 ): number {
   if (!Array.isArray(positions) || positions.length === 0) {
     return 0;
@@ -238,7 +236,7 @@ export function MMR(inputs: MMRInputs): number {
       .mul(IMRFactor)
       .mul(Math.pow(Math.abs(positionNotional), IMR_factor_power))
       // .toPower(IMR_factor_power)
-      .toNumber()
+      .toNumber(),
   );
 }
 

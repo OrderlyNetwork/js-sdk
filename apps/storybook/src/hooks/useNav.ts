@@ -34,6 +34,7 @@ export function useNav() {
       [PortfolioLeftSidebarPath.ApiKey]: "Package/portfolio/ApiKey",
       [PortfolioLeftSidebarPath.Positions]: "Package/portfolio/Positions",
       [PortfolioLeftSidebarPath.Orders]: "Package/portfolio/Orders",
+      [PortfolioLeftSidebarPath.Assets]: "Package/portfolio/Assets",
       [PortfolioLeftSidebarPath.Setting]: "Package/portfolio/Setting",
       [PortfolioLeftSidebarPath.History]: "Package/portfolio/History",
 

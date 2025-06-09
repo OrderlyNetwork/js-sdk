@@ -1,6 +1,6 @@
+import { useAccount } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useAppContext } from "../provider/appContext";
-import { useAccount } from "@orderly.network/hooks";
 
 export const useDataTap = <T = any>(
   data: T,
@@ -8,14 +8,16 @@ export const useDataTap = <T = any>(
     skip?: false;
     fallbackData?: T;
     accountStatus?: AccountStatusEnum;
-  }
+  },
 ): T | null => {
   const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
   /**
    * ignore
    */
-  if (options?.skip) return data;
+  if (options?.skip) {
+    return data;
+  }
 
   if (wrongNetwork || disabledConnect) {
     return typeof options?.fallbackData !== "undefined"

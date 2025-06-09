@@ -17,7 +17,7 @@ export const ReduceIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         />
       </BaseIcon>
     );
-  }
+  },
 );
 
 ReduceIcon.displayName = "ReduceIcon";

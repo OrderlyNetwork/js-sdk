@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
-
 import { format as formatDate, isValid } from "date-fns";
-import { CopyableTextProps, Text, TextElement, TextProps } from "./text";
-import { CopyIcon } from "../icon/copy";
-import { TokenIcon } from "../icon";
 import { SizeType } from "../helpers/sizeType";
+import { TokenIcon } from "../icon";
+import { CopyIcon } from "../icon/copy";
+import { CopyableTextProps, Text, TextElement, TextProps } from "./text";
+import { formatAddress } from "./utils";
 
 export type TextRule = "date" | "address" | "symbol" | "status" | "txId";
 
@@ -113,8 +113,9 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
     }, [prefix, showIcon, rule, iconSize, children]);
 
     const suffix = useMemo(() => {
-      if (typeof props.suffix !== "undefined") return props.suffix;
-
+      if (typeof props.suffix !== "undefined") {
+        return props.suffix;
+      }
       if (copyable) {
         return (
           <button
@@ -132,13 +133,17 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
     }, [props.suffix, copyable, children]);
 
     const content = useMemo(() => {
-      if (typeof children === "undefined") return "--";
-      if (typeof rule === "undefined") return children;
+      if (typeof children === "undefined") {
+        return "--";
+      }
+      if (typeof rule === "undefined") {
+        return children;
+      }
       if (rule === "address" || rule === "txId") {
-        const address = children as string;
-        const [start, end] = range ?? (rule === "address" ? [6, 4] : [6, 6]);
-        const reg = new RegExp(`^(.{${start}})(.*)(.{${end}})$`);
-        return `${address.replace(reg, "$1...$3")}`;
+        return formatAddress(
+          children as string,
+          range ?? (rule === "address" ? [6, 4] : [6, 6]),
+        );
       }
       if (rule === "date") {
         // return new Date(children as string).toLocaleString();
@@ -148,7 +153,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
         }
         return formatDate(
           new Date(children as string),
-          formatString ?? DEFAULT_DATE_FORMAT
+          formatString ?? DEFAULT_DATE_FORMAT,
         );
       }
       /**
@@ -180,10 +185,14 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
     }, [children, rule, formatString, range, symbolElement]);
 
     const contentWithFix = useMemo(() => {
-      if (typeof suffix === "undefined" && typeof prefixElement === "undefined")
+      if (
+        typeof suffix === "undefined" &&
+        typeof prefixElement === "undefined"
+      ) {
         return content;
+      }
       return (
-        <span className="oui-flex oui-gap-1 oui-items-center">
+        <span className="oui-flex oui-items-center oui-gap-1">
           {prefixElement}
           {content}
           {suffix}
@@ -196,7 +205,7 @@ export const FormattedText = React.forwardRef<TextElement, FormattedTextProps>(
         {contentWithFix}
       </Text>
     );
-  }
+  },
 );
 
 FormattedText.displayName = "FormattedText";

@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { API } from "@orderly.network/types";
 import {
   useQuery,
   useLocalStorage,
   useSessionStorage,
 } from "@orderly.network/hooks";
+import type { API } from "@orderly.network/types";
 import defaultStyles, { getDefaultColors } from "./theming/mergeStyles";
+
 // import { setStorage, removeStorage } from "@/helper/storage";
 
 export enum EditorViewMode {
@@ -34,7 +35,7 @@ export const DemoContextProvider = ({ children }) => {
   // const [colors, setColors] = useState<any>(defaultStyles);
   const [theme, setTheme] = useSessionStorage<any>(
     "THEME_DOCUMENT",
-    defaultStyles
+    defaultStyles,
   );
 
   const { data: symbols } = useQuery<API.MarketInfo[]>(`/v1/public/futures`, {

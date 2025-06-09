@@ -96,6 +96,28 @@ export function useChains<
   UseChainsReturnObject,
 ];
 
+/**
+ *
+ * @example
+ * // { testnet: API.Chain[];  mainnet: API.Chain[]; }
+ * const [chains1] = useChains();
+ *
+ * // { testnet: API.Chain[];  mainnet: API.Chain[]; }
+ * const [chains2] = useChains(undefined);
+ *
+ * // { testnet: API.NetworkInfos[];  mainnet: API.NetworkInfos[]; }
+ * const [chains3] = useChains(undefined, { pick: "network_infos" });
+ *
+ * // API.Chain[]
+ * const [chains4] = useChains("testnet");
+ *
+ * // API.Chain[]
+ * const [chains5] = useChains("mainnet");
+ *
+ * // API.NetworkInfos[]
+ * const [chains6] = useChains("testnet", { pick: "network_infos" }); *
+ *
+ */
 export function useChains(
   networkId?: NetworkId,
   options: UseChainsOptions = {},

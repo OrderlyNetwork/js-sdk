@@ -2,7 +2,7 @@
 import type { Immer } from "immer";
 
 export { default as version } from "./version";
-
+export { fetcher } from "./utils/fetcher";
 export { useQuery } from "./useQuery";
 export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";
@@ -12,6 +12,7 @@ export { useInfiniteQuery } from "./useInfiniteQuery";
 export { useBoolean } from "./useBoolean";
 
 export { useAccount } from "./useAccount";
+export { type SubAccount } from "@orderly.network/core";
 export { useAccountInstance } from "./useAccountInstance";
 
 export { usePreLoadData } from "./usePreloadData";
@@ -61,8 +62,14 @@ export {
   // SWRConfig,
   useSWRConfig,
   type SWRConfiguration,
+  type SWRHook,
+  type SWRResponse,
+  type Middleware,
+  type KeyedMutator,
   unstable_serialize,
 } from "swr";
+
+export * as swr from "swr";
 
 export * from "use-debounce";
 
@@ -99,3 +106,7 @@ export {
   type RestrictedInfoReturns,
   type RestrictedInfoOptions,
 } from "./useRestrictedInfo";
+
+export * from "./subAccount";
+
+export { usePositionClose } from "./next/positions/usePositionClose";

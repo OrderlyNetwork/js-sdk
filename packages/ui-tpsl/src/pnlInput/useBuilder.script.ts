@@ -1,12 +1,12 @@
 import { useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { MenuItem } from "@orderly.network/ui";
-import { Decimal, todpIfNeed } from "@orderly.network/utils";
 import type {
   InputFormatter,
   InputFormatterOptions,
 } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { Decimal, todpIfNeed } from "@orderly.network/utils";
 
 export enum PnLMode {
   PnL = "PnL",
@@ -33,7 +33,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const { type, values } = props;
   const [mode, setMode] = useLocalStorage<PnLMode>(
     "TP/SL_Mode",
-    PnLMode.PERCENTAGE
+    PnLMode.PERCENTAGE,
   );
   const [focus, setFocus] = useState(true);
 
@@ -77,7 +77,6 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
   const percentageSuffix = useRef<string>("");
 
   const onValueChange = (value: string) => {
-    console.log("onValueChange", value);
     props.onChange(key, value);
   };
 
@@ -89,7 +88,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
     return {
       onRenderBefore: (
         value: string | number,
-        options: InputFormatterOptions
+        options: InputFormatterOptions,
       ) => {
         value = `${value}`; // convert to string
 
@@ -108,8 +107,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           return `${new Decimal(
             value.replace(
               new RegExp(percentageSuffix.current.replace(".", "\\.") + "$"),
-              ""
-            )
+              "",
+            ),
           )
             .mul(100)
             .todp(2, 4)

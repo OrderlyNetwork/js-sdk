@@ -371,33 +371,47 @@ export const LeverageSelector: React.FC<PortfolioSheetState> = (props) => {
 const Buttons: FC<PortfolioSheetState> = (props) => {
   const { t } = useTranslation();
 
+  if (props.isMainAccount) {
+    return (
+      <Grid
+        cols={2}
+        rows={1}
+        gap={3}
+        className="oui-grid-row-[1fr,1fr]"
+        width={"100%"}
+        pt={2}
+        pb={4}
+      >
+        <Button
+          icon={<ArrowUpShortIcon color="white" opacity={0.8} />}
+          size="md"
+          fullWidth
+          className="oui-bg-base-2 hover:oui-bg-base-2/50"
+          onClick={props.onWithdraw}
+        >
+          {t("common.withdraw")}
+        </Button>
+        <Button
+          icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
+          size="md"
+          fullWidth
+          onClick={props.onDeposit}
+        >
+          {t("common.deposit")}
+        </Button>
+      </Grid>
+    );
+  }
+
   return (
-    <Grid
-      cols={2}
-      rows={1}
-      gap={3}
-      className="oui-grid-row-[1fr,1fr]"
-      width={"100%"}
-      pt={2}
-      pb={4}
+    <Button
+      fullWidth
+      color="secondary"
+      size="md"
+      onClick={props.onTransfer}
+      data-testid="oui-testid-assetView-transfer-button"
     >
-      <Button
-        icon={<ArrowUpShortIcon color="white" opacity={0.8} />}
-        size="md"
-        fullWidth
-        className="oui-bg-base-2 hover:oui-bg-base-2/50"
-        onClick={props.onWithdraw}
-      >
-        {t("common.withdraw")}
-      </Button>
-      <Button
-        icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
-        size="md"
-        fullWidth
-        onClick={props.onDeposit}
-      >
-        {t("common.deposit")}
-      </Button>
-    </Grid>
+      <Text>{t("common.transfer")}</Text>
+    </Button>
   );
 };

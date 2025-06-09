@@ -19,7 +19,7 @@ export const parseNumber = (
     padding?: boolean;
 
     abs?: boolean;
-  } = {}
+  } = {},
 ): string => {
   let {
     rule,
@@ -39,7 +39,7 @@ export const parseNumber = (
   if (rule === "human") {
     return numberToHumanStyle(
       typeof value === "number" ? value : Number(value),
-      dp
+      dp,
       // { padding }
     );
   }
@@ -85,7 +85,7 @@ export const parseNumber = (
 
 function rounding(
   d: Decimal,
-  options: { dp: number; rm: RoundingMode; padding: boolean }
+  options: { dp: number; rm: RoundingMode; padding: boolean },
 ): string {
   const { dp, rm, padding } = options;
 
@@ -102,9 +102,10 @@ function rounding(
 
 export const NumberReg = /^([0-9]{1,}[.]?[0-9]*)/;
 
-
 export function formatAddress(address: string, range?: [number, number]) {
-  if (address === undefined || address === null) return '';
+  if (address === undefined || address === null) {
+    return "";
+  }
   const [start, end] = range ?? [6, 4];
   const reg = new RegExp(`^(.{${start}})(.*)(.{${end}})$`);
   return `${address.replace(reg, "$1...$3")}`;

@@ -13,7 +13,7 @@ export async function withdrawMessage(
   inputs: WithdrawInputs & {
     domain: SignatureDomain;
     chainId: number;
-  }
+  },
 ) {
   const { chainId, receiver, token, amount, nonce, brokerId, domain } = inputs;
   // const domain = getDomain(chainId,true);
@@ -51,7 +51,7 @@ export async function addOrderlyKeyMessage(
     domain: SignatureDomain;
     chainId: number;
     // chainType: ChainType;
-  }
+  },
 ) {
   const {
     publicKey,
@@ -63,6 +63,7 @@ export async function addOrderlyKeyMessage(
     scope,
     tag,
     domain,
+    subAccountId,
   } = inputs;
   // const now = Date.now();
   // message;
@@ -77,6 +78,7 @@ export async function addOrderlyKeyMessage(
     // chainType,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
     ...(typeof tag !== "undefined" ? { tag } : {}),
+    ...(typeof subAccountId !== "undefined" ? { subAccountId } : {}),
   };
 
   const typeDefinition = {
@@ -102,7 +104,7 @@ export async function registerAccountMessage(
   inputs: RegisterAccountInputs & {
     domain: SignatureDomain;
     chainId: number;
-  }
+  },
 ) {
   const { chainId, domain, registrationNonce, brokerId, timestamp } = inputs;
   // const chainId = this.chainId;
@@ -134,7 +136,7 @@ export async function settleMessage(
   inputs: SettleInputs & {
     domain: SignatureDomain;
     chainId: number;
-  }
+  },
 ) {
   const { settlePnlNonce, brokerId, chainId, timestamp, domain } = inputs;
 
