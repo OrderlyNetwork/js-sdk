@@ -1,12 +1,13 @@
-import { Box, ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
-import { LayoutProvider } from "./context";
-import { Scaffold, SideBar, SideBarProps } from "@orderly.network/ui-scaffold";
 import { PropsWithChildren } from "react";
+import { Box, ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import { Scaffold, SideBar, SideBarProps } from "@orderly.network/ui-scaffold";
+import { LayoutProvider } from "./context";
 
-export type AffiliateLayoutProps = {
-} & SideBarProps;
+export type AffiliateLayoutProps = {} & SideBarProps;
 
-export const AffiliateLayout = (props: PropsWithChildren<AffiliateLayoutProps>) => {
+export const AffiliateLayout = (
+  props: PropsWithChildren<AffiliateLayoutProps>,
+) => {
   const { ...rest } = props;
   return (
     <Scaffold leftSidebar={<LeftSidebar {...rest} />}>
@@ -35,7 +36,7 @@ export const AffiliateLayout = (props: PropsWithChildren<AffiliateLayoutProps>) 
 
 const LeftSidebar = (props: SideBarProps) => {
   console.log("xxxxxxx left sidebar", props.items);
-  
+
   return (
     <Box p={4} m={3} border borderColor={8} r={"xl"}>
       <SideBar {...props} />

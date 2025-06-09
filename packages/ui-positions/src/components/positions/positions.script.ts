@@ -1,10 +1,10 @@
+import React from "react";
 import { usePositionStream } from "@orderly.network/hooks";
-import { PositionsProps } from "../../types/types";
 import { useDataTap } from "@orderly.network/react-app";
 import { usePagination } from "@orderly.network/ui";
-import { useEffect } from "react";
+import type { PositionsProps } from "../../types/types";
 
-export const usePositionsBuilder = (props: PositionsProps) => {
+export const usePositionsScript = (props: PositionsProps) => {
   const {
     symbol,
     calcMode,
@@ -17,23 +17,18 @@ export const usePositionsBuilder = (props: PositionsProps) => {
   //   "showAllSymbol",
   //   true
   // );
-  const { pagination, setPage } = usePagination({
-    pageSize: 50,
-  });
+  const { pagination, setPage } = usePagination({ pageSize: 50 });
 
-  const [data, info, { isLoading }] = usePositionStream(symbol, {
+  React.useEffect(() => {
+    setPage(1);
+  }, [symbol]);
+
+  const [data, , { isLoading }] = usePositionStream(symbol, {
     calcMode,
     includedPendingOrder,
   });
 
-  useEffect(() => {
-    setPage(1);
-  }, [symbol]);
-
-  const dataSource =
-    useDataTap(data?.rows, {
-      fallbackData: [],
-    }) ?? undefined;
+  const dataSource = useDataTap(data?.rows, { fallbackData: [] }) ?? undefined;
 
   return {
     dataSource,
@@ -46,4 +41,4 @@ export const usePositionsBuilder = (props: PositionsProps) => {
   };
 };
 
-export type PositionsBuilderState = ReturnType<typeof usePositionsBuilder>;
+export type PositionsState = ReturnType<typeof usePositionsScript>;

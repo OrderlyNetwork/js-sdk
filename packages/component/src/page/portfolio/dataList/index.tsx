@@ -1,9 +1,8 @@
 import { useContext, useState } from "react";
+import { LayoutContext } from "@/layout/layoutContext";
 import { TabPane, Tabs } from "@/tab";
 import AssetHistory from "./assetHistory";
 import FundingFee from "./fundingFee";
-import Liquidations from "./liquidations";
-import { LayoutContext } from "@/layout/layoutContext";
 
 export enum EPortfolioTab {
   DepositsWithdrawals = "deposits_withdrawals",
@@ -13,7 +12,7 @@ export enum EPortfolioTab {
 
 export const DataList = () => {
   const [activeTab, setActiveTab] = useState<string>(
-    EPortfolioTab.DepositsWithdrawals
+    EPortfolioTab.DepositsWithdrawals,
   );
 
   const { pageHeaderHeight, headerHeight, footerHeight } =

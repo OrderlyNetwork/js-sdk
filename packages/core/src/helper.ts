@@ -5,7 +5,7 @@ import { getTimestamp, SignatureDomain } from "./utils";
 
 export const getMockSigner = (secretKey?: string) => {
   const mockKeyStore = new MockKeyStore(
-    secretKey || "AFmQSju4FhDwG93cMdKogcnKx7SWmViDtDv5PVzfvRDF"
+    secretKey || "AFmQSju4FhDwG93cMdKogcnKx7SWmViDtDv5PVzfvRDF",
     // "c24fe227663f5a73493cad3f4049514f70623177272d57fffa8cb895fa1f92de"
   );
 
@@ -88,6 +88,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
   timestamp?: number;
   scope?: string;
   tag?: string;
+  subAccountId?: string;
 }) {
   const {
     publicKey,
@@ -98,6 +99,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
     timestamp = getTimestamp(),
     scope,
     tag,
+    subAccountId,
   } = inputs;
   // const now = Date.now();
   // message;
@@ -109,6 +111,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
     timestamp,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
     ...(typeof tag !== "undefined" ? { tag } : {}),
+    ...(typeof subAccountId !== "undefined" ? { subAccountId } : {}),
   };
 
   const typeDefinition = {

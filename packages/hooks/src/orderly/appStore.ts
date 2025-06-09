@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import { API } from "@orderly.network/types";
 import { immer } from "zustand/middleware/immer";
-import { Decimal, zero } from "@orderly.network/utils";
+import { API } from "@orderly.network/types";
 import { WSMessage } from "@orderly.network/types";
+import { Decimal, zero } from "@orderly.network/utils";
+
 // import { devtools } from "zustand/middleware";
 
 export type AppStatus = {
@@ -40,7 +41,7 @@ export type AppActions = {
   updateAppStatus: (key: keyof AppStatus, value: boolean) => void;
   updatePortfolio: (
     key: keyof Omit<Portfolio, "usdc" | "holding">,
-    value: number | Decimal
+    value: number | Decimal,
   ) => void;
 
   batchUpdateForPortfolio: (data: Partial<Portfolio>) => void;
@@ -48,6 +49,17 @@ export type AppActions = {
   updateHolding: (msg: Record<string, WSMessage.Holding>) => void;
 };
 
+/**
+ * @warning This store should be used with caution. It contains sensitive account and portfolio data.
+ * Please ensure you have proper authorization and follow security best practices when using this store.
+ *
+ * @example
+ * // Correct usage:
+ * const accountInfo = useAppStore(state => state.accountInfo);
+ *
+ * // Avoid direct store manipulation:
+ * const store = useAppStore.getState(); // Not recommended
+ */
 export const useAppStore = create<
   AppState & {
     actions: AppActions;
@@ -89,7 +101,7 @@ export const useAppStore = create<
           (state) => {
             state.accountInfo = accountInfo;
           },
-          false
+          false,
           // "setAccountInfo"
         );
       },
@@ -98,7 +110,7 @@ export const useAppStore = create<
           (state) => {
             state.symbolsInfo = symbolsInfo;
           },
-          false
+          false,
           // "setSymbolsInfo"
         );
       },
@@ -107,7 +119,7 @@ export const useAppStore = create<
           (state) => {
             state.fundingRates = fundingRates;
           },
-          false
+          false,
           // "setFundingRates"
         );
       },
@@ -116,19 +128,19 @@ export const useAppStore = create<
           (state) => {
             state.appState[key] = value;
           },
-          false
+          false,
           // "updateAppStatus"
         );
       },
       updatePortfolio: (
         key: keyof Omit<Portfolio, "usdc" | "holding">,
-        value: any
+        value: any,
       ) => {
         set(
           (state) => {
             state.portfolio[key] = value;
           },
-          false
+          false,
           // "updatePortfolio"
         );
       },
@@ -137,7 +149,7 @@ export const useAppStore = create<
           (state) => {
             state.portfolio = { ...state.portfolio, ...data };
           },
-          false
+          false,
           // "batchUpdateForPortfolio"
         );
       },
@@ -146,7 +158,7 @@ export const useAppStore = create<
           (state) => {
             state.portfolio.holding = holding;
           },
-          false
+          false,
           // "updateHolding"
         );
       },
@@ -156,7 +168,7 @@ export const useAppStore = create<
             if (state.portfolio.holding && state.portfolio.holding.length) {
               for (const key in msg) {
                 const holding = state.portfolio.holding.find(
-                  (item) => item.token === key
+                  (item) => item.token === key,
                 );
                 if (holding) {
                   holding.holding = msg[key].holding;
@@ -172,12 +184,12 @@ export const useAppStore = create<
               }
             }
           },
-          false
+          false,
           // "updateHolding"
         );
       },
     },
-  }))
+  })),
 );
 
 export const useAccountInfo = () => useAppStore((state) => state.accountInfo);

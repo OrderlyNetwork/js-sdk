@@ -1,15 +1,5 @@
-import {
-  AddOrderlyKeyInputs,
-  RegisterAccountInputs,
-  type SettleInputs,
-  type SignatureDomain,
-  type WithdrawInputs,
-} from "@orderly.network/core";
-import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
-import { AbiCoder, solidityPackedKeccak256 } from "ethers";
-import { keccak256 } from "ethereum-cryptography/keccak";
-import { decode as bs58Decode } from "bs58";
-
+import { BN, Program } from "@coral-xyz/anchor";
+import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
 import {
   ComputeBudgetProgram,
   Connection,
@@ -18,7 +8,26 @@ import {
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { BN, Program } from "@coral-xyz/anchor";
+import { decode as bs58Decode } from "bs58";
+import { keccak256 } from "ethereum-cryptography/keccak";
+import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
+import { AbiCoder, solidityPackedKeccak256 } from "ethers";
+import {
+  AddOrderlyKeyInputs,
+  RegisterAccountInputs,
+  type SettleInputs,
+  type SignatureDomain,
+  type WithdrawInputs,
+} from "@orderly.network/core";
+import { LedgerWalletKey } from "@orderly.network/types";
+import {
+  DVN_PROGRAM_ID,
+  ENDPOINT_PROGRAM_ID,
+  EXECUTOR_PROGRAM_ID,
+  PRICE_FEED_PROGRAM_ID,
+  SEND_LIB_PROGRAM_ID,
+  TREASURY_PROGRAM_ID,
+} from "./constant";
 import { IDL as VaultIDL, SolanaVault } from "./idl/solana_vault";
 import {
   getBrokerPDA,
@@ -49,19 +58,9 @@ import {
   getUSDCAccounts,
   getVaultAuthorityPda,
 } from "./solana.util";
-import {
-  DVN_PROGRAM_ID,
-  ENDPOINT_PROGRAM_ID,
-  EXECUTOR_PROGRAM_ID,
-  PRICE_FEED_PROGRAM_ID,
-  SEND_LIB_PROGRAM_ID,
-  TREASURY_PROGRAM_ID,
-} from "./constant";
-import type { WalletAdapterProps } from "@solana/wallet-adapter-base";
-import { LedgerWalletKey } from "@orderly.network/types";
 
 export function addOrderlyKeyMessage(
-  inputs: AddOrderlyKeyInputs & { chainId: number }
+  inputs: AddOrderlyKeyInputs & { chainId: number },
 ) {
   const {
     publicKey,
@@ -71,6 +70,7 @@ export function addOrderlyKeyMessage(
     scope,
     tag,
     chainId,
+    subAccountId,
   } = inputs;
   const message = {
     brokerId: brokerId,
@@ -79,16 +79,16 @@ export function addOrderlyKeyMessage(
     scope: scope || "read,trading",
     chainId,
     timestamp,
-    ...(typeof tag !== "undefined" ? { tag } : {}),
-
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
+    ...(typeof tag !== "undefined" ? { tag } : {}),
+    ...(typeof subAccountId !== "undefined" ? { subAccountId } : {}),
   };
 
   const brokerIdHash = solidityPackedKeccak256(["string"], [message.brokerId]);
 
   const orderlyKeyHash = solidityPackedKeccak256(
     ["string"],
-    [message.orderlyKey]
+    [message.orderlyKey],
   );
   const scopeHash = solidityPackedKeccak256(["string"], [message.scope]);
   const abicoder = AbiCoder.defaultAbiCoder();
@@ -103,13 +103,13 @@ export function addOrderlyKeyMessage(
           message.chainId,
           message.timestamp,
           message.expiration,
-        ]
-      )
-    )
+        ],
+      ),
+    ),
   );
   const msgToSignHex = bytesToHex(msgToSign);
   const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
-    msgToSignHex
+    msgToSignHex,
   );
   return [message, msgToSignTextEncoded];
 }
@@ -117,8 +117,8 @@ export function addOrderlyKeyMessage(
 export function registerAccountMessage(
   inputs: RegisterAccountInputs & {
     chainId: number;
-  }
-){
+  },
+) {
   const { chainId, registrationNonce, brokerId, timestamp } = inputs;
 
   const message = {
@@ -138,13 +138,13 @@ export function registerAccountMessage(
           message.chainId,
           message.timestamp,
           message.registrationNonce,
-        ]
-      )
-    )
+        ],
+      ),
+    ),
   );
   const msgToSignHex = bytesToHex(msgToSign);
   const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
-    msgToSignHex
+    msgToSignHex,
   );
   return [message, msgToSignTextEncoded];
 }
@@ -152,7 +152,7 @@ export function registerAccountMessage(
 export function withdrawMessage(
   inputs: WithdrawInputs & {
     chainId: number;
-  }
+  },
 ) {
   const { chainId, receiver, token, amount, nonce, brokerId } = inputs;
   const timestamp = Date.now();
@@ -195,13 +195,13 @@ export function withdrawMessage(
           message.withdrawNonce,
           timestamp,
           salt,
-        ]
-      )
-    )
+        ],
+      ),
+    ),
   );
   const msgToSignHex = bytesToHex(msgToSign);
   const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
-    msgToSignHex
+    msgToSignHex,
   );
   return [message, msgToSignTextEncoded];
 }
@@ -209,7 +209,7 @@ export function withdrawMessage(
 export function settleMessage(
   inputs: SettleInputs & {
     chainId: number;
-  }
+  },
 ) {
   const { settlePnlNonce, brokerId, chainId, timestamp } = inputs;
 
@@ -227,13 +227,13 @@ export function settleMessage(
     hexToBytes(
       abicoder.encode(
         ["bytes32", "uint256", "uint64", "uint64"],
-        [brokerIdHash, message.chainId, message.settleNonce, message.timestamp]
-      )
-    )
+        [brokerIdHash, message.chainId, message.settleNonce, message.timestamp],
+      ),
+    ),
   );
   const msgToSignHex = bytesToHex(msgToSign);
   const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
-    msgToSignHex
+    msgToSignHex,
   );
   return [message, msgToSignTextEncoded];
 }
@@ -285,7 +285,7 @@ export async function getDepositQuoteFee({
   const endorcedPDA = getEndorcedOptionsPda(
     appProgramId,
     oappConfigPDA,
-    DST_EID
+    DST_EID,
   );
   const sendLibConfigPDA = getSendLibConfigPda(oappConfigPDA, DST_EID);
   const defaultSendLibPDA = getDefaultSendLibConfigPda(DST_EID);
@@ -413,7 +413,7 @@ export async function getDepositQuoteFee({
   const lookupTableAddress = getLookupTableAddress(appProgramId);
   const lookupTableAccount = await getLookupTableAccount(
     connection,
-    lookupTableAddress
+    lookupTableAddress,
   );
   if (!lookupTableAccount) {
     console.log("-- lookup table account error");
@@ -444,7 +444,7 @@ export async function getDepositQuoteFee({
   }
   const returnPrefix = `Program return: ${program.programId} `;
   const returnLogEntry = feeRes.value.logs!.find((log) =>
-    log.startsWith(returnPrefix)
+    log.startsWith(returnPrefix),
   );
   if (!returnLogEntry) {
     throw new Error("Error: get deposit fee error");
@@ -457,7 +457,7 @@ export async function getDepositQuoteFee({
   const decodedBuffer = Buffer.from(encodedReturnData, "base64");
   console.log(
     decodedBuffer.readBigUInt64LE(0),
-    decodedBuffer.readBigUInt64LE(1)
+    decodedBuffer.readBigUInt64LE(1),
   );
   return decodedBuffer.readBigUInt64LE(0);
 }
@@ -469,7 +469,7 @@ const getDepositParams = (
     accountId: string;
     USDCAddress: string;
     tokenAmount: string;
-  }
+  },
 ) => {
   const brokerHash = depositData.brokerHash;
   const codedBrokerHash = Array.from(Buffer.from(brokerHash.slice(2), "hex"));
@@ -532,7 +532,7 @@ export async function deposit({
   const endorcedPDA = getEndorcedOptionsPda(
     appProgramId,
     oappConfigPDA,
-    DST_EID
+    DST_EID,
   );
   const sendLibPDA = getSendLibPda();
   const sendLibConfigPDA = getSendLibConfigPda(oappConfigPDA, DST_EID);
@@ -741,7 +741,7 @@ export async function deposit({
   const lookupTableAddress = getLookupTableAddress(appProgramId);
   const lookupTableAccount = await getLookupTableAccount(
     connection,
-    lookupTableAddress
+    lookupTableAddress,
   );
   if (!lookupTableAccount) {
     console.log("-- lookup table account error");
@@ -766,17 +766,15 @@ export async function deposit({
   return res;
 }
 
-export function checkIsLedgerWallet(userAddress: string): boolean{
+export function checkIsLedgerWallet(userAddress: string): boolean {
   const info = window.localStorage.getItem(LedgerWalletKey);
   if (!info) {
     return false;
   }
-  const addressArr = JSON.parse(info ?? '[]');
-  console.log('-- addressArr', addressArr);
+  const addressArr = JSON.parse(info ?? "[]");
+  console.log("-- addressArr", addressArr);
   if (addressArr.includes(userAddress)) {
     return true;
   }
   return false;
-
-
 }

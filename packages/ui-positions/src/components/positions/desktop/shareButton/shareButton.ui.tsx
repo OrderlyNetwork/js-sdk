@@ -24,7 +24,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
           pnl: position.unrealized_pnl,
           roi: new Decimal(position.unrealized_pnl_ROI * 100).toFixed(
             2,
-            Decimal.ROUND_DOWN
+            Decimal.ROUND_DOWN,
           ),
           openPrice: Math.abs(position.average_open_price),
           markPrice: position.mark_price,

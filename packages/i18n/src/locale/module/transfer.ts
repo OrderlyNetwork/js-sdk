@@ -43,6 +43,26 @@ export const transfer = {
   "transfer.withdraw.requested": "Withdraw requested",
   "transfer.withdraw.completed": "Withdraw completed",
   "transfer.withdraw.failed": "Withdraw failed",
+  // "transfer.withdraw.unsettled.tooltip":
+  //   "Unsettled balance can not be withdrawn. In order to withdraw, please settle your balance first.",
+  // "transfer.withdraw.settlePnl.description":
+  //   "Are you sure you want to settle your PnL? Settlement will take up to 1 minute before you can withdraw your available balance.",
+
+  "transfer.internalTransfer.from": "From",
+  "transfer.internalTransfer.to": "To",
+  "transfer.internalTransfer.currentAssetValue": "Current asset value",
+  "transfer.internalTransfer.success":
+    "Success! Funds will be available in 15 seconds.",
+  "transfer.internalTransfer.failed":
+    "Unable to complete transfer. Please try again later.",
+  "transfer.internalTransfer.failed.transferInProgress":
+    "An internal transfer is currently in progress.",
+  "transfer.internalTransfer.failed.withdrawalInProgress":
+    "There is a withdrawal in progress.",
+  "transfer.internalTransfer.unsettled.tooltip":
+    "Unsettled balance can not be transferred. In order to transfer, please settle your balance first.",
+  "transfer.internalTransfer.settlePnl.description":
+    "Are you sure you want to settle your PnL? <br/> Settlement will take up to 1 minute before you can transfer your available balance.",
 };
 
 export type Transfer = typeof transfer;

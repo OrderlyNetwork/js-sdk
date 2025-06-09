@@ -1,0 +1,40 @@
+import { FC } from "react";
+import { i18n } from "@orderly.network/i18n";
+import { registerSimpleDialog } from "@orderly.network/ui";
+import { registerSimpleSheet } from "@orderly.network/ui";
+import {
+  TransferFormScriptOptions,
+  useTransferFormScript,
+} from "./transferForm.script";
+import { TransferForm } from "./transferForm.ui";
+
+export const TransferDialogId = "TransferDialogId";
+export const TransferSheetId = "TransferSheetId";
+
+export type TransferFormWidgetProps = TransferFormScriptOptions;
+
+export const TransferFormWidget = (props: TransferFormWidgetProps) => {
+  const state = useTransferFormScript({
+    toAccountId: props.toAccountId,
+    close: props.close,
+  });
+  return <TransferForm {...state} />;
+};
+
+export const TransferWidget: FC<TransferFormWidgetProps> = (props) => {
+  return (
+    <TransferFormWidget close={props.close} toAccountId={props.toAccountId} />
+  );
+};
+
+registerSimpleDialog(TransferDialogId, TransferWidget, {
+  size: "md",
+  classNames: {
+    content: "oui-border oui-border-line-6",
+  },
+  title: () => i18n.t("common.transfer"),
+});
+
+registerSimpleSheet(TransferSheetId, TransferWidget, {
+  title: () => i18n.t("common.transfer"),
+});

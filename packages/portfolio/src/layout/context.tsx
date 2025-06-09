@@ -1,4 +1,10 @@
-import { PropsWithChildren, createContext, useContext, useState } from "react";
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+} from "react";
 import { RouterAdapter } from "@orderly.network/ui-scaffold";
 
 type LayoutContextValue = {
@@ -19,14 +25,16 @@ export const LayoutProvider = (
   props: PropsWithChildren<{ routerAdapter?: RouterAdapter }>,
 ) => {
   const [sideOpen, setSideOpen] = useState(true);
+  const memoizedValue = useMemo<LayoutContextValue>(
+    () => ({
+      sideOpen,
+      onSideOpenChange: setSideOpen,
+      routerAdapter: props.routerAdapter,
+    }),
+    [sideOpen, setSideOpen, props.routerAdapter],
+  );
   return (
-    <LayoutContext.Provider
-      value={{
-        sideOpen,
-        onSideOpenChange: setSideOpen,
-        routerAdapter: props.routerAdapter,
-      }}
-    >
+    <LayoutContext.Provider value={memoizedValue}>
       {props.children}
     </LayoutContext.Provider>
   );

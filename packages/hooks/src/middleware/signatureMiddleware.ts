@@ -1,17 +1,17 @@
 import { SWRHook, Middleware } from "swr";
 import { SimpleDI, Account, MessageFactor } from "@orderly.network/core";
-import { useConfig } from "../useConfig";
 import { getTimestamp } from "@orderly.network/utils";
+import { useConfig } from "../useConfig";
 
 export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {
   const apiBaseUrl = useConfig("apiBaseUrl");
   return (key, fetcher, config) => {
     try {
       const extendedFetcher = async (args: any) => {
-        let url = Array.isArray(args) ? args[0] : args;
+        const url = Array.isArray(args) ? args[0] : args;
 
-        let account = SimpleDI.get<Account>("account");
-        let fullUrl = `${apiBaseUrl}${url}`;
+        const account = SimpleDI.get<Account>("account");
+        const fullUrl = `${apiBaseUrl}${url}`;
 
         const signer = account.signer;
 

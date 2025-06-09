@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CopyIcon,
@@ -8,7 +9,6 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   const ip = props.generateKey?.ip ?? "--";
@@ -61,7 +61,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             onCopy={props.onCopyAccountId}
             data-testid="oui-testid-apiKey-createdApiKey-dialog-key-span"
           >
-            {props.address}
+            {props.accountId}
           </Text.formatted>
         </Statistic>
         <Statistic label={t("portfolio.apiKey.column.apiKey")}>

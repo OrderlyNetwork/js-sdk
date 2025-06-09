@@ -1,9 +1,4 @@
-import {
-  PropsWithChildren,
-  forwardRef,
-  ElementType,
-  ReactNode,
-} from "react";
+import { PropsWithChildren, forwardRef, ElementType, ReactNode } from "react";
 import {
   BaseCardProps,
   CardBase,
@@ -13,7 +8,7 @@ import {
   CardTitle,
 } from "./cardBase";
 
-type CardProps = {
+interface CardProps extends BaseCardProps {
   title?: ReactNode;
   footer?: ReactNode;
   // footerClassName?: string;
@@ -24,7 +19,7 @@ type CardProps = {
     footer?: string;
   };
   // color?: number;
-} & BaseCardProps;
+}
 
 const Card = forwardRef<React.ElementRef<"div">, PropsWithChildren<CardProps>>(
   (props, ref) => {
@@ -32,11 +27,7 @@ const Card = forwardRef<React.ElementRef<"div">, PropsWithChildren<CardProps>>(
     return (
       <CardBase {...rest} className={classNames?.root} ref={ref}>
         <CardHeader className={classNames?.header}>
-          {typeof props.title === "string" ? (
-            <CardTitle>{title}</CardTitle>
-          ) : (
-            title
-          )}
+          {typeof title === "string" ? <CardTitle>{title}</CardTitle> : title}
         </CardHeader>
         <CardContent className={classNames?.content}>{children}</CardContent>
         {footer && (
@@ -44,7 +35,7 @@ const Card = forwardRef<React.ElementRef<"div">, PropsWithChildren<CardProps>>(
         )}
       </CardBase>
     );
-  }
+  },
 );
 
 Card.displayName = "Card";

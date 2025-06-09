@@ -1,3 +1,6 @@
+import { FC, useState } from "react";
+import { APIKeyItem } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Button,
@@ -10,21 +13,18 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import {
-  ApiManagerScriptReturns,
-  capitalizeFirstChar,
-} from "./apiManager.script";
-import { FC, useState } from "react";
-import { CreateAPIKeyDialog } from "./dialog/createApiKey";
-import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
-import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
-import { EditAPIKeyDialog } from "./dialog/editApiKey";
-import {
   AuthGuardEmpty,
   AuthGuardDataTable,
   AuthGuardTooltip,
 } from "@orderly.network/ui-connector";
-import { APIKeyItem } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import {
+  ApiManagerScriptReturns,
+  capitalizeFirstChar,
+} from "./apiManager.script";
+import { CreateAPIKeyDialog } from "./dialog/createApiKey";
+import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
+import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
+import { EditAPIKeyDialog } from "./dialog/editApiKey";
 
 export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
   const { t } = useTranslation();
@@ -78,12 +78,12 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
           size="base"
           inlist={80}
           rule={"address"}
-          copyable={props.address !== "--"}
+          copyable={props.accountId !== "--"}
           copyIconSize={16}
           onCopy={props.onCopyAccountId}
           copyIconTestid="oui-testid-apiKey-accountInfo-accountId-copy-btn"
         >
-          {props.address}
+          {props.accountId}
         </Text.formatted>
       </Flex>
       <Flex
@@ -101,7 +101,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
           {t("portfolio.apiKey.uid")}
         </Text>
         <Text size="base" inlist={80}>
-          {props.uid}
+          {props.userId}
         </Text>
       </Flex>
     </Flex>

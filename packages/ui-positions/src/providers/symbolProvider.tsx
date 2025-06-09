@@ -26,10 +26,9 @@ interface FormatterProviderProps {
 }
 
 export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
-  props
+  props,
 ) => {
   const symbolInfo = useSymbolsInfo()[props.symbol];
-
   return (
     <SymbolContext.Provider
       value={{
@@ -42,7 +41,7 @@ export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
         symbol: props.symbol,
         origin: symbolInfo(),
         quote_max: symbolInfo("quote_max"),
-        quote_min: symbolInfo("quote_min")
+        quote_min: symbolInfo("quote_min"),
       }}
     >
       {props.children}
