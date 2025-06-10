@@ -2,11 +2,15 @@ import { FC, ReactNode } from "react";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
-import { LeaderboardWidget } from "../../components/leaderboard";
-import { GeneralLeaderboardWidgetProps } from "../../components/leaderboard/generalLeaderboard";
+import { CampaignLeaderboardWidget } from "../../components/leaderboard/campaignLeaderboard";
+import {
+  GeneralLeaderboardWidget,
+  GeneralLeaderboardWidgetProps,
+} from "../../components/leaderboard/generalLeaderboard";
 import {
   TradingLeaderboardProvider,
   TradingLeaderboardProviderProps,
+  useTradingLeaderboardContext,
 } from "../../components/provider";
 import { RewardsWidget } from "../../components/rewards/rewards.widget";
 
@@ -29,13 +33,42 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
           props.className,
         )}
       >
-        <CampaignsWidget />
+        <CampaignsWidget className="oui-relative oui-z-[1] oui-mx-6" />
         <RewardsWidget />
-        {/* <Background backgroundSrc={props.backgroundSrc} /> */}
-        <LeaderboardWidget {...props} />
+        <LeaderboardSection {...props} />
       </div>
     </TradingLeaderboardProvider>
   );
+};
+
+type LeaderboardSectionProps = {
+  style?: React.CSSProperties;
+  className?: string;
+};
+
+export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
+  const { currentCampaignId, currentCampaign, backgroundSrc } =
+    useTradingLeaderboardContext();
+
+  if (currentCampaignId === "general") {
+    return (
+      <div className={cn("oui-mix-blend-screen")}>
+        <Background backgroundSrc={backgroundSrc} />
+        <GeneralLeaderboardWidget {...props} className="oui-mt-10" />
+      </div>
+    );
+  }
+
+  if (currentCampaign && currentCampaignId != "general") {
+    return (
+      <>
+        <LeaderboardTitle title="Leaderboard" />
+        <CampaignLeaderboardWidget {...props} campaignId={currentCampaignId} />
+      </>
+    );
+  }
+
+  return null;
 };
 
 export const LeaderboardTitle = (props: { title: ReactNode }) => {

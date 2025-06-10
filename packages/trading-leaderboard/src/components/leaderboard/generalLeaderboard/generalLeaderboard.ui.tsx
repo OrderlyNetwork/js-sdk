@@ -33,13 +33,15 @@ export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
         r="2xl"
         intensity={900}
         width="100%"
-        className={cn("oui-trading-leaderboard oui-relative")}
+        className={cn("oui-trading-leaderboard oui-relative", props.className)}
+        style={props.style}
       >
         <LeaderboardFilter {...props} />
         <LeaderboardTabs
           activeTab={props.activeTab}
           onTabChange={props.onTabChange}
           isMobile={isMobile}
+          className="oui-pt-0"
         />
 
         <GeneralRankingWidget
@@ -59,8 +61,10 @@ export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
       intensity={900}
       className={cn(
         "oui-trading-leaderboard oui-relative",
-        "oui-mx-auto oui-max-w-[1040px] ",
+        "oui-mx-auto oui-max-w-[992px]",
+        props.className,
       )}
+      style={props.style}
     >
       <LeaderboardFilter {...props} />
       <Divider intensity={8} />

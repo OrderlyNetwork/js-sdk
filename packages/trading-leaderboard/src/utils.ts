@@ -16,6 +16,16 @@ export const formatDateRange = (date: Date): string => {
   return format(date, "yyyy-MM-dd");
 };
 
+function getUTCDateInfo(date: Date) {
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth();
+  const day = date.getUTCDate();
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+  return { year, month, day, hours, minutes };
+}
+
 export function formatCampaignDate(date: Date | string): string {
   const monthNames = [
     "Jan",
@@ -34,10 +44,14 @@ export function formatCampaignDate(date: Date | string): string {
   if (typeof date === "string") {
     date = new Date(date);
   }
-  const year = date.getUTCFullYear();
-  const month = monthNames[date.getUTCMonth()];
-  const day = date.getUTCDate();
-  const hours = String(date.getUTCHours()).padStart(2, "0");
-  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-  return `${month} ${day}, ${year} ${hours}:${minutes}`;
+  const { year, month, day, hours, minutes } = getUTCDateInfo(date);
+  return `${monthNames[month]} ${day}, ${year} ${hours}:${minutes}`;
+}
+
+export function formatUpdateDate(timestamp: number): string {
+  const date = new Date(timestamp);
+  const { year, month, day, hours, minutes } = getUTCDateInfo(date);
+  const monthStr = month.toString().padStart(2, "0");
+  const dayStr = day.toString().padStart(2, "0");
+  return `${year}-${monthStr}-${dayStr} ${hours}:${minutes} UTC`;
 }

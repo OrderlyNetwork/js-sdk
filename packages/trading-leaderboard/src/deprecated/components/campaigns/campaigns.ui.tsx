@@ -13,8 +13,6 @@ export const Campaigns: FC<CampaignsProps> = (props) => {
     return null;
   }
 
-  console.log("props", props);
-
   return (
     <Box
       width="100%"

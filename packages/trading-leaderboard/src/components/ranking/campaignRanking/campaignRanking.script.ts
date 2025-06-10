@@ -32,6 +32,7 @@ export type CampaignRankingData = {
 type CampaignRankingResponse = {
   meta: API.RecordsMeta;
   rows: CampaignRankingData[];
+  updated_time: number;
 };
 export type CampaignRankingScriptReturn = ReturnType<
   typeof useCampaignRankingScript
@@ -52,7 +53,8 @@ export function useCampaignRankingScript(
   });
   const [sort, setSort] = useState<TableSort | undefined>(initialSort);
 
-  const { currentCampaign, setUserData } = useTradingLeaderboardContext();
+  const { currentCampaign, setUserData, setUpdatedTime } =
+    useTradingLeaderboardContext();
 
   const { state } = useAccount();
   const brokerId = useConfig("brokerId");
@@ -261,6 +263,11 @@ export function useCampaignRankingScript(
       setUserData?.(userData as any);
     }
   }, [userData]);
+
+  useEffect(() => {
+    setUpdatedTime?.(data?.updated_time || 0);
+    // when currentCampaign changed, we need to reset the snapshot time
+  }, [data, currentCampaign]);
 
   return {
     pagination,

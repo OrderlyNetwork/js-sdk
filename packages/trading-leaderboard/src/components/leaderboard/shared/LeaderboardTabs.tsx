@@ -1,5 +1,7 @@
-import { FC } from "react";
-import { Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { FC, useMemo } from "react";
+import { cn, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { formatUpdateDate } from "../../../utils";
+import { useTradingLeaderboardContext } from "../../provider";
 
 export enum TradingTab {
   Volume = "volume",
@@ -10,15 +12,28 @@ type LeaderboardTabsProps = {
   activeTab: string;
   onTabChange: (tab: TradingTab) => void;
   isMobile?: boolean;
+  className?: string;
 };
 
 export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
+  const { updatedTime } = useTradingLeaderboardContext();
+
+  const updateTime = useMemo(() => {
+    if (props.isMobile) {
+      return "Updated hourly.";
+    }
+    if (updatedTime) {
+      return `Last update: ${formatUpdateDate(updatedTime)}`;
+    }
+    return "";
+  }, [props.isMobile, updatedTime]);
+
   return (
     <Flex
       width="100%"
-      pb={3}
+      py={3}
       justify="between"
-      className="oui-border-b oui-border-line"
+      className={cn("oui-border-b oui-border-line", props.className)}
     >
       <Tabs
         value={props.activeTab}
@@ -30,9 +45,7 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
         <TabPanel title="Realized PnL" value={TradingTab.Pnl}></TabPanel>
       </Tabs>
       <Text size="sm" intensity={36}>
-        {props.isMobile
-          ? "Updated hourly."
-          : "Last update: 2023-12-13 12:00 UTC"}
+        {updateTime}
       </Text>
     </Flex>
   );

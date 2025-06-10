@@ -155,13 +155,13 @@ export const useRankingColumns = (
         title: "Estimated rewards",
         dataIndex: "rewards",
         align: isMobile ? "right" : "left",
-        render: (value: string) => {
+        render: (value: { amount: number; currency: string }) => {
           if (!value) {
             return "-";
           }
           return (
-            <Text.numeral suffix=" USDC" rule="price" dp={0}>
-              {value}
+            <Text.numeral suffix={` ${value?.currency}`} rule="price" dp={0}>
+              {value?.amount}
             </Text.numeral>
           );
         },

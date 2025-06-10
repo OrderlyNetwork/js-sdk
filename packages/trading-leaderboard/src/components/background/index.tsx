@@ -1,14 +1,20 @@
 import { FC, useMemo } from "react";
-import { cn } from "@orderly.network/ui";
+import { cn, useScreen } from "@orderly.network/ui";
 
 type BackgroundProps = {
   backgroundSrc?: string;
 };
 
 export const Background: FC<BackgroundProps> = (props) => {
+  const { isMobile } = useScreen();
+
   const isVideo = useMemo(() => {
     return isVideoSrc(props.backgroundSrc);
   }, [props.backgroundSrc]);
+
+  if (isMobile) {
+    return null;
+  }
 
   const linearGradient =
     "linear-gradient(180deg, rgba(var(--oui-color-base-10) / 0.3) 0%, rgba(var(--oui-color-base-10) / 0) 70%, rgba(var(--oui-color-base-10) / 1) 100%)";
@@ -56,8 +62,9 @@ export const Background: FC<BackgroundProps> = (props) => {
           backgroundRepeat: "no-repeat",
         }}
         className={cn(
-          "oui-absolute oui-top-0 oui-left-0",
-          "oui-w-full oui-h-full",
+          "oui-general-leaderboard-background",
+          "oui-absolute oui-left-0 oui-top-0 oui-z-[-1]",
+          "oui-size-full",
           "oui-opacity-50",
         )}
       />

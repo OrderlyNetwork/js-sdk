@@ -7,10 +7,8 @@ import {
   GeneralLeaderboardWidget,
   CampaignLeaderboardWidget,
   LeaderboardPage,
-  TradingLeaderboardProvider,
 } from "@orderly.network/trading-leaderboard";
-import { Box, useScreen } from "@orderly.network/ui";
-import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { Box } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
 
 function getCampaigns() {
@@ -258,54 +256,17 @@ const meta: Meta<typeof LeaderboardPage> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Container = (props: {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-}) => {
-  const { topNavbarHeight, footerHeight, announcementHeight } =
-    useScaffoldContext();
-  const { isMobile } = useScreen();
-  return (
-    <Box
-      width="100%"
-      px={3}
-      style={{
-        minHeight: 379,
-        maxHeight: 2560,
-        overflow: "scroll",
-        // Make the table scroll instead of the page scroll
-        height: isMobile ? "100%" : "100%",
-        ...props.style,
-      }}
-    >
-      {props.children}
-    </Box>
-  );
-};
-
 export const Page: Story = {
   render: (args) => {
-    return (
-      <Container style={{ height: "calc(100vh)" }}>
-        <LeaderboardPage {...args} className="oui-py-5" />
-      </Container>
-    );
+    return <LeaderboardPage {...args} className="oui-py-5" />;
   },
 };
 
 export const LayoutPage: Story = {
   render: (args) => {
-    const { isDesktop } = useScreen();
     return (
-      <BaseLayout
-        initialMenu="/leaderboard"
-        // classNames={{
-        //   root: isDesktop ? "oui-overflow-hidden" : undefined,
-        // }}
-      >
-        <Container>
-          <LeaderboardPage {...args} className="oui-py-5" />
-        </Container>
+      <BaseLayout initialMenu="/leaderboard">
+        <LeaderboardPage {...args} className="oui-py-5" />
       </BaseLayout>
     );
   },

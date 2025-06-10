@@ -256,6 +256,12 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
 
   const onSort = useCallback(
     (sort?: TableSort) => {
+      // befause table column dataIndex is not the same as the api sort, so we need to map the sortKey
+      if (sort?.sortKey === "volume") {
+        sort.sortKey = "perp_volume";
+      } else if (sort?.sortKey === "pnl") {
+        sort.sortKey = "realized_pnl";
+      }
       setSort(sort || initialSort);
     },
     [initialSort],

@@ -22,8 +22,14 @@ export type TradingLeaderboardState = {
   currentCampaignId: string;
   currentCampaign: CampaignConfig | undefined;
   onCampaignChange: (campaignId: string) => void;
+  /** leaderboard user data, it will be used to calculate the rewards */
   userData?: UserData;
+  /** set leaderboard user data */
   setUserData?: (userdata: UserData) => void;
+  /** campaign leaderboard ranking snapshot time */
+  updatedTime?: number;
+  /** set snapshot time */
+  setUpdatedTime?: (updatedTime: number) => void;
 };
 
 /**
@@ -42,6 +48,7 @@ export const TradingLeaderboardProvider = (
 ) => {
   const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
   const [userData, setUserData] = useState<UserData>();
+  const [updatedTime, setUpdatedTime] = useState<number>();
 
   const currentCampaign = useMemo(() => {
     return props.campaigns?.find(
@@ -60,6 +67,8 @@ export const TradingLeaderboardProvider = (
         onCampaignChange: setCurrentCampaignId,
         userData,
         setUserData,
+        updatedTime,
+        setUpdatedTime,
       }}
     >
       {props.children}
