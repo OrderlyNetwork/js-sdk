@@ -12,7 +12,10 @@ export const RewardsWidget = () => {
   return (
     <>
       <LeaderboardTitle title="Rewards" />
-      <RewardsDesktopUI campaign={state.currentCampaign} />
+      <RewardsDesktopUI
+        campaign={state.currentCampaign}
+        userdata={state.userData}
+      />
     </>
   );
 };

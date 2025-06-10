@@ -4,6 +4,7 @@ import { CampaignConfig, UserData } from "../campaigns/type";
 import {
   calculateEstimatedRewards,
   calculateEstimatedTickets,
+  calculateUserPoolReward,
   formatRewardAmount,
   formatTicketCount,
 } from "./utils";
@@ -13,20 +14,12 @@ interface RewardsDesktopUIProps {
   userdata?: UserData;
 }
 
-// Mock data for testing rewards calculation
-const mockUserData: UserData = {
-  rank: 5,
-  volume: 75000,
-  pnl: 2500,
-  total_participants: 1000,
-};
-
 export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   campaign,
   userdata,
 }) => {
   // Use mock data for userdata if not provided
-  const currentUserData = userdata || mockUserData;
+  const currentUserData = userdata;
 
   // Calculate estimated rewards
   const estimatedRewards =
@@ -47,13 +40,15 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   const ticketText = formatTicketCount(estimatedTickets);
 
   const tooltipContent = useMemo(() => {
-    if (!campaign?.prize_pools) {
+    if (!campaign?.prize_pools || !currentUserData) {
       return null;
     }
 
     return (
       <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
         {campaign?.prize_pools?.map((pool) => {
+          const userPoolReward = calculateUserPoolReward(currentUserData, pool);
+
           return (
             <div
               key={pool.pool_id}
@@ -73,7 +68,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
                   weight="semibold"
                   className="oui-text-base-contrast"
                 >
-                  {pool.total_prize}
+                  {userPoolReward}
                 </Text.numeral>
                 <Text
                   size="2xs"
@@ -88,7 +83,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
         })}
       </div>
     );
-  }, [campaign]);
+  }, [campaign, currentUserData]);
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-6 oui-pb-10 oui-mb-10">

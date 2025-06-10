@@ -4,6 +4,7 @@ import {
   TicketRules,
   CampaignConfig,
   UserData,
+  PrizePool,
 } from "../campaigns/type";
 
 /**
@@ -162,4 +163,72 @@ export function formatRewardAmount(amount: number, currency: string): string {
  */
 export function formatTicketCount(tickets: number): string {
   return tickets.toLocaleString();
+}
+
+/**
+ * Calculate user's estimated reward for a specific prize pool
+ * @param userdata User's current trading data
+ * @param pool Specific prize pool
+ * @returns Estimated reward amount for this pool, or 0 if not eligible
+ */
+export function calculateUserPoolReward(
+  userdata: UserData,
+  pool: PrizePool,
+): number {
+  const userMetricValue =
+    pool.metric === "volume" ? userdata.volume : userdata.pnl;
+
+  // Skip if user has no relevant data
+  if (userMetricValue <= 0) return 0;
+
+  const estimatedRank = estimateUserRankForPool(userdata, pool.metric);
+  if (estimatedRank === null) return 0;
+
+  // Find matching tier based on estimated rank
+  for (const tier of pool.tiers) {
+    let isInTier = false;
+
+    if (tier.position && estimatedRank === tier.position) {
+      isInTier = true;
+    } else if (tier.position_range) {
+      const [start, end] = tier.position_range;
+      if (estimatedRank >= start && estimatedRank <= end) {
+        isInTier = true;
+      }
+    }
+
+    if (isInTier) {
+      return tier.amount;
+    }
+  }
+
+  return 0;
+}
+
+/**
+ * Estimate user's rank for a specific pool metric
+ * Simplified version without campaign dependency
+ */
+function estimateUserRankForPool(
+  userdata: UserData,
+  metric: "volume" | "pnl",
+): number | null {
+  // If we have actual rank data, use it
+  if (userdata.rank) {
+    return Number(userdata.rank);
+  }
+
+  // Otherwise, make a simple estimation based on performance
+  const userMetricValue = metric === "volume" ? userdata.volume : userdata.pnl;
+  const totalParticipants = userdata.total_participants || 1000;
+
+  if (userMetricValue <= 0) return null;
+
+  // Simple heuristic: assume better performance means better rank
+  if (userMetricValue >= 100000) return 1;
+  if (userMetricValue >= 50000) return Math.floor(totalParticipants * 0.05); // Top 5%
+  if (userMetricValue >= 10000) return Math.floor(totalParticipants * 0.2); // Top 20%
+  if (userMetricValue >= 1000) return Math.floor(totalParticipants * 0.5); // Top 50%
+
+  return Math.floor(totalParticipants * 0.8); // Bottom 80%
 }

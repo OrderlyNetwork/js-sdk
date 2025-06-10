@@ -82,7 +82,9 @@ export const CampaignsContentDesktopUI: FC<{
           "oui-w-full oui-h-[500px] oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-10",
           `oui-bg-cover oui-bg-center oui-bg-no-repeat`,
         ])}
-        style={{ backgroundImage: `url(${bgSrc})` }}
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.95) 5%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.95) 95%, rgba(0, 0, 0, 1) 100%), url(${bgSrc})`,
+        }}
       >
         <div className="oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-[10px]">
           <Text

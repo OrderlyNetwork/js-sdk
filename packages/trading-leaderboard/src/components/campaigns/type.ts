@@ -9,7 +9,6 @@ export enum CampaignTagEnum {
 export interface CampaignStatistics {
   total_participants: number;
   total_volume: number;
-  total_pnl: number;
 }
 
 // Campaign prize pool configuration types
@@ -76,3 +75,10 @@ export interface UserData {
   total_participants?: number;
   volume: number;
 }
+
+export type CampaignStatsDetailsResponse = {
+  broker_id: string;
+  user_count: number;
+  volume: number;
+  symbol: string;
+}[];
