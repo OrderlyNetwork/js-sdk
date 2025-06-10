@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { cn, Text, InfoCircleIcon, Button } from "@orderly.network/ui";
+import { FC, useMemo } from "react";
+import { cn, Text, InfoCircleIcon, Button, Tooltip } from "@orderly.network/ui";
 import { CampaignConfig, CampaignStatistics } from "./type";
 import {
   formatCampaignDateRange,
@@ -30,6 +30,50 @@ export const CampaignsContentDesktopUI: FC<{
   const tradingVolume = getTradingVolume(statistics);
   const totalPrizePool = getTotalPrizePool(campaign);
   const ticketPrizePool = getTicketPrizePool(campaign);
+
+  const tooltipContent = useMemo(() => {
+    if (!campaign?.prize_pools) {
+      return null;
+    }
+
+    return (
+      <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
+        {campaign?.prize_pools?.map((pool) => {
+          return (
+            <div
+              key={pool.pool_id}
+              className="oui-flex oui-items-center oui-justify-between oui-h-[18px]"
+            >
+              <Text
+                size="2xs"
+                weight="semibold"
+                className="oui-text-base-contrast-54"
+              >
+                {pool.label}
+              </Text>
+              <div className="oui-flex oui-items-center oui-gap-1">
+                <Text.numeral
+                  dp={2}
+                  size="2xs"
+                  weight="semibold"
+                  className="oui-text-base-contrast"
+                >
+                  {pool.total_prize}
+                </Text.numeral>
+                <Text
+                  size="2xs"
+                  weight="semibold"
+                  className="oui-text-base-contrast"
+                >
+                  {pool.currency}
+                </Text>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }, [campaign]);
 
   return (
     <div className="oui-w-full oui-flex oui-flex-col">
@@ -114,7 +158,15 @@ export const CampaignsContentDesktopUI: FC<{
                   >
                     Prize pool
                   </Text>
-                  <InfoCircleIcon />
+                  <Tooltip
+                    // @ts-ignore
+                    content={tooltipContent}
+                    className="oui-max-w-[260px] oui-bg-base-5 oui-py-1 oui-px-2"
+                  >
+                    <div className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4">
+                      <InfoCircleIcon className="oui-cursor-pointer" />
+                    </div>
+                  </Tooltip>
                 </div>
                 <div>
                   <Text.gradient size="2xl" weight="bold" color="brand">
@@ -149,14 +201,28 @@ export const CampaignsContentDesktopUI: FC<{
                 </div>
               )}
             </div>
-            <Button
-              size="sm"
-              variant="gradient"
-              color="primary"
-              className="oui-w-full"
-            >
-              View rules
-            </Button>
+            <div className="oui-flex oui-gap-4">
+              <Button
+                size="md"
+                variant="outlined"
+                className="oui-flex-1 
+              oui-border-[rgb(var(--oui-gradient-brand-start))] 
+              oui-text-[rgb(var(--oui-gradient-brand-start))] 
+              hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
+              active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
+              "
+              >
+                View rules
+              </Button>
+              <Button
+                size="md"
+                variant="gradient"
+                color="primary"
+                className="oui-flex-1"
+              >
+                Trade now
+              </Button>
+            </div>
           </div>
         </div>
       </div>

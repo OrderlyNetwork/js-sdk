@@ -26,6 +26,7 @@ function getCampaigns() {
       href: "https://orderly.network/",
       start_time: addDays(new Date(), -7).toISOString(),
       end_time: addDays(new Date(), 23).toISOString(),
+      reward_distribution_time: addDays(new Date(), 25).toISOString(),
       prize_pools: [
         {
           pool_id: "general_volume",
@@ -82,6 +83,7 @@ function getCampaigns() {
       },
       start_time: addDays(new Date(), 3).toISOString(),
       end_time: addDays(new Date(), 33).toISOString(),
+      reward_distribution_time: addDays(new Date(), 35).toISOString(),
       referral_codes: ["VIP2024", "ELITE", "PREMIUM"],
       volume_scope: ["BTC", "ETH", "SOL"],
       prize_pools: [
@@ -121,6 +123,7 @@ function getCampaigns() {
       href: "https://orderly.network/meme-results",
       start_time: addDays(new Date(), -45).toISOString(),
       end_time: addDays(new Date(), -15).toISOString(),
+      reward_distribution_time: addDays(new Date(), -10).toISOString(),
       volume_scope: ["DOGE", "SHIB", "PEPE", "BONK", "WIF"],
       prize_pools: [
         {
@@ -160,6 +163,7 @@ function getCampaigns() {
       href: "https://orderly.network/pnl-masters",
       start_time: addDays(new Date(), 14).toISOString(),
       end_time: addDays(new Date(), 44).toISOString(),
+      reward_distribution_time: addDays(new Date(), 46).toISOString(),
       prize_pools: [
         {
           pool_id: "pnl_masters",
@@ -188,6 +192,7 @@ function getCampaigns() {
       href: "https://orderly.network/broker-partnership",
       start_time: addDays(new Date(), -10).toISOString(),
       end_time: addDays(new Date(), 20).toISOString(),
+      reward_distribution_time: addDays(new Date(), 22).toISOString(),
       referral_codes: ["PARTNER1", "BROKER2024", "ALLIANCE"],
       prize_pools: [
         {

@@ -73,12 +73,12 @@ export const CampaignsHeaderUI: FC<{
       </button>
 
       <div className="oui-flex-1 oui-min-w-0 oui-overflow-hidden">
-        <div className="embla" ref={emblaRef}>
-          <div className="embla__container oui-flex oui-gap-2">
+        <div ref={emblaRef}>
+          <div className="oui-flex oui-gap-2">
             {campaigns?.map((campaign) => (
               <div
                 key={campaign.campaign_id}
-                className="embla__slide oui-flex-shrink-0"
+                className="oui-flex-shrink-0"
                 style={slideStyle}
               >
                 <CampaignItemUI

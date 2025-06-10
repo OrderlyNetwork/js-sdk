@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { InfoCircleIcon, Tooltip, Text, Button } from "@orderly.network/ui";
 import { CampaignConfig, UserData } from "../campaigns/type";
 import {
@@ -47,6 +47,50 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
 
   const ticketText = formatTicketCount(estimatedTickets);
 
+  const tooltipContent = useMemo(() => {
+    if (!campaign?.prize_pools) {
+      return null;
+    }
+
+    return (
+      <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
+        {campaign?.prize_pools?.map((pool) => {
+          return (
+            <div
+              key={pool.pool_id}
+              className="oui-flex oui-items-center oui-justify-between oui-h-[18px]"
+            >
+              <Text
+                size="2xs"
+                weight="semibold"
+                className="oui-text-base-contrast-54"
+              >
+                {pool.label}
+              </Text>
+              <div className="oui-flex oui-items-center oui-gap-1">
+                <Text.numeral
+                  dp={2}
+                  size="2xs"
+                  weight="semibold"
+                  className="oui-text-base-contrast"
+                >
+                  {pool.total_prize}
+                </Text.numeral>
+                <Text
+                  size="2xs"
+                  weight="semibold"
+                  className="oui-text-base-contrast"
+                >
+                  {pool.currency}
+                </Text>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }, [campaign]);
+
   return (
     <div className="oui-flex oui-flex-col oui-gap-6 oui-pb-10 oui-mb-10">
       <div className="oui-w-full oui-flex oui-items-center oui-gap-3">
@@ -54,7 +98,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
           title="Estimated rewards"
           value={rewardText}
           showTooltip
-          tooltip="Based on your current performance and rank estimation"
+          tooltip={tooltipContent}
         />
         {/* {campaign?.ticket_rules && (
       <RewardItem 
@@ -64,9 +108,26 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
     )} */}
         <RewardItem title="Estimated tickets earned" value={ticketText} />
       </div>
-      <div className="oui-flex oui-items-center oui-justify-center">
-        <Button size="sm" variant="gradient" color="primary">
+      <div className="oui-flex oui-gap-3 oui-justify-center">
+        <Button
+          size="lg"
+          variant="outlined"
+          className=" oui-w-[140px]
+              oui-border-[rgb(var(--oui-gradient-brand-start))] 
+              oui-text-[rgb(var(--oui-gradient-brand-start))] 
+              hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
+              active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
+              "
+        >
           View rules
+        </Button>
+        <Button
+          size="lg"
+          variant="gradient"
+          color="primary"
+          className=" oui-w-[140px]"
+        >
+          Trade now
         </Button>
       </div>
     </div>
@@ -77,7 +138,7 @@ const RewardItem: FC<{
   title: string;
   value: string;
   showTooltip?: boolean;
-  tooltip?: string;
+  tooltip?: any;
 }> = (props) => {
   return (
     <div className="oui-flex-1 oui-px-5 oui-py-4 oui-flex oui-flex-col oui-items-center oui-bg-base-9 oui-rounded-2xl">
@@ -90,7 +151,9 @@ const RewardItem: FC<{
         </Text.gradient>
         {props.showTooltip && (
           <Tooltip content={props.tooltip}>
-            <InfoCircleIcon />
+            <div className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4">
+              <InfoCircleIcon className="oui-cursor-pointer" />
+            </div>
           </Tooltip>
         )}
       </div>

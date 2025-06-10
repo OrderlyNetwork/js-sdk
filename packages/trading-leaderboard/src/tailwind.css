@@ -1,24 +1,3 @@
 /* @tailwind base; */
 @tailwind components;
 @tailwind utilities;
-
-/* Embla Carousel styles */
-.embla {
-  overflow: hidden;
-}
-
-.embla__container {
-  display: flex;
-  /* Remove default gap as we use Tailwind gap classes */
-}
-
-.embla__slide {
-  flex: 0 0 auto;
-  /* Responsive width handled by Tailwind classes */
-  min-width: 0;
-}
-
-/* Ensure campaign items fill the slide width */
-.embla__slide > * {
-  width: 100%;
-}

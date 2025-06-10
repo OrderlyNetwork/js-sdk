@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { TimelinePoint } from "./components/axis";
 import { CampaignConfig, CampaignTagEnum, CampaignStatistics } from "./type";
 
 /**
@@ -218,4 +219,77 @@ export const formatParticipantsCount = (count: number): string => {
   } else {
     return count.toLocaleString();
   }
+};
+
+/**
+ * Generate timeline data points for campaign visualization
+ * @param campaign Campaign configuration object
+ * @returns Array of TimelinePoint objects (max 4 points)
+ */
+export const generateCampaignTimeline = (
+  campaign: CampaignConfig,
+): TimelinePoint[] => {
+  const currentTime = new Date();
+  const startTime = new Date(campaign.start_time);
+  const endTime = new Date(campaign.end_time);
+  const rewardTime = campaign.reward_distribution_time
+    ? new Date(campaign.reward_distribution_time)
+    : null;
+
+  const timeline: TimelinePoint[] = [];
+
+  // Helper function to determine point type based on time
+  const getTimelineType = (
+    time: Date,
+    isNow: boolean = false,
+  ): "past" | "active" | "future" => {
+    if (isNow) return "active";
+    return currentTime >= time ? "past" : "future";
+  };
+
+  // Helper function to format time for display
+  const formatTimeDisplay = (time: Date): string => {
+    try {
+      return format(time, "yyyy-MM-dd HH:mm 'UTC'");
+    } catch (error) {
+      console.error("Error formatting time:", error);
+      return time.toISOString();
+    }
+  };
+
+  // Battle starts point
+  timeline.push({
+    title: "Battle starts",
+    type: getTimelineType(startTime),
+    time: formatTimeDisplay(startTime),
+  });
+
+  // Add "Now" point if battle is ongoing
+  const isOngoing = currentTime >= startTime && currentTime <= endTime;
+  if (isOngoing) {
+    timeline.push({
+      title: "Now",
+      type: "active",
+      time: formatTimeDisplay(currentTime),
+    });
+  }
+
+  // Battle ends point
+  timeline.push({
+    title: "Battle ends",
+    type: getTimelineType(endTime),
+    time: formatTimeDisplay(endTime),
+  });
+
+  // Reward distribution point (if provided)
+  if (rewardTime) {
+    timeline.push({
+      title: "Reward distribution",
+      type: getTimelineType(rewardTime),
+      time: formatTimeDisplay(rewardTime),
+    });
+  }
+
+  // Ensure we don't exceed 4 points
+  return timeline.slice(0, 4);
 };

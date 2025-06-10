@@ -16,79 +16,85 @@ export const CampaignsAxis: FC<CampaignsAxisProps> = ({ points }) => {
     return null;
   }
 
-  // For single point, center it
+  // Find the index of the active point
+  const activeIndex = points.findIndex((point) => point.type === "active");
+
+  // For single point, center it without any lines
   if (points.length === 1) {
     return (
-      <div className="oui-w-full oui-flex oui-flex-col oui-items-center oui-justify-center">
-        <AxisPoint type={points[0].type} />
-        <div className="oui-flex oui-flex-col oui-items-center oui-text-center oui-mt-4">
-          <div className="oui-text-sm oui-font-medium oui-text-base-contrast-100 oui-mb-1 oui-whitespace-nowrap">
-            {points[0].title}
-          </div>
-          <div className="oui-text-xs oui-text-base-contrast-80 oui-whitespace-nowrap">
-            {points[0].time}
+      <div className="oui-w-full oui-flex oui-justify-center">
+        <div className="oui-flex oui-flex-col oui-items-center">
+          <AxisPoint type={points[0].type} />
+          <div className="oui-flex oui-flex-col oui-items-center oui-text-center oui-mt-4">
+            <div className="oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1 oui-whitespace-nowrap">
+              {points[0].title}
+            </div>
+            <div className="oui-text-xs oui-text-base-contrast-36 oui-whitespace-nowrap">
+              {points[0].time}
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
+  // Helper function to determine line background class
+  const getLineBackgroundClass = (segmentIndex: number): string => {
+    // If there's an active point and this segment is to the left of it, use oui-bg-base-3
+    if (activeIndex !== -1 && segmentIndex < activeIndex) {
+      return "oui-bg-base-3";
+    }
+    // Otherwise use regular color
+    return "oui-bg-base-8";
+  };
+
   return (
-    <div className="oui-w-full oui-flex oui-flex-col oui-items-center oui-justify-center">
-      {/* Timeline points and connecting lines */}
-      <div className="oui-w-full oui-flex oui-items-center oui-relative">
-        {/* Continuous line background */}
-        <div className="oui-absolute oui-left-16 oui-right-16 oui-h-[2px] oui-bg-base-contrast-80" />
+    <div className="oui-w-full oui-flex">
+      {points.map((point, index) => {
+        const isFirst = index === 0;
+        const isLast = index === points.length - 1;
 
-        {/* Points container with equal spacing */}
-        <div className="oui-w-full oui-flex oui-items-center oui-relative">
-          {/* Left spacer */}
-          <div className="oui-flex-1" />
+        return (
+          <div
+            key={index}
+            className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-relative"
+          >
+            {/* Point container with connecting lines */}
+            <div className="oui-relative oui-flex oui-items-center oui-w-full">
+              {/* Left line - always occupy space, but invisible for first point */}
+              <div
+                className={cn([
+                  "oui-flex-1 oui-h-[6px]",
+                  !isFirst && getLineBackgroundClass(index - 1),
+                ])}
+              />
 
-          {points.map((point, index) => {
-            const isLast = index === points.length - 1;
-
-            return (
-              <div key={index} className="oui-flex oui-items-center oui-flex-1">
-                {/* Point */}
-                <div className="oui-flex oui-justify-center oui-relative oui-z-10 oui-w-full">
-                  <AxisPoint type={point.type} />
-                </div>
+              {/* Point */}
+              <div className="oui-flex-shrink-0 oui-z-10">
+                <AxisPoint type={point.type} />
               </div>
-            );
-          })}
 
-          {/* Right spacer */}
-          <div className="oui-flex-1" />
-        </div>
-      </div>
+              {/* Right line - always occupy space, but invisible for last point */}
+              <div
+                className={cn([
+                  "oui-flex-1 oui-h-[6px]",
+                  !isLast && getLineBackgroundClass(index),
+                ])}
+              />
+            </div>
 
-      {/* Labels below points */}
-      <div className="oui-w-full oui-flex oui-items-center oui-mt-4">
-        {/* Left spacer */}
-        <div className="oui-flex-1" />
-
-        {points.map((point, index) => {
-          return (
-            <div key={index} className="oui-flex oui-items-center oui-flex-1">
-              {/* Label */}
-              <div className="oui-flex oui-justify-center oui-w-full">
-                <div className="oui-flex oui-flex-col oui-items-center oui-text-center">
-                  <div className="oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1 oui-whitespace-nowrap">
-                    {point.title}
-                  </div>
-                  <div className="oui-text-xs oui-text-base-contrast-36 oui-whitespace-nowrap">
-                    {point.time}
-                  </div>
-                </div>
+            {/* Label below point */}
+            <div className="oui-flex oui-flex-col oui-items-center oui-text-center oui-mt-4">
+              <div className="oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1 oui-whitespace-nowrap">
+                {point.title}
+              </div>
+              <div className="oui-text-xs oui-text-base-contrast-36 oui-whitespace-nowrap">
+                {point.type !== "active" && point.time}
               </div>
             </div>
-          );
-        })}
-
-        {/* Right spacer */}
-        <div className="oui-flex-1" />
-      </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
