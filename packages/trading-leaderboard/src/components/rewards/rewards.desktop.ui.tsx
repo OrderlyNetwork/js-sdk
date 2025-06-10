@@ -15,10 +15,9 @@ interface RewardsDesktopUIProps {
 
 // Mock data for testing rewards calculation
 const mockUserData: UserData = {
-  account_id: "mock_user_001",
-  current_rank: 5,
-  trading_volume: 75000, // $75k volume to test different reward tiers
-  pnl: 2500, // $2.5k PnL
+  rank: 5,
+  volume: 75000,
+  pnl: 2500,
   total_participants: 1000,
 };
 

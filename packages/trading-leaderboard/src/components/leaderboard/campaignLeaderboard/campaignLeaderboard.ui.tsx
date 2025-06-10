@@ -8,7 +8,7 @@ import { CampaignLeaderboardScriptReturn } from "./campaignLeaderboard.script";
 export type CampaignLeaderboardProps = {
   style?: React.CSSProperties;
   className?: string;
-  campaignId: number;
+  campaignId: number | string;
 } & CampaignLeaderboardScriptReturn;
 
 export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {

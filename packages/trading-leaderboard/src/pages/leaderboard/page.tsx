@@ -2,10 +2,8 @@ import { FC, ReactNode } from "react";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
-import {
-  GeneralLeaderboardWidget,
-  GeneralLeaderboardWidgetProps,
-} from "../../components/leaderboard/generalLeaderboard";
+import { LeaderboardWidget } from "../../components/leaderboard";
+import { GeneralLeaderboardWidgetProps } from "../../components/leaderboard/generalLeaderboard";
 import {
   TradingLeaderboardProvider,
   TradingLeaderboardProviderProps,
@@ -34,8 +32,7 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
         <CampaignsWidget />
         <RewardsWidget />
         {/* <Background backgroundSrc={props.backgroundSrc} /> */}
-        <LeaderboardTitle title="Leaderboard" />
-        <GeneralLeaderboardWidget {...props} />
+        <LeaderboardWidget {...props} />
       </div>
     </TradingLeaderboardProvider>
   );

@@ -36,7 +36,7 @@ export type CampaignRankingScriptReturn = ReturnType<
 >;
 
 export type CampaignRankingScriptOptions = {
-  campaignId: number;
+  campaignId: number | string;
   sortKey?: "volume" | "pnl";
 };
 
