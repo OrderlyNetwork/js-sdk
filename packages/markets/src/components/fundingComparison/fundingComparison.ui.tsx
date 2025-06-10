@@ -1,4 +1,5 @@
-import { FC } from "react";
+import type { FC } from "react";
+import type { PaginationMeta } from "@orderly.network/ui";
 import { cn } from "@orderly.network/ui";
 import { DataTable } from "@orderly.network/ui";
 import { useFundingColumns } from "./columns";
@@ -9,7 +10,7 @@ interface FundingComparisonProps {
     funding: (number | null)[];
   }>;
   isLoading: boolean;
-  pagination: any;
+  pagination: PaginationMeta;
 }
 
 export const FundingComparison: FC<FundingComparisonProps> = ({
