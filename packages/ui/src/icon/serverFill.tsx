@@ -11,7 +11,7 @@ export const ServerFillIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         {...props}
       />
     );
-  }
+  },
 );
 
 ServerFillIcon.displayName = "ServerFillIcon";

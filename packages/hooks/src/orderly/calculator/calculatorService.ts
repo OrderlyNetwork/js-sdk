@@ -35,7 +35,7 @@ class CalculatorService {
 
   constructor(
     private readonly scheduler: CalculatorScheduler,
-    calculators: [string, Calculator[]][]
+    calculators: [string, Calculator[]][],
   ) {
     this.calculators = new Map(calculators);
   }

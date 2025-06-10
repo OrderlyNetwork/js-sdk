@@ -1,11 +1,10 @@
+import { order as orderUtils } from "@orderly.network/perp";
 import {
   AlgoOrderRootType,
   OrderlyOrder,
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-
-import { order as orderUtils } from "@orderly.network/perp";
 import { OrderFactory } from "../../services/orderCreator/factory";
 
 export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
@@ -51,7 +50,7 @@ export const hasTPSL = (order: Partial<OrderlyOrder>): boolean => {
 
 export const getPriceAndQty = (
   symbolOrOrder: Partial<OrderlyOrder>,
-  askAndBid: number[]
+  askAndBid: number[],
 ): { quantity: number; price: number } | null => {
   let quantity = Number(symbolOrOrder.order_quantity);
   const orderPrice = Number(symbolOrOrder.order_price);
@@ -62,7 +61,7 @@ export const getPriceAndQty = (
 
   if (askAndBid.length === 0) {
     console.warn(
-      "Please check if you are using the `useOrderbookStream` hook or if the orderBook has data."
+      "Please check if you are using the `useOrderbookStream` hook or if the orderBook has data.",
     );
     return null;
   }
@@ -134,7 +133,7 @@ export const calcEstLiqPrice = (
     totalCollateral: number;
     markPrice: number;
     positions: any;
-  }
+  },
 ) => {
   const result = getPriceAndQty(order, askAndBid);
 
@@ -189,7 +188,7 @@ export const calcEstLeverage = (
     totalCollateral: number;
     positions: any;
     symbol: string;
-  }
+  },
 ) => {
   const result = getPriceAndQty(order, askAndBid);
   const { totalCollateral, positions, symbol } = inputs;

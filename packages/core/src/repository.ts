@@ -4,6 +4,7 @@ export interface Repository {
   get: (address: string, key: string) => any;
   clear: (address: string) => void;
   update: (address: string, key: string, data: any) => void;
+  remove: (address: string, key: string) => void;
 }
 
 export class LocalStorageRepository implements Repository {
@@ -33,6 +34,11 @@ export class LocalStorageRepository implements Repository {
     }
     return data[key];
   }
+  /**
+   * get all data from local storage
+   * @param address
+   * @returns
+   */
   getAll(address: string) {
     try {
       const data = localStorage.getItem(this.name);
@@ -59,6 +65,13 @@ export class LocalStorageRepository implements Repository {
     this.run(() => {
       const all = this.getAll(address);
       all[key] = data;
+      localStorage.setItem(this.name, JSON.stringify(all));
+    });
+  }
+  remove(address: string, key: string) {
+    this.run(() => {
+      const all = this.getAll(address);
+      delete all[key];
       localStorage.setItem(this.name, JSON.stringify(all));
     });
   }

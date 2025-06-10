@@ -1,20 +1,20 @@
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
+import Split from "@uiw/react-split";
 import {
   useAccount,
   useCollateral,
   useLocalStorage,
   useMediaQuery,
 } from "@orderly.network/hooks";
-import { modal } from "@orderly.network/ui";
-import { useTradingPageContext } from "../../provider/context";
-import { TradingPageState } from "../../types/types";
-import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
+import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
-import Split from "@uiw/react-split";
-import { useTranslation } from "@orderly.network/i18n";
+import { modal } from "@orderly.network/ui";
 import { PortfolioSheetWidget, useTradingLocalStorage } from "../..";
+import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
+import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
+import { useTradingPageContext } from "../../provider/context";
+import { TradingPageState } from "../../types/types";
 
 export type TradingState = ReturnType<typeof useTradingScript>;
 
@@ -262,7 +262,7 @@ function useObserverOrderEntry(options: { max2XL: boolean }) {
     if (!element || !max2XL) return;
 
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         const height = entry.contentRect.height;
         if (height) {
           setOrderEntryHeight(height);

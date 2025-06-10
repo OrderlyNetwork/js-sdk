@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@orderly.network/ui";
+import { cn, ScrollArea } from "@orderly.network/ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { WalletConnectType, WalletType } from "../../types";
@@ -88,11 +88,13 @@ export function RenderConnector() {
     );
   };
   return (
-    <div className={cn("oui-flex oui-flex-col oui-gap-4", "md:oui-gap-5")}>
-      {renderPrivyConnectArea()}
-      {renderWagmiConnectArea()}
-      {renderSolanaConnectArea()}
-      {renderAbstractConnectArea()}
-    </div>
+    <ScrollArea className="oui-flex oui-grow oui-shrik oui-basis-auto">
+      <div className={cn("oui-flex oui-flex-col oui-gap-4", "md:oui-gap-5")}>
+        {renderPrivyConnectArea()}
+        {renderWagmiConnectArea()}
+        {renderSolanaConnectArea()}
+        {renderAbstractConnectArea()}
+      </div>
+    </ScrollArea>
   );
 }

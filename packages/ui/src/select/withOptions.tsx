@@ -1,9 +1,9 @@
 import React, { FC, ReactElement } from "react";
+import { cn } from "..";
+import { Box } from "../box";
+import { Flex } from "../flex";
 import { Select, SelectProps } from "./select";
 import { SelectGroup, SelectItem } from "./selectPrimitive";
-import { Flex } from "../flex";
-import { Box } from "../box";
-import { cn } from "..";
 
 export type SelectOption = {
   label: string;
@@ -15,7 +15,7 @@ export type SelectWithOptionsProps<T = string> = SelectProps<T> & {
   currentValue?: string;
   options: SelectOption[];
   optionRenderer?: (
-    option: SelectOption
+    option: SelectOption,
     // & {
     //   size?: SizeType;
     //   index: number;
@@ -23,11 +23,12 @@ export type SelectWithOptionsProps<T = string> = SelectProps<T> & {
   ) => ReactElement;
   // loading?: boolean;
   testid?: string;
+  prefix?: string;
 };
 
 export const defaultOptionRenderer = (
   option: SelectOption,
-  currentValue?: string
+  currentValue?: string,
 ) => {
   return (
     <SelectItem

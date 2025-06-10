@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { useAppContext } from "@orderly.network/react-app";
 import { useAccount, useWalletConnector } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { useTradingRewardsContext } from "../provider";
 import { RewardsTooltipProps } from "./rewardsTooltip";
 
@@ -11,6 +11,8 @@ export const useCurEpochScript = () => {
     curEpochEstimate: estimate,
     brokerId,
     brokerName,
+    statusInfo,
+    showEpochPauseCountdown,
   } = useTradingRewardsContext();
   const { wrongNetwork, disabledConnect } = useAppContext();
   const { connect } = useWalletConnector();
@@ -48,6 +50,8 @@ export const useCurEpochScript = () => {
     notConnected,
     connect,
     rewardsTooltip: hideData ? undefined : rewardsTooltip,
+    statusInfo,
+    showEpochPauseCountdown,
   };
 };
 

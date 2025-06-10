@@ -11,7 +11,7 @@ export const CalendarMinusIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         {...props}
       />
     );
-  }
+  },
 );
 
 CalendarMinusIcon.displayName = "CalendarMinusIcon";

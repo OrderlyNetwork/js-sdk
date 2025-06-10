@@ -1,20 +1,13 @@
+import { useAssetScript } from "./assets.script";
 import { AssetsUI } from "./assets.ui";
-import { useAssetScript } from "./useBuilder.script";
 
 export const AssetWidget = () => {
-  const {
-    canTrade,
-    connect: connectWallet,
-    portfolioValue,
-    onLeverageEdit,
-    ...rest
-  } = useAssetScript();
+  const { connect: connectWallet, ...rest } = useAssetScript();
   return (
     <AssetsUI
+      // TODO: remove duplicate props
       onConnectWallet={connectWallet}
-      canTrade={canTrade}
-      portfolioValue={portfolioValue}
-      onLeverageEdit={onLeverageEdit}
+      connect={connectWallet}
       {...rest}
     />
   );

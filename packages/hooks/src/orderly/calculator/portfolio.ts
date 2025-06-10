@@ -1,12 +1,12 @@
-import { API } from "@orderly.network/types";
-import { CalculatorCtx, CalculatorScope } from "../../types";
-import { BaseCalculator } from "./baseCalculator";
-import { account } from "@orderly.network/perp";
 import { pathOr } from "ramda";
+import { account } from "@orderly.network/perp";
+import { API } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
+import { CalculatorCtx, CalculatorScope } from "../../types";
+import { createGetter } from "../../utils/createGetter";
 import { parseHolding } from "../../utils/parseHolding";
 import { Portfolio, useAppStore } from "../appStore";
-import { Decimal } from "@orderly.network/utils";
-import { createGetter } from "../../utils/createGetter";
+import { BaseCalculator } from "./baseCalculator";
 import { MarketCalculatorName } from "./markPrice";
 
 export const PortfolioCalculatorName = "portfolio";
@@ -21,7 +21,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       markPrices = data;
     } else {
       markPrices = ctx.get<Record<string, number>>(
-        (cache) => cache[MarketCalculatorName]
+        (cache) => cache[MarketCalculatorName],
       );
     }
 
@@ -29,7 +29,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
     //   positions = data;
     // } else {
     positions = ctx.get<API.PositionsTPSLExt>(
-      (output: Record<string, any>) => output.positionCalculator_all
+      (output: Record<string, any>) => output.positionCalculator_all,
     );
     // }
 
@@ -40,21 +40,25 @@ class PortfolioCalculator extends BaseCalculator<any> {
       data.holding &&
       Array.isArray(holding)
     ) {
-      holding = holding.map((item) => {
-        if (data.holding[item.token]) {
-          return {
-            ...item,
-            holding: data.holding[item.token].holding,
-            frozen: data.holding[item.token].frozen,
-          };
-        }
+      if (Array.isArray(data.holding)) {
+        holding = data.holding;
+      } else {
+        holding = holding.map((item) => {
+          if (data.holding[item.token]) {
+            return {
+              ...item,
+              holding: data.holding[item.token].holding,
+              frozen: data.holding[item.token].frozen,
+            };
+          }
 
-        return item;
-      });
+          return item;
+        });
+      }
     }
 
-    const accountInfo = ctx.accountInfo;
-    const symbolsInfo = ctx.symbolsInfo;
+    const accountInfo = ctx.accountInfo!;
+    const symbolsInfo = ctx.symbolsInfo!;
 
     return this.format({
       holding,
@@ -145,7 +149,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
   update(
     data: { [K in keyof Portfolio]: number | Decimal } | null,
-    scope: CalculatorScope
+    scope: CalculatorScope,
   ) {
     if (!!data) {
       useAppStore.getState().actions.batchUpdateForPortfolio({

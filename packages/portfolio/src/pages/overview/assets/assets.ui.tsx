@@ -14,28 +14,12 @@ import {
   EyeCloseIcon,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { AssetScriptReturn } from "./assets.script";
 import { AssetsHeader } from "./assetsHeader";
 
-type Props = {
-  canTrade?: boolean;
-  onConnectWallet?: () => void;
-  onWithdraw?: () => void;
-  onDeposit?: () => void;
-  onLeverageEdit?: () => void;
-  portfolioValue: number | null;
-  visible: boolean;
-  toggleVisible: () => void;
-  wrongNetwork: boolean;
-} & StatisticProps;
-
-type StatisticProps = {
-  currentLeverage: number;
-  unrealPnL: number;
-  unrealROI: number;
-  freeCollateral: number;
-};
-
-export const AssetsUI = (props: Props) => {
+export const AssetsUI = (
+  props: AssetScriptReturn & { onConnectWallet?: () => void },
+) => {
   const { t } = useTranslation();
   return (
     <Card
@@ -43,12 +27,13 @@ export const AssetsUI = (props: Props) => {
         footer: "oui-h-[48px]",
         root: "oui-h-[240px]",
       }}
-      // @ts-ignore
       title={
         <AssetsHeader
           disabled={!props.canTrade}
+          isMainAccount={props.isMainAccount}
           onDeposit={props.onDeposit}
           onWithdraw={props.onWithdraw}
+          onTransfer={props.onTransfer}
         />
       }
     >
@@ -115,9 +100,17 @@ const NoValue: FC = () => {
   );
 };
 
-export const AssetStatistic = (
-  props: StatisticProps & { onLeverageEdit?: () => void; visible: boolean },
-) => {
+type AssetStatisticProps = Pick<
+  AssetScriptReturn,
+  | "currentLeverage"
+  | "unrealPnL"
+  | "unrealROI"
+  | "freeCollateral"
+  | "onLeverageEdit"
+  | "visible"
+>;
+
+export const AssetStatistic = (props: AssetStatisticProps) => {
   const { t } = useTranslation();
 
   return (

@@ -1,12 +1,10 @@
-import {
-  TabPanel,
-  Tabs,
-} from "@orderly.network/ui";
-import { AssetHistoryWidget } from "../assetHistory";
-import { TabName } from "./useState.script";
-import { FundingHistoryWidget } from "../funding";
-import { DistributionHistoryWidget } from "../distribution";
 import { useTranslation } from "@orderly.network/i18n";
+import { TabPanel, Tabs } from "@orderly.network/ui";
+import { AssetHistoryWidget } from "../assetHistory";
+import { DistributionHistoryWidget } from "../distribution";
+import { FundingHistoryWidget } from "../funding";
+import { TabName } from "./useState.script";
+
 export const HistoryDataGroupMobile = (props: {
   active?: TabName;
   onTabChange: (tab: string) => void;
@@ -30,10 +28,7 @@ export const HistoryDataGroupMobile = (props: {
       >
         <AssetHistoryWidget />
       </TabPanel>
-      <TabPanel
-        title={t("common.funding")}
-        value={"funding"}
-      >
+      <TabPanel title={t("common.funding")} value={"funding"}>
         <FundingHistoryWidget />
       </TabPanel>
       <TabPanel

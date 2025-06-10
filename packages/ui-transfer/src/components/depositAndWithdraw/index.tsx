@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   registerSimpleDialog,
   registerSimpleSheet,
@@ -8,7 +9,7 @@ import {
 import { DepositIcon, WithdrawIcon } from "../../icons";
 import { WithdrawFormWidget } from "../withdrawForm";
 import { DepositSlot } from "./plugin";
-import { useTranslation } from "@orderly.network/i18n";
+
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export const DepositAndWithdrawWithSheetId = "DepositAndWithdrawWithSheetId";
 
@@ -19,7 +20,7 @@ export type DepositAndWithdrawProps = {
 
 export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
   const [activeTab, setActiveTab] = useState<string>(
-    props.activeTab || "deposit"
+    props.activeTab || "deposit",
   );
   const { t } = useTranslation();
 

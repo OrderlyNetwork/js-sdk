@@ -9,6 +9,10 @@ import React, {
   ReactElement,
 } from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cnBase, VariantProps } from "tailwind-variants";
+import { Flex } from "../flex";
+import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
+import { ScrollIndicator } from "../scrollIndicator";
 import {
   TabsBase,
   TabsList,
@@ -16,10 +20,6 @@ import {
   TabsTrigger,
   tabsVariants,
 } from "./tabsBase";
-import { Flex } from "../flex";
-import { cnBase, VariantProps } from "tailwind-variants";
-import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
-import { ScrollIndicator } from "../scrollIndicator";
 
 type tabConfig = {
   title: ReactNode;
@@ -83,7 +83,7 @@ const Tabs: FC<TabsProps> = (props) => {
         size={rest.size}
         className={cnBase(
           "oui-flex-1 oui-border-0",
-          props.classNames?.tabsList
+          props.classNames?.tabsList,
         )}
       >
         {Object.keys(tabList).map((key) => {
@@ -129,7 +129,7 @@ const Tabs: FC<TabsProps> = (props) => {
           width="100%"
           className={cnBase(
             tabsOverrides.variant !== "contained" &&
-              "oui-border-b oui-border-b-line-6"
+              "oui-border-b oui-border-b-line-6",
           )}
         >
           {props.leading}

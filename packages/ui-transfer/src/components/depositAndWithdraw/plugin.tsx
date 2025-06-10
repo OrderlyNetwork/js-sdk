@@ -4,7 +4,7 @@ import {
   installExtension,
 } from "@orderly.network/ui";
 import { DepositFormWidget } from "../depositForm";
-import { DepositFormWidgetProps } from "../depositForm/widget";
+import { DepositFormWidgetProps } from "../depositForm/depositForm.widget";
 
 export function installDeposit() {
   installExtension<DepositFormWidgetProps>({

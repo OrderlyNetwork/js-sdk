@@ -2,18 +2,20 @@ import {
   FC,
   PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
 import {
-  useOrderEntry_deprecated,
+  KeyedMutator,
+  usePositionClose,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { toast } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
+
 export interface PositionsRowContextState {
   quantity: string;
   price: string;
@@ -37,50 +39,83 @@ export interface PositionsRowContextState {
 }
 
 export const PositionsRowContext = createContext(
-  {} as PositionsRowContextState
+  {} as PositionsRowContextState,
 );
 
 export const usePositionsRowContext = () => {
   return useContext(PositionsRowContext);
 };
 
-export const PositionsRowProvider: FC<
-  PropsWithChildren<{ position: API.PositionExt | API.PositionTPSLExt }>
-> = (props) => {
-  const [quantity, setQuantity] = useState<string>(
-    Math.abs(props.position.position_qty).toString()
-  );
+type PositionsRowProviderProps = PropsWithChildren<{
+  position: API.PositionExt | API.PositionTPSLExt;
+  mutatePositions?: KeyedMutator<API.PositionExt[]>;
+}>;
+
+export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
+  const { position } = props;
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setQuantity(Math.abs(props.position.position_qty).toString());
-  }, [props.position.position_qty]);
-
+  const [quantity, setQuantity] = useState<string>(
+    Math.abs(position.position_qty).toString(),
+  );
   const [price, setPrice] = useState<string>("");
-  // const [side, setSide] = useState<OrderSide>(
-  //   props.position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY
-  // );
-
-  const side = props.position.position_qty > 0 ? OrderSide.SELL : OrderSide.BUY;
-
-  const [errors, setErrors] = useState<any | undefined>(undefined);
-
   const [type, setType] = useState<OrderType>(OrderType.MARKET);
 
-  const config = useSymbolsInfo();
-  const symbol = props.position.symbol;
-  const curSymbolInfo = config?.[symbol];
-  const quoteDp = curSymbolInfo("quote_dp");
-  const baseDp = curSymbolInfo("base_dp");
-  const baseTick = curSymbolInfo("base_tick");
+  useEffect(() => {
+    setQuantity(Math.abs(position.position_qty).toString());
+  }, [position.position_qty]);
 
-  const { helper, onSubmit, submitting } = useOrderEntry_deprecated(
-    props.position?.symbol!,
+  const symbol = position.symbol;
+  const symbolsInfo = useSymbolsInfo();
+  const info = symbolsInfo?.[symbol];
+  const quoteDp = info("quote_dp");
+  const baseDp = info("base_dp");
+  const baseTick = info("base_tick");
+
+  const {
     side,
-    true
+    closeOrderData,
+    submit,
+    isMutating: submitting,
+    errors,
+    calculate,
+  } = usePositionClose({
+    position,
+    order: {
+      type,
+      quantity,
+      price,
+    },
+  });
+
+  const updateQuantity = useCallback(
+    (value: string) => {
+      const newValues = calculate(
+        {},
+        "order_quantity",
+        value,
+        position.mark_price,
+        info(),
+      ) as OrderEntity;
+      setQuantity(newValues["order_quantity"] as string);
+    },
+    [calculate, symbolsInfo, position.mark_price],
   );
 
-  const updateOrderType = (type: OrderType, price?: string) => {
+  const updatePriceChange = useCallback(
+    (value: string) => {
+      const newValues = calculate(
+        {},
+        "order_price",
+        value,
+        position.mark_price,
+        info(),
+      ) as OrderEntity;
+      setPrice(newValues["order_price"] as string);
+    },
+    [calculate, symbolsInfo, position.mark_price],
+  );
+
+  const updateOrderType = useCallback((type: OrderType, price?: string) => {
     setType(type);
     if (type === OrderType.LIMIT) {
       if (!price) {
@@ -90,60 +125,29 @@ export const PositionsRowProvider: FC<
     } else {
       setPrice("");
     }
-  };
+  }, []);
 
-  const closeOrderData = useMemo(() => {
-    const { position } = props;
+  const onSubmit = useCallback(async () => {
+    return submit()
+      .then((res) => {
+        if (res.success) {
+          props.mutatePositions?.();
+          return res;
+        }
 
-    if (!position) return null;
+        if (res.message) {
+          toast.error(res.message);
+        }
 
-    const data: any = {
-      //   order_price: undefined,
-      order_quantity: quantity,
-      symbol: props.position.symbol,
-      order_type: type,
-      side,
-      reduce_only: true,
-    };
-
-    if (type === OrderType.LIMIT) {
-      data.order_price = price;
-    }
-
-    return data;
-  }, [props.position, price, type, quantity]);
-
-  const onUpdateQuantity = (value: string) => {
-    const newValues = helper.calculate(
-      {},
-      "order_quantity",
-      value
-    ) as OrderEntity;
-    setQuantity(newValues["order_quantity"] as string);
-  };
-
-  const onUpdatePrice = (value: string) => {
-    const newValues = helper.calculate({}, "order_price", value) as OrderEntity;
-    setPrice(newValues["order_price"] as string);
-  };
-
-  useEffect(() => {
-    let order = closeOrderData;
-    helper.validator(order).then((value: any) => {
-      setErrors(value);
-    });
-  }, [closeOrderData]);
-
-  const postOrder = () => {
-    return onSubmit(closeOrderData).catch((error) => {
-      if (typeof error === "string") {
-        toast.error(error);
-      } else {
-        toast.error(error.message);
-      }
-      return Promise.resolve();
-    });
-  };
+        throw true;
+      })
+      .catch((err) => {
+        if (err.message) {
+          toast.error(err.message);
+        }
+        return false;
+      });
+  }, [submit]);
 
   return (
     <PositionsRowContext.Provider
@@ -152,13 +156,12 @@ export const PositionsRowProvider: FC<
         price,
         type,
         side,
-        position: props.position,
-        updatePriceChange: onUpdatePrice,
-        updateQuantity: onUpdateQuantity,
+        position,
+        updatePriceChange,
+        updateQuantity,
         updateOrderType,
-        tpslOrder: (props.position as unknown as API.PositionTPSLExt)
-          .algo_order,
-        onSubmit: postOrder,
+        tpslOrder: (position as API.PositionTPSLExt).algo_order,
+        onSubmit,
         submitting,
         closeOrderData,
         quoteDp,

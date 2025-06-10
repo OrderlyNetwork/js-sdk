@@ -1,11 +1,17 @@
-import { PropsWithChildren, createContext, useContext, useRef } from "react";
-import { usePrivateDataObserver } from "./orderly/usePrivateDataObserver";
-import { usePreLoadData } from "./usePreloadData";
-import { useWSObserver } from "./orderly/internal/useWSObserver";
-import { useSimpleDI } from "./useSimpleDI";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useRef,
+} from "react";
 import { CalculatorService } from "./orderly/calculator/calculatorService";
-import { useCalculatorService } from "./useCalculatorService";
+import { useWSObserver } from "./orderly/internal/useWSObserver";
+import { usePrivateDataObserver } from "./orderly/usePrivateDataObserver";
 import { usePublicDataObserver } from "./orderly/usePublicDataObserver";
+import { useCalculatorService } from "./useCalculatorService";
+import { usePreLoadData } from "./usePreloadData";
+import { useSimpleDI } from "./useSimpleDI";
+
 export type getKeyFunction = (index: number, prevData: any) => string | null;
 
 interface DataCenterContextState {
@@ -18,12 +24,14 @@ interface DataCenterContextState {
 }
 
 export const DataCenterContext = createContext<DataCenterContextState>(
-  {} as any
+  {} as any,
 );
 
 export const useDataCenterContext = () => useContext(DataCenterContext);
 
-export const DataCenterProvider = ({ children }: PropsWithChildren) => {
+export const DataCenterProvider: React.FC<PropsWithChildren> = ({
+  children,
+}) => {
   /**
    *  preload the required data for the app
    *  hidden view while the required data is not ready
@@ -51,7 +59,9 @@ export const DataCenterProvider = ({ children }: PropsWithChildren) => {
     return <div>Data load failed</div>;
   }
 
-  if (!done) return null;
+  if (!done) {
+    return null;
+  }
 
   return (
     <DataCenterContext.Provider

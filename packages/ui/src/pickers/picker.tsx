@@ -6,11 +6,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { tv } from "../utils/tv";
 import { VariantProps } from "tailwind-variants";
+import { ChevronDownIcon, ChevronUpIcon, cn } from "..";
 import { SelectOption } from "../select/withOptions";
 import { ActionSheet } from "../sheet";
-import { ChevronDownIcon, ChevronUpIcon, cn } from "..";
+import { tv } from "../utils/tv";
 
 const pickerVariants = tv({
   base: "oui-flex oui-flex-row oui-items-stretch oui-rounded-md oui-cursor-pointer oui-border oui-border-line-6 oui-bg-line-4 oui-text-base-contrast-54",
@@ -54,7 +54,6 @@ export interface PickerProps
   onValueChange?: (value: any) => void;
 }
 
-
 export type PickerRef = {};
 export const Picker = forwardRef<PickerRef, PickerProps>(
   (
@@ -71,7 +70,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       disabled,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [open, setOpen] = useState(false);
 
@@ -132,7 +131,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
               fullWidth,
               disabled: disabled || options.length === 0,
               className,
-            })
+            }),
           )}
         >
           <div className="oui-flex-1 oui-flex oui-justify-start oui-items-center oui-text-inherit oui-text-2xs">
@@ -149,5 +148,5 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
         </div>
       </ActionSheet>
     );
-  }
+  },
 );

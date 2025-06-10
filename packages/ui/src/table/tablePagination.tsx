@@ -3,10 +3,11 @@ import { Flex } from "../flex";
 import { PaginationProps, Paginations } from "../pagination";
 
 export const TablePagination: FC<Omit<PaginationProps, "classNames">> = (
-  props
+  props,
 ) => {
-  if (props.pageTotal === 0) return null;
-
+  if (props.pageTotal === 0) {
+    return null;
+  }
   return (
     <Flex justify={"end"} py={2} mx={3} className="oui-h-10 oui-w-full">
       <Paginations
