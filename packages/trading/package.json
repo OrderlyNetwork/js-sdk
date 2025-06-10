@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "2.2.1-internal-20250612.0",
+  "version": "2.2.1-internal-20250612.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

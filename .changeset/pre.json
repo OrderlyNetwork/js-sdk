@@ -49,6 +49,7 @@
     "@orderly.network/web3-provider-ethers": "2.2.0"
   },
   "changesets": [
-    "olive-bottles-ring"
+    "olive-bottles-ring",
+    "swift-buttons-care"
   ]
 }
