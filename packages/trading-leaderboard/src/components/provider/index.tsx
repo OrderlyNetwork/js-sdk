@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { CampaignConfig } from "../campaigns/type";
+import { CampaignConfig, UserData } from "../campaigns/type";
 
 /**
  * Trading leaderboard provider state
@@ -22,6 +22,8 @@ export type TradingLeaderboardState = {
   currentCampaignId: string;
   currentCampaign: CampaignConfig | undefined;
   onCampaignChange: (campaignId: string) => void;
+  userData?: UserData;
+  setUserData?: (userdata: UserData) => void;
 };
 
 /**
@@ -39,6 +41,7 @@ export const TradingLeaderboardProvider = (
   props: TradingLeaderboardProviderProps,
 ) => {
   const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
+  const [userData, setUserData] = useState<UserData>();
 
   const currentCampaign = useMemo(() => {
     return props.campaigns?.find(
@@ -55,6 +58,8 @@ export const TradingLeaderboardProvider = (
         currentCampaignId,
         currentCampaign,
         onCampaignChange: setCurrentCampaignId,
+        userData,
+        setUserData,
       }}
     >
       {props.children}

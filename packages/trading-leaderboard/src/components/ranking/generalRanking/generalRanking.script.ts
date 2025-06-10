@@ -4,7 +4,6 @@ import {
   useConfig,
   useInfiniteQuery,
   useQuery,
-  usePrivateQuery,
 } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
@@ -97,6 +96,7 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
       searchParams.set("address", args.address);
     }
 
+    // https://orderly.network/docs/build-on-omnichain/evm-api/restful-api/private/get-builders-leaderboard
     return `/v1/broker/leaderboard/daily?${searchParams.toString()}`;
   };
 
@@ -150,7 +150,7 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     },
   );
 
-  const { data: userDataRes = [] } = usePrivateQuery<GeneralRankingData[]>(
+  const { data: userDataRes = [] } = useQuery<GeneralRankingData[]>(
     state.address
       ? getUrl({ page: 1, pageSize: 1, address: state.address, sort: null })
       : null,

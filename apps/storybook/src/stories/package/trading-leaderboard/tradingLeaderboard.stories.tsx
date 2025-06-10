@@ -18,7 +18,7 @@ function getCampaigns() {
   return [
     // Ongoing general campaign with volume-based prizes
     {
-      campaign_id: "general-volume-ongoing",
+      campaign_id: 102,
       title: "RISE ABOVE. OUTTRADE THE REST",
       description:
         "A new era of traders is rising. Are you the one leading the charge? Compete for your share of $15K by climbing the ranks. Only the bold will make it to the top.",
@@ -72,7 +72,7 @@ function getCampaigns() {
 
     // Future exclusive campaign for specific referral codes
     {
-      campaign_id: "exclusive-future-vip",
+      campaign_id: 106,
       title: "VIP TRADERS EXCLUSIVE CHAMPIONSHIP",
       description:
         "An exclusive tournament for our VIP community. Massive prizes await the elite traders. Limited to verified VIP members only.",
@@ -344,7 +344,7 @@ export const CampaignLeaderboard: Story = {
   render: (args) => {
     return (
       <Box p={3}>
-        <CampaignLeaderboardWidget campaignId={14} />
+        <CampaignLeaderboardWidget campaignId={102} />
       </Box>
     );
   },

@@ -4,11 +4,13 @@ import {
   useConfig,
   useInfiniteQuery,
   useQuery,
-  usePrivateQuery,
 } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { useEndReached } from "../../../hooks/useEndReached";
+import { CampaignConfig, UserData } from "../../campaigns/type";
+import { useTradingLeaderboardContext } from "../../provider";
+import { calculateEstimatedRewards } from "../../rewards/utils";
 import { getCurrentAddressRowKey, isSameAddress } from "../shared/util";
 
 export type CampaignRankingData = {
@@ -50,6 +52,8 @@ export function useCampaignRankingScript(
   });
   const [sort, setSort] = useState<TableSort | undefined>(initialSort);
 
+  const { currentCampaign, setUserData } = useTradingLeaderboardContext();
+
   const { state } = useAccount();
   const brokerId = useConfig("brokerId");
 
@@ -83,7 +87,9 @@ export function useCampaignRankingScript(
       searchParams.set("sort_by", sort.sortKey);
     }
 
-    return `/v1/public/campaign/ranking?${searchParams.toString()}`;
+    // https://orderly.network/docs/build-on-omnichain/evm-api/restful-api/public/get-campaign-ranking
+    // only get prod ranking data
+    return `https://api.orderly.org/v1/public/campaign/ranking?${searchParams.toString()}`;
   };
 
   const { data, isLoading } = useQuery<CampaignRankingResponse>(
@@ -149,15 +155,14 @@ export function useCampaignRankingScript(
     searchParams.set("campaign_id", campaignId.toString());
     searchParams.set("address", state.address!);
 
-    return `/v1/public/campaign/user?${searchParams.toString()}`;
+    // https://orderly.network/docs/build-on-omnichain/evm-api/restful-api/public/get-campaign-user-info
+    // only get prod user data
+    return `https://api.orderly.org/v1/public/campaign/user?${searchParams.toString()}`;
   };
 
-  const { data: userDataRes } = usePrivateQuery<CampaignRankingData[]>(
-    getUserUrl(),
-    {
-      revalidateOnFocus: false,
-    },
-  );
+  const { data: userDataRes } = useQuery<CampaignRankingData[]>(getUserUrl(), {
+    revalidateOnFocus: false,
+  });
 
   const getAddressRank = useCallback(
     (address: string) => {
@@ -169,7 +174,7 @@ export function useCampaignRankingScript(
     [top100Data],
   );
 
-  const userDataList = useMemo(() => {
+  const userData = useMemo(() => {
     if (!state.address || isLoading) {
       return undefined;
     }
@@ -214,11 +219,11 @@ export function useCampaignRankingScript(
     const list = data?.rows || [];
     const total = data?.meta.total || 0;
     const rankList = addRankForList(list, total);
-    if (page === 1) {
-      return formatData(userDataList ? [userDataList, ...rankList] : rankList);
-    }
-    return formatData(rankList);
-  }, [data, page, userDataList, , addRankForList]);
+    const _data =
+      page === 1 ? (userData ? [userData, ...rankList] : rankList) : rankList;
+
+    return formatData(_data, currentCampaign);
+  }, [data, page, userData, addRankForList, currentCampaign]);
 
   const dataList = useMemo(() => {
     if (!infiniteData?.length) {
@@ -229,8 +234,10 @@ export function useCampaignRankingScript(
     const flatList = infiniteData?.map((item) => item.rows)?.flat();
     const rankList = addRankForList(flatList, total);
 
-    return formatData(userDataList ? [userDataList, ...rankList] : rankList);
-  }, [infiniteData, userDataList, addRankForList]);
+    const _data = userData ? [userData, ...rankList] : rankList;
+
+    return formatData(_data, currentCampaign);
+  }, [infiniteData, userData, addRankForList, currentCampaign]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -249,6 +256,12 @@ export function useCampaignRankingScript(
     setPage(1);
   }, [state.address]);
 
+  useEffect(() => {
+    if (userData) {
+      setUserData?.(userData as any);
+    }
+  }, [userData]);
+
   return {
     pagination,
     initialSort,
@@ -261,9 +274,11 @@ export function useCampaignRankingScript(
   };
 }
 
-function formatData(data: any[]) {
+function formatData(data: any[], currentCampaign?: CampaignConfig) {
   return data.map((item) => ({
     ...item,
-    rewards: item.volume / 1000,
+    rewards:
+      currentCampaign &&
+      calculateEstimatedRewards(item as UserData, currentCampaign!),
   }));
 }

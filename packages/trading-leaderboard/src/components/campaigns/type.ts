@@ -50,7 +50,7 @@ export interface TicketRules {
 
 // Campaign configuration
 export interface CampaignConfig {
-  campaign_id: string;
+  campaign_id: number | string;
   title: string;
   description: string;
   start_time: string;

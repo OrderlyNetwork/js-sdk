@@ -37,7 +37,7 @@ export const Ranking: FC<RankingProps> = (props) => {
   const onRow = useCallback(
     (record: RankingData, index: number) => {
       const isYou = record.key === getCurrentAddressRowKey(props.address!);
-      const isFirst = record.rank === 1 && !isYou;
+      const isFirst = record.rank === 1;
       const isSecond = record.rank === 2;
       const isThird = record.rank === 3;
 
@@ -48,14 +48,17 @@ export const Ranking: FC<RankingProps> = (props) => {
           "oui-h-[48px]",
           // use oui-relative to let the background image position based on row
           "oui-relative",
-          (showBg || isYou) && "oui-border-b-2 oui-border-b-transparent",
-          isYou && "oui-h-[52px]",
-          isFirst &&
-            "oui-bg-[linear-gradient(270deg,rgba(241,215,121,0.0225)_-2.05%,rgba(255,203,70,0.45)_100%)]",
-          isSecond &&
-            "oui-bg-[linear-gradient(270deg,rgba(255,255,255,0.0225)_-2.05%,rgba(199,199,199,0.45)_100%)]",
-          isThird &&
-            "oui-bg-[linear-gradient(270deg,rgba(255,233,157,0.0225)_-1.3%,rgba(160,101,46,0.45)_100%)]",
+          isYou
+            ? "oui-h-[52px]"
+            : cn(
+                showBg && "oui-border-b-2 oui-border-b-transparent",
+                isFirst &&
+                  "oui-bg-[linear-gradient(270deg,rgba(241,215,121,0.0225)_-2.05%,rgba(255,203,70,0.45)_100%)]",
+                isSecond &&
+                  "oui-bg-[linear-gradient(270deg,rgba(255,255,255,0.0225)_-2.05%,rgba(199,199,199,0.45)_100%)]",
+                isThird &&
+                  "oui-bg-[linear-gradient(270deg,rgba(255,233,157,0.0225)_-1.3%,rgba(160,101,46,0.45)_100%)]",
+              ),
         ),
       };
     },

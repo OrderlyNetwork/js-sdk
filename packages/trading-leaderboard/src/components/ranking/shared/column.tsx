@@ -27,21 +27,23 @@ export const useRankingColumns = (
         title: t("tradingLeaderboard.rank"),
         dataIndex: "rank",
         width: 40,
-        render: (value: number) => {
+        render: (value: number, record: any) => {
+          const isYou = record.key === getCurrentAddressRowKey(address!);
+
           let rankIcon: ReactNode;
           let badgeImg: ReactNode = null;
 
-          if (value === 1) {
-            rankIcon = <FirstRankIcon />;
-            badgeImg = firstBadge;
-          }
-          if (value === 2) {
-            rankIcon = <SecondRankIcon />;
-            badgeImg = secondBadge;
-          }
-          if (value === 3) {
-            rankIcon = <ThirdRankIcon />;
-            badgeImg = thirdBadge;
+          if (!isYou) {
+            if (value === 1) {
+              rankIcon = <FirstRankIcon />;
+              badgeImg = firstBadge;
+            } else if (value === 2) {
+              rankIcon = <SecondRankIcon />;
+              badgeImg = secondBadge;
+            } else if (value === 3) {
+              rankIcon = <ThirdRankIcon />;
+              badgeImg = thirdBadge;
+            }
           }
 
           return (
@@ -53,6 +55,7 @@ export const useRankingColumns = (
                   className={cn(
                     "oui-z-0 oui-h-[47px] oui-opacity-30",
                     "oui-absolute oui-left-0 oui-top-0",
+                    "oui-mix-blend-luminosity",
                   )}
                 />
               )}
@@ -76,21 +79,34 @@ export const useRankingColumns = (
             return <Text>You</Text>;
           }
 
-          const linearGradientText = {
-            background:
-              "linear-gradient(169deg, #FBE67B 2.09%, #FCFBE7 15.8%, #F7D14E 40.73%, #D4A041 58.8%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          };
+          let linearGradientText;
+
+          if (!isYou) {
+            if (record.rank === 1) {
+              linearGradientText =
+                "linear-gradient(169deg, #FBE67B 2.09%, #FCFBE7 15.8%, #F7D14E 40.73%, #D4A041 58.8%)";
+            } else if (record.rank === 2) {
+              linearGradientText =
+                "linear-gradient(201.05deg, #D9D9D9 38.79%, #F7F6F4 53.85%, #D9D9D9 71.71%, #7F7F7F 91.87%), rgba(255, 255, 255, 0.8)";
+            } else if (record.rank === 3) {
+              linearGradientText =
+                "linear-gradient(149.05deg, #B6947E 15.63%, #F8DAC8 31.37%, #B6947E 44.29%, #F8DCCB 56.6%), rgba(255, 255, 255, 0.8)";
+            }
+          }
 
           return (
             <>
               <Text.formatted
                 rule="address"
                 style={
-                  // only first rank is linear gradient text
-                  !isYou && record.rank === 1 ? linearGradientText : undefined
+                  linearGradientText
+                    ? {
+                        background: linearGradientText,
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }
+                    : undefined
                 }
               >
                 {value}
