@@ -1,6 +1,4 @@
 import {
-  PrizePoolTier,
-  PrizePool,
   TicketTierRule,
   TicketLinearRule,
   TicketRules,
@@ -27,7 +25,7 @@ export function calculateEstimatedRewards(
 
   for (const pool of campaign.prize_pools) {
     const userMetricValue =
-      pool.metric === "volume" ? userdata.trading_volume : userdata.pnl;
+      pool.metric === "volume" ? userdata.volume : userdata.pnl;
 
     // Skip if user has no relevant data
     if (userMetricValue <= 0) continue;
@@ -71,7 +69,7 @@ export function calculateEstimatedTickets(
   ticketRules: TicketRules,
 ): number {
   const userMetricValue =
-    ticketRules.metric === "volume" ? userdata.trading_volume : userdata.pnl;
+    ticketRules.metric === "volume" ? userdata.volume : userdata.pnl;
 
   if (userMetricValue <= 0) return 0;
 
@@ -131,14 +129,13 @@ function estimateUserRank(
   metric: "volume" | "pnl",
 ): number | null {
   // If we have actual rank data, use it
-  if (userdata.current_rank) {
-    return userdata.current_rank;
+  if (userdata.rank) {
+    return Number(userdata.rank);
   }
 
   // Otherwise, make a simple estimation based on performance
   // This is a placeholder logic - real implementation should consider actual leaderboard data
-  const userMetricValue =
-    metric === "volume" ? userdata.trading_volume : userdata.pnl;
+  const userMetricValue = metric === "volume" ? userdata.volume : userdata.pnl;
   const totalParticipants = userdata.total_participants || 1000;
 
   if (userMetricValue <= 0) return null;

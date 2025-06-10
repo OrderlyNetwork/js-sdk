@@ -1,4 +1,10 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import { CampaignConfig } from "../campaigns/type";
 
 /**
@@ -14,6 +20,7 @@ export type TradingLeaderboardState = {
     trading: string;
   };
   currentCampaignId: string;
+  currentCampaign: CampaignConfig | undefined;
   onCampaignChange: (campaignId: string) => void;
 };
 
@@ -33,6 +40,12 @@ export const TradingLeaderboardProvider = (
 ) => {
   const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
 
+  const currentCampaign = useMemo(() => {
+    return props.campaigns?.find(
+      (campaign) => campaign.campaign_id === currentCampaignId,
+    );
+  }, [props.campaigns, currentCampaignId]);
+
   return (
     <TradingLeaderboardContext.Provider
       value={{
@@ -40,6 +53,7 @@ export const TradingLeaderboardProvider = (
         href: props.href,
         backgroundSrc: props.backgroundSrc,
         currentCampaignId,
+        currentCampaign,
         onCampaignChange: setCurrentCampaignId,
       }}
     >

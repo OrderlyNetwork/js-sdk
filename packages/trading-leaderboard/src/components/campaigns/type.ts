@@ -71,9 +71,8 @@ export interface CampaignConfig {
 
 // User data for calculations
 export interface UserData {
-  account_id: string;
-  current_rank?: number;
-  trading_volume: number;
+  rank?: number | string;
   pnl: number;
   total_participants?: number;
+  volume: number;
 }

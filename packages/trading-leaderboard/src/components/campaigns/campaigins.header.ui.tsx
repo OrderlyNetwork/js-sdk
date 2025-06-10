@@ -12,6 +12,8 @@ export const CampaignsHeaderUI: FC<{
   onCampaignChange: (campaignId: string) => void;
 }> = ({ campaigns, currentCampaignId, onCampaignChange }) => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -36,6 +38,38 @@ export const CampaignsHeaderUI: FC<{
     skipSnaps: false,
     dragFree: false,
   });
+
+  // Update scroll availability
+  const updateScrollAvailability = useCallback(() => {
+    if (!emblaApi || !campaigns?.length) return;
+
+    setCanScrollPrev(emblaApi.canScrollPrev());
+
+    // Check if the last slide is in view
+    const slidesInView = emblaApi.slidesInView();
+    const lastSlideIndex = campaigns.length - 1;
+    const isLastSlideInView = slidesInView.includes(lastSlideIndex);
+
+    setCanScrollNext(emblaApi.canScrollNext() && !isLastSlideInView);
+  }, [emblaApi, campaigns]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    // Initial check
+    updateScrollAvailability();
+
+    // Listen for scroll events
+    emblaApi.on("select", updateScrollAvailability);
+    emblaApi.on("reInit", updateScrollAvailability);
+    emblaApi.on("scroll", updateScrollAvailability);
+
+    return () => {
+      emblaApi.off("select", updateScrollAvailability);
+      emblaApi.off("reInit", updateScrollAvailability);
+      emblaApi.off("scroll", updateScrollAvailability);
+    };
+  }, [emblaApi, updateScrollAvailability]);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -64,12 +98,18 @@ export const CampaignsHeaderUI: FC<{
         />
       </div>
 
+      <div className="oui-w-[1px] oui-h-[78px] oui-bg-white/[0.16]" />
+
       <button
         onClick={scrollPrev}
-        className="oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-8 oui-h-8 oui-p-1 oui-rounded oui-transition-colors hover:oui-bg-base-6"
+        disabled={!canScrollPrev}
+        className="oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent"
         aria-label="Previous campaigns"
       >
-        <ChevronLeftIcon />
+        <ChevronLeftIcon
+          opacity={1}
+          className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast"
+        />
       </button>
 
       <div className="oui-flex-1 oui-min-w-0 oui-overflow-hidden">
@@ -92,13 +132,16 @@ export const CampaignsHeaderUI: FC<{
           </div>
         </div>
       </div>
-
       <button
         onClick={scrollNext}
-        className="oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-8 oui-h-8 oui-p-1 oui-rounded oui-transition-colors hover:oui-bg-base-6"
+        disabled={!canScrollNext}
+        className="oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent"
         aria-label="Next campaigns"
       >
-        <ChevronRightIcon />
+        <ChevronRightIcon
+          opacity={1}
+          className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast"
+        />
       </button>
     </div>
   );

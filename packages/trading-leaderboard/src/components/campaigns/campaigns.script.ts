@@ -18,20 +18,18 @@ export const useCampaignsScript = () => {
     campaigns = [],
     currentCampaignId,
     onCampaignChange,
+    currentCampaign,
   } = useTradingLeaderboardContext();
 
   // TODO: Replace with actual API hook like useQuery for campaign statistics
   // const { data: statistics } = useQuery(`/v1/public/campaign/statistics?campaign_id=${currentCampaignId}`)
   const statistics = mockCampaignStatistics;
-  const currentCampaign = campaigns?.find(
-    (campaign) => campaign.campaign_id === currentCampaignId,
-  );
 
   return {
     campaigns,
     currentCampaignId,
-    onCampaignChange,
     currentCampaign,
+    onCampaignChange,
     statistics,
   };
 };
