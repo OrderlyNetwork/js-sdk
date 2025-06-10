@@ -24,9 +24,7 @@ export const exchanges = [
 ];
 
 export const useFundingComparisonScript = () => {
-  const { pagination } = usePagination({
-    pageSize: 10,
-  });
+  const { pagination } = usePagination({ pageSize: 10 });
   const { onSort, getSortedList } = useSort();
   const { searchValue } = useMarketsContext();
 
