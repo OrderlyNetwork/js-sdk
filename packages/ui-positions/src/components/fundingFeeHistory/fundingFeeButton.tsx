@@ -1,5 +1,6 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useBoolean } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   SimpleDialog,
   SimpleSheet,
@@ -12,6 +13,7 @@ export const FundingFeeButton: FC<{
   fee: string;
   symbol: string;
 }> = ({ fee, symbol }) => {
+  const { t } = useTranslation();
   const [isOpen, { setTrue, setFalse }] = useBoolean(false);
   const { isMobile } = useScreen();
 
@@ -32,9 +34,9 @@ export const FundingFeeButton: FC<{
         <SimpleSheet
           open={isOpen}
           onOpenChange={setFalse}
-          title="Funding fee"
+          title={t("funding.fundingFee")}
           classNames={{
-            body: "oui-max-h-[80vh] oui-overflow-y-auto oui-py-0",
+            body: "oui-max-h-[80vh] oui-py-0",
           }}
         >
           <FundingFeeHistoryUI total={fee} symbol={symbol} />
@@ -43,10 +45,10 @@ export const FundingFeeButton: FC<{
         <SimpleDialog
           open={isOpen}
           onOpenChange={setFalse}
-          title="Funding fee"
+          title={t("funding.fundingFee")}
           classNames={{
             content: "lg:oui-max-w-[640px]",
-            body: "oui-overflow-y-auto oui-max-h-[80vh] oui-bg-base-8 lg:oui-py-0",
+            body: "oui-max-h-[80vh] oui-bg-base-8 lg:oui-py-0",
           }}
         >
           <FundingFeeHistoryUI total={fee} symbol={symbol} />

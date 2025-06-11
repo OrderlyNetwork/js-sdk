@@ -111,7 +111,7 @@ export const usePositionHistoryColumn = (props: {
           },
         },
         {
-          title: "Funding fee",
+          title: t("funding.fundingFee"),
           dataIndex: "accumulated_funding_fee",
           render: (value, record) => {
             return <FundingFeeButton fee={value} symbol={record.symbol} />;
@@ -365,9 +365,7 @@ export const NetPnL = (props: {
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>
-              {t("positions.history.netPnl.fundingFee")}
-            </Text>
+            <Text intensity={54}>{t("funding.fundingFee")}</Text>
             <Text
               color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
               className="oui-cursor-pointer"

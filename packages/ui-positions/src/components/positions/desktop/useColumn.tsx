@@ -253,7 +253,7 @@ export const useColumn = (config: ColumnConfig) => {
         render: (value: string) => <Text.numeral>{value}</Text.numeral>,
       },
       {
-        title: "Funding fee",
+        title: t("funding.fundingFee"),
         dataIndex: "last_sum_unitary_funding",
         width: 100,
         render: (value: string, record) => (

@@ -230,9 +230,10 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
 };
 
 export const FundingFee: FC<PositionCellState> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex justify={"end"} className="oui-text-2xs oui-w-full">
-      <Text intensity={36}>Funding fee: </Text>
+      <Text intensity={36}>{t("funding.fundingFee")}: </Text>
       <FundingFeeButton
         fee={props.item.last_sum_unitary_funding}
         symbol={props.item.symbol}

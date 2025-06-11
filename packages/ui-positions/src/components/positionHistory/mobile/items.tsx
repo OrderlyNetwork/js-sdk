@@ -303,12 +303,13 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
 };
 
 export const FundingFee: FC<PositionHistoryCellState> = (props) => {
+  const { t } = useTranslation();
   return (
     <Flex
       justify={"end"}
       className="oui-text-2xs oui-w-full oui-py-2 oui-gap-1 oui-gap-1"
     >
-      <Text intensity={36}>Funding fee: </Text>
+      <Text intensity={36}>{t("funding.fundingFee")}: </Text>
       <FundingFeeButton
         fee={props.item.accumulated_funding_fee}
         symbol={props.item.symbol}

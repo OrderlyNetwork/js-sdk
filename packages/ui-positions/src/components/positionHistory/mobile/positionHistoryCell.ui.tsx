@@ -55,9 +55,7 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>
-              {t("positions.history.netPnl.fundingFee")}
-            </Text>
+            <Text intensity={54}>{t("funding.fundingFee")}</Text>
             <Text
               color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
             >

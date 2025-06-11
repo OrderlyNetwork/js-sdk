@@ -1,5 +1,6 @@
 import { FC, useCallback, useMemo } from "react";
 import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Grid,
   Statistic,
@@ -8,6 +9,7 @@ import {
   ListView,
   Flex,
   useScreen,
+  cn,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { EndReachedBox } from "./endReachedBox";
@@ -27,6 +29,7 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
   total,
   symbol,
 }) => {
+  const { t } = useTranslation();
   const { isMobile } = useScreen();
 
   const { isLoading, data, setSize } =
@@ -76,7 +79,7 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
           {/* <Statistic label={"Instrument"} /> */}
           <Flex direction={"column"} gap={1} itemAlign={"start"}>
             <span className="oui-text-2xs oui-text-base-contrast-36">
-              Instrument
+              {t("common.instrument")}
             </span>
             <Text.formatted
               rule="symbol"
@@ -89,7 +92,7 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
         </div>
         <div className="oui-bg-base-9 oui-rounded-lg oui-p-3 oui-border oui-border-line-6">
           <Statistic
-            label="Funding fee (USDC)"
+            label={`${t("funding.fundingFee")} (USDC)`}
             valueProps={{
               ignoreDP: true,
               coloring: true,
@@ -112,10 +115,11 @@ type ListProps = {
 };
 
 const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
+  const { t } = useTranslation();
   const columns = useMemo(() => {
     return [
       {
-        title: "Time",
+        title: t("common.time"),
         dataIndex: "created_time",
         width: 120,
         render: (value: string) => {
@@ -123,7 +127,7 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         },
       },
       {
-        title: "Funding rate",
+        title: t("funding.fundingRate"),
         dataIndex: "funding_rate",
         formatter: (value: string) => new Decimal(value).mul(100).toString(),
         render: (value: string) => {
@@ -131,15 +135,17 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         },
       },
       {
-        title: "Payment type",
+        title: t("funding.paymentType"),
         dataIndex: "payment_type",
         formatter: (value: string) => {
-          return value === "Pay" ? "Paid" : "Received";
+          return value === "Pay"
+            ? t("funding.paymentType.paid")
+            : t("funding.paymentType.received");
         },
         render: (value) => <span>{value}</span>,
       },
       {
-        title: "Funding fee (USDC)",
+        title: `${t("funding.fundingFee")} (USDC)`,
         dataIndex: "funding_fee",
         render: (value: string) => {
           return (
@@ -150,11 +156,17 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         },
       },
     ];
-  }, []);
+  }, [t]);
+
   return (
     <EndReachedBox onEndReached={loadMore}>
       <DataTable
-        className="oui-text-sm oui-bg-base-8"
+        classNames={{
+          root: cn(
+            "oui-bg-base-8 oui-text-sm",
+            "oui-h-[calc(80vh_-_102px_-_8px)]",
+          ),
+        }}
         columns={columns}
         dataSource={data ?? []}
         loading={isLoading}
@@ -172,24 +184,27 @@ const HistoryDataListViewSimple: FC<ListProps> = ({
     return <FundingFeeItem item={item} />;
   }, []);
   return (
-    <ListView
-      dataSource={data}
-      renderItem={renderItem}
-      isLoading={isLoading}
-      contentClassName="oui-space-y-0"
-      loadMore={loadMore}
-    />
+    <div className="oui-h-[calc(80vh_-_104px)] oui-overflow-y-auto">
+      <ListView
+        dataSource={data}
+        renderItem={renderItem}
+        isLoading={isLoading}
+        contentClassName="oui-space-y-0"
+        loadMore={loadMore}
+      />
+    </div>
   );
 };
 
 const FundingFeeItem: FC<{
   item: any;
 }> = ({ item }) => {
+  const { t } = useTranslation();
   return (
     <div className="oui-flex oui-flex-col oui-space-y-2 oui-border-t oui-border-line-6 oui-py-2">
       <Flex justify={"between"}>
         <Statistic
-          label="Funding rate"
+          label={t("funding.fundingRate")}
           classNames={{
             label: "oui-text-2xs",
           }}
@@ -202,7 +217,7 @@ const FundingFeeItem: FC<{
           {item.funding_rate}
         </Statistic>
         <Statistic
-          label="Amount"
+          label={t("common.amount")}
           className="oui-items-end"
           classNames={{
             label: "oui-text-2xs",
@@ -227,7 +242,9 @@ const FundingFeeItem: FC<{
           {item.created_time}
         </Text.formatted>
         <Text size="sm" intensity={80}>
-          {item.payment_type === "Pay" ? "Paid" : "Received"}
+          {item.payment_type === "Pay"
+            ? t("funding.paymentType.paid")
+            : t("funding.paymentType.received")}
         </Text>
       </Flex>
     </div>
