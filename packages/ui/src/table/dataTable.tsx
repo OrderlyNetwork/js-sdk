@@ -15,7 +15,7 @@ import {
   ExpandedState,
   OnChangeFn,
 } from "@tanstack/react-table";
-import { cnBase } from "tailwind-variants";
+import { cnBase, cn } from "tailwind-variants";
 import { useInit } from "./hooks/useInit";
 import { useScroll } from "./hooks/useScroll";
 import { useShowHeader } from "./hooks/useShowHeader";
@@ -211,23 +211,27 @@ export function DataTable<RecordType extends any>(
     <div
       ref={wrapRef}
       id={props.id}
-      className={cnBase(
+      className={cn(
         "oui-table-root oui-size-full",
         "oui-bg-base-9",
         className,
         classNames?.root,
-      )}
+      )({
+        twMerge: true,
+      })}
     >
       <div
         ref={scrollRef}
-        className={cnBase(
+        className={cn(
           "oui-table-scroll oui-relative",
           "oui-min-h-[162px] oui-w-full",
           "oui-text-xs oui-font-semibold",
           "oui-custom-scrollbar oui-overflow-auto",
           showPagination ? "oui-h-[calc(100%_-_40px)]" : "oui-h-full",
           classNames?.scroll,
-        )}
+        )({
+          twMerge: true,
+        })}
       >
         <table
           className={cnBase(

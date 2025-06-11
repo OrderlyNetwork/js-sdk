@@ -13,6 +13,7 @@ import {
 } from "@orderly.network/ui";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
+import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { CloseButton } from "./closeButton";
 import { TPSLButton } from "./components";
 import {
@@ -250,6 +251,14 @@ export const useColumn = (config: ColumnConfig) => {
         width: 100,
         rule: "price",
         render: (value: string) => <Text.numeral>{value}</Text.numeral>,
+      },
+      {
+        title: t("funding.fundingFee"),
+        dataIndex: "last_sum_unitary_funding",
+        width: 100,
+        render: (value: string, record) => (
+          <FundingFeeButton fee={value} symbol={record.symbol} />
+        ),
       },
       {
         title: t("common.qty"),
