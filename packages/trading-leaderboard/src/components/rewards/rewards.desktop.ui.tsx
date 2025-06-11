@@ -12,11 +12,15 @@ import {
 interface RewardsDesktopUIProps {
   campaign?: CampaignConfig;
   userdata?: UserData;
+  onLearnMore: () => void;
+  onTradeNow: () => void;
 }
 
 export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   campaign,
   userdata,
+  onLearnMore,
+  onTradeNow,
 }) => {
   // Use mock data for userdata if not provided
   const currentUserData = userdata;
@@ -121,6 +125,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
               hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
               active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
               "
+          onClick={onLearnMore}
         >
           View rules
         </Button>
@@ -130,6 +135,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
             variant="gradient"
             color="primary"
             className=" oui-w-[140px]"
+            onClick={onTradeNow}
           >
             Trade now
           </Button>

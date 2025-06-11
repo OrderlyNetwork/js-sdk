@@ -6,8 +6,9 @@ interface CampaignItemUIProps {
   className?: string;
   active?: boolean;
   tag: CampaignTagEnum;
-  onCampaignChange: (campaignId: string | number) => void;
+  onCampaignChange: (campaignId: string) => void;
   campaign: CampaignConfig;
+  backgroundSrc?: string;
 }
 
 export const CampaignItemUI: FC<CampaignItemUIProps> = ({
@@ -15,6 +16,7 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
   tag,
   onCampaignChange,
   campaign,
+  backgroundSrc,
 }) => {
   return (
     <div
@@ -27,7 +29,7 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
           : "oui-border-transparent",
         "hover:oui-border-base-contrast",
       ])}
-      onClick={() => onCampaignChange(campaign.campaign_id)}
+      onClick={() => onCampaignChange(campaign.campaign_id.toString())}
     >
       <CampaignTag tag={tag} active={active} />
       <div
@@ -37,7 +39,7 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
           active ? "oui-grayscale-0" : "oui-grayscale",
           "group-hover:oui-grayscale-0",
         ])}
-        style={{ backgroundImage: `url(${campaign.image})` }}
+        style={{ backgroundImage: `url(${campaign?.image || backgroundSrc})` }}
       >
         <Text
           size="base"

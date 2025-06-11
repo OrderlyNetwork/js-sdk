@@ -55,17 +55,14 @@ export interface CampaignConfig {
   start_time: string;
   end_time: string;
   reward_distribution_time?: string;
-  volume_scope?: string | string[];
-  referral_codes?: string[];
+  volume_scope: string | string[];
+  referral_codes?: string[] | string;
   prize_pools?: PrizePool[];
   ticket_rules?: TicketRules;
-  image: string;
-  href?:
-    | string
-    | {
-        learnMore?: string;
-        trading?: string;
-      };
+  image?: string;
+  rule_url?: string;
+  trading_url?: string;
+  href?: string;
 }
 
 // User data for calculations
@@ -74,7 +71,7 @@ export interface UserData {
   pnl: number;
   total_participants?: number;
   volume: number;
-  referral_codes?: string[];
+  referral_code?: string;
 }
 
 export type CampaignStatsDetailsResponse = {

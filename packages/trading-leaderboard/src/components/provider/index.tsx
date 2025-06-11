@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { isEmpty, intersection } from "lodash";
+import { isEmpty, sortWith, descend, prop } from "ramda";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
 /**
@@ -53,33 +53,31 @@ export const TradingLeaderboardProvider = (
 
   const currentCampaign = useMemo(() => {
     return props.campaigns?.find(
-      (campaign) => campaign.campaign_id === currentCampaignId,
+      (campaign) => campaign.campaign_id == currentCampaignId,
     );
   }, [props.campaigns, currentCampaignId]);
 
   const filteredCampaigns = useMemo(() => {
-    return props.campaigns?.filter((campaign) => {
+    const filtered = props.campaigns?.filter((campaign) => {
       // Campaign without referral_codes is visible to all users
-      if (isEmpty(campaign.referral_codes)) {
+      if (!campaign.referral_codes) {
         return true;
       }
 
-      // Campaign with referral_codes is only visible if user has matching referral codes
-      if (isEmpty(userData?.referral_codes)) {
-        return false;
-      }
-
-      // Check if there's intersection between campaign and user referral codes
-      return !isEmpty(
-        intersection(campaign.referral_codes, userData?.referral_codes),
-      );
+      return campaign.referral_codes?.includes(userData?.referral_code || "");
     });
+
+    // Using ramda for descending time sort
+    return filtered
+      ? sortWith([descend(prop("end_time"))], filtered)
+      : filtered;
   }, [props.campaigns, userData]);
 
   return (
     <TradingLeaderboardContext.Provider
       value={{
         campaigns: filteredCampaigns,
+        // campaigns: props.campaigns,
         href: props.href,
         backgroundSrc: props.backgroundSrc,
         currentCampaignId,

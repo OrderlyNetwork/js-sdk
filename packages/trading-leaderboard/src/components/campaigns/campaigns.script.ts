@@ -1,13 +1,7 @@
-import { useQuery } from "@orderly.network/hooks";
+import { useMemo } from "react";
+import { useQuery, useConfig } from "@orderly.network/hooks";
 import { useTradingLeaderboardContext } from "../provider";
-import { CampaignStatistics, CampaignStatsDetailsResponse } from "./type";
-
-// Mock function to simulate API call for campaign statistics
-// In real implementation, this would be replaced with actual API hook
-const mockCampaignStatistics: CampaignStatistics = {
-  total_participants: 10000,
-  total_volume: 323232,
-};
+import { CampaignStatsDetailsResponse } from "./type";
 
 /**
  * Hook for managing campaigns data and statistics
@@ -20,19 +14,52 @@ export const useCampaignsScript = () => {
     onCampaignChange,
     currentCampaign,
     userData,
+    backgroundSrc,
   } = useTradingLeaderboardContext();
 
-  // TODO: Replace with actual API hook like useQuery for campaign statistics
-  // const { data: statistics } = useQuery(`/v1/public/campaign/statistics?campaign_id=${currentCampaignId}`)
+  const symbols = Array.isArray(currentCampaign?.volume_scope)
+    ? currentCampaign?.volume_scope.join(",")
+    : currentCampaign?.volume_scope;
+
+  const brokerId = useConfig("brokerId");
+
+  const isCampaignStarted = useMemo(() => {
+    return (
+      currentCampaign?.start_time &&
+      currentCampaign?.start_time < new Date().toISOString()
+    );
+  }, [currentCampaign]);
+
+  const searchParams = useMemo(() => {
+    return {
+      campaign_id: currentCampaignId,
+      symbols: symbols || "",
+      broker_id: brokerId,
+      group_by: "BROKER",
+    };
+  }, [currentCampaignId, symbols, brokerId]);
+
   const { data } = useQuery<CampaignStatsDetailsResponse>(
-    currentCampaignId === "general"
-      ? null
-      : `https://api.orderly.org/v1/public/campaign/stats/details?campaign_id=${currentCampaignId}&symbols=PERP_WIF_USDC`,
+    isCampaignStarted && currentCampaignId !== "general"
+      ? `https://api.orderly.org/v1/public/campaign/stats/details?${new URLSearchParams(searchParams).toString()}`
+      : null,
   );
 
   const statistics = {
     total_participants: data?.[0]?.user_count,
     total_volume: data?.[0]?.volume,
+  };
+
+  const onLearnMore = () => {
+    if (currentCampaign?.rule_url) {
+      window.open(currentCampaign.rule_url, "_blank");
+    }
+  };
+
+  const onTradeNow = () => {
+    if (currentCampaign?.trading_url) {
+      window.open(currentCampaign.trading_url, "_self");
+    }
   };
 
   return {
@@ -42,5 +69,8 @@ export const useCampaignsScript = () => {
     onCampaignChange,
     statistics,
     userData,
+    onLearnMore,
+    onTradeNow,
+    backgroundSrc,
   };
 };

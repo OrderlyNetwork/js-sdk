@@ -10,7 +10,8 @@ export const CampaignsHeaderUI: FC<{
   campaigns: CampaignConfig[];
   currentCampaignId: string;
   onCampaignChange: (campaignId: string) => void;
-}> = ({ campaigns, currentCampaignId, onCampaignChange }) => {
+  backgroundSrc?: string;
+}> = ({ campaigns, currentCampaignId, onCampaignChange, backgroundSrc }) => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -89,6 +90,11 @@ export const CampaignsHeaderUI: FC<{
         width: "calc((100% - 0.5rem) / 2)",
       };
 
+  // Check if scroll buttons should be hidden based on screen size and campaign count
+  const shouldHideScrollButtons = isLargeScreen
+    ? campaigns.length <= 3
+    : campaigns.length <= 2;
+
   return (
     <div className="oui-flex oui-gap-2 oui-w-full oui-items-center">
       <div className="oui-flex-shrink-0">
@@ -103,7 +109,7 @@ export const CampaignsHeaderUI: FC<{
       <button
         onClick={scrollPrev}
         disabled={!canScrollPrev}
-        className="oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent"
+        className={`oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
         aria-label="Previous campaigns"
       >
         <ChevronLeftIcon
@@ -122,6 +128,7 @@ export const CampaignsHeaderUI: FC<{
                 style={slideStyle}
               >
                 <CampaignItemUI
+                  backgroundSrc={backgroundSrc}
                   campaign={campaign}
                   tag={getCampaignTag(campaign)}
                   active={currentCampaignId === campaign.campaign_id}
@@ -135,7 +142,7 @@ export const CampaignsHeaderUI: FC<{
       <button
         onClick={scrollNext}
         disabled={!canScrollNext}
-        className="oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent"
+        className={`oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
         aria-label="Next campaigns"
       >
         <ChevronRightIcon

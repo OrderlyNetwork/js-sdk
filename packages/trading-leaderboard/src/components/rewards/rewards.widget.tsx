@@ -15,6 +15,8 @@ export const RewardsWidget = () => {
       <RewardsDesktopUI
         campaign={state.currentCampaign}
         userdata={state.userData}
+        onLearnMore={state.onLearnMore}
+        onTradeNow={state.onTradeNow}
       />
     </>
   );

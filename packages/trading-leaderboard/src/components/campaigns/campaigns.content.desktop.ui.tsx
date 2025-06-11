@@ -3,30 +3,30 @@ import { cn, Text, InfoCircleIcon, Button, Tooltip } from "@orderly.network/ui";
 import { CampaignConfig, CampaignStatistics } from "./type";
 import {
   formatCampaignDateRange,
-  getParticipantsCount,
   getTradingVolume,
   getTotalPrizePool,
   getTicketPrizePool,
   formatPrizeAmount,
-  formatParticipantsCount,
 } from "./utils";
 
 export const CampaignsContentDesktopUI: FC<{
   campaign?: CampaignConfig;
   statistics?: CampaignStatistics;
-}> = ({ campaign, statistics }) => {
+  onLearnMore: () => void;
+  onTradeNow: () => void;
+  backgroundSrc?: string;
+}> = ({ campaign, statistics, onLearnMore, onTradeNow, backgroundSrc }) => {
   if (!campaign) {
     return null;
   }
 
-  const bgSrc = campaign?.image;
+  const bgSrc = campaign?.image || backgroundSrc;
   const dateRange = formatCampaignDateRange(
     campaign.start_time,
     campaign.end_time,
   );
 
   // Get campaign data using utility functions
-  const participantsCount = getParticipantsCount(statistics);
   const tradingVolume = getTradingVolume(statistics);
   const totalPrizePool = getTotalPrizePool(campaign);
   const ticketPrizePool = getTicketPrizePool(campaign);
@@ -36,6 +36,10 @@ export const CampaignsContentDesktopUI: FC<{
       campaign.start_time < new Date().toISOString() &&
       campaign.end_time > new Date().toISOString()
     );
+  }, [campaign]);
+
+  const isCampaignStarted = useMemo(() => {
+    return campaign.start_time < new Date().toISOString();
   }, [campaign]);
 
   const tooltipContent = useMemo(() => {
@@ -90,7 +94,7 @@ export const CampaignsContentDesktopUI: FC<{
           `oui-bg-cover oui-bg-center oui-bg-no-repeat`,
         ])}
         style={{
-          backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.95) 5%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.95) 95%, rgba(0, 0, 0, 1) 100%), url(${bgSrc})`,
+          backgroundImage: `linear-gradient(180deg, rgba(var(--oui-color-base-10) / 1) 0%, rgba(var(--oui-color-base-10) / 0.95) 5%, rgba(var(--oui-color-base-10) / 0.2) 50%, rgba(var(--oui-color-base-10) / 0.95) 95%, rgba(var(--oui-color-base-10) / 1) 100%), url(${bgSrc})`,
         }}
       >
         <div className="oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-[10px]">
@@ -115,7 +119,12 @@ export const CampaignsContentDesktopUI: FC<{
           </div>
         </div>
         <div className="oui-border oui-border-solid oui-border-base-contrast/[0.08] oui-rounded-2xl oui-overflow-hidden">
-          <div className="oui-flex oui-py-3 oui-px-4 oui-items-center oui-gap-4 oui-backdrop-blur-[10px]">
+          <div
+            className={cn([
+              "oui-flex oui-py-3 oui-px-4 oui-items-center oui-gap-4 oui-backdrop-blur-[10px]",
+              isCampaignStarted ? "" : "oui-hidden",
+            ])}
+          >
             <div className="oui-flex oui-items-center oui-gap-1">
               <Text
                 size="2xs"
@@ -129,7 +138,7 @@ export const CampaignsContentDesktopUI: FC<{
                 weight="semibold"
                 className="oui-text-base-contrast-54"
               >
-                {formatParticipantsCount(participantsCount)}
+                {statistics?.total_participants}
               </Text>
             </div>
             <div className="oui-flex oui-items-center oui-gap-1">
@@ -155,6 +164,7 @@ export const CampaignsContentDesktopUI: FC<{
             className={cn([
               "oui-border oui-border-solid oui-border-base-contrast/[0.08] oui-rounded-2xl oui-p-4 oui-bg-primary/[0.08] oui-backdrop-blur-[10px]",
               "oui-flex oui-flex-col oui-gap-4",
+              isCampaignStarted ? "" : "oui-border-transparent",
             ])}
           >
             <div className="oui-flex oui-items-center oui-gap-6">
@@ -230,6 +240,7 @@ export const CampaignsContentDesktopUI: FC<{
               hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
               active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
               "
+                onClick={onLearnMore}
               >
                 View rules
               </Button>
@@ -239,6 +250,7 @@ export const CampaignsContentDesktopUI: FC<{
                   variant="gradient"
                   color="primary"
                   className="oui-flex-1"
+                  onClick={onTradeNow}
                 >
                   Trade now
                 </Button>

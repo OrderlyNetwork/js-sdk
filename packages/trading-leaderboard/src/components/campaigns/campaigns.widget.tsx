@@ -30,6 +30,7 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
       style={props.style}
     >
       <CampaignsHeaderUI
+        backgroundSrc={state.backgroundSrc}
         campaigns={state.campaigns}
         currentCampaignId={state.currentCampaignId}
         onCampaignChange={state.onCampaignChange}
@@ -37,6 +38,9 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
       <CampaignsContentDesktopUI
         campaign={state.currentCampaign}
         statistics={state.statistics}
+        onLearnMore={state.onLearnMore}
+        onTradeNow={state.onTradeNow}
+        backgroundSrc={state.backgroundSrc}
       />
       {state.currentCampaign && (
         <CampaignsTimeDesktopUI campaign={state.currentCampaign} />

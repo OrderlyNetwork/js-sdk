@@ -24,6 +24,7 @@ function getCampaigns() {
       image: "/leaderboard/woof.png",
       href: "https://orderly.network/",
       start_time: addDays(new Date(), -7).toISOString(),
+      volume_scope: ["PERP_WIF_USDC", "PERP_APT_USDC", "PERP_ANIME_USDC"],
       end_time: addDays(new Date(), 23).toISOString(),
       reward_distribution_time: addDays(new Date(), 25).toISOString(),
       prize_pools: [
@@ -71,20 +72,18 @@ function getCampaigns() {
 
     // Future exclusive campaign for specific referral codes
     {
-      campaign_id: 106,
+      campaign_id: 103,
       title: "VIP TRADERS EXCLUSIVE CHAMPIONSHIP",
       description:
         "An exclusive tournament for our VIP community. Massive prizes await the elite traders. Limited to verified VIP members only.",
-      image: "/leaderboard/woof.png",
-      href: {
-        learnMore: "https://orderly.network/vip-campaign",
-        trading: "https://orderly.network/trade",
-      },
+      // image: "/leaderboard/woof.png",
+      rule_url: "https://orderly.network/vip-campaign",
+      trading_url: "https://orderly.network/trade",
       start_time: addDays(new Date(), 3).toISOString(),
       end_time: addDays(new Date(), 33).toISOString(),
       reward_distribution_time: addDays(new Date(), 35).toISOString(),
       referral_codes: ["VIP2024", "ELITE", "PREMIUM"],
-      volume_scope: ["BTC", "ETH", "SOL"],
+      volume_scope: ["PERP_BTC_USDC", "PERP_ETH_USDC", "PERP_SOL_USDC"],
       prize_pools: [
         {
           pool_id: "vip_exclusive",
@@ -114,16 +113,23 @@ function getCampaigns() {
 
     // Past campaign with linear ticket system
     {
-      campaign_id: "meme-coins-championship",
+      campaign_id: "104",
       title: "MEME COINS TRADING FRENZY",
       description:
         "The wildest meme coin trading competition has ended! Congratulations to all participants who rode the waves of DOGE, SHIB, and PEPE to victory.",
-      image: "/leaderboard/woof.png",
-      href: "https://orderly.network/meme-results",
+      // image: "/leaderboard/woof.png",
+      rule_url: "https://orderly.network/meme-results",
+      trading_url: "https://orderly.network/trade",
       start_time: addDays(new Date(), -45).toISOString(),
       end_time: addDays(new Date(), -15).toISOString(),
       reward_distribution_time: addDays(new Date(), -10).toISOString(),
-      volume_scope: ["DOGE", "SHIB", "PEPE", "BONK", "WIF"],
+      volume_scope: [
+        "PERP_DOGE_USDC",
+        "PERP_SHIB_USDC",
+        "PERP_PEPE_USDC",
+        "PERP_BONK_USDC",
+        "PERP_WIF_USDC",
+      ],
       prize_pools: [
         {
           pool_id: "meme_volume",
@@ -154,7 +160,7 @@ function getCampaigns() {
 
     // Coming campaign with PnL focus
     {
-      campaign_id: "pnl-masters-coming",
+      campaign_id: "105",
       title: "PNL MASTERS TOURNAMENT",
       description:
         "Think you're a trading genius? Prove it in our upcoming PnL-focused competition. Consistent profits beat volume - skill over quantity.",
@@ -163,6 +169,7 @@ function getCampaigns() {
       start_time: addDays(new Date(), 14).toISOString(),
       end_time: addDays(new Date(), 44).toISOString(),
       reward_distribution_time: addDays(new Date(), 46).toISOString(),
+      volume_scope: ["PERP_BTC_USDC", "PERP_ETH_USDC", "PERP_SOL_USDC"],
       prize_pools: [
         {
           pool_id: "pnl_masters",
@@ -183,16 +190,17 @@ function getCampaigns() {
 
     // Exclusive ongoing campaign for specific brokers
     {
-      campaign_id: "broker-exclusive-ongoing",
+      campaign_id: "106",
       title: "BROKER PARTNERSHIP REWARDS",
       description:
         "Exclusive rewards for our partnered broker users. Enhanced prizes and special recognition for our valued community members.",
-      image: "/leaderboard/woof.png",
+      // image: "/leaderboard/woof.png",
       href: "https://orderly.network/broker-partnership",
       start_time: addDays(new Date(), -10).toISOString(),
       end_time: addDays(new Date(), 20).toISOString(),
       reward_distribution_time: addDays(new Date(), 22).toISOString(),
       referral_codes: ["PARTNER1", "BROKER2024", "ALLIANCE"],
+      volume_scope: ["PERP_BTC_USDC", "PERP_ETH_USDC", "PERP_SOL_USDC"],
       prize_pools: [
         {
           pool_id: "broker_volume",
