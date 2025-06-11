@@ -27,7 +27,7 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
           requireVolume: generateCode.requireVolume,
         }),
         desc: t("affiliate.process.step1.volumeGt0.description", {
-          volume: commify(generateCode.completedVolume, 2),
+          volume: commify(generateCode.completedVolume ?? 0, 2),
           // volume: <Text.formatted></Text.formatted>,
           requireVolume: commify(generateCode.requireVolume),
         }),
