@@ -1,7 +1,7 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 import { FundingRateState } from "./fundingRate.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const FundingRate: FC<FundingRateState> = (props) => {
   const predFundingRate = props.data.est_funding_rate;

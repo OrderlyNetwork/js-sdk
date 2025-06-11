@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { OrderBookCell } from "./cell";
+import { Box } from "@orderly.network/ui";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { OrderBookCellType } from "../../base/orderBook/types";
-import { Box } from "@orderly.network/ui";
+import { OrderBookCell } from "./cell";
 
 interface OrderBookListProps {
   type: OrderBookCellType;
@@ -13,19 +13,17 @@ interface OrderBookListProps {
 export const ListBox: FC<OrderBookListProps> = (props) => {
   const { data } = props;
   const { mode } = useOrderBookContext();
-
   return (
-    <Box
-      className="oui-order-book-list oui-flex oui-flex-col oui-gap-[1px] oui-w-full"
-    >
+    <Box className="oui-order-book-list oui-flex oui-w-full oui-flex-col oui-gap-px">
       {data.map((item, index) => {
         return (
           <OrderBookCell
-            key={index}
+            key={`item-${index}`}
             background={""}
             price={item[0]}
             quantity={item[1]}
             accumulated={item[2]}
+            accumulatedAmount={item[3]}
             count={props.countQty}
             type={props.type}
             mode={mode}
