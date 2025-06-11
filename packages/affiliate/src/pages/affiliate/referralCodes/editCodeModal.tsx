@@ -37,24 +37,18 @@ export const EditCodeModal = modal.create<{
   }, [props.code]);
 
   useEffect(() => {
-    if (newCode.length < 4 || newCode.length > 10) {
-      setFiledError({
-        ...filedError,
-        length: true,
-      });
-      return;
-    }
-    if (!/^[A-Z0-9]+$/.test(newCode)) {
-      setFiledError({
-        ...filedError,
-        format: true,
-      });
-      return;
-    }
-    setFiledError({
+    const _code = newCode.toUpperCase();
+    const _fieldError = {
       length: false,
       format: false,
-    });
+    };
+    if (_code.length < 4 || _code.length > 10) {
+      _fieldError.length = true;
+    }
+    if (!/^[A-Z0-9]+$/.test(_code)) {
+      _fieldError.format = true;
+    }
+    setFiledError(_fieldError);
   }, [newCode]);
 
   return (
@@ -74,7 +68,7 @@ export const EditCodeModal = modal.create<{
             try {
               const res = await editCode({
                 current_referral_code: props.code.code,
-                new_referral_code: newCode,
+                new_referral_code: newCode.toUpperCase(),
               });
               if (res.success) {
                 toast.success(
@@ -99,10 +93,13 @@ export const EditCodeModal = modal.create<{
         placeholder=""
         fullWidth
         label={t("affiliate.referralCode.editCodeModal.label")}
-        clearable
+        onClean={() => {
+          setNewCode("");
+        }}
         value={newCode}
         onChange={(e) => {
-          setNewCode(e.target.value);
+          const _value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+          setNewCode(_value);
         }}
         formatters={[
           inputFormatter.createRegexInputFormatter((value: string | number) => {
