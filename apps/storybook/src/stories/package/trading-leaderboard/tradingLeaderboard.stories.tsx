@@ -7,6 +7,7 @@ import {
   GeneralLeaderboardWidget,
   CampaignLeaderboardWidget,
   LeaderboardPage,
+  TradingLeaderboardProvider,
 } from "@orderly.network/trading-leaderboard";
 import { Box } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
@@ -295,7 +296,9 @@ export const GeneralLeaderboard: Story = {
   render: (args) => {
     return (
       <Box p={3}>
-        <GeneralLeaderboardWidget />
+        <TradingLeaderboardProvider>
+          <GeneralLeaderboardWidget />
+        </TradingLeaderboardProvider>
       </Box>
     );
   },
@@ -305,7 +308,9 @@ export const CampaignLeaderboard: Story = {
   render: (args) => {
     return (
       <Box p={3}>
-        <CampaignLeaderboardWidget campaignId={102} />
+        <TradingLeaderboardProvider>
+          <CampaignLeaderboardWidget campaignId={102} />
+        </TradingLeaderboardProvider>
       </Box>
     );
   },

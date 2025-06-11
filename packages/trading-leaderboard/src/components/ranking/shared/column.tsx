@@ -98,6 +98,7 @@ export const useRankingColumns = (
             <>
               <Text.formatted
                 rule="address"
+                key={record.rank}
                 style={
                   linearGradientText
                     ? {
@@ -106,7 +107,7 @@ export const useRankingColumns = (
                         WebkitTextFillColor: "transparent",
                         backgroundClip: "text",
                       }
-                    : undefined
+                    : {}
                 }
               >
                 {value}

@@ -1,8 +1,9 @@
 import { FC, useMemo } from "react";
 import { cn, Box, useScreen } from "@orderly.network/ui";
+import { LeaderboardTab } from "../../../type";
 import { CampaignRankingWidget } from "../../ranking/campaignRanking";
 import { RankingColumnFields } from "../../ranking/shared/column";
-import { LeaderboardTabs, TradingTab } from "../shared/LeaderboardTabs";
+import { LeaderboardTabs } from "../shared/LeaderboardTabs";
 import { CampaignLeaderboardScriptReturn } from "./campaignLeaderboard.script";
 
 export type CampaignLeaderboardProps = {
@@ -14,14 +15,13 @@ export type CampaignLeaderboardProps = {
 export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {
   const { isMobile } = useScreen();
 
+  const sortKey = useMemo(() => {
+    return props.activeTab === LeaderboardTab.Volume ? "volume" : "pnl";
+  }, [props.activeTab]);
+
   const fields = useMemo<RankingColumnFields[]>(() => {
-    return [
-      "rank",
-      "address",
-      props.activeTab === TradingTab.Volume ? "volume" : "pnl",
-      "rewards",
-    ];
-  }, [isMobile, props.activeTab]);
+    return ["rank", "address", sortKey, "rewards"];
+  }, [isMobile, sortKey]);
 
   if (isMobile) {
     return (
@@ -31,15 +31,21 @@ export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {
         r="2xl"
         intensity={900}
         width="100%"
-        className={cn("oui-trading-leaderboard oui-relative")}
+        className={cn(
+          "oui-trading-leaderboard-campaign-leaderboard oui-relative",
+        )}
       >
         <LeaderboardTabs
+          isMobile={isMobile}
           activeTab={props.activeTab}
           onTabChange={props.onTabChange}
-          isMobile={isMobile}
         />
 
-        <CampaignRankingWidget campaignId={props.campaignId} fields={fields} />
+        <CampaignRankingWidget
+          campaignId={props.campaignId}
+          fields={fields}
+          sortKey={sortKey}
+        />
       </Box>
     );
   }
@@ -51,16 +57,20 @@ export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {
       r="2xl"
       intensity={900}
       className={cn(
-        "oui-trading-leaderboard oui-relative",
+        "oui-trading-leaderboard-campaign-leaderboard oui-relative",
         "oui-mx-auto oui-max-w-[992px]",
       )}
     >
       <LeaderboardTabs
+        isMobile={isMobile}
         activeTab={props.activeTab}
         onTabChange={props.onTabChange}
-        isMobile={isMobile}
       />
-      <CampaignRankingWidget campaignId={props.campaignId} fields={fields} />
+      <CampaignRankingWidget
+        campaignId={props.campaignId}
+        fields={fields}
+        sortKey={sortKey}
+      />
     </Box>
   );
 };

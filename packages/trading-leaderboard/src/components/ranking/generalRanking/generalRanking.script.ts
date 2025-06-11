@@ -41,14 +41,21 @@ export type GeneralRankingScriptReturn = ReturnType<
 export type GeneralRankingScriptOptions = {
   dateRange?: DateRange;
   address?: string;
+  sortKey?: "perp_volume" | "realized_pnl";
 };
 
 export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
-  const { dateRange = getDateRange(90), address: searchValue } = options || {};
+  const {
+    dateRange = getDateRange(90),
+    address: searchValue,
+    sortKey = "perp_volume",
+  } = options || {};
+
   const [initialSort] = useState<TableSort>({
-    sortKey: "perp_volume",
+    sortKey,
     sort: "desc",
   });
+
   const [sort, setSort] = useState<TableSort | undefined>(initialSort);
 
   const { state } = useAccount();
@@ -282,6 +289,10 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
       setPage(1);
     }
   }, [dateRange]);
+
+  useEffect(() => {
+    setSort({ sortKey, sort: "desc" });
+  }, [sortKey]);
 
   return {
     pagination,

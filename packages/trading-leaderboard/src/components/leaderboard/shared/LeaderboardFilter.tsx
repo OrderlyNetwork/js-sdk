@@ -96,7 +96,7 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
         itemAlign="center"
         direction="column"
         mt={3}
-        className={cn("oui-mobile-trading-leaderboard-trading-filter")}
+        className={cn("oui-mobile-trading-leaderboard-ranking-filter")}
       >
         {input}
         <Flex gap={3} className="oui-w-full">
@@ -114,7 +114,7 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
       width="100%"
       justify="between"
       itemAlign="center"
-      className={cn("oui-trading-leaderboard-trading-filter")}
+      className={cn("oui-trading-leaderboard-ranking-filter")}
     >
       <Flex gap={3}>
         {dateRangeView}

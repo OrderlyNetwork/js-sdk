@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { TradingTab } from "../shared/LeaderboardTabs";
+import { LeaderboardTab } from "../../../type";
 
 export type CampaignLeaderboardScriptReturn = ReturnType<
   typeof useCampaignLeaderboardScript
 >;
 
-export type CampaignLeaderboardScriptOptions = {};
-
-export function useCampaignLeaderboardScript(
-  options?: CampaignLeaderboardScriptOptions,
-) {
-  const [activeTab, setActiveTab] = useState<TradingTab>(TradingTab.Volume);
+export function useCampaignLeaderboardScript() {
+  const [activeTab, setActiveTab] = useState<LeaderboardTab>(
+    LeaderboardTab.Volume,
+  );
 
   return {
     activeTab,

@@ -1,9 +1,10 @@
 import { FC, useMemo } from "react";
 import { cn, Box, useScreen, Divider } from "@orderly.network/ui";
+import { LeaderboardTab } from "../../../type";
 import { GeneralRankingWidget } from "../../ranking/generalRanking";
 import { RankingColumnFields } from "../../ranking/shared/column";
 import { LeaderboardFilter } from "../shared/LeaderboardFilter";
-import { LeaderboardTabs, TradingTab } from "../shared/LeaderboardTabs";
+import { LeaderboardTabs } from "../shared/LeaderboardTabs";
 import { GeneralLeaderboardScriptReturn } from "./generalLeaderboard.script";
 
 export type GeneralLeaderboardProps = {
@@ -19,7 +20,7 @@ export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
       return [
         "rank",
         "address",
-        props.activeTab === TradingTab.Volume ? "volume" : "pnl",
+        props.activeTab === LeaderboardTab.Volume ? "volume" : "pnl",
       ];
     }
     return ["rank", "address", "volume", "pnl"];
@@ -33,20 +34,28 @@ export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
         r="2xl"
         intensity={900}
         width="100%"
-        className={cn("oui-trading-leaderboard oui-relative", props.className)}
+        className={cn(
+          "oui-trading-leaderboard-general-leaderboard oui-relative",
+          props.className,
+        )}
         style={props.style}
       >
         <LeaderboardFilter {...props} />
         <LeaderboardTabs
-          activeTab={props.activeTab}
-          onTabChange={props.onTabChange}
           isMobile={isMobile}
           className="oui-pt-0"
+          activeTab={props.activeTab}
+          onTabChange={props.onTabChange}
         />
 
         <GeneralRankingWidget
           dateRange={props.dateRange}
           address={props.searchValue}
+          sortKey={
+            props.activeTab === LeaderboardTab.Volume
+              ? "perp_volume"
+              : "realized_pnl"
+          }
           fields={fields}
         />
       </Box>
@@ -60,7 +69,7 @@ export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
       r="2xl"
       intensity={900}
       className={cn(
-        "oui-trading-leaderboard oui-relative",
+        "oui-trading-leaderboard-general-leaderboard oui-relative",
         "oui-mx-auto oui-max-w-[992px]",
         props.className,
       )}

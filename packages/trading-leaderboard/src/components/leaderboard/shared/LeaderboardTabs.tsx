@@ -1,29 +1,22 @@
 import { FC, useMemo } from "react";
-import { cn, Flex, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { cn, Flex, TabPanel, Tabs } from "@orderly.network/ui";
+import { LeaderboardTab } from "../../../type";
 import { formatUpdateDate } from "../../../utils";
 import { useTradingLeaderboardContext } from "../../provider";
 
-export enum TradingTab {
-  Volume = "volume",
-  Pnl = "pnl",
-}
-
 type LeaderboardTabsProps = {
-  activeTab: string;
-  onTabChange: (tab: TradingTab) => void;
   isMobile?: boolean;
   className?: string;
+  activeTab: LeaderboardTab;
+  onTabChange: (tab: LeaderboardTab) => void;
 };
 
 export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
   const { updatedTime } = useTradingLeaderboardContext();
 
   const updateTime = useMemo(() => {
-    if (props.isMobile) {
-      return "Updated hourly.";
-    }
     if (updatedTime) {
-      return `Last update: ${formatUpdateDate(updatedTime)}`;
+      return formatUpdateDate(updatedTime);
     }
     return "";
   }, [props.isMobile, updatedTime]);
@@ -33,7 +26,11 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
       width="100%"
       py={3}
       justify="between"
-      className={cn("oui-border-b oui-border-line", props.className)}
+      className={cn(
+        "oui-trading-leaderboard-ranking-tabs",
+        "oui-border-b oui-border-line",
+        props.className,
+      )}
     >
       <Tabs
         value={props.activeTab}
@@ -41,12 +38,26 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
         variant="contained"
         size="lg"
       >
-        <TabPanel title="Trading volume" value={TradingTab.Volume}></TabPanel>
-        <TabPanel title="Realized PnL" value={TradingTab.Pnl}></TabPanel>
+        <TabPanel
+          title="Trading volume"
+          value={LeaderboardTab.Volume}
+        ></TabPanel>
+        <TabPanel title="Realized PnL" value={LeaderboardTab.Pnl}></TabPanel>
       </Tabs>
-      <Text size="sm" intensity={36}>
-        {updateTime}
-      </Text>
+      {updateTime && (
+        <Flex
+          itemAlign="start"
+          direction={props.isMobile ? "column" : "row"}
+          gap={1}
+          className={cn(
+            props.isMobile ? "oui-text-3xs" : "oui-text-sm",
+            "oui-text-base-contrast-36",
+          )}
+        >
+          <span>Last update:</span>
+          <span>{updateTime}</span>
+        </Flex>
+      )}
     </Flex>
   );
 };

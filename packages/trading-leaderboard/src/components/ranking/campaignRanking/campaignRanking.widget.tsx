@@ -14,9 +14,10 @@ export type CampaignRankingWidgetProps = Pick<
 export const CampaignRankingWidget: FC<CampaignRankingWidgetProps> = (
   props,
 ) => {
-  const { campaignId, fields, ...rest } = props;
+  const { campaignId, fields, sortKey, ...rest } = props;
   const state = useCampaignRankingScript({
     campaignId,
+    sortKey,
   });
 
   // @ts-ignore

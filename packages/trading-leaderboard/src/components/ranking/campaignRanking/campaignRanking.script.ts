@@ -269,6 +269,10 @@ export function useCampaignRankingScript(
     // when currentCampaign changed, we need to reset the snapshot time
   }, [data, currentCampaign]);
 
+  useEffect(() => {
+    setSort({ sortKey, sort: "desc" });
+  }, [sortKey]);
+
   return {
     pagination,
     initialSort,

@@ -106,6 +106,7 @@ export const Ranking: FC<RankingProps> = (props) => {
       <>
         <DataTable
           classNames={{
+            root: "oui-trading-leaderboard-ranking-table",
             body: "oui-text-2xs",
             scroll: "oui-overflow-y-hidden oui-h-full",
           }}
@@ -150,7 +151,7 @@ export const Ranking: FC<RankingProps> = (props) => {
       pagination={props.pagination}
       classNames={{
         root: cn(
-          "oui-trading-leaderboard-trading-table",
+          "oui-trading-leaderboard-ranking-table",
           "!oui-h-[calc(100%_-_53px_-_8px)]",
         ),
         scroll: "oui-min-h-[600px]",
