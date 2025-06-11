@@ -1,6 +1,9 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Divider, Flex, Grid, modal, Text } from "@orderly.network/ui";
-import { PositionHistoryCellState } from "./positionHistoryCell.script";
+import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
+import { commifyOptional } from "@orderly.network/utils";
+import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import {
   PositionHistoryType,
   ClosedQty,
@@ -10,11 +13,10 @@ import {
   AvgClosed,
   ClosedTime,
   MaxClosedQty,
+  FundingFee,
 } from "./items";
-import { commifyOptional } from "@orderly.network/utils";
-import { ShareButtonWidget } from "../../positions/desktop/shareButton";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { useTranslation } from "@orderly.network/i18n";
+import { PositionHistoryCellState } from "./positionHistoryCell.script";
+
 export const PositionHistoryCell: FC<PositionHistoryCellState> = (props) => {
   return (
     <Flex
@@ -112,19 +114,22 @@ export const Header: FC<PositionHistoryCellState> = (props) => {
 
 export const Body: FC<PositionHistoryCellState> = (props) => {
   return (
-    <Grid
-      cols={3}
-      rows={2}
-      width={"100%"}
-      gap={0}
-      className="oui-grid-cols-[1fr,1fr,135px]"
-    >
-      <ClosedQty {...props} />
-      <MaxClosedQty {...props} />
-      <OpenTime {...props} />
-      <AvgOpen {...props} />
-      <AvgClosed {...props} />
-      <ClosedTime {...props} />
-    </Grid>
+    <div className="oui-w-full">
+      <Grid
+        cols={3}
+        rows={2}
+        width={"100%"}
+        gap={0}
+        className="oui-grid-cols-[1fr,1fr,135px]"
+      >
+        <ClosedQty {...props} />
+        <MaxClosedQty {...props} />
+        <OpenTime {...props} />
+        <AvgOpen {...props} />
+        <AvgClosed {...props} />
+        <ClosedTime {...props} />
+      </Grid>
+      <FundingFee {...props} />
+    </div>
   );
 };
