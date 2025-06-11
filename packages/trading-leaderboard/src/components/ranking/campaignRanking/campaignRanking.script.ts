@@ -10,7 +10,7 @@ import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { useEndReached } from "../../../hooks/useEndReached";
 import { CampaignConfig, UserData } from "../../campaigns/type";
 import { useTradingLeaderboardContext } from "../../provider";
-import { calculateEstimatedRewards } from "../../rewards/utils";
+import { calculateUserPoolReward } from "../../rewards/utils";
 import { getCurrentAddressRowKey, isSameAddress } from "../shared/util";
 
 export type CampaignRankingData = {
@@ -27,6 +27,10 @@ export type CampaignRankingData = {
   // custom field
   key?: string;
   rank?: number | string;
+  rewards?: {
+    amount: number;
+    currency: string;
+  };
 };
 
 type CampaignRankingResponse = {
@@ -224,8 +228,8 @@ export function useCampaignRankingScript(
     const _data =
       page === 1 ? (userData ? [userData, ...rankList] : rankList) : rankList;
 
-    return formatData(_data, currentCampaign);
-  }, [data, page, userData, addRankForList, currentCampaign]);
+    return formatData(_data, currentCampaign, sortKey);
+  }, [data, page, userData, addRankForList, currentCampaign, sortKey]);
 
   const dataList = useMemo(() => {
     if (!infiniteData?.length) {
@@ -238,8 +242,8 @@ export function useCampaignRankingScript(
 
     const _data = userData ? [userData, ...rankList] : rankList;
 
-    return formatData(_data, currentCampaign);
-  }, [infiniteData, userData, addRankForList, currentCampaign]);
+    return formatData(_data, currentCampaign, sortKey);
+  }, [infiniteData, userData, addRankForList, currentCampaign, sortKey]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -285,11 +289,23 @@ export function useCampaignRankingScript(
   };
 }
 
-function formatData(data: any[], currentCampaign?: CampaignConfig) {
-  return data.map((item) => ({
-    ...item,
-    rewards:
-      currentCampaign &&
-      calculateEstimatedRewards(item as UserData, currentCampaign!),
-  }));
+function formatData(
+  data: any[],
+  currentCampaign?: CampaignConfig,
+  metric?: "volume" | "pnl",
+) {
+  const pool = currentCampaign?.prize_pools?.find(
+    (item) => item.metric === metric,
+  );
+  return data.map((item) => {
+    const rewards = pool ? calculateUserPoolReward(item as UserData, pool!) : 0;
+
+    return {
+      ...item,
+      rewards: {
+        amount: rewards,
+        currency: pool?.currency,
+      },
+    };
+  });
 }
