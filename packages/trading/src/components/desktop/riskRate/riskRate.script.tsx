@@ -29,7 +29,7 @@ export const useRiskRateScript = () => {
     state.status === AccountStatusEnum.EnableTradingWithoutConnected;
   const { marginRatio, currentLeverage, mmr } = useMarginRatio();
 
-  const { maxLeverage } = useLeverage();
+  const { curLeverage } = useLeverage();
 
   const riskRate = useMemo(() => {
     if (!isConnected || marginRatio === null || mmr === null) {
@@ -56,7 +56,7 @@ export const useRiskRateScript = () => {
   }, [riskRateNumber]);
 
   const _curLeverage = useDataTap(currentLeverage);
-  const _maxLeverage = useDataTap(maxLeverage);
+  const _maxLeverage = useDataTap(curLeverage);
   const _riskRate = useDataTap(riskRate);
 
   return {

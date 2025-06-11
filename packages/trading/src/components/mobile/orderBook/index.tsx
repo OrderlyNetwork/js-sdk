@@ -1,13 +1,14 @@
-import { FC} from "react";
-import { Header } from "./header";
-import { Bids } from "./bids";
-import { Asks } from "./asks";
-import { MarkPrice } from "./markPrice";
-import { OrderBookProvider } from "../../base/orderBook/orderContext";
-import { DepthSelect } from "./depthSelect";
+import { FC } from "react";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
+import { OrderBookProvider } from "../../base/orderBook/orderContext";
 import { FundingRateWidget } from "../fundingRate";
+import { Asks } from "./asks";
+import { Bids } from "./bids";
+import { DepthSelect } from "./depthSelect";
+import { Header } from "./header";
+import { MarkPrice } from "./markPrice";
+
 export interface OrderBookProps {
   asks: any[];
   bids: any[];
@@ -49,7 +50,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
         direction={"column"}
         p={2}
         id="oui-orderbook-mobile"
-        className={cn("oui-h-full oui-wfull oui-relative", props.className)}
+        className={cn("oui-relative oui-size-full", props.className)}
         justify={"start"}
         itemAlign={"start"}
       >
@@ -58,14 +59,13 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <Bids data={props.bids} />
-
         <DepthSelect
           depth={props.depths || []}
           value={props.activeDepth}
           onChange={onDepthChange}
         />
         {isLoading && (
-          <div className="oui-absolute oui-left-0 oui-top-0 oui-right-0 oui-bottom-0 oui-z-10 oui-flex oui-items-center oui-justify-center oui-bg-base-800/70 oui-h-full oui-min-h-[420px]">
+          <div className="oui-bg-base-800/70 oui-absolute oui-inset-0 oui-z-10 oui-flex oui-h-full oui-min-h-[420px] oui-items-center oui-justify-center">
             <Spinner />
           </div>
         )}
