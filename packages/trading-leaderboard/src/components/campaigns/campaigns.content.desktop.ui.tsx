@@ -31,6 +31,13 @@ export const CampaignsContentDesktopUI: FC<{
   const totalPrizePool = getTotalPrizePool(campaign);
   const ticketPrizePool = getTicketPrizePool(campaign);
 
+  const canTrade = useMemo(() => {
+    return (
+      campaign.start_time < new Date().toISOString() &&
+      campaign.end_time > new Date().toISOString()
+    );
+  }, [campaign]);
+
   const tooltipContent = useMemo(() => {
     if (!campaign?.prize_pools) {
       return null;
@@ -94,10 +101,10 @@ export const CampaignsContentDesktopUI: FC<{
           >
             {dateRange}
           </Text>
-          <Text className="oui-text-[48px] oui-leading-[56px] oui-font-bold oui-text-base-contrast oui-text-center">
+          <Text className="oui-trading-leaderboard-title oui-text-[48px] oui-leading-[56px] oui-font-bold oui-text-base-contrast oui-text-center">
             {campaign.title}
           </Text>
-          <div className="oui-w-[342px] oui-h-[40px] oui-text-center">
+          <div className="oui-w-[342px] oui-text-center">
             <Text
               size="sm"
               weight="semibold"
@@ -171,7 +178,12 @@ export const CampaignsContentDesktopUI: FC<{
                   </Tooltip>
                 </div>
                 <div>
-                  <Text.gradient size="2xl" weight="bold" color="brand">
+                  <Text.gradient
+                    size="2xl"
+                    weight="bold"
+                    color="brand"
+                    className="oui-trading-leaderboard-title"
+                  >
                     {totalPrizePool
                       ? formatPrizeAmount(
                           totalPrizePool.amount,
@@ -193,7 +205,12 @@ export const CampaignsContentDesktopUI: FC<{
                     </Text>
                   </div>
                   <div>
-                    <Text.gradient size="2xl" weight="bold" color="brand">
+                    <Text.gradient
+                      size="2xl"
+                      weight="bold"
+                      color="brand"
+                      className="oui-trading-leaderboard-title"
+                    >
                       {formatPrizeAmount(
                         ticketPrizePool.amount,
                         ticketPrizePool.currency,
@@ -216,14 +233,16 @@ export const CampaignsContentDesktopUI: FC<{
               >
                 View rules
               </Button>
-              <Button
-                size="md"
-                variant="gradient"
-                color="primary"
-                className="oui-flex-1"
-              >
-                Trade now
-              </Button>
+              {canTrade && (
+                <Button
+                  size="md"
+                  variant="gradient"
+                  color="primary"
+                  className="oui-flex-1"
+                >
+                  Trade now
+                </Button>
+              )}
             </div>
           </div>
         </div>

@@ -19,10 +19,10 @@ interface TimeUnitProps {
 
 const TimeUnit: FC<TimeUnitProps> = ({ value, label }) => (
   <div className="oui-flex oui-flex-col oui-items-center oui-gap-1 oui-w-[63px]">
-    <div className="oui-text-base-contrast oui-font-medium oui-text-[36px] oui-leading-[44px] oui-h-[44px]">
+    <div className="oui-trading-leaderboard-title oui-text-base-contrast oui-font-medium oui-text-[36px] oui-leading-[44px] oui-h-[44px]">
       {value.toString().padStart(2, "0")}
     </div>
-    <div className="oui-text-base-contrast-80 oui-text-sm oui-font-medium">
+    <div className="oui-trading-leaderboard-title oui-text-base-contrast-80 oui-text-sm oui-font-medium">
       {label}
     </div>
   </div>
@@ -85,8 +85,18 @@ export const CampaignsCountdown: FC<{ campaign: CampaignConfig }> = ({
 
   if (currentTime > endTime) {
     return (
-      <div className="oui-text-base-contrast-54 oui-text-[18px] oui-leading-[26px] oui-font-medium">
-        Battle has ended
+      <div className="oui-w-full oui-flex oui-items-center oui-justify-center oui-gap-4">
+        <div
+          className="oui-max-w-[382px] oui-w-full oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-end)/0)]
+        oui-to-[rgba(var(--oui-gradient-brand-start))]"
+        />
+        <div className="oui-trading-leaderboard-title oui-flex oui-items-center oui-justify-center oui-p-5 oui-text-base-contrast-54 oui-text-[18px] oui-leading-[26px] oui-font-medium oui-whitespace-nowrap">
+          Battle has ended
+        </div>
+        <div
+          className="oui-max-w-[382px] oui-w-full oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-start))]
+        oui-to-[rgba(var(--oui-gradient-brand-end)/0)]"
+        />
       </div>
     );
   }
@@ -104,11 +114,11 @@ export const CampaignsCountdown: FC<{ campaign: CampaignConfig }> = ({
   return (
     <div className="oui-w-full oui-flex oui-items-center oui-justify-center oui-gap-4">
       <div
-        className="oui-w-[298px] oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-end)/0)]
+        className="oui-max-w-[298px] oui-w-full oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-end)/0)]
         oui-to-[rgba(var(--oui-gradient-brand-start))]"
       />
       <div className="oui-flex oui-flex-col oui-items-center oui-p-5 oui-gap-2">
-        <div className="oui-text-base-contrast-54 oui-text-[18px] oui-leading-[26px] oui-h-[26px] oui-font-medium">
+        <div className="oui-trading-leaderboard-title oui-text-base-contrast-54 oui-text-[18px] oui-leading-[26px] oui-h-[26px] oui-font-medium">
           {titleText}
         </div>
         <div className="oui-flex oui-items-center oui-gap-[10px]">
@@ -124,7 +134,7 @@ export const CampaignsCountdown: FC<{ campaign: CampaignConfig }> = ({
         </div>
       </div>
       <div
-        className="oui-w-[298px] oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-start))]
+        className="oui-max-w-[298px] oui-w-full oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-start))]
         oui-to-[rgba(var(--oui-gradient-brand-end)/0)]"
       />
     </div>

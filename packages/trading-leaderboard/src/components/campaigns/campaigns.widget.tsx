@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { cn, useScreen } from "@orderly.network/ui";
 import { CampaignsHeaderUI } from "./campaigins.header.ui";
 import { CampaignsContentDesktopUI } from "./campaigns.content.desktop.ui";
 import { useCampaignsScript } from "./campaigns.script";
@@ -25,7 +25,10 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
   //   }
 
   return (
-    <div className={props.className} style={props.style}>
+    <div
+      className={cn(["oui-overflow-hidden"], props.className)}
+      style={props.style}
+    >
       <CampaignsHeaderUI
         campaigns={state.campaigns}
         currentCampaignId={state.currentCampaignId}

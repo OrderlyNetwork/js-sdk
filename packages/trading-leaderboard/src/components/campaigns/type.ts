@@ -7,8 +7,8 @@ export enum CampaignTagEnum {
 
 // Campaign statistics data structure (from campaign statistics API)
 export interface CampaignStatistics {
-  total_participants: number;
-  total_volume: number;
+  total_participants?: number;
+  total_volume?: number;
 }
 
 // Campaign prize pool configuration types
@@ -74,6 +74,7 @@ export interface UserData {
   pnl: number;
   total_participants?: number;
   volume: number;
+  referral_codes?: string[];
 }
 
 export type CampaignStatsDetailsResponse = {

@@ -6,7 +6,7 @@ interface CampaignItemUIProps {
   className?: string;
   active?: boolean;
   tag: CampaignTagEnum;
-  onCampaignChange: (campaignId: string) => void;
+  onCampaignChange: (campaignId: string | number) => void;
   campaign: CampaignConfig;
 }
 
@@ -45,6 +45,7 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
           className={cn([
             active ? "oui-text-base-contrast" : "oui-text-base-contrast-54",
             "group-hover:oui-text-base-contrast",
+            "oui-trading-leaderboard-title",
             "oui-text-center",
           ])}
         >

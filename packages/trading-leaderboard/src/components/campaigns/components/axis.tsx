@@ -26,7 +26,7 @@ export const CampaignsAxis: FC<CampaignsAxisProps> = ({ points }) => {
         <div className="oui-flex oui-flex-col oui-items-center">
           <AxisPoint type={points[0].type} />
           <div className="oui-flex oui-flex-col oui-items-center oui-text-center oui-mt-4">
-            <div className="oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1 oui-whitespace-nowrap">
+            <div className="oui-trading-leaderboard-title oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1 oui-whitespace-nowrap">
               {points[0].title}
             </div>
             <div className="oui-text-xs oui-text-base-contrast-36 oui-whitespace-nowrap">
@@ -48,8 +48,10 @@ export const CampaignsAxis: FC<CampaignsAxisProps> = ({ points }) => {
     return "oui-bg-base-8";
   };
 
+  const widthPercentage = points?.length > 3 ? "110%" : "120%";
+
   return (
-    <div className="oui-w-full oui-flex">
+    <div className="oui-w-full oui-flex" style={{ width: widthPercentage }}>
       {points.map((point, index) => {
         const isFirst = index === 0;
         const isLast = index === points.length - 1;
@@ -85,7 +87,7 @@ export const CampaignsAxis: FC<CampaignsAxisProps> = ({ points }) => {
 
             {/* Label below point */}
             <div className="oui-flex oui-flex-col oui-items-center oui-text-center oui-mt-4">
-              <div className="oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1 oui-whitespace-nowrap">
+              <div className="oui-trading-leaderboard-title oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1 oui-whitespace-nowrap">
                 {point.title}
               </div>
               <div className="oui-text-xs oui-text-base-contrast-36 oui-whitespace-nowrap">

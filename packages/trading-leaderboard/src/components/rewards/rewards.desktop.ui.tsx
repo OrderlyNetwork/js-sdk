@@ -39,6 +39,15 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
 
   const ticketText = formatTicketCount(estimatedTickets);
 
+  const canTrade = useMemo(() => {
+    return (
+      campaign?.start_time &&
+      campaign?.end_time &&
+      campaign.start_time < new Date().toISOString() &&
+      campaign.end_time > new Date().toISOString()
+    );
+  }, [campaign]);
+
   const tooltipContent = useMemo(() => {
     if (!campaign?.prize_pools || !currentUserData) {
       return null;
@@ -86,7 +95,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   }, [campaign, currentUserData]);
 
   return (
-    <div className="oui-flex oui-flex-col oui-gap-6 oui-pb-10 oui-mb-10">
+    <div className="oui-flex oui-flex-col oui-gap-6 oui-pb-10 oui-mb-10 oui-max-w-[992px] oui-mx-auto">
       <div className="oui-w-full oui-flex oui-items-center oui-gap-3">
         <RewardItem
           title="Estimated rewards"
@@ -115,14 +124,16 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
         >
           View rules
         </Button>
-        <Button
-          size="lg"
-          variant="gradient"
-          color="primary"
-          className=" oui-w-[140px]"
-        >
-          Trade now
-        </Button>
+        {canTrade && (
+          <Button
+            size="lg"
+            variant="gradient"
+            color="primary"
+            className=" oui-w-[140px]"
+          >
+            Trade now
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -140,7 +151,11 @@ const RewardItem: FC<{
         {props.title}
       </div>
       <div className="oui-flex oui-items-center oui-gap-2">
-        <Text.gradient weight="bold" color="brand" className="oui-text-[32px]">
+        <Text.gradient
+          weight="bold"
+          color="brand"
+          className="oui-trading-leaderboard-title oui-text-[32px] oui-h-10 oui-leading-10"
+        >
           {props.value}
         </Text.gradient>
         {props.showTooltip && (

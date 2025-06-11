@@ -5,6 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { isEmpty, intersection } from "lodash";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
 /**
@@ -56,10 +57,29 @@ export const TradingLeaderboardProvider = (
     );
   }, [props.campaigns, currentCampaignId]);
 
+  const filteredCampaigns = useMemo(() => {
+    return props.campaigns?.filter((campaign) => {
+      // Campaign without referral_codes is visible to all users
+      if (isEmpty(campaign.referral_codes)) {
+        return true;
+      }
+
+      // Campaign with referral_codes is only visible if user has matching referral codes
+      if (isEmpty(userData?.referral_codes)) {
+        return false;
+      }
+
+      // Check if there's intersection between campaign and user referral codes
+      return !isEmpty(
+        intersection(campaign.referral_codes, userData?.referral_codes),
+      );
+    });
+  }, [props.campaigns, userData]);
+
   return (
     <TradingLeaderboardContext.Provider
       value={{
-        campaigns: props.campaigns,
+        campaigns: filteredCampaigns,
         href: props.href,
         backgroundSrc: props.backgroundSrc,
         currentCampaignId,

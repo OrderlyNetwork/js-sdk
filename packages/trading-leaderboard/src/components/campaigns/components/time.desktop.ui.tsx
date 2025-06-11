@@ -10,7 +10,7 @@ export const CampaignsTimeDesktopUI: FC<{ campaign: CampaignConfig }> = ({
   const timelineData = generateCampaignTimeline(campaign);
 
   return (
-    <div className="oui-w-full oui-py-10 oui-flex oui-flex-col oui-items-center oui-gap-4">
+    <div className="oui-max-w-[992px] oui-mx-auto oui-py-10 oui-flex oui-flex-col oui-items-center oui-gap-4">
       <CampaignsCountdown campaign={campaign} />
       <CampaignsAxis points={timelineData} />
     </div>
