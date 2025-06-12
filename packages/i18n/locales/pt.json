@@ -670,7 +670,7 @@
   "subAccount.modal.create.max.description": "Você atingiu o limite máximo de 10 sub-contas.",
   "subAccount.modal.create.title": "Criar sub-conta",
   "subAccount.modal.create.description": "Você tem {{subAccountCount}} sub-contas. {{remainingCount}} mais podem ser criadas.",
-  "subAccount.modal.create.nickname.role": "5-20 caracteres. Apenas letras, números e @, _, - (espaço) são permitidos.",
+  "subAccount.modal.create.nickname.role": "1-20 caracteres. Apenas letras, números e @, _, - (espaço) são permitidos.",
   "subAccount.modal.create.success.description": "Sub-conta criada com sucesso.",
   "subAccount.modal.create.failed.description": "Falha ao criar sub-conta.",
   "subAccount.modal.edit.title": "Editar apelido",

@@ -670,7 +670,7 @@
   "subAccount.modal.create.max.description": "서브 계정 최대 한도(10개)에 도달했습니다.",
   "subAccount.modal.create.title": "서브 계정 생성",
   "subAccount.modal.create.description": "현재 {{subAccountCount}}개의 서브 계정이 있습니다. {{remainingCount}}개 더 생성할 수 있습니다.",
-  "subAccount.modal.create.nickname.role": "5-20자. 문자, 숫자, @, _, - (공백)만 허용됩니다.",
+  "subAccount.modal.create.nickname.role": "1-20자. 문자, 숫자, @, _, - (공백)만 허용됩니다.",
   "subAccount.modal.create.success.description": "서브 계정이 성공적으로 생성되었습니다.",
   "subAccount.modal.create.failed.description": "서브 계정 생성에 실패했습니다.",
   "subAccount.modal.edit.title": "닉네임 수정",

@@ -693,7 +693,7 @@
   "subAccount.modal.create.max.description": "您已达到10个子账户的最大限制。",
   "subAccount.modal.create.title": "创建子账户",
   "subAccount.modal.create.description": "您有{{subAccountCount}}个子账户。还可以创建{{remainingCount}}个。",
-  "subAccount.modal.create.nickname.role": "5-20个字符。仅允许字母、数字和@、_、-（空格）。",
+  "subAccount.modal.create.nickname.role": "1-20个字符。仅允许字母、数字和@、_、-（空格）。",
   "subAccount.modal.create.success.description": "子账户创建成功。",
   "subAccount.modal.create.failed.description": "创建子账户失败。",
   "subAccount.modal.edit.title": "编辑昵称",
