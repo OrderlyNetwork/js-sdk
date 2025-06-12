@@ -19,8 +19,8 @@ export const exchanges = [
   `${baseEX} - dYdX`,
   "Bitget",
   `${baseEX} - Bitget`,
-  "Kucoin",
-  `${baseEX} - Kucoin`,
+  "KuCoin",
+  `${baseEX} - KuCoin`,
 ];
 
 export const useFundingComparisonScript = () => {

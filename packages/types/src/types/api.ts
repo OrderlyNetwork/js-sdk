@@ -291,6 +291,7 @@ export declare namespace API {
     MMR_with_orders: number;
     pnl_24_h: number;
     fee_24_h: number;
+    fundingFee?: number;
   }
 
   export interface PositionExt extends Position {

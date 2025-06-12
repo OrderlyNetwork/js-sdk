@@ -235,7 +235,7 @@ export const FundingFee: FC<PositionCellState> = (props) => {
     <Flex justify={"end"} className="oui-text-2xs oui-w-full">
       <Text intensity={36}>{t("funding.fundingFee")}: </Text>
       <FundingFeeButton
-        fee={props.item.last_sum_unitary_funding}
+        fee={props.item.fundingFee}
         symbol={props.item.symbol}
       />
     </Flex>
