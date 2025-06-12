@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-share",
-  "version": "2.2.1-internal-20250612.4",
+  "version": "2.2.1-internal-20250612.5",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

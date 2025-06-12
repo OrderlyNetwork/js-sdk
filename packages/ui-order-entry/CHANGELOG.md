@@ -1,5 +1,20 @@
 # @orderly.network/ui-order-entry
 
+## 2.2.1-internal-20250612.5
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.2.1-internal-20250612.5
+  - @orderly.network/hooks@2.2.1-internal-20250612.5
+  - @orderly.network/i18n@2.2.1-internal-20250612.5
+  - @orderly.network/types@2.2.1-internal-20250612.5
+  - @orderly.network/ui@2.2.1-internal-20250612.5
+  - @orderly.network/ui-connector@2.2.1-internal-20250612.5
+  - @orderly.network/ui-leverage@2.2.1-internal-20250612.5
+  - @orderly.network/utils@2.2.1-internal-20250612.5
+
 ## 2.2.1-internal-20250612.4
 
 ### Patch Changes
