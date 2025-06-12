@@ -1,6 +1,6 @@
 {
   "name": "tsconfig",
-  "version": "0.5.1-internal-20250612.3",
+  "version": "0.5.1-internal-20250612.4",
   "private": true,
   "license": "MIT",
   "publishConfig": {
