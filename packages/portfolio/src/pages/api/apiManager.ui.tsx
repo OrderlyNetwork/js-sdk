@@ -72,7 +72,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         className="oui-w-1/2"
       >
         <Text size="xs" intensity={36}>
-          {t("portfolio.apiKey.accountId")}
+          {t("common.accountId")}
         </Text>
         <Text.formatted
           size="base"

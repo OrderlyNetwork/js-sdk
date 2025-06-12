@@ -8,6 +8,7 @@ import {
   useLocalStorage,
   usePrivateQuery,
   useQuery,
+  useTransfer,
   useWalletConnector,
   useWalletSubscription,
   useWithdraw,
@@ -17,7 +18,8 @@ import { useAppContext } from "@orderly.network/react-app";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
-import { InputStatus } from "../../types";
+import { InputStatus, WithdrawTo } from "../../types";
+import { checkIsAccountId, getTransferErrorMessage } from "../../utils";
 import { CurrentChain } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 
@@ -36,7 +38,10 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
     revalidateOnMount: true,
   });
-  const networkId = useConfig("networkId") as NetworkId;
+  const config = useConfig();
+
+  const brokerName = config.get("brokerName");
+  const networkId = config.get("networkId") as NetworkId;
 
   const ee = useEventEmitter();
 
@@ -50,6 +55,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   });
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
+
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
 
@@ -58,12 +64,14 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const { data: balanceList } = useQuery<any>(`/v1/public/vault_balance`, {
     revalidateOnMount: true,
   });
+
   const {
     connectedChain,
     wallet,
     setChain: switchChain,
     settingChain,
   } = useWalletConnector();
+
   const { walletName, address } = useMemo(
     () => ({
       walletName: wallet?.label,
@@ -88,7 +96,16 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     availableWithdraw,
     unsettledPnL,
   } = useWithdraw();
-  const [disabled, setDisabled] = useState<boolean>(true);
+
+  const internalWithdrawState = useInternalWithdraw({
+    symbol: token.symbol,
+    quantity,
+    setQuantity,
+    close: options.onClose,
+    setLoading,
+  });
+
+  const { withdrawTo, toAccountId } = internalWithdrawState;
 
   const [allChains, { findByChainId }] = useChains(networkId, {
     pick: "network_infos",
@@ -300,7 +317,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [currentChain, tokenChainsRes, chains, crossChainWithdraw]);
 
   const showQty = useMemo(() => {
-    console.log("quanty", quantity);
     if (!quantity) {
       return "";
     }
@@ -313,13 +329,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [fee, quantity]);
 
   useEffect(() => {
-    if (crossChainTrans) {
-      setDisabled(true);
-    }
     if (!quantity) {
       setInputStatus("default");
       setHintMessage("");
-      setDisabled(true);
       return;
     }
     const qty = new Decimal(quantity ?? 0);
@@ -328,31 +340,33 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       if (qty.gt(maxAmount)) {
         setInputStatus("error");
         setHintMessage(t("transfer.insufficientBalance"));
-        setDisabled(true);
       } else {
         setInputStatus("default");
         setHintMessage("");
-        setDisabled(false);
       }
     } else {
       if (qty.gt(maxAmount)) {
         setInputStatus("error");
         setHintMessage(t("transfer.insufficientBalance"));
-        setDisabled(true);
       } else if (
         qty.gt(new Decimal(maxAmount).minus(unsettledPnL)) &&
         qty.lessThanOrEqualTo(maxAmount)
       ) {
         setInputStatus("warning");
         setHintMessage(t("settle.settlePnl.warning"));
-        setDisabled(true);
       } else {
         setInputStatus("default");
         setHintMessage("");
-        setDisabled(false);
       }
     }
   }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
+
+  const disabled =
+    crossChainTrans ||
+    !quantity ||
+    Number(quantity) === 0 ||
+    ["error", "warning"].includes(inputStatus) ||
+    (withdrawTo === WithdrawTo.Account && !toAccountId);
 
   useEffect(() => {
     // const item = assetHistory?.find((e: any) => e.trans_status === "COMPLETED");
@@ -409,5 +423,83 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     checkIsBridgeless,
     hasPositions,
     onSettlePnl,
+    brokerName,
+    ...internalWithdrawState,
   };
 };
+
+type InternalWithdrawOptions = {
+  symbol: string;
+  quantity: string;
+  setQuantity: (quantity: string) => void;
+  close?: () => void;
+  setLoading: (loading: boolean) => void;
+};
+
+function useInternalWithdraw(options: InternalWithdrawOptions) {
+  const { symbol, quantity, setQuantity, close, setLoading } = options;
+  const { t } = useTranslation();
+  const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Account);
+  const [toAccountId, setToAccountId] = useState<string>("");
+  const [inputStatus, setInputStatus] = useState<InputStatus>("default");
+  const [hintMessage, setHintMessage] = useState<string>();
+
+  const { transfer, submitting } = useTransfer();
+
+  const onTransfer = useCallback(() => {
+    const num = Number(quantity);
+
+    if (isNaN(num) || num <= 0) {
+      toast.error(t("transfer.quantity.invalid"));
+      return;
+    }
+
+    if (submitting || !toAccountId) return;
+    setLoading(true);
+
+    transfer(symbol, {
+      account_id: toAccountId,
+      amount: new Decimal(quantity).toNumber(),
+    })
+      .then(() => {
+        toast.success(t("transfer.internalTransfer.success"));
+        setQuantity("");
+        close?.();
+      })
+      .catch((err) => {
+        console.log("transfer error: ", err, err.code);
+        const errorMsg = getTransferErrorMessage(err.code);
+        toast.error(errorMsg);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [t, quantity, symbol, submitting, toAccountId, transfer]);
+
+  useEffect(() => {
+    if (!toAccountId) {
+      setInputStatus("default");
+      setHintMessage("");
+      return;
+    }
+
+    if (checkIsAccountId(toAccountId)) {
+      setInputStatus("default");
+      setHintMessage("");
+    } else {
+      setInputStatus("error");
+      setHintMessage(t("transfer.withdraw.accountId.invalid"));
+    }
+  }, [toAccountId]);
+
+  return {
+    withdrawTo,
+    setWithdrawTo,
+    toAccountId,
+    setToAccountId,
+    onTransfer,
+    internalWithdrawSubmitting: submitting,
+    toAccountIdInputStatus: inputStatus,
+    toAccountIdHintMessage: hintMessage,
+  };
+}

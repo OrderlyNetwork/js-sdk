@@ -1,7 +1,9 @@
 export const transfer = {
   "transfer.network": "Network",
   "transfer.lowestFee": "lowest fee",
-  "transfer.web3Wallet": "Your Web3 Wallet",
+  "transfer.web3Wallet.your": "Your Web3 Wallet",
+  "transfer.web3Wallet.my": "My Web3 wallet",
+
   "transfer.brokerAccount": "Your {{brokerName}} account",
   "transfer.quantity.invalid": "Please input a valid number",
 
@@ -47,22 +49,37 @@ export const transfer = {
   //   "Unsettled balance can not be withdrawn. In order to withdraw, please settle your balance first.",
   // "transfer.withdraw.settlePnl.description":
   //   "Are you sure you want to settle your PnL? Settlement will take up to 1 minute before you can withdraw your available balance.",
+  "transfer.withdraw.otherAccount": "Other {{brokerName}} account",
+  "transfer.withdraw.accountId.tips":
+    "Please enter an Account ID instead of a wallet address.",
+  "transfer.withdraw.accountId.invalid":
+    "Invalid Account ID. Please try again.",
 
   "transfer.internalTransfer.from": "From",
   "transfer.internalTransfer.to": "To",
   "transfer.internalTransfer.currentAssetValue": "Current asset value",
   "transfer.internalTransfer.success":
     "Success! Funds will be available in 15 seconds.",
-  "transfer.internalTransfer.failed":
-    "Unable to complete transfer. Please try again later.",
-  "transfer.internalTransfer.failed.transferInProgress":
-    "An internal transfer is currently in progress.",
-  "transfer.internalTransfer.failed.withdrawalInProgress":
-    "There is a withdrawal in progress.",
+
   "transfer.internalTransfer.unsettled.tooltip":
     "Unsettled balance can not be transferred. In order to transfer, please settle your balance first.",
   "transfer.internalTransfer.settlePnl.description":
     "Are you sure you want to settle your PnL? <br/> Settlement will take up to 1 minute before you can transfer your available balance.",
+
+  "transfer.internalTransfer.error.default":
+    "Unable to complete transfer. Please try again later.",
+  "transfer.internalTransfer.error.transferInProgress":
+    "An internal transfer is currently in progress.",
+  "transfer.internalTransfer.error.withdrawalInProgress":
+    "There is a withdrawal in progress.",
+  "transfer.internalTransfer.error.transferToSelf":
+    "Transfers to your own account are not allowed",
+  "transfer.internalTransfer.error.accountIdNotExist":
+    "Receiver account ID does not exist.",
+  "transfer.internalTransfer.error.transferToSubAccount":
+    "Transfers to sub-accounts under different main accounts are not permitted.",
+  // "transfer.internalTransfer.error.scopeInsufficient":
+  //   "The scope is insufficient",
 };
 
 export type Transfer = typeof transfer;

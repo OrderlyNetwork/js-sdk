@@ -39,32 +39,6 @@ export const SelectArrowDownIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const DepositIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path d="M4.078 1.744a2.333 2.333 0 0 0-2.333 2.333v5.834a2.333 2.333 0 0 0 2.333 2.333h5.833a2.333 2.333 0 0 0 2.334-2.333V4.077A2.333 2.333 0 0 0 9.91 1.744zm2.917 2.333c.322 0 .583.262.583.584v2.916h1.75L6.995 9.911 4.66 7.577h1.75V4.661c0-.322.262-.584.584-.584" />
-  </svg>
-);
-
-export const WithdrawIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 14 14"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <path d="M4.078 12.244a2.333 2.333 0 0 1-2.333-2.333V4.077a2.333 2.333 0 0 1 2.333-2.333h5.833a2.333 2.333 0 0 1 2.334 2.333v5.834a2.333 2.333 0 0 1-2.334 2.333zm2.917-2.333a.584.584 0 0 0 .583-.584V6.411h1.75L6.995 4.077 4.66 6.411h1.75v2.916c0 .322.262.584.584.584" />
-  </svg>
-);
-
 export const RefreshIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="12"
