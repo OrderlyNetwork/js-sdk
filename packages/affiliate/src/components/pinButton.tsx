@@ -30,7 +30,7 @@ export const PinBtn: FC<{
 };
 
 const PinnedIcon: FC<IconProps> = (props) => {
-  const { size = 16 } = props;
+  const { size = 12 } = props;
   return (
     <svg
       width={size}
@@ -46,7 +46,7 @@ const PinnedIcon: FC<IconProps> = (props) => {
 };
 
 const UnPinIcon: FC<IconProps> = (props) => {
-  const { size = 16 } = props;
+  const { size = 12 } = props;
   return (
     <svg
       width={size}

@@ -244,7 +244,10 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
             placeholder={t("affiliate.referralCode")}
             value={props.code}
             onChange={(e) => {
-              props.setCode(e.target.value);
+              const _value = e.target.value
+                .toUpperCase()
+                .replace(/[^A-Z0-9]/g, "");
+              props.setCode(_value);
             }}
             formatters={[
               inputFormatter.createRegexInputFormatter(

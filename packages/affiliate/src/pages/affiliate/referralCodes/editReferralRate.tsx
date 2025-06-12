@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { cleanStringStyle, useMutation } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
-import { ReferralCodeType } from "./referralCodes.script";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
   cn,
@@ -15,6 +14,8 @@ import {
   toast,
   useModal,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { ReferralCodeType } from "./referralCodes.script";
 
 export const EditReferralRate = modal.create<{
   code: ReferralCodeType;
@@ -24,20 +25,21 @@ export const EditReferralRate = modal.create<{
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
   const maxRate = new Decimal(code.max_rebate_rate).mul(100);
   const [refereeRebateRate, setRefereeRebateRate] = useState(
-    `${new Decimal(code.referee_rebate_rate).mul(100)}`
+    `${new Decimal(code.referee_rebate_rate).mul(100)}`,
   );
   const [referrerRebateRate, setReferrerRebateRate] = useState(
-    `${new Decimal(code.referrer_rebate_rate).mul(100)}`
+    `${new Decimal(code.referrer_rebate_rate).mul(100)}`,
   );
   const [showError, setShowError] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (inputRef?.current) {
       inputRef.current.focus();
       inputRef.current.setSelectionRange(
         inputRef.current.value.length,
-        inputRef.current.value.length
+        inputRef.current.value.length,
       );
     }
   }, [inputRef]);
@@ -49,7 +51,7 @@ export const EditReferralRate = modal.create<{
 
   const [editRate, { error, isMutating }] = useMutation(
     "/v1/referral/edit_split",
-    "POST"
+    "POST",
   );
 
   const onClickConfirm = async () => {
@@ -62,7 +64,7 @@ export const EditReferralRate = modal.create<{
         referee_rebate_rate: r1 / 100,
         referrer_rebate_rate: r2 / 100,
       });
-      toast.success("Referral code edited");
+      toast.success(t("affiliate.referralRate.editRateModal.success"));
       mutate();
       hide();
     } catch (e) {
@@ -78,25 +80,27 @@ export const EditReferralRate = modal.create<{
         closable
       >
         <DialogTitle>
-          <div className="oui-my-3">Settings</div>
+          <div className="oui-my-3">
+            {t("affiliate.referralRate.editRateModal.title")}
+          </div>
           <Divider />
         </DialogTitle>
 
         <div className="oui-mt-3 oui-h-full oui-flex oui-flex-col oui-justify-end">
           <div className="oui-text-xs oui-text-base-contrast-54">
-            Set the ratio of referral rate shared with your referees
+            {t("affiliate.referralRate.editRateModal.description")}
           </div>
           <div className="oui-text-xs oui-text-base-contrast-80 oui-mt-2 oui-flex">
-            {`Your max commission rate: `}
+            {t("affiliate.referralRate.editRateModal.label")}
             <div className="oui-text-warning-darken oui-pl-1">{`${new Decimal(
-              code.max_rebate_rate
+              code.max_rebate_rate,
             )
               .mul(100)
               .toFixed(0, Decimal.ROUND_DOWN)}%`}</div>
           </div>
 
           <div className="oui-text-2xs oui-mt-6 oui-text-base-contrast-80">
-            You receive
+            {t("affiliate.referralRate.editRateModal.label.you")}
           </div>
           <Input
             ref={inputRef}
@@ -112,7 +116,7 @@ export const EditReferralRate = modal.create<{
               setReferrerRebateRate(text);
               if (!Number.isNaN(rate)) {
                 setRefereeRebateRate(
-                  `${maxDecimal(new Decimal(0), maxRate.sub(rate))}`
+                  `${maxDecimal(new Decimal(0), maxRate.sub(rate))}`,
                 );
                 setShowError(maxRate.sub(rate) < new Decimal(0));
               } else {
@@ -129,7 +133,7 @@ export const EditReferralRate = modal.create<{
           />
 
           <div className="oui-text-2xs oui-mt-6 oui-text-base-contrast-80">
-            Referee receives
+            {t("affiliate.referralRate.editRateModal.label.referee")}
           </div>
           <Input
             containerClassName="oui-h-[40px] oui-mt-3 oui-bg-base-700 oui-outline oui-outline-1 oui-outline-base-contrast-12 focus-within:oui-outline-primary-darken"
@@ -145,7 +149,7 @@ export const EditReferralRate = modal.create<{
               setRefereeRebateRate(text);
               if (!Number.isNaN(rate)) {
                 setReferrerRebateRate(
-                  `${maxDecimal(new Decimal(0), maxRate.sub(rate))}`
+                  `${maxDecimal(new Decimal(0), maxRate.sub(rate))}`,
                 );
                 setShowError(maxRate.sub(rate) < new Decimal(0));
               } else {
@@ -163,7 +167,7 @@ export const EditReferralRate = modal.create<{
 
           {showError && (
             <div className="oui-text-danger oui-text-xs oui-mt-8 oui-text-center oui-px-4">
-              {`The total commission rate must equal to your maximum commission rate limit`}
+              {t("affiliate.referralRate.editRateModal.helpText.max")}
             </div>
           )}
 
@@ -178,14 +182,14 @@ export const EditReferralRate = modal.create<{
               loading={isMutating}
               className={cn(
                 "oui-mt-8 oui-mb-4 oui-w-[154px]",
-                showError && "oui-mt-3"
+                showError && "oui-mt-3",
               )}
               onClick={(e) => {
                 e.stopPropagation();
                 onClickConfirm();
               }}
             >
-              Confirm
+              {t("common.confirm")}
             </Button>
           </Flex>
         </div>
