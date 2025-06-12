@@ -670,7 +670,7 @@
   "subAccount.modal.create.max.description": "サブアカウントの最大制限（10個）に達しました。",
   "subAccount.modal.create.title": "サブアカウントを作成",
   "subAccount.modal.create.description": "現在{{subAccountCount}}個のサブアカウントがあります。あと{{remainingCount}}個作成できます。",
-  "subAccount.modal.create.nickname.role": "5〜20文字。文字、数字、@、_、-（スペース）のみ使用可能。",
+  "subAccount.modal.create.nickname.role": "1〜20文字。文字、数字、@、_、-（スペース）のみ使用可能。",
   "subAccount.modal.create.success.description": "サブアカウントが正常に作成されました。",
   "subAccount.modal.create.failed.description": "サブアカウントの作成に失敗しました。",
   "subAccount.modal.edit.title": "ニックネームを編集",

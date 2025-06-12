@@ -670,7 +670,7 @@
   "subAccount.modal.create.max.description": "Вы достигли максимального лимита в 10 подсчетов.",
   "subAccount.modal.create.title": "Создать подсчет",
   "subAccount.modal.create.description": "У вас {{subAccountCount}} подсчетов. Можно создать еще {{remainingCount}}.",
-  "subAccount.modal.create.nickname.role": "5-20 символов. Разрешены только буквы, цифры и @, _, - (пробел).",
+  "subAccount.modal.create.nickname.role": "1-20 символов. Разрешены только буквы, цифры и @, _, - (пробел).",
   "subAccount.modal.create.success.description": "Подсчет успешно создан.",
   "subAccount.modal.create.failed.description": "Не удалось создать подсчет.",
   "subAccount.modal.edit.title": "Редактировать псевдоним",

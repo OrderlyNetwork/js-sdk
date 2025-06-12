@@ -27,7 +27,7 @@ export const NickNameTextField = (props: {
         input: "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
       }}
       maxLength={20}
-      minLength={5}
+      minLength={1}
       autoComplete="off"
       helpText={t("subAccount.modal.create.nickname.role")}
       className="oui-mb-4"

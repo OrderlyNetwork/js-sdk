@@ -670,7 +670,7 @@
   "subAccount.modal.create.max.description": "Ha alcanzado el límite máximo de 10 subcuentas.",
   "subAccount.modal.create.title": "Crear subcuenta",
   "subAccount.modal.create.description": "Tiene {{subAccountCount}} subcuentas. Se pueden crear {{remainingCount}} más.",
-  "subAccount.modal.create.nickname.role": "5-20 caracteres. Solo se permiten letras, números y @, _, - (espacio).",
+  "subAccount.modal.create.nickname.role": "1-20 caracteres. Solo se permiten letras, números y @, _, - (espacio).",
   "subAccount.modal.create.success.description": "Subcuenta creada exitosamente.",
   "subAccount.modal.create.failed.description": "Error al crear la subcuenta.",
   "subAccount.modal.edit.title": "Editar apodo",
