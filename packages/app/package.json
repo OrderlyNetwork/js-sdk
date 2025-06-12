@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react-app",
-  "version": "2.2.1-internal-20250612.5",
+  "version": "2.2.1-internal-20250612.6",
   "description": "Create React App with Orderly Network components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
