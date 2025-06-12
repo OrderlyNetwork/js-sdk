@@ -670,7 +670,7 @@
   "subAccount.modal.create.max.description": "Sie haben das Maximum von 10 Unterkonten erreicht.",
   "subAccount.modal.create.title": "Unterkonto erstellen",
   "subAccount.modal.create.description": "Sie haben {{subAccountCount}} Unterkonten. {{remainingCount}} weitere können erstellt werden.",
-  "subAccount.modal.create.nickname.role": "5-20 Zeichen. Nur Buchstaben, Zahlen und @, _, - (Leerzeichen) erlaubt.",
+  "subAccount.modal.create.nickname.role": "1-20 Zeichen. Nur Buchstaben, Zahlen und @, _, - (Leerzeichen) erlaubt.",
   "subAccount.modal.create.success.description": "Unterkonto erfolgreich erstellt.",
   "subAccount.modal.create.failed.description": "Unterkonto konnte nicht erstellt werden.",
   "subAccount.modal.edit.title": "Spitznamen bearbeiten",
