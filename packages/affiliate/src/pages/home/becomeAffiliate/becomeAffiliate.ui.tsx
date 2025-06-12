@@ -1,14 +1,44 @@
-import { FC, ReactNode } from "react";
-import { Flex, Text, cn } from "@orderly.network/ui";
-import { BecomeAffiliateReturns } from "./becomeAffiliate.script";
+import { FC, ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text, cn } from "@orderly.network/ui";
+import { commify } from "@orderly.network/utils";
+import { useReferralContext } from "../../../hooks/provider";
+import { BecomeAffiliateReturns } from "./becomeAffiliate.script";
 
 export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
   const { t } = useTranslation();
 
+  const { generateCode } = useReferralContext();
+
   if (typeof props.overwrite === "function") {
     return props.overwrite?.(props.state);
   }
+
+  const applyText = useMemo(() => {
+    if (!generateCode) {
+      return {
+        title: t("affiliate.process.step1.title"),
+        desc: t("affiliate.process.step1.description"),
+      };
+    }
+    if (generateCode.requireVolume > 0) {
+      return {
+        title: t("affiliate.process.step1.volumeGt0.title", {
+          requireVolume: generateCode.requireVolume,
+        }),
+        desc: t("affiliate.process.step1.volumeGt0.description", {
+          volume: commify(generateCode.completedVolume ?? 0, 2),
+          // volume: <Text.formatted></Text.formatted>,
+          requireVolume: commify(generateCode.requireVolume),
+        }),
+      };
+    }
+    // require volume = 0;
+    return {
+      title: t("affiliate.process.step1.volumeEq0.title"),
+      desc: t("affiliate.process.step1.volumeEq0.description"),
+    };
+  }, [generateCode]);
 
   return (
     <Flex
@@ -25,8 +55,8 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       <Flex className="oui-flex oui-flex-col lg:oui-flex-row oui-gap-3 lg:oui-items-stretch lg:oui-w-full">
         <Item
           icon={<ApplyIcon />}
-          title={t("affiliate.process.step1.title")}
-          content={t("affiliate.process.step1.description")}
+          title={applyText.title}
+          content={applyText.desc}
         />
         <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
           <ArrowDownIcon />
@@ -59,7 +89,7 @@ const Item: FC<{
       className={cn(
         "oui-flex oui-flex-row oui-gap-3",
         // lg
-        "lg:oui-flex-col lg:oui-gap-[6px] lg:oui-flex-1"
+        "lg:oui-flex-col lg:oui-gap-[6px] lg:oui-flex-1",
       )}
       width={"100%"}
     >
@@ -68,13 +98,13 @@ const Item: FC<{
         className={cn(
           "oui-flex oui-flex-col oui-items-start oui-h-full oui-justify-between",
           // lg
-          "lg:oui-items-center lg:oui-justify-start"
+          "lg:oui-items-center lg:oui-justify-start",
         )}
       >
         <Text className="oui-text-sm md:oui-text-base 2xl:oui-text-lg lg:oui-text-center">
           {props.title}
         </Text>
-        <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-36 lg:oui-text-center">
+        <Text className="oui-text-2xs oui-text-base-contrast-36  lg:oui-text-center">
           {props.content}
         </Text>
       </Flex>
