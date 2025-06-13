@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -36,6 +36,7 @@ export const useColumn = (config: ColumnConfig) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig, onSymbolChange } =
     config;
   const { t } = useTranslation();
+  const fundingFeeEndTime = useRef(Date.now().toString());
   const column = useMemo<Column<API.PositionTPSLExt>[]>(
     () => [
       {
@@ -257,7 +258,12 @@ export const useColumn = (config: ColumnConfig) => {
         dataIndex: "fundingFee",
         width: 100,
         render: (value: string, record) => (
-          <FundingFeeButton fee={value} symbol={record.symbol} />
+          <FundingFeeButton
+            fee={value}
+            symbol={record.symbol}
+            start_t={record.timestamp.toString()}
+            end_t={fundingFeeEndTime.current}
+          />
         ),
       },
       {

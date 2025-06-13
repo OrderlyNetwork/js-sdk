@@ -10,9 +10,11 @@ import {
 import { FundingFeeHistoryUI } from "./fundingFeeHistory.ui";
 
 export const FundingFeeButton: FC<{
-  fee: string;
+  fee: number;
   symbol: string;
-}> = ({ fee, symbol }) => {
+  start_t: string;
+  end_t: string;
+}> = ({ fee, symbol, start_t, end_t }) => {
   const { t } = useTranslation();
   const [isOpen, { setTrue, setFalse }] = useBoolean(false);
   const { isMobile } = useScreen();
@@ -39,7 +41,12 @@ export const FundingFeeButton: FC<{
             body: "oui-max-h-[80vh] oui-py-0",
           }}
         >
-          <FundingFeeHistoryUI total={fee} symbol={symbol} />
+          <FundingFeeHistoryUI
+            total={fee}
+            symbol={symbol}
+            start_t={start_t}
+            end_t={end_t}
+          />
         </SimpleSheet>
       ) : (
         <SimpleDialog
@@ -51,7 +58,12 @@ export const FundingFeeButton: FC<{
             body: "oui-max-h-[80vh] oui-bg-base-8 lg:oui-py-0",
           }}
         >
-          <FundingFeeHistoryUI total={fee} symbol={symbol} />
+          <FundingFeeHistoryUI
+            total={fee}
+            symbol={symbol}
+            start_t={start_t}
+            end_t={end_t}
+          />
         </SimpleDialog>
       )}
     </>

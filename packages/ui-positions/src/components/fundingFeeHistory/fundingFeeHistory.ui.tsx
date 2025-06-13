@@ -25,10 +25,12 @@ type FundingFeeHistory = {
   updated_time: number;
 };
 
-export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
-  total,
-  symbol,
-}) => {
+export const FundingFeeHistoryUI: FC<{
+  total: number;
+  symbol: string;
+  start_t: string;
+  end_t: string;
+}> = ({ total, symbol, start_t, end_t }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
@@ -36,17 +38,28 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
     usePrivateInfiniteQuery<FundingFeeHistory>(
       (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.length) return null;
-        return `/v1/funding_fee/history?page=${pageIndex}&symbol=${symbol}`;
+        return `/v1/funding_fee/history?page=${pageIndex}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
+      },
+      {
+        revalidateFirstPage: false,
       },
     );
 
   const loadMore = useCallback(() => {
-    setSize((prev) => prev + 1);
+    setSize((prev) => {
+      // console.log(">>>>>>>>loadMore", prev);
+      return prev + 1;
+    });
   }, [setSize]);
 
   const flattenData = useMemo(() => {
     if (!Array.isArray(data)) return [];
-    return data.flat();
+    return data.flat().map((item) => {
+      return {
+        ...item,
+        funding_fee: -item.funding_fee,
+      };
+    });
   }, [data]);
 
   const listView = useMemo(() => {
@@ -69,7 +82,7 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
   }, [isMobile, flattenData, isLoading]);
 
   return (
-    <div className="oui-h-full">
+    <div className="oui-h-[calc(80vh_-_102px_-_8px)] oui-overflow-y-auto">
       <Grid
         cols={2}
         gapX={3}
@@ -163,8 +176,8 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
       <DataTable
         classNames={{
           root: cn(
-            "oui-bg-base-8 oui-text-sm",
-            "oui-h-[calc(80vh_-_102px_-_8px)]",
+            "oui-bg-base-8 oui-text-sm oui-h-auto",
+            // "oui-h-[calc(80vh_-_102px_-_8px)]",
           ),
         }}
         columns={columns}

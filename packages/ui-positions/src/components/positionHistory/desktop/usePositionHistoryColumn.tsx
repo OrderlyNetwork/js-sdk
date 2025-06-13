@@ -114,7 +114,14 @@ export const usePositionHistoryColumn = (props: {
           title: t("funding.fundingFee"),
           dataIndex: "accumulated_funding_fee",
           render: (value, record) => {
-            return <FundingFeeButton fee={value} symbol={record.symbol} />;
+            return (
+              <FundingFeeButton
+                fee={-value}
+                symbol={record.symbol}
+                start_t={record.open_timestamp.toString()}
+                end_t={record.close_timestamp?.toString()}
+              />
+            );
           },
         },
         // time opened

@@ -223,6 +223,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       const fundingFee = new Decimal(sum_unitary_funding)
         .sub(item.last_sum_unitary_funding)
         .mul(item.position_qty)
+        .negated()
         .toNumber();
 
       return {
