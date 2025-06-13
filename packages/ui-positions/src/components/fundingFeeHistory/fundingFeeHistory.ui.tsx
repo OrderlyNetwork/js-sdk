@@ -76,10 +76,9 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
         className="oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-py-4"
       >
         <div className="oui-bg-base-9 oui-rounded-lg oui-p-3 oui-border oui-border-line-6">
-          {/* <Statistic label={"Instrument"} /> */}
           <Flex direction={"column"} gap={1} itemAlign={"start"}>
             <span className="oui-text-2xs oui-text-base-contrast-36">
-              {t("common.instrument")}
+              {t("common.symbol")}
             </span>
             <Text.formatted
               rule="symbol"
