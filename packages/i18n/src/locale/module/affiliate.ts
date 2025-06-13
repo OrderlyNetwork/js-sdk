@@ -32,7 +32,14 @@ export const affiliate = {
 
   "affiliate.process.title": "Becoming an affiliate is easy",
   "affiliate.process.step1.title": "Apply",
-  "affiliate.process.step1.description": "Fill out the application form",
+  "affiliate.process.step1.description": "Apply for a referral code via form.",
+  "affiliate.process.step1.volumeEq0.title": "Get auto referral code or apply",
+  "affiliate.process.step1.volumeEq0.description":
+    "Your referral code is ready to use after placing your first trade. you can apply for a higher rate via form.",
+  "affiliate.process.step1.volumeGt0.title":
+    "Trade ${{requireVolume}}+ or apply",
+  "affiliate.process.step1.volumeGt0.description":
+    "Earn a referral code automatically (${{volume}} of ${{requireVolume}} completed), or apply for a higher rate via form.",
   "affiliate.process.step2.title": "Share",
   "affiliate.process.step2.description":
     "Unlock your affiliate link and share it with your community",
@@ -78,6 +85,25 @@ export const affiliate = {
   "affiliate.trader.tradingRebates": "Trading rebates",
   "affiliate.trader.myRebates": "My rebates",
   "affiliate.trader.tradingVol": "Trading vol.",
+  "affiliate.referralCode.editCodeModal.title": "Settings",
+  "affiliate.referralCode.editCodeModal.description": "Edit your Referral Code",
+  "affiliate.referralCode.editCodeModal.label": "Referral Code",
+  "affiliate.referralCode.editCodeModal.helpText.length":
+    "Must be 4–10 characters long",
+  "affiliate.referralCode.editCodeModal.helpText.format":
+    "Only uppercase letters (A–Z) and numbers (0–9) are allowed",
+  "affiliate.referralCode.editCodeModal.success":
+    "Referral code updated successfully",
+  "affiliate.referralRate.editRateModal.title": "Settings",
+  "affiliate.referralRate.editRateModal.description":
+    "Set the ratio of referral rate shared with your referees",
+  "affiliate.referralRate.editRateModal.label": "Your max commission rate:",
+  "affiliate.referralRate.editRateModal.label.you": "You receive",
+  "affiliate.referralRate.editRateModal.label.referee": "Referee receives",
+  "affiliate.referralRate.editRateModal.helpText.max":
+    "The total commission rate must equal to your maximum commission rate limit",
+  "affiliate.referralRate.editRateModal.success":
+    "Referral rate updated successfully",
 };
 
 export type Affiliate = typeof affiliate;

@@ -107,12 +107,12 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
         {showTotal ? (
           <>
             <div className={cn("oui-flex-1 oui-pr-3 oui-text-right")}>
-              <Text.numeral dp={base_dp} className="oui-z-10">
+              <Text.numeral dp={dp} className="oui-z-10">
                 {accumulated}
               </Text.numeral>
             </div>
             <div className={cn("oui-flex-1 oui-pr-3 oui-text-right")}>
-              <Text.numeral dp={dp} className="oui-z-10">
+              <Text.numeral dp={2} className="oui-z-10">
                 {totalAmount}
               </Text.numeral>
             </div>
@@ -120,12 +120,12 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
         ) : (
           <div className={cn("oui-flex-1 oui-pr-3 oui-text-right")}>
             {coinType === base && (
-              <Text.numeral dp={base_dp} className="oui-z-10">
+              <Text.numeral dp={dp} className="oui-z-10">
                 {accumulated}
               </Text.numeral>
             )}
             {coinType === quote && (
-              <Text.numeral dp={dp} className="oui-z-10">
+              <Text.numeral dp={2} className="oui-z-10">
                 {totalAmount}
               </Text.numeral>
             )}

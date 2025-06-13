@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { Flex, Text, type Column } from "@orderly.network/ui";
-import { API } from "@orderly.network/types";
 import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
+import { Flex, Text, type Column } from "@orderly.network/ui";
 
 export const useFundingHistoryColumns = () => {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ export const useFundingHistoryColumns = () => {
         rule: "date",
       },
       {
-        title: t("portfolio.overview.column.funding&AnnualRate"),
+        title: `${t("funding.fundingRate")} / ${t("funding.annualRate")}`,
         dataIndex: "funding_rate",
         width: 80,
         render: (value: any, record) => {
@@ -44,24 +44,24 @@ export const useFundingHistoryColumns = () => {
         },
       },
       {
-        title: t("portfolio.overview.column.paymentType"),
+        title: t("funding.paymentType"),
         dataIndex: "payment_type",
         width: 80,
         render: (value: any) => {
           switch (value) {
             case "Pay":
             case "Paid":
-              return t("portfolio.overview.column.paymentType.paid");
+              return t("funding.paymentType.paid");
             case "Receive":
             case "Received":
-              return t("portfolio.overview.column.paymentType.received");
+              return t("funding.paymentType.received");
             default:
               return value;
           }
         },
       },
       {
-        title: `${t("portfolio.overview.column.fundingFee")} (USDC)`,
+        title: `${t("funding.fundingFee")} (USDC)`,
         dataIndex: "funding_fee",
         width: 80,
         rule: "price",

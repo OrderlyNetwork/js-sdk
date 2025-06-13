@@ -52,15 +52,15 @@
       // "@orderly.network/ui-leverage": [
       //   "../../packages/ui-leverage/src"
       // ],
-      // "@orderly.network/ui-positions": [
-      //   "../../packages/ui-positions/src"
-      // ],
+      "@orderly.network/ui-positions": [
+        "../../packages/ui-positions/src"
+      ],
       // "@orderly.network/ui-orders": [
       //   "../../packages/ui-orders/src"
       // ],
-      "@orderly.network/ui-share": [
-        "../../packages/ui-share/src"
-      ],
+      // "@orderly.network/ui-share": [
+      //   "../../packages/ui-share/src"
+      // ],
       "@orderly.network/markets": [
         "../../packages/markets/src"
       ],

@@ -1,9 +1,10 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
+import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { PositionCellState } from "./positionCell.script";
 
@@ -224,6 +225,22 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
           <Text.numeral color="sell">{item.sl_trigger_price}</Text.numeral>
         )}
       </Flex>
+    </Flex>
+  );
+};
+
+export const FundingFee: FC<PositionCellState> = (props) => {
+  const { t } = useTranslation();
+  const fundingFeeEndTime = useRef(Date.now().toString());
+  return (
+    <Flex justify={"end"} className="oui-text-2xs oui-w-full">
+      <Text intensity={36}>{t("funding.fundingFee")}: </Text>
+      <FundingFeeButton
+        fee={props.item.fundingFee}
+        symbol={props.item.symbol}
+        start_t={props.item.timestamp.toString()}
+        end_t={fundingFeeEndTime.current}
+      />
     </Flex>
   );
 };

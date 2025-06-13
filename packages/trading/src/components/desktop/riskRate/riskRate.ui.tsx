@@ -16,9 +16,8 @@ import { TooltipContent } from "../assetView/assetView.ui";
 import { RiskRateState } from "./riskRate.script";
 
 export const RiskRate: FC<RiskRateState> = (props) => {
-  const { riskRate, riskRateColor, isConnected, currentLeverage, maxLeverage } =
-    props;
-  const { isHigh, isMedium, isLow, isDefault } = riskRateColor;
+  const { riskRate, riskRateColor, currentLeverage, maxLeverage } = props;
+  const { isHigh, isMedium, isLow } = riskRateColor;
   const { wrongNetwork } = useAppContext();
   const { t } = useTranslation();
 
@@ -63,12 +62,10 @@ export const RiskRate: FC<RiskRateState> = (props) => {
         <Flex direction="column">
           <Tooltip
             content={
-              (
-                <TooltipContent
-                  description={t("trading.riskRate.tooltip")}
-                  formula={t("trading.riskRate.formula")}
-                />
-              ) as any
+              <TooltipContent
+                description={t("trading.riskRate.tooltip")}
+                formula={t("trading.riskRate.formula")}
+              />
             }
           >
             <Text

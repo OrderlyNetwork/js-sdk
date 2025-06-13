@@ -68,12 +68,14 @@ export function useSort(
   return { sort, onSort, getSortedList };
 }
 
-export function searchBySymbol<T extends { symbol: string }>(
+export function searchBySymbol<T extends Record<PropertyKey, any>>(
   list: T[],
   searchValue = "",
   formatString?: string,
 ) {
-  if (!searchValue) return list;
+  if (!searchValue) {
+    return list;
+  }
 
   const reg = new RegExp(searchValue, "i");
   const searchValueLower = searchValue.toLowerCase();
@@ -114,6 +116,9 @@ export function searchBySymbol<T extends { symbol: string }>(
 }
 
 function formatSymbol(symbol: string, formatString: string = "base") {
+  if (!symbol) {
+    return "";
+  }
   const arr = symbol.split("_");
   const type = arr[0];
   const base = arr[1];

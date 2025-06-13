@@ -1,14 +1,12 @@
-import { API } from "@orderly.network/types";
-
-import { CalculatorCtx, CalculatorScope } from "../../types";
-
+import { propOr } from "ramda";
 import { account, positions } from "@orderly.network/perp";
-
+import { API } from "@orderly.network/types";
+import { Decimal, zero } from "@orderly.network/utils";
+import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
+import { CalculatorCtx, CalculatorScope } from "../../types";
+import { useAppStore } from "../appStore";
 import { usePositionStore } from "../usePositionStream/usePosition.store";
 import { BaseCalculator } from "./baseCalculator";
-import { propOr } from "ramda";
-import { zero } from "@orderly.network/utils";
-import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
 import { CalculatorContext } from "./calculatorContext";
 
 const NAME_PREFIX = "positionCalculator";
@@ -35,7 +33,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   calc(
     scope: CalculatorScope,
     data: any,
-    ctx: CalculatorCtx
+    ctx: CalculatorCtx,
   ): API.PositionsTPSLExt | null {
     if (scope === CalculatorScope.MARK_PRICE) {
       return this.calcByMarkPrice(data as Record<string, number>, ctx);
@@ -48,7 +46,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
     if (scope === CalculatorScope.POSITION) {
       return this.calcByPosition(
         this.preprocess(data as API.PositionInfo),
-        ctx
+        ctx,
       );
     }
 
@@ -74,9 +72,11 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   private calcByMarkPrice(
     markPrice: Record<string, number>,
-    ctx: CalculatorCtx
+    ctx: CalculatorCtx,
   ) {
     let positions = this.getPosition(markPrice, ctx);
+    const fundingRates = useAppStore.getState().fundingRates;
+
     // positions = this.checkIsClosed(positions, ctx);
 
     // console.log("-------PositionCalculator calcByMarkPrice", positions);
@@ -86,10 +86,15 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     positions = {
       ...positions,
-      rows: positions.rows.map((item: API.PositionTPSLExt) => ({
-        ...item,
-        mark_price: markPrice[item.symbol] || item.mark_price,
-      })),
+      rows: positions.rows.map((item: API.PositionTPSLExt) => {
+        // console.log(fundingRates?.[item.symbol]);
+
+        return {
+          ...item,
+
+          mark_price: markPrice[item.symbol] || item.mark_price,
+        };
+      }),
     };
 
     return this.format(positions, ctx);
@@ -97,7 +102,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   private calcByIndexPrice(
     indexPrice: Record<string, number>,
-    ctx: CalculatorCtx
+    ctx: CalculatorCtx,
   ) {
     let positions = this.getPosition(indexPrice, ctx);
     // positions = this.checkIsClosed(positions, ctx);
@@ -130,7 +135,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
   private format(
     data: API.PositionInfo | API.PositionsTPSLExt,
-    ctx: CalculatorCtx
+    ctx: CalculatorCtx,
   ): API.PositionsTPSLExt {
     const { accountInfo, symbolsInfo, fundingRates, portfolio } = ctx;
 
@@ -145,6 +150,8 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
 
     let rows = data.rows.map((item) => {
       const info = symbolsInfo[item.symbol];
+      const sum_unitary_funding =
+        fundingRates?.[item.symbol]?.["sum_unitary_funding"] ?? 0;
 
       const notional = positions.notional(item.position_qty, item.mark_price);
       const unrealPnl = positions.unrealizedPnL({
@@ -195,7 +202,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
         sumUnitaryFunding: propOr(
           0,
           "sum_unitary_funding",
-          fundingRates[item.symbol]
+          fundingRates[item.symbol],
         ),
         lastSumUnitaryFunding: item.last_sum_unitary_funding,
       });
@@ -213,8 +220,15 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       notional_total = notional_total.add(notional);
       unsettlementPnL_total = unsettlementPnL_total.add(unsettlementPnL);
 
+      const fundingFee = new Decimal(sum_unitary_funding)
+        .sub(item.last_sum_unitary_funding)
+        .mul(item.position_qty)
+        .negated()
+        .toNumber();
+
       return {
         ...item,
+        fundingFee,
         mm: positions.maintenanceMargin({
           positionQty: item.position_qty,
           markPrice: item.mark_price,
@@ -293,7 +307,7 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
   }
 
   private getPosition(_: Record<string, number>, ctx: CalculatorCtx) {
-    let positions =
+    const positions =
       ctx.get((output: Record<string, any>) => output[this.name]) ||
       usePositionStore.getState().positions[this.symbol];
 

@@ -9,13 +9,13 @@ import {
   useRef,
   useState,
 } from "react";
+import { format, subDays } from "date-fns";
 import {
   RefferalAPI as API,
   usePrivateQuery,
   useDaily,
   useAccount,
 } from "@orderly.network/hooks";
-import { format, subDays } from "date-fns";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 
@@ -84,7 +84,7 @@ export type ReferralContextProps = {
     success: boolean,
     error: any,
     hide: any,
-    queryParams: any
+    queryParams: any,
   ) => void;
   //** click learn affilate, if this method is implemented, the `learnAffilateUrl` will not work */
   onLearnAffiliate?: () => void;
@@ -120,16 +120,17 @@ export type ReferralContextReturns = {
   setTab: React.Dispatch<React.SetStateAction<TabTypes>>;
   wrongNetwork: boolean;
   disabledConnect: boolean;
+  generateCode: API.AutoGenerateCode | undefined;
 } & ReferralContextProps;
 
 export const ReferralContext = createContext<ReferralContextReturns>(
-  {} as ReferralContextReturns
+  {} as ReferralContextReturns,
 );
 
 export type BuildNode = (state: ReferralContextReturns) => ReactNode;
 
 export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
-  props
+  props,
 ) => {
   const {
     onBecomeAnAffiliate: becomeAnAffiliate,
@@ -155,6 +156,22 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
     revalidateOnFocus: true,
   });
+
+  const { data: generateCode, mutate: generateCodeMutate } =
+    usePrivateQuery<API.AutoGenerateCode>(
+      "/v1/referral/auto_referral/progress",
+      {
+        revalidateOnFocus: true,
+        errorRetryCount: 2,
+        formatter: (data) => {
+          return {
+            code: data.auto_referral_code,
+            requireVolume: data.required_volume,
+            completedVolume: data.completed_volume,
+          };
+        },
+      },
+    );
 
   const [showHome, setShowHome] = useState(isLoading);
   useEffect(() => {
@@ -213,6 +230,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     volumeStatisticsMutate();
     dailyVolumeMutate();
     referralInfoMutate();
+    generateCodeMutate();
   };
 
   useEffect(() => {
@@ -245,6 +263,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   return (
     <ReferralContext.Provider
       value={{
+        generateCode,
         showHome,
         setShowHome,
         referralInfo: data,
