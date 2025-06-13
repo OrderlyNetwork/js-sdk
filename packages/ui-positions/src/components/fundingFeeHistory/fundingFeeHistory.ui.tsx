@@ -82,17 +82,17 @@ export const FundingFeeHistoryUI: FC<{
   }, [isMobile, flattenData, isLoading]);
 
   return (
-    <div className="oui-h-[calc(80vh_-_102px_-_8px)] oui-overflow-y-auto">
+    <div>
       <Grid
         cols={2}
         gapX={3}
         className="oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-py-4"
       >
-        <div className="oui-bg-base-9 oui-rounded-lg oui-p-3 oui-border oui-border-line-6">
+        <div className="oui-rounded-lg oui-border oui-border-line-6 oui-bg-base-9 oui-p-3">
           {/* <Statistic label={"Instrument"} /> */}
           <Flex direction={"column"} gap={1} itemAlign={"start"}>
             <span className="oui-text-2xs oui-text-base-contrast-36">
-              {t("common.instrument")}
+              {t("common.symbol")}
             </span>
             <Text.formatted
               rule="symbol"
@@ -103,7 +103,7 @@ export const FundingFeeHistoryUI: FC<{
             </Text.formatted>
           </Flex>
         </div>
-        <div className="oui-bg-base-9 oui-rounded-lg oui-p-3 oui-border oui-border-line-6">
+        <div className="oui-rounded-lg oui-border oui-border-line-6 oui-bg-base-9 oui-p-3">
           <Statistic
             label={`${t("funding.fundingFee")} (USDC)`}
             valueProps={{
@@ -172,19 +172,18 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
   }, [t]);
 
   return (
-    <EndReachedBox onEndReached={loadMore}>
-      <DataTable
-        classNames={{
-          root: cn(
-            "oui-bg-base-8 oui-text-sm oui-h-auto",
-            // "oui-h-[calc(80vh_-_102px_-_8px)]",
-          ),
-        }}
-        columns={columns}
-        dataSource={data ?? []}
-        loading={isLoading}
-      />
-    </EndReachedBox>
+    <div className="oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
+      <EndReachedBox onEndReached={loadMore}>
+        <DataTable
+          classNames={{
+            root: cn("oui-h-auto oui-bg-base-8 oui-text-sm"),
+          }}
+          columns={columns}
+          dataSource={data ?? []}
+          loading={isLoading}
+        />
+      </EndReachedBox>
+    </div>
   );
 };
 

@@ -92,6 +92,4 @@ export const common = {
   "common.mainAccount": "Main account",
   "common.subAccount": "Sub account",
   "common.settings": "Settings",
-
-  "common.instrument": "Instrument",
 };
